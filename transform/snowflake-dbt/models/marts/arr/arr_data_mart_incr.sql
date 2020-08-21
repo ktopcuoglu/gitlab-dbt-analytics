@@ -191,4 +191,4 @@ WITH fct_charges AS (
     ON charges_month_by_month.arr_month = quarter.last_month_of_fiscal_quarter
   LEFT JOIN last_month_of_fiscal_year year
     ON  charges_month_by_month.arr_month = year.last_month_of_fiscal_year
-  {{ dbt_utils.group_by(n=27) }}
+  {{ dbt_utils.group_by(n=23) }}
