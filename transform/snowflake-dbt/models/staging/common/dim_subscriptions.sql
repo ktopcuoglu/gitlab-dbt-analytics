@@ -1,5 +1,5 @@
 WITH zuora_subscription AS (
-  SELECT *,
+  SELECT *
   FROM {{ ref('zuora_subscription_source') }}
 
 ), zuora_subscription_snapshots AS (
