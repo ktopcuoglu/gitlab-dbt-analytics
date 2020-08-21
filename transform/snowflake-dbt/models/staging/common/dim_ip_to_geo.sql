@@ -42,7 +42,7 @@ WITH all_hashed_ips_version_usage AS (
       source_ip_hash AS ip_address_hash,
       geoname_id AS location_id
     FROM all_distinct_ips
-    LEFT JOIN maxmind_ip_ranges
+    JOIN maxmind_ip_ranges
     WHERE all_distinct_ips.source_ip_numeric BETWEEN maxmind_ip_ranges.ip_range_first_ip_numeric AND maxmind_ip_ranges.ip_range_last_ip_numeric 
 
 )

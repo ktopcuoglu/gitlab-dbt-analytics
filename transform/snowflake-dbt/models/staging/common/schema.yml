@@ -78,8 +78,6 @@ models:
           - unique
           - not_null
       - name: location_id
-        tests:
-          - not_null
 
   - name: dim_location
     description: '{{ doc("dim_location") }}'
