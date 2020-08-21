@@ -70,6 +70,44 @@ models:
           - not_null
           - unique
 
+  - name: dim_ip_to_geo
+    description: '{{ doc("dim_ip_to_geo") }}'
+    columns:
+      - name: ip_address_number_range_end
+        tests:
+          - unique
+          - not_null
+      - name: ip_address_number_range_start
+        tests:
+          - unique
+          - not_null
+      - name: ip_range_first_ip
+        tests:
+          - unique
+          - not_null
+      - name: ip_range_last_ip
+        tests:
+          - unique
+          - not_null
+      - name: location_id
+        tests:
+          - not_null
+
+  - name: dim_location
+    description: '{{ doc("dim_location") }}'
+    columns:
+      - name: country_name
+        tests:
+          - not_null
+      - name: iso_2_country_code
+        tests:
+          - not_null
+          - unique
+      - name: location_id
+        tests:
+          - not_null
+          - unique
+          
   - name: dim_subscriptions
     description: '{{ doc("dim_subscriptions") }}'
     columns:
@@ -334,6 +372,12 @@ models:
         description: The identifier of the host of the instance.
       - name: license_md5
         description: The md5 hash of the license file. Use this field to join to dim_licenses.
+      - name: subscription_id
+        description: The zuora subscription id derived from the license. Use this field to join to dim_subscriptions.
+      - name: account_id
+        description: The zuora account id associated with the subscription. Use this field to join to dim_accounts.
+      - name: array_product_details_id  
+        description: The array of distinct product detail ids associated with the subscription. Use this field to join to dim_product_details.
       - name: hostname
         description: The name of the host of the instance.
       - name: edition

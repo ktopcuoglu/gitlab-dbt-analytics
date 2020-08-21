@@ -56,7 +56,6 @@ WITH source AS (
         --web_ide_commits // was implemented as both a column and in `counts`
         influxdb_metrics_enabled::BOOLEAN            AS influxdb_metrics_enabled,
         prometheus_metrics_enabled::BOOLEAN          AS prometheus_metrics_enabled,
-        --smau // never not null
         PARSE_JSON(usage_activity_by_stage)          AS usage_activity_by_stage,
         PARSE_JSON(usage_activity_by_stage_monthly)  AS usage_activity_by_stage_monthly,
         gitaly_clusters::NUMBER                      AS gitaly_clusters,
@@ -71,7 +70,8 @@ WITH source AS (
         ingress_modsecurity_enabled::boolean         AS is_ingress_modsecurity_enabled,
         PARSE_JSON(topology)                         AS topology,
         app_server_type::VARCHAR                     AS app_server_type,
-        grafana_link_enabled::BOOLEAN                AS is_grafana_link_enabled
+        grafana_link_enabled::BOOLEAN                AS is_grafana_link_enabled, 
+        PARSE_JSON(analytics_unique_visits)          AS analytics_unique_visits
     FROM source
     WHERE CHECK_JSON(counts) IS NULL
 
