@@ -1449,6 +1449,12 @@ roles:
         warehouses:
             - analyst_xs
 
+    - skerr:
+        member_of:
+            - reporter
+        warehouses:
+            - reporting
+
     - ssichak:
         warehouses:
             - reporting
@@ -1864,6 +1870,11 @@ users:
         member_of:
             - rparker
             - accountadmin
+
+    - skerr:
+        can_login: yes
+        member_of:
+            - skerr
 
     - sreddy:
         can_login: no
