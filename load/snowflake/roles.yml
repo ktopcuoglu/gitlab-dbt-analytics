@@ -1180,13 +1180,8 @@ roles:
             - analyst_engineering
 
     - eburke:
-        member_of:
-            - read_all                  # gitlab-com/team-member-epics/access-requests#5540
-            - analyst_core
-        warehouses:
-            - analyst_xs
-            - analyst_l
-            - analyst_xl
+        member_of: []
+        warehouses: []
 
     - eeastwood:
         member_of:
@@ -1639,9 +1634,8 @@ users:
             - dtownsend
 
     - eburke:
-        can_login: yes
-        member_of:
-            - eburke
+        can_login: no
+        member_of: []
 
     - eeastwood:
         can_login: yes

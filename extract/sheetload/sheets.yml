@@ -8,7 +8,7 @@ sheets:
     tabs:
       - abuse_mitigation
   - name: calendar
-    owner: '@emilie'
+    owner: '@tayloramurphy'
     tabs:
       - calendar
   - name: clari_export_forecast_net_iacv
