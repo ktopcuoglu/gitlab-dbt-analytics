@@ -23,7 +23,7 @@ models:
       - name: account_currency
         description: A currency as defined in Billing Settings in the Zuora UI
       - name: sold_to_country
-        description: The country of the old to contact
+        description: The country of the sold to contact
       - name: is_deleted
         description: flag indicating if account has been deleted
       - name: is_excluded
