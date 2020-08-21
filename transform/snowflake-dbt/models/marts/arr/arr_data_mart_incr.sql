@@ -35,6 +35,20 @@ WITH fct_charges AS (
     SELECT *
     FROM {{ ref('dim_subscriptions_valid_at') }}
 
+), last_month_of_fiscal_quarter AS (
+
+    SELECT DISTINCT
+      DATE_TRUNC('month', last_day_of_fiscal_quarter) AS last_month_of_fiscal_quarter,
+      fiscal_quarter_name_fy
+    FROM {{ ref('dim_dates') }}
+
+), last_month_of_fiscal_year AS (
+
+    SELECT DISTINCT
+      DATE_TRUNC('month', last_day_of_fiscal_year) AS last_month_of_fiscal_year,
+      fiscal_year
+    FROM {{ ref('dim_dates') }}
+
 ), base_charges AS (
 
     SELECT
@@ -141,6 +155,8 @@ WITH fct_charges AS (
     --date info
     snapshot_date,
     arr_month,
+    quarter.fiscal_quarter_name_fy,
+    year.fiscal_year,
     subscription_start_month,
     subscription_end_month,
 
@@ -170,4 +186,8 @@ WITH fct_charges AS (
     SUM(arr)                      AS arr,
     SUM(quantity)                 AS quantity
   FROM charges_month_by_month
+  LEFT JOIN last_month_of_fiscal_quarter quarter
+    ON charges_month_by_month.arr_month = quarter.last_month_of_fiscal_quarter
+  LEFT JOIN last_month_of_fiscal_year year
+    ON  charges_month_by_month.arr_month = year.last_month_of_fiscal_year
   {{ dbt_utils.group_by(n=20) }}
