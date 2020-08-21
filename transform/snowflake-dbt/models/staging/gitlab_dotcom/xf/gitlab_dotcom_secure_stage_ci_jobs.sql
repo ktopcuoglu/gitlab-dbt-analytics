@@ -47,7 +47,7 @@ WITH ci_builds AS (
         THEN 'license_scanning'
       WHEN ci_build_name LIKE '%sast%'  
         THEN 'sast'  
-      WHEN ci_build_name = 'secret_detection'
+      WHEN ci_build_name LIKE 'secret_detection'
         THEN 'secret_detection'  
       END AS secure_ci_job_type
     FROM ci_builds 

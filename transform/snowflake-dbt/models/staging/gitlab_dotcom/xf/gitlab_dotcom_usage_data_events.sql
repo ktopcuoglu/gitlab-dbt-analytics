@@ -373,7 +373,7 @@
     "key_to_parent_project": "ci_build_project_id",
     "primary_key": "ci_build_id",
     "stage_name": "secure",
-    "is_representative_of_stage": "False"
+    "is_representative_of_stage": "True"
   },
   {
     "event_name": "secure_stage_ci_jobs",
