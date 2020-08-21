@@ -14,8 +14,8 @@
 WITH all_hashed_ips_version_usage AS (
 
     SELECT
-      {{ hash_sensitive_columns('version_usage_data') }}
-    FROM {{ ref('version_usage_data') }}
+      {{ nohash_sensitive_columns('version_usage_data_source', 'source_ip') }}
+    FROM {{ ref('version_usage_data_source') }}
 
 ),  all_distinct_ips AS (
 
@@ -26,10 +26,9 @@ WITH all_hashed_ips_version_usage AS (
     {% if is_incremental() %}
         WHERE source_ip_hash NOT IN (
             SELECT 
-            source_ip_hash 
+              ip_address_hash 
             FROM {{this}}
         )
-    LIMIT 200000
     {% endif %}
 
 ), maxmind_ip_ranges AS (
@@ -40,8 +39,8 @@ WITH all_hashed_ips_version_usage AS (
 ), newly_mapped_ips AS (
 
     SELECT 
-      source_ip_hash,
-      location_id
+      source_ip_hash AS ip_address_hash,
+      geoname_id AS location_id
     FROM all_distinct_ips
     LEFT JOIN maxmind_ip_ranges
     WHERE all_distinct_ips.source_ip_numeric BETWEEN maxmind_ip_ranges.ip_range_first_ip_numeric AND maxmind_ip_ranges.ip_range_last_ip_numeric 

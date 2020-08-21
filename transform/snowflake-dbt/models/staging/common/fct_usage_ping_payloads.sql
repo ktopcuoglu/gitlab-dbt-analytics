@@ -79,7 +79,7 @@ WITH license AS (
     LEFT JOIN license_product_details
       ON calculated.license_md5 = license_product_details.license_md5
     LEFT JOIN ip_to_geo
-      ON calculated.source_ip_hash = ip_to_geo.source_ip_hash
+      ON calculated.source_ip_hash = ip_to_geo.ip_address_hash
 
 ), renamed AS (
 
