@@ -172,6 +172,7 @@ WITH fct_charges AS (
     ultimate_parent_account_segment,
 
     --subscription info
+    subscription_name,
     subscription_name_slugify,
     subscription_status,
 
@@ -190,4 +191,4 @@ WITH fct_charges AS (
     ON charges_month_by_month.arr_month = quarter.last_month_of_fiscal_quarter
   LEFT JOIN last_month_of_fiscal_year year
     ON  charges_month_by_month.arr_month = year.last_month_of_fiscal_year
-  {{ dbt_utils.group_by(n=20) }}
+  {{ dbt_utils.group_by(n=27) }}
