@@ -23,16 +23,16 @@ WITH sfdc_lead_source AS(
 ), event_marketing_qualification AS (
 
   SELECT
-    {{ dbt_utils.surrogate_key(['lead_id','marketo_qualified_lead_datetime']) }} AS event_id,
-    marketo_qualified_lead_datetime                                              AS event_timestamp,
+    {{ dbt_utils.surrogate_key(['lead_id','marketo_qualified_lead_date::timestamp']) }} AS event_id,
+    marketo_qualified_lead_date::timestamp                                              AS event_timestamp,
     lead_id,
-    NULL                                                                         AS crm_user_id, -- if we move this to lead history then we can get this
-    converted_contact_id                                                         AS contact_id,
-    converted_opportunity_id                                                     AS opportunity_id,
-    converted_account_id                                                         AS account_id,
-    'marketing qualification'                                                    AS event_name
+    NULL                                                                                AS crm_user_id, -- if we move this to lead history then we can get this
+    converted_contact_id                                                                AS contact_id,
+    converted_opportunity_id                                                            AS opportunity_id,
+    converted_account_id                                                                AS account_id,
+    'marketing qualification'                                                           AS event_name
   FROM sfdc_lead_source
-  WHERE marketo_qualified_lead_datetime IS NOT NULL
+  WHERE marketo_qualified_lead_date IS NOT NULL
 
 )
 
