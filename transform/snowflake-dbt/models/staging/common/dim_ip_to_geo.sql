@@ -5,12 +5,6 @@
     })
 }}
 
-{% if execute %}
-  {% if flags.FULL_REFRESH %}
-      {{ exceptions.raise_compiler_error("Full refresh is not allowed for this model. Exclude it from the run via the argument \"--exclude staging.common.dim_ip_to_geo\".") }}
-  {% endif %}
-{% endif %}
-
 WITH all_hashed_ips_version_usage AS (
 
     SELECT
