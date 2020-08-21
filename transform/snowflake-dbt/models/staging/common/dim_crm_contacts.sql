@@ -14,9 +14,9 @@ WITH sfdc_leads AS (
 
 SELECT
   --id
-  contact_id          AS sfdc_record_id,
-  'contact'           AS sfdc_record_type,
-  contact_email_hash  AS email_hash,
+  contact_id           AS sfdc_record_id,
+  'contact'            AS sfdc_record_type,
+  contact_email_hash   AS email_hash,
   email_domain,
   
   --keys
