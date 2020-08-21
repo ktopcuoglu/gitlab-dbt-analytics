@@ -33,7 +33,7 @@ WITH date_details AS (
       project_snapshots.last_update_started_at
     FROM project_snapshots
     INNER JOIN date_details
-      ON date_details.date_actual BETWEEN project_snapshots.valid_from AND project_snapshots.valid_to_
+      ON date_details.date_actual BETWEEN project_snapshots.valid_from::DATE AND project_snapshots.valid_to_::DATE
       QUALIFY ROW_NUMBER() OVER(PARTITION BY snapshot_day, project_id ORDER BY valid_to_ DESC) = 1
 
 )
