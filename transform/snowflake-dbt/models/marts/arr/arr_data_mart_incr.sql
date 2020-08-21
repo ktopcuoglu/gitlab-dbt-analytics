@@ -56,9 +56,13 @@ WITH fct_charges AS (
       dim_customers.ultimate_parent_account_name,
       dim_customers.ultimate_parent_billing_country,
       dim_customers.ultimate_parent_account_segment,
+      dim_customers.ultimate_parent_industry,
+      dim_customers.ultimate_parent_account_owner_team,
+      dim_customers.ultimate_parent_territory,
 
       --subscription info
       dim_subscriptions.subscription_id,
+      dim_subscriptions.subscription_name,
       dim_subscriptions.subscription_name_slugify,
       dim_subscriptions.subscription_status,
 
@@ -131,7 +135,7 @@ WITH fct_charges AS (
 
   SELECT
     --primary_key
-    {{ dbt_utils.surrogate_key(['snapshot_date', 'arr_month', 'subscription_name_slugify', 'product_category']) }}
+    {{ dbt_utils.surrogate_key(['snapshot_date', 'arr_month', 'subscription_name', 'product_category']) }}
                                  AS primary_key,
 
     --date info
