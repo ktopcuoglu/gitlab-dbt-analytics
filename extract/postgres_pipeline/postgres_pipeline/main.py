@@ -112,7 +112,6 @@ def load_incremental(
         last_execution_date = date_parse(os.environ["LAST_EXECUTION_DATE"])
         execution_date = date_parse(os.environ["EXECUTION_DATE"])
 
-
         hours_difference = (execution_date - last_execution_date).seconds / 3600
 
         hours_looking_back = int(os.environ["HOURS"])

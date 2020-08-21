@@ -163,61 +163,62 @@ def extract_manifest(file_path):
 
 def load_subdag(parent_dag_name, child_dag_name, args, schedule, pool):
     dag_subdag = DAG(
-        dag_id='{0}.{1}'.format(parent_dag_name, child_dag_name),
+        dag_id="{0}.{1}".format(parent_dag_name, child_dag_name),
         default_args=args,
         schedule_interval=schedule,
     )
     with dag_subdag:
         incremental_cmd = generate_cmd(
-                config["dag_name"], f"--load_type incremental --load_only_table {table}"
+            config["dag_name"], f"--load_type incremental --load_only_table {table}"
         )
         incremental_extract = KubernetesPodOperator(
-                        **gitlab_defaults,
-                        image=DATA_IMAGE,
-                        task_id=f"{config['task_name']}-{table.replace('_', '-')}-db-incremental",
-                        name=f"{config['task_name']}-{table.replace('_', '-')}-db-incremental",
-                        pool=pool,
-                        secrets=standard_secrets + config["secrets"],
-                        env_vars={
-                            **standard_pod_env_vars,
-                            **config["env_vars"],
-                            "LAST_EXECUTION_DATE": "{{ execution_date }}",
-                        },
-                        affinity=get_affinity(False),
-                        tolerations=get_toleration(False),
-                        arguments=[incremental_cmd],
-                        do_xcom_push=True,
-                        xcom_push=True,
-                        dag=dag_subdag,
-                )
+            **gitlab_defaults,
+            image=DATA_IMAGE,
+            task_id=f"{config['task_name']}-{table.replace('_', '-')}-db-incremental",
+            name=f"{config['task_name']}-{table.replace('_', '-')}-db-incremental",
+            pool=pool,
+            secrets=standard_secrets + config["secrets"],
+            env_vars={
+                **standard_pod_env_vars,
+                **config["env_vars"],
+                "LAST_EXECUTION_DATE": "{{ execution_date }}",
+            },
+            affinity=get_affinity(False),
+            tolerations=get_toleration(False),
+            arguments=[incremental_cmd],
+            do_xcom_push=True,
+            xcom_push=True,
+            dag=dag_subdag,
+        )
 
         # Validate Task
         validate_cmd = generate_cmd(
-                config["dag_name"], f"--load_type validate --load_only_table {table}"
+            config["dag_name"], f"--load_type validate --load_only_table {table}"
         )
         validate_ids = KubernetesPodOperator(
-                **gitlab_defaults,
-                image=DATA_IMAGE,
-                task_id=f"{config['task_name']}-{table.replace('_', '-')}-db-validation",
-                name=f"{config['task_name']}-{table.replace('_', '-')}-db-validation",
-                pool=pool,
-                secrets=standard_secrets + config["secrets"],
-                env_vars={
-                    **standard_pod_env_vars,
-                    **config["env_vars"],
-                    "LAST_EXECUTION_DATE": "{{ execution_date }}",
-                },
-                affinity=get_affinity(False),
-                tolerations=get_toleration(False),
-                arguments=[validate_cmd],
-                do_xcom_push=True,
-                xcom_push=True,
-                dag=dag_subdag,
+            **gitlab_defaults,
+            image=DATA_IMAGE,
+            task_id=f"{config['task_name']}-{table.replace('_', '-')}-db-validation",
+            name=f"{config['task_name']}-{table.replace('_', '-')}-db-validation",
+            pool=pool,
+            secrets=standard_secrets + config["secrets"],
+            env_vars={
+                **standard_pod_env_vars,
+                **config["env_vars"],
+                "LAST_EXECUTION_DATE": "{{ execution_date }}",
+            },
+            affinity=get_affinity(False),
+            tolerations=get_toleration(False),
+            arguments=[validate_cmd],
+            do_xcom_push=True,
+            xcom_push=True,
+            dag=dag_subdag,
         )
 
         incremental_extract >> validate_ids
 
     return dag_subdag
+
 
 def extract_table_list_from_manifest(manifest_contents):
     return manifest_contents["tables"].keys()
@@ -238,7 +239,6 @@ for source_name, config in config_dict.items():
         "sla_miss_callback": slack_failed_task,
         "start_date": config["start_date"],
         "dagrun_timeout": timedelta(hours=6),
-
     }
     extract_dag = DAG(
         f"{config['dag_name']}_db_extract",
@@ -258,17 +258,17 @@ for source_name, config in config_dict.items():
                 continue
 
             load_tasks = SubDagOperator(
-                    task_id=f"{config['task_name']}-{table.replace('_','-')}-db-increment-validate",
-                    subdag=load_subdag(
-                            parent_dag_name=f"{config['dag_name']}_db_extract",
-                            child_dag_name=f"{config['task_name']}-{table.replace('_','-')}-db-increment-validate",
-                            args=extract_dag_args,
-                            schedule=config["extract_schedule_interval"],
-                            pool=f"{config['task_name']}_pool"),
-
-                    default_args=extract_dag_args,
-                    dag=extract_dag,
-                    pool=f"{config['task_name']}_pool"
+                task_id=f"{config['task_name']}-{table.replace('_','-')}-db-increment-validate",
+                subdag=load_subdag(
+                    parent_dag_name=f"{config['dag_name']}_db_extract",
+                    child_dag_name=f"{config['task_name']}-{table.replace('_','-')}-db-increment-validate",
+                    args=extract_dag_args,
+                    schedule=config["extract_schedule_interval"],
+                    pool=f"{config['task_name']}_pool",
+                ),
+                default_args=extract_dag_args,
+                dag=extract_dag,
+                pool=f"{config['task_name']}_pool",
             )
 
     globals()[f"{config['dag_name']}_db_extract"] = extract_dag
