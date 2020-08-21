@@ -314,9 +314,6 @@ models:
         xf:
           +schema: analytics
 
-        # ------------------
-        # Staging
-        # ------------------
     # ------------------
     # Marts
     # ------------------
@@ -325,9 +322,7 @@ models:
       arr:
         +materialized: table
 
-      pipeline_health_dashboard:
-        +materialized: table
-        +schema: tdf
+
 
       product_kpis:
         +materialized: table
@@ -338,7 +333,6 @@ models:
 
         users_emails:
           enabled: false
-
     # ------------------
     # Legacy Structure
     # ------------------
@@ -365,6 +359,12 @@ models:
       +tags: ["product"]
       +materialized: table
 
+    # ------------------
+    # Trusted data framework
+    # ------------------
+    trusted_data_framework:
+      +materialized: table
+      +schema: tdf
 
 # ======
 # Snapshot Configs
