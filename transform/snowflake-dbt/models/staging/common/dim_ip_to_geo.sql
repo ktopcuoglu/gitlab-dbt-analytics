@@ -29,6 +29,7 @@ WITH all_hashed_ips_version_usage AS (
             source_ip_hash 
             FROM {{this}}
         )
+    LIMIT 200000
     {% endif %}
 
 ), maxmind_ip_ranges AS (
