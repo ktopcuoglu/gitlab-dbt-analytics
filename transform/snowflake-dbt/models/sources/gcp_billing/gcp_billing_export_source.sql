@@ -13,6 +13,7 @@ WITH source AS (
     flatten_export.value:currency::VARCHAR                         AS currency,
     flatten_export.value:currency_conversion_rate::FLOAT           AS currency_conversion_rate,
     flatten_export.value:export_time::TIMESTAMP                    AS export_time,
+    TO_DATE(flatten_export.value:invoice:month::STRING,'YYYYMM')   AS invoice_month,
     flatten_export.value:labels::VARIANT                           AS labels,
     flatten_export.value:location:country::VARCHAR                 AS resource_country,
     flatten_export.value:location:location::VARCHAR                AS resource_location,
