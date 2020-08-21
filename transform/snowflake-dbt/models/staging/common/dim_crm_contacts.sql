@@ -1,19 +1,22 @@
 WITH sfdc_leads AS (
 
-    SELECT *
+    SELECT
+	{{ hash_sensitive_columns('sfdc_lead_source') }}
     FROM {{ ref('sfdc_lead_source') }}
 
 ), sfdc_contacts AS (
 
-    SELECT *
+    SELECT
+    {{ hash_sensitive_columns('sfdc_contact_source') }}
     FROM {{ ref('sfdc_contact_source') }}
 
 )
 
 SELECT
   --id
-  contact_id           AS sfdc_record_id,
-  'contact'            AS sfdc_record_type,
+  contact_id          AS sfdc_record_id,
+  'contact'           AS sfdc_record_type,
+  contact_email_hash  AS email_hash,
   email_domain,
   
   --keys
@@ -40,6 +43,7 @@ SELECT
   --id
   lead_id              AS sfdc_record_id,
   'lead'               AS sfdc_record_type,
+  lead_email_hash      AS email_hash,
   email_domain,
   
   --keys
