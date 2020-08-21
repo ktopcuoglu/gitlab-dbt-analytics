@@ -3,14 +3,12 @@ import yaml
 from datetime import datetime, timedelta
 
 from airflow.models import DAG
-from airflow.operators.dummy_operator import DummyOperator
 
-from airflow import DAG
-from airflow_utils import DATA_IMAGE, clone_repo_cmd, gitlab_defaults, slack_failed_task
 from airflow.operators.subdag_operator import SubDagOperator
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
 from airflow.utils.helpers import cross_downstream, chain
 
+from airflow_utils import DATA_IMAGE, clone_repo_cmd, gitlab_defaults, slack_failed_task
 from kubernetes_helpers import get_affinity, get_toleration
 from kube_secrets import (
     CI_STATS_DB_HOST,
