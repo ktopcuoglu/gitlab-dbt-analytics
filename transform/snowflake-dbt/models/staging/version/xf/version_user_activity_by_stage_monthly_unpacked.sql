@@ -26,7 +26,7 @@ WITH usage_data AS (
 
     FROM usage_data,
       LATERAL FLATTEN(input => usage_data.analytics_unique_visits) f
-    WHERE IS_OBJECT(f.value) = TRUE
+    WHERE f.value > 0
     {% if is_incremental() %}
         AND created_at >= (SELECT max(created_at) FROM {{ this }})
     {% endif %}
