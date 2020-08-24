@@ -360,7 +360,7 @@ models:
       +materialized: table
 
     # ------------------
-    # Trusted data framework
+    # Trusted Data Framework
     # ------------------
     trusted_data_framework:
       +materialized: table
