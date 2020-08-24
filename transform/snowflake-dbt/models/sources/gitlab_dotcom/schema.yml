@@ -603,6 +603,34 @@ models:
           - not_null
           - unique
 
+  - name: gitlab_dotcom_experiment_users_source
+    columns:
+      - name: created_at
+      - name: experiment_id
+        tests:
+          - not_null
+      - name: experiment_user_id
+        tests:
+          - not_null
+      - name: group_type
+      - name: updated_at
+        tests:
+          - not_null
+      - name: user_id
+        tests:
+          - not_null
+
+  - name: gitlab_dotcom_experiments_source
+    columns:
+      - name: experiment_id
+        tests:
+          - not_null
+          - unique
+      - name: experiment_name
+        tests:
+          - not_null
+          - unique
+
   - name: gitlab_dotcom_gitlab_subscription_histories
     description: A log table tracking all changes to a gitlab_subscription.
     columns:

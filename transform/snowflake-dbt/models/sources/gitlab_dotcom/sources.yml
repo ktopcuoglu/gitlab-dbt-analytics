@@ -139,6 +139,10 @@ sources:
         identifier: gitlab_db_epics
       - name: events
         identifier: gitlab_db_events
+      - name: experiment_users
+        identifier: gitlab_db_experiment_users
+      - name: experiments
+        identifier: gitlab_db_experiments
       - name: gitlab_subscription_histories
         identifier: gitlab_db_gitlab_subscription_histories
       - name: gitlab_subscriptions
