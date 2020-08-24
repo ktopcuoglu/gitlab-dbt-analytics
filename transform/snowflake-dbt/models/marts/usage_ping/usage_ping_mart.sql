@@ -1,4 +1,11 @@
-WITH dim_customers AS (
+{{ config(materialized='table') }}
+
+WITH dim_accounts AS (
+
+    SELECT *
+    FROM {{ ref('dim_accounts') }}
+
+), dim_customers AS (
 
     SELECT *
     FROM {{ ref('dim_customers') }}
@@ -17,11 +24,6 @@ WITH dim_customers AS (
 
     SELECT *
     FROM {{ ref('dim_product_details') }}
-
-), dim_subscriptions AS (
-
-    SELECT *
-    FROM {{ ref('dim_subscriptions') }}
 
 ), fct_usage_ping_payloads AS (
 
@@ -51,28 +53,27 @@ WITH dim_customers AS (
 
     SELECT
       fct_usage_ping_payloads.*,
+      dim_customers.crm_id,
       dim_customers.customer_name,
       dim_customers.customer_country,
       dim_customers.ultimate_parent_account_id,
       dim_customers.ultimate_parent_account_segment,
-      dim_customers.ultimate_parent_account_billing_country,
-      dim_customers.ultimate_parent_account_industry,
+      dim_customers.ultimate_parent_billing_country,
+      dim_customers.ultimate_parent_industry,
       dim_customers.ultimate_parent_account_owner_team,
-      dim_customers.ultimate_parent_account_territory,
+      dim_customers.ultimate_parent_territory,
       dim_dates.date_actual,
-      dim_dates.month_actual,
+      dim_dates.first_day_of_month,
       dim_dates.fiscal_quarter_name_fy,
       dim_location.country_name,
       dim_location.iso_2_country_code,
-      dim_subscriptions.subscription_start_date,
-      dim_subscriptions.subscription_end_date,
       product_details.product_rate_plans,
       product_details.product_categories
     FROM fct_usage_ping_payloads
-    LEFT JOIN dim_subscriptions
-      ON fct_usage_ping_payloads.subscription_id = dim_subscriptions.subscription_id
+    LEFT JOIN dim_accounts
+      ON fct_usage_ping_payloads.account_id = dim_accounts.account_id
     LEFT JOIN dim_customers
-      ON dim_subscriptions.crm_id = dim_customers.crm_id
+      ON dim_accounts.crm_id = dim_customers.crm_id
     LEFT JOIN dim_dates
       ON fct_usage_ping_payloads.date_id = dim_dates.date_id
     LEFT JOIN dim_location
@@ -94,10 +95,10 @@ WITH dim_customers AS (
       created_at              AS ping_created_at,
       recorded_at             AS ping_recorded_at,    
       date_actual             AS ping_date,
-      month_actual            AS ping_month,
+      first_day_of_month      AS ping_month,
       fiscal_quarter_name_fy  AS ping_fiscal_quarter,
       IFF(ROW_NUMBER() OVER (
-          PARTITION BY uuid, month_actual 
+          PARTITION BY uuid, ping_month 
           ORDER BY usage_ping_id DESC
           ) = 1, TRUE, FALSE) AS is_last_ping_in_month,
       IFF(ROW_NUMBER() OVER (
@@ -111,21 +112,19 @@ WITH dim_customers AS (
       customer_name, 
       customer_country,
       ultimate_parent_account_id,
-      ultimate_parent_account_billing_country,
-      ultimate_parent_account_industry,
+      ultimate_parent_billing_country,
+      ultimate_parent_industry,
       ultimate_parent_account_owner_team,
       ultimate_parent_account_segment,
-      ultimate_parent_account_territory,
+      ultimate_parent_territory,
 
       -- product info
-      license_plan            AS ping_license_plan,
-      license_trial           AS ping_license_trial,
+      license_md5,
+      is_trial                AS ping_is_trial_license,
       product_tier            AS ping_product_tier,
       product_categories,
       product_rate_plans, 
       subscription_id,
-      subscription_start_date,
-      subscription_end_date,
 
       -- location info
       location_id,
