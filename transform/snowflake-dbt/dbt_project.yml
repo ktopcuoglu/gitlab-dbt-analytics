@@ -59,7 +59,6 @@ seeds:
     gitlab_release_schedule:
       +column_types:
         major_minor_version: varchar
-      +schema: tdf
 
 # ==================
 # Variable Configs
