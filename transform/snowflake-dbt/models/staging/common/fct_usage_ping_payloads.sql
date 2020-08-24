@@ -65,7 +65,7 @@ WITH license AS (
       ON subscription.subscription_id = rate_plan.subscription_id
     INNER JOIN product_rate_plan_charge
       ON rate_plan.product_rate_plan_id = product_rate_plan_charge.product_rate_plan_id
-    GROUP BY 1,2,3      
+    GROUP BY 1,2,3
 
 ), joined AS (
 
