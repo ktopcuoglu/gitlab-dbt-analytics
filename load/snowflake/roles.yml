@@ -787,12 +787,12 @@ roles:
             schemas:
                 read:
                     - analytics.maxmind
-                    - analytics.boneyard
+                    - raw.sheetload
             tables:
                 read:
                     - analytics.maxmind.*
-                    - analytics.boneyard.countries
-                    - analytics.boneyard.ranges
+                    - raw.sheetload.maxmind_countries
+                    - raw.sheetload.maxmind_ranges
 
     - netsuite:
         warehouses:

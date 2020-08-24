@@ -28,7 +28,7 @@ WITH all_hashed_ips_version_usage AS (
 ), maxmind_ip_ranges AS (
 
    SELECT *
-   FROM {{ ref('maxmind_ip_ranges_source') }}
+   FROM {{ ref('sheetload_maxmind_ip_ranges_source') }}
 
 ), newly_mapped_ips AS (
 

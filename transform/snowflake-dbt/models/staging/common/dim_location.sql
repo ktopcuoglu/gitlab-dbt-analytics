@@ -1,7 +1,7 @@
 WITH maxmind_countries_source AS (
 
     SELECT *
-    FROM {{ ref('maxmind_countries_source') }}
+    FROM {{ ref('sheetload_maxmind_countries_source') }}
 
 ), zuora_country_geographic_region AS (
 

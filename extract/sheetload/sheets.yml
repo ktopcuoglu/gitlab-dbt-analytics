@@ -80,6 +80,14 @@ sheets:
     owner: '@tayloramurphy'
     tabs:
       - marketing_pipe_to_spend_headcount
+  - name: maxmind_geolite_countries
+    owner: '@m_walker'
+    tabs:
+      - maxmind_countries
+  - name: maxmind_geolite_ranges
+    owner: '@m_walker'
+    tabs:
+      - maxmind_ranges
   - name: osat
     owner: '@pluthra'
     tabs:
