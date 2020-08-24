@@ -171,6 +171,22 @@ models:
       - name: environment_name
         tests:
           - not_null
+
+  - name: gitlab_dotcom_gitlab_emails
+    description: '{{ doc("gitlab_dotcom_gitlab_emails") }}'
+    columns:
+        - name: confirmation_sent_at
+        - name: created_at
+        - name: email_address
+          tests:
+            - not_null
+        - name: email_confirmed_at
+        - name: gitlab_email_id
+        - name: user_id
+          tests:
+            - not_null
+        - name: updated_at
+
   - name: gitlab_dotcom_gitlab_user_requests
     description: '{{ doc("gitlab_dotcom_gitlab_user_requests") }}'
     tests:
