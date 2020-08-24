@@ -128,6 +128,8 @@ sources:
         freshness:
           warn_after: {count: 7, period: day}
           error_after: {count: 30, period: day}
+      - name: emails
+        identifier: gitlab_db_emails
       - name: environments
         identifier: gitlab_db_environments
       - name: epic_issues

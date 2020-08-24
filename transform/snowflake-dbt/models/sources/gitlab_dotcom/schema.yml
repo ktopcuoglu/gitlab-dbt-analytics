@@ -545,6 +545,21 @@ models:
       - name: task_instance_name
       - name: uploaded_at
 
+  - name: gitlab_dotcom_emails_source
+    description: Source model for Gitlab.com emails.
+    columns:
+      - name: confirmation_sent_at
+      - name: created_at
+      - name: email_address
+        tests:
+          - not_null
+      - name: email_confirmed_at
+      - name: gitlab_email_id
+      - name: user_id
+        tests:
+          - not_null
+      - name: updated_at
+
   - name: gitlab_dotcom_environments
     description: Base model for GitLab.com environments.
     columns:
