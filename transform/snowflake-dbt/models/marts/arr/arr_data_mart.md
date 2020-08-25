@@ -16,6 +16,10 @@ Charges_month_by_month CTE:
 
 This CTE amortizes the ARR by month over the effective term of the rate plan charges. There are 4 subscription statuses in Zuora: active, cancelled, draft and expired. The Zuora UI reporting modules use a filter of WHERE subscription_status NOT IN ('Draft','Expired') which is also applied in this query. Please see the column definitions for additional details.
 
+Here is an image documenting the ERD for this table:
+
+<div style="width: 640px; height: 480px; margin: 10px; position: relative;"><iframe allowfullscreen frameborder="0" style="width:640px; height:480px" src="https://app.lucidchart.com/documents/embeddedchart/bfd9322f-5132-42e4-8584-8230e6e28b87" id="jtDoONWhVAV9"></iframe></div>
+
 {% enddocs %}
 
 {% docs arr_data_mart_incr %}

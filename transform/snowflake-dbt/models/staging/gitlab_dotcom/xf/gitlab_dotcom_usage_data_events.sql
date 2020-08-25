@@ -24,7 +24,7 @@
     "key_to_parent_project": "project_id",
     "primary_key": "event_id",
     "stage_name": "create",
-    "is_representative_of_stage": "False"
+    "is_representative_of_stage": "True"
   }, {
     "event_name": "action_monthly_active_users_design_management",
     "source_table_name": "gitlab_dotcom_events",
@@ -274,7 +274,7 @@
     "key_to_parent_project": "project_id",
     "primary_key": "merge_request_id",
     "stage_name": "create",
-    "is_representative_of_stage": "True"
+    "is_representative_of_stage": "False"
   },
   {
     "event_name": "merge_request_notes",
@@ -319,7 +319,7 @@
     "key_to_parent_project": "project_id",
     "primary_key": "project_id",
     "stage_name": "package",
-    "is_representative_of_stage": "True"
+    "is_representative_of_stage": "False"
   },
   {
     "event_name": "projects_prometheus_active",
@@ -367,13 +367,22 @@
     "is_representative_of_stage": "False"
   },
   {
+    "event_name": "secret_detection",
+    "source_cte_name": "secret_detection_jobs",
+    "user_column_name": "ci_build_user_id",
+    "key_to_parent_project": "ci_build_project_id",
+    "primary_key": "ci_build_id",
+    "stage_name": "secure",
+    "is_representative_of_stage": "True"
+  },
+  {
     "event_name": "secure_stage_ci_jobs",
     "source_table_name": "gitlab_dotcom_secure_stage_ci_jobs",
     "user_column_name": "ci_build_user_id",
     "key_to_parent_project": "ci_build_project_id",
     "primary_key": "ci_build_id",
     "stage_name": "secure",
-    "is_representative_of_stage": "True"
+    "is_representative_of_stage": "False"
   },
   {
     "event_name": "services",
@@ -587,6 +596,12 @@ WITH gitlab_subscriptions AS (
     SELECT *
     FROM {{ ref('gitlab_dotcom_secure_stage_ci_jobs') }}
     WHERE secure_ci_job_type = 'sast'
+
+), secret_detection_jobs AS (
+
+    SELECT *
+    FROM {{ ref('gitlab_dotcom_secure_stage_ci_jobs') }}
+    WHERE secure_ci_job_type = 'secret_detection'
 
 ), services AS (
 

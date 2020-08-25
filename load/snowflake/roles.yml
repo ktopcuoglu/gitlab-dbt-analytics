@@ -92,6 +92,7 @@ roles:
             - dbt_analytics_clones
             - gitlab_data_yaml
             - handbook
+            - maxmind
             - sheetload
             - snapshots
             - snowflake_db
@@ -110,6 +111,7 @@ roles:
             - boneyard
             - covid19
             - dbt_analytics
+            - gcp_billing
             - gitlab_data_yaml
             - handbook
             - license_db
@@ -127,17 +129,6 @@ roles:
             databases:
                 write:
                     - analytics
-                read:
-                    - raw
-            schemas:
-                write:
-                    - analytics.*
-                read: raw.gcp_billing
-            tables:
-                write:
-                    - analytics.*.*
-                read:
-                    - raw.gcp_billing.*
 
     - analyst_growth:
         warehouses:
@@ -688,6 +679,23 @@ roles:
                 read:
                     - analytics.analytics_sensitive.*
 
+    - gcp_billing:
+        warehouses:
+            - analyst_xs
+        privileges:
+            databases:
+                read:
+                    - analytics
+                    - raw
+            schemas:
+                read:
+                    - analytics.gcp_billing
+                    - raw.gcp_billing
+            tables:
+                read:
+                    - analytics.gcp_billing.*
+                    - raw.gcp_billing.*
+
     - gitlab_data_yaml:
         warehouses:
             - analyst_xs
@@ -770,6 +778,21 @@ roles:
                 read:
                     - analytics.license_db.*
                     - raw.license_db_dump.*
+
+    - maxmind:
+        privileges:
+            databases:
+                read:
+                    - analytics
+            schemas:
+                read:
+                    - analytics.maxmind
+                    - analytics.boneyard
+            tables:
+                read:
+                    - analytics.maxmind.*
+                    - analytics.boneyard.countries
+                    - analytics.boneyard.ranges
 
     - netsuite:
         warehouses:
@@ -1157,13 +1180,8 @@ roles:
             - analyst_engineering
 
     - eburke:
-        member_of:
-            - read_all                  # gitlab-com/team-member-epics/access-requests#5540
-            - analyst_core
-        warehouses:
-            - analyst_xs
-            - analyst_l
-            - analyst_xl
+        member_of: []
+        warehouses: []
 
     - eeastwood:
         member_of:
@@ -1431,6 +1449,12 @@ roles:
         warehouses:
             - analyst_xs
 
+    - skerr:
+        member_of:
+            - reporter
+        warehouses:
+            - reporting
+
     - ssichak:
         warehouses:
             - reporting
@@ -1616,9 +1640,8 @@ users:
             - dtownsend
 
     - eburke:
-        can_login: yes
-        member_of:
-            - eburke
+        can_login: no
+        member_of: []
 
     - eeastwood:
         can_login: yes
@@ -1848,6 +1871,11 @@ users:
             - rparker
             - accountadmin
 
+    - skerr:
+        can_login: yes
+        member_of:
+            - skerr
+
     - sreddy:
         can_login: no
         member_of: []
@@ -1855,7 +1883,6 @@ users:
     - ssichak:
         can_login: yes
         member_of:
-            - securityadmin
             - ssichak
 
     - stitch:

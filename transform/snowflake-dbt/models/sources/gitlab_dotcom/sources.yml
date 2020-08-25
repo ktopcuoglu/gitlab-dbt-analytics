@@ -90,6 +90,9 @@ sources:
         identifier: gitlab_db_clusters_applications_cert_managers
       - name: clusters_applications_crossplane
         identifier: gitlab_db_clusters_applications_crossplane
+        freshness:
+            warn_after: {count: 2, period: day}
+            error_after: {count: 4, period: day}
       - name: clusters_applications_elastic_stacks
         identifier: gitlab_db_clusters_applications_elastic_stacks
       - name: clusters_applications_helm
@@ -125,6 +128,8 @@ sources:
         freshness:
           warn_after: {count: 7, period: day}
           error_after: {count: 30, period: day}
+      - name: emails
+        identifier: gitlab_db_emails
       - name: environments
         identifier: gitlab_db_environments
       - name: epic_issues
@@ -136,6 +141,10 @@ sources:
         identifier: gitlab_db_epics
       - name: events
         identifier: gitlab_db_events
+      - name: experiment_users
+        identifier: gitlab_db_experiment_users
+      - name: experiments
+        identifier: gitlab_db_experiments
       - name: gitlab_subscription_histories
         identifier: gitlab_db_gitlab_subscription_histories
       - name: gitlab_subscriptions
