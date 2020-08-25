@@ -29,11 +29,14 @@ WITH source AS (
       bizible2__ad_content__c                 AS bizible_ad_content,
       bizible2__ad_group_name__c              AS bizible_ad_group_name,
       bizible2__form_url__c                   AS bizible_form_url,
+      bizible2__form_url_raw__c               AS bizible_form_url_raw,
       bizible2__landing_page__c               AS bizible_landing_page,
+      bizible2__landing_page_raw__c           AS bizible_landing_page_raw,
       bizible2__marketing_channel__c          AS bizible_marketing_channel,
       bizible2__marketing_channel_path__c     AS bizible_marketing_channel_path,
       bizible2__medium__c                     AS bizible_medium, 
       bizible2__referrer_page__c              AS bizible_referrer_page,   
+      bizible2__referrer_page_raw__c          AS bizible_referrer_page_raw, 
       bizible2__sf_campaign__c                AS bizible_salesforce_campaign,
 
       isdeleted                               AS is_deleted
