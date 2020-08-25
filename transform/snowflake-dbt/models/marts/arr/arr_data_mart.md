@@ -24,6 +24,21 @@ Here is an image documenting the ERD for this table:
 
 {% docs arr_data_mart_incr %}
 
-Daily snapshots of arr_data_mart.
+Keeps daily snapshots of arr_data_mart. This allows to query ARR from a historical perspective. 
+
+The below query will pull ARR by month as observed on selected snapshot_date.
+
+SELECT
+  arr_month,
+  SUM(arr)  AS arr
+FROM "ANALYTICS"."ANALYTICS"."ARR_DATA_MART"
+WHERE arr_month < DATE_TRUNC('month',CURRENT_DATE)
+GROUP BY 1
+ORDER BY 1 DESC
+WHERE snapshot_date = '2020-08-01'
+
+Here is an image documenting the ERD for this table:
+
+<div style="width: 640px; height: 480px; margin: 10px; position: relative;"><iframe allowfullscreen frameborder="0" style="width:640px; height:480px" src="https://app.lucidchart.com/documents/embeddedchart/7e9d42d8-6fe9-4537-b5cb-227131a3fa38" id="sJPpmmGm~0y0"></iframe></div>
 
 {% enddocs %}
