@@ -9,6 +9,11 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
+{% docs dim_crm_contacts %}
+Dimension that combines dimensional data from salesforce leads and salesforce contacts. They are combined with a union and a filter on leads excluding converted leads and leads where there is a corresponding contact. 
+
+{% enddocs %}
+
 {% docs dim_accounts %}
 Dimensional table representing each individual Zuora account with details of person to bill for the account.
 
@@ -64,6 +69,12 @@ Dimensional table representing both calendar year and fiscal year date details.
 The grain of the table is a calendar day.
 
 Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+{% enddocs %}
+
+{% docs fct_crm_conversion_events %}
+
+A fact for events along the marketing funnel and sales pipeline such as lead creation, conversion, marketing qualification, etc.
 
 {% enddocs %}
 
