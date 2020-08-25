@@ -2,4 +2,8 @@ version: 2
 
 models:
     - name: rspec_profiling_data
-
+      description: '{{ doc("sfdc_accounts_xf") }}'
+      columns:
+        - name: commit
+          tests:
+            - not_null
