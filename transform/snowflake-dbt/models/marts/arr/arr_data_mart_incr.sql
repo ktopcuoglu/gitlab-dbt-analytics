@@ -35,6 +35,20 @@ WITH fct_charges AS (
     SELECT *
     FROM {{ ref('dim_subscriptions_valid_at') }}
 
+), last_month_of_fiscal_quarter AS (
+
+    SELECT DISTINCT
+      DATE_TRUNC('month', last_day_of_fiscal_quarter) AS last_month_of_fiscal_quarter,
+      fiscal_quarter_name_fy
+    FROM {{ ref('dim_dates') }}
+
+), last_month_of_fiscal_year AS (
+
+    SELECT DISTINCT
+      DATE_TRUNC('month', last_day_of_fiscal_year) AS last_month_of_fiscal_year,
+      fiscal_year
+    FROM {{ ref('dim_dates') }}
+
 ), base_charges AS (
 
     SELECT
@@ -56,9 +70,13 @@ WITH fct_charges AS (
       dim_customers.ultimate_parent_account_name,
       dim_customers.ultimate_parent_billing_country,
       dim_customers.ultimate_parent_account_segment,
+      dim_customers.ultimate_parent_industry,
+      dim_customers.ultimate_parent_account_owner_team,
+      dim_customers.ultimate_parent_territory,
 
       --subscription info
       dim_subscriptions.subscription_id,
+      dim_subscriptions.subscription_name,
       dim_subscriptions.subscription_name_slugify,
       dim_subscriptions.subscription_status,
 
@@ -131,12 +149,14 @@ WITH fct_charges AS (
 
   SELECT
     --primary_key
-    {{ dbt_utils.surrogate_key(['snapshot_date', 'arr_month', 'subscription_name_slugify', 'product_category']) }}
+    {{ dbt_utils.surrogate_key(['snapshot_date', 'arr_month', 'subscription_name', 'product_category']) }}
                                  AS primary_key,
 
     --date info
     snapshot_date,
     arr_month,
+    quarter.fiscal_quarter_name_fy,
+    year.fiscal_year,
     subscription_start_month,
     subscription_end_month,
 
@@ -152,6 +172,7 @@ WITH fct_charges AS (
     ultimate_parent_account_segment,
 
     --subscription info
+    subscription_name,
     subscription_name_slugify,
     subscription_status,
 
@@ -166,4 +187,8 @@ WITH fct_charges AS (
     SUM(arr)                      AS arr,
     SUM(quantity)                 AS quantity
   FROM charges_month_by_month
-  {{ dbt_utils.group_by(n=20) }}
+  LEFT JOIN last_month_of_fiscal_quarter quarter
+    ON charges_month_by_month.arr_month = quarter.last_month_of_fiscal_quarter
+  LEFT JOIN last_month_of_fiscal_year year
+    ON  charges_month_by_month.arr_month = year.last_month_of_fiscal_year
+  {{ dbt_utils.group_by(n=23) }}
