@@ -5,6 +5,12 @@
     unique_key='primary_key')
   }}
 
+{% if execute %}
+  {% if flags.FULL_REFRESH %}
+      {{ exceptions.raise_compiler_error("Full refresh is not allowed for this model. Exclude it from the run via the argument \"--exclude marts.arr_data_mart_incr\".") }}
+  {% endif %}
+{% endif %}
+
 WITH fct_charges AS (
 
     SELECT *
@@ -35,6 +41,20 @@ WITH fct_charges AS (
     SELECT *
     FROM {{ ref('dim_subscriptions_valid_at') }}
 
+), last_month_of_fiscal_quarter AS (
+
+    SELECT DISTINCT
+      DATE_TRUNC('month', last_day_of_fiscal_quarter) AS last_month_of_fiscal_quarter,
+      fiscal_quarter_name_fy
+    FROM {{ ref('dim_dates') }}
+
+), last_month_of_fiscal_year AS (
+
+    SELECT DISTINCT
+      DATE_TRUNC('month', last_day_of_fiscal_year) AS last_month_of_fiscal_year,
+      fiscal_year
+    FROM {{ ref('dim_dates') }}
+
 ), base_charges AS (
 
     SELECT
@@ -56,9 +76,13 @@ WITH fct_charges AS (
       dim_customers.ultimate_parent_account_name,
       dim_customers.ultimate_parent_billing_country,
       dim_customers.ultimate_parent_account_segment,
+      dim_customers.ultimate_parent_industry,
+      dim_customers.ultimate_parent_account_owner_team,
+      dim_customers.ultimate_parent_territory,
 
       --subscription info
       dim_subscriptions.subscription_id,
+      dim_subscriptions.subscription_name,
       dim_subscriptions.subscription_name_slugify,
       dim_subscriptions.subscription_status,
 
@@ -117,27 +141,28 @@ WITH fct_charges AS (
       SELECT
         '{{ var('valid_at') }}'::DATE AS snapshot_date,
         charges_agg.*,
-        dim_dates.date_id,
-        dateadd('month', -1, dim_dates.date_actual)  AS reporting_month
+        dim_dates.date_actual         AS arr_month
       FROM charges_agg
       INNER JOIN dim_dates
-        ON charges_agg.effective_start_date_id <= dim_dates.date_id
-        AND (charges_agg.effective_end_date_id > dim_dates.date_id OR charges_agg.effective_end_date_id IS NULL)
+        ON charges_agg.effective_start_month <= dim_dates.date_actual
+        AND (charges_agg.effective_end_month > dim_dates.date_actual OR charges_agg.effective_end_month IS NULL)
         AND dim_dates.day_of_month = 1
       WHERE subscription_status NOT IN ('Draft', 'Expired')
-        AND mrr IS NOT NULL
+        AND charges_agg.charge_type = 'Recurring'
         AND mrr != 0
 
   )
 
   SELECT
     --primary_key
-    {{ dbt_utils.surrogate_key('snapshot_date', 'reporting_month', 'subscription_name_slugify', 'product_category') }}
+    {{ dbt_utils.surrogate_key(['snapshot_date', 'arr_month', 'subscription_name', 'product_category']) }}
                                  AS primary_key,
 
     --date info
     snapshot_date,
-    reporting_month,
+    arr_month,
+    quarter.fiscal_quarter_name_fy,
+    year.fiscal_year,
     subscription_start_month,
     subscription_end_month,
 
@@ -153,6 +178,7 @@ WITH fct_charges AS (
     ultimate_parent_account_segment,
 
     --subscription info
+    subscription_name,
     subscription_name_slugify,
     subscription_status,
 
@@ -167,4 +193,8 @@ WITH fct_charges AS (
     SUM(arr)                      AS arr,
     SUM(quantity)                 AS quantity
   FROM charges_month_by_month
-  {{ dbt_utils.group_by(n=20) }}
+  LEFT JOIN last_month_of_fiscal_quarter quarter
+    ON charges_month_by_month.arr_month = quarter.last_month_of_fiscal_quarter
+  LEFT JOIN last_month_of_fiscal_year year
+    ON  charges_month_by_month.arr_month = year.last_month_of_fiscal_year
+  {{ dbt_utils.group_by(n=23) }}

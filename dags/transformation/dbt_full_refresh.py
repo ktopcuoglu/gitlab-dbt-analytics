@@ -17,6 +17,7 @@ from kube_secrets import (
     SALT_EMAIL,
     SALT_IP,
     SALT_NAME,
+    SALT_PASSWORD,
     SNOWFLAKE_ACCOUNT,
     SNOWFLAKE_PASSWORD,
     SNOWFLAKE_TRANSFORM_ROLE,
@@ -58,7 +59,8 @@ logging.info(f"Running full refresh for {dbt_model_to_full_refresh}")
 # dbt-full-refresh
 dbt_full_refresh_cmd = f"""
     {dbt_install_deps_and_seed_nosha_cmd} &&
-    dbt run --profiles-dir profile --target prod --models {dbt_model_to_full_refresh} --full-refresh
+    dbt run --profiles-dir profile --target prod --models {dbt_model_to_full_refresh} --full-refresh; ret=$?;
+    python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
 dbt_full_refresh = KubernetesPodOperator(
     **gitlab_defaults,
@@ -70,6 +72,7 @@ dbt_full_refresh = KubernetesPodOperator(
         SALT_EMAIL,
         SALT_IP,
         SALT_NAME,
+        SALT_PASSWORD,
         SNOWFLAKE_ACCOUNT,
         SNOWFLAKE_USER,
         SNOWFLAKE_PASSWORD,

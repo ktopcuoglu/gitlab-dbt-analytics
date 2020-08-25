@@ -16,6 +16,7 @@ from kube_secrets import (
     SALT_EMAIL,
     SALT_IP,
     SALT_NAME,
+    SALT_PASSWORD,
     SNOWFLAKE_ACCOUNT,
     SNOWFLAKE_PASSWORD,
     SNOWFLAKE_TRANSFORM_ROLE,
@@ -48,7 +49,8 @@ dag = DAG(
 # dbt-poc
 dbt_poc_cmd = f"""
     {dbt_install_deps_and_seed_nosha_cmd} &&
-    dbt run --profiles-dir profile --target prod --models tag:poc
+    dbt run --profiles-dir profile --target prod --models tag:poc; ret=$?;
+    python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
 dbt_poc = KubernetesPodOperator(
     **gitlab_defaults,
@@ -60,6 +62,7 @@ dbt_poc = KubernetesPodOperator(
         SALT_EMAIL,
         SALT_IP,
         SALT_NAME,
+        SALT_PASSWORD,
         SNOWFLAKE_ACCOUNT,
         SNOWFLAKE_USER,
         SNOWFLAKE_PASSWORD,

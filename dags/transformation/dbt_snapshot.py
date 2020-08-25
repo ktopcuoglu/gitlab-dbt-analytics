@@ -21,6 +21,7 @@ from kube_secrets import (
     SALT_EMAIL,
     SALT_IP,
     SALT_NAME,
+    SALT_PASSWORD,
     SNOWFLAKE_ACCOUNT,
     SNOWFLAKE_PASSWORD,
     SNOWFLAKE_TRANSFORM_ROLE,
@@ -55,12 +56,13 @@ default_args = {
 
 # Create the DAG
 # Runs 3x per day
-dag = DAG("dbt_snapshots", default_args=default_args, schedule_interval="30 */8 * * *")
+dag = DAG("dbt_snapshots", default_args=default_args, schedule_interval="0 */8 * * *")
 
 # dbt-snapshot for daily tag
 dbt_snapshot_cmd = f"""
     {dbt_install_deps_nosha_cmd} &&
-    dbt snapshot -s tag:daily --profiles-dir profile
+    dbt snapshot -s tag:daily --profiles-dir profile; ret=$?;
+    python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
 
 dbt_snapshot = KubernetesPodOperator(
@@ -73,6 +75,7 @@ dbt_snapshot = KubernetesPodOperator(
         SALT_EMAIL,
         SALT_IP,
         SALT_NAME,
+        SALT_PASSWORD,
         SNOWFLAKE_ACCOUNT,
         SNOWFLAKE_USER,
         SNOWFLAKE_PASSWORD,
@@ -122,6 +125,7 @@ dbt_snapshot_models_run = KubernetesPodOperator(
         SALT_EMAIL,
         SALT_IP,
         SALT_NAME,
+        SALT_PASSWORD,
         SNOWFLAKE_ACCOUNT,
         SNOWFLAKE_USER,
         SNOWFLAKE_PASSWORD,
@@ -157,6 +161,7 @@ dbt_test_snapshot_models = KubernetesPodOperator(
         SALT_EMAIL,
         SALT_IP,
         SALT_NAME,
+        SALT_PASSWORD,
         SNOWFLAKE_ACCOUNT,
         SNOWFLAKE_USER,
         SNOWFLAKE_PASSWORD,

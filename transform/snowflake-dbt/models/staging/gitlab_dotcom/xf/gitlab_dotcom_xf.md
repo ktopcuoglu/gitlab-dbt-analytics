@@ -1,3 +1,11 @@
+{% docs gitlab_dotcom_ci_minutes_ui_namespace_replication %}
+
+This table replicates the proccess that the Gitlab UI uses to generate the CI minutes Usage Quota both for personal namespaces and top level group namespaces. The codebase logic used to build this model can be seen mapped in [this diagram](https://app.lucidchart.com/documents/view/0b8b66e6-8536-4a5d-b992-9e324581187d/0_0).
+
+It also adds two additional columns which aren't calculated in the UI, which are `limit_based_plan` and `status_based_plan` which are independent of whether there aren't projects with `shared_runners_enabled` inside the namespaces and only take into account how many minutes have been used from the monthly quota based in the plan of the namespace.
+
+{% enddocs %}
+
 {% docs gitlab_dotcom_daily_usage_data_events_90 %}
 
 This table selects all the rows from `gitlab_dotcom_usage_data_events` that have an `event_date` (date when the event happened) that is less than 90 days ago. 
@@ -10,9 +18,22 @@ This table is a daily aggregated table built on top of `gitlab_dotcom_usage_data
 
 {% enddocs %}
 
+{% docs gitlab_dotcom_elasticsearch_indexed_namespaces_current %}
+
+Only the most recent gitlab_dotcom elasticsearch_indexed_namespaces data.  
+Records that have been deleted in the source database have been filtered out.
+
+{% enddocs %}
+
 {% docs gitlab_dotcom_environments_xf %}
 
 This model anonymizes three fields: `environment_name`, `slug`, `external_url` based on the visibility of the projects the environments are associated to 
+
+{% enddocs %}
+
+{% docs gitlab_dotcom_gitlab_emails %}
+
+This model limits the gitlab dotcom emails table to only have records for emails ending with `gitlab.com`.
 
 {% enddocs %}
 

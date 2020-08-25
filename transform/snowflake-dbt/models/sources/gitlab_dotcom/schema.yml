@@ -530,17 +530,36 @@ models:
         tests:
           - not_null
           - unique
-  - name: gitlab_dotcom_elasticsearch_indexed_namespaces
+  - name: gitlab_dotcom_elasticsearch_indexed_namespaces_source
     description: Base model for GitLab.com elasticsearch indexed namespaces.
     columns:
       - name: namespace_id
         tests:
           - not_null
-          - unique
-          - relationships:
-              to: ref('gitlab_dotcom_namespaces')
-              field: namespace_id
-              severity: warn
+      - name: updated_at
+        tests: 
+          - not_null
+      - name: created_at
+        tests:
+          - not_null
+      - name: task_instance_name
+      - name: uploaded_at
+
+  - name: gitlab_dotcom_emails_source
+    description: Source model for Gitlab.com emails.
+    columns:
+      - name: confirmation_sent_at
+      - name: created_at
+      - name: email_address
+        tests:
+          - not_null
+      - name: email_confirmed_at
+      - name: gitlab_email_id
+      - name: user_id
+        tests:
+          - not_null
+      - name: updated_at
+
   - name: gitlab_dotcom_environments
     description: Base model for GitLab.com environments.
     columns:
@@ -595,6 +614,34 @@ models:
   - name: gitlab_dotcom_events
     columns:
       - name: event_id
+        tests:
+          - not_null
+          - unique
+
+  - name: gitlab_dotcom_experiment_users_source
+    columns:
+      - name: created_at
+      - name: experiment_id
+        tests:
+          - not_null
+      - name: experiment_user_id
+        tests:
+          - not_null
+      - name: group_type
+      - name: updated_at
+        tests:
+          - not_null
+      - name: user_id
+        tests:
+          - not_null
+
+  - name: gitlab_dotcom_experiments_source
+    columns:
+      - name: experiment_id
+        tests:
+          - not_null
+          - unique
+      - name: experiment_name
         tests:
           - not_null
           - unique
@@ -1319,7 +1366,19 @@ models:
         description: '{{ doc("visibility_documentation") }}'
       - name: project_description
         description: '{{ doc("visibility_documentation") }}'
-
+  - name: gitlab_dotcom_prometheus_alerts
+    description: Base model for Gitlab.com prometheus_alerts
+    columns:
+      - name: prometheus_alert_id
+        tests:
+          - not_null
+          - unique
+      - name: created_at
+        tests:
+          - not_null
+      - name: updated_at
+        tests:
+          - not_null
   - name: gitlab_dotcom_releases
     description: Base model for Gitlab.com releases
     columns:

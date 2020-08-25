@@ -21,6 +21,7 @@ from kube_secrets import (
     SALT_EMAIL,
     SALT_IP,
     SALT_NAME,
+    SALT_PASSWORD,
     SNOWFLAKE_ACCOUNT,
     SNOWFLAKE_LOAD_PASSWORD,
     SNOWFLAKE_LOAD_ROLE,
@@ -112,7 +113,8 @@ for sheet in sheets:
 dbt_sheetload_cmd = f"""
     export snowflake_load_database="RAW" &&
     {dbt_install_deps_and_seed_nosha_cmd} &&
-    dbt run --profiles-dir profile --target prod --models sources.sheetload.*+ --vars {xs_warehouse}
+    dbt run --profiles-dir profile --target prod --models sources.sheetload+ --vars {xs_warehouse}; ret=$?;
+    python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
 dbt_sheetload = KubernetesPodOperator(
     **gitlab_defaults,
@@ -124,12 +126,17 @@ dbt_sheetload = KubernetesPodOperator(
         SALT_EMAIL,
         SALT_IP,
         SALT_NAME,
+        SALT_PASSWORD,
         SNOWFLAKE_ACCOUNT,
-        SNOWFLAKE_USER,
+        SNOWFLAKE_LOAD_ROLE,
+        SNOWFLAKE_LOAD_USER,
+        SNOWFLAKE_LOAD_WAREHOUSE,
+        SNOWFLAKE_LOAD_PASSWORD,
         SNOWFLAKE_PASSWORD,
         SNOWFLAKE_TRANSFORM_ROLE,
         SNOWFLAKE_TRANSFORM_WAREHOUSE,
         SNOWFLAKE_TRANSFORM_SCHEMA,
+        SNOWFLAKE_USER,
     ],
     env_vars=pod_env_vars,
     affinity=get_affinity(False),

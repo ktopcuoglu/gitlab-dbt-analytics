@@ -23,6 +23,7 @@ from kube_secrets import (
     SALT_EMAIL,
     SALT_IP,
     SALT_NAME,
+    SALT_PASSWORD,
     SNOWFLAKE_ACCOUNT,
     SNOWFLAKE_PASSWORD,
     SNOWFLAKE_TRANSFORM_ROLE,
@@ -63,7 +64,7 @@ default_args = {
 }
 
 # Create the DAG
-dag = DAG("dbt", default_args=default_args, schedule_interval="0 */8 * * *")
+dag = DAG("dbt", default_args=default_args, schedule_interval="45 */8 * * *")
 
 # BranchPythonOperator functions
 def dbt_run_or_refresh(timestamp: datetime, dag: DAG) -> str:
@@ -99,7 +100,7 @@ branching_dbt_run = BranchPythonOperator(
 dbt_non_product_models_command = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_and_seed_cmd} &&
-    dbt run --profiles-dir profile --target prod --exclude tag:product snapshots --vars {xs_warehouse}; ret=$?;
+    dbt run --profiles-dir profile --target prod --exclude tag:product snapshots arr_data_mart_incr sources.sheetload+ --vars {xs_warehouse}; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
 
@@ -113,6 +114,7 @@ dbt_non_product_models_task = KubernetesPodOperator(
         SALT_EMAIL,
         SALT_IP,
         SALT_NAME,
+        SALT_PASSWORD,
         SNOWFLAKE_ACCOUNT,
         SNOWFLAKE_USER,
         SNOWFLAKE_PASSWORD,
@@ -148,6 +150,7 @@ dbt_product_models_task = KubernetesPodOperator(
         SALT_EMAIL,
         SALT_IP,
         SALT_NAME,
+        SALT_PASSWORD,
         SNOWFLAKE_ACCOUNT,
         SNOWFLAKE_USER,
         SNOWFLAKE_PASSWORD,
@@ -169,7 +172,7 @@ dbt_product_models_task = KubernetesPodOperator(
 dbt_full_refresh_cmd = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_and_seed_cmd} &&
-    dbt run --profiles-dir profile --target prod --full-refresh; ret=$?;
+    dbt run --profiles-dir profile --target prod --full-refresh --exclude staging.common.dim_ip_to_geo arr_data_mart_incr; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
 dbt_full_refresh = KubernetesPodOperator(
@@ -182,6 +185,7 @@ dbt_full_refresh = KubernetesPodOperator(
         SALT_EMAIL,
         SALT_IP,
         SALT_NAME,
+        SALT_PASSWORD,
         SNOWFLAKE_ACCOUNT,
         SNOWFLAKE_USER,
         SNOWFLAKE_PASSWORD,
@@ -218,6 +222,7 @@ dbt_source_freshness = KubernetesPodOperator(
         SALT_EMAIL,
         SALT_IP,
         SALT_NAME,
+        SALT_PASSWORD,
         SNOWFLAKE_ACCOUNT,
         SNOWFLAKE_USER,
         SNOWFLAKE_PASSWORD,
@@ -252,6 +257,7 @@ dbt_test = KubernetesPodOperator(
         SALT_EMAIL,
         SALT_IP,
         SALT_NAME,
+        SALT_PASSWORD,
         SNOWFLAKE_ACCOUNT,
         SNOWFLAKE_USER,
         SNOWFLAKE_PASSWORD,

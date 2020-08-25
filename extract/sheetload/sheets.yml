@@ -8,7 +8,7 @@ sheets:
     tabs:
       - abuse_mitigation
   - name: calendar
-    owner: '@emilie'
+    owner: '@tayloramurphy'
     tabs:
       - calendar
   - name: clari_export_forecast_net_iacv
@@ -44,6 +44,10 @@ sheets:
     tabs:
       - hire_plan
       - hire_forecast
+  - name: infrastructure_missing_employees
+    owner: '@ken_aguilar'
+    tabs:
+      - infrastructure_missing_employees
   - name: job_roles_prior_to_2020_02
     owner: '@pluthra'
     tabs:
@@ -76,6 +80,14 @@ sheets:
     owner: '@tayloramurphy'
     tabs:
       - marketing_pipe_to_spend_headcount
+  - name: maxmind_countries
+    owner: '@m_walker'
+    tabs:
+      - maxmind_countries
+  - name: maxmind_ranges
+    owner: '@m_walker'
+    tabs:
+      - maxmind_ranges
   - name: osat
     owner: '@pluthra'
     tabs:
@@ -115,6 +127,12 @@ sheets:
       - communication_certificate
       - values_certificate
       - compensation_certificate
+      - ic_collaboration_competency
+      - ic_results_competency
+      - ic_efficiency_competency
+      - ic_dib_comptency
+      - ic_iteration_competency
+      - ic_transparency_competency
   - name: yc_companies
     owner: '@jeanpeguero'
     tabs:
@@ -130,4 +148,8 @@ sheets:
   - name: data_team_capacity
     owner: '@kathleentam'
     tabs:
-      - data_team_capacity     
+      - data_team_capacity
+  - name: account_golden_records
+    owner: '@paul_armstrong'
+    tabs:
+      - account_golden_records

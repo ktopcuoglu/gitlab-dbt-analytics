@@ -114,11 +114,11 @@ WITH usage_data AS (
       unpacked.versions_behind_latest,
 
       {% for stat_name in version_usage_stats_list %}
-        MAX(IFF(full_ping_name = '{{stat_name}}', ping_value::NUMERIC, NULL)) AS {{stat_name}}
+        MAX(IFF(full_ping_name = '{{stat_name}}', ping_value::NUMBER, NULL)) AS {{stat_name}}
         {{ "," if not loop.last }}
       {% endfor %}
     FROM unpacked
-    {{ dbt_utils.group_by(n=71) }}
+    {{ dbt_utils.group_by(n=72) }}
 
 
 )

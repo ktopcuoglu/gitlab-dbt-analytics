@@ -91,6 +91,13 @@ models:
   - name: plan
     tests:
     - not_null
+- name: sheetload_infrastructure_missing_employees_source
+  description: This lists the missing Infrastructure employees from the MR Rate computation.
+  columns:
+  - name: employee_id
+  - name: gitlab_dotcom_user_id
+  - name: full_name
+  - name: work_email
 - name: sheetload_job_roles_prior_to_2020_02_source
   description: This links all job titles prior to 2020-02-28 to a job role since we  did not start capturing job role prior to this date.
   columns:
@@ -179,6 +186,31 @@ models:
   - name: goal_date
     tests:
     - not_null
+- name: sheetload_maxmind_countries_source
+  description: "Countries source layer for maxmind ip-to-geo service"
+  columns:
+    - name: continent_code
+    - name: continent_name
+    - name: country_iso_code
+      tests:
+        - unique
+    - name: country_name
+    - name: geoname_id
+      tests:
+        - not_null
+        - unique
+    - name: is_in_european_union
+    - name: locale_code        
+- name: sheetload_maxmind_ip_ranges_source
+  description: "IP ranges source layer for maxmind ip-to-geo service"
+  columns:
+    - name: geoname_id
+    - name: ip_range_first_ip
+    - name: ip_range_last_ip
+    - name: is_anonymous_proxy
+    - name: is_satellite_provider
+    - name: registered_country_geoname_id
+    - name: represented_country_geoname_id
 - name: sheetload_planned_values_source
   description: Planned values for multiple metrics as defined by Finance Team via Chase
   columns:
@@ -268,7 +300,7 @@ models:
   description: This is based on the Finance Replan - R4QF.
   columns:
     - name: departments
-- name: sheetload_data_team_capacity
+- name: sheetload_data_team_capacity_source
   description: This sheet contains the capacity prediction from the Data Team. 
   columns:
     - name: milestone_id
@@ -278,3 +310,17 @@ models:
       tests:
       - not_null
     - name: capacity
+- name: sheetload_ic_collaboration_competency_source
+  description: This is a list of all who have completed the IC collaboraiton competency knowledge assessment.
+- name: sheetload_ic_results_competency_source
+  description: This is a list of all who have completed the IC results competency knowledge assessment.
+- name: sheetload_ic_efficiency_competency_source
+  description: This is a list of all who have completed the IC efficiency competency knowledge assessment.
+- name: sheetload_ic_dib_comptency_source
+  description: This is a list of all who have completed the IC diversity, inclusion, and belonging competency knowledge assessment.
+- name: sheetload_ic_iteration_competency_source
+  description: This is a list of all who have completed the IC iteration competency knowledge assessment.
+- name: sheetload_ic_transparency_competency_source
+  description: This is a list of all who have completed the IC transparency competency knowledge assessment.
+- name: sheetload_account_golden_records_source
+  description: Golden records (values unexpected to changed for a few accounts), currently based off zuora data

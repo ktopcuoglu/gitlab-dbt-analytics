@@ -19,6 +19,7 @@ from kube_secrets import (
     SALT_EMAIL,
     SALT_IP,
     SALT_NAME,
+    SALT_PASSWORD,
     SNOWFLAKE_ACCOUNT,
     SNOWFLAKE_LOAD_PASSWORD,
     SNOWFLAKE_LOAD_ROLE,
@@ -84,7 +85,8 @@ sheetload_run = KubernetesPodOperator(
 # dbt run task
 dbt_run_cmd = f"""
     {dbt_install_deps_and_seed_nosha_cmd} &&
-    dbt run --profiles-dir profile --target prod --models +engineering_pulse_survey --vars {xs_warehouse} # run on small warehouse
+    dbt run --profiles-dir profile --target prod --models +engineering_pulse_survey --vars {xs_warehouse} # run on small warehouse; ret=$?;
+    python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
 
 dbt_run = KubernetesPodOperator(
@@ -97,6 +99,7 @@ dbt_run = KubernetesPodOperator(
         SALT_EMAIL,
         SALT_IP,
         SALT_NAME,
+        SALT_PASSWORD,
         SNOWFLAKE_ACCOUNT,
         SNOWFLAKE_USER,
         SNOWFLAKE_PASSWORD,

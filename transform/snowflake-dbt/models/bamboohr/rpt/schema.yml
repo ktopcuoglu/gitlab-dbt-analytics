@@ -35,7 +35,7 @@ models:
       description: This identifies the breakout of the data. 
       tests:
         - accepted_values:
-                values: ['all_attributes_breakout', 'kpi_breakout','eeoc_breakout','division_breakout']
+                values: ['all_attributes_breakout', 'kpi_breakout','eeoc_breakout','division_breakout','department_breakout']
     - name: department
     - name: division
     - name: eeoc_field_name
@@ -48,6 +48,8 @@ models:
     - name: hire_count
       description: Provides the total number of employees hired for a given month as associated to the diversity_field and aggregation_type.
     - name: separation_count
+    - name: voluntary_separation_count
+    - name: involuntary_separation_count
     - name: rolling_12_month_headcount
       description: Provides the average of the current month and previous 11 month average headcounts (the average headcount for each month is the headcount_start + headcount_end divided by 2).  
     - name: rolling_12_month_separations
@@ -95,6 +97,35 @@ models:
     - name: percent_of_headcount_leaders
     - name: percent_of_headcount_manager
     - name: percent_of_headcount_contributor
+    - name: rolling_12_month_promotions
+    - name: location_factor
  
   - name: cost_center_division_department_mapping_current
     description: This provides the current division, department, cost center.    
+
+  - name: rpt_headcount_vs_planned
+    description: Combines the headcount and hire plan model to actual headcount and hires.
+    columns:
+    - name: month_date
+    - name: breakout_type
+      description: Identifies if the breakout is at an all company level, division, or department.
+      tests:
+        - accepted_values:
+                values: ['all_company_breakout','department_division_breakout','division_breakout']
+    - name: department
+    - name: division
+    - name: planned_headcount
+      tests:
+        - not_null
+    - name: planned_hires
+      tests:
+        - not_null
+    - name: headcount_actual
+      tests:
+        - not_null
+    - name: hires_actual
+      tests:
+        - not_null
+    - name: actual_headcount_vs_planned_headcount
+    - name: bamboohr_missing_emergency_contact_alert
+      description: Identifies team members that need to add emergency contact.
