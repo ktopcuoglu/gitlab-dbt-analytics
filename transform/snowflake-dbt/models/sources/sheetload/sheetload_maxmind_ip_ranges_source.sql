@@ -1,7 +1,7 @@
 WITH source AS (
 
     SELECT *
-    FROM {{ source('maxmind', 'ranges') }}
+    FROM {{ source('sheetload', 'maxmind_ranges') }}
 
 ), parsed AS (
 
