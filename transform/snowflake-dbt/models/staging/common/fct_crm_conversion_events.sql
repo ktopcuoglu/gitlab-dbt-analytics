@@ -34,12 +34,17 @@ WITH sfdc_lead_source AS(
   FROM sfdc_lead_source
   WHERE marketo_qualified_lead_date IS NOT NULL
 
+), unioned AS (
+
+  SELECT *
+  FROM event_lead_conversion
+  
+  UNION
+  
+  SELECT *
+  FROM event_marketing_qualification
+
 )
 
 SELECT *
-FROM event_lead_conversion
-
-UNION
-
-SELECT *
-FROM event_marketing_qualification
+FROM unioned
