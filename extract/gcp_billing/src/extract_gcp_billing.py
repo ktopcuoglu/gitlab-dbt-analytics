@@ -2,6 +2,7 @@ import json
 from google.cloud import bigquery
 from logging import info
 from os import environ as env
+from typing import List
 
 from pandas import DataFrame
 from big_query_client import BigQueryClient
@@ -40,7 +41,7 @@ def get_billing_data_query(start_date: str, end_date: str) -> str:
     """
 
 
-def write_date_json(date: str, df: DataFrame) -> str:
+def write_date_json(date: str, df: DataFrame) -> List[str]:
     """
     Chunks the dataframe into 10,000 rows each
     then writes each chunk locally.
