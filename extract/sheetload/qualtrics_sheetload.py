@@ -17,7 +17,11 @@ def construct_qualtrics_contact(result):
         "lastName": result["last_name"],
         "email": result["email_address"],
         "language": result["language"],
-        "embeddedData": {"gitlabUserID": result["user_id"]},
+        "embeddedData": {
+            "gitlabUserID": result["user_id"],
+            "user_id": result["user_id"],
+            "plan": result["plan"],
+        },
     }
 
 
@@ -54,7 +58,7 @@ def process_qualtrics_file(
     table = get_qualtrics_request_table_name(file.id)
     dw_uploader(engine, table, dataframe, schema)
     query = f"""
-        SELECT first_name, last_name, email_address, language, user_id
+        SELECT first_name, last_name, email_address, language, user_id, plan
         FROM ANALYTICS_SENSITIVE.QUALTRICS_API_FORMATTED_CONTACTS WHERE user_id in
         (
             SELECT id
