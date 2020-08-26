@@ -326,6 +326,7 @@ roles:
             - loader
             - transformer
             - snowflake_db
+            - static_admin
         warehouses:
             - airflow_testing_l
             - engineer_xs
@@ -1295,7 +1296,7 @@ roles:
             - analyst_marketing
             - customers_db
             - netsuite
-            - static_sensitive
+            - static_admin
         warehouses:
             - analyst_xs
 
