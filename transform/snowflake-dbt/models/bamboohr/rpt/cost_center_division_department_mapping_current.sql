@@ -19,7 +19,8 @@ WITH source AS (
     COUNT(employee_id) AS total_employees
     FROM source
     WHERE date_actual = CURRENT_DATE()
-    AND is_termination_date = False 
+      AND is_termination_date = False 
+    GROUP BY 1,2,3
 
 )
 
