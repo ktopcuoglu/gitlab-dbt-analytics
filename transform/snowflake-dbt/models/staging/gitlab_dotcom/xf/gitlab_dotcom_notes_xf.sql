@@ -38,7 +38,7 @@ WITH base AS (
   
     SELECT 
       note_id,
-      LISTAGG(action_type) AS action_type_list
+      ARRAY_AGG(action_type) AS action_type_array
     FROM {{ ref('gitlab_dotcom_system_note_metadata') }}
     GROUP BY 1
 
@@ -58,7 +58,7 @@ WITH base AS (
         END                                                    AS {{field}},
       {% endfor %}
       projects.ultimate_parent_id,
-      action_type_list
+      action_type_array
     FROM base
       LEFT JOIN projects 
         ON base.project_id = projects.project_id
