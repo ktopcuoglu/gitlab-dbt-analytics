@@ -8,7 +8,7 @@ WITH source AS (
     SELECT
       commit::VARCHAR                       AS commit,
       commit_time::TIMESTAMP_TZ             AS commit_time_at,
-      total_time::FLOAT                     AS total_time,
+      total_time::FLOAT                     AS total_time_elapsed,
       number_of_tests::FLOAT                AS number_of_tests,
       time_per_single_test::FLOAT           AS time_per_single_test,
       total_queries::FLOAT                  AS total_queries,
