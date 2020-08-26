@@ -5,5 +5,4 @@ WITH golden_records AS (
 
 )
 
-SELECT *
-FROM golden_records
+SELECT * FROM golden_records
