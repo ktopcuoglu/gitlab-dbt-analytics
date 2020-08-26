@@ -13,5 +13,5 @@ sources:
       identifier: false
 
     tables:
-      - name: profiling_data
-        description: '{{ doc("rspec_profiling_data") }}'
+      - name: overall_time
+        description: '{{ doc("rspec_profiling") }}'

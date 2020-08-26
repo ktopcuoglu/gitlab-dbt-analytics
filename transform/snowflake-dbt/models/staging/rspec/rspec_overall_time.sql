@@ -1,7 +1,7 @@
 WITH source AS (
 
     SELECT *
-    FROM {{ ref('rspec_profiling_data_source') }}
+    FROM {{ ref('rspec_overall_time_source') }}
 
 )
 

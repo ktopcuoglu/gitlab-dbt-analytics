@@ -1,7 +1,7 @@
 version: 2
 
 models:
-    - name: rspec_profiling_data_source
+    - name: rspec_overall_time_source
       columns:
         - name: commit
           tests:

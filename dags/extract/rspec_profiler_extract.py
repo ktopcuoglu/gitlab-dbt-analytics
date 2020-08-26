@@ -48,7 +48,7 @@ dag = DAG(
 rspec_profiler_extract_cmd = f"""
     {clone_and_setup_extraction_cmd} &&
     curl https://gitlab-org.gitlab.io/rspec_profiling_stats/overall_time.csv > overall_time.csv
-    python3 sheetload/sheetload.py csv --filename overall_time.csv --schema rspec --tablename profiling_data
+    python3 sheetload/sheetload.py csv --filename overall_time.csv --schema rspec --tablename overall_time
 """
 
 # having both xcom flag flavors since we're in an airflow version where one is being deprecated
