@@ -60,6 +60,7 @@ default_args = {
     "params": {"slack_channel_override": "#dbt-runs"},
     "owner": "airflow",
     "retries": 0,
+    "trigger_rule": "all_done", # To be changed to all_success
     "start_date": datetime(2019, 1, 1, 0, 0, 0),
 }
 
