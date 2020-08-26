@@ -13,7 +13,9 @@ WITH memberships AS (
           'group_membership', 1,
           'project_membership', 2,
           'group_group_link', 3,
-          'project_group_link', 4
+          'group_group_link_ancestor', 4,
+          'project_group_link', 5,
+          'project_group_link_ancestor', 6
       ) AS membership_source_type_order,
       IFF(namespace_id = ultimate_parent_id, TRUE, FALSE) AS is_ultimate_parent
     FROM {{ ref('gitlab_dotcom_memberships') }}
