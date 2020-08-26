@@ -38,7 +38,7 @@ WITH base AS (
   
     SELECT 
       note_id,
-      ARRAY_AGG(action_type) AS action_type_array
+      ARRAY_AGG(action_type) WITHIN GROUP (ORDER BY action_type ASC) AS action_type_array
     FROM {{ ref('gitlab_dotcom_system_note_metadata') }}
     GROUP BY 1
 
