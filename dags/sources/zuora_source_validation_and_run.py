@@ -67,7 +67,7 @@ default_args = {
 # Create the DAG
 # Run twice per day, 10 minutes after every 12th hour
 dag = DAG(
-    "zuora_source_validation",
+    "zuora_source_validation_and_run",
     default_args=default_args,
     schedule_interval="10 */12 * * *",
 )
@@ -115,8 +115,8 @@ dbt_run_cmd = f"""
 dbt_zuora_source_run = KubernetesPodOperator(
     **gitlab_defaults,
     image=DBT_IMAGE,
-    task_id="zuora-source-run",
-    name="zuora-source-run",
+    task_id="zuora-source-model-run",
+    name="zuora-source-model-run",
     secrets=pod_secrets,
     env_vars=pod_env_vars,
     arguments=[dbt_run_cmd],
@@ -142,20 +142,20 @@ dbt_model_test_run = KubernetesPodOperator(
 )
 
 # Snapshot zuora data
-dbt_snapshot_cmd = f"""
+dbt_zuora_snapshot_cmd = f"""
     {dbt_install_deps_nosha_cmd} &&
     dbt snapshot --profiles-dir profile --target prod --select path:snapshots/zuora; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
-dbt_snapshot = KubernetesPodOperator(
+dbt_zuora_snapshot = KubernetesPodOperator(
     **gitlab_defaults,
     image=DBT_IMAGE,
-    task_id="zuora-snapshot",
-    name="zuora-snapshot",
+    task_id="zuora-source-snapshot",
+    name="zuora-source-snapshot",
     secrets=pod_secrets,
     env_vars=pod_env_vars,
-    arguments=[dbt_snapshot_cmd],
+    arguments=[dbt_zuora_snapshot_cmd],
     dag=dag,
 )
 
-dbt_source_freshness >> dbt_zuora_source_test >> dbt_zuora_source_run >> dbt_model_test_run >> dbt_snapshot
+dbt_source_freshness >> dbt_zuora_source_test >> dbt_zuora_snapshot >> dbt_zuora_source_run >> dbt_model_test_run
