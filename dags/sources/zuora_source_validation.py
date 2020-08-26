@@ -13,21 +13,21 @@ from airflow_utils import (
     xs_warehouse,
 )
 from kube_secrets import (
-        SALT,
-        SALT_EMAIL,
-        SALT_IP,
-        SALT_NAME,
-        SALT_PASSWORD,
-        SNOWFLAKE_ACCOUNT,
-        SNOWFLAKE_PASSWORD,
-        SNOWFLAKE_TRANSFORM_ROLE,
-        SNOWFLAKE_TRANSFORM_SCHEMA,
-        SNOWFLAKE_TRANSFORM_WAREHOUSE,
-        SNOWFLAKE_USER,
-        SNOWFLAKE_LOAD_PASSWORD,
-        SNOWFLAKE_LOAD_ROLE,
-        SNOWFLAKE_LOAD_USER,
-        SNOWFLAKE_LOAD_WAREHOUSE,
+    SALT,
+    SALT_EMAIL,
+    SALT_IP,
+    SALT_NAME,
+    SALT_PASSWORD,
+    SNOWFLAKE_ACCOUNT,
+    SNOWFLAKE_PASSWORD,
+    SNOWFLAKE_TRANSFORM_ROLE,
+    SNOWFLAKE_TRANSFORM_SCHEMA,
+    SNOWFLAKE_TRANSFORM_WAREHOUSE,
+    SNOWFLAKE_USER,
+    SNOWFLAKE_LOAD_PASSWORD,
+    SNOWFLAKE_LOAD_ROLE,
+    SNOWFLAKE_LOAD_USER,
+    SNOWFLAKE_LOAD_WAREHOUSE,
 )
 
 # Load the env vars into a dict and set Secrets
@@ -35,22 +35,22 @@ env = os.environ.copy()
 GIT_BRANCH = env["GIT_BRANCH"]
 pod_env_vars = {**gitlab_pod_env_vars, **{}}
 pod_secrets = [
-        SALT,
-        SALT_EMAIL,
-        SALT_IP,
-        SALT_NAME,
-        SALT_PASSWORD,
-        SNOWFLAKE_ACCOUNT,
-        SNOWFLAKE_PASSWORD,
-        SNOWFLAKE_TRANSFORM_ROLE,
-        SNOWFLAKE_TRANSFORM_SCHEMA,
-        SNOWFLAKE_TRANSFORM_WAREHOUSE,
-        SNOWFLAKE_USER,
-        SNOWFLAKE_LOAD_PASSWORD,
-        SNOWFLAKE_LOAD_ROLE,
-        SNOWFLAKE_LOAD_USER,
-        SNOWFLAKE_LOAD_WAREHOUSE,
-    ]
+    SALT,
+    SALT_EMAIL,
+    SALT_IP,
+    SALT_NAME,
+    SALT_PASSWORD,
+    SNOWFLAKE_ACCOUNT,
+    SNOWFLAKE_PASSWORD,
+    SNOWFLAKE_TRANSFORM_ROLE,
+    SNOWFLAKE_TRANSFORM_SCHEMA,
+    SNOWFLAKE_TRANSFORM_WAREHOUSE,
+    SNOWFLAKE_USER,
+    SNOWFLAKE_LOAD_PASSWORD,
+    SNOWFLAKE_LOAD_ROLE,
+    SNOWFLAKE_LOAD_USER,
+    SNOWFLAKE_LOAD_WAREHOUSE,
+]
 
 # Default arguments for the DAG
 default_args = {
@@ -60,14 +60,16 @@ default_args = {
     "params": {"slack_channel_override": "#dbt-runs"},
     "owner": "airflow",
     "retries": 0,
-    "trigger_rule": "all_done", # To be changed to all_success
+    "trigger_rule": "all_success",
     "start_date": datetime(2019, 1, 1, 0, 0, 0),
 }
 
 # Create the DAG
 # Run twice per day, 10 minutes after every 12th hour
 dag = DAG(
-    "zuora_source_validation", default_args=default_args, schedule_interval="10 */12 * * *"
+    "zuora_source_validation",
+    default_args=default_args,
+    schedule_interval="10 */12 * * *",
 )
 
 # Source Freshness
