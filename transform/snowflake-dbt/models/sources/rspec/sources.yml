@@ -14,4 +14,4 @@ sources:
 
     tables:
       - name: overall_time
-        description: '{{ doc("rspec_profiling") }}'
+        description: '{{ doc("rspec_overall_time") }}'
