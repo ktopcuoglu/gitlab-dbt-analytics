@@ -192,6 +192,9 @@ models:
         +materialized: table
         +schema: pmg
 
+      rspec:
+        +schema: rspec
+
       sfdc:
         +schema: sfdc
         sensitive:

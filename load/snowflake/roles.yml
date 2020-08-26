@@ -375,6 +375,7 @@ roles:
                 - raw.gitter
                 - raw.pmg
                 - raw.prometheus
+                - raw.rspec
                 - raw.snowplow
                 - raw.tap_postgres
                 - raw.qualtrics_mailing_list
@@ -386,6 +387,7 @@ roles:
                 - raw.gitter.*
                 - raw.pmg.*
                 - raw.prometheus.*
+                - raw.rspec.*
                 - raw.snowplow.*
                 - raw.tap_postgres.*
                 - raw.qualtrics_mailing_list.*
