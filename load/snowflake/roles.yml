@@ -784,6 +784,7 @@ roles:
             databases:
                 read:
                     - analytics
+                    - raw
             schemas:
                 read:
                     - analytics.maxmind
