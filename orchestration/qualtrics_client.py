@@ -18,8 +18,8 @@ class QualtricsClient:
     def get(self, url_path, query_params={}):
         """
         Should only be called within the qualtrics client.
-        Does a GET on the passed in url_path on the v3 API.  
-        Is a generator for the elements returned from the GET.  
+        Does a GET on the passed in url_path on the v3 API.
+        Is a generator for the elements returned from the GET.
         Implemented as a generator in case there are multiple pages of results.
         """
         url = self.base_url + url_path
@@ -54,7 +54,7 @@ class QualtricsClient:
 
     def get_mailing_lists(self):
         """
-        Returns a generator of all visible mailing lists in Qualtrics. 
+        Returns a generator of all visible mailing lists in Qualtrics.
         """
         return self.get("mailinglists")
 
