@@ -59,18 +59,20 @@ default_args = {
     "on_failure_callback": slack_failed_task,
     "params": {"slack_channel_override": "#dbt-runs"},
     "owner": "airflow",
+    "retries": 0,
     "start_date": datetime(2019, 1, 1, 0, 0, 0),
 }
 
 # Create the DAG
+# Run twice per day, 10 minutes after every 12th hour
 dag = DAG(
-    "zuora_source_validation", default_args=default_args, schedule_interval="0 6 * * 0"
+    "zuora_source_validation", default_args=default_args, schedule_interval="10 */12 * * *"
 )
 
 # Source Freshness
 dbt_source_cmd = f"""
     {dbt_install_deps_and_seed_nosha_cmd} &&
-    dbt source snapshot-freshness --profiles-dir profile --target prod --select source:zuora; ret=$?;
+    dbt source snapshot-freshness --profiles-dir profile --target prod --select zuora; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py sources; exit $ret
 """
 dbt_source_freshness = KubernetesPodOperator(
