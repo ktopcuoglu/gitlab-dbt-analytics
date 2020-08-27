@@ -29,6 +29,7 @@ models:
           tests:
             - not_null
         - name: user_language
+        - name: user_plan
     - name: qualtrics_nps_scores
       description: Just the scores and reasons from the `qualtrics_nps_answers` model.
       columns:
@@ -47,6 +48,8 @@ models:
           description: Take the average of this column to get the "NPS Score".
           tests:
             - not_null
+        - name: user_plan
+          description: The product plan of the user as recorded in Qualtrics at the time of the survey.
     - name: qualtrics_api_formatted_contacts
       description: GitLab dotcom users table formatted for quick lookup and push to Qualtrics
       columns:
