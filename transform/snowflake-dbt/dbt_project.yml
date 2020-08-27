@@ -365,9 +365,7 @@ models:
     trusted_data_framework:
       +materialized: table
       +schema: tdf
-      sensitive:
-        +schema: sensitive
-        secure: true
+
 
 # ======
 # Snapshot Configs
