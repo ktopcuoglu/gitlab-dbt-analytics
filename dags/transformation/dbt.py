@@ -100,7 +100,7 @@ branching_dbt_run = BranchPythonOperator(
 dbt_non_product_models_command = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_and_seed_cmd} &&
-    dbt run --profiles-dir profile --target prod --exclude tag:product snapshots arr_data_mart_incr sources.sheetload+ --vars {xs_warehouse}; ret=$?;
+    dbt run --profiles-dir profile --target prod --exclude tag:product snapshots arr_data_mart_incr sources.sheetload+ sources.zuora --vars {xs_warehouse}; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
 
@@ -209,7 +209,7 @@ dbt_full_refresh = KubernetesPodOperator(
 dbt_source_cmd = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
-    dbt source snapshot-freshness --profiles-dir profile; ret=$?;
+    dbt source snapshot-freshness --profiles-dir profile --exclude zuora; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py sources; exit $ret
 """
 dbt_source_freshness = KubernetesPodOperator(
@@ -243,7 +243,7 @@ dbt_source_freshness = KubernetesPodOperator(
 dbt_test_cmd = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_and_seed_cmd} &&
-    dbt test --profiles-dir profile --target prod --vars {xs_warehouse} --exclude snowplow snapshots; ret=$?;
+    dbt test --profiles-dir profile --target prod --vars {xs_warehouse} --exclude snowplow snapshots source:zuora; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py test; exit $ret
 """
 dbt_test = KubernetesPodOperator(
