@@ -1,10 +1,10 @@
-{% macro source_golden_records_unchanged(sheetload_model, hashed_model, join_column) %}
+{% macro source_golden_records_unchanged(golden_record_model, hashed_model, join_column) %}
 
 WITH sheetload_data AS (
 
     SELECT
-        *
-    FROM {{ ref(sheetload_model) }}
+        {{ hash_sensitive_columns(golden_record_model)}}
+    FROM {{ ref(golden_record_model) }}
 
 ), hashed_data AS (
 
