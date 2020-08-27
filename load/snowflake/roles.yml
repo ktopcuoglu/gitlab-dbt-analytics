@@ -559,6 +559,22 @@ roles:
         privileges:
             databases:
                 read:
+                    - analytics
+            schemas:
+                read:
+                    - analytics.analytics
+                    - analytics.analytics_sensitive.*
+            tables:
+                read:
+                    - analytics.analytics.*
+                    - analytics.analytics_sensitive.*
+
+    - bamboohr_raw:
+        warehouses:
+            - analyst_xs
+        privileges:
+            databases:
+                read:
                     - raw
             schemas:
                 read:
@@ -566,7 +582,8 @@ roles:
             tables:
                 read:
                     - raw.bamboohr.*
-    
+
+
     - boneyard:
         warehouses:
             - analyst_xs
@@ -1440,6 +1457,7 @@ roles:
         member_of:
             - analyst_people
             - customers_db
+            - bamboohr_raw
         warehouses:
             - analyst_xs
 
@@ -1530,6 +1548,8 @@ roles:
                     - testing_db.*.*
 
     - tmurphy:
+        member_of:
+            - bamboohr_raw
         warehouses:
             - admin
             - engineer_xs
@@ -1803,6 +1823,7 @@ users:
         member_of:
             - engineer
             - msendal
+            - bamboohr_raw
 
     - mvilain:
         can_login: yes
