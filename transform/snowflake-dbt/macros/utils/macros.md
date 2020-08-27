@@ -17,6 +17,9 @@ This macro creates a base model for dbt snapshots. A single entry is generated f
 Returns the schema name based on the run start time. Returns `base_yyyy_mm`.
 {% enddocs %}
 
+{% docs dbt_audit %}
+Used to append audit columns to a model. 
+{% enddocs %}
 
 {% docs distinct_source %}
 This macro is used for condensing a `source` CTE into unique rows only. Our ETL runs quite frequently while most rows in our source tables don't update as frequently. So we end up with a lot of rows in our RAW tables that look the same as each other (except for the metadata columns with a leading underscore). This macro takes in a `source_cte` and looks for unique values across ALL columns (excluding airflow metadata.)

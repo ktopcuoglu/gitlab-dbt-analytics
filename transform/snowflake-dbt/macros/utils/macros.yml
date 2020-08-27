@@ -9,6 +9,27 @@ macros:
     description: '{{ doc("create_snapshot_base") }}'
   - name: current_date_schema
     description: '{{ doc("current_date_schema") }}'
+  - name: dbt_audit
+    description: '{{ doc("dbt_audit") }}'
+    arguments:
+      - name: cte_ref
+        type: string
+        description: The CTE immediately preceding the macro call
+      - name: revision_number
+        type: integer
+        description: Manually incremented revision revision_number
+      - name: created_by
+        type: string
+        description: The GitLab handle of the original model creator
+      - name: updated_by
+        type: string
+        description: The GitLab handle of the original model creator
+      - name: created_date
+        type: date
+        description: Manually input ISO date of when model was original created
+      - name: updated_date
+        type: date
+        description: Manually input ISO date of when model was updated
   - name: distinct_source
     description: '{{ doc("distinct_source") }}'
   - name: generate_schema_name
