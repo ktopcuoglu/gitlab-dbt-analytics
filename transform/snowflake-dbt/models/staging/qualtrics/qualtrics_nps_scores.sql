@@ -15,11 +15,12 @@ trimmed AS (
     has_finished_survey,
     user_language,
     response_recorded_at,
+    user_plan,
     MAX(IFF(question_id = 'QID172787673', question_response, NULL)::NUMBER)      AS nps_score,
     MAX(IFF(question_id = 'QID172787675_TEXT', question_response, NULL)::VARCHAR) AS nps_reason
 
   FROM answers
-  {{ dbt_utils.group_by(n=5) }}
+  {{ dbt_utils.group_by(n=6) }}
 
 ),
 
