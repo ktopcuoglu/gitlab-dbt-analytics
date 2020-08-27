@@ -53,7 +53,6 @@ SELECT
   ultimate_parent_account.account_owner_team    AS ultimate_parent_account_owner_team,
   ultimate_parent_account.tsp_territory         AS ultimate_parent_territory,
   sfdc_account.record_type_id                   AS record_type_id,
-  sfdc_account.gitlab_entity,
   sfdc_account.federal_account                  AS federal_account,
   sfdc_account.gitlab_com_user,
   sfdc_account.account_owner,
