@@ -1,6 +1,6 @@
 WITH golden_records AS (
 
-  SELECT {{ hash_sensitive_columns('sheetload_zuora_golden_records_source') }}
+  SELECT *
   FROM {{ ref('sheetload_zuora_golden_records_source') }}
 
 )

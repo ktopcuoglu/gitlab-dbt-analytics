@@ -324,29 +324,5 @@ models:
   description: This is a list of all who have completed the IC transparency competency knowledge assessment.
 - name: sheetload_zuora_golden_records_source
   description: Golden records (values unexpected to changed for a few accounts), currently based off zuora data
-  columns:
-    - name: account_name
-      meta:
-        sensitive: true
-    - name: account_type
-      meta:
-        sensitive: true
-    - name: mrr
-      meta:
-        sensitive: true
-    - name: mrr
-      meta:
-        sensitive: true
-    - name: subscription_start_date
-      meta:
-        sensitive: true
-    - name: product_sku
-      meta:
-        sensitive: true
-    - name: unit_of_measure
-      meta:
-        sensitive: true
-    - name: quantity
-      meta:
-        sensitive: true
+
 
