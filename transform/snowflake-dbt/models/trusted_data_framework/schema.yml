@@ -13,5 +13,5 @@ models:
       - name: date_day
         tests:
           - not_null
-  - name: zuora_accounts_golden_records
-    description: '{{ doc("zuora_accounts_golden_records") }}'
+  - name: zuora_golden_records
+    description: '{{ doc("zuora_golden_records") }}'
