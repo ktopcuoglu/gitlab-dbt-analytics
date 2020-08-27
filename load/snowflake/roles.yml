@@ -1170,8 +1170,10 @@ roles:
     - dparker:
         member_of:
             - reporter
+            - postgres_pipeline
         warehouses:
             - reporting
+            - analyst_xs
 
     - dtang:
         member_of:
