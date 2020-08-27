@@ -64,98 +64,99 @@ default_args = {
     "start_date": datetime(2019, 1, 1, 0, 0, 0),
 }
 
+data_source = "zuora"
+
 # Create the DAG
 # Run twice per day, 10 minutes after every 12th hour
 dag = DAG(
-    "zuora_source_validation_and_run",
+    f"source_{data_source}_validation_and_run",
     default_args=default_args,
     schedule_interval="10 */12 * * *",
 )
 
-# Source Freshness
-dbt_source_cmd = f"""
+# Raw source Freshness
+freshness_cmd = f"""
     {dbt_install_deps_and_seed_nosha_cmd} &&
     dbt source snapshot-freshness --profiles-dir profile --target prod --select zuora; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py sources; exit $ret
 """
-dbt_source_freshness = KubernetesPodOperator(
+freshness = KubernetesPodOperator(
     **gitlab_defaults,
     image=DBT_IMAGE,
-    task_id="zuora-source-freshness",
-    name="zuora-source-freshness",
+    task_id=f"{data_source}-source-freshness",
+    name=f"{data_source}-source-freshness",
     secrets=pod_secrets,
     env_vars=pod_env_vars,
-    arguments=[dbt_source_cmd],
+    arguments=[freshness_cmd],
     dag=dag,
 )
 
-# Test Zuora source
-dbt_source_test_cmd = f"""
+# Test raw source
+test_cmd = f"""
     {dbt_install_deps_nosha_cmd} &&
     dbt test --profiles-dir profile --target prod --models source:zuora; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py test; exit $ret
 """
-dbt_zuora_source_test = KubernetesPodOperator(
+test = KubernetesPodOperator(
     **gitlab_defaults,
     image=DBT_IMAGE,
-    task_id="zuora-source-test",
-    name="zuora-source-test",
+    task_id=f"{data_source}-source-test",
+    name=f"{data_source}-source-test",
     secrets=pod_secrets,
     env_vars=pod_env_vars,
-    arguments=[dbt_source_test_cmd],
+    arguments=[test_cmd],
     dag=dag,
 )
 
-# Run zuora models
-dbt_run_cmd = f"""
-    {dbt_install_deps_nosha_cmd} &&
-    dbt run --profiles-dir profile --target prod --models +sources.zuora; ret=$?;
-    python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
-"""
-dbt_zuora_source_run = KubernetesPodOperator(
-    **gitlab_defaults,
-    image=DBT_IMAGE,
-    task_id="zuora-source-model-run",
-    name="zuora-source-model-run",
-    secrets=pod_secrets,
-    env_vars=pod_env_vars,
-    arguments=[dbt_run_cmd],
-    dag=dag,
-)
-
-
-# Test all zuora models
-dbt_model_test_cmd = f"""
-    {dbt_install_deps_nosha_cmd} &&
-    dbt test --profiles-dir profile --target prod --models +sources.zuora; ret=$?;
-    python ../../orchestration/upload_dbt_file_to_snowflake.py test; exit $ret
-"""
-dbt_model_test_run = KubernetesPodOperator(
-    **gitlab_defaults,
-    image=DBT_IMAGE,
-    task_id="zuora-model-test",
-    name="zuora-model-test",
-    secrets=pod_secrets,
-    env_vars=pod_env_vars,
-    arguments=[dbt_model_test_cmd],
-    dag=dag,
-)
-
-# Snapshot zuora data
-dbt_zuora_snapshot_cmd = f"""
+# Snapshot source data
+snapshot_cmd = f"""
     {dbt_install_deps_nosha_cmd} &&
     dbt snapshot --profiles-dir profile --target prod --select path:snapshots/zuora; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
-dbt_zuora_snapshot = KubernetesPodOperator(
+snapshot = KubernetesPodOperator(
     **gitlab_defaults,
     image=DBT_IMAGE,
-    task_id="zuora-source-snapshot",
-    name="zuora-source-snapshot",
+    task_id=f"{data_source}-source-snapshot",
+    name=f"{data_source}-source-snapshot",
     secrets=pod_secrets,
     env_vars=pod_env_vars,
-    arguments=[dbt_zuora_snapshot_cmd],
+    arguments=[snapshot_cmd],
     dag=dag,
 )
 
-dbt_source_freshness >> dbt_zuora_source_test >> dbt_zuora_snapshot >> dbt_zuora_source_run >> dbt_model_test_run
+# Run source models
+model_run_cmd = f"""
+    {dbt_install_deps_nosha_cmd} &&
+    dbt run --profiles-dir profile --target prod --models +sources.zuora; ret=$?;
+    python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
+"""
+model_run = KubernetesPodOperator(
+    **gitlab_defaults,
+    image=DBT_IMAGE,
+    task_id=f"{data_source}-source-model-run",
+    name=f"{data_source}-source-model-run",
+    secrets=pod_secrets,
+    env_vars=pod_env_vars,
+    arguments=[model_run_cmd],
+    dag=dag,
+)
+
+# Test all source models
+model_test_cmd = f"""
+    {dbt_install_deps_nosha_cmd} &&
+    dbt test --profiles-dir profile --target prod --models +sources.zuora; ret=$?;
+    python ../../orchestration/upload_dbt_file_to_snowflake.py test; exit $ret
+"""
+model_test = KubernetesPodOperator(
+    **gitlab_defaults,
+    image=DBT_IMAGE,
+    task_id=f"{data_source}-model-test",
+    name=f"{data_source}-model-test",
+    secrets=pod_secrets,
+    env_vars=pod_env_vars,
+    arguments=[model_test_cmd],
+    dag=dag,
+)
+
+freshness >> test >> snapshot >> model_run >> model_test
