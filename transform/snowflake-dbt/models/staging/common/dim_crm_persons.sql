@@ -63,7 +63,11 @@ WITH sfdc_leads AS (
     lead_source_type
   
   FROM sfdc_leads
-  WHERE is_converted = FALSE
+  WHERE converted_contact_id IS NULL
+    OR converted_contact_id NOT IN (
+	  SELECT contact_id
+	  FROM sfdc_contacts
+  )
 )
 
 SELECT *

@@ -65,8 +65,13 @@ models:
   - name: dim_crm_persons
     description: '{{ doc("dim_crm_persons") }}'
     columns:
+      - name: crm_person_id
+        tests:
+          - not_null
+          - unique
       - name: sfdc_record_id
         tests:
+          - not_null
           - unique
 
   - name: dim_dates
@@ -182,6 +187,11 @@ models:
       - name: event_timestamp
         tests:
           - not_null
+      # - name: crm_person_id --needs answer from https://gitlab.com/gitlab-data/analytics/-/issues/6029#note_404082812
+      #   tests:
+      #     - relationships:
+      #         to: ref('dim_crm_persons')
+      #         field: crm_person_id
 
   - name: fct_invoice_items
     description: '{{ doc("fct_invoice_items") }}'
