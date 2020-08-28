@@ -13,9 +13,9 @@ WITH sfdc_leads AS (
   SELECT
     --id
     {{ dbt_utils.surrogate_key(['contact_id']) }} AS crm_person_id,
-	contact_id           AS sfdc_record_id,
-    'contact'            AS sfdc_record_type,
-    contact_email_hash   AS email_hash,
+    contact_id                                    AS sfdc_record_id,
+    'contact'                                     AS sfdc_record_type,
+    contact_email_hash                            AS email_hash,
     email_domain,
     
     --keys
@@ -27,7 +27,7 @@ WITH sfdc_leads AS (
   
     --info
     person_score,
-    contact_title        AS title,
+    contact_title                                 AS title,
     has_opted_out_email,
     email_bounced_date,
     email_bounced_reason,
@@ -41,17 +41,17 @@ WITH sfdc_leads AS (
   SELECT
     --id
     {{ dbt_utils.surrogate_key(['lead_id']) }} AS crm_person_id,
-    lead_id              AS sfdc_record_id,
-    'lead'               AS sfdc_record_type,
-    lead_email_hash      AS email_hash,
+    lead_id                                    AS sfdc_record_id,
+    'lead'                                     AS sfdc_record_type,
+    lead_email_hash                            AS email_hash,
     email_domain,
     
     --keys
     master_record_id,
     owner_id,
     record_type_id,
-    NULL                 AS account_id,
-    NULL                 AS reports_to_id,
+    NULL                                       AS account_id,
+    NULL                                       AS reports_to_id,
     
     --info
     person_score,
