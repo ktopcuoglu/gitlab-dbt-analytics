@@ -187,7 +187,7 @@ models:
       - name: event_timestamp
         tests:
           - not_null
-      # - name: crm_person_id --needs answer from https://gitlab.com/gitlab-data/analytics/-/issues/6029#note_404082812
+      # - name: crm_person_id
       #   tests:
       #     - relationships:
       #         to: ref('dim_crm_persons')
