@@ -15,6 +15,7 @@ if __name__ == "__main__":
         categories="categories",
         location_factors="location_factors",
         roles="job_families",
+        stages="stages",
         team="team",
     )
 
