@@ -184,6 +184,7 @@ models:
       - name: event_id
         description: a dbt generated surrogate key combining the sfdc_record_id and the event_timestamp
         tests:
+          - unique
           - not_null
       - name: event_timestamp
         description: the date and time this event occurred
