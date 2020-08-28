@@ -123,11 +123,12 @@ def manifest_reader(file_path: str) -> Dict[str, Dict]:
 def read_sql_tmpfile(query, db_engine):
     with tempfile.TemporaryFile() as tmpfile:
         copy_sql = f"COPY ({query}) TO STDOUT WITH CSV HEADER"
+        logging.info(f" running COPY ({query}) TO STDOUT WITH CSV HEADER")
         conn = db_engine.raw_connection()
         cur = conn.cursor()
         cur.copy_expert(copy_sql, tmpfile)
         tmpfile.seek(0)
-        df = pandas.read_csv(tmpfile)
+        df = pd.read_csv(tmpfile)
         return df
 
 def query_results_generator(
