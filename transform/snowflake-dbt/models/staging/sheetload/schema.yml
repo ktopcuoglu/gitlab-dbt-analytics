@@ -13,8 +13,6 @@ models:
     - not_null
   - name: submitter_name
     description: The name of the submitter, if one was provided.
-    tests:
-    - not_null
   - name: correct_responses
     description: The number of correctly submitted responses.
     tests:
@@ -29,8 +27,6 @@ models:
     - not_null
   - name: submitter_email
     description: If the person is a team member, share their email; otherwise, this is a hash.
-    tests:
-    - not_null
   - name: certificate_name
     description: The name of the certificate- there are multiple kinds (Values, Ally, Certification, etc.)
     tests:
