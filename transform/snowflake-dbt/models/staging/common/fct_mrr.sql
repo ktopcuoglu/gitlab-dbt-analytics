@@ -71,14 +71,14 @@ WITH zuora_rate_plan AS (
 
 ), mrr_month_by_month AS (
 
-  SELECT dim_dates.date_id,
+  SELECT
+    dim_dates.date_id,
     account_id,
     crm_id,
     subscription_id,
     mrr as mrr
   FROM rate_plan_charge_filtered
-  INNER JOIN dim_dates
-    ON rate_plan_charge_filtered.rate_plan_charge_filtered <= dim_dates.date_actual
+  INNER JOIN dim_dates ON rate_plan_charge_filtered.effective_start_month <= dim_dates.date_actual
     AND (rate_plan_charge_filtered.effective_end_month > dim_dates.date_actual
       OR rate_plan_charge_filtered.effective_end_month IS NULL)
     AND dim_dates.day_of_month = 1
