@@ -12,7 +12,8 @@ WITH sfdc_leads AS (
   
   SELECT
     --id
-    contact_id           AS sfdc_record_id,
+    {{ dbt_utils.surrogate_key(['contact_id']) }} AS crm_person_id,
+	contact_id           AS sfdc_record_id,
     'contact'            AS sfdc_record_type,
     contact_email_hash   AS email_hash,
     email_domain,
@@ -39,6 +40,7 @@ WITH sfdc_leads AS (
   
   SELECT
     --id
+    {{ dbt_utils.surrogate_key(['lead_id']) }} AS crm_person_id,
     lead_id              AS sfdc_record_id,
     'lead'               AS sfdc_record_type,
     lead_email_hash      AS email_hash,

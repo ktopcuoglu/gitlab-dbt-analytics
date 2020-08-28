@@ -9,7 +9,7 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
-{% docs dim_crm_contacts %}
+{% docs dim_crm_persons %}
 Dimension that combines dimensional data from salesforce leads and salesforce contacts. They are combined with a union and a filter on leads excluding converted leads and leads where there is a corresponding contact. 
 
 {% enddocs %}
