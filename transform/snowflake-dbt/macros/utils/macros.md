@@ -18,7 +18,26 @@ Returns the schema name based on the run start time. Returns `base_yyyy_mm`.
 {% enddocs %}
 
 {% docs dbt_audit %}
-Used to append audit columns to a model. 
+Used to append audit columns to a model.
+
+This model assumes that the final statement in your model is a `SELECT *` from a CTE. The final SQL will still be a `SELECT *` just with 7 additional columns added to it. Further SQL DML can be added after the macro call, such as ORDER BY and GROUP BY.
+
+There are two internally calculated date values based on when the table is created and, for an incremental model, when data was inserted.
+
+```sql
+WITH my_cte AS (...)
+
+{{ dbt_audit(
+    "my_cte", 
+    1, 
+    "@gitlab_user1", 
+    "@gitlab_user2", 
+    "2019-02-12", 
+    "2020-08-20"
+) }}
+ORDER BY updated_at
+```
+
 {% enddocs %}
 
 {% docs distinct_source %}
