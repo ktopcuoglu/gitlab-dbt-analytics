@@ -25,12 +25,33 @@ from kube_secrets import (
     SNOWFLAKE_TRANSFORM_SCHEMA,
     SNOWFLAKE_TRANSFORM_WAREHOUSE,
     SNOWFLAKE_USER,
+    SNOWFLAKE_LOAD_PASSWORD,
+    SNOWFLAKE_LOAD_ROLE,
+    SNOWFLAKE_LOAD_USER,
+    SNOWFLAKE_LOAD_WAREHOUSE,
 )
 
 # Load the env vars into a dict and set Secrets
 env = os.environ.copy()
 GIT_BRANCH = env["GIT_BRANCH"]
 pod_env_vars = {**gitlab_pod_env_vars, **{}}
+task_secrets = [
+    SALT,
+    SALT_EMAIL,
+    SALT_IP,
+    SALT_NAME,
+    SALT_PASSWORD,
+    SNOWFLAKE_ACCOUNT,
+    SNOWFLAKE_PASSWORD,
+    SNOWFLAKE_TRANSFORM_ROLE,
+    SNOWFLAKE_TRANSFORM_SCHEMA,
+    SNOWFLAKE_TRANSFORM_WAREHOUSE,
+    SNOWFLAKE_USER,
+    SNOWFLAKE_LOAD_PASSWORD,
+    SNOWFLAKE_LOAD_ROLE,
+    SNOWFLAKE_LOAD_USER,
+    SNOWFLAKE_LOAD_WAREHOUSE,
+]
 
 # Default arguments for the DAG
 default_args = {
@@ -63,19 +84,7 @@ def generate_dbt_command(vars_dict):
         image=DBT_IMAGE,
         task_id=f"dbt-snowplow-full-refresh-{vars_dict['year']}-{vars_dict['month']}",
         name=f"dbt-snowplow-full-refresh-{vars_dict['year']}-{vars_dict['month']}",
-        secrets=[
-            SALT,
-            SALT_EMAIL,
-            SALT_IP,
-            SALT_NAME,
-            SALT_PASSWORD,
-            SNOWFLAKE_ACCOUNT,
-            SNOWFLAKE_USER,
-            SNOWFLAKE_PASSWORD,
-            SNOWFLAKE_TRANSFORM_ROLE,
-            SNOWFLAKE_TRANSFORM_WAREHOUSE,
-            SNOWFLAKE_TRANSFORM_SCHEMA,
-        ],
+        secrets=task_secrets,
         env_vars=pod_env_vars,
         arguments=[dbt_generate_command],
         dag=dag,
@@ -96,19 +105,7 @@ dbt_snowplow_combined = KubernetesPodOperator(
     task_id=f"dbt-snowplow-combined",
     name=f"dbt-snowplow-combined",
     trigger_rule="all_success",
-    secrets=[
-        SALT,
-        SALT_EMAIL,
-        SALT_IP,
-        SALT_NAME,
-        SALT_PASSWORD,
-        SNOWFLAKE_ACCOUNT,
-        SNOWFLAKE_USER,
-        SNOWFLAKE_PASSWORD,
-        SNOWFLAKE_TRANSFORM_ROLE,
-        SNOWFLAKE_TRANSFORM_WAREHOUSE,
-        SNOWFLAKE_TRANSFORM_SCHEMA,
-    ],
+    secrets=task_secrets,
     env_vars=pod_env_vars,
     arguments=[dbt_snowplow_combined_cmd],
     dag=dag,
