@@ -563,7 +563,7 @@ roles:
             schemas:
                 read:
                     - analytics.analytics
-                    - analytics.analytics_sensitive.*
+                    - analytics.analytics_sensitive
             tables:
                 read:
                     - analytics.analytics.*
