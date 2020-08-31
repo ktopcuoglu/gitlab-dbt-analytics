@@ -25,6 +25,12 @@ WITH base AS (
     FROM {{ ref('gitlab_dotcom_epics_xf') }}
 )
 
+, namespaces AS (
+
+    SELECT *
+    FROM {{ ref('gitlab_dotcom_namespaces_xf') }}
+)
+
 , internal_namespaces AS (
   
     SELECT 
@@ -42,7 +48,7 @@ WITH base AS (
       {% for field in fields_to_mask %}
         CASE
           WHEN TRUE 
-            AND projects.visibility_level != 'public'
+            AND namespaces.visibility_level != 'public'
             AND NOT internal_namespaces.namespace_is_internal
             THEN 'confidential - masked'
           ELSE {{field}}
@@ -52,8 +58,10 @@ WITH base AS (
     FROM base
       LEFT JOIN epics 
         ON base.noteable_id = epics.epic_id
+      LEFT JOIN namespaces
+        ON epics.group_id = namespaces.namespace_id
       LEFT JOIN internal_namespaces
-        ON projects.namespace_id = internal_namespaces.namespace_id
+        ON epics.group_id = internal_namespaces.namespace_id
 
 )
 
