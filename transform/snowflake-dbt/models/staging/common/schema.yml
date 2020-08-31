@@ -49,8 +49,6 @@ models:
       - name: ultimate_parent_billing_country
         description: billing country of parent account
       - name: record_type_id
-      - name: gitlab_entity
-        description: Gitlab entity that subcription was sold through
       - name: federal_account
       - name: gitlab_com_user
       - name: account_owner
