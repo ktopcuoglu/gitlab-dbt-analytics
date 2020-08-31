@@ -15,9 +15,6 @@ macros:
       - name: cte_ref
         type: string
         description: The CTE immediately preceding the macro call
-      - name: revision_number
-        type: integer
-        description: Manually incremented revision revision_number
       - name: created_by
         type: string
         description: The GitLab handle of the original model creator

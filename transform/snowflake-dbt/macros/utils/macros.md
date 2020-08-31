@@ -29,7 +29,6 @@ WITH my_cte AS (...)
 
 {{ dbt_audit(
     "my_cte", 
-    1, 
     "@gitlab_user1", 
     "@gitlab_user2", 
     "2019-02-12", 

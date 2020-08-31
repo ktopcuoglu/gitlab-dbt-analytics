@@ -2,7 +2,6 @@
 
     SELECT
       *,
-      '{{ revision_number }}'::INTEGER  AS revision_number,
       '{{ created_by }}'::VARCHAR       AS created_by,
       '{{ updated_by }}'::VARCHAR       AS updated_by,
       '{{ created_date }}'::DATE        AS model_created_date,
