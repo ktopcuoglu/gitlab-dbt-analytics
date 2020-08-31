@@ -40,6 +40,33 @@ models:
           tests:
             - not_null
 
+  - name: stages_groups_yaml_historical
+    description: Snapshots of the [stages.yml file](https://gitlab.com/gitlab-com/www-gitlab-com/blob/master/data/stages.yml) with groups parsed out.
+    columns:
+      - name: snapshot_date
+        tests:
+          - not_null
+
+  - name: stages_groups_yaml_latest
+    description: The latest snapshot of the [stages.yml file](https://gitlab.com/gitlab-com/www-gitlab-com/blob/master/data/stages.yml) with groups parsed out.
+    columns:
+      - name: snapshot_date
+        tests:
+          - not_null
+
+  - name: stages_yaml_historical
+    description: Snapshots of the [stages.yml file](https://gitlab.com/gitlab-com/www-gitlab-com/blob/master/data/stages.yml).
+    columns:
+      - name: snapshot_date
+        tests:
+          - not_null
+
+  - name: stages_yaml_latest
+    description: The latest snapshot of the [stages.yml file](https://gitlab.com/gitlab-com/www-gitlab-com/blob/master/data/stages.yml).
+    columns:
+      - name: snapshot_date
+        tests:
+          - not_null
 
   - name: team_yaml_historical
     description: This is the base table built on the snapshots of the [team.yml file](https://gitlab.com/gitlab-com/www-gitlab-com/blob/master/data/team.yml) in the GitLab Handbook.
