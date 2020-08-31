@@ -1,5 +1,15 @@
 /* grain: one record per subscription per month */
-WITH zuora_rate_plan AS (
+WITH dim_dates AS (
+
+    SELECT *
+    FROM {{ ref('dim_dates') }}
+
+), zuora_account AS (
+
+  SELECT *
+  FROM {{ ref('zuora_account_source') }}
+
+), zuora_rate_plan AS (
 
     SELECT *
     FROM {{ ref('zuora_rate_plan_source') }}
@@ -32,16 +42,6 @@ WITH zuora_rate_plan AS (
   WHERE subscription_status NOT IN ('Draft', 'Expired')
     AND CURRENT_TIMESTAMP()::TIMESTAMP_TZ >= dbt_valid_from
     AND {{ coalesce_to_infinity('dbt_valid_to') }} > current_timestamp()::TIMESTAMP_TZ
-
-), zuora_account AS (
-
-  SELECT *
-  FROM {{ ref('zuora_account_source') }}
-
-), dim_dates AS (
-
-    SELECT *
-    FROM {{ ref('dim_dates') }}
 
 ), rate_plan_charge_filtered AS (
 
