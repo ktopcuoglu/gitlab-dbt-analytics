@@ -193,7 +193,6 @@ models:
       - name: crm_person_id
         description: a surrogate key for use when joining to `fct_crm_conversion_event` created from the contact id where there is a contact and a lead id where there isn't.  
         tests:
-          - unique
           - not_null
 
   - name: fct_invoice_items
