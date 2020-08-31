@@ -320,6 +320,19 @@ roles:
                 write:
                     - analytics
 
+    - decisive_data:
+        warehouses:
+            - analyst_xs
+        member_of:
+            - analyst_core
+            - snowflake_db
+            - zuora
+            - salesforce
+        privileges:
+            databases:
+                write:
+                    - analytics
+
     - engineer:
         member_of:
             - covid19
