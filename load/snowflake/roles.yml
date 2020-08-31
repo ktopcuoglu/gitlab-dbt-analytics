@@ -1247,6 +1247,12 @@ roles:
         warehouses:
             - reporting
 
+    - evan:
+        member_of:
+            - decisive_data
+        warehouses:
+            - analyst_xs
+
     - ewegscheider:
         member_of:
             - analyst_people
@@ -1404,6 +1410,12 @@ roles:
     - mdewji:
         warehouses:
             - admin
+
+    - michellecooper:
+        member_of:
+            - decisive_data
+        warehouses:
+            - analyst_xs
 
     - mjozenazemian:
         warehouses:
@@ -1696,7 +1708,12 @@ users:
         member_of:
             - eurie
             - securityadmin
-    
+
+    - evan:
+        can_login: yes 
+        member_of:
+            - evan
+
     - ewegscheider:
         can_login: yes
         member_of: 
@@ -1810,7 +1827,12 @@ users:
         member_of:
             - mdewji
             - securityadmin
-    
+
+    - michellecooper:
+        can_login: yes 
+        member_of:
+            - michellecooper
+
     - mjozenazemian:
         can_login: yes
         member_of:
