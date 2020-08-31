@@ -76,6 +76,7 @@ WITH dim_dates AS (
     account_id,
     crm_id,
     subscription_id,
+    zuora_product_rate_plan_charge.product_rate_plan_charge_id AS product_details_id,
     mrr as mrr
   FROM rate_plan_charge_filtered
   INNER JOIN dim_dates
@@ -86,7 +87,10 @@ WITH dim_dates AS (
 
 )
 
-SELECT *
+SELECT
+  {{ dbt_utils.surrogate_key(['date_id', 'subscription_id', 'product_details_id']) }}
+                                      AS mrr_id,
+  *
 FROM mrr_month_by_month
 
 
