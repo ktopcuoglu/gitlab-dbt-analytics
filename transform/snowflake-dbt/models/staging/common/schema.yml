@@ -60,11 +60,16 @@ models:
       - name: merged_to_account_id
         description: for deleted accounts this is the SFDC account they were merged to
 
-  - name: dim_crm_contacts
-    description: '{{ doc("dim_crm_contacts") }}'
+  - name: dim_crm_persons
+    description: '{{ doc("dim_crm_persons") }}'
     columns:
+      - name: crm_person_id
+        tests:
+          - not_null
+          - unique
       - name: sfdc_record_id
         tests:
+          - not_null
           - unique
 
   - name: dim_dates
@@ -175,9 +180,16 @@ models:
     description: '{{ doc("fct_crm_conversion_events") }}'
     columns:
       - name: event_id
+        description: a dbt generated surrogate key combining the sfdc_record_id and the event_timestamp
         tests:
+          - unique
           - not_null
       - name: event_timestamp
+        description: The date and time this event occurred.
+        tests:
+          - not_null
+      - name: crm_person_id
+        description: a surrogate key for use when joining to `fct_crm_conversion_event` created from the contact id where there is a contact and a lead id where there isn't.  
         tests:
           - not_null
 
