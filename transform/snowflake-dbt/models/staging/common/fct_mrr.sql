@@ -78,7 +78,9 @@ WITH dim_dates AS (
     crm_id,
     subscription_id,
     product_details_id,
-    sum(mrr) as mrr
+    SUM(mrr) AS mrr,
+    SUM(mrr)* 12 AS arr,
+    SUM(quantity) AS quantity
   FROM rate_plan_charge_filtered
   INNER JOIN dim_dates
     ON rate_plan_charge_filtered.effective_start_month <= dim_dates.date_actual
