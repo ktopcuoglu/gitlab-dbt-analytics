@@ -16,6 +16,20 @@ models:
       - name: primary_key
         tests:
           - not_null
+  - name: mart_delta_arr_parent_month
+    description: "Mart table by month purusant to ARR Analysis Framework"
+    columns:
+      - name: primary_key
+        tests:
+          - not_null
+          - unique
+  - name: mart_delta_arr_parent_year
+    description: "Mart table by year purusant to ARR Analysis Framework"
+    columns:
+      - name: primary_key
+        tests:
+          - not_null
+          - unique
   - name: charges_agg
     description: "Base table used as a starting point for all charge analyses"
     columns:
@@ -40,4 +54,4 @@ models:
           - not_null
       - name: date_id
         tests:
-          - not_null        
+          - not_null
