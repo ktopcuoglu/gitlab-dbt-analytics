@@ -26,7 +26,7 @@ There are two internally calculated date values based on when the table is creat
 
 ```sql
 WITH my_cte AS (...)
-
+{% raw %}
 {{ dbt_audit(
     "my_cte", 
     "@gitlab_user1", 
@@ -34,6 +34,7 @@ WITH my_cte AS (...)
     "2019-02-12", 
     "2020-08-20"
 ) }}
+{% endraw %}
 ORDER BY updated_at
 ```
 
