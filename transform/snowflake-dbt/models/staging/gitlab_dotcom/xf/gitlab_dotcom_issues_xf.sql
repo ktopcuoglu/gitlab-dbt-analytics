@@ -106,22 +106,26 @@ WITH issues AS (
     END                                          AS is_community_contributor_related,
 
     CASE
-      WHEN ARRAY_CONTAINS('severity::1'::variant, agg_labels.labels)
+      WHEN ARRAY_CONTAINS('severity::1'::variant, agg_labels.labels) OR ARRAY_CONTAINS('S1'::variant, agg_labels.labels)
         THEN 'severity 1'
-      WHEN ARRAY_CONTAINS('severity::2'::variant, agg_labels.labels)
+      WHEN ARRAY_CONTAINS('severity::2'::variant, agg_labels.labels) OR ARRAY_CONTAINS('S2'::variant, agg_labels.labels)
         THEN 'severity 2'
-      WHEN ARRAY_CONTAINS('severity::3'::variant, agg_labels.labels)
+      WHEN ARRAY_CONTAINS('severity::3'::variant, agg_labels.labels) OR ARRAY_CONTAINS('S3'::variant, agg_labels.labels)
         THEN 'severity 3'
-      WHEN ARRAY_CONTAINS('severity::4'::variant, agg_labels.labels)
+      WHEN ARRAY_CONTAINS('severity::4'::variant, agg_labels.labels) OR ARRAY_CONTAINS('S4'::variant, agg_labels.labels)
         THEN 'severity 4'
       ELSE 'undefined'
     END                                          AS severity_tag,
 
     CASE
-      WHEN ARRAY_CONTAINS('priority::1'::variant, agg_labels.labels) THEN 'priority 1'
-      WHEN ARRAY_CONTAINS('priority::2'::variant, agg_labels.labels) THEN 'priority 2'
-      WHEN ARRAY_CONTAINS('priority::3'::variant, agg_labels.labels) THEN 'priority 3'
-      WHEN ARRAY_CONTAINS('priority::4'::variant, agg_labels.labels) THEN 'priority 4'
+      WHEN ARRAY_CONTAINS('priority::1'::variant, agg_labels.labels) OR ARRAY_CONTAINS('P1'::variant, agg_labels.labels)
+        THEN 'priority 1'
+      WHEN ARRAY_CONTAINS('priority::2'::variant, agg_labels.labels) OR ARRAY_CONTAINS('P2'::variant, agg_labels.labels)
+        THEN 'priority 2'
+      WHEN ARRAY_CONTAINS('priority::3'::variant, agg_labels.labels) OR ARRAY_CONTAINS('P3'::variant, agg_labels.labels)
+        THEN 'priority 3'
+      WHEN ARRAY_CONTAINS('priority::4'::variant, agg_labels.labels) OR ARRAY_CONTAINS('P4'::variant, agg_labels.labels)
+        THEN 'priority 4'
       ELSE 'undefined'
     END                                          AS priority_tag,
 
