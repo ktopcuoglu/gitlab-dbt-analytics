@@ -369,17 +369,21 @@ models:
       - name: subscription_id
         description: The identifier of subscription in dim_subscriptions table
         tests:
-          - not null
+          - not_null
       - name: product_details_id
         description: The identifier of product details in dim_product_details
         tests:
-          - not null
+          - not_null
       - name: account_id
         description: Zuora account id
       - name:  crm_id
         description: customer crm_id
       - name: mrr
         description: Monthly Recurring Revenue value for given month
+      - name: arr
+        description: Annual Recurring Revenue value for given month
+      - name: quantity
+        description: Total quantity
 
   - name: fct_usage_ping_payloads
     description: '{{ doc("fct_usage_ping_payloads") }}'
