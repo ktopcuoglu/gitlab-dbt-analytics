@@ -64,19 +64,7 @@ WITH mart_arr AS (
 
     SELECT
       prior_quarter.*,
-      CASE
-        WHEN previous_quarter_arr = 0 AND arr > 0
-          THEN 'New'
-        WHEN arr = 0 AND previous_quarter_arr > 0
-          THEN 'Churn'
-	    WHEN arr < previous_quarter_arr AND arr > 0
-          THEN 'Contraction'
-	    WHEN arr > previous_quarter_arr
-          THEN 'Expansion'
-	    WHEN arr = previous_quarter_arr
-          THEN 'No Impact'
-	    ELSE NULL
-	  END                 AS type_of_arr_change
+      {{ type_of_arr_change('arr','previous_quarter_arr') }}
     FROM prior_quarter
 
 ), reason_for_arr_change_beg AS (
@@ -93,18 +81,8 @@ WITH mart_arr AS (
     SELECT
       arr_quarter,
       ultimate_parent_account_id,
-      CASE
-        WHEN previous_quarter_quantity != quantity AND previous_quarter_quantity > 0
-          THEN ZEROIFNULL(previous_quarter_arr/NULLIF(previous_quarter_quantity,0) * (quantity - previous_quarter_quantity))
-        WHEN previous_quarter_quantity != quantity AND previous_quarter_quantity = 0
-          THEN arr
-        ELSE 0
-      END                AS seat_change_arr,
-      CASE
-        WHEN previous_quarter_quantity != quantity
-        THEN quantity - previous_quarter_quantity
-        ELSE 0
-      END                AS seat_change_quantity
+      {{ reason_for_arr_change_seat_change('arr','previous_quarter_arr','quantity','previous_quarter_quantity') }},
+      {{ reason_for_quantity_change_seat_change('quantity','previous_quarter_quantity') }}
     FROM type_of_arr_change
 
 ), reason_for_arr_change_price_change AS (
