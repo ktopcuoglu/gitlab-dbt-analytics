@@ -187,7 +187,7 @@ models:
           - unique
           - not_null
       - name: event_timestamp
-        description: the date and time this event occurred
+        description: The date and time this event occurred.
         tests:
           - not_null
       - name: crm_person_id
