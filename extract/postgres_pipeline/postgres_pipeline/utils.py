@@ -217,7 +217,10 @@ def chunk_and_upload(
     target_engine.dispose()
     source_engine.dispose()
 
-def read_sql_tmpfile(query, db_engine, tmp_file):
+def read_sql_tmpfile(query:str, db_engine:Engine, tmp_file: file) -> pd.DataFrame:
+    """
+        Uses postGres commands to copy data out of the DB and return a DF iterator
+    """
     copy_sql = f"COPY ({query}) TO STDOUT WITH CSV HEADER"
     logging.info(f" running COPY ({query}) TO STDOUT WITH CSV HEADER")
     conn = db_engine.raw_connection()
