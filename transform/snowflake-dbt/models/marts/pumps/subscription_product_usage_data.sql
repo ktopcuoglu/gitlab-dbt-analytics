@@ -94,24 +94,35 @@ WITH customers_db_license_seat_links AS (
 ), orders AS (
   
     SELECT
+      subscription_name,
       subscription_id,
       product_rate_plan_id,
       gitlab_namespace_id,
       order_start_date,
-      order_end_date
+      order_end_date,
+      order_updated_at
     FROM customers_db_orders
     WHERE gitlab_namespace_id IS NOT NULL
       AND order_is_trial = FALSE
       AND order_end_date > CURRENT_DATE
   
+), latest_order_per_subscription_name AS (
+
+    SELECT *
+    FROM orders
+    QUALIFY ROW_NUMBER() OVER (
+        PARTITION BY subscription_name
+        ORDER BY order_end_date DESC, order_updated_at DESC
+    ) = 1
+
 ), customers AS (
   
     SELECT 
       zuora_minus_exceptions.*,
-      orders.gitlab_namespace_id
+      latest_order_per_subscription_name.gitlab_namespace_id
     FROM zuora_minus_exceptions
-    LEFT JOIN orders
-      ON zuora_minus_exceptions.subscription_id = orders.subscription_id
+    LEFT JOIN latest_order_per_subscription_name
+      ON zuora_minus_exceptions.subscription_name = latest_order_per_subscription_name.subscription_name
     WHERE delivery_group = 'SaaS'
     
 ), customers_minus_exceptions AS (
