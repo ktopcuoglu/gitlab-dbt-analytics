@@ -238,14 +238,14 @@ def validate_ids(
     raw_query = table_dict["import_query"]
     additional_filtering = table_dict.get("additional_filtering", "")
     primary_key = table_dict["export_table_primary_key"]
-    if "{EXECUTION_DATE}" not in raw_query:
-        logging.info(f"Table {table} does not need id validation.")
-        return False
-    if "_TEMP" == table_name[-5:] or target_engine.has_table(f"{table_name}_TEMP"):
-        logging.info(
-            f"Table {table} needs to be backfilled due to schema change, aborting validation."
-        )
-        return False
+    # if "{EXECUTION_DATE}" not in raw_query:
+    #     logging.info(f"Table {table} does not need id validation.")
+    #     return False
+    # if "_TEMP" == table_name[-5:] or target_engine.has_table(f"{table_name}_TEMP"):
+    #     logging.info(
+    #         f"Table {table} needs to be backfilled due to schema change, aborting validation."
+    #     )
+    #     return False
 
     # Set the new table name vars
     validate_table_name = f"{table_name}_VALIDATE"  # Contains the list of current IDs
