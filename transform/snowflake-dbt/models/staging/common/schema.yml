@@ -356,6 +356,31 @@ models:
   - name: fct_invoice_items_agg_valid_at
     description: Parameterized model to recreate aggregate fact table with invoice items summarized on charge level at given timestamp {valid_at}. Required variable valid_at is timezone sensitive
 
+  - name: fct_mrr
+    description: One row represents Monthly Recurring Revenue per one month, subscription_id, product_details_id
+    columns:
+      - name: mrr_id
+        - description: The unique identifier of the MRR.
+          tests:
+            - not_null
+            - unique
+      - name: date_id
+        subscription: The identifier of date month in dim_dates
+      - name: subscription_id
+        description: The identifier of subscription in dim_subscriptions table
+        tests:
+          - not null
+      - name: product_details_id
+        description: The identifier of product details in dim_product_details
+        test:
+          - not null
+      - name: account_id
+        description: Zuora account id
+      - name:  crm_id
+        description: customer crm_id
+      - name: mrr
+        description: Monthly Recurring Revenue value for given month
+
   - name: fct_usage_ping_payloads
     description: '{{ doc("fct_usage_ping_payloads") }}'
     columns:
