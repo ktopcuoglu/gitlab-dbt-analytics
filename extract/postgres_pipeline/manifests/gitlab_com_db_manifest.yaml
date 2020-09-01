@@ -22,10 +22,11 @@ tables:
     import_schema: information_schema
     import_query: >
       SELECT CONCAT(table_name, '_', column_name, table_schema) AS column_id
-      , table_name
       , column_name
+      , data_type
+      , ordinal_poition
+      , table_name      
       , table_schema
-      , ordinal_position
       FROM information_schema.columns
     export_schema: 'gitlab_com'
     export_table: 'columns'
