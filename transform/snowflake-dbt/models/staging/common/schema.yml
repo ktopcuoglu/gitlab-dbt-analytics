@@ -29,6 +29,9 @@ models:
       - name: is_excluded
         description: Field used to exclude test accounts from downstream models
 
+  - name: dim_accounts_valid_at
+    description: Dimension table representing each individual account with details of person to bill for the account. Excludes deleted and test accounts. Required variable valid_at is timezone sensitive
+
   - name: dim_customers
     description: '{{ doc("dim_customers") }}'
     columns:
@@ -62,6 +65,9 @@ models:
       - name: merged_to_account_id
         description: for deleted accounts this is the SFDC account they were merged to
 
+  - name: dim_customers_valid_at
+    description: Parameterized model to recreate dimension table representing customer details as in SFDC at given date. Required variable valid_at is timezone sensitive
+
   - name: dim_crm_contacts
     description: '{{ doc("dim_crm_contacts") }}'
     columns:
@@ -86,6 +92,71 @@ models:
           - not_null
       - name: location_id
 
+  - name: dim_gitlab_versions
+    description: '{{ doc("dim_gitlab_versions") }}'
+    columns:
+      - name: version_id
+        description: The unique identifier of the release maintained by the Version app.
+        tests:
+          - not_null
+          - unique
+      - name: version
+        description: The unique identifier of the release.
+        tests:
+          - not_null
+          - unique
+      - name: major_version
+        description: The major version number of the release.
+      - name: minor_version
+        description: The minor version number of the release.
+      - name: patch_number
+        description: The patch number of the release.
+      - name: is_monthly_release
+        description: Derived boolean flag noting if the version number corresponds to a major monthly release.
+      - name: is_vulnerable
+        description: Boolean flag noting if vulnerabilities have been detected for the release.
+      - name: created_date
+        description: The date the release was created in the Version app.
+      - name: updated_date
+        description: The date the release was updated in the Version app.
+
+
+  - name: dim_licenses
+    description: '{{ doc("dim_licenses") }}'
+    columns:
+      - name: license_id
+        description: The unique ID of a generated license.
+        tests:
+          - not_null
+          - unique
+      - name: license_md5
+        description: The md5 hash of the license file. Use this field to join to fct_usage_ping_payloads.
+        tests:
+          - not_null
+          - unique
+      - name: subscription_id
+        description: The unique identifier of a version of a subscription.
+      - name: subscription_name
+        description: The unique identifier of a subscription.
+      - name: license_user_count
+        description: The user count of the license.
+      - name: license_plan
+        description: The plan code for the product tier of the license.
+      - name: is_trial
+        description: Boolean flag noting if the license was generated as part of a trial.
+      - name: is_internal
+        description: Derived boolean flag noting if the email recipient and company associated with the license is part of GitLab.
+      - name: company
+        description: The company the license was generated for.
+      - name: license_start_date
+        description: The start date of the license.
+      - name: license_expire_date
+        description: The expiration date of the license.
+      - name: created_at
+        description: The timestamp of when the license was generated.
+      - name: updated_at
+        description: The timestamp of when the license was updated.
+
   - name: dim_location
     description: '{{ doc("dim_location") }}'
     columns:
@@ -100,6 +171,37 @@ models:
         tests:
           - not_null
           - unique
+
+  - name: dim_product_details
+    description: '{{ doc("dim_product_details") }}'
+    columns:
+      - name: product_id
+        description: The ID of the product that contains the product rate plan.
+        tests:
+          - not_null
+      - name: product_name
+        description: The name of the product
+      - name: is_reporter_license
+        description: "Reporter licenses are in the Products with 'Additional Permission Types' in the name."
+      - name: billing_list_price
+        description: The price of the tier if the charge is a flat fee, or the price of each unit in the tier if the charge model is tiered pricing.
+      - name: product_details_id
+        description: The unique ID of a product rate plan charge
+        tests:
+          - unique
+          - not_null
+      - name: product_rate_plan_name
+        description: The name of the product rate plan. The name doesn't have to be unique in a Product Catalog, but the name has to be unique within a product.
+      - name: product_rate_plan_charge_name
+        description: The name of the product rate plan charge
+      - name: product_sku
+        description: The unique SKU for the product
+      - name: product_category
+        description: Category of the product. Used by Zuora Quotes Guided Product Selector.
+      - name: effective_start_date
+        description: The date when the product becomes available and can be subscribed to
+      - name: effective_end_date
+        description: The date when the product expires and can't be subscribed to anymore
           
   - name: dim_subscriptions
     description: '{{ doc("dim_subscriptions") }}'
@@ -140,36 +242,8 @@ models:
       - name: subscription_end_month
         description: The month when the subscription term ends. This month is the same as the term end month or the cancelation month, as appropriate.
 
-  - name: dim_product_details
-    description: '{{ doc("dim_product_details") }}'
-    columns:
-      - name: product_id
-        description: The ID of the product that contains the product rate plan.
-        tests:
-          - not_null
-      - name: product_name
-        description: The name of the product
-      - name: is_reporter_license
-        description: "Reporter licenses are in the Products with 'Additional Permission Types' in the name."
-      - name: billing_list_price
-        description: The price of the tier if the charge is a flat fee, or the price of each unit in the tier if the charge model is tiered pricing.
-      - name: product_details_id
-        description: The unique ID of a product rate plan charge
-        tests:
-          - unique
-          - not_null
-      - name: product_rate_plan_name
-        description: The name of the product rate plan. The name doesn't have to be unique in a Product Catalog, but the name has to be unique within a product.
-      - name: product_rate_plan_charge_name
-        description: The name of the product rate plan charge
-      - name: product_sku
-        description: The unique SKU for the product
-      - name: product_category
-        description: Category of the product. Used by Zuora Quotes Guided Product Selector.
-      - name: effective_start_date
-        description: The date when the product becomes available and can be subscribed to
-      - name: effective_end_date
-        description: The date when the product expires and can't be subscribed to anymore
+  - name: dim_subscriptions_valid_at
+    description: Parameterized model to recreate dimension table representing subscription details as in Zuora at given date. Required variable valid_at is timezone sensitive
 
   - name: fct_crm_conversion_events
     description: '{{ doc("fct_crm_conversion_events") }}'
@@ -214,15 +288,7 @@ models:
       - name: invoice_item_unit_price
         description: The per-unit price of the invoice item. Calculated from multiple fields in Product Rate Plan Charge and Product Rate Plan Charge Tier objects.
 
-  - name: fct_invoice_items_agg
-    description: Aggregate fact table with invoice items summarized on charge level
-    columns:
-      - name: charge_id
-        tests:
-          - not_null
-          - unique
-
-  - name: fct_charges
+ - name: fct_charges
     description: '{{ doc("fct_charges") }}'
     columns:
       - name: subscription_id
@@ -277,85 +343,20 @@ models:
       - name: charge_type
         description: Specifies the type of charge
 
-  - name: dim_accounts_valid_at
-    description: Dimension table representing each individual account with details of person to bill for the account. Excludes deleted and test accounts. Required variable valid_at is timezone sensitive
-
-  - name: dim_subscriptions_valid_at
-    description: Parameterized model to recreate dimension table representing subscription details as in Zuora at given date. Required variable valid_at is timezone sensitive
-
   - name: fct_charges_valid_at
     description: Factual table with all rate plan charges coming from subscriptions or an amendment to a subscription. Required variable valid_at is timezone sensitive
+
+  - name: fct_invoice_items_agg
+    description: Aggregate fact table with invoice items summarized on charge level
+    columns:
+      - name: charge_id
+        tests:
+          - not_null
+          - unique
 
   - name: fct_invoice_items_agg_valid_at
     description: Parameterized model to recreate aggregate fact table with invoice items summarized on charge level at given timestamp {valid_at}. Required variable valid_at is timezone sensitive
 
-  - name: dim_customers_valid_at
-    description: Parameterized model to recreate dimension table representing customer details as in SFDC at given date. Required variable valid_at is timezone sensitive
-
-  - name: dim_licenses
-    description: '{{ doc("dim_licenses") }}'
-    columns:
-      - name: license_id
-        description: The unique ID of a generated license.
-        tests:
-          - not_null
-          - unique
-      - name: license_md5
-        description: The md5 hash of the license file. Use this field to join to fct_usage_ping_payloads.    
-        tests:
-          - not_null
-          - unique      
-      - name: subscription_id
-        description: The unique identifier of a version of a subscription.
-      - name: subscription_name
-        description: The unique identifier of a subscription.
-      - name: license_user_count
-        description: The user count of the license.
-      - name: license_plan
-        description: The plan code for the product tier of the license.
-      - name: is_trial
-        description: Boolean flag noting if the license was generated as part of a trial.          
-      - name: is_internal
-        description: Derived boolean flag noting if the email recipient and company associated with the license is part of GitLab.
-      - name: company
-        description: The company the license was generated for.    
-      - name: license_start_date
-        description: The start date of the license.
-      - name: license_expire_date
-        description: The expiration date of the license.
-      - name: created_at
-        description: The timestamp of when the license was generated.
-      - name: updated_at
-        description: The timestamp of when the license was updated.                                     
-
-  - name: dim_gitlab_versions
-    description: '{{ doc("dim_gitlab_versions") }}'
-    columns:
-      - name: version_id
-        description: The unique identifier of the release maintained by the Version app.
-        tests:
-          - not_null
-          - unique
-      - name: version
-        description: The unique identifier of the release.
-        tests:
-          - not_null
-          - unique
-      - name: major_version
-        description: The major version number of the release.
-      - name: minor_version
-        description: The minor version number of the release.
-      - name: patch_number
-        description: The patch number of the release.
-      - name: is_monthly_release
-        description: Derived boolean flag noting if the version number corresponds to a major monthly release.
-      - name: is_vulnerable
-        description: Boolean flag noting if vulnerabilities have been detected for the release.      
-      - name: created_date
-        description: The date the release was created in the Version app.
-      - name: updated_date    
-        description: The date the release was updated in the Version app.
-        
   - name: fct_usage_ping_payloads
     description: '{{ doc("fct_usage_ping_payloads") }}'
     columns:
