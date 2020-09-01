@@ -3,8 +3,6 @@ import logging
 import os
 import sys
 import yaml
-import tempfile
-
 from time import time
 from typing import Dict, List, Generator, Any, Tuple
 
@@ -120,15 +118,6 @@ def manifest_reader(file_path: str) -> Dict[str, Dict]:
 
     return manifest_dict
 
-def read_sql_tmpfile(query, db_engine):
-    with tempfile.TemporaryFile() as tmpfile:
-        copy_sql = f"COPY ({query}) TO STDOUT WITH CSV HEADER"
-        conn = db_engine.raw_connection()
-        cur = conn.cursor()
-        cur.copy_expert(copy_sql, tmpfile)
-        tmpfile.seek(0)
-        df = pandas.read_csv(tmpfile)
-        return df
 
 def query_results_generator(
     query: str, engine: Engine, chunksize: int = 100_000
@@ -140,7 +129,6 @@ def query_results_generator(
 
     try:
         query_df_iterator = pd.read_sql(sql=query, con=engine, chunksize=chunksize)
-
     except Exception as e:
         logging.exception(e)
         sys.exit(1)
@@ -186,10 +174,7 @@ def chunk_and_upload(
     """
 
     rows_uploaded = 0
-    results_generator = read_sql_tmpfile(query, source_engine)
-    logging.info(results_generator.head(5))
-
-
+    results_generator = query_results_generator(query, source_engine)
     upload_file_name = f"{target_table}_CHUNK.tsv.gz"
 
     backfilled_rows = 0
