@@ -153,8 +153,6 @@ models:
         description: "Reporter licenses are in the Products with 'Additional Permission Types' in the name."
       - name: billing_list_price
         description: The price of the tier if the charge is a flat fee, or the price of each unit in the tier if the charge model is tiered pricing.
-        tests:
-          - not_null
       - name: product_details_id
         description: The unique ID of a product rate plan charge
         tests:
