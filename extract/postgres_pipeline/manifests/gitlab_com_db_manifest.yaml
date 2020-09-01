@@ -1712,7 +1712,6 @@ tables:
       SELECT id
       , created_at
       , requirement_id
-      , pipeline_id
       , author_id
       , state
       , build_id
