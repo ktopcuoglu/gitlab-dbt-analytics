@@ -2,11 +2,8 @@ import os
 import yaml
 from datetime import datetime, timedelta
 
-from airflow.models import DAG
-
-from airflow.operators.subdag_operator import SubDagOperator
+from airflow import DAG
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
-from airflow.utils.helpers import cross_downstream, chain
 
 from airflow_utils import DATA_IMAGE, clone_repo_cmd, gitlab_defaults, slack_failed_task
 from kubernetes_helpers import get_affinity, get_toleration
@@ -65,6 +62,7 @@ standard_secrets = [
     SNOWFLAKE_LOAD_ROLE,
 ]
 
+validation_schedule_interval = "0 1 * * 0"
 every_eighth_hour = "0 */8 * * *"
 every_day_at_four = "0 4 */1 * *"
 
@@ -83,6 +81,7 @@ config_dict = {
         "start_date": datetime(2019, 5, 30),
         "sync_schedule_interval": every_day_at_four,
         "task_name": "ci-stats",
+        "validation_schedule_interval": validation_schedule_interval,
     },
     "customers": {
         "dag_name": "customers",
@@ -97,6 +96,7 @@ config_dict = {
         "start_date": datetime(2019, 5, 30),
         "sync_schedule_interval": "0 3 */1 * *",
         "task_name": "customers",
+        "validation_schedule_interval": validation_schedule_interval,
     },
     "gitlab_com": {
         "dag_name": "gitlab_com",
@@ -111,6 +111,7 @@ config_dict = {
         "start_date": datetime(2019, 5, 30),
         "sync_schedule_interval": "0 2 */1 * *",
         "task_name": "gitlab-com",
+        "validation_schedule_interval": validation_schedule_interval,
     },
     "gitlab_profiler": {
         "dag_name": "gitlab_profiler",
@@ -125,6 +126,7 @@ config_dict = {
         "start_date": datetime(2019, 5, 30),
         "sync_schedule_interval": every_day_at_four,
         "task_name": "gitlab-profiler",
+        "validation_schedule_interval": validation_schedule_interval,
     },
     "license": {
         "dag_name": "license",
@@ -134,6 +136,7 @@ config_dict = {
         "start_date": datetime(2019, 5, 30),
         "sync_schedule_interval": every_day_at_four,
         "task_name": "license",
+        "validation_schedule_interval": validation_schedule_interval,
     },
     "version": {
         "dag_name": "version",
@@ -143,6 +146,7 @@ config_dict = {
         "start_date": datetime(2019, 5, 30),
         "sync_schedule_interval": every_day_at_four,
         "task_name": "version",
+        "validation_schedule_interval": validation_schedule_interval,
     },
 }
 
@@ -159,65 +163,6 @@ def extract_manifest(file_path):
     with open(file_path, "r") as file:
         manifest_dict = yaml.load(file, Loader=yaml.FullLoader)
     return manifest_dict
-
-
-def load_subdag(parent_dag_name, child_dag_name, args, schedule, pool):
-    dag_subdag = DAG(
-        dag_id="{0}.{1}".format(parent_dag_name, child_dag_name),
-        default_args=args,
-        schedule_interval=schedule,
-    )
-    with dag_subdag:
-        incremental_cmd = generate_cmd(
-            config["dag_name"], f"--load_type incremental --load_only_table {table}"
-        )
-        incremental_extract = KubernetesPodOperator(
-            **gitlab_defaults,
-            image=DATA_IMAGE,
-            task_id=f"{config['task_name']}-{table.replace('_', '-')}-db-incremental",
-            name=f"{config['task_name']}-{table.replace('_', '-')}-db-incremental",
-            pool=pool,
-            secrets=standard_secrets + config["secrets"],
-            env_vars={
-                **standard_pod_env_vars,
-                **config["env_vars"],
-                "LAST_EXECUTION_DATE": "{{ execution_date }}",
-            },
-            affinity=get_affinity(False),
-            tolerations=get_toleration(False),
-            arguments=[incremental_cmd],
-            do_xcom_push=True,
-            xcom_push=True,
-            dag=dag_subdag,
-        )
-
-        # Validate Task
-        validate_cmd = generate_cmd(
-            config["dag_name"], f"--load_type validate --load_only_table {table}"
-        )
-        validate_ids = KubernetesPodOperator(
-            **gitlab_defaults,
-            image=DATA_IMAGE,
-            task_id=f"{config['task_name']}-{table.replace('_', '-')}-db-validation",
-            name=f"{config['task_name']}-{table.replace('_', '-')}-db-validation",
-            pool=pool,
-            secrets=standard_secrets + config["secrets"],
-            env_vars={
-                **standard_pod_env_vars,
-                **config["env_vars"],
-                "LAST_EXECUTION_DATE": "{{ execution_date }}",
-            },
-            affinity=get_affinity(False),
-            tolerations=get_toleration(False),
-            arguments=[validate_cmd],
-            do_xcom_push=True,
-            xcom_push=True,
-            dag=dag_subdag,
-        )
-
-        incremental_extract >> validate_ids
-
-    return dag_subdag
 
 
 def extract_table_list_from_manifest(manifest_contents):
@@ -244,7 +189,6 @@ for source_name, config in config_dict.items():
         f"{config['dag_name']}_db_extract",
         default_args=extract_dag_args,
         schedule_interval=config["extract_schedule_interval"],
-        concurrency=2,
     )
 
     with extract_dag:
@@ -256,22 +200,31 @@ for source_name, config in config_dict.items():
             # tables without execution_date in the query won't be processed incrementally
             if "{EXECUTION_DATE}" not in manifest["tables"][table]["import_query"]:
                 continue
+            incremental_cmd = generate_cmd(
+                config["dag_name"], f"--load_type incremental --load_only_table {table}"
+            )
 
-            load_tasks = SubDagOperator(
-                task_id=f"{config['task_name']}-{table.replace('_','-')}-db-increment-validate",
-                subdag=load_subdag(
-                    parent_dag_name=f"{config['dag_name']}_db_extract",
-                    child_dag_name=f"{config['task_name']}-{table.replace('_','-')}-db-increment-validate",
-                    args=extract_dag_args,
-                    schedule=config["extract_schedule_interval"],
-                    pool=f"{config['task_name']}_pool",
-                ),
-                default_args=extract_dag_args,
-                dag=extract_dag,
+            incremental_extract = KubernetesPodOperator(
+                **gitlab_defaults,
+                image=DATA_IMAGE,
+                task_id=f"{config['task_name']}-{table.replace('_','-')}-db-incremental",
+                name=f"{config['task_name']}-{table.replace('_','-')}-db-incremental",
                 pool=f"{config['task_name']}_pool",
+                secrets=standard_secrets + config["secrets"],
+                env_vars={
+                    **standard_pod_env_vars,
+                    **config["env_vars"],
+                    "LAST_EXECUTION_DATE": "{{ execution_date }}",
+                },
+                affinity=get_affinity(False),
+                tolerations=get_toleration(False),
+                arguments=[incremental_cmd],
+                do_xcom_push=True,
+                xcom_push=True,
             )
 
     globals()[f"{config['dag_name']}_db_extract"] = extract_dag
+
     # Sync DAG
     sync_dag_args = {
         "catchup": False,
@@ -338,3 +291,40 @@ for source_name, config in config_dict.items():
                 )
 
     globals()[f"{config['dag_name']}_db_sync"] = sync_dag
+
+    # Validation DAG
+    validation_dag_args = {
+        "catchup": True,
+        "concurrency": 1,
+        "depends_on_past": False,
+        "on_failure_callback": slack_failed_task,
+        "owner": "airflow",
+        "retries": 0,
+        "retry_delay": timedelta(minutes=1),
+        "start_date": datetime(2019, 1, 1),
+    }
+    validation_dag = DAG(
+        f"{config['dag_name']}_db_validate",
+        default_args=validation_dag_args,
+        schedule_interval=config["validation_schedule_interval"],
+    )
+
+    with validation_dag:
+
+        # Validate Task
+        validate_cmd = generate_cmd(config["dag_name"], "validate")
+        validate_ids = KubernetesPodOperator(
+            **gitlab_defaults,
+            image=DATA_IMAGE,
+            task_id=f"{config['task_name']}-db-validation",
+            name=f"{config['task_name']}-db-validation",
+            secrets=standard_secrets + config["secrets"],
+            env_vars={**standard_pod_env_vars, **config["env_vars"]},
+            affinity=get_affinity(False),
+            tolerations=get_toleration(False),
+            arguments=[validate_cmd],
+            dag=validation_dag,
+            do_xcom_push=True,
+            xcom_push=True,
+        )
+    globals()[f"{config['dag_name']}_db_validation"] = validation_dag

@@ -3,7 +3,7 @@
 WITH source as (
 
     SELECT *
-    FROM {{ env_var('SNOWFLAKE_LOAD_DATABASE') }}.information_schema.tables
+    FROM "{{ env_var('SNOWFLAKE_LOAD_DATABASE') }}".information_schema.tables
 
 ), counts AS (
 

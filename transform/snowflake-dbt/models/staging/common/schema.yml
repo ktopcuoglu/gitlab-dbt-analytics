@@ -49,8 +49,6 @@ models:
       - name: ultimate_parent_billing_country
         description: billing country of parent account
       - name: record_type_id
-      - name: gitlab_entity
-        description: Gitlab entity that subcription was sold through
       - name: federal_account
       - name: gitlab_com_user
       - name: account_owner
@@ -61,6 +59,13 @@ models:
         description: flag indicating if account has been deleted
       - name: merged_to_account_id
         description: for deleted accounts this is the SFDC account they were merged to
+
+  - name: dim_crm_contacts
+    description: '{{ doc("dim_crm_contacts") }}'
+    columns:
+      - name: sfdc_record_id
+        tests:
+          - unique
 
   - name: dim_dates
     description: '{{ doc("dim_dates") }}'
@@ -166,6 +171,15 @@ models:
       - name: effective_end_date
         description: The date when the product expires and can't be subscribed to anymore
 
+  - name: fct_crm_conversion_events
+    description: '{{ doc("fct_crm_conversion_events") }}'
+    columns:
+      - name: event_id
+        tests:
+          - not_null
+      - name: event_timestamp
+        tests:
+          - not_null
 
   - name: fct_invoice_items
     description: '{{ doc("fct_invoice_items") }}'
