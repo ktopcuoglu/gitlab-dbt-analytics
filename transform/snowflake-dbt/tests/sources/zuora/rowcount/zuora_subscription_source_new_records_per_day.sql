@@ -1,5 +1,5 @@
 {{ config({
-    "tags": ["tdf"]
+    "tags": ["tdf","zuora"]
     })
 }}
 
