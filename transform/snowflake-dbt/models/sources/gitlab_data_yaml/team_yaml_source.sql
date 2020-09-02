@@ -16,6 +16,7 @@ WITH source AS (
 ), renamed AS (
 
     SELECT
+      data_by_row['departments']::ARRAY     AS departments,
       data_by_row['gitlab']::VARCHAR        AS gitlab_username,
       data_by_row['name']::VARCHAR          AS name,
       data_by_row['projects']::VARCHAR      AS projects,

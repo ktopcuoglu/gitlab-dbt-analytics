@@ -320,6 +320,19 @@ roles:
                 write:
                     - analytics
 
+    - decisive_data:
+        warehouses:
+            - analyst_xs
+        member_of:
+            - analyst_core
+            - snowflake_db
+            - zuora
+            - salesforce
+        privileges:
+            databases:
+                write:
+                    - analytics
+
     - engineer:
         member_of:
             - covid19
@@ -559,6 +572,22 @@ roles:
         privileges:
             databases:
                 read:
+                    - analytics
+            schemas:
+                read:
+                    - analytics.analytics
+                    - analytics.analytics_sensitive
+            tables:
+                read:
+                    - analytics.analytics.*
+                    - analytics.analytics_sensitive.*
+
+    - bamboohr_raw:
+        warehouses:
+            - analyst_xs
+        privileges:
+            databases:
+                read:
                     - raw
             schemas:
                 read:
@@ -566,7 +595,8 @@ roles:
             tables:
                 read:
                     - raw.bamboohr.*
-    
+
+
     - boneyard:
         warehouses:
             - analyst_xs
@@ -1217,6 +1247,12 @@ roles:
         warehouses:
             - reporting
 
+    - evan:
+        member_of:
+            - decisive_data
+        warehouses:
+            - analyst_xs
+
     - ewegscheider:
         member_of:
             - analyst_people
@@ -1375,6 +1411,12 @@ roles:
         warehouses:
             - admin
 
+    - michellecooper:
+        member_of:
+            - decisive_data
+        warehouses:
+            - analyst_xs
+
     - mjozenazemian:
         warehouses:
             - reporting
@@ -1440,6 +1482,7 @@ roles:
         member_of:
             - analyst_people
             - customers_db
+            - bamboohr_raw
         warehouses:
             - analyst_xs
 
@@ -1530,6 +1573,8 @@ roles:
                     - testing_db.*.*
 
     - tmurphy:
+        member_of:
+            - bamboohr_raw
         warehouses:
             - admin
             - engineer_xs
@@ -1663,7 +1708,12 @@ users:
         member_of:
             - eurie
             - securityadmin
-    
+
+    - evan:
+        can_login: yes 
+        member_of:
+            - evan
+
     - ewegscheider:
         can_login: yes
         member_of: 
@@ -1777,7 +1827,12 @@ users:
         member_of:
             - mdewji
             - securityadmin
-    
+
+    - michellecooper:
+        can_login: yes 
+        member_of:
+            - michellecooper
+
     - mjozenazemian:
         can_login: yes
         member_of:
@@ -1803,6 +1858,7 @@ users:
         member_of:
             - engineer
             - msendal
+            - bamboohr_raw
 
     - mvilain:
         can_login: yes

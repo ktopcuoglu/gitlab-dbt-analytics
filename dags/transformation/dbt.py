@@ -209,7 +209,7 @@ dbt_full_refresh = KubernetesPodOperator(
 dbt_source_cmd = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
-    dbt source snapshot-freshness --profiles-dir profile --exclude zuora; ret=$?;
+    dbt source snapshot-freshness --profiles-dir profile; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py sources; exit $ret
 """
 dbt_source_freshness = KubernetesPodOperator(

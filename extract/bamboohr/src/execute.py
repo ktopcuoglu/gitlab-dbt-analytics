@@ -108,6 +108,8 @@ if __name__ == "__main__":
         employmentstatus="employmentStatus",
         custombonus="customBonus",
         emergencyContacts="emergencyContacts",
+        customontargetearnings= "customOnTargetEarnings",
+        customcurrencyconversion="customCurrencyConversion",
     )
 
     for key, value in tabular_data.items():

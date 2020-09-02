@@ -19,4 +19,5 @@ sources:
       - name: categories
       - name: location_factors
       - name: roles
+      - name: stages
       - name: team

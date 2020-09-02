@@ -11,6 +11,7 @@ WITH base AS (
 
     SELECT *
     FROM {{ ref('gitlab_dotcom_notes') }}
+    WHERE noteable_type = 'Epic'
     {% if is_incremental() %}
 
       WHERE updated_at >= (SELECT MAX(updated_at) FROM {{this}})
@@ -18,10 +19,16 @@ WITH base AS (
     {% endif %}
 )
 
-, projects AS (
+, epics AS (
 
     SELECT * 
-    FROM {{ ref('gitlab_dotcom_projects_xf') }}
+    FROM {{ ref('gitlab_dotcom_epics_xf') }}
+)
+
+, namespaces AS (
+
+    SELECT *
+    FROM {{ ref('gitlab_dotcom_namespaces_xf') }}
 )
 
 , internal_namespaces AS (
@@ -34,38 +41,27 @@ WITH base AS (
 
 )
 
-, system_note_metadata AS (
-  
-    SELECT 
-      note_id,
-      ARRAY_AGG(action_type) WITHIN GROUP (ORDER BY action_type ASC) AS action_type_array
-    FROM {{ ref('gitlab_dotcom_system_note_metadata') }}
-    GROUP BY 1
-
-)
-
-,  anonymised AS (
+, anonymised AS (
     
     SELECT
       {{ dbt_utils.star(from=ref('gitlab_dotcom_notes'), except=fields_to_mask|upper, relation_alias='base') }},
       {% for field in fields_to_mask %}
         CASE
           WHEN TRUE 
-            AND projects.visibility_level != 'public'
+            AND namespaces.visibility_level != 'public'
             AND NOT internal_namespaces.namespace_is_internal
             THEN 'confidential - masked'
           ELSE {{field}}
-        END                                                    AS {{field}},
+        END AS {{field}},
       {% endfor %}
-      projects.ultimate_parent_id,
-      action_type_array
+      epics.ultimate_parent_id
     FROM base
-      LEFT JOIN projects 
-        ON base.project_id = projects.project_id
+      LEFT JOIN epics 
+        ON base.noteable_id = epics.epic_id
+      LEFT JOIN namespaces
+        ON epics.group_id = namespaces.namespace_id
       LEFT JOIN internal_namespaces
-        ON projects.namespace_id = internal_namespaces.namespace_id
-      LEFT JOIN system_note_metadata
-        ON base.note_id = system_note_metadata.note_id
+        ON epics.group_id = internal_namespaces.namespace_id
 
 )
 
