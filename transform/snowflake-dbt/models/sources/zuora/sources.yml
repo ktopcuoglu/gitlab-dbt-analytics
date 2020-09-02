@@ -25,6 +25,7 @@ sources:
             tests:
               - dbt_utils.expression_is_true:
                   expression: "id REGEXP '[0-9a-z]{32}'"
+                  tags: ["tdf"]
       - name: accounting_period
         identifier: accountingperiod
         description: '{{ doc("zuora_accounting_period_source") }}'
@@ -71,6 +72,8 @@ sources:
             tests:
               - dbt_utils.expression_is_true:
                   expression: "accountid REGEXP '[0-9a-z]{32}'"
+                  tags: ["tdf"]
               - relationships:
                   to: source('zuora', 'account')
                   field: id
+                  tags: ["tdf"]
