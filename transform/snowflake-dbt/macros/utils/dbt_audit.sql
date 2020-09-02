@@ -1,4 +1,4 @@
-{%- macro dbt_audit(cte_ref, revision_number, created_by, updated_by, created_date, updated_date) -%}
+{%- macro dbt_audit(cte_ref, created_by, updated_by, created_date, updated_date) -%}
 
     SELECT
       *,
