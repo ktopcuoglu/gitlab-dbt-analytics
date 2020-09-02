@@ -1,4 +1,4 @@
-{% macro source_new_rows_per_day(schema, table, created_column, min_value, max_value, where_clause=None) %}
+{% macro source_new_rows_per_day(schema, table, created_column, min_value, max_value=None, where_clause=None) %}
 
 WITH dates as (
 
@@ -29,6 +29,9 @@ WITH dates as (
 
 SELECT row_count
 FROM counts
-WHERE row_count < {{ min_value }} OR row_count > {{ max_value }}
+WHERE row_count < {{ min_value }} 
+    {% if max_value != None %}
+      OR row_count > {{ max_value }}
+    {% endif %}
 
 {% endmacro %}
