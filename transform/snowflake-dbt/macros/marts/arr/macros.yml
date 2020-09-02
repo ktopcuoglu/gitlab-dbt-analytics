@@ -1,0 +1,15 @@
+version: 2
+
+macros:
+  - name: annual_price_per_seat_change
+    description: '{{ doc("annual_price_per_seat_change") }}'
+  - name: reason_for_arr_change_price_change
+    description: '{{ doc("reason_for_arr_change_price_change") }}'
+  - name: reason_for_arr_change_seat_change
+    description: '{{ doc("reason_for_arr_change_seat_change") }}'
+  - name: reason_for_arr_change_tier_change
+    description: '{{ doc("reason_for_arr_change_tier_change") }}'
+  - name: reason_for_quantity_change_seat_change
+    description: '{{ doc("reason_for_quantity_change_seat_change") }}'
+  - name: type_of_arr_change
+    description: '{{ doc("type_of_arr_change") }}'

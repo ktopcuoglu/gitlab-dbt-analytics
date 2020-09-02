@@ -23,6 +23,13 @@ models:
         tests:
           - not_null
           - unique
+  - name: mart_delta_arr_parent_quarter
+    description: "Mart table by quarter purusant to ARR Analysis Framework"
+    columns:
+      - name: primary_key
+        tests:
+          - not_null
+          - unique
   - name: mart_delta_arr_parent_year
     description: "Mart table by year purusant to ARR Analysis Framework"
     columns:

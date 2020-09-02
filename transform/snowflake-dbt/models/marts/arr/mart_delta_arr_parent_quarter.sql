@@ -11,18 +11,19 @@ WITH mart_arr AS (
 ), base AS (
 
     SELECT DISTINCT
-      date_actual                       AS arr_month,
-      ultimate_parent_account_name,
-      ultimate_parent_account_id
+      dim_dates.date_actual                       AS arr_month,
+      dim_dates.fiscal_quarter_name_fy,
+      mart_arr.ultimate_parent_account_name,
+      mart_arr.ultimate_parent_account_id
     FROM mart_arr
     CROSS JOIN dim_dates
     WHERE day_of_month = 1
       AND date_actual < DATE_TRUNC('month',CURRENT_DATE)
-    ORDER BY 2, 1 DESC
 
 ), quarterly_arr_parent_level AS (
 
     SELECT
+      base.fiscal_quarter_name_fy,
       base.arr_month                                                                         AS arr_quarter,
       base.ultimate_parent_account_name,
       base.ultimate_parent_account_id,
@@ -47,24 +48,24 @@ WITH mart_arr AS (
     INNER JOIN dim_dates
       ON base.arr_month = dim_dates.date_actual
     WHERE base.arr_month = date_trunc('month', last_day_of_fiscal_quarter)
-    {{ dbt_utils.group_by(n=3) }}
+    {{ dbt_utils.group_by(n=4) }}
 
 ), prior_quarter AS (
 
     SELECT
       quarterly_arr_parent_level.*,
-      LAG(product_category) OVER (PARTITION BY ultimate_parent_account_id ORDER BY arr_quarter) AS previous_quarter_product_category,
-      LAG(delivery) OVER (PARTITION BY ultimate_parent_account_id ORDER BY arr_quarter) AS previous_quarter_delivery,
-      COALESCE(LAG(product_ranking) OVER (PARTITION BY ultimate_parent_account_id ORDER BY arr_quarter),0) AS previous_quarter_product_ranking,
-      COALESCE(LAG(quantity) OVER (PARTITION BY ultimate_parent_account_id ORDER BY arr_quarter),0) AS previous_quarter_quantity,
-      COALESCE(LAG(arr) OVER (PARTITION BY ultimate_parent_account_id ORDER BY arr_quarter),0) AS previous_quarter_arr
+      LAG(product_category) OVER (PARTITION BY ultimate_parent_account_id ORDER BY arr_quarter) AS previous_product_category,
+      LAG(delivery) OVER (PARTITION BY ultimate_parent_account_id ORDER BY arr_quarter) AS previous_delivery,
+      COALESCE(LAG(product_ranking) OVER (PARTITION BY ultimate_parent_account_id ORDER BY arr_quarter),0) AS previous_product_ranking,
+      COALESCE(LAG(quantity) OVER (PARTITION BY ultimate_parent_account_id ORDER BY arr_quarter),0) AS previous_quantity,
+      COALESCE(LAG(arr) OVER (PARTITION BY ultimate_parent_account_id ORDER BY arr_quarter),0) AS previous_arr
     FROM quarterly_arr_parent_level
 
 ), type_of_arr_change AS (
 
     SELECT
       prior_quarter.*,
-      {{ type_of_arr_change('arr','previous_quarter_arr') }}
+      {{ type_of_arr_change('arr','previous_arr') }}
     FROM prior_quarter
 
 ), reason_for_arr_change_beg AS (
@@ -72,8 +73,8 @@ WITH mart_arr AS (
     SELECT
       arr_quarter,
       ultimate_parent_account_id,
-      previous_quarter_arr      AS beg_arr,
-      previous_quarter_quantity AS beg_quantity
+      previous_arr      AS beg_arr,
+      previous_quantity AS beg_quantity
     FROM type_of_arr_change
 
 ), reason_for_arr_change_seat_change AS (
@@ -81,8 +82,8 @@ WITH mart_arr AS (
     SELECT
       arr_quarter,
       ultimate_parent_account_id,
-      {{ reason_for_arr_change_seat_change('arr','previous_quarter_arr','quantity','previous_quarter_quantity') }},
-      {{ reason_for_quantity_change_seat_change('quantity','previous_quarter_quantity') }}
+      {{ reason_for_arr_change_seat_change('quantity', 'previous_quantity', 'arr', 'previous_arr') }},
+      {{ reason_for_quantity_change_seat_change('quantity', 'previous_quantity') }}
     FROM type_of_arr_change
 
 ), reason_for_arr_change_price_change AS (
@@ -90,13 +91,7 @@ WITH mart_arr AS (
     SELECT
       arr_quarter,
       ultimate_parent_account_id,
-      CASE
-        WHEN previous_quarter_product_category = product_category
-          THEN quantity * (arr/NULLIF(quantity,0) - previous_quarter_arr/NULLIF(previous_quarter_quantity,0))
-        WHEN previous_quarter_product_category != product_category AND previous_quarter_product_ranking = product_ranking
-          THEN quantity * (arr/NULLIF(quantity,0) - previous_quarter_arr/NULLIF(previous_quarter_quantity,0))
-        ELSE 0
-      END                  AS price_change_arr
+      {{ reason_for_arr_change_price_change('product_category', 'previous_product_category', 'quantity', 'previous_quantity', 'arr', 'previous_arr', 'product_ranking',' previous_product_ranking') }}
     FROM type_of_arr_change
 
 ), reason_for_arr_change_tier_change AS (
@@ -104,11 +99,7 @@ WITH mart_arr AS (
     SELECT
       arr_quarter,
       ultimate_parent_account_id,
-      CASE
-        WHEN previous_quarter_product_ranking != product_ranking
-        THEN ZEROIFNULL(quantity * (arr/NULLIF(quantity,0) - previous_quarter_arr/NULLIF(previous_quarter_quantity,0)))
-        ELSE 0
-      END                   AS tier_change_arr
+      {{ reason_for_arr_change_tier_change('product_ranking', 'previous_product_ranking', 'quantity', 'previous_quantity', 'arr', 'previous_arr') }}
     FROM type_of_arr_change
 
 ), reason_for_arr_change_end AS (
@@ -125,22 +116,23 @@ WITH mart_arr AS (
     SELECT
       arr_quarter,
       ultimate_parent_account_id,
-      ZEROIFNULL(( arr / NULLIF(quantity,0) ) - ( previous_quarter_arr / NULLIF(previous_quarter_quantity,0))) AS annual_price_per_seat_change
+      {{ annual_price_per_seat_change('quantity', 'previous_quantity', 'arr', 'previous_arr') }}
     FROM type_of_arr_change
 
 ), combined AS (
 
     SELECT
       {{ dbt_utils.surrogate_key(['type_of_arr_change.arr_quarter', 'type_of_arr_change.ultimate_parent_account_id']) }} AS primary_key,
+      type_of_arr_change.fiscal_quarter_name_fy,
       type_of_arr_change.arr_quarter,
       type_of_arr_change.ultimate_parent_account_name,
       type_of_arr_change.ultimate_parent_account_id,
       type_of_arr_change.product_category,
-      type_of_arr_change.previous_quarter_product_category,
+      type_of_arr_change.previous_product_category                      AS previous_quarter_product_category,
       type_of_arr_change.delivery,
-      type_of_arr_change.previous_quarter_delivery,
+      type_of_arr_change.previous_delivery                              AS previous_quarter_delivery,
       type_of_arr_change.product_ranking,
-      type_of_arr_change.previous_quarter_product_ranking,
+      type_of_arr_change.previous_product_ranking                       AS previous_quarter_product_ranking,
       type_of_arr_change.type_of_arr_change,
       reason_for_arr_change_beg.beg_arr,
       reason_for_arr_change_beg.beg_quantity,

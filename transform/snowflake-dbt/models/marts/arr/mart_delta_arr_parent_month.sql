@@ -50,30 +50,18 @@ WITH mart_arr AS (
 
     SELECT
       monthly_arr_parent_level.*,
-      LAG(product_category) OVER (PARTITION BY ultimate_parent_account_id ORDER BY arr_month) AS previous_month_product_category,
-      LAG(delivery) OVER (PARTITION BY ultimate_parent_account_id ORDER BY arr_month) AS previous_month_delivery,
-      COALESCE(LAG(product_ranking) OVER (PARTITION BY ultimate_parent_account_id ORDER BY arr_month),0) AS previous_month_product_ranking,
-      COALESCE(LAG(quantity) OVER (PARTITION BY ultimate_parent_account_id ORDER BY arr_month),0) AS previous_month_quantity,
-      COALESCE(LAG(arr) OVER (PARTITION BY ultimate_parent_account_id ORDER BY arr_month),0) AS previous_month_arr
+      LAG(product_category) OVER (PARTITION BY ultimate_parent_account_id ORDER BY arr_month) AS previous_product_category,
+      LAG(delivery) OVER (PARTITION BY ultimate_parent_account_id ORDER BY arr_month) AS previous_delivery,
+      COALESCE(LAG(product_ranking) OVER (PARTITION BY ultimate_parent_account_id ORDER BY arr_month),0) AS previous_product_ranking,
+      COALESCE(LAG(quantity) OVER (PARTITION BY ultimate_parent_account_id ORDER BY arr_month),0) AS previous_quantity,
+      COALESCE(LAG(arr) OVER (PARTITION BY ultimate_parent_account_id ORDER BY arr_month),0) AS previous_arr
     FROM monthly_arr_parent_level
 
 ), type_of_arr_change AS (
 
     SELECT
       prior_month.*,
-      CASE
-        WHEN previous_month_arr = 0 AND arr > 0
-          THEN 'New'
-        WHEN arr = 0 AND previous_month_arr > 0
-          THEN 'Churn'
-	    WHEN arr < previous_month_arr AND arr > 0
-          THEN 'Contraction'
-	    WHEN arr > previous_month_arr
-          THEN 'Expansion'
-	    WHEN arr = previous_month_arr
-          THEN 'No Impact'
-	    ELSE NULL
-	  END                 AS type_of_arr_change
+      {{ type_of_arr_change('arr','previous_arr') }}
     FROM prior_month
 
 ), reason_for_arr_change_beg AS (
@@ -81,8 +69,8 @@ WITH mart_arr AS (
     SELECT
       arr_month,
       ultimate_parent_account_id,
-      previous_month_arr      AS beg_arr,
-      previous_month_quantity AS beg_quantity
+      previous_arr      AS beg_arr,
+      previous_quantity AS beg_quantity
     FROM type_of_arr_change
 
 ), reason_for_arr_change_seat_change AS (
@@ -90,18 +78,8 @@ WITH mart_arr AS (
     SELECT
       arr_month,
       ultimate_parent_account_id,
-      CASE
-        WHEN previous_month_quantity != quantity AND previous_month_quantity > 0
-          THEN ZEROIFNULL(previous_month_arr/NULLIF(previous_month_quantity,0) * (quantity - previous_month_quantity))
-        WHEN previous_month_quantity != quantity AND previous_month_quantity = 0
-          THEN arr
-        ELSE 0
-      END                AS seat_change_arr,
-      CASE
-        WHEN previous_month_quantity != quantity
-        THEN quantity - previous_month_quantity
-        ELSE 0
-      END                AS seat_change_quantity
+      {{ reason_for_arr_change_seat_change('quantity', 'previous_quantity', 'arr', 'previous_arr') }},
+      {{ reason_for_quantity_change_seat_change('quantity', 'previous_quantity') }}
     FROM type_of_arr_change
 
 ), reason_for_arr_change_price_change AS (
@@ -109,13 +87,7 @@ WITH mart_arr AS (
     SELECT
       arr_month,
       ultimate_parent_account_id,
-      CASE
-        WHEN previous_month_product_category = product_category
-          THEN quantity * (arr/NULLIF(quantity,0) - previous_month_arr/NULLIF(previous_month_quantity,0))
-        WHEN previous_month_product_category != product_category AND previous_month_product_ranking = product_ranking
-          THEN quantity * (arr/NULLIF(quantity,0) - previous_month_arr/NULLIF(previous_month_quantity,0))
-        ELSE 0
-      END                  AS price_change_arr
+      {{ reason_for_arr_change_price_change('product_category', 'previous_product_category', 'quantity', 'previous_quantity', 'arr', 'previous_arr', 'product_ranking',' previous_product_ranking') }}
     FROM type_of_arr_change
 
 ), reason_for_arr_change_tier_change AS (
@@ -123,11 +95,7 @@ WITH mart_arr AS (
     SELECT
       arr_month,
       ultimate_parent_account_id,
-      CASE
-        WHEN previous_month_product_ranking != product_ranking
-        THEN ZEROIFNULL(quantity * (arr/NULLIF(quantity,0) - previous_month_arr/NULLIF(previous_month_quantity,0)))
-        ELSE 0
-      END                   AS tier_change_arr
+      {{ reason_for_arr_change_tier_change('product_ranking', 'previous_product_ranking', 'quantity', 'previous_quantity', 'arr', 'previous_arr') }}
     FROM type_of_arr_change
 
 ), reason_for_arr_change_end AS (
@@ -144,7 +112,7 @@ WITH mart_arr AS (
     SELECT
       arr_month,
       ultimate_parent_account_id,
-      ZEROIFNULL(( arr / NULLIF(quantity,0) ) - ( previous_month_arr / NULLIF(previous_month_quantity,0))) AS annual_price_per_seat_change
+      {{ annual_price_per_seat_change('quantity', 'previous_quantity', 'arr', 'previous_arr') }}
     FROM type_of_arr_change
 
 ), combined AS (
@@ -155,11 +123,11 @@ WITH mart_arr AS (
       type_of_arr_change.ultimate_parent_account_name,
       type_of_arr_change.ultimate_parent_account_id,
       type_of_arr_change.product_category,
-      type_of_arr_change.previous_month_product_category,
+      type_of_arr_change.previous_product_category                  AS previous_month_product_category,
       type_of_arr_change.delivery,
-      type_of_arr_change.previous_month_delivery,
+      type_of_arr_change.previous_delivery                          AS previous_month_delivery,
       type_of_arr_change.product_ranking,
-      type_of_arr_change.previous_month_product_ranking,
+      type_of_arr_change.previous_product_ranking                   AS previous_month_product_ranking,
       type_of_arr_change.type_of_arr_change,
       reason_for_arr_change_beg.beg_arr,
       reason_for_arr_change_beg.beg_quantity,
