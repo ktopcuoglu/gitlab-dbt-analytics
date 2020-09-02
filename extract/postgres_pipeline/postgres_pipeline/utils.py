@@ -174,7 +174,9 @@ def transform_dataframe_to_snowflake_types(
 ) -> pd.DataFrame:
     pg_types = get_postgres_types(table_name, source_engine)
     for column in df:
-        df[column] = transform_dataframe_column(pg_types[column], df[column])
+        df[column] = transform_dataframe_column(
+            pg_types[column], df[column].to_series()
+        )
     return df
 
 
