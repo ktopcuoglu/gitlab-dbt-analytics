@@ -262,7 +262,7 @@ def chunk_and_upload(
     source_engine.dispose()
 
 
-def read_sql_tmpfile(query: str, db_engine: Engine, tmp_file: file) -> pd.DataFrame:
+def read_sql_tmpfile(query: str, db_engine: Engine, tmp_file: Any) -> pd.DataFrame:
     """
     Uses postGres commands to copy data out of the DB and return a DF iterator
     """
