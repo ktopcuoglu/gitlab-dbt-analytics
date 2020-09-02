@@ -24,7 +24,7 @@ tables:
       SELECT CONCAT(table_name, '_', column_name, table_schema) AS column_id
       , column_name
       , data_type
-      , ordinal_poition
+      , ordinal_position
       , table_name      
       , table_schema
       FROM information_schema.columns
