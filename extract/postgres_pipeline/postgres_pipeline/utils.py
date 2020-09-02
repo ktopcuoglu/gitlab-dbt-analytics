@@ -233,7 +233,7 @@ def chunk_and_upload(
     """
 
     rows_uploaded = 0
-    backfilled_rows = 0
+
     with tempfile.TemporaryFile() as tmpfile:
 
         iter_csv = read_sql_tmpfile(query, source_engine, tmpfile)
@@ -250,20 +250,18 @@ def chunk_and_upload(
             row_count = chunk_df.shape[0]
             rows_uploaded += row_count
 
-            if not backfill or row_count > 0:
+            upload_file_name = f"{target_table}_CHUNK.tsv.gz"
+
+            if row_count > 0:
                 upload_to_gcs(
                     advanced_metadata, chunk_df, upload_file_name + "." + str(idx)
                 )
 
-            upload_file_name = f"{target_table}_CHUNK.tsv.gz"
+        trigger_snowflake_upload(
+            target_engine, target_table, upload_file_name + "[.]\\\\d*", purge=True
+        )
 
-            trigger_snowflake_upload(
-                target_engine, target_table, upload_file_name + "[.]\\\\d*", purge=True
-            )
-
-            logging.info(
-                f"Uploaded {rows_uploaded + backfilled_rows} total rows to table {target_table}."
-            )
+        logging.info(f"Uploaded {rows_uploaded} total rows to table {target_table}.")
 
     target_engine.dispose()
     source_engine.dispose()
