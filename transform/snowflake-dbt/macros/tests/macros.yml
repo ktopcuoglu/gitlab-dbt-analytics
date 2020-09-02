@@ -31,6 +31,7 @@ macros:
       - name: where_clause
         description: Optional filter on the data. Wrap the entire clause in double quotes.
   - name: source_new_rows_per_day
+    description: Counts the number of new records created in the previous day during normal, non-holiday, business days in the US.
     arguments:
       - name: schema
         type: string
