@@ -139,7 +139,7 @@ def query_results_generator(
 
 def transform_dataframe_column(pg_type: str, column: pd.Series) -> pd.Series:
     if pg_type == "timestamp with time zone":
-        return column.to_timestamp()
+        return column.dt
     elif (
         pg_type == "integer"
         or pg_type == "smallint"
@@ -153,7 +153,7 @@ def transform_dataframe_column(pg_type: str, column: pd.Series) -> pd.Series:
     elif pg_type == "boolean":
         return column.astype(bool)
     else:
-        return column.to_string()
+        return column
 
 
 def get_postgres_types(table_name: str, source_engine: Engine) -> Dict[str, str]:
@@ -174,9 +174,7 @@ def transform_dataframe_to_snowflake_types(
 ) -> pd.DataFrame:
     pg_types = get_postgres_types(table_name, source_engine)
     for column in df:
-        df[column] = transform_dataframe_column(
-            pg_types[column], df[column].to_series()
-        )
+        df[column] = transform_dataframe_column(pg_types[column], df[column])
     return df
 
 
