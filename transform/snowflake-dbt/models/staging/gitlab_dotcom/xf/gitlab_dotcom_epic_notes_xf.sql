@@ -14,7 +14,7 @@ WITH base AS (
     WHERE noteable_type = 'Epic'
     {% if is_incremental() %}
 
-      WHERE updated_at >= (SELECT MAX(updated_at) FROM {{this}})
+      AND updated_at >= (SELECT MAX(updated_at) FROM {{this}})
 
     {% endif %}
 )
