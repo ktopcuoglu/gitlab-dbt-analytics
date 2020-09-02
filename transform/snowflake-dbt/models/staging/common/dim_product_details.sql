@@ -32,7 +32,6 @@ WITH zuora_product AS (
       zuora_product.sku                                                         AS product_sku,
       {{ product_category('zuora_product_rate_plan.product_rate_plan_name') }},
       {{ delivery('product_category')}},      
-      zuora_product.category                                                    AS zuora_product_category,
       zuora_product_rate_plan.product_rate_plan_name like '%reporter_access%'   AS is_reporter_license,
       zuora_product.effective_start_date                                        AS effective_start_date,
       zuora_product.effective_end_date                                          AS effective_end_date,
@@ -46,7 +45,6 @@ WITH zuora_product AS (
       ON zuora_product_rate_plan_charge.product_rate_plan_charge_id = zuora_product_rate_plan_charge_tier.product_rate_plan_charge_id
     WHERE zuora_product.is_deleted = FALSE
       AND zuora_product_rate_plan_charge_tier.currency = 'USD'
-      AND zuora_product_rate_plan_charge_tier.price != 0
     {{ dbt_utils.group_by(n=12) }}
     ORDER BY 1, 3
 
