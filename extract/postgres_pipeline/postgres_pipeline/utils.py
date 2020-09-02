@@ -203,6 +203,8 @@ def seed_table(
     """
     Sets the proper data types and column names.
     """
+    if target_engine.dialect.has_table(target_table_name):
+        return
     if advanced_metadata:
         snowflake_types.append(Column("_task_instance", String))
     snowflake_types.append(Column("_uploaded_at", Float))
