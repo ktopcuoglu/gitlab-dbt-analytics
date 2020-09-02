@@ -137,6 +137,47 @@ def query_results_generator(
     return query_df_iterator
 
 
+def transform_dataframe_column(pg_type: str, column: pd.Series) -> pd.Series:
+    if pg_type == "timestamp with time zone":
+        return column.to_timestamp()
+    elif (
+        pg_type == "integer"
+        or pg_type == "smallint"
+        or pg_type == "numeric"
+        or pg_type == "bigint"
+        or pg_type == "double precision"
+    ):
+        return pd.to_numeric(column, errors="ignore")
+    elif pg_type == "date":
+        return column.dt.date
+    elif pg_type == "boolean":
+        return column.astype(bool)
+    else:
+        return column.to_string()
+
+
+def get_postgres_types(table_name: str, source_engine: Engine) -> Dict[str, str]:
+    query = f"""
+      select column_name, data_type 
+      from information_schema.columns
+      WHERE table_name = '{table_name}'
+    """
+    query_results = query_executor(source_engine, query)
+    type_dict = {}
+    for result in query_results:
+        type_dict[result[0]] = result[1]
+    return type_dict
+
+
+def transform_dataframe_to_snowflake_types(
+    df: pd.DataFrame, table_name: str, source_engine: Engine
+) -> pd.DataFrame:
+    pg_types = get_postgres_types(table_name, source_engine)
+    for column in df:
+        df[column] = transform_dataframe_column(pg_types[column], df[column])
+    return df
+
+
 def seed_table(
     advanced_metadata: bool,
     df: pd.DataFrame,
@@ -148,7 +189,6 @@ def seed_table(
     Load a set number of rows to Snowflake through pandas to create the table
     and set the proper data types and column names.
     """
-
     logging.info(f"Seeding {rows_to_seed} rows directly into Snowflake...")
     dataframe_uploader(
         df.iloc[:rows_to_seed], engine, table, advanced_metadata=advanced_metadata
@@ -161,6 +201,7 @@ def chunk_and_upload(
     source_engine: Engine,
     target_engine: Engine,
     target_table: str,
+    source_table: str,
     advanced_metadata: bool = False,
     backfill: bool = False,
 ) -> None:
@@ -185,12 +226,15 @@ def chunk_and_upload(
 
             if backfill:
                 rows_to_seed = 10000
+                chunk_df = transform_dataframe_to_snowflake_types(
+                    chunk_df, source_table, source_engine
+                )
                 seed_table(
-                        advanced_metadata,
-                        chunk_df,
-                        target_engine,
-                        target_table,
-                        rows_to_seed=rows_to_seed,
+                    advanced_metadata,
+                    chunk_df,
+                    target_engine,
+                    target_table,
+                    rows_to_seed=rows_to_seed,
                 )
                 backfilled_rows += chunk_df[:rows_to_seed].shape[0]
                 chunk_df = chunk_df.iloc[rows_to_seed:]
@@ -201,25 +245,26 @@ def chunk_and_upload(
 
             if not backfill or row_count > 0:
                 upload_to_gcs(
-                        advanced_metadata, chunk_df, upload_file_name + "." + str(idx)
+                    advanced_metadata, chunk_df, upload_file_name + "." + str(idx)
                 )
 
             upload_file_name = f"{target_table}_CHUNK.tsv.gz"
 
             trigger_snowflake_upload(
-                    target_engine, target_table, upload_file_name + "[.]\\\\d*", purge=True
+                target_engine, target_table, upload_file_name + "[.]\\\\d*", purge=True
             )
 
             logging.info(
-                    f"Uploaded {rows_uploaded + backfilled_rows} total rows to table {target_table}."
+                f"Uploaded {rows_uploaded + backfilled_rows} total rows to table {target_table}."
             )
 
     target_engine.dispose()
     source_engine.dispose()
 
-def read_sql_tmpfile(query:str, db_engine:Engine, tmp_file: file) -> pd.DataFrame:
+
+def read_sql_tmpfile(query: str, db_engine: Engine, tmp_file: file) -> pd.DataFrame:
     """
-        Uses postGres commands to copy data out of the DB and return a DF iterator
+    Uses postGres commands to copy data out of the DB and return a DF iterator
     """
     copy_sql = f"COPY ({query}) TO STDOUT WITH CSV HEADER"
     logging.info(f" running COPY ({query}) TO STDOUT WITH CSV HEADER")
