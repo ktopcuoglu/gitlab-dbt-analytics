@@ -1,3 +1,8 @@
+{{ config({
+    "tags": ["tdf"]
+    })
+}}
+
 {{ source_column_sum_min(
     'zuora', 
     'account',
