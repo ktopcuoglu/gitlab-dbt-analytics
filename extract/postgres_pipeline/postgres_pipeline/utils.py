@@ -139,7 +139,7 @@ def query_results_generator(
 
 def transform_dataframe_column(pg_type: str, column: pd.Series) -> pd.Series:
     if pg_type == "timestamp with time zone":
-        return column.dt
+        return pd.to_datetime(column, errors="coerce")
     elif (
         pg_type == "integer"
         or pg_type == "smallint"
@@ -147,9 +147,9 @@ def transform_dataframe_column(pg_type: str, column: pd.Series) -> pd.Series:
         or pg_type == "bigint"
         or pg_type == "double precision"
     ):
-        return pd.to_numeric(column, errors="ignore")
+        return pd.to_numeric(column, errors="coerce")
     elif pg_type == "date":
-        return column.dt.date
+        return pd.to_datetime(column, errors="coerce").date
     elif pg_type == "boolean":
         return column.astype(bool)
     else:
