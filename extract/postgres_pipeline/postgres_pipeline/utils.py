@@ -19,8 +19,19 @@ import sqlalchemy
 from google.cloud import storage
 from google.cloud.storage.bucket import Bucket
 from google.oauth2 import service_account
-from sqlalchemy import create_engine
+from sqlalchemy import (
+    create_engine,
+    Column,
+    Integer,
+    String,
+    Boolean,
+    Date,
+    Float,
+    DateTime,
+    Table,
+)
 from sqlalchemy.engine.base import Engine
+from sqlalchemy.schema import CreateTable
 
 SCHEMA = "tap_postgres"
 
@@ -137,9 +148,9 @@ def query_results_generator(
     return query_df_iterator
 
 
-def transform_dataframe_column(pg_type: str, column: pd.Series) -> pd.Series:
+def transform_dataframe_column(column_name: str, pg_type: str) -> List[Column]:
     if pg_type == "timestamp with time zone":
-        return pd.to_datetime(column, errors="coerce")
+        return Column(column_name, DateTime)
     elif (
         pg_type == "integer"
         or pg_type == "smallint"
@@ -147,13 +158,15 @@ def transform_dataframe_column(pg_type: str, column: pd.Series) -> pd.Series:
         or pg_type == "bigint"
         or pg_type == "double precision"
     ):
-        return pd.to_numeric(column, errors="coerce")
+        return Column(column_name, Integer)
     elif pg_type == "date":
-        return pd.to_datetime(column, errors="coerce").date
+        return Column(column_name, Date)
     elif pg_type == "boolean":
-        return column.astype(bool)
+        return Column(column_name, Boolean)
+    elif pg_type == "float":
+        return Column(column_name, Float)
     else:
-        return column
+        return Column(column_name, String)
 
 
 def get_postgres_types(table_name: str, source_engine: Engine) -> Dict[str, str]:
@@ -169,31 +182,32 @@ def get_postgres_types(table_name: str, source_engine: Engine) -> Dict[str, str]
     return type_dict
 
 
-def transform_dataframe_to_snowflake_types(
-    df: pd.DataFrame, table_name: str, source_engine: Engine
-) -> pd.DataFrame:
-    pg_types = get_postgres_types(table_name, source_engine)
-    for column in df:
-        df[column] = transform_dataframe_column(pg_types[column], df[column])
-    return df
+def transform_source_types_to_snowflake_types(
+    df: pd.DataFrame,
+    source_table_name: str,
+    source_engine: Engine,
+) -> List[Column]:
+    pg_types = get_postgres_types(source_table_name, source_engine)
+    table_columns = [
+        transform_dataframe_column(column, pg_types[column]) for column in df
+    ]
+    return table_columns
 
 
 def seed_table(
     advanced_metadata: bool,
-    df: pd.DataFrame,
-    engine: Engine,
-    table: str,
-    rows_to_seed: int = 10000,
-) -> bool:
+    snowflake_types: List[Column],
+    target_table_name: str,
+    target_engine: Engine,
+) -> None:
     """
-    Load a set number of rows to Snowflake through pandas to create the table
-    and set the proper data types and column names.
+    Sets the proper data types and column names.
     """
-    logging.info(f"Seeding {rows_to_seed} rows directly into Snowflake...")
-    dataframe_uploader(
-        df.iloc[:rows_to_seed], engine, table, advanced_metadata=advanced_metadata
-    )
-    return False
+    if advanced_metadata:
+        snowflake_types.append(Column("_task_instance", String))
+    snowflake_types.append(Column("_uploaded_at", Float))
+    table = Table(target_table_name, sqlalchemy.MetaData(), *snowflake_types)
+    query_executor(target_engine, CreateTable(table))
 
 
 def chunk_and_upload(
@@ -225,19 +239,10 @@ def chunk_and_upload(
         for idx, chunk_df in enumerate(iter_csv):
 
             if backfill:
-                rows_to_seed = 10000
-                chunk_df = transform_dataframe_to_snowflake_types(
+                schema_types = transform_source_types_to_snowflake_types(
                     chunk_df, source_table, source_engine
                 )
-                seed_table(
-                    advanced_metadata,
-                    chunk_df,
-                    target_engine,
-                    target_table,
-                    rows_to_seed=rows_to_seed,
-                )
-                backfilled_rows += chunk_df[:rows_to_seed].shape[0]
-                chunk_df = chunk_df.iloc[rows_to_seed:]
+                seed_table(advanced_metadata, schema_types, target_table, target_engine)
                 backfill = False
 
             row_count = chunk_df.shape[0]
