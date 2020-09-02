@@ -66,6 +66,8 @@ If you are the person who will be using this data and/or the dashboard it depend
 <summary><i>Click to toggle Auditing</i></summary>
 What are you using to audit your results are accurate If you have an existing report/dashboard/dataset as reference, please provide your query used to validate the results of your model changes. If this is the first iteration of a model or validation is otherwise out of scope, please provide additional context.
 
+- [ ] Have you updated the values in any `dbt_audit` macros that you're referencing?
+
 <details>
 <summary> Paste query and results here </summary>
 
