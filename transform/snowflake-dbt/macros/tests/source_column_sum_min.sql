@@ -7,7 +7,7 @@ WITH source as (
 
 ), counts AS (
 
-    SELECT sum({{column}}) as sum_value
+    SELECT SUM({{column}}) AS sum_value
     FROM source
     {% if where_clause != None %}
     WHERE {{ where_clause }}
