@@ -1,6 +1,6 @@
 {% macro source_column_sum_min(schema, table, column, min_value, where_clause=None) %}
 
-WITH source as (
+WITH source AS (
 
     SELECT *
     FROM {{ source(schema, table) }}
