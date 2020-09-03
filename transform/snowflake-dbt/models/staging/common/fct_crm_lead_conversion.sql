@@ -24,9 +24,9 @@ WITH sfdc_lead AS(
     sfdc_lead.converted_opportunity_id                                                   AS opportunity_id,
     'lead conversion'                                                                    AS event_name
 
-  FROM sfdc_lead_history_source
+  FROM sfdc_lead_history
   INNER JOIN sfdc_lead
-    ON sfdc_lead.lead_id = sfdc_lead_history_source.lead_id
+    ON sfdc_lead.lead_id = sfdc_lead_history.lead_id
 
 )
 
