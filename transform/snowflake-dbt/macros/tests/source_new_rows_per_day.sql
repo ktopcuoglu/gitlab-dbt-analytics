@@ -15,14 +15,15 @@ WITH dates as (
 ), counts AS (
 
     SELECT 
-      count(*)                             AS row_count,
-      date_trunc('day',{{created_column}}) AS the_day
+      COUNT(*)                                          AS row_count,
+      DATEADD('day', -1, DATE_TRUNC('day',createddate)) AS the_day
     FROM source
     WHERE the_day IN (SELECT DATE_ACTUAL FROM dates)
     {% if where_clause != None %}
       AND {{ where_clause }}
     {% endif %}
     GROUP BY 2
+    ORDER BY 2 DESC
     LIMIT 1
 
 )
