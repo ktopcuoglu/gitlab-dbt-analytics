@@ -1,7 +1,7 @@
 WITH sfdc_lead AS(
 
   SELECT *
-  FROM {{ ref('sfdc_lead') }}
+    FROM {{ ref('sfdc_lead') }}
 
 ), sfdc_contact AS (
 
