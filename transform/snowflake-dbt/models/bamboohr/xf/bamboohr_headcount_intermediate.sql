@@ -103,7 +103,7 @@ WITH dates AS (
           AND job_role_modified = 'Senior Leadership',1,0)                       AS headcount_start_leader,
       IFF(dates.end_date = date_actual
           AND job_role_modified = 'Senior Leadership',1,0)                       AS headcount_end_leader,
-      IFF(is_hire_date = True 
+      IFF(date_actual = LAST_DAY(date_actual) 
           AND job_role_modified = 'Senior Leadership',1,0)                       AS hired_leaders,
       IFF(is_termination_date = True
           AND job_role_modified = 'Senior Leadership',1,0)                       AS separated_leaders,

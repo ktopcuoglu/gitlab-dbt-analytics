@@ -64,7 +64,6 @@ WITH epic_issues AS (
       namespaces.namespace_name,
       sfdc_accounts.account_id   AS sfdc_account_id,
       sfdc_accounts.account_type AS sfdc_account_type,
-      sfdc_accounts.total_account_value,
       sfdc_accounts.carr_this_account,
       sfdc_accounts.carr_total,
       epics.epic_title
@@ -102,7 +101,6 @@ WITH epic_issues AS (
       namespaces.namespace_name,
       sfdc_accounts.account_id   AS sfdc_account_id,
       sfdc_accounts.account_type AS sfdc_account_type,
-      sfdc_accounts.total_account_value,
       sfdc_accounts.carr_this_account,
       sfdc_accounts.carr_total,
       epics.epic_title --Redundant in this case.
@@ -134,7 +132,6 @@ WITH epic_issues AS (
       namespaces.namespace_name,
       sfdc_accounts.account_id AS sfdc_account_id,
       sfdc_accounts.account_type AS sfdc_account_type,
-      sfdc_accounts.total_account_value,
       sfdc_accounts.carr_this_account,
       sfdc_accounts.carr_total,
       epics.epic_title
@@ -172,7 +169,6 @@ WITH epic_issues AS (
       namespaces.namespace_name,
       sfdc_accounts.account_id   AS sfdc_account_id,
       sfdc_accounts.account_type AS sfdc_account_type,
-      sfdc_accounts.total_account_value,
       sfdc_accounts.carr_this_account,
       sfdc_accounts.carr_total,
       epics.epic_title --Redundant in this case.

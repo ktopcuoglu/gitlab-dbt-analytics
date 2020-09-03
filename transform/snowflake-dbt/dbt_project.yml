@@ -175,9 +175,6 @@ models:
 
       license:
         +schema: license_db
-    
-      maxmind:
-        +schema: maxmind
 
       netsuite:
         +schema: netsuite
@@ -192,6 +189,9 @@ models:
       pmg:
         +materialized: table
         +schema: pmg
+
+      rspec:
+        +schema: rspec
 
       sfdc:
         +schema: sfdc

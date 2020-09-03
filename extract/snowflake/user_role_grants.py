@@ -34,7 +34,7 @@ def iterative_query_upload(
 ) -> None:
     """
     Takes a pandas dataframe, iterates on a given column, builds a final result set,
-    and uploads to raw.snowflake. 
+    and uploads to raw.snowflake.
     """
     snowflake_engine_sysadmin = snowflake_engine_factory(config_dict, "SYSADMIN")
     connection = snowflake_engine_sysadmin.connect()

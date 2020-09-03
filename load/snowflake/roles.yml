@@ -320,12 +320,26 @@ roles:
                 write:
                     - analytics
 
+    - decisive_data:
+        warehouses:
+            - analyst_xs
+        member_of:
+            - analyst_core
+            - snowflake_db
+            - zuora
+            - salesforce
+        privileges:
+            databases:
+                write:
+                    - analytics
+
     - engineer:
         member_of:
             - covid19
             - loader
             - transformer
             - snowflake_db
+            - static_admin
         warehouses:
             - airflow_testing_l
             - engineer_xs
@@ -374,6 +388,7 @@ roles:
                 - raw.gitter
                 - raw.pmg
                 - raw.prometheus
+                - raw.rspec
                 - raw.snowplow
                 - raw.tap_postgres
                 - raw.qualtrics_mailing_list
@@ -385,6 +400,7 @@ roles:
                 - raw.gitter.*
                 - raw.pmg.*
                 - raw.prometheus.*
+                - raw.rspec.*
                 - raw.snowplow.*
                 - raw.tap_postgres.*
                 - raw.qualtrics_mailing_list.*
@@ -556,6 +572,22 @@ roles:
         privileges:
             databases:
                 read:
+                    - analytics
+            schemas:
+                read:
+                    - analytics.analytics
+                    - analytics.analytics_sensitive
+            tables:
+                read:
+                    - analytics.analytics.*
+                    - analytics.analytics_sensitive.*
+
+    - bamboohr_raw:
+        warehouses:
+            - analyst_xs
+        privileges:
+            databases:
+                read:
                     - raw
             schemas:
                 read:
@@ -563,7 +595,8 @@ roles:
             tables:
                 read:
                     - raw.bamboohr.*
-    
+
+
     - boneyard:
         warehouses:
             - analyst_xs
@@ -784,6 +817,7 @@ roles:
             databases:
                 read:
                     - analytics
+                    - raw
             schemas:
                 read:
                     - analytics.maxmind
@@ -1166,8 +1200,10 @@ roles:
     - dparker:
         member_of:
             - reporter
+            - postgres_pipeline
         warehouses:
             - reporting
+            - analyst_xs
 
     - dtang:
         member_of:
@@ -1210,6 +1246,12 @@ roles:
             - reporter
         warehouses:
             - reporting
+
+    - evan:
+        member_of:
+            - decisive_data
+        warehouses:
+            - analyst_xs
 
     - ewegscheider:
         member_of:
@@ -1294,7 +1336,7 @@ roles:
             - analyst_marketing
             - customers_db
             - netsuite
-            - static_sensitive
+            - static_admin
         warehouses:
             - analyst_xs
 
@@ -1369,6 +1411,12 @@ roles:
         warehouses:
             - admin
 
+    - michellecooper:
+        member_of:
+            - decisive_data
+        warehouses:
+            - analyst_xs
+
     - mjozenazemian:
         warehouses:
             - reporting
@@ -1434,6 +1482,7 @@ roles:
         member_of:
             - analyst_people
             - customers_db
+            - bamboohr_raw
         warehouses:
             - analyst_xs
 
@@ -1524,6 +1573,8 @@ roles:
                     - testing_db.*.*
 
     - tmurphy:
+        member_of:
+            - bamboohr_raw
         warehouses:
             - admin
             - engineer_xs
@@ -1657,7 +1708,12 @@ users:
         member_of:
             - eurie
             - securityadmin
-    
+
+    - evan:
+        can_login: yes 
+        member_of:
+            - evan
+
     - ewegscheider:
         can_login: yes
         member_of: 
@@ -1771,7 +1827,12 @@ users:
         member_of:
             - mdewji
             - securityadmin
-    
+
+    - michellecooper:
+        can_login: yes 
+        member_of:
+            - michellecooper
+
     - mjozenazemian:
         can_login: yes
         member_of:
@@ -1797,6 +1858,7 @@ users:
         member_of:
             - engineer
             - msendal
+            - bamboohr_raw
 
     - mvilain:
         can_login: yes

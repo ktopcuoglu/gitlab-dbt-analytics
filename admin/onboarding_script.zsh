@@ -1,5 +1,5 @@
-# install homebrew
-# Check if exists
+## Install homebrew
+## Check if exists
 command -v brew >/dev/null 2>&1 || { echo "Installing Homebrew.."
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
   } >&2;
@@ -28,15 +28,15 @@ echo "tldr installed. "
 ## Get oh my zsh (plugins, themes for zsh).
 sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" "" --unattended
 git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-# Set zsh theme
+## Set zsh theme
 sed -i '' 's/ZSH_THEME=".*"/ZSH_THEME="bira"/g' ~/.zshrc
 sed -i '' 's/plugins=(git)/plugins=(git zsh-autosuggestions jump)/g' ~/.zshrc
 
-# Fix zsh permissions
+## Fix zsh permissions
 chmod 755 /usr/local/share/zsh
 chmod 755 /usr/local/share/zsh/site-functions
 
-# source file to get jump working
+## source file to get jump working
 source ~/.zshrc
 
 ## install the project
@@ -71,9 +71,6 @@ brew cask install visual-studio-code
 code --version
 echo "VS Code successfully installed"
 
-## Add refresh command
-echo "alias dbt_refresh='dbt clean ; dbt deps ; dbt seed'" >> ~/.zshrc
-
 ## install anaconda
 echo "Installing anaconda.."
 brew cask install anaconda
@@ -103,7 +100,7 @@ echo "Installing rbenv.."
 ### Ruby setup
 brew install rbenv
 
-# Get ruby version from repo
+## Get ruby version from repo
 ruby_version=$(curl -L 'https://gitlab.com/gitlab-com/www-gitlab-com/-/raw/master/.ruby-version' )
 
 rbenv init

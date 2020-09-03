@@ -17,7 +17,11 @@ def construct_qualtrics_contact(result):
         "lastName": result["last_name"],
         "email": result["email_address"],
         "language": result["language"],
-        "embeddedData": {"gitlabUserID": result["user_id"]},
+        "embeddedData": {
+            "gitlabUserID": result["user_id"],
+            "user_id": result["user_id"],
+            "plan": result["plan"],
+        },
     }
 
 
@@ -39,6 +43,32 @@ def should_file_be_processed(file, qualtrics_mailing_lists):
     return True
 
 
+def push_contacts_to_qualtrics(
+    tab_name, file, qualtrics_client, qualtrics_contacts
+) -> str:
+    final_status = "processed"
+    try:
+        mailing_id = qualtrics_client.create_mailing_list(
+            env["QUALTRICS_POOL_ID"], tab_name, env["QUALTRICS_GROUP_ID"]
+        )
+    except:
+        file.sheet1.update_acell(
+            "A1",
+            "Mailing list could not be created in Qualtrics.  Try changing mailing list name.",
+        )
+        raise
+    else:
+        error_contacts = qualtrics_client.upload_contacts_to_mailing_list(
+            env["QUALTRICS_POOL_ID"], mailing_id, qualtrics_contacts
+        )
+        error_contacts_ids = [
+            contact["embeddedData"]["gitlabUserID"] for contact in error_contacts
+        ]
+        if error_contacts_ids:
+            final_status = f"{final_status} except {error_contacts_ids}"
+    return final_status
+
+
 def process_qualtrics_file(
     file, is_test, google_sheet_client, schema, qualtrics_client
 ):
@@ -54,7 +84,7 @@ def process_qualtrics_file(
     table = get_qualtrics_request_table_name(file.id)
     dw_uploader(engine, table, dataframe, schema)
     query = f"""
-        SELECT first_name, last_name, email_address, language, user_id
+        SELECT first_name, last_name, email_address, language, user_id, plan
         FROM ANALYTICS_SENSITIVE.QUALTRICS_API_FORMATTED_CONTACTS WHERE user_id in
         (
             SELECT id
@@ -68,33 +98,12 @@ def process_qualtrics_file(
 
     qualtrics_contacts = [construct_qualtrics_contact(result) for result in results]
 
-    final_status = "processed"
-
-    if not is_test:
-
-        try:
-            mailing_id = qualtrics_client.create_mailing_list(
-                env["QUALTRICS_POOL_ID"], tab, env["QUALTRICS_GROUP_ID"]
-            )
-        except:
-            file.sheet1.update_acell(
-                "A1",
-                "Mailing list could not be created in Qualtrics.  Try changing mailing list name.",
-            )
-            raise
-        else:
-            error_contacts = qualtrics_client.upload_contacts_to_mailing_list(
-                env["QUALTRICS_POOL_ID"], mailing_id, qualtrics_contacts
-            )
-            error_contacts_ids = [
-                contact["embeddedData"]["gitlabUserID"] for contact in error_contacts
-            ]
-            if error_contacts_ids:
-                final_status = f"{final_status} except {error_contacts_ids}"
-
     if is_test:
-        info(f"Not renaming file for test.")
+        info(f"Not updating file for test.")
     else:
+        final_status = push_contacts_to_qualtrics(
+            tab, file, qualtrics_client, qualtrics_contacts
+        )
         file.sheet1.update_acell("A1", final_status)
 
 
