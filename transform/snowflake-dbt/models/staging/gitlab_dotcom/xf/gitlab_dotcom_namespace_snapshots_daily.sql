@@ -11,6 +11,15 @@ WITH date_details AS (
       *,
       IFNULL(valid_to, CURRENT_TIMESTAMP) AS valid_to_
     FROM {{ ref('gitlab_dotcom_namespaces_snapshots_base') }}
+    {% if is_incremental() %}
+    WHERE dbt_scd_id in (
+    SELECT base.dbt_scd_id
+    FROM {{ ref('gitlab_dotcom_namespaces_snapshots_base') }} 
+    base WHERE NOT EXISTS
+         (SELECT dbt_scd_id from {{this}} derived WHERE 
+    derived.dbt_scd_id = base.dbt_scd_id)
+    )
+    {% end if %}
   
 ), namespace_snapshots_daily AS (
   
