@@ -1,10 +1,19 @@
-{{ config(materialized='view') }}
+{{
+    config(
+        materialized='incremental'
+    )
+}}
 
 WITH namespace_snapshots_daily AS (
 
     SELECT *
     FROM {{ ref('gitlab_dotcom_namespace_snapshots_daily') }}
-    WHERE snapshot_day BETWEEN '2020-05-01'::DATE AND '2020-05-31'::DATE
+    WHERE snapshot_day >= '2020-01-01'::DATE
+    {% if is_incremental() %}
+
+      AND snapshot_day > (select max(snapshot_day) from {{ this }})
+
+    {% endif %}
 
 ),  namespace_subscription_snapshot AS (
 
