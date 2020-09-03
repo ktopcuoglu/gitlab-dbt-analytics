@@ -7,6 +7,7 @@ WITH sfdc_lead AS(
 
 	SELECT *
 	FROM {{ ref('sfdc_contact')}}
+
 ), marketing_qualification_events AS(
 
 SELECT
