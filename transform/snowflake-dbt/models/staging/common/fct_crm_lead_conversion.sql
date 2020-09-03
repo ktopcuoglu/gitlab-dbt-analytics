@@ -3,10 +3,10 @@ WITH sfdc_lead AS(
   SELECT *
   FROM {{ ref('sfdc_lead') }}
 
-), sfdc_lead_history_source AS(
+), sfdc_lead_history AS(
 
   SELECT *
-  FROM {{ ref('sfdc_lead_history_source') }}
+  FROM {{ ref('sfdc_lead_history') }}
 
 ), lead_conversion_event AS (
 
