@@ -7,7 +7,7 @@ WITH source AS (
 
   SELECT
     flatten_export.value:billing_account_id::VARCHAR               AS billing_account_id,
-    flatten_export.value:cost::NUMBER                              AS cost,
+    flatten_export.value:cost::FLOAT                               AS cost,
     flatten_export.value:cost_type::VARCHAR                        AS cost_type,
     flatten_export.value:credits::VARIANT                          AS credits,
     flatten_export.value:currency::VARCHAR                         AS currency,
@@ -28,14 +28,16 @@ WITH source AS (
     flatten_export.value:sku:id::VARCHAR                           AS sku_id,
     flatten_export.value:sku:description::VARCHAR                  AS sku_description,
     flatten_export.value:system_labels::VARIANT                    AS system_labels,
-    flatten_export.value:usage:amount::NUMBER                      AS usage_amount,
-    flatten_export.value:usage:amount_in_pricing_units::NUMBER     AS usage_amount_in_pricing_units,
+    flatten_export.value:usage:amount::FLOAT                       AS usage_amount,
+    flatten_export.value:usage:amount_in_pricing_units::FLOAT      AS usage_amount_in_pricing_units,
     flatten_export.value:usage:pricing_unit::VARCHAR               AS pricing_unit,
     flatten_export.value:usage:unit::VARCHAR                       AS usage_unit,
     flatten_export.value:usage_start_time::TIMESTAMP               AS usage_start_time,
-    flatten_export.value:usage_end_time::TIMESTAMP                 AS usage_end_time
+    flatten_export.value:usage_end_time::TIMESTAMP                 AS usage_end_time,
+    ROW_NUMBER() OVER (ORDER BY COUNT(*) DESC)                     AS row_id
   FROM source,
   TABLE(FLATTEN(source.jsontext)) flatten_export
+  GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28
 
 )
 
