@@ -2,7 +2,7 @@
     "materialized": "incremental",
     "unique_key": "primary_key"
     })
-}}```
+}}
 
 WITH date_details AS (
   
@@ -17,13 +17,15 @@ WITH date_details AS (
     FROM {{ ref('gitlab_dotcom_namespaces_snapshots_base') }}
     {% if is_incremental() %}
     WHERE dbt_scd_id in (
-    SELECT base.dbt_scd_id
-    FROM {{ ref('gitlab_dotcom_namespaces_snapshots_base') }} 
-    base WHERE NOT EXISTS
-         (SELECT dbt_scd_id from {{this}} derived WHERE 
-    derived.dbt_scd_id = base.dbt_scd_id)
-    )
-    {% end if %}
+      SELECT base.dbt_scd_id
+      FROM {{ ref('gitlab_dotcom_namespaces_snapshots_base') }} base
+      WHERE NOT EXISTS
+        (
+          SELECT dbt_scd_id
+          FROM {{this}} derived
+          WHERE derived.dbt_scd_id = base.dbt_scd_id)
+        )
+    {% endif %}
   
 ), namespace_snapshots_daily AS (
   
