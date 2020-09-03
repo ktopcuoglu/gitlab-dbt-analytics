@@ -358,7 +358,7 @@ models:
           - unique
           - not_null
       - name: event_timestamp
-        description: The date and time the lead was converted
+        description: The date and time the lead was converted.
         tests:
           - not_null
       - name: crm_person_id
