@@ -34,11 +34,9 @@ WITH source AS (
     flatten_export.value:usage:unit::VARCHAR                       AS usage_unit,
     flatten_export.value:usage_start_time::TIMESTAMP               AS usage_start_time,
     flatten_export.value:usage_end_time::TIMESTAMP                 AS usage_end_time,
-    ROW_NUMBER() OVER (ORDER BY COUNT(*) DESC)                     AS row_id
+    uuid_string()                                                  AS primary_key
   FROM source,
   TABLE(FLATTEN(source.jsontext)) flatten_export
-  {{ dbt_utils.group_by(n=28) }}
-
 )
 
 
