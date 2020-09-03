@@ -895,6 +895,7 @@ tables:
       , updated_at
       , confidential
       , description
+      , issue_type
       , milestone_id
       , updated_by_id
       , weight
