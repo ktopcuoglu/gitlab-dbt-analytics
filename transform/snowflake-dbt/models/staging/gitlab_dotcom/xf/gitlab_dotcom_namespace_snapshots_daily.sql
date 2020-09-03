@@ -28,6 +28,7 @@ WITH date_details AS (
 ), namespace_snapshots_daily AS (
   
     SELECT
+      uuid_string() as primary_key,
       date_details.date_actual AS snapshot_day,
       namespace_snapshots.namespace_id,
       namespace_snapshots.plan_id,
