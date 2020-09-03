@@ -6,7 +6,7 @@ WITH source AS (
 ), flattened AS (
 
     SELECT 
-      d.value as data_by_row
+      d.value AS data_by_row
     FROM source
     INNER JOIN LATERAL FLATTEN(INPUT => PARSE_JSON(jsontext['results']), outer => true) d
 
