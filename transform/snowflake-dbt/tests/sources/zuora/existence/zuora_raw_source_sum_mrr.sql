@@ -3,8 +3,9 @@
     })
 }}
 
-{{ source_column_existence(
-    'zuora_stitch', 
+{{ source_column_sum_min(
+    'zuora', 
     'account',
-    ['name', 'id']
+    'mrr',
+    13500000
 ) }}
