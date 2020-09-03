@@ -8,7 +8,6 @@ models:
         tests:
           - not_null
           - unique
-    columns:
       - name: billing_account_id
         tests:
           - not_null
