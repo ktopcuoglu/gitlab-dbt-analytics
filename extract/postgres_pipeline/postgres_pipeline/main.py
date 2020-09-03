@@ -133,11 +133,11 @@ def load_incremental(
 
     # If _TEMP exists in the table name, skip it because it needs a full sync
     # If a temp table exists then it needs to finish syncing so don't load incrementally
-    # if "_TEMP" == table_name[-5:] or target_engine.has_table(f"{table_name}_TEMP"):
-    #     logging.info(
-    #         f"Table {table} needs to be backfilled due to schema change, aborting incremental load."
-    #     )
-    #     return False
+    if "_TEMP" == table_name[-5:] or target_engine.has_table(f"{table_name}_TEMP"):
+        logging.info(
+            f"Table {table} needs to be backfilled due to schema change, aborting incremental load."
+        )
+        return False
     env = os.environ.copy()
     query = f"{raw_query.format(**env)} {additional_filter}"
     logging.info(query)
