@@ -1,4 +1,8 @@
-{{ config(materialized='view') }}
+{{ config({
+    "materialized": "incremental",
+    "unique_key": "primary_key"
+    })
+}}```
 
 WITH date_details AS (
   
