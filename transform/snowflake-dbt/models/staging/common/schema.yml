@@ -247,39 +247,6 @@ models:
   - name: dim_subscriptions_valid_at
     description: Parameterized model to recreate dimension table representing subscription details as in Zuora at given date. Required variable valid_at is timezone sensitive
 
-  - name: dim_product_details
-    description: '{{ doc("dim_product_details") }}'
-    columns:
-      - name: product_id
-        description: The ID of the product that contains the product rate plan.
-        tests:
-          - not_null
-      - name: product_name
-        description: The name of the product
-      - name: is_reporter_license
-        description: "Reporter licenses are in the Products with 'Additional Permission Types' in the name."
-      - name: billing_list_price
-        description: The price of the tier if the charge is a flat fee, or the price of each unit in the tier if the charge model is tiered pricing.
-        tests:
-          - not_null
-      - name: product_details_id
-        description: The unique ID of a product rate plan charge
-        tests:
-          - unique
-          - not_null
-      - name: product_rate_plan_name
-        description: The name of the product rate plan. The name doesn't have to be unique in a Product Catalog, but the name has to be unique within a product.
-      - name: product_rate_plan_charge_name
-        description: The name of the product rate plan charge
-      - name: product_sku
-        description: The unique SKU for the product
-      - name: product_category
-        description: Category of the product. Used by Zuora Quotes Guided Product Selector.
-      - name: effective_start_date
-        description: The date when the product becomes available and can be subscribed to
-      - name: effective_end_date
-        description: The date when the product expires and can't be subscribed to anymore
-
   - name: fct_charges
     description: '{{ doc("fct_charges") }}'
     columns:
