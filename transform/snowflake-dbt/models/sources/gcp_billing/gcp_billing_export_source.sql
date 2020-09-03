@@ -37,7 +37,7 @@ WITH source AS (
     ROW_NUMBER() OVER (ORDER BY COUNT(*) DESC)                     AS row_id
   FROM source,
   TABLE(FLATTEN(source.jsontext)) flatten_export
-  GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28
+  {{ dbt_utils.group_by(n=28) }}
 
 )
 
