@@ -25,7 +25,7 @@ check_data AS (
          SUM(
         {%- for column in meta_columns %}
         CASE WHEN
-            sheetload.{{ column }}_hash = hashed.{{ column }}_hash THEN 0 ELSE 1
+            IFNULL(sheetload.{{ column }}_hash, '') = IFNULL(hashed.{{ column }}_hash, '') THEN 0 ELSE 1
         END +
         {% endfor %}
         -- Terminate the last +
@@ -33,7 +33,6 @@ check_data AS (
         AS num_rows
     FROM sheetload_data sheetload
     LEFT JOIN hashed_data hashed ON hashed.{{ join_column }} = sheetload.{{ join_column }}
-    WHERE sheetload.{{ column}}_hash IS NOT NULL
     GROUP BY sheetload.account_id
 )
 
