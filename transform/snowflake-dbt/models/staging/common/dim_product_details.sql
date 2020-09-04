@@ -31,7 +31,12 @@ WITH zuora_product AS (
       zuora_product.product_name                                                AS product_name,
       zuora_product.sku                                                         AS product_sku,
       {{ product_category('zuora_product_rate_plan.product_rate_plan_name') }},
-      {{ delivery('product_category')}},      
+      {{ delivery('product_category')}},
+      CASE
+        WHEN lower(product_rate_plan_name) like '%support%'
+          THEN 'Support Only'
+        ELSE 'Full Service'
+      END                                                                       AS service_type,
       zuora_product_rate_plan.product_rate_plan_name like '%reporter_access%'   AS is_reporter_license,
       zuora_product.effective_start_date                                        AS effective_start_date,
       zuora_product.effective_end_date                                          AS effective_end_date,
