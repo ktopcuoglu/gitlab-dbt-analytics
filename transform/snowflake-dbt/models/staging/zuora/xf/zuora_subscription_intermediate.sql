@@ -27,6 +27,7 @@ with zuora_subscription as (
 ), zuora_partitioned_filter AS(
 
   SELECT
+
     zuora_subs_filtered.*,
     -- Dates
     date_trunc('month', zuora_subs_filtered.subscription_start_date)::DATE                    AS subscription_start_month,
