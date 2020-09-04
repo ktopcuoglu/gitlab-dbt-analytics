@@ -1,3 +1,9 @@
+{{ config({
+    "materialized": "incremental",
+    "unique_key": "primary_key",
+    })
+}}
+
 WITH source AS (
 
   SELECT *
@@ -34,9 +40,15 @@ WITH source AS (
     flatten_export.value:usage:unit::VARCHAR                       AS usage_unit,
     flatten_export.value:usage_start_time::TIMESTAMP               AS usage_start_time,
     flatten_export.value:usage_end_time::TIMESTAMP                 AS usage_end_time,
-    uuid_string()                                                  AS primary_key
+    uuid_string()                                                  AS primary_key,
+    source.uploaded_at                                             AS uploaded_at
   FROM source,
   TABLE(FLATTEN(source.jsontext)) flatten_export
+  {% if is_incremental() %}
+
+  WHERE uploaded_at >= (SELECT MAX(uploaded_at) FROM {{this}})
+
+  {% endif %}
 )
 
 
