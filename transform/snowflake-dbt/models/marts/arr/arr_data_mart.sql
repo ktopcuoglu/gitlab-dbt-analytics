@@ -12,7 +12,7 @@ WITH dim_accounts AS (
   SELECT *
   FROM {{ ref('dim_customers') }}
 
-),dim_dates AS (
+), dim_dates AS (
 
   SELECT *
   FROM {{ ref('dim_dates') }}
@@ -97,6 +97,6 @@ SELECT
   LEFT JOIN dim_customers
     ON dim_accounts.crm_id = dim_customers.crm_id
   LEFT JOIN last_month_of_fiscal_quarter quarter
-    ON charges_month_by_month.arr_month = quarter.last_month_of_fiscal_quarter
+    ON dim_dates.date_actual = quarter.last_month_of_fiscal_quarter
   LEFT JOIN last_month_of_fiscal_year year
-    ON charges_month_by_month.arr_month = year.last_month_of_fiscal_year
+    ON dim_dates.date_actual = year.last_month_of_fiscal_year
