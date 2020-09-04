@@ -125,6 +125,7 @@ models:
     # Sources
     # ------------------
     sources:
+      +tags: ["sources"]
 
       airflow:
         +materialized: table
@@ -221,6 +222,7 @@ models:
 
       zuora:
         +schema: zuora
+        +tags: ["zuora"]
 
     # ------------------
     # Staging
