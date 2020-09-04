@@ -1,12 +1,13 @@
 version: 2
 
 models:
-  - name: gcp_billing_export
-    description: Base model for gcp billing export
+  - name: gcp_billing_export_xf
+    description: final model for billing export
     columns:
-      - name: billing_account_id
+      - name: primary_key
         tests:
           - not_null
+          - unique
 
   - name: gcp_billing_export_credits
     description: table for unnested credit rows
