@@ -1197,6 +1197,12 @@ roles:
         warehouses:
             - analyst_xs
 
+    - dmack:
+        member_of:
+            - analyst_sales
+        warehouses:
+            - analyst_xs
+
     - dparker:
         member_of:
             - reporter
@@ -1681,6 +1687,11 @@ users:
         member_of:
             - dknox
     
+    - dmack:
+        can_login: yes
+        member_of:
+            - dmack   
+
     - dparker:
         can_login: yes
         member_of:
