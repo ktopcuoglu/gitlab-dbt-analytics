@@ -1,7 +1,7 @@
-{{
-    config(
-        materialized='incremental'
-    )
+{{ config({
+    "materialized": "incremental",
+    "unique_key": "primary_key"
+    })
 }}
 
 WITH namespace_snapshots_daily AS (
@@ -64,5 +64,7 @@ WITH namespace_snapshots_daily AS (
 
 )
 
-SELECT *
+SELECT
+  {{ dbt_utils.surrogate_key(['snapshot_day', 'namepsace_id'] ) }}         AS primary_key,
+  *
 FROM namespace_lineage_daily
