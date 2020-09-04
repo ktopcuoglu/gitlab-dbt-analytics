@@ -233,7 +233,36 @@ def chunk_and_upload(
     """
 
     rows_uploaded = 0
+    backfilled_rows = 0
 
+    for idx, chunk_df in enumerate(results_generator):
+        # If the table doesn't exist, it needs to send the first chunk to the dataframe_uploader
+        if backfill:
+            rows_to_seed = 10000
+            seed_table(
+                advanced_metadata,
+                chunk_df,
+                target_engine,
+                target_table,
+                rows_to_seed=rows_to_seed,
+            )
+            backfilled_rows += chunk_df[:rows_to_seed].shape[0]
+            chunk_df = chunk_df.iloc[rows_to_seed:]
+        row_count = chunk_df.shape[0]
+        rows_uploaded += row_count
+        if not backfill or row_count > 0:
+            upload_to_gcs(
+                advanced_metadata, chunk_df, upload_file_name + "." + str(idx + 10)
+            )
+        backfill = False
+
+    if rows_uploaded > 0:
+        trigger_snowflake_upload(
+            target_engine, target_table, upload_file_name + "[.]\\\\d*", purge=True
+        )
+    logging.info(
+        f"Uploaded {rows_uploaded + backfilled_rows} total rows to table {target_table}."
+    )
     with tempfile.TemporaryFile() as tmpfile:
 
         iter_csv = read_sql_tmpfile(query, source_engine, tmpfile)
