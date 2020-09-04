@@ -40,7 +40,7 @@ with zuora_subscription as (
 
 ), circular AS ( 
 	
-	-- Identify for exclusions subscriptions with circular references in renewals
+    -- Identify for exclusions subscriptions with circular references in renewals
     -- See: https://app.periscopedata.com/app/gitlab/738643
   
   SELECT DISTINCT
