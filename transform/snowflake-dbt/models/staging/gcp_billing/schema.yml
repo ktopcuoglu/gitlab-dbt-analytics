@@ -29,3 +29,25 @@ models:
       - name: source_primary_key
         tests:
           - not_null
+
+  - name: gcp_billing_export_project_labels
+    description: table for unnested project label rows
+    columns:
+      - name: project_label_pk
+        tests:
+          - not_null
+          - unique
+      - name: source_primary_key
+        tests:
+          - not_null
+
+  - name: gcp_billing_export_system_labels
+    description: table for unnested system label rows
+    columns:
+      - name: system_label_pk
+        tests:
+          - not_null
+          - unique
+      - name: source_primary_key
+        tests:
+          - not_null
