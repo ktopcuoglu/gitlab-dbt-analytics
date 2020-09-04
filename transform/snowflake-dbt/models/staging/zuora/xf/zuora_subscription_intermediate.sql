@@ -36,7 +36,7 @@ with zuora_subscription as (
     date_trunc('year', zuora_subs_filtered.contract_effective_date)::DATE                     AS subscription_year
   
   FROM zuora_subs_filtered
-    WHERE zuora_subs_filtered.sub_row = 1
+  WHERE zuora_subs_filtered.sub_row = 1
 
 ), circular AS ( 
 	
