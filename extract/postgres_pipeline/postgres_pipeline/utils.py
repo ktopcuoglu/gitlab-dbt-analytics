@@ -234,7 +234,9 @@ def chunk_and_upload(
 
     rows_uploaded = 0
     backfilled_rows = 0
-
+    rows_uploaded = 0
+    results_generator = query_results_generator(query, source_engine)
+    upload_file_name = f"{target_table}_CHUNK.tsv.gz"
     for idx, chunk_df in enumerate(results_generator):
         # If the table doesn't exist, it needs to send the first chunk to the dataframe_uploader
         if backfill:
@@ -243,8 +245,7 @@ def chunk_and_upload(
                 advanced_metadata,
                 chunk_df,
                 target_engine,
-                target_table,
-                rows_to_seed=rows_to_seed,
+                target_table
             )
             backfilled_rows += chunk_df[:rows_to_seed].shape[0]
             chunk_df = chunk_df.iloc[rows_to_seed:]
