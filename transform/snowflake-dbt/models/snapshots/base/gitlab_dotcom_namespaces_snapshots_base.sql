@@ -14,10 +14,10 @@ WITH source AS (
   SELECT
   
     dbt_scd_id::VARCHAR                                           AS namespace_snapshot_id,
-    id::NUMBER                                                   AS namespace_id,
+    id::NUMBER                                                    AS namespace_id,
     name::VARCHAR                                                 AS namespace_name,
     path::VARCHAR                                                 AS namespace_path,
-    owner_id::NUMBER                                             AS owner_id,
+    owner_id::NUMBER                                              AS owner_id,
     type                                                          AS namespace_type,
     IFF(avatar IS NULL, FALSE, TRUE)                              AS has_avatar,
     created_at::TIMESTAMP                                         AS namespace_created_at,
