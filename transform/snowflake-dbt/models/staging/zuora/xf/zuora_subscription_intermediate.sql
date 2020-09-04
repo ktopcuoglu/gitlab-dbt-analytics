@@ -41,7 +41,6 @@ with zuora_subscription as (
 ), circular AS ( 
 	
     -- Identify for, exclusion, subscriptions with circular references in renewals to prevent failure of zuora_subscription_lineage
-    -- See: https://app.periscopedata.com/app/gitlab/738643
   
   SELECT DISTINCT
     left_subs.subscription_id
