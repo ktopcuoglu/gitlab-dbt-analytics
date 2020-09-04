@@ -7,3 +7,25 @@ models:
       - name: billing_account_id
         tests:
           - not_null
+
+  - name: gcp_billing_export_credits
+    description: table for unnested credit rows
+    columns:
+      - name: credits_pk
+        tests:
+          - not_null
+          - unique
+      - name: source_primary_key
+        tests:
+          - not_null
+
+  - name: gcp_billing_export_labels
+    description: table for unnested label rows
+    columns:
+      - name: labels_pk
+        tests:
+          - not_null
+          - unique
+      - name: source_primary_key
+        tests:
+          - not_null
