@@ -77,12 +77,13 @@ SELECT
   dim_subscriptions.subscription_name,
   dim_subscriptions.subscription_status,
 
-  --charge info
+  --product info
   dim_product_details.product_category,
   dim_product_details.delivery,
   dim_product_details.service_type,
+  dim_product_details.product_rate_plan_name,
   --charge_type,
-  --array_agg(unit_of_measure)                      AS unit_of_measure,
+  fct_mrr.unit_of_measure,
   --array_agg(rate_plan_name)                       AS rate_plan_name,
   fct_mrr.mrr                                     AS mrr,
   fct_mrr.arr                                     AS arr,
