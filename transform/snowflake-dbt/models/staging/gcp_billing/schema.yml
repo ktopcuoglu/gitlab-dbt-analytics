@@ -19,10 +19,10 @@ models:
         tests:
           - not_null
 
-  - name: gcp_billing_export_labels
-    description: table for unnested label rows
+  - name: gcp_billing_export_resource_labels
+    description: table for unnested resource label rows
     columns:
-      - name: label_pk
+      - name: resource_label_pk
         tests:
           - not_null
           - unique

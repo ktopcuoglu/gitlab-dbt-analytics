@@ -11,7 +11,7 @@ WITH source AS (
 )
 
 SELECT
-{{ dbt_utils.surrogate_key(['primary_key', 'system_label_key','system_label_value'] ) }}            AS label_pk,
+{{ dbt_utils.surrogate_key(['primary_key', 'system_label_key','system_label_value'] ) }}            AS system_label_pk,
 source.primary_key                                                                                  AS source_primary_key,
 system_labels_flat.value:key::VARCHAR                                                               AS system_label_key,
 system_labels_flat.value:value::VARCHAR                                                             AS system_label_value,
