@@ -45,7 +45,7 @@ WITH zuora_product AS (
       ON zuora_product_rate_plan_charge.product_rate_plan_charge_id = zuora_product_rate_plan_charge_tier.product_rate_plan_charge_id
     WHERE zuora_product.is_deleted = FALSE
       AND zuora_product_rate_plan_charge_tier.currency = 'USD'
-    {{ dbt_utils.group_by(n=12) }}
+    {{ dbt_utils.group_by(n=11) }}
     ORDER BY 1, 3
 
 )
