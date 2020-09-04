@@ -56,5 +56,5 @@ SELECT *
 FROM zuora_partitioned_filter
 WHERE subscription_id not in (
                                SELECT subscription_id
-							   FROM circular
+                               FROM circular
                              )
