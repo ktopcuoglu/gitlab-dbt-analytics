@@ -40,7 +40,7 @@ with zuora_subscription as (
 
 ), circular AS ( 
 	
-    -- Identify for exclusions subscriptions with circular references in renewals
+    -- Identify for, exclusion, subscriptions with circular references in renewals to prevent failure of zuora_subscription_lineage
     -- See: https://app.periscopedata.com/app/gitlab/738643
   
   SELECT DISTINCT
@@ -54,7 +54,7 @@ with zuora_subscription as (
 
 SELECT *
 FROM zuora_partitioned_filter
-WHERE subscription_id not in (
+WHERE subscription_id not in ( -- exclude circularly referenced subscriptions
                                SELECT subscription_id
                                FROM circular
                              )
