@@ -9,5 +9,5 @@ SELECT
   DATE_TRUNC('month', last_day_of_fiscal_quarter)                                 AS last_month_of_fiscal_quarter,
   IFF(DATE_TRUNC('month', last_day_of_fiscal_quarter) = date_actual, True, False) AS is_first_day_of_last_month_of_fiscal_quarter,
   DATE_TRUNC('month', last_day_of_fiscal_year)                                    AS last_month_of_fiscal_year,
-  IFF(DATE_TRUNC('month', last_day_of_fiscal_year) = date_actual, True, False)    AS is_first_day_of_last_month_of_fiscal_quarter
+  IFF(DATE_TRUNC('month', last_day_of_fiscal_year) = date_actual, True, False)    AS is_first_day_of_last_month_of_fiscal_year
 FROM dates
