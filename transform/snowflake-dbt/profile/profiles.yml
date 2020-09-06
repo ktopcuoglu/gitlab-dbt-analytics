@@ -11,10 +11,22 @@ gitlab-snowflake:
       account: gitlab
       user: "{{ env_var('SNOWFLAKE_USER') }}"
       password: "{{ env_var('SNOWFLAKE_PASSWORD') }}"
-      role: pluthra
-      database: ANALYTICS
-      warehouse: ANALYST_XS
+      database: "{{ env_var('SNOWFLAKE_TRANSFORM_DATABASE') }}"
+      role: "{{ env_var('SNOWFLAKE_TRANSFORM_ROLE') }}"
+      warehouse: "{{ env_var('SNOWFLAKE_TRANSFORM_WAREHOUSE') }}"
       schema: "{{ env_var('SNOWFLAKE_TRANSFORM_SCHEMA') }}"
+      client_session_keep_alive: True
+    ci:
+      type: snowflake
+      threads: 16
+      account: "{{ env_var('SNOWFLAKE_ACCOUNT') }}"
+      user: "{{ env_var('SNOWFLAKE_USER') }}"
+      password: "{{ env_var('SNOWFLAKE_PASSWORD') }}"
+      database: "{{ env_var('SNOWFLAKE_TRANSFORM_DATABASE') }}"
+      role: "{{ env_var('SNOWFLAKE_TRANSFORM_ROLE') }}"
+      warehouse: "{{ env_var('SNOWFLAKE_TRANSFORM_WAREHOUSE') }}"
+      schema: "{{ env_var('SNOWFLAKE_TRANSFORM_SCHEMA') }}"
+
     docs:
       type: snowflake
       threads: 8
