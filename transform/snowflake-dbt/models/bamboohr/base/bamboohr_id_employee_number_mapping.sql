@@ -26,6 +26,8 @@ WITH source AS (
       d.value['customRegion']::VARCHAR                                AS region,
       d.value['ethnicity']::VARCHAR                                   AS ethnicity,
       d.value['gender']::VARCHAR                                      AS gender, 
+      d.value['country']::VARCHAR                                     AS country,
+      d.value['age']::NUMBER                                          AS age,
       d.value['customCandidateID']::NUMBER                            AS greenhouse_candidate_id
     FROM source,
     LATERAL FLATTEN(INPUT => PARSE_JSON(jsontext['employees']), outer => true) d
