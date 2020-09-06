@@ -1,5 +1,6 @@
 {{ config({
-    "tags": ["tdf","zuora"]
+    "tags": ["tdf","zuora"],
+    "severity": "warn",
     })
 }}
 
