@@ -25,7 +25,7 @@ SELECT
 FROM promotions
 LEFT JOIN bamboohr_ote
   ON bamboohr_ote.employee_id = promotions.employee_id
-  AND bamboohr_ote.effective_date = promotions.effective_date
+  AND bamboohr_ote.effective_date = DATE_TRUNC(month, promotions.effective_date)
 LEFT JOIN bamboohr_currency_conversion
   ON bamboohr_currency_conversion.employee_id = promotions.employee_id
-  AND bamboohr_currency_conversion.effective_date = promotions.effective_date
+  AND bamboohr_currency_conversion.effective_date = DATE_TRUNC(month,promotions.effective_date)
