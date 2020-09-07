@@ -21,7 +21,6 @@ tables:
       , seats
       , trial
       FROM gitlab_subscriptions
-      LIMIT 10
     export_schema: 'gitlab_com'
     export_table: 'gitlab_subscriptions'
     export_table_primary_key: id
