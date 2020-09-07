@@ -91,6 +91,8 @@ SELECT
   FROM fct_mrr
   INNER JOIN dim_subscriptions
     ON dim_subscriptions.subscription_id = fct_mrr.subscription_id
+  INNER JOIN dim_product_details
+    ON dim_product_details.product_details_id = fct_mrr.product_details_id
   INNER JOIN dim_accounts
     ON dim_accounts.account_id = fct_mrr.account_id
   INNER JOIN dim_dates
