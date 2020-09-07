@@ -24,7 +24,7 @@ with labels AS (
       label_id,
 
     CASE
-      WHEN projects.visibility_level != 'public' AND namespace_id IN (SELECT * FROM internal_namespaces) THEN 'content masked'
+      WHEN projects.visibility_level != 'public' AND namespace_id NOT IN (SELECT * FROM internal_namespaces) THEN 'content masked'
       ELSE label_title
     END                                          AS masked_label_title,
 
