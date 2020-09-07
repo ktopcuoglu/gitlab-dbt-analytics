@@ -1197,6 +1197,12 @@ roles:
         warehouses:
             - analyst_xs
 
+    - dmack:
+        member_of:
+            - analyst_sales
+        warehouses:
+            - analyst_xs
+
     - dparker:
         member_of:
             - reporter
@@ -1582,6 +1588,12 @@ roles:
             - loading
             - reporting
 
+    - vjuhasz:
+        member_of:
+            - reporter
+        warehouses:
+            - analyst_xs
+
     - wwright:
         member_of:
             - analyst_finance
@@ -1675,6 +1687,11 @@ users:
         member_of:
             - dknox
     
+    - dmack:
+        can_login: yes
+        member_of:
+            - dmack   
+
     - dparker:
         can_login: yes
         member_of:
@@ -1977,6 +1994,11 @@ users:
     - valexieva:
         can_login: no
         member_of: []
+
+    - vjuhasz:
+        can_login: yes
+        member_of:
+            - vjuhasz
 
     - wwright:
         can_login: yes

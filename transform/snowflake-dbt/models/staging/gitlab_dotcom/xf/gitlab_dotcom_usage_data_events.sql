@@ -512,8 +512,7 @@ WITH gitlab_subscriptions AS (
 ), epic_notes AS (
 
     SELECT *
-    FROM {{ ref('gitlab_dotcom_notes_xf') }}
-    WHERE noteable_type = 'Epic'
+    FROM {{ ref('gitlab_dotcom_epic_notes_xf') }}
 
 ), incident_labeled_issues AS (
 

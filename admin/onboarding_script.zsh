@@ -71,9 +71,6 @@ brew cask install visual-studio-code
 code --version
 echo "VS Code successfully installed"
 
-## Add refresh command
-echo "alias dbt_refresh='dbt clean ; dbt deps ; dbt seed'" >> ~/.zshrc
-
 ## install anaconda
 echo "Installing anaconda.."
 brew cask install anaconda
