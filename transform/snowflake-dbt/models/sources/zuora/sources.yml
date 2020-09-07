@@ -2,6 +2,7 @@ version: 2
 
 sources:
   - name: zuora
+    tags: ["tdf","zuora"]
     database: '{{ env_var("SNOWFLAKE_LOAD_DATABASE") }}'
     schema: zuora_stitch
     loader: Stitch
