@@ -262,14 +262,13 @@ def chunk_and_upload(
                 upload_to_gcs(
                     advanced_metadata, chunk_df, upload_file_name + "." + str(idx)
                 )
-            logging.info(f"Uploaded {row_count} to GCS in {upload_file_name}.{str(idx)}")
+                logging.info(f"Uploaded {row_count} to GCS in {upload_file_name}.{str(idx)}")
 
-
-        trigger_snowflake_upload(
-            target_engine, target_table, upload_file_name + "[.]\\\\d*", purge=True
-        )
-
-        logging.info(f"Uploaded {rows_uploaded} total rows to table {target_table}.")
+        if rows_uploaded > 0:
+            trigger_snowflake_upload(
+                target_engine, target_table, upload_file_name + "[.]\\\\d*", purge=True
+            )
+            logging.info(f"Uploaded {rows_uploaded} total rows to table {target_table}.")
 
     target_engine.dispose()
     source_engine.dispose()
