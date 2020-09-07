@@ -45,7 +45,7 @@ WITH dim_dates AS (
 
 ), rate_plan_charge_filtered AS (
 
-  SELECT DISTINCT
+  SELECT
     zuora_account.account_id,
     zuora_account.crm_id,
     zuora_subscription_snapshots.subscription_id,
