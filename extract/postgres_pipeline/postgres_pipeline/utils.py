@@ -203,6 +203,7 @@ def seed_table(
     """
     Sets the proper data types and column names.
     """
+    logging.info(f"Creating table {target_table_name}")
     if advanced_metadata:
         snowflake_types.append(Column("_task_instance", String))
     snowflake_types.append(Column("_uploaded_at", Float))
@@ -210,7 +211,7 @@ def seed_table(
     if target_engine.has_table(target_table_name):
         query_executor(target_engine, DropTable(table))
     query_executor(target_engine, CreateTable(table))
-
+    logging.info(f"{target_table_name} created")
 
 def chunk_and_upload(
     query: str,
@@ -251,11 +252,12 @@ def chunk_and_upload(
             rows_uploaded += row_count
 
             upload_file_name = f"{target_table}_CHUNK.tsv.gz"
-
             if row_count > 0:
                 upload_to_gcs(
                     advanced_metadata, chunk_df, upload_file_name + "." + str(idx)
                 )
+            logging.info(f"Uploaded {row_count} to GCS")
+
 
         trigger_snowflake_upload(
             target_engine, target_table, upload_file_name + "[.]\\\\d*", purge=True
@@ -289,7 +291,6 @@ def range_generator(
     """
     Yields a list that contains the starting and ending number for a given window.
     """
-
     while True:
         if start > stop:
             break
