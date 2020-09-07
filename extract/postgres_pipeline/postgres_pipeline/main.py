@@ -33,7 +33,7 @@ def load_ids(
     source_table_name: str,
     table_name: str,
     target_engine: Engine,
-    id_range: int = 1_000_000,
+    id_range: int = 750_000,
 ) -> None:
     """ Load a query by chunks of IDs instead of all at once."""
 
