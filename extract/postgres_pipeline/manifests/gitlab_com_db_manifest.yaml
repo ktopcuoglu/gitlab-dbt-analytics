@@ -1405,7 +1405,7 @@ tables:
       SELECT user_id
       , project_id
       , access_level
-      FROM project_authorizations
+      FROM project_authorizations LIMIT 1000000
     export_schema: 'gitlab_com'
     export_table: 'project_authorizations'
     export_table_primary_key: user_id
