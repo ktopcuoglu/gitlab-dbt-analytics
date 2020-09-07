@@ -30,7 +30,7 @@ WITH zuora_product AS (
       zuora_product_rate_plan_charge.product_rate_plan_charge_name              AS product_rate_plan_charge_name,
       zuora_product.product_name                                                AS product_name,
       zuora_product.sku                                                         AS product_sku,
-      {{ product_category('zuora_product_rate_plan.product_rate_plan_name') }}  AS product_category,
+      {{ product_category('zuora_product_rate_plan.product_rate_plan_name') }},
       {{ delivery('product_category')}},
       CASE
         WHEN lower(product_rate_plan_name) like '%support%'
@@ -50,7 +50,7 @@ WITH zuora_product AS (
       ON zuora_product_rate_plan_charge.product_rate_plan_charge_id = zuora_product_rate_plan_charge_tier.product_rate_plan_charge_id
     WHERE zuora_product.is_deleted = FALSE
       AND zuora_product_rate_plan_charge_tier.currency = 'USD'
-    {{ dbt_utils.group_by(n=11) }}
+    {{ dbt_utils.group_by(n=12) }}
     ORDER BY 1, 3
 
 )
