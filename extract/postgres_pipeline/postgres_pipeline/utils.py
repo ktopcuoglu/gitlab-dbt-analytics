@@ -94,8 +94,12 @@ def trigger_snowflake_upload(
         );
     """
     results = query_executor(engine, upload_query)
-    logging.info(results[0])
-    log_result = f"Loaded {results[0][2]} rows from file: {results[0][0]}"
+    total_rows = 0
+
+    for result in results:
+        total_rows += result[2]
+
+    log_result = f"Loaded {total_rows} rows from {len(results)} files"
     logging.info(log_result)
 
 
