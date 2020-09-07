@@ -81,10 +81,11 @@ SELECT
   dim_product_details.product_category,
   dim_product_details.delivery,
   dim_product_details.service_type,
-  dim_product_details.product_rate_plan_name,
-  --charge_type,
+  dim_product_details.product_rate_plan_name      AS rate_plan_name,
+  --  not needed as all charges in fct_mrr are recurring
+  --  fct_mrr.charge_type,
   fct_mrr.unit_of_measure,
-  --array_agg(rate_plan_name)                       AS rate_plan_name,
+
   fct_mrr.mrr                                     AS mrr,
   fct_mrr.arr                                     AS arr,
   fct_mrr.quantity                                AS quantity
