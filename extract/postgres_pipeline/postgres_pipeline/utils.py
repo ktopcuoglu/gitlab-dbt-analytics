@@ -77,6 +77,7 @@ def trigger_snowflake_upload(
     engine: Engine, table: str, upload_file_name: str, purge: bool = False
 ) -> None:
     """ Trigger Snowflake to upload a tsv file from GCS."""
+    logging.info("Loading from GCS into SnowFlake")
 
     purge_opt = "purge = true" if purge else ""
 
