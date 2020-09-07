@@ -262,7 +262,7 @@ def chunk_and_upload(
                 upload_to_gcs(
                     advanced_metadata, chunk_df, upload_file_name + "." + str(idx)
                 )
-            logging.info(f"Uploaded {row_count} to GCS")
+            logging.info(f"Uploaded {row_count} to GCS in {upload_file_name}.{str(idx)}")
 
 
         trigger_snowflake_upload(
