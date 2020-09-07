@@ -133,7 +133,7 @@ def manifest_reader(file_path: str) -> Dict[str, Dict]:
 
 
 def query_results_generator(
-    query: str, engine: Engine, chunksize: int = 750_000
+    query: str, engine: Engine, chunksize: int = 1_000_000
 ) -> pd.DataFrame:
     """
     Use pandas to run a sql query and load it into a dataframe.
@@ -233,37 +233,7 @@ def chunk_and_upload(
     """
 
     rows_uploaded = 0
-    backfilled_rows = 0
-    rows_uploaded = 0
-    results_generator = query_results_generator(query, source_engine)
-    upload_file_name = f"{target_table}_CHUNK.tsv.gz"
-    for idx, chunk_df in enumerate(results_generator):
-        # If the table doesn't exist, it needs to send the first chunk to the dataframe_uploader
-        # if backfill:
-        #     rows_to_seed = 10000
-        #     seed_table(
-        #         advanced_metadata,
-        #         chunk_df,
-        #         target_engine,
-        #         target_table
-        #     )
-        #     # backfilled_rows += chunk_df[:rows_to_seed].shape[0]
-        #     chunk_df = chunk_df.iloc[rows_to_seed:]
-        row_count = chunk_df.shape[0]
-        rows_uploaded += row_count
-        if not backfill or row_count > 0:
-            upload_to_gcs(
-                advanced_metadata, chunk_df, upload_file_name + "." + str(idx + 10)
-            )
-        backfill = False
 
-    if rows_uploaded > 0:
-        trigger_snowflake_upload(
-            target_engine, target_table, upload_file_name + "[.]\\\\d*", purge=True
-        )
-    logging.info(
-        f"Uploaded {rows_uploaded + backfilled_rows} total rows to table {target_table}."
-    )
     with tempfile.TemporaryFile() as tmpfile:
 
         iter_csv = read_sql_tmpfile(query, source_engine, tmpfile)
@@ -308,13 +278,13 @@ def read_sql_tmpfile(query: str, db_engine: Engine, tmp_file: Any) -> pd.DataFra
     cur.copy_expert(copy_sql, tmp_file)
     tmp_file.seek(0)
     logging.info("Reading csv")
-    df = pd.read_csv(tmp_file, chunksize=750_000, parse_dates=True, low_memory=False)
+    df = pd.read_csv(tmp_file, chunksize=1_000_000, parse_dates=True, low_memory=False)
     logging.info("CSV read")
     return df
 
 
 def range_generator(
-    start: int, stop: int, step: int = 750_000
+    start: int, stop: int, step: int = 1_000_000
 ) -> Generator[Tuple[int, ...], None, None]:
     """
     Yields a list that contains the starting and ending number for a given window.
@@ -374,7 +344,7 @@ def id_query_generator(
     snowflake_engine: Engine,
     source_table: str,
     target_table: str,
-    id_range: int = 750_000,
+    id_range: int = 1_000_000,
 ) -> Generator[str, Any, None]:
     """
     This function generates a list of queries based on the max ID in the target table.
