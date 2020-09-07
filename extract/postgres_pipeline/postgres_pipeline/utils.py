@@ -97,6 +97,7 @@ def trigger_snowflake_upload(
     total_rows = 0
 
     for result in results:
+        logging.info(result)
         total_rows += result[2]
 
     log_result = f"Loaded {total_rows} rows from {len(results)} files"
