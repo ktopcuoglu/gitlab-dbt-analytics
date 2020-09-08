@@ -16,9 +16,9 @@ WITH source AS (
 
 ), credits AS (
     SELECT
-    primary_key,
-    SUM(IFNULL(credit_amount,0)) as total_credits
-    FROM {{ ref('gcp_billing_export_source') }}
+        source_primary_key                               AS primary_key,
+        SUM(IFNULL(credit_amount,0))                     AS total_credits
+    FROM {{ ref('gcp_billing_export_credits') }}
     GROUP BY 1
 )
 
