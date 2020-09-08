@@ -86,7 +86,11 @@ WITH date_spine AS (
         WHEN MONTH(date_day) = 12 AND DAYOFMONTH(date_day) = 26 THEN 'Boxing Day'
         ELSE NULL END)::VARCHAR                                                               AS holiday_desc,
       (CASE WHEN HOLIDAY_DESC IS NULL THEN 0
-        ELSE 1 END)::BOOLEAN                                                                  AS is_holiday
+        ELSE 1 END)::BOOLEAN                                                                  AS is_holiday,
+        DATE_TRUNC('month', last_day_of_fiscal_quarter)                                       AS last_month_of_fiscal_quarter,
+      IFF(DATE_TRUNC('month', last_day_of_fiscal_quarter) = date_actual, True, False)         AS is_first_day_of_last_month_of_fiscal_quarter,
+      DATE_TRUNC('month', last_day_of_fiscal_year)                                            AS last_month_of_fiscal_year,
+      IFF(DATE_TRUNC('month', last_day_of_fiscal_year) = date_actual, True, False)            AS is_first_day_of_last_month_of_fiscal_year
 
     FROM date_spine
 
