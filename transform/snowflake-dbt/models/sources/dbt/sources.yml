@@ -25,8 +25,10 @@ sources:
         identifier: sources
       - name: source_tests
         description: This is for the reulsts from testing source data.
+        identifier: source_tests_run_results
       - name: snapshot
         description: This is for the results from `dbt snapshot`
+        identifier: snapshots_run_results
       - name: test
         description: This is for running dbt test on non-source models.
         identifier: test_run_results
