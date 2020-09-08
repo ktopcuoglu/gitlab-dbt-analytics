@@ -23,28 +23,29 @@ WITH source AS (
       updated_by_id::NUMBER                                    AS updated_by_id,
       last_edited_by_id::NUMBER                                AS last_edited_by_id,
       moved_to_id::NUMBER                                      AS moved_to_id,
-      created_at::TIMESTAMP                                     AS created_at,
-      updated_at::TIMESTAMP                                     AS updated_at,
-      last_edited_at::TIMESTAMP                                 AS issue_last_edited_at,
-      closed_at::TIMESTAMP                                      AS issue_closed_at,
-      confidential::BOOLEAN                                     AS is_confidential,
-      title::VARCHAR                                            AS issue_title,
-      description::VARCHAR                                      AS issue_description,
+      created_at::TIMESTAMP                                    AS created_at,
+      updated_at::TIMESTAMP                                    AS updated_at,
+      last_edited_at::TIMESTAMP                                AS issue_last_edited_at,
+      closed_at::TIMESTAMP                                     AS issue_closed_at,
+      confidential::BOOLEAN                                    AS is_confidential,
+      title::VARCHAR                                           AS issue_title,
+      description::VARCHAR                                     AS issue_description,
 
       -- Override state by mapping state_id. See issue #3344.
-      {{ map_state_id('state_id') }}                            AS state,
+      {{ map_state_id('state_id') }}                           AS state,
 
-      weight::NUMBER                                            AS weight,
-      due_date::DATE                                            AS due_date,
-      lock_version::NUMBER                                      AS lock_version,
-      time_estimate::NUMBER                                     AS time_estimate,
-      discussion_locked::BOOLEAN                                AS has_discussion_locked,
+      weight::NUMBER                                           AS weight,
+      due_date::DATE                                           AS due_date,
+      lock_version::NUMBER                                     AS lock_version,
+      time_estimate::NUMBER                                    AS time_estimate,
+      discussion_locked::BOOLEAN                               AS has_discussion_locked,
       closed_by_id::NUMBER                                     AS closed_by_id,
       relative_position::NUMBER                                AS relative_position,
-      service_desk_reply_to::VARCHAR                            AS service_desk_reply_to,
+      service_desk_reply_to::VARCHAR                           AS service_desk_reply_to,
       state_id::NUMBER                                         AS state_id,
       duplicated_to_id::NUMBER                                 AS duplicated_to_id,
-      promoted_to_epic_id::NUMBER                              AS promoted_to_epic_id
+      promoted_to_epic_id::NUMBER                              AS promoted_to_epic_id,
+      issue_type::NUMBER                                       AS issue_type
 
     FROM source
 
