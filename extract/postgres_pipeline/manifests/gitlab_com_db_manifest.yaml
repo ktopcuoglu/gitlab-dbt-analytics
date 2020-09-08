@@ -1992,6 +1992,9 @@ tables:
       , last_activity_on
       , notified_of_own_activity
       , preferred_language
+      , email_opted_in
+      , email_opted_in_source_id
+      , email_opted_in_at
       , theme_id
       , accepted_term_id
       , private_profile
