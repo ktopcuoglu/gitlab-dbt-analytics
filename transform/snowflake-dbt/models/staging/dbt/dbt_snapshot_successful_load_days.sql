@@ -1,7 +1,7 @@
 WITH source_status AS (
     
     SELECT *
-    FROM {{ ref('dbt_source_freshness_results_source') }}
+    FROM {{ ref('dbt_source_freshness') }}
 
 ), filtered_to_snapshots AS (
 
