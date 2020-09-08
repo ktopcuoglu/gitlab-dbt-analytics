@@ -148,3 +148,15 @@ models:
             description: Whether or not it is a holiday
             tests:
                - not_null
+          - name: last_month_of_fiscal_quarter,
+            description: Date indicating last month of fiscal quarter e.g '2020-04-01' for 2020-02-02
+            tests:
+              - not_null
+          - name: is_first_day_of_last_month_of_fiscal_quarter
+            description: Flag indicating date that is the first day of last month of fiscal quarter. E.g TRUE for '2020-04-01'
+          - name: last_month_of_fiscal_year
+            description: Date indicating last month of fiscal year e.g '2021-01-01' for 2020-02-02
+            tests:
+              - not_null
+          - name: is_first_day_of_last_month_of_fiscal_year
+            description: Flag indicating date that is the first day of last month of fiscal year. E.g TRUE for '2021-01-01'

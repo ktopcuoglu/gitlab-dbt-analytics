@@ -132,5 +132,9 @@ SELECT
   fiscal_quarter_name_fy,
   fiscal_quarter_number_absolute,
   holiday_desc,
-  is_holiday
+  is_holiday,
+  last_month_of_fiscal_quarter,
+  is_first_day_of_last_month_of_fiscal_quarter,
+  last_month_of_fiscal_year,
+  is_first_day_of_last_month_of_fiscal_year
 FROM calculated
