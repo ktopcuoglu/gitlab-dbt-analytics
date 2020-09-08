@@ -1,0 +1,29 @@
+WITH data AS 
+( SELECT * FROM {{ ref('version_usage_data')}}
+
+)
+
+, flattened AS (
+SELECT 
+    uuid, 
+    id, 
+    path AS metric_path, 
+    'stats_used.' || path AS full_metrics_path,
+    value AS metric_value
+FROM data,
+lateral flatten(input => stats_used,
+recursive => true) X
+WHERE typeof(value) IN ('INTEGER', 'DECIMAL')
+ORDER BY created_at DESC
+
+)
+
+SELECT 
+  flattened.uuid,
+  flattened.id,
+  test.*, 
+  flattened.metric_value
+FROM flattened
+INNER JOIN {{ ref('test_metrics_renaming')}} AS test 
+  ON flattened.full_metrics_path = test.full_metrics_path
+    AND metric_type = 'all_time'
