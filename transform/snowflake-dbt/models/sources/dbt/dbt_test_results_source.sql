@@ -7,7 +7,7 @@
 WITH source AS (
 
     SELECT *
-    FROM {{ source('dbt', 'test_run_results') }}
+    FROM {{ source('dbt', 'test') }}
     {% if is_incremental() %}
     WHERE uploaded_at >= (SELECT MAX(uploaded_at) FROM {{this}})
     {% endif %}

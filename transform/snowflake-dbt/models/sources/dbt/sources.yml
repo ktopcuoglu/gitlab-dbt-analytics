@@ -17,6 +17,16 @@ sources:
       error_after: {count: 24, period: hour}
 
     tables:
-      - name: run_results
-      - name: sources
-      - name: test_run_results
+      - name: run
+        description: This is for the results from any regular `dbt run`
+        identifier: run_results
+      - name: freshness
+        description: This is for the results from `dbt source snapshot-freshness`
+        identifier: sources
+      - name: source_tests
+        description: This is for the reulsts from testing source data.
+      - name: snapshot
+        description: This is for the results from `dbt snapshot`
+      - name: test
+        description: This is for running dbt test on non-source models.
+        identifier: test_run_results
