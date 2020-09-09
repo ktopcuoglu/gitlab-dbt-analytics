@@ -40,7 +40,6 @@ WITH source AS (
     flatten_export.value:usage:unit::VARCHAR                       AS usage_unit,
     flatten_export.value:usage_start_time::TIMESTAMP               AS usage_start_time,
     flatten_export.value:usage_end_time::TIMESTAMP                 AS usage_end_time,
-    --uuid_string()                                                  AS primary_key,
     {{ dbt_utils.surrogate_key([
         'flatten_export.value:billing_account_id',
         'flatten_export.value:cost',
