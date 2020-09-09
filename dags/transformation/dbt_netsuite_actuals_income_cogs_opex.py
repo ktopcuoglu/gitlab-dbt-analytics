@@ -39,7 +39,7 @@ env = os.environ.copy()
 GIT_BRANCH = env["GIT_BRANCH"]
 # schedule : “At minute 0 past hour 5, 11, 17, and 23 on
 # every day-of-week from Monday through Friday.”
-dag_schedule = "15 4,11,17,23 * * 1-5"
+dag_schedule = "0 5,11,17,23 * * 1-5"
 
 pod_env_vars = {**gitlab_pod_env_vars}
 
