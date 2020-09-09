@@ -10,8 +10,13 @@ WITH hire_replan AS (
 
 ), employee_directory AS (
 
-    SELECT * 
-    FROM {{ ref ('employee_directory_analysis') }}
+    SELECT 
+      date_actual,
+      IFF(date_actual>'2020-06-30' AND department = 'Alliances','Business Development', department) AS department,  
+      --sheetload file does not have department change reflected
+      division,
+      employment_status
+    FROM {{ ref ('employee_directory_intermediate') }}
 
 ), unpivoted AS (
 
@@ -54,6 +59,7 @@ WITH hire_replan AS (
     LEFT JOIN employee_directory
       ON unpivoted.month_date = employee_directory.date_actual
       AND unpivoted.department = employee_directory.department
+    WHERE employment_status ='Active'
     GROUP BY 1,2,3
   
 ), all_company AS (

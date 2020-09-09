@@ -35,6 +35,10 @@ models:
         - name: source_name
           description: Where the candidate came from 
         - name: source_type
+        - name: is_outbound
+          description: Indicates whether the applicant source is from outbound recruiting. A 1 indicates the applicant came through the outbound recruiting model vs a 0 indicates they did not.
+        - name: is_sourced
+          description: Indicates whether the candidate was sourced by the recruiting team. A 1 indicates the candidate was sourced, and a 0 indicates they were not.
         - name: sourcer_name
         - name: candidate_recruiter
         - name: candidate_coordinator
@@ -143,6 +147,8 @@ models:
         - name: division_modified
         - name: source_name
         - name: source_type
+        - name: is_outbound
+        - name: is_source
         - name: sourcer_name
         - name: candidate_recruiter
         - name: candidate_coordinator

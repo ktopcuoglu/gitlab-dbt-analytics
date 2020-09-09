@@ -131,6 +131,10 @@ models:
               values: ['SMB', 'Mid-Market', 'Strategic', 'Large', 'Unknown', Null]
       - name: order_type_live
         description: The most current state of the order type formula in SFDC.
+      - name: dr_partner_deal_type
+        description: Map field from Lead object during conversion. Lead Field Name = [Partners] Deal Registration Type.
+      - name: dr_partner_engagement
+        description: This field Identified the engagement of the partner who registered the deal.
   - name: sfdc_professional_services_engagement_xf
     columns:
       - name: ps_engagement_id

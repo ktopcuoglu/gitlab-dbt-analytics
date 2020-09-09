@@ -32,20 +32,6 @@ WITH dim_accounts AS (
   SELECT *
   FROM {{ ref('fct_mrr') }}
 
-), last_month_of_fiscal_quarter AS (
-
-    SELECT DISTINCT
-      DATE_TRUNC('month', last_day_of_fiscal_quarter) AS last_month_of_fiscal_quarter,
-      fiscal_quarter_name_fy
-    FROM {{ ref('dim_dates') }}
-
-), last_month_of_fiscal_year AS (
-
-    SELECT DISTINCT
-      DATE_TRUNC('month', last_day_of_fiscal_year) AS last_month_of_fiscal_year,
-      fiscal_year
-    FROM {{ ref('dim_dates') }}
-
 )
 
 SELECT
@@ -54,8 +40,8 @@ SELECT
 
   --date info
   dim_dates.date_actual AS arr_month,
-  quarter.fiscal_quarter_name_fy,
-  year.fiscal_year,
+  IFF(is_first_day_of_last_month_of_fiscal_quarter, fiscal_quarter_name_fy, NULL) AS fiscal_quarter_name_fy,
+  IFF(is_first_day_of_last_month_of_fiscal_year, fiscal_year, NULL)               AS fiscal_year,
   dim_subscriptions.subscription_start_month,
   dim_subscriptions.subscription_end_month,
 

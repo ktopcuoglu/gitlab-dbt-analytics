@@ -129,6 +129,11 @@ WITH source AS (
         x6_closed_won_date__c                       AS stage_6_closed_won_date,
         x7_closed_lost_date__c                      AS stage_6_closed_lost_date,
 
+        -- channel reporting
+        -- original issue: https://gitlab.com/gitlab-data/analytics/-/issues/6072
+        dr_partner_deal_type__c                     AS dr_partner_deal_type,
+        dr_partner_engagement__c                    AS dr_partner_engagement,
+
         -- command plan fields
         fm_champion__c                              AS cp_champion,
         fm_close_plan__c                            AS cp_close_plan,
