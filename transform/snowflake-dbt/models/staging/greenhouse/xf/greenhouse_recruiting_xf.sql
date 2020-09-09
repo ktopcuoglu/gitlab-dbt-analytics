@@ -105,6 +105,15 @@ WITH applications AS (
                     greenhouse_departments.department_name) END                         AS division_modified,     
         greenhouse_sources.source_name                                                  AS source_name,
         greenhouse_sources.source_type                                                  AS source_type,
+        CASE WHEN TRIM(source_name) IN ('Sales Bootcamp','Social media presence','Greenhouse','Maildrop','Reddit',
+                              'Slack Groups','AmazingHiring','AngelList','Google','Greenhouse Sourcing',
+                              'LinkedIn (Prospecting)','SocialReferral','Talent Community','Viren - LinkedIn',
+                              'Referral', 'LinkedIn (Social Media)','Twitter') THEN 1
+            WHEN TRIM(source_type) = 'In person event' THEN 1 ELSE 0 END                AS is_outbound,
+        CASE WHEN TRIM(source_name) IN ('Greenhouse','Maildrop','Reddit','Slack Groups','AmazingHiring','Google',
+                             'Greenhouse Sourcing','LinkedIn (Prospecting)','Talent Community',
+                             'Viren - LinkedIn','LinkedIn (Social Media)','Twitter') THEN 1
+            WHEN TRIM(source_type) = 'In person event' THEN 1 ELSE 0 END                AS is_sourced,
         greenhouse_sourcer.sourcer_name,
         candidates.candidate_recruiter,
         candidates.candidate_coordinator,
