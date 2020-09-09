@@ -14,7 +14,7 @@ WITH data AS (
       'stats_used.' || path AS full_metrics_path,
       value AS metric_value
     FROM data,
-    lateral flatten(input => stats_used,
+    lateral flatten(input => usage_activity_by_stage_monthly,
     recursive => true) X
     WHERE typeof(value) IN ('INTEGER', 'DECIMAL')
     ORDER BY created_at DESC
@@ -30,4 +30,4 @@ SELECT
 FROM flattened
 INNER JOIN {{ ref('test_metrics_renaming')}} AS test 
   ON flattened.full_metrics_path = test.full_metrics_path
-    AND time_window = 'all_time'
+    AND time_window = '28_days'

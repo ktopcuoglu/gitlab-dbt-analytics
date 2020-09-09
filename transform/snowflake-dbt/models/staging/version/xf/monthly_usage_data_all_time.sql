@@ -19,7 +19,7 @@ WITH data AS (
   SELECT 
     *,
     metric_value 
-      - COALESCE(LEAD(metric_value) OVER (
+      - COALESCE(LAG(metric_value) OVER (
                                           PARTITION BY uuid, clean_metrics_name 
                                           ORDER BY created_month
                                         ), 0) AS monthly_metric_value
@@ -34,6 +34,5 @@ SELECT
   full_metrics_path,
   stage,
   clean_metrics_name,
-  metric_type,
-  IFF(metric_value < 0, 0, monthly_metric_value) AS monthly_metric_value
+  IFF(monthly_metric_value < 0, 0, monthly_metric_value) AS monthly_metric_value
 FROM monthly
