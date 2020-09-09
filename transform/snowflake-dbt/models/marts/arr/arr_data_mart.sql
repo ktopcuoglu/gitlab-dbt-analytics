@@ -67,14 +67,14 @@ SELECT
   dim_product_details.product_category,
   dim_product_details.delivery,
   dim_product_details.service_type,
-  dim_product_details.product_rate_plan_name      AS rate_plan_name,
+  dim_product_details.product_rate_plan_name                            AS rate_plan_name,
   --  not needed as all charges in fct_mrr are recurring
   --  fct_mrr.charge_type,
   fct_mrr.unit_of_measure,
 
-  fct_mrr.mrr                                     AS mrr,
-  fct_mrr.arr                                     AS arr,
-  fct_mrr.quantity                                AS quantity
+  fct_mrr.mrr,
+  fct_mrr.arr,
+  fct_mrr.quantity
   FROM fct_mrr
   INNER JOIN dim_subscriptions
     ON dim_subscriptions.subscription_id = fct_mrr.subscription_id
