@@ -148,7 +148,7 @@ models:
             description: Whether or not it is a holiday
             tests:
                - not_null
-          - name: last_month_of_fiscal_quarter,
+          - name: last_month_of_fiscal_quarter
             description: Date indicating last month of fiscal quarter e.g '2020-04-01' for 2020-02-02
             tests:
               - not_null
