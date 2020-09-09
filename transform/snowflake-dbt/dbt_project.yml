@@ -144,6 +144,7 @@ models:
       dbt:
         +materialized: table
         +schema: dbt
+        +tags: ["dbt"]
 
       engineering:
         +materialized: table
@@ -396,4 +397,4 @@ snapshots:
       +tags: ["daily"]
 
     zuora:
-      +tags: ["daily"]
+      +tags: ["daily", "zuora"]
