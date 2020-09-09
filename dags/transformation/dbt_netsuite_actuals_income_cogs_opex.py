@@ -12,6 +12,7 @@ from airflow_utils import (
     dbt_install_deps_nosha_cmd,
     gitlab_defaults,
     gitlab_pod_env_vars,
+    number_of_dbt_threads_argument,
     slack_failed_task,
     xs_warehouse,
 )
@@ -38,7 +39,7 @@ env = os.environ.copy()
 GIT_BRANCH = env["GIT_BRANCH"]
 # schedule : “At minute 0 past hour 5, 11, 17, and 23 on
 # every day-of-week from Monday through Friday.”
-dag_schedule = "0 5,11,17,23 * * 1-5"
+dag_schedule = "15 4,11,17,23 * * 1-5"
 
 pod_env_vars = {**gitlab_pod_env_vars}
 
@@ -78,7 +79,7 @@ dag = DAG(
 
 dbt_cmd = f"""
     {dbt_install_deps_nosha_cmd} &&
-    dbt run --profiles-dir profile --target prod --models +netsuite_actuals_income_cogs_opex; ret=$?;
+    dbt run --profiles-dir profile --target prod --models +netsuite_actuals_income_cogs_opex {number_of_dbt_threads_argument(4)}; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
 
