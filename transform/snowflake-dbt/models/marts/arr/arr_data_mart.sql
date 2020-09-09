@@ -86,7 +86,3 @@ SELECT
     ON dim_dates.date_id = fct_mrr.date_id
   LEFT JOIN dim_customers
     ON dim_accounts.crm_id = dim_customers.crm_id
-  LEFT JOIN last_month_of_fiscal_quarter quarter
-    ON dim_dates.date_actual = quarter.last_month_of_fiscal_quarter
-  LEFT JOIN last_month_of_fiscal_year year
-    ON dim_dates.date_actual = year.last_month_of_fiscal_year
