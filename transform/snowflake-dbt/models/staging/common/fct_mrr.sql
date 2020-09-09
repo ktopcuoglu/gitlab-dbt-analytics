@@ -69,6 +69,7 @@ WITH dim_dates AS (
   WHERE zuora_subscription.is_deleted = FALSE
     AND zuora_subscription.exclude_from_analysis IN ('False', '')
     AND zuora_account.is_deleted = FALSE
+    AND zuora_subscription.subscription_status NOT IN ('Expired', 'Draft')
 
 ), mrr_month_by_month AS (
 
