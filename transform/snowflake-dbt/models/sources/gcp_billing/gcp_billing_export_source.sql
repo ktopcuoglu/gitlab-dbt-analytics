@@ -8,6 +8,12 @@ WITH source AS (
 
   SELECT *
   FROM {{ source('gcp_billing', 'gcp_billing_export_combined') }}
+  {% if is_incremental() %}
+
+  WHERE uploaded_at >= (SELECT MAX(uploaded_at) FROM {{this}})
+
+  {% endif %}
+  QUALIFY ROW_NUMBER() OVER (PARTITION BY jsontext ORDER BY uploaded_at DESC) = 1
 
 ), renamed AS (
 
@@ -70,11 +76,6 @@ WITH source AS (
 
   FROM source,
   TABLE(FLATTEN(source.jsontext)) flatten_export
-  {% if is_incremental() %}
-
-  WHERE uploaded_at >= (SELECT MAX(uploaded_at) FROM {{this}})
-
-  {% endif %}
   {{ dbt_utils.group_by(n=27) }}
 
 )
