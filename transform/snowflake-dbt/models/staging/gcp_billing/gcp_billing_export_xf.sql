@@ -1,6 +1,5 @@
 {{ config({
     "materialized": "incremental",
-    "unique_key": "primary_key",
     })
 }}
 
@@ -16,14 +15,14 @@ WITH source AS (
 
 ), credits AS (
     SELECT
-        source_primary_key                               AS primary_key,
+        source_surrogate_key                             AS source_surrogate_key,
         SUM(IFNULL(credit_amount,0))                     AS total_credits
     FROM {{ ref('gcp_billing_export_credits') }}
     GROUP BY 1
 ), renamed as (
 
     SELECT
-        source.primary_key                                   AS primary_key,
+        source.source_surrogate_key                          AS source_surrogate_key,
         source.billing_account_id                            AS billing_account_id,
         source.service_id                                    AS service_id,
         source.service_description                           AS service_description,
@@ -57,7 +56,7 @@ WITH source AS (
         source.uploaded_at                                   AS uploaded_at
     FROM source
     INNER JOIN credits
-    ON source.primary_key = credits.primary_key
+    ON source.source_surrogate_key = credits.source_surrogate_key
 )
 
 SELECT * FROM renamed

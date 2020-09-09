@@ -15,7 +15,7 @@ WITH source AS (
             'source.primary_key',
             'resource_labels_flat.value:key',
             'resource_labels_flat.value:value'] ) }}         AS resource_label_pk,
-        source.primary_key                                   AS source_primary_key,
+        source.source_surrogate_key                          AS source_surrogate_key,
         resource_labels_flat.value:key::VARCHAR              AS resource_label_key,
         resource_labels_flat.value:value::VARCHAR            AS resource_label_value
     FROM source,
