@@ -1,5 +1,5 @@
 {{ config({
-    "materialized": "incremental",
+    "materialized": "incremental"
     })
 }}
 
@@ -46,12 +46,12 @@ WITH source AS (
     flatten_export.value:usage_end_time::TIMESTAMP                 AS usage_end_time,
     {{ dbt_utils.surrogate_key([
         'flatten_export.value:billing_account_id',
-        'flatten_export.value:cost,'
+        'flatten_export.value:cost',
         'flatten_export.value:cost_type',
         'flatten_export.value:credits',
         'flatten_export.value:currency',
         'flatten_export.value:currency_conversion_rate',
-        'flatten_export.value:export_time'
+        'flatten_export.value:export_time',
         'flatten_export.value:invoice:month',
         'flatten_export.value:labels',
         'flatten_export.value:location:country',
