@@ -10,7 +10,7 @@ from gitlabdata.orchestration_utils import (
 
 
 def get_file_name(config_name):
-    if config_name == "sources":
+    if config_name == "freshness":
         return "target/sources.json"
     else:
         return "target/run_results.json"
