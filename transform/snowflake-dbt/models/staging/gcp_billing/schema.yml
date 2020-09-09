@@ -2,7 +2,7 @@ version: 2
 
 models:
   - name: gcp_billing_export_xf
-    description: final model for billing export
+    description: Final model for billing export.
     columns:
       - name: primary_key
         tests:
