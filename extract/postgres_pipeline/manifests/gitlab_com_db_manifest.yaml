@@ -1269,6 +1269,7 @@ tables:
       , two_factor_grace_period
       , project_creation_level
       , auto_devops_enabled
+      , push_rule_id
       FROM namespaces
       WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
         AND '{EXECUTION_DATE}'::timestamp

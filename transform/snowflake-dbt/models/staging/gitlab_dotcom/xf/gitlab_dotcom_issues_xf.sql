@@ -151,6 +151,7 @@ WITH issues AS (
     service_desk_reply_to,
     duplicated_to_id,
     promoted_to_epic_id,
+    issue_type,
 
     agg_labels.labels,
     ARRAY_TO_STRING(agg_labels.labels,'|')       AS masked_label_title,
