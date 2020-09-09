@@ -11,7 +11,7 @@ WITH source AS (
 
     SELECT
         {{ dbt_utils.surrogate_key([
-            'source.primary_key',
+            'source.source_surrogate_key',
             'project_labels_flat.value:key',
             'project_labels_flat.value:value'] ) }}              AS project_label_pk,
         source.source_surrogate_key                              AS source_surrogate_key,
