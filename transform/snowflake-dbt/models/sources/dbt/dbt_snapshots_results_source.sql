@@ -11,7 +11,6 @@ WITH source AS (
     {% if is_incremental() %}
     WHERE uploaded_at >= (SELECT MAX(uploaded_at) FROM {{this}})
     {% endif %}
-
 ), flattened AS (
 
     SELECT 
@@ -23,41 +22,27 @@ WITH source AS (
 ), model_parsed_out AS (
 
     SELECT
-      data_by_row['execution_time']::FLOAT      AS model_execution_time,
-      data_by_row['node']['name']::VARCHAR      AS model_name,
-      data_by_row['node']['unique_id']::VARCHAR AS unique_id,
-      data_by_row['node']['tags']::ARRAY        AS model_tags,
-      data_by_row['timing']::ARRAY              AS timings,
-      uploaded_at
+      data_by_row['execution_time']::FLOAT          AS model_execution_time,
+      data_by_row['node']['name']::VARCHAR          AS model_name,
+      data_by_row['node']['schema']::VARCHAR        AS schema_name,
+      data_by_row['node']['unique_id']::VARCHAR     AS unique_id,
+      data_by_row['node']['tags']::ARRAY            AS model_tags,
+      IFNULL(data_by_row['error']::VARCHAR, False)  AS model_error_text,
+      IFNULL(data_by_row['fail']::VARCHAR, False)   AS model_fail,
+      IFNULL(data_by_row['warn']::VARCHAR, False)   AS model_warn,
+      data_by_row['skip']::BOOLEAN                  AS model_skip,
+      uploaded_at,
+      timing.value['started_at']::TIMESTAMP         AS compilation_started_at,
+      timing.value['completed_at']::TIMESTAMP       AS compilation_completed_at,
+      {{ dbt_utils.surrogate_key([
+          'unique_id', 
+          'compilation_started_at'
+          ]) }}                                     AS run_unique_key
     FROM flattened
-  
-), timing_flattened_out AS (
-    
-    SELECT
-      model_execution_time,
-      model_name,
-      unique_id,
-      model_tags,
-      d.value AS data_by_row,
-      uploaded_at
-    FROM model_parsed_out
-    LEFT JOIN LATERAL FLATTEN(INPUT => timings, outer => true) d
-  
-), compilation_information_parsed AS (
-
-    SELECT 
-      model_execution_time,
-      model_name,
-      unique_id,
-      model_tags,
-      data_by_row['started_at']::TIMESTAMP                                          AS compilation_started_at,
-      data_by_row['completed_at']::TIMESTAMP                                        AS compilation_completed_at,
-      {{ dbt_utils.surrogate_key(['unique_id', 'compilation_started_at']) }}        AS run_unique_key,
-      uploaded_at
-    FROM timing_flattened_out
+    LEFT JOIN LATERAL FLATTEN(INPUT => data_by_row['timing']::ARRAY, outer => true) timing
     WHERE IFNULL(data_by_row['name'], 'compile') = 'compile'
-
+  
 )
 
 SELECT *
-FROM compilation_information_parsed
+FROM model_parsed_out
