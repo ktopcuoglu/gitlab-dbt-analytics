@@ -12,16 +12,16 @@
 
 
 [Admin]
-/.gitlab/       @kathleentam    @jjstark
-/admin/         @kathleentam    @jjstark
-/analyze/       @kathleentam    @jjstark
+/.gitlab/       @kathleentam    @jjstark    @tayloramurphy
+/admin/         @kathleentam    @jjstark    @tayloramurphy
+/analyze/       @kathleentam    @jjstark    @tayloramurphy
 
-CODEOWNERS      @kathleentam    @jjstark  
-.gitignore      @kathleentam    @jjstark    
-CONTRIBUTING.md @kathleentam    @jjstark  
-LICENSE.md      @kathleentam    @jjstark  
-README.md       @kathleentam    @jjstark  
-__init__.py     @kathleentam    @jjstark  
+CODEOWNERS      @kathleentam    @jjstark    @tayloramurphy
+.gitignore      @kathleentam    @jjstark    @tayloramurphy  
+CONTRIBUTING.md @kathleentam    @jjstark    @tayloramurphy
+LICENSE.md      @kathleentam    @jjstark    @tayloramurphy
+README.md       @kathleentam    @jjstark    @tayloramurphy
+__init__.py     @kathleentam    @jjstark    @tayloramurphy
 
 
 [Data Engineering]
