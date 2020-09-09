@@ -28,7 +28,8 @@ WITH source AS (
       data_by_row['usage_driver_score']::NUMBER              AS stage_usage_driver_score,
       data_by_row['sam_driver_score']::NUMBER                AS stage_sam_driver_score,
       data_by_row['stage_development_spend_percent']::NUMBER AS stage_development_spend_percent,
-      data_by_row['groups']::ARRAY                           AS stage_groups
+      data_by_row['groups']::ARRAY                           AS stage_groups,
+      data_by_row['section']::VARCHAR                        AS stage_section
     FROM intermediate
       
 )
