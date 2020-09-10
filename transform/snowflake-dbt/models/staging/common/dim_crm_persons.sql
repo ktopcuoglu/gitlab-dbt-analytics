@@ -52,7 +52,7 @@ WITH sfdc_leads AS (
     master_record_id,
     owner_id,
     record_type_id,
-    NULL                                       AS account_id,
+    lean_data_matched_account                  AS account_id,
     NULL                                       AS reports_to_id,
     
     --info
