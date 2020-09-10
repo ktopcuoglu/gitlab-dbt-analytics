@@ -28,7 +28,7 @@ sheets:
     tabs:
       - employee_location_factor
   - name: dev_section_metrics
-    owner: 'mpeychet_'
+    owner: '@mpeychet_'
     tabs:
       - dev_section_metrics
   - name: gitlab_slack_stats
