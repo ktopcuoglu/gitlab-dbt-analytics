@@ -14,8 +14,8 @@ from airflow_utils import (
     dbt_install_deps_cmd,
     gitlab_defaults,
     gitlab_pod_env_vars,
-    l_warehouse,
     slack_failed_task,
+    xl_warehouse,
     xs_warehouse,
 )
 from kube_secrets import (
@@ -136,7 +136,7 @@ dbt_non_product_models_task = KubernetesPodOperator(
 dbt_product_models_command = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_and_seed_cmd} &&
-    dbt run --profiles-dir profile --target prod --models tag:product --vars {l_warehouse}; ret=$?;
+    dbt run --profiles-dir profile --target prod --models tag:product --vars {xl_warehouse}; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
 
