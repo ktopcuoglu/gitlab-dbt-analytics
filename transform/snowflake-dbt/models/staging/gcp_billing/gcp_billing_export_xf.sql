@@ -14,11 +14,13 @@ WITH source AS (
     {% endif %}
 
 ), credits AS (
+
     SELECT
         source_surrogate_key                             AS source_surrogate_key,
         SUM(IFNULL(credit_amount,0))                     AS total_credits
     FROM {{ ref('gcp_billing_export_credits') }}
     GROUP BY 1
+
 ), renamed as (
 
     SELECT
@@ -57,6 +59,8 @@ WITH source AS (
     FROM source
     INNER JOIN credits
     ON source.source_surrogate_key = credits.source_surrogate_key
+
 )
 
-SELECT * FROM renamed
+SELECT * 
+FROM renamed

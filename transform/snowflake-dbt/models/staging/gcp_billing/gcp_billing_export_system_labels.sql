@@ -11,15 +11,18 @@ WITH source AS (
 ), renamed as (
 
     SELECT
-        {{ dbt_utils.surrogate_key([
-            'source.source_surrogate_key',
-            'system_labels_flat.value:key',
-            'system_labels_flat.value:value'] ) }}               AS system_label_pk,
+        
         source.source_surrogate_key                              AS source_surrogate_key,
-        system_labels_flat.value:key::VARCHAR                    AS system_label_key,
-        system_labels_flat.value:value::VARCHAR                  AS system_label_value
+        system_labels_flat.value['key']::VARCHAR                 AS system_label_key,
+        system_labels_flat.value['value']::VARCHAR               AS system_label_value,
+        {{ dbt_utils.surrogate_key([
+            'source_surrogate_key',
+            'system_label_key',
+            'system_label_value'] ) }}                           AS system_label_pk
     FROM source,
-    lateral flatten(input=> system_labels) system_labels_flat
+    LATERAL FLATTEN(input=> system_labels) system_labels_flat
+
 )
 
-SELECT * FROM renamed
+SELECT * 
+FROM renamed
