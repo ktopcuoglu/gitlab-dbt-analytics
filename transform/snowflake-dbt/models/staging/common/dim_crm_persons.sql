@@ -32,7 +32,9 @@ WITH sfdc_leads AS (
     email_bounced_date,
     email_bounced_reason,
     lead_source,
-    lead_source_type
+    lead_source_type, 
+    source_buckets,
+    net_new_source_categories
   
   FROM sfdc_contacts
   
@@ -60,8 +62,10 @@ WITH sfdc_leads AS (
     email_bounced_date,
     email_bounced_reason,
     lead_source,
-    lead_source_type
-  
+    lead_source_type,
+    source_buckets,
+    net_new_source_categories
+
   FROM sfdc_leads
   WHERE converted_contact_id IS NULL
     OR converted_contact_id NOT IN (
