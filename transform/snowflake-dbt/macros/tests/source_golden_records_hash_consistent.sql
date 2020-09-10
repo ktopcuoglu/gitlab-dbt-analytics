@@ -1,10 +1,9 @@
-{% macro source_golden_records_unchanged(golden_record_model, hashed_model, join_column) %}
+{% macro source_golden_records_hash_consistent(golden_record_model, hashed_model, join_column) %}
 
 
 WITH sheetload_data AS (
 
     SELECT
-
         {{ hash_sensitive_columns(golden_record_model)}}
     FROM {{ ref(golden_record_model) }}
 
@@ -21,7 +20,7 @@ check_data AS (
 
 
     SELECT
-        sheetload.account_id,
+        sheetload.{{ join_column }},
          SUM(
         {%- for column in meta_columns %}
         CASE WHEN
@@ -33,7 +32,7 @@ check_data AS (
         AS num_rows
     FROM sheetload_data sheetload
     LEFT JOIN hashed_data hashed ON hashed.{{ join_column }} = sheetload.{{ join_column }}
-    GROUP BY sheetload.account_id
+    GROUP BY sheetload.{{ join_column }}
 )
 
     SELECT *

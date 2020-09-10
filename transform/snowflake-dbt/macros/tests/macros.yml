@@ -37,7 +37,7 @@ macros:
       - name: table_list
         type: list
         description: List of tables being referenced
-  - name: source_golden_records_unchanged
+  - name: source_golden_records_hash_consistent
     description: Validates that the golden records model is still the same as the sheetload model by using a static seed file for comparison
     arguments:
       - name: golden_record_model
