@@ -149,7 +149,7 @@ sheets:
     owner: '@kathleentam'
     tabs:
       - data_team_capacity
-  - name: account_golden_records
+  - name: zuora_golden_records
     owner: '@paul_armstrong'
     tabs:
-      - account_golden_records
+      - zuora_golden_records

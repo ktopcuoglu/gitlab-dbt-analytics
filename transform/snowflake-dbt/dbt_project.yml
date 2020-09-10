@@ -59,7 +59,8 @@ seeds:
     gitlab_release_schedule:
       +column_types:
         major_minor_version: varchar
-
+    golden_records:
+      +schema: tdf
 # ==================
 # Variable Configs
 # ==================
@@ -367,6 +368,7 @@ models:
     trusted_data_framework:
       +materialized: table
       +schema: tdf
+
 
 # ======
 # Snapshot Configs
