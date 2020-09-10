@@ -18,7 +18,7 @@ def get_file_name(config_name):
 
 def get_table_name(config_name, snowflake_database):
     if config_name == "freshness":
-        return f'"{snowflake_database}".dbt.sources' #rename to source_freshness
+        return f'"{snowflake_database}".dbt.sources'  # rename to source_freshness
     elif config_name == "source_tests":
         return f'"{snowflake_database}".dbt.source_tests_run_results'
     elif config_name == "snapshots":
