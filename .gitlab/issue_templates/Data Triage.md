@@ -46,8 +46,9 @@ Please prioritize this issue since we dedicate a day from your milestone to this
 
 ## Data Engineer tasks
 
-* [ ] [Create issue](https://gitlab.com/gitlab-data/analytics/issues/new?issuable_template=DE%20Triage%20Errors) for each new failure in the **#dbt-runs** 
-* [ ] [Create issue](https://gitlab.com/gitlab-data/analytics/issues/new?issuable_template=DE%20Triage%20Errors) for each new failure in **#analytics-pipelines**
+* [ ] [Create an issue](https://gitlab.com/gitlab-data/analytics/issues/new?issuable_template=DE%20Triage%20Errors) for each new failure in **#data-prom-alerts**
+* [ ] [Create an issue](https://gitlab.com/gitlab-data/analytics/issues/new?issuable_template=DE%20Triage%20Errors) for each new failure in **#dbt-runs** 
+* [ ] [Create an issue](https://gitlab.com/gitlab-data/analytics/issues/new?issuable_template=DE%20Triage%20Errors) for each new failure in **#analytics-pipelines**
     * [ ] Link to all resulting issues and MRs in slack 
 * [ ] Check the DBT Source Freshness Dashboard for lagging or missing data. 
     * [ ] Link to all resulting issues and MRs in slack 
