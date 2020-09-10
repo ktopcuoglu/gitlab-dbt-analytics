@@ -29,13 +29,13 @@ WITH source AS (
     "31_to_60_days_past_due"::NUMBER                    AS "31_to_60_days_past_due",
     "61_to_90_days_past_due"::NUMBER                    AS "61_to_90_days_past_due",
     "91_to_120_days_past_due"::NUMBER                   AS "91_to_120_days_past_due",
-    "more_than_120_days_past_due"::NUMBER               AS "more_than_120_days_past_due",
+    more_than_120_days_past_due::NUMBER                 AS more_than_120_days_past_due,
     current_home_currency::NUMBER                       AS current_home_currency,
     "1_to_30_days_past_due_home_currency"::NUMBER       AS "1_to_30_days_past_due_home_currency",
     "31_to_60_days_past_due_home_currency"::NUMBER      AS "31_to_60_days_past_due_home_currency",
     "61_to_90_days_past_due_home_currency"::NUMBER      AS "61_to_90_days_past_due_home_currency",
     "91_to_120_days_past_due_home_currency"::NUMBER     AS "91_to_120_days_past_due_home_currency",
-    "more_than_120_days_past_due_home_currency"::NUMBER AS "more_than_120_days_past_due_home_currency"
+     more_than_120_days_past_due_home_currency::NUMBER  AS more_than_120_days_past_due_home_currency
   FROM source
 
 )
