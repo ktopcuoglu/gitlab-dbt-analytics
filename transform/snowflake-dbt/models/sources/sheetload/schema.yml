@@ -20,7 +20,6 @@ models:
     - name: invoice_number
       tests:
         - not_null
-        - unique
     - name: invoice_period
       tests:
         - not_null
