@@ -24,7 +24,9 @@
     "key_to_parent_project": "project_id",
     "primary_key": "event_id",
     "stage_name": "create",
-    "is_representative_of_stage": "True"
+    "is_representative_of_stage": "True",
+    "group": "gitaly",
+    "gmau": "True"
   }, {
     "event_name": "action_monthly_active_users_design_management",
     "source_table_name": "gitlab_dotcom_events",
@@ -160,6 +162,15 @@
     "is_representative_of_stage": "False"
   },
   {
+    "event_name": "epic_interaction",
+    "source_cte_name": "epic_interaction",
+    "user_column_name": "user_id",
+    "key_to_parent_group": "ultimate_parent_id",
+    "primary_key": "event_id",
+    "stage_name": "plan",
+    "is_representative_of_stage": "False"
+  },
+  {
     "event_name": "epic_notes",
     "source_cte_name": "epic_notes",
     "user_column_name": "note_author_id",
@@ -193,7 +204,17 @@
     "key_to_parent_project": "project_id",
     "primary_key": "issue_id",
     "stage_name": "plan",
-    "is_representative_of_stage": "True"
+    "is_representative_of_stage": "False"
+  },
+  {
+    "event_name": "issue_interaction",
+    "source_cte_name": "issue_notes",
+    "user_column_name": "note_author_id",
+    "key_to_parent_project": "project_id",
+    "primary_key": "author_id",
+    "stage_name": "plan",
+    "is_representative_of_stage": "True",
+    "group_name": "project_management"
   },
   {
     "event_name": "issue_notes",
@@ -275,6 +296,17 @@
     "primary_key": "merge_request_id",
     "stage_name": "create",
     "is_representative_of_stage": "False"
+  },
+  {
+    "event_name": "merge_request_interactions",
+    "source_cte_name": "merge_request_interactions",
+    "user_column_name": "event_id",
+    "key_to_parent_project": "project_id",
+    "primary_key": "author_id",
+    "stage_name": "create",
+    "is_representative_of_stage": "False",
+    "group_name": "source_code",
+    "gmau": "True"
   },
   {
     "event_name": "merge_request_notes",
