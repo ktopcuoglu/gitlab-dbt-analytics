@@ -12,25 +12,13 @@ WITH charges_agg AS (
     SELECT *
     FROM {{ ref('dim_dates') }}
 
-), last_month_of_fiscal_quarter AS (
-
-    SELECT DISTINCT
-      DATE_TRUNC('month', last_day_of_fiscal_quarter) AS last_month_of_fiscal_quarter,
-      fiscal_quarter_name_fy
-    FROM {{ ref('dim_dates') }}
-
-), last_month_of_fiscal_year AS (
-
-    SELECT DISTINCT
-      DATE_TRUNC('month', last_day_of_fiscal_year) AS last_month_of_fiscal_year,
-      fiscal_year
-    FROM {{ ref('dim_dates') }}
-
 ), charges_month_by_month AS (
 
     SELECT
       charges_agg.*,
-      dim_dates.date_actual  AS arr_month
+      dim_dates.date_actual                                                           AS arr_month,
+      IFF(is_first_day_of_last_month_of_fiscal_quarter, fiscal_quarter_name_fy, NULL) AS fiscal_quarter_name_fy,
+      IFF(is_first_day_of_last_month_of_fiscal_year, fiscal_year, NULL)               AS fiscal_year
     FROM charges_agg
     INNER JOIN dim_dates
       ON charges_agg.effective_start_month <= dim_dates.date_actual
@@ -49,8 +37,8 @@ WITH charges_agg AS (
 
       --date info
       arr_month,
-      quarter.fiscal_quarter_name_fy,
-      year.fiscal_year,
+      fiscal_quarter_name_fy,
+      fiscal_year,
       subscription_start_month,
       subscription_end_month,
 
@@ -83,8 +71,4 @@ WITH charges_agg AS (
       SUM(arr)                      AS arr,
       SUM(quantity)                 AS quantity
     FROM charges_month_by_month
-    LEFT JOIN last_month_of_fiscal_quarter quarter
-      ON charges_month_by_month.arr_month = quarter.last_month_of_fiscal_quarter
-    LEFT JOIN last_month_of_fiscal_year year
-      ON  charges_month_by_month.arr_month = year.last_month_of_fiscal_year
     {{ dbt_utils.group_by(n=24) }}

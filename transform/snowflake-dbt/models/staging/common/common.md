@@ -72,9 +72,15 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
-{% docs fct_crm_conversion_events %}
+{% docs fct_crm_lead_conversion %}
 
-A fact for events along the marketing funnel and sales pipeline such as lead creation, conversion, marketing qualification, etc.
+A fact from the lead history and lead tables in Salesforce that has a record for every converted lead
+
+{% enddocs %}
+
+{% docs fct_crm_marketing_qualification %}
+
+A fact from the lead and contact tables that shows the date they were qualified. Ideally this should be using the lead and contact history tables as well, but, as of yet, the appropriate fields are not being tracked in Salesforce. 
 
 {% enddocs %}
 

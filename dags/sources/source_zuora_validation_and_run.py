@@ -79,7 +79,7 @@ dag = DAG(
 freshness_cmd = f"""
     {dbt_install_deps_and_seed_nosha_cmd} &&
     dbt source snapshot-freshness --profiles-dir profile --target prod --select zuora; ret=$?;
-    python ../../orchestration/upload_dbt_file_to_snowflake.py sources; exit $ret
+    python ../../orchestration/upload_dbt_file_to_snowflake.py freshness; exit $ret
 """
 freshness = KubernetesPodOperator(
     **gitlab_defaults,
@@ -96,7 +96,7 @@ freshness = KubernetesPodOperator(
 test_cmd = f"""
     {dbt_install_deps_nosha_cmd} &&
     dbt test --profiles-dir profile --target prod --models source:zuora; ret=$?;
-    python ../../orchestration/upload_dbt_file_to_snowflake.py test; exit $ret
+    python ../../orchestration/upload_dbt_file_to_snowflake.py source_tests; exit $ret
 """
 test = KubernetesPodOperator(
     **gitlab_defaults,
@@ -113,7 +113,7 @@ test = KubernetesPodOperator(
 snapshot_cmd = f"""
     {dbt_install_deps_nosha_cmd} &&
     dbt snapshot --profiles-dir profile --target prod --select path:snapshots/zuora; ret=$?;
-    python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
+    python ../../orchestration/upload_dbt_file_to_snowflake.py snapshots; exit $ret
 """
 snapshot = KubernetesPodOperator(
     **gitlab_defaults,
