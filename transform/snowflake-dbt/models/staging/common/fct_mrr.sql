@@ -80,7 +80,6 @@ WITH dim_dates AS (
     subscription_id,
     product_details_id,
     SUM(mrr)                                             AS mrr,
-    SUM(mrr)* 12                                         AS arr,
     SUM(quantity)                                        AS quantity,
     ARRAY_AGG(rate_plan_charge_filtered.unit_of_measure) AS unit_of_measure
   FROM rate_plan_charge_filtered
