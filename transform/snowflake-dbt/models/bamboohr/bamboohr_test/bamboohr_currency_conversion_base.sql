@@ -1,13 +1,14 @@
-{{ config({
+{# {{ config({
     "schema": "sensitive",
     "materialized": "ephemeral"
     })
-}}
+}} #}
 
 WITH source AS (
 
     SELECT *
-    FROM "RAW"."BAMBOOHR"."CUSTOMCURRENCYCONVERSION"
+    FROM {{ source('bamboohr', 'custom_currency_conversion') }}
+
     ORDER BY uploaded_at DESC
     LIMIT 1
 
@@ -43,9 +44,12 @@ WITH source AS (
 
     SELECT 
       renamed.*,
-      TO_NUMBER(SPLIT_PART(usd_annual_salary,' ',1)) AS usd_annual_salary_amount,
-      SPLIT_PART(usd_annual_salary,' ',2)            AS usd_annual_salary_type
+      TO_NUMBER(SPLIT_PART(local_annual_salary,' ',1)) AS local_annual_salary_amount,
+      SPLIT_PART(local_annual_salary,' ',2)            AS local_currency_code,  
+      TO_NUMBER(SPLIT_PART(usd_annual_salary,' ',1))   AS usd_annual_salary_amount,
+      SPLIT_PART(usd_annual_salary,' ',2)              AS usd_currency_code
     FROM renamed
+
 
 ), final AS (
 
@@ -53,11 +57,15 @@ WITH source AS (
     conversion_id,
     employee_id,
     effective_date,
+    currency_conversion_factor,
+    local_annual_salary_amount,
+    local_currency_code,
     usd_annual_salary_amount
     FROM cleaned 
     QUALIFY ROW_NUMBER() OVER (PARTITION BY employee_id, usd_annual_salary_amount ORDER BY conversion_id) = 1
 
 ) 
+
 SELECT *,
   LAG(usd_annual_salary_amount) OVER (PARTITION BY employee_id ORDER BY conversion_id) AS prior_bamboohr_annual_salary
 FROM final 

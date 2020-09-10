@@ -1,0 +1,23 @@
+version: 2
+
+sources:
+  - name: bamboohr
+    database: '{{ env_var("SNOWFLAKE_LOAD_DATABASE") }}'
+    schema: bamboohr
+    loader: Airflow
+    loaded_at_field: uploaded_at
+    
+    quoting:
+      database: true
+      schema: false
+      identifier: false
+
+    freshness:
+      warn_after: {count: 8, period: hour}
+      error_after: {count: 24, period: hour}
+
+    tables:
+      - name: custom_on_target_earnings 
+        identifier: customontargetearnings
+      - name: custom_currency_conversion
+        identifier: customcurrencyconversion
