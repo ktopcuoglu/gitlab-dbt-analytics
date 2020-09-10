@@ -21,7 +21,7 @@ Zuora Accounts added here will be excluded from all relevant Zuora base models.
 * The `description` column is a non-functional helper for us to track which accounts are excluded.
 {% enddocs %}
 
-{% docs zuora_golden_records %}
+{% docs zuora_golden_records_hash_doc %}
  ## [Zuora Golden Records](https://gitlab.com/gitlab-data/analytics/-/issues/5957)
 For use in the [Trusted Data Framework](https://about.gitlab.com/handbook/business-ops/data-team/direction/trusted-data), these records were created using the hash_sensitive_columns macro using production SALT and hashes. 
 
