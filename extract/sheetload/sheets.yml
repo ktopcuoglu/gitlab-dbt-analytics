@@ -7,6 +7,10 @@ sheets:
     owner: '@ken_aguilar'
     tabs:
       - abuse_mitigation
+  - name: ar_aging_details
+    owner: '@s_mccauley'
+    tabs:
+      - ar_aging_details
   - name: calendar
     owner: '@tayloramurphy'
     tabs:
@@ -141,7 +145,7 @@ sheets:
     owner: '@jeanpeguero'
     tabs:
       - abm_account_baselines
-  - name: hire_replan 
+  - name: hire_replan
     owner: '@pluthra'
     tabs:
       - hire_replan
