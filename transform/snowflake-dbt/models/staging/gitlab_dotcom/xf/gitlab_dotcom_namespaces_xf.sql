@@ -59,6 +59,7 @@ projects AS (
       namespaces.does_require_two_factor_authentication,
       namespaces.two_factor_grace_period,
       namespaces.project_creation_level,
+      namespaces.push_rule_id,
 
       namespace_lineage.namespace_is_internal,
       namespace_lineage.ultimate_parent_id                             AS namespace_ultimate_parent_id,
