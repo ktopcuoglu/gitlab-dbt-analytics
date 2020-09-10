@@ -28,8 +28,6 @@ WITH source AS (
             data_by_row:rate:currency          AS currency,
             data_by_row:rate:value             AS compensation_value,
             uploaded_at 
-      FROM intermediate,
-      lateral flatten( input => data_by_Row:rate ) a
       FROM intermediate
 
 )
