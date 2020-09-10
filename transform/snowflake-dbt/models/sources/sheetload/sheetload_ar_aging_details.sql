@@ -18,7 +18,7 @@ WITH source AS (
     invoice_date::DATE                                  AS invoice_date,
     invoice_amount::NUMBER                              AS invoice_amount,
     due_date::DATE                                      AS due_date,
-    terms::NUMBER                                       AS terms,
+    terms::VARCHAR                                      AS terms,
     days_aging::NUMBER                                  AS days_aging,
     aging_bucket::VARCHAR                               AS aging_bucket,
     invoice_balance::NUMBER                             AS invoice_balance,
