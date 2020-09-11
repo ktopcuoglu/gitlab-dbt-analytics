@@ -4,7 +4,7 @@ models:
   - name: gcp_billing_export_xf
     description: Final model for billing export.
     columns:
-      - name: source_surrogate_key
+      - name: source_primary_key
         tests:
           - not_null
           - unique
@@ -16,7 +16,7 @@ models:
         tests:
           - not_null
           - unique
-      - name: source_surrogate_key
+      - name: source_primary_key
         tests:
           - not_null
 
@@ -27,7 +27,7 @@ models:
         tests:
           - not_null
           - unique
-      - name: source_surrogate_key
+      - name: source_primary_key
         tests:
           - not_null
 
@@ -38,7 +38,7 @@ models:
         tests:
           - not_null
           - unique
-      - name: source_surrogate_key
+      - name: source_primary_key
         tests:
           - not_null
 
@@ -49,6 +49,6 @@ models:
         tests:
           - not_null
           - unique
-      - name: source_surrogate_key
+      - name: source_primary_key
         tests:
           - not_null
