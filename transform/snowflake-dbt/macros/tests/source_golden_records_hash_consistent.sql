@@ -22,10 +22,12 @@ WITH sheetload_data AS (
         {%- for column in meta_columns %}
         CASE WHEN
             IFNULL(sheetload.{{ column }}_hash, '') = IFNULL(hashed.{{ column }}_hash, '') THEN 0 ELSE 1
-        END +
+        END
+            {%- if not loop.last %}
+                +
+            {% endif %}
         {% endfor %}
-        -- Terminate the last +
-        0 )
+        )
         AS num_rows
     FROM sheetload_data sheetload
     LEFT JOIN hashed_data hashed ON hashed.{{ join_column }} = sheetload.{{ join_column }}
