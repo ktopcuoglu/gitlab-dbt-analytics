@@ -9,8 +9,7 @@ WITH sheetload_data AS (
 
 ), hashed_data AS (
 
-    SELECT
-        *
+    SELECT *
     FROM {{ ref(hashed_model) }}
 
 ),
