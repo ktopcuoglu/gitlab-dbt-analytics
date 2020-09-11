@@ -32,9 +32,10 @@ WITH source AS (
       data_by_row['employeeId']::NUMBER               AS employee_id,
       data_by_row['customDate']::DATE                 AS effective_date,
       data_by_row['type']::VARCHAR                    AS compensation_type,
+      data_by_row['customAnnualAmountLocal']::VARCHAR AS annual_amount_local,
+      data_by_row['customAnnualAmountUSD']::VARCHAR   AS annual_amount_usd,
       data_by_row['customOTELocal']::VARCHAR          AS ote_local,
       data_by_row['customOTEUSD']::VARCHAR            AS ote_usd,
-      data_by_row['customAnnualAmountUSD']::VARCHAR   AS annual_amount_usd,
       data_by_row['customType']::VARCHAR              AS ote_type,
       data_by_row['customVariablePay']::VARCHAR       AS variable_pay
     FROM unnest_again
@@ -47,23 +48,20 @@ WITH source AS (
       effective_date,
       variable_pay,
       compensation_type,
+      SPLIT_PART(annual_amount_local,' ',1) AS annual_amount_local_value,
+      SPLIT_PART(annual_amount_local,' ',2) AS annual_amount_local_currency,
+      SPLIT_PART(annual_amount_usd,' ',1) AS annual_amount_usd_value,
+      SPLIT_PART(annual_amount_usd,' ',2) AS annual_amount_usd_currency,
       ote_local,
       SPLIT_PART(ote_local,' ',1) AS ote_local_amount,
       SPLIT_PART(ote_local,' ',2) AS ote_local_currency_code,
       SPLIT_PART(ote_usd,' ',1)   AS ote_usd,
-      annual_amount_usd,
       ote_type
     FROM renamed
 
 )
 
-SELECT 
-  target_earnings_update_id,
-  employee_id,
-  effective_date,
-  variable_pay,
-  ote_local_amount,
-  ote_local_currency_code,
-  ote_usd,
-  LAG(ote_usd) OVER (PARTITION BY employee_id ORDER BY target_earnings_update_id) AS prior_bamboohr_ote
+SELECT *,
+  LAG(COALESCE(annual_amount_usd_value,0)) OVER (PARTITION BY employee_id ORDER BY target_earnings_update_id)   AS prior_annual_amount_usd,
+  annual_amount_usd_value - prior_annual_amount_usd AS change_in_annual_amount_usd
 FROM final

@@ -20,12 +20,14 @@ WITH source AS (
       d.value['customCostCenter']::VARCHAR                            AS cost_center,
       d.value['customJobTitleSpeciality']::VARCHAR                    AS jobtitle_speciality,
       d.value['customGitLabUsername']::VARCHAR                        AS gitlab_username,
+      d.value['customPayFrequency']::VARCHAR                           AS pay_frequency,
       d.value['customSalesGeoDifferential']::VARCHAR                  AS sales_geo_differential,
       uploaded_at::TIMESTAMP                                          AS effective_date
     FROM source,
     LATERAL FLATTEN(INPUT => PARSE_JSON(jsontext['employees']), OUTER => true) d
     QUALIFY ROW_NUMBER() OVER (PARTITION BY employee_id, job_role, job_grade, cost_center,
-                                            jobtitle_speciality, gitlab_username, sales_geo_differential
+                                            jobtitle_speciality, gitlab_username, 
+                                            pay_frequency, sales_geo_differential
             ORDER BY DATE_TRUNC(day,effective_date) ASC, DATE_TRUNC(hour, effective_date) DESC)=1  
 
 ), final AS (
@@ -38,6 +40,7 @@ WITH source AS (
       cost_center,
       jobtitle_speciality,
       gitlab_username,
+      pay_frequency,
       sales_geo_differential,
       DATE_TRUNC(day, effective_date)                                                    AS effective_date,
       LEAD(DATEADD(day,-1,DATE_TRUNC(day, intermediate.effective_date))) OVER 
