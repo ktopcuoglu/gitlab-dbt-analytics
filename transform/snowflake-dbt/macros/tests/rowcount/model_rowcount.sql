@@ -1,6 +1,6 @@
 {% macro model_rowcount(model_name, count, where_clause=None) %}
 
-WITH source as (
+WITH source AS (
 
     SELECT *
     FROM {{ ref(model_name) }}
