@@ -17,10 +17,13 @@ models:
     description: '{{ doc("zuora_golden_records") }}'
     columns:
       - name: account_id
-      - name: subscription_id
       - name: account_name
         meta:
           sensitive: true
+  - name: zuora_subscription_golden_records
+    description: '{{ doc("zuora_golden_records") }}'
+    columns:
+      - name: subscription_id
       - name: subscription_start_date
         meta:
           sensitive: true
