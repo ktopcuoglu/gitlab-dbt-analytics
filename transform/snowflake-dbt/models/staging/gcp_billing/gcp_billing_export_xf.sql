@@ -58,7 +58,7 @@ WITH source AS (
         source.export_time                                   AS export_time,
         source.uploaded_at                                   AS uploaded_at
     FROM source
-    INNER JOIN credits
+    LEFT JOIN credits
     ON source.primary_key = credits.source_primary_key
 
 )
