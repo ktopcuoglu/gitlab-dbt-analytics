@@ -14,7 +14,7 @@ models:
         tests:
           - not_null
   - name: zuora_account_golden_records
-    description: '{{ doc("zuora_subscription_golden_records") }}'
+    description: '{{ doc("zuora_account_golden_records") }}'
     columns:
       - name: account_id
       - name: account_name
