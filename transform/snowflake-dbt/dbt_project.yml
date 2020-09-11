@@ -60,7 +60,11 @@ seeds:
       +column_types:
         major_minor_version: varchar
     golden_records:
-      +schema: tdf
+      +schema: tdf  
+  
+  golden_records:
+    +schema: tdf
+
 # ==================
 # Variable Configs
 # ==================
