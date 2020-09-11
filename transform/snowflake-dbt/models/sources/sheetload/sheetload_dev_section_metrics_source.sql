@@ -6,7 +6,7 @@ WITH source AS (
 ), renamed AS (
 
     SELECT 
-      section::VARCHAR                AS section,
+      section::VARCHAR                AS section_name,
       metrics_path::VARCHAR           AS metrics_path,
       stage::VARCHAR                  AS stage_name
       smau::BOOLEAN                   AS is_smau,
