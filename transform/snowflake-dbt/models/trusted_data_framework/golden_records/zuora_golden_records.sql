@@ -1,10 +1,9 @@
-WITH golden_records AS (
+WITH source AS (
 
-  SELECT *
-  FROM {{ ref('sheetload_zuora_golden_records_source') }}
+    SELECT *
+    FROM {{ source('sheetload','zuora_golden_records') }}
 
 )
 
 SELECT *
-FROM golden_records
-
+FROM source

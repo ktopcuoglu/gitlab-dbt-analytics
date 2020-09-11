@@ -16,6 +16,8 @@ models:
   - name: zuora_golden_records
     description: '{{ doc("zuora_golden_records") }}'
     columns:
+      - name: account_id
+      - name: subscription_id
       - name: account_name
         meta:
           sensitive: true
