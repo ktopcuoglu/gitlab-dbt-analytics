@@ -911,7 +911,7 @@ tables:
       , milestone_id
       , updated_by_id
       , weight
-      , due_date
+      , CASE WHEN due_date < '1970-01-01' THEN NULL ELSE due_date END AS due_date
       , moved_to_id
       , lock_version
       , time_estimate

@@ -281,5 +281,6 @@ dbt_install_deps_and_seed_nosha_cmd = f"""
     {dbt_install_deps_nosha_cmd} &&
     dbt seed --profiles-dir profile --target prod --vars {xs_warehouse}"""
 
+
 def number_of_dbt_threads_argument(number_of_threads):
     return f"--threads {number_of_threads}"
