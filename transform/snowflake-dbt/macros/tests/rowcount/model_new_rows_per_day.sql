@@ -7,7 +7,7 @@ WITH dates AS (
     WHERE is_holiday = FALSE
     AND day_of_week IN (2,3,4,5,6)
 
-), source as (
+), source AS (
 
     SELECT *
     FROM {{ ref(model_name) }}
