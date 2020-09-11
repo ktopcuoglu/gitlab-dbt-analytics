@@ -71,8 +71,7 @@ WITH source AS (
           'pricing_unit',
           'usage_unit',
           'usage_start_time',
-          'usage_end_time',
-          'uploaded_at'] ) }}                                                  AS primary_key
+          'usage_end_time'] ) }}                                                  AS primary_key
 
   FROM source,
   TABLE(FLATTEN(source.jsontext)) flatten_export
