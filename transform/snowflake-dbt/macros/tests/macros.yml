@@ -118,6 +118,18 @@ macros:
       - name: table_list
         type: list
         description: List of tables being referenced
+  - name: source_golden_records_hash_consistent
+    description: Validates that the golden records model is still the same as the sheetload model by using a static seed file for comparison
+    arguments:
+      - name: golden_record_model
+        type: string
+        description: The name of the golden record model
+      - name: hashed_model
+        type: string
+        description: The name of the seeded and hashed model
+      - name: join_column
+        type: string
+        description: Column the models are expected to join on, this value will remain unhashed.
   - name: test_no_overlapping_valid_from_to_dates
     description: '{{ doc("test_no_overlapping_valid_from_to_dates") }}'
   - name: test_unique_where_currently_valid
