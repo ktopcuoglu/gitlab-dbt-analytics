@@ -36,7 +36,7 @@ def get_billing_data_query(start_date: str, end_date: str) -> str:
           credits,
           invoice,
           cost_type
-        FROM gitlab_com_billing.gcp_billing_export_combined
+        FROM gitlab_com_billing.gcp_billing_export_v1_017B02_778F9C_493B83
         WHERE export_time >= '{start_date}' and export_time < '{end_date}'
     """
 

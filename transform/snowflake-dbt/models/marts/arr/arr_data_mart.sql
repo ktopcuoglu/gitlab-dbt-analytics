@@ -2,73 +2,87 @@
 {{ config(materialized='table',
   transient=false)}}
 
-WITH charges_agg AS (
+WITH dim_accounts AS (
 
-    SELECT *
-    FROM {{ ref('charges_agg') }}
+  SELECT *
+  FROM {{ ref('dim_accounts') }}
+
+), dim_customers AS (
+
+  SELECT *
+  FROM {{ ref('dim_customers') }}
 
 ), dim_dates AS (
 
-    SELECT *
-    FROM {{ ref('dim_dates') }}
+  SELECT *
+  FROM {{ ref('dim_dates') }}
 
-), charges_month_by_month AS (
+), dim_product_details AS (
 
-    SELECT
-      charges_agg.*,
-      dim_dates.date_actual                                                           AS arr_month,
-      IFF(is_first_day_of_last_month_of_fiscal_quarter, fiscal_quarter_name_fy, NULL) AS fiscal_quarter_name_fy,
-      IFF(is_first_day_of_last_month_of_fiscal_year, fiscal_year, NULL)               AS fiscal_year
-    FROM charges_agg
-    INNER JOIN dim_dates
-      ON charges_agg.effective_start_month <= dim_dates.date_actual
-      AND (charges_agg.effective_end_month > dim_dates.date_actual OR charges_agg.effective_end_month IS NULL)
-      AND dim_dates.day_of_month = 1
-    WHERE subscription_status NOT IN ('Draft', 'Expired')
-      AND charges_agg.charge_type = 'Recurring'
-      AND mrr != 0
+  SELECT *
+  FROM {{ ref('dim_product_details') }}
+
+), dim_subscriptions AS (
+
+  SELECT *
+  FROM {{ ref('dim_subscriptions') }}
+
+), fct_mrr AS (
+
+  SELECT *
+  FROM {{ ref('fct_mrr') }}
 
 )
 
-    SELECT
-      --primary_key
-      {{ dbt_utils.surrogate_key(['arr_month', 'subscription_name', 'product_category']) }}
-                                      AS primary_key,
+SELECT
+  --primary_key
+  fct_mrr.mrr_id,
 
-      --date info
-      arr_month,
-      fiscal_quarter_name_fy,
-      fiscal_year,
-      subscription_start_month,
-      subscription_end_month,
+  --date info
+  dim_dates.date_actual AS arr_month,
+  IFF(is_first_day_of_last_month_of_fiscal_quarter, fiscal_quarter_name_fy, NULL) AS fiscal_quarter_name_fy,
+  IFF(is_first_day_of_last_month_of_fiscal_year, fiscal_year, NULL)               AS fiscal_year,
+  dim_subscriptions.subscription_start_month,
+  dim_subscriptions.subscription_end_month,
 
-      --account info
-      zuora_account_id,
-      zuora_sold_to_country,
-      zuora_account_name,
-      zuora_account_number,
-      crm_id,
-      ultimate_parent_account_id,
-      ultimate_parent_account_name,
-      ultimate_parent_billing_country,
-      ultimate_parent_account_segment,
-      ultimate_parent_industry,
-      ultimate_parent_account_owner_team,
-      ultimate_parent_territory,
+  --account info
+  dim_accounts.account_id                                              AS zuora_account_id,
+  dim_accounts.sold_to_country                                         AS zuora_sold_to_country,
+  dim_accounts.account_name                                            AS zuora_account_name,
+  dim_accounts.account_number                                          AS zuora_account_number,
+  COALESCE(dim_customers.merged_to_account_id, dim_customers.crm_id)   AS crm_id,
+  dim_customers.ultimate_parent_account_id,
+  dim_customers.ultimate_parent_account_name,
+  dim_customers.ultimate_parent_billing_country,
+  dim_customers.ultimate_parent_account_segment,
+  dim_customers.ultimate_parent_industry,
+  dim_customers.ultimate_parent_account_owner_team,
+  dim_customers.ultimate_parent_territory,
 
-      --subscription info
-      subscription_name,
-      subscription_status,
+  --subscription info
+  dim_subscriptions.subscription_name,
+  dim_subscriptions.subscription_status,
 
-      --charge info
-      product_category,
-      delivery,
-      service_type,
-      charge_type,
-      array_agg(unit_of_measure)    AS unit_of_measure,
-      array_agg(rate_plan_name)     AS rate_plan_name,
-      SUM(mrr)                      AS mrr,
-      SUM(arr)                      AS arr,
-      SUM(quantity)                 AS quantity
-    FROM charges_month_by_month
-    {{ dbt_utils.group_by(n=24) }}
+  --product info
+  dim_product_details.product_category,
+  dim_product_details.delivery,
+  dim_product_details.service_type,
+  dim_product_details.product_rate_plan_name                            AS rate_plan_name,
+  --  not needed as all charges in fct_mrr are recurring
+  --  fct_mrr.charge_type,
+  fct_mrr.unit_of_measure,
+
+  fct_mrr.mrr,
+  fct_mrr.arr,
+  fct_mrr.quantity
+  FROM fct_mrr
+  INNER JOIN dim_subscriptions
+    ON dim_subscriptions.subscription_id = fct_mrr.subscription_id
+  INNER JOIN dim_product_details
+    ON dim_product_details.product_details_id = fct_mrr.product_details_id
+  INNER JOIN dim_accounts
+    ON dim_accounts.account_id = fct_mrr.account_id
+  INNER JOIN dim_dates
+    ON dim_dates.date_id = fct_mrr.date_id
+  LEFT JOIN dim_customers
+    ON dim_accounts.crm_id = dim_customers.crm_id
