@@ -18,6 +18,7 @@ sources:
       - name: abuse_mitigation
       - name: account_golden_records
       - name: ally_certificate
+      - name: ar_aging_details
       - name: calendar
       - name: clari_export_forecast_net_iacv
       - name: communication_certificate
@@ -61,4 +62,3 @@ sources:
       - name: yc_companies
       - name: zuora_account_golden_records
       - name: zuora_subscription_golden_records
-
