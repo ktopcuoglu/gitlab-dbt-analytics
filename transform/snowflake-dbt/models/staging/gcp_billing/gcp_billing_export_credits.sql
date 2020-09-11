@@ -11,11 +11,11 @@ WITH source AS (
 ), renamed as (
 
     SELECT
-        source.source_surrogate_key             AS source_surrogate_key,
+        source.primary_key                      AS source_primary_key,
         credits_flat.value['name']::VARCHAR     AS credit_description,
         credits_flat.value['amount']::FLOAT     AS credit_amount,
         {{ dbt_utils.surrogate_key([
-            'source_surrogate_key',
+            'source_primary_key',
             'credit_description',
             'credits_flat.value'] ) }}          AS credit_pk
     FROM source,
@@ -23,5 +23,5 @@ WITH source AS (
 
 )
 
-SELECT * 
+SELECT *
 FROM renamed

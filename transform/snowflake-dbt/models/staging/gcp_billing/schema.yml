@@ -7,6 +7,7 @@ models:
       - name: source_surrogate_key
         tests:
           - not_null
+          - unique
 
   - name: gcp_billing_export_credits
     description: table for unnested credit rows
@@ -14,6 +15,7 @@ models:
       - name: credit_pk
         tests:
           - not_null
+          - unique
       - name: source_surrogate_key
         tests:
           - not_null
@@ -24,6 +26,7 @@ models:
       - name: resource_label_pk
         tests:
           - not_null
+          - unique
       - name: source_surrogate_key
         tests:
           - not_null
@@ -34,6 +37,7 @@ models:
       - name: project_label_pk
         tests:
           - not_null
+          - unique
       - name: source_surrogate_key
         tests:
           - not_null
@@ -44,6 +48,7 @@ models:
       - name: system_label_pk
         tests:
           - not_null
+          - unique
       - name: source_surrogate_key
         tests:
           - not_null
