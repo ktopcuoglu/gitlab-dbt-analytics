@@ -69,8 +69,8 @@ billing_operator = KubernetesPodOperator(
     ],
     env_vars={
         **pod_env_vars,
-        "START_TIME": "{{ execution_date.isoformat() }}",
-        "END_TIME": "{{ next_execution_date.isoformat() }}",
+        "START_TIME": "{{ (execution_date - macros.timedelta(hours=3)).isoformat() }}",
+        "END_TIME": "{{ (next_execution_date - macros.timedelta(hours=3)).isoformat() }}",
     },
     affinity=get_affinity(False),
     tolerations=get_toleration(False),

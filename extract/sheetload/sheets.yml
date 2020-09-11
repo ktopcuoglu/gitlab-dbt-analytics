@@ -31,6 +31,10 @@ sheets:
     owner: '@pluthra'
     tabs:
       - employee_location_factor
+  - name: dev_section_metrics
+    owner: '@mpeychet_'
+    tabs:
+      - dev_section_metrics
   - name: gitlab_slack_stats
     owner: '@pluthra'
     tabs:
@@ -153,7 +157,17 @@ sheets:
     owner: '@kathleentam'
     tabs:
       - data_team_capacity
-  - name: account_golden_records
+  - name: zuora_account_golden_records
     owner: '@paul_armstrong'
     tabs:
-      - account_golden_records
+      - zuora_account_golden_records
+  - name: zuora_subscription_golden_records
+    owner: '@paul_armstrong'
+    tabs:
+    - zuora_subscription_golden_records
+  - name: product_maturity_historical
+    owner: '@pluthra'
+    tabs:
+      - product_maturity_historical
+
+
