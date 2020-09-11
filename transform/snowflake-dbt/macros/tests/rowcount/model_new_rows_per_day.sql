@@ -1,6 +1,6 @@
 {% macro model_new_rows_per_day(model_name, created_column, min_value, max_value=None, where_clause=None) %}
 
-WITH dates as (
+WITH dates AS (
 
     SELECT *
     FROM {{ ref('date_details' )}}
