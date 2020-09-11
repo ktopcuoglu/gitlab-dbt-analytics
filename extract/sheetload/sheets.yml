@@ -27,6 +27,10 @@ sheets:
     owner: '@pluthra'
     tabs:
       - employee_location_factor
+  - name: dev_section_metrics
+    owner: '@mpeychet_'
+    tabs:
+      - dev_section_metrics
   - name: gitlab_slack_stats
     owner: '@pluthra'
     tabs:
@@ -153,3 +157,7 @@ sheets:
     owner: '@paul_armstrong'
     tabs:
       - account_golden_records
+  - name: product_maturity_historical
+    owner: '@pluthra'
+    tabs: 
+      - product_maturity_historical  

@@ -18,8 +18,7 @@ This CTE amortizes the ARR by month over the effective term of the rate plan cha
 
 Here is an image documenting the ERD for this table:
 
-<div style="width: 640px; height: 480px; margin: 10px; position: relative;"><iframe allowfullscreen frameborder="0" style="width:640px; height:480px" src="https://app.lucidchart.com/documents/embeddedchart/bfd9322f-5132-42e4-8584-8230e6e28b87" id="jtDoONWhVAV9"></iframe></div>
-
+<div style="width: 640px; height: 480px; margin: 10px; position: relative;"><iframe allowfullscreen frameborder="0" style="width:640px; height:480px" src="https://app.lucidchart.com/documents/embeddedchart/c13fc602-4177-4a8e-bfc1-ff356242a16f" id="HkBuGXKRnl5b"></iframe></div>
 {% enddocs %}
 
 {% docs arr_data_mart_incr %}
