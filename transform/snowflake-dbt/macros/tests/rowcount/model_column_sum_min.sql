@@ -1,4 +1,4 @@
-{% macro source_column_sum_min(model_name, column, min_value, where_clause=None) %}
+{% macro model_column_sum_min(model_name, column, min_value, where_clause=None) %}
 
 WITH source AS (
 

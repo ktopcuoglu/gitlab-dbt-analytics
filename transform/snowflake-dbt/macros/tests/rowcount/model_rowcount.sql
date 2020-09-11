@@ -1,4 +1,4 @@
-{% macro source_rowcount(model_name, count, where_clause=None) %}
+{% macro model_rowcount(model_name, count, where_clause=None) %}
 
 WITH source as (
 

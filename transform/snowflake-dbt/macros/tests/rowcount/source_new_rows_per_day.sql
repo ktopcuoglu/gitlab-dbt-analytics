@@ -15,8 +15,8 @@ WITH dates as (
 ), counts AS (
 
     SELECT 
-      COUNT(*)                                          AS row_count,
-      DATEADD('day', -1, DATE_TRUNC('day',createddate)) AS the_day
+      COUNT(*)                                                      AS row_count,
+      DATEADD('day', -1, DATE_TRUNC('day', {{ created_column }}))   AS the_day
     FROM source
     WHERE the_day IN (SELECT DATE_ACTUAL FROM dates)
     {% if where_clause != None %}
