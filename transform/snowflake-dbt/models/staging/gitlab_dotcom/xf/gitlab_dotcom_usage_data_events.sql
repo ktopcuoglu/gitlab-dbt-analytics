@@ -554,7 +554,42 @@ WITH gitlab_subscriptions AS (
     FROM {{ ref('gitlab_dotcom_issues_xf') }}
     WHERE ARRAY_CONTAINS('incident'::variant, labels)
 
-),  issue_notes AS (
+), issue_interactions AS ( --gmau for project_management
+
+    SELECT
+      note_author_id AS user_id,
+      created_at,
+      project_id
+    FROM {{ ref('gitlab_dotcom_notes_xf') }}
+    WHERE noteable_type = 'Issue'
+
+    UNION 
+
+    SELECT
+      author_id AS user_id,
+      issue_created_at,
+      project_id
+    FROM {{ ref('gitlab_dotcom_issues_xf') }}
+
+    UNION 
+    
+    SELECT
+      user_id,
+      created_at,
+      project_id
+    FROM {{ref('gitlab_dotcom_resource_label_events_xf')}}
+    WHERE issue_id IS NOT NULL
+  
+    UNION 
+
+    SELECT
+      user_id,
+      created_at,
+      project_id
+    FROM {{ref('gitlab_dotcom_resource_milestone_events_xf')}}
+    WHERE issue_id IS NOT NULL
+
+), issue_notes AS (
 
     SELECT *
     FROM {{ ref('gitlab_dotcom_notes') }}
