@@ -13,7 +13,7 @@ models:
       - name: date_day
         tests:
           - not_null
-  - name: zuora_golden_records
+  - name: zuora_account_golden_records
     description: '{{ doc("zuora_golden_records") }}'
     columns:
       - name: account_id
