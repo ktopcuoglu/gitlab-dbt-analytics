@@ -6,7 +6,7 @@ models:
     columns:
       - name: arr
         description: "Calculated as 12 * MRR value"
-      - name: primary_key
+      - name: mrr_id
         tests:
             - not_null
             - unique
