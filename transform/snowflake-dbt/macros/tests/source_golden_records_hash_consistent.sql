@@ -18,7 +18,6 @@ check_data AS (
 
 {% set meta_columns = get_meta_columns(golden_record_model, "sensitive") %}
 
-
     SELECT
         sheetload.{{ join_column }},
          SUM(
