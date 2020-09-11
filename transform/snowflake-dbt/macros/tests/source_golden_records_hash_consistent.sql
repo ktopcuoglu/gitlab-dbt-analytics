@@ -12,8 +12,7 @@ WITH sheetload_data AS (
     SELECT *
     FROM {{ ref(hashed_model) }}
 
-),
-check_data AS (
+), check_data AS (
 
 {% set meta_columns = get_meta_columns(golden_record_model, "sensitive") %}
 
