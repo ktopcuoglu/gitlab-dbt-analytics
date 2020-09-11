@@ -48,6 +48,7 @@ WITH source AS (
       source.uploaded_at                                                  AS uploaded_at,
       {{ dbt_utils.surrogate_key([
           'billing_account_id',
+          'cost',
           'cost_type',
           'credits',
           'currency',
@@ -69,6 +70,8 @@ WITH source AS (
           'sku_description',
           'system_labels',
           'pricing_unit',
+          'usage_amount',
+          'usage_amount_in_pricing_units',
           'usage_unit',
           'usage_start_time',
           'usage_end_time'] ) }}                                                  AS primary_key
