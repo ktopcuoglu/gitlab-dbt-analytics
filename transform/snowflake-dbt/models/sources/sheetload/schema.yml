@@ -14,7 +14,7 @@ models:
     - name: gtm_strategy
       tests:
         - not_null
-- name: sheetload_ar_aging_details
+- name: sheetload_ar_aging_details_source
   description: This is the source for AR aging invoice details.
   columns:
     - name: invoice_number
