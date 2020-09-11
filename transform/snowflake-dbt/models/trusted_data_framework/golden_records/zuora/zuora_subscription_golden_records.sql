@@ -7,5 +7,3 @@ WITH source AS (
 
 SELECT *
 FROM source
-
-+gitlab_snowflake.trusted_data_framework.golden_records.*
