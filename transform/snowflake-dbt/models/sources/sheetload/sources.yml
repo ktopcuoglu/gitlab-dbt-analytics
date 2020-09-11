@@ -58,5 +58,6 @@ sources:
       - name: social_marketing_metrics
       - name: values_certificate
       - name: yc_companies
-      - name: zuora_golden_records
+      - name: zuora_account_golden_records
+      - name: zuora_subscription_golden_records
 

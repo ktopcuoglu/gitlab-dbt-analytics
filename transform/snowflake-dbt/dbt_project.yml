@@ -368,6 +368,9 @@ models:
     trusted_data_framework:
       +materialized: table
       +schema: tdf
+      secure: true
+      golden_records:
+        +materialized: view
 
 
 # ======

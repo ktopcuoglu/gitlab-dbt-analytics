@@ -1,0 +1,7 @@
+version: 2
+
+seeds:
+  - name: zuora_account_golden_records_hash
+    description: '{{ doc("zuora_golden_records_hash_doc") }}'
+  - name: zuora_subscription_golden_records_hash
+    description: '{{ doc("zuora_golden_records_hash_doc") }}'
