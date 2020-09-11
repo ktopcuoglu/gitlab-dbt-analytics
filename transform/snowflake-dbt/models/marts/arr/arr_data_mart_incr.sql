@@ -6,7 +6,7 @@
   }}
 
 {% if execute %}
-  {% if flags.FULL_REFRESH %}
+  {% if flags.FULL_REFRESH and env_var('SNOWFLAKE_TRANSFORM_DATABASE', 'ANALYTICS') != "ANALYTICS" %}
       {{ exceptions.raise_compiler_error("Full refresh is not allowed for this model. Exclude it from the run via the argument \"--exclude marts.arr_data_mart_incr\".") }}
   {% endif %}
 {% endif %}
