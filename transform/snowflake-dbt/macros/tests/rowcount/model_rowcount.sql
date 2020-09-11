@@ -7,7 +7,7 @@ WITH source AS (
 
 ), counts AS (
 
-    SELECT count(*) as row_count
+    SELECT count(*) AS row_count
     FROM source
     {% if where_clause != None %}
     WHERE {{ where_clause }}

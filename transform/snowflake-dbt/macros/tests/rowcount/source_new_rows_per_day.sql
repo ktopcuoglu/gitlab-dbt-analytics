@@ -1,13 +1,13 @@
 {% macro source_new_rows_per_day(schema, table, created_column, min_value, max_value=None, where_clause=None) %}
 
-WITH dates as (
+WITH dates AS (
 
     SELECT *
     FROM {{ ref('date_details' )}}
     WHERE is_holiday = FALSE
     AND day_of_week IN (2,3,4,5,6)
 
-), source as (
+), source AS (
 
     SELECT *
     FROM {{ source(schema, table) }}
