@@ -140,7 +140,7 @@ def manifest_reader(file_path: str) -> Dict[str, Dict]:
 
 
 def query_results_generator(
-    query: str, engine: Engine, chunksize: int = 750_000
+    query: str, engine: Engine, chunksize: int = 1_000_000
 ) -> pd.DataFrame:
     """
     Use pandas to run a sql query and load it into a dataframe.
@@ -286,13 +286,13 @@ def read_sql_tmpfile(query: str, db_engine: Engine, tmp_file: Any) -> pd.DataFra
     cur.copy_expert(copy_sql, tmp_file)
     tmp_file.seek(0)
     logging.info("Reading csv")
-    df = pd.read_csv(tmp_file, chunksize=750_000, parse_dates=True, low_memory=False)
+    df = pd.read_csv(tmp_file, chunksize=1_000_000, parse_dates=True, low_memory=False)
     logging.info("CSV read")
     return df
 
 
 def range_generator(
-    start: int, stop: int, step: int = 750_000
+    start: int, stop: int, step: int = 1_000_000
 ) -> Generator[Tuple[int, ...], None, None]:
     """
     Yields a list that contains the starting and ending number for a given window.
@@ -351,7 +351,7 @@ def id_query_generator(
     snowflake_engine: Engine,
     source_table: str,
     target_table: str,
-    id_range: int = 750_000,
+    id_range: int = 1_000_000,
 ) -> Generator[str, Any, None]:
     """
     This function generates a list of queries based on the max ID in the target table.
