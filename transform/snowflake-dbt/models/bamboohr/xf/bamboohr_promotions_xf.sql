@@ -4,7 +4,7 @@ WITH bamboohr_compensation_changes AS (
       LAG(compensation_value) OVER (PARTITION BY employee_id ORDER BY compensation_update_id)       AS prior_compensation_value,
       LAG(compensation_currency) OVER (PARTITION BY employee_id ORDER BY compensation_update_id)    AS prior_compensation_currency,
       LAG(effective_date) OVER (PARTITION BY employee_id ORDER BY compensation_update_id)           AS prior_compensation_value_date,
-      ROW_NUMBER() OVER (PARTITION BY effective_date ORDER BY compensation_update_id)               AS rank_compensation_change_effective_date
+      ROW_NUMBER() OVER (PARTITION BY employee_id, effective_date ORDER BY compensation_update_id)  AS rank_compensation_change_effective_date
     FROM {{ ref('bamboohr_compensation') }}
 
 ), pay_frequency AS (
@@ -17,7 +17,7 @@ WITH bamboohr_compensation_changes AS (
 ), ote AS (
 
     SELECT *,
-      ROW_NUMBER() OVER (PARTITION BY effective_date ORDER BY target_earnings_update_id)            AS rank_ote_effective_date
+      ROW_NUMBER() OVER (PARTITION BY employee_id, effective_date ORDER BY target_earnings_update_id)   AS rank_ote_effective_date
     FROM {{ ref('bamboohr_ote') }}
 
 ), employee_directory AS (
@@ -84,7 +84,6 @@ WITH bamboohr_compensation_changes AS (
       compensation_change_reason,
       effective_date,
       currency_conversion_factor,
-      LAG(currency_conversion_factor) OVER (PARTITION BY employee_id ORDER BY compensation_update_id) AS prior_currency_conversion,
       pay_frequency,
       LAG(pay_frequency) OVER (PARTITION BY employee_id ORDER BY compensation_update_id) AS prior_pay_frequency,  
       compensation_value AS new_compensation_value,
@@ -108,9 +107,9 @@ WITH bamboohr_compensation_changes AS (
       effective_date AS promotion_date,
       variable_pay,
       new_compensation_value * pay_frequency * currency_conversion_factor AS new_compensation_value_usd,
-      prior_compensation_value * prior_pay_frequency * prior_currency_conversion AS prior_compensation_value_usd,
+      prior_compensation_value * prior_pay_frequency * currency_conversion_factor AS prior_compensation_value_usd,
       (new_compensation_value * pay_frequency * currency_conversion_factor) - 
-        (prior_compensation_value * prior_pay_frequency * prior_currency_conversion) AS change_in_comp_usd,
+        (prior_compensation_value * prior_pay_frequency * currency_conversion_factor) AS change_in_comp_usd,
       COALESCE(ote_change,0) AS ote_change
       
   FROM intermediate
@@ -121,9 +120,7 @@ WITH bamboohr_compensation_changes AS (
 
 SELECT 
 a.employee_number, promotions.*,
-
   ote_change+change_in_comp_usd as total_change
-  {# total_change/prior_compensation_value_usd as percent_change #}
   FROm promotions 
   left join "ANALYTICS"."ANALYTICS_SENSITIVE"."BAMBOOHR_ID_EMPLOYEE_NUMBER_MAPPING" a
     on a.employee_id = promotions.employee_id
