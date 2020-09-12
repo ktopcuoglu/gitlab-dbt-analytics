@@ -148,6 +148,11 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity.cp_why_gitlab,
       sfdc_opportunity.cp_why_now,
 
+      -- channel reporting
+      -- original issue: https://gitlab.com/gitlab-data/analytics/-/issues/6072
+      sfdc_opportunity.dr_partner_deal_type,
+      sfdc_opportunity.dr_partner_engagement,
+
       -- metadata
       sfdc_opportunity._last_dbt_run,
       sfdc_record_type.business_process_id,

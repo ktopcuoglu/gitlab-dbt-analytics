@@ -19,5 +19,3 @@ sources:
 
     tables:
       - name: gcp_billing_export_combined
-        identifier: gcp_billing_export_combined
-

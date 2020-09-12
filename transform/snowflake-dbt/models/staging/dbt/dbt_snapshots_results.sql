@@ -1,7 +1,7 @@
 WITH source AS (
 
     SELECT *
-    FROM {{ ref('gcp_billing_export_source') }}
+    FROM {{ ref('dbt_snapshots_results_source') }}
 
 )
 

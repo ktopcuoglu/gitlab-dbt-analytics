@@ -1,7 +1,7 @@
 version: 2
 
 models:
-    - name: dbt_source_status
+    - name: dbt_source_freshness
       description: 'The current status of all DBT sources along with when the sources were last loaded.'
       columns:
         - name: freshness_observed_at
@@ -16,7 +16,6 @@ models:
         - name: table_name
           tests:
             - not_null
-            - unique
     - name: dbt_compilation_runtime
       description: 'The most recent not null compilation time elapsed for each DBT model.'
       columns:
@@ -50,5 +49,9 @@ models:
         - name: last_successful_run_at
     - name: dbt_run_results
       description: "Information about compilation/execution time for DBT models."
+    - name: dbt_snapshots_results
+      description: Model for dbt snapshot results
+    - name: dbt_source_tests
+      description: Model for source testing
     - name: dbt_test_results
       description: "DBT test results by name and time"

@@ -1,0 +1,1 @@
+{{ source_golden_records_hash_consistent('zuora_subscription_golden_records','zuora_subscription_golden_records_hash', 'subscription_id') }}

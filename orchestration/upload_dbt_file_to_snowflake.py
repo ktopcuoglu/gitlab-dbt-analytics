@@ -10,15 +10,19 @@ from gitlabdata.orchestration_utils import (
 
 
 def get_file_name(config_name):
-    if config_name == "sources":
+    if config_name == "freshness":
         return "target/sources.json"
     else:
         return "target/run_results.json"
 
 
 def get_table_name(config_name, snowflake_database):
-    if config_name == "sources":
-        return f'"{snowflake_database}".dbt.sources'
+    if config_name == "freshness":
+        return f'"{snowflake_database}".dbt.sources'  # rename to source_freshness
+    elif config_name == "source_tests":
+        return f'"{snowflake_database}".dbt.source_tests_run_results'
+    elif config_name == "snapshots":
+        return f'"{snowflake_database}".dbt.snapshots_run_results'
     elif config_name == "test":
         return f'"{snowflake_database}".dbt.test_run_results'
     else:
