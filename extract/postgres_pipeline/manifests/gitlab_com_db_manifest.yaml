@@ -13,6 +13,7 @@ tables:
       ,'' AS user_id
       ,'' AS awardable_id
       ,'' AS awardable_type
+      FROM award_emoji
     export_schema: 'gitlab_com'
     export_table: 'award_emoji'
     export_table_primary_key: id
