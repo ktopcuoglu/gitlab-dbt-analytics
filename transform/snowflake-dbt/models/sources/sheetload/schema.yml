@@ -14,6 +14,15 @@ models:
     - name: gtm_strategy
       tests:
         - not_null
+- name: sheetload_ar_aging_details_source
+  description: This is the source for AR aging invoice details.
+  columns:
+    - name: invoice_number
+      tests:
+        - not_null
+    - name: invoice_period
+      tests:
+        - not_null
 - name: sheetload_calendar_source
   description: This is the basis of the CEO's calendar analysis. When you open the raw sheet, you'll be prompted to run the appscript. Additional categorization can be done by adding additional `case when` statements.
   columns:
@@ -133,7 +142,7 @@ models:
     - name: version_number
     - name: handbook_reference
     - name: kpi_id
-      description: This is the id that ties the issue to gitlab_dotcom data.  
+      description: This is the id that ties the issue to gitlab_dotcom data.
 - name: sheetload_linkedin_recruiter_source
   description: This is the source of linkedin recruiter inmail data for each month by sourcer .
   columns:
@@ -200,7 +209,7 @@ models:
         - not_null
         - unique
     - name: is_in_european_union
-    - name: locale_code        
+    - name: locale_code
 - name: sheetload_maxmind_ip_ranges_source
   description: "IP ranges source layer for maxmind ip-to-geo service"
   columns:
@@ -301,7 +310,7 @@ models:
   columns:
     - name: departments
 - name: sheetload_data_team_capacity_source
-  description: This sheet contains the capacity prediction from the Data Team. 
+  description: This sheet contains the capacity prediction from the Data Team.
   columns:
     - name: milestone_id
       tests:
@@ -322,5 +331,3 @@ models:
   description: This is a list of all who have completed the IC iteration competency knowledge assessment.
 - name: sheetload_ic_transparency_competency_source
   description: This is a list of all who have completed the IC transparency competency knowledge assessment.
-- name: sheetload_account_golden_records_source
-  description: Golden records (values unexpected to changed for a few accounts), currently based off zuora data
