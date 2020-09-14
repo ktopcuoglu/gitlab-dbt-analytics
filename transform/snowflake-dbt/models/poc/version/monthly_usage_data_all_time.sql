@@ -10,7 +10,7 @@ WITH data AS (
         *,
         DATE_TRUNC('month', created_at) AS created_month
     FROM data
-    QUALIFY ROW_NUMBER() OVER (PARTITION BY uuid, clean_metrics_name, created_month ORDER BY created_at DESC) = 1
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY instance_id, clean_metrics_name, created_month ORDER BY created_at DESC) = 1
 
 )
 
@@ -20,7 +20,7 @@ WITH data AS (
     *,
     metric_value 
       - COALESCE(LAG(metric_value) OVER (
-                                          PARTITION BY uuid, clean_metrics_name 
+                                          PARTITION BY instance_id, clean_metrics_name 
                                           ORDER BY created_month
                                         ), 0) AS monthly_metric_value
   FROM transformed

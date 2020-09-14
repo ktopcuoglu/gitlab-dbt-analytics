@@ -37,7 +37,7 @@ SELECT
   flattened.instance_id,
   flattened.ping_id,
   created_at,
-  test.*, 
+  metrics.*, 
   flattened.metric_value
 FROM flattened
 INNER JOIN {{ ref('test_metrics_renaming')}} AS metrics 
