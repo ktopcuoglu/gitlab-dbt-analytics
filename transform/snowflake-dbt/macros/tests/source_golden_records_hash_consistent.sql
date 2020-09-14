@@ -5,7 +5,7 @@ WITH sheetload_data AS (
 
     SELECT
         {{ hash_sensitive_columns(golden_record_model)}}
-    FROM {{ ref(golden_record_model) }}
+    FROM {{ ref(golden_record_model"_golden_record") }}
 
 ), hashed_data AS (
 
