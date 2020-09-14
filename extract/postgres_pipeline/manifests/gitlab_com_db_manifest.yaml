@@ -8,7 +8,7 @@ tables:
   award_emoji:
     import_db: GITLAB_DB
     import_query: >
-      SELECT  AS id
+      SELECT '' AS id
       ,'' AS name
       ,'' AS user_id
       ,'' AS awardable_id
