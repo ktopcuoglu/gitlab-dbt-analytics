@@ -1,7 +1,7 @@
 packages:
   - git: https://gitlab.com/gitlab-data/snowflake_spend.git
     revision: v1.2.0
-  - git: https://dbt-deploy-token:{{env_var('DBT_TOKEN')}}@gitlab.com/gitlab-data/golden-records.git
+  - git: https://dbt-deploy-token:{{env_var('DBT_GOLDEN_RECORD_TOKEN')}}@gitlab.com/gitlab-data/golden-records.git
     warn-unpinned: false
   - package: fishtown-analytics/audit_helper
     version: 0.1.0
