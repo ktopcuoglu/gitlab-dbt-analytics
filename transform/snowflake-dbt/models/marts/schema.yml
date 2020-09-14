@@ -10,8 +10,8 @@ models:
         tests:
             - not_null
             - unique
-  - name: arr_data_mart_incr
-    description: '{{ doc("arr_data_mart_incr") }}'
+  - name: mart_arr_incr
+    description: '{{ doc("mart_arr_incr") }}'
     columns:
       - name: primary_key
         tests:
