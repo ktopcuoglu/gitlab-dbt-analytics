@@ -1,8 +1,8 @@
 version: 2
 
 models:
-  - name: arr_data_mart
-    description: '{{ doc("arr_data_mart") }}'
+  - name: mart_arr
+    description: '{{ doc("mart_arr") }}'
     columns:
       - name: arr
         description: "Calculated as 12 * MRR value"
