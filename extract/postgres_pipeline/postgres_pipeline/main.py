@@ -321,7 +321,7 @@ def check_new_tables(
         logging.info(f"Table {table} already exists and won't be tested.")
         return False
 
-    # If the table doesn't exist, load 1 million rows (or whatever the table has)
+    # If the table doesn't exist, load whatever the table has
     query = f"{raw_query} WHERE {primary_key} IS NOT NULL {additional_filtering}"
     chunk_and_upload(
         query,
