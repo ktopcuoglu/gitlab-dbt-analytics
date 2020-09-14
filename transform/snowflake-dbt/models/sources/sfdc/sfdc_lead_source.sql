@@ -21,6 +21,7 @@ WITH source AS (
         recordtypeid                                            AS record_type_id,
         round_robin_id__c                                       AS round_robin_id,
         instance_uuid__c                                        AS instance_uuid,
+        lean_data_matched_account__c                            AS lean_data_matched_account,
 
         --lead info
         isconverted                                             AS is_converted,
