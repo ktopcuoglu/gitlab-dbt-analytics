@@ -22,16 +22,16 @@ Here is an image documenting the ERD for this table:
 
 {% enddocs %}
 
-{% docs arr_data_mart_incr %}
+{% docs mart_arr_incr %}
 
-Keeps daily snapshots of arr_data_mart. This allows to query ARR from a historical perspective. 
+Keeps daily snapshots of mart_arr. This allows to query ARR from a historical perspective. 
 
 The below query will pull ARR by month as observed on selected snapshot_date.
 
 SELECT
   arr_month,
   SUM(arr)  AS arr
-FROM "ANALYTICS"."ANALYTICS"."ARR_DATA_MART_INCR"
+FROM "ANALYTICS"."ANALYTICS"."MART_ARR_INCR"
 WHERE arr_month < DATE_TRUNC('month',CURRENT_DATE)
 GROUP BY 1
 ORDER BY 1 DESC
