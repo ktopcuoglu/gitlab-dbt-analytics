@@ -1,12 +1,56 @@
-WITH mart_arr AS (
+WITH dim_accounts AS (
 
     SELECT *
-    FROM {{ ref('arr_data_mart') }}
+    FROM {{ ref('dim_accounts') }}
+
+), dim_customers AS (
+
+    SELECT *
+    FROM {{ ref('dim_customers') }}
 
 ), dim_dates AS (
 
     SELECT *
     FROM {{ ref('dim_dates') }}
+
+), dim_product_details AS (
+
+    SELECT *
+    FROM {{ ref('dim_product_details') }}
+
+), dim_subscriptions AS (
+
+    SELECT *
+    FROM {{ ref('dim_subscriptions') }}
+
+), fct_mrr AS (
+
+    SELECT *
+    FROM {{ ref('fct_mrr') }}
+
+), mart_arr AS (
+
+    SELECT
+      dim_dates.date_actual                                                           AS arr_month,
+      IFF(is_first_day_of_last_month_of_fiscal_quarter, fiscal_quarter_name_fy, NULL) AS fiscal_quarter_name_fy,
+      IFF(is_first_day_of_last_month_of_fiscal_year, fiscal_year, NULL)               AS fiscal_year,
+      dim_customers.ultimate_parent_account_name,
+      dim_customers.ultimate_parent_account_id,
+      dim_product_details.product_category,
+      dim_product_details.delivery,
+      fct_mrr.mrr,
+      fct_mrr.quantity
+    FROM fct_mrr
+    INNER JOIN dim_subscriptions
+      ON dim_subscriptions.subscription_id = fct_mrr.subscription_id
+    INNER JOIN dim_product_details
+      ON dim_product_details.product_details_id = fct_mrr.product_details_id
+    INNER JOIN dim_accounts
+      ON dim_accounts.account_id = fct_mrr.account_id
+    INNER JOIN dim_dates
+      ON dim_dates.date_id = fct_mrr.date_id
+    LEFT JOIN dim_customers
+      ON dim_accounts.crm_id = dim_customers.crm_id
 
 ), base AS (
 
@@ -118,7 +162,8 @@ WITH mart_arr AS (
 ), combined AS (
 
     SELECT
-      {{ dbt_utils.surrogate_key(['type_of_arr_change.arr_month', 'type_of_arr_change.ultimate_parent_account_id']) }} AS primary_key,
+      {{ dbt_utils.surrogate_key(['type_of_arr_change.arr_month', 'type_of_arr_change.ultimate_parent_account_id']) }}
+                                                                    AS primary_key,
       type_of_arr_change.arr_month,
       type_of_arr_change.ultimate_parent_account_name,
       type_of_arr_change.ultimate_parent_account_id,
