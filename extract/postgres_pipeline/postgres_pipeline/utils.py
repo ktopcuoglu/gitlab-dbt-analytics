@@ -177,8 +177,8 @@ def transform_dataframe_column(column_name: str, pg_type: str) -> List[Column]:
 
 def get_postgres_types(table_name: str, source_engine: Engine) -> Dict[str, str]:
     query = f"""
-      select column_name, data_type 
-      from information_schema.columns
+      SELECT column_name, data_type
+      FROM information_schema.columns
       WHERE table_name = '{table_name}'
     """
     query_results = query_executor(source_engine, query)
