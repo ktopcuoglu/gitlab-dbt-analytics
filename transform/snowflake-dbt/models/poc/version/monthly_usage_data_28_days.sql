@@ -8,16 +8,16 @@ WITH data AS (
 , transformed AS (
 
     SELECT 
-        *,
-        DATE_TRUNC('month', created_at) AS created_month
+      *,
+      DATE_TRUNC('month', created_at) AS created_month
     FROM data
     QUALIFY ROW_NUMBER() OVER (PARTITION BY uuid, clean_metrics_name, created_month ORDER BY created_at DESC) = 1
 
 )
 
 SELECT 
-  id,
-  uuid,
+  ping_id,
+  instance_id,
   created_month,
   full_metrics_path,
   stage,

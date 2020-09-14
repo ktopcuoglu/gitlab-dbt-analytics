@@ -28,8 +28,8 @@ WITH data AS (
 )
 
 SELECT 
-  id,
-  uuid,
+  ping_id,
+  instance_id,
   created_month,
   full_metrics_path,
   stage,

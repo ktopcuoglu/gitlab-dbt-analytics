@@ -22,11 +22,6 @@ Union of models `monthly_usage_data_28_days` and `monthly_usage_data_all_time`
 
 {% enddocs %}
 
-{% docs monthly_usage_data_28_days %}
-
-
-
-{% enddocs %}
 
 {% docs usage_data_28_days_flattened %}
 

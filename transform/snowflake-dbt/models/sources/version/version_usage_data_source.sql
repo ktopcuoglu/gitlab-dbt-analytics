@@ -28,9 +28,7 @@ WITH source AS (
         PARSE_JSON(license_add_ons)                  AS license_add_ons,
         recorded_at::TIMESTAMP                       AS recorded_at,
         created_at::TIMESTAMP                        AS created_at,
-        updated_at::TIMESTAMP                        AS updated_at,
-        license_id::NUMBER                           AS license_id,
-        mattermost_enabled::BOOLEAN                  AS mattermost_enabled,
+        updated_at::TIMESTAMP                        AS updated_at,        mattermost_enabled::BOOLEAN                  AS mattermost_enabled,
         uuid::VARCHAR                                AS uuid,
         edition::VARCHAR                             AS edition,
         hostname::VARCHAR                            AS hostname,
@@ -54,7 +52,6 @@ WITH source AS (
         reply_by_email_enabled::BOOLEAN              AS reply_by_email_enabled,
         signup_enabled::BOOLEAN                      AS signup_enabled,
         --web_ide_commits // was implemented as both a column and in `counts`
-        influxdb_metrics_enabled::BOOLEAN            AS influxdb_metrics_enabled,
         prometheus_metrics_enabled::BOOLEAN          AS prometheus_metrics_enabled,
         PARSE_JSON(usage_activity_by_stage)          AS usage_activity_by_stage,
         PARSE_JSON(usage_activity_by_stage_monthly)  AS usage_activity_by_stage_monthly,
@@ -66,14 +63,13 @@ WITH source AS (
         dependency_proxy_enabled::BOOLEAN            AS is_dependency_proxy_enabled,
         recording_ce_finished_at::TIMESTAMP          AS recording_ce_finished_at,
         recording_ee_finished_at::TIMESTAMP          AS recording_ee_finished_at,
-        PARSE_JSON(COALESCE(counts, stats))          AS stats_used,
+        PARSE_JSON(stats)        AS stats_used,
         ingress_modsecurity_enabled::boolean         AS is_ingress_modsecurity_enabled,
         PARSE_JSON(topology)                         AS topology,
-        app_server_type::VARCHAR                     AS app_server_type,
         grafana_link_enabled::BOOLEAN                AS is_grafana_link_enabled, 
         PARSE_JSON(analytics_unique_visits)          AS analytics_unique_visits
     FROM source
-    WHERE CHECK_JSON(counts) IS NULL
+    WHERE CHECK_JSON(stats) IS NULL
 
 )
 
