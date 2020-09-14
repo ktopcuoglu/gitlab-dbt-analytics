@@ -3,6 +3,7 @@ import logging
 import os
 import sys
 import yaml
+import tempfile
 from time import time
 from typing import Dict, List, Generator, Any, Tuple
 
@@ -17,8 +18,19 @@ import sqlalchemy
 from google.cloud import storage
 from google.cloud.storage.bucket import Bucket
 from google.oauth2 import service_account
-from sqlalchemy import create_engine
+from sqlalchemy import (
+    create_engine,
+    Column,
+    Integer,
+    String,
+    Boolean,
+    Date,
+    Float,
+    DateTime,
+    Table,
+)
 from sqlalchemy.engine.base import Engine
+from sqlalchemy.schema import CreateTable, DropTable
 
 SCHEMA = "tap_postgres"
 
@@ -64,6 +76,7 @@ def trigger_snowflake_upload(
     engine: Engine, table: str, upload_file_name: str, purge: bool = False
 ) -> None:
     """ Trigger Snowflake to upload a tsv file from GCS."""
+    logging.info("Loading from GCS into SnowFlake")
 
     purge_opt = "purge = true" if purge else ""
 
@@ -81,7 +94,13 @@ def trigger_snowflake_upload(
         );
     """
     results = query_executor(engine, upload_query)
-    log_result = f"Loaded {results[0][2]} rows from file: {results[0][0]}"
+    total_rows = 0
+
+    for result in results:
+        if result[1] == "LOADED":
+            total_rows += result[2]
+
+    log_result = f"Loaded {total_rows} rows from {len(results)} files"
     logging.info(log_result)
 
 
@@ -120,7 +139,7 @@ def manifest_reader(file_path: str) -> Dict[str, Dict]:
 
 
 def query_results_generator(
-    query: str, engine: Engine, chunksize: int = 100_000
+    query: str, engine: Engine, chunksize: int = 750_000
 ) -> pd.DataFrame:
     """
     Use pandas to run a sql query and load it into a dataframe.
@@ -135,23 +154,70 @@ def query_results_generator(
     return query_df_iterator
 
 
+def transform_dataframe_column(column_name: str, pg_type: str) -> List[Column]:
+    if pg_type == "timestamp with time zone":
+        return Column(column_name, DateTime)
+    elif (
+        pg_type == "integer"
+        or pg_type == "smallint"
+        or pg_type == "numeric"
+        or pg_type == "bigint"
+        or pg_type == "double precision"
+    ):
+        return Column(column_name, Integer)
+    elif pg_type == "date":
+        return Column(column_name, Date)
+    elif pg_type == "boolean":
+        return Column(column_name, Boolean)
+    elif pg_type == "float":
+        return Column(column_name, Float)
+    else:
+        return Column(column_name, String)
+
+
+def get_postgres_types(table_name: str, source_engine: Engine) -> Dict[str, str]:
+    query = f"""
+      SELECT column_name, data_type
+      FROM information_schema.columns
+      WHERE table_name = '{table_name}'
+    """
+    query_results = query_executor(source_engine, query)
+    type_dict = {}
+    for result in query_results:
+        type_dict[result[0]] = result[1]
+    return type_dict
+
+
+def transform_source_types_to_snowflake_types(
+    df: pd.DataFrame,
+    source_table_name: str,
+    source_engine: Engine,
+) -> List[Column]:
+    pg_types = get_postgres_types(source_table_name, source_engine)
+    table_columns = [
+        transform_dataframe_column(column, pg_types[column]) for column in df
+    ]
+    return table_columns
+
+
 def seed_table(
     advanced_metadata: bool,
-    df: pd.DataFrame,
-    engine: Engine,
-    table: str,
-    rows_to_seed: int = 10000,
-) -> bool:
+    snowflake_types: List[Column],
+    target_table_name: str,
+    target_engine: Engine,
+) -> None:
     """
-    Load a set number of rows to Snowflake through pandas to create the table
-    and set the proper data types and column names.
+    Sets the proper data types and column names.
     """
-
-    logging.info(f"Seeding {rows_to_seed} rows directly into Snowflake...")
-    dataframe_uploader(
-        df.iloc[:rows_to_seed], engine, table, advanced_metadata=advanced_metadata
-    )
-    return False
+    logging.info(f"Creating table {target_table_name}")
+    if advanced_metadata:
+        snowflake_types.append(Column("_task_instance", String))
+    snowflake_types.append(Column("_uploaded_at", Float))
+    table = Table(target_table_name, sqlalchemy.MetaData(), *snowflake_types)
+    if target_engine.has_table(target_table_name):
+        query_executor(target_engine, DropTable(table))
+    query_executor(target_engine, CreateTable(table))
+    logging.info(f"{target_table_name} created")
 
 
 def chunk_and_upload(
@@ -159,6 +225,7 @@ def chunk_and_upload(
     source_engine: Engine,
     target_engine: Engine,
     target_table: str,
+    source_table: str,
     advanced_metadata: bool = False,
     backfill: bool = False,
 ) -> None:
@@ -174,49 +241,64 @@ def chunk_and_upload(
     """
 
     rows_uploaded = 0
-    results_generator = query_results_generator(query, source_engine)
-    upload_file_name = f"{target_table}_CHUNK.tsv.gz"
 
-    backfilled_rows = 0
+    with tempfile.TemporaryFile() as tmpfile:
 
-    for idx, chunk_df in enumerate(results_generator):
-        # If the table doesn't exist, it needs to send the first chunk to the dataframe_uploader
-        if backfill:
-            rows_to_seed = 10000
-            seed_table(
-                advanced_metadata,
-                chunk_df,
-                target_engine,
-                target_table,
-                rows_to_seed=rows_to_seed,
-            )
-            backfilled_rows += chunk_df[:rows_to_seed].shape[0]
-            chunk_df = chunk_df.iloc[rows_to_seed:]
-        row_count = chunk_df.shape[0]
-        rows_uploaded += row_count
-        if not backfill or row_count > 0:
-            upload_to_gcs(
-                advanced_metadata, chunk_df, upload_file_name + "." + str(idx)
-            )
-        backfill = False
+        iter_csv = read_sql_tmpfile(query, source_engine, tmpfile)
+
+        for idx, chunk_df in enumerate(iter_csv):
+
+            if backfill:
+                schema_types = transform_source_types_to_snowflake_types(
+                    chunk_df, source_table, source_engine
+                )
+                seed_table(advanced_metadata, schema_types, target_table, target_engine)
+                backfill = False
+
+            row_count = chunk_df.shape[0]
+            rows_uploaded += row_count
+
+            upload_file_name = f"{target_table}_CHUNK.tsv.gz"
+            if row_count > 0:
+                upload_to_gcs(
+                    advanced_metadata, chunk_df, upload_file_name + "." + str(idx)
+                )
+                logging.info(
+                    f"Uploaded {row_count} to GCS in {upload_file_name}.{str(idx)}"
+                )
+
     if rows_uploaded > 0:
         trigger_snowflake_upload(
             target_engine, target_table, upload_file_name + "[.]\\\\d*", purge=True
         )
-    logging.info(
-        f"Uploaded {rows_uploaded + backfilled_rows} total rows to table {target_table}."
-    )
+        logging.info(f"Uploaded {rows_uploaded} total rows to table {target_table}.")
+
     target_engine.dispose()
     source_engine.dispose()
 
 
+def read_sql_tmpfile(query: str, db_engine: Engine, tmp_file: Any) -> pd.DataFrame:
+    """
+    Uses postGres commands to copy data out of the DB and return a DF iterator
+    """
+    copy_sql = f"COPY ({query}) TO STDOUT WITH CSV HEADER"
+    logging.info(f" running COPY ({query}) TO STDOUT WITH CSV HEADER")
+    conn = db_engine.raw_connection()
+    cur = conn.cursor()
+    cur.copy_expert(copy_sql, tmp_file)
+    tmp_file.seek(0)
+    logging.info("Reading csv")
+    df = pd.read_csv(tmp_file, chunksize=750_000, parse_dates=True, low_memory=False)
+    logging.info("CSV read")
+    return df
+
+
 def range_generator(
-    start: int, stop: int, step: int = 100_000
+    start: int, stop: int, step: int = 750_000
 ) -> Generator[Tuple[int, ...], None, None]:
     """
     Yields a list that contains the starting and ending number for a given window.
     """
-
     while True:
         if start > stop:
             break
@@ -271,7 +353,7 @@ def id_query_generator(
     snowflake_engine: Engine,
     source_table: str,
     target_table: str,
-    id_range: int = 100_000,
+    id_range: int = 750_000,
 ) -> Generator[str, Any, None]:
     """
     This function generates a list of queries based on the max ID in the target table.

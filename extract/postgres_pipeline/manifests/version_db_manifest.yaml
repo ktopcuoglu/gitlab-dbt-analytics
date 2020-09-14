@@ -24,7 +24,6 @@ tables:
       , created_at
       , updated_at
       , counts
-      , license_id
       , mattermost_enabled
       , uuid
       , edition
@@ -49,7 +48,6 @@ tables:
       , reply_by_email_enabled
       , signup_enabled
       , web_ide_commits
-      , influxdb_metrics_enabled
       , prometheus_metrics_enabled
       , usage_activity_by_stage
       , gitaly_version
