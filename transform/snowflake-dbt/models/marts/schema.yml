@@ -23,6 +23,10 @@ models:
         tests:
           - not_null
           - unique
+        tags:
+          - tdf
+          - mart
+          - arr
   - name: mart_delta_arr_parent_quarter
     description: "Mart table by quarter purusant to the ARR Analysis Framework at the parent customer level"
     columns:
@@ -30,6 +34,10 @@ models:
         tests:
           - not_null
           - unique
+        tags:
+          - tdf
+          - mart
+          - arr
   - name: mart_delta_arr_parent_year
     description: "Mart table by year purusant to the ARR Analysis Framework at the parent customer level"
     columns:
@@ -37,6 +45,10 @@ models:
         tests:
           - not_null
           - unique
+        tags:
+          - tdf
+          - mart
+          - arr
   - name: mart_delta_arr_subscription_month
     description: "Mart table by month purusant to the ARR Analysis Framework at the subscription level"
     columns:
@@ -44,6 +56,10 @@ models:
         tests:
           - not_null
           - unique
+        tags:
+          - tdf
+          - mart
+          - arr
   - name: usage_ping_mart
     description: '{{ doc("usage_ping_mart") }}'
     columns:

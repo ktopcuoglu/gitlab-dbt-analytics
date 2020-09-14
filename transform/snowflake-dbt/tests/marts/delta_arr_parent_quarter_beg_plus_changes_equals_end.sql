@@ -24,7 +24,7 @@ WITH test AS (
       ultimate_parent_account_id,
       SUM(mrr*12)        AS arr,
       SUM(quantity)      AS quantity
-    FROM {{ ref('arr_data_mart') }}
+    FROM {{ ref('mart_arr') }}
     GROUP BY 1,2
 
 ), test_two AS (
