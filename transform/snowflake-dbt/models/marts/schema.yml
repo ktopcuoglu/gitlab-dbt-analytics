@@ -1,8 +1,8 @@
 version: 2
 
 models:
-  - name: arr_data_mart
-    description: '{{ doc("arr_data_mart") }}'
+  - name: mart_arr
+    description: '{{ doc("mart_arr") }}'
     columns:
       - name: arr
         description: "Calculated as 12 * MRR value"
@@ -10,8 +10,8 @@ models:
         tests:
             - not_null
             - unique
-  - name: arr_data_mart_incr
-    description: '{{ doc("arr_data_mart_incr") }}'
+  - name: mart_arr_incr
+    description: '{{ doc("mart_arr_incr") }}'
     columns:
       - name: primary_key
         tests:
