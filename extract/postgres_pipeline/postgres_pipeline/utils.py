@@ -190,9 +190,7 @@ def get_postgres_types(table_name: str, source_engine: Engine) -> Dict[str, str]
 
 
 def transform_source_types_to_snowflake_types(
-    df: pd.DataFrame,
-    source_table_name: str,
-    source_engine: Engine,
+    df: pd.DataFrame, source_table_name: str, source_engine: Engine,
 ) -> List[Column]:
     pg_types = get_postgres_types(source_table_name, source_engine)
     table_columns = [
@@ -219,6 +217,7 @@ def seed_table(
         query_executor(target_engine, DropTable(table))
     query_executor(target_engine, CreateTable(table))
     logging.info(f"{target_table_name} created")
+
 
 def chunk_and_upload(
     query: str,
@@ -263,7 +262,9 @@ def chunk_and_upload(
                 upload_to_gcs(
                     advanced_metadata, chunk_df, upload_file_name + "." + str(idx)
                 )
-                logging.info(f"Uploaded {row_count} to GCS in {upload_file_name}.{str(idx)}")
+                logging.info(
+                    f"Uploaded {row_count} to GCS in {upload_file_name}.{str(idx)}"
+                )
 
     if rows_uploaded > 0:
         trigger_snowflake_upload(

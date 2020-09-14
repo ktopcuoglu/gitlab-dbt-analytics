@@ -316,20 +316,22 @@ for source_name, config in config_dict.items():
         table_list = extract_table_list_from_manifest(manifest)
         for table in table_list:
             # Validate Task
-            validate_cmd = generate_cmd(config["dag_name"], f"--load_type validate --load_only_table {table}")
+            validate_cmd = generate_cmd(
+                config["dag_name"], f"--load_type validate --load_only_table {table}"
+            )
             validate_ids = KubernetesPodOperator(
-                    **gitlab_defaults,
-                    image=DATA_IMAGE,
-                    task_id=f"{config['task_name']}-{table.replace('_', '-')}-db-validation",
-                    name=f"{config['task_name']}-{table.replace('_', '-')}-db-validation",
-                    pool=f"{config['task_name']}_pool",
-                    secrets=standard_secrets + config["secrets"],
-                    env_vars={**standard_pod_env_vars, **config["env_vars"]},
-                    affinity=get_affinity(False),
-                    tolerations=get_toleration(False),
-                    arguments=[validate_cmd],
-                    dag=validation_dag,
-                    do_xcom_push=True,
-                    xcom_push=True,
+                **gitlab_defaults,
+                image=DATA_IMAGE,
+                task_id=f"{config['task_name']}-{table.replace('_', '-')}-db-validation",
+                name=f"{config['task_name']}-{table.replace('_', '-')}-db-validation",
+                pool=f"{config['task_name']}_pool",
+                secrets=standard_secrets + config["secrets"],
+                env_vars={**standard_pod_env_vars, **config["env_vars"]},
+                affinity=get_affinity(False),
+                tolerations=get_toleration(False),
+                arguments=[validate_cmd],
+                dag=validation_dag,
+                do_xcom_push=True,
+                xcom_push=True,
             )
     globals()[f"{config['dag_name']}_db_validation"] = validation_dag
