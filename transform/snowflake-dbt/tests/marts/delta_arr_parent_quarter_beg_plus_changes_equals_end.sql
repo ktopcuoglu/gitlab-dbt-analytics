@@ -1,5 +1,9 @@
 --Test that the beg ARR, plus the changes that are calculated independently, equals the ending ARR. Also check to see that
 --the end arr ties out to the arr in arr_data_mart.
+{{ config({
+    "tags": ["tdf","mart","arr"]
+    })
+}}
 
 WITH test AS (
 
