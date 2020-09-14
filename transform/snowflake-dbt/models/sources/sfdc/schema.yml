@@ -166,6 +166,10 @@ models:
               - relationships:
                     to: ref('sfdc_opportunity_stage')
                     field: primary_label
+        - name: dr_partner_deal_type
+          description: Map field from Lead object during conversion. Lead Field Name = [Partners] Deal Registration Type
+        - name: dr_partner_engagement
+          description: 	This field Identified the engagement of the partner who registered the deal
   - name: sfdc_opportunity_history_source
     description: Source model for SFDC Opportunity History
     columns:

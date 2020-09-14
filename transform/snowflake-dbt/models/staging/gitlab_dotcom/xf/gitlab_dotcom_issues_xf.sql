@@ -62,7 +62,7 @@ WITH issues AS (
     FROM {{ ref('gitlab_dotcom_resource_weight_events_xf') }}
 
 ), first_events_weight AS (
-  
+
     SELECT
       issue_id,
       MIN(created_at) first_weight_set_at
@@ -106,22 +106,26 @@ WITH issues AS (
     END                                          AS is_community_contributor_related,
 
     CASE
-      WHEN ARRAY_CONTAINS('s1'::variant, agg_labels.labels)
+      WHEN ARRAY_CONTAINS('severity::1'::variant, agg_labels.labels) OR ARRAY_CONTAINS('S1'::variant, agg_labels.labels)
         THEN 'severity 1'
-      WHEN ARRAY_CONTAINS('s2'::variant, agg_labels.labels)
+      WHEN ARRAY_CONTAINS('severity::2'::variant, agg_labels.labels) OR ARRAY_CONTAINS('S2'::variant, agg_labels.labels)
         THEN 'severity 2'
-      WHEN ARRAY_CONTAINS('s3'::variant, agg_labels.labels)
+      WHEN ARRAY_CONTAINS('severity::3'::variant, agg_labels.labels) OR ARRAY_CONTAINS('S3'::variant, agg_labels.labels)
         THEN 'severity 3'
-      WHEN ARRAY_CONTAINS('s4'::variant, agg_labels.labels)
+      WHEN ARRAY_CONTAINS('severity::4'::variant, agg_labels.labels) OR ARRAY_CONTAINS('S4'::variant, agg_labels.labels)
         THEN 'severity 4'
       ELSE 'undefined'
     END                                          AS severity_tag,
 
     CASE
-      WHEN ARRAY_CONTAINS('p1'::variant, agg_labels.labels) THEN 'priority 1'
-      WHEN ARRAY_CONTAINS('p2'::variant, agg_labels.labels) THEN 'priority 2'
-      WHEN ARRAY_CONTAINS('p3'::variant, agg_labels.labels) THEN 'priority 3'
-      WHEN ARRAY_CONTAINS('p4'::variant, agg_labels.labels) THEN 'priority 4'
+      WHEN ARRAY_CONTAINS('priority::1'::variant, agg_labels.labels) OR ARRAY_CONTAINS('P1'::variant, agg_labels.labels)
+        THEN 'priority 1'
+      WHEN ARRAY_CONTAINS('priority::2'::variant, agg_labels.labels) OR ARRAY_CONTAINS('P2'::variant, agg_labels.labels)
+        THEN 'priority 2'
+      WHEN ARRAY_CONTAINS('priority::3'::variant, agg_labels.labels) OR ARRAY_CONTAINS('P3'::variant, agg_labels.labels)
+        THEN 'priority 3'
+      WHEN ARRAY_CONTAINS('priority::4'::variant, agg_labels.labels) OR ARRAY_CONTAINS('P4'::variant, agg_labels.labels)
+        THEN 'priority 4'
       ELSE 'undefined'
     END                                          AS priority_tag,
 
@@ -147,6 +151,7 @@ WITH issues AS (
     service_desk_reply_to,
     duplicated_to_id,
     promoted_to_epic_id,
+    issue_type,
 
     agg_labels.labels,
     ARRAY_TO_STRING(agg_labels.labels,'|')       AS masked_label_title,

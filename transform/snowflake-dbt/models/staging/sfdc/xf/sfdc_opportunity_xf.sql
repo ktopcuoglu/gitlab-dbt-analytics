@@ -116,6 +116,22 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity.true_up_value,
       sfdc_opportunity.order_type_live,
 
+      -- days and dates per stage
+      sfdc_opportunity.days_in_1_discovery,
+      sfdc_opportunity.days_in_2_scoping,
+      sfdc_opportunity.days_in_3_technical_evaluation,
+      sfdc_opportunity.days_in_4_proposal,
+      sfdc_opportunity.days_in_5_negotiating,
+      sfdc_opportunity.stage_0_pending_acceptance_date,
+      sfdc_opportunity.stage_1_discovery_date,
+      sfdc_opportunity.stage_2_scoping_date,
+      sfdc_opportunity.stage_3_technical_evaluation_date,
+      sfdc_opportunity.stage_4_proposal_date,
+      sfdc_opportunity.stage_5_negotiating_date,
+      sfdc_opportunity.stage_6_awaiting_signature_date,
+      sfdc_opportunity.stage_6_closed_won_date,
+      sfdc_opportunity.stage_6_closed_lost_date,
+
       -- command plan fields
       sfdc_opportunity.cp_champion,
       sfdc_opportunity.cp_close_plan,
@@ -131,6 +147,11 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity.cp_why_do_anything_at_all,
       sfdc_opportunity.cp_why_gitlab,
       sfdc_opportunity.cp_why_now,
+
+      -- channel reporting
+      -- original issue: https://gitlab.com/gitlab-data/analytics/-/issues/6072
+      sfdc_opportunity.dr_partner_deal_type,
+      sfdc_opportunity.dr_partner_engagement,
 
       -- metadata
       sfdc_opportunity._last_dbt_run,

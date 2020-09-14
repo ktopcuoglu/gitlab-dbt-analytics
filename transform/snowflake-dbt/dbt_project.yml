@@ -125,6 +125,7 @@ models:
     # Sources
     # ------------------
     sources:
+      +tags: ["sources"]
 
       airflow:
         +materialized: table
@@ -143,6 +144,7 @@ models:
       dbt:
         +materialized: table
         +schema: dbt
+        +tags: ["dbt"]
 
       engineering:
         +materialized: table
@@ -221,6 +223,7 @@ models:
 
       zuora:
         +schema: zuora
+        +tags: ["zuora"]
 
     # ------------------
     # Staging
@@ -394,4 +397,4 @@ snapshots:
       +tags: ["daily"]
 
     zuora:
-      +tags: ["daily"]
+      +tags: ["daily", "zuora"]

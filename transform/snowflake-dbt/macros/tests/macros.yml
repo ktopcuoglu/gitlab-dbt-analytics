@@ -13,6 +13,43 @@ macros:
       - name: column_list
         type: list
         description: List of columns being referenced
+  - name: source_column_sum_min
+    description: Does a sum on the specified column and ensures it's greater than the minimum value specified.
+    arguments:
+      - name: schema
+        type: string
+        description: The name of the schema being referenced
+      - name: table
+        type: string
+        description: The name of the table being referenced
+      - name: column
+        type: string
+        description: The column to be summed
+      - name: min_value
+        type: integer
+        description: The minimum value the sum should be greater than
+      - name: where_clause
+        description: Optional filter on the data. Wrap the entire clause in double quotes.
+  - name: source_new_rows_per_day
+    description: Counts the number of new records created in the previous day during normal, non-holiday, business days in the US.
+    arguments:
+      - name: schema
+        type: string
+        description: The name of the schema being referenced
+      - name: table
+        type: string
+        description: The name of the table being referenced
+      - name: created_column
+        type: string
+        description: The column indicating when the row was created
+      - name: min_value
+        type: integer
+        description: The minimum value the sum should be greater than
+      - name: max_value
+        type: integer
+        description:  This field is optional. The maximum value the sum should be greater than.
+      - name: where_clause
+        description: Optional filter on the data. Wrap the entire clause in double quotes.
   - name: source_rowcount
     description: Does a rowcount check and fails if there are fewer rows than expected. An optional condition can be applied as well.
     arguments:
