@@ -8,11 +8,7 @@ models:
         - name: compilation_completed_at
         - name: compilation_started_at
         - name: model_execution_time
-          tests:
-            - not_null
         - name: model_name
-          tests:
-            - not_null    
 
     - name: dbt_snapshots_results_source
       description: Run results for dbt snapshot

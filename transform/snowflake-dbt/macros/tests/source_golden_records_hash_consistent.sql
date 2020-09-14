@@ -9,15 +9,12 @@ WITH sheetload_data AS (
 
 ), hashed_data AS (
 
-    SELECT
-        *
+    SELECT *
     FROM {{ ref(hashed_model) }}
 
-),
-check_data AS (
+), check_data AS (
 
 {% set meta_columns = get_meta_columns(golden_record_model, "sensitive") %}
-
 
     SELECT
         sheetload.{{ join_column }},
@@ -25,10 +22,12 @@ check_data AS (
         {%- for column in meta_columns %}
         CASE WHEN
             IFNULL(sheetload.{{ column }}_hash, '') = IFNULL(hashed.{{ column }}_hash, '') THEN 0 ELSE 1
-        END +
+        END
+            {%- if not loop.last %}
+                +
+            {% endif %}
         {% endfor %}
-        -- Terminate the last +
-        0 )
+        )
         AS num_rows
     FROM sheetload_data sheetload
     LEFT JOIN hashed_data hashed ON hashed.{{ join_column }} = sheetload.{{ join_column }}

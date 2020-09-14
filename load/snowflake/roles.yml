@@ -492,7 +492,6 @@ roles:
             - reporting
         member_of:
             - boneyard
-            - dbt
             - dbt_analytics
             - snowflake_db
         privileges:

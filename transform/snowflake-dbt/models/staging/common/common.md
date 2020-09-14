@@ -84,6 +84,12 @@ A fact from the lead and contact tables that shows the date they were qualified.
 
 {% enddocs %}
 
+{% docs fct_crm_sales_accepted_opportunity %}
+
+A fact from the opportunity using the sales_accepted_date created in order to standardize the logic and dimensional joins for this metric.
+
+{% enddocs %}
+
 {% docs fct_invoice_items %}
 Fact table providing invoice line item details.
 
