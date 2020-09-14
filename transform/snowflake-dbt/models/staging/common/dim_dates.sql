@@ -4,6 +4,6 @@ WITH dates AS (
 )
 
 SELECT
-  TO_NUMBER(TO_CHAR(date_actual,'YYYYMMDD'),'99999999') AS date_id,
+  TO_NUMBER(TO_CHAR(date_actual,'YYYYMMDD'),'99999999')                           AS date_id,
   *
 FROM dates

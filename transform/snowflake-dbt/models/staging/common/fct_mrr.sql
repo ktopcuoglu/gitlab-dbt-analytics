@@ -69,6 +69,7 @@ WITH dim_dates AS (
   WHERE zuora_subscription.is_deleted = FALSE
     AND zuora_subscription.exclude_from_analysis IN ('False', '')
     AND zuora_account.is_deleted = FALSE
+    AND zuora_subscription.subscription_status NOT IN ('Expired', 'Draft')
 
 ), mrr_month_by_month AS (
 
@@ -78,9 +79,10 @@ WITH dim_dates AS (
     crm_id,
     subscription_id,
     product_details_id,
-    SUM(mrr) AS mrr,
-    SUM(mrr)* 12 AS arr,
-    SUM(quantity) AS quantity
+    SUM(mrr)                                             AS mrr,
+    SUM(mrr)* 12                                         AS arr,
+    SUM(quantity)                                        AS quantity,
+    ARRAY_AGG(rate_plan_charge_filtered.unit_of_measure) AS unit_of_measure
   FROM rate_plan_charge_filtered
   INNER JOIN dim_dates
     ON rate_plan_charge_filtered.effective_start_month <= dim_dates.date_actual

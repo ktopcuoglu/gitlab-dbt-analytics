@@ -26,4 +26,3 @@ gitlab-snowflake:
       role: "{{ env_var('SNOWFLAKE_TRANSFORM_ROLE') }}"
       warehouse: "{{ env_var('SNOWFLAKE_TRANSFORM_WAREHOUSE') }}"
       schema: "{{ env_var('SNOWFLAKE_TRANSFORM_SCHEMA') }}"
-  

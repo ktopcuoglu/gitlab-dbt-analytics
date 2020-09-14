@@ -10,7 +10,6 @@ WITH source AS (
     id::NUMBER                      AS approval_merge_request_rule_id,
     merge_request_id::NUMBER        AS merge_request_id,
     approvals_required::NUMBER      AS is_approvals_required,
-    code_owner::BOOLEAN             AS has_code_owner,
     rule_type::VARCHAR              AS rule_type,
     report_type::VARCHAR            AS report_type,
     created_at::TIMESTAMP           AS created_at,

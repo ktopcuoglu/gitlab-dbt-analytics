@@ -10,6 +10,8 @@
         source_name,
         source_type,
         sourcer_name,
+        is_outbound,
+        is_sourced,
         candidate_recruiter,
         candidate_coordinator,
         rejection_reason_name,
