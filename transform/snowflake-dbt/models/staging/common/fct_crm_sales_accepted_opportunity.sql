@@ -35,9 +35,9 @@ WITH sfdc_opportunity AS (
     AND is_edu_oss = 0
 	AND stage_name != '10-Duplicate'
 	AND sales_qualified_source IN (
-                                 'SDR Generated'
-                                 , 'BDR Generated'
-	                             )
+                                  'SDR Generated'
+                                  , 'BDR Generated'
+                                  )
 )
 
 SELECT *
