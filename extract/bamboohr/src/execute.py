@@ -108,7 +108,7 @@ if __name__ == "__main__":
         employmentstatus="employmentStatus",
         custombonus="customBonus",
         emergencyContacts="emergencyContacts",
-        customontargetearnings= "customOnTargetEarnings",
+        customontargetearnings="customOnTargetEarnings",
         customcurrencyconversion="customCurrencyConversion",
     )
 

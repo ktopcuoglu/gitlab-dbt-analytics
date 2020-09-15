@@ -59,6 +59,7 @@ projects AS (
       namespaces.does_require_two_factor_authentication,
       namespaces.two_factor_grace_period,
       namespaces.project_creation_level,
+      namespaces.push_rule_id,
 
       namespace_lineage.namespace_is_internal,
       namespace_lineage.ultimate_parent_id                             AS namespace_ultimate_parent_id,
@@ -77,7 +78,7 @@ projects AS (
         ON namespaces.namespace_id = projects.namespace_id
       LEFT JOIN namespace_lineage
         ON namespaces.namespace_id = namespace_lineage.namespace_id
-    {{ dbt_utils.group_by(n=30) }}
+    {{ dbt_utils.group_by(n=31) }}
 )
 
 SELECT *

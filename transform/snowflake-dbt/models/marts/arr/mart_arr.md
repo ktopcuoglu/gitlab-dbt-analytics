@@ -1,4 +1,4 @@
-{% docs arr_data_mart %}
+{% docs mart_arr %}
 
 Data mart to explore ARR. This model is built using the same logic as the Zuora UI out of the box MRR Trend Report. The report looks at the charges associated with subscriptions, along with their effective dates and subscription statuses, and calculates ARR.
 
@@ -7,7 +7,7 @@ The below query will pull ARR by month. You can add additional dimensions to the
 SELECT
   arr_month,
   SUM(arr)  AS arr
-FROM "ANALYTICS"."ANALYTICS"."ARR_DATA_MART"
+FROM "ANALYTICS"."ANALYTICS"."MART_ARR"
 WHERE arr_month < DATE_TRUNC('month',CURRENT_DATE)
 GROUP BY 1
 ORDER BY 1 DESC
@@ -18,20 +18,20 @@ This CTE amortizes the ARR by month over the effective term of the rate plan cha
 
 Here is an image documenting the ERD for this table:
 
-<div style="width: 640px; height: 480px; margin: 10px; position: relative;"><iframe allowfullscreen frameborder="0" style="width:640px; height:480px" src="https://app.lucidchart.com/documents/embeddedchart/bfd9322f-5132-42e4-8584-8230e6e28b87" id="jtDoONWhVAV9"></iframe></div>
+<div style="width: 640px; height: 480px; margin: 10px; position: relative;"><iframe allowfullscreen frameborder="0" style="width:640px; height:480px" src="https://app.lucidchart.com/documents/embeddedchart/998dbbae-f04e-4310-9d85-0c360a40a018" id="T0XuoGn786sQ"></iframe></div>
 
 {% enddocs %}
 
-{% docs arr_data_mart_incr %}
+{% docs mart_arr_incr %}
 
-Keeps daily snapshots of arr_data_mart. This allows to query ARR from a historical perspective. 
+Keeps daily snapshots of mart_arr. This allows to query ARR from a historical perspective. 
 
 The below query will pull ARR by month as observed on selected snapshot_date.
 
 SELECT
   arr_month,
   SUM(arr)  AS arr
-FROM "ANALYTICS"."ANALYTICS"."ARR_DATA_MART"
+FROM "ANALYTICS"."ANALYTICS"."MART_ARR_INCR"
 WHERE arr_month < DATE_TRUNC('month',CURRENT_DATE)
 GROUP BY 1
 ORDER BY 1 DESC

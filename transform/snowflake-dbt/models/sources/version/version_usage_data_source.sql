@@ -28,7 +28,8 @@ WITH source AS (
         PARSE_JSON(license_add_ons)                  AS license_add_ons,
         recorded_at::TIMESTAMP                       AS recorded_at,
         created_at::TIMESTAMP                        AS created_at,
-        updated_at::TIMESTAMP                        AS updated_at,        mattermost_enabled::BOOLEAN                  AS mattermost_enabled,
+        updated_at::TIMESTAMP                        AS updated_at,
+        mattermost_enabled::BOOLEAN                  AS mattermost_enabled,
         uuid::VARCHAR                                AS uuid,
         edition::VARCHAR                             AS edition,
         hostname::VARCHAR                            AS hostname,
@@ -63,13 +64,12 @@ WITH source AS (
         dependency_proxy_enabled::BOOLEAN            AS is_dependency_proxy_enabled,
         recording_ce_finished_at::TIMESTAMP          AS recording_ce_finished_at,
         recording_ee_finished_at::TIMESTAMP          AS recording_ee_finished_at,
-        PARSE_JSON(stats)        AS stats_used,
+        PARSE_JSON(stats)                            AS stats_used,
         ingress_modsecurity_enabled::boolean         AS is_ingress_modsecurity_enabled,
         PARSE_JSON(topology)                         AS topology,
         grafana_link_enabled::BOOLEAN                AS is_grafana_link_enabled, 
         PARSE_JSON(analytics_unique_visits)          AS analytics_unique_visits
     FROM source
-    WHERE CHECK_JSON(stats) IS NULL
 
 )
 

@@ -676,12 +676,14 @@ roles:
                     - analytics.analytics
                     - analytics.analytics_meta
                     - analytics.analytics_staging
+                    - analytics.dbt
                     - raw.dbt
             tables:
                 read:
                     - analytics.analytics.*
                     - analytics.analytics_meta.*
                     - analytics.analytics_staging.*
+                    - analytics.dbt.*
                     - raw.dbt.*
 
     - dbt_analytics_clones:
@@ -1504,6 +1506,13 @@ roles:
         warehouses:
             - analyst_xs
 
+    - sawezec:
+        member_of:
+            - product_manager
+            - reporter
+        warehouses:
+            - reporting
+
     - skerr:
         member_of:
             - reporter
@@ -1949,6 +1958,11 @@ users:
         member_of:
             - rparker
             - accountadmin
+
+    - sawezec:
+        can_login: yes
+        member_of:
+            - sawezec
 
     - skerr:
         can_login: yes
