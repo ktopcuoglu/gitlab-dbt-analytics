@@ -1,65 +1,40 @@
 {%- set event_ctes = [
   {
     "event_name": "action_monthly_active_users_project_repo",
-    "events_to_include": "action_monthly_active_users_project_repo",
+    "events_to_include": ["action_monthly_active_users_project_repo"],
     "stage_name": "create",
     "smau": "True",
-    "group": "gitaly",
+    "group_name": "gitaly",
+    "gmau": "True"
+  },
+  {
+    "event_name": "epic_interaction",
+    "events_to_include": ["epics", "epic_notes"],
+    "stage_name": "plan",
+    "smau": "False",
+    "group_name": "portfolio_management",
     "gmau": "True"
   },
   {
     "event_name": "issue_interaction",
-    "source_cte_name": "issue_interaction",
-    "events_to_include": ["epics", "epic_notes"],
+    "events_to_include": ["issues", "issue_notes"],
+    "stage_name": "plan",
+    "smau": "True",
+    "group_name": "project_management",
+    "gmau": "True"
+  },
+  {
+    "event_name": "merge_request_interaction",
+    "events_to_include": ["merge_requests", "merge_request_notes"],
     "stage_name": "create",
     "smau": "False",
-    "group": "source_code",
+    "group_name": "source_code",
     "gmau": "True"
   }
 ]
 -%}
-WITH epic_interaction AS (
 
-    SELECT *
-    FROM {{ ref('gitlab_dotcom_daily_usage_data_events') }}
-    WHERE event_name IN ('epics', 'epic_notes')
-
-)
-
-, issue_interaction AS (
-
-    SELECT *
-    FROM {{ ref('gitlab_dotcom_daily_usage_data_events') }}
-    WHERE event_name IN ('issues', 'issue_notes')
-
-)
-
-, merge_request_interaction AS (
-
-    SELECT *
-    FROM {{ ref('gitlab_dotcom_daily_usage_data_events') }}
-    WHERE event_name IN ('merge_requests', 'merge_request_notes')
-    
-)
-
-, unioned AS (
-
-    SELECT *
-    FROM epic_interaction
-
-    UNION 
-
-    SELECT *
-    FROM issue_interaction
-
-    UNION
-
-    SELECT *
-    FROM merge_request_interaction
-
-)
-
-, skeleton AS (
+WITH skeleton AS (
 
     SELECT DISTINCT first_day_of_month, last_day_of_month
     FROM {{ ref('date_details') }}
@@ -68,15 +43,53 @@ WITH epic_interaction AS (
 
 )
 
+{% for event_cte in event_ctes %}
+
+, {{ event_cte.event_name }} AS (
+
+    SELECT 
+      user_id,
+      namespace_id,
+      '{{ event_cte.stage_name }}'       AS stage_name,
+      {{ event_cte.smau }}::BOOLEAN      AS is_smau,
+      '{{ event_cte.group_name }}'       AS group_name,
+      {{ event_cte.gmau }}::BOOLEAN      AS is_gmau
+    FROM {{ ref('gitlab_dotcom_daily_usage_data_events') }}
+    WHERE event_name IN (
+      {% for event_to_include in event_cte.events_to_include %}
+        '{{ event_to_include }}'
+        {% if not loop.last %},{% endif %}
+      {% endfor %}
+    )
+    )
+{% endfor -%}
+
+, unioned AS (
+    {% for event_cte in event_ctes %}
+    SELECT *
+    FROM {{ event_cte.event_name }}
+    {% if not loop.last %}UNION{% endif %}
+    {% endfor %}
+
+)
+
 , joined AS (
 
     SELECT 
       first_day_of_month,
       event_name,
-      COUNT(DISTINCT user_id)
-    FROM date_details
+      stage_name,
+      is_smau,
+      group_name,
+      is_gmau,
+      COUNT(DISTINCT user_id) AS total_user_count,
+      COUNT(DISTINCT user_id) AS free_user_count,
+      COUNT(DISTINCT user_id) AS paid_user_count,
+      COUNT(DISTINCT namespace_id) AS total_namespace_id
+    FROM skeleton
     LEFT JOIN unioned
         ON event_date BETWEEN DATEADD('days', -28, last_day_of_month) AND last_day_of_month
+    {{ dbt_utils.group_by(n=6)}}
 
 )
 
