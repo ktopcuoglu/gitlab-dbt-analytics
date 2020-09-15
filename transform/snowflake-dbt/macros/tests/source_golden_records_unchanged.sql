@@ -1,17 +1,32 @@
-{% macro source_golden_records_unchanged(golden_record_model, source_model, join_column, check_column) %}
+{% macro source_golden_records_unchanged(source_model) %}
 
+{% set golden_record_model = source_model + '_golden_records' %}
+{% set meta_columns = get_meta_columns(golden_record_model) %}
 
 WITH check_data AS (
 
     SELECT
-        CASE WHEN IFNULL(golden_records.{{ check_column }}, '') = IFNULL(golden_records.{{ check_column }}, '')
-        THEN 0 ELSE 1 END AS num_rows
+      SUM(
+      {%- for column in meta_columns %}
+          CASE WHEN IFNULL(golden_records.{{ column }}, '') = IFNULL(golden_records.{{ column }}, '') THEN 0 ELSE 1 END
+              {%- if not loop.last %}
+                  +
+              {% endif %}
+          {% endfor %}
+          ) AS is_incorrect
     FROM {{ ref(golden_record_model) }} golden_records
-    LEFT JOIN {{ ref(source_model) }} ON source_model.{{ join_column }} = golden_records.{{ join_column }}
-
+    JOIN {{ ref(source_model) }} source_model ON
+    {%- for column in meta_columns %}
+        source_model.{{ column }} = golden_records.{{ column  }}
+        {% if not loop.last %}
+            AND
+        {% endif %}
+    {% endfor %}
 )
-    SELECT *
-    FROM check_data
-    WHERE num_rows > 0
+
+
+SELECT *
+FROM check_data
+WHERE is_incorrect > 1
 
 {% endmacro %}

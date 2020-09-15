@@ -274,6 +274,23 @@ models:
       - name: updated_at
         tests:
           - not_null
+
+  - name: gitlab_dotcom_ci_platform_metrics_source
+    description: Source model for Gitlab.com ci_platform_metrics
+    columns:
+      - name: metric_id
+        tests:
+          - not_null
+          - unique
+      - name: platform_target
+        tests:
+          - not_null
+      - name: recorded_at
+        tests:
+          - not_null
+      - name: target_count
+        tests:
+          - not_null
   - name: gitlab_dotcom_ci_runner_projects
     description: Base model for Gitlab.com ci_runner_projects
     columns:
