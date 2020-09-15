@@ -30,10 +30,10 @@ def load_ids(
     primary_key: str,
     raw_query: str,
     source_engine: Engine,
-    table: str,
+    source_table_name: str,
     table_name: str,
     target_engine: Engine,
-    id_range: int = 100_000,
+    id_range: int = 750_000,
 ) -> None:
     """ Load a query by chunks of IDs instead of all at once."""
 
@@ -43,7 +43,7 @@ def load_ids(
         primary_key,
         raw_query,
         target_engine,
-        table,
+        source_table_name,
         table_name,
         id_range=id_range,
     )
@@ -53,7 +53,12 @@ def load_ids(
         filtered_query = f"{query} {additional_filtering} ORDER BY {primary_key}"
         logging.info(filtered_query)
         chunk_and_upload(
-            filtered_query, source_engine, target_engine, table_name, backfill=backfill
+            filtered_query,
+            source_engine,
+            target_engine,
+            table_name,
+            source_table_name,
+            backfill=backfill,
         )
         backfill = False  # this prevents it from seeding rows for every chunk
 
@@ -82,7 +87,7 @@ def swap_temp_table(engine: Engine, real_table: str, temp_table: str) -> None:
 def load_incremental(
     source_engine: Engine,
     target_engine: Engine,
-    table: str,
+    source_table_name: str,
     table_dict: Dict[Any, Any],
     table_name: str,
 ) -> bool:
@@ -93,7 +98,7 @@ def load_incremental(
     raw_query = table_dict["import_query"]
     additional_filter = table_dict.get("additional_filtering", "")
     if "{EXECUTION_DATE}" not in raw_query:
-        logging.info(f"Table {table} does not need incremental processing.")
+        logging.info(f"Table {source_table_name} does not need incremental processing.")
         return False
 
     replication_check_query = "select pg_last_xact_replay_timestamp();"
@@ -135,13 +140,13 @@ def load_incremental(
     # If a temp table exists then it needs to finish syncing so don't load incrementally
     if "_TEMP" == table_name[-5:] or target_engine.has_table(f"{table_name}_TEMP"):
         logging.info(
-            f"Table {table} needs to be backfilled due to schema change, aborting incremental load."
+            f"Table {source_table_name} needs to be backfilled due to schema change, aborting incremental load."
         )
         return False
     env = os.environ.copy()
     query = f"{raw_query.format(**env)} {additional_filter}"
     logging.info(query)
-    chunk_and_upload(query, source_engine, target_engine, table_name)
+    chunk_and_upload(query, source_engine, target_engine, table_name, source_table_name)
 
     return True
 
@@ -184,7 +189,7 @@ def sync_incremental_ids(
 def load_scd(
     source_engine: Engine,
     target_engine: Engine,
-    table: str,
+    source_table_name: str,
     table_dict: Dict[Any, Any],
     table_name: str,
 ) -> bool:
@@ -196,23 +201,29 @@ def load_scd(
     additional_filter = table_dict.get("additional_filtering", "")
     advanced_metadata = table_dict.get("advanced_metadata", False)
     if "{EXECUTION_DATE}" in raw_query:
-        logging.info(f"Table {table} does not need SCD processing.")
+        logging.info(f"Table {source_table_name} does not need SCD processing.")
         return False
 
     # If the schema has changed for the SCD table, treat it like a backfill
     if "_TEMP" == table_name[-5:] or target_engine.has_table(f"{table_name}_TEMP"):
         logging.info(
-            f"Table {table} needs to be recreated to due to schema change. Recreating...."
+            f"Table {source_table_name} needs to be recreated to due to schema change. Recreating...."
         )
         backfill = True
     else:
         backfill = False
 
-    logging.info(f"Processing table: {table}")
+    logging.info(f"Processing table: {source_table_name}")
     query = f"{raw_query} {additional_filter}"
     logging.info(query)
     chunk_and_upload(
-        query, source_engine, target_engine, table_name, advanced_metadata, backfill
+        query,
+        source_engine,
+        target_engine,
+        table_name,
+        source_table_name,
+        advanced_metadata,
+        backfill,
     )
     return True
 
@@ -310,13 +321,14 @@ def check_new_tables(
         logging.info(f"Table {table} already exists and won't be tested.")
         return False
 
-    # If the table doesn't exist, load 1 million rows (or whatever the table has)
-    query = f"{raw_query} WHERE {primary_key} IS NOT NULL {additional_filtering} LIMIT 100000"
+    # If the table doesn't exist, load whatever the table has
+    query = f"{raw_query} WHERE {primary_key} IS NOT NULL {additional_filtering}"
     chunk_and_upload(
         query,
         source_engine,
         target_engine,
         table_name,
+        table,
         advanced_metadata,
         backfill=True,
     )

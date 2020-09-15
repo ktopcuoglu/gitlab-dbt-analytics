@@ -1,22 +1,22 @@
-{% macro source_new_rows_per_day(schema, table, created_column, min_value, max_value=None, where_clause=None) %}
+{% macro model_new_rows_per_day(model_name, created_column, min_value, max_value=None, where_clause=None) %}
 
-WITH dates as (
+WITH dates AS (
 
     SELECT *
     FROM {{ ref('date_details' )}}
     WHERE is_holiday = FALSE
     AND day_of_week IN (2,3,4,5,6)
 
-), source as (
+), source AS (
 
     SELECT *
-    FROM {{ source(schema, table) }}
+    FROM {{ ref(model_name) }}
 
 ), counts AS (
 
     SELECT 
-      COUNT(*)                                          AS row_count,
-      DATEADD('day', -1, DATE_TRUNC('day',createddate)) AS the_day
+      COUNT(*)                                                      AS row_count,
+      DATEADD('day', -1, DATE_TRUNC('day',{{ created_column }}))    AS the_day
     FROM source
     WHERE the_day IN (SELECT DATE_ACTUAL FROM dates)
     {% if where_clause != None %}
