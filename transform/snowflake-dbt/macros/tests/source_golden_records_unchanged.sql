@@ -2,7 +2,7 @@
 
 {% set golden_record_model = source_model + '_golden_records' %}
 
-{% set meta_columns = get_meta_columns(golden_record_model, "sensitive") %}
+{% set meta_columns = get_meta_columns(golden_record_model) %}
 
 WITH check_data AS (
 
@@ -17,9 +17,12 @@ WITH check_data AS (
         {% endfor %}
         ) AS is_correct
     FROM {{ ref(golden_record_model) }} golden_records
-    JOIN {{ ref(source_model) }} ON
+    JOIN {{ ref(source_model) }} source_model ON
     {%- for column in meta_columns %}
-        source_model.{{ column }} = golden_records.{{ column  }} AND
+        source_model.{{ column }} = golden_records.{{ column  }}
+        {% if not loop.last %}
+            AND
+        {% endif %}
     {% endfor %}
 )
     SELECT *
