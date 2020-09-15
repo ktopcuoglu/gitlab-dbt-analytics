@@ -1,10 +1,15 @@
 WITH bamboohr_compensation_changes AS (
 
     SELECT *,
-      LAG(compensation_value) OVER (PARTITION BY employee_id ORDER BY compensation_update_id)       AS prior_compensation_value,
-      LAG(compensation_currency) OVER (PARTITION BY employee_id ORDER BY compensation_update_id)    AS prior_compensation_currency,
-      LAG(effective_date) OVER (PARTITION BY employee_id ORDER BY compensation_update_id)           AS prior_compensation_value_date,
-      ROW_NUMBER() OVER (PARTITION BY employee_id, effective_date ORDER BY compensation_update_id)  AS rank_compensation_change_effective_date
+      ROW_NUMBER() OVER (PARTITION BY employee_id ORDER BY effective_date) AS rank_by_effective_date,
+      ROW_NUMBER() OVER (PARTITION BY employee_id ORDER BY compensation_update_id)                             AS rank_by_id,
+      CASE WHEN rank_by_effective_date != rank_by_id
+           THEN LAG(compensation_value) OVER (PARTITION BY employee_id ORDER BY effective_date)
+           ELSE LAG(compensation_value) OVER (PARTITION BY employee_id ORDER BY compensation_update_id) END    AS prior_compensation_value,
+      CASE WHEN rank_by_effective_date != rank_by_id
+           THEN LAG(compensation_currency) OVER (PARTITION BY employee_id ORDER BY effective_date)
+           ELSE LAG(compensation_currency) OVER (PARTITION BY employee_id ORDER BY compensation_update_id) END AS prior_compensation_currency,
+      ROW_NUMBER() OVER (PARTITION BY employee_id, effective_date ORDER BY compensation_update_id)             AS rank_compensation_change_effective_date    
     FROM {{ ref('bamboohr_compensation') }}
 
 ), pay_frequency AS (
@@ -43,11 +48,18 @@ WITH bamboohr_compensation_changes AS (
 ), joined AS (
 
     SELECT 
+      employee_directory.employee_number,
       bamboohr_compensation_changes.*,
       employee_directory.division,
       employee_directory.department,
       employee_directory.job_title,
-      COALESCE(pay_frequency.pay_frequency, pay_frequency_initial.pay_frequency) AS pay_frequency, -- started capturing pay frequency on 2020.09.10 and are using this frequency for historical data
+      CASE WHEN pay_rate = 'Month' 
+            THEN 12
+           WHEN pay_rate = 'Year' 
+            THEN 1
+           WHEN pay_rate = 'PayPeriod' 
+            THEN COALESCE(pay_frequency.pay_frequency, pay_frequency_initial.pay_frequency) 
+           ELSE NULL END        AS pay_frequency, -- started capturing pay frequency on 2020.09.10 and are using this frequency for historical data
       currency_conversion_factor,
       ote.variable_pay,
       ote.annual_amount_usd_value AS ote_usd,
@@ -77,6 +89,7 @@ WITH bamboohr_compensation_changes AS (
 
     SELECT 
       compensation_update_id,
+      employee_number,
       employee_id,
       division,
       department,
@@ -84,11 +97,13 @@ WITH bamboohr_compensation_changes AS (
       compensation_change_reason,
       effective_date,
       currency_conversion_factor,
+      LAG(currency_conversion_factor) 
+        OVER (PARTITION BY employee_id ORDER BY compensation_update_id)                  AS prior_currency_conversion_factor,
       pay_frequency,
-      LAG(pay_frequency) OVER (PARTITION BY employee_id ORDER BY compensation_update_id) AS prior_pay_frequency,  
-      compensation_value AS new_compensation_value,
+      LAG(pay_frequency) OVER (PARTITION BY employee_id ORDER BY compensation_update_id) AS prior_pay_frequency,
+      compensation_value                                                                 AS new_compensation_value,
       prior_compensation_value,
-      compensation_currency AS new_compensation_currency,
+      compensation_currency                                                              AS new_compensation_currency,
       prior_compensation_currency,
       variable_pay,
       ote_usd,
@@ -100,29 +115,27 @@ WITH bamboohr_compensation_changes AS (
 
     SELECT 
       compensation_update_id,
+      employee_number,
       employee_id,
       division,
       department,
       job_title,
-      effective_date AS promotion_date,
+      effective_date                                                                                  AS promotion_date,
       variable_pay,
-      new_compensation_value * pay_frequency * currency_conversion_factor AS new_compensation_value_usd,
-      prior_compensation_value * prior_pay_frequency * currency_conversion_factor AS prior_compensation_value_usd,
-      (new_compensation_value * pay_frequency * currency_conversion_factor) - 
-        (prior_compensation_value * prior_pay_frequency * currency_conversion_factor) AS change_in_comp_usd,
+      new_compensation_value * pay_frequency * currency_conversion_factor                             AS new_compensation_value_usd,
+      CASE WHEN new_compensation_currency = prior_compensation_currency 
+           THEN prior_compensation_value * prior_pay_frequency * currency_conversion_factor 
+           ELSE prior_compensation_value * prior_pay_frequency * prior_currency_conversion_factor END AS prior_compensation_value_usd,
+      new_compensation_value_usd - prior_compensation_value_usd                                       AS change_in_comp_usd,
       COALESCE(ote_change,0) AS ote_change
-      
-  FROM intermediate
-  WHERE compensation_change_reason = 'Promotion'
+    FROM intermediate
+    WHERE compensation_change_reason = 'Promotion'
 
 
 )
 
 SELECT 
-a.employee_number, promotions.*,
-  ote_change+change_in_comp_usd as total_change
-  FROm promotions 
-  left join "ANALYTICS"."ANALYTICS_SENSITIVE"."BAMBOOHR_ID_EMPLOYEE_NUMBER_MAPPING" a
-    on a.employee_id = promotions.employee_id
+  promotions.*,
+  ote_change+change_in_comp_usd AS total_change
+FROM promotions 
  
-where promotion_date between '2019-08-01' AND '2020-07-31'
