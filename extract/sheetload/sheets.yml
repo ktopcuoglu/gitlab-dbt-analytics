@@ -170,7 +170,7 @@ sheets:
     tabs:
       - product_maturity_historical
   - name: engineering_speciality_prior_to_capture
-    owner: '@pluthra' '@lmai'
+    owner: '@pluthra'
     tabs: 
       - speciality
 
