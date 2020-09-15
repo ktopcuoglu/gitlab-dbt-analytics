@@ -36,7 +36,7 @@ WITH sfdc_opportunity AS (
 	AND stage_name != '10-Duplicate'
 	AND sales_qualified_source IN (
                                  'SDR Generated'
-								 , 'BDR Generated'
+                                 , 'BDR Generated'
 	                             )
 )
 
