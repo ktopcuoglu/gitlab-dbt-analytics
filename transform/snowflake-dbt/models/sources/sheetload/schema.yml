@@ -248,7 +248,7 @@ models:
       tests:
       - not_null
       - unique
-- name: sheetload_product_maturity_historical
+- name: sheetload_product_maturity_historical_source
   description: This captures the categories_yaml file for FY 2021 Q1 and Q2.      
 - name: sheetload_rep_quotas_full_fy2020_source
   description: This is the model that captures sales data for rep quotas for the full fy2020.
