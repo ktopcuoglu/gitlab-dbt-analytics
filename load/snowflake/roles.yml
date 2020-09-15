@@ -1313,6 +1313,10 @@ roles:
         warehouses:
             - analyst_xs
 
+    - hsharma:
+        warehouses:
+            - reporting
+
     - iroussos:
         member_of:
             - reporter
@@ -1765,6 +1769,12 @@ users:
         can_login: yes
         member_of:
             - hfrancisco
+
+    - hsharma:
+        can_login: yes
+        member_of:
+            - hsharma
+            - securityadmin
 
     - iroussos:
         can_login: yes
