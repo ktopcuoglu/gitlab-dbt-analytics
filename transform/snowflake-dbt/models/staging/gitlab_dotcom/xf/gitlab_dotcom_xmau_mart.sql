@@ -1,7 +1,27 @@
+{%- set event_ctes = [
+  {
+    "event_name": "action_monthly_active_users_project_repo",
+    "events_to_include": "action_monthly_active_users_project_repo",
+    "stage_name": "create",
+    "smau": "True",
+    "group": "gitaly",
+    "gmau": "True"
+  },
+  {
+    "event_name": "issue_interaction",
+    "source_cte_name": "issue_interaction",
+    "events_to_include": ["epics", "epic_notes"],
+    "stage_name": "create",
+    "smau": "False",
+    "group": "source_code",
+    "gmau": "True"
+  }
+]
+-%}
 WITH epic_interaction AS (
 
     SELECT *
-    FROM {{ ref('gitlab_dotocm_daily_usage_data_events') }}
+    FROM {{ ref('gitlab_dotcom_daily_usage_data_events') }}
     WHERE event_name IN ('epics', 'epic_notes')
 
 )
@@ -9,7 +29,7 @@ WITH epic_interaction AS (
 , issue_interaction AS (
 
     SELECT *
-    FROM {{ ref('gitlab_dotocm_daily_usage_data_events') }}
+    FROM {{ ref('gitlab_dotcom_daily_usage_data_events') }}
     WHERE event_name IN ('issues', 'issue_notes')
 
 )
@@ -17,7 +37,7 @@ WITH epic_interaction AS (
 , merge_request_interaction AS (
 
     SELECT *
-    FROM {{ ref('gitlab_dotocm_daily_usage_data_events') }}
+    FROM {{ ref('gitlab_dotcom_daily_usage_data_events') }}
     WHERE event_name IN ('merge_requests', 'merge_request_notes')
     
 )
@@ -41,16 +61,24 @@ WITH epic_interaction AS (
 
 , skeleton AS (
 
-    SELECT *
+    SELECT DISTINCT first_day_of_month, last_day_of_month
     FROM {{ ref('date_details') }}
+    WHERE date_day = last_day_of_month
+        AND last_day_of_month < CURRENT_DATE()
 
 )
 
 , joined AS (
 
-    SELECT *
+    SELECT 
+      first_day_of_month,
+      event_name,
+      COUNT(DISTINCT user_id)
     FROM date_details
     LEFT JOIN unioned
-        ON date_details.date
+        ON event_date BETWEEN DATEADD('days', -28, last_day_of_month) AND last_day_of_month
 
 )
+
+SELECT *
+FROM joined

@@ -162,15 +162,6 @@
     "is_representative_of_stage": "False"
   },
   {
-    "event_name": "epic_interaction",
-    "source_cte_name": "epic_interaction",
-    "user_column_name": "user_id",
-    "key_to_parent_group": "ultimate_parent_id",
-    "primary_key": "event_id",
-    "stage_name": "plan",
-    "is_representative_of_stage": "False"
-  },
-  {
     "event_name": "epic_notes",
     "source_cte_name": "epic_notes",
     "user_column_name": "note_author_id",
@@ -205,16 +196,6 @@
     "primary_key": "issue_id",
     "stage_name": "plan",
     "is_representative_of_stage": "False"
-  },
-  {
-    "event_name": "issue_interaction",
-    "source_cte_name": "issue_notes",
-    "user_column_name": "note_author_id",
-    "key_to_parent_project": "project_id",
-    "primary_key": "author_id",
-    "stage_name": "plan",
-    "is_representative_of_stage": "True",
-    "group_name": "project_management"
   },
   {
     "event_name": "issue_notes",
@@ -296,17 +277,6 @@
     "primary_key": "merge_request_id",
     "stage_name": "create",
     "is_representative_of_stage": "False"
-  },
-  {
-    "event_name": "merge_request_interactions",
-    "source_cte_name": "merge_request_interactions",
-    "user_column_name": "event_id",
-    "key_to_parent_project": "project_id",
-    "primary_key": "author_id",
-    "stage_name": "create",
-    "is_representative_of_stage": "False",
-    "group_name": "source_code",
-    "gmau": "True"
   },
   {
     "event_name": "merge_request_notes",
@@ -553,41 +523,6 @@ WITH gitlab_subscriptions AS (
       issue_created_at AS created_at
     FROM {{ ref('gitlab_dotcom_issues_xf') }}
     WHERE ARRAY_CONTAINS('incident'::variant, labels)
-
-), issue_interactions AS ( --gmau for project_management
-
-    SELECT
-      note_author_id AS user_id,
-      created_at,
-      project_id
-    FROM {{ ref('gitlab_dotcom_notes_xf') }}
-    WHERE noteable_type = 'Issue'
-
-    UNION 
-
-    SELECT
-      author_id AS user_id,
-      issue_created_at,
-      project_id
-    FROM {{ ref('gitlab_dotcom_issues_xf') }}
-
-    UNION 
-    
-    SELECT
-      user_id,
-      created_at,
-      project_id
-    FROM {{ref('gitlab_dotcom_resource_label_events_xf')}}
-    WHERE issue_id IS NOT NULL
-  
-    UNION 
-
-    SELECT
-      user_id,
-      created_at,
-      project_id
-    FROM {{ref('gitlab_dotcom_resource_milestone_events_xf')}}
-    WHERE issue_id IS NOT NULL
 
 ), issue_notes AS (
 
