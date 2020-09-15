@@ -372,9 +372,6 @@ models:
       +materialized: table
       +schema: tdf
       secure: true
-      zuora:
-        golden_records:
-          +materialized: view
 
 
 # ======
