@@ -3,4 +3,4 @@
     })
 }}
 
-{{ model_golden_records_unchanged('zuora_subscription_source') }}
+{{ model_golden_records_comparison('zuora_subscription_source') }}

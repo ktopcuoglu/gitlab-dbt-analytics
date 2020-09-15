@@ -1,4 +1,4 @@
-{% macro source_golden_records_unchanged(source_name, table_name) %}
+{% macro source_golden_records_comparison(source_name, table_name) %}
 
 {% set golden_record_model = source_name + '_' + table_name + '_raw_golden_record' %}
 {% set gr_columns = adapter.get_columns_in_relation(ref(golden_record_model)) %}

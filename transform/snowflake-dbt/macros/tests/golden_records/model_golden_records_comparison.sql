@@ -1,4 +1,4 @@
-{% macro model_golden_records_unchanged(dbt_model) %}
+{% macro model_golden_records_comparison(dbt_model) %}
 
 {% set golden_record_model = dbt_model + '_golden_record' %}
 {% set gr_columns = adapter.get_columns_in_relation(ref(golden_record_model)) %}
