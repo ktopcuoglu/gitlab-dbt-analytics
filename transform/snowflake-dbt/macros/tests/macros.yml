@@ -15,7 +15,7 @@ macros:
         description: The minimum value the sum should be greater than
       - name: where_clause
         description: Optional filter on the data. Wrap the entire clause in double quotes.
-  - name: model_golden_records_unchanged
+  - name: model_golden_records_comparison
     description: Compare a dbt model table to a Golden Record CSV
     arguments:
       - name: dbt_model
@@ -80,7 +80,7 @@ macros:
         description: The minimum value the sum should be greater than
       - name: where_clause
         description: Optional filter on the data. Wrap the entire clause in double quotes.
-  - name: source_golden_records_unchanged
+  - name: source_golden_records_comparison
     description: Compare a dbt model table to a Golden Record CSV
     arguments:
       - name: source_name
