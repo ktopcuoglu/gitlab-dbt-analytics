@@ -38,6 +38,7 @@ WITH sfdc_opportunity AS (
                                   'SDR Generated'
                                   , 'BDR Generated'
                                   )
+
 )
 
 SELECT *
