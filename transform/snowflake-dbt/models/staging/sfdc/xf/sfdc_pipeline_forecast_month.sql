@@ -10,6 +10,9 @@ Questions:
 WITH sfdc_opportunity_snapshot_history_xf AS (
     SELECT *
     FROM {{ ref('sfdc_opportunity_snapshot_history_xf') }}
+    -- remove lost & deleted deals
+    WHERE stage_name NOT IN ('9-Unqualified','10-Duplicate','Unqualified')
+        AND is_deleted = 0
 ) 
 -- This portion is specfic for the Forecast Model
 SELECT  snapshot_date,
@@ -17,6 +20,7 @@ SELECT  snapshot_date,
         close_fiscal_year,
         forecast_category_name,                  
         owner_id,
+        opportunity_owner_manager,
         tsp_region,
         tsp_sub_region,
         stage_name,
@@ -33,4 +37,4 @@ WHERE is_lvl_2_vp_flag = 1
         AND snapshot_date >= dateadd(month,-1, close_month)
         -- till end of the month
         AND snapshot_date <= dateadd(month, 1, close_month)
-GROUP BY 1,2,3,4,5,6,7,8,9
+GROUP BY 1,2,3,4,5,6,7,8,9,10

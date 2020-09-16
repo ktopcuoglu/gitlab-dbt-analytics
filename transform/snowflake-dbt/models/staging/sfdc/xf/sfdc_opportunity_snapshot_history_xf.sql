@@ -122,10 +122,12 @@ SELECT
         h.forecast_category_name                                                                        AS forecast_category_name,                  
         h.opportunity_id,
         h.owner_id                                                                                      AS owner_id,
+        o.opportunity_owner_manager,                     
+        h.stage_name,
+        h.sales_type,
+        h.is_deleted,
         a.tsp_region,
         a.tsp_sub_region,
-        h.stage_name                                                                                    AS stage_name,
-        h.sales_type,
         CASE WHEN sa.level_2 IS NOT NULL 
                 THEN sa.level_2
                 ELSE cro.level_2 END                                                                    AS segment,
@@ -189,25 +191,21 @@ SELECT
             ELSE 0 END                                                                                  AS churn_only
 
     FROM sfdc_opportunity_snapshot_history h
+    -- close date
+    INNER JOIN date_details d
+        ON cast(h.close_date as date) = d.date_actual
     -- current opportunity
     LEFT JOIN sfdc_opportunity_xf o     
         ON o.opportunity_id = h.opportunity_id
     -- accounts
     LEFT JOIN sfdc_accounts_xf a
         ON h.account_id = a.account_id 
-    -- close date
-    INNER JOIN date_details d
-        ON h.close_date = d.date_actual
     -- owner hierarchy
     LEFT JOIN cro_sfdc_hierarchy cro
         ON h.owner_id = cro.id
     -- sales admin hierarchy
     LEFT JOIN sales_admin_bookings_hierarchy sa
         ON h.opportunity_id = sa.opportunity_id
-    -- remove lost & deleted deals
-    WHERE h.stage_name NOT IN ('9-Unqualified','10-Duplicate','Unqualified')
-        AND h.is_deleted = 0
-
 ) 
 SELECT *
 FROM final
