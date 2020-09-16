@@ -75,8 +75,8 @@ WITH dim_dates AS (
 
   SELECT
     dim_dates.date_id,
-    account_id,
-    crm_id,
+    billing_account_id,
+    crm_account_id,
     subscription_id,
     product_details_id,
     SUM(mrr)                                             AS mrr,
