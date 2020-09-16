@@ -13,6 +13,7 @@ from airflow_utils import (
     xs_warehouse,
 )
 from kube_secrets import (
+    GOLDEN_RECORD_KEY,
     SALT,
     SALT_EMAIL,
     SALT_IP,
@@ -76,6 +77,7 @@ dbt_poc = KubernetesPodOperator(
     task_id="dbt-arr-data-mart-incr",
     name="dbt-arr-data-mart-incr",
     secrets=[
+        GOLDEN_RECORD_KEY,
         SALT,
         SALT_EMAIL,
         SALT_IP,

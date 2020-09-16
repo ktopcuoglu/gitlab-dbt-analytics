@@ -19,6 +19,7 @@ from airflow_utils import (
     xs_warehouse,
 )
 from kube_secrets import (
+    GOLDEN_RECORD_KEY,
     SALT,
     SALT_EMAIL,
     SALT_IP,
@@ -110,6 +111,7 @@ dbt_non_product_models_task = KubernetesPodOperator(
     task_id="dbt-non-product-models-run",
     name="dbt-non-product-models-run",
     secrets=[
+        GOLDEN_RECORD_KEY,
         SALT,
         SALT_EMAIL,
         SALT_IP,
@@ -146,6 +148,7 @@ dbt_product_models_task = KubernetesPodOperator(
     task_id="dbt-product-models-run",
     name="dbt-product-models-run",
     secrets=[
+        GOLDEN_RECORD_KEY,
         SALT,
         SALT_EMAIL,
         SALT_IP,
@@ -181,6 +184,7 @@ dbt_full_refresh = KubernetesPodOperator(
     task_id="dbt-full-refresh",
     name="dbt-full-refresh",
     secrets=[
+        GOLDEN_RECORD_KEY,
         SALT,
         SALT_EMAIL,
         SALT_IP,
@@ -218,6 +222,7 @@ dbt_source_freshness = KubernetesPodOperator(
     task_id="dbt-source-freshness",
     name="dbt-source-freshness",
     secrets=[
+        GOLDEN_RECORD_KEY,
         SALT,
         SALT_EMAIL,
         SALT_IP,
@@ -253,6 +258,7 @@ dbt_test = KubernetesPodOperator(
     name="dbt-test",
     trigger_rule="all_done",
     secrets=[
+        GOLDEN_RECORD_KEY,
         SALT,
         SALT_EMAIL,
         SALT_IP,

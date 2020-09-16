@@ -13,6 +13,7 @@ from airflow_utils import (
     slack_failed_task,
 )
 from kube_secrets import (
+    GOLDEN_RECORD_KEY,
     SALT,
     SALT_EMAIL,
     SALT_IP,
@@ -73,6 +74,7 @@ dbt_full_refresh = KubernetesPodOperator(
     task_id="dbt-full-refresh",
     name="dbt-full-refresh",
     secrets=[
+        GOLDEN_RECORD_KEY,
         SALT,
         SALT_EMAIL,
         SALT_IP,
