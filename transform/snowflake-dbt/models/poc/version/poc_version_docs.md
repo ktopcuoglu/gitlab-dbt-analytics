@@ -11,7 +11,7 @@ This model transforms 28_days counters stored in the usage data payload into mon
 This model transforms all_time counters stored in the usage data payload into monthly proxies. To do so the logic is followed is:
 
 * For one specific instance (instance_uid), one specific metric (metrics_name) and one specific month M, take the latest received data
-* Compare this data point with the one received one month before, we have 3 scenarii:
+* Compare this data point with the one received one month before, we have 3 scenarios:
   * data from month M > data from month M-1: the monthly proxied metric is data(M) - data(M-1)
   * no data for month M-1: then monthly proxied metric is data(M)
   * data from month M < data from month M-1: abnormal behavior which might be due to an instance reset, then proxied metric is 0
