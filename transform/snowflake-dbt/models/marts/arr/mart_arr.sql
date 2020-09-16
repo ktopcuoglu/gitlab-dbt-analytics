@@ -2,15 +2,15 @@
 {{ config(materialized='table',
   transient=false)}}
 
-WITH dim_accounts AS (
+WITH dim_billing_accounts AS (
 
   SELECT *
-  FROM {{ ref('dim_accounts') }}
+  FROM {{ ref('dim_billing_accounts') }}
 
-), dim_customers AS (
+), dim_crm_accounts AS (
 
   SELECT *
-  FROM {{ ref('dim_customers') }}
+  FROM {{ ref('dim_crm_accounts') }}
 
 ), dim_dates AS (
 
@@ -46,18 +46,18 @@ SELECT
   dim_subscriptions.subscription_end_month,
 
   --account info
-  dim_accounts.account_id                                              AS zuora_account_id,
-  dim_accounts.sold_to_country                                         AS zuora_sold_to_country,
-  dim_accounts.account_name                                            AS zuora_account_name,
-  dim_accounts.account_number                                          AS zuora_account_number,
-  COALESCE(dim_customers.merged_to_account_id, dim_customers.crm_id)   AS crm_id,
-  dim_customers.ultimate_parent_account_id,
-  dim_customers.ultimate_parent_account_name,
-  dim_customers.ultimate_parent_billing_country,
-  dim_customers.ultimate_parent_account_segment,
-  dim_customers.ultimate_parent_industry,
-  dim_customers.ultimate_parent_account_owner_team,
-  dim_customers.ultimate_parent_territory,
+  dim_billing_accounts.billing_account_id                                             AS zuora_account_id,
+  dim_billing_accounts.sold_to_country                                         AS zuora_sold_to_country,
+  dim_billing_accounts.billing_account_name                                            AS zuora_account_name,
+  dim_billing_accounts.billing_account_number                                          AS zuora_account_number,
+  COALESCE(dim_crm_accounts.merged_to_account_id, dim_crm_accounts.crm_account_id)   AS crm_id,
+  dim_crm_accounts.ultimate_parent_account_id,
+  dim_crm_accounts.ultimate_parent_account_name,
+  dim_crm_accounts.ultimate_parent_billing_country,
+  dim_crm_accounts.ultimate_parent_account_segment,
+  dim_crm_accounts.ultimate_parent_industry,
+  dim_crm_accounts.ultimate_parent_account_owner_team,
+  dim_crm_accounts.ultimate_parent_territory,
 
   --subscription info
   dim_subscriptions.subscription_name,
@@ -80,9 +80,9 @@ SELECT
     ON dim_subscriptions.subscription_id = fct_mrr.subscription_id
   INNER JOIN dim_product_details
     ON dim_product_details.product_details_id = fct_mrr.product_details_id
-  INNER JOIN dim_accounts
-    ON dim_accounts.account_id = fct_mrr.account_id
+  INNER JOIN dim_billing_accounts
+    ON dim_billing_accounts.billing_account_id= fct_mrr.account_id
   INNER JOIN dim_dates
     ON dim_dates.date_id = fct_mrr.date_id
-  LEFT JOIN dim_customers
-    ON dim_accounts.crm_id = dim_customers.crm_id
+  LEFT JOIN dim_crm_accounts
+    ON dim_billing_accounts.crm_account_id = dim_crm_accounts.crm_account_id
