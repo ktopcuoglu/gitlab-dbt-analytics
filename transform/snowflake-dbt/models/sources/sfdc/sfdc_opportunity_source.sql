@@ -52,13 +52,11 @@ WITH source AS (
         BDR_LU__c                                   AS opportunity_business_development_representative,
         BDR_SDR__c                                  AS opportunity_development_representative,
         account_owner_team_o__c                     AS account_owner_team_stamped,
-        COALESCE({{ sales_segment_cleaning('ultimate_parent_sales_segment_emp_o__c') }}, {{ sales_segment_cleaning('ultimate_parent_sales_segment_o__c') }} )
-                                                    AS parent_segment,
+
         sales_accepted_date__c                      AS sales_accepted_date,
         engagement_type__c                          AS sales_path,
         sales_qualified_date__c                     AS sales_qualified_date,
-        COALESCE({{ sales_segment_cleaning('sales_segmentation_employees_o__c') }}, {{ sales_segment_cleaning('sales_segmentation_o__c') }}, 'Unknown' )
-                                                    AS sales_segment,
+
         type                                        AS sales_type,
         {{  sfdc_source_buckets('leadsource') }}
         stagename                                   AS stage_name,
@@ -95,7 +93,6 @@ WITH source AS (
         renewal_amount__c                           AS renewal_amount,
         sql_source__c                               AS sales_qualified_source,
         sdr_pipeline_contribution__c                AS sdr_pipeline_contribution,
-        sales_segmentation_o__c                     AS segment,
         solutions_to_be_replaced__c                 AS solutions_to_be_replaced,
         x3_technical_evaluation_date__c
                                                     AS technical_evaluation_date,
@@ -110,6 +107,17 @@ WITH source AS (
         end_date__c                                 AS subscription_end_date,
         true_up_value__c                            AS true_up_value,
         order_type_live__c                          AS order_type_live,
+
+
+      -- ************************************
+      -- sales segmentation deprecated fields - 2020-09-03
+      -- left temporary for the sake of MVC and avoid breaking SiSense existing charts
+        sales_segmentation_o__c                     AS segment,
+        COALESCE({{ sales_segment_cleaning('sales_segmentation_employees_o__c') }}, {{ sales_segment_cleaning('sales_segmentation_o__c') }}, 'Unknown' )
+                                                    AS sales_segment,
+        COALESCE({{ sales_segment_cleaning('ultimate_parent_sales_segment_emp_o__c') }}, {{ sales_segment_cleaning('ultimate_parent_sales_segment_o__c') }} )
+                                                    AS parent_segment,
+      -- ************************************
 
         -- dates in stage fields
         days_in_0_pending_acceptance__c             AS days_in_0_pending_acceptance,
@@ -129,6 +137,10 @@ WITH source AS (
         x6_closed_won_date__c                       AS stage_6_closed_won_date,
         x7_closed_lost_date__c                      AS stage_6_closed_lost_date,
 
+        -- sales segment fields
+        COALESCE({{ sales_segment_cleaning('sales_segmentation_employees_o__c') }}, {{ sales_segment_cleaning('sales_segmentation_o__c') }}, 'Unknown' )
+                                                   AS
+division_sales_segment_stamped,
         -- channel reporting
         -- original issue: https://gitlab.com/gitlab-data/analytics/-/issues/6072
         dr_partner_deal_type__c                     AS dr_partner_deal_type,

@@ -1313,6 +1313,10 @@ roles:
         warehouses:
             - analyst_xs
 
+    - hsharma:
+        warehouses:
+            - reporting
+
     - iroussos:
         member_of:
             - reporter
@@ -1505,6 +1509,13 @@ roles:
             - analyst_core
         warehouses:
             - analyst_xs
+
+    - sawezec:
+        member_of:
+            - product_manager
+            - reporter
+        warehouses:
+            - reporting
 
     - skerr:
         member_of:
@@ -1759,6 +1770,12 @@ users:
         member_of:
             - hfrancisco
 
+    - hsharma:
+        can_login: yes
+        member_of:
+            - hsharma
+            - securityadmin
+
     - iroussos:
         can_login: yes
         member_of:
@@ -1951,6 +1968,11 @@ users:
         member_of:
             - rparker
             - accountadmin
+
+    - sawezec:
+        can_login: yes
+        member_of:
+            - sawezec
 
     - skerr:
         can_login: yes

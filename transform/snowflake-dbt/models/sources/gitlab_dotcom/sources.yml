@@ -68,6 +68,8 @@ sources:
         identifier: gitlab_db_ci_pipeline_variables
       - name: ci_pipelines
         identifier: gitlab_db_ci_pipelines
+      - name: ci_platform_metrics
+        identifier: gitlab_db_ci_platform_metrics
       - name: ci_runner_projects
         identifier: gitlab_db_ci_runner_projects
       - name: ci_runners

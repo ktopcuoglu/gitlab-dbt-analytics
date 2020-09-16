@@ -41,6 +41,8 @@ models:
 - name: sheetload_data_team_capacity
 - name: sheetload_days_to_close
 - name: sheetload_engineering_speciality_prior_to_capture
+- name: sheetload_dev_section_metrics
+  description: Base model for the Google Sheet ingested through Sheetload called dev_section_metrics
 - name: sheetload_gitlab_slack_stats
 - name: sheetload_google_referrals
 - name: sheetload_headcount
@@ -62,6 +64,7 @@ models:
 - name: sheetload_osat
 - name: sheetload_planned_values
 - name: sheetload_procurement_cost_savings
+- name: sheetload_product_maturity_historical
 - name: sheetload_release_blog_posts
 - name: sheetload_rep_quotas_full_fy2020
 - name: sheetload_rep_quotas_full_ps_fy2020

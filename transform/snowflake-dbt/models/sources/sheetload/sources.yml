@@ -25,6 +25,7 @@ sources:
       - name: compensation_certificate
       - name: data_team_capacity
       - name: days_to_close
+      - name: dev_section_metrics
       - name: employee_location_factor
       - name: engineering_speciality_prior_to_capture
       - name: gitlab_slack_stats
@@ -53,6 +54,7 @@ sources:
       - name: osat
       - name: planned_values
       - name: procurement_cost_savings
+      - name: product_maturity_historical 
       - name: release_blog_posts
       - name: rep_quotas_full_fy2020
       - name: rep_quotas_full_ps_fy2020

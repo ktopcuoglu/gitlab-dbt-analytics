@@ -2,7 +2,7 @@
 
 WITH usage_data AS (
 
-    SELECT {{ dbt_utils.star(from=ref('version_usage_data'), except=['LICENSE_ID', 'LICENSE_STARTS_AT', 'LICENSE_EXPIRES_AT']) }}
+    SELECT {{ dbt_utils.star(from=ref('version_usage_data'), except=['LICENSE_STARTS_AT', 'LICENSE_EXPIRES_AT']) }}
     FROM {{ ref('version_usage_data') }}
 
 ), licenses AS ( -- Licenses app doesn't alter rows after creation so the snapshot is not necessary.
@@ -118,7 +118,7 @@ WITH usage_data AS (
         {{ "," if not loop.last }}
       {% endfor %}
     FROM unpacked
-    {{ dbt_utils.group_by(n=72) }}
+    {{ dbt_utils.group_by(n=69) }}
 
 
 )

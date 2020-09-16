@@ -1,4 +1,4 @@
-{% docs arr_data_mart %}
+{% docs mart_arr %}
 
 Data mart to explore ARR. This model is built using the same logic as the Zuora UI out of the box MRR Trend Report. The report looks at the charges associated with subscriptions, along with their effective dates and subscription statuses, and calculates ARR.
 
@@ -7,7 +7,7 @@ The below query will pull ARR by month. You can add additional dimensions to the
 SELECT
   arr_month,
   SUM(arr)  AS arr
-FROM "ANALYTICS"."ANALYTICS"."ARR_DATA_MART"
+FROM "ANALYTICS"."ANALYTICS"."MART_ARR"
 WHERE arr_month < DATE_TRUNC('month',CURRENT_DATE)
 GROUP BY 1
 ORDER BY 1 DESC
@@ -22,16 +22,16 @@ Here is an image documenting the ERD for this table:
 
 {% enddocs %}
 
-{% docs arr_data_mart_incr %}
+{% docs mart_arr_incr %}
 
-Keeps daily snapshots of arr_data_mart. This allows to query ARR from a historical perspective. 
+Keeps daily snapshots of mart_arr. This allows to query ARR from a historical perspective. 
 
 The below query will pull ARR by month as observed on selected snapshot_date.
 
 SELECT
   arr_month,
   SUM(arr)  AS arr
-FROM "ANALYTICS"."ANALYTICS"."ARR_DATA_MART"
+FROM "ANALYTICS"."ANALYTICS"."MART_ARR_INCR"
 WHERE arr_month < DATE_TRUNC('month',CURRENT_DATE)
 GROUP BY 1
 ORDER BY 1 DESC
