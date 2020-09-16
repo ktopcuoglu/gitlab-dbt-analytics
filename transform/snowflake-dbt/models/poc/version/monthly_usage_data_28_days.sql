@@ -1,4 +1,3 @@
-
 WITH data AS ( 
   
     SELECT * 
