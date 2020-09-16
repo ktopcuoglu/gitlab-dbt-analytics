@@ -30,10 +30,15 @@ WITH sfdc_opportunity AS (
   FROM sfdc_opportunity
   INNER JOIN first_contact_roles 
     ON sfdc_opportunity.opportunity_id = first_contact_roles.opportunity_id 
-	  AND row_num = 1
+      AND row_num = 1
   WHERE sfdc_opportunity.sales_accepted_date IS NOT NULL
     AND is_edu_oss = 0
-	AND order_type = '1. New - First Order'
+    AND stage_name != '10-Duplicate'
+    AND sales_qualified_source IN (
+                                  'SDR Generated'
+                                  , 'BDR Generated'
+                                  )
+
 )
 
 SELECT *
