@@ -9,7 +9,7 @@ models:
         tests:
           - not_null
           - unique
-      - name: billing_crm_id
+      - name: crm_account_id
         description: CRM account ID for the account
       - name: account_number
         description: A unique Zuora account number
