@@ -1,7 +1,8 @@
 
 WITH data AS ( 
   
-    SELECT * FROM {{ ref('usage_data_28_days_flattened')}}
+    SELECT * 
+    FROM {{ ref('usage_data_28_days_flattened')}}
 
 )
 
