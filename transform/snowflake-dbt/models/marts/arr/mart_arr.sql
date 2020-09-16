@@ -36,7 +36,7 @@ WITH dim_accounts AS (
 
 SELECT
   --primary_key
-  fct_mrr.mrr_id,
+  fct_mrr.mrr_id AS primary_key,
 
   --date info
   dim_dates.date_actual AS arr_month,

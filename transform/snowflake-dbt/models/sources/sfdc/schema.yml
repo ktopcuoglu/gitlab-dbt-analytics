@@ -13,6 +13,12 @@ models:
         - name: is_sdr_target_account
           tests:
               - not_null
+        - name: tsp_max_hierarchy_sales_segment
+          description: Maximum account sales segment within the account hierarchy.      
+        - name: division_sales_segment
+          description: Sales segment of the specific account.
+        - name: ultimate_parent_sales_segment
+          description: Sales segment of the parent of the account hierarchy.
   - name: sfdc_account_history_source
     description: Source model for SFDC Account History
     columns:
@@ -166,6 +172,8 @@ models:
               - relationships:
                     to: ref('sfdc_opportunity_stage')
                     field: primary_label
+        - name: division_sales_segment_stamped
+          description: Stamped version of the account division sales segment.
         - name: dr_partner_deal_type
           description: Map field from Lead object during conversion. Lead Field Name = [Partners] Deal Registration Type
         - name: dr_partner_engagement

@@ -34,8 +34,6 @@ WITH source AS (
       technical_account_manager_lu__c            AS technical_account_manager_id,
 
       -- info
-      ultimate_parent_sales_segment_employees__c AS sales_segment,
-      sales_segmentation_new__c                  AS account_segment,
       {{target.schema}}_staging.id15to18(substring(regexp_replace(ultimate_parent_account__c,
                      '_HL_ENCODED_/|<a\\s+href="/', ''), 0, 15))
                                                  AS ultimate_parent_account_id,
@@ -62,7 +60,6 @@ WITH source AS (
       atam_next_owner_team__c                    AS tsp_next_owner_team,
       atam_account_employees__c                  AS tsp_account_employees,
       jb_max_family_employees__c                 AS tsp_max_family_employees,
-      jb_test_sales_segment__c                   AS tsp_test_sales_segment,
       atam_region__c                             AS tsp_region,
       atam_sub_region__c                         AS tsp_sub_region,
       atam_area__c                               AS tsp_area,
@@ -110,6 +107,20 @@ WITH source AS (
       sessions__c                                AS demandbase_sessions,
       trending_offsite_intent__c                 AS demandbase_trending_offsite_intent,
       trending_onsite_engagement__c              AS demandbase_trending_onsite_engagement,
+
+      -- sales segment fields
+      ultimate_parent_sales_segment_employees__c AS ultimate_parent_sales_segment,
+      sales_segmentation_new__c                  AS division_sales_segment,
+      jb_test_sales_segment__c                   AS tsp_max_hierarchy_sales_segment,
+
+      -- ************************************
+      -- sales segmentation deprecated fields - 2020-09-03
+      -- left temporary for the sake of MVC and avoid breaking SiSense existing charts
+      jb_test_sales_segment__c                   AS tsp_test_sales_segment,
+      ultimate_parent_sales_segment_employees__c AS sales_segment,
+      sales_segmentation_new__c                  AS account_segment,
+
+     -- ************************************
 
       -- metadata
       createdbyid                                AS created_by_id,
