@@ -72,7 +72,7 @@ Cc @Jake Bielecki, @Matt Benzaquen, @Jack Brennan, @Craig Mestel
 
 Message: We have identified a delay in the `Zuora` data refresh and this problem potentially impacts any Financial KPIs or SiSense dashboards. We are actively working on a resolution and will provide an update once the KPIs and SiSense dashboards have been brought up-to-date.  
 
-Cc @Craig Mestel
+Cc @Jake Bielecki, @Matt Benzaquen, @Jack Brennan, @Craig Mestel
 
 ### GitLab Data Refresh Delay
 
