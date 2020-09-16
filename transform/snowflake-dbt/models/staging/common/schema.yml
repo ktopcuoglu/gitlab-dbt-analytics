@@ -4,7 +4,7 @@ models:
   - name: dim_billing_accounts
     description: '{{ doc("dim_billing_accounts") }}'
     columns:
-      - name: account_id
+      - name: billing_account_id
         description: Unique id of the Zuora account
         tests:
           - not_null
@@ -219,7 +219,7 @@ models:
           - not_null
       - name: crm_account_id
         description: account id from SFDC identifing the customer
-      - name: account_id
+      - name: billing_account_id
         description: The id of the Zuora account the subscription is associated with
       - name: subscription_name_slugify
         description: The unique identifier of the subscription
@@ -416,7 +416,7 @@ models:
         description: The identifier of product details in dim_product_details
         tests:
           - not_null
-      - name: account_id
+      - name: billing_account_id
         description: Zuora account id
       - name:  crm_account_id
         description: account id frm crm
@@ -445,7 +445,7 @@ models:
         description: The md5 hash of the license file. Use this field to join to dim_licenses.
       - name: subscription_id
         description: The zuora subscription id derived from the license. Use this field to join to dim_subscriptions.
-      - name: account_id
+      - name: billing_account_id
         description: The zuora account id associated with the subscription. Use this field to join to dim_billing_accounts.
       - name: array_product_details_id  
         description: The array of distinct product detail ids associated with the subscription. Use this field to join to dim_product_details.
