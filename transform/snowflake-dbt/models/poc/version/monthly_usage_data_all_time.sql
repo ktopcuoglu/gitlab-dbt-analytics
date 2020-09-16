@@ -1,6 +1,7 @@
 WITH data AS ( 
   
-    SELECT * FROM {{ ref('usage_data_all_time_flattened')}}
+    SELECT * 
+    FROM {{ ref('usage_data_all_time_flattened')}}
 
 )
 
