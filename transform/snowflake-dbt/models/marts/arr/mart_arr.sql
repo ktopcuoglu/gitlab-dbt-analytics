@@ -81,7 +81,7 @@ SELECT
   INNER JOIN dim_product_details
     ON dim_product_details.product_details_id = fct_mrr.product_details_id
   INNER JOIN dim_billing_accounts
-    ON dim_billing_accounts.billing_account_id= fct_mrr.account_id
+    ON dim_billing_accounts.billing_account_id= fct_mrr.billing_account_id
   INNER JOIN dim_dates
     ON dim_dates.date_id = fct_mrr.date_id
   LEFT JOIN dim_crm_accounts
