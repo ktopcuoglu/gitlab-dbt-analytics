@@ -90,7 +90,7 @@ Those metrics sent could be of various types:
 * 28_days counters (how many users have created at least one issue over the last 4 months)
 * an instance configuration parameter (has this instance enabled saml/sso)
 
-This model extracts the 28-days counters (based on the mapping table in this spreadsheet) and flattens the json. 
+This model extracts the all-time counters (based on the mapping table in this spreadsheet) and flattens the json. 
 
 The models transforms this json:
 
