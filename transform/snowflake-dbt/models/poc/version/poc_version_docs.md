@@ -8,7 +8,7 @@ This model transforms 28_days counters stored in the usage data payload into mon
 
 {% docs monthly_usage_data_all_time %}
 
-This model transforms all_time counters stored in the usage data payload into monthly proxies. To do so the logic is followed is:
+This model transforms all_time counters stored in the usage data payload into monthly proxies. To do so the logic is as follows:
 
 * For one specific instance (instance_uid), one specific metric (metrics_name) and one specific month M, take the latest received data
 * Compare this data point with the one received one month before, we have 3 scenarios:
