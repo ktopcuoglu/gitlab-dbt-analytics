@@ -7,18 +7,18 @@ WITH source AS (
 ), renamed AS (
 
     SELECT DISTINCT
-      id::NUMBER                                     AS order_id,
-      customer_id::NUMBER                            AS customer_id,
+      id::NUMBER                                      AS order_id,
+      customer_id::NUMBER                             AS customer_id,
       product_rate_plan_id::VARCHAR                   AS product_rate_plan_id,
       subscription_id::VARCHAR                        AS subscription_id,
       subscription_name::VARCHAR                      AS subscription_name,
       {{zuora_slugify("subscription_name")}}::VARCHAR AS subscription_name_slugify,
       start_date::TIMESTAMP                           AS order_start_date,
       end_date::TIMESTAMP                             AS order_end_date,
-      quantity::NUMBER                               AS order_quantity,
+      quantity::NUMBER                                AS order_quantity,
       created_at::TIMESTAMP                           AS order_created_at,
       updated_at::TIMESTAMP                           AS order_updated_at,
-      NULLIF(gl_namespace_id, '')::VARCHAR            AS gitlab_namespace_id,
+      NULLIF(gl_namespace_id::INTEGER, '')::VARCHAR   AS gitlab_namespace_id,
       NULLIF(gl_namespace_name, '')::VARCHAR          AS gitlab_namespace_name,
       amendment_type::VARCHAR                         AS amendment_type,
       trial::BOOLEAN                                  AS order_is_trial,
