@@ -57,6 +57,13 @@ models:
       tests:
       - not_null
       - unique
+- name: sheetload_dev_section_metrics_source
+  description: dev section metrics used to create the Dev Section Dashboard 
+  columns:
+    - name: metrics_path
+      tests:
+      - not_null
+      - unique
 - name: sheetload_gitlab_slack_stats_source
   description: This is the source of Slack usage statistics exported from the [Analytics dashboard](https://slack.com/help/articles/218407447-view-your-slack-analytics-dashboard).
   columns:
