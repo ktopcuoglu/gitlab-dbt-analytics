@@ -183,7 +183,7 @@ SELECT
             ELSE 0 END                                                                                  AS net_iacv,
         CASE WHEN h.stage_name IN ('8-Closed Lost', 'Closed Lost') 
                 AND h.sales_type = 'Renewal'      
-                    THEN h.Renewal_acv*-1
+                    THEN h.renewal_acv*-1
             WHEN h.stage_name IN ('Closed Won') AND h.forecasted_iacv < 0                           
                     THEN h.forecasted_iacv
             ELSE 0 END                                                                                  AS churn_only
