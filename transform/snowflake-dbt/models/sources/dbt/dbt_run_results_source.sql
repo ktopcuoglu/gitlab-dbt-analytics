@@ -37,7 +37,8 @@ WITH source AS (
       timing.value['completed_at']::TIMESTAMP       AS compilation_completed_at,
       {{ dbt_utils.surrogate_key([
           'unique_id', 
-          'compilation_started_at'
+          'compilation_started_at',
+          'uploaded_at'
           ]) }}                                     AS run_unique_key
     FROM flattened
     LEFT JOIN LATERAL FLATTEN(INPUT => data_by_row['timing']::ARRAY, outer => true) timing
