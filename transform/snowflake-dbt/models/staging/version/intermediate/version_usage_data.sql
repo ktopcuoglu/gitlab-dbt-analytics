@@ -3,7 +3,7 @@
     })
 }}
 
-WITH source AS (
+WITH usage_data AS (
 
     SELECT
       *,
@@ -22,5 +22,22 @@ WITH source AS (
 
 )
 
+, raw_usage_data AS (
+
+    SELECT *
+    FROM {{ ref('version_raw_usage_data_source') }}
+
+)
+
+, joined AS (
+
+    SELECT 
+      usage_data.*,
+      raw_usage_data.payload
+    FROM usage_data
+    LEFT JOIN raw_usage_data
+      ON usage_data.raw_usage_data_id = raw_usage_data.raw_usage_data_id
+)
+
 SELECT *
-FROM source
+FROM joined
