@@ -26,6 +26,7 @@ sources:
       - name: data_team_capacity
       - name: days_to_close
       - name: employee_location_factor
+      - name: engineering_speciality_prior_to_capture
       - name: gitlab_slack_stats
       - name: google_referrals
       - name: headcount

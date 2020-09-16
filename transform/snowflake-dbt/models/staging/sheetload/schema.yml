@@ -40,6 +40,7 @@ models:
 - name: sheetload_compensation_certificate
 - name: sheetload_data_team_capacity
 - name: sheetload_days_to_close
+- name: sheetload_engineering_speciality_prior_to_capture
 - name: sheetload_gitlab_slack_stats
 - name: sheetload_google_referrals
 - name: sheetload_headcount

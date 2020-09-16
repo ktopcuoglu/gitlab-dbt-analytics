@@ -57,6 +57,7 @@ models:
       tests:
       - not_null
       - unique
+- name: engineering_speciality_prior_to_capture_source     
 - name: sheetload_gitlab_slack_stats_source
   description: This is the source of Slack usage statistics exported from the [Analytics dashboard](https://slack.com/help/articles/218407447-view-your-slack-analytics-dashboard).
   columns:
