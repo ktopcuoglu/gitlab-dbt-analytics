@@ -66,7 +66,7 @@ In addition to these tasks the Data Engineer on triage should be focused on reso
 
 Message: We have identified a delay in the `Salesforce` data refresh and this problem potentially impacts any Sales related KPIs or SiSense dashboards. We are actively working on a resolution and will provide an update once the KPIs and SiSense dashboards have been brought up-to-date.
 
-Cc @Jake Bielecki, @Matt Benzaquen, @Jack Brennan
+Cc @Jake Bielecki, @Matt Benzaquen, @Jack Brennan, @Craig Mestel
 
 ### Zuora Data Refresh Delay
 
