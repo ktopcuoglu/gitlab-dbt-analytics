@@ -33,7 +33,7 @@ WITH usage_data AS (
 
     SELECT 
       usage_data.*,
-      raw_usage_data.payload
+      raw_usage_data.raw_usage_data_payload
     FROM usage_data
     LEFT JOIN raw_usage_data
       ON usage_data.raw_usage_data_id = raw_usage_data.raw_usage_data_id
