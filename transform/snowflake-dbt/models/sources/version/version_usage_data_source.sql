@@ -12,7 +12,6 @@ WITH source AS (
     WHERE updated_at >= (SELECT MAX(updated_at) FROM {{this}})
     {% endif %}
 
-
 ), renamed AS (
 
     SELECT
