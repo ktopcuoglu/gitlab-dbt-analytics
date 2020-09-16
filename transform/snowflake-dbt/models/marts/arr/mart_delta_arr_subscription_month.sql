@@ -55,20 +55,38 @@ WITH dim_accounts AS (
     LEFT JOIN dim_customers
       ON dim_accounts.crm_id = dim_customers.crm_id
 
-), base AS (
+), max_min_month AS (
 
-    SELECT DISTINCT
-      date_actual                       AS arr_month,
+    SELECT
       ultimate_parent_account_name,
       ultimate_parent_account_id,
       crm_id,
       subscription_name,
-      subscription_id
+      subscription_id,
+      MIN(arr_month)                      AS date_month_start,
+      --add 1 month to generate churn month
+      DATEADD('month',1,MAX(arr_month))   AS date_month_end
     FROM mart_arr
-    CROSS JOIN dim_dates
-    WHERE day_of_month = 1
-      AND date_actual < DATE_TRUNC('month',CURRENT_DATE)
-    ORDER BY 2, 1 DESC
+    {{ dbt_utils.group_by(n=5) }}
+
+), base AS (
+
+    SELECT
+      ultimate_parent_account_name,
+      ultimate_parent_account_id,
+      crm_id,
+      subscription_name,
+      subscription_id,
+      dim_dates.date_actual         AS arr_month,
+      dim_dates.fiscal_quarter_name_fy,
+      dim_dates.fiscal_year
+    FROM max_min_month
+    INNER JOIN dim_dates
+      -- all months after start date
+      ON  dim_dates.date_actual >= max_min_month.date_month_start
+      -- up to and including end date
+      AND dim_dates.date_actual <=  max_min_month.date_month_end
+      AND day_of_month = 1
 
 ), monthly_arr_subscription_level AS (
 
