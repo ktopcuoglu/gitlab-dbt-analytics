@@ -40,8 +40,6 @@ models:
     tests:
     - not_null
   - name: day_of_the_week
-    tests:
-    - not_null
   - name: call_time
     tests:
     - not_null
