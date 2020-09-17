@@ -46,8 +46,8 @@ WITH dim_dates AS (
 ), rate_plan_charge_filtered AS (
 
   SELECT
-    zuora_account.account_id,
-    zuora_account.crm_id,
+    zuora_account.account_id                           AS billing_account_id,
+    zuora_account.crm_id                               AS crm_account_id,
     zuora_subscription_snapshots.subscription_id,
     zuora_rate_plan_charge.product_rate_plan_charge_id AS product_details_id,
     zuora_rate_plan_charge.mrr,
@@ -75,8 +75,8 @@ WITH dim_dates AS (
 
   SELECT
     dim_dates.date_id,
-    account_id,
-    crm_id,
+    billing_account_id,
+    crm_account_id,
     subscription_id,
     product_details_id,
     SUM(mrr)                                             AS mrr,
