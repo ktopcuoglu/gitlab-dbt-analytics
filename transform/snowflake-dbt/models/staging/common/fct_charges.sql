@@ -49,5 +49,10 @@ WITH zuora_rate_plan AS (
 
 )
 
-SELECT *
-FROM base_charges
+{{ dbt_audit(
+    "base_charges",
+    "@msendal",
+    "@msendal",
+    "2020-06-01",
+    "2020-09-17"
+) }}

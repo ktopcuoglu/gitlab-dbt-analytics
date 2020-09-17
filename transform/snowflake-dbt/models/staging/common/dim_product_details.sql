@@ -55,8 +55,13 @@ WITH zuora_product AS (
 
 )
 
-SELECT *
-FROM joined
+{{ dbt_audit(
+    "joined",
+    "@msendal",
+    "@msendal",
+    "2020-06-01",
+    "2020-09-17"
+) }}
 
 
 

@@ -14,25 +14,34 @@ WITH zuora_account AS (
       account_id
     FROM {{ref('zuora_excluded_accounts')}}
 
+), filtered AS (
+
+  SELECT
+    zuora_account.account_id,
+    zuora_account.crm_id,
+    zuora_account.account_number,
+    zuora_account.account_name,
+    zuora_account.status          AS account_status,
+    zuora_account.parent_id,
+    zuora_account.sfdc_account_code,
+    zuora_account.currency        AS account_currency,
+    zuora_contact.country         AS sold_to_country,
+    zuora_account.is_deleted,
+    zuora_account.account_id IN (
+                                  SELECT
+                                    account_id
+                                  FROM excluded_accounts
+                                ) AS is_excluded
+  FROM zuora_account
+  LEFT JOIN zuora_contact
+    ON COALESCE(zuora_account.sold_to_contact_id, zuora_account.bill_to_contact_id) = zuora_contact.contact_id
+  WHERE zuora_account.is_deleted = FALSE
 )
 
-SELECT
-  zuora_account.account_id,
-  zuora_account.crm_id,
-  zuora_account.account_number,
-  zuora_account.account_name,
-  zuora_account.status          AS account_status,
-  zuora_account.parent_id,
-  zuora_account.sfdc_account_code,
-  zuora_account.currency        AS account_currency,
-  zuora_contact.country         AS sold_to_country,
-  zuora_account.is_deleted,
-  zuora_account.account_id IN (
-                                SELECT
-                                  account_id
-                                FROM excluded_accounts
-                              ) AS is_excluded
-FROM zuora_account
-LEFT JOIN zuora_contact
-  ON COALESCE(zuora_account.sold_to_contact_id, zuora_account.bill_to_contact_id) = zuora_contact.contact_id
-WHERE zuora_account.is_deleted = FALSE
+{{ dbt_audit(
+    "filtered",
+    "@msendal",
+    "@msendal",
+    "2020-07-20",
+    "2020-09-17"
+) }}
