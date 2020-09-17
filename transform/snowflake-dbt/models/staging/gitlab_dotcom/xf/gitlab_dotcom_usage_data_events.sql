@@ -24,9 +24,7 @@
     "key_to_parent_project": "project_id",
     "primary_key": "event_id",
     "stage_name": "create",
-    "is_representative_of_stage": "True",
-    "group": "gitaly",
-    "gmau": "True"
+    "is_representative_of_stage": "True"
   }, {
     "event_name": "action_monthly_active_users_design_management",
     "source_table_name": "gitlab_dotcom_events",
