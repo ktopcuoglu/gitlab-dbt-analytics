@@ -42,7 +42,7 @@ WITH all_hashed_ips_version_usage AS (
 )
 
 {{ dbt_audit(
-    "renamed",
+    "newly_mapped_ips",
     "@m_walker",
     "@msendal",
     "2020-08-25",
