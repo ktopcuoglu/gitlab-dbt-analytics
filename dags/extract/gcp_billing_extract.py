@@ -44,7 +44,10 @@ default_args = {
 }
 
 dag = DAG(
-    "gcp_billing_extract", default_args=default_args, schedule_interval="20 1/3 * * *"
+    "gcp_billing_extract",
+    default_args=default_args,
+    schedule_interval="20 1/3 * * *",
+    concurrency=1,
 )
 
 

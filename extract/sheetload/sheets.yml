@@ -23,6 +23,10 @@ sheets:
     owner: '@pluthra'
     tabs:
       - company_call_attendance
+  - name: days_sales_outstanding
+    owner: '@s_mccauley'
+    tabs:
+      - days_sales_outstanding
   - name: days_to_close
     owner: '@iweeks'
     tabs:
@@ -172,5 +176,5 @@ sheets:
   - name: engineering_speciality_prior_to_capture
     owner: '@pluthra'
     tabs: 
-      - speciality
+      - engineering_speciality_prior_to_capture
 
