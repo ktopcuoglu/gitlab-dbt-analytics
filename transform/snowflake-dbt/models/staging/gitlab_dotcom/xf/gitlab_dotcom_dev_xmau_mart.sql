@@ -32,6 +32,14 @@
     "gmau": "True"
   },
   {
+    "event_name": "requirements",
+    "events_to_include": ["requirements"],
+    "stage_name": "plan",
+    "smau": "False",
+    "group_name": "certify",
+    "gmau": "True"
+  },
+  {
     "event_name": "snippets",
     "events_to_include": ["snippets"],
     "stage_name": "create",
@@ -96,12 +104,12 @@ WITH skeleton AS (
       is_smau,
       group_name,
       is_gmau,
-      COUNT(DISTINCT user_id) AS total_user_count,
-      COUNT(DISTINCT IFF(plan_name_at_event_date='free',user_id)) AS free_user_count,
-      COUNT(DISTINCT IFF(plan_name_at_event_date IN ('bronze', 'silver', 'gold'), user_id)) AS paid_user_count,
-      COUNT(DISTINCT namespace_id) AS total_namespace_count,
-      COUNT(DISTINCT IFF(plan_name_at_event_date='free',namespace_id)) AS free_namespace_count,
-      COUNT(DISTINCT IFF(plan_name_at_event_date IN ('bronze', 'silver', 'gold'), namespace_id)) AS paid_namespace_count
+      COUNT(DISTINCT user_id)                                                                           AS total_user_count,
+      COUNT(DISTINCT IFF(plan_name_at_event_date='free',user_id, NULL))                                 AS free_user_count,
+      COUNT(DISTINCT IFF(plan_name_at_event_date IN ('bronze', 'silver', 'gold'), user_id, NULL))       AS paid_user_count,
+      COUNT(DISTINCT namespace_id)                                                                      AS total_namespace_count,
+      COUNT(DISTINCT IFF(plan_name_at_event_date='free',namespace_id, NULL))                            AS free_namespace_count,
+      COUNT(DISTINCT IFF(plan_name_at_event_date IN ('bronze', 'silver', 'gold'), namespace_id, NULL))  AS paid_namespace_count
     FROM skeleton
     LEFT JOIN unioned
         ON event_date BETWEEN DATEADD('days', -28, last_day_of_month) AND last_day_of_month
