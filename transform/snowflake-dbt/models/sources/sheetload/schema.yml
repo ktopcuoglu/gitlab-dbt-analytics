@@ -36,8 +36,6 @@ models:
   description: This spreadsheet contains data from company call attendance (also called the "Take a Break Call"). The People Experience team pulls their data and updates their spreadsheet, which is imported into the sheetload sheet.
   columns:
   - name: call_date
-    tests:
-    - not_null
   - name: meeting_topic
     tests:
     - not_null
