@@ -2,7 +2,7 @@
 
 WITH usage_data AS (
 
-    SELECT {{ dbt_utils.star(from=ref('version_usage_data'), except=['LICENSE_STARTS_AT', 'LICENSE_EXPIRES_AT']) }}
+    SELECT {{ dbt_utils.star(from=ref('version_usage_data'), except=['LICENSE_STARTS_AT', 'LICENSE_EXPIRES_AT', RAW_USAGE_DATA_PAYLOAD]) }}
     FROM {{ ref('version_usage_data') }}
 
 ), licenses AS ( -- Licenses app doesn't alter rows after creation so the snapshot is not necessary.
@@ -62,7 +62,7 @@ WITH usage_data AS (
 ), unpacked AS (
 
     SELECT
-      {{ dbt_utils.star(from=ref('version_usage_data'), except=['stats_used']) }},
+      {{ dbt_utils.star(from=ref('version_usage_data'), except=['stats_used, raw_usage_data_payload']) }},
       CASE
         WHEN uuid = 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f' THEN 'SaaS'
         ELSE 'Self-Managed'
@@ -99,7 +99,7 @@ WITH usage_data AS (
 ), final AS (
 
     SELECT
-      {{ dbt_utils.star(from=ref('version_usage_data'), except=['stats_used']) }},
+      {{ dbt_utils.star(from=ref('version_usage_data'), except=['stats_used', 'raw_usage_data_payload']) }},
       unpacked.usage_activity_by_stage_monthly['manage']['events'] AS monthly_active_users_last_28_days,
       unpacked.ping_source,
       unpacked.main_edition,
