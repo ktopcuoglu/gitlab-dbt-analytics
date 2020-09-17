@@ -59,8 +59,8 @@ billing_extract_command = (
 billing_operator = KubernetesPodOperator(
     **gitlab_defaults,
     image=DATA_IMAGE,
-    task_id="gcp-billing-extract",
-    name="gcp-billing-extract",
+    task_id="gcp-billing-extract-partition",
+    name="gcp-billing-extract-partition",
     secrets=[
         GCP_BILLING_ACCOUNT_CREDENTIALS,
         SNOWFLAKE_ACCOUNT,
