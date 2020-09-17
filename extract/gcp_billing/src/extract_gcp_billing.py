@@ -84,7 +84,7 @@ if __name__ == "__main__":
         job_config=bigquery.QueryJobConfig(use_legacy_sql=False),
     )
 
-    file_names = write_date_json(end_time, df_result)
+    file_names = write_date_json(start_time, df_result)
 
     for file_name in file_names:
         snowflake_stage_load_copy_remove(
