@@ -108,6 +108,7 @@ WITH source AS (
         true_up_value__c                            AS true_up_value,
         order_type_live__c                          AS order_type_live,
         order_type_test__c                          AS order_type_stamped,
+        arr_net__c                                  AS net_arr,
 
       -- ************************************
       -- sales segmentation deprecated fields - 2020-09-03
