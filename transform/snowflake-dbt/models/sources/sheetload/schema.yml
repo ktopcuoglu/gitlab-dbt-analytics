@@ -50,6 +50,13 @@ models:
   - name: count_of_participants
     tests:
     - not_null
+- name: sheetload_days_sales_outstanding_source
+  description: Days sales outstanding = Total Ending AR / Total Credit Sales (billing) x Number of Days in the Period
+  columns:
+    - name: period
+      tests:
+      - not_null
+      - unique
 - name: sheetload_days_to_close_source
   description: Days for accounting to close the books in Netsuite.
   columns:
@@ -58,7 +65,7 @@ models:
       - not_null
       - unique
 - name: sheetload_dev_section_metrics_source
-  description: dev section metrics used to create the Dev Section Dashboard 
+  description: dev section metrics used to create the Dev Section Dashboard
   columns:
     - name: metrics_path
       tests:
@@ -256,7 +263,7 @@ models:
       - not_null
       - unique
 - name: sheetload_product_maturity_historical_source
-  description: This captures the categories_yaml file for FY 2021 Q1 and Q2.      
+  description: This captures the categories_yaml file for FY 2021 Q1 and Q2.
 - name: sheetload_rep_quotas_full_fy2020_source
   description: This is the model that captures sales data for rep quotas for the full fy2020.
 - name: sheetload_osat_source
