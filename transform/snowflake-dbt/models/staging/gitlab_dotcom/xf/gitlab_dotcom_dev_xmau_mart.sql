@@ -30,6 +30,14 @@
     "smau": "False",
     "group_name": "source_code",
     "gmau": "True"
+  },
+  {
+    "event_name": "snippets",
+    "events_to_include": ["snippets"],
+    "stage_name": "create",
+    "smau": "False",
+    "group_name": "editor",
+    "gmau": "True"
   }
 ]
 -%}
@@ -54,11 +62,12 @@ WITH skeleton AS (
       plan_name_at_event_date,
       plan_id_at_event_date,
       namespace_is_internal,
-      '{{ event_cte.event_name }}'       AS stage_name,
+      '{{ event_cte.event_name }}'       AS event_name,
       '{{ event_cte.stage_name }}'       AS stage_name,
       {{ event_cte.smau }}::BOOLEAN      AS is_smau,
       '{{ event_cte.group_name }}'       AS group_name,
-      {{ event_cte.gmau }}::BOOLEAN      AS is_gmau
+      {{ event_cte.gmau }}::
+      BOOLEAN      AS is_gmau
     FROM {{ ref('gitlab_dotcom_daily_usage_data_events') }}
     WHERE event_name IN (
       {% for event_to_include in event_cte.events_to_include %}
