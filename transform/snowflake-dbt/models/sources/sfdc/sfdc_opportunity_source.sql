@@ -107,7 +107,7 @@ WITH source AS (
         end_date__c                                 AS subscription_end_date,
         true_up_value__c                            AS true_up_value,
         order_type_live__c                          AS order_type_live,
-
+        order_type_test__c                          AS order_type_stamped,
 
       -- ************************************
       -- sales segmentation deprecated fields - 2020-09-03
