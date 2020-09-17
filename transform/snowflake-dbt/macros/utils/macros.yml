@@ -20,7 +20,7 @@ macros:
         description: The GitLab handle of the original model creator
       - name: updated_by
         type: string
-        description: The GitLab handle of the original model creator
+        description: The GitLab handle of the model editor
       - name: created_date
         type: date
         description: Manually input ISO date of when model was original created
