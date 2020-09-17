@@ -1,20 +1,12 @@
-{{
-  config( materialized='ephemeral')
-}}
-
 WITH zuora_account AS (
 
     SELECT *
-    FROM {{ ref('zuora_account_snapshots_source') }}
-    WHERE '{{ var('valid_at') }}'::TIMESTAMP_TZ >= dbt_valid_from
-      AND '{{ var('valid_at') }}'::TIMESTAMP_TZ < {{ coalesce_to_infinity('dbt_valid_to') }}
+    FROM {{ ref('zuora_account_source') }}
 
 ), zuora_contact AS (
 
     SELECT *
-    FROM {{ ref('zuora_contact_snapshots_source') }}
-    WHERE '{{ var('valid_at') }}'::TIMESTAMP_TZ >= dbt_valid_from
-      AND '{{ var('valid_at') }}'::TIMESTAMP_TZ < {{ coalesce_to_infinity('dbt_valid_to') }}
+    FROM {{ ref('zuora_contact_source') }}
 
 ), excluded_accounts AS (
 
@@ -25,10 +17,10 @@ WITH zuora_account AS (
 )
 
 SELECT
-  zuora_account.account_id,
-  zuora_account.crm_id,
-  zuora_account.account_number,
-  zuora_account.account_name,
+  zuora_account.account_id      AS billing_account_id,
+  zuora_account.crm_id          AS crm_account_id,
+  zuora_account.account_number  AS billing_account_number,
+  zuora_account.account_name    AS billing_account_name,
   zuora_account.status          AS account_status,
   zuora_account.parent_id,
   zuora_account.sfdc_account_code,

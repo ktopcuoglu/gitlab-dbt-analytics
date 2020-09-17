@@ -6,7 +6,7 @@ WITH source AS (
 ), renamed AS (
 
     SELECT
-      "Date"::DATE         AS call_date,
+      TRY_TO_DATE("Date")  AS call_date,
       "Topic"::VARCHAR     AS meeting_topic,
       DAYNAME(call_date)   AS day_of_the_week,
       "Start_Time"         AS call_time,

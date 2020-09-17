@@ -62,27 +62,32 @@ In addition to these tasks the Data Engineer on triage should be focused on reso
 
 ## Data Notification Templates
 
-### Salesforce Data Refresh Delay
+Use these to notify stakeholders of Data Delays.
 
-Message: We have identified a delay in the `Salesforce` data refresh and this problem potentially impacts any Sales related KPIs or SiSense dashboards. We are actively working on a resolution and will provide an update once the KPIs and SiSense dashboards have been brought up-to-date.
+<details>
+<summary><i>Data Source Delay Templates</i></summary>
 
-Cc @Jake Bielecki, @Matt Benzaquen, @Jack Brennan, @Craig Mestel
-
-### Zuora Data Refresh Delay
-
-Message: We have identified a delay in the `Zuora` data refresh and this problem potentially impacts any Financial KPIs or SiSense dashboards. We are actively working on a resolution and will provide an update once the KPIs and SiSense dashboards have been brought up-to-date.  
-
-Cc @Jake Bielecki, @Matt Benzaquen, @Jack Brennan, @Craig Mestel
-
-### GitLab Data Refresh Delay
+### GitLab.com
 
 We have identified a delay in the `GitLab` data refresh and this problem potentially impacts any GitLab KPIs (e.g. MR Rate, TMAU) or SiSense dashboards. We are actively working on a resolution and will provide an update once the KPIs and SiSense dashboards have been brought up-to-date.  
 
-Cc @Mek Stittri, @Christopher Lefelhocz, @Hila Qu
+`CC @Mek Stittri, @Christopher Lefelhocz, @Hila Qu`
 
-### Generic Data Refresh Delay
+### Salesforce
+
+Message: We have identified a delay in the `Salesforce` data refresh and this problem potentially impacts any Sales related KPIs or SiSense dashboards. We are actively working on a resolution and will provide an update once the KPIs and SiSense dashboards have been brought up-to-date.
+
+`CC @Jake Bielecki, @Matt Benzaquen, @Jack Brennan, @Craig Mestel`
+
+### Zuora
+
+Message: We have identified a delay in the `Zuora` data refresh and this problem potentially impacts any Financial KPIs or SiSense dashboards. We are actively working on a resolution and will provide an update once the KPIs and SiSense dashboards have been brought up-to-date.  
+
+`CC @Jake Bielecki, @Matt Benzaquen, @Jack Brennan, @Craig Mestel`
+
+### General
 
 We have identified a delay in the `DATA SOURCE` data refresh. We are actively working on a resolution and will provide an update once data has been brought up-to-date. 
-
+</details>
 
 /label ~"workflow::In dev" ~"Housekeeping" ~"Data Team" ~"Documentation" ~"Triage" ~"Priority::1-Ops"
