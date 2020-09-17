@@ -40,5 +40,10 @@ SELECT
 
 )
 
-SELECT *
-FROM marketing_qualification_events
+{{ dbt_audit(
+    "marketing_qualification_events",
+    "@jjstark ",
+    "@msendal",
+    "2020-09-09",
+    "2020-09-17"
+) }}

@@ -35,6 +35,6 @@ WITH zuora_invoice_item AS (
     "invoice_charges",
     "@msendal",
     "@msendal",
-    "2020-06-01",
+    "2020-04-07",
     "2020-09-17"
 ) }}

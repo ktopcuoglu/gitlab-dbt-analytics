@@ -29,5 +29,11 @@ WITH sfdc_lead AS(
 
 )
 
-SELECT *
-FROM lead_conversion_event
+
+{{ dbt_audit(
+    "lead_conversion_event",
+    "@jjstark ",
+    "@msendal",
+    "2020-09-09",
+    "2020-09-17"
+) }}

@@ -74,5 +74,10 @@ WITH sfdc_leads AS (
   )
 )
 
-SELECT *
-FROM unioned
+{{ dbt_audit(
+    "unioned",
+    "@jjstark",
+    "@msendal",
+    "2020-09-10",
+    "2020-09-17"
+) }}

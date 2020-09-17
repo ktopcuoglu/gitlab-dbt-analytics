@@ -41,5 +41,10 @@ WITH sfdc_opportunity AS (
 
 )
 
-SELECT *
-FROM sales_accepted_opps
+{{ dbt_audit(
+    "sales_accepted_opps",
+    "@jjstark ",
+    "@msendal",
+    "2020-09-15",
+    "2020-09-17"
+) }}

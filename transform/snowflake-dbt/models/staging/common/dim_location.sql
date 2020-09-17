@@ -21,5 +21,11 @@ WITH maxmind_countries_source AS (
     WHERE country_iso_code IS NOT NULL
 ) 
 
-SELECT *
-FROM joined
+
+{{ dbt_audit(
+    "joined",
+    "@m_walker",
+    "@msendal",
+    "2020-08-25",
+    "2020-09-17"
+) }}

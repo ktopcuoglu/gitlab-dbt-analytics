@@ -106,7 +106,12 @@ WITH license AS (
       recorded_at
     FROM joined
 
-)  
+)
 
-SELECT *
-FROM renamed
+{{ dbt_audit(
+    "final",
+    "@derekatwood",
+    "@msendal",
+    "2020-08-17",
+    "2020-09-17"
+) }}

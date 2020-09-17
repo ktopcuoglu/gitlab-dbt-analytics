@@ -100,6 +100,7 @@ WITH dim_dates AS (
   FROM mrr_month_by_month
 
 )
+
 {{ dbt_audit(
     "final",
     "@msendal",

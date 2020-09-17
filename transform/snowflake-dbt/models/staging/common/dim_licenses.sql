@@ -26,5 +26,11 @@ WITH licenses AS (
 
 )
 
-SELECT *
-FROM renamed
+
+{{ dbt_audit(
+    "renamed",
+    "@derekatwood",
+    "@msendal",
+    "2020-08-10",
+    "2020-09-17"
+) }}
