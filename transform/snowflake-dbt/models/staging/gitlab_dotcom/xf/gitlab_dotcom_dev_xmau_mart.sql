@@ -50,6 +50,11 @@ WITH skeleton AS (
     SELECT 
       user_id,
       namespace_id,
+      event_date,
+      plan_name_at_event_date,
+      plan_id_at_event_date,
+      namespace_is_internal,
+      '{{ event_cte.event_name }}'       AS stage_name,
       '{{ event_cte.stage_name }}'       AS stage_name,
       {{ event_cte.smau }}::BOOLEAN      AS is_smau,
       '{{ event_cte.group_name }}'       AS group_name,
@@ -83,9 +88,11 @@ WITH skeleton AS (
       group_name,
       is_gmau,
       COUNT(DISTINCT user_id) AS total_user_count,
-      COUNT(DISTINCT user_id) AS free_user_count,
-      COUNT(DISTINCT user_id) AS paid_user_count,
-      COUNT(DISTINCT namespace_id) AS total_namespace_id
+      COUNT(DISTINCT IFF(plan_name_at_event_date='free',user_id)) AS free_user_count,
+      COUNT(DISTINCT IFF(plan_name_at_event_date IN ('bronze', 'silver', 'gold'), user_id)) AS paid_user_count,
+      COUNT(DISTINCT namespace_id) AS total_namespace_count,
+      COUNT(DISTINCT IFF(plan_name_at_event_date='free',namespace_id)) AS free_namespace_count,
+      COUNT(DISTINCT IFF(plan_name_at_event_date IN ('bronze', 'silver', 'gold'), namespace_id)) AS paid_namespace_count
     FROM skeleton
     LEFT JOIN unioned
         ON event_date BETWEEN DATEADD('days', -28, last_day_of_month) AND last_day_of_month
