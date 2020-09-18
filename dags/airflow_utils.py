@@ -232,8 +232,7 @@ xl_warehouse = f"'{{warehouse_name: transforming_xl}}'"
 # git commands
 data_test_ssh_key_cmd = f"""
     mkdir ~/.ssh/ &&
-    touch ~/.ssh/id_rsa.pub && touch ~/.ssh/id_rsa && touch ~/.ssh/config &&
-    echo "$GIT_DATA_TESTS_PUBLIC_KEY" > ~/.ssh/id_rsa.pub && chmod 0400 ~/.ssh/id_rsa.pub &&
+    touch ~/.ssh/id_rsa && touch ~/.ssh/config &&
     echo "$GIT_DATA_TESTS_PRIVATE_KEY" > ~/.ssh/id_rsa && chmod 0400 ~/.ssh/id_rsa &&
     echo "$GIT_DATA_TESTS_CONFIG" > ~/.ssh/config"""
 
