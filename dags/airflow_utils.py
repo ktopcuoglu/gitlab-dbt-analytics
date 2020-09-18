@@ -236,6 +236,8 @@ clone_repo_cmd = f"""
     echo $GIT_DATA_TESTS_PUBLIC_KEY > ~/.ssh/id_rsa.pub && cat ~/.ssh/id_rsa.pub && chmod 0400 ~/.ssh/id_rsa.pub &&
     echo $GIT_DATA_TESTS_PRIVATE_KEY > ~/.ssh/id_rsa && cat ~/.ssh/id_rsa && chmod 0400 ~/.ssh/id_rsa &&
     ssh -oStrictHostKeyChecking=no -T git@gitlab.com &&
+    ssh-keygen -l -f ~/.ssh/id_rsa.pub &&
+    ssh-keygen -l -f ~/.ssh/id_rsa &&
     if [[ -z "$GIT_COMMIT" ]]; then
         export GIT_COMMIT="HEAD"
     fi
