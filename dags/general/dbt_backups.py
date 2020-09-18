@@ -11,8 +11,7 @@ from airflow_utils import (
     slack_failed_task,
 )
 from kube_secrets import (
-    GIT_DATA_TESTS_PRIVATE_KEY,
-    GIT_DATA_TESTS_PUBLIC_KEY,
+    GIT_DATA_TESTS_PRIVATE_KEY,    
     GIT_DATA_TESTS_CONFIG,
     SALT,
     SALT_EMAIL,
@@ -59,8 +58,7 @@ dbt_backups = KubernetesPodOperator(
     task_id="dbt-backups",
     name="dbt-backups",
     secrets=[
-        GIT_DATA_TESTS_PRIVATE_KEY,
-        GIT_DATA_TESTS_PUBLIC_KEY,
+        GIT_DATA_TESTS_PRIVATE_KEY,        
         GIT_DATA_TESTS_CONFIG,
         SALT,
         SALT_EMAIL,
