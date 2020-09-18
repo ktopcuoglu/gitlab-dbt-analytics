@@ -91,13 +91,23 @@ WITH dim_dates AS (
     AND dim_dates.day_of_month = 1
   {{ dbt_utils.group_by(n=5) }}
 
+), final AS (
+
+  SELECT
+    {{ dbt_utils.surrogate_key(['date_id', 'subscription_id', 'product_details_id']) }}
+      AS mrr_id,
+    *
+  FROM mrr_month_by_month
+
 )
 
-SELECT
-  {{ dbt_utils.surrogate_key(['date_id', 'subscription_id', 'product_details_id']) }}
-    AS mrr_id,
-  *
-FROM mrr_month_by_month
+{{ dbt_audit(
+    cte_ref="final",
+    created_by="@msendal",
+    updated_by="@msendal",
+    created_date="2020-09-10",
+    updated_date="2020-09-17",
+) }}
 
 
 

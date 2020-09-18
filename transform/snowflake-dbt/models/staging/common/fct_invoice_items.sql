@@ -31,5 +31,10 @@ WITH zuora_invoice_item AS (
 
 )
 
-SELECT *
-FROM invoice_charges
+{{ dbt_audit(
+    cte_ref="invoice_charges",
+    created_by="@msendal",
+    updated_by="@msendal",
+    created_date="2020-04-07",
+    updated_date="2020-09-17"
+) }}

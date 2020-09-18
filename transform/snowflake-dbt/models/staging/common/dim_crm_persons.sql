@@ -74,5 +74,10 @@ WITH sfdc_leads AS (
   )
 )
 
-SELECT *
-FROM unioned
+{{ dbt_audit(
+    cte_ref="unioned",
+    created_by="@jjstark",
+    updated_by="@msendal",
+    created_date="2020-09-10",
+    updated_date="2020-09-17"
+) }}

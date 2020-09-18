@@ -28,11 +28,11 @@ There are two internally calculated date values based on when the table is creat
 WITH my_cte AS (...)
 {% raw %}
 {{ dbt_audit(
-    "my_cte", 
-    "@gitlab_user1", 
-    "@gitlab_user2", 
-    "2019-02-12", 
-    "2020-08-20"
+    cte_ref="my_cte", 
+    created_by="@gitlab_user1", 
+    updated_by="@gitlab_user2", 
+    created_date="2019-02-12", 
+    updated_date="2020-08-20"
 ) }}
 {% endraw %}
 ORDER BY updated_at
