@@ -62,7 +62,7 @@ WITH usage_data AS (
 ), unpacked AS (
 
     SELECT
-      {{ dbt_utils.star(from=ref('version_usage_data'), except=["StATS_USED", "RAW_USAGE_DATA_PAYLOAD"]) }},
+      {{ dbt_utils.star(from=ref('version_usage_data'), except=["STATS_USED", "RAW_USAGE_DATA_PAYLOAD"]) }},
       CASE
         WHEN uuid = 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f' THEN 'SaaS'
         ELSE 'Self-Managed'
