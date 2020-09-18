@@ -109,7 +109,7 @@ WITH license AS (
 )
 
 {{ dbt_audit(
-    "final",
+    "renamed",
     "@derekatwood",
     "@msendal",
     "2020-08-17",
