@@ -230,14 +230,16 @@ l_warehouse = f"'{{warehouse_name: transforming_l}}'"
 xl_warehouse = f"'{{warehouse_name: transforming_xl}}'"
 
 # git commands
-clone_repo_cmd = f"""
+data_test_ssh_key_cmd = f"""
     mkdir ~/.ssh/ &&
-    touch ~/.ssh/id_rsa.pub && touch ~/.ssh/id_rsa &&
-    echo $GIT_DATA_TESTS_PUBLIC_KEY > ~/.ssh/id_rsa.pub && cat ~/.ssh/id_rsa.pub && chmod 0400 ~/.ssh/id_rsa.pub &&
-    echo $GIT_DATA_TESTS_PRIVATE_KEY > ~/.ssh/id_rsa && cat ~/.ssh/id_rsa && chmod 0400 ~/.ssh/id_rsa &&
-    ssh -oStrictHostKeyChecking=no -T git@gitlab.com &&
-    ssh-keygen -l -f ~/.ssh/id_rsa.pub &&
-    ssh-keygen -l -f ~/.ssh/id_rsa &&
+    touch ~/.ssh/id_rsa.pub && touch ~/.ssh/id_rsa && touch ~/.ssh/config &&
+    echo "$GIT_DATA_TESTS_PUBLIC_KEY" > ~/.ssh/id_rsa.pub && chmod 0400 ~/.ssh/id_rsa.pub &&
+    echo "$GIT_DATA_TESTS_PRIVATE_KEY" > ~/.ssh/id_rsa && chmod 0400 ~/.ssh/id_rsa &&
+    echo "$GIT_DATA_TESTS_CONFIG" > ~/.ssh/config"""
+
+clone_repo_cmd = f"""
+    {data_test_ssh_key_cmd} &&
+    git clone -v git@gitlab.com:gitlab-data/data-tests.git && 
     if [[ -z "$GIT_COMMIT" ]]; then
         export GIT_COMMIT="HEAD"
     fi
@@ -249,11 +251,7 @@ clone_repo_cmd = f"""
     cd .."""
 
 clone_repo_sha_cmd = f"""
-    mkdir ~/.ssh/ &&
-    touch ~/.ssh/id_rsa.pub && touch ~/.ssh/id_rsa &&
-    echo $GIT_DATA_TESTS_PUBLIC_KEY > ~/.ssh/id_rsa.pub && chmod 0400 ~/.ssh/id_rsa.pub &&
-    echo $GIT_DATA_TESTS_PRIVATE_KEY > ~/.ssh/id_rsa && chmod 0400 ~/.ssh/id_rsa &&
-    ssh -oStrictHostKeyChecking=no -T git@gitlab.com &&
+    {data_test_ssh_key_cmd} &&
     mkdir analytics &&
     cd analytics &&
     git init &&

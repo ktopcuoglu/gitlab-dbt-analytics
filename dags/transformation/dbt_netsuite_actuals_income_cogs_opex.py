@@ -19,7 +19,7 @@ from airflow_utils import (
 from kube_secrets import (
     GIT_DATA_TESTS_PRIVATE_KEY,
     GIT_DATA_TESTS_PUBLIC_KEY,
-    GIT_DATA_TESTS_KNOWN_HOSTS,
+    GIT_DATA_TESTS_CONFIG,
     SALT,
     SALT_EMAIL,
     SALT_IP,
@@ -103,7 +103,7 @@ dbt_poc = KubernetesPodOperator(
     secrets=[
         GIT_DATA_TESTS_PRIVATE_KEY,
         GIT_DATA_TESTS_PUBLIC_KEY,
-        GIT_DATA_TESTS_KNOWN_HOSTS,
+        GIT_DATA_TESTS_CONFIG,
         SALT,
         SALT_EMAIL,
         SALT_IP,
