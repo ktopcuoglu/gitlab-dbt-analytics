@@ -115,6 +115,14 @@ SELECT
 ), final AS (
 
     SELECT h.date_actual                                                                                AS snapshot_date,
+
+       --snapshot date helpers
+        ds.first_day_of_month                                                                           AS snapshot_month,
+        ds.fiscal_year                                                                                  AS snapshot_fiscal_year,
+        ds.fiscal_quarter_name_fy                                                                       AS snapshot_fiscal_quarter,
+        ds.first_day_of_fiscal_quarter                                                                  AS snapshot_fiscal_quarter_date,
+
+       --close date helpers
         d.first_day_of_month                                                                            AS close_month,
         d.fiscal_year                                                                                   AS close_fiscal_year,
         d.fiscal_quarter_name_fy                                                                        AS close_fiscal_quarter,
@@ -170,7 +178,7 @@ SELECT
             ELSE 'Other' END                                                                            AS stage_name_4plus,
         -- excluded accounts 
         CASE WHEN a.ultimate_parent_id IN ('001610000111bA3','0016100001F4xla','0016100001CXGCs','00161000015O9Yn','0016100001b9Jsc') 
-                AND h.close_date < '2020-08-01' THEN 0 ELSE 1 END                                       AS exclusion_flag,
+                AND h.close_date < '2020-08-01' THEN 1 ELSE 0 END                                       AS is_excluded_flag,
 
         -- metrics
         h.forecasted_iacv,
@@ -194,6 +202,9 @@ SELECT
     -- close date
     INNER JOIN date_details d
         ON cast(h.close_date as date) = d.date_actual
+    -- snapshot date
+    INNER JOIN date_details ds
+        ON h.date_actual = ds.date_actual
     -- current opportunity
     LEFT JOIN sfdc_opportunity_xf o     
         ON o.opportunity_id = h.opportunity_id
