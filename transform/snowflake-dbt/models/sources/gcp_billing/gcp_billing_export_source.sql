@@ -78,7 +78,6 @@ WITH source AS (
 
   FROM source,
   TABLE(FLATTEN(source.jsontext)) flatten_export
-  QUALIFY ROW_NUMBER() OVER (PARTITION BY primary_key ORDER BY uploaded_at DESC) = 1
 
 ), grouped AS (
     SELECT
@@ -114,6 +113,7 @@ WITH source AS (
       SUM(usage_amount_in_pricing_units)                                AS usage_amount_in_pricing_units
       FROM flattened
       {{ dbt_utils.group_by(n=27) }}
+      QUALIFY ROW_NUMBER() OVER (PARTITION BY primary_key ORDER BY uploaded_at DESC) = 1
 
 )
 
