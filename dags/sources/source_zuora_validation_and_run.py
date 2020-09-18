@@ -13,7 +13,7 @@ from airflow_utils import (
     xs_warehouse,
 )
 from kube_secrets import (
-    GIT_DATA_TESTS_PRIVATE_KEY,    
+    GIT_DATA_TESTS_PRIVATE_KEY,
     GIT_DATA_TESTS_CONFIG,
     SALT,
     SALT_EMAIL,
@@ -37,7 +37,7 @@ env = os.environ.copy()
 GIT_BRANCH = env["GIT_BRANCH"]
 pod_env_vars = {**gitlab_pod_env_vars, **{}}
 pod_secrets = [
-    GIT_DATA_TESTS_PRIVATE_KEY,    
+    GIT_DATA_TESTS_PRIVATE_KEY,
     GIT_DATA_TESTS_CONFIG,
     SALT,
     SALT_EMAIL,
