@@ -25,10 +25,10 @@ WITH zuora_account AS (
 )
 
 SELECT
-  zuora_account.account_id,
-  zuora_account.crm_id,
-  zuora_account.account_number,
-  zuora_account.account_name,
+  zuora_account.account_id      AS billing_account_id,
+  zuora_account.crm_id          AS crm_account_id,
+  zuora_account.account_number  AS billing_account_number,
+  zuora_account.account_name    AS billing_account_name,
   zuora_account.status          AS account_status,
   zuora_account.parent_id,
   zuora_account.sfdc_account_code,

@@ -44,9 +44,9 @@ default_args = {
 }
 
 dag = DAG(
-    "gcp_billing_extract",
+    "gcp_billing_extract_partition",
     default_args=default_args,
-    schedule_interval="20 1/3 * * *",
+    schedule_interval="20 4 * * *",
     concurrency=1,
 )
 
@@ -59,8 +59,8 @@ billing_extract_command = (
 billing_operator = KubernetesPodOperator(
     **gitlab_defaults,
     image=DATA_IMAGE,
-    task_id="gcp-billing-extract",
-    name="gcp-billing-extract",
+    task_id="gcp-billing-extract-partition",
+    name="gcp-billing-extract-partition",
     secrets=[
         GCP_BILLING_ACCOUNT_CREDENTIALS,
         SNOWFLAKE_ACCOUNT,
@@ -72,8 +72,7 @@ billing_operator = KubernetesPodOperator(
     ],
     env_vars={
         **pod_env_vars,
-        "START_TIME": "{{ (execution_date - macros.timedelta(hours=3)).isoformat() }}",
-        "END_TIME": "{{ (next_execution_date - macros.timedelta(hours=3)).isoformat() }}",
+        "START_TIME": "{{ yesterday_ds }}",
     },
     affinity=get_affinity(False),
     tolerations=get_toleration(False),

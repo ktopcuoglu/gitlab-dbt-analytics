@@ -23,7 +23,7 @@ WITH sfdc_opportunity AS (
     sfdc_opportunity.sales_accepted_date                                                     AS sales_accepted_date,
     {{ dbt_utils.surrogate_key(['first_contact_roles.contact_id']) }}                        AS crm_person_id,
     first_contact_roles.contact_id                                                           AS contact_id,
-    sfdc_opportunity.account_id                                                              AS account_id,
+    sfdc_opportunity.account_id                                                              AS crm_account_id,
     sfdc_opportunity.opportunity_id                                                          AS opportunity_id,
     first_contact_roles.opportunity_contact_role_id                                          AS opportunity_contact_role_id
 

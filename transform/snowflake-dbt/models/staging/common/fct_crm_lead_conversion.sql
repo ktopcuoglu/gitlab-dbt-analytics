@@ -20,7 +20,7 @@ WITH sfdc_lead AS(
     sfdc_lead_history.lead_id                                                            AS lead_id,
     sfdc_lead_history.created_by_id                                                      AS crm_user_id,
     sfdc_lead.converted_contact_id                                                       AS contact_id,
-    sfdc_lead.converted_account_id                                                       AS account_id,
+    sfdc_lead.converted_account_id                                                       AS crm_account_id,
     sfdc_lead.converted_opportunity_id                                                   AS opportunity_id
 
   FROM sfdc_lead_history

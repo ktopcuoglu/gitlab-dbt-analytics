@@ -41,9 +41,9 @@ WITH sfdc_account AS (
 ), final AS (
 
   SELECT
-    sfdc_account.account_id                       AS crm_id,
-    sfdc_account.account_name                     AS customer_name,
-    sfdc_account.billing_country                  AS customer_country,
+    sfdc_account.account_id                       AS crm_account_id,
+    sfdc_account.account_name                     AS crm_account_name,
+    sfdc_account.billing_country                  AS crm_account_country,
     ultimate_parent_account.account_id            AS ultimate_parent_account_id,
     ultimate_parent_account.account_name          AS ultimate_parent_account_name,
     {{ sales_segment_cleaning('ultimate_parent_account.account_segment') }}
@@ -82,4 +82,3 @@ WITH sfdc_account AS (
     "2020-06-01",
     "2020-09-17"
 ) }}
-
