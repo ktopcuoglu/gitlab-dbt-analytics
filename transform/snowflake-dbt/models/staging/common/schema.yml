@@ -440,8 +440,6 @@ models:
         tests:
           - not_null
       - name: stage_name
-        tests:
-          - not_null
       - name: usage_ping_id
         tests:
           - not_null
@@ -460,8 +458,6 @@ models:
         tests:
           - not_null
       - name: stage_name
-        tests:
-          - not_null
       - name: usage_ping_id
         tests:
           - not_null
