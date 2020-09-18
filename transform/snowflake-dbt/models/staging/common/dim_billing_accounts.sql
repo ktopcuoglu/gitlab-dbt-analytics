@@ -40,9 +40,9 @@ WITH zuora_account AS (
 )
 
 {{ dbt_audit(
-    "filtered",
-    "@msendal",
-    "@msendal",
-    "2020-07-20",
-    "2020-09-17"
+    cte_ref="filtered",
+    created_by="@msendal",
+    updated_by="@msendal",
+    created_date="2020-07-20",
+    updated_date="2020-09-17"
 ) }}

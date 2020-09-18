@@ -41,9 +41,9 @@ SELECT
 )
 
 {{ dbt_audit(
-    "marketing_qualification_events",
-    "@jjstark ",
-    "@msendal",
-    "2020-09-09",
-    "2020-09-17"
+    cte_ref="marketing_qualification_events",
+    created_by="@jjstark ",
+    updated_by="@msendal",
+    created_date="2020-09-09",
+    updated_date="2020-09-17"
 ) }}

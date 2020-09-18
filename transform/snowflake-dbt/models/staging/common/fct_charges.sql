@@ -50,9 +50,9 @@ WITH zuora_rate_plan AS (
 )
 
 {{ dbt_audit(
-    "base_charges",
-    "@msendal",
-    "@msendal",
-    "2020-06-01",
-    "2020-09-17"
+    cte_ref="base_charges",
+    created_by="@msendal",
+    updated_by="@msendal",
+    created_date="2020-06-01",
+    updated_date="2020-09-17"
 ) }}

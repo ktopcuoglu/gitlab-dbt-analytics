@@ -32,9 +32,9 @@ WITH zuora_invoice_item AS (
 )
 
 {{ dbt_audit(
-    "invoice_charges",
-    "@msendal",
-    "@msendal",
-    "2020-04-07",
-    "2020-09-17"
+    cte_ref="invoice_charges",
+    created_by="@msendal",
+    updated_by="@msendal",
+    created_date="2020-04-07",
+    updated_date="2020-09-17"
 ) }}

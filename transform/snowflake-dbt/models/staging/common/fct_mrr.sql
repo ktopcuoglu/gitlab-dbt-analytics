@@ -102,11 +102,11 @@ WITH dim_dates AS (
 )
 
 {{ dbt_audit(
-    "final",
-    "@msendal",
-    "@msendal",
-    "2020-09-10",
-    "2020-09-17"
+    cte_ref="final",
+    created_by="@msendal",
+    updated_by="@msendal",
+    created_date="2020-09-10",
+    updated_date="2020-09-17",
 ) }}
 
 

@@ -75,9 +75,9 @@ WITH sfdc_leads AS (
 )
 
 {{ dbt_audit(
-    "unioned",
-    "@jjstark",
-    "@msendal",
-    "2020-09-10",
-    "2020-09-17"
+    cte_ref="unioned",
+    created_by="@jjstark",
+    updated_by="@msendal",
+    created_date="2020-09-10",
+    updated_date="2020-09-17"
 ) }}

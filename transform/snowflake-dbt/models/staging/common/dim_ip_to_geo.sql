@@ -42,9 +42,9 @@ WITH all_hashed_ips_version_usage AS (
 )
 
 {{ dbt_audit(
-    "newly_mapped_ips",
-    "@m_walker",
-    "@msendal",
-    "2020-08-25",
-    "2020-09-17"
+    cte_ref="newly_mapped_ips",
+    created_by="@m_walker",
+    updated_by="@msendal",
+    created_date="2020-08-25",
+    updated_date="2020-09-17"
 ) }}

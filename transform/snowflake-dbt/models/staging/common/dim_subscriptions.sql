@@ -58,9 +58,9 @@ WITH zuora_subscription AS (
 )
 
 {{ dbt_audit(
-    "joined",
-    "@msendal",
-    "@msendal",
-    "2020-06-01",
-    "2020-09-17"
+    cte_ref="joined",
+    created_by="@msendal",
+    updated_by="@msendal",
+    created_date="2020-06-01",
+    updated_date="2020-09-17"
 ) }}

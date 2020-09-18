@@ -42,9 +42,9 @@ WITH sfdc_opportunity AS (
 )
 
 {{ dbt_audit(
-    "sales_accepted_opps",
-    "@jjstark ",
-    "@msendal",
-    "2020-09-15",
-    "2020-09-17"
+    cte_ref="sales_accepted_opps",
+    created_by="@jjstark ",
+    updated_by="@msendal",
+    created_date="2020-09-15",
+    updated_date="2020-09-17"
 ) }}

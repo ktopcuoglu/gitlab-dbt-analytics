@@ -109,9 +109,9 @@ WITH license AS (
 )
 
 {{ dbt_audit(
-    "renamed",
-    "@derekatwood",
-    "@msendal",
-    "2020-08-17",
-    "2020-09-17"
+    cte_ref="renamed",
+    created_by="@derekatwood",
+    updated_by="@msendal",
+    created_date="2020-08-17",
+    updated_date="2020-09-17"
 ) }}
