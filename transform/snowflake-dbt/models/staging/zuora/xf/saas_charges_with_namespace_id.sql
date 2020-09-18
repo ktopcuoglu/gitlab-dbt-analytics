@@ -20,17 +20,17 @@ WITH zuora_base_mrr AS (
   
 )
 
-, dim_accounts AS (
+, dim_billing_accounts AS (
 
     SELECT *
-    FROM {{ ref('dim_accounts') }}
+    FROM {{ ref('dim_billing_accounts') }}
 
 )
 
-, dim_customers AS (
+, dim_crm_accounts AS (
 
     SELECT *
-    FROM {{ ref('dim_customers') }}
+    FROM {{ ref('dim_crm_accounts') }}
 
 )
 
@@ -47,12 +47,12 @@ WITH zuora_base_mrr AS (
     SELECT 
       zuora_base_mrr.rate_plan_charge_id,
       zuora_base_mrr.subscription_name_slugify,
-      dim_accounts.account_id                                AS zuora_account_id,
-      COALESCE(merged_accounts.crm_id, dim_customers.crm_id) AS sfdc_account_id,
+      dim_billing_accounts.billing_account_id                               AS zuora_account_id,
+      COALESCE(merged_accounts.crm_account_id, dim_crm_accounts.crm_account_id) AS sfdc_account_id,
       COALESCE(merged_accounts.ultimate_parent_account_id, 
-                dim_customers.ultimate_parent_account_id)    AS ultimate_parent_account_id,
+                dim_crm_accounts.ultimate_parent_account_id)    AS ultimate_parent_account_id,
       COALESCE(merged_accounts.ultimate_parent_account_name, 
-                dim_customers.ultimate_parent_account_name)  AS ultimate_parent_account_name,
+                dim_crm_accounts.ultimate_parent_account_name)  AS ultimate_parent_account_name,
       customers_db_charges.current_customer_id,
       namespaces.namespace_id
     FROM zuora_base_mrr
@@ -60,12 +60,12 @@ WITH zuora_base_mrr AS (
       ON zuora_base_mrr.rate_plan_charge_id = customers_db_charges.rate_plan_charge_id
     LEFT JOIN namespaces
       ON customers_db_charges.current_gitlab_namespace_id = namespaces.namespace_id
-    LEFT JOIN dim_accounts
-      ON zuora_base_mrr.account_number = dim_accounts.account_number
-    LEFT JOIN dim_customers
-      ON dim_accounts.crm_id = dim_customers.crm_id
-    LEFT JOIN dim_customers AS merged_accounts
-      ON dim_customers.merged_to_account_id = merged_accounts.crm_id
+    LEFT JOIN dim_billing_accounts
+      ON zuora_base_mrr.account_number = dim_billing_accounts.billing_account_number
+    LEFT JOIN dim_crm_accounts
+      ON dim_billing_accounts.crm_account_id = dim_crm_accounts.crm_account_id
+    LEFT JOIN dim_crm_accounts AS merged_accounts
+      ON dim_crm_accounts.merged_to_account_id = merged_accounts.crm_account_id
 
 )
 

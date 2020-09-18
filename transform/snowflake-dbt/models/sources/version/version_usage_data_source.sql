@@ -68,7 +68,8 @@ WITH source AS (
         ingress_modsecurity_enabled::boolean         AS is_ingress_modsecurity_enabled,
         PARSE_JSON(topology)                         AS topology,
         grafana_link_enabled::BOOLEAN                AS is_grafana_link_enabled, 
-        PARSE_JSON(analytics_unique_visits)          AS analytics_unique_visits
+        PARSE_JSON(analytics_unique_visits)          AS analytics_unique_visits,
+        raw_usage_data_id::INTEGER                   AS raw_usage_data_id
     FROM source
 
 )

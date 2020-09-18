@@ -1,15 +1,15 @@
 version: 2
 
 models:
-  - name: dim_accounts
-    description: '{{ doc("dim_accounts") }}'
+  - name: dim_billing_accounts
+    description: '{{ doc("dim_billing_accounts") }}'
     columns:
-      - name: account_id
+      - name: billing_account_id
         description: Unique id of the Zuora account
         tests:
           - not_null
           - unique
-      - name: crm_id
+      - name: crm_account_id
         description: CRM account ID for the account
       - name: account_number
         description: A unique Zuora account number
@@ -29,19 +29,19 @@ models:
       - name: is_excluded
         description: Field used to exclude test accounts from downstream models
 
-  - name: dim_accounts_valid_at
+  - name: dim_billing_accounts_valid_at
     description: Dimension table representing each individual account with details of person to bill for the account. Excludes deleted and test accounts. Required variable valid_at is timezone sensitive
 
-  - name: dim_customers
-    description: '{{ doc("dim_customers") }}'
+  - name: dim_crm_accounts
+    description: '{{ doc("dim_crm_accounts") }}'
     columns:
-      - name: crm_id
+      - name: crm_account_id
         description: account id from SFDC identifing the customer
         tests:
           - unique
-      - name: customer_name
+      - name: crm_account_name
         description: account name from SFDC
-      - name: customer_country
+      - name: crm_account_country
         description: billing country of SFDC account
       - name: ultimate_parent_account_id
         description: ultimate parent account id
@@ -63,7 +63,7 @@ models:
       - name: merged_to_account_id
         description: for deleted accounts this is the SFDC account they were merged to
 
-  - name: dim_customers_valid_at
+  - name: dim_crm_accounts_valid_at
     description: Parameterized model to recreate dimension table representing customer details as in SFDC at given date. Required variable valid_at is timezone sensitive
 
   - name: dim_crm_persons
@@ -217,9 +217,9 @@ models:
         description: The status of the subscription
         tests:
           - not_null
-      - name: crm_id
+      - name: crm_account_id
         description: account id from SFDC identifing the customer
-      - name: account_id
+      - name: billing_account_id
         description: The id of the Zuora account the subscription is associated with
       - name: subscription_name_slugify
         description: The unique identifier of the subscription
@@ -416,10 +416,10 @@ models:
         description: The identifier of product details in dim_product_details
         tests:
           - not_null
-      - name: account_id
+      - name: billing_account_id
         description: Zuora account id
-      - name:  crm_id
-        description: customer crm_id
+      - name:  crm_account_id
+        description: account id frm crm
       - name: mrr
         description: Monthly Recurring Revenue value for given month
       - name: arr
@@ -445,8 +445,8 @@ models:
         description: The md5 hash of the license file. Use this field to join to dim_licenses.
       - name: subscription_id
         description: The zuora subscription id derived from the license. Use this field to join to dim_subscriptions.
-      - name: account_id
-        description: The zuora account id associated with the subscription. Use this field to join to dim_accounts.
+      - name: billing_account_id
+        description: The zuora account id associated with the subscription. Use this field to join to dim_billing_accounts.
       - name: array_product_details_id  
         description: The array of distinct product detail ids associated with the subscription. Use this field to join to dim_product_details.
       - name: hostname

@@ -1,14 +1,14 @@
 {{ config(materialized='table') }}
 
-WITH dim_accounts AS (
+WITH dim_billing_accounts AS (
 
     SELECT *
-    FROM {{ ref('dim_accounts') }}
+    FROM {{ ref('dim_billing_accounts') }}
 
-), dim_customers AS (
+), dim_crm_accounts AS (
 
     SELECT *
-    FROM {{ ref('dim_customers') }}
+    FROM {{ ref('dim_crm_accounts') }}
 
 ), dim_dates AS (
 
@@ -53,15 +53,15 @@ WITH dim_accounts AS (
 
     SELECT
       fct_usage_ping_payloads.*,
-      dim_customers.crm_id,
-      dim_customers.customer_name,
-      dim_customers.customer_country,
-      dim_customers.ultimate_parent_account_id,
-      dim_customers.ultimate_parent_account_segment,
-      dim_customers.ultimate_parent_billing_country,
-      dim_customers.ultimate_parent_industry,
-      dim_customers.ultimate_parent_account_owner_team,
-      dim_customers.ultimate_parent_territory,
+      dim_crm_accounts.crm_account_id,
+      dim_crm_accounts.crm_account_name,
+      dim_crm_accounts.crm_account_country,
+      dim_crm_accounts.ultimate_parent_account_id,
+      dim_crm_accounts.ultimate_parent_account_segment,
+      dim_crm_accounts.ultimate_parent_billing_country,
+      dim_crm_accounts.ultimate_parent_industry,
+      dim_crm_accounts.ultimate_parent_account_owner_team,
+      dim_crm_accounts.ultimate_parent_territory,
       dim_dates.date_actual,
       dim_dates.first_day_of_month,
       dim_dates.fiscal_quarter_name_fy,
@@ -70,10 +70,10 @@ WITH dim_accounts AS (
       product_details.product_rate_plans,
       product_details.product_categories
     FROM fct_usage_ping_payloads
-    LEFT JOIN dim_accounts
-      ON fct_usage_ping_payloads.account_id = dim_accounts.account_id
-    LEFT JOIN dim_customers
-      ON dim_accounts.crm_id = dim_customers.crm_id
+    LEFT JOIN dim_billing_accounts
+      ON fct_usage_ping_payloads.account_id = dim_billing_accounts.billing_account_id
+    LEFT JOIN dim_crm_accounts
+      ON dim_billing_accounts.crm_account_id = dim_crm_accounts.crm_account_id
     LEFT JOIN dim_dates
       ON fct_usage_ping_payloads.date_id = dim_dates.date_id
     LEFT JOIN dim_location
@@ -108,9 +108,9 @@ WITH dim_accounts AS (
 
       -- customer info
       account_id,
-      crm_id,
-      customer_name, 
-      customer_country,
+      crm_account_id,
+      crm_account_name, 
+      crm_account_country,
       ultimate_parent_account_id,
       ultimate_parent_billing_country,
       ultimate_parent_industry,
