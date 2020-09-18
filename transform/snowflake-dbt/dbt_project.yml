@@ -60,7 +60,7 @@ seeds:
       +column_types:
         major_minor_version: varchar
   
-  golden_records:
+  data_tests:
     +schema: tdf
 
 # ==================

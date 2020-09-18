@@ -205,8 +205,7 @@ Snowflake SQL is probably not that different from the dialects of SQL you're alr
 
 
 ### Getting Set up with dbt locally
-- Ensure you have the `GOLDEN_RECORDS_KEY` environment variable set in your .zshrc or .bash_profile (depending on which onboarding script you used)
-  - Go to [this Google Doc](https://docs.google.com/document/d/1hSCwkQ_sgTK1HoCZId_D8fpTKZPiAteHGn1y-faw8Xw/edit) and follow the instructions to export the environment variable.
+- Ensure you've set up your SSH configuration in the previous step as this is required to connect to one our dbt packages
 - All dbt commands need to be run within the `dbt-image` docker container
 - To get into the `dbt-image` docker container, go to the analytics project (which you can get to by typing `goto analytics` from anywhere on your Mac) and run the command `make dbt-image`. This will spin up our docker container that contains `dbt` and give you a bash shell within the `analytics/transform/snowflake-dbt` directory.
 - All changes made to the files within the `analytics` repo will automatically be visible in the docker container! This container is only used to run `dbt` commands themselves, not to write SQL or edit `dbt` files in general (though technically it could be, as VIM is available within the container)
