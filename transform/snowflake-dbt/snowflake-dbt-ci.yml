@@ -14,10 +14,11 @@
     - echo $SNOWFLAKE_SNAPSHOT_DATABASE
     - export CI_PROFILE_TARGET="--profiles-dir profile --target ci"
     - echo $CI_PROFILE_TARGET
-    - eval $(ssh-agent -s)
-    - ssh-add <(echo "$GIT_DATA_TESTS_SSH_PRIVATE_KEY" | base64 --decode) # Adds the SSH Key for the data-tests project
     - mkdir -p ~/.ssh
+    - touch ~/.ssh/id_rsa
     - chmod 700 ~/.ssh
+    - echo "$GIT_DATA_TESTS_SSH_PRIVATE_KEY" | base64 --decode > ~/.ssh/id_rsa
+    - chmod 0400 ~/.ssh/id_rsa
     - git clone git@gitlab.com:gitlab-data/data-tests.git
     - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
   after_script:
