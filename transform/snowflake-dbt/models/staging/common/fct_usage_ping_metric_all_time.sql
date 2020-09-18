@@ -38,7 +38,7 @@ WITH usage_data AS (
     SELECT
       full_metrics_path,
       stage
-    FROM ref('test_metrics_renaming')
+    FROM {{ ref('test_metrics_renaming') }}
 
 ), stats_used AS (
 
@@ -54,14 +54,25 @@ WITH usage_data AS (
     SELECT
       id            AS usage_ping_id,
       recorded_at   AS recorded_at,
-      stage_name,
+      stage         AS stage_name,
       metric_name,
       metric_value
     FROM stats_used
-    INNER JOIN 
+    INNER JOIN stats_used_mappings
+    ON 'stats_used.' || metric_name = stats_used_mappings.full_metrics_path
+
+), unioned AS (
+
+    SELECT *
+    FROM joined_stats_info
+
+    UNION ALL
+
+    SELECT *
+    FROM renamed_activity_by_stage
 
 )
 
 SELECT *
-FROM renamed
+FROM unioned
 
