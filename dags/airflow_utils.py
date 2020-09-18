@@ -231,10 +231,10 @@ xl_warehouse = f"'{{warehouse_name: transforming_xl}}'"
 
 # git commands
 clone_repo_cmd = f"""
-    mkdir /.ssh/ &&
-    touch /.ssh/id_rsa.pub && touch /.ssh/id_rsa &&
-    echo $GIT_DATA_TESTS_PUBLIC_KEY > /.ssh/id_rsa.pub &&
-    echo $GIT_DATA_TESTS_PRIVATE_KEY > /.ssh/id_rsa &&
+    mkdir ~/.ssh/ &&
+    touch ~/.ssh/id_rsa.pub && touch ~/.ssh/id_rsa &&
+    echo $GIT_DATA_TESTS_PUBLIC_KEY > ~/.ssh/id_rsa.pub &&
+    echo $GIT_DATA_TESTS_PRIVATE_KEY > ~/.ssh/id_rsa &&
     ssh -oStrictHostKeyChecking=no -T git@gitlab.com &&
     if [[ -z "$GIT_COMMIT" ]]; then
         export GIT_COMMIT="HEAD"
@@ -247,10 +247,10 @@ clone_repo_cmd = f"""
     cd .."""
 
 clone_repo_sha_cmd = f"""
-    mkdir /.ssh/ &&
-    touch /.ssh/id_rsa.pub && touch /.ssh/id_rsa &&
-    echo $GIT_DATA_TESTS_PUBLIC_KEY > /.ssh/id_rsa.pub &&
-    echo $GIT_DATA_TESTS_PRIVATE_KEY > /.ssh/id_rsa &&
+    mkdir ~/.ssh/ &&
+    touch ~/.ssh/id_rsa.pub && touch ~/.ssh/id_rsa &&
+    echo $GIT_DATA_TESTS_PUBLIC_KEY > ~/.ssh/id_rsa.pub &&
+    echo $GIT_DATA_TESTS_PRIVATE_KEY > ~/.ssh/id_rsa &&
     ssh -oStrictHostKeyChecking=no -T git@gitlab.com &&
     mkdir analytics &&
     cd analytics &&
