@@ -235,7 +235,7 @@ clone_repo_cmd = f"""
     touch /.ssh/id_ed25519.pub && touch /.ssh/id_ed25519 && touch /.ssh/known_hosts
     echo $GIT_DATA_TESTS_PUBLIC_KEY > /.ssh/id_ed25519.pub &&
     echo $GIT_DATA_TESTS_PRIVATE_KEY > /.ssh/id_ed25519 &&
-    echo $GIT_DATA_TESTS_KNOWN_HOSTS > /.ssh/known_hosts &&
+    ssh -oStrictHostKeyChecking=no -T git@gitlab.com &&
     if [[ -z "$GIT_COMMIT" ]]; then
         export GIT_COMMIT="HEAD"
     fi
@@ -251,7 +251,7 @@ clone_repo_sha_cmd = f"""
     touch /.ssh/id_ed25519.pub && touch /.ssh/id_ed25519 && touch /.ssh/known_hosts
     echo $GIT_DATA_TESTS_PUBLIC_KEY > /.ssh/id_ed25519.pub &&
     echo $GIT_DATA_TESTS_PRIVATE_KEY > /.ssh/id_ed25519 &&
-    echo $GIT_DATA_TESTS_KNOWN_HOSTS > /.ssh/known_hosts &&
+    ssh -oStrictHostKeyChecking=no -T git@gitlab.com &&
     mkdir analytics &&
     cd analytics &&
     git init &&
