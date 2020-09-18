@@ -55,6 +55,12 @@ sources:
           - name: updated_at
             tests:
               - not_null
+      - name: raw_usage_data
+        columns:
+          - name: id
+            tests:
+              - not_null
+              - unique
       - name: schema_migrations
       - name: usage_data
         columns:

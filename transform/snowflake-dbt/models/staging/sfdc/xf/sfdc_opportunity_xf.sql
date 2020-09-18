@@ -116,6 +116,8 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity.subscription_end_date,
       sfdc_opportunity.true_up_value,
       sfdc_opportunity.order_type_live,
+      sfdc_opportunity.order_type_stamped,
+      sfdc_opportunity.net_arr,
 
       -- days and dates per stage
       sfdc_opportunity.days_in_1_discovery,

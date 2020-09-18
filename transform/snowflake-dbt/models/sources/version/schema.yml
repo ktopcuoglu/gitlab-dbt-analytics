@@ -37,6 +37,13 @@ models:
           tests:
             - not_null
             - unique
+    - name: version_raw_usage_data_source
+      description: data source for usage ping https://docs.gitlab.com/ee/development/telemetry/usage_ping.html contains full unprocessed usage ping payloads 
+      columns:
+        - name: raw_usage_data_id
+          tests:
+            - not_null
+            - unique
 
     - name: version_usage_data_source
       description: Primary data source for usage ping https://docs.gitlab.com/ee/development/telemetry/usage_ping.html.

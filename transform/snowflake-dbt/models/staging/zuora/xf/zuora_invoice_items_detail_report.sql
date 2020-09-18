@@ -142,6 +142,7 @@ SELECT
   invoice_item_unit_price,
   invoice_item_charge_amount,
   CASE
+    WHEN LOWER(rate_plan_name) LIKE '%month%'   THEN (invoice_item_unit_price * 12)
     WHEN LOWER(rate_plan_name) LIKE '%2 years%' THEN (invoice_item_unit_price/2)
     WHEN LOWER(rate_plan_name) LIKE '%2 year%'  THEN (invoice_item_unit_price/2)
     WHEN LOWER(rate_plan_name) LIKE '%3 years%' THEN (invoice_item_unit_price/3)
@@ -158,6 +159,7 @@ SELECT
   invoice_month,
   fiscal_quarter_name_fy                        AS fiscal_period,
   CASE
+    WHEN LOWER(rate_plan_name) LIKE '%month%'   THEN (billing_list_price*12)
     WHEN LOWER(rate_plan_name) LIKE '%2 years%' THEN (billing_list_price/2)
     WHEN LOWER(rate_plan_name) LIKE '%2 year%'  THEN (billing_list_price/2)
     WHEN LOWER(rate_plan_name) LIKE '%3 years%' THEN (billing_list_price/3)

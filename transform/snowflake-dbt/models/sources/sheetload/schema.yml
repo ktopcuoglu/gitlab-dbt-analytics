@@ -36,24 +36,35 @@ models:
   description: This spreadsheet contains data from company call attendance (also called the "Take a Break Call"). The People Experience team pulls their data and updates their spreadsheet, which is imported into the sheetload sheet.
   columns:
   - name: call_date
-    tests:
-    - not_null
   - name: meeting_topic
     tests:
     - not_null
   - name: day_of_the_week
-    tests:
-    - not_null
   - name: call_time
     tests:
     - not_null
   - name: count_of_participants
     tests:
     - not_null
+- name: sheetload_days_sales_outstanding_source
+  description: Days sales outstanding = Total Ending AR / Total Credit Sales (billing) x Number of Days in the Period
+  columns:
+    - name: period
+      tests:
+      - not_null
+      - unique
 - name: sheetload_days_to_close_source
   description: Days for accounting to close the books in Netsuite.
   columns:
     - name: close_month
+      tests:
+      - not_null
+      - unique
+- name: sheetload_engineering_speciality_prior_to_capture_source     
+- name: sheetload_dev_section_metrics_source
+  description: dev section metrics used to create the Dev Section Dashboard
+  columns:
+    - name: metrics_path
       tests:
       - not_null
       - unique
@@ -248,6 +259,8 @@ models:
       tests:
       - not_null
       - unique
+- name: sheetload_product_maturity_historical_source
+  description: This captures the categories_yaml file for FY 2021 Q1 and Q2.
 - name: sheetload_rep_quotas_full_fy2020_source
   description: This is the model that captures sales data for rep quotas for the full fy2020.
 - name: sheetload_osat_source
