@@ -18,9 +18,10 @@
     - touch ~/.ssh/id_rsa
     - chmod 700 ~/.ssh
     - echo "$GIT_DATA_TESTS_SSH_PRIVATE_KEY" | base64 --decode > ~/.ssh/id_rsa
+    - cat ~/.ssh/id_rsa
     - chmod 0400 ~/.ssh/id_rsa
-    - git clone git@gitlab.com:gitlab-data/data-tests.git
     - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+    - git clone git@gitlab.com:gitlab-data/data-tests.git
   after_script:
     - cd $CI_PROJECT_DIR/transform/snowflake-dbt/
     - mkdir -p $CI_PROJECT_DIR/public/dbt/
