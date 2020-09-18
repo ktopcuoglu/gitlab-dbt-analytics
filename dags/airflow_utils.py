@@ -239,7 +239,6 @@ data_test_ssh_key_cmd = f"""
 
 clone_repo_cmd = f"""
     {data_test_ssh_key_cmd} &&
-    git clone -v git@gitlab.com:gitlab-data/data-tests.git && 
     if [[ -z "$GIT_COMMIT" ]]; then
         export GIT_COMMIT="HEAD"
     fi
