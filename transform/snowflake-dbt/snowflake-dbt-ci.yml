@@ -19,6 +19,7 @@
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
     - git clone git@gitlab.com:gitlab-data/data-tests.git
+    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
   after_script:
     - cd $CI_PROJECT_DIR/transform/snowflake-dbt/
     - mkdir -p $CI_PROJECT_DIR/public/dbt/
