@@ -93,8 +93,6 @@ CI_STATS_DB_PASS = Secret("env", "CI_STATS_DB_PASS", "airflow", "CI_STATS_DB_PAS
 CI_STATS_DB_HOST = Secret("env", "CI_STATS_DB_HOST", "airflow", "CI_STATS_DB_HOST")
 CI_STATS_DB_NAME = Secret("env", "CI_STATS_DB_NAME", "airflow", "CI_STATS_DB_NAME")
 
-# dbt
-GOLDEN_RECORD_KEY = Secret("env", "GOLDEN_RECORD_KEY", "airflow", "GOLDEN_RECORD_KEY")
 
 # Snowflake Generic
 SNOWFLAKE_ACCOUNT = Secret("env", "SNOWFLAKE_ACCOUNT", "airflow", "SNOWFLAKE_ACCOUNT")

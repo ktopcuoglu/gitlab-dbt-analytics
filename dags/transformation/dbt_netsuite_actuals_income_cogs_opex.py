@@ -17,7 +17,6 @@ from airflow_utils import (
     xs_warehouse,
 )
 from kube_secrets import (
-    GOLDEN_RECORD_KEY,
     SALT,
     SALT_EMAIL,
     SALT_IP,
@@ -99,7 +98,6 @@ dbt_poc = KubernetesPodOperator(
     task_id="dbt-netsuite-actuals-income-cogs-opex",
     name="dbt-netsuite-actuals-income-cogs-opex",
     secrets=[
-        GOLDEN_RECORD_KEY,
         SALT,
         SALT_EMAIL,
         SALT_IP,
