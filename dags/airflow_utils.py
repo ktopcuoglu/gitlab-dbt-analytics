@@ -233,8 +233,8 @@ xl_warehouse = f"'{{warehouse_name: transforming_xl}}'"
 clone_repo_cmd = f"""
     mkdir ~/.ssh/ &&
     touch ~/.ssh/id_rsa.pub && touch ~/.ssh/id_rsa &&
-    echo $GIT_DATA_TESTS_PUBLIC_KEY > ~/.ssh/id_rsa.pub && chmod 0400 ~/.ssh/id_rsa.pub &&
-    echo $GIT_DATA_TESTS_PRIVATE_KEY > ~/.ssh/id_rsa && chmod 0400 ~/.ssh/id_rsa &&
+    echo $GIT_DATA_TESTS_PUBLIC_KEY > ~/.ssh/id_rsa.pub && cat ~/.ssh/id_rsa.pub && chmod 0400 ~/.ssh/id_rsa.pub &&
+    echo $GIT_DATA_TESTS_PRIVATE_KEY > ~/.ssh/id_rsa && cat ~/.ssh/id_rsa && chmod 0400 ~/.ssh/id_rsa &&
     ssh -oStrictHostKeyChecking=no -T git@gitlab.com &&
     if [[ -z "$GIT_COMMIT" ]]; then
         export GIT_COMMIT="HEAD"
