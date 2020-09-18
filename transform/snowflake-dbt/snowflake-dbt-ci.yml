@@ -18,6 +18,7 @@
     - ssh-add <(echo "$GIT_DATA_TESTS_SSH_PRIVATE_KEY" | base64 --decode) # Adds the SSH Key for the data-tests project
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
+    - git clone git@gitlab.com:gitlab-data/data-tests.git
   after_script:
     - cd $CI_PROJECT_DIR/transform/snowflake-dbt/
     - mkdir -p $CI_PROJECT_DIR/public/dbt/
