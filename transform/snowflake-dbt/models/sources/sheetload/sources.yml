@@ -28,6 +28,7 @@ sources:
       - name: days_to_close
       - name: dev_section_metrics
       - name: employee_location_factor
+      - name: engineering_speciality_prior_to_capture
       - name: gitlab_slack_stats
       - name: google_referrals
       - name: headcount

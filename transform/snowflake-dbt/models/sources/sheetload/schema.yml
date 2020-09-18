@@ -60,6 +60,7 @@ models:
       tests:
       - not_null
       - unique
+- name: sheetload_engineering_speciality_prior_to_capture_source     
 - name: sheetload_dev_section_metrics_source
   description: dev section metrics used to create the Dev Section Dashboard
   columns:
