@@ -12,6 +12,8 @@ from airflow_utils import (
     xs_warehouse,
 )
 from kube_secrets import (
+    GIT_DATA_TESTS_PRIVATE_KEY,
+    GIT_DATA_TESTS_PUBLIC_KEY,
     SALT,
     SALT_EMAIL,
     SALT_IP,
@@ -62,6 +64,8 @@ dbt_poc = KubernetesPodOperator(
     task_id="dbt-poc",
     name="dbt-poc",
     secrets=[
+        GIT_DATA_TESTS_PRIVATE_KEY,
+        GIT_DATA_TESTS_PUBLIC_KEY,
         SALT,
         SALT_EMAIL,
         SALT_IP,

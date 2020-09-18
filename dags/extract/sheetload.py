@@ -17,6 +17,8 @@ from airflow_utils import (
 )
 from kube_secrets import (
     GCP_SERVICE_CREDS,
+    GIT_DATA_TESTS_PRIVATE_KEY,
+    GIT_DATA_TESTS_PUBLIC_KEY,
     SALT,
     SALT_EMAIL,
     SALT_IP,
@@ -122,6 +124,8 @@ dbt_sheetload = KubernetesPodOperator(
     task_id="dbt-sheetload",
     name="dbt-sheetload",
     secrets=[
+        GIT_DATA_TESTS_PRIVATE_KEY,
+        GIT_DATA_TESTS_PUBLIC_KEY,
         SALT,
         SALT_EMAIL,
         SALT_IP,

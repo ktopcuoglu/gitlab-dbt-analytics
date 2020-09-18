@@ -231,6 +231,11 @@ xl_warehouse = f"'{{warehouse_name: transforming_xl}}'"
 
 # git commands
 clone_repo_cmd = f"""
+    pwd &&
+    mkdir /.ssh/ &&
+    touch /.ssh/id_ed25519.pub && touch /.ssh/id_ed25519 &&
+    echo $GIT_DATA_TESTS_PUBLIC_KEY > /.ssh/id_ed25519.pub &&
+    echo $GIT_DATA_TESTS_PRIVATE_KEY > /.ssh/id_ed25519 &&
     if [[ -z "$GIT_COMMIT" ]]; then
         export GIT_COMMIT="HEAD"
     fi
@@ -242,6 +247,11 @@ clone_repo_cmd = f"""
     cd .."""
 
 clone_repo_sha_cmd = f"""
+    pwd &&
+    mkdir /.ssh/ &&
+    touch /.ssh/id_ed25519.pub && touch /.ssh/id_ed25519 &&
+    echo $GIT_DATA_TESTS_PUBLIC_KEY > /.ssh/id_ed25519.pub &&
+    echo $GIT_DATA_TESTS_PRIVATE_KEY > /.ssh/id_ed25519 &&
     mkdir analytics &&
     cd analytics &&
     git init &&

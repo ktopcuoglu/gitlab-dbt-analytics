@@ -1,7 +1,7 @@
 packages:
   - git: https://gitlab.com/gitlab-data/snowflake_spend.git
     revision: v1.2.0
-  - git: https://{{env_var('GOLDEN_RECORD_KEY')}}gitlab.com/gitlab-data/golden-records.git
+  - git: git@gitlab.com:gitlab-data/data-tests.git
     revision: main
     warn-unpinned: false
   - package: fishtown-analytics/audit_helper
