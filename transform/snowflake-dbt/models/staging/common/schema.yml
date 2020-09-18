@@ -427,6 +427,45 @@ models:
       - name: quantity
         description: Total quantity
 
+  - name: fct_usage_ping_metric_28_days
+    description: '{{ doc("fct_usage_ping_metric_28_days") }}'
+    columns:
+      - name: metric_name
+        tests:
+          - not_null
+      - name: metric_value
+        tests:
+          - not_null
+      - name: recorded_at
+        tests:
+          - not_null
+      - name: stage_name
+        tests:
+          - not_null
+      - name: usage_ping_id
+        tests:
+          - not_null
+      
+
+  - name: fct_usage_ping_metric_all_time
+    description: '{{ doc("fct_usage_ping_metric_all_time") }}'
+    columns:
+      - name: metric_name
+        tests:
+          - not_null
+      - name: metric_value
+        tests:
+          - not_null
+      - name: recorded_at
+        tests:
+          - not_null
+      - name: stage_name
+        tests:
+          - not_null
+      - name: usage_ping_id
+        tests:
+          - not_null
+
   - name: fct_usage_ping_payloads
     description: '{{ doc("fct_usage_ping_payloads") }}'
     columns:

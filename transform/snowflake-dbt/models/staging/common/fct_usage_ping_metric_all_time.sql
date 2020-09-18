@@ -58,7 +58,7 @@ WITH usage_data AS (
       metric_name,
       metric_value
     FROM stats_used
-    INNER JOIN stats_used_mappings
+    LEFT JOIN stats_used_mappings
     ON 'stats_used.' || metric_name = stats_used_mappings.full_metrics_path
 
 ), unioned AS (
