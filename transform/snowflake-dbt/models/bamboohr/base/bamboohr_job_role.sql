@@ -28,41 +28,27 @@ WITH source AS (
                                             jobtitle_speciality, gitlab_username, sales_geo_differential
             ORDER BY DATE_TRUNC(day,effective_date) ASC, DATE_TRUNC(hour, effective_date) DESC)=1  
 
-
-), engineering_sheetload_speciality AS (
-
-    SELECT 
-      employee_id, 
-      speciality, 
-      start_date                                                                           AS speciality_start_date,
-      LEAD(DATEADD(day,-1,start_date)) OVER (PARTITION BY employee_id ORDER BY start_date) AS speciality_end_date
-    FROM {{ ref ('sheetload_engineering_speciality_prior_to_capture') }}
-
 ), final AS (
 
     SELECT 
-      intermediate.employee_number,
-      intermediate.employee_id,
-      intermediate.job_role,
-      intermediate.job_grade,
-      intermediate.cost_center,
-      COALESCE(engineering_sheetload_speciality.speciality, intermediate.jobtitle_speciality)         AS jobtitle_speciality,
-      intermediate.gitlab_username,
-      intermediate.sales_geo_differential,
-      DATE_TRUNC(day, intermediate.effective_date)                                                    AS effective_date,
+      employee_number,
+      employee_id,
+      job_role,
+      job_grade,
+      cost_center,
+      jobtitle_speciality,
+      gitlab_username,
+      sales_geo_differential,
+      DATE_TRUNC(day, effective_date)                                                    AS effective_date,
       LEAD(DATEADD(day,-1,DATE_TRUNC(day, intermediate.effective_date))) OVER 
-        (PARTITION BY intermediate.employee_number ORDER BY intermediate.effective_date)              AS next_effective_date
+        (PARTITION BY employee_number ORDER BY intermediate.effective_date)              AS next_effective_date
     FROM intermediate 
-    LEFT JOIN engineering_sheetload_speciality
-      ON intermediate.employee_id = engineering_sheetload_speciality.employee_id
-      AND intermediate.effective_date BETWEEN engineering_sheetload_speciality.speciality_start_date 
-                                  AND COALESCE(engineering_sheetload_speciality.speciality_end_date, '2020-09-30') --transistioning changes in speciality to bamboohr
-    WHERE intermediate.effective_date>= '2020-02-27'  --1st day we started capturing job role
-      AND intermediate.hire_date IS NOT NULL
-      AND (LOWER(intermediate.first_name) NOT LIKE '%greenhouse test%'
-      AND LOWER(intermediate.last_name) NOT LIKE '%test profile%'
-      AND LOWER(intermediate.last_name) != 'test-gitlab')
-      AND intermediate.employee_id != 42039
+    WHERE effective_date>= '2020-02-27'  --1st day we started capturing job role
+      AND hire_date IS NOT NULL
+      AND (LOWER(first_name) NOT LIKE '%greenhouse test%'
+      AND LOWER(last_name) NOT LIKE '%test profile%'
+      AND LOWER(last_name) != 'test-gitlab')
+      AND employee_id != 42039
 
 ) 
 

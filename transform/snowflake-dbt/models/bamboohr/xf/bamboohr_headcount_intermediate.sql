@@ -1,5 +1,6 @@
 {{ config({
     "materialized":"table",
+    "schema": "sensitive"
     })
 }}
 
@@ -96,7 +97,7 @@ WITH dates AS (
     SELECT
       employees.date_actual,
       employees.department,
-      current_division_mapping.division,
+      current_division_mapping.division_mapped_current,
       employees.division,
       job_role,
       job_grade,
