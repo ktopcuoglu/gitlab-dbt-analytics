@@ -1,3 +1,7 @@
+{{ config({
+    "materialized":"table",
+    })
+}}
 
 {% set repeated_metric_columns = 
       "SUM(headcount_start)                             AS headcount_start,
@@ -81,13 +85,20 @@ WITH dates AS (
 
     SELECT *
     FROM {{ ref ('employee_directory_intermediate') }}
+ 
+), current_division_mapping AS (
 
-), intermediate AS (
+    SELECT 
+      IFF(department IN ('People Ops','People'), 'People Group', division) AS division,
+      department
+    FROM "ANALYTICS"."ANALYTICS"."COST_CENTER_DIVISION_DEPARTMENT_MAPPING_CURRENT"
 
+{# ), intermediate AS ( #}
+)
     SELECT
       employees.date_actual,
-      department,
-      division,
+      employees.department,
+      COALESCE(current_division_mapping.division, employees.division) AS division,
       job_role,
       job_grade,
       mapping_enhanced.eeoc_field_name,                                                       
@@ -146,10 +157,12 @@ WITH dates AS (
     LEFT JOIN separation_reason
       ON separation_reason.employee_id = employees.employee_id
       AND employees.date_actual = separation_reason.valid_from_date
+    LEFT JOIN current_division_mapping
+      ON employees.department = current_division_mapping.department  
    WHERE date_actual IS NOT NULL
 
 
-), aggregated AS (
+{# ), aggregated AS (
 
 
     SELECT
@@ -223,4 +236,4 @@ WITH dates AS (
 ) 
 
 SELECT * 
-FROM aggregated
+FROM aggregated #}
