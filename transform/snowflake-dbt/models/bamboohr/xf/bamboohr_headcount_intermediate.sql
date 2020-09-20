@@ -88,17 +88,16 @@ WITH dates AS (
  
 ), current_division_mapping AS (
 
-    SELECT 
-      IFF(department IN ('People Ops','People'), 'People Group', division) AS division,
-      department
-    FROM "ANALYTICS"."ANALYTICS"."COST_CENTER_DIVISION_DEPARTMENT_MAPPING_CURRENT"
+    SELECT *
+    FROM {{ ref ('bamboohr_current_division_mapping') }}
 
 {# ), intermediate AS ( #}
 )
     SELECT
       employees.date_actual,
       employees.department,
-      COALESCE(current_division_mapping.division, employees.division) AS division,
+      current_division_mapping.division,
+      employees.division,
       job_role,
       job_grade,
       mapping_enhanced.eeoc_field_name,                                                       
@@ -158,7 +157,8 @@ WITH dates AS (
       ON separation_reason.employee_id = employees.employee_id
       AND employees.date_actual = separation_reason.valid_from_date
     LEFT JOIN current_division_mapping
-      ON employees.department = current_division_mapping.department  
+      ON employees.employee_id = current_division_mapping.employee_id
+      AND dates.end_date BETWEEN current_division_mapping.effective_date AND current_division_mapping.effective_end_date --map to division at end of month 
    WHERE date_actual IS NOT NULL
 
 

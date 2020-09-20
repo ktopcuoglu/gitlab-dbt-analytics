@@ -31,7 +31,7 @@ WITH source AS (
 
 ), engineering_sheetload_speciality AS (
 
-     SELECT 
+    SELECT 
       employee_id, 
       speciality, 
       start_date                                                                           AS speciality_start_date,
