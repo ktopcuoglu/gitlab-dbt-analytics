@@ -9,7 +9,7 @@ WITH check_data AS (
     SELECT
       SUM(
       {%- for column in gr_column_names %}
-          CASE WHEN golden_records.{{ column }} = dbt_model.{{ column }} THEN 0 ELSE 1 END
+          CASE WHEN golden_records.{{ column }} = source_table.{{ column }} THEN 0 ELSE 1 END
               {%- if not loop.last %}
                   +
               {% endif %}
