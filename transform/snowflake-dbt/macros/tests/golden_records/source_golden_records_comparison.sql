@@ -18,7 +18,7 @@ WITH check_data AS (
     FROM {{ ref(golden_record_model) }} golden_records
     JOIN {{ source(source_name, table_name) }} source_table ON
     {%- for column in gr_column_names %}
-        source_table.{{ column }} = golden_records.{{ column  }}
+        source_table.{{ column }} = golden_records.{{ column }}
         {% if not loop.last %}
             AND
         {% endif %}
