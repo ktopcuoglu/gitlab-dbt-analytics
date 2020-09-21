@@ -6,7 +6,7 @@ from gitlabdata.orchestration_utils import (
     snowflake_engine_factory,
     query_executor,
 )
-from google_sheets_client import GoogleSheetsClient
+from google_sheets_client import APIError, GoogleSheetsClient
 from qualtrics_client import QualtricsClient
 from sheetload_dataframe_utils import dw_uploader
 
@@ -67,14 +67,32 @@ def push_contacts_to_qualtrics(
 
 
 def process_qualtrics_file(
-    file, is_test, google_sheet_client, schema, qualtrics_client
+    file, is_test, google_sheet_client, schema, qualtrics_client, qualtrics_mailing_lists
 ):
-    file_name = file.title
-    _, file_name_split = file_name.split(".")
-    tab = file.sheet1.title
-    if tab != file_name_split:
-        error(f"{file_name}: First worksheet did not match expected name of {tab}")
-        return
+    maximum_backoff_sec = 600
+    n = 0
+    while maximum_backoff_sec > (2 ** n):
+        try:
+            file_name = file.title
+            _, file_name_split = file_name.split(".")
+            tab = file.sheet1.title
+            if tab in qualtrics_mailing_lists:
+                info(
+                    f"{file_name}: Qualtrics already has mailing list with corresponding name -- not processing."
+                )
+                return False
+            if tab != file_name_split:
+                error(f"{file_name}: First worksheet did not match expected name of {file_name_split}")
+                return
+        except APIError as gspread_error:
+            if gspread_error.response.status_code == 429:
+                google_sheet_client.wait_exponential_backoff(n)
+                n = n + 1
+            else:
+                raise
+    else:
+        error(f"Max retries exceeded, giving up on {file_name}")
+
     dataframe = google_sheet_client.load_google_sheet(None, file.title, tab)
     if list(dataframe.columns.values)[0].lower() != "id":
         warning(f"{file.title}: First column did not match expected name of id")
@@ -136,16 +154,8 @@ def qualtrics_loader(load_type: str):
         qualtrics_client = None
         qualtrics_mailing_lists = []
 
-    qualtrics_files_to_load = list(
-        filter(
-            lambda file: should_file_be_processed(file, qualtrics_mailing_lists),
-            all_qualtrics_files_to_load,
-        )
-    )
-
-    info(f"Found {len(qualtrics_files_to_load)} files to process.")
-
-    for file in qualtrics_files_to_load:
+    for file in all_qualtrics_files_to_load:
         process_qualtrics_file(
-            file, is_test, google_sheet_client, schema, qualtrics_client
+            file, is_test, google_sheet_client, schema, qualtrics_client,
+            qualtrics_mailing_lists
         )
