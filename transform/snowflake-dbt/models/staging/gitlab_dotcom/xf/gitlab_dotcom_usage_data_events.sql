@@ -52,42 +52,6 @@
     "is_representative_of_stage": "False"
   },
   {
-    "event_name": "ci_builds",
-    "source_table_name": "gitlab_dotcom_ci_builds",
-    "user_column_name": "ci_build_user_id",
-    "key_to_parent_project": "ci_build_project_id",
-    "primary_key": "ci_build_id",
-    "stage_name": "verify",
-    "is_representative_of_stage": "False"
-  },
-  {
-    "event_name": "ci_pipeline_schedules",
-    "source_table_name": "gitlab_dotcom_ci_pipeline_schedules",
-    "user_column_name": "owner_id",
-    "key_to_parent_project": "project_id",
-    "primary_key": "ci_pipeline_schedule_id",
-    "stage_name": "verify",
-    "is_representative_of_stage": "False"
-  },
-  {
-    "event_name": "ci_pipelines",
-    "source_table_name": "gitlab_dotcom_ci_pipelines",
-    "user_column_name": "user_id",
-    "key_to_parent_project": "project_id",
-    "primary_key": "ci_pipeline_id",
-    "stage_name": "verify",
-    "is_representative_of_stage": "True"
-  },
-  {
-    "event_name": "ci_stages",
-    "source_table_name": "gitlab_dotcom_ci_stages",
-    "user_column_name": "NULL",
-    "key_to_parent_project": "project_id",
-    "primary_key": "ci_stage_id",
-    "stage_name": "configure",
-    "is_representative_of_stage": "False"
-  },
-  {
     "event_name": "ci_triggers",
     "source_table_name": "gitlab_dotcom_ci_triggers",
     "user_column_name": "owner_id",
@@ -104,33 +68,6 @@
     "primary_key": "clusters_applications_helm_id",
     "stage_name": "configure",
     "is_representative_of_stage": "True"
-  },
-  {
-    "event_name": "container_scanning",
-    "source_cte_name": "container_scanning_jobs",
-    "user_column_name": "ci_build_user_id",
-    "key_to_parent_project": "ci_build_project_id",
-    "primary_key": "ci_build_id",
-    "stage_name": "secure",
-    "is_representative_of_stage": "False"
-  },
-  {
-    "event_name": "dast",
-    "source_cte_name": "dast_jobs",
-    "user_column_name": "ci_build_user_id",
-    "key_to_parent_project": "ci_build_project_id",
-    "primary_key": "ci_build_id",
-    "stage_name": "secure",
-    "is_representative_of_stage": "False"
-  },
-  {
-    "event_name": "dependency_scanning",
-    "source_cte_name": "dependency_scanning_jobs",
-    "user_column_name": "ci_build_user_id",
-    "key_to_parent_project": "ci_build_project_id",
-    "primary_key": "ci_build_id",
-    "stage_name": "secure",
-    "is_representative_of_stage": "False"
   },
   {
     "event_name": "deployments",
@@ -250,24 +187,6 @@
     "is_representative_of_stage": "False"
   },
   {
-    "event_name": "license_management",
-    "source_cte_name": "license_management_jobs",
-    "user_column_name": "ci_build_user_id",
-    "key_to_parent_project": "ci_build_project_id",
-    "primary_key": "ci_build_id",
-    "stage_name": "secure",
-    "is_representative_of_stage": "False"
-  },
-  {
-    "event_name": "license_scanning",
-    "source_cte_name": "license_scanning_jobs",
-    "user_column_name": "ci_build_user_id",
-    "key_to_parent_project": "ci_build_project_id",
-    "primary_key": "ci_build_id",
-    "stage_name": "secure",
-    "is_representative_of_stage": "False"
-  },
-  {
     "event_name": "merge_requests",
     "source_table_name": "gitlab_dotcom_merge_requests",
     "user_column_name": "author_id",
@@ -355,33 +274,6 @@
     "key_to_parent_project": "project_id",
     "primary_key": "requirement_id",
     "stage_name": "plan",
-    "is_representative_of_stage": "False"
-  },
-  {
-    "event_name": "sast",
-    "source_cte_name": "sast_jobs",
-    "user_column_name": "ci_build_user_id",
-    "key_to_parent_project": "ci_build_project_id",
-    "primary_key": "ci_build_id",
-    "stage_name": "secure",
-    "is_representative_of_stage": "False"
-  },
-  {
-    "event_name": "secret_detection",
-    "source_cte_name": "secret_detection_jobs",
-    "user_column_name": "ci_build_user_id",
-    "key_to_parent_project": "ci_build_project_id",
-    "primary_key": "ci_build_id",
-    "stage_name": "secure",
-    "is_representative_of_stage": "True"
-  },
-  {
-    "event_name": "secure_stage_ci_jobs",
-    "source_table_name": "gitlab_dotcom_secure_stage_ci_jobs",
-    "user_column_name": "ci_build_user_id",
-    "key_to_parent_project": "ci_build_project_id",
-    "primary_key": "ci_build_id",
-    "stage_name": "secure",
     "is_representative_of_stage": "False"
   },
   {
@@ -491,25 +383,9 @@ WITH gitlab_subscriptions AS (
     WHERE target_type = 'WikiPage::Meta' 
       AND event_action_type_id IN (1, 2)
 
-), container_scanning_jobs AS (
+),
 
-    SELECT *
-    FROM {{ ref('gitlab_dotcom_secure_stage_ci_jobs') }}
-    WHERE secure_ci_job_type = 'container_scanning'
-
-), dast_jobs AS (
-
-    SELECT *
-    FROM {{ ref('gitlab_dotcom_secure_stage_ci_jobs') }}
-    WHERE secure_ci_job_type = 'dast'
-
-), dependency_scanning_jobs AS (
-
-    SELECT *
-    FROM {{ ref('gitlab_dotcom_secure_stage_ci_jobs') }}
-    WHERE secure_ci_job_type = 'dependency_scanning'
-
-), epic_notes AS (
+epic_notes AS (
 
     SELECT *
     FROM {{ ref('gitlab_dotcom_epic_notes_xf') }}
@@ -540,18 +416,6 @@ WITH gitlab_subscriptions AS (
     FROM {{ref('gitlab_dotcom_resource_milestone_events_xf')}}
     WHERE issue_id IS NOT NULL
   
-), license_management_jobs AS (
-
-    SELECT *
-    FROM {{ ref('gitlab_dotcom_secure_stage_ci_jobs') }}
-    WHERE secure_ci_job_type = 'license_management'
-
-), license_scanning_jobs AS (
-
-    SELECT *
-    FROM {{ ref('gitlab_dotcom_secure_stage_ci_jobs') }}
-    WHERE secure_ci_job_type = 'license_scanning'
-
 ), merge_request_notes AS (
 
     SELECT *
@@ -589,18 +453,6 @@ WITH gitlab_subscriptions AS (
       invite_created_at AS created_at
     FROM {{ ref('gitlab_dotcom_members') }}
     WHERE member_source_type = 'Namespace'
-
-), sast_jobs AS (
-
-    SELECT *
-    FROM {{ ref('gitlab_dotcom_secure_stage_ci_jobs') }}
-    WHERE secure_ci_job_type = 'sast'
-
-), secret_detection_jobs AS (
-
-    SELECT *
-    FROM {{ ref('gitlab_dotcom_secure_stage_ci_jobs') }}
-    WHERE secure_ci_job_type = 'secret_detection'
 
 ), services AS (
 
