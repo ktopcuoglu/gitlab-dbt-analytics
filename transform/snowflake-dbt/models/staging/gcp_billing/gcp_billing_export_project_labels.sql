@@ -10,16 +10,16 @@ WITH source AS (
 ), renamed as (
 
     SELECT
-        source.source_surrogate_key                              AS source_surrogate_key,
+        source.primary_key                                       AS source_primary_key,
         project_labels_flat.value['key']::VARCHAR                AS project_label_key,
         project_labels_flat.value['value']::VARCHAR              AS project_label_value,
         {{ dbt_utils.surrogate_key([
-            'source_surrogate_key',
+            'source_primary_key',
             'project_label_key',
             'project_label_value'] ) }}                          AS project_label_pk
     FROM source,
     LATERAL FLATTEN(input=> project_labels) project_labels_flat
 )
 
-SELECT * 
+SELECT *
 FROM renamed
