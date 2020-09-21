@@ -16,7 +16,7 @@ WITH check_data AS (
       {% endfor %}
           ) AS is_incorrect
     FROM {{ ref(golden_record_model) }} golden_records
-    JOIN {{ source(source_name, table_name) }} source_table ON
+    LEFT JOIN {{ source(source_name, table_name) }} source_table ON
     {%- for column in gr_column_names %}
         source_table.{{ column }} = golden_records.{{ column }}
         {% if not loop.last %}
