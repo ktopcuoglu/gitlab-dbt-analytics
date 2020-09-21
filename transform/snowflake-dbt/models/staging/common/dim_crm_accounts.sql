@@ -9,12 +9,16 @@ WITH sfdc_account AS (
     SELECT *
     FROM {{ ref('sfdc_users_source') }}
 
+), sfdc_record_type AS (
+
+    SELECT *
+    FROM {{ ref('sfdc_record_type') }}
+
 ), ultimate_parent_account AS (
 
     SELECT
       account_id,
       account_name,
-      account_segment,
       billing_country,
       df_industry,
       account_owner_team,
@@ -46,7 +50,7 @@ WITH sfdc_account AS (
     sfdc_account.billing_country                  AS crm_account_country,
     ultimate_parent_account.account_id            AS ultimate_parent_account_id,
     ultimate_parent_account.account_name          AS ultimate_parent_account_name,
-    {{ sales_segment_cleaning('ultimate_parent_account.account_segment') }}
+    {{ sales_segment_cleaning('sfdc_account.ultimate_parent_sales_segment') }}
                                                   AS ultimate_parent_account_segment,
     ultimate_parent_account.billing_country       AS ultimate_parent_billing_country,
     ultimate_parent_account.df_industry           AS ultimate_parent_industry,
@@ -64,7 +68,11 @@ WITH sfdc_account AS (
       WHEN sfdc_account.is_deleted
         THEN master_records.sfdc_master_record_id
       ELSE NULL
-    END                                           AS merged_to_account_id
+    END                                           AS merged_to_account_id,
+    IFF(sfdc_record_type.record_type_label != 'Channel'
+        AND sfdc_account.account_type NOT IN ('Unofficial Reseller','Authorized Reseller','Prospective Partner','Partner','Former Reseller','Reseller','Prospective Reseller'),
+        FALSE, TRUE)                              AS is_reseller,
+    sfdc_account.potential_arr_lam
   FROM sfdc_account
   LEFT JOIN master_records
     ON sfdc_account.account_id = master_records.account_id
@@ -72,6 +80,8 @@ WITH sfdc_account AS (
     ON ultimate_parent_account.account_id = sfdc_account.ultimate_parent_account_id
   LEFT OUTER JOIN sfdc_users
     ON sfdc_account.technical_account_manager_id = sfdc_users.id
+  LEFT JOIN sfdc_record_type
+    ON sfdc_account.record_type_id = sfdc_record_type.record_type_id
 
 )
 
