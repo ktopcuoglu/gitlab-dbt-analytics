@@ -114,7 +114,12 @@ WITH RECURSIVE employee_directory AS (
 ), sheetload_engineering_speciality AS (
 
     SELECT *
-    FROM {{ ref('sheetload_engineering_speciality_prior_to_capture') }}
+    FROM {{ ref('sheetload_engineering_speciality_prior_to_capture') }}    
+
+), current_division_mapping AS (
+
+    SELECT *
+    FROM {{ ref('bamboohr_current_division_mapping') }}    
 
 ), enriched AS (
 
@@ -124,6 +129,7 @@ WITH RECURSIVE employee_directory AS (
       department_info.job_title,
       department_info.department,
       department_info.division,
+      current_division_mapping.division_mapped_current,
       COALESCE(job_role.cost_center, 
                cost_center_prior_to_bamboo.cost_center)                     AS cost_center,
       department_info.reports_to,
@@ -135,7 +141,6 @@ WITH RECURSIVE employee_directory AS (
             job_info_mapping_historical.job_grade, 
             job_role.job_grade)                                             AS job_grade,
       COALESCE(sheetload_engineering_speciality.speciality, job_role.jobtitle_speciality) AS jobtitle_speciality,
-      sheetload_engineering_speciality.speciality as test_speciality,
       ---to capture speciality for engineering prior to 2020.09.30 we are using sheetload, and capturing from bamboohr afterwards      
       location_factor.location_factor, 
       IFF(hire_date = date_actual OR 
@@ -228,6 +233,10 @@ WITH RECURSIVE employee_directory AS (
       AND date_details.date_actual BETWEEN sheetload_engineering_speciality.speciality_start_date 
                                        AND COALESCE(sheetload_engineering_speciality.speciality_end_date, '2020-09-30')
                                        ---Post 2020.09.30 we will capture engineering speciality from bamboohr
+    LEFT JOIN current_division_mapping
+      ON employee_directory.employee_id = current_division_mapping.employee_id
+      AND date_details.date_actual BETWEEN current_division_mapping.effective_date 
+                                    AND COALESCE(current_division_mapping.effective_end_date, CURRENT_DATE())
     WHERE employee_directory.employee_id IS NOT NULL
 
 ), base_layers as (

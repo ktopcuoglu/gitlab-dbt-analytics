@@ -87,20 +87,14 @@ WITH dates AS (
     SELECT *
     FROM {{ ref ('employee_directory_intermediate') }}
  
-), current_division_mapping AS (
+), intermediate AS (
 
-    SELECT *
-    FROM {{ ref ('bamboohr_current_division_mapping') }}
-
-{# ), intermediate AS ( #}
-)
     SELECT
       employees.date_actual,
       employees.department,
-      current_division_mapping.division_mapped_current,
-      employees.division,
-      job_role,
-      job_grade,
+      division_mapped_current                                                  AS division,
+      job_role_modified                                                        AS job_role,
+      COALESCE(job_grade,'NA')                                                 AS job_grade,
       mapping_enhanced.eeoc_field_name,                                                       
       mapping_enhanced.eeoc_value,                                          
       IFF(dates.start_date = date_actual,1,0)                                   AS headcount_start,
@@ -157,13 +151,10 @@ WITH dates AS (
     LEFT JOIN separation_reason
       ON separation_reason.employee_id = employees.employee_id
       AND employees.date_actual = separation_reason.valid_from_date
-    LEFT JOIN current_division_mapping
-      ON employees.employee_id = current_division_mapping.employee_id
-      AND dates.end_date BETWEEN current_division_mapping.effective_date AND current_division_mapping.effective_end_date --map to division at end of month 
    WHERE date_actual IS NOT NULL
 
 
-{# ), aggregated AS (
+), aggregated AS (
 
 
     SELECT
@@ -237,4 +228,4 @@ WITH dates AS (
 ) 
 
 SELECT * 
-FROM aggregated #}
+FROM aggregated
