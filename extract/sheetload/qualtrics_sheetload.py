@@ -29,12 +29,16 @@ def get_qualtrics_request_table_name(file_id):
     return "".join(x for x in file_id if x.isalpha()).lower()
 
 
-def should_file_be_processed(file, qualtrics_mailing_lists):
-    file_name = file.title
-    _, tab = file_name.split(".")
+def should_file_be_processed(file_name, tab, qualtrics_mailing_lists):
+    _, file_name_split = file_name.split(".")
     if tab in qualtrics_mailing_lists:
         info(
             f"{file_name}: Qualtrics already has mailing list with corresponding name -- not processing."
+        )
+        return False
+    if tab != file_name_split:
+        error(
+            f"{file_name}: First worksheet did not match expected name of {file_name_split}"
         )
         return False
     return True
@@ -67,23 +71,24 @@ def push_contacts_to_qualtrics(
 
 
 def process_qualtrics_file(
-    file, is_test, google_sheet_client, schema, qualtrics_client, qualtrics_mailing_lists
+    file,
+    is_test,
+    google_sheet_client,
+    schema,
+    qualtrics_client,
+    qualtrics_mailing_lists,
 ):
-    maximum_backoff_sec = 600
+    maximum_backoff_sec = 300
     n = 0
+    should_file_be_processed = False
     while maximum_backoff_sec > (2 ** n):
         try:
             file_name = file.title
-            _, file_name_split = file_name.split(".")
+
             tab = file.sheet1.title
-            if tab in qualtrics_mailing_lists:
-                info(
-                    f"{file_name}: Qualtrics already has mailing list with corresponding name -- not processing."
-                )
-                return False
-            if tab != file_name_split:
-                error(f"{file_name}: First worksheet did not match expected name of {file_name_split}")
-                return
+            should_file_be_processed = should_file_be_processed(
+                file_name, tab, qualtrics_mailing_lists
+            )
         except APIError as gspread_error:
             if gspread_error.response.status_code == 429:
                 google_sheet_client.wait_exponential_backoff(n)
@@ -92,7 +97,9 @@ def process_qualtrics_file(
                 raise
     else:
         error(f"Max retries exceeded, giving up on {file_name}")
-
+        return
+    if not should_file_be_processed:
+        return
     dataframe = google_sheet_client.load_google_sheet(None, file_name, tab)
     if list(dataframe.columns.values)[0].lower() != "id":
         warning(f"{file.title}: First column did not match expected name of id")
@@ -156,6 +163,10 @@ def qualtrics_loader(load_type: str):
 
     for file in all_qualtrics_files_to_load:
         process_qualtrics_file(
-            file, is_test, google_sheet_client, schema, qualtrics_client,
-            qualtrics_mailing_lists
+            file,
+            is_test,
+            google_sheet_client,
+            schema,
+            qualtrics_client,
+            qualtrics_mailing_lists,
         )
