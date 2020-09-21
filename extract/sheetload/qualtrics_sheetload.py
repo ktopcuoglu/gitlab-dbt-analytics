@@ -37,9 +37,6 @@ def should_file_be_processed(file, qualtrics_mailing_lists):
             f"{file_name}: Qualtrics already has mailing list with corresponding name -- not processing."
         )
         return False
-    if file.sheet1.title != tab:
-        error(f"{file_name}: First worksheet did not match expected name of {tab}")
-        return False
     return True
 
 
@@ -72,7 +69,12 @@ def push_contacts_to_qualtrics(
 def process_qualtrics_file(
     file, is_test, google_sheet_client, schema, qualtrics_client
 ):
+    file_name = file.title
+    _, file_name_split = file_name.split(".")
     tab = file.sheet1.title
+    if tab != file_name_split:
+        error(f"{file_name}: First worksheet did not match expected name of {tab}")
+        return
     dataframe = google_sheet_client.load_google_sheet(None, file.title, tab)
     if list(dataframe.columns.values)[0].lower() != "id":
         warning(f"{file.title}: First column did not match expected name of id")
