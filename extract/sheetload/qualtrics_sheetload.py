@@ -67,12 +67,7 @@ def push_contacts_to_qualtrics(
 
 
 def process_qualtrics_file(
-    file,
-    is_test,
-    google_sheet_client,
-    schema,
-    qualtrics_client,
-    qualtrics_mailing_lists,
+    file, is_test, google_sheet_client, schema, qualtrics_client, qualtrics_mailing_lists
 ):
     maximum_backoff_sec = 600
     n = 0
@@ -87,9 +82,7 @@ def process_qualtrics_file(
                 )
                 return False
             if tab != file_name_split:
-                error(
-                    f"{file_name}: First worksheet did not match expected name of {file_name_split}"
-                )
+                error(f"{file_name}: First worksheet did not match expected name of {file_name_split}")
                 return
         except APIError as gspread_error:
             if gspread_error.response.status_code == 429:
@@ -100,7 +93,7 @@ def process_qualtrics_file(
     else:
         error(f"Max retries exceeded, giving up on {file_name}")
 
-    dataframe = google_sheet_client.load_google_sheet(None, file.title, tab)
+    dataframe = google_sheet_client.load_google_sheet(None, file_name, tab)
     if list(dataframe.columns.values)[0].lower() != "id":
         warning(f"{file.title}: First column did not match expected name of id")
         return
@@ -163,10 +156,6 @@ def qualtrics_loader(load_type: str):
 
     for file in all_qualtrics_files_to_load:
         process_qualtrics_file(
-            file,
-            is_test,
-            google_sheet_client,
-            schema,
-            qualtrics_client,
-            qualtrics_mailing_lists,
+            file, is_test, google_sheet_client, schema, qualtrics_client,
+            qualtrics_mailing_lists
         )
