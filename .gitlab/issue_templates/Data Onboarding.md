@@ -67,7 +67,7 @@ Please watch one minute of [this clip](https://www.youtube.com/watch?v=LqzDY76Q8
 *This is the most important thing to learn during all of onboarding.*
 
 **Getting your computer set up locally**
-* Make sure that you have [created your SSH keys](https://docs.gitlab.com/ee/gitlab-basics/create-your-ssh-keys.html) prior to running this. You can check this by typing `ssh -T git@gitlab.com` into your terminal which should return "Welcome to GitLab, " + your_username
+* Make sure that you have [created your SSH keys](https://docs.gitlab.com/ee/gitlab-basics/create-your-ssh-keys.html) prior to running this. You can check this by typing `ssh -T git@gitlab.com` into your terminal which should return "Welcome to GitLab, " + your_username. Make the SSH key with no password.
 <details>
 
 <summary>For Data Analysts</summary>
