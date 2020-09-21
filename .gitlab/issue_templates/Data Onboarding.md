@@ -67,7 +67,7 @@ Please watch one minute of [this clip](https://www.youtube.com/watch?v=LqzDY76Q8
 *This is the most important thing to learn during all of onboarding.*
 
 **Getting your computer set up locally**
-* Make sure that you have [created your SSH keys](https://docs.gitlab.com/ee/gitlab-basics/create-your-ssh-keys.html) prior to running this. You can check this by typing `ssh -T git@gitlab.com` into your terminal which should return "Welcome to GitLab, " + your_username
+* Make sure that you have [created your SSH keys](https://docs.gitlab.com/ee/gitlab-basics/create-your-ssh-keys.html) prior to running this. You can check this by typing `ssh -T git@gitlab.com` into your terminal which should return "Welcome to GitLab, " + your_username. Make the SSH key with no password.
 <details>
 
 <summary>For Data Analysts</summary>
@@ -205,6 +205,7 @@ Snowflake SQL is probably not that different from the dialects of SQL you're alr
 
 
 ### Getting Set up with dbt locally
+- Ensure you've set up your SSH configuration in the previous step as this is required to connect to one our dbt packages
 - All dbt commands need to be run within the `dbt-image` docker container
 - To get into the `dbt-image` docker container, go to the analytics project (which you can get to by typing `goto analytics` from anywhere on your Mac) and run the command `make dbt-image`. This will spin up our docker container that contains `dbt` and give you a bash shell within the `analytics/transform/snowflake-dbt` directory.
 - All changes made to the files within the `analytics` repo will automatically be visible in the docker container! This container is only used to run `dbt` commands themselves, not to write SQL or edit `dbt` files in general (though technically it could be, as VIM is available within the container)

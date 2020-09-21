@@ -107,6 +107,9 @@ services:
           source: ${HOME}/.dbt
           target: /usr/local/dbt_profiles/
           read_only: True
+        - type: bind
+          source: ${HOME}/.ssh
+          target: /root/.ssh
 
 volumes:
   airflow_logs:

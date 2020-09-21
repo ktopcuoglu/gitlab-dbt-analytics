@@ -2,25 +2,13 @@ version: 2
 
 models:
   - name: zuora_accounts_new_updated
-    description: '{{ doc("zuora_accounts_new_updated") }}'
     columns:
       - name: date_day
         tests:
           - not_null
   - name: zuora_subscriptions_new_updated
-    description: '{{ doc("zuora_subscriptions_new_updated") }}'
     columns:
       - name: date_day
         tests:
           - not_null
-  - name: zuora_account_source_golden_records
-    description: '{{ doc("zuora_account_golden_records") }}'
-    columns:
-      - name: account_id
-      - name: account_name
-  - name: zuora_subscription_source_golden_records
-    description: '{{ doc("zuora_subscription_golden_records") }}'
-    columns:
-      - name: subscription_id
-      - name: subscription_start_date
 
