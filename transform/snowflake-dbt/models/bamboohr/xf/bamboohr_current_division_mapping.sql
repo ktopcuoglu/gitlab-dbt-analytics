@@ -1,18 +1,22 @@
-WITH current_division_department_mapping AS (
+WITH job_info AS (
 
     SELECT *
-    FROM {{ ref ('cost_center_division_department_mapping_current') }}
+    FROM {{ ref ('bamboohr_job_info') }}
 
 ), bamboo_mapping AS (
 
     SELECT *
     FROM {{ ref ('bamboohr_id_employee_number_mapping') }}
 
-), job_info AS (
+), current_division_department_mapping AS (
 
-    SELECT *
-    FROM {{ ref ('bamboohr_job_info') }}
-
+    SELECT job_info.*, termination_date
+    FROM job_info
+    LEFT JOIN bamboo_mapping
+      ON job_info.employee_id = bamboo_mapping.employee_id
+    WHERE CURRENT_DATE() BETWEEN effective_date AND COALESCE(effective_end_date, CURRENT_DATE())
+    AND bamboo_mapping.termination_date IS NULL
+  
 ), mapped_division AS (
 
     SELECT 
