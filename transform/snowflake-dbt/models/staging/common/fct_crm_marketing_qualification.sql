@@ -46,10 +46,10 @@ SELECT
 
   SELECT *
   FROM marketing_qualified_leads
-  
-	UNION
-  
-	SELECT *
+
+  UNION
+
+  SELECT *
   FROM marketing_qualified_contacts
 
 )
