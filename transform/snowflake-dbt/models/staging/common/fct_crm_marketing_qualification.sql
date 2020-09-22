@@ -12,7 +12,7 @@ WITH sfdc_lead AS(
 
 SELECT
 
-    {{ dbt_utils.surrogate_key(['COALESCE(converted_contact_id, lead_id),'marketo_qualified_lead_date::timestamp']) }} AS event_id,
+    {{ dbt_utils.surrogate_key(['COALESCE(converted_contact_id, lead_id)','marketo_qualified_lead_date::timestamp']) }} AS event_id,
     marketo_qualified_lead_date::timestamp                                              AS event_timestamp,
     lead_id                                                                             AS sfdc_record_id,
     'lead'                                                                              AS sfdc_record,
