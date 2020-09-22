@@ -38,10 +38,8 @@ SELECT
   FROM sfdc_contact
   WHERE marketo_qualified_lead_date IS NOT NULL
 	HAVING event_id not in (
-
                          SELECT event_id
                          FROM marketing_qualified_leads
-
                          ) 
 
 ), unioned AS(
