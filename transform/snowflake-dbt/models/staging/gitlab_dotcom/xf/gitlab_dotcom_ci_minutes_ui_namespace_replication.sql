@@ -1,21 +1,21 @@
 WITH project_snapshot_monthly AS (
   
     SELECT *
-    FROM {{ ref('gitlab_dotcom_project_snapshots_monthly') }}
+    FROM {{ ref('gitlab_dotcom_project_historical_monthly') }}
     WHERE snapshot_month >= '2020-07-01'
       AND snapshot_month < DATE_TRUNC('month', CURRENT_DATE)
 
 ), namespace_lineage_monthly AS (
 
     SELECT *
-    FROM {{ ref('gitlab_dotcom_namespace_lineage_monthly') }}
+    FROM {{ ref('gitlab_dotcom_namespace_lineage_historical_monthly') }}
     WHERE snapshot_month >= '2020-07-01'
       AND snapshot_month < DATE_TRUNC('month', CURRENT_DATE)
 
 ), namespace_statistic_monthly AS (
   
     SELECT *
-    FROM {{ ref('gitlab_dotcom_namespace_statistics_snapshots_monthly') }}
+    FROM {{ ref('gitlab_dotcom_namespace_statistics_historical_monthly') }}
     WHERE snapshot_month >= '2020-07-01'
       AND snapshot_month < DATE_TRUNC('month', CURRENT_DATE)
 
@@ -33,7 +33,7 @@ WITH project_snapshot_monthly AS (
 ), namespace_snapshots_monthly AS (
 
     SELECT *
-    FROM {{ ref('gitlab_dotcom_namespace_snapshots_monthly') }}
+    FROM {{ ref('gitlab_dotcom_namespace_historical_monthly') }}
     WHERE snapshot_month >= '2020-07-01'
       AND snapshot_month < DATE_TRUNC('month', CURRENT_DATE)
 
