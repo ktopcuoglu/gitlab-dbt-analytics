@@ -8,10 +8,6 @@ from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOpera
 from airflow_utils import DATA_IMAGE, clone_repo_cmd, gitlab_defaults, slack_failed_task
 from kubernetes_helpers import get_affinity, get_toleration
 from kube_secrets import (
-    CI_STATS_DB_HOST,
-    CI_STATS_DB_NAME,
-    CI_STATS_DB_PASS,
-    CI_STATS_DB_USER,
     CUSTOMERS_DB_HOST,
     CUSTOMERS_DB_NAME,
     CUSTOMERS_DB_PASS,
@@ -25,20 +21,12 @@ from kube_secrets import (
     GITLAB_PROFILER_DB_NAME,
     GITLAB_PROFILER_DB_PASS,
     GITLAB_PROFILER_DB_USER,
-    LICENSE_DB_HOST,
-    LICENSE_DB_NAME,
-    LICENSE_DB_PASS,
-    LICENSE_DB_USER,
     PG_PORT,
     SNOWFLAKE_ACCOUNT,
     SNOWFLAKE_LOAD_PASSWORD,
     SNOWFLAKE_LOAD_ROLE,
     SNOWFLAKE_LOAD_USER,
     SNOWFLAKE_LOAD_WAREHOUSE,
-    VERSION_DB_HOST,
-    VERSION_DB_NAME,
-    VERSION_DB_PASS,
-    VERSION_DB_USER,
 )
 
 # Load the env vars into a dict and set env vars
@@ -68,21 +56,6 @@ every_day_at_four = "0 4 */1 * *"
 
 # Dictionary containing the configuration values for the various Postgres DBs
 config_dict = {
-    "ci_stats": {
-        "dag_name": "ci_stats",
-        "env_vars": {"HOURS": "13"},
-        "extract_schedule_interval": "0 */6 * * *",
-        "secrets": [
-            CI_STATS_DB_USER,
-            CI_STATS_DB_PASS,
-            CI_STATS_DB_HOST,
-            CI_STATS_DB_NAME,
-        ],
-        "start_date": datetime(2019, 5, 30),
-        "sync_schedule_interval": every_day_at_four,
-        "task_name": "ci-stats",
-        "validation_schedule_interval": validation_schedule_interval,
-    },
     "customers": {
         "dag_name": "customers",
         "env_vars": {"DAYS": "1"},
@@ -126,26 +99,6 @@ config_dict = {
         "start_date": datetime(2019, 5, 30),
         "sync_schedule_interval": every_day_at_four,
         "task_name": "gitlab-profiler",
-        "validation_schedule_interval": validation_schedule_interval,
-    },
-    "license": {
-        "dag_name": "license",
-        "env_vars": {"DAYS": "1"},
-        "extract_schedule_interval": every_eighth_hour,
-        "secrets": [LICENSE_DB_USER, LICENSE_DB_PASS, LICENSE_DB_HOST, LICENSE_DB_NAME],
-        "start_date": datetime(2019, 5, 30),
-        "sync_schedule_interval": every_day_at_four,
-        "task_name": "license",
-        "validation_schedule_interval": validation_schedule_interval,
-    },
-    "version": {
-        "dag_name": "version",
-        "env_vars": {"DAYS": "1", "AVG_CYCLE_ANALYTICS_ID": "1"},
-        "extract_schedule_interval": every_eighth_hour,
-        "secrets": [VERSION_DB_USER, VERSION_DB_PASS, VERSION_DB_HOST, VERSION_DB_NAME],
-        "start_date": datetime(2019, 5, 30),
-        "sync_schedule_interval": every_day_at_four,
-        "task_name": "version",
         "validation_schedule_interval": validation_schedule_interval,
     },
 }
