@@ -7,7 +7,7 @@
 WITH namespace_snapshots_daily AS (
 
     SELECT *
-    FROM {{ ref('gitlab_dotcom_namespace_snapshots_daily') }}
+    FROM {{ ref('gitlab_dotcom_namespace_historical_daily') }}
     WHERE snapshot_day >= '2020-01-01'::DATE
     {% if is_incremental() %}
 
