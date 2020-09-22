@@ -1,19 +1,19 @@
 WITH project_snapshot_monthly AS (
   
     SELECT *
-    FROM {{ ref('gitlab_dotcom_project_snapshots_monthly') }}
+    FROM {{ ref('gitlab_dotcom_project_historical_monthly') }}
     WHERE snapshot_month >= '2020-07-01'
 
 ), namespace_lineage_monthly AS (
 
     SELECT *
-    FROM {{ ref('gitlab_dotcom_namespace_lineage_monthly') }}
+    FROM {{ ref('gitlab_dotcom_namespace_lineage_historical_monthly') }}
     WHERE snapshot_month >= '2020-07-01'
 
 ), namespace_statistic_monthly AS (
   
     SELECT *
-    FROM {{ ref('gitlab_dotcom_namespace_statistics_snapshots_monthly') }}
+    FROM {{ ref('gitlab_dotcom_namespace_statistics_historical_monthly') }}
     WHERE snapshot_month >= '2020-07-01'
 
 ), namespace_lineage_current AS (
@@ -30,7 +30,7 @@ WITH project_snapshot_monthly AS (
 ), namespace_snapshots_monthly AS (
 
     SELECT *
-    FROM {{ ref('gitlab_dotcom_namespace_snapshots_monthly') }}
+    FROM {{ ref('gitlab_dotcom_namespace_historical_monthly') }}
     WHERE snapshot_month >= '2020-07-01'
 
 ), namespace_statistic_current AS (
