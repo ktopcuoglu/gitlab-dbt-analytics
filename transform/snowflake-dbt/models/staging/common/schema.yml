@@ -217,6 +217,8 @@ models:
         description: The status of the subscription
         tests:
           - not_null
+          - accepted_values:
+              values: ['Active', 'Cancelled']
       - name: crm_account_id
         description: account id from SFDC identifing the customer
       - name: billing_account_id

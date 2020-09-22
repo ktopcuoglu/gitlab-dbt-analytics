@@ -1,4 +1,5 @@
 WITH zuora_subscription AS (
+
   SELECT *
   FROM {{ ref('zuora_subscription_source') }}
 
@@ -54,3 +55,4 @@ INNER JOIN zuora_account
   ON zuora_account.account_id = zuora_subscription.account_id
 WHERE is_deleted = FALSE
   AND exclude_from_analysis IN ('False', '')
+  AND zuora_subscription.subscription_status NOT IN ('Draft', 'Expired')
