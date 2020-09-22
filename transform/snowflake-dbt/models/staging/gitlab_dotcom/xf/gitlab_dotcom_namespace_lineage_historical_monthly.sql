@@ -9,7 +9,7 @@ WITH date_details AS (
 ), namespace_lineage_snapshots_daily AS (
 
     SELECT *
-    FROM {{ ref('gitlab_dotcom_namespace_lineage_daily') }}
+    FROM {{ ref('gitlab_dotcom_namespace_lineage_historical_daily') }}
   
 ), namespace_lineage_snapshots_monthly AS (
   
