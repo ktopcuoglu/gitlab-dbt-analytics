@@ -2,7 +2,7 @@ packages:
   - git: https://gitlab.com/gitlab-data/snowflake_spend.git
     revision: v1.2.0
   - git: git@gitlab.com:gitlab-data/data-tests.git
-    revision: main
+    revision: "{{env_var('DATA_TEST_BRANCH')}}"
     warn-unpinned: false
   - package: fishtown-analytics/audit_helper
     version: 0.1.0
