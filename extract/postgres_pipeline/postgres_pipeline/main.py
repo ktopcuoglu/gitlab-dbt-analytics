@@ -322,7 +322,7 @@ def check_new_tables(
         return False
 
     # If the table doesn't exist, load whatever the table has
-    query = f"{raw_query} WHERE {primary_key} IS NOT NULL {additional_filtering}"
+    query = f"{raw_query} WHERE {primary_key} IS NOT NULL {additional_filtering} LIMIT 100000"
     chunk_and_upload(
         query,
         source_engine,
