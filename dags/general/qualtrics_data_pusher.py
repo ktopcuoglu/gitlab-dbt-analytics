@@ -15,6 +15,8 @@ from airflow_utils import (
 )
 from kube_secrets import (
     GCP_SERVICE_CREDS,
+    GIT_DATA_TESTS_PRIVATE_KEY,
+    GIT_DATA_TESTS_CONFIG,
     QUALTRICS_API_TOKEN,
     QUALTRICS_GROUP_ID,
     QUALTRICS_POOL_ID,
@@ -71,6 +73,8 @@ qualtrics_sheetload = KubernetesPodOperator(
     name="sheetload",
     secrets=[
         GCP_SERVICE_CREDS,
+        GIT_DATA_TESTS_PRIVATE_KEY,
+        GIT_DATA_TESTS_CONFIG,
         QUALTRICS_API_TOKEN,
         QUALTRICS_GROUP_ID,
         QUALTRICS_POOL_ID,

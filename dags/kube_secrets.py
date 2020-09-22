@@ -93,6 +93,13 @@ CI_STATS_DB_PASS = Secret("env", "CI_STATS_DB_PASS", "airflow", "CI_STATS_DB_PAS
 CI_STATS_DB_HOST = Secret("env", "CI_STATS_DB_HOST", "airflow", "CI_STATS_DB_HOST")
 CI_STATS_DB_NAME = Secret("env", "CI_STATS_DB_NAME", "airflow", "CI_STATS_DB_NAME")
 
+# dbt
+GIT_DATA_TESTS_PRIVATE_KEY = Secret(
+    "env", "GIT_DATA_TESTS_PRIVATE_KEY", "airflow", "GIT_DATA_TESTS_PRIVATE_KEY"
+)
+GIT_DATA_TESTS_CONFIG = Secret(
+    "env", "GIT_DATA_TESTS_CONFIG", "airflow", "GIT_DATA_TESTS_CONFIG"
+)
 
 # Snowflake Generic
 SNOWFLAKE_ACCOUNT = Secret("env", "SNOWFLAKE_ACCOUNT", "airflow", "SNOWFLAKE_ACCOUNT")
