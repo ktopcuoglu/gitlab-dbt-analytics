@@ -1,6 +1,6 @@
 {{ config({
     "materialized": "incremental",
-    "unique_key" : "primary_key"
+    "unique_key" : "source_primary_key"
     })
 }}
 
