@@ -41,5 +41,10 @@ WITH sfdc_opportunity AS (
 
 )
 
-SELECT *
-FROM sales_accepted_opps
+{{ dbt_audit(
+    cte_ref="sales_accepted_opps",
+    created_by="@jjstark ",
+    updated_by="@msendal",
+    created_date="2020-09-15",
+    updated_date="2020-09-17"
+) }}

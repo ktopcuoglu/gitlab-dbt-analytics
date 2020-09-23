@@ -59,8 +59,10 @@ seeds:
     gitlab_release_schedule:
       +column_types:
         major_minor_version: varchar
-    golden_records:
-      +schema: tdf
+  
+  data_tests:
+    +schema: tdf
+
 # ==================
 # Variable Configs
 # ==================
@@ -370,9 +372,6 @@ models:
       +materialized: table
       +schema: tdf
       secure: true
-      zuora:
-        golden_records:
-          +materialized: view
 
 
 # ======
