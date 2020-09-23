@@ -20,7 +20,7 @@ WITH usage_data AS (
 , aggregated AS (
 
     SELECT
-      {{ dbt_utils.surrogate_key(['namespace_id', 'user_id', 'event_name', 'event_date']) }} AS daily_usage_data_event_id,
+      {{ dbt_utils.surrogate_key(['namespace_id', 'user_id', 'event_name', 'TO_DATE(event_created_at)']) }} AS daily_usage_data_event_id,
       {{ dbt_utils.star(from=ref('gitlab_dotcom_usage_data_events'), except=["EVENT_CREATED_AT", "PARENT_TYPE", "PARENT_ID", "PARENT_CREATED_AT"]) }},
       TO_DATE(event_created_at) AS event_date,
       COUNT(*)                  AS event_count
