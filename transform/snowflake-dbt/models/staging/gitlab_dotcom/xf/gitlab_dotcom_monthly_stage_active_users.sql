@@ -37,6 +37,7 @@ WITH date_details AS (
 )
 
 SELECT 
+  -- primary key
   {{ dbt_utils.surrogate_key(['gitlab_dotcom_usage_data_events.namespace_id', 
                               'user_id', 
                               'event_name', 
