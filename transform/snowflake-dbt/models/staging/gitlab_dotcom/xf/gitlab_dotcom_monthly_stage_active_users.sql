@@ -41,7 +41,7 @@ SELECT
   {{ dbt_utils.surrogate_key(['gitlab_dotcom_usage_data_events.namespace_id', 
                               'user_id', 
                               'event_name', 
-                              'smau_month']) }}                                          AS mau_id,
+                              'DATEADD(month, -1, date_day)']) }}                      AS mau_id,
   DATEADD('month', -1, date_day)                                                         AS smau_month,
   
   -- ids 
