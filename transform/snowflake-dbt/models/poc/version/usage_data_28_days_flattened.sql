@@ -17,7 +17,6 @@ WITH data AS (
           id                            AS ping_id,
           created_at,
           path                          AS metric_path, 
-          '{{ column }}' || '.' || path AS full_metrics_path,
           value                         AS metric_value
         FROM data,
         lateral flatten(input => raw_usage_data_payload, path => '{{ column }}',
@@ -41,5 +40,5 @@ SELECT
   flattened.metric_value
 FROM flattened
 INNER JOIN {{ ref('sheetload_dev_section_metrics' )}} AS metrics 
-  ON flattened.full_metrics_path = metrics.metrics_path
+  ON flattened.metric_path = metrics.metrics_path
     AND time_period = '{{metric_type}}'

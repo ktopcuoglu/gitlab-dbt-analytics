@@ -16,6 +16,7 @@ SELECT
   clean_metrics_name,
   product_tier,
   stage_name,
+  section_name, 
   is_smau,
   SUM(monthly_metric_value) AS monthly_metric_value_sum
 FROM monthly_usage_data
