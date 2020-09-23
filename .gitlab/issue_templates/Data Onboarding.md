@@ -18,7 +18,6 @@ Goal: To help bring you, our new data team member, up to speed in the GitLab Dat
    - [ ] Manager: Request addition to `@datateam` alias on Slack in PeopleOps Onboarding issue
    - [ ] Manager: Request addition to `@data-analysts` alias on Slack in PeopleOps Onboarding issue
    - [ ] Manager: Request addition to `Data Team` 1password vault in PeopleOps Onboarding issue
-- [ ] Manager: Add to the `gitlab-data/chatops` project as a Maintainer.
 - [ ] Manager: Add to the `gitlab-data` namespace as a Developer.
 - [ ] Manager: Add to Airflow as Analyst
 - [ ] Manager: Update codeowners file in the handbook to include the new team member
@@ -56,7 +55,6 @@ Goal: To help bring you, our new data team member, up to speed in the GitLab Dat
    - [ ] [Periscope Directory](https://about.gitlab.com/handbook/business-ops/data-team/platform/periscope-directory/)
 - [ ] Watch @tlapiana's [talk at DataEngConf](https://www.youtube.com/watch?v=eu623QBwakc) that gives a phenomenal overview of how the team works.
 - [ ] Watch [this great talk](https://www.youtube.com/watch?v=prcz0ubTAAg) on what Analytics is
-- [ ] Try running `/gitlab datachat run hello-world` in Slack in the #data team channel. You may be prompted to authenticate! Do it! (Sometimes we run [chatops](https://docs.gitlab.com/ee/ci/chatops/) to help with testing.). If you get `You are not allowed to perform given chatops command` double check you are added as a Maintainer of the project.
 - [ ] If relevant, watch ["The State of [Product] Data"](https://www.youtube.com/watch?v=eNLkj3Ho2bk&feature=youtu.be) from Eli at the Growth Fastboot. (You'll need to be logged into GitLab Unfiltered.)
 
 There is a lot of information being thrown at you over the last couple of days.
@@ -67,7 +65,7 @@ Please watch one minute of [this clip](https://www.youtube.com/watch?v=LqzDY76Q8
 *This is the most important thing to learn during all of onboarding.*
 
 **Getting your computer set up locally**
-* Make sure that you have [created your SSH keys](https://docs.gitlab.com/ee/gitlab-basics/create-your-ssh-keys.html) prior to running this. You can check this by typing `ssh -T git@gitlab.com` into your terminal which should return "Welcome to GitLab, " + your_username
+* Make sure that you have [created your SSH keys](https://docs.gitlab.com/ee/gitlab-basics/create-your-ssh-keys.html) prior to running this. You can check this by typing `ssh -T git@gitlab.com` into your terminal which should return "Welcome to GitLab, " + your_username. Make the SSH key with no password.
 <details>
 
 <summary>For Data Analysts</summary>
@@ -205,6 +203,7 @@ Snowflake SQL is probably not that different from the dialects of SQL you're alr
 
 
 ### Getting Set up with dbt locally
+- Ensure you've set up your SSH configuration in the previous step as this is required to connect to one our dbt packages
 - All dbt commands need to be run within the `dbt-image` docker container
 - To get into the `dbt-image` docker container, go to the analytics project (which you can get to by typing `goto analytics` from anywhere on your Mac) and run the command `make dbt-image`. This will spin up our docker container that contains `dbt` and give you a bash shell within the `analytics/transform/snowflake-dbt` directory.
 - All changes made to the files within the `analytics` repo will automatically be visible in the docker container! This container is only used to run `dbt` commands themselves, not to write SQL or edit `dbt` files in general (though technically it could be, as VIM is available within the container)

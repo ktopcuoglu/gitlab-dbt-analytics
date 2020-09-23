@@ -8,7 +8,7 @@ WITH sfdc_lead AS(
 	SELECT *
 	FROM {{ ref('sfdc_contact')}}
 
-), marketing_qualification_events AS(
+), marketing_qualified_leads AS(
 
 SELECT
 
@@ -23,7 +23,7 @@ SELECT
   FROM sfdc_lead
   WHERE marketo_qualified_lead_date IS NOT NULL
 
-  UNION 
+), marketing_qualified_contacts AS(
 
   SELECT
 
@@ -37,13 +37,27 @@ SELECT
      
   FROM sfdc_contact
   WHERE marketo_qualified_lead_date IS NOT NULL
+  HAVING event_id not in (
+                         SELECT event_id
+                         FROM marketing_qualified_leads
+                         ) 
+
+), unioned AS(
+
+  SELECT *
+  FROM marketing_qualified_leads
+
+  UNION
+
+  SELECT *
+  FROM marketing_qualified_contacts
 
 )
 
 {{ dbt_audit(
-    cte_ref="marketing_qualification_events",
+    cte_ref="unioned",
     created_by="@jjstark ",
-    updated_by="@msendal",
+    updated_by="@jjstark",
     created_date="2020-09-09",
-    updated_date="2020-09-17"
+    updated_date="2020-09-22"
 ) }}
