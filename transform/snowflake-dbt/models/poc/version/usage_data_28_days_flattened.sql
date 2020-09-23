@@ -1,6 +1,6 @@
 
 {% set metric_type = '28_days' %}
-{% set columns_to_parse = ['usage_activity_by_stage_monthly', 'stats_used', 'usage_activity_by_stage_monthly'] %}
+{% set columns_to_parse = ['analytics_unique_visits', 'usage_activity_by_stage_monthly', 'stats_used', 'usage_activity_by_stage_monthly', 'redis_hll_counters'] %}
 
 WITH data AS ( 
   
@@ -20,7 +20,7 @@ WITH data AS (
           '{{ column }}' || '.' || path AS full_metrics_path,
           value                         AS metric_value
         FROM data,
-        lateral flatten(input => {{ column }},
+        lateral flatten(input => raw_usage_data_payload, path => '{{ column }}',
         recursive => true) 
         WHERE typeof(value) IN ('INTEGER', 'DECIMAL')
         ORDER BY created_at DESC
