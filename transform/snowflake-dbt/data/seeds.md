@@ -5,6 +5,10 @@ Past releases can be found [here](https://about.gitlab.com/releases/).
 Historical release dates were copied from [this issue](https://gitlab.com/gitlab-com/www-gitlab-com/issues/5396).
 {% enddocs %}
 
+{% docs gitlab_dotcom_xmau_metrics_doc %}
+This seed file captures the different metrics used for calculation of XMAU metrics. More information around XMAU metrics [here](https://about.gitlab.com/handbook/product/performance-indicators/#three-versions-of-xmau)
+{% enddocs %}
+
 {% docs version_blacklisted_instance_uuid %}
 This seed file captures the UUID sending us abnormal usage ping counters. Those UUID are excluded from the analytics downstream models in order to allow easy charting.
 For example in [this issue](https://gitlab.com/gitlab-data/analytics/-/issues/4343), one can clearly see an abnormal spike in monthly numbers of `projects_prometheus_active`.
