@@ -19,5 +19,5 @@ SELECT
   SUM(monthly_metric_value) AS monthly_metric_value_sum
 FROM monthly_usage_data
 INNER JOIN fct_usage_ping_payloads
-  ON monthly_usage_data.usage_ping_id = fct_usage_ping_payloads.usage_ping_id
+  ON monthly_usage_data.ping_id = fct_usage_ping_payloads.usage_ping_id
 GROUP BY 1,2,3,4
