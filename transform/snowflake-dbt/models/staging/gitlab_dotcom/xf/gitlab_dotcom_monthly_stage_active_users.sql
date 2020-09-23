@@ -17,7 +17,7 @@ WITH date_details AS (
     FROM {{ ref('gitlab_dotcom_usage_data_events') }}
     {% if is_incremental() %}
 
-      WHERE DATE_TRUNC('month', event_date) >= (SELECT DATEADD('days', -1, MAX(smau_month) FROM {{this}}))
+      WHERE DATE_TRUNC('month', event_created_at) >= (SELECT DATEADD('days', -1, MAX(smau_month) FROM {{this}}))
 
     {% endif %}
       
