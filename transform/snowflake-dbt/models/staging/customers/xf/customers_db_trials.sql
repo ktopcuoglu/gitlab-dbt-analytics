@@ -62,7 +62,7 @@ WITH customers AS (
 
   SELECT orders_snapshots.*,
      FIRST_VALUE(subscription_name_slugify) IGNORE NULLS
-      OVER (PARTITION BY order_id ORDER BY order_updated_at DESC) AS first_subscription_name_slugify
+      OVER (PARTITION BY order_id ORDER BY order_updated_at ASC) AS first_subscription_name_slugify
   FROM orders_snapshots
   LEFT JOIN ci_minutes_charges
     ON orders_snapshots.subscription_id = ci_minutes_charges.subscription_id
