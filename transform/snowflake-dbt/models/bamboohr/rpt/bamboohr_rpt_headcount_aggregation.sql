@@ -1,8 +1,9 @@
 {{ config({
+    "materialized":"table",
     "schema": "analytics"
+    
     })
 }}
-
  
 {% set partition_statement = "OVER (PARTITION BY base.breakout_type, base.department, base.division, base.job_role,
                                     base.job_grade, base.eeoc_field_name, base.eeoc_value
@@ -24,7 +25,7 @@ WITH source AS (
 
     SELECT DISTINCT 
       month_date,
-      breakout_type, 
+      breakout_type_modified AS breakout_type,
       department,
       division,
       job_role,
@@ -37,13 +38,18 @@ WITH source AS (
 
    SELECT
       base.month_date,
-      IFF(base.breakout_type = 'eeoc_breakout' AND base.eeoc_field_name = 'no_eeoc', 'kpi_breakout',base.breakout_type) AS breakout_type, 
+      base.breakout_type, 
       base.department,
       base.division,
       base.job_role,
       base.job_grade,
       base.eeoc_field_name,
       base.eeoc_value,
+      CASE WHEN base.breakout_type = 'eeoc_breakout' AND base.eeoc_field_name = 'no_eeoc' 
+            THEN 1 --kpi breakout 
+           WHEN base.breakout_Type = 'eeoc_breakout' THEN 1 
+           WHEN base.eeoc_field_name = 'no_eeoc' THEN 1
+           ELSE 0 END                                                               AS show_value_criteria,
       headcount_start,
       headcount_end,
       headcount_average,
@@ -117,9 +123,11 @@ WITH source AS (
     FROM base
     LEFT JOIN source  
       ON base.month_date = source.month_date
-      AND base.breakout_type = source.breakout_type
+      AND base.breakout_type = source.breakout_type_modified
       AND base.department = source.department
       AND base.division = source.division
+      AND COALESCE(base.job_role,'NA') = COALESCE(source.job_role,'NA')
+      AND COALESCE(base.job_grade,'NA') = COALESCE(source.job_grade,'NA')
       AND base.eeoc_field_name = source.eeoc_field_name
       AND base.eeoc_value = source.eeoc_value
     WHERE base.month_date < DATE_TRUNC('month', CURRENT_DATE)   
@@ -135,9 +143,9 @@ WITH source AS (
       job_grade,
       eeoc_field_name,
       eeoc_value,
-      IFF(headcount_start <4 AND eeoc_field_name != 'no_eeoc', 
+      IFF(headcount_start <4 AND show_value_criteria =0,
         NULL,headcount_start)                                               AS headcount_start,
-      IFF(headcount_end <4 AND eeoc_field_name != 'no_eeoc',
+      IFF(headcount_end <4 AND show_value_criteria = 0,
         NULL, headcount_end)                                                AS headcount_end,
       IFF(headcount_average <4 AND eeoc_field_name != 'no_eeoc',  
         NULL, headcount_average)                                            AS headcount_average,
@@ -221,5 +229,5 @@ WITH source AS (
 
 )
 
- SELECT * 
- FROM final
+SELECT * 
+FROM final

@@ -1,3 +1,8 @@
+{{ config({
+    "materialized":"table",
+    "schema": "sensitive"
+    })
+}}
 
 {% set repeated_metric_columns = 
       "SUM(headcount_start)                             AS headcount_start,
@@ -71,6 +76,7 @@ WITH dates AS (
       'no_eeoc'                         AS eeoc_value
     FROM mapping
  
+
 ), separation_reason AS(
 
     SELECT * 
@@ -87,7 +93,8 @@ WITH dates AS (
     SELECT
       employees.date_actual,
       department,
-      division,
+      division_mapped_current                                                   AS division,
+      --using the current division - department mapping for reporting
       job_role,
       job_grade,
       mapping_enhanced.eeoc_field_name,                                                       
@@ -222,5 +229,6 @@ WITH dates AS (
 
 ) 
 
-SELECT * 
+SELECT *,
+  IFF(breakout_type = 'eeoc_breakout' AND eeoc_field_name = 'no_eeoc', 'kpi_breakout', breakout_type) AS breakout_type_modified
 FROM aggregated

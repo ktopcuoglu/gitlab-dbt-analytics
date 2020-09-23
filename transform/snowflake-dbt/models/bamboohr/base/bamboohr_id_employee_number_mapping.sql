@@ -58,6 +58,11 @@ WITH source AS (
       gender,  
       nationality,
       region,
+      CASE WHEN region = 'Americas' AND country IN ('United States', 'Canada','Mexico') 
+            THEN 'NORAM'
+         WHEN region = 'Americas' AND country NOT IN ('United States', 'Canada','Mexico') 
+            THEN 'LATAM'
+         ELSE region END AS region_modified,
       greenhouse_candidate_id
     FROM intermediate
     WHERE hire_date IS NOT NULL
