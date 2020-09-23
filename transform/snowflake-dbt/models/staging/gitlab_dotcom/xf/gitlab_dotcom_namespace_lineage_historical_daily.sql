@@ -20,7 +20,7 @@ WITH namespace_snapshots_daily AS (
   SELECT
     *,
     IFNULL(valid_to, CURRENT_TIMESTAMP) AS valid_to_
-  FROM {{ ref("gitlab_dotcom_gitlab_subscriptions_snapshots_namespace_id_base") }}
+  FROM {{ ref('gitlab_dotcom_gitlab_subscriptions_snapshots_namespace_id_base') }}
 
 ), recursive_namespace_ultimate(snapshot_day, namespace_id, parent_id, upstream_lineage) AS (
     

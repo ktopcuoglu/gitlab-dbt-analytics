@@ -7,7 +7,7 @@
 WITH date_details AS (
   
     SELECT *
-    FROM {{ ref("date_details") }}
+    FROM {{ ref('date_details') }}
     WHERE date_actual <= CURRENT_DATE
     {% if is_incremental() %}
       AND date_actual >= (SELECT MAX(snapshot_day) FROM {{ this }})
