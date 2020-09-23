@@ -1,6 +1,8 @@
 WITH skeleton AS (
 
-    SELECT DISTINCT first_day_of_month, last_day_of_month
+    SELECT 
+      DISTINCT first_day_of_month, 
+      last_day_of_month
     FROM {{ ref('date_details') }}
     WHERE date_day = last_day_of_month
         AND last_day_of_month < CURRENT_DATE()
@@ -51,7 +53,7 @@ WITH skeleton AS (
     FROM skeleton
     LEFT JOIN events
         ON event_date BETWEEN DATEADD('days', -28, last_day_of_month) AND last_day_of_month
-    {{ dbt_utils.group_by(n=6)}}
+    {{ dbt_utils.group_by(n=6) }}
 
 )
 
