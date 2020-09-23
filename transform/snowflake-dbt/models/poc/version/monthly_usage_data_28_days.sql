@@ -19,8 +19,8 @@ SELECT
   ping_id,
   instance_id,
   created_month,
-  full_metrics_path,
-  stage,
+  metrics_path,
+  stage_name,
   clean_metrics_name,
   metric_value AS monthly_metric_value
 FROM transformed
