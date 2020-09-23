@@ -1,0 +1,6 @@
+
+version: 2
+
+models:
+    - name: gitlab_dotcom_dev_xmau_mart
+      description: '{{ doc("gitlab_dotcom_dev_xmau_mart") }}'
