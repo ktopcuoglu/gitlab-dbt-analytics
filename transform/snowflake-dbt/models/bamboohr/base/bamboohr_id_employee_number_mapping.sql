@@ -52,7 +52,7 @@ WITH source AS (
           WHEN age>= 60               THEN '60+'
           WHEN age IS NULL            THEN 'Unreported'
           WHEN age = -1               THEN 'Unreported'
-          ELSE NULL END               AS age_cohort,
+          ELSE NULL END                                       AS age_cohort,
       country,
       ethnicity,
       gender,  
@@ -62,7 +62,9 @@ WITH source AS (
             THEN 'NORAM'
          WHEN region = 'Americas' AND country NOT IN ('United States', 'Canada','Mexico') 
             THEN 'LATAM'
-         ELSE region END AS region_modified,
+         ELSE region END                                        AS region_modified,
+      IFF(TRIM(country)='United States',  COALESCE(gender,'Did Not Identify') || '_' || country, 
+                                    COALESCE(gender,'Did Not Identify') || '_'|| 'Non-US') AS gender_region,
       greenhouse_candidate_id
     FROM intermediate
     WHERE hire_date IS NOT NULL
