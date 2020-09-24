@@ -42,7 +42,7 @@ WITH usage_data AS (
       LATERAL FLATTEN(input => usage_data.raw_usage_data_payload, path => 'redis_hhl_counters', recursive => TRUE) f
     WHERE f.value > 0
     {% if is_incremental() %}
-        AND created_at >= (SELECT max(created_at) FROM {{ this }})
+        AND created_at >= (SELECT MAX(created_at) FROM {{ this }})
     {% endif %}
 
 
