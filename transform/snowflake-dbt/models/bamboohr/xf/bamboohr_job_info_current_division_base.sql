@@ -1,23 +1,22 @@
-{# {{ config({
+{{ config({
     "schema": "temporary"
     })
-}} #}
+}}
 
 WITH job_info AS (
 
     SELECT *
-    FROM "ANALYTICS"."ANALYTICS_SENSITIVE"."BAMBOOHR_JOB_INFO"
+    FROM {{ ref ('bamboohr_job_info') }}
 
 ), bamboo_mapping AS (
 
     SELECT *
-    FROM "ANALYTICS"."ANALYTICS_SENSITIVE"."BAMBOOHR_ID_EMPLOYEE_NUMBER_MAPPING"
+    FROM {{ ref ('bamboohr_id_employee_number_mapping') }}
 
 ), job_role AS (
 
     SELECT *
-    FROM "ANALYTICS"."ANALYTICS_SENSITIVE"."BAMBOOHR_JOB_ROLE"
-
+    FROM {{ ref ('bamboohr_job_role') }}
 
 ), current_division_department_mapping AS (
 

@@ -45,11 +45,7 @@ WITH source AS (
       base.job_grade,
       base.eeoc_field_name,
       base.eeoc_value,
-      CASE WHEN base.breakout_type = 'eeoc_breakout' AND base.eeoc_field_name = 'no_eeoc' 
-            THEN 1 --kpi breakout 
-           WHEN base.breakout_Type = 'eeoc_breakout' THEN 1 
-           WHEN base.eeoc_field_name = 'no_eeoc' THEN 1
-           ELSE 0 END                                                               AS show_value_criteria,
+      IFF(base.eeoc_field_name = 'no_eeoc', TRUE, FALSE)                            AS show_value_criteria,
       headcount_start,
       headcount_end,
       headcount_average,
@@ -143,9 +139,9 @@ WITH source AS (
       job_grade,
       eeoc_field_name,
       eeoc_value,
-      IFF(headcount_start <4 AND show_value_criteria =0,
+      IFF(headcount_start <4 AND show_value_criteria = FALSE,
         NULL,headcount_start)                                               AS headcount_start,
-      IFF(headcount_end <4 AND show_value_criteria = 0,
+      IFF(headcount_end <4 AND show_value_criteria = FALSE,
         NULL, headcount_end)                                                AS headcount_end,
       IFF(headcount_average <4 AND eeoc_field_name != 'no_eeoc',  
         NULL, headcount_average)                                            AS headcount_average,

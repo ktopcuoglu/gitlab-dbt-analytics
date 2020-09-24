@@ -226,7 +226,7 @@ WITH dates AS (
     WHERE department IS NOT NULL
     {{ dbt_utils.group_by(n=8) }} 
 
-) 
+)
 
 SELECT *,
   IFF(breakout_type = 'eeoc_breakout' AND eeoc_field_name = 'no_eeoc', 'kpi_breakout', breakout_type) AS breakout_type_modified

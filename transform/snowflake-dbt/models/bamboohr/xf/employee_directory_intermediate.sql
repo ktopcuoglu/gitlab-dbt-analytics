@@ -27,7 +27,7 @@ WITH RECURSIVE employee_directory AS (
 ), department_info AS (
 
     SELECT *
-    FROM {{ ref('bamboohr_job_info_xf') }}
+    FROM {{ ref('bamboohr_job_info_current_division_base') }}
 
 ), job_role AS (
 

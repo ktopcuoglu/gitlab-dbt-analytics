@@ -160,7 +160,7 @@ models:
         - name: separated_contributor
         - name: promotion
         - name: location_factor
-  - name: bamboohr_job_info_xf
+  - name: bamboohr_job_info_current_division_base
     description: This model identifies the current division department mapping and joins back on to bamboohr_job_info to map historical departments to the current division.      
   - name: employee_locality
     description: This idenitifes the location factor for an employee on a given day starting 2020.03.24
