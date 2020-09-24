@@ -1,5 +1,6 @@
 {{ config({
-    "materialized": "view"
+    "materialized": "incremental",
+    "unique_key" : "resource_label_pk"
     })
 }}
 
@@ -7,6 +8,11 @@ WITH source AS (
 
     SELECT *
     FROM {{ ref('gcp_billing_export_source') }}
+    {% if is_incremental() %}
+
+    WHERE uploaded_at >= (SELECT MAX(uploaded_at) FROM {{this}})
+
+    {% endif %}
 
 ), renamed as (
 
