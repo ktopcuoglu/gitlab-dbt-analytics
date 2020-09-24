@@ -30,7 +30,6 @@ WITH zuora_subscription AS (
 
 ), joined AS (
 
-<<<<<<< HEAD
   SELECT
     zuora_subscription.subscription_id,
     zuora_account.crm_id                                                      AS crm_account_id,
