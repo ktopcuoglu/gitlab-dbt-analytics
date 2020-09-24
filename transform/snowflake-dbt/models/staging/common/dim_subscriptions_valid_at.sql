@@ -22,21 +22,21 @@ WITH zuora_subscription_snapshots AS (
 
 SELECT
   zuora_subscription_snapshots.subscription_id,
-  zuora_account.crm_id,
-  zuora_account.account_id,
+  zuora_account.crm_id                                                      AS crm_account_id,
+  zuora_account.account_id                                                  AS billing_account_id,
   zuora_subscription_snapshots.subscription_name,
   zuora_subscription_snapshots.subscription_name_slugify,
   zuora_subscription_snapshots.subscription_status,
-  zuora_subscription_snapshots.version                                                AS subscription_version,
-  zuora_subscription_snapshots.auto_renew                                             AS is_auto_renew,
+  zuora_subscription_snapshots.version                                      AS subscription_version,
+  zuora_subscription_snapshots.auto_renew                                   AS is_auto_renew,
   zuora_subscription_snapshots.zuora_renewal_subscription_name,
   zuora_subscription_snapshots.zuora_renewal_subscription_name_slugify,
   zuora_subscription_snapshots.renewal_term,
   zuora_subscription_snapshots.renewal_term_period_type,
-  zuora_subscription_snapshots.subscription_start_date                                AS subscription_start_date,
-  zuora_subscription_snapshots.subscription_end_date                                  AS subscription_end_date,
-  DATE_TRUNC('month', zuora_subscription_snapshots.subscription_start_date)           AS subscription_start_month,
-  DATE_TRUNC('month', zuora_subscription_snapshots.subscription_end_date)             AS subscription_end_month
+  zuora_subscription_snapshots.subscription_start_date                       AS subscription_start_date,
+  zuora_subscription_snapshots.subscription_end_date                         AS subscription_end_date,
+  DATE_TRUNC('month', zuora_subscription_snapshots.subscription_start_date)  AS subscription_start_month,
+  DATE_TRUNC('month', zuora_subscription_snapshots.subscription_end_date)    AS subscription_end_month
 FROM zuora_subscription_snapshots
 INNER JOIN zuora_account
   ON zuora_account.account_id = zuora_subscription_snapshots.account_id
