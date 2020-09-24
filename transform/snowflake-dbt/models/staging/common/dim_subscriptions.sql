@@ -31,8 +31,8 @@ WITH zuora_subscription AS (
 
   SELECT
     zuora_subscription.subscription_id,
-    zuora_account.crm_id,
-    zuora_account.account_id,
+    zuora_account.crm_id                                                      AS crm_account_id,
+    zuora_account.account_id                                                  AS billing_account_id,
     zuora_subscription.subscription_name,
     zuora_subscription.subscription_name_slugify,
     zuora_subscription.subscription_status,
@@ -62,5 +62,5 @@ WITH zuora_subscription AS (
     created_by="@msendal",
     updated_by="@msendal",
     created_date="2020-06-01",
-    updated_date="2020-09-17"
+    updated_date="2020-09-24"
 ) }}
