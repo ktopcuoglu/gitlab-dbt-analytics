@@ -31,7 +31,7 @@ WITH source AS (
       job_role,
       job_grade,
       eeoc_field_name,                                                       
-      eeoc_value_modified AS eeoc_value
+      eeoc_value
       --- this is to group groups with less than 4 headcount
     FROM source
 
@@ -126,7 +126,7 @@ WITH source AS (
       AND COALESCE(base.job_role,'NA') = COALESCE(source.job_role,'NA')
       AND COALESCE(base.job_grade,'NA') = COALESCE(source.job_grade,'NA')
       AND base.eeoc_field_name = source.eeoc_field_name
-      AND base.eeoc_value = source.eeoc_value_modified
+      AND base.eeoc_value = source.eeoc_value
     WHERE base.month_date < DATE_TRUNC('month', CURRENT_DATE)   
 
  ), final AS (
@@ -145,7 +145,7 @@ WITH source AS (
             THEN 'Other_'|| SPLIT_PART(eeoc_value,'_',2)
            WHEN eeoc_field_name = 'ethnicity' AND headcount_end < 5
             THEN 'Other'       
-           ELSE eeoc_value end as eeoc_value
+           ELSE eeoc_value END                                              AS eeoc_value,
       IFF(headcount_start <4 AND show_value_criteria = FALSE,
         NULL,headcount_start)                                               AS headcount_start,
       IFF(headcount_end <4 AND show_value_criteria = FALSE,
