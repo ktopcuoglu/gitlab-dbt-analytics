@@ -48,7 +48,11 @@ WITH license AS (
         WHEN edition IN ('EE', 'EES') THEN 'Starter'
         WHEN edition = 'EEP' THEN 'Premium'
         WHEN edition = 'EEU' THEN 'Ultimate'
-      ELSE NULL END                                              AS product_tier
+      ELSE NULL END                                              AS product_tier,
+      CASE
+        WHEN uuid = 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f' THEN 'SaaS'
+        ELSE 'Self-Managed'
+      END                                                        AS ping_source,
     FROM usage_data
 
 ), license_product_details AS (
