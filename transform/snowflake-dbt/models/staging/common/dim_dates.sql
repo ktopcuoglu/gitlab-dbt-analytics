@@ -6,7 +6,7 @@ WITH dates AS (
 ), final AS (
 
   SELECT
-    TO_NUMBER(TO_CHAR(date_actual,'YYYYMMDD'),'99999999')                           AS date_id,
+    {{ get_date_id('date_actual') }},
     *
   FROM dates
 

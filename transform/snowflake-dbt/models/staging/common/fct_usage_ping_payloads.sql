@@ -36,7 +36,7 @@ WITH license AS (
 
     SELECT
       *,
-      TO_NUMBER(TO_CHAR(created_at::DATE,'YYYYMMDD'),'99999999') AS date_id,
+      {{ get_date_id('created_at') }},
       REGEXP_REPLACE(NULLIF(version, ''), '\-.*')                AS cleaned_version,
       IFF(
           version LIKE '%-pre%' OR version LIKE '%-rc%', 
