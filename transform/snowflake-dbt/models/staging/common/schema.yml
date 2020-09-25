@@ -442,7 +442,7 @@ models:
         tests:
           - not_null
       - name: snapshot_id
-          description: The identifier of snapshot day in dim_dates
+        description: The identifier of snapshot day in dim_dates
       - name: date_id
         description: The identifier of date month in dim_dates
       - name: subscription_id
