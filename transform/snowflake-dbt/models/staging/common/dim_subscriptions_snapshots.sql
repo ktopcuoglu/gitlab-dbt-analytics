@@ -47,14 +47,14 @@ WITH snapshot_dates AS (
       zuora_subscription_spined.subscription_status,
       zuora_subscription_spined.version                                         AS subscription_version,
       zuora_subscription_spined.auto_renew                                      AS is_auto_renew,
-      zuora_subscription.zuora_renewal_subscription_name,
-      zuora_subscription.zuora_renewal_subscription_name_slugify,
-      zuora_subscription.renewal_term,
-      zuora_subscription.renewal_term_period_type,
-      zuora_subscription.subscription_start_date                                AS subscription_start_date,
-      zuora_subscription.subscription_end_date                                  AS subscription_end_date,
-      DATE_TRUNC('month', zuora_subscription.subscription_start_date)           AS subscription_start_month,
-      DATE_TRUNC('month', zuora_subscription.subscription_end_date)             AS subscription_end_month
+      zuora_subscription_spined.zuora_renewal_subscription_name,
+      zuora_subscription_spined.zuora_renewal_subscription_name_slugify,
+      zuora_subscription_spined.renewal_term,
+      zuora_subscription_spined.renewal_term_period_type,
+      zuora_subscription_spined.subscription_start_date                         AS subscription_start_date,
+      zuora_subscription_spined.subscription_end_date                           AS subscription_end_date,
+      DATE_TRUNC('month', zuora_subscription_spined.subscription_start_date)    AS subscription_start_month,
+      DATE_TRUNC('month', zuora_subscription_spined.subscription_end_date)      AS subscription_end_month
     FROM zuora_subscription
     INNER JOIN zuora_subscription_snapshots
       ON zuora_subscription_snapshots.subscription_id = zuora_subscription.subscription_id
