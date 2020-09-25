@@ -69,7 +69,9 @@ WITH source AS (
         PARSE_JSON(topology)                         AS topology,
         grafana_link_enabled::BOOLEAN                AS is_grafana_link_enabled, 
         PARSE_JSON(analytics_unique_visits)          AS analytics_unique_visits,
-        raw_usage_data_id::INTEGER                   AS raw_usage_data_id
+        raw_usage_data_id::INTEGER                   AS raw_usage_data_id,
+        container_registry_vendor::VARCHAR           AS container_registry_vendor,
+        container_registry_version::VARCHAR          AS container_registry_version
     FROM source
 
 )

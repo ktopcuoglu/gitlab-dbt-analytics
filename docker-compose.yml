@@ -88,6 +88,7 @@ services:
       image: registry.gitlab.com/gitlab-data/data-image/dbt-image:v0.0.9
       environment:
         DBT_PROFILES_DIR: /usr/local/dbt_profiles/
+        DATA_TEST_BRANCH: "main"
         SNOWFLAKE_SNAPSHOT_DATABASE: "SNOWFLAKE"
         SNOWFLAKE_LOAD_DATABASE: "RAW"
         SNOWFLAKE_TRANSFORM_WAREHOUSE: "ANALYST_XS"
@@ -107,6 +108,9 @@ services:
           source: ${HOME}/.dbt
           target: /usr/local/dbt_profiles/
           read_only: True
+        - type: bind
+          source: ${HOME}/.ssh
+          target: /root/.ssh
 
 volumes:
   airflow_logs:

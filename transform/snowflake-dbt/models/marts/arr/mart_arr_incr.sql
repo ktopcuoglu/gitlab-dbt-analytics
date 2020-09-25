@@ -103,7 +103,7 @@ WITH fct_charges AS (
       fct_charges.quantity
     FROM dim_billing_accounts
     INNER JOIN dim_subscriptions
-      ON dim_billing_accounts.billing_account_id= dim_subscriptions.account_id
+      ON dim_billing_accounts.billing_account_id= dim_subscriptions.billing_account_id
     INNER JOIN fct_charges
       ON dim_subscriptions.subscription_id = fct_charges.subscription_id
     LEFT JOIN dim_crm_accounts

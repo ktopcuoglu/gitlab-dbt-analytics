@@ -11,11 +11,11 @@ WITH source AS (
 ), renamed as (
 
     SELECT
-        source.source_surrogate_key                             AS source_surrogate_key,
+        source.primary_key                                      AS source_primary_key,
         resource_labels_flat.value['key']::VARCHAR              AS resource_label_key,
         resource_labels_flat.value['value']::VARCHAR            AS resource_label_value,
         {{ dbt_utils.surrogate_key([
-            'source_surrogate_key',
+            'source_primary_key',
             'resource_label_key',
             'resource_label_value'] ) }}                        AS resource_label_pk
     FROM source,

@@ -40,6 +40,6 @@ SELECT
   metrics.*, 
   flattened.metric_value
 FROM flattened
-INNER JOIN {{ ref('test_metrics_renaming')}} AS metrics 
-  ON flattened.full_metrics_path = metrics.full_metrics_path
-    AND time_window = '{{metric_type}}'
+INNER JOIN {{ ref('sheetload_dev_section_metrics') }} AS metrics 
+  ON flattened.full_metrics_path = metrics.metrics_path
+    AND time_period = '{{metric_type}}'

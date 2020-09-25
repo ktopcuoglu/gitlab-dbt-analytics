@@ -40,23 +40,11 @@ PG_PASSWORD = Secret("env", "PG_PASSWORD", "airflow", "PG_PASSWORD")
 PG_DATABASE = Secret("env", "PG_DATABASE", "airflow", "PG_DATABASE")
 PG_PORT = Secret("env", "PG_PORT", "airflow", "PG_PORT")
 
-# Version DB
-VERSION_DB_USER = Secret("env", "VERSION_DB_USER", "airflow", "VERSION_DB_USER")
-VERSION_DB_PASS = Secret("env", "VERSION_DB_PASS", "airflow", "VERSION_DB_PASS")
-VERSION_DB_HOST = Secret("env", "VERSION_DB_HOST", "airflow", "VERSION_DB_HOST")
-VERSION_DB_NAME = Secret("env", "VERSION_DB_NAME", "airflow", "VERSION_DB_NAME")
-
 # Customers DB
 CUSTOMERS_DB_USER = Secret("env", "CUSTOMERS_DB_USER", "airflow", "CUSTOMERS_DB_USER")
 CUSTOMERS_DB_PASS = Secret("env", "CUSTOMERS_DB_PASS", "airflow", "CUSTOMERS_DB_PASS")
 CUSTOMERS_DB_HOST = Secret("env", "CUSTOMERS_DB_HOST", "airflow", "CUSTOMERS_DB_HOST")
 CUSTOMERS_DB_NAME = Secret("env", "CUSTOMERS_DB_NAME", "airflow", "CUSTOMERS_DB_NAME")
-
-# License DB
-LICENSE_DB_USER = Secret("env", "LICENSE_DB_USER", "airflow", "LICENSE_DB_USER")
-LICENSE_DB_PASS = Secret("env", "LICENSE_DB_PASS", "airflow", "LICENSE_DB_PASS")
-LICENSE_DB_HOST = Secret("env", "LICENSE_DB_HOST", "airflow", "LICENSE_DB_HOST")
-LICENSE_DB_NAME = Secret("env", "LICENSE_DB_NAME", "airflow", "LICENSE_DB_NAME")
 
 
 # GitLab Profiler DB
@@ -87,12 +75,13 @@ GITLAB_PROFILER_DB_NAME = Secret(
     "env", "GITLAB_PROFILER_DB_NAME", "airflow", "GITLAB_PROFILER_DB_NAME"
 )
 
-# CI Stats DB
-CI_STATS_DB_USER = Secret("env", "CI_STATS_DB_USER", "airflow", "CI_STATS_DB_USER")
-CI_STATS_DB_PASS = Secret("env", "CI_STATS_DB_PASS", "airflow", "CI_STATS_DB_PASS")
-CI_STATS_DB_HOST = Secret("env", "CI_STATS_DB_HOST", "airflow", "CI_STATS_DB_HOST")
-CI_STATS_DB_NAME = Secret("env", "CI_STATS_DB_NAME", "airflow", "CI_STATS_DB_NAME")
-
+# dbt
+GIT_DATA_TESTS_PRIVATE_KEY = Secret(
+    "env", "GIT_DATA_TESTS_PRIVATE_KEY", "airflow", "GIT_DATA_TESTS_PRIVATE_KEY"
+)
+GIT_DATA_TESTS_CONFIG = Secret(
+    "env", "GIT_DATA_TESTS_CONFIG", "airflow", "GIT_DATA_TESTS_CONFIG"
+)
 
 # Snowflake Generic
 SNOWFLAKE_ACCOUNT = Secret("env", "SNOWFLAKE_ACCOUNT", "airflow", "SNOWFLAKE_ACCOUNT")

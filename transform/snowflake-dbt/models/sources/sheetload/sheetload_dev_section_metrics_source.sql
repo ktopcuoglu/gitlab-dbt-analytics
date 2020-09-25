@@ -11,7 +11,8 @@ WITH source AS (
       stage::VARCHAR                  AS stage_name,
       smau::BOOLEAN                   AS is_smau,
       clean_metric_name::VARCHAR      AS clean_metrics_name,
-      periscope_metrics_name::VARCHAR AS periscope_metrics_name
+      periscope_metrics_name::VARCHAR AS periscope_metrics_name,
+      time_period::VARCHAR            AS time_period
     FROM source 
 
 )
