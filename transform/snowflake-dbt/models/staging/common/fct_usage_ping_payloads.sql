@@ -38,6 +38,8 @@ WITH license AS (
       *,
       TO_NUMBER(TO_CHAR(created_at::DATE,'YYYYMMDD'),'99999999') AS date_id,
       REGEXP_REPLACE(NULLIF(version, ''), '\-.*')                AS cleaned_version,
+      SPLIT_PART(cleaned_version, '.', 1)                        AS major_version,
+      SPLIT_PART(cleaned_version, '.', 2)                        AS minor_version,
       IFF(
           version LIKE '%-pre%' OR version LIKE '%-rc%', 
           TRUE, FALSE
@@ -103,6 +105,8 @@ WITH license AS (
       product_tier,
       ping_source,
       cleaned_version AS version,
+      major_version,
+      minor_version,
       is_pre_release,
       instance_user_count,
       license_plan,
