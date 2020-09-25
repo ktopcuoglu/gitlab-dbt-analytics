@@ -52,7 +52,7 @@ WITH license AS (
       CASE
         WHEN uuid = 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f' THEN 'SaaS'
         ELSE 'Self-Managed'
-      END                                                        AS ping_source,
+      END                                                        AS ping_source
     FROM usage_data
 
 ), license_product_details AS (
