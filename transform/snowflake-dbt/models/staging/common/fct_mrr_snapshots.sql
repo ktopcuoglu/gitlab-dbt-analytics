@@ -76,7 +76,7 @@ WITH dim_dates AS (
       zuora_subscription.*,
       -- hard deletes will be ranked 2
       rank() OVER (
-         PARTITION BY subscription_name
+         PARTITION BY subscription_name, snapshot_dates.date_actual
          ORDER BY DBT_VALID_FROM DESC) AS rank
     FROM zuora_subscription
     INNER JOIN snapshot_dates
