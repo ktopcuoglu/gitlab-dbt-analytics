@@ -71,8 +71,7 @@ WITH sfdc_account AS (
     END                                           AS merged_to_account_id,
     IFF(sfdc_record_type.record_type_label != 'Channel'
         AND sfdc_account.account_type NOT IN ('Unofficial Reseller','Authorized Reseller','Prospective Partner','Partner','Former Reseller','Reseller','Prospective Reseller'),
-        FALSE, TRUE)                              AS is_reseller,
-    sfdc_account.potential_arr_lam
+        FALSE, TRUE)                              AS is_reseller
   FROM sfdc_account
   LEFT JOIN master_records
     ON sfdc_account.account_id = master_records.account_id
