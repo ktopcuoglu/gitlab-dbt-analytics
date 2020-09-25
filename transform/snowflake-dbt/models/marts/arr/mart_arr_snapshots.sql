@@ -42,9 +42,9 @@ SELECT
   --date info
   snapshot_dates.date_actual                                                       AS snapshot_date,
   dim_dates.date_actual                                                            AS arr_month,
-  IFF(dim_dates.is_first_day_of_last_month_of_fiscal_quarter, fiscal_quarter_name_fy, NULL)
+  IFF(dim_dates.is_first_day_of_last_month_of_fiscal_quarter, dim_dates.fiscal_quarter_name_fy, NULL)
     AS fiscal_quarter_name_fy,
-  IFF(dim_dates.is_first_day_of_last_month_of_fiscal_year, fiscal_year, NULL)
+  IFF(dim_dates.is_first_day_of_last_month_of_fiscal_year, dim_dates.fiscal_year, NULL)
     AS fiscal_year,
   dim_subscriptions.subscription_start_month,
   dim_subscriptions.subscription_end_month,
