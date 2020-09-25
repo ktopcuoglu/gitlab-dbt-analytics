@@ -101,6 +101,7 @@ WITH license AS (
       hostname,
       main_edition    AS edition,
       product_tier,
+      ping_source,
       cleaned_version AS version,
       is_pre_release,
       instance_user_count,
