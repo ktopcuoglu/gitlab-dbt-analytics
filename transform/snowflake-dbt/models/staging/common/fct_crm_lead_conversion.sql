@@ -34,7 +34,7 @@ WITH sfdc_lead AS(
 {{ dbt_audit(
     cte_ref="lead_conversion_event",
     created_by="@jjstark ",
-    updated_by="@msendal",
+    updated_by="@jjstark",
     created_date="2020-09-09",
-    updated_date="2020-09-17"
+    updated_date="2020-09-25"
 ) }}
