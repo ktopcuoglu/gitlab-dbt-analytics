@@ -119,7 +119,7 @@ roles:
             - salesforce
             - sheetload
             - snapshots
-            - snowplowƒ
+            - snowplow
             - snowflake_db
             - version_db
             - zendesk
