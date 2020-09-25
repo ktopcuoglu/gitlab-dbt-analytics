@@ -119,7 +119,7 @@ roles:
             - salesforce
             - sheetload
             - snapshots
-            - snowplow
+            - snowplowƒ
             - snowflake_db
             - version_db
             - zendesk
@@ -589,12 +589,17 @@ roles:
             databases:
                 read:
                     - raw
+                    - analytics
             schemas:
                 read:
                     - raw.bamboohr
+                    - analytics.analytics.
+                    - analytics.analytics_sensitive
             tables:
                 read:
                     - raw.bamboohr.*
+                    - analytics.analytics.*
+                    - analytics.analytics_sensitive.*
 
 
     - boneyard:
