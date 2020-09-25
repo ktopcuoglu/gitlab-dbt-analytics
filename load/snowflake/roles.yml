@@ -593,6 +593,9 @@ roles:
             schemas:
                 read:
                     - raw.bamboohr
+                    - analytics.analytics.
+                    - analytics.analytics_sensitive
+
             tables:
                 read:
                     - raw.bamboohr.*
