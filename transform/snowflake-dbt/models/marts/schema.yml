@@ -16,6 +16,13 @@ models:
       - name: primary_key
         tests:
           - not_null
+  - name: mart_arr_snapshots
+    description: Daily snapshots of MRR/ARR by month values per customer, subscription and product
+    columns:
+      - name: primary_key
+        tests:
+          - not_null
+          - unique
   - name: mart_delta_arr_parent_month
     description: "Mart table by month purusant to the ARR Analysis Framework at the parent customer level"
     columns:
