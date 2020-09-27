@@ -582,7 +582,15 @@ roles:
                     - analytics.analytics.*
                     - analytics.analytics_sensitive.employee_*
                     - analytics.analytics_sensitive.bamboohr_custom_bonus
-
+                    - analytics.analytics_sensitive.bamboohr_directory
+                    - analytics.analytics_sensitive.bamboohr_emergency_contacts
+                    - analytics.analytics_sensitive.bamboohr_id_employee_number_mapping
+                    - analytics.analytics_sensitive.bamboohr_employment_status
+                    - analytics.analytics_sensitive.bamboohr_job_info
+                    - analytics.analytics_sensitive.bamboohr_job_role
+                    - analytics.analytics_sensitive.bamboohr_locality
+                    - analytics.analytics_sensitive.bamboohr_employment_status_xf
+                    - analytics.analytics_sensitive.bamboohr_headcount_intermediate
 
     - bamboohr_raw:
         warehouses:
