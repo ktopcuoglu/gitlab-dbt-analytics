@@ -581,6 +581,8 @@ roles:
                 read:
                     - analytics.analytics.*
                     - analytics.analytics_sensitive.employee_*
+                    - analytics.analytics_sensitive.bamboohr_custom_bonus
+
 
     - bamboohr_raw:
         warehouses:
@@ -601,7 +603,6 @@ roles:
                     - raw.bamboohr.*
                     - analytics.analytics.*
                     - analytics.analytics_sensitive.*
-                    - analytics.analytics_sensitive.bamboohr_custom_bonus
 
 
     - boneyard:
