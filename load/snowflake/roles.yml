@@ -580,15 +580,7 @@ roles:
             tables:
                 read:
                     - analytics.analytics.*
-                    - analytics.analytics_sensitive.bamboohr_custom_bonus
-                    - analytics.analytics_sensitive.bamboohr_directory
-                    - analytics.analytics_sensitive.bamboohr_emergency_contacts
-                    - analytics.analytics_sensitive.bamboohr_id_employee_number_mapping
-                    - analytics.analytics_sensitive.bamboohr_job_info
-                    - analytics.analytics_sensitive.bamboohr_job_role
-                    - analytics.analytics_sensitive.bambohr_locality
                     - analytics.analytics_sensitive.employee_*
-
 
     - bamboohr_raw:
         warehouses:
