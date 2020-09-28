@@ -34,7 +34,7 @@ SELECT
   created_month,
   metrics_path,
   stage_name,
-  section_name, 
+  section_name,
   is_smau,
   clean_metrics_name,
   IFF(monthly_metric_value < 0, 0, monthly_metric_value) AS monthly_metric_value
