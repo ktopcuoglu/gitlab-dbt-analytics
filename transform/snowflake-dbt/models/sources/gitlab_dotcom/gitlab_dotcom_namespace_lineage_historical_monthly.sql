@@ -18,6 +18,8 @@ WITH date_details AS (
       namespace_lineage_snapshots_daily.namespace_id,
       namespace_lineage_snapshots_daily.parent_id,
       namespace_lineage_snapshots_daily.upstream_lineage,
+      namespace_lineage_snapshots_daily.ultimate_parent_id,
+      namespace_lineage_snapshots_daily.namespace_is_internal,
       namespace_lineage_snapshots_daily.ultimate_parent_plan_id
     FROM namespace_lineage_snapshots_daily
     INNER JOIN date_details
