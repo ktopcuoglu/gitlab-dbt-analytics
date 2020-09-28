@@ -107,13 +107,15 @@ WITH source AS (
       usage_unit,
       usage_start_time,
       usage_end_time,
-      uploaded_at,
+      -- rows can have identical primary keys, but differerent uploaded_at times
+      -- so this allows these to be grouped together still
+      MAX(uploaded_at)                                                  AS uploaded_at,
       SUM(cost)                                                         AS cost,
       SUM(usage_amount)                                                 AS usage_amount,
       SUM(usage_amount_in_pricing_units)                                AS usage_amount_in_pricing_units
       FROM flattened
-      {{ dbt_utils.group_by(n=27) }}
-      QUALIFY ROW_NUMBER() OVER (PARTITION BY primary_key ORDER BY uploaded_at DESC) = 1
+      {{ dbt_utils.group_by(n=26) }}
+      --UALIFY ROW_NUMBER() OVER (PARTITION BY primary_key ORDER BY uploaded_at DESC) = 1
 
 )
 

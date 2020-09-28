@@ -55,6 +55,8 @@ models:
     - name: termination_date
     - name: department
     - name: division
+    - name: division_mapped_current
+      description: This is the division as used for the current month. We map back historically based on identifying the current division deparmtment mapping and then updating for months prior what the department would be mapped to currently.
     - name: cost_center
     - name: jobtitle_speciality
     - name: location_factor
@@ -158,5 +160,7 @@ models:
         - name: separated_contributor
         - name: promotion
         - name: location_factor
+  - name: bamboohr_job_info_current_division_base
+    description: This model identifies the current division department mapping and joins back on to bamboohr_job_info to map historical departments to the current division.      
   - name: employee_locality
     description: This idenitifes the location factor for an employee on a given day starting 2020.03.24
