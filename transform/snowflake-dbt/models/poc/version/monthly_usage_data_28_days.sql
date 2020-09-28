@@ -22,7 +22,7 @@ SELECT
   metrics_path,
   stage_name,
   section_name,
-  is_smaU,
+  is_smau,
   clean_metrics_name,
   metric_value AS monthly_metric_value
 FROM transformed
