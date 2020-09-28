@@ -20,7 +20,7 @@ WITH source AS (
       d.value['customCostCenter']::VARCHAR                            AS cost_center,
       d.value['customJobTitleSpeciality']::VARCHAR                    AS jobtitle_speciality,
       d.value['customGitLabUsername']::VARCHAR                        AS gitlab_username,
-      d.value['customPayFrequency']::VARCHAR                           AS pay_frequency,
+      d.value['customPayFrequency']::VARCHAR                          AS pay_frequency,
       d.value['customSalesGeoDifferential']::VARCHAR                  AS sales_geo_differential,
       uploaded_at::TIMESTAMP                                          AS effective_date
     FROM source,

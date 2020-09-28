@@ -53,13 +53,14 @@ WITH bamboohr_compensation_changes AS (
       employee_directory.division,
       employee_directory.department,
       employee_directory.job_title,
-      CASE WHEN pay_rate = 'Month' 
+      {# CASE WHEN pay_rate = 'Month' 
             THEN 12
            WHEN pay_rate = 'Year' 
             THEN 1
            WHEN pay_rate = 'PayPeriod' 
             THEN COALESCE(pay_frequency.pay_frequency, pay_frequency_initial.pay_frequency) 
-           ELSE NULL END        AS pay_frequency, -- started capturing pay frequency on 2020.09.10 and are using this frequency for historical data
+           ELSE NULL END        AS pay_frequency, -- started capturing pay frequency on 2020.09.10 and are using this frequency for historical data #}
+      COALESCE(pay_frequency.pay_frequency, pay_frequency_initial.pay_frequency) AS pay_frequency,     
       currency_conversion_factor,
       ote.variable_pay,
       ote.annual_amount_usd_value AS ote_usd,
