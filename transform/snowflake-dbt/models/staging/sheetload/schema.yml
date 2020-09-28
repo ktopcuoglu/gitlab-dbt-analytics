@@ -40,6 +40,7 @@ models:
 - name: sheetload_company_call_attendance
 - name: sheetload_compensation_certificate
 - name: sheetload_data_team_capacity
+- name: sheetload_data_certifications
 - name: sheetload_days_sales_outstanding
 - name: sheetload_days_to_close
 - name: sheetload_engineering_speciality_prior_to_capture
