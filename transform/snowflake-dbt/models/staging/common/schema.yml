@@ -61,7 +61,7 @@ models:
       - name: is_deleted
         description: flag indicating if account has been deleted
       - name: is_reseller
-        description: "Identify whether a crm_account is a reseller."
+        description: Identify whether a crm_account is a reseller.
         tests:
           - accepted_values:
                   values: ['TRUE', 'FALSE']
@@ -250,7 +250,7 @@ models:
       - name: subscription_end_month
         description: The month when the subscription term ends. This month is the same as the term end month or the cancelation month, as appropriate.
       - name: subscription_sales_type
-        description: "Identifies whether a subscription is Sales-Assisted or Self-Service / Web Direct."
+        description: Identifies whether a subscription is Sales-Assisted or Self-Service / Web Direct.
         tests:
           - not_null
           - accepted_values:
