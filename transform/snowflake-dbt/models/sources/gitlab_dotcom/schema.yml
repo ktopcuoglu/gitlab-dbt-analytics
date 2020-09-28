@@ -734,9 +734,6 @@ models:
         tests:
           - not_null
           - unique
-      - name: group_name
-        tests:
-          - not_null
       - name: created_at
         tests:
           - not_null
