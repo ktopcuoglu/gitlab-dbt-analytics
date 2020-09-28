@@ -13,7 +13,8 @@ WITH snapshot_dates AS (
 ), zuora_subscription AS (
 
     SELECT *
-    FROM {{ ref('zuora_subscription_source') }}
+    FROM {{ ref('zuora_subscription_snapshots_source') }}
+    WHERE subscription_status NOT IN ('Draft', 'Expired')
 
 ), zuora_subscription_spined AS (
 

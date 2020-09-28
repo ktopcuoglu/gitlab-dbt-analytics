@@ -1,7 +1,3 @@
-/* This table needs to be permanent to allow zero cloning at specific timestamps */
-{{ config(materialized='table',
-  transient=false)}}
-
 WITH dim_billing_accounts AS (
 
   SELECT *
@@ -25,7 +21,7 @@ WITH dim_billing_accounts AS (
 ), dim_subscriptions AS (
 
   SELECT *
-  FROM {{ ref('dim_subscriptions') }}
+  FROM {{ ref('dim_subscriptions_snapshots') }}
 
 ), fct_mrr AS (
 
@@ -82,6 +78,7 @@ SELECT
   FROM fct_mrr
   INNER JOIN dim_subscriptions
     ON dim_subscriptions.subscription_id = fct_mrr.subscription_id
+    AND dim_subscriptions.snapshot_id = fct_mrr.snapshot_id
   INNER JOIN dim_product_details
     ON dim_product_details.product_details_id = fct_mrr.product_details_id
   INNER JOIN dim_billing_accounts
