@@ -177,4 +177,11 @@ sheets:
     owner: '@pluthra'
     tabs: 
       - engineering_speciality_prior_to_capture
-
+  - name: data_certifications
+    description: This identifies team members who have taken the level 2 certifications and have passed.
+    owner: '@pluthra'
+    tabs:
+      - product_geo_dashboard
+      - product_geo_sql
+      - customer_segmentation_dashboard
+      - customer_segmentation_sql
