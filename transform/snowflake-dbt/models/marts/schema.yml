@@ -10,6 +10,10 @@ models:
         tests:
             - not_null
             - unique
+      - name: is_reseller
+        description: Identify whether a crm_account is a reseller.
+      - name: subscription_sales_type
+        description: Identifies whether a subscription is Sales-Assisted or Self-Service / Web Direct.
   - name: mart_arr_incr
     description: '{{ doc("mart_arr_incr") }}'
     columns:

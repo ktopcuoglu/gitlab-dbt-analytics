@@ -60,6 +60,12 @@ models:
       - name: technical_account_manager
       - name: is_deleted
         description: flag indicating if account has been deleted
+      - name: is_reseller
+        description: Identify whether a crm_account is a reseller.
+        tests:
+          - accepted_values:
+                  values: ['TRUE', 'FALSE']
+      
       - name: merged_to_account_id
         description: for deleted accounts this is the SFDC account they were merged to
 
@@ -245,6 +251,12 @@ models:
         description: The month when the subscription term starts. This month is the same as the start month of the original term, which isn't necessarily the start month of the current or new term.
       - name: subscription_end_month
         description: The month when the subscription term ends. This month is the same as the term end month or the cancelation month, as appropriate.
+      - name: subscription_sales_type
+        description: Identifies whether a subscription is Sales-Assisted or Self-Service / Web Direct.
+        tests:
+          - not_null
+          - accepted_values:
+                  values: ['Sales-Assisted', 'Self-Service']
 
   - name: dim_subscriptions_valid_at
     description: Parameterized model to recreate dimension table representing subscription details as in Zuora at given date. Required variable valid_at is timezone sensitive
