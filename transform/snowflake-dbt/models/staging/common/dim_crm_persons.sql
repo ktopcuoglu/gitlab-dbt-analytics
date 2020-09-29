@@ -24,7 +24,7 @@ WITH sfdc_leads AS (
     record_type_id,
     account_id                                    AS crm_account_id,
     reports_to_id,
-		owner_id                                      AS sales_rep_id,
+		owner_id                                      AS crm_sales_rep_id,
   
     --info
     person_score,
@@ -55,7 +55,7 @@ WITH sfdc_leads AS (
     record_type_id,
     lean_data_matched_account                  AS crm_account_id,
     NULL                                       AS reports_to_id,
-		owner_id                                   AS sales_rep_id,
+		owner_id                                   AS crm_sales_rep_id,
     
     --info
     person_score,
