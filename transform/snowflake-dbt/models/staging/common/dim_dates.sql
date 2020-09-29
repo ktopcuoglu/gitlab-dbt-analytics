@@ -6,7 +6,7 @@ WITH dates AS (
 ), final AS (
 
   SELECT
-    TO_NUMBER(TO_CHAR(date_actual,'YYYYMMDD'),'99999999')                           AS date_id,
+    {{ get_date_id('date_actual') }},
     *
   FROM dates
 
@@ -15,7 +15,7 @@ WITH dates AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@msendal",
-    updated_by="@msendal",
+    updated_by="@jstark",
     created_date="2020-06-01",
-    updated_date="2020-09-17"
+    updated_date="2020-09-25"
 ) }}

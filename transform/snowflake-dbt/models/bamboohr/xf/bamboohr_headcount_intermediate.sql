@@ -58,7 +58,7 @@ WITH dates AS (
 ), mapping AS (
 
     {{ dbt_utils.unpivot(relation=ref('bamboohr_id_employee_number_mapping'), cast_to='varchar', 
-       exclude=['employee_number', 'employee_id','first_name', 'last_name', 'hire_date', 'termination_date', 'greenhouse_candidate_id']) }}
+       exclude=['employee_number', 'employee_id','first_name', 'last_name', 'hire_date', 'termination_date', 'greenhouse_candidate_id','region','country']) }}
 
 ), mapping_enhanced AS (
 
@@ -225,7 +225,8 @@ WITH dates AS (
     WHERE department IS NOT NULL
     {{ dbt_utils.group_by(n=8) }} 
 
-) 
+)
 
-SELECT * 
+SELECT *,
+  IFF(breakout_type = 'eeoc_breakout' AND eeoc_field_name = 'no_eeoc', 'kpi_breakout', breakout_type) AS breakout_type_modified
 FROM aggregated
