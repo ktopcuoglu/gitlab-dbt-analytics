@@ -22,7 +22,7 @@ WITH sfdc_leads AS (
     master_record_id,
     owner_id,
     record_type_id,
-    account_id,
+    account_id                                    AS crm_account_id,
     reports_to_id,
   
     --info
@@ -32,7 +32,9 @@ WITH sfdc_leads AS (
     email_bounced_date,
     email_bounced_reason,
     lead_source,
-    lead_source_type
+    lead_source_type, 
+    source_buckets,
+    net_new_source_categories
   
   FROM sfdc_contacts
   
@@ -50,7 +52,7 @@ WITH sfdc_leads AS (
     master_record_id,
     owner_id,
     record_type_id,
-    NULL                                       AS account_id,
+    lean_data_matched_account                  AS crm_account_id,
     NULL                                       AS reports_to_id,
     
     --info
@@ -60,8 +62,10 @@ WITH sfdc_leads AS (
     email_bounced_date,
     email_bounced_reason,
     lead_source,
-    lead_source_type
-  
+    lead_source_type,
+    source_buckets,
+    net_new_source_categories
+
   FROM sfdc_leads
   WHERE converted_contact_id IS NULL
     OR converted_contact_id NOT IN (
@@ -70,5 +74,10 @@ WITH sfdc_leads AS (
   )
 )
 
-SELECT *
-FROM unioned
+{{ dbt_audit(
+    cte_ref="unioned",
+    created_by="@jjstark",
+    updated_by="@msendal",
+    created_date="2020-09-10",
+    updated_date="2020-09-17"
+) }}

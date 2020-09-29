@@ -25,7 +25,7 @@ tables:
       , column_name
       , data_type
       , ordinal_position
-      , table_name      
+      , table_name
       , table_schema
       FROM information_schema.columns
     export_schema: 'gitlab_com'
@@ -112,7 +112,7 @@ tables:
         , service
         , monitoring_tool
         , hosts
-        , payload        
+        , payload
         FROM alert_management_alerts
         WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
           AND '{EXECUTION_DATE}'::timestamp
@@ -288,7 +288,6 @@ tables:
       , updated_at
       , merge_request_id
       , approvals_required
-      , code_owner
       , name
       , rule_type
       , report_type
@@ -349,6 +348,19 @@ tables:
         AND '{EXECUTION_DATE}'::timestamp
     export_schema: 'gitlab_com'
     export_table: 'boards'
+    export_table_primary_key: id
+  ci_platform_metrics:
+    import_db: GITLAB_DB
+    import_query: >
+      SELECT id
+      , recorded_at
+      , platform_target
+      , count
+      FROM ci_platform_metrics
+      WHERE recorded_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
+      AND '{EXECUTION_DATE}'::timestamp
+    export_schema: 'gitlab_com'
+    export_table: ci_platform_metrics
     export_table_primary_key: id
   ci_stages:
     import_db: GITLAB_DB
@@ -899,7 +911,7 @@ tables:
       , milestone_id
       , updated_by_id
       , weight
-      , due_date
+      , CASE WHEN due_date < '1970-01-01' THEN NULL ELSE due_date END AS due_date
       , moved_to_id
       , lock_version
       , time_estimate
@@ -1270,6 +1282,7 @@ tables:
       , two_factor_grace_period
       , project_creation_level
       , auto_devops_enabled
+      , push_rule_id
       FROM namespaces
       WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
         AND '{EXECUTION_DATE}'::timestamp
@@ -1646,6 +1659,27 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'push_rules'
     export_table_primary_key: id
+  resource_label_events:
+    import_db: GITLAB_DB
+    import_query: >
+      SELECT id
+      , action
+      , issue_id
+      , merge_request_id
+      , epic_id
+      , label_id
+      , user_id
+      , created_at
+      , cached_markdown_version
+      , reference
+      , reference_html
+      FROM resource_label_events
+      WHERE created_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
+        AND '{EXECUTION_DATE}'::timestamp
+    export_schema: 'gitlab_com'
+    export_table: 'resource_label_events'
+    export_table_primary_key: id
+    advanced_metadata: true
   resource_milestone_events:
     import_db: GITLAB_DB
     import_query: >
@@ -1779,7 +1813,7 @@ tables:
     import_query: >
       SELECT id
       , note_id
-      , commit_count 
+      , commit_count
       , action
       , created_at
       , updated_at
@@ -1993,6 +2027,9 @@ tables:
       , last_activity_on
       , notified_of_own_activity
       , preferred_language
+      , email_opted_in
+      , email_opted_in_source_id
+      , email_opted_in_at
       , theme_id
       , accepted_term_id
       , private_profile

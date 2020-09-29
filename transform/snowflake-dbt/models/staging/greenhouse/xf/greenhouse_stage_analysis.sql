@@ -36,6 +36,8 @@
       division_modified,
       source_name,
       source_type,
+      is_outbound,
+      is_sourced,
       sourcer_name,
       candidate_recruiter,
       candidate_coordinator,

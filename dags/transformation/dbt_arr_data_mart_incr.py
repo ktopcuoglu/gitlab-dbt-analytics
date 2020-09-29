@@ -13,6 +13,8 @@ from airflow_utils import (
     xs_warehouse,
 )
 from kube_secrets import (
+    GIT_DATA_TESTS_PRIVATE_KEY,
+    GIT_DATA_TESTS_CONFIG,
     SALT,
     SALT_EMAIL,
     SALT_IP,
@@ -54,7 +56,7 @@ dag = DAG(
     dag_id="dbt_arr_data_mart_incr",
     default_args=default_args,
     schedule_interval="0 7 * * *",
-    description="\nThis DAG runs arr_data_mart_incr model using DAG's execution date"
+    description="\nThis DAG runs mart_arr_incr model using DAG's execution date"
     " as input parameter for dbt model. The time used as input parameter "
     "for the dbt model is set to 06:59 am UTC, which is EOD PST.\n"
     " This way a dagrun generated any time given execution date will "
@@ -64,7 +66,7 @@ dag = DAG(
 
 dbt_cmd = f"""
     {dbt_install_deps_nosha_cmd} &&
-    dbt run --profiles-dir profile --target prod --models +arr_data_mart_incr --vars "$DBT_VARS"; ret=$?;
+    dbt run --profiles-dir profile --target prod --models +mart_arr_incr --vars "$DBT_VARS"; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
 
@@ -76,6 +78,8 @@ dbt_poc = KubernetesPodOperator(
     task_id="dbt-arr-data-mart-incr",
     name="dbt-arr-data-mart-incr",
     secrets=[
+        GIT_DATA_TESTS_PRIVATE_KEY,
+        GIT_DATA_TESTS_CONFIG,
         SALT,
         SALT_EMAIL,
         SALT_IP,

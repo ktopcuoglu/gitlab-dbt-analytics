@@ -16,22 +16,25 @@ sources:
     tables:
       - name: abm_account_baselines
       - name: abuse_mitigation
-      - name: account_golden_records
       - name: ally_certificate
+      - name: ar_aging_details
       - name: calendar
       - name: clari_export_forecast_net_iacv
       - name: communication_certificate
       - name: company_call_attendance
       - name: compensation_certificate
       - name: data_team_capacity
+      - name: days_sales_outstanding
       - name: days_to_close
+      - name: dev_section_metrics
       - name: employee_location_factor
+      - name: engineering_speciality_prior_to_capture
       - name: gitlab_slack_stats
       - name: google_referrals
       - name: headcount
       - name: hire_forecast
       - name: hire_plan
-      - name: hire_replan  
+      - name: hire_replan
       - name: ic_collaboration_competency
       - name: ic_dib_comptency
       - name: ic_efficiency_competency
@@ -52,6 +55,7 @@ sources:
       - name: osat
       - name: planned_values
       - name: procurement_cost_savings
+      - name: product_maturity_historical
       - name: release_blog_posts
       - name: rep_quotas_full_fy2020
       - name: rep_quotas_full_ps_fy2020
@@ -59,5 +63,4 @@ sources:
       - name: social_marketing_metrics
       - name: values_certificate
       - name: yc_companies
-
 

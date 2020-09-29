@@ -18,6 +18,9 @@ WITH sfdc_opportunity AS (
 
     SELECT *
     FROM {{ ref('sfdc_record_type') }}
+), sfdc_account AS (
+
+    SELECT * FROM {{ref('sfdc_account')}}
 
 ), layered AS (
 
@@ -52,12 +55,10 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity.opportunity_development_representative,
       sfdc_opportunity.account_owner_team_stamped,
       sfdc_opportunity.opportunity_term,
-      sfdc_opportunity.parent_segment,
       sfdc_opportunity.primary_campaign_source_id                                                 AS primary_campaign_source_id,
       sfdc_opportunity.sales_accepted_date,
       sfdc_opportunity.sales_path,
       sfdc_opportunity.sales_qualified_date,
-      sfdc_opportunity.sales_segment,
       sfdc_opportunity.sales_type,
       sfdc_opportunity.sdr_pipeline_contribution,
       sfdc_opportunity.source_buckets,
@@ -115,6 +116,8 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity.subscription_end_date,
       sfdc_opportunity.true_up_value,
       sfdc_opportunity.order_type_live,
+      sfdc_opportunity.order_type_stamped,
+      sfdc_opportunity.net_arr,
 
       -- days and dates per stage
       sfdc_opportunity.days_in_1_discovery,
@@ -148,6 +151,26 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity.cp_why_gitlab,
       sfdc_opportunity.cp_why_now,
 
+      -- sales segment refactor
+      sfdc_opportunity.division_sales_segment_stamped,
+      sfdc_account.tsp_max_hierarchy_sales_segment,
+      sfdc_account.division_sales_segment,
+      sfdc_account.ultimate_parent_sales_segment,
+
+      -- ************************************
+      -- sales segmentation deprecated fields - 2020-09-03
+      -- left temporary for the sake of MVC and avoid breaking SiSense existing charts
+      -- issue: https://gitlab.com/gitlab-data/analytics/-/issues/5709
+      sfdc_opportunity.segment                          AS segment,
+      sfdc_opportunity.sales_segment                    AS sales_segment,
+      sfdc_opportunity.parent_segment                   AS parent_segment,
+      
+      -- ************************************
+      -- channel reporting
+      -- issue: https://gitlab.com/gitlab-data/analytics/-/issues/6072
+      sfdc_opportunity.dr_partner_deal_type,
+      sfdc_opportunity.dr_partner_engagement,
+
       -- metadata
       sfdc_opportunity._last_dbt_run,
       sfdc_record_type.business_process_id,
@@ -171,6 +194,8 @@ WITH sfdc_opportunity AS (
     ON sfdc_opportunity.owner_id = sfdc_users_xf.id
   LEFT JOIN sfdc_record_type
     ON sfdc_opportunity.record_type_id = sfdc_record_type.record_type_id
+  LEFT JOIN sfdc_account
+    ON sfdc_account.account_id = sfdc_opportunity.account_id
 
 )
 

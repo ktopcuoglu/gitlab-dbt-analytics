@@ -9,7 +9,7 @@ WITH source AS (
   SELECT *
   FROM {{ source('gitlab_dotcom', 'resource_label_events') }}
     {% if is_incremental() %}
-      WHERE created_at >= (SELECT MAX(created_at) FROM {{this}})
+      WHERE created_at >= (SELECT MAX(created_at) FROM {{this}} WHERE created_at < CURRENT_TIMESTAMP)
     {% endif %}
   QUALIFY ROW_NUMBER() OVER (PARTITION BY id ORDER BY _uploaded_at DESC) = 1
 

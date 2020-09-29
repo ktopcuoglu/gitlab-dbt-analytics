@@ -1,4 +1,5 @@
 {{ config({
+    "materialized":"table",
     "schema": "analytics"
     })
 }}
@@ -120,6 +121,8 @@ WITH source AS (
       AND base.breakout_type = source.breakout_type
       AND base.department = source.department
       AND base.division = source.division
+      AND COALESCE(base.job_role,'NA') = COALESCE(source.job_role,'NA')
+      AND COALESCE(base.job_grade,'NA') = COALESCE(source.job_grade,'NA')
       AND base.eeoc_field_name = source.eeoc_field_name
       AND base.eeoc_value = source.eeoc_value
     WHERE base.month_date < DATE_TRUNC('month', CURRENT_DATE)   

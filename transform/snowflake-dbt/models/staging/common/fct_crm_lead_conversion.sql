@@ -20,9 +20,8 @@ WITH sfdc_lead AS(
     sfdc_lead_history.lead_id                                                            AS lead_id,
     sfdc_lead_history.created_by_id                                                      AS crm_user_id,
     sfdc_lead.converted_contact_id                                                       AS contact_id,
-    sfdc_lead.converted_account_id                                                       AS account_id,
-    sfdc_lead.converted_opportunity_id                                                   AS opportunity_id,
-    'lead conversion'                                                                    AS event_name
+    sfdc_lead.converted_account_id                                                       AS crm_account_id,
+    sfdc_lead.converted_opportunity_id                                                   AS opportunity_id
 
   FROM sfdc_lead_history
   INNER JOIN sfdc_lead
@@ -30,5 +29,11 @@ WITH sfdc_lead AS(
 
 )
 
-SELECT *
-FROM lead_conversion_event
+
+{{ dbt_audit(
+    cte_ref="lead_conversion_event",
+    created_by="@jjstark ",
+    updated_by="@msendal",
+    created_date="2020-09-09",
+    updated_date="2020-09-17"
+) }}

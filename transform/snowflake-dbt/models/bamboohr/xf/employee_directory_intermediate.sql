@@ -111,6 +111,20 @@ WITH RECURSIVE employee_directory AS (
     SELECT *
     FROM {{ ref('cost_center_division_department_mapping') }}
 
+), sheetload_engineering_speciality AS (
+
+    SELECT *
+<<<<<<< HEAD
+    FROM {{ ref('sheetload_engineering_speciality_prior_to_capture') }}  
+=======
+    FROM {{ ref('sheetload_engineering_speciality_prior_to_capture') }}    
+
+), current_division_mapping AS (
+
+    SELECT *
+    FROM {{ ref('bamboohr_current_division_mapping') }}    
+>>>>>>> 6306-engineering-speciality-backfill
+
 ), enriched AS (
 
     SELECT
@@ -119,6 +133,7 @@ WITH RECURSIVE employee_directory AS (
       department_info.job_title,
       department_info.department,
       department_info.division,
+      current_division_mapping.division_mapped_current,
       COALESCE(job_role.cost_center, 
                cost_center_prior_to_bamboo.cost_center)                     AS cost_center,
       department_info.reports_to,
@@ -129,7 +144,13 @@ WITH RECURSIVE employee_directory AS (
       IFF(date_details.date_actual BETWEEN '2019-11-01' AND '2020-02-27', 
             job_info_mapping_historical.job_grade, 
             job_role.job_grade)                                             AS job_grade,
-      job_role.jobtitle_speciality,      
+<<<<<<< HEAD
+       COALESCE(sheetload_engineering_speciality.speciality, job_role.jobtitle_speciality) AS jobtitle_speciality,
+      ---to capture speciality for engineering prior to 2020.09.30 we are using sheetload, and capturing from bamboohr afterwards
+=======
+      COALESCE(sheetload_engineering_speciality.speciality, job_role.jobtitle_speciality) AS jobtitle_speciality,
+      ---to capture speciality for engineering prior to 2020.09.30 we are using sheetload, and capturing from bamboohr afterwards      
+>>>>>>> 6306-engineering-speciality-backfill
       location_factor.location_factor, 
       IFF(hire_date = date_actual OR 
           rehire_date = date_actual, True, False)                           AS is_hire_date,
@@ -216,6 +237,18 @@ WITH RECURSIVE employee_directory AS (
     LEFT JOIN promotion
       ON promotion.employee_id = employee_directory.employee_id
       AND date_details.date_actual = promotion.effective_date
+    LEFT JOIN sheetload_engineering_speciality
+      ON employee_directory.employee_id = sheetload_engineering_speciality.employee_id
+      AND date_details.date_actual BETWEEN sheetload_engineering_speciality.speciality_start_date 
+                                       AND COALESCE(sheetload_engineering_speciality.speciality_end_date, '2020-09-30')
+                                       ---Post 2020.09.30 we will capture engineering speciality from bamboohr
+<<<<<<< HEAD
+=======
+    LEFT JOIN current_division_mapping
+      ON employee_directory.employee_id = current_division_mapping.employee_id
+      AND date_details.date_actual BETWEEN current_division_mapping.effective_date 
+                                    AND COALESCE(current_division_mapping.effective_end_date, CURRENT_DATE())
+>>>>>>> 6306-engineering-speciality-backfill
     WHERE employee_directory.employee_id IS NOT NULL
 
 ), base_layers as (

@@ -51,12 +51,7 @@ class GoogleSheetsClient:
                 return sheet_df
             except APIError as gspread_error:
                 if gspread_error.response.status_code == 429:
-                    # Start for waiting at least
-                    wait_sec = (2 ** n) + (random.randint(0, 1000) / 1000)
-                    info(
-                        f"Received API rate limit error. Wait for {wait_sec} seconds before trying again."
-                    )
-                    time.sleep(wait_sec)
+                    self.wait_exponential_backoff(n)
                     n = n + 1
                 else:
                     raise
@@ -98,3 +93,11 @@ class GoogleSheetsClient:
                 }
             }
         )
+
+    def wait_exponential_backoff(self, n):
+        # Start for waiting at least
+        wait_sec = (2 ** n) + (random.randint(0, 1000) / 1000)
+        info(
+            f"Received API rate limit error. Wait for {wait_sec} seconds before trying again."
+        )
+        time.sleep(wait_sec)

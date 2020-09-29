@@ -14,11 +14,13 @@ from airflow_utils import (
     dbt_install_deps_cmd,
     gitlab_defaults,
     gitlab_pod_env_vars,
-    l_warehouse,
     slack_failed_task,
+    xl_warehouse,
     xs_warehouse,
 )
 from kube_secrets import (
+    GIT_DATA_TESTS_PRIVATE_KEY,
+    GIT_DATA_TESTS_CONFIG,
     SALT,
     SALT_EMAIL,
     SALT_IP,
@@ -100,7 +102,7 @@ branching_dbt_run = BranchPythonOperator(
 dbt_non_product_models_command = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_and_seed_cmd} &&
-    dbt run --profiles-dir profile --target prod --exclude tag:product snapshots arr_data_mart_incr sources.sheetload+ sources.zuora --vars {xs_warehouse}; ret=$?;
+    dbt run --profiles-dir profile --target prod --exclude tag:product snapshots mart_arr_incr sources.sheetload+ sources.zuora --vars {xs_warehouse}; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
 
@@ -110,6 +112,8 @@ dbt_non_product_models_task = KubernetesPodOperator(
     task_id="dbt-non-product-models-run",
     name="dbt-non-product-models-run",
     secrets=[
+        GIT_DATA_TESTS_PRIVATE_KEY,
+        GIT_DATA_TESTS_CONFIG,
         SALT,
         SALT_EMAIL,
         SALT_IP,
@@ -136,7 +140,7 @@ dbt_non_product_models_task = KubernetesPodOperator(
 dbt_product_models_command = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_and_seed_cmd} &&
-    dbt run --profiles-dir profile --target prod --models tag:product --vars {l_warehouse}; ret=$?;
+    dbt run --profiles-dir profile --target prod --models tag:product --vars {xl_warehouse}; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
 
@@ -146,6 +150,8 @@ dbt_product_models_task = KubernetesPodOperator(
     task_id="dbt-product-models-run",
     name="dbt-product-models-run",
     secrets=[
+        GIT_DATA_TESTS_PRIVATE_KEY,
+        GIT_DATA_TESTS_CONFIG,
         SALT,
         SALT_EMAIL,
         SALT_IP,
@@ -172,7 +178,7 @@ dbt_product_models_task = KubernetesPodOperator(
 dbt_full_refresh_cmd = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_and_seed_cmd} &&
-    dbt run --profiles-dir profile --target prod --full-refresh --exclude staging.common.dim_ip_to_geo arr_data_mart_incr; ret=$?;
+    dbt run --profiles-dir profile --target prod --full-refresh --exclude staging.common.dim_ip_to_geo mart_arr_incr; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
 dbt_full_refresh = KubernetesPodOperator(
@@ -181,6 +187,8 @@ dbt_full_refresh = KubernetesPodOperator(
     task_id="dbt-full-refresh",
     name="dbt-full-refresh",
     secrets=[
+        GIT_DATA_TESTS_PRIVATE_KEY,
+        GIT_DATA_TESTS_CONFIG,
         SALT,
         SALT_EMAIL,
         SALT_IP,
@@ -210,7 +218,7 @@ dbt_source_cmd = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
     dbt source snapshot-freshness --profiles-dir profile; ret=$?;
-    python ../../orchestration/upload_dbt_file_to_snowflake.py sources; exit $ret
+    python ../../orchestration/upload_dbt_file_to_snowflake.py freshness; exit $ret
 """
 dbt_source_freshness = KubernetesPodOperator(
     **gitlab_defaults,
@@ -218,6 +226,8 @@ dbt_source_freshness = KubernetesPodOperator(
     task_id="dbt-source-freshness",
     name="dbt-source-freshness",
     secrets=[
+        GIT_DATA_TESTS_PRIVATE_KEY,
+        GIT_DATA_TESTS_CONFIG,
         SALT,
         SALT_EMAIL,
         SALT_IP,
@@ -253,6 +263,8 @@ dbt_test = KubernetesPodOperator(
     name="dbt-test",
     trigger_rule="all_done",
     secrets=[
+        GIT_DATA_TESTS_PRIVATE_KEY,
+        GIT_DATA_TESTS_CONFIG,
         SALT,
         SALT_EMAIL,
         SALT_IP,

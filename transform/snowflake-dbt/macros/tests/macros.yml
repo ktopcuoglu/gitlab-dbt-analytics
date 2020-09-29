@@ -1,6 +1,56 @@
 version: 2
 
 macros:
+  - name: model_column_sum_min
+    description: Does a sum on the specified column and ensures it's greater than the minimum value specified.
+    arguments:
+      - name: model_name
+        type: string
+        description: The name of the dbt model being referenced
+      - name: column
+        type: string
+        description: The column to be summed
+      - name: min_value
+        type: integer
+        description: The minimum value the sum should be greater than
+      - name: where_clause
+        description: Optional filter on the data. Wrap the entire clause in double quotes.
+  - name: model_golden_records_comparison
+    description: Compare a dbt model table to a Golden Record CSV
+    arguments:
+      - name: dbt_model
+        type: string
+        description: The name of the dbt model to be compared against. The golden record name is automatically determined.
+  - name: model_new_rows_per_day
+    description: Counts the number of new records created in the previous day during normal, non-holiday, business days in the US.
+    arguments:
+      - name: model_name
+        type: string
+        description: The name of the dbt model being referenced
+      - name: created_column
+        type: string
+        description: The column indicating when the row was created
+      - name: min_value
+        type: integer
+        description: The minimum value the sum should be greater than
+      - name: max_value
+        type: integer
+        description:  This field is optional. The maximum value the sum should be greater than.
+      - name: where_clause
+        description: Optional filter on the data. Wrap the entire clause in double quotes.
+  - name: model_rowcount
+    description: Does a rowcount check and fails if there are fewer rows than expected. An optional condition can be applied as well.
+    arguments:
+      - name: model_name
+        type: string
+        description: The name of the dbt model being referenced
+      - name: count
+        type: integer
+        description: The minimum number of rows expected in the source table
+      - name: where_clause
+        type: string
+        description: Optional filter on the data. Wrap the entire clause in double quotes.
+
   - name: source_column_existence
     description: Validates the existence of certain columns in a table within the raw database.
     arguments:
@@ -30,6 +80,15 @@ macros:
         description: The minimum value the sum should be greater than
       - name: where_clause
         description: Optional filter on the data. Wrap the entire clause in double quotes.
+  - name: source_golden_records_comparison
+    description: Compare a dbt model table to a Golden Record CSV
+    arguments:
+      - name: source_name
+        type: string
+        description: The name of the dbt source (such as zuora)
+      - name: table_name
+        type: string
+        description: The name of the table defined in the source to use as a comparison
   - name: source_new_rows_per_day
     description: Counts the number of new records created in the previous day during normal, non-holiday, business days in the US.
     arguments:

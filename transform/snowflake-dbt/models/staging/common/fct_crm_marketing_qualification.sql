@@ -18,8 +18,7 @@ SELECT
     'lead'                                                                              AS sfdc_record,
     {{ dbt_utils.surrogate_key(['COALESCE(converted_contact_id, lead_id)']) }}          AS crm_person_id,
     converted_contact_id                                                                AS contact_id,
-    converted_account_id                                                                AS account_id,
-    'marketing qualification'                                                           AS event_name
+    converted_account_id                                                                AS account_id
   
   FROM sfdc_lead
   WHERE marketo_qualified_lead_date IS NOT NULL
@@ -34,13 +33,17 @@ SELECT
     'contact'                                                                              AS sfdc_record,
     {{ dbt_utils.surrogate_key(['contact_id']) }}                                          AS crm_person_id,
     contact_id                                                                             AS contact_id,
-    account_id                                                                             AS account_id,
-    'marketing qualification'                                                              AS event_name
+    account_id                                                                             AS account_id
      
   FROM sfdc_contact
   WHERE marketo_qualified_lead_date IS NOT NULL
 
 )
 
-SELECT *
-FROM marketing_qualification_events
+{{ dbt_audit(
+    cte_ref="marketing_qualification_events",
+    created_by="@jjstark ",
+    updated_by="@msendal",
+    created_date="2020-09-09",
+    updated_date="2020-09-17"
+) }}

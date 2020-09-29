@@ -1,9 +1,54 @@
 version: 2
 
 models:
-  - name: gcp_billing_export
-    description: Base model for gcp billing export
+  - name: gcp_billing_export_xf
+    description: Final model for billing export.
     columns:
-      - name: billing_account_id
+      - name: source_primary_key
+        tests:
+          - not_null
+          - unique
+
+  - name: gcp_billing_export_credits
+    description: table for unnested credit rows
+    columns:
+      - name: credit_pk
+        tests:
+          - not_null
+          - unique
+      - name: source_primary_key
+        tests:
+          - not_null
+
+  - name: gcp_billing_export_resource_labels
+    description: table for unnested resource label rows
+    columns:
+      - name: resource_label_pk
+        tests:
+          - not_null
+          - unique
+      - name: source_primary_key
+        tests:
+          - not_null
+
+  - name: gcp_billing_export_project_labels
+    description: table for unnested project label rows
+    columns:
+      - name: project_label_pk
+        tests:
+          - not_null
+          - unique
+      - name: source_primary_key
+        tests:
+          - not_null
+
+  - name: gcp_billing_export_system_labels
+    description: table for unnested system label rows
+    columns:
+      - name: system_label_pk
+        tests:
+          - not_null
+          - unique
+      - name: source_primary_key
         tests:
           - not_null

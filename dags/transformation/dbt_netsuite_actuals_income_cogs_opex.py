@@ -12,10 +12,13 @@ from airflow_utils import (
     dbt_install_deps_nosha_cmd,
     gitlab_defaults,
     gitlab_pod_env_vars,
+    number_of_dbt_threads_argument,
     slack_failed_task,
     xs_warehouse,
 )
 from kube_secrets import (
+    GIT_DATA_TESTS_PRIVATE_KEY,
+    GIT_DATA_TESTS_CONFIG,
     SALT,
     SALT_EMAIL,
     SALT_IP,
@@ -78,7 +81,7 @@ dag = DAG(
 
 dbt_cmd = f"""
     {dbt_install_deps_nosha_cmd} &&
-    dbt run --profiles-dir profile --target prod --models +netsuite_actuals_income_cogs_opex; ret=$?;
+    dbt run --profiles-dir profile --target prod --models +netsuite_actuals_income_cogs_opex {number_of_dbt_threads_argument(4)}; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
 
@@ -97,6 +100,8 @@ dbt_poc = KubernetesPodOperator(
     task_id="dbt-netsuite-actuals-income-cogs-opex",
     name="dbt-netsuite-actuals-income-cogs-opex",
     secrets=[
+        GIT_DATA_TESTS_PRIVATE_KEY,
+        GIT_DATA_TESTS_CONFIG,
         SALT,
         SALT_EMAIL,
         SALT_IP,

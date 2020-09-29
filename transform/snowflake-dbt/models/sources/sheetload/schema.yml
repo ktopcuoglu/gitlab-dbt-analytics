@@ -14,6 +14,15 @@ models:
     - name: gtm_strategy
       tests:
         - not_null
+- name: sheetload_ar_aging_details_source
+  description: This is the source for AR aging invoice details.
+  columns:
+    - name: invoice_number
+      tests:
+        - not_null
+    - name: invoice_period
+      tests:
+        - not_null
 - name: sheetload_calendar_source
   description: This is the basis of the CEO's calendar analysis. When you open the raw sheet, you'll be prompted to run the appscript. Additional categorization can be done by adding additional `case when` statements.
   columns:
@@ -27,24 +36,35 @@ models:
   description: This spreadsheet contains data from company call attendance (also called the "Take a Break Call"). The People Experience team pulls their data and updates their spreadsheet, which is imported into the sheetload sheet.
   columns:
   - name: call_date
-    tests:
-    - not_null
   - name: meeting_topic
     tests:
     - not_null
   - name: day_of_the_week
-    tests:
-    - not_null
   - name: call_time
     tests:
     - not_null
   - name: count_of_participants
     tests:
     - not_null
+- name: sheetload_days_sales_outstanding_source
+  description: Days sales outstanding = Total Ending AR / Total Credit Sales (billing) x Number of Days in the Period
+  columns:
+    - name: period
+      tests:
+      - not_null
+      - unique
 - name: sheetload_days_to_close_source
   description: Days for accounting to close the books in Netsuite.
   columns:
     - name: close_month
+      tests:
+      - not_null
+      - unique
+- name: sheetload_engineering_speciality_prior_to_capture_source     
+- name: sheetload_dev_section_metrics_source
+  description: dev section metrics used to create the Dev Section Dashboard
+  columns:
+    - name: metrics_path
       tests:
       - not_null
       - unique
@@ -133,7 +153,7 @@ models:
     - name: version_number
     - name: handbook_reference
     - name: kpi_id
-      description: This is the id that ties the issue to gitlab_dotcom data.  
+      description: This is the id that ties the issue to gitlab_dotcom data.
 - name: sheetload_linkedin_recruiter_source
   description: This is the source of linkedin recruiter inmail data for each month by sourcer .
   columns:
@@ -200,7 +220,7 @@ models:
         - not_null
         - unique
     - name: is_in_european_union
-    - name: locale_code        
+    - name: locale_code
 - name: sheetload_maxmind_ip_ranges_source
   description: "IP ranges source layer for maxmind ip-to-geo service"
   columns:
@@ -239,6 +259,8 @@ models:
       tests:
       - not_null
       - unique
+- name: sheetload_product_maturity_historical_source
+  description: This captures the categories_yaml file for FY 2021 Q1 and Q2.
 - name: sheetload_rep_quotas_full_fy2020_source
   description: This is the model that captures sales data for rep quotas for the full fy2020.
 - name: sheetload_osat_source
@@ -301,7 +323,7 @@ models:
   columns:
     - name: departments
 - name: sheetload_data_team_capacity_source
-  description: This sheet contains the capacity prediction from the Data Team. 
+  description: This sheet contains the capacity prediction from the Data Team.
   columns:
     - name: milestone_id
       tests:
@@ -322,5 +344,3 @@ models:
   description: This is a list of all who have completed the IC iteration competency knowledge assessment.
 - name: sheetload_ic_transparency_competency_source
   description: This is a list of all who have completed the IC transparency competency knowledge assessment.
-- name: sheetload_account_golden_records_source
-  description: Golden records (values unexpected to changed for a few accounts), currently based off zuora data

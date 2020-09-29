@@ -46,8 +46,8 @@ WITH dim_dates AS (
 ), rate_plan_charge_filtered AS (
 
   SELECT
-    zuora_account.account_id,
-    zuora_account.crm_id,
+    zuora_account.account_id                           AS billing_account_id,
+    zuora_account.crm_id                               AS crm_account_id,
     zuora_subscription_snapshots.subscription_id,
     zuora_rate_plan_charge.product_rate_plan_charge_id AS product_details_id,
     zuora_rate_plan_charge.mrr,
@@ -69,18 +69,20 @@ WITH dim_dates AS (
   WHERE zuora_subscription.is_deleted = FALSE
     AND zuora_subscription.exclude_from_analysis IN ('False', '')
     AND zuora_account.is_deleted = FALSE
+    AND zuora_subscription.subscription_status NOT IN ('Expired', 'Draft')
 
 ), mrr_month_by_month AS (
 
   SELECT
     dim_dates.date_id,
-    account_id,
-    crm_id,
+    billing_account_id,
+    crm_account_id,
     subscription_id,
     product_details_id,
-    SUM(mrr) AS mrr,
-    SUM(mrr)* 12 AS arr,
-    SUM(quantity) AS quantity
+    SUM(mrr)                                             AS mrr,
+    SUM(mrr)* 12                                         AS arr,
+    SUM(quantity)                                        AS quantity,
+    ARRAY_AGG(rate_plan_charge_filtered.unit_of_measure) AS unit_of_measure
   FROM rate_plan_charge_filtered
   INNER JOIN dim_dates
     ON rate_plan_charge_filtered.effective_start_month <= dim_dates.date_actual
@@ -89,13 +91,23 @@ WITH dim_dates AS (
     AND dim_dates.day_of_month = 1
   {{ dbt_utils.group_by(n=5) }}
 
+), final AS (
+
+  SELECT
+    {{ dbt_utils.surrogate_key(['date_id', 'subscription_id', 'product_details_id']) }}
+      AS mrr_id,
+    *
+  FROM mrr_month_by_month
+
 )
 
-SELECT
-  {{ dbt_utils.surrogate_key(['date_id', 'subscription_id', 'product_details_id']) }}
-    AS mrr_id,
-  *
-FROM mrr_month_by_month
+{{ dbt_audit(
+    cte_ref="final",
+    created_by="@msendal",
+    updated_by="@msendal",
+    created_date="2020-09-10",
+    updated_date="2020-09-17",
+) }}
 
 
 

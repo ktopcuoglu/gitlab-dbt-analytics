@@ -1,4 +1,4 @@
-{% docs dim_customers %}
+{% docs dim_crm_accounts %}
 Dimensional customer table representing all existing and historical customers from SalesForce. There are customer definitions for external reporting and additional customer definitions for internal reporting defined in the [handbook](https://about.gitlab.com/handbook/sales/#customer).
 
 The Customer Account Management business process can be found in the [handbook](https://about.gitlab.com/handbook/finance/sox-internal-controls/quote-to-cash/#1-customer-account-management-and-conversion-of-lead-to-opportunity).
@@ -14,7 +14,7 @@ Dimension that combines demographic data from salesforce leads and salesforce co
 
 {% enddocs %}
 
-{% docs dim_accounts %}
+{% docs dim_billing_accounts %}
 Dimensional table representing each individual Zuora account with details of person to bill for the account.
 
 The Zuora account creation and maintenance is part of the broader Quote Creation business process and can be found in the [handbook](https://about.gitlab.com/handbook/finance/sox-internal-controls/quote-to-cash/#3-quote-creation).
@@ -84,6 +84,12 @@ A fact from the lead and contact tables that shows the date they were qualified.
 
 {% enddocs %}
 
+{% docs fct_crm_sales_accepted_opportunity %}
+
+A fact from the opportunity using the sales_accepted_date created in order to standardize the logic and dimensional joins for this metric.
+
+{% enddocs %}
+
 {% docs fct_invoice_items %}
 Fact table providing invoice line item details.
 
@@ -130,6 +136,20 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 Factual table with metadata on usage ping payloads received.
 
 The grain of the table is a usage_ping_id.
+
+Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+{% enddocs %}
+
+{% docs fct_usage_ping_metric_28_days %}
+Factual table on the grain of an individual metric received as part of a usage ping payload.  This model specifically includes only metrics that represent usage over a month (or 28 days).
+
+Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+{% enddocs %}
+
+{% docs fct_usage_ping_metric_all_time %}
+Factual table on the grain of an individual metric received as part of a usage ping payload.  This model specifically includes only metrics that represent usage over the entire lifetime of the instance.
 
 Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
 
