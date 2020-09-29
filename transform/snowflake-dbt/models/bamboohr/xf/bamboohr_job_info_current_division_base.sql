@@ -1,7 +1,4 @@
-{{ config({
-    "schema": "temporary"
-    })
-}}
+
 
 WITH job_info AS (
 
@@ -22,12 +19,16 @@ WITH job_info AS (
 
     SELECT DISTINCT 
       division, 
-      department
+      department,
+      COUNT(bamboo_mapping.employee_id) AS total_employees
     FROM bamboo_mapping
     LEFT JOIN job_info
       ON job_info.employee_id = bamboo_mapping.employee_id
     WHERE CURRENT_DATE() BETWEEN effective_date AND COALESCE(effective_end_date, CURRENT_DATE())
       AND bamboo_mapping.termination_date IS NULL
+    GROUP BY 1,2
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY department ORDER BY total_employees DESC) =1
+    --accounts for individuals that not transistioned to new division
   
 )
 

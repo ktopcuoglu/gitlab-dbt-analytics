@@ -91,7 +91,7 @@ WITH dates AS (
 
     SELECT
       employees.date_actual,
-      employees.department,
+      employees.department_modified                                            AS department,
       division_mapped_current                                                  AS division,
       job_role_modified                                                        AS job_role,
       COALESCE(job_grade,'NA')                                                 AS job_grade,
