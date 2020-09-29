@@ -27,7 +27,7 @@ WITH RECURSIVE employee_directory AS (
 ), department_info AS (
 
     SELECT *
-    FROM {{ ref('bamboohr_job_info') }}
+    FROM {{ ref('bamboohr_job_info_current_division_base') }}
 
 ), job_role AS (
 
@@ -124,6 +124,7 @@ WITH RECURSIVE employee_directory AS (
       department_info.job_title,
       department_info.department,
       department_info.division,
+      department_info.division_mapped_current,
       COALESCE(job_role.cost_center, 
                cost_center_prior_to_bamboo.cost_center)                     AS cost_center,
       department_info.reports_to,
