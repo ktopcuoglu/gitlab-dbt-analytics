@@ -5,6 +5,8 @@ sources:
     database: '{{ env_var("SNOWFLAKE_LOAD_DATABASE") }}'
     schema: tap_postgres
     loader: Airflow
+    tags: ["tdf", "customers_db"]
+
     loaded_at_field: DATEADD(sec, _uploaded_at, '1970-01-01')
 
     quoting:

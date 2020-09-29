@@ -5,6 +5,9 @@ models:
     description: This model is the data from tap-postgres for the customers table from customers.gitlab.com. The schema of the database is defined in [this ruby code](https://gitlab.com/gitlab-org/customers-gitlab-com/blob/master/db/schema.rb).
     columns:
       - name: customer_id
+        tags:
+          - tdf
+          - customers_db
         tests:
           - not_null
           - unique
@@ -18,9 +21,15 @@ models:
         meta:
           sensitive: true
       - name: customer_created_at
+        tags:
+          - tdf
+          - customers_db
         tests:
           - not_null
       - name: customer_updated_at
+        tags:
+          - tdf
+          - customers_db
         tests:
           - not_null
       - name: current_sign_in_at
@@ -32,15 +41,24 @@ models:
     description: This model contains records of EULA requests sent to customers.
     columns:
       - name: eula_request_id
+        tags:
+          - tdf
+          - customers_db
         tests:
           - not_null
       - name: eula_id
+        tags:
+          - tdf
+          - customers_db
         tests:
           - not_null
   - name: customers_db_eulas_source
     description: This model contains details for each available EULA.
     columns:
       - name: eula_id
+        tags:
+          - tdf
+          - customers_db
         tests:
           - not_null
   - name: customers_db_license_seat_links_source
@@ -48,19 +66,31 @@ models:
     columns:
       - name: zuora_subscription_id
       - name: order_id
+        tags:
+          - tdf
+          - customers_db
         tests:
           - not_null
       - name: report_date
+        tags:
+          - tdf
+          - customers_db
         tests:
           - not_null
   - name: customers_db_orders_source
     description: This model is the data from tap-postgres for the orders table from customers.gitlab.com. The schema of the database is defined in [this ruby code](https://gitlab.com/gitlab-org/customers-gitlab-com/blob/master/db/schema.rb).
     columns:
       - name: order_id
+        tags:
+          - tdf
+          - customers_db
         tests:
           - not_null
           - unique
       - name: customer_id
+        tags:
+          - tdf
+          - customers_db
         tests:
           - not_null
       - name: product_rate_plan_id
@@ -71,15 +101,24 @@ models:
       - name: order_end_date
       - name: order_quanity
       - name: order_created_at
+        tags:
+          - tdf
+          - customers_db
         tests:
           - not_null
       - name: order_updated_at
+        tags:
+          - tdf
+          - customers_db
         tests:
           - not_null
   - name: customers_db_trial_histories_source
     description: This model is the data from tap-postgres for the trial_histories table from customers.gitlab.com. The schema of the database is defined in [this ruby code](https://gitlab.com/gitlab-org/customers-gitlab-com/blob/master/db/schema.rb).
     columns:
       - name: gl_namespace_id
+        tags:
+          - tdf
+          - customers_db
         tests:
           - not_null
           - unique

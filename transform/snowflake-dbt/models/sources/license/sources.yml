@@ -2,6 +2,7 @@ version: 2
 
 sources:
   - name: license
+    tags: ["tdf","license_db"]
     database: '{{ env_var("SNOWFLAKE_LOAD_DATABASE") }}'
     schema: license_db_dump
     loaded_at_field: _sdc_batched_at
