@@ -5,12 +5,16 @@ sources:
     tags: ["tdf","license_db"]
     database: '{{ env_var("SNOWFLAKE_LOAD_DATABASE") }}'
     schema: license_db_dump
-    loader: Airflow
+    loaded_at_field: _sdc_batched_at
 
     quoting:
       database: true
       schema: false
       identifier: false
+
+    freshness:
+      warn_after: {count: 15, period: day}
+      error_after: {count: 31, period: day}
 
     tables:
       - name: add_ons

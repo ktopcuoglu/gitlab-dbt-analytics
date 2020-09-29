@@ -12,6 +12,10 @@ sources:
       schema: false
       identifier: false
 
+    freshness:
+      warn_after: {count: 15, period: day}
+      error_after: {count: 31, period: day}
+
     tables:
       - name: avg_cycle_analytics
         columns:

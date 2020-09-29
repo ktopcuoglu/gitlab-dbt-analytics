@@ -38,6 +38,8 @@ WITH license AS (
       *,
       {{ get_date_id('created_at') }},
       REGEXP_REPLACE(NULLIF(version, ''), '\-.*')                AS cleaned_version,
+      SPLIT_PART(cleaned_version, '.', 1)                        AS major_version,
+      SPLIT_PART(cleaned_version, '.', 2)                        AS minor_version,
       IFF(
           version LIKE '%-pre%' OR version LIKE '%-rc%', 
           TRUE, FALSE
@@ -48,7 +50,11 @@ WITH license AS (
         WHEN edition IN ('EE', 'EES') THEN 'Starter'
         WHEN edition = 'EEP' THEN 'Premium'
         WHEN edition = 'EEU' THEN 'Ultimate'
-      ELSE NULL END                                              AS product_tier
+      ELSE NULL END                                              AS product_tier,
+      CASE
+        WHEN uuid = 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f' THEN 'SaaS'
+        ELSE 'Self-Managed'
+      END                                                        AS ping_source
     FROM usage_data
 
 ), license_product_details AS (
@@ -97,7 +103,10 @@ WITH license AS (
       hostname,
       main_edition    AS edition,
       product_tier,
+      ping_source,
       cleaned_version AS version,
+      major_version,
+      minor_version,
       is_pre_release,
       instance_user_count,
       license_plan,
