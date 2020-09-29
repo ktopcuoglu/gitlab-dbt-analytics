@@ -20,6 +20,7 @@ WITH source AS (
         source.primary_key                                      AS source_primary_key,
         resource_labels_flat.value['key']::VARCHAR              AS resource_label_key,
         resource_labels_flat.value['value']::VARCHAR            AS resource_label_value,
+        source.uploaded_at                                      AS uploaded_at,
         {{ dbt_utils.surrogate_key([
             'source_primary_key',
             'resource_label_key',

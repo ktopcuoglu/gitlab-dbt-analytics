@@ -20,6 +20,7 @@ WITH source AS (
         source.primary_key                      AS source_primary_key,
         credits_flat.value['name']::VARCHAR     AS credit_description,
         credits_flat.value['amount']::FLOAT     AS credit_amount,
+        source.uploaded_at                      AS uploaded_at,
         {{ dbt_utils.surrogate_key([
             'source_primary_key',
             'credit_description',
