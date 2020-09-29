@@ -21,5 +21,10 @@ WITH sfdc_users AS (
 
 )
 
-SELECT *
-FROM joined
+{{ dbt_audit(
+    cte_ref="joined",
+    created_by="@jjstark",
+    updated_by="@jjstark",
+    created_date="2020-09-29",
+    updated_date="2020-09-29"
+) }}
