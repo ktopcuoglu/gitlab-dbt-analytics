@@ -31,6 +31,20 @@ WITH usage_data AS (
         AND created_at >= (SELECT max(created_at) FROM {{ this }})
     {% endif %}
 
+     UNION 
+
+    SELECT
+      usage_data.*,
+      f.key                                                              AS stage_name,
+      f.value                                                            AS stage_activity_count_json
+
+    FROM usage_data,
+      LATERAL FLATTEN(input => usage_data.raw_usage_data_payload, path => 'redis_hhl_counters', recursive => TRUE) f
+    WHERE f.value > 0
+    {% if is_incremental() %}
+        AND created_at >= (SELECT MAX(created_at) FROM {{ this }})
+    {% endif %}
+
 
 ), final AS (
 

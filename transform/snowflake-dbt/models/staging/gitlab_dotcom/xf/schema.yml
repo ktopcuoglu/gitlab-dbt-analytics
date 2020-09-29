@@ -425,9 +425,6 @@ models:
         tests:
           - not_null
           - unique
-      - name: namespace_name
-        tests:
-          - not_null
       - name: namespace_path
         tests:
           - not_null
