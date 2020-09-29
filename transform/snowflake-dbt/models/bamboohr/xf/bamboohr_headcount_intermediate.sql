@@ -86,16 +86,15 @@ WITH dates AS (
 
     SELECT *
     FROM {{ ref ('employee_directory_intermediate') }}
-
+ 
 ), intermediate AS (
 
     SELECT
       employees.date_actual,
-      department,
-      division_mapped_current                                                   AS division,
-      --using the current division - department mapping for reporting
-      job_role,
-      job_grade,
+      employees.department,
+      division_mapped_current                                                  AS division,
+      job_role_modified                                                        AS job_role,
+      COALESCE(job_grade,'NA')                                                 AS job_grade,
       mapping_enhanced.eeoc_field_name,                                                       
       mapping_enhanced.eeoc_value,                                          
       IFF(dates.start_date = date_actual,1,0)                                   AS headcount_start,

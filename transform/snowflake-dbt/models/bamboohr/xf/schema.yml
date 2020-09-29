@@ -1,6 +1,14 @@
 version: 2
 
 models:
+  - name: bamboohr_current_division_mapping
+    description: This model accounts for the current mapping of department and divisions to allow for aggregatd models to reflect current division terminology used (as seen in bamboohr_rpt_headcount_aggregation)
+    columns:
+    - name: job_id
+    - name: employee_id
+    - name: effective_date
+    - name: effective_end_date
+    - name: division_mapped_current
   - name: employee_directory_analysis
     description: Gives the current state of the employees at GitLab at any point of time. This is the model to use for headcount, team size, or any people-related analysis for employees. This has current and past employees, as well as their department, division, and cost center and hire/termination dates.
     columns:
@@ -114,7 +122,7 @@ models:
           description: Provides the end date for a specific record. For the terminated record stamp, it will provide a null since there will be no following record, unless the employee is re-hired, in which case it will indicate how long the employee was separated.
 
   - name: bamboohr_headcount_intermediate
-    description: This is the intermediate model to creating out the headcount report. This report provides headcounts, hires, separations by diversity fields, department, and division.
+    description: This is the intermediate model to creating out the headcount report. This report provides headcounts, hires, separations by diversity fields, department, and division. Note - division is mapped to the last month in the report to account for 12 month calculations. 
     columns:
         - name: month_date
         - name: breakout_type
