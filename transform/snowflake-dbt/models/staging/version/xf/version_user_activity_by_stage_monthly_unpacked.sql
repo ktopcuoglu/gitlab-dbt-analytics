@@ -17,16 +17,32 @@ WITH usage_data AS (
         AND created_at > (SELECT max(created_at) FROM {{ this }})
     {% endif %}
 
-     UNION 
+), unpacked_other_metrics AS (
 
     SELECT
-      usage_data.*,
-      f.key                                                              AS stage_name,
-      f.value                                                            AS stage_activity_count_json
+      usage_data.id,
+      usage_data.version,
+      usage_data.created_at,
+      usage_data.uuid,
+      usage_data.edition,      
+      usage_data.ping_source,
+      usage_data.major_version,
+      usage_data.main_edition,
+      usage_data.edition_type,
+      usage_data.license_plan_code,
+      usage_data.company,
+      usage_data.zuora_subscription_id,
+      usage_data.zuora_subscription_status,
+      usage_data.zuora_crm_id,
+      NUll                                                               AS stage_name,
+      DATEADD('days', -28, usage_data.created_at)                        AS period_start,
+      usage_data.created_at                                              AS period_end,
+      f.key                                                              AS usage_action_name,
+      f.value                                                            AS usage_action_count
 
     FROM usage_data,
       LATERAL FLATTEN(input => usage_data.analytics_unique_visits) f
-    WHERE f.value > 0
+    WHERE  IS_REAL(f.value) = True
     {% if is_incremental() %}
         AND created_at >= (SELECT max(created_at) FROM {{ this }})
     {% endif %}
@@ -34,19 +50,35 @@ WITH usage_data AS (
      UNION 
 
     SELECT
-      usage_data.*,
-      f.key                                                              AS stage_name,
-      f.value                                                            AS stage_activity_count_json
+      usage_data.id,
+      usage_data.version,
+      usage_data.created_at,
+      usage_data.uuid,
+      usage_data.edition,      
+      usage_data.ping_source,
+      usage_data.major_version,
+      usage_data.main_edition,
+      usage_data.edition_type,
+      usage_data.license_plan_code,
+      usage_data.company,
+      usage_data.zuora_subscription_id,
+      usage_data.zuora_subscription_status,
+      usage_data.zuora_crm_id,
+      NUll                                                               AS stage_name,
+      DATEADD('days', -28, usage_data.created_at)                        AS period_start,
+      usage_data.created_at                                              AS period_end,
+      f.key                                                              AS usage_action_name,
+      f.value                                                            AS usage_action_count
 
     FROM usage_data,
-      LATERAL FLATTEN(input => usage_data.raw_usage_data_payload, path => 'redis_hhl_counters', recursive => TRUE) f
-    WHERE f.value > 0
+      LATERAL FLATTEN (input => usage_data.raw_usage_data_payload, recursive => True, path => 'redis_hll_counters') f
+    WHERE  IS_REAL(f.value) = True
     {% if is_incremental() %}
         AND created_at >= (SELECT MAX(created_at) FROM {{ this }})
     {% endif %}
 
 
-), final AS (
+), unpacked_stage_metrics AS (
 
     SELECT
       unpacked_stage_json.id,
@@ -73,5 +105,16 @@ WITH usage_data AS (
 
 )
 
+, final AS (
+
+    SELECT *
+    FROM unpacked_stage_metrics
+
+    UNION 
+
+    SELECT *
+    FROM unpacked_other_metrics
+
+)
 SELECT *
 FROM final
