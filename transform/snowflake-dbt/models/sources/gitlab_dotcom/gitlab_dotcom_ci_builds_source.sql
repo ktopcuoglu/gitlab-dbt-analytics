@@ -1,8 +1,7 @@
 
 {{ config({
     "materialized": "incremental",
-    "unique_key": "ci_build_id",
-    "schema": "analytics"
+    "unique_key": "ci_build_id"
     })
 }}
 
