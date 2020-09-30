@@ -40,7 +40,9 @@ WITH snapshot_dates AS (
 ), joined AS (
 
     SELECT
-      zuora_subscription_spined.subscription_id,
+      {{ dbt_utils.surrogate_key(['zuora_subscription_spined.subscription_name']) }}
+        AS subscription_id,
+      zuora_subscription_spined.subscription_id                                 AS zuora_subscription_id,
       zuora_account.crm_id                                                      AS crm_account_id,
       zuora_account.account_id                                                  AS billing_account_id,
       zuora_subscription_spined.subscription_name,
@@ -57,14 +59,14 @@ WITH snapshot_dates AS (
       DATE_TRUNC('month', zuora_subscription_spined.subscription_start_date)    AS subscription_start_month,
       DATE_TRUNC('month', zuora_subscription_spined.subscription_end_date)      AS subscription_end_month
     FROM zuora_subscription
-    INNER JOIN zuora_subscription_snapshots
-      ON zuora_subscription_snapshots.subscription_id = zuora_subscription.subscription_id
-      AND zuora_subscription_snapshots.rank = 1
+    INNER JOIN zuora_subscription_spined
+      ON zuora_subscription_spined.subscription_id = zuora_subscription.subscription_id
     INNER JOIN zuora_account
       ON zuora_account.account_id = zuora_subscription.account_id
-    WHERE is_deleted = FALSE
+    WHERE zuora_account.is_deleted = FALSE
       AND exclude_from_analysis IN ('False', '')
-      AND zuora_subscription.rank = 1
+      AND zuora_subscription_spined.rank = 1
+
 
 ), final AS (
 
@@ -72,7 +74,7 @@ WITH snapshot_dates AS (
         {{ dbt_utils.surrogate_key(['snapshot_id', 'subscription_id']) }}
           AS subscription_snapshot_id,
         *
-    FROM mrr_month_by_month
+    FROM joined
 
     {% if is_incremental() %}
 
@@ -86,7 +88,7 @@ WITH snapshot_dates AS (
     cte_ref="final",
     created_by="@msendal",
     updated_by="@msendal",
-    created_date="2020-09-25",
-    updated_date="2020-09-25"
+    created_date="2020-09-29",
+    updated_date="2020-09-29"
 ) }}
 
