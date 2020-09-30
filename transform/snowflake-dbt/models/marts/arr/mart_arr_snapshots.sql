@@ -84,13 +84,13 @@ WITH dim_billing_accounts AS (
       fct_mrr_snapshots.arr,
       fct_mrr_snapshots.quantity
       FROM fct_mrr_snapshots
-      INNER JOIN dim_subscriptions
+      INNER JOIN dim_subscriptions_snapshots
         ON dim_subscriptions_snapshots.subscription_id = fct_mrr_snapshots.subscription_id
         AND dim_subscriptions_snapshots.snapshot_id = fct_mrr_snapshots.snapshot_id
       INNER JOIN dim_product_details
-        ON dim_product_details.product_details_id = fct_mrr.product_details_id
+        ON dim_product_details.product_details_id = fct_mrr_snapshots.product_details_id
       INNER JOIN dim_billing_accounts
-        ON dim_billing_accounts.billing_account_id= fct_mrr.billing_account_id
+        ON dim_billing_accounts.billing_account_id= fct_mrr_snapshots.billing_account_id
       INNER JOIN dim_dates AS arr_month
         ON arr_month.date_id = fct_mrr_snapshots.date_id
       INNER JOIN dim_dates AS snapshot_dates
