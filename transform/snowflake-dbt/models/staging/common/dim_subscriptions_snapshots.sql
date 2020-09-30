@@ -60,7 +60,7 @@ WITH snapshot_dates AS (
       DATE_TRUNC('month', zuora_subscription_spined.subscription_end_date)      AS subscription_end_month
     FROM zuora_subscription_spined
     INNER JOIN zuora_account
-      ON zuora_account.account_id = zuora_subscription.account_id
+      ON zuora_account.account_id = zuora_subscription_spined.account_id
     WHERE is_deleted = FALSE
       AND exclude_from_analysis IN ('False', '')
       AND zuora_subscription_spined.rank = 1
