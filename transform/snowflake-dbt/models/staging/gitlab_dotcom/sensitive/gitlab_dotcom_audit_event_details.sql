@@ -19,8 +19,8 @@ WITH source AS (
 
     SELECT
       audit_event_id,
-      REGEXP_SUBSTR(details, '\\:([a-z_]*)\\: (.*)', 1, generated_number, 'c', 1) AS key_name,
-      REGEXP_SUBSTR(details, '\\:([a-z_]*)\\: (.*)', 1, generated_number, 'c', 2) AS key_value,
+      REGEXP_SUBSTR(audit_event_details, '\\:([a-z_]*)\\: (.*)', 1, generated_number, 'c', 1) AS key_name,
+      REGEXP_SUBSTR(audit_event_details, '\\:([a-z_]*)\\: (.*)', 1, generated_number, 'c', 2) AS key_value,
       created_at
     FROM source
     INNER JOIN sequence
