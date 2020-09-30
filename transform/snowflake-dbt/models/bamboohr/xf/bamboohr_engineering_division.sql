@@ -14,14 +14,14 @@ WITH bamboohr_employee_directory AS (
       DISTINCT date_actual                                                  AS date_employed,
       employee_id,
       full_name,
-      lower(job_title)                                                      AS job_title,
-      lower(TRIM(value::string))                                            AS jobtitle_speciality,
+      LOWER(job_title)                                                      AS job_title,
+      LOWER(TRIM(VALUE::string))                                            AS jobtitle_speciality,
       reports_to,
       layers,
       department,
       work_email
     FROM bamboohr_employee_directory,
-    lateral flatten(input=>split(COALESCE(replace(jobtitle_speciality,'&',','),''), ','))
+    LATERAL FLATTEN(INPUT=>SPLIT(COALESCE(REPLACE(jobtitle_speciality,'&',','),''), ','))
     WHERE division = 'Engineering'
       AND date_actual >= '2020-01-01'
 
@@ -33,22 +33,21 @@ WITH bamboohr_employee_directory AS (
       development_department_employees.full_name,
       development_department_employees.job_title,
       bamboohr_engineering_division_mapping.sub_department,
-      development_department_employees.jobtitle_speciality AS group_,
+      development_department_employees.jobtitle_speciality,
       CASE 
         WHEN development_department_employees.employee_id IN (41965,41996,41453,41482,41974,41487,42029,40914,41954) OR development_department_employees.job_title LIKE '%backend%' THEN 'backend'
         WHEN development_department_employees.job_title LIKE '%fullstack%' THEN 'fullstack'
         WHEN development_department_employees.job_title LIKE '%frontend%' THEN 'frontend'
-        ELSE null END AS technology_group,
-      CONCATENATE(bamboohr_engineering_division_mapping.sub_department,'_',development_department_employees.jobtitle_speciality,'_',technology_group) AS team_member_attributes,
+        ELSE NULL END AS technology_group,
       development_department_employees.department,
       development_department_employees.work_email,
       development_department_employees.reports_to
     FROM development_department_employees
     LEFT JOIN bamboohr_engineering_division_mapping
-    ON development_department_employees.jobtitle_speciality = bamboohr_engineering_division_mapping.jobtitle_speciality
+      ON development_department_employees.jobtitle_speciality = bamboohr_engineering_division_mapping.jobtitle_speciality
 
 )
 
 SELECT *,
-{{ engineering_division_mapping('sub_department','group_','technology_group') }}                AS team_name
+{{ engineering_division_mapping('sub_department','jobtitle_speciality','technology_group') }}                AS team_name
 FROM reporting_structure
