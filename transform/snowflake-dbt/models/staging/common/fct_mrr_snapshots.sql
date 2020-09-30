@@ -89,7 +89,8 @@ WITH dim_dates AS (
       zuora_rate_plan_charge_spined.snapshot_id,
       zuora_account_spined.account_id                           AS billing_account_id,
       zuora_account_spined.crm_id                               AS crm_account_id,
-      zuora_subscription_spined.subscription_id,
+      {{ dbt_utils.surrogate_key(['zuora_subscription_spined.subscription_name']) }}
+        AS subscription_id,
       zuora_rate_plan_charge_spined.product_rate_plan_charge_id AS product_details_id,
       zuora_rate_plan_charge_spined.mrr,
       zuora_rate_plan_charge_spined.delta_tcv,
@@ -156,8 +157,8 @@ WITH dim_dates AS (
     cte_ref="final",
     created_by="@msendal",
     updated_by="@msendal",
-    created_date="2020-09-25",
-    updated_date="2020-09-25",
+    created_date="2020-09-29",
+    updated_date="2020-09-29",
 ) }}
 
 
