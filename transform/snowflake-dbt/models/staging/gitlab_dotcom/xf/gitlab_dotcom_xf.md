@@ -241,7 +241,7 @@ Currently, the following tables are included in the model:
 * gitlab_dotcom_ci_stages
 * gitlab_dotcom_ci_triggers
 * gitlab_dotcom_deployments
-* gitlab_dotcom_environments
+* gitlab_dotcom_environments_source
 * gitlab_dotcom_issues
 * gitlab_dotcom_labels
 * gitlab_dotcom_lfs_objects_projects
