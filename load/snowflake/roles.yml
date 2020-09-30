@@ -536,12 +536,14 @@ roles:
                 - analytics.analytics_meta
                 - analytics.analytics_sensitive
                 - analytics.analytics_staging
+                - analytics.common
             tables:
                 - analytics.analytics.*
                 - analytics.analytics_clones.*
                 - analytics.analytics_meta.*
                 - analytics.analytics_sensitive.*
                 - analytics.analytics_staging.*
+                - analytics.common.*
         privileges:
             databases:
                 read:
@@ -577,10 +579,12 @@ roles:
                 read:
                     - analytics.analytics
                     - analytics.analytics_sensitive
+                    - analytics.common
             tables:
                 read:
                     - analytics.analytics.*
                     - analytics.analytics_sensitive.*
+                    - analytics.common.*
 
     - bamboohr_raw:
         warehouses:
@@ -674,6 +678,7 @@ roles:
             schemas:
                 read:
                     - analytics.analytics
+                    - analytics.common
                     - analytics.analytics_meta
                     - analytics.analytics_staging
                     - analytics.dbt
@@ -681,6 +686,7 @@ roles:
             tables:
                 read:
                     - analytics.analytics.*
+                    - analytics.common.*
                     - analytics.analytics_meta.*
                     - analytics.analytics_staging.*
                     - analytics.dbt.*
