@@ -23,7 +23,7 @@ This model also adds some helper columns related to the **plan** associated with
 {% enddocs %}
 
 
-{% docs gitlab_dotcom_gitlab_subscriptions %}
+{% docs gitlab_dotcom_gitlab_subscriptions_source %}
 
 Base model for Gitlab.com gitlab_subscriptions. These are the plan subscriptions for the GitLab.com product, as opposed to the `subscriptions` table (no prefix) which deals with subscriptions in the notification sense, related to issues and merge requests.
 
@@ -55,7 +55,7 @@ Read the documentation for the SCD Type 2 Macro [here](https://gitlab.com/gitlab
 {% enddocs %}
 
 
-{% docs gitlab_dotcom_events %}
+{% docs gitlab_dotcom_events_source %}
 
 Base model for Gitlab.com events. Events are documented [here](https://docs.gitlab.com/ee/api/events.html).
 We do one transformation in this base model where we map an `action_type_id` to an `action_type` thanks to the macro `action_type`.
@@ -76,7 +76,7 @@ This content will be masked for privacy in one of the following conditions:
 
 {% enddocs %}
 
-{% docs gitlab_dotcom_resource_label_events %}
+{% docs gitlab_dotcom_resource_label_events_source %}
 
 Base model for Gitlab.com resource label events. Explanation [here](https://docs.gitlab.com/ee/api/resource_label_events.html). 
 
