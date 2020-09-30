@@ -27,7 +27,7 @@ WITH dim_billing_accounts AS (
 ), dim_subscriptions_snapshots AS (
 
   SELECT *
-  FROM {{ ref('dim_subscriptions_snapshots.snapshots') }}
+  FROM {{ ref('dim_subscriptions_snapshots') }}
 
 ), fct_mrr_snapshots AS (
 
