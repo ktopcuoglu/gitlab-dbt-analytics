@@ -1,7 +1,6 @@
 {{ config({
     "materialized": "incremental",
-    "unique_key": "note_id",
-    "schema": "sensitive"
+    "unique_key": "note_id"
     })
 }}
 
