@@ -41,7 +41,7 @@ WITH snapshot_dates AS (
 
     SELECT
       zuora_subscription_spined.snapshot_id,
-      zuora_subscription_spined.subscription_id
+      zuora_subscription_spined.subscription_id,
       zuora_account.crm_id                                                      AS crm_account_id,
       zuora_account.account_id                                                  AS billing_account_id,
       zuora_subscription_spined.subscription_name,
