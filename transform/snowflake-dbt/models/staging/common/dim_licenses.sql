@@ -26,5 +26,11 @@ WITH licenses AS (
 
 )
 
-SELECT *
-FROM renamed
+
+{{ dbt_audit(
+    cte_ref="renamed",
+    created_by="@derekatwood",
+    updated_by="@msendal",
+    created_date="2020-08-10",
+    updated_date="2020-09-17"
+) }}

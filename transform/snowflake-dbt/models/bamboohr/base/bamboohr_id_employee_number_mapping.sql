@@ -26,7 +26,8 @@ WITH source AS (
       d.value['customRegion']::VARCHAR                                AS region,
       d.value['ethnicity']::VARCHAR                                   AS ethnicity,
       d.value['gender']::VARCHAR                                      AS gender, 
-      d.value['country']::VARCHAR                                     AS country,
+      d.value['customOtherGenderOptions']::VARCHAR                    AS gender_dropdown, 
+      TRIM(d.value['country']::VARCHAR)                               AS country,
       d.value['age']::NUMBER                                          AS age,
       d.value['customCandidateID']::NUMBER                            AS greenhouse_candidate_id
     FROM source,
@@ -52,12 +53,19 @@ WITH source AS (
           WHEN age>= 60               THEN '60+'
           WHEN age IS NULL            THEN 'Unreported'
           WHEN age = -1               THEN 'Unreported'
-          ELSE NULL END               AS age_cohort,
+          ELSE NULL END                                       AS age_cohort,
       country,
       ethnicity,
-      gender,  
+      COALESCE(gender_dropdown, gender,'Did Not Identify')    AS gender,
       nationality,
       region,
+      CASE WHEN region = 'Americas' AND country IN ('United States', 'Canada','Mexico') 
+            THEN 'NORAM'
+         WHEN region = 'Americas' AND country NOT IN ('United States', 'Canada','Mexico') 
+            THEN 'LATAM'
+         ELSE region END                                        AS region_modified,
+      IFF(country='United States', COALESCE(gender_dropdown, gender,'Did Not Identify')  || '_' || country, 
+                                   COALESCE(gender_dropdown, gender,'Did Not Identify')  || '_'|| 'Non-US') AS gender_region,
       greenhouse_candidate_id
     FROM intermediate
     WHERE hire_date IS NOT NULL

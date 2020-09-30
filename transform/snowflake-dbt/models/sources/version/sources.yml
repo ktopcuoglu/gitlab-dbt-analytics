@@ -2,6 +2,7 @@ version: 2
 
 sources:
   - name: version
+    tags: ["tdf","version_db"]
     database: '{{ env_var("SNOWFLAKE_LOAD_DATABASE") }}'
     schema: version_db_dump_stitch
     loaded_at_field: _sdc_batched_at
@@ -10,6 +11,10 @@ sources:
       database: true
       schema: false
       identifier: false
+
+    freshness:
+      warn_after: {count: 15, period: day}
+      error_after: {count: 31, period: day}
 
     tables:
       - name: avg_cycle_analytics
@@ -55,6 +60,12 @@ sources:
           - name: updated_at
             tests:
               - not_null
+      - name: raw_usage_data
+        columns:
+          - name: id
+            tests:
+              - not_null
+              - unique
       - name: schema_migrations
       - name: usage_data
         columns:

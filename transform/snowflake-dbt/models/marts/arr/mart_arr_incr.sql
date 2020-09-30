@@ -21,15 +21,15 @@ WITH fct_charges AS (
     SELECT *
     FROM {{ ref('fct_invoice_items_agg_valid_at') }}
 
-), dim_customers AS (
+), dim_crm_accounts AS (
 
     SELECT *
-    FROM {{ ref('dim_customers_valid_at') }}
+    FROM {{ ref('dim_crm_accounts_valid_at') }}
 
-), dim_accounts AS (
+), dim_billing_accounts AS (
 
     SELECT *
-    FROM {{ ref('dim_accounts_valid_at') }}
+    FROM {{ ref('dim_billing_accounts_valid_at') }}
 
 ), dim_dates AS (
 
@@ -67,18 +67,18 @@ WITH fct_charges AS (
       dim_subscriptions.subscription_end_month,
 
       --account info
-      dim_accounts.account_id                                              AS zuora_account_id,
-      dim_accounts.sold_to_country                                         AS zuora_sold_to_country,
-      dim_accounts.account_name                                            AS zuora_account_name,
-      dim_accounts.account_number                                          AS zuora_account_number,
-      COALESCE(dim_customers.merged_to_account_id, dim_customers.crm_id)   AS crm_id,
-      dim_customers.ultimate_parent_account_id,
-      dim_customers.ultimate_parent_account_name,
-      dim_customers.ultimate_parent_billing_country,
-      dim_customers.ultimate_parent_account_segment,
-      dim_customers.ultimate_parent_industry,
-      dim_customers.ultimate_parent_account_owner_team,
-      dim_customers.ultimate_parent_territory,
+      dim_billing_accounts.billing_account_id                                          AS zuora_account_id,
+      dim_billing_accounts.sold_to_country                                             AS zuora_sold_to_country,
+      dim_billing_accounts.billing_account_name                                        AS zuora_account_name,
+      dim_billing_accounts.billing_account_number                                      AS zuora_account_number,
+      COALESCE(dim_crm_accounts.merged_to_account_id, dim_crm_accounts.crm_account_id) AS crm_id,
+      dim_crm_accounts.ultimate_parent_account_id,
+      dim_crm_accounts.ultimate_parent_account_name,
+      dim_crm_accounts.ultimate_parent_billing_country,
+      dim_crm_accounts.ultimate_parent_account_segment,
+      dim_crm_accounts.ultimate_parent_industry,
+      dim_crm_accounts.ultimate_parent_account_owner_team,
+      dim_crm_accounts.ultimate_parent_territory,
 
       --subscription info
       dim_subscriptions.subscription_id,
@@ -101,13 +101,13 @@ WITH fct_charges AS (
       fct_charges.mrr,
       fct_charges.mrr*12                                                    AS arr,
       fct_charges.quantity
-    FROM dim_accounts
+    FROM dim_billing_accounts
     INNER JOIN dim_subscriptions
-      ON dim_accounts.account_id = dim_subscriptions.account_id
+      ON dim_billing_accounts.billing_account_id= dim_subscriptions.billing_account_id
     INNER JOIN fct_charges
       ON dim_subscriptions.subscription_id = fct_charges.subscription_id
-    LEFT JOIN dim_customers
-      ON dim_accounts.crm_id = dim_customers.crm_id
+    LEFT JOIN dim_crm_accounts
+      ON dim_billing_accounts.crm_account_id = dim_crm_accounts.crm_account_id
 
 ), latest_invoiced_charge_version_in_segment AS (
 

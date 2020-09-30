@@ -58,43 +58,42 @@ WITH customers AS (
   
 )
 
-, orders_shapshots_excluding_ci_minutes AS (
-  
-  SELECT orders_snapshots.*
+,  orders_shapshots_excluding_ci_minutes AS (
+
+  SELECT orders_snapshots.*,
+     FIRST_VALUE(subscription_name_slugify) IGNORE NULLS
+      OVER (PARTITION BY order_id ORDER BY order_updated_at ASC) AS first_subscription_name_slugify
   FROM orders_snapshots
-  LEFT JOIN ci_minutes_charges 
+  LEFT JOIN ci_minutes_charges
     ON orders_snapshots.subscription_id = ci_minutes_charges.subscription_id
     AND orders_snapshots.product_rate_plan_id = ci_minutes_charges.product_rate_plan_id
   WHERE ci_minutes_charges.subscription_id IS NULL
-  
-)
 
-, trials AS (
-  
-  SELECT 
+)
+  , trials AS (
+
+  SELECT
     *,
     FIRST_VALUE(customer_id)
       OVER (PARTITION BY order_id ORDER BY order_updated_at DESC) AS latest_customer_id,
-    FIRST_VALUE(gitlab_namespace_id) 
+    FIRST_VALUE(gitlab_namespace_id)
       OVER (PARTITION BY order_id ORDER BY order_updated_at DESC) AS latest_namespace_id
   FROM orders_snapshots
   WHERE order_is_trial = TRUE
-  
-)
 
-, converted_trials AS (
-  
+), converted_trials AS (
+
   SELECT DISTINCT
     trials.order_id,
-    orders_shapshots_excluding_ci_minutes.subscription_name_slugify
+    orders_shapshots_excluding_ci_minutes.first_subscription_name_slugify AS subscription_name_slugify
   FROM trials
-  INNER JOIN orders_shapshots_excluding_ci_minutes 
+  INNER JOIN orders_shapshots_excluding_ci_minutes
     ON trials.order_id = orders_shapshots_excluding_ci_minutes.order_id
   INNER JOIN zuora_subscription_with_positive_mrr_tcv AS subscription
-    ON orders_shapshots_excluding_ci_minutes.subscription_name_slugify = subscription.subscription_name_slugify
+    ON orders_shapshots_excluding_ci_minutes.first_subscription_name_slugify = subscription.subscription_name_slugify
       AND trials.order_start_date <= subscription.subscription_start_date
   WHERE orders_shapshots_excluding_ci_minutes.subscription_name_slugify IS NOT NULL
-  
+
 )
 , joined AS (
   

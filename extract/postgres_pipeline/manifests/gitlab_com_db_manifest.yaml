@@ -1659,6 +1659,27 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'push_rules'
     export_table_primary_key: id
+  resource_label_events:
+    import_db: GITLAB_DB
+    import_query: >
+      SELECT id
+      , action
+      , issue_id
+      , merge_request_id
+      , epic_id
+      , label_id
+      , user_id
+      , created_at
+      , cached_markdown_version
+      , reference
+      , reference_html
+      FROM resource_label_events
+      WHERE created_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
+        AND '{EXECUTION_DATE}'::timestamp
+    export_schema: 'gitlab_com'
+    export_table: 'resource_label_events'
+    export_table_primary_key: id
+    advanced_metadata: true
   resource_milestone_events:
     import_db: GITLAB_DB
     import_query: >

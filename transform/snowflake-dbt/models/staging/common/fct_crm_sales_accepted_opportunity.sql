@@ -21,9 +21,10 @@ WITH sfdc_opportunity AS (
   
     {{ dbt_utils.surrogate_key(['sfdc_opportunity.opportunity_id','sales_accepted_date']) }} AS event_id,
     sfdc_opportunity.sales_accepted_date                                                     AS sales_accepted_date,
+    {{ get_date_id('sales_accepted_date') }},                                                -- date_id
     {{ dbt_utils.surrogate_key(['first_contact_roles.contact_id']) }}                        AS crm_person_id,
     first_contact_roles.contact_id                                                           AS contact_id,
-    sfdc_opportunity.account_id                                                              AS account_id,
+    sfdc_opportunity.account_id                                                              AS crm_account_id,
     sfdc_opportunity.opportunity_id                                                          AS opportunity_id,
     first_contact_roles.opportunity_contact_role_id                                          AS opportunity_contact_role_id
 
@@ -41,5 +42,10 @@ WITH sfdc_opportunity AS (
 
 )
 
-SELECT *
-FROM sales_accepted_opps
+{{ dbt_audit(
+    cte_ref="sales_accepted_opps",
+    created_by="@jjstark ",
+    updated_by="@jjstark",
+    created_date="2020-09-15",
+    updated_date="2020-09-25"
+) }}

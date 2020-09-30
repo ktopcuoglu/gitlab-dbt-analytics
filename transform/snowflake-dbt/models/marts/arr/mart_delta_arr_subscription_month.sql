@@ -1,12 +1,12 @@
-WITH dim_accounts AS (
+WITH dim_billing_accounts AS (
 
     SELECT *
-    FROM {{ ref('dim_accounts') }}
+    FROM {{ ref('dim_billing_accounts') }}
 
-), dim_customers AS (
+), dim_crm_accounts AS (
 
     SELECT *
-    FROM {{ ref('dim_customers') }}
+    FROM {{ ref('dim_crm_accounts') }}
 
 ), dim_dates AS (
 
@@ -34,9 +34,9 @@ WITH dim_accounts AS (
       dim_dates.date_actual                                                           AS arr_month,
       IFF(is_first_day_of_last_month_of_fiscal_quarter, fiscal_quarter_name_fy, NULL) AS fiscal_quarter_name_fy,
       IFF(is_first_day_of_last_month_of_fiscal_year, fiscal_year, NULL)               AS fiscal_year,
-      dim_customers.ultimate_parent_account_name,
-      dim_customers.ultimate_parent_account_id,
-      COALESCE(dim_customers.merged_to_account_id, dim_customers.crm_id)              AS crm_id,
+      dim_crm_accounts.ultimate_parent_account_name,
+      dim_crm_accounts.ultimate_parent_account_id,
+      COALESCE(dim_crm_accounts.merged_to_account_id, dim_crm_accounts.crm_account_id)              AS crm_id,
       dim_subscriptions.subscription_name,
       dim_subscriptions.subscription_id,
       dim_product_details.product_category,
@@ -48,12 +48,12 @@ WITH dim_accounts AS (
       ON dim_subscriptions.subscription_id = fct_mrr.subscription_id
     INNER JOIN dim_product_details
       ON dim_product_details.product_details_id = fct_mrr.product_details_id
-    INNER JOIN dim_accounts
-      ON dim_accounts.account_id = fct_mrr.account_id
+    INNER JOIN dim_billing_accounts
+      ON dim_billing_accounts.billing_account_id= fct_mrr.billing_account_id
     INNER JOIN dim_dates
       ON dim_dates.date_id = fct_mrr.date_id
-    LEFT JOIN dim_customers
-      ON dim_accounts.crm_id = dim_customers.crm_id
+    LEFT JOIN dim_crm_accounts
+      ON dim_billing_accounts.crm_account_id = dim_crm_accounts.crm_account_id
 
 ), max_min_month AS (
 

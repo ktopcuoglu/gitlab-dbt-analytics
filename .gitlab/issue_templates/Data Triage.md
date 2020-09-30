@@ -20,7 +20,7 @@ Please prioritize this issue since we dedicate a day from your milestone to this
 * [ ] Review each slack message request in the **#data** and **#data-lounge** channel 
     - [ ] Reply to slack threads by pointing GitLabbers to the appropriate handbook page, visualization, or to other GitLabbers who may know more about the topic. 
     - [ ] Direct GitLabbers to the channel description, which has the link to the Data team project, if the request requires more than 5 minutes of investigative effort from a Data team member.
-* [ ] Review each slack message in the **#data-triage** channel, which will inform the triager of what issues have been opened in the data team project that day. 
+* [ ] Review each slack message in the **#data-triage** channel, which will inform the triager of what issues have been opened in the data team project that day.
     - [ ] For each issue opened by a non-Data Team member, label the issue by: 
         - [ ] Adding the `Workflow::start (triage)` and `Triage` label
         - [ ] Adding additional [labels](https://about.gitlab.com/handbook/business-ops/data-team/how-we-work/#issue-labeling)
@@ -46,6 +46,7 @@ Please prioritize this issue since we dedicate a day from your milestone to this
 
 ## Data Engineer tasks
 
+* [ ] Notify Data Customers of [data refresh SLO](https://about.gitlab.com/handbook/business-ops/data-team/platform/#slos-service-level-objectives-by-data-source) breach by posting a message to the _#data_ Slack channel using the appropriate Data Notification Template
 * [ ] [Create an issue](https://gitlab.com/gitlab-data/analytics/issues/new?issuable_template=DE%20Triage%20Errors) for each new failure in **#data-prom-alerts**
 * [ ] [Create an issue](https://gitlab.com/gitlab-data/analytics/issues/new?issuable_template=DE%20Triage%20Errors) for each new failure in **#dbt-runs** 
 * [ ] [Create an issue](https://gitlab.com/gitlab-data/analytics/issues/new?issuable_template=DE%20Triage%20Errors) for each new failure in **#analytics-pipelines**
@@ -59,8 +60,34 @@ In addition to these tasks the Data Engineer on triage should be focused on reso
 
 * [ ] At the end of your working day post EOD message to slack along with a link to this issue in the above mentioned slack channels so that it is clear for the next triager what time to check for issues from.
 
+## Data Notification Templates
 
+Use these to notify stakeholders of Data Delays.
 
+<details>
+<summary><i>Data Source Delay Templates</i></summary>
 
+### GitLab.com
+
+We have identified a delay in the `GitLab` data refresh and this problem potentially impacts any GitLab KPIs (e.g. MR Rate, TMAU) or SiSense dashboards. We are actively working on a resolution and will provide an update once the KPIs and SiSense dashboards have been brought up-to-date.  
+
+`CC @Mek Stittri, @Christopher Lefelhocz, @Hila Qu`
+
+### Salesforce
+
+Message: We have identified a delay in the `Salesforce` data refresh and this problem potentially impacts any Sales related KPIs or SiSense dashboards. We are actively working on a resolution and will provide an update once the KPIs and SiSense dashboards have been brought up-to-date.
+
+`CC @Jake Bielecki, @Matt Benzaquen, @Jack Brennan, @Craig Mestel`
+
+### Zuora
+
+Message: We have identified a delay in the `Zuora` data refresh and this problem potentially impacts any Financial KPIs or SiSense dashboards. We are actively working on a resolution and will provide an update once the KPIs and SiSense dashboards have been brought up-to-date.  
+
+`CC @Jake Bielecki, @Matt Benzaquen, @Jack Brennan, @Craig Mestel`
+
+### General
+
+We have identified a delay in the `DATA SOURCE` data refresh. We are actively working on a resolution and will provide an update once data has been brought up-to-date. 
+</details>
 
 /label ~"workflow::In dev" ~"Housekeeping" ~"Data Team" ~"Documentation" ~"Triage" ~"Priority::1-Ops"

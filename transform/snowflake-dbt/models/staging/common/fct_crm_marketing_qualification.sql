@@ -8,12 +8,13 @@ WITH sfdc_lead AS(
 	SELECT *
 	FROM {{ ref('sfdc_contact')}}
 
-), marketing_qualification_events AS(
+), marketing_qualified_leads AS(
 
 SELECT
 
     {{ dbt_utils.surrogate_key(['lead_id','marketo_qualified_lead_date::timestamp']) }} AS event_id,
     marketo_qualified_lead_date::timestamp                                              AS event_timestamp,
+    {{ get_date_id('marketo_qualified_lead_date') }},                                   -- date_id
     lead_id                                                                             AS sfdc_record_id,
     'lead'                                                                              AS sfdc_record,
     {{ dbt_utils.surrogate_key(['COALESCE(converted_contact_id, lead_id)']) }}          AS crm_person_id,
@@ -23,12 +24,13 @@ SELECT
   FROM sfdc_lead
   WHERE marketo_qualified_lead_date IS NOT NULL
 
-  UNION 
+), marketing_qualified_contacts AS(
 
   SELECT
 
     {{ dbt_utils.surrogate_key(['contact_id','marketo_qualified_lead_date::timestamp']) }} AS event_id,
     marketo_qualified_lead_date::timestamp                                                 AS event_timestamp,
+    {{ get_date_id('marketo_qualified_lead_date') }},                                      -- date_id
     contact_id                                                                             AS sfdc_record_id,
     'contact'                                                                              AS sfdc_record,
     {{ dbt_utils.surrogate_key(['contact_id']) }}                                          AS crm_person_id,
@@ -37,8 +39,27 @@ SELECT
      
   FROM sfdc_contact
   WHERE marketo_qualified_lead_date IS NOT NULL
+  HAVING event_id not in (
+                         SELECT event_id
+                         FROM marketing_qualified_leads
+                         ) 
+
+), unioned AS(
+
+  SELECT *
+  FROM marketing_qualified_leads
+
+  UNION
+
+  SELECT *
+  FROM marketing_qualified_contacts
 
 )
 
-SELECT *
-FROM marketing_qualification_events
+{{ dbt_audit(
+    cte_ref="unioned",
+    created_by="@jjstark ",
+    updated_by="@jjstark",
+    created_date="2020-09-09",
+    updated_date="2020-09-25"
+) }}
