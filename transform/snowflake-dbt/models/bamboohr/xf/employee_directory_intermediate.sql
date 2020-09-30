@@ -123,6 +123,7 @@ WITH RECURSIVE employee_directory AS (
       employee_directory.*,
       department_info.job_title,
       department_info.department,
+      IFF(department_info.department LIKE '%People%', 'People Success',department_info.department) AS department_modified, 
       department_info.division,
       department_info.division_mapped_current,
       COALESCE(job_role.cost_center, 
