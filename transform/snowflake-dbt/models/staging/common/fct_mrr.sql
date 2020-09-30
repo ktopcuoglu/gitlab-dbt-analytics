@@ -46,7 +46,6 @@ WITH dim_dates AS (
 ), rate_plan_charge_filtered AS (
 
   SELECT
-    zuora_subscription.subscription_name,
     zuora_subscription.subscription_id,
     zuora_account.account_id                             AS billing_account_id,
     zuora_account.crm_id                                 AS crm_account_id,
@@ -80,7 +79,6 @@ WITH dim_dates AS (
     crm_account_id,
     subscription_id,
     product_details_id,
-    subscription_id                                      AS zuora_subscription_id,
     SUM(mrr)                                             AS mrr,
     SUM(mrr)* 12                                         AS arr,
     SUM(quantity)                                        AS quantity,
@@ -91,7 +89,7 @@ WITH dim_dates AS (
     AND (rate_plan_charge_filtered.effective_end_month > dim_dates.date_actual
       OR rate_plan_charge_filtered.effective_end_month IS NULL)
     AND dim_dates.day_of_month = 1
-  {{ dbt_utils.group_by(n=6) }}
+  {{ dbt_utils.group_by(n=5) }}
 
 ), final AS (
 
