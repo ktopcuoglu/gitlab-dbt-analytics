@@ -215,7 +215,7 @@ models:
     description: '{{ doc("dim_subscriptions") }}'
     columns:
       - name: subscription_id
-        description: Unique internal identifier of a subscription
+        description: Unique identifier of a version of a subscription
         tests:
           - not_null
           - unique
