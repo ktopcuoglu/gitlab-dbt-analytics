@@ -25,7 +25,7 @@ WITH bamboohr_employee_directory AS (
     WHERE division = 'Engineering'
       AND date_actual >= '2020-01-01'
 
-), reporting_structure AS (
+), engineering_team_member_attributes AS (
     
     SELECT 
       DISTINCT development_department_employees.date_employed,
@@ -46,8 +46,17 @@ WITH bamboohr_employee_directory AS (
     LEFT JOIN bamboohr_engineering_division_mapping
       ON development_department_employees.jobtitle_speciality = bamboohr_engineering_division_mapping.jobtitle_speciality
 
+), reporting_structure AS (
+
+    SELECT engineering_team_member_attributes.*,
+      bamboohr_engineering_division_mapping.team_name
+    FROM engineering_team_member_attributes
+    LEFT JOIN bamboohr_engineering_division_mapping
+      ON engineering_team_member_attributes.jobtitle_speciality = bamboohr_engineering_division_mapping.jobtitle_speciality
+      ON engineering_team_member_attributes.sub_department = bamboohr_engineering_division_mapping.sub_department
+      ON engineering_team_member_attributes.technology_group = bamboohr_engineering_division_mapping.technology_group
+ 
 )
 
 SELECT *,
-{{ engineering_division_mapping('sub_department','jobtitle_speciality','technology_group') }}                AS team_name
 FROM reporting_structure
