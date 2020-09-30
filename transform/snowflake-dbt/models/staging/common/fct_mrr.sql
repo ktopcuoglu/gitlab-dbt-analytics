@@ -92,7 +92,7 @@ WITH dim_dates AS (
     AND (rate_plan_charge_filtered.effective_end_month > dim_dates.date_actual
       OR rate_plan_charge_filtered.effective_end_month IS NULL)
     AND dim_dates.day_of_month = 1
-  {{ dbt_utils.group_by(n=5) }}
+  {{ dbt_utils.group_by(n=6) }}
 
 ), final AS (
 
