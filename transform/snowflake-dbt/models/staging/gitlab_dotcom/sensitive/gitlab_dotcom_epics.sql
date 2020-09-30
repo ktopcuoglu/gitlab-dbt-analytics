@@ -1,9 +1,3 @@
-{{ config({
-    "schema": "sensitive",
-    "materialized": "view"
-    })
-}}
-
 WITH source AS (
 
     SELECT *
