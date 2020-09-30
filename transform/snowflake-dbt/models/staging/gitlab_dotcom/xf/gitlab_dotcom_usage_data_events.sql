@@ -44,7 +44,7 @@
   },
   {
     "event_name": "boards",
-    "source_table_name": "gitlab_dotcom_boards",
+    "source_table_name": "gitlab_dotcom_boards_source",
     "user_column_name": "NULL",
     "key_to_parent_project": "project_id",
     "primary_key": "board_id",
