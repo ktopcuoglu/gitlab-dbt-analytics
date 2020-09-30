@@ -64,7 +64,7 @@ WITH usage_data AS (
       usage_data.zuora_subscription_id,
       usage_data.zuora_subscription_status,
       usage_data.zuora_crm_id,
-      NUll                                                               AS stage_name,
+      NULL                                                               AS stage_name,
       DATEADD('days', -28, usage_data.created_at)                        AS period_start,
       usage_data.created_at                                              AS period_end,
       f.key                                                              AS usage_action_name,
