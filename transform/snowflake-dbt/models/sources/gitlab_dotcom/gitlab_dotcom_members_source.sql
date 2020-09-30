@@ -1,8 +1,3 @@
-{{ config({
-    "schema": "analytics"
-    })
-}}
-
 WITH
 {{ distinct_source(source=source('gitlab_dotcom', 'members'))}}
 
