@@ -257,6 +257,9 @@ models:
         +tags: ["product"]
         +materialized: table
         +schema: analytics
+        source_view:
+          +materialized: view
+          +schema: staging
 
       gitter:
         +enabled: false
