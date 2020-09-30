@@ -11,14 +11,14 @@ WITH twenty_eight_day_metrics AS (
       metrics.usage_ping_id,
       metrics.recorded_at,
       metrics.stage_name,
-      payloads.host_id,
+      payloads.uuid,
       payloads.created_at,
       DATE_TRUNC('month', created_at) AS created_month
     FROM {{ ref('fct_usage_ping_metric_all_time') }} metrics
     INNER JOIN {{ ref('fct_usage_ping_payloads') }} payloads
       ON metrics.usage_ping_id = payloads.usage_ping_id
     WHERE IS_REAL(metric_value) = True
-    QUALIFY ROW_NUMBER() OVER (PARTITION BY host_id, metric_name, created_month ORDER BY created_at DESC) = 1
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY uuid, metric_name, created_month ORDER BY created_at DESC) = 1
 
 ), monthly_all_time_metrics AS (
 
@@ -26,7 +26,7 @@ WITH twenty_eight_day_metrics AS (
       *,
       metric_value - COALESCE(
         LAG(metric_value) OVER (
-          PARTITION BY host_id, metric_name 
+          PARTITION BY uuid, metric_name 
           ORDER BY created_month
         ), 
         0
