@@ -91,7 +91,7 @@ WITH dates AS (
 
     SELECT
       employees.date_actual,
-      department,
+      employees.department_modified                                             AS department,
       division_mapped_current                                                   AS division,
       --using the current division - department mapping for reporting
       job_role,
