@@ -79,7 +79,7 @@ WITH dim_dates AS (
     dim_dates.date_id,
     billing_account_id,
     crm_account_id,
-    {{ dbt_utils.surrogate_key([subscription_name]) }}   AS subscription_id,
+    {{ dbt_utils.surrogate_key(['subscription_name']) }} AS subscription_id,
     product_details_id,
     subscription_id                                      AS zuora_subscription_id,
     SUM(mrr)                                             AS mrr,
