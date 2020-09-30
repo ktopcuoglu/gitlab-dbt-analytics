@@ -40,6 +40,7 @@ WITH snapshot_dates AS (
 ), joined AS (
 
     SELECT
+      zuora_subscription_spined.snapshot_id,
       {{ dbt_utils.surrogate_key(['zuora_subscription_spined.subscription_name']) }}
         AS subscription_id,
       zuora_subscription_spined.subscription_id                                 AS zuora_subscription_id,
