@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: gitlab_dotcom_audit_event_details_source
+  - name: gitlab_dotcom_audit_event_details
     description: Audit event details parsed into key-value pairs
     columns:
       - name: audit_event_id
@@ -17,7 +17,7 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_audit_event_details_pii_source
+  - name: gitlab_dotcom_audit_event_details_pii
     description: Just the audit event key-value pair details that possibly have PII.
     columns:
       - name: audit_event_id
