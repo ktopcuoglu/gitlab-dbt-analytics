@@ -46,10 +46,10 @@ WITH dim_dates AS (
 ), rate_plan_charge_filtered AS (
 
   SELECT
-    zuora_subscription.subscription_id,
-    zuora_account.account_id                             AS billing_account_id,
-    zuora_account.crm_id                                 AS crm_account_id,
-    zuora_rate_plan_charge.product_rate_plan_charge_id   AS product_details_id,
+    zuora_account.account_id                           AS billing_account_id,
+    zuora_account.crm_id                               AS crm_account_id,
+    zuora_subscription_snapshots.subscription_id,
+    zuora_rate_plan_charge.product_rate_plan_charge_id AS product_details_id,
     zuora_rate_plan_charge.mrr,
     zuora_rate_plan_charge.delta_tcv,
     zuora_rate_plan_charge.unit_of_measure,
@@ -106,7 +106,7 @@ WITH dim_dates AS (
     created_by="@msendal",
     updated_by="@msendal",
     created_date="2020-09-10",
-    updated_date="2020-09-29",
+    updated_date="2020-09-17",
 ) }}
 
 
