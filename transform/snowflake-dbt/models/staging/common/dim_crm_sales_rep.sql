@@ -22,9 +22,9 @@ WITH sfdc_users AS (
     sfdc_users.start_date, -- start_date
     sfdc_user_roles.name   AS user_role_name
 	
-	FROM sfdc_users
-	LEFT JOIN sfdc_user_roles
-	  ON sfdc_users.user_role_id = sfdc_user_roles.id
+  FROM sfdc_users
+  LEFT JOIN sfdc_user_roles
+    ON sfdc_users.user_role_id = sfdc_user_roles.id
 
 )
 
