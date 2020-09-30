@@ -1,27 +1,16 @@
-{{ config({
-    "schema": "sensitive"
-    })
-}}
-
 WITH source AS (
 
   SELECT *
   FROM {{ source('gitlab_dotcom', 'namespaces') }}
   QUALIFY ROW_NUMBER() OVER (PARTITION BY id ORDER BY updated_at DESC) = 1
 
-), gitlab_subscriptions AS (
-
-    SELECT *
-    FROM {{ref('gitlab_dotcom_gitlab_subscriptions')}}
-    WHERE is_currently_valid = TRUE
-
-), namespaces AS (
+), renamed AS (
 
     SELECT 
-      id::NUMBER                                                   AS namespace_id,
+      id::NUMBER                                                    AS namespace_id,
       name::VARCHAR                                                 AS namespace_name,
       path::VARCHAR                                                 AS namespace_path,
-      owner_id::NUMBER                                             AS owner_id,
+      owner_id::NUMBER                                              AS owner_id,
       type                                                          AS namespace_type,
       IFF(avatar IS NULL, FALSE, TRUE)                              AS has_avatar,
       created_at::TIMESTAMP                                         AS created_at,
@@ -50,16 +39,7 @@ WITH source AS (
       push_rule_id::INTEGER                                         AS push_rule_id
     FROM source
 
-), joined AS (
-
-  SELECT
-    namespaces.*,
-    COALESCE(gitlab_subscriptions.plan_id, 34) AS plan_id
-  FROM namespaces
-    LEFT JOIN gitlab_subscriptions
-      ON namespaces.namespace_id = gitlab_subscriptions.namespace_id
-
 )
 
 SELECT *
-FROM joined
+FROM renamed
