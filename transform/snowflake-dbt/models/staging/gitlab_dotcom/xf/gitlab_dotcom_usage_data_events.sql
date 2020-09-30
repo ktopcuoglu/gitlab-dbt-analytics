@@ -143,7 +143,7 @@
   },
   {
     "event_name": "environments",
-    "source_table_name": "gitlab_dotcom_environments_source",
+    "source_table_name": "gitlab_dotcom_environments",
     "user_column_name": "NULL",
     "key_to_parent_project": "project_id",
     "primary_key": "environment_id",

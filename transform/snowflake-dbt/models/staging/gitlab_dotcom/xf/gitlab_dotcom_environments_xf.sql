@@ -3,7 +3,7 @@
 WITH base AS (
 
     SELECT *
-    FROM {{ ref('gitlab_dotcom_environments_source') }}
+    FROM {{ ref('gitlab_dotcom_environments') }}
 
 )
 
@@ -25,7 +25,7 @@ WITH base AS (
 , anonymised AS (
     
     SELECT
-      {{ dbt_utils.star(from=ref('gitlab_dotcom_environments_source'), except=fields_to_mask|upper, relation_alias='base') }},
+      {{ dbt_utils.star(from=ref('gitlab_dotcom_environments'), except=fields_to_mask|upper, relation_alias='base') }},
       {% for field in fields_to_mask %}
       CASE
         WHEN TRUE 
