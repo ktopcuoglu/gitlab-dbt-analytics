@@ -37,7 +37,7 @@ WITH dim_dates AS (
     rank() OVER (
       PARTITION BY subscription_name
       ORDER BY DBT_VALID_FROM DESC) AS rank,
-     subscription_id,
+    subscription_id,
     subscription_name
   FROM {{ ref('zuora_subscription_snapshots_source') }}
   WHERE subscription_status NOT IN ('Draft', 'Expired')
@@ -47,8 +47,8 @@ WITH dim_dates AS (
 ), rate_plan_charge_filtered AS (
 
   SELECT
-    {{ dbt_utils.surrogate_key(['zuora_subscription.subscription_name']) }}
-      AS subscription_id,
+    zuora_subscription.subscription_name,
+    zuora_subscription.subscription_id,
     zuora_account.account_id                             AS billing_account_id,
     zuora_account.crm_id                                 AS crm_account_id,
     zuora_rate_plan_charge.product_rate_plan_charge_id   AS product_details_id,
@@ -79,8 +79,9 @@ WITH dim_dates AS (
     dim_dates.date_id,
     billing_account_id,
     crm_account_id,
-    subscription_id,
+    {{ dbt_utils.surrogate_key([subscription_name]) }}   AS subscription_id,
     product_details_id,
+    subscription_id                                      AS zuora_subscription_id,
     SUM(mrr)                                             AS mrr,
     SUM(mrr)* 12                                         AS arr,
     SUM(quantity)                                        AS quantity,
