@@ -114,7 +114,7 @@ WITH RECURSIVE employee_directory AS (
 ), sheetload_engineering_speciality AS (
 
     SELECT *
-    FROM {{ ref('sheetload_engineering_speciality_prior_to_capture') }}    
+    FROM {{ ref('sheetload_engineering_speciality_prior_to_capture') }}  
 
 ), enriched AS (
 
@@ -123,9 +123,8 @@ WITH RECURSIVE employee_directory AS (
       employee_directory.*,
       department_info.job_title,
       department_info.department,
-      IFF(department_info.department LIKE '%People%', 'People Sucess', department_info.department) AS department_modified,
       department_info.division,
-      department_info.division_mapped_current,
+      current_division_mapping.division_mapped_current,
       COALESCE(job_role.cost_center, 
                cost_center_prior_to_bamboo.cost_center)                     AS cost_center,
       department_info.reports_to,
@@ -136,8 +135,8 @@ WITH RECURSIVE employee_directory AS (
       IFF(date_details.date_actual BETWEEN '2019-11-01' AND '2020-02-27', 
             job_info_mapping_historical.job_grade, 
             job_role.job_grade)                                             AS job_grade,
-      COALESCE(sheetload_engineering_speciality.speciality, job_role.jobtitle_speciality) AS jobtitle_speciality,
-      ---to capture speciality for engineering prior to 2020.09.30 we are using sheetload, and capturing from bamboohr afterwards      
+       COALESCE(sheetload_engineering_speciality.speciality, job_role.jobtitle_speciality) AS jobtitle_speciality,
+      ---to capture speciality for engineering prior to 2020.09.30 we are using sheetload, and capturing from bamboohr afterwards
       location_factor.location_factor, 
       IFF(hire_date = date_actual OR 
           rehire_date = date_actual, True, False)                           AS is_hire_date,
