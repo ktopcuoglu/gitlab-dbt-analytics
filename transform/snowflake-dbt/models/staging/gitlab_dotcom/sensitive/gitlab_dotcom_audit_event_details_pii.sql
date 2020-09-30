@@ -6,7 +6,7 @@
 WITH base AS (
 
     SELECT * 
-    FROM {{ ref('gitlab_dotcom_audit_event_details') }}
+    FROM {{ ref('gitlab_dotcom_audit_event_details_source') }}
 
 ), audit_event_pii AS (
 
