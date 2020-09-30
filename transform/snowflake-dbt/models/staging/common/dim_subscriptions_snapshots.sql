@@ -58,12 +58,10 @@ WITH snapshot_dates AS (
       zuora_subscription_spined.subscription_end_date                           AS subscription_end_date,
       DATE_TRUNC('month', zuora_subscription_spined.subscription_start_date)    AS subscription_start_month,
       DATE_TRUNC('month', zuora_subscription_spined.subscription_end_date)      AS subscription_end_month
-    FROM zuora_subscription
-    INNER JOIN zuora_subscription_spined
-      ON zuora_subscription_spined.subscription_id = zuora_subscription.subscription_id
+    FROM zuora_subscription_spined
     INNER JOIN zuora_account
       ON zuora_account.account_id = zuora_subscription.account_id
-    WHERE zuora_account.is_deleted = FALSE
+    WHERE is_deleted = FALSE
       AND exclude_from_analysis IN ('False', '')
       AND zuora_subscription_spined.rank = 1
 
