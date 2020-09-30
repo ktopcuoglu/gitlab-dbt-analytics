@@ -37,8 +37,7 @@ WITH dim_dates AS (
     rank() OVER (
       PARTITION BY subscription_name
       ORDER BY DBT_VALID_FROM DESC) AS rank,
-    subscription_id,
-    subscription_name
+    subscription_id
   FROM {{ ref('zuora_subscription_snapshots_source') }}
   WHERE subscription_status NOT IN ('Draft', 'Expired')
     AND CURRENT_TIMESTAMP()::TIMESTAMP_TZ >= dbt_valid_from
@@ -79,7 +78,7 @@ WITH dim_dates AS (
     dim_dates.date_id,
     billing_account_id,
     crm_account_id,
-    {{ dbt_utils.surrogate_key(['subscription_name']) }} AS subscription_id,
+    subscription_id,
     product_details_id,
     subscription_id                                      AS zuora_subscription_id,
     SUM(mrr)                                             AS mrr,

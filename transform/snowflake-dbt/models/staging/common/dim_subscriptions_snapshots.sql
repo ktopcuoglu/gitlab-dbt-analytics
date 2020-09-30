@@ -41,9 +41,7 @@ WITH snapshot_dates AS (
 
     SELECT
       zuora_subscription_spined.snapshot_id,
-      {{ dbt_utils.surrogate_key(['zuora_subscription_spined.subscription_name']) }}
-        AS subscription_id,
-      zuora_subscription_spined.subscription_id                                 AS zuora_subscription_id,
+      zuora_subscription_spined.subscription_id
       zuora_account.crm_id                                                      AS crm_account_id,
       zuora_account.account_id                                                  AS billing_account_id,
       zuora_subscription_spined.subscription_name,
