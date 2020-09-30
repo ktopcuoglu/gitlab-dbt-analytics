@@ -69,7 +69,7 @@ WITH dim_billing_accounts AS (
       --subscription info
       dim_subscriptions_snapshots.subscription_name,
       dim_subscriptions_snapshots.subscription_status,
-      dim_subscriptions.subscription_sales_type,
+      dim_subscriptions_snapshots.subscription_sales_type,
 
       --product info
       dim_product_details.product_category,
