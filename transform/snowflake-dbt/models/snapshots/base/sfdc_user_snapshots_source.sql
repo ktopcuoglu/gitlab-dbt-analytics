@@ -28,14 +28,14 @@ WITH source AS (
       lastmodifiedbyid AS last_modified_id,
       lastmodifieddate AS last_modified_date,
       dbt_scd_id,
-			dbt_updated_at,
-			dbt_valid_from,
-			dbt_valid_to,
+      dbt_updated_at,
+      dbt_valid_from,
+      dbt_valid_to,
 
       --dbt last run
       convert_timezone('America/Los_Angeles',convert_timezone('UTC',current_timestamp())) AS _last_dbt_run
     
-		FROM source
+    FROM source
 
 )
 
