@@ -1,6 +1,5 @@
 {{ config({
-        "materialized": "incremental",
-        "schema": "sensitive"
+        "materialized": "incremental"
     })
 }}
 
@@ -23,7 +22,7 @@ WITH source AS (
 ), details_parsed AS (
 
     SELECT
-      id::NUMBER                                                                 AS audit_event_id,
+      id::NUMBER                                                                  AS audit_event_id,
       REGEXP_SUBSTR(details, '\\:([a-z_]*)\\: (.*)', 1, generated_number, 'c', 1) AS key_name,
       REGEXP_SUBSTR(details, '\\:([a-z_]*)\\: (.*)', 1, generated_number, 'c', 2) AS key_value,
       created_at::TIMESTAMP                                                       AS created_at

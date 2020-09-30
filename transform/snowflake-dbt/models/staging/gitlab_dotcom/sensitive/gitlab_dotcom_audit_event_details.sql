@@ -1,5 +1,6 @@
 {{ config({
-    "schema": "analytics"
+    "schema": "sensitive",
+    "materialized": "view"
     })
 }}
 
