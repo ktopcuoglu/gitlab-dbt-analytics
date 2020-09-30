@@ -57,6 +57,8 @@ WITH snapshot_dates AS (
       zuora_subscription_spined.renewal_term_period_type,
       zuora_subscription_spined.subscription_start_date                         AS subscription_start_date,
       zuora_subscription_spined.subscription_end_date                           AS subscription_end_date,
+      IFF(zuora_subscription.created_by_id = '2c92a0fd55822b4d015593ac264767f2', -- All Self-Service / Web direct subscriptions are identified by that created_by_id
+      'Self-Service', 'Sales-Assisted')                                         AS subscription_sales_type,
       DATE_TRUNC('month', zuora_subscription_spined.subscription_start_date)    AS subscription_start_month,
       DATE_TRUNC('month', zuora_subscription_spined.subscription_end_date)      AS subscription_end_month
     FROM zuora_subscription_spined
