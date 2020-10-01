@@ -257,7 +257,7 @@ models:
   - name: sfdc_users_source
     description: Source model for SFDC Users
     columns:
-        - name: id
+        - name: user_id
           tests:
               - not_null
               - unique
