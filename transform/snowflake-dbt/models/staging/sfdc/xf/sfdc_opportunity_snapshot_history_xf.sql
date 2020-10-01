@@ -147,6 +147,12 @@ SELECT
 
         CASE WHEN o.order_type IS NULL THEN '3. Growth'
             ELSE o.order_type END                                                                       AS order_type, 
+        
+        CASE WHEN o.order_type_stamped IS NULL THEN '3. Growth'
+            ELSE o.order_type_stamped END                                                               AS order_type_stamped, 
+        
+        o.account_owner_team_stamped,
+
         CASE
             WHEN (a.sales_segment = 'Unknown' OR a.sales_segment IS NULL) 
                 AND o.user_segment = 'SMB' 
@@ -197,7 +203,7 @@ SELECT
             WHEN h.stage_name IN ('Closed Won') AND h.forecasted_iacv < 0                           
                     THEN h.forecasted_iacv
             ELSE 0 END                                                                                  AS churn_only
-
+            
     FROM sfdc_opportunity_snapshot_history h
     -- close date
     INNER JOIN date_details d

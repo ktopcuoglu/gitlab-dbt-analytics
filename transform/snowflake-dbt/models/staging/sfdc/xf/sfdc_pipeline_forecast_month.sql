@@ -18,7 +18,7 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
 SELECT  snapshot_date,
         close_month,
         close_fiscal_year,
-        forecast_category_name,                  
+        forecast_category_name,            
         owner_id,
         opportunity_owner_manager,
         tsp_region,
