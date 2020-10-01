@@ -41,9 +41,15 @@
       SUM(hired_contributor)                            AS hired_contributor,
       SUM(separated_contributor)                        AS separated_contributor,
       SUM(IFF(is_promotion = TRUE,1,0))                 AS promotion,
-      AVG(location_factor)                              AS location_factor
-      " %}
-
+      AVG(location_factor)                              AS location_factor,
+      SUM(total_discretionary_bonuses)                  AS total_discretionary_bonuses, 
+      AVG(tenure_months)                                AS tenure_months,
+      SUM(tenure_zero_to_six_months)                    AS tenure_zero_to_six_months,
+      SUM(tenure_six_to_twelve_months)                  AS tenure_six_to_twelve_months,
+      SUM(tenure_one_to_two_years)                      AS tenure_one_to_two_years,
+      SUM(tenure_two_to_four_years)                     AS tenure_two_to_four_years,
+      SUM(tenure_four_plus_years)                       AS tenure_four_plus_years
+      "%}
 
 WITH dates AS (
 
@@ -143,7 +149,14 @@ WITH dates AS (
       is_promotion,                         
       IFF(dates.end_date = date_actual 
             AND sales_geo_differential = 'n/a - Comp Calc',
-            location_factor, NULL)                                               AS location_factor
+            location_factor, NULL)                                               AS location_factor,
+      total_discretionary_bonuses,      
+      ROUND((tenure_days/30),1)                                                  AS tenure_months,
+      IFF(tenure_months BETWEEN 0 AND 6, 1, 0)                                   AS tenure_zero_to_six_months,
+      IFF(tenure_months BETWEEN 6 AND 12, 1, 0)                                  AS tenure_six_to_twelve_months,
+      IFF(tenure_months BETWEEN 12 AND 24, 1, 0)                                 AS tenure_one_to_two_years,
+      IFF(tenure_months BETWEEN 24 AND 48, 1, 0)                                 AS tenure_two_to_four_years,
+      IFF(tenure_months >= 48, 1, 0)                                             AS tenure_four_plus_years
     FROM dates
     LEFT JOIN employees
       ON DATE_TRUNC(month,dates.start_date) = DATE_TRUNC(month, employees.date_actual)

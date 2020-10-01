@@ -116,6 +116,11 @@ WITH RECURSIVE employee_directory AS (
     SELECT *
     FROM {{ ref('sheetload_engineering_speciality_prior_to_capture') }}  
 
+), bamboohr_discretionary_bonuses_xf AS (
+
+    SELECT *
+    FROM {{ ref('bamboohr_directionary_bonuses_xf') }}  
+
 ), enriched AS (
 
     SELECT
@@ -185,7 +190,10 @@ WITH RECURSIVE employee_directory AS (
              ELSE COALESCE(job_role.job_role, 
                            job_info_mapping_historical.job_role,
                            department_info.job_role) END                           AS job_role_modified,
-          IFF(compensation_change_reason IS NOT NULL,TRUE,FALSE)                   AS is_promotion                                                                        
+          IFF(compensation_change_reason IS NOT NULL,TRUE,FALSE)                   AS is_promotion,
+        bamboohr_discretionary_bonuses_xf.total_discretionary_bonuses,
+        ROW_NUMBER() OVER 
+            (PARTITION BY employee_directory.employee_id ORDER BY date_actual)     AS tenure_days                                                                        
     FROM date_details
     LEFT JOIN employee_directory
       ON hire_date::DATE <= date_actual
@@ -229,6 +237,9 @@ WITH RECURSIVE employee_directory AS (
       AND date_details.date_actual BETWEEN sheetload_engineering_speciality.speciality_start_date 
                                        AND COALESCE(sheetload_engineering_speciality.speciality_end_date, '2020-09-30')
                                        ---Post 2020.09.30 we will capture engineering speciality from bamboohr
+    LEFT JOIN bamboohr_discretionary_bonuses_xf
+      ON employee_directory.employee_id = bamboohr_discretionary_bonuses_xf.employee_id
+      AND date_details.date_actual = bamboohr_discretionary_bonuses_xf.bonus_date                                    
     WHERE employee_directory.employee_id IS NOT NULL
 
 ), base_layers as (

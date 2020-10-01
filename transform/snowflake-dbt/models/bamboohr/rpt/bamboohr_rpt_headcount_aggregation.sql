@@ -116,7 +116,14 @@ WITH source AS (
         {{ratio_to_report_partition_statement}}                                     AS percent_of_headcount_contributor,
       
       SUM(COALESCE(promotion,0)) {{partition_statement}}                            AS rolling_12_month_promotions,
-      location_factor
+      location_factor,
+      total_discretionary_bonuses,
+      tenure_months,
+      tenure_zero_to_six_months,
+      tenure_six_to_twelve_months,
+      tenure_one_to_two_years,
+      tenure_two_to_four_years,
+      tenure_four_plus_years
     FROM base
     LEFT JOIN source  
       ON base.month_date = source.month_date
@@ -227,7 +234,14 @@ WITH source AS (
         NULL, percent_of_headcount_leaders)                                 AS percent_of_headcount_contributor,
       IFF(rolling_12_month_promotions<2 AND eeoc_field_name != 'no_eeoc', 
         NULL, rolling_12_month_promotions)                                  AS rolling_12_month_promotions,
-      location_factor
+      location_factor,
+      total_discretionary_bonuses,
+      tenure_months,
+      tenure_zero_to_six_months,
+      tenure_six_to_twelve_months,
+      tenure_one_to_two_years,
+      tenure_two_to_four_years,
+      tenure_four_plus_years
     FROM intermediate   
 
 )
