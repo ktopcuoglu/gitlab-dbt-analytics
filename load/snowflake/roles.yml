@@ -641,6 +641,18 @@ roles:
                     - analytics.analytics_sensitive.customers_db_customers_pii
                     - analytics.customers.*
 
+    - common:
+        privileges:
+            databases:
+                read:
+                    - analytics
+            schemas:
+                read:
+                    - analytics.common
+            tables:
+                read:
+                    - analytics.common.*
+
     - date:
         privileges:
             databases:
