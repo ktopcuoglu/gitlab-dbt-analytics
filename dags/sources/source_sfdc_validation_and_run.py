@@ -68,7 +68,7 @@ default_args = {
     "start_date": datetime(2019, 1, 1, 0, 0, 0),
 }
 
-data_source = "zuora"
+data_source = "sfdc"
 
 # Create the DAG
 # Run twice per day, 10 minutes after every 12th hour
