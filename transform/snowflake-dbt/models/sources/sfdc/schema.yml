@@ -3,268 +3,315 @@ models:
   - name: sfdc_account_source
     description: Source model for SFDC Accounts
     columns:
-        - name: account_id
-          tests:
-              - not_null
-              - unique
-        - name: account_name
-          tests:
-              - not_null
-        - name: is_sdr_target_account
-          tests:
-              - not_null
-        - name: tsp_max_hierarchy_sales_segment
-          description: Maximum account sales segment within the account hierarchy.      
-        - name: division_sales_segment
-          description: Sales segment of the specific account.
-        - name: ultimate_parent_sales_segment
-          description: Sales segment of the parent of the account hierarchy.
+      - name: account_id
+        tags: ["tdf", "sfdc"]
+        tests:
+          - not_null
+          - unique
+      - name: account_name
+        tags: ["tdf", "sfdc"]
+        tests:
+          - not_null
+      - name: is_sdr_target_account
+        tags: ["tdf", "sfdc"]
+        tests:
+          - not_null
+      - name: tsp_max_hierarchy_sales_segment
+        description: Maximum account sales segment within the account hierarchy.
+      - name: division_sales_segment
+        description: Sales segment of the specific account.
+      - name: ultimate_parent_sales_segment
+        description: Sales segment of the parent of the account hierarchy.
   - name: sfdc_account_history_source
     description: Source model for SFDC Account History
     columns:
-        - name: account_history_id
-          tests:
-            - not_null
-            - unique
-        - name: account_id
-          tests:
-            - not_null
+      - name: account_history_id
+        tags: ["tdf", "sfdc"]
+        tests:
+          - not_null
+          - unique
+      - name: account_id
+        tags: ["tdf", "sfdc"]
+        tests:
+          - not_null
   - name: sfdc_bizible_attribution_touchpoint_source
     description: Attribution touchpoints are on opportunities.
     columns:
-        - name: touchpoint_id
-          tests:
-              - not_null
-              - unique
-        - name: campaign_id
-          tests:
-              - not_null
-              - relationships:
-                    to: ref('sfdc_campaign')
-                    field: campaign_id
+      - name: touchpoint_id
+        tags: ["tdf", "sfdc"]
+        tests:
+          - not_null
+          - unique
+      - name: campaign_id
+        tags: ["tdf", "sfdc"]
+        tests:
+          - not_null
+          - relationships:
+              to: ref('sfdc_campaign')
+              field: campaign_id
   - name: sfdc_bizible_touchpoint_source
     description: Touch points are on leads and contacts.
     columns:
-        - name: touchpoint_id
-          tests:
-              - unique
-              - not_null
+      - name: touchpoint_id
+        tests:
+          - unique
+          - not_null
   - name: sfdc_campaign_source
     description: source model for SFDC Campaigns
     columns:
-        - name: campaign_id
-          tests:
-              - not_null
-              - unique
-        - name: campaign_name
-          tests:
-              - not_null
+      - name: campaign_id
+        tags: ["tdf", "sfdc"]
+        tests:
+          - not_null
+          - unique
+      - name: campaign_name
+        tags: ["tdf", "sfdc"]
+        tests:
+          - not_null
   - name: sfdc_campaign_member_source
     description: The source model for SFDC Campaign Members
     columns:
-        - name: campaign_member_id
-          tests:
-              - not_null
-              - unique
+      - name: campaign_member_id
+        tags: ["tdf", "sfdc"]
+        tests:
+          - not_null
+          - unique
   - name: sfdc_contact_source
     description: Source model for SFDC Contacts
     columns:
-         - name: contact_id
-           tests:
-              - not_null
-              - unique
-         - name: contact_email
-           meta:
-              sensitive: true
-         - name: contact_name
-           meta:
-              sensitive: true
-           tests:
-              - not_null
+      - name: contact_id
+        tags: ["tdf", "sfdc"]
+        tests:
+          - not_null
+          - unique
+      - name: contact_email
+        meta:
+          sensitive: true
+      - name: contact_name
+        tags: ["tdf", "sfdc"]
+        meta:
+          sensitive: true
+        tests:
+          - not_null
   - name: sfdc_contact_history_source
     description: Source model for SFDC Contacts History
     columns:
-        - name: contact_id
-          tests:
-            - not_null
-        - name: contact_history_id
-          tests:
-            - not_null
-            - unique
+      - name: contact_id
+        tags: ["tdf", "sfdc"]
+        tests:
+          - not_null
+      - name: contact_history_id
+        tags: ["tdf", "sfdc"]
+        tests:
+          - not_null
+          - unique
   - name: sfdc_event_source
     description: Source model for SFDC Event
     columns:
-         - name: event_id
-           tests:
-              - not_null
-              - unique
-         - name: owner_id
-           tests:
-              - not_null
-         - name: account_id
-           tests:
-              - relationships:
-                    to: ref('sfdc_account_source')
-                    field: account_id
+      - name: event_id
+        tags: ["tdf", "sfdc"]
+        tests:
+          - not_null
+          - unique
+      - name: owner_id
+        tags: ["tdf", "sfdc"]
+        tests:
+          - not_null
+      - name: account_id
+        tags: ["tdf", "sfdc"]
+        tests:
+          - relationships:
+              to: ref('sfdc_account_source')
+              field: account_id
   - name: sfdc_executive_business_review_source
     description: Source model for SFDC Executive Business Reviews
     columns:
-        - name: account_id
-          tests:
-              - not_null
-              - relationships:
-                    to: ref('sfdc_account')
-                    field: account_id
-        - name: ebr_id
-          tests:
-              - not_null
-              - unique
-        - name: ebr_date
-          tests:
-              - not_null
-        - name: owner_id
-          tests:
-              - not_null
-        - name: ebr_name
-          tests:
-              - not_null
+      - name: account_id
+        tags: ["tdf", "sfdc"]
+        tests:
+          - not_null
+          - relationships:
+              to: ref('sfdc_account')
+              field: account_id
+      - name: ebr_id
+        tags: ["tdf", "sfdc"]
+        tests:
+          - not_null
+          - unique
+      - name: ebr_date
+        tags: ["tdf", "sfdc"]
+        tests:
+          - not_null
+      - name: owner_id
+        tags: ["tdf", "sfdc"]
+        tests:
+          - not_null
+      - name: ebr_name
+        tags: ["tdf", "sfdc"]
+        tests:
+          - not_null
   - name: sfdc_lead_source
     description: Source model for SFDC Leads
     columns:
-        - name: lead_id
-          tests:
-            - not_null
-            - unique
-        - name: lead_email
-          meta:
-            sensitive: true
-        - name: lead_name
-          meta:
-            sensitive: true
-          tests:
-            - not_null
+      - name: lead_id
+        tags: ["tdf", "sfdc"]
+        tests:
+          - not_null
+          - unique
+      - name: lead_email
+        meta:
+          sensitive: true
+      - name: lead_name
+        tags: ["tdf", "sfdc"]
+        meta:
+          sensitive: true
+        tests:
+          - not_null
   - name: sfdc_lead_history_source
     description: Source model for SFDC Leads History
     columns:
-        - name: lead_id
-          tests:
-            - not_null
-        - name: lead_history_id
-          tests:
-            - not_null
-            - unique
+      - name: lead_id
+        tags: ["tdf", "sfdc"]
+        tests:
+          - not_null
+      - name: lead_history_id
+        tags: ["tdf", "sfdc"]
+        tests:
+          - not_null
+          - unique
   - name: sfdc_opportunity_source
     description: Source model for SFDC Opportunities
     columns:
-        - name: account_id
-          tests:
-              - not_null
-        - name: opportunity_id
-          tests:
-              - not_null
-              - unique
-        - name: opportunity_name
-          tests:
-              - not_null
-        - name: stage_name
-          tests:
-              - not_null
-              - relationships:
-                    to: ref('sfdc_opportunity_stage')
-                    field: primary_label
-        - name: division_sales_segment_stamped
-          description: Stamped version of the account division sales segment.
-        - name: dr_partner_deal_type
-          description: Map field from Lead object during conversion. Lead Field Name = [Partners] Deal Registration Type
-        - name: dr_partner_engagement
-          description: 	This field Identified the engagement of the partner who registered the deal
+      - name: account_id
+        tags: ["tdf", "sfdc"]
+        tests:
+          - not_null
+      - name: opportunity_id
+        tags: ["tdf", "sfdc"]
+        tests:
+          - not_null
+          - unique
+      - name: opportunity_name
+        tags: ["tdf", "sfdc"]
+        tests:
+          - not_null
+      - name: stage_name
+        tags: ["tdf", "sfdc"]
+        tests:
+          - not_null
+          - relationships:
+              to: ref('sfdc_opportunity_stage')
+              field: primary_label
+      - name: division_sales_segment_stamped
+        description: Stamped version of the account division sales segment.
+      - name: dr_partner_deal_type
+        description: Map field from Lead object during conversion. Lead Field Name = [Partners] Deal Registration Type
+      - name: dr_partner_engagement
+        description: This field Identified the engagement of the partner who registered the deal
   - name: sfdc_opportunity_history_source
     description: Source model for SFDC Opportunity History
     columns:
-        - name: opportunity_history_id
-          tests:
-            - not_null
-            - unique
-        - name: opportunity_id
-          tests:
-            - not_null
+      - name: opportunity_history_id
+        tags: ["tdf", "sfdc"]
+        tests:
+          - not_null
+          - unique
+      - name: opportunity_id
+        tags: ["tdf", "sfdc"]
+        tests:
+          - not_null
   - name: sfdc_opportunity_field_history_source
     description: Source model for SFDC Opportunity Field History
     columns:
-        - name: field_history_id
-          tests:
-              - not_null
-        - name: opportunity_id
-          tests:
-              - not_null
+      - name: field_history_id
+        tags: ["tdf", "sfdc"]
+        tests:
+          - not_null
+      - name: opportunity_id
+        tags: ["tdf", "sfdc"]
+        tests:
+          - not_null
   - name: sfdc_opportunity_stage_source
     description: Source model for SFDC Opportunity Stages
     columns:
-        - name: sfdc_id
-          tests:
-              - not_null
-              - unique
+      - name: sfdc_id
+        tags: ["tdf", "sfdc"]
+        tests:
+          - not_null
+          - unique
   - name: sfdc_statement_of_work_source
     description: Source model for SFDC statement of work
     columns:
-        - name: ps_engagement_id
-          tests:
-              - not_null
-              - unique
-        - name: opportunity_id
-          tests:
-              - not_null
+      - name: ps_engagement_id
+        tags: ["tdf", "sfdc"]
+        tests:
+          - not_null
+          - unique
+      - name: opportunity_id
+        tags: ["tdf", "sfdc"]
+        tests:
+          - not_null
   - name: sfdc_proof_of_concept_source
     description: base model for SFDC Proof of Concept
     columns:
-        - name: account_id
-          tests:
-              - not_null
-        - name: pov_id
-          tests:
-              - not_null
-              - unique
-        - name: pov_status
-          tests:
-              - not_null
+      - name: account_id
+        tags: ["tdf", "sfdc"]
+        tests:
+          - not_null
+      - name: pov_id
+        tags: ["tdf", "sfdc"]
+        tests:
+          - not_null
+          - unique
+      - name: pov_status
+        tags: ["tdf", "sfdc"]
+        tests:
+          - not_null
   - name: sfdc_quote_source
     description: Source model for SFDC Zuora Quotes
     columns:
-        - name: quote_id
-          tests:
-              - not_null
-              - unique
-        - name: owner_id
-          tests:
-              - not_null
+      - name: quote_id
+        tags: ["tdf", "sfdc"]
+        tests:
+          - not_null
+          - unique
+      - name: owner_id
+        tags: ["tdf", "sfdc"]
+        tests:
+          - not_null
   - name: sfdc_record_type_source
     description: Source model for SFDC Record Types
     columns:
-        - name: record_type_id
-          tests:
-              - not_null
-              - unique
-        - name: record_type_name
-          tests:
-              - not_null
+      - name: record_type_id
+        tags: ["tdf", "sfdc"]
+        tests:
+          - not_null
+          - unique
+      - name: record_type_name
+        tags: ["tdf", "sfdc"]
+        tests:
+          - not_null
   - name: sfdc_user_roles_source
     description: Source model for SFDC User Roles
     columns:
-        - name: id
-          tests:
-              - not_null
-              - unique
+      - name: id
+        tags: ["tdf", "sfdc"]
+        tests:
+          - not_null
+          - unique
   - name: sfdc_users_source
     description: Source model for SFDC Users
     columns:
-        - name: user_id
-          tests:
-              - not_null
-              - unique
+      - name: user_id
+        tags: ["tdf", "sfdc"]
+        tests:
+          - not_null
+          - unique
   - name: sfdc_zqu_quote_source
     description: Source model for SFDC custom object representing a quote from Zuora
     columns:
       - name: zqu_quote_id
+        tags: ["tdf", "sfdc"]
         tests:
           - not_null
           - unique
@@ -272,6 +319,7 @@ models:
     description: Source model for SFDC custom object representing a quote amendment from Zuora
     columns:
       - name: zqu_quote_amendment_id
+        tags: ["tdf", "sfdc"]
         tests:
           - not_null
           - unique
