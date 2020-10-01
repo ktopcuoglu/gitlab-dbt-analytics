@@ -107,6 +107,7 @@ models:
       - name: gitlab_username
       - name: jobtitle_speciality
       - name: sales_geo_differential
+      - name: pay_frequency
       - name: effective_date
         description: The date the role is effective until a change occurs. 
   - name: bamboohr_locality
