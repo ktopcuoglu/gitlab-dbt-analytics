@@ -392,13 +392,13 @@ snapshots:
     transient: false
 
     customers:
-      +tags: ["daily"]
+      +tags: ["daily", "customers_db"]
 
     gitlab_dotcom:
       +tags: ["daily"]
 
     license:
-      +tags: ["daily"]
+      +tags: ["daily", "license_db"]
 
     netsuite:
       +tags: ["daily"]

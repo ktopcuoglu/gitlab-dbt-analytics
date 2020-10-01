@@ -302,7 +302,7 @@ models:
   - name: sfdc_users_source
     description: Source model for SFDC Users
     columns:
-      - name: id
+      - name: user_id
         tags: ["tdf", "sfdc"]
         tests:
           - not_null
