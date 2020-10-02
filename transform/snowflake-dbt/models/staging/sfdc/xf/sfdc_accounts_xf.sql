@@ -56,7 +56,7 @@ WITH sfdc_account AS (
     LEFT JOIN parent_account
       ON sfdc_account.ultimate_parent_account_id = parent_account.ultimate_parent_account_id
     LEFT OUTER JOIN sfdc_users
-      ON sfdc_account.technical_account_manager_id = sfdc_users.id
+      ON sfdc_account.technical_account_manager_id = sfdc_users.user_id
     LEFT JOIN sfdc_record_type
       ON sfdc_account.record_type_id = sfdc_record_type.record_type_id
     LEFT JOIN sfdc_account_deal_size_segmentation
