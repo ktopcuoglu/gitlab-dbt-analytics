@@ -26,7 +26,8 @@ WITH sfdc_opportunity AS (
     first_contact_roles.contact_id                                                           AS contact_id,
     sfdc_opportunity.account_id                                                              AS crm_account_id,
     sfdc_opportunity.opportunity_id                                                          AS opportunity_id,
-    first_contact_roles.opportunity_contact_role_id                                          AS opportunity_contact_role_id
+    first_contact_roles.opportunity_contact_role_id                                          AS opportunity_contact_role_id,
+    owner_id                                                                                 AS crm_sales_rep_id
 
   FROM sfdc_opportunity
   INNER JOIN first_contact_roles 
