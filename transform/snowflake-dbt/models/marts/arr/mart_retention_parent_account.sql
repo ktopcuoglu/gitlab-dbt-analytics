@@ -1,24 +1,31 @@
 WITH dim_crm_accounts AS (
 
-  SELECT *
-  FROM {{ ref('dim_crm_accounts') }}
+    SELECT *
+    FROM {{ ref('dim_crm_accounts') }}
+
+), dim_dates AS (
+
+    SELECT *
+    FROM {{ ref('dim_dates') }}
 
 ), fct_mrr AS (
 
-  SELECT *
-  FROM {{ ref('fct_mrr') }}
+    SELECT *
+    FROM {{ ref('fct_mrr') }}
 
 ), parent_account_mrrs AS (
 
-  SELECT
-    dim_crm_accounts.ultimate_parent_account_id,
-    fct_mrr.mrr_month,
-    dateadd('year', 1, mrr_month) AS retention_month,
-    SUM(mrr)                      AS mrr_total
-  FROM fct_mrr
-  LEFT JOIN dim_crm_accounts
-    ON dim_crm_accounts.crm_account_id = fct_mrr.crm_account_id
-  GROUP BY 1, 2, 3
+    SELECT
+      dim_crm_accounts.ultimate_parent_account_id,
+      dim_dates.date_actual           AS mrr_month,
+      dateadd('year', 1, date_actual) AS retention_month,
+      SUM(mrr)                        AS mrr_total
+    FROM fct_mrr
+    LEFT JOIN dim_crm_accounts
+      ON dim_crm_accounts.crm_account_id = fct_mrr.crm_account_id
+    INNER JOIN dim_dates
+      ON dim_dates.date_id = fct_mrr.date_id
+    GROUP BY 1, 2, 3
 
 ), retention_subs AS (
 
@@ -26,8 +33,8 @@ WITH dim_crm_accounts AS (
       current_mrr.ultimate_parent_account_id,
       current_mrr.mrr_month     AS original_mrr_month,
       current_mrr.retention_month,
-      current_mrr.mrr           AS original_mrr,
-      future_mrr.mrr            AS retention_mrr
+      current_mrr.mrr_total     AS original_mrr,
+      future_mrr.mrr_total      AS retention_mrr
     FROM parent_account_mrrs AS current_mrr
     LEFT JOIN parent_account_mrrs AS future_mrr
       ON current_mrr.ultimate_parent_account_id = future_mrr.ultimate_parent_account_id
