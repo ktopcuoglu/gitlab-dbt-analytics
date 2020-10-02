@@ -191,7 +191,7 @@ WITH RECURSIVE employee_directory AS (
                            job_info_mapping_historical.job_role,
                            department_info.job_role) END                           AS job_role_modified,
           IFF(compensation_change_reason IS NOT NULL,TRUE,FALSE)                   AS is_promotion,
-        bamboohr_discretionary_bonuses_xf.total_discretionary_bonuses,
+        bamboohr_discretionary_bonuses_xf.total_discretionary_bonuses              AS discretionary_bonus,
         ROW_NUMBER() OVER 
             (PARTITION BY employee_directory.employee_id ORDER BY date_actual)     AS tenure_days                                                                        
     FROM date_details
