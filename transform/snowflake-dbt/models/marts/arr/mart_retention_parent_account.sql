@@ -17,7 +17,7 @@ WITH dim_crm_accounts AS (
     SUM(mrr)                      AS mrr_total
   FROM fct_mrr
   LEFT JOIN dim_crm_accounts
-    ON dim_billing_accounts.crm_account_id = fct_mrr.crm_account_id
+    ON dim_crm_accounts.crm_account_id = fct_mrr.crm_account_id
   GROUP BY 1, 2, 3
 
 ), retention_subs AS (
