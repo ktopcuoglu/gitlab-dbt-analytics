@@ -202,12 +202,20 @@ SELECT
                     THEN h.renewal_acv*-1
             WHEN h.stage_name IN ('Closed Won') AND h.forecasted_iacv < 0                           
                     THEN h.forecasted_iacv
-            ELSE 0 END                                                                                  AS churn_only
-            
+            ELSE 0 END                                                                                  AS churn_only,
+
+        -- created & closed in quarter
+        CASE WHEN dc.fiscal_quarter_name_fy = d.fiscal_quarter_name_fy
+            AND h.stage_name IN ('Closed Won')  
+            THEN h.forecasted_iacv ELSE 0 END                                                           AS created_and_won_iacv
+
     FROM sfdc_opportunity_snapshot_history h
     -- close date
     INNER JOIN date_details d
         ON cast(h.close_date as date) = d.date_actual
+    -- created date
+    INNER JOIN analytics.date_details dc
+        ON dc.date_actual = h.created_date
     -- snapshot date
     INNER JOIN date_details ds
         ON h.date_actual = ds.date_actual
