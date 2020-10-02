@@ -42,7 +42,7 @@
       SUM(separated_contributor)                        AS separated_contributor,
       SUM(IFF(is_promotion = TRUE,1,0))                 AS promotion,
       AVG(location_factor)                              AS location_factor,
-      SUM(total_discretionary_bonuses)                  AS total_discretionary_bonuses, 
+      SUM(discretionary_bonus)                          AS discretionary_bonus, 
       AVG(tenure_months)                                AS tenure_months,
       SUM(tenure_zero_to_six_months)                    AS tenure_zero_to_six_months,
       SUM(tenure_six_to_twelve_months)                  AS tenure_six_to_twelve_months,
@@ -150,7 +150,7 @@ WITH dates AS (
       IFF(dates.end_date = date_actual 
             AND sales_geo_differential = 'n/a - Comp Calc',
             location_factor, NULL)                                               AS location_factor,
-      total_discretionary_bonuses,      
+      discretionary_bonus,      
       ROUND((tenure_days/30),1)                                                  AS tenure_months,
       IFF(tenure_months BETWEEN 0 AND 6, 1, 0)                                   AS tenure_zero_to_six_months,
       IFF(tenure_months BETWEEN 6 AND 12, 1, 0)                                  AS tenure_six_to_twelve_months,

@@ -1,13 +1,12 @@
 WITH bamboohr_discretionary_bonuses AS (
 
     SELECT *
-    FROM "ANALYTICS"."ANALYTICS"."BAMBOOHR_DISCRETIONARY_BONUSES"
-
+    FROM {{ ref('bamboohr_discretionary_bonuses') }}
 )
 
 SELECT
   employee_id,
   bonus_date,
-  COUNT(*) AS total_discretionay_bonuses
+  COUNT(*) AS total_discretionary_bonuses
 FROM bamboohr_discretionary_bonuses
 GROUP BY 1,2
