@@ -65,7 +65,7 @@ models:
         tests:
           - accepted_values:
                   values: ['TRUE', 'FALSE']
-      
+
       - name: merged_to_account_id
         description: for deleted accounts this is the SFDC account they were merged to
 
@@ -179,7 +179,19 @@ models:
         tests:
           - not_null
           - unique
-
+  - name: dim_mapping_sfdc_deleted_accounts
+    description: Mapping table to provide the merged to crm_id for deleted accounts.
+    columns:
+      - name: zuora_account_id
+        tests:
+          - not_null
+          - unique
+      - name: crm_id_original
+        tests:
+          - not_null
+      - name: crm_id_final
+        tests:
+          - not_null
   - name: dim_product_details
     description: '{{ doc("dim_product_details") }}'
     columns:
@@ -387,7 +399,7 @@ models:
         tests:
           - not_null
       - name: crm_person_id
-        description: A surrogate key for use when joining to `fct_crm_conversion_event`. Created from the contact_id where there is a contact and a lead_id where there isn't.  
+        description: A surrogate key for use when joining to `fct_crm_conversion_event`. Created from the contact_id where there is a contact and a lead_id where there isn't.
         tests:
           - not_null
 
@@ -403,7 +415,7 @@ models:
         tests:
           - not_null
       - name: crm_person_id
-        description: A surrogate key for use when joining to `fct_crm_conversion_event`. Created from the contact_id where there is a contact and a lead_id where there isn't.  
+        description: A surrogate key for use when joining to `fct_crm_conversion_event`. Created from the contact_id where there is a contact and a lead_id where there isn't.
         tests:
           - not_null
 
@@ -418,7 +430,7 @@ models:
       - name: sales_accepted_date
         description: The sales_accepted_date from the sfdc_opportunity
       - name: crm_person_id
-        description: A surrogate key for use when joining to `fct_crm_sales_accepted_opportunity`. Created from the contact_id where there is a contact and a lead_id where there isn't.  
+        description: A surrogate key for use when joining to `fct_crm_sales_accepted_opportunity`. Created from the contact_id where there is a contact and a lead_id where there isn't.
         tests:
           - not_null
 
@@ -467,7 +479,7 @@ models:
       - name: usage_ping_id
         tests:
           - not_null
-    
+
 
   - name: fct_usage_ping_metric_28_days
     description: '{{ doc("fct_usage_ping_metric_28_days") }}'
@@ -485,7 +497,7 @@ models:
       - name: usage_ping_id
         tests:
           - not_null
-      
+
 
   - name: fct_usage_ping_metric_all_time
     description: '{{ doc("fct_usage_ping_metric_all_time") }}'
@@ -524,7 +536,7 @@ models:
         description: The zuora subscription id derived from the license. Use this field to join to dim_subscriptions.
       - name: billing_account_id
         description: The zuora account id associated with the subscription. Use this field to join to dim_billing_accounts.
-      - name: array_product_details_id  
+      - name: array_product_details_id
         description: The array of distinct product detail ids associated with the subscription. Use this field to join to dim_product_details.
       - name: hostname
         description: The name of the host of the instance.
@@ -541,7 +553,7 @@ models:
       - name: license_plan
         description: The plan code for the product tier of the license.
       - name: is_trial
-        description: Boolean flag noting if the license was generated as part of a trial. 
+        description: Boolean flag noting if the license was generated as part of a trial.
       - name: created_at
         description: The timestamp when the usage ping was created.
         tests:
