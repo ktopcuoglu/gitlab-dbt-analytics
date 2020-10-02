@@ -212,13 +212,13 @@ SELECT
     FROM sfdc_opportunity_snapshot_history h
     -- close date
     INNER JOIN date_details d
-        ON cast(h.close_date as date) = d.date_actual
-    -- created date
-    INNER JOIN analytics.date_details dc
-        ON dc.date_actual = h.created_date
+        ON d.date_actual = cast(h.close_date as date) 
     -- snapshot date
     INNER JOIN date_details ds
         ON h.date_actual = ds.date_actual
+    -- created date - INNER JOIN does not work.
+    LEFT JOIN date_details dc
+        ON dc.date_actual = CAST(h.created_date AS DATE)
     -- current opportunity
     LEFT JOIN sfdc_opportunity_xf o     
         ON o.opportunity_id = h.opportunity_id

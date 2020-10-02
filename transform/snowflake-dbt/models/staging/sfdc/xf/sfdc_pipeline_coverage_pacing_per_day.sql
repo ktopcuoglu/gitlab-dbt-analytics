@@ -38,7 +38,10 @@ SELECT  snapshot_date,
         CASE WHEN order_type_stamped = '1. New - First Order' 
                 THEN '1. New'
             WHEN order_type_stamped IN ('2. New - Connected', '3. Growth') 
-                THEN '2. Growth' ELSE '3. Other' END                                AS deal_category,
+                THEN '2. Growth' 
+            WHEN order_type_stamped = '4. Churn'
+                THEN '3. Churn'
+            ELSE '4. Other' END                                                     AS deal_category,
 
         CASE WHEN account_owner_team_stamped in ('APAC', 'MM - APAC')
             THEN 'APAC'
@@ -66,10 +69,15 @@ WHERE
 GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12
 ), opty_base AS (
    SELECT o.*,
-         CASE WHEN o.order_type_stamped = '1. New - First Order' 
+        
+        CASE WHEN order_type_stamped = '1. New - First Order' 
                 THEN '1. New'
-            WHEN o.order_type_stamped IN ('2. New - Connected', '3. Growth') 
-                THEN '2. Growth' ELSE '3. Other' END                                        AS deal_category,
+            WHEN order_type_stamped IN ('2. New - Connected', '3. Growth') 
+                THEN '2. Growth' 
+            WHEN order_type_stamped = '4. Churn'
+                THEN '3. Churn'
+            ELSE '4. Other' END                                                             AS deal_category,
+
          CASE WHEN o.ultimate_parent_sales_segment IS NULL 
                 OR o.ultimate_parent_sales_segment = 'Unknown' THEN 'SMB'
                 ELSE o.ultimate_parent_sales_segment END                                    AS adj_sales_segment,
@@ -90,10 +98,10 @@ GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12
    FROM sfdc_opportunity_xf o
     -- close date
     INNER JOIN date_details d
-        ON d.date_actual = o.close_date
+        ON d.date_actual = cast(o.close_date as date)
     --created date
     INNER JOIN date_details dc
-        ON dc.date_actual = o.created_date
+        ON dc.date_actual = cast(o.created_date as date)
 ), pipeline_snapshot_extended AS (
     SELECT pq.close_fiscal_quarter,
             pq.close_fiscal_quarter_date,
@@ -306,5 +314,5 @@ GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12
         ON ntq.close_fiscal_quarter = nq.next_close_fiscal_quarter
             AND ntq.sales_segment = nq.adj_sales_segment
             AND ntq.deal_category = nq.deal_category
-            AND ntq.adj_region = ntq.adj_region
+            AND ntq.adj_region = nq.adj_region
 WHERE pq.adj_sales_segment is not null
