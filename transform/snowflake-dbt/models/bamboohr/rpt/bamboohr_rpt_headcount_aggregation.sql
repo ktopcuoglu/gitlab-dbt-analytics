@@ -118,17 +118,17 @@ WITH source AS (
       MIN(headcount_average_contributor) {{ratio_to_report_partition_statement}}    AS min_headcount_contributor,
 
 
-      RATIO_TO_REPORT(headcount_average) 
+      RATIO_TO_REPORT(headcount_end) 
         {{ratio_to_report_partition_statement}}                                     AS percent_of_headcount,
       RATIO_TO_REPORT(hire_count) 
         {{ratio_to_report_partition_statement}}                                     AS percent_of_hires,
-      RATIO_TO_REPORT(headcount_average_leader) 
+      RATIO_TO_REPORT(headcount_end_leader) 
         {{ratio_to_report_partition_statement}}                                     AS percent_of_headcount_leaders,
-      RATIO_TO_REPORT(headcount_average_manager) 
+      RATIO_TO_REPORT(headcount_end_manager) 
         {{ratio_to_report_partition_statement}}                                     AS percent_of_headcount_manager,     
       RATIO_TO_REPORT(headcount_end_staff) 
-        {{ratio_to_report_partition_statement}}                                     AS percent_of_headcount_end_staff,      
-      RATIO_TO_REPORT(headcount_average_contributor) 
+        {{ratio_to_report_partition_statement}}                                     AS percent_of_headcount_staff,      
+      RATIO_TO_REPORT(headcount_end_contributor) 
         {{ratio_to_report_partition_statement}}                                     AS percent_of_headcount_contributor,
       
       SUM(COALESCE(promotion,0)) {{partition_statement}}                            AS rolling_12_month_promotions,
@@ -261,14 +261,22 @@ WITH source AS (
         NULL, percent_of_headcount_leaders)                                      AS percent_of_headcount_contributor,
       IFF(rolling_12_month_promotions<2 AND eeoc_field_name != 'no_eeoc', 
         NULL, rolling_12_month_promotions)                                       AS rolling_12_month_promotions,
-      location_factor,
-      discretionary_bonus,
-      tenure_months,
-      tenure_zero_to_six_months,
-      tenure_six_to_twelve_months,
-      tenure_one_to_two_years,
-      tenure_two_to_four_years,
-      tenure_four_plus_years
+      IFF(headcount_end <4 AND show_value_criteria = FALSE,
+        NULL,location_factor)                                                    AS location_factor,
+      IFF(discretionary_bonus<4 AND show_value_criteria = FALSE,
+        NULL, discretionary_bonus)                                               AS discretionary_bonus,
+      IFF(tenure_months<4 AND show_value_criteria = FALSE,
+        NULL, tenure_months)                                                     AS tenure_months,
+      IFF(tenure_zero_to_six_months<4 AND show_value_criteria  = FALSE
+        NULL, tenure_zero_to_six_months)                                         AS tenure_zero_to_six_months,
+      IFF(tenure_six_to_twelve_months<4 AND show_value_criteria = FALSE,
+        NULL, tenure_six_to_twelve_months)                                       AS tenure_six_to_twelve_months,
+      IFF(tenure_one_to_two_years<4 AND show_value_criteria = FALSE,
+        NULL, tenure_one_to_two_years)                                           AS tenure_one_to_two_years,
+      IFF(tenure_two_to_four_years<4 AND show_value_criteria = FALSE,
+        NULL, tenure_two_to_four_years)                                          AS tenure_two_to_four_years,
+      IFF(tenure_four_plus_years<4 AND show_value_criteria = FALSE,
+        NULL, tenure_four_plus_years)                                            AS tenure_four_plus_years
     FROM intermediate   
 
 )

@@ -36,7 +36,7 @@
             
 
       SUM(headcount_start_staff)                        AS headcount_start_staff,
-      SUM(headcount_end_staff)                          AS headcount_end_individual_staff,
+      SUM(headcount_end_staff)                          AS headcount_end_staff,
       (SUM(headcount_start_staff) 
         + SUM(headcount_end_staff))/2                   AS headcount_average_staff,
       SUM(hired_staff)                                  AS hired_staff,
