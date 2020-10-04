@@ -90,6 +90,19 @@ WITH source AS (
         1 - (rolling_12_month_separations_management/
             NULLIF(rolling_12_month_headcount_management,0)))                            AS retention_management,
 
+
+      headcount_end_staff,
+      headcount_average_staff,
+      hired_staff,
+      separated_staff,
+      AVG(COALESCE(headcount_average_staff, 0)) {{partition_statement}}             AS rolling_12_month_headcount_staff,
+      SUM(COALESCE(separated_staff,0)) {{partition_statement}}                      AS rolling_12_month_separations_staff,
+      IFF(rolling_12_month_headcount_staff< rolling_12_month_separations_staff, 
+        NULL,
+        1 - (rolling_12_month_separations_management/
+            NULLIF(rolling_12_month_headcount_staff,0)))                            AS retention_staff,
+
+
       headcount_end_individual_contributor,
       headcount_average_contributor,
       hired_contributor,
@@ -101,6 +114,7 @@ WITH source AS (
       MIN(hire_count) {{ratio_to_report_partition_statement}}                       AS min_hire_count,
       MIN(headcount_average_leader) {{ratio_to_report_partition_statement}}         AS min_headcount_leader,
       MIN(headcount_average_manager) {{ratio_to_report_partition_statement}}        AS min_headcount_manager,
+      MIN(headcount_average_staff) {{ratio_to_report_partition_statement}}          AS min_headcount_staff,
       MIN(headcount_average_contributor) {{ratio_to_report_partition_statement}}    AS min_headcount_contributor,
 
 
@@ -112,6 +126,8 @@ WITH source AS (
         {{ratio_to_report_partition_statement}}                                     AS percent_of_headcount_leaders,
       RATIO_TO_REPORT(headcount_average_manager) 
         {{ratio_to_report_partition_statement}}                                     AS percent_of_headcount_manager,     
+      RATIO_TO_REPORT(headcount_end_staff) 
+        {{ratio_to_report_partition_statement}}                                     AS percent_of_headcount_end_staff,      
       RATIO_TO_REPORT(headcount_average_contributor) 
         {{ratio_to_report_partition_statement}}                                     AS percent_of_headcount_contributor,
       
@@ -213,27 +229,38 @@ WITH source AS (
       rolling_12_month_separations_management,
       retention_management,
 
+      IFF(headcount_end_staff < 4 AND eeoc_field_name != 'no_eeoc', 
+        NULL, headcount_end_staff)                                              AS headcount_end_staff,
+      IFF(headcount_average_staff < 4 AND eeoc_field_name != 'no_eeoc', 
+        NULL, headcount_average_staff)                                          AS headcount_average_staff,
+      IFF(hired_staff < 4 AND eeoc_field_name != 'no_eeoc', 
+        NULL, hired_staff)                                                      AS hired_staff,
+      IFF(separated_staff < 4 AND eeoc_field_name != 'no_eeoc',
+        NULL, separated_staff)                                                  AS separated_staff,
+
       IFF(headcount_end_individual_contributor < 4 AND eeoc_field_name != 'no_eeoc', 
-        NULL, headcount_end_individual_contributor)                         AS headcount_end_contributor,
+        NULL, headcount_end_individual_contributor)                              AS headcount_end_contributor,
       IFF(headcount_average_contributor < 4 AND eeoc_field_name != 'no_eeoc', 
-        NULL, headcount_average_contributor)                                AS headcount_contributor,
+        NULL, headcount_average_contributor)                                     AS headcount_contributor,
       IFF(hired_contributor < 4 AND eeoc_field_name != 'no_eeoc', 
-        NULL, hired_contributor)                                            AS hired_contributor,
+        NULL, hired_contributor)                                                 AS hired_contributor,
       IFF(separated_contributor < 4 AND eeoc_field_name != 'no_eeoc',
-        NULL, separated_contributor)                                        AS separated_contributor,
+        NULL, separated_contributor)                                             AS separated_contributor,
 
       IFF(min_headcount_average <2 AND eeoc_field_name != 'no_eeoc', 
-        NULL, percent_of_headcount)                                         AS percent_of_headcount,
+        NULL, percent_of_headcount)                                              AS percent_of_headcount,
       IFF(min_hire_count <2 AND eeoc_field_name != 'no_eeoc',
-        NULL, percent_of_hires)                                             AS percent_of_hires,
+        NULL, percent_of_hires)                                                  AS percent_of_hires,
       IFF(min_headcount_leader <2 AND eeoc_field_name != 'no_eeoc', 
-        NULL, percent_of_headcount_leaders)                                 AS percent_of_headcount_leaders,
+        NULL, percent_of_headcount_leaders)                                      AS percent_of_headcount_leaders,
       IFF(min_headcount_manager <2 AND eeoc_field_name != 'no_eeoc', 
-        NULL, percent_of_headcount_manager)                                 AS percent_of_headcount_manager,
+        NULL, percent_of_headcount_manager)                                      AS percent_of_headcount_manager,    
+      IFF(min_headcount_staff <2 AND eeoc_field_name != 'no_eeoc', 
+        NULL, percent_of_headcount_staff)                                        AS percent_of_headcount_staff,  
       IFF(min_headcount_contributor <2 AND eeoc_field_name != 'no_eeoc', 
-        NULL, percent_of_headcount_leaders)                                 AS percent_of_headcount_contributor,
+        NULL, percent_of_headcount_leaders)                                      AS percent_of_headcount_contributor,
       IFF(rolling_12_month_promotions<2 AND eeoc_field_name != 'no_eeoc', 
-        NULL, rolling_12_month_promotions)                                  AS rolling_12_month_promotions,
+        NULL, rolling_12_month_promotions)                                       AS rolling_12_month_promotions,
       location_factor,
       discretionary_bonus,
       tenure_months,
