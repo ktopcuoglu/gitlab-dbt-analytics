@@ -267,7 +267,7 @@ WITH source AS (
         NULL, discretionary_bonus)                                               AS discretionary_bonus,
       IFF(tenure_months<4 AND show_value_criteria = FALSE,
         NULL, tenure_months)                                                     AS tenure_months,
-      IFF(tenure_zero_to_six_months<4 AND show_value_criteria  = FALSE
+      IFF(tenure_zero_to_six_months<4 AND show_value_criteria  = FALSE,
         NULL, tenure_zero_to_six_months)                                         AS tenure_zero_to_six_months,
       IFF(tenure_six_to_twelve_months<4 AND show_value_criteria = FALSE,
         NULL, tenure_six_to_twelve_months)                                       AS tenure_six_to_twelve_months,
