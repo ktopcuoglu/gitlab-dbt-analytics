@@ -16,17 +16,15 @@ WITH source AS (
 ), filtered AS (
 
     SELECT
-      employee_id,
-      bonus_id,
-      bonus_date,
-      bonus_nominator_type,
+      source.*,
       department,
       division_mapped_current AS division
     FROM source
-    LEFT JOIN department_info
-      ON employee_directory.employee_id = current_division_department_mapping.employee_id
-      AND date_actual BETWEEN bonus_date AND COALESCE(current_division_department_mapping.effective_end_date::DATE, {{max_date_in_bamboo_analyses()}})
-    WHERE bonus_type = 'Discretionary Bonus'
+    LEFT JOIN current_division_department_mapping
+      ON source.employee_id = current_division_department_mapping.employee_id
+      AND source.bonus_date BETWEEN current_division_department_mapping.effective_date 
+                            AND COALESCE(current_division_department_mapping.effective_end_date::DATE, {{max_date_in_bamboo_analyses()}})
+    WHERE source.bonus_type = 'Discretionary Bonus'
 
 )
 

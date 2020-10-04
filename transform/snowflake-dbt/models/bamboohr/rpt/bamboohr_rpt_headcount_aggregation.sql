@@ -117,7 +117,7 @@ WITH source AS (
       
       SUM(COALESCE(promotion,0)) {{partition_statement}}                            AS rolling_12_month_promotions,
       location_factor,
-      total_discretionary_bonuses,
+      discretionary_bonus,
       tenure_months,
       tenure_zero_to_six_months,
       tenure_six_to_twelve_months,
@@ -235,7 +235,7 @@ WITH source AS (
       IFF(rolling_12_month_promotions<2 AND eeoc_field_name != 'no_eeoc', 
         NULL, rolling_12_month_promotions)                                  AS rolling_12_month_promotions,
       location_factor,
-      total_discretionary_bonuses,
+      discretionary_bonus,
       tenure_months,
       tenure_zero_to_six_months,
       tenure_six_to_twelve_months,

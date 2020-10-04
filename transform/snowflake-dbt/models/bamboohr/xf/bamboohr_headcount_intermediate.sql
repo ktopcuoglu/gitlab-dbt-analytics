@@ -152,11 +152,11 @@ WITH dates AS (
             location_factor, NULL)                                               AS location_factor,
       discretionary_bonus,      
       ROUND((tenure_days/30),1)                                                  AS tenure_months,
-      IFF(tenure_months BETWEEN 0 AND 6, 1, 0)                                   AS tenure_zero_to_six_months,
-      IFF(tenure_months BETWEEN 6 AND 12, 1, 0)                                  AS tenure_six_to_twelve_months,
-      IFF(tenure_months BETWEEN 12 AND 24, 1, 0)                                 AS tenure_one_to_two_years,
-      IFF(tenure_months BETWEEN 24 AND 48, 1, 0)                                 AS tenure_two_to_four_years,
-      IFF(tenure_months >= 48, 1, 0)                                             AS tenure_four_plus_years
+      IFF(tenure_months BETWEEN 0 AND 6 AND dates.end_date = date_actual, 1, 0)                                   AS tenure_zero_to_six_months,
+      IFF(tenure_months BETWEEN 6 AND 12 AND dates.end_date = date_actual, 1, 0)                                  AS tenure_six_to_twelve_months,
+      IFF(tenure_months BETWEEN 12 AND 24 AND dates.end_date = date_actual, 1, 0)                                 AS tenure_one_to_two_years,
+      IFF(tenure_months BETWEEN 24 AND 48 AND dates.end_date = date_actual, 1, 0)                                 AS tenure_two_to_four_years,
+      IFF(tenure_months >= 48 AND dates.end_date = date_actual, 1, 0)                                             AS tenure_four_plus_years
     FROM dates
     LEFT JOIN employees
       ON DATE_TRUNC(month,dates.start_date) = DATE_TRUNC(month, employees.date_actual)
