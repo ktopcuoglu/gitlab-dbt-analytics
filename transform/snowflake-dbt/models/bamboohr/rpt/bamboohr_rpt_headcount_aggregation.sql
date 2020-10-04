@@ -128,7 +128,7 @@ WITH source AS (
         {{ratio_to_report_partition_statement}}                                     AS percent_of_headcount_manager,     
       RATIO_TO_REPORT(headcount_end_staff) 
         {{ratio_to_report_partition_statement}}                                     AS percent_of_headcount_staff,      
-      RATIO_TO_REPORT(headcount_end_contributor) 
+      RATIO_TO_REPORT(headcount_end_individual_contributor) 
         {{ratio_to_report_partition_statement}}                                     AS percent_of_headcount_contributor,
       
       SUM(COALESCE(promotion,0)) {{partition_statement}}                            AS rolling_12_month_promotions,
