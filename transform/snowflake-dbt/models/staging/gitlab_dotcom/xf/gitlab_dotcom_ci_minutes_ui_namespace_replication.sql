@@ -71,7 +71,7 @@ WITH project_snapshot_monthly AS (
     SELECT
       DATE_TRUNC('month', CURRENT_DATE) AS snapshot_month,
       namespace_id,
-      NULLIF(plan_id, 'trial')          AS plan_id,
+      plan_id,
       parent_id,
       owner_id,
       namespace_type,
