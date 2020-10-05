@@ -1,7 +1,7 @@
 WITH usage_data AS (
 
     SELECT *
-    FROM {{ ref('version_usage_data_combined') }}
+    FROM {{ ref('version_usage_data_source') }}
     WHERE uuid IS NOT NULL
 
 ), unpacked_stages AS (
