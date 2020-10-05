@@ -1,4 +1,9 @@
-WITH bamboohr_compensation_changes AS (
+WITH bamboohr_compensation AS (
+
+    SELECT *
+    FROM {{ ref('bamboohr_compensation') }}
+
+), bamboohr_compensation_changes AS (
 
     SELECT *,
       ROW_NUMBER() OVER (PARTITION BY employee_id ORDER BY effective_date) AS rank_by_effective_date,
@@ -10,7 +15,8 @@ WITH bamboohr_compensation_changes AS (
            THEN LAG(compensation_currency) OVER (PARTITION BY employee_id ORDER BY effective_date)
            ELSE LAG(compensation_currency) OVER (PARTITION BY employee_id ORDER BY compensation_update_id) END AS prior_compensation_currency,
       ROW_NUMBER() OVER (PARTITION BY employee_id, effective_date ORDER BY compensation_update_id)             AS rank_compensation_change_effective_date    
-    FROM {{ ref('bamboohr_compensation') }}
+    FROM bamboohr_compensation
+    WHERE compensation_update_id != 20263 ---incorrectly labeled 
 
 ), employee_directory AS (
 
@@ -69,13 +75,20 @@ WITH bamboohr_compensation_changes AS (
     SELECT 
       employee_directory.employee_number,
       bamboohr_compensation_changes.*,
-      employee_directory.division,
-      employee_directory.department,
+      employee_directory.division_mapped_current                                    AS division,
+      employee_directory.department_modified                                        AS department,
       employee_directory.job_title,
-      IFF(employee_directory.employee_id IN (40955, 40647, 41234, 40985, 41027, 40782, 40874, 40540) AND bamboohr_compensation_changes.effective_date <='2020-07-01', 12, 
-      --we didn't capture pay frequency prior to 2020.07 and in 2020.07 the pay frequency had changed for these individuals
-            COALESCE(pay_frequency.pay_frequency, pay_frequency_initial.pay_frequency)) AS pay_frequency,     
-      IFF(compensation_currency = 'USD',1, currency_conversion_factor) AS currency_conversion_factor,
+      CASE 
+        WHEN bamboohr_compensation_changes.employee_id IN (40955, 40647, 41234, 40985, 
+                                                   41027, 40782, 40540) 
+            AND bamboohr_compensation_changes.effective_date <='2020-06-01' 
+          THEN 12
+        --we didn't capture pay frequency prior to 2020.07 and in 2020.07 the pay frequency had changed for these individuals  
+        WHEN bamboohr_compensation_changes.employee_id ='40874' AND bamboohr_compensation_changes.effective_date < '2019-12-31' 
+          THEN 12
+        --This team member has a pay frequency of 12 prior to the 2019.12.31 and the current pay frequency for 2020
+        ELSE COALESCE(pay_frequency.pay_frequency, pay_frequency_initial.pay_frequency) END AS pay_frequency,    
+      currency_conversion_factor,
       ote.variable_pay,
       ote.annual_amount_usd_value AS ote_usd,
       ote.prior_annual_amount_usd AS prior_ote_usd,
@@ -101,10 +114,14 @@ WITH bamboohr_compensation_changes AS (
       ON bamboohr_compensation_changes.employee_id = ote.employee_id
       AND bamboohr_compensation_changes.effective_date = ote.effective_date
       AND bamboohr_compensation_changes.rank_compensation_change_effective_date = ote.rank_ote_effective_date
+<<<<<<< HEAD
     LEFT JOIN hourly_compensation
        ON bamboohr_compensation_changes.employee_id = hourly_compensation.employee_id
       AND bamboohr_compensation_changes.effective_date = hourly_compensation.effective_date
   
+=======
+   
+>>>>>>> 5035-move-spend-per-team-member-in-sisense
 ), intermediate AS (
 
     SELECT 
@@ -137,24 +154,33 @@ WITH bamboohr_compensation_changes AS (
 
     SELECT 
       compensation_update_id,
+      effective_date                                                                                  AS promotion_date,
+      DATE_TRUNC(month, effective_date)                                                               AS promotion_month,
       employee_number,
       employee_id,
       division,
       department,
       job_title,
-      effective_date                                                                                  AS promotion_date,
       variable_pay,
       pay_rate,
       IFF(pay_rate = 'Hour', new_compensation_value, 
             new_compensation_value * pay_frequency * currency_conversion_factor)                      AS new_compensation_value_usd,
       CASE WHEN new_compensation_currency = prior_compensation_currency AND pay_rate !='Hour'
            THEN prior_compensation_value * prior_pay_frequency * currency_conversion_factor 
+<<<<<<< HEAD
            WHEN new_compensation_currency != prior_compensation_currency AND pay_rate !='Hour'
            THEN prior_compensation_value * prior_pay_frequency * prior_currency_conversion_factor 
            ELSE prior_compensation_value END                                                          AS prior_compensation_value_usd,
       IFF(pay_rate = 'Hour', hourly_change_in_comp, 
                 new_compensation_value_usd - prior_compensation_value_usd)                            AS change_in_comp_usd,
       COALESCE(ote_change,0) AS ote_change
+=======
+           ELSE prior_compensation_value * prior_pay_frequency * prior_currency_conversion_factor END AS prior_compensation_value_usd,
+      new_compensation_value_usd - prior_compensation_value_usd                                       AS change_in_comp_usd,
+      COALESCE(ote_usd,0)                                                                             AS ote_usd,
+      COALESCE(prior_ote_usd,0)                                                                       AS prior_ote_usd,
+      COALESCE(ote_change,0)                                                                          AS ote_change
+>>>>>>> 5035-move-spend-per-team-member-in-sisense
     FROM intermediate
     WHERE compensation_change_reason = 'Promotion'
       AND job_title NOT LIKE '%VP%'
@@ -164,6 +190,7 @@ WITH bamboohr_compensation_changes AS (
 
 SELECT 
   promotions.*,
-  ote_change+change_in_comp_usd AS total_change
+  ote_change+change_in_comp_usd                                                                         AS total_change,
+  ROUND((total_change/(prior_compensation_value_usd+prior_ote_usd)),2)                                  AS percent_change
 FROM promotions 
- 
+WHERE job_title NOT LIKE '%VP%'

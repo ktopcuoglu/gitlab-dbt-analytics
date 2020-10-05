@@ -188,7 +188,6 @@ WITH dates AS (
 
 ), aggregated AS (
 
-
     SELECT
       DATE_TRUNC(month,start_date)      AS month_date,
       'all_attributes_breakout'         AS breakout_type,
@@ -203,7 +202,6 @@ WITH dates AS (
     LEFT JOIN intermediate 
       ON DATE_TRUNC(month, start_date) = DATE_TRUNC(month, date_actual)
     {{ dbt_utils.group_by(n=8) }}  
-
 
     UNION ALL
 

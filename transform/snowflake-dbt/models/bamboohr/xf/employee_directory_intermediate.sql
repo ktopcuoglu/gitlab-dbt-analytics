@@ -115,18 +115,21 @@ WITH RECURSIVE employee_directory AS (
 
     SELECT *
     FROM {{ ref('sheetload_engineering_speciality_prior_to_capture') }}  
+<<<<<<< HEAD
 
 ), bamboohr_discretionary_bonuses_xf AS (
 
     SELECT *
     FROM {{ ref('bamboohr_directionary_bonuses_xf') }}  
+=======
+>>>>>>> 5035-move-spend-per-team-member-in-sisense
 
 ), enriched AS (
 
     SELECT
       date_details.date_actual,
       employee_directory.*,
-      department_info.job_title,
+      department_info.job_title,      
       department_info.department,
       IFF(department_info.department LIKE '%People%', 'People Success',department_info.department) AS department_modified, 
       department_info.division,
@@ -242,9 +245,12 @@ WITH RECURSIVE employee_directory AS (
       AND date_details.date_actual BETWEEN sheetload_engineering_speciality.speciality_start_date 
                                        AND COALESCE(sheetload_engineering_speciality.speciality_end_date, '2020-09-30')
                                        ---Post 2020.09.30 we will capture engineering speciality from bamboohr
+<<<<<<< HEAD
     LEFT JOIN bamboohr_discretionary_bonuses_xf
       ON employee_directory.employee_id = bamboohr_discretionary_bonuses_xf.employee_id
       AND date_details.date_actual = bamboohr_discretionary_bonuses_xf.bonus_date                                    
+=======
+>>>>>>> 5035-move-spend-per-team-member-in-sisense
     WHERE employee_directory.employee_id IS NOT NULL
 
 ), base_layers as (
