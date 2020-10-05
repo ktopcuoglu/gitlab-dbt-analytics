@@ -50,8 +50,8 @@ WITH bamboohr_compensation_changes AS (
     SELECT 
       employee_directory.employee_number,
       bamboohr_compensation_changes.*,
-      employee_directory.division,
-      employee_directory.department,
+      employee_directory.division_mapped_current    AS division,
+      employee_directory.department_modified        AS department,
       employee_directory.job_title,
       {# CASE WHEN pay_rate = 'Month' 
             THEN 12
@@ -122,6 +122,7 @@ WITH bamboohr_compensation_changes AS (
       department,
       job_title,
       effective_date                                                                                  AS promotion_date,
+      DATE_TRUNC(month, effective_date)                                                               AS promotion_month,
       variable_pay,
       new_compensation_value * pay_frequency * currency_conversion_factor                             AS new_compensation_value_usd,
       CASE WHEN new_compensation_currency = prior_compensation_currency 
@@ -137,6 +138,7 @@ WITH bamboohr_compensation_changes AS (
 
 SELECT 
   promotions.*,
-  ote_change+change_in_comp_usd AS total_change
+  ote_change+change_in_comp_usd AS total_change,
+  ROUND((total_change/prior_compensation_value_usd),2) AS percent_change
 FROM promotions 
- 
+WHERE job_title NOT LIKE '%VP%'
