@@ -17,7 +17,7 @@ WITH orders_snapshots AS (
   
     SELECT *
     FROM trials_snapshots
-    QUALIFY ROW_NUMBER() OVER (PARTITION BY gitlab_namespace_id ORDER BY valid_from DESC, order_id DESC) = 1
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY TRY_TO_NUMBER(gitlab_namespace_id) ORDER BY valid_from DESC, order_id DESC) = 1
 
 )  
 
