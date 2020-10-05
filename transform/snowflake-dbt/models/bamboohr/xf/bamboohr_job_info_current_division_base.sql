@@ -1,4 +1,7 @@
-
+{{ config({
+    "schema": "staging"
+    })
+}}
 
 WITH job_info AS (
 

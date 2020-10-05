@@ -36,6 +36,7 @@ WITH sfdc_opportunity AS (
   WHERE sfdc_opportunity.sales_accepted_date IS NOT NULL
     AND is_edu_oss = 0
     AND stage_name != '10-Duplicate'
+    AND order_type = '1. New - First Order'
     AND sales_qualified_source IN (
                                   'SDR Generated'
                                   , 'BDR Generated'

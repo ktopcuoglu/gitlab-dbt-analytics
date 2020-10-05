@@ -162,7 +162,7 @@ models:
       gitlab_dotcom:
         +tags: ["product"]
         +materialized: table
-        +schema: staging
+        +schema: gitlab_dotcom
 
       gitter:
         +enabled: false
@@ -257,6 +257,14 @@ models:
         +tags: ["product"]
         +materialized: table
         +schema: analytics
+        sensitive:
+          +materialized: view
+          +schema: sensitive
+        source_view:
+          +materialized: view
+          +schema: staging
+        staging:
+          +schema: staging
 
       gitter:
         +enabled: false
