@@ -18,7 +18,7 @@ with sfdc_ps_engagement AS (
       sfdc_users.title        AS ps_engagement_owner_title
     FROM sfdc_ps_engagement
     LEFT JOIN sfdc_users
-      ON sfdc_ps_engagement.owner_id = sfdc_users.id
+      ON sfdc_ps_engagement.owner_id = sfdc_users.user_id
 
 )
 

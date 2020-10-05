@@ -46,7 +46,7 @@ WITH source AS (
         source.system_labels                                 AS system_labels,
         source.cost                                          AS cost_before_credits,
         credits.total_credits                                AS total_credits,
-        source.cost + credits.total_credits                  AS total_cost,
+        source.cost + IFNULL(credits.total_credits, 0)       AS total_cost,
         source.usage_amount                                  AS usage_amount,
         source.usage_unit                                    AS usage_unit,
         source.usage_amount_in_pricing_units                 AS usage_amount_in_pricing_units,

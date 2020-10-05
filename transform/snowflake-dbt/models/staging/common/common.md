@@ -80,7 +80,7 @@ A fact from the lead history and lead tables in Salesforce that has a record for
 
 {% docs fct_crm_marketing_qualification %}
 
-A fact from the lead and contact tables that shows the date they were qualified. Ideally this should be using the lead and contact history tables as well, but, as of yet, the appropriate fields are not being tracked in Salesforce. 
+A fact from the lead and contact tables that shows the date they were qualified. Ideally this should be using the lead and contact history tables as well, but, as of yet, the appropriate fields are not being tracked in Salesforce. For mor information on Marketing Qualification please refer to the [Marketing Operations handbook](https://about.gitlab.com/handbook/marketing/marketing-operations/marketo/#mql-definition).
 
 {% enddocs %}
 
@@ -131,6 +131,25 @@ Additional information can be found on the [GitLab Releases](https://about.gitla
 Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
 
 {% enddocs %}
+
+
+{% docs fct_usage_data_monthly %}
+
+Factual table derived from the metrics received as part of usage ping payloads.  
+
+To create this table, all-time metrics are normalized to estimate usage over a month and combined with 28-day metrics.  Therefore, a single record in this table is one usage metric for a month for an instance of GitLab.
+
+Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+{% enddocs %}
+
+
+{% docs dim_crm_sales_rep %}
+
+Dimension representing the associated sales rep from salesforce. Most often this will be the record owner, which is a ubiquitous field in salesforce. 
+
+{% enddocs %}
+
 
 {% docs fct_usage_ping_payloads %}
 Factual table with metadata on usage ping payloads received.

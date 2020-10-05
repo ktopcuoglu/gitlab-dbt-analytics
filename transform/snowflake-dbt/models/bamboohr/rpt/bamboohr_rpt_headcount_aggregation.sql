@@ -1,9 +1,9 @@
 {{ config({
     "materialized":"table",
     "schema": "analytics"
+    
     })
 }}
-
  
 {% set partition_statement = "OVER (PARTITION BY base.breakout_type, base.department, base.division, base.job_role,
                                     base.job_grade, base.eeoc_field_name, base.eeoc_value
@@ -25,26 +25,28 @@ WITH source AS (
 
     SELECT DISTINCT 
       month_date,
-      breakout_type, 
+      breakout_type_modified AS breakout_type,
       department,
       division,
       job_role,
       job_grade,
       eeoc_field_name,                                                       
       eeoc_value
+      --- this is to group groups with less than 4 headcount
     FROM source
 
 ), intermediate AS (
 
    SELECT
       base.month_date,
-      IFF(base.breakout_type = 'eeoc_breakout' AND base.eeoc_field_name = 'no_eeoc', 'kpi_breakout',base.breakout_type) AS breakout_type, 
+      base.breakout_type, 
       base.department,
       base.division,
       base.job_role,
       base.job_grade,
       base.eeoc_field_name,
       base.eeoc_value,
+      IFF(base.eeoc_field_name = 'no_eeoc', TRUE, FALSE)                            AS show_value_criteria,
       headcount_start,
       headcount_end,
       headcount_average,
@@ -88,6 +90,19 @@ WITH source AS (
         1 - (rolling_12_month_separations_management/
             NULLIF(rolling_12_month_headcount_management,0)))                            AS retention_management,
 
+
+      headcount_end_staff,
+      headcount_average_staff,
+      hired_staff,
+      separated_staff,
+      AVG(COALESCE(headcount_average_staff, 0)) {{partition_statement}}             AS rolling_12_month_headcount_staff,
+      SUM(COALESCE(separated_staff,0)) {{partition_statement}}                      AS rolling_12_month_separations_staff,
+      IFF(rolling_12_month_headcount_staff< rolling_12_month_separations_staff, 
+        NULL,
+        1 - (rolling_12_month_separations_management/
+            NULLIF(rolling_12_month_headcount_staff,0)))                            AS retention_staff,
+
+
       headcount_end_individual_contributor,
       headcount_average_contributor,
       hired_contributor,
@@ -99,26 +114,36 @@ WITH source AS (
       MIN(hire_count) {{ratio_to_report_partition_statement}}                       AS min_hire_count,
       MIN(headcount_average_leader) {{ratio_to_report_partition_statement}}         AS min_headcount_leader,
       MIN(headcount_average_manager) {{ratio_to_report_partition_statement}}        AS min_headcount_manager,
+      MIN(headcount_average_staff) {{ratio_to_report_partition_statement}}          AS min_headcount_staff,
       MIN(headcount_average_contributor) {{ratio_to_report_partition_statement}}    AS min_headcount_contributor,
 
 
-      RATIO_TO_REPORT(headcount_average) 
+      RATIO_TO_REPORT(headcount_end) 
         {{ratio_to_report_partition_statement}}                                     AS percent_of_headcount,
       RATIO_TO_REPORT(hire_count) 
         {{ratio_to_report_partition_statement}}                                     AS percent_of_hires,
-      RATIO_TO_REPORT(headcount_average_leader) 
+      RATIO_TO_REPORT(headcount_end_leader) 
         {{ratio_to_report_partition_statement}}                                     AS percent_of_headcount_leaders,
-      RATIO_TO_REPORT(headcount_average_manager) 
+      RATIO_TO_REPORT(headcount_end_manager) 
         {{ratio_to_report_partition_statement}}                                     AS percent_of_headcount_manager,     
-      RATIO_TO_REPORT(headcount_average_contributor) 
+      RATIO_TO_REPORT(headcount_end_staff) 
+        {{ratio_to_report_partition_statement}}                                     AS percent_of_headcount_staff,      
+      RATIO_TO_REPORT(headcount_end_individual_contributor) 
         {{ratio_to_report_partition_statement}}                                     AS percent_of_headcount_contributor,
       
       SUM(COALESCE(promotion,0)) {{partition_statement}}                            AS rolling_12_month_promotions,
-      location_factor
+      location_factor,
+      discretionary_bonus,
+      tenure_months,
+      tenure_zero_to_six_months,
+      tenure_six_to_twelve_months,
+      tenure_one_to_two_years,
+      tenure_two_to_four_years,
+      tenure_four_plus_years
     FROM base
     LEFT JOIN source  
       ON base.month_date = source.month_date
-      AND base.breakout_type = source.breakout_type
+      AND base.breakout_type = source.breakout_type_modified
       AND base.department = source.department
       AND base.division = source.division
       AND COALESCE(base.job_role,'NA') = COALESCE(source.job_role,'NA')
@@ -137,10 +162,16 @@ WITH source AS (
       job_role,
       job_grade,
       eeoc_field_name,
-      eeoc_value,
-      IFF(headcount_start <4 AND eeoc_field_name != 'no_eeoc', 
+      CASE WHEN eeoc_field_name = 'gender' AND headcount_end < 5
+            THEN 'Other'
+           WHEN eeoc_field_name = 'gender-region' AND headcount_end < 5
+            THEN 'Other_'|| SPLIT_PART(eeoc_value,'_',2)
+           WHEN eeoc_field_name = 'ethnicity' AND headcount_end < 5
+            THEN 'Other'       
+           ELSE eeoc_value END                                              AS eeoc_value,
+      IFF(headcount_start <4 AND show_value_criteria = FALSE,
         NULL,headcount_start)                                               AS headcount_start,
-      IFF(headcount_end <4 AND eeoc_field_name != 'no_eeoc',
+      IFF(headcount_end <4 AND show_value_criteria = FALSE,
         NULL, headcount_end)                                                AS headcount_end,
       IFF(headcount_average <4 AND eeoc_field_name != 'no_eeoc',  
         NULL, headcount_average)                                            AS headcount_average,
@@ -198,31 +229,57 @@ WITH source AS (
       rolling_12_month_separations_management,
       retention_management,
 
+      IFF(headcount_end_staff < 4 AND eeoc_field_name != 'no_eeoc', 
+        NULL, headcount_end_staff)                                              AS headcount_end_staff,
+      IFF(headcount_average_staff < 4 AND eeoc_field_name != 'no_eeoc', 
+        NULL, headcount_average_staff)                                          AS headcount_average_staff,
+      IFF(hired_staff < 4 AND eeoc_field_name != 'no_eeoc', 
+        NULL, hired_staff)                                                      AS hired_staff,
+      IFF(separated_staff < 4 AND eeoc_field_name != 'no_eeoc',
+        NULL, separated_staff)                                                  AS separated_staff,
+
       IFF(headcount_end_individual_contributor < 4 AND eeoc_field_name != 'no_eeoc', 
-        NULL, headcount_end_individual_contributor)                         AS headcount_end_contributor,
+        NULL, headcount_end_individual_contributor)                              AS headcount_end_contributor,
       IFF(headcount_average_contributor < 4 AND eeoc_field_name != 'no_eeoc', 
-        NULL, headcount_average_contributor)                                AS headcount_contributor,
+        NULL, headcount_average_contributor)                                     AS headcount_contributor,
       IFF(hired_contributor < 4 AND eeoc_field_name != 'no_eeoc', 
-        NULL, hired_contributor)                                            AS hired_contributor,
+        NULL, hired_contributor)                                                 AS hired_contributor,
       IFF(separated_contributor < 4 AND eeoc_field_name != 'no_eeoc',
-        NULL, separated_contributor)                                        AS separated_contributor,
+        NULL, separated_contributor)                                             AS separated_contributor,
 
       IFF(min_headcount_average <2 AND eeoc_field_name != 'no_eeoc', 
-        NULL, percent_of_headcount)                                         AS percent_of_headcount,
+        NULL, percent_of_headcount)                                              AS percent_of_headcount,
       IFF(min_hire_count <2 AND eeoc_field_name != 'no_eeoc',
-        NULL, percent_of_hires)                                             AS percent_of_hires,
+        NULL, percent_of_hires)                                                  AS percent_of_hires,
       IFF(min_headcount_leader <2 AND eeoc_field_name != 'no_eeoc', 
-        NULL, percent_of_headcount_leaders)                                 AS percent_of_headcount_leaders,
+        NULL, percent_of_headcount_leaders)                                      AS percent_of_headcount_leaders,
       IFF(min_headcount_manager <2 AND eeoc_field_name != 'no_eeoc', 
-        NULL, percent_of_headcount_manager)                                 AS percent_of_headcount_manager,
+        NULL, percent_of_headcount_manager)                                      AS percent_of_headcount_manager,    
+      IFF(min_headcount_staff <2 AND eeoc_field_name != 'no_eeoc', 
+        NULL, percent_of_headcount_staff)                                        AS percent_of_headcount_staff,  
       IFF(min_headcount_contributor <2 AND eeoc_field_name != 'no_eeoc', 
-        NULL, percent_of_headcount_leaders)                                 AS percent_of_headcount_contributor,
+        NULL, percent_of_headcount_leaders)                                      AS percent_of_headcount_contributor,
       IFF(rolling_12_month_promotions<2 AND eeoc_field_name != 'no_eeoc', 
-        NULL, rolling_12_month_promotions)                                  AS rolling_12_month_promotions,
-      location_factor
+        NULL, rolling_12_month_promotions)                                       AS rolling_12_month_promotions,
+      IFF(headcount_end <4 AND show_value_criteria = FALSE,
+        NULL,location_factor)                                                    AS location_factor,
+      IFF(discretionary_bonus<4 AND show_value_criteria = FALSE,
+        NULL, discretionary_bonus)                                               AS discretionary_bonus,
+      IFF(tenure_months<4 AND show_value_criteria = FALSE,
+        NULL, tenure_months)                                                     AS tenure_months,
+      IFF(tenure_zero_to_six_months<4 AND show_value_criteria  = FALSE,
+        NULL, tenure_zero_to_six_months)                                         AS tenure_zero_to_six_months,
+      IFF(tenure_six_to_twelve_months<4 AND show_value_criteria = FALSE,
+        NULL, tenure_six_to_twelve_months)                                       AS tenure_six_to_twelve_months,
+      IFF(tenure_one_to_two_years<4 AND show_value_criteria = FALSE,
+        NULL, tenure_one_to_two_years)                                           AS tenure_one_to_two_years,
+      IFF(tenure_two_to_four_years<4 AND show_value_criteria = FALSE,
+        NULL, tenure_two_to_four_years)                                          AS tenure_two_to_four_years,
+      IFF(tenure_four_plus_years<4 AND show_value_criteria = FALSE,
+        NULL, tenure_four_plus_years)                                            AS tenure_four_plus_years
     FROM intermediate   
 
 )
 
- SELECT * 
- FROM final
+SELECT * 
+FROM final
