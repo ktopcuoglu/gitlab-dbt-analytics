@@ -12,4 +12,6 @@ models:
                 - not_null
           - name: uuid
             tests:
-                - not_null    
+                - not_null  
+    - name: version_usage_data_combined
+      description: usage data from both manual imports and version_db combined using dbt_utils union_relations macro
