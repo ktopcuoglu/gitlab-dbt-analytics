@@ -5,8 +5,8 @@
 
 WITH source AS (
 
-    SELECT
-    FROM {{ ref('version_usage_data_source') }}
+    SELECT *
+    FROM {{ ref('version_usage_data_combined') }}
 
 
 ), usage_data AS (

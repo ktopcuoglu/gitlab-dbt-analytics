@@ -44,7 +44,6 @@ WITH source AS (
       jsontext['version']::VARCHAR                              AS version,
       jsontext['license_trial_ends_on']::TIMESTAMP              AS license_trial_ends_on,
       jsontext['web_ide_clientside_preview_enabled']::BOOLEAN   AS is_web_ide_clientside_preview_enabled,
-      jsontext['container_registry_enabled']::BOOLEAN           AS is_container_registry_enabled,
       jsontext['ingress_modsecurity_enabled']::BOOLEAN          AS is_ingress_modsecurity_enabled,
       jsontext['dependency_proxy_enabled']::BOOLEAN             AS is_dependency_proxy_enabled
     FROM source
