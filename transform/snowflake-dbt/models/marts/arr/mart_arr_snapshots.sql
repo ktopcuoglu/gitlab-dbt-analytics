@@ -1,8 +1,9 @@
 {{
-  config( materialized='incremental',
-    incremental_startegy='merge',
-    unique_key='primary_key')
-  }}
+  config(
+        materialized='incremental',
+        unique_key='primary_key'
+  )
+}}
 
 WITH dim_billing_accounts AS (
 
