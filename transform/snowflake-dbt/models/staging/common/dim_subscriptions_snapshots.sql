@@ -1,6 +1,7 @@
 {{
     config(
-        materialized='incremental'
+        materialized='incremental',
+        unique_key='subscription_snapshot_id'
     )
 }}
 
@@ -9,6 +10,12 @@ WITH snapshot_dates AS (
    SELECT *
    FROM {{ ref('dim_dates') }}
    WHERE date_actual >= '2020-03-01' and date_actual <= CURRENT_DATE
+   {% if is_incremental() %}
+
+   -- this filter will only be applied on an incremental run
+   AND date_id > (select max(snapshot_id) from {{ this }})
+
+   {% endif %}
 
 ), zuora_subscription AS (
 
@@ -75,12 +82,6 @@ WITH snapshot_dates AS (
         *
     FROM joined
 
-    {% if is_incremental() %}
-
-      -- this filter will only be applied on an incremental run
-     WHERE snapshot_id > (select max(snapshot_id) from {{ this }})
-
-    {% endif %}
 )
 
 {{ dbt_audit(

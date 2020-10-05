@@ -1,6 +1,7 @@
 {{
     config(
-        materialized='incremental'
+        materialized='incremental',
+        unique_key='mrr_snapshot_id'
     )
 }}
 
@@ -15,6 +16,13 @@ WITH dim_dates AS (
    SELECT *
    FROM {{ ref('dim_dates') }}
    WHERE date_actual >= '2020-03-01' and date_actual <= CURRENT_DATE
+
+   {% if is_incremental() %}
+
+   -- this filter will only be applied on an incremental run
+   AND date_id > (select max(snapshot_id) from {{ this }})
+
+   {% endif %}
 
 ), zuora_account AS (
 
@@ -142,13 +150,6 @@ WITH dim_dates AS (
           AS mrr_id,
         *
     FROM mrr_month_by_month
-
-    {% if is_incremental() %}
-
-      -- this filter will only be applied on an incremental run
-     WHERE snapshot_id > (select max(snapshot_id) from {{ this }})
-
-    {% endif %}
 
 )
 
