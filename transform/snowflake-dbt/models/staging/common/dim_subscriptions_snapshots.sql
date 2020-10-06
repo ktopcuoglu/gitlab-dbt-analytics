@@ -22,20 +22,21 @@ WITH snapshot_dates AS (
     SELECT *
     FROM {{ ref('zuora_subscription_snapshots_source') }}
     WHERE subscription_status NOT IN ('Draft', 'Expired')
+      AND is_deleted = FALSE
+      AND exclude_from_analysis IN ('False', '')
 
 ), zuora_subscription_spined AS (
 
     SELECT
       snapshot_dates.date_id AS snapshot_id,
-      zuora_subscription.*,
-      -- hard deletes will be ranked 2
-      rank() OVER (
-         PARTITION BY subscription_name, snapshot_dates.date_actual
-         ORDER BY DBT_VALID_FROM DESC) AS rank
+      zuora_subscription.*
     FROM zuora_subscription
     INNER JOIN snapshot_dates
       ON snapshot_dates.date_actual >= zuora_subscription.dbt_valid_from
       AND snapshot_dates.date_actual < {{ coalesce_to_infinity('zuora_subscription.dbt_valid_to') }}
+    QUALIFY rank() OVER (
+         PARTITION BY subscription_name, snapshot_dates.date_actual
+         ORDER BY DBT_VALID_FROM DESC) = 1
 
 ), zuora_account AS (
 
@@ -43,6 +44,7 @@ WITH snapshot_dates AS (
       account_id,
       crm_id
     FROM {{ ref('zuora_account_source') }}
+    WHERE is_deleted = FALSE
 
 ), joined AS (
 
@@ -69,10 +71,6 @@ WITH snapshot_dates AS (
     FROM zuora_subscription_spined
     INNER JOIN zuora_account
       ON zuora_account.account_id = zuora_subscription_spined.account_id
-    WHERE is_deleted = FALSE
-      AND exclude_from_analysis IN ('False', '')
-      AND zuora_subscription_spined.rank = 1
-
 
 ), final AS (
 

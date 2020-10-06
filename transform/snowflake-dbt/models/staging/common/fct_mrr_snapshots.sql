@@ -26,8 +26,9 @@ WITH dim_dates AS (
 
 ), zuora_account AS (
 
-    SELECT *
-    FROM {{ ref('zuora_account_snapshots_source') }}
+  SELECT *
+  FROM {{ ref('zuora_account_source') }}
+  WHERE zuora_account.is_deleted = FALSE
 
 ), zuora_account_spined AS (
 
@@ -76,20 +77,21 @@ WITH dim_dates AS (
     SELECT *
     FROM {{ ref('zuora_subscription_snapshots_source') }}
     WHERE subscription_status NOT IN ('Draft', 'Expired')
+       AND is_deleted = FALSE
+      AND exclude_from_analysis IN ('False', '')
 
 ), zuora_subscription_spined AS (
 
     SELECT
       snapshot_dates.date_id AS snapshot_id,
-      zuora_subscription.*,
-      -- hard deletes will be ranked 2
-      rank() OVER (
-         PARTITION BY subscription_name, snapshot_dates.date_actual
-         ORDER BY dbt_valid_from DESC) AS rank
+      zuora_subscription.*
     FROM zuora_subscription
     INNER JOIN snapshot_dates
       ON snapshot_dates.date_actual >= zuora_subscription.dbt_valid_from
       AND snapshot_dates.date_actual < {{ coalesce_to_infinity('zuora_subscription.dbt_valid_to') }}
+    QUALIFY rank() OVER (
+         PARTITION BY subscription_name, snapshot_dates.date_actual
+         ORDER BY dbt_valid_from DESC) = 1
 
 ), rate_plan_charge_filtered AS (
 
@@ -115,10 +117,6 @@ WITH dim_dates AS (
     INNER JOIN zuora_account_spined
       ON zuora_account_spined.account_id = zuora_subscription_spined.account_id
         AND zuora_account_spined.snapshot_id = zuora_subscription_spined.snapshot_id
-    WHERE zuora_subscription_spined.is_deleted = FALSE
-      AND zuora_subscription_spined.exclude_from_analysis IN ('False', '')
-      AND zuora_account_spined.is_deleted = FALSE
-      AND zuora_subscription_spined.rank = 1
 
 ), mrr_month_by_month AS (
 
