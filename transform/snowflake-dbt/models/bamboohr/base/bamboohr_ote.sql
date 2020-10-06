@@ -1,10 +1,3 @@
-{# {{ config({
-    "schema": "sensitive",
-    "materialized": "ephemeral"
-    })
-}} #}
-
-
 WITH source AS (
 
     SELECT *
