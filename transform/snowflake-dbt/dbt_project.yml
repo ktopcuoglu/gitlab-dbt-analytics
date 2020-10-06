@@ -160,7 +160,6 @@ models:
         +schema: gitlab_data_yaml
 
       gitlab_dotcom:
-        +tags: ["product"]
         +materialized: table
         +schema: gitlab_dotcom
 
