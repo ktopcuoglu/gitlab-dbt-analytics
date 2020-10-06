@@ -56,14 +56,6 @@ from kube_secrets import (
 # Load the env vars into a dict and set env vars
 env = os.environ.copy()
 GIT_BRANCH = env["GIT_BRANCH"]
-standard_pod_env_vars = {
-    "EXECUTION_DATE": "{{ next_execution_date }}",
-    "SNOWFLAKE_LOAD_DATABASE": "RAW" if GIT_BRANCH == "master" else f"{GIT_BRANCH}_RAW",
-    "SNOWFLAKE_TRANSFORM_DATABASE": "ANALYTICS"
-    if GIT_BRANCH == "master"
-    else f"{GIT_BRANCH}_ANALYTICS",
-    "TASK_INSTANCE": "{{ task_instance_key_str }}",
-}
 standard_secrets = [
     GCP_SERVICE_CREDS,
     PG_PORT,
@@ -211,12 +203,12 @@ for source_name, config in config_dict.items():
             incremental_extract = KubernetesPodOperator(
                 **gitlab_defaults,
                 image=DATA_IMAGE,
-                task_id=f"{task_identifier}",
-                name=f"{task_identifier}",
+                task_id=f"{task_identifier}-pgp-extract",
+                name=f"{task_identifier}-pgp-extract",
                 pool=f"{config['task_name']}_pool",
                 secrets=standard_secrets + config["secrets"],
                 env_vars={
-                    **standard_pod_env_vars,
+                    **gitlab_pod_env_vars,
                     **config["env_vars"],
                     "LAST_EXECUTION_DATE": "{{ execution_date }}",
                 },
@@ -241,7 +233,7 @@ for source_name, config in config_dict.items():
                 task_id=f"{task_identifier}-source-freshness",
                 name=f"{task_identifier}-source-freshness",
                 secrets=standard_secrets + dbt_secrets,
-                env_vars=standard_pod_env_vars,
+                env_vars=gitlab_pod_env_vars,
                 arguments=[freshness_cmd],
             )
 
@@ -257,7 +249,7 @@ for source_name, config in config_dict.items():
                 task_id=f"{task_identifier}-source-test",
                 name=f"{task_identifier}-source-test",
                 secrets=standard_secrets + dbt_secrets,
-                env_vars=standard_pod_env_vars,
+                env_vars=gitlab_pod_env_vars,
                 arguments=[test_cmd],
             )
             
@@ -275,7 +267,7 @@ for source_name, config in config_dict.items():
                     task_id=f"{task_identifier}-source-snapshot",
                     name=f"{task_identifier}-source-snapshot",
                     secrets=standard_secrets + dbt_secrets,
-                    env_vars=standard_pod_env_vars,
+                    env_vars=gitlab_pod_env_vars,
                     arguments=[snapshot_cmd],
                 )
 
@@ -293,7 +285,7 @@ for source_name, config in config_dict.items():
                     task_id=f"{task_identifier}-source-model-run",
                     name=f"{task_identifier}-source-model-run",
                     secrets=standard_secrets + dbt_secrets,
-                    env_vars=standard_pod_env_vars,
+                    env_vars=gitlab_pod_env_vars,
                     arguments=[model_run_cmd],
                 )
 
@@ -309,7 +301,7 @@ for source_name, config in config_dict.items():
                     task_id=f"{task_identifier}-model-test",
                     name=f"{task_identifier}-model-test",
                     secrets=standard_secrets + dbt_secrets,
-                    env_vars=standard_pod_env_vars,
+                    env_vars=gitlab_pod_env_vars,
                     arguments=[model_test_cmd],
                 )
 
@@ -362,15 +354,13 @@ for source_name, config in config_dict.items():
                     name=task_identifier,
                     pool=f"{config['task_name']}_pool",
                     secrets=standard_secrets + config["secrets"],
-                    env_vars={**standard_pod_env_vars, **config["env_vars"]},
+                    env_vars={**gitlab_pod_env_vars, **config["env_vars"]},
                     affinity=get_affinity(False),
                     tolerations=get_toleration(False),
                     arguments=[sync_cmd],
                     do_xcom_push=True,
                     xcom_push=True,
                 )
-
-                load_status  = f'{{ ti.xcom_pull(task_ids="{task_identifier}", key="return_value")["load_run"] }}'
 
             else:
                 task_type = "db-scd"
@@ -420,7 +410,7 @@ for source_name, config in config_dict.items():
                 task_id=f"{task_identifier}-source-freshness",
                 name=f"{task_identifier}-source-freshness",
                 secrets=standard_secrets + dbt_secrets,
-                env_vars=standard_pod_env_vars,
+                env_vars=gitlab_pod_env_vars,
                 arguments=[freshness_cmd],
             )
 
@@ -436,7 +426,7 @@ for source_name, config in config_dict.items():
                 task_id=f"{task_identifier}-source-test",
                 name=f"{task_identifier}-source-test",
                 secrets=standard_secrets + dbt_secrets,
-                env_vars=standard_pod_env_vars,
+                env_vars=gitlab_pod_env_vars,
                 arguments=[test_cmd],
             )
             
@@ -454,7 +444,7 @@ for source_name, config in config_dict.items():
                     task_id=f"{task_identifier}-source-snapshot",
                     name=f"{task_identifier}-source-snapshot",
                     secrets=standard_secrets + dbt_secrets,
-                    env_vars=standard_pod_env_vars,
+                    env_vars=gitlab_pod_env_vars,
                     arguments=[snapshot_cmd],
                 )
 
@@ -472,7 +462,7 @@ for source_name, config in config_dict.items():
                     task_id=f"{task_identifier}-source-model-run",
                     name=f"{task_identifier}-source-model-run",
                     secrets=standard_secrets + dbt_secrets,
-                    env_vars=standard_pod_env_vars,
+                    env_vars=gitlab_pod_env_vars,
                     arguments=[model_run_cmd],
                 )
 
@@ -488,7 +478,7 @@ for source_name, config in config_dict.items():
                     task_id=f"{task_identifier}-model-test",
                     name=f"{task_identifier}-model-test",
                     secrets=standard_secrets + dbt_secrets,
-                    env_vars=standard_pod_env_vars,
+                    env_vars=gitlab_pod_env_vars,
                     arguments=[model_test_cmd],
                 )
 
@@ -544,7 +534,7 @@ for source_name, config in config_dict.items():
                 name=f"{config['task_name']}-{table.replace('_', '-')}-db-validation",
                 pool=f"{config['task_name']}_pool",
                 secrets=standard_secrets + config["secrets"],
-                env_vars={**standard_pod_env_vars, **config["env_vars"]},
+                env_vars={**gitlab_pod_env_vars, **config["env_vars"]},
                 affinity=get_affinity(False),
                 tolerations=get_toleration(False),
                 arguments=[validate_cmd],
