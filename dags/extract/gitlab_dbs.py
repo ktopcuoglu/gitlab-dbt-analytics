@@ -199,6 +199,9 @@ for source_name, config in config_dict.items():
             # tables without execution_date in the query won't be processed incrementally
             if "{EXECUTION_DATE}" not in manifest["tables"][table]["import_query"]:
                 continue
+            task_type = "db-incremental"
+            task_identifier = f"{config['task_name']}-{table.replace('_','-')}-{task_type}"
+            
             incremental_cmd = generate_cmd(
                 config["dag_name"], f"--load_type incremental --load_only_table {table}"
             )
@@ -206,8 +209,8 @@ for source_name, config in config_dict.items():
             incremental_extract = KubernetesPodOperator(
                 **gitlab_defaults,
                 image=DATA_IMAGE,
-                task_id=f"{config['task_name']}-{table.replace('_','-')}-db-incremental",
-                name=f"{config['task_name']}-{table.replace('_','-')}-db-incremental",
+                task_id=f"{task_identifier}",
+                name=f"{task_identifier}",
                 pool=f"{config['task_name']}_pool",
                 secrets=standard_secrets + config["secrets"],
                 env_vars={
@@ -222,16 +225,19 @@ for source_name, config in config_dict.items():
                 xcom_push=True,
             )
 
+            source_ref = f"{config['dbt_name']}.{table}"
+            model_ref = f"{config['dbt_name']}_{table}"
+
             freshness_cmd = f"""
                 {dbt_install_deps_and_seed_nosha_cmd} &&
-                dbt source snapshot-freshness --profiles-dir profile --target prod --select {config['dbt_name']}.{table}; ret=$?;
+                dbt source snapshot-freshness --profiles-dir profile --target prod --select {source_ref}; ret=$?;
                 python ../../orchestration/upload_dbt_file_to_snowflake.py freshness; exit $ret
             """
             freshness = KubernetesPodOperator(
                 **gitlab_defaults,
                 image=DBT_IMAGE,
-                task_id=f"{config['task_name']}-{table.replace('_','-')}-incremental-source-freshness",
-                name=f"{config['task_name']}-{table.replace('_','-')}-incremental-source-freshness",
+                task_id=f"{task_identifier}-source-freshness",
+                name=f"{task_identifier}-source-freshness",
                 secrets=standard_secrets + dbt_secrets,
                 env_vars=standard_pod_env_vars,
                 arguments=[freshness_cmd],
@@ -240,14 +246,14 @@ for source_name, config in config_dict.items():
             # Test raw source
             test_cmd = f"""
                 {dbt_install_deps_nosha_cmd} &&
-                dbt test --profiles-dir profile --target prod --models source:{config['dbt_name']}.{table}; ret=$?;
+                dbt test --profiles-dir profile --target prod --models source:{source_ref}; ret=$?;
                 python ../../orchestration/upload_dbt_file_to_snowflake.py source_tests; exit $ret
             """
             test = KubernetesPodOperator(
                 **gitlab_defaults,
                 image=DBT_IMAGE,
-                task_id=f"{config['task_name']}-{table.replace('_','-')}-incremental-source-test",
-                name=f"{config['task_name']}-{table.replace('_','-')}-incremental-source-test",
+                task_id=f"{task_identifier}-source-test",
+                name=f"{task_identifier}-source-test",
                 secrets=standard_secrets + dbt_secrets,
                 env_vars=standard_pod_env_vars,
                 arguments=[test_cmd],
@@ -258,14 +264,14 @@ for source_name, config in config_dict.items():
                 # Snapshot source data
                 snapshot_cmd = f"""
                     {dbt_install_deps_nosha_cmd} &&
-                    dbt snapshot --profiles-dir profile --target prod --select source:{config['dbt_name']}.{table}; ret=$?;
+                    dbt snapshot --profiles-dir profile --target prod --select source:{source_ref}; ret=$?;
                     python ../../orchestration/upload_dbt_file_to_snowflake.py snapshots; exit $ret
                 """
                 snapshot = KubernetesPodOperator(
                     **gitlab_defaults,
                     image=DBT_IMAGE,
-                    task_id=f"{config['task_name']}-{table.replace('_','-')}-incremental-source-snapshot",
-                    name=f"{config['task_name']}-{table.replace('_','-')}-incremental-source-snapshot",
+                    task_id=f"{task_identifier}-source-snapshot",
+                    name=f"{task_identifier}-source-snapshot",
                     secrets=standard_secrets + dbt_secrets,
                     env_vars=standard_pod_env_vars,
                     arguments=[snapshot_cmd],
@@ -276,14 +282,14 @@ for source_name, config in config_dict.items():
                 # Run source models
                 model_run_cmd = f"""
                     {dbt_install_deps_nosha_cmd} &&
-                    dbt run --profiles-dir profile --target prod --models +sources.{config['dbt_name']}_{table}_source; ret=$?;
+                    dbt run --profiles-dir profile --target prod --models +sources.{model_ref}_source; ret=$?;
                     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
                 """
                 model_run = KubernetesPodOperator(
                     **gitlab_defaults,
                     image=DBT_IMAGE,
-                    task_id=f"{config['task_name']}-{table.replace('_','-')}-incremental-source-model-run",
-                    name=f"{config['task_name']}-{table.replace('_','-')}-incremental-source-model-run",
+                    task_id=f"{task_identifier}-source-model-run",
+                    name=f"{task_identifier}-source-model-run",
                     secrets=standard_secrets + dbt_secrets,
                     env_vars=standard_pod_env_vars,
                     arguments=[model_run_cmd],
@@ -292,14 +298,14 @@ for source_name, config in config_dict.items():
                 # Test all source models
                 model_test_cmd = f"""
                     {dbt_install_deps_nosha_cmd} &&
-                    dbt test --profiles-dir profile --target prod --models +sources.{config['dbt_name']}_{table}_source; ret=$?;
+                    dbt test --profiles-dir profile --target prod --models +sources.{model_ref}_source; ret=$?;
                     python ../../orchestration/upload_dbt_file_to_snowflake.py test; exit $ret
                 """
                 model_test = KubernetesPodOperator(
                     **gitlab_defaults,
                     image=DBT_IMAGE,
-                    task_id=f"{config['task_name']}-{table.replace('_','-')}-incremental-model-test",
-                    name=f"{config['task_name']}-{table.replace('_','-')}-incremental-model-test",
+                    task_id=f"{task_identifier}-model-test",
+                    name=f"{task_identifier}-model-test",
                     secrets=standard_secrets + dbt_secrets,
                     env_vars=standard_pod_env_vars,
                     arguments=[model_test_cmd],
