@@ -33,10 +33,11 @@ WITH dim_billing_accounts AS (
     {% if is_incremental() %}
 
     -- this filter will only be applied on an incremental run
-    AND snapshot_id > (SELECT max(snapshot_id)
-                       FROM {{ this }}
-                       INNER JOIN dim_dates
-                       ON dim_dates.date_actual = snapshot_date)
+    WHERE snapshot_id > (SELECT max(snapshot_id)
+                            FROM {{ this }}
+                            INNER JOIN dim_dates
+                            ON dim_dates.date_actual = snapshot_date
+                            )
 
     {% endif %}
 
@@ -49,10 +50,11 @@ WITH dim_billing_accounts AS (
     {% if is_incremental() %}
 
     -- this filter will only be applied on an incremental run
-    AND snapshot_id > (SELECT max(snapshot_id)
-                       FROM {{ this }}
-                       INNER JOIN dim_dates
-                       ON dim_dates.date_actual = snapshot_date)
+    WHERE snapshot_id > (SELECT max(snapshot_id)
+                            FROM {{ this }}
+                            INNER JOIN dim_dates
+                            ON dim_dates.date_actual = snapshot_date
+                            )
 
     {% endif %}
 
