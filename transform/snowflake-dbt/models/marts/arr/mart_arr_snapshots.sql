@@ -8,33 +8,54 @@
 
 WITH dim_billing_accounts AS (
 
-  SELECT *
-  FROM {{ ref('dim_billing_accounts') }}
+    SELECT *
+    FROM {{ ref('dim_billing_accounts') }}
 
 ), dim_crm_accounts AS (
 
-  SELECT *
-  FROM {{ ref('dim_crm_accounts') }}
+    SELECT *
+    FROM {{ ref('dim_crm_accounts') }}
 
 ), dim_dates AS (
 
-  SELECT *
-  FROM {{ ref('dim_dates') }}
+    SELECT *
+    FROM {{ ref('dim_dates') }}
 
 ), dim_product_details AS (
 
-  SELECT *
-  FROM {{ ref('dim_product_details') }}
+    SELECT *
+    FROM {{ ref('dim_product_details') }}
 
 ), dim_subscriptions_snapshots AS (
 
-  SELECT *
-  FROM {{ ref('dim_subscriptions_snapshots') }}
+    SELECT *
+    FROM {{ ref('dim_subscriptions_snapshots') }}
+
+    {% if is_incremental() %}
+
+    -- this filter will only be applied on an incremental run
+    AND snapshot_id > (SELECT max(snapshot_id)
+                       FROM {{ this }}
+                       INNER JOIN dim_dates
+                       ON dim_dates.date_actual = snapshot_date)
+
+    {% endif %}
 
 ), fct_mrr_snapshots AS (
 
-  SELECT *
-  FROM {{ ref('fct_mrr_snapshots') }}
+    SELECT *
+    FROM {{ ref('dim_dates') }}
+    WHERE date_actual >= '2020-03-01' and date_actual <= CURRENT_DATE
+
+    {% if is_incremental() %}
+
+    -- this filter will only be applied on an incremental run
+    AND snapshot_id > (SELECT max(snapshot_id)
+                       FROM {{ this }}
+                       INNER JOIN dim_dates
+                       ON dim_dates.date_actual = snapshot_date)
+
+    {% endif %}
 
 ), final AS (
 
@@ -99,13 +120,6 @@ WITH dim_billing_accounts AS (
       ON snapshot_dates.date_id = fct_mrr_snapshots.snapshot_id
     LEFT JOIN dim_crm_accounts
         ON dim_billing_accounts.crm_account_id = dim_crm_accounts.crm_account_id
-
-    {% if is_incremental() %}
-
-      -- this filter will only be applied on an incremental run
-     WHERE snapshot_dates.date_actual  > (select max(snapshot_date) from {{ this }})
-
-    {% endif %}
 
 )
 
