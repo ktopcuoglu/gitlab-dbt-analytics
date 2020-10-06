@@ -26,9 +26,9 @@ WITH dim_dates AS (
 
 ), zuora_account AS (
 
-  SELECT *
-  FROM {{ ref('zuora_account_source') }}
-  WHERE is_deleted = FALSE
+    SELECT *
+    FROM {{ ref('zuora_account_snapshots_source') }}
+    WHERE is_deleted = FALSE
 
 ), zuora_account_spined AS (
 
