@@ -1,9 +1,8 @@
-{{
-    config(
-        materialized='incremental',
-        unique_key='mrr_snapshot_id',
-        tags='arr_snapshots'
-    )
+{{ config({
+        "materialized": "incremental",
+        "unique_key": "mrr_snapshot_id",
+        "tags": ["arr_snapshots"]
+    })
 }}
 
 /* grain: one record per subscription, product per month */

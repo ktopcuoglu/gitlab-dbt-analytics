@@ -39,7 +39,7 @@ models:
           - not_null
           - unique
         tags: ['tdf', 'mart', 'arr']
-        
+
   - name: mart_delta_arr_parent_quarter
     description: "Mart table by quarter purusant to the ARR Analysis Framework at the parent customer level"
     columns:

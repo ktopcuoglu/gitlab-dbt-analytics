@@ -1,9 +1,8 @@
-{{
-    config(
-        materialized='incremental',
-        unique_key='subscription_snapshot_id',
-        tags='arr_snapshots'
-    )
+{{ config({
+        "materialized": "incremental",
+        "unique_key": "subscription_snapshot_id",
+        "tags": ["arr_snapshots"]
+    })
 }}
 
 WITH snapshot_dates AS (
