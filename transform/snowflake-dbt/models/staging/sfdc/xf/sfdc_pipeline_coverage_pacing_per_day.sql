@@ -51,6 +51,8 @@ SELECT  snapshot_date,
             THEN 'US EAST'
         WHEN account_owner_team_stamped in ('US West', 'MM - West')
             THEN 'US WEST'
+        WHEN account_owner_team_stamped in ('Public Sector')
+            THEN 'PUBSEC'
         ELSE 'OTHER' END                                                            AS adj_region,
 
         COUNT(DISTINCT opportunity_id)                          AS opps,
@@ -90,6 +92,8 @@ GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12
                 THEN 'US EAST'
             WHEN o.account_owner_team_stamped in ('US West', 'MM - West')
                 THEN 'US WEST'
+            WHEN o.account_owner_team_stamped in ('Public Sector')
+                THEN 'PUBSEC'
             ELSE 'OTHER' END                                                                AS adj_region,
 
         -- date fields

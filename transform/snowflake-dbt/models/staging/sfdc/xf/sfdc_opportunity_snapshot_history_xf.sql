@@ -35,7 +35,7 @@ WITH RECURSIVE date_details AS (
 
 ),  managers AS (
   SELECT
-        id,
+        user_id,
         name,
         role_name,
         manager_name,
@@ -48,7 +48,7 @@ WITH RECURSIVE date_details AS (
 UNION ALL
 
 SELECT
-      users.id,
+      users.user_id,
       users.name,
       users.role_name,
       users.manager_name,
@@ -57,12 +57,12 @@ SELECT
       path || managers.role_name || '::'
 FROM sfdc_users_xf users
 INNER JOIN managers
-ON users.manager_id = managers.id
+ON users.manager_id = managers.user_id
 
 ), cro_sfdc_hierarchy AS (
 
 SELECT
-      id,
+      user_id,
       name,
       role_name,
       manager_name,
@@ -227,7 +227,7 @@ SELECT
         ON h.account_id = a.account_id 
     -- owner hierarchy
     LEFT JOIN cro_sfdc_hierarchy cro
-        ON h.owner_id = cro.id
+        ON h.owner_id = cro.user_id
     -- sales admin hierarchy
     LEFT JOIN sales_admin_bookings_hierarchy sa
         ON h.opportunity_id = sa.opportunity_id
