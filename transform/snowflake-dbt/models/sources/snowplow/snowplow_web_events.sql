@@ -16,7 +16,7 @@ WITH all_events AS (
     SELECT * 
     FROM all_events
     {% if is_incremental() %}
-        WHERE collector_tstamp > DATEADD('days', -1 * var('snowplow:page_view_lookback_days') , {{dbt_utils.get_start_ts(this, 'collector_tstamp')}})
+        WHERE collector_tstamp > DATEADD('days', -1 * var('snowplow:page_view_lookback_days') , (SELECT MAX(collector_tstamp) FROM {{this}}))
     {% endif %}
 
 ), web_page_context AS (
