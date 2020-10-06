@@ -60,6 +60,7 @@ SELECT distinct
         mapping.employee_number,
         mapping.first_name,
         mapping.last_name,
+        mapping.first_name || ' ' || mapping.last_name                            AS full_name,
         bamboohr_directory.work_email,
         iff(rehire.is_rehire = 'True', initial_hire.hire_date, mapping.hire_date) AS hire_date,
         rehire.rehire_date,
