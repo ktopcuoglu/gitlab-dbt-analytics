@@ -157,13 +157,16 @@ def extract_table_list_from_manifest(manifest_contents):
 
 
 def data_load_status(task_identifier, **context):
-    ti = context['ti']
-    loaded = ti.xcom_pull(task_ids=task_identifier, key="return_value").get("load_ran", False)
+    ti = context["ti"]
+    loaded = ti.xcom_pull(task_ids=task_identifier, key="return_value").get(
+        "load_ran", False
+    )
 
     if loaded == True:
         return f"{task_identifier}-source-freshness"
     else:
         return f"{task_identifier}-do-nothing"
+
 
 # Loop through each config_dict and generate a DAG
 for source_name, config in config_dict.items():
@@ -197,10 +200,12 @@ for source_name, config in config_dict.items():
             # tables without execution_date in the query won't be processed incrementally
             if "{EXECUTION_DATE}" not in manifest["tables"][table]["import_query"]:
                 continue
-            
+
             task_type = "db-incremental"
-            task_identifier = f"{config['task_name']}-{table.replace('_','-')}-{task_type}"
-            
+            task_identifier = (
+                f"{config['task_name']}-{table.replace('_','-')}-{task_type}"
+            )
+
             incremental_cmd = generate_cmd(
                 config["dag_name"], f"--load_type incremental --load_only_table {table}"
             )
@@ -257,7 +262,7 @@ for source_name, config in config_dict.items():
                 env_vars=gitlab_pod_env_vars,
                 arguments=[test_cmd],
             )
-            
+
             has_snapshot = manifest["tables"][table].get("dbt_snapshots", False)
             if has_snapshot:
                 # Snapshot source data
@@ -318,7 +323,7 @@ for source_name, config in config_dict.items():
                 incremental_extract >> freshness >> test >> model_run >> model_test
             else:
                 incremental_extract >> freshness >> test
-    
+
     globals()[f"{config['dag_name']}_db_extract"] = extract_dag
 
     # Sync DAG
@@ -348,7 +353,9 @@ for source_name, config in config_dict.items():
         for table in table_list:
             task_type = "db-sync"
             if "{EXECUTION_DATE}" in manifest["tables"][table]["import_query"]:
-                task_identifier = f"{config['task_name']}-{table.replace('_','-')}-{task_type}"
+                task_identifier = (
+                    f"{config['task_name']}-{table.replace('_','-')}-{task_type}"
+                )
 
                 sync_cmd = generate_cmd(
                     config["dag_name"], f"--load_type sync --load_only_table {table}"
@@ -371,7 +378,9 @@ for source_name, config in config_dict.items():
             else:
                 task_type = "db-scd"
 
-                task_identifier = f"{config['task_name']}-{table.replace('_','-')}-{task_type}"
+                task_identifier = (
+                    f"{config['task_name']}-{table.replace('_','-')}-{task_type}"
+                )
 
                 # SCD Task
                 scd_cmd = generate_cmd(
@@ -396,7 +405,7 @@ for source_name, config in config_dict.items():
             branching_dbt_run = BranchPythonOperator(
                 task_id=f"{task_identifier}-branching-dbt-run",
                 python_callable=data_load_status,
-                op_kwargs={'task_identifier': task_identifier},
+                op_kwargs={"task_identifier": task_identifier},
                 provide_context=True,
             )
 
@@ -435,7 +444,7 @@ for source_name, config in config_dict.items():
                 env_vars=gitlab_pod_env_vars,
                 arguments=[test_cmd],
             )
-            
+
             has_snapshot = manifest["tables"][table].get("dbt_snapshots", False)
             if has_snapshot:
                 # Snapshot source data
@@ -492,7 +501,7 @@ for source_name, config in config_dict.items():
                 sync_extract >> branching_dbt_run
             else:
                 scd_extract >> branching_dbt_run
-            
+
             branching_dbt_run >> do_nothing
 
             if has_snapshot and has_models:

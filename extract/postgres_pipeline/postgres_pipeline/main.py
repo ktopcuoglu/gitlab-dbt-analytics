@@ -124,7 +124,7 @@ def load_incremental(
             )
             execution_date = datetime.datetime.strptime(
                 os.environ["EXECUTION_DATE"], "%Y-%m-%dT%H:%M:%S.%f%z"
-            ) 
+            )
 
         hours_difference = (execution_date - last_execution_date).seconds / 3600
 
