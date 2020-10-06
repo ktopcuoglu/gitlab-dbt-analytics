@@ -159,8 +159,5 @@ WITH dim_dates AS (
     updated_by="@msendal",
     created_date="2020-09-29",
     updated_date="2020-09-29",
-) }}
-
-
-
+ 	) }}
 
