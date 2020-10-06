@@ -97,6 +97,7 @@ every_day_at_four = "0 4 */1 * *"
 config_dict = {
     "customers": {
         "dag_name": "customers",
+        "dbt_name": "customers_db",
         "env_vars": {"DAYS": "1"},
         "extract_schedule_interval": every_eighth_hour,
         "secrets": [
@@ -128,6 +129,7 @@ config_dict = {
     },
     "gitlab_profiler": {
         "dag_name": "gitlab_profiler",
+        "dbt_name": "none",
         "env_vars": {"DAYS": "3"},
         "extract_schedule_interval": "0 0 */1 * *",
         "secrets": [
