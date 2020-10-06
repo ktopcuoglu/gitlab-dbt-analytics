@@ -4,7 +4,7 @@ WITH zuora_subscription AS (
   FROM {{ ref('zuora_subscription_source') }}
   WHERE is_deleted = FALSE
     AND exclude_from_analysis IN ('False', '')
-    AND zuora_subscription.subscription_status NOT IN ('Draft', 'Expired')
+    AND subscription_status NOT IN ('Draft', 'Expired')
 
 ), zuora_subscription_snapshots AS (
 
