@@ -277,6 +277,9 @@ models:
         tests:
           - not_null
           - unique
+        tags:
+          - tdf
+          - arr
 
   - name: dim_subscriptions_valid_at
     description: Parameterized model to recreate dimension table representing subscription details as in Zuora at given date. Required variable valid_at is timezone sensitive
@@ -468,6 +471,9 @@ models:
         tests:
           - not_null
           - unique
+        tags:
+          - tdf
+          - arr
       - name: mrr_id
         description: The unique identifier of the MRR.
         tests:
