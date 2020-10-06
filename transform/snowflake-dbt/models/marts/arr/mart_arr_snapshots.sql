@@ -44,8 +44,7 @@ WITH dim_billing_accounts AS (
 ), fct_mrr_snapshots AS (
 
     SELECT *
-    FROM {{ ref('dim_dates') }}
-    WHERE date_actual >= '2020-03-01' and date_actual <= CURRENT_DATE
+    FROM {{ ref('fct_mrr_snapshots') }}
 
     {% if is_incremental() %}
 
