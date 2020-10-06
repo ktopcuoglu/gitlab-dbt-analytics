@@ -28,6 +28,7 @@ WITH source AS (
 
       -- Override state by mapping state_id. See issue #3344.
       {{ map_state_id('state_id') }}                           AS state,
+
       weight::NUMBER                                           AS weight,
       due_date::DATE                                           AS due_date,
       lock_version::NUMBER                                     AS lock_version,
