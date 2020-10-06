@@ -8,10 +8,8 @@ WITH RECURSIVE employee_directory AS (
 
     SELECT
       employee_id,
-      employee_number,
-      first_name,
-      last_name,
-      (employee_directory.first_name ||' '|| employee_directory.last_name)   AS full_name,
+      employee_number,	
+      full_name,
       work_email,
       hire_date,
       rehire_date,
@@ -81,7 +79,7 @@ WITH RECURSIVE employee_directory AS (
 
     SELECT 
       department_info.employee_id,
-      department_info.job_title,
+      department_info.job_title,	
       IFF(job_title = 'Manager, Field Marketing','Leader',COALESCE(job_role.job_role, department_info.job_role))    AS job_role, 
       CASE WHEN job_title = 'Group Manager, Product' 
             THEN '9.5'
@@ -120,6 +118,7 @@ WITH RECURSIVE employee_directory AS (
 
     SELECT *
     FROM {{ ref('bamboohr_directionary_bonuses_xf') }}  
+
 
 ), enriched AS (
 

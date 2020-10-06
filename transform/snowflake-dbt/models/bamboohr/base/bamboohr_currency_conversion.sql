@@ -13,16 +13,17 @@ WITH source AS (
 ), renamed AS (
 
     SELECT
-      e.value['id']::NUMBER                       AS target_earnings_update_id,
-      e.value['employeeId']::NUMBER               AS employee_id,
-      e.value['customDate']::DATE                 AS effective_date,
-      e.value['customType']::VARCHAR              AS compensation_type,
-      e.value['customAnnualAmountLocal']::VARCHAR AS annual_amount_local,
-      e.value['customAnnualAmountUSD']::VARCHAR   AS annual_amount_usd,
-      e.value['customOTELocal']::VARCHAR          AS ote_local,
-      e.value['customOTEUSD']::VARCHAR            AS ote_usd,
-      e.value['customType']::VARCHAR              AS ote_type,
-      e.value['customVariablePay']::VARCHAR       AS variable_pay
+      e.value['id']::NUMBER                                 AS target_earnings_update_id,
+      e.value['employeeId']::NUMBER                         AS employee_id,
+      e.value['customDate']::DATE                           AS effective_date,
+      e.value['customType']::VARCHAR                        AS compensation_type,
+      e.value['customCurrencyConversionFactor']::DECIMAL    AS currency_conversion_factor
+      e.value['customAnnualAmountLocal']::VARCHAR           AS annual_amount_local,
+      e.value['customAnnualAmountUSD']::VARCHAR             AS annual_amount_usd,
+      e.value['customOTELocal']::VARCHAR                    AS ote_local,
+      e.value['customOTEUSD']::VARCHAR                      AS ote_usd,
+      e.value['customType']::VARCHAR                        AS ote_type,
+      e.value['customVariablePay']::VARCHAR                 AS variable_pay
     FROM source,
     LATERAL FLATTEN(INPUT => parse_json(jsontext), OUTER => true) initial_unnest,
     LATERAL FLATTEN(INPUT => parse_json(initial_unnest.value), OUTER => true) e
@@ -35,6 +36,7 @@ WITH source AS (
       effective_date,
       variable_pay,
       compensation_type,
+      currency_conversion_factor,
       REGEXP_REPLACE(annual_amount_local, '[a-z/-/A-z/#/*]', '')::DECIMAL   AS annual_amount_local_value,
       REGEXP_REPLACE(annual_amount_local, '[0-9/-/#/./*]', '')              AS annual_local_currency_code,
       REGEXP_REPLACE(annual_amount_usd, '[a-z/-/A-z/#/*]', '')::DECIMAL     AS annual_amount_usd_value,

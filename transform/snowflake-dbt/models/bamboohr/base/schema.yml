@@ -162,19 +162,19 @@ models:
   - name: bamboohr_ote
     description: Provides on-target-earning as related to sales roles.
     columns:
-      name: target_earnings_update_id
-      tests:
-        - unique
-        - not_null
+      - name: target_earnings_update_id
+        tests:
+          - unique
+          - not_null
       - name: employee_id
         description: Foreign Key to employee info
         tests:
           - not_null
-      name: effective_date
-      name: variable_pay
-      name: annual_amount_local
-      name: annual_amount_usd_value
-      name: ote_local
-      name: ote_usd
-      name: ote_type
+      - name: effective_date
+      - name: variable_pay
+      - name: annual_amount_local
+      - name: annual_amount_usd_value
+      - name: ote_local
+      - name: ote_usd
+      - name: ote_type
  
