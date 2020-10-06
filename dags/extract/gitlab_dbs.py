@@ -156,11 +156,14 @@ def extract_table_list_from_manifest(manifest_contents):
     return manifest_contents["tables"].keys()
 
 
-def data_load_status(loaded, task_template):
-    if loaded:
-        return f"{task_template}-source-freshness"
+def data_load_status(task_identifier, **context):
+    ti = context['ti']
+    loaded = ti.xcom_pull(task_ids=task_identifier, key="return_value").get("load_ran", False)
+
+    if loaded == True:
+        return f"{task_identifier}-source-freshness"
     else:
-        return "do_nothing"
+        return f"{task_identifier}-do-nothing"
 
 # Loop through each config_dict and generate a DAG
 for source_name, config in config_dict.items():
@@ -379,7 +382,7 @@ for source_name, config in config_dict.items():
                     name=task_identifier,
                     pool=f"{config['task_name']}_pool",
                     secrets=standard_secrets + config["secrets"],
-                    env_vars={**standard_pod_env_vars, **config["env_vars"]},
+                    env_vars={**gitlab_pod_env_vars, **config["env_vars"]},
                     arguments=[scd_cmd],
                     affinity=get_affinity(True),
                     tolerations=get_toleration(True),
@@ -387,11 +390,11 @@ for source_name, config in config_dict.items():
                     xcom_push=True,
                 )
 
-                load_status  = f'{{ ti.xcom_pull(task_ids="{task_identifier}", key="return_value")["load_run"] }}'
-            
             branching_dbt_run = BranchPythonOperator(
                 task_id=f"{task_identifier}-branching-dbt-run",
-                python_callable=lambda: data_load_status(load_status, task_identifier),
+                python_callable=data_load_status,
+                op_kwargs={'task_identifier': task_identifier},
+                provide_context=True,
             )
 
             do_nothing = DummyOperator(task_id=f"{task_identifier}-do-nothing")
