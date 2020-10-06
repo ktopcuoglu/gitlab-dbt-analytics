@@ -32,6 +32,14 @@ models:
   - name: calculated_duration
     tests:
     - not_null
+- name: sheetload_cert_product_geo_dashboard_source
+  description: All team members that passed the product geolocation dashboard certification.
+- name: sheetload_cert_product_geo_sql_source
+  description: All team members that passed the product geolocation sql certification.
+- name: sheetload_cert_customer_segmentation_dashboard_source
+  description: All team members that passed the customer segmentation dashboard certification.
+- name: sheetload_cert_customer_segmentation_sql_source
+  description: All team members that passed the customer segmentation sql certification.
 - name: sheetload_company_call_attendance_source
   description: This spreadsheet contains data from company call attendance (also called the "Take a Break Call"). The People Experience team pulls their data and updates their spreadsheet, which is imported into the sheetload sheet.
   columns:
