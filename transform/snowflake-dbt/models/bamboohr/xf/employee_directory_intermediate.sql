@@ -184,11 +184,9 @@ WITH RECURSIVE employee_directory AS (
                 AND total_direct_reports > 0 
                 AND employment_status NOT IN ('Parental Leave','Garden Leave')
             THEN 'Senior Leadership'
------test --- 
             WHEN COALESCE(total_direct_reports,0) =0 AND 
                     COALESCE(job_role.job_role, job_info_mapping_historical.job_role,department_info.job_role) = 'Manager'
                     THEN 'Staff'
-  ---end test                  
             WHEN COALESCE(total_direct_reports,0) = 0 
             THEN 'Individual Contributor'
              ELSE COALESCE(job_role.job_role, 
@@ -246,6 +244,8 @@ WITH RECURSIVE employee_directory AS (
       AND date_details.date_actual = bamboohr_discretionary_bonuses_xf.bonus_date                                    
     WHERE employee_directory.employee_id IS NOT NULL
 
+) select * from enriched
+{# 
 ), base_layers as (
 
     SELECT
@@ -298,4 +298,4 @@ LEFT JOIN calculated_layers
   ON enriched.date_actual = calculated_layers.date_actual
   AND full_name = employee
   AND enriched.employment_status IS NOT NULL
-WHERE employment_status IS NOT NULL
+WHERE employment_status IS NOT NULL #}

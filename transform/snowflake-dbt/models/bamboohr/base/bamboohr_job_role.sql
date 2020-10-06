@@ -23,10 +23,10 @@ WITH source AS (
       d.value['customPayFrequency']::VARCHAR                          AS pay_frequency,
       d.value['customSalesGeoDifferential']::VARCHAR                  AS sales_geo_differential,
       uploaded_at::TIMESTAMP                                          AS effective_date,
-      {{ dbt_utils.surrogate_key([employee_id, job_role, job_grade, 
-                                  cost_center, jobtitle_speciality, 
-                                  gitlab_username, pay_frequency, 
-                                  sales_geo_differential]) }}           AS unique_key
+      {{ dbt_utils.surrogate_key(['employee_id', 'job_role', 'job_grade', 
+                                  'cost_center', 'jobtitle_speciality', 
+                                  'gitlab_username', 'pay_frequency', 
+                                  'sales_geo_differential']) }}        AS unique_key
     FROM source,
     LATERAL FLATTEN(INPUT => PARSE_JSON(jsontext['employees']), OUTER => true) d
     QUALIFY ROW_NUMBER() OVER (PARTITION BY unique_key
