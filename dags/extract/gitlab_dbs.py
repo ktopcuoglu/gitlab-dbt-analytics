@@ -180,6 +180,7 @@ for source_name, config in config_dict.items():
         "sla_miss_callback": slack_failed_task,
         "start_date": config["start_date"],
         "dagrun_timeout": timedelta(hours=6),
+        "trigger_rule": "all_success",
     }
     extract_dag = DAG(
         f"{config['dag_name']}_db_extract",
@@ -196,6 +197,7 @@ for source_name, config in config_dict.items():
             # tables without execution_date in the query won't be processed incrementally
             if "{EXECUTION_DATE}" not in manifest["tables"][table]["import_query"]:
                 continue
+            
             task_type = "db-incremental"
             task_identifier = f"{config['task_name']}-{table.replace('_','-')}-{task_type}"
             
@@ -329,6 +331,7 @@ for source_name, config in config_dict.items():
         "retry_delay": timedelta(minutes=3),
         "start_date": config["start_date"],
         "dagrun_timeout": timedelta(hours=10),
+        "trigger_rule": "all_success",
     }
 
     sync_dag = DAG(
