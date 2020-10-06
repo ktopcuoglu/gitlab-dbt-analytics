@@ -14,7 +14,7 @@ WITH snapshot_dates AS (
    {% if is_incremental() %}
 
    -- this filter will only be applied on an incremental run
-   AND date_id > (select max(snapshot_id) from {{ this }})
+   AND date_id > (SELECT max(snapshot_id) FROM {{ this }})
 
    {% endif %}
 

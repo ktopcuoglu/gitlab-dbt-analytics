@@ -16,12 +16,12 @@ WITH dim_dates AS (
 
    SELECT *
    FROM {{ ref('dim_dates') }}
-   WHERE date_actual >= '2020-03-01' and date_actual <= CURRENT_DATE
+   WHERE date_actual >= '2020-03-01' AND date_actual <= CURRENT_DATE
 
    {% if is_incremental() %}
 
    -- this filter will only be applied on an incremental run
-   AND date_id > (select max(snapshot_id) from {{ this }})
+   AND date_id > (SELECT max(snapshot_id) FROM {{ this }})
 
    {% endif %}
 
