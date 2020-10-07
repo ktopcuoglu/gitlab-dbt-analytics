@@ -102,7 +102,7 @@ branching_dbt_run = BranchPythonOperator(
 dbt_non_product_models_command = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_and_seed_cmd} &&
-    dbt run --profiles-dir profile --target prod --exclude tag:product snapshots mart_arr_incr sources.sheetload+ sources.sfdc sources.zuora sources.gitlab_dotcom --vars {xs_warehouse}; ret=$?;
+    dbt run --profiles-dir profile --target prod --exclude tag:product snapshots mart_arr_incr sources.sheetload+ sources.sfdc sources.zuora --vars {xs_warehouse}; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
 
@@ -253,7 +253,7 @@ dbt_source_freshness = KubernetesPodOperator(
 dbt_test_cmd = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_and_seed_cmd} &&
-    dbt test --profiles-dir profile --target prod --vars {xs_warehouse} --exclude snowplow snapshots source:sfdc source:zuora source:gitlab_dotcom; ret=$?;
+    dbt test --profiles-dir profile --target prod --vars {xs_warehouse} --exclude snowplow snapshots source:sfdc source:zuora; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py test; exit $ret
 """
 dbt_test = KubernetesPodOperator(
