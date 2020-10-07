@@ -16,6 +16,7 @@ from airflow_utils import (
     dbt_install_deps_nosha_cmd,
     dbt_install_deps_and_seed_nosha_cmd,
     gitlab_pod_env_vars,
+    xl_warehouse,
     xs_warehouse,
 )
 from kubernetes_helpers import get_affinity, get_toleration
@@ -268,7 +269,7 @@ for source_name, config in config_dict.items():
                 # Snapshot source data
                 snapshot_cmd = f"""
                     {dbt_install_deps_nosha_cmd} &&
-                    dbt snapshot --profiles-dir profile --target prod --select source:{source_ref}; ret=$?;
+                    dbt snapshot --profiles-dir profile --target prod --select source:{source_ref} --vars {xl_warehouse}; ret=$?;
                     python ../../orchestration/upload_dbt_file_to_snowflake.py snapshots; exit $ret
                 """
                 snapshot = KubernetesPodOperator(
@@ -286,7 +287,7 @@ for source_name, config in config_dict.items():
                 # Run source models
                 model_run_cmd = f"""
                     {dbt_install_deps_nosha_cmd} &&
-                    dbt run --profiles-dir profile --target prod --models +sources.{model_ref}_source; ret=$?;
+                    dbt run --profiles-dir profile --target prod --models +sources.{model_ref}_source --vars {xl_warehouse}; ret=$?;
                     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
                 """
                 model_run = KubernetesPodOperator(
