@@ -116,7 +116,7 @@ WITH all_events AS (
           ON ev.event_id = wp.root_id
 
     WHERE ev.platform = 'web'
-      and ev.event_name = 'page_view'
+      AND ev.event_name = 'page_view'
 
 )
 
