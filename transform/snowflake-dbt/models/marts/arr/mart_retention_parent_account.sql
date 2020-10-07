@@ -19,7 +19,8 @@ WITH dim_crm_accounts AS (
       dim_crm_accounts.ultimate_parent_account_id,
       dim_dates.date_actual           AS mrr_month,
       dateadd('year', 1, date_actual) AS retention_month,
-      SUM(mrr)                        AS mrr_total
+      SUM(mrr)                        AS mrr_total,
+      SUM(arr)                        AS arr_total
     FROM fct_mrr
     LEFT JOIN dim_crm_accounts
       ON dim_crm_accounts.crm_account_id = fct_mrr.crm_account_id
@@ -34,7 +35,9 @@ WITH dim_crm_accounts AS (
       current_mrr.mrr_month     AS original_mrr_month,
       current_mrr.retention_month,
       current_mrr.mrr_total     AS original_mrr,
-      future_mrr.mrr_total      AS retention_mrr
+      future_mrr.mrr_total      AS retention_mrr,
+      current_mrr.arr_total     AS original_arr,
+      future_mrr.arr_total      AS retention_arr
     FROM parent_account_mrrs AS current_mrr
     LEFT JOIN parent_account_mrrs AS future_mrr
       ON current_mrr.ultimate_parent_account_id = future_mrr.ultimate_parent_account_id
@@ -46,6 +49,7 @@ WITH dim_crm_accounts AS (
       retention_subs.ultimate_parent_account_id,
       dim_crm_accounts.crm_account_name,
       retention_mrr,
+      retention_arr,
       coalesce(retention_mrr, 0) AS net_retention_mrr,
       CASE WHEN net_retention_mrr > 0
         THEN least(net_retention_mrr, original_mrr)
@@ -53,7 +57,8 @@ WITH dim_crm_accounts AS (
       retention_month,
       original_mrr_month,
       original_mrr,
-      {{ churn_type('original_mrr', 'net_retention_mrr') }}
+      original_arr,
+      {{ type_of_arr_change(retention_arr, original_arr) }}
     FROM retention_subs
     LEFT JOIN dim_crm_accounts
       ON dim_crm_accounts.crm_account_id = retention_subs.ultimate_parent_account_id
