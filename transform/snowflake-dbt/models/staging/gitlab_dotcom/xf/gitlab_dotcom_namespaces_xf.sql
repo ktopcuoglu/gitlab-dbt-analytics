@@ -27,7 +27,7 @@ projects AS (
 
 ), creators AS (
 
-    SELECT
+    SELECT DISTINCT
       author_id as creator_id,
       entity_id AS group_id
     FROM {{ ref('gitlab_dotcom_audit_event_details_clean') }} AS audit_events_clean
