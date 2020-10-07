@@ -12,46 +12,30 @@ WITH source AS (
 
 ), renamed AS (
 
-    SELECT
-      e.value['id']::NUMBER                                 AS target_earnings_update_id,
-      e.value['employeeId']::NUMBER                         AS employee_id,
-      e.value['customDate']::DATE                           AS effective_date,
-      e.value['customType']::VARCHAR                        AS compensation_type,
-      e.value['customCurrencyConversionFactor']::DECIMAL    AS currency_conversion_factor,
-      e.value['customAnnualAmountLocal']::VARCHAR           AS annual_amount_local,
-      e.value['customAnnualAmountUSD']::VARCHAR             AS annual_amount_usd,
-      e.value['customOTELocal']::VARCHAR                    AS ote_local,
-      e.value['customOTEUSD']::VARCHAR                      AS ote_usd,
-      e.value['customType']::VARCHAR                        AS ote_type,
-      e.value['customVariablePay']::VARCHAR                 AS variable_pay
+    SELECT 
+      data_by_row.value['id']::NUMBER                                      AS conversion_id,
+      data_by_row.value['employeeId']::NUMBER                              AS employee_id,
+      data_by_row.value['customConversionEffectiveDate']::DATE             AS effective_date,
+      data_by_row.value['customCurrencyConversionFactor']::DECIMAL(10,2)   AS currency_conversion_factor,
+      data_by_row.value['customLocalAnnualSalary']::VARCHAR                AS local_annual_salary,
+      data_by_row.value['customUSDAnnualSalary']::VARCHAR                  AS usd_annual_salary,
+      uploaded_at
     FROM source,
     LATERAL FLATTEN(INPUT => parse_json(jsontext), OUTER => true) initial_unnest,
-    LATERAL FLATTEN(INPUT => parse_json(initial_unnest.value), OUTER => true) e
+    LATERAL FLATTEN(INPUT => parse_json(initial_unnest.value), OUTER => true) data_by_row
 
 ), final AS (
 
     SELECT 
-      target_earnings_update_id,
+      conversion_id,
       employee_id,
       effective_date,
-      variable_pay,
-      compensation_type,
       currency_conversion_factor,
-      REGEXP_REPLACE(annual_amount_local, '[a-z/-/A-z/#/*]', '')::DECIMAL   AS annual_amount_local_value,
-      REGEXP_REPLACE(annual_amount_local, '[0-9/-/#/./*]', '')              AS annual_local_currency_code,
-      REGEXP_REPLACE(annual_amount_usd, '[a-z/-/A-z/#/*]', '')::DECIMAL     AS annual_amount_usd_value,
-      REGEXP_REPLACE(ote_local, '[a-z/-/A-z/#/*]', '')::DECIMAL             AS ote_local_amount,
-      REGEXP_REPLACE(ote_local, '[0-9/-/#/./*]', '')                        AS ote_local_currency_code,
-      REGEXP_REPLACE(ote_usd, '[a-z/-/A-z/#/*]', '')::DECIMAL               AS ote_usd,
-      ote_type
+      local_annual_salary,
+      REGEXP_REPLACE(local_annual_salary, '[0-9/-/#/./*]', '')                    AS annual_local_currency_code,
+      REGEXP_REPLACE(usd_annual_salary, '[a-z/-/A-z/#/*]', '')::DECIMAL(10,2)     AS annual_amount_usd_value,
+      REGEXP_REPLACE(usd_annual_salary, '[0-9/-/#/./*]', '')                      AS annual_local_usd_code  
     FROM renamed
-
-), final AS (
-
-    SELECT *,
-      LAG(COALESCE(annual_amount_usd_value,0)) OVER (PARTITION BY employee_id ORDER BY target_earnings_update_id)  AS prior_annual_amount_usd,
-      annual_amount_usd_value - prior_annual_amount_usd AS change_in_annual_amount_usd
-    FROM final
 
 )
 

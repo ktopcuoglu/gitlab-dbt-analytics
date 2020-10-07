@@ -49,7 +49,7 @@
       SUM(hired_contributor)                            AS hired_contributor,
       SUM(separated_contributor)                        AS separated_contributor,
       SUM(IFF(is_promotion = TRUE,1,0))                 AS promotion,
-      SUM(percent_change_in_comp)                       AS total_percent_change_in_comp,
+      SUM(percent_change_in_comp)                       AS percent_change_in_comp,
       AVG(location_factor)                              AS location_factor,
       SUM(discretionary_bonus)                          AS discretionary_bonus, 
       AVG(tenure_months)                                AS tenure_months,
