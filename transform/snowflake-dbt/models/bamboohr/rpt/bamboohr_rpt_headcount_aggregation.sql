@@ -260,12 +260,17 @@ WITH source AS (
         NULL, percent_of_headcount_staff)                                        AS percent_of_headcount_staff,  
       IFF(min_headcount_contributor <2 AND eeoc_field_name != 'no_eeoc', 
         NULL, percent_of_headcount_leaders)                                      AS percent_of_headcount_contributor,
-      IFF(rolling_12_month_promotions<2 AND eeoc_field_name != 'no_eeoc', 
-        NULL, rolling_12_month_promotions)                                       AS rolling_12_month_promotions,
-      {# CASE 
-        WHEN show_value_criteria = FALSE THEN NULL
-        WHEN COALESCE(rolling_12_month_promotions,0) THEN NULL
-        ELSE rolling_12_month_promotions_percent_change_in_comp/rolling_12_month_promotions END AS rolling_12_month_promotion_increase, #}
+      IFF(eeoc_field_name != 'no_eeoc', NULL, rolling_12_month_promotions)       AS rolling_12_month_promotions,
+      CASE 
+        WHEN breakout_type IN ('kpi_breakout','division_breakout','department_breakout') 
+            AND eeoc_value = 'no_eeoc'
+            AND rolling_12_month_promotions > 3
+        THEN rolling_12_month_promotions_percent_change_in_comp/rolling_12_month_promotions
+        WHEN breakout_type IN ('eeoc_breakout') 
+            AND eeoc_field_name IN ('gender','ethnicity','region_modified')
+            AND rolling_12_month_promotions > 3
+          THEN rolling_12_month_promotions_percent_change_in_comp/rolling_12_month_promotions
+        ELSE NULL END                                                            AS rolling_12_month_promotion_increase,
       IFF(headcount_end <4 AND show_value_criteria = FALSE,
         NULL,location_factor)                                                    AS location_factor,
       IFF(discretionary_bonus<4 AND show_value_criteria = FALSE,

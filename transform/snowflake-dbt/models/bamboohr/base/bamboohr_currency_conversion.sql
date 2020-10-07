@@ -16,7 +16,7 @@ WITH source AS (
       data_by_row.value['id']::NUMBER                                      AS conversion_id,
       data_by_row.value['employeeId']::NUMBER                              AS employee_id,
       data_by_row.value['customConversionEffectiveDate']::DATE             AS effective_date,
-      data_by_row.value['customCurrencyConversionFactor']::DECIMAL(10,2)   AS currency_conversion_factor,
+      data_by_row.value['customCurrencyConversionFactor']::DECIMAL(10,5)   AS currency_conversion_factor,
       data_by_row.value['customLocalAnnualSalary']::VARCHAR                AS local_annual_salary,
       data_by_row.value['customUSDAnnualSalary']::VARCHAR                  AS usd_annual_salary,
       uploaded_at
