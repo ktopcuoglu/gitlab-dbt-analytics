@@ -17,11 +17,11 @@ WITH sfdc_pov AS (
       tam.name      AS technical_account_manager_name
     FROM sfdc_pov
     LEFT JOIN sfdc_users AS owner 
-      ON sfdc_pov.pov_owner_id = owner.id
+      ON sfdc_pov.pov_owner_id = owner.user_id
     LEFT JOIN sfdc_users AS solarch 
-      ON sfdc_pov.solutions_architect_id = solarch.id
+      ON sfdc_pov.solutions_architect_id = solarch.user_id
     LEFT JOIN sfdc_users AS tam 
-      ON sfdc_pov.technical_account_manager_id = tam.id
+      ON sfdc_pov.technical_account_manager_id = tam.user_id
 
 )
 

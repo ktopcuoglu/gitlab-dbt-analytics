@@ -1,3 +1,8 @@
+{{ config({
+    "materialized":"table",
+    "schema": "sensitive"
+    })
+}}
 
 {% set repeated_metric_columns = 
       "SUM(headcount_start)                             AS headcount_start,
@@ -29,6 +34,14 @@
       SUM(hired_management)                             AS hired_management,
       SUM(separated_management)                         AS separated_management,
             
+
+      SUM(headcount_start_staff)                        AS headcount_start_staff,
+      SUM(headcount_end_staff)                          AS headcount_end_staff,
+      (SUM(headcount_start_staff) 
+        + SUM(headcount_end_staff))/2                   AS headcount_average_staff,
+      SUM(hired_staff)                                  AS hired_staff,
+      SUM(separated_staff)                              AS separated_staff,
+
       SUM(headcount_start_contributor)                  AS headcount_start_contributor,
       SUM(headcount_end_contributor)                    AS headcount_end_individual_contributor,
       (SUM(headcount_start_contributor) 
@@ -36,9 +49,15 @@
       SUM(hired_contributor)                            AS hired_contributor,
       SUM(separated_contributor)                        AS separated_contributor,
       SUM(IFF(is_promotion = TRUE,1,0))                 AS promotion,
-      AVG(location_factor)                              AS location_factor
-      " %}
-
+      AVG(location_factor)                              AS location_factor,
+      SUM(discretionary_bonus)                          AS discretionary_bonus, 
+      AVG(tenure_months)                                AS tenure_months,
+      SUM(tenure_zero_to_six_months)                    AS tenure_zero_to_six_months,
+      SUM(tenure_six_to_twelve_months)                  AS tenure_six_to_twelve_months,
+      SUM(tenure_one_to_two_years)                      AS tenure_one_to_two_years,
+      SUM(tenure_two_to_four_years)                     AS tenure_two_to_four_years,
+      SUM(tenure_four_plus_years)                       AS tenure_four_plus_years
+      "%}
 
 WITH dates AS (
 
@@ -53,7 +72,7 @@ WITH dates AS (
 ), mapping AS (
 
     {{ dbt_utils.unpivot(relation=ref('bamboohr_id_employee_number_mapping'), cast_to='varchar', 
-       exclude=['employee_number', 'employee_id','first_name', 'last_name', 'hire_date', 'termination_date', 'greenhouse_candidate_id']) }}
+       exclude=['employee_number', 'employee_id','first_name', 'last_name', 'hire_date', 'termination_date', 'greenhouse_candidate_id','region','country','nationality']) }}
 
 ), mapping_enhanced AS (
 
@@ -86,58 +105,77 @@ WITH dates AS (
 
     SELECT
       employees.date_actual,
-      department,
-      division,
+      employees.department_modified                                                 AS department,
+      division_mapped_current                                                       AS division,
+      --using the current division - department mapping for reporting
       job_role,
       job_grade,
       mapping_enhanced.eeoc_field_name,                                                       
       mapping_enhanced.eeoc_value,                                          
-      IFF(dates.start_date = date_actual,1,0)                                   AS headcount_start,
-      IFF(dates.end_date = date_actual,1,0)                                     AS headcount_end,
-      IFF(is_hire_date = True, 1,0)                                             AS hire_count,
-      IFF(termination_type = 'Voluntary',1,0)                                   AS voluntary_separation,
-      IFF(termination_type = 'Involuntary',1,0)                                 AS involuntary_separation,
-      voluntary_separation + involuntary_separation                             AS separation_count,
+      IFF(dates.start_date = date_actual,1,0)                                       AS headcount_start,
+      IFF(dates.end_date = date_actual,1,0)                                         AS headcount_end,
+      IFF(is_hire_date = True, 1,0)                                                 AS hire_count,
+      IFF(termination_type = 'Voluntary',1,0)                                       AS voluntary_separation,
+      IFF(termination_type = 'Involuntary',1,0)                                     AS involuntary_separation,
+      voluntary_separation + involuntary_separation                                 AS separation_count,
 
       IFF(dates.start_date = date_actual 
-          AND job_role_modified = 'Senior Leadership',1,0)                       AS headcount_start_leader,
+          AND job_role_modified = 'Senior Leadership',1,0)                          AS headcount_start_leader,
       IFF(dates.end_date = date_actual
-          AND job_role_modified = 'Senior Leadership',1,0)                       AS headcount_end_leader,
+          AND job_role_modified = 'Senior Leadership',1,0)                          AS headcount_end_leader,
       IFF(is_hire_date = True 
-          AND job_role_modified = 'Senior Leadership',1,0)                       AS hired_leaders,
+          AND job_role_modified = 'Senior Leadership',1,0)                          AS hired_leaders,
       IFF(is_termination_date = True
-          AND job_role_modified = 'Senior Leadership',1,0)                       AS separated_leaders,
+          AND job_role_modified = 'Senior Leadership',1,0)                          AS separated_leaders,
       
       IFF(dates.start_date = date_actual 
-          AND job_role_modified = 'Manager',1,0)                                 AS headcount_start_manager,
+          AND job_role_modified = 'Manager',1,0)                                    AS headcount_start_manager,
       IFF(dates.end_date = date_actual
-          AND job_role_modified = 'Manager',1,0)                                 AS headcount_end_manager,
+          AND job_role_modified = 'Manager',1,0)                                    AS headcount_end_manager,
       IFF(is_hire_date = True 
-          AND job_role_modified = 'Manager',1,0)                                 AS hired_manager,
+          AND job_role_modified = 'Manager',1,0)                                    AS hired_manager,
       IFF(is_termination_date = True
-          AND job_role_modified = 'Manager',1,0)                                 AS separated_manager,
+          AND job_role_modified = 'Manager',1,0)                                    AS separated_manager,
 
       IFF(dates.start_date = date_actual 
-          AND job_role_modified != 'Individual Contributor',1,0)                 AS headcount_start_management,
+          AND job_role_modified != 'Individual Contributor',1,0)                    AS headcount_start_management,
       IFF(dates.end_date = date_actual
-          AND job_role_modified != 'Individual Contributor',1,0)                 AS headcount_end_management,
+          AND job_role_modified != 'Individual Contributor',1,0)                    AS headcount_end_management,
       IFF(is_hire_date = True 
-          AND job_role_modified != 'Individual Contributor',1,0)                 AS hired_management,
+          AND job_role_modified != 'Individual Contributor',1,0)                    AS hired_management,
       IFF(is_termination_date = True
-          AND job_role_modified != 'Individual Contributor',1,0)                 AS separated_management,   
+          AND job_role_modified != 'Individual Contributor',1,0)                    AS separated_management,   
 
        IFF(dates.start_date = date_actual 
-          AND job_role_modified = 'Individual Contributor',1,0)                  AS headcount_start_contributor,
+          AND job_role_modified = 'Staff',1,0)                                      AS headcount_start_staff,
       IFF(dates.end_date = date_actual
-          AND job_role_modified = 'Individual Contributor',1,0)                  AS headcount_end_contributor,
+          AND job_role_modified = 'Staff',1,0)                                      AS headcount_end_staff,
       IFF(is_hire_date = True 
-          AND job_role_modified = 'Individual Contributor',1,0)                  AS hired_contributor,
+          AND job_role_modified = 'Staff',1,0)                                      AS hired_staff,
       IFF(is_termination_date = True
-          AND job_role_modified = 'Individual Contributor',1,0)                  AS separated_contributor,  
+          AND job_role_modified = 'Staff',1,0)                                      AS separated_staff, 
+
+       IFF(dates.start_date = date_actual 
+          AND job_role_modified = 'Individual Contributor',1,0)                     AS headcount_start_contributor,
+      IFF(dates.end_date = date_actual
+          AND job_role_modified = 'Individual Contributor',1,0)                     AS headcount_end_contributor,
+      IFF(is_hire_date = True 
+          AND job_role_modified = 'Individual Contributor',1,0)                     AS hired_contributor,
+      IFF(is_termination_date = True
+          AND job_role_modified = 'Individual Contributor',1,0)                     AS separated_contributor, 
+
+
       is_promotion,                         
       IFF(dates.end_date = date_actual 
             AND sales_geo_differential = 'n/a - Comp Calc',
-            location_factor, NULL)                                               AS location_factor
+            location_factor, NULL)                                                  AS location_factor,
+      discretionary_bonus,      
+      ROUND((tenure_days/30),2)                                                     AS tenure_months,
+      IFF(tenure_months BETWEEN 0 AND 6 AND dates.end_date = date_actual, 1, 0)     AS tenure_zero_to_six_months,
+      IFF(tenure_months BETWEEN 6 AND 12 AND dates.end_date = date_actual, 1, 0)    AS tenure_six_to_twelve_months,
+      IFF(tenure_months BETWEEN 12 AND 24 AND dates.end_date = date_actual, 1, 0)   AS tenure_one_to_two_years,
+      IFF(tenure_months BETWEEN 24 AND 48 AND dates.end_date = date_actual, 1, 0)   AS tenure_two_to_four_years,
+      IFF(tenure_months >= 48 AND dates.end_date = date_actual, 1, 0)               AS tenure_four_plus_years
     FROM dates
     LEFT JOIN employees
       ON DATE_TRUNC(month,dates.start_date) = DATE_TRUNC(month, employees.date_actual)
@@ -220,7 +258,8 @@ WITH dates AS (
     WHERE department IS NOT NULL
     {{ dbt_utils.group_by(n=8) }} 
 
-) 
+)
 
-SELECT * 
+SELECT *,
+  IFF(breakout_type = 'eeoc_breakout' AND eeoc_field_name = 'no_eeoc', 'kpi_breakout', breakout_type) AS breakout_type_modified
 FROM aggregated

@@ -31,7 +31,7 @@ models:
       - not_null    
 
   - name: bamboohr_rpt_headcount_aggregation    
-    description: This report creates out a headcount report from the bamboohr_headcount_intermediate_v2 to be used for periscope dashboards for each month.
+    description: This report creates out a headcount report from the bamboohr_headcount_intermediate to be used for periscope dashboards for each month. Note - the division reporting is based on current division used.
     columns:
     - name: month_date
     - name: breakout_type
@@ -91,17 +91,40 @@ models:
     - name: rolling_12_month_headcount_management
     - name: rolling_12_month_separations_management
     - name: retention_manager
+    - name: headcount_end_staff
+      description: Staff is defined as any individuals with 0 direct reports and bamboohr job role of `Manager.` The job titles included in this are Staff, Principal, and Distinguished roles, as well as managers without direct reports.
+    - name: headcount_staff_average
+    - name: hired_staff
+    - name: separated_staff
+    - name: rolling_12_month_headcount_staff
+    - name: rolling_12_month_separations_staff
+    - name: retention_staff
     - name: headcount_end_contributor
     - name: headcount_contributor
     - name: hired_contributor
     - name: separated_contributor
     - name: percent_of_headcount
+      description: This is based on headcount at end of month.
     - name: percent_of_hires
+      description: This is based on headcount at end of month.
     - name: percent_of_headcount_leaders
-    - name: percent_of_headcount_manager
+      description: This is based on headcount at end of month.
+    - name: percent_of_headcount_manager      
+      description: This is based on headcount at end of month.
+    - name: percent_of_headcount_staff
+      description: This is based on headcount at end of month.
     - name: percent_of_headcount_contributor
+      description: This is based on headcount at end of month.
     - name: rolling_12_month_promotions
     - name: location_factor 
+    - name: discretionary_bonus
+    - name: tenure_months
+      description: Average tenure of group in months.
+    - name: tenure_zero_to_six_months
+    - name: tenure_six_to_twelve_months
+    - name: tenure_one_to_two_years
+    - name: tenure_two_to_four_years
+    - name: tenure_four_plus_years
 
   - name: rpt_headcount_vs_planned
     description: Combines the headcount and hire plan model to actual headcount and hires.

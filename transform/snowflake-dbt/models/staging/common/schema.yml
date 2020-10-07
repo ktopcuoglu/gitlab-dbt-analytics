@@ -60,6 +60,12 @@ models:
       - name: technical_account_manager
       - name: is_deleted
         description: flag indicating if account has been deleted
+      - name: is_reseller
+        description: Identify whether a crm_account is a reseller.
+        tests:
+          - accepted_values:
+                  values: ['TRUE', 'FALSE']
+      
       - name: merged_to_account_id
         description: for deleted accounts this is the SFDC account they were merged to
 
@@ -204,7 +210,18 @@ models:
         description: The date when the product becomes available and can be subscribed to
       - name: effective_end_date
         description: The date when the product expires and can't be subscribed to anymore
-          
+
+  - name: dim_crm_sales_rep
+    description: '{{ doc("dim_crm_sales_rep") }}'
+    columns:
+      - name: crm_sales_rep_id
+        description: Primary key for Salesforce users and the primary key for this dimension
+        tests:
+          - unique
+          - not_null
+      - name: is_active
+        description: A boolean column that flags if the user is active in salesforce, which means that the user can login and use salesforce.
+
   - name: dim_subscriptions
     description: '{{ doc("dim_subscriptions") }}'
     columns:
@@ -217,6 +234,8 @@ models:
         description: The status of the subscription
         tests:
           - not_null
+          - accepted_values:
+              values: ['Active', 'Cancelled']
       - name: crm_account_id
         description: account id from SFDC identifing the customer
       - name: billing_account_id
@@ -243,6 +262,22 @@ models:
         description: The month when the subscription term starts. This month is the same as the start month of the original term, which isn't necessarily the start month of the current or new term.
       - name: subscription_end_month
         description: The month when the subscription term ends. This month is the same as the term end month or the cancelation month, as appropriate.
+      - name: subscription_sales_type
+        description: Identifies whether a subscription is Sales-Assisted or Self-Service / Web Direct.
+        tests:
+          - not_null
+          - accepted_values:
+                  values: ['Sales-Assisted', 'Self-Service']
+
+  - name: dim_subscriptions_snapshots
+    description: Daily snapshot of subscriptions starting from 2020-03-01. Fiel
+    columns:
+      - name: subscription_snapshot_id
+        description: Unique identifier of a subscription snapshot
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "arr"]
 
   - name: dim_subscriptions_valid_at
     description: Parameterized model to recreate dimension table representing subscription details as in Zuora at given date. Required variable valid_at is timezone sensitive
@@ -372,7 +407,6 @@ models:
       - name: event_id
         description: A dbt generated surrogate key combining the sfdc_record_id and the event_timestamp.
         tests:
-          - unique
           - not_null
       - name: event_timestamp
         description: The date and time the respective lead or contact record was last marked Marketing Qualified
@@ -426,6 +460,62 @@ models:
         description: Annual Recurring Revenue value for given month
       - name: quantity
         description: Total quantity
+
+  - name: fct_mrr_snapshots
+    description: One row represents Monthly Recurring Revenue per one month, subscription_id, product_details_id. Snapshot dates start from 2020-0
+    columns:
+      - name: mrr_snapshot_id
+        description: The unique identifier of the given snapshot MRR.
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "arr"]
+      - name: mrr_id
+        description: The unique identifier of the MRR.
+        tests:
+          - not_null
+        tags: ["tdf", "arr"]
+      - name: snapshot_id
+        description: The identifier of snapshot day in dim_dates
+      - name: date_id
+        description: The identifier of date month in dim_dates
+      - name: subscription_id
+        description: The identifier of subscription in dim_subscriptions_snapshots table
+        tests:
+          - not_null
+        tags: ["tdf", "arr"]
+      - name: product_details_id
+        description: The identifier of product details in dim_product_details
+        tests:
+          - not_null
+        tags: ["tdf", "arr"]
+      - name: billing_account_id
+        description: Zuora account id
+      - name:  crm_account_id
+        description: account id frm crm
+      - name: mrr
+        description: Monthly Recurring Revenue value for given month
+      - name: arr
+        description: Annual Recurring Revenue value for given month
+      - name: quantity
+        description: Total quantity
+
+  - name: fct_usage_data_monthly
+    description: '{{ doc("fct_usage_data_monthly") }}'
+    columns:
+      - name: metric_name
+        tests:
+          - not_null
+      - name: metric_value
+        tests:
+          - not_null
+      - name: recorded_at
+        tests:
+          - not_null
+      - name: stage_name
+      - name: usage_ping_id
+        tests:
+          - not_null
 
   - name: fct_usage_ping_metric_28_days
     description: '{{ doc("fct_usage_ping_metric_28_days") }}'

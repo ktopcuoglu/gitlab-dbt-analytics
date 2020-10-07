@@ -2,6 +2,7 @@ version: 2
 
 sources:
   - name: salesforce
+    tags: ["tdf","sfdc"]
     database: '{{ env_var("SNOWFLAKE_LOAD_DATABASE") }}'
     schema: salesforce_stitch
     loader: Stitch
@@ -88,22 +89,3 @@ sources:
         identifier: zqu__quote__c
       - name: zqu_quote_amendment
         identifier: zqu__quoteamendment__c
-
-  - name: salesforce_archive
-    database: analytics
-    schema: dbt_archive
-    loader: Stitch
-    loaded_at_field: _last_dbt_run
-
-    freshness: null
-
-    tables: 
-      - name: sfdc_account_archived
-        description: '{{ doc("sfdc_acct_arch_source") }}'
-      - name: sfdc_opportunity_archived
-        description: '{{ doc("sfdc_opp_arch_source") }}'
-      - name: sfdc_users_archived
-        description: '{{ doc("sfdc_users_arch_source") }}'
-
-
-

@@ -17,6 +17,7 @@ sources:
 
     tables:
       - name: categories
+      - name: dev_section_pi
       - name: location_factors
       - name: roles
       - name: stages

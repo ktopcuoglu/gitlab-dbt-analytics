@@ -1,7 +1,7 @@
 WITH RECURSIVE managers AS (
 
   SELECT
-    id,
+    user_id,
     name,
     role_name,
     manager_name,
@@ -14,7 +14,7 @@ WITH RECURSIVE managers AS (
   UNION ALL
   
   SELECT
-    users.id,
+    users.user_id,
     users.name,
     users.role_name,
     users.manager_name,
@@ -23,12 +23,12 @@ WITH RECURSIVE managers AS (
     path || managers.role_name || '::'
   FROM {{ ref('sfdc_users_xf') }} users
   INNER JOIN managers
-    ON users.manager_id = managers.id
+    ON users.manager_id = managers.user_id
   
 ), final AS (  
 
   SELECT
-    id,
+    user_id,
     name,
     role_name,
     manager_name,

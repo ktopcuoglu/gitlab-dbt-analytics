@@ -191,7 +191,7 @@ WITH sfdc_opportunity AS (
   LEFT JOIN sfdc_lead_source
     ON sfdc_opportunity.lead_source = sfdc_lead_source.initial_source
   LEFT JOIN sfdc_users_xf
-    ON sfdc_opportunity.owner_id = sfdc_users_xf.id
+    ON sfdc_opportunity.owner_id = sfdc_users_xf.user_id
   LEFT JOIN sfdc_record_type
     ON sfdc_opportunity.record_type_id = sfdc_record_type.record_type_id
   LEFT JOIN sfdc_account

@@ -17,7 +17,7 @@ WITH employees as (
 
     SELECT
       employee_id, 
-      SUM(IFF(home_phone IS NULL AND mobile_phone IS NULL AND work_phone IS NULL,1,0)) AS missing_contact
+      SUM(IFF(home_phone IS NOT NULL OR mobile_phone IS NOT NULL OR work_phone IS NOT NULL,1,0)) AS total_emergency_contact_numbers
     FROM contacts
     GROUP BY 1
 
@@ -25,7 +25,7 @@ WITH employees as (
 
     SELECT 
       employees.*,
-      IFF(contacts_aggregated.missing_contact= 0, False, True) AS missing_contact
+      IFF(contacts_aggregated.total_emergency_contact_numbers= 0, TRUE, FALSE) AS missing_contact
     FROM employees
     LEFT JOIN contacts_aggregated
       ON employees.employee_id = contacts_aggregated.employee_id
