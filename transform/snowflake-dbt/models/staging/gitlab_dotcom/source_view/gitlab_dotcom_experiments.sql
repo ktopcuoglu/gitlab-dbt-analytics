@@ -1,7 +1,7 @@
 WITH source AS (
 
     SELECT *
-    FROM {{ ref('sheetload_clari_forecast_source') }}
+    FROM {{ ref('gitlab_dotcom_experiments_source') }}
 
 )
 

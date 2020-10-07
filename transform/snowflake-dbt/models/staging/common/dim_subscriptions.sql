@@ -2,6 +2,9 @@ WITH zuora_subscription AS (
 
   SELECT *
   FROM {{ ref('zuora_subscription_source') }}
+  WHERE is_deleted = FALSE
+    AND exclude_from_analysis IN ('False', '')
+    AND subscription_status NOT IN ('Draft', 'Expired')
 
 ), zuora_subscription_snapshots AS (
 
@@ -19,7 +22,6 @@ WITH zuora_subscription AS (
   WHERE subscription_status NOT IN ('Draft', 'Expired')
     AND CURRENT_TIMESTAMP()::TIMESTAMP_TZ >= dbt_valid_from
     AND {{ coalesce_to_infinity('dbt_valid_to') }} > current_timestamp()::TIMESTAMP_TZ
-
 
 ), zuora_account AS (
 
@@ -55,9 +57,6 @@ WITH zuora_subscription AS (
     AND zuora_subscription_snapshots.rank = 1
   INNER JOIN zuora_account
     ON zuora_account.account_id = zuora_subscription.account_id
-  WHERE is_deleted = FALSE
-    AND exclude_from_analysis IN ('False', '')
-    AND zuora_subscription.subscription_status NOT IN ('Draft', 'Expired')
 
 )
 
