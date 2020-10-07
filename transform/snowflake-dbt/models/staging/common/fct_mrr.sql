@@ -8,6 +8,7 @@ WITH dim_dates AS (
 
   SELECT *
   FROM {{ ref('zuora_account_source') }}
+  WHERE is_deleted = FALSE
 
 ), zuora_rate_plan AS (
 
@@ -25,6 +26,9 @@ WITH dim_dates AS (
 
   SELECT *
   FROM {{ ref('zuora_subscription_source') }}
+  WHERE is_deleted = FALSE
+    AND exclude_from_analysis IN ('False', '')
+    AND subscription_status NOT IN ('Expired', 'Draft')
 
 ), zuora_subscription_snapshots AS (
 
@@ -66,10 +70,6 @@ WITH dim_dates AS (
     AND zuora_subscription_snapshots.rank = 1
   INNER JOIN zuora_account
     ON zuora_account.account_id = zuora_subscription.account_id
-  WHERE zuora_subscription.is_deleted = FALSE
-    AND zuora_subscription.exclude_from_analysis IN ('False', '')
-    AND zuora_account.is_deleted = FALSE
-    AND zuora_subscription.subscription_status NOT IN ('Expired', 'Draft')
 
 ), mrr_month_by_month AS (
 
