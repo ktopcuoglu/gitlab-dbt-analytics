@@ -112,7 +112,8 @@ WITH all_events AS (
 
 
     FROM events AS ev
-        INNER JOIN web_page_context AS wp  ON ev.event_id = wp.root_id
+        INNER JOIN web_page_context AS wp  
+          ON ev.event_id = wp.root_id
 
     WHERE ev.platform = 'web'
       and ev.event_name = 'page_view'
