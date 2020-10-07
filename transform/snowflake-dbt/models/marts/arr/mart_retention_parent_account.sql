@@ -33,12 +33,12 @@ WITH dim_crm_accounts AS (
 
     SELECT
       current_mrr.ultimate_parent_account_id,
-      current_mrr.mrr_month     AS current_mrr_month,
+      current_mrr.mrr_month          AS current_mrr_month,
       current_mrr.retention_month,
-      current_mrr.mrr_total     AS current_mrr,
-      future_mrr.mrr_total      AS future_mrr,
-      current_mrr.arr_total     AS current_arr,
-      future_mrr.arr_total      AS future_arr,
+      current_mrr.mrr_total          AS current_mrr,
+      future_mrr.mrr_total           AS future_mrr,
+      current_mrr.arr_total          AS current_arr,
+      future_mrr.arr_total           AS future_arr,
       current_mrr.quantity_total     AS current_quantity,
       future_mrr.quantity_total      AS future_quantity
     FROM parent_account_mrrs AS current_mrr
@@ -59,9 +59,14 @@ WITH dim_crm_accounts AS (
         ELSE 0 END                AS gross_retention_mrr,
       retention_month,
       original_mrr_month,
-      current_mrr,
+      future_arr,
       current_arr,
-      {{ type_of_arr_change(current_arr, original_arr) }}
+      future_quantity,
+      current_quantity,
+      {{ type_of_arr_change('current_arr', 'original_arr') }},
+      {{ reason_for_arr_change_seat_change('future_quantity', 'current_quantity', 'future_arr', 'current_arr') }},
+      {{ reason_for_quantity_change_seat_change('future_quantity', 'current_quantity') }},
+      {{ annual_price_per_seat_change('future_quantity', 'current_quantity', 'future_arr', 'current_arr') }}
     FROM retention_subs
     LEFT JOIN dim_crm_accounts
       ON dim_crm_accounts.crm_account_id = retention_subs.ultimate_parent_account_id
