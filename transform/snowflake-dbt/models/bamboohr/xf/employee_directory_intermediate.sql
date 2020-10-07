@@ -9,7 +9,9 @@ WITH RECURSIVE employee_directory AS (
     SELECT
       employee_id,
       employee_number,	
-      full_name,
+      first_name,	
+      last_name,	
+      (employee_directory.first_name ||' '|| employee_directory.last_name)   AS full_name,
       work_email,
       hire_date,
       rehire_date,
@@ -79,7 +81,7 @@ WITH RECURSIVE employee_directory AS (
 
     SELECT 
       department_info.employee_id,
-      department_info.job_title,	
+      department_info.job_title,
       IFF(job_title = 'Manager, Field Marketing','Leader',COALESCE(job_role.job_role, department_info.job_role))    AS job_role, 
       CASE WHEN job_title = 'Group Manager, Product' 
             THEN '9.5'
@@ -125,9 +127,9 @@ WITH RECURSIVE employee_directory AS (
     SELECT
       date_details.date_actual,
       employee_directory.*,
-      department_info.job_title,      
-      department_info.department,
-      department_info.department_modified, 
+      department_info.job_title,	
+      department_info.department,	
+      IFF(department_info.department LIKE '%People%', 'People Success',department_info.department) AS department_modified,
       department_info.division,
       department_info.division_mapped_current,
       COALESCE(job_role.cost_center, 

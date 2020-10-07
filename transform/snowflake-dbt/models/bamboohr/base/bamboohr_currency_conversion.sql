@@ -1,7 +1,7 @@
-{{ config({
+{# {{ config({
     "materialized": "ephemeral"
     })
-}}
+}} #}
 
 WITH source AS (
 
@@ -17,7 +17,7 @@ WITH source AS (
       e.value['employeeId']::NUMBER                         AS employee_id,
       e.value['customDate']::DATE                           AS effective_date,
       e.value['customType']::VARCHAR                        AS compensation_type,
-      e.value['customCurrencyConversionFactor']::DECIMAL    AS currency_conversion_factor
+      e.value['customCurrencyConversionFactor']::DECIMAL    AS currency_conversion_factor,
       e.value['customAnnualAmountLocal']::VARCHAR           AS annual_amount_local,
       e.value['customAnnualAmountUSD']::VARCHAR             AS annual_amount_usd,
       e.value['customOTELocal']::VARCHAR                    AS ote_local,
