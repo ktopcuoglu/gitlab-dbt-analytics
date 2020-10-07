@@ -93,7 +93,7 @@ projects AS (
         ON namespaces.namespace_id = namespace_lineage.namespace_id
       LEFT JOIN creators
         ON namespaces.namespace_id = creators.group_id
-    {{ dbt_utils.group_by(n=31) }}
+    {{ dbt_utils.group_by(n=32) }}
 )
 
 SELECT *
