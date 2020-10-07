@@ -127,7 +127,7 @@ WITH RECURSIVE employee_directory AS (
       employee_directory.*,
       department_info.job_title,      
       department_info.department,
-      IFF(department_info.department LIKE '%People%', 'People Success',department_info.department) AS department_modified, 
+      department_info.department_modified, 
       department_info.division,
       department_info.division_mapped_current,
       COALESCE(job_role.cost_center, 
@@ -186,16 +186,16 @@ WITH RECURSIVE employee_directory AS (
             THEN 'Senior Leadership'
             WHEN COALESCE(total_direct_reports,0) =0 AND 
                     COALESCE(job_role.job_role, job_info_mapping_historical.job_role,department_info.job_role) = 'Manager'
-                    THEN 'Staff'
+              THEN 'Staff'
             WHEN COALESCE(total_direct_reports,0) = 0 
             THEN 'Individual Contributor'
              ELSE COALESCE(job_role.job_role, 
                            job_info_mapping_historical.job_role,
-                           department_info.job_role) END                           AS job_role_modified,
-          IFF(compensation_change_reason IS NOT NULL,TRUE,FALSE)                   AS is_promotion,
-        bamboohr_discretionary_bonuses_xf.total_discretionary_bonuses              AS discretionary_bonus,
-        ROW_NUMBER() OVER 
-            (PARTITION BY employee_directory.employee_id ORDER BY date_actual)     AS tenure_days                                                                        
+                           department_info.job_role) END                       AS job_role_modified,
+      IFF(compensation_change_reason IS NOT NULL,TRUE,FALSE)                   AS is_promotion,
+      bamboohr_discretionary_bonuses_xf.total_discretionary_bonuses            AS discretionary_bonus,
+      ROW_NUMBER() OVER 
+            (PARTITION BY employee_directory.employee_id ORDER BY date_actual) AS tenure_days
     FROM date_details
     LEFT JOIN employee_directory
       ON hire_date::DATE <= date_actual
@@ -241,11 +241,9 @@ WITH RECURSIVE employee_directory AS (
                                        ---Post 2020.09.30 we will capture engineering speciality from bamboohr
     LEFT JOIN bamboohr_discretionary_bonuses_xf
       ON employee_directory.employee_id = bamboohr_discretionary_bonuses_xf.employee_id
-      AND date_details.date_actual = bamboohr_discretionary_bonuses_xf.bonus_date                                    
+      AND date_details.date_actual = bamboohr_discretionary_bonuses_xf.bonus_date
     WHERE employee_directory.employee_id IS NOT NULL
 
-) select * from enriched
-{# 
 ), base_layers as (
 
     SELECT
@@ -298,4 +296,4 @@ LEFT JOIN calculated_layers
   ON enriched.date_actual = calculated_layers.date_actual
   AND full_name = employee
   AND enriched.employment_status IS NOT NULL
-WHERE employment_status IS NOT NULL #}
+WHERE employment_status IS NOT NULL

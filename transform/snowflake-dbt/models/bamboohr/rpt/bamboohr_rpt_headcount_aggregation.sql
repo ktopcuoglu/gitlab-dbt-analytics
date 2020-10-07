@@ -262,11 +262,9 @@ WITH source AS (
         NULL, percent_of_headcount_leaders)                                      AS percent_of_headcount_contributor,
       IFF(rolling_12_month_promotions<2 AND eeoc_field_name != 'no_eeoc', 
         NULL, rolling_12_month_promotions)                                       AS rolling_12_month_promotions,
-      
-      IFF(rolling_12_month_promotions<2 AND eeoc_field_name != 'no_eeoc', 
-        NULL, 
+      IFF(show_value_criteria = FALSE, NULL, 
         rolling_12_month_promotions_percent_change_in_comp/
-        rolling_12_month_promotions)                                             AS rolling_12_month_promotions,
+        rolling_12_month_promotions)                                             AS rolling_12_month_promotion_increase,
         
       IFF(headcount_end <4 AND show_value_criteria = FALSE,
         NULL,location_factor)                                                    AS location_factor,
