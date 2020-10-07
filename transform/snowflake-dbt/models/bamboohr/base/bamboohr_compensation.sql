@@ -1,7 +1,7 @@
-{# {{ config({
-    "materialized": "ephemeral"
+{{ config({
+    "schema": "temporary"
     })
-}} #}
+}}
 
 WITH source AS (
 

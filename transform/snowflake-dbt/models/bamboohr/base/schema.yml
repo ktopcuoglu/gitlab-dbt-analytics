@@ -2,7 +2,7 @@ version: 2
 
 models:
   - name: bamboohr_compensation
-    description: A log of compensation and compensation related updates. This model is ephemeral and is used for downstream models.
+    description: A log of compensation and compensation related updates. This model is temporary and is used for downstream models.
     columns:
       - name: compensation_update_id
         tests:
