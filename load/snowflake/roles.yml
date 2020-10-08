@@ -1647,12 +1647,8 @@ roles:
             - analyst_xs
 
     - wwright:
-        member_of:
-            - analyst_finance
-            - bamboohr
-        warehouses:
-            - analyst_xs
-            - reporting
+        member_of: []
+        warehouses: []
 
     - ysun:
         member_of:
@@ -2062,10 +2058,9 @@ users:
         member_of:
             - vjuhasz
 
-    - wwright:
-        can_login: yes
-        member_of:
-            - wwright
+    - wwright: #https://gitlab.com/gitlab-data/analytics/-/issues/6552
+        can_login: no
+        member_of: []
 
     - ysun:
         can_login: yes
