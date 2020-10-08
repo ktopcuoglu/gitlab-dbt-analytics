@@ -37,9 +37,9 @@ WITH job_info AS (
 
 SELECT 
   job_info.*, 
-  CASE WHEN job_info.department IN ('People','People Ops') 
-       THEN 'People Group'
-       ELSE COALESCE(current_division_department_mapping.division, job_info.division) END AS division_mapped_current,
+  IFF(job_info.department IN ('People','People Ops'), 'People Group',
+    COALESCE(current_division_department_mapping.division, job_info.division))                 AS division_mapped_current,
+  IFF(job_info.department LIKE '%People%', 'People Success',job_info.department)               AS department_modified,      
   bamboo_mapping.termination_date   
 FROM bamboo_mapping
 LEFT JOIN job_info 
