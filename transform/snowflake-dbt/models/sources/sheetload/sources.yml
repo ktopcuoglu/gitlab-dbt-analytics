@@ -59,6 +59,7 @@ sources:
       - name: release_blog_posts
       - name: rep_quotas_full_fy2020
       - name: rep_quotas_full_ps_fy2020
+      - name: sales_training_completion_dates
       - name: scalable_employment_values
       - name: social_marketing_metrics
       - name: values_certificate

@@ -124,6 +124,10 @@ sheets:
     owner: '@derekatwood'
     tabs:
       - rep_quotas_full_ps_fy2020
+  - name: sales_training_completion_dates
+    owner: '@paul_armstrong'
+    tabs:
+      - sales_training_completion_dates
   - name: scalable_employment_values
     owner: '@iweeks'
     tabs:
