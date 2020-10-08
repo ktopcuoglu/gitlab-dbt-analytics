@@ -351,7 +351,6 @@ models:
         users_emails:
           enabled: false
 
-
     # ------------------
     # Legacy Structure
     # ------------------
