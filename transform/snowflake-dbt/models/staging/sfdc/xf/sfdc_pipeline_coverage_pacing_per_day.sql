@@ -1,4 +1,12 @@
 
+ /*
+TODO: 
+2020-10-06: - Add external logic to track excluded. Maybe that logic can be added at the opportunity
+            level and bring it in from the opportunity_report or xf object.
+            - Refactor the flags added to the opportunity snapshot history, move them to that table instead
+
+
+ */
  WITH date_details AS (
     SELECT
       *,
@@ -121,6 +129,8 @@ GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12
   SELECT pq.close_fiscal_quarter,
         pq.snapshot_fiscal_quarter,
         pq.close_fiscal_quarter_date,
+        pq.snapshot_fiscal_quarter_date,
+
         pq.adj_sales_segment,
         pq.deal_category,
         pq.snapshot_day_of_fiscal_quarter,
@@ -148,6 +158,7 @@ GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12
 
    GROUP BY pq.close_fiscal_quarter,
             pq.snapshot_fiscal_quarter,
+            pq.snapshot_fiscal_quarter_date,
             pq.close_fiscal_quarter_date,
             pq.adj_sales_segment,
             pq.deal_category,
@@ -188,55 +199,63 @@ GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12
             pq.deal_category,
             pq.adj_region,
             pq.snapshot_day_of_fiscal_quarter
-  ) 
-  SELECT pq.adj_sales_segment                                                           AS sales_segment, 
-        pq.deal_category,
-        pq.adj_region                                                                   AS region,
-        lower(pq.deal_category) || '_' || lower(pq.adj_sales_segment)                   AS key_segment_report,
-        lower(pq.adj_region) || '_' || lower(pq.adj_sales_segment)                      AS key_region_report,
-        pq.close_fiscal_quarter,
-        pq.snapshot_fiscal_quarter,
-        pq.snapshot_day_of_fiscal_quarter,
+  ), data_structure AS (
+    SELECT DISTINCT a.adj_sales_segment,
+                    b.deal_category,
+                    e.adj_region,
+                    c.snapshot_fiscal_quarter_date,
+                    d.snapshot_fiscal_quarter,
+                    d.snapshot_day_of_fiscal_quarter,
+                    d.snapshot_next_fiscal_quarter_date
+         FROM (SELECT DISTINCT adj_sales_segment FROM pipeline_snapshot_extended) a
+            CROSS JOIN (SELECT DISTINCT deal_category FROM pipeline_snapshot_extended) b
+            CROSS JOIN (SELECT DISTINCT snapshot_fiscal_quarter_date FROM pipeline_snapshot_extended) c
+            CROSS JOIN (SELECT DISTINCT adj_region FROM pipeline_snapshot_extended) e
+            INNER JOIN (SELECT DISTINCT fiscal_quarter_name_fy                          AS snapshot_fiscal_quarter,
+                                        first_day_of_fiscal_quarter                     AS snapshot_fiscal_quarter_date, 
+                                        dateadd(month,3,first_day_of_fiscal_quarter)    AS snapshot_next_fiscal_quarter_date,
+                                        day_of_fiscal_quarter                           AS snapshot_day_of_fiscal_quarter
+                        FROM date_details) d
+                ON c.snapshot_fiscal_quarter_date = d.snapshot_fiscal_quarter_date
+ )
+  SELECT de.adj_sales_segment                                                           AS sales_segment, 
+        de.deal_category,
+        de.adj_region                                                                   AS region,
+        lower(de.deal_category) || '_' || lower(de.adj_sales_segment)                   AS key_segment_report,
+        lower(de.adj_region) || '_' || lower(de.adj_sales_segment)                      AS key_region_report,
+        de.snapshot_fiscal_quarter                                                      AS close_fiscal_quarter,
+        de.snapshot_fiscal_quarter,
+        de.snapshot_day_of_fiscal_quarter,
         coalesce(pq.open_won_net_iacv,0) - coalesce(pq.won_net_iacv,0)                  AS open_pipeline_net_iacv,
         coalesce(pq.open_won_3plus_net_iacv,0)- coalesce(pq.won_net_iacv,0)             AS open_3plus_pipeline_net_iacv,  
         coalesce(pq.won_net_iacv,0)                                                     AS won_net_iacv,
-        --tq.total_won_net_iacv,
         coalesce(pq.open_won_deal_count,0) - coalesce(pq.won_deal_count,0)              AS open_pipeline_deal_count,
         coalesce(pq.open_won_3plus_deal_count,0) - coalesce(pq.won_deal_count,0)        AS open_3plus_deal_count,
         coalesce(pq.won_deal_count,0)                                                   AS won_deal_count,
-        --tq.total_won_deal_count,
 
-         -- created and closed
+        -- created and closed
         pq.created_and_won_iacv,
-        --tq.total_created_and_won_net_iacv,
-          
+                
         -- next quarter 
-        nq.next_close_fiscal_quarter,
+        nqd.fiscal_quarter_name_fy                                                      AS next_close_fiscal_quarter,
+        nqd.first_day_of_fiscal_quarter                                                 AS next_close_fiscal_quarter_date,                   
         nq.next_open_net_iacv,
         nq.next_open_3plus_net_iacv,
         nq.next_open_deal_count,
         nq.next_open_3plus_deal_count
-          
-        -- next quarter totals 
-       -- ntq.total_won_deal_count                                                            AS next_total_won_deal_count,
-       -- ntq.total_won_net_iacv                                                              AS next_total_won_net_iacv   
-          
-       /* -- caculated ratios
-        -- open coverage
-        open_pipeline_net_iacv / (tq.total_won_net_iacv - won_net_iacv)                     AS open_coverage_day,
-        open_3plus_pipeline_net_iacv / (tq.total_won_net_iacv - won_net_iacv)               AS open_3plus_coverage_day,
-
-        won_net_iacv / tq.total_won_net_iacv                                                AS pacing_won_qtd_iacv,
-        won_deal_count / tq.total_won_deal_count                                            AS pacing_won_deal_count,
-
-        nq.next_open_net_iacv /  ntq.total_won_net_iacv                                     AS next_open_coverage,
-        nq.next_open_3plus_net_iacv /  ntq.total_won_net_iacv                               AS next_open_3plus_coverage
-*/
- FROM previous_quarter pq
-    INNER JOIN next_quarter nq
-        ON nq.close_fiscal_quarter_date = pq.close_fiscal_quarter_date
-            AND nq.adj_sales_segment = pq.adj_sales_segment
-            AND nq.deal_category = pq.deal_category
-            AND nq.snapshot_day_of_fiscal_quarter = pq.snapshot_day_of_fiscal_quarter
-            AND nq.adj_region = pq.adj_region
-WHERE pq.adj_sales_segment is not null
+       
+ FROM data_structure de
+    LEFT JOIN previous_quarter pq
+        ON de.adj_sales_segment = pq.adj_sales_segment
+        AND de.snapshot_fiscal_quarter_date = pq.snapshot_fiscal_quarter_date
+        AND de.deal_category = pq.deal_category
+        AND de.snapshot_day_of_fiscal_quarter = pq.snapshot_day_of_fiscal_quarter
+        AND de.adj_region = pq.adj_region
+    LEFT JOIN  next_quarter nq
+        ON nq.close_fiscal_quarter_date = de.snapshot_fiscal_quarter_date
+            AND nq.adj_sales_segment = de.adj_sales_segment
+            AND nq.deal_category = de.deal_category
+            AND nq.snapshot_day_of_fiscal_quarter = de.snapshot_day_of_fiscal_quarter
+            AND nq.adj_region = de.adj_region
+    LEFT JOIN date_details nqd
+        ON nqd.date_actual = de.snapshot_next_fiscal_quarter_date
