@@ -32,4 +32,6 @@ WHERE
     snapshot_date <= dateadd(month,3,close_fiscal_quarter_date)
     -- 2 quarters before start
     AND snapshot_date >= dateadd(month,-6,close_fiscal_quarter_date)
+    -- remove forecast category Omitted
+    AND forecast_category_name != 'Omitted'
 GROUP BY 1,2,3,4,5,6,7,8,9,10,11

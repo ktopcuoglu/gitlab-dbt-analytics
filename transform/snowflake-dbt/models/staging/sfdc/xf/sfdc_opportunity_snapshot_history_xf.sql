@@ -139,7 +139,16 @@ SELECT
         CASE WHEN sa.level_2 IS NOT NULL 
                 THEN sa.level_2
                 ELSE cro.level_2 END                                                                    AS segment,
-        
+
+        CASE WHEN sa.level_2 IS NOT NULL 
+                THEN sa.level_2
+                ELSE trim(cro.level_2) END                                                              AS team_level_2,
+
+        CASE WHEN sa.level_3 IS NOT NULL 
+                THEN sa.level_3
+                ELSE trim(cro.level_3) END                                                              AS team_level_3,
+
+
         -- identify VP level managers
         CASE WHEN cro.level_2 LIKE 'VP%' 
             OR sa.level_2 LIKE 'VP%'
