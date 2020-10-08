@@ -11,7 +11,7 @@ WITH source AS (
 ), usage_data AS (
 
     SELECT
-      {{ dbt_utils.star(from=ref('version_usage_data_source'), except=['EDITION']) }},
+      {{ dbt_utils.star(from=ref('snowflake_imports_usage_ping_payloads_source'), except=['EDITION']) }},
       IFF(license_expires_at >= recorded_at OR license_expires_at IS NULL, edition, 'EE Free') AS edition,
       REGEXP_REPLACE(NULLIF(version, ''), '[^0-9.]+')                                          AS cleaned_version,
       IFF(version ILIKE '%-pre', True, False)                                                  AS version_is_prerelease,
