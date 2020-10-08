@@ -132,11 +132,24 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
+
+{% docs fct_usage_data_monthly %}
+
+Factual table derived from the metrics received as part of usage ping payloads.  
+
+To create this table, all-time metrics are normalized to estimate usage over a month and combined with 28-day metrics.  Therefore, a single record in this table is one usage metric for a month for an instance of GitLab.
+
+Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+{% enddocs %}
+
+
 {% docs dim_crm_sales_rep %}
 
 Dimension representing the associated sales rep from salesforce. Most often this will be the record owner, which is a ubiquitous field in salesforce. 
 
 {% enddocs %}
+
 
 {% docs fct_usage_ping_payloads %}
 Factual table with metadata on usage ping payloads received.

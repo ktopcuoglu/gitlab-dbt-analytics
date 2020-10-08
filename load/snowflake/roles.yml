@@ -113,6 +113,7 @@ roles:
             - dbt_analytics
             - gcp_billing
             - gitlab_data_yaml
+            - gitlab_dotcom
             - handbook
             - license_db
             - postgres_pipeline
@@ -144,6 +145,7 @@ roles:
             - gitlab_data_yaml
             - handbook
             - license_db
+            - gitlab_dotcom
             - postgres_pipeline
             - netsuite
             - qualtrics
@@ -185,6 +187,7 @@ roles:
             - covid19
             - dbt_analytics
             - gitlab_data_yaml
+            - gitlab_dotcom
             - license_db
             - netsuite
             - postgres_pipeline
@@ -245,6 +248,7 @@ roles:
             - dbt_analytics
             - dbt_analytics_sensitive
             - gitlab_data_yaml
+            - gitlab_dotcom
             - greenhouse
             - license_db
             - netsuite
@@ -272,6 +276,7 @@ roles:
             - covid19
             - dbt_analytics
             - gitlab_data_yaml
+            - gitlab_dotcom
             - license_db
             - postgres_pipeline
             - salesforce
@@ -302,6 +307,7 @@ roles:
             - customers_db
             - dbt_analytics
             - gitlab_data_yaml
+            - gitlab_dotcom
             - handbook
             - license_db
             - netsuite
@@ -437,6 +443,7 @@ roles:
         member_of:
             - boneyard
             - dbt_analytics
+            - gitlab_dotcom
             - license_db
             - postgres_pipeline
             - salesforce
@@ -582,7 +589,17 @@ roles:
             tables:
                 read:
                     - analytics.analytics.*
-                    - analytics.analytics_sensitive.*
+                    - analytics.analytics_sensitive.employee_*
+                    - analytics.analytics_sensitive.bamboohr_custom_bonus
+                    - analytics.analytics_sensitive.bamboohr_directory
+                    - analytics.analytics_sensitive.bamboohr_emergency_contacts
+                    - analytics.analytics_sensitive.bamboohr_id_employee_number_mapping
+                    - analytics.analytics_sensitive.bamboohr_employment_status
+                    - analytics.analytics_sensitive.bamboohr_job_info
+                    - analytics.analytics_sensitive.bamboohr_job_role
+                    - analytics.analytics_sensitive.bamboohr_locality
+                    - analytics.analytics_sensitive.bamboohr_employment_status_xf
+                    - analytics.analytics_sensitive.bamboohr_headcount_intermediate
 
     - bamboohr_raw:
         warehouses:
@@ -591,12 +608,20 @@ roles:
             databases:
                 read:
                     - raw
+                    - analytics
             schemas:
                 read:
                     - raw.bamboohr
+                    - analytics.analytics
+                    - analytics.analytics_sensitive
+
             tables:
                 read:
                     - raw.bamboohr.*
+                    - analytics.analytics.*
+                    - analytics.analytics_sensitive.employee_*
+                    - analytics.analytics_sensitive.bamboohr_*
+
 
 
     - boneyard:
@@ -749,6 +774,23 @@ roles:
                 read:
                     - analytics.gitlab_data_yaml.*
                     - raw.gitlab_data_yaml.*
+
+    - gitlab_dotcom:
+        warehouses:
+            - analyst_xs
+        privileges:
+            databases:
+                read:
+                    - analytics
+                    - raw
+            schemas:
+                read:
+                    - analytics.gitlab_dotcom
+                    - raw.tap_postgres
+            tables:
+                read:
+                    - analytics.gitlab_dotcom.*
+                    - raw.tap_postgres.gitlab_db*
 
     - google_analytics_360: 
         warehouses:
