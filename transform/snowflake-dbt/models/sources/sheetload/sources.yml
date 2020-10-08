@@ -29,6 +29,7 @@ sources:
       - name: dev_section_metrics
       - name: employee_location_factor
       - name: engineering_speciality_prior_to_capture
+      - name: engineering_contributing_organizations
       - name: gitlab_slack_stats
       - name: google_referrals
       - name: headcount
