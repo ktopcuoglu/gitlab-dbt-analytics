@@ -302,7 +302,6 @@ tables:
     import_query: >
       SELECT id
       , author_id
-      , type
       , entity_id
       , entity_type
       , details
