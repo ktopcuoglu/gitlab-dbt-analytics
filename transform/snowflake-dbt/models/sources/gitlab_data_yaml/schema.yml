@@ -4,9 +4,6 @@ models:
   - name: categories_yaml_source
     description: Emphemeral layer for extracting and cleaning data from [location_factors.yml file](https://gitlab.com/gitlab-com/www-gitlab-com/blob/master/data/categories.yml) in the GitLab Handbook.
 
-  - name: dev_section_pi_yaml_source
-    description: Emphemeral layer for extracting and cleaning data from [dev_section_pi_yaml_source.yml file](https://gitlab.com/gitlab-com/www-gitlab-com/blob/master/data/performanc-indicators/dev_section.yml) in the GitLab Handbook.
-
   - name: location_factors_yaml_source
     description: Emphemeral layer for extracting and cleaning data from [location_factors.yml file](https://gitlab.com/gitlab-com/www-gitlab-com/blob/master/data/location_factors.yml) in the GitLab Handbook.
 
@@ -18,4 +15,50 @@ models:
 
   - name: stages_yaml_source
     description: Emphemeral layer for extracting and cleaning data from [stages.yml file](https://gitlab.com/gitlab-com/www-gitlab-com/blob/master/data/stages.yml) in the GitLab Handbook.
+
+  - name: performance_indicators_corporate_finance_source
+    description: Emphemeral layer for extracting and cleaning data from [corporate_finance.yml](https://gitlab.com/gitlab-com/www-gitlab-com/-/blob/master/data/performance_indicators/corporate_finance.yml) in the GitLab Handbook.
+
+  - name: performance_indicators_cost_source
+    description: Emphemeral layer for extracting and cleaning data from [chief_of_staff_team.yml](https://gitlab.com/gitlab-com/www-gitlab-com/-/blob/master/data/performance_indicators/chief_of_staff_team.yml) in the GitLab Handbook.
+
+  - name: performance_indicators_dev_section_source
+    description: Emphemeral layer for extracting and cleaning data from [corporate_finance.yml](https://gitlab.com/gitlab-com/www-gitlab-com/-/blob/master/data/performance_indicators/dev_section.yml) in the GitLab Handbook.
+
+  - name: performance_indicators_enablement_section_source
+    description: Emphemeral layer for extracting and cleaning data from [corporate_finance.yml](https://gitlab.com/gitlab-com/www-gitlab-com/-/blob/master/data/performance_indicators/enablement_section.yml) in the GitLab Handbook.
+
+  - name: performance_indicators_engineering_source
+    description: Emphemeral layer for extracting and cleaning data from [corporate_finance.yml](https://gitlab.com/gitlab-com/www-gitlab-com/-/blob/master/data/performance_indicators/engineering_function.yml) in the GitLab Handbook.
+
+  - name: performance_indicators_finance_source
+    description: Emphemeral layer for extracting and cleaning data from [corporate_finance.yml](https://gitlab.com/gitlab-com/www-gitlab-com/-/blob/master/data/performance_indicators/finance_team.yml) in the GitLab Handbook.
+
+  - name: performance_indicators_marketing_source
+    description: Emphemeral layer for extracting and cleaning data from [corporate_finance.yml](https://gitlab.com/gitlab-com/www-gitlab-com/-/blob/master/data/performance_indicators/marketing.yml) in the GitLab Handbook.
+
+  - name: performance_indicators_ops_section_source
+    description: Emphemeral layer for extracting and cleaning data from [corporate_finance.yml](https://gitlab.com/gitlab-com/www-gitlab-com/-/blob/master/data/performance_indicators/ops_section.yml) in the GitLab Handbook.
+
+  - name: performance_indicators_people_success_source
+    description: Emphemeral layer for extracting and cleaning data from [corporate_finance.yml](https://gitlab.com/gitlab-com/www-gitlab-com/-/blob/master/data/performance_indicators/people_success.yml) in the GitLab Handbook.
+
+  - name: performance_indicators_product_source
+    description: Emphemeral layer for extracting and cleaning data from [corporate_finance.yml](https://gitlab.com/gitlab-com/www-gitlab-com/-/blob/master/data/performance_indicators/product.yml) in the GitLab Handbook.
+
+  - name: performance_indicators_quality_department_source
+    description: Emphemeral layer for extracting and cleaning data from [corporate_finance.yml](https://gitlab.com/gitlab-com/www-gitlab-com/-/blob/master/data/performance_indicators/quality_department.yml) in the GitLab Handbook.
+
+  - name: performance_indicators_recruiting_source
+    description: Emphemeral layer for extracting and cleaning data from [corporate_finance.yml](https://gitlab.com/gitlab-com/www-gitlab-com/-/blob/master/data/performance_indicators/recruiting.yml) in the GitLab Handbook.
+
+  - name: performance_indicators_sales_source
+    description: Emphemeral layer for extracting and cleaning data from [corporate_finance.yml](https://gitlab.com/gitlab-com/www-gitlab-com/-/blob/master/data/performance_indicators/sales.yml) in the GitLab Handbook.
+
+  - name: performance_indicators_security_department_source
+    description: Emphemeral layer for extracting and cleaning data from [corporate_finance.yml](https://gitlab.com/gitlab-com/www-gitlab-com/-/blob/master/data/performance_indicators/security_department.yml) in the GitLab Handbook.
+
+  - name: performance_indicators_ux_department_source
+    description: Emphemeral layer for extracting and cleaning data from [corporate_finance.yml](https://gitlab.com/gitlab-com/www-gitlab-com/-/blob/master/data/performance_indicators/ux_department.yml) in the GitLab Handbook.
+
 

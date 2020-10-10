@@ -22,3 +22,18 @@ sources:
       - name: roles
       - name: stages
       - name: team
+      - name: chief_of_staff_team_pi
+      - name: corporate_finance_pi
+      - name: enablement_section_pi
+      - name: engineering_function_pi
+      - name: finance_team_pi
+      - name: marketing_pi
+      - name: ops_section_pi
+      - name: people_success_pi
+      - name: product_pi
+      - name: quality_department_pi
+      - name: recruiting_pi
+      - name: sales_pi
+      - name: security_department_pi
+      - name: support_department_pi
+      - name: ux_department_pi
