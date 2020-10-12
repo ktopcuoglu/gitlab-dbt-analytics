@@ -65,11 +65,3 @@ WITH usage_ping_data AS (
    FROM joined
 
 )
-
-{{ dbt_audit(
-    cte_ref="renamed",
-    created_by="@kathleentam",
-    updated_by="@kathleentam",
-    created_date="2020-10-11",
-    updated_date="2020-10-11"
-) }}
