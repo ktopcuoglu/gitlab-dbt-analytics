@@ -61,7 +61,7 @@ WITH usage_ping_data AS (
 ), renamed AS (
 
    SELECT 
-    {{ dbt_utils.star(from=joined, except=["source_ip_hash"]) }}
+    *
    FROM joined
 
 )
