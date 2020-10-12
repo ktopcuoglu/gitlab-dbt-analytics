@@ -83,6 +83,11 @@ GIT_DATA_TESTS_CONFIG = Secret(
     "env", "GIT_DATA_TESTS_CONFIG", "airflow", "GIT_DATA_TESTS_CONFIG"
 )
 
+# graphite
+GRAPHITE_HOST = Secret("env", "GRAPHITE_HOST", "airflow", "GRAPHITE_HOST")
+GRAPHITE_PASSWORD = Secret("env", "GRAPHITE_PASSWORD", "airflow", "GRAPHITE_PASSWORD")
+GRAPHITE_USERNAME = Secret("env", "GRAPHITE_USERNAME", "airflow", "GRAPHITE_USERNAME")
+
 # Snowflake Generic
 SNOWFLAKE_ACCOUNT = Secret("env", "SNOWFLAKE_ACCOUNT", "airflow", "SNOWFLAKE_ACCOUNT")
 SNOWFLAKE_PASSWORD = Secret(
