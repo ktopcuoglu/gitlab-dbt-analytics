@@ -50,8 +50,8 @@ extract_command = (
 lcp_operator = KubernetesPodOperator(
     **gitlab_defaults,
     image=DATA_IMAGE,
-    task_id="pmg-extract",
-    name="pmg-extract",
+    task_id="lcp-extract",
+    name="lcp-extract",
     secrets=[
         GRAPHITE_HOST,
         GRAPHITE_PASSWORD,
