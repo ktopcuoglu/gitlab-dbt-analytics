@@ -56,7 +56,7 @@ WITH usage_ping_data AS (
       ip_to_geo.location_id 
     FROM internal_identified
     LEFT JOIN ip_to_geo
-      ON usage_data.source_ip_hash = ip_to_geo.ip_address_hash
+      ON internal_identified.source_ip_hash = ip_to_geo.ip_address_hash
 
 ), renamed AS (
 
