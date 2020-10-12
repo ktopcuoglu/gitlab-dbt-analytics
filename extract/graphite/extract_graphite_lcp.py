@@ -20,6 +20,7 @@ def make_api_call(
     }
     url = "http://" + host + ":" + str(port) + "/render"
     logging.info(url)
+    logging.info(param_dict)
     response = requests.get(
         url,
         params=param_dict,
