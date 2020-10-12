@@ -58,12 +58,12 @@ WITH dim_crm_accounts AS (
         THEN least(net_retention_mrr, current_mrr)
         ELSE 0 END                AS gross_retention_mrr,
       retention_month,
-      original_mrr_month,
+      current_mrr_month,
       future_arr,
       current_arr,
       future_quantity,
       current_quantity,
-      {{ type_of_arr_change('current_arr', 'original_arr') }},
+      {{ type_of_arr_change('future_arr', 'current_arr') }},
       {{ reason_for_arr_change_seat_change('future_quantity', 'current_quantity', 'future_arr', 'current_arr') }},
       {{ reason_for_quantity_change_seat_change('future_quantity', 'current_quantity') }},
       {{ annual_price_per_seat_change('future_quantity', 'current_quantity', 'future_arr', 'current_arr') }}
