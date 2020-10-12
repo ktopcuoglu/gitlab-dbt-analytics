@@ -1229,11 +1229,8 @@ roles:
             - analyst_xs
 
     - datwood:
-        member_of:
-            - analyst_growth
-            - customers_db
-        warehouses:
-            - analyst_xs
+        member_of: []
+        warehouses: []
 
     - dknox:
         member_of:
@@ -1650,12 +1647,8 @@ roles:
             - analyst_xs
 
     - wwright:
-        member_of:
-            - analyst_finance
-            - bamboohr
-        warehouses:
-            - analyst_xs
-            - reporting
+        member_of: []
+        warehouses: []
 
     - ysun:
         member_of:
@@ -1732,10 +1725,9 @@ users:
         member_of:
             - cmestel
 
-    - datwood:
-        can_login: yes
-        member_of:
-            - datwood
+    - datwood: # https://gitlab.com/gitlab-data/analytics/-/issues/6551
+        can_login: no 
+        member_of: []
     
     - dknox:
         can_login: yes
@@ -2066,10 +2058,9 @@ users:
         member_of:
             - vjuhasz
 
-    - wwright:
-        can_login: yes
-        member_of:
-            - wwright
+    - wwright: #https://gitlab.com/gitlab-data/analytics/-/issues/6552
+        can_login: no
+        member_of: []
 
     - ysun:
         can_login: yes
