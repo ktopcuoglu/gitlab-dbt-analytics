@@ -65,6 +65,6 @@ WITH namespace_snapshots_daily AS (
 )
 
 SELECT
-  {{ dbt_utils.surrogate_key(['snapshot_day', 'namespace_id'] ) }}         AS primary_key,
+  {{ dbt_utils.surrogate_key(['snapshot_day', 'namespace_id'] ) }}         AS snapshot_day_namespace_id,
   *
 FROM namespace_lineage_daily
