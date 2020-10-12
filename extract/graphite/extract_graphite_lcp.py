@@ -18,9 +18,8 @@ def make_api_call(
         "until": until_time,
         "format": "json",
     }
+
     url = "https://" + host + ":" + str(port) + "/render"
-    print(url)
-    print(param_dict)
     response = requests.get(
         url,
         params=param_dict,
