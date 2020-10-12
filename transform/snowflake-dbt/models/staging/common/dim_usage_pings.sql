@@ -30,7 +30,7 @@ WITH usage_ping_data AS (
             WHEN 'EE' THEN main_edition || ' - ' || product_tier  
             ELSE NULL END                                            AS main_edition_product_tier, 
         IFF( uuid = 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f',
-                'SaaS','Self-Managed')                               AS ping_source, 
+                'SaaS','Self-Managed')                               AS ping_source
     FROM usage_ping_data
 
 ), internal_identified AS (
