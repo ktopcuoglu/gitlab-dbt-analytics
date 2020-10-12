@@ -47,7 +47,6 @@ WITH project_snapshot_monthly AS (
     SELECT
       snapshot_month,
       namespace_id,
-      plan_id,
       parent_id,
       owner_id,
       namespace_type,
@@ -71,7 +70,6 @@ WITH project_snapshot_monthly AS (
     SELECT
       DATE_TRUNC('month', CURRENT_DATE) AS snapshot_month,
       namespace_id,
-      plan_id,
       parent_id,
       owner_id,
       namespace_type,
