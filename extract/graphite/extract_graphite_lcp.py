@@ -1,4 +1,5 @@
 import json
+import logging
 import requests
 from os import environ as env
 
@@ -17,8 +18,10 @@ def make_api_call(
         "until": until_time,
         "format": "json",
     }
+    url = "http://" + host + ":" + str(port) + "/render"
+    logging.info(url)
     response = requests.get(
-        "http://" + host + ":" + str(port) + "/render",
+        url,
         params=param_dict,
         auth=(username, password),
     )
