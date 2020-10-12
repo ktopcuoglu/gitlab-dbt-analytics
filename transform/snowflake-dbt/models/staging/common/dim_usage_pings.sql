@@ -65,3 +65,6 @@ WITH usage_ping_data AS (
    FROM joined
 
 )
+
+SELECT * 
+FROM renamed
