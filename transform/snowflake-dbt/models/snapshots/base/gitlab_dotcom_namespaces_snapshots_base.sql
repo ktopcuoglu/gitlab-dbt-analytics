@@ -42,7 +42,6 @@ WITH source AS (
     repository_size_limit::NUMBER                                 AS repository_size_limit,
     require_two_factor_authentication::BOOLEAN                    AS does_require_two_factor_authentication,
     two_factor_grace_period::NUMBER                               AS two_factor_grace_period,
-    plan_id::NUMBER                                              AS plan_id,
     project_creation_level::NUMBER                               AS project_creation_level,
     "DBT_VALID_FROM"::TIMESTAMP                                   AS valid_from,
     "DBT_VALID_TO"::TIMESTAMP                                     AS valid_to

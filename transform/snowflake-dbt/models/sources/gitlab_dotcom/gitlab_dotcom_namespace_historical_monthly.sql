@@ -15,7 +15,6 @@ WITH date_details AS (
     SELECT
       date_details.first_day_of_month AS snapshot_month,
       namespace_snapshots_daily.namespace_id,
-      namespace_snapshots_daily.plan_id,
       namespace_snapshots_daily.parent_id,
       namespace_snapshots_daily.owner_id,
       namespace_snapshots_daily.namespace_type,
