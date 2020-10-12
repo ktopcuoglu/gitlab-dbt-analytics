@@ -142,6 +142,8 @@ models:
         description: The minimum instance user count ever recorded from a usage ping for this instance 
       - name: recorded_maximum_instance_user_count
         description: The maximum instance user count ever recorded from a usage ping for this instance 
+      - name: recorded_total_usage_pings_sent
+        description: The total number of usage pings ever associated with the instance 
       - name: recorded_total_countries
         description: The total number of countries related to usage ping for this instance. This is derived from ip_address 
       - name: recorded_total_license_count
