@@ -23,8 +23,11 @@ def make_api_call(
     print(url)
 =======
     url = "http://" + host + ":" + str(port) + "/render"
+<<<<<<< HEAD
 >>>>>>> Apply 1 suggestion(s) to 1 file(s)
     print(param_dict)
+=======
+>>>>>>> Apply 1 suggestion(s) to 1 file(s)
     response = requests.get(
         url,
         params=param_dict,
