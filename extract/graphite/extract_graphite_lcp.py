@@ -18,7 +18,9 @@ def make_api_call(
         "format": "json",
     }
     response = requests.get(
-        host + ":" + str(port) + "/render", params=param_dict, auth=(username, password)
+        "http://" + host + ":" + str(port) + "/render",
+        params=param_dict,
+        auth=(username, password),
     )
     return response.json()
 
