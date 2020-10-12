@@ -26,7 +26,7 @@ WITH date_details AS (
 ), namespace_snapshots_daily AS (
   
     SELECT
-      {{ dbt_utils.surrogate_key(['date_actual', 'namespace_id']) }}           AS primary_key,
+      {{ dbt_utils.surrogate_key(['date_actual', 'namespace_id']) }}           AS snapshot_day_namespace_id,
       date_details.date_actual                                                 AS snapshot_day,
       namespace_snapshots.namespace_id,
       namespace_snapshots.parent_id,
