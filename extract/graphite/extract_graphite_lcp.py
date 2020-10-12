@@ -18,8 +18,12 @@ def make_api_call(
         "until": until_time,
         "format": "json",
     }
+<<<<<<< HEAD
     url = "https://" + host + ":" + str(port) + "/render"
     print(url)
+=======
+    url = "http://" + host + ":" + str(port) + "/render"
+>>>>>>> Apply 1 suggestion(s) to 1 file(s)
     print(param_dict)
     response = requests.get(
         url,
