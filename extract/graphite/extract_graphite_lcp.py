@@ -19,8 +19,8 @@ def make_api_call(
         "format": "json",
     }
     url = "http://" + host + ":" + str(port) + "/render"
-    logging.info(url)
-    logging.info(param_dict)
+    print(url)
+    print(param_dict)
     response = requests.get(
         url,
         params=param_dict,
@@ -31,7 +31,7 @@ def make_api_call(
 
 def get_targets():
     return [
-        "sitespeed_io.desktop.pageSummary.gitlab_com.GitLab_Project_Home.chrome.cable.browsertime.statistics.timngs.largestContentfulPaint.renderTime.*"
+        "sitespeed_io.desktop.pageSummary.gitlab_com.GitLab_Project_Home.chrome.cable.browsertime.statistics.timings.largestContentfulPaint.renderTime.*"
     ]
 
 
