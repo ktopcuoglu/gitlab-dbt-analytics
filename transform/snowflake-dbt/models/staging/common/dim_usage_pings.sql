@@ -53,7 +53,7 @@ WITH usage_ping_data AS (
 ), joined AS (
 
     SELECT *,
-      ip_to_geo.location_id 
+      ip_to_geo.location_id  AS geo_location_id 
     FROM internal_identified
     LEFT JOIN ip_to_geo
       ON internal_identified.source_ip_hash = ip_to_geo.ip_address_hash
