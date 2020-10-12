@@ -536,14 +536,14 @@ roles:
                 - analytics.analytics_meta
                 - analytics.analytics_sensitive
                 - analytics.analytics_staging
-                - analytics.analytics_common
+                - analytics.common
             tables:
                 - analytics.analytics.*
                 - analytics.analytics_clones.*
                 - analytics.analytics_meta.*
                 - analytics.analytics_sensitive.*
                 - analytics.analytics_staging.*
-                - analytics.analytics_common.*
+                - analytics.common.*
         privileges:
             databases:
                 read:
@@ -579,12 +579,12 @@ roles:
                 read:
                     - analytics.analytics
                     - analytics.analytics_sensitive
-                    - analytics.analytics_common
+                    - analytics.common
             tables:
                 read:
                     - analytics.analytics.*
                     - analytics.analytics_sensitive.*
-                    - analytics.analytics_common.*
+                    - analytics.common.*
 
     - bamboohr_raw:
         warehouses:
@@ -648,10 +648,10 @@ roles:
                     - analytics
             schemas:
                 read:
-                    - analytics.analytics_common
+                    - analytics.common
             tables:
                 read:
-                    - analytics.analytics_common.*
+                    - analytics.common.*
 
     - date:
         privileges:
@@ -690,7 +690,7 @@ roles:
             schemas:
                 read:
                     - analytics.analytics
-                    - analytics.analytics_common
+                    - analytics.common
                     - analytics.analytics_meta
                     - analytics.analytics_staging
                     - analytics.dbt
@@ -698,7 +698,7 @@ roles:
             tables:
                 read:
                     - analytics.analytics.*
-                    - analytics.analytics_common.*
+                    - analytics.common.*
                     - analytics.analytics_meta.*
                     - analytics.analytics_staging.*
                     - analytics.dbt.*
