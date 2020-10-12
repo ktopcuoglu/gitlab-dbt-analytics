@@ -19,7 +19,6 @@ def make_api_call(
         "format": "json",
     }
     url = "http://" + host + ":" + str(port) + "/render"
-    print(url)
     print(param_dict)
     response = requests.get(
         url,
