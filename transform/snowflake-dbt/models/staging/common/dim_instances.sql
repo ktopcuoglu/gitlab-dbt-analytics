@@ -18,7 +18,7 @@ WITH usage_ping AS (
         COUNT(DISTINCT edition)             AS recorded_total_edition_count, 
         COUNT(DISTINCT hostname)            AS recorded_total_hostname_count, 
         COUNT(DISTINCT host_id)             AS recorded_total_host_id_count, 
-        COUNT(DISTINCT installation_type)   AS recorded_total_installation_type_count, 
+        COUNT(DISTINCT installation_type)   AS recorded_total_installation_type_count
         
     FROM usage_ping
     GROUP BY uuid 
