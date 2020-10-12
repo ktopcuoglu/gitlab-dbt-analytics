@@ -19,6 +19,7 @@ def make_api_call(
         "format": "json",
     }
 <<<<<<< HEAD
+<<<<<<< HEAD
     url = "https://" + host + ":" + str(port) + "/render"
     print(url)
 =======
@@ -28,6 +29,10 @@ def make_api_call(
     print(param_dict)
 =======
 >>>>>>> Apply 1 suggestion(s) to 1 file(s)
+=======
+
+    url = "http://" + host + ":" + str(port) + "/render"
+>>>>>>> change back to http
     response = requests.get(
         url,
         params=param_dict,
