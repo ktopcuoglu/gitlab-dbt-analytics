@@ -67,4 +67,4 @@ sources:
       - name: cert_product_geo_sql
       - name: cert_customer_segmentation_dashboard
       - name: cert_customer_segmentation_sql
-
+      - name: promo_budget

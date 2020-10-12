@@ -185,7 +185,7 @@ sheets:
       - cert_product_geo_sql
       - cert_customer_segmentation_dashboard
       - cert_customer_segmentation_sql
-  - name: budget_spend
+  - name: people_budget
     description: Data used by people team for budget spend.
     owner: '@pluthra'
     tabs: 
