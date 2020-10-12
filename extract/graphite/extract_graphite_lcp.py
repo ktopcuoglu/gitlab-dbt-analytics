@@ -19,7 +19,7 @@ def make_api_call(
         "format": "json",
     }
 
-    url = "https://" + host + ":" + str(port) + "/render"
+    url = "http://" + host + ":" + str(port) + "/render"
     response = requests.get(
         url,
         params=param_dict,
