@@ -30,6 +30,7 @@ WITH source AS (
         budgetedcost                                                        AS budgeted_cost,
         expectedresponse                                                    AS expected_response,
         expectedrevenue                                                     AS expected_revenue,
+        bizible2__bizible_attribution_synctype__c                           AS bizible_touchpoint_enabled_setting,
 
         --results
         actualcost                                                          AS actual_cost,
