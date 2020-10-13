@@ -79,4 +79,4 @@ LEFT JOIN master_records
 LEFT JOIN ultimate_parent_account
   ON ultimate_parent_account.account_id = sfdc_account.ultimate_parent_account_id
 LEFT OUTER JOIN sfdc_users
-  ON sfdc_account.technical_account_manager_id = sfdc_users.id
+  ON sfdc_account.technical_account_manager_id = sfdc_users.user_id

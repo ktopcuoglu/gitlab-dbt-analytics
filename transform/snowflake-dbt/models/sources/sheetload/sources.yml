@@ -63,4 +63,8 @@ sources:
       - name: social_marketing_metrics
       - name: values_certificate
       - name: yc_companies
+      - name: cert_product_geo_dashboard
+      - name: cert_product_geo_sql
+      - name: cert_customer_segmentation_dashboard
+      - name: cert_customer_segmentation_sql
 

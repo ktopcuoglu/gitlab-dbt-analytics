@@ -200,7 +200,7 @@ models:
   - name: sfdc_users
     description: base model for SFDC Users
     columns:
-        - name: id
+        - name: user_id
           tests:
               - not_null
               - unique
