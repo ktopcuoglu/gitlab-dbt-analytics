@@ -7,15 +7,6 @@ models:
   - name: location_factors_yaml_source
     description: Emphemeral layer for extracting and cleaning data from [location_factors.yml file](https://gitlab.com/gitlab-com/www-gitlab-com/blob/master/data/location_factors.yml) in the GitLab Handbook.
 
-  - name: roles_yaml_source
-    description: Emphemeral layer for extracting and cleaning data from [roles.yml file](https://gitlab.com/gitlab-com/www-gitlab-com/blob/master/data/roles.yml) in the GitLab Handbook.
-
-  - name: team_yaml_source
-    description: Emphemeral layer for extracting and cleaning data from [team.yml file](https://gitlab.com/gitlab-com/www-gitlab-com/blob/master/data/team.yml) in the GitLab Handbook.
-
-  - name: stages_yaml_source
-    description: Emphemeral layer for extracting and cleaning data from [stages.yml file](https://gitlab.com/gitlab-com/www-gitlab-com/blob/master/data/stages.yml) in the GitLab Handbook.
-
   - name: performance_indicators_corporate_finance_source
     description: Emphemeral layer for extracting and cleaning data from [corporate_finance.yml](https://gitlab.com/gitlab-com/www-gitlab-com/-/blob/master/data/performance_indicators/corporate_finance.yml) in the GitLab Handbook.
 
@@ -60,5 +51,14 @@ models:
 
   - name: performance_indicators_ux_department_source
     description: Emphemeral layer for extracting and cleaning data from [ux_department.yml](https://gitlab.com/gitlab-com/www-gitlab-com/-/blob/master/data/performance_indicators/ux_department.yml) in the GitLab Handbook.
+
+  - name: roles_yaml_source
+    description: Emphemeral layer for extracting and cleaning data from [roles.yml file](https://gitlab.com/gitlab-com/www-gitlab-com/blob/master/data/roles.yml) in the GitLab Handbook.
+
+  - name: stages_yaml_source
+    description: Emphemeral layer for extracting and cleaning data from [stages.yml file](https://gitlab.com/gitlab-com/www-gitlab-com/blob/master/data/stages.yml) in the GitLab Handbook.
+
+  - name: team_yaml_source
+    description: Emphemeral layer for extracting and cleaning data from [team.yml file](https://gitlab.com/gitlab-com/www-gitlab-com/blob/master/data/team.yml) in the GitLab Handbook.
 
 
