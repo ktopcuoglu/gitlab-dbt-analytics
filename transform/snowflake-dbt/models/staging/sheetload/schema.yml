@@ -73,6 +73,7 @@ models:
 - name: sheetload_scalable_employment_values
 - name: sheetload_social_marketing_metrics
 - name: sheetload_values_certificate
+- name: sheetload_yc_companies
 - name: sheetload_sales_training_completion_dates
 
 
