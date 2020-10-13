@@ -39,5 +39,5 @@ WITH unioned AS (
 )
 
 SELECT *,
-  COALESCE(LEAD(effective_date) OVER (PARTITION BY pi_name, org_name ORDER BY effective_date), CURRENT_DATE()) AS valid_to_date
+  COALESCE(LEAD(valid_from_date) OVER (PARTITION BY pi_name, org_name ORDER BY valid_from_date), CURRENT_DATE()) AS valid_to_date
 FROM intermediate
