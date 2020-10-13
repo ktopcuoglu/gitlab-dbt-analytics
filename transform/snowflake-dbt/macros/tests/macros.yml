@@ -51,12 +51,12 @@ macros:
         type: string
         description: Optional filter on the data. Wrap the entire clause in double quotes.
 
-  - name: source_column_existence
+  - name: raw_column_existence
     description: Validates the existence of certain columns in a table within the raw database.
     arguments:
       - name: schema
         type: string
-        description: The name of hte schema being referenced
+        description: The name of the schema being referenced
       - name: table
         type: string
         description: The name of the table being referenced
@@ -124,7 +124,7 @@ macros:
       - name: where_clause
         type: string
         description: Optional filter on the data. Wrap the entire clause in double quotes.
-  - name: source_table_existence
+  - name: raw_table_existence
     description: Validates the existence of certain columns in a table within the raw database.
     arguments:
       - name: schema

@@ -1,4 +1,4 @@
-{% macro source_column_existence(schema, table, column_list) %}
+{% macro raw_column_existence(schema, table, column_list) %}
 
 WITH source as (
 
