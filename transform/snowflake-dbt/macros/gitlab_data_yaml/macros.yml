@@ -1,0 +1,5 @@
+version: 2
+
+macros:
+  - name: create_pi_source_table
+    description: '{{ doc("create_pi_source_table") }}'

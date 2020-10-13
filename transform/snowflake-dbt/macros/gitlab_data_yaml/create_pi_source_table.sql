@@ -17,12 +17,12 @@ WITH source AS (
 
 ), intermediate_stage AS (
 
-    SELECT 
+     SELECT 
+      data_by_row['name']::VARCHAR                         AS pi_name,
+      data_by_row['org']::VARCHAR                          AS org_name,
       data_by_row['definition']::VARCHAR                   AS pi_definition,
       data_by_row['is_key']::BOOLEAN                       AS is_key,
       data_by_row['is_primary']::BOOLEAN                   AS is_primary,
-      data_by_row['name']::VARCHAR                         AS pi_name,
-      data_by_row['org']::VARCHAR                          AS org_name,
       data_by_row['public']::BOOLEAN                       AS is_public,
       data_by_row['sisense_data'] IS NOT NULL              AS is_embedded,
       data_by_row['target']::VARCHAR                       AS pi_target,
