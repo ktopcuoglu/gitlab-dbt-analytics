@@ -15,10 +15,9 @@ WITH source AS (
 ), data_points_flushed_out AS (
 
     SELECT
-      metric_name,
-      data_by_row.value[0]::FLOAT     AS metric_value,
-      data_by_row.value[1]::TIMESTAMP AS metric_reported_at,
-      uploaded_at
+      SPLIT(metric_name, '.')[12]::VARCHAR AS metric_name,
+      data_by_row.value[0]::FLOAT          AS metric_value,
+      data_by_row.value[1]::TIMESTAMP      AS metric_reported_at
     FROM metric_per_row,
     LATERAL FLATTEN(input => datapoints, OUTER => True) data_by_row
     WHERE NULLIF(metric_value::VARCHAR, 'null') IS NOT NULL
