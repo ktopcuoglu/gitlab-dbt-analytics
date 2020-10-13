@@ -3,7 +3,7 @@
 WITH date_details AS (
   
     SELECT *
-    FROM {{ ref("date_details") }}
+    FROM {{ ref('date_details') }}
     WHERE last_day_of_month = date_actual
      
 ), namespace_snapshots_daily AS (
