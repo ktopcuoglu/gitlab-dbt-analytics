@@ -46,7 +46,8 @@ WITH license AS (
       )::BOOLEAN                                                 AS is_pre_release,
       IFF(edition = 'CE', 'CE', 'EE')                            AS main_edition,
       CASE
-        WHEN edition IN ('CE', 'EE Free') THEN 'Core'
+        WHEN edition = 'CE' THEN 'CE'
+        WHEN edition = 'EE Free' THEN 'Core'
         WHEN edition IN ('EE', 'EES') THEN 'Starter'
         WHEN edition = 'EEP' THEN 'Premium'
         WHEN edition = 'EEU' THEN 'Ultimate'
