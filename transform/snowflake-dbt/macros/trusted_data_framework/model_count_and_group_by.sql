@@ -1,9 +1,9 @@
-{% macro model_count_and_group_by(model_name, group_by_column) %}
+{% macro model_count_and_group_by(model_name, date_column_to_group_by) %}
 
 with model_data AS (
 
   SELECT
-    CAST({{ group_by_column }} AS DATE) AS grouped_date,
+    CAST({{ date_column_to_group_by }} AS DATE) AS grouped_date,
     COUNT(*)                            AS num_rows
   FROM {{ ref(model_name) }}
   GROUP BY CAST({{ group_by_column }} AS DATE)
