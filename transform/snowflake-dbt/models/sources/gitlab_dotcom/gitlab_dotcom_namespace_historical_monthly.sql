@@ -7,6 +7,7 @@ WITH date_details AS (
     WHERE last_day_of_month = date_actual
      
 ), namespace_snapshots_daily AS (
+
     SELECT *
     FROM {{ ref('gitlab_dotcom_namespace_historical_daily') }}
   
