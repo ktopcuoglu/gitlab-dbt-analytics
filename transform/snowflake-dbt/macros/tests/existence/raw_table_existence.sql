@@ -1,4 +1,4 @@
-{% macro source_table_existence(schema, table_list) %}
+{% macro raw_table_existence(schema, table_list) %}
 
 WITH source as (
 
