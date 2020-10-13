@@ -6,11 +6,11 @@ WITH source AS (
 ), renamed AS (
 
     SELECT
-      "UUID"::VARCHAR                          AS uuid,
-      "NAME"::VARCHAR                          AS name,
-      "EMAIL"::VARCHAR                         AS email,
-      "GITLAB_USER"::VARCHAR                   AS gitlab_user,
-      "ORGANIZATION"                           AS organization
+      uuid::VARCHAR                          AS uuid,
+      name::VARCHAR                          AS name,
+      email::VARCHAR                         AS email,
+      gitlab_user::VARCHAR                   AS gitlab_user,
+      organization::VARCHAR                  AS organization
     FROM source
 
 )
