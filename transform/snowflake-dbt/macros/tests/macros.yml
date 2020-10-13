@@ -64,11 +64,11 @@ macros:
         type: list
         description: List of columns being referenced
   - name: source_column_sum_min
-    description: Does a sum on the specified column and ensures it's greater than the minimum value specified.
+    description: Does a sum on the specified column and ensures it's greater than the minimum value specified. This is for a source reference as defined in a sources.yml file.
     arguments:
-      - name: schema
+      - name: source_name
         type: string
-        description: The name of the schema being referenced
+        description: The name of the dbt source (such as zuora, defined in a sources.yml file). This is not the schema name in the raw databse.
       - name: table
         type: string
         description: The name of the table being referenced
@@ -81,20 +81,20 @@ macros:
       - name: where_clause
         description: Optional filter on the data. Wrap the entire clause in double quotes.
   - name: source_golden_records_comparison
-    description: Compare a dbt model table to a Golden Record CSV
+    description: Compare a dbt source table to a Golden Record CSV. This is for a source reference as defined in a sources.yml file.
     arguments:
       - name: source_name
         type: string
-        description: The name of the dbt source (such as zuora)
+        description: The name of the dbt source (such as zuora, defined in a sources.yml file). This is not the schema name in the raw databse.
       - name: table_name
         type: string
         description: The name of the table defined in the source to use as a comparison
   - name: source_new_rows_per_day
-    description: Counts the number of new records created in the previous day during normal, non-holiday, business days in the US.
+    description: Counts the number of new records created in the previous day during normal, non-holiday, business days in the US. This is for a source reference as defined in a sources.yml file.
     arguments:
-      - name: schema
+      - name: source_name
         type: string
-        description: The name of the schema being referenced
+        description: The name of the dbt source (such as zuora, defined in a sources.yml file). This is not the schema name in the raw databse.
       - name: table
         type: string
         description: The name of the table being referenced
@@ -110,11 +110,11 @@ macros:
       - name: where_clause
         description: Optional filter on the data. Wrap the entire clause in double quotes.
   - name: source_rowcount
-    description: Does a rowcount check and fails if there are fewer rows than expected. An optional condition can be applied as well.
+    description: Does a rowcount check and fails if there are fewer rows than expected. An optional condition can be applied as well. This is for a source reference as defined in a sources.yml file.
     arguments:
-      - name: schema
+      - name: source_name
         type: string
-        description: The name of the schema being referenced
+        description: The name of the dbt source (such as zuora, defined in a sources.yml file). This is not the schema name in the raw databse.
       - name: table
         type: string
         description: The name of the table being referenced
