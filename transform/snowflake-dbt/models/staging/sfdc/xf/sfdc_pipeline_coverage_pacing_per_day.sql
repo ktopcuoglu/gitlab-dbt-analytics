@@ -27,6 +27,8 @@ TODO:
     WHERE stage_name NOT IN ('9-Unqualified','10-Duplicate','Unqualified')
         AND is_deleted = 0
         AND forecast_category_name != 'Omitted'
+        -- remove incomplete quarters, data from beggining of Q4 FY20
+        AND snapshot_date >= CAST('2019-11-01' AS DATE)
 ), pipeline_snapshot_base AS (
 SELECT  snapshot_date,
         close_fiscal_quarter,
@@ -77,6 +79,7 @@ WHERE
     snapshot_date <= dateadd(month,3,close_fiscal_quarter_date)
     -- 1 quarters before start
     AND snapshot_date >= dateadd(month,-3,close_fiscal_quarter_date)
+
 GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12
 ), pipeline_snapshot_extended AS (
     SELECT pq.close_fiscal_quarter,
