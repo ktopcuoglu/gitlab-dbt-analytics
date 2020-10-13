@@ -56,7 +56,7 @@ macros:
     arguments:
       - name: schema
         type: string
-        description: The name of the schema being referenced
+        description: The name of the raw schema being referenced. This is not the same as a dbt source name.
       - name: table
         type: string
         description: The name of the table being referenced
@@ -129,7 +129,7 @@ macros:
     arguments:
       - name: schema
         type: string
-        description: The name of the schema being referenced
+        description: The name of the raw schema being referenced. This is not the same as a dbt source name.
       - name: table_list
         type: list
         description: List of tables being referenced
