@@ -189,4 +189,4 @@ sheets:
     description: Data used by people team for budget spend.
     owner: '@pluthra'
     tabs: 
-      - promo_budget
+      - people_budget
