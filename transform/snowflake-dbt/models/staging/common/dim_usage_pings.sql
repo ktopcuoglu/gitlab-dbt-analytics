@@ -43,7 +43,7 @@ WITH usage_ping_data AS (
         CASE
             WHEN installation_type = 'gitlab-development-kit' THEN TRUE 
             WHEN hostname = 'gitlab.com' THEN TRUE 
-            WHEN hostname ilike '%.gitlab.com' THEN TRUE 
+            WHEN hostname ILIKE '%.gitlab.com' THEN TRUE 
             ELSE FALSE END                                           AS is_internal, 
         IFF(hostname ilike '%staging%', TRUE, FALSE)                 AS is_staging
     FROM version_edition_cleaned
