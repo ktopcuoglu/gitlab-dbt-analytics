@@ -6,7 +6,7 @@ with model_data AS (
     CAST({{ date_column_to_group_by }} AS DATE) AS grouped_date,
     COUNT(*)                            AS num_rows
   FROM {{ ref(model_name) }}
-  GROUP BY CAST({{ group_by_column }} AS DATE)
+  GROUP BY CAST({{ date_column_to_group_by }} AS DATE)
 
 )
 
