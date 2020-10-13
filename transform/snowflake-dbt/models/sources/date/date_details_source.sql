@@ -133,6 +133,8 @@ SELECT
   fiscal_quarter_name,
   fiscal_quarter_name_fy,
   fiscal_quarter_number_absolute,
+  fiscal_month_name,
+  fiscal_month_name_fy,
   holiday_desc,
   is_holiday,
   last_month_of_fiscal_quarter,
