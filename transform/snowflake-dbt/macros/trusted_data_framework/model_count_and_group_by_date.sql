@@ -1,4 +1,4 @@
-{% macro model_count_and_group_by(model_name, date_column_to_group_by) %}
+{% macro model_count_and_group_by_date(model_name, date_column_to_group_by) %}
 
 with model_data AS (
 
