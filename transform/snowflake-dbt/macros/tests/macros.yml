@@ -81,7 +81,7 @@ macros:
       - name: where_clause
         description: Optional filter on the data. Wrap the entire clause in double quotes.
   - name: source_golden_data_comparison
-    description: Compare a dbt model table to a Golden Data CSV. This is for a source reference as defined in a sources.yml file.
+    description: Compare a dbt source table to a Golden Data CSV. This is for a source reference as defined in a sources.yml file.
     arguments:
       - name: source_name
         type: string
