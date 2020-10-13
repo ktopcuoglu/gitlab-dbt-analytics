@@ -21,12 +21,16 @@ WITH dim_crm_accounts AS (
       dateadd('year', 1, date_actual) AS retention_month,
       SUM(mrr)                        AS mrr_total,
       SUM(arr)                        AS arr_total,
-      SUM(quantity)                   AS quantity_total
+      SUM(quantity)                   AS quantity_total,
+      MIN(subscription_end_month)     AS subscription_end_month
     FROM fct_mrr
+    INNER JOIN dim_subscriptions
+      ON dim_subscriptions.subscription_id = fct_mrr.subscription_id
     LEFT JOIN dim_crm_accounts
       ON dim_crm_accounts.crm_account_id = fct_mrr.crm_account_id
     INNER JOIN dim_dates
       ON dim_dates.date_id = fct_mrr.date_id
+
     GROUP BY 1, 2, 3
 
 ), retention_subs AS (
@@ -58,6 +62,8 @@ WITH dim_crm_accounts AS (
         THEN least(net_retention_mrr, current_mrr)
         ELSE 0 END                AS gross_retention_mrr,
       retention_month,
+      dim_dates.fiscal_year,
+      dim_dates.fiscal_quarter,
       current_mrr_month,
       future_arr,
       current_arr,
@@ -68,6 +74,8 @@ WITH dim_crm_accounts AS (
       {{ reason_for_quantity_change_seat_change('future_quantity', 'current_quantity') }},
       {{ annual_price_per_seat_change('future_quantity', 'current_quantity', 'future_arr', 'current_arr') }}
     FROM retention_subs
+    INNER JOIN dim_dates
+      ON dim_dates.date_actual = retention_subs.retention_month
     LEFT JOIN dim_crm_accounts
       ON dim_crm_accounts.crm_account_id = retention_subs.ultimate_parent_account_id
 
