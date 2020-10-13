@@ -352,7 +352,7 @@ models:
   description: This is a list of all who have completed the IC iteration competency knowledge assessment.
 - name: sheetload_ic_transparency_competency_source
   description: This is a list of all who have completed the IC transparency competency knowledge assessment.
-- name: sales_training_completion_dates_source
+- name: sheetload_sales_training_completion_dates_source
   description: Training completion dates for Sales team.
   columns:
     - name: email_address
