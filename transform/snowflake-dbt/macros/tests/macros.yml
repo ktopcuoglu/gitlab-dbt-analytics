@@ -15,12 +15,12 @@ macros:
         description: The minimum value the sum should be greater than
       - name: where_clause
         description: Optional filter on the data. Wrap the entire clause in double quotes.
-  - name: model_golden_records_comparison
-    description: Compare a dbt model table to a Golden Record CSV
+  - name: model_golden_data_comparison
+    description: Compare a dbt model table to a Golden Data CSV
     arguments:
       - name: dbt_model
         type: string
-        description: The name of the dbt model to be compared against. The golden record name is automatically determined.
+        description: The name of the dbt model to be compared against. The golden data name is automatically determined.
   - name: model_new_rows_per_day
     description: Counts the number of new records created in the previous day during normal, non-holiday, business days in the US.
     arguments:
@@ -80,8 +80,8 @@ macros:
         description: The minimum value the sum should be greater than
       - name: where_clause
         description: Optional filter on the data. Wrap the entire clause in double quotes.
-  - name: source_golden_records_comparison
-    description: Compare a dbt model table to a Golden Record CSV
+  - name: source_golden_data_comparison
+    description: Compare a dbt model table to a Golden Data CSV
     arguments:
       - name: source_name
         type: string
