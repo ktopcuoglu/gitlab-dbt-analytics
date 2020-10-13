@@ -114,7 +114,7 @@ macros:
     arguments:
       - name: source_name
         type: string
-        description: The name of the dbt source (such as zuora, defined in a sources.yml file). This is not the schema name in the raw databse.
+        description: The name of the dbt source (such as zuora, defined in a sources.yml file). This is not the schema name in the raw database.
       - name: table
         type: string
         description: The name of the table being referenced
