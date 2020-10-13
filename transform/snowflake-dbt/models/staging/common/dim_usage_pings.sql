@@ -16,6 +16,9 @@ WITH usage_ping_data AS (
             version LIKE '%-pre%' OR version LIKE '%-rc%', 
             TRUE, FALSE
         )::BOOLEAN                                                 AS is_pre_release,
+        IFF(license_expires_at >= created_at 
+            OR license_expires_at IS NULL, 
+            edition, 'EE Free')                                    AS edition,
         IFF(edition = 'CE', 'CE', 'EE')                            AS main_edition,
         CASE edition
             WHEN 'CE'       THEN 'CE'
