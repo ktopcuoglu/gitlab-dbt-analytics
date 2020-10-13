@@ -1,7 +1,7 @@
 WITH source AS (
 
     SELECT * 
-    FROM {{ source('sheetload','promo_budget') }}
+    FROM {{ source('sheetload','people_budget') }}
     
 ), renamed AS (
 
