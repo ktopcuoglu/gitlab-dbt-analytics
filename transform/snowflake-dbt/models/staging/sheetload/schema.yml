@@ -43,6 +43,7 @@ models:
 - name: sheetload_days_sales_outstanding
 - name: sheetload_days_to_close
 - name: sheetload_engineering_speciality_prior_to_capture
+- name: sheetload_engineering_contributing_organizations
 - name: sheetload_dev_section_metrics
   description: Base model for the Google Sheet ingested through Sheetload called dev_section_metrics
 - name: sheetload_gitlab_slack_stats
