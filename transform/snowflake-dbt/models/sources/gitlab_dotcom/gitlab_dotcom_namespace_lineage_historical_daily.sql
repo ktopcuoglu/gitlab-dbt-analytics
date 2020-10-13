@@ -1,6 +1,6 @@
 {{ config({
     "materialized": "incremental",
-    "unique_key": "primary_key"
+    "unique_key": "snapshot_day_namespace_id"
     })
 }}
 
