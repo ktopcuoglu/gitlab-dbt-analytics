@@ -1,0 +1,5 @@
+version: 2
+
+macros:
+  - name: model_count_and_group_by_date
+    description: '{{ doc("model_count_and_group_by_date") }}'
