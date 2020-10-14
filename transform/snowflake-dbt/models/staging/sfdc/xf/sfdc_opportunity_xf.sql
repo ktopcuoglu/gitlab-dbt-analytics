@@ -31,47 +31,6 @@ WITH RECURSIVE sfdc_opportunity AS (
     FROM {{ ref('date_details') }}
     ORDER BY 1 DESC
 
-),  managers AS (
-    
-    SELECT
-        user_id,
-        name,
-        role_name,
-        manager_name,
-        manager_id,
-        0 AS level,
-        '' AS path
-    FROM sfdc_users_xf
-    WHERE role_name = 'CRO'
-
-    UNION ALL
-
-    SELECT
-        users.user_id,
-        users.name,
-        users.role_name,
-        users.manager_name,
-        users.manager_id,
-        level + 1,
-        path || managers.role_name || '::'
-    FROM sfdc_users_xf users
-        INNER JOIN managers
-            ON users.manager_id = managers.user_id
-
-), cro_sfdc_hierarchy AS (
-
-    SELECT
-        user_id,
-        name,
-        role_name,
-        manager_name,
-        SPLIT_PART(path, '::', 1)::VARCHAR(50) AS level_1,
-        SPLIT_PART(path, '::', 2)::VARCHAR(50) AS level_2,
-        SPLIT_PART(path, '::', 3)::VARCHAR(50) AS level_3,
-        SPLIT_PART(path, '::', 4)::VARCHAR(50) AS level_4,
-        SPLIT_PART(path, '::', 5)::VARCHAR(50) AS level_5
-    FROM managers
-
 ), sales_admin_bookings_hierarchy AS (
     SELECT
         sfdc_opportunity.opportunity_id,
@@ -137,9 +96,9 @@ WITH RECURSIVE sfdc_opportunity AS (
       sfdc_opportunity.opportunity_owner                                                          AS opportunity_owner,
       sfdc_opportunity.opportunity_owner_department                                               AS opportunity_owner_department,
       sfdc_opportunity.opportunity_owner_manager                                                  AS opportunity_owner_manager,
-      sfdc_users_xf.role_name                                                                     AS opportunity_owner_role,
+      opportunity_owner.role_name                                                                 AS opportunity_owner_role,
       sfdc_opportunity.opportunity_owner_team                                                     AS opportunity_owner_team,
-      sfdc_users_xf.title                                                                         AS opportunity_owner_title,
+      opportunity_owner.title                                                                     AS opportunity_owner_title,
       sfdc_opportunity.opportunity_sales_development_representative,
       sfdc_opportunity.opportunity_development_representative,
       sfdc_opportunity.account_owner_team_stamped,
@@ -250,9 +209,9 @@ WITH RECURSIVE sfdc_opportunity AS (
       -- sales segmentation deprecated fields - 2020-09-03
       -- left temporary for the sake of MVC and avoid breaking SiSense existing charts
       -- issue: https://gitlab.com/gitlab-data/analytics/-/issues/5709
-      sfdc_opportunity.segment                          AS segment,
-      sfdc_opportunity.sales_segment                    AS sales_segment,
-      sfdc_opportunity.parent_segment                   AS parent_segment,
+      sfdc_opportunity.segment                                                                          AS segment,
+      sfdc_opportunity.sales_segment                                                                    AS sales_segment,
+      sfdc_opportunity.parent_segment                                                                   AS parent_segment,
       
       -- ************************************
       -- channel reporting
@@ -260,28 +219,15 @@ WITH RECURSIVE sfdc_opportunity AS (
       sfdc_opportunity.dr_partner_deal_type,
       sfdc_opportunity.dr_partner_engagement,
 
-      -- metadata
-      sfdc_opportunity._last_dbt_run,
-      sfdc_record_type.business_process_id,
-      sfdc_opportunity.days_since_last_activity,
-      sfdc_opportunity.is_deleted,
-      sfdc_opportunity.last_activity_date,
-      sfdc_record_type.record_type_description,
-      sfdc_opportunity.record_type_id,
-      sfdc_record_type.record_type_label,
-      sfdc_record_type.record_type_modifying_object_type,
-      sfdc_record_type.record_type_name,
-      md5((date_trunc('month', sfdc_opportunity.close_date)::date)||UPPER(sfdc_users_xf.team))    AS region_quota_id,
-      md5((date_trunc('month', sfdc_opportunity.close_date)::date)||UPPER(sfdc_users_xf.name))    AS sales_quota_id,
-
     CASE WHEN sfdc_opportunity.order_type_stamped = '1. New - First Order' 
             THEN '1. New'
         WHEN sfdc_opportunity.order_type_stamped IN ('2. New - Connected', '3. Growth') 
             THEN '2. Growth' 
         WHEN sfdc_opportunity.order_type_stamped = '4. Churn'
             THEN '3. Churn'
-        ELSE '4. Other' END                                                                         AS deal_category,
+        ELSE '4. Other' END                                                                             AS deal_category,
     
+    -- adjusted, as logic is applied to removed as many blanks as possible
     CASE
         WHEN (sfdc_account.ultimate_parent_sales_segment  = 'Unknown' OR sfdc_account.ultimate_parent_sales_segment  IS NULL) 
             AND sfdc_opportunity.user_segment = 'SMB' 
@@ -292,7 +238,7 @@ WITH RECURSIVE sfdc_opportunity AS (
         WHEN (sfdc_account.ultimate_parent_sales_segment  = 'Unknown' OR sfdc_account.ultimate_parent_sales_segment  IS NULL) 
             AND sfdc_opportunity.user_segment IN ('Large', 'US West', 'US East', 'Public Sector''EMEA', 'APAC') 
                 THEN 'Large'
-        ELSE sfdc_account.ultimate_parent_sales_segment END                                         AS adj_sales_segment,
+        ELSE sfdc_account.ultimate_parent_sales_segment END                                          AS adj_sales_segment,
     
         
     CASE WHEN sfdc_opportunity.account_owner_team_stamped in ('APAC', 'MM - APAC')
@@ -305,23 +251,34 @@ WITH RECURSIVE sfdc_opportunity AS (
             THEN 'US WEST'
         WHEN sfdc_opportunity.account_owner_team_stamped in ('Public Sector')
             THEN 'PUBSEC'
-        ELSE 'OTHER' END                                                                            AS adj_region,
+        ELSE 'OTHER' END                                                                                AS adj_region,
 
-    CASE WHEN sa.level_2 IS NOT NULL 
-            THEN sa.level_2
-            ELSE trim(cro.level_2) END                                                              AS team_level_2,
-
-    CASE WHEN sa.level_3 IS NOT NULL 
-            THEN sa.level_3
-            ELSE trim(cro.level_3) END                                                              AS team_level_3,
+    -- account owner hierarchies levels
+    account_owner.sales_team_level_2                                                                    AS account_owner_team_level_2,
+    account_owner.sales_team_level_3                                                                    AS account_owner_team_level_3,
+    account_owner.sales_team_level_4                                                                    AS account_owner_team_level_4,
+        
+    account_owner.sales_team_vp_level                                                                   AS account_owner_team_vp_level,
+    account_owner.sales_team_rd_level                                                                   AS account_owner_team_rd_level,
+    account_owner.sales_team_asm_level                                                                  AS account_owner_team_asm_level,
 
     -- identify VP level managers
-    CASE WHEN cro.level_2 LIKE 'VP%' 
+    account_owner.is_lvl_2_vp_flag                                                                      AS account_owner_is_lvl_2_vp_flag,
+
+    -- opportunity owner hierarchies levels
+    CASE WHEN sa.level_2 is not null 
+        THEN sa.level_2 
+        ELSE opportunity_owner.sales_team_level_2 END                                                   AS opportunity_owner_team_level_2,
+    CASE WHEN sa.level_3 is not null 
+        THEN sa.level_3 
+        ELSE opportunity_owner.sales_team_level_3 END                                                   AS opportunity_owner_team_level_3,
+    
+    -- identify VP level managers
+    CASE WHEN opportunity_owner.sales_team_level_2 LIKE 'VP%' 
         OR sa.level_2 LIKE 'VP%'
-            THEN 1 ELSE 0 END                                                                       AS is_lvl_2_vp_flag,
+            THEN 1 ELSE 0 END                                                                           AS opportunity_owner_is_lvl_2_vp_flag,
 
     -- helper flags
-
     CASE WHEN sfdc_opportunity.stage_name 
                 IN ('00-Pre Opportunity','0-Pending Acceptance','0-Qualifying','Developing', '1-Discovery', '2-Developing', '2-Scoping')  THEN 'Pipeline'													
                 WHEN sfdc_opportunity.stage_name 
@@ -330,7 +287,7 @@ WITH RECURSIVE sfdc_opportunity AS (
                 IN ('8-Closed Lost', 'Closed Lost')                                                                                             THEN 'Lost'													  
                 WHEN sfdc_opportunity.stage_name IN ('Closed Won')                                                                                             THEN 'Closed Won'													
                 ELSE 'Other'													
-                END                                                                                   AS stage_name_3plus,												
+                END                                                                                     AS stage_name_3plus,												
     CASE WHEN sfdc_opportunity.stage_name 
                 IN ('00-Pre Opportunity','0-Pending Acceptance','0-Qualifying','Developing','1-Discovery', '2-Developing', '2-Scoping', '3-Technical Evaluation')     
                             THEN 'Pipeline'													
@@ -339,54 +296,67 @@ WITH RECURSIVE sfdc_opportunity AS (
                 WHEN sfdc_opportunity.stage_name IN ('8-Closed Lost', 'Closed Lost')                                                                             THEN 'Lost'													
                 WHEN sfdc_opportunity.stage_name IN ('Closed Won')                                                                                               THEN 'Closed Won'													
                 ELSE 'Other'													
-                END                                                                                   AS stage_name_4plus,	
+                END                                                                                     AS stage_name_4plus,	
 
     CASE WHEN sfdc_opportunity.stage_name 
                 IN ('3-Technical Evaluation', '4-Proposal', 'Closed Won','5-Negotiating', '6-Awaiting Signature', '7-Closing')                               THEN 1												
                                         
                 ELSE 0													
-                END                                                                                   AS is_stage_3_plus,
+                END                                                                                     AS is_stage_3_plus,
 
-    CASE WHEN sfdc_opportunity.stage_name = '8-Closed Lost'  THEN 1 ELSE 0 END                                     AS is_lost,
+    CASE WHEN sfdc_opportunity.stage_name = '8-Closed Lost'  THEN 1 ELSE 0 END                          AS is_lost,
     CASE WHEN (sfdc_opportunity.stage_name = '8-Closed Lost' 
             OR sfdc_opportunity.stage_name = '9-Unqualified'
-            OR is_won = 1) THEN 0 ELSE 1 END                                                        AS is_open,
+            OR is_won = 1) THEN 0 ELSE 1 END                                                            AS is_open,
 
-    CASE WHEN is_open = 0 THEN 1 ELSE 0 END                                                         AS is_closed,
+    CASE WHEN is_open = 0 THEN 1 ELSE 0 END                                                             AS is_closed,
     CASE WHEN is_won = 1 THEN '1.Won'
         WHEN is_lost = 1 THEN '2.Lost'
         WHEN is_open = 1 THEN '0. Open' 
-        ELSE 'N/A' END                                                                              AS stage_category,
+        ELSE 'N/A' END                                                                                  AS stage_category,
 
     CASE WHEN  lower(sfdc_opportunity.sales_type) like '%renewal%' 
         -- OR op.renewal_acv > 0
-        THEN 1 ELSE 0 END                                                                             AS is_renewal, 
+        THEN 1 ELSE 0 END                                                                               AS is_renewal, 
 
     -- date fields
-    d.fiscal_quarter_name_fy                                                                        AS close_fiscal_quarter_name,
-    d.first_day_of_fiscal_quarter                                                                   AS close_fiscal_quarter_date,
-    d.fiscal_year                                                                                   AS close_fiscal_quarter_year,
-    d.first_day_of_month                                                                            AS close_date_month,
+    d.fiscal_quarter_name_fy                                                                            AS close_fiscal_quarter_name,
+    d.first_day_of_fiscal_quarter                                                                       AS close_fiscal_quarter_date,
+    d.fiscal_year                                                                                       AS close_fiscal_quarter_year,
+    d.first_day_of_month                                                                                AS close_date_month,
     
-    dc.fiscal_quarter_name_fy                                                                       AS created_fiscal_quarter_name,
-    dc.first_day_of_fiscal_quarter                                                                  AS created_fiscal_quarter_date,
-    dc.fiscal_year                                                                                  AS created_fiscal_year,
-    dc.first_day_of_month                                                                           AS created_date_month,
+    dc.fiscal_quarter_name_fy                                                                           AS created_fiscal_quarter_name,
+    dc.first_day_of_fiscal_quarter                                                                      AS created_fiscal_quarter_date,
+    dc.fiscal_year                                                                                      AS created_fiscal_year,
+    dc.first_day_of_month                                                                               AS created_date_month,
 
     -- subscription start date extra fields
-    start_date.fiscal_year                                                                          AS start_date_fiscal_year,
-    start_date.fiscal_quarter_name_fy                                                               AS start_date_fiscal_quarter,
-    start_date.first_day_of_month                                                                   AS start_date_month,
+    start_date.fiscal_year                                                                              AS start_date_fiscal_year,
+    start_date.fiscal_quarter_name_fy                                                                   AS start_date_fiscal_quarter,
+    start_date.first_day_of_month                                                                       AS start_date_month,
     -- sales accepted date
-    dsa.fiscal_quarter_name_fy                                                                      AS sales_accepted_fiscal_quarter,
-    dsa.fiscal_year                                                                                 AS sales_accepted_fiscal_year,
-    dsa.first_day_of_month                                                                          AS sales_accepted_date_month,
+    dsa.fiscal_quarter_name_fy                                                                          AS sales_accepted_fiscal_quarter,
+    dsa.fiscal_year                                                                                     AS sales_accepted_fiscal_year,
+    dsa.first_day_of_month                                                                              AS sales_accepted_date_month,
 
     -- sales qualified date
-    dqa.fiscal_quarter_name_fy                                                                      AS sales_qualified_fiscal_quarter,
-    dqa.fiscal_year                                                                                 AS sales_qualified_fiscal_year,
-    dqa.first_day_of_month                                                                          AS sales_qualified_date_month      
+    dqa.fiscal_quarter_name_fy                                                                          AS sales_qualified_fiscal_quarter,
+    dqa.fiscal_year                                                                                     AS sales_qualified_fiscal_year,
+    dqa.first_day_of_month                                                                              AS sales_qualified_date_month,      
 
+    -- metadata
+    sfdc_opportunity._last_dbt_run,
+    sfdc_record_type.business_process_id,
+    sfdc_opportunity.days_since_last_activity,
+    sfdc_opportunity.is_deleted,
+    sfdc_opportunity.last_activity_date,
+    sfdc_record_type.record_type_description,
+    sfdc_opportunity.record_type_id,
+    sfdc_record_type.record_type_label,
+    sfdc_record_type.record_type_modifying_object_type,
+    sfdc_record_type.record_type_name,
+    md5((date_trunc('month', sfdc_opportunity.close_date)::date)||UPPER(opportunity_owner.team))            AS region_quota_id,
+    md5((date_trunc('month', sfdc_opportunity.close_date)::date)||UPPER(opportunity_owner.name))            AS sales_quota_id
 
     FROM sfdc_opportunity
     INNER JOIN sfdc_opportunity_stage
@@ -399,8 +369,9 @@ WITH RECURSIVE sfdc_opportunity AS (
         ON dc.date_actual = cast(created_date as date)
     LEFT JOIN sfdc_lead_source
         ON sfdc_opportunity.lead_source = sfdc_lead_source.initial_source
-    LEFT JOIN sfdc_users_xf
-        ON sfdc_opportunity.owner_id = sfdc_users_xf.user_id
+    -- opportunity owner
+    LEFT JOIN sfdc_users_xf opportunity_owner
+        ON sfdc_opportunity.owner_id = opportunity_owner.user_id
     LEFT JOIN sfdc_record_type
         ON sfdc_opportunity.record_type_id = sfdc_record_type.record_type_id
     LEFT JOIN sfdc_account
@@ -414,9 +385,9 @@ WITH RECURSIVE sfdc_opportunity AS (
     -- sales qualified date
     LEFT JOIN date_details dqa
         ON CAST(sfdc_opportunity.sales_qualified_date as date) = dqa.date_actual
-    -- owner hierarchy
-    LEFT JOIN cro_sfdc_hierarchy cro
-        ON sfdc_opportunity.owner_id = cro.user_id
+    -- account owner
+    LEFT JOIN sfdc_users_xf account_owner
+        ON account_owner.user_id = sfdc_account.owner_id
     -- sales admin hierarchy
     LEFT JOIN sales_admin_bookings_hierarchy sa
         ON sfdc_opportunity.opportunity_id = sa.opportunity_id

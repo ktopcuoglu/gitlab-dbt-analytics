@@ -33,50 +33,10 @@ WITH RECURSIVE date_details AS (
     SELECT * 
     FROM {{ref('sfdc_users_xf')}}
 
-),  managers AS (
-  SELECT
-        user_id,
-        name,
-        role_name,
-        manager_name,
-        manager_id,
-        0 AS level,
-        '' AS path
-  FROM sfdc_users_xf
-  WHERE role_name = 'CRO'
-
-UNION ALL
-
-SELECT
-      users.user_id,
-      users.name,
-      users.role_name,
-      users.manager_name,
-      users.manager_id,
-      level + 1,
-      path || managers.role_name || '::'
-FROM sfdc_users_xf users
-INNER JOIN managers
-ON users.manager_id = managers.user_id
-
-), cro_sfdc_hierarchy AS (
-
-SELECT
-      user_id,
-      name,
-      role_name,
-      manager_name,
-      SPLIT_PART(path, '::', 1)::VARCHAR(50) AS level_1,
-      SPLIT_PART(path, '::', 2)::VARCHAR(50) AS level_2,
-      SPLIT_PART(path, '::', 3)::VARCHAR(50) AS level_3,
-      SPLIT_PART(path, '::', 4)::VARCHAR(50) AS level_4,
-      SPLIT_PART(path, '::', 5)::VARCHAR(50) AS level_5
-FROM managers
-
 ), sales_admin_bookings_hierarchy AS (
-SELECT
-        sfdc_opportunity_xf.opportunity_id,
-        sfdc_opportunity_xf.owner_id,
+    SELECT
+        opportunity_id,
+        owner_id,
         'CRO'                                                           AS level_1,
         CASE account_owner_team_stamped
             WHEN 'APAC'                 THEN 'VP Ent'
@@ -136,26 +96,15 @@ SELECT
         h.is_deleted,
         a.tsp_region,
         a.tsp_sub_region,
-        CASE WHEN sa.level_2 IS NOT NULL 
-                THEN sa.level_2
-                ELSE cro.level_2 END                                                                    AS segment,
 
-        CASE WHEN sa.level_2 IS NOT NULL 
-                THEN sa.level_2
-                ELSE trim(cro.level_2) END                                                              AS team_level_2,
-
-        CASE WHEN sa.level_3 IS NOT NULL 
-                THEN sa.level_3
-                ELSE trim(cro.level_3) END                                                              AS team_level_3,
-
-
-        -- identify VP level managers
-        CASE WHEN cro.level_2 LIKE 'VP%' 
-            OR sa.level_2 LIKE 'VP%'
-                THEN 1 ELSE 0 END                                                                       AS is_lvl_2_vp_flag,
-
+        --********************************************************
+        -- Deprecated field - 20201013
+        -- Please use order_type_stamped instead
+        
         CASE WHEN o.order_type IS NULL THEN '3. Growth'
             ELSE o.order_type END                                                                       AS order_type, 
+        
+        --********************************************************
         
         CASE WHEN o.order_type_stamped IS NULL THEN '3. Growth'
             ELSE o.order_type_stamped END                                                               AS order_type_stamped, 
@@ -216,7 +165,32 @@ SELECT
         -- created & closed in quarter
         CASE WHEN dc.fiscal_quarter_name_fy = d.fiscal_quarter_name_fy
             AND h.stage_name IN ('Closed Won')  
-            THEN h.forecasted_iacv ELSE 0 END                                                           AS created_and_won_iacv
+            THEN h.forecasted_iacv ELSE 0 END                                                           AS created_and_won_iacv,
+
+        -- account owner hierarchies levels
+        account_owner.sales_team_level_2                                                                AS account_owner_team_level_2,
+        account_owner.sales_team_level_3                                                                AS account_owner_team_level_3,
+        account_owner.sales_team_level_4                                                                AS account_owner_team_level_4,
+        
+        account_owner.sales_team_vp_level                                                               AS account_owner_team_vp_level,
+        account_owner.sales_team_rd_level                                                               AS account_owner_team_rd_level,
+        account_owner.sales_team_asm_level                                                              AS account_owner_team_asm_level,
+        
+        -- identify VP level managers
+        account_owner.is_lvl_2_vp_flag                                                                  AS account_owner_is_lvl_2_vp_flag,
+
+        -- opportunity owner hierarchies levels
+        CASE WHEN sa.level_2 is not null 
+            THEN sa.level_2 
+            ELSE opportunity_owner.sales_team_level_2 END                                                   AS opportunity_owner_team_level_2,
+        CASE WHEN sa.level_3 is not null 
+            THEN sa.level_3 
+            ELSE opportunity_owner.sales_team_level_3 END                                                   AS opportunity_owner_team_level_3,
+        
+        -- identify VP level managers
+        CASE WHEN opportunity_owner.sales_team_level_2 LIKE 'VP%' 
+            OR sa.level_2 LIKE 'VP%'
+                THEN 1 ELSE 0 END                                                                           AS opportunity_owner_is_lvl_2_vp_flag
 
     FROM sfdc_opportunity_snapshot_history h
     -- close date
@@ -234,9 +208,12 @@ SELECT
     -- accounts
     LEFT JOIN sfdc_accounts_xf a
         ON h.account_id = a.account_id 
-    -- owner hierarchy
-    LEFT JOIN cro_sfdc_hierarchy cro
-        ON h.owner_id = cro.user_id
+     -- account owner
+    LEFT JOIN sfdc_users_xf account_owner
+        ON account_owner.user_id = a.owner_id
+    -- opportunity owner
+    LEFT JOIN sfdc_users_xf opportunity_owner
+        ON opportunity_owner.user_id = h.owner_id
     -- sales admin hierarchy
     LEFT JOIN sales_admin_bookings_hierarchy sa
         ON h.opportunity_id = sa.opportunity_id

@@ -24,7 +24,7 @@ SELECT  snapshot_date,
         tsp_region,
         tsp_sub_region,
         stage_name,
-        segment,
+        opportunity_owner_team_level_2                                      AS segment,
         --aggregations
         COUNT(DISTINCT opportunity_id)                                      AS opps,
         SUM(net_iacv)                                                       AS net_iacv,
@@ -32,11 +32,9 @@ SELECT  snapshot_date,
         SUM(forecasted_iacv)                                                AS forecasted_iacv
 FROM sfdc_opportunity_snapshot_history_xf
 -- filter only deals at the VP level 2 hierarchy
-WHERE is_lvl_2_vp_flag = 1
+WHERE opportunity_owner_is_lvl_2_vp_flag = 1
         -- one month before
         AND snapshot_date >= dateadd(month,-1, close_month)
         -- till end of the month
         AND snapshot_date <= dateadd(month, 1, close_month)
-        -- remove forecast category name
-        AND forecast_category_name != 'Omitted'
 GROUP BY 1,2,3,4,5,6,7,8,9,10
