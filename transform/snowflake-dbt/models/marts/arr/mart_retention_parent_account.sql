@@ -31,12 +31,12 @@ WITH dim_crm_accounts AS (
     FROM fct_mrr
     INNER JOIN dim_subscriptions
       ON dim_subscriptions.subscription_id = fct_mrr.subscription_id
-    LEFT JOIN dim_crm_accounts
-      ON dim_crm_accounts.crm_account_id = fct_mrr.crm_account_id
-    INNER JOIN dim_crm_accounts AS merged_accounts
-      ON merged_accounts.crm_account_id = COALESCE(dim_crm_accounts.merged_to_account_id, dim_crm_accounts.crm_account_id))
     INNER JOIN dim_dates
       ON dim_dates.date_id = fct_mrr.date_id
+    LEFT JOIN dim_crm_accounts AS crm_accounts
+      ON dim_crm_accounts.crm_account_id = fct_mrr.crm_account_id
+    INNER JOIN dim_crm_accounts AS merged_accounts
+      ON merged_accounts.crm_account_id = COALESCE(crm_accounts.merged_to_account_id, crm_accounts.crm_account_id)
     GROUP BY 1, 2, 3
 
 ), retention_subs AS (
