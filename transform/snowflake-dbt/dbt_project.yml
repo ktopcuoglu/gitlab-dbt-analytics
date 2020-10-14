@@ -324,6 +324,11 @@ models:
         ephemeral:
           +schema: analytics
 
+      trusted_data_framework:
+        +schema: analytics
+        +materialized: table
+        +tags: ["tdf"]
+
       zuora:
         xf:
           +schema: analytics
@@ -336,8 +341,6 @@ models:
       arr:
         +materialized: table
 
-
-
       product_kpis:
         +materialized: table
 
@@ -347,6 +350,7 @@ models:
 
         users_emails:
           enabled: false
+
     # ------------------
     # Legacy Structure
     # ------------------
@@ -380,6 +384,7 @@ models:
       +materialized: table
       +schema: tdf
       secure: true
+      +tags: ["tdf"]
 
 
 # ======
