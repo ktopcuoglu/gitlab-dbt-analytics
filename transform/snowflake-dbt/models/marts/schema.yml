@@ -67,6 +67,9 @@ models:
           - unique
         tags: ["tdf", "mart", "arr"]
 
+  - name: mart_retention_parent_account
+    description: "Mart table to support drillable retention analysis"
+
   - name: usage_ping_mart
     description: '{{ doc("usage_ping_mart") }}'
     columns:
