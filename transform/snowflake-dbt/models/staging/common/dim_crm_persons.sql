@@ -75,7 +75,7 @@ WITH sfdc_leads AS (
 {{ dbt_audit(
     cte_ref="unioned",
     created_by="@jjstark",
-    updated_by="@msendal",
+    updated_by="@jjstark",
     created_date="2020-09-10",
-    updated_date="2020-09-17"
+    updated_date="2020-10-14"
 ) }}
