@@ -463,7 +463,8 @@ WITH gitlab_subscriptions AS (
 , users AS (
 
     SELECT *
-    FROM {{ ref('gitlab_dotcom_users') }}
+    FROM {{ ref('gitlab_dotcom_users') }} gitlab_users
+    WHERE {{ filter_out_blocked_users('gitlab_users', 'user_id') }}
 
 )
 
@@ -743,7 +744,7 @@ WITH gitlab_subscriptions AS (
     FROM data
       LEFT JOIN users
         ON data.user_id = users.user_id
-    WHERE {{ filter_for_blocked_users('users', 'user_id') }}
+    
 )
 
 SELECT *
