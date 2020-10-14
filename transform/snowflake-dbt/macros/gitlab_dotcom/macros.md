@@ -2,6 +2,12 @@
 This macro maps action type ID to the action type.
 {% enddocs %}
 
+{% docs filter_out_blocked_users %}
+This macro takes in the name of the table and column that contain GitLab user ids. This macro creates the SQL filter for filtering out users blocked by GitLab.
+
+The SQL filter returned does not include a `WHERE`, `AND`, or `OR` so it can flexibly be used as any part of the `WHERE` clause.
+
+{% enddocs %}
 
 {% docs get_internal_parent_namespaces %}
 Returns a list of all the internal gitlab.com parent namespaces, enclosed in round brackets. This is useful for filtering an analysis down to external users only.
@@ -29,13 +35,6 @@ The internal namespaces are documented below.
 | gl-compensation | 5495265 |
 | gl-learning | 5496484 |
 | meltano | 2524164 |
-
-{% enddocs %}
-
-{% docs filter_for_blocked_users %}
-This macro takes in the name of the table and column that contain GitLab user ids. This macro creates the SQL filter for filtering out users blocked by GitLab.
-
-The SQL filter returned does not include a `WHERE`, `AND`, or `OR` so it can flexibly be used as any part of the `WHERE` clause.
 
 {% enddocs %}
 
