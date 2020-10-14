@@ -15,7 +15,7 @@ WITH data AS (
       section_name,
       is_smau,
       clean_metrics_name,
-      SUM(metric_value) AS weekly_metrics_value
+      SUM(IFNULL(metric_value,0)) AS weekly_metrics_value
     FROM data
     {{ dbt_utils.group_by(n=9) }} 
 
@@ -33,7 +33,7 @@ WITH data AS (
       clean_metrics_name,
       weekly_metrics_value              AS monthly_metric_value
     FROM transformed
-    QUALIFY (ROW_NUMBER() OVER (PARTITION BY created_month, ping_id ORDER BY created_week DESC)) = 1
+    QUALIFY (ROW_NUMBER() OVER (PARTITION BY created_month, instance_id, metrics_path ORDER BY created_week DESC)) = 1
 
 )
 
