@@ -21,7 +21,7 @@ WITH dim_crm_accounts AS (
 ), parent_account_mrrs AS (
 
     SELECT
-      dim_crm_accounts.ultimate_parent_account_id,
+      merged_accounts.ultimate_parent_account_id,
       dim_dates.date_actual           AS mrr_month,
       dateadd('year', 1, date_actual) AS retention_month,
       SUM(mrr)                        AS mrr_total,
@@ -33,6 +33,8 @@ WITH dim_crm_accounts AS (
       ON dim_subscriptions.subscription_id = fct_mrr.subscription_id
     LEFT JOIN dim_crm_accounts
       ON dim_crm_accounts.crm_account_id = fct_mrr.crm_account_id
+    INNER JOIN dim_crm_accounts AS merged_accounts
+      ON merged_accounts.crm_account_id = COALESCE(dim_crm_accounts.merged_to_account_id, dim_crm_accounts.crm_account_id))
     INNER JOIN dim_dates
       ON dim_dates.date_id = fct_mrr.date_id
     GROUP BY 1, 2, 3
