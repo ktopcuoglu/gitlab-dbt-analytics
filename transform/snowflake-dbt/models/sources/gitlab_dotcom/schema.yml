@@ -1017,6 +1017,32 @@ models:
         tests:
           - not_null
 
+  - name: gitlab_dotcom_namespace_historical_daily
+    columns:
+      - name: snapshot_day_namespace_id
+        tests:
+          - not_null
+          - unique
+  
+  - name: gitlab_dotcom_namespace_historical_monthly
+    columns:
+      - name: CONCAT(snapshot_month, namespace_id)
+        tests:
+          - unique
+  
+  - name: gitlab_dotcom_namespace_lineage_historical_daily
+    columns:
+      - name: snapshot_day_namespace_id
+        tests:
+          - not_null
+          - unique
+  
+  - name: gitlab_dotcom_namespace_lineage_historical_monthly
+    columns:
+      - name: CONCAT(snapshot_month, namespace_id)
+        tests:
+          - unique
+
   - name: gitlab_dotcom_namespace_statistics_source
     description: Base model for Gitlab.com namespace statistics
     columns:

@@ -31,12 +31,16 @@ sheets:
     owner: '@iweeks'
     tabs:
       - days_to_close
+  - name: dev_section_metrics
+    owner: '@mpeychet_'
+    tabs:
+      - dev_section_metrics
   - name: employee_location_factor
     owner: '@pluthra'
     tabs:
       - employee_location_factor
-  - name: dev_section_metrics
-    owner: '@mpeychet_'
+  - name: engineering_contributing_organizations
+    owner: '@kwiebers'
     tabs:
       - dev_section_metrics
   - name: event_dictionary_simplified
@@ -128,6 +132,10 @@ sheets:
     owner: '@derekatwood'
     tabs:
       - rep_quotas_full_ps_fy2020
+  - name: sales_training_completion_dates
+    owner: '@paul_armstrong'
+    tabs:
+      - sales_training_completion_dates
   - name: scalable_employment_values
     owner: '@iweeks'
     tabs:
