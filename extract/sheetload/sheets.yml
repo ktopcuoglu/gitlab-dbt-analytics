@@ -3,14 +3,22 @@ sheets:
     owner: '@jjstark'
     tabs:
       - test_sheet
-  - name: abuse_top_storage_data
-    owner: '@ken_aguilar'
-    tabs:
-      - abuse_top_storage_data
   - name: abuse_mitigation
     owner: '@ken_aguilar'
     tabs:
       - abuse_mitigation
+  - name: abuse_top_ci_data
+    owner: '@ken_aguilar'
+    tabs:
+      - abuse_top_ci_data
+  - name: abuse_top_download_data
+    owner: '@ken_aguilar'
+    tabs:
+      - abuse_top_download_data
+  - name: abuse_top_storage_data
+    owner: '@ken_aguilar'
+    tabs:
+      - abuse_top_storage_data
   - name: ar_aging_details
     owner: '@s_mccauley'
     tabs:

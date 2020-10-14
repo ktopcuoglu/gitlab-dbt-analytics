@@ -16,6 +16,8 @@ sources:
     tables:
       - name: abm_account_baselines
       - name: abuse_mitigation
+      - name: abuse_top_ci_data
+      - name: abuse_top_download_data
       - name: abuse_top_storage_data
       - name: ally_certificate
       - name: ar_aging_details
