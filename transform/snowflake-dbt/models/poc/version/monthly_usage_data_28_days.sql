@@ -47,5 +47,5 @@ SELECT
   section_name,
   is_smau,
   clean_metrics_name,
-  metric_value AS monthly_metric_value
+  monthly_metric_value
 FROM monthly
