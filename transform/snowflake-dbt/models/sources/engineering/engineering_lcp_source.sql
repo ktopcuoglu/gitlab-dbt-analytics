@@ -15,13 +15,14 @@ WITH source AS (
 ), data_points_flushed_out AS (
 
     SELECT
-      metric_name,
-      data_by_row.value[0]::FLOAT          AS metric_value,
-      data_by_row.value[1]::TIMESTAMP      AS metric_reported_at
+      SPLIT_PART(metric_name, '.', 13)::VARCHAR  AS aggregation_name,
+      SPLIT_PART(metric_name, '.', 5)::VARCHAR   AS metric_name,        
+      data_by_row.value[0]::FLOAT                AS metric_value,
+      data_by_row.value[1]::TIMESTAMP            AS metric_reported_at
     FROM metric_per_row,
     LATERAL FLATTEN(input => datapoints, OUTER => True) data_by_row
     WHERE NULLIF(metric_value::VARCHAR, 'null') IS NOT NULL
-    QUALIFY ROW_NUMBER() OVER (PARTITION BY metric_name, metric_reported_at ORDER BY uploaded_at DESC) = 1
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY metric_name, aggregation_name, metric_reported_at ORDER BY uploaded_at DESC) = 1
 
 )
 
