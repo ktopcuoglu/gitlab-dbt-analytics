@@ -69,11 +69,7 @@ WITH sfdc_leads AS (
     net_new_source_categories
 
   FROM sfdc_leads
-  WHERE converted_contact_id IS NULL
-    OR converted_contact_id NOT IN (
-	  SELECT contact_id
-	  FROM sfdc_contacts
-  )
+  WHERE is_converted = false
 )
 
 {{ dbt_audit(
