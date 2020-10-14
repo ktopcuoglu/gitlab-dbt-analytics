@@ -743,6 +743,7 @@ WITH gitlab_subscriptions AS (
     FROM data
       LEFT JOIN users
         ON data.user_id = users.user_id
+    WHERE {{ filter_for_blocked_users('users', 'user_id') }}
 )
 
 SELECT *
