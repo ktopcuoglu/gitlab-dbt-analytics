@@ -50,7 +50,8 @@ WITH dim_crm_accounts AS (
       current_mrr.arr_total          AS current_arr,
       future_mrr.arr_total           AS future_arr,
       current_mrr.quantity_total     AS current_quantity,
-      future_mrr.quantity_total      AS future_quantity
+      future_mrr.quantity_total      AS future_quantity,
+      current_mrr.subscription_end_month
     FROM parent_account_mrrs AS current_mrr
     LEFT JOIN parent_account_mrrs AS future_mrr
       ON current_mrr.ultimate_parent_account_id = future_mrr.ultimate_parent_account_id
@@ -64,6 +65,7 @@ WITH dim_crm_accounts AS (
       retention_month,
       dim_dates.fiscal_year                     AS retention_fiscal_year,
       dim_dates.fiscal_quarter                  AS retention_fiscal_quarter,
+      subscription_end_month,
       current_mrr                               AS original_mrr,
       COALESCE(future_mrr, 0)                   AS net_retention_mrr,
       CASE WHEN net_retention_mrr > 0
