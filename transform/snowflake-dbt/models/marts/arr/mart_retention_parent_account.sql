@@ -35,7 +35,6 @@ WITH dim_crm_accounts AS (
       ON dim_crm_accounts.crm_account_id = fct_mrr.crm_account_id
     INNER JOIN dim_dates
       ON dim_dates.date_id = fct_mrr.date_id
-
     GROUP BY 1, 2, 3
 
 ), retention_subs AS (
@@ -60,24 +59,24 @@ WITH dim_crm_accounts AS (
     SELECT
       retention_subs.ultimate_parent_account_id,
       dim_crm_accounts.crm_account_name,
+      retention_month,
+      dim_dates.fiscal_year        AS retention_fiscal_year,
+      dim_dates.fiscal_quarter     AS retention_fiscal_quarter,
+      current_mrr_month,
       future_mrr,
       current_mrr,
-      coalesce(future_mrr, 0)     AS net_retention_mrr,
+      COALESCE(future_mrr, 0)      AS net_retention_mrr,
       CASE WHEN net_retention_mrr > 0
         THEN least(net_retention_mrr, current_mrr)
-        ELSE 0 END                AS gross_retention_mrr,
-      retention_month,
-      dim_dates.fiscal_year,
-      dim_dates.fiscal_quarter,
-      current_mrr_month,
-      future_arr,
+        ELSE 0 END                 AS gross_retention_mrr,
+      COALESCE(future_arr, 0)      AS retention_arr,
       current_arr,
-      future_quantity,
+      COALESCE(future_quantity, 0) AS retention_quantity             ,
       current_quantity,
-      {{ type_of_arr_change('future_arr', 'current_arr') }},
-      {{ reason_for_arr_change_seat_change('future_quantity', 'current_quantity', 'future_arr', 'current_arr') }},
-      {{ reason_for_quantity_change_seat_change('future_quantity', 'current_quantity') }},
-      {{ annual_price_per_seat_change('future_quantity', 'current_quantity', 'future_arr', 'current_arr') }}
+      {{ type_of_arr_change('retention_arr', 'current_arr') }},
+      {{ reason_for_arr_change_seat_change('retention_quantity', 'current_quantity', 'retention_arr', 'current_arr') }},
+      {{ reason_for_quantity_change_seat_change('retention_quantity', 'current_quantity') }},
+      {{ annual_price_per_seat_change('retention_quantity', 'current_quantity', 'retention_arr', 'current_arr') }}
     FROM retention_subs
     INNER JOIN dim_dates
       ON dim_dates.date_actual = retention_subs.retention_month
