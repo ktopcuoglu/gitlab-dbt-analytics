@@ -42,7 +42,7 @@ sheets:
   - name: engineering_contributing_organizations
     owner: '@kwiebers'
     tabs:
-      - dev_section_metrics
+      - engineering_contributing_organizations
   - name: event_dictionary_simplified
     owner: '@mpeychet_'
     tabs:
