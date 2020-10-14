@@ -410,7 +410,7 @@ roles:
                 - raw.rspec.*
                 - raw.snowplow.*
                 - raw.tap_postgres.*
-                - raw.snowplow_imports.*
+                - raw.snowflake_imports.*
                 - raw.qualtrics_mailing_list.*
         privileges:
             databases:
