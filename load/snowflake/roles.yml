@@ -1270,6 +1270,12 @@ roles:
             - reporting
             - analyst_xs
 
+    - dpeterson:
+        member_of:
+            - analyst_growth
+        warehouses:
+            - analyst_xs
+
     - dtang:
         member_of:
             - reporter
@@ -1761,6 +1767,11 @@ users:
         can_login: yes
         member_of:
             - dparker
+
+    - dpeterson:
+        can_login: yes
+        member_of:
+            - dpeterson
 
     - dtang:
         can_login: yes
