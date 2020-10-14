@@ -9,17 +9,14 @@ WITH usage_ping_data AS (
      SELECT
         *,
         {{ get_date_id('created_at') }},
-        REGEXP_REPLACE(NULLIF(version, ''), '\-.*')                AS cleaned_version,
-        SPLIT_PART(cleaned_version, '.', 1)                        AS major_version,
-        SPLIT_PART(cleaned_version, '.', 2)                        AS minor_version,
+        REGEXP_REPLACE(NULLIF(version, ''), '\-.*')                  AS cleaned_version,
+        SPLIT_PART(cleaned_version, '.', 1)                          AS major_version,
+        SPLIT_PART(cleaned_version, '.', 2)                          AS minor_version,
         IFF(
             version LIKE '%-pre%' OR version LIKE '%-rc%', 
             TRUE, FALSE
-        )::BOOLEAN                                                 AS is_pre_release,
-        IFF(license_expires_at >= created_at 
-            OR license_expires_at IS NULL, 
-            edition, 'EE Free')                                    AS edition,
-        IFF(edition = 'CE', 'CE', 'EE')                            AS main_edition,
+        )::BOOLEAN                                                   AS is_pre_release,
+        IFF(edition = 'CE', 'CE', 'EE')                              AS main_edition,
         CASE edition
             WHEN 'CE'       THEN 'CE'
             WHEN 'EE Free'  THEN 'Core'
