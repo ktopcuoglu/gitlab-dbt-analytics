@@ -32,6 +32,12 @@ The internal namespaces are documented below.
 
 {% enddocs %}
 
+{% docs filter_for_blocked_users %}
+This macro takes in the name of the table and column that contain GitLab user ids. This macro creates the SQL filter for filtering out users blocked by GitLab.
+
+The SQL filter returned does not include a `WHERE`, `AND`, or `OR` so it can flexibly be used as any part of the `WHERE` clause.
+
+{% enddocs %}
 
 {% docs map_state_id %}
 This macro maps state_ids to english state names (opened, closed, etc).
