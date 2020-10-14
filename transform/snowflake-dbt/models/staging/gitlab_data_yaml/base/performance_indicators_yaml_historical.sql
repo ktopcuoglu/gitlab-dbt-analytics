@@ -36,8 +36,13 @@ WITH unioned AS (
     FROM unioned
     QUALIFY ROW_NUMBER() OVER (PARTITION BY pi_name, org_name, pi_definition, is_key, is_public, is_embedded, pi_target ORDER BY snapshot_date) =1 
 
+), final AS (
+
+    SELECT *,
+    COALESCE(LEAD(valid_from_date) OVER (PARTITION BY pi_name, org_name ORDER BY valid_from_date), CURRENT_DATE()) AS valid_to_date
+    FROM intermediate
+    
 )
 
-SELECT *,
-  COALESCE(LEAD(valid_from_date) OVER (PARTITION BY pi_name, org_name ORDER BY valid_from_date), CURRENT_DATE()) AS valid_to_date
-FROM intermediate
+SELECT *
+FROM final

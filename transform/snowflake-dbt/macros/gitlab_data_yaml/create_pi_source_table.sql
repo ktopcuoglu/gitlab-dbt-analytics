@@ -1,10 +1,10 @@
-{%- macro create_pi_source_table(source) -%}
+{%- macro create_pi_source_table(source_performance_indicator) -%}
 
 WITH source AS (
 
     SELECT *,
       RANK() OVER (PARTITION BY DATE_TRUNC('day', uploaded_at) ORDER BY uploaded_at DESC) AS rank
-    FROM {{ source }}
+    FROM {{ source_performance_indicator }}
 
 ), intermediate AS (
 
@@ -30,7 +30,11 @@ WITH source AS (
       snapshot_date,
       rank
     FROM intermediate
-      
+
 )
+
+SELECT *
+FROM intermediate_stage
+
 
  {% endmacro %}

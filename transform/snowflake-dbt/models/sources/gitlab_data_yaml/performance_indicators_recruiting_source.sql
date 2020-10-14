@@ -1,8 +1,5 @@
 
 {{ create_pi_source_table(
-    source=source('gitlab_data_yaml', 'recruiting_pi')
+    source_performance_indicator=source('gitlab_data_yaml', 'recruiting_pi')
     )
 }}
-
-SELECT *
-FROM intermediate_stage
