@@ -396,6 +396,7 @@ roles:
                 - raw.prometheus
                 - raw.rspec
                 - raw.snowplow
+                - raw.snowflake_imports
                 - raw.tap_postgres
                 - raw.qualtrics_mailing_list
             tables:
@@ -409,6 +410,7 @@ roles:
                 - raw.rspec.*
                 - raw.snowplow.*
                 - raw.tap_postgres.*
+                - raw.snowflake_imports.*
                 - raw.qualtrics_mailing_list.*
         privileges:
             databases:
