@@ -57,31 +57,30 @@ WITH dim_crm_accounts AS (
 ), final AS (
 
     SELECT
-      retention_subs.ultimate_parent_account_id,
-      dim_crm_accounts.crm_account_name,
+      retention_subs.ultimate_parent_account_id AS parent_account_id,
+      dim_crm_accounts.crm_account_name         AS parent_account_name,
       retention_month,
       dim_dates.fiscal_year        AS retention_fiscal_year,
       dim_dates.fiscal_quarter     AS retention_fiscal_quarter,
-      current_mrr_month,
-      future_mrr,
-      current_mrr,
+      current_mrr                  AS original_mrr,
       COALESCE(future_mrr, 0)      AS net_retention_mrr,
       CASE WHEN net_retention_mrr > 0
         THEN least(net_retention_mrr, current_mrr)
         ELSE 0 END                 AS gross_retention_mrr,
+      current_arr                  AS original_arr,
       COALESCE(future_arr, 0)      AS retention_arr,
-      current_arr,
+      current_quantity             AS original_quantity,
       COALESCE(future_quantity, 0) AS retention_quantity             ,
-      current_quantity,
-      {{ type_of_arr_change('retention_arr', 'current_arr') }},
-      {{ reason_for_arr_change_seat_change('retention_quantity', 'current_quantity', 'retention_arr', 'current_arr') }},
-      {{ reason_for_quantity_change_seat_change('retention_quantity', 'current_quantity') }},
-      {{ annual_price_per_seat_change('retention_quantity', 'current_quantity', 'retention_arr', 'current_arr') }}
+      {{ type_of_arr_change('retention_arr', 'original_arr') }},
+      {{ reason_for_arr_change_seat_change('retention_quantity', 'original_quantity', 'retention_arr', 'original_arr') }},
+      {{ reason_for_quantity_change_seat_change('retention_quantity', 'original_quantity') }},
+      {{ annual_price_per_seat_change('retention_quantity', 'original_quantity', 'retention_arr', 'original_arr') }}
     FROM retention_subs
     INNER JOIN dim_dates
       ON dim_dates.date_actual = retention_subs.retention_month
     LEFT JOIN dim_crm_accounts
       ON dim_crm_accounts.crm_account_id = retention_subs.ultimate_parent_account_id
+    WHERE retention_month <= dateadd(month, -1, CURRENT_DATE)
 
 )
 
