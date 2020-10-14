@@ -1,3 +1,9 @@
+<!-- format should be something like 'user [de]provisioning - firstname last initual' -->
+<!-- example: user provisioning - John S -->
+
+
+Source Issue: <!-- link to source issue -->
+
 # Creating a New User in Snowflake
 
 - [ ] Create user using SECURITYADMIN role
