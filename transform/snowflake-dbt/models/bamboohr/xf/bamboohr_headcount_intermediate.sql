@@ -171,8 +171,9 @@ WITH dates AS (
           AND job_role_modified = 'Individual Contributor',1,0)                     AS separated_contributor, 
 
 
-      is_promotion,    
-      percent_change_in_comp,                     
+      IFF(employees.job_title = '%VP%', FALSE, is_promotion)                        AS is_promotion,    
+      IFF(is_promotion = TRUE AND employees.job_title NOT LIKE '%VP%',
+        percent_change_in_comp, NULL)                                               AS percent_change_in_comp,              
       IFF(dates.end_date = date_actual 
             AND sales_geo_differential = 'n/a - Comp Calc',
             location_factor, NULL)                                                  AS location_factor,
