@@ -6,22 +6,11 @@ WITH source AS (
 ), final AS (
     
     SELECT 
-        NULLIF(email_domain, '')::VARCHAR                                 AS email_domain,
-        NULLIF(account_creation_date, '')::VARCHAR::DATE                  AS account_creation_date,
-        NULLIF(account_creation_time, '')::VARCHAR::TIME                  AS account_creation_time,
-        NULLIF(account_creation_timestamp, '')::VARCHAR::TIMESTAMP        AS account_creation_timestamp,
-        NULLIF(category, '')::VARCHAR                                     AS category,
-        NULLIF(description, '')::VARCHAR                                  AS description,
-        NULLIF(automation, '')::VARCHAR                                   AS automation,
-        TRY_TO_NUMBER(mitigation_week)                                    AS mitigation_week,
-        TRY_TO_NUMBER(mitigation_month)                                   AS mitigation_month,
-        NULLIF(mitigation_date, '')::VARCHAR::DATE                        AS mitigation_date,
-        NULLIF(mitigation_time, '')::VARCHAR::TIME                        AS mitigation_time,
-        NULLIF(mitigation_timestamp, '')::VARCHAR::TIMESTAMP              AS mitigation_timestamp,
-        NULLIF(timezone, '')::VARCHAR                                     AS timezone,
-        TRY_TO_DECIMAL(time_to_mitigate)                                  AS time_to_mitigate,
-        TRY_TO_NUMBER(rule_id)                                            AS rule_id,
-        NULLIF(rule_name, '')::VARCHAR                                    AS rule_name
+        NULLIF(date_, '')::VARCHAR::DATE                                  AS date_,
+        TRY_TO_NUMBER(legit_users)                                        AS legit_users,
+        TRY_TO_DECIMAL(legit_gb)                                          AS legit_gb,
+        TRY_TO_NUMBER(blocked_users)                                      AS blocked_users,
+        TRY_TO_DECIMAL(blocked_gb)                                        AS blocked_gb
     FROM source
 
 ) 
