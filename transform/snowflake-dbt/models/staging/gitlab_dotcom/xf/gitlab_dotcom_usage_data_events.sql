@@ -463,7 +463,7 @@ WITH gitlab_subscriptions AS (
 , users AS (
 
     SELECT *
-    FROM {{ ref('gitlab_dotcom_users') }} gitlab_users
+    FROM {{ ref('gitlab_dotcom_users') }}
 
 )
 
