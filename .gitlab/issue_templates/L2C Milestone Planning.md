@@ -6,7 +6,7 @@ Please add a number for days you'll be working this milestone. Team members shou
 
 - @pluthra
 - @jeanpeguero:
-- @iweeks
+- @iweeks:
 - `@jjstark: 0`
 - @msendal: 
 - @paul_armstrong:
