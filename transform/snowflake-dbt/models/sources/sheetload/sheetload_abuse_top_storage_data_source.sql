@@ -6,11 +6,11 @@ WITH source AS (
 ), final AS (
     
     SELECT 
-        NULLIF(date_, '')::VARCHAR::DATE                                  AS date_,
-        TRY_TO_NUMBER(legit_users)                                        AS legit_users,
-        TRY_TO_DECIMAL(legit_gb)                                          AS legit_gb,
-        TRY_TO_NUMBER(blocked_users)                                      AS blocked_users,
-        TRY_TO_DECIMAL(blocked_gb)                                        AS blocked_gb
+      NULLIF(date_, '')::VARCHAR::DATE                                  AS date_,
+      TRY_TO_NUMBER(legit_users)                                        AS legit_users,
+      TRY_TO_DECIMAL(legit_gb)                                          AS legit_gb,
+      TRY_TO_NUMBER(blocked_users)                                      AS blocked_users,
+      TRY_TO_DECIMAL(blocked_gb)                                        AS blocked_gb
     FROM source
 
 ) 
