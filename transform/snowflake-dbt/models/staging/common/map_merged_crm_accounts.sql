@@ -29,7 +29,7 @@ WITH sfdc_account_source AS (
 )
 
 SELECT
-  account_id, 
+  account_id                                         AS sfdc_account_id, 
   lineage[ARRAY_SIZE(lineage) - 1]::VARCHAR          AS merged_account_id,
   is_deleted,
   IFF(merged_account_id != account_id, TRUE, FALSE)  AS is_merged,
