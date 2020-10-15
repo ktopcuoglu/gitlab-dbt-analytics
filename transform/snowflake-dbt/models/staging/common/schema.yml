@@ -577,7 +577,6 @@ models:
         tests:
           - not_null
 
-
   - name: fct_usage_ping_metric_all_time
     description: '{{ doc("fct_usage_ping_metric_all_time") }}'
     columns:
