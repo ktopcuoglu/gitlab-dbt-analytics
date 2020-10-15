@@ -209,7 +209,7 @@ models:
         tests:
           - not_null
           - unique
-  - name: dim_mapping_sfdc_deleted_accounts
+  - name: map_merged_crm_accounts
     description: Mapping table to provide the merged to crm_id for deleted accounts.
     columns:
       - name: zuora_account_id
