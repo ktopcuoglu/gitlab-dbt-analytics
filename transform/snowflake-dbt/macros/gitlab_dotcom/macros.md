@@ -5,7 +5,15 @@ This macro maps action type ID to the action type.
 {% docs filter_out_blocked_users %}
 This macro takes in the name of the table and column that contain GitLab user ids. This macro creates the SQL filter for filtering out users blocked by GitLab.
 
-The SQL filter returned does not include a `WHERE`, `AND`, or `OR` so it can flexibly be used as any part of the `WHERE` clause.
+The SQL filter returned does not include a `WHERE`, `AND`, or `OR` so it can flexibly be used as any part of the `WHERE` clause.  For example, to filter out blocked users from a table named `users` with a column named `user_id`, the dbt model would look like
+
+```
+SELECT *
+FROM users
+WHERE {{ filter_out_blocked_users(users, user_id) }}
+```
+
+This macro should be used downstream of source models, in models where activities of blocked users may introduce noise to metrics.  For example, this macro is used in `gitlab_dotcom_usage_data_events` to only keep events generated from legitimate use.
 
 {% enddocs %}
 
