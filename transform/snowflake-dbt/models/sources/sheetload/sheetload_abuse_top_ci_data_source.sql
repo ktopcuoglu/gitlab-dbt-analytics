@@ -6,7 +6,7 @@ WITH source AS (
 ), final AS (
     
     SELECT 
-      NULLIF(date_, '')::VARCHAR::DATE                                  AS date_,
+      NULLIF(tracked_date, '')::VARCHAR::DATE                           AS tracked_date,
       TRY_TO_NUMBER(legit_users)                                        AS legit_users,
       TRY_TO_NUMBER(legit_hours)                                        AS legit_hours,
       TRY_TO_NUMBER(blocked_users)                                      AS blocked_users,
