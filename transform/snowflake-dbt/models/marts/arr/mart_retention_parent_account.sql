@@ -78,6 +78,7 @@ WITH dim_crm_accounts AS (
       {{ type_of_arr_change('retention_arr', 'original_arr') }},
       {{ reason_for_arr_change_seat_change('retention_quantity', 'original_quantity', 'retention_arr', 'original_arr') }},
       {{ reason_for_quantity_change_seat_change('retention_quantity', 'original_quantity') }},
+      {{ reason_for_arr_change_price_change('product_category', 'previous_product_category', 'retention_quantity', 'original_quantity', 'retention_arr', 'original_arr', 'product_ranking',' previous_product_ranking')
       {{ annual_price_per_seat_change('retention_quantity', 'original_quantity', 'retention_arr', 'original_arr') }}
     FROM retention_subs
     INNER JOIN dim_dates
