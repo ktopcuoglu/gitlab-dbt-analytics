@@ -140,6 +140,7 @@ WITH RECURSIVE date_details AS (
             WHEN h.stage_name IN ('Closed Won')                                                                                                                                     
                 THEN 'Closed Won'
             ELSE 'Other' END                                                                            AS stage_name_4plus,
+        
         -- excluded accounts 
         CASE WHEN a.ultimate_parent_id IN ('001610000111bA3','0016100001F4xla','0016100001CXGCs','00161000015O9Yn','0016100001b9Jsc') 
                 AND h.close_date < '2020-08-01' THEN 1 ELSE 0 END                                       AS is_excluded_flag,

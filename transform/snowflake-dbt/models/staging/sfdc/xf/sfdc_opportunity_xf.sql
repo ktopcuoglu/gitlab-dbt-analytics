@@ -356,7 +356,11 @@ WITH RECURSIVE sfdc_opportunity AS (
     sfdc_record_type.record_type_modifying_object_type,
     sfdc_record_type.record_type_name,
     md5((date_trunc('month', sfdc_opportunity.close_date)::date)||UPPER(opportunity_owner.team))            AS region_quota_id,
-    md5((date_trunc('month', sfdc_opportunity.close_date)::date)||UPPER(opportunity_owner.name))            AS sales_quota_id
+    md5((date_trunc('month', sfdc_opportunity.close_date)::date)||UPPER(opportunity_owner.name))            AS sales_quota_id,
+
+    -- excluded accounts 
+    CASE WHEN sfdc_account.ultimate_parent_account_id IN ('001610000111bA3','0016100001F4xla','0016100001CXGCs','00161000015O9Yn','0016100001b9Jsc') 
+        AND sfdc_opportunity.close_date < '2020-08-01' THEN 1 ELSE 0 END                                    AS is_excluded_flag
 
     FROM sfdc_opportunity
     INNER JOIN sfdc_opportunity_stage

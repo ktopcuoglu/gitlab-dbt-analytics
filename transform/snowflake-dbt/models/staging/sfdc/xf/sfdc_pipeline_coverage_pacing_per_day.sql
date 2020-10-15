@@ -8,19 +8,26 @@ TODO:
 
  */
  WITH date_details AS (
+
     SELECT
       *,
       DENSE_RANK() OVER (ORDER BY first_day_of_fiscal_quarter) AS quarter_number
     FROM {{ ref('date_details') }}
     ORDER BY 1 DESC
+
 ), sfdc_pipeline_velocity_quarter AS (
+    
     SELECT *
     FROM {{ ref('sfdc_pipeline_velocity_quarter') }}  
+
 ), sfdc_opportunity_xf AS (
+    
     SELECT *
     FROM {{ ref('sfdc_opportunity_xf') }}
     WHERE is_deleted = 0
+
 ), sfdc_opportunity_snapshot_history_xf AS (
+    
     SELECT *
     FROM {{ ref('sfdc_opportunity_snapshot_history_xf') }}
     -- remove lost & deleted deals
@@ -29,8 +36,10 @@ TODO:
         AND forecast_category_name != 'Omitted'
         -- remove incomplete quarters, data from beggining of Q4 FY20
         AND snapshot_date >= CAST('2019-11-01' AS DATE)
+
 ), pipeline_snapshot_base AS (
-SELECT  snapshot_date,
+    
+    SELECT  snapshot_date,
         close_fiscal_quarter,
         close_fiscal_quarter_date,
         close_fiscal_year,
@@ -79,9 +88,12 @@ WHERE
     snapshot_date <= dateadd(month,3,close_fiscal_quarter_date)
     -- 1 quarters before start
     AND snapshot_date >= dateadd(month,-3,close_fiscal_quarter_date)
+    AND is_excluded_flag = 0
 
 GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12
+
 ), pipeline_snapshot_extended AS (
+
     SELECT pq.close_fiscal_quarter,
             pq.close_fiscal_quarter_date,
             pq.adj_sales_segment,
@@ -127,9 +139,11 @@ GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12
      AND dt.day_of_fiscal_quarter < 92
      -- exclude current quarter
      AND dt.fiscal_quarter_name_fy != da.fiscal_quarter_name_fy  
- ), previous_quarter AS (
-  -- daily snapshot of pipeline metrics per quarter within the quarter
-  SELECT pq.close_fiscal_quarter,
+
+), previous_quarter AS (
+  
+    -- daily snapshot of pipeline metrics per quarter within the quarter
+    SELECT pq.close_fiscal_quarter,
         pq.snapshot_fiscal_quarter,
         pq.close_fiscal_quarter_date,
         pq.snapshot_fiscal_quarter_date,
@@ -168,8 +182,9 @@ GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12
             pq.adj_region,
             pq.snapshot_day_of_fiscal_quarter
  
- ), next_quarter AS (
-    SELECT pq.snapshot_fiscal_quarter                                                  AS close_fiscal_quarter,
+), next_quarter AS (
+    
+        SELECT pq.snapshot_fiscal_quarter                                                  AS close_fiscal_quarter,
           pq.snapshot_fiscal_quarter_date                                              AS close_fiscal_quarter_date,
           pq.close_fiscal_quarter                                                      AS next_close_fiscal_quarter,
           pq.close_fiscal_quarter_date                                                 AS next_close_fiscal_quarter_date,
@@ -202,7 +217,9 @@ GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12
             pq.deal_category,
             pq.adj_region,
             pq.snapshot_day_of_fiscal_quarter
-  ), data_structure AS (
+
+), data_structure AS (
+    
     SELECT DISTINCT a.adj_sales_segment,
                     b.deal_category,
                     e.adj_region,
@@ -220,8 +237,10 @@ GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12
                                         day_of_fiscal_quarter                           AS snapshot_day_of_fiscal_quarter
                         FROM date_details) d
                 ON c.snapshot_fiscal_quarter_date = d.snapshot_fiscal_quarter_date
- )
-  SELECT de.adj_sales_segment                                                           AS sales_segment, 
+
+)
+  
+SELECT de.adj_sales_segment                                                           AS sales_segment, 
         de.deal_category,
         de.adj_region                                                                   AS region,
         lower(de.deal_category) || '_' || lower(de.adj_sales_segment)                   AS key_segment_report,
