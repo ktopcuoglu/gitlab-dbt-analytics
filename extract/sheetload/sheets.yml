@@ -43,6 +43,10 @@ sheets:
     owner: '@kwiebers'
     tabs:
       - engineering_contributing_organizations
+  - name: event_dictionary_simplified
+    owner: '@mpeychet_'
+    tabs:
+      - event_dictionary_simplified
   - name: gitlab_slack_stats
     owner: '@pluthra'
     tabs:
@@ -169,14 +173,6 @@ sheets:
     owner: '@kathleentam'
     tabs:
       - data_team_capacity
-  - name: zuora_account_golden_records
-    owner: '@paul_armstrong'
-    tabs:
-      - zuora_account_golden_records
-  - name: zuora_subscription_golden_records
-    owner: '@paul_armstrong'
-    tabs:
-    - zuora_subscription_golden_records
   - name: product_maturity_historical
     owner: '@pluthra'
     tabs:

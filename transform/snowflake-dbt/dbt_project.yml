@@ -70,6 +70,9 @@ vars:
   warehouse_name: "{{ env_var('SNOWFLAKE_TRANSFORM_WAREHOUSE') }}"
   valid_at: '{{ run_started_at.strftime("%Y-%m-%d %H:%M:%S%z") }}'
 
+  snowplow:pass_through_columns: ['glm_source','cf_formid','cf_elementid','cf_nodename','cf_type','cf_elementclasses','cf_value','sf_formid','sf_formclasses','sf_elements','ff_formid','ff_elementid','ff_nodename','ff_elementtype','ff_elementclasses','ff_value','lc_elementid','lc_elementclasses','lc_elementtarget','lc_targeturl','lc_elementcontent','tt_category','tt_variable','tt_timing','tt_label']
+  snowplow:page_view_lookback_days: 7
+
   snowplow:
     'snowplow:use_fivetran_interface': false
     'snowplow:events': "{{ ref('snowplow_unnested_events') }}"
@@ -77,11 +80,8 @@ vars:
     'snowplow:context:performance_timing': false
     'snowplow:context:useragent': false
     'snowplow:timezone': 'America/New_York'
-    'snowplow:page_ping_frequency': 30
+    'snowplow:page_ping_frequency': 30	    
     'snowplow:app_ids': ['gitlab', 'about', 'gitlab_customers']
-    'snowplow:pass_through_columns': ['glm_source','cf_formid','cf_elementid','cf_nodename','cf_type','cf_elementclasses','cf_value','sf_formid','sf_formclasses','sf_elements','ff_formid','ff_elementid','ff_nodename','ff_elementtype','ff_elementclasses','ff_value','lc_elementid','lc_elementclasses','lc_elementtarget','lc_targeturl','lc_elementcontent','tt_category','tt_variable','tt_timing','tt_label']
-    'snowplow:page_view_lookback_days': 7
-
 
 # ==================
 # Model Configs
@@ -109,6 +109,10 @@ models:
       - "grant usage on schema {{this.schema}} to role snowplow"
       - "grant select on {{this}} to role snowplow"
     +tags: ["product"]
+    page_views:
+      default:
+        snowplow_web_events:
+          +enabled: false
 
   # ------------------
   # Snowflake Spend Package https://gitlab.com/gitlab-data/snowflake_spend
@@ -324,6 +328,11 @@ models:
         ephemeral:
           +schema: analytics
 
+      trusted_data_framework:
+        +schema: analytics
+        +materialized: table
+        +tags: ["tdf"]
+
       zuora:
         xf:
           +schema: analytics
@@ -336,8 +345,6 @@ models:
       arr:
         +materialized: table
 
-
-
       product_kpis:
         +materialized: table
 
@@ -347,6 +354,7 @@ models:
 
         users_emails:
           enabled: false
+
     # ------------------
     # Legacy Structure
     # ------------------
@@ -380,6 +388,7 @@ models:
       +materialized: table
       +schema: tdf
       secure: true
+      +tags: ["tdf"]
 
 
 # ======

@@ -12,4 +12,4 @@ models:
                 - not_null
           - name: uuid
             tests:
-                - not_null    
+                - not_null
