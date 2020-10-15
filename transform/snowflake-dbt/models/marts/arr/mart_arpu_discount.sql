@@ -55,7 +55,7 @@ WITH dim_dates AS (
       AND (fct_invoice_items.effective_end_month > dim_dates.date_actual
         OR fct_invoice_items.effective_end_month IS NULL)
       AND dim_dates.day_of_month = 1
-    GROUP BY {{ dbt_utils.group_by(n=11) }}
+    {{ dbt_utils.group_by(n=11) }}
 
 )
 

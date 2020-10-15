@@ -95,7 +95,8 @@ WITH zuora_product AS (
         OR LOWER(product_name)                    LIKE '%5 year%'
         THEN (billing_list_price/5)
       ELSE billing_list_price
- END                                           AS annual_billing_list_price
+      END                                           AS annual_billing_list_price
+    FROM joined
 
 )
 
