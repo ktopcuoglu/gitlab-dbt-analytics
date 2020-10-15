@@ -7,9 +7,8 @@ Please add a number for days you'll be working this milestone. Team members shou
 - @pluthra
 - @jeanpeguero:
 - @iweeks
-- @jjstark: 
+- `@jjstark: 0`
 - @msendal: 
-- @m_walker: 
 - @paul_armstrong:
 
 **Total work days**: <!-- sum the above engineering days -->
