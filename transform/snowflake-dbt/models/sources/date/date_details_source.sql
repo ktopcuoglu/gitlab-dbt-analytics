@@ -80,6 +80,8 @@ WITH date_spine AS (
         4, 'Q4'))                                                                             AS fiscal_quarter_name,  
       ('FY' || SUBSTR(fiscal_quarter_name, 3, 7))                                             AS fiscal_quarter_name_fy,
       DENSE_RANK() OVER (ORDER BY fiscal_quarter_name)                                        AS fiscal_quarter_number_absolute,
+      fiscal_year || '-' || MONTHNAME(date_day)                                               AS fiscal_month_name,
+      ('FY' || SUBSTR(fiscal_month_name, 3, 8))                                               AS fiscal_month_name_fy,
 
       (CASE WHEN MONTH(date_day) = 1 AND DAYOFMONTH(date_day) = 1 THEN 'New Year''s Day'
         WHEN MONTH(date_day) = 12 AND DAYOFMONTH(date_day) = 25 THEN 'Christmas Day'
@@ -131,6 +133,8 @@ SELECT
   fiscal_quarter_name,
   fiscal_quarter_name_fy,
   fiscal_quarter_number_absolute,
+  fiscal_month_name,
+  fiscal_month_name_fy,
   holiday_desc,
   is_holiday,
   last_month_of_fiscal_quarter,
