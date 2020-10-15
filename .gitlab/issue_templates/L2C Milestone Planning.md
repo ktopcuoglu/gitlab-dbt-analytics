@@ -4,12 +4,11 @@
 # work days :calendar: 
 Please add a number for days you'll be working this milestone. Team members should subtract a day for each triage day and a day for meetings. Any time-off should also be subtracted from this number. This means that the maximum Days a Data Team member will ever post is 7. If you have two triage days it's 5. **This section should be filled out by the data team members themselves.**
 
-- @pluthra
+- @pluthra:
 - @jeanpeguero:
-- @iweeks
-- @jjstark: 
+- @iweeks:
+- `@jjstark: 0`
 - @msendal: 
-- @m_walker: 
 - @paul_armstrong:
 
 **Total work days**: <!-- sum the above engineering days -->
