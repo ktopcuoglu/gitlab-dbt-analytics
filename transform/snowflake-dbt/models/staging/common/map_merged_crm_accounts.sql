@@ -1,3 +1,5 @@
+{{ config(schema='common') }}
+
 WITH sfdc_account_source AS (
 
     SELECT *
