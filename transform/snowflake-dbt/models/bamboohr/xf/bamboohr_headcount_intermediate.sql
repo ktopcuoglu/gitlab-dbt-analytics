@@ -171,7 +171,7 @@ WITH dates AS (
           AND job_role_modified = 'Individual Contributor',1,0)                     AS separated_contributor, 
 
 
-      IFF(employees.job_title = '%VP%', FALSE, is_promotion)                        AS is_promotion,    
+      IFF(employees.job_title LIKE '%VP%', 'Exclude', is_promotion)                 AS is_promotion,    
       IFF(is_promotion = TRUE AND employees.job_title NOT LIKE '%VP%',
         percent_change_in_comp, NULL)                                               AS percent_change_in_comp,              
       IFF(dates.end_date = date_actual 
@@ -199,7 +199,6 @@ WITH dates AS (
 
 
 ), aggregated AS (
-
 
     SELECT
       DATE_TRUNC(month,start_date)      AS month_date,
