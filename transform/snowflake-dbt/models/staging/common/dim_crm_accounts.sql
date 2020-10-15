@@ -63,7 +63,7 @@ WITH sfdc_account AS (
     sfdc_account.account_owner_team,
     sfdc_account.account_type,
     sfdc_account.gtm_strategy,
-		sfdc_users.name                               AS technical_account_manager,
+    sfdc_users.name                               AS technical_account_manager,
     sfdc_account.is_deleted                       AS is_deleted,
     CASE
       WHEN sfdc_account.is_deleted
