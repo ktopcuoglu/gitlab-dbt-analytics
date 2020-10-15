@@ -1,12 +1,22 @@
 version: 2
 
 models:
-  - name: zuora_accounts_new_updated
+  - name: zuora_accounts_new
     columns:
       - name: date_day
         tests:
           - not_null
-  - name: zuora_subscriptions_new_updated
+  - name: zuora_accounts_updated
+    columns:
+        - name: date_day
+          tests:
+            - not_null
+  - name: zuora_subscriptions_new
+    columns:
+      - name: date_day
+        tests:
+          - not_null
+  - name: zuora_subscriptions_updated
     columns:
       - name: date_day
         tests:
