@@ -3,16 +3,18 @@ WITH promotions AS (
     SELECT *
     FROM {{ ref ('bamboohr_promotions_xf') }}
     WHERE promotion_month BETWEEN DATEADD(month,-12, DATE_TRUNC(month, CURRENT_DATE())) AND
-          DATEADD(month,-1, DATE_TRUNC(month, CURRENT_DATE()))
+                                  DATEADD(month,-1, DATE_TRUNC(month, CURRENT_DATE()))
 
 ), bamboohr_headcount_aggregated AS (
 
     SELECT 
-       month_date, 
-       IFF(breakout_type = 'kpi_breakout','company_breakout',breakout_type) AS breakout_type, 
-       CASE WHEN breakout_type = 'kpi_breakout' THEN 'Company Overall - Including Sales Development'
-            WHEN breakout_type = 'division_breakout' THEN division
-            ELSE department END AS division_department, 
+      month_date, 
+      IFF(breakout_type = 'kpi_breakout','company_breakout',breakout_type) AS breakout_type, 
+      CASE WHEN breakout_type = 'kpi_breakout' 
+             THEN 'Company Overall - Including Sales Development'
+           WHEN breakout_type = 'division_breakout' 
+             THEN division
+           ELSE department END                                             AS division_department, 
       division,
       department,
       headcount_end, 
@@ -81,8 +83,8 @@ WITH promotions AS (
     SELECT
       'company_breakout'                                  AS breakout_type,
       'Company Overall - Including Sales Development'     AS division_department,
-      AVG(percent_change_in_comp) AS average_increase,
-      MEDIAN(percent_change_in_comp) AS median_incrase
+      AVG(percent_change_in_comp)                         AS average_increase,
+      MEDIAN(percent_change_in_comp)                      AS median_increase
     FROM promotions
     GROUP BY 1,2
     
@@ -91,8 +93,8 @@ WITH promotions AS (
     SELECT
       'company_breakout'                                  AS breakout_type,
       'Company - Excluding Sales Development'             AS division_department,
-      AVG(percent_change_in_comp) AS average_increase,
-      MEDIAN(percent_change_in_comp) AS median_incrase
+      AVG(percent_change_in_comp)                         AS average_increase,
+      MEDIAN(percent_change_in_comp)                      AS median_increase
     FROM promotions
     WHERE department != 'Sales Development'
     GROUP BY 1,2
@@ -102,8 +104,8 @@ WITH promotions AS (
     SELECT
       'department_breakout'                               AS breakout_type,
       department                                          AS division_department,
-      AVG(percent_change_in_comp) AS average_increase,
-      MEDIAN(percent_change_in_comp) AS median_incrase
+      AVG(percent_change_in_comp)                         AS average_increase,
+      MEDIAN(percent_change_in_comp)                      AS median_incrase
     FROM promotions
     WHERE department != 'Sales Development'
     GROUP BY 1,2
