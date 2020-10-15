@@ -83,9 +83,54 @@ SELECT base.*,
             THEN cro.level_4
         ELSE 'n/a' END                                                                              AS sales_team_asm_level,
 
+    CASE WHEN (cro.level_4 IS NOT NULL
+              AND cro.level_4 != ''
+              AND (cro.level_4 LIKE 'ASM%' OR cro.level_4 LIKE 'Area Sales%') )
+            THEN cro.level_4 
+          WHEN (cro.level_3 IS NOT NULL
+              AND cro.level_3 != '')
+            THEN cro.level_3
+          WHEN (cro.level_2 IS NOT NULL
+              AND cro.level_2 != '')
+            THEN cro.level_2    ELSE 'n/a' END                                                     AS sales_min_hierarchy_level,
+    
+    CASE sales_min_hierarchy_level
+        WHEN 'ASM - APAC - Japan'                 THEN 'APAC'
+        WHEN 'ASM - Civilian'                     THEN 'PUBSEC'
+        WHEN 'ASM - DoD - USAF+COCOMS+4th Estate' THEN 'PUBSEC'
+        WHEN 'ASM - EMEA - DACH'                  THEN 'EMEA'
+        WHEN 'ASM - EMEA - North'                 THEN 'EMEA'
+        WHEN 'ASM - MM - EMEA'                    THEN 'EMEA'
+        WHEN 'ASM - MM - East'                    THEN 'US East'
+        WHEN 'ASM - MM - West'                    THEN 'US West'
+        WHEN 'ASM - NSG'                          THEN 'PUBSEC'
+        WHEN 'ASM - SLED'                         THEN 'PUBSEC'
+        WHEN 'ASM - US East - Southeast'          THEN 'US East'
+        WHEN 'ASM - US West - NorCal'             THEN 'US West'
+        WHEN 'ASM - US West - PacNW'              THEN 'US West'
+        WHEN 'ASM - US West - SoCal+Rockies'      THEN 'US West'
+        WHEN 'ASM-DOD- Army+Navy+Marines+SI''s'   THEN 'PUBSEC'
+        WHEN 'ASM-SMB-AMER-East'                  THEN 'US East'
+        WHEN 'ASM-SMB-AMER-West'                  THEN 'US West'
+        WHEN 'ASM-SMB-EMEA'                       THEN 'EMEA'
+        WHEN 'Area Sales Manager - US East - Central'           THEN 'US East'
+        WHEN 'Area Sales Manager - US East - Named Accounts'    THEN 'US East'
+        WHEN 'Area Sales Manager - US East - Northeast'         THEN 'US East'
+        WHEN 'CD EMEA'                            THEN 'EMEA'
+        WHEN 'CD PubSec'                          THEN 'PUBSEC'
+        WHEN 'RD APAC'                            THEN 'APAC'
+        WHEN 'RD EMEA'                            THEN 'EMEA'
+        WHEN 'RD PubSec'                          THEN 'PUBSEC'
+        WHEN 'RD US East'                         THEN 'US East'
+        WHEN 'RD US West'                         THEN 'US West'
+        WHEN 'VP Comm MM'                         THEN 'Other'
+        WHEN 'VP Ent'                             THEN 'Other'
+        ELSE 'n/a'
+    END                                                                                                 AS sales_region,
+
     -- identify VP level managers
     CASE WHEN cro.level_2 LIKE 'VP%' 
-            THEN 1 ELSE 0 END                                                                       AS is_lvl_2_vp_flag
+            THEN 1 ELSE 0 END                                                                           AS is_lvl_2_vp_flag
 FROM base
 LEFT JOIN cro_sfdc_hierarchy cro
     ON cro.user_id = base.user_id

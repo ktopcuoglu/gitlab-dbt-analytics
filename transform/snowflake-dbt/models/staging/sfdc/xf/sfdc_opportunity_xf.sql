@@ -225,7 +225,7 @@ WITH RECURSIVE sfdc_opportunity AS (
             THEN '2. Growth' 
         WHEN sfdc_opportunity.order_type_stamped = '4. Churn'
             THEN '3. Churn'
-        ELSE '4. Other' END                                                                             AS deal_category,
+        ELSE '4. Other' END                                                                            AS deal_category,
     
     -- adjusted, as logic is applied to removed as many blanks as possible
     CASE
@@ -238,21 +238,9 @@ WITH RECURSIVE sfdc_opportunity AS (
         WHEN (sfdc_account.ultimate_parent_sales_segment  = 'Unknown' OR sfdc_account.ultimate_parent_sales_segment  IS NULL) 
             AND sfdc_opportunity.user_segment IN ('Large', 'US West', 'US East', 'Public Sector''EMEA', 'APAC') 
                 THEN 'Large'
-        ELSE sfdc_account.ultimate_parent_sales_segment END                                          AS adj_sales_segment,
+        ELSE sfdc_account.ultimate_parent_sales_segment END                                             AS adj_ultimate_parent_sales_segment,
     
         
-    CASE WHEN sfdc_opportunity.account_owner_team_stamped in ('APAC', 'MM - APAC')
-            THEN 'APAC'
-        WHEN sfdc_opportunity.account_owner_team_stamped in ('MM - EMEA', 'EMEA', 'MM-EMEA')
-            THEN 'EMEA'
-        WHEN sfdc_opportunity.account_owner_team_stamped in ('US East', 'MM - East')
-            THEN 'US EAST'
-        WHEN sfdc_opportunity.account_owner_team_stamped in ('US West', 'MM - West')
-            THEN 'US WEST'
-        WHEN sfdc_opportunity.account_owner_team_stamped in ('Public Sector')
-            THEN 'PUBSEC'
-        ELSE 'OTHER' END                                                                                AS adj_region,
-
     -- account owner hierarchies levels
     account_owner.sales_team_level_2                                                                    AS account_owner_team_level_2,
     account_owner.sales_team_level_3                                                                    AS account_owner_team_level_3,
@@ -261,6 +249,9 @@ WITH RECURSIVE sfdc_opportunity AS (
     account_owner.sales_team_vp_level                                                                   AS account_owner_team_vp_level,
     account_owner.sales_team_rd_level                                                                   AS account_owner_team_rd_level,
     account_owner.sales_team_asm_level                                                                  AS account_owner_team_asm_level,
+
+    account_owner.sales_min_hierarchy_level                                                             AS account_owner_min_team_level,
+    account_owner.sales_region                                                                          AS account_owner_sales_region,
 
     -- identify VP level managers
     account_owner.is_lvl_2_vp_flag                                                                      AS account_owner_is_lvl_2_vp_flag,

@@ -110,18 +110,19 @@ WITH RECURSIVE date_details AS (
             ELSE o.order_type_stamped END                                                               AS order_type_stamped, 
         
         o.account_owner_team_stamped,
+        a.ultimate_parent_sales_segment,
 
         CASE
-            WHEN (a.sales_segment = 'Unknown' OR a.sales_segment IS NULL) 
+            WHEN (a.ultimate_parent_sales_segment = 'Unknown' OR a.ultimate_parent_sales_segment IS NULL) 
                 AND o.user_segment = 'SMB' 
                     THEN 'SMB'
-            WHEN (a.sales_segment = 'Unknown' OR a.sales_segment IS NULL) 
+            WHEN (a.ultimate_parent_sales_segment = 'Unknown' OR a.ultimate_parent_sales_segment IS NULL) 
                 AND o.user_segment = 'Mid-Market' 
                     THEN 'Mid-Market'
-            WHEN (a.sales_segment = 'Unknown' OR a.sales_segment IS NULL) 
+            WHEN (a.ultimate_parent_sales_segment = 'Unknown' OR a.ultimate_parent_sales_segment IS NULL) 
                 AND o.user_segment IN ('Large', 'US West', 'US East', 'Public Sector''EMEA', 'APAC') 
                     THEN 'Large'
-            ELSE a.sales_segment END                                                                    AS sales_segment,
+            ELSE a.ultimate_parent_sales_segment END                                                    AS adj_ultimate_parent_sales_segment,
         CASE WHEN h.stage_name IN ('00-Pre Opportunity','0-Pending Acceptance','0-Qualifying','Developing', '1-Discovery', '2-Developing', '2-Scoping')  
                 THEN 'Pipeline'
              WHEN h.stage_name IN ('3-Technical Evaluation', '4-Proposal', '5-Negotiating', '6-Awaiting Signature', '7-Closing')                         
@@ -169,29 +170,31 @@ WITH RECURSIVE date_details AS (
             THEN h.forecasted_iacv ELSE 0 END                                                           AS created_and_won_iacv,
 
         -- account owner hierarchies levels
-        account_owner.sales_team_level_2                                                                AS account_owner_team_level_2,
-        account_owner.sales_team_level_3                                                                AS account_owner_team_level_3,
-        account_owner.sales_team_level_4                                                                AS account_owner_team_level_4,
+        coalesce(account_owner.sales_team_level_2,'n/a')                                                AS account_owner_team_level_2,
+        coalesce(account_owner.sales_team_level_3,'n/a')                                                AS account_owner_team_level_3,
+        coalesce(account_owner.sales_team_level_4,'n/a')                                                AS account_owner_team_level_4,
         
-        account_owner.sales_team_vp_level                                                               AS account_owner_team_vp_level,
-        account_owner.sales_team_rd_level                                                               AS account_owner_team_rd_level,
-        account_owner.sales_team_asm_level                                                              AS account_owner_team_asm_level,
+        coalesce(account_owner.sales_team_vp_level,'n/a')                                               AS account_owner_team_vp_level,
+        coalesce(account_owner.sales_team_rd_level,'n/a')                                               AS account_owner_team_rd_level,
+        coalesce(account_owner.sales_team_asm_level,'n/a')                                              AS account_owner_team_asm_level,
         
         -- identify VP level managers
+        coalesce(account_owner.sales_min_hierarchy_level,'n/a')                                         AS account_owner_min_team_level,
         account_owner.is_lvl_2_vp_flag                                                                  AS account_owner_is_lvl_2_vp_flag,
+        account_owner.sales_region                                                                      AS account_owner_sales_region,
 
         -- opportunity owner hierarchies levels
         CASE WHEN sa.level_2 is not null 
             THEN sa.level_2 
-            ELSE opportunity_owner.sales_team_level_2 END                                                   AS opportunity_owner_team_level_2,
+            ELSE opportunity_owner.sales_team_level_2 END                                               AS opportunity_owner_team_level_2,
         CASE WHEN sa.level_3 is not null 
             THEN sa.level_3 
-            ELSE opportunity_owner.sales_team_level_3 END                                                   AS opportunity_owner_team_level_3,
+            ELSE opportunity_owner.sales_team_level_3 END                                               AS opportunity_owner_team_level_3,
         
         -- identify VP level managers
         CASE WHEN opportunity_owner.sales_team_level_2 LIKE 'VP%' 
             OR sa.level_2 LIKE 'VP%'
-                THEN 1 ELSE 0 END                                                                           AS opportunity_owner_is_lvl_2_vp_flag
+                THEN 1 ELSE 0 END                                                                       AS opportunity_owner_is_lvl_2_vp_flag
 
     FROM sfdc_opportunity_snapshot_history h
     -- close date

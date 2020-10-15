@@ -44,16 +44,21 @@ TODO:
         close_fiscal_quarter_date,
         close_fiscal_year,
         order_type_stamped,
+
+        -- sales team - region fields
         account_owner_team_stamped,
-        sales_segment,
+        account_owner_team_vp_level,
+        account_owner_team_rd_level,
+        account_owner_team_asm_level,
+        account_owner_sales_region,
+        
         stage_name_3plus,
         stage_name_4plus,
         is_excluded_flag,
         stage_name,
         forecast_category_name,
 
-        CASE WHEN sales_segment = 'Unknown' 
-            THEN 'SMB' ELSE sales_segment END                                       AS adj_sales_segment,
+        adj_ultimate_parent_sales_segment,
         
         CASE WHEN order_type_stamped = '1. New - First Order' 
                 THEN '1. New'
@@ -63,25 +68,17 @@ TODO:
                 THEN '3. Churn'
             ELSE '4. Other' END                                                     AS deal_category,
 
-        CASE WHEN account_owner_team_stamped in ('APAC', 'MM - APAC')
-            THEN 'APAC'
-        WHEN account_owner_team_stamped in ('MM - EMEA', 'EMEA', 'MM-EMEA')
-            THEN 'EMEA'
-        WHEN account_owner_team_stamped in ('US East', 'MM - East')
-            THEN 'US EAST'
-        WHEN account_owner_team_stamped in ('US West', 'MM - West')
-            THEN 'US WEST'
-        WHEN account_owner_team_stamped in ('Public Sector')
-            THEN 'PUBSEC'
-        ELSE 'OTHER' END                                                            AS adj_region,
+        -- the account hierarchy can be related to the VP / ASM / RD levels
+        -- and to an approximate region
+        account_owner_min_team_level,
 
-        COUNT(DISTINCT opportunity_id)                          AS opps,
-        SUM(net_iacv)                                           AS net_iacv,
-        SUM(churn_only)                                         AS churn_only,
-        SUM(forecasted_iacv)                                    AS forecasted_iacv,
-        SUM(total_contract_value)                               AS tcv,
+        COUNT(DISTINCT opportunity_id)                                              AS opps,
+        SUM(net_iacv)                                                               AS net_iacv,
+        SUM(churn_only)                                                             AS churn_only,
+        SUM(forecasted_iacv)                                                        AS forecasted_iacv,
+        SUM(total_contract_value)                                                   AS tcv,
 
-        SUM(created_and_won_iacv)                               AS created_and_won_iacv
+        SUM(created_and_won_iacv)                                                   AS created_and_won_iacv
 FROM sfdc_opportunity_snapshot_history_xf 
 WHERE 
     -- till end of quarter
@@ -90,28 +87,35 @@ WHERE
     AND snapshot_date >= dateadd(month,-3,close_fiscal_quarter_date)
     AND is_excluded_flag = 0
 
-GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12
+GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18
 
 ), pipeline_snapshot_extended AS (
 
     SELECT pq.close_fiscal_quarter,
             pq.close_fiscal_quarter_date,
-            pq.adj_sales_segment,
-            pq.adj_region,
+            pq.adj_ultimate_parent_sales_segment,
+            
+            -- sales team - region fields
+            pq.account_owner_min_team_level,
+            pq.account_owner_team_vp_level,
+            pq.account_owner_team_rd_level,
+            pq.account_owner_team_asm_level,
+            pq.account_owner_sales_region,
+
             pq.deal_category,
             dt.day_of_fiscal_quarter,
-            pq.forecasted_iacv                                                                AS open_won_net_iacv,
-            pq.opps                                                                           AS open_won_deal_count,
+            pq.forecasted_iacv                                                               AS open_won_net_iacv,
+            pq.opps                                                                          AS open_won_deal_count,
     
             CASE WHEN pq.stage_name_3plus in ('3+ Pipeline','Closed Won')
-                    THEN pq.forecasted_iacv ELSE 0 END                                        AS open_won_3plus_net_iacv,
+                    THEN pq.forecasted_iacv ELSE 0 END                                       AS open_won_3plus_net_iacv,
             CASE WHEN pq.stage_name_3plus in ('3+ Pipeline','Closed Won')
-                    THEN pq.opps ELSE 0 END                                                   AS open_won_3plus_deal_count,
+                    THEN pq.opps ELSE 0 END                                                  AS open_won_3plus_deal_count,
         
             CASE WHEN pq.stage_name like '%Won%'
-                        THEN pq.net_iacv ELSE 0 END                                           AS won_net_iacv,
+                        THEN pq.net_iacv ELSE 0 END                                          AS won_net_iacv,
             CASE WHEN pq.stage_name like '%Won%'
-                        THEN pq.opps ELSE 0 END                                               AS won_deal_count,
+                        THEN pq.opps ELSE 0 END                                              AS won_deal_count,
         
             -- created and closed
             pq.created_and_won_iacv,
@@ -148,26 +152,26 @@ GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12
         pq.close_fiscal_quarter_date,
         pq.snapshot_fiscal_quarter_date,
 
-        pq.adj_sales_segment,
+        pq.adj_ultimate_parent_sales_segment,
         pq.deal_category,
         pq.snapshot_day_of_fiscal_quarter,
    
         -- keys missing
-        pq.adj_region,
+        pq.account_owner_min_team_level,
         -- channel
         
         -- open / won pipeline in quarter
-        sum(open_won_net_iacv)                                                      AS open_won_net_iacv,
-        sum(open_won_deal_count)                                                    AS open_won_deal_count,
+        sum(open_won_net_iacv)                                                          AS open_won_net_iacv,
+        sum(open_won_deal_count)                                                        AS open_won_deal_count,
 
-        sum(open_won_3plus_net_iacv)                                                AS open_won_3plus_net_iacv,
-        sum(open_won_3plus_deal_count)                                              AS open_won_3plus_deal_count,
+        sum(open_won_3plus_net_iacv)                                                    AS open_won_3plus_net_iacv,
+        sum(open_won_3plus_deal_count)                                                  AS open_won_3plus_deal_count,
 
-        sum(won_net_iacv)                                                           AS won_net_iacv,
-        sum(won_deal_count)                                                         AS won_deal_count,
+        sum(won_net_iacv)                                                               AS won_net_iacv,
+        sum(won_deal_count)                                                             AS won_deal_count,
 
         --created in quarter
-        sum(pq.created_and_won_iacv)                                                AS created_and_won_iacv
+        sum(pq.created_and_won_iacv)                                                    AS created_and_won_iacv
 
    FROM pipeline_snapshot_extended pq
    -- restrict the rows to pipeline of the quarter the snapshot was taken
@@ -177,26 +181,26 @@ GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12
             pq.snapshot_fiscal_quarter,
             pq.snapshot_fiscal_quarter_date,
             pq.close_fiscal_quarter_date,
-            pq.adj_sales_segment,
+            pq.adj_ultimate_parent_sales_segment,
             pq.deal_category,
-            pq.adj_region,
+            pq.account_owner_min_team_level,
             pq.snapshot_day_of_fiscal_quarter
  
 ), next_quarter AS (
     
-        SELECT pq.snapshot_fiscal_quarter                                                  AS close_fiscal_quarter,
+        SELECT pq.snapshot_fiscal_quarter                                              AS close_fiscal_quarter,
           pq.snapshot_fiscal_quarter_date                                              AS close_fiscal_quarter_date,
           pq.close_fiscal_quarter                                                      AS next_close_fiscal_quarter,
           pq.close_fiscal_quarter_date                                                 AS next_close_fiscal_quarter_date,
           pq.snapshot_fiscal_quarter,
           pq.snapshot_fiscal_quarter_date,
           
-          pq.adj_sales_segment,
+          pq.adj_ultimate_parent_sales_segment,
           pq.deal_category,
           pq.snapshot_day_of_fiscal_quarter,
    
           -- keys missing
-          pq.adj_region,
+          pq.account_owner_min_team_level,
           -- channel
    
           sum(open_won_net_iacv)                                                      AS next_open_net_iacv,
@@ -213,54 +217,66 @@ GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12
             pq.close_fiscal_quarter_date,
             pq.snapshot_fiscal_quarter,
             pq.snapshot_fiscal_quarter_date,      
-            pq.adj_sales_segment,
+            pq.adj_ultimate_parent_sales_segment,
             pq.deal_category,
-            pq.adj_region,
+            pq.account_owner_min_team_level,
             pq.snapshot_day_of_fiscal_quarter
 
 ), data_structure AS (
     
-    SELECT DISTINCT a.adj_sales_segment,
+    SELECT DISTINCT a.adj_ultimate_parent_sales_segment,
                     b.deal_category,
-                    e.adj_region,
+                    e.account_owner_min_team_level,
+                    e.account_owner_sales_region,
+                    e.account_owner_team_vp_level,
+                    e.account_owner_team_rd_level,
+                    e.account_owner_team_asm_level,
                     c.snapshot_fiscal_quarter_date,
                     d.snapshot_fiscal_quarter,
                     d.snapshot_day_of_fiscal_quarter,
                     d.snapshot_next_fiscal_quarter_date
-         FROM (SELECT DISTINCT adj_sales_segment FROM pipeline_snapshot_extended) a
+         FROM (SELECT DISTINCT adj_ultimate_parent_sales_segment FROM pipeline_snapshot_extended) a
             CROSS JOIN (SELECT DISTINCT deal_category FROM pipeline_snapshot_extended) b
             CROSS JOIN (SELECT DISTINCT snapshot_fiscal_quarter_date FROM pipeline_snapshot_extended) c
-            CROSS JOIN (SELECT DISTINCT adj_region FROM pipeline_snapshot_extended) e
-            INNER JOIN (SELECT DISTINCT fiscal_quarter_name_fy                          AS snapshot_fiscal_quarter,
-                                        first_day_of_fiscal_quarter                     AS snapshot_fiscal_quarter_date, 
-                                        dateadd(month,3,first_day_of_fiscal_quarter)    AS snapshot_next_fiscal_quarter_date,
-                                        day_of_fiscal_quarter                           AS snapshot_day_of_fiscal_quarter
+            CROSS JOIN (SELECT DISTINCT account_owner_min_team_level,
+                                        account_owner_sales_region,
+                                        account_owner_team_vp_level,
+                                        account_owner_team_rd_level,
+                                        account_owner_team_asm_level
+                                        FROM pipeline_snapshot_extended) e
+            INNER JOIN (SELECT DISTINCT fiscal_quarter_name_fy                                               AS snapshot_fiscal_quarter,
+                                        first_day_of_fiscal_quarter                                          AS snapshot_fiscal_quarter_date, 
+                                        dateadd(month,3,first_day_of_fiscal_quarter)                         AS snapshot_next_fiscal_quarter_date,
+                                        day_of_fiscal_quarter                                                AS snapshot_day_of_fiscal_quarter
                         FROM date_details) d
-                ON c.snapshot_fiscal_quarter_date = d.snapshot_fiscal_quarter_date
-
+                ON c.snapshot_fiscal_quarter_date = d.snapshot_fiscal_quarter_date 
 )
   
-SELECT de.adj_sales_segment                                                           AS sales_segment, 
+SELECT de.adj_ultimate_parent_sales_segment                                                                   AS sales_segment, 
         de.deal_category,
-        de.adj_region                                                                   AS region,
-        lower(de.deal_category) || '_' || lower(de.adj_sales_segment)                   AS key_segment_report,
-        lower(de.adj_region) || '_' || lower(de.adj_sales_segment)                      AS key_region_report,
-        de.snapshot_fiscal_quarter                                                      AS close_fiscal_quarter,
+        de.account_owner_min_team_level,
+        de.account_owner_team_vp_level,
+        de.account_owner_team_rd_level,
+        de.account_owner_team_asm_level,
+        de.account_owner_sales_region,
+        lower(de.deal_category) || '_' || lower(de.adj_ultimate_parent_sales_segment)                         AS key_segment_report,
+        lower(de.account_owner_min_team_level) || '_' || lower(de.adj_ultimate_parent_sales_segment)      AS key_region_report,
+        de.snapshot_fiscal_quarter                                                                            AS close_fiscal_quarter,
         de.snapshot_fiscal_quarter,
         de.snapshot_day_of_fiscal_quarter,
-        coalesce(pq.open_won_net_iacv,0) - coalesce(pq.won_net_iacv,0)                  AS open_pipeline_net_iacv,
-        coalesce(pq.open_won_3plus_net_iacv,0)- coalesce(pq.won_net_iacv,0)             AS open_3plus_pipeline_net_iacv,  
-        coalesce(pq.won_net_iacv,0)                                                     AS won_net_iacv,
-        coalesce(pq.open_won_deal_count,0) - coalesce(pq.won_deal_count,0)              AS open_pipeline_deal_count,
-        coalesce(pq.open_won_3plus_deal_count,0) - coalesce(pq.won_deal_count,0)        AS open_3plus_deal_count,
-        coalesce(pq.won_deal_count,0)                                                   AS won_deal_count,
+        coalesce(pq.open_won_net_iacv,0) - coalesce(pq.won_net_iacv,0)                                        AS open_pipeline_net_iacv,
+        coalesce(pq.open_won_3plus_net_iacv,0)- coalesce(pq.won_net_iacv,0)                                   AS open_3plus_pipeline_net_iacv,  
+        coalesce(pq.won_net_iacv,0)                                                                           AS won_net_iacv,
+        coalesce(pq.open_won_deal_count,0) - coalesce(pq.won_deal_count,0)                                    AS open_pipeline_deal_count,
+        coalesce(pq.open_won_3plus_deal_count,0) - coalesce(pq.won_deal_count,0)                              AS open_3plus_deal_count,
+        coalesce(pq.won_deal_count,0)                                                                         AS won_deal_count,
 
         -- created and closed
         pq.created_and_won_iacv,
                 
         -- next quarter 
-        nqd.fiscal_quarter_name_fy                                                      AS next_close_fiscal_quarter,
-        nqd.first_day_of_fiscal_quarter                                                 AS next_close_fiscal_quarter_date,                   
+        nqd.fiscal_quarter_name_fy                                                                           AS next_close_fiscal_quarter,
+        nqd.first_day_of_fiscal_quarter                                                                      AS next_close_fiscal_quarter_date,                   
         nq.next_open_net_iacv,
         nq.next_open_3plus_net_iacv,
         nq.next_open_deal_count,
@@ -268,16 +284,16 @@ SELECT de.adj_sales_segment                                                     
        
  FROM data_structure de
     LEFT JOIN previous_quarter pq
-        ON de.adj_sales_segment = pq.adj_sales_segment
+        ON de.adj_ultimate_parent_sales_segment = pq.adj_ultimate_parent_sales_segment
         AND de.snapshot_fiscal_quarter_date = pq.snapshot_fiscal_quarter_date
         AND de.deal_category = pq.deal_category
         AND de.snapshot_day_of_fiscal_quarter = pq.snapshot_day_of_fiscal_quarter
-        AND de.adj_region = pq.adj_region
+        AND de.account_owner_min_team_level = pq.account_owner_min_team_level
     LEFT JOIN  next_quarter nq
         ON nq.close_fiscal_quarter_date = de.snapshot_fiscal_quarter_date
-            AND nq.adj_sales_segment = de.adj_sales_segment
+            AND nq.adj_ultimate_parent_sales_segment = de.adj_ultimate_parent_sales_segment
             AND nq.deal_category = de.deal_category
             AND nq.snapshot_day_of_fiscal_quarter = de.snapshot_day_of_fiscal_quarter
-            AND nq.adj_region = de.adj_region
+            AND nq.account_owner_min_team_level = de.account_owner_min_team_level
     LEFT JOIN date_details nqd
         ON nqd.date_actual = de.snapshot_next_fiscal_quarter_date
