@@ -31,10 +31,6 @@ sheets:
     owner: '@iweeks'
     tabs:
       - days_to_close
-  - name: dev_section_metrics
-    owner: '@mpeychet_'
-    tabs:
-      - dev_section_metrics
   - name: employee_location_factor
     owner: '@pluthra'
     tabs:
@@ -144,6 +140,10 @@ sheets:
     owner: '@jeanpeguero'
     tabs:
       - social_marketing_metrics
+  - name: usage_ping_metrics_sections
+    owner: '@mpeychet_'
+    tabs:
+      - usage_ping_metrics_sections
   - name: values_certificate
     owner: '@jbandur'
     tabs:
