@@ -396,6 +396,7 @@ roles:
                 - raw.prometheus
                 - raw.rspec
                 - raw.snowplow
+                - raw.snowflake_imports
                 - raw.tap_postgres
                 - raw.qualtrics_mailing_list
             tables:
@@ -409,6 +410,7 @@ roles:
                 - raw.rspec.*
                 - raw.snowplow.*
                 - raw.tap_postgres.*
+                - raw.snowflake_imports.*
                 - raw.qualtrics_mailing_list.*
         privileges:
             databases:
@@ -543,12 +545,14 @@ roles:
                 - analytics.analytics_meta
                 - analytics.analytics_sensitive
                 - analytics.analytics_staging
+                - analytics.common
             tables:
                 - analytics.analytics.*
                 - analytics.analytics_clones.*
                 - analytics.analytics_meta.*
                 - analytics.analytics_sensitive.*
                 - analytics.analytics_staging.*
+                - analytics.common.*
         privileges:
             databases:
                 read:
@@ -584,6 +588,7 @@ roles:
                 read:
                     - analytics.analytics
                     - analytics.analytics_sensitive
+                    - analytics.common
             tables:
                 read:
                     - analytics.analytics.*
@@ -598,6 +603,7 @@ roles:
                     - analytics.analytics_sensitive.bamboohr_locality
                     - analytics.analytics_sensitive.bamboohr_employment_status_xf
                     - analytics.analytics_sensitive.bamboohr_headcount_intermediate
+                    - analytics.common.*
 
     - bamboohr_raw:
         warehouses:
@@ -662,6 +668,18 @@ roles:
                     - analytics.analytics_sensitive.customers_db_customers_pii
                     - analytics.customers.*
 
+    - common:
+        privileges:
+            databases:
+                read:
+                    - analytics
+            schemas:
+                read:
+                    - analytics.common
+            tables:
+                read:
+                    - analytics.common.*
+
     - date:
         privileges:
             databases:
@@ -699,6 +717,7 @@ roles:
             schemas:
                 read:
                     - analytics.analytics
+                    - analytics.common
                     - analytics.analytics_meta
                     - analytics.analytics_staging
                     - analytics.dbt
@@ -706,6 +725,7 @@ roles:
             tables:
                 read:
                     - analytics.analytics.*
+                    - analytics.common.*
                     - analytics.analytics_meta.*
                     - analytics.analytics_staging.*
                     - analytics.dbt.*
@@ -790,7 +810,7 @@ roles:
                     - analytics.gitlab_dotcom.*
                     - raw.tap_postgres.gitlab_db*
 
-    - google_analytics_360: 
+    - google_analytics_360:
         warehouses:
             - analyst_xs
         privileges:
@@ -1250,6 +1270,12 @@ roles:
             - postgres_pipeline
         warehouses:
             - reporting
+            - analyst_xs
+
+    - dpeterson:
+        member_of:
+            - analyst_growth
+        warehouses:
             - analyst_xs
 
     - dtang:
@@ -1743,6 +1769,11 @@ users:
         can_login: yes
         member_of:
             - dparker
+
+    - dpeterson:
+        can_login: yes
+        member_of:
+            - dpeterson
 
     - dtang:
         can_login: yes

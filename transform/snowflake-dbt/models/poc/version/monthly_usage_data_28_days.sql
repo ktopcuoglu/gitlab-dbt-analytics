@@ -20,6 +20,7 @@ SELECT
   instance_id,
   created_month,
   metrics_path,
+  group_name,
   stage_name,
   section_name,
   is_smau,

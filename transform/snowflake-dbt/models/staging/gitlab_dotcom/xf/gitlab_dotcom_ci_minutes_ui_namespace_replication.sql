@@ -1,21 +1,36 @@
 WITH project_snapshot_monthly AS (
   
-    SELECT *
-    FROM {{ ref('gitlab_dotcom_project_snapshots_monthly') }}
+    SELECT
+      snapshot_month,
+      project_id,
+      namespace_id,
+      visibility_level,
+      shared_runners_enabled
+    FROM {{ ref('gitlab_dotcom_project_historical_monthly') }}
     WHERE snapshot_month >= '2020-07-01'
       AND snapshot_month < DATE_TRUNC('month', CURRENT_DATE)
 
 ), namespace_lineage_monthly AS (
 
-    SELECT *
-    FROM {{ ref('gitlab_dotcom_namespace_lineage_monthly') }}
+    SELECT
+      snapshot_month,
+      namespace_id,
+      parent_id,
+      upstream_lineage,
+      ultimate_parent_id,
+      namespace_is_internal
+    FROM {{ ref('gitlab_dotcom_namespace_lineage_historical_monthly') }}
     WHERE snapshot_month >= '2020-07-01'
       AND snapshot_month < DATE_TRUNC('month', CURRENT_DATE)
 
 ), namespace_statistic_monthly AS (
   
-    SELECT *
-    FROM {{ ref('gitlab_dotcom_namespace_statistics_snapshots_monthly') }}
+    SELECT
+      snapshot_month,
+      namespace_id,
+      shared_runners_seconds,
+      shared_runners_seconds_last_reset
+    FROM {{ ref('gitlab_dotcom_namespace_statistics_historical_monthly') }}
     WHERE snapshot_month >= '2020-07-01'
       AND snapshot_month < DATE_TRUNC('month', CURRENT_DATE)
 
@@ -32,8 +47,16 @@ WITH project_snapshot_monthly AS (
 
 ), namespace_snapshots_monthly AS (
 
-    SELECT *
-    FROM {{ ref('gitlab_dotcom_namespace_snapshots_monthly') }}
+    SELECT
+      snapshot_month,
+      namespace_id,
+      parent_id,
+      owner_id,
+      namespace_type,
+      visibility_level,
+      shared_runners_minutes_limit,
+      extra_shared_runners_minutes_limit
+    FROM {{ ref('gitlab_dotcom_namespace_historical_monthly') }}
     WHERE snapshot_month >= '2020-07-01'
       AND snapshot_month < DATE_TRUNC('month', CURRENT_DATE)
 
@@ -51,7 +74,6 @@ WITH project_snapshot_monthly AS (
     SELECT
       DATE_TRUNC('month', CURRENT_DATE) AS snapshot_month,
       namespace_id,
-      NULLIF(plan_id, 'trial')          AS plan_id,
       parent_id,
       owner_id,
       namespace_type,

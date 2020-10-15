@@ -16,6 +16,7 @@ SELECT
   clean_metrics_name,
   edition,
   product_tier,
+  group_name,
   stage_name,
   section_name, 
   is_smau,
@@ -24,4 +25,4 @@ SELECT
 FROM monthly_usage_data
 INNER JOIN fct_usage_ping_payloads
   ON monthly_usage_data.ping_id = fct_usage_ping_payloads.usage_ping_id
-GROUP BY 1,2,3,4,5,6,7,8
+GROUP BY 1,2,3,4,5,6,7,8,9
