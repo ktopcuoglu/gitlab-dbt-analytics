@@ -32,6 +32,7 @@ WITH zuora_product AS (
       zuora_product.sku                                                         AS product_sku,
       {{ product_category('zuora_product_rate_plan.product_rate_plan_name') }},
       {{ delivery('product_category')}},
+      {{ product_ranking('product_category') }},
       CASE
         WHEN lower(product_rate_plan_name) like '%support%'
           THEN 'Support Only'
