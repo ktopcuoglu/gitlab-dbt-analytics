@@ -39,7 +39,7 @@ WITH self_managed_active_subscriptions AS (
 ), transformed AS (
   
     SELECT 
-      {{ dbt_utils.surrogate_key(['first_day_of_month', 'subscription_id']) }}        AS month_subscrption_id,
+      {{ dbt_utils.surrogate_key(['first_day_of_month', 'self_managed_active_subscriptions.subscription_id']) }}        AS month_subscrption_id,
       first_day_of_month                                                              AS reporting_month,
       self_managed_active_subscriptions.subscription_id,
       active_subscriptions.subscription_name_slugify,
@@ -58,7 +58,7 @@ WITH self_managed_active_subscriptions AS (
     LEFT JOIN active_subscriptions ON self_managed_active_subscriptions.subscription_id = active_subscriptions.subscription_id
     LEFT JOIN all_subscriptions ON active_subscriptions.subscription_name_slugify = all_subscriptions.subscription_name_slugify
     LEFT JOIN fct_payloads ON all_subscriptions.subscription_id = fct_payloads.subscription_id AND first_day_of_month = DATE_TRUNC('month', fct_payloads.created_at)
-    GROUP BY 1,2,3,4,5
+    GROUP BY 1,2,3,4,5,6
 
 ), latest_versions AS (
 
