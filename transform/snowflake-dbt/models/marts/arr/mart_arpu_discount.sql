@@ -27,10 +27,10 @@ WITH dim_dates AS (
 
 ), zuora_subscription AS (
 
-  SELECT *
-  FROM {{ ref('zuora_subscription_source') }}
-  WHERE is_deleted = FALSE
-    AND exclude_from_analysis IN ('False', '')
+    SELECT *
+    FROM {{ ref('zuora_subscription_source') }}
+    WHERE is_deleted = FALSE
+      AND exclude_from_analysis IN ('False', '')
 
 ), arr_month_by_month AS (
 
@@ -62,15 +62,24 @@ WITH dim_dates AS (
 
 SELECT
   {{ dbt_utils.surrogate_key(['arr_month', 'invoice_item_id']) }}
-                                        AS invoice_item_month_id,
+                                                                    AS invoice_item_month_id,
   arr_month,
-  DATE_TRUNC('month',invoice_date)      AS invoice_month,
+  DATE_TRUNC('month',invoice_date)                                  AS invoice_month,
   invoice_number,
-  ultimate_parent_account_id,
-  ultimate_parent_account_name,
-  ultimate_parent_billing_country,
-  ultimate_parent_account_segment,
-  is_reseller,
+  dim_crm_accounts_invoice.ultimate_parent_account_id               AS parent_account_id_invoice,
+  dim_crm_accounts_invoice.ultimate_parent_account_name             AS parent_account_name_invoice,
+  dim_crm_accounts_invoice.ultimate_parent_billing_country          AS parent_billing_country_invoice,
+  dim_crm_accounts_invoice.ultimate_parent_account_segment          AS parent_account_segment_invoice,
+  dim_crm_accounts_invoice.crm_account_id                           AS crm_account_id_invoice,
+  dim_crm_accounts_invoice.crm_account_name                         AS crm_account_name_invoice,
+  dim_crm_accounts_subscription.ultimate_parent_account_id          AS parent_account_id_subscription,
+  dim_crm_accounts_subscription.ultimate_parent_account_name        AS parent_account_name_subscription,
+  dim_crm_accounts_subscription.ultimate_parent_billing_country     AS parent_billing_country_subscription,
+  dim_crm_accounts_subscription.ultimate_parent_account_segment     AS parent_account_segment_subscription,
+  dim_crm_accounts_subscription.crm_account_id                      AS crm_account_id_subscription,
+  dim_crm_accounts_subscription.crm_account_name                    AS crm_account_name_subscription,
+  subscription_name,
+  dim_crm_accounts_invoice.is_reseller,
   product_rate_plan_charge_name,
   product_category,
   delivery,
@@ -78,17 +87,19 @@ SELECT
   IFF(zuora_subscription.created_by_id = '2c92a0fd55822b4d015593ac264767f2', -- All Self-Service / Web direct subscriptions are identified by that created_by_id
       'Self-Service', 'Sales-Assisted') AS subscription_sales_type,
   CASE
-    WHEN lower(product_rate_plan_charge_name) LIKE '%edu or oss%'   THEN TRUE
-    WHEN lower(product_rate_plan_charge_name) LIKE '%y combinator%' THEN TRUE
-    WHEN lower(product_rate_plan_charge_name) LIKE '%support%'      THEN TRUE
+    WHEN LOWER(product_rate_plan_charge_name) LIKE '%edu or oss%'   THEN TRUE
+    WHEN LOWER(product_rate_plan_charge_name) LIKE '%y combinator%' THEN TRUE
+    WHEN LOWER(product_rate_plan_charge_name) LIKE '%support%'      THEN TRUE
     ELSE FALSE
-  END                                   AS is_excluded_from_disc_analysis,
+  END                                                               AS is_excluded_from_disc_analysis,
   effective_start_month,
   effective_end_month,
+  subscription_start_date,
+  subscription_end_date,
   annual_billing_list_price,
-  arr/quantity                          AS arpu,
-  arr                                   AS arr,
-  quantity                              AS quantity
+  arr/quantity                                                      AS arpu,
+  arr                                                               AS arr,
+  quantity                                                          AS quantity
 FROM arr_month_by_month
 INNER JOIN zuora_subscription
   ON arr_month_by_month.dim_subscription_id = zuora_subscription.subscription_id
@@ -96,6 +107,8 @@ INNER JOIN dim_product_details
   ON arr_month_by_month.dim_product_details_id = dim_product_details.product_details_id
 INNER JOIN dim_billing_accounts
   ON arr_month_by_month.dim_billing_account_id_invoice = dim_billing_accounts.billing_account_id
-LEFT JOIN dim_crm_accounts
-  ON arr_month_by_month.dim_crm_account_id_invoice = dim_crm_accounts.crm_account_id
+LEFT JOIN dim_crm_accounts AS dim_crm_accounts_invoice
+  ON arr_month_by_month.dim_crm_account_id_invoice = dim_crm_accounts_invoice.crm_account_id
+LEFT JOIN dim_crm_accounts AS dim_crm_accounts_subscription
+  ON arr_month_by_month.dim_crm_account_id_subscription = dim_crm_accounts_subscription.crm_account_id
 ORDER BY 3 DESC
