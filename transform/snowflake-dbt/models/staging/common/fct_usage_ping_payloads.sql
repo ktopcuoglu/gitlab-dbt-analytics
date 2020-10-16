@@ -74,6 +74,7 @@ WITH license AS (
       cleaned_version AS version,
       major_version,
       minor_version,
+      major_version || '.' || minor_version AS major_minor_version,
       is_pre_release,
       instance_user_count,
       license_plan,
@@ -87,7 +88,7 @@ WITH license AS (
 {{ dbt_audit(
     cte_ref="renamed",
     created_by="@derekatwood",
-    updated_by="@kathleentam",
+    updated_by="@mpeychet",
     created_date="2020-08-17",
-    updated_date="2020-10-11"
+    updated_date="2020-10-16"
 ) }}
