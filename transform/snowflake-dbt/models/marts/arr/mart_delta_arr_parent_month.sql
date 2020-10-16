@@ -87,16 +87,7 @@ WITH dim_billing_accounts AS (
       base.ultimate_parent_account_id,
       ARRAY_AGG(DISTINCT product_category) WITHIN GROUP (ORDER BY product_category ASC)      AS product_category,
       ARRAY_AGG(DISTINCT delivery) WITHIN GROUP (ORDER BY delivery ASC)                      AS delivery,
-      MAX(DECODE(product_category,   --Need to account for the 'other' categories
-          'Bronze', 1,
-          'Silver', 2,
-          'Gold', 3,
-
-          'Starter', 1,
-          'Premium', 2,
-          'Ultimate', 3,
-          0
-     ))                                                                                       AS product_ranking,
+      {{ product_ranking(product_category) }},
       SUM(ZEROIFNULL(quantity))                                                               AS quantity,
       SUM(ZEROIFNULL(mrr)*12)                                                                 AS arr
     FROM base
