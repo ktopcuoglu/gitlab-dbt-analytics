@@ -8,6 +8,11 @@ WITH dim_crm_accounts AS (
     SELECT *
     FROM {{ ref('dim_dates') }}
 
+), dim_product_details AS (
+
+    SELECT *
+    FROM {{ ref('dim_product_details') }}
+
 ), dim_subscriptions AS (
 
     SELECT *
