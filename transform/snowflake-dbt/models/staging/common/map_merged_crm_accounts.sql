@@ -26,14 +26,19 @@ WITH RECURSIVE sfdc_account_source AS (
     INNER JOIN sfdc_account_source AS iter
       ON iter.master_record_id = anchor.account_id
 
+), final AS (
+
+    SELECT
+      account_id                                         AS sfdc_account_id, 
+      lineage[ARRAY_SIZE(lineage) - 1]::VARCHAR          AS merged_account_id,
+      is_deleted,
+      IFF(merged_account_id != account_id, TRUE, FALSE)  AS is_merged,
+      IFF(is_deleted AND NOT is_merged, TRUE, FALSE)     AS deleted_not_merged,
+      --return final common dimension mapping,
+      IFF(deleted_not_merged, '-1', merged_account_id)   AS dim_crm_account_id
+    FROM recursive_cte
+
 )
 
-SELECT
-  account_id                                         AS sfdc_account_id, 
-  lineage[ARRAY_SIZE(lineage) - 1]::VARCHAR          AS merged_account_id,
-  is_deleted,
-  IFF(merged_account_id != account_id, TRUE, FALSE)  AS is_merged,
-  IFF(is_deleted AND NOT is_merged, TRUE, FALSE)     AS deleted_not_merged,
-  --return final common dimension mapping,
-  IFF(deleted_not_merged, '-1', merged_account_id)   AS dim_crm_account_id
-FROM recursive_cte
+SELECT *
+FROM final
