@@ -32,6 +32,14 @@ models:
   - name: calculated_duration
     tests:
     - not_null
+- name: sheetload_cert_product_geo_dashboard_source
+  description: All team members that passed the product geolocation dashboard certification.
+- name: sheetload_cert_product_geo_sql_source
+  description: All team members that passed the product geolocation sql certification.
+- name: sheetload_cert_customer_segmentation_dashboard_source
+  description: All team members that passed the customer segmentation dashboard certification.
+- name: sheetload_cert_customer_segmentation_sql_source
+  description: All team members that passed the customer segmentation sql certification.
 - name: sheetload_company_call_attendance_source
   description: This spreadsheet contains data from company call attendance (also called the "Take a Break Call"). The People Experience team pulls their data and updates their spreadsheet, which is imported into the sheetload sheet.
   columns:
@@ -60,7 +68,6 @@ models:
       tests:
       - not_null
       - unique
-- name: sheetload_engineering_speciality_prior_to_capture_source     
 - name: sheetload_dev_section_metrics_source
   description: dev section metrics used to create the Dev Section Dashboard
   columns:
@@ -68,6 +75,15 @@ models:
       tests:
       - not_null
       - unique
+- name: sheetload_engineering_speciality_prior_to_capture_source     
+- name: sheetload_engineering_contributing_organizations_source
+  description: Information about organizations that contribute
+  columns: 
+    - name: uuid
+    - name: name
+    - name: email
+    - name: gitlab_user
+    - name: organization
 - name: sheetload_gitlab_slack_stats_source
   description: This is the source of Slack usage statistics exported from the [Analytics dashboard](https://slack.com/help/articles/218407447-view-your-slack-analytics-dashboard).
   columns:
@@ -344,3 +360,9 @@ models:
   description: This is a list of all who have completed the IC iteration competency knowledge assessment.
 - name: sheetload_ic_transparency_competency_source
   description: This is a list of all who have completed the IC transparency competency knowledge assessment.
+- name: sheetload_sales_training_completion_dates_source
+  description: Training completion dates for Sales team.
+  columns:
+    - name: email_address
+      tests:
+      - not_null

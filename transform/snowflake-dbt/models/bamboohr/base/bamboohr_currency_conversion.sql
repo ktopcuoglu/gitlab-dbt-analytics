@@ -1,8 +1,7 @@
-{# {{ config({
-    "schema": "sensitive",
-    "materialized": "ephemeral"
+{{ config({
+    "schema": "ephemeral"
     })
-}} #}
+}}
 
 WITH source AS (
 
@@ -11,43 +10,19 @@ WITH source AS (
     ORDER BY uploaded_at DESC
     LIMIT 1
 
-), intermediate AS (
-
-    SELECT 
-      d.value AS data_by_row,
-      uploaded_at
-    FROM source,
-    LATERAL FLATTEN(INPUT => parse_json(jsontext), OUTER => true) d
-
-), unnest_again AS (
-
-    SELECT 
-      d.value AS data_by_row,
-      uploaded_at
-    FROM intermediate,
-    LATERAL FLATTEN(INPUT => parse_json(data_by_row), OUTER => true) d  
-
 ), renamed AS (
 
     SELECT 
-      data_by_row['id']::NUMBER                                      AS conversion_id,
-      data_by_row['employeeId']::NUMBER                              AS employee_id,
-      data_by_row['customConversionEffectiveDate']::DATE             AS effective_date,
-      data_by_row['customCurrencyConversionFactor']::VARCHAR           AS currency_conversion_factor,
-      data_by_row['customLocalAnnualSalary']::VARCHAR                AS local_annual_salary,
-      data_by_row['customUSDAnnualSalary']::VARCHAR                  AS usd_annual_salary,
+      data_by_row.value['id']::NUMBER                                      AS conversion_id,
+      data_by_row.value['employeeId']::NUMBER                              AS employee_id,
+      data_by_row.value['customConversionEffectiveDate']::DATE             AS effective_date,
+      data_by_row.value['customCurrencyConversionFactor']::DECIMAL(10,5)   AS currency_conversion_factor,
+      data_by_row.value['customLocalAnnualSalary']::VARCHAR                AS local_annual_salary,
+      data_by_row.value['customUSDAnnualSalary']::VARCHAR                  AS usd_annual_salary,
       uploaded_at
-    FROM unnest_again
-  
-), cleaned AS (
-
-    SELECT 
-      renamed.*,
-      TO_NUMBER(SPLIT_PART(local_annual_salary,' ',1)) AS local_annual_salary_amount,
-      SPLIT_PART(local_annual_salary,' ',2)            AS local_currency_code,  
-      TO_NUMBER(SPLIT_PART(usd_annual_salary,' ',1))   AS usd_annual_salary_amount,
-      SPLIT_PART(usd_annual_salary,' ',2)              AS usd_currency_code
-    FROM renamed
+    FROM source,
+    LATERAL FLATTEN(INPUT => parse_json(jsontext), OUTER => true) initial_unnest,
+    LATERAL FLATTEN(INPUT => parse_json(initial_unnest.value), OUTER => true) data_by_row
 
 ), final AS (
 
@@ -56,13 +31,13 @@ WITH source AS (
       employee_id,
       effective_date,
       currency_conversion_factor,
-      local_annual_salary_amount,
-      local_currency_code,
-      usd_annual_salary_amount
-    FROM cleaned 
+      local_annual_salary,
+      REGEXP_REPLACE(local_annual_salary, '[0-9/-/#/./*]', '')                    AS annual_local_currency_code,
+      REGEXP_REPLACE(usd_annual_salary, '[a-z/-/A-z/#/*]', '')::DECIMAL(10,2)     AS annual_amount_usd_value,
+      REGEXP_REPLACE(usd_annual_salary, '[0-9/-/#/./*]', '')                      AS annual_local_usd_code  
+    FROM renamed
 
-) 
+)
 
-SELECT *,
-  LAG(usd_annual_salary_amount) OVER (PARTITION BY employee_id ORDER BY conversion_id) AS prior_bamboohr_annual_salary
-FROM final 
+SELECT *
+FROM final

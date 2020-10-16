@@ -20,9 +20,11 @@ SELECT
   instance_id,
   created_month,
   metrics_path,
+  group_name,
   stage_name,
   section_name,
   is_smau,
+  is_gmau,
   clean_metrics_name,
   metric_value AS monthly_metric_value
 FROM transformed

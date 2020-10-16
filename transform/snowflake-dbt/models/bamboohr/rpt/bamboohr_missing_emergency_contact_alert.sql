@@ -6,7 +6,9 @@
 WITH employees as (
 
     SELECT *
-    FROM {{ ref ('bamboohr_directory') }}
+    FROM {{ ref ('employee_directory') }}
+    WHERE termination_date IS NULL
+      AND hire_date <= CURRENT_DATE()
 
 ), contacts AS (
 
@@ -24,8 +26,11 @@ WITH employees as (
 ), final AS (
 
     SELECT 
-      employees.*,
-      IFF(contacts_aggregated.total_emergency_contact_numbers= 0, TRUE, FALSE) AS missing_contact
+      employees.employee_id,
+      employees.full_name,
+      employees.hire_date,
+      employees.work_email,
+      COALESCE(contacts_aggregated.total_emergency_contact_numbers,0) AS total_emergency_contacts
     FROM employees
     LEFT JOIN contacts_aggregated
       ON employees.employee_id = contacts_aggregated.employee_id
@@ -34,4 +39,4 @@ WITH employees as (
 
 SELECT *
 FROM final
-WHERE MISSING_CONTACT = TRUE
+WHERE total_emergency_contacts = 0

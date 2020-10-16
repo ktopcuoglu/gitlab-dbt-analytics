@@ -1,3 +1,8 @@
+{{ config({
+    "schema": "ephemeral"
+    })
+}}
+
 WITH source AS (
 
     SELECT *

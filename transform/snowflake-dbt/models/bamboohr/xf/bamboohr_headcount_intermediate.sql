@@ -49,6 +49,7 @@
       SUM(hired_contributor)                            AS hired_contributor,
       SUM(separated_contributor)                        AS separated_contributor,
       SUM(IFF(is_promotion = TRUE,1,0))                 AS promotion,
+      SUM(percent_change_in_comp)                       AS percent_change_in_comp,
       AVG(location_factor)                              AS location_factor,
       SUM(discretionary_bonus)                          AS discretionary_bonus, 
       AVG(tenure_months)                                AS tenure_months,
@@ -100,15 +101,21 @@ WITH dates AS (
 
     SELECT *
     FROM {{ ref ('employee_directory_intermediate') }}
- 
+
+), bamboohr_promotion AS (
+
+    SELECT *
+    FROM {{ ref ('bamboohr_promotions_xf') }}
+
 ), intermediate AS (
 
     SELECT
       employees.date_actual,
-      employees.department_modified                                            AS department,
-      division_mapped_current                                                  AS division,
-      job_role_modified                                                        AS job_role,
-      COALESCE(job_grade,'NA')                                                 AS job_grade,
+      employees.department_modified                                             AS department,
+      division_mapped_current                                                   AS division,
+      --using the current division - department mapping for reporting
+      job_role_modified                                                         AS job_role,
+      COALESCE(job_grade,'NA')                                                  AS job_grade,
       mapping_enhanced.eeoc_field_name,                                                       
       mapping_enhanced.eeoc_value,                                          
       IFF(dates.start_date = date_actual,1,0)                                       AS headcount_start,
@@ -164,7 +171,9 @@ WITH dates AS (
           AND job_role_modified = 'Individual Contributor',1,0)                     AS separated_contributor, 
 
 
-      is_promotion,                         
+      IFF(employees.job_title LIKE '%VP%', 'Exclude', is_promotion)                 AS is_promotion,    
+      IFF(is_promotion = TRUE AND employees.job_title NOT LIKE '%VP%',
+        percent_change_in_comp, NULL)                                               AS percent_change_in_comp,              
       IFF(dates.end_date = date_actual 
             AND sales_geo_differential = 'n/a - Comp Calc',
             location_factor, NULL)                                                  AS location_factor,
@@ -183,6 +192,9 @@ WITH dates AS (
     LEFT JOIN separation_reason
       ON separation_reason.employee_id = employees.employee_id
       AND employees.date_actual = separation_reason.valid_from_date
+    LEFT JOIN bamboohr_promotion
+      ON employees.employee_id = bamboohr_promotion.employee_id
+      AND employees.date_actual = bamboohr_promotion.promotion_date  
    WHERE date_actual IS NOT NULL
 
 

@@ -8,9 +8,9 @@ WITH RECURSIVE employee_directory AS (
 
     SELECT
       employee_id,
-      employee_number,
-      first_name,
-      last_name,
+      employee_number,	
+      first_name,	
+      last_name,	
       (employee_directory.first_name ||' '|| employee_directory.last_name)   AS full_name,
       work_email,
       hire_date,
@@ -115,23 +115,21 @@ WITH RECURSIVE employee_directory AS (
 
     SELECT *
     FROM {{ ref('sheetload_engineering_speciality_prior_to_capture') }}  
-<<<<<<< HEAD
 
 ), bamboohr_discretionary_bonuses_xf AS (
 
     SELECT *
     FROM {{ ref('bamboohr_directionary_bonuses_xf') }}  
-=======
->>>>>>> 5035-move-spend-per-team-member-in-sisense
+
 
 ), enriched AS (
 
     SELECT
       date_details.date_actual,
       employee_directory.*,
-      department_info.job_title,      
-      department_info.department,
-      IFF(department_info.department LIKE '%People%', 'People Success',department_info.department) AS department_modified, 
+      department_info.job_title,	
+      department_info.department,	
+      department_info.department_modified,
       department_info.division,
       department_info.division_mapped_current,
       COALESCE(job_role.cost_center, 
@@ -188,20 +186,18 @@ WITH RECURSIVE employee_directory AS (
                 AND total_direct_reports > 0 
                 AND employment_status NOT IN ('Parental Leave','Garden Leave')
             THEN 'Senior Leadership'
------test --- 
             WHEN COALESCE(total_direct_reports,0) =0 AND 
                     COALESCE(job_role.job_role, job_info_mapping_historical.job_role,department_info.job_role) = 'Manager'
-                    THEN 'Staff'
-  ---end test                  
+              THEN 'Staff'
             WHEN COALESCE(total_direct_reports,0) = 0 
             THEN 'Individual Contributor'
              ELSE COALESCE(job_role.job_role, 
                            job_info_mapping_historical.job_role,
-                           department_info.job_role) END                           AS job_role_modified,
-          IFF(compensation_change_reason IS NOT NULL,TRUE,FALSE)                   AS is_promotion,
-        bamboohr_discretionary_bonuses_xf.total_discretionary_bonuses              AS discretionary_bonus,
-        ROW_NUMBER() OVER 
-            (PARTITION BY employee_directory.employee_id ORDER BY date_actual)     AS tenure_days                                                                        
+                           department_info.job_role) END                       AS job_role_modified,
+      IFF(compensation_change_reason IS NOT NULL,TRUE,FALSE)                   AS is_promotion,
+      bamboohr_discretionary_bonuses_xf.total_discretionary_bonuses            AS discretionary_bonus,
+      ROW_NUMBER() OVER 
+            (PARTITION BY employee_directory.employee_id ORDER BY date_actual) AS tenure_days
     FROM date_details
     LEFT JOIN employee_directory
       ON hire_date::DATE <= date_actual
@@ -248,9 +244,13 @@ WITH RECURSIVE employee_directory AS (
 <<<<<<< HEAD
     LEFT JOIN bamboohr_discretionary_bonuses_xf
       ON employee_directory.employee_id = bamboohr_discretionary_bonuses_xf.employee_id
+<<<<<<< HEAD
       AND date_details.date_actual = bamboohr_discretionary_bonuses_xf.bonus_date                                    
 =======
 >>>>>>> 5035-move-spend-per-team-member-in-sisense
+=======
+      AND date_details.date_actual = bamboohr_discretionary_bonuses_xf.bonus_date
+>>>>>>> 3ba2d66900673a9c4f46324327ace6e4ef7842a2
     WHERE employee_directory.employee_id IS NOT NULL
 
 ), base_layers as (

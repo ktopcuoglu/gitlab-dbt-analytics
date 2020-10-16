@@ -1,3 +1,8 @@
+{{ config({
+    "schema": "sensitive"
+    })
+}}
+
 WITH bamboohr_compensation AS (
 
     SELECT *
@@ -165,32 +170,22 @@ WITH bamboohr_compensation AS (
       pay_rate,
       IFF(pay_rate = 'Hour', new_compensation_value, 
             new_compensation_value * pay_frequency * currency_conversion_factor)                      AS new_compensation_value_usd,
-      CASE WHEN new_compensation_currency = prior_compensation_currency AND pay_rate !='Hour'
+      CASE WHEN new_compensation_currency = prior_compensation_currency 
            THEN prior_compensation_value * prior_pay_frequency * currency_conversion_factor 
-<<<<<<< HEAD
-           WHEN new_compensation_currency != prior_compensation_currency AND pay_rate !='Hour'
-           THEN prior_compensation_value * prior_pay_frequency * prior_currency_conversion_factor 
-           ELSE prior_compensation_value END                                                          AS prior_compensation_value_usd,
+           ELSE prior_compensation_value * prior_pay_frequency * prior_currency_conversion_factor END AS prior_compensation_value_usd,     
       IFF(pay_rate = 'Hour', hourly_change_in_comp, 
                 new_compensation_value_usd - prior_compensation_value_usd)                            AS change_in_comp_usd,
-      COALESCE(ote_change,0) AS ote_change
-=======
-           ELSE prior_compensation_value * prior_pay_frequency * prior_currency_conversion_factor END AS prior_compensation_value_usd,
-      new_compensation_value_usd - prior_compensation_value_usd                                       AS change_in_comp_usd,
       COALESCE(ote_usd,0)                                                                             AS ote_usd,
       COALESCE(prior_ote_usd,0)                                                                       AS prior_ote_usd,
-      COALESCE(ote_change,0)                                                                          AS ote_change
->>>>>>> 5035-move-spend-per-team-member-in-sisense
+      COALESCE(ote_change,0)                                                                          AS ote_change,
+      COALESCE(ote_change,0) + change_in_comp_usd                                                     AS total_change_in_comp,
+      ROUND((COALESCE(ote_change,0) + change_in_comp_usd)/
+        (prior_compensation_value_usd+ COALESCE(prior_ote_usd,0)),2)                                  AS percent_change_in_comp
     FROM intermediate
     WHERE compensation_change_reason = 'Promotion'
       AND job_title NOT LIKE '%VP%'
 
-
 )
 
-SELECT 
-  promotions.*,
-  ote_change+change_in_comp_usd                                                                         AS total_change,
-  ROUND((total_change/(prior_compensation_value_usd+prior_ote_usd)),2)                                  AS percent_change
+SELECT *
 FROM promotions 
-WHERE job_title NOT LIKE '%VP%'

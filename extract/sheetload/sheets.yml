@@ -31,14 +31,22 @@ sheets:
     owner: '@iweeks'
     tabs:
       - days_to_close
-  - name: employee_location_factor
-    owner: '@pluthra'
-    tabs:
-      - employee_location_factor
   - name: dev_section_metrics
     owner: '@mpeychet_'
     tabs:
       - dev_section_metrics
+  - name: employee_location_factor
+    owner: '@pluthra'
+    tabs:
+      - employee_location_factor
+  - name: engineering_contributing_organizations
+    owner: '@kwiebers'
+    tabs:
+      - engineering_contributing_organizations
+  - name: event_dictionary_simplified
+    owner: '@mpeychet_'
+    tabs:
+      - event_dictionary_simplified
   - name: gitlab_slack_stats
     owner: '@pluthra'
     tabs:
@@ -124,6 +132,10 @@ sheets:
     owner: '@derekatwood'
     tabs:
       - rep_quotas_full_ps_fy2020
+  - name: sales_training_completion_dates
+    owner: '@paul_armstrong'
+    tabs:
+      - sales_training_completion_dates
   - name: scalable_employment_values
     owner: '@iweeks'
     tabs:
@@ -161,14 +173,6 @@ sheets:
     owner: '@kathleentam'
     tabs:
       - data_team_capacity
-  - name: zuora_account_golden_records
-    owner: '@paul_armstrong'
-    tabs:
-      - zuora_account_golden_records
-  - name: zuora_subscription_golden_records
-    owner: '@paul_armstrong'
-    tabs:
-    - zuora_subscription_golden_records
   - name: product_maturity_historical
     owner: '@pluthra'
     tabs:
@@ -177,4 +181,11 @@ sheets:
     owner: '@pluthra'
     tabs: 
       - engineering_speciality_prior_to_capture
-
+  - name: data_certifications
+    description: This identifies team members who have taken the level 2 certifications and have passed.
+    owner: '@pluthra'
+    tabs:
+      - cert_product_geo_dashboard
+      - cert_product_geo_sql
+      - cert_customer_segmentation_dashboard
+      - cert_customer_segmentation_sql

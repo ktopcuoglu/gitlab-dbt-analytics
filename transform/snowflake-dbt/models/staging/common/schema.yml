@@ -57,6 +57,7 @@ models:
       - name: account_owner
       - name: account_owner_team
       - name: account_type
+      - name: gtm_strategy
       - name: technical_account_manager
       - name: is_deleted
         description: flag indicating if account has been deleted
@@ -128,6 +129,36 @@ models:
         description: The date the release was created in the Version app.
       - name: updated_date
         description: The date the release was updated in the Version app.
+
+  - name: dim_instances 
+    description: '{{ doc("dim_instances") }}'
+    columns: 
+      - name: uuid
+        description: Unique Identifier for GitLab Self-Managed Instances 
+      - name: recorded_first_usage_ping_time_stamp
+        description: The first time a usage ping was sent from this instance and recorded in the Version Database 
+      - name: recorded_most_recent_usage_ping_time_stamp
+        description: The most recent time a usage ping was sent from this instance and recorded in the Version Database 
+      - name: recorded_minimum_instance_user_count
+        description: The minimum instance user count ever recorded from a usage ping for this instance 
+      - name: recorded_maximum_instance_user_count
+        description: The maximum instance user count ever recorded from a usage ping for this instance 
+      - name: recorded_total_usage_pings_sent
+        description: The total number of usage pings ever associated with the instance 
+      - name: recorded_total_countries
+        description: The total number of countries related to usage ping for this instance. This is derived from ip_address 
+      - name: recorded_total_license_count
+        description: The total number of licenses related to usage ping for this instance. 
+      - name: recorded_total_version_count
+        description: The total number of versions related to usage ping for this instance. 
+      - name: recorded_total_edition_count
+        description: The total number of editions related to usage ping for this instance. 
+      - name: recorded_total_hostname_count
+        description: The total number of hostname related to usage ping for this instance. 
+      - name: recorded_total_host_id_count
+        description: The total number of host_id related to usage ping for this instance. 
+      - name: recorded_total_installation_type_count
+        description: The total number of installation_type related to usage ping for this instance. 
 
   - name: dim_licenses
     description: '{{ doc("dim_licenses") }}'
@@ -269,6 +300,16 @@ models:
           - accepted_values:
                   values: ['Sales-Assisted', 'Self-Service']
 
+  - name: dim_subscriptions_snapshots
+    description: Daily snapshot of subscriptions starting from 2020-03-01. Fiel
+    columns:
+      - name: subscription_snapshot_id
+        description: Unique identifier of a subscription snapshot
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "arr"]
+
   - name: dim_subscriptions_valid_at
     description: Parameterized model to recreate dimension table representing subscription details as in Zuora at given date. Required variable valid_at is timezone sensitive
 
@@ -326,6 +367,10 @@ models:
         description: The version of the rate plan charge. Each time a charge is amended, Zuora creates a new version of the rate plan charge.
       - name: charge_type
         description: Specifies the type of charge
+
+  - name: dim_usage_pings
+    description: '{{ doc("dim_usage_pings") }}'
+
 
   - name: fct_charges_valid_at
     description: Factual table with all rate plan charges coming from subscriptions or an amendment to a subscription. Required variable valid_at is timezone sensitive
@@ -451,6 +496,45 @@ models:
       - name: quantity
         description: Total quantity
 
+  - name: fct_mrr_snapshots
+    description: One row represents Monthly Recurring Revenue per one month, subscription_id, product_details_id. Snapshot dates start from 2020-0
+    columns:
+      - name: mrr_snapshot_id
+        description: The unique identifier of the given snapshot MRR.
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "arr"]
+      - name: mrr_id
+        description: The unique identifier of the MRR.
+        tests:
+          - not_null
+        tags: ["tdf", "arr"]
+      - name: snapshot_id
+        description: The identifier of snapshot day in dim_dates
+      - name: date_id
+        description: The identifier of date month in dim_dates
+      - name: subscription_id
+        description: The identifier of subscription in dim_subscriptions_snapshots table
+        tests:
+          - not_null
+        tags: ["tdf", "arr"]
+      - name: product_details_id
+        description: The identifier of product details in dim_product_details
+        tests:
+          - not_null
+        tags: ["tdf", "arr"]
+      - name: billing_account_id
+        description: Zuora account id
+      - name:  crm_account_id
+        description: account id frm crm
+      - name: mrr
+        description: Monthly Recurring Revenue value for given month
+      - name: arr
+        description: Annual Recurring Revenue value for given month
+      - name: quantity
+        description: Total quantity
+
   - name: fct_usage_data_monthly
     description: '{{ doc("fct_usage_data_monthly") }}'
     columns:
@@ -467,7 +551,6 @@ models:
       - name: usage_ping_id
         tests:
           - not_null
-    
 
   - name: fct_usage_ping_metric_28_days
     description: '{{ doc("fct_usage_ping_metric_28_days") }}'
