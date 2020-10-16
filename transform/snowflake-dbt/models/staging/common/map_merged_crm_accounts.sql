@@ -1,6 +1,6 @@
 {{ config(schema='common') }}
 
-WITH sfdc_account_source AS (
+WITH RECURSIVE sfdc_account_source AS (
 
     SELECT *
     FROM {{ ref('sfdc_account_source') }}
