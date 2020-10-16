@@ -366,3 +366,5 @@ models:
     - name: email_address
       tests:
       - not_null
+- name: sheetload_people_budget_source
+  description: This is the budget used by the people team.

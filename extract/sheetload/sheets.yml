@@ -112,6 +112,11 @@ sheets:
     owner: '@pluthra'
     tabs:
       - osat
+  - name: people_budget
+    description: Data used by people team for budget spend.
+    owner: '@pluthra'
+    tabs: 
+      - people_budget      
   - name: planned_values
     owner: '@iweeks'
     tabs:
