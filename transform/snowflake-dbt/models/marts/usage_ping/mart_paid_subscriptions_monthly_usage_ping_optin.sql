@@ -39,16 +39,17 @@ WITH self_managed_active_subscriptions AS (
 ), transformed AS (
   
     SELECT 
-      first_day_of_month                                  AS reporting_month,
+      {{ dbt_utils.surrogate_key(['reporting_month', 'subscription_id']) }}           AS month_subscrption_id
+      first_day_of_month                                                              AS reporting_month,
       self_managed_active_subscriptions.subscription_id,
       active_subscriptions.subscription_name_slugify,
       active_subscriptions.subscription_start_date,
       active_subscriptions.subscription_end_date,
-      SUM(self_managed_active_subscriptions.mrr) * 12     AS arr,
-      SUM(self_managed_active_subscriptions.quantity)     AS quantity,
-      MAX(fct_payloads.subscription_id) IS NOT NULL       AS has_sent_payloads,
-      COUNT(DISTINCT fct_payloads.subscription_id)        AS monthly_payload_counts,
-      COUNT(DISTINCT host_id)                             AS monthly_host_counts
+      SUM(self_managed_active_subscriptions.mrr) * 12                                 AS arr,
+      SUM(self_managed_active_subscriptions.quantity)                                 AS quantity,
+      MAX(fct_payloads.subscription_id) IS NOT NULL                                   AS has_sent_payloads,
+      COUNT(DISTINCT fct_payloads.subscription_id)                                    AS monthly_payload_counts,
+      COUNT(DISTINCT host_id)                                                         AS monthly_host_counts
     FROM self_managed_active_subscriptions  
     INNER JOIN dim_product_details
       ON self_managed_active_subscriptions.product_details_id = dim_product_details.product_details_id

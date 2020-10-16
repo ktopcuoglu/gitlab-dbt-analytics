@@ -4,6 +4,10 @@ models:
   - name: mart_paid_subscriptions_monthly_usage_ping_optin
     description: '{{ doc("mart_paid_subscriptions_monthly_usage_ping_optin") }}'
     columns:
+      - name: month_subscription_id
+        tests:
+            - not_null
+            - unique
       - name: arr
         description: "Calculated as 12 * MRR value"
       - name: subscription_name_slugify
