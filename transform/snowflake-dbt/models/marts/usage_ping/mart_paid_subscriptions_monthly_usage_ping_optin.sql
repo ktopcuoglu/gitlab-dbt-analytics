@@ -39,7 +39,7 @@ WITH self_managed_active_subscriptions AS (
 ), transformed AS (
   
     SELECT 
-      {{ dbt_utils.surrogate_key(['reporting_month', 'subscription_id']) }}           AS month_subscrption_id,
+      {{ dbt_utils.surrogate_key(['first_day_of_month', 'subscription_id']) }}        AS month_subscrption_id,
       first_day_of_month                                                              AS reporting_month,
       self_managed_active_subscriptions.subscription_id,
       active_subscriptions.subscription_name_slugify,
