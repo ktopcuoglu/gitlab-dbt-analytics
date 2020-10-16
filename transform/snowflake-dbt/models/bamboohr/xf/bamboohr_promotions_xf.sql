@@ -45,7 +45,6 @@ WITH bamboohr_compensation AS (
 
     SELECT *,
       LAG(currency_conversion_factor) OVER (PARTITION BY employee_id ORDER BY conversion_ID)        AS prior_conversion_factor,
-      LAG(usd_annual_salary_amount)  OVER (PARTITION BY employee_id ORDER BY conversion_ID)         AS prior_usd_annual_salary_amount,
       ROW_NUMBER() OVER (PARTITION BY employee_id ORDER BY conversion_ID)                           AS rank_conversion_id
     FROM {{ ref('bamboohr_currency_conversion') }}
   
