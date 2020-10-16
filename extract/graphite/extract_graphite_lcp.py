@@ -30,7 +30,11 @@ def make_api_call(
 
 def get_targets():
     return [
-        "sitespeed_io.desktop.pageSummary.gitlab_com.GitLab_Project_Home.chrome.cable.browsertime.statistics.timings.largestContentfulPaint.renderTime.*"
+        "sitespeed_io.desktop.pageSummary.gitlab_com.GitLab_Project_Home.chrome.cable.browsertime.statistics.timings.largestContentfulPaint.renderTime.*",
+        "sitespeed_io.desktop.pageSummary.gitlab_com.GitLab_Issue_list.chrome.cable.browsertime.statistics.timings.largestContentfulPaint.renderTime.*",
+        "sitespeed_io.desktop.pageSummary.gitlab_com.GitLab_Issue_Detail.chrome.cable.browsertime.statistics.timings.largestContentfulPaint.renderTime.*",
+        "sitespeed_io.desktop.pageSummary.gitlab_com.GitLab_Merge_List.chrome.cable.browsertime.statistics.timings.largestContentfulPaint.renderTime.*",
+        "sitespeed_io.desktop.pageSummary.gitlab_com.GitLab_Merge_Detail.chrome.cable.browsertime.statistics.timings.largestContentfulPaint.renderTime.*",
     ]
 
 

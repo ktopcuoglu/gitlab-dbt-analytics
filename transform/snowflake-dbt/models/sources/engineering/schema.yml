@@ -17,6 +17,9 @@ models:
   - name: engineering_lcp_source
     description: This table contains information about largest-content-paint statistics.
     columns:
+      - name: aggregation_name
+        tests:
+          - not_null
       - name: metric_name
         tests:
           - not_null
