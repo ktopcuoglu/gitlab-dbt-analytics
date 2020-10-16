@@ -68,7 +68,7 @@ WITH self_managed_active_subscriptions AS (
       active_subscriptions.subscription_name_slugify,
       FIRST_VALUE(major_minor_version) OVER (
         PARTITION BY first_day_of_month, active_subscriptions.subscription_name_slugify
-        ORDER BY major_version DESC, minor_version DESC
+        ORDER BY major_version DESC, minor_version
       ) AS latest_major_minor_version
     FROM self_managed_active_subscriptions  
     INNER JOIN dim_product_details
@@ -77,7 +77,7 @@ WITH self_managed_active_subscriptions AS (
     INNER JOIN dim_dates ON self_managed_active_subscriptions.date_id = dim_dates.date_id
     LEFT JOIN active_subscriptions ON self_managed_active_subscriptions.subscription_id = active_subscriptions.subscription_id
     LEFT JOIN all_subscriptions ON active_subscriptions.subscription_name_slugify = all_subscriptions.subscription_name_slugify
-    LEFT JOIN fct_payloads ON all_subscriptions.subscription_id = fct_payloads.subscription_id AND first_day_of_month = DATE_TRUNC('month', fct_payloads.created_at)
+    INNER JOIN fct_payloads ON all_subscriptions.subscription_id = fct_payloads.subscription_id AND first_day_of_month = DATE_TRUNC('month', fct_payloads.created_at)
 
 ), joined AS (
 
@@ -87,7 +87,7 @@ WITH self_managed_active_subscriptions AS (
     FROM transformed
     LEFT JOIN latest_versions
       ON transformed.reporting_month = latest_versions.reporting_month
-        AND transformed.subscription_name_slugify = latest_versions.latest_major_minor_version
+        AND transformed.subscription_name_slugify = latest_versions.subscription_name_slugify
 
 )
 
