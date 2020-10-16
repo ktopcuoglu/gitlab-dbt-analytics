@@ -62,31 +62,19 @@ WITH zuora_product AS (
         OR LOWER(product_rate_plan_charge_name)   LIKE '%month%'
         OR LOWER(product_name)                    LIKE '%month%'
         THEN (billing_list_price*12)
-      WHEN LOWER(product_rate_plan_name)          LIKE '%2 years%'
-        OR LOWER(product_rate_plan_charge_name)   LIKE '%2 years%'
-        OR LOWER(product_name)                    LIKE '%2 years%'
-        OR LOWER(product_rate_plan_name)          LIKE '%2 year%'
+      WHEN LOWER(product_rate_plan_name)          LIKE '%2 year%'
         OR LOWER(product_rate_plan_charge_name)   LIKE '%2 year%'
         OR LOWER(product_name)                    LIKE '%2 year%'
         THEN (billing_list_price/2)
-      WHEN LOWER(product_rate_plan_name)          LIKE '%3 years%'
-        OR LOWER(product_rate_plan_charge_name)   LIKE '%3 years%'
-        OR LOWER(product_name)                    LIKE '%3 years%'
-        OR LOWER(product_rate_plan_name)          LIKE '%3 year%'
+      WHEN LOWER(product_rate_plan_name)          LIKE '%3 year%'
         OR LOWER(product_rate_plan_charge_name)   LIKE '%3 year%'
         OR LOWER(product_name)                    LIKE '%3 year%'
         THEN (billing_list_price/3)
-      WHEN LOWER(product_rate_plan_name)          LIKE '%4 years%'
-        OR LOWER(product_rate_plan_charge_name)   LIKE '%4 years%'
-        OR LOWER(product_name)                    LIKE '%4 years%'
-        OR LOWER(product_rate_plan_name)          LIKE '%4 year%'
+      WHEN LOWER(product_rate_plan_name)          LIKE '%4 year%'
         OR LOWER(product_rate_plan_charge_name)   LIKE '%4 year%'
         OR LOWER(product_name)                    LIKE '%4 year%'
         THEN (billing_list_price/4)
-      WHEN LOWER(product_rate_plan_name)          LIKE '%5 years%'
-        OR LOWER(product_rate_plan_charge_name)   LIKE '%5 years%'
-        OR LOWER(product_name)                    LIKE '%5 years%'
-        OR LOWER(product_rate_plan_name)          LIKE '%5 year%'
+      WHEN LOWER(product_rate_plan_name)          LIKE '%5 year%'
         OR LOWER(product_rate_plan_charge_name)   LIKE '%5 year%'
         OR LOWER(product_name)                    LIKE '%5 year%'
         THEN (billing_list_price/5)
@@ -101,5 +89,5 @@ WITH zuora_product AS (
     created_by="@msendal",
     updated_by="@iweeks",
     created_date="2020-06-01",
-    updated_date="2020-10-14"
+    updated_date="2020-10-16"
 ) }}
