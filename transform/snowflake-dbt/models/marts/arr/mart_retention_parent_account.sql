@@ -33,7 +33,8 @@ WITH dim_crm_accounts AS (
       SUM(arr)                        AS arr_total,
       SUM(quantity)                   AS quantity_total,
       MIN(subscription_end_month)     AS subscription_end_month,
-      ARRAY(product_category)         AS product_category
+      ARRAY_AGG(product_category)         AS product_category,
+      MAX(product_ranking)            AS product_ranking
     FROM fct_mrr
     INNER JOIN dim_subscriptions
       ON dim_subscriptions.subscription_id = fct_mrr.subscription_id
@@ -61,6 +62,8 @@ WITH dim_crm_accounts AS (
       future_mrr.quantity_total      AS future_quantity,
       current_mrr.product_category   AS current_product_category,
       future_mrr.product_category    AS future_product_category,
+      current_mrr.product_ranking    AS current_product_ranking,
+      future_mrr.product_ranking     AS future_product_ranking,
       current_mrr.subscription_end_month
     FROM parent_account_mrrs AS current_mrr
     LEFT JOIN parent_account_mrrs AS future_mrr
@@ -87,10 +90,12 @@ WITH dim_crm_accounts AS (
       COALESCE(future_quantity, 0)              AS retention_quantity,
       future_product_category,
       current_product_category,
+      future_product_ranking,
+      current_product_ranking,
       {{ type_of_arr_change('retention_arr', 'original_arr') }},
       {{ reason_for_arr_change_seat_change('retention_quantity', 'original_quantity', 'retention_arr', 'original_arr') }},
       {{ reason_for_quantity_change_seat_change('retention_quantity', 'original_quantity') }},
-      {{ reason_for_arr_change_price_change('future_product_category', 'previous_product_category', 'retention_quantity', 'original_quantity', 'retention_arr', 'original_arr', 'product_ranking',' previous_product_ranking') }},
+      {{ reason_for_arr_change_price_change('future_product_category', 'current_product_category', 'retention_quantity', 'original_quantity', 'retention_arr', 'original_arr', 'future_product_ranking','current_product_ranking') }},
       {{ annual_price_per_seat_change('retention_quantity', 'original_quantity', 'retention_arr', 'original_arr') }}
     FROM retention_subs
     INNER JOIN dim_dates
