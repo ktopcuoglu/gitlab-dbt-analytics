@@ -29,11 +29,11 @@ WITH dim_crm_accounts AS (
       merged_accounts.ultimate_parent_account_id,
       dim_dates.date_actual           AS mrr_month,
       dateadd('year', 1, date_actual) AS retention_month,
-      SUM(mrr)                        AS mrr_total,
-      SUM(arr)                        AS arr_total,
-      SUM(quantity)                   AS quantity_total,
+      SUM(ZEROIFNULL(mrr))            AS mrr_total,
+      SUM(ZEROIFNULLarr))             AS arr_total,
+      SUM(ZEROIFNULL(quantity))       AS quantity_total,
       MIN(subscription_end_month)     AS subscription_end_month,
-      ARRAY_AGG(product_category)         AS product_category,
+      ARRAY_AGG(product_category)     AS product_category,
       MAX(product_ranking)            AS product_ranking
     FROM fct_mrr
     INNER JOIN dim_subscriptions

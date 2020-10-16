@@ -41,6 +41,7 @@ WITH dim_billing_accounts AS (
       dim_subscriptions.subscription_id,
       dim_product_details.product_category,
       dim_product_details.delivery,
+      dim_product_details.product_ranking,
       fct_mrr.mrr,
       fct_mrr.quantity
     FROM fct_mrr
@@ -97,9 +98,9 @@ WITH dim_billing_accounts AS (
       base.crm_id,
       base.subscription_name,
       base.subscription_id,
-      ARRAY_AGG(DISTINCT product_category) WITHIN GROUP (ORDER BY product_category ASC)      AS product_category,
-      ARRAY_AGG(DISTINCT delivery) WITHIN GROUP (ORDER BY delivery ASC)                      AS delivery,
-      {{ product_ranking(product_category) }},
+      ARRAY_AGG(DISTINCT product_category) WITHIN GROUP (ORDER BY product_category ASC)       AS product_category,
+      ARRAY_AGG(DISTINCT delivery) WITHIN GROUP (ORDER BY delivery ASC)                       AS delivery,
+      MAX(product_ranking)                                                                    AS product_ranking,
       SUM(ZEROIFNULL(quantity))                                                               AS quantity,
       SUM(ZEROIFNULL(mrr)*12)                                                                 AS arr
     FROM base
