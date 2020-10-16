@@ -112,6 +112,11 @@ sheets:
     owner: '@pluthra'
     tabs:
       - osat
+  - name: people_budget
+    description: Data used by people team for budget spend.
+    owner: '@pluthra'
+    tabs: 
+      - people_budget      
   - name: planned_values
     owner: '@iweeks'
     tabs:
@@ -189,8 +194,3 @@ sheets:
       - cert_product_geo_sql
       - cert_customer_segmentation_dashboard
       - cert_customer_segmentation_sql
-  - name: people_budget
-    description: Data used by people team for budget spend.
-    owner: '@pluthra'
-    tabs: 
-      - people_budget
