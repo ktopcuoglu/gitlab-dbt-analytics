@@ -23,17 +23,6 @@ WITH bamboohr_compensation AS (
     FROM bamboohr_compensation
     WHERE compensation_update_id != 20263 ---incorrectly labeled 
 
-), employee_directory AS (
-
-    SELECT *
-    FROM {{ ref('employee_directory_intermediate') }}
-
-), ote AS (
-
-    SELECT *,
-      ROW_NUMBER() OVER (PARTITION BY employee_id, effective_date ORDER BY target_earnings_update_id)   AS rank_ote_effective_date
-    FROM {{ ref('bamboohr_ote') }}
-
 ), pay_frequency AS (
 
     SELECT *,
@@ -41,6 +30,17 @@ WITH bamboohr_compensation AS (
     FROM {{ ref('bamboohr_job_role') }}
     WHERE pay_frequency IS NOT NULL
   
+), ote AS (
+
+    SELECT *,
+      ROW_NUMBER() OVER (PARTITION BY employee_id, effective_date ORDER BY target_earnings_update_id)   AS rank_ote_effective_date
+    FROM {{ ref('bamboohr_ote') }}
+
+), employee_directory AS (
+
+    SELECT *
+    FROM {{ ref('employee_directory_intermediate') }}
+
 ), currency_conversion AS (
 
     SELECT *,
@@ -56,24 +56,6 @@ WITH bamboohr_compensation AS (
     FROM currency_conversion
     WHERE currency_conversion_factor <> prior_conversion_factor
       OR rank_conversion_id = 1
-
-), hourly_compensation AS (
-
-    SELECT 
-      bamboohr_compensation_changes.employee_id, 
-      bamboohr_compensation_changes.effective_date, 
-      pay_rate, 
-      usd_annual_salary_amount                                  AS hourly_usd_annual, 
-      prior_usd_annual_salary_amount                            AS hourly_prior_usd_annual, 
-      usd_annual_salary_amount - prior_usd_annual_salary_amount AS hourly_change_in_comp
-    FROM bamboohr_compensation_changes
-    LEFT JOIN currency_conversion
-      ON bamboohr_compensation_changes.employee_id = currency_conversion.employee_id
-      AND bamboohr_compensation_changes.effective_date BETWEEN currency_conversion.effective_date AND DATEADD(MONTH, 6, currency_conversion.effective_date)
-      --Using 6 months here because the currency conversion table captures compensation changes for the 2 review cycle periods
-    WHERE compensation_change_reason = 'Promotion' 
-      AND pay_rate ='Hour'
-    QUALIFY ROW_NUMBER() OVER (PARTITION BY bamboohr_compensation_changes.employee_id, bamboohr_compensation_changes.effective_date ORDER BY currency_conversion.conversion_id DESC) =1
 
 ), joined AS (
 
@@ -98,10 +80,7 @@ WITH bamboohr_compensation AS (
       ote.annual_amount_usd_value AS ote_usd,
       ote.prior_annual_amount_usd AS prior_ote_usd,
       ote.change_in_annual_amount_usd AS ote_change,
-      rank_ote_effective_date,
-      hourly_compensation.hourly_usd_annual, 
-      hourly_compensation.hourly_prior_usd_annual, 
-      hourly_compensation.hourly_change_in_comp
+      rank_ote_effective_date
     FROM bamboohr_compensation_changes
     LEFT JOIN employee_directory
       ON bamboohr_compensation_changes.employee_id = employee_directory.employee_id
@@ -119,14 +98,7 @@ WITH bamboohr_compensation AS (
       ON bamboohr_compensation_changes.employee_id = ote.employee_id
       AND bamboohr_compensation_changes.effective_date = ote.effective_date
       AND bamboohr_compensation_changes.rank_compensation_change_effective_date = ote.rank_ote_effective_date
-<<<<<<< HEAD
-    LEFT JOIN hourly_compensation
-       ON bamboohr_compensation_changes.employee_id = hourly_compensation.employee_id
-      AND bamboohr_compensation_changes.effective_date = hourly_compensation.effective_date
-  
-=======
    
->>>>>>> 5035-move-spend-per-team-member-in-sisense
 ), intermediate AS (
 
     SELECT 
@@ -138,21 +110,19 @@ WITH bamboohr_compensation AS (
       job_title,
       compensation_change_reason,
       effective_date,
-      pay_rate,
       currency_conversion_factor,
       LAG(currency_conversion_factor) 
-        OVER (PARTITION BY employee_id ORDER BY compensation_update_id)                     AS prior_currency_conversion_factor,
+        OVER (PARTITION BY employee_id ORDER BY compensation_update_id)                  AS prior_currency_conversion_factor,
       pay_frequency,
-      LAG(pay_frequency) OVER (PARTITION BY employee_id ORDER BY compensation_update_id)    AS prior_pay_frequency,
-      IFF(pay_rate = 'Hour', hourly_usd_annual, compensation_value)                         AS new_compensation_value,
-      IFF(pay_rate = 'Hour', hourly_prior_usd_annual, prior_compensation_value)             AS prior_compensation_value,
-      compensation_currency                                                                 AS new_compensation_currency,
+      LAG(pay_frequency) OVER (PARTITION BY employee_id ORDER BY compensation_update_id) AS prior_pay_frequency,
+      compensation_value                                                                 AS new_compensation_value,
+      prior_compensation_value,
+      compensation_currency                                                              AS new_compensation_currency,
       prior_compensation_currency,
       variable_pay,
       ote_usd,
       prior_ote_usd,
-      ote_change,
-      hourly_change_in_comp
+      ote_change
     FROM joined 
   
 ), promotions AS (
@@ -167,14 +137,11 @@ WITH bamboohr_compensation AS (
       department,
       job_title,
       variable_pay,
-      pay_rate,
-      IFF(pay_rate = 'Hour', new_compensation_value, 
-            new_compensation_value * pay_frequency * currency_conversion_factor)                      AS new_compensation_value_usd,
+      new_compensation_value * pay_frequency * currency_conversion_factor                             AS new_compensation_value_usd,
       CASE WHEN new_compensation_currency = prior_compensation_currency 
            THEN prior_compensation_value * prior_pay_frequency * currency_conversion_factor 
-           ELSE prior_compensation_value * prior_pay_frequency * prior_currency_conversion_factor END AS prior_compensation_value_usd,     
-      IFF(pay_rate = 'Hour', hourly_change_in_comp, 
-                new_compensation_value_usd - prior_compensation_value_usd)                            AS change_in_comp_usd,
+           ELSE prior_compensation_value * prior_pay_frequency * prior_currency_conversion_factor END AS prior_compensation_value_usd,
+      new_compensation_value_usd - prior_compensation_value_usd                                       AS change_in_comp_usd,
       COALESCE(ote_usd,0)                                                                             AS ote_usd,
       COALESCE(prior_ote_usd,0)                                                                       AS prior_ote_usd,
       COALESCE(ote_change,0)                                                                          AS ote_change,

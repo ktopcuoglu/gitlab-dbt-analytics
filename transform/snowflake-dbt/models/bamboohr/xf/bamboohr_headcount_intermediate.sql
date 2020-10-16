@@ -215,6 +215,7 @@ WITH dates AS (
       ON DATE_TRUNC(month, start_date) = DATE_TRUNC(month, date_actual)
     {{ dbt_utils.group_by(n=8) }}  
 
+
     UNION ALL
 
     SELECT

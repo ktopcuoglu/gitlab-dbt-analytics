@@ -146,7 +146,6 @@ models:
       - name: pay_frequency
         description: The number of compensation periods. Started capturing on 2020.09.10
       - name: sales_geo_differential
-      - name: pay_frequency
       - name: effective_date
         description: The date the role is effective until a change occurs. 
   - name: bamboohr_locality

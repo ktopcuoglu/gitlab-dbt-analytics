@@ -241,16 +241,9 @@ WITH RECURSIVE employee_directory AS (
       AND date_details.date_actual BETWEEN sheetload_engineering_speciality.speciality_start_date 
                                        AND COALESCE(sheetload_engineering_speciality.speciality_end_date, '2020-09-30')
                                        ---Post 2020.09.30 we will capture engineering speciality from bamboohr
-<<<<<<< HEAD
     LEFT JOIN bamboohr_discretionary_bonuses_xf
       ON employee_directory.employee_id = bamboohr_discretionary_bonuses_xf.employee_id
-<<<<<<< HEAD
-      AND date_details.date_actual = bamboohr_discretionary_bonuses_xf.bonus_date                                    
-=======
->>>>>>> 5035-move-spend-per-team-member-in-sisense
-=======
       AND date_details.date_actual = bamboohr_discretionary_bonuses_xf.bonus_date
->>>>>>> 3ba2d66900673a9c4f46324327ace6e4ef7842a2
     WHERE employee_directory.employee_id IS NOT NULL
 
 ), base_layers as (
