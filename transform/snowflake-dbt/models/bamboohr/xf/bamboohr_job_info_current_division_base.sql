@@ -18,6 +18,11 @@ WITH job_info AS (
     SELECT *
     FROM {{ ref ('bamboohr_job_role') }}
 
+), department_name_changes AS (
+
+    SELECT *
+    FROM {{ref ('department_name_changes')}}
+
 ), current_division_department_mapping AS (
 
     SELECT DISTINCT 
@@ -31,18 +36,21 @@ WITH job_info AS (
       AND bamboo_mapping.termination_date IS NULL
     GROUP BY 1,2
     QUALIFY ROW_NUMBER() OVER (PARTITION BY department ORDER BY total_employees DESC) =1 
-    --to account for individuals that have not been transistioned to new division
-  
+    --to account for individuals that have not been transistioned to new division  
+
 )
 
 SELECT 
   job_info.*, 
-  IFF(job_info.department IN ('People','People Ops'), 'People Group',
-    COALESCE(current_division_department_mapping.division, job_info.division))                 AS division_mapped_current,
-  IFF(job_info.department LIKE '%People%', 'People Success',job_info.department)               AS department_modified,      
+  IFF(job_info.department = 'Meltano', 'Engineering',
+      COALESCE(current_division_department_mapping.division, job_info.division))               AS division_mapped_current,
+  COALESCE(department_name_changes.new_department_name, job_info.department)                   AS department_modified,      
   bamboo_mapping.termination_date   
 FROM bamboo_mapping
 LEFT JOIN job_info 
   ON job_info.employee_id = bamboo_mapping.employee_id
+LEFT JOIN department_name_changes
+  ON job_info.department = department_name_changes.old_department_name  
 LEFT JOIN current_division_department_mapping
-  ON current_division_department_mapping.department = job_info.department
+  ON current_division_department_mapping.department = COALESCE(department_name_changes.new_department_name, job_info.department)
+
