@@ -5,7 +5,7 @@ WITH source AS (
     
 ), renamed AS (
 
-    SELECT *
+    SELECT
       "DIVISION"::VARCHAR                                  AS division,
       "FISCAL_YEAR"::NUMBER                                AS fiscal_year,
       "QUARTER"::NUMBER                                    AS fiscal_quarter,
