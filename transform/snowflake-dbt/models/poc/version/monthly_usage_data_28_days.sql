@@ -46,6 +46,7 @@ SELECT
   stage_name,
   section_name,
   is_smau,
+  is_gmau,
   clean_metrics_name,
   monthly_metric_value
 FROM monthly

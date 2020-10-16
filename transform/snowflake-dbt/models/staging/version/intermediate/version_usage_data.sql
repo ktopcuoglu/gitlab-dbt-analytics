@@ -3,7 +3,12 @@
     })
 }}
 
-WITH usage_data AS (
+WITH source AS (
+
+    SELECT *
+    FROM {{ ref('version_usage_data_source') }}
+
+), usage_data AS (
 
     SELECT
       {{ dbt_utils.star(from=ref('version_usage_data_source'), except=['EDITION']) }},
@@ -13,7 +18,7 @@ WITH usage_data AS (
       SPLIT_PART(cleaned_version, '.', 1)::NUMBER                                             AS major_version,
       SPLIT_PART(cleaned_version, '.', 2)::NUMBER                                             AS minor_version,
       major_version || '.' || minor_version                                                   AS major_minor_version
-    FROM {{ ref('version_usage_data_source') }}
+    FROM source
     WHERE uuid IS NOT NULL
       AND version NOT LIKE ('%VERSION%') -- Messy data that's not worth parsing.
       AND hostname NOT IN ( -- Staging data has no current use cases for analysis.
