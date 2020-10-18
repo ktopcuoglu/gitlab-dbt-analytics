@@ -371,6 +371,10 @@ models:
   - name: dim_usage_pings
     description: '{{ doc("dim_usage_pings") }}'
     columns: 
+      - name: uuid 
+        description: concatenate this field with host_id for a unique identifier for instances. See https://gitlab.com/gitlab-data/analytics/-/issues/6413#note_428426837. Business Process Issue - https://gitlab.com/gitlab-data/analytics/-/issues/6413#note_429177832
+      - name: host_id 
+        description: uuid concatenated with this field for a unique identifier for instances. See https://gitlab.com/gitlab-data/analytics/-/issues/6413#note_428426837. Business Process Issue - https://gitlab.com/gitlab-data/analytics/-/issues/6413#note_429177832
       - name: main_edition
         description: segmentation for Edition. Values - CE, EE 
       - name: product_tier 
@@ -384,7 +388,7 @@ models:
       - name: is_staging 
         descrition: DRAFT - need to better identify instances used for staging environments
       - name: location_id 
-        description: JOIN key for country information derived. More information can be found in this comment https://gitlab.com/gitlab-data/analytics/-/issues/6560#note_427936012
+        description: JOIN key for country information derived. See https://gitlab.com/gitlab-data/analytics/-/issues/6560#note_427936012
 
   - name: fct_charges_valid_at
     description: Factual table with all rate plan charges coming from subscriptions or an amendment to a subscription. Required variable valid_at is timezone sensitive
