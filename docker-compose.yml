@@ -1,7 +1,7 @@
 version: '3.7'
 services:
     airflow_webserver:
-        image: registry.gitlab.com/gitlab-data/data-image/airflow-image:v0.0.9
+        image: registry.gitlab.com/gitlab-data/data-image/airflow-image:v0.0.10
         restart: always
         ports:
           - "8080:8080"
@@ -33,7 +33,7 @@ services:
             read_only: True
 
     airflow_scheduler:
-        image: registry.gitlab.com/gitlab-data/data-image/airflow-image:v0.0.9
+        image: registry.gitlab.com/gitlab-data/data-image/airflow-image:v0.0.10
         restart: always
         ports:
           - "8793:8793"
@@ -88,7 +88,7 @@ services:
       image: registry.gitlab.com/gitlab-data/data-image/dbt-image:v0.0.10
       environment:
         DBT_PROFILES_DIR: /usr/local/dbt_profiles/
-        DATA_TEST_BRANCH: "main"
+        DATA_TEST_BRANCH: "6067-tdf-tests-for-mart_arr_snapshots"
         SNOWFLAKE_SNAPSHOT_DATABASE: "SNOWFLAKE"
         SNOWFLAKE_LOAD_DATABASE: "RAW"
         SNOWFLAKE_TRANSFORM_WAREHOUSE: "ANALYST_XS"
