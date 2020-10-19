@@ -4,7 +4,7 @@ Data Mart to explore Usage Ping Opt In rate of Paid subscriptions. The report lo
 
 This SQL query will pull opt-in rate per month for Paid subscriptions:
 
-```
+```sql
 
 SELECT
     mrr_month,
