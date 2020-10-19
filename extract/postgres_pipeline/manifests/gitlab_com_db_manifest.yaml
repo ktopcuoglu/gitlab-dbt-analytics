@@ -1440,6 +1440,7 @@ tables:
       , name
       , version
       , package_type
+      , creator_id
       FROM packages_packages
       WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
         AND '{EXECUTION_DATE}'::timestamp
