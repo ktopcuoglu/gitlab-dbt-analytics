@@ -23,7 +23,7 @@ WITH dim_dates AS (
     SELECT *
     FROM {{ ref('fct_invoice_items') }}
     WHERE is_last_segment_version = TRUE
-      AND arr > 0
+      AND arr != 0
 
 ), zuora_subscription AS (
 

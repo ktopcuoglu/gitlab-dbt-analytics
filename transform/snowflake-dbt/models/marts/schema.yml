@@ -1,15 +1,6 @@
 version: 2
 
 models:
-  - name: mart_arpu_discount
-    description: Model with Invoiced ARR used to calculate discounts across various dimensions.
-    columns:
-      - name: invoice_item_month_id
-        description: Unique identifier of the transaction on the invoice amortized by month.
-        tests:
-            - not_null
-            - unique
-        tags: ["tdf", "mart", "arr"]
   - name: mart_arr
     description: '{{ doc("mart_arr") }}'
     columns:
@@ -40,6 +31,16 @@ models:
           - unique
         tags: ["tdf", "mart", "arr"]
 
+  - name: mart_discount_arr
+    description: Model with Invoiced ARR used to calculate discounts across various dimensions.
+    columns:
+      - name: invoice_item_month_id
+        description: Unique identifier of the transaction on the invoice amortized by month.
+        tests:
+            - not_null
+            - unique
+        tags: ["tdf", "mart", "arr"]
+        
   - name: mart_delta_arr_parent_month
     description: "Mart table by month pursuant to the ARR Analysis Framework at the parent customer level"
     columns:
