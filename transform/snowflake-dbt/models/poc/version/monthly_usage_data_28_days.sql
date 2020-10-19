@@ -14,6 +14,7 @@ WITH data AS (
       stage_name,
       section_name,
       is_smau,
+      is_gmau,
       clean_metrics_name,
       SUM(IFNULL(metric_value,0)) AS weekly_metrics_value
     FROM data
