@@ -32,3 +32,15 @@ models:
         tests:
           - not_null
           - unique
+
+  - name: customers_db_trial_histories
+    description: '{{ doc("customers_db_trial_histories") }}'
+    columns:
+      - name: gl_namespace_id
+      - name: start_date
+      - name: expired_on
+      - name: created_at
+      - name: updated_at
+      - name: glm_source
+      - name: glm_content
+      - name: trial_entity

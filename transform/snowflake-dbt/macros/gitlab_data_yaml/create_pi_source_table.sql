@@ -27,6 +27,7 @@ WITH source AS (
       data_by_row['sisense_data'] IS NOT NULL              AS is_embedded,
       data_by_row['target']::VARCHAR                       AS pi_target,
       data_by_row['telemetry_type']::VARCHAR               AS telemetry_type,
+      data_by_row['urls']::VARCHAR                         AS pi_url,
       snapshot_date,
       rank
     FROM intermediate
