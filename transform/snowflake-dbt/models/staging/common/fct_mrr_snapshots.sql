@@ -142,9 +142,9 @@ WITH dim_dates AS (
 ), final AS (
 
     SELECT
-        {{ dbt_utils.surrogate_key(['snapshot_id', 'date_id', 'subscription_id', 'product_details_id']) }}
+        {{ dbt_utils.surrogate_key(['snapshot_id', 'date_id', 'subscription_name', 'product_details_id']) }}
           AS mrr_snapshot_id,
-        {{ dbt_utils.surrogate_key(['date_id', 'subscription_id', 'product_details_id']) }}
+        {{ dbt_utils.surrogate_key(['date_id', 'subscription_name', 'product_details_id']) }}
           AS mrr_id,
         *
     FROM mrr_month_by_month
