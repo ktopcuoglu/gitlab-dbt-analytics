@@ -75,8 +75,8 @@ WITH self_managed_active_subscriptions AS (
       ON self_managed_active_subscriptions.product_details_id = dim_product_details.product_details_id
         AND delivery='Self-Managed'
     INNER JOIN dim_dates ON self_managed_active_subscriptions.date_id = dim_dates.date_id
-    LEFT JOIN active_subscriptions ON self_managed_active_subscriptions.subscription_id = active_subscriptions.subscription_id
-    LEFT JOIN all_subscriptions ON active_subscriptions.subscription_name_slugify = all_subscriptions.subscription_name_slugify
+    INNER JOIN active_subscriptions ON self_managed_active_subscriptions.subscription_id = active_subscriptions.subscription_id
+    INNER JOIN all_subscriptions ON active_subscriptions.subscription_name_slugify = all_subscriptions.subscription_name_slugify
     INNER JOIN fct_payloads ON all_subscriptions.subscription_id = fct_payloads.subscription_id AND first_day_of_month = DATE_TRUNC('month', fct_payloads.created_at)
 
 ), joined AS (
