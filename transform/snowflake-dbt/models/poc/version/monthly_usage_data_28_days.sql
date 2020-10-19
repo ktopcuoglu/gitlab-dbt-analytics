@@ -18,7 +18,7 @@ WITH data AS (
       clean_metrics_name,
       SUM(IFNULL(metric_value,0)) AS weekly_metrics_value
     FROM data
-    {{ dbt_utils.group_by(n=9) }} 
+    {{ dbt_utils.group_by(n=10) }} 
 
 ), monthly AS (
 
