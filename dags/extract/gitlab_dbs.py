@@ -238,7 +238,7 @@ for source_name, config in config_dict.items():
                     affinity=get_affinity(True),
                     tolerations=get_toleration(True),
                     do_xcom_push=True,
-x                )
+                )
 
     globals()[f"{config['dag_name']}_db_sync"] = sync_dag
 
