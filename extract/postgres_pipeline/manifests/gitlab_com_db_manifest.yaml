@@ -1419,7 +1419,6 @@ tables:
       , created_at
       , updated_at
       , size
-      , file_type
       , file_store
       , file_name
       , file
