@@ -24,6 +24,7 @@ WITH sfdc_leads AS (
     record_type_id,
     account_id                                    AS crm_account_id,
     reports_to_id,
+    owner_id                                      AS crm_sales_rep_id,
   
     --info
     person_score,
@@ -54,6 +55,7 @@ WITH sfdc_leads AS (
     record_type_id,
     lean_data_matched_account                  AS crm_account_id,
     NULL                                       AS reports_to_id,
+    owner_id                                   AS crm_sales_rep_id,
     
     --info
     person_score,
@@ -67,17 +69,13 @@ WITH sfdc_leads AS (
     net_new_source_categories
 
   FROM sfdc_leads
-  WHERE converted_contact_id IS NULL
-    OR converted_contact_id NOT IN (
-	  SELECT contact_id
-	  FROM sfdc_contacts
-  )
+  WHERE is_converted = false
 )
 
 {{ dbt_audit(
     cte_ref="unioned",
     created_by="@jjstark",
-    updated_by="@msendal",
+    updated_by="@jjstark",
     created_date="2020-09-10",
-    updated_date="2020-09-17"
+    updated_date="2020-10-14"
 ) }}

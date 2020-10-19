@@ -185,13 +185,13 @@ models:
   - name: sfdc_sales_role_hierarchy
     description: This model contains a mapping of the user role hierarchy for all users in the Sales organization reporting to the CRO.
     columns:
-      - name: id
+      - name: user_id
         tests:
           - not_null
           - unique
   - name: sfdc_users_xf
     columns:
-      - name: id
+      - name: user_id
         tests:
           - not_null
           - unique

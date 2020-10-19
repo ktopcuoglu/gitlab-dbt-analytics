@@ -1,14 +1,14 @@
 version: 2
 
 models:
-  - name: gitlab_dotcom_alert_management_alert_assignees
+  - name: gitlab_dotcom_alert_management_alert_assignees_source
     description: Base model for Gitlab.com alert_management_alert_assignees
     columns:
       - name: alert_management_alert_assignee_id
         tests:
           - not_null
           - unique
-  - name: gitlab_dotcom_alert_management_alerts
+  - name: gitlab_dotcom_alert_management_alerts_source
     description: Base model for Gitlab.com alert_management_alerts
     columns:
       - name: alert_management_alert_id
@@ -21,7 +21,7 @@ models:
       - name: updated_at
         tests:
           - not_null
-  - name: gitlab_dotcom_alerts_service_data
+  - name: gitlab_dotcom_alerts_service_data_source
     description: Base model for Gitlab.com alerts_service_data
     columns:
       - name: alerts_service_data_id
@@ -34,7 +34,7 @@ models:
       - name: updated_at
         tests:
           - not_null
-  - name: gitlab_dotcom_approval_merge_request_rules
+  - name: gitlab_dotcom_approval_merge_request_rules_source
     description: Base model for Gitlab.com approval_merge_request_rules
     columns:
       - name: approval_merge_request_rule_id
@@ -47,7 +47,7 @@ models:
       - name: updated_at
         tests:
           - not_null
-  - name: gitlab_dotcom_approvals
+  - name: gitlab_dotcom_approvals_source
     description: Base model for Gitlab.com approvals
     columns:
       - name: approval_id
@@ -61,7 +61,7 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_approver_groups
+  - name: gitlab_dotcom_approver_groups_source
     description: Base model for Gitlab.com approver groups
     columns:
       - name: approver_group_id
@@ -75,38 +75,7 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_audit_event_details
-    description: Audit event details parsed into key-value pairs
-    columns:
-      - name: audit_event_id
-        tests:
-          - not_null
-      - name: key_name
-        tests:
-          - not_null
-      - name: key_value
-        meta:
-          sensitive: true
-      - name: created_at
-        tests:
-          - not_null
-
-  - name: gitlab_dotcom_audit_event_details_pii
-    description: Just the audit event key-value pair details that possibly have PII.
-    columns:
-      - name: audit_event_id
-        tests:
-          - not_null
-      - name: key_name
-        tests:
-          - not_null
-      - name: key_value
-      - name: key_value_hash
-        tests:
-          - not_null
-      - name: created_at
-
-  - name: gitlab_dotcom_audit_events
+  - name: gitlab_dotcom_audit_events_source
     description: Base model for Gitlab.com audit events
     columns:
       - name: audit_event_id
@@ -117,7 +86,7 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_board_assignees
+  - name: gitlab_dotcom_board_assignees_source
     description: Base model for Gitlab.com Board Assignees
     columns:
       - name: board_assignee_relation_id
@@ -128,7 +97,7 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_board_labels
+  - name: gitlab_dotcom_board_labels_source
     description: Base model for Gitlab.com board labels
     columns:
       - name: board_label_relation_id
@@ -142,7 +111,7 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_boards
+  - name: gitlab_dotcom_boards_source
     description: Base model for Gitlab.com board
     columns:
       - name: board_id
@@ -156,21 +125,21 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_ci_build_trace_chunks
+  - name: gitlab_dotcom_ci_build_trace_chunks_source
     description: Base model for Gitlab.com ci_build_trace_chunks
     columns:
       - name: ci_build_id
         tests:
           - not_null
 
-  - name: gitlab_dotcom_ci_build_trace_section_names
+  - name: gitlab_dotcom_ci_build_trace_section_names_source
     description: Base model for Gitlab.com ci_builds
     columns:
       - name: ci_build_id
         tests:
           - not_null
 
-  - name: gitlab_dotcom_ci_builds
+  - name: gitlab_dotcom_ci_builds_source
     description: Base model for Gitlab.com ci_builds
     columns:
       - name: ci_build_id
@@ -184,7 +153,7 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_ci_group_variables
+  - name: gitlab_dotcom_ci_group_variables_source
     description: Base model for Gitlab.com ci_group_variables
     columns:
       - name: ci_group_variable_id
@@ -198,7 +167,7 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_ci_job_artifacts
+  - name: gitlab_dotcom_ci_job_artifacts_source
     description: Base model for Gitlab.com ci_job_artifacts
     columns:
       - name: ci_job_artifact_id
@@ -212,7 +181,7 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_ci_pipeline_schedule_variables
+  - name: gitlab_dotcom_ci_pipeline_schedule_variables_source
     description: Base model for Gitlab.com ci_pipeline_schedule_variables
     columns:
       - name: ci_pipeline_schedule_variable_id
@@ -226,7 +195,7 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_ci_pipeline_schedules
+  - name: gitlab_dotcom_ci_pipeline_schedules_source
     description: Base model for Gitlab.com ci_pipeline_schedules
     columns:
       - name: ci_pipeline_schedule_id
@@ -240,14 +209,14 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_ci_pipeline_variables
+  - name: gitlab_dotcom_ci_pipeline_variables_source
     description: Base model for Gitlab.com ci_pipeline_variables
     columns:
       - name: ci_pipeline_variable_id
         tests:
           - not_null
 
-  - name: gitlab_dotcom_epic_issues
+  - name: gitlab_dotcom_epic_issues_source
     description: Base model for Gitlab.com epic issues
     columns:
       - name: epic_issues_relation_id
@@ -261,7 +230,7 @@ models:
           - not_null
           - unique
 
-  - name: gitlab_dotcom_ci_pipelines
+  - name: gitlab_dotcom_ci_pipelines_source
     description: Base model for Gitlab.com ci_pipelines
     columns:
       - name: ci_pipeline_id
@@ -291,7 +260,7 @@ models:
       - name: target_count
         tests:
           - not_null
-  - name: gitlab_dotcom_ci_runner_projects
+  - name: gitlab_dotcom_ci_runner_projects_source
     description: Base model for Gitlab.com ci_runner_projects
     columns:
       - name: ci_runner_project_id
@@ -306,7 +275,7 @@ models:
           - not_null
 
 
-  - name: gitlab_dotcom_ci_runners
+  - name: gitlab_dotcom_ci_runners_source
     description: Base model for Gitlab.com ci_runners
     columns:
       - name: runner_id
@@ -320,7 +289,7 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_ci_stages
+  - name: gitlab_dotcom_ci_stages_source
     description: Base model for Gitlab.com ci_stages
     columns:
       - name: ci_stage_id
@@ -331,7 +300,7 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_ci_trigger_requests
+  - name: gitlab_dotcom_ci_trigger_requests_source
     description: Base model for Gitlab.com ci_trigger_requests
     columns:
       - name: ci_trigger_request_id
@@ -345,7 +314,7 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_ci_triggers
+  - name: gitlab_dotcom_ci_triggers_source
     description: Base model for Gitlab.com ci_triggers
     columns:
       - name: ci_trigger_id
@@ -359,7 +328,7 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_clusters_applications_cert_managers
+  - name: gitlab_dotcom_clusters_applications_cert_managers_source
     columns:
       - name: clusters_applications_cert_managers_id
         tests:
@@ -369,7 +338,7 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_clusters_applications_crossplane
+  - name: gitlab_dotcom_clusters_applications_crossplane_source
     columns:
       - name: clusters_applications_crossplane_id
         tests:
@@ -379,7 +348,7 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_clusters_applications_elastic_stacks
+  - name: gitlab_dotcom_clusters_applications_elastic_stacks_source
     columns:
       - name: clusters_applications_elastic_stacks_id
         tests:
@@ -389,7 +358,7 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_clusters_applications_helm
+  - name: gitlab_dotcom_clusters_applications_helm_source
     description: Base model for the Gitlab.com `clusters_applications_helm` table.
     columns:
       - name: clusters_applications_helm_id
@@ -400,7 +369,7 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_clusters_applications_ingress
+  - name: gitlab_dotcom_clusters_applications_ingress_source
     columns:
       - name: clusters_applications_ingress_id
         tests:
@@ -410,7 +379,7 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_clusters_applications_jupyter
+  - name: gitlab_dotcom_clusters_applications_jupyter_source
     columns:
       - name: clusters_applications_jupyter_id
         tests:
@@ -420,7 +389,7 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_clusters_applications_knative
+  - name: gitlab_dotcom_clusters_applications_knative_source
     columns:
       - name: clusters_applications_knative_id
         tests:
@@ -430,7 +399,7 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_clusters_applications_prometheus
+  - name: gitlab_dotcom_clusters_applications_prometheus_source
     columns:
       - name: clusters_applications_prometheus_id
         tests:
@@ -440,7 +409,7 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_clusters_applications_runners
+  - name: gitlab_dotcom_clusters_applications_runners_source
     columns:
       - name: clusters_applications_runners_id
         tests:
@@ -450,14 +419,14 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_clusters
+  - name: gitlab_dotcom_clusters_source
     columns:
       - name: cluster_id
         tests:
           - not_null
           - unique
 
-  - name: gitlab_dotcom_cluster_groups
+  - name: gitlab_dotcom_cluster_groups_source
     description: Base model for Gitlab.com cluster_groups
     columns:
       - name: cluster_group_id
@@ -471,7 +440,7 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_cluster_projects
+  - name: gitlab_dotcom_cluster_projects_source
     description: Base model for Gitlab.com cluster_projects
     columns:
       - name: cluster_project_id
@@ -483,7 +452,7 @@ models:
           - not_null
       - name: project_id
 
-  - name: gitlab_dotcom_deployment_merge_requests
+  - name: gitlab_dotcom_deployment_merge_requests_source
     description: Base model for GitLab.com deployments_merge_requests.
     columns:
       - name: deployment_merge_request_id
@@ -497,7 +466,7 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_deployments
+  - name: gitlab_dotcom_deployments_source
     description: Base model for GitLab.com deployments.
     columns:
       - name: deployment_id
@@ -514,7 +483,7 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_design_management_designs_versions
+  - name: gitlab_dotcom_design_management_designs_versions_source
     description: Base model for GitLab.com designs_versions.
     columns:
       - name: design_version_id
@@ -528,7 +497,7 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_design_management_designs
+  - name: gitlab_dotcom_design_management_designs_source
     description: Base model for GitLab.com designs.
     columns:
       - name: design_id
@@ -540,7 +509,7 @@ models:
           -  not_null
       - name: issue_id
 
-  - name: gitlab_dotcom_design_management_versions
+  - name: gitlab_dotcom_design_management_versions_source
     description: Base model for GitLab.com versions.
     columns:
       - name: version_id
@@ -577,7 +546,7 @@ models:
           - not_null
       - name: updated_at
 
-  - name: gitlab_dotcom_environments
+  - name: gitlab_dotcom_environments_source
     description: Base model for GitLab.com environments.
     columns:
       - name: environment_id
@@ -591,7 +560,7 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_epic_metrics
+  - name: gitlab_dotcom_epic_metrics_source
     description: Base model for Gitlab.com epic metrics
     columns:
       - name: epic_id
@@ -605,7 +574,7 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_epics
+  - name: gitlab_dotcom_epics_source
     description: Base model for Gitlab.com epics
     columns:
       - name: epic_id
@@ -628,7 +597,7 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_events
+  - name: gitlab_dotcom_events_source
     columns:
       - name: event_id
         tests:
@@ -663,7 +632,7 @@ models:
           - not_null
           - unique
 
-  - name: gitlab_dotcom_gitlab_subscription_histories
+  - name: gitlab_dotcom_gitlab_subscription_histories_source
     description: A log table tracking all changes to a gitlab_subscription.
     columns:
       - name: gitlab_subscription_history_id
@@ -676,8 +645,8 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_gitlab_subscriptions
-    description: '{{ doc("gitlab_dotcom_gitlab_subscriptions") }} {{ doc("scd_type_two_documentation") }}'
+  - name: gitlab_dotcom_gitlab_subscriptions_source
+    description: '{{ doc("gitlab_dotcom_gitlab_subscriptions_source") }} {{ doc("scd_type_two_documentation") }}'
     columns:
       - name: gitlab_subscription_id
         tests:
@@ -705,7 +674,7 @@ models:
           - dbt_utils.expression_is_true:
               expression: "valid_from <= valid_to"
 
-  - name: gitlab_dotcom_group_group_links
+  - name: gitlab_dotcom_group_group_links_source
     description: This table represents groups being shared with groups. {{ doc("scd_type_two_documentation") }}'
     tests:
       - dbt_utils.expression_is_true:
@@ -727,21 +696,7 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_groups
-    description: '{{ doc("gitlab_dotcom_groups") }}'
-    columns:
-      - name: group_id
-        tests:
-          - not_null
-          - unique
-      - name: created_at
-        tests:
-          - not_null
-      - name: updated_at
-        tests:
-          - not_null
-
-  - name: gitlab_dotcom_identities
+  - name: gitlab_dotcom_identities_source
     description: Base model for GitLab.com identities (3rd party login providers).
     columns:
       - name: identity_id
@@ -755,7 +710,7 @@ models:
       - name: created_at
       - name: updated_at
 
-  - name: gitlab_dotcom_issue_assignees
+  - name: gitlab_dotcom_issue_assignees_source
     description: >-
       Base model for Gitlab.com issue assignees, duplicate rows have not been
       included.
@@ -772,7 +727,7 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_issue_links
+  - name: gitlab_dotcom_issue_links_source
     description: 'Base model for Gitlab.com issue links. {{ doc("scd_type_two_documentation") }}'
     columns:
       - name: issue_link_id
@@ -790,7 +745,7 @@ models:
           - dbt_utils.expression_is_true:
               expression: "valid_from <= valid_to"
 
-  - name: gitlab_dotcom_issue_metrics
+  - name: gitlab_dotcom_issue_metrics_source
     description: Base model for Gitlab.com issue metrics
     columns:
       - name: issue_metric_id
@@ -807,7 +762,7 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_issues
+  - name: gitlab_dotcom_issues_source
     description: Base model for Gitlab.com issues
     columns:
       - name: issue_id
@@ -843,7 +798,7 @@ models:
       - name: issue_description
         description: '{{ doc("visibility_documentation") }}'
 
-  - name: gitlab_dotcom_keys
+  - name: gitlab_dotcom_keys_source
     description: Base model for Gitlab.com keys. All sensitive fields are not included in the manifest.
     columns:
       - name: key_id
@@ -857,7 +812,7 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_label_links
+  - name: gitlab_dotcom_label_links_source
     description: 'Base model for Gitlab.com label links. {{ doc("scd_type_two_documentation") }}'
     columns:
       - name: label_link_id
@@ -873,7 +828,7 @@ models:
           - dbt_utils.expression_is_true:
               expression: "valid_from <= valid_to"
 
-  - name: gitlab_dotcom_label_priorities
+  - name: gitlab_dotcom_label_priorities_source
     description: Base model for Gitlab.com label priorities
     columns:
       - name: label_priority_id
@@ -893,7 +848,7 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_labels
+  - name: gitlab_dotcom_labels_source
     description: >-
       Base model for Gitlab.com labels, the field `title` is hidden as contains
       PII.
@@ -903,7 +858,7 @@ models:
           - not_null
           - unique
 
-  - name: gitlab_dotcom_lfs_objects_projects
+  - name: gitlab_dotcom_lfs_objects_projects_source
     description: Base model for Gitlab.com lfs_objects_projects
     columns:
       - name: lfs_object_project_id
@@ -917,7 +872,7 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_licenses
+  - name: gitlab_dotcom_licenses_source
     description: Base model for Gitlab.com licenses
     columns:
       - name: license_id
@@ -931,7 +886,7 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_lists
+  - name: gitlab_dotcom_lists_source
     description: Base model for Gitlab.com lists
     columns:
       - name: list_id
@@ -945,7 +900,7 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_members
+  - name: gitlab_dotcom_members_source
     description: 'Base model for Gitlab.com members. {{ doc("scd_type_two_documentation") }}'
     columns:
       - name: member_id
@@ -961,7 +916,7 @@ models:
           - dbt_utils.expression_is_true:
               expression: "valid_from <= valid_to"
 
-  - name: gitlab_dotcom_merge_request_diffs
+  - name: gitlab_dotcom_merge_request_diffs_source
     description: Base model for Gitlab.com request diffs
     columns:
       - name: merge_request_diff_id
@@ -978,7 +933,7 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_merge_request_metrics
+  - name: gitlab_dotcom_merge_request_metrics_source
     description: Base model for Gitlab.com merge request metrics
     columns:
       - name: merge_request_metric_id
@@ -995,7 +950,7 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_merge_requests
+  - name: gitlab_dotcom_merge_requests_source
     description: >-
       Base model for Gitlab.com merge requests, column `merge_params` is hidden
       for privacy concerns.
@@ -1025,7 +980,7 @@ models:
           - not_null
           - accepted_values:
               values: [1, 2, 3, 4]
-  - name: gitlab_dotcom_merge_requests_closing_issues
+  - name: gitlab_dotcom_merge_requests_closing_issues_source
     description: Base model for Gitlab.com merge requests closing issues
     columns:
       - name: merge_request_issue_relation_id
@@ -1048,7 +1003,7 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_milestones
+  - name: gitlab_dotcom_milestones_source
     description: Base model for Gitlab.com milestones
     columns:
       - name: milestone_id
@@ -1062,47 +1017,33 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_namespace_lineage
-    description: '{{ doc("gitlab_dotcom_namespace_lineage") }}'
+  - name: gitlab_dotcom_namespace_historical_daily
     columns:
-      - name: namespace_id
+      - name: snapshot_day_namespace_id
         tests:
           - not_null
           - unique
-      - name: parent_id
-        description: >-
-          The direct parent of a namespace. Will only be null for top-level
-          namespaces.
-      - name: upstream_lineage
-        description: >-
-          An array of the namespace's parent (upstream) lineage. Direction from
-          left to right is young to old [namespace, parent, grandparent, ...]
+  
+  - name: gitlab_dotcom_namespace_historical_monthly
+    columns:
+      - name: CONCAT(snapshot_month, namespace_id)
+        tests:
+          - unique
+  
+  - name: gitlab_dotcom_namespace_lineage_historical_daily
+    columns:
+      - name: snapshot_day_namespace_id
         tests:
           - not_null
-      - name: ultimate_parent_id
-        description: >-
-          The last (furthest right) item in upstream_lineage. I.E. the parent
-          which has no parent. For top-level namespaces, this is will be
-          itself.
+          - unique
+  
+  - name: gitlab_dotcom_namespace_lineage_historical_monthly
+    columns:
+      - name: CONCAT(snapshot_month, namespace_id)
         tests:
-          - not_null
-      - name: namespace_is_internal
-        description: >-
-          Whether or not the *ultimate parent* is a namespace that is internal to GitLab Inc.
-        tests:
-          - not_null
-      - name: namespace_plan_id
-        tests:
-          - not_null
-      - name: ultimate_parent_plan_id
-        description: >-
-          The plan_id of the namespace's ultimate parent namespace. This is inheritted downwards,
-          meaning a namespace's ultimate_parent_plan_id will supersede its own plan_id whenever its plan
-          is higher (ex: a Silver ultimate parent plan will override a namespace's Bronze plan.)
-        tests:
-          - not_null
+          - unique
 
-  - name: gitlab_dotcom_namespace_statistics
+  - name: gitlab_dotcom_namespace_statistics_source
     description: Base model for Gitlab.com namespace statistics
     columns:
       - name: namespace_statistics_id
@@ -1113,7 +1054,7 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_namespaces
+  - name: gitlab_dotcom_namespaces_source
     description: Base model for Gitlab.com namespaces
     columns:
       - name: namespace_id
@@ -1132,14 +1073,8 @@ models:
         description: '{{ doc("visibility_documentation") }}'
       - name: visbility_level
         description: '{{ doc("visibility_documentation") }}'
-      - name: plan_id
-        description: This column comes from the `gitlab_subscriptions` table which is the source of truth for namespace plans (NOT namespaces.plan_id).
-        tests:
-          - not_null
-          - accepted_values:
-              values: [2, 3, 4, 34, 67]
 
-  - name: gitlab_dotcom_notes
+  - name: gitlab_dotcom_notes_source
     description: >-
       This is a base model for Gitlab.com notes. Notes are comments on Commits,
       Epics, Issues, Merge Requests, Snippets, or Wikis.
@@ -1155,7 +1090,7 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_notification_settings
+  - name: gitlab_dotcom_notification_settings_source
     description: Base model for Gitlab.com notification settings
     columns:
       - name: notification_settings_id
@@ -1172,7 +1107,7 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_oauth_access_tokens
+  - name: gitlab_dotcom_oauth_access_tokens_source
     description: >-
       A base model for Gitlab.com oauth access tokens.
       https://docs.gitlab.com/ee/api/oauth2.html
@@ -1185,7 +1120,7 @@ models:
           - not_null
           - unique
 
-  - name: gitlab_dotcom_plans
+  - name: gitlab_dotcom_plans_source
     description: >-
       A base model for Gitlab.com plans.
     columns:
@@ -1213,7 +1148,7 @@ models:
           - not_null
 
 
-  - name: gitlab_dotcom_pages_domains
+  - name: gitlab_dotcom_pages_domains_source
     description: >-
       A base model for Gitlab.com pages domains.
     columns:
@@ -1222,7 +1157,7 @@ models:
           - not_null
           - unique
 
-  - name: gitlab_dotcom_programming_languages
+  - name: gitlab_dotcom_programming_languages_source
     description: >-
       A base model for Gitlab.com Gitlab.com programming_languages.
     columns:
@@ -1231,7 +1166,7 @@ models:
           - not_null
           - unique
 
-  - name: gitlab_dotcom_project_authorizations
+  - name: gitlab_dotcom_project_authorizations_source
     description: >-
       Base model for Gitlab.com authorizations, duplicate rows have not been
       included.
@@ -1253,7 +1188,7 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_project_auto_devops
+  - name: gitlab_dotcom_project_auto_devops_source
     description: Base model for Gitlab.com auto devops
     columns:
       - name: project_id
@@ -1267,7 +1202,7 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_project_features
+  - name: gitlab_dotcom_project_features_source
     description: Base model for Gitlab.com project features
     columns:
       - name: project_feature_id
@@ -1285,7 +1220,7 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_project_group_links
+  - name: gitlab_dotcom_project_group_links_source
     description: 'Base model for Gitlab.com group links. {{ doc("scd_type_two_documentation") }}'
     columns:
       - name: project_group_link_id
@@ -1313,7 +1248,7 @@ models:
           - dbt_utils.expression_is_true:
               expression: "valid_from <= valid_to"
 
-  - name: gitlab_dotcom_project_import_data
+  - name: gitlab_dotcom_project_import_data_source
     description: Base model for Gitlab.com import data
     columns:
       - name: project_import_relation_id
@@ -1321,7 +1256,7 @@ models:
           - not_null
           - unique
 
-  - name: gitlab_dotcom_project_mirror_data
+  - name: gitlab_dotcom_project_mirror_data_source
     description: Base model for Gitlab.com mirror data
     columns:
       - name: project_mirror_data_id
@@ -1332,7 +1267,7 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_project_statistics
+  - name: gitlab_dotcom_project_statistics_source
     description: Base model for Gitlab.com project statistics
     columns:
       - name: project_statistics_id
@@ -1343,7 +1278,7 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_projects
+  - name: gitlab_dotcom_projects_source
     description: Base model for Gitlab.com projects
     columns:
       - name: project_id
@@ -1380,7 +1315,7 @@ models:
         description: '{{ doc("visibility_documentation") }}'
       - name: project_description
         description: '{{ doc("visibility_documentation") }}'
-  - name: gitlab_dotcom_prometheus_alerts
+  - name: gitlab_dotcom_prometheus_alerts_source
     description: Base model for Gitlab.com prometheus_alerts
     columns:
       - name: prometheus_alert_id
@@ -1393,7 +1328,7 @@ models:
       - name: updated_at
         tests:
           - not_null
-  - name: gitlab_dotcom_releases
+  - name: gitlab_dotcom_releases_source
     description: Base model for Gitlab.com releases
     columns:
       - name: release_id
@@ -1410,7 +1345,7 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_protected_branches
+  - name: gitlab_dotcom_protected_branches_source
     description: >-
       A base model for Gitlab.com Gitlab.com protected_branches.
     columns:
@@ -1422,7 +1357,7 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_push_rules
+  - name: gitlab_dotcom_push_rules_source
     description: >-
       A base model for Gitlab.com Gitlab.com push_rules.
     columns:
@@ -1434,7 +1369,7 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_repository_languages
+  - name: gitlab_dotcom_repository_languages_source
     description: >-
       A base model for Gitlab.com Gitlab.com repository_languages.
     columns:
@@ -1449,7 +1384,7 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_requirements
+  - name: gitlab_dotcom_requirements_source
     description: Base model for requirements table
     columns:
       - name: requirement_id
@@ -1460,8 +1395,8 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_resource_label_events
-    description: '{{ doc("gitlab_dotcom_resource_label_events") }}'
+  - name: gitlab_dotcom_resource_label_events_source
+    description: '{{ doc("gitlab_dotcom_resource_label_events_source") }}'
     columns:
       - name: resource_label_event_id
         tests:
@@ -1474,21 +1409,21 @@ models:
         tests:
           - not_null
   
-  - name: gitlab_dotcom_resource_milestone_events
+  - name: gitlab_dotcom_resource_milestone_events_source
     columns:
       - name: resource_milestone_event_id
         tests:
           - not_null
           - unique
 
-  - name: gitlab_dotcom_resource_weight_events
+  - name: gitlab_dotcom_resource_weight_events_source
     columns:
       - name: resource_weight_event_id
         tests:
           - not_null
           - unique
 
-  - name: gitlab_dotcom_saml_providers
+  - name: gitlab_dotcom_saml_providers_source
     description: Base model for Gitlab.com gitlab_dotcom_saml_providers
     columns:
       - name: saml_provider_id
@@ -1496,7 +1431,7 @@ models:
           - not_null
           - unique
 
-  - name: gitlab_dotcom_services
+  - name: gitlab_dotcom_services_source
     description: Base model for Gitlab.com services
     columns:
       - name: service_id
@@ -1510,7 +1445,7 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_snippets
+  - name: gitlab_dotcom_snippets_source
     description: Base model for Gitlab.com snippets
     columns:
       - name: snippet_id
@@ -1527,7 +1462,7 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_subscriptions
+  - name: gitlab_dotcom_subscriptions_source
     description: Base model for Gitlab.com subscriptions
     columns:
       - name: subscription_id
@@ -1541,7 +1476,7 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_system_note_metadata
+  - name: gitlab_dotcom_system_note_metadata_source
     description: Base model for Gitlab.com system_note_metadata
     columns:
       - name: system_note_metadata_id
@@ -1555,7 +1490,7 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_timelogs
+  - name: gitlab_dotcom_timelogs_source
     description: Base model for timelogs table.
     columns:
       - name: timelog_id
@@ -1569,7 +1504,7 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_todos
+  - name: gitlab_dotcom_todos_source
     description: Base model for Gitlab.com todos
     columns:
       - name: todo_id
@@ -1586,7 +1521,7 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_user_preferences
+  - name: gitlab_dotcom_user_preferences_source
     description: Base model for Gitlab.com user_preferences
     columns:
       - name: user_id
@@ -1594,7 +1529,7 @@ models:
           - not_null
           - unique
 
-  - name: gitlab_dotcom_users
+  - name: gitlab_dotcom_users_source
     description: >-
       Base model for Gitlab.com users, the following fields are hidden for
       privacy `current_sign_in_ip`, `last_sign_in_ip`, `unconfirmed_email`,
@@ -1618,7 +1553,7 @@ models:
         tests:
           - accepted_values:
               values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 99]
-  - name: gitlab_dotcom_vulnerability_occurrences
+  - name: gitlab_dotcom_vulnerability_occurrences_source
     description: >-
       Base model for Gitlab.com vulnerability occurrences.  The `project_id` field is uniformly obscured for privacy.
     columns:

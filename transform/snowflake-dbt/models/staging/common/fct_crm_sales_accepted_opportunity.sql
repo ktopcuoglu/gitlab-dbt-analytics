@@ -26,7 +26,8 @@ WITH sfdc_opportunity AS (
     first_contact_roles.contact_id                                                           AS contact_id,
     sfdc_opportunity.account_id                                                              AS crm_account_id,
     sfdc_opportunity.opportunity_id                                                          AS opportunity_id,
-    first_contact_roles.opportunity_contact_role_id                                          AS opportunity_contact_role_id
+    first_contact_roles.opportunity_contact_role_id                                          AS opportunity_contact_role_id,
+    owner_id                                                                                 AS crm_sales_rep_id
 
   FROM sfdc_opportunity
   INNER JOIN first_contact_roles 
@@ -35,6 +36,7 @@ WITH sfdc_opportunity AS (
   WHERE sfdc_opportunity.sales_accepted_date IS NOT NULL
     AND is_edu_oss = 0
     AND stage_name != '10-Duplicate'
+    AND order_type = '1. New - First Order'
     AND sales_qualified_source IN (
                                   'SDR Generated'
                                   , 'BDR Generated'

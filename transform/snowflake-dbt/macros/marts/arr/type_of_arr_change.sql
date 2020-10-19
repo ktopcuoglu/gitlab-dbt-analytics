@@ -5,7 +5,7 @@
        THEN 'New'
      WHEN {{ arr }} = 0 AND {{ previous_arr }} > 0
        THEN 'Churn'
-     WHEN {{ arr }} < {{ previous_arr }} AND arr > 0
+     WHEN {{ arr }} < {{ previous_arr }} AND {{ arr }} > 0
        THEN 'Contraction'
      WHEN {{ arr }} > {{ previous_arr }}
        THEN 'Expansion'
