@@ -173,7 +173,6 @@ for source_name, config in config_dict.items():
                 tolerations=get_toleration(False),
                 arguments=[incremental_cmd],
                 do_xcom_push=True,
-                xcom_push=True,
             )
 
     globals()[f"{config['dag_name']}_db_extract"] = extract_dag

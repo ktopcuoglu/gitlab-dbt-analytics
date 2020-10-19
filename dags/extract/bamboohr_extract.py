@@ -76,6 +76,5 @@ bamboohr_extract = KubernetesPodOperator(
     tolerations=get_toleration(False),
     arguments=[bamboohr_extract_cmd],
     do_xcom_push=True,
-    xcom_push=True,
     dag=dag,
 )
