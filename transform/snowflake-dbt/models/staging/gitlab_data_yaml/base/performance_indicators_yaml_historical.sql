@@ -35,7 +35,7 @@ WITH unioned AS (
       FIRST_VALUE(snapshot_date) OVER (PARTITION BY pi_name ORDER BY snapshot_date) AS date_first_added, 
       snapshot_date AS valid_from_date
     FROM unioned
-    QUALIFY ROW_NUMBER() OVER (PARTITION BY pi_name, org_name, pi_definition, is_key, is_public, is_embedded, pi_target, pi__url ORDER BY snapshot_date) =1 
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY pi_name, org_name, pi_definition, is_key, is_public, is_embedded, pi_target, pi_url ORDER BY snapshot_date) =1 
 
 ), final AS (
 
