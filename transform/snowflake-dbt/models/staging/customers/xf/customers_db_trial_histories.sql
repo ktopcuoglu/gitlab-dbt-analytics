@@ -1,4 +1,4 @@
-WITH customers_db_trial_histories_source AS (
+WITH source AS (
   
     SELECT * 
     FROM {{ ref('customers_db_trial_histories_source') }}
@@ -6,4 +6,4 @@ WITH customers_db_trial_histories_source AS (
 )
 
 SELECT * 
-FROM customers_db_trial_histories_source
+FROM source
