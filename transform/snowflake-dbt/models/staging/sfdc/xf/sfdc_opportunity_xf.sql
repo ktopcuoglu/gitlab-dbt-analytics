@@ -156,7 +156,7 @@ WITH RECURSIVE sfdc_opportunity AS (
       sfdc_opportunity.total_contract_value,
       sfdc_opportunity.upside_iacv,
       sfdc_opportunity.upside_swing_deal_iacv,
-      sfdc_opportunity.incremental_acv * (probability /100)         AS weighted_iacv,
+      sfdc_opportunity.incremental_acv * (probability /100)                                         AS weighted_iacv,
       sfdc_opportunity.is_web_portal_purchase,
       sfdc_opportunity.partner_initiated_opportunity,
       sfdc_opportunity.user_segment,
@@ -229,15 +229,14 @@ WITH RECURSIVE sfdc_opportunity AS (
     
     -- adjusted, as logic is applied to removed as many blanks as possible
     CASE
-        WHEN (sfdc_account.ultimate_parent_sales_segment  = 'Unknown' OR sfdc_account.ultimate_parent_sales_segment  IS NULL) 
-            AND sfdc_opportunity.user_segment = 'SMB' 
-                THEN 'SMB'
-        WHEN (sfdc_account.ultimate_parent_sales_segment  = 'Unknown' OR sfdc_account.ultimate_parent_sales_segment  IS NULL) 
+           WHEN (sfdc_account.ultimate_parent_sales_segment  = 'Unknown' OR sfdc_account.ultimate_parent_sales_segment  IS NULL) 
             AND sfdc_opportunity.user_segment = 'Mid-Market' 
                 THEN 'Mid-Market'
         WHEN (sfdc_account.ultimate_parent_sales_segment  = 'Unknown' OR sfdc_account.ultimate_parent_sales_segment  IS NULL) 
             AND sfdc_opportunity.user_segment IN ('Large', 'US West', 'US East', 'Public Sector''EMEA', 'APAC') 
                 THEN 'Large'
+         WHEN (sfdc_account.ultimate_parent_sales_segment  = 'Unknown' OR sfdc_account.ultimate_parent_sales_segment  IS NULL) 
+                THEN 'SMB'    
         ELSE sfdc_account.ultimate_parent_sales_segment END                                             AS adj_ultimate_parent_sales_segment,
     
         
@@ -313,7 +312,7 @@ WITH RECURSIVE sfdc_opportunity AS (
     -- date fields
     d.fiscal_quarter_name_fy                                                                            AS close_fiscal_quarter_name,
     d.first_day_of_fiscal_quarter                                                                       AS close_fiscal_quarter_date,
-    d.fiscal_year                                                                                       AS close_fiscal_quarter_year,
+    d.fiscal_year                                                                                       AS close_fiscal_year,
     d.first_day_of_month                                                                                AS close_date_month,
     
     dc.fiscal_quarter_name_fy                                                                           AS created_fiscal_quarter_name,
@@ -323,15 +322,15 @@ WITH RECURSIVE sfdc_opportunity AS (
 
     -- subscription start date extra fields
     start_date.fiscal_year                                                                              AS start_date_fiscal_year,
-    start_date.fiscal_quarter_name_fy                                                                   AS start_date_fiscal_quarter,
+    start_date.fiscal_quarter_name_fy                                                                   AS start_date_fiscal_quarter_name,
     start_date.first_day_of_month                                                                       AS start_date_month,
     -- sales accepted date
-    dsa.fiscal_quarter_name_fy                                                                          AS sales_accepted_fiscal_quarter,
+    dsa.fiscal_quarter_name_fy                                                                          AS sales_accepted_fiscal_quarter_name,
     dsa.fiscal_year                                                                                     AS sales_accepted_fiscal_year,
     dsa.first_day_of_month                                                                              AS sales_accepted_date_month,
 
     -- sales qualified date
-    dqa.fiscal_quarter_name_fy                                                                          AS sales_qualified_fiscal_quarter,
+    dqa.fiscal_quarter_name_fy                                                                          AS sales_qualified_fiscal_quarter_name,
     dqa.fiscal_year                                                                                     AS sales_qualified_fiscal_year,
     dqa.first_day_of_month                                                                              AS sales_qualified_date_month,      
 

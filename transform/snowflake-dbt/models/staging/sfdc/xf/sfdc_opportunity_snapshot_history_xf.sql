@@ -112,17 +112,17 @@ WITH RECURSIVE date_details AS (
         o.account_owner_team_stamped,
         a.ultimate_parent_sales_segment,
 
-        CASE
-            WHEN (a.ultimate_parent_sales_segment = 'Unknown' OR a.ultimate_parent_sales_segment IS NULL) 
-                AND o.user_segment = 'SMB' 
-                    THEN 'SMB'
-            WHEN (a.ultimate_parent_sales_segment = 'Unknown' OR a.ultimate_parent_sales_segment IS NULL) 
-                AND o.user_segment = 'Mid-Market' 
-                    THEN 'Mid-Market'
-            WHEN (a.ultimate_parent_sales_segment = 'Unknown' OR a.ultimate_parent_sales_segment IS NULL) 
-                AND o.user_segment IN ('Large', 'US West', 'US East', 'Public Sector''EMEA', 'APAC') 
-                    THEN 'Large'
-            ELSE a.ultimate_parent_sales_segment END                                                    AS adj_ultimate_parent_sales_segment,
+    CASE
+           WHEN (a.ultimate_parent_sales_segment  = 'Unknown' OR a.ultimate_parent_sales_segment  IS NULL) 
+            AND o.user_segment = 'Mid-Market' 
+                THEN 'Mid-Market'
+        WHEN (a.ultimate_parent_sales_segment  = 'Unknown' OR a.ultimate_parent_sales_segment  IS NULL) 
+            AND o.user_segment IN ('Large', 'US West', 'US East', 'Public Sector''EMEA', 'APAC') 
+                THEN 'Large'
+         WHEN (a.ultimate_parent_sales_segment  = 'Unknown' OR a.ultimate_parent_sales_segment  IS NULL) 
+                THEN 'SMB'    
+        ELSE a.ultimate_parent_sales_segment END                                             AS adj_ultimate_parent_sales_segment,
+    
         CASE WHEN h.stage_name IN ('00-Pre Opportunity','0-Pending Acceptance','0-Qualifying','Developing', '1-Discovery', '2-Developing', '2-Scoping')  
                 THEN 'Pipeline'
              WHEN h.stage_name IN ('3-Technical Evaluation', '4-Proposal', '5-Negotiating', '6-Awaiting Signature', '7-Closing')                         
