@@ -39,6 +39,7 @@ models:
           description: Identifies if the performance indicator had a chart embedded in the handbook.
         - name: pi_target
         - name: telemetry_type
+        - name: pi_url
         - name: date_first_added
           description: This identifies when the KPI was first added. Note, since we started capturing the data on 2020.08.18 this will be the date for all performance indicators that existed before capturing. 
         - name: snapshot_date
@@ -56,6 +57,7 @@ models:
         description: Identifies if the performance indicator had a chart embedded in the handbook.
       - name: pi_target
       - name: telemetry_type
+      - name: pi_url
       - name: date_first_added
         description: This identifies when the KPI was first added. Note, since we started capturing the data on 2020.08.18 this will be the date for all performance indicators that existed before capturing. 
       - name: valid_from_date
