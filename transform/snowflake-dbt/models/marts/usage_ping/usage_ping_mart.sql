@@ -1,5 +1,3 @@
-{{ config(materialized='table') }}
-
 WITH dim_billing_accounts AS (
 
     SELECT *
