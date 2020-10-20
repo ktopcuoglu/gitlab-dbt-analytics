@@ -189,3 +189,6 @@ sheets:
       - cert_product_geo_sql
       - cert_customer_segmentation_dashboard
       - cert_customer_segmentation_sql
+      - cert_product_geo_dashboard_user
+      - cert_customer_segmentation_dashboard_user
+      
