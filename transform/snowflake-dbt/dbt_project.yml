@@ -5,7 +5,7 @@ name: 'gitlab_snowflake'
 version: '1.0'
 config-version: 2
 profile: 'gitlab-snowflake'
-require-dbt-version: 0.17.1
+require-dbt-version: 0.18.1
 
 
 # ======
@@ -80,7 +80,7 @@ vars:
     'snowplow:context:performance_timing': false
     'snowplow:context:useragent': false
     'snowplow:timezone': 'America/New_York'
-    'snowplow:page_ping_frequency': 30	    
+    'snowplow:page_ping_frequency': 30
     'snowplow:app_ids': ['gitlab', 'about', 'gitlab_customers']
 
 # ==================
@@ -109,6 +109,7 @@ models:
       - "grant usage on schema {{this.schema}} to role snowplow"
       - "grant select on {{this}} to role snowplow"
     +tags: ["product"]
+    +incremental_strategy: "delete+insert"
     page_views:
       default:
         snowplow_web_events:

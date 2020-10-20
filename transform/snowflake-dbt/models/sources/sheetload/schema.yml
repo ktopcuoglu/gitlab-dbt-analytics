@@ -2,6 +2,12 @@ version: 2
 models:
 - name: sheetload_abuse_mitigation_source
   description: Abuse currently manually pulls data from Bouncer (Abuse mitigation Tool) in order to report on abusive account mitigation.
+- name: sheetload_abuse_top_ci_data_source
+  description: Trust and Safety currently tracks top ci usage and report on the volume implicated in abuse.
+- name: sheetload_abuse_top_download_data_source
+  description: Trust and Safety currently tracks top downloaded content and report on the volume implicated in abuse.
+- name: sheetload_abuse_top_storage_data_source
+  description: Trust and Safety currently tracks largest namespaces and report on the volume implicated in abuse.
 - name: sheetload_abm_account_baselines_source
   description: This is the source for ABM account data
   columns:
@@ -366,3 +372,5 @@ models:
     - name: email_address
       tests:
       - not_null
+- name: sheetload_people_budget_source
+  description: This is the budget used by the people team.
