@@ -30,7 +30,7 @@ WITH dim_crm_accounts AS (
       dim_dates.date_actual           AS mrr_month,
       dateadd('year', 1, date_actual) AS retention_month,
       SUM(ZEROIFNULL(mrr))            AS mrr_total,
-      SUM(ZEROIFNULL(arr))             AS arr_total,
+      SUM(ZEROIFNULL(arr))            AS arr_total,
       SUM(ZEROIFNULL(quantity))       AS quantity_total,
       MIN(subscription_end_month)     AS subscription_end_month,
       ARRAY_AGG(product_category)     AS product_category,
@@ -85,19 +85,22 @@ WITH dim_crm_accounts AS (
         THEN least(net_retention_mrr, current_mrr)
         ELSE 0 END                              AS gross_retention_mrr,
       current_arr                               AS original_arr,
-      COALESCE(future_arr, 0)                   AS retention_arr,
+      COALESCE(future_arr, 0)                   AS net_retention_arr,
+      CASE WHEN net_retention_arr > 0
+        THEN least(net_retention_arr, current_arr)
+        ELSE 0 END                              AS gross_retention_arr,
       current_quantity                          AS original_quantity,
       COALESCE(future_quantity, 0)              AS retention_quantity,
-      future_product_category,
-      current_product_category,
-      future_product_ranking,
-      current_product_ranking,
-      {{ type_of_arr_change('retention_arr', 'original_arr') }},
-      {{ reason_for_arr_change_seat_change('retention_quantity', 'original_quantity', 'retention_arr', 'original_arr') }},
+      future_product_category                   AS retention_product_category,
+      current_product_category                  AS original_product_category,
+      future_product_ranking                    AS retention_product_ranking,
+      current_product_ranking                   AS original_product_ranking,
+      {{ type_of_arr_change('net_retention_arr', 'original_arr') }},
+      {{ reason_for_arr_change_seat_change('retention_quantity', 'original_quantity', 'net_retention_arr', 'original_arr') }},
       {{ reason_for_quantity_change_seat_change('retention_quantity', 'original_quantity') }},
-      {{ reason_for_arr_change_price_change('future_product_category', 'current_product_category', 'retention_quantity', 'original_quantity', 'retention_arr', 'original_arr', 'future_product_ranking','current_product_ranking') }},
-      {{ reason_for_arr_change_tier_change('future_product_ranking', 'current_product_ranking', 'future_quantity', 'current_quantity', 'future_arr', 'current_arr') }},
-      {{ annual_price_per_seat_change('retention_quantity', 'original_quantity', 'retention_arr', 'original_arr') }}
+      {{ reason_for_arr_change_price_change('retention_product_category', 'original_product_category', 'retention_quantity', 'original_quantity', 'net_retention_arr', 'original_arr', 'retention_product_ranking','original_product_ranking') }},
+      {{ reason_for_arr_change_tier_change('retention_product_ranking', 'original_product_ranking', 'retention_quantity', 'original_quantity', 'net_retention_arr', 'original_arr') }},
+      {{ annual_price_per_seat_change('retention_quantity', 'original_quantity', 'net_retention_arr', 'original_arr') }}
     FROM retention_subs
     INNER JOIN dim_dates
       ON dim_dates.date_actual = retention_subs.retention_month
