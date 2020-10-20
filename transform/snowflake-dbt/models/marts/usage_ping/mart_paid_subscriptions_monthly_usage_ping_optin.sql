@@ -46,7 +46,7 @@ WITH self_managed_active_subscriptions AS (
       active_subscriptions.subscription_start_date,
       active_subscriptions.subscription_end_date,
       MAX(fct_payloads.subscription_id) IS NOT NULL                                   AS has_sent_payloads,
-      COUNT(DISTINCT fct_payloads.subscription_id)                                    AS monthly_payload_counts,
+      COUNT(DISTINCT fct_payloads.usage_ping_id)                                      AS monthly_payload_counts,
       COUNT(DISTINCT host_id)                                                         AS monthly_host_counts
     FROM self_managed_active_subscriptions  
     INNER JOIN dim_product_details
