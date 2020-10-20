@@ -15,17 +15,6 @@ TODO:
     FROM {{ ref('date_details') }}
     ORDER BY 1 DESC
 
-), sfdc_pipeline_velocity_quarter AS (
-    
-    SELECT *
-    FROM {{ ref('sfdc_pipeline_velocity_quarter') }}  
-
-), sfdc_opportunity_xf AS (
-    
-    SELECT *
-    FROM {{ ref('sfdc_opportunity_xf') }}
-    WHERE is_deleted = 0
-
 ), sfdc_opportunity_snapshot_history_xf AS (
     
     SELECT *
@@ -36,6 +25,8 @@ TODO:
         AND forecast_category_name != 'Omitted'
         -- remove incomplete quarters, data from beggining of Q4 FY20
         AND snapshot_date >= CAST('2019-11-01' AS DATE)
+        -- remove excluded deals
+        AND is_excluded_flag = 0
 
 ), pipeline_snapshot_base AS (
     
@@ -85,8 +76,6 @@ WHERE
     snapshot_date <= dateadd(month,3,close_fiscal_quarter_date)
     -- 1 quarters before start
     AND snapshot_date >= dateadd(month,-3,close_fiscal_quarter_date)
-    AND is_excluded_flag = 0
-
 GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18
 
 ), pipeline_snapshot_extended AS (
@@ -137,8 +126,6 @@ GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18
   
    -- exclude close lost
    WHERE lower(pq.stage_name) not like '%lost%'
-     -- and exclusion as per Pipeline Velocity file
-     --AND is_excluded_flag = 0
      -- remove the 92 day
      AND dt.day_of_fiscal_quarter < 92
      -- exclude current quarter
