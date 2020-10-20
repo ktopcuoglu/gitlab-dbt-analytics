@@ -68,7 +68,7 @@ WITH self_managed_active_subscriptions AS (
       active_subscriptions.subscription_name_slugify,
       FIRST_VALUE(major_minor_version) OVER (
         PARTITION BY first_day_of_month, active_subscriptions.subscription_name_slugify
-        ORDER BY major_version DESC, minor_version
+        ORDER BY created_at DESC
       ) AS latest_major_minor_version
     FROM self_managed_active_subscriptions  
     INNER JOIN dim_product_details
