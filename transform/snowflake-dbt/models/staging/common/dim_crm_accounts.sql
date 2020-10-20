@@ -62,6 +62,7 @@ WITH sfdc_account AS (
     sfdc_account.account_owner,
     sfdc_account.account_owner_team,
     sfdc_account.account_type,
+    sfdc_account.gtm_strategy,
     sfdc_users.name                               AS technical_account_manager,
     sfdc_account.is_deleted                       AS is_deleted,
     CASE
@@ -87,7 +88,7 @@ WITH sfdc_account AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@msendal",
-    updated_by="@msendal",
+    updated_by="@jjstark",
     created_date="2020-06-01",
-    updated_date="2020-09-17"
+    updated_date="2020-10-15"
 ) }}
