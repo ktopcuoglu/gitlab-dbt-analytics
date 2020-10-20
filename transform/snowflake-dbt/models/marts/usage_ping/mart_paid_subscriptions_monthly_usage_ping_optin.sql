@@ -45,8 +45,6 @@ WITH self_managed_active_subscriptions AS (
       active_subscriptions.subscription_name_slugify,
       active_subscriptions.subscription_start_date,
       active_subscriptions.subscription_end_date,
-      MAX(self_managed_active_subscriptions.mrr) * 12                                 AS arr,
-      MAX(self_managed_active_subscriptions.quantity)                                 AS quantity,
       MAX(fct_payloads.subscription_id) IS NOT NULL                                   AS has_sent_payloads,
       COUNT(DISTINCT fct_payloads.subscription_id)                                    AS monthly_payload_counts,
       COUNT(DISTINCT host_id)                                                         AS monthly_host_counts
