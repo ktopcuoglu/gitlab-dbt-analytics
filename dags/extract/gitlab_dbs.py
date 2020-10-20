@@ -173,6 +173,7 @@ for source_name, config in config_dict.items():
                 tolerations=get_toleration(False),
                 arguments=[incremental_cmd],
                 do_xcom_push=True,
+                xcom_push=True,
             )
 
     globals()[f"{config['dag_name']}_db_extract"] = extract_dag
@@ -217,6 +218,7 @@ for source_name, config in config_dict.items():
                     tolerations=get_toleration(False),
                     arguments=[sync_cmd],
                     do_xcom_push=True,
+                    xcom_push=True,
                 )
 
             else:
@@ -238,6 +240,7 @@ for source_name, config in config_dict.items():
                     affinity=get_affinity(True),
                     tolerations=get_toleration(True),
                     do_xcom_push=True,
+                    xcom_push=True,
                 )
 
     globals()[f"{config['dag_name']}_db_sync"] = sync_dag
@@ -282,5 +285,6 @@ for source_name, config in config_dict.items():
                 arguments=[validate_cmd],
                 dag=validation_dag,
                 do_xcom_push=True,
+                xcom_push=True,
             )
     globals()[f"{config['dag_name']}_db_validation"] = validation_dag
