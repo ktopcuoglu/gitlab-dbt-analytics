@@ -45,10 +45,8 @@ WITH self_managed_active_subscriptions AS (
       active_subscriptions.subscription_name_slugify,
       active_subscriptions.subscription_start_date,
       active_subscriptions.subscription_end_date,
-      SUM(self_managed_active_subscriptions.mrr) * 12                                 AS arr,
-      SUM(self_managed_active_subscriptions.quantity)                                 AS quantity,
       MAX(fct_payloads.subscription_id) IS NOT NULL                                   AS has_sent_payloads,
-      COUNT(DISTINCT fct_payloads.subscription_id)                                    AS monthly_payload_counts,
+      COUNT(DISTINCT fct_payloads.usage_ping_id)                                      AS monthly_payload_counts,
       COUNT(DISTINCT host_id)                                                         AS monthly_host_counts
     FROM self_managed_active_subscriptions  
     INNER JOIN dim_product_details
@@ -68,7 +66,7 @@ WITH self_managed_active_subscriptions AS (
       active_subscriptions.subscription_name_slugify,
       FIRST_VALUE(major_minor_version) OVER (
         PARTITION BY first_day_of_month, active_subscriptions.subscription_name_slugify
-        ORDER BY major_version DESC, minor_version
+        ORDER BY created_at DESC
       ) AS latest_major_minor_version
     FROM self_managed_active_subscriptions  
     INNER JOIN dim_product_details

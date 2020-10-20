@@ -40,6 +40,7 @@ WITH zuora_product AS (
       zuora_product_rate_plan.product_rate_plan_name like '%reporter_access%'   AS is_reporter_license,
       zuora_product.effective_start_date                                        AS effective_start_date,
       zuora_product.effective_end_date                                          AS effective_end_date,
+      {{ product_ranking('product_category') }}                                 AS product_ranking,
       MIN(zuora_product_rate_plan_charge_tier.price)                            AS billing_list_price
     FROM zuora_product
     INNER JOIN zuora_product_rate_plan 
@@ -60,7 +61,7 @@ WITH zuora_product AS (
     created_by="@msendal",
     updated_by="@msendal",
     created_date="2020-06-01",
-    updated_date="2020-09-17"
+    updated_date="2020-10-16"
 ) }}
 
 

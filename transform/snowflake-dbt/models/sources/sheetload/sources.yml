@@ -16,9 +16,16 @@ sources:
     tables:
       - name: abm_account_baselines
       - name: abuse_mitigation
+      - name: abuse_top_ci_data
+      - name: abuse_top_download_data
+      - name: abuse_top_storage_data
       - name: ally_certificate
       - name: ar_aging_details
       - name: calendar
+      - name: cert_customer_segmentation_dashboard
+      - name: cert_customer_segmentation_sql
+      - name: cert_product_geo_dashboard
+      - name: cert_product_geo_sql
       - name: clari_export_forecast_net_iacv
       - name: communication_certificate
       - name: company_call_attendance
@@ -28,8 +35,8 @@ sources:
       - name: days_to_close
       - name: dev_section_metrics
       - name: employee_location_factor
-      - name: engineering_speciality_prior_to_capture
       - name: engineering_contributing_organizations
+      - name: engineering_speciality_prior_to_capture
       - name: gitlab_slack_stats
       - name: google_referrals
       - name: headcount
@@ -54,6 +61,7 @@ sources:
       - name: maxmind_countries
       - name: maxmind_ranges
       - name: osat
+      - name: people_budget
       - name: planned_values
       - name: procurement_cost_savings
       - name: product_maturity_historical

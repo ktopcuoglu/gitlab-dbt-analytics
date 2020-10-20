@@ -355,6 +355,8 @@ models:
 
         users_emails:
           enabled: false
+      usage_ping:
+        +materialized: table
 
     # ------------------
     # Legacy Structure
