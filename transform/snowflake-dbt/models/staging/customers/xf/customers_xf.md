@@ -89,3 +89,7 @@ This order examplifies perfectly what is happening in the table `customers_db_or
 
 
 {% enddocs %}
+
+{% docs customers_db_trial_histories %}
+This data model contains the trial histories of each namespace and brings it to Sisense. 
+{% enddocs %}

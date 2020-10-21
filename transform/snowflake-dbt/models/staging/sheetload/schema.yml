@@ -2,6 +2,13 @@ version: 2
 models:
 - name: sheetload_abm_account_baselines
 - name: sheetload_abuse_mitigation
+  description: Abuse currently manually pulls data from Bouncer (Abuse mitigation Tool) in order to report on abusive account mitigation.
+- name: sheetload_abuse_top_ci_data
+  description: Trust and Safety currently tracks top ci usage and report on the volume implicated in abuse.
+- name: sheetload_abuse_top_download_data
+  description: Trust and Safety currently tracks top downloaded content and report on the volume implicated in abuse.
+- name: sheetload_abuse_top_storage_data
+  description: Trust and Safety currently tracks largest namespaces and report on the volume implicated in abuse.
 - name: sheetload_ally_certificate
 - name: sheetload_ar_aging_details
 - name: sheetload_calendar
@@ -46,8 +53,6 @@ models:
 - name: sheetload_days_to_close
 - name: sheetload_engineering_speciality_prior_to_capture
 - name: sheetload_engineering_contributing_organizations
-- name: sheetload_dev_section_metrics
-  description: Base model for the Google Sheet ingested through Sheetload called dev_section_metrics
 - name: sheetload_gitlab_slack_stats
 - name: sheetload_google_referrals
 - name: sheetload_headcount
@@ -76,6 +81,8 @@ models:
 - name: sheetload_sales_training_completion_dates
 - name: sheetload_scalable_employment_values
 - name: sheetload_social_marketing_metrics
+- name: sheetload_usage_ping_metrics_sections
+  description: Base model for the Google Sheet ingested through Sheetload called usage_ping_metrics_sections
 - name: sheetload_values_certificate
 - name: sheetload_yc_companies
 

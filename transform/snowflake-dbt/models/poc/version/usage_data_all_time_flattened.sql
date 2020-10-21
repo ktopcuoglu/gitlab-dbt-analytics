@@ -39,6 +39,6 @@ SELECT
   metrics.*, 
   flattened.metric_value
 FROM flattened
-INNER JOIN {{ ref('sheetload_dev_section_metrics' )}} AS metrics 
+INNER JOIN {{ ref('sheetload_usage_ping_metrics_sections' )}} AS metrics 
   ON flattened.metric_path = metrics.metrics_path
     AND time_period = '{{metric_type}}'
