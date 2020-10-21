@@ -469,8 +469,6 @@ models:
         description: The sales_accepted_date from the sfdc_opportunity
       - name: crm_person_id
         description: A surrogate key for use when joining to `fct_crm_sales_accepted_opportunity`. Created from the contact_id where there is a contact and a lead_id where there isn't.
-        tests:
-          - not_null
 
   - name: fct_mrr
     description: One row represents Monthly Recurring Revenue per one month, subscription_id, product_details_id
