@@ -70,7 +70,7 @@ SELECT
   opporunity_fields.is_won,
   is_sao.is_sao,
   is_sdr_sao.is_sdr_sao,
-	opporunity_fields.iacv
+  opporunity_fields.iacv
 FROM opporunity_fields
 LEFT JOIN first_contact
   ON opporunity_fields.opportunity_id = first_contact.opportunity_id AND row_num = 1
