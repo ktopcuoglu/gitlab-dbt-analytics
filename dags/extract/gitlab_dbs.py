@@ -181,7 +181,7 @@ for source_name, config in config_dict.items():
     )
 
     with extract_dag:
-        
+
         # dbt tasks
         dbt_name = f"{config['dbt_name']}"
         dbt_task_identifier = f"{config['task_name']}-dbt-incremental"
@@ -306,7 +306,6 @@ for source_name, config in config_dict.items():
             incremental_extract >> freshness
 
     globals()[f"{config['dag_name']}_db_extract"] = extract_dag
-
 
     # Sync DAG
     sync_dag_args = {
