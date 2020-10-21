@@ -21,7 +21,7 @@ The Zuora account creation and maintenance is part of the broader Quote Creation
 
 Data comes from [Zuora Documentation](https://www.zuora.com/developer/api-reference/#tag/Accounts).
 
-The grain of the table is the Zuora Account.
+The grain of the table is the Zuora Account. 
 
 Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
 
