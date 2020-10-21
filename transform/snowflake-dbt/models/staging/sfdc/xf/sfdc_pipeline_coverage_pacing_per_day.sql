@@ -76,7 +76,7 @@ WHERE
     snapshot_date <= dateadd(month,3,close_fiscal_quarter_date)
     -- 1 quarters before start
     AND snapshot_date >= dateadd(month,-3,close_fiscal_quarter_date)
-GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18
+{{ dbt_utils.group_by(n=18) }}
 
 ), pipeline_snapshot_extended AS (
 
