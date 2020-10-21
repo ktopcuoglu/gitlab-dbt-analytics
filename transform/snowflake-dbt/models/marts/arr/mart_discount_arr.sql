@@ -56,6 +56,8 @@ WITH dim_dates AS (
       AND (fct_invoice_items.effective_end_month > dim_dates.date_actual
         OR fct_invoice_items.effective_end_month IS NULL)
       AND dim_dates.day_of_month = 1
+      --filter out 2 subscription_ids with known data quality issues when comparing invoiced subscriptions to the Zuora UI.
+      AND dim_subscription_id NOT IN ('2c92a0ff5e1dcf14015e3c191d4f7689','2c92a00e6a3477b5016a46aaec2f08bc')
     {{ dbt_utils.group_by(n=12) }}
 
 )
