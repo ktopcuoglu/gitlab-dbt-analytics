@@ -60,57 +60,67 @@ WITH dim_dates AS (
       AND dim_subscription_id NOT IN ('2c92a0ff5e1dcf14015e3c191d4f7689','2c92a00e6a3477b5016a46aaec2f08bc')
     {{ dbt_utils.group_by(n=12) }}
 
+), final AS (
+
+    SELECT
+      {{ dbt_utils.surrogate_key(['arr_month_by_month.arr_month', 'arr_month_by_month.invoice_item_id']) }}
+                                                                        AS invoice_item_month_id,
+      arr_month_by_month.arr_month,
+      DATE_TRUNC('month',arr_month_by_month.invoice_date)                                  AS invoice_month,
+      arr_month_by_month.invoice_number,
+      dim_crm_accounts_invoice.ultimate_parent_account_id               AS parent_account_id_invoice,
+      dim_crm_accounts_invoice.ultimate_parent_account_name             AS parent_account_name_invoice,
+      dim_crm_accounts_invoice.ultimate_parent_billing_country          AS parent_billing_country_invoice,
+      dim_crm_accounts_invoice.ultimate_parent_account_segment          AS parent_account_segment_invoice,
+      dim_crm_accounts_invoice.crm_account_id                           AS crm_account_id_invoice,
+      dim_crm_accounts_invoice.crm_account_name                         AS crm_account_name_invoice,
+      dim_crm_accounts_subscription.ultimate_parent_account_id          AS parent_account_id_subscription,
+      dim_crm_accounts_subscription.ultimate_parent_account_name        AS parent_account_name_subscription,
+      dim_crm_accounts_subscription.ultimate_parent_billing_country     AS parent_billing_country_subscription,
+      dim_crm_accounts_subscription.ultimate_parent_account_segment     AS parent_account_segment_subscription,
+      dim_crm_accounts_subscription.crm_account_id                      AS crm_account_id_subscription,
+      dim_crm_accounts_subscription.crm_account_name                    AS crm_account_name_subscription,
+      zuora_subscription.subscription_name,
+      dim_crm_accounts_invoice.is_reseller,
+      dim_product_details.product_rate_plan_charge_name,
+      dim_product_details.product_category,
+      dim_product_details.delivery,
+      dim_product_details.service_type,
+      IFF(zuora_subscription.created_by_id = '2c92a0fd55822b4d015593ac264767f2', -- All Self-Service / Web direct subscriptions are identified by that created_by_id
+        'Self-Service', 'Sales-Assisted') AS subscription_sales_type,
+      CASE
+        WHEN LOWER(dim_product_details.product_rate_plan_charge_name) LIKE '%edu or oss%'   THEN TRUE
+        WHEN LOWER(dim_product_details.product_rate_plan_charge_name) LIKE '%y combinator%' THEN TRUE
+        WHEN LOWER(dim_product_details.product_rate_plan_charge_name) LIKE '%support%'      THEN TRUE
+        ELSE FALSE
+      END                                                               AS is_excluded_from_disc_analysis,
+      arr_month_by_month.effective_start_month,
+      arr_month_by_month.effective_end_month,
+      zuora_subscription.subscription_start_date,
+      zuora_subscription.subscription_end_date,
+      dim_product_details.annual_billing_list_price,
+      arr_month_by_month.arr/arr_month_by_month.quantity                AS arpu,
+      arr_month_by_month.arr                                            AS arr,
+      arr_month_by_month.quantity                                       AS quantity
+    FROM arr_month_by_month
+    INNER JOIN zuora_subscription
+      ON arr_month_by_month.dim_subscription_id = zuora_subscription.subscription_id
+    INNER JOIN dim_product_details
+      ON arr_month_by_month.dim_product_details_id = dim_product_details.product_details_id
+    INNER JOIN dim_billing_accounts
+      ON arr_month_by_month.dim_billing_account_id_invoice = dim_billing_accounts.billing_account_id
+    LEFT JOIN dim_crm_accounts AS dim_crm_accounts_invoice
+      ON arr_month_by_month.dim_crm_account_id_invoice = dim_crm_accounts_invoice.crm_account_id
+    LEFT JOIN dim_crm_accounts AS dim_crm_accounts_subscription
+      ON arr_month_by_month.dim_crm_account_id_subscription = dim_crm_accounts_subscription.crm_account_id
+    ORDER BY 3 DESC
+
 )
 
-SELECT
-  {{ dbt_utils.surrogate_key(['arr_month', 'invoice_item_id']) }}
-                                                                    AS invoice_item_month_id,
-  arr_month,
-  DATE_TRUNC('month',invoice_date)                                  AS invoice_month,
-  invoice_number,
-  dim_crm_accounts_invoice.ultimate_parent_account_id               AS parent_account_id_invoice,
-  dim_crm_accounts_invoice.ultimate_parent_account_name             AS parent_account_name_invoice,
-  dim_crm_accounts_invoice.ultimate_parent_billing_country          AS parent_billing_country_invoice,
-  dim_crm_accounts_invoice.ultimate_parent_account_segment          AS parent_account_segment_invoice,
-  dim_crm_accounts_invoice.crm_account_id                           AS crm_account_id_invoice,
-  dim_crm_accounts_invoice.crm_account_name                         AS crm_account_name_invoice,
-  dim_crm_accounts_subscription.ultimate_parent_account_id          AS parent_account_id_subscription,
-  dim_crm_accounts_subscription.ultimate_parent_account_name        AS parent_account_name_subscription,
-  dim_crm_accounts_subscription.ultimate_parent_billing_country     AS parent_billing_country_subscription,
-  dim_crm_accounts_subscription.ultimate_parent_account_segment     AS parent_account_segment_subscription,
-  dim_crm_accounts_subscription.crm_account_id                      AS crm_account_id_subscription,
-  dim_crm_accounts_subscription.crm_account_name                    AS crm_account_name_subscription,
-  subscription_name,
-  dim_crm_accounts_invoice.is_reseller,
-  product_rate_plan_charge_name,
-  product_category,
-  delivery,
-  service_type,
-  IFF(zuora_subscription.created_by_id = '2c92a0fd55822b4d015593ac264767f2', -- All Self-Service / Web direct subscriptions are identified by that created_by_id
-      'Self-Service', 'Sales-Assisted') AS subscription_sales_type,
-  CASE
-    WHEN LOWER(product_rate_plan_charge_name) LIKE '%edu or oss%'   THEN TRUE
-    WHEN LOWER(product_rate_plan_charge_name) LIKE '%y combinator%' THEN TRUE
-    WHEN LOWER(product_rate_plan_charge_name) LIKE '%support%'      THEN TRUE
-    ELSE FALSE
-  END                                                               AS is_excluded_from_disc_analysis,
-  effective_start_month,
-  effective_end_month,
-  subscription_start_date,
-  subscription_end_date,
-  annual_billing_list_price,
-  arr/quantity                                                      AS arpu,
-  arr                                                               AS arr,
-  quantity                                                          AS quantity
-FROM arr_month_by_month
-INNER JOIN zuora_subscription
-  ON arr_month_by_month.dim_subscription_id = zuora_subscription.subscription_id
-INNER JOIN dim_product_details
-  ON arr_month_by_month.dim_product_details_id = dim_product_details.product_details_id
-INNER JOIN dim_billing_accounts
-  ON arr_month_by_month.dim_billing_account_id_invoice = dim_billing_accounts.billing_account_id
-LEFT JOIN dim_crm_accounts AS dim_crm_accounts_invoice
-  ON arr_month_by_month.dim_crm_account_id_invoice = dim_crm_accounts_invoice.crm_account_id
-LEFT JOIN dim_crm_accounts AS dim_crm_accounts_subscription
-  ON arr_month_by_month.dim_crm_account_id_subscription = dim_crm_accounts_subscription.crm_account_id
-ORDER BY 3 DESC
+{{ dbt_audit(
+    cte_ref="final",
+    created_by="@iweeks",
+    updated_by="@iweeks",
+    created_date="2020-10-21",
+    updated_date="2020-10-21",
+) }}
