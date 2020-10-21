@@ -270,7 +270,7 @@ SELECT de.adj_ultimate_parent_sales_segment                                     
         nq.next_open_3plus_deal_count
        
  FROM data_structure de
-    LEFT JOIN previous_quarter pq
+LEFT JOIN previous_quarter pq
   ON de.adj_ultimate_parent_sales_segment = pq.adj_ultimate_parent_sales_segment
         AND de.snapshot_fiscal_quarter_date = pq.snapshot_fiscal_quarter_date
         AND de.deal_category = pq.deal_category
