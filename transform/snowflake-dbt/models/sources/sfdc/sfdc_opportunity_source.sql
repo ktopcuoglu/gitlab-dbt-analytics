@@ -35,7 +35,9 @@ WITH source AS (
         ownerid                                     AS owner_id,
 
         -- logistical information
-        business_type__c                            AS business_type,
+        isclosed                                    AS is_closed,
+				iswon                                       AS is_won,
+				business_type__c                            AS business_type,
         closedate                                   AS close_date,
         createddate                                 AS created_date,
         days_in_stage                               AS days_in_stage,
