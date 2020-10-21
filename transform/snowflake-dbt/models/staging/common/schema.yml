@@ -457,8 +457,8 @@ models:
         tests:
           - not_null
 
-  - name: fct_crm_opportunity
-    description: '{{ doc("fct_crm_opportunity") }}'
+  - name: fct_crm_opportunities
+    description: '{{ doc("fct_crm_opportunities") }}'
     columns:
       - name: opportunity_id
         description: A dbt generated surrogate key combining the sfdc_record_id and the sales_accepted_date.

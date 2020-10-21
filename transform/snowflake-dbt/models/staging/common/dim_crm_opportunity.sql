@@ -10,8 +10,8 @@ WITH sfdc_opportunity AS (
 
     SELECT
       -- keys
-      sfdc_opportunity.account_id,
-      sfdc_opportunity.opportunity_id,
+      sfdc_opportunity.account_id                                                                 AS crm_account_id,
+      sfdc_opportunity.opportunity_id                                                             AS crm_opportunity_ud,
       sfdc_opportunity.opportunity_name,
       sfdc_opportunity.owner_id                                                                   AS crm_sales_rep_id,
 
@@ -21,13 +21,6 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity.lead_source,
       sfdc_opportunity.merged_opportunity_id,
       sfdc_opportunity.net_new_source_categories,
-      sfdc_opportunity.opportunity_business_development_representative,
-      sfdc_opportunity.opportunity_owner                                                          AS opportunity_owner,
-      sfdc_opportunity.opportunity_owner_department                                               AS opportunity_owner_department,
-      sfdc_opportunity.opportunity_owner_manager                                                  AS opportunity_owner_manager,
-      sfdc_opportunity.opportunity_owner_team                                                     AS opportunity_owner_team,
-      sfdc_opportunity.opportunity_sales_development_representative,
-      sfdc_opportunity.opportunity_development_representative,
       sfdc_opportunity.account_owner_team_stamped,
       sfdc_opportunity.primary_campaign_source_id                                                 AS primary_campaign_source_id,
       sfdc_opportunity.sales_accepted_date,

@@ -84,7 +84,7 @@ A fact from the lead and contact tables that shows the date they were qualified.
 
 {% enddocs %}
 
-{% docs fct_crm_opportunity %}
+{% docs fct_crm_opportunities %}
 
 A fact table for salesforce opportunities
 

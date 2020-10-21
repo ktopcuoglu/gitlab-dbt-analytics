@@ -15,7 +15,7 @@ WITH sfdc_opportunity AS (
 ), opporunity_fields AS( 
 
   SELECT
-    opportunity_id,      -- opportunity_id
+    opportunity_id,      AS crm_opportunity_id
     account_id           AS crm_account_id,
     owner_id             AS crm_sales_rep_id,
 		incremental_acv      AS iacv,
@@ -58,7 +58,7 @@ WITH sfdc_opportunity AS (
 ), joined AS (
 
 SELECT
-  opporunity_fields.opportunity_id,
+  opporunity_fields.crm_opportunity_id,
   opporunity_fields.crm_account_id,
   opporunity_fields.crm_sales_rep_id,
   first_contact.crm_person_id,
@@ -73,11 +73,11 @@ SELECT
   opporunity_fields.iacv
 FROM opporunity_fields
 LEFT JOIN first_contact
-  ON opporunity_fields.opportunity_id = first_contact.opportunity_id AND row_num = 1
+  ON opporunity_fields.crm_opportunity_id = first_contact.opportunity_id AND row_num = 1
 LEFT JOIN is_sao
-  ON opporunity_fields.opportunity_id = is_sao.opportunity_id
+  ON opporunity_fields.crm_opportunity_id = is_sao.opportunity_id
 LEFT JOIN is_sdr_sao
-  ON opporunity_fields.opportunity_id = is_sdr_sao.opportunity_id
+  ON opporunity_fields.crm_opportunity_id = is_sdr_sao.opportunity_id
 
 )
 
