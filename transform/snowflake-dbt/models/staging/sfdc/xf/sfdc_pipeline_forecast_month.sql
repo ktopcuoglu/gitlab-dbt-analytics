@@ -41,4 +41,4 @@ WHERE (opportunity_owner_is_lvl_2_vp_flag = 1
         AND snapshot_date >= dateadd(month,-1, close_month)
         -- till end of the month
         AND snapshot_date <= dateadd(month, 1, close_month)
-GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13
+{{ dbt_utils.group_by(n=13) }}
