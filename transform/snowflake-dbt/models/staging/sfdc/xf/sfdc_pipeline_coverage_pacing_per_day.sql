@@ -30,7 +30,8 @@ TODO:
 
 ), pipeline_snapshot_base AS (
     
-    SELECT  snapshot_date,
+    SELECT
+      snapshot_date,
         close_fiscal_quarter,
         close_fiscal_quarter_date,
         close_fiscal_year,
