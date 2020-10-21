@@ -18,6 +18,7 @@ WITH sfdc_opportunity AS (
     opportunity_id,      -- opportunity_id
     account_id           AS crm_account_id,
     owner_id             AS crm_sales_rep_id,
+		incremental_acv      AS iacv,
     created_date,        -- created_date
     sales_accepted_date, -- sales_accepted_date
     close_date,          -- close_date
@@ -68,7 +69,8 @@ SELECT
   opporunity_fields.is_closed,
   opporunity_fields.is_won,
   is_sao.is_sao,
-  is_sdr_sao.is_sdr_sao
+  is_sdr_sao.is_sdr_sao,
+	opporunity_fields.iacv
 FROM opporunity_fields
 LEFT JOIN first_contact
   ON opporunity_fields.opportunity_id = first_contact.opportunity_id AND row_num = 1
