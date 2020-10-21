@@ -30,14 +30,14 @@ WITH sfdc_account AS (
     SELECT
       sfdc_account.*,
 
-      sfdc_users.name                                                   AS technical_account_manager,
+      sfdc_users.name                                                                   AS technical_account_manager,
       parent_account.ultimate_parent_account_name, 
 
       -- ************************************
       -- sales segmentation deprecated fields - 2020-09-03
       -- left temporary for the sake of MVC and avoid breaking SiSense existing charts
       -- issue: https://gitlab.com/gitlab-data/analytics/-/issues/5709
-      sfdc_account.ultimate_parent_sales_segment                                                      AS ultimate_parent_account_segment,
+      sfdc_account.ultimate_parent_sales_segment                                        AS ultimate_parent_account_segment,
       -- ************************************
       
       sfdc_record_type.record_type_name,
@@ -50,7 +50,8 @@ WITH sfdc_account AS (
         WHEN ultimate_parent_sales_segment IN ('Large', 'Strategic')
           OR division_sales_segment IN ('Large', 'Strategic') 
           THEN TRUE
-        ELSE FALSE  END                                                                              AS is_large_and_up
+        ELSE FALSE 
+      END                                                                               AS is_large_and_up
 
     FROM sfdc_account
     LEFT JOIN parent_account

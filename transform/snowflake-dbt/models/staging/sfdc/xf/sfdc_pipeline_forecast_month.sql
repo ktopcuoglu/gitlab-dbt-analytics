@@ -10,8 +10,10 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
     FROM {{ ref('sfdc_opportunity_snapshot_history_xf') }}
     -- remove lost & deleted deals
     WHERE stage_name NOT IN ('9-Unqualified','10-Duplicate','Unqualified')
-        AND is_deleted = 0
+      AND is_deleted = 0
+
 ) 
+
 SELECT
   snapshot_date,
   close_month,

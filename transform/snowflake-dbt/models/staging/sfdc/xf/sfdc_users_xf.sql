@@ -1,10 +1,12 @@
 WITH RECURSIVE users AS (
 
-    SELECT * FROM {{ref('sfdc_users')}}
+    SELECT *
+    FROM {{ref('sfdc_users')}}
 
 ), user_role AS (
 
-    SELECT * FROM {{ref('sfdc_user_roles')}}
+    SELECT *
+    FROM {{ref('sfdc_user_roles')}}
 
 ), base AS (
 
@@ -67,25 +69,31 @@ WITH RECURSIVE users AS (
     FROM managers
 
 )
+
 SELECT 
   base.*,
 
   -- account owner hierarchies levels
-  trim(cro.level_2)                                                                               AS sales_team_level_2,
-  trim(cro.level_3)                                                                               AS sales_team_level_3,
-  trim(cro.level_4)                                                                               AS sales_team_level_4,
+  TRIM(cro.level_2)                                                                               AS sales_team_level_2,
+  TRIM(cro.level_3)                                                                               AS sales_team_level_3,
+  TRIM(cro.level_4)                                                                               AS sales_team_level_4,
   CASE 
-    WHEN trim(cro.level_2) IS NOT NULL
-      THEN trim(cro.level_2) ELSE 'n/a' END                                                       AS sales_team_vp_level,
+    WHEN TRIM(cro.level_2) IS NOT NULL
+      THEN TRIM(cro.level_2)
+    ELSE 'n/a'
+  END                                                                                             AS sales_team_vp_level,
   CASE 
-    WHEN (trim(cro.level_3) IS NOT NULL  AND trim(cro.level_3) != '')
-      THEN trim(cro.level_3) ELSE 'n/a' END                                                       AS sales_team_rd_level,
+    WHEN (TRIM(cro.level_3) IS NOT NULL  AND TRIM(cro.level_3) != '')
+      THEN TRIM(cro.level_3)
+    ELSE 'n/a'
+  END                                                                                             AS sales_team_rd_level,
   CASE 
     WHEN cro.level_3 LIKE 'ASM%' 
       THEN cro.level_3
     WHEN cro.level_4 LIKE 'ASM%' OR cro.level_4 LIKE 'Area Sales%' 
       THEN cro.level_4
-      ELSE 'n/a' END                                                                              AS sales_team_asm_level,
+      ELSE 'n/a'
+  END                                                                                             AS sales_team_asm_level,
   CASE 
     WHEN (cro.level_4 IS NOT NULL 
       AND cro.level_4 != ''
@@ -94,7 +102,9 @@ SELECT
     WHEN (cro.level_3 IS NOT NULL AND cro.level_3 != '')
       THEN cro.level_3
     WHEN (cro.level_2 IS NOT NULL AND cro.level_2 != '')
-      THEN cro.level_2    ELSE 'n/a' END                                                         AS sales_min_hierarchy_level,
+      THEN cro.level_2
+    ELSE 'n/a'
+  END                                                                                             AS sales_min_hierarchy_level,
     CASE sales_min_hierarchy_level
       WHEN 'ASM - APAC - Japan'                 THEN 'APAC'
       WHEN 'ASM - Civilian'                     THEN 'PUBSEC'
@@ -127,11 +137,13 @@ SELECT
       WHEN 'VP Comm MM'                         THEN 'Other'
       WHEN 'VP Ent'                             THEN 'Other'
       ELSE 'n/a'
-    END                                                                                                 AS sales_region,
+    END                                                                                           AS sales_region,
     -- identify VP level managers
     CASE 
       WHEN cro.level_2 LIKE 'VP%' 
-        THEN 1 ELSE 0 END                                                                               AS is_lvl_2_vp_flag
+        THEN 1
+      ELSE 0
+    END                                                                                           AS is_lvl_2_vp_flag
 FROM base
 LEFT JOIN cro_sfdc_hierarchy cro
     ON cro.user_id = base.user_id

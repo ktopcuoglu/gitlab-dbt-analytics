@@ -60,7 +60,8 @@ WITH date_details AS (
         WHEN 'SMB - US'             THEN 'VP Comm SMB'
         WHEN 'US East'              THEN 'VP Ent'
         WHEN 'US West'              THEN 'VP Ent'
-        ELSE NULL END                                                  AS level_2,
+        ELSE NULL
+      END                                                  AS level_2,
       CASE account_owner_team_stamped
         WHEN 'APAC'                 THEN 'RD APAC'
         WHEN 'EMEA'                 THEN 'RD EMEA'
@@ -72,7 +73,8 @@ WITH date_details AS (
         WHEN 'Public Sector'        THEN 'RD PubSec'
         WHEN 'US East'              THEN 'RD US East'
         WHEN 'US West'              THEN 'RD US West'
-        ELSE NULL END                                                   AS level_3
+        ELSE NULL
+      END                                                   AS level_3
     FROM sfdc_opportunity_xf
     -- sfdc Sales Admin user
     WHERE owner_id = '00561000000mpHTAAY'
@@ -105,7 +107,9 @@ WITH date_details AS (
       
       CASE 
         WHEN sfdc_opportunity_xf.order_type_stamped IS NULL 
-          THEN '3. Growth' ELSE sfdc_opportunity_xf.order_type_stamped END                                   AS order_type_stamped,     
+          THEN '3. Growth'
+        ELSE sfdc_opportunity_xf.order_type_stamped
+      END                                                                                                    AS order_type_stamped,     
      
       --********************************************************
       -- Deprecated field - 20201013
@@ -113,7 +117,9 @@ WITH date_details AS (
       
       CASE 
         WHEN sfdc_opportunity_xf.order_type IS NULL 
-          THEN '3. Growth' ELSE sfdc_opportunity_xf.order_type END                                           AS order_type, 
+          THEN '3. Growth'
+        ELSE sfdc_opportunity_xf.order_type
+      END                                                                                                    AS order_type, 
       --********************************************************    
 
       -- account driven fields
@@ -137,16 +143,17 @@ WITH date_details AS (
         WHEN (sfdc_accounts_xf.ultimate_parent_sales_segment  = 'Unknown' 
           OR sfdc_accounts_xf.ultimate_parent_sales_segment  IS NULL) 
           AND sfdc_opportunity_xf.user_segment = 'Mid-Market' 
-            THEN 'Mid-Market'
+          THEN 'Mid-Market'
         WHEN (sfdc_accounts_xf.ultimate_parent_sales_segment  = 'Unknown' 
           OR sfdc_accounts_xf.ultimate_parent_sales_segment  IS NULL) 
           AND sfdc_opportunity_xf.user_segment IN ('Large', 'US West', 'US East', 'Public Sector'
                                                     , 'EMEA', 'APAC') 
-            THEN 'Large'
+          THEN 'Large'
         WHEN (sfdc_accounts_xf.ultimate_parent_sales_segment  = 'Unknown' 
               OR sfdc_accounts_xf.ultimate_parent_sales_segment  IS NULL) 
-            THEN 'SMB'    
-        ELSE sfdc_accounts_xf.ultimate_parent_sales_segment END                                             AS adj_ultimate_parent_sales_segment,
+          THEN 'SMB'    
+        ELSE sfdc_accounts_xf.ultimate_parent_sales_segment
+      END                                                                                                   AS adj_ultimate_parent_sales_segment,
   
       CASE 
         WHEN h.stage_name IN ('00-Pre Opportunity', '0-Pending Acceptance', '0-Qualifying'
@@ -159,7 +166,8 @@ WITH date_details AS (
           THEN 'Lost'
         WHEN h.stage_name IN ('Closed Won')                                                                                                         
           THEN 'Closed Won'
-        ELSE 'Other' END                                                                                    AS stage_name_3plus,
+        ELSE 'Other'
+      END                                                                                                   AS stage_name_3plus,
       CASE 
         WHEN h.stage_name IN ('00-Pre Opportunity', '0-Pending Acceptance', '0-Qualifying'
                             , 'Developing', '1-Discovery', '2-Developing', '2-Scoping', '3-Technical Evaluation')     
@@ -170,7 +178,8 @@ WITH date_details AS (
           THEN 'Lost'
         WHEN h.stage_name IN ('Closed Won')                                                                                                                                     
           THEN 'Closed Won'
-        ELSE 'Other' END                                                                                    AS stage_name_4plus,
+        ELSE 'Other'
+      END                                                                                                   AS stage_name_4plus,
       
       --********************************************************
       -- calculated fields for pipeline velocity report
@@ -179,7 +188,9 @@ WITH date_details AS (
       -- excluded accounts 
       CASE 
         WHEN sfdc_accounts_xf.ultimate_parent_id IN ('001610000111bA3','0016100001F4xla','0016100001CXGCs','00161000015O9Yn','0016100001b9Jsc') 
-          AND h.close_date < '2020-08-01' THEN 1 ELSE 0 END                                                 AS is_excluded_flag,
+          AND h.close_date < '2020-08-01' THEN 1
+        ELSE 0
+      END                                                                                                   AS is_excluded_flag,
 
       -- NF: Is there any difference between net_iacv and net_incremental_iacv?
       CASE 
@@ -188,20 +199,24 @@ WITH date_details AS (
             THEN h.renewal_acv*-1
         WHEN h.stage_name IN ('Closed Won')                                                     
           THEN h.forecasted_iacv  
-        ELSE 0 END                                                                                          AS net_iacv,
+        ELSE 0
+      END                                                                                                   AS net_iacv,
       CASE 
         WHEN h.stage_name IN ('8-Closed Lost', 'Closed Lost') 
           AND h.sales_type = 'Renewal'      
             THEN h.renewal_acv*-1
         WHEN h.stage_name IN ('Closed Won') AND h.forecasted_iacv < 0                           
           THEN h.forecasted_iacv
-        ELSE 0 END                                                                                          AS churn_only,
+        ELSE 0
+      END                                                                                                   AS churn_only,
 
       -- created & closed in quarter
       CASE 
         WHEN created_date_detail.fiscal_quarter_name_fy = close_date_detail.fiscal_quarter_name_fy
           AND h.stage_name IN ('Closed Won')  
-            THEN h.forecasted_iacv ELSE 0 END                                                               AS created_and_won_iacv,
+            THEN h.forecasted_iacv
+        ELSE 0
+      END                                                                                                   AS created_and_won_iacv,
 
       -- account owner hierarchies levels
       COALESCE(account_owner.sales_team_level_2,'n/a')                                                      AS account_owner_team_level_2,
@@ -220,18 +235,21 @@ WITH date_details AS (
       CASE 
         WHEN sales_admin_hierarchy.level_2 IS NOT NULL 
           THEN sales_admin_hierarchy.level_2 
-        ELSE opportunity_owner.sales_team_level_2 END                                                       AS opportunity_owner_team_level_2,
+        ELSE opportunity_owner.sales_team_level_2
+      END                                                                                                   AS opportunity_owner_team_level_2,
       CASE 
         WHEN sales_admin_hierarchy.level_3 IS NOT NULL 
           THEN sales_admin_hierarchy.level_3 
-        ELSE opportunity_owner.sales_team_level_3 END                                                       AS opportunity_owner_team_level_3,
+        ELSE opportunity_owner.sales_team_level_3
+      END                                                                                                   AS opportunity_owner_team_level_3,
       
       -- identify VP level managers
       CASE 
         WHEN LOWER(opportunity_owner.sales_team_level_2) LIKE 'vp%' 
           OR LOWER(sales_admin_hierarchy.level_2) LIKE 'vp%'
             THEN 1 
-        ELSE 0 END                                                                                          AS opportunity_owner_is_lvl_2_vp_flag
+        ELSE 0
+      END                                                                                                   AS opportunity_owner_is_lvl_2_vp_flag
 
     FROM sfdc_opportunity_snapshot_history h
     -- close date
