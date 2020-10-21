@@ -45,7 +45,7 @@ WITH dim_crm_accounts AS (
       ON crm_accounts.crm_account_id = fct_mrr.crm_account_id
     INNER JOIN dim_crm_accounts AS merged_accounts
       ON merged_accounts.crm_account_id = COALESCE(crm_accounts.merged_to_account_id, crm_accounts.crm_account_id)
-    INNER JOIN dim_subscriptions AS all_subscriptions
+    LEFT JOIN dim_subscriptions AS all_subscriptions
       ON all_subscriptions.crm_account_id = crm_accounts.crm_account_id
       AND all_subscriptions.subscription_end_month <= CURRENT_DATE
     LEFT JOIN dim_subscriptions as current_subscriptions
