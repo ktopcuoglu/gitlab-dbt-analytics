@@ -12,7 +12,7 @@ WITH sfdc_opportunity AS (
     ROW_NUMBER() OVER (PARTITION BY opportunity_id ORDER BY created_date ASC) AS row_num
   FROM {{ ref('sfdc_opportunity_contact_role')}}
 
-), opporunity_fields AS( 
+), opportunity_fields AS( 
 
   SELECT
     opportunity_id,      AS crm_opportunity_id
@@ -58,26 +58,26 @@ WITH sfdc_opportunity AS (
 ), joined AS (
 
 SELECT
-  opporunity_fields.crm_opportunity_id,
-  opporunity_fields.crm_account_id,
-  opporunity_fields.crm_sales_rep_id,
+  opportunity_fields.crm_opportunity_id,
+  opportunity_fields.crm_account_id,
+  opportunity_fields.crm_sales_rep_id,
   first_contact.crm_person_id,
   first_contact.sfdc_contact_id,
-  opporunity_fields.created_date,
-  opporunity_fields.sales_accepted_date,
-  opporunity_fields.close_date,
-  opporunity_fields.is_closed,
-  opporunity_fields.is_won,
+  opportunity_fields.created_date,
+  opportunity_fields.sales_accepted_date,
+  opportunity_fields.close_date,
+  opportunity_fields.is_closed,
+  opportunity_fields.is_won,
   is_sao.is_sao,
   is_sdr_sao.is_sdr_sao,
-  opporunity_fields.iacv
-FROM opporunity_fields
+  opportunity_fields.iacv
+FROM opportunity_fields
 LEFT JOIN first_contact
-  ON opporunity_fields.crm_opportunity_id = first_contact.opportunity_id AND row_num = 1
+  ON opportunity_fields.crm_opportunity_id = first_contact.opportunity_id AND row_num = 1
 LEFT JOIN is_sao
-  ON opporunity_fields.crm_opportunity_id = is_sao.opportunity_id
+  ON opportunity_fields.crm_opportunity_id = is_sao.opportunity_id
 LEFT JOIN is_sdr_sao
-  ON opporunity_fields.crm_opportunity_id = is_sdr_sao.opportunity_id
+  ON opportunity_fields.crm_opportunity_id = is_sdr_sao.opportunity_id
 
 )
 
