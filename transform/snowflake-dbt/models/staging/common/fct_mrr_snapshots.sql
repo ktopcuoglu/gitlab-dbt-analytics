@@ -148,7 +148,16 @@ WITH dim_dates AS (
           AS mrr_snapshot_id,
         {{ dbt_utils.surrogate_key(['date_id', 'subscription_name', 'product_details_id']) }}
           AS mrr_id,
-        *
+        snapshot_id,
+        date_id,
+        billing_account_id,
+        crm_account_id,
+        subscription_id,
+        product_details_id,
+        mrr,
+        arr,
+        quantity,
+        unit_of_measure
     FROM mrr_month_by_month
 
 )
