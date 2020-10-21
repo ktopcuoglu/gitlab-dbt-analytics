@@ -69,7 +69,8 @@ WITH dim_crm_accounts AS (
       future_mrr.product_category    AS future_product_category,
       current_mrr.product_ranking    AS current_product_ranking,
       future_mrr.product_ranking     AS future_product_ranking,
-      current_mrr.subscription_end_month
+      current_mrr.last_renewal_date,
+      current_mrr.next_renewal_date
     FROM parent_account_mrrs AS current_mrr
     LEFT JOIN parent_account_mrrs AS future_mrr
       ON current_mrr.ultimate_parent_account_id = future_mrr.ultimate_parent_account_id
@@ -83,7 +84,8 @@ WITH dim_crm_accounts AS (
       retention_month,
       dim_dates.fiscal_year                     AS retention_fiscal_year,
       dim_dates.fiscal_quarter                  AS retention_fiscal_quarter,
-      subscription_end_month,
+      retention_subs.last_renewal_date,
+      retention_subs.next_renewal_date,
       current_mrr                               AS original_mrr,
       COALESCE(future_mrr, 0)                   AS net_retention_mrr,
       CASE WHEN net_retention_mrr > 0
