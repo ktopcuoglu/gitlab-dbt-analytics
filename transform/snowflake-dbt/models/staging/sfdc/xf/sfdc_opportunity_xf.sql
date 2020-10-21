@@ -233,7 +233,7 @@ WITH RECURSIVE sfdc_opportunity AS (
             AND sfdc_opportunity.user_segment = 'Mid-Market' 
                 THEN 'Mid-Market'
         WHEN (sfdc_account.ultimate_parent_sales_segment  = 'Unknown' OR sfdc_account.ultimate_parent_sales_segment  IS NULL) 
-            AND sfdc_opportunity.user_segment IN ('Large', 'US West', 'US East', 'Public Sector''EMEA', 'APAC') 
+            AND sfdc_opportunity.user_segment IN ('Large', 'US West', 'US East', 'Public Sector', 'EMEA', 'APAC') 
                 THEN 'Large'
          WHEN (sfdc_account.ultimate_parent_sales_segment  = 'Unknown' OR sfdc_account.ultimate_parent_sales_segment  IS NULL) 
                 THEN 'SMB'    
