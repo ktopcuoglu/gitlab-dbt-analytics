@@ -1446,6 +1446,12 @@ roles:
         warehouses:
             - analyst_xs
 
+    - kchu:
+        member_of:
+            - product_manager
+        warehouses:
+            - analyst_xs
+
     - ktam:
         member_of:
             - analyst_core
@@ -1901,7 +1907,12 @@ users:
         can_login: yes
         member_of:
             - kaguilar
-
+    
+    - kchu:
+        can_login: yes
+        member_of:
+            - kchu
+ 
     - ktam:
         can_login: yes
         member_of:
