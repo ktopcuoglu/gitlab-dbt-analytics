@@ -219,7 +219,8 @@ WITH RECURSIVE sfdc_opportunity AS (
       sfdc_opportunity.dr_partner_deal_type,
       sfdc_opportunity.dr_partner_engagement,
 
-    CASE WHEN sfdc_opportunity.order_type_stamped = '1. New - First Order' 
+    CASE
+      WHEN sfdc_opportunity.order_type_stamped = '1. New - First Order' 
             THEN '1. New'
         WHEN sfdc_opportunity.order_type_stamped IN ('2. New - Connected', '3. Growth') 
             THEN '2. Growth' 
