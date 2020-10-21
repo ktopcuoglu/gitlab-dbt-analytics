@@ -11,7 +11,7 @@ WITH sfdc_opportunity AS (
     SELECT
       -- keys
       sfdc_opportunity.account_id                                                                 AS crm_account_id,
-      sfdc_opportunity.opportunity_id                                                             AS crm_opportunity_ud,
+      sfdc_opportunity.opportunity_id                                                             AS crm_opportunity_id,
       sfdc_opportunity.opportunity_name,
       sfdc_opportunity.owner_id                                                                   AS crm_sales_rep_id,
 
