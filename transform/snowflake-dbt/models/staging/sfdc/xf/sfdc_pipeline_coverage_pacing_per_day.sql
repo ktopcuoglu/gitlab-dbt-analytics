@@ -271,7 +271,7 @@ SELECT de.adj_ultimate_parent_sales_segment                                     
        
  FROM data_structure de
     LEFT JOIN previous_quarter pq
-        ON de.adj_ultimate_parent_sales_segment = pq.adj_ultimate_parent_sales_segment
+  ON de.adj_ultimate_parent_sales_segment = pq.adj_ultimate_parent_sales_segment
         AND de.snapshot_fiscal_quarter_date = pq.snapshot_fiscal_quarter_date
         AND de.deal_category = pq.deal_category
         AND de.snapshot_day_of_fiscal_quarter = pq.snapshot_day_of_fiscal_quarter
