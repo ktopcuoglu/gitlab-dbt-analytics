@@ -12,7 +12,7 @@ ci_pipelines,ci_pipelines,verify,TRUE,continuous_delivery,TRUE
 releases,releases,release,TRUE,release_management,TRUE
 secure_stage_ci_jobs,secure_stage_ci_jobs,secure,TRUE,,FALSE
 dast_jobs,dast_jobs,secure,FALSE,dynamic_testing,TRUE
-sast_jobs,sast_jobs,secure,FALSE,static_analysis,TRUE
+sast_jobs,sast,secure,FALSE,static_analysis,TRUE
 dependency_scanning_jobs,composition_analysis_jobs,secure,FALSE,composition_analysis,TRUE
 license_scanning_jobs,composition_analysis_jobs,secure,FALSE,composition_analysis,TRUE
 container_scanning_jobs,composition_analysis_jobs,secure,FALSE,composition_analysis,TRUE
