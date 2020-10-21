@@ -15,7 +15,7 @@ WITH sfdc_opportunity AS (
 ), opportunity_fields AS( 
 
   SELECT
-    opportunity_id,      AS crm_opportunity_id
+    opportunity_id      AS crm_opportunity_id,
     account_id           AS crm_account_id,
     owner_id             AS crm_sales_rep_id,
 		incremental_acv      AS iacv,
