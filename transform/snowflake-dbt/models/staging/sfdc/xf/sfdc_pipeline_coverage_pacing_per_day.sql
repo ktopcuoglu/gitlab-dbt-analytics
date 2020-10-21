@@ -125,7 +125,7 @@ GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18
         ON dt.date_actual = pq.snapshot_date
   
    -- exclude close lost
-   WHERE lower(pq.stage_name) not like '%lost%'
+   WHERE LOWER(pq.stage_name) NOT LIKE '%lost%'
      -- remove the 92 day
      AND dt.day_of_fiscal_quarter < 92
      -- exclude current quarter
