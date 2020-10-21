@@ -1,4 +1,4 @@
-WITH RECURSIVE sfdc_opportunity AS (
+WITH sfdc_opportunity AS (
 
     SELECT * FROM {{ref('sfdc_opportunity')}}
 
@@ -32,6 +32,7 @@ WITH RECURSIVE sfdc_opportunity AS (
     ORDER BY 1 DESC
 
 ), sales_admin_hierarchy AS (
+    
     SELECT
       sfdc_opportunity.opportunity_id,
       sfdc_opportunity.owner_id,
