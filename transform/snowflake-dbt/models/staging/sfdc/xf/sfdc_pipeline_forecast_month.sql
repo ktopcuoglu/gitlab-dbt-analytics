@@ -15,7 +15,8 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
         AND is_deleted = 0
 ) 
 -- This portion is specfic for the Forecast Model
-SELECT  snapshot_date,
+SELECT
+  snapshot_date,
         close_month,
         close_fiscal_year,
         forecast_category_name,            
