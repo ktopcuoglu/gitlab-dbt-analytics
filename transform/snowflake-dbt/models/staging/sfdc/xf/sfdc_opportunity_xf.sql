@@ -256,7 +256,8 @@ WITH RECURSIVE sfdc_opportunity AS (
     account_owner.is_lvl_2_vp_flag                                                                      AS account_owner_is_lvl_2_vp_flag,
 
     -- opportunity owner hierarchies levels
-    CASE WHEN sa.level_2 is not null 
+    CASE
+      WHEN sa.level_2 IS NOT NULL 
         THEN sa.level_2 
         ELSE opportunity_owner.sales_team_level_2 END                                                   AS opportunity_owner_team_level_2,
     CASE WHEN sa.level_3 is not null 
