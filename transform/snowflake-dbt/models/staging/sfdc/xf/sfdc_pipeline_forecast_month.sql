@@ -35,7 +35,7 @@ FROM sfdc_opportunity_snapshot_history_xf
 WHERE (opportunity_owner_is_lvl_2_vp_flag = 1
   OR account_owner_is_lvl_2_vp_flag = 1)
   -- one month before
-  AND snapshot_date >= dateadd(month,-1, close_month)
+  AND snapshot_date >= DATEADD(month,-1, close_month)
   -- till end of the month
-  AND snapshot_date <= dateadd(month, 1, close_month)
+  AND snapshot_date <= DATEADD(month, 1, close_month)
 {{ dbt_utils.group_by(n=13) }}

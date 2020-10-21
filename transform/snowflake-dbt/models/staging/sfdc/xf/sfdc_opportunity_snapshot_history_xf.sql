@@ -86,7 +86,7 @@ WITH date_details AS (
       h.owner_id,    
       h.stage_name,
       h.sales_type,
-      h..is_deleted,
+      h.is_deleted,
 
       -- metrics
       h.renewal_acv,

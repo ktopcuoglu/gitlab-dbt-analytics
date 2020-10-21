@@ -108,10 +108,10 @@ WITH date_details AS (
           THEN pipeline_snapshot_base.opps ELSE 0 END                                                       AS open_won_3plus_deal_count,
   
       CASE 
-        WHEN LOWER(pipeline_snapshot_base.stage_name) like '%won%'
+        WHEN LOWER(pipeline_snapshot_base.stage_name) LIKE '%won%'
           THEN pipeline_snapshot_base.net_iacv ELSE 0 END                                                   AS won_net_iacv,
       CASE 
-        WHEN LOWER(pipeline_snapshot_base.stage_name) like '%won%'
+        WHEN LOWER(pipeline_snapshot_base.stage_name) LIKE '%won%'
           THEN pipeline_snapshot_base.opps ELSE 0 END                                                       AS won_deal_count,
   
       -- created and closed
@@ -226,40 +226,40 @@ WITH date_details AS (
                                 account_owner_team_rd_level,
                                 account_owner_team_asm_level
                 FROM pipeline_snapshot) e
-    INNER JOIN (SELECT DISTINCT fiscal_quarter_name_fy                                                  AS snapshot_fiscal_quarter,
-                              first_day_of_fiscal_quarter                                               AS snapshot_fiscal_quarter_date, 
-                              DATEADD(month,3,first_day_of_fiscal_quarter)                              AS snapshot_next_fiscal_quarter_date,
-                              day_of_fiscal_quarter                                                     AS snapshot_day_of_fiscal_quarter
+    INNER JOIN (SELECT DISTINCT fiscal_quarter_name_fy                                                              AS snapshot_fiscal_quarter,
+                              first_day_of_fiscal_quarter                                                           AS snapshot_fiscal_quarter_date, 
+                              DATEADD(month,3,first_day_of_fiscal_quarter)                                          AS snapshot_next_fiscal_quarter_date,
+                              day_of_fiscal_quarter                                                                 AS snapshot_day_of_fiscal_quarter
               FROM date_details) d
       ON c.snapshot_fiscal_quarter_date = d.snapshot_fiscal_quarter_date 
 )
   
 SELECT 
-  base_fields.adj_ultimate_parent_sales_segment                                                                   AS sales_segment, 
+  base_fields.adj_ultimate_parent_sales_segment                                                                     AS sales_segment, 
   base_fields.deal_category,
   base_fields.account_owner_min_team_level,
   base_fields.account_owner_team_vp_level,
   base_fields.account_owner_team_rd_level,
   base_fields.account_owner_team_asm_level,
   base_fields.account_owner_sales_region,
-  lower(base_fields.deal_category) || '_' || lower(base_fields.adj_ultimate_parent_sales_segment)                         AS key_segment_report,
-  lower(base_fields.account_owner_min_team_level) || '_' || lower(base_fields.adj_ultimate_parent_sales_segment)          AS key_region_report,
-  base_fields.snapshot_fiscal_quarter                                                                            AS close_fiscal_quarter,
+  LOWER(base_fields.deal_category) || '_' || LOWER(base_fields.adj_ultimate_parent_sales_segment)                   AS key_segment_report,
+  LOWER(base_fields.account_owner_min_team_level) || '_' || LOWER(base_fields.adj_ultimate_parent_sales_segment)    AS key_region_report,
+  base_fields.snapshot_fiscal_quarter                                                                               AS close_fiscal_quarter,
   base_fields.snapshot_fiscal_quarter,
   base_fields.snapshot_day_of_fiscal_quarter,
-  coalesce(previous_quarter.open_won_net_iacv,0) - coalesce(previous_quarter.won_net_iacv,0)                                        AS open_pipeline_net_iacv,
-  coalesce(previous_quarter.open_won_3plus_net_iacv,0)- coalesce(previous_quarter.won_net_iacv,0)                                   AS open_3plus_pipeline_net_iacv,  
-  coalesce(previous_quarter.won_net_iacv,0)                                                                           AS won_net_iacv,
-  coalesce(previous_quarter.open_won_deal_count,0) - coalesce(previous_quarter.won_deal_count,0)                                    AS open_pipeline_deal_count,
-  coalesce(previous_quarter.open_won_3plus_deal_count,0) - coalesce(previous_quarter.won_deal_count,0)                              AS open_3plus_deal_count,
-  coalesce(previous_quarter.won_deal_count,0)                                                                         AS won_deal_count,
+  COALESCE(previous_quarter.open_won_net_iacv,0) - COALESCE(previous_quarter.won_net_iacv,0)                                        AS open_pipeline_net_iacv,
+  COALESCE(previous_quarter.open_won_3plus_net_iacv,0)- COALESCE(previous_quarter.won_net_iacv,0)                                   AS open_3plus_pipeline_net_iacv,  
+  COALESCE(previous_quarter.won_net_iacv,0)                                                                         AS won_net_iacv,
+  COALESCE(previous_quarter.open_won_deal_count,0) - COALESCE(previous_quarter.won_deal_count,0)                                    AS open_pipeline_deal_count,
+  COALESCE(previous_quarter.open_won_3plus_deal_count,0) - COALESCE(previous_quarter.won_deal_count,0)                              AS open_3plus_deal_count,
+  COALESCE(previous_quarter.won_deal_count,0)                                                                       AS won_deal_count,
 
   -- created and closed
   previous_quarter.created_and_won_iacv,
           
   -- next quarter 
-  next_quarter_date.fiscal_quarter_name_fy                                                                           AS next_close_fiscal_quarter,
-  next_quarter_date.first_day_of_fiscal_quarter                                                                      AS next_close_fiscal_quarter_date,                   
+  next_quarter_date.fiscal_quarter_name_fy                                                                          AS next_close_fiscal_quarter,
+  next_quarter_date.first_day_of_fiscal_quarter                                                                     AS next_close_fiscal_quarter_date,                   
   next_quarter.next_open_net_iacv,
   next_quarter.next_open_3plus_net_iacv,
   next_quarter.next_open_deal_count,
