@@ -18,7 +18,7 @@ WITH sfdc_opportunity AS (
     opportunity_id      AS crm_opportunity_id,
     account_id           AS crm_account_id,
     owner_id             AS crm_sales_rep_id,
-		incremental_acv      AS iacv,
+    incremental_acv      AS iacv,
     created_date,        -- created_date
     sales_accepted_date, -- sales_accepted_date
     close_date,          -- close_date
