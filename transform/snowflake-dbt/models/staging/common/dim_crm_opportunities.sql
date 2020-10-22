@@ -86,9 +86,9 @@ WITH sfdc_opportunity AS (
       -- metadata
       sfdc_opportunity._last_dbt_run
 
-  FROM sfdc_opportunity
-  INNER JOIN sfdc_opportunity_stage
-    ON sfdc_opportunity.stage_name = sfdc_opportunity_stage.primary_label
+    FROM sfdc_opportunity
+    INNER JOIN sfdc_opportunity_stage
+      ON sfdc_opportunity.stage_name = sfdc_opportunity_stage.primary_label
 
 
 )
