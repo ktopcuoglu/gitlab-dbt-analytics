@@ -14,17 +14,19 @@ WITH zuora_account AS (
 
     SELECT *
     FROM  {{ ref('zuora_invoice_item_source') }}
-    WHERE is_deleted= FALSE
+    WHERE is_deleted = FALSE
 
 ), zuora_rate_plan AS (
 
     SELECT *
     FROM {{ ref('zuora_rate_plan_source') }}
+    WHERE is_deleted = FALSE
 
 ), zuora_rate_plan_charge AS (
 
     SELECT *
     FROM {{ ref('zuora_rate_plan_charge_source') }}
+    WHERE is_deleted = FALSE
 
 ), zuora_subscription AS (
 
