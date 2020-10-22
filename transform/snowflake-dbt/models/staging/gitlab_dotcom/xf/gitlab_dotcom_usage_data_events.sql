@@ -704,6 +704,10 @@ WITH gitlab_subscriptions AS (
         AND {{ coalesce_to_infinity("gitlab_subscriptions.valid_to") }}
       LEFT JOIN plans
         ON gitlab_subscriptions.plan_id = plans.plan_id
+    {% if 'NULL' not in event_cte.user_column_name %}
+      WHERE {{ filter_out_blocked_users(event_cte.event_name , event_cte.user_column_name) }}
+    {% endif %}
+    
         
     {% if not loop.last %}
     UNION
@@ -743,6 +747,7 @@ WITH gitlab_subscriptions AS (
     FROM data
       LEFT JOIN users
         ON data.user_id = users.user_id
+    
 )
 
 SELECT *

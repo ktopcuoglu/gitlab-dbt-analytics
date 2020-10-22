@@ -2,6 +2,12 @@ version: 2
 models:
 - name: sheetload_abuse_mitigation_source
   description: Abuse currently manually pulls data from Bouncer (Abuse mitigation Tool) in order to report on abusive account mitigation.
+- name: sheetload_abuse_top_ci_data_source
+  description: Trust and Safety currently tracks top ci usage and report on the volume implicated in abuse.
+- name: sheetload_abuse_top_download_data_source
+  description: Trust and Safety currently tracks top downloaded content and report on the volume implicated in abuse.
+- name: sheetload_abuse_top_storage_data_source
+  description: Trust and Safety currently tracks largest namespaces and report on the volume implicated in abuse.
 - name: sheetload_abm_account_baselines_source
   description: This is the source for ABM account data
   columns:
@@ -68,13 +74,6 @@ models:
       tests:
       - not_null
       - unique
-- name: sheetload_dev_section_metrics_source
-  description: dev section metrics used to create the Dev Section Dashboard
-  columns:
-    - name: metrics_path
-      tests:
-      - not_null
-      - unique
 - name: sheetload_engineering_speciality_prior_to_capture_source     
 - name: sheetload_engineering_contributing_organizations_source
   description: Information about organizations that contribute
@@ -127,6 +126,18 @@ models:
   - name: plan
     tests:
     - not_null
+- name: sheetload_ic_collaboration_competency_source
+  description: This is a list of all who have completed the IC collaboraiton competency knowledge assessment.
+- name: sheetload_ic_results_competency_source
+  description: This is a list of all who have completed the IC results competency knowledge assessment.
+- name: sheetload_ic_efficiency_competency_source
+  description: This is a list of all who have completed the IC efficiency competency knowledge assessment.
+- name: sheetload_ic_dib_comptency_source
+  description: This is a list of all who have completed the IC diversity, inclusion, and belonging competency knowledge assessment.
+- name: sheetload_ic_iteration_competency_source
+  description: This is a list of all who have completed the IC iteration competency knowledge assessment.
+- name: sheetload_ic_transparency_competency_source
+  description: This is a list of all who have completed the IC transparency competency knowledge assessment.
 - name: sheetload_infrastructure_missing_employees_source
   description: This lists the missing Infrastructure employees from the MR Rate computation.
   columns:
@@ -321,6 +332,13 @@ models:
   tests:
     - unique:
         column_name: "CONCAT(month_date, channel, brand, metric, is_organic)"
+- name: sheetload_usage_ping_metrics_sections_source
+  description: Classification of usage ping metrics into dev sections; used to create the Dev Section Dashboard
+  columns:
+    - name: metrics_path
+      tests:
+        - not_null
+        - unique
 - name: sheetload_yc_companies_source
   description: This is a list of YC Companies and their cohort provided by and maintained by marketing.
   columns:
@@ -348,21 +366,11 @@ models:
       tests:
       - not_null
     - name: capacity
-- name: sheetload_ic_collaboration_competency_source
-  description: This is a list of all who have completed the IC collaboraiton competency knowledge assessment.
-- name: sheetload_ic_results_competency_source
-  description: This is a list of all who have completed the IC results competency knowledge assessment.
-- name: sheetload_ic_efficiency_competency_source
-  description: This is a list of all who have completed the IC efficiency competency knowledge assessment.
-- name: sheetload_ic_dib_comptency_source
-  description: This is a list of all who have completed the IC diversity, inclusion, and belonging competency knowledge assessment.
-- name: sheetload_ic_iteration_competency_source
-  description: This is a list of all who have completed the IC iteration competency knowledge assessment.
-- name: sheetload_ic_transparency_competency_source
-  description: This is a list of all who have completed the IC transparency competency knowledge assessment.
 - name: sheetload_sales_training_completion_dates_source
   description: Training completion dates for Sales team.
   columns:
     - name: email_address
       tests:
       - not_null
+- name: sheetload_people_budget_source
+  description: This is the budget used by the people team.

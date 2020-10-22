@@ -7,6 +7,18 @@ sheets:
     owner: '@ken_aguilar'
     tabs:
       - abuse_mitigation
+  - name: abuse_top_ci_data
+    owner: '@ken_aguilar'
+    tabs:
+      - abuse_top_ci_data
+  - name: abuse_top_download_data
+    owner: '@ken_aguilar'
+    tabs:
+      - abuse_top_download_data
+  - name: abuse_top_storage_data
+    owner: '@ken_aguilar'
+    tabs:
+      - abuse_top_storage_data
   - name: ar_aging_details
     owner: '@s_mccauley'
     tabs:
@@ -31,10 +43,6 @@ sheets:
     owner: '@iweeks'
     tabs:
       - days_to_close
-  - name: dev_section_metrics
-    owner: '@mpeychet_'
-    tabs:
-      - dev_section_metrics
   - name: employee_location_factor
     owner: '@pluthra'
     tabs:
@@ -112,6 +120,11 @@ sheets:
     owner: '@pluthra'
     tabs:
       - osat
+  - name: people_budget
+    description: Data used by people team for budget spend.
+    owner: '@pluthra'
+    tabs: 
+      - people_budget      
   - name: planned_values
     owner: '@iweeks'
     tabs:
@@ -144,6 +157,10 @@ sheets:
     owner: '@jeanpeguero'
     tabs:
       - social_marketing_metrics
+  - name: usage_ping_metrics_sections
+    owner: '@mpeychet_'
+    tabs:
+      - usage_ping_metrics_sections
   - name: values_certificate
     owner: '@jbandur'
     tabs:

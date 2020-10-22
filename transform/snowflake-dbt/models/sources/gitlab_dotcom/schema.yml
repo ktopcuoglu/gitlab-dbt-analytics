@@ -1462,6 +1462,23 @@ models:
         tests:
           - not_null
 
+  - name: gitlab_dotcom_sprints_source
+    description: Base model for Gitlab.com sprints
+    columns:
+      - name: sprint_id
+        tests:
+          - not_null
+          - unique
+      - name: created_at
+        tests:
+          - not_null
+      - name: updated_at
+        tests:
+          - not_null
+      - name: sprint_iid
+        tests:
+          - not_null
+
   - name: gitlab_dotcom_subscriptions_source
     description: Base model for Gitlab.com subscriptions
     columns:
