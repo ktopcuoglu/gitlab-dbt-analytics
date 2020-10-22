@@ -45,7 +45,7 @@ WITH sfdc_opportunity AS (
   SELECT
     opportunity_id,
     CASE
-      WHEN opportunity_id in (select opportunity_id from is_sao)
+      WHEN opportunity_id in (select opportunity_id from is_sao where is_sao = true)
         AND sales_qualified_source IN (
                                       'SDR Generated'
                                       , 'BDR Generated'
