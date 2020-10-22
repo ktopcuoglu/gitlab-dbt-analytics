@@ -66,7 +66,7 @@ WITH dim_dates AS (
       {{ dbt_utils.surrogate_key(['arr_month_by_month.arr_month', 'arr_month_by_month.invoice_item_id']) }}
                                                                         AS invoice_item_month_id,
       arr_month_by_month.arr_month,
-      DATE_TRUNC('month',arr_month_by_month.invoice_date)                                  AS invoice_month,
+      DATE_TRUNC('month',arr_month_by_month.invoice_date)               AS invoice_month,
       arr_month_by_month.invoice_number,
       dim_crm_accounts_invoice.ultimate_parent_account_id               AS parent_account_id_invoice,
       dim_crm_accounts_invoice.ultimate_parent_account_name             AS parent_account_name_invoice,

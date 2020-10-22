@@ -1,4 +1,9 @@
-WITH zuora_account AS (
+WITH map_merged_crm_accounts AS (
+
+    SELECT *
+    FROM {{ ref('map_merged_crm_accounts') }}
+
+), zuora_account AS (
 
     SELECT *
     FROM {{ ref('zuora_account_source') }}
@@ -39,7 +44,7 @@ WITH zuora_account AS (
 
     SELECT
       zuora_account.account_id                                                  AS billing_account_id_subscription,
-      zuora_account.crm_id                                                      AS crm_account_id_subscription,
+      map_merged_crm_accounts.dim_crm_account_id                                AS crm_account_id_subscription,
       zuora_subscription.subscription_id,
       zuora_rate_plan_charge.rate_plan_charge_id                                AS charge_id,
       zuora_rate_plan_charge.rate_plan_charge_number,
@@ -57,6 +62,8 @@ WITH zuora_account AS (
       ON zuora_subscription.subscription_id = zuora_rate_plan.subscription_id
     INNER JOIN zuora_rate_plan_charge
       ON zuora_rate_plan.rate_plan_id = zuora_rate_plan_charge.rate_plan_id
+    LEFT JOIN map_merged_crm_accounts
+      ON zuora_account.crm_id = map_merged_crm_accounts.sfdc_account_id
 
 ), invoice_charges AS (
 
@@ -68,7 +75,7 @@ WITH zuora_account AS (
       zuora_invoice_item.service_start_date::DATE       AS service_start_date,
       zuora_invoice_item.service_end_date::DATE         AS service_end_date,
       zuora_invoice.account_id                          AS billing_account_id_invoice,
-      zuora_account.crm_id                              AS crm_account_id_invoice,
+      map_merged_crm_accounts.dim_crm_account_id        AS crm_account_id_invoice,
       zuora_invoice_item.rate_plan_charge_id            AS charge_id,
       zuora_invoice_item.product_rate_plan_charge_id    AS product_details_id,
       zuora_invoice_item.sku                            AS sku,
@@ -81,6 +88,8 @@ WITH zuora_account AS (
       ON zuora_invoice_item.invoice_id = zuora_invoice.invoice_id
     INNER JOIN zuora_account
       ON zuora_invoice.account_id = zuora_account.account_id
+    LEFT JOIN map_merged_crm_accounts
+      ON zuora_account.crm_id = map_merged_crm_accounts.sfdc_account_id
     WHERE zuora_invoice.status='Posted'
 
 ), final AS (
