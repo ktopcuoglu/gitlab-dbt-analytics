@@ -472,7 +472,7 @@ models:
       - name: is_sao
         description: a boolean field created in the warehouse to flag Sales Accepted Opportunities. This field should be deprecated once sales accepted is in a more stable and consistent state in salesforce.
       - name: is_sdr_sao
-        description: a boolean field created in the warehouse to flag Sales Accepted Opportunities from SDRs. This field should be deprecated once sales accepted is in a more stable and consistent state in salesforce.
+        description: a boolean field created in the warehouse to flag Sales Accepted Opportunities from [Sales Development Reps](https://about.gitlab.com/handbook/marketing/revenue-marketing/sdr/). This field should be deprecated once sales accepted is in a more stable and consistent state in salesforce.
 
   - name: fct_mrr
     description: One row represents Monthly Recurring Revenue per one month, subscription_id, product_details_id
