@@ -7,7 +7,7 @@ WITH sfdc_opportunity AS (
 
   SELECT
     opportunity_id,                                                           -- opportunity_id
-		contact_id                                                                AS sfdc_contact_id,
+    contact_id                                                                AS sfdc_contact_id,
     {{ dbt_utils.surrogate_key(['contact_id']) }}                             AS crm_person_id,
     ROW_NUMBER() OVER (PARTITION BY opportunity_id ORDER BY created_date ASC) AS row_num
   FROM {{ ref('sfdc_opportunity_contact_role')}}
