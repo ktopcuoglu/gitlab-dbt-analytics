@@ -2,7 +2,12 @@
   config( materialized='ephemeral')
 }}
 
-WITH sfdc_account AS (
+WITH map_merged_crm_accounts AS (
+
+    SELECT *
+    FROM {{ ref('map_merged_crm_accounts') }}
+
+), sfdc_account AS (
 
     SELECT *
     FROM {{ ref('sfdc_account_snapshots_source') }}
@@ -30,22 +35,6 @@ WITH sfdc_account AS (
     FROM sfdc_account
     WHERE account_id = ultimate_parent_account_id
 
-), deleted_accounts AS (
-
-    SELECT *
-    FROM sfdc_account
-    WHERE is_deleted = TRUE
-
-), master_records AS (
-
-    SELECT
-      a.account_id,
-      COALESCE(
-      b.master_record_id, a.master_record_id) AS sfdc_master_record_id
-    FROM deleted_accounts a
-    LEFT JOIN deleted_accounts b
-      ON a.master_record_id = b.account_id
-
 )
 
 SELECT
@@ -68,14 +57,10 @@ SELECT
   sfdc_account.account_type,
   sfdc_users.name                               AS technical_account_manager,
   sfdc_account.is_deleted                       AS is_deleted,
-  CASE
-    WHEN sfdc_account.is_deleted
-      THEN master_records.sfdc_master_record_id
-    ELSE NULL
-  END                                           AS merged_to_account_id
+  map_merged_crm_accounts.dim_crm_account_id    AS merged_to_account_id
 FROM sfdc_account
-LEFT JOIN master_records
-  ON sfdc_account.account_id = master_records.account_id
+LEFT JOIN map_merged_crm_accounts
+  ON sfdc_account.account_id = map_merged_crm_accounts.sfdc_account_id
 LEFT JOIN ultimate_parent_account
   ON ultimate_parent_account.account_id = sfdc_account.ultimate_parent_account_id
 LEFT OUTER JOIN sfdc_users

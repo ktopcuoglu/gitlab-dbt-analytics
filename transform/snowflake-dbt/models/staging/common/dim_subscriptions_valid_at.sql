@@ -2,7 +2,12 @@
   config( materialized='ephemeral')
 }}
 
-WITH zuora_subscription_snapshots AS (
+WITH map_merged_crm_accounts AS (
+
+    SELECT *
+    FROM {{ ref('map_merged_crm_accounts') }}
+
+), zuora_subscription_snapshots AS (
 
   SELECT *
   FROM {{ ref('zuora_subscription_snapshots_source') }}
@@ -22,7 +27,7 @@ WITH zuora_subscription_snapshots AS (
 
 SELECT
   zuora_subscription_snapshots.subscription_id,
-  zuora_account.crm_id                                                      AS crm_account_id,
+  map_merged_crm_accounts.dim_crm_account_id                                AS crm_account_id,
   zuora_account.account_id                                                  AS billing_account_id,
   zuora_subscription_snapshots.subscription_name,
   zuora_subscription_snapshots.subscription_name_slugify,
@@ -40,5 +45,7 @@ SELECT
 FROM zuora_subscription_snapshots
 INNER JOIN zuora_account
   ON zuora_account.account_id = zuora_subscription_snapshots.account_id
+LEFT JOIN map_merged_crm_accounts
+  ON zuora_account.crm_id = map_merged_crm_accounts.sfdc_account_id
 WHERE zuora_subscription_snapshots.is_deleted = FALSE
   AND zuora_subscription_snapshots.exclude_from_analysis IN ('False', '')

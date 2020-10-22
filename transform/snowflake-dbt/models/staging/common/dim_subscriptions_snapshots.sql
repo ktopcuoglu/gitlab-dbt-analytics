@@ -5,7 +5,12 @@
     })
 }}
 
-WITH snapshot_dates AS (
+WITH map_merged_crm_accounts AS (
+
+    SELECT *
+    FROM {{ ref('map_merged_crm_accounts') }}
+
+), snapshot_dates AS (
 
    SELECT *
    FROM {{ ref('dim_dates') }}
@@ -51,7 +56,7 @@ WITH snapshot_dates AS (
     SELECT
       zuora_subscription_spined.snapshot_id,
       zuora_subscription_spined.subscription_id,
-      zuora_account.crm_id                                                      AS crm_account_id,
+      map_merged_crm_accounts.dim_crm_account_id                                AS crm_account_id,
       zuora_account.account_id                                                  AS billing_account_id,
       zuora_subscription_spined.subscription_name,
       zuora_subscription_spined.subscription_name_slugify,
@@ -71,6 +76,8 @@ WITH snapshot_dates AS (
     FROM zuora_subscription_spined
     INNER JOIN zuora_account
       ON zuora_account.account_id = zuora_subscription_spined.account_id
+    LEFT JOIN map_merged_crm_accounts
+      ON zuora_account.crm_id = map_merged_crm_accounts.sfdc_account_id
 
 ), final AS (
 
@@ -85,8 +92,7 @@ WITH snapshot_dates AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@msendal",
-    updated_by="@msendal",
+    updated_by="@iweeks",
     created_date="2020-09-29",
-    updated_date="2020-09-29"
+    updated_date="2020-10-22"
 ) }}
-
