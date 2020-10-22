@@ -57,27 +57,27 @@ WITH sfdc_opportunity AS (
 
 ), joined AS (
 
-SELECT
-  opportunity_fields.crm_opportunity_id,
-  opportunity_fields.crm_account_id,
-  opportunity_fields.crm_sales_rep_id,
-  first_contact.crm_person_id,
-  first_contact.sfdc_contact_id,
-  opportunity_fields.created_date,
-  opportunity_fields.sales_accepted_date,
-  opportunity_fields.close_date,
-  opportunity_fields.is_closed,
-  opportunity_fields.is_won,
-  is_sao.is_sao,
-  is_sdr_sao.is_sdr_sao,
-  opportunity_fields.iacv
-FROM opportunity_fields
-LEFT JOIN first_contact
-  ON opportunity_fields.crm_opportunity_id = first_contact.opportunity_id AND row_num = 1
-LEFT JOIN is_sao
-  ON opportunity_fields.crm_opportunity_id = is_sao.opportunity_id
-LEFT JOIN is_sdr_sao
-  ON opportunity_fields.crm_opportunity_id = is_sdr_sao.opportunity_id
+  SELECT
+    opportunity_fields.crm_opportunity_id,
+    opportunity_fields.crm_account_id,
+    opportunity_fields.crm_sales_rep_id,
+    first_contact.crm_person_id,
+    first_contact.sfdc_contact_id,
+    opportunity_fields.created_date,
+    opportunity_fields.sales_accepted_date,
+    opportunity_fields.close_date,
+    opportunity_fields.is_closed,
+    opportunity_fields.is_won,
+    is_sao.is_sao,
+    is_sdr_sao.is_sdr_sao,
+    opportunity_fields.iacv
+  FROM opportunity_fields
+  LEFT JOIN first_contact
+    ON opportunity_fields.crm_opportunity_id = first_contact.opportunity_id AND row_num = 1
+  LEFT JOIN is_sao
+    ON opportunity_fields.crm_opportunity_id = is_sao.opportunity_id
+  LEFT JOIN is_sdr_sao
+    ON opportunity_fields.crm_opportunity_id = is_sdr_sao.opportunity_id
 
 )
 
