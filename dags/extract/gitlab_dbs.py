@@ -236,7 +236,7 @@ def dbt_tasks(dbt_name, dbt_task_identifier):
     )
 
     return freshness, test, snapshot, model_run, model_test
-    
+
 
 # Loop through each config_dict and generate a DAG
 for source_name, config in config_dict.items():
@@ -267,7 +267,9 @@ for source_name, config in config_dict.items():
         dbt_name = f"{config['dbt_name']}"
         dbt_task_identifier = f"{config['task_name']}-dbt-incremental"
 
-        freshness, test, snapshot, model_run, model_test = dbt_tasks(dbt_name, dbt_task_identifier)
+        freshness, test, snapshot, model_run, model_test = dbt_tasks(
+            dbt_name, dbt_task_identifier
+        )
 
         freshness >> test >> snapshot >> model_run >> model_test
 
@@ -337,7 +339,9 @@ for source_name, config in config_dict.items():
         dbt_name = f"{config['dbt_name']}"
         dbt_task_identifier = f"{config['task_name']}-dbt-sync"
 
-        freshness, test, snapshot, model_run, model_test = dbt_tasks(dbt_name, dbt_task_identifier)
+        freshness, test, snapshot, model_run, model_test = dbt_tasks(
+            dbt_name, dbt_task_identifier
+        )
 
         freshness >> test >> snapshot >> model_run >> model_test
 
