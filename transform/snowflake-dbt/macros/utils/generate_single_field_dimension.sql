@@ -1,0 +1,25 @@
+{% macro generate_single_field_dimension(model_name,
+id_column,
+id_column_name,
+dimension_column,
+dimension_column_name) %}
+
+with dimension_data AS (
+
+    SELECT
+        DISTINCT MD5({{ id_column }})              AS {{ id_column_name }}
+        , {{  dimension_column }}                  AS {{ dimension_column_name }}
+    FROM {{ ref(model_name) }}
+    WHERE {{ dimension_column }} IS NOT NULL
+
+    UNION ALL
+
+    SELECT
+        '-1'                                        AS {{ id_column_name }}
+        ,'(Missing {{dimension_column_name}})'      AS {{ dimension_column_name }}
+
+)
+
+select * from dimension_data
+
+{%- endmacro -%}
