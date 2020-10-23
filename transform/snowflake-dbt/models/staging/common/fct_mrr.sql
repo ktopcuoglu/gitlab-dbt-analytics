@@ -59,12 +59,8 @@ WITH dim_dates AS (
     zuora_account.account_id                            AS billing_account_id,
     map_merged_crm_accounts.dim_crm_account_id          AS crm_account_id,
     zuora_subscription_snapshots.subscription_id,
-<<<<<<< HEAD
-    zuora_rate_plan_charge.product_rate_plan_charge_id  AS product_details_id,
-=======
     zuora_subscription_snapshots.subscription_name,
     zuora_rate_plan_charge.product_rate_plan_charge_id AS product_details_id,
->>>>>>> origin/master
     zuora_rate_plan_charge.mrr,
     zuora_rate_plan_charge.delta_tcv,
     zuora_rate_plan_charge.unit_of_measure,
