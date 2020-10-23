@@ -6,7 +6,7 @@ WITH dates AS (
 ), final AS (
 
   SELECT
-    {{ get_date_id('date_actual') }},
+    {{ get_date_id('date_actual') }} AS date_id,
     *
   FROM dates
 
