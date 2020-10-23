@@ -27,17 +27,16 @@ WITH dim_crm_accounts AS (
 
     SELECT
       merged_accounts.ultimate_parent_account_id,
-      dim_dates.date_actual           AS mrr_month,
-      dateadd('year', 1, date_actual) AS retention_month,
-      SUM(ZEROIFNULL(mrr))            AS mrr_total,
-      SUM(ZEROIFNULL(arr))            AS arr_total,
-      SUM(ZEROIFNULL(quantity))       AS quantity_total,
-      MIN(subscription_end_month)     AS subscription_end_month,
-      ARRAY_AGG(product_category)     AS product_category,
-      MAX(product_ranking)            AS product_ranking
+      dim_dates.date_actual                             AS mrr_month,
+      dateadd('year', 1, date_actual)                   AS retention_month,
+      SUM(ZEROIFNULL(mrr))                              AS mrr_total,
+      SUM(ZEROIFNULL(arr))                              AS arr_total,
+      SUM(ZEROIFNULL(quantity))                         AS quantity_total,
+      MAX(all_subscriptions.subscription_end_month)     AS last_renewal_date,
+      MIN(current_subscriptions.subscription_end_month) AS next_renewal_date,
+      ARRAY_AGG(product_category)                       AS product_category,
+      MAX(product_ranking)                              AS product_ranking
     FROM fct_mrr
-    INNER JOIN dim_subscriptions
-      ON dim_subscriptions.subscription_id = fct_mrr.subscription_id
     INNER JOIN dim_product_details
       ON dim_product_details.product_details_id = fct_mrr.product_details_id
     INNER JOIN dim_dates
@@ -46,6 +45,12 @@ WITH dim_crm_accounts AS (
       ON crm_accounts.crm_account_id = fct_mrr.crm_account_id
     INNER JOIN dim_crm_accounts AS merged_accounts
       ON merged_accounts.crm_account_id = COALESCE(crm_accounts.merged_to_account_id, crm_accounts.crm_account_id)
+    LEFT JOIN dim_subscriptions AS all_subscriptions
+      ON all_subscriptions.subscription_id = fct_mrr.subscription_id
+      AND all_subscriptions.subscription_end_month <= CURRENT_DATE
+    LEFT JOIN dim_subscriptions as current_subscriptions
+      ON current_subscriptions.subscription_id = fct_mrr.subscription_id
+      AND current_subscriptions.subscription_end_month > CURRENT_DATE
     GROUP BY 1, 2, 3
 
 ), retention_subs AS (
@@ -64,7 +69,8 @@ WITH dim_crm_accounts AS (
       future_mrr.product_category    AS future_product_category,
       current_mrr.product_ranking    AS current_product_ranking,
       future_mrr.product_ranking     AS future_product_ranking,
-      current_mrr.subscription_end_month
+      current_mrr.last_renewal_date,
+      current_mrr.next_renewal_date
     FROM parent_account_mrrs AS current_mrr
     LEFT JOIN parent_account_mrrs AS future_mrr
       ON current_mrr.ultimate_parent_account_id = future_mrr.ultimate_parent_account_id
@@ -78,7 +84,8 @@ WITH dim_crm_accounts AS (
       retention_month,
       dim_dates.fiscal_year                     AS retention_fiscal_year,
       dim_dates.fiscal_quarter                  AS retention_fiscal_quarter,
-      subscription_end_month,
+      retention_subs.last_renewal_date,
+      retention_subs.next_renewal_date,
       current_mrr                               AS original_mrr,
       COALESCE(future_mrr, 0)                   AS net_retention_mrr,
       CASE WHEN net_retention_mrr > 0
