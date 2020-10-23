@@ -20,11 +20,11 @@ WITH sfdc_opportunity AS (
     owner_id                                 AS crm_sales_rep_id,
     incremental_acv                          AS iacv,
     created_date,                            -- created_date
-		{{ get_date_id('created_date') }}        AS created_date_id,
+    {{ get_date_id('created_date') }}        AS created_date_id,
     sales_accepted_date,                     -- sales_accepted_date
-		{{ get_date_id('sales_accepted_date') }} AS sales_accepted_date_id,
+    {{ get_date_id('sales_accepted_date') }} AS sales_accepted_date_id,
     close_date,                              -- close_date
-		{{ get_date_id('close_date') }}          AS close_date_id,
+    {{ get_date_id('close_date') }}          AS close_date_id,
     is_closed,                               -- is_closed
     is_won                                   -- is_won
   FROM sfdc_opportunity
