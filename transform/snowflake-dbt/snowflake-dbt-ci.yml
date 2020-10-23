@@ -45,7 +45,7 @@
   - python3 macro_name_check.py
   - dbt deps
   - dbt seed --profiles-dir profile --target ci #seed data from csv
-  - dbt --warn-error $CI_PROFILE_TARGET run-operation tag_validation
+  - dbt --warn-error --partial-parse run-operation tag_validation --profiles-dir profile --target ci
 
 .xl_warehouse: &xl_warehouse
   - export SNOWFLAKE_TRANSFORM_WAREHOUSE=$SNOWFLAKE_MR_XL_WAREHOUSE
