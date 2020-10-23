@@ -43,8 +43,8 @@
 
 .deps_and_seed: &deps_and_seed
   - python3 macro_name_check.py
-  - dbt deps
-  - dbt seed --profiles-dir profile --target ci #seed data from csv
+  - dbt deps $CI_PROFILE_TARGET
+  - dbt seed $CI_PROFILE_TARGET #seed data from csv
   - dbt --warn-error --partial-parse run-operation tag_validation --profiles-dir profile --target ci
 
 .xl_warehouse: &xl_warehouse
