@@ -47,7 +47,7 @@ dag = DAG(
 # SFDC Extract
 rspec_profiler_extract_cmd = f"""
     {clone_and_setup_extraction_cmd} &&
-    python3 twitter/src/execute.py && 
+    python3 keyhole_twitter/src/execute.py && 
     python3 sheetload/sheetload.py csv --filename social_twitter_impressions.csv --schema twitter --tablename impressions
 """
  

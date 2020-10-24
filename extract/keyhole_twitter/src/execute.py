@@ -1,6 +1,6 @@
 from os import environ as env
 
-from pandas import DataFrame
+import pandas as pd
 from big_query_client import BigQueryClient
 
 from gitlabdata.orchestration_utils import (
