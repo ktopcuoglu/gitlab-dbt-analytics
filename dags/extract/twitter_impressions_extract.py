@@ -41,7 +41,7 @@ default_args = {
 
 # Create the DAG
 dag = DAG(
-    "rspec_profiler_extract", default_args=default_args, schedule_interval="0 */2 * * *"
+    "keyhole_twitter_extract", default_args=default_args, schedule_interval="0 */2 * * *"
 )
 
 # SFDC Extract
