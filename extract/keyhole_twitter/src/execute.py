@@ -1,7 +1,8 @@
 from os import environ as env
 import requests
 import pandas as pd
-from big_query_client import BigQueryClient
+from datetime import datetime
+from dateutil import parser as date_parser
 
 from gitlabdata.orchestration_utils import (
     snowflake_engine_factory,
