@@ -1,0 +1,7 @@
+version: 2
+
+models:
+    - name: twitter_impressions
+      columns:
+        - name: impression_month
+        - name: impressions
