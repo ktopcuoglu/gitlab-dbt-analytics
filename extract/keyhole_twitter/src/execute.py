@@ -11,6 +11,10 @@ from gitlabdata.orchestration_utils import (
 
 config_dict = env.copy()
 
+years_back = 15
+valid_years = range(datetime.now().year - 15, datetime.now().year + 1)
+
+year = datetime.now().year
 
 def recursive_parse_dict(dict_to_parse, path=""):
     for key in dict_to_parse.keys():
