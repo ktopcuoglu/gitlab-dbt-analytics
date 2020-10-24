@@ -48,7 +48,7 @@ dag = DAG(
 rspec_profiler_extract_cmd = f"""
     {clone_and_setup_extraction_cmd} &&
     python3 keyhole_twitter/src/execute.py && 
-    python3 sheetload/sheetload.py csv --filename social_twitter_impressions.csv --schema twitter --tablename impressions
+    python3 sheetload/sheetload.py csv --filename social_twitter_impressions.csv --schema keyhole_twitter --tablename impressions
 """
  
 # having both xcom flag flavors since we're in an airflow version where one is being deprecated
