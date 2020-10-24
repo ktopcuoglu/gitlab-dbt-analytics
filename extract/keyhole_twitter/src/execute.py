@@ -1,5 +1,5 @@
 from os import environ as env
-
+import requests
 import pandas as pd
 from big_query_client import BigQueryClient
 
@@ -59,7 +59,7 @@ def write_csv_data(file_name, data):
 
 
 if __name__ == "__main__":
-
+./,,
     snowflake_engine = snowflake_engine_factory(config_dict, "LOADER")
 
     output_data = get_twitter_impressions_data()
