@@ -68,7 +68,7 @@ if __name__ == "__main__":
 
     endpoint = "https://gitlab-com.gitlab.io/marketing/corporate_marketing/developer-evangelism/code/de-dashboard" \
             "/metrics/data.json"
-    output_data = get_twitter_impressions_data(endpoint)
+    output_df = get_twitter_impressions_data(endpoint)
 
     # Groups by date so we can create a file for each day
     df_by_path = output_df.groupby(by="path")
