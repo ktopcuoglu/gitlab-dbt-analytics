@@ -1,14 +1,14 @@
 WITH source AS (
 
     SELECT *
-    FROM {{ source('rspec', 'overall_time') }}
+    FROM {{ source('keyhole_twitter', 'impressions') }}
 
 ), renamed AS (
 
     SELECT
       FIELD::timestamp                      AS impression_month,
       VALUE::int                            AS impressions,
-      _UPDATED_AT::FLOAT                    AS updated_at,
+      _UPDATED_AT::FLOAT                    AS updated_at
     FROM source
 
 )

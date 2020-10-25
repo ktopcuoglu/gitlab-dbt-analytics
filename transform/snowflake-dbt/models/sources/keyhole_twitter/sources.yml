@@ -1,9 +1,9 @@
 version: 2
 
 sources:
-  - name: twitter_keyhole
+  - name: keyhole_twitter
     database: '{{ env_var("SNOWFLAKE_LOAD_DATABASE") }}'
-    schema: twitter_keyhole
+    schema: keyhole_twitter
     loader: Stitch
     loaded_at_field: _sdc_batched_at
 
@@ -13,5 +13,5 @@ sources:
       identifier: false
 
     tables:
-      - name: overall_time
+      - name: impressions
         description: '{{ doc("twitter_impressions") }}'
