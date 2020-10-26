@@ -9,6 +9,23 @@ WITH monthly_usage_data AS (
     SELECT *
     FROM {{ ref('fct_usage_ping_payloads') }}
 
+), monthly_usage_data_agg AS (
+
+    SELECT 
+      created_month,
+      clean_metrics_name,
+      uuid,
+      product_tier,
+      group_name,
+      stage_name,
+      section_name, 
+      is_smau,
+      is_gmau,
+      ping_source,
+      MAX(monthly_metric_value)
+    FROM
+    GROUP BY 1,2,3,4,5,6,7,8,9,10
+    
 )
 
 SELECT 
