@@ -11,6 +11,7 @@ from os import environ as env
 
 config_dict = env.copy()
 
+# Year date range for mapping dates passed on JSON
 years_back = 15
 valid_years = range(datetime.now().year - 15, datetime.now().year + 1)
 
@@ -19,7 +20,8 @@ year = datetime.now().year
 
 def recursive_parse_dict(dict_to_parse, path=""):
     """
-
+        Parses dicts of dicts, specifically for the keyhole extract.
+        Written as a recursive function so new data endpoints can be added without any changes required.
     """
     for key in dict_to_parse.keys():
         field = dict_to_parse.get(key)
@@ -56,7 +58,7 @@ def recursive_parse_dict(dict_to_parse, path=""):
 
 def get_twitter_impressions_data(endpoint) -> pd.DataFrame:
     """
-
+        Retrieves twitter data from internally setup keyhole endpoint
     """
     raw_data = requests.get(endpoint).json()
     data = [d for d in recursive_parse_dict(raw_data)]
@@ -66,7 +68,7 @@ def get_twitter_impressions_data(endpoint) -> pd.DataFrame:
 
 def write_csv_data(file_name, data):
     """
-
+        Just here to return filenames, probably not needed but consistent with our other extracts
     """
     if data.to_csv(f"{file_name}.csv", index=False):
         return file_name
