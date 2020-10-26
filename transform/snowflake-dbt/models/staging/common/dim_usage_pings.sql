@@ -70,7 +70,7 @@ WITH usage_ping_data AS (
       raw_usage_data.raw_usage_data_payload
     FROM usage_with_ip
     LEFT JOIN raw_usage_data
-      ON usage_data.raw_usage_data_id = raw_usage_data.raw_usage_data_id
+      ON usage_with_ip.raw_usage_data_id = raw_usage_data.raw_usage_data_id
 
 )
 
