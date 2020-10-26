@@ -54,6 +54,9 @@ This macro **is specific** to pgp tables (gitlab_dotcom, version, license) and s
 This is the GitLab overwrite for the dbt internal macro. See our [dbt guide](https://about.gitlab.com/handbook/business-ops/data-team/platform/dbt-guide/#general) for more info on how this works.
 {% enddocs %}
 
+{% docs generate_single_field_dimension %}
+Convenience macro created to assist in the creation of new Dimensions based off a single source field. 
+{% enddocs %}
 
 {% docs monthly_change %}
 This macro calculates differences for each consecutive usage ping by uuid.
