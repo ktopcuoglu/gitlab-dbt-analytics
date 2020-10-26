@@ -17,5 +17,5 @@ static_analysis_job,sast,secure,FALSE,static_analysis,TRUE
 static_analysis_job,secret_detection,secure,FALSE,static_analysis,TRUE
 composition_analysis_jobs,dependency_scanning_jobs,secure,FALSE,composition_analysis,TRUE
 composition_analysis_jobs,license_scanning_jobs,secure,FALSE,composition_analysis,TRUE
-composition_analysis_jobs,container_scanning_jobs,container_scanning_jobs,secure,FALSE,composition_analysis,TRUE
+composition_analysis_jobs,container_scanning_jobs,secure,FALSE,composition_analysis,TRUE
 packages,packages,package,TRUE,package,TRUE
