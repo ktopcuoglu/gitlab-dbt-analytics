@@ -36,7 +36,7 @@ if __name__ == "__main__":
         quality_department_pi="quality_department",
         recruiting_pi="recruiting",
         sales_pi="sales",
-        secure_and_protect_pi = "secure_and_protect_section",
+        secure_and_protect_section_pi = "secure_and_protect_section",
         security_department_pi="security_department",
         ux_department_pi="ux_department",
     )

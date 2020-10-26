@@ -18,11 +18,14 @@ sources:
     tables:
       - name: categories
       - name: chief_of_staff_team_pi
+      - name: customer_support_pi
       - name: corporate_finance_pi
+      - name: development_department_pi
       - name: dev_section_pi
       - name: enablement_section_pi
       - name: engineering_function_pi
       - name: finance_team_pi
+      - name: infrastructure_department_pi
       - name: location_factors
       - name: marketing_pi
       - name: ops_section_pi
@@ -33,7 +36,7 @@ sources:
       - name: roles
       - name: sales_pi
       - name: security_department_pi
+      - name: secure_and_protect_section_pi
       - name: stages
-      - name: support_department_pi
       - name: team
       - name: ux_department_pi

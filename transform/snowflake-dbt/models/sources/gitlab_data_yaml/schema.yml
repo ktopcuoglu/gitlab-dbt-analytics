@@ -12,6 +12,12 @@ models:
 
   - name: performance_indicators_cost_source
     description: Emphemeral layer for extracting and cleaning data from [chief_of_staff_team.yml](https://gitlab.com/gitlab-com/www-gitlab-com/-/blob/master/data/performance_indicators/chief_of_staff_team.yml) in the GitLab Handbook.
+  
+  - name: performance_indicators_customer_support_source
+    description: Emphemeral layer for extracting and cleaning data from [customer_support_department.yml](https://gitlab.com/gitlab-com/www-gitlab-com/-/blob/master/data/performance_indicators/customer_support_department.yml) in the GitLab Handbook.
+
+  - name: performance_indicators_development_department_source
+    description: Emphemeral layer for extracting and cleaning data from [development_department.yml](https://gitlab.com/gitlab-com/www-gitlab-com/-/blob/master/data/performance_indicators/development_department.yml) in the GitLab Handbook.
 
   - name: performance_indicators_dev_section_source
     description: Emphemeral layer for extracting and cleaning data from [dev_section.yml](https://gitlab.com/gitlab-com/www-gitlab-com/-/blob/master/data/performance_indicators/dev_section.yml) in the GitLab Handbook.
@@ -24,6 +30,9 @@ models:
 
   - name: performance_indicators_finance_source
     description: Emphemeral layer for extracting and cleaning data from [finance_team.yml](https://gitlab.com/gitlab-com/www-gitlab-com/-/blob/master/data/performance_indicators/finance_team.yml) in the GitLab Handbook.
+
+  - name: performance_indicators_infrastructure_department_source
+    description: Emphemeral layer for extracting and cleaning data from [infrastructure_department.yml](https://gitlab.com/gitlab-com/www-gitlab-com/-/blob/master/data/performance_indicators/infrastructure_department.yml) in the GitLab Handbook.
 
   - name: performance_indicators_marketing_source
     description: Emphemeral layer for extracting and cleaning data from [marketing.yml](https://gitlab.com/gitlab-com/www-gitlab-com/-/blob/master/data/performance_indicators/marketing.yml) in the GitLab Handbook.
@@ -48,6 +57,9 @@ models:
 
   - name: performance_indicators_security_department_source
     description: Emphemeral layer for extracting and cleaning data from [security_department.yml](https://gitlab.com/gitlab-com/www-gitlab-com/-/blob/master/data/performance_indicators/security_department.yml) in the GitLab Handbook.
+
+  - name: performance_indicators_secure_and_protect_section_source
+    description: Emphemeral layer for extracting and cleaning data from [secure_and_protect_section.yml](https://gitlab.com/gitlab-com/www-gitlab-com/-/blob/master/data/performance_indicators/secure_and_protect_section.yml) in the GitLab Handbook.
 
   - name: performance_indicators_ux_department_source
     description: Emphemeral layer for extracting and cleaning data from [ux_department.yml](https://gitlab.com/gitlab-com/www-gitlab-com/-/blob/master/data/performance_indicators/ux_department.yml) in the GitLab Handbook.
