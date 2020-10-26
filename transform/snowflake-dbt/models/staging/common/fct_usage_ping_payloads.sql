@@ -57,7 +57,7 @@ WITH license AS (
 
     SELECT
       id              AS usage_ping_id,
-      date_id,
+      created_date_id AS date_id,
       uuid,
       host_id,
       source_ip_hash,
