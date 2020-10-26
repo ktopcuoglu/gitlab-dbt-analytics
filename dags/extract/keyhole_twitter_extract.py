@@ -44,15 +44,15 @@ dag = DAG(
     "keyhole_twitter_extract", default_args=default_args, schedule_interval="00 16 * * MON"
 )
 
-# SFDC Extract
-rspec_profiler_extract_cmd = f"""
+# Keyhole Twitter Extract
+keyhole_twitter_extract_cmd = f"""
     {clone_and_setup_extraction_cmd} &&
     python3 keyhole_twitter/src/execute.py && 
     python3 sheetload/sheetload.py csv --filename social_twitter_impressions.csv --schema keyhole_twitter --tablename impressions
 """
  
 # having both xcom flag flavors since we're in an airflow version where one is being deprecated
-rspec_profiler_extract = KubernetesPodOperator(
+keyhole_twitter_extract_cmd = KubernetesPodOperator(
     **gitlab_defaults,
     image=DATA_IMAGE,
     task_id="twitter-impressions-extract",
@@ -68,6 +68,6 @@ rspec_profiler_extract = KubernetesPodOperator(
     env_vars=pod_env_vars,
     affinity=get_affinity(False),
     tolerations=get_toleration(False),
-    arguments=[rspec_profiler_extract_cmd],
+    arguments=[keyhole_twitter_extract_cmd],
     dag=dag,
 )
