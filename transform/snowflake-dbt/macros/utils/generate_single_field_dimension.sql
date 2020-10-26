@@ -1,8 +1,4 @@
-{% macro generate_single_field_dimension(model_name,
-id_column,
-id_column_name,
-dimension_column,
-dimension_column_name) %}
+{% macro generate_single_field_dimension(model_name, id_column, id_column_name, dimension_column, dimension_column_name) %}
 
 WITH source_data AS (
     SELECT *
