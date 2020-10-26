@@ -4,22 +4,24 @@ id_column_name,
 dimension_column,
 dimension_column_name) %}
 
-with dimension_data AS (
-
-    SELECT
-        DISTINCT MD5({{ id_column }})              AS {{ id_column_name }}
-        , {{  dimension_column }}                  AS {{ dimension_column_name }}
+WITH source_data AS (
+    SELECT *
     FROM {{ ref(model_name) }}
     WHERE {{ dimension_column }} IS NOT NULL
+), unioned AS (
+
+    SELECT
+        DISTINCT
+        {{ dbt_utils.surrogate_key([id_column]) }}  AS {{ id_column_name }},
+        {{  dimension_column }}                     AS {{ dimension_column_name }}
+    FROM source_data
 
     UNION ALL
 
     SELECT
-        '-1'                                        AS {{ id_column_name }}
-        ,'(Missing {{dimension_column_name}})'      AS {{ dimension_column_name }}
+        MD5('-1')                                   AS {{ id_column_name }},
+        'Missing {{dimension_column_name}}'       AS {{ dimension_column_name }}
 
 )
-
-select * from dimension_data
 
 {%- endmacro -%}
