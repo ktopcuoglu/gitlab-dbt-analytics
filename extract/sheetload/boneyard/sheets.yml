@@ -8,6 +8,10 @@ sheets:
     owner: '@kwiebers'
     tabs:
       - gitlab_product_mrs_size
+  - name: opt_out_contacts
+    owner: '@Jean Peguero'
+    tabs:
+      - do_not_email_contacts
   - name: test_sheet
     owner: '@taylormurphy'
     tabs:
@@ -20,7 +24,3 @@ sheets:
     owner: '@rkohnke'
     tabs:
       - us_cities_latitude_longitude
-  - name: opt_out_contacts
-    owner: '@Jean Peguero'
-    tabs:
-      - do_not_email_contacts
