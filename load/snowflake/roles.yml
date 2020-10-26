@@ -1237,6 +1237,13 @@ roles:
         warehouses:
             - analyst_xs
 
+    - amurray:
+        member_of:
+            - analyst_finance
+            - bamboohr
+        warehouses:
+            - analyst_xs 
+
     - cmccarty:
         warehouses:
             - admin
@@ -1745,6 +1752,11 @@ users:
         can_login: yes
         member_of:
             - amihaila
+
+    - amurray:
+        can_login: yes
+        member_of:
+            - amurray
 
     - cmccarty:
         can_login: yes
