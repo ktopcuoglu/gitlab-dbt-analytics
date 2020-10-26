@@ -41,7 +41,7 @@ default_args = {
 
 # Create the DAG
 dag = DAG(
-    "keyhole_twitter_extract", default_args=default_args, schedule_interval="0 */2 * * *"
+    "keyhole_twitter_extract", default_args=default_args, schedule_interval="00 16 * * MON"
 )
 
 # SFDC Extract
