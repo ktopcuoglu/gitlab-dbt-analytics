@@ -1,3 +1,5 @@
+-- depends on: {{ ref('sfdc_event_source') }}
+
 {{config({
     "materialized": "table",
     "schema": "common"
