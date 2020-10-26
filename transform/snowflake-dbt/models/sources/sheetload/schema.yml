@@ -74,6 +74,7 @@ models:
       tests:
       - not_null
       - unique
+- name: sheetload_engineering_speciality_prior_to_capture_source  
 - name: sheetload_engineering_contributing_organizations_source
   description: Information about organizations that contribute
   columns: 
