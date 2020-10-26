@@ -55,7 +55,7 @@ This is the GitLab overwrite for the dbt internal macro. See our [dbt guide](htt
 {% enddocs %}
 
 {% docs generate_single_field_dimension %}
-Convenience macro created to assist in the creation of new Dimensions based off a single source field. 
+Convenience macro created to assist in the creation of new Dimensions based off a single source field. This returns the compiled SQL for selecting from the Source model,  
 {% enddocs %}
 
 {% docs monthly_change %}
