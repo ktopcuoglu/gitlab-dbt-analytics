@@ -8,6 +8,16 @@ WITH dates AS (
     SELECT *
     FROM {{ ref('date_details') }}
 
+), promotions AS (
+
+    SELECT *
+    FROM {{ ref('bamboohr_promotions_xf') }}
+
+), sheetload_people_budget AS (
+
+    SELECT *
+    FROM {{ ref('sheetload_people_budget') }}
+  
 ), budget AS (
 
     SELECT 
@@ -16,7 +26,7 @@ WITH dates AS (
       fiscal_quarter, 
       budget,
       excess_from_previous_quarter
-    FROM {{ ref('sheetload_people_budget') }}
+    FROM sheetload_people_budget
 
     UNION ALL
 
@@ -26,13 +36,8 @@ WITH dates AS (
       fiscal_quarter, 
       SUM(budget)                                               AS budget,
       SUM(excess_from_previous_quarter)                         AS excess_from_previous_quarter
-    FROM {{ ref('sheetload_people_budget') }}
+    FROM sheetload_people_budget
     GROUP BY 1,2,3
-
-), promotions AS (
-
-    SELECT *
-    FROM {{ ref('bamboohr_promotions_xf') }}
 
 ), promotions_aggregated AS (
 
@@ -66,9 +71,9 @@ WITH dates AS (
       promotions_aggregated.total_spend
     FROM budget
     LEFT JOIN promotions_aggregated
-    ON budget.division = promotions_aggregated.division
-    AND budget.fiscal_year = promotions_aggregated.fiscal_year
-    AND budget.fiscal_quarter = promotions_aggregated.fiscal_quarter
+      ON budget.division = promotions_aggregated.division
+      AND budget.fiscal_year = promotions_aggregated.fiscal_year
+      AND budget.fiscal_quarter = promotions_aggregated.fiscal_quarter
 
 )
 
