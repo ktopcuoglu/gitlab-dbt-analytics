@@ -18,7 +18,6 @@ sources:
     tables:
       - name: categories
       - name: chief_of_staff_team_pi
-      - name: customer_support_pi
       - name: corporate_finance_pi
       - name: dev_section_pi
       - name: enablement_section_pi
