@@ -34,6 +34,5 @@ sources:
       - name: sales_pi
       - name: security_department_pi
       - name: stages
-      - name: support_department_pi
       - name: team
       - name: ux_department_pi
