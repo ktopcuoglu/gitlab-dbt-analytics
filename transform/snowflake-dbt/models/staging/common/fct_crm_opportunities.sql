@@ -37,7 +37,6 @@ WITH sfdc_opportunity AS (
       WHEN sfdc_opportunity.sales_accepted_date IS NOT NULL
         AND is_edu_oss = 0
         AND stage_name != '10-Duplicate'
-        AND order_type_stamped = '1. New - First Order'
           THEN TRUE
     	ELSE FALSE
     END AS is_sao
