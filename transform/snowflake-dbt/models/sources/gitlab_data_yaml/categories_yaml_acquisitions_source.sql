@@ -5,7 +5,7 @@ WITH source AS (
     FROM {{ source('gitlab_data_yaml', 'categories') }}
     ORDER BY uploaded_at DESC
 
-), info_combined AS (
+), split_acquisition_info AS (
 
     SELECT 
       category.value['name']::VARCHAR  	    AS category_name,
@@ -33,7 +33,7 @@ WITH source AS (
     snapshot_date,
     acquisition_key,
     OBJECT_AGG(info_key, info_object) acquisition_info
-  FROM split_acq_info
+  FROM split_acquisition_info
   {{ dbt_utils.group_by(n=5) }}
   
 ), info_parsed AS (
