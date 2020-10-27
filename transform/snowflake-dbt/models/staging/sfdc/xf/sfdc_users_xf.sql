@@ -105,39 +105,24 @@ SELECT
       THEN cro.level_2
     ELSE 'n/a'
   END                                                                                             AS sales_min_hierarchy_level,
-    CASE sales_min_hierarchy_level
-      WHEN 'ASM - APAC - Japan'                 THEN 'APAC'
-      WHEN 'ASM - Civilian'                     THEN 'PUBSEC'
-      WHEN 'ASM - DoD - USAF+COCOMS+4th Estate' THEN 'PUBSEC'
-      WHEN 'ASM - EMEA - DACH'                  THEN 'EMEA'
-      WHEN 'ASM - EMEA - North'                 THEN 'EMEA'
-      WHEN 'ASM - MM - EMEA'                    THEN 'EMEA'
-      WHEN 'ASM - MM - East'                    THEN 'US East'
-      WHEN 'ASM - MM - West'                    THEN 'US West'
-      WHEN 'ASM - NSG'                          THEN 'PUBSEC'
-      WHEN 'ASM - SLED'                         THEN 'PUBSEC'
-      WHEN 'ASM - US East - Southeast'          THEN 'US East'
-      WHEN 'ASM - US West - NorCal'             THEN 'US West'
-      WHEN 'ASM - US West - PacNW'              THEN 'US West'
-      WHEN 'ASM - US West - SoCal+Rockies'      THEN 'US West'
-      WHEN 'ASM-DOD- Army+Navy+Marines+SI''s'   THEN 'PUBSEC'
-      WHEN 'ASM-SMB-AMER-East'                  THEN 'US East'
-      WHEN 'ASM-SMB-AMER-West'                  THEN 'US West'
-      WHEN 'ASM-SMB-EMEA'                       THEN 'EMEA'
-      WHEN 'Area Sales Manager - US East - Central'           THEN 'US East'
-      WHEN 'Area Sales Manager - US East - Named Accounts'    THEN 'US East'
-      WHEN 'Area Sales Manager - US East - Northeast'         THEN 'US East'
-      WHEN 'CD EMEA'                            THEN 'EMEA'
-      WHEN 'CD PubSec'                          THEN 'PUBSEC'
-      WHEN 'RD APAC'                            THEN 'APAC'
-      WHEN 'RD EMEA'                            THEN 'EMEA'
-      WHEN 'RD PubSec'                          THEN 'PUBSEC'
-      WHEN 'RD US East'                         THEN 'US East'
-      WHEN 'RD US West'                         THEN 'US West'
-      WHEN 'VP Comm MM'                         THEN 'Other'
-      WHEN 'VP Ent'                             THEN 'Other'
-      ELSE 'n/a'
-    END                                                                                           AS sales_region,
+    CASE 
+      WHEN sales_min_hierarchy_level IN ('ASM - APAC - Japan', 'RD APAC')
+        THEN 'APAC'
+      WHEN sales_min_hierarchy_level IN ('ASM - Civilian','ASM - DoD - USAF+COCOMS+4th Estate'
+                                        , 'ASM - NSG', 'ASM - SLED', 'ASM-DOD- Army+Navy+Marines+SI''s'  
+                                        , 'CD PubSec', 'RD PubSec' )
+        THEN 'PUBSEC'
+      WHEN sales_min_hierarchy_level IN ('ASM - EMEA - DACH', 'ASM - EMEA - North', 'ASM - MM - EMEA' 
+                                        , 'ASM-SMB-EMEA', 'CD EMEA', 'RD EMEA')
+        THEN 'EMEA'
+      WHEN sales_min_hierarchy_level IN ('ASM - MM - East','ASM - US East - Southeast', 'ASM-SMB-AMER-East'
+                                        , 'Area Sales Manager - US East - Central', 'Area Sales Manager - US East - Named Accounts' 
+                                        , 'Area Sales Manager - US East - Northeast', 'RD US East')
+        THEN 'US East'
+      WHEN sales_min_hierarchy_level IN ('ASM - MM - West','ASM - US West - NorCal','ASM - US West - PacNW'
+                                        ,'ASM - US West - SoCal+Rockies', 'ASM-SMB-AMER-West','RD US West')
+        THEN 'US West'
+        ELSE 'n/a' END                                                                            AS sales_region,
     -- identify VP level managers
     CASE 
       WHEN cro.level_2 LIKE 'VP%' 

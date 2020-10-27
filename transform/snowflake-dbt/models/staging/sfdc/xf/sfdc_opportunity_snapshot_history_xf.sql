@@ -42,34 +42,24 @@ WITH date_details AS (
     SELECT
       opportunity_id,
       owner_id,
-      'CRO'                                                           AS level_1,
-      CASE account_owner_team_stamped
-        WHEN 'APAC'                 THEN 'VP Ent'
-        WHEN 'Commercial'           THEN 'VP Comm SMB'
-        WHEN 'Commercial - MM'      THEN 'VP Comm MM'
-        WHEN 'Commercial - SMB'     THEN 'VP Comm SMB'
-        WHEN 'EMEA'                 THEN 'VP Ent'
-        WHEN 'MM - APAC'            THEN 'VP Comm MM'
-        WHEN 'MM - East'            THEN 'VP Comm MM'
-        WHEN 'MM - EMEA'            THEN 'VP Comm MM'
-        WHEN 'MM - West'            THEN 'VP Comm MM'
-        WHEN 'MM-EMEA'              THEN 'VP Comm MM'
-        WHEN 'Public Sector'        THEN 'VP Ent'
-        WHEN 'SMB'                  THEN 'VP Comm SMB'
-        WHEN 'SMB - International'  THEN 'VP Comm SMB'
-        WHEN 'SMB - US'             THEN 'VP Comm SMB'
-        WHEN 'US East'              THEN 'VP Ent'
-        WHEN 'US West'              THEN 'VP Ent'
+      'CRO'                                                AS level_1,
+      CASE 
+        WHEN account_owner_team_stamped IN ('APAC', 'EMEA', 'Public Sector','US East', 'US West')
+          THEN 'VP Ent'
+        WHEN account_owner_team_stamped IN ('Commercial', 'Commercial - SMB', 'SMB', 'SMB - International', 'SMB - US')
+          THEN 'VP Comm SMB'
+        WHEN account_owner_team_stamped IN ('MM - APAC', 'MM - East', 'MM - EMEA', 'MM - West', 'MM-EMEA','Commercial - MM')
+          THEN 'VP Comm MM'
         ELSE NULL
       END                                                  AS level_2,
-      CASE account_owner_team_stamped
+      CASE account_owner_team_stampeD
         WHEN 'APAC'                 THEN 'RD APAC'
         WHEN 'EMEA'                 THEN 'RD EMEA'
         WHEN 'MM - APAC'            THEN 'ASM - MM - APAC'
         WHEN 'MM - East'            THEN 'ASM - MM - East'
-        WHEN 'MM - EMEA'            THEN 'ASM - MM - EMEA'
         WHEN 'MM - West'            THEN 'ASM - MM - West'
         WHEN 'MM-EMEA'              THEN 'ASM - MM - EMEA'
+        WHEN 'MM - EMEA'            THEN 'ASM - MM - EMEA'
         WHEN 'Public Sector'        THEN 'RD PubSec'
         WHEN 'US East'              THEN 'RD US East'
         WHEN 'US West'              THEN 'RD US West'
@@ -82,7 +72,7 @@ WITH date_details AS (
 ), final AS (
 
     SELECT 
-      h.date_actual                                                                                           AS snapshot_date,  
+      h.date_actual                                         AS snapshot_date,  
       h.forecast_category_name,                
       h.opportunity_id,
       h.owner_id,    
@@ -109,7 +99,7 @@ WITH date_details AS (
         WHEN sfdc_opportunity_xf.order_type_stamped IS NULL 
           THEN '3. Growth'
         ELSE sfdc_opportunity_xf.order_type_stamped
-      END                                                                                                    AS order_type_stamped,     
+      END                                                          AS order_type_stamped,     
      
       --********************************************************
       -- Deprecated field - 20201013
@@ -119,7 +109,7 @@ WITH date_details AS (
         WHEN sfdc_opportunity_xf.order_type IS NULL 
           THEN '3. Growth'
         ELSE sfdc_opportunity_xf.order_type
-      END                                                                                                    AS order_type, 
+      END                                                           AS order_type, 
       --********************************************************    
 
       -- account driven fields
@@ -128,16 +118,16 @@ WITH date_details AS (
       sfdc_accounts_xf.ultimate_parent_sales_segment,
 
       --snapshot date helpers
-      snapshot_date.first_day_of_month                                                                       AS snapshot_month,
-      snapshot_date.fiscal_year                                                                              AS snapshot_fiscal_year,
-      snapshot_date.fiscal_quarter_name_fy                                                                   AS snapshot_fiscal_quarter,
-      snapshot_date.first_day_of_fiscal_quarter                                                              AS snapshot_fiscal_quarter_date,
+      snapshot_date.first_day_of_month                              AS snapshot_month,
+      snapshot_date.fiscal_year                                     AS snapshot_fiscal_year,
+      snapshot_date.fiscal_quarter_name_fy                          AS snapshot_fiscal_quarter,
+      snapshot_date.first_day_of_fiscal_quarter                     AS snapshot_fiscal_quarter_date,
 
       --close date helpers
-      close_date_detail.first_day_of_month                                                                   AS close_month,
-      close_date_detail.fiscal_year                                                                          AS close_fiscal_year,
-      close_date_detail.fiscal_quarter_name_fy                                                               AS close_fiscal_quarter,
-      close_date_detail.first_day_of_fiscal_quarter                                                          AS close_fiscal_quarter_date,
+      close_date_detail.first_day_of_month                          AS close_month,
+      close_date_detail.fiscal_year                                 AS close_fiscal_year,
+      close_date_detail.fiscal_quarter_name_fy                      AS close_fiscal_quarter,
+      close_date_detail.first_day_of_fiscal_quarter                 AS close_fiscal_quarter_date,
 
       CASE
         WHEN (sfdc_accounts_xf.ultimate_parent_sales_segment  = 'Unknown' 
