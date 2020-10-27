@@ -73,5 +73,5 @@ WITH source AS (
 
 )
 
-SELECT * FROM 
-info_parsed
+SELECT *
+FROM info_parsed
