@@ -13,6 +13,7 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
       AND is_deleted = 0
 
 ) 
+
 SELECT
   snapshot_date,
   close_fiscal_quarter,

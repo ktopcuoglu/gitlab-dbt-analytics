@@ -66,8 +66,7 @@ WITH date_details AS (
         ELSE NULL
       END                                                   AS level_3
     FROM sfdc_opportunity_xf
-    -- sfdc Sales Admin user
-    WHERE owner_id = '00561000000mpHTAAY'
+    WHERE owner_id = '00561000000mpHTAAY' -- sfdc Sales Admin user
 
 ), final AS (
 
@@ -102,7 +101,7 @@ WITH date_details AS (
       END                                                          AS order_type_stamped,     
      
       --********************************************************
-      -- Deprecated field - 20201013
+      -- Deprecated field - 2020-10-13
       -- Please use order_type_stamped instead
       
       CASE 
@@ -186,7 +185,7 @@ WITH date_details AS (
       CASE 
         WHEN h.stage_name IN ('8-Closed Lost', 'Closed Lost') 
           AND h.sales_type = 'Renewal'      
-            THEN h.renewal_acv*-1
+            THEN h.renewal_acv * -1
         WHEN h.stage_name IN ('Closed Won')                                                     
           THEN h.forecasted_iacv  
         ELSE 0
