@@ -1439,6 +1439,10 @@ roles:
         warehouses:
             - reporting
 
+    - jwanjohi:
+        warehouses:
+            - reporting
+
     - jwatson:
         member_of:
             - product_manager
@@ -1908,6 +1912,12 @@ users:
         can_login: yes
         member_of:
             - jurbanc
+            - securityadmin
+
+    - jwanjohi:
+        can_login: yes
+        member_of:
+            - jwanjohi
             - securityadmin
 
     - jwatson:
