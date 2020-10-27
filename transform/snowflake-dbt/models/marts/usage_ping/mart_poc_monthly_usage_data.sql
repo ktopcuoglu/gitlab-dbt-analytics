@@ -23,7 +23,7 @@ WITH monthly_usage_data AS (
       is_gmau,
       ping_source,
       MAX(monthly_metric_value) AS monthly_metric_value
-    FROM monthly_usage_datap
+    FROM monthly_usage_data
     GROUP BY 1,2,3,4,5,6,7,8,9,10
     
 )
