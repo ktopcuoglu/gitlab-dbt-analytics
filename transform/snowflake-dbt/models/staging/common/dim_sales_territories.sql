@@ -4,7 +4,14 @@
   })
 }}
 
-{{ generate_single_field_dimension ('sfdc_account_source', 'tsp_territory', 'dim_sales_territory_id', 'tsp_territory', 'sales_territory_name') }}
+{{ generate_single_field_dimension (
+    model_name="sfdc_account_source",
+    id_column="tsp_territory",
+    id_column_name="dim_sales_territory_id",
+    dimension_column="tsp_territory",
+    dimension_column_name="sales_territory_name"
+) }}
+
 
 {{ dbt_audit(
     cte_ref="unioned",
