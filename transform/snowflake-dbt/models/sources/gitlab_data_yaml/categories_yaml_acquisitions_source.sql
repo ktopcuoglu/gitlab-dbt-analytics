@@ -5,7 +5,6 @@ WITH source AS (
     FROM {{ source('gitlab_data_yaml', 'categories') }}
     ORDER BY uploaded_at DESC
 
-
 ), stages AS (
 
     SELECT 
