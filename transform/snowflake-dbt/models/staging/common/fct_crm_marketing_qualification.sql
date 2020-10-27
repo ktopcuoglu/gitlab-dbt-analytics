@@ -14,7 +14,7 @@ SELECT
 
     {{ dbt_utils.surrogate_key(['COALESCE(converted_contact_id, lead_id)','marketo_qualified_lead_date::timestamp']) }} AS event_id,
     marketo_qualified_lead_date::timestamp                                              AS event_timestamp,
-    {{ get_date_id('marketo_qualified_lead_date') }},                                   -- date_id
+    {{ get_date_id('marketo_qualified_lead_date') }}                                    AS date_id,
     lead_id                                                                             AS sfdc_record_id,
     'lead'                                                                              AS sfdc_record,
     {{ dbt_utils.surrogate_key(['COALESCE(converted_contact_id, lead_id)']) }}          AS crm_person_id,
@@ -31,7 +31,7 @@ SELECT
 
     {{ dbt_utils.surrogate_key(['contact_id','marketo_qualified_lead_date::timestamp']) }} AS event_id,
     marketo_qualified_lead_date::timestamp                                                 AS event_timestamp,
-    {{ get_date_id('marketo_qualified_lead_date') }},                                      -- date_id
+    {{ get_date_id('marketo_qualified_lead_date') }}                                       AS date_id,
     contact_id                                                                             AS sfdc_record_id,
     'contact'                                                                              AS sfdc_record,
     {{ dbt_utils.surrogate_key(['contact_id']) }}                                          AS crm_person_id,

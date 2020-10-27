@@ -100,6 +100,7 @@ WITH dim_dates AS (
       zuora_account_spined.account_id                           AS billing_account_id,
       zuora_account_spined.crm_id                               AS crm_account_id,
       zuora_subscription_spined.subscription_id,
+      zuora_subscription_spined.subscription_name,
       zuora_rate_plan_charge_spined.product_rate_plan_charge_id AS product_details_id,
       zuora_rate_plan_charge_spined.mrr,
       zuora_rate_plan_charge_spined.delta_tcv,
@@ -126,6 +127,7 @@ WITH dim_dates AS (
       billing_account_id,
       crm_account_id,
       subscription_id,
+      subscription_name,
       product_details_id,
       SUM(mrr)                                             AS mrr,
       SUM(mrr)* 12                                         AS arr,
@@ -137,16 +139,25 @@ WITH dim_dates AS (
       AND (rate_plan_charge_filtered.effective_end_month > dim_dates.date_actual
         OR rate_plan_charge_filtered.effective_end_month IS NULL)
       AND dim_dates.day_of_month = 1
-    {{ dbt_utils.group_by(n=6) }}
+    {{ dbt_utils.group_by(n=7) }}
 
 ), final AS (
 
     SELECT
-        {{ dbt_utils.surrogate_key(['snapshot_id', 'date_id', 'subscription_id', 'product_details_id']) }}
+        {{ dbt_utils.surrogate_key(['snapshot_id', 'date_id', 'subscription_name', 'product_details_id']) }}
           AS mrr_snapshot_id,
-        {{ dbt_utils.surrogate_key(['date_id', 'subscription_id', 'product_details_id']) }}
+        {{ dbt_utils.surrogate_key(['date_id', 'subscription_name', 'product_details_id']) }}
           AS mrr_id,
-        *
+        snapshot_id,
+        date_id,
+        billing_account_id,
+        crm_account_id,
+        subscription_id,
+        product_details_id,
+        mrr,
+        arr,
+        quantity,
+        unit_of_measure
     FROM mrr_month_by_month
 
 )

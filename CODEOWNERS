@@ -43,7 +43,7 @@ docker-compose.yml  @tayloramurphy  @m_walker
 [dbt]
 /transform/                                         @tayloramurphy  @jjstark        @kathleentam
 /transform/general/                                 @kathleentam    @pluthra
-/transform/snowflake-dbt/                           @tayloramurphy  @jjstark        @kathleentam
+/transform/snowflake-dbt/                           @tayloramurphy  @jjstark        @kathleentam    @m_walker
 
 /transform/snowflake-dbt/snowflake-dbt-ci.yml       @tayloramurphy  @m_walker       @jjstark        @kathleentam
 /transform/snowflake-dbt/generate_dbt_schema.py     @tayloramurphy  @m_walker       @jjstark        @kathleentam

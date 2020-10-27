@@ -209,6 +209,8 @@ sources:
         identifier: gitlab_db_notification_settings
       - name: oauth_access_tokens
         identifier: gitlab_db_oauth_access_tokens
+      - name: packages_packages
+        identifier: gitlab_db_packages_packages
       - name: plans
         identifier: gitlab_db_plans
       - name: pages_domains
@@ -257,6 +259,8 @@ sources:
         identifier: gitlab_db_saml_providers
       - name: services
         identifier: gitlab_db_services
+      - name: sprints
+        identifier: gitlab_db_sprints
       - name: subscriptions
         identifier: gitlab_db_subscriptions
       - name: system_note_metadata
