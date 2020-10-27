@@ -268,24 +268,6 @@ roles:
                 write:
                     - analytics
 
-    - people_operations:
-        warehouses:
-            - analyst_xs
-        member_of: 
-            - analyst_core
-            - bamboohr
-            - boneyard
-            - gitlab_data_yaml
-            - gitlab_dotcom
-            - greenhouse
-            - sheetload
-            - snapshots
-        privileges:
-            databases:
-                write:
-                    - analytics
-
-
     - analyst_sales:
         warehouses:
             - analyst_xs
@@ -453,6 +435,23 @@ roles:
                 write:
                     - analytics.boneyard.*
                     - raw.*.*
+
+    - people_operations:
+        warehouses:
+            - analyst_xs
+        member_of: 
+            - analyst_core
+            - bamboohr
+            - boneyard
+            - gitlab_data_yaml
+            - gitlab_dotcom
+            - greenhouse
+            - sheetload
+            - snapshots
+        privileges:
+            databases:
+                write:
+                    - analytics
 
     - product_manager:
         warehouses:
