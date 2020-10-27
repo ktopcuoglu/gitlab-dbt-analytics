@@ -19,8 +19,8 @@ WITH sfdc_opportunity_snapshots AS (
 
       -- logistical information
       business_type__c               AS business_type,
-      CAST(closedate   AS DATE)      AS close_date,
-      CAST(createddate AS DATE)      AS created_date,
+      closedate::DATE                AS close_date,
+      createddate::DATE              AS created_date,
       deployment_preference__c       AS deployment_preference,
       sql_source__c                  AS generated_source,
       leadsource                     AS lead_source,

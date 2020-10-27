@@ -250,16 +250,12 @@ WITH sfdc_opportunity AS (
       -- account owner hierarchies levels
       account_owner.sales_team_level_2                                                                    AS account_owner_team_level_2,
       account_owner.sales_team_level_3                                                                    AS account_owner_team_level_3,
-      account_owner.sales_team_level_4                                                                    AS account_owner_team_level_4,
-        
+      account_owner.sales_team_level_4                                                                    AS account_owner_team_level_4,       
       account_owner.sales_team_vp_level                                                                   AS account_owner_team_vp_level,
       account_owner.sales_team_rd_level                                                                   AS account_owner_team_rd_level,
       account_owner.sales_team_asm_level                                                                  AS account_owner_team_asm_level,
-
       account_owner.sales_min_hierarchy_level                                                             AS account_owner_min_team_level,
       account_owner.sales_region                                                                          AS account_owner_sales_region,
-
-      -- identify VP level managers
       account_owner.is_lvl_2_vp_flag                                                                      AS account_owner_is_lvl_2_vp_flag,
 
       -- opportunity owner hierarchies levels
@@ -273,8 +269,6 @@ WITH sfdc_opportunity AS (
           THEN sales_admin_hierarchy.level_3 
         ELSE opportunity_owner.sales_team_level_3
       END                                                                                                AS opportunity_owner_team_level_3,
-    
-      -- identify VP level managers
       CASE 
         WHEN opportunity_owner.sales_team_level_2 LIKE 'VP%' 
           OR sales_admin_hierarchy.level_2 LIKE 'VP%'
@@ -350,7 +344,7 @@ WITH sfdc_opportunity AS (
         ELSE 0
       END                                                                                               AS is_renewal, 
 
-      -- date fields
+      -- date fields helpers
       close_date_detail.fiscal_quarter_name_fy                                                          AS close_fiscal_quarter_name,
       close_date_detail.first_day_of_fiscal_quarter                                                     AS close_fiscal_quarter_date,
       close_date_detail.fiscal_year                                                                     AS close_fiscal_year,
@@ -391,9 +385,8 @@ WITH sfdc_opportunity AS (
       -- calculated fields for pipeline velocity report
       
       -- 20201021 NF: This should be replaced by a table that keeps track of excluded deals for forecasting purposes
-      -- excluded accounts 
       CASE 
-        WHEN LEFT(sfdc_account.ultimate_parent_account_id,15) IN ('001610000111bA3','0016100001F4xla','0016100001CXGCs','00161000015O9Yn','0016100001b9Jsc') 
+        WHEN sfdc_account.ultimate_parent_id IN ('001610000111bA3','0016100001F4xla','0016100001CXGCs','00161000015O9Yn','0016100001b9Jsc') 
           AND sfdc_opportunity.close_date < '2020-08-01' 
             THEN 1
         ELSE 0
@@ -402,34 +395,26 @@ WITH sfdc_opportunity AS (
     FROM sfdc_opportunity
     INNER JOIN sfdc_opportunity_stage
       ON sfdc_opportunity.stage_name = sfdc_opportunity_stage.primary_label
-    -- close date
     INNER JOIN date_details close_date_detail
       ON close_date_detail.date_actual = sfdc_opportunity.close_date::DATE
-    --created date
     INNER JOIN date_details created_date_detail
       ON created_date_detail.date_actual = sfdc_opportunity.created_date::DATE
     LEFT JOIN sfdc_lead_source
       ON sfdc_opportunity.lead_source = sfdc_lead_source.initial_source
-    -- opportunity owner
     LEFT JOIN sfdc_users_xf opportunity_owner
       ON sfdc_opportunity.owner_id = opportunity_owner.user_id
     LEFT JOIN sfdc_record_type
       ON sfdc_opportunity.record_type_id = sfdc_record_type.record_type_id
     LEFT JOIN sfdc_account
       ON sfdc_account.account_id = sfdc_opportunity.account_id
-    -- sales accepted date
     LEFT JOIN date_details sales_accepted_date
       ON sfdc_opportunity.sales_accepted_date::DATE = sales_accepted_date.date_actual
-    -- subscription start date data
     LEFT JOIN date_details start_date
       ON sfdc_opportunity.subscription_start_date::DATE = start_date.date_actual
-    -- sales qualified date
     LEFT JOIN date_details sales_qualified_date
       ON sfdc_opportunity.sales_qualified_date::DATE = sales_qualified_date.date_actual
-    -- account owner
     LEFT JOIN sfdc_users_xf account_owner
       ON account_owner.user_id = sfdc_account.owner_id
-    -- sales admin hierarchy
     LEFT JOIN sales_admin_hierarchy 
       ON sfdc_opportunity.opportunity_id = sales_admin_hierarchy.opportunity_id
 )
