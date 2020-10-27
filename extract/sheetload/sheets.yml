@@ -47,6 +47,7 @@ sheets:
     owner: '@pluthra'
     tabs:
       - employee_location_factor
+      - comp_band
   - name: engineering_contributing_organizations
     owner: '@kwiebers'
     tabs:
