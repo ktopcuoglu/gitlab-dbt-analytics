@@ -6,5 +6,5 @@ select
     DBT_UPDATED_AT,
     DBT_VALID_FROM,
     DBT_VALID_TO
-from RAW.snapshots.sheetload_employee_location_factor_snapshots
+from RAW.snapshots.sheetload_comp_band_snapshots
 
