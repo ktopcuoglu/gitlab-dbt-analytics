@@ -1237,6 +1237,13 @@ roles:
         warehouses:
             - analyst_xs
 
+    - amurray:
+        member_of:
+            - analyst_finance
+            - bamboohr
+        warehouses:
+            - analyst_xs 
+
     - cmccarty:
         warehouses:
             - admin
@@ -1432,6 +1439,10 @@ roles:
         warehouses:
             - reporting
 
+    - jwanjohi:
+        warehouses:
+            - reporting
+
     - jwatson:
         member_of:
             - product_manager
@@ -1443,6 +1454,12 @@ roles:
         member_of:
             - analyst_engineering
             - customers_db
+        warehouses:
+            - analyst_xs
+
+    - kchu:
+        member_of:
+            - product_manager
         warehouses:
             - analyst_xs
 
@@ -1740,6 +1757,11 @@ users:
         member_of:
             - amihaila
 
+    - amurray:
+        can_login: yes
+        member_of:
+            - amurray
+
     - cmccarty:
         can_login: yes
         member_of:
@@ -1892,6 +1914,12 @@ users:
             - jurbanc
             - securityadmin
 
+    - jwanjohi:
+        can_login: yes
+        member_of:
+            - jwanjohi
+            - securityadmin
+
     - jwatson:
         can_login: yes
         member_of:
@@ -1901,7 +1929,12 @@ users:
         can_login: yes
         member_of:
             - kaguilar
-
+    
+    - kchu:
+        can_login: yes
+        member_of:
+            - kchu
+ 
     - ktam:
         can_login: yes
         member_of:

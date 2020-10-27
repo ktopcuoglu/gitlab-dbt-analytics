@@ -35,10 +35,10 @@ sources:
       - name: data_team_capacity
       - name: days_sales_outstanding
       - name: days_to_close
-      - name: dev_section_metrics
       - name: employee_location_factor
       - name: engineering_contributing_organizations
       - name: engineering_speciality_prior_to_capture
+      - name: event_dictionary_simplified
       - name: gitlab_slack_stats
       - name: google_referrals
       - name: headcount
@@ -73,5 +73,6 @@ sources:
       - name: sales_training_completion_dates
       - name: scalable_employment_values
       - name: social_marketing_metrics
+      - name: usage_ping_metrics_sections
       - name: values_certificate
-      - name: yc_companies
+      - name: yc_companies    
