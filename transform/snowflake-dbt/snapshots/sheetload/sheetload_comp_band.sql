@@ -10,7 +10,7 @@
     }}
 
     SELECT *
-    FROM {{ source('sheetload', 'comb_band') }}
+    FROM {{ source('sheetload', 'comp_band') }}
     WHERE "Employee_ID" != ''
 
 {% endsnapshot %}
