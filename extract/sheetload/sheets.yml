@@ -149,10 +149,10 @@ sheets:
     owner: '@paul_armstrong'
     tabs:
       - sales_training_completion_dates
-  - name: sheetload_territory_mapping
+  - name: territory_mapping
     owner: '@rkohnke'
     tabs:
-      - sheetload_territory_mapping
+      - territory_mapping
   - name: scalable_employment_values
     owner: '@iweeks'
     tabs:

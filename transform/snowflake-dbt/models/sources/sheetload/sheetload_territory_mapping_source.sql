@@ -1,7 +1,7 @@
 WITH source AS (
 
     SELECT *
-    FROM {{ source('sheetload', 'sheetload_territory_mapping') }}
+    FROM {{ source('sheetload', 'territory_mapping') }}
 
 ), renamed AS (
 
