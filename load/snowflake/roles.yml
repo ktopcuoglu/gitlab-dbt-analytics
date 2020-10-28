@@ -19,6 +19,11 @@ databases:
     - testing_db:
         shared: no
     
+    - tmurphy_prod:
+        shared: no
+    - tmurphy_prep:
+        shared: no
+
     - static:
         shared: no
 
@@ -1694,6 +1699,38 @@ roles:
     - tmurphy:
         member_of:
             - bamboohr_raw
+        owns:
+            databases:
+              - tmurphy_prep
+              - tmurphy_prod
+            schemas:
+              - tmurphy_prep.*
+              - tmurphy_prod.*
+            tables:
+              - tmurphy_prep.*.*
+              - tmurphy_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - tmurphy_prep
+                    - tmurphy_prod
+                write:
+                    - tmurphy_prep
+                    - tmurphy_prod
+            schemas:
+                read:
+                    - tmurphy_prep.*
+                    - tmurphy_prod.*
+                write:
+                    - tmurphy_prep.*
+                    - tmurphy_prod.*
+            tables:
+                read:
+                    - tmurphy_prep.*.*
+                    - tmurphy_prod.*.*
+                write:
+                    - tmurphy_prep.*.*
+                    - tmurphy_prod.*.*
         warehouses:
             - admin
             - engineer_xs
