@@ -15,6 +15,7 @@ WITH source AS (
       author_id::NUMBER                                        AS author_id,
       source.project_id::NUMBER                                AS project_id,
       milestone_id::NUMBER                                     AS milestone_id,
+      sprint_id::NUMBER                                        AS sprint_id,
       updated_by_id::NUMBER                                    AS updated_by_id,
       last_edited_by_id::NUMBER                                AS last_edited_by_id,
       moved_to_id::NUMBER                                      AS moved_to_id,
