@@ -7,7 +7,7 @@ WITH source AS (
 
     SELECT
       field::TIMESTAMP                      AS impression_month,
-      VALUE::int                            AS impressions,
+      value::INT                            AS impressions,
       _UPDATED_AT::FLOAT                    AS updated_at
     FROM source
 
