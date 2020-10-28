@@ -24,8 +24,10 @@ sources:
       - name: calendar
       - name: cert_customer_segmentation_dashboard
       - name: cert_customer_segmentation_sql
+      - name: cert_customer_segmentation_viewer
       - name: cert_product_geo_dashboard
       - name: cert_product_geo_sql
+      - name: cert_product_geo_viewer
       - name: clari_export_forecast_net_iacv
       - name: communication_certificate
       - name: company_call_attendance
@@ -73,4 +75,4 @@ sources:
       - name: social_marketing_metrics
       - name: usage_ping_metrics_sections
       - name: values_certificate
-      - name: yc_companies    
+      - name: yc_companies
