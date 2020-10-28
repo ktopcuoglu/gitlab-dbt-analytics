@@ -8,7 +8,7 @@ WITH usage_ping_data AS (
 
      SELECT
         *,
-        {{ get_date_id('created_at') }},
+        {{ get_date_id('created_at') }}                              AS created_date_id,
         REGEXP_REPLACE(NULLIF(version, ''), '\-.*')                  AS cleaned_version,
         SPLIT_PART(cleaned_version, '.', 1)                          AS major_version,
         SPLIT_PART(cleaned_version, '.', 2)                          AS minor_version,
