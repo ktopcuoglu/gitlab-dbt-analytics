@@ -321,7 +321,7 @@ WITH sfdc_opportunity AS (
       CASE 
         WHEN (sfdc_opportunity.stage_name = '8-Closed Lost' 
           OR sfdc_opportunity.stage_name = '9-Unqualified'
-          OR is_won = 1) 
+          OR sfdc_opportunity_stage.is_won = 1) 
             THEN 0
         ELSE 1  
       END                                                                                               AS is_open,
@@ -333,7 +333,7 @@ WITH sfdc_opportunity AS (
       END                                                                                               AS is_closed,
       
       CASE 
-        WHEN is_won = 1 THEN '1.Won'
+        WHEN sfdc_opportunity_stage.is_won = 1 THEN '1.Won'
         WHEN is_lost = 1 THEN '2.Lost'
         WHEN is_open = 1 THEN '0. Open' 
         ELSE 'N/A'
