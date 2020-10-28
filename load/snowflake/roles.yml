@@ -86,14 +86,14 @@ roles:
             tables:
                 read:
                     - analytics.*.*
-                    - prep.*
-                    - prod.*
+                    - prep.*.*
+                    - prod.*.*
                     - raw.*.*
                     - testing_db.*.*
                 write:
                     - analytics.*.*
-                    - prep.*
-                    - prod.*
+                    - prep.*.*
+                    - prod.*.*
                     - raw.*.*
                     - testing_db.*.*
 
