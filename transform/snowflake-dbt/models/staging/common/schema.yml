@@ -312,6 +312,20 @@ models:
   - name: dim_subscriptions_valid_at
     description: Parameterized model to recreate dimension table representing subscription details as in Zuora at given date. Required variable valid_at is timezone sensitive
 
+  - name: dim_sales_territory
+    description: '{{ doc("dim_sales_territory") }}'
+    columns:
+      - name: dim_sales_territory_id
+        description: Unique identifier of a version of a subscription
+        tests:
+          - not_null
+          - unique
+      - name: sales_territory_name
+        description:
+        tests:
+          - not_null
+          - unique
+
   - name: fct_charges
     description: '{{ doc("fct_charges") }}'
     columns:
