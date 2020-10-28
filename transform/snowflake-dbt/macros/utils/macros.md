@@ -54,7 +54,7 @@ This macro **is specific** to pgp tables (gitlab_dotcom, version, license) and s
 This is the GitLab overwrite for the dbt internal macro. See our [dbt guide](https://about.gitlab.com/handbook/business-ops/data-team/platform/dbt-guide/#general) for more info on how this works.
 {% enddocs %}
 
-{% docs generate_single_field_dimension %}
+{% docs generate_map_area %}
 Convenience macro created to assist in the creation of new Dimensions based off a single source field. This returns the compiled SQL for selecting from the Source model,  
 {% enddocs %}
 
