@@ -25,6 +25,8 @@ models:
       description: Provides headcount at start of month.
     - name: headcount_end
       description: Provides headcount on the last day of the month.
+    - name: headcount_end_excluding_sdr
+      description: Headcount not including the Sales Development department (used for promotion calculation)
     - name: headcount_average
     - name: hire_count
       description: Provides the total number of employees hired for a given month as associated to the diversity_field and aggregation_type.
@@ -94,6 +96,8 @@ models:
     - name: percent_of_headcount_contributor
       description: This is based on headcount at end of month.
     - name: rolling_12_month_promotions
+    - name: rolling_12_month_promotions_excluding_sdr
+      description: Promotion count excluding the Sales Development department
     - name: location_factor 
     - name: discretionary_bonus
     - name: tenure_months

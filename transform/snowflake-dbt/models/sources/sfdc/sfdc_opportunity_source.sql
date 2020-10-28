@@ -35,6 +35,8 @@ WITH source AS (
         ownerid                                     AS owner_id,
 
         -- logistical information
+        isclosed                                    AS is_closed,
+        iswon                                       AS is_won,
         business_type__c                            AS business_type,
         closedate                                   AS close_date,
         createddate                                 AS created_date,
@@ -61,6 +63,7 @@ WITH source AS (
         {{  sfdc_source_buckets('leadsource') }}
         stagename                                   AS stage_name,
         revenue_type__c                             AS order_type,
+        deal_path__c                                AS deal_path,
 
         -- opportunity information
         acv_2__c                                    AS acv,

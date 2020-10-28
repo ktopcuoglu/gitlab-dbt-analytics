@@ -8,7 +8,7 @@ WITH usage_ping_data AS (
 
      SELECT
         *,
-        {{ get_date_id('created_at') }},
+        {{ get_date_id('created_at') }}                              AS created_date_id,
         REGEXP_REPLACE(NULLIF(version, ''), '\-.*')                  AS cleaned_version,
         SPLIT_PART(cleaned_version, '.', 1)                          AS major_version,
         SPLIT_PART(cleaned_version, '.', 2)                          AS minor_version,
@@ -42,7 +42,7 @@ WITH usage_ping_data AS (
             WHEN hostname = 'gitlab.com' THEN TRUE 
             WHEN hostname ILIKE '%.gitlab.com' THEN TRUE 
             ELSE FALSE END                                           AS is_internal, 
-        IFF(hostname ilike '%staging%', TRUE, FALSE)                 AS is_staging
+        IFF(hostname ilike '%staging.%', TRUE, FALSE)                AS is_staging
     FROM version_edition_cleaned
 
 ), ip_to_geo AS (
@@ -50,7 +50,7 @@ WITH usage_ping_data AS (
     SELECT *
     FROM {{ ref('dim_ip_to_geo') }}
 
-), joined AS (
+), usage_with_ip AS (
 
     SELECT *,
       ip_to_geo.location_id  AS geo_location_id 
@@ -58,11 +58,19 @@ WITH usage_ping_data AS (
     LEFT JOIN ip_to_geo
       ON internal_identified.source_ip_hash = ip_to_geo.ip_address_hash
 
+), raw_usage_data AS (
+
+    SELECT *
+    FROM {{ ref('version_raw_usage_data_source') }}
+
 ), renamed AS (
 
-   SELECT 
-    *
-   FROM joined
+    SELECT 
+      usage_with_ip.*,
+      raw_usage_data.raw_usage_data_payload
+    FROM usage_with_ip
+    LEFT JOIN raw_usage_data
+      ON usage_with_ip.raw_usage_data_id = raw_usage_data.raw_usage_data_id
 
 )
 
