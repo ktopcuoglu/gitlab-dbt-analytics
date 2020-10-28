@@ -15,13 +15,6 @@ models:
       - name: subscription_sales_type
         description: Identifies whether a subscription is Sales-Assisted or Self-Service / Web Direct.
 
-  - name: mart_arr_incr
-    description: '{{ doc("mart_arr_incr") }}'
-    columns:
-      - name: primary_key
-        tests:
-          - not_null
-
   - name: mart_arr_snapshots
     description: Daily snapshots of MRR/ARR by month values per customer, subscription and product
     columns:
