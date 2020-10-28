@@ -182,6 +182,9 @@ models:
       handbook:
         +schema: handbook
 
+      keyhole_twitter:
+        +schema: keyhole_twitter
+
       license:
         +schema: license_db
 
