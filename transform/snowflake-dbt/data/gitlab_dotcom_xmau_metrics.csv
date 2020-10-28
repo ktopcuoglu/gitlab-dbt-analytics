@@ -1,4 +1,4 @@
-event_name,events_to_include,stage_name,smau,group_name,gmau,section
+event_name,events_to_include,stage_name,smau,group_name,gmau,section_name
 action_monthly_active_users_project_repo,action_monthly_active_users_project_repo,create,TRUE,source_code,TRUE,dev
 epic_interaction,epics,plan,FALSE,portfolio_management,TRUE,dev
 issue_interaction,issues,plan,TRUE,project_management,TRUE,dev
