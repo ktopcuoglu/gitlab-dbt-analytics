@@ -6,7 +6,7 @@ WITH source AS (
 ), renamed AS (
 
     SELECT
-      FIELD::timestamp                      AS impression_month,
+      field::TIMESTAMP                      AS impression_month,
       VALUE::int                            AS impressions,
       _UPDATED_AT::FLOAT                    AS updated_at
     FROM source
