@@ -1,8 +1,8 @@
 event_name,events_to_include,stage_name,smau,group_name,gmau
-action_monthly_active_users_project_repo,action_monthly_active_users_project_repo,create,TRUE,gitaly,TRUE
+action_monthly_active_users_project_repo,action_monthly_active_users_project_repo,create,TRUE,source_code,TRUE
 epic_interaction,epics,plan,FALSE,portfolio_management,TRUE
 issue_interaction,issues,plan,TRUE,project_management,TRUE
-merge_request_interaction,merge_requests,create,FALSE,source_code,TRUE
+merge_request_interaction,merge_requests,create,FALSE,source_code,FALSE
 requirements,requirements,plan,FALSE,certify,TRUE
 snippets,snippets,create,FALSE,editor,FALSE
 epic_interaction,epic_notes,plan,FALSE,portfolio_management,TRUE
