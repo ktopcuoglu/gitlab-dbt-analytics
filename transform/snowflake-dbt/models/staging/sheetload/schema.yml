@@ -53,6 +53,7 @@ models:
 - name: sheetload_days_to_close
 - name: sheetload_engineering_speciality_prior_to_capture
 - name: sheetload_engineering_contributing_organizations
+- name: sheetload_event_dictionary_simplified
 - name: sheetload_gitlab_slack_stats
 - name: sheetload_google_referrals
 - name: sheetload_headcount

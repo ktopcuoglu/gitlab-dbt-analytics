@@ -1,6 +1,9 @@
 version: 2
 
 models:
+  - name: bamboohr_budget_vs_actual
+    description: Compares promotion budget spend to the budget aggregated at the division level.
+
   - name: bamboohr_current_division_mapping
     description: This model accounts for the current mapping of department and divisions to allow for aggregatd models to reflect current division terminology used (as seen in bamboohr_rpt_headcount_aggregation)
     columns:

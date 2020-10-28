@@ -74,7 +74,7 @@ models:
       tests:
       - not_null
       - unique
-- name: sheetload_engineering_speciality_prior_to_capture_source     
+- name: sheetload_engineering_speciality_prior_to_capture_source  
 - name: sheetload_engineering_contributing_organizations_source
   description: Information about organizations that contribute
   columns: 
@@ -83,6 +83,8 @@ models:
     - name: email
     - name: gitlab_user
     - name: organization
+- name: sheetload_event_dictionary_simplified_source  
+  description: Simplified version of Events dictionary sheet   
 - name: sheetload_gitlab_slack_stats_source
   description: This is the source of Slack usage statistics exported from the [Analytics dashboard](https://slack.com/help/articles/218407447-view-your-slack-analytics-dashboard).
   columns:
