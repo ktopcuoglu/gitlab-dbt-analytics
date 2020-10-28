@@ -2,10 +2,9 @@
 
     {{
         config(
-          unique_key='"employee_number"',
+          unique_key='employee_number',
           strategy='timestamp',
           updated_at='_UPDATED_AT',
-          enabled=False
         )
     }}
 
