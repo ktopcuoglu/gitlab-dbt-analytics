@@ -9,6 +9,7 @@ from airflow_utils import (
     clone_and_setup_extraction_cmd,
     gitlab_defaults,
     slack_failed_task,
+    gitlab_pod_env_vars,
 )
 from kube_secrets import (
     SNOWFLAKE_ACCOUNT,
@@ -22,8 +23,6 @@ from kube_secrets import (
 
 # Load the env vars into a dict and set Secrets
 env = os.environ.copy()
-pod_env_vars = {"CI_PROJECT_DIR": "/analytics"}
-
 
 # Default arguments for the DAG
 default_args = {
@@ -64,7 +63,7 @@ keyhole_twitter_extract_cmd = KubernetesPodOperator(
         SNOWFLAKE_LOAD_WAREHOUSE,
         SNOWFLAKE_LOAD_PASSWORD,
     ],
-    env_vars=pod_env_vars,
+    env_vars=gitlab_pod_env_vars,
     affinity=get_affinity(False),
     tolerations=get_toleration(False),
     arguments=[keyhole_twitter_extract_cmd],
