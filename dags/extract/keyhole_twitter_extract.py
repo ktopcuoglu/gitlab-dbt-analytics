@@ -51,7 +51,6 @@ keyhole_twitter_extract_cmd = f"""
     python3 sheetload/sheetload.py csv --filename social_twitter_impressions.csv --schema keyhole_twitter --tablename impressions
 """
  
-# having both xcom flag flavors since we're in an airflow version where one is being deprecated
 keyhole_twitter_extract_cmd = KubernetesPodOperator(
     **gitlab_defaults,
     image=DATA_IMAGE,
