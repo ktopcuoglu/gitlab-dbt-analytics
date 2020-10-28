@@ -10,7 +10,7 @@ databases:
     - covid19:
         shared: yes    
     - prep:
-        shares: no
+        shared: no
     - prod:
         shared: no        
     - raw:
