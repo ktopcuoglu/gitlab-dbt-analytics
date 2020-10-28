@@ -334,7 +334,7 @@ models:
   tests:
     - unique:
         column_name: "CONCAT(month_date, channel, brand, metric, is_organic)"
-- name: sheetload_territory_mapping
+- name: sheetload_territory_mapping_source
   description: Base model for marketing territory mapping.
   columns:
     - name: segment
