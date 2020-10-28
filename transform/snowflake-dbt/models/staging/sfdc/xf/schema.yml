@@ -7,6 +7,7 @@ models:
       - name: account_id
         tests:
           - not_null
+          - unique
       - name: account_name
         tests:
           - not_null
