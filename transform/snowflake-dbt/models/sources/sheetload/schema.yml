@@ -334,6 +334,21 @@ models:
   tests:
     - unique:
         column_name: "CONCAT(month_date, channel, brand, metric, is_organic)"
+- name: sheetload_territory_mapping
+  description: Base model for marketing territory mapping.
+  columns:
+    - name: segment
+      tests:
+        - not_null
+    - name: region
+      tests:
+        - not_null
+    - name: area
+      tests:
+        - not_null
+    - name: territory
+      tests:
+        - not_null
 - name: sheetload_usage_ping_metrics_sections_source
   description: Classification of usage ping metrics into dev sections; used to create the Dev Section Dashboard
   columns:
