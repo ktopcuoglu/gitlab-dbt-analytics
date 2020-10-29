@@ -24,11 +24,12 @@ WITH skeleton AS (
       plan_name_at_event_date,
       plan_id_at_event_date,
       namespace_is_internal,
-      xmau.event_name       AS event_name,
-      xmau.stage_name       AS stage_name,
-      xmau.smau::BOOLEAN    AS is_smau,
-      xmau.group_name       AS group_name,
-      xmau.gmau::BOOLEAN    AS is_gmau
+      xmau.event_name            AS event_name,
+      xmau.stage_name            AS stage_name,
+      xmau.smau::BOOLEAN         AS is_smau,
+      xmau.group_name            AS group_name,
+      xmau.gmau::BOOLEAN         AS is_gmau,
+      xmau.section_name::VARCHAR AS section_name
     FROM {{ ref('gitlab_dotcom_daily_usage_data_events') }} AS events
     INNER JOIN gitlab_dotcom_xmau_metrics AS xmau
       ON events.event_name = xmau.events_to_include
