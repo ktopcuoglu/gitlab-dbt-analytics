@@ -37,7 +37,6 @@ apm,ops,backend,monitor:apm
 apm,ops,frontend,monitor:apm
 apm,ops,,monitor stage
 health,ops,,monitor stage
-health,ops,backend,verify backend
 continuous integration,ops,backend,verify backend
 testing,ops,backend,verify backend
 continuous integration,ops,frontend,verify & release frontend
