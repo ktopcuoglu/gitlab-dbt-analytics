@@ -35,7 +35,7 @@ resource_rules:
             labels:
               - Triage
               - Needs Triage
-            actions:
-                remove_labels:
-                    - Needs Triage
+          actions:
+            remove_labels:
+              - Needs Triage
               
