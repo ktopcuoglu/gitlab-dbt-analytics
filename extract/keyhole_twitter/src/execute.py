@@ -7,8 +7,9 @@ from gitlabdata.orchestration_utils import (
     snowflake_stage_load_copy_remove,
     dataframe_uploader,
 )
-from typing import Dict, Any
 from os import environ as env
+
+from typing import Optional, Any
 
 config_dict = env.copy()
 
@@ -19,7 +20,7 @@ valid_years = range(datetime.now().year - 15, datetime.now().year + 1)
 year = datetime.now().year
 
 
-def recursive_parse_dict(dict_to_parse: Dict[Any, Any],
+def recursive_parse_dict(dict_to_parse: Optional[Any, Any],
                          path: str = ""):
     """
     Parses dicts of dicts, specifically for the keyhole extract.
