@@ -8,6 +8,7 @@ from gitlabdata.orchestration_utils import (
     dataframe_uploader,
 )
 from os import environ as env
+from typing import Dict, Any
 
 config_dict = env.copy()
 
@@ -18,7 +19,7 @@ valid_years = range(datetime.now().year - 15, datetime.now().year + 1)
 year = datetime.now().year
 
 
-def recursive_parse_dict(dict_to_parse, path: str = ""):
+def recursive_parse_dict(dict_to_parse: Dict[Any, Any], path: str = ""):
     """
     Parses dicts of dicts, specifically for the keyhole extract.
     Written as a recursive function so new data endpoints can be added without any changes required.
@@ -59,7 +60,7 @@ def get_twitter_impressions_data(endpoint: str) -> pd.DataFrame:
     Retrieves twitter data from internally setup keyhole endpoint
     """
     raw_data = requests.get(endpoint).json()
-    data = [d for d in recursive_parse_dict(raw_data)]
+    data = [d for d in recursive_parse_dict(raw_data) if d is not None]
     output_df = pd.DataFrame(data)
     return output_df
 
