@@ -1,4 +1,4 @@
-with source as (
+WITH source AS (
 
     SELECT *
     FROM {{ ref('sfdc_account_source') }}
@@ -6,7 +6,5 @@ with source as (
     AND is_deleted = FALSE
 
 )
-
 SELECT *
 FROM source
-
