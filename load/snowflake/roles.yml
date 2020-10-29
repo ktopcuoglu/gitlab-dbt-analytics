@@ -4,23 +4,30 @@ version: "1.0"
 # Databases
 # ==========================================
 databases:
+  # Production
     - analytics:
         shared: no
-
     - covid19:
         shared: yes    
-        
+    - prep:
+        shared: no
+    - prod:
+        shared: no        
     - raw:
         shared: no
-
     - snowflake:
         shared: yes
-
-    - testing_db:
-        shared: no
-    
     - static:
         shared: no
+ 
+# User / Testing
+    - testing_db:
+        shared: no  
+    - tmurphy_prod:
+        shared: no
+    - tmurphy_prep:
+        shared: no
+
 
 
 # ==========================================
@@ -52,29 +59,41 @@ roles:
             databases:
                 read:
                     - analytics
+                    - prep
+                    - prod
                     - raw
                     - snowflake
                     - testing_db
                 write:
                     - analytics
+                    - prep
+                    - prod
                     - raw
                     - testing_db
             schemas:
                 read:
                     - analytics.*
+                    - prep.*
+                    - prod.*
                     - raw.*
                     - testing_db.*
                 write:
                     - analytics.*
+                    - prep.*
+                    - prod.*
                     - raw.*
                     - testing_db.*
             tables:
                 read:
                     - analytics.*.*
+                    - prep.*.*
+                    - prod.*.*
                     - raw.*.*
                     - testing_db.*.*
                 write:
                     - analytics.*.*
+                    - prep.*.*
+                    - prod.*.*
                     - raw.*.*
                     - testing_db.*.*
 
@@ -1694,6 +1713,38 @@ roles:
     - tmurphy:
         member_of:
             - bamboohr_raw
+        owns:
+            databases:
+              - tmurphy_prep
+              - tmurphy_prod
+            schemas:
+              - tmurphy_prep.*
+              - tmurphy_prod.*
+            tables:
+              - tmurphy_prep.*.*
+              - tmurphy_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - tmurphy_prep
+                    - tmurphy_prod
+                write:
+                    - tmurphy_prep
+                    - tmurphy_prod
+            schemas:
+                read:
+                    - tmurphy_prep.*
+                    - tmurphy_prod.*
+                write:
+                    - tmurphy_prep.*
+                    - tmurphy_prod.*
+            tables:
+                read:
+                    - tmurphy_prep.*.*
+                    - tmurphy_prod.*.*
+                write:
+                    - tmurphy_prep.*.*
+                    - tmurphy_prod.*.*
         warehouses:
             - admin
             - engineer_xs
