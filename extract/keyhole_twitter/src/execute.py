@@ -8,7 +8,7 @@ from gitlabdata.orchestration_utils import (
     dataframe_uploader,
 )
 from os import environ as env
-from typing import Dict, Any
+from typing import Any
 
 config_dict = env.copy()
 
@@ -19,11 +19,12 @@ valid_years = range(datetime.now().year - 15, datetime.now().year + 1)
 year = datetime.now().year
 
 
-def recursive_parse_dict(dict_to_parse: Dict[Any, Any], path: str = ""):
+def recursive_parse_dict(dict_to_parse: Any, path: str = ""):
     """
     Parses dicts of dicts, specifically for the keyhole extract.
     Written as a recursive function so new data endpoints can be added without any changes required.
     """
+
     for key in dict_to_parse.keys():
         field = dict_to_parse.get(key)
 
