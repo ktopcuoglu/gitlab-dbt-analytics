@@ -4,7 +4,7 @@
         config(
           unique_key='employee_number',
           strategy='timestamp',
-          updated_at='_UPDATED_AT',
+          updated_at='updated_at',
         )
     }}
 
