@@ -35,23 +35,21 @@ def recursive_parse_dict(dict_to_parse, path=""):
             else:
                 path = path + key
 
-            if str.isdigit(key) \
-                    and int(key) in valid_years:
+            if str.isdigit(key) and int(key) in valid_years:
                 print(key)
 
-                new_fields = {date_parser.parse(f"{k} {key} 01"): value for k, value in field.items()}
+                new_fields = {
+                    date_parser.parse(f"{k} {key} 01"): value
+                    for k, value in field.items()
+                }
                 field = new_fields
 
-                path = path[:path.find(key) - 1]
+                path = path[: path.find(key) - 1]
 
             yield from recursive_parse_dict(field, path)
         else:
 
-            return_data = {
-                "path" : path,
-                "field": key,
-                "value": field
-            }
+            return_data = {"path": path, "field": key, "value": field}
 
             yield (return_data)
 
@@ -79,8 +77,10 @@ def write_csv_data(file_name, data):
 if __name__ == "__main__":
     snowflake_engine = snowflake_engine_factory(config_dict, "LOADER")
 
-    endpoint = "https://gitlab-com.gitlab.io/marketing/corporate_marketing/developer-evangelism/code/de-dashboard" \
-               "/metrics/data.json"
+    endpoint = (
+        "https://gitlab-com.gitlab.io/marketing/corporate_marketing/developer-evangelism/code/de-dashboard"
+        "/metrics/data.json"
+    )
     output_df = get_twitter_impressions_data(endpoint)
 
     # Groups by date so we can create a file for each day
