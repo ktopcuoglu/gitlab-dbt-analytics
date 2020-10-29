@@ -4,7 +4,7 @@ sources:
   - name: keyhole_twitter
     database: '{{ env_var("SNOWFLAKE_LOAD_DATABASE") }}'
     schema: keyhole_twitter
-    loader: Stitch
+    loader: Airflow
     loaded_at_field: _updated_at
 
     quoting:
