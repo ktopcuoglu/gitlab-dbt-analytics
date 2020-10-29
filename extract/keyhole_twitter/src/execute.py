@@ -11,7 +11,7 @@ from os import environ as env
 
 config_dict = env.copy()
 
-# Year date range for mapping dates passed on JSON
+# Year date range for mapping dates passed on JSON.
 years_back = 15
 valid_years = range(datetime.now().year - 15, datetime.now().year + 1)
 
