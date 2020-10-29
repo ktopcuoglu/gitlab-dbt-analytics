@@ -40,7 +40,9 @@ default_args = {
 
 # Create the DAG
 dag = DAG(
-    "keyhole_twitter_extract", default_args=default_args, schedule_interval="00 16 * * MON"
+    "keyhole_twitter_extract",
+    default_args=default_args,
+    schedule_interval="00 16 * * MON",
 )
 
 # Keyhole Twitter Extract
@@ -49,7 +51,7 @@ keyhole_twitter_extract_cmd = f"""
     python3 keyhole_twitter/src/execute.py && 
     python3 sheetload/sheetload.py csv --filename social_twitter_impressions.csv --schema keyhole_twitter --tablename impressions
 """
- 
+
 keyhole_twitter_extract_cmd = KubernetesPodOperator(
     **gitlab_defaults,
     image=DATA_IMAGE,
