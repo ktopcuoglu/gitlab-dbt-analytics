@@ -2,7 +2,6 @@ version: 2
 
 models:
     - name: twitter_impressions_source
-      tags: ["keyhole_twitter", "social", "sources"]
       columns:
         - name: impression_month
           tests:

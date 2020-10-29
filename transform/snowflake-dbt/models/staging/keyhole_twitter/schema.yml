@@ -2,4 +2,3 @@ version: 2
 
 models:
     - name: twitter_impressions
-      tags: ["keyhole_twitter", "social"]
