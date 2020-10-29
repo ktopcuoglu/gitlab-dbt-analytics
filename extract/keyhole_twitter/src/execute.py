@@ -7,6 +7,7 @@ from gitlabdata.orchestration_utils import (
     snowflake_stage_load_copy_remove,
     dataframe_uploader,
 )
+from typing import Dict, Any
 from os import environ as env
 
 config_dict = env.copy()
