@@ -222,27 +222,29 @@ models:
   - name: bamboohr_engineering_division
     description: This model contains a list of team members and their engineering groups.
     columns:
-    - name: date_employed
-      description: 
-    - name: employee_id
-      description: Bamboo HR employee ID
-    - name: full_name
-      description: Bamboo HR full name
-    - name: job_title
-      description: Bamboo HR job title
-    - name: sub_department
-      description:
-    - name: jobtitle_speciality
-      description: Engineering group
-    - name: technology_group
-      description: Backend/frontend/fullstack. Derived from Bamboo HR job title.
-    - name: department
-      description: Bamboo HR department
-    - name: work_email
-      description: Bamboo HR work email
-    - name: reports_to
-      description: Who the team member directly reports to
-    - name: team_name
-      description: Dependent on jobtitle_speciality and technology_group. 
+      - name: unique_key
+        tests:
+            - not_null
+            - unique
+      - name: date_actual
+      - name: employee_id
+        description: Bamboo HR employee ID
+      - name: full_name
+        description: Bamboo HR full name
+      - name: job_title
+        description: Bamboo HR job title
+      - name: sub_department
+      - name: jobtitle_speciality
+        description: Engineering group
+      - name: technology_group
+        description: Backend/frontend/fullstack. Derived from Bamboo HR job title.
+      - name: department
+        description: Bamboo HR department
+      - name: work_email
+        description: Bamboo HR work email
+      - name: reports_to
+        description: Who the team member directly reports to
+      - name: team_name
+        description: Dependent on jobtitle_speciality and technology_group. 
 
 

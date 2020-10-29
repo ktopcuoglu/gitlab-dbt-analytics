@@ -11,7 +11,7 @@ WITH employees AS (
 ), engineering_employees AS (
 
     SELECT
-      DISTINCT date_actual                                                  AS date_employed,
+      date_actual,
       employee_id,
       full_name,
       LOWER(job_title)                                                      AS job_title,
@@ -28,17 +28,21 @@ WITH employees AS (
 ), engineering_employee_attributes AS (
     
     SELECT 
-      DISTINCT engineering_employees.date_employed,
+      engineering_employees.date_actual,
       engineering_employees.employee_id,
       engineering_employees.full_name,
       engineering_employees.job_title,
       bamboohr_engineering_division_mapping.sub_department,
       engineering_employees.jobtitle_speciality,
       CASE 
-        WHEN engineering_employees.employee_id IN (41965,41996,41453,41482,41974,41487,42029,40914,41954) OR engineering_employees.job_title LIKE '%backend%' THEN 'backend'
-        WHEN engineering_employees.job_title LIKE '%fullstack%' THEN 'fullstack'
-        WHEN engineering_employees.job_title LIKE '%frontend%' THEN 'frontend'
-        ELSE NULL END AS technology_group,
+        WHEN engineering_employees.employee_id IN (41965,41996,41453,41482,41974,41487,42029,40914,41954) 
+            OR engineering_employees.job_title LIKE '%backend%' 
+          THEN 'backend'
+        WHEN engineering_employees.job_title LIKE '%fullstack%'
+          THEN 'fullstack'
+        WHEN engineering_employees.job_title LIKE '%frontend%'
+          THEN 'frontend'
+        ELSE NULL END                                                           AS technology_group,
       engineering_employees.department,
       engineering_employees.work_email,
       engineering_employees.reports_to
@@ -48,15 +52,16 @@ WITH employees AS (
 
 ), reporting_structure AS (
 
-    SELECT engineering_employee_attributes.*,
+    SELECT 
+      engineering_employee_attributes.*,
       bamboohr_engineering_division_mapping.team_name
     FROM engineering_employee_attributes
     LEFT JOIN bamboohr_engineering_division_mapping
       ON bamboohr_engineering_division_mapping.jobtitle_speciality = engineering_employee_attributes.jobtitle_speciality
-      ON bamboohr_engineering_division_mapping.sub_department = engineering_employee_attributes.sub_department
-      ON bamboohr_engineering_division_mapping.technology_group = engineering_employee_attributes.technology_group
+      AND bamboohr_engineering_division_mapping.sub_department = engineering_employee_attributes.sub_department
+      AND bamboohr_engineering_division_mapping.technology_group = engineering_employee_attributes.technology_group
  
 )
 
-SELECT *,
+SELECT *
 FROM reporting_structure
