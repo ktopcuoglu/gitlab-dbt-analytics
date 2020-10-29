@@ -21,8 +21,8 @@ year = datetime.now().year
 def recursive_parse_dict(dict_to_parse: Dict[Any, Any],
                          path: str = ""):
     """
-        Parses dicts of dicts, specifically for the keyhole extract.
-        Written as a recursive function so new data endpoints can be added without any changes required.
+    Parses dicts of dicts, specifically for the keyhole extract.
+    Written as a recursive function so new data endpoints can be added without any changes required.
     """
     for key in dict_to_parse.keys():
         field = dict_to_parse.get(key)
@@ -57,7 +57,7 @@ def recursive_parse_dict(dict_to_parse: Dict[Any, Any],
 
 def get_twitter_impressions_data(endpoint: str) -> pd.DataFrame:
     """
-        Retrieves twitter data from internally setup keyhole endpoint
+    Retrieves twitter data from internally setup keyhole endpoint
     """
     raw_data = requests.get(endpoint).json()
     data = [d for d in recursive_parse_dict(raw_data)]
@@ -68,7 +68,7 @@ def get_twitter_impressions_data(endpoint: str) -> pd.DataFrame:
 def write_csv_data(file_name: str,
                    data: pd.DataFrame):
     """
-        Just here to return filenames, probably not needed but consistent with our other extracts
+    Just here to return filenames, probably not needed but consistent with our other extracts
     """
     if data.to_csv(f"{file_name}.csv", index=False):
         return file_name
