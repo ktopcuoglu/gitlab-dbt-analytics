@@ -18,7 +18,7 @@ valid_years = range(datetime.now().year - 15, datetime.now().year + 1)
 year = datetime.now().year
 
 
-def recursive_parse_dict(dict_to_parse: dict,
+def recursive_parse_dict(dict_to_parse: Dict[Any, Any],
                          path: str = ""):
     """
         Parses dicts of dicts, specifically for the keyhole extract.
@@ -79,11 +79,11 @@ def write_csv_data(file_name: str,
 if __name__ == "__main__":
     snowflake_engine = snowflake_engine_factory(config_dict, "LOADER")
 
-    endpoint = (
+    api_endpoint = (
         "https://gitlab-com.gitlab.io/marketing/corporate_marketing/developer-evangelism/code/de-dashboard"
         "/metrics/data.json"
     )
-    output_df = get_twitter_impressions_data(endpoint)
+    output_df = get_twitter_impressions_data(api_endpoint)
 
     # Groups by date so we can create a file for each day
     df_by_path = output_df.groupby(by="path")
