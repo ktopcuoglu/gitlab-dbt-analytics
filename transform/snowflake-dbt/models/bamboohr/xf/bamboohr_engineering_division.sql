@@ -53,6 +53,7 @@ WITH employees AS (
 ), reporting_structure AS (
 
     SELECT 
+      {{ dbt_utils.surrogate_key(['date_actual', 'employee_id', 'team_name']) }} AS unique_key,
       engineering_employee_attributes.*,
       bamboohr_engineering_division_mapping.team_name
     FROM engineering_employee_attributes
