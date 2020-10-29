@@ -20,7 +20,11 @@ def make_api_call(
     }
 
     url = "http://" + host + ":" + str(port) + "/render"
-    response = requests.get(url, params=param_dict, auth=(username, password),)
+    response = requests.get(
+        url,
+        params=param_dict,
+        auth=(username, password),
+    )
     return response.json()
 
 
