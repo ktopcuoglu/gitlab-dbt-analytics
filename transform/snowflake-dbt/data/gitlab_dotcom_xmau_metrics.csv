@@ -13,8 +13,9 @@ releases,releases,release,FALSE,release_management,TRUE
 deployments,deployments,release,TRUE,,FALSE
 secure_stage_ci_jobs,secure_stage_ci_jobs,secure,TRUE,,FALSE
 dast_jobs,dast,secure,FALSE,dynamic_analysis,TRUE
-sast_jobs,sast,secure,FALSE,static_analysis,TRUE
-dependency_scanning_jobs,composition_analysis_jobs,secure,FALSE,composition_analysis,TRUE
-license_scanning_jobs,composition_analysis_jobs,secure,FALSE,composition_analysis,TRUE
-container_scanning_jobs,composition_analysis_jobs,secure,FALSE,composition_analysis,TRUE
+static_analysis_job,sast,secure,FALSE,static_analysis,TRUE
+static_analysis_job,secret_detection,secure,FALSE,static_analysis,TRUE
+composition_analysis_jobs,dependency_scanning_jobs,secure,FALSE,composition_analysis,TRUE
+composition_analysis_jobs,license_scanning_jobs,secure,FALSE,composition_analysis,TRUE
+composition_analysis_jobs,container_scanning_jobs,secure,FALSE,composition_analysis,TRUE
 packages,packages,package,TRUE,package,TRUE

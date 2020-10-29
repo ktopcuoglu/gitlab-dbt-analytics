@@ -132,6 +132,7 @@ def process_qualtrics_file(
         final_status = push_contacts_to_qualtrics(
             tab, file, qualtrics_client, qualtrics_contacts
         )
+        file.client.login()
         file.sheet1.update_acell("A1", final_status)
 
 
