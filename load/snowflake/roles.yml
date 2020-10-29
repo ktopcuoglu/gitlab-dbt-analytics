@@ -1642,6 +1642,13 @@ roles:
         warehouses:
             - reporting
 
+    - snalamaru:
+        warehouses:
+            - engineer_xs
+            - engineer_xl
+            - loading
+            - reporting 
+
     - ssichak:
         warehouses:
             - reporting
@@ -2145,6 +2152,12 @@ users:
         can_login: yes
         member_of:
             - skerr
+
+    - snalamaru:
+        can_login: yes
+        member_of:
+            - engineer
+            - snalamaru
 
     - sreddy:
         can_login: no
