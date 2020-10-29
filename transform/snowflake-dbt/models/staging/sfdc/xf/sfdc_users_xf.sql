@@ -16,6 +16,7 @@ WITH RECURSIVE users AS (
       users.title           AS title,
       users.team,           --team,
       users.user_id,        --user_id
+      users.user_email,     --user_email
       manager.name          AS manager_name,
       manager.user_id       AS manager_id,
       user_role.name        AS role_name,
