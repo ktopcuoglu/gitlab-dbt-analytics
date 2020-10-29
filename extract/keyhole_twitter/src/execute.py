@@ -18,8 +18,7 @@ valid_years = range(datetime.now().year - 15, datetime.now().year + 1)
 year = datetime.now().year
 
 
-def recursive_parse_dict(dict_to_parse,
-                         path: str = ""):
+def recursive_parse_dict(dict_to_parse, path: str = ""):
     """
     Parses dicts of dicts, specifically for the keyhole extract.
     Written as a recursive function so new data endpoints can be added without any changes required.
@@ -65,8 +64,7 @@ def get_twitter_impressions_data(endpoint: str) -> pd.DataFrame:
     return output_df
 
 
-def write_csv_data(file_name: str,
-                   data: pd.DataFrame):
+def write_csv_data(file_name: str, data: pd.DataFrame):
     """
     Just here to return filenames, probably not needed but consistent with our other extracts
     """
