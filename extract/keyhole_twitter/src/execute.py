@@ -9,7 +9,7 @@ from gitlabdata.orchestration_utils import (
 )
 from os import environ as env
 
-from typing import Optional, Any
+from typing import Optional, Any, Dict
 
 config_dict = env.copy()
 
@@ -20,7 +20,7 @@ valid_years = range(datetime.now().year - 15, datetime.now().year + 1)
 year = datetime.now().year
 
 
-def recursive_parse_dict(dict_to_parse: Optional[Any],
+def recursive_parse_dict(dict_to_parse: Dict[Any],
                          path: str = ""):
     """
     Parses dicts of dicts, specifically for the keyhole extract.
