@@ -1,4 +1,7 @@
-{% macro generate_single_field_dimension(model_name, id_column, id_column_name, dimension_column, dimension_column_name) %}
+{% macro generate_single_field_dimension_from_prep(model_name, dimension_column) %}
+
+{% set dimension_column_name = dimension_column|replace('_source', '')  %}
+{% set id_column_name = dimension_column_name ~ '_id'  %}
 
 WITH source_data AS (
 
@@ -9,13 +12,13 @@ WITH source_data AS (
 ), unioned AS (
 
     SELECT DISTINCT
-      {{ dbt_utils.surrogate_key([id_column]) }}  AS {{ id_column_name }},
-      {{  dimension_column }}                     AS {{ dimension_column_name }}
+      {{ dbt_utils.surrogate_key([dimension_column]) }}     AS {{ id_column_name }},
+      {{  dimension_column }}                               AS {{ dimension_column_name }}
     FROM source_data
     UNION ALL
     SELECT
-      MD5('-1')                                   AS {{ id_column_name }},
-      'Missing {{dimension_column_name}}'       AS {{ dimension_column_name }}
+      MD5('-1')                                     AS {{ id_column_name }},
+      'Missing {{dimension_column_name}}'           AS {{ dimension_column_name }}
 
 )
 
