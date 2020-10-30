@@ -248,6 +248,7 @@ roles:
             - gitlab_data_yaml
             - google_analytics_360
             - netsuite
+            - keyhole_twitter
             - pmg
             - snowflake_db
             - zendesk
@@ -417,6 +418,7 @@ roles:
                 - raw.pmg
                 - raw.prometheus
                 - raw.rspec
+                - raw.keyhole_twitter
                 - raw.snowplow
                 - raw.snowflake_imports
                 - raw.tap_postgres
@@ -427,6 +429,7 @@ roles:
                 - raw.gcp_billing.*
                 - raw.gitlab_data_yaml.*
                 - raw.gitter.*
+                - raw.keyhole_twitter.*
                 - raw.pmg.*
                 - raw.prometheus.*
                 - raw.rspec.*
@@ -914,6 +917,21 @@ roles:
                 read:
                     - analytics.license_db.*
                     - raw.license_db_dump.*
+
+    - keyhole_twitter:
+        privileges:
+            databases:
+                read:
+                    - analytics
+                    - raw
+            schemas:
+                read:
+                    - analytics.keyhole_twitter
+                    - raw.keyhole_twitter
+            tables:
+                read:
+                    - analytics.keyhole_twitter.*
+                    - raw.keyhole_twitter.*
 
     - maxmind:
         privileges:
