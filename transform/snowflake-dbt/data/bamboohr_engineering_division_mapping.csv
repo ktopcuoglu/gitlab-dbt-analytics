@@ -23,21 +23,17 @@ editor,dev,frontend,create:editor frontend
 gitaly,dev,,gitaly
 gitter,dev,,gitter
 ecosystem,dev,,ecosystem
-static analysis,secure,backend,secure backend
-dynamic analysis,secure,backend,secure backend
-composition analysis,secure,backend,secure backend
-fuzz testing,secure,backend,secure backend
-vulnerability research,secure,backend,secure backend
-secure,secure,backend,secure backend
+static analysis,secure,,secure backend
+dynamic analysis,secure,,secure backend
+composition analysis,secure,,secure backend
+fuzz testing,secure,,secure backend
+vulnerability research,secure,,secure backend
+secure,secure,,secure backend
 frontend,secure,frontend,secure frontend
 vulnerability management,secure,,
 configure,ops,,configure
-health,ops,backend,monitor:health
-health,ops,frontend,monitor:health
-apm,ops,backend,monitor:apm
-apm,ops,frontend,monitor:apm
-apm,ops,,monitor stage
-health,ops,,monitor stage
+apm,ops,,monitor:health
+health,ops,,monitor:health
 continuous integration,ops,backend,verify backend
 testing,ops,backend,verify backend
 continuous integration,ops,frontend,verify & release frontend
