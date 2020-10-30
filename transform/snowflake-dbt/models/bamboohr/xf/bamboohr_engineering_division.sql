@@ -35,7 +35,7 @@ WITH employees AS (
       bamboohr_engineering_division_mapping.sub_department,
       engineering_employees.jobtitle_speciality,
       CASE 
-        WHEN engineering_employees.employee_id IN (41965,41996,41453,41482,41974,41487,42029,40914,41954) 
+        WHEN engineering_employees.employee_id IN (41965,41996,41453,41482,41974,41487,42029,40914,41954,46) 
             OR engineering_employees.job_title LIKE '%backend%' 
           THEN 'backend'
         WHEN engineering_employees.job_title LIKE '%fullstack%'
