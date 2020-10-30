@@ -28,6 +28,7 @@ dynamic analysis,secure,backend,secure backend
 composition analysis,secure,backend,secure backend
 fuzz testing,secure,backend,secure backend
 vulnerability research,secure,backend,secure backend
+secure,secure,backend,secure backend
 frontend,secure,frontend,secure frontend
 vulnerability management,secure,,
 configure,ops,,configure
@@ -50,6 +51,7 @@ release management,ops,backend,release backend
 container security,threat management,,threat management
 insider threats,threat management,,threat management
 rsponsible disclosure,threat management,,threat management
+threat management,threat management,,threat management
 fulfillment,growth,frontend,fulfillment frontend
 fulfillment,growth,backend,fulfillment backend
 telemetry,growth,frontend,telemetry frontend
