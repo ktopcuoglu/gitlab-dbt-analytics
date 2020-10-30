@@ -1,9 +1,4 @@
 --Create mapping table for clean-up in ANALYTICS.COMMON_MAPPING
-{{config({
-    "materialized": "table",
-    "schema": "common_mapping"
-  })
-}}
 
 WITH sfdc_account AS (
 

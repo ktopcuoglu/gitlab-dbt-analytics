@@ -7,7 +7,7 @@
 WITH sfdc_account AS (
 
     SELECT *
-    FROM {{ ref('[reference to region mapping table in common_mapping]') }}
+    FROM {{ ref('map_geo_region') }}
 
 ), unioned AS (
 
