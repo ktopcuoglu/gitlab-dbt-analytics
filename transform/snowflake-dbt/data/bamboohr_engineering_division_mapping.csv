@@ -30,7 +30,7 @@ fuzz testing,secure,,secure backend
 vulnerability research,secure,,secure backend
 secure,secure,,secure backend
 frontend,secure,frontend,secure frontend
-vulnerability management,secure,,
+vulnerability management,secure,,secure backend
 configure,ops,,configure
 apm,ops,,monitor:health
 health,ops,,monitor:health
