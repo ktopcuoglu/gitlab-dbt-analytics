@@ -1,5 +1,7 @@
 version: 2
 
 models:
+  - name: map_geo_area
+    description: 
   - name: map_geo_region
     description: Mapping table for cleaning up region names built off ATAM_Region__C in SFDC
