@@ -14,7 +14,6 @@ WITH map_area AS (
     SELECT DISTINCT
         dim_sales_territory_id,
         dim_sales_territory
-    FROM map_area
     UNION ALL
     SELECT
         MD5('-1')           AS dim_sales_territory_id,
