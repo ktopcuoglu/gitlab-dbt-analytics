@@ -108,6 +108,16 @@ models:
           - not_null
       - name: location_id
 
+  - name: dim_geo_sub_region
+    description: "Dimension table for sub-region. Example values: Southern Europe, NA East, Nordics"
+    columns:
+      - name: dim_geo_sub_region_id
+        tests:
+          -  unique
+      - name: geo_sub_region_name
+        tests:
+          - not_null
+
   - name: dim_gitlab_versions
     description: '{{ doc("dim_gitlab_versions") }}'
     columns:
