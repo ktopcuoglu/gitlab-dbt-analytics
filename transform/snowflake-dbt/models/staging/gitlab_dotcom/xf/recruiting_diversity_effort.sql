@@ -36,15 +36,15 @@ WITH issues AS (
       IFF(issue_closed_at IS NOT NULL,1,0)                      AS is_issue_closed,
       issues.state                                              AS issue_state,
       agg_assignee.assignee,
-      IFF(CONTAINS(issue_description, '[x] Yes, Diversity Sourcing methods were used'::VARCHAR) = True,
-        'Used Diversity Strings', NULL)                         AS is_using_diversity_strings,
-      IFF(CONTAINS(issue_description, '[x] No, I did not use Diversity Sourcing methods'::VARCHAR) = True,
-        'Did not Use', NULL)                                    AS is_not_using_diversity_srings,
-      IFF(CONTAINS(issue_description, '[x] Not Actively Sourcing'::VARCHAR) = True,
-        'Not Actively Sourcing', NULL)                          AS not_actively_sourcing,
-      IFF(is_using_diversity_strings IS NULL 
-          AND is_not_using_diversity_srings IS NULL, 
-          'No Answer', NULL)                                    AS has_no_Answer
+      issues.issue_description,
+      SPLIT_PART(issue_description, '| Week',2)                 AS issue_description_split,
+      CASE WHEN CONTAINS(issue_description, '[x] Yes, Diversity Sourcing methods were used'::VARCHAR) = True
+            THEN 'Used Diversity Strings'
+           WHEN CONTAINS(issue_description, '[x] No, I did not use Diversity Sourcing methods'::VARCHAR) = True
+            THEN 'Did not use'
+           WHEN CONTAINS(issue_description, '[x] Not Actively Sourcing'::VARCHAR) = True
+            THEN 'Not Actively Sourcing'
+            ELSE 'No Answer' END                                AS issue_answer
     FROM issues
     LEFT JOIN agg_assignee 
       ON agg_assignee.issue_id = issues.issue_id
@@ -52,7 +52,43 @@ WITH issues AS (
       AND LOWER(issue_title) LIKE '%weekly check-in:%'
       AND LOWER(issue_title) NOT LIKE '%test%'
   
+), split_issue AS (
+
+    SELECT *
+    FROM intermediate AS splittable, lateral split_to_table(splittable.issue_description_split, '| 20') 
+    ---- splitting by year starting with 20
+
+), cleaned AS (
+
+    SELECT *,
+      value,
+      LEFT(TRIM(value), 8) As week_end,
+      CASE WHEN value LIKE '[x] Yes' 
+             THEN 'Yes'
+           WHEN value LIKE '[x] Not actively sourcing]'
+             THEN 'Not Actively Sourcing'
+          WHEN value LIKE '[x] No, Not]'
+            THEN 'No'
+         ELSE issue_answer END                              AS used_diversity_string
+  FROM split_issue
+
+), final AS (
+
+    SELECT
+      issue_title,
+      issue_iid,
+      issue_created_at,
+      issue_created_week,
+      issue_closed_at,
+      issue_closed_week,
+      is_issue_closed,
+      issue_state,
+      issue_description,
+      assignee,
+      used_diversity_string
+    FROM cleaned
+  
 )
 
 SELECT *
-FROM intermediate
+FROM final
