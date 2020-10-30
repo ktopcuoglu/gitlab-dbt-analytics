@@ -594,7 +594,7 @@ roles:
                 - analytics.analytics_sensitive.*
                 - analytics.analytics_staging.*
                 - analytics.common.*
-                - - analytics.common_mapping.*
+                - analytics.common_mapping.*
         privileges:
             databases:
                 read:
