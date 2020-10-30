@@ -31,8 +31,8 @@ macros:
     description: '{{ doc("distinct_source") }}'
   - name: generate_schema_name
     description: '{{ doc("generate_schema_name") }}'
-  - name: generate_map_area
-    description: '{{ doc("generate_map_area") }}'
+  - name: generate_single_field_dimension
+    description: '{{ doc("generate_single_field_dimension") }}'
     arguments:
       - name: model_name
         type: string

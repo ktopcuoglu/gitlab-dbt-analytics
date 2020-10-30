@@ -4,22 +4,14 @@
   })
 }}
 
-WITH map_area AS (
+{{ generate_single_field_dimension (
+    model_name="prep_sfdc_account",
+    id_column="tsp_territory",
+    id_column_name="dim_sales_territory_id",
+    dimension_column="tsp_territory",
+    dimension_column_name="sales_territory_name"
+) }}
 
-    SELECT *
-    FROM {{ ref('dim_sales_territory_map_area') }}
-
-), unioned AS (
-
-    SELECT DISTINCT
-        dim_sales_territory_id,
-        dim_sales_territory
-    UNION ALL
-    SELECT
-        MD5('-1')           AS dim_sales_territory_id,
-        '(Missing Area)'    AS dim_sales_territory
-
-)
 
 {{ dbt_audit(
     cte_ref="unioned",
