@@ -1714,7 +1714,14 @@ roles:
                     - raw.zendesk_stitch.*
                     - raw.zendesk_community_relations_stitch.*
                     - raw.zuora_stitch.*
-    
+
+    - swaldner:
+        member_of:
+            - product_manager
+            - reporter
+        warehouses:
+            - reporting
+
     - target_snowflake:
         warehouses:
             - target_snowflake
@@ -2190,6 +2197,11 @@ users:
         can_login: yes
         member_of:
             - stitch
+
+    - swaldner:
+        can_login: yes
+        member_of:
+            - swaldner
 
     - tcarter:
         can_login: no
