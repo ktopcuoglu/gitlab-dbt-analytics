@@ -53,8 +53,6 @@ roles:
             - admin
 
     - sysadmin:
-        member_of:
-            - "*"
         warehouses:
             - admin
         privileges:
