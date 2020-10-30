@@ -12,7 +12,7 @@
       employee_number,
       percent_over_top_end_of_band,
       DATEADD('sec', _updated_at, '1970-01-01')::TIMESTAMP AS updated_at
-    FROM {{ source('sheetload', 'sheetload_comp_band_snapshots') }}
+    FROM {{ source('sheetload', 'comp_band') }}
 
 {% endsnapshot %}
 

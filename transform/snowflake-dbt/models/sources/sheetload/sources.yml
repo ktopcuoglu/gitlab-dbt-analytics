@@ -30,7 +30,7 @@ sources:
       - name: communication_certificate
       - name: company_call_attendance
       - name: compensation_certificate
-      - name: sheetload_comp_band_snapshots
+      - name: comp_band
       - name: data_team_capacity
       - name: days_sales_outstanding
       - name: days_to_close
