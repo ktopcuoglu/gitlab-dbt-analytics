@@ -320,7 +320,7 @@ models:
         tests:
           - not_null
           - unique
-      - name: sales_territory_name
+      - name: dim_sales_territory
         description:
         tests:
           - not_null
