@@ -7,14 +7,13 @@ WITH source AS (
 ), final AS (
 
     SELECT
-      *,
+      account_id                                                                                                          AS crm_account_id,
       TRIM(SPLIT_PART(tsp_sub_region, '-', 1))                                                                            AS tsp_sub_region_clean,
       TRIM(SPLIT_PART(tsp_region, '-', 1))                                                                                AS tsp_region_clean,
       TRIM(SPLIT_PART(REPLACE(tsp_area,'Mid - Atlantic', 'Mid Atlantic'), '-', 1))                                        AS tsp_area_clean,
       TRIM(tsp_territory)                                                                                                 AS tsp_territory_clean,
       TRIM(SPLIT_PART(df_industry, '-', 1))                                                                               AS df_industry_clean,
       TRIM(SPLIT_PART(ultimate_parent_sales_segment, '-', 1))                                                             AS ultimate_parent_sales_segment_clean,
-      account_id                                                                                                          AS crm_account_id,
       MAX(tsp_area_clean) OVER (Partition by UPPER(TRIM(tsp_area_clean)))                                                 AS dim_geo_area_name_source,
       MAX(tsp_region_clean) OVER (Partition by UPPER(TRIM(tsp_region_clean)))                                             AS dim_geo_region_name_source,
       MAX(tsp_sub_region_clean) OVER (Partition by UPPER(TRIM(tsp_sub_region_clean)))                                     AS dim_geo_sub_region_name_source,
