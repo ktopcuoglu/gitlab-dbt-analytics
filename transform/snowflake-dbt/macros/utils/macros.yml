@@ -36,10 +36,10 @@ macros:
     arguments:
       - name: model_name
         type: string
-        description: Name of the source model
+        description: Name of the prepped data model
       - name: dimension_column
         type: string
-        description: Name of the column in the source model to select
+        description: Name of the column in the source model to be used in the dimensions
   - name: monthly_change
     description: '{{ doc("monthly_change") }}'
   - name: monthly_is_used
