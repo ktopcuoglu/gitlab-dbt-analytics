@@ -27,7 +27,6 @@ WITH promotions AS (
     FROM {{ ref ('bamboohr_rpt_headcount_aggregation') }}
     WHERE breakout_type in ('department_breakout','kpi_breakout','division_breakout')
       AND eeoc_field_name = 'no_eeoc'
-      AND month_date = DATEADD(month,-1, DATE_TRUNC(month, CURRENT_DATE()))
 
 ), current_division_department AS (
 
@@ -64,16 +63,18 @@ WITH promotions AS (
 ), division AS (
 
     SELECT
+      promotion_month,
       'division_breakout'                                AS breakout_type,
       division                                           AS division_department,
       AVG(promotions.percent_change_in_comp)             AS average_increase,
       MEDIAN(promotions.percent_change_in_comp)          AS median_increase
     FROM promotions
-    GROUP BY 1,2
+    GROUP BY 1,2,3
 
     UNION ALL
 
     SELECT
+      promotion_month,
       'division_breakout'                                AS breakout_type,
       'Marketing - Excluding Sales Development'          AS division_department,
       AVG(percent_change_in_comp)                        AS average_increase,
@@ -81,39 +82,42 @@ WITH promotions AS (
     FROM promotions
     WHERE department != 'Sales Development'
       AND division = 'Marketing'
-    GROUP BY 1,2
+    GROUP BY 1,2,3
 
 ), company AS (
 
     SELECT
+      promotion_month,
       'company_breakout'                                  AS breakout_type,
       'Company Overall - Including Sales Development'     AS division_department,
       AVG(percent_change_in_comp)                         AS average_increase,
       MEDIAN(percent_change_in_comp)                      AS median_increase
     FROM promotions
-    GROUP BY 1,2
+    GROUP BY 1,2,3
     
     UNION ALL 
 
     SELECT
+      promotion_month,
       'company_breakout'                                  AS breakout_type,
       'Company - Excluding Sales Development'             AS division_department,
       AVG(percent_change_in_comp)                         AS average_increase,
       MEDIAN(percent_change_in_comp)                      AS median_increase
     FROM promotions
     WHERE department != 'Sales Development'
-    GROUP BY 1,2
+    GROUP BY 1,2,3
     
 ), department AS (
 
     SELECT
+      promotion_month,
       'department_breakout'                               AS breakout_type,
       department                                          AS division_department,
       AVG(percent_change_in_comp)                         AS average_increase,
       MEDIAN(percent_change_in_comp)                      AS median_incrase
     FROM promotions
     WHERE department != 'Sales Development'
-    GROUP BY 1,2
+    GROUP BY 1,2,3
 
 ), unioned AS (
 
@@ -144,10 +148,14 @@ WITH promotions AS (
     LEFT JOIN bamboohr_headcount_aggregated
       ON bamboohr_headcount_aggregated.breakout_type = unioned.breakout_type
       AND bamboohr_headcount_aggregated.division_department = unioned.division_department
+      AND bamboohr_headcount_aggregated.month_date = unioned.promotion_month
     LEFT JOIN marketing_headcount_excluding_sales_development
       ON marketing_headcount_excluding_sales_development.division_department = unioned.division_department
+      AND bamboohr_headcount_aggregated.month_date = unioned.promotion_month
     LEFT JOIN company_headcount_excluding_sales_development
-      ON company_headcount_excluding_sales_development.division_department = unioned.division_department
+      ON company_headcount_excluding_sales_development.division_department = unioned.division_department      
+      AND bamboohr_headcount_aggregated.month_date = unioned.promotion_month
+
 
 )
 

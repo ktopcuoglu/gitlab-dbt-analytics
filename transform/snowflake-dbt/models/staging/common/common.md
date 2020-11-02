@@ -9,6 +9,11 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
+{% docs dim_crm_opportunities %}
+Model for all dimensional opportunity columns from salesforce opportunity object
+
+{% enddocs %}
+
 {% docs dim_crm_persons %}
 Dimension that combines demographic data from salesforce leads and salesforce contacts. They are combined with a union and a filter on leads excluding converted leads and leads where there is a corresponding contact. 
 
@@ -84,9 +89,9 @@ A fact from the lead and contact tables that shows the date they were qualified.
 
 {% enddocs %}
 
-{% docs fct_crm_sales_accepted_opportunity %}
+{% docs fct_crm_opportunities %}
 
-A fact from the opportunity using the sales_accepted_date created in order to standardize the logic and dimensional joins for this metric.
+A fact table for salesforce opportunities
 
 {% enddocs %}
 
@@ -175,8 +180,11 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 {% enddocs %}
 
 {% docs dim_usage_pings %}
-Dimension that contains demographic data from usage ping data, including additional breaks out for product_tier, if it is from an internal instance, and replaces the ip_address hash with a location_id instead 
+Dimension that contains demographic data from usage ping data, including additional breaks out for product_tier, if it is from an internal instance, and replaces the ip_address hash with a location_id instead. 
 
+[Core represents both CE and EE](https://about.gitlab.com/handbook/marketing/product-marketing/tiers/#history-of-ce-and-ee-distributions). 
+
+Get started by exploring the [Product Geolocation Analysis](https://about.gitlab.com/handbook/business-ops/data-team/data-catalog/product-geolocation/) handbook page. 
 Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
 
 {% enddocs %}

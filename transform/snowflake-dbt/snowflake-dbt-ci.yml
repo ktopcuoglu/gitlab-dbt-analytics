@@ -45,6 +45,7 @@
   - python3 macro_name_check.py
   - dbt deps $CI_PROFILE_TARGET
   - dbt seed $CI_PROFILE_TARGET #seed data from csv
+  - dbt --warn-error --partial-parse run-operation tag_validation --profiles-dir profile --target ci
 
 .xl_warehouse: &xl_warehouse
   - export SNOWFLAKE_TRANSFORM_WAREHOUSE=$SNOWFLAKE_MR_XL_WAREHOUSE
@@ -57,10 +58,10 @@
   script:
     - *deps_and_seed
     - echo $DBT_MODELS
-    - dbt run $CI_PROFILE_TARGET --full-refresh --exclude $DBT_MODELS || true
-    - dbt test $CI_PROFILE_TARGET --exclude $DBT_MODELS || true
-    - dbt run $CI_PROFILE_TARGET --exclude $DBT_MODELS || true
-    - dbt test $CI_PROFILE_TARGET --exclude $DBT_MODELS
+    - dbt --partial-parse run $CI_PROFILE_TARGET --full-refresh --exclude $DBT_MODELS || true
+    - dbt --partial-parse test $CI_PROFILE_TARGET --exclude $DBT_MODELS || true
+    - dbt --partial-parse run $CI_PROFILE_TARGET --exclude $DBT_MODELS || true
+    - dbt --partial-parse test $CI_PROFILE_TARGET --exclude $DBT_MODELS
 
 ➖🦖specify_xl_exclude:
   <<: *snowflake_dbt_jobs
@@ -68,20 +69,20 @@
     - *xl_warehouse
     - *deps_and_seed
     - echo $DBT_MODELS
-    - dbt run $CI_PROFILE_TARGET --full-refresh --exclude $DBT_MODELS || true
-    - dbt test $CI_PROFILE_TARGET --exclude $DBT_MODELS || true
-    - dbt run $CI_PROFILE_TARGET --exclude $DBT_MODELS || true
-    - dbt test $CI_PROFILE_TARGET --exclude $DBT_MODELS
+    - dbt --partial-parse run $CI_PROFILE_TARGET --full-refresh --exclude $DBT_MODELS || true
+    - dbt --partial-parse test $CI_PROFILE_TARGET --exclude $DBT_MODELS || true
+    - dbt --partial-parse run $CI_PROFILE_TARGET --exclude $DBT_MODELS || true
+    - dbt --partial-parse test $CI_PROFILE_TARGET --exclude $DBT_MODELS
 
 ➕🐭specify_model:
   <<: *snowflake_dbt_jobs
   script:
     - *deps_and_seed
     - echo $DBT_MODELS
-    - dbt run $CI_PROFILE_TARGET --full-refresh --models $DBT_MODELS || true
-    - dbt test $CI_PROFILE_TARGET --models $DBT_MODELS || true
-    - dbt run $CI_PROFILE_TARGET --models $DBT_MODELS || true
-    - dbt test $CI_PROFILE_TARGET --models $DBT_MODELS
+    - dbt --partial-parse run $CI_PROFILE_TARGET --full-refresh --models $DBT_MODELS || true
+    - dbt --partial-parse test $CI_PROFILE_TARGET --models $DBT_MODELS || true
+    - dbt --partial-parse run $CI_PROFILE_TARGET --models $DBT_MODELS || true
+    - dbt --partial-parse test $CI_PROFILE_TARGET --models $DBT_MODELS
 
 ➕🦖specify_xl_model:
   <<: *snowflake_dbt_jobs
@@ -89,10 +90,10 @@
     - *xl_warehouse
     - *deps_and_seed
     - echo $DBT_MODELS
-    - dbt run $CI_PROFILE_TARGET --full-refresh --models $DBT_MODELS || true
-    - dbt test $CI_PROFILE_TARGET --models $DBT_MODELS || true
-    - dbt run $CI_PROFILE_TARGET --models $DBT_MODELS || true
-    - dbt test $CI_PROFILE_TARGET --models $DBT_MODELS
+    - dbt --partial-parse run $CI_PROFILE_TARGET --full-refresh --models $DBT_MODELS || true
+    - dbt --partial-parse test $CI_PROFILE_TARGET --models $DBT_MODELS || true
+    - dbt --partial-parse run $CI_PROFILE_TARGET --models $DBT_MODELS || true
+    - dbt --partial-parse test $CI_PROFILE_TARGET --models $DBT_MODELS
 
 ➕🐭🥩specify_raw_model:
   <<: *snowflake_dbt_jobs
@@ -101,9 +102,9 @@
     - *clone_raw # Reads from raw clone 
     - echo $DBT_MODELS
     - dbt run $CI_PROFILE_TARGET --full-refresh --models $DBT_MODELS || true
-    - dbt test $CI_PROFILE_TARGET --models $DBT_MODELS || true
-    - dbt run $CI_PROFILE_TARGET --models $DBT_MODELS || true
-    - dbt test $CI_PROFILE_TARGET --models $DBT_MODELS
+    - dbt --partial-parse test $CI_PROFILE_TARGET --models $DBT_MODELS || true
+    - dbt --partial-parse run $CI_PROFILE_TARGET --models $DBT_MODELS || true
+    - dbt --partial-parse test $CI_PROFILE_TARGET --models $DBT_MODELS
 
 
 ➕specify_csv_seed:
@@ -132,25 +133,25 @@
   <<: *dbt_misc_jobs
   script:
     - *deps_and_seed
-    - dbt test $CI_PROFILE_TARGET
+    - dbt --partial-parse test $CI_PROFILE_TARGET
 
 💾data_tests:
   <<: *dbt_misc_jobs
   script:
     - *deps_and_seed
-    - dbt test --data $CI_PROFILE_TARGET
+    - dbt --partial-parse test --data $CI_PROFILE_TARGET
 
 🌻freshness:
   <<: *dbt_misc_jobs
   script:
     - *deps_and_seed
-    - dbt source snapshot-freshness $CI_PROFILE_TARGET
+    - dbt --partial-parse source snapshot-freshness $CI_PROFILE_TARGET
 
 🗂schema_tests:
   <<: *dbt_misc_jobs
   script:
     - *deps_and_seed
-    - dbt test --schema $CI_PROFILE_TARGET
+    - dbt --partial-parse test --schema $CI_PROFILE_TARGET
 
 📸snapshots:
   <<: *dbt_misc_jobs
@@ -165,7 +166,7 @@
   script:
     - *deps_and_seed
     - echo $DBT_MODELS
-    - dbt test $CI_PROFILE_TARGET --models $DBT_MODELS
+    - dbt --partial-parse test $CI_PROFILE_TARGET --models $DBT_MODELS
 
 # ======
 # Periscope Model Check
