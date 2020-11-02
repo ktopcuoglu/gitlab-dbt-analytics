@@ -4,7 +4,7 @@
   })
 }}
 
-{{ generate_single_field_dimension (
+{{ generate_single_field_dimension_from_prep (
     model_name="prep_sfdc_account",
     dimension_column="dim_industry_name_source",
 ) }}
