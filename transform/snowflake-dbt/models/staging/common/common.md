@@ -63,7 +63,6 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
-
 {% docs dim_dates %}
 Dimensional table representing both calendar year and fiscal year date details.
 
