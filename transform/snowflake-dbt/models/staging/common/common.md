@@ -196,8 +196,8 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
-{% docs dim_sales_territory %}
+{% docs dim_opportunity_source %}
 
-Sales territory dimension placeholder docs
+Opportunity source dimension, based off of salesforce opportunity data, using the `generate_single_field_dimension` macro to create the final formatted SQL
 
 {% enddocs %}
