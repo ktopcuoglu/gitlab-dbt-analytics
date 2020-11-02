@@ -6,7 +6,7 @@ WITH source_data AS (
     FROM {{ ref(model_name) }}
     WHERE {{ dimension_column }} IS NOT NULL
     {% if where_clause != None %}
-      {{ where_clause }}
+      AND {{ where_clause }}
     {% endif %}
 
 ), unioned AS (
