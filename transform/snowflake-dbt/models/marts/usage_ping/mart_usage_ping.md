@@ -1,4 +1,8 @@
 {% docs mart_paid_subscriptions_monthly_usage_ping_optin %}
+TBD
+{% enddocs %}
+
+{% docs mart_paid_subscriptions_monthly_usage_ping_optin %}
 
 Data Mart to explore Usage Ping Opt In rate of Paid subscriptions. The report looks at monthly active subscriptions, along with their licenses and linked usage ping payloads received in order to retrieve an opt-in rate and the application version used by a specific subscription.
 

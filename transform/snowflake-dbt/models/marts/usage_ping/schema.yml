@@ -1,6 +1,14 @@
 version: 2
 
 models:
+  - name: mart_paid_subscription_monthly_counter_adoption
+    description: '{{ doc("mart_paid_subscriptions_monthly_usage_ping_optin") }}'
+    columns:
+      - name: reporting_month
+        tests:
+            - not_null
+      - name: pct_subscriptions_with_counters
+        description: Percent of paid subscriptions that send us values for this specific counter. That means for a counter C releases in version V, all versions before V are excluded from this total
   - name: mart_paid_subscriptions_monthly_usage_ping_optin
     description: '{{ doc("mart_paid_subscriptions_monthly_usage_ping_optin") }}'
     columns:

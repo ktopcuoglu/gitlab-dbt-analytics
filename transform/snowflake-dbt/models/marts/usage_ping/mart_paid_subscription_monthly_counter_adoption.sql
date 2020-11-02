@@ -77,7 +77,7 @@ WITH self_managed_active_subscriptions AS (
     INNER JOIN all_subscriptions ON active_subscriptions.subscription_name_slugify = all_subscriptions.subscription_name_slugify
     INNER JOIN fct_payloads ON all_subscriptions.subscription_id = fct_payloads.subscription_id AND first_day_of_month = DATE_TRUNC('month', fct_payloads.created_at)
 
-), mart_paid_subscriptions_monthly_usage_ping_optin AS (
+), paid_subscriptions_monthly_usage_ping_optin AS (
 
     SELECT
       transformed.*,
@@ -97,7 +97,7 @@ WITH self_managed_active_subscriptions AS (
     SELECT 
       reporting_month AS agg_month,
       COUNT(DISTINCT subscription_name_slugify) AS total_subscrption_count
-    FROM  mart_paid_subscriptions_monthly_usage_ping_optin
+    FROM  paid_subscriptions_monthly_usage_ping_optin
     GROUP BY 1
 
 ), monthly_subscription_optin_counts AS (
@@ -109,10 +109,10 @@ WITH self_managed_active_subscriptions AS (
       minor_version,
       COUNT(DISTINCT subscription_name_slugify)                         AS major_minor_version_subscriptions,
       major_minor_version_subscriptions /  MAX(total_subscrption_count) AS pct_major_minor_version_subscriptions
-    FROM mart_paid_subscriptions_monthly_usage_ping_optin
+    FROM paid_subscriptions_monthly_usage_ping_optin
     INNER JOIN analytics_staging.gitlab_release_schedule AS gitlab_releases
-      ON mart_paid_subscriptions_monthly_usage_ping_optin.latest_major_minor_version = gitlab_releases.major_minor_version
-    LEFT JOIN agg_total_subscriptions AS agg ON mart_paid_subscriptions_monthly_usage_ping_optin.reporting_month = agg.agg_month
+      ON paid_subscriptions_monthly_usage_ping_optin.latest_major_minor_version = gitlab_releases.major_minor_version
+    LEFT JOIN agg_total_subscriptions AS agg ON paid_subscriptions_monthly_usage_ping_optin.reporting_month = agg.agg_month
     GROUP BY 1,2,3,4
 
 ), section_metrics AS (
@@ -152,7 +152,7 @@ WITH self_managed_active_subscriptions AS (
       group_name,
       is_smau,
       is_gmau,
-      FIRST_VALUE(major_minor_version ) OVER (PARTITION BY group_name ORDER BY
+      FIRST_VALUE(major_minor_version) OVER (PARTITION BY group_name ORDER BY
                                  major_version ASC,
       minor_version ASC) AS first_version_with_counter,
       edition
@@ -187,6 +187,7 @@ WITH self_managed_active_subscriptions AS (
       ON date_spine.reporting_month = monthly_subscription_optin_counts.reporting_month
         AND (counter_data.major_version < monthly_subscription_optin_counts.major_version OR
         (counter_data.major_version = monthly_subscription_optin_counts.major_version AND counter_data.minor_version <= monthly_subscription_optin_counts.minor_version))
+    WHERE reporting_month < DATE_TRUNC('month', CURRENT_DATE)
     GROUP BY 1,2,3,4,5,6,7,8
   
 )
