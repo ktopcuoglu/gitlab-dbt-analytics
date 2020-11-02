@@ -106,4 +106,8 @@ This macro takes a schema prefix and a table name and does a UNION ALL on all ta
 This macro takes a schema prefix, a table name, a column name, and an integer representing days. It returns a view that is limited to the last 30 days based on the column name. Note that this also calls schema union all which can be a heavy call.
 {% enddocs %}
 
+{% docs generate_single_field_dimension %}
+Convenience macro created to assist in the creation of new Dimensions based off a single source field. This returns the compiled SQL for selecting from the Source model,  
+{% enddocs %}
+
 
