@@ -9,12 +9,9 @@
     id_column="sales_qualified_source",
     id_column_name="dim_opportunity_source_id",
     dimension_column="sales_qualified_source",
-    dimension_column_name="opportunity_source_name"
+    dimension_column_name="opportunity_source_name",
+    where_clause="NOT is_deleted"
 ) }}
-
-WHERE sales_qualified_source IS NOT NULL
-AND NOT is_deleted
-
 
 {{ dbt_audit(
     cte_ref="unioned",
