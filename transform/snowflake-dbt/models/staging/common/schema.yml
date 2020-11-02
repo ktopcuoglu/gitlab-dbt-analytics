@@ -161,7 +161,7 @@ models:
           - not_null
           - unique
         tags: [ "tdf", "purchase_channel", "common" ]
-      - name: opportunity_source_name
+      - name: purchase_channel_name
         description: Opportunity source name
         tests:
           - not_null
