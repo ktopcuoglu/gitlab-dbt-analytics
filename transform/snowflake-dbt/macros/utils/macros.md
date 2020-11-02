@@ -101,7 +101,7 @@ This macro takes a schema prefix, a table name, a column name, and an integer re
 {% enddocs %}
 
 {% docs generate_single_field_dimension %}
-Convenience macro created to assist in the creation of new Dimensions based off a single source field. This returns the compiled SQL for selecting from the Source model,  
+Convenience macro created to assist in the creation of new Dimensions based off a single source field. This returns the compiled SQL for selecting from the Source model   
 {% enddocs %}
 
 
