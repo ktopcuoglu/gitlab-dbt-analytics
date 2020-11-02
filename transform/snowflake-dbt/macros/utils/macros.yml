@@ -43,3 +43,21 @@ macros:
     description: '{{ doc("schema_union_all") }}'
   - name: schema_union_limit
     description: '{{ doc("schema_union_limit") }}'
+  - name: generate_single_field_dimension
+    description: '{{ doc("generate_single_field_dimension") }}'
+    arguments:
+      - name: model_name
+        type: string
+        description: Name of the source model
+      - name: id_column
+        type: string
+        description: Name of column in the source model to be used as an ID
+      - name: id_column_name
+        type: string
+        description: Name of the ID column in the final dimension
+      - name: dimension_column
+        type: string
+        description: Name of the column in the source model to select
+      - name: dimension_column_name
+        type: string
+        description: Name of the column in the final dimension
