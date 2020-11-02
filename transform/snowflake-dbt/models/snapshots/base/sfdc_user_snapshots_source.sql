@@ -21,6 +21,7 @@ WITH source AS (
       isactive         AS is_active,
       userroleid       AS user_role_id,
 			start_date__c    AS start_date,
+      user_segment__c  AS user_segment,
 
       --metadata
       createdbyid      AS created_by_id,
