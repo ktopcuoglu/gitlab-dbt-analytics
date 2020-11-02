@@ -31,6 +31,8 @@ macros:
     description: '{{ doc("distinct_source") }}'
   - name: generate_schema_name
     description: '{{ doc("generate_schema_name") }}'
+  - name: get_date_id
+    description: '{{ doc("get_date_id") }}'
   - name: generate_single_field_dimension_from_prep
     description: '{{ doc("generate_single_field_dimension_from_prep") }}'
     arguments:

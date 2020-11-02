@@ -11,7 +11,7 @@ The SQL filter returned does not include a `WHERE`, `AND`, or `OR` so it can fle
 {% raw %}
 SELECT *
 FROM users
-WHERE {{ filter_out_blocked_users(users, user_id) }}
+WHERE {{ filter_out_blocked_users('users', 'user_id') }}
 {% endraw %}
 ```
 
