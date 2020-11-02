@@ -1,3 +1,9 @@
+{{ config({
+        "materialized": "view",
+        "schema": "common_mapping"
+    })
+}}
+
 WITH source AS (
 
     SELECT *
