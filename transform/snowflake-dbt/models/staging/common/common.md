@@ -201,3 +201,10 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 Opportunity source dimension, based off of salesforce opportunity data, using the `generate_single_field_dimension` macro to create the final formatted SQL
 
 {% enddocs %}
+
+{% docs dim_purchase_channel %}
+
+Purchase channel dimension, based off of salesforce opportunity data, using the `generate_single_field_dimension` macro to create the final formatted SQL
+
+{% enddocs %}
+

@@ -152,6 +152,22 @@ models:
           - unique
         tags: ["tdf", "opportunity", "common"]
 
+  - name: dim_purchase_channel
+    description: '{{ doc("dim_purchase_channel") }}'
+    columns:
+      - name: dim_purchase_channel_id
+        description: Unique identifier for each opportunity source name
+        tests:
+          - not_null
+          - unique
+        tags: [ "tdf", "purchase_channel", "common" ]
+      - name: opportunity_source_name
+        description: Opportunity source name
+        tests:
+          - not_null
+          - unique
+        tags: [ "tdf", "purchase_channel", "common" ]
+
   - name: dim_instances 
     description: '{{ doc("dim_instances") }}'
     columns: 
