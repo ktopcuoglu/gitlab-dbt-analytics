@@ -24,11 +24,12 @@ WITH skeleton AS (
       plan_name_at_event_date,
       plan_id_at_event_date,
       namespace_is_internal,
-      xmau.event_name       AS event_name,
-      xmau.stage_name       AS stage_name,
-      xmau.smau::BOOLEAN    AS is_smau,
-      xmau.group_name       AS group_name,
-      xmau.gmau::BOOLEAN    AS is_gmau
+      xmau.event_name            AS event_name,
+      xmau.stage_name            AS stage_name,
+      xmau.smau::BOOLEAN         AS is_smau,
+      xmau.group_name            AS group_name,
+      xmau.gmau::BOOLEAN         AS is_gmau,
+      xmau.section_name::VARCHAR AS section_name
     FROM {{ ref('gitlab_dotcom_daily_usage_data_events') }} AS events
     INNER JOIN gitlab_dotcom_xmau_metrics AS xmau
       ON events.event_name = xmau.events_to_include
@@ -44,6 +45,7 @@ WITH skeleton AS (
       is_smau,
       group_name,
       is_gmau,
+      section_name,
       COUNT(DISTINCT user_id)                                                                           AS total_user_count,
       COUNT(DISTINCT IFF(plan_name_at_event_date='free',user_id, NULL))                                 AS free_user_count,
       COUNT(DISTINCT IFF(plan_name_at_event_date IN ('bronze', 'silver', 'gold'), user_id, NULL))       AS paid_user_count,
@@ -53,7 +55,7 @@ WITH skeleton AS (
     FROM skeleton
     LEFT JOIN events
         ON event_date BETWEEN DATEADD('days', -28, last_day_of_month) AND last_day_of_month
-    {{ dbt_utils.group_by(n=6) }}
+    {{ dbt_utils.group_by(n=7) }}
 
 )
 

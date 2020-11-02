@@ -167,6 +167,10 @@ models:
       handbook:
         +schema: handbook
 
+      keyhole_twitter:
+        +schema: keyhole_twitter
+        +tags: ["keyhole_twitter", "social", "sources"]
+
       license:
         +schema: license_db
 
@@ -276,6 +280,9 @@ models:
           +schema: analytics
         xf:
           +schema: analytics
+
+      keyhole_twitter:
+        +tags: [ "keyhole_twitter", "social" ]
 
       license:
         +materialized: view

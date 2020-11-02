@@ -83,7 +83,21 @@ models:
 - name: sheetload_scalable_employment_values
 - name: sheetload_social_marketing_metrics
 - name: sheetload_usage_ping_metrics_sections
-  description: Base model for the Google Sheet ingested through Sheetload called usage_ping_metrics_sections
+- name: sheetload_territory_mapping
+  description: Base model for marketing territory mapping.
+  columns:
+    - name: segment
+      tests:
+        - not_null
+    - name: region
+      tests:
+        - not_null
+    - name: area
+      tests:
+        - not_null
+    - name: territory
+      tests:
+        - not_null
 - name: sheetload_values_certificate
 - name: sheetload_yc_companies
 
