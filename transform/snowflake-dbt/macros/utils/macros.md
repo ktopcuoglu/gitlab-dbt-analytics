@@ -49,11 +49,6 @@ This macro **is specific** to pgp tables (gitlab_dotcom, version, license) and s
 
 {% enddocs %}
 
-{% docs dim_sales_territory %}
-
-Sales territory dimension placeholder docs
-
-{% enddocs %}
 
 
 {% docs generate_schema_name %}
