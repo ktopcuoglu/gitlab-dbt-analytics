@@ -5,7 +5,7 @@
 
 WITH source_data AS (
 
-    SELECT *
+    SELECT {{ dimension_column }}
     FROM {{ ref(model_name) }}
     WHERE {{ dimension_column }} IS NOT NULL
 
