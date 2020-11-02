@@ -138,10 +138,10 @@ sheets:
     owner: '@m_walker'
     tabs:
       - release_blog_posts
-  - name: rep_quotas_full_fy2020
+  - name: rep_quotas
     owner: '@derekatwood'
     tabs:
-      - rep_quotas_full_fy2020
+      - quotas_for_upload
   - name: rep_quotas_full_ps_fy2020
     owner: '@derekatwood'
     tabs:
