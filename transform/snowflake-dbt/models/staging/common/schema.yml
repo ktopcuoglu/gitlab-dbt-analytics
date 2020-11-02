@@ -316,12 +316,12 @@ models:
     description: '{{ doc("dim_sales_territory") }}'
     columns:
       - name: dim_sales_territory_id
-        description: Unique identifier of a version of a subscription
+        description: Unique identifier of a version of a sales territory
         tests:
           - not_null
           - unique
       - name: dim_sales_territory
-        description:
+        description: Sales territory text
         tests:
           - not_null
           - unique
