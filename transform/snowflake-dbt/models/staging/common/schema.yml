@@ -138,11 +138,13 @@ models:
         tests:
           - not_null
           - unique
+        tags: ["tdf", "industry", "common"]
       - name: dim_industry_name
         description: Industry text
         tests:
           - not_null
           - unique
+        tags: ["tdf", "industry", "common"]
 
   - name: dim_instances 
     description: '{{ doc("dim_instances") }}'
@@ -334,11 +336,13 @@ models:
         tests:
           - not_null
           - unique
+        tags: ["tdf", "sales_territory", "common"]
       - name: dim_sales_territory_name
         description: Sales territory text
         tests:
           - not_null
           - unique
+        tags: ["tdf", "sales_territory", "common"]
 
   - name: fct_charges
     description: '{{ doc("fct_charges") }}'
