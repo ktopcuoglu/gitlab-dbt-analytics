@@ -10,7 +10,7 @@ WITH events AS (
       event_id,
       derived_tstamp
     FROM events,
-    LATERAL FLATTEN(INPUT => contexts, PATH=>'data') AS context
+    LATERAL FLATTEN(INPUT => contexts, PATH => 'data') AS context
     WHERE context.value['schema'] = 'iglu:org.w3/PerformanceTiming/jsonschema/1-0-0'
 
 ), parsed_timing AS (
