@@ -2,10 +2,9 @@ WITH source AS (
 
   SELECT *
   FROM {{ ref('sfdc_account_source') }}
-  WHERE NOT is_deleted;
+  WHERE NOT is_deleted
 
-)
-
+), final AS (
 SELECT
     TRIM(SPLIT_PART(tsp_sub_region, '-', 1))                                                                            AS tsp_sub_region_clean
   , TRIM(SPLIT_PART(tsp_region, '-', 1))                                                                                AS tsp_region_clean
@@ -21,3 +20,14 @@ SELECT
   , MAX(df_industry_clean) OVER (Partition by UPPER(TRIM(df_industry_clean)))                                           AS dim_industry_name_source
   , MAX(ultimate_parent_sales_segment_clean ) OVER (Partition by UPPER(TRIM(ultimate_parent_sales_segment_clean )))     AS dim_sales_segment_name_source
 FROM source
+)
+
+
+
+{{ dbt_audit(
+    cte_ref="final",
+    created_by="@paul_armstrong",
+    updated_by="@paul_armstrong",
+    created_date="2020-10-30",
+    updated_date="2020-10-30"
+) }}
