@@ -1,4 +1,4 @@
-WITH WITH self_managed_active_subscriptions AS (
+WITH self_managed_active_subscriptions AS (
   
     SELECT
       date_id,
