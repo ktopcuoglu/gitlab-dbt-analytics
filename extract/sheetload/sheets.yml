@@ -69,7 +69,7 @@ sheets:
     tabs:
       - headcount
   - name: hire_plan_forecast
-    owner: '@derekatwood'
+    owner: '@pluthra'
     tabs:
       - hire_plan
       - hire_forecast
