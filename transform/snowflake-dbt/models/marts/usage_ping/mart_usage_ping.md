@@ -1,5 +1,14 @@
-{% docs mart_paid_subscriptions_monthly_usage_ping_optin %}
-TBD
+{% docs mart_usage_ping_counters_statistics %}
+
+Data mart to explore statistics around usage ping counters. This includes the following statistics:
+
+* first version
+* first major version
+* first minor version
+* last version
+* last major version
+* last minor version
+
 {% enddocs %}
 
 {% docs mart_paid_subscriptions_monthly_usage_ping_optin %}
