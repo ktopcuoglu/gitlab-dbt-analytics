@@ -94,7 +94,7 @@ sheets:
     tabs:
       - location_factor_targets
   - name: manual_downgrade_dotcom_tracking
-    owner: '@derekatwood'
+    owner: '@mpeychet_'
     tabs:
       - manual_downgrade_dotcom_tracking
   - name: marketing_core_users_from_docs_gitlab_com
