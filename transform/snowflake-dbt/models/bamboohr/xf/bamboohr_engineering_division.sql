@@ -50,19 +50,7 @@ WITH employees AS (
     LEFT JOIN bamboohr_engineering_division_mapping
       ON bamboohr_engineering_division_mapping.jobtitle_speciality = engineering_employees.jobtitle_speciality 
 
-), reporting_structure AS (
-
-    SELECT 
-      {{ dbt_utils.surrogate_key(['date_actual', 'employee_id', 'team_name']) }} AS unique_key,
-      engineering_employee_attributes.*,
-      bamboohr_engineering_division_mapping.team_name
-    FROM engineering_employee_attributes
-    LEFT JOIN bamboohr_engineering_division_mapping
-      ON bamboohr_engineering_division_mapping.jobtitle_speciality = engineering_employee_attributes.jobtitle_speciality
-      AND bamboohr_engineering_division_mapping.sub_department = engineering_employee_attributes.sub_department
-      AND (bamboohr_engineering_division_mapping.technology_group = engineering_employee_attributes.technology_group OR bamboohr_engineering_division_mapping.technology_group = '')
- 
 )
 
 SELECT *
-FROM reporting_structure
+FROM engineering_employee_attributes
