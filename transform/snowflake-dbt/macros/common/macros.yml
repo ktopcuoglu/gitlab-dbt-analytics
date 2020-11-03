@@ -1,0 +1,15 @@
+version: 2
+
+macros:
+  - name: arr_buckets
+    description: This macro calculates buckets of values for ARR.
+    arguments:
+      - name: arr
+        type: number
+        description: ARR for the specified row.
+  - name: number_of_seats_buckets
+    description: This macro calculates buckets of values for number of seats.
+    arguments:
+      - name: number_of_seats
+        type: number
+        description: Number of seats for the specified row.

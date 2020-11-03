@@ -49,7 +49,9 @@ WITH dim_dates AS (
       dim_product_details_id,
       SUM(mrr)                                             AS mrr,
       SUM(arr)                                             AS arr,
-      SUM(quantity)                                        AS quantity
+      SUM(quantity)                                        AS quantity,
+      {{ arr_bucket('SUM(ARR)') }}                         AS arr_bucket,
+      {{ number_of_seats_buckets('SUM(quantity)') }}       AS number_of_seats_buckets
     FROM fct_invoice_items
     INNER JOIN dim_dates
       ON fct_invoice_items.effective_start_month <= dim_dates.date_actual
@@ -74,13 +76,16 @@ WITH dim_dates AS (
       dim_crm_accounts_invoice.ultimate_parent_account_segment          AS parent_account_segment_invoice,
       dim_crm_accounts_invoice.crm_account_id                           AS crm_account_id_invoice,
       dim_crm_accounts_invoice.crm_account_name                         AS crm_account_name_invoice,
+      dim_crm_accounts_invoice.account_owner_team                       AS account_owner_team_invoice,
       dim_crm_accounts_subscription.ultimate_parent_account_id          AS parent_account_id_subscription,
       dim_crm_accounts_subscription.ultimate_parent_account_name        AS parent_account_name_subscription,
       dim_crm_accounts_subscription.ultimate_parent_billing_country     AS parent_billing_country_subscription,
       dim_crm_accounts_subscription.ultimate_parent_account_segment     AS parent_account_segment_subscription,
       dim_crm_accounts_subscription.crm_account_id                      AS crm_account_id_subscription,
       dim_crm_accounts_subscription.crm_account_name                    AS crm_account_name_subscription,
+      dim_crm_accounts_subscription.account_owner_team                  AS account_owner_team_subscription,
       zuora_subscription.subscription_name,
+      zuora_subscription.subscription_id,
       dim_crm_accounts_invoice.is_reseller,
       dim_product_details.product_rate_plan_charge_name,
       dim_product_details.product_category,
@@ -101,7 +106,9 @@ WITH dim_dates AS (
       dim_product_details.annual_billing_list_price,
       arr_month_by_month.arr/arr_month_by_month.quantity                AS arpu,
       arr_month_by_month.arr                                            AS arr,
-      arr_month_by_month.quantity                                       AS quantity
+      arr_month_by_month.quantity                                       AS quantity,
+      arr_month_by_month.arr_buckets,
+      arr_month_by_month.number_of_seats_buckets
     FROM arr_month_by_month
     INNER JOIN zuora_subscription
       ON arr_month_by_month.dim_subscription_id = zuora_subscription.subscription_id
