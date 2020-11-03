@@ -50,7 +50,7 @@ WITH dim_dates AS (
       SUM(mrr)                                             AS mrr,
       SUM(arr)                                             AS arr,
       SUM(quantity)                                        AS quantity,
-      {{ arr_bucket('SUM(ARR)') }}                         AS arr_bucket,
+      {{ arr_buckets('SUM(ARR)') }}                        AS arr_buckets,
       {{ number_of_seats_buckets('SUM(quantity)') }}       AS number_of_seats_buckets
     FROM fct_invoice_items
     INNER JOIN dim_dates
