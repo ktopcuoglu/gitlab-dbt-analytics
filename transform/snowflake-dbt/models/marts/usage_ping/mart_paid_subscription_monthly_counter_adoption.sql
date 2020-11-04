@@ -97,7 +97,7 @@ WITH self_managed_active_subscriptions AS (
     SELECT 
       reporting_month AS agg_month,
       COUNT(DISTINCT subscription_name_slugify) AS total_subscrption_count
-    FROM  paid_subscriptions_monthly_usage_ping_optin
+    FROM paid_subscriptions_monthly_usage_ping_optin
     GROUP BY 1
 
 ), monthly_subscription_optin_counts AS (
