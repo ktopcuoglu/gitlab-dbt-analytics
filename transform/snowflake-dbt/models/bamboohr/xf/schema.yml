@@ -222,10 +222,6 @@ models:
   - name: bamboohr_engineering_division
     description: This model contains a list of team members and their engineering groups.
     columns:
-      - name: unique_key
-        tests:
-            - not_null
-            - unique
       - name: date_actual
       - name: employee_id
         description: Bamboo HR employee ID
@@ -244,7 +240,5 @@ models:
         description: Bamboo HR work email
       - name: reports_to
         description: Who the team member directly reports to
-      - name: team_name
-        description: Dependent on jobtitle_speciality and technology_group. 
 
 
