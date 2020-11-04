@@ -11,6 +11,7 @@ dbt,Relates to dbt-generated data-sets
 geo,Relates to geo data
 gitlab_dotcom,Relates to GitLab.com Database
 license_db,Relates to License DB
+industry, Related to companies industry data
 keyhole_twitter,Relates to Twitter data provided by Keyhole
 mart,For data marts
 mrr,Monthly Recurring revenue
@@ -18,6 +19,7 @@ on-run-end,dbt built-in
 on-run-start,dbt built-in
 poc,Proof of concept
 product,For large product analytics data
+sales_territory, Related to sales territory mappings
 schema,dbt built-in
 sfdc,Relates to Salesforce dotcom
 sources,Related to sources
