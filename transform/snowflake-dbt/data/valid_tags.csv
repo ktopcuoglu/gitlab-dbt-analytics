@@ -15,6 +15,7 @@ industry, Related to companies industry data
 keyhole_twitter,Relates to Twitter data provided by Keyhole
 mart,For data marts
 mrr,Monthly Recurring revenue
+order_type, For identifying types or order data
 on-run-end,dbt built-in
 on-run-start,dbt built-in
 opportunity, Relates to customer opportunity data.
