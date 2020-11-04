@@ -105,10 +105,12 @@ models:
       - name: dim_geo_region_name_id
         tests:
           - unique
+          - not_null
       - name: dim_geo_region_name
         tests:
           - unique
-            
+          - not_null
+
   - name: dim_ip_to_geo
     description: '{{ doc("dim_ip_to_geo") }}'
     columns:
