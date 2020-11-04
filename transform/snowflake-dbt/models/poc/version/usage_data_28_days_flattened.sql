@@ -1,6 +1,6 @@
 
 {% set metric_type = '28_days' %}
-{% set columns_to_parse = ['analytics_unique_visits', 'usage_activity_by_stage_monthly', 'stats_used', 'usage_activity_by_stage_monthly', 'redis_hll_counters'] %}
+{% set columns_to_parse = ['analytics_unique_visits', 'counts_monthly', 'usage_activity_by_stage_monthly', 'stats_used', 'usage_activity_by_stage_monthly', 'redis_hll_counters'] %}
 
 WITH data AS ( 
   

@@ -6,7 +6,8 @@
 WITH users AS (
 
   SELECT *
-  FROM {{ ref('gitlab_dotcom_users') }}
+  FROM {{ ref('gitlab_dotcom_users') }} users
+  WHERE {{ filter_out_blocked_users('users', 'user_id') }}
 
 ), cohorting AS (
 
