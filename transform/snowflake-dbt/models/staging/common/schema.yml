@@ -146,6 +146,22 @@ models:
       - name: updated_date
         description: The date the release was updated in the Version app.
 
+  - name: dim_industry
+    description: '{{ doc("dim_industry") }}'
+    columns:
+      - name: dim_industry_name_id
+        description: Unique identifier of a version of a industry
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "industry", "common"]
+      - name: dim_industry_name
+        description: Industry text
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "industry", "common"]
+
   - name: dim_instances 
     description: '{{ doc("dim_instances") }}'
     columns: 
@@ -327,6 +343,22 @@ models:
 
   - name: dim_subscriptions_valid_at
     description: Parameterized model to recreate dimension table representing subscription details as in Zuora at given date. Required variable valid_at is timezone sensitive
+
+  - name: dim_sales_territory
+    description: '{{ doc("dim_sales_territory") }}'
+    columns:
+      - name: dim_sales_territory_name_id
+        description: Unique identifier of a version of a sales territory
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "sales_territory", "common"]
+      - name: dim_sales_territory_name
+        description: Sales territory text
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "sales_territory", "common"]
 
   - name: fct_charges
     description: '{{ doc("fct_charges") }}'
