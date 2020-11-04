@@ -24,7 +24,7 @@ WITH usage_ping_data AS (
         )::BOOLEAN                                                   AS is_pre_release,
         IFF(edition = 'CE', 'CE', 'EE')                              AS main_edition,
         CASE 
-            WHEN edition = 'CE'                                   THEN 'CE'
+            WHEN edition = 'CE'                                   THEN 'Core'
             WHEN edition = 'EE Free'                              THEN 'Core'                                                      
             WHEN license_expire_date < usage_ping_data.created_at THEN 'Core'
             WHEN edition = 'EE'                                   THEN 'Starter'
