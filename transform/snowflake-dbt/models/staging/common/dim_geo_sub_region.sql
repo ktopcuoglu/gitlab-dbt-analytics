@@ -9,9 +9,9 @@
 ) }}
 
 {{ dbt_audit(
-    cte_ref="mapping",
+    cte_ref="unioned",
     created_by="@msendal",
     updated_by="@msendal",
-    created_date="2020-10-30",
-    updated_date="2020-10-30"
+    created_date="2020-11-04",
+    updated_date="2020-11-04"
 ) }}

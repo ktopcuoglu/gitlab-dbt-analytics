@@ -109,7 +109,7 @@ models:
       - name: location_id
 
   - name: dim_geo_sub_region
-    description: "Dimension table for sub-region. Example values: Southern Europe, NA East, Nordics"
+    description: "Dimension table for sub-region built off ATAM_Sub_Region__C in SFDC. Example values: Southern Europe, NA East, Nordics"
     columns:
       - name: dim_geo_sub_region_id
         tests:
