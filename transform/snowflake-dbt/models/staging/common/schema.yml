@@ -152,7 +152,23 @@ models:
           - unique
         tags: ["tdf", "industry", "common"]
 
-  - name: dim_instances 
+  - name: dim_opportunity_source
+    description: '{{ doc("dim_opportunity_source") }}'
+    columns:
+      - name: dim_opportunity_source_id
+        description: Unique identifier for each opportunity source name
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "opportunity", "common"]
+      - name: opportunity_source_name
+        description: Opportunity source name
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "opportunity", "common"]
+
+  - name: dim_instances
     description: '{{ doc("dim_instances") }}'
     columns: 
       - name: uuid
@@ -333,22 +349,6 @@ models:
 
   - name: dim_subscriptions_valid_at
     description: Parameterized model to recreate dimension table representing subscription details as in Zuora at given date. Required variable valid_at is timezone sensitive
-
-  - name: dim_sales_territory
-    description: '{{ doc("dim_sales_territory") }}'
-    columns:
-      - name: dim_sales_territory_name_id
-        description: Unique identifier of a version of a sales territory
-        tests:
-          - not_null
-          - unique
-        tags: ["tdf", "sales_territory", "common"]
-      - name: dim_sales_territory_name
-        description: Sales territory text
-        tests:
-          - not_null
-          - unique
-        tags: ["tdf", "sales_territory", "common"]
 
   - name: fct_charges
     description: '{{ doc("fct_charges") }}'
