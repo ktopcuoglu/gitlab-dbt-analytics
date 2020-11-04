@@ -108,6 +108,8 @@ models:
           - not_null
       - name: location_id
 
+  - name: dim_geo_area
+    description: "Dimension table for geographic area built off ATAM_Area__C in SFDC. Example values: Southern PNW, India, Northeast"
   - name: dim_gitlab_versions
     description: '{{ doc("dim_gitlab_versions") }}'
     columns:
