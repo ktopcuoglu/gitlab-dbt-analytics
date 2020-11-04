@@ -37,7 +37,7 @@ WITH issues AS (
       issues.state                                              AS issue_state,
       agg_assignee.assignee,
       issues.issue_description,
-      SPLIT_PART(issue_description, '#### <summary>',2)                 AS issue_description_split,
+      SPLIT_PART(issue_description, '**Weekly Check-In Table**',2)                 AS issue_description_split,
       CASE WHEN CONTAINS(issue_description, '[x] Yes, Diversity Sourcing methods were used'::VARCHAR) = True
             THEN 'Used Diversity Strings'
            WHEN CONTAINS(issue_description, '[x] No, I did not use Diversity Sourcing methods'::VARCHAR) = True
@@ -55,7 +55,7 @@ WITH issues AS (
 ), split_issue AS (
 
     SELECT *
-    FROM intermediate AS splittable, lateral split_to_table(splittable.issue_description_split, '| 20') 
+    FROM intermediate AS splittable, lateral split_to_table(splittable.issue_description_split, '#### <summary>') 
     ---- splitting by year starting with 20
 
 ), cleaned AS (
