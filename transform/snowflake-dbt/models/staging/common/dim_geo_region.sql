@@ -1,33 +1,17 @@
 {{config({
-    "materialized": "table",
     "schema": "common"
   })
 }}
 
-WITH sfdc_account AS (
-
-    SELECT *
-    FROM {{ ref('map_geo_region') }}
-
-), unioned AS (
-
-  SELECT DISTINCT
-    dim_geo_region_id AS dim_geo_region_id,
-    geo_region_name   AS geo_region_name
-
-  FROM sfdc_account
-
-  UNION ALL
-
-  SELECT
-    '-1'                AS dim_geo_region_id,
-    '(Missing Region)'  AS geo_region_name
-)
+{{ generate_single_field_dimension_from_prep (
+    model_name="prep_sfdc_account",
+    dimension_column="dim_geo_region_name_source",
+) }}
 
 {{ dbt_audit(
     cte_ref="unioned",
     created_by="@msendal",
     updated_by="@msendal",
-    created_date="2020-10-30",
-    updated_date="2020-10-30"
+    created_date="2020-11-04",
+    updated_date="2020-11-04"
 ) }}
