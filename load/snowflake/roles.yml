@@ -53,6 +53,13 @@ roles:
             - admin
 
     - sysadmin:
+        member_of:
+          include:
+            - "*"
+          exclude:
+            - accountadmin
+            - securityadmin
+            - useradmin
         warehouses:
             - admin
         privileges:
@@ -586,6 +593,7 @@ roles:
                 - analytics.analytics_sensitive
                 - analytics.analytics_staging
                 - analytics.common
+                - analytics.common_mapping
             tables:
                 - analytics.analytics.*
                 - analytics.analytics_clones.*
@@ -593,6 +601,7 @@ roles:
                 - analytics.analytics_sensitive.*
                 - analytics.analytics_staging.*
                 - analytics.common.*
+                - analytics.common_mapping.*
         privileges:
             databases:
                 read:
@@ -716,9 +725,11 @@ roles:
             schemas:
                 read:
                     - analytics.common
+                    - analytics.common_mapping
             tables:
                 read:
                     - analytics.common.*
+                    - analytics.common_mapping.*
 
     - date:
         privileges:
@@ -758,6 +769,7 @@ roles:
                 read:
                     - analytics.analytics
                     - analytics.common
+                    - analytics.common_mapping
                     - analytics.analytics_meta
                     - analytics.analytics_staging
                     - analytics.dbt
@@ -766,6 +778,7 @@ roles:
                 read:
                     - analytics.analytics.*
                     - analytics.common.*
+                    - analytics.common_mapping.*
                     - analytics.analytics_meta.*
                     - analytics.analytics_staging.*
                     - analytics.dbt.*
@@ -1714,7 +1727,14 @@ roles:
                     - raw.zendesk_stitch.*
                     - raw.zendesk_community_relations_stitch.*
                     - raw.zuora_stitch.*
-    
+
+    - swaldner:
+        member_of:
+            - product_manager
+            - reporter
+        warehouses:
+            - reporting
+
     - target_snowflake:
         warehouses:
             - target_snowflake
@@ -2190,6 +2210,11 @@ users:
         can_login: yes
         member_of:
             - stitch
+
+    - swaldner:
+        can_login: yes
+        member_of:
+            - swaldner
 
     - tcarter:
         can_login: no
