@@ -16,6 +16,7 @@ mart,For data marts
 mrr,Monthly Recurring revenue
 on-run-end,dbt built-in
 on-run-start,dbt built-in
+opportunity, Relates to customer opportunity data
 poc,Proof of concept
 product,For large product analytics data
 schema,dbt built-in
