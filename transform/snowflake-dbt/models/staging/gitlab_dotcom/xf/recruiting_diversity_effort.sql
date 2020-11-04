@@ -37,7 +37,7 @@ WITH issues AS (
       issues.state                                              AS issue_state,
       agg_assignee.assignee,
       issues.issue_description,
-      SPLIT_PART(issue_description, '| Week',2)                 AS issue_description_split,
+      SPLIT_PART(issue_description, '#### <summary>',2)                 AS issue_description_split,
       CASE WHEN CONTAINS(issue_description, '[x] Yes, Diversity Sourcing methods were used'::VARCHAR) = True
             THEN 'Used Diversity Strings'
            WHEN CONTAINS(issue_description, '[x] No, I did not use Diversity Sourcing methods'::VARCHAR) = True
@@ -61,13 +61,12 @@ WITH issues AS (
 ), cleaned AS (
 
     SELECT *,
-      value,
-      LEFT(TRIM(value), 8) As week_end,
-      CASE WHEN value LIKE '[x] Yes' 
+      LEFT(TRIM(value),10) As week_of,
+      CASE WHEN CONTAINS(value,'[x] Yes, Diversity sourcing was used')
              THEN 'Yes'
-           WHEN value LIKE '[x] Not actively sourcing]'
+           WHEN CONTAINS(value, '[x] Not actively sourcing')
              THEN 'Not Actively Sourcing'
-          WHEN value LIKE '[x] No, Not]'
+          WHEN CONTAINS(value,'[x] No, Did not use')
             THEN 'No'
          ELSE issue_answer END                              AS used_diversity_string
   FROM split_issue
@@ -81,6 +80,8 @@ WITH issues AS (
       issue_created_week,
       issue_closed_at,
       issue_closed_week,
+      week_of,
+      ---moved to using 1 issue per req and tracking weeks in issue on 2020.11.01
       is_issue_closed,
       issue_state,
       issue_description,
