@@ -1,27 +1,12 @@
 {{config({
-    "materialized": "table",
     "schema": "common"
   })
 }}
 
-WITH sfdc_account AS (
-
-    SELECT *
-    FROM {{ ref('map_geo_region') }}
-
-), unioned AS (
-
-    SELECT DISTINCT
-      dim_geo_sub_region_id   AS dim_geo_sub_region_id,
-      geo_sub_region_name     AS geo_sub_region_name
-    FROM sfdc_account
-
-    UNION ALL
-
-    SELECT
-      '-1'                     AS dim_geo_sub_region_id,
-      '(Missing Sub Region)'   AS geo_sub_region_name
-)
+{{ generate_single_field_dimension_from_prep (
+    model_name="prep_sfdc_account",
+    dimension_column="dim_geo_sub_region_name_source",
+) }}
 
 {{ dbt_audit(
     cte_ref="mapping",
