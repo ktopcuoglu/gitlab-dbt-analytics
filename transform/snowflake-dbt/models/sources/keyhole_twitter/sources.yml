@@ -1,0 +1,17 @@
+version: 2
+
+sources:
+  - name: keyhole_twitter
+    database: '{{ env_var("SNOWFLAKE_LOAD_DATABASE") }}'
+    schema: keyhole_twitter
+    loader: Airflow
+    loaded_at_field: _updated_at
+
+    quoting:
+      database: true
+      schema: false
+      identifier: false
+
+    tables:
+      - name: impressions
+        description: '{{ doc("twitter_impressions") }}'

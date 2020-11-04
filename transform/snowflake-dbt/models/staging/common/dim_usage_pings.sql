@@ -18,17 +18,14 @@ WITH usage_ping_data AS (
         )::BOOLEAN                                                   AS is_pre_release,
         IFF(edition = 'CE', 'CE', 'EE')                              AS main_edition,
         CASE edition
-            WHEN 'CE'       THEN 'CE'
+            WHEN 'CE'       THEN 'Core'
             WHEN 'EE Free'  THEN 'Core'
             WHEN 'EE'       THEN 'Starter'
             WHEN 'EES'      THEN 'Starter'
             WHEN 'EEP'      THEN 'Premium'
             WHEN 'EEU'      THEN 'Ultimate'
             ELSE NULL END                                            AS product_tier,
-        CASE edition
-            WHEN 'CE' THEN product_tier
-            WHEN 'EE' THEN main_edition || ' - ' || product_tier  
-            ELSE NULL END                                            AS main_edition_product_tier, 
+        main_edition || ' - ' || product_tier                        AS main_edition_product_tier, 
         IFF( uuid = 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f',
                 'SaaS','Self-Managed')                               AS ping_source
     FROM usage_ping_data
@@ -52,8 +49,9 @@ WITH usage_ping_data AS (
 
 ), usage_with_ip AS (
 
-    SELECT *,
-      ip_to_geo.location_id  AS geo_location_id 
+    SELECT 
+        internal_identified.*,
+        ip_to_geo.location_id
     FROM internal_identified
     LEFT JOIN ip_to_geo
       ON internal_identified.source_ip_hash = ip_to_geo.ip_address_hash

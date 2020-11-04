@@ -976,6 +976,7 @@ tables:
       , state_id
       , duplicated_to_id
       , promoted_to_epic_id
+      , sprint_id
       FROM issues
       WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
         AND '{EXECUTION_DATE}'::timestamp
@@ -2193,6 +2194,8 @@ tables:
     import_db: GITLAB_DB
     import_query: >
       SELECT id
+      , email
+      , commit_email
       , remember_created_at
       , sign_in_count
       , current_sign_in_at

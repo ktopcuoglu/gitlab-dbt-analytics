@@ -64,7 +64,8 @@ models:
           - name: lineage
             description: "All the subscriptions subsquent to the primary subscription, separated by commas."
             tests:
-                - not_null
+                - dbt_utils.not_null_where:
+                   where: "account_number NOT IN ('A00012364')" #https://gitlab.com/gitlab-data/analytics/-/issues/6543
           - name: rate_plan_name
             tests:
                 - not_null
@@ -180,7 +181,8 @@ models:
                 - not_null
           - name: lineage
             tests:
-                - not_null
+                - dbt_utils.not_null_where:
+                   where: "account_number NOT IN ('A00012364')" #https://gitlab.com/gitlab-data/analytics/-/issues/6543
           - name: mrr_month
             description: '{{ doc("zuora_mrr_totals_col_mrr_month") }}'
             tests:
