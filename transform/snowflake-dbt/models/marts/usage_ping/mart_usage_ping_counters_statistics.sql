@@ -18,7 +18,7 @@ WITH flattened_usage_data AS (
       )                                AS firt_minor_version_with_counter,
       LAST_VALUE(major_minor_version) OVER (
         PARTITION BY full_ping_name 
-        ORDER BY  major_version ASC, minor_version ASC
+        ORDER BY major_version ASC, minor_version ASC
       )                                AS last_version_with_counter,
       MAX(major_version) OVER (
         PARTITION BY full_ping_name
