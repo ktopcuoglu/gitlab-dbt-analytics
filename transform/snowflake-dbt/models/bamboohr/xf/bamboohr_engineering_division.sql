@@ -14,7 +14,7 @@ WITH employees AS (
       date_actual,
       employee_id,
       full_name,
-      LOWER(job_title)                                                      AS job_title,
+      job_title                                                             AS job_title,
       LOWER(TRIM(VALUE::string))                                            AS jobtitle_speciality,
       reports_to,
       layers,
@@ -28,6 +28,7 @@ WITH employees AS (
 ), engineering_employee_attributes AS (
     
     SELECT 
+     {{ dbt_utils.surrogate_key(['date_actual', 'employee_id', 'technology_group']) }} AS unique_key,
       engineering_employees.date_actual,
       engineering_employees.employee_id,
       engineering_employees.full_name,
@@ -36,11 +37,11 @@ WITH employees AS (
       engineering_employees.jobtitle_speciality,
       CASE 
         WHEN engineering_employees.employee_id IN (41965,41996,41453,41482,41974,41487,42029,40914,41954,46) 
-            OR engineering_employees.job_title LIKE '%backend%' 
+            OR LOWER(engineering_employees.job_title) LIKE '%backend%' 
           THEN 'backend'
-        WHEN engineering_employees.job_title LIKE '%fullstack%'
+        WHEN LOWER(engineering_employees.job_title) LIKE '%fullstack%'
           THEN 'fullstack'
-        WHEN engineering_employees.job_title LIKE '%frontend%'
+        WHEN LOWER(engineering_employees.job_title) LIKE '%frontend%'
           THEN 'frontend'
         ELSE NULL END                                                           AS technology_group,
       engineering_employees.department,
