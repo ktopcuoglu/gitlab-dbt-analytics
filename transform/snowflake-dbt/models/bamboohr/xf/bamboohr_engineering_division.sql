@@ -28,7 +28,6 @@ WITH employees AS (
 ), engineering_employee_attributes AS (
     
     SELECT 
-     {{ dbt_utils.surrogate_key(['date_actual', 'employee_id', 'technology_group']) }} AS unique_key,
       engineering_employees.date_actual,
       engineering_employees.employee_id,
       engineering_employees.full_name,
