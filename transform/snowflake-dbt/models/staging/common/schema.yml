@@ -172,13 +172,13 @@ models:
     description: '{{ doc("dim_purchase_channel") }}'
     columns:
       - name: dim_purchase_channel_id
-        description: Unique identifier for each opportunity source name
+        description: Unique identifier for each purchase channel name
         tests:
           - not_null
           - unique
         tags: [ "tdf", "purchase_channel", "common" ]
       - name: purchase_channel_name
-        description: Opportunity source name
+        description: Purchase channel name text
         tests:
           - not_null
           - unique
