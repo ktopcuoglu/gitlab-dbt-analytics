@@ -25,7 +25,7 @@ WITH flattened_usage_data AS (
       )                                as last_major_version_with_counter,
       LAST_VALUE(minor_version) OVER (
         PARTITION BY full_ping_name 
-        ORDER BY  major_version ASC, minor_version ASC
+        ORDER BY major_version ASC, minor_version ASC
       )                                AS last_minor_version_with_counter,
       COUNT(DISTINCT id) OVER (PARTITION BY full_ping_name) AS count_pings,
       COUNT(DISTINCT uuid) OVER (PARTITION BY full_ping_name) AS count_instances
