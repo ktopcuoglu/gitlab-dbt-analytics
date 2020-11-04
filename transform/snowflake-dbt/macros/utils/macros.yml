@@ -31,6 +31,8 @@ macros:
     description: '{{ doc("distinct_source") }}'
   - name: generate_schema_name
     description: '{{ doc("generate_schema_name") }}'
+  - name: get_date_id
+    description: '{{ doc("get_date_id") }}'
   - name: monthly_change
     description: '{{ doc("monthly_change") }}'
   - name: monthly_is_used
