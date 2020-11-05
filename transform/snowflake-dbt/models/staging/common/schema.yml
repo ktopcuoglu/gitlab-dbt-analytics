@@ -325,7 +325,7 @@ models:
   - name: dim_sales_segment
     description: '{{ doc("dim_sales_segment") }}'
     columns:
-      - name: dim_sales_segment_id
+      - name: dim_sales_segment_name_id
         description: Unique identifier of a version of a sales segment
         tests:
           - not_null
