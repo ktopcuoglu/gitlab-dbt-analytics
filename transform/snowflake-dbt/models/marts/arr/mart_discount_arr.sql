@@ -95,19 +95,11 @@ WITH dim_dates AS (
       DATE_TRUNC('month',zuora_subscription.subscription_start_date)    AS subscription_start_month,
       DATE_TRUNC('month',zuora_subscription.subscription_end_date)      AS subscription_end_month,
       dim_product_details.annual_billing_list_price,
-<<<<<<< HEAD
-      arr_month_by_month.arr/arr_month_by_month.quantity                AS arpu,
-      arr_month_by_month.arr                                            AS arr,
-      arr_month_by_month.quantity                                       AS quantity,
-      arr_month_by_month.arr_buckets,
-      arr_month_by_month.number_of_seats_buckets
-=======
       ARRAY_AGG(IFF(zuora_subscription.created_by_id = '2c92a0fd55822b4d015593ac264767f2', -- All Self-Service / Web direct subscriptions are identified by that created_by_id
                    'Self-Service', 'Sales-Assisted'))                   AS subscription_sales_type,
       SUM(arr_month_by_month.arr)/SUM(arr_month_by_month.quantity)      AS arpu,
       SUM(arr_month_by_month.arr)                                       AS arr,
       SUM(arr_month_by_month.quantity)                                  AS quantity
->>>>>>> master
     FROM arr_month_by_month
     INNER JOIN zuora_subscription
       ON arr_month_by_month.dim_subscription_id = zuora_subscription.subscription_id
