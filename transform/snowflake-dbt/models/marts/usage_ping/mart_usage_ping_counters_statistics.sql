@@ -4,7 +4,7 @@ WITH flattened_usage_data AS (
       f.path                           AS ping_name, 
       IFF(edition='CE', edition, 'EE') AS edition,
       SPLIT_PART(ping_name, '.', 1)    AS main_json_name,
-      SPLIT_PART(ping_name, '.', -1)   AS feature_name
+      SPLIT_PART(ping_name, '.', -1)   AS feature_name,
       FIRST_VALUE(major_minor_version) OVER (
         PARTITION BY full_ping_name 
         ORDER BY  major_version ASC, minor_version ASC
