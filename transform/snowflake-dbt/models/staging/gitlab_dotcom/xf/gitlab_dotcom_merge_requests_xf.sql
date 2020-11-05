@@ -7,7 +7,8 @@ WITH merge_requests AS (
       {{ dbt_utils.star(from=ref('gitlab_dotcom_merge_requests'), except=["created_at", "updated_at"]) }},
       created_at AS merge_request_created_at,
       updated_at  AS merge_request_updated_at
-    FROM {{ref('gitlab_dotcom_merge_requests')}}
+    FROM {{ref('gitlab_dotcom_merge_requests')}} merge_requests
+    WHERE {{ filter_out_blocked_users('merge_requests', 'author_id') }}
 
 ), label_links AS (
 
