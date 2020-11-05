@@ -232,10 +232,7 @@ models:
       customers:
         xf:
           +schema: analytics
-
-      common_mapping:
-        +schema: common_mapping
-
+          
       date:
         +schema: analytics
         +materialized: view
