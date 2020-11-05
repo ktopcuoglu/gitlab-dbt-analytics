@@ -79,7 +79,10 @@ def get_metadata(file, google_sheet_client):
             tab = file.sheet1.title
             return file_name, tab
         except APIError as gspread_error:
-            if gspread_error.response.status_code == 429:
+            if (
+                gspread_error.response.status_code == 429
+                or gspread_error.response.status_code == 503
+            ):
                 google_sheet_client.wait_exponential_backoff(n)
                 n = n + 1
             else:
