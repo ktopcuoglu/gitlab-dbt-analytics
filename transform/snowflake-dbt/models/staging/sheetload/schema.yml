@@ -78,6 +78,7 @@ models:
 - name: sheetload_product_maturity_historical
 - name: sheetload_release_blog_posts
 - name: sheetload_rep_quotas
+  description: Sales representative quota data
 - name: sheetload_rep_quotas_full_ps_fy2020
 - name: sheetload_sales_training_completion_dates
 - name: sheetload_scalable_employment_values
