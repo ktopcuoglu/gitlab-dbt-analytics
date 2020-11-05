@@ -220,3 +220,9 @@ Sales territory dimension, based off of salesforce account data, using the `gene
 Industry dimension, based off of salesforce account data, using the `generate_single_field_dimension_from_prep` macro to create the final formatted SQL
 
 {% enddocs %}
+
+{% docs dim_order_type %}
+
+Order type dimension, based off of salesforce opportunity data, using the `generate_single_field_dimension` macro to create the final formatted SQL
+
+{% enddocs %}
