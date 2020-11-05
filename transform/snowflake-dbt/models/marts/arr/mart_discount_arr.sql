@@ -117,40 +117,9 @@ WITH dim_dates AS (
 ), final AS (
 
     SELECT
-      primary_key,
-      IFF(ROW_NUMBER() OVER(PARTITION BY invoice_month, subscription_name, dim_product_details_id ORDER BY arr_month ASC) = 1, TRUE, FALSE) AS is_first_arr_month,
-      arr_month,
-      invoice_month,
-      parent_account_id_invoice,
-      parent_account_name_invoice,
-      parent_billing_country_invoice,
-      parent_account_segment_invoice,
-      crm_account_id_invoice,
-      crm_account_name_invoice,
-      account_owner_team_invoice,
-      parent_account_id_subscription,
-      parent_account_name_subscription,
-      parent_billing_country_subscription,
-      parent_account_segment_subscription,
-      crm_account_id_subscription,
-      crm_account_name_subscription,
-      account_owner_team_subscription,
-      subscription_name,
-      is_reseller,
-      product_rate_plan_charge_name,
-      product_category,
-      delivery,
-      service_type,
-      is_excluded_from_disc_analysis,
-      subscription_start_month,
-      subscription_end_month,
-      annual_billing_list_price,
-      subscription_sales_type,
-      arpu,
-      arr,
-      quantity,
-      arr_buckets,
-      number_of_seats_buckets
+      IFF(ROW_NUMBER() OVER(PARTITION BY invoice_month, subscription_name, crm_account_id_invoice,
+      dim_product_details_id, arr ORDER BY arr_month ASC) = 1, TRUE, FALSE) AS is_first_arr_month,
+      *
     FROM aggregation
 
 )
