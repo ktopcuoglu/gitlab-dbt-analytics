@@ -100,14 +100,14 @@ docker-compose.yml  @tayloramurphy  @m_walker
 /transform/snowflake-dbt/models/sources/pmg   @jeanpeguero    @paul_armstrong   @jjstark
 /transform/snowflake-dbt/models/staging/pmg   @jeanpeguero    @paul_armstrong   @jjstark
 
-/transform/snowflake-dbt/models/sources/qualtrics   @m_walker  @jjstark  @tayloramurphy
-/transform/snowflake-dbt/models/staging/qualtrics   @m_walker  @jjstark  @tayloramurphy
+/transform/snowflake-dbt/models/sources/qualtrics   @m_walker  @jjstark     @tayloramurphy
+/transform/snowflake-dbt/models/staging/qualtrics   @m_walker  @jjstark     @tayloramurphy
 
 /transform/snowflake-dbt/models/sources/sfdc/           @kathleentam	@jeanpeguero   @jjstark     @paul_armstrong
 /transform/snowflake-dbt/models/staging/sfdc/           @kathleentam    @jeanpeguero   @jjstark     @paul_armstrong
 
-/transform/snowflake-dbt/models/sources/snowflake/  @m_walker       @kathleentam    @jjstark  @tayloramurphy
-/transform/snowflake-dbt/models/staging/snowflake/  @m_walker       @kathleentam    @jjstark  @tayloramurphy
+/transform/snowflake-dbt/models/sources/snowflake/  @m_walker       @kathleentam    @jjstark    @tayloramurphy
+/transform/snowflake-dbt/models/staging/snowflake/  @m_walker       @kathleentam    @jjstark    @tayloramurphy
 
 /transform/snowflake-dbt/models/sources/version/    @mpeychet_		@m_walker       @kathleentam
 /transform/snowflake-dbt/models/staging/version/    @mpeychet_		@m_walker       @kathleentam
