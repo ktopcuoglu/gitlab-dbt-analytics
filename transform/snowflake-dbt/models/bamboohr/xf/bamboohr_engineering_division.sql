@@ -15,7 +15,7 @@ WITH employees AS (
       employee_id,
       full_name,
       job_title                                                             AS job_title,
-      LOWER(TRIM(VALUE::string))                                            AS jobtitle_speciality,
+      LOWER(TRIM(VALUE::VARCHAR))                                            AS job_title_speciality,
       reports_to,
       layers,
       department,
