@@ -59,7 +59,7 @@ WITH dim_dates AS (
 ), aggregation AS (
 
     SELECT
-      {{ dbt_utils.surrogate_key(['arr_month_by_month.invoice_month','arr_month_by_month.arr_month', 'zuora_subscription.subscription_name', 'arr_month_by_month.dim_product_details_id']) }}
+      {{ dbt_utils.surrogate_key(['arr_month_by_month.invoice_month','arr_month_by_month.arr_month', 'zuora_subscription.subscription_name', 'dim_crm_accounts_invoice.crm_account_id','arr_month_by_month.dim_product_details_id']) }}
                                                                                   AS primary_key,
       arr_month_by_month.arr_month,
       arr_month_by_month.invoice_month,
