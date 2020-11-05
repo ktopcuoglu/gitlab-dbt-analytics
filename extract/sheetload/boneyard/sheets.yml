@@ -1,6 +1,6 @@
 sheets:
   - name: frontend_interview_metrics
-    owner: '@ClemMakesApps'
+    owner: '@andr3'
     tabs:
       - interviews
       - rubric_max_points

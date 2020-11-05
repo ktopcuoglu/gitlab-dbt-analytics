@@ -20,7 +20,8 @@ WITH source AS (
       manager_name__c  AS manager_name,
       isactive         AS is_active,
       userroleid       AS user_role_id,
-			start_date__c    AS start_date,
+      start_date__c    AS start_date,
+      user_segment__c  AS user_segment,
 
       --metadata
       createdbyid      AS created_by_id,
