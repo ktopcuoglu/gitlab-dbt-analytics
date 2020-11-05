@@ -141,7 +141,7 @@ sheets:
   - name: rep_quotas
     owner: '@derekatwood'
     tabs:
-      - quotas_for_upload
+      - rep_quotas
   - name: rep_quotas_full_ps_fy2020
     owner: '@derekatwood'
     tabs:
