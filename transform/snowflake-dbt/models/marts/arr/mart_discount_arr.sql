@@ -56,13 +56,14 @@ WITH dim_dates AS (
       AND dim_subscription_id NOT IN ('2c92a0ff5e1dcf14015e3c191d4f7689','2c92a00e6a3477b5016a46aaec2f08bc')
     {{ dbt_utils.group_by(n=8) }}
 
-), final AS (
+), aggregation AS (
 
     SELECT
       {{ dbt_utils.surrogate_key(['arr_month_by_month.invoice_month','arr_month_by_month.arr_month', 'zuora_subscription.subscription_name', 'arr_month_by_month.dim_product_details_id']) }}
                                                                                   AS primary_key,
       arr_month_by_month.arr_month,
       arr_month_by_month.invoice_month,
+      arr_month_by_month.dim_product_details_id,
       dim_crm_accounts_invoice.ultimate_parent_account_id                         AS parent_account_id_invoice,
       dim_crm_accounts_invoice.ultimate_parent_account_name                       AS parent_account_name_invoice,
       dim_crm_accounts_invoice.ultimate_parent_billing_country                    AS parent_billing_country_invoice,
@@ -110,8 +111,47 @@ WITH dim_dates AS (
       ON arr_month_by_month.dim_crm_account_id_invoice = dim_crm_accounts_invoice.crm_account_id
     LEFT JOIN dim_crm_accounts AS dim_crm_accounts_subscription
       ON arr_month_by_month.dim_crm_account_id_subscription = dim_crm_accounts_subscription.crm_account_id
-    {{ dbt_utils.group_by(n=27) }}
+    {{ dbt_utils.group_by(n=28) }}
     ORDER BY 3 DESC
+
+), final AS (
+
+    SELECT
+      primary_key,
+      IFF(ROW_NUMBER() OVER(PARTITION BY invoice_month, subscription_name, dim_product_details_id ORDER BY arr_month ASC) = 1, TRUE, FALSE) AS is_first_arr_month,
+      arr_month,
+      invoice_month,
+      parent_account_id_invoice,
+      parent_account_name_invoice,
+      parent_billing_country_invoice,
+      parent_account_segment_invoice,
+      crm_account_id_invoice,
+      crm_account_name_invoice,
+      account_owner_team_invoice,
+      parent_account_id_subscription,
+      parent_account_name_subscription,
+      parent_billing_country_subscription,
+      parent_account_segment_subscription,
+      crm_account_id_subscription,
+      crm_account_name_subscription,
+      account_owner_team_subscription,
+      subscription_name,
+      is_reseller,
+      product_rate_plan_charge_name,
+      product_category,
+      delivery,
+      service_type,
+      is_excluded_from_disc_analysis,
+      subscription_start_month,
+      subscription_end_month,
+      annual_billing_list_price,
+      subscription_sales_type,
+      arpu,
+      arr,
+      quantity,
+      arr_buckets,
+      number_of_seats_buckets
+    FROM aggregation
 
 )
 
