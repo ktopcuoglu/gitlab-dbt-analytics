@@ -33,6 +33,15 @@ macros:
     description: '{{ doc("generate_schema_name") }}'
   - name: get_date_id
     description: '{{ doc("get_date_id") }}'
+  - name: generate_single_field_dimension_from_prep
+    description: '{{ doc("generate_single_field_dimension_from_prep") }}'
+    arguments:
+      - name: model_name
+        type: string
+        description: Name of the prepped data model
+      - name: dimension_column
+        type: string
+        description: Name of the column in the source model to be used in the dimensions
   - name: monthly_change
     description: '{{ doc("monthly_change") }}'
   - name: monthly_is_used
@@ -45,3 +54,25 @@ macros:
     description: '{{ doc("schema_union_all") }}'
   - name: schema_union_limit
     description: '{{ doc("schema_union_limit") }}'
+  - name: generate_single_field_dimension
+    description: '{{ doc("generate_single_field_dimension") }}'
+    arguments:
+      - name: model_name
+        type: string
+        description: Name of the source model
+      - name: id_column
+        type: string
+        description: Name of column in the source model to be used as an ID
+      - name: id_column_name
+        type: string
+        description: Name of the ID column in the final dimension
+      - name: dimension_column
+        type: string
+        description: Name of the column in the source model to select
+      - name: dimension_column_name
+        type: string
+        description: Name of the column in the final dimension
+      - name: where_clause
+        type: string
+        description: Optional where clause, first condition can be passed through without a predicate. Subsequent conditions can be passed in the string if including additional AND 's
+

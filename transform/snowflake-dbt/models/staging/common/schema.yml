@@ -136,7 +136,71 @@ models:
       - name: updated_date
         description: The date the release was updated in the Version app.
 
-  - name: dim_instances 
+  - name: dim_industry
+    description: '{{ doc("dim_industry") }}'
+    columns:
+      - name: dim_industry_name_id
+        description: Unique identifier of a version of a industry
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "industry", "common"]
+      - name: dim_industry_name
+        description: Industry text
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "industry", "common"]
+
+  - name: dim_opportunity_source
+    description: '{{ doc("dim_opportunity_source") }}'
+    columns:
+      - name: dim_opportunity_source_id
+        description: Unique identifier for each opportunity source name
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "opportunity", "common"]
+      - name: opportunity_source_name
+        description: Opportunity source name
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "opportunity", "common"]
+
+  - name: dim_purchase_channel
+    description: '{{ doc("dim_purchase_channel") }}'
+    columns:
+      - name: dim_purchase_channel_id
+        description: Unique identifier for each purchase channel name
+        tests:
+          - not_null
+          - unique
+        tags: [ "tdf", "purchase_channel", "common" ]
+      - name: purchase_channel_name
+        description: Purchase channel name text
+        tests:
+          - not_null
+          - unique
+        tags: [ "tdf", "purchase_channel", "common" ]
+
+  - name: dim_order_type
+    description: '{{ doc("dim_purchase_channel") }}'
+    columns:
+      - name: dim_order_type_id
+        description: Unique identifier for each opportunity source name
+        tests:
+          - not_null
+          - unique
+        tags: [ "tdf", "order_type", "common" ]
+      - name: order_type_name
+        description: Opportunity source name
+        tests:
+          - not_null
+          - unique
+        tags: [ "tdf", "order_type", "common" ]
+
+  - name: dim_instances
     description: '{{ doc("dim_instances") }}'
     columns: 
       - name: uuid
@@ -257,6 +321,22 @@ models:
           - not_null
       - name: is_active
         description: A boolean column that flags if the user is active in salesforce, which means that the user can login and use salesforce.
+
+  - name: dim_sales_territory
+    description: '{{ doc("dim_sales_territory") }}'
+    columns:
+      - name: dim_sales_territory_id
+        description: Unique identifier of a version of a sales territory
+        tests:
+          - not_null
+          - unique
+        tags: [ "tdf", "sales_territory", "common" ]
+      - name: dim_sales_territory_name
+        description: Sales Territory text
+        tests:
+          - not_null
+          - unique
+        tags: [ "tdf", "sales_territory", "common" ]
 
   - name: dim_subscriptions
     description: '{{ doc("dim_subscriptions") }}'
