@@ -21,7 +21,7 @@ WITH promotions AS (
              THEN division
            ELSE department_grouping END                                             AS division_department, 
       division,
-      department_grouping                                                           AS department,
+      {{bamboohr_department_grouping()}}                                              AS department,
       headcount_end, 
       rolling_12_month_promotions
     FROM {{ ref ('bamboohr_rpt_headcount_aggregation') }}
