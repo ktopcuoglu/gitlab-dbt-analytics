@@ -45,9 +45,7 @@ WITH dim_dates AS (
       dim_product_details_id,
       SUM(mrr)                                             AS mrr,
       SUM(arr)                                             AS arr,
-      SUM(quantity)                                        AS quantity,
-      {{ arr_buckets('SUM(ARR)') }}                        AS arr_buckets,
-      {{ number_of_seats_buckets('SUM(quantity)') }}       AS number_of_seats_buckets
+      SUM(quantity)                                        AS quantity
     FROM fct_invoice_items
     INNER JOIN dim_dates
       ON fct_invoice_items.effective_start_month <= dim_dates.date_actual
@@ -62,25 +60,24 @@ WITH dim_dates AS (
 
     SELECT
       {{ dbt_utils.surrogate_key(['arr_month_by_month.invoice_month','arr_month_by_month.arr_month', 'zuora_subscription.subscription_name', 'arr_month_by_month.dim_product_details_id']) }}
-                                                                        AS primary_key,
+                                                                                  AS primary_key,
       arr_month_by_month.arr_month,
       arr_month_by_month.invoice_month,
-      dim_crm_accounts_invoice.ultimate_parent_account_id               AS parent_account_id_invoice,
-      dim_crm_accounts_invoice.ultimate_parent_account_name             AS parent_account_name_invoice,
-      dim_crm_accounts_invoice.ultimate_parent_billing_country          AS parent_billing_country_invoice,
-      dim_crm_accounts_invoice.ultimate_parent_account_segment          AS parent_account_segment_invoice,
-      dim_crm_accounts_invoice.crm_account_id                           AS crm_account_id_invoice,
-      dim_crm_accounts_invoice.crm_account_name                         AS crm_account_name_invoice,
-      dim_crm_accounts_invoice.account_owner_team                       AS account_owner_team_invoice,
-      dim_crm_accounts_subscription.ultimate_parent_account_id          AS parent_account_id_subscription,
-      dim_crm_accounts_subscription.ultimate_parent_account_name        AS parent_account_name_subscription,
-      dim_crm_accounts_subscription.ultimate_parent_billing_country     AS parent_billing_country_subscription,
-      dim_crm_accounts_subscription.ultimate_parent_account_segment     AS parent_account_segment_subscription,
-      dim_crm_accounts_subscription.crm_account_id                      AS crm_account_id_subscription,
-      dim_crm_accounts_subscription.crm_account_name                    AS crm_account_name_subscription,
-      dim_crm_accounts_subscription.account_owner_team                  AS account_owner_team_subscription,
+      dim_crm_accounts_invoice.ultimate_parent_account_id                         AS parent_account_id_invoice,
+      dim_crm_accounts_invoice.ultimate_parent_account_name                       AS parent_account_name_invoice,
+      dim_crm_accounts_invoice.ultimate_parent_billing_country                    AS parent_billing_country_invoice,
+      dim_crm_accounts_invoice.ultimate_parent_account_segment                    AS parent_account_segment_invoice,
+      dim_crm_accounts_invoice.crm_account_id                                     AS crm_account_id_invoice,
+      dim_crm_accounts_invoice.crm_account_name                                   AS crm_account_name_invoice,
+      dim_crm_accounts_invoice.account_owner_team                                 AS account_owner_team_invoice,
+      dim_crm_accounts_subscription.ultimate_parent_account_id                    AS parent_account_id_subscription,
+      dim_crm_accounts_subscription.ultimate_parent_account_name                  AS parent_account_name_subscription,
+      dim_crm_accounts_subscription.ultimate_parent_billing_country               AS parent_billing_country_subscription,
+      dim_crm_accounts_subscription.ultimate_parent_account_segment               AS parent_account_segment_subscription,
+      dim_crm_accounts_subscription.crm_account_id                                AS crm_account_id_subscription,
+      dim_crm_accounts_subscription.crm_account_name                              AS crm_account_name_subscription,
+      dim_crm_accounts_subscription.account_owner_team                            AS account_owner_team_subscription,
       zuora_subscription.subscription_name,
-      zuora_subscription.subscription_id,
       dim_crm_accounts_invoice.is_reseller,
       dim_product_details.product_rate_plan_charge_name,
       dim_product_details.product_category,
@@ -91,15 +88,17 @@ WITH dim_dates AS (
         WHEN LOWER(dim_product_details.product_rate_plan_charge_name) LIKE '%y combinator%' THEN TRUE
         WHEN LOWER(dim_product_details.product_rate_plan_charge_name) LIKE '%support%'      THEN TRUE
         ELSE FALSE
-      END                                                               AS is_excluded_from_disc_analysis,
-      DATE_TRUNC('month',zuora_subscription.subscription_start_date)    AS subscription_start_month,
-      DATE_TRUNC('month',zuora_subscription.subscription_end_date)      AS subscription_end_month,
+      END                                                                         AS is_excluded_from_disc_analysis,
+      DATE_TRUNC('month',zuora_subscription.subscription_start_date)              AS subscription_start_month,
+      DATE_TRUNC('month',zuora_subscription.subscription_end_date)                AS subscription_end_month,
       dim_product_details.annual_billing_list_price,
       ARRAY_AGG(IFF(zuora_subscription.created_by_id = '2c92a0fd55822b4d015593ac264767f2', -- All Self-Service / Web direct subscriptions are identified by that created_by_id
-                   'Self-Service', 'Sales-Assisted'))                   AS subscription_sales_type,
-      SUM(arr_month_by_month.arr)/SUM(arr_month_by_month.quantity)      AS arpu,
-      SUM(arr_month_by_month.arr)                                       AS arr,
-      SUM(arr_month_by_month.quantity)                                  AS quantity
+                   'Self-Service', 'Sales-Assisted'))                             AS subscription_sales_type,
+      SUM(arr_month_by_month.arr)/SUM(arr_month_by_month.quantity)                AS arpu,
+      SUM(arr_month_by_month.arr)                                                 AS arr,
+      SUM(arr_month_by_month.quantity)                                            AS quantity,
+      {{ arr_buckets('SUM(arr_month_by_month.arr)') }}                            AS arr_buckets,
+      {{ number_of_seats_buckets('SUM(arr_month_by_month.quantity)') }}           AS number_of_seats_buckets
     FROM arr_month_by_month
     INNER JOIN zuora_subscription
       ON arr_month_by_month.dim_subscription_id = zuora_subscription.subscription_id
@@ -119,7 +118,7 @@ WITH dim_dates AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@iweeks",
+    updated_by="@jpeguero",
     created_date="2020-10-21",
-    updated_date="2020-11-04",
+    updated_date="2020-11-05",
 ) }}
