@@ -110,7 +110,7 @@ WITH dim_dates AS (
       ON arr_month_by_month.dim_crm_account_id_invoice = dim_crm_accounts_invoice.crm_account_id
     LEFT JOIN dim_crm_accounts AS dim_crm_accounts_subscription
       ON arr_month_by_month.dim_crm_account_id_subscription = dim_crm_accounts_subscription.crm_account_id
-    {{ dbt_utils.group_by(n=25) }}
+    {{ dbt_utils.group_by(n=27) }}
     ORDER BY 3 DESC
 
 )
