@@ -230,7 +230,7 @@ models:
       - name: job_title
         description: Bamboo HR job title
       - name: sub_department
-      - name: jobtitle_speciality
+      - name: job_title_speciality
         description: Engineering group
       - name: technology_group
         description: Backend/frontend/fullstack. Derived from Bamboo HR job title.

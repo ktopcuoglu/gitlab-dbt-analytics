@@ -33,7 +33,7 @@ WITH employees AS (
       engineering_employees.full_name,
       engineering_employees.job_title,
       bamboohr_engineering_division_mapping.sub_department,
-      engineering_employees.jobtitle_speciality,
+      engineering_employees.job_title_speciality,
       CASE 
         WHEN engineering_employees.employee_id IN (41965,41996,41453,41482,41974,41487,42029,40914,41954,46) 
             OR LOWER(engineering_employees.job_title) LIKE '%backend%' 
@@ -48,7 +48,7 @@ WITH employees AS (
       engineering_employees.reports_to
     FROM engineering_employees
     LEFT JOIN bamboohr_engineering_division_mapping
-      ON bamboohr_engineering_division_mapping.jobtitle_speciality = engineering_employees.jobtitle_speciality 
+      ON bamboohr_engineering_division_mapping.job_title_speciality = engineering_employees.job_title_speciality 
 
 )
 
