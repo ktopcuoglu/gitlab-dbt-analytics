@@ -116,7 +116,7 @@ models:
           - unique
           - not_null
         tags: ["tdf", "common"]
-      - name: dim_geo_sub_region_name_source
+      - name: dim_geo_sub_region_name
         tests:
           - unique
           - not_null
