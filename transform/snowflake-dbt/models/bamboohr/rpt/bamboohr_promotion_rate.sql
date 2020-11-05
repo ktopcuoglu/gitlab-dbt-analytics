@@ -19,21 +19,15 @@ WITH promotions AS (
              THEN 'Company Overall - Including Sales Development'
            WHEN breakout_type = 'division_breakout' 
              THEN division
-           ELSE department END                                             AS division_department, 
+           ELSE department_grouping END                                             AS division_department, 
       division,
-      department,
+      department_grouping                                                           AS department,
       headcount_end, 
       rolling_12_month_promotions
     FROM {{ ref ('bamboohr_rpt_headcount_aggregation') }}
     WHERE breakout_type in ('department_breakout','kpi_breakout','division_breakout')
       AND eeoc_field_name = 'no_eeoc'
 
-), current_division_department AS (
-
-    SELECT 
-      DISTINCT division_mapped_current, 
-      department_modified
-    FROM {{ ref ('bamboohr_job_info_current_division_base') }}
 
 ), marketing_headcount_excluding_sales_development AS (
 
