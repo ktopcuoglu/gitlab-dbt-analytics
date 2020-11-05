@@ -232,7 +232,6 @@ models:
       customers:
         xf:
           +schema: analytics
-          
       date:
         +schema: analytics
         +materialized: view
