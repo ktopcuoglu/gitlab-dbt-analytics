@@ -8,7 +8,7 @@
 # nested in that directory, on any level
 
 [Default]
-* @jjstark @kathleentam @tayloramurphy
+* @jjstark @kathleentam @tayloramurphy @m_walker
 
 
 [Admin]
@@ -94,8 +94,8 @@ docker-compose.yml  @tayloramurphy  @m_walker
 /transform/snowflake-dbt/models/sources/license/    @mpeychet_		@m_walker       @kathleentam
 /transform/snowflake-dbt/models/staging/license/    @mpeychet_		@m_walker       @kathleentam
 
-/transform/snowflake-dbt/models/sources/netsuite/           @iweeks         @kathleentam    @m_walker
-/transform/snowflake-dbt/models/staging/netsuite/           @iweeks         @kathleentam    @m_walker
+/transform/snowflake-dbt/models/sources/netsuite/           @iweeks         @kathleentam    @tayloramurphy
+/transform/snowflake-dbt/models/staging/netsuite/           @iweeks         @kathleentam    @tayloramurphy
 
 /transform/snowflake-dbt/models/sources/pmg   @jeanpeguero    @paul_armstrong   @jjstark
 /transform/snowflake-dbt/models/staging/pmg   @jeanpeguero    @paul_armstrong   @jjstark
