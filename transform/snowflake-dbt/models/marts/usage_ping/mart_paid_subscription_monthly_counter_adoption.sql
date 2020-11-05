@@ -103,7 +103,7 @@ WITH self_managed_active_subscriptions AS (
 ), monthly_subscription_optin_counts AS (
 
     SELECT DISTINCT 
-      reporting_month,
+      paid_subscriptions_monthly_usage_ping_optin.reporting_month,
       latest_major_minor_version,
       major_version,
       minor_version,
@@ -187,7 +187,7 @@ WITH self_managed_active_subscriptions AS (
       ON date_spine.reporting_month = monthly_subscription_optin_counts.reporting_month
         AND (counter_data.major_version < monthly_subscription_optin_counts.major_version OR
         (counter_data.major_version = monthly_subscription_optin_counts.major_version AND counter_data.minor_version <= monthly_subscription_optin_counts.minor_version))
-    WHERE reporting_month < DATE_TRUNC('month', CURRENT_DATE)
+    WHERE date_spine.reporting_month < DATE_TRUNC('month', CURRENT_DATE)
     {{ dbt_utils.group_by(n=8) }}
   
 )
