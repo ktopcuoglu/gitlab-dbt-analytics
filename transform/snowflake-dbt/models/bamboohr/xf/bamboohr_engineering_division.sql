@@ -14,8 +14,8 @@ WITH employees AS (
       date_actual,
       employee_id,
       full_name,
-      job_title                                                             AS job_title,
-      LOWER(TRIM(VALUE::VARCHAR))                                            AS job_title_speciality,
+      job_title                     AS job_title,
+      LOWER(TRIM(VALUE::VARCHAR))   AS job_title_speciality,
       reports_to,
       layers,
       department,
@@ -42,7 +42,7 @@ WITH employees AS (
           THEN 'fullstack'
         WHEN LOWER(engineering_employees.job_title) LIKE '%frontend%'
           THEN 'frontend'
-        ELSE NULL END                                                           AS technology_group,
+        ELSE NULL END               AS technology_group,
       engineering_employees.department,
       engineering_employees.work_email,
       engineering_employees.reports_to
