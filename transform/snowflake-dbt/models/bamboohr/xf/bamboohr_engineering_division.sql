@@ -1,7 +1,7 @@
 WITH employees AS (
 
     SELECT *
-    FROM {{ ref ('employee_directory_analysis') }}
+    FROM {{ ref('employee_directory_analysis') }}
 
 ), bamboohr_engineering_division_mapping AS (
 
