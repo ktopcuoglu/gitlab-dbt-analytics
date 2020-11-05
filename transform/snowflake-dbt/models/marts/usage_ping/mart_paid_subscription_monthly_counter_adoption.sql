@@ -18,8 +18,8 @@ WITH self_managed_active_subscriptions AS (
   
 ), dim_product_details AS (
 
-  SELECT *
-  FROM {{ ref('dim_product_details') }}
+    SELECT *
+    FROM {{ ref('dim_product_details') }}
 
 ), active_subscriptions AS (
   
@@ -56,7 +56,7 @@ WITH self_managed_active_subscriptions AS (
     LEFT JOIN active_subscriptions ON self_managed_active_subscriptions.subscription_id = active_subscriptions.subscription_id
     LEFT JOIN all_subscriptions ON active_subscriptions.subscription_name_slugify = all_subscriptions.subscription_name_slugify
     LEFT JOIN fct_payloads ON all_subscriptions.subscription_id = fct_payloads.subscription_id AND first_day_of_month = DATE_TRUNC('month', fct_payloads.created_at)
-    GROUP BY 1,2,3,4,5,6
+    {{ dbt_utils.group_by(n=6) }}
 
 ), latest_versions AS (
 
@@ -98,7 +98,7 @@ WITH self_managed_active_subscriptions AS (
       reporting_month AS agg_month,
       COUNT(DISTINCT subscription_name_slugify) AS total_subscrption_count
     FROM paid_subscriptions_monthly_usage_ping_optin
-    GROUP BY 1
+    {{ dbt_utils.group_by(n=1)}}
 
 ), monthly_subscription_optin_counts AS (
 
@@ -113,7 +113,7 @@ WITH self_managed_active_subscriptions AS (
     INNER JOIN analytics_staging.gitlab_release_schedule AS gitlab_releases
       ON paid_subscriptions_monthly_usage_ping_optin.latest_major_minor_version = gitlab_releases.major_minor_version
     LEFT JOIN agg_total_subscriptions AS agg ON paid_subscriptions_monthly_usage_ping_optin.reporting_month = agg.agg_month
-    GROUP BY 1,2,3,4
+    {{ dbt_utils.group_by(n=4) }}
 
 ), section_metrics AS (
   
@@ -188,7 +188,7 @@ WITH self_managed_active_subscriptions AS (
         AND (counter_data.major_version < monthly_subscription_optin_counts.major_version OR
         (counter_data.major_version = monthly_subscription_optin_counts.major_version AND counter_data.minor_version <= monthly_subscription_optin_counts.minor_version))
     WHERE reporting_month < DATE_TRUNC('month', CURRENT_DATE)
-    GROUP BY 1,2,3,4,5,6,7,8
+    {{ dbt_utils.group_by(n=8) }}
   
 )
   
