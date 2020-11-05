@@ -6,7 +6,7 @@ WITH employees AS (
 ), bamboohr_engineering_division_mapping AS (
 
     SELECT *
-    FROM {{ ref ('bamboohr_engineering_division_mapping') }}
+    FROM {{ ref('bamboohr_engineering_division_mapping') }}
 
 ), engineering_employees AS (
 
