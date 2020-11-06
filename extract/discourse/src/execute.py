@@ -31,12 +31,13 @@ if __name__ == "__main__":
     parser.add_argument("--start_date")
     parser.add_argument("--end_date")
     parser.add_argument("--months_ago")
+    parser.add_argument("--reports_yml")
     args = parser.parse_args()
 
     config_dict = os.environ.copy()
     snowflake_engine = snowflake_engine_factory(config_dict, "LOADER")
 
-    with open("/opt/project/extract/discourse/reports.yml", "r") as file:
+    with open(args["reports_yml"], "r") as file:
         try:
             stream = safe_load(file)
         except YAMLError as exc:
