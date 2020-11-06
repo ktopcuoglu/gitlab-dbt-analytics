@@ -1,4 +1,4 @@
-{ %docs bamboohr_department_grouping %}
+{% docs bamboohr_department_grouping %}
 This macro groups departments for bambohr_promotion_rate report
 {% enddocs %}
 
