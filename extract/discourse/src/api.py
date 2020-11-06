@@ -8,7 +8,7 @@ class DiscourseClient():
         self.base_url = base_url
 
 
-    def get_json(self, endpoint):
+    def get_json(self, endpoint, params):
 
         get_url = f"{self.base_url}/{endpoint}.json"
 
@@ -17,7 +17,7 @@ class DiscourseClient():
             'Api-Key' : self.api_token
         }
 
-        req = requests.get(get_url, headers=headers)
+        req = requests.get(get_url, headers=headers, params=params)
         if req.status_code == 200:
             json_data = req.content
 

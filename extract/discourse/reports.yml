@@ -1,0 +1,19 @@
+reports:
+  - name: consolidated_page_views
+    path: 'admin/reports/consolidated_page_views'
+  - name: accepted_solutions
+    path: 'admin/reports/accepted_solutions'
+  - name: posts
+    path: '/admin/reports/posts'
+  - name: dau_by_mau
+    path: 'admin/reports/dau_by_mau'
+  - name: daily_engaged_users
+    path: 'admin/reports/daily_engaged_users'
+  - name: topics_with_no_response
+    path: 'admin/reports/topics_with_no_response'
+  - name: time_to_first_response
+    path: 'admin/reports/time_to_first_response'
+  - name: top_referred_topics
+    path: 'admin/reports/top_referred_topics'
+  - name: trending_search
+    path: 'admin/reports/trending_search'
