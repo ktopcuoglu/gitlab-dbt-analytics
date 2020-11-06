@@ -1,7 +1,7 @@
 WITH fct_mrr AS (
 
     SELECT *
-    FROM {{ ref('fct_mrr')}}
+    FROM {{ ref('fct_mrr') }}
 
 ), dim_product_details AS (
 
