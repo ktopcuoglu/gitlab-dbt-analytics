@@ -37,7 +37,7 @@ if __name__ == "__main__":
     config_dict = os.environ.copy()
     snowflake_engine = snowflake_engine_factory(config_dict, "LOADER")
 
-    with open(args["reports_yml"], "r") as file:
+    with open(args.reports_yml, "r") as file:
         try:
             stream = safe_load(file)
         except YAMLError as exc:
