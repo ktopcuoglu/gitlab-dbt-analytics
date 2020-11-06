@@ -61,14 +61,7 @@ kubernetes_operator = KubernetesPodOperator(
         SNOWFLAKE_LOAD_WAREHOUSE,
         SNOWFLAKE_LOAD_PASSWORD,
     ],
-    env_vars={
-        **pod_env_vars,
-        **{
-            "--start_date": "{{ execution_date.isoformat() }}",
-            "--end_date": "{{ next_execution_date.isoformat() }}",
-            "--months_ago" : 1
-        },
-    },
+    env_vars=pod_env_vars,
     arguments=[extract_command],
     dag=dag,
 )
