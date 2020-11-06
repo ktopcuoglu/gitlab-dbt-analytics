@@ -20,6 +20,8 @@ from kube_secrets import (
     SNOWFLAKE_LOAD_WAREHOUSE,
 )
 
+from kubernetes_helpers import get_affinity, get_toleration
+
 env = os.environ.copy()
 pod_env_vars = {"CI_PROJECT_DIR": "/analytics"}
 
@@ -61,6 +63,8 @@ kubernetes_operator = KubernetesPodOperator(
         SNOWFLAKE_LOAD_WAREHOUSE,
         SNOWFLAKE_LOAD_PASSWORD,
     ],
+    affinity=get_affinity(False),
+    tolerations=get_toleration(False),
     env_vars=pod_env_vars,
     arguments=[extract_command],
     dag=dag,
