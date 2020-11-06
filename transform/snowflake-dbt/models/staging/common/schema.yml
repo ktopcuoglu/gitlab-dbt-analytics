@@ -115,12 +115,12 @@ models:
         tests:
           - not_null
           - unique
-        tags: ["tdf", "common"]
+        tags: ["tdf", "common", "geo"]
       - name: dim_geo_area_name
         tests:
           - not_null
           - unique
-        tags: ["tdf", "common"]
+        tags: ["tdf", "common", "geo"]
 
   - name: dim_gitlab_versions
     description: '{{ doc("dim_gitlab_versions") }}'
