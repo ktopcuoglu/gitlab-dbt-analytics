@@ -51,6 +51,7 @@ sources:
         identifier: productrateplancharge
       - name: product_rate_plan_charge_tier
         identifier: productrateplanchargetier
+        freshness: null
       - name: rate_plan_charge
         identifier: rateplancharge
         description: '{{ doc("zuora_rateplan_charge_source") }}'
