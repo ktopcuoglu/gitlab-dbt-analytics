@@ -143,7 +143,7 @@ sheets:
     tabs:
       - rep_quotas_full_fy2020
   - name: rep_quotas_full_ps_fy2020
-    owner: '@derekatwood'
+    owner: '@mbenza'
     tabs:
       - rep_quotas_full_ps_fy2020
   - name: sales_training_completion_dates
