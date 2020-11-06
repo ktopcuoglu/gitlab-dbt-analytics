@@ -53,7 +53,7 @@ WITH fct_mrr AS (
       active_subscriptions.subscription_name_slugify,
       active_subscriptions.subscription_start_date,
       active_subscriptions.subscription_end_date,
-      mrr,
+      mrr*12                                                                                                            AS arr,
       quantity,
       MAX(fct_payloads.subscription_id) IS NOT NULL                                                                     AS has_sent_payloads,
       COUNT(DISTINCT fct_payloads.usage_ping_id)                                                                        AS monthly_payload_counts,
@@ -71,8 +71,6 @@ WITH fct_mrr AS (
       first_day_of_month AS reporting_month,
       self_managed_active_subscriptions.subscription_id,
       active_subscriptions.subscription_name_slugify,
-      mrr,
-      quantity,
       FIRST_VALUE(major_minor_version) OVER (
         PARTITION BY first_day_of_month, active_subscriptions.subscription_name_slugify
         ORDER BY created_at DESC
