@@ -19,6 +19,7 @@ class DiscourseClient():
 
         req = requests.get(get_url, headers=headers, params=params)
         if req.status_code == 200:
-            json_data = req.content
+            data = req.content
+            data = data.decode('utf-8')
 
-            return json_data
+            return data

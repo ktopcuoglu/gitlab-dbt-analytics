@@ -53,7 +53,8 @@ if __name__ == "__main__":
 
     for report, path in reports.items():
         logging.info(
-            f"Processing {report} with start date "
+            f"Processing {report} with start date {params['start_date']} "
+            f"and end date {params['end_date']} "
         )
         file_name = f"{report}.json"
         with open(file_name, "w") as outfile:
