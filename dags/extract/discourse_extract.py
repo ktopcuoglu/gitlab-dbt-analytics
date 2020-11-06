@@ -19,7 +19,6 @@ from kube_secrets import (
     SNOWFLAKE_LOAD_USER,
     SNOWFLAKE_LOAD_WAREHOUSE,
 )
-from kubernetes_helpers import get_affinity, get_toleration
 
 env = os.environ.copy()
 pod_env_vars = {"CI_PROJECT_DIR": "/analytics"}
@@ -44,6 +43,8 @@ dag = DAG(
 # don't add a newline at the end of this because it gets added to in the K8sPodOperator arguments
 extract_command = (
     f"{clone_and_setup_extraction_cmd} && python discourse/src/execute.py"
+    f" --start_date {{ execution_date.isoformat() }} "
+    f"--end_date {{ next_execution_date.isoformat() }} --months_ago : 1"
 )
 
 kubernetes_operator = KubernetesPodOperator(
