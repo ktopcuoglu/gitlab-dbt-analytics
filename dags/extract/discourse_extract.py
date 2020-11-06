@@ -47,9 +47,10 @@ dag = DAG(
 
 # don't add a newline at the end of this because it gets added to in the K8sPodOperator arguments
 extract_command = (
-    f"{clone_and_setup_extraction_cmd} && python discourse/src/execute.py"
-    f" --start_date {{ execution_date.isoformat() }} "
-    f"--end_date {{ next_execution_date.isoformat() }} --months_ago : 1"
+    f"""{clone_and_setup_extraction_cmd} && python discourse/src/execute.py
+    --reports_yml discourse/reports.yml
+    --start_date {{ execution_date.isoformat() }}
+    --end_date {{ next_execution_date.isoformat() }} --months_ago : 1"""
 )
 
 kubernetes_operator = KubernetesPodOperator(
