@@ -138,7 +138,7 @@ WITH bamboohr_compensation AS (
       CASE WHEN division IN ('Engineering','Meltano') THEN 'Engineering/Meltaano'
             ELSE division END                                                                        AS division,
       department,
-      {{bamboohr_department_grouping(department)}}                                                             AS department,
+      {{bamboohr_department_grouping(department='department')}}                                       AS department_grouping,
       job_title,
       variable_pay,
       new_compensation_value * pay_frequency * currency_conversion_factor                             AS new_compensation_value_usd,
