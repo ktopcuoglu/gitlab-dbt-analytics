@@ -39,7 +39,10 @@ default_args = {
 }
 
 dag = DAG(
-    "discourse_extract", default_args=default_args, schedule_interval="0 7 1 * *"
+    dag_id="discourse_extract",
+    description="Monthly extract of Discourse analytics data",
+    default_args=default_args,
+    schedule_interval="0 7 1 * *"
 )
 
 # don't add a newline at the end of this because it gets added to in the K8sPodOperator arguments
