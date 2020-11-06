@@ -206,7 +206,7 @@ WITH sfdc_opportunity AS (
 
       -- sales segment refactor
       sfdc_opportunity.division_sales_segment_stamped,
-      sfdc_account.tsp_max_hierarchy_sales_segment,
+      {{ sales_segment_cleaning('sfdc_account.tsp_max_hierarchy_sales_segment') }}                        AS tsp_max_hierarchy_sales_segment,
       sfdc_account.division_sales_segment,
       sfdc_account.ultimate_parent_sales_segment,
 

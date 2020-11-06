@@ -1,66 +1,50 @@
-jobtitle_speciality,sub_department,technology_group,team_name
-access,dev,backend,manage backend
-access,dev,frontend,manage & fulfillment frontend
-compliance,dev,backend,manage backend
-compliance,dev,frontend,manage & fulfillment frontend
-import,dev,backend,manage backend
-import,dev,frontend,manage & fulfillment frontend
-analytics,dev,backend,manage backend
-analytics,dev,frontend,manage & fulfillment frontend
-project management,dev,backend,plan:project management backend
-project management,dev,frontend,plan frontend
-portfolio management,dev,backend,plan:portfolio management backend
-portfolio management,dev,frontend,plan frontend
-certify,dev,backend,plan:portfolio management backend
-certify,dev,frontend,plan frontend
-source code,dev,backend,create:source code backend
-source code,dev,frontend,create:source code frontend
-knowledge,dev,backend,create:knowledge backend
-knowledge,dev,frontend,create:knowledge frontend
-static site editor,dev,,create:static site editor
-editor,dev,backend,create:editor backend
-editor,dev,frontend,create:editor frontend
-gitaly,dev,,gitaly
-gitter,dev,,gitter
-ecosystem,dev,,ecosystem
-static analysis,secure,backend,secure backend
-dynamic analysis,secure,backend,secure backend
-composition analysis,secure,backend,secure backend
-fuzz testing,secure,backend,secure backend
-vulnerability research,secure,backend,secure backend
-frontend,secure,frontend,secure frontend
-vulnerability management,secure,,
-configure,ops,,configure
-health,ops,backend,monitor:health
-health,ops,frontend,monitor:health
-apm,ops,backend,monitor:apm
-apm,ops,frontend,monitor:apm
-apm,ops,,monitor stage
-health,ops,,monitor stage
-health,ops,backend,verify backend
-continuous integration,ops,backend,verify backend
-testing,ops,backend,verify backend
-continuous integration,ops,frontend,verify & release frontend
-testing,ops,frontend,verify & release frontend
-runner,ops,,verify & release frontend
-release management,ops,frontend,verify & release frontend
-progressive delivery,ops,frontend,verify & release frontend
-package,ops,,package
-progressive delivery,ops,backend,release backend
-release management,ops,backend,release backend
-container security,threat management,,threat management
-insider threats,threat management,,threat management
-rsponsible disclosure,threat management,,threat management
-fulfillment,growth,frontend,fulfillment frontend
-fulfillment,growth,backend,fulfillment backend
-telemetry,growth,frontend,telemetry frontend
-telemetry,growth,backend,telemetry backend
-acquisition,growth,,acquisition
-conversion,growth,,conversion
-expansion,growth,,expansion
-retention,growth,,retention
-database,enablement,,database
-distribution,enablement,,distribution
-geo,enablement,,geo
-memory,enablement,,memory
-global search,enablement,,search
+job_title_speciality,sub_department
+access,dev
+compliance,dev
+import,dev
+analytics,dev
+project management,dev
+portfolio management,dev
+certify,dev
+source code,dev
+knowledge,dev
+static site editor,dev
+editor,dev
+gitaly,dev
+gitter,dev
+ecosystem,dev
+static analysis,secure
+dynamic analysis,secure
+composition analysis,secure
+fuzz testing,secure
+vulnerability research,secure
+secure,secure
+frontend,secure
+vulnerability management,secure
+configure,ops
+apm,ops
+health,ops
+continuous integration,ops
+testing,ops
+runner,ops
+release management,ops
+progressive delivery,ops
+package,ops
+container security,threat management
+insider threats,threat management
+rsponsible disclosure,threat management
+threat management,threat management
+fulfillment,fulfillment
+purchase,fulfillment
+provision,fulfillment
+telemetry,growth
+acquisition,growth
+conversion,growth
+expansion,growth
+retention,growth
+database,enablement
+distribution,enablement
+geo,enablement
+memory,enablement
+global search,enablement
+product planning,dev

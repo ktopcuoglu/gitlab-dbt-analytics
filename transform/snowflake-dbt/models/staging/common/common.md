@@ -208,6 +208,12 @@ Purchase channel dimension, based off of salesforce opportunity data, using the 
 
 {% enddocs %}
 
+{% docs dim_sales_segment %}
+
+Dimension table for sales segment built off Ultimate_Parent_Sales_Segment_Employees__c in SFDC field in account data. Example values: SMB, Mid-Market, Large
+
+{% enddocs %}
+
 
 {% docs dim_sales_territory %}
 
