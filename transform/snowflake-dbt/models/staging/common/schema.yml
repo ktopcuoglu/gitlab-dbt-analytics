@@ -106,12 +106,12 @@ models:
         tests:
           - unique
           - not_null
-        tags: ["tdf", "common"]
+        tags: ["tdf", "common", "geo"]
       - name: dim_geo_region_name
         tests:
           - unique
           - not_null
-        tags: ["tdf", "common"]
+        tags: ["tdf", "common", "geo"]
   - name: dim_ip_to_geo
     description: '{{ doc("dim_ip_to_geo") }}'
     columns:
