@@ -37,7 +37,6 @@ WITH sfdc_opportunity AS (
       WHEN sfdc_opportunity.sales_accepted_date IS NOT NULL
         AND is_edu_oss = 0
         AND stage_name != '10-Duplicate'
-        AND order_type_stamped = '1. New - First Order'
           THEN TRUE
     	ELSE FALSE
     END AS is_sao
@@ -67,8 +66,11 @@ WITH sfdc_opportunity AS (
     first_contact.crm_person_id,
     first_contact.sfdc_contact_id,
     opportunity_fields.created_date,
+    opportunity_fields.created_date_id,
     opportunity_fields.sales_accepted_date,
+    opportunity_fields.sales_accepted_date_id,
     opportunity_fields.close_date,
+    opportunity_fields.close_date_id,
     opportunity_fields.is_closed,
     opportunity_fields.is_won,
     is_sao.is_sao,

@@ -35,12 +35,10 @@ query-comment:
 # Run Hooks
 # ======
 on-run-start:
-    - "{{ dbt_logging_start('on run start hooks') }}"
     - "{{ resume_warehouse(var('resume_warehouse', false), var('warehouse_name')) }}"
     - "{{ create_udfs() }}"
 
 on-run-end:
-    - "{{ dbt_logging_start('on run end hooks') }}"
     - "{{ grant_usage_to_schemas() }}"
     - "drop schema if exists {{ generate_schema_name('temporary') }}"
     - "{{ suspend_warehouse(var('suspend_warehouse', false), var('warehouse_name')) }}"
@@ -77,7 +75,7 @@ vars:
     'snowplow:use_fivetran_interface': false
     'snowplow:events': "{{ ref('snowplow_unnested_events') }}"
     'snowplow:context:web_page': "{{ ref('snowplow_web_page') }}"
-    'snowplow:context:performance_timing': false
+    'snowplow:context:performance_timing': "{{ ref('snowplow_performance_timing_metrics') }}"
     'snowplow:context:useragent': false
     'snowplow:timezone': 'America/New_York'
     'snowplow:page_ping_frequency': 30
@@ -87,18 +85,6 @@ vars:
 # Model Configs
 # ==================
 models:
-  +pre-hook:
-    - "{{ logging.log_model_start_event() }}"
-  +post-hook:
-    - "{{ logging.log_model_end_event() }}"
-
-  # ------------------
-  # Logging Package https://hub.getdbt.com/fishtown-analytics/logging/latest/
-  # ------------------
-  logging:
-    +schema: meta
-    +post-hook:
-      - "grant select on {{this}} to role reporter"
 
   # ------------------
   # Snowplow Package https://hub.getdbt.com/fishtown-analytics/snowplow/latest/
@@ -165,7 +151,6 @@ models:
         +schema: gitlab_data_yaml
 
       gitlab_dotcom:
-        +tags: ["product"]
         +materialized: table
         +schema: gitlab_dotcom
 
@@ -181,6 +166,10 @@ models:
 
       handbook:
         +schema: handbook
+
+      keyhole_twitter:
+        +schema: keyhole_twitter
+        +tags: ["keyhole_twitter", "social", "sources"]
 
       license:
         +schema: license_db
@@ -291,6 +280,9 @@ models:
           +schema: analytics
         xf:
           +schema: analytics
+
+      keyhole_twitter:
+        +tags: [ "keyhole_twitter", "social" ]
 
       license:
         +materialized: view

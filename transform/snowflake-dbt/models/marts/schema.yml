@@ -15,13 +15,6 @@ models:
       - name: subscription_sales_type
         description: Identifies whether a subscription is Sales-Assisted or Self-Service / Web Direct.
 
-  - name: mart_arr_incr
-    description: '{{ doc("mart_arr_incr") }}'
-    columns:
-      - name: primary_key
-        tests:
-          - not_null
-
   - name: mart_arr_snapshots
     description: Daily snapshots of MRR/ARR by month values per customer, subscription and product
     columns:
@@ -34,13 +27,15 @@ models:
   - name: mart_discount_arr
     description: Model with Invoiced ARR used to calculate discounts across various dimensions.
     columns:
-      - name: invoice_item_month_id
-        description: Unique identifier of the transaction on the invoice amortized by month.
+      - name: primary_key
+        description: Unique identifier of a product charge on the invoice amortized by month.
         tests:
-            - not_null
-            - unique
+            - not_null:
+                severity: warn
+            - unique:
+                severity: warn
         tags: ["tdf", "mart", "arr"]
-        
+
   - name: mart_delta_arr_parent_month
     description: "Mart table by month pursuant to the ARR Analysis Framework at the parent customer level"
     columns:

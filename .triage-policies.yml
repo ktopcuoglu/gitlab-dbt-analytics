@@ -1,6 +1,41 @@
 resource_rules:
     issues:
       rules:
-        - name: find all open issues - any label (simple - should be lots)
+        - name: find all open issues - any label (simple - should be lots) -- sanity check
           conditions:
-           state: opened
+            state: opened
+        - name: Issues needing triage
+          conditions:
+            state: opened
+            forbidden_labels: 
+              - workflow::1 - triage
+              - workflow::2 - validation
+              - workflow::3 - scheduling
+              - workflow::4 - scheduled
+              - workflow::5 - development
+              - workflow::6 - review
+              - workflow::X - blocked
+              - Triage
+              - Needs Triage
+            author_member:
+              source: group
+              condition: not_member_of
+              source_id: 4347861
+            assignee_member:
+              source: group
+              condition: not_member_of
+              source_id: 4347861
+          actions:
+            labels:
+              - Needs Triage
+        
+        - name: Issues that have been triaged
+          conditions:
+            state: opened
+            labels:
+              - Triage
+              - Needs Triage
+          actions:
+            remove_labels:
+              - Needs Triage
+              
