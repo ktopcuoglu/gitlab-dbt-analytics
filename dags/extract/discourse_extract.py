@@ -49,7 +49,7 @@ dag = DAG(
 extract_command = (
     f"""{clone_and_setup_extraction_cmd} && 
     cd discourse/ && 
-    python src/execute.py --reports_yml reports.yml --start_date {{ execution_date.isoformat() }} --end_date {{ next_execution_date.isoformat() }} --months_ago : 1"""
+    python src/execute.py --reports_yml reports.yml --start_date {{ execution_date.isoformat() }} --end_date {{ next_execution_date.isoformat() }} --months_ago 1"""
 )
 kubernetes_operator = KubernetesPodOperator(
     **gitlab_defaults,
