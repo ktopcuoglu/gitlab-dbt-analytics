@@ -23,6 +23,8 @@ databases:
 # User / Testing
     - testing_db:
         shared: no  
+    - tmurphy_analytics:
+        shared: no
     - tmurphy_prod:
         shared: no
     - tmurphy_prep:
@@ -1715,34 +1717,43 @@ roles:
             - bamboohr_raw
         owns:
             databases:
+              - tmurphy_analytics
               - tmurphy_prep
               - tmurphy_prod
             schemas:
+              - tmurphy_analytics.*
               - tmurphy_prep.*
               - tmurphy_prod.*
             tables:
+              - tmurphy_analytics.*.*
               - tmurphy_prep.*.*
               - tmurphy_prod.*.*
         privileges:
             databases:
                 read:
+                    - tmurphy_analytics
                     - tmurphy_prep
                     - tmurphy_prod
                 write:
+                    - tmurphy_analytics
                     - tmurphy_prep
                     - tmurphy_prod
             schemas:
                 read:
+                    - tmurphy_analytics.*
                     - tmurphy_prep.*
                     - tmurphy_prod.*
                 write:
+                    - tmurphy_analytics.*
                     - tmurphy_prep.*
                     - tmurphy_prod.*
             tables:
                 read:
+                    - tmurphy_analytics.*.*
                     - tmurphy_prep.*.*
                     - tmurphy_prod.*.*
                 write:
+                    - tmurphy_analytics.*.*
                     - tmurphy_prep.*.*
                     - tmurphy_prod.*.*
         warehouses:
