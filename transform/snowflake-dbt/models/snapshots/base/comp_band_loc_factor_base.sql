@@ -1,8 +1,3 @@
-{{ config({
-    "schema": "temporary"
-    })
-}}
-
 with source as (
 
     SELECT *
