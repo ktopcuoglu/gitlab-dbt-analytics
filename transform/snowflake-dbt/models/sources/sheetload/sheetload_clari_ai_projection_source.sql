@@ -50,10 +50,4 @@ WITH source AS (
 )
 
 
-{{ dbt_audit(
-    cte_ref="renamed",
-    created_by="@paul_armstrong",
-    updated_by="@paul_armstrong",
-    created_date="2020-11-09",
-    updated_date="2020-11-09"
-) }}
+SELECT * FROM renamed
