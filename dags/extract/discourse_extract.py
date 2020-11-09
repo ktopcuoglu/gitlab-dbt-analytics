@@ -1,3 +1,4 @@
+import logging
 import os
 from datetime import datetime, timedelta
 
@@ -51,6 +52,8 @@ extract_command = (
     cd discourse/ && 
     python src/execute.py --reports_yml reports.yml --start_date {{ execution_date.isoformat() }} --end_date {{ next_execution_date.isoformat() }} --months_ago 1"""
 )
+logging.info(extract_command)
+
 kubernetes_operator = KubernetesPodOperator(
     **gitlab_defaults,
     image=DATA_IMAGE,
