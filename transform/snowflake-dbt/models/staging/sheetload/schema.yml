@@ -93,8 +93,6 @@ models:
       tests:
         - not_null
     - name: area
-      tests:
-        - not_null
     - name: territory
       tests:
         - not_null
