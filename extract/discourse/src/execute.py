@@ -21,7 +21,7 @@ def fixup_datetime_string_format(datetime_string: str) -> str:
     return datetime_string[:-6] + "Z"
 
 
-DISCOURSE_API_TOKEN = os.environ.get('DISCOURSE_API_TOKEN')
+DISCOURSE_API_TOKEN = os.environ.get("DISCOURSE_API_TOKEN")
 
 if __name__ == "__main__":
 
@@ -43,12 +43,13 @@ if __name__ == "__main__":
         except YAMLError as exc:
             print(exc)
 
-        reports = {report["name"]: report["path"]
-                   for report in stream["reports"]}
+        reports = {report["name"]: report["path"] for report in stream["reports"]}
 
-    params = {"start_date": fixup_datetime_string_format(args.start_date),
-              "end_date": fixup_datetime_string_format(args.end_date),
-              "months_ago": args.months_ago}
+    params = {
+        "start_date": fixup_datetime_string_format(args.start_date),
+        "end_date": fixup_datetime_string_format(args.end_date),
+        "months_ago": args.months_ago,
+    }
 
     api_client = DiscourseClient(api_token=DISCOURSE_API_TOKEN)
 
