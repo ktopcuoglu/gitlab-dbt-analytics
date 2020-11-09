@@ -397,4 +397,10 @@ models:
   description: This is the budget used by the people team.
 - name: sheetload_clari_ai_projection_source
   description: Ai projection for clari data
+  columns:
+    - name: projection_date
+      tests:
+      - not_null
+      - unique
+
 
