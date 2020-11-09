@@ -812,6 +812,18 @@ roles:
                 read:
                     - analytics.analytics_sensitive.*
 
+    - discourse:
+        privileges:
+            databases:
+                read:
+                    - raw
+            schemas:
+                read:
+                    - raw.discourse
+            tables:
+                read:
+                    - raw.discourse.*
+
     - gcp_billing:
         warehouses:
             - analyst_xs
