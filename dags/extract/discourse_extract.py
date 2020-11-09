@@ -50,7 +50,7 @@ dag = DAG(
 extract_command = (
     f"""{clone_and_setup_extraction_cmd} && 
     cd discourse/ && 
-    python src/execute.py --reports_yml reports.yml --start_date 2020-09-01 --end_date 2020-09-30 --months_ago 1"""
+    python src/execute.py --reports_yml reports.yml --start_date $START_DATE --end_date $END_DATE --months_ago 1"""
 )
 logging.info(extract_command)
 
@@ -70,7 +70,13 @@ kubernetes_operator = KubernetesPodOperator(
     ],
     affinity=get_affinity(False),
     tolerations=get_toleration(False),
-    env_vars=pod_env_vars,
+    env_vars={
+        **pod_env_vars,
+        **{
+            "START_DATE": "{{ execution_date.isoformat() }}",
+            "END_DATE": "{{ next_execution_date.isoformat() }}",
+        },
+    },
     arguments=[extract_command],
     dag=dag,
 )
