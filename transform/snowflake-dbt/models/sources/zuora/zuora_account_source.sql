@@ -11,7 +11,7 @@ WITH source AS (
       id                                                     AS account_id,
       -- keys
       communicationprofileid                                 AS communication_profile_id,
-      nullif({{target.schema}}_staging.id15to18(crmid), '')  AS crm_id,
+      nullif({{target.schema}}.id15to18(crmid), '')  AS crm_id,
       defaultpaymentmethodid                                 AS default_payment_method_id,
       invoicetemplateid                                      AS invoice_template_id,
       parentid                                               AS parent_id,
