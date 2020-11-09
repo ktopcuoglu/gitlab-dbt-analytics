@@ -130,6 +130,7 @@ WITH RECURSIVE employee_directory AS (
       department_info.job_title,	
       department_info.department,	
       department_info.department_modified,
+      department_info.department_grouping,
       department_info.division,
       department_info.division_mapped_current,
       COALESCE(job_role.cost_center, 

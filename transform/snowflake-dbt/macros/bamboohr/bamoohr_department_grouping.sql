@@ -1,4 +1,4 @@
-{%- macro department_grouping(department) -%}
+{%- macro bamboohr_department_grouping(department) -%}
 
     CASE WHEN {{department}} IN ('Awareness','Communications','Community Relations','Owned Events')
            THEN 'Awareness, Communications, Community Relations, Owned Events'
@@ -14,6 +14,7 @@
           THEN 'People Success, CEO'
          WHEN {{department}} IN ('Product Management', 'Product Strategy')
            THEN 'Product Management, Product Strategy'
-         ELSE {{department}} END 
+         ELSE {{department}} 
+         END 
 
 {%- endmacro -%}

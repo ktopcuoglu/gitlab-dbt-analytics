@@ -1,6 +1,9 @@
 version: 2
 
 models:
+  - name: bamboohr_base_mapping
+    description: This model ties all departments to the last 12 months and is used in downstream models to do rolling 12 month metrics
+
   - name: bamboohr_budget_vs_actual
     description: Compares promotion budget spend to the budget aggregated at the division level.
 
@@ -230,7 +233,7 @@ models:
       - name: job_title
         description: Bamboo HR job title
       - name: sub_department
-      - name: job_title_speciality
+      - name: jobtitle_speciality
         description: Engineering group
       - name: technology_group
         description: Backend/frontend/fullstack. Derived from Bamboo HR job title.

@@ -7,8 +7,11 @@ WITH promotions AS (
 
     SELECT *
     FROM {{ ref ('bamboohr_promotions_xf') }}
-    WHERE promotion_month BETWEEN DATEADD(month,-12, DATE_TRUNC(month, CURRENT_DATE())) AND
-                                  DATEADD(month,-1, DATE_TRUNC(month, CURRENT_DATE()))
+
+), bamboohr_base AS (
+
+    SELECT *
+    FROM {{ ref ('bamboohr_base_mapping') }}
 
 ), bamboohr_headcount_aggregated AS (
 
@@ -19,9 +22,9 @@ WITH promotions AS (
              THEN 'Company Overall - Including Sales Development'
            WHEN breakout_type = 'division_breakout' 
              THEN division
-           ELSE department_grouping END                                             AS division_department, 
+           ELSE department END                                                      AS division_department, 
       division,
-      {{bamboohr_department_grouping(department='department')}}                     AS department_grouping,
+      {{bamboohr_department_grouping(department='department')}}                     AS department,
       headcount_end, 
       rolling_12_month_promotions
     FROM {{ ref ('bamboohr_rpt_headcount_aggregation') }}
@@ -153,5 +156,17 @@ WITH promotions AS (
 
 )
 
-SELECT * 
-FROM final
+{# SELECT *  #}
+{# FROM final #}
+{# FROM bamboohr_headcount_aggregated #}
+
+
+ SELECT
+      promotion_month,
+      'division_breakout'                                AS breakout_type,
+      TRIM(division)                                          AS division_department,
+      AVG(promotions.percent_change_in_comp) OVER 
+            (PARTITION BY division ORDER BY promotion_month DESC ROWS BETWEEN CURRENT ROW AND 11 FOLLOWING)     AS average_increase,
+      COUNT(*) OVER (PARTITION BY division
+                              ORDER BY promotion_month DESC ROWS BETWEEN CURRENT ROW AND 11 FOLLOWING) as total_promotions
+    FROM promotions

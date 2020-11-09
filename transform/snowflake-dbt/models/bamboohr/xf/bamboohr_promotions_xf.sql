@@ -135,8 +135,8 @@ WITH bamboohr_compensation AS (
       employee_number,
       employee_id,
       full_name,
-      CASE WHEN division IN ('Engineering','Meltano') THEN 'Engineering/Meltaano'
-            ELSE division END                                                                        AS division,
+      CASE WHEN division IN ('Engineering','Meltano') THEN 'Engineering/Meltano'
+            ELSE division END                                                                         AS division,
       department,
       {{bamboohr_department_grouping(department='department')}}                                       AS department_grouping,
       job_title,

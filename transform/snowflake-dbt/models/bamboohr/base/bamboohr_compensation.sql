@@ -36,4 +36,4 @@ WITH source AS (
 
 SELECT *
 FROM renamed
-WHERE compensation_update_id != 20263 ---incorrectly labeled 
+{# WHERE compensation_update_id != 20263 ---incorrectly labeled  #}
