@@ -48,6 +48,7 @@ on-run-end:
 # ======
 seeds:
   +enabled: true
+  +database: "{{ env_var('SNOWFLAKE_PROD_WAREHOUSE') }}" #PROD
   +schema: staging
   +quote_columns: False
 
@@ -85,6 +86,7 @@ vars:
 # Model Configs
 # ==================
 models:
+  +database: "{{ env_var('SNOWFLAKE_PREP_WAREHOUSE') }}" #PREP
 
   # ------------------
   # Snowplow Package https://hub.getdbt.com/fishtown-analytics/snowplow/latest/
