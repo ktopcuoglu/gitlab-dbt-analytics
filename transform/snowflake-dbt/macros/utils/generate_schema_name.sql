@@ -3,9 +3,9 @@
 
 {% macro generate_schema_name(custom_schema_name, node) -%}
 
-    {%- set production_targets = ('prod','docs','ci') -%}
+    {%- set production_targets = production_targets() -%}
 
-    {%- set prefixed_schemas = ('meta','sensitive','staging','temporary') -%}
+    {%- set prefixed_schemas = ('meta','sensitive','staging') -%}
 
     {#
         Definitions:
@@ -18,45 +18,30 @@
 
         (analytics, prod, analytics) = analytics
         (analytics, ci, analytics) = analytics
-        (analytics, dev, tmurphy_scratch) = tmurphy_scratch_analytics
+        (analytics, dev, tmurphy_scratch) = analytics
         
         (staging, prod, analytics) = analytics_staging
         (staging, ci, analytics) = analytics_staging
-        (staging, dev, tmurphy_scratch) = tmurphy_scratch_staging
+        (staging, dev, tmurphy_scratch) = analytics_staging
         
         (zuora, prod, analytics) = zuora
         (zuora, ci, analytics) = zuora
-        (zuora, dev, tmurphy_scratch) = tmurphy_scratch_zuora
+        (zuora, dev, tmurphy_scratch) = zuora
 
     #}
-    {%- if target.name in production_targets -%}
-        
-        {%- if custom_schema_name in prefixed_schemas -%}
 
-            {{ target.schema.lower() }}_{{ custom_schema_name | trim }}
+    {%- if custom_schema_name in prefixed_schemas -%}
 
-        {%- elif custom_schema_name is none -%}
+        analytics_{{ custom_schema_name | trim }}
 
-            {{ target.schema.lower() | trim }}
+    {%- elif custom_schema_name is none -%}
 
-        {%- else -%}
-            
-            {{ custom_schema_name.lower() | trim }}
-
-        {%- endif -%}
+        {{ target.schema.lower() | trim }}
 
     {%- else -%}
-    
-        {%- if custom_schema_name is none -%}
 
-            {{ target.schema.lower() | trim }}
+        {{ custom_schema_name.lower() | trim }}
 
-        {%- else -%}
-            
-            {{ target.schema.lower() }}_{{ custom_schema_name | trim }}
-
-        {%- endif -%}
-    
     {%- endif -%}
-
+    
 {%- endmacro %}
