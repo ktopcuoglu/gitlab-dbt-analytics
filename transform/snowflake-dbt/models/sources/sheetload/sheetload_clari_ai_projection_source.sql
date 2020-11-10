@@ -50,4 +50,5 @@ WITH source AS (
 )
 
 
-SELECT * FROM renamed
+SELECT * 
+FROM renamed
