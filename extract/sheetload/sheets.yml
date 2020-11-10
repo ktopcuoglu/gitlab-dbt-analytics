@@ -31,6 +31,10 @@ sheets:
     owner: '@mvilain'
     tabs:
       - clari_export_forecast_net_iacv
+  - name: clari_ai_projection
+    owner: '@mvilain'
+    tabs:
+      - clari_ai_projection
   - name: company_call_attendance
     owner: '@pluthra'
     tabs:
