@@ -133,6 +133,7 @@ WITH RECURSIVE employee_directory AS (
       department_info.department_grouping,
       department_info.division,
       department_info.division_mapped_current,
+      department_info.division_grouping,
       COALESCE(job_role.cost_center, 
                cost_center_prior_to_bamboo.cost_center)                     AS cost_center,
       department_info.reports_to,

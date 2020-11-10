@@ -1,7 +1,7 @@
-{{ config({
+{# {{ config({
     "schema": "ephemeral"
     })
-}}
+}} #}
 
 WITH dates AS (
 
@@ -16,15 +16,17 @@ WITH dates AS (
 
     SELECT *,
       'join' AS join_field
-    FROM  {{ ref('cost_center_division_department_mapping_current') }}  
+    FROM  {{ ref('bamboohr_job_info_current_division_base') }}
+    WHERE DATE_TRUNC(month, CURRENT_DATE()) BETWEEN effective_date AND COALESCE(effective_end_date, termination_date,CURRENT_DATE())
+
 
 ), unioned AS (
 
     SELECT 
       DISTINCT 
       dates.date_actual,
-      'division' AS field_name,
-      division   AS field_value
+      'division_grouping_breakout'                   AS field_name,
+      division_grouping                              AS field_value
     FROM dates
     LEFT JOIN division_department_mapping
       ON dates.join_field = division_department_mapping.join_field
@@ -34,11 +36,19 @@ WITH dates AS (
     SELECT 
       DISTINCT 
       dates.date_actual,
-      'department' AS field_name,
-      department   AS field_value
+      'department_grouping_breakout'          AS field_name,
+      department_grouping                     AS field_value
     FROM dates
     LEFT JOIN division_department_mapping
       ON dates.join_field = division_department_mapping.join_field
+
+    UNION ALL
+
+    SELECT
+      dates.date_actual,
+      'company_breakout'                    AS field_name,
+      'company_breakout'                    AS field_value
+    FROM dates     
 
 )
 

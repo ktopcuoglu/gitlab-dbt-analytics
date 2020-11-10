@@ -26,7 +26,10 @@ WITH source AS (
 
 ), bamboohr_employment_status AS (
   
-    SELECT *
+    SELECT
+      employee_id,
+      valid_from_date,
+      DATEADD(day,1,valid_to_date) AS valid_to_date ---adding a day to capture termination date
     FROM {{ ref('bamboohr_employment_status_xf') }}  
     WHERE next_employment_status = 'Terminated'
 
@@ -62,22 +65,22 @@ WITH source AS (
 ), joined AS (
 
     SELECT 
-      final.job_id,
-      final.employee_id,
-      final.job_title,
-      final.effective_date,
-      IFF(bamboohr_employment_status.valid_to_date BETWEEN final.effective_date AND COALESCE(final.effective_end_date, CURRENT_DATE()), 
-            bamboohr_employment_status.valid_to_date, final.effective_end_date)               AS effective_end_date,
-      department,
-      division,
-      entity,
-      reports_to,
+      cleaned.job_id,
+      cleaned.employee_id,
+      cleaned.job_title,
+      cleaned.effective_date,
+      IFF(bamboohr_employment_status.valid_to_date BETWEEN cleaned.effective_date AND COALESCE(cleaned.effective_end_date, CURRENT_DATE()), 
+            bamboohr_employment_status.valid_to_date, cleaned.effective_end_date)               AS effective_end_date,
+      cleaned.department,
+      cleaned.division,
+      cleaned.entity,
+      cleaned.reports_to,
       sheetload_job_roles.job_role --- This will only appear for records prior to 2020-02-28 -- after this data populates in bamboohr_job_role
-    FROM final
+    FROM cleaned
     LEFT JOIN sheetload_job_roles
-      ON sheetload_job_roles.job_title = final.job_title
+      ON sheetload_job_roles.job_title = cleaned.job_title
     LEFT JOIN bamboohr_employment_status
-      ON bamboohr_employment_status.employee_id = final.employee_id 
+      ON bamboohr_employment_status.employee_id = cleaned.employee_id 
 
 )
 
