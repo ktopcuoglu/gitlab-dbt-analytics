@@ -123,7 +123,7 @@ WITH dates AS (
     LEFT JOIN dates
       ON promotions.promotion_month = dates.date_actual
     WHERE department != 'Sales Development'
-    GROUP BY 1,2,3
+    GROUP BY 1,2,3,4
   
 ), final AS (
 

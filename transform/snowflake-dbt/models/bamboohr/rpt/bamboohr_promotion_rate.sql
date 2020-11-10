@@ -1,3 +1,9 @@
+{{ config({
+    "schema": "analytics"
+    })
+}}
+
+
 WITH promotions AS (
 
     SELECT *
