@@ -7,6 +7,22 @@ models:
 
   - name: bamboohr_promotion_rate
     description: Displays promotion rate aggregated at the department, division, and company overall level.
+    columns:
+    - name: month_date
+      description: The month for which the rolling metrics apply
+    - name: field_name
+      description: Idenitfies whether the metrics are at the division, department, or comapny level
+    - name: field_value
+      description: Identifies the associated division/department for the field_name	
+    - name: headcount_end
+      description: The headcount at the end of the month
+    - name: total_promotions
+      description: The total promotions over for the rolling 12 months period.
+    - name: promotion_rate 
+      description: The promotion rate for the rolling 12 month period.
+    - name: average_percent_change_in_comp
+      description: The average percent change in comp for the rolling 12 month period. The calculation for percent change can be found in the bamboohr_promotions_xf model.
+    - name: median_percent_change_in_comp 
 
   - name: bamboohr_rpt_headcount_aggregation    
     description: This report creates out a headcount report from the bamboohr_headcount_intermediate to be used for periscope dashboards for each month. Note - the division reporting is based on current division used.
