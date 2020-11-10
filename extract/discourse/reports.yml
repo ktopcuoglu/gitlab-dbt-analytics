@@ -1,0 +1,19 @@
+reports:
+  - name: accepted_solutions
+    path: 'admin/reports/accepted_solutions'
+  - name: consolidated_page_views
+    path: 'admin/reports/consolidated_page_views'
+  - name: daily_engaged_users
+    path: '/admin/reports/daily_engaged_users'
+  - name: page_view_total_reqs
+    path: '/admin/reports/page_view_total_reqs'
+  - name: posts
+    path: '/admin/reports/posts'
+  - name: signups
+    path: '/admin/reports/signups'
+  - name: time_to_first_response
+    path: 'admin/reports/time_to_first_response'
+  - name: topics_with_no_response
+    path: 'admin/reports/topics_with_no_response'
+  - name: visits
+    path: '/admin/reports/visits'
