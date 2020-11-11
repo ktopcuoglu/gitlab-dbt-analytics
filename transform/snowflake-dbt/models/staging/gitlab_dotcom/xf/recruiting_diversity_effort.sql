@@ -55,7 +55,8 @@ WITH issues AS (
 ), split_issue AS (
 
     SELECT *
-    FROM intermediate AS splittable, lateral split_to_table(splittable.issue_description_split, '#### <summary>') 
+    FROM intermediate AS splittable, 
+    LATERAL SPLIT_TO_TABLE(splittable.issue_description_split, '#### <summary>') 
     ---- splitting by year starting with 20
 
 ), cleaned AS (
@@ -69,7 +70,7 @@ WITH issues AS (
           WHEN CONTAINS(value,'[x] No, Did not use')
             THEN 'No'
          ELSE issue_answer END                              AS used_diversity_string
-  FROM split_issue
+    FROM split_issue
 
 ), final AS (
 
