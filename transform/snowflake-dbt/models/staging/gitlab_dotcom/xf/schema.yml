@@ -573,7 +573,6 @@ models:
     - name: issue_IID
       tests:
         - not_null
-        - unique
     - name: issue_created_at
     - name: issue_created_week
     - name: issue_closed_at
