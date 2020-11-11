@@ -291,28 +291,24 @@ Also referred as SFDC, Salesforce.com (Sales Force Dot Com).
 
 ### Metrics and Methods
 - [ ] Read through [SaaS Metrics 2.0](http://www.forentrepreneurs.com/saas-metrics-2/) to get a good understanding of general SaaS metrics.
-- [ ] Check out [10 Reads for Data Scientists Getting Started with Business Models](https://www.conordewey.com/blog/10-reads-for-data-scientists-getting-started-with-business-models/) and read through the collection of articles to deepen your understanding of SaaS metrics.
-- [ ] Familiarize yourself with the GitLab Metrics Sheet (search in Google Drive, it should come up) which contains most of the key metrics we use at GitLab and the [definitions of these metrics](https://about.gitlab.com/handbook/business-ops/data-team/kpi-index/).
-- [ ] Optional, for more information on Finance KPIs, you can watch this working session between the Manager, Financial Planning and Analysis and Data Analyst, Finance: [Finance KPIs](https://www.youtube.com/watch?v=dmdilBQb9PY&feature=youtu.be)
 
-## Suggested Bookmarks
-None of these are required, but bookmarking these links will make life at GitLab much easier. Some of these are not hyperlinked for security concerns.
-- [ ] [Company Call Agenda](https://docs.google.com/document/d/1JiLWsTOm0yprPVIW9W-hM4iUsRxkBt_1bpm3VXV4Muc/edit)
-- [ ] [DataOps Meeting Agenda](https://docs.google.com/document/d/1qCfpRRKQfSU3VplI45huE266CT0nB82levb3lF9xeUs/edit)
-- [ ] 1:1 with Manager Agenda
-- [ ] [Create new issue in Analytics Project](https://gitlab.com/gitlab-data/analytics/issues/new?issue%5Bassignee_id%5D=&issue%5Bmilestone_id%5D=)
-- [ ] [Active Milestone](https://gitlab.com/gitlab-data/analytics/issues?scope=all&utf8=✓&state=opened&milestone_title=%23started) (You may want to update this link to filter to just your issues.)
-- [ ] [Data team page of Handbook](https://about.gitlab.com/handbook/business-ops/data-team/)
-- [ ] [dbt Docs](https://docs.getdbt.com)
-- [ ] [dbt Discourse](http://discourse.getdbt.com)
-- [ ] [GitLab's dbt Documentation](https://dbt.gitlabdata.com)
-- [ ] [Data Team GitLab Activity](https://gitlab.com/groups/gitlab-data/-/activity)
 
 ## Good First Issues:
 - [ ] [Replace]
 - [ ] [Replace]
 
-## Resources to help you get started with your first issue
+## Video Resources 
+- [ ] Setting up visual studio and git terminals to use for testing locally. (https://youtu.be/t5eoNLUl3x0)
 - [ ] Pairing session between a new Data Analyst and a Staff Data Engineer working on the new analyst's first issue: [Pair on Lost MRR Dashboard Creation](https://www.youtube.com/watch?v=WuIcnpuS2Mg)
 - [ ] 2nd part of pairing session between a new Data Analyst and a Staff Data Engineer working on the new analyst's first issue: [Pair on Lost MRR Dashboard Creation Part 2](https://www.youtube.com/watch?v=HIlDH5gaL3M)
-- [ ] Setting up visual studio and git terminals to use for testing locally. (https://youtu.be/t5eoNLUl3x0)
+- [ ] Optional, for more information on Finance KPIs, you can watch this working session between the Manager, Financial Planning and Analysis and Data Analyst, Finance: [Finance KPIs](https://www.youtube.com/watch?v=dmdilBQb9PY&feature=youtu.be)
+
+## Suggested Bookmarks
+None of these are required, but bookmarking these links will make life at GitLab much easier. Some of these are not hyperlinked for security concerns.
+- [ ] 1:1 with Manager Agenda
+- [ ] [Create new issue in Analytics Project](https://gitlab.com/gitlab-data/analytics/issues/new?issue%5Bassignee_id%5D=&issue%5Bmilestone_id%5D=)
+- [ ] [Data team page of Handbook](https://about.gitlab.com/handbook/business-ops/data-team/)
+- [ ] [dbt Docs](https://docs.getdbt.com)
+- [ ] [dbt Discourse](http://discourse.getdbt.com)
+- [ ] [GitLab's dbt Documentation](https://dbt.gitlabdata.com)
+- [ ] [Data Team GitLab Activity](https://gitlab.com/groups/gitlab-data/-/activity)
