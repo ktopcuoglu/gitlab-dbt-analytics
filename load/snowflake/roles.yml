@@ -23,6 +23,91 @@ databases:
 # User / Testing
     - testing_db:
         shared: no
+
+    - dtownsend_analytics:
+        shared: no
+    - dtownsend_prod:
+        shared: no
+    - dtownsend_prep:
+        shared: no
+        
+    - iweeks_analytics:
+        shared: no
+    - iweeks_prod:
+        shared: no
+    - iweeks_prep:
+        shared: no
+        
+    - jpeguero_analytics:
+        shared: no
+    - jpeguero_prod:
+        shared: no
+    - jpeguero_prep:
+        shared: no
+        
+    - jstark_analytics:
+        shared: no
+    - jstark_prod:
+        shared: no
+    - jstark_prep:
+        shared: no
+        
+    - ktam_analytics:
+        shared: no
+    - ktam_prod:
+        shared: no
+    - ktam_prep:
+        shared: no
+        
+    - michellecooper_analytics:
+        shared: no
+    - michellecooper_prod:
+        shared: no
+    - michellecooper_prep:
+        shared: no
+        
+    - mpeychet_analytics:
+        shared: no
+    - mpeychet_prod:
+        shared: no
+    - mpeychet_prep:
+        shared: no
+        
+    - mwalker_analytics:
+        shared: no
+    - mwalker_prod:
+        shared: no
+    - mwalker_prep:
+        shared: no
+        
+    - nfiguera_analytics:
+        shared: no
+    - nfiguera_prod:
+        shared: no
+    - nfiguera_prep:
+        shared: no
+        
+    - parmstrong_analytics:
+        shared: no
+    - parmstrong_prod:
+        shared: no
+    - parmstrong_prep:
+        shared: no
+        
+    - pluthra_analytics:
+        shared: no
+    - pluthra_prod:
+        shared: no
+    - pluthra_prep:
+        shared: no
+        
+    - snalamaru_analytics:
+        shared: no
+    - snalamaru_prod:
+        shared: no
+    - snalamaru_prep:
+        shared: no
+  
     - tmurphy_analytics:
         shared: no
     - tmurphy_prod:
@@ -266,7 +351,6 @@ roles:
                 write:
                     - analytics
 
-
     - analyst_people:
         warehouses:
             - analyst_xs
@@ -385,23 +469,35 @@ roles:
             databases:
                 read:
                     - analytics
+                    - prep
+                    - prod
                     - raw
                 write:
                     - analytics
+                    - prep
+                    - prod
                     - raw
             schemas:
                 read:
                     - analytics.*
+                    - prep.*
+                    - prod.*
                     - raw.*
                 write:
                     - analytics.*
+                    - prep.*
+                    - prod.*
                     - raw.*
             tables:
                 read:
                     - analytics.*.*
+                    - prep.*.*
+                    - prod.*.*
                     - raw.*.*
                 write:
                     - analytics.*.*
+                    - prep.*.*
+                    - prod.*.*
                     - raw.*.*
 
     - intern:
@@ -528,6 +624,8 @@ roles:
             databases:
                 read:
                     - analytics
+                    - prep
+                    - prod
                     - raw
                     - snowflake
                     - static
@@ -535,12 +633,16 @@ roles:
             schemas:
                 read:
                     - analytics.*
+                    - prep.*
+                    - prod.*
                     - raw.*
                     - static.*
                     - testing_db.*
             tables:
                 read:
                     - analytics.*.*
+                    - prep.*.*
+                    - prod.*.*
                     - raw.*.*
                     - static.*.*
                     - testing_db.*.*
@@ -608,21 +710,29 @@ roles:
             databases:
                 read:
                     - analytics
+                    - prep
+                    - prod
                     - raw
                 write:
                     - analytics
+                    - prep
+                    - prod
                     - raw
             schemas:
                 read:
                     - raw.*
                 write:
                     - analytics.*
+                    - prep.*
+                    - prod.*
                     - raw.snapshots
             tables:
                 read:
                     - raw.*.*
                 write:
                     - analytics.*.*
+                    - prep.*.*
+                    - prod.*.*
                     - raw.snapshots.*
 
 # ==========================================
@@ -676,8 +786,6 @@ roles:
                     - analytics.analytics.*
                     - analytics.analytics_sensitive.employee_*
                     - analytics.analytics_sensitive.bamboohr_*
-
-
 
     - boneyard:
         warehouses:
@@ -1374,6 +1482,47 @@ roles:
     - dtownsend:
         member_of:
             - analyst_engineering
+        owns:
+            databases:
+                - dtownsend_analytics
+                - dtownsend_prep
+                - dtownsend_prod
+            schemas:
+                - dtownsend_analytics.*
+                - dtownsend_prep.*
+                - dtownsend_prod.*
+            tables:
+                - dtownsend_analytics.*.*
+                - dtownsend_prep.*.*
+                - dtownsend_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - dtownsend_analytics
+                    - dtownsend_prep
+                    - dtownsend_prod
+                write:
+                    - dtownsend_analytics
+                    - dtownsend_prep
+                    - dtownsend_prod
+            schemas:
+                read:
+                    - dtownsend_analytics.*
+                    - dtownsend_prep.*
+                    - dtownsend_prod.*
+                write:
+                    - dtownsend_analytics.*
+                    - dtownsend_prep.*
+                    - dtownsend_prod.*
+            tables:
+                read:
+                    - dtownsend_analytics.*.*
+                    - dtownsend_prep.*.*
+                    - dtownsend_prod.*.*
+                write:
+                    - dtownsend_analytics.*.*
+                    - dtownsend_prep.*.*
+                    - dtownsend_prod.*.*
 
     - eburke:
         member_of: []
@@ -1482,6 +1631,47 @@ roles:
             - customers_db
         warehouses:
             - analyst_xs
+        owns:
+            databases:
+                - iweeks_analytics
+                - iweeks_prep
+                - iweeks_prod
+            schemas:
+                - iweeks_analytics.*
+                - iweeks_prep.*
+                - iweeks_prod.*
+            tables:
+                - iweeks_analytics.*.*
+                - iweeks_prep.*.*
+                - iweeks_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - iweeks_analytics
+                    - iweeks_prep
+                    - iweeks_prod
+                write:
+                    - iweeks_analytics
+                    - iweeks_prep
+                    - iweeks_prod
+            schemas:
+                read:
+                    - iweeks_analytics.*
+                    - iweeks_prep.*
+                    - iweeks_prod.*
+                write:
+                    - iweeks_analytics.*
+                    - iweeks_prep.*
+                    - iweeks_prod.*
+            tables:
+                read:
+                    - iweeks_analytics.*.*
+                    - iweeks_prep.*.*
+                    - iweeks_prod.*.*
+                write:
+                    - iweeks_analytics.*.*
+                    - iweeks_prep.*.*
+                    - iweeks_prod.*.*
             
     - iwiedler:
         member_of:
@@ -1503,6 +1693,47 @@ roles:
             - static_admin
         warehouses:
             - analyst_xs
+        owns:
+            databases:
+                - jpeguero_analytics
+                - jpeguero_prep
+                - jpeguero_prod
+            schemas:
+                - jpeguero_analytics.*
+                - jpeguero_prep.*
+                - jpeguero_prod.*
+            tables:
+                - jpeguero_analytics.*.*
+                - jpeguero_prep.*.*
+                - jpeguero_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - jpeguero_analytics
+                    - jpeguero_prep
+                    - jpeguero_prod
+                write:
+                    - jpeguero_analytics
+                    - jpeguero_prep
+                    - jpeguero_prod
+            schemas:
+                read:
+                    - jpeguero_analytics.*
+                    - jpeguero_prep.*
+                    - jpeguero_prod.*
+                write:
+                    - jpeguero_analytics.*
+                    - jpeguero_prep.*
+                    - jpeguero_prod.*
+            tables:
+                read:
+                    - jpeguero_analytics.*.*
+                    - jpeguero_prep.*.*
+                    - jpeguero_prod.*.*
+                write:
+                    - jpeguero_analytics.*.*
+                    - jpeguero_prep.*.*
+                    - jpeguero_prod.*.*
 
     - jsalazar:
         warehouses:
@@ -1514,6 +1745,47 @@ roles:
             - engineer_xl
             - loading
             - reporting
+        owns:
+            databases:
+                - jstark_analytics
+                - jstark_prep
+                - jstark_prod
+            schemas:
+                - jstark_analytics.*
+                - jstark_prep.*
+                - jstark_prod.*
+            tables:
+                - jstark_analytics.*.*
+                - jstark_prep.*.*
+                - jstark_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - jstark_analytics
+                    - jstark_prep
+                    - jstark_prod
+                write:
+                    - jstark_analytics
+                    - jstark_prep
+                    - jstark_prod
+            schemas:
+                read:
+                    - jstark_analytics.*
+                    - jstark_prep.*
+                    - jstark_prod.*
+                write:
+                    - jstark_analytics.*
+                    - jstark_prep.*
+                    - jstark_prod.*
+            tables:
+                read:
+                    - jstark_analytics.*.*
+                    - jstark_prep.*.*
+                    - jstark_prod.*.*
+                write:
+                    - jstark_analytics.*.*
+                    - jstark_prep.*.*
+                    - jstark_prod.*.*
     
     - jurbanc:
         warehouses:
@@ -1554,6 +1826,47 @@ roles:
             - engineer_xl
             - loading
             - reporting
+        owns:
+            databases:
+                - ktam_analytics
+                - ktam_prep
+                - ktam_prod
+            schemas:
+                - ktam_analytics.*
+                - ktam_prep.*
+                - ktam_prod.*
+            tables:
+                - ktam_analytics.*.*
+                - ktam_prep.*.*
+                - ktam_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - ktam_analytics
+                    - ktam_prep
+                    - ktam_prod
+                write:
+                    - ktam_analytics
+                    - ktam_prep
+                    - ktam_prod
+            schemas:
+                read:
+                    - ktam_analytics.*
+                    - ktam_prep.*
+                    - ktam_prod.*
+                write:
+                    - ktam_analytics.*
+                    - ktam_prep.*
+                    - ktam_prod.*
+            tables:
+                read:
+                    - ktam_analytics.*.*
+                    - ktam_prep.*.*
+                    - ktam_prod.*.*
+                write:
+                    - ktam_analytics.*.*
+                    - ktam_prep.*.*
+                    - ktam_prod.*.*
 
     - ksmith:
         warehouses:
@@ -1590,6 +1903,47 @@ roles:
             - decisive_data
         warehouses:
             - analyst_xs
+        owns:
+            databases:
+                - michellecooper_analytics
+                - michellecooper_prep
+                - michellecooper_prod
+            schemas:
+                - michellecooper_analytics.*
+                - michellecooper_prep.*
+                - michellecooper_prod.*
+            tables:
+                - michellecooper_analytics.*.*
+                - michellecooper_prep.*.*
+                - michellecooper_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - michellecooper_analytics
+                    - michellecooper_prep
+                    - michellecooper_prod
+                write:
+                    - michellecooper_analytics
+                    - michellecooper_prep
+                    - michellecooper_prod
+            schemas:
+                read:
+                    - michellecooper_analytics.*
+                    - michellecooper_prep.*
+                    - michellecooper_prod.*
+                write:
+                    - michellecooper_analytics.*
+                    - michellecooper_prep.*
+                    - michellecooper_prod.*
+            tables:
+                read:
+                    - michellecooper_analytics.*.*
+                    - michellecooper_prep.*.*
+                    - michellecooper_prod.*.*
+                write:
+                    - michellecooper_analytics.*.*
+                    - michellecooper_prep.*.*
+                    - michellecooper_prod.*.*
 
     - mjozenazemian:
         warehouses:
@@ -1602,6 +1956,47 @@ roles:
             - analyst_xs
             - analyst_l
             - analyst_xl
+        owns:
+            databases:
+                - mpeychet_analytics
+                - mpeychet_prep
+                - mpeychet_prod
+            schemas:
+                - mpeychet_analytics.*
+                - mpeychet_prep.*
+                - mpeychet_prod.*
+            tables:
+                - mpeychet_analytics.*.*
+                - mpeychet_prep.*.*
+                - mpeychet_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - mpeychet_analytics
+                    - mpeychet_prep
+                    - mpeychet_prod
+                write:
+                    - mpeychet_analytics
+                    - mpeychet_prep
+                    - mpeychet_prod
+            schemas:
+                read:
+                    - mpeychet_analytics.*
+                    - mpeychet_prep.*
+                    - mpeychet_prod.*
+                write:
+                    - mpeychet_analytics.*
+                    - mpeychet_prep.*
+                    - mpeychet_prod.*
+            tables:
+                read:
+                    - mpeychet_analytics.*.*
+                    - mpeychet_prep.*.*
+                    - mpeychet_prod.*.*
+                write:
+                    - mpeychet_analytics.*.*
+                    - mpeychet_prep.*.*
+                    - mpeychet_prod.*.*
 
     - mriser:
         warehouses:
@@ -1626,12 +2021,94 @@ roles:
             - engineer_xl
             - loading
             - reporting
+        owns:
+            databases:
+                - mwalker_analytics
+                - mwalker_prep
+                - mwalker_prod
+            schemas:
+                - mwalker_analytics.*
+                - mwalker_prep.*
+                - mwalker_prod.*
+            tables:
+                - mwalker_analytics.*.*
+                - mwalker_prep.*.*
+                - mwalker_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - mwalker_analytics
+                    - mwalker_prep
+                    - mwalker_prod
+                write:
+                    - mwalker_analytics
+                    - mwalker_prep
+                    - mwalker_prod
+            schemas:
+                read:
+                    - mwalker_analytics.*
+                    - mwalker_prep.*
+                    - mwalker_prod.*
+                write:
+                    - mwalker_analytics.*
+                    - mwalker_prep.*
+                    - mwalker_prod.*
+            tables:
+                read:
+                    - mwalker_analytics.*.*
+                    - mwalker_prep.*.*
+                    - mwalker_prod.*.*
+                write:
+                    - mwalker_analytics.*.*
+                    - mwalker_prep.*.*
+                    - mwalker_prod.*.*
 
     - nfiguera:
         member_of:
             - analyst_sales
         warehouses:
             - analyst_xs
+        owns:
+            databases:
+                - nfiguera_analytics
+                - nfiguera_prep
+                - nfiguera_prod
+            schemas:
+                - nfiguera_analytics.*
+                - nfiguera_prep.*
+                - nfiguera_prod.*
+            tables:
+                - nfiguera_analytics.*.*
+                - nfiguera_prep.*.*
+                - nfiguera_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - nfiguera_analytics
+                    - nfiguera_prep
+                    - nfiguera_prod
+                write:
+                    - nfiguera_analytics
+                    - nfiguera_prep
+                    - nfiguera_prod
+            schemas:
+                read:
+                    - nfiguera_analytics.*
+                    - nfiguera_prep.*
+                    - nfiguera_prod.*
+                write:
+                    - nfiguera_analytics.*
+                    - nfiguera_prep.*
+                    - nfiguera_prod.*
+            tables:
+                read:
+                    - nfiguera_analytics.*.*
+                    - nfiguera_prep.*.*
+                    - nfiguera_prod.*.*
+                write:
+                    - nfiguera_analytics.*.*
+                    - nfiguera_prep.*.*
+                    - nfiguera_prod.*.*
 
     - parmstrong:
         warehouses:
@@ -1639,6 +2116,47 @@ roles:
             - engineer_xl
             - loading
             - reporting
+        owns:
+            databases:
+                - parmstrong_analytics
+                - parmstrong_prep
+                - parmstrong_prod
+            schemas:
+                - parmstrong_analytics.*
+                - parmstrong_prep.*
+                - parmstrong_prod.*
+            tables:
+                - parmstrong_analytics.*.*
+                - parmstrong_prep.*.*
+                - parmstrong_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - parmstrong_analytics
+                    - parmstrong_prep
+                    - parmstrong_prod
+                write:
+                    - parmstrong_analytics
+                    - parmstrong_prep
+                    - parmstrong_prod
+            schemas:
+                read:
+                    - parmstrong_analytics.*
+                    - parmstrong_prep.*
+                    - parmstrong_prod.*
+                write:
+                    - parmstrong_analytics.*
+                    - parmstrong_prep.*
+                    - parmstrong_prod.*
+            tables:
+                read:
+                    - parmstrong_analytics.*.*
+                    - parmstrong_prep.*.*
+                    - parmstrong_prod.*.*
+                write:
+                    - parmstrong_analytics.*.*
+                    - parmstrong_prep.*.*
+                    - parmstrong_prod.*.*
 
     - periscope:
         warehouses:
@@ -1659,6 +2177,47 @@ roles:
             - bamboohr_raw
         warehouses:
             - analyst_xs
+        owns:
+            databases:
+                - pluthra_analytics
+                - pluthra_prep
+                - pluthra_prod
+            schemas:
+                - pluthra_analytics.*
+                - pluthra_prep.*
+                - pluthra_prod.*
+            tables:
+                - pluthra_analytics.*.*
+                - pluthra_prep.*.*
+                - pluthra_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - pluthra_analytics
+                    - pluthra_prep
+                    - pluthra_prod
+                write:
+                    - pluthra_analytics
+                    - pluthra_prep
+                    - pluthra_prod
+            schemas:
+                read:
+                    - pluthra_analytics.*
+                    - pluthra_prep.*
+                    - pluthra_prod.*
+                write:
+                    - pluthra_analytics.*
+                    - pluthra_prep.*
+                    - pluthra_prod.*
+            tables:
+                read:
+                    - pluthra_analytics.*.*
+                    - pluthra_prep.*.*
+                    - pluthra_prod.*.*
+                write:
+                    - pluthra_analytics.*.*
+                    - pluthra_prep.*.*
+                    - pluthra_prod.*.*
 
     - rkohnke:
         member_of:
@@ -1690,7 +2249,48 @@ roles:
             - engineer_xs
             - engineer_xl
             - loading
-            - reporting 
+            - reporting
+        owns:
+            databases:
+                - snalamaru_analytics
+                - snalamaru_prep
+                - snalamaru_prod
+            schemas:
+                - snalamaru_analytics.*
+                - snalamaru_prep.*
+                - snalamaru_prod.*
+            tables:
+                - snalamaru_analytics.*.*
+                - snalamaru_prep.*.*
+                - snalamaru_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - snalamaru_analytics
+                    - snalamaru_prep
+                    - snalamaru_prod
+                write:
+                    - snalamaru_analytics
+                    - snalamaru_prep
+                    - snalamaru_prod
+            schemas:
+                read:
+                    - snalamaru_analytics.*
+                    - snalamaru_prep.*
+                    - snalamaru_prod.*
+                write:
+                    - snalamaru_analytics.*
+                    - snalamaru_prep.*
+                    - snalamaru_prod.*
+            tables:
+                read:
+                    - snalamaru_analytics.*.*
+                    - snalamaru_prep.*.*
+                    - snalamaru_prod.*.*
+                write:
+                    - snalamaru_analytics.*.*
+                    - snalamaru_prep.*.*
+                    - snalamaru_prod.*.*
 
     - ssichak:
         warehouses:
