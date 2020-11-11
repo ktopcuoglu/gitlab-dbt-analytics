@@ -211,7 +211,7 @@ sheets:
     owner: '@paul_armstrong'
     tabs:
       - sales_funnel_target_dates
-      - kpi_values
+      - kpi_totals
       - sales_segment
       - opportunity_source
       - purchase_channel
