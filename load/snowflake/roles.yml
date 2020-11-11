@@ -266,7 +266,6 @@ roles:
                 write:
                     - analytics
 
-
     - analyst_people:
         warehouses:
             - analyst_xs
@@ -385,23 +384,35 @@ roles:
             databases:
                 read:
                     - analytics
+                    - prep
+                    - prod
                     - raw
                 write:
                     - analytics
+                    - prep
+                    - prod
                     - raw
             schemas:
                 read:
                     - analytics.*
+                    - prep.*
+                    - prod.*
                     - raw.*
                 write:
                     - analytics.*
+                    - prep.*
+                    - prod.*
                     - raw.*
             tables:
                 read:
                     - analytics.*.*
+                    - prep.*.*
+                    - prod.*.*
                     - raw.*.*
                 write:
                     - analytics.*.*
+                    - prep.*.*
+                    - prod.*.*
                     - raw.*.*
 
     - intern:
@@ -528,6 +539,8 @@ roles:
             databases:
                 read:
                     - analytics
+                    - prep
+                    - prod
                     - raw
                     - snowflake
                     - static
@@ -535,12 +548,16 @@ roles:
             schemas:
                 read:
                     - analytics.*
+                    - prep.*
+                    - prod.*
                     - raw.*
                     - static.*
                     - testing_db.*
             tables:
                 read:
                     - analytics.*.*
+                    - prep.*.*
+                    - prod.*.*
                     - raw.*.*
                     - static.*.*
                     - testing_db.*.*
@@ -608,21 +625,29 @@ roles:
             databases:
                 read:
                     - analytics
+                    - prep
+                    - prod
                     - raw
                 write:
                     - analytics
+                    - prep
+                    - prod
                     - raw
             schemas:
                 read:
                     - raw.*
                 write:
                     - analytics.*
+                    - prep.*
+                    - prod.*
                     - raw.snapshots
             tables:
                 read:
                     - raw.*.*
                 write:
                     - analytics.*.*
+                    - prep.*.*
+                    - prod.*.*
                     - raw.snapshots.*
 
 # ==========================================
@@ -676,8 +701,6 @@ roles:
                     - analytics.analytics.*
                     - analytics.analytics_sensitive.employee_*
                     - analytics.analytics_sensitive.bamboohr_*
-
-
 
     - boneyard:
         warehouses:
