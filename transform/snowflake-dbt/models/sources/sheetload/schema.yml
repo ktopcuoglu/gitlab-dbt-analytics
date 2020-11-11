@@ -294,7 +294,7 @@ models:
       - unique
 - name: sheetload_product_maturity_historical_source
   description: This captures the categories_yaml file for FY 2021 Q1 and Q2.
-- name: sheetload_rep_quotas_full_fy2020_source
+- name: sheetload_rep_quotas_source
   description: This is the model that captures sales data for rep quotas for the full fy2020.
 - name: sheetload_osat_source
   description: This is the model that captures the onboarding satisfaction score survey OSAT.
@@ -347,9 +347,6 @@ models:
     - name: region
       tests:
         - not_null
-    - name: area
-      tests:
-        - not_null
     - name: territory
       tests:
         - not_null
@@ -395,3 +392,12 @@ models:
       - not_null
 - name: sheetload_people_budget_source
   description: This is the budget used by the people team.
+- name: sheetload_clari_ai_projection_source
+  description: Ai projection for clari data
+  columns:
+    - name: projection_date
+      tests:
+      - not_null
+      - unique
+
+

@@ -31,6 +31,10 @@ sheets:
     owner: '@mvilain'
     tabs:
       - clari_export_forecast_net_iacv
+  - name: clari_ai_projection
+    owner: '@mvilain'
+    tabs:
+      - clari_ai_projection
   - name: company_call_attendance
     owner: '@pluthra'
     tabs:
@@ -138,10 +142,10 @@ sheets:
     owner: '@m_walker'
     tabs:
       - release_blog_posts
-  - name: rep_quotas_full_fy2020
+  - name: rep_quotas
     owner: '@derekatwood'
     tabs:
-      - rep_quotas_full_fy2020
+      - rep_quotas
   - name: rep_quotas_full_ps_fy2020
     owner: '@derekatwood'
     tabs:
