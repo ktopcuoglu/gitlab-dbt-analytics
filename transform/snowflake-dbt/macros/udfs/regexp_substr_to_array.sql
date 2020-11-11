@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION {{target.schema}}.regexp_to_array("input_text" string
 
 {%- else -%}
 
-CREATE OR REPLACE FUNCTION "{{ target.database | trim }}_PREP".{{target.schema}}.regexp_to_array("input_text" string,
+CREATE OR REPLACE FUNCTION "{{ target.database | trim }}_ANALYTICS".{{target.schema}}.regexp_to_array("input_text" string,
                                                                      "regex_text" STRING)
 
 {% endif %}

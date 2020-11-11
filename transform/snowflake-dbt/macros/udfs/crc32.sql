@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION {{target.schema}}.crc32("input" string)
 
 {%- else -%}
     
-CREATE OR REPLACE FUNCTION "{{ target.database | trim }}_PREP".{{target.schema}}.crc32("input" string)
+CREATE OR REPLACE FUNCTION "{{ target.database | trim }}_ANALYTICS".{{target.schema}}.crc32("input" string)
 
 {% endif %}
 
