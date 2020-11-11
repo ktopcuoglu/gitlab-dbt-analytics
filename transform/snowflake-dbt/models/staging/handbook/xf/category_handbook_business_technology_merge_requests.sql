@@ -13,7 +13,7 @@ WITH handbook_categories AS (
   SELECT *
   FROM handbook_categories
   WHERE ARRAY_CONTAINS('business_technology'::VARIANT, merge_request_department_list)
-    AND ARRAY_CONTAINS('procurement'::VARIANT, merge_request_department_list) 
+    OR ARRAY_CONTAINS('procurement'::VARIANT, merge_request_department_list) 
 
 )
 
