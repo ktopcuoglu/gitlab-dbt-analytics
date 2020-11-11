@@ -207,6 +207,16 @@ sheets:
     owner: '@pluthra'
     tabs: 
       - engineering_speciality_prior_to_capture
+  - name: sales_funnel_targets
+    owner: '@paul_armstrong'
+    tabs:
+      - sales_funnel_target_dates
+      - kpi_values
+      - sales_segment
+      - opportunity_source
+      - purchase_channel
+      - account_region
+      - sales_territory
   - name: data_certifications
     description: This identifies team members who have taken the level 2 certifications and have passed.
     owner: '@pluthra'
