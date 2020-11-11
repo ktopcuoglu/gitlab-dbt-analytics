@@ -30,26 +30,27 @@ WITH issues AS (
       issues.issue_title,
       issues.issue_iid,
       issues.issue_created_at,
-      DATE_TRUNC(week,issue_created_at)                         AS issue_created_week,
+      DATE_TRUNC(week,issue_created_at)                           AS issue_created_week,
       issues.issue_closed_at,
-      DATE_TRUNC(week,issues.issue_closed_at)                   AS issue_closed_week,
-      IFF(issue_closed_at IS NOT NULL,1,0)                      AS is_issue_closed,
-      issues.state                                              AS issue_state,
+      DATE_TRUNC(week,issues.issue_closed_at)                     AS issue_closed_week,
+      IFF(issue_closed_at IS NOT NULL,1,0)                        AS is_issue_closed,
+      issues.state                                                AS issue_state,
       agg_assignee.assignee,
       issues.issue_description,
-      SPLIT_PART(issue_description, '**Weekly Check-In Table**',2)                 AS issue_description_split,
-      CASE WHEN CONTAINS(issue_description, '[x] Yes, Diversity Sourcing methods were used'::VARCHAR) = True
-            THEN 'Used Diversity Strings'
-           WHEN CONTAINS(issue_description, '[x] No, I did not use Diversity Sourcing methods'::VARCHAR) = True
-            THEN 'Did not use'
-           WHEN CONTAINS(issue_description, '[x] Not Actively Sourcing'::VARCHAR) = True
-            THEN 'Not Actively Sourcing'
-            ELSE 'No Answer' END                                AS issue_answer
+      SPLIT_PART(issue_description, '**Weekly Check-In Table**',2) AS issue_description_split,
+      CASE
+        WHEN CONTAINS(issue_description, '[x] Yes, Diversity Sourcing methods were used'::VARCHAR) = True
+          THEN 'Used Diversity Strings'
+        WHEN CONTAINS(issue_description, '[x] No, I did not use Diversity Sourcing methods'::VARCHAR) = True
+          THEN 'Did not use'
+        WHEN CONTAINS(issue_description, '[x] Not Actively Sourcing'::VARCHAR) = True
+          THEN 'Not Actively Sourcing'
+        ELSE 'No Answer' 
+      END                                                         AS issue_answer
     FROM issues
     LEFT JOIN agg_assignee 
       ON agg_assignee.issue_id = issues.issue_id
-    WHERE project_id = 16492321
-      AND LOWER(issue_title) LIKE '%weekly check-in:%'
+    WHERE LOWER(issue_title) LIKE '%weekly check-in:%'
       AND LOWER(issue_title) NOT LIKE '%test%'
   
 ), split_issue AS (
@@ -57,19 +58,21 @@ WITH issues AS (
     SELECT *
     FROM intermediate AS splittable, 
     LATERAL SPLIT_TO_TABLE(splittable.issue_description_split, '#### <summary>') 
-    ---- splitting by year starting with 20
+    ---- splitting by year (numeric values)
 
 ), cleaned AS (
 
     SELECT *,
-      LEFT(TRIM(value),10) As week_of,
-      CASE WHEN CONTAINS(value,'[x] Yes, Diversity sourcing was used')
-             THEN 'Yes'
-           WHEN CONTAINS(value, '[x] Not actively sourcing')
-             THEN 'Not Actively Sourcing'
-          WHEN CONTAINS(value,'[x] No, Did not use')
-            THEN 'No'
-         ELSE issue_answer END                              AS used_diversity_string
+      LEFT(TRIM(value),10)          AS week_of,
+      CASE
+        WHEN CONTAINS(value,'[x] Yes, Diversity sourcing was used')
+          THEN 'Yes'
+        WHEN CONTAINS(value, '[x] Not actively sourcing')
+          THEN 'Not Actively Sourcing'
+        WHEN CONTAINS(value,'[x] No, Did not use')
+          THEN 'No'
+        ELSE issue_answer 
+      END                              AS used_diversity_string
     FROM split_issue
 
 ), final AS (
