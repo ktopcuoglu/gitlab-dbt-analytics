@@ -34,6 +34,10 @@
         grant usage on schema common to role {{ non_sensitive }};
         grant select on all tables in schema common to role {{ non_sensitive }};
         grant select on all views in schema common to role {{ non_sensitive }};
+        
+        grant usage on schema common_mapping to role {{ non_sensitive }};
+        grant select on all tables in schema common_mapping to role {{ non_sensitive }};
+        grant select on all views in schema common_mapping to role {{ non_sensitive }};
 
         grant usage on schema covid19 to role {{ non_sensitive }};
         grant select on all tables in schema covid19 to role {{ non_sensitive }};

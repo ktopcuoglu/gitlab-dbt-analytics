@@ -32,13 +32,9 @@ WITH dim_dates AS (
     WHERE is_deleted = FALSE
       AND exclude_from_analysis IN ('False', '')
 
-), arr_month_by_month AS (
+), arr_agg AS (
 
     SELECT
-      dim_dates.date_actual                               AS arr_month,
-      fct_invoice_items.invoice_date,
-      fct_invoice_items.invoice_number,
-      fct_invoice_items.invoice_item_id,
       fct_invoice_items.effective_start_month,
       fct_invoice_items.effective_end_month,
       dim_billing_account_id_subscription,
@@ -51,23 +47,20 @@ WITH dim_dates AS (
       SUM(arr)                                             AS arr,
       SUM(quantity)                                        AS quantity
     FROM fct_invoice_items
-    INNER JOIN dim_dates
-      ON fct_invoice_items.effective_start_month <= dim_dates.date_actual
-      AND (fct_invoice_items.effective_end_month > dim_dates.date_actual
-        OR fct_invoice_items.effective_end_month IS NULL)
-      AND dim_dates.day_of_month = 1
+    WHERE fct_invoice_items.effective_end_month > fct_invoice_items.effective_start_month OR fct_invoice_items.effective_end_month IS NULL
       --filter out 2 subscription_ids with known data quality issues when comparing invoiced subscriptions to the Zuora UI.
       AND dim_subscription_id NOT IN ('2c92a0ff5e1dcf14015e3c191d4f7689','2c92a00e6a3477b5016a46aaec2f08bc')
-    {{ dbt_utils.group_by(n=12) }}
+    {{ dbt_utils.group_by(n=8) }}
 
 ), final AS (
 
     SELECT
-      {{ dbt_utils.surrogate_key(['arr_month_by_month.arr_month', 'arr_month_by_month.invoice_item_id']) }}
-                                                                        AS invoice_item_month_id,
-      arr_month_by_month.arr_month,
-      DATE_TRUNC('month',arr_month_by_month.invoice_date)               AS invoice_month,
-      arr_month_by_month.invoice_number,
+      {{ dbt_utils.surrogate_key(['dim_crm_accounts_invoice.ultimate_parent_account_id', 'arr_agg.effective_start_month', 'arr_agg.effective_end_month', 'zuora_subscription.subscription_name', 'arr_agg.dim_product_details_id']) }}
+                                                                        AS primary_key,
+      arr_agg.effective_start_month,
+      arr_agg.effective_end_month,
+      DATE_TRUNC('month',zuora_subscription.subscription_start_date)    AS subscription_start_month,
+      DATE_TRUNC('month',zuora_subscription.subscription_end_date)      AS subscription_end_month,
       dim_crm_accounts_invoice.ultimate_parent_account_id               AS parent_account_id_invoice,
       dim_crm_accounts_invoice.ultimate_parent_account_name             AS parent_account_name_invoice,
       dim_crm_accounts_invoice.ultimate_parent_billing_country          AS parent_billing_country_invoice,
@@ -86,33 +79,34 @@ WITH dim_dates AS (
       dim_product_details.product_category,
       dim_product_details.delivery,
       dim_product_details.service_type,
-      IFF(zuora_subscription.created_by_id = '2c92a0fd55822b4d015593ac264767f2', -- All Self-Service / Web direct subscriptions are identified by that created_by_id
-        'Self-Service', 'Sales-Assisted') AS subscription_sales_type,
       CASE
         WHEN LOWER(dim_product_details.product_rate_plan_charge_name) LIKE '%edu or oss%'   THEN TRUE
+        WHEN LOWER(dim_product_details.product_rate_plan_charge_name) LIKE '%education%'    THEN TRUE
         WHEN LOWER(dim_product_details.product_rate_plan_charge_name) LIKE '%y combinator%' THEN TRUE
         WHEN LOWER(dim_product_details.product_rate_plan_charge_name) LIKE '%support%'      THEN TRUE
+        WHEN LOWER(dim_product_details.product_rate_plan_charge_name) LIKE '%reporter%'     THEN TRUE
+        WHEN LOWER(dim_product_details.product_rate_plan_charge_name) LIKE '%guest%'        THEN TRUE
+        WHEN dim_product_details.annual_billing_list_price = 0                              THEN TRUE
         ELSE FALSE
       END                                                               AS is_excluded_from_disc_analysis,
-      arr_month_by_month.effective_start_month,
-      arr_month_by_month.effective_end_month,
-      zuora_subscription.subscription_start_date,
-      zuora_subscription.subscription_end_date,
       dim_product_details.annual_billing_list_price,
-      arr_month_by_month.arr/arr_month_by_month.quantity                AS arpu,
-      arr_month_by_month.arr                                            AS arr,
-      arr_month_by_month.quantity                                       AS quantity
-    FROM arr_month_by_month
+      ARRAY_AGG(IFF(zuora_subscription.created_by_id = '2c92a0fd55822b4d015593ac264767f2', -- All Self-Service / Web direct subscriptions are identified by that created_by_id
+                   'Self-Service', 'Sales-Assisted'))                   AS subscription_sales_type,
+      SUM(arr_agg.arr)/SUM(arr_agg.quantity)                            AS arpu,
+      SUM(arr_agg.arr)                                                  AS arr,
+      SUM(arr_agg.quantity)                                             AS quantity
+    FROM arr_agg
     INNER JOIN zuora_subscription
-      ON arr_month_by_month.dim_subscription_id = zuora_subscription.subscription_id
+      ON arr_agg.dim_subscription_id = zuora_subscription.subscription_id
     INNER JOIN dim_product_details
-      ON arr_month_by_month.dim_product_details_id = dim_product_details.product_details_id
+      ON arr_agg.dim_product_details_id = dim_product_details.product_details_id
     INNER JOIN dim_billing_accounts
-      ON arr_month_by_month.dim_billing_account_id_invoice = dim_billing_accounts.billing_account_id
+      ON arr_agg.dim_billing_account_id_invoice = dim_billing_accounts.billing_account_id
     LEFT JOIN dim_crm_accounts AS dim_crm_accounts_invoice
-      ON arr_month_by_month.dim_crm_account_id_invoice = dim_crm_accounts_invoice.crm_account_id
+      ON arr_agg.dim_crm_account_id_invoice = dim_crm_accounts_invoice.crm_account_id
     LEFT JOIN dim_crm_accounts AS dim_crm_accounts_subscription
-      ON arr_month_by_month.dim_crm_account_id_subscription = dim_crm_accounts_subscription.crm_account_id
+      ON arr_agg.dim_crm_account_id_subscription = dim_crm_accounts_subscription.crm_account_id
+    {{ dbt_utils.group_by(n=25) }}
     ORDER BY 3 DESC
 
 )
@@ -122,5 +116,5 @@ WITH dim_dates AS (
     created_by="@iweeks",
     updated_by="@iweeks",
     created_date="2020-10-21",
-    updated_date="2020-10-21",
+    updated_date="2020-11-09",
 ) }}

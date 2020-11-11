@@ -179,3 +179,7 @@ SALT_IP = Secret("env", "SALT_IP", "airflow", "SALT_IP")
 SALT_NAME = Secret("env", "SALT_NAME", "airflow", "SALT_NAME")
 
 SALT_PASSWORD = Secret("env", "SALT_PASSWORD", "airflow", "SALT_PASSWORD")
+
+DISCOURSE_API_TOKEN = Secret(
+    "env", "DISCOURSE_API_TOKEN", "airflow", "DISCOURSE_API_TOKEN"
+)

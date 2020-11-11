@@ -7,3 +7,5 @@ models:
     description: This model isolates only unstructured events and chooses a subset of columns needed for further models/analyses.
   - name: snowplow_web_page
     description: This model is needed for the snowplow dbt package.
+  - name: snowplow_performance_timing_metrics
+    description: This model is needed for the snowplow dbt package.

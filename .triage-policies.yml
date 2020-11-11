@@ -28,5 +28,14 @@ resource_rules:
           actions:
             labels:
               - Needs Triage
-
+        
+        - name: Issues that have been triaged
+          conditions:
+            state: opened
+            labels:
+              - Triage
+              - Needs Triage
+          actions:
+            remove_labels:
+              - Needs Triage
               

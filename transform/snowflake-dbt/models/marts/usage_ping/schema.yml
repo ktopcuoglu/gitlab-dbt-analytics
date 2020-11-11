@@ -1,6 +1,15 @@
 version: 2
 
 models:
+  - name: mart_usage_ping_counters_statistics
+    description: '{{ doc("mart_usage_ping_counters_statistics") }}'
+    tests:
+      - unique:
+          column_name: "concat(ping_name, edition)"
+    columns:
+      - name: ping_name
+        tests:
+            - not_null
   - name: mart_paid_subscriptions_monthly_usage_ping_optin
     description: '{{ doc("mart_paid_subscriptions_monthly_usage_ping_optin") }}'
     columns:

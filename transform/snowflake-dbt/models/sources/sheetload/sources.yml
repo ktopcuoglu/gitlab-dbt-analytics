@@ -28,10 +28,12 @@ sources:
       - name: cert_product_geo_dashboard
       - name: cert_product_geo_sql
       - name: cert_product_geo_viewer
+      - name: clari_ai_projection
       - name: clari_export_forecast_net_iacv
       - name: communication_certificate
       - name: company_call_attendance
       - name: compensation_certificate
+      - name: comp_band
       - name: data_team_capacity
       - name: days_sales_outstanding
       - name: days_to_close
@@ -68,9 +70,10 @@ sources:
       - name: procurement_cost_savings
       - name: product_maturity_historical
       - name: release_blog_posts
-      - name: rep_quotas_full_fy2020
+      - name: rep_quotas
       - name: rep_quotas_full_ps_fy2020
       - name: sales_training_completion_dates
+      - name: territory_mapping
       - name: scalable_employment_values
       - name: social_marketing_metrics
       - name: usage_ping_metrics_sections

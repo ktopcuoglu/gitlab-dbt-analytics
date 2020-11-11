@@ -26,7 +26,7 @@
    CASE
       WHEN {{ lead_source }} in ('CORE Check-Up', 'CE Download', 'CE Usage Ping','CE Version Check')
         THEN 'core'
-      WHEN {{ lead_source }} in ('Consultancy Request','Contact Request','Content','Demo','Drift','Education','EE Version Check','Email Request','Email Subscription','Enterprise Trial','Gated Content - eBook','Gated Content - General','Gated Content - Report','Gated Content - Video','Gated Content - Whitepaper','GitLab.com','MovingtoGitLab','Newsletter','OSS','Request - Community','Request - Contact','Request - Professional Services','Request - Public Sector','Security Newsletter','Startup Application','Trial - Enterprise','Trial - GitLab.com','Web','Web Chat','White Paper')
+      WHEN {{ lead_source }} in ('Consultancy Request','Contact Request','Content','Demo','Drift','Education','EE Version Check','Email Request','Email Subscription','Enterprise Trial','Gated Content - eBook','Gated Content - General','Gated Content - Report','Gated Content - Video','Gated Content - Whitepaper','GitLab.com','MovingtoGitLab','Newsletter','OSS','Request - Community','Request - Contact','Request - Professional Services','Request - Public Sector','Security Newsletter','Startup Application','Web','Web Chat','White Paper')
         THEN 'inbound'
       WHEN {{ lead_source }} in ('AE Generated', 'Clearbit','Datanyze','DiscoverOrg','Gemnasium','GitLab Hosted','Gitorious','gmail','Leadware','LinkedIn','Live Event','Prospecting','Prospecting - General','Prospecting - LeadIQ','SDR Generated','seamless.ai','Zoominfo')
         THEN 'outbound'
@@ -36,6 +36,8 @@
         THEN 'purchased list'
       WHEN {{ lead_source }} in ('Employee Referral', 'Event Partner', 'Existing Client', 'External Referral','Partner','Seminar - Partner','Word of mouth')
         THEN 'referral'
+      WHEN {{ lead_source }} in('Trial - Enterprise','Trial - GitLab.com')
+        THEN 'trial'
       WHEN {{ lead_source }} in ('Webcast','Webinar')
         THEN 'virtual event'
       WHEN {{ lead_source }} in ('GitLab Subscription Portal','Web Direct')

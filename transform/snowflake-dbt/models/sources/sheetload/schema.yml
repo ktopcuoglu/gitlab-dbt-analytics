@@ -294,7 +294,7 @@ models:
       - unique
 - name: sheetload_product_maturity_historical_source
   description: This captures the categories_yaml file for FY 2021 Q1 and Q2.
-- name: sheetload_rep_quotas_full_fy2020_source
+- name: sheetload_rep_quotas_source
   description: This is the model that captures sales data for rep quotas for the full fy2020.
 - name: sheetload_osat_source
   description: This is the model that captures the onboarding satisfaction score survey OSAT.
@@ -338,6 +338,18 @@ models:
   tests:
     - unique:
         column_name: "CONCAT(month_date, channel, brand, metric, is_organic)"
+- name: sheetload_territory_mapping_source
+  description: Base model for marketing territory mapping.
+  columns:
+    - name: segment
+      tests:
+        - not_null
+    - name: region
+      tests:
+        - not_null
+    - name: territory
+      tests:
+        - not_null
 - name: sheetload_usage_ping_metrics_sections_source
   description: Classification of usage ping metrics into dev sections; used to create the Dev Section Dashboard
   columns:
@@ -380,3 +392,12 @@ models:
       - not_null
 - name: sheetload_people_budget_source
   description: This is the budget used by the people team.
+- name: sheetload_clari_ai_projection_source
+  description: Ai projection for clari data
+  columns:
+    - name: projection_date
+      tests:
+      - not_null
+      - unique
+
+

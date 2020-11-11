@@ -99,6 +99,19 @@ models:
           - not_null
           - unique
 
+  - name: dim_geo_region
+    description: "Dimension for geographical region built off ATAM_Region__C in SFDC. Example values: NORAM, LATAM, APAC, EMEA"
+    columns:
+      - name: dim_geo_region_name_id
+        tests:
+          - unique
+          - not_null
+        tags: ["tdf", "common", "geo"]
+      - name: dim_geo_region_name
+        tests:
+          - unique
+          - not_null
+        tags: ["tdf", "common", "geo"]
   - name: dim_ip_to_geo
     description: '{{ doc("dim_ip_to_geo") }}'
     columns:
@@ -107,6 +120,33 @@ models:
           - unique
           - not_null
       - name: location_id
+
+  - name: dim_geo_sub_region
+    description: "Dimension table for sub-region built off ATAM_Sub_Region__C in SFDC. Example values: Southern Europe, NA East, Nordics"
+    columns:
+      - name: dim_geo_sub_region_name_id
+        tests:
+          - unique
+          - not_null
+        tags: ["tdf", "common", "geo"]
+      - name: dim_geo_sub_region_name
+        tests:
+          - unique
+          - not_null
+        tags: ["tdf", "common", "geo"]
+  - name: dim_geo_area
+    description: "Dimension table for geographic area built off ATAM_Area__C in SFDC. Example values: Southern PNW, India, Northeast"
+    columns:
+      - name: dim_geo_area_name_id
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "common", "geo"]
+      - name: dim_geo_area_name
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "common", "geo"]
 
   - name: dim_gitlab_versions
     description: '{{ doc("dim_gitlab_versions") }}'
@@ -136,7 +176,71 @@ models:
       - name: updated_date
         description: The date the release was updated in the Version app.
 
-  - name: dim_instances 
+  - name: dim_industry
+    description: '{{ doc("dim_industry") }}'
+    columns:
+      - name: dim_industry_name_id
+        description: Unique identifier of a version of a industry
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "industry", "common"]
+      - name: dim_industry_name
+        description: Industry text
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "industry", "common"]
+
+  - name: dim_opportunity_source
+    description: '{{ doc("dim_opportunity_source") }}'
+    columns:
+      - name: dim_opportunity_source_id
+        description: Unique identifier for each opportunity source name
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "opportunity", "common"]
+      - name: opportunity_source_name
+        description: Opportunity source name
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "opportunity", "common"]
+
+  - name: dim_purchase_channel
+    description: '{{ doc("dim_purchase_channel") }}'
+    columns:
+      - name: dim_purchase_channel_id
+        description: Unique identifier for each purchase channel name
+        tests:
+          - not_null
+          - unique
+        tags: [ "tdf", "purchase_channel", "common" ]
+      - name: purchase_channel_name
+        description: Purchase channel name text
+        tests:
+          - not_null
+          - unique
+        tags: [ "tdf", "purchase_channel", "common" ]
+
+  - name: dim_order_type
+    description: '{{ doc("dim_purchase_channel") }}'
+    columns:
+      - name: dim_order_type_id
+        description: Unique identifier for each opportunity source name
+        tests:
+          - not_null
+          - unique
+        tags: [ "tdf", "order_type", "common" ]
+      - name: order_type_name
+        description: Opportunity source name
+        tests:
+          - not_null
+          - unique
+        tags: [ "tdf", "order_type", "common" ]
+
+  - name: dim_instances
     description: '{{ doc("dim_instances") }}'
     columns: 
       - name: uuid
@@ -257,6 +361,38 @@ models:
           - not_null
       - name: is_active
         description: A boolean column that flags if the user is active in salesforce, which means that the user can login and use salesforce.
+
+  - name: dim_sales_segment
+    description: '{{ doc("dim_sales_segment") }}'
+    columns:
+      - name: dim_sales_segment_name_id
+        description: Unique identifier of a version of a sales segment
+        tests:
+          - not_null
+          - unique
+        tags: [ "tdf", "common" ]
+      - name: dim_sales_segment_name
+        description: Sales Segment text
+        tests:
+          - not_null
+          - unique
+        tags: [ "tdf", "common" ]
+
+  - name: dim_sales_territory
+    description: '{{ doc("dim_sales_territory") }}'
+    columns:
+      - name: dim_sales_territory_name_id
+        description: Unique identifier of a version of a sales territory
+        tests:
+          - not_null
+          - unique
+        tags: [ "tdf", "sales_territory", "common" ]
+      - name: dim_sales_territory_name
+        description: Sales Territory text
+        tests:
+          - not_null
+          - unique
+        tags: [ "tdf", "sales_territory", "common" ]
 
   - name: dim_subscriptions
     description: '{{ doc("dim_subscriptions") }}'

@@ -8,7 +8,7 @@
 # nested in that directory, on any level
 
 [Default]
-* @jjstark @kathleentam @tayloramurphy
+* @jjstark @kathleentam @tayloramurphy @m_walker
 
 
 [Admin]
@@ -65,7 +65,7 @@ docker-compose.yml  @tayloramurphy  @m_walker
 /transform/snowflake-dbt/models/sources/customers/          @mpeychet_		@m_walker           @kathleentam
 /transform/snowflake-dbt/models/staging/customers/          @mpeychet_		@m_walker           @kathleentam
 
-/transform/snowflake-dbt/models/staging/common/     @jjstark  @msendal  @paul_armstrong @m_walker
+/transform/snowflake-dbt/models/staging/common/     @jjstark  @paul_armstrong @m_walker @tayloramurphy
 
 /transform/snowflake-dbt/models/sources/dbt         @m_walker    @jjstark   @tayloramurphy
 /transform/snowflake-dbt/models/staging/dbt         @m_walker    @jjstark   @tayloramurphy
@@ -94,20 +94,20 @@ docker-compose.yml  @tayloramurphy  @m_walker
 /transform/snowflake-dbt/models/sources/license/    @mpeychet_		@m_walker       @kathleentam
 /transform/snowflake-dbt/models/staging/license/    @mpeychet_		@m_walker       @kathleentam
 
-/transform/snowflake-dbt/models/sources/netsuite/           @iweeks         @kathleentam    @msendal
-/transform/snowflake-dbt/models/staging/netsuite/           @iweeks         @kathleentam    @msendal
+/transform/snowflake-dbt/models/sources/netsuite/           @iweeks         @kathleentam    @tayloramurphy
+/transform/snowflake-dbt/models/staging/netsuite/           @iweeks         @kathleentam    @tayloramurphy
 
 /transform/snowflake-dbt/models/sources/pmg   @jeanpeguero    @paul_armstrong   @jjstark
 /transform/snowflake-dbt/models/staging/pmg   @jeanpeguero    @paul_armstrong   @jjstark
 
-/transform/snowflake-dbt/models/sources/qualtrics   @m_walker  @jjstark  @tayloramurphy
-/transform/snowflake-dbt/models/staging/qualtrics   @m_walker  @jjstark  @tayloramurphy
+/transform/snowflake-dbt/models/sources/qualtrics   @m_walker  @jjstark     @tayloramurphy
+/transform/snowflake-dbt/models/staging/qualtrics   @m_walker  @jjstark     @tayloramurphy
 
-/transform/snowflake-dbt/models/sources/sfdc/           @kathleentam	@jeanpeguero   @jjstark  @msendal  
-/transform/snowflake-dbt/models/staging/sfdc/           @kathleentam    @jeanpeguero   @jjstark  @msendal
+/transform/snowflake-dbt/models/sources/sfdc/           @kathleentam	@jeanpeguero   @jjstark     @paul_armstrong
+/transform/snowflake-dbt/models/staging/sfdc/           @kathleentam    @jeanpeguero   @jjstark     @paul_armstrong
 
-/transform/snowflake-dbt/models/sources/snowflake/  @m_walker       @kathleentam    @jjstark  @tayloramurphy
-/transform/snowflake-dbt/models/staging/snowflake/  @m_walker       @kathleentam    @jjstark  @tayloramurphy
+/transform/snowflake-dbt/models/sources/snowflake/  @m_walker       @kathleentam    @jjstark    @tayloramurphy
+/transform/snowflake-dbt/models/staging/snowflake/  @m_walker       @kathleentam    @jjstark    @tayloramurphy
 
 /transform/snowflake-dbt/models/sources/version/    @mpeychet_		@m_walker       @kathleentam
 /transform/snowflake-dbt/models/staging/version/    @mpeychet_		@m_walker       @kathleentam
@@ -115,8 +115,8 @@ docker-compose.yml  @tayloramurphy  @m_walker
 /transform/snowflake-dbt/models/sources/zendesk         @ken_aguilar    @kathleentam
 /transform/snowflake-dbt/models/staging/zendesk         @ken_aguilar    @kathleentam
 
-/transform/snowflake-dbt/models/sources/zuora       @iweeks             @msendal
-/transform/snowflake-dbt/models/staging/zuora       @iweeks         	@msendal
+/transform/snowflake-dbt/models/sources/zuora       @iweeks     @tayloramurphy           
+/transform/snowflake-dbt/models/staging/zuora       @iweeks     @tayloramurphy
 
 # ======
 # dbt data file Overwrites

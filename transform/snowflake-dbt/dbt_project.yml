@@ -75,7 +75,7 @@ vars:
     'snowplow:use_fivetran_interface': false
     'snowplow:events': "{{ ref('snowplow_unnested_events') }}"
     'snowplow:context:web_page': "{{ ref('snowplow_web_page') }}"
-    'snowplow:context:performance_timing': false
+    'snowplow:context:performance_timing': "{{ ref('snowplow_performance_timing_metrics') }}"
     'snowplow:context:useragent': false
     'snowplow:timezone': 'America/New_York'
     'snowplow:page_ping_frequency': 30
@@ -167,6 +167,10 @@ models:
 
       handbook:
         +schema: handbook
+
+      keyhole_twitter:
+        +schema: keyhole_twitter
+        +tags: ["keyhole_twitter", "social", "sources"]
 
       license:
         +schema: license_db
@@ -277,6 +281,9 @@ models:
           +schema: analytics
         xf:
           +schema: analytics
+
+      keyhole_twitter:
+        +tags: [ "keyhole_twitter", "social" ]
 
       license:
         +materialized: view

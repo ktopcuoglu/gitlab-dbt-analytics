@@ -3,7 +3,8 @@ WITH users AS (
     SELECT
       user_id,
       user_name
-    FROM {{ ref('gitlab_dotcom_users') }}
+    FROM {{ ref('gitlab_dotcom_users') }} users
+    WHERE {{ filter_out_blocked_users('users', 'user_id') }}
 
 ), notes AS (
 
@@ -50,7 +51,8 @@ WITH users AS (
       rank_in_event
     FROM notes_flat 
     INNER JOIN users
-      ON notes_flat.user_name = users.user_name 
+      ON notes_flat.user_name = users.user_name
+    WHERE {{ filter_out_blocked_users('notes_flat', 'note_author_id') }} 
 
 )
 

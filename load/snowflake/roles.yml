@@ -22,7 +22,7 @@ databases:
  
 # User / Testing
     - testing_db:
-        shared: no  
+        shared: no
     - tmurphy_analytics:
         shared: no
     - tmurphy_prod:
@@ -55,6 +55,13 @@ roles:
             - admin
 
     - sysadmin:
+        member_of:
+          include:
+            - "*"
+          exclude:
+            - accountadmin
+            - securityadmin
+            - useradmin
         warehouses:
             - admin
         privileges:
@@ -248,6 +255,7 @@ roles:
             - gitlab_data_yaml
             - google_analytics_360
             - netsuite
+            - keyhole_twitter
             - pmg
             - snowflake_db
             - zendesk
@@ -417,6 +425,7 @@ roles:
                 - raw.pmg
                 - raw.prometheus
                 - raw.rspec
+                - raw.keyhole_twitter
                 - raw.snowplow
                 - raw.snowflake_imports
                 - raw.tap_postgres
@@ -427,6 +436,7 @@ roles:
                 - raw.gcp_billing.*
                 - raw.gitlab_data_yaml.*
                 - raw.gitter.*
+                - raw.keyhole_twitter.*
                 - raw.pmg.*
                 - raw.prometheus.*
                 - raw.rspec.*
@@ -585,6 +595,7 @@ roles:
                 - analytics.analytics_sensitive
                 - analytics.analytics_staging
                 - analytics.common
+                - analytics.common_mapping
             tables:
                 - analytics.analytics.*
                 - analytics.analytics_clones.*
@@ -592,6 +603,7 @@ roles:
                 - analytics.analytics_sensitive.*
                 - analytics.analytics_staging.*
                 - analytics.common.*
+                - analytics.common_mapping.*
         privileges:
             databases:
                 read:
@@ -715,9 +727,11 @@ roles:
             schemas:
                 read:
                     - analytics.common
+                    - analytics.common_mapping
             tables:
                 read:
                     - analytics.common.*
+                    - analytics.common_mapping.*
 
     - date:
         privileges:
@@ -757,6 +771,7 @@ roles:
                 read:
                     - analytics.analytics
                     - analytics.common
+                    - analytics.common_mapping
                     - analytics.analytics_meta
                     - analytics.analytics_staging
                     - analytics.dbt
@@ -765,6 +780,7 @@ roles:
                 read:
                     - analytics.analytics.*
                     - analytics.common.*
+                    - analytics.common_mapping.*
                     - analytics.analytics_meta.*
                     - analytics.analytics_staging.*
                     - analytics.dbt.*
@@ -797,6 +813,18 @@ roles:
             tables:
                 read:
                     - analytics.analytics_sensitive.*
+
+    - discourse:
+        privileges:
+            databases:
+                read:
+                    - raw
+            schemas:
+                read:
+                    - raw.discourse
+            tables:
+                read:
+                    - raw.discourse.*
 
     - gcp_billing:
         warehouses:
@@ -914,6 +942,21 @@ roles:
                 read:
                     - analytics.license_db.*
                     - raw.license_db_dump.*
+
+    - keyhole_twitter:
+        privileges:
+            databases:
+                read:
+                    - analytics
+                    - raw
+            schemas:
+                read:
+                    - analytics.keyhole_twitter
+                    - raw.keyhole_twitter
+            tables:
+                read:
+                    - analytics.keyhole_twitter.*
+                    - raw.keyhole_twitter.*
 
     - maxmind:
         privileges:
@@ -1299,10 +1342,8 @@ roles:
         warehouses: []
 
     - dknox:
-        member_of:
-            - analyst_engineering
-        warehouses:
-            - analyst_xs
+        member_of: []
+        warehouses: []
 
     - dmack:
         member_of:
@@ -1644,6 +1685,13 @@ roles:
         warehouses:
             - reporting
 
+    - snalamaru:
+        warehouses:
+            - engineer_xs
+            - engineer_xl
+            - loading
+            - reporting 
+
     - ssichak:
         warehouses:
             - reporting
@@ -1691,7 +1739,14 @@ roles:
                     - raw.zendesk_stitch.*
                     - raw.zendesk_community_relations_stitch.*
                     - raw.zuora_stitch.*
-    
+
+    - swaldner:
+        member_of:
+            - product_manager
+            - reporter
+        warehouses:
+            - reporting
+
     - target_snowflake:
         warehouses:
             - target_snowflake
@@ -1717,17 +1772,17 @@ roles:
             - bamboohr_raw
         owns:
             databases:
-              - tmurphy_analytics
-              - tmurphy_prep
-              - tmurphy_prod
+                - tmurphy_analytics
+                - tmurphy_prep
+                - tmurphy_prod
             schemas:
-              - tmurphy_analytics.*
-              - tmurphy_prep.*
-              - tmurphy_prod.*
+                - tmurphy_analytics.*
+                - tmurphy_prep.*
+                - tmurphy_prod.*
             tables:
-              - tmurphy_analytics.*.*
-              - tmurphy_prep.*.*
-              - tmurphy_prod.*.*
+                - tmurphy_analytics.*.*
+                - tmurphy_prep.*.*
+                - tmurphy_prod.*.*
         privileges:
             databases:
                 read:
@@ -1857,10 +1912,9 @@ users:
         can_login: no 
         member_of: []
     
-    - dknox:
-        can_login: yes
-        member_of:
-            - dknox
+    - dknox: # https://gitlab.com/gitlab-data/analytics/-/issues/6970
+        can_login: no
+        member_of: []
     
     - dmack:
         can_login: yes
@@ -2157,6 +2211,12 @@ users:
         member_of:
             - skerr
 
+    - snalamaru:
+        can_login: yes
+        member_of:
+            - engineer
+            - snalamaru
+
     - sreddy:
         can_login: no
         member_of: []
@@ -2170,6 +2230,11 @@ users:
         can_login: yes
         member_of:
             - stitch
+
+    - swaldner:
+        can_login: yes
+        member_of:
+            - swaldner
 
     - tcarter:
         can_login: no

@@ -105,7 +105,7 @@
     - *deps_and_seed
     - *clone_raw # Reads from raw clone 
     - echo $DBT_MODELS
-    - dbt --partial-parse run $CI_PROFILE_TARGET --full-refresh --models $DBT_MODELS || true
+    - dbt run $CI_PROFILE_TARGET --full-refresh --models $DBT_MODELS || true
     - dbt --partial-parse test $CI_PROFILE_TARGET --models $DBT_MODELS || true
     - dbt --partial-parse run $CI_PROFILE_TARGET --models $DBT_MODELS || true
     - dbt --partial-parse test $CI_PROFILE_TARGET --models $DBT_MODELS
@@ -125,7 +125,7 @@
     - export SNOWFLAKE_SNAPSHOT_DATABASE="${CI_COMMIT_REF_NAME^^}_RAW" # Must write to clone of RAW since this does real work
     - echo $SNOWFLAKE_SNAPSHOT_DATABASE
     - *deps_and_seed
-    - dbt --partial-parse snapshot $CI_PROFILE_TARGET --select $DBT_MODELS
+    - dbt snapshot $CI_PROFILE_TARGET --select $DBT_MODELS
     
 
 # dbt tests
@@ -163,7 +163,7 @@
     - export SNOWFLAKE_SNAPSHOT_DATABASE="${CI_COMMIT_REF_NAME^^}_RAW" # Must write to clone of RAW since this does real work
     - echo $SNOWFLAKE_SNAPSHOT_DATABASE
     - *deps_and_seed
-    - dbt --partial-parse snapshot $CI_PROFILE_TARGET
+    - dbt snapshot $CI_PROFILE_TARGET
     
 📝specify_tests:
   <<: *dbt_misc_jobs
