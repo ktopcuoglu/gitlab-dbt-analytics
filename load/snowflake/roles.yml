@@ -1340,10 +1340,8 @@ roles:
         warehouses: []
 
     - dknox:
-        member_of:
-            - analyst_engineering
-        warehouses:
-            - analyst_xs
+        member_of: []
+        warehouses: []
 
     - dmack:
         member_of:
@@ -1903,10 +1901,9 @@ users:
         can_login: no 
         member_of: []
     
-    - dknox:
-        can_login: yes
-        member_of:
-            - dknox
+    - dknox: # https://gitlab.com/gitlab-data/analytics/-/issues/6970
+        can_login: no
+        member_of: []
     
     - dmack:
         can_login: yes
