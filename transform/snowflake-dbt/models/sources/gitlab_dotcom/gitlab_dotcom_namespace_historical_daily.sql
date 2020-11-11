@@ -34,7 +34,8 @@ WITH date_details AS (
       namespace_snapshots.namespace_type,
       namespace_snapshots.visibility_level,
       namespace_snapshots.shared_runners_minutes_limit,
-      namespace_snapshots.extra_shared_runners_minutes_limit
+      namespace_snapshots.extra_shared_runners_minutes_limit,
+      namespace_snapshots.namespace_created_at
     FROM namespace_snapshots
     INNER JOIN date_details
       ON date_details.date_actual BETWEEN namespace_snapshots.valid_from::DATE AND namespace_snapshots.valid_to_::DATE

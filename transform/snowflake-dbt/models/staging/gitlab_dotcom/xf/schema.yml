@@ -417,6 +417,14 @@ models:
       - name: namespace_id
         description: This is added as a helper column. This is either the group_id (groups are namespaces) or the namespace associated with the milestone's project.
 
+  - name: gitlab_dotcom_namespace_historical_monthly_xf
+    columns:
+      - name: CONCAT(snapshot_month, namespace_id)
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+          - unique
+
   - name: gitlab_dotcom_namespaces_xf
     description: '{{ doc("gitlab_dotcom_namespaces_xf") }}'
     columns:
