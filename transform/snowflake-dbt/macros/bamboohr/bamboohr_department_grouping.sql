@@ -1,6 +1,6 @@
 {%- macro bamboohr_department_grouping(department) -%}
 
-    CASE WHEN {{department}} IN ('Awareness','Communications','Community Relations','Owned Events')
+    CASE WHEN {{department}} IN ('Awareness', 'Communications', 'Community Relations', 'Owned Events')
            THEN 'Awareness, Communications, Community Relations, Owned Events'
          WHEN {{department}} IN ('Brand & Digital Design', 'Content Marketing', 'Inbound Marketing')
            THEN 'Brand & Digital Design, Content Marketing, Inbound Marketing'
