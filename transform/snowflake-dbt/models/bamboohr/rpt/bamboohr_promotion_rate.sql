@@ -32,7 +32,7 @@ WITH promotions AS (
       CASE WHEN breakout_type = 'kpi_breakout' 
              THEN 'company_breakout'
            WHEN breakout_type = 'division_breakout' 
-             THEN {{bamboohr_division_grouping(division='division')}}
+             THEN {{ bamboohr_division_grouping(division='division') }}
            ELSE {{bamboohr_department_grouping(department='department')}} END   AS division_department, 
       SUM(headcount_end)                                                        AS headcount_end,
       SUM(headcount_end_excluding_sdr)                                          AS headcount_end_excluding_sdr
