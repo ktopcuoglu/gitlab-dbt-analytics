@@ -68,7 +68,7 @@ WITH promotions AS (
       promotions.*, 
       headcount_end_excluding_sdr
     FROM bamboohr_base
-    LEFT JOIN promotions
+    INNER JOIN promotions
       ON promotions.promotion_month BETWEEN rolling_start_month AND rolling_end_month
       AND IFF(field_name = 'division_grouping_breakout', promotions.division_grouping, promotions.department_grouping) = bamboohr_base.field_value
     LEFT JOIN headcount_end
