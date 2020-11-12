@@ -2003,11 +2003,7 @@ roles:
             - admin
 
     - msendal:
-        warehouses:
-            - engineer_xs
-            - engineer_xl
-            - loading
-            - reporting    
+        warehouses: []  
 
     - mvilain:
         member_of:
@@ -2722,11 +2718,8 @@ users:
         member_of: []
 
     - msendal:
-        can_login: yes
-        member_of:
-            - engineer
-            - msendal
-            - bamboohr_raw
+        can_login: no
+        member_of: []
 
     - mvilain:
         can_login: yes
