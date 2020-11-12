@@ -1,7 +1,7 @@
 {%- macro number_of_seats_buckets(number_of_seats) -%}
 
     CASE
-      WHEN {{ number_of_seats }} =< 0 THEN '[00] < 0'
+      WHEN {{ number_of_seats }} <= 0 THEN '[00] <= 0'
       WHEN {{ number_of_seats }} BETWEEN 1 AND 5 THEN '[01] 1-5'
       WHEN {{ number_of_seats }} BETWEEN 6 AND 7 THEN '[02] 6-7'
       WHEN {{ number_of_seats }} BETWEEN 8 AND 10 THEN '[03] 8-10'
