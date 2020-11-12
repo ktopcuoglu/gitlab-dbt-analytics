@@ -399,11 +399,11 @@ models:
       tests:
       - not_null
       - unique
-- name: sheetload_account_region
-- name: sheetload_kpi_totals
-- name: sheetload_opportunity_source
-- name: sheetload_purchase_channel
-- name: sheetload_sales_funnel_target_dates
-- name: sheetload_sales_segment
-- name: sheetload_sales_territory
+- name: sheetload_account_region_source
+- name: sheetload_kpi_totals_source
+- name: sheetload_opportunity_source_source
+- name: sheetload_purchase_channel_source
+- name: sheetload_sales_funnel_target_dates_source
+- name: sheetload_sales_segment_source
+- name: sheetload_sales_territory_source
 
