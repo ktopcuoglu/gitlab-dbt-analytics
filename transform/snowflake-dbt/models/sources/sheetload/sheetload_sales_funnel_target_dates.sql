@@ -6,7 +6,7 @@ WITH source AS (
 )
 
 SELECT
-  Concat::VARCHAR                         AS concat,
+  "Concat"::VARCHAR                       AS fields_concatenated,
   KPI_Name::VARCHAR                       AS kpi_name,
   Date::DATE                              AS sales_funnel_target_date,
   Target::FLOAT                           AS target,
