@@ -37,7 +37,7 @@ WITH promotions AS (
       SUM(headcount_end)                                                        AS headcount_end,
       SUM(headcount_end_excluding_sdr)                                          AS headcount_end_excluding_sdr
     FROM {{ ref('bamboohr_rpt_headcount_aggregation') }}  
-    WHERE breakout_type IN ('department_breakout','kpi_breakout','division_breakout')
+    WHERE breakout_type IN ('department_breakout', 'kpi_breakout', 'division_breakout')
         AND eeoc_field_name = 'no_eeoc'
     GROUP BY 1,2,3    
   
