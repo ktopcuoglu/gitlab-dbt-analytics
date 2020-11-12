@@ -400,10 +400,17 @@ models:
       - not_null
       - unique
 - name: sheetload_account_region_source
+  description: Account region source data
 - name: sheetload_kpi_totals_source
-- name: sheetload_opportunity_source_source
+  description: Kpi totals source data
+- name: sheetload_opportunity_source
+  description: Opportunity source data
 - name: sheetload_purchase_channel_source
+  description: Purchase channel source data
 - name: sheetload_sales_funnel_target_dates_source
+  description: Sales funnel target date source data
 - name: sheetload_sales_segment_source
+  description: Sales segment source data
 - name: sheetload_sales_territory_source
+  description: Sales territory source data
 
