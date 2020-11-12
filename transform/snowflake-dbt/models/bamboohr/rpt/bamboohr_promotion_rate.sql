@@ -12,7 +12,7 @@ WITH promotions AS (
 ), bamboohr_base AS (
 
     SELECT
-      DATEADD(month,-11, date_actual)                           AS rolling_start_month,
+      DATEADD(month, -11, date_actual)                           AS rolling_start_month,
       date_actual                                               AS rolling_end_month,
       field_name,
       field_value
