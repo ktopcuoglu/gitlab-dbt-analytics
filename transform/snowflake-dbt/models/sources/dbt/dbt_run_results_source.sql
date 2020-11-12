@@ -42,7 +42,7 @@ WITH source AS (
           ]) }}                                     AS run_unique_key
     FROM flattened
     LEFT JOIN LATERAL FLATTEN(INPUT => data_by_row['timing']::ARRAY, outer => true) timing
-    WHERE IFNULL(data_by_row['name'], 'compile') = 'compile'
+    ON IFNULL(timing.value['name'], 'compile') = 'compile'
   
 )
 

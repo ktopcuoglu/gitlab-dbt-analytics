@@ -1,7 +1,7 @@
 {%- macro product_category(product_column, output_column_name = 'product_category') -%}
 
 CASE  WHEN ltrim(lower({{product_column}})) LIKE 'githost%' THEN 'GitHost'
-      WHEN {{product_column}} IN ('#movingtogitlab', 'File Locking', 'Payment Gateway Test', 'Time Tracking', '1,000 CI Minutes') THEN 'Other'
+      WHEN {{product_column}} IN ('#movingtogitlab', 'File Locking', 'Payment Gateway Test', 'Time Tracking', '1,000 CI Minutes', 'Gitlab Storage 10GB') THEN 'Other'
       WHEN lower({{product_column}}) LIKE 'gitlab geo%' THEN 'Other'
       WHEN lower({{product_column}}) LIKE 'basic%' THEN 'Basic'
       WHEN lower({{product_column}}) LIKE 'bronze%' THEN 'Bronze'

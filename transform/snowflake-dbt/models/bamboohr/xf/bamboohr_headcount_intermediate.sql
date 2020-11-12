@@ -7,6 +7,7 @@
 {% set repeated_metric_columns = 
       "SUM(headcount_start)                             AS headcount_start,
       SUM(headcount_end)                                AS headcount_end,
+      SUM(headcount_end_excluding_sdr)                  AS headcount_end_excluding_sdr,
       (SUM(headcount_start) + SUM(headcount_end))/2     AS headcount_average,
       SUM(hire_count)                                   AS hire_count,
       SUM(separation_count)                             AS separation_count,
@@ -48,8 +49,13 @@
         + SUM(headcount_end_contributor))/2             AS headcount_average_contributor,
       SUM(hired_contributor)                            AS hired_contributor,
       SUM(separated_contributor)                        AS separated_contributor,
+
       SUM(IFF(is_promotion = TRUE,1,0))                 AS promotion,
+      SUM(IFF(is_promotion_excluding_sdr = TRUE,1,0))   AS promotion_excluding_sdr,
+      
       SUM(percent_change_in_comp)                       AS percent_change_in_comp,
+      SUM(percent_change_in_comp_excluding_sdr)         AS percent_change_in_comp_excluding_sdr,
+
       AVG(location_factor)                              AS location_factor,
       SUM(discretionary_bonus)                          AS discretionary_bonus, 
       AVG(tenure_months)                                AS tenure_months,
@@ -59,6 +65,8 @@
       SUM(tenure_two_to_four_years)                     AS tenure_two_to_four_years,
       SUM(tenure_four_plus_years)                       AS tenure_four_plus_years
       "%}
+
+
 
 WITH dates AS (
 
@@ -111,15 +119,17 @@ WITH dates AS (
 
     SELECT
       employees.date_actual,
-      employees.department_modified                                             AS department,
-      division_mapped_current                                                   AS division,
+      employees.department_modified                                                 AS department,
+      division_mapped_current                                                       AS division,
       --using the current division - department mapping for reporting
-      job_role_modified                                                         AS job_role,
-      COALESCE(job_grade,'NA')                                                  AS job_grade,
+      job_role_modified                                                             AS job_role,
+      COALESCE(job_grade,'NA')                                                      AS job_grade,
       mapping_enhanced.eeoc_field_name,                                                       
       mapping_enhanced.eeoc_value,                                          
       IFF(dates.start_date = date_actual,1,0)                                       AS headcount_start,
       IFF(dates.end_date = date_actual,1,0)                                         AS headcount_end,
+      IFF(dates.end_date = date_actual 
+        AND employees.department_modified != 'Sales Development', 1,0)              AS headcount_end_excluding_sdr,
       IFF(is_hire_date = True, 1,0)                                                 AS hire_count,
       IFF(termination_type = 'Voluntary',1,0)                                       AS voluntary_separation,
       IFF(termination_type = 'Involuntary',1,0)                                     AS involuntary_separation,
@@ -171,9 +181,16 @@ WITH dates AS (
           AND job_role_modified = 'Individual Contributor',1,0)                     AS separated_contributor, 
 
 
-      IFF(employees.job_title LIKE '%VP%', 'Exclude', is_promotion)                 AS is_promotion,    
+      IFF(employees.job_title LIKE '%VP%', 'Exclude', is_promotion)                 AS is_promotion,  
+      IFF(employees.job_title LIKE '%VP%' 
+        OR employees.department_modified = 'Sales Development',
+        'Exclude',is_promotion)                                                     AS is_promotion_excluding_sdr,
       IFF(is_promotion = TRUE AND employees.job_title NOT LIKE '%VP%',
-        percent_change_in_comp, NULL)                                               AS percent_change_in_comp,              
+        percent_change_in_comp, NULL)                                               AS percent_change_in_comp,      
+      IFF(employees.job_title LIKE '%VP%' 
+        OR employees.department_modified = 'Sales Development',
+        NULL,percent_change_in_comp)                                                AS percent_change_in_comp_excluding_sdr,
+
       IFF(dates.end_date = date_actual 
             AND sales_geo_differential = 'n/a - Comp Calc',
             location_factor, NULL)                                                  AS location_factor,

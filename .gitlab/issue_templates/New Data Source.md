@@ -17,10 +17,8 @@ If none, please include a description
 ## DRI/Prioritization Owner Checklist
 * [ ] This data does not exist live in the Data team's data warehouse? (https://dbt.gitlabdata.com) 
 * [ ] Do any objects in this data source need to be snapshotted? If yes, please open separate issues to have the objects snapshotted.
-* [ ] Does this data contain anything that is sensitive (Classified as Red or Orange in our [Data Classification Policy](https://about.gitlab.com/handbook/engineering/security/data-classification-policy.html#data-classification-levels))?
-  - [ ] Yes 
-  - [ ] No
-  - [ ] I don't know
+* [ ] Please list and describe any data from this source that is sensitive (Classified as Red or Orange in our [Data Classification Policy](https://about.gitlab.com/handbook/engineering/security/data-classification-policy.html#data-classification-levels))?
+  - _`{data fields, columns, or objects}`_
 * [ ] Does this data have any agreed [SLO](https://about.gitlab.com/handbook/business-ops/data-team/platform/#slos-service-level-objectives-by-data-source) attached to it? If not: 
     * [ ] How often does the data need to be refreshed? 
 

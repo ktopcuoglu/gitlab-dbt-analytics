@@ -1,6 +1,6 @@
 sheets:
   - name: frontend_interview_metrics
-    owner: '@ClemMakesApps'
+    owner: '@andr3'
     tabs:
       - interviews
       - rubric_max_points
@@ -8,6 +8,10 @@ sheets:
     owner: '@kwiebers'
     tabs:
       - gitlab_product_mrs_size
+  - name: opt_out_contacts
+    owner: '@Jean Peguero'
+    tabs:
+      - do_not_email_contacts
   - name: test_sheet
     owner: '@taylormurphy'
     tabs:

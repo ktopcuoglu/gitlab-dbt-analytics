@@ -7,7 +7,8 @@
 WITH issues AS (
 
     SELECT *
-    FROM {{ref('gitlab_dotcom_issues')}}
+    FROM {{ref('gitlab_dotcom_issues')}} issues
+    WHERE {{ filter_out_blocked_users('issues', 'author_id') }}
 
 ), label_links AS (
 
@@ -77,6 +78,7 @@ WITH issues AS (
     issues.author_id,
     issues.project_id,
     milestone_id,
+    sprint_id,
     updated_by_id,
     last_edited_by_id,
     moved_to_id,

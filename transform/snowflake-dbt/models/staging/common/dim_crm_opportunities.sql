@@ -64,18 +64,6 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity.order_type_live,
       sfdc_opportunity.order_type_stamped,
       sfdc_opportunity.net_arr,
-
-
-      -- sales segment refactor
-      sfdc_opportunity.division_sales_segment_stamped,
-
-      -- ************************************
-      -- sales segmentation deprecated fields - 2020-09-03
-      -- left temporary for the sake of MVC and avoid breaking SiSense existing charts
-      -- issue: https://gitlab.com/gitlab-data/analytics/-/issues/5709
-      sfdc_opportunity.segment                          AS segment,
-      sfdc_opportunity.sales_segment                    AS sales_segment,
-      sfdc_opportunity.parent_segment                   AS parent_segment,
       
       -- ************************************
       -- channel reporting

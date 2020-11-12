@@ -189,9 +189,7 @@ def get_postgres_types(table_name: str, source_engine: Engine) -> Dict[str, str]
 
 
 def transform_source_types_to_snowflake_types(
-    df: pd.DataFrame,
-    source_table_name: str,
-    source_engine: Engine,
+    df: pd.DataFrame, source_table_name: str, source_engine: Engine
 ) -> List[Column]:
     pg_types = get_postgres_types(source_table_name, source_engine)
     table_columns = [

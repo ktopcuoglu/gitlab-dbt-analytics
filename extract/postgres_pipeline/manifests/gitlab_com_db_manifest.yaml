@@ -81,6 +81,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'epics'
     export_table_primary_key: id
+    dbt_source_model: true
 
   alert_management_alert_assignees:
     import_db: GITLAB_DB
@@ -92,6 +93,7 @@ tables:
     export_schema: 'gitlab_dotcom'
     export_table: 'alert_management_alert_assignees'
     export_table_primary_key: id
+    dbt_source_model: true
 
   alert_management_alerts:
     import_db: GITLAB_DB
@@ -119,6 +121,7 @@ tables:
     export_schema: 'gitlab_dotcom'
     export_table: 'alert_management_alerts'
     export_table_primary_key: id
+    dbt_source_model: true
 
   alerts_service_data:
     import_db: GITLAB_DB
@@ -135,6 +138,7 @@ tables:
     export_schema: 'gitlab_dotcom'
     export_table: 'alerts_service_data'
     export_table_primary_key: id
+    dbt_source_model: true
 
   approvals:
     import_db: GITLAB_DB
@@ -150,6 +154,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'approvals'
     export_table_primary_key: id
+    dbt_source_model: true
   ci_build_trace_chunks:
     import_db: GITLAB_DB
     import_query: >
@@ -161,6 +166,7 @@ tables:
     export_schema: 'gitlab_dotcom'
     export_table: ci_build_trace_chunks
     export_table_primary_key: build_id
+    dbt_source_model: true
   ci_build_trace_section_names:
     import_db: GITLAB_DB
     import_query: >
@@ -171,6 +177,7 @@ tables:
     export_schema: 'gitlab_dotcom'
     export_table: ci_build_trace_section_names
     export_table_primary_key: id
+    dbt_source_model: true
   ci_pipeline_schedule_variables:
     import_db: GITLAB_DB
     import_query: >
@@ -186,6 +193,7 @@ tables:
     export_schema: 'gitlab_dotcom'
     export_table: ci_pipeline_schedule_variables
     export_table_primary_key: id
+    dbt_source_model: true
   ci_pipeline_schedules:
     import_db: GITLAB_DB
     import_query: >
@@ -206,6 +214,7 @@ tables:
     export_schema: 'gitlab_dotcom'
     export_table: ci_pipeline_schedules
     export_table_primary_key: id
+    dbt_source_model: true
   ci_job_artifacts:
     import_db: GITLAB_DB
     import_query: >
@@ -228,6 +237,7 @@ tables:
     export_schema: 'gitlab_dotcom'
     export_table: ci_job_artifacts
     export_table_primary_key: id
+    dbt_source_model: true
   ci_pipeline_chat_data:
     import_db: GITLAB_DB
     import_query: >
@@ -238,6 +248,7 @@ tables:
     export_schema: 'gitlab_dotcom'
     export_table: ci_pipeline_chat_data
     export_table_primary_key: pipeline_id
+    dbt_source_model: true
   ci_pipeline_variables:
     import_db: GITLAB_DB
     import_query: >
@@ -249,6 +260,7 @@ tables:
     export_schema: 'gitlab_dotcom'
     export_table: ci_pipeline_variables
     export_table_primary_key: id
+    dbt_source_model: true
   events:
     import_db: GITLAB_DB
     import_query: >
@@ -266,6 +278,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'events'
     export_table_primary_key: id
+    dbt_source_model: true
   approver_groups:
     import_db: GITLAB_DB
     import_query: >
@@ -280,6 +293,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'approver_groups'
     export_table_primary_key: id
+    dbt_source_model: true
   approval_merge_request_rules:
     import_db: GITLAB_DB
     import_query: >
@@ -297,6 +311,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'approval_merge_request_rules'
     export_table_primary_key: id
+    dbt_source_model: true
   audit_events:
     import_db: GITLAB_DB
     import_query: >
@@ -312,6 +327,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'audit_events'
     export_table_primary_key: id
+    dbt_source_model: true
   board_assignees:
     import_db: GITLAB_DB
     import_query: >
@@ -322,6 +338,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'board_assignees'
     export_table_primary_key: id
+    dbt_source_model: true
   board_labels:
     import_db: GITLAB_DB
     import_query: >
@@ -332,6 +349,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'board_labels'
     export_table_primary_key: id
+    dbt_source_model: true
   boards:
     import_db: GITLAB_DB
     import_query: >
@@ -348,6 +366,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'boards'
     export_table_primary_key: id
+    dbt_source_model: true
   ci_platform_metrics:
     import_db: GITLAB_DB
     import_query: >
@@ -361,6 +380,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: ci_platform_metrics
     export_table_primary_key: id
+    dbt_source_model: true
   ci_stages:
     import_db: GITLAB_DB
     import_query: >
@@ -379,6 +399,7 @@ tables:
     export_schema: 'gitlab_dotcom'
     export_table: ci_stages
     export_table_primary_key: id
+    dbt_source_model: true
   ci_trigger_requests:
     import_db: GITLAB_DB
     import_query: >
@@ -394,6 +415,7 @@ tables:
     export_schema: 'gitlab_dotcom'
     export_table: ci_trigger_requests
     export_table_primary_key: id
+    dbt_source_model: true
   ci_triggers:
     import_db: GITLAB_DB
     import_query: >
@@ -409,6 +431,7 @@ tables:
     export_schema: 'gitlab_dotcom'
     export_table: ci_triggers
     export_table_primary_key: id
+    dbt_source_model: true
   ci_variables:
     import_db: GITLAB_DB
     import_query: >
@@ -454,6 +477,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'ci_pipelines'
     export_table_primary_key: id
+    dbt_source_model: true
   cluster_groups:
     import_db: GITLAB_DB
     import_query: >
@@ -464,6 +488,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'cluster_groups'
     export_table_primary_key: id
+    dbt_source_model: true
   cluster_projects:
     import_db: GITLAB_DB
     import_query: >
@@ -478,6 +503,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'cluster_projects'
     export_table_primary_key: id
+    dbt_source_model: true
   clusters:
     import_db: GITLAB_DB
     import_query: >
@@ -499,6 +525,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'clusters'
     export_table_primary_key: id
+    dbt_source_model: true
   clusters_applications_cert_managers:
     import_db: GITLAB_DB
     import_query: >
@@ -515,6 +542,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'clusters_applications_cert_managers'
     export_table_primary_key: id
+    dbt_source_model: true
   clusters_applications_crossplane:
     import_db: GITLAB_DB
     import_query: >
@@ -532,6 +560,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'clusters_applications_crossplane'
     export_table_primary_key: id
+    dbt_source_model: true
   clusters_applications_elastic_stacks:
     import_db: GITLAB_DB
     import_query: >
@@ -548,6 +577,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'clusters_applications_elastic_stacks'
     export_table_primary_key: id
+    dbt_source_model: true
   clusters_applications_helm:
     import_db: GITLAB_DB
     import_query: >
@@ -564,6 +594,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'clusters_applications_helm'
     export_table_primary_key: id
+    dbt_source_model: true
   clusters_applications_ingress:
     import_db: GITLAB_DB
     import_query: >
@@ -584,6 +615,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'clusters_applications_ingress'
     export_table_primary_key: id
+    dbt_source_model: true
   clusters_applications_jupyter:
     import_db: GITLAB_DB
     import_query: >
@@ -602,6 +634,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'clusters_applications_jupyter'
     export_table_primary_key: id
+    dbt_source_model: true
   clusters_applications_knative:
     import_db: GITLAB_DB
     import_query: >
@@ -621,6 +654,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'clusters_applications_knative'
     export_table_primary_key: id
+    dbt_source_model: true
   clusters_applications_prometheus:
     import_db: GITLAB_DB
     import_query: >
@@ -638,6 +672,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'clusters_applications_prometheus'
     export_table_primary_key: id
+    dbt_source_model: true
   clusters_applications_runners:
     import_db: GITLAB_DB
     import_query: >
@@ -656,6 +691,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'clusters_applications_runners'
     export_table_primary_key: id
+    dbt_source_model: true
   clusters_kubernetes_namespaces:
     import_db: GITLAB_DB
     import_query: >
@@ -682,6 +718,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'deployment_merge_requests'
     export_table_primary_key: CONCAT(deployment_id,'_',merge_request_id)
+    dbt_source_model: true
   deployments:
     import_db: GITLAB_DB
     import_query: >
@@ -707,6 +744,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'deployments'
     export_table_primary_key: id
+    dbt_source_model: true
   design_management_designs:
     import_db: GITLAB_DB
     import_query: >
@@ -718,6 +756,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'design_management_designs'
     export_table_primary_key: CONCAT(issue_id,'_',filename)
+    dbt_source_model: true
   design_management_designs_versions:
     import_db: GITLAB_DB
     import_query: >
@@ -729,6 +768,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'design_management_designs_versions'
     export_table_primary_key: CONCAT(design_id,'_', version_id)
+    dbt_source_model: true
   design_management_versions:
     import_db: GITLAB_DB
     import_query: >
@@ -741,6 +781,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'design_management_versions'
     export_table_primary_key: CONCAT(sha,'_', issue_id)
+    dbt_source_model: true
   elasticsearch_indexed_namespaces:
     # want to treat this more as an SCD since rows are deleted and want to display current state
     # see https://gitlab.com/gitlab-data/analytics/-/issues/5463#note_387839921
@@ -754,6 +795,7 @@ tables:
     export_table: 'elasticsearch_indexed_namespaces'
     export_table_primary_key: namespace_id
     advanced_metadata: true
+    dbt_source_model: true
   emails:
     import_db: GITLAB_DB
     import_query: >
@@ -770,6 +812,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'emails'
     export_table_primary_key: id
+    dbt_source_model: true
   environments:
     import_db: GITLAB_DB
     import_query: >
@@ -789,6 +832,7 @@ tables:
     export_table: 'environments'
     export_table_primary_key: id
     advanced_metadata: true
+    dbt_source_model: true
   epic_issues:
     import_db: GITLAB_DB
     import_query: >
@@ -800,6 +844,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'epic_issues'
     export_table_primary_key: id
+    dbt_source_model: true
   epic_metrics:
     import_db: GITLAB_DB
     import_query: >
@@ -813,6 +858,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'epic_metrics'
     export_table_primary_key: id
+    dbt_source_model: true
   experiment_users:
     import_db: GITLAB_DB
     import_query: >
@@ -828,6 +874,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'experiment_users'
     export_table_primary_key: id
+    dbt_source_model: true
   experiments:
     import_db: GITLAB_DB
     import_query: >
@@ -837,6 +884,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'experiments'
     export_table_primary_key: id
+    dbt_source_model: true
   gitlab_subscription_histories:
     import_db: GITLAB_DB
     import_query: >
@@ -859,6 +907,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'gitlab_subscription_histories'
     export_table_primary_key: id
+    dbt_source_model: true
   gitlab_subscriptions:
     import_db: GITLAB_DB
     import_query: >
@@ -879,6 +928,8 @@ tables:
     export_table: 'gitlab_subscriptions'
     export_table_primary_key: id
     advanced_metadata: true
+    dbt_source_model: true
+    dbt_snapshots: true
   group_group_links:
     import_db: GITLAB_DB
     import_query: >
@@ -894,6 +945,7 @@ tables:
     export_table: 'group_group_links'
     export_table_primary_key: id
     advanced_metadata: true
+    dbt_source_model: true
   issues:
     import_db: GITLAB_DB
     import_query: >
@@ -924,6 +976,7 @@ tables:
       , state_id
       , duplicated_to_id
       , promoted_to_epic_id
+      , sprint_id
       FROM issues
       WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
         AND '{EXECUTION_DATE}'::timestamp
@@ -931,6 +984,8 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'issues'
     export_table_primary_key: id
+    dbt_source_model: true
+    dbt_snapshots: true
   labels:
     import_db: GITLAB_DB
     import_query: >
@@ -949,6 +1004,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'labels'
     export_table_primary_key: id
+    dbt_source_model: true
   lfs_objects_projects:
     import_db: GITLAB_DB
     import_query: >
@@ -964,6 +1020,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'lfs_objects_projects'
     export_table_primary_key: id
+    dbt_source_model: true
   identities:
     import_db: GITLAB_DB
     import_query: >
@@ -981,6 +1038,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'identities'
     export_table_primary_key: id
+    dbt_source_model: true
   issue_assignees:
     import_db: GITLAB_DB
     import_query: >
@@ -990,6 +1048,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'issue_assignees'
     export_table_primary_key: user_id
+    dbt_source_model: true
   issue_links:
     import_db: GITLAB_DB
     import_query: >
@@ -1003,6 +1062,7 @@ tables:
     export_table: 'issue_links'
     export_table_primary_key: id
     advanced_metadata: true
+    dbt_source_model: true
   issue_metrics:
     import_db: GITLAB_DB
     import_query: >
@@ -1019,6 +1079,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'issue_metrics'
     export_table_primary_key: id
+    dbt_source_model: true
   keys:
     import_db: GITLAB_DB
     import_query: >
@@ -1033,6 +1094,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'keys'
     export_table_primary_key: id
+    dbt_source_model: true
   label_links:
     import_db: GITLAB_DB
     import_query: >
@@ -1047,6 +1109,7 @@ tables:
     export_table: 'label_links'
     export_table_primary_key: id
     advanced_metadata: true
+    dbt_source_model: true
   label_priorities:
     import_db: GITLAB_DB
     import_query: >
@@ -1062,6 +1125,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'label_priorities'
     export_table_primary_key: id
+    dbt_source_model: true
   licenses:
     import_db: GITLAB_DB
     import_query: >
@@ -1074,6 +1138,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'licenses'
     export_table_primary_key: id
+    dbt_source_model: true
   lists:
     import_db: GITLAB_DB
     import_query: >
@@ -1095,6 +1160,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'lists'
     export_table_primary_key: id
+    dbt_source_model: true
   members:
     import_db: GITLAB_DB
     import_query: >
@@ -1119,6 +1185,8 @@ tables:
     export_table: 'members'
     export_table_primary_key: id
     advanced_metadata: true
+    dbt_source_model: true
+    dbt_snapshots: true
   merge_requests:
     import_db: GITLAB_DB
     import_query: >
@@ -1157,6 +1225,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'merge_requests'
     export_table_primary_key: id
+    dbt_source_model: true
   merge_request_diffs:
     import_db: GITLAB_DB
     import_query: >
@@ -1176,6 +1245,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'merge_request_diffs'
     export_table_primary_key: id
+    dbt_source_model: true
   merge_request_metrics:
     import_db: GITLAB_DB
     import_query: >
@@ -1207,6 +1277,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'merge_request_metrics'
     export_table_primary_key: id
+    dbt_source_model: true
   merge_requests_closing_issues:
     import_db: GITLAB_DB
     import_query: >
@@ -1221,6 +1292,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'merge_requests_closing_issues'
     export_table_primary_key: id
+    dbt_source_model: true
   milestones:
     import_db: GITLAB_DB
     import_query: >
@@ -1241,6 +1313,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'milestones'
     export_table_primary_key: id
+    dbt_source_model: true
   namespace_statistics:
     import_db: GITLAB_DB
     import_query: >
@@ -1252,6 +1325,8 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'namespace_statistics'
     export_table_primary_key: id
+    dbt_source_model: true
+    dbt_snapshots: true
   namespaces:
     import_db: GITLAB_DB
     import_query: >
@@ -1288,6 +1363,8 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'namespaces'
     export_table_primary_key: id
+    dbt_source_model: true
+    dbt_snapshots: true
   namespace_root_storage_statistics:
     import_db: GITLAB_DB
     import_query: >
@@ -1305,6 +1382,8 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'namespace_root_storage_statistics'
     export_table_primary_key: namespace_id
+    dbt_source_model: true
+    dbt_snapshots: true
   notes:
     import_db: GITLAB_DB
     import_query: >
@@ -1338,6 +1417,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'notes'
     export_table_primary_key: id
+    dbt_source_model: true
   notification_settings:
     import_db: GITLAB_DB
     import_query: >
@@ -1366,6 +1446,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'notification_settings'
     export_table_primary_key: id
+    dbt_source_model: true
   oauth_access_tokens:
     import_db: GITLAB_DB
     import_query: >
@@ -1380,6 +1461,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'oauth_access_tokens'
     export_table_primary_key: id
+    dbt_source_model: true
   packages_build_infos:
     import_db: GITLAB_DB
     import_query: >
@@ -1478,6 +1560,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'pages_domains'
     export_table_primary_key: id
+    dbt_source_model: true
   plans:
     import_db: GITLAB_DB
     import_query: >
@@ -1490,6 +1573,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'plans'
     export_table_primary_key: id
+    dbt_source_model: true
   project_authorizations:
     import_db: GITLAB_DB
     import_query: >
@@ -1500,6 +1584,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'project_authorizations'
     export_table_primary_key: user_id
+    dbt_source_model: true
   project_auto_devops:
     import_db: GITLAB_DB
     import_query: >
@@ -1514,6 +1599,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'project_auto_devops'
     export_table_primary_key: id
+    dbt_source_model: true
   project_custom_attributes:
     import_db: GITLAB_DB
     import_query: >
@@ -1547,6 +1633,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'project_features'
     export_table_primary_key: id
+    dbt_source_model: true
   project_group_links:
     import_db: GITLAB_DB
     import_query: >
@@ -1562,6 +1649,7 @@ tables:
     export_table: 'project_group_links'
     export_table_primary_key: id
     advanced_metadata: true
+    dbt_source_model: true
   project_import_data:
     import_db: GITLAB_DB
     import_query: >
@@ -1571,6 +1659,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'project_import_data'
     export_table_primary_key: id
+    dbt_source_model: true
   project_mirror_data:
     import_db: GITLAB_DB
     import_query: >
@@ -1584,6 +1673,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'project_mirror_data'
     export_table_primary_key: id
+    dbt_source_model: true
   project_repository_states:
     import_db: GITLAB_DB
     import_query: >
@@ -1614,6 +1704,8 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'project_statistics'
     export_table_primary_key: id
+    dbt_source_model: true
+    dbt_snapshots: true
   projects:
     import_db: GITLAB_DB
     import_query: >
@@ -1680,6 +1772,8 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'projects'
     export_table_primary_key: id
+    dbt_source_model: true
+    dbt_snapshots: true
   protected_branches:
     import_db: GITLAB_DB
     import_query: >
@@ -1695,6 +1789,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'protected_branches'
     export_table_primary_key: id
+    dbt_source_model: true
   prometheus_alerts:
     import_db: GITLAB_DB
     import_query: >
@@ -1709,6 +1804,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'prometheus_alerts'
     export_table_primary_key: id
+    dbt_source_model: true
   push_rules:
     import_db: GITLAB_DB
     import_query: >
@@ -1737,6 +1833,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'push_rules'
     export_table_primary_key: id
+    dbt_source_model: true
   resource_label_events:
     import_db: GITLAB_DB
     import_query: >
@@ -1758,6 +1855,7 @@ tables:
     export_table: 'resource_label_events'
     export_table_primary_key: id
     advanced_metadata: true
+    dbt_source_model: true
   resource_milestone_events:
     import_db: GITLAB_DB
     import_query: >
@@ -1775,6 +1873,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'resource_milestone_events'
     export_table_primary_key: id
+    dbt_source_model: true
 #  resource_state_events:
 #    import_db: GITLAB_DB
 #    import_query: >
@@ -1804,6 +1903,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'resource_weight_events'
     export_table_primary_key: id
+    dbt_source_model: true
   requirements:
     import_db: GITLAB_DB
     import_query: >
@@ -1820,6 +1920,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'requirements'
     export_table_primary_key: id
+    dbt_source_model: true
   requirements_management_test_reports:
     import_db: GITLAB_DB
     import_query: >
@@ -1850,6 +1951,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'saml_providers'
     export_table_primary_key: id
+    dbt_source_model: true
   snippets:
     import_db: GITLAB_DB
     import_query: >
@@ -1869,6 +1971,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'snippets'
     export_table_primary_key: id
+    dbt_source_model: true
   subscriptions:
     import_db: GITLAB_DB
     import_query: >
@@ -1886,6 +1989,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'subscriptions'
     export_table_primary_key: id
+    dbt_source_model: true
   system_note_metadata:
     import_db: GITLAB_DB
     import_query: >
@@ -1902,6 +2006,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'system_note_metadata'
     export_table_primary_key: id
+    dbt_source_model: true
   programming_languages:
     import_db: GITLAB_DB
     import_query: >
@@ -1911,6 +2016,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'programming_languages'
     export_table_primary_key: id
+    dbt_source_model: true
   protected_environments:
     import_db: GITLAB_DB
     import_query: >
@@ -1938,6 +2044,7 @@ tables:
     export_table: 'repository_languages'
     export_table_primary_key: CONCAT(project_id, '_', programming_language_id)
     advanced_metadata: true
+    dbt_source_model: true
   releases:
     import_db: GITLAB_DB
     import_query: >
@@ -1955,6 +2062,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'releases'
     export_table_primary_key: id
+    dbt_source_model: true
   routes:
     import_db: GITLAB_DB
     import_query: >
@@ -2001,6 +2109,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'services'
     export_table_primary_key: id
+    dbt_source_model: true
   sprints:
     import_db: GITLAB_DB
     import_query: >
@@ -2024,6 +2133,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'sprints'
     export_table_primary_key: id
+    dbt_source_model: true
   terraform_states:
     import_db: GITLAB_DB
     import_query: >
@@ -2038,6 +2148,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'terraform_states'
     export_table_primary_key: id
+    dbt_source_model: true
   timelogs:
     import_db: GITLAB_DB
     import_query: >
@@ -2055,6 +2166,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'timelogs'
     export_table_primary_key: id
+    dbt_source_model: true
   todos:
     import_db: GITLAB_DB
     import_query: >
@@ -2077,10 +2189,13 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'todos'
     export_table_primary_key: id
+    dbt_source_model: true
   users:
     import_db: GITLAB_DB
     import_query: >
       SELECT id
+      , email
+      , commit_email
       , remember_created_at
       , sign_in_count
       , current_sign_in_at
@@ -2149,6 +2264,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'users'
     export_table_primary_key: id
+    dbt_source_model: true
   user_preferences:
     import_db: GITLAB_DB
     import_query: >
@@ -2181,6 +2297,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'user_preferences'
     export_table_primary_key: user_id
+    dbt_source_model: true
   vulnerabilities:
     import_db: GITLAB_DB
     import_query: >
@@ -2269,6 +2386,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'vulnerability_occurrences'
     export_table_primary_key: 'id'
+    dbt_source_model: true
   vulnerability_occurrence_identifiers:
     import_db: GITLAB_DB
     import_query: >
@@ -2365,6 +2483,7 @@ tables:
     export_schema: 'gitlab_dotcom'
     export_table: ci_group_variables
     export_table_primary_key: id
+    dbt_source_model: true
   ci_builds_runner_session:
     import_db: GITLAB_DB
     import_query: >
@@ -2430,6 +2549,7 @@ tables:
     export_schema: 'gitlab_dotcom'
     export_table: ci_builds
     export_table_primary_key: id
+    dbt_source_model: true
   ci_runners:
     import_db: GITLAB_DB
     import_query: >
@@ -2459,6 +2579,7 @@ tables:
     export_schema: 'gitlab_dotcom'
     export_table: ci_runners
     export_table_primary_key: id
+    dbt_source_model: true
   ci_runner_projects:
     import_db: GITLAB_DB
     import_query: >
@@ -2473,3 +2594,4 @@ tables:
     export_schema: 'gitlab_dotcom'
     export_table: ci_runner_projects
     export_table_primary_key: id
+    dbt_source_model: true

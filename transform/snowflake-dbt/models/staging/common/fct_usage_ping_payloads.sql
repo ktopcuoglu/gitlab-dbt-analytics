@@ -57,7 +57,7 @@ WITH license AS (
 
     SELECT
       id              AS usage_ping_id,
-      date_id,
+      created_date_id AS date_id,
       uuid,
       host_id,
       source_ip_hash,
@@ -88,7 +88,7 @@ WITH license AS (
 {{ dbt_audit(
     cte_ref="renamed",
     created_by="@derekatwood",
-    updated_by="@mpeychet",
+    updated_by="@msendal",
     created_date="2020-08-17",
-    updated_date="2020-10-16"
+    updated_date="2020-10-26"
 ) }}

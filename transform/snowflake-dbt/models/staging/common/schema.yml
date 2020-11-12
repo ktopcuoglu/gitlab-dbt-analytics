@@ -99,6 +99,19 @@ models:
           - not_null
           - unique
 
+  - name: dim_geo_region
+    description: "Dimension for geographical region built off ATAM_Region__C in SFDC. Example values: NORAM, LATAM, APAC, EMEA"
+    columns:
+      - name: dim_geo_region_name_id
+        tests:
+          - unique
+          - not_null
+        tags: ["tdf", "common", "geo"]
+      - name: dim_geo_region_name
+        tests:
+          - unique
+          - not_null
+        tags: ["tdf", "common", "geo"]
   - name: dim_ip_to_geo
     description: '{{ doc("dim_ip_to_geo") }}'
     columns:
@@ -107,6 +120,33 @@ models:
           - unique
           - not_null
       - name: location_id
+
+  - name: dim_geo_sub_region
+    description: "Dimension table for sub-region built off ATAM_Sub_Region__C in SFDC. Example values: Southern Europe, NA East, Nordics"
+    columns:
+      - name: dim_geo_sub_region_name_id
+        tests:
+          - unique
+          - not_null
+        tags: ["tdf", "common", "geo"]
+      - name: dim_geo_sub_region_name
+        tests:
+          - unique
+          - not_null
+        tags: ["tdf", "common", "geo"]
+  - name: dim_geo_area
+    description: "Dimension table for geographic area built off ATAM_Area__C in SFDC. Example values: Southern PNW, India, Northeast"
+    columns:
+      - name: dim_geo_area_name_id
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "common", "geo"]
+      - name: dim_geo_area_name
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "common", "geo"]
 
   - name: dim_gitlab_versions
     description: '{{ doc("dim_gitlab_versions") }}'
@@ -136,7 +176,71 @@ models:
       - name: updated_date
         description: The date the release was updated in the Version app.
 
-  - name: dim_instances 
+  - name: dim_industry
+    description: '{{ doc("dim_industry") }}'
+    columns:
+      - name: dim_industry_name_id
+        description: Unique identifier of a version of a industry
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "industry", "common"]
+      - name: dim_industry_name
+        description: Industry text
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "industry", "common"]
+
+  - name: dim_opportunity_source
+    description: '{{ doc("dim_opportunity_source") }}'
+    columns:
+      - name: dim_opportunity_source_id
+        description: Unique identifier for each opportunity source name
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "opportunity", "common"]
+      - name: opportunity_source_name
+        description: Opportunity source name
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "opportunity", "common"]
+
+  - name: dim_purchase_channel
+    description: '{{ doc("dim_purchase_channel") }}'
+    columns:
+      - name: dim_purchase_channel_id
+        description: Unique identifier for each purchase channel name
+        tests:
+          - not_null
+          - unique
+        tags: [ "tdf", "purchase_channel", "common" ]
+      - name: purchase_channel_name
+        description: Purchase channel name text
+        tests:
+          - not_null
+          - unique
+        tags: [ "tdf", "purchase_channel", "common" ]
+
+  - name: dim_order_type
+    description: '{{ doc("dim_purchase_channel") }}'
+    columns:
+      - name: dim_order_type_id
+        description: Unique identifier for each opportunity source name
+        tests:
+          - not_null
+          - unique
+        tags: [ "tdf", "order_type", "common" ]
+      - name: order_type_name
+        description: Opportunity source name
+        tests:
+          - not_null
+          - unique
+        tags: [ "tdf", "order_type", "common" ]
+
+  - name: dim_instances
     description: '{{ doc("dim_instances") }}'
     columns: 
       - name: uuid
@@ -258,6 +362,38 @@ models:
       - name: is_active
         description: A boolean column that flags if the user is active in salesforce, which means that the user can login and use salesforce.
 
+  - name: dim_sales_segment
+    description: '{{ doc("dim_sales_segment") }}'
+    columns:
+      - name: dim_sales_segment_name_id
+        description: Unique identifier of a version of a sales segment
+        tests:
+          - not_null
+          - unique
+        tags: [ "tdf", "common" ]
+      - name: dim_sales_segment_name
+        description: Sales Segment text
+        tests:
+          - not_null
+          - unique
+        tags: [ "tdf", "common" ]
+
+  - name: dim_sales_territory
+    description: '{{ doc("dim_sales_territory") }}'
+    columns:
+      - name: dim_sales_territory_name_id
+        description: Unique identifier of a version of a sales territory
+        tests:
+          - not_null
+          - unique
+        tags: [ "tdf", "sales_territory", "common" ]
+      - name: dim_sales_territory_name
+        description: Sales Territory text
+        tests:
+          - not_null
+          - unique
+        tags: [ "tdf", "sales_territory", "common" ]
+
   - name: dim_subscriptions
     description: '{{ doc("dim_subscriptions") }}'
     columns:
@@ -375,7 +511,29 @@ models:
 
   - name: dim_usage_pings
     description: '{{ doc("dim_usage_pings") }}'
-
+    columns: 
+      - name: uuid 
+        description: concatenate this field with host_id for a unique identifier for instances. See https://gitlab.com/gitlab-data/analytics/-/issues/6413#note_428426837. Business Process Issue - https://gitlab.com/gitlab-data/analytics/-/issues/6413#note_429177832 and https://gitlab.com/gitlab-data/analytics/-/issues/6560#note_428035384 and https://gitlab.com/gitlab-org/gitlab/-/merge_requests/44972
+      - name: host_id 
+        description: uuid concatenated with this field for a unique identifier for instances. See https://gitlab.com/gitlab-data/analytics/-/issues/6413#note_428426837. Business Process Issue - https://gitlab.com/gitlab-data/analytics/-/issues/6413#note_429177832
+      - name: license_md5
+        description: JOIN key to license_db_licenses (see - https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.license_db_licenses). Note - License is only for self-managed instances and not for namespaces. CE and EE free should not have licenses. Known issue with EE version 9-10 having null records https://gitlab.com/gitlab-data/analytics/-/issues/6560#note_431390413
+      - name: installation_type
+        description: segmentation for how instances are installed. See https://gitlab.com/gitlab-data/analytics/-/issues/6560#note_429097420 for how this field is populated and known data concerns, such as all the instances without installation_type seem to be between 9 and 10, which lines up with the date that installation_type was added to usage ping.
+      - name: main_edition
+        description: segmentation for Edition. Values - CE, EE 
+      - name: product_tier 
+        description: segmentation for Product Tier. Values - Core (CE, EE), Starter, Premium, Ultimate, NULL
+      - name: main_edition_product_tier
+        description: segmentation for the product tier, including separate records for Core CE and Core EE 
+      - name: ping_source
+        description: segmentation for SaaS data (from the self-managed instance that hosts the SaaS GitLab.com website) and data sent from customer self-managed instances 
+      - name: is_internal 
+        description: this instance is used by the company or a GitLab team member 
+      - name: is_staging 
+        descrition: DRAFT - need to better identify instances used for staging environments
+      - name: location_id 
+        description: JOIN key for country information derived. See https://gitlab.com/gitlab-data/analytics/-/issues/6560#note_427936012
 
   - name: fct_charges_valid_at
     description: Factual table with all rate plan charges coming from subscriptions or an amendment to a subscription. Required variable valid_at is timezone sensitive

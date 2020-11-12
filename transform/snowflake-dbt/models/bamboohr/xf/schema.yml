@@ -1,6 +1,9 @@
 version: 2
 
 models:
+  - name: bamboohr_budget_vs_actual
+    description: Compares promotion budget spend to the budget aggregated at the division level.
+
   - name: bamboohr_current_division_mapping
     description: This model accounts for the current mapping of department and divisions to allow for aggregatd models to reflect current division terminology used (as seen in bamboohr_rpt_headcount_aggregation)
     columns:
@@ -215,3 +218,27 @@ models:
 
   - name: employee_locality
     description: This idenitifes the location factor for an employee on a given day starting 2020.03.24
+
+  - name: bamboohr_engineering_division
+    description: This model contains a list of team members and their engineering groups.
+    columns:
+      - name: date_actual
+      - name: employee_id
+        description: Bamboo HR employee ID
+      - name: full_name
+        description: Bamboo HR full name
+      - name: job_title
+        description: Bamboo HR job title
+      - name: sub_department
+      - name: job_title_speciality
+        description: Engineering group
+      - name: technology_group
+        description: Backend/frontend/fullstack. Derived from Bamboo HR job title.
+      - name: department
+        description: Bamboo HR department
+      - name: work_email
+        description: Bamboo HR work email
+      - name: reports_to
+        description: Who the team member directly reports to
+
+

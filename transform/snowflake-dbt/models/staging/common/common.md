@@ -180,8 +180,11 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 {% enddocs %}
 
 {% docs dim_usage_pings %}
-Dimension that contains demographic data from usage ping data, including additional breaks out for product_tier, if it is from an internal instance, and replaces the ip_address hash with a location_id instead 
+Dimension that contains demographic data from usage ping data, including additional breaks out for product_tier, if it is from an internal instance, and replaces the ip_address hash with a location_id instead. 
 
+[Core represents both CE and EE](https://about.gitlab.com/handbook/marketing/product-marketing/tiers/#history-of-ce-and-ee-distributions). 
+
+Get started by exploring the [Product Geolocation Analysis](https://about.gitlab.com/handbook/business-ops/data-team/data-catalog/product-geolocation/) handbook page. 
 Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
 
 {% enddocs %}
@@ -193,3 +196,39 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
+{% docs dim_opportunity_source %}
+
+Opportunity source dimension, based off of salesforce opportunity data, using the `generate_single_field_dimension` macro to create the final formatted SQL
+
+{% enddocs %}
+
+{% docs dim_purchase_channel %}
+
+Purchase channel dimension, based off of salesforce opportunity data, using the `generate_single_field_dimension` macro to create the final formatted SQL
+
+{% enddocs %}
+
+{% docs dim_sales_segment %}
+
+Dimension table for sales segment built off Ultimate_Parent_Sales_Segment_Employees__c in SFDC field in account data. Example values: SMB, Mid-Market, Large
+
+{% enddocs %}
+
+
+{% docs dim_sales_territory %}
+
+Sales territory dimension, based off of salesforce account data, using the `generate_single_field_dimension_from_prep` macro to create the final formatted SQL
+
+{% enddocs %}
+
+{% docs dim_industry %}
+
+Industry dimension, based off of salesforce account data, using the `generate_single_field_dimension_from_prep` macro to create the final formatted SQL
+
+{% enddocs %}
+
+{% docs dim_order_type %}
+
+Order type dimension, based off of salesforce opportunity data, using the `generate_single_field_dimension` macro to create the final formatted SQL
+
+{% enddocs %}

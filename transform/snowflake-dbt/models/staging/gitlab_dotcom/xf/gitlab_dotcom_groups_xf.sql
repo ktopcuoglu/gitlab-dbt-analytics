@@ -10,8 +10,9 @@ WITH groups AS (
 members AS (
 
     SELECT *
-    FROM {{ref('gitlab_dotcom_members')}}
-    WHERE is_currently_valid = TRUE
+    FROM {{ref('gitlab_dotcom_members')}} members
+    WHERE is_currently_valid = TRUE 
+      AND {{ filter_out_blocked_users('members', 'user_id') }}
 
 ),
 

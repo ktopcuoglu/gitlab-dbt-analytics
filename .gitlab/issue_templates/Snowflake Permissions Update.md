@@ -2,7 +2,7 @@
 <!-- example: user provisioning - John S -->
 
 
-Source Issue: <!-- link to source issue -->
+Source Access Request: <!-- link to source  Access Request issue, it should be approved and ready for provisioning -->
 
 # Creating a New User in Snowflake
 

@@ -304,6 +304,15 @@
     "is_representative_of_stage": "False"
   },
   {
+    "event_name": "packages",
+    "source_table_name": "gitlab_dotcom_packages_packages",
+    "user_column_name": "creator_id",
+    "key_to_parent_project": "project_id",
+    "primary_key": "packages_package_id",
+    "stage_name": "package",
+    "is_representative_of_stage": "True"
+  },
+  {
     "event_name": "project_auto_devops",
     "source_table_name": "gitlab_dotcom_project_auto_devops",
     "user_column_name": "NULL",

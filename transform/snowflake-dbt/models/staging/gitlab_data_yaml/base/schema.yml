@@ -1,6 +1,16 @@
 version: 2
 
 models:
+  - name: categories_yaml_acquisitions
+    description: Identifies the acqusitions based on the [categories.yml file](https://gitlab.com/gitlab-com/www-gitlab-com/blob/master/data/categories.yml) in the GitLab Handbook.
+    columns:
+      - name: category_name
+      - name: category_stage
+      - name: snapshot_date
+      - name: acquisition_key
+      - name: acquisition_name
+      - name: acquisition_start_date
+      - name: acquisition_end_date
   - name: categories_yaml_historical
     description: This is the base table built on the snapshots of the [categories.yml file](https://gitlab.com/gitlab-com/www-gitlab-com/blob/master/data/categories.yml) in the GitLab Handbook.
     columns:

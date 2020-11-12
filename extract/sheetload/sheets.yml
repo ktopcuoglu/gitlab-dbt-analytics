@@ -31,6 +31,10 @@ sheets:
     owner: '@mvilain'
     tabs:
       - clari_export_forecast_net_iacv
+  - name: clari_ai_projection
+    owner: '@mvilain'
+    tabs:
+      - clari_ai_projection
   - name: company_call_attendance
     owner: '@pluthra'
     tabs:
@@ -47,10 +51,12 @@ sheets:
     owner: '@pluthra'
     tabs:
       - employee_location_factor
+      - comp_band
   - name: engineering_contributing_organizations
     owner: '@kwiebers'
     tabs:
       - engineering_contributing_organizations
+      - gitlab_contributing_organizations
   - name: event_dictionary_simplified
     owner: '@mpeychet_'
     tabs:
@@ -137,10 +143,10 @@ sheets:
     owner: '@m_walker'
     tabs:
       - release_blog_posts
-  - name: rep_quotas_full_fy2020
+  - name: rep_quotas
     owner: '@derekatwood'
     tabs:
-      - rep_quotas_full_fy2020
+      - rep_quotas
   - name: rep_quotas_full_ps_fy2020
     owner: '@derekatwood'
     tabs:
@@ -149,6 +155,10 @@ sheets:
     owner: '@paul_armstrong'
     tabs:
       - sales_training_completion_dates
+  - name: territory_mapping
+    owner: '@rkohnke'
+    tabs:
+      - territory_mapping
   - name: scalable_employment_values
     owner: '@iweeks'
     tabs:
@@ -206,3 +216,5 @@ sheets:
       - cert_product_geo_sql
       - cert_customer_segmentation_dashboard
       - cert_customer_segmentation_sql
+      - cert_product_geo_viewer
+      - cert_customer_segmentation_viewer
