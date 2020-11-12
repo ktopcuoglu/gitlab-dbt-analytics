@@ -73,6 +73,13 @@ sources:
       - name: rep_quotas
       - name: rep_quotas_full_ps_fy2020
       - name: sales_training_completion_dates
+      - name: sales_funnel_target_dates
+      - name: kpi_totals
+      - name: sales_segment
+      - name: opportunity_source
+      - name: purchase_channel
+      - name: account_region
+      - name: sales_territory
       - name: territory_mapping
       - name: scalable_employment_values
       - name: social_marketing_metrics
