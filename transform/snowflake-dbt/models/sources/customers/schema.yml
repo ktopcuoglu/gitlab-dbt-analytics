@@ -2,7 +2,7 @@ version: 2
 
 models:
   - name: customers_db_customers_source
-    description: This model is the data from tap-postgres for the customers table from customers.gitlab.com. The schema of the database is defined in [this ruby code](https://gitlab.com/gitlab-org/customers-gitlab-com/blob/master/db/schema.rb).
+    description: '{{ doc("customers_db_customers_source") }}'
     columns:
       - name: customer_id
         tags:
