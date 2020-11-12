@@ -77,7 +77,7 @@ WITH promotions AS (
       AND bamboohr_base.field_value = headcount_end.division_department
     WHERE bamboohr_base.field_name = 'division_grouping_breakout'
       AND promotions.division_grouping = 'Marketing'
-      AND promotions.department !='Sales Development'
+      AND promotions.department != 'Sales Development'
 
     UNION ALL
 
