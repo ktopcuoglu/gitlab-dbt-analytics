@@ -21,7 +21,7 @@ WITH dates AS (
 ), budget AS (
 
     SELECT 
-      CASE WHEN division='Engineering_Meltano'
+      CASE WHEN division = 'Engineering_Meltano'
             THEN 'Engineering/Meltano'
            WHEN division = 'Marketing'
             THEN 'Marketing - Including SDR'
