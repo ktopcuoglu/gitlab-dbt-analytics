@@ -31,7 +31,7 @@ models:
     - name: job_title
     - name: department
     - name: division
-    - name: jobtitle_speciality
+    - name: job_title_speciality
     - name: job_role_modified
       description: Introduces values of ['Senior Leadership', 'Manager', 'Individual Contributor'] for roles. There is no accepted values test since this field was not religiously populated prior to 2020-02.
     - name: location_factor
