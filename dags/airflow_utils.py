@@ -276,7 +276,7 @@ dbt_install_deps_cmd = f"""
 
 dbt_install_deps_and_seed_cmd = f"""
     {dbt_install_deps_cmd} &&
-    dbt seed --profiles-dir profile --target prod --vars {xs_warehouse}"""
+    dbt seed --profiles-dir profile --target prod --full-refresh --vars {xs_warehouse}"""
 
 clone_and_setup_dbt_nosha_cmd = f"""
     {clone_repo_cmd} &&
@@ -288,7 +288,7 @@ dbt_install_deps_nosha_cmd = f"""
 
 dbt_install_deps_and_seed_nosha_cmd = f"""
     {dbt_install_deps_nosha_cmd} &&
-    dbt seed --profiles-dir profile --target prod --vars {xs_warehouse}"""
+    dbt seed --profiles-dir profile --target prod --full-refresh --vars {xs_warehouse}"""
 
 
 def number_of_dbt_threads_argument(number_of_threads):
