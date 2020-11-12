@@ -75,7 +75,7 @@ WITH promotions AS (
       ON bamboohr_base.rolling_end_month = headcount_end.month_date
       AND bamboohr_base.field_name = headcount_end.breakout_type
       AND bamboohr_base.field_value = headcount_end.division_department
-    WHERE bamboohr_base.field_name ='division_grouping_breakout'
+    WHERE bamboohr_base.field_name = 'division_grouping_breakout'
       AND promotions.division_grouping='Marketing'
       AND promotions.department !='Sales Development'
 
