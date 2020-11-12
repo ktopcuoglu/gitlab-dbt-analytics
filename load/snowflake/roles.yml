@@ -1434,6 +1434,12 @@ roles:
         warehouses:
             - analyst_xs 
 
+    - cli:
+        member_of:
+            - product_manager
+        warehouses:
+            - analyst_xs
+
     - cmccarty:
         warehouses:
             - admin
@@ -2492,6 +2498,10 @@ users:
         can_login: yes
         member_of:
             - amurray
+    - cli:
+        can_login: yes
+        member_of:
+            - cli
 
     - cmccarty:
         can_login: yes
