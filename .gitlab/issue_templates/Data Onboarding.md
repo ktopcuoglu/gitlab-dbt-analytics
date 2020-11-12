@@ -6,18 +6,21 @@ Goal: To help bring you, our new data team member, up to speed in the GitLab Dat
 ## Access Requests
 
 ### For all going through the Data Onboarding Process
-- [ ] Manager: Upgrade Periscope user to editor (after they've logged in via Okta)
+- [ ] Manager: Upgrade Periscope/Sisense user to editor (after they've logged in via Okta)
 - [ ] Manager: Add to Snowflake [following Handbook Process](https://about.gitlab.com/handbook/business-ops/data-team/platform/#warehouse-access)
   - Scratch schema will follow be your Snowflake username followed by `_scratch` i.e. `jsmith_scratch`
-- [ ] Manager: Add to Data Ops calendar meeting
-- [ ] Manager: Customize this template for the analysts specialty, if any. Delete sections, if appropriate
+- [ ] Manager: Add to Data Team calendar 
 - [ ] Manager: Add to the `GitLab Data Team` project as a Developer.
+- [ ] Manager: Customize this template for the analysts specialty, if any. Delete sections, if appropriate
 
 ### For Central or Embedded Analyst/Engineers
-- [ ] Manager: Create access request using data analyst baseline.
+- [ ] Manager: Create access request 
    - [ ] Manager: Request addition to `@datateam` alias on Slack in PeopleOps Onboarding issue
    - [ ] Manager: Request addition to `@data-analysts` alias on Slack in PeopleOps Onboarding issue
    - [ ] Manager: Request addition to `Data Team` 1password vault in PeopleOps Onboarding issue
+   - [ ] Join the following channels on Slack: `data`, `data-lounge`, `data-daily`, `data-triage`, and `business-operations`.
+   - [ ] Engineers, join `analytics-pipelines`
+   - [ ] Analytsts, join `dbt-runs`
 - [ ] Manager: Add to the `gitlab-data` namespace as a Developer.
 - [ ] Manager: Add to Airflow as Analyst
 - [ ] Manager: Update codeowners file in the handbook to include the new team member
@@ -42,20 +45,14 @@ Goal: To help bring you, our new data team member, up to speed in the GitLab Dat
 
 - [ ] Read (skim) through this full issue, just so you have a sense of what's coming.
 - [ ] Create a new issue in the Analytics project (this project). As you proceed and things are unclear, document it in the issue. Don't worry about organizing it; just brain dump it into the issue! This will help us iterate on the onboarding process.
-- [ ] Join the following channels on Slack: `data`, `data-lounge`, `data-daily`, `data-triage`, and `business-operations`.
-   - [ ] Engineers, join `analytics-pipelines`
-   - [ ] Analytsts, join `dbt-runs`
-- [ ] Schedule a recurring fortnightly (every two weeks) 1:1 meeting with the Director of Data and Analytics.
-- [ ] Invite yourself to the DataOps Meetings from the Data Team Calendar. To do this, update the invitation to include your email address; don't just copy the event to your calendar.  If you do not yet have access to the Data Team Calendar, ask your manager to add you.
-- [ ] Schedule a coffee chat with each member of the data team. These should be in addition to the ones you do with other GitLab team members.  In addition, you should also consider scheduling chats with IT and BizOps people as well.
+- [ ] Schedule a recurring fortnightly (every two weeks) 1:1 meeting with the Sr. Director of Data and Analytics.
+- [ ] Schedule a coffee chat with each member of the data team. These should be in addition to the ones you do with other GitLab team members.  In addition, you should also consider scheduling chats with Business Technology (IT, Enterprise Apps, Procurement) people as well.
 - [ ] Read the following pages of the handbook in their entirety. Bookmark them as you should soon be making MR's to improve our documentation!
    - [ ] [Data Team](https://about.gitlab.com/handbook/business-ops/data-team/)
    - [ ] [Business Operations](https://about.gitlab.com/handbook/business-ops/)
    - [ ] [Data Quality Process](https://about.gitlab.com/handbook/business-ops/data-quality-process/)
    - [ ] [Periscope Directory](https://about.gitlab.com/handbook/business-ops/data-team/platform/periscope-directory/)
-- [ ] Watch @tlapiana's [talk at DataEngConf](https://www.youtube.com/watch?v=eu623QBwakc) that gives a phenomenal overview of how the team works.
-- [ ] Watch [this great talk](https://www.youtube.com/watch?v=prcz0ubTAAg) on what Analytics is
-- [ ] If relevant, watch ["The State of [Product] Data"](https://www.youtube.com/watch?v=eNLkj3Ho2bk&feature=youtu.be) from Eli at the Growth Fastboot. (You'll need to be logged into GitLab Unfiltered.)
+
 
 There is a lot of information being thrown at you over the last couple of days.
 It can all feel a bit overwhelming.
@@ -302,6 +299,10 @@ Also referred as SFDC, Salesforce.com (Sales Force Dot Com).
 - [ ] Pairing session between a new Data Analyst and a Staff Data Engineer working on the new analyst's first issue: [Pair on Lost MRR Dashboard Creation](https://www.youtube.com/watch?v=WuIcnpuS2Mg)
 - [ ] 2nd part of pairing session between a new Data Analyst and a Staff Data Engineer working on the new analyst's first issue: [Pair on Lost MRR Dashboard Creation Part 2](https://www.youtube.com/watch?v=HIlDH5gaL3M)
 - [ ] Optional, for more information on Finance KPIs, you can watch this working session between the Manager, Financial Planning and Analysis and Data Analyst, Finance: [Finance KPIs](https://www.youtube.com/watch?v=dmdilBQb9PY&feature=youtu.be)
+- [ ] Watch @tlapiana's [talk at DataEngConf](https://www.youtube.com/watch?v=eu623QBwakc) that gives a phenomenal overview of how the team works.
+- [ ] Watch [this great talk](https://www.youtube.com/watch?v=prcz0ubTAAg) on what Analytics is
+- [ ] If relevant, watch ["The State of [Product] Data"](https://www.youtube.com/watch?v=eNLkj3Ho2bk&feature=youtu.be) from Eli at the Growth Fastboot. (You'll need to be logged into GitLab Unfiltered.)
+
 
 ## Suggested Bookmarks
 None of these are required, but bookmarking these links will make life at GitLab much easier. Some of these are not hyperlinked for security concerns.
@@ -312,3 +313,7 @@ None of these are required, but bookmarking these links will make life at GitLab
 - [ ] [dbt Discourse](http://discourse.getdbt.com)
 - [ ] [GitLab's dbt Documentation](https://dbt.gitlabdata.com)
 - [ ] [Data Team GitLab Activity](https://gitlab.com/groups/gitlab-data/-/activity)
+- [ ] [Data Team](https://about.gitlab.com/handbook/business-ops/data-team/)
+- [ ] [Business Operations](https://about.gitlab.com/handbook/business-ops/)
+- [ ] [Data Quality Process](https://about.gitlab.com/handbook/business-ops/data-quality-process/)
+- [ ] [Periscope Directory](https://about.gitlab.com/handbook/business-ops/data-team/platform/periscope-directory/)
