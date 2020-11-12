@@ -7,9 +7,9 @@ WITH source AS (
 
 SELECT
   "Concat"::VARCHAR                       AS fields_concatenated,
-  KPI_Name::VARCHAR                       AS kpi_name,
-  Purchase_Channel::VARCHAR               AS purchase_channel,
-  Target::VARCHAR                         AS target,
-  Percent_Curve::VARCHAR                  AS percent_curve,
-  _updated_at::FLOAT                      AS last_updated_at
+  "KPI_Name"::VARCHAR                     AS kpi_name,
+  "Purchase_Channel"::VARCHAR             AS purchase_channel,
+  "Target"::VARCHAR                       AS target,
+  "Percent_Curve"::VARCHAR                AS percent_curve,
+  "_updated_at"::FLOAT                    AS last_updated_at
 FROM source
