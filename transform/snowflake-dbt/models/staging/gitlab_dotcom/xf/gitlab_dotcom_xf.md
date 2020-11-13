@@ -39,7 +39,7 @@ This model limits the gitlab dotcom emails table to only have records for emails
 
 {% enddocs %}
 
-{% docs gitlab_dotcom_gitlab_sprints %}
+{% docs gitlab_dotcom_gitlab_internal_sprints %}
 
 This model limits the gitlab dotcom sprints table to only have records from groups gitlab-org(9970) and gitlab-com(6543), or projects that are part of product.
 
