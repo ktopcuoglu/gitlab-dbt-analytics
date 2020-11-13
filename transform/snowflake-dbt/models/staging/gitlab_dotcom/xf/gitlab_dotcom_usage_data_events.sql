@@ -43,6 +43,15 @@
     "is_representative_of_stage": "False"
   },
   {
+    "event_name": "api_fuzzing",
+    "source_cte_name": "api_fuzzing_jobs",
+    "user_column_name": "ci_build_user_id",
+    "key_to_parent_project": "ci_build_project_id",
+    "primary_key": "ci_build_id",
+    "stage_name": "secure",
+    "is_representative_of_stage": "False"
+  },
+  {
     "event_name": "boards",
     "source_table_name": "gitlab_dotcom_boards",
     "user_column_name": "NULL",
@@ -499,6 +508,12 @@ WITH gitlab_subscriptions AS (
     FROM  {{ ref('gitlab_dotcom_events') }}
     WHERE target_type = 'WikiPage::Meta' 
       AND event_action_type_id IN (1, 2)
+
+), api_fuzzing_jobs AS (
+
+    SELECT *
+    FROM {{ ref('gitlab_dotcom_secure_stage_ci_jobs') }}
+    WHERE secure_ci_job_type = 'api_fuzzing'
 
 ), container_scanning_jobs AS (
 
