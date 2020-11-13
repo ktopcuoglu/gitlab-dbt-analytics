@@ -6,7 +6,7 @@ WITH source AS (
 )
 
 SELECT
-  "Concat"::VARCHAR                       AS fields_concatenated,
+  "Concat"::VARCHAR                         AS fields_concatenated,
   "Account_Region"::VARCHAR                 AS account_region,
   "KPI_Name"::VARCHAR                       AS kpi_name,
   "Target"::VARCHAR                         AS target,
