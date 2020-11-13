@@ -11,5 +11,5 @@ SELECT
   "KPI_Name"::VARCHAR                       AS kpi_name,
   "Target"::VARCHAR                         AS target,
   "Percent_Curve"::VARCHAR                  AS percent_curve,
-  "_updated_at"::FLOAT                      AS last_updated_at
+  "_UPDATED_AT"::FLOAT                      AS last_updated_at
 FROM source
