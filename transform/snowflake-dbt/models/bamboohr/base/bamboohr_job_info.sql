@@ -61,6 +61,7 @@ WITH source AS (
       reports_to,
       (LAG(DATEADD('day',-1,renamed.effective_date), 1) OVER (PARTITION BY renamed.employee_id ORDER BY renamed.effective_date DESC, job_id DESC)) AS effective_end_date
     FROM renamed
+
     
 ), joined AS (
 
