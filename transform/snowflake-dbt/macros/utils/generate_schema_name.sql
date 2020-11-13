@@ -1,5 +1,4 @@
 -- Will write to custom schemas not on prod
--- Ensures logging package writes to analytics_meta
 
 {% macro generate_schema_name(custom_schema_name, node) -%}
 
@@ -10,23 +9,26 @@
     {#
         Definitions:
             - custom_schema_name: schema provided via dbt_project.yml or model config
-            - target.schema: schema provided by the target defined in profiles.yml
             - target.name: name of the target (dev for local development, prod for production, etc.)
+            - target.schema: schema provided by the target defined in profiles.yml
         
         This macro is hard to test, but here are some test cases and expected output.
         (custom_schema_name, target.name, target.schema) = <output>
 
+        In all cases it will now write to the same schema. The database is what's 
+        different. See generate_database_name.sql
+
         (analytics, prod, analytics) = analytics
         (analytics, ci, analytics) = analytics
-        (analytics, dev, tmurphy_scratch) = analytics
+        (analytics, dev, preparation) = analytics
         
         (staging, prod, analytics) = analytics_staging
         (staging, ci, analytics) = analytics_staging
-        (staging, dev, tmurphy_scratch) = analytics_staging
+        (staging, dev, preparation) = analytics_staging
         
         (zuora, prod, analytics) = zuora
         (zuora, ci, analytics) = zuora
-        (zuora, dev, tmurphy_scratch) = zuora
+        (zuora, dev, preparation) = zuora
 
     #}
 
