@@ -72,7 +72,7 @@ models:
     - name: division_mapped_current
       description: This is the division as used for the current month. We map back historically based on identifying the current division deparmtment mapping and then updating for months prior what the department would be mapped to currently.
     - name: cost_center
-    - name: jobtitle_speciality
+    - name: job_title_speciality
     - name: location_factor
     - name: total_direct_reports
       description: Identifies the number of team members that roll up to an individual for a given day.
@@ -233,7 +233,7 @@ models:
       - name: job_title
         description: Bamboo HR job title
       - name: sub_department
-      - name: jobtitle_speciality
+      - name: job_title_speciality
         description: Engineering group
       - name: technology_group
         description: Backend/frontend/fullstack. Derived from Bamboo HR job title.
