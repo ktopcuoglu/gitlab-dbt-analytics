@@ -144,9 +144,16 @@ models:
     - name: data_team_member_capacity
 
 - name: sheetload_account_region
+  description: Account region info
 - name: sheetload_kpi_totals
+  description: Kpi total info
 - name: sheetload_opportunity
+  description: Opportunity data
 - name: sheetload_purchase_channel
+  description: Purchase channel dates
 - name: sheetload_sales_funnel_target_dates
+  description: Sales funnel target dates
 - name: sheetload_sales_segment
+  description: Sales segment data
 - name: sheetload_sales_territory
+  description: Sales territory data
