@@ -41,7 +41,7 @@ models:
           - not_null
           - unique
       - name: campaign_name
-        description: Campaign name text field
+        description: Campaign name text field.
       - name: is_active
       - name: status
       - name: type
