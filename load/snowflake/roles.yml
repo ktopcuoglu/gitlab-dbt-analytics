@@ -1380,8 +1380,7 @@ roles:
             - analyst_xs    
     
     - acarella:
-        warehouses:
-            - reporting
+        warehouses: []
 
     - adietrich:
         warehouses:
@@ -2450,10 +2449,8 @@ users:
             - aakgun
 
     - acarella:
-        can_login: yes
-        member_of:
-            - acarella
-            - securityadmin
+        can_login: no
+        member_of: []
 
     - adietrich:
         can_login: yes
