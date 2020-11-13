@@ -69,8 +69,7 @@ WITH source AS (
       cleaned.employee_id,
       cleaned.job_title,
       cleaned.effective_date,
-      IFF(bamboohr_employment_status.valid_to_date BETWEEN cleaned.effective_date AND COALESCE(cleaned.effective_end_date, CURRENT_DATE()), 
-            bamboohr_employment_status.valid_to_date, cleaned.effective_end_date)               AS effective_end_date,
+      COALESCE(bamboohr_employment_status.valid_to_date, cleaned.effective_end_date) as effective_end_date,
       cleaned.department,
       cleaned.division,
       cleaned.entity,
@@ -81,6 +80,7 @@ WITH source AS (
       ON sheetload_job_roles.job_title = cleaned.job_title
     LEFT JOIN bamboohr_employment_status
       ON bamboohr_employment_status.employee_id = cleaned.employee_id 
+      AND bamboohr_employment_status.valid_to_date BETWEEN cleaned.effective_date AND COALESCE(cleaned.effective_end_date, {{max_date_in_bamboo_analyses()}})
 
 )
 
