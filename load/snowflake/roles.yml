@@ -445,9 +445,10 @@ roles:
             - analyst_xs
         member_of:
             - analyst_core
-            - snowflake_db
-            - zuora
             - salesforce
+            - snowflake_db
+            - version_db
+            - zuora
         privileges:
             databases:
                 write:
