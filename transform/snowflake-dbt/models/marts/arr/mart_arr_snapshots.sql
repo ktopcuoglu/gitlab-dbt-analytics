@@ -79,7 +79,7 @@ WITH dim_billing_accounts AS (
       dim_billing_accounts.sold_to_country                                             AS zuora_sold_to_country,
       dim_billing_accounts.billing_account_name                                        AS zuora_account_name,
       dim_billing_accounts.billing_account_number                                      AS zuora_account_number,
-      dim_crm_accounts.crm_account_id                                                  AS crm_id,
+      COALESCE(dim_crm_accounts.merged_to_account_id, dim_crm_accounts.crm_account_id) AS crm_id,
       dim_crm_accounts.ultimate_parent_account_id,
       dim_crm_accounts.ultimate_parent_account_name,
       dim_crm_accounts.ultimate_parent_billing_country,
@@ -125,3 +125,5 @@ WITH dim_billing_accounts AS (
 
 SELECT *
 FROM final
+
+
