@@ -9,4 +9,4 @@ models:
         tests:
           - not_null
       - name: marketing_channel_name
-        description: Mapped marketing channel name
+        description: Mapped marketing channel name.
