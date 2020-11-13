@@ -12,7 +12,7 @@
 
 {%- else -%}
     
-    create schema if not exists "{{ target.database | trim }}_PREP".{{target.schema}};
+    create schema if not exists "{{ target.database | trim }}_ANALYTICS".{{target.schema}};
 
     {{sfdc_id_15_to_18()}}
     {{regexp_substr_to_array()}}
