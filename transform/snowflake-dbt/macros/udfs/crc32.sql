@@ -38,7 +38,7 @@ GRANT USAGE ON FUNCTION {{target.schema}}.crc32(STRING) TO ROLE PUBLIC;
 
 {%- else -%}
     
-GRANT USAGE ON FUNCTION "{{ target.database | trim }}_PREP".{{target.schema}}.crc32(string) TO ROLE PUBLIC; 
+GRANT USAGE ON FUNCTION "{{ target.database | trim }}_ANALYTICS".{{target.schema}}.crc32(string) TO ROLE PUBLIC; 
 
 {%- endif -%}
 
