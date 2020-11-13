@@ -1,5 +1,4 @@
--- Will write to custom schemas not on prod
--- Ensures logging package writes to analytics_meta
+-- Will write to custom databases not on prod
 
 {% macro generate_database_name(custom_database_name, node) -%}
 
@@ -8,12 +7,10 @@
     {#
         Definitions:
             - custom_database_name: database provided via dbt_project.yml or model config
-            - target.database: database provided by the target defined in profiles.yml
             - target.name: name of the target (dev for local development, prod for production, etc.)
+            - target.database: database provided by the target defined in profiles.yml
         
         Assumptions:
-            - default database is PREP - target.database = PREP
-            - ANALYTICS and PROD are overrides
             - dbt users will have USERNAME_PROD, USERNAME_PREP DBs defined
 
         This macro is hard to test, but here are some test cases and expected output.
@@ -21,15 +18,15 @@
 
         (analytics, prod, analytics) = analytics
         (analytics, ci, analytics) = analytics
-        (analytics, dev, tmurphy_scratch) = tmurphy_analytics
+        (analytics, dev, tmurphy) = tmurphy_analytics
         
         (prod, prod, analytics) = prod
         (prod, ci, analytics) = prod
-        (prod, dev, tmurphy_scratch) = tmurphy_prod
+        (prod, dev, tmurphy) = tmurphy_prod
         
         (prep, prod, analytics) = prep
         (prep, ci, analytics) = prep
-        (prep, dev, tmurphy_scratch) = tmurphy_prep
+        (prep, dev, tmurphy) = tmurphy_prep
 
     #}
     {%- if target.name in production_targets -%}
