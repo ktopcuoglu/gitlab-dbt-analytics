@@ -445,9 +445,10 @@ roles:
             - analyst_xs
         member_of:
             - analyst_core
-            - snowflake_db
-            - zuora
             - salesforce
+            - snowflake_db
+            - version_db
+            - zuora
         privileges:
             databases:
                 write:
@@ -1379,8 +1380,7 @@ roles:
             - analyst_xs    
     
     - acarella:
-        warehouses:
-            - reporting
+        warehouses: []
 
     - adietrich:
         warehouses:
@@ -1433,6 +1433,12 @@ roles:
             - bamboohr
         warehouses:
             - analyst_xs 
+
+    - cli:
+        member_of:
+            - product_manager
+        warehouses:
+            - analyst_xs
 
     - cmccarty:
         warehouses:
@@ -2003,11 +2009,7 @@ roles:
             - admin
 
     - msendal:
-        warehouses:
-            - engineer_xs
-            - engineer_xl
-            - loading
-            - reporting    
+        warehouses: []  
 
     - mvilain:
         member_of:
@@ -2447,10 +2449,8 @@ users:
             - aakgun
 
     - acarella:
-        can_login: yes
-        member_of:
-            - acarella
-            - securityadmin
+        can_login: no
+        member_of: []
 
     - adietrich:
         can_login: yes
@@ -2496,6 +2496,10 @@ users:
         can_login: yes
         member_of:
             - amurray
+    - cli:
+        can_login: yes
+        member_of:
+            - cli
 
     - cmccarty:
         can_login: yes
@@ -2722,11 +2726,8 @@ users:
         member_of: []
 
     - msendal:
-        can_login: yes
-        member_of:
-            - engineer
-            - msendal
-            - bamboohr_raw
+        can_login: no
+        member_of: []
 
     - mvilain:
         can_login: yes

@@ -56,6 +56,7 @@ sheets:
     owner: '@kwiebers'
     tabs:
       - engineering_contributing_organizations
+      - gitlab_contributing_organizations
   - name: event_dictionary_simplified
     owner: '@mpeychet_'
     tabs:
@@ -73,7 +74,7 @@ sheets:
     tabs:
       - headcount
   - name: hire_plan_forecast
-    owner: '@derekatwood'
+    owner: '@pluthra'
     tabs:
       - hire_plan
       - hire_forecast
@@ -98,7 +99,7 @@ sheets:
     tabs:
       - location_factor_targets
   - name: manual_downgrade_dotcom_tracking
-    owner: '@derekatwood'
+    owner: '@mpeychet_'
     tabs:
       - manual_downgrade_dotcom_tracking
   - name: marketing_core_users_from_docs_gitlab_com
@@ -143,11 +144,11 @@ sheets:
     tabs:
       - release_blog_posts
   - name: rep_quotas
-    owner: '@derekatwood'
+    owner: '@mbenza'
     tabs:
       - rep_quotas
   - name: rep_quotas_full_ps_fy2020
-    owner: '@derekatwood'
+    owner: '@mbenza'
     tabs:
       - rep_quotas_full_ps_fy2020
   - name: sales_training_completion_dates
