@@ -795,3 +795,13 @@ models:
           - not_null
       - name: recorded_at
         description: The timestamp when the usage ping was recorded.
+  - name: dim_marketing_channel
+    description: '{{ doc("prep_sfdc_account") }}'
+    columns:
+      - name: dim_marketing_channel_id
+        description: Ma
+        tests:
+          - not_null
+          - unique
+      - name: marketing_channel_name
+        description: Sales sub region, temp cleaning column

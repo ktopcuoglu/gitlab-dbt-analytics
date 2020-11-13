@@ -1,0 +1,12 @@
+version: 2
+
+models:
+  - name: map_marketing_channel
+    description: '{{ doc("prep_sfdc_account") }}'
+    columns:
+      - name: bizible_marketing_channel_path
+        description: Channel path to map
+        tests:
+          - not_null
+      - name: marketing_channel_name
+        description: Mapped marketing channel name
