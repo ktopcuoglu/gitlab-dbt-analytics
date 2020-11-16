@@ -187,6 +187,28 @@ models:
             - not_null
         - name: updated_at
 
+  - name: gitlab_dotcom_gitlab_internal_sprints
+    description: '{{ doc("gitlab_dotcom_gitlab_internal_sprints") }}'
+    columns:
+        - name: cached_markdown_version
+        - name: created_at
+        - name: due_date
+        - name: group_id
+        - name: project_id
+        - name: sprint_description
+        - name: sprint_description_html
+        - name: sprint_id
+          tests:
+            - not_null
+            - unique
+        - name: sprint_iid
+        - name: sprint_state_enum
+        - name: sprint_title
+        - name: sprint_title_html
+        - name: start_date
+        - name: updated_at
+        
+
   - name: gitlab_dotcom_gitlab_user_requests
     description: '{{ doc("gitlab_dotcom_gitlab_user_requests") }}'
     tests:

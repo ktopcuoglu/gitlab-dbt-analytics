@@ -39,6 +39,14 @@ This model limits the gitlab dotcom emails table to only have records for emails
 
 {% enddocs %}
 
+{% docs gitlab_dotcom_gitlab_internal_sprints %}
+
+This model limits the gitlab dotcom sprints table to only have records from groups gitlab-org(9970) and gitlab-com(6543), or projects that are part of product.
+
+Useful to get sprint title and description information for GitLab internal sprints.
+
+{% enddocs %}
+
 {% docs gitlab_dotcom_gitlab_user_requests %}
 
 This model enables product managers to surface which issue has been requested by potential prospects and current customers. The final model creates a table where each row is unique tuple of a `issue_id` and a `sfdc_account_id`.
