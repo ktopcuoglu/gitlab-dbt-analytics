@@ -23,10 +23,10 @@ WITH sfdc_campaign_info AS (
 
 {{ dbt_audit(
     cte_ref="final",
-    created_by="@msendal",
-    updated_by="@jjstark",
-    created_date="2020-06-01",
-    updated_date="2020-10-15"
+    created_by="@paul_armstrong",
+    updated_by="@paul_armstrong",
+    created_date="2020-11-13",
+    updated_date="2020-11-13"
 ) }}
 
 
