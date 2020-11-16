@@ -799,9 +799,8 @@ models:
     description: '{{ doc("prep_sfdc_account") }}'
     columns:
       - name: dim_marketing_channel_id
-        description: Ma
+        description: Unique identifier for the marketing channel.
         tests:
           - not_null
           - unique
       - name: marketing_channel_name
-        description: Sales sub region, temp cleaning column
