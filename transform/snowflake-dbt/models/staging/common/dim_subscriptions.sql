@@ -1,4 +1,9 @@
-WITH zuora_subscription AS (
+WITH map_merged_crm_accounts AS (
+
+    SELECT *
+    FROM {{ ref('map_merged_crm_accounts') }}
+
+), zuora_subscription AS (
 
   SELECT *
   FROM {{ ref('zuora_subscription_source') }}
@@ -34,7 +39,7 @@ WITH zuora_subscription AS (
 
   SELECT
     zuora_subscription.subscription_id,
-    zuora_account.crm_id                                                      AS crm_account_id,
+    map_merged_crm_accounts.dim_crm_account_id                                AS crm_account_id,
     zuora_account.account_id                                                  AS billing_account_id,
     zuora_subscription.subscription_name,
     zuora_subscription.subscription_name_slugify,
@@ -57,14 +62,15 @@ WITH zuora_subscription AS (
     AND zuora_subscription_snapshots.rank = 1
   INNER JOIN zuora_account
     ON zuora_account.account_id = zuora_subscription.account_id
+  LEFT JOIN map_merged_crm_accounts
+    ON zuora_account.crm_id = map_merged_crm_accounts.sfdc_account_id
 
 )
 
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@msendal",
-    updated_by="@msendal",
+    updated_by="@iweeks",
     created_date="2020-06-01",
-    updated_date="2020-09-24"
+    updated_date="2020-10-22"
 ) }}
-
