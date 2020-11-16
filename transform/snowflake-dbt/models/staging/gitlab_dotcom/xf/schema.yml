@@ -573,7 +573,6 @@ models:
     - name: issue_IID
       tests:
         - not_null
-        - unique
     - name: issue_created_at
     - name: issue_created_week
     - name: issue_closed_at
@@ -581,6 +580,5 @@ models:
     - name: is_issue_closed
     - name: issue_state
     - name: assignee
-    - name: is_using_diversity_strings   
-    - name: is_not_using_diversity_srings
-    - name: has_no_answer
+    - name: issue_description
+    - name: used_diversity_string

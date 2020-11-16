@@ -15,6 +15,11 @@ WITH source AS (
     FROM {{ ref ('sheetload_hire_plan') }}
     WHERE month_year <='2020-05-31'
 
+), employee_directory AS (
+
+    SELECT *
+    FROM {{ ref ('employee_directory_analysis') }}
+
 ), department_division_mapping AS (
 
     SELECT 
@@ -22,7 +27,7 @@ WITH source AS (
       source.department,
       employee_directory.division
     FROM source
-    LEFT JOIN "ANALYTICS"."ANALYTICS"."EMPLOYEE_DIRECTORY_ANALYSIS" employee_directory
+    LEFT JOIN employee_directory
       ON DATE_TRUNC(month,source.month_date) = DATE_TRUNC(month,employee_directory.date_actual)
       AND employee_directory.department = source.department
     GROUP BY 1,2,3

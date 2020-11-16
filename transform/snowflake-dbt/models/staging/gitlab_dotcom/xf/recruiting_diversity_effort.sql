@@ -18,7 +18,7 @@ WITH issues AS (
 
     SELECT
      issue_id,
-     ARRAY_AGG(LOWER(user_name)) WITHIN GROUP (ORDER BY user_name ASC) AS assignee
+     ARRAY_AGG(LOWER(user_name)) WITHIN GROUP (ORDER BY user_name ASC)  AS assignee
     FROM assignee
     LEFT JOIN users
       ON assignee.user_id = users.user_id 
@@ -30,29 +30,70 @@ WITH issues AS (
       issues.issue_title,
       issues.issue_iid,
       issues.issue_created_at,
-      DATE_TRUNC(week,issue_created_at)                         AS issue_created_week,
+      DATE_TRUNC(week,issue_created_at)                                 AS issue_created_week,
       issues.issue_closed_at,
-      DATE_TRUNC(week,issues.issue_closed_at)                   AS issue_closed_week,
-      IFF(issue_closed_at IS NOT NULL,1,0)                      AS is_issue_closed,
-      issues.state                                              AS issue_state,
+      DATE_TRUNC(week,issues.issue_closed_at)                           AS issue_closed_week,
+      IFF(issue_closed_at IS NOT NULL,1,0)                              AS is_issue_closed,
+      issues.state                                                      AS issue_state,
       agg_assignee.assignee,
-      IFF(CONTAINS(issue_description, '[x] Yes, Diversity Sourcing methods were used'::VARCHAR) = True,
-        'Used Diversity Strings', NULL)                         AS is_using_diversity_strings,
-      IFF(CONTAINS(issue_description, '[x] No, I did not use Diversity Sourcing methods'::VARCHAR) = True,
-        'Did not Use', NULL)                                    AS is_not_using_diversity_srings,
-      IFF(CONTAINS(issue_description, '[x] Not Actively Sourcing'::VARCHAR) = True,
-        'Not Actively Sourcing', NULL)                          AS not_actively_sourcing,
-      IFF(is_using_diversity_strings IS NULL 
-          AND is_not_using_diversity_srings IS NULL, 
-          'No Answer', NULL)                                    AS has_no_Answer
+      issues.issue_description,
+      SPLIT_PART(issue_description, '**Weekly Check-In Table**',2)      AS issue_description_split,
+      CASE
+        WHEN CONTAINS(issue_description, '[x] Yes, Diversity Sourcing methods were used'::VARCHAR) = TRUE
+          THEN 'Used Diversity Strings'
+        WHEN CONTAINS(issue_description, '[x] No, I did not use Diversity Sourcing methods'::VARCHAR) = TRUE
+          THEN 'Did not use'
+        WHEN CONTAINS(issue_description, '[x] Not Actively Sourcing'::VARCHAR) = TRUE
+          THEN 'Not Actively Sourcing'
+        ELSE 'No Answer' 
+      END                                                               AS issue_answer
     FROM issues
     LEFT JOIN agg_assignee 
       ON agg_assignee.issue_id = issues.issue_id
-    WHERE project_id = 16492321
-      AND LOWER(issue_title) LIKE '%weekly check-in:%'
+    WHERE LOWER(issue_title) LIKE '%weekly check-in:%'
       AND LOWER(issue_title) NOT LIKE '%test%'
+  
+), split_issue AS (
+
+    SELECT *
+    FROM intermediate AS splittable, 
+    LATERAL SPLIT_TO_TABLE(splittable.issue_description_split, '#### <summary>') 
+    ---- splitting by year (numeric values)
+
+), cleaned AS (
+
+    SELECT *,
+      LEFT(TRIM(value),10)                                              AS week_of,
+      CASE
+        WHEN CONTAINS(value,'[x] Yes, Diversity sourcing was used')
+          THEN 'Yes'
+        WHEN CONTAINS(value, '[x] Not actively sourcing')
+          THEN 'Not Actively Sourcing'
+        WHEN CONTAINS(value,'[x] No, Did not use')
+          THEN 'No'
+        ELSE issue_answer 
+      END                                                               AS used_diversity_string
+    FROM split_issue
+
+), final AS (
+
+    SELECT
+      issue_title,
+      issue_iid,
+      issue_created_at,
+      issue_created_week,
+      issue_closed_at,
+      issue_closed_week,
+      week_of,
+      ---moved to using 1 issue per req and tracking weeks in issue on 2020.11.01
+      is_issue_closed,
+      issue_state,
+      issue_description,
+      assignee,
+      used_diversity_string
+    FROM cleaned
   
 )
 
 SELECT *
-FROM intermediate
+FROM final
