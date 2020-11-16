@@ -41,6 +41,7 @@ sources:
       - name: engineering_contributing_organizations
       - name: engineering_speciality_prior_to_capture
       - name: event_dictionary_simplified
+      - name: gitlab_contributing_organizations
       - name: gitlab_slack_stats
       - name: google_referrals
       - name: headcount

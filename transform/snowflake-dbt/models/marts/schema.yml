@@ -30,10 +30,8 @@ models:
       - name: primary_key
         description: Unique identifier of a product charge on the invoice amortized by month.
         tests:
-            - not_null:
-                severity: warn
-            - unique:
-                severity: warn
+            - not_null
+            - unique
         tags: ["tdf", "mart", "arr"]
 
   - name: mart_delta_arr_parent_month
