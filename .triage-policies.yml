@@ -21,10 +21,6 @@ resource_rules:
               source: group
               condition: not_member_of
               source_id: 4347861
-            assignee_member:
-              source: group
-              condition: not_member_of
-              source_id: 4347861
           actions:
             labels:
               - Needs Triage
