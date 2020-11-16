@@ -1,19 +1,20 @@
 WITH source AS (
 
     SELECT *
-    FROM {{ ref('sheetload_sales_segment_source') }}
+    FROM {{ ref('sheetload_sales_funnel_targets_opportunity_source') }}
 
 ), final AS (
 
     SELECT
       fields_concatenated,
       kpi_name,
-      sales_segment,
+      opportunity_source,
       target,
       percent_curve
     FROM source
 
 )
+
 
 {{ dbt_audit(
     cte_ref="final",

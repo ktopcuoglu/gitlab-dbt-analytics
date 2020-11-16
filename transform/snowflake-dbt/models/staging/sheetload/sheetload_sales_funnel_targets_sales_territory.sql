@@ -1,20 +1,18 @@
 WITH source AS (
 
     SELECT *
-    FROM {{ ref('sheetload_kpi_totals_source') }}
+    FROM {{ ref('sheetload_sales_funnel_targets_sales_territory_source') }}
 
 ), final AS (
 
     SELECT
       kpi_name,
-      fiscal_year_target,
-      is_additive,
-      formula,
-      priority
+      sales_territory,
+      target,
+      percent_curve
     FROM source
 
 )
-
 {{ dbt_audit(
     cte_ref="final",
     created_by="@paul_armstrong",

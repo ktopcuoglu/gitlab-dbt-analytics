@@ -1,7 +1,7 @@
 WITH source AS (
 
     SELECT *
-    FROM {{ ref('sheetload_purchase_channel_source') }}
+    FROM {{ ref('sheetload_sales_funnel_targets_purchase_channel_source') }}
 
 ), final AS (
 
