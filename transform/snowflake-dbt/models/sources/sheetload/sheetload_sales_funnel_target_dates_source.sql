@@ -11,5 +11,5 @@ SELECT
   "Date"::DATE                            AS sales_funnel_target_date,
   "Target"::VARCHAR                       AS target,
   "Percent_Curve"::VARCHAR                AS percent_curve,
-  _UPDATED_AT::FLOAT                      AS last_updated_at
+  "_UPDATED_AT"::FLOAT                      AS last_updated_at
 FROM source
