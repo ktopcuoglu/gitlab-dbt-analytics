@@ -2,7 +2,7 @@ WITH sfdc_campaign_info AS (
 
     SELECT *
     FROM {{ ref('sfdc_campaign_source') }}
-    WHERE account_id IS NOT NULL
+    WHERE campaign_id IS NOT NULL
 
 ), final AS (
 
