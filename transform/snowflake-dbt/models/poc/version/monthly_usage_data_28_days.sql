@@ -15,10 +15,12 @@ WITH data AS (
       section_name,
       is_smau,
       is_gmau,
+      is_paid_gmau,
+      is_umau,
       clean_metrics_name,
       SUM(IFNULL(metric_value,0)) AS weekly_metrics_value
     FROM data
-    {{ dbt_utils.group_by(n=10) }} 
+    {{ dbt_utils.group_by(n=12) }} 
 
 ), monthly AS (
 
@@ -32,6 +34,8 @@ WITH data AS (
       section_name,
       is_smau,
       is_gmau,
+      is_paid_gmau,
+      is_umau,
       clean_metrics_name,
       weekly_metrics_value              AS monthly_metric_value
     FROM transformed
@@ -49,6 +53,8 @@ SELECT
   section_name,
   is_smau,
   is_gmau,
+  is_paid_gmau,
+  is_umau,
   clean_metrics_name,
   monthly_metric_value
 FROM monthly
