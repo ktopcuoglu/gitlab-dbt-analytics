@@ -5,8 +5,8 @@
 }}
 WITH touchpoints AS (
 
-  SELECT *
-  FROM {{ ref('sfdc_bizible_touchpoint_source') }}
+    SELECT *
+    FROM {{ ref('sfdc_bizible_touchpoint_source') }}
 
 ), final AS (
 
