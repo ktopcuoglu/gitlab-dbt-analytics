@@ -6,7 +6,7 @@
 WITH dates AS (
 
     SELECT *
-    FROM {{ ref('date_details') }}
+    FROM {{ ref('dim_dates') }}
 
 ), promotions AS (
 
@@ -21,7 +21,11 @@ WITH dates AS (
 ), budget AS (
 
     SELECT 
-      IFF(division='Engineering_Meltano','Engineering',division) AS division,
+      CASE WHEN division = 'Engineering_Meltano'
+            THEN 'Engineering/Meltano'
+           WHEN division = 'Marketing'
+            THEN 'Marketing - Including SDR'
+           ELSE division END                        AS division,
       fiscal_year,
       fiscal_quarter, 
       budget,
@@ -31,7 +35,7 @@ WITH dates AS (
     UNION ALL
 
     SELECT 
-      'Total'                                                   AS division,
+      'Total - Including SDR'                                   AS division,
       fiscal_year,
       fiscal_quarter, 
       SUM(budget)                                               AS budget,
@@ -39,35 +43,93 @@ WITH dates AS (
     FROM sheetload_people_budget
     GROUP BY 1,2,3
 
+    UNION ALL
+    
+    SELECT 
+      'Total - Excluding SDR'                                   AS division,
+      fiscal_year,
+      fiscal_quarter, 
+      SUM(budget)                                               AS budget,
+      SUM(excess_from_previous_quarter)                         AS excess_from_previous_quarter
+    FROM sheetload_people_budget
+    WHERE division != 'Sales Development'
+    GROUP BY 1,2,3
+
 ), promotions_aggregated AS (
 
     SELECT
-      IFF(division LIKE '%People%' OR division ='CEO',
-            'People_CEO',division)                              AS division,
+      division,
       dates.fiscal_year,
       dates.fiscal_quarter,
+      dates.fiscal_quarter_name,
       SUM(total_change_in_comp)                                 AS total_spend
     FROM promotions
     LEFT JOIN dates
       ON promotions.promotion_month = dates.date_actual
-    GROUP BY 1,2,3
+    GROUP BY 1,2,3,4
+
+    UNION ALL
+
+    SELECT
+      'Marketing - Excluding SDR'                               AS division,
+      dates.fiscal_year,
+      dates.fiscal_quarter,
+      dates.fiscal_quarter_name,
+      SUM(total_change_in_comp)                                 AS total_spend
+    FROM promotions
+    LEFT JOIN dates
+      ON promotions.promotion_month = dates.date_actual
+    WHERE division = 'Marketing'
+      AND department != 'Sales Development'
+    GROUP BY 1,2,3,4
+
+    UNION ALL
+
+    SELECT
+      'Sales Development'                                       AS division,
+      dates.fiscal_year,
+      dates.fiscal_quarter,
+      dates.fiscal_quarter_name,
+      SUM(total_change_in_comp)                                 AS total_spend
+    FROM promotions
+    LEFT JOIN dates
+      ON promotions.promotion_month = dates.date_actual
+    WHERE division = 'Marketing'
+      AND department = 'Sales Development'
+    GROUP BY 1,2,3,4
 
     UNION ALL 
 
     SELECT
-      'Total'                                                  AS division,
+      'Total - Including SDR'                                  AS division,
       dates.fiscal_year,
       dates.fiscal_quarter,
+      dates.fiscal_quarter_name,
       SUM(total_change_in_comp)                                AS total_spend
     FROM promotions
     LEFT JOIN dates
       ON promotions.promotion_month = dates.date_actual
-    GROUP BY 1,2,3
+    GROUP BY 1,2,3,4
+
+    UNION ALL
+
+    SELECT
+      'Total - Excluding SDR'                                  AS division,
+      dates.fiscal_year,
+      dates.fiscal_quarter,
+      dates.fiscal_quarter_name,
+      SUM(total_change_in_comp)                                AS total_spend
+    FROM promotions
+    LEFT JOIN dates
+      ON promotions.promotion_month = dates.date_actual
+    WHERE department != 'Sales Development'
+    GROUP BY 1,2,3,4
   
 ), final AS (
 
     SELECT 
       budget.*,
+      promotions_aggregated.fiscal_quarter_name,
       promotions_aggregated.total_spend
     FROM budget
     LEFT JOIN promotions_aggregated
