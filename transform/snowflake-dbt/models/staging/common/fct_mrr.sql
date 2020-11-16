@@ -4,6 +4,11 @@ WITH dim_dates AS (
     SELECT *
     FROM {{ ref('dim_dates') }}
 
+), map_merged_crm_accounts AS (
+
+    SELECT *
+    FROM {{ ref('map_merged_crm_accounts') }}
+
 ), zuora_account AS (
 
   SELECT *
@@ -51,8 +56,8 @@ WITH dim_dates AS (
 ), rate_plan_charge_filtered AS (
 
   SELECT
-    zuora_account.account_id                           AS billing_account_id,
-    zuora_account.crm_id                               AS crm_account_id,
+    zuora_account.account_id                            AS billing_account_id,
+    map_merged_crm_accounts.dim_crm_account_id          AS crm_account_id,
     zuora_subscription_snapshots.subscription_id,
     zuora_subscription_snapshots.subscription_name,
     zuora_rate_plan_charge.product_rate_plan_charge_id AS product_details_id,
@@ -72,6 +77,8 @@ WITH dim_dates AS (
     AND zuora_subscription_snapshots.rank = 1
   INNER JOIN zuora_account
     ON zuora_account.account_id = zuora_subscription.account_id
+  LEFT JOIN map_merged_crm_accounts
+    ON zuora_account.crm_id = map_merged_crm_accounts.sfdc_account_id
 
 ), mrr_month_by_month AS (
 
@@ -115,11 +122,7 @@ WITH dim_dates AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@msendal",
-    updated_by="@msendal",
+    updated_by="@iweeks",
     created_date="2020-09-10",
-    updated_date="2020-09-17",
+    updated_date="2020-10-22",
 ) }}
-
-
-
-

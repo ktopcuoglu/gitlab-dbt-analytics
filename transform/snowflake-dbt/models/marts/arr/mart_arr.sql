@@ -40,17 +40,17 @@ SELECT
 
   --date info
   dim_dates.date_actual AS arr_month,
-  IFF(is_first_day_of_last_month_of_fiscal_quarter, fiscal_quarter_name_fy, NULL) AS fiscal_quarter_name_fy,
-  IFF(is_first_day_of_last_month_of_fiscal_year, fiscal_year, NULL)               AS fiscal_year,
+  IFF(is_first_day_of_last_month_of_fiscal_quarter, fiscal_quarter_name_fy, NULL)       AS fiscal_quarter_name_fy,
+  IFF(is_first_day_of_last_month_of_fiscal_year, fiscal_year, NULL)                     AS fiscal_year,
   dim_subscriptions.subscription_start_month,
   dim_subscriptions.subscription_end_month,
 
   --account info
-  dim_billing_accounts.billing_account_id                                             AS zuora_account_id,
-  dim_billing_accounts.sold_to_country                                         AS zuora_sold_to_country,
-  dim_billing_accounts.billing_account_name                                            AS zuora_account_name,
-  dim_billing_accounts.billing_account_number                                          AS zuora_account_number,
-  COALESCE(dim_crm_accounts.merged_to_account_id, dim_crm_accounts.crm_account_id)   AS crm_id,
+  dim_billing_accounts.billing_account_id                                               AS zuora_account_id,
+  dim_billing_accounts.sold_to_country                                                  AS zuora_sold_to_country,
+  dim_billing_accounts.billing_account_name                                             AS zuora_account_name,
+  dim_billing_accounts.billing_account_number                                           AS zuora_account_number,
+  dim_crm_accounts.crm_account_id                                                       AS crm_id,
   dim_crm_accounts.ultimate_parent_account_id,
   dim_crm_accounts.ultimate_parent_account_name,
   dim_crm_accounts.ultimate_parent_billing_country,
