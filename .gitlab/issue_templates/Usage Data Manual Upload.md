@@ -16,3 +16,6 @@ copy into raw.snowflake_imports.usage_ping_payloads (jsontext)
 from @raw.snowflake_imports.snowflake_imports_stage/{file_name}
 file_format = (type = json)
 ```
+
+/confidential
+/label ~Snowflake ~Infrastructure  ~"Priority::3-Other" ~"Usage/Version Ping"
