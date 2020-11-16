@@ -14,7 +14,7 @@ WITH touchpoints AS (
       bizible_marketing_channel_path                                    AS bizible_marketing_channel_path,
       {{ map_marketing_channel_path("bizible_marketing_channel_path")}} AS marketing_channel_name
     FROM touchpoints
-    WHERE bizible_touchpoint_position LIKE '%FT%';
+    WHERE bizible_touchpoint_position LIKE '%FT%'
 
 )
 
