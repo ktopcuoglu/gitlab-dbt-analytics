@@ -56,7 +56,10 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity.probability,
       sfdc_opportunity.reason_for_loss,
       sfdc_opportunity.reason_for_loss_details,
-      sfdc_opportunity.sales_qualified_source,
+      CASE
+        WHEN sfdc_opportunity.sales_qualified_source = 'BDR Generated' THEN 'SDR Generated'
+        ELSE sfdc_opportunity.sales_qualified_source
+      END                                                                                         AS sales_qualified_source,
       sfdc_opportunity.solutions_to_be_replaced,
       sfdc_opportunity.is_web_portal_purchase,
       sfdc_opportunity.partner_initiated_opportunity,
@@ -64,7 +67,8 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity.order_type_live,
       sfdc_opportunity.order_type_stamped,
       sfdc_opportunity.net_arr,
-      
+      sfdc_opportunity.days_in_sao,
+
       -- ************************************
       -- channel reporting
       -- issue: https://gitlab.com/gitlab-data/analytics/-/issues/6072
@@ -84,8 +88,7 @@ WITH sfdc_opportunity AS (
 {{ dbt_audit(
     cte_ref="layered",
     created_by="@jjstark ",
-    updated_by="@jjstark",
+    updated_by="@iweeks",
     created_date="2020-10-21",
-    updated_date="2020-10-21"
+    updated_date="2020-11-16"
 ) }}
-

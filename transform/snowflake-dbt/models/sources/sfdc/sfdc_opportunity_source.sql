@@ -112,6 +112,7 @@ WITH source AS (
         order_type_live__c                          AS order_type_live,
         order_type_test__c                          AS order_type_stamped,
         arr_net__c                                  AS net_arr,
+        days_in_sao__c                              AS days_in_sao,
 
       -- ************************************
       -- sales segmentation deprecated fields - 2020-09-03

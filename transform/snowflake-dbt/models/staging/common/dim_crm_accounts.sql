@@ -27,7 +27,11 @@ WITH map_merged_crm_accounts AS (
       billing_country,
       df_industry,
       account_owner_team,
-      tsp_territory
+      tsp_territory,
+      tsp_region,
+      tsp_sub_region,
+      tsp_area,
+      gtm_strategy
     FROM sfdc_account
     WHERE account_id = ultimate_parent_account_id
 
@@ -61,6 +65,10 @@ WITH map_merged_crm_accounts AS (
     ultimate_parent_account.df_industry           AS ultimate_parent_industry,
     ultimate_parent_account.account_owner_team    AS ultimate_parent_account_owner_team,
     ultimate_parent_account.tsp_territory         AS ultimate_parent_territory,
+    ultimate_parent_account.tsp_region            AS ultimate_parent_tsp_region,
+    ultimate_parent_account.tsp_sub_region        AS ultimate_parent_tsp_sub_region,
+    ultimate_parent_account.tsp_area              AS ultimate_parent_tsp_area,
+    ultimate_parent_account.gtm_strategy          AS ultimate_parent_gtm_strategy,
     sfdc_account.record_type_id                   AS record_type_id,
     sfdc_account.federal_account                  AS federal_account,
     sfdc_account.gitlab_com_user,
@@ -91,5 +99,5 @@ WITH map_merged_crm_accounts AS (
     created_by="@msendal",
     updated_by="@iweeks",
     created_date="2020-06-01",
-    updated_date="2020-10-22"
+    updated_date="2020-11-16"
 ) }}
