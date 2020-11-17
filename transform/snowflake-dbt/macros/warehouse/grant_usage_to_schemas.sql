@@ -1,6 +1,6 @@
 {%- macro grant_usage_to_schemas() -%}
 
-	{%- set schema_name = target.schema -%}
+	{%- set schema_name = 'analytics' -%}
 
     {#
         This works in conjunction with the Permifrost roles.yml file. 
@@ -18,10 +18,6 @@
         grant usage on schema {{ schema_name }} to role {{ non_sensitive }};
         grant select on all tables in schema {{ schema_name }} to role {{ non_sensitive }};
         grant select on all views in schema {{ schema_name }} to role {{ non_sensitive }};
-
-        grant usage on schema {{ schema_name }}_meta to role {{ non_sensitive }};
-        grant select on all tables in schema {{ schema_name }}_meta to role {{ non_sensitive }};
-        grant select on all views in schema {{ schema_name }}_meta to role {{ non_sensitive }};
 
         grant usage on schema {{ schema_name }}_staging to role {{ non_sensitive }};
         grant select on all tables in schema {{ schema_name }}_staging to role {{ non_sensitive }};
