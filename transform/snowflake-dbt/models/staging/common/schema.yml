@@ -32,6 +32,24 @@ models:
   - name: dim_billing_accounts_valid_at
     description: Dimension table representing each individual account with details of person to bill for the account. Excludes deleted and test accounts. Required variable valid_at is timezone sensitive
 
+  - name: dim_campaign
+    description: Dimension table representing each individual Campaign. Excludes deleted campaigns. Based completely off SFDC campaign data.
+    columns:
+      - name: campaign_id
+        description: Campaign unique identifier
+        tests:
+          - not_null
+          - unique
+      - name: campaign_name
+        description: Campaign name text field.
+      - name: is_active
+      - name: status
+      - name: type
+      - name: description
+      - name: budget_holder
+      - name: bizible_touchpoint_enabled_setting
+      - name: strategic_marketing_contribution
+
   - name: dim_crm_accounts
     description: '{{ doc("dim_crm_accounts") }}'
     columns:
