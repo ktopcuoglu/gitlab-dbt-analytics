@@ -1,7 +1,8 @@
 ## Activities for the Requestor
 
 * [ ] If this is your first time doing this, you will need access to the `snowflake_imports` GCS bucket.  Create an [access request](https://about.gitlab.com/handbook/business-ops/team-member-enablement/onboarding-access-requests/access-requests/#individual-or-bulk-access-request) the usual way.  Tag the `@gitlab-data/engineers` group in the access request when access is ready to be provisioned.
-* [ ] Place usage ping payload files in the [`snowflake_imports` GCS bucket](https://console.cloud.google.com/storage/browser/snowflake_imports) by clicking the `UPLOAD FILES` button, selecting the files, and pressing upload.
+* [ ] If a folder for the customer does not yet exist in the [`snowflake_imports` GCS bucket](https://console.cloud.google.com/storage/browser/snowflake_imports), create one.
+* [ ] Place usage ping payload files in the [`snowflake_imports` GCS bucket](https://console.cloud.google.com/storage/browser/snowflake_imports), in that customer's folder: First, click into the folder. Then, press the `UPLOAD FILES` button, select the files, and press upload.
 * [ ] List the file names here:
 
 * Indicate a desired response time:
