@@ -401,7 +401,7 @@ models:
       tests:
       - not_null
       - unique
-- name: sheetload_rfs_support_requests
+- name: sheetload_rfs_support_requests_source
   description: This contains data for the pipe risk and security metrics - https://gitlab.com/gitlab-data/analytics/-/issues/6995 
   columns: 
     - name: customer_prospect_name
