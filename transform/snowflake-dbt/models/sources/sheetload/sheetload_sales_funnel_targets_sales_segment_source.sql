@@ -1,7 +1,7 @@
 WITH source AS (
 
     SELECT *
-    FROM {{ source('sheetload', 'sales_segment') }}
+    FROM {{ source('sheetload', 'sales_funnel_targets_sales_segment') }}
 
 ), renamed AS (
 

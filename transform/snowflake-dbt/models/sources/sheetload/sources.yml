@@ -75,7 +75,7 @@ sources:
       - name: rep_quotas_full_ps_fy2020
       - name: sales_training_completion_dates
       - name: sales_funnel_targets_dates
-      - name: sales_funnel_targets_kpi_totals
+      - name: sales_funnel_targets_kpi_values
       - name: sales_funnel_targets_sales_segment
       - name: sales_funnel_targets_opportunity_source
       - name: sales_funnel_targets_purchase_channel
