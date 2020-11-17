@@ -47,7 +47,7 @@ WITH fct_mrr AS (
 ), mau AS (
     
     SELECT *
-    FROM analytics.monthly_usage_data
+    FROM {{ ref('mart_monthly_usage_data') }}
     WHERE metrics_path = 'usage_activity_by_stage_monthly.manage.events'
 
 ), transformed AS (
