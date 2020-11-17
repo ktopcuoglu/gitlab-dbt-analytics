@@ -30,7 +30,14 @@ databases:
         shared: no
     - dtownsend_prep:
         shared: no
-        
+
+    - ianschweickart_analytics:
+        shared: no
+    - ianschweickart_prod:
+        shared: no
+    - ianschweickart_prep:
+        shared: no
+
     - iweeks_analytics:
         shared: no
     - iweeks_prod:
@@ -100,7 +107,14 @@ databases:
         shared: no
     - pluthra_prep:
         shared: no
-        
+  
+    - rheannamistry_analytics:
+        shared: no
+    - rheannamistry_prod:
+        shared: no
+    - rheannamistry_prep:
+        shared: no
+
     - snalamaru_analytics:
         shared: no
     - snalamaru_prod:
@@ -108,6 +122,13 @@ databases:
     - snalamaru_prep:
         shared: no
   
+    - trevorromero_analytics:
+        shared: no
+    - trevorromero_prod:
+        shared: no
+    - trevorromero_prep:
+        shared: no
+
     - tmurphy_analytics:
         shared: no
     - tmurphy_prod:
