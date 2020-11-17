@@ -80,7 +80,8 @@ WITH license AS (
       license_plan,
       license_trial   AS is_trial,
       created_at,
-      recorded_at
+      recorded_at,
+      license_user_count
     FROM joined
 
 )
