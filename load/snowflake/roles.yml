@@ -1624,6 +1624,53 @@ roles:
         warehouses:
             - reporting
 
+    - ianschweickart:
+        member_of:
+            - decisive_data
+        warehouses:
+            - analyst_xs
+        owns:
+            databases:
+                - ianschweickart_analytics
+                - ianschweickart_prep
+                - ianschweickart_prod
+            schemas:
+                - ianschweickart_analytics.*
+                - ianschweickart_prep.*
+                - ianschweickart_prod.*
+            tables:
+                - ianschweickart_analytics.*.*
+                - ianschweickart_prep.*.*
+                - ianschweickart_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - ianschweickart_analytics
+                    - ianschweickart_prep
+                    - ianschweickart_prod
+                write:
+                    - ianschweickart_analytics
+                    - ianschweickart_prep
+                    - ianschweickart_prod
+            schemas:
+                read:
+                    - ianschweickart_analytics.*
+                    - ianschweickart_prep.*
+                    - ianschweickart_prod.*
+                write:
+                    - ianschweickart_analytics.*
+                    - ianschweickart_prep.*
+                    - ianschweickart_prod.*
+            tables:
+                read:
+                    - ianschweickart_analytics.*.*
+                    - ianschweickart_prep.*.*
+                    - ianschweickart_prod.*.*
+                write:
+                    - ianschweickart_analytics.*.*
+                    - ianschweickart_prep.*.*
+                    - ianschweickart_prod.*.*           
+
     - iroussos:
         member_of:
             - reporter
@@ -2221,6 +2268,54 @@ roles:
                     - pluthra_prep.*.*
                     - pluthra_prod.*.*
 
+    - rheannamistry:
+        member_of:
+            - decisive_data
+        warehouses:
+            - analyst_xs
+        owns:
+            databases:
+                - rheannamistry_analytics
+                - rheannamistry_prep
+                - rheannamistry_prod
+            schemas:
+                - rheannamistry_analytics.*
+                - rheannamistry_prep.*
+                - rheannamistry_prod.*
+            tables:
+                - rheannamistry_analytics.*.*
+                - rheannamistry_prep.*.*
+                - rheannamistry_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - rheannamistry_analytics
+                    - rheannamistry_prep
+                    - rheannamistry_prod
+                write:
+                    - rheannamistry_analytics
+                    - rheannamistry_prep
+                    - rheannamistry_prod
+            schemas:
+                read:
+                    - rheannamistry_analytics.*
+                    - rheannamistry_prep.*
+                    - rheannamistry_prod.*
+                write:
+                    - rheannamistry_analytics.*
+                    - rheannamistry_prep.*
+                    - rheannamistry_prod.*
+            tables:
+                read:
+                    - rheannamistry_analytics.*.*
+                    - rheannamistry_prep.*.*
+                    - rheannamistry_prod.*.*
+                write:
+                    - rheannamistry_analytics.*.*
+                    - rheannamistry_prep.*.*
+                    - rheannamistry_prod.*.*
+
+
     - rkohnke:
         member_of:
             - reporter
@@ -2420,6 +2515,54 @@ roles:
             - loading
             - reporting
 
+    - trevorromero:
+        member_of:
+            - decisive_data
+        warehouses:
+            - analyst_xs
+        owns:
+            databases:
+                - trevorromero_analytics
+                - trevorromero_prep
+                - trevorromero_prod
+            schemas:
+                - trevorromero_analytics.*
+                - trevorromero_prep.*
+                - trevorromero_prod.*
+            tables:
+                - trevorromero_analytics.*.*
+                - trevorromero_prep.*.*
+                - trevorromero_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - trevorromero_analytics
+                    - trevorromero_prep
+                    - trevorromero_prod
+                write:
+                    - trevorromero_analytics
+                    - trevorromero_prep
+                    - trevorromero_prod
+            schemas:
+                read:
+                    - trevorromero_analytics.*
+                    - trevorromero_prep.*
+                    - trevorromero_prod.*
+                write:
+                    - trevorromero_analytics.*
+                    - trevorromero_prep.*
+                    - trevorromero_prod.*
+            tables:
+                read:
+                    - trevorromero_analytics.*.*
+                    - trevorromero_prep.*.*
+                    - trevorromero_prod.*.*
+                write:
+                    - trevorromero_analytics.*.*
+                    - trevorromero_prep.*.*
+                    - trevorromero_prod.*.*
+
+
     - vjuhasz:
         member_of:
             - reporter
@@ -2600,6 +2743,11 @@ users:
         member_of:
             - hsharma
             - securityadmin
+
+    - ianschweickart:
+        can_login: yes 
+        member_of:
+            - ianschweickart
 
     - iroussos:
         can_login: yes
@@ -2791,6 +2939,11 @@ users:
         can_login: no
         member_of: []
 
+    - rheannamistry:
+        can_login: yes
+        member_of:
+            - rheannamistry
+
     - rkohnke:
         can_login: yes
         member_of:
@@ -2858,6 +3011,11 @@ users:
             - securityadmin
             - sysadmin
             - tmurphy
+
+    - trevorromero:
+        can_login: yes
+        member_of:
+            - trevorromero
 
     - valexieva:
         can_login: no
