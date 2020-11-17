@@ -13,7 +13,8 @@ WITH source AS (
         NULLIF(sfdc_link, '')::VARCHAR                                    AS sfdc_link,
         NULLIF(iacv_impact, '')::VARCHAR                                  AS iacv_impact,
         NULLIF(product_host, '')::VARCHAR                                 AS product_host,
-        NULLIF(due_date, '')::VARCHAR.                                  AS due_date,
+        NULLIF(due_date, '')::VARCHAR.                                   
+ AS due_date,
         NULLIF(other, '')::VARCHAR                                        AS other,
         NULLIF(requestor_name, '')::VARCHAR                               AS requestor_name,
         NULLIF(additional_gitlab_team_members, '')::VARCHAR               AS additional_gitlab_team_members
