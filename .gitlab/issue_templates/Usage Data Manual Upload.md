@@ -4,7 +4,12 @@
 * [ ] Place usage ping payload files in the [`snowflake_imports` GCS bucket](https://console.cloud.google.com/storage/browser/snowflake_imports) by clicking the `UPLOAD FILES` button, selecting the files, and pressing upload.
 * [ ] List the file names here:
 
-* [ ] Assign this issue to a member of `@gitlab-data/engineers` for completion.
+* Indicate a desired response time:
+  * [ ] 24h
+  * [ ] 48h
+  * [ ] No particular SLA
+  * [ ] Other, specify ________
+* [ ] Tag the `@gitlab-data/engineers` group in this issue.
 
 ## For the Assignee
 * [ ] Open up a Snowflake DB console
