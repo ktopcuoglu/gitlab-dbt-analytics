@@ -544,7 +544,10 @@ WITH gitlab_subscriptions AS (
 
     SELECT *
     FROM {{ ref('gitlab_dotcom_secure_stage_ci_jobs') }}
-    WHERE secure_ci_job_type = 'license_scanning' or secure_ci_job_type = 'license_management'
+    WHERE secure_ci_job_type IN (
+                                  'license_scanning',
+                                  'license_management'
+                                )
 
 ), merge_request_notes AS (
 
