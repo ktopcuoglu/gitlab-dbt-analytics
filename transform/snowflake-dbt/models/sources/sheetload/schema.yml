@@ -443,4 +443,18 @@ models:
     - name: kpi_name
       tests:
       - not_null
+- name: sheetload_rfs_support_requests_source
+  description: This contains data for the pipe risk and security metrics - https://gitlab.com/gitlab-data/analytics/-/issues/6995 
+  columns: 
+    - name: customer_prospect_name
+    - name: request_type
+    - name: market_industry_vertical
+    - name: customer_prospect_size
+    - name: sfdc_link
+    - name: iacv_impact
+    - name: product_host
+    - name: due_date
+    - name: other
+    - name: requestor_name
+    - name: additional_gitlab_team_members
 
