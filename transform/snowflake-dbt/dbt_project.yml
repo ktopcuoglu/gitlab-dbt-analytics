@@ -121,6 +121,7 @@ models:
     # Sources
     # ------------------
     sources:
+      +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
       +tags: ["sources"]
 
       airflow:
@@ -134,15 +135,18 @@ models:
           secure: true
 
       date:
+        +database: "{{ env_var('SNOWFLAKE_TRANSFORM_DATABASE') }}" # ANALYTICS
         +materialized: table
         +schema: date
 
       dbt:
+        +database: "{{ env_var('SNOWFLAKE_TRANSFORM_DATABASE') }}" # ANALYTICS
         +materialized: table
         +schema: dbt
         +tags: ["dbt"]
 
       engineering:
+        +database: "{{ env_var('SNOWFLAKE_TRANSFORM_DATABASE') }}" # ANALYTICS
         +materialized: table
 
       gcp_billing:
@@ -155,9 +159,6 @@ models:
       gitlab_dotcom:
         +materialized: table
         +schema: gitlab_dotcom
-
-      gitter:
-        +enabled: false
 
       google_analytics_360:
         +materialized: table
@@ -182,13 +183,13 @@ models:
           +schema: sensitive
           secure: true
 
-      qualtrics:
-        +materialized: table
-        +schema: qualtrics
-
       pmg:
         +materialized: table
         +schema: pmg
+
+      qualtrics:
+        +materialized: table
+        +schema: qualtrics
 
       rspec:
         +schema: rspec
@@ -204,6 +205,9 @@ models:
 
       snowflake:
         +schema: snowflake
+
+      snowflake_imports:
+        +schema: snowflake_imports
 
       snowplow:
         +tags: ["product"]
@@ -360,10 +364,6 @@ models:
       secure: true
       base:
         +materialized: table
-
-    pipe2spend:
-      +enabled: false
-      +materialized: table
 
     poc:
       +tags: ["poc"]
