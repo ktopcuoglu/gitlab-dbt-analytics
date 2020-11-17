@@ -1,62 +1,49 @@
 -- Will write to custom schemas not on prod
--- Ensures logging package writes to analytics_meta
 
 {% macro generate_schema_name(custom_schema_name, node) -%}
 
-    {%- set production_targets = ('prod','docs','ci') -%}
+    {%- set production_targets = production_targets() -%}
 
-    {%- set prefixed_schemas = ('meta','sensitive','staging','temporary') -%}
+    {%- set prefixed_schemas = ('meta','sensitive','staging') -%}
 
     {#
         Definitions:
             - custom_schema_name: schema provided via dbt_project.yml or model config
-            - target.schema: schema provided by the target defined in profiles.yml
             - target.name: name of the target (dev for local development, prod for production, etc.)
+            - target.schema: schema provided by the target defined in profiles.yml
         
         This macro is hard to test, but here are some test cases and expected output.
         (custom_schema_name, target.name, target.schema) = <output>
 
+        In all cases it will now write to the same schema. The database is what's 
+        different. See generate_database_name.sql
+
         (analytics, prod, analytics) = analytics
         (analytics, ci, analytics) = analytics
-        (analytics, dev, tmurphy_scratch) = tmurphy_scratch_analytics
+        (analytics, dev, preparation) = analytics
         
         (staging, prod, analytics) = analytics_staging
         (staging, ci, analytics) = analytics_staging
-        (staging, dev, tmurphy_scratch) = tmurphy_scratch_staging
+        (staging, dev, preparation) = analytics_staging
         
         (zuora, prod, analytics) = zuora
         (zuora, ci, analytics) = zuora
-        (zuora, dev, tmurphy_scratch) = tmurphy_scratch_zuora
+        (zuora, dev, preparation) = zuora
 
     #}
-    {%- if target.name in production_targets -%}
-        
-        {%- if custom_schema_name in prefixed_schemas -%}
 
-            {{ target.schema.lower() }}_{{ custom_schema_name | trim }}
+    {%- if custom_schema_name in prefixed_schemas -%}
 
-        {%- elif custom_schema_name is none -%}
+        analytics_{{ custom_schema_name | trim }}
 
-            {{ target.schema.lower() | trim }}
+    {%- elif custom_schema_name is none -%}
 
-        {%- else -%}
-            
-            {{ custom_schema_name.lower() | trim }}
-
-        {%- endif -%}
+        {{ target.schema.lower() | trim }}
 
     {%- else -%}
-    
-        {%- if custom_schema_name is none -%}
 
-            {{ target.schema.lower() | trim }}
+        {{ custom_schema_name.lower() | trim }}
 
-        {%- else -%}
-            
-            {{ target.schema.lower() }}_{{ custom_schema_name | trim }}
-
-        {%- endif -%}
-    
     {%- endif -%}
-
+    
 {%- endmacro %}

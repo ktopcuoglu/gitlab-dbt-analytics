@@ -1,6 +1,16 @@
 {% macro crc32() %}
 
-CREATE OR REPLACE FUNCTION {{target.schema}}_staging.crc32("input" string)
+{%- set production_targets = production_targets() -%}
+
+{%- if target.name in production_targets -%}
+
+CREATE OR REPLACE FUNCTION {{target.schema}}.crc32("input" string)
+
+{%- else -%}
+    
+CREATE OR REPLACE FUNCTION "{{ target.database | trim }}_ANALYTICS".{{target.schema}}.crc32("input" string)
+
+{% endif %}
 
   RETURNS string
   LANGUAGE JAVASCRIPT
@@ -22,6 +32,14 @@ return (crc ^ (-1)) >>> 0;
 $$
 ;
 
-GRANT USAGE ON FUNCTION {{target.schema}}_staging.crc32(STRING) TO ROLE PUBLIC; 
+{%- if target.name in production_targets -%}
+
+GRANT USAGE ON FUNCTION {{target.schema}}.crc32(STRING) TO ROLE PUBLIC; 
+
+{%- else -%}
+    
+GRANT USAGE ON FUNCTION "{{ target.database | trim }}_ANALYTICS".{{target.schema}}.crc32(string) TO ROLE PUBLIC; 
+
+{%- endif -%}
 
 {% endmacro %}

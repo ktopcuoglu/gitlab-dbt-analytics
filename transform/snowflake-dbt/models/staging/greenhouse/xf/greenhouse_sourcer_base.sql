@@ -1,8 +1,3 @@
-{# {{ config({
-    "schema": "temporary"
-    }) #}
-{# }} #}
-
 WITH sourcer_metrics AS (
 
     SELECT 

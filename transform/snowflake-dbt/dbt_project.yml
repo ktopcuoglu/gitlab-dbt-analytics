@@ -40,7 +40,6 @@ on-run-start:
 
 on-run-end:
     - "{{ grant_usage_to_schemas() }}"
-    - "drop schema if exists {{ generate_schema_name('temporary') }}"
     - "{{ suspend_warehouse(var('suspend_warehouse', false), var('warehouse_name')) }}"
 
 # ======
@@ -48,6 +47,7 @@ on-run-end:
 # ======
 seeds:
   +enabled: true
+  +database: "{{ env_var('SNOWFLAKE_TRANSFORM_DATABASE') }}" #ANALYTICS
   +schema: staging
   +quote_columns: False
 
@@ -85,6 +85,8 @@ vars:
 # Model Configs
 # ==================
 models:
+  +database: "{{ env_var('SNOWFLAKE_TRANSFORM_DATABASE') }}" # ANALYTICS
+  +schema: analytics  # Top level override since profiles defaults to PREP
 
   # ------------------
   # Snowplow Package https://hub.getdbt.com/fishtown-analytics/snowplow/latest/
@@ -391,7 +393,7 @@ models:
 # ======
 snapshots:
   gitlab_snowflake:
-    target_database: "{{ env_var('SNOWFLAKE_SNAPSHOT_DATABASE') }}"
+    target_database: "{{ env_var('SNOWFLAKE_SNAPSHOT_DATABASE') }}" #RAW in production
     target_schema: "snapshots"
     transient: false
 

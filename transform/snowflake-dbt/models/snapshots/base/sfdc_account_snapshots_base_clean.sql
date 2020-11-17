@@ -1,12 +1,17 @@
-
-WITH source AS (
+WITH sfdc_account_snapshots AS (
 
     SELECT *
-    FROM {{ source('snapshots', 'sfdc_account_snapshots') }}
+    FROM {{ref('sfdc_account_snapshots_base')}}
 
-), renamed AS (
+), final AS (
 
     SELECT
+      -- keys
+      date_actual,
+      valid_from,
+      valid_to,
+      is_currently_valid,
+      account_snapshot_id,
       id                                         AS account_id,
       name                                       AS account_name,
 
@@ -30,7 +35,7 @@ WITH source AS (
       dedicated_service_engineer__c              AS dedicated_service_engineer,
       sdr_assigned__c                            AS sales_development_rep,
       sdr_account_team__c                        AS sales_development_rep_team,
-      -- solutions_architect__c                     AS solutions_architect,
+      --solutions_architect__c                     AS solutions_architect,
       technical_account_manager_lu__c            AS technical_account_manager_id,
 
       -- info
@@ -40,14 +45,13 @@ WITH source AS (
                      '_HL_ENCODED_/|<a\\s+href="/', ''), 0, 15))                 
                                                  AS ultimate_parent_account_id,
       type                                       AS account_type,
-      dfox_industry__c                           AS df_industry,
       industry                                   AS industry,
       account_tier__c                            AS account_tier,
       customer_since__c::DATE                    AS customer_since_date,
-      carr_this_account__c                       AS carr_this_account,
       carr_total__c                              AS carr_total,
       next_renewal_date__c                       AS next_renewal_date,
       license_utilization__c                     AS license_utilization,
+      products_purchased__c                      AS products_purchased,
       region__c                                  AS account_region,
       sub_region__c                              AS account_sub_region,
       support_level__c                           AS support_level,
@@ -91,19 +95,6 @@ WITH source AS (
       number_of_open_opportunities__c            AS count_open_opportunities,
       using_ce__c                                AS count_using_ce,
 
-      --account based marketing fields
-      abm_tier__c                                AS abm_tier,
-      gtm_strategy__c                            AS gtm_strategy,
-
-      --demandbase fields
-      account_list__c                            AS demandbase_account_list,
-      intent__c                                  AS demandbase_intent,
-      page_views__c                              AS demandbase_page_views,
-      score__c                                   AS demandbase_score,
-      sessions__c                                AS demandbase_sessions,
-      trending_offsite_intent__c                 AS demandbase_trending_offsite_intent,
-      trending_onsite_engagement__c              AS demandbase_trending_onsite_engagement,
-
       -- metadata
       createdbyid                                AS created_by_id,
       createddate                                AS created_date,
@@ -112,16 +103,15 @@ WITH source AS (
       lastmodifieddate                           AS last_modified_date,
       lastactivitydate                           AS last_activity_date,
       convert_timezone('America/Los_Angeles',convert_timezone('UTC',current_timestamp())) AS _last_dbt_run,
-      systemmodstamp,
+      systemmodstamp
 
-      -- snapshot metadata
-      dbt_scd_id,
-      dbt_updated_at,
-      dbt_valid_from,
-      dbt_valid_to
+    FROM sfdc_account_snapshots
+    WHERE id IS NOT NULL
+    AND isdeleted = FALSE
 
-    FROM source
 )
 
 SELECT *
-FROM renamed
+FROM final
+
+
