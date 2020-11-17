@@ -77,7 +77,7 @@ sources:
       - name: sales_funnel_targets_dates
       - name: sales_funnel_targets_kpi_values
       - name: sales_funnel_targets_sales_segment
-      - name: sales_funnel_targets_opportunity_source
+      - name: sales_funnel_targets_opportunity
       - name: sales_funnel_targets_purchase_channel
       - name: sales_funnel_targets_account_region
       - name: sales_funnel_targets_sales_territory
