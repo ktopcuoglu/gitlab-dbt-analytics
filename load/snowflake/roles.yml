@@ -1814,6 +1814,10 @@ roles:
             - reporting
 
     - jstark:
+        member_of:
+            - analyst_core
+            - data_manager
+            - engineer
         warehouses:
             - engineer_xs
             - engineer_xl
@@ -2086,6 +2090,8 @@ roles:
             - analyst_xs
 
     - mwalker:
+        member_of:
+            - engineer
         warehouses:
             - engineer_xs
             - engineer_xl
@@ -2181,6 +2187,8 @@ roles:
                     - nfiguera_prod.*.*
 
     - parmstrong:
+        member_of:
+            - engineer
         warehouses:
             - engineer_xs
             - engineer_xl
@@ -2363,6 +2371,8 @@ roles:
             - reporting
 
     - snalamaru:
+        member_of:
+            - engineer
         warehouses:
             - engineer_xs
             - engineer_xl
@@ -2488,6 +2498,7 @@ roles:
     - tmurphy:
         member_of:
             - bamboohr_raw
+            - engineer
         owns:
             databases:
                 - tmurphy_analytics
@@ -2809,8 +2820,6 @@ users:
         can_login: yes
         member_of:
             - accountadmin
-            - analyst_core
-            - data_manager
             - jstark
             - securityadmin
             - sysadmin
@@ -2906,7 +2915,6 @@ users:
     - mwalker:
         can_login: yes
         member_of:
-            - engineer
             - mwalker
 
     - nfiguera:
@@ -2917,7 +2925,6 @@ users:
     - parmstrong:
         can_login: yes
         member_of:
-            - engineer
             - parmstrong
 
     - periscope:
@@ -2989,7 +2996,6 @@ users:
     - snalamaru:
         can_login: yes
         member_of:
-            - engineer
             - snalamaru
 
     - sreddy:
@@ -3028,7 +3034,6 @@ users:
         can_login: yes
         member_of:
             - accountadmin
-            - engineer
             - securityadmin
             - sysadmin
             - tmurphy
