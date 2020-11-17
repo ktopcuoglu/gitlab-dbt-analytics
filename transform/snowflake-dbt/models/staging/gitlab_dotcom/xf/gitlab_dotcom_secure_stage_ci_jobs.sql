@@ -35,6 +35,8 @@ WITH ci_builds AS (
     SELECT 
       *,
       CASE
+      WHEN ci_build_name LIKE '%apifuzzer_fuzz%' 
+        THEN 'api_fuzzing'
       WHEN ci_build_name LIKE '%container_scanning%' 
         THEN 'container_scanning'
       WHEN ci_build_name LIKE '%dast%'  
@@ -52,6 +54,7 @@ WITH ci_builds AS (
       END AS secure_ci_job_type
     FROM ci_builds 
     WHERE ci_build_name ILIKE ANY (
+                                      '%apifuzzer_fuzz%',
                                       '%container_scanning%',
                                       '%dast%',
                                       '%dependency_scanning%',
