@@ -25,7 +25,7 @@ WITH monthly_usage_data AS (
       is_umau,
       MAX(monthly_metric_value) AS monthly_metric_value
     FROM monthly_usage_data
-    {{dbt_utils.group_by(n=11)}}
+    {{ dbt_utils.group_by(n=11) }}
     
 )
 
