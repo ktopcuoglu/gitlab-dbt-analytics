@@ -2,7 +2,7 @@ WITH sfdc_campaign_info AS (
 
     SELECT *
     FROM {{ ref('sfdc_campaign_source') }}
-    WHERE campaign_id IS NOT NULL
+    WHERE NOT is_deleted
 
 ), final AS (
 
@@ -17,7 +17,6 @@ WITH sfdc_campaign_info AS (
       bizible_touchpoint_enabled_setting,
       strategic_marketing_contribution
     FROM sfdc_campaign_info
-    WHERE NOT is_deleted
 
 )
 
