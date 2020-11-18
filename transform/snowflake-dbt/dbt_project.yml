@@ -366,6 +366,9 @@ models:
       base:
         +materialized: table
 
+    covid19:
+      +schema: covid19
+
     poc:
       +tags: ["poc"]
       +enabled: true
@@ -378,6 +381,9 @@ models:
     smau_events:
       +tags: ["product"]
       +materialized: table
+
+    snapshots:
+      +schema: analytics
 
     # ------------------
     # Trusted Data Framework
