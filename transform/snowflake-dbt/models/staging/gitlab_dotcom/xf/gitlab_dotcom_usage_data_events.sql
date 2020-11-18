@@ -178,6 +178,15 @@
     "is_representative_of_stage": "False"
   },
   {
+    "event_name": "events",
+    "source_table_name": "gitlab_dotcom_events",
+    "user_column_name": "author_id",
+    "key_to_parent_group": "project_id",
+    "primary_key": "event_id",
+    "stage_name": "manage",
+    "is_representative_of_stage": "False"
+  },
+  {
     "event_name": "groups",
     "source_cte_name": "group_members",
     "user_column_name": "user_id",
