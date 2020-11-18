@@ -30,6 +30,10 @@ from kube_secrets import (
     GITLAB_COM_DB_NAME,
     GITLAB_COM_DB_PASS,
     GITLAB_COM_DB_USER,
+    GITLAB_OPS_DB_USER,
+    GITLAB_OPS_DB_PASS,
+    GITLAB_OPS_DB_HOST,
+    GITLAB_OPS_DB_NAME,
     GITLAB_PROFILER_DB_HOST,
     GITLAB_PROFILER_DB_NAME,
     GITLAB_PROFILER_DB_PASS,
@@ -87,6 +91,7 @@ every_day_at_four = "0 4 */1 * *"
 # Dictionary containing the configuration values for the various Postgres DBs
 config_dict = {
     "customers": {
+        "cloudsql_instance_name": None,
         "dag_name": "customers",
         "dbt_name": "customers_db",
         "env_vars": {"DAYS": "1"},
@@ -103,6 +108,7 @@ config_dict = {
         "validation_schedule_interval": validation_schedule_interval,
     },
     "gitlab_com": {
+        "cloudsql_instance_name": None,
         "dag_name": "gitlab_com",
         "dbt_name": "gitlab_dotcom",
         "env_vars": {"HOURS": "13"},
@@ -119,6 +125,7 @@ config_dict = {
         "validation_schedule_interval": validation_schedule_interval,
     },
     "gitlab_profiler": {
+        "cloudsql_instance_name": None,
         "dag_name": "gitlab_profiler",
         "dbt_name": "none",
         "env_vars": {"DAYS": "3"},
@@ -134,15 +141,45 @@ config_dict = {
         "task_name": "gitlab-profiler",
         "validation_schedule_interval": validation_schedule_interval,
     },
+    "gitlab_ops": {
+        "cloudsql_instance_name": "ops-db-restore"
+        "dag_name": "gitlab_ops",
+        "dbt_name": "none",
+        "env_vars": {"HOURS": "13"},
+        "extract_schedule_interval": "0 */6 * * *",
+        "secrets": [
+            GITLAB_OPS_DB_USER,
+            GITLAB_OPS_DB_PASS,
+            GITLAB_OPS_DB_HOST,
+            GITLAB_OPS_DB_NAME,
+        ],
+        "start_date": datetime(2019, 5, 30),
+        "sync_schedule_interval": "0 2 */1 * *",
+        "task_name": "gitlab-ops",
+        "validation_schedule_interval": validation_schedule_interval,
+    }
 }
 
-
-def generate_cmd(dag_name, operation):
+def use_cloudsql_proxy(instance_name, dag_name, operation)
     return f"""
         {clone_repo_cmd} &&
-        cd analytics/extract/postgres_pipeline/postgres_pipeline/ &&
-        python main.py tap ../manifests/{dag_name}_db_manifest.yaml {operation}
+        cd analytics/orchestration &&
+        python ci_helpers.py use_proxy --instance_name {instance_name} --command " \
+            python ../extract/postgres_pipeline/postgres_pipeline/main.py tap  \
+            ../extract/postgres_pipeline/manifests/{dag_name}_db_manifest.yaml {operation}
+        "
     """
+
+def generate_cmd(cloudsql_instance_name, dag_name, operation):
+    if cloudsql_instance_name is None:
+        return f"""
+            {clone_repo_cmd} &&
+            cd analytics/extract/postgres_pipeline/postgres_pipeline/ &&
+            python main.py tap ../manifests/{dag_name}_db_manifest.yaml {operation}
+        """
+    else:
+        return use_cloudsql_proxy(cloudsql_instance_name, dag_name, operation)
+        
 
 
 def extract_manifest(file_path):
@@ -288,7 +325,7 @@ for source_name, config in config_dict.items():
             )
 
             incremental_cmd = generate_cmd(
-                config["dag_name"], f"--load_type incremental --load_only_table {table}"
+                config["cloudsql_instance_name"], config["dag_name"], f"--load_type incremental --load_only_table {table}"
             )
 
             incremental_extract = KubernetesPodOperator(
@@ -358,7 +395,7 @@ for source_name, config in config_dict.items():
                 )
 
                 sync_cmd = generate_cmd(
-                    config["dag_name"], f"--load_type sync --load_only_table {table}"
+                    config["cloudsql_instance_name"], config["dag_name"], f"--load_type sync --load_only_table {table}"
                 )
                 sync_extract = KubernetesPodOperator(
                     **gitlab_defaults,
@@ -390,7 +427,7 @@ for source_name, config in config_dict.items():
 
                 # SCD Task
                 scd_cmd = generate_cmd(
-                    config["dag_name"], f"--load_type scd --load_only_table {table}"
+                    config["cloudsql_instance_name"], config["dag_name"], f"--load_type scd --load_only_table {table}"
                 )
 
                 scd_extract = KubernetesPodOperator(
@@ -441,7 +478,7 @@ for source_name, config in config_dict.items():
         for table in table_list:
             # Validate Task
             validate_cmd = generate_cmd(
-                config["dag_name"], f"--load_type validate --load_only_table {table}"
+                config["cloudsql_instance_name"], config["dag_name"], f"--load_type validate --load_only_table {table}"
             )
             validate_ids = KubernetesPodOperator(
                 **gitlab_defaults,
