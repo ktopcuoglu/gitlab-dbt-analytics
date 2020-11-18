@@ -24,4 +24,4 @@ file_format = (type = json)
 ```
 
 /confidential
-/label ~Snowflake ~Infrastructure  ~"Priority::3-Other" ~"Usage/Version Ping"
+/label ~Snowflake ~Infrastructure  ~"Priority::3-Other" ~"Usage/Version Ping" ~"Customer Success" 
