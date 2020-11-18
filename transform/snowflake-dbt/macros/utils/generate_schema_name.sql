@@ -4,7 +4,7 @@
 
     {%- set production_targets = production_targets() -%}
 
-    {%- set prefixed_schemas = ('staging') -%}
+    {%- set prefixed_schemas = ['staging'] -%}
 
     {#
         Definitions:
