@@ -167,6 +167,10 @@ division_sales_segment_stamped,
         fm_why_gitlab__c                            AS cp_why_gitlab,
         fm_why_now__c                               AS cp_why_now,
 
+        SA_Validated_Tech_Evaluation_Close_Statu__c AS sa_tech_evaluation_close_status,
+        SA_Validated_Tech_Evaluation_End_Date__c    AS sa_tech_evaluation_end_date,
+        SA_Validated_Tech_Evaluation_Start_Date__c  AS sa_tech_evaluation_start_date,
+
         -- metadata
         convert_timezone('America/Los_Angeles',convert_timezone('UTC',
                  CURRENT_TIMESTAMP()))              AS _last_dbt_run,
@@ -174,9 +178,7 @@ division_sales_segment_stamped,
                          CURRENT_DATE)              AS days_since_last_activity,
         isdeleted                                   AS is_deleted,
         lastactivitydate                            AS last_activity_date,
-        recordtypeid                                AS record_type_id
-
-
+        recordtypeid                                AS record_type_id,
 
       FROM source
   )
