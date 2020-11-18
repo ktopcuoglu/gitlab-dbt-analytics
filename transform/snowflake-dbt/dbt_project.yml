@@ -259,6 +259,7 @@ models:
         +materialized: table
         +schema: analytics
         sensitive:
+          +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
           +materialized: view
           +schema: sensitive
         source_view:
@@ -277,6 +278,7 @@ models:
 
       greenhouse:
         xf:
+          +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
           +schema: sensitive
           secure: true
         rpt:
@@ -361,6 +363,7 @@ models:
     # Legacy Structure
     # ------------------
     bamboohr:
+      +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
       +schema: sensitive
       secure: true
       base:
