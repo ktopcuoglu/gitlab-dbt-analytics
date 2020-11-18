@@ -73,6 +73,7 @@ sources:
       - name: release_blog_posts
       - name: rep_quotas
       - name: rep_quotas_full_ps_fy2020
+      - name: rfs_support_requests
       - name: sales_training_completion_dates
       - name: sales_funnel_targets_dates
       - name: sales_funnel_targets_kpi_values
