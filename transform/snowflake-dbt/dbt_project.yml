@@ -136,7 +136,6 @@ models:
           secure: true
 
       date:
-        +database: "{{ env_var('SNOWFLAKE_TRANSFORM_DATABASE') }}" # ANALYTICS
         +materialized: table
         +schema: date
 
@@ -371,7 +370,6 @@ models:
         +materialized: table
 
     covid19:
-      +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
       +schema: covid19
 
     poc:
