@@ -351,6 +351,7 @@ models:
         +materialized: table
 
       exports:
+        +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
         +materialized: view
         +schema: exports
 
@@ -370,6 +371,7 @@ models:
         +materialized: table
 
     covid19:
+      +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
       +schema: covid19
 
     poc:
@@ -392,6 +394,7 @@ models:
     # Trusted Data Framework
     # ------------------
     trusted_data_framework:
+      +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
       +materialized: table
       +schema: tdf
       secure: true
