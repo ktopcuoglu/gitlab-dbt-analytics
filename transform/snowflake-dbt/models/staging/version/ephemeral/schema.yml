@@ -13,3 +13,9 @@ models:
           - name: uuid
             tests:
                 - not_null
+          - name: edition
+            description: Indicates CE or EE with some additional granularity. Current values are EE, EE Free, EEU, EEP, and EES. Not sure what those mean this should be updated to add that.
+          - name: edition_type
+            description: The tier. Current values are CE, Premium, Ultimate, Starter, Core.
+          - name: main_edition
+            description: Either EE or CE.
