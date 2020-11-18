@@ -431,7 +431,7 @@ models:
     - name: fields_concatenated
       tests:
       - not_null
-- name: sheetload_sales_funnel_targets_matrix
+- name: sheetload_sales_funnel_targets_matrix_source
   description: Sales funnel target matrix source data
   columns:
     - name: kpi_name
