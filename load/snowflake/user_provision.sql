@@ -35,6 +35,8 @@ set prod_db = (select $username || '_PROD');
 set prep_db = (select $username || '_PREP');
 set analytics_db = (select $username || '_ANALYTICS');
 
+user role sysadmin;
+
 CREATE DATABASE identifier($prod_db);
 GRANT OWNERSHIP ON DATABASE identifier($prod_db) to role identifier($username);
 GRANT ALL PRIVILEGES ON DATABASE identifier($prod_db) to role identifier($username);

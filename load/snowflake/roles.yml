@@ -231,10 +231,6 @@ roles:
             - snapshots
             - snowflake_db
             - static
-        privileges:
-            databases:
-                write:
-                    - analytics
                     
     - analyst_engineering:
         warehouses:
@@ -260,10 +256,6 @@ roles:
             - zendesk
             - zendesk_community_relations
             - zuora
-        privileges:
-            databases:
-                write:
-                    - analytics
 
     - analyst_growth:
         warehouses:
@@ -296,8 +288,6 @@ roles:
         privileges:
             databases:
                 read:
-                    - analytics
-                write:
                     - analytics
             schemas:
                 read:
@@ -337,7 +327,6 @@ roles:
                 read:
                     - raw
                 write:
-                    - analytics
                     - raw
             schemas:
                 read:
@@ -367,10 +356,6 @@ roles:
             - zendesk
             - zendesk_community_relations
             - zuora
-        privileges:
-            databases:
-                write:
-                    - analytics
 
     - analyst_people:
         warehouses:
@@ -397,10 +382,6 @@ roles:
             - zendesk
             - zendesk_community_relations
             - zuora
-        privileges:
-            databases:
-                write:
-                    - analytics
 
     - analyst_sales:
         warehouses:
@@ -420,10 +401,6 @@ roles:
             - snowflake_db
             - version_db
             - zuora
-        privileges:
-            databases:
-                write:
-                    - analytics
 
     - data_manager:
         warehouses:
@@ -456,10 +433,6 @@ roles:
             - zendesk
             - zendesk_community_relations
             - zuora
-        privileges:
-            databases:
-                write:
-                    - analytics
 
     - decisive_data:
         warehouses:
@@ -470,10 +443,6 @@ roles:
             - snowflake_db
             - version_db
             - zuora
-        privileges:
-            databases:
-                write:
-                    - analytics
 
     - engineer:
         member_of:
@@ -597,10 +566,6 @@ roles:
             - greenhouse
             - sheetload
             - snapshots
-        privileges:
-            databases:
-                write:
-                    - analytics
 
     - product_manager:
         warehouses:
@@ -623,8 +588,6 @@ roles:
         privileges:
             databases:
                 read:
-                    - analytics
-                write:
                     - analytics
             schemas:
                 read:
