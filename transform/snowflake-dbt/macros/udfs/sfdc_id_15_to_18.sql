@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION {{target.schema}}.id15to18("input_id" string)
 
 {%- else -%}
 
-CREATE OR REPLACE FUNCTION "{{ target.database | trim }}_ANALYTICS".{{target.schema}}.id15to18("input_id" string)
+CREATE OR REPLACE FUNCTION "{{ target.database | trim }}_PREP".{{target.schema}}.id15to18("input_id" string)
 
 {% endif %}
   RETURNS string

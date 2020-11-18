@@ -85,13 +85,14 @@ vars:
 # Model Configs
 # ==================
 models:
-  +database: "{{ env_var('SNOWFLAKE_TRANSFORM_DATABASE') }}" # ANALYTICS
+  +database: "{{ env_var('SNOWFLAKE_TRANSFORM_DATABASE') }}" # ANALYTICS, redundant, but good to be explicit
   +schema: analytics  # Top level override since profiles defaults to PREP
 
   # ------------------
   # Snowplow Package https://hub.getdbt.com/fishtown-analytics/snowplow/latest/
   # ------------------
   snowplow:
+    +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
     +schema: "snowplow_{{ var('year', run_started_at.strftime('%Y')) }}_{{ var('month', run_started_at.strftime('%m')) }}"
     +post-hook:
       - "grant usage on schema {{this.schema}} to role snowplow"

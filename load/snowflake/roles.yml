@@ -840,14 +840,15 @@ roles:
             databases:
                 read:
                     - analytics
+                    - prep
             schemas:
                 read:
                     - analytics.analytics_sensitive
-                    - analytics.customers
+                    - prep.customers
             tables:
                 read:
                     - analytics.analytics_sensitive.customers_db_customers_pii
-                    - analytics.customers.*
+                    - prep.customers.*
 
     - common:
         privileges:
