@@ -15,6 +15,7 @@ WITH data AS (
         SELECT 
           uuid                          AS instance_id, 
           id                            AS ping_id,
+          host_id,
           created_at,
           path                          AS metric_path, 
           value                         AS metric_value
@@ -35,6 +36,7 @@ WITH data AS (
 SELECT 
   flattened.instance_id,
   flattened.ping_id,
+  flattened.host_id,
   created_at,
   metrics.*, 
   flattened.metric_value
