@@ -23,6 +23,8 @@ from kube_secrets import (
     CUSTOMERS_DB_NAME,
     CUSTOMERS_DB_PASS,
     CUSTOMERS_DB_USER,
+    GCP_PROJECT,
+    GCP_REGION,
     GCP_SERVICE_CREDS,
     GIT_DATA_TESTS_CONFIG,
     GIT_DATA_TESTS_PRIVATE_KEY,
@@ -142,12 +144,14 @@ config_dict = {
         "validation_schedule_interval": validation_schedule_interval,
     },
     "gitlab_ops": {
-        "cloudsql_instance_name": "ops-db-restore"
+        "cloudsql_instance_name": "ops-db-restore",
         "dag_name": "gitlab_ops",
         "dbt_name": "none",
         "env_vars": {"HOURS": "13"},
         "extract_schedule_interval": "0 */6 * * *",
         "secrets": [
+            GCP_PROJECT,
+            GCP_REGION,
             GITLAB_OPS_DB_USER,
             GITLAB_OPS_DB_PASS,
             GITLAB_OPS_DB_HOST,
@@ -160,7 +164,7 @@ config_dict = {
     }
 }
 
-def use_cloudsql_proxy(instance_name, dag_name, operation)
+def use_cloudsql_proxy(instance_name, dag_name, operation):
     return f"""
         {clone_repo_cmd} &&
         cd analytics/orchestration &&
