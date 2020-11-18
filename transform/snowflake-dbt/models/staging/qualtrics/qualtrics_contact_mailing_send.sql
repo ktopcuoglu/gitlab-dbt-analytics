@@ -1,6 +1,6 @@
 {{ config({
     "schema": "sensitive",
-    "database": "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}",
+    "database": "env_var('SNOWFLAKE_PREP_DATABASE')",
     })
 }}
 WITH qualtrics_mailing_contacts AS (
