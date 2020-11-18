@@ -87,7 +87,6 @@ WITH dim_billing_accounts AS (
       dim_crm_accounts.ultimate_parent_industry,
       dim_crm_accounts.ultimate_parent_account_owner_team,
       dim_crm_accounts.ultimate_parent_territory,
-      dim_crm_accounts.is_reseller,
 
       --subscription info
       dim_subscriptions_snapshots.subscription_name,
@@ -125,5 +124,3 @@ WITH dim_billing_accounts AS (
 
 SELECT *
 FROM final
-
-
