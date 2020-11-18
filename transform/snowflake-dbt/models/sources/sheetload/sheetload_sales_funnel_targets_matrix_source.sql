@@ -6,13 +6,13 @@ WITH source AS (
 ), renamed AS (
 
     SELECT
-      "KPI_Name"::VARCHAR                                   AS kpi_name,
-      "Month"::VARCHAR                                      AS month,
-      "Sales_Segment"::VARCHAR                              AS sales_segment,
-      "Opportunity_Source"::VARCHAR                         AS opportunity_source,
-      "Account_Region"::VARCHAR                             AS account_Region,
-      "Allocated_Target"::NUMBER                            AS allocated_target,
-      "KPI_Total"::NUMBER                                   AS kpi_total,
+      "kpi_name"::VARCHAR                                   AS kpi_name,
+      "month"::VARCHAR                                      AS month,
+      "sales_segment"::VARCHAR                              AS sales_segment,
+      "opportunity_source"::VARCHAR                         AS opportunity_source,
+      "account_region"::VARCHAR                             AS account_region,
+      "allocated_target"::NUMBER                            AS allocated_target,
+      "kpi_total"::NUMBER                                   AS kpi_total,
       TO_TIMESTAMP(TO_NUMERIC("_UPDATED_AT"))::TIMESTAMP    AS last_updated_at
     FROM source
 
