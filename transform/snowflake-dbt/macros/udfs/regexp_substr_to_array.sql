@@ -9,7 +9,7 @@
 {% for db in production_databases %}
     {%- if target.name in production_targets -%}
 
-    CREATE OR REPLACE FUNCTION {{ db | trim }}.{{target.schema}}.regexp_to_array("input_text" string,
+    CREATE OR REPLACE FUNCTION "{{ db | trim }}".{{target.schema}}.regexp_to_array("input_text" string,
                                                                 "regex_text" STRING)
 
     {%- else -%}
