@@ -214,6 +214,9 @@ def dbt_tasks(dbt_name, dbt_task_identifier):
         arguments=[freshness_cmd],
     )
 
+    if dbt_name == "none":
+        return freshness, None, None, None, None
+
     # Test raw source
     test_cmd = f"""
         {dbt_install_deps_nosha_cmd} &&
@@ -312,8 +315,8 @@ for source_name, config in config_dict.items():
         freshness, test, snapshot, model_run, model_test = dbt_tasks(
             dbt_name, dbt_task_identifier
         )
-
-        freshness >> test >> snapshot >> model_run >> model_test
+        if test is not None:
+            freshness >> test >> snapshot >> model_run >> model_test
 
         # Actual PGP extract
         file_path = f"analytics/extract/postgres_pipeline/manifests/{config['dag_name']}_db_manifest.yaml"
@@ -388,7 +391,8 @@ for source_name, config in config_dict.items():
             dbt_name, dbt_task_identifier
         )
 
-        freshness >> test >> snapshot >> model_run >> model_test
+        if test is not None:
+            freshness >> test >> snapshot >> model_run >> model_test
 
         # PGP Extract
         file_path = f"analytics/extract/postgres_pipeline/manifests/{config['dag_name']}_db_manifest.yaml"
