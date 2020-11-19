@@ -21,7 +21,6 @@ WITH bamboohr_compensation AS (
            ELSE LAG(compensation_currency) OVER (PARTITION BY employee_id ORDER BY compensation_update_id) END AS prior_compensation_currency,
       ROW_NUMBER() OVER (PARTITION BY employee_id, effective_date ORDER BY compensation_update_id)             AS rank_compensation_change_effective_date    
     FROM bamboohr_compensation
-    WHERE compensation_update_id != 20263 ---incorrectly labeled 
 
 ), pay_frequency AS (
 
@@ -60,9 +59,12 @@ WITH bamboohr_compensation AS (
 
     SELECT 
       employee_directory.employee_number,
+      employee_directory.full_name,
       bamboohr_compensation_changes.*,
       employee_directory.division_mapped_current                                    AS division,
+      employee_directory.division_grouping,
       employee_directory.department_modified                                        AS department,
+      employee_directory.department_grouping,
       employee_directory.job_title,
       CASE 
         WHEN bamboohr_compensation_changes.employee_id IN (40955, 40647, 41234, 40985, 
@@ -104,8 +106,11 @@ WITH bamboohr_compensation AS (
       compensation_update_id,
       employee_number,
       employee_id,
+      full_name,
       division,
+      division_grouping,
       department,
+      department_grouping,
       job_title,
       compensation_change_reason,
       effective_date,
@@ -132,8 +137,11 @@ WITH bamboohr_compensation AS (
       DATE_TRUNC(month, effective_date)                                                               AS promotion_month,
       employee_number,
       employee_id,
+      full_name,
       division,
+      division_grouping,
       department,
+      department_grouping,
       job_title,
       variable_pay,
       new_compensation_value * pay_frequency * currency_conversion_factor                             AS new_compensation_value_usd,
@@ -144,9 +152,11 @@ WITH bamboohr_compensation AS (
       COALESCE(ote_usd,0)                                                                             AS ote_usd,
       COALESCE(prior_ote_usd,0)                                                                       AS prior_ote_usd,
       COALESCE(ote_change,0)                                                                          AS ote_change,
-      COALESCE(ote_change,0) + change_in_comp_usd                                                     AS total_change_in_comp,
-      ROUND((COALESCE(ote_change,0) + change_in_comp_usd)/
-        (prior_compensation_value_usd+ COALESCE(prior_ote_usd,0)),2)                                  AS percent_change_in_comp
+      IFF(compensation_update_id = 20263, NULL,  ---incorrectly labeled 
+        COALESCE(ote_change,0) + change_in_comp_usd)                                                  AS total_change_in_comp,
+      IFF(compensation_update_id = 20263, NULL,
+        ROUND((COALESCE(ote_change,0) + change_in_comp_usd)/
+        (prior_compensation_value_usd+ COALESCE(prior_ote_usd,0)),2))                                 AS percent_change_in_comp
     FROM intermediate
     WHERE compensation_change_reason = 'Promotion'
       AND job_title NOT LIKE '%VP%'

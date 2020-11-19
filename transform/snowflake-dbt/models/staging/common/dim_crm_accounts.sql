@@ -1,4 +1,9 @@
-WITH sfdc_account AS (
+WITH map_merged_crm_accounts AS (
+
+    SELECT *
+    FROM {{ ref('map_merged_crm_accounts') }}
+
+), sfdc_account AS (
 
     SELECT *
     FROM {{ ref('sfdc_account_source') }}
@@ -22,7 +27,11 @@ WITH sfdc_account AS (
       billing_country,
       df_industry,
       account_owner_team,
-      tsp_territory
+      tsp_territory,
+      tsp_region,
+      tsp_sub_region,
+      tsp_area,
+      gtm_strategy
     FROM sfdc_account
     WHERE account_id = ultimate_parent_account_id
 
@@ -56,6 +65,10 @@ WITH sfdc_account AS (
     ultimate_parent_account.df_industry           AS ultimate_parent_industry,
     ultimate_parent_account.account_owner_team    AS ultimate_parent_account_owner_team,
     ultimate_parent_account.tsp_territory         AS ultimate_parent_territory,
+    ultimate_parent_account.tsp_region            AS ultimate_parent_tsp_region,
+    ultimate_parent_account.tsp_sub_region        AS ultimate_parent_tsp_sub_region,
+    ultimate_parent_account.tsp_area              AS ultimate_parent_tsp_area,
+    ultimate_parent_account.gtm_strategy          AS ultimate_parent_gtm_strategy,
     sfdc_account.record_type_id                   AS record_type_id,
     sfdc_account.federal_account                  AS federal_account,
     sfdc_account.gitlab_com_user,
@@ -65,17 +78,13 @@ WITH sfdc_account AS (
     sfdc_account.gtm_strategy,
     sfdc_users.name                               AS technical_account_manager,
     sfdc_account.is_deleted                       AS is_deleted,
-    CASE
-      WHEN sfdc_account.is_deleted
-        THEN master_records.sfdc_master_record_id
-      ELSE NULL
-    END                                           AS merged_to_account_id,
+    map_merged_crm_accounts.dim_crm_account_id    AS merged_to_account_id,
     IFF(sfdc_record_type.record_type_label != 'Channel'
         AND sfdc_account.account_type NOT IN ('Unofficial Reseller','Authorized Reseller','Prospective Partner','Partner','Former Reseller','Reseller','Prospective Reseller'),
         FALSE, TRUE)                              AS is_reseller
   FROM sfdc_account
-  LEFT JOIN master_records
-    ON sfdc_account.account_id = master_records.account_id
+  LEFT JOIN map_merged_crm_accounts
+    ON sfdc_account.account_id = map_merged_crm_accounts.sfdc_account_id
   LEFT JOIN ultimate_parent_account
     ON ultimate_parent_account.account_id = sfdc_account.ultimate_parent_account_id
   LEFT OUTER JOIN sfdc_users
@@ -88,7 +97,7 @@ WITH sfdc_account AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@msendal",
-    updated_by="@jjstark",
+    updated_by="@iweeks",
     created_date="2020-06-01",
-    updated_date="2020-10-15"
+    updated_date="2020-11-16"
 ) }}
