@@ -7,7 +7,6 @@ WITH source AS (
 
     SELECT
       id                            AS task_id,
-      accountid                     AS account_id,
 
       --keys
       accountid                     AS account_id,
