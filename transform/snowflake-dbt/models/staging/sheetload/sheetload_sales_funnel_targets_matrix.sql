@@ -10,7 +10,9 @@ WITH source AS (
       month,
       sales_segment,
       opportunity_source,
-      account_Region,
+      order_type,
+      region,
+      area,
       allocated_target,
       kpi_total
     FROM source
