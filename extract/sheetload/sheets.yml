@@ -216,7 +216,6 @@ sheets:
       - sales_funnel_targets_sales_segment
       - sales_funnel_targets_opportunity
       - sales_funnel_targets_region
-      - sales_funnel_targets_area
   - name: data_certifications
     description: This identifies team members who have taken the level 2 certifications and have passed.
     owner: '@pluthra'
