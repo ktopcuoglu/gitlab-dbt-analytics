@@ -22,10 +22,10 @@ models:
           - name: requester_id
             tests:
               - not_null
-              - dbt_utils.relationships_where::
-                 to: ref('zendesk_users_source')
-                 field: user_id
-                 from_condition: "ticket_id not in ('177203','177205')" #https://gitlab.com/gitlab-data/analytics/-/issues/6720
+              # - dbt_utils.relationships_where::
+              #    to: ref('zendesk_users_source')
+              #    field: user_id
+              #    from_condition: "ticket_id not in ('177203','177205')" #https://gitlab.com/gitlab-data/analytics/-/issues/6720
           - name: submitter_id
             tests:
               - not_null

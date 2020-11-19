@@ -3,7 +3,7 @@ WITH source AS (
     SELECT *
     FROM {{ source('sheetload', 'sales_funnel_targets_dates') }}
 
-), renamed (
+), renamed AS (
 
     SELECT
       "Concat"::VARCHAR                                     AS fields_concatenated,
