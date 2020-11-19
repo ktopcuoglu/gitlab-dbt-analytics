@@ -4,10 +4,13 @@
     })
 }}
 
-WITH source AS (
+WITH initial_source AS (
 
     SELECT *
     FROM {{ref("comp_band_loc_factor_base")}}
+    ---this data was coming from the sheetload prior to the move to compass
+
+),     
 
 ), renamed AS (
 
