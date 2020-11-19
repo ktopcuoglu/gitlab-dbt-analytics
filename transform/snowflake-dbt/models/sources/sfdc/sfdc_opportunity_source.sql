@@ -178,7 +178,7 @@ division_sales_segment_stamped,
                          CURRENT_DATE)              AS days_since_last_activity,
         isdeleted                                   AS is_deleted,
         lastactivitydate                            AS last_activity_date,
-        recordtypeid                                AS record_type_id,
+        recordtypeid                                AS record_type_id
 
       FROM source
   )
