@@ -1,0 +1,38 @@
+connection_info:
+  user: GITLAB_OPS_DB_USER
+  pass: GITLAB_OPS_DB_PASS
+  host: GITLAB_OPS_DB_HOST
+  database: GITLAB_OPS_DB_NAME
+  port: PG_PORT
+tables:
+  ci_pipelines:
+    import_db: GITLAB_OPS_DB
+    import_query: >
+      SELECT id
+      , created_at
+      , updated_at
+      , ref
+      , tag
+      , yaml_errors
+      , committed_at
+      , project_id
+      , status
+      , started_at
+      , finished_at
+      , duration
+      , user_id
+      , lock_version
+      , auto_canceled_by_id
+      , pipeline_schedule_id
+      , source
+      , config_source
+      , protected
+      , failure_reason
+      , iid
+      , merge_request_id
+      FROM ci_pipelines
+      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
+        AND '{EXECUTION_DATE}'::timestamp
+    export_schema: 'gitlab_ops_net'
+    export_table: 'ci_pipelines'
+    export_table_primary_key: id
