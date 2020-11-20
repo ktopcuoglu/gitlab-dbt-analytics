@@ -22,13 +22,6 @@ WITH source AS (
 
 ), department_division_mapping AS (
 
-    {# SELECT DISTINCT 
-      department, 
-      department_modified,
-      division_mapped_current AS division
-    FROM "ANALYTICS"."ANALYTICS_STAGING"."BAMBOOHR_JOB_INFO_CURRENT_DIVISION_BASE"
-    WHERE DEPARTMENT IS NOT NULL #}
-
     SELECT DISTINCT 
       department, 
       department_modified,

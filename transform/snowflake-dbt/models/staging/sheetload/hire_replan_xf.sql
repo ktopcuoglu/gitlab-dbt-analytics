@@ -51,17 +51,6 @@ WITH hire_replan AS (
   
 ), department_division_mapping AS (
 
-    {# SELECT 
-      unpivoted.month_date,
-      unpivoted.department,
-      employee_directory.division
-    FROM unpivoted
-    LEFT JOIN employee_directory
-      ON unpivoted.month_date = employee_directory.date_actual
-      AND unpivoted.department = employee_directory.department
-    WHERE employment_status ='Active'
-    GROUP BY 1,2,3 #}
-  
     SELECT DISTINCT 
       department, 
       department_modified,
