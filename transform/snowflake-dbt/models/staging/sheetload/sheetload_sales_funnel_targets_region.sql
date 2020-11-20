@@ -1,13 +1,13 @@
 WITH source AS (
 
     SELECT *
-    FROM {{ ref('sheetload_sales_funnel_targets_account_region_source') }}
+    FROM {{ ref('sheetload_sales_funnel_targets_region_source') }}
 
 ), final AS (
 
     SELECT
       fields_concatenated,
-      account_region,
+      region,
       kpi_name,
       target,
       percent_curve

@@ -15,6 +15,7 @@ WITH source AS (
 
 )
 
+
 {{ dbt_audit(
     cte_ref="final",
     created_by="@paul_armstrong",

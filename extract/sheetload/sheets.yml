@@ -215,9 +215,7 @@ sheets:
       - sales_funnel_targets_kpi_values
       - sales_funnel_targets_sales_segment
       - sales_funnel_targets_opportunity
-      - sales_funnel_targets_purchase_channel
-      - sales_funnel_targets_account_region
-      - sales_funnel_targets_sales_territory
+      - sales_funnel_targets_region
       - sales_funnel_targets_matrix
   - name: data_certifications
     description: This identifies team members who have taken the level 2 certifications and have passed.
