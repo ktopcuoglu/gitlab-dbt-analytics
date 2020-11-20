@@ -79,6 +79,7 @@ sources:
       - name: sales_funnel_targets_kpi_values
       - name: sales_funnel_targets_sales_segment
       - name: sales_funnel_targets_opportunity
+      - name: sales_funnel_targets_matrix
       - name: sales_funnel_targets_region
       - name: territory_mapping
       - name: scalable_employment_values

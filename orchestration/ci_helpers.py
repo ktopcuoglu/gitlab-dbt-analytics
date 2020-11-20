@@ -138,13 +138,14 @@ def async_run(command: str, instance: str) -> None:
             info(status)
 
 
-def use_cloudsqlproxy(command: str) -> None:
+def use_cloudsqlproxy(command: str, instance_name: str = None) -> None:
     """
     Execute a command while running the cloud sql proxy in the background.
     """
 
     # Get the instance name and start the proxy
-    instance_name, *_ = set_sql_instance()
+    if instance_name is None:
+        instance_name, *_ = set_sql_instance()
     sql_proxy_command = "cloud_sql_proxy -instances={}:{}:{}=tcp:5432 -credential_file=gcp_credentials.json -verbose=False"
     sql_proxy = Popen(
         sql_proxy_command.format(env["GCP_PROJECT"], env["GCP_REGION"], instance_name),
