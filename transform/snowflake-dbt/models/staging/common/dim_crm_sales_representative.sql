@@ -6,12 +6,12 @@
 WITH sfdc_users AS (
 
     SELECT *
-    FROM "ANALYTICS"."SFDC"."SFDC_USERS_SOURCE"
+    FROM {{ ref('sfdc_users')}}
 
 ), sfdc_user_roles AS (
 
     SELECT *
-    FROM "ANALYTICS"."SFDC"."SFDC_USER_ROLES_SOURCE"
+    FROM {{ ref('sfdc_user_roles')}}
 
 ), joined AS (
 
