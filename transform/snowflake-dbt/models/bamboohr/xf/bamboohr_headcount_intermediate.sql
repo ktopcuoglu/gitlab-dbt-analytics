@@ -215,7 +215,7 @@ WITH dates AS (
    WHERE date_actual IS NOT NULL
 
 
-{# ), aggregated AS (
+), aggregated AS (
 
     SELECT
       DATE_TRUNC(month,start_date)      AS month_date,
@@ -290,9 +290,4 @@ WITH dates AS (
 SELECT *,
   IFF(breakout_type = 'eeoc_breakout' AND eeoc_field_name = 'no_eeoc', 'kpi_breakout', breakout_type) AS breakout_type_modified
 FROM aggregated
- #}
 
-)
-
-SELECT * 
-FROM intermediate
