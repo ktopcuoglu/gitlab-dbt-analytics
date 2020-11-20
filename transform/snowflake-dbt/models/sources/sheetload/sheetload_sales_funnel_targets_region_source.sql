@@ -7,7 +7,7 @@ WITH source AS (
 
     SELECT
       "Concat"::VARCHAR                                     AS fields_concatenated,
-      "Account_Region"::VARCHAR                             AS account_region,
+      "Region"::VARCHAR                                     AS region,
       "KPI_Name"::VARCHAR                                   AS kpi_name,
       "Target"::VARCHAR                                     AS target,
       "Percent_Curve"::VARCHAR                              AS percent_curve,
