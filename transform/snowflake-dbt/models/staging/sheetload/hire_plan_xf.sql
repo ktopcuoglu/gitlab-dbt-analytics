@@ -22,15 +22,19 @@ WITH source AS (
 
 ), department_division_mapping AS (
 
-    SELECT 
-      source.month_date,
-      source.department,
-      employee_directory.division
-    FROM source
-    LEFT JOIN employee_directory
-      ON DATE_TRUNC(month,source.month_date) = DATE_TRUNC(month,employee_directory.date_actual)
-      AND employee_directory.department = source.department
-    GROUP BY 1,2,3
+    {# SELECT DISTINCT 
+      department, 
+      department_modified,
+      division_mapped_current AS division
+    FROM "ANALYTICS"."ANALYTICS_STAGING"."BAMBOOHR_JOB_INFO_CURRENT_DIVISION_BASE"
+    WHERE DEPARTMENT IS NOT NULL #}
+
+    SELECT DISTINCT 
+      department, 
+      department_modified,
+      division_mapped_current AS division
+    FROM "ANALYTICS"."ANALYTICS_STAGING"."BAMBOOHR_JOB_INFO_CURRENT_DIVISION_BASE"
+    WHERE DEPARTMENT IS NOT NULL
       
 ), all_company AS (
 
@@ -58,7 +62,7 @@ WITH source AS (
     FROM source
     LEFT JOIN department_division_mapping 
       ON department_division_mapping.department = source.department
-      AND department_division_mapping.month_date = source.month_date
+      {# AND department_division_mapping.month_date = source.month_date #}
     GROUP BY 1,2,3,4
 
 ), department_level AS (
@@ -75,7 +79,7 @@ WITH source AS (
     FROM source
     LEFT JOIN department_division_mapping 
       ON department_division_mapping.department = source.department
-      AND department_division_mapping.month_date = source.month_date
+      {# AND department_division_mapping.month_date = source.month_date #}
     GROUP BY 1,2,3,4
 
 )
