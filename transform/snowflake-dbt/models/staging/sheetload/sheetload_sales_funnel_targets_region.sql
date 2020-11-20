@@ -7,7 +7,7 @@ WITH source AS (
 
     SELECT
       fields_concatenated,
-      account_region,
+      region,
       kpi_name,
       target,
       percent_curve

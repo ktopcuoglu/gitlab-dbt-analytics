@@ -8,7 +8,7 @@ WITH source AS (
     SELECT
       fields_concatenated,
       kpi_name,
-      sales_funnel_target_date,
+      sales_funnel_target_quarter,
       target,
       percent_curve
     FROM source
