@@ -100,6 +100,12 @@ A fact table for salesforce opportunities
 
 {% enddocs %}
 
+{% docs fct_crm_opportunity_contact_role_bridge %}
+
+A fact table bridging opportunities with contacts. One opportunity can have multiple contacts and one can be flagged as the primary.
+
+{% enddocs %}
+
 {% docs fct_invoice_items %}
 Fact table providing invoice line item details.
 

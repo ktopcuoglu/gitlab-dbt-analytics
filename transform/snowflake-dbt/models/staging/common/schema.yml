@@ -662,6 +662,15 @@ models:
       - name: is_sdr_sao
         description: a boolean field created in the warehouse to flag Sales Accepted Opportunities from [Sales Development Reps](https://about.gitlab.com/handbook/marketing/revenue-marketing/sdr/). This field should be deprecated once sales accepted is in a more stable and consistent state in salesforce.
 
+  - name: fct_crm_opportunity_contact_role_bridge
+    description: '{{ doc("fct_crm_opportunity_contact_role_bridge") }}'
+    columns:
+      - name: opportunity_contact_role_id
+        description: A primary key for the contact added to an opportunity.
+        tests:
+          - unique
+          - not_null
+
   - name: fct_mrr
     description: One row represents Monthly Recurring Revenue per one month, subscription_id, product_details_id
     columns:
