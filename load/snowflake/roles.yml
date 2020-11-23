@@ -2224,8 +2224,10 @@ roles:
     - pluthra:
         member_of:
             - analyst_people
-            - customers_db
             - bamboohr_raw
+            - customers_db
+            - qualtrics
+            - qualtrics_sensitive
         warehouses:
             - analyst_xs
         owns:

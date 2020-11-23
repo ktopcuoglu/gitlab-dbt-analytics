@@ -14,8 +14,13 @@ Model for all dimensional opportunity columns from salesforce opportunity object
 
 {% enddocs %}
 
+{% docs dim_crm_person %}
+Dimension that combines demographic data from salesforce leads and salesforce contacts. They are combined with a union and a filter on leads excluding converted leads and leads where there is a corresponding contact.
+
+{% enddocs %}
+
 {% docs dim_crm_persons %}
-Dimension that combines demographic data from salesforce leads and salesforce contacts. They are combined with a union and a filter on leads excluding converted leads and leads where there is a corresponding contact. 
+Dimension that combines demographic data from salesforce leads and salesforce contacts. They are combined with a union and a filter on leads excluding converted leads and leads where there is a corresponding contact.
 
 {% enddocs %}
 
@@ -74,6 +79,12 @@ Dimensional table representing both calendar year and fiscal year date details.
 The grain of the table is a calendar day.
 
 Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+{% enddocs %}
+
+{% docs fct_campaign %}
+
+Fact table representing marketing campaign details tracked in SFDC.
 
 {% enddocs %}
 
@@ -151,7 +162,7 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% docs dim_crm_sales_rep %}
 
-Dimension representing the associated sales rep from salesforce. Most often this will be the record owner, which is a ubiquitous field in salesforce. 
+Dimension representing the associated sales rep from salesforce. Most often this will be the record owner, which is a ubiquitous field in salesforce.
 
 {% enddocs %}
 
@@ -180,17 +191,17 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 {% enddocs %}
 
 {% docs dim_usage_pings %}
-Dimension that contains demographic data from usage ping data, including additional breaks out for product_tier, if it is from an internal instance, and replaces the ip_address hash with a location_id instead. 
+Dimension that contains demographic data from usage ping data, including additional breaks out for product_tier, if it is from an internal instance, and replaces the ip_address hash with a location_id instead.
 
-[Core represents both CE and EE](https://about.gitlab.com/handbook/marketing/product-marketing/tiers/#history-of-ce-and-ee-distributions). 
+[Core represents both CE and EE](https://about.gitlab.com/handbook/marketing/product-marketing/tiers/#history-of-ce-and-ee-distributions).
 
-Get started by exploring the [Product Geolocation Analysis](https://about.gitlab.com/handbook/business-ops/data-team/data-catalog/product-geolocation/) handbook page. 
+Get started by exploring the [Product Geolocation Analysis](https://about.gitlab.com/handbook/business-ops/data-team/data-catalog/product-geolocation/) handbook page.
 Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
 
 {% enddocs %}
 
 {% docs dim_instances %}
-Dimension that contains statistical data for instances from usage ping data 
+Dimension that contains statistical data for instances from usage ping data
 
 Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
 

@@ -97,6 +97,18 @@ models:
         tests:
           - unique
           - not_null
+  - name: dim_crm_person
+    description: '{{ doc("dim_crm_person") }}'
+    columns:
+      - name: crm_person_id
+        tests:
+          - not_null
+          - unique
+      - name: sfdc_record_id
+        tests:
+          - not_null
+          - unique
+
   - name: dim_crm_persons
     description: '{{ doc("dim_crm_persons") }}'
     columns:
@@ -260,33 +272,33 @@ models:
 
   - name: dim_instances
     description: '{{ doc("dim_instances") }}'
-    columns: 
+    columns:
       - name: uuid
-        description: Unique Identifier for GitLab Self-Managed Instances 
+        description: Unique Identifier for GitLab Self-Managed Instances
       - name: recorded_first_usage_ping_time_stamp
-        description: The first time a usage ping was sent from this instance and recorded in the Version Database 
+        description: The first time a usage ping was sent from this instance and recorded in the Version Database
       - name: recorded_most_recent_usage_ping_time_stamp
-        description: The most recent time a usage ping was sent from this instance and recorded in the Version Database 
+        description: The most recent time a usage ping was sent from this instance and recorded in the Version Database
       - name: recorded_minimum_instance_user_count
-        description: The minimum instance user count ever recorded from a usage ping for this instance 
+        description: The minimum instance user count ever recorded from a usage ping for this instance
       - name: recorded_maximum_instance_user_count
-        description: The maximum instance user count ever recorded from a usage ping for this instance 
+        description: The maximum instance user count ever recorded from a usage ping for this instance
       - name: recorded_total_usage_pings_sent
-        description: The total number of usage pings ever associated with the instance 
+        description: The total number of usage pings ever associated with the instance
       - name: recorded_total_countries
-        description: The total number of countries related to usage ping for this instance. This is derived from ip_address 
+        description: The total number of countries related to usage ping for this instance. This is derived from ip_address
       - name: recorded_total_license_count
-        description: The total number of licenses related to usage ping for this instance. 
+        description: The total number of licenses related to usage ping for this instance.
       - name: recorded_total_version_count
-        description: The total number of versions related to usage ping for this instance. 
+        description: The total number of versions related to usage ping for this instance.
       - name: recorded_total_edition_count
-        description: The total number of editions related to usage ping for this instance. 
+        description: The total number of editions related to usage ping for this instance.
       - name: recorded_total_hostname_count
-        description: The total number of hostname related to usage ping for this instance. 
+        description: The total number of hostname related to usage ping for this instance.
       - name: recorded_total_host_id_count
-        description: The total number of host_id related to usage ping for this instance. 
+        description: The total number of host_id related to usage ping for this instance.
       - name: recorded_total_installation_type_count
-        description: The total number of installation_type related to usage ping for this instance. 
+        description: The total number of installation_type related to usage ping for this instance.
 
   - name: dim_licenses
     description: '{{ doc("dim_licenses") }}'
@@ -472,6 +484,16 @@ models:
   - name: dim_subscriptions_valid_at
     description: Parameterized model to recreate dimension table representing subscription details as in Zuora at given date. Required variable valid_at is timezone sensitive
 
+  - name: fct_campaign
+    description: '{{ doc("fct_campaign") }}'
+    columns:
+      - name: dim_campaign_id
+        description: Unique identifier of a SFDC campaign.
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "common"]
+
   - name: fct_charges
     description: '{{ doc("fct_charges") }}'
     columns:
@@ -529,28 +551,28 @@ models:
 
   - name: dim_usage_pings
     description: '{{ doc("dim_usage_pings") }}'
-    columns: 
-      - name: uuid 
+    columns:
+      - name: uuid
         description: concatenate this field with host_id for a unique identifier for instances. See https://gitlab.com/gitlab-data/analytics/-/issues/6413#note_428426837. Business Process Issue - https://gitlab.com/gitlab-data/analytics/-/issues/6413#note_429177832 and https://gitlab.com/gitlab-data/analytics/-/issues/6560#note_428035384 and https://gitlab.com/gitlab-org/gitlab/-/merge_requests/44972
-      - name: host_id 
+      - name: host_id
         description: uuid concatenated with this field for a unique identifier for instances. See https://gitlab.com/gitlab-data/analytics/-/issues/6413#note_428426837. Business Process Issue - https://gitlab.com/gitlab-data/analytics/-/issues/6413#note_429177832
       - name: license_md5
         description: JOIN key to license_db_licenses (see - https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.license_db_licenses). Note - License is only for self-managed instances and not for namespaces. CE and EE free should not have licenses. Known issue with EE version 9-10 having null records https://gitlab.com/gitlab-data/analytics/-/issues/6560#note_431390413
       - name: installation_type
         description: segmentation for how instances are installed. See https://gitlab.com/gitlab-data/analytics/-/issues/6560#note_429097420 for how this field is populated and known data concerns, such as all the instances without installation_type seem to be between 9 and 10, which lines up with the date that installation_type was added to usage ping.
       - name: main_edition
-        description: segmentation for Edition. Values - CE, EE 
-      - name: product_tier 
+        description: segmentation for Edition. Values - CE, EE
+      - name: product_tier
         description: segmentation for Product Tier. Values - Core (CE, EE), Starter, Premium, Ultimate, NULL
       - name: main_edition_product_tier
-        description: segmentation for the product tier, including separate records for Core CE and Core EE 
+        description: segmentation for the product tier, including separate records for Core CE and Core EE
       - name: ping_source
-        description: segmentation for SaaS data (from the self-managed instance that hosts the SaaS GitLab.com website) and data sent from customer self-managed instances 
-      - name: is_internal 
-        description: this instance is used by the company or a GitLab team member 
-      - name: is_staging 
+        description: segmentation for SaaS data (from the self-managed instance that hosts the SaaS GitLab.com website) and data sent from customer self-managed instances
+      - name: is_internal
+        description: this instance is used by the company or a GitLab team member
+      - name: is_staging
         descrition: DRAFT - need to better identify instances used for staging environments
-      - name: location_id 
+      - name: location_id
         description: JOIN key for country information derived. See https://gitlab.com/gitlab-data/analytics/-/issues/6560#note_427936012
 
   - name: fct_charges_valid_at
