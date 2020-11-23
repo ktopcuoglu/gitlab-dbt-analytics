@@ -1,4 +1,7 @@
-{{ config(schema='common_mapping') }}
+{{ config({
+    "schema": "common_mapping"
+  })
+}}
 
 WITH RECURSIVE sfdc_account_source AS (
 
@@ -40,5 +43,10 @@ WITH RECURSIVE sfdc_account_source AS (
 
 )
 
-SELECT *
-FROM final
+{{ dbt_audit(
+    cte_ref="final",
+    created_by="@mcooperDD",
+    updated_by="@mcooperDD",
+    created_date="2020-11-23",
+    updated_date="2020-11-23",
+) }}
