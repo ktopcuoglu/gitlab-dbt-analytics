@@ -57,9 +57,9 @@ WITH sfdc_campaigns AS (
 )
 
 {{ dbt_audit(
-    cte_ref="final_campaigns"
-    created_by="@mcooperDD"
-    updated_by="@mcooperDD"
-    created_date="2020-11-19"
+    cte_ref="final_campaigns",
+    created_by="@mcooperDD",
+    updated_by="@mcooperDD",
+    created_date="2020-11-19",
     updated_date="2020-11-19"
 ) }}
