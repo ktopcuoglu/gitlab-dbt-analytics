@@ -82,6 +82,12 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
+{% docs fct_campaign %}
+
+Fact table representing marketing campaign details tracked in SFDC.
+
+{% enddocs %}
+
 {% docs fct_crm_lead_conversion %}
 
 A fact from the lead history and lead tables in Salesforce that has a record for every converted lead

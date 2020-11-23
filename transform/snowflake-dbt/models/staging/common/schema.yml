@@ -484,6 +484,16 @@ models:
   - name: dim_subscriptions_valid_at
     description: Parameterized model to recreate dimension table representing subscription details as in Zuora at given date. Required variable valid_at is timezone sensitive
 
+  - name: fct_campaign
+    description: '{{ doc("fct_campaign") }}'
+    columns:
+      - name: dim_campaign_id
+        description: Unique identifier of a SFDC campaign.
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "common"]
+
   - name: fct_charges
     description: '{{ doc("fct_charges") }}'
     columns:
