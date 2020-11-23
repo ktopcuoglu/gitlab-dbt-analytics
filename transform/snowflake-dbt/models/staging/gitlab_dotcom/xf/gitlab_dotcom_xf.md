@@ -228,7 +228,9 @@ XF model that joins the base model `gitlab_dotcom_saml_providers` to the `gitlab
 
 {% docs gitlab_dotcom_secure_stage_ci_jobs %}
 
-This table is meant to isolate all ci_build jobs used to create the AMAU calculation for secure stage as described in [this handbook page](https://about.gitlab.com/handbook/product/metrics/#stage-monthly-active-users-smau)
+This table is meant to isolate all ci_build jobs used to create the AMAU calculation for secure stage as described in [this handbook page](https://about.gitlab.com/handbook/product/metrics/#stage-monthly-active-users-smau).
+
+This table is populated to try to catch customized setups. It leverages tables gitlab_dotcom_ci_job_artifacts, gitlab_dotcom_projects_xf, and gitlab_dotcom_ci_builds.
 
 {% enddocs %}
 
