@@ -7,7 +7,7 @@ WITH sfdc_campaigns AS (
 
     SELECT *
     FROM {{ ref('sfdc_campaign_source') }}
-    WHERE is_deleted = 'FALSE'
+    WHERE NOT is_deleted
 
 ), final_campaigns AS (
 
