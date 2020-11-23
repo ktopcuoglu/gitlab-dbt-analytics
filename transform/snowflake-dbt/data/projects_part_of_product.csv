@@ -102,6 +102,7 @@ gitlab-org/security-products/codequality,5498087
 gitlab-org/ci-cd/codequality,17035255
 gitlab-org/ci-cd/accessibility,17166102
 gitlab-org/security-products/dast,9762266
+gitlab-org/security-products/analyzers/browserker,21351796
 gitlab-org/security-products/dependency-scanning,5779760
 gitlab-org/security-products/gemnasium-db,12006272
 gitlab-org/security-products/gemnasium/api,5777179
@@ -139,6 +140,7 @@ gitlab-org/security-products/analyzers/api-fuzzing,19617580
 gitlab-org/security-products/analyzers/api-fuzzing-src,5964710
 gitlab-org/security-products/analyzers/gitlab-cov-fuzz,19413101
 gitlab-org/security-products/analyzers/gitlab-cov-fuzz-src,19413012
+gitlab-org/security-products/analyzers/fuzzers/javafuzz,19871573
 gitlab-org/security-products/security-report-schemas,16683102
 gitlab-org/security-products/tests/apex-salesforce,13348998
 gitlab-org/security-products/tests/c,5727416
