@@ -37,7 +37,7 @@ query-comment:
 on-run-start:
     - "{{ resume_warehouse(var('resume_warehouse', false), var('warehouse_name')) }}"
     - "{{ create_udfs() }}"
-    - "create schema if not exists {{ env_var('SNOWFLAKE_PREP_DATABASE') }}.snowplow_{{ var('year', run_started_at.strftime('%Y')) }}_{{ var('month', run_started_at.strftime('%m')) }}"
+    - "create schema if not exists \"{{ env_var('SNOWFLAKE_PREP_DATABASE') }}\".snowplow_{{ var('year', run_started_at.strftime('%Y')) }}_{{ var('month', run_started_at.strftime('%m')) }}"
 
 on-run-end:
     - "{{ grant_usage_to_schemas() }}"
@@ -96,9 +96,6 @@ models:
   snowplow:
     +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
     +schema: "snowplow_{{ var('year', run_started_at.strftime('%Y')) }}_{{ var('month', run_started_at.strftime('%m')) }}"
-    +post-hook:
-      - "grant usage on schema {{this.schema}} to role snowplow"
-      - "grant select on {{this}} to role snowplow"
     +tags: ["product"]
     +incremental_strategy: "delete+insert"
     page_views:
