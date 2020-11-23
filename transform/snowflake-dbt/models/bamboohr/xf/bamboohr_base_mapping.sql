@@ -1,8 +1,3 @@
-{# {{ config({
-    "schema": "ephemeral"
-    })
-}} #}
-
 WITH dates AS (
 
     SELECT *,

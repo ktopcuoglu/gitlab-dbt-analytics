@@ -1,9 +1,3 @@
-{{
-    config({
-        "schema": "covid19"
-    })
-}}
-
 WITH source AS (
 
     SELECT *

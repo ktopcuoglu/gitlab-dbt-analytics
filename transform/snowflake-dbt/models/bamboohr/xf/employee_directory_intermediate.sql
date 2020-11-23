@@ -1,6 +1,7 @@
 {{ config({
     "materialized":"table",
-    "schema": "sensitive"
+    "schema": "sensitive",
+    "database": env_var('SNOWFLAKE_PREP_DATABASE'),
     })
 }}
 

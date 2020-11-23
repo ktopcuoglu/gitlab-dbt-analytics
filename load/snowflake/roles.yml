@@ -288,19 +288,19 @@ roles:
         privileges:
             databases:
                 read:
-                    - analytics
+                    - prep
             schemas:
                 read:
-                    - analytics.analytics_sensitive
+                    - prep.sensitive
             tables:
                 read:
-                    - analytics.analytics_sensitive.gitlab_dotcom_epics
-                    - analytics.analytics_sensitive.gitlab_dotcom_issues
-                    - analytics.analytics_sensitive.gitlab_dotcom_labels
-                    - analytics.analytics_sensitive.gitlab_dotcom_merge_requests
-                    - analytics.analytics_sensitive.gitlab_dotcom_milestones
-                    - analytics.analytics_sensitive.gitlab_dotcom_namespaces
-                    - analytics.analytics_sensitive.gitlab_dotcom_projects
+                    - prep.sensitive.gitlab_dotcom_epics
+                    - prep.sensitive.gitlab_dotcom_issues
+                    - prep.sensitive.gitlab_dotcom_labels
+                    - prep.sensitive.gitlab_dotcom_merge_requests
+                    - prep.sensitive.gitlab_dotcom_milestones
+                    - prep.sensitive.gitlab_dotcom_namespaces
+                    - prep.sensitive.gitlab_dotcom_projects
 
     - analyst_finance:
         warehouses:
@@ -588,19 +588,19 @@ roles:
         privileges:
             databases:
                 read:
-                    - analytics
+                    - prep
             schemas:
                 read:
-                    - analytics.analytics_sensitive
+                    - prep.sensitive
             tables:
                 read:
-                    - analytics.analytics_sensitive.gitlab_dotcom_epics
-                    - analytics.analytics_sensitive.gitlab_dotcom_issues
-                    - analytics.analytics_sensitive.gitlab_dotcom_labels
-                    - analytics.analytics_sensitive.gitlab_dotcom_merge_requests
-                    - analytics.analytics_sensitive.gitlab_dotcom_milestones
-                    - analytics.analytics_sensitive.gitlab_dotcom_namespaces
-                    - analytics.analytics_sensitive.gitlab_dotcom_projects
+                    - prep.sensitive.gitlab_dotcom_epics
+                    - prep.sensitive.gitlab_dotcom_issues
+                    - prep.sensitive.gitlab_dotcom_labels
+                    - prep.sensitive.gitlab_dotcom_merge_requests
+                    - prep.sensitive.gitlab_dotcom_milestones
+                    - prep.sensitive.gitlab_dotcom_namespaces
+                    - prep.sensitive.gitlab_dotcom_projects
 
     - read_all:
         warehouses:
@@ -643,17 +643,18 @@ roles:
             databases:
                 read:
                     - analytics
+                    - prep
             schemas:
                 read:
-                    - analytics.airflow
                     - analytics.covid19
+                    - prep.airflow
             tables:
                 read:
-                    - analytics.airflow.airflow_dag
-                    - analytics.airflow.airflow_dag_run
                     - analytics.covid19.covid19_cases
+                    - prep.airflow.airflow_dag
+                    - prep.airflow.airflow_dag_run
 
-    - reporter_sensitive: #Right now this matches the reporter role, until we roll out the sensitive schema
+    - reporter_sensitive:
         warehouses:
             - reporting
         member_of:
@@ -679,18 +680,18 @@ roles:
                 - analytics.analytics
                 - analytics.analytics_clones
                 - analytics.analytics_meta
-                - analytics.analytics_sensitive
                 - analytics.analytics_staging
                 - analytics.common
                 - analytics.common_mapping
+                - prep.sensitive
             tables:
                 - analytics.analytics.*
                 - analytics.analytics_clones.*
                 - analytics.analytics_meta.*
-                - analytics.analytics_sensitive.*
                 - analytics.analytics_staging.*
                 - analytics.common.*
                 - analytics.common_mapping.*
+                - prep.sensitive.*
         privileges:
             databases:
                 read:
@@ -730,26 +731,27 @@ roles:
             databases:
                 read:
                     - analytics
+                    - prep
             schemas:
                 read:
                     - analytics.analytics
-                    - analytics.analytics_sensitive
                     - analytics.common
+                    - prep.sensitive
             tables:
                 read:
                     - analytics.analytics.*
-                    - analytics.analytics_sensitive.employee_*
-                    - analytics.analytics_sensitive.bamboohr_custom_bonus
-                    - analytics.analytics_sensitive.bamboohr_directory
-                    - analytics.analytics_sensitive.bamboohr_emergency_contacts
-                    - analytics.analytics_sensitive.bamboohr_id_employee_number_mapping
-                    - analytics.analytics_sensitive.bamboohr_employment_status
-                    - analytics.analytics_sensitive.bamboohr_job_info
-                    - analytics.analytics_sensitive.bamboohr_job_role
-                    - analytics.analytics_sensitive.bamboohr_locality
-                    - analytics.analytics_sensitive.bamboohr_employment_status_xf
-                    - analytics.analytics_sensitive.bamboohr_headcount_intermediate
                     - analytics.common.*
+                    - prep.sensitive.employee_*
+                    - prep.sensitive.bamboohr_custom_bonus
+                    - prep.sensitive.bamboohr_directory
+                    - prep.sensitive.bamboohr_emergency_contacts
+                    - prep.sensitive.bamboohr_id_employee_number_mapping
+                    - prep.sensitive.bamboohr_employment_status
+                    - prep.sensitive.bamboohr_job_info
+                    - prep.sensitive.bamboohr_job_role
+                    - prep.sensitive.bamboohr_locality
+                    - prep.sensitive.bamboohr_employment_status_xf
+                    - prep.sensitive.bamboohr_headcount_intermediate
 
     - bamboohr_raw:
         warehouses:
@@ -757,20 +759,21 @@ roles:
         privileges:
             databases:
                 read:
-                    - raw
                     - analytics
+                    - prep
+                    - raw
             schemas:
                 read:
-                    - raw.bamboohr
                     - analytics.analytics
-                    - analytics.analytics_sensitive
+                    - prep.sensitive
+                    - raw.bamboohr
 
             tables:
                 read:
-                    - raw.bamboohr.*
                     - analytics.analytics.*
-                    - analytics.analytics_sensitive.employee_*
-                    - analytics.analytics_sensitive.bamboohr_*
+                    - prep.sensitive.employee_*
+                    - prep.sensitive.bamboohr_*
+                    - raw.bamboohr.*
 
     - boneyard:
         warehouses:
@@ -790,12 +793,15 @@ roles:
         privileges:
             databases:
                 read:
+                    - analytics
                     - covid19
             schemas:
                 read:
+                    - analytics.covid19
                     - covid19.public
             tables:
                 read:
+                    - analytics.covid19.*
                     - covid19.public.jhu_covid_19
 
     - customers_db:
@@ -803,14 +809,15 @@ roles:
             databases:
                 read:
                     - analytics
+                    - prep
             schemas:
                 read:
-                    - analytics.analytics_sensitive
-                    - analytics.customers
+                    - prep.customers
+                    - prep.sensitive
             tables:
                 read:
-                    - analytics.analytics_sensitive.customers_db_customers_pii
-                    - analytics.customers.*
+                    - prep.customers.*
+                    - prep.sensitive.customers_db_customers_pii
 
     - common:
         privileges:
@@ -831,12 +838,15 @@ roles:
             databases:
                 read:
                     - analytics
+                    - prep
             schemas:
                 read:
                     - analytics.date
+                    - prep.date
             tables:
                 read:
                     - analytics.date.*
+                    - prep.date.*
 
     - db_dumps:
         privileges:
@@ -899,13 +909,13 @@ roles:
         privileges:
             databases:
                 read:
-                    - analytics
+                    - prep
             schemas:
                 read:
-                    - analytics.analytics_sensitive
+                    - prep.sensitive
             tables:
                 read:
-                    - analytics.analytics_sensitive.*
+                    - prep.sensitive.*
 
     - discourse:
         privileges:
@@ -925,15 +935,15 @@ roles:
         privileges:
             databases:
                 read:
-                    - analytics
+                    - prep
                     - raw
             schemas:
                 read:
-                    - analytics.gcp_billing
+                    - prep.gcp_billing
                     - raw.gcp_billing
             tables:
                 read:
-                    - analytics.gcp_billing.*
+                    - prep.gcp_billing.*
                     - raw.gcp_billing.*
 
     - gitlab_data_yaml:
@@ -942,15 +952,15 @@ roles:
         privileges:
             databases:
                 read:
-                    - analytics
+                    - prep
                     - raw
             schemas:
                 read:
-                    - analytics.gitlab_data_yaml
+                    - prep.gitlab_data_yaml
                     - raw.gitlab_data_yaml
             tables:
                 read:
-                    - analytics.gitlab_data_yaml.*
+                    - prep.gitlab_data_yaml.*
                     - raw.gitlab_data_yaml.*
 
     - gitlab_dotcom:
@@ -959,15 +969,15 @@ roles:
         privileges:
             databases:
                 read:
-                    - analytics
+                    - prep
                     - raw
             schemas:
                 read:
-                    - analytics.gitlab_dotcom
+                    - prep.gitlab_dotcom
                     - raw.tap_postgres
             tables:
                 read:
-                    - analytics.gitlab_dotcom.*
+                    - prep.gitlab_dotcom.*
                     - raw.tap_postgres.gitlab_db*
 
     - google_analytics_360:
@@ -976,15 +986,15 @@ roles:
         privileges:
             databases:
                 read:
-                    - analytics
+                    - prep
                     - raw
             schemas:
                 read:
-                    - analytics.google_analytics_360
+                    - prep.google_analytics_360
                     - raw.google_analytics_360_fivetran
             tables:
                 read:
-                    - analytics.google_analytics_360.*
+                    - prep.google_analytics_360.*
                     - raw.google_analytics_360_fivetran.*
 
     - greenhouse:
@@ -993,15 +1003,15 @@ roles:
         privileges:
             databases:
                 read:
-                    - analytics
+                    - prep
                     - raw
             schemas:
                 read:
-                    - analytics.greenhouse
+                    - prep.greenhouse
                     - raw.greenhouse
             tables:
                 read:
-                    - analytics.greenhouse.*
+                    - prep.greenhouse.*
                     - raw.greenhouse.*
 
     - handbook:
@@ -1010,60 +1020,60 @@ roles:
         privileges:
             databases:
                 read:
-                    - analytics
+                    - prep
                     - raw
             schemas:
                 read:
-                    - analytics.handbook
+                    - prep.handbook
                     - raw.handbook
             tables:
                 read:
-                    - analytics.handbook.*
+                    - prep.handbook.*
                     - raw.handbook.*
 
     - license_db:
         privileges:
             databases:
                 read:
-                    - analytics
+                    - prep
                     - raw
             schemas:
                 read:
-                    - analytics.license_db
+                    - prep.license_db
                     - raw.license_db_dump
             tables:
                 read:
-                    - analytics.license_db.*
+                    - prep.license_db.*
                     - raw.license_db_dump.*
 
     - keyhole_twitter:
         privileges:
             databases:
                 read:
-                    - analytics
+                    - prep
                     - raw
             schemas:
                 read:
-                    - analytics.keyhole_twitter
+                    - prep.keyhole_twitter
                     - raw.keyhole_twitter
             tables:
                 read:
-                    - analytics.keyhole_twitter.*
+                    - prep.keyhole_twitter.*
                     - raw.keyhole_twitter.*
 
     - maxmind:
         privileges:
             databases:
                 read:
-                    - analytics
+                    - prep
                     - raw
             schemas:
                 read:
-                    - analytics.maxmind
+                    - prep.maxmind
                     - raw.sheetload
             tables:
                 read:
-                    - analytics.maxmind.*
+                    - prep.maxmind.*
                     - raw.sheetload.maxmind_countries
                     - raw.sheetload.maxmind_ranges
 
@@ -1073,18 +1083,18 @@ roles:
         privileges:
             databases:
                 read:
+                    - prep
                     - raw
-                    - analytics
             schemas:
                 read:
+                    - prep.netsuite
+                    - prep.sensitive
                     - raw.netsuite_fivetran
-                    - analytics.netsuite
-                    - analytics.analytics_sensitive
             tables:
                 read:
+                    - prep.netsuite.*
+                    - prep.sensitive.netsuite_*
                     - raw.netsuite_fivetran.*
-                    - analytics.netsuite.*
-                    - analytics.analytics_sensitive.netsuite_*
 
     - postgres_pipeline:
         warehouses:
@@ -1110,13 +1120,13 @@ roles:
         privileges:
             databases:
                 read:
-                    - analytics
+                    - prep
             schemas:
                 read:
-                    - analytics.qualtrics
+                    - prep.qualtrics
             tables:
                 read:
-                    - analytics.qualtrics.*
+                    - prep.qualtrics.*
     
     - qualtrics_sensitive:
         warehouses:
@@ -1124,30 +1134,30 @@ roles:
         privileges:
             databases:
                 read:
-                    - analytics
+                    - prep
                     - raw
             schemas:
                 read:
-                    - analytics.analytics_sensitive
+                    - prep.sensitive
                     - raw.qualtrics
             tables:
                 read:
-                    - analytics.analytics_sensitive.qualtrics_*
+                    - prep.sensitive.qualtrics_*
                     - raw.qualtrics.*
 
     - pmg:
-          warehouses:
-              - analyst_xs
-          privileges:
-              databases:
-                  read:
-                      - analytics
-              schemas:
-                  read:
-                      - analytics.pmg
-              tables:
-                  read:
-                      - analytics.pmg.*
+        warehouses:
+            - analyst_xs
+        privileges:
+            databases:
+                read:
+                    - prep
+            schemas:
+                read:
+                    - prep.pmg
+            tables:
+                read:
+                    - prep.pmg.*
 
     - salesforce:
         warehouses:
@@ -1155,15 +1165,15 @@ roles:
         privileges:
             databases:
                 read:
-                    - analytics
+                    - prep
                     - raw
             schemas:
                 read:
-                    - analytics.sfdc
+                    - prep.sfdc
                     - raw.salesforce_stitch
             tables:
                 read:
-                    - analytics.sfdc.*
+                    - prep.sfdc.*
                     - raw.salesforce_stitch.*      
 
     - sheetload:
@@ -1172,17 +1182,17 @@ roles:
         privileges:
             databases:
                 read:
-                    - analytics
+                    - prep
                     - raw
             schemas:
                 read:
-                    - analytics.analytics_sensitive
-                    - analytics.sheetload
+                    - prep.sensitive
+                    - prep.sheetload
                     - raw.sheetload
             tables:
                 read:
-                    - analytics.analytics_sensitive.sheetload_*
-                    - analytics.sheetload.*
+                    - prep.sensitive.sheetload_*
+                    - prep.sheetload.*
                     - raw.sheetload.*  
 
     - snapshots:
@@ -1215,17 +1225,17 @@ roles:
         privileges:
             databases:
                 read:
-                    - analytics
+                    - prep
                     - raw
             schemas:
                 read:
-                    - analytics.snowplow
-                    - analytics.snowplow_*
+                    - prep.snowplow
+                    - prep.snowplow_*
                     - raw.snowplow
             tables:
                 read:
-                    - analytics.snowplow.*
-                    - analytics.snowplow_*.*
+                    - prep.snowplow.*
+                    - prep.snowplow_*.*
                     - raw.snowplow.*
 
     - static:
@@ -1294,13 +1304,13 @@ roles:
         privileges:
             databases:
                 read:
-                    - analytics
+                    - prep
             schemas:
                 read:
-                    - analytics.version_db
+                    - prep.version_db
             tables:
                 read:
-                    - analytics.version_db.*
+                    - prep.version_db.*
 
 
     - zendesk:
@@ -1309,15 +1319,15 @@ roles:
         privileges:
             databases:
                 read:
-                    - analytics
+                    - prep
                     - raw
             schemas:
                 read:
-                    - analytics.zendesk
+                    - prep.zendesk
                     - raw.zendesk_stitch
             tables:
                 read:
-                    - analytics.zendesk.*
+                    - prep.zendesk.*
                     - raw.zendesk_stitch.*
 
     - zendesk_community_relations:
@@ -1326,15 +1336,15 @@ roles:
           privileges:
               databases:
                   read:
-                      - analytics
+                      - prep
                       - raw
               schemas:
                   read:
-                      - analytics.zendesk_community_relations
+                      - prep.zendesk_community_relations
                       - raw.zendesk_community_relations_stitch
               tables:
                   read:
-                      - analytics.zendesk_community_relations.*
+                      - prep.zendesk_community_relations.*
                       - raw.zendesk_community_relations_stitch.*
 
     - zuora:
@@ -1343,15 +1353,15 @@ roles:
         privileges:
             databases:
                 read:
-                    - analytics
+                    - prep
                     - raw
             schemas:
                 read:
-                    - analytics.zuora
+                    - prep.zuora
                     - raw.zuora_stitch
             tables:
                 read:
-                    - analytics.zuora.*
+                    - prep.zuora.*
                     - raw.zuora_stitch.*
 
 # ==========================================
@@ -1919,13 +1929,13 @@ roles:
         privileges:
             databases:
                 read:
-                    - analytics
+                    - prep
             schemas:
                 read:
-                    - analytics.analytics_sensitive
+                    - prep.sensitive
             tables: # https://gitlab.com/gitlab-com/team-member-epics/access-requests/-/issues/6311
                 read:
-                    - analytics.analytics_sensitive.bamboohr_id_employee_number_mapping 
+                    - prep.sensitive.bamboohr_id_employee_number_mapping 
         warehouses:
             - analyst_xs
 
