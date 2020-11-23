@@ -25,7 +25,6 @@ sources:
       - name: source_tests
         description: This is for the reulsts from testing source data.
         identifier: source_tests_run_results
-        freshness:
       - name: snapshots
         description: This is for the results from `dbt snapshot`
         identifier: snapshots_run_results
