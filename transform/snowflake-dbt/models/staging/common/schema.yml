@@ -165,6 +165,14 @@ models:
           - not_null
           - unique
 
+  - name: dim_date
+    description: '{{ doc("dim_date") }}'
+    columns:
+      - name: date_id
+        tests:
+          - not_null
+          - unique
+
   - name: dim_geo_region
     description: "Dimension for geographical region built off ATAM_Region__C in SFDC. Example values: NORAM, LATAM, APAC, EMEA"
     columns:
