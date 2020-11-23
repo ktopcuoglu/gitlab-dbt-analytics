@@ -56,7 +56,7 @@ WITH hire_replan AS (
       department_modified,
       division_mapped_current AS division
     FROM {{ ref ('bamboohr_job_info_current_division_base') }}   
-    WHERE DEPARTMENT IS NOT NULL
+    WHERE department IS NOT NULL
 
 ), all_company AS (
 
