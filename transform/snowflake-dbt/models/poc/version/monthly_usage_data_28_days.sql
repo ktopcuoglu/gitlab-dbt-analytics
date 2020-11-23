@@ -3,15 +3,43 @@ WITH data AS (
     SELECT * 
     FROM {{ ref('usage_data_28_days_flattened')}}
 
-)
+), transformed AS (
 
-, transformed AS (
-
-    SELECT 
-      *,
-      DATE_TRUNC('month', created_at) AS created_month
+    SELECT  
+      ping_id,
+      DATE_TRUNC('week', created_at) AS created_week,
+      instance_id,
+      metrics_path,
+      group_name,
+      stage_name,
+      section_name,
+      is_smau,
+      is_gmau,
+      is_paid_gmau,
+      is_umau,
+      clean_metrics_name,
+      SUM(IFNULL(metric_value,0)) AS weekly_metrics_value
     FROM data
-    QUALIFY ROW_NUMBER() OVER (PARTITION BY instance_id, clean_metrics_name, created_month ORDER BY created_at DESC) = 1
+    {{ dbt_utils.group_by(n=12) }} 
+
+), monthly AS (
+
+    SELECT  
+      ping_id,
+      DATE_TRUNC('month', created_week) AS created_month,
+      instance_id,
+      metrics_path,
+      group_name,
+      stage_name,
+      section_name,
+      is_smau,
+      is_gmau,
+      is_paid_gmau,
+      is_umau,
+      clean_metrics_name,
+      weekly_metrics_value              AS monthly_metric_value
+    FROM transformed
+    QUALIFY (ROW_NUMBER() OVER (PARTITION BY created_month, instance_id, metrics_path ORDER BY created_week DESC)) = 1
 
 )
 
@@ -20,9 +48,13 @@ SELECT
   instance_id,
   created_month,
   metrics_path,
+  group_name,
   stage_name,
   section_name,
   is_smau,
+  is_gmau,
+  is_paid_gmau,
+  is_umau,
   clean_metrics_name,
-  metric_value AS monthly_metric_value
-FROM transformed
+  monthly_metric_value
+FROM monthly

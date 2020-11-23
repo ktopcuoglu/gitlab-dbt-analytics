@@ -1,5 +1,16 @@
 {% macro sfdc_id_15_to_18() %}
-CREATE OR REPLACE FUNCTION {{target.schema}}_staging.id15to18("input_id" string)
+
+{%- set production_targets = production_targets() -%}
+
+{%- if target.name in production_targets -%}
+
+CREATE OR REPLACE FUNCTION {{target.schema}}.id15to18("input_id" string)
+
+{%- else -%}
+
+CREATE OR REPLACE FUNCTION "{{ target.database | trim }}_ANALYTICS".{{target.schema}}.id15to18("input_id" string)
+
+{% endif %}
   RETURNS string
   LANGUAGE JAVASCRIPT
   AS '

@@ -1,9 +1,9 @@
-{% macro source_rowcount(schema, table, count, where_clause=None) %}
+{% macro source_rowcount(source_name, table, count, where_clause=None) %}
 
 WITH source AS (
 
     SELECT *
-    FROM {{ source(schema, table) }}
+    FROM {{ source(source_name, table) }}
 
 ), counts AS (
 

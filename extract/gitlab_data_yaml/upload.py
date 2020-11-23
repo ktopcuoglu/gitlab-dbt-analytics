@@ -22,10 +22,13 @@ if __name__ == "__main__":
     pi_file_dict = dict(
         chief_of_staff_team_pi="chief_of_staff_team",
         corporate_finance_pi="corporate_finance",
+        customer_support_pi="customer_support_department",
         dev_section_pi="dev_section",
+        development_department_pi="development_department",
         enablement_section_pi="enablement_section",
         engineering_function_pi="engineering_function",
         finance_team_pi="finance_team",
+        infrastructure_department_pi="infrastructure_department",
         marketing_pi="marketing",
         ops_section_pi="ops_section",
         people_success_pi="people_success",
@@ -33,8 +36,8 @@ if __name__ == "__main__":
         quality_department_pi="quality_department",
         recruiting_pi="recruiting",
         sales_pi="sales",
+        secure_and_protect_section_pi="secure_and_protect_section",
         security_department_pi="security_department",
-        support_department_pi="support_department",
         ux_department_pi="ux_department",
     )
 

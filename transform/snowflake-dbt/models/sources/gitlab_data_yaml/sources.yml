@@ -17,7 +17,22 @@ sources:
 
     tables:
       - name: categories
+      - name: chief_of_staff_team_pi
+      - name: corporate_finance_pi
+      - name: dev_section_pi
+      - name: enablement_section_pi
+      - name: engineering_function_pi
+      - name: finance_team_pi
       - name: location_factors
+      - name: marketing_pi
+      - name: ops_section_pi
+      - name: people_success_pi
+      - name: product_pi 
+      - name: quality_department_pi
+      - name: recruiting_pi
       - name: roles
+      - name: sales_pi
+      - name: security_department_pi
       - name: stages
       - name: team
+      - name: ux_department_pi

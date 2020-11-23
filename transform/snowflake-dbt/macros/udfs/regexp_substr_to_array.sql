@@ -1,6 +1,18 @@
 {% macro regexp_substr_to_array() %}
-CREATE OR REPLACE FUNCTION {{target.schema}}_staging.regexp_to_array("input_text" string,
+
+{%- set production_targets = production_targets() -%}
+
+{%- if target.name in production_targets -%}
+
+CREATE OR REPLACE FUNCTION {{target.schema}}.regexp_to_array("input_text" string,
+                                                             "regex_text" STRING)
+
+{%- else -%}
+
+CREATE OR REPLACE FUNCTION "{{ target.database | trim }}_ANALYTICS".{{target.schema}}.regexp_to_array("input_text" string,
                                                                      "regex_text" STRING)
+
+{% endif %}
   RETURNS array
   LANGUAGE JAVASCRIPT
   AS '

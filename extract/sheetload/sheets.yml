@@ -7,6 +7,18 @@ sheets:
     owner: '@ken_aguilar'
     tabs:
       - abuse_mitigation
+  - name: abuse_top_ci_data
+    owner: '@ken_aguilar'
+    tabs:
+      - abuse_top_ci_data
+  - name: abuse_top_download_data
+    owner: '@ken_aguilar'
+    tabs:
+      - abuse_top_download_data
+  - name: abuse_top_storage_data
+    owner: '@ken_aguilar'
+    tabs:
+      - abuse_top_storage_data
   - name: ar_aging_details
     owner: '@s_mccauley'
     tabs:
@@ -19,6 +31,10 @@ sheets:
     owner: '@mvilain'
     tabs:
       - clari_export_forecast_net_iacv
+  - name: clari_ai_projection
+    owner: '@mvilain'
+    tabs:
+      - clari_ai_projection
   - name: company_call_attendance
     owner: '@pluthra'
     tabs:
@@ -35,10 +51,16 @@ sheets:
     owner: '@pluthra'
     tabs:
       - employee_location_factor
-  - name: dev_section_metrics
+      - comp_band
+  - name: engineering_contributing_organizations
+    owner: '@kwiebers'
+    tabs:
+      - engineering_contributing_organizations
+      - gitlab_contributing_organizations
+  - name: event_dictionary_simplified
     owner: '@mpeychet_'
     tabs:
-      - dev_section_metrics
+      - event_dictionary_simplified
   - name: gitlab_slack_stats
     owner: '@pluthra'
     tabs:
@@ -52,7 +74,7 @@ sheets:
     tabs:
       - headcount
   - name: hire_plan_forecast
-    owner: '@derekatwood'
+    owner: '@pluthra'
     tabs:
       - hire_plan
       - hire_forecast
@@ -77,7 +99,7 @@ sheets:
     tabs:
       - location_factor_targets
   - name: manual_downgrade_dotcom_tracking
-    owner: '@derekatwood'
+    owner: '@mpeychet_'
     tabs:
       - manual_downgrade_dotcom_tracking
   - name: marketing_core_users_from_docs_gitlab_com
@@ -104,6 +126,11 @@ sheets:
     owner: '@pluthra'
     tabs:
       - osat
+  - name: people_budget
+    description: Data used by people team for budget spend.
+    owner: '@pluthra'
+    tabs:
+      - people_budget
   - name: planned_values
     owner: '@iweeks'
     tabs:
@@ -116,14 +143,22 @@ sheets:
     owner: '@m_walker'
     tabs:
       - release_blog_posts
-  - name: rep_quotas_full_fy2020
-    owner: '@derekatwood'
+  - name: rep_quotas
+    owner: '@mbenza'
     tabs:
-      - rep_quotas_full_fy2020
+      - rep_quotas
   - name: rep_quotas_full_ps_fy2020
-    owner: '@derekatwood'
+    owner: '@mbenza'
     tabs:
       - rep_quotas_full_ps_fy2020
+  - name: sales_training_completion_dates
+    owner: '@paul_armstrong'
+    tabs:
+      - sales_training_completion_dates
+  - name: territory_mapping
+    owner: '@rkohnke'
+    tabs:
+      - territory_mapping
   - name: scalable_employment_values
     owner: '@iweeks'
     tabs:
@@ -132,6 +167,10 @@ sheets:
     owner: '@jeanpeguero'
     tabs:
       - social_marketing_metrics
+  - name: usage_ping_metrics_sections
+    owner: '@mpeychet_'
+    tabs:
+      - usage_ping_metrics_sections
   - name: values_certificate
     owner: '@jbandur'
     tabs:
@@ -161,20 +200,35 @@ sheets:
     owner: '@kathleentam'
     tabs:
       - data_team_capacity
-  - name: zuora_account_golden_records
-    owner: '@paul_armstrong'
-    tabs:
-      - zuora_account_golden_records
-  - name: zuora_subscription_golden_records
-    owner: '@paul_armstrong'
-    tabs:
-    - zuora_subscription_golden_records
   - name: product_maturity_historical
     owner: '@pluthra'
     tabs:
       - product_maturity_historical
   - name: engineering_speciality_prior_to_capture
     owner: '@pluthra'
-    tabs: 
+    tabs:
       - engineering_speciality_prior_to_capture
-
+  - name: sales_funnel_targets
+    owner: '@paul_armstrong'
+    tabs:
+      - sales_funnel_targets_dates
+      - sales_funnel_targets_kpi_values
+      - sales_funnel_targets_sales_segment
+      - sales_funnel_targets_opportunity
+      - sales_funnel_targets_region
+      - sales_funnel_targets_matrix
+  - name: data_certifications
+    description: This identifies team members who have taken the level 2 certifications and have passed.
+    owner: '@pluthra'
+    tabs:
+      - cert_product_geo_dashboard
+      - cert_product_geo_sql
+      - cert_customer_segmentation_dashboard
+      - cert_customer_segmentation_sql
+      - cert_product_geo_viewer
+      - cert_customer_segmentation_viewer
+  - name: rfs_support_requests
+    description: This contains data for the pipe risk and security metrics - https://gitlab.com/gitlab-data/analytics/-/issues/6995
+    owner: '@mmaneval20'
+    tabs:
+      - rfs_support_requests

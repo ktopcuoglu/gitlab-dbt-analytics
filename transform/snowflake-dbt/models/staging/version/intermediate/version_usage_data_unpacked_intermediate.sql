@@ -69,7 +69,8 @@ WITH usage_data AS (
       END                                                                             AS ping_source,
       CASE WHEN LOWER(edition) LIKE '%ee%' THEN 'EE'
         ELSE 'CE' END                                                                 AS main_edition,
-      CASE WHEN edition LIKE '%CE%' THEN 'Core'
+      CASE 
+          WHEN edition LIKE '%CE%' THEN 'Core'
           WHEN edition LIKE '%EES%' THEN 'Starter'
           WHEN edition LIKE '%EEP%' THEN 'Premium'
           WHEN edition LIKE '%EEU%' THEN 'Ultimate'

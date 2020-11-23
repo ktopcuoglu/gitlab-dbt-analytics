@@ -59,7 +59,10 @@ If none, please include a description
       - [ ] [Edit the sheets.yml file](https://gitlab.com/gitlab-data/analytics/-/blob/master/extract/sheetload/sheets.yml)
       - [ ] [Edit the schema.yml](https://gitlab.com/gitlab-data/analytics/-/blob/master/transform/snowflake-dbt/models/sources/sheetload/schema.yml)
       - [ ] [Edit the sources.yml](https://gitlab.com/gitlab-data/analytics/-/blob/master/transform/snowflake-dbt/models/sources/sheetload/sources.yml)
-      - [ ] Add a new file for the base model under [sources-->sheetload repo](https://gitlab.com/gitlab-data/analytics/-/tree/master/transform/snowflake-dbt/models/sources/sheetload)
+      - [ ] Add a new base model under [sources-->sheetload repo](https://gitlab.com/gitlab-data/analytics/-/tree/master/transform/snowflake-dbt/models/sources/sheetload)
+      - **If the the data is required in SiSense** 
+         - [ ] Add a new staging model under [staging-->sheetload repo](https://gitlab.com/gitlab-data/analytics/-/tree/master/transform/snowflake-dbt/models/staging/sheetload)
+         - [ ] [Edit the schema.yml](https://gitlab.com/gitlab-data/analytics/-/blob/master/transform/snowflake-dbt/models/staging/sheetload/schema.yml) 
     * [ ]  Data Team member to run the following CI Jobs on the MR: 
          - [ ] clone_raw
          - [ ] sheetload

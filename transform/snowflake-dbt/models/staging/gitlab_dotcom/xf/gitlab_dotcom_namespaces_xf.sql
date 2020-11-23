@@ -10,8 +10,9 @@ WITH namespaces AS (
 members AS (
 
     SELECT *
-    FROM {{ref('gitlab_dotcom_members')}}
+    FROM {{ref('gitlab_dotcom_members')}} members
     WHERE is_currently_valid = TRUE
+      AND {{ filter_out_blocked_users('members', 'user_id') }}
 
 ),
 
@@ -25,6 +26,18 @@ projects AS (
     SELECT *
     FROM {{ref('gitlab_dotcom_namespace_lineage')}}
 
+), creators AS (
+
+    SELECT DISTINCT
+      author_id AS creator_id,
+      entity_id AS group_id
+    FROM {{ ref('gitlab_dotcom_audit_event_details_clean') }} AS audit_event_details_clean
+    LEFT JOIN {{ ref('gitlab_dotcom_audit_events') }} AS audit_events 
+        ON audit_event_details_clean.audit_event_id = audit_events.audit_event_id
+    WHERE entity_type = 'Group'
+      AND key_name = 'add'
+      AND key_value = 'group'
+  
 ), joined AS (
     SELECT
       namespaces.namespace_id,
@@ -60,6 +73,7 @@ projects AS (
       namespaces.two_factor_grace_period,
       namespaces.project_creation_level,
       namespaces.push_rule_id,
+      COALESCE(creators.creator_id, namespaces.owner_id)               AS creator_id,
 
       namespace_lineage.namespace_is_internal,
       namespace_lineage.ultimate_parent_id                             AS namespace_ultimate_parent_id,
@@ -78,7 +92,9 @@ projects AS (
         ON namespaces.namespace_id = projects.namespace_id
       LEFT JOIN namespace_lineage
         ON namespaces.namespace_id = namespace_lineage.namespace_id
-    {{ dbt_utils.group_by(n=31) }}
+      LEFT JOIN creators
+        ON namespaces.namespace_id = creators.group_id
+    {{ dbt_utils.group_by(n=32) }}
 )
 
 SELECT *

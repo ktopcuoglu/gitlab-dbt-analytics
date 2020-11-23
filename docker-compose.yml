@@ -85,12 +85,16 @@ services:
           target: /usr/local/analytics
 
     dbt_image:
-      image: registry.gitlab.com/gitlab-data/data-image/dbt-image:v0.0.9
+      image: registry.gitlab.com/gitlab-data/data-image/dbt-image:v0.0.10
       environment:
         DBT_PROFILES_DIR: /usr/local/dbt_profiles/
         DATA_TEST_BRANCH: "main"
         SNOWFLAKE_SNAPSHOT_DATABASE: "SNOWFLAKE"
         SNOWFLAKE_LOAD_DATABASE: "RAW"
+        SNOWFLAKE_PREP_DATABASE: "PREP"
+        SNOWFLAKE_PREP_SCHEMA: "preparation"
+        SNOWFLAKE_PROD_DATABASE: "PROD"
+        SNOWFLAKE_TRANSFORM_DATABASE: "ANALYTICS"
         SNOWFLAKE_TRANSFORM_WAREHOUSE: "ANALYST_XS"
         SALT: "pizza"
         SALT_IP: "pie"

@@ -1,4 +1,4 @@
-{% macro source_new_rows_per_day(schema, table, created_column, min_value, max_value=None, where_clause=None) %}
+{% macro source_new_rows_per_day(source_name, table, created_column, min_value, max_value=None, where_clause=None) %}
 
 WITH dates AS (
 
@@ -10,7 +10,7 @@ WITH dates AS (
 ), source AS (
 
     SELECT *
-    FROM {{ source(schema, table) }}
+    FROM {{ source(source_name, table) }}
 
 ), counts AS (
 

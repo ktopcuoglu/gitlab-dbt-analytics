@@ -38,6 +38,7 @@ WITH dim_billing_accounts AS (
       dim_crm_accounts.ultimate_parent_account_id,
       dim_product_details.product_category,
       dim_product_details.delivery,
+      dim_product_details.product_ranking,
       fct_mrr.mrr,
       fct_mrr.quantity
     FROM fct_mrr
@@ -87,18 +88,9 @@ WITH dim_billing_accounts AS (
       base.ultimate_parent_account_id,
       ARRAY_AGG(DISTINCT product_category) WITHIN GROUP (ORDER BY product_category ASC)      AS product_category,
       ARRAY_AGG(DISTINCT delivery) WITHIN GROUP (ORDER BY delivery ASC)                      AS delivery,
-      MAX(DECODE(product_category,   --Need to account for the 'other' categories
-          'Bronze', 1,
-          'Silver', 2,
-          'Gold', 3,
-
-          'Starter', 1,
-          'Premium', 2,
-          'Ultimate', 3,
-          0
-     ))                                                                                       AS product_ranking,
-      SUM(ZEROIFNULL(quantity))                                                               AS quantity,
-      SUM(ZEROIFNULL(mrr)*12)                                                                 AS arr
+      MAX(product_ranking)                                                                   AS product_ranking,
+      SUM(ZEROIFNULL(quantity))                                                              AS quantity,
+      SUM(ZEROIFNULL(mrr)*12)                                                                AS arr
     FROM base
     LEFT JOIN mart_arr
       ON base.arr_month = mart_arr.arr_month

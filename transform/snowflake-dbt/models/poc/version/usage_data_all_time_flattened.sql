@@ -1,6 +1,6 @@
 
 {% set metric_type = 'all_time' %}
-{% set columns_to_parse = ['analytics_unique_visits', 'usage_activity_by_stage_monthly', 'stats_used', 'usage_activity_by_stage_monthly', 'redis_hll_counters'] %}
+{% set columns_to_parse = ['analytics_unique_visits', 'usage_activity_by_stage_monthly', 'counts', 'usage_activity_by_stage_monthly', 'redis_hll_counters'] %}
 
 WITH data AS ( 
   
@@ -39,6 +39,6 @@ SELECT
   metrics.*, 
   flattened.metric_value
 FROM flattened
-INNER JOIN {{ ref('sheetload_dev_section_metrics' )}} AS metrics 
+INNER JOIN {{ ref('sheetload_usage_ping_metrics_sections' )}} AS metrics 
   ON flattened.metric_path = metrics.metrics_path
     AND time_period = '{{metric_type}}'

@@ -1,0 +1,9 @@
+version: 2
+
+models:
+    - name: twitter_impressions_source
+      columns:
+        - name: impression_month
+          tests:
+            - not_null
+        - name: impressions

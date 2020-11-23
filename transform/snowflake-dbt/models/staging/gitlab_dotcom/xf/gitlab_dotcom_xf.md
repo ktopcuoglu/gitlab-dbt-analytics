@@ -14,7 +14,9 @@ This table selects all the rows from `gitlab_dotcom_usage_data_events` that have
 
 {% docs gitlab_dotcom_daily_usage_data_events %}
 
-This table is a daily aggregated table built on top of `gitlab_dotcom_usage_data_events`  table at a namespace/project level. 
+This table is a daily aggregated table built on top of `gitlab_dotcom_usage_data_events` table aggregated at the top-most  namespace/project level. It is preferable to use this table instead of `gitlab_dotcom_usage_data_events` for efficiency.
+It excludes the following columns; PARENT_TYPE, PARENT_ID, PARENT_CREATED_AT, EVENT_CREATED_AT.
+It adds the following columns; DAILY_USAGE_DATA_EVENT_ID, EVENT_DATE, EVENT_COUNT.
 
 {% enddocs %}
 
@@ -34,6 +36,14 @@ This model anonymizes three fields: `environment_name`, `slug`, `external_url` b
 {% docs gitlab_dotcom_gitlab_emails %}
 
 This model limits the gitlab dotcom emails table to only have records for emails ending with `gitlab.com`.
+
+{% enddocs %}
+
+{% docs gitlab_dotcom_gitlab_internal_sprints %}
+
+This model limits the gitlab dotcom sprints table to only have records from groups gitlab-org(9970) and gitlab-com(6543), or projects that are part of product.
+
+Useful to get sprint title and description information for GitLab internal sprints.
 
 {% enddocs %}
 
@@ -224,7 +234,13 @@ This table is meant to isolate all ci_build jobs used to create the AMAU calcula
 
 {% docs gitlab_dotcom_usage_data_events %}
 
-This table produces an event table at a namespace/project level. The goal is to be able to reproduce the same usage dataset as the one sent weekly by self-managed instances to the version app.
+This table aggregates but does not manipulate a subset of columns from all of the gitlab_dotcom database tables. These tables are populated directly from gitlab-dot-com variables. The calculated columns are `stage_name` and `event_name`.
+
+This data is associated to the top-most namespace/project level, not necessarily the level at which the event occurred.
+
+The goal is to be able to reproduce the same usage dataset as the one sent weekly by self-managed instances to the version app.
+
+Data Team notes:
 
 The table normalizes all the gitlab_dotcom tables to always extract the same subset of column:
 * namespace_id, 
@@ -252,8 +268,6 @@ Currently, the following tables are included in the model:
 * gitlab_dotcom_releases
 * gitlab_dotcom_snippets
 * gitlab_dotcom_todos
-
-A `stage_name` column is also added leveraging the seeded csv file `version_usage_stats_to_stage_mappings.csv`. When the event_name is not in the csv file, we add a condition to the case statement.
 
 {% enddocs %}
 

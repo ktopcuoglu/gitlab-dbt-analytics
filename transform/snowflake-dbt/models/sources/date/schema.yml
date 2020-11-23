@@ -141,7 +141,15 @@ models:
           - name: fiscal_quarter_number_absolute
             description: Monotonically increasing integer for each fiscal quarter. This allows for comparing the relative order of fiscal quarters.
             tests:
-              - not_null   
+              - not_null
+          - name: fiscal_month_name
+            description: The name of the fiscal month, e.g '2020-Feb' for 2019-02-02
+            tests:
+              - not_null
+          - name: fiscal_month_name_fy
+            description: The name of the fiscal month, e.g 'FY20-Feb' for 2019-02-02
+            tests:
+              - not_null
           - name: holiday_desc
             description: The name of the holiday, if applicable
           - name: is_holiday

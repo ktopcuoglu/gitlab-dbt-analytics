@@ -1,34 +1,28 @@
 version: 2
 
 models:
-  - name: cost_center_division_department_mapping_current
-    description: This provides the current division, department, cost center. We take into account the qualify row_number argument to make sure we don't have department displaying twice - which can happen if not all individuals are moved to the correct department, division, cost center when changes occur.
 
-  - name: rpt_team_members_out_of_comp_band
-    description: This calculates the weighted number of team members outside of the compensation band. From the Comp Model (SheetLoad) we get how far from the top of the comp band team members are. We round to the nearest tenth (because this is how People Ops does it). Then we use the weighting model utilized by the Comp Team (the case when statement on L28) based on how far over the top of the band we are. The sum of the weights are divided by the total number of active team members to create this KPI. We only care about the state of this number on the last day of a calendar month. This model is used for reporting purposes and can be used with ```SELECT date_actual, sum(sum_weighted_deviated_from_comp_calc)/sum(current_employees) FROM analytics.rpt_team_members_out_of_comp_band GROUP BY 1``` in order to aggregate to the whole company. It's grain is by department, but it can easily be aggregated upwards. THIS MODEL SHOULD NOT BE CONSUMED FOR ANY ANALYSIS PRIOR TO SEPTERMBER 2019.
+  - name: bamboohr_missing_emergency_contact_alert
+    description: Identifies team members that need to add emergency contact.
+
+  - name: bamboohr_promotion_rate
+    description: Displays promotion rate aggregated at the department, division, and company overall level.
     columns:
-    - name: unique_key
-      tests:
-      - not_null
-      - unique
-    - name: date_actual
-      tests:
-      - not_null
-    - name: division
-      tests:
-      - not_null
-    - name: department
-      tests:
-      - not_null
-    - name: sum_weighted_deviated_from_comp_calc
-      tests:
-      - not_null
-    - name: current_employees
-      tests:
-      - not_null
-    - name: percent_of_employees_outside_of_band
-      tests:
-      - not_null    
+    - name: month_date
+      description: The month for which the rolling metrics apply
+    - name: field_name
+      description: Idenitfies whether the metrics are at the division, department, or comapny level
+    - name: field_value
+      description: Identifies the associated division/department for the field_name	
+    - name: headcount_end
+      description: The headcount at the end of the month
+    - name: total_promotions
+      description: The total promotions over for the rolling 12 months period.
+    - name: promotion_rate 
+      description: The promotion rate for the rolling 12 month period.
+    - name: average_percent_change_in_comp
+      description: The average percent change in comp for the rolling 12 month period. The calculation for percent change can be found in the bamboohr_promotions_xf model.
+    - name: median_percent_change_in_comp 
 
   - name: bamboohr_rpt_headcount_aggregation    
     description: This report creates out a headcount report from the bamboohr_headcount_intermediate to be used for periscope dashboards for each month. Note - the division reporting is based on current division used.
@@ -47,6 +41,8 @@ models:
       description: Provides headcount at start of month.
     - name: headcount_end
       description: Provides headcount on the last day of the month.
+    - name: headcount_end_excluding_sdr
+      description: Headcount not including the Sales Development department (used for promotion calculation)
     - name: headcount_average
     - name: hire_count
       description: Provides the total number of employees hired for a given month as associated to the diversity_field and aggregation_type.
@@ -91,18 +87,73 @@ models:
     - name: rolling_12_month_headcount_management
     - name: rolling_12_month_separations_management
     - name: retention_manager
+    - name: headcount_end_staff
+      description: Staff is defined as any individuals with 0 direct reports and bamboohr job role of `Manager.` The job titles included in this are Staff, Principal, and Distinguished roles, as well as managers without direct reports.
+    - name: headcount_staff_average
+    - name: hired_staff
+    - name: separated_staff
+    - name: rolling_12_month_headcount_staff
+    - name: rolling_12_month_separations_staff
+    - name: retention_staff
     - name: headcount_end_contributor
     - name: headcount_contributor
     - name: hired_contributor
     - name: separated_contributor
     - name: percent_of_headcount
+      description: This is based on headcount at end of month.
     - name: percent_of_hires
+      description: This is based on headcount at end of month.
     - name: percent_of_headcount_leaders
-    - name: percent_of_headcount_manager
+      description: This is based on headcount at end of month.
+    - name: percent_of_headcount_manager      
+      description: This is based on headcount at end of month.
+    - name: percent_of_headcount_staff
+      description: This is based on headcount at end of month.
     - name: percent_of_headcount_contributor
+      description: This is based on headcount at end of month.
     - name: rolling_12_month_promotions
+    - name: rolling_12_month_promotions_excluding_sdr
+      description: Promotion count excluding the Sales Development department
     - name: location_factor 
+    - name: discretionary_bonus
+    - name: tenure_months
+      description: Average tenure of group in months.
+    - name: tenure_zero_to_six_months
+    - name: tenure_six_to_twelve_months
+    - name: tenure_one_to_two_years
+    - name: tenure_two_to_four_years
+    - name: tenure_four_plus_years
 
+  - name: cost_center_division_department_mapping_current
+    description: This provides the current division, department, cost center. We take into account the qualify row_number argument to make sure we don't have department displaying twice - which can happen if not all individuals are moved to the correct department, division, cost center when changes occur.
+
+  - name: rpt_team_members_out_of_comp_band
+    description: This calculates the weighted number of team members outside of the compensation band. From the Comp Model (SheetLoad) we get how far from the top of the comp band team members are. We round to the nearest tenth (because this is how People Ops does it). Then we use the weighting model utilized by the Comp Team (the case when statement on L28) based on how far over the top of the band we are. The sum of the weights are divided by the total number of active team members to create this KPI. We only care about the state of this number on the last day of a calendar month. This model is used for reporting purposes and can be used with ```SELECT date_actual, sum(sum_weighted_deviated_from_comp_calc)/sum(current_employees) FROM analytics.rpt_team_members_out_of_comp_band GROUP BY 1``` in order to aggregate to the whole company. It's grain is by department, but it can easily be aggregated upwards. THIS MODEL SHOULD NOT BE CONSUMED FOR ANY ANALYSIS PRIOR TO SEPTERMBER 2019.
+    columns:
+    - name: unique_key
+      tests:
+      - not_null
+      - unique
+    - name: date_actual
+      tests:
+      - not_null
+    - name: division
+      tests:
+      - not_null
+    - name: department
+      tests:
+      - not_null
+    - name: sum_weighted_deviated_from_comp_calc
+      tests:
+      - not_null
+    - name: current_employees
+      tests:
+      - not_null
+    - name: percent_of_employees_outside_of_band
+      tests:
+      - not_null    
+
+  
   - name: rpt_headcount_vs_planned
     description: Combines the headcount and hire plan model to actual headcount and hires.
     columns:
@@ -127,5 +178,4 @@ models:
       tests:
         - not_null
     - name: actual_headcount_vs_planned_headcount
-    - name: bamboohr_missing_emergency_contact_alert
-      description: Identifies team members that need to add emergency contact.
+

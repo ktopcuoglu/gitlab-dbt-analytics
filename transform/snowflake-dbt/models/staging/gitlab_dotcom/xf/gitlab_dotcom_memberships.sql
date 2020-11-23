@@ -1,9 +1,10 @@
 WITH members AS ( -- direct group and project members
 
     SELECT *
-    FROM {{ ref('gitlab_dotcom_members') }}
+    FROM {{ ref('gitlab_dotcom_members') }} members
     WHERE is_currently_valid = TRUE
       AND user_id IS NOT NULL
+      AND {{ filter_out_blocked_users('members', 'user_id') }}
     QUALIFY RANK() OVER (
         PARTITION BY 
           user_id, 

@@ -1,0 +1,15 @@
+version: 2
+
+models:
+  - name: tdf_zuora_accounts_new_updated
+    columns:
+      - name: date_day
+        tests:
+          - not_null
+        tags: ['tdf', 'zuora']
+  - name: tdf_zuora_subscriptions_new_updated
+    columns:
+      - name: date_day
+        tests:
+          - not_null
+        tags: ['tdf', 'zuora']

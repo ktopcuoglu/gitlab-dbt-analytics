@@ -32,6 +32,24 @@ models:
   - name: dim_billing_accounts_valid_at
     description: Dimension table representing each individual account with details of person to bill for the account. Excludes deleted and test accounts. Required variable valid_at is timezone sensitive
 
+  - name: dim_campaign
+    description: Dimension table representing each individual Campaign. Excludes deleted campaigns. Based completely off SFDC campaign data.
+    columns:
+      - name: campaign_id
+        description: Campaign unique identifier
+        tests:
+          - not_null
+          - unique
+      - name: campaign_name
+        description: Campaign name text field.
+      - name: is_active
+      - name: status
+      - name: type
+      - name: description
+      - name: budget_holder
+      - name: bizible_touchpoint_enabled_setting
+      - name: strategic_marketing_contribution
+
   - name: dim_crm_accounts
     description: '{{ doc("dim_crm_accounts") }}'
     columns:
@@ -57,6 +75,7 @@ models:
       - name: account_owner
       - name: account_owner_team
       - name: account_type
+      - name: gtm_strategy
       - name: technical_account_manager
       - name: is_deleted
         description: flag indicating if account has been deleted
@@ -65,12 +84,30 @@ models:
         tests:
           - accepted_values:
                   values: ['TRUE', 'FALSE']
-      
+
       - name: merged_to_account_id
         description: for deleted accounts this is the SFDC account they were merged to
 
   - name: dim_crm_accounts_valid_at
     description: Parameterized model to recreate dimension table representing customer details as in SFDC at given date. Required variable valid_at is timezone sensitive
+  - name: dim_crm_opportunities
+    description: '{{ doc("dim_crm_opportunities") }}'
+    columns:
+      - name: crm_opportunity_id
+        tests:
+          - unique
+          - not_null
+  - name: dim_crm_person
+    description: '{{ doc("dim_crm_person") }}'
+    columns:
+      - name: crm_person_id
+        tests:
+          - not_null
+          - unique
+      - name: sfdc_record_id
+        tests:
+          - not_null
+          - unique
 
   - name: dim_crm_persons
     description: '{{ doc("dim_crm_persons") }}'
@@ -92,6 +129,19 @@ models:
           - not_null
           - unique
 
+  - name: dim_geo_region
+    description: "Dimension for geographical region built off ATAM_Region__C in SFDC. Example values: NORAM, LATAM, APAC, EMEA"
+    columns:
+      - name: dim_geo_region_name_id
+        tests:
+          - unique
+          - not_null
+        tags: ["tdf", "common", "geo"]
+      - name: dim_geo_region_name
+        tests:
+          - unique
+          - not_null
+        tags: ["tdf", "common", "geo"]
   - name: dim_ip_to_geo
     description: '{{ doc("dim_ip_to_geo") }}'
     columns:
@@ -100,6 +150,33 @@ models:
           - unique
           - not_null
       - name: location_id
+
+  - name: dim_geo_sub_region
+    description: "Dimension table for sub-region built off ATAM_Sub_Region__C in SFDC. Example values: Southern Europe, NA East, Nordics"
+    columns:
+      - name: dim_geo_sub_region_name_id
+        tests:
+          - unique
+          - not_null
+        tags: ["tdf", "common", "geo"]
+      - name: dim_geo_sub_region_name
+        tests:
+          - unique
+          - not_null
+        tags: ["tdf", "common", "geo"]
+  - name: dim_geo_area
+    description: "Dimension table for geographic area built off ATAM_Area__C in SFDC. Example values: Southern PNW, India, Northeast"
+    columns:
+      - name: dim_geo_area_name_id
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "common", "geo"]
+      - name: dim_geo_area_name
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "common", "geo"]
 
   - name: dim_gitlab_versions
     description: '{{ doc("dim_gitlab_versions") }}'
@@ -128,6 +205,100 @@ models:
         description: The date the release was created in the Version app.
       - name: updated_date
         description: The date the release was updated in the Version app.
+
+  - name: dim_industry
+    description: '{{ doc("dim_industry") }}'
+    columns:
+      - name: dim_industry_name_id
+        description: Unique identifier of a version of a industry
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "industry", "common"]
+      - name: dim_industry_name
+        description: Industry text
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "industry", "common"]
+
+  - name: dim_opportunity_source
+    description: '{{ doc("dim_opportunity_source") }}'
+    columns:
+      - name: dim_opportunity_source_id
+        description: Unique identifier for each opportunity source name
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "opportunity", "common"]
+      - name: opportunity_source_name
+        description: Opportunity source name
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "opportunity", "common"]
+
+  - name: dim_purchase_channel
+    description: '{{ doc("dim_purchase_channel") }}'
+    columns:
+      - name: dim_purchase_channel_id
+        description: Unique identifier for each purchase channel name
+        tests:
+          - not_null
+          - unique
+        tags: [ "tdf", "purchase_channel", "common" ]
+      - name: purchase_channel_name
+        description: Purchase channel name text
+        tests:
+          - not_null
+          - unique
+        tags: [ "tdf", "purchase_channel", "common" ]
+
+  - name: dim_order_type
+    description: '{{ doc("dim_purchase_channel") }}'
+    columns:
+      - name: dim_order_type_id
+        description: Unique identifier for each opportunity source name
+        tests:
+          - not_null
+          - unique
+        tags: [ "tdf", "order_type", "common" ]
+      - name: order_type_name
+        description: Opportunity source name
+        tests:
+          - not_null
+          - unique
+        tags: [ "tdf", "order_type", "common" ]
+
+  - name: dim_instances
+    description: '{{ doc("dim_instances") }}'
+    columns:
+      - name: uuid
+        description: Unique Identifier for GitLab Self-Managed Instances
+      - name: recorded_first_usage_ping_time_stamp
+        description: The first time a usage ping was sent from this instance and recorded in the Version Database
+      - name: recorded_most_recent_usage_ping_time_stamp
+        description: The most recent time a usage ping was sent from this instance and recorded in the Version Database
+      - name: recorded_minimum_instance_user_count
+        description: The minimum instance user count ever recorded from a usage ping for this instance
+      - name: recorded_maximum_instance_user_count
+        description: The maximum instance user count ever recorded from a usage ping for this instance
+      - name: recorded_total_usage_pings_sent
+        description: The total number of usage pings ever associated with the instance
+      - name: recorded_total_countries
+        description: The total number of countries related to usage ping for this instance. This is derived from ip_address
+      - name: recorded_total_license_count
+        description: The total number of licenses related to usage ping for this instance.
+      - name: recorded_total_version_count
+        description: The total number of versions related to usage ping for this instance.
+      - name: recorded_total_edition_count
+        description: The total number of editions related to usage ping for this instance.
+      - name: recorded_total_hostname_count
+        description: The total number of hostname related to usage ping for this instance.
+      - name: recorded_total_host_id_count
+        description: The total number of host_id related to usage ping for this instance.
+      - name: recorded_total_installation_type_count
+        description: The total number of installation_type related to usage ping for this instance.
 
   - name: dim_licenses
     description: '{{ doc("dim_licenses") }}'
@@ -179,7 +350,6 @@ models:
         tests:
           - not_null
           - unique
-
   - name: dim_product_details
     description: '{{ doc("dim_product_details") }}'
     columns:
@@ -221,6 +391,38 @@ models:
           - not_null
       - name: is_active
         description: A boolean column that flags if the user is active in salesforce, which means that the user can login and use salesforce.
+
+  - name: dim_sales_segment
+    description: '{{ doc("dim_sales_segment") }}'
+    columns:
+      - name: dim_sales_segment_name_id
+        description: Unique identifier of a version of a sales segment
+        tests:
+          - not_null
+          - unique
+        tags: [ "tdf", "common" ]
+      - name: dim_sales_segment_name
+        description: Sales Segment text
+        tests:
+          - not_null
+          - unique
+        tags: [ "tdf", "common" ]
+
+  - name: dim_sales_territory
+    description: '{{ doc("dim_sales_territory") }}'
+    columns:
+      - name: dim_sales_territory_name_id
+        description: Unique identifier of a version of a sales territory
+        tests:
+          - not_null
+          - unique
+        tags: [ "tdf", "sales_territory", "common" ]
+      - name: dim_sales_territory_name
+        description: Sales Territory text
+        tests:
+          - not_null
+          - unique
+        tags: [ "tdf", "sales_territory", "common" ]
 
   - name: dim_subscriptions
     description: '{{ doc("dim_subscriptions") }}'
@@ -268,6 +470,16 @@ models:
           - not_null
           - accepted_values:
                   values: ['Sales-Assisted', 'Self-Service']
+
+  - name: dim_subscriptions_snapshots
+    description: Daily snapshot of subscriptions starting from 2020-03-01. Fiel
+    columns:
+      - name: subscription_snapshot_id
+        description: Unique identifier of a subscription snapshot
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "arr"]
 
   - name: dim_subscriptions_valid_at
     description: Parameterized model to recreate dimension table representing subscription details as in Zuora at given date. Required variable valid_at is timezone sensitive
@@ -326,6 +538,32 @@ models:
         description: The version of the rate plan charge. Each time a charge is amended, Zuora creates a new version of the rate plan charge.
       - name: charge_type
         description: Specifies the type of charge
+
+  - name: dim_usage_pings
+    description: '{{ doc("dim_usage_pings") }}'
+    columns:
+      - name: uuid
+        description: concatenate this field with host_id for a unique identifier for instances. See https://gitlab.com/gitlab-data/analytics/-/issues/6413#note_428426837. Business Process Issue - https://gitlab.com/gitlab-data/analytics/-/issues/6413#note_429177832 and https://gitlab.com/gitlab-data/analytics/-/issues/6560#note_428035384 and https://gitlab.com/gitlab-org/gitlab/-/merge_requests/44972
+      - name: host_id
+        description: uuid concatenated with this field for a unique identifier for instances. See https://gitlab.com/gitlab-data/analytics/-/issues/6413#note_428426837. Business Process Issue - https://gitlab.com/gitlab-data/analytics/-/issues/6413#note_429177832
+      - name: license_md5
+        description: JOIN key to license_db_licenses (see - https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.license_db_licenses). Note - License is only for self-managed instances and not for namespaces. CE and EE free should not have licenses. Known issue with EE version 9-10 having null records https://gitlab.com/gitlab-data/analytics/-/issues/6560#note_431390413
+      - name: installation_type
+        description: segmentation for how instances are installed. See https://gitlab.com/gitlab-data/analytics/-/issues/6560#note_429097420 for how this field is populated and known data concerns, such as all the instances without installation_type seem to be between 9 and 10, which lines up with the date that installation_type was added to usage ping.
+      - name: main_edition
+        description: segmentation for Edition. Values - CE, EE
+      - name: product_tier
+        description: segmentation for Product Tier. Values - Core (CE, EE), Starter, Premium, Ultimate, NULL
+      - name: main_edition_product_tier
+        description: segmentation for the product tier, including separate records for Core CE and Core EE
+      - name: ping_source
+        description: segmentation for SaaS data (from the self-managed instance that hosts the SaaS GitLab.com website) and data sent from customer self-managed instances
+      - name: is_internal
+        description: this instance is used by the company or a GitLab team member
+      - name: is_staging
+        descrition: DRAFT - need to better identify instances used for staging environments
+      - name: location_id
+        description: JOIN key for country information derived. See https://gitlab.com/gitlab-data/analytics/-/issues/6560#note_427936012
 
   - name: fct_charges_valid_at
     description: Factual table with all rate plan charges coming from subscriptions or an amendment to a subscription. Required variable valid_at is timezone sensitive
@@ -387,7 +625,7 @@ models:
         tests:
           - not_null
       - name: crm_person_id
-        description: A surrogate key for use when joining to `fct_crm_conversion_event`. Created from the contact_id where there is a contact and a lead_id where there isn't.  
+        description: A surrogate key for use when joining to `fct_crm_conversion_event`. Created from the contact_id where there is a contact and a lead_id where there isn't.
         tests:
           - not_null
 
@@ -403,24 +641,26 @@ models:
         tests:
           - not_null
       - name: crm_person_id
-        description: A surrogate key for use when joining to `fct_crm_conversion_event`. Created from the contact_id where there is a contact and a lead_id where there isn't.  
+        description: A surrogate key for use when joining to `fct_crm_conversion_event`. Created from the contact_id where there is a contact and a lead_id where there isn't.
         tests:
           - not_null
 
-  - name: fct_crm_sales_accepted_opportunity
-    description: '{{ doc("fct_crm_sales_accepted_opportunity") }}'
+  - name: fct_crm_opportunities
+    description: '{{ doc("fct_crm_opportunities") }}'
     columns:
-      - name: event_id
+      - name: crm_opportunity_id
         description: A dbt generated surrogate key combining the sfdc_record_id and the sales_accepted_date.
         tests:
           - unique
           - not_null
       - name: sales_accepted_date
-        description: The sales_accepted_date from the sfdc_opportunity
+        description: The sales_accepted_date from the sfdc_opportunity. Note that there can be opportunities with sales accepted dates that aren't sales accepted opportunities. This is indicated with the is_sao and is_sdr_sao booleans
       - name: crm_person_id
-        description: A surrogate key for use when joining to `fct_crm_sales_accepted_opportunity`. Created from the contact_id where there is a contact and a lead_id where there isn't.  
-        tests:
-          - not_null
+        description: A surrogate key for use when joining to `fct_crm_sales_accepted_opportunity`. Created from the contact_id where there is a contact and a lead_id where there isn't.
+      - name: is_sao
+        description: a boolean field created in the warehouse to flag Sales Accepted Opportunities. This field should be deprecated once sales accepted is in a more stable and consistent state in salesforce.
+      - name: is_sdr_sao
+        description: a boolean field created in the warehouse to flag Sales Accepted Opportunities from [Sales Development Reps](https://about.gitlab.com/handbook/marketing/revenue-marketing/sdr/). This field should be deprecated once sales accepted is in a more stable and consistent state in salesforce.
 
   - name: fct_mrr
     description: One row represents Monthly Recurring Revenue per one month, subscription_id, product_details_id
@@ -451,6 +691,45 @@ models:
       - name: quantity
         description: Total quantity
 
+  - name: fct_mrr_snapshots
+    description: One row represents Monthly Recurring Revenue per one month, subscription_id, product_details_id. Snapshot dates start from 2020-0
+    columns:
+      - name: mrr_snapshot_id
+        description: The unique identifier of the given snapshot MRR.
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "arr"]
+      - name: mrr_id
+        description: The unique identifier of the MRR.
+        tests:
+          - not_null
+        tags: ["tdf", "arr"]
+      - name: snapshot_id
+        description: The identifier of snapshot day in dim_dates
+      - name: date_id
+        description: The identifier of date month in dim_dates
+      - name: subscription_id
+        description: The identifier of subscription in dim_subscriptions_snapshots table
+        tests:
+          - not_null
+        tags: ["tdf", "arr"]
+      - name: product_details_id
+        description: The identifier of product details in dim_product_details
+        tests:
+          - not_null
+        tags: ["tdf", "arr"]
+      - name: billing_account_id
+        description: Zuora account id
+      - name:  crm_account_id
+        description: account id frm crm
+      - name: mrr
+        description: Monthly Recurring Revenue value for given month
+      - name: arr
+        description: Annual Recurring Revenue value for given month
+      - name: quantity
+        description: Total quantity
+
   - name: fct_usage_data_monthly
     description: '{{ doc("fct_usage_data_monthly") }}'
     columns:
@@ -467,7 +746,6 @@ models:
       - name: usage_ping_id
         tests:
           - not_null
-    
 
   - name: fct_usage_ping_metric_28_days
     description: '{{ doc("fct_usage_ping_metric_28_days") }}'
@@ -485,7 +763,6 @@ models:
       - name: usage_ping_id
         tests:
           - not_null
-      
 
   - name: fct_usage_ping_metric_all_time
     description: '{{ doc("fct_usage_ping_metric_all_time") }}'
@@ -524,7 +801,7 @@ models:
         description: The zuora subscription id derived from the license. Use this field to join to dim_subscriptions.
       - name: billing_account_id
         description: The zuora account id associated with the subscription. Use this field to join to dim_billing_accounts.
-      - name: array_product_details_id  
+      - name: array_product_details_id
         description: The array of distinct product detail ids associated with the subscription. Use this field to join to dim_product_details.
       - name: hostname
         description: The name of the host of the instance.
@@ -541,10 +818,19 @@ models:
       - name: license_plan
         description: The plan code for the product tier of the license.
       - name: is_trial
-        description: Boolean flag noting if the license was generated as part of a trial. 
+        description: Boolean flag noting if the license was generated as part of a trial.
       - name: created_at
         description: The timestamp when the usage ping was created.
         tests:
           - not_null
       - name: recorded_at
         description: The timestamp when the usage ping was recorded.
+  - name: dim_marketing_channel
+    description: '{{ doc("prep_sfdc_account") }}'
+    columns:
+      - name: dim_marketing_channel_id
+        description: Unique identifier for the marketing channel.
+        tests:
+          - not_null
+          - unique
+      - name: marketing_channel_name

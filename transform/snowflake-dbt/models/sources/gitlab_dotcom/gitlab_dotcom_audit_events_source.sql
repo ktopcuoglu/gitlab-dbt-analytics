@@ -21,7 +21,6 @@ WITH source AS (
   SELECT
     id::NUMBER              AS audit_event_id,
     author_id::NUMBER       AS author_id,
-    type::VARCHAR           AS audit_event_type,
     entity_id::NUMBER       AS entity_id,
     entity_type::VARCHAR    AS entity_type,
     details::VARCHAR        AS audit_event_details,

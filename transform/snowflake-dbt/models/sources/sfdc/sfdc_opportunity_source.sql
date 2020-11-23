@@ -35,6 +35,8 @@ WITH source AS (
         ownerid                                     AS owner_id,
 
         -- logistical information
+        isclosed                                    AS is_closed,
+        iswon                                       AS is_won,
         business_type__c                            AS business_type,
         closedate                                   AS close_date,
         createddate                                 AS created_date,
@@ -61,6 +63,7 @@ WITH source AS (
         {{  sfdc_source_buckets('leadsource') }}
         stagename                                   AS stage_name,
         revenue_type__c                             AS order_type,
+        deal_path__c                                AS deal_path,
 
         -- opportunity information
         acv_2__c                                    AS acv,
@@ -109,6 +112,7 @@ WITH source AS (
         order_type_live__c                          AS order_type_live,
         order_type_test__c                          AS order_type_stamped,
         arr_net__c                                  AS net_arr,
+        days_in_sao__c                              AS days_in_sao,
 
       -- ************************************
       -- sales segmentation deprecated fields - 2020-09-03

@@ -14,6 +14,21 @@ models:
     columns:
       - name: commit_date
       - name: commit_id
+  - name: engineering_lcp_source
+    description: This table contains information about largest-content-paint statistics.
+    columns:
+      - name: aggregation_name
+        tests:
+          - not_null
+      - name: metric_name
+        tests:
+          - not_null
+      - name: metric_value
+        tests:
+          - not_null
+      - name: metric_reported_at
+        tests:
+          - not_null
   - name: engineering_nvd_data
     description: '{{ doc("engineering_nvd_data") }}'
     columns:

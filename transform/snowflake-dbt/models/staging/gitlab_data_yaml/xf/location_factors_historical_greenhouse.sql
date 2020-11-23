@@ -1,8 +1,3 @@
-{# {{ config({
-    "schema": "temporary"
-    })
-}} #}
-
 WITH location_factor_base AS (
   
   SELECT *

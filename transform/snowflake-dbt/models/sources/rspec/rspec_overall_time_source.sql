@@ -6,7 +6,7 @@ WITH source AS (
 ), renamed AS (
 
     SELECT
-      commit::VARCHAR                       AS commit,
+      commit_hash::VARCHAR                  AS commit,
       commit_time::TIMESTAMP_TZ             AS commit_at_time,
       total_time::FLOAT                     AS total_time_taken_seconds,
       number_of_tests::FLOAT                AS number_of_tests,

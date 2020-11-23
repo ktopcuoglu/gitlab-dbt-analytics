@@ -1,9 +1,9 @@
-{% macro source_column_sum_min(schema, table, column, min_value, where_clause=None) %}
+{% macro source_column_sum_min(source_name, table, column, min_value, where_clause=None) %}
 
 WITH source AS (
 
     SELECT *
-    FROM {{ source(schema, table) }}
+    FROM {{ source(source_name, table) }}
 
 ), counts AS (
 

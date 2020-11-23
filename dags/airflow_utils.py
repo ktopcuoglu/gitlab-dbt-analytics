@@ -9,8 +9,8 @@ from airflow.operators.slack_operator import SlackAPIPostOperator
 
 REPO = "https://gitlab.com/gitlab-data/analytics.git"
 DATA_IMAGE = "registry.gitlab.com/gitlab-data/data-image/data-image:v0.0.9"
-DBT_IMAGE = "registry.gitlab.com/gitlab-data/data-image/dbt-image:v0.0.9"
-PERMIFROST_IMAGE = "registry.gitlab.com/gitlab-data/permifrost:v0.1.1"
+DBT_IMAGE = "registry.gitlab.com/gitlab-data/data-image/dbt-image:v0.0.10"
+PERMIFROST_IMAGE = "registry.gitlab.com/gitlab-data/permifrost:v0.8.0"
 
 
 def split_date_parts(day: date, partition: str) -> List[dict]:
@@ -211,12 +211,19 @@ GIT_BRANCH = env["GIT_BRANCH"]
 gitlab_pod_env_vars = {
     "CI_PROJECT_DIR": "/analytics",
     "EXECUTION_DATE": "{{ next_execution_date }}",
+    "SNOWFLAKE_PREPARATION_SCHEMA": "preparation",
     "SNOWFLAKE_SNAPSHOT_DATABASE": "RAW"
     if GIT_BRANCH == "master"
     else f"{GIT_BRANCH.upper()}_RAW",
     "SNOWFLAKE_LOAD_DATABASE": "RAW"
     if GIT_BRANCH == "master"
     else f"{GIT_BRANCH.upper()}_RAW",
+    "SNOWFLAKE_PREP_DATABASE": "PREP"
+    if GIT_BRANCH == "master"
+    else f"{GIT_BRANCH.upper()}_PREP",
+    "SNOWFLAKE_PROD_DATABASE": "PROD"
+    if GIT_BRANCH == "master"
+    else f"{GIT_BRANCH.upper()}_PROD",
     "SNOWFLAKE_TRANSFORM_DATABASE": "ANALYTICS"
     if GIT_BRANCH == "master"
     else f"{GIT_BRANCH.upper()}_ANALYTICS",
@@ -276,7 +283,7 @@ dbt_install_deps_cmd = f"""
 
 dbt_install_deps_and_seed_cmd = f"""
     {dbt_install_deps_cmd} &&
-    dbt seed --profiles-dir profile --target prod --vars {xs_warehouse}"""
+    dbt seed --profiles-dir profile --target prod --full-refresh --vars {xs_warehouse}"""
 
 clone_and_setup_dbt_nosha_cmd = f"""
     {clone_repo_cmd} &&
@@ -288,7 +295,7 @@ dbt_install_deps_nosha_cmd = f"""
 
 dbt_install_deps_and_seed_nosha_cmd = f"""
     {dbt_install_deps_nosha_cmd} &&
-    dbt seed --profiles-dir profile --target prod --vars {xs_warehouse}"""
+    dbt seed --profiles-dir profile --target prod --full-refresh --vars {xs_warehouse}"""
 
 
 def number_of_dbt_threads_argument(number_of_threads):

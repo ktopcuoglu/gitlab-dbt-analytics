@@ -1,8 +1,7 @@
 WITH usage_data AS (
 
     SELECT *
-    FROM {{ ref('version_usage_data_source') }}
-    WHERE uuid IS NOT NULL
+    FROM {{ ref('dim_usage_pings') }}
 
 ), unpacked_stages AS (
     

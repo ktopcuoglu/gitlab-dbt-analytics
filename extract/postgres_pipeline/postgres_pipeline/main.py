@@ -412,7 +412,7 @@ def main(file_path: str, load_type: str, load_only_table: str = None) -> None:
         except:
             pass  # likely that the table doesn't exist -- don't want an error here to stop the task
 
-        append_to_xcom_file({table_name: count})
+        append_to_xcom_file({table_name: count, "load_ran": loaded})
 
 
 if __name__ == "__main__":

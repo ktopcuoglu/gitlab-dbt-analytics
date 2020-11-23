@@ -1,0 +1,27 @@
+version: 2
+
+models:
+  - name: mart_usage_ping_counters_statistics
+    description: '{{ doc("mart_usage_ping_counters_statistics") }}'
+    tests:
+      - unique:
+          column_name: "concat(ping_name, edition)"
+    columns:
+      - name: ping_name
+        tests:
+            - not_null
+  - name: mart_paid_subscriptions_monthly_usage_ping_optin
+    description: '{{ doc("mart_paid_subscriptions_monthly_usage_ping_optin") }}'
+    columns:
+      - name: month_subscription_id
+        tests:
+            - not_null
+            - unique
+      - name: arr
+        description: "Calculated as 12 * MRR value"
+      - name: subscription_name_slugify
+        description: Unique key of a subscription
+      - name: has_sent_payloads
+        description: boolean flag to identify if for a specific month reporting_month and a specific subscription_name_slugify, a usage ping payload has been received.
+      - name: latest_major_minor_version
+        description: for a specific month reporting_month and a specific subscription_name_slugify, the latest version of the GitLab Application used.

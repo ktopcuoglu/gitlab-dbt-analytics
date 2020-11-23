@@ -116,7 +116,26 @@ models:
     - name: merge_request_updated_at
       tests:
         - not_null
-
+  - name: category_handbook_business_technology_merge_requests
+    description: This dbt model (view) just filters category_handbook_merge_requests to only include Business Technology related MRs.
+    columns:
+    - name: merge_request_created_at
+      tests:
+        - not_null
+    - name: merge_request_department_list
+      tests:
+        - not_null
+    - name: merge_request_iid
+      tests: 
+        - not_null
+    - name: merge_request_last_edited_at
+    - name: merge_request_merged_at
+    - name: merge_request_state
+      tests:
+        - not_null
+    - name: merge_request_updated_at
+      tests:
+        - not_null
 
 
 

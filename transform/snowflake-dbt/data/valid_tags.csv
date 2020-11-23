@@ -1,0 +1,32 @@
+tag,description
+arr,Annual Recurring Revenue
+arr_snapshots,For ARR Snapshots
+billing_accounts,For billing accounts
+common,For the common schema
+crm_accounts,For CRM Accounts
+customers_db,Relates to Customers database
+daily,Used in Airflow runs
+data,dbt built-in
+dbt,Relates to dbt-generated data-sets
+geo,Relates to geo data
+gitlab_dotcom,Relates to GitLab.com Database
+license_db,Relates to License DB
+industry, Related to companies industry data
+keyhole_twitter,Relates to Twitter data provided by Keyhole
+mart,For data marts
+mrr,Monthly Recurring revenue
+order_type, For identifying types or order data
+on-run-end,dbt built-in
+on-run-start,dbt built-in
+opportunity, Relates to customer opportunity data.
+poc,Proof of concept
+product,For large product analytics data
+purchase_channel, Related to identifying types of purchase channel data
+sales_territory, Related to sales territory mappings
+schema,dbt built-in
+sfdc,Relates to Salesforce dotcom
+sources,Related to sources
+social,Related to social media data
+tdf,Trusted Data Framework
+version_db,Relates to the Version Database
+zuora,Relates to Zuora data

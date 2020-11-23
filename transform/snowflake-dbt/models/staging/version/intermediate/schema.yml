@@ -29,6 +29,8 @@ models:
           - name: uuid
             tests:
                 - not_null
+    
+    - name: version_usage_data_manually_imported
 
     - name: version_usage_stats_list
       columns:

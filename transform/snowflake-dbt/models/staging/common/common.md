@@ -9,8 +9,18 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
+{% docs dim_crm_opportunities %}
+Model for all dimensional opportunity columns from salesforce opportunity object
+
+{% enddocs %}
+
+{% docs dim_crm_person %}
+Dimension that combines demographic data from salesforce leads and salesforce contacts. They are combined with a union and a filter on leads excluding converted leads and leads where there is a corresponding contact.
+
+{% enddocs %}
+
 {% docs dim_crm_persons %}
-Dimension that combines demographic data from salesforce leads and salesforce contacts. They are combined with a union and a filter on leads excluding converted leads and leads where there is a corresponding contact. 
+Dimension that combines demographic data from salesforce leads and salesforce contacts. They are combined with a union and a filter on leads excluding converted leads and leads where there is a corresponding contact.
 
 {% enddocs %}
 
@@ -84,9 +94,9 @@ A fact from the lead and contact tables that shows the date they were qualified.
 
 {% enddocs %}
 
-{% docs fct_crm_sales_accepted_opportunity %}
+{% docs fct_crm_opportunities %}
 
-A fact from the opportunity using the sales_accepted_date created in order to standardize the logic and dimensional joins for this metric.
+A fact table for salesforce opportunities
 
 {% enddocs %}
 
@@ -146,7 +156,7 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% docs dim_crm_sales_rep %}
 
-Dimension representing the associated sales rep from salesforce. Most often this will be the record owner, which is a ubiquitous field in salesforce. 
+Dimension representing the associated sales rep from salesforce. Most often this will be the record owner, which is a ubiquitous field in salesforce.
 
 {% enddocs %}
 
@@ -174,3 +184,56 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
+{% docs dim_usage_pings %}
+Dimension that contains demographic data from usage ping data, including additional breaks out for product_tier, if it is from an internal instance, and replaces the ip_address hash with a location_id instead.
+
+[Core represents both CE and EE](https://about.gitlab.com/handbook/marketing/product-marketing/tiers/#history-of-ce-and-ee-distributions).
+
+Get started by exploring the [Product Geolocation Analysis](https://about.gitlab.com/handbook/business-ops/data-team/data-catalog/product-geolocation/) handbook page.
+Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+{% enddocs %}
+
+{% docs dim_instances %}
+Dimension that contains statistical data for instances from usage ping data
+
+Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+{% enddocs %}
+
+{% docs dim_opportunity_source %}
+
+Opportunity source dimension, based off of salesforce opportunity data, using the `generate_single_field_dimension` macro to create the final formatted SQL
+
+{% enddocs %}
+
+{% docs dim_purchase_channel %}
+
+Purchase channel dimension, based off of salesforce opportunity data, using the `generate_single_field_dimension` macro to create the final formatted SQL
+
+{% enddocs %}
+
+{% docs dim_sales_segment %}
+
+Dimension table for sales segment built off Ultimate_Parent_Sales_Segment_Employees__c in SFDC field in account data. Example values: SMB, Mid-Market, Large
+
+{% enddocs %}
+
+
+{% docs dim_sales_territory %}
+
+Sales territory dimension, based off of salesforce account data, using the `generate_single_field_dimension_from_prep` macro to create the final formatted SQL
+
+{% enddocs %}
+
+{% docs dim_industry %}
+
+Industry dimension, based off of salesforce account data, using the `generate_single_field_dimension_from_prep` macro to create the final formatted SQL
+
+{% enddocs %}
+
+{% docs dim_order_type %}
+
+Order type dimension, based off of salesforce opportunity data, using the `generate_single_field_dimension` macro to create the final formatted SQL
+
+{% enddocs %}

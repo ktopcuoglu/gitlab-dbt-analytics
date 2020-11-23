@@ -1,0 +1,50 @@
+job_title_speciality,sub_department
+access,dev
+compliance,dev
+import,dev
+analytics,dev
+project management,dev
+portfolio management,dev
+certify,dev
+source code,dev
+knowledge,dev
+static site editor,dev
+editor,dev
+gitaly,dev
+gitter,dev
+ecosystem,dev
+static analysis,secure
+dynamic analysis,secure
+composition analysis,secure
+fuzz testing,secure
+vulnerability research,secure
+secure,secure
+frontend,secure
+vulnerability management,secure
+configure,ops
+apm,ops
+health,ops
+continuous integration,ops
+testing,ops
+runner,ops
+release management,ops
+progressive delivery,ops
+package,ops
+container security,threat management
+insider threats,threat management
+rsponsible disclosure,threat management
+threat management,threat management
+fulfillment,fulfillment
+purchase,fulfillment
+provision,fulfillment
+telemetry,growth
+acquisition,growth
+conversion,growth
+expansion,growth
+retention,growth
+database,enablement
+distribution,enablement
+geo,enablement
+memory,enablement
+global search,enablement
+product planning,dev

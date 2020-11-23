@@ -17,7 +17,12 @@ flattening AS (
     renewal.value::VARCHAR 		AS ZUORA_RENEWAL_SUBSCRIPTION_NAME_SLUGIFY
   FROM {{ref('zuora_subscription_intermediate')}},
     LATERAL flatten(input => zuora_renewal_subscription_name_slugify, OUTER => TRUE) renewal
-
+  -- See issue: https://gitlab.com/gitlab-data/analytics/-/issues/6518
+  WHERE SUBSCRIPTION_ID
+  NOT IN ('2c92a00d6e59c212016e6432a2d70dee',
+   '2c92a0ff74357c7401744e2bf3ee614b',
+   '2c92a00f74e75dd60174e89220361bbc',
+   '2c92a00774ddaf190174de37f0eb147d')
 ),
 
 zuora_sub (base_slug, renewal_slug, parent_slug, lineage, children_count) AS (

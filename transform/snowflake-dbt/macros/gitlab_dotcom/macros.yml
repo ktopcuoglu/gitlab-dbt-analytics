@@ -3,6 +3,8 @@ version: 2
 macros:
   - name: action_type
     description: '{{ doc("action_type") }}'
+  - name: filter_out_blocked_users
+    description: '{{ doc("filter_out_blocked_users") }}'
   - name: get_internal_parent_namespaces
     description: '{{ doc("get_internal_parent_namespaces") }}'
   - name: map_state_id

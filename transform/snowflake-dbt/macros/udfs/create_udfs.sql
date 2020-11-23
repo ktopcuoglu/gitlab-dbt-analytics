@@ -1,11 +1,24 @@
 {% macro create_udfs() %}
 
-  create schema if not exists {{target.schema}}_staging;
+{%- set production_targets = production_targets() -%}
+
+{%- if target.name in production_targets -%}
+
+  create schema if not exists {{target.schema}};
 
     {{sfdc_id_15_to_18()}}
     {{regexp_substr_to_array()}}
     {{crc32()}}
 
-  create schema if not exists {{target.schema}}_analytics;
+{%- else -%}
+    
+    create schema if not exists "{{ target.database | trim }}_ANALYTICS".{{target.schema}};
+
+    {{sfdc_id_15_to_18()}}
+    {{regexp_substr_to_array()}}
+    {{crc32()}}
+
+{%- endif -%}
+
 
 {% endmacro %}

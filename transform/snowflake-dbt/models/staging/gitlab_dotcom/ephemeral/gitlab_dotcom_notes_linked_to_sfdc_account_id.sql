@@ -39,7 +39,7 @@ WITH gitlab_notes AS (
       gitlab_notes.note_id,
       noteable_id,
       noteable_type,
-      {{target.schema}}_staging.id15to18(f.value::VARCHAR) AS sfdc_id_18char,
+      {{target.schema}}.id15to18(f.value::VARCHAR) AS sfdc_id_18char,
       SUBSTR(sfdc_id_18char, 0, 3)                         AS sfdc_id_prefix
     FROM gitlab_notes, 
       TABLE(flatten(sfdc_link_array)) f

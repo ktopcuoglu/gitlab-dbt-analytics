@@ -22,7 +22,8 @@ WITH days AS (
       plan_id_at_event_date,
       plan_was_paid_at_event_date,
       TO_DATE(created_at) AS event_day
-    FROM {{ ref('gitlab_dotcom_events') }}
+    FROM {{ ref('gitlab_dotcom_events') }} dotcom_events
+    WHERE {{ filter_out_blocked_users('dotcom_events', 'author_id') }}
 
 ), audit_events_active_user AS (
 

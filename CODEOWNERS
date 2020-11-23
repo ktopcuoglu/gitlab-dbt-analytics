@@ -8,7 +8,7 @@
 # nested in that directory, on any level
 
 [Default]
-* @jjstark @kathleentam @tayloramurphy
+* @jjstark @kathleentam @tayloramurphy @m_walker
 
 
 [Admin]
@@ -42,8 +42,8 @@ docker-compose.yml  @tayloramurphy  @m_walker
 
 [dbt]
 /transform/                                         @tayloramurphy  @jjstark        @kathleentam
-/transform/general/                                 @kathleentam    @derekatwood    @pluthra
-/transform/snowflake-dbt/                           @tayloramurphy  @jjstark        @kathleentam
+/transform/general/                                 @kathleentam    @pluthra
+/transform/snowflake-dbt/                           @tayloramurphy  @jjstark        @kathleentam    @m_walker
 
 /transform/snowflake-dbt/snowflake-dbt-ci.yml       @tayloramurphy  @m_walker       @jjstark        @kathleentam
 /transform/snowflake-dbt/generate_dbt_schema.py     @tayloramurphy  @m_walker       @jjstark        @kathleentam
@@ -55,19 +55,20 @@ docker-compose.yml  @tayloramurphy  @m_walker
 
 /transform/snowflake-dbt/models/bamboohr/           @pluthra        @kathleentam    @tayloramurphy 
 /transform/snowflake-dbt/models/covid19/            @tayloramurphy  @jjstark        @kathleentam
-/transform/snowflake-dbt/models/date/base/          @derekatwood    @kathleentam
+/transform/snowflake-dbt/models/date/base/          @kathleentam
 /transform/snowflake-dbt/models/marts/product_kpis/ @mpeychet_      @kathleentam
 /transform/snowflake-dbt/models/smau_events/        @mpeychet_      @kathleentam
-/transform/snowflake-dbt/models/snapshots/          @m_walker       @kathleentam    @jjstark
+/transform/snowflake-dbt/models/snapshots/          @m_walker       @kathleentam    @tayloramurphy
 /transform/snowflake-dbt/models/snowplow/           @tayloramurphy  @mpeychet_      
 /transform/snowflake-dbt/models/snowplow_combined/  @tayloramurphy  @mpeychet_
 
-/transform/snowflake-dbt/models/sources/customers/          @mpeychet_		@m_walker       @derekatwood    @kathleentam
-/transform/snowflake-dbt/models/staging/customers/          @mpeychet_		@m_walker       @derekatwood    @kathleentam
+/transform/snowflake-dbt/models/sources/customers/          @mpeychet_		@m_walker           @kathleentam
+/transform/snowflake-dbt/models/staging/customers/          @mpeychet_		@m_walker           @kathleentam
 
+/transform/snowflake-dbt/models/staging/common/     @jjstark  @paul_armstrong @m_walker @tayloramurphy
 
-/transform/snowflake-dbt/models/sources/dbt         @m_walker    @jjstark
-/transform/snowflake-dbt/models/staging/dbt         @m_walker    @jjstark
+/transform/snowflake-dbt/models/sources/dbt         @m_walker    @jjstark   @tayloramurphy
+/transform/snowflake-dbt/models/staging/dbt         @m_walker    @jjstark   @tayloramurphy
 
 /transform/snowflake-dbt/models/sources/engineering/        @m_walker       @kathleentam    @ken_aguilar
 /transform/snowflake-dbt/models/staging/engineering/        @m_walker       @kathleentam    @ken_aguilar
@@ -75,14 +76,14 @@ docker-compose.yml  @tayloramurphy  @m_walker
 /transform/snowflake-dbt/models/sources/gitlab_data_yaml/   @tayloramurphy  @kathleentam    @jjstark
 /transform/snowflake-dbt/models/staging/gitlab_data_yaml/   @tayloramurphy  @kathleentam    @jjstark
 
-/transform/snowflake-dbt/models/sources/gitlab_dotcom/      @mpeychet_		@m_walker       @derekatwood    @kathleentam    
-/transform/snowflake-dbt/models/staging/gitlab_dotcom/      @mpeychet_		@m_walker       @derekatwood    @kathleentam
+/transform/snowflake-dbt/models/sources/gitlab_dotcom/      @mpeychet_		@m_walker           @kathleentam    
+/transform/snowflake-dbt/models/staging/gitlab_dotcom/      @mpeychet_		@m_walker           @kathleentam
 
 /transform/snowflake-dbt/models/sources/gitter/             @tayloramurphy  @kathleentam    @jjstark
 /transform/snowflake-dbt/models/staging/gitter/             @tayloramurphy  @kathleentam    @jjstark
 
-/transform/snowflake-dbt/models/sources/google_analytics_360/   @mpeychet_	@jjstark	@jeanpeguero
-/transform/snowflake-dbt/models/staging/google_analytics_360/   @mpeychet_	@jjstark	@jeanpeguero
+/transform/snowflake-dbt/models/sources/google_analytics_360/   @mpeychet_	@jjstark  @paul_armstrong	@jeanpeguero
+/transform/snowflake-dbt/models/staging/google_analytics_360/   @mpeychet_	@jjstark  @paul_armstrong	@jeanpeguero
 
 /transform/snowflake-dbt/models/sources/greenhouse/         @pluthra        @kathleentam	@tayloramurphy
 /transform/snowflake-dbt/models/staging/greenhouse/         @pluthra        @kathleentam	@tayloramurphy
@@ -90,40 +91,40 @@ docker-compose.yml  @tayloramurphy  @m_walker
 /transform/snowflake-dbt/models/sources/handbook/           @m_walker       @kathleentam    @ken_aguilar
 /transform/snowflake-dbt/models/staging/handbook/           @m_walker       @kathleentam    @ken_aguilar
 
-/transform/snowflake-dbt/models/sources/license/    @mpeychet_		@m_walker   @derekatwood    @kathleentam
-/transform/snowflake-dbt/models/staging/license/    @mpeychet_		@m_walker   @derekatwood    @kathleentam
+/transform/snowflake-dbt/models/sources/license/    @mpeychet_		@m_walker       @kathleentam
+/transform/snowflake-dbt/models/staging/license/    @mpeychet_		@m_walker       @kathleentam
 
-/transform/snowflake-dbt/models/sources/netsuite/           @iweeks         @kathleentam    @msendal
-/transform/snowflake-dbt/models/staging/netsuite/           @iweeks         @kathleentam    @msendal
+/transform/snowflake-dbt/models/sources/netsuite/           @iweeks         @kathleentam    @tayloramurphy
+/transform/snowflake-dbt/models/staging/netsuite/           @iweeks         @kathleentam    @tayloramurphy
 
 /transform/snowflake-dbt/models/sources/pmg   @jeanpeguero    @paul_armstrong   @jjstark
 /transform/snowflake-dbt/models/staging/pmg   @jeanpeguero    @paul_armstrong   @jjstark
 
-/transform/snowflake-dbt/models/sources/qualtrics   @m_walker    @jjstark
-/transform/snowflake-dbt/models/staging/qualtrics   @m_walker    @jjstark
+/transform/snowflake-dbt/models/sources/qualtrics   @m_walker  @jjstark     @tayloramurphy
+/transform/snowflake-dbt/models/staging/qualtrics   @m_walker  @jjstark     @tayloramurphy
 
-/transform/snowflake-dbt/models/sources/sfdc/       @derekatwood    @kathleentam	@jeanpeguero     @jjstark  
-/transform/snowflake-dbt/models/staging/sfdc/       @derekatwood    @kathleentam    @jeanpeguero     @jjstark
+/transform/snowflake-dbt/models/sources/sfdc/           @kathleentam	@jeanpeguero   @jjstark     @paul_armstrong
+/transform/snowflake-dbt/models/staging/sfdc/           @kathleentam    @jeanpeguero   @jjstark     @paul_armstrong
 
-/transform/snowflake-dbt/models/sources/snowflake/  @m_walker       @kathleentam    @jjstark
-/transform/snowflake-dbt/models/staging/snowflake/  @m_walker       @kathleentam    @jjstark
+/transform/snowflake-dbt/models/sources/snowflake/  @m_walker       @kathleentam    @jjstark    @tayloramurphy
+/transform/snowflake-dbt/models/staging/snowflake/  @m_walker       @kathleentam    @jjstark    @tayloramurphy
 
-/transform/snowflake-dbt/models/sources/version/    @mpeychet_		@m_walker   @derekatwood    @kathleentam
-/transform/snowflake-dbt/models/staging/version/    @mpeychet_		@m_walker   @derekatwood    @kathleentam
+/transform/snowflake-dbt/models/sources/version/    @mpeychet_		@m_walker       @kathleentam
+/transform/snowflake-dbt/models/staging/version/    @mpeychet_		@m_walker       @kathleentam
 
-/transform/snowflake-dbt/models/sources/zendesk     @derekatwood    @ken_aguilar    @kathleentam
-/transform/snowflake-dbt/models/staging/zendesk     @derekatwood    @ken_aguilar    @kathleentam
+/transform/snowflake-dbt/models/sources/zendesk         @ken_aguilar    @kathleentam
+/transform/snowflake-dbt/models/staging/zendesk         @ken_aguilar    @kathleentam
 
-/transform/snowflake-dbt/models/sources/zuora       @iweeks         @derekatwood    @msendal
-/transform/snowflake-dbt/models/staging/zuora       @iweeks         @derekatwood	@msendal
+/transform/snowflake-dbt/models/sources/zuora       @iweeks     @tayloramurphy           
+/transform/snowflake-dbt/models/staging/zuora       @iweeks     @tayloramurphy
 
 # ======
 # dbt data file Overwrites
 # ======
 /transform/snowflake-dbt/data/cost_center_division_department_mapping.csv               @iweeks     @kathleentam
 /transform/snowflake-dbt/data/engineering_productivity_metrics_projects_to_include.csv  @m_walker   @kathleentam    @tayloramurphy 
-/transform/snowflake-dbt/data/excluded.csv                                              @jjstark    @kathleentam
-/transform/snowflake-dbt/data/google_analytics_custom_dimension_indexes.csv             @jjstark    @kathleentam
+/transform/snowflake-dbt/data/excluded.csv                                              @jjstark    @tayloramurphy  @kathleentam
+/transform/snowflake-dbt/data/google_analytics_custom_dimension_indexes.csv             @jjstark    @tayloramurphy  @kathleentam
 /transform/snowflake-dbt/data/handbook_file_classification_mapping.csv                  @m_walker   @kathleentam
 /transform/snowflake-dbt/data/historical_counts_maintainers_engineers.csv               @m_walker   @kathleentam    @tayloramurphy 
 /transform/snowflake-dbt/data/netsuite_expense_cost_category.csv                        @iweeks     @kathleentam
