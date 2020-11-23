@@ -559,7 +559,7 @@ models:
           - not_null
           - unique
   - name: gitlab_dotcom_secure_stage_ci_jobs
-    description: '{{ doc("gitlab_dotcom_secure_stage_ci_jobs") }}' This table is populated on a like query to try and catch customized setups. It leverages tables gitlab_dotcom_ci_job_artifacts, gitlab_dotcom_projects_xf, and gitlab_dotcom_ci_builds.
+    description: This table is populated to try and catch customized setups. It leverages tables gitlab_dotcom_ci_job_artifacts, gitlab_dotcom_projects_xf, and gitlab_dotcom_ci_builds.
     columns:
       - name: ci_build_id
         tests:
