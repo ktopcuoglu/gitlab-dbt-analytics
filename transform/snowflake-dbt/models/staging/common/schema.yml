@@ -400,8 +400,10 @@ models:
         tests:
           - unique
           - not_null
+        tags: [ "tdf", "common" ]
       - name: is_active
         description: A boolean column that flags if the user is active in salesforce, which means that the user can login and use salesforce.
+        tags: [ "tdf", "common" ]
 
   - name: dim_sales_segment
     description: '{{ doc("dim_sales_segment") }}'
