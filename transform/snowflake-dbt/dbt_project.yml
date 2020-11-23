@@ -60,6 +60,7 @@ seeds:
         major_minor_version: varchar
   
   data_tests:
+    +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
     +schema: tdf
 
 # ==================
@@ -95,9 +96,6 @@ models:
   snowplow:
     +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
     +schema: "snowplow_{{ var('year', run_started_at.strftime('%Y')) }}_{{ var('month', run_started_at.strftime('%m')) }}"
-    +post-hook:
-      - "grant usage on schema {{this.schema}} to role snowplow"
-      - "grant select on {{this}} to role snowplow"
     +tags: ["product"]
     +incremental_strategy: "delete+insert"
     page_views:
@@ -321,6 +319,7 @@ models:
         +tags: ["product"]
         +schema: analytics
         month_partition:
+          +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
           +schema: "snowplow_{{ var('year', run_started_at.strftime('%Y')) }}_{{ var('month', run_started_at.strftime('%m')) }}"
 
       version:
