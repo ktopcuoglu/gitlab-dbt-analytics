@@ -39,11 +39,11 @@
         grant select on all tables in schema covid19 to role {{ non_sensitive }};
         grant select on all views in schema covid19 to role {{ non_sensitive }};
 
-        grant usage on schema sensitive to role {{ sensitive }};
-        grant select on all tables in schema sensitive to role {{ sensitive }};
-        grant select on all views in schema sensitive to role {{ sensitive }};
+        grant usage on schema prep.sensitive to role {{ sensitive }};
+        grant select on all tables in schema prep.sensitive to role {{ sensitive }};
+        grant select on all views in schema prep.sensitive to role {{ sensitive }};
 
-        grant select on table analytics.analytics_sensitive.bamboohr_id_employee_number_mapping to role lmai;
+        grant select on table prep.sensitive.bamboohr_id_employee_number_mapping to role lmai;
     {%- endif -%}
 
 {%- endmacro -%} 
