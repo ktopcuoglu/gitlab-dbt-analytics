@@ -654,7 +654,7 @@ roles:
                     - prep.airflow.airflow_dag
                     - prep.airflow.airflow_dag_run
 
-    - reporter_sensitive: #Right now this matches the reporter role, until we roll out the sensitive schema
+    - reporter_sensitive:
         warehouses:
             - reporting
         member_of:
