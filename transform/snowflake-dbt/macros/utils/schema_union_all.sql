@@ -2,18 +2,18 @@
 
  {% if database_name is not none %}
 
-    {% set database = database_name %}
+    {% set database_id = database_name %}
 
  {% else %}
 
-    {% set database = target.database %}
+    {% set database_id = target.database %}
 
  {% endif %}
 
  {% call statement('get_schemata', fetch_result=True) %}
 
     SELECT DISTINCT '"' || table_schema || '"."' || table_name || '"'
-    FROM '"'database'"'.information_schema.tables
+    FROM '"'database_id'"'.information_schema.tables
     WHERE table_schema ILIKE '%{{ schema_part }}%'
       AND table_schema NOT ILIKE '%{{ exclude_part }}%'
       AND table_name ILIKE '{{ table_name }}'
@@ -29,7 +29,7 @@
 
             {% for schematable in values %}
                 SELECT *
-                FROM '"'database'"'.{{ schematable }}
+                FROM '"'database_id'"'.{{ schematable }}
 
             {%- if not loop.last %}
                 UNION ALL
