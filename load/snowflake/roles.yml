@@ -679,7 +679,6 @@ roles:
             schemas:
                 - analytics.analytics
                 - analytics.analytics_clones
-                - analytics.analytics_meta
                 - analytics.analytics_staging
                 - analytics.common
                 - analytics.common_mapping
@@ -687,7 +686,6 @@ roles:
             tables:
                 - analytics.analytics.*
                 - analytics.analytics_clones.*
-                - analytics.analytics_meta.*
                 - analytics.analytics_staging.*
                 - analytics.common.*
                 - analytics.common_mapping.*
@@ -838,15 +836,12 @@ roles:
             databases:
                 read:
                     - analytics
-                    - prep
             schemas:
                 read:
                     - analytics.date
-                    - prep.date
             tables:
                 read:
                     - analytics.date.*
-                    - prep.date.*
 
     - db_dumps:
         privileges:
@@ -875,7 +870,6 @@ roles:
                     - analytics.analytics
                     - analytics.common
                     - analytics.common_mapping
-                    - analytics.analytics_meta
                     - analytics.analytics_staging
                     - analytics.dbt
                     - raw.dbt
@@ -884,7 +878,6 @@ roles:
                     - analytics.analytics.*
                     - analytics.common.*
                     - analytics.common_mapping.*
-                    - analytics.analytics_meta.*
                     - analytics.analytics_staging.*
                     - analytics.dbt.*
                     - raw.dbt.*
