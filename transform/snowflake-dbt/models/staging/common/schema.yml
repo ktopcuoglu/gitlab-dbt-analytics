@@ -492,6 +492,7 @@ models:
         tests:
           - not_null
           - unique
+        tags: ["tdf", "common"]
 
   - name: fct_charges
     description: '{{ doc("fct_charges") }}'
