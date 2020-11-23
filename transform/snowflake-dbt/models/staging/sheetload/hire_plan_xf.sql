@@ -26,7 +26,7 @@ WITH source AS (
       department, 
       department_modified,
       division_mapped_current AS division
-    FROM "ANALYTICS"."ANALYTICS_STAGING"."BAMBOOHR_JOB_INFO_CURRENT_DIVISION_BASE"
+    FROM {{ ref ('bamboohr_job_info_current_division_base') }}   
     WHERE DEPARTMENT IS NOT NULL
       
 ), all_company AS (
@@ -55,7 +55,6 @@ WITH source AS (
     FROM source
     LEFT JOIN department_division_mapping 
       ON department_division_mapping.department = source.department
-      {# AND department_division_mapping.month_date = source.month_date #}
     GROUP BY 1,2,3,4
 
 ), department_level AS (
@@ -72,7 +71,6 @@ WITH source AS (
     FROM source
     LEFT JOIN department_division_mapping 
       ON department_division_mapping.department = source.department
-      {# AND department_division_mapping.month_date = source.month_date #}
     GROUP BY 1,2,3,4
 
 )

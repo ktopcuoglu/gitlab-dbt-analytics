@@ -55,7 +55,7 @@ WITH hire_replan AS (
       department, 
       department_modified,
       division_mapped_current AS division
-    FROM "ANALYTICS"."ANALYTICS_STAGING"."BAMBOOHR_JOB_INFO_CURRENT_DIVISION_BASE"
+    FROM {{ ref ('bamboohr_job_info_current_division_base') }}   
     WHERE DEPARTMENT IS NOT NULL
 
 ), all_company AS (
@@ -84,7 +84,6 @@ WITH hire_replan AS (
     FROM unpivoted
     LEFT JOIN department_division_mapping 
       ON department_division_mapping.department = unpivoted.department
-      {# AND department_division_mapping.month_date = unpivoted.month_date  #}
     GROUP BY 1,2,3,4
 
 ), department_level AS (
@@ -101,7 +100,6 @@ WITH hire_replan AS (
     FROM unpivoted
     LEFT JOIN department_division_mapping 
       ON department_division_mapping.department = unpivoted.department
-      {# AND department_division_mapping.month_date = unpivoted.month_date #}
     GROUP BY 1,2,3,4
 
 ), unioned AS (
