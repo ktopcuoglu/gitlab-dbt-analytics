@@ -1,4 +1,14 @@
-{%- macro schema_union_all(schema_part, table_name, exclude_part='scratch') -%}
+{%- macro schema_union_all(schema_part, table_name, exclude_part='scratch', database_name=none) -%}
+
+ {% if database_name is not none %}
+
+    {% set database = database_name %}
+
+ {% else %}
+
+    {% set database = target.database %}
+
+ {% endif %}
 
  {% call statement('get_schemata', fetch_result=True) %}
 
