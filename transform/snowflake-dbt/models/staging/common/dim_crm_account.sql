@@ -91,7 +91,7 @@ WITH map_merged_crm_accounts AS (
   LEFT JOIN map_merged_crm_accounts
     ON sfdc_account.account_id = map_merged_crm_accounts.sfdc_account_id
   LEFT JOIN ultimate_parent_account
-    ON ultimate_parent_account.account_id = sfdc_account.ultimate_parent_account_id
+    ON sfdc_account.ultimate_parent_account_id = ultimate_parent_account.account_id 
   LEFT OUTER JOIN sfdc_users
     ON sfdc_account.technical_account_manager_id = sfdc_users.user_id
   LEFT JOIN sfdc_record_type
