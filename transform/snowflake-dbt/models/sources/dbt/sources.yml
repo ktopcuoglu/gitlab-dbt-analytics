@@ -13,8 +13,7 @@ sources:
       identifier: false
 
     freshness:
-      warn_after: {count: 8, period: hour}
-      error_after: {count: 24, period: hour}
+      warn_after: {count: 24, period: hour}
 
     tables:
       - name: run
@@ -27,7 +26,6 @@ sources:
         description: This is for the reulsts from testing source data.
         identifier: source_tests_run_results
         freshness:
-          error_after: null
       - name: snapshots
         description: This is for the results from `dbt snapshot`
         identifier: snapshots_run_results
