@@ -273,14 +273,8 @@ models:
       gitlab_ops:
         +materialized: table
         +schema: analytics
-        sensitive:
-          +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
-          +materialized: view
-          +schema: sensitive
         source_view:
           +materialized: view
-          +schema: staging
-        staging:
           +schema: staging
 
       gitter:
