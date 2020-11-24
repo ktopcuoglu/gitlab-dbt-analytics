@@ -25,14 +25,14 @@ __init__.py     @kathleentam    @jjstark    @tayloramurphy
 
 
 [Data Engineering]
-/dags/              @tayloramurphy  @m_walker
-/extract/           @tayloramurphy  @m_walker	@jjstark
+/dags/              @tayloramurphy  @m_walker   @paul_armstrong
+/extract/           @tayloramurphy  @m_walker   @jjstark          @paul_armstrong
 /load/              @tayloramurphy  @jjstark    @kathleentam
-/orchestrate/       @tayloramurphy  @m_walker
+/orchestrate/       @tayloramurphy  @m_walker   @paul_armstrong
 
-Makefile            @tayloramurphy  @m_walker
-docker-compose.yml  @tayloramurphy  @m_walker
-.gitlab-ci.yml      @tayloramurphy  @m_walker
+Makefile            @tayloramurphy  @m_walker   @paul_armstrong
+docker-compose.yml  @tayloramurphy  @m_walker   @paul_armstrong
+.gitlab-ci.yml      @tayloramurphy  @m_walker   @paul_armstrong
 
 
 
@@ -43,11 +43,11 @@ docker-compose.yml  @tayloramurphy  @m_walker
 [dbt]
 /transform/                                         @tayloramurphy  @jjstark        @kathleentam
 /transform/general/                                 @kathleentam    @pluthra
-/transform/snowflake-dbt/                           @tayloramurphy  @jjstark        @kathleentam    @m_walker
+/transform/snowflake-dbt/                           @tayloramurphy  @jjstark        @kathleentam    @m_walker      @paul_armstrong
 
-/transform/snowflake-dbt/snowflake-dbt-ci.yml       @tayloramurphy  @m_walker       @jjstark        @kathleentam
-/transform/snowflake-dbt/generate_dbt_schema.py     @tayloramurphy  @m_walker       @jjstark        @kathleentam
-/transform/snowflake-dbt/periscope_check.py         @tayloramurphy  @m_walker       @jjstark        @kathleentam
+/transform/snowflake-dbt/snowflake-dbt-ci.yml       @tayloramurphy  @m_walker       @jjstark        @kathleentam        @paul_armstrong
+/transform/snowflake-dbt/generate_dbt_schema.py     @tayloramurphy  @m_walker       @jjstark        @kathleentam        @paul_armstrong
+/transform/snowflake-dbt/periscope_check.py         @tayloramurphy  @m_walker       @jjstark        @kathleentam        @paul_armstrong
 
 /transform/snowflake-dbt/analysis/                  @tayloramurphy  @jjstark        @kathleentam
 /transform/snowflake-dbt/docs/                      @tayloramurphy  @jjstark        @kathleentam
