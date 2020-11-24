@@ -1,7 +1,7 @@
 {{ config({
         "materialized": "incremental",
         "unique_key": "ip_address_hash",
-        "schema": "analytics"
+        "schema": "common"
     })
 }}
 
