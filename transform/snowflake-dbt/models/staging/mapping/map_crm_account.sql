@@ -4,6 +4,7 @@
 }}
 
 WITH account_prep AS (
+
     SELECT *
     FROM {{ ref('prep_sfdc_account') }}
 
