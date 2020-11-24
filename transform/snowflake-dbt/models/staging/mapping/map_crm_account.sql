@@ -6,7 +6,6 @@
 WITH account_prep AS (
     SELECT *
     FROM {{ ref('prep_sfdc_account') }}
-    WHERE NOT is_deleted
 
 ), geo_region AS (
 
@@ -36,7 +35,7 @@ WITH account_prep AS (
 
     SELECT *
     FROM {{ ref('dim_industry') }}
-    
+
 ), final AS (
     
     SELECT
