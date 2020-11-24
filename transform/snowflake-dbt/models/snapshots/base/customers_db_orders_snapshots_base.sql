@@ -1,5 +1,5 @@
 {{ config({
-    "schema": "staging",
+    "schema": "legacy",
     "alias": "customers_db_orders_snapshots"
     })
 }}
