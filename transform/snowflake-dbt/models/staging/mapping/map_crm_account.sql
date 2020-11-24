@@ -52,7 +52,7 @@ WITH account_prep AS (
     LEFT JOIN geo_region         
       ON account_prep.dim_geo_region_name_source = geo_region.dim_geo_region_name 
     LEFT JOIN geo_sub_region
-      ON account_prep.dim_geo_sub_region_name_source = geo_sub_region.dim_geo_sub_region 
+      ON account_prep.dim_geo_sub_region_name_source = geo_sub_region.dim_geo_sub_region_name 
     LEFT JOIN geo_area      
       ON account_prep.dim_geo_area_name_source = geo_area.dim_geo_area_name  
     LEFT JOIN sales_segment
