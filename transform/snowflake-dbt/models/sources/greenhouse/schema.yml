@@ -677,8 +677,6 @@ models:
           tests:
             - not_null
         - name: user_id
-          tests:
-            - unique
         - name: offer_custom_field
           tests:
             - not_null
