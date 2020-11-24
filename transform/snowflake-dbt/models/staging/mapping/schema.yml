@@ -11,7 +11,7 @@ models:
       - name: marketing_channel_name
         description: Mapped marketing channel name.
 
-  - name: map_crm_account_dimension
+  - name: map_crm_account
     description: '{{ doc("prep_sfdc_account") }}'
     columns:
       - name: crm_account_id
