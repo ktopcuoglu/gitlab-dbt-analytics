@@ -11,13 +11,13 @@ WITH licenses AS (
       zuora_subscription_id    AS subscription_id,
       zuora_subscription_name  AS subscription_name,
       users_count              AS license_user_count,
-      plan_code                AS license_plan,
+      plan_code                AS product_tier,
       is_trial,
       IFF(
           LOWER(email) LIKE '%@gitlab.com' AND LOWER(company) LIKE '%gitlab%',
           TRUE, FALSE
       )                        AS is_internal,
-      company,
+      company                  AS company_name,
       starts_at::DATE          AS license_start_date,
       license_expires_at::DATE AS license_expire_date,
       created_at,

@@ -1,20 +1,30 @@
-/* grain: one record per usage pin */
+/* grain: one record per host per metric per month */
 
-WITH hosts AS (
+WITH dim_hosts AS (
 
     SELECT *
     FROM {{ ref('dim_hosts') }}
 
-), instances AS (
+), dim_instances AS (
 
     SELECT *
     FROM {{ ref('dim_instances') }}
 
-), licenses AS (
+), dim_licenses AS (
 
     SELECT *
     FROM {{ ref('dim_licenses') }}
 
+), fct_mrr AS (
+
+    SELECT *
+    FROM {{ ref('fct_mrr')}}
+
+), dim_product_details AS (
+
+    SELECT *
+    FROM {{ ref('dim_product_details')}}
+  
 ), subscription_source AS (
 
     SELECT *
@@ -22,12 +32,12 @@ WITH hosts AS (
     WHERE is_deleted = FALSE
       AND exclude_from_analysis IN ('False', '')
 
-), subscriptions AS (
+), dim_subscriptions AS (
 
     SELECT *
     FROM {{ ref('dim_subscriptions') }}
 
-), usage_data AS (
+), dim_usage_pings AS (
 
     SELECT *
     FROM {{ ref('dim_usage_pings') }}
@@ -49,6 +59,10 @@ WITH hosts AS (
       ON licenses.zuora_subscription_id = subscription_source.subscription_id
     LEFT JOIN subscriptions
       ON subscription_source.subscription_name_slugify = subscriptions.subscription_name_slugify
+    INNER JOIN fct_mrr
+      ON dim_subscriptions.subscription_id = fct_mrr.subscription_id
+    INNER JOIN dim_product_details
+      ON dim_product_details.product_details_id = fct_mrr.product_details_id
     GROUP BY 1,2,3
 
 ), joined AS (
