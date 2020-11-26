@@ -23,6 +23,8 @@ from kube_secrets import (
     CUSTOMERS_DB_NAME,
     CUSTOMERS_DB_PASS,
     CUSTOMERS_DB_USER,
+    GCP_PROJECT,
+    GCP_REGION,
     GCP_SERVICE_CREDS,
     GIT_DATA_TESTS_CONFIG,
     GIT_DATA_TESTS_PRIVATE_KEY,
@@ -30,6 +32,10 @@ from kube_secrets import (
     GITLAB_COM_DB_NAME,
     GITLAB_COM_DB_PASS,
     GITLAB_COM_DB_USER,
+    GITLAB_OPS_DB_USER,
+    GITLAB_OPS_DB_PASS,
+    GITLAB_OPS_DB_HOST,
+    GITLAB_OPS_DB_NAME,
     GITLAB_PROFILER_DB_HOST,
     GITLAB_PROFILER_DB_NAME,
     GITLAB_PROFILER_DB_PASS,
@@ -87,6 +93,7 @@ every_day_at_four = "0 4 */1 * *"
 # Dictionary containing the configuration values for the various Postgres DBs
 config_dict = {
     "customers": {
+        "cloudsql_instance_name": None,
         "dag_name": "customers",
         "dbt_name": "customers_db",
         "env_vars": {"DAYS": "1"},
@@ -103,6 +110,7 @@ config_dict = {
         "validation_schedule_interval": validation_schedule_interval,
     },
     "gitlab_com": {
+        "cloudsql_instance_name": None,
         "dag_name": "gitlab_com",
         "dbt_name": "gitlab_dotcom",
         "env_vars": {"HOURS": "13"},
@@ -119,6 +127,7 @@ config_dict = {
         "validation_schedule_interval": validation_schedule_interval,
     },
     "gitlab_profiler": {
+        "cloudsql_instance_name": None,
         "dag_name": "gitlab_profiler",
         "dbt_name": "none",
         "env_vars": {"DAYS": "3"},
@@ -134,15 +143,48 @@ config_dict = {
         "task_name": "gitlab-profiler",
         "validation_schedule_interval": validation_schedule_interval,
     },
+    "gitlab_ops": {
+        "cloudsql_instance_name": "ops-db-restore",
+        "dag_name": "gitlab_ops",
+        "dbt_name": "none",
+        "env_vars": {"HOURS": "13"},
+        "extract_schedule_interval": "0 */6 * * *",
+        "secrets": [
+            GCP_PROJECT,
+            GCP_REGION,
+            GITLAB_OPS_DB_USER,
+            GITLAB_OPS_DB_PASS,
+            GITLAB_OPS_DB_HOST,
+            GITLAB_OPS_DB_NAME,
+        ],
+        "start_date": datetime(2019, 5, 30),
+        "sync_schedule_interval": "0 2 */1 * *",
+        "task_name": "gitlab-ops",
+        "validation_schedule_interval": validation_schedule_interval,
+    },
 }
 
 
-def generate_cmd(dag_name, operation):
+def use_cloudsql_proxy(dag_name, operation, instance_name):
     return f"""
         {clone_repo_cmd} &&
-        cd analytics/extract/postgres_pipeline/postgres_pipeline/ &&
-        python main.py tap ../manifests/{dag_name}_db_manifest.yaml {operation}
+        cd analytics/orchestration &&
+        python ci_helpers.py use_proxy --instance_name {instance_name} --command " \
+            python ../extract/postgres_pipeline/postgres_pipeline/main.py tap  \
+            ../extract/postgres_pipeline/manifests/{dag_name}_db_manifest.yaml {operation}
+        "
     """
+
+
+def generate_cmd(dag_name, operation, cloudsql_instance_name):
+    if cloudsql_instance_name is None:
+        return f"""
+            {clone_repo_cmd} &&
+            cd analytics/extract/postgres_pipeline/postgres_pipeline/ &&
+            python main.py tap ../manifests/{dag_name}_db_manifest.yaml {operation}
+        """
+    else:
+        return use_cloudsql_proxy(dag_name, operation, cloudsql_instance_name)
 
 
 def extract_manifest(file_path):
@@ -171,6 +213,9 @@ def dbt_tasks(dbt_name, dbt_task_identifier):
         env_vars=gitlab_pod_env_vars,
         arguments=[freshness_cmd],
     )
+
+    if dbt_name == "none":
+        return freshness, None, None, None, None
 
     # Test raw source
     test_cmd = f"""
@@ -270,8 +315,8 @@ for source_name, config in config_dict.items():
         freshness, test, snapshot, model_run, model_test = dbt_tasks(
             dbt_name, dbt_task_identifier
         )
-
-        freshness >> test >> snapshot >> model_run >> model_test
+        if test is not None:
+            freshness >> test >> snapshot >> model_run >> model_test
 
         # Actual PGP extract
         file_path = f"analytics/extract/postgres_pipeline/manifests/{config['dag_name']}_db_manifest.yaml"
@@ -288,7 +333,9 @@ for source_name, config in config_dict.items():
             )
 
             incremental_cmd = generate_cmd(
-                config["dag_name"], f"--load_type incremental --load_only_table {table}"
+                config["dag_name"],
+                f"--load_type incremental --load_only_table {table}",
+                config["cloudsql_instance_name"],
             )
 
             incremental_extract = KubernetesPodOperator(
@@ -344,7 +391,8 @@ for source_name, config in config_dict.items():
             dbt_name, dbt_task_identifier
         )
 
-        freshness >> test >> snapshot >> model_run >> model_test
+        if test is not None:
+            freshness >> test >> snapshot >> model_run >> model_test
 
         # PGP Extract
         file_path = f"analytics/extract/postgres_pipeline/manifests/{config['dag_name']}_db_manifest.yaml"
@@ -358,7 +406,9 @@ for source_name, config in config_dict.items():
                 )
 
                 sync_cmd = generate_cmd(
-                    config["dag_name"], f"--load_type sync --load_only_table {table}"
+                    config["dag_name"],
+                    f"--load_type sync --load_only_table {table}",
+                    config["cloudsql_instance_name"],
                 )
                 sync_extract = KubernetesPodOperator(
                     **gitlab_defaults,
@@ -390,7 +440,9 @@ for source_name, config in config_dict.items():
 
                 # SCD Task
                 scd_cmd = generate_cmd(
-                    config["dag_name"], f"--load_type scd --load_only_table {table}"
+                    config["dag_name"],
+                    f"--load_type scd --load_only_table {table}",
+                    config["cloudsql_instance_name"],
                 )
 
                 scd_extract = KubernetesPodOperator(
@@ -441,7 +493,9 @@ for source_name, config in config_dict.items():
         for table in table_list:
             # Validate Task
             validate_cmd = generate_cmd(
-                config["dag_name"], f"--load_type validate --load_only_table {table}"
+                config["dag_name"],
+                f"--load_type validate --load_only_table {table}",
+                config["cloudsql_instance_name"],
             )
             validate_ids = KubernetesPodOperator(
                 **gitlab_defaults,

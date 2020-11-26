@@ -47,7 +47,7 @@ WITH fct_mrr AS (
 ), mau AS (
     
     SELECT *
-    FROM {{ ref('monthly_usage_data') }}
+    FROM {{ ref('usage_data_28_days_flattened') }}
     WHERE metrics_path = 'usage_activity_by_stage_monthly.manage.events'
 
 ), transformed AS (
@@ -65,7 +65,7 @@ WITH fct_mrr AS (
       COUNT(DISTINCT fct_payloads.usage_ping_id)                                                                        AS monthly_payload_counts,
       COUNT(DISTINCT host_id)                                                                                           AS monthly_host_counts,
       MAX(license_user_count)                                                                                           AS license_user_count,
-      MAX(monthly_metric_value)                                                                                         AS umau
+      MAX(metric_value)                                                                                                 AS umau
     FROM self_managed_active_subscriptions
     INNER JOIN dim_dates ON self_managed_active_subscriptions.date_id = dim_dates.date_id
     LEFT JOIN active_subscriptions ON self_managed_active_subscriptions.subscription_id = active_subscriptions.subscription_id

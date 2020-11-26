@@ -458,6 +458,7 @@ models:
         tests:
           - not_null
       - name: namespace_type
+        description: This field should be Group or Individual. A namespace is the first item to come after the / following the domain. For example https://www.gitlab.com/NicoleSchwartz/ is an Individual namespace. There are some namespace_IDs that are missing from this table, when doing certain joins (left) you may get NULL when this data is missing.
         tests:
           - not_null
       - name: plan_id
@@ -564,7 +565,15 @@ models:
         tests:
           - not_null
           - unique
-          
+        description: Identifier that you can join on gitlab_dotcom_ci_builds.ci_build_id if needed.
+      - name: secure_ci_job_type
+        description: This field is populated by doing a LIKE case statement from gitlab_dotcom_ci_builds.ci_build_name in order to try and catch as many jobs as possible. Since users can customize this field, using a like potentially excludes some of the customized entires, and may include entries named similarly but not actually our scanners.
+      - name: artifacts_file
+        description: NULL - To get this data join on ci_build_id for analytics_staging.gitlab_dotcom_ci_job_artifacts.file. Note that you will need to add a match for file like '%.json' and then use case statement likes to correlate the correct files to the correct scans or categories.
+      - name: artifacts_size
+        description: NULL - To get this data join on ci_build_id for analytics_staging.gitlab_dotcom_ci_job_artifacts.size
+      - name: ci_build_project_id
+        description: Join on project_id to analytics.gitlab_dotcom_projects_xf to be able to get tier (namespace_plan_title) and paid state (namespace_plan_is_paid). Note that there are ongoing improvements to better trace accurate tier and payment at specific dates and times and this recommendation may change as a result.
   - name: gitlab_dotcom_usage_data_events
     description: '{{ doc("gitlab_dotcom_usage_data_events") }}'
     columns:

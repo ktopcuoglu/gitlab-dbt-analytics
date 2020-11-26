@@ -12,6 +12,9 @@ models:
 
     -   name: snowplow_page_views_all
         description: This is is a view over all snowplow_YYYY_MM schemas for page views.
+        columns:
+            - name: user_snowplow_domain_id
+              description: This is an ID from a Cookie, and as such is not valid for MAU, although Secure is using it for now until there is a better field. `domain_user_id` is a better field to use at this time but I can not locate that field at this time.
 
     -   name: snowplow_sessions_all
         description: This is is a view over all snowplow_YYYY_MM schemas for sessions.

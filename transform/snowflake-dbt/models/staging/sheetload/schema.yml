@@ -81,6 +81,7 @@ models:
 - name: sheetload_rep_quotas
   description: Sales representative quota data
 - name: sheetload_rep_quotas_full_ps_fy2020
+- name: sheetload_rfs_support_requests
 - name: sheetload_sales_training_completion_dates
 - name: sheetload_scalable_employment_values
 - name: sheetload_social_marketing_metrics
@@ -143,17 +144,15 @@ models:
     - name: data_team_member_gitlab_handle
     - name: data_team_member_capacity
 
-- name: sheetload_sales_funnel_targets_account_region
+- name: sheetload_sales_funnel_targets_region
   description: Account region info
-- name: sheetload_sales_funnel_targets_kpi_totals
+- name: sheetload_sales_funnel_targets_kpi_values
   description: Kpi total info
 - name: sheetload_sales_funnel_targets_opportunity
   description: Opportunity data
-- name: sheetload_sales_funnel_targets_purchase_channel
-  description: Purchase channel dates
 - name: sheetload_sales_funnel_targets_dates
   description: Sales funnel target dates
+- name: sheetload_sales_funnel_targets_matrix
+  description: Sales funnel target Matrix
 - name: sheetload_sales_funnel_targets_sales_segment
   description: Sales segment data
-- name: sheetload_sales_funnel_targets_sales_territory
-  description: Sales territory data

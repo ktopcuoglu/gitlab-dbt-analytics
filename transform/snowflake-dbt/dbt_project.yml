@@ -37,6 +37,7 @@ query-comment:
 on-run-start:
     - "{{ resume_warehouse(var('resume_warehouse', false), var('warehouse_name')) }}"
     - "{{ create_udfs() }}"
+    - "create schema if not exists \"{{generate_database_name(env_var('SNOWFLAKE_PREP_DATABASE'))}}\".snowplow_{{ var('year', run_started_at.strftime('%Y')) }}_{{ var('month', run_started_at.strftime('%m')) }}"
 
 on-run-end:
     - "{{ grant_usage_to_schemas() }}"
@@ -59,6 +60,7 @@ seeds:
         major_minor_version: varchar
   
   data_tests:
+    +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
     +schema: tdf
 
 # ==================
@@ -85,17 +87,15 @@ vars:
 # Model Configs
 # ==================
 models:
-  +database: "{{ env_var('SNOWFLAKE_TRANSFORM_DATABASE') }}" # ANALYTICS
+  +database: "{{ env_var('SNOWFLAKE_TRANSFORM_DATABASE') }}" # ANALYTICS, redundant, but good to be explicit
   +schema: analytics  # Top level override since profiles defaults to PREP
 
   # ------------------
   # Snowplow Package https://hub.getdbt.com/fishtown-analytics/snowplow/latest/
   # ------------------
   snowplow:
+    +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
     +schema: "snowplow_{{ var('year', run_started_at.strftime('%Y')) }}_{{ var('month', run_started_at.strftime('%m')) }}"
-    +post-hook:
-      - "grant usage on schema {{this.schema}} to role snowplow"
-      - "grant select on {{this}} to role snowplow"
     +tags: ["product"]
     +incremental_strategy: "delete+insert"
     page_views:
@@ -121,6 +121,7 @@ models:
     # Sources
     # ------------------
     sources:
+      +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
       +tags: ["sources"]
 
       airflow:
@@ -138,11 +139,13 @@ models:
         +schema: date
 
       dbt:
+        +database: "{{ env_var('SNOWFLAKE_TRANSFORM_DATABASE') }}" # ANALYTICS
         +materialized: table
         +schema: dbt
         +tags: ["dbt"]
 
       engineering:
+        +database: "{{ env_var('SNOWFLAKE_TRANSFORM_DATABASE') }}" # ANALYTICS
         +materialized: table
 
       gcp_billing:
@@ -155,9 +158,6 @@ models:
       gitlab_dotcom:
         +materialized: table
         +schema: gitlab_dotcom
-
-      gitter:
-        +enabled: false
 
       google_analytics_360:
         +materialized: table
@@ -182,13 +182,13 @@ models:
           +schema: sensitive
           secure: true
 
-      qualtrics:
-        +materialized: table
-        +schema: qualtrics
-
       pmg:
         +materialized: table
         +schema: pmg
+
+      qualtrics:
+        +materialized: table
+        +schema: qualtrics
 
       rspec:
         +schema: rspec
@@ -204,6 +204,9 @@ models:
 
       snowflake:
         +schema: snowflake
+
+      snowflake_imports:
+        +schema: snowflake_imports
 
       snowplow:
         +tags: ["product"]
@@ -254,6 +257,7 @@ models:
         +materialized: table
         +schema: analytics
         sensitive:
+          +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
           +materialized: view
           +schema: sensitive
         source_view:
@@ -272,6 +276,7 @@ models:
 
       greenhouse:
         xf:
+          +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
           +schema: sensitive
           secure: true
         rpt:
@@ -314,6 +319,7 @@ models:
         +tags: ["product"]
         +schema: analytics
         month_partition:
+          +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
           +schema: "snowplow_{{ var('year', run_started_at.strftime('%Y')) }}_{{ var('month', run_started_at.strftime('%m')) }}"
 
       version:
@@ -344,6 +350,7 @@ models:
         +materialized: table
 
       exports:
+        +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
         +materialized: view
         +schema: exports
 
@@ -356,14 +363,14 @@ models:
     # Legacy Structure
     # ------------------
     bamboohr:
+      +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
       +schema: sensitive
       secure: true
       base:
         +materialized: table
 
-    pipe2spend:
-      +enabled: false
-      +materialized: table
+    covid19:
+      +schema: covid19
 
     poc:
       +tags: ["poc"]
@@ -378,10 +385,14 @@ models:
       +tags: ["product"]
       +materialized: table
 
+    snapshots:
+      +schema: analytics
+
     # ------------------
     # Trusted Data Framework
     # ------------------
     trusted_data_framework:
+      +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
       +materialized: table
       +schema: tdf
       secure: true
