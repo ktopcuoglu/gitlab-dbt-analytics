@@ -10,6 +10,7 @@ data,dbt built-in
 dbt,Relates to dbt-generated data-sets
 geo,Relates to geo data
 gitlab_dotcom,Relates to GitLab.com Database
+gitlab_ops,Relates to GitLab ops database
 license_db,Relates to License DB
 industry, Related to companies industry data
 keyhole_twitter,Relates to Twitter data provided by Keyhole

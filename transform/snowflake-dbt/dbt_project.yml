@@ -158,6 +158,10 @@ models:
       gitlab_dotcom:
         +materialized: table
         +schema: gitlab_dotcom
+      
+      gitlab_ops:
+        +materialized: table
+        +schema: gitlab_ops
 
       google_analytics_360:
         +materialized: table
