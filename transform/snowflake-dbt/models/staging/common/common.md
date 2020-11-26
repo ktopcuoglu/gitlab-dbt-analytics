@@ -263,3 +263,9 @@ Industry dimension, based off of salesforce account data, using the `generate_si
 Order type dimension, based off of salesforce opportunity data, using the `generate_single_field_dimension` macro to create the final formatted SQL
 
 {% enddocs %}
+
+{% docs map_merged_crm_account%}
+
+Table mapping current crm account ids to accounts merged in the past.
+
+{% enddocs %}
