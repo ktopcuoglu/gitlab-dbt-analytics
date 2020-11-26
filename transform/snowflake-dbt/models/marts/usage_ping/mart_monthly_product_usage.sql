@@ -1,6 +1,16 @@
 /* grain: one record per host per metric per month */
 
-WITH dim_hosts AS (
+WITH dim_billing_accounts AS (
+
+  SELECT *
+  FROM {{ ref('dim_billing_accounts') }}
+
+), dim_crm_accounts AS (
+
+  SELECT *
+  FROM {{ ref('dim_crm_accounts') }}
+
+), dim_hosts AS (
 
     SELECT *
     FROM {{ ref('dim_hosts') }}
@@ -15,16 +25,31 @@ WITH dim_hosts AS (
     SELECT *
     FROM {{ ref('dim_licenses') }}
 
-), fct_mrr AS (
-
-    SELECT *
-    FROM {{ ref('fct_mrr')}}
-
 ), dim_product_details AS (
 
     SELECT *
     FROM {{ ref('dim_product_details')}}
   
+), dim_subscriptions AS (
+
+    SELECT *
+    FROM {{ ref('dim_subscriptions') }}
+
+), fct_mrr AS (
+
+    SELECT *
+    FROM {{ ref('fct_mrr')}}
+
+), fct_monthly_usage_data AS (
+
+    SELECT *
+    FROM {{ ref('monthly_usage_data') }}
+  
+), fct_usage_ping_payloads AS (
+
+    SELECT *
+    FROM {{ ref('dim_usage_pings') }}
+
 ), subscription_source AS (
 
     SELECT *
@@ -32,76 +57,95 @@ WITH dim_hosts AS (
     WHERE is_deleted = FALSE
       AND exclude_from_analysis IN ('False', '')
 
-), dim_subscriptions AS (
-
-    SELECT *
-    FROM {{ ref('dim_subscriptions') }}
-
-), dim_usage_pings AS (
-
-    SELECT *
-    FROM {{ ref('dim_usage_pings') }}
-
 ), license_subscriptions AS (
 
-    SELECT
-      licenses.license_md5,
+    SELECT DISTINCT
+      license_id,
+      dim_licenses.license_md5,
       subscription_source.subscription_id AS original_linked_subscription_id,
       subscription_source.account_id,
       subscription_source.subscription_name_slugify,
-      subscriptions.subscription_id       AS latest_active_subscription_id,
-      subscription_start_date,
-      subscription_end_date,
-      subscription_start_month,
-      subscription_end_month
-    FROM licenses
+      dim_subscriptions.subscription_id       AS latest_active_subscription_id,
+      dim_subscriptions.subscription_start_date,
+      dim_subscriptions.subscription_end_date,
+      dim_subscriptions.subscription_start_month,
+      dim_subscriptions.subscription_end_month,
+      dim_billing_accounts.billing_account_id
+    FROM dim_licenses
     INNER JOIN subscription_source
-      ON licenses.zuora_subscription_id = subscription_source.subscription_id
-    LEFT JOIN subscriptions
-      ON subscription_source.subscription_name_slugify = subscriptions.subscription_name_slugify
+      ON dim_licenses.subscription_id = subscription_source.subscription_id
+    LEFT JOIN dim_subscriptions
+      ON subscription_source.subscription_name_slugify = dim_subscriptions.subscription_name_slugify
     INNER JOIN fct_mrr
       ON dim_subscriptions.subscription_id = fct_mrr.subscription_id
     INNER JOIN dim_product_details
       ON dim_product_details.product_details_id = fct_mrr.product_details_id
-    GROUP BY 1,2,3
+    INNER JOIN dim_billing_accounts
+      ON dim_subscriptions.billing_account_id = dim_billing_accounts.billing_account_id
+    INNER JOIN dim_crm_accounts
+      ON dim_billing_accounts.crm_account_id = dim_crm_accounts.crm_account_id
 
 ), joined AS (
 
     SELECT
-      usage_data.*,
-      subscription_id,
-      account_id,
-      array_product_details_id
-    FROM usage_data
-    LEFT JOIN license_product_details
-      ON usage_data.license_md5 = license_product_details.license_md5
+      fct_monthly_usage_data.ping_id,
+      fct_monthly_usage_data.created_month,
+      fct_monthly_usage_data.metrics_path,
+      fct_monthly_usage_data.group_name,
+      fct_monthly_usage_data.stage_name,
+      fct_monthly_usage_data.section_name,
+      fct_monthly_usage_data.is_smau,
+      fct_monthly_usage_data.is_gmau,
+      fct_monthly_usage_data.is_paid_gmau,
+      fct_monthly_usage_data.is_umau,
+      license_subscriptions.original_linked_subscription_id,
+      license_subscriptions.latest_active_subscription_id,
+      license_subscriptions.billing_account_id,
+      fct_usage_ping_payloads.delivery,
+      fct_usage_ping_payloads.edition,
+      fct_usage_ping_payloads.product_tier,
+      fct_usage_ping_payloads.main_edition_product_tier,
+      fct_usage_ping_payloads.major_version,
+      fct_usage_ping_payloads.minor_version,
+      fct_usage_ping_payloads.major_minor_version,
+      fct_usage_ping_payloads.version,
+      fct_usage_ping_payloads.is_pre_release,
+      monthly_metric_value,
+      dim_hosts.host_id,
+      dim_hosts.host_name,
+      dim_hosts.location_id
+    FROM fct_monthly_usage_data
+    LEFT JOIN fct_usage_ping_payloads
+      ON fct_monthly_usage_data.ping_id = fct_usage_ping_payloads.id
+    LEFT JOIN dim_hosts
+      ON fct_usage_ping_payloads.host_id = dim_hosts.host_id
+    LEFT JOIN license_subscriptions
+      ON fct_usage_ping_payloads.license_md5 = license_subscriptions.license_md5      
 
 ), renamed AS (
 
     SELECT
 
       -- Primary Key
-      id              AS usage_ping_id,
-      created_date_id AS date_id,
+      created_month AS reporting_month,
+      metrics_path,
 
       --Foreign Key
-      instance_id,
       host_id,
+      original_linked_subscription_id,
+      billing_account_id,
       location_id,
-      license_id,
-      subscription_id,
-      account_id,
 
       -- metadata usage ping
-      delivery,
-      main_edition    AS edition,
+      --delivery,
+      edition,
       product_tier,
       main_edition_product_tier,
       major_version,
       minor_version,
       major_minor_version,
-      cleaned_version AS version,
-      is_pre_release,
+      version,
+      is_pre_release
 
       --metatadata hosts
       source_ip_hash,
@@ -109,15 +153,18 @@ WITH dim_hosts AS (
 
 
       --metadata instance
-      instance_user_count,
+      --instance_user_count,
 
       --metadata subscription and license
-      license_plan,
-      license_trial   AS is_trial,
-      license_user_count,
+      --license_plan,
+      --license_trial   AS is_trial,
+      --license_user_count,
 
-      created_at,
-      recorded_at
+      --created_at,
+      --recorded_at
+
+      -- monthly_usage_data
+      monthly_metric_value
       
     FROM joined
 
