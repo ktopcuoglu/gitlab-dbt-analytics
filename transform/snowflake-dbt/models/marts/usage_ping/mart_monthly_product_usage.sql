@@ -119,6 +119,8 @@ WITH dim_billing_accounts AS (
       ON fct_monthly_usage_data.ping_id = fct_usage_ping_payloads.id
     LEFT JOIN dim_hosts
       ON fct_usage_ping_payloads.host_id = dim_hosts.host_id
+        AND fct_usage_ping_payloads.source_ip_hash = dim_hosts.source_ip_hash
+        AND fct_usage_ping_payloads.uuid = dim_hosts.instance_id
     LEFT JOIN license_subscriptions
       ON fct_usage_ping_payloads.license_md5 = license_subscriptions.license_md5      
 
