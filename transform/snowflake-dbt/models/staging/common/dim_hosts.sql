@@ -7,7 +7,11 @@ WITH usage_ping AS (
 
     SELECT DISTINCT
       host_id                             AS host_id,
-      hostname                            AS host_name,
+      FIRST_VALUE(hostname) OVER (
+          PARTITION BY host_id
+          ORDER BY hostname IS NOT NULL DESC, 
+                   created_at DESC
+      )                                   AS host_name,
       uuid                                AS instance_id,
       source_ip_hash
     FROM usage_ping

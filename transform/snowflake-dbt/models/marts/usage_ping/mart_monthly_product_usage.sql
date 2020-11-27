@@ -34,6 +34,8 @@ WITH dim_billing_accounts AS (
 
     SELECT *
     FROM {{ ref('dim_subscriptions') }}
+    WHERE subscription_name_slugify <> zuora_renewal_subscription_name_slugify[0]::TEXT
+      --OR subscription_end_date < DATE_TRUNC('month', current_date)
 
 ), fct_mrr AS (
 
@@ -100,6 +102,7 @@ WITH dim_billing_accounts AS (
       fct_monthly_usage_data.is_umau,
       license_subscriptions.original_linked_subscription_id,
       license_subscriptions.latest_active_subscription_id,
+      license_subscriptions.subscription_name_slugify,
       license_subscriptions.billing_account_id,
       fct_usage_ping_payloads.delivery,
       fct_usage_ping_payloads.edition,
@@ -131,10 +134,13 @@ WITH dim_billing_accounts AS (
       -- Primary Key
       created_month AS reporting_month,
       metrics_path,
+      ping_id,
 
       --Foreign Key
       host_id,
       original_linked_subscription_id,
+      latest_active_subscription_id,
+      subscription_name_slugify,
       billing_account_id,
       location_id,
 

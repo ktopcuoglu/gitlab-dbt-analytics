@@ -58,9 +58,7 @@ WITH hosts AS (
       subscription_id,
       account_id,
       array_product_details_id
-    FROM usage_data
-    LEFT JOIN license_product_details
-      ON usage_data.license_md5 = license_product_details.license_md5
+    FROM version_usage_data
 
 ), renamed AS (
 
