@@ -126,6 +126,15 @@ models:
 
   - name: dim_crm_accounts_valid_at
     description: Parameterized model to recreate dimension table representing customer details as in SFDC at given date. Required variable valid_at is timezone sensitive
+
+  - name: dim_crm_opportunity
+    description: '{{ doc("dim_crm_opportunity") }}'
+    columns:
+      - name: dim_crm_opportunity_id
+        tests:
+          - unique
+          - not_null
+
   - name: dim_crm_opportunities
     description: '{{ doc("dim_crm_opportunities") }}'
     columns:
