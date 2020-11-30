@@ -65,6 +65,10 @@ seeds:
 # Variable Configs
 # ==================
 vars:
+
+  
+  datasiren:sensorlist: ['email_column_name_sensor']
+
   warehouse_name: "{{ env_var('SNOWFLAKE_TRANSFORM_WAREHOUSE') }}"
   valid_at: '{{ run_started_at.strftime("%Y-%m-%d %H:%M:%S%z") }}'
 
