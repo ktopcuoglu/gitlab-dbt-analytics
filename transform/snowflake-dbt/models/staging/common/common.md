@@ -25,6 +25,11 @@ Model for all dimensional opportunity columns from salesforce opportunity object
 
 {% enddocs %}
 
+{% docs dim_crm_opportunity %}
+Model for all dimensional opportunity columns from salesforce opportunity object
+
+{% enddocs %}
+
 {% docs dim_crm_person %}
 Dimension that combines demographic data from salesforce leads and salesforce contacts. They are combined with a union and a filter on leads excluding converted leads and leads where there is a corresponding contact.
 
@@ -186,6 +191,11 @@ Dimension representing the associated sales rep from salesforce. Most often this
 
 {% enddocs %}
 
+{% docs dim_crm_sales_representative %}
+
+Dimension representing the associated sales rep from salesforce. Most often this will be the record owner, which is a ubiquitous field in salesforce.
+
+{% enddocs %}
 
 {% docs fct_usage_ping_payloads %}
 Factual table with metadata on usage ping payloads received.
@@ -261,5 +271,11 @@ Industry dimension, based off of salesforce account data, using the `generate_si
 {% docs dim_order_type %}
 
 Order type dimension, based off of salesforce opportunity data, using the `generate_single_field_dimension` macro to create the final formatted SQL
+
+{% enddocs %}
+
+{% docs map_merged_crm_account%}
+
+Table mapping current crm account ids to accounts merged in the past.
 
 {% enddocs %}

@@ -154,6 +154,10 @@ models:
       gitlab_dotcom:
         +materialized: table
         +schema: gitlab_dotcom
+      
+      gitlab_ops:
+        +materialized: table
+        +schema: gitlab_ops
 
       google_analytics_360:
         +materialized: table
@@ -241,6 +245,13 @@ models:
         source_view:
           +materialized: view
 
+      gitlab_ops:
+        +materialized: table
+        +schema: analytics
+        source_view:
+          +materialized: view
+          +schema: staging
+
       greenhouse:
         xf:
           +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
@@ -292,6 +303,9 @@ models:
       secure: true
       base:
         +materialized: table
+      rpt:
+        +database: "{{ env_var('SNOWFLAKE_TRANSFORM_DATABASE') }}"
+
 
     covid19:
       +schema: covid19
