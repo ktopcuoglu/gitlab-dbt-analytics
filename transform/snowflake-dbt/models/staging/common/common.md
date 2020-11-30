@@ -9,6 +9,12 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
+{% docs bdg_crm_opportunity_contact_role %}
+
+A fact table bridging opportunities with contacts. One opportunity can have multiple contacts and one can be flagged as the primary.
+
+{% enddocs %}
+
 {% docs dim_crm_opportunities %}
 Model for all dimensional opportunity columns from salesforce opportunity object
 
@@ -97,12 +103,6 @@ A fact from the lead and contact tables that shows the date they were qualified.
 {% docs fct_crm_opportunities %}
 
 A fact table for salesforce opportunities
-
-{% enddocs %}
-
-{% docs fct_crm_opportunity_contact_role_bridge %}
-
-A fact table bridging opportunities with contacts. One opportunity can have multiple contacts and one can be flagged as the primary.
 
 {% enddocs %}
 
