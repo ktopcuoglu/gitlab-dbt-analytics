@@ -372,6 +372,9 @@ models:
       secure: true
       base:
         +materialized: table
+      rpt:
+        +database: "{{ env_var('SNOWFLAKE_TRANSFORM_DATABASE') }}"
+
 
     covid19:
       +schema: covid19
