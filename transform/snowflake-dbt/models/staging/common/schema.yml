@@ -629,19 +629,28 @@ models:
         description: The unique identifier of a verion of a rate plan charge associated with the invoice item
         tests:
           - not_null
+        tags: ["tdf", "common"]
       - name: invoice_item_id
         description: unique invoice item id that identifies a line item on the invoice
         tests:
           - not_null
           - unique
+        tags: ["tdf", "common"]
       - name: invoice_id
         description: The ID of the invoice that's associated with the invoice item
         tests:
           - not_null
+        tags: ["tdf", "common"]
       - name: invoice_number
         description: The unique identification number of the invoice
+        tests:
+          - not_null
+        tags: ["tdf", "common"]
       - name: invoice_account_id
         description: The ID of the customer account associated with the invoice
+        tests:
+          - not_null
+        tags: ["tdf", "common"]
       - name: invoice_date
         description: The date the invoice was generated
       - name: service_start_date
