@@ -2017,6 +2017,19 @@ tables:
     export_table: 'programming_languages'
     export_table_primary_key: id
     dbt_source_model: true
+  project_daily_statistics:
+    import_db: GITLAB_DB
+    import_query: >
+      SELECT id
+      , project_id
+      , fetch_count
+      , date
+      FROM project_daily_statistics
+      WHERE date >= '{EXECUTION_DATE}'::date - interval '{HOURS} hours'
+        AND date <= '{EXECUTION_DATE}'::date
+    export_schema: 'gitlab_com'
+    export_table: 'project_daily_statistics'
+    export_table_primary_key: id
   protected_environments:
     import_db: GITLAB_DB
     import_query: >
