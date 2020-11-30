@@ -270,6 +270,13 @@ models:
         staging:
           +schema: staging
 
+      gitlab_ops:
+        +materialized: table
+        +schema: analytics
+        source_view:
+          +materialized: view
+          +schema: staging
+
       gitter:
         +enabled: false
         +materialized: table
