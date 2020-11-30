@@ -1522,26 +1522,8 @@ roles:
         warehouses: []
 
     - eeastwood:
-        member_of:
-            - reporter
-        warehouses:
-            - reporting
-        privileges:
-            databases:
-                read:
-                    - raw
-                write:
-                    - raw
-            schemas:
-                read:
-                    - raw.gitter
-                write:
-                    - raw.gitter
-            tables:
-                read:
-                    - raw.gitter.*
-                write:
-                    - raw.gitter.*
+        member_of: []
+        warehouses: []
 
     - eurie:
         member_of:
@@ -2693,9 +2675,8 @@ users:
         member_of: []
 
     - eeastwood:
-        can_login: yes
-        member_of:
-            - eeastwood
+        can_login: no
+        member_of: []
 
     - ekastelein:
         can_login: no
