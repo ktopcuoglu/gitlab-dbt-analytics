@@ -1,3 +1,9 @@
+{{ config({
+    "schema": "analytics",
+    "database": env_var('SNOWFLAKE_TRANSFORM_DATABASE'),
+    })
+}}
+
 WITH employees AS (
 
     SELECT *
