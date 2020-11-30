@@ -6,7 +6,7 @@ WITH answers AS (
 
 ), trimmed AS (
 
-    SELECT DISTINCT
+    SELECT
       response_id,
       distribution_channel,
       has_finished_survey,
