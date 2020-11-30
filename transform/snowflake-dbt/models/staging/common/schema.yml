@@ -646,7 +646,7 @@ models:
         tests:
           - not_null
         tags: ["tdf", "common", "invoice"]
-      - name: invoice_account_id
+      - name: dim_crm_account_id_invoice
         description: The ID of the customer account associated with the invoice
         tests:
           - not_null
