@@ -68,6 +68,7 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity.order_type_stamped,
       sfdc_opportunity.net_arr,
       sfdc_opportunity.days_in_sao,
+      sfdc_opportunity.total_contract_value,
 
       -- ************************************
       -- channel reporting
@@ -90,5 +91,5 @@ WITH sfdc_opportunity AS (
     created_by="@jjstark ",
     updated_by="@iweeks",
     created_date="2020-10-21",
-    updated_date="2020-11-16"
+    updated_date="2020-11-17"
 ) }}

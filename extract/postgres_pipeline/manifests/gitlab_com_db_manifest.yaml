@@ -2289,7 +2289,6 @@ tables:
       , setup_for_company
       , render_whitespace_in_code
       , tab_width
-      , feature_filter_type
       , experience_level
       FROM user_preferences
       WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'

@@ -1,9 +1,19 @@
-{%- macro schema_union_all(schema_part, table_name, exclude_part='scratch') -%}
+{%- macro schema_union_all(schema_part, table_name, exclude_part='scratch', database_name=none) -%}
+
+ {% if database_name is not none %}
+
+    {% set database = database_name %}
+
+ {% else %}
+
+    {% set database = target.database %}
+
+ {% endif %}
 
  {% call statement('get_schemata', fetch_result=True) %}
 
     SELECT DISTINCT '"' || table_schema || '"."' || table_name || '"'
-    FROM "{{ target.database }}".information_schema.tables
+    FROM "{{ database }}".information_schema.tables
     WHERE table_schema ILIKE '%{{ schema_part }}%'
       AND table_schema NOT ILIKE '%{{ exclude_part }}%'
       AND table_name ILIKE '{{ table_name }}'
@@ -19,7 +29,7 @@
 
             {% for schematable in values %}
                 SELECT *
-                FROM "{{ target.database }}".{{ schematable }}
+                FROM "{{ database }}".{{ schematable }}
 
             {%- if not loop.last %}
                 UNION ALL
