@@ -131,6 +131,12 @@ A fact table for salesforce opportunities
 
 {% enddocs %}
 
+{% docs fct_crm_opportunity %}
+
+A fact table for salesforce opportunities with keys to connect opportunities to shared dimensions through the attributes of the crm account.
+
+{% enddocs %}
+
 {% docs fct_invoice_items %}
 Fact table providing invoice line item details.
 
