@@ -100,8 +100,8 @@ docker-compose.yml  @tayloramurphy  @m_walker   @paul_armstrong
 /transform/snowflake-dbt/models/sources/qualtrics   @m_walker       @jjstark     @tayloramurphy
 /transform/snowflake-dbt/models/staging/qualtrics   @m_walker       @jjstark     @tayloramurphy
 
-/transform/snowflake-dbt/models/sources/sfdc/       @kathleentam	@jeanpeguero   @jjstark     @paul_armstrong
-/transform/snowflake-dbt/models/staging/sfdc/       @kathleentam    @jeanpeguero   @jjstark     @paul_armstrong
+/transform/snowflake-dbt/models/sources/sfdc/       @kathleentam	@jeanpeguero   @jjstark     @paul_armstrong    @iweeks
+/transform/snowflake-dbt/models/staging/sfdc/       @kathleentam    @jeanpeguero   @jjstark     @paul_armstrong    @iweeks  
 
 /transform/snowflake-dbt/models/sources/snowflake/  @m_walker       @kathleentam    @jjstark    @tayloramurphy
 /transform/snowflake-dbt/models/staging/snowflake/  @m_walker       @kathleentam    @jjstark    @tayloramurphy
