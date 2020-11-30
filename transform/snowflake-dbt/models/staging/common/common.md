@@ -191,6 +191,11 @@ Dimension representing the associated sales rep from salesforce. Most often this
 
 {% enddocs %}
 
+{% docs dim_crm_sales_representative %}
+
+Dimension representing the associated sales rep from salesforce. Most often this will be the record owner, which is a ubiquitous field in salesforce.
+
+{% enddocs %}
 
 {% docs fct_usage_ping_payloads %}
 Factual table with metadata on usage ping payloads received.
