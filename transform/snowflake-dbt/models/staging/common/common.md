@@ -1,3 +1,9 @@
+{% docs bdg_crm_opportunity_contact_role %}
+
+A fact table bridging opportunities with contacts. One opportunity can have multiple contacts and one can be flagged as the primary.
+
+{% enddocs %}
+
 {% docs dim_crm_accounts %}
 Dimensional customer table representing all existing and historical customers from SalesForce. There are customer definitions for external reporting and additional customer definitions for internal reporting defined in the [handbook](https://about.gitlab.com/handbook/sales/#customer).
 
@@ -6,12 +12,6 @@ The Customer Account Management business process can be found in the [handbook](
 The grain of the table is the SalesForce Account, also referred to as CRM_ID.
 
 Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
-
-{% enddocs %}
-
-{% docs bdg_crm_opportunity_contact_role %}
-
-A fact table bridging opportunities with contacts. One opportunity can have multiple contacts and one can be flagged as the primary.
 
 {% enddocs %}
 
