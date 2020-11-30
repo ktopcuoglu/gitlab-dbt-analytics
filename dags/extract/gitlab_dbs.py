@@ -12,7 +12,6 @@ from airflow_utils import (
     slack_failed_task,
     DBT_IMAGE,
     dbt_install_deps_nosha_cmd,
-    dbt_install_deps_and_seed_nosha_cmd,
     gitlab_pod_env_vars,
     xl_warehouse,
     xs_warehouse,
@@ -200,7 +199,7 @@ def extract_table_list_from_manifest(manifest_contents):
 def dbt_tasks(dbt_name, dbt_task_identifier):
 
     freshness_cmd = f"""
-        {dbt_install_deps_and_seed_nosha_cmd} &&
+        {dbt_install_deps_nosha_cmd} &&
         dbt source snapshot-freshness --profiles-dir profile --target prod --select {dbt_name}; ret=$?;
         python ../../orchestration/upload_dbt_file_to_snowflake.py freshness; exit $ret
     """
