@@ -30,6 +30,3 @@ WITH source AS (
 SELECT *
 FROM renamed
 
-
--- opportunity?
--- full_comments?
