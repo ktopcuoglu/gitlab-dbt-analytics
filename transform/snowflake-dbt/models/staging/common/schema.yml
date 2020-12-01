@@ -84,12 +84,57 @@ models:
         tests:
           - accepted_values:
                   values: ['TRUE', 'FALSE']
+      - name: merged_to_account_id
+        description: for deleted accounts this is the SFDC account they were merged to
 
+  - name: dim_crm_account
+    description: '{{ doc("dim_crm_account") }}'
+    columns:
+      - name: crm_account_id
+        description: account id from SFDC identifing the customer
+        tests:
+          - unique
+      - name: crm_account_name
+        description: account name from SFDC
+      - name: crm_account_country
+        description: billing country of SFDC account
+      - name: ultimate_parent_account_id
+        description: ultimate parent account id
+      - name: ultimate_parent_account_name
+        description: parent account name
+      - name: ultimate_parent_account_segment
+        description: Sales segment of the parent account
+      - name: ultimate_parent_billing_country
+        description: billing country of parent account
+      - name: record_type_id
+      - name: federal_account
+      - name: gitlab_com_user
+      - name: account_owner
+      - name: account_owner_team
+      - name: account_type
+      - name: gtm_strategy
+      - name: technical_account_manager
+      - name: is_deleted
+        description: flag indicating if account has been deleted
+      - name: is_reseller
+        description: Identify whether a crm_account is a reseller.
+        tests:
+          - accepted_values:
+                  values: ['TRUE', 'FALSE']
       - name: merged_to_account_id
         description: for deleted accounts this is the SFDC account they were merged to
 
   - name: dim_crm_accounts_valid_at
     description: Parameterized model to recreate dimension table representing customer details as in SFDC at given date. Required variable valid_at is timezone sensitive
+
+  - name: dim_crm_opportunity
+    description: '{{ doc("dim_crm_opportunity") }}'
+    columns:
+      - name: dim_crm_opportunity_id
+        tests:
+          - unique
+          - not_null
+
   - name: dim_crm_opportunities
     description: '{{ doc("dim_crm_opportunities") }}'
     columns:
@@ -123,6 +168,14 @@ models:
 
   - name: dim_dates
     description: '{{ doc("dim_dates") }}'
+    columns:
+      - name: date_id
+        tests:
+          - not_null
+          - unique
+
+  - name: dim_date
+    description: '{{ doc("dim_date") }}'
     columns:
       - name: date_id
         tests:
@@ -392,6 +445,19 @@ models:
       - name: is_active
         description: A boolean column that flags if the user is active in salesforce, which means that the user can login and use salesforce.
 
+  - name: dim_crm_sales_representative
+    description: '{{ doc("dim_crm_sales_representative") }}'
+    columns:
+      - name: crm_sales_rep_id
+        description: Primary key for Salesforce users and the primary key for this dimension
+        tests:
+          - unique
+          - not_null
+        tags: [ "tdf", "common" ]
+      - name: is_active
+        description: A boolean column that flags if the user is active in salesforce, which means that the user can login and use salesforce.
+        tags: [ "tdf", "common" ]
+
   - name: dim_sales_segment
     description: '{{ doc("dim_sales_segment") }}'
     columns:
@@ -585,18 +651,24 @@ models:
         description: The unique identifier of a verion of a rate plan charge associated with the invoice item
         tests:
           - not_null
+        tags: ["tdf", "common", "invoice"]
       - name: invoice_item_id
         description: unique invoice item id that identifies a line item on the invoice
         tests:
           - not_null
           - unique
+        tags: ["tdf", "common", "invoice"]
       - name: invoice_id
         description: The ID of the invoice that's associated with the invoice item
         tests:
           - not_null
+        tags: ["tdf", "common", "invoice"]
       - name: invoice_number
         description: The unique identification number of the invoice
-      - name: invoice_account_id
+        tests:
+          - not_null
+        tags: ["tdf", "common", "invoice"]
+      - name: dim_crm_account_id_invoice
         description: The ID of the customer account associated with the invoice
       - name: invoice_date
         description: The date the invoice was generated
@@ -844,3 +916,16 @@ models:
           - not_null
           - unique
       - name: marketing_channel_name
+
+  - name: map_merged_crm_account
+    description: This table maps an original crm_account_id to its final, non-deleted crm_account_id if the original crm_id has been deleted and merged. If the account has not been deleted and merged, the non-deleted crm_account_id is equal to the original crm_account_id.
+    columns:
+      - name: sfdc_account_id
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "common", "crm_accounts"]
+      - name: dim_crm_account_id
+        tests:
+          - not_null
+        tags: ["tdf", "common", "crm_accounts"]

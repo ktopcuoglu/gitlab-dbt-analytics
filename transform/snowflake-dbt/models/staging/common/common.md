@@ -9,7 +9,23 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
+{% docs dim_crm_account %}
+Dimensional customer table representing all existing and historical customers from SalesForce. There are customer definitions for external reporting and additional customer definitions for internal reporting defined in the [handbook](https://about.gitlab.com/handbook/sales/#customer).
+
+The Customer Account Management business process can be found in the [handbook](https://about.gitlab.com/handbook/finance/sox-internal-controls/quote-to-cash/#1-customer-account-management-and-conversion-of-lead-to-opportunity).
+
+The grain of the table is the SalesForce Account, also referred to as CRM_ID.
+
+Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+{% enddocs %}
+
 {% docs dim_crm_opportunities %}
+Model for all dimensional opportunity columns from salesforce opportunity object
+
+{% enddocs %}
+
+{% docs dim_crm_opportunity %}
 Model for all dimensional opportunity columns from salesforce opportunity object
 
 {% enddocs %}
@@ -74,6 +90,15 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 {% enddocs %}
 
 {% docs dim_dates %}
+Dimensional table representing both calendar year and fiscal year date details.
+
+The grain of the table is a calendar day.
+
+Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+{% enddocs %}
+
+{% docs dim_date %}
 Dimensional table representing both calendar year and fiscal year date details.
 
 The grain of the table is a calendar day.
@@ -166,6 +191,11 @@ Dimension representing the associated sales rep from salesforce. Most often this
 
 {% enddocs %}
 
+{% docs dim_crm_sales_representative %}
+
+Dimension representing the associated sales rep from salesforce. Most often this will be the record owner, which is a ubiquitous field in salesforce.
+
+{% enddocs %}
 
 {% docs fct_usage_ping_payloads %}
 Factual table with metadata on usage ping payloads received.
@@ -241,5 +271,11 @@ Industry dimension, based off of salesforce account data, using the `generate_si
 {% docs dim_order_type %}
 
 Order type dimension, based off of salesforce opportunity data, using the `generate_single_field_dimension` macro to create the final formatted SQL
+
+{% enddocs %}
+
+{% docs map_merged_crm_account%}
+
+Table mapping current crm account ids to accounts merged in the past.
 
 {% enddocs %}

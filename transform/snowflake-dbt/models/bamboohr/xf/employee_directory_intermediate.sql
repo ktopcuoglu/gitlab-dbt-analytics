@@ -1,6 +1,7 @@
 {{ config({
     "materialized":"table",
-    "schema": "sensitive"
+    "schema": "sensitive",
+    "database": env_var('SNOWFLAKE_PREP_DATABASE'),
     })
 }}
 
@@ -11,7 +12,7 @@ WITH RECURSIVE employee_directory AS (
       employee_number,	
       first_name,	
       last_name,	
-      (employee_directory.first_name ||' '|| employee_directory.last_name)   AS full_name,
+      (first_name ||' '|| last_name)   AS full_name,
       work_email,
       hire_date,
       rehire_date,

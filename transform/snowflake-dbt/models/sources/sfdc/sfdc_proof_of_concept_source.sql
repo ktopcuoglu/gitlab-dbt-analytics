@@ -1,5 +1,6 @@
 {{config({
-    "schema": "staging"
+    "schema": "staging",
+    "database": env_var('SNOWFLAKE_TRANSFORM_DATABASE'),
   })
 }}
 
