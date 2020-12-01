@@ -58,7 +58,7 @@ WITH hosts AS (
       subscription_id,
       account_id,
       array_product_details_id
-    FROM version_usage_data
+    FROM usage_data
 
 ), renamed AS (
 

@@ -95,12 +95,11 @@ WITH dim_billing_accounts AS (
       fct_invoice_items.effective_end_month,
       fct_invoice_items.effective_start_month,
       IFF(MAX(arr) > 0, TRUE, FALSE)                            AS is_paid,
+      MAX(IFF(product_rate_plan_name ILIKE ANY ('%edu%', '%oss%'), TRUE, FALSE))    AS is_edu_oss,
       ARRAY_AGG(DISTINCT product_category)
         WITHIN GROUP (ORDER BY product_category ASC)            AS product_category_array,
       ARRAY_AGG(DISTINCT product_rate_plan_name)
-        WITHIN GROUP (ORDER BY product_rate_plan_name ASC)      AS product_rate_plan_name_array,
-      ARRAY_AGG(DISTINCT product_rate_plan_name ILIKE ANY ('%edeu%', '%oss%%'))
-        WITHIN GROUP (ORDER BY product_rate_plan_name ILIKE ANY ('%edeu%', '%oss%%') ASC)      AS product_rate_plan_name_is_edu_oss_array
+        WITHIN GROUP (ORDER BY product_rate_plan_name ASC)      AS product_rate_plan_name_array
     FROM dim_licenses
     INNER JOIN subscription_source
       ON dim_licenses.subscription_id = subscription_source.subscription_id
@@ -141,7 +140,7 @@ WITH dim_billing_accounts AS (
       license_subscriptions.product_category_array,
       license_subscriptions.product_rate_plan_name_array,
       COALESCE(is_paid, FALSE) AS is_paid,
-      COALESCE(ARRAY_CONTAINS('True'::VARIANT, license_subscriptions.product_rate_plan_name_array), FALSE) AS is_edu_oss,
+      is_edu_oss,
       fct_usage_ping_payloads.delivery,
       fct_usage_ping_payloads.edition,
       fct_usage_ping_payloads.product_tier,
@@ -209,7 +208,7 @@ WITH dim_billing_accounts AS (
       product_category_array,
       product_rate_plan_name_array,
       is_paid,
-      is_edu,
+      is_edu_oss,
       --created_at,
       --recorded_at
 
