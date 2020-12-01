@@ -92,6 +92,14 @@ WITH dim_billing_accounts AS (
       dim_subscriptions.subscription_start_month,
       dim_subscriptions.subscription_end_month,
       dim_billing_accounts.billing_account_id,
+      dim_crm_accounts.crm_account_name,
+      dim_crm_accounts.ultimate_parent_account_id,
+      dim_crm_accounts.ultimate_parent_account_name,
+      dim_crm_accounts.ultimate_parent_billing_country,
+      dim_crm_accounts.ultimate_parent_account_segment,
+      dim_crm_accounts.ultimate_parent_industry,
+      dim_crm_accounts.ultimate_parent_account_owner_team,
+      dim_crm_accounts.ultimate_parent_territory,
       fct_invoice_items.effective_end_month,
       fct_invoice_items.effective_start_month,
       IFF(MAX(arr) > 0, TRUE, FALSE)                            AS is_paid_subscription,
@@ -120,7 +128,7 @@ WITH dim_billing_accounts AS (
       ON dim_subscriptions.billing_account_id = dim_billing_accounts.billing_account_id
     INNER JOIN dim_crm_accounts
       ON dim_billing_accounts.crm_account_id = dim_crm_accounts.crm_account_id
-    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13
+    {{ dbt_utils.group_by(n=21)}}
 
 ), joined AS (
 
@@ -138,11 +146,19 @@ WITH dim_billing_accounts AS (
       license_subscriptions.original_linked_subscription_id,
       license_subscriptions.latest_active_subscription_id,
       license_subscriptions.subscription_name_slugify,
-      license_subscriptions.billing_account_id,
       license_subscriptions.product_category_array,
       license_subscriptions.product_rate_plan_name_array,
       license_subscriptions.subscription_start_month,
       license_subscriptions.subscription_end_month,
+      license_subscriptions.billing_account_id,
+      license_subscriptions.crm_account_name,
+      license_subscriptions.ultimate_parent_account_id,
+      license_subscriptions.ultimate_parent_account_name,
+      license_subscriptions.ultimate_parent_billing_country,
+      license_subscriptions.ultimate_parent_account_segment,
+      license_subscriptions.ultimate_parent_industry,
+      license_subscriptions.ultimate_parent_account_owner_team,
+      license_subscriptions.ultimate_parent_territory,
       COALESCE(is_paid_subscription, FALSE) AS is_paid_subscription,
       is_edu_oss_subscription,
       fct_usage_ping_payloads.delivery,
@@ -186,6 +202,7 @@ WITH dim_billing_accounts AS (
       latest_active_subscription_id,
       billing_account_id,
       location_id,
+      ultimate_parent_account_id,
 
       -- metadata usage ping
       delivery,
@@ -206,10 +223,7 @@ WITH dim_billing_accounts AS (
       --metadata instance
       --instance_user_count,
 
-      --metadata subscription and license
-      --license_plan,
-      --license_trial   AS is_trial,
-      --license_user_count,
+      --metadata subscription
       subscription_name_slugify,
       subscription_start_month,
       subscription_end_month,
@@ -218,6 +232,14 @@ WITH dim_billing_accounts AS (
       is_paid_subscription,
       is_edu_oss_subscription,
       
+      -- account metadata
+      crm_account_name,
+      ultimate_parent_account_name,
+      ultimate_parent_billing_country,
+      ultimate_parent_account_segment,
+      ultimate_parent_industry,
+      ultimate_parent_account_owner_team,
+      ultimate_parent_territory,
       
       created_at,
       recorded_at
