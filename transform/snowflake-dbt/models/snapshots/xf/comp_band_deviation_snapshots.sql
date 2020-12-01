@@ -1,14 +1,33 @@
 {{ config({
     "schema": "sensitive",
+    "database": env_var('SNOWFLAKE_PREP_DATABASE'),
     "materialized": "table"
     })
 }}
 
-WITH source AS (
+WITH comp_band_location_factor_base AS (
 
     SELECT *
     FROM {{ref("comp_band_loc_factor_base")}}
 
+), sheetload_comp_band_snapshots_base AS (
+
+    SELECT *
+    FROM {{ref("sheetload_comp_band_snapshot_base")}}
+
+)
+
+SELECT *
+FROM comp_band_location_factor_base
+
+UNION ALL
+
+SELECT *
+FROM sheetload_comp_band_snapshots_base
+
+
+
+{# 
 ), renamed AS (
 
     SELECT
@@ -53,4 +72,4 @@ WITH source AS (
   )
 
   SELECT *
-  FROM final
+  FROM final #}

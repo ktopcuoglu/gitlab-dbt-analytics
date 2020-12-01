@@ -39,11 +39,12 @@ WITH source AS (
 
   SELECT
     employee_number,
+    original_value,
     deviation_from_comp_calc,
     MIN(valid_from)                     AS valid_from,
     NULLIF(MAX(valid_to), CURRENT_DATE) AS valid_to
   FROM deduplicated
-  GROUP BY 1, 2
+  GROUP BY 1, 2, 3
 
 )
 

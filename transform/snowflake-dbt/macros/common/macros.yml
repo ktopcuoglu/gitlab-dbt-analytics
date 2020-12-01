@@ -13,3 +13,10 @@ macros:
       - name: number_of_seats
         type: number
         description: Number of seats for the specified row.
+  - name: map_marketing_channel_path
+    description: '{{ doc("map_marketing_channel_path") }}'
+    arguments:
+      - name: channel_path_column
+        type: string
+        description: Name of the column which has channel path data in it.
+

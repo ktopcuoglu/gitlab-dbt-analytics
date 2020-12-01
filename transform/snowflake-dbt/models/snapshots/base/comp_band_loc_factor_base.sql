@@ -34,6 +34,7 @@ WITH source AS (
 
     SELECT DISTINCT   
       employee_number,
+      original_value_deviation_from_comp_calc,
       IFF(CONTAINS(original_value_deviation_from_comp_calc,'%') = True,
           ROUND(deviation_from_comp_calc_cl/100::FLOAT, 2),
           ROUND(deviation_from_comp_calc_cl::FLOAT, 2))                    AS deviation_from_comp_calc,
@@ -50,7 +51,7 @@ WITH source AS (
       MIN(valid_from)                                                       AS valid_from,
       NULLIF(MAX(valid_to), CURRENT_DATE)                                   AS valid_to
     FROM deduplicated
-    GROUP BY 1, 2
+    GROUP BY 1, 2, 3
 
 )
 

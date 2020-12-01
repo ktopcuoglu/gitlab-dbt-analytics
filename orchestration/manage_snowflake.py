@@ -28,9 +28,11 @@ class SnowflakeManager:
         # Snowflake database name should be in CAPS
         # see https://gitlab.com/meltano/analytics/issues/491
         self.analytics_database = "{}_ANALYTICS".format(
-            config_vars["SNOWFLAKE_DATABASE"].upper()
+            config_vars["BRANCH_NAME"].upper()
         )
-        self.raw_database = "{}_RAW".format(config_vars["SNOWFLAKE_DATABASE"].upper())
+        self.prep_database = "{}_PREP".format(config_vars["BRANCH_NAME"].upper())
+        self.prod_database = "{}_PROD".format(config_vars["BRANCH_NAME"].upper())
+        self.raw_database = "{}_RAW".format(config_vars["BRANCH_NAME"].upper())
 
     def generate_db_queries(
         self, database_name: str, cloned_database: str
@@ -65,10 +67,15 @@ class SnowflakeManager:
         self, database: str, empty: bool = False, force: bool = False
     ) -> None:
         """
-        Manage zero copy clones in Snowflake.
+        For the creation of zero copy clones in Snowflake.
         """
 
-        databases = {"analytics": self.analytics_database, "raw": self.raw_database}
+        databases = {
+            "analytics": self.analytics_database,
+            "prep": self.prep_database,
+            "prod": self.prod_database,
+            "raw": self.raw_database,
+        }
 
         create_db = databases[database]
         clone_db = f"clone {database}" if not empty else ""
@@ -109,7 +116,12 @@ class SnowflakeManager:
         """
         Delete a clone.
         """
-        db_list = [self.analytics_database, self.raw_database]
+        db_list = [
+            self.analytics_database,
+            self.prep_database,
+            self.prod_database,
+            self.raw_database,
+        ]
 
         for db in db_list:
             query = 'DROP DATABASE IF EXISTS "{}";'.format(db)

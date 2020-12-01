@@ -1,6 +1,7 @@
 {{ config({
     "materialized":"table",
-    "schema": "sensitive"
+    "schema": "sensitive",
+    "database": env_var('SNOWFLAKE_PREP_DATABASE'),
     })
 }}
 
@@ -11,7 +12,7 @@ WITH RECURSIVE employee_directory AS (
       employee_number,	
       first_name,	
       last_name,	
-      (employee_directory.first_name ||' '|| employee_directory.last_name)   AS full_name,
+      (first_name ||' '|| last_name)   AS full_name,
       work_email,
       hire_date,
       rehire_date,
@@ -130,8 +131,10 @@ WITH RECURSIVE employee_directory AS (
       department_info.job_title,	
       department_info.department,	
       department_info.department_modified,
+      department_info.department_grouping,
       department_info.division,
       department_info.division_mapped_current,
+      department_info.division_grouping,
       COALESCE(job_role.cost_center, 
                cost_center_prior_to_bamboo.cost_center)                     AS cost_center,
       department_info.reports_to,

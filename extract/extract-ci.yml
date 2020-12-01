@@ -5,11 +5,15 @@
   stage: 🚂 Extract
   before_script:
     - export PATH="$CI_PROJECT_DIR/orchestration/:$PATH"
-    - echo $SNOWFLAKE_DATABASE
-    - if [ $SNOWFLAKE_DATABASE = "master" ]; then export SNOWFLAKE_LOAD_DATABASE="RAW"; else export SNOWFLAKE_LOAD_DATABASE="${CI_COMMIT_REF_NAME^^}_RAW"; fi
+    - echo $BRANCH_NAME
+    - if [ $BRANCH_NAME = "master" ]; then export SNOWFLAKE_LOAD_DATABASE="RAW"; else export SNOWFLAKE_LOAD_DATABASE="${CI_COMMIT_REF_NAME^^}_RAW"; fi
     - echo $SNOWFLAKE_LOAD_DATABASE
-    - echo $SNOWFLAKE_DATABASE
-    - if [ $SNOWFLAKE_DATABASE = "master" ]; then export SNOWFLAKE_TRANSFORM_DATABASE="ANALYTICS"; else export SNOWFLAKE_TRANSFORM_DATABASE="${CI_COMMIT_REF_NAME^^}_ANALYTICS"; fi
+    - echo $BRANCH_NAME
+    - if [ $BRANCH_NAME = "master" ]; then export SNOWFLAKE_TRANSFORM_DATABASE="ANALYTICS"; else export SNOWFLAKE_TRANSFORM_DATABASE="${CI_COMMIT_REF_NAME^^}_ANALYTICS"; fi
+    - if [ $BRANCH_NAME = "master" ]; then export SNOWFLAKE_PREP_DATABASE="PREP"; else export SNOWFLAKE_PREP_DATABASE="${CI_COMMIT_REF_NAME^^}_PREP"; fi
+    - if [ $BRANCH_NAME = "master" ]; then export SNOWFLAKE_PROD_DATABASE="PROD"; else export SNOWFLAKE_PROD_DATABASE="${CI_COMMIT_REF_NAME^^}_PROD"; fi
+    - echo $SNOWFLAKE_PREP_DATABASE
+    - echo $SNOWFLAKE_PROD_DATABASE
     - echo $SNOWFLAKE_TRANSFORM_DATABASE
   tags:
     - analytics
@@ -51,4 +55,13 @@ qualtrics_sheetload:
   only:
     - merge_requests
     - $MANIFEST_NAME
+  when: manual
+
+🛢gitlab_ops_pgp_test:
+  <<: *extract_definition
+  script:
+    - cd orchestration
+    - python ci_helpers.py use_proxy --instance_name ops-db-restore --command "python ../extract/postgres_pipeline/postgres_pipeline/main.py tap ../extract/postgres_pipeline/manifests/gitlab_ops_db_manifest.yaml --load_type test"
+  only:
+    - merge_requests
   when: manual
