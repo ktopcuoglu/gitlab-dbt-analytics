@@ -1,9 +1,12 @@
+{{ config({
+    "schema": "temporary"
+    })
+}}
+
 WITH source AS (
 
     SELECT *
-    {# FROM {{ source('snapshots', 'sheetload_comp_band_snapshots') }} #}
-     FROM "RAW"."SNAPSHOTS"."SHEETLOAD_COMP_BAND_SNAPSHOTS"
-    ---started capturing in new sheet starting 2020.10.31 post move to compass
+    FROM {{ source('snapshots', 'sheetload_comp_band_snapshots') }}
 
 ), renamed AS (
 
@@ -29,8 +32,8 @@ WITH source AS (
       employee_number,
       percent_over_top_end_of_band                                                  AS original_value,
       IFF(CONTAINS(percent_over_top_end_of_band,'%') = True,
-          ROUND(percent_over_top_end_of_band_cleaned/100::FLOAT, 2),
-          ROUND(percent_over_top_end_of_band_cleaned::FLOAT, 2))                    AS deviation_from_comp_calc,
+          ROUND(percent_over_top_end_of_band_cleaned/100::FLOAT, 4),
+          ROUND(percent_over_top_end_of_band_cleaned::FLOAT, 4))                    AS deviation_from_comp_calc,
     valid_from,
     valid_to
     FROM renamed

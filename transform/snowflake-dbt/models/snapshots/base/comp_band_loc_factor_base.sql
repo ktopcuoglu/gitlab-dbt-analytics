@@ -49,7 +49,8 @@ WITH source AS (
       original_value_deviation_from_comp_calc                               AS original_value,
       deviation_from_comp_calc,
       MIN(valid_from)                                                       AS valid_from,
-      NULLIF(MAX(valid_to), CURRENT_DATE)                                   AS valid_to
+      COALESCE(MAX(valid_to), '2020-05-21')                                 AS valid_to
+      --we stopped capturing this on 2020.05.20 from this spreadsheet 
     FROM deduplicated
     GROUP BY 1, 2, 3
 

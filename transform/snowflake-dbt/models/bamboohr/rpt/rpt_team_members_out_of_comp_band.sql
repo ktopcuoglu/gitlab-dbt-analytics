@@ -25,18 +25,18 @@ WITH employee_directory_intermediate AS (
       comp_band.deviation_from_comp_calc,
       comp_band.original_value,
       CASE 
-        WHEN deviation_from_comp_calc <= 0      THEN 0
-        WHEN deviation_from_comp_calc <= 0.01   THEN 0.25
-        WHEN deviation_from_comp_calc <= 0.05   THEN 0.5
-        WHEN deviation_from_comp_calc <= 0.1    THEN 0.75
-        WHEN deviation_from_comp_calc <= 1      THEN 1
+        WHEN LOWER(original_value) = 'exec'           THEN 0
+        WHEN deviation_from_comp_calc <= 0.0001       THEN 0
+        WHEN deviation_from_comp_calc <= 0.05         THEN 0.25
+        WHEN deviation_from_comp_calc <= 0.1          THEN 0.5
+        WHEN deviation_from_comp_calc <= 0.15         THEN 0.75
+        WHEN deviation_from_comp_calc <= 1            THEN 1
         ELSE 1 END                                      AS  weighted_deviated_from_comp_calc
     FROM employee_directory_intermediate
     LEFT JOIN comp_band
         ON employee_directory_intermediate.employee_number = comp_band.employee_number
         AND valid_from <= date_actual
         AND COALESCE(valid_to::date, {{max_date_in_bamboo_analyses()}}) > date_actual
-    WHERE LOWER(comp_band.original_value) != 'exec'
 
 ), bucketed AS (
 

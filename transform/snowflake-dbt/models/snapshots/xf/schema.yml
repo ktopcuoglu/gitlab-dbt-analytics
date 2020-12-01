@@ -1,6 +1,26 @@
 version: 2
 
 models:
+  - name: comp_band_deviation_snapshots
+    description: Combines the two sheetload files to capture comp band deviation. 
+    columns: 
+      - name: employee_number
+        tests:
+          - not_null
+      - name: original_value
+        description: Value as appears in the report
+        tests: 
+          - not_null
+      - name: deviation_from_comp_calc
+        description: The original value cleaned and rounded.
+        tests:
+          - not_null
+      - name: valid_from
+        description: The date the comp band deviation is applicable from.
+        tests:
+          -  not_null
+      - name: valid_to
+        description: The comp band deviation is applicable to.     
   - name: employee_location_factor_snapshots
     description: This captures changes in location factor for an employee. Starting 2020.03.24 data is captured from bamboohr instead of sheetload.
     columns:
@@ -12,8 +32,6 @@ models:
         description: The location associated to the employee.     
       - name: location_factor
         description: The location factor for the given time period
-        # tests:
-        #   - not_null
       - name: valid_from
         description: Marks the start date for a location factor used for an employee
         tests:
