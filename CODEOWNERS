@@ -8,7 +8,7 @@
 # nested in that directory, on any level
 
 [Default]
-* @jjstark @kathleentam @tayloramurphy @m_walker 
+* @jjstark @kathleentam @tayloramurphy @m_walker @paul_armstrong
 
 
 [Admin]
@@ -112,8 +112,8 @@ docker-compose.yml  @tayloramurphy  @m_walker   @paul_armstrong
 /transform/snowflake-dbt/models/sources/zendesk     @ken_aguilar    @kathleentam
 /transform/snowflake-dbt/models/staging/zendesk     @ken_aguilar    @kathleentam
 
-/transform/snowflake-dbt/models/sources/zuora       @iweeks     @tayloramurphy           
-/transform/snowflake-dbt/models/staging/zuora       @iweeks     @tayloramurphy
+/transform/snowflake-dbt/models/sources/zuora       @iweeks     @tayloramurphy      @paul_armstrong
+/transform/snowflake-dbt/models/staging/zuora       @iweeks     @tayloramurphy      @paul_armstrong
 
 # ======
 # dbt data file Overwrites
