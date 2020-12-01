@@ -1,6 +1,18 @@
 version: 2
 
 models:
+  - name: mart_monthly_product_usage
+    description: '{{ doc("mart_monthly_product_usage") }}'
+    tests:
+      - unique:
+          column_name: "concat(reporting_month, metrics_path, ping_id)"
+    columns:
+      - name: ping_id
+        tests:
+            - not_null
+      - name: metrics_path
+        tests:
+            - not_null
   - name: mart_usage_ping_counters_statistics
     description: '{{ doc("mart_usage_ping_counters_statistics") }}'
     tests:

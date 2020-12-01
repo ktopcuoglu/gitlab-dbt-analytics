@@ -94,12 +94,14 @@ WITH dim_billing_accounts AS (
       dim_billing_accounts.billing_account_id,
       fct_invoice_items.effective_end_month,
       fct_invoice_items.effective_start_month,
-      IFF(MAX(arr) > 0, TRUE, FALSE)                            AS is_paid,
-      MAX(IFF(product_rate_plan_name ILIKE ANY ('%edu%', '%oss%'), TRUE, FALSE))    AS is_edu_oss,
+      IFF(MAX(arr) > 0, TRUE, FALSE)                            AS is_paid_subscription,
+      MAX(IFF(product_rate_plan_name ILIKE ANY ('%edu%', '%oss%'), TRUE, FALSE))    AS is_edu_oss_subscription,
       ARRAY_AGG(DISTINCT product_category)
         WITHIN GROUP (ORDER BY product_category ASC)            AS product_category_array,
       ARRAY_AGG(DISTINCT product_rate_plan_name)
-        WITHIN GROUP (ORDER BY product_rate_plan_name ASC)      AS product_rate_plan_name_array
+        WITHIN GROUP (ORDER BY product_rate_plan_name ASC)      AS product_rate_plan_name_array,
+      SUM(quantity) AS quantity,
+      SUM(arr)      AS arr
     FROM dim_licenses
     INNER JOIN subscription_source
       ON dim_licenses.subscription_id = subscription_source.subscription_id
@@ -139,17 +141,21 @@ WITH dim_billing_accounts AS (
       license_subscriptions.billing_account_id,
       license_subscriptions.product_category_array,
       license_subscriptions.product_rate_plan_name_array,
-      COALESCE(is_paid, FALSE) AS is_paid,
-      is_edu_oss,
+      license_subscriptions.subscription_start_month,
+      license_subscriptions.subscription_end_month,
+      COALESCE(is_paid_subscription, FALSE) AS is_paid_subscription,
+      is_edu_oss_subscription,
       fct_usage_ping_payloads.delivery,
       fct_usage_ping_payloads.edition,
-      fct_usage_ping_payloads.product_tier,
-      fct_usage_ping_payloads.main_edition_product_tier,
+      fct_usage_ping_payloads.product_tier              AS ping_product_tier,
+      fct_usage_ping_payloads.main_edition_product_tier AS ping_main_edition_product_tier,
       fct_usage_ping_payloads.major_version,
       fct_usage_ping_payloads.minor_version,
       fct_usage_ping_payloads.major_minor_version,
       fct_usage_ping_payloads.version,
       fct_usage_ping_payloads.is_pre_release,
+      fct_usage_ping_payloads.created_at,
+      fct_usage_ping_payloads.recorded_at,
       monthly_metric_value,
       dim_hosts.host_id,
       dim_hosts.host_name,
@@ -178,15 +184,14 @@ WITH dim_billing_accounts AS (
       host_id,
       original_linked_subscription_id,
       latest_active_subscription_id,
-      subscription_name_slugify,
       billing_account_id,
       location_id,
 
       -- metadata usage ping
       delivery,
       edition,
-      product_tier,
-      main_edition_product_tier,
+      ping_product_tier,
+      ping_main_edition_product_tier,
       major_version,
       minor_version,
       major_minor_version,
@@ -205,12 +210,17 @@ WITH dim_billing_accounts AS (
       --license_plan,
       --license_trial   AS is_trial,
       --license_user_count,
+      subscription_name_slugify,
+      subscription_start_month,
+      subscription_end_month,
       product_category_array,
       product_rate_plan_name_array,
-      is_paid,
-      is_edu_oss,
-      --created_at,
-      --recorded_at
+      is_paid_subscription,
+      is_edu_oss_subscription,
+      
+      
+      created_at,
+      recorded_at
 
       -- monthly_usage_data
       monthly_metric_value
