@@ -1,54 +1,50 @@
-/* grain: one record per usage pin */
-
-WITH hosts AS (
+WITH license AS (
 
     SELECT *
-    FROM {{ ref('dim_hosts') }}
+    FROM {{ ref('license_db_licenses_source') }}
 
-), instances AS (
-
-    SELECT *
-    FROM {{ ref('dim_instances') }}
-
-), licenses AS (
+), product_rate_plan_charge AS (
 
     SELECT *
-    FROM {{ ref('dim_licenses') }}
+    FROM {{ ref('zuora_product_rate_plan_charge_source') }}
 
-), subscription_source AS (
+), rate_plan AS (
+
+    SELECT *
+    FROM {{ ref('zuora_rate_plan_source') }}
+    WHERE is_deleted = FALSE
+
+), subscription AS (
 
     SELECT *
     FROM {{ ref('zuora_subscription_source') }}
     WHERE is_deleted = FALSE
       AND exclude_from_analysis IN ('False', '')
 
-), subscriptions AS (
+), dim_hosts AS (
 
     SELECT *
-    FROM {{ ref('dim_subscriptions') }}
+    FROM {{ ref('dim_hosts') }}
 
 ), usage_data AS (
 
     SELECT *
     FROM {{ ref('dim_usage_pings') }}
 
-), license_subscriptions AS (
+), license_product_details AS (
 
     SELECT
-      licenses.license_md5,
-      subscription_source.subscription_id AS original_linked_subscription_id,
-      subscription_source.account_id,
-      subscription_source.subscription_name_slugify,
-      subscriptions.subscription_id       AS latest_active_subscription_id,
-      subscription_start_date,
-      subscription_end_date,
-      subscription_start_month,
-      subscription_end_month
-    FROM licenses
-    INNER JOIN subscription_source
-      ON licenses.zuora_subscription_id = subscription_source.subscription_id
-    LEFT JOIN subscriptions
-      ON subscription_source.subscription_name_slugify = subscriptions.subscription_name_slugify
+      license.license_md5,
+      subscription.subscription_id,
+      subscription.account_id,
+      ARRAY_AGG(DISTINCT product_rate_plan_charge_id)            AS array_product_details_id
+    FROM license
+    INNER JOIN subscription
+      ON license.zuora_subscription_id = subscription.subscription_id
+    INNER JOIN rate_plan
+      ON subscription.subscription_id = rate_plan.subscription_id
+    INNER JOIN product_rate_plan_charge
+      ON rate_plan.product_rate_plan_id = product_rate_plan_charge.product_rate_plan_id
     GROUP BY 1,2,3
 
 ), joined AS (
@@ -57,52 +53,46 @@ WITH hosts AS (
       usage_data.*,
       subscription_id,
       account_id,
-      array_product_details_id
+      array_product_details_id,
+      dim_hosts.location_id
+
     FROM usage_data
+    LEFT JOIN license_product_details
+      ON usage_data.license_md5 = license_product_details.license_md5
+    LEFT JOIN dim_hosts
+      ON usage_data.host_id = dim_hosts.host_id
+        AND usage_data.source_ip_hash = dim_hosts.source_ip_hash
+        AND usage_data.uuid = dim_hosts.instance_id
 
 ), renamed AS (
 
     SELECT
-
-      -- Primary Key
       id              AS usage_ping_id,
       created_date_id AS date_id,
-
-      --Foreign Key
-      instance_id,
+      uuid,
       host_id,
+      source_ip_hash,
       location_id,
-      license_id,
+      license_md5,
       subscription_id,
       account_id,
-
-      -- metadata usage ping
-      delivery,
+      array_product_details_id,
+      hostname,
       main_edition    AS edition,
       product_tier,
       main_edition_product_tier,
+      delivery,
+      cleaned_version AS version,
       major_version,
       minor_version,
-      major_minor_version,
-      cleaned_version AS version,
+      major_version || '.' || minor_version AS major_minor_version,
       is_pre_release,
-
-      --metatadata hosts
-      source_ip_hash,
-      host_name,
-
-
-      --metadata instance
       instance_user_count,
-
-      --metadata subscription and license
       license_plan,
       license_trial   AS is_trial,
-      license_user_count,
-
       created_at,
-      recorded_at
-      
+      recorded_at,
+      license_user_count
     FROM joined
 
 )
