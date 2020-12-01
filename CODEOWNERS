@@ -76,8 +76,8 @@ docker-compose.yml  @tayloramurphy  @m_walker   @paul_armstrong
 /transform/snowflake-dbt/models/sources/gitlab_data_yaml/   @tayloramurphy  @kathleentam    @jjstark
 /transform/snowflake-dbt/models/staging/gitlab_data_yaml/   @tayloramurphy  @kathleentam    @jjstark
 
-/transform/snowflake-dbt/models/sources/gitlab_dotcom/      @mpeychet_		@m_walker       @kathleentam    
-/transform/snowflake-dbt/models/staging/gitlab_dotcom/      @mpeychet_		@m_walker       @kathleentam
+/transform/snowflake-dbt/models/sources/gitlab_dotcom/      @mpeychet_		@m_walker       @kathleentam       @jeanpeguero    
+/transform/snowflake-dbt/models/staging/gitlab_dotcom/      @mpeychet_		@m_walker       @kathleentam       @jeanpeguero
 
 /transform/snowflake-dbt/models/sources/google_analytics_360/   @mpeychet_	@jjstark  @paul_armstrong	@jeanpeguero
 /transform/snowflake-dbt/models/staging/google_analytics_360/   @mpeychet_	@jjstark  @paul_armstrong	@jeanpeguero
@@ -112,8 +112,8 @@ docker-compose.yml  @tayloramurphy  @m_walker   @paul_armstrong
 /transform/snowflake-dbt/models/sources/zendesk     @ken_aguilar    @kathleentam
 /transform/snowflake-dbt/models/staging/zendesk     @ken_aguilar    @kathleentam
 
-/transform/snowflake-dbt/models/sources/zuora       @iweeks     @tayloramurphy      @paul_armstrong
-/transform/snowflake-dbt/models/staging/zuora       @iweeks     @tayloramurphy      @paul_armstrong
+/transform/snowflake-dbt/models/sources/zuora       @iweeks     @tayloramurphy      @paul_armstrong      @jeanpeguero
+/transform/snowflake-dbt/models/staging/zuora       @iweeks     @tayloramurphy      @paul_armstrong      @jeanpeguero
 
 # ======
 # dbt data file Overwrites
