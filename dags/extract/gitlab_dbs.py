@@ -399,38 +399,7 @@ for source_name, config in config_dict.items():
         table_list = extract_table_list_from_manifest(manifest)
         for table in table_list:
             task_type = "db-sync"
-            if "{EXECUTION_DATE}" in manifest["tables"][table]["import_query"]:
-                task_identifier = (
-                    f"{config['task_name']}-{table.replace('_','-')}-{task_type}"
-                )
-
-                sync_cmd = generate_cmd(
-                    config["dag_name"],
-                    f"--load_type sync --load_only_table {table}",
-                    config["cloudsql_instance_name"],
-                )
-                sync_extract = KubernetesPodOperator(
-                    **gitlab_defaults,
-                    image=DATA_IMAGE,
-                    task_id=task_identifier,
-                    name=task_identifier,
-                    pool=f"{config['task_name']}_pool",
-                    secrets=standard_secrets + config["secrets"],
-                    env_vars={
-                        **gitlab_pod_env_vars,
-                        **config["env_vars"],
-                        "TASK_INSTANCE": "{{ task_instance_key_str }}",
-                    },
-                    affinity=get_affinity(False),
-                    tolerations=get_toleration(False),
-                    arguments=[sync_cmd],
-                    do_xcom_push=True,
-                    xcom_push=True,
-                )
-
-                sync_extract >> freshness
-
-            else:
+            if "{EXECUTION_DATE}" not in manifest["tables"][table]["import_query"]:
                 task_type = "db-scd"
 
                 task_identifier = (
@@ -466,6 +435,52 @@ for source_name, config in config_dict.items():
                 scd_extract >> freshness
 
     globals()[f"{config['dag_name']}_db_sync"] = sync_dag
+
+    incremental_backfill_dag = DAG(
+        f"{config['dag_name']}_db_incremental_backfill",
+        default_args=sync_dag_args,
+        schedule_interval=config["sync_schedule_interval"],
+        concurrency=1,        
+    )
+
+    with incremental_backfill_dag:
+
+        file_path = f"analytics/extract/postgres_pipeline/manifests/{config['dag_name']}_db_manifest.yaml"
+        manifest = extract_manifest(file_path)
+        table_list = extract_table_list_from_manifest(manifest)
+        for table in table_list:
+            if "{EXECUTION_DATE}" in manifest["tables"][table]["import_query"]:
+                task_type = "backfill"
+
+                task_identifier = (
+                                f"{config['task_name']}-{table.replace('_','-')}-{task_type}"
+                            )
+
+                sync_cmd = generate_cmd(
+                    config["dag_name"],
+                    f"--load_type sync --load_only_table {table}",
+                    config["cloudsql_instance_name"],
+                )
+                sync_extract = KubernetesPodOperator(
+                    **gitlab_defaults,
+                    image=DATA_IMAGE,
+                    task_id=task_identifier,
+                    name=task_identifier,
+                    pool=f"{config['task_name']}_pool",
+                    secrets=standard_secrets + config["secrets"],
+                    env_vars={
+                        **gitlab_pod_env_vars,
+                        **config["env_vars"],
+                        "TASK_INSTANCE": "{{ task_instance_key_str }}",
+                    },
+                    affinity=get_affinity(False),
+                    tolerations=get_toleration(False),
+                    arguments=[sync_cmd],
+                    do_xcom_push=True,
+                    xcom_push=True
+                )
+
+    globals()[f"{config['dag_name']}_db_incremental_backfill"] = incremental_backfill_dag
 
     # Validation DAG
     validation_dag_args = {
