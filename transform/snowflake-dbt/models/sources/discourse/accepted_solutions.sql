@@ -6,18 +6,16 @@ WITH source AS (
 ), parsed AS (
 
     SELECT
-      json_value.value['start_date']::DATETIME  AS report_start_date,
-      json_value.value['title']::VARCHAR        AS report_title,
-      json_value.value['type']::VARCHAR         AS report_type,
-      data_level_one.value['req']::VARCHAR      AS request_type,
-      data_level_one.value['label']::VARCHAR    AS request_label,
-      data_level_two.value['x']::DATE           AS report_value_date,
-      data_level_two.value['y']::INT            AS report_value,
+      json_value.value['start_date']::datetime  as report_start_date,
+      json_value.value['title']::varchar        as report_title,
+      json_value.value['type']::varchar         as report_type,
+      json_value.value['total']::varchar        as report_total,
+      data_level_one.value['x']::DATE           AS report_value_date,
+      data_level_one.value['y']::INT            AS report_value,
       uploaded_at                               AS uploaded_at
     FROM source,
-    LATERAL FLATTEN(INPUT => PARSE_JSON(jsontext), OUTER => TRUE) json_value,
-    LATERAL FLATTEN(json_value.value:data,'') data_level_one,
-    LATERAL FLATTEN(data_level_one.value:data, '') data_level_two
+    LATERAL FLATTEN(INPUT => PARSE_JSON(jsontext), outer => true) json_value,
+    lateral flatten(json_value.value:data,'') data_level_one
 
 ), dedupe AS (
 
