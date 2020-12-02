@@ -1,0 +1,5 @@
+version: 2
+
+models:
+    - name: discourse_accepted_values
+      description: 'PMGs reporting data based off GitLabs paid digital ad campaigns'
