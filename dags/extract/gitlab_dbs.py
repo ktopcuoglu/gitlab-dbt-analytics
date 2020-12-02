@@ -408,7 +408,7 @@ for source_name, config in config_dict.items():
                 # SCD Task
                 scd_cmd = generate_cmd(
                     config["dag_name"],
-                    f"--load_type scd --load_only_table {table}",
+                    f"--load_type sync --load_only_table {table}",
                     config["cloudsql_instance_name"],
                 )
 
