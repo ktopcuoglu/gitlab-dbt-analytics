@@ -161,7 +161,7 @@ WITH dim_billing_accounts AS (
       license_subscriptions.ultimate_parent_territory,
       COALESCE(is_paid_subscription, FALSE) AS is_paid_subscription,
       is_edu_oss_subscription,
-      fct_usage_ping_payloads.delivery,
+      fct_usage_ping_payloads.ping_source               AS delivery,
       fct_usage_ping_payloads.edition,
       fct_usage_ping_payloads.product_tier              AS ping_product_tier,
       fct_usage_ping_payloads.main_edition_product_tier AS ping_main_edition_product_tier,

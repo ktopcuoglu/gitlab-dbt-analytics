@@ -618,6 +618,10 @@ models:
   - name: dim_usage_pings
     description: '{{ doc("dim_usage_pings") }}'
     columns:
+      - name: id
+        tests:
+          - not_null
+          - unique
       - name: uuid
         description: concatenate this field with host_id for a unique identifier for instances. See https://gitlab.com/gitlab-data/analytics/-/issues/6413#note_428426837. Business Process Issue - https://gitlab.com/gitlab-data/analytics/-/issues/6413#note_429177832 and https://gitlab.com/gitlab-data/analytics/-/issues/6560#note_428035384 and https://gitlab.com/gitlab-org/gitlab/-/merge_requests/44972
       - name: host_id
