@@ -89,6 +89,7 @@ WITH source AS (
         bdr_lu__c                                               AS business_development_look_up,
         business_development_rep_contact__c                     AS business_development_representative_contact,
         business_development_representative__c                  AS business_development_representative,
+        sdr_lu__c                                               AS sales_development_representative,
         competition__c                                          AS competition,
 
         --metadata

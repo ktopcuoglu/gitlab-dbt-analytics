@@ -126,6 +126,15 @@ models:
 
   - name: dim_crm_accounts_valid_at
     description: Parameterized model to recreate dimension table representing customer details as in SFDC at given date. Required variable valid_at is timezone sensitive
+
+  - name: dim_crm_opportunity
+    description: '{{ doc("dim_crm_opportunity") }}'
+    columns:
+      - name: dim_crm_opportunity_id
+        tests:
+          - unique
+          - not_null
+
   - name: dim_crm_opportunities
     description: '{{ doc("dim_crm_opportunities") }}'
     columns:
@@ -436,6 +445,19 @@ models:
       - name: is_active
         description: A boolean column that flags if the user is active in salesforce, which means that the user can login and use salesforce.
 
+  - name: dim_crm_sales_representative
+    description: '{{ doc("dim_crm_sales_representative") }}'
+    columns:
+      - name: crm_sales_rep_id
+        description: Primary key for Salesforce users and the primary key for this dimension
+        tests:
+          - unique
+          - not_null
+        tags: [ "tdf", "common" ]
+      - name: is_active
+        description: A boolean column that flags if the user is active in salesforce, which means that the user can login and use salesforce.
+        tags: [ "tdf", "common" ]
+
   - name: dim_sales_segment
     description: '{{ doc("dim_sales_segment") }}'
     columns:
@@ -629,18 +651,24 @@ models:
         description: The unique identifier of a verion of a rate plan charge associated with the invoice item
         tests:
           - not_null
+        tags: ["tdf", "common", "invoice"]
       - name: invoice_item_id
         description: unique invoice item id that identifies a line item on the invoice
         tests:
           - not_null
           - unique
+        tags: ["tdf", "common", "invoice"]
       - name: invoice_id
         description: The ID of the invoice that's associated with the invoice item
         tests:
           - not_null
+        tags: ["tdf", "common", "invoice"]
       - name: invoice_number
         description: The unique identification number of the invoice
-      - name: invoice_account_id
+        tests:
+          - not_null
+        tags: ["tdf", "common", "invoice"]
+      - name: dim_crm_account_id_invoice
         description: The ID of the customer account associated with the invoice
       - name: invoice_date
         description: The date the invoice was generated

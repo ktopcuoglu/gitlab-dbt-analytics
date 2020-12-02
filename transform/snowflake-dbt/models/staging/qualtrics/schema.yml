@@ -25,7 +25,11 @@ models:
             - not_null
         - name: question_response
         - name: response_id
+        - name: survey_start_date
+        - name: survey_end_date
+          description: The last recorded time a user interacts with the survey.
         - name: response_recorded_at
+          description: In qualtrics, if a user interacts with a survey and then there is no further interaction the recorded date will show up as 7 days after the survey end date and turn the survey into a completed response.
           tests:
             - not_null
         - name: user_language

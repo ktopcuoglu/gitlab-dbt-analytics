@@ -5,7 +5,7 @@ models:
       description: '{{ doc("monthly_usage_data_28_days") }}'
       tests:
       - unique:
-          column_name: "concat(instance_id, created_month, metrics_path)"
+          column_name: "concat(host_id, instance_id, created_month, metrics_path)"
       columns:
           - name: ping_id
             tests:
@@ -20,7 +20,7 @@ models:
       description: '{{ doc("monthly_usage_data_all_time") }}'
       tests:
       - unique:
-          column_name: "concat(instance_id, created_month, clean_metrics_name)"
+          column_name: "concat(host_id, instance_id, created_month, metrics_path)"
       columns:
           - name: ping_id
             tests:

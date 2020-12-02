@@ -10,7 +10,6 @@ from airflow_utils import (
     DBT_IMAGE,
     clone_repo_cmd,
     clone_and_setup_dbt_cmd,
-    dbt_install_deps_and_seed_cmd,
     dbt_install_deps_cmd,
     gitlab_defaults,
     gitlab_pod_env_vars,
@@ -66,7 +65,7 @@ default_args = {
 }
 
 # Create the DAG
-dag = DAG("dbt", default_args=default_args, schedule_interval="45 */8 * * *")
+dag = DAG("dbt", default_args=default_args, schedule_interval="45 8 * * *")
 
 # BranchPythonOperator functions
 def dbt_run_or_refresh(timestamp: datetime, dag: DAG) -> str:
@@ -86,7 +85,7 @@ def dbt_run_or_refresh(timestamp: datetime, dag: DAG) -> str:
     dag_interval = SCHEDULE_INTERVAL_HOURS * 3600
 
     # run a full-refresh once per week (on sunday early AM)
-    if current_weekday == 7 and dag_interval > current_seconds:
+    if current_weekday == 7:  # and dag_interval > current_seconds:
         return "dbt-full-refresh"
     else:
         return "dbt-non-product-models-run"
@@ -101,7 +100,7 @@ branching_dbt_run = BranchPythonOperator(
 # run non-product models on small warehouse
 dbt_non_product_models_command = f"""
     {pull_commit_hash} &&
-    {dbt_install_deps_and_seed_cmd} &&
+    {dbt_install_deps_cmd} &&
     dbt run --profiles-dir profile --target prod --exclude tag:product snapshots sources.gitlab_dotcom sources.sheetload+ sources.sfdc sources.zuora --vars {xs_warehouse}; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
@@ -139,7 +138,7 @@ dbt_non_product_models_task = KubernetesPodOperator(
 # run product models on large warehouse
 dbt_product_models_command = f"""
     {pull_commit_hash} &&
-    {dbt_install_deps_and_seed_cmd} &&
+    {dbt_install_deps_cmd} &&
     dbt run --profiles-dir profile --target prod --models tag:product --vars {xl_warehouse}; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
@@ -177,7 +176,7 @@ dbt_product_models_task = KubernetesPodOperator(
 # dbt-full-refresh
 dbt_full_refresh_cmd = f"""
     {pull_commit_hash} &&
-    {dbt_install_deps_and_seed_cmd} &&
+    {dbt_install_deps_cmd} &&
     dbt run --profiles-dir profile --target prod --full-refresh --exclude staging.common.dim_ip_to_geo mart_arr_snapshots --vars {xl_warehouse}; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
@@ -252,7 +251,7 @@ dbt_source_freshness = KubernetesPodOperator(
 # dbt-test
 dbt_test_cmd = f"""
     {pull_commit_hash} &&
-    {dbt_install_deps_and_seed_cmd} &&
+    {dbt_install_deps_cmd} &&
     dbt test --profiles-dir profile --target prod --vars {xs_warehouse} --exclude snowplow snapshots source:gitlab_dotcom source:sfdc source:zuora; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py test; exit $ret
 """

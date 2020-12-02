@@ -270,6 +270,13 @@ models:
         staging:
           +schema: staging
 
+      gitlab_ops:
+        +materialized: table
+        +schema: analytics
+        source_view:
+          +materialized: view
+          +schema: staging
+
       gitter:
         +enabled: false
         +materialized: table
@@ -372,6 +379,9 @@ models:
       secure: true
       base:
         +materialized: table
+      rpt:
+        +database: "{{ env_var('SNOWFLAKE_TRANSFORM_DATABASE') }}"
+
 
     covid19:
       +schema: covid19
