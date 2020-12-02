@@ -2314,7 +2314,14 @@ tables:
     import_db: GITLAB_DB
     import_query: >
       SELECT id
+      , confidence
+      , confidence_overridden
+      , confirmed_at
       , created_at
+      , dismissed_at
+      , resolved_at
+      , severity_overridden
+      , state
       , updated_at
       FROM vulnerabilities
       WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
