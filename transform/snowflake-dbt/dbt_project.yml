@@ -357,9 +357,6 @@ models:
       arr:
         +materialized: table
 
-      product_kpis:
-        +materialized: table
-
       exports:
         +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
         +materialized: view
