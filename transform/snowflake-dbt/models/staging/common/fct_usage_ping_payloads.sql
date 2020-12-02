@@ -81,7 +81,7 @@ WITH license AS (
       main_edition    AS edition,
       product_tier,
       main_edition_product_tier,
-      delivery,
+      ping_source,
       cleaned_version AS version,
       major_version,
       minor_version,
