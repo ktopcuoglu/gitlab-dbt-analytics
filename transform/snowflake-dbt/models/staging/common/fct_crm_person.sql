@@ -169,7 +169,8 @@ WITH account_dims_mapping AS (
 
       crm_person_id,
       MIN(event_timestamp)  AS first_mql_date,
-      MAX(event_timestamp)  AS last_mql_date
+      MAX(event_timestamp)  AS last_mql_date,
+      COUNT(*)              AS mql_count
 
     FROM mqls_unioned
     GROUP BY 1
@@ -221,7 +222,8 @@ WITH account_dims_mapping AS (
 
      -- additive fields
 
-      crm_person_with_touchpoints.person_score                                                                            AS person_score
+      crm_person_with_touchpoints.person_score                                                                            AS person_score,
+      mqls.mql_count                                                                                                      AS mql_count
 
     FROM crm_person_with_touchpoints
     LEFT JOIN sfdc_leads
