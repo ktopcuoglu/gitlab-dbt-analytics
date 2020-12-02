@@ -23,8 +23,6 @@ WITH source AS (
       report_start_date,
       report_title,
       report_type,
-      request_type,
-      request_label,
       report_value_date,
       report_value,
       max(uploaded_at)      AS last_uploaded_at
@@ -33,8 +31,6 @@ WITH source AS (
       report_start_date,
       report_title,
       report_type,
-      request_type,
-      request_label,
       report_value_date,
       report_value
 )
