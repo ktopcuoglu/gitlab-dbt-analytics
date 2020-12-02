@@ -401,12 +401,6 @@ models:
       tests:
       - not_null
       - unique
-- name: sheetload_sales_funnel_targets_region_source
-  description: Account region source data
-  columns:
-    - name: fields_concatenated
-      tests:
-      - not_null
 - name: sheetload_sales_funnel_targets_kpi_values_source
   description: Kpi values source data
   columns:
@@ -432,12 +426,6 @@ models:
       tests:
       - not_null
     - name: month
-      tests:
-      - not_null
-- name: sheetload_sales_funnel_targets_sales_segment_source
-  description: Sales segment source data
-  columns:
-    - name: fields_concatenated
       tests:
       - not_null
 - name: sheetload_rfs_support_requests_source
