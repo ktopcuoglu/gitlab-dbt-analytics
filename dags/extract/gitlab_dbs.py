@@ -398,7 +398,6 @@ for source_name, config in config_dict.items():
         manifest = extract_manifest(file_path)
         table_list = extract_table_list_from_manifest(manifest)
         for table in table_list:
-            task_type = "db-sync"
             if "{EXECUTION_DATE}" not in manifest["tables"][table]["import_query"]:
                 task_type = "db-scd"
 
