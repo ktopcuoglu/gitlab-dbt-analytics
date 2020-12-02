@@ -378,7 +378,7 @@ for source_name, config in config_dict.items():
         f"{config['dag_name']}_db_incremental_backfill",
         default_args=sync_dag_args,
         schedule_interval=config["sync_schedule_interval"],
-        concurrency=1,        
+        concurrency=1,
     )
 
     with incremental_backfill_dag:
@@ -391,8 +391,8 @@ for source_name, config in config_dict.items():
                 task_type = "backfill"
 
                 task_identifier = (
-                                f"{config['task_name']}-{table.replace('_','-')}-{task_type}"
-                            )
+                    f"{config['task_name']}-{table.replace('_','-')}-{task_type}"
+                )
 
                 sync_cmd = generate_cmd(
                     config["dag_name"],
@@ -415,11 +415,12 @@ for source_name, config in config_dict.items():
                     tolerations=get_toleration(False),
                     arguments=[sync_cmd],
                     do_xcom_push=True,
-                    xcom_push=True
+                    xcom_push=True,
                 )
 
-    globals()[f"{config['dag_name']}_db_incremental_backfill"] = incremental_backfill_dag
-
+    globals()[
+        f"{config['dag_name']}_db_incremental_backfill"
+    ] = incremental_backfill_dag
 
     sync_dag = DAG(
         f"{config['dag_name']}_db_sync",
