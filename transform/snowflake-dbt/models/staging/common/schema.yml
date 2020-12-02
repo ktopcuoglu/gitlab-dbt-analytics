@@ -744,6 +744,23 @@ models:
       - name: is_sdr_sao
         description: a boolean field created in the warehouse to flag Sales Accepted Opportunities from [Sales Development Reps](https://about.gitlab.com/handbook/marketing/revenue-marketing/sdr/). This field should be deprecated once sales accepted is in a more stable and consistent state in salesforce.
 
+  - name: fct_crm_person
+    description: '{{ doc("fct_crm_person") }}'
+    columns:
+      - name: dim_crm_person_id
+        description: A dbt generated surrogate key combining the lead id and contact id.
+        tests:
+          - unique
+          - not_null
+      - name: bizible_person_id
+        description: The unique identifier assigned to a lead or contact in Bizible used to join to touchpoint and attribution data.
+      - name: mql_date_first
+        description: The first date a lead or contact was assigned a Marketo Qualified Lead Date.
+      - name: mql_date_latest
+        description: The most recent date a lead or contact was assigned a Marketo Qualified Lead Date.
+      - name: is_mql
+        description: a boolean field created in the warehouse to flag Marketing Qualified Leads.
+
   - name: fct_mrr
     description: One row represents Monthly Recurring Revenue per one month, subscription_id, product_details_id
     columns:
