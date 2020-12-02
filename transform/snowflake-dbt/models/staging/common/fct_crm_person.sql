@@ -187,7 +187,7 @@ WITH account_dims_mapping AS (
 
       crm_person_with_touchpoints.crm_sales_rep_id                                                                        AS dim_crm_sales_rep_id,
       crm_person_with_touchpoints.crm_account_id                                                                          AS dim_crm_account_id,
-      COALESCE(account_dims_mapping.dim_sales_segment_name_id, sales_segment.dim_sales_segment_name_id, MD5(-1))          AS dim_segment_id,
+      COALESCE(account_dims_mapping.dim_sales_segment_name_id, sales_segment.dim_sales_segment_name_id, MD5(-1))          AS dim_sales_segment_id,
       COALESCE(account_dims_mapping.dim_geo_region_name_id, geo_region.dim_geo_region_name_id, MD5(-1))                   AS dim_geo_region_id,
       COALESCE(account_dims_mapping.dim_geo_sub_region_name_id, geo_sub_region.dim_geo_sub_region_name_id, MD5(-1))       AS dim_geo_sub_region_id,
       COALESCE(account_dims_mapping.dim_geo_area_name_id, MD5(-1))                                                        AS dim_geo_area_id,
