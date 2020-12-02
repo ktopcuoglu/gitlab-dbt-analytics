@@ -1,7 +1,6 @@
-{# {{ config({
+{{ config({
     "schema": "temporary"
     })
-}} #}
 
 WITH source AS (
 
