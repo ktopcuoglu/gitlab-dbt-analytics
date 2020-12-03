@@ -528,6 +528,7 @@ roles:
                 - raw.snowflake_imports
                 - raw.tap_postgres
                 - raw.qualtrics_mailing_list
+                - raw.version_db
             tables:
                 - raw.bamboohr.*
                 - raw.engineering_extracts.*
@@ -542,6 +543,7 @@ roles:
                 - raw.tap_postgres.*
                 - raw.snowflake_imports.*
                 - raw.qualtrics_mailing_list.*
+                - raw.version_db.*
         privileges:
             databases:
                 read:
@@ -1305,12 +1307,15 @@ roles:
             databases:
                 read:
                     - prep
+                    - raw
             schemas:
                 read:
                     - prep.version_db
+                    - raw.version_db
             tables:
                 read:
                     - prep.version_db.*
+                    - raw.version_db.*
 
 
     - zendesk:
