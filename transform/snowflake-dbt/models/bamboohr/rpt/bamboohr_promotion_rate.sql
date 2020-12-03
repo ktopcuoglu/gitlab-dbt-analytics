@@ -122,9 +122,9 @@ WITH promotions AS (
       headcount_end,
       COUNT(employee_id)                            AS total_promotions,
       total_promotions/headcount_end                AS promotion_rate,
-      IFF(total_promotions <= 3, '-', 
+      IFF(total_promotions <= 3, NULL, 
             AVG(percent_change_in_comp))            AS average_percent_change_in_comp,
-      IFF(total_promotions <= 3, '-', 
+      IFF(total_promotions <= 3, NULL, 
             MEDIAN(percent_change_in_comp))         AS median_percent_change_change_in_comp
     FROM joined
     GROUP BY 1,2,3,4
