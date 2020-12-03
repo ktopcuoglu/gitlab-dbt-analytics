@@ -574,6 +574,7 @@ models:
         description: NULL - To get this data join on ci_build_id for analytics_staging.gitlab_dotcom_ci_job_artifacts.size
       - name: ci_build_project_id
         description: Join on project_id to analytics.gitlab_dotcom_projects_xf to be able to get tier (namespace_plan_title) and paid state (namespace_plan_is_paid). Note that there are ongoing improvements to better trace accurate tier and payment at specific dates and times and this recommendation may change as a result.
+
   - name: gitlab_dotcom_usage_data_events
     description: '{{ doc("gitlab_dotcom_usage_data_events") }}'
     columns:
@@ -590,7 +591,22 @@ models:
       - name: event_created_at
         tests:
           - not_null
-        
+  - name: gitlab_dotcom_usage_data_events_blocked_users
+    description: '{{ doc("gitlab_dotcom_usage_data_events_blocked_users") }}'
+    columns:
+      - name: event_name
+        tests:
+          - not_null
+      - name: stage_name
+        tests:
+          - not_null
+      - name: is_representative_of_stage
+        tests:
+          - not_null
+        description: This column represents whether or not this action represents being active for the entire stage. One action per stage has this designation.
+      - name: event_created_at
+        tests:
+          - not_null      
   - name: gitlab_dotcom_users_xf
     description: '{{ doc("gitlab_dotcom_users_xf") }}'
     columns:
@@ -602,6 +618,17 @@ models:
         description: days between user creation and last activity
       - name: account_age_cohort
         description: cohorting of time between last dbt run and user creation date.    
+  - name: gitlab_dotcom_users_blocked_xf
+    description: '{{ doc("gitlab_dotcom_users_blocked_xf") }}'
+    columns:
+      - name: user_id
+        tests:
+          - not_null
+          - unique
+      - name: days_active
+        description: days between user creation and last activity
+      - name: account_age_cohort
+        description: cohorting of time between last dbt run and user creation date.
 
   - name: recruiting_diversity_effort
     description: This tracks the recruiting teams weekly check-ins to understand how they are progressing on their OKR for a diverse team.
