@@ -688,18 +688,16 @@ roles:
             - snowflake_db
         owns:
             schemas:
-                - analytics.analytics
                 - analytics.analytics_clones
-                - analytics.analytics_staging
                 - analytics.common
                 - analytics.common_mapping
+                - analytics.legacy
                 - prep.sensitive
             tables:
-                - analytics.analytics.*
                 - analytics.analytics_clones.*
-                - analytics.analytics_staging.*
                 - analytics.common.*
                 - analytics.common_mapping.*
+                - analytics.legacy.*
                 - prep.sensitive.*
         privileges:
             databases:
@@ -743,13 +741,13 @@ roles:
                     - prep
             schemas:
                 read:
-                    - analytics.analytics
                     - analytics.common
+                    - analytics.legacy
                     - prep.sensitive
             tables:
                 read:
-                    - analytics.analytics.*
                     - analytics.common.*
+                    - analytics.legacy.*
                     - prep.sensitive.employee_*
                     - prep.sensitive.bamboohr_custom_bonus
                     - prep.sensitive.bamboohr_directory
@@ -773,13 +771,13 @@ roles:
                     - raw
             schemas:
                 read:
-                    - analytics.analytics
+                    - analytics.legacy
                     - prep.sensitive
                     - raw.bamboohr
 
             tables:
                 read:
-                    - analytics.analytics.*
+                    - analytics.legacy.*
                     - prep.sensitive.employee_*
                     - prep.sensitive.bamboohr_*
                     - raw.bamboohr.*
@@ -878,19 +876,17 @@ roles:
                     - raw
             schemas:
                 read:
-                    - analytics.analytics
                     - analytics.common
                     - analytics.common_mapping
-                    - analytics.analytics_staging
                     - analytics.dbt
+                    - analytics.legacy
                     - raw.dbt
             tables:
                 read:
-                    - analytics.analytics.*
                     - analytics.common.*
                     - analytics.common_mapping.*
-                    - analytics.analytics_staging.*
                     - analytics.dbt.*
+                    - analytics.legacy.*
                     - raw.dbt.*
 
     - dbt_analytics_clones:
