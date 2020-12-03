@@ -439,8 +439,19 @@ roles:
             - analyst_xs
         member_of:
             - analyst_core
+            - boneyard
+            - covid19
+            - dbt_analytics
+            - gitlab_data_yaml
+            - gitlab_dotcom
+            - license_db
+            - netsuite
+            - postgres_pipeline
             - salesforce
+            - sheetload
+            - snapshots
             - snowflake_db
+            - snowplow
             - version_db
             - zuora
 
