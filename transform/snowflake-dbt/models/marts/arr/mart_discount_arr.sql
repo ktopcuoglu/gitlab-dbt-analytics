@@ -43,6 +43,7 @@ WITH dim_dates AS (
       dim_crm_account_id_invoice,
       dim_subscription_id,
       dim_product_details_id,
+      SUM(invoice_item_charge_amount)                      AS invoice_item_charge_amount,
       SUM(mrr)                                             AS mrr,
       SUM(arr)                                             AS arr,
       SUM(quantity)                                        AS quantity
@@ -52,7 +53,7 @@ WITH dim_dates AS (
       AND dim_subscription_id NOT IN ('2c92a0ff5e1dcf14015e3c191d4f7689','2c92a00e6a3477b5016a46aaec2f08bc')
     {{ dbt_utils.group_by(n=8) }}
 
-), final AS (
+), combined AS (
 
     SELECT
       {{ dbt_utils.surrogate_key(['dim_crm_accounts_invoice.ultimate_parent_account_id', 'arr_agg.effective_start_month', 'arr_agg.effective_end_month', 'zuora_subscription.subscription_name', 'arr_agg.dim_product_details_id']) }}
@@ -76,6 +77,13 @@ WITH dim_dates AS (
       dim_crm_accounts_subscription.crm_account_name                    AS crm_account_name_subscription,
       dim_crm_accounts_subscription.account_owner_team                  AS account_owner_team_subscription,
       zuora_subscription.subscription_name,
+      CASE
+        WHEN zuora_subscription.current_term <= 12 THEN FALSE
+        WHEN zuora_subscription.current_term > 12  THEN TRUE
+        ELSE NULL
+      END                                                               AS is_myb,
+      zuora_subscription.current_term                                   AS current_term_months,
+      ROUND(zuora_subscription.current_term / 12, 1)                    AS current_term_years,
       dim_crm_accounts_invoice.is_reseller,
       dim_product_details.product_rate_plan_charge_name,
       dim_product_details.product_category,
@@ -94,6 +102,7 @@ WITH dim_dates AS (
       dim_product_details.annual_billing_list_price,
       ARRAY_AGG(IFF(zuora_subscription.created_by_id = '2c92a0fd55822b4d015593ac264767f2', -- All Self-Service / Web direct subscriptions are identified by that created_by_id
                    'Self-Service', 'Sales-Assisted'))                   AS subscription_sales_type,
+      SUM(arr_agg.invoice_item_charge_amount)                           AS invoice_item_charge_amount,
       SUM(arr_agg.arr)/SUM(arr_agg.quantity)                            AS arpu,
       SUM(arr_agg.arr)                                                  AS arr,
       SUM(arr_agg.quantity)                                             AS quantity,
@@ -110,15 +119,28 @@ WITH dim_dates AS (
       ON arr_agg.dim_crm_account_id_invoice = dim_crm_accounts_invoice.crm_account_id
     LEFT JOIN dim_crm_accounts AS dim_crm_accounts_subscription
       ON arr_agg.dim_crm_account_id_subscription = dim_crm_accounts_subscription.crm_account_id
-    {{ dbt_utils.group_by(n=27) }}
+    {{ dbt_utils.group_by(n=30) }}
     ORDER BY 3 DESC
+
+), final AS (
+
+    SELECT
+      combined.*,
+      CASE
+        WHEN combined.current_term_months <= 12 AND combined.invoice_item_charge_amount >= combined.arr THEN TRUE
+        WHEN combined.current_term_months <= 12 AND combined.invoice_item_charge_amount < combined.arr  THEN FALSE
+        WHEN combined.current_term_months > 12  AND combined.invoice_item_charge_amount > combined.arr THEN TRUE
+        WHEN combined.current_term_months > 12  AND combined.invoice_item_charge_amount <= combined.arr THEN FALSE
+        ELSE NULL
+      END                                                               AS is_prepaid
+    FROM combined
 
 )
 
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@jpeguero",
+    updated_by="@iweeks",
     created_date="2020-10-21",
-    updated_date="2020-11-11",
+    updated_date="2020-12-03",
 ) }}
