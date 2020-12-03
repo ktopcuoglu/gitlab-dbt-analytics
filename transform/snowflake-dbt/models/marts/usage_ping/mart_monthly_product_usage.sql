@@ -12,8 +12,8 @@ WITH dim_billing_accounts AS (
 
 ), dim_hosts AS (
 
-    SELECT *
-    FROM {{ ref('dim_hosts') }}
+  SELECT *
+  FROM {{ ref('dim_hosts') }}
 
 ), dim_instances AS (
 

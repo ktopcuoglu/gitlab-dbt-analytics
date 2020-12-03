@@ -24,8 +24,8 @@ WITH usage_ping AS (
 ), usage_with_ip AS (
 
     SELECT 
-        hosts.*,
-        ip_to_geo.location_id
+      hosts.*,
+      ip_to_geo.location_id
     FROM hosts
     LEFT JOIN ip_to_geo
       ON hosts.source_ip_hash = ip_to_geo.ip_address_hash
