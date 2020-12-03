@@ -310,6 +310,7 @@ roles:
             - boneyard
             - covid19
             - dbt_analytics
+            - db_dumps
             - gitlab_data_yaml
             - gitlab_dotcom
             - license_db
@@ -442,6 +443,7 @@ roles:
             - boneyard
             - covid19
             - dbt_analytics
+            - db_dumps
             - gitlab_data_yaml
             - gitlab_dotcom
             - license_db
