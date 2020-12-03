@@ -102,5 +102,5 @@ WITH license AS (
     created_by="@derekatwood",
     updated_by="@mpeychet_",
     created_date="2020-08-17",
-    updated_date="2020-10-26"
+    updated_date="2020-12-03"
 ) }}
