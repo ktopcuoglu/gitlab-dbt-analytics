@@ -3,7 +3,7 @@ WITH paid_subscriptions_monthly_usage_ping_optin AS (
     SELECT *
     FROM {{ ref('mart_paid_subscriptions_monthly_usage_ping_optin') }}
 
-), c AS (
+), gitlab_releases AS (
     
     SELECT *
     FROM {{ ref('gitlab_release_schedule') }}
@@ -26,7 +26,7 @@ WITH paid_subscriptions_monthly_usage_ping_optin AS (
       COUNT(DISTINCT subscription_name_slugify)                         AS major_minor_version_subscriptions,
       major_minor_version_subscriptions /  MAX(total_subscrption_count) AS pct_major_minor_version_subscriptions
     FROM paid_subscriptions_monthly_usage_ping_optin
-    INNER JOIN gitlab_releases
+    INNER JOIN {{ ref('gitlab_release_schedule') }} AS gitlab_releases
       ON paid_subscriptions_monthly_usage_ping_optin.latest_major_minor_version = gitlab_releases.major_minor_version
     LEFT JOIN agg_total_subscriptions AS agg ON paid_subscriptions_monthly_usage_ping_optin.reporting_month = agg.agg_month
     {{ dbt_utils.group_by(n=4) }}
@@ -56,7 +56,10 @@ WITH paid_subscriptions_monthly_usage_ping_optin AS (
 ), counter_data AS (
   
     SELECT DISTINCT
-go
+      FIRST_VALUE(major_version) OVER (PARTITION BY flattened_usage_data.metrics_path, edition
+                                         ORDER BY release_date ASC) AS major_version,
+      FIRST_VALUE(minor_version) OVER (PARTITION BY flattened_usage_data.metrics_path, edition
+                                         ORDER BY release_date ASC) AS minor_version,
       FIRST_VALUE(DATE_TRUNC('month', release_date)) OVER (PARTITION BY flattened_usage_data.metrics_path, edition ORDER BY
                                  major_version ASC, minor_version ASC) AS release_month,
       flattened_usage_data.metrics_path,
