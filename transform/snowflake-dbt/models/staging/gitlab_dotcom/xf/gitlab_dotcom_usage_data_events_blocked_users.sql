@@ -18,7 +18,7 @@
 
 {%- set event_ctes = [
   {
-    "event_name": "action_monthly_blocked_users_project_repo",
+    "event_name": "action_monthly_active_users_project_repo",
     "source_table_name": "gitlab_dotcom_events",
     "user_column_name": "author_id",
     "key_to_parent_project": "project_id",
@@ -26,7 +26,7 @@
     "stage_name": "create",
     "is_representative_of_stage": "True"
   }, {
-    "event_name": "action_monthly_blocked_users_design_management",
+    "event_name": "action_monthly_active_users_design_management",
     "source_table_name": "gitlab_dotcom_events",
     "user_column_name": "author_id",
     "key_to_parent_project": "project_id",
@@ -34,7 +34,7 @@
     "stage_name": "create",
     "is_representative_of_stage": "False"
   }, {
-    "event_name": "action_monthly_blocked_users_wiki_repo",
+    "event_name": "action_monthly_active_users_wiki_repo",
     "source_table_name": "gitlab_dotcom_events",
     "user_column_name": "author_id",
     "key_to_parent_project": "project_id",
@@ -340,8 +340,8 @@
     "is_representative_of_stage": "False"
   },
   {
-    "event_name": "projects_prometheus_blocked",
-    "source_cte_name": "projects_prometheus_blocked",
+    "event_name": "projects_prometheus_active",
+    "source_cte_name": "projects_prometheus_active",
     "user_column_name": "creator_id",
     "key_to_parent_project": "project_id",
     "primary_key": "project_id",
@@ -487,7 +487,7 @@ WITH gitlab_subscriptions AS (
 
 
 /* Source CTEs Start Here */
-, action_monthly_blocked_users_project_repo AS (
+, action_monthly_active_users_project_repo AS (
 
     SELECT *
     FROM  {{ ref('gitlab_dotcom_events') }}
@@ -495,14 +495,14 @@ WITH gitlab_subscriptions AS (
       AND event_action_type_id = 5
 
 
-), action_monthly_blocked_users_design_management AS (
+), action_monthly_active_users_design_management AS (
 
     SELECT *
     FROM  {{ ref('gitlab_dotcom_events') }}
     WHERE target_type = 'DesignManagement::Design' 
       AND event_action_type_id IN (1, 2)
 
-), action_monthly_blocked_users_wiki_repo AS (
+), action_monthly_active_users_wiki_repo AS (
 
     SELECT *
     FROM  {{ ref('gitlab_dotcom_events') }}
@@ -579,13 +579,13 @@ WITH gitlab_subscriptions AS (
     FROM {{ ref('gitlab_dotcom_notes') }}
     WHERE noteable_type = 'MergeRequest'
 
-), projects_prometheus_blocked AS (
+), projects_prometheus_active AS (
 
     SELECT *
     FROM {{ ref('gitlab_dotcom_projects_xf') }}
     WHERE ARRAY_CONTAINS('PrometheusService'::VARIANT, active_service_types)
 
-), projects_prometheus_blocked AS (
+), projects_prometheus_active AS (
 
     SELECT *
     FROM {{ ref('gitlab_dotcom_projects_xf') }}
