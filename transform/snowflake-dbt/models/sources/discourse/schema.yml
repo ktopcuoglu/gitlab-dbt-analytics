@@ -37,7 +37,7 @@ models:
       description: '{{ doc("daily_engaged_users") }}'
       columns:
           - name: report_start_date
-          tests:
+            tests:
               - not_null
           - name: report_title
           - name: report_type
@@ -52,7 +52,7 @@ models:
       description: '{{ doc("page_view_total_reqs") }}'
       columns:
           - name: report_start_date
-          tests:
+            tests:
             - not_null
           - name: report_title
           - name: report_type
