@@ -11,7 +11,7 @@ WITH account_dims_mapping AS (
 ), biz_touchpoints AS (
 
     SELECT *
-    FROM {{ref('sfdc_bizible_touchpoint_source') }}
+    FROM {{ ref('sfdc_bizible_touchpoint_source') }}
     WHERE bizible_touchpoint_position LIKE '%FT%'
      AND is_deleted = 'FALSE'
 
