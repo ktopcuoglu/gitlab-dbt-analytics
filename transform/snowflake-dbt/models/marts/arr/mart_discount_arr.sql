@@ -131,7 +131,9 @@ WITH dim_dates AS (
         WHEN combined.current_term_months > 12  AND combined.invoice_item_charge_amount > combined.arr  THEN 'Prepaid MYB'
         WHEN combined.current_term_months > 12  AND combined.invoice_item_charge_amount <= combined.arr THEN 'Non Prepaid MYB'
         ELSE NULL
-      END                                                               AS prepaid_myb
+      END                                                               AS prepaid_myb,
+      ABS(invoice_item_charge_amount) / (arr * current_term_years)
+                                                                        AS pct_paid_of_total_revenue
     FROM combined
 
 )
