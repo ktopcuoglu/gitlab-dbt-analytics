@@ -100,7 +100,7 @@ WITH license AS (
 {{ dbt_audit(
     cte_ref="renamed",
     created_by="@derekatwood",
-    updated_by="@msendal",
+    updated_by="@mpeychet_",
     created_date="2020-08-17",
     updated_date="2020-10-26"
 ) }}
