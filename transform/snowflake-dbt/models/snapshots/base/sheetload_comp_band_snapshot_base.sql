@@ -15,7 +15,7 @@ WITH source AS (
       percent_over_top_end_of_band,
       CASE 
         WHEN NULLIF(LOWER(percent_over_top_end_of_band), '') ='exec'    
-          THEN NULL
+          THEN 0.00
         WHEN NULLIF(percent_over_top_end_of_band, '') ='#DIV/0!' 
           THEN NULL
         WHEN percent_over_top_end_of_band LIKE '%'               

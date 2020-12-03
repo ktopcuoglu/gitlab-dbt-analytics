@@ -144,14 +144,10 @@ models:
       tests:
       - not_null
     - name: sum_weighted_deviated_from_comp_calc
-      tests:
-      - not_null
     - name: current_employees
       tests:
       - not_null
     - name: percent_of_employees_outside_of_band
-      tests:
-      - not_null    
 
   
   - name: rpt_headcount_vs_planned

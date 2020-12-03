@@ -17,6 +17,8 @@ WITH employee_directory_intermediate AS (
 
     SELECT DISTINCT last_day_of_month
     FROM {{ref('date_details')}}
+    WHERE last_day_of_month < '2020-05-20' --last day we captured before transitioning to new report
+      OR last_day_of_month>='2020-10-31' -- started capturing again from new report
 
 ), joined AS (
 
