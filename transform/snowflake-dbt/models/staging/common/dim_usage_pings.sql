@@ -27,7 +27,7 @@ WITH usage_ping_data AS (
         CASE 
             WHEN edition = 'CE'                                   THEN 'Core'
             WHEN edition = 'EE Free'                              THEN 'Core'                                                      
-            WHEN license_expires_at < usage_ping_data.created_at THEN 'Core'
+            WHEN license_expires_at < usage_ping_data.created_at  THEN 'Core'
             WHEN edition = 'EE'                                   THEN 'Starter'
             WHEN edition = 'EES'                                  THEN 'Starter'
             WHEN edition = 'EEP'                                  THEN 'Premium'
