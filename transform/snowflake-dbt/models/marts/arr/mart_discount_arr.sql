@@ -127,9 +127,9 @@ WITH dim_dates AS (
     SELECT
       combined.*,
       CASE
-        WHEN combined.current_term_months <= 12                                                         THEN 'Non-MYB'
-        WHEN combined.current_term_months > 12  AND combined.invoice_item_charge_amount > combined.arr  THEN 'Prepaid MYB'
-        WHEN combined.current_term_months > 12  AND combined.invoice_item_charge_amount <= combined.arr THEN 'Non Prepaid MYB'
+        WHEN combined.current_term_months <= 12                                                              THEN 'Non-MYB'
+        WHEN combined.current_term_months > 12  AND ABS(combined.invoice_item_charge_amount) > combined.arr  THEN 'Prepaid MYB'
+        WHEN combined.current_term_months > 12  AND ABS(combined.invoice_item_charge_amount) <= combined.arr THEN 'Non Prepaid MYB'
         ELSE NULL
       END                                                               AS prepaid_myb,
       ABS(invoice_item_charge_amount) / (arr * current_term_years)
