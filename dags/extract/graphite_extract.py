@@ -63,9 +63,7 @@ lcp_operator = KubernetesPodOperator(
         SNOWFLAKE_LOAD_WAREHOUSE,
         SNOWFLAKE_LOAD_PASSWORD,
     ],
-    env_vars={
-        "START_DATE": "{{ ds_nodash }}",
-    },
+    env_vars={"START_DATE": "{{ ds_nodash }}"},
     affinity=get_affinity(False),
     tolerations=get_toleration(False),
     arguments=[extract_command],
