@@ -865,12 +865,10 @@ roles:
                 read:
                     - raw.license_db_dump
                     - raw.version_db_dump_stitch
-                    - raw.version_db
             tables:
                 read:
                     - raw.license_db_dump.*
                     - raw.version_db_dump_stitch.*
-                    - raw.version_db.*
 
     - dbt_analytics:
         warehouses:
@@ -1313,12 +1311,15 @@ roles:
             databases:
                 read:
                     - prep
+                    - raw
             schemas:
                 read:
                     - prep.version_db
+                    - raw.version_db
             tables:
                 read:
                     - prep.version_db.*
+                    - raw.version_db.*
 
 
     - zendesk:
