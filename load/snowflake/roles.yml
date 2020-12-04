@@ -1909,8 +1909,8 @@ roles:
                     - ktam_prod.*.*
 
     - ksmith:
-        warehouses:
-            - reporting
+        member_of: []
+        warehouses: []
 
     - lmai:
         member_of:
@@ -2820,10 +2820,8 @@ users:
             - ktam
 
     - ksmith:
-        can_login: yes
-        member_of:
-            - ksmith
-            - securityadmin
+        can_login: no
+        member_of: []
 
     - lmai:
         can_login: yes
