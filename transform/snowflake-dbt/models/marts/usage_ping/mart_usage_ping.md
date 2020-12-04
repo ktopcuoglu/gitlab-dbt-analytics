@@ -59,7 +59,7 @@ This SQL query will pull opt-in rate per month for Paid subscriptions:
 SELECT
     mrr_month,
     AVERAGE(has_sent_payloads::BOOLEAN)
-FROM analytics.mart_paid_subscriptions_monthly_usage_ping_optin
+FROM legacy.mart_paid_subscriptions_monthly_usage_ping_optin
 GROUP BY 1
 
 ```

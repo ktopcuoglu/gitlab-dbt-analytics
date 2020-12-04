@@ -25,7 +25,7 @@ If none, please include a description
   - [ ] Yes (You will need to already have [approved access](https://about.gitlab.com/handbook/business-ops/it-ops-team/access-requests/) to this data) 
   - [ ] No (I verify that this data that will be extracted does not contain sensitive information.)
 * [ ]  How soon do you need this data ? Timeline: _________
-* [ ]  cc: @gitlab-data to have this issue prioritized and assigned.  
+* [ ]  cc: `@gitlab-data` to have this issue prioritized and assigned.  
 
   ### Reviewer Checklist 
 * [ ]  Review the Submitter Checklist. 

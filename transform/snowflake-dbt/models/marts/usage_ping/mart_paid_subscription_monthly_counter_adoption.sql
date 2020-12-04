@@ -92,11 +92,6 @@ WITH self_managed_active_subscriptions AS (
       ON transformed.reporting_month = latest_versions.reporting_month
         AND transformed.subscription_name_slugify = latest_versions.subscription_name_slugify
 
-), gitlab_releases AS (
-    
-    SELECT *
-    FROM {{ ref('gitlab_release_schedule') }}
-
 ), agg_total_subscriptions AS (
 
     SELECT 
