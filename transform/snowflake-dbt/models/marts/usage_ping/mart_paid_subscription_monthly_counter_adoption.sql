@@ -158,7 +158,7 @@ WITH self_managed_active_subscriptions AS (
       edition
     FROM flattened_usage_data
     INNER JOIN section_metrics ON flattened_usage_data.ping_name = section_metrics.metrics_path
-    LEFT JOIN gitlab_releases ON flattened_usage_data.first_version_with_counter = gitlab_releases.major_minor_version
+    LEFT JOIN gitlab_release_schedule AS gitlab_releases  ON flattened_usage_data.first_version_with_counter = gitlab_releases.major_minor_version
     WHERE release_date < CURRENT_DATE AND (is_smau OR is_gmau)
 
 ), date_spine AS (

@@ -32,6 +32,10 @@ This is still a WIP, and we are planning to add some other dimensions such as:
 * team size
 * Industry
 
+### Data Team Explanation:
+
+In order to properly link the license to the subscriptions and invoice items we copied the logic from [the fact_mrr model](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.fct_mrr)
+
 {% enddocs %}
 
 
