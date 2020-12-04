@@ -77,7 +77,6 @@ WITH dim_dates AS (
       dim_crm_account_subscription.crm_account_name                    AS crm_account_name_subscription,
       dim_crm_account_subscription.account_owner_team                  AS account_owner_team_subscription,
       zuora_subscription.subscription_name,
-      dim_crm_account_invoice.is_reseller,
       CASE
         WHEN zuora_subscription.current_term <= 12 THEN FALSE
         WHEN zuora_subscription.current_term > 12  THEN TRUE
@@ -85,7 +84,7 @@ WITH dim_dates AS (
       END                                                               AS is_myb,
       zuora_subscription.current_term                                   AS current_term_months,
       ROUND(zuora_subscription.current_term / 12, 1)                    AS current_term_years,
-      dim_crm_accounts_invoice.is_reseller,
+      dim_crm_account_invoice.is_reseller,
       dim_product_details.product_rate_plan_charge_name,
       dim_product_details.product_category,
       dim_product_details.delivery,
@@ -116,10 +115,10 @@ WITH dim_dates AS (
       ON arr_agg.dim_product_details_id = dim_product_details.product_details_id
     INNER JOIN dim_billing_accounts
       ON arr_agg.dim_billing_account_id_invoice = dim_billing_accounts.billing_account_id
-    LEFT JOIN dim_crm_accounts AS dim_crm_accounts_invoice
-      ON arr_agg.dim_crm_account_id_invoice = dim_crm_accounts_invoice.crm_account_id
-    LEFT JOIN dim_crm_accounts AS dim_crm_accounts_subscription
-      ON arr_agg.dim_crm_account_id_subscription = dim_crm_accounts_subscription.crm_account_id
+    LEFT JOIN dim_crm_account AS dim_crm_account_invoice
+      ON arr_agg.dim_crm_account_id_invoice = dim_crm_account_invoice.crm_account_id
+    LEFT JOIN dim_crm_account AS dim_crm_account_subscription
+      ON arr_agg.dim_crm_account_id_subscription = dim_crm_account_subscription.crm_account_id
     {{ dbt_utils.group_by(n=30) }}
     ORDER BY 3 DESC
 
