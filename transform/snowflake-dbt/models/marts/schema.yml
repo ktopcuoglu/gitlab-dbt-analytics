@@ -33,6 +33,14 @@ models:
             - not_null
             - unique
         tags: ["tdf", "mart", "arr"]
+      - name: is_myb
+        description: Identifies if a subscription charge is for a multiple year term.
+      - name: current_term_months
+        description: Term of the subscription in months.
+      - name: current_term_years
+        description: Term of the subscription in years. Rounds to the one decimal point. For examples, an 18 month term subscription will be a 1.5 year term.
+      - name: prepaid_myb
+        description: Identifies if a MYB deal has more than 1 year paid on the subscription. The flag does NOT identify how years have been prepaid or if the subscription has been prepaid in full.
 
   - name: mart_delta_arr_parent_month
     description: "Mart table by month pursuant to the ARR Analysis Framework at the parent customer level"
