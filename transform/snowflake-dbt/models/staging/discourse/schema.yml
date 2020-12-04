@@ -1,7 +1,7 @@
 version: 2
 
 models:
-    - name: discourse_accepted_values
+    - name: discourse_accepted_solutions
       description: 'Pre-formatted report data displaying the accepted reporting values on the gitlab.com discourse instance. Used in calculation of Ticket deflection KPI'
       columns:
           - name: report_start_date
