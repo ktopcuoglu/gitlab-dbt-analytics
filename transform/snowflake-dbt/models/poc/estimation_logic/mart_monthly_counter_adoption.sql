@@ -40,14 +40,14 @@ WITH paid_subscriptions_monthly_usage_ping_optin AS (
 ), flattened_usage_data AS (
   
     SELECT DISTINCT
-      f.path                           AS metrics_path, 
-      IFF(edition='CE', edition, 'EE') AS edition,
-      SPLIT_PART(metrics_path, '.', 1)    AS main_json_name,
-      SPLIT_PART(metrics_path, '.', -1)   AS feature_name,
-      REPLACE(f.path, '.','_')         AS full_metrics_path,
-      FIRST_VALUE(major_minor_version ) OVER (PARTITION BY metrics_path, edition ORDER BY
-                                 major_version ASC,
-      minor_version ASC) AS first_version_with_counter
+      f.path                                                                AS metrics_path, 
+      IFF(edition='CE', edition, 'EE')                                      AS edition,
+      SPLIT_PART(metrics_path, '.', 1)                                      AS main_json_name,
+      SPLIT_PART(metrics_path, '.', -1)                                     AS feature_name,
+      REPLACE(f.path, '.','_')                                              AS full_metrics_path,
+      FIRST_VALUE(major_minor_version ) OVER (PARTITION BY metrics_path, edition 
+                                                ORDER BY major_version ASC,
+                                                         minor_version ASC) AS first_version_with_counter
     FROM {{ ref('version_usage_data') }},
       lateral flatten(input => version_usage_data.raw_usage_data_payload, recursive => True) f
 
@@ -57,11 +57,11 @@ WITH paid_subscriptions_monthly_usage_ping_optin AS (
   
     SELECT DISTINCT
       FIRST_VALUE(major_version) OVER (PARTITION BY flattened_usage_data.metrics_path, edition
-                                         ORDER BY release_date ASC) AS major_version,
+                                        ORDER BY release_date ASC)                           AS major_version,
       FIRST_VALUE(minor_version) OVER (PARTITION BY flattened_usage_data.metrics_path, edition
-                                         ORDER BY release_date ASC) AS minor_version,
+                                         ORDER BY release_date ASC)                          AS minor_version,
       FIRST_VALUE(DATE_TRUNC('month', release_date)) OVER (PARTITION BY flattened_usage_data.metrics_path, edition ORDER BY
-                                 major_version ASC, minor_version ASC) AS release_month,
+                                 major_version ASC, minor_version ASC)                       AS release_month,
       flattened_usage_data.metrics_path,
       stage_name, 
       section_name,
@@ -69,9 +69,8 @@ WITH paid_subscriptions_monthly_usage_ping_optin AS (
       is_smau,
       is_gmau,
       edition,
-      FIRST_VALUE(major_minor_version) OVER (PARTITION BY flattened_usage_data.metrics_path, edition ORDER BY
-                                 major_version ASC,
-      minor_version ASC) AS first_version_with_counter
+      FIRST_VALUE(major_minor_version) OVER (PARTITION BY flattened_usage_data.metrics_path, edition 
+                                              ORDER BY major_version ASC, minor_version ASC) AS first_version_with_counter
     FROM flattened_usage_data
     INNER JOIN section_metrics ON flattened_usage_data.metrics_path = section_metrics.metrics_path
     LEFT JOIN gitlab_releases ON flattened_usage_data.first_version_with_counter = gitlab_releases.major_minor_version
