@@ -18,7 +18,7 @@ WITH paid_subscriptions_monthly_usage_ping_optin AS (
 
 ), monthly_subscription_optin_counts AS (
 
-    SELECT DISTINCT 
+    SELECT
       paid_subscriptions_monthly_usage_ping_optin.reporting_month,
       latest_major_minor_version,
       major_version,
