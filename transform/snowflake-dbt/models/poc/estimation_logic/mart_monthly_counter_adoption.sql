@@ -44,7 +44,7 @@ WITH paid_subscriptions_monthly_usage_ping_optin AS (
       IFF(edition='CE', edition, 'EE')                                      AS edition,
       SPLIT_PART(metrics_path, '.', 1)                                      AS main_json_name,
       SPLIT_PART(metrics_path, '.', -1)                                     AS feature_name,
-      REPLACE(f.path, '.','_')                                              AS full_metrics_path,
+      REPLACE(f.path, '.', '_')                                              AS full_metrics_path,
       FIRST_VALUE(major_minor_version ) OVER (PARTITION BY metrics_path, edition 
                                                 ORDER BY major_version ASC,
                                                          minor_version ASC) AS first_version_with_counter
