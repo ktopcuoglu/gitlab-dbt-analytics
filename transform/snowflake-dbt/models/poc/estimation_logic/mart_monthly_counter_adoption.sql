@@ -14,7 +14,7 @@ WITH paid_subscriptions_monthly_usage_ping_optin AS (
       reporting_month AS agg_month,
       COUNT(DISTINCT subscription_name_slugify) AS total_subscrption_count
     FROM paid_subscriptions_monthly_usage_ping_optin
-    {{ dbt_utils.group_by(n=1)}}
+    GROUP BY 1
 
 ), monthly_subscription_optin_counts AS (
 
