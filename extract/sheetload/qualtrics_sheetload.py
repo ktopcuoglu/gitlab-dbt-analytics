@@ -116,7 +116,7 @@ def process_qualtrics_file(
     dw_uploader(engine, table, dataframe, schema)
     query = f"""
         SELECT first_name, last_name, email_address, language, user_id, plan
-        FROM  ANALYTICS_SENSITIVE.QUALTRICS_API_FORMATTED_CONTACTS WHERE user_id in
+        FROM PREP.SENSITIVE.QUALTRICS_API_FORMATTED_CONTACTS WHERE user_id in
         (
             SELECT id
             FROM RAW.{schema}.{table}
