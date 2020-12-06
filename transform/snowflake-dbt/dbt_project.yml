@@ -49,12 +49,10 @@ on-run-end:
 seeds:
   +enabled: true
   +database: "{{ env_var('SNOWFLAKE_TRANSFORM_DATABASE') }}" #ANALYTICS
-  +schema: staging
+  +schema: legacy
   +quote_columns: False
 
   gitlab_snowflake:
-    zuora_country_geographic_region:
-      +schema: analytics
     gitlab_release_schedule:
       +column_types:
         major_minor_version: varchar
@@ -88,7 +86,7 @@ vars:
 # ==================
 models:
   +database: "{{ env_var('SNOWFLAKE_TRANSFORM_DATABASE') }}" # ANALYTICS, redundant, but good to be explicit
-  +schema: analytics  # Top level override since profiles defaults to PREP
+  +schema: legacy  # Top level override since profiles defaults to PREP
 
   # ------------------
   # Snowplow Package https://hub.getdbt.com/fishtown-analytics/snowplow/latest/
@@ -108,8 +106,6 @@ models:
   # ------------------
   snowflake_spend:
     +materialized: table
-    xf:
-      +schema: analytics
 
   # ==================
   # GitLab Models
@@ -235,69 +231,29 @@ models:
     # Staging
     # ------------------
     staging:
-      +schema: staging
       +materialized: table
 
-      customers:
-        xf:
-          +schema: analytics
-
       date:
-        +schema: analytics
         +materialized: view
-
-      engineering:
-        +materialized: table
-
-      gcp_billing:
-        +schema: analytics
-
-      gitlab_data_yaml:
-        xf:
-          +schema: analytics
 
       gitlab_dotcom:
         +tags: ["product"]
-        +materialized: table
-        +schema: analytics
         sensitive:
           +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
           +materialized: view
           +schema: sensitive
         source_view:
           +materialized: view
-          +schema: staging
-        staging:
-          +schema: staging
 
       gitlab_ops:
-        +materialized: table
-        +schema: analytics
         source_view:
           +materialized: view
-          +schema: staging
-
-      gitter:
-        +enabled: false
-        +materialized: table
-
-      google_analytics_360:
-        xf:
-          +schema: analytics
 
       greenhouse:
         xf:
           +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
           +schema: sensitive
           secure: true
-        rpt:
-          +schema: analytics
-
-      handbook:
-        rpt:
-          +schema: analytics
-        xf:
-          +schema: analytics
 
       keyhole_twitter:
         +tags: [ "keyhole_twitter", "social" ]
@@ -305,57 +261,27 @@ models:
       license:
         +materialized: view
 
-      netsuite:
-        xf:
-          +schema: analytics
-
-      qualtrics:
-        +schema: analytics
-
-      pmg:
-        +schema: analytics
-
-      sfdc:
-        xf:
-          +schema: analytics
-
-      sheetload:
-        +schema: analytics
-
       snowflake:
-        +schema: analytics
         +materialized: view
 
       snowplow:
         +tags: ["product"]
-        +schema: analytics
         month_partition:
           +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
           +schema: "snowplow_{{ var('year', run_started_at.strftime('%Y')) }}_{{ var('month', run_started_at.strftime('%m')) }}"
 
       version:
         +tags: ["product"]
-        xf:
-          +schema: analytics
-        ephemeral:
-          +schema: analytics
 
       trusted_data_framework:
-        +schema: analytics
-        +materialized: table
         +tags: ["tdf"]
 
-      zuora:
-        xf:
-          +schema: analytics
 
     # ------------------
     # Marts
     # ------------------
     marts:
-
-      arr:
-        +materialized: table
+      +materialized: table
 
       exports:
         +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
@@ -364,8 +290,6 @@ models:
 
         users_emails:
           enabled: false
-      usage_ping:
-        +materialized: table
 
     # ------------------
     # Legacy Structure
@@ -387,7 +311,6 @@ models:
       +tags: ["poc"]
       +enabled: true
       +materialized: table
-      +schema: analytics
 
     retention:
       +materialized: table
@@ -396,8 +319,6 @@ models:
       +tags: ["product"]
       +materialized: table
 
-    snapshots:
-      +schema: analytics
 
     # ------------------
     # Trusted Data Framework

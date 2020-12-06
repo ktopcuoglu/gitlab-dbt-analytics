@@ -1,6 +1,6 @@
 {{ config({
     "alias": "sfdc_account_snapshots",
-    "schema": "staging"
+    "schema": "legacy"
     })
 }}
 
