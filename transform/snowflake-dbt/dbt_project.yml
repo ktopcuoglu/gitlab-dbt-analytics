@@ -111,6 +111,10 @@ models:
   snowflake_spend:
     +materialized: table
 
+  datsiren:
+    +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
+    +schema: datasiren
+
   # ==================
   # GitLab Models
   # ==================
@@ -133,6 +137,9 @@ models:
         sensitive:
           +schema: sensitive
           secure: true
+
+      datasiren:
+        +schema: datasiren
 
       date:
         +materialized: table
