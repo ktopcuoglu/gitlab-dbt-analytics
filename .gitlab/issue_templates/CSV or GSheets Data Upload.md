@@ -22,7 +22,7 @@ If none, please include a description
 * [ ]  Does this data need to be linked to other data in the Data team's data warehouse?
   - [ ] Yes 
   - [ ] No
-* [ ] Does this data contain anything that is sensitive (Classified as Red or Orange in our [Data Classification Policy](https://about.gitlab.com/handbook/engineering/security/data-classification-policy.html#data-classification-levels))?
+* [ ] Does this data contain anything that is sensitive (Classified as Red or Orange in our [Data Classification Policy](https://about.gitlab.com/handbook/engineering/security/data-classification-standard.html#data-classification-levels))?
   - [ ] Yes 
   - [ ] No
   - [ ] I don't know
@@ -42,7 +42,7 @@ If none, please include a description
 - [ ] **DO** need to link it to other data AND this is a one-off analysis (Boneyard)
     * [ ] Submitter to put spreadsheet data into a new file into the [Sheetload > Boneyard GDrive Folder](https://drive.google.com/open?id=1NdA5CDy2kT653qUdqtCiq_RkmRa-LKqs).
     * [ ] Submitter to share it with the required service account - [Email Address to share with](https://docs.google.com/document/d/1m8kky3DPv2yvH63W4NDYFURrhUwRiMKHI-himxn1r7k/edit?usp=sharing) (GitLab Internal)
-    * [ ] Submitter to make an MR to [this file](https://gitlab.com/gitlab-data/analytics/blob/master/extract/sheetload/boneyard/sheets.txt) adding the new sheet in alphabetical order. 
+    * [ ] Submitter to make an MR to [this file](https://gitlab.com/gitlab-data/analytics/-/blob/master/extract/sheetload/boneyard/sheets.yml) adding the new sheet in alphabetical order. 
     * [ ] Submitter to assign MR to member of the Data Team
     * [ ] Data Team member to check file name and sheet names to match: The file will be located and loaded based on its name `boneyard.<table_name>`. The names of the sheets shared with the runner must be unique and in the `<file_name>.<tab_name>` format.
     * [ ] Data Team member to merge update after validation of data and MR
@@ -64,9 +64,9 @@ If none, please include a description
          - [ ] Add a new staging model under [staging-->sheetload repo](https://gitlab.com/gitlab-data/analytics/-/tree/master/transform/snowflake-dbt/models/staging/sheetload)
          - [ ] [Edit the schema.yml](https://gitlab.com/gitlab-data/analytics/-/blob/master/transform/snowflake-dbt/models/staging/sheetload/schema.yml) 
     * [ ]  Data Team member to run the following CI Jobs on the MR: 
-         - [ ] clone_raw
-         - [ ] sheetload
-         - [ ] specify_raw_model (here you need to specify which dbt-models you want to run/test, just as if it was specify_model)
+         - [ ] `clone_raw`
+         - [ ] `sheetload`
+         - [ ] `specify_raw_model` (here you need to specify which dbt-models you want to run/test, just as if it was specify_model)
     * [ ]  Data Analyst to assign MR to project maintainer for review (iterate until model is complete).
     * [ ]  Data Team project maintainers/owners to merge in dbt models 
     * [ ]  If not urgent, data will be availble within 24 hours. If urgent, Data Engineer to run full refresh and inform when available.

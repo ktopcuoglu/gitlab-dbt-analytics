@@ -2,7 +2,7 @@
 
 <img src="https://gitlab.com/meltano/analytics/uploads/d90d572dbc2b1b2c32ce987d581314da/sheetload_logo.png" alt="SheetLoadLogo" width="600"/>
 
-Spreadsheets and CSVs can be loaded into the our data warehouse using `extract/sheetload/sheetload.py`. Google Sheeets can be loaded as well as CSVs in GCS or S3. A Google Sheet or CSV in S3 will only be loaded if there has been a change between the current and existing data in the DW (unless otherwise specified). GCS files will always force a full reload.
+Google Sheets and CSVs can be loaded into the data warehouse using `extract/sheetload/sheetload.py`. CSVs stored in GCS or S3 can be uploaded. A Google Sheet or S3-stored CSV will only be loaded if there has been a change between the current and existing data in the warehouse (unless otherwise specified). CSV files stored in GCS will always force a full reload.
 
 If you are unsure what SheetLoad is or are requesting the inclusion of a data source into Snowflake/Periscope, please see the handbook page [Using SheetLoad](https://about.gitlab.com/handbook/business-ops/data-team/platform/#using-sheetload) and the corresponding [Issue Template](https://gitlab.com/gitlab-data/analytics/blob/master/.gitlab/issue_templates/CSV%20or%20GSheets%20Data%20Upload.md).
 

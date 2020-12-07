@@ -30,7 +30,7 @@ for path in paths_to_check:
                     for line in new_lines:
                         # Find from and join references. Only match group is table name(s)
                         matches = re.search(
-                            r"(?:from|join)\s+(?:analytics|analytics_staging|boneyard)\.([\_A-z0-9]*)",
+                            r"(?:from|join)\s+(?:legacy|common|common_mapping|boneyard)\.([\_A-z0-9]*)",
                             line.lower(),
                         )
                         if matches is not None:

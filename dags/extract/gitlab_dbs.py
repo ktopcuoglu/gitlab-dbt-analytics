@@ -12,7 +12,6 @@ from airflow_utils import (
     slack_failed_task,
     DBT_IMAGE,
     dbt_install_deps_nosha_cmd,
-    dbt_install_deps_and_seed_nosha_cmd,
     gitlab_pod_env_vars,
     xl_warehouse,
     xs_warehouse,
@@ -200,7 +199,7 @@ def extract_table_list_from_manifest(manifest_contents):
 def dbt_tasks(dbt_name, dbt_task_identifier):
 
     freshness_cmd = f"""
-        {dbt_install_deps_and_seed_nosha_cmd} &&
+        {dbt_install_deps_nosha_cmd} &&
         dbt source snapshot-freshness --profiles-dir profile --target prod --select {dbt_name}; ret=$?;
         python ../../orchestration/upload_dbt_file_to_snowflake.py freshness; exit $ret
     """
@@ -375,32 +374,22 @@ for source_name, config in config_dict.items():
         "trigger_rule": "all_success",
     }
 
-    sync_dag = DAG(
-        f"{config['dag_name']}_db_sync",
+    incremental_backfill_dag = DAG(
+        f"{config['dag_name']}_db_incremental_backfill",
         default_args=sync_dag_args,
         schedule_interval=config["sync_schedule_interval"],
         concurrency=1,
     )
 
-    with sync_dag:
-        # dbt Tasks
-        dbt_name = f"{config['dbt_name']}"
-        dbt_task_identifier = f"{config['task_name']}-dbt-sync"
+    with incremental_backfill_dag:
 
-        freshness, test, snapshot, model_run, model_test = dbt_tasks(
-            dbt_name, dbt_task_identifier
-        )
-
-        if test is not None:
-            freshness >> test >> snapshot >> model_run >> model_test
-
-        # PGP Extract
         file_path = f"analytics/extract/postgres_pipeline/manifests/{config['dag_name']}_db_manifest.yaml"
         manifest = extract_manifest(file_path)
         table_list = extract_table_list_from_manifest(manifest)
         for table in table_list:
-            task_type = "db-sync"
             if "{EXECUTION_DATE}" in manifest["tables"][table]["import_query"]:
+                task_type = "backfill"
+
                 task_identifier = (
                     f"{config['task_name']}-{table.replace('_','-')}-{task_type}"
                 )
@@ -429,9 +418,35 @@ for source_name, config in config_dict.items():
                     xcom_push=True,
                 )
 
-                sync_extract >> freshness
+    globals()[
+        f"{config['dag_name']}_db_incremental_backfill"
+    ] = incremental_backfill_dag
 
-            else:
+    sync_dag = DAG(
+        f"{config['dag_name']}_db_sync",
+        default_args=sync_dag_args,
+        schedule_interval=config["sync_schedule_interval"],
+        concurrency=1,
+    )
+
+    with sync_dag:
+        # dbt Tasks
+        dbt_name = f"{config['dbt_name']}"
+        dbt_task_identifier = f"{config['task_name']}-dbt-sync"
+
+        freshness, test, snapshot, model_run, model_test = dbt_tasks(
+            dbt_name, dbt_task_identifier
+        )
+
+        if test is not None:
+            freshness >> test >> snapshot >> model_run >> model_test
+
+        # PGP Extract
+        file_path = f"analytics/extract/postgres_pipeline/manifests/{config['dag_name']}_db_manifest.yaml"
+        manifest = extract_manifest(file_path)
+        table_list = extract_table_list_from_manifest(manifest)
+        for table in table_list:
+            if "{EXECUTION_DATE}" not in manifest["tables"][table]["import_query"]:
                 task_type = "db-scd"
 
                 task_identifier = (

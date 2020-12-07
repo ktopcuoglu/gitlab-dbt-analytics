@@ -1,15 +1,10 @@
-{# {{ config({
-    "schema": "ephemeral"
-    })
-}} #}
-
 WITH dates AS (
 
     SELECT *,
       'join' AS join_field
     FROM  {{ ref('dim_dates') }}
     WHERE date_actual BETWEEN DATEADD(YEAR, -1, DATEADD(month, -1, DATE_TRUNC(month, CURRENT_DATE())))
-                          AND DATEADD(month,-1,DATE_TRUNC(month, CURRENT_DATE()))
+                          AND DATE_TRUNC(month, CURRENT_DATE())
       AND day_of_month = 1
 
 ), division_department_mapping AS (

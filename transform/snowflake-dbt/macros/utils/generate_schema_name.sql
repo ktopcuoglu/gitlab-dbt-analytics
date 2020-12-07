@@ -4,8 +4,6 @@
 
     {%- set production_targets = production_targets() -%}
 
-    {%- set prefixed_schemas = ('meta','sensitive','staging') -%}
-
     {#
         Definitions:
             - custom_schema_name: schema provided via dbt_project.yml or model config
@@ -22,21 +20,13 @@
         (analytics, ci, analytics) = analytics
         (analytics, dev, preparation) = analytics
         
-        (staging, prod, analytics) = analytics_staging
-        (staging, ci, analytics) = analytics_staging
-        (staging, dev, preparation) = analytics_staging
-        
         (zuora, prod, analytics) = zuora
         (zuora, ci, analytics) = zuora
         (zuora, dev, preparation) = zuora
 
     #}
 
-    {%- if custom_schema_name in prefixed_schemas -%}
-
-        analytics_{{ custom_schema_name | trim }}
-
-    {%- elif custom_schema_name is none -%}
+    {%- if custom_schema_name is none -%}
 
         {{ target.schema.lower() | trim }}
 
