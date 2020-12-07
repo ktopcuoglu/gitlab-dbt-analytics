@@ -7,7 +7,7 @@ WITH usage_ping_data AS (
 ), licenses AS (
 
     SELECT *
-    FROM {{ ref('dim_licenses') }}
+    FROM {{ ref('license_db_licenses_source') }}
     
     
 ), version_edition_cleaned AS (
@@ -18,6 +18,7 @@ WITH usage_ping_data AS (
         REGEXP_REPLACE(NULLIF(version, ''), '\-.*')                  AS cleaned_version,
         SPLIT_PART(cleaned_version, '.', 1)                          AS major_version,
         SPLIT_PART(cleaned_version, '.', 2)                          AS minor_version,
+        major_version || '.' || minor_version                        AS major_minor_version,
         IFF(
             version LIKE '%-pre%' OR version LIKE '%-rc%', 
             TRUE, FALSE
@@ -26,7 +27,7 @@ WITH usage_ping_data AS (
         CASE 
             WHEN edition = 'CE'                                   THEN 'Core'
             WHEN edition = 'EE Free'                              THEN 'Core'                                                      
-            WHEN license_expire_date < usage_ping_data.created_at THEN 'Core'
+            WHEN license_expires_at < usage_ping_data.created_at  THEN 'Core'
             WHEN edition = 'EE'                                   THEN 'Starter'
             WHEN edition = 'EES'                                  THEN 'Starter'
             WHEN edition = 'EEP'                                  THEN 'Premium'
@@ -36,8 +37,6 @@ WITH usage_ping_data AS (
         IFF( uuid = 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f',
                 'SaaS','Self-Managed')                               AS ping_source
     FROM usage_ping_data
-    LEFT JOIN licenses
-      ON usage_ping_data.license_md5 = licenses.license_md5
 
 ), internal_identified AS (
 
@@ -51,20 +50,6 @@ WITH usage_ping_data AS (
         IFF(hostname ilike '%staging.%', TRUE, FALSE)                AS is_staging
     FROM version_edition_cleaned
 
-), ip_to_geo AS (
-
-    SELECT *
-    FROM {{ ref('dim_ip_to_geo') }}
-
-), usage_with_ip AS (
-
-    SELECT 
-        internal_identified.*,
-        ip_to_geo.location_id
-    FROM internal_identified
-    LEFT JOIN ip_to_geo
-      ON internal_identified.source_ip_hash = ip_to_geo.ip_address_hash
-
 ), raw_usage_data AS (
 
     SELECT *
@@ -73,11 +58,11 @@ WITH usage_ping_data AS (
 ), renamed AS (
 
     SELECT 
-      usage_with_ip.*,
+      internal_identified.*,
       raw_usage_data.raw_usage_data_payload
-    FROM usage_with_ip
+    FROM internal_identified
     LEFT JOIN raw_usage_data
-      ON usage_with_ip.raw_usage_data_id = raw_usage_data.raw_usage_data_id
+      ON internal_identified.raw_usage_data_id = raw_usage_data.raw_usage_data_id
 
 )
 
