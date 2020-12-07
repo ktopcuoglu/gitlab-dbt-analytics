@@ -10,6 +10,11 @@ WITH dim_billing_accounts AS (
     SELECT *
     FROM {{ ref('dim_crm_accounts') }}
 
+), dim_dates AS (
+  
+    SELECT DISTINCT first_day_of_month AS date_day
+    FROM {{ ref('dim_dates') }}
+
 ), dim_hosts AS (
 
     SELECT *
@@ -36,7 +41,6 @@ WITH dim_billing_accounts AS (
     FROM {{ ref('dim_subscriptions') }}
     WHERE subscription_name_slugify <> zuora_renewal_subscription_name_slugify[0]::TEXT
       OR zuora_renewal_subscription_name_slugify IS NULL
-      --OR subscription_end_date < DATE_TRUNC('month', current_date)
 
 ),  zuora_subscription_snapshots AS (
 
@@ -56,10 +60,10 @@ WITH dim_billing_accounts AS (
     AND CURRENT_TIMESTAMP()::TIMESTAMP_TZ >= dbt_valid_from
     AND {{ coalesce_to_infinity('dbt_valid_to') }} > current_timestamp()::TIMESTAMP_TZ
 
-), fct_invoice_items AS (
+), fct_charges AS (
 
     SELECT *
-    FROM {{ ref('fct_invoice_items')}}
+    FROM {{ ref('fct_charges')}}
 
 ), fct_monthly_usage_data AS (
 
@@ -81,6 +85,7 @@ WITH dim_billing_accounts AS (
 ), license_subscriptions AS (
 
     SELECT DISTINCT
+      dim_dates.date_day                               AS reporting_month,
       license_id,
       dim_licenses.license_md5,
       subscription_source.subscription_id              AS original_linked_subscription_id,
@@ -100,35 +105,38 @@ WITH dim_billing_accounts AS (
       dim_crm_accounts.ultimate_parent_industry,
       dim_crm_accounts.ultimate_parent_account_owner_team,
       dim_crm_accounts.ultimate_parent_territory,
-      fct_invoice_items.effective_end_month,
-      fct_invoice_items.effective_start_month,
-      IFF(MAX(arr) > 0, TRUE, FALSE)                            AS is_paid_subscription,
+      IFF(MAX(mrr) > 0, TRUE, FALSE)                            AS is_paid_subscription,
       MAX(IFF(product_rate_plan_name ILIKE ANY ('%edu%', '%oss%'), TRUE, FALSE))    AS is_edu_oss_subscription,
-      ARRAY_AGG(DISTINCT product_category)
-        WITHIN GROUP (ORDER BY product_category ASC)            AS product_category_array,
+      ARRAY_AGG(DISTINCT dim_product_details.product_category)
+        WITHIN GROUP (ORDER BY dim_product_details.product_category ASC)            AS product_category_array,
       ARRAY_AGG(DISTINCT product_rate_plan_name)
         WITHIN GROUP (ORDER BY product_rate_plan_name ASC)      AS product_rate_plan_name_array,
       SUM(quantity) AS quantity,
-      SUM(arr)      AS arr
+      SUM(mrr * 12)      AS arr
     FROM dim_licenses
     INNER JOIN subscription_source
       ON dim_licenses.subscription_id = subscription_source.subscription_id
-    INNER JOIN dim_subscriptions
+    LEFT JOIN dim_subscriptions
       ON subscription_source.subscription_name_slugify = dim_subscriptions.subscription_name_slugify
-    INNER JOIN zuora_subscription_snapshots
+    LEFT JOIN subscription_source AS all_subscriptions
+      ON subscription_source.subscription_name_slugify = all_subscriptions.subscription_name_slugify
+    LEFT JOIN zuora_subscription_snapshots
       ON zuora_subscription_snapshots.subscription_id = dim_subscriptions.subscription_id
       AND zuora_subscription_snapshots.rank = 1
-    LEFT JOIN fct_invoice_items
-      ON zuora_subscription_snapshots.subscription_id = fct_invoice_items.dim_subscription_id
+    INNER JOIN fct_charges
+      ON all_subscriptions.subscription_id = fct_charges.subscription_id
+        AND charge_type = 'Recurring'
     INNER JOIN dim_product_details
-      ON dim_product_details.product_details_id = fct_invoice_items.dim_product_details_id
-        AND delivery = 'Self-Managed'
-        AND product_rate_plan_name NOT IN ('Premium - 1 Year - Eval')
-    INNER JOIN dim_billing_accounts
+      ON dim_product_details.product_details_id = fct_charges.product_details_id
+      AND dim_product_details.delivery = 'Self-Managed'
+      AND product_rate_plan_name NOT IN ('Premium - 1 Year - Eval')
+    LEFT JOIN dim_billing_accounts
       ON dim_subscriptions.billing_account_id = dim_billing_accounts.billing_account_id
-    INNER JOIN dim_crm_accounts
+    LEFT JOIN dim_crm_accounts
       ON dim_billing_accounts.crm_account_id = dim_crm_accounts.crm_account_id
-    {{ dbt_utils.group_by(n=21)}}
+    INNER JOIN dim_dates
+      ON effective_start_month <= dim_dates.date_day AND effective_end_month > dim_dates.date_day
+    {{ dbt_utils.group_by(n=20)}}
 
 ), joined AS (
 
@@ -159,8 +167,8 @@ WITH dim_billing_accounts AS (
       license_subscriptions.ultimate_parent_industry,
       license_subscriptions.ultimate_parent_account_owner_team,
       license_subscriptions.ultimate_parent_territory,
-      COALESCE(is_paid_subscription, FALSE) AS is_paid_subscription,
-      is_edu_oss_subscription,
+      COALESCE(is_paid_subscription, FALSE)             AS is_paid_subscription,
+      COALESCE(is_edu_oss_subscription, FALSE)          AS is_edu_oss_subscription,
       fct_usage_ping_payloads.ping_source               AS delivery,
       fct_usage_ping_payloads.edition,
       fct_usage_ping_payloads.product_tier              AS ping_product_tier,
@@ -185,7 +193,7 @@ WITH dim_billing_accounts AS (
         AND fct_usage_ping_payloads.uuid = dim_hosts.instance_id
     LEFT JOIN license_subscriptions
       ON fct_usage_ping_payloads.license_md5 = license_subscriptions.license_md5 
-        AND created_month >= license_subscriptions.effective_start_month AND created_month < license_subscriptions.effective_end_month
+        AND fct_monthly_usage_data.created_month = license_subscriptions.reporting_month
 
 ), renamed AS (
 
