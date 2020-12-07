@@ -111,7 +111,7 @@ models:
   snowflake_spend:
     +materialized: table
 
-  datsiren:
+  datasiren:
     +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
     +schema: datasiren
 
