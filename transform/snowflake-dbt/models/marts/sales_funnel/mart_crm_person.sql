@@ -1,3 +1,8 @@
+{{config({
+    "schema": "common_mart_marketing"
+  })
+}}
+
 WITH dim_marketing_channel AS (
 
     SELECT *
