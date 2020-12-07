@@ -85,13 +85,13 @@ WITH dim_billing_accounts AS (
 ), license_subscriptions AS (
 
     SELECT DISTINCT
-      dim_dates.date_day                               AS reporting_month,
+      dim_dates.date_day                                                           AS reporting_month,
       license_id,
       dim_licenses.license_md5,
-      subscription_source.subscription_id              AS original_linked_subscription_id,
+      subscription_source.subscription_id                                          AS original_linked_subscription_id,
       subscription_source.account_id,
       subscription_source.subscription_name_slugify,
-      dim_subscriptions.subscription_id                AS latest_active_subscription_id,
+      dim_subscriptions.subscription_id                                            AS latest_active_subscription_id,
       dim_subscriptions.subscription_start_date,
       dim_subscriptions.subscription_end_date,
       dim_subscriptions.subscription_start_month,
@@ -105,14 +105,14 @@ WITH dim_billing_accounts AS (
       dim_crm_accounts.ultimate_parent_industry,
       dim_crm_accounts.ultimate_parent_account_owner_team,
       dim_crm_accounts.ultimate_parent_territory,
-      IFF(MAX(mrr) > 0, TRUE, FALSE)                            AS is_paid_subscription,
+      IFF(MAX(mrr) > 0, TRUE, FALSE)                                                AS is_paid_subscription,
       MAX(IFF(product_rate_plan_name ILIKE ANY ('%edu%', '%oss%'), TRUE, FALSE))    AS is_edu_oss_subscription,
       ARRAY_AGG(DISTINCT dim_product_details.product_category)
         WITHIN GROUP (ORDER BY dim_product_details.product_category ASC)            AS product_category_array,
       ARRAY_AGG(DISTINCT product_rate_plan_name)
-        WITHIN GROUP (ORDER BY product_rate_plan_name ASC)      AS product_rate_plan_name_array,
-      SUM(quantity) AS quantity,
-      SUM(mrr * 12)      AS arr
+        WITHIN GROUP (ORDER BY product_rate_plan_name ASC)                          AS product_rate_plan_name_array,
+      SUM(quantity)                                                                 AS quantity,
+      SUM(mrr * 12)                                                                 AS arr
     FROM dim_licenses
     INNER JOIN subscription_source
       ON dim_licenses.subscription_id = subscription_source.subscription_id
