@@ -197,21 +197,21 @@ WITH account_dims_mapping AS (
 
      -- important person dates
 
-      COALESCE(sfdc_contacts.created_date, sfdc_leads.created_date)                                                       AS created_date,
+      COALESCE(sfdc_contacts.created_date, sfdc_leads.created_date)::DATE                                                 AS created_date,
       {{ get_date_id('COALESCE(sfdc_contacts.created_date, sfdc_leads.created_date)') }}                                  AS created_date_id,
-      COALESCE(sfdc_contacts.inquiry_datetime, sfdc_leads.inquiry_datetime)                                               AS inquiry_date,
+      COALESCE(sfdc_contacts.inquiry_datetime, sfdc_leads.inquiry_datetime)::DATE                                         AS inquiry_date,
       {{ get_date_id('inquiry_date') }}                                                                                   AS inquiry_date_id,
-      mqls.first_mql_date                                                                                                 AS mql_date_first,
+      mqls.first_mql_date::DATE                                                                                           AS mql_date_first,
       {{ get_date_id('mql_date_first') }}                                                                                 AS mql_date_first_id,
-      mqls.last_mql_date                                                                                                  AS mql_date_latest,
+      mqls.last_mql_date::DATE                                                                                            AS mql_date_latest,
       {{ get_date_id('last_mql_date') }}                                                                                  AS mql_date_latest_id,
-      COALESCE(sfdc_contacts.accepted_datetime, sfdc_leads.accepted_datetime)                                             AS accepted_date,
+      COALESCE(sfdc_contacts.accepted_datetime, sfdc_leads.accepted_datetime)::DATE                                       AS accepted_date,
       {{ get_date_id('accepted_date') }}                                                                                  AS accepted_date_id,
-      COALESCE(sfdc_contacts.qualifying_datetime, sfdc_leads.qualifying_datetime)                                         AS qualifying_date,
+      COALESCE(sfdc_contacts.qualifying_datetime, sfdc_leads.qualifying_datetime)::DATE                                   AS qualifying_date,
       {{ get_date_id('qualifying_date') }}                                                                                AS qualifying_date_id,
-      COALESCE(sfdc_contacts.qualified_datetime, sfdc_leads.qualified_datetime)                                           AS qualified_date,
+      COALESCE(sfdc_contacts.qualified_datetime, sfdc_leads.qualified_datetime)::DATE                                     AS qualified_date,
       {{ get_date_id('qualified_date') }}                                                                                 AS qualified_date_id,
-      sfdc_leads.converted_date                                                                                           AS converted_date,
+      sfdc_leads.converted_date::DATE                                                                                     AS converted_date,
       {{ get_date_id('converted_date') }}                                                                                 AS converted_date_id,
 
      -- flags
@@ -253,7 +253,7 @@ WITH account_dims_mapping AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mcooperDD",
-    updated_by="@mcooperDD",
+    updated_by="@iweeks",
     created_date="2020-12-01",
-    updated_date="2020-12-01"
+    updated_date="2020-12-07"
 ) }}
