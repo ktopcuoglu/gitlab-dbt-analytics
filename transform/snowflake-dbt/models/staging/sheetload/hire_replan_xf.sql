@@ -51,17 +51,13 @@ WITH hire_replan AS (
   
 ), department_division_mapping AS (
 
-    SELECT 
-      unpivoted.month_date,
-      unpivoted.department,
-      employee_directory.division
-    FROM unpivoted
-    LEFT JOIN employee_directory
-      ON unpivoted.month_date = employee_directory.date_actual
-      AND unpivoted.department = employee_directory.department
-    WHERE employment_status ='Active'
-    GROUP BY 1,2,3
-  
+    SELECT DISTINCT 
+      department, 
+      department_modified,
+      division_mapped_current AS division
+    FROM {{ ref ('bamboohr_job_info_current_division_base') }}   
+    WHERE department IS NOT NULL
+
 ), all_company AS (
 
     SELECT 
@@ -88,7 +84,6 @@ WITH hire_replan AS (
     FROM unpivoted
     LEFT JOIN department_division_mapping 
       ON department_division_mapping.department = unpivoted.department
-      AND department_division_mapping.month_date = unpivoted.month_date 
     GROUP BY 1,2,3,4
 
 ), department_level AS (
@@ -105,7 +100,6 @@ WITH hire_replan AS (
     FROM unpivoted
     LEFT JOIN department_division_mapping 
       ON department_division_mapping.department = unpivoted.department
-      AND department_division_mapping.month_date = unpivoted.month_date
     GROUP BY 1,2,3,4
 
 ), unioned AS (

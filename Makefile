@@ -49,11 +49,11 @@ data-image:
 
 dbt-docs:
 	@echo "Generating docs and spinning up the a webserver on port 8081..."
-	@"$(DOCKER_RUN)" -p "8081:8081" dbt_image bash -c "dbt deps && dbt docs generate --target docs && dbt docs serve --port 8081"
+	@"$(DOCKER_RUN)" -p "8081:8081" dbt_image bash -c "dbt clean && dbt deps && dbt docs generate --target docs && dbt docs serve --port 8081"
 
 dbt-image:
 	@echo "Attaching to dbt-image and mounting repo..."
-	@"$(DOCKER_RUN)" dbt_image bash -c "dbt deps && /bin/bash"
+	@"$(DOCKER_RUN)" dbt_image bash -c "dbt clean && dbt deps && /bin/bash"
 
 init-airflow:
 	@echo "Initializing the Airflow DB..."

@@ -12,6 +12,7 @@ models:
         tests:
           - not_null
         tags: ["tdf", "common", "crm_accounts"]
+
   - name: sfdc_account
     description: source model for SFDC Accounts
     columns:

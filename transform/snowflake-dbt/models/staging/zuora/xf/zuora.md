@@ -89,7 +89,7 @@ The below query will pull MRR by month. You can add additional dimensions to the
 SELECT
   mrr_month,
   SUM(mrr)  AS mrr
-FROM "ANALYTICS"."ANALYTICS"."ZUORA_MONTHLY_RECURRING_REVENUE"
+FROM "ANALYTICS"."LEGACY"."ZUORA_MONTHLY_RECURRING_REVENUE"
 WHERE mrr_month < DATE_TRUNC('month',CURRENT_DATE)
 GROUP BY 1
 ORDER BY 1 DESC

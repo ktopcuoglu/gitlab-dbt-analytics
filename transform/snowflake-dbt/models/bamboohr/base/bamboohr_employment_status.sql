@@ -21,8 +21,14 @@ WITH source AS (
             nullif(data_by_row['terminationTypeId']::VARCHAR, '') AS termination_type
       FROM intermediate
 
+), final AS (
+
+    SELECT *
+    FROM renamed
+    WHERE status_id != 27606 -- incorrect record
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY employee_id,effective_date,employment_status ORDER BY effective_date) = 1
+
 )
 
 SELECT *
-FROM renamed
-QUALIFY ROW_NUMBER() OVER (PARTITION BY employee_id,effective_date,employment_status ORDER BY effective_date) = 1
+FROM final

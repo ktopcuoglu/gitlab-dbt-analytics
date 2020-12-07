@@ -187,6 +187,28 @@ models:
             - not_null
         - name: updated_at
 
+  - name: gitlab_dotcom_gitlab_internal_sprints
+    description: '{{ doc("gitlab_dotcom_gitlab_internal_sprints") }}'
+    columns:
+        - name: cached_markdown_version
+        - name: created_at
+        - name: due_date
+        - name: group_id
+        - name: project_id
+        - name: sprint_description
+        - name: sprint_description_html
+        - name: sprint_id
+          tests:
+            - not_null
+            - unique
+        - name: sprint_iid
+        - name: sprint_state_enum
+        - name: sprint_title
+        - name: sprint_title_html
+        - name: start_date
+        - name: updated_at
+        
+
   - name: gitlab_dotcom_gitlab_user_requests
     description: '{{ doc("gitlab_dotcom_gitlab_user_requests") }}'
     tests:
@@ -417,6 +439,14 @@ models:
       - name: namespace_id
         description: This is added as a helper column. This is either the group_id (groups are namespaces) or the namespace associated with the milestone's project.
 
+  - name: gitlab_dotcom_namespace_historical_monthly_xf
+    columns:
+      - name: CONCAT(snapshot_month, namespace_id)
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+          - unique
+
   - name: gitlab_dotcom_namespaces_xf
     description: '{{ doc("gitlab_dotcom_namespaces_xf") }}'
     columns:
@@ -428,6 +458,7 @@ models:
         tests:
           - not_null
       - name: namespace_type
+        description: This field should be Group or Individual. A namespace is the first item to come after the / following the domain. For example https://www.gitlab.com/NicoleSchwartz/ is an Individual namespace. There are some namespace_IDs that are missing from this table, when doing certain joins (left) you may get NULL when this data is missing.
         tests:
           - not_null
       - name: plan_id
@@ -534,7 +565,15 @@ models:
         tests:
           - not_null
           - unique
-          
+        description: Identifier that you can join on gitlab_dotcom_ci_builds.ci_build_id if needed.
+      - name: secure_ci_job_type
+        description: This field is populated by doing a LIKE case statement from gitlab_dotcom_ci_builds.ci_build_name in order to try and catch as many jobs as possible. Since users can customize this field, using a like potentially excludes some of the customized entires, and may include entries named similarly but not actually our scanners.
+      - name: artifacts_file
+        description: NULL - To get this data join on ci_build_id for legacy.gitlab_dotcom_ci_job_artifacts.file. Note that you will need to add a match for file like '%.json' and then use case statement likes to correlate the correct files to the correct scans or categories.
+      - name: artifacts_size
+        description: NULL - To get this data join on ci_build_id for legacy.gitlab_dotcom_ci_job_artifacts.size
+      - name: ci_build_project_id
+        description: Join on project_id to legacy.gitlab_dotcom_projects_xf to be able to get tier (namespace_plan_title) and paid state (namespace_plan_is_paid). Note that there are ongoing improvements to better trace accurate tier and payment at specific dates and times and this recommendation may change as a result.
   - name: gitlab_dotcom_usage_data_events
     description: '{{ doc("gitlab_dotcom_usage_data_events") }}'
     columns:

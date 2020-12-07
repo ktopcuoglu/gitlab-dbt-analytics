@@ -1,4 +1,21 @@
+{% docs bdg_crm_opportunity_contact_role %}
+
+A fact table bridging opportunities with contacts. One opportunity can have multiple contacts and one can be flagged as the primary.
+
+{% enddocs %}
+
 {% docs dim_crm_accounts %}
+Dimensional customer table representing all existing and historical customers from SalesForce. There are customer definitions for external reporting and additional customer definitions for internal reporting defined in the [handbook](https://about.gitlab.com/handbook/sales/#customer).
+
+The Customer Account Management business process can be found in the [handbook](https://about.gitlab.com/handbook/finance/sox-internal-controls/quote-to-cash/#1-customer-account-management-and-conversion-of-lead-to-opportunity).
+
+The grain of the table is the SalesForce Account, also referred to as CRM_ID.
+
+Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+{% enddocs %}
+
+{% docs dim_crm_account %}
 Dimensional customer table representing all existing and historical customers from SalesForce. There are customer definitions for external reporting and additional customer definitions for internal reporting defined in the [handbook](https://about.gitlab.com/handbook/sales/#customer).
 
 The Customer Account Management business process can be found in the [handbook](https://about.gitlab.com/handbook/finance/sox-internal-controls/quote-to-cash/#1-customer-account-management-and-conversion-of-lead-to-opportunity).
@@ -14,8 +31,18 @@ Model for all dimensional opportunity columns from salesforce opportunity object
 
 {% enddocs %}
 
+{% docs dim_crm_opportunity %}
+Model for all dimensional opportunity columns from salesforce opportunity object
+
+{% enddocs %}
+
+{% docs dim_crm_person %}
+Dimension that combines demographic data from salesforce leads and salesforce contacts. They are combined with a union and a filter on leads excluding converted leads and leads where there is a corresponding contact.
+
+{% enddocs %}
+
 {% docs dim_crm_persons %}
-Dimension that combines demographic data from salesforce leads and salesforce contacts. They are combined with a union and a filter on leads excluding converted leads and leads where there is a corresponding contact. 
+Dimension that combines demographic data from salesforce leads and salesforce contacts. They are combined with a union and a filter on leads excluding converted leads and leads where there is a corresponding contact.
 
 {% enddocs %}
 
@@ -77,6 +104,21 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
+{% docs dim_date %}
+Dimensional table representing both calendar year and fiscal year date details.
+
+The grain of the table is a calendar day.
+
+Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+{% enddocs %}
+
+{% docs fct_campaign %}
+
+Fact table representing marketing campaign details tracked in SFDC.
+
+{% enddocs %}
+
 {% docs fct_crm_lead_conversion %}
 
 A fact from the lead history and lead tables in Salesforce that has a record for every converted lead
@@ -92,6 +134,18 @@ A fact from the lead and contact tables that shows the date they were qualified.
 {% docs fct_crm_opportunities %}
 
 A fact table for salesforce opportunities
+
+{% enddocs %}
+
+{% docs fct_crm_opportunity %}
+
+A fact table for salesforce opportunities with keys to connect opportunities to shared dimensions through the attributes of the crm account.
+
+{% enddocs %}
+
+{% docs fct_crm_person %}
+
+A fact table for Salesforce unconverted leads and contacts. The important stage dates have been included to calculate the velocity of people through the sales funnel. A boolean flag has been created to indicate leads and contacts who have been assigned a Marketo Qualified Lead Date, and a Bizible person id has been included to pull in the marketing channel based on the first touchpoint of a given lead or contact.
 
 {% enddocs %}
 
@@ -151,10 +205,15 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% docs dim_crm_sales_rep %}
 
-Dimension representing the associated sales rep from salesforce. Most often this will be the record owner, which is a ubiquitous field in salesforce. 
+Dimension representing the associated sales rep from salesforce. Most often this will be the record owner, which is a ubiquitous field in salesforce.
 
 {% enddocs %}
 
+{% docs dim_crm_sales_representative %}
+
+Dimension representing the associated sales rep from salesforce. Most often this will be the record owner, which is a ubiquitous field in salesforce.
+
+{% enddocs %}
 
 {% docs fct_usage_ping_payloads %}
 Factual table with metadata on usage ping payloads received.
@@ -180,17 +239,17 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 {% enddocs %}
 
 {% docs dim_usage_pings %}
-Dimension that contains demographic data from usage ping data, including additional breaks out for product_tier, if it is from an internal instance, and replaces the ip_address hash with a location_id instead. 
+Dimension that contains demographic data from usage ping data, including additional breaks out for product_tier, if it is from an internal instance, and replaces the ip_address hash with a location_id instead.
 
-[Core represents both CE and EE](https://about.gitlab.com/handbook/marketing/product-marketing/tiers/#history-of-ce-and-ee-distributions). 
+[Core represents both CE and EE](https://about.gitlab.com/handbook/marketing/product-marketing/tiers/#history-of-ce-and-ee-distributions).
 
-Get started by exploring the [Product Geolocation Analysis](https://about.gitlab.com/handbook/business-ops/data-team/data-catalog/product-geolocation/) handbook page. 
+Get started by exploring the [Product Geolocation Analysis](https://about.gitlab.com/handbook/business-ops/data-team/data-catalog/product-geolocation/) handbook page.
 Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
 
 {% enddocs %}
 
 {% docs dim_instances %}
-Dimension that contains statistical data for instances from usage ping data 
+Dimension that contains statistical data for instances from usage ping data
 
 Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
 
@@ -230,5 +289,11 @@ Industry dimension, based off of salesforce account data, using the `generate_si
 {% docs dim_order_type %}
 
 Order type dimension, based off of salesforce opportunity data, using the `generate_single_field_dimension` macro to create the final formatted SQL
+
+{% enddocs %}
+
+{% docs map_merged_crm_account%}
+
+Table mapping current crm account ids to accounts merged in the past.
 
 {% enddocs %}

@@ -21,7 +21,7 @@ WITH data AS (
       *,
       metric_value 
         - COALESCE(LAG(metric_value) OVER (
-                                            PARTITION BY instance_id, clean_metrics_name 
+                                            PARTITION BY instance_id, host_id, clean_metrics_name 
                                             ORDER BY created_month
                                           ), 0) AS monthly_metric_value
     FROM transformed
@@ -31,6 +31,7 @@ WITH data AS (
 SELECT 
   ping_id,
   instance_id,
+  host_id,
   created_month,
   metrics_path,
   group_name,
@@ -38,6 +39,8 @@ SELECT
   section_name,
   is_smau,
   is_gmau,
+  is_paid_gmau,
+  is_umau,
   clean_metrics_name,
   IFF(monthly_metric_value < 0, 0, monthly_metric_value) AS monthly_metric_value
 FROM monthly
