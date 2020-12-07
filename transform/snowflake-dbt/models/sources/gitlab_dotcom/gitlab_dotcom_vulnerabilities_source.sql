@@ -13,7 +13,7 @@ WITH source AS (
       created_at::TIMESTAMP             AS created_at,
       dismissed_at::TIMESTAMP           AS dismissed_at,
       resolved_at::TIMESTAMP            AS resolved_at,
-      severity_overridden::BOOLEAN       AS is_severity_overriden,
+      severity_overridden::BOOLEAN      AS is_severity_overriden,
       state::NUMBER                     AS state,
       updated_at::TIMESTAMP             AS updated_at
     FROM source
