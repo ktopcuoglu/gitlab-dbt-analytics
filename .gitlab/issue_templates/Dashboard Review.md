@@ -60,4 +60,5 @@ Dashboard Owner/Editor:
 - [ ] Dashboard Creator: Add prefix `TD` to Level 2 Dashboards to indicate this is a trusted data solution
 - [ ] Dashboard Creator: Add to appropriate topics as well as Trusted Data Framework Topic
 
+/label ~Reporting ~Periscope / Sisense ~Dashboard Review
 
