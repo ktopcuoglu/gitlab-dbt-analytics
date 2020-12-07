@@ -29,7 +29,7 @@ WITH source AS (
       request_label,
       report_value_date,
       report_value,
-      max(uploaded_at)      AS last_uploaded_at
+      MAX(uploaded_at)      AS last_uploaded_at
     FROM parsed
     GROUP BY
       report_start_date,
