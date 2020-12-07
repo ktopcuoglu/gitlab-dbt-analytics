@@ -1,4 +1,4 @@
 version: 2
 
 models:
-  - name: transform_db_email_column_name_sensor
+  - name: datasiren_transform_db_email_column_name_sensor
