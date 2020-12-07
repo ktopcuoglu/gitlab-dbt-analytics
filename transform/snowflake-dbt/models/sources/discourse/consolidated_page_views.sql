@@ -31,14 +31,8 @@ WITH source AS (
       report_value,
       MAX(uploaded_at)      AS last_uploaded_at
     FROM parsed
-    GROUP BY
-      report_start_date,
-      report_title,
-      report_type,
-      request_type,
-      request_label,
-      report_value_date,
-      report_value
+    {{ dbt_utils.group_by(n=7) }}
+
 )
 
 SELECT * 
