@@ -16,7 +16,7 @@ Link to Handbook Page(s):
 - [ ] Validate filters are working correctly
 - [ ] Validate drill downs are working correctly
 - [ ] Adheres to Sisense Style Guide
-- [ ] Includes a `Data As of:` date/timestamp representing the most recent dbt run completion time for the supporting FCT
+- [ ] Includes a `Data as of:` date/timestamp representing the most recent dbt run completion time for the supporting FCT
 - [ ] Associated handbook page
 
 ## After Review Process is Completed:
