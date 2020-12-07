@@ -24,12 +24,21 @@ WITH source AS (
       data_by_row['reportsTo']::VARCHAR      AS reports_to
     FROM intermediate
 
+), bamboohr_employment_status AS (
+  
+    SELECT
+      employee_id,
+      valid_from_date,
+      DATEADD(day,1,valid_to_date) AS valid_to_date ---adding a day to capture termination date
+    FROM {{ ref('bamboohr_employment_status_xf') }}  
+    WHERE next_employment_status = 'Terminated'
+
 ), sheetload_job_roles AS (
 
     SELECT *
     FROM {{ source('sheetload', 'job_roles_prior_to_2020_02') }}
 
-), final AS (
+), cleaned AS (
 
     SELECT 
       job_id,
@@ -47,17 +56,34 @@ WITH source AS (
            WHEN division = 'Alliances' Then 'Sales'
            WHEN division = 'Customer Support' THEN 'Engineering'
            WHEN division = 'Customer Service' THEN 'Sales'
-           ELSE NULLIF(division, '') END AS division,
+           ELSE NULLIF(division, '') END                                        AS division,
       entity,
       reports_to,
       (LAG(DATEADD('day',-1,renamed.effective_date), 1) OVER (PARTITION BY renamed.employee_id ORDER BY renamed.effective_date DESC, job_id DESC)) AS effective_end_date
     FROM renamed
+
     
+), joined AS (
+
+    SELECT 
+      cleaned.job_id,
+      cleaned.employee_id,
+      cleaned.job_title,
+      cleaned.effective_date,
+      COALESCE(bamboohr_employment_status.valid_to_date, cleaned.effective_end_date) as effective_end_date,
+      cleaned.department,
+      cleaned.division,
+      cleaned.entity,
+      cleaned.reports_to,
+      sheetload_job_roles.job_role --- This will only appear for records prior to 2020-02-28 -- after this data populates in bamboohr_job_role
+    FROM cleaned
+    LEFT JOIN sheetload_job_roles
+      ON sheetload_job_roles.job_title = cleaned.job_title
+    LEFT JOIN bamboohr_employment_status
+      ON bamboohr_employment_status.employee_id = cleaned.employee_id 
+      AND bamboohr_employment_status.valid_to_date BETWEEN cleaned.effective_date AND COALESCE(cleaned.effective_end_date, {{max_date_in_bamboo_analyses()}})
+
 )
 
-SELECT 
-  final.*,
-  sheetload_job_roles.job_role --- This will only appear for records prior to 2020-02-28 -- after this data populates in bamboohr_job_role
-FROM final
-LEFT JOIN sheetload_job_roles
-  ON sheetload_job_roles.job_title = final.job_title
+SELECT *
+FROM joined

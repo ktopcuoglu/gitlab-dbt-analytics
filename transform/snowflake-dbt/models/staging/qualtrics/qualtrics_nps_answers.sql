@@ -1,5 +1,6 @@
 {{ config({
-    "schema": "sensitive"
+    "schema": "sensitive",
+    "database": env_var('SNOWFLAKE_PREP_DATABASE'),
     })
 }}
 WITH responses AS (
@@ -30,6 +31,8 @@ WITH responses AS (
       GET(response_values, question_id)                 AS question_response,
       response_values['distributionChannel']::VARCHAR   AS distribution_channel,
       IFF(response_values['finished'] = 1, True, False) AS has_finished_survey,
+      response_values['startDate']::TIMESTAMP           AS survey_start_date,
+      response_values['endDate']::TIMESTAMP             AS survey_end_date,
       response_values['recordedDate']::TIMESTAMP        AS response_recorded_at,
       response_values['userLanguage']::VARCHAR          AS user_language,
       GET(response_values, 'plan')::VARCHAR             AS user_plan

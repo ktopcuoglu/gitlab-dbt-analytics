@@ -1,6 +1,6 @@
 {{ config({
     "alias": "sfdc_opportunity_snapshots",
-    "schema": "staging"
+    "schema": "legacy"
     })
 }}
 

@@ -26,7 +26,7 @@ WITH users AS (
       created_at,
       note,
       event,
-      {{target.schema}}_staging.regexp_to_array(event_string, '(?<=\@)(.*?)(?=(\\s|$|\,))') AS event_cleaned
+      {{target.schema}}.regexp_to_array(event_string, '(?<=\@)(.*?)(?=(\\s|$|\,))') AS event_cleaned
     FROM notes
     UNPIVOT(event_string FOR event IN (assigned, unassigned, reassigned))
   

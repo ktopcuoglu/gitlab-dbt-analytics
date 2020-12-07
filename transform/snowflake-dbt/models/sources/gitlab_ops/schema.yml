@@ -1,0 +1,19 @@
+version: 2
+
+models:
+  - name: gitlab_ops_ci_pipelines_source
+    description: Base model for Gitlab ops ci_pipelines
+    columns:
+      - name: ci_pipeline_id
+        tags: ["tdf","gitlab_ops"]
+        tests:
+          - not_null
+          - unique
+      - name: created_at
+        tags: ["tdf","gitlab_ops"]
+        tests:
+          - not_null
+      - name: updated_at
+        tags: ["tdf","gitlab_ops"]
+        tests:
+          - not_null

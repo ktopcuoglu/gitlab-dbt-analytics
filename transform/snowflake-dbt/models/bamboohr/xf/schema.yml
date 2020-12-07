@@ -1,6 +1,9 @@
 version: 2
 
 models:
+  - name: bamboohr_base_mapping
+    description: This model ties all departments to the last 12 months and is used in downstream models to do rolling 12 month metrics
+
   - name: bamboohr_budget_vs_actual
     description: Compares promotion budget spend to the budget aggregated at the division level.
 
@@ -28,7 +31,7 @@ models:
     - name: job_title
     - name: department
     - name: division
-    - name: jobtitle_speciality
+    - name: job_title_speciality
     - name: job_role_modified
       description: Introduces values of ['Senior Leadership', 'Manager', 'Individual Contributor'] for roles. There is no accepted values test since this field was not religiously populated prior to 2020-02.
     - name: location_factor
@@ -69,7 +72,7 @@ models:
     - name: division_mapped_current
       description: This is the division as used for the current month. We map back historically based on identifying the current division deparmtment mapping and then updating for months prior what the department would be mapped to currently.
     - name: cost_center
-    - name: jobtitle_speciality
+    - name: job_title_speciality
     - name: location_factor
     - name: total_direct_reports
       description: Identifies the number of team members that roll up to an individual for a given day.

@@ -1,6 +1,6 @@
 {{
     config({
-    "schema": "staging"
+    "schema": "legacy"
     })
 }}
 

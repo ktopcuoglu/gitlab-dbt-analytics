@@ -61,6 +61,19 @@ GITLAB_COM_DB_NAME = Secret(
     "env", "GITLAB_COM_DB_NAME", "airflow", "GITLAB_COM_DB_NAME"
 )
 
+GITLAB_OPS_DB_USER = Secret(
+    "env", "GITLAB_OPS_DB_USER", "airflow", "GITLAB_OPS_DB_USER"
+)
+GITLAB_OPS_DB_PASS = Secret(
+    "env", "GITLAB_OPS_DB_PASS", "airflow", "GITLAB_OPS_DB_PASS"
+)
+GITLAB_OPS_DB_HOST = Secret(
+    "env", "GITLAB_OPS_DB_HOST", "airflow", "GITLAB_OPS_DB_HOST"
+)
+GITLAB_OPS_DB_NAME = Secret(
+    "env", "GITLAB_OPS_DB_NAME", "airflow", "GITLAB_OPS_DB_NAME"
+)
+
 # GitLab Profiler DB
 GITLAB_PROFILER_DB_USER = Secret(
     "env", "GITLAB_PROFILER_DB_USER", "airflow", "GITLAB_PROFILER_DB_USER"
@@ -179,3 +192,7 @@ SALT_IP = Secret("env", "SALT_IP", "airflow", "SALT_IP")
 SALT_NAME = Secret("env", "SALT_NAME", "airflow", "SALT_NAME")
 
 SALT_PASSWORD = Secret("env", "SALT_PASSWORD", "airflow", "SALT_PASSWORD")
+
+DISCOURSE_API_TOKEN = Secret(
+    "env", "DISCOURSE_API_TOKEN", "airflow", "DISCOURSE_API_TOKEN"
+)

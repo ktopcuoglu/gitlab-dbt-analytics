@@ -2017,6 +2017,19 @@ tables:
     export_table: 'programming_languages'
     export_table_primary_key: id
     dbt_source_model: true
+  project_daily_statistics:
+    import_db: GITLAB_DB
+    import_query: >
+      SELECT id
+      , project_id
+      , fetch_count
+      , date
+      FROM project_daily_statistics
+      WHERE date >= '{EXECUTION_DATE}'::date - interval '{HOURS} hours'
+        AND date <= '{EXECUTION_DATE}'::date
+    export_schema: 'gitlab_com'
+    export_table: 'project_daily_statistics'
+    export_table_primary_key: id
   protected_environments:
     import_db: GITLAB_DB
     import_query: >
@@ -2289,7 +2302,6 @@ tables:
       , setup_for_company
       , render_whitespace_in_code
       , tab_width
-      , feature_filter_type
       , experience_level
       FROM user_preferences
       WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
@@ -2302,7 +2314,14 @@ tables:
     import_db: GITLAB_DB
     import_query: >
       SELECT id
+      , confidence
+      , confidence_overridden
+      , confirmed_at
       , created_at
+      , dismissed_at
+      , resolved_at
+      , severity_overridden
+      , state
       , updated_at
       FROM vulnerabilities
       WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'

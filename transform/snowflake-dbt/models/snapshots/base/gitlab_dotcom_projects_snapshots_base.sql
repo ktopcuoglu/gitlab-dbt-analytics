@@ -1,5 +1,5 @@
 {{ config({
-    "schema": "staging",
+    "schema": "legacy",
     "alias": "gitlab_dotcom_projects_snapshots"
     })
 }}

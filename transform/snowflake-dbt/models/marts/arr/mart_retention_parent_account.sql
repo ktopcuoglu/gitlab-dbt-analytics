@@ -60,7 +60,7 @@ WITH dim_crm_accounts AS (
 ), parent_account_mrrs AS (
 
     SELECT
-      merged_accounts.ultimate_parent_account_id,
+      dim_crm_accounts.ultimate_parent_account_id,
       dim_dates.date_actual                             AS mrr_month,
       dateadd('year', 1, date_actual)                   AS retention_month,
       next_renewal_month,
@@ -75,14 +75,12 @@ WITH dim_crm_accounts AS (
       ON dim_product_details.product_details_id = fct_mrr.product_details_id
     INNER JOIN dim_dates
       ON dim_dates.date_id = fct_mrr.date_id
-    LEFT JOIN dim_crm_accounts AS crm_accounts
-      ON crm_accounts.crm_account_id = fct_mrr.crm_account_id
-    INNER JOIN dim_crm_accounts AS merged_accounts
-      ON merged_accounts.crm_account_id = COALESCE(crm_accounts.merged_to_account_id, crm_accounts.crm_account_id)
+    LEFT JOIN dim_crm_accounts
+      ON dim_crm_accounts.crm_account_id = fct_mrr.crm_account_id
     LEFT JOIN next_renewal_month
-      ON next_renewal_month.ultimate_parent_account_id = merged_accounts.ultimate_parent_account_id
+      ON next_renewal_month.ultimate_parent_account_id = dim_crm_accounts.ultimate_parent_account_id
     LEFT JOIN last_renewal_month
-      ON last_renewal_month.ultimate_parent_account_id = merged_accounts.ultimate_parent_account_id
+      ON last_renewal_month.ultimate_parent_account_id = dim_crm_accounts.ultimate_parent_account_id
     {{ dbt_utils.group_by(n=5) }}
 
 ), retention_subs AS (

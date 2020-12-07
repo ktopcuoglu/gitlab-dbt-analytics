@@ -1,8 +1,3 @@
-{# {{ config({
-    "schema": "temporary"
-    }) #}
-{# }} #}
-
 WITH sourcer_metrics AS (
 
     SELECT 
@@ -26,7 +21,7 @@ WITH sourcer_metrics AS (
       date_actual                                   AS reporting_month,
       DATEADD(month,-3,date_actual)                 AS start_period,    
       DATEADD(month,-1,date_actual)                 AS end_period          
-    FROM analytics.date_details
+    FROM {{ ref('date_details') }}
     WHERE day_of_month = 1
       AND date_actual BETWEEN DATE_TRUNC(month,DATEADD(month,-15,CURRENT_DATE())) AND DATE_TRUNC(month,CURRENT_DATE())
   
