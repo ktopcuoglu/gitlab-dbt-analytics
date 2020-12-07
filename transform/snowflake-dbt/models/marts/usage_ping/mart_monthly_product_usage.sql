@@ -2,13 +2,13 @@
 
 WITH dim_billing_accounts AS (
 
-  SELECT *
-  FROM {{ ref('dim_billing_accounts') }}
+    SELECT *
+    FROM {{ ref('dim_billing_accounts') }}
 
 ), dim_crm_accounts AS (
 
-  SELECT *
-  FROM {{ ref('dim_crm_accounts') }}
+    SELECT *
+    FROM {{ ref('dim_crm_accounts') }}
 
 ), dim_hosts AS (
 

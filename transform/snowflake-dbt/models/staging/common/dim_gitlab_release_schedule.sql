@@ -1,6 +1,6 @@
 WITH base AS (
 
-  SELECT *
+    SELECT *
   FROM {{ ref('gitlab_release_schedule')}}
 
 )
