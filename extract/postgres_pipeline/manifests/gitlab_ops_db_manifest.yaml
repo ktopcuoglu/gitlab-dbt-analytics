@@ -54,7 +54,7 @@ tables:
     export_schema: 'gitlab_ops_net'
     export_table: ci_stages
     export_table_primary_key: id 
-   ci_builds:
+  ci_builds:
     import_db: GITLAB_OPS_DB
     import_query: >
       SELECT id
