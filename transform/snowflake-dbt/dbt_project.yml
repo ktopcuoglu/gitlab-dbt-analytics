@@ -112,9 +112,10 @@ models:
     +materialized: table
 
   datasiren:
+    +full_refresh: false
     +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
     +schema: datasiren
-
+    
   # ==================
   # GitLab Models
   # ==================
@@ -140,6 +141,7 @@ models:
 
       datasiren:
         +schema: datasiren
+        +tags: ["datasiren"]
 
       date:
         +materialized: table
