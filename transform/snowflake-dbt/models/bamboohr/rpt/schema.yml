@@ -13,7 +13,7 @@ models:
     - name: field_name
       description: Idenitfies whether the metrics are at the division, department, or comapny level
     - name: field_value
-      description: Identifies the associated division/department for the field_name	
+      description: Identifies the associated division/department for the field_name
     - name: headcount_end
       description: The headcount at the end of the month
     - name: total_promotions
