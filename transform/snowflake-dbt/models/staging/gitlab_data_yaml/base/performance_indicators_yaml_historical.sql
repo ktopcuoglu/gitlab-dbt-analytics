@@ -35,6 +35,8 @@ WITH unioned AS (
       pi_target,
       telemetry_type,
       pi_url,
+      sisense_chart_id,
+      sisense_dashboard_id,
       FIRST_VALUE(snapshot_date) OVER (PARTITION BY pi_name ORDER BY snapshot_date) AS date_first_added, 
       snapshot_date AS valid_from_date
     FROM unioned
