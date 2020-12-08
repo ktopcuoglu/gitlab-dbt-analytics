@@ -115,6 +115,7 @@ models:
     +full_refresh: false
     +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
     +schema: datasiren
+    +tags: ["datasiren"]
     
   # ==================
   # GitLab Models
