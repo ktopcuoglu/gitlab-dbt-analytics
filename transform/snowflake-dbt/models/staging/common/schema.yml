@@ -116,18 +116,6 @@ models:
           - not_null
           - unique
 
-  - name: dim_crm_persons
-    description: '{{ doc("dim_crm_persons") }}'
-    columns:
-      - name: crm_person_id
-        tests:
-          - not_null
-          - unique
-      - name: sfdc_record_id
-        tests:
-          - not_null
-          - unique
-
   - name: dim_dates
     description: '{{ doc("dim_dates") }}'
     columns:
