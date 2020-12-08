@@ -677,22 +677,6 @@ models:
         tests:
           - not_null
 
-  - name: fct_crm_marketing_qualification
-    description: '{{ doc("fct_crm_marketing_qualification") }}'
-    columns:
-      - name: event_id
-        description: A dbt generated surrogate key combining the sfdc_record_id and the event_timestamp.
-        tests:
-          - not_null
-      - name: event_timestamp
-        description: The date and time the respective lead or contact record was last marked Marketing Qualified
-        tests:
-          - not_null
-      - name: crm_person_id
-        description: A surrogate key for use when joining to `fct_crm_conversion_event`. Created from the contact_id where there is a contact and a lead_id where there isn't.
-        tests:
-          - not_null
-
   - name: fct_crm_opportunity
     description: '{{ doc("fct_crm_opportunity") }}'
     columns:
