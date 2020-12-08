@@ -70,9 +70,7 @@ default_args = {
 dag_schedule = "30 5 * * 6"
 
 # Create the DAG
-dag = DAG(
-    "dbt_datasiren", default_args=default_args, schedule_interval=dag_schedule
-)
+dag = DAG("dbt_datasiren", default_args=default_args, schedule_interval=dag_schedule)
 
 dbt_datasiren_command = f"""
         {dbt_install_deps_nosha_cmd} &&
