@@ -138,7 +138,8 @@ tables:
       FROM label_links
     export_schema: 'gitlab_ops_net'
     export_table: 'label_links'
-    export_table_primary_key: id  
+    export_table_primary_key: id
+    advanced_metadata: true  
   members:
     import_db: GITLAB_OPS_DB
     import_query: >
@@ -161,7 +162,8 @@ tables:
         FROM members
     export_schema: 'gitlab_ops_net'
     export_table: 'members'
-    export_table_primary_key: id 
+    export_table_primary_key: id
+    advanced_metadata: true
   merge_requests:
     import_db: GITLAB_OPS_DB
     import_query: >
