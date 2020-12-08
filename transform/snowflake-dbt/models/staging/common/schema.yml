@@ -931,8 +931,8 @@ models:
         tests:
           - not_null
           - unique
-        tags: ["tdf", "common", "crm_accounts"]
+        tags: ["tdf", "common", "crm_account"]
       - name: dim_crm_account_id
         tests:
           - not_null
-        tags: ["tdf", "common", "crm_accounts"]
+        tags: ["tdf", "common", "crm_account"]
