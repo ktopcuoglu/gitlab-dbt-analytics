@@ -68,13 +68,15 @@ WITH paid_subscriptions_monthly_usage_ping_optin AS (
       group_name,
       is_smau,
       is_gmau,
+      is_umau,
+      is_paid_gmau,
       edition,
       FIRST_VALUE(major_minor_version) OVER (PARTITION BY flattened_usage_data.metrics_path, edition 
                                               ORDER BY major_version ASC, minor_version ASC) AS first_version_with_counter
     FROM flattened_usage_data
     INNER JOIN section_metrics ON flattened_usage_data.metrics_path = section_metrics.metrics_path
     LEFT JOIN gitlab_releases ON flattened_usage_data.first_version_with_counter = gitlab_releases.major_minor_version
-    WHERE release_date < CURRENT_DATE AND (is_smau OR is_gmau)
+    WHERE release_date < CURRENT_DATE AND (is_smau OR is_gmau OR is_umau OR is_paid_gmau)
 
 ), date_spine AS (
     
@@ -95,6 +97,8 @@ WITH paid_subscriptions_monthly_usage_ping_optin AS (
       group_name,
       is_smau,
       is_gmau,
+      is_paid_gmau,
+      is_umau,
       SUM(pct_major_minor_version_subscriptions) AS pct_subscriptions_with_counters
     FROM date_spine
     INNER JOIN counter_data
@@ -104,7 +108,7 @@ WITH paid_subscriptions_monthly_usage_ping_optin AS (
         AND (counter_data.major_version < monthly_subscription_optin_counts.major_version OR
         (counter_data.major_version = monthly_subscription_optin_counts.major_version AND counter_data.minor_version <= monthly_subscription_optin_counts.minor_version))
     WHERE date_spine.reporting_month < DATE_TRUNC('month', CURRENT_DATE)
-    {{ dbt_utils.group_by(n=9) }}
+    {{ dbt_utils.group_by(n=11) }}
   
 )
   
