@@ -5,55 +5,6 @@ connection_info:
   database: GITLAB_OPS_DB_NAME
   port: PG_PORT
 tables:
-  ci_pipelines:
-    import_db: GITLAB_OPS_DB
-    import_query: >
-      SELECT id
-      , created_at
-      , updated_at
-      , ref
-      , tag
-      , yaml_errors
-      , committed_at
-      , project_id
-      , status
-      , started_at
-      , finished_at
-      , duration
-      , user_id
-      , lock_version
-      , auto_canceled_by_id
-      , pipeline_schedule_id
-      , source
-      , config_source
-      , protected
-      , failure_reason
-      , iid
-      , merge_request_id
-      FROM ci_pipelines
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
-    export_schema: 'gitlab_ops_net'
-    export_table: 'ci_pipelines'
-    export_table_primary_key: id
-  ci_stages:
-    import_db: GITLAB_OPS_DB
-    import_query: >
-      SELECT id
-      , project_id
-      , pipeline_id
-      , created_at
-      , updated_at
-      , name
-      , status
-      , lock_version
-      , position
-      FROM ci_stages
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
-    export_schema: 'gitlab_ops_net'
-    export_table: ci_stages
-    export_table_primary_key: id 
   ci_builds:
     import_db: GITLAB_OPS_DB
     import_query: >
@@ -108,6 +59,109 @@ tables:
     export_schema: 'gitlab_ops_net'
     export_table: ci_builds
     export_table_primary_key: id 
+  ci_pipelines:
+    import_db: GITLAB_OPS_DB
+    import_query: >
+      SELECT id
+      , created_at
+      , updated_at
+      , ref
+      , tag
+      , yaml_errors
+      , committed_at
+      , project_id
+      , status
+      , started_at
+      , finished_at
+      , duration
+      , user_id
+      , lock_version
+      , auto_canceled_by_id
+      , pipeline_schedule_id
+      , source
+      , config_source
+      , protected
+      , failure_reason
+      , iid
+      , merge_request_id
+      FROM ci_pipelines
+      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
+        AND '{EXECUTION_DATE}'::timestamp
+    export_schema: 'gitlab_ops_net'
+    export_table: 'ci_pipelines'
+    export_table_primary_key: id
+  ci_stages:
+    import_db: GITLAB_OPS_DB
+    import_query: >
+      SELECT id
+      , project_id
+      , pipeline_id
+      , created_at
+      , updated_at
+      , name
+      , status
+      , lock_version
+      , position
+      FROM ci_stages
+      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
+        AND '{EXECUTION_DATE}'::timestamp
+    export_schema: 'gitlab_ops_net'
+    export_table: ci_stages
+    export_table_primary_key: id
+  labels:
+    import_db: GITLAB_OPS_DB
+    import_query: >
+      SELECT id
+      , title
+      , color
+      , project_id
+      , created_at
+      , updated_at
+      , template
+      , type
+      , group_id
+      FROM labels
+      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
+        AND '{EXECUTION_DATE}'::timestamp
+    export_schema: 'gitlab_ops_net'
+    export_table: 'labels'
+    export_table_primary_key: id
+  label_links:
+    import_db: GITLAB_OPS_DB
+    import_query: >
+      SELECT id
+      , label_id
+      , target_id
+      , target_type
+      , created_at
+      , updated_at
+      FROM label_links
+    export_schema: 'gitlab_ops_net'
+    export_table: 'label_links'
+    export_table_primary_key: id  
+  members:
+    import_db: GITLAB_OPS_DB
+    import_query: >
+        SELECT id
+        , access_level
+        , source_id
+        , source_type
+        , user_id
+        , notification_level
+        , type
+        , created_at
+        , created_by_id
+        , invite_email
+        , invite_accepted_at
+        , invite_token
+        , requested_at
+        , CASE WHEN expires_at > '2262-01-01' THEN '2262-01-01' ELSE expires_at END AS expires_at
+        , ldap
+        , override
+        FROM members
+    export_schema: 'gitlab_ops_net'
+    export_table: 'members'
+    export_table_primary_key: id 
   merge_requests:
     import_db: GITLAB_OPS_DB
     import_query: >
@@ -145,6 +199,72 @@ tables:
         AND '{EXECUTION_DATE}'::timestamp
     export_schema: 'gitlab_ops_net'
     export_table: 'merge_requests'
+    export_table_primary_key: id
+  projects:
+    import_db: GITLAB_OPS_DB
+    import_query: >
+      SELECT id
+      , name
+      , path
+      , description
+      , created_at
+      , updated_at
+      , creator_id
+      , namespace_id
+      , last_activity_at
+      , import_url
+      , visibility_level
+      , archived
+      , avatar
+      , merge_requests_template
+      , star_count
+      , merge_requests_rebase_enabled
+      , import_type
+      , import_source
+      , approvals_before_merge
+      , reset_approvals_on_push
+      , merge_requests_ff_only_enabled
+      , issues_template
+      , mirror
+      , mirror_user_id
+      , shared_runners_enabled
+      , build_coverage_regex
+      , build_allow_git_fetch
+      , build_timeout
+      , mirror_trigger_builds
+      , pending_delete
+      , public_builds
+      , last_repository_check_failed
+      , last_repository_check_at
+      , container_registry_enabled
+      , only_allow_merge_if_pipeline_succeeds
+      , has_external_issue_tracker
+      , repository_storage
+      , repository_read_only
+      , request_access_enabled
+      , has_external_wiki
+      , ci_config_path
+      , lfs_enabled
+      , only_allow_merge_if_all_discussions_are_resolved
+      , repository_size_limit
+      , printing_merge_request_link_enabled
+      , auto_cancel_pending_pipelines
+      , service_desk_enabled
+      , delete_error
+      , last_repository_updated_at
+      , disable_overriding_approvers_per_merge_request
+      , storage_version
+      , resolve_outdated_diff_discussions
+      , remote_mirror_available_overridden
+      , only_mirror_protected_branches
+      , pull_mirror_available_overridden
+      , mirror_overwrites_diverged_branches
+      , external_authorization_classification_label
+      FROM projects
+      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
+        AND '{EXECUTION_DATE}'::timestamp
+    export_schema: 'gitlab_ops_net'
+    export_table: 'projects'
     export_table_primary_key: id
   users:
     import_db: GITLAB_OPS_DB
@@ -220,123 +340,3 @@ tables:
     export_schema: 'gitlab_ops_net'
     export_table: 'users'
     export_table_primary_key: id
-  members:
-    import_db: GITLAB_OPS_DB
-    import_query: >
-        SELECT id
-        , access_level
-        , source_id
-        , source_type
-        , user_id
-        , notification_level
-        , type
-        , created_at
-        , created_by_id
-        , invite_email
-        , invite_accepted_at
-        , invite_token
-        , requested_at
-        , CASE WHEN expires_at > '2262-01-01' THEN '2262-01-01' ELSE expires_at END AS expires_at
-        , ldap
-        , override
-        FROM members
-    export_schema: 'gitlab_ops_net'
-    export_table: 'members'
-    export_table_primary_key: id
-  labels:
-    import_db: GITLAB_OPS_DB
-    import_query: >
-      SELECT id
-      , title
-      , color
-      , project_id
-      , created_at
-      , updated_at
-      , template
-      , type
-      , group_id
-      FROM labels
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
-    export_schema: 'gitlab_ops_net'
-    export_table: 'labels'
-    export_table_primary_key: id  
-  projects:
-    import_db: GITLAB_OPS_DB
-    import_query: >
-      SELECT id
-      , name
-      , path
-      , description
-      , created_at
-      , updated_at
-      , creator_id
-      , namespace_id
-      , last_activity_at
-      , import_url
-      , visibility_level
-      , archived
-      , avatar
-      , merge_requests_template
-      , star_count
-      , merge_requests_rebase_enabled
-      , import_type
-      , import_source
-      , approvals_before_merge
-      , reset_approvals_on_push
-      , merge_requests_ff_only_enabled
-      , issues_template
-      , mirror
-      , mirror_user_id
-      , shared_runners_enabled
-      , build_coverage_regex
-      , build_allow_git_fetch
-      , build_timeout
-      , mirror_trigger_builds
-      , pending_delete
-      , public_builds
-      , last_repository_check_failed
-      , last_repository_check_at
-      , container_registry_enabled
-      , only_allow_merge_if_pipeline_succeeds
-      , has_external_issue_tracker
-      , repository_storage
-      , repository_read_only
-      , request_access_enabled
-      , has_external_wiki
-      , ci_config_path
-      , lfs_enabled
-      , only_allow_merge_if_all_discussions_are_resolved
-      , repository_size_limit
-      , printing_merge_request_link_enabled
-      , auto_cancel_pending_pipelines
-      , service_desk_enabled
-      , delete_error
-      , last_repository_updated_at
-      , disable_overriding_approvers_per_merge_request
-      , storage_version
-      , resolve_outdated_diff_discussions
-      , remote_mirror_available_overridden
-      , only_mirror_protected_branches
-      , pull_mirror_available_overridden
-      , mirror_overwrites_diverged_branches
-      , external_authorization_classification_label
-      FROM projects
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
-    export_schema: 'gitlab_ops_net'
-    export_table: 'projects'
-    export_table_primary_key: id
-  label_links:
-    import_db: GITLAB_OPS_DB
-    import_query: >
-      SELECT id
-      , label_id
-      , target_id
-      , target_type
-      , created_at
-      , updated_at
-      FROM label_links
-    export_schema: 'gitlab_ops_net'
-    export_table: 'label_links'
-    export_table_primary_key: id  
