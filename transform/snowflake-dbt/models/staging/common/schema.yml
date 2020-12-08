@@ -1,6 +1,15 @@
 version: 2
 
 models:
+  - name: bdg_crm_opportunity_contact_role
+    description: '{{ doc("bdg_crm_opportunity_contact_role") }}'
+    columns:
+      - name: opportunity_contact_role_id
+        description: A primary key for the contact added to an opportunity.
+        tests:
+          - unique
+          - not_null
+
   - name: dim_billing_accounts
     description: '{{ doc("dim_billing_accounts") }}'
     columns:
@@ -618,6 +627,10 @@ models:
   - name: dim_usage_pings
     description: '{{ doc("dim_usage_pings") }}'
     columns:
+      - name: id
+        tests:
+          - not_null
+          - unique
       - name: uuid
         description: concatenate this field with host_id for a unique identifier for instances. See https://gitlab.com/gitlab-data/analytics/-/issues/6413#note_428426837. Business Process Issue - https://gitlab.com/gitlab-data/analytics/-/issues/6413#note_429177832 and https://gitlab.com/gitlab-data/analytics/-/issues/6560#note_428035384 and https://gitlab.com/gitlab-org/gitlab/-/merge_requests/44972
       - name: host_id
@@ -743,6 +756,40 @@ models:
         description: a boolean field created in the warehouse to flag Sales Accepted Opportunities. This field should be deprecated once sales accepted is in a more stable and consistent state in salesforce.
       - name: is_sdr_sao
         description: a boolean field created in the warehouse to flag Sales Accepted Opportunities from [Sales Development Reps](https://about.gitlab.com/handbook/marketing/revenue-marketing/sdr/). This field should be deprecated once sales accepted is in a more stable and consistent state in salesforce.
+
+  - name: fct_crm_opportunity
+    description: '{{ doc("fct_crm_opportunity") }}'
+    columns:
+      - name: crm_opportunity_id
+        description: A dbt generated surrogate key combining the sfdc_record_id and the sales_accepted_date.
+        tests:
+          - unique
+          - not_null
+      - name: sales_accepted_date
+        description: The sales_accepted_date from the sfdc_opportunity. Note that there can be opportunities with sales accepted dates that aren't sales accepted opportunities. This is indicated with the is_sao and is_sdr_sao booleans
+      - name: crm_person_id
+        description: A surrogate key for use when joining to `fct_crm_sales_accepted_opportunity`. Created from the contact_id where there is a contact and a lead_id where there isn't.
+      - name: is_sao
+        description: a boolean field created in the warehouse to flag Sales Accepted Opportunities. This field should be deprecated once sales accepted is in a more stable and consistent state in salesforce.
+      - name: is_sdr_sao
+        description: a boolean field created in the warehouse to flag Sales Accepted Opportunities from [Sales Development Reps](https://about.gitlab.com/handbook/marketing/revenue-marketing/sdr/). This field should be deprecated once sales accepted is in a more stable and consistent state in salesforce.
+
+  - name: fct_crm_person
+    description: '{{ doc("fct_crm_person") }}'
+    columns:
+      - name: dim_crm_person_id
+        description: A dbt generated surrogate key combining the lead id and contact id.
+        tests:
+          - unique
+          - not_null
+      - name: bizible_person_id
+        description: The unique identifier assigned to a lead or contact in Bizible used to join to touchpoint and attribution data.
+      - name: mql_date_first
+        description: The first date a lead or contact was assigned a Marketo Qualified Lead Date.
+      - name: mql_date_latest
+        description: The most recent date a lead or contact was assigned a Marketo Qualified Lead Date.
+      - name: is_mql
+        description: a boolean field created in the warehouse to flag Marketing Qualified Leads.
 
   - name: fct_mrr
     description: One row represents Monthly Recurring Revenue per one month, subscription_id, product_details_id

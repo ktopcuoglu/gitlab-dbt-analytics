@@ -131,7 +131,7 @@ Additionally, this model calculates the field `is_billable` - i.e. if a member s
 
 ```
 SELECT COUNT(DISTINCT user_id)
-FROM analytics.gitlab_dotcom_memberships
+FROM legacy.gitlab_dotcom_memberships
 WHERE is_billable = TRUE
   AND ultimate_parent_id = 123456
 ```  

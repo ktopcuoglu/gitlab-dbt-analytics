@@ -310,6 +310,7 @@ roles:
             - boneyard
             - covid19
             - dbt_analytics
+            - db_dumps
             - gitlab_data_yaml
             - gitlab_dotcom
             - license_db
@@ -442,6 +443,7 @@ roles:
             - boneyard
             - covid19
             - dbt_analytics
+            - db_dumps
             - gitlab_data_yaml
             - gitlab_dotcom
             - license_db
@@ -528,6 +530,7 @@ roles:
                 - raw.snowflake_imports
                 - raw.tap_postgres
                 - raw.qualtrics_mailing_list
+                - raw.version_db
             tables:
                 - raw.bamboohr.*
                 - raw.engineering_extracts.*
@@ -542,6 +545,7 @@ roles:
                 - raw.tap_postgres.*
                 - raw.snowflake_imports.*
                 - raw.qualtrics_mailing_list.*
+                - raw.version_db.*
         privileges:
             databases:
                 read:
@@ -688,18 +692,16 @@ roles:
             - snowflake_db
         owns:
             schemas:
-                - analytics.analytics
                 - analytics.analytics_clones
-                - analytics.analytics_staging
                 - analytics.common
                 - analytics.common_mapping
+                - analytics.legacy
                 - prep.sensitive
             tables:
-                - analytics.analytics.*
                 - analytics.analytics_clones.*
-                - analytics.analytics_staging.*
                 - analytics.common.*
                 - analytics.common_mapping.*
+                - analytics.legacy.*
                 - prep.sensitive.*
         privileges:
             databases:
@@ -743,13 +745,13 @@ roles:
                     - prep
             schemas:
                 read:
-                    - analytics.analytics
                     - analytics.common
+                    - analytics.legacy
                     - prep.sensitive
             tables:
                 read:
-                    - analytics.analytics.*
                     - analytics.common.*
+                    - analytics.legacy.*
                     - prep.sensitive.employee_*
                     - prep.sensitive.bamboohr_custom_bonus
                     - prep.sensitive.bamboohr_directory
@@ -773,13 +775,13 @@ roles:
                     - raw
             schemas:
                 read:
-                    - analytics.analytics
+                    - analytics.legacy
                     - prep.sensitive
                     - raw.bamboohr
 
             tables:
                 read:
-                    - analytics.analytics.*
+                    - analytics.legacy.*
                     - prep.sensitive.employee_*
                     - prep.sensitive.bamboohr_*
                     - raw.bamboohr.*
@@ -878,19 +880,17 @@ roles:
                     - raw
             schemas:
                 read:
-                    - analytics.analytics
                     - analytics.common
                     - analytics.common_mapping
-                    - analytics.analytics_staging
                     - analytics.dbt
+                    - analytics.legacy
                     - raw.dbt
             tables:
                 read:
-                    - analytics.analytics.*
                     - analytics.common.*
                     - analytics.common_mapping.*
-                    - analytics.analytics_staging.*
                     - analytics.dbt.*
+                    - analytics.legacy.*
                     - raw.dbt.*
 
     - dbt_analytics_clones:
@@ -1309,12 +1309,15 @@ roles:
             databases:
                 read:
                     - prep
+                    - raw
             schemas:
                 read:
                     - prep.version_db
+                    - raw.version_db
             tables:
                 read:
                     - prep.version_db.*
+                    - raw.version_db.*
 
 
     - zendesk:
@@ -1906,8 +1909,8 @@ roles:
                     - ktam_prod.*.*
 
     - ksmith:
-        warehouses:
-            - reporting
+        member_of: []
+        warehouses: []
 
     - lmai:
         member_of:
@@ -2817,10 +2820,8 @@ users:
             - ktam
 
     - ksmith:
-        can_login: yes
-        member_of:
-            - ksmith
-            - securityadmin
+        can_login: no
+        member_of: []
 
     - lmai:
         can_login: yes

@@ -36,6 +36,11 @@ WITH self_managed_active_subscriptions AS (
     SELECT *
     FROM {{ ref('fct_usage_ping_payloads') }}
   
+), gitlab_release_schedule AS (
+  
+    SELECT *
+    FROM {{ ref('gitlab_release_schedule')}}  
+
 ), transformed AS (
   
     SELECT 
@@ -87,11 +92,6 @@ WITH self_managed_active_subscriptions AS (
       ON transformed.reporting_month = latest_versions.reporting_month
         AND transformed.subscription_name_slugify = latest_versions.subscription_name_slugify
 
-), gitlab_releases AS (
-    
-    SELECT *
-    FROM {{ ref('gitlab_release_schedule') }}
-
 ), agg_total_subscriptions AS (
 
     SELECT 
@@ -110,7 +110,7 @@ WITH self_managed_active_subscriptions AS (
       COUNT(DISTINCT subscription_name_slugify)                         AS major_minor_version_subscriptions,
       major_minor_version_subscriptions /  MAX(total_subscrption_count) AS pct_major_minor_version_subscriptions
     FROM paid_subscriptions_monthly_usage_ping_optin
-    INNER JOIN analytics_staging.gitlab_release_schedule AS gitlab_releases
+    INNER JOIN gitlab_release_schedule AS gitlab_releases
       ON paid_subscriptions_monthly_usage_ping_optin.latest_major_minor_version = gitlab_releases.major_minor_version
     LEFT JOIN agg_total_subscriptions AS agg ON paid_subscriptions_monthly_usage_ping_optin.reporting_month = agg.agg_month
     {{ dbt_utils.group_by(n=4) }}
@@ -158,7 +158,7 @@ WITH self_managed_active_subscriptions AS (
       edition
     FROM flattened_usage_data
     INNER JOIN section_metrics ON flattened_usage_data.ping_name = section_metrics.metrics_path
-    LEFT JOIN gitlab_releases ON flattened_usage_data.first_version_with_counter = gitlab_releases.major_minor_version
+    LEFT JOIN gitlab_release_schedule AS gitlab_releases  ON flattened_usage_data.first_version_with_counter = gitlab_releases.major_minor_version
     WHERE release_date < CURRENT_DATE AND (is_smau OR is_gmau)
 
 ), date_spine AS (
