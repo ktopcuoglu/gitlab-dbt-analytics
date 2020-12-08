@@ -189,6 +189,8 @@ models:
     - name: handbook_reference
     - name: kpi_id
       description: This is the id that ties the issue to gitlab_dotcom data.
+    - name: kpi_name_pi_yaml
+      description: KPI name as it appears in performance_indicators_yaml file.
 - name: sheetload_linkedin_recruiter_source
   description: This is the source of linkedin recruiter inmail data for each month by sourcer .
   columns:
