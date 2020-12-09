@@ -1,20 +1,15 @@
-<<<<<<< HEAD
 {{ config({
     "schema": "temporary"
     })
 }}
 
 WITH source AS (
-=======
-with source as (
->>>>>>> master
 
     SELECT *
     FROM {{ source('snapshots', 'sheetload_employee_location_factor_snapshots') }}
     WHERE "Employee_ID" != 'Not In Comp Calc'
       AND "Employee_ID" NOT IN ('$72,124','S1453')
 
-<<<<<<< HEAD
 ), renamed AS (
 
     SELECT
@@ -59,9 +54,7 @@ with source as (
   FROM deduplicated
   GROUP BY 1, 2, 3
 
-=======
->>>>>>> master
 )
 
 SELECT *
-FROM source
+FROM final
