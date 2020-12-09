@@ -135,14 +135,6 @@ models:
           - not_null
           - unique
 
-  - name: dim_dates
-    description: '{{ doc("dim_dates") }}'
-    columns:
-      - name: date_id
-        tests:
-          - not_null
-          - unique
-
   - name: dim_date
     description: '{{ doc("dim_date") }}'
     columns:
@@ -552,13 +544,13 @@ models:
       - name: effective_end_month
         description: Month when the segmented charge ends or ended
       - name: effective_start_date_id
-        description: Id of the date when the segmented charge starts or started. Use this field to join to dim_dates on id.
+        description: Id of the date when the segmented charge starts or started. Use this field to join to dim_date on id.
       - name: effective_end_date_id
-        description: Id of the date when the segmented charge ends or ended. Use this field to join to dim_dates on id.
+        description: Id of the date when the segmented charge ends or ended. Use this field to join to dim_date on id.
       - name: effective_start_month_id
-        description: Id of the month when the segmented charge starts or started. Use this field to join to dim_dates on id.
+        description: Id of the month when the segmented charge starts or started. Use this field to join to dim_date on id.
       - name: effective_end_month_id
-        description: Id of the month when the segmented charge ends or ended. Use this field to join to dim_dates on id.
+        description: Id of the month when the segmented charge ends or ended. Use this field to join to dim_date on id.
       - name: unit_of_measure
         description: Specifies the units to measure usage
       - name: quantity
@@ -760,7 +752,7 @@ models:
           - not_null
           - unique
       - name: date_id
-        description: The identifier of date month in dim_dates
+        description: The identifier of date month in dim_date
       - name: subscription_id
         description: The identifier of subscription in dim_subscriptions table
         tests:
@@ -795,9 +787,9 @@ models:
           - not_null
         tags: ["tdf", "arr"]
       - name: snapshot_id
-        description: The identifier of snapshot day in dim_dates
+        description: The identifier of snapshot day in dim_date
       - name: date_id
-        description: The identifier of date month in dim_dates
+        description: The identifier of date month in dim_date
       - name: subscription_id
         description: The identifier of subscription in dim_subscriptions_snapshots table
         tests:

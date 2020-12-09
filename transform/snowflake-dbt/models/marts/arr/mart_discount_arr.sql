@@ -1,7 +1,7 @@
-WITH dim_dates AS (
+WITH dim_date AS (
 
     SELECT *
-    FROM {{ ref('dim_dates') }}
+    FROM {{ ref('dim_date') }}
 
 ), dim_billing_accounts AS (
 

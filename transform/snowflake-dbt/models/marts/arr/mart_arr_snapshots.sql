@@ -15,10 +15,10 @@ WITH dim_billing_accounts AS (
     SELECT *
     FROM {{ ref('dim_crm_account') }}
 
-), dim_dates AS (
+), dim_date AS (
 
     SELECT *
-    FROM {{ ref('dim_dates') }}
+    FROM {{ ref('dim_date') }}
 
 ), dim_product_details AS (
 
@@ -33,10 +33,10 @@ WITH dim_billing_accounts AS (
     {% if is_incremental() %}
 
     -- this filter will only be applied on an incremental run
-    WHERE snapshot_id > (SELECT max(dim_dates.date_id)
+    WHERE snapshot_id > (SELECT max(dim_date.date_id)
                             FROM {{ this }}
-                            INNER JOIN dim_dates
-                            ON dim_dates.date_actual = snapshot_date
+                            INNER JOIN dim_date
+                            ON dim_date.date_actual = snapshot_date
                             )
 
     {% endif %}
@@ -49,10 +49,10 @@ WITH dim_billing_accounts AS (
     {% if is_incremental() %}
 
     -- this filter will only be applied on an incremental run
-    WHERE snapshot_id > (SELECT max(dim_dates.date_id)
+    WHERE snapshot_id > (SELECT max(dim_date.date_id)
                             FROM {{ this }}
-                            INNER JOIN dim_dates
-                            ON dim_dates.date_actual = snapshot_date
+                            INNER JOIN dim_date
+                            ON dim_date.date_actual = snapshot_date
                             )
 
     {% endif %}
@@ -113,9 +113,9 @@ WITH dim_billing_accounts AS (
       ON dim_product_details.product_details_id = fct_mrr_snapshots.product_details_id
     INNER JOIN dim_billing_accounts
       ON dim_billing_accounts.billing_account_id= fct_mrr_snapshots.billing_account_id
-    INNER JOIN dim_dates AS arr_month
+    INNER JOIN dim_date AS arr_month
       ON arr_month.date_id = fct_mrr_snapshots.date_id
-    INNER JOIN dim_dates AS snapshot_dates
+    INNER JOIN dim_date AS snapshot_dates
       ON snapshot_dates.date_id = fct_mrr_snapshots.snapshot_id
     LEFT JOIN dim_crm_account
         ON dim_billing_accounts.crm_account_id = dim_crm_account.crm_account_id
