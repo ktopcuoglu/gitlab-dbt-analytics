@@ -6,15 +6,15 @@
 }}
 
 /* grain: one record per subscription, product per month */
-WITH dim_dates AS (
+WITH dim_date AS (
 
     SELECT *
-    FROM {{ ref('dim_dates') }}
+    FROM {{ ref('dim_date') }}
 
 ), snapshot_dates AS (
 
    SELECT *
-   FROM {{ ref('dim_dates') }}
+   FROM {{ ref('dim_date') }}
    WHERE date_actual >= '2020-03-01' AND date_actual <= CURRENT_DATE
 
    {% if is_incremental() %}
@@ -123,7 +123,7 @@ WITH dim_dates AS (
 
     SELECT
       snapshot_id,
-      dim_dates.date_id,
+      dim_date.date_id,
       billing_account_id,
       crm_account_id,
       subscription_id,
@@ -134,11 +134,11 @@ WITH dim_dates AS (
       SUM(quantity)                                        AS quantity,
       ARRAY_AGG(rate_plan_charge_filtered.unit_of_measure) AS unit_of_measure
     FROM rate_plan_charge_filtered
-    INNER JOIN dim_dates
-      ON rate_plan_charge_filtered.effective_start_month <= dim_dates.date_actual
-      AND (rate_plan_charge_filtered.effective_end_month > dim_dates.date_actual
+    INNER JOIN dim_date
+      ON rate_plan_charge_filtered.effective_start_month <= dim_date.date_actual
+      AND (rate_plan_charge_filtered.effective_end_month > dim_date.date_actual
         OR rate_plan_charge_filtered.effective_end_month IS NULL)
-      AND dim_dates.day_of_month = 1
+      AND dim_date.day_of_month = 1
     {{ dbt_utils.group_by(n=7) }}
 
 ), final AS (

@@ -8,12 +8,12 @@ WITH self_managed_active_subscriptions AS (
       quantity
     FROM {{ ref('fct_mrr')}}
   
-), dim_dates AS (
+), dim_date AS (
   
     SELECT DISTINCT
       date_id,
       first_day_of_month
-    FROM {{ ref('dim_dates')}}
+    FROM {{ ref('dim_date')}}
     WHERE first_day_of_month < CURRENT_DATE
   
 ), dim_product_details AS (
@@ -57,7 +57,7 @@ WITH self_managed_active_subscriptions AS (
     INNER JOIN dim_product_details
       ON self_managed_active_subscriptions.product_details_id = dim_product_details.product_details_id
         AND delivery='Self-Managed'
-    INNER JOIN dim_dates ON self_managed_active_subscriptions.date_id = dim_dates.date_id
+    INNER JOIN dim_date ON self_managed_active_subscriptions.date_id = dim_date.date_id
     LEFT JOIN active_subscriptions ON self_managed_active_subscriptions.subscription_id = active_subscriptions.subscription_id
     LEFT JOIN all_subscriptions ON active_subscriptions.subscription_name_slugify = all_subscriptions.subscription_name_slugify
     LEFT JOIN fct_payloads ON all_subscriptions.subscription_id = fct_payloads.subscription_id AND first_day_of_month = DATE_TRUNC('month', fct_payloads.created_at)
@@ -77,7 +77,7 @@ WITH self_managed_active_subscriptions AS (
     INNER JOIN dim_product_details
       ON self_managed_active_subscriptions.product_details_id = dim_product_details.product_details_id
         AND delivery='Self-Managed'
-    INNER JOIN dim_dates ON self_managed_active_subscriptions.date_id = dim_dates.date_id
+    INNER JOIN dim_date ON self_managed_active_subscriptions.date_id = dim_date.date_id
     INNER JOIN active_subscriptions ON self_managed_active_subscriptions.subscription_id = active_subscriptions.subscription_id
     INNER JOIN all_subscriptions ON active_subscriptions.subscription_name_slugify = all_subscriptions.subscription_name_slugify
     INNER JOIN fct_payloads ON all_subscriptions.subscription_id = fct_payloads.subscription_id AND first_day_of_month = DATE_TRUNC('month', fct_payloads.created_at)
