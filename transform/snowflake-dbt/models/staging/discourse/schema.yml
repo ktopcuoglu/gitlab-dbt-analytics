@@ -5,6 +5,7 @@ models:
       description: 'Pre-formatted report data displaying the accepted reporting values on the gitlab.com discourse instance. Used in calculation of Ticket deflection KPI'
       columns:
           - name: report_start_date
+            tags: ["discourse", "social"]
             tests:
                 - not_null
           - name: report_title
@@ -21,6 +22,7 @@ models:
       description: 'Pre-formatted report data based on the number of page views on the gitlab.com discourse instance. Used in calculation of Ticket deflection KPI'
       columns:
           - name: report_start_date
+            tags: ["discourse", "social"]
             tests:
                 - not_null
           - name: report_title
@@ -40,6 +42,7 @@ models:
       description: 'Pre-formatted report data based on the number of daily engaged users on the gitlab.com discourse instance. Used in calculation of Ticket deflection KPI'
       columns:
           - name: report_start_date
+            tags: ["discourse", "social"]
             tests:
                 - not_null
           - name: report_title
@@ -56,6 +59,7 @@ models:
       description: 'Pre-formatted report data based on the number of total page view requests the gitlab.com discourse instance. Used in calculation of Ticket deflection KPI'
       columns:
           - name: report_start_date
+            tags: ["discourse", "social"]
             tests:
                 - not_null
           - name: report_title
@@ -72,6 +76,7 @@ models:
       description: 'Pre-formatted report data based on the number of posts on the gitlab.com discourse instance. Used in calculation of Ticket deflection KPI'
       columns:
           - name: report_start_date
+            tags: ["discourse", "social"]
             tests:
                 - not_null
           - name: report_title
@@ -88,6 +93,7 @@ models:
       description: 'Pre-formatted report data based on the number of signups on the gitlab.com discourse instance. Used in calculation of Ticket deflection KPI'
       columns:
           - name: report_start_date
+            tags: ["discourse", "social"]
             tests:
                 - not_null
           - name: report_title
@@ -104,6 +110,7 @@ models:
       description: 'Pre-formatted report data downloaded from the gitlab.com discourse instance. Used in calculation of Ticket deflection KPI'
       columns:
           - name: report_start_date
+            tags: ["discourse", "social"]
             tests:
                 - not_null
           - name: report_title
@@ -120,6 +127,7 @@ models:
       description: 'Pre-formatted report data downloaded from the gitlab.com discourse instance. Used in calculation of Ticket deflection KPI'
       columns:
           - name: report_start_date
+            tags: ["discourse", "social"]
             tests:
                 - not_null
           - name: report_title
@@ -136,6 +144,7 @@ models:
       description: 'Pre-formatted report data based on the number of visits on the gitlab.com discourse instance. Used in calculation of Ticket deflection KPI'
       columns:
           - name: report_start_date
+            tags: ["discourse", "social"]
             tests:
                 - not_null
           - name: report_title
