@@ -7,6 +7,7 @@ crm_account,For CRM Accounts
 customers_db,Relates to Customers database
 daily,Used in Airflow runs
 data,dbt built-in
+datasiren,Relates to datasiren models
 dbt,Relates to dbt-generated data-sets
 discourse,Relates to Discourse data
 geo,Relates to geo data
