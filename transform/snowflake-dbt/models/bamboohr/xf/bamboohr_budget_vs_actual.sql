@@ -7,7 +7,7 @@
 WITH dates AS (
 
     SELECT *
-    FROM {{ ref('dim_dates') }}
+    FROM {{ ref('dim_date') }}
 
 ), promotions AS (
 

@@ -4,10 +4,13 @@ WITH unioned AS (
         relations=[
             ref('performance_indicators_cost_source'), 
             ref('performance_indicators_corporate_finance_source'),
+            ref('performance_indicators_customer_support_source'),
             ref('performance_indicators_dev_section_source'),              
+            ref('performance_indicators_development_department_source'),              
             ref('performance_indicators_enablement_section_source'),          
             ref('performance_indicators_engineering_source'),
             ref('performance_indicators_finance_source'),
+            ref('performance_indicators_infrastructure_department_source'),
             ref('performance_indicators_marketing_source'),
             ref('performance_indicators_ops_section_source'),
             ref('performance_indicators_people_success_source'),
@@ -32,6 +35,8 @@ WITH unioned AS (
       pi_target,
       telemetry_type,
       pi_url,
+      sisense_chart_id,
+      sisense_dashboard_id,
       FIRST_VALUE(snapshot_date) OVER (PARTITION BY pi_name ORDER BY snapshot_date) AS date_first_added, 
       snapshot_date AS valid_from_date
     FROM unioned
