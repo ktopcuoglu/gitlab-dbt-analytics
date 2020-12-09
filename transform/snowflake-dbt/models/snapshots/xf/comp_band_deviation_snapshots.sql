@@ -14,7 +14,7 @@ WITH source AS (
     SELECT *
     FROM {{ref("sheetload_comp_band_snapshot_base")}}
 
-)
+  )
 
 SELECT * 
 FROM source
