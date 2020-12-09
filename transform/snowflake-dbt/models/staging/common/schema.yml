@@ -41,12 +41,12 @@ models:
   - name: dim_billing_account
     description: '{{ doc("dim_billing_account") }}'
     columns:
-      - name: billing_account_id
+      - name: dim_billing_account_id
         description: Unique id of the Zuora account
         tests:
           - not_null
           - unique
-      - name: crm_account_id
+      - name: dim_crm_account_id
         description: CRM account ID for the account
       - name: account_number
         description: A unique Zuora account number
