@@ -15,22 +15,12 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
-{% docs dim_crm_opportunities %}
-Model for all dimensional opportunity columns from salesforce opportunity object
-
-{% enddocs %}
-
 {% docs dim_crm_opportunity %}
 Model for all dimensional opportunity columns from salesforce opportunity object
 
 {% enddocs %}
 
 {% docs dim_crm_person %}
-Dimension that combines demographic data from salesforce leads and salesforce contacts. They are combined with a union and a filter on leads excluding converted leads and leads where there is a corresponding contact.
-
-{% enddocs %}
-
-{% docs dim_crm_persons %}
 Dimension that combines demographic data from salesforce leads and salesforce contacts. They are combined with a union and a filter on leads excluding converted leads and leads where there is a corresponding contact.
 
 {% enddocs %}
@@ -102,18 +92,6 @@ Fact table representing marketing campaign details tracked in SFDC.
 {% docs fct_crm_lead_conversion %}
 
 A fact from the lead history and lead tables in Salesforce that has a record for every converted lead
-
-{% enddocs %}
-
-{% docs fct_crm_marketing_qualification %}
-
-A fact from the lead and contact tables that shows the date they were qualified. Ideally this should be using the lead and contact history tables as well, but, as of yet, the appropriate fields are not being tracked in Salesforce. For mor information on Marketing Qualification please refer to the [Marketing Operations handbook](https://about.gitlab.com/handbook/marketing/marketing-operations/marketo/#mql-definition).
-
-{% enddocs %}
-
-{% docs fct_crm_opportunities %}
-
-A fact table for salesforce opportunities
 
 {% enddocs %}
 

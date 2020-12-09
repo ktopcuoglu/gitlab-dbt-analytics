@@ -104,13 +104,6 @@ models:
           - unique
           - not_null
 
-  - name: dim_crm_opportunities
-    description: '{{ doc("dim_crm_opportunities") }}'
-    columns:
-      - name: crm_opportunity_id
-        tests:
-          - unique
-          - not_null
   - name: dim_crm_person
     description: '{{ doc("dim_crm_person") }}'
     columns:
@@ -123,14 +116,10 @@ models:
           - not_null
           - unique
 
-  - name: dim_crm_persons
-    description: '{{ doc("dim_crm_persons") }}'
+  - name: dim_dates
+    description: '{{ doc("dim_dates") }}'
     columns:
-      - name: crm_person_id
-        tests:
-          - not_null
-          - unique
-      - name: sfdc_record_id
+      - name: date_id
         tests:
           - not_null
           - unique
@@ -675,39 +664,6 @@ models:
         description: A surrogate key for use when joining to `fct_crm_conversion_event`. Created from the contact_id where there is a contact and a lead_id where there isn't.
         tests:
           - not_null
-
-  - name: fct_crm_marketing_qualification
-    description: '{{ doc("fct_crm_marketing_qualification") }}'
-    columns:
-      - name: event_id
-        description: A dbt generated surrogate key combining the sfdc_record_id and the event_timestamp.
-        tests:
-          - not_null
-      - name: event_timestamp
-        description: The date and time the respective lead or contact record was last marked Marketing Qualified
-        tests:
-          - not_null
-      - name: crm_person_id
-        description: A surrogate key for use when joining to `fct_crm_conversion_event`. Created from the contact_id where there is a contact and a lead_id where there isn't.
-        tests:
-          - not_null
-
-  - name: fct_crm_opportunities
-    description: '{{ doc("fct_crm_opportunities") }}'
-    columns:
-      - name: crm_opportunity_id
-        description: A dbt generated surrogate key combining the sfdc_record_id and the sales_accepted_date.
-        tests:
-          - unique
-          - not_null
-      - name: sales_accepted_date
-        description: The sales_accepted_date from the sfdc_opportunity. Note that there can be opportunities with sales accepted dates that aren't sales accepted opportunities. This is indicated with the is_sao and is_sdr_sao booleans
-      - name: crm_person_id
-        description: A surrogate key for use when joining to `fct_crm_sales_accepted_opportunity`. Created from the contact_id where there is a contact and a lead_id where there isn't.
-      - name: is_sao
-        description: a boolean field created in the warehouse to flag Sales Accepted Opportunities. This field should be deprecated once sales accepted is in a more stable and consistent state in salesforce.
-      - name: is_sdr_sao
-        description: a boolean field created in the warehouse to flag Sales Accepted Opportunities from [Sales Development Reps](https://about.gitlab.com/handbook/marketing/revenue-marketing/sdr/). This field should be deprecated once sales accepted is in a more stable and consistent state in salesforce.
 
   - name: fct_crm_opportunity
     description: '{{ doc("fct_crm_opportunity") }}'
