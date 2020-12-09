@@ -52,6 +52,8 @@ models:
         - name: pi_url
         - name: date_first_added
           description: This identifies when the KPI was first added. Note, since we started capturing the data on 2020.08.18 this will be the date for all performance indicators that existed before capturing. 
+        - name: sisense_chart_id
+        - name: sisense_dashboard_id
         - name: snapshot_date
           description: Will reflect the last_date the performance indicators file was captured
 
@@ -70,6 +72,8 @@ models:
       - name: pi_url
       - name: date_first_added
         description: This identifies when the KPI was first added. Note, since we started capturing the data on 2020.08.18 this will be the date for all performance indicators that existed before capturing. 
+      - name: sisense_chart_id
+      - name: sisense_dashboard_id
       - name: valid_from_date
         description: All events have been de-duped into records that can be identified by the valid_from_date and is applicable to the valid_to_date. 
       - name: valid_to_date
