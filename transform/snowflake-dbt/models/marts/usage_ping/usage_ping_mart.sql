@@ -3,10 +3,10 @@ WITH dim_billing_accounts AS (
     SELECT *
     FROM {{ ref('dim_billing_accounts') }}
 
-), dim_crm_accounts AS (
+), dim_crm_account AS (
 
     SELECT *
-    FROM {{ ref('dim_crm_accounts') }}
+    FROM {{ ref('dim_crm_account') }}
 
 ), dim_dates AS (
 
@@ -51,15 +51,15 @@ WITH dim_billing_accounts AS (
 
     SELECT
       fct_usage_ping_payloads.*,
-      dim_crm_accounts.crm_account_id,
-      dim_crm_accounts.crm_account_name,
-      dim_crm_accounts.crm_account_country,
-      dim_crm_accounts.ultimate_parent_account_id,
-      dim_crm_accounts.ultimate_parent_account_segment,
-      dim_crm_accounts.ultimate_parent_billing_country,
-      dim_crm_accounts.ultimate_parent_industry,
-      dim_crm_accounts.ultimate_parent_account_owner_team,
-      dim_crm_accounts.ultimate_parent_territory,
+      dim_crm_account.crm_account_id,
+      dim_crm_account.crm_account_name,
+      dim_crm_account.crm_account_country,
+      dim_crm_account.ultimate_parent_account_id,
+      dim_crm_account.ultimate_parent_account_segment,
+      dim_crm_account.ultimate_parent_billing_country,
+      dim_crm_account.ultimate_parent_industry,
+      dim_crm_account.ultimate_parent_account_owner_team,
+      dim_crm_account.ultimate_parent_territory,
       dim_dates.date_actual,
       dim_dates.first_day_of_month,
       dim_dates.fiscal_quarter_name_fy,
@@ -70,8 +70,8 @@ WITH dim_billing_accounts AS (
     FROM fct_usage_ping_payloads
     LEFT JOIN dim_billing_accounts
       ON fct_usage_ping_payloads.account_id = dim_billing_accounts.billing_account_id
-    LEFT JOIN dim_crm_accounts
-      ON dim_billing_accounts.crm_account_id = dim_crm_accounts.crm_account_id
+    LEFT JOIN dim_crm_account
+      ON dim_billing_accounts.crm_account_id = dim_crm_account.crm_account_id
     LEFT JOIN dim_dates
       ON fct_usage_ping_payloads.date_id = dim_dates.date_id
     LEFT JOIN dim_location

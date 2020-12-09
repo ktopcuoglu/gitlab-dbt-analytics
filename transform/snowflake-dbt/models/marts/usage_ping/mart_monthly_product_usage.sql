@@ -8,7 +8,7 @@ WITH dim_billing_accounts AS (
 ), dim_crm_accounts AS (
 
     SELECT *
-    FROM {{ ref('dim_crm_accounts') }}
+    FROM {{ ref('dim_crm_account') }}
 
 ), dim_dates AS (
   
