@@ -753,15 +753,10 @@ roles:
                     - analytics.common.*
                     - analytics.legacy.*
                     - prep.sensitive.employee_*
-                    - prep.sensitive.bamboohr_custom_bonus
                     - prep.sensitive.bamboohr_directory
-                    - prep.sensitive.bamboohr_emergency_contacts
-                    - prep.sensitive.bamboohr_id_employee_number_mapping
-                    - prep.sensitive.bamboohr_employment_status
                     - prep.sensitive.bamboohr_job_info
                     - prep.sensitive.bamboohr_job_role
                     - prep.sensitive.bamboohr_locality
-                    - prep.sensitive.bamboohr_employment_status_xf
                     - prep.sensitive.bamboohr_headcount_intermediate
 
     - bamboohr_raw:
