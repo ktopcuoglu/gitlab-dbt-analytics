@@ -10,7 +10,7 @@ Closes #
 
 Describe the solution. Include links to any related MRs and/or issues.
 
-* [ ]  Provide link to CSV/GSheet data. Link: ____
+* [ ] Provide link to CSV/GSheet data. Link: ____
 * [ ] Does this data contain anything that is sensitive (Classified as Red or Orange in our [Data Classification Policy](https://about.gitlab.com/handbook/engineering/security/data-classification-standard.html#data-classification-levels))?
   - [ ] Yes 
   - [ ] No
@@ -34,7 +34,7 @@ Describe the solution. Include links to any related MRs and/or issues.
 
 * [ ] Step 5: [Add base model to sources.sheetload repository](https://gitlab.com/gitlab-data/analytics/-/tree/master/transform/snowflake-dbt/models/sources/sheetload). Naming the file as sheetload_file_name_sources.sql.
         This file will have the following code, but can also be restricted down to specific columns. Update data type of columns in this file (i.e converting value to decimal or varchar)
-        ```
+        ```sql
         WITH source AS (
 
         SELECT * 
