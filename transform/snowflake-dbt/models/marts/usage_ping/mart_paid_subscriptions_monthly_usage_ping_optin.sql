@@ -63,7 +63,7 @@ WITH fct_mrr AS (
       quantity,
       MAX(fct_payloads.subscription_id) IS NOT NULL                                                                     AS has_sent_payloads,
       COUNT(DISTINCT fct_payloads.usage_ping_id)                                                                        AS monthly_payload_counts,
-      COUNT(DISTINCT host_id)                                                                                           AS monthly_host_counts,
+      COUNT(DISTINCT fct_payloads.host_id)                                                                              AS monthly_host_counts,
       MAX(license_user_count)                                                                                           AS license_user_count,
       MAX(metric_value)                                                                                                 AS umau
     FROM self_managed_active_subscriptions

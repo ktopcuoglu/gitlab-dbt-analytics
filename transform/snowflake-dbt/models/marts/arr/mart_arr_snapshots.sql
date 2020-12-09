@@ -10,10 +10,10 @@ WITH dim_billing_accounts AS (
     SELECT *
     FROM {{ ref('dim_billing_accounts') }}
 
-), dim_crm_accounts AS (
+), dim_crm_account AS (
 
     SELECT *
-    FROM {{ ref('dim_crm_accounts') }}
+    FROM {{ ref('dim_crm_account') }}
 
 ), dim_dates AS (
 
@@ -79,14 +79,14 @@ WITH dim_billing_accounts AS (
       dim_billing_accounts.sold_to_country                                             AS zuora_sold_to_country,
       dim_billing_accounts.billing_account_name                                        AS zuora_account_name,
       dim_billing_accounts.billing_account_number                                      AS zuora_account_number,
-      COALESCE(dim_crm_accounts.merged_to_account_id, dim_crm_accounts.crm_account_id) AS crm_id,
-      dim_crm_accounts.ultimate_parent_account_id,
-      dim_crm_accounts.ultimate_parent_account_name,
-      dim_crm_accounts.ultimate_parent_billing_country,
-      dim_crm_accounts.ultimate_parent_account_segment,
-      dim_crm_accounts.ultimate_parent_industry,
-      dim_crm_accounts.ultimate_parent_account_owner_team,
-      dim_crm_accounts.ultimate_parent_territory,
+      COALESCE(dim_crm_account.merged_to_account_id, dim_crm_account.crm_account_id) AS crm_id,
+      dim_crm_account.ultimate_parent_account_id,
+      dim_crm_account.ultimate_parent_account_name,
+      dim_crm_account.ultimate_parent_billing_country,
+      dim_crm_account.ultimate_parent_account_segment,
+      dim_crm_account.ultimate_parent_industry,
+      dim_crm_account.ultimate_parent_account_owner_team,
+      dim_crm_account.ultimate_parent_territory,
 
       --subscription info
       dim_subscriptions_snapshots.subscription_name,
@@ -117,8 +117,8 @@ WITH dim_billing_accounts AS (
       ON arr_month.date_id = fct_mrr_snapshots.date_id
     INNER JOIN dim_dates AS snapshot_dates
       ON snapshot_dates.date_id = fct_mrr_snapshots.snapshot_id
-    LEFT JOIN dim_crm_accounts
-        ON dim_billing_accounts.crm_account_id = dim_crm_accounts.crm_account_id
+    LEFT JOIN dim_crm_account
+        ON dim_billing_accounts.crm_account_id = dim_crm_account.crm_account_id
 
 )
 

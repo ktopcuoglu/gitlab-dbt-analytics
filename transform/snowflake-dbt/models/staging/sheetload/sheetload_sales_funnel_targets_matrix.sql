@@ -8,13 +8,15 @@ WITH source AS (
     SELECT
       kpi_name,
       month,
-      sales_segment,
       opportunity_source,
       order_type,
-      region,
       area,
       allocated_target,
-      kpi_total
+      kpi_total,
+      month_percentage,
+      opportunity_source_percentage,
+      order_type_percentage,
+      area_percentage
     FROM source
 
 )
