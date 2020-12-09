@@ -12,7 +12,9 @@ WITH source AS (
       accountid                     AS account_id,
       ownerid                       AS owner_id,
       whoid                         AS lead_or_contact_id,
+      whatid                        AS account_or_opportunity_id,
 
+      description                   AS full_comments,
       --info
       subject                       AS task_subject,
       activitydate                  AS task_date,
@@ -29,4 +31,3 @@ WITH source AS (
 
 SELECT *
 FROM renamed
-
