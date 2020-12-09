@@ -48,34 +48,35 @@ WITH first_contact  AS (
 
     SELECT
 
-      opportunity_id                         AS crm_opportunity_id,
-      merged_opportunity_id                  AS merged_crm_opportunity_id,
-      account_id                             AS crm_account_id,
-      owner_id                               AS crm_sales_rep_id,
-      incremental_acv                        AS iacv,
+      opportunity_id                                            AS crm_opportunity_id,
+      merged_opportunity_id                                     AS merged_crm_opportunity_id,
+      account_id                                                AS crm_account_id,
+      owner_id                                                  AS crm_sales_rep_id,
+      incremental_acv                                           AS iacv,
       net_arr,
-      created_date,
-      {{ get_date_id('created_date') }}      AS created_date_id,
-      sales_accepted_date,
-      {{ get_date_id('created_date') }}      AS sales_accepted_date_id,
-      close_date,
-      {{ get_date_id('created_date') }}      AS close_date_id,
-      stage_0_pending_acceptance_date,
-      {{ get_date_id('created_date') }}      AS stage_0_pending_acceptance_date_id,
-      stage_1_discovery_date,
-      {{ get_date_id('created_date') }}      AS stage_1_discovery_date_id,
-      stage_2_scoping_date,
-      {{ get_date_id('created_date') }}      AS stage_2_scoping_date_id,
-      stage_3_technical_evaluation_date,
-      {{ get_date_id('created_date') }}      AS stage_3_technical_evaluation_date_id,
-      stage_4_proposal_date,
-      {{ get_date_id('created_date') }}      AS stage_4_proposal_date_id,
-      stage_5_negotiating_date,
-      {{ get_date_id('created_date') }}      AS stage_5_negotiating_date_id,
-      stage_6_closed_won_date,
-      {{ get_date_id('created_date') }}      AS stage_6_closed_won_date_id,
-      stage_6_closed_lost_date,
-      {{ get_date_id('created_date') }}      AS stage_6_closed_lost_date_id,
+      total_contract_value,
+      created_date::DATE                                        AS created_date,
+      {{ get_date_id('created_date') }}                         AS created_date_id,
+      sales_accepted_date::DATE                                 AS sales_accepted_date,
+      {{ get_date_id('sales_accepted_date') }}                  AS sales_accepted_date_id,
+      close_date::DATE                                          AS close_date,
+      {{ get_date_id('close_date') }}                           AS close_date_id,
+      stage_0_pending_acceptance_date::DATE                     AS stage_0_pending_acceptance_date,
+      {{ get_date_id('stage_0_pending_acceptance_date') }}      AS stage_0_pending_acceptance_date_id,
+      stage_1_discovery_date::DATE                              AS stage_1_discovery_date,
+      {{ get_date_id('stage_1_discovery_date') }}               AS stage_1_discovery_date_id,
+      stage_2_scoping_date::DATE                                AS stage_2_scoping_date,
+      {{ get_date_id('stage_2_scoping_date') }}                 AS stage_2_scoping_date_id,
+      stage_3_technical_evaluation_date::DATE                   AS stage_3_technical_evaluation_date,
+      {{ get_date_id('stage_3_technical_evaluation_date') }}    AS stage_3_technical_evaluation_date_id,
+      stage_4_proposal_date::DATE                               AS stage_4_proposal_date,
+      {{ get_date_id('stage_4_proposal_date') }}                AS stage_4_proposal_date_id,
+      stage_5_negotiating_date::DATE                            AS stage_5_negotiating_date,
+      {{ get_date_id('stage_5_negotiating_date') }}             AS stage_5_negotiating_date_id,
+      stage_6_closed_won_date::DATE                             AS stage_6_closed_won_date,
+      {{ get_date_id('stage_6_closed_won_date') }}              AS stage_6_closed_won_date_id,
+      stage_6_closed_lost_date::DATE                            AS stage_6_closed_lost_date,
+      {{ get_date_id('stage_6_closed_lost_date') }}             AS stage_6_closed_lost_date_id,
       days_in_0_pending_acceptance,
       days_in_1_discovery,
       days_in_2_scoping,
@@ -90,7 +91,7 @@ WITH first_contact  AS (
       is_edu_oss,
       is_web_portal_purchase,
       deal_path,
-      order_type_stamped                      AS order_type,
+      order_type_stamped                                        AS order_type,
       sales_segment,
       sales_qualified_source,
       days_in_sao
@@ -170,6 +171,16 @@ WITH first_contact  AS (
       opportunity_fields.days_in_4_proposal,
       opportunity_fields.days_in_5_negotiating,
       opportunity_fields.days_in_sao,
+      CASE
+        WHEN opportunity_fields.days_in_sao < 0                  THEN '1. Closed in < 0 days'
+        WHEN opportunity_fields.days_in_sao BETWEEN 0 AND 30     THEN '2. Closed in 0-30 days'
+        WHEN opportunity_fields.days_in_sao BETWEEN 31 AND 60    THEN '3. Closed in 31-60 days'
+        WHEN opportunity_fields.days_in_sao BETWEEN 61 AND 90    THEN '4. Closed in 61-90 days'
+        WHEN opportunity_fields.days_in_sao BETWEEN 91 AND 180   THEN '5. Closed in 91-180 days'
+        WHEN opportunity_fields.days_in_sao BETWEEN 181 AND 270  THEN '6. Closed in 181-270 days'
+        WHEN opportunity_fields.days_in_sao > 270                THEN '7. Closed in > 270 days'
+        ELSE NULL
+      END                                                                                                           AS closed_buckets,
 
       -- common dimension keys
       COALESCE(opportunity_fields.crm_sales_rep_id, MD5(-1))                                                        AS dim_crm_sales_rep_id,
@@ -196,7 +207,8 @@ WITH first_contact  AS (
 
       -- additive fields
       opportunity_fields.iacv,
-      opportunity_fields.net_arr
+      opportunity_fields.net_arr,
+      opportunity_fields.total_contract_value
 
     FROM opportunity_fields
     LEFT JOIN crm_account_dimensions
@@ -221,7 +233,7 @@ WITH first_contact  AS (
 {{ dbt_audit(
     cte_ref="final_opportunities",
     created_by="@mcooperDD",
-    updated_by="@mcooperDD",
+    updated_by="@iweeks",
     created_date="2020-11-30",
-    updated_date="2020-11-30"
+    updated_date="2020-12-07"
 ) }}

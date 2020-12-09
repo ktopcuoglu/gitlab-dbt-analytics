@@ -22,7 +22,8 @@ WITH source AS (
       NULLIF(kpi_number, '')::NUMBER                AS kpi_number,
       NULLIF(version_number, '')::NUMBER            AS version_number,
       NULLIF(handbook_reference, '')::VARCHAR       AS handbook_reference,
-      NULLIF(kpi_id, '')::NUMBER                    AS kpi_id
+      NULLIF(kpi_id, '')::NUMBER                    AS kpi_id,
+      NULLIF(kpi_name_pi_yaml,'')::VARCHAR          AS kpi_name_pi_yaml
     FROM source
       
 ) 
