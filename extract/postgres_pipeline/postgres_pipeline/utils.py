@@ -208,9 +208,9 @@ def seed_table(
     Sets the proper data types and column names.
     """
     logging.info(f"Creating table {target_table_name}")
+    snowflake_types.append(Column("_uploaded_at", Float))
     if advanced_metadata:
         snowflake_types.append(Column("_task_instance", String))
-    snowflake_types.append(Column("_uploaded_at", Float))
     table = Table(target_table_name, sqlalchemy.MetaData(), *snowflake_types)
     if target_engine.has_table(target_table_name):
         query_executor(target_engine, DropTable(table))
