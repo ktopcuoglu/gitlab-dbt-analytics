@@ -10,10 +10,10 @@ WITH dim_billing_accounts AS (
     SELECT *
     FROM {{ ref('dim_crm_account') }}
 
-), dim_dates AS (
+), dim_date AS (
   
     SELECT DISTINCT first_day_of_month AS date_day
-    FROM {{ ref('dim_dates') }}
+    FROM {{ ref('dim_date') }}
 
 ), dim_hosts AS (
 
@@ -85,7 +85,7 @@ WITH dim_billing_accounts AS (
 ), license_subscriptions AS (
 
     SELECT DISTINCT
-      dim_dates.date_day                                                           AS reporting_month,
+      dim_date.date_day                                                           AS reporting_month,
       license_id,
       dim_licenses.license_md5,
       subscription_source.subscription_id                                          AS original_linked_subscription_id,
@@ -134,8 +134,8 @@ WITH dim_billing_accounts AS (
       ON dim_subscriptions.billing_account_id = dim_billing_accounts.billing_account_id
     LEFT JOIN dim_crm_accounts
       ON dim_billing_accounts.crm_account_id = dim_crm_accounts.crm_account_id
-    INNER JOIN dim_dates
-      ON effective_start_month <= dim_dates.date_day AND effective_end_month > dim_dates.date_day
+    INNER JOIN dim_date
+      ON effective_start_month <= dim_date.date_day AND effective_end_month > dim_date.date_day
     {{ dbt_utils.group_by(n=20)}}
 
 ), joined AS (
