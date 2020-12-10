@@ -127,16 +127,17 @@ models:
   - name: dim_geo_region
     description: "Dimension for geographical region built off ATAM_Region__C in SFDC. Example values: NORAM, LATAM, APAC, EMEA"
     columns:
-      - name: dim_geo_region_name_id
+      - name: dim_geo_region_id
         tests:
           - unique
           - not_null
         tags: ["tdf", "common", "geo"]
-      - name: dim_geo_region_name
+      - name: geo_region_name
         tests:
           - unique
           - not_null
         tags: ["tdf", "common", "geo"]
+
   - name: dim_ip_to_geo
     description: '{{ doc("dim_ip_to_geo") }}'
     columns:
@@ -149,25 +150,26 @@ models:
   - name: dim_geo_sub_region
     description: "Dimension table for sub-region built off ATAM_Sub_Region__C in SFDC. Example values: Southern Europe, NA East, Nordics"
     columns:
-      - name: dim_geo_sub_region_name_id
+      - name: dim_geo_sub_region_id
         tests:
           - unique
           - not_null
         tags: ["tdf", "common", "geo"]
-      - name: dim_geo_sub_region_name
+      - name: geo_sub_region_name
         tests:
           - unique
           - not_null
         tags: ["tdf", "common", "geo"]
+
   - name: dim_geo_area
     description: "Dimension table for geographic area built off ATAM_Area__C in SFDC. Example values: Southern PNW, India, Northeast"
     columns:
-      - name: dim_geo_area_name_id
+      - name: dim_geo_area_id
         tests:
           - not_null
           - unique
         tags: ["tdf", "common", "geo"]
-      - name: dim_geo_area_name
+      - name: geo_area_name
         tests:
           - not_null
           - unique
@@ -204,13 +206,13 @@ models:
   - name: dim_industry
     description: '{{ doc("dim_industry") }}'
     columns:
-      - name: dim_industry_name_id
+      - name: dim_industry_id
         description: Unique identifier of a version of a industry
         tests:
           - not_null
           - unique
         tags: ["tdf", "industry", "common"]
-      - name: dim_industry_name
+      - name: industry_name
         description: Industry text
         tests:
           - not_null
@@ -403,13 +405,13 @@ models:
   - name: dim_sales_segment
     description: '{{ doc("dim_sales_segment") }}'
     columns:
-      - name: dim_sales_segment_name_id
+      - name: dim_sales_segment_id
         description: Unique identifier of a version of a sales segment
         tests:
           - not_null
           - unique
         tags: [ "tdf", "common" ]
-      - name: dim_sales_segment_name
+      - name: sales_segment_name
         description: Sales Segment text
         tests:
           - not_null
@@ -419,13 +421,13 @@ models:
   - name: dim_sales_territory
     description: '{{ doc("dim_sales_territory") }}'
     columns:
-      - name: dim_sales_territory_name_id
+      - name: dim_sales_territory_id
         description: Unique identifier of a version of a sales territory
         tests:
           - not_null
           - unique
         tags: [ "tdf", "sales_territory", "common" ]
-      - name: dim_sales_territory_name
+      - name: sales_territory_name
         description: Sales Territory text
         tests:
           - not_null
