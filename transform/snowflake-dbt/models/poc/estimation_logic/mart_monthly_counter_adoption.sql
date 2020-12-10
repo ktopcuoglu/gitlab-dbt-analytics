@@ -38,20 +38,28 @@ WITH paid_subscriptions_monthly_usage_ping_optin AS (
     WHERE is_smau OR is_gmau OR clean_metrics_name = 'monthly_active_users_28_days'
 
 ), flattened_usage_data AS (
-  
-    SELECT DISTINCT
-      f.path                                                                AS metrics_path, 
-      IFF(edition='CE', edition, 'EE')                                      AS edition,
-      SPLIT_PART(metrics_path, '.', 1)                                      AS main_json_name,
-      SPLIT_PART(metrics_path, '.', -1)                                     AS feature_name,
-      REPLACE(f.path, '.', '_')                                              AS full_metrics_path,
-      FIRST_VALUE(major_minor_version ) OVER (PARTITION BY metrics_path, edition 
-                                                ORDER BY major_version ASC,
-                                                         minor_version ASC) AS first_version_with_counter
+
+    SELECT *
     FROM {{ ref('version_usage_data') }},
       lateral flatten(input => version_usage_data.raw_usage_data_payload, recursive => True) f
 
-
+), transformed_flattened AS (
+  
+    SELECT DISTINCT
+      path                                                                  AS metrics_path, 
+      IFF(edition='CE', edition, 'EE')                                      AS edition,
+      SPLIT_PART(path, '.', 1)                                              AS main_json_name,
+      SPLIT_PART(path, '.', -1)                                             AS feature_name,
+      REPLACE(path, '.', '_')                                               AS full_metrics_path,
+      FIRST_VALUE(major_minor_version ) OVER (PARTITION BY metrics_path, edition 
+                                                ORDER BY major_version ASC,
+                                                         minor_version ASC) AS first_version_with_counter
+    FROM flattened_usage_data
+    WHERE TRY_TO_DECIMAL(value::TEXT) > 0
+      -- Removing SaaS
+      AND uuid <> 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f'
+      -- Removing pre-releases
+      AND version NOT LIKE '%pre'
   
 ), counter_data AS (
   
