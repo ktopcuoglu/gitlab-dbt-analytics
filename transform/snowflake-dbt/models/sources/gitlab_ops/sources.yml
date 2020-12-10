@@ -19,5 +19,24 @@ sources:
       error_after: {count: 48, period: hour}
 
     tables:
+      - name: ci_builds
+        identifier: gitlab_ops_db_ci_builds
       - name: ci_pipelines
         identifier: gitlab_ops_db_ci_pipelines
+      - name: ci_stages
+        identifier: gitlab_ops_db_ci_stages
+      - name: label_links
+        identifier: gitlab_ops_db_label_links
+      - name: labels
+        identifier: gitlab_ops_db_labels
+      - name: members
+        identifier: gitlab_ops_db_members
+      - name: merge_requests
+        identifier: gitlab_ops_db_merge_requests
+        freshness:
+          warn_after: {count: 12, period: hour}
+          error_after: {count: 24, period: hour}   
+      - name: projects
+        identifier: gitlab_ops_db_projects
+      - name: users
+        identifier: gitlab_ops_db_users

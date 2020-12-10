@@ -97,7 +97,6 @@ models:
           - dbt_utils.expression_is_true:
               expression: "valid_from <= valid_to"
 
-              
   - name: gitlab_ops_merge_requests_source
     description: >-
       Base model for ops.gitlab.net merge requests, column `merge_params` is hidden
