@@ -168,6 +168,7 @@ division_sales_segment_stamped,
         fm_why_gitlab__c                            AS cp_why_gitlab,
         fm_why_now__c                               AS cp_why_now,
 
+        -- original issue: https://gitlab.com/gitlab-data/analytics/-/issues/6577
         SA_Validated_Tech_Evaluation_Close_Statu__c AS sa_tech_evaluation_close_status,
         SA_Validated_Tech_Evaluation_End_Date__c    AS sa_tech_evaluation_end_date,
         SA_Validated_Tech_Evaluation_Start_Date__c  AS sa_tech_evaluation_start_date,
