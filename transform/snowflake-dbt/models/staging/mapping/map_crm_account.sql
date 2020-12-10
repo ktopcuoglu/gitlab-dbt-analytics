@@ -68,7 +68,7 @@ WITH account_prep AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@snalamaru",
-    updated_by="@snalamaru",
+    updated_by="@paul_armstrong",
     created_date="2020-11-23",
-    updated_date="2020-11-23"
+    updated_date="2020-12-10"
 ) }}
