@@ -17,5 +17,5 @@
     created_by="@msendal",
     updated_by="@msendal",
     created_date="2020-11-05",
-    updated_date="2020-11-05"
+    updated_date="2020-12-10"
 ) }}
