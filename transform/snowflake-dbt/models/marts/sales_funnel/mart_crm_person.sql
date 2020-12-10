@@ -29,7 +29,7 @@ WITH dim_marketing_channel AS (
         WHEN LOWER(dim_sales_segment.sales_segment_name) LIKE '%unknown%' THEN 'SMB'
         WHEN LOWER(dim_sales_segment.sales_segment_name) LIKE '%mid%' THEN 'Mid-Market'
         ELSE dim_sales_segment.sales_segment_name
-      END                                      AS dim_sales_segment_name,
+      END                                      AS sales_segment_name,
       fct_crm_person.is_mql
     FROM fct_crm_person
     LEFT JOIN dim_sales_segment
