@@ -219,6 +219,10 @@ WITH account_dims_mapping AS (
           WHEN mqls.first_mql_date IS NOT NULL THEN 1
           ELSE 0
         END                                                                                                               AS is_mql,
+      CASE
+        WHEN COALESCE(LOWER(sfdc_contacts.contact_status), LOWER(sfdc_leads.lead_status)) = 'inquiry' THEN 1
+        ELSE 0
+      END                                                                                                                 AS is_inquiry,
 
      -- additive fields
 
@@ -253,7 +257,7 @@ WITH account_dims_mapping AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mcooperDD",
-    updated_by="@iweeks",
+    updated_by="@mcooperDD",
     created_date="2020-12-01",
-    updated_date="2020-12-07"
+    updated_date="2020-12-10"
 ) }}
