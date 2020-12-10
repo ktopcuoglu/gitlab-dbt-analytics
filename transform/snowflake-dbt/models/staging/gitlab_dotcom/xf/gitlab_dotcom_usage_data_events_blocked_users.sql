@@ -735,9 +735,7 @@ WITH gitlab_subscriptions AS (
     {% endif %}
     {% endfor -%}
 
-)
-
-, final AS (
+), final AS (
     SELECT
       data.*,
       users.created_at                                    AS user_created_at,

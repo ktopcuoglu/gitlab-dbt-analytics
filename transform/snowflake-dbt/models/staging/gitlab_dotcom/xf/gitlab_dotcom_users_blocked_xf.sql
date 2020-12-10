@@ -3,16 +3,12 @@ WITH customers AS (
     SELECT *
     FROM {{ ref('customers_db_customers') }}
 
-)
-
-, trials AS  (
+), trials AS  (
 
     SELECT *
     FROM {{ ref('customers_db_trials') }}
 
-)
-
-, users AS (
+), users AS (
 
     SELECT
       {{ dbt_utils.star(from=ref('gitlab_dotcom_users'), except=["created_at", "first_name", "last_name", "notification_email", "public_email", "updated_at", "users_name"]) }},
@@ -20,16 +16,12 @@ WITH customers AS (
       updated_at AS user_updated_at
     FROM {{ ref('gitlab_dotcom_users') }}
 
-)
-
-, highest_paid_subscription_plan AS (
+), highest_paid_subscription_plan AS (
 
     SELECT *
     FROM {{ ref('gitlab_dotcom_highest_paid_subscription_plan') }}
 
-)
-
-,   customers_with_trial AS (
+),   customers_with_trial AS (
 
     SELECT
       customers.customer_provider_user_id                         AS user_id,
@@ -45,9 +37,7 @@ WITH customers AS (
     WHERE customers.customer_provider = 'gitlab'
     GROUP BY 1
 
-)
-
-,   joined AS (
+),   joined AS (
     SELECT
       users.*,
       TIMESTAMPDIFF(DAYS, user_created_at, last_activity_on)                       AS days_active,
