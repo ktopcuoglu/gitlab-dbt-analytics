@@ -1,7 +1,15 @@
 {% macro generate_single_field_dimension_from_prep(model_name, dimension_column) %}
 
+-- Safer / less confusing to break up these replaces
+-- Setup dimension column
 {% set dimension_column_name = dimension_column|replace('_source', '')  %}
-{% set id_column_name = dimension_column_name ~ '_id'  %}
+{% set dimension_column_name = dimension_column|replace('dim_', '')  %}
+
+-- Setup id column
+{% set id_column_name = id_column_name|replace('_source', '')  %}
+{% set id_column_name = id_column_name|replace('_name', '')  %}
+{% set id_column_name = id_column_name ~ '_id'  %}
+{% set id_column_name = id_column_name|replace('', '')  %}
 
 WITH source_data AS (
 
