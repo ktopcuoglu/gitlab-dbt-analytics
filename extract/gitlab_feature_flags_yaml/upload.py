@@ -30,7 +30,7 @@ if __name__ == "__main__":
         "git checkout master"
     )
 
-    logging.info("Clonning GitLab...")
+    logging.info("Cloning GitLab...")
 
     p = run(command, shell=True)
     p.check_returncode()
@@ -48,7 +48,7 @@ if __name__ == "__main__":
     logging.info("Writing JSON...")
 
     with open('all_feature_flags.json', 'w') as outfile:
-        json.dump(data, outfile)
+        json.dump(all_ffs, outfile)
 
     snowflake_stage_load_copy_remove(
         "all_feature_flags.json",
