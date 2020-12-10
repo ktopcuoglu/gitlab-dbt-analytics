@@ -1,23 +1,6 @@
 version: 2
 
-models:
-  - name: gitlab_ops_ci_builds_source
-    description: Base model for ops.gitlab.net ci_builds
-    columns:
-      - name: ci_build_id
-        tags: ["tdf","gitlab_ops"]
-        tests:
-          - not_null
-          - unique
-      - name: created_at
-        tags: ["tdf","gitlab_ops"]
-        tests:
-          - not_null
-      - name: updated_at
-        tags: ["tdf","gitlab_ops"]
-        tests:
-          - not_null
-                        
+models:               
   - name: gitlab_ops_ci_pipelines_source
     description: Base model for ops.gitlab.net ci_pipelines
     columns:

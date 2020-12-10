@@ -19,8 +19,6 @@ sources:
       error_after: {count: 48, period: hour}
 
     tables:
-      - name: ci_builds
-        identifier: gitlab_ops_db_ci_builds
       - name: ci_pipelines
         identifier: gitlab_ops_db_ci_pipelines
       - name: ci_stages
