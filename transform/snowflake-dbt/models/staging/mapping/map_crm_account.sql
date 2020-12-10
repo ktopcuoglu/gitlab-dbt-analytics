@@ -52,17 +52,17 @@ WITH account_prep AS (
 
     FROM account_prep 
     LEFT JOIN geo_region         
-      ON account_prep.dim_geo_region_name_source = geo_region.dim_geo_region_name
+      ON account_prep.dim_geo_region_name_source = geo_region.geo_region_name
     LEFT JOIN geo_sub_region
-      ON account_prep.dim_geo_sub_region_name_source = geo_sub_region.dim_geo_sub_region_name
+      ON account_prep.dim_geo_sub_region_name_source = geo_sub_region.geo_sub_region_name
     LEFT JOIN geo_area      
-      ON account_prep.dim_geo_area_name_source = geo_area.dim_geo_area_name
+      ON account_prep.dim_geo_area_name_source = geo_area.geo_area_name
     LEFT JOIN sales_segment
-      ON account_prep.dim_sales_segment_name_source = sales_segment.dim_sales_segment_name
+      ON account_prep.dim_sales_segment_name_source = sales_segment.sales_segment_name
     LEFT JOIN sales_territory
-      ON account_prep.dim_sales_territory_name_source = sales_territory.dim_sales_territory_name
+      ON account_prep.dim_sales_territory_name_source = sales_territory.sales_territory_name
     LEFT JOIN industry      
-      ON account_prep.dim_industry_name_source = industry.dim_industry_name
+      ON account_prep.dim_industry_name_source = industry.industry_name
 )
 
 {{ dbt_audit(
