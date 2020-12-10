@@ -59,6 +59,7 @@ tables:
     export_schema: 'gitlab_ops_net'
     export_table: ci_builds
     export_table_primary_key: id 
+    dbt_source_model: true
   ci_pipelines:
     import_db: GITLAB_OPS_DB
     import_query: >
