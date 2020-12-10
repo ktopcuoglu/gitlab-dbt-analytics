@@ -14,14 +14,14 @@ WITH source AS (
       whoid                         AS lead_or_contact_id,
       whatid                        AS account_or_opportunity_id,
 
-      description                   AS full_comments,
       --info
+      description                   AS full_comments,
       subject                       AS task_subject,
       activitydate                  AS task_date,
       isdeleted                     AS is_deleted,
 
       assigned_employee_number__c   AS assigned_employee_number,
-
+      -- Original issue: https://gitlab.com/gitlab-data/analytics/-/issues/6577
       persona_functions__c          AS persona_functions,
       persona_levels__c             AS persona_levels,
       sa_activity_type__c           AS sa_activity_type
