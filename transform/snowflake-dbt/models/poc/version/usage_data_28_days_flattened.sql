@@ -1,7 +1,6 @@
 
 {% set metric_type = '28_days' %}
-{% set json_to_parse = ['analytics_unique_visits', 'counts_monthly', 'usage_activity_by_stage_monthly', 'stats_used', 'usage_activity_by_stage_monthly', 'redis_hll_counters'] %}
-{% set columns_to_parse = ['stats_used', 'usage_activity_by_stage_monthly'] %}
+{% set json_to_parse = ['analytics_unique_visits', 'counts_monthly', 'usage_activity_by_stage_monthly', 'counts', 'usage_activity_by_stage_monthly', 'redis_hll_counters'] %}
 
 WITH data AS ( 
   
@@ -27,27 +26,6 @@ WITH data AS (
         ORDER BY created_at DESC
 
       )
-
-      {% if column in columns_to_parse %}
-      UNION 
-
-      (
-
-        SELECT 
-          uuid                          AS instance_id, 
-          id                            AS ping_id,
-          host_id,
-          created_at,
-          '{{column}}' || '.' || path   AS metric_path, 
-          value                         AS metric_value
-        FROM data,
-        lateral flatten(input => {{column}}, 
-        recursive => true) 
-        WHERE raw_usage_data_payload IS NULL
-        ORDER BY created_at DESC
-
-      )
-      {% endif %}
 
       {% if not loop.last %}
         UNION 
