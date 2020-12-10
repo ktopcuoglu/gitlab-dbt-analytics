@@ -521,6 +521,7 @@ roles:
                 - raw.engineering_extracts
                 - raw.gcp_billing
                 - raw.gitlab_data_yaml
+                - raw.gitlab_feature_flags_yaml
                 - raw.gitter
                 - raw.pmg
                 - raw.prometheus
@@ -536,6 +537,7 @@ roles:
                 - raw.engineering_extracts.*
                 - raw.gcp_billing.*
                 - raw.gitlab_data_yaml.*
+                - raw.gitlab_feature_flags_yaml.*
                 - raw.gitter.*
                 - raw.keyhole_twitter.*
                 - raw.pmg.*
@@ -973,6 +975,23 @@ roles:
                 read:
                     - prep.gitlab_data_yaml.*
                     - raw.gitlab_data_yaml.*
+
+    - gitlab_feature_flags_yaml:
+        warehouses:
+            - analyst_xs
+        privileges:
+            databases:
+                read:
+                    - prep
+                    - raw
+            schemas:
+                read:
+                    - prep.gitlab_feature_flags_yaml
+                    - raw.gitlab_feature_flags_yaml
+            tables:
+                read:
+                    - prep.gitlab_feature_flags_yaml.*
+                    - raw.gitlab_feature_flags_yaml.*
 
     - gitlab_dotcom:
         warehouses:
