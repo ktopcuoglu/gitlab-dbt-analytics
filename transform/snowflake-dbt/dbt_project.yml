@@ -157,6 +157,7 @@ models:
       discourse:
         +materialized: table
         +schema: discourse
+        +tags: ["discourse", "social"]
 
       engineering:
         +database: "{{ env_var('SNOWFLAKE_TRANSFORM_DATABASE') }}" # ANALYTICS
@@ -256,6 +257,7 @@ models:
 
       discourse:
         +schema: preparation
+        +tags: ["discourse", "social"]
 
       gitlab_dotcom:
         +tags: ["product"]
