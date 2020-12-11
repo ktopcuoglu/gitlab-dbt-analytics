@@ -231,6 +231,31 @@ models:
         tags: ["tdf", "sfdc"]
         tests:
           - not_null
+
+  - name: sfdc_opportunity_split_source
+    description: Source model for SFDC Opportunity Splits
+    columns:
+      - name: opportunity_split_id
+        tags: [ "tdf", "sfdc" ]
+        tests:
+          - not_null
+
+  - name: sfdc_opportunity_split_type_source
+    description: Source model for SFDC Opportunity Split types
+    columns:
+      - name: opportunity_split_type_id
+        tags: [ "tdf", "sfdc" ]
+        tests:
+          - not_null
+
+  - name: sfdc_opportunity_team_member_source
+    description: Source model for SFDC Opportunities
+    columns:
+      - name: opportunity_team_member_id
+        tags: [ "tdf", "sfdc" ]
+        tests:
+          - not_null
+
   - name: sfdc_opportunity_stage_source
     description: Source model for SFDC Opportunity Stages
     columns:
