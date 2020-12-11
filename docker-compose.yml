@@ -75,7 +75,7 @@ services:
         - pgdata:/var/lib/postgresql/data
 
     data_image:
-      image: registry.gitlab.com/gitlab-data/data-image/data-image:v0.0.9
+      image: registry.gitlab.com/gitlab-data/data-image/data-image:tayloramurphy-master-patch-72651
       restart: always
       command: bash -c "/bin/bash"
       working_dir: /usr/local/analytics/
