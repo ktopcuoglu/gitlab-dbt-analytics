@@ -25,14 +25,14 @@ Describe the solution. Include links to any related MRs and/or issues.
 
 * [ ] Step 2: Share the file with the required service account - [Email Address to share with](https://docs.google.com/document/d/1m8kky3DPv2yvH63W4NDYFURrhUwRiMKHI-himxn1r7k/edit?usp=sharing) (GitLab Internal)
 
-* [ ] Step 3: Update [sheets.yml](https://gitlab.com/gitlab-data/analytics/-/blob/master/extract/sheetload/sheets.yml)
+* [ ] Step 3: Open up the web ide and let's start the MR! Update extract--> sheetload--> [sheets.yml](https://gitlab.com/gitlab-data/analytics/-/blob/master/extract/sheetload/sheets.yml)
     * Add the name of the file_name (i.e. kpi_status)
     * Add yourself as an owner
     * Add the tab name(s) to be imported. Tab names must be unique
 
-* [ ] Step 4: [Edit the sources.yml](https://gitlab.com/gitlab-data/analytics/-/blob/master/transform/snowflake-dbt/models/sources/sheetload/sources.yml). Add the file name (i.e kpi_status)
+* [ ] Step 4: Next in this MR, head to transform --> snowflake-dbt --> models --> sources --> sheetload--> [Edit the sources.yml](https://gitlab.com/gitlab-data/analytics/-/blob/master/transform/snowflake-dbt/models/sources/sheetload/sources.yml). Add the file name as `sheetload_file_name_source`
 
-* [ ] Step 5: [Add base model to sources.sheetload repository](https://gitlab.com/gitlab-data/analytics/-/tree/master/transform/snowflake-dbt/models/sources/sheetload). Naming the file as sheetload_file_name_sources.sql.
+* [ ] Step 5: In the same repoistory folder as the sources.yml file, you will [add the base model to sources.sheetload repository](https://gitlab.com/gitlab-data/analytics/-/tree/master/transform/snowflake-dbt/models/sources/sheetload). Naming the file as sheetload_file_name_sources.sql.
         This file will have the following code, but can also be restricted down to specific columns. Update data type of columns in this file (i.e converting value to decimal or varchar)
         ```sql
         WITH source AS (
@@ -44,12 +44,13 @@ Describe the solution. Include links to any related MRs and/or issues.
         SELECT * 
         FROM source
         ```
-* [ ] Step 6: [Edit the schema.yml](https://gitlab.com/gitlab-data/analytics/-/blob/master/transform/snowflake-dbt/models/sources/sheetload/schema.yml).
+* [ ] Step 6: In the sources.sheetload repository [Edit the schema.yml](https://gitlab.com/gitlab-data/analytics/-/blob/master/transform/snowflake-dbt/models/sources/sheetload/schema.yml) to explain the source model. 
 
-* [ ] Step 7: [Update staging.sheetload](https://gitlab.com/gitlab-data/analytics/-/tree/master/transform/snowflake-dbt/models/staging/sheetload). This will make the model accesible in Sisense. If any transformations are needed, this would be the file to update.
+* [ ] Step 7: Next we'll head to head to transform --> snowflake-dbt --> models --> staging --> sheetload--> [Add a new file for the model in staging.sheetload](https://gitlab.com/gitlab-data/analytics/-/tree/master/transform/snowflake-dbt/models/staging/sheetload). This will make the model accesible in Sisense. If any transformations are needed, this would be the file to update. Name the file `sheetload_file_name`
 
-* [ ] Step 8: [Update staging.sheetload schema.yml file](https://gitlab.com/gitlab-data/analytics/-/blob/master/transform/snowflake-dbt/models/staging/sheetload/schema.yml) to add description of the model
+* [ ] Step 8: [Update staging.sheetload schema.yml file](https://gitlab.com/gitlab-data/analytics/-/blob/master/transform/snowflake-dbt/models/staging/sheetload/schema.yml) to add description of the staging model. 
 
+To understand the difference between source and staging models, please refer to these sources: [source models](https://about.gitlab.com/handbook/business-ops/data-team/platform/dbt-guide/#source-models) vs [staging models](https://about.gitlab.com/handbook/business-ops/data-team/platform/dbt-guide/#staging)
 </details>
 
 #### Testing
