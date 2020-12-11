@@ -11,7 +11,7 @@ WITH sfdc_users AS (
 ), sfdc_user_roles AS (
 
     SELECT *
-    FROM {{ ref('sfdc_user_roles')}}
+    FROM {{ ref('sfdc_user_roles_source')}}
 
 ), final_users AS (
 
@@ -41,5 +41,5 @@ WITH sfdc_users AS (
     created_by="@mcooperDD",
     updated_by="@mcooperDD",
     created_date="2020-11-20",
-    updated_date="2020-11-20"
+    updated_date="2020-12-11"
 ) }}
