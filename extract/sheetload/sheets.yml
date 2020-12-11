@@ -55,7 +55,6 @@ sheets:
   - name: engineering_contributing_organizations
     owner: '@kwiebers'
     tabs:
-      - engineering_contributing_organizations
       - gitlab_contributing_organizations
   - name: event_dictionary_simplified
     owner: '@mpeychet_'
