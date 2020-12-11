@@ -27,7 +27,7 @@ WITH source AS (
         photourl::VARCHAR                                               AS photo_url,
         title::VARCHAR                                                  AS title,
         teammemberrole::VARCHAR                                         AS team_member_role,
-        userid::VARCHAR                                                 AS userid,
+        userid::VARCHAR                                                 AS user_id,
         systemmodstamp::TIMESTAMP                                       AS system_mod_timestamp
       FROM source
   )

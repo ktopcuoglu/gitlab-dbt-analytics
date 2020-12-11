@@ -15,7 +15,7 @@ WITH source AS (
 
       SELECT
         
-        id::VARCHAR                                                AS split_type_id,
+        id::VARCHAR                                                AS opportunity_split_type_id,
         createdbyid::VARCHAR                                       AS created_by_id,
         createddate::TIMESTAMP                                     AS created_date,
         lastmodifiedbyid::VARCHAR                                  AS last_modified_by_id,
