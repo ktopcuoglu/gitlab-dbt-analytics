@@ -3,6 +3,8 @@ from datetime import datetime, timedelta
 
 from airflow import DAG
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
+from airflow.models import Variable
+from airflow.operators.python_operator import PythonOperator
 from airflow.utils.trigger_rule import TriggerRule
 from airflow_utils import (
     DBT_IMAGE,
@@ -116,6 +118,16 @@ dbt_commit_hash_setter = KubernetesPodOperator(
     dag=dag,
 )
 
+def commit_hash_exporter(**context):
+    Variable.set("dbt_hash", context["ti"].xcom_pull(task_ids="dbt-commit-hash-setter", key="return_value")["commit_hash"])
+
+dbt_commit_hash_exporter = PythonOperator(
+    task_id="dbt-commit-hash-exporter",
+    provide_context=True,
+    python_callable=commit_hash_exporter,
+    dag=dag
+)
+
 # run snapshots on large warehouse
 dbt_snapshot_models_command = f"""
     {pull_commit_hash} &&
@@ -157,4 +169,4 @@ dbt_test_snapshot_models = KubernetesPodOperator(
 )
 
 
-dbt_commit_hash_setter >> dbt_snapshot >> dbt_snapshot_models_run >> dbt_test_snapshot_models
+dbt_commit_hash_setter >> dbt_commit_hash_exporter >> dbt_snapshot >> dbt_snapshot_models_run >> dbt_test_snapshot_models
