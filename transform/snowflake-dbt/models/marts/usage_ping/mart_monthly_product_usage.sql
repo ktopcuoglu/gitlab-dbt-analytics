@@ -30,6 +30,11 @@ WITH dim_billing_accounts AS (
     SELECT *
     FROM {{ ref('dim_licenses') }}
 
+), dim_location AS (
+
+    SELECT *
+    FROM {{ ref('dim_location') }}
+
 ), dim_product_details AS (
 
     SELECT *
@@ -189,7 +194,9 @@ WITH dim_billing_accounts AS (
       dim_hosts.host_id,
       dim_hosts.instance_id,
       dim_hosts.host_name,
-      dim_hosts.location_id
+      dim_hosts.location_id,
+      dim_location.country_name,
+      dim_location.iso_2_country_code
     FROM fct_monthly_usage_data
     LEFT JOIN fct_usage_ping_payloads
       ON fct_monthly_usage_data.ping_id = fct_usage_ping_payloads.id
@@ -200,8 +207,10 @@ WITH dim_billing_accounts AS (
     LEFT JOIN license_subscriptions
       ON fct_usage_ping_payloads.license_md5 = license_subscriptions.license_md5 
         AND fct_monthly_usage_data.created_month = license_subscriptions.reporting_month
+    LEFT JOIN dim_location
+      ON dim_hosts.location_id = dim_location.location_id
 
-), renamed AS (
+), sorted AS (
 
     SELECT
 
@@ -259,6 +268,10 @@ WITH dim_billing_accounts AS (
       ultimate_parent_account_owner_team,
       ultimate_parent_territory,
       
+      -- location info
+      country_name            AS ping_country_name,
+      iso_2_country_code      AS ping_country_code,
+
       created_at,
       recorded_at,
 
@@ -270,7 +283,7 @@ WITH dim_billing_accounts AS (
 )
 
 {{ dbt_audit(
-    cte_ref="renamed",
+    cte_ref="sorted",
     created_by="@mpeychet",
     updated_by="@mpeychet",
     created_date="2020-12-01",
