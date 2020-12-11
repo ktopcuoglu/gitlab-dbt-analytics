@@ -43,16 +43,16 @@ dag = DAG(
     default_args=default_args,
     schedule_interval="0 */8 * * *",
 )
-# python gitlab_data_yaml/upload.py &&
 
 # YAML Extract
 data_yaml_extract_cmd = f"""
     {clone_and_setup_extraction_cmd} &&
+    python gitlab_data_yaml/upload.py &&
     python gitlab_feature_flags_yaml/upload.py
 """
 data_yaml_extract = KubernetesPodOperator(
     **gitlab_defaults,
-    image="registry.gitlab.com/gitlab-data/data-image/data-image:tayloramurphy-master-patch-72651",
+    image="registry.gitlab.com/gitlab-data/data-image/data-image:v0.0.12"
     task_id="data-yaml-extract",
     name="data-yaml-extract",
     secrets=[
