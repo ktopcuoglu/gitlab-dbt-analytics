@@ -4,17 +4,6 @@ A fact table bridging opportunities with contacts. One opportunity can have mult
 
 {% enddocs %}
 
-{% docs dim_crm_accounts %}
-Dimensional customer table representing all existing and historical customers from SalesForce. There are customer definitions for external reporting and additional customer definitions for internal reporting defined in the [handbook](https://about.gitlab.com/handbook/sales/#customer).
-
-The Customer Account Management business process can be found in the [handbook](https://about.gitlab.com/handbook/finance/sox-internal-controls/quote-to-cash/#1-customer-account-management-and-conversion-of-lead-to-opportunity).
-
-The grain of the table is the SalesForce Account, also referred to as CRM_ID.
-
-Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
-
-{% enddocs %}
-
 {% docs dim_crm_account %}
 Dimensional customer table representing all existing and historical customers from SalesForce. There are customer definitions for external reporting and additional customer definitions for internal reporting defined in the [handbook](https://about.gitlab.com/handbook/sales/#customer).
 
@@ -26,22 +15,12 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
-{% docs dim_crm_opportunities %}
-Model for all dimensional opportunity columns from salesforce opportunity object
-
-{% enddocs %}
-
 {% docs dim_crm_opportunity %}
 Model for all dimensional opportunity columns from salesforce opportunity object
 
 {% enddocs %}
 
 {% docs dim_crm_person %}
-Dimension that combines demographic data from salesforce leads and salesforce contacts. They are combined with a union and a filter on leads excluding converted leads and leads where there is a corresponding contact.
-
-{% enddocs %}
-
-{% docs dim_crm_persons %}
 Dimension that combines demographic data from salesforce leads and salesforce contacts. They are combined with a union and a filter on leads excluding converted leads and leads where there is a corresponding contact.
 
 {% enddocs %}
@@ -95,15 +74,6 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
-{% docs dim_dates %}
-Dimensional table representing both calendar year and fiscal year date details.
-
-The grain of the table is a calendar day.
-
-Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
-
-{% enddocs %}
-
 {% docs dim_date %}
 Dimensional table representing both calendar year and fiscal year date details.
 
@@ -122,18 +92,6 @@ Fact table representing marketing campaign details tracked in SFDC.
 {% docs fct_crm_lead_conversion %}
 
 A fact from the lead history and lead tables in Salesforce that has a record for every converted lead
-
-{% enddocs %}
-
-{% docs fct_crm_marketing_qualification %}
-
-A fact from the lead and contact tables that shows the date they were qualified. Ideally this should be using the lead and contact history tables as well, but, as of yet, the appropriate fields are not being tracked in Salesforce. For mor information on Marketing Qualification please refer to the [Marketing Operations handbook](https://about.gitlab.com/handbook/marketing/marketing-operations/marketo/#mql-definition).
-
-{% enddocs %}
-
-{% docs fct_crm_opportunities %}
-
-A fact table for salesforce opportunities
 
 {% enddocs %}
 

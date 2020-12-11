@@ -2,7 +2,7 @@ WITH dates AS (
 
     SELECT *,
       'join' AS join_field
-    FROM  {{ ref('dim_dates') }}
+    FROM  {{ ref('dim_date') }}
     WHERE date_actual BETWEEN DATEADD(YEAR, -1, DATEADD(month, -1, DATE_TRUNC(month, CURRENT_DATE())))
                           AND DATE_TRUNC(month, CURRENT_DATE())
       AND day_of_month = 1
