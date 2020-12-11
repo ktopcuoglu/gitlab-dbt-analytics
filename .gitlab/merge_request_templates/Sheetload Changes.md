@@ -17,7 +17,7 @@ Describe the solution. Include links to any related MRs and/or issues.
   - [ ] I don't know
 * [ ]  How long will this data need to reside in the Data team's data warehouse? Expiration Date: ______ 
 
-## Adding/Updating a new sheetload file
+## Adding/Updating a new sheetload file*
 <details><summary>Click on Dropdown for Process</summary>
 <br>
 
@@ -66,7 +66,7 @@ To understand the difference between source and staging models, please refer to 
 </details>
 
 
-## CI Jobs to run
+## CI Jobs to run*
 Run the following CI Jobs on the MR: 
 
 * [ ] `❄️ Snowflake: clone_raw (to run extract job)`
