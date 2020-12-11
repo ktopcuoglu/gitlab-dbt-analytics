@@ -521,7 +521,6 @@ roles:
                 - raw.engineering_extracts
                 - raw.gcp_billing
                 - raw.gitlab_data_yaml
-                - raw.gitlab_feature_flags_yaml
                 - raw.gitter
                 - raw.pmg
                 - raw.prometheus
@@ -537,7 +536,6 @@ roles:
                 - raw.engineering_extracts.*
                 - raw.gcp_billing.*
                 - raw.gitlab_data_yaml.*
-                - raw.gitlab_feature_flags_yaml.*
                 - raw.gitter.*
                 - raw.keyhole_twitter.*
                 - raw.pmg.*
