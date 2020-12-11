@@ -9,7 +9,7 @@ WITH source AS (
 
     SELECT
       *
-    FROM {{ source('salesforce', 'sfdc_opportunity_team_member') }}
+    FROM {{ source('salesforce', 'opportunity_team_member') }}
 
 ), renamed AS (
 
@@ -34,4 +34,3 @@ WITH source AS (
 
 SELECT *
 FROM renamed
-
