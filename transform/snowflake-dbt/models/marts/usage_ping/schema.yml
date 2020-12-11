@@ -44,7 +44,7 @@ models:
         tests:
             - not_null
       - name: delivery
-        description: '{{ doc("delivery") }}'
+        description: '{{ doc("delivery_column") }}'
         tests:
             - not_null
       - name: main_edition
