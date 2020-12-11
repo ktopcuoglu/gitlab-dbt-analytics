@@ -118,14 +118,21 @@ dbt_commit_hash_setter = KubernetesPodOperator(
     dag=dag,
 )
 
+
 def commit_hash_exporter(**context):
-    Variable.set("dbt_hash", context["ti"].xcom_pull(task_ids="dbt-commit-hash-setter", key="return_value")["commit_hash"])
+    Variable.set(
+        "dbt_hash",
+        context["ti"].xcom_pull(task_ids="dbt-commit-hash-setter", key="return_value")[
+            "commit_hash"
+        ],
+    )
+
 
 dbt_commit_hash_exporter = PythonOperator(
     task_id="dbt-commit-hash-exporter",
     provide_context=True,
     python_callable=commit_hash_exporter,
-    dag=dag
+    dag=dag,
 )
 
 # run snapshots on large warehouse
