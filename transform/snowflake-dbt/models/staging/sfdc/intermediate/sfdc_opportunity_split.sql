@@ -2,8 +2,6 @@ WITH base AS (
 
     SELECT *
     FROM {{ ref('sfdc_opportunity_split_source') }}
-     WHERE account_id IS NOT NULL
-      AND is_deleted = FALSE
 
 )
 
