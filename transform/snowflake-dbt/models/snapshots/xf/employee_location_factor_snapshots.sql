@@ -14,7 +14,6 @@ WITH source AS (
     WHERE "Employee_ID" != 'Not In Comp Calc'
       AND "Employee_ID" NOT IN ('$72,124','S1453')
 
-
 ), renamed as (
 
     SELECT
