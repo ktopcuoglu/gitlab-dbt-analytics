@@ -2,7 +2,7 @@ WITH source AS (
 
     SELECT *,
       RANK() OVER (PARTITION BY DATE_TRUNC('day', uploaded_at) ORDER BY uploaded_at DESC) AS rank
-    FROM {{ source('gitlab_feature_flags_yaml', 'feature_flags') }}
+    FROM {{ source('gitlab_data_yaml', 'feature_flags') }}
     ORDER BY uploaded_at DESC
 
 ), intermediate AS (
