@@ -1,18 +1,32 @@
-WITH filtered_attributes AS (
+WITH source AS (
+
+    SELECT *,
+      RANK() OVER (PARTITION BY DATE_TRUNC('day', uploaded_at) ORDER BY uploaded_at DESC) AS rank
+    FROM {{ source('gitlab_feature_flags_yaml', 'feature_flags') }}
+    ORDER BY uploaded_at DESC
+
+), intermediate AS (
+
+    SELECT d.value                          AS data_by_row,
+    date_trunc('day', uploaded_at)::date    AS snapshot_date,
+    rank
+    FROM source,
+    LATERAL FLATTEN(INPUT => parse_json(jsontext), OUTER => TRUE) d
+
+), renamed AS (
 
     SELECT
-      jsontext['name']::VARCHAR            AS name,
-      jsontext['type']::VARCHAR            AS type,
-      jsontext['milestone']::VARCHAR       AS milestone,
-      jsontext['default_enabled']::BOOLEAN AS default_enabled,
-      jsontext['group']::VARCHAR           AS group
-    FROM  {{ source('gitlab_feature_flags_yaml', 'feature_flags') }}
-    QUALIFY ROW_NUMBER() OVER (
-      PARTITION BY jsontext['group'] ORDER BY uploaded_at DESC
-    ) = 1
+      data_by_row['name']::VARCHAR            AS name,
+      data_by_row['type']::VARCHAR            AS type,
+      data_by_row['milestone']::VARCHAR       AS milestone,
+      data_by_row['default_enabled']::BOOLEAN AS default_enabled,
+      data_by_row['group']::VARCHAR           AS gitlab_group,
+      snapshot_date,
+      rank
+    FROM intermediate
 
 )
 
-SELECT * 
-FROM filtered_attributes
+SELECT *
+FROM renamed
  
