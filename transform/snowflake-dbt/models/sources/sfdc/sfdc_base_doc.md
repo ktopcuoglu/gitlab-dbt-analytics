@@ -62,7 +62,21 @@ The opportunity stage source table represents the stage of an Opportunity in the
 The opportunity source table contains info about your opportunities, which are sales or pending deals. [Link to Documentation](https://www.stitchdata.com/docs/integrations/saas/salesforce/#opportunity)
 
 {% enddocs %}
+{% docs sfdc_opportunity_split %}
 
+The opportunity source table contains info about your opportunities, which are sales or pending deals. [Link to Documentation](https://www.stitchdata.com/docs/integrations/saas/salesforce/#opportunity)
+
+{% enddocs %}
+{% docs sfdc_opportunity_split_type %}
+
+The opportunity source table contains info about your opportunities, which are sales or pending deals. [Link to Documentation](https://www.stitchdata.com/docs/integrations/saas/salesforce/#opportunity)
+
+{% enddocs %}
+{% docs sfdc_opportunity_team_member %}
+
+The opportunity source table contains info about your opportunities, which are sales or pending deals. [Link to Documentation](https://www.stitchdata.com/docs/integrations/saas/salesforce/#opportunity)
+
+{% enddocs %}
 {% docs sfdc_contact_role_source %}
 
 The opportunity contact role is a junction object between Opportunities and contacts that facilitates a many:many relationship. [Link to Salesforce Documentation](https://developer.salesforce.com/docs/atlas.en-us.object_reference.meta/object_reference/sforce_api_objects_opportunitycontactrole.htm)
