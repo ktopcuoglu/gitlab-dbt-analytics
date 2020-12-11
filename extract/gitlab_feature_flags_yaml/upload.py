@@ -47,7 +47,6 @@ if __name__ == "__main__":
         for yaml_file in files:
             full_dir = os.path.join(root, yaml_file)
             if re.search("yaml|yml", full_dir):
-                # print(full_dir)
                 with open(full_dir) as file:
                     ff = yaml.load(file, Loader=yaml.SafeLoader)
                     if "name" in ff and "type" in ff:

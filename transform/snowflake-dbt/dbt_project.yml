@@ -165,9 +165,6 @@ models:
       gitlab_data_yaml:
         +schema: gitlab_data_yaml
 
-      gitlab_feature_flags_yaml:
-        +schema: gitlab_feature_flags_yaml
-
       gitlab_dotcom:
         +materialized: table
         +schema: gitlab_dotcom
