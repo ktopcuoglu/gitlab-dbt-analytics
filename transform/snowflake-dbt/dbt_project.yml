@@ -154,6 +154,10 @@ models:
         +schema: dbt
         +tags: ["dbt"]
 
+      discourse:
+        +materialized: table
+        +schema: discourse
+
       engineering:
         +database: "{{ env_var('SNOWFLAKE_TRANSFORM_DATABASE') }}" # ANALYTICS
         +materialized: table
