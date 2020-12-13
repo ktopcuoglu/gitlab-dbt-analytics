@@ -23,7 +23,7 @@ WITH unioned AS (
             ]
     ) }}
 
-), intermediate AS (
+), final AS (
 
     SELECT
       pi_name,
@@ -38,16 +38,17 @@ WITH unioned AS (
       sisense_chart_id,
       sisense_dashboard_id,
       FIRST_VALUE(snapshot_date) OVER (PARTITION BY pi_name ORDER BY snapshot_date) AS date_first_added, 
-      snapshot_date AS valid_from_date
+      MIN(snapshot_date) OVER (PARTITION BY pi_name, org_name, pi_definition, 
+                                            is_key, is_public, is_embedded, 
+                                            pi_target, pi_url
+                               ORDER BY snapshot_date)                              AS valid_from_date,
+      MAX(snapshot_date) OVER (PARTITION BY pi_name, org_name, pi_definition,
+                                            is_key, is_public, is_embedded,
+                                            pi_target, pi_url
+                               ORDER BY snapshot_date DESC)                         AS valid_to_date
     FROM unioned
-    QUALIFY ROW_NUMBER() OVER (PARTITION BY pi_name, org_name, pi_definition, is_key, is_public, is_embedded, pi_target, pi_url ORDER BY snapshot_date) =1 
-
-), final AS (
-
-    SELECT *,
-    COALESCE(LEAD(valid_from_date) OVER (PARTITION BY pi_name, org_name ORDER BY valid_from_date), CURRENT_DATE()) AS valid_to_date
-    FROM intermediate
-    
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY pi_name, org_name, pi_definition, is_key, is_public, is_embedded, pi_target, pi_url ORDER BY snapshot_date) = 1 
+ 
 )
 
 SELECT *
