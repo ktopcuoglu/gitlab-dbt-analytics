@@ -6,6 +6,21 @@ models:
 
   - name: bamboohr_budget_vs_actual
     description: Compares promotion budget spend to the budget aggregated at the division level.
+    columns:
+    - name: fiscal_quarter_name
+    - name: division
+    - name: fiscal_year
+    - name: fiscal_quarter
+    - name: budget
+    - name: excess_from_previous_quarter
+    - name: division_promotions_grouping
+      description: This column is coming from the promotions data aggregated to identify total spend, and is joined on the budget aggregated data. We've added a test for not null to confirm all divisions are accounted for as we are using division_groupings to summarize data.
+      tests:
+        - not_null
+    - name: total_spend
+       division_promotions_grouping
+
+
 
   - name: bamboohr_current_division_mapping
     description: This model accounts for the current mapping of department and divisions to allow for aggregatd models to reflect current division terminology used (as seen in bamboohr_rpt_headcount_aggregation)

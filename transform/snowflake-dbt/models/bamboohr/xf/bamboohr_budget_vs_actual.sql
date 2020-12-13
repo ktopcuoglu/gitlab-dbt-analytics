@@ -24,11 +24,13 @@ WITH dates AS (
     SELECT 
       CASE WHEN division = 'Engineering_Meltano'
             THEN 'Engineering/Meltano'
+           WHEN division ='People_CEO'
+            THEN 'People Group/CEO'
            WHEN division = 'Marketing'
             THEN 'Marketing - Including SDR'
-           ELSE division END                        AS division,
+           ELSE division END                          AS division,
       fiscal_year,
-      fiscal_quarter, 
+      fiscal_quarter,
       budget,
       excess_from_previous_quarter
     FROM sheetload_people_budget
@@ -124,14 +126,11 @@ WITH dates AS (
 ), final AS (
 
     SELECT 
+      'FY' || budget.fiscal_year || ' - Q' || budget.fiscal_quarter AS fiscal_quarter_name,
       budget.*,
-      dates.fiscal_quarter_name,
-      promotions_aggregated.fiscal_quarter_name,
+      promotions_aggregated.division                                AS division_promotions_grouping
       promotions_aggregated.total_spend
     FROM budget
-    LEFT JOIN dates
-      ON dates.fiscal_year = budget.fiscal_year
-      AND dates.fiscal_quarter = budget.fiscal_quarter
     LEFT JOIN promotions_aggregated
       ON budget.division = promotions_aggregated.division
       AND budget.fiscal_year = promotions_aggregated.fiscal_year
