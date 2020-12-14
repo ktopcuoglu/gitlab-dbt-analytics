@@ -256,6 +256,7 @@ models:
         +materialized: view
 
       discourse:
+        +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
         +schema: preparation
         +tags: ["discourse", "social"]
 
