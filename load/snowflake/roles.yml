@@ -880,6 +880,7 @@ roles:
             databases:
                 read:
                     - analytics
+                    - prep
                     - raw
             schemas:
                 read:
@@ -887,8 +888,9 @@ roles:
                     - analytics.common_mapping
                     - analytics.common_mart_marketing
                     - analytics.common_mart_sales
-                    - analytics.dbt
                     - analytics.legacy
+                    - analytics.workspace_data
+                    - prep.dbt
                     - raw.dbt
             tables:
                 read:
@@ -896,8 +898,9 @@ roles:
                     - analytics.common_mapping.*
                     - analytics.common_mart_marketing.*
                     - analytics.common_mart_sales.*
-                    - analytics.dbt.*
                     - analytics.legacy.*
+                    - analytics.workspace_data.*
+                    - prep.dbt.*
                     - raw.dbt.*
 
     - dbt_analytics_clones:
