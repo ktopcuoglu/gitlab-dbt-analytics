@@ -64,17 +64,24 @@ The opportunity source table contains info about your opportunities, which are s
 {% enddocs %}
 {% docs sfdc_opportunity_split %}
 
-The opportunity source table contains info about your opportunities, which are sales or pending deals. [Link to Documentation](https://www.stitchdata.com/docs/integrations/saas/salesforce/#opportunity)
+OpportunitySplit credits one or more opportunity team members with a portion of the opportunity amount. 
+[See original issue](https://gitlab.com/gitlab-data/analytics/-/issues/6073)
+[Opportunity Split Docs](https://developer.salesforce.com/docs/atlas.en-us.api.meta/api/sforce_api_objects_opportunitysplit.htm)
+
 
 {% enddocs %}
 {% docs sfdc_opportunity_split_type %}
 
-The opportunity source table contains info about your opportunities, which are sales or pending deals. [Link to Documentation](https://www.stitchdata.com/docs/integrations/saas/salesforce/#opportunity)
+Added as references for the sfdc_opportunity_split data
+[See original issue](https://gitlab.com/gitlab-data/analytics/-/issues/6073)
+[Opportunity Split Type Docs](https://developer.salesforce.com/docs/atlas.en-us.api.meta/api/sforce_api_objects_opportunitysplittype.htm)
 
 {% enddocs %}
 {% docs sfdc_opportunity_team_member %}
 
-The opportunity source table contains info about your opportunities, which are sales or pending deals. [Link to Documentation](https://www.stitchdata.com/docs/integrations/saas/salesforce/#opportunity)
+Represents a User on the opportunity team of an Opportunity.
+[See original issue](https://gitlab.com/gitlab-data/analytics/-/issues/6073)
+[Opportunity Team member Docs](https://developer.salesforce.com/docs/atlas.en-us.api.meta/api/sforce_api_objects_opportunitysplit.htm)
 
 {% enddocs %}
 {% docs sfdc_contact_role_source %}
