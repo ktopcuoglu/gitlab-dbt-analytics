@@ -3,7 +3,7 @@ WITH source AS (
     SELECT *
     FROM {{ ref('feature_flags_source') }}
 
-), filtered as (
+), filtered AS (
 
     SELECT *
     FROM source

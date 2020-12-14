@@ -1,4 +1,4 @@
-de### YML Extractor
+### YML Extractor
 
 This job pulls an YAML files into tables in Snowflake within the raw.gitlab_data_yaml.feature_flags table. It uses [PyYAML](https://pypi.org/project/pyyaml/) to serialize YAML to JSON.
 
