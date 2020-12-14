@@ -5,60 +5,6 @@ connection_info:
   database: GITLAB_OPS_DB_NAME
   port: PG_PORT
 tables:
-  ci_builds:
-    import_db: GITLAB_OPS_DB
-    import_query: >
-      SELECT id
-      , status
-      , finished_at
-      , trace
-      , created_at
-      , updated_at
-      , started_at
-      , runner_id
-      , coverage
-      , commit_id
-      , commands
-      , name
-      , options
-      , allow_failure
-      , stage
-      , trigger_request_id
-      , stage_idx
-      , tag
-      , ref
-      , user_id
-      , type
-      , target_url
-      , description
-      , artifacts_file
-      , project_id
-      , artifacts_metadata
-      , erased_by_id
-      , erased_at
-      , CASE WHEN artifacts_expire_at > '2262-01-01' THEN '2262-01-01' ELSE artifacts_expire_at END AS artifacts_expire_at
-      , environment
-      , artifacts_size
-      , "when"
-      , yaml_variables
-      , queued_at
-      , lock_version
-      , coverage_regex
-      , auto_canceled_by_id
-      , retried
-      , stage_id
-      , artifacts_file_store
-      , artifacts_metadata_store
-      , protected
-      , failure_reason
-      , scheduled_at
-      , upstream_pipeline_id
-      FROM ci_builds
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
-    export_schema: 'gitlab_ops_net'
-    export_table: ci_builds
-    export_table_primary_key: id 
   ci_pipelines:
     import_db: GITLAB_OPS_DB
     import_query: >
@@ -90,6 +36,7 @@ tables:
     export_schema: 'gitlab_ops_net'
     export_table: 'ci_pipelines'
     export_table_primary_key: id
+    dbt_source_model: true
   ci_stages:
     import_db: GITLAB_OPS_DB
     import_query: >
@@ -108,6 +55,7 @@ tables:
     export_schema: 'gitlab_ops_net'
     export_table: ci_stages
     export_table_primary_key: id
+    dbt_source_model: true
   labels:
     import_db: GITLAB_OPS_DB
     import_query: >
@@ -126,6 +74,7 @@ tables:
     export_schema: 'gitlab_ops_net'
     export_table: 'labels'
     export_table_primary_key: id
+    dbt_source_model: true
   label_links:
     import_db: GITLAB_OPS_DB
     import_query: >
@@ -140,6 +89,7 @@ tables:
     export_table: 'label_links'
     export_table_primary_key: id
     advanced_metadata: true  
+    dbt_source_model: true
   members:
     import_db: GITLAB_OPS_DB
     import_query: >
@@ -164,6 +114,7 @@ tables:
     export_table: 'members'
     export_table_primary_key: id
     advanced_metadata: true
+    dbt_source_model: true
   merge_requests:
     import_db: GITLAB_OPS_DB
     import_query: >
@@ -202,6 +153,7 @@ tables:
     export_schema: 'gitlab_ops_net'
     export_table: 'merge_requests'
     export_table_primary_key: id
+    dbt_source_model: true
   projects:
     import_db: GITLAB_OPS_DB
     import_query: >
@@ -268,6 +220,7 @@ tables:
     export_schema: 'gitlab_ops_net'
     export_table: 'projects'
     export_table_primary_key: id
+    dbt_source_model: true
   users:
     import_db: GITLAB_OPS_DB
     import_query: >
@@ -342,3 +295,4 @@ tables:
     export_schema: 'gitlab_ops_net'
     export_table: 'users'
     export_table_primary_key: id
+    dbt_source_model: true
