@@ -128,7 +128,6 @@ WITH dates AS (
     SELECT 
       'FY' || budget.fiscal_year || ' - Q' || budget.fiscal_quarter AS fiscal_quarter_name,
       budget.*,
-      promotions_aggregated.division                                AS division_promotions_grouping,
       promotions_aggregated.total_spend
     FROM budget
     LEFT JOIN promotions_aggregated
