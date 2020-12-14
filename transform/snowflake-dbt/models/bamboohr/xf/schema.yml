@@ -14,9 +14,6 @@ models:
     - name: budget
     - name: excess_from_previous_quarter
     - name: total_spend
-       division_promotions_grouping
-
-
 
   - name: bamboohr_current_division_mapping
     description: This model accounts for the current mapping of department and divisions to allow for aggregatd models to reflect current division terminology used (as seen in bamboohr_rpt_headcount_aggregation)
