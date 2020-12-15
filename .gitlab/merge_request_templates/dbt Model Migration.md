@@ -13,7 +13,6 @@ Describe the solution. Include links to any related MRs and/or issues.
 ## Submitter Checklist
 
 For the models being migrated:
-- [ ] All references to staging, meta, or temporary removed
 - [ ] Configuration changes are at the highest level possible
   - Most changes should be in dbt_project.yml
 - [ ] Model level configuration reviewed
