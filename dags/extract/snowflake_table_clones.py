@@ -31,7 +31,6 @@ GIT_BRANCH = env["GIT_BRANCH"]
 # tomorrow_ds -  the day after the execution date as YYYY-MM-DD
 # ds_nodash - the execution date as YYYYMMDD
 pod_env_vars = {
-    "CLONE_DATE": "{{ yesterday_ds }}",
     "CLONE_NAME_DATE": "{{ ds_nodash }}",
     "SNOWFLAKE_SYSADMIN_ROLE": "TRANSFORMER",
 }
