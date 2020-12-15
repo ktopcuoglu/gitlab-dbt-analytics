@@ -414,18 +414,6 @@ models:
           - not_null
       - name: is_active
         description: A boolean column that flags if the user is active in salesforce, which means that the user can login and use salesforce.
-
-  - name: dim_crm_sales_representative
-    description: '{{ doc("dim_crm_sales_representative") }}'
-    columns:
-      - name: crm_sales_rep_id
-        description: Primary key for Salesforce users and the primary key for this dimension
-        tests:
-          - unique
-          - not_null
-        tags: [ "tdf", "common" ]
-      - name: is_active
-        description: A boolean column that flags if the user is active in salesforce, which means that the user can login and use salesforce.
         tags: [ "tdf", "common" ]
 
   - name: dim_sales_segment
@@ -667,23 +655,6 @@ models:
 
   - name: fct_invoice_items_agg_valid_at
     description: Parameterized model to recreate aggregate fact table with invoice items summarized on charge level at given timestamp {valid_at}. Required variable valid_at is timezone sensitive
-
-  - name: fct_crm_lead_conversion
-    description: '{{ doc("fct_crm_lead_conversion") }}'
-    columns:
-      - name: event_id
-        description: A dbt generated surrogate key combining the sfdc_record_id and the event_timestamp.
-        tests:
-          - unique
-          - not_null
-      - name: event_timestamp
-        description: The date and time the lead was converted.
-        tests:
-          - not_null
-      - name: crm_person_id
-        description: A surrogate key for use when joining to `fct_crm_conversion_event`. Created from the contact_id where there is a contact and a lead_id where there isn't.
-        tests:
-          - not_null
 
   - name: fct_crm_opportunity
     description: '{{ doc("fct_crm_opportunity") }}'
