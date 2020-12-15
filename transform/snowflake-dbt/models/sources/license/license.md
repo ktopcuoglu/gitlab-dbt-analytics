@@ -14,4 +14,7 @@ See the [LicenseApp domain model](https://gitlab.com/gitlab-org/license-gitlab-c
 This source model is the data from from a bi-weekly export of the license-db-restore CloudSQL instance for the licenses table from license.gitlab.com. This data represents licenses and associated metadata such as expiration date and zuora subscription id.
 
 See the [LicenseApp domain model](https://gitlab.com/gitlab-org/license-gitlab-com/-/blob/master/doc/db_erd.pdf) for details on how the license models relate to each other.
+
+[Exploratory Data Analysis / Business Context on license_db_license](https://gitlab.com/gitlab-org/license-gitlab-com/-/issues/190)
+
 {% enddocs %}
