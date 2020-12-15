@@ -930,6 +930,22 @@ tables:
     advanced_metadata: true
     dbt_source_model: true
     dbt_snapshots: true
+  group_custom_attributes:
+    import_db: GITLAB_DB
+    import_query: >
+      SELECT id
+      , created_at
+      , updated_at
+      , group_id
+      , key
+      , value
+      FROM group_custom_attributes
+      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
+        AND '{EXECUTION_DATE}'::timestamp
+    export_schema: 'gitlab_com'
+    export_table: 'group_custom_attributes'
+    export_table_primary_key: id
+    dbt_source_model: true
   group_group_links:
     import_db: GITLAB_DB
     import_query: >
@@ -1608,12 +1624,14 @@ tables:
       , updated_at
       , project_id
       , key
+      , value
       FROM project_custom_attributes
       WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
         AND '{EXECUTION_DATE}'::timestamp
     export_schema: 'gitlab_com'
     export_table: 'project_custom_attributes'
     export_table_primary_key: id
+    dbt_source_model: true
   project_features:
     import_db: GITLAB_DB
     import_query: >
@@ -2276,6 +2294,22 @@ tables:
         AND '{EXECUTION_DATE}'::timestamp
     export_schema: 'gitlab_com'
     export_table: 'users'
+    export_table_primary_key: id
+    dbt_source_model: true
+  user_custom_attributes:
+    import_db: GITLAB_DB
+    import_query: >
+      SELECT id
+      , created_at
+      , updated_at
+      , user_id
+      , key
+      , value
+      FROM user_custom_attributes
+      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
+        AND '{EXECUTION_DATE}'::timestamp
+    export_schema: 'gitlab_com'
+    export_table: 'user_custom_attributes'
     export_table_primary_key: id
     dbt_source_model: true
   user_preferences:

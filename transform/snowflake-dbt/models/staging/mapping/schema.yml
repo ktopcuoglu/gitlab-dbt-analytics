@@ -31,3 +31,20 @@ models:
         description: Unique identifier of a version of a sales territory
       - name: dim_industry_name_id
         description: Unique identifier of a version of a industry
+
+  - name: map_product_tier
+    description: '{{ doc("map_product_tier") }}'
+    columns:
+      - name: product_rate_plan_id
+        description: "Rate Plan ID for Zuora Product"
+        tests:
+          - not_null
+          - unique
+      - name: product_rate_plan_name
+        description: "rate plan name from Zuora product source"
+      - name: product_tier
+        description: "Product pricing tiers for both SaaS and Self-Managed customers (https://about.gitlab.com/handbook/marketing/strategic-marketing/tiers/)"
+      - name: product_delivery_type
+        description: "How product is delivered to customer; SaaS or Self-Managed (or Other)"
+      - name: product_ranking
+        description: "Numeric product pricing tier, independent of delivery type"

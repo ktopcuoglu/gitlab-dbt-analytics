@@ -23,6 +23,7 @@ WITH source AS (
 ), base AS (
 
     SELECT DISTINCT 
+      unique_key,
       month_date,
       breakout_type_modified AS breakout_type,
       department,
@@ -146,14 +147,15 @@ WITH source AS (
       tenure_four_plus_years
     FROM base
     LEFT JOIN source  
-      ON base.month_date = source.month_date
+      ON base.unique_key = source.unique_key
+      {# ON base.month_date = source.month_date
       AND base.breakout_type = source.breakout_type_modified
       AND base.department = source.department
       AND base.division = source.division
       AND COALESCE(base.job_role,'NA') = COALESCE(source.job_role,'NA')
       AND COALESCE(base.job_grade,'NA') = COALESCE(source.job_grade,'NA')
       AND base.eeoc_field_name = source.eeoc_field_name
-      AND base.eeoc_value = source.eeoc_value
+      AND base.eeoc_value = source.eeoc_value #}
     WHERE base.month_date < DATE_TRUNC('month', CURRENT_DATE)   
 
  ), final AS (
