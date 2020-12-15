@@ -692,7 +692,6 @@ roles:
             - snowflake_db
         owns:
             schemas:
-                - analytics.analytics_clones
                 - analytics.common
                 - analytics.common_mapping
                 - analytics.common_mart_marketing
@@ -700,7 +699,6 @@ roles:
                 - analytics.legacy
                 - prep.sensitive
             tables:
-                - analytics.analytics_clones.*
                 - analytics.common.*
                 - analytics.common_mapping.*
                 - analytics.common_mart_marketing.*
@@ -909,13 +907,13 @@ roles:
         privileges:
             databases:
                 read:
-                    - analytics
+                    - raw
             schemas:
                 read:
-                    - analytics.analytics_clones
+                    - raw.full_table_clones
             tables:
                 read:
-                    - analytics.analytics_clones.*
+                    - raw.full_table_clones.*
 
     - dbt_analytics_sensitive:
         warehouses:
