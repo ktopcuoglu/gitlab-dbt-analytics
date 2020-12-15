@@ -219,6 +219,10 @@ WITH account_dims_mapping AS (
           WHEN mqls.first_mql_date IS NOT NULL THEN 1
           ELSE 0
         END                                                                                                               AS is_mql,
+      CASE
+        WHEN COALESCE(LOWER(sfdc_contacts.contact_status), LOWER(sfdc_leads.lead_status)) = 'inquiry' THEN 1
+        ELSE 0
+      END                                                                                                                 AS is_inquiry,
 
      -- additive fields
 

@@ -102,12 +102,6 @@ Fact table representing marketing campaign details tracked in SFDC.
 
 {% enddocs %}
 
-{% docs fct_crm_lead_conversion %}
-
-A fact from the lead history and lead tables in Salesforce that has a record for every converted lead
-
-{% enddocs %}
-
 {% docs fct_crm_opportunity %}
 
 A fact table for salesforce opportunities with keys to connect opportunities to shared dimensions through the attributes of the crm account.
@@ -175,12 +169,6 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 
 {% docs dim_crm_sales_rep %}
-
-Dimension representing the associated sales rep from salesforce. Most often this will be the record owner, which is a ubiquitous field in salesforce.
-
-{% enddocs %}
-
-{% docs dim_crm_sales_representative %}
 
 Dimension representing the associated sales rep from salesforce. Most often this will be the record owner, which is a ubiquitous field in salesforce.
 
