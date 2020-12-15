@@ -76,6 +76,10 @@ docker-compose.yml  @tayloramurphy  @m_walker   @paul_armstrong
 /transform/snowflake-dbt/models/sources/gitlab_data_yaml/   @tayloramurphy  @kathleentam    @jjstark
 /transform/snowflake-dbt/models/staging/gitlab_data_yaml/   @tayloramurphy  @kathleentam    @jjstark
 
+/transform/snowflake-dbt/models/sources/gitlab_data_yaml/feature_flags_source.sql           @ayufan  @m_walker
+/transform/snowflake-dbt/models/staging/gitlab_data_yaml/feature_flags_yaml_latest.sql      @ayufan  @m_walker
+/transform/snowflake-dbt/models/staging/gitlab_data_yaml/feature_flags_yaml_historical.sql  @ayufan  @m_walker
+
 /transform/snowflake-dbt/models/sources/gitlab_dotcom/      @mpeychet_		@m_walker       @kathleentam       @jeanpeguero    
 /transform/snowflake-dbt/models/staging/gitlab_dotcom/      @mpeychet_		@m_walker       @kathleentam       @jeanpeguero
 

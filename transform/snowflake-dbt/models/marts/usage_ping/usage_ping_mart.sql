@@ -8,10 +8,10 @@ WITH dim_billing_accounts AS (
     SELECT *
     FROM {{ ref('dim_crm_account') }}
 
-), dim_dates AS (
+), dim_date AS (
 
     SELECT *
-    FROM {{ ref('dim_dates') }}
+    FROM {{ ref('dim_date') }}
 
 ), dim_location AS (
 
@@ -60,9 +60,9 @@ WITH dim_billing_accounts AS (
       dim_crm_account.ultimate_parent_industry,
       dim_crm_account.ultimate_parent_account_owner_team,
       dim_crm_account.ultimate_parent_territory,
-      dim_dates.date_actual,
-      dim_dates.first_day_of_month,
-      dim_dates.fiscal_quarter_name_fy,
+      dim_date.date_actual,
+      dim_date.first_day_of_month,
+      dim_date.fiscal_quarter_name_fy,
       dim_location.country_name,
       dim_location.iso_2_country_code,
       product_details.product_rate_plans,
@@ -72,8 +72,8 @@ WITH dim_billing_accounts AS (
       ON fct_usage_ping_payloads.account_id = dim_billing_accounts.billing_account_id
     LEFT JOIN dim_crm_account
       ON dim_billing_accounts.crm_account_id = dim_crm_account.crm_account_id
-    LEFT JOIN dim_dates
-      ON fct_usage_ping_payloads.date_id = dim_dates.date_id
+    LEFT JOIN dim_date
+      ON fct_usage_ping_payloads.date_id = dim_date.date_id
     LEFT JOIN dim_location
       ON fct_usage_ping_payloads.location_id = dim_location.location_id
     LEFT JOIN product_details

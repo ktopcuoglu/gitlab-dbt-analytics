@@ -10,10 +10,10 @@ WITH dim_billing_accounts AS (
     SELECT *
     FROM {{ ref('dim_crm_account') }}
 
-), dim_dates AS (
+), dim_date AS (
   
     SELECT DISTINCT first_day_of_month AS date_day
-    FROM {{ ref('dim_dates') }}
+    FROM {{ ref('dim_date') }}
 
 ), dim_hosts AS (
 
@@ -90,7 +90,7 @@ WITH dim_billing_accounts AS (
 ), license_subscriptions AS (
 
     SELECT DISTINCT
-      dim_dates.date_day                                                           AS reporting_month,
+      dim_date.date_day                                                           AS reporting_month,
       license_id,
       dim_licenses.license_md5,
       dim_licenses.company                                                         AS license_company_name,

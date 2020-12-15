@@ -145,7 +145,7 @@ config_dict = {
     "gitlab_ops": {
         "cloudsql_instance_name": "ops-db-restore",
         "dag_name": "gitlab_ops",
-        "dbt_name": "none",
+        "dbt_name": "gitlab_ops",
         "env_vars": {"HOURS": "13"},
         "extract_schedule_interval": "0 */6 * * *",
         "secrets": [
