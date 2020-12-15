@@ -38,9 +38,6 @@ models:
       - name: is_excluded
         description: Field used to exclude test accounts from downstream models
 
-  - name: dim_billing_accounts_valid_at
-    description: Dimension table representing each individual account with details of person to bill for the account. Excludes deleted and test accounts. Required variable valid_at is timezone sensitive
-
   - name: dim_campaign
     description: Dimension table representing each individual Campaign. Excludes deleted campaigns. Based completely off SFDC campaign data.
     columns:
