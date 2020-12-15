@@ -695,12 +695,16 @@ roles:
                 - analytics.analytics_clones
                 - analytics.common
                 - analytics.common_mapping
+                - analytics.common_mart_marketing
+                - analytics.common_mart_sales
                 - analytics.legacy
                 - prep.sensitive
             tables:
                 - analytics.analytics_clones.*
                 - analytics.common.*
                 - analytics.common_mapping.*
+                - analytics.common_mart_marketing.*
+                - analytics.common_mart_sales.*
                 - analytics.legacy.*
                 - prep.sensitive.*
         privileges:
@@ -834,10 +838,14 @@ roles:
                 read:
                     - analytics.common
                     - analytics.common_mapping
+                    - analytics.common_mart_marketing
+                    - analytics.common_mart_sales
             tables:
                 read:
                     - analytics.common.*
                     - analytics.common_mapping.*
+                    - analytics.common_mart_marketing.*
+                    - analytics.common_mart_sales.*
 
     - date:
         privileges:
@@ -872,20 +880,27 @@ roles:
             databases:
                 read:
                     - analytics
+                    - prep
                     - raw
             schemas:
                 read:
                     - analytics.common
                     - analytics.common_mapping
-                    - analytics.dbt
+                    - analytics.common_mart_marketing
+                    - analytics.common_mart_sales
                     - analytics.legacy
+                    - analytics.workspace_data
+                    - prep.dbt
                     - raw.dbt
             tables:
                 read:
                     - analytics.common.*
                     - analytics.common_mapping.*
-                    - analytics.dbt.*
+                    - analytics.common_mart_marketing.*
+                    - analytics.common_mart_sales.*
                     - analytics.legacy.*
+                    - analytics.workspace_data.*
+                    - prep.dbt.*
                     - raw.dbt.*
 
     - dbt_analytics_clones:

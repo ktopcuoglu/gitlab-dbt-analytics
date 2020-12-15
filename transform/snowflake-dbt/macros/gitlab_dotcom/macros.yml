@@ -3,6 +3,15 @@ version: 2
 macros:
   - name: action_type
     description: '{{ doc("action_type") }}'
+  - name: filter_out_active_users
+    description: '{{ doc("filter_out_active_users") }}'
+    arguments:
+      - name: table_to_filter
+        type: string
+        description: Name of the table to filter
+      - name: user_id_column_name
+        type: string
+        description: The column name representing the user id
   - name: filter_out_blocked_users
     description: '{{ doc("filter_out_blocked_users") }}'
   - name: get_internal_parent_namespaces

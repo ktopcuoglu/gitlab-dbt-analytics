@@ -38,6 +38,34 @@ models:
       - name: is_excluded
         description: Field used to exclude test accounts from downstream models
 
+  - name: dim_billing_account
+    description: '{{ doc("dim_billing_account") }}'
+    columns:
+      - name: dim_billing_account_id
+        description: Unique id of the Zuora account
+        tests:
+          - not_null
+          - unique
+      - name: dim_crm_account_id
+        description: CRM account ID for the account
+      - name: account_number
+        description: A unique Zuora account number
+      - name: account_name
+        description: Zuora account name
+      - name: account_status
+        description: Status of the account in the system. Can be draft, active, cancelled.
+      - name: parent_id
+        description: Identifier of the parent customer account
+      - name: sfdc_account_code
+      - name: account_currency
+        description: A currency as defined in Billing Settings in the Zuora UI
+      - name: sold_to_country
+        description: The country of the sold to contact
+      - name: is_deleted
+        description: flag indicating if account has been deleted
+      - name: is_excluded
+        description: Field used to exclude test accounts from downstream models
+
   - name: dim_billing_accounts_valid_at
     description: Dimension table representing each individual account with details of person to bill for the account. Excludes deleted and test accounts. Required variable valid_at is timezone sensitive
 
@@ -390,7 +418,7 @@ models:
   - name: dim_crm_sales_representative
     description: '{{ doc("dim_crm_sales_representative") }}'
     columns:
-      - name: crm_sales_rep_id
+      - name: dim_crm_sales_rep_id
         description: Primary key for Salesforce users and the primary key for this dimension
         tests:
           - unique
@@ -639,23 +667,6 @@ models:
 
   - name: fct_invoice_items_agg_valid_at
     description: Parameterized model to recreate aggregate fact table with invoice items summarized on charge level at given timestamp {valid_at}. Required variable valid_at is timezone sensitive
-
-  - name: fct_crm_lead_conversion
-    description: '{{ doc("fct_crm_lead_conversion") }}'
-    columns:
-      - name: event_id
-        description: A dbt generated surrogate key combining the sfdc_record_id and the event_timestamp.
-        tests:
-          - unique
-          - not_null
-      - name: event_timestamp
-        description: The date and time the lead was converted.
-        tests:
-          - not_null
-      - name: crm_person_id
-        description: A surrogate key for use when joining to `fct_crm_conversion_event`. Created from the contact_id where there is a contact and a lead_id where there isn't.
-        tests:
-          - not_null
 
   - name: fct_crm_opportunity
     description: '{{ doc("fct_crm_opportunity") }}'
