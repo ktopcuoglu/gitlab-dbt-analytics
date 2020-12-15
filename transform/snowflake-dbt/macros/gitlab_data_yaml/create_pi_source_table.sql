@@ -34,10 +34,16 @@ WITH source AS (
       rank
     FROM intermediate
 
+), final AS (
+
+    SELECT 
+      {{ dbt_utils.surrogate_key(['pi_name', 'org_name', 'pi_definition','is_key','is_public','is_embedded','pi_target','pi_url']) }} AS unique_key,
+      intermediate_stage.*
+    FROM intermediate_stage
+
 )
 
 SELECT *
-FROM intermediate_stage
+FROM final
 
-
- {% endmacro %}
+{% endmacro %}
