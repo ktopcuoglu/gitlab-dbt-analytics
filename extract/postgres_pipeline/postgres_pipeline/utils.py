@@ -392,6 +392,10 @@ def id_query_generator(
         sys.exit(1)
     logging.info(f"Source Max ID: {max_source_id}")
 
+    if max_source_id is None:
+        logging.info("No source data found -- exiting")
+        return
+
     # Get the min ID from the source DB
     logging.info(f"Getting min ID from source_table: {source_table}")
     min_source_id_query = (
