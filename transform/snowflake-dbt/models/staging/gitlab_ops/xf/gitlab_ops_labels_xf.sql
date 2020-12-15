@@ -1,4 +1,4 @@
-with labels AS (
+WITH labels AS (
 
   SELECT *
   FROM {{ ref('gitlab_ops_labels') }}
