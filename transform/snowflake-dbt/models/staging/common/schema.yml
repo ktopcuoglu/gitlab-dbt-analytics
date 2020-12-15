@@ -410,7 +410,7 @@ models:
   - name: dim_product_tier
     description: '{{ doc("dim_product_tier") }}'
     columns:
-      - name: product_tier_id
+      - name: dim_product_tier_id
         description: ID of the product tier determined by the surrogate key macro.
         tests:
           - unique
