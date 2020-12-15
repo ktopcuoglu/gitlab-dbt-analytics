@@ -70,6 +70,7 @@ OpportunitySplit credits one or more opportunity team members with a portion of 
 [Opportunity Split Docs](https://developer.salesforce.com/docs/atlas.en-us.api.meta/api/sforce_api_objects_opportunitysplit.htm)
 
 {% enddocs %}
+
 {% docs sfdc_opportunity_split_type %}
 
 Added as references for the sfdc_opportunity_split data
