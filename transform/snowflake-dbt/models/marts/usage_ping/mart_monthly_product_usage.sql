@@ -1,9 +1,9 @@
 /* grain: one record per host per metric per month */
 
-WITH dim_billing_accounts AS (
+WITH dim_billing_account AS (
 
     SELECT *
-    FROM {{ ref('dim_billing_accounts') }}
+    FROM {{ ref('dim_billing_account') }}
 
 ), dim_crm_accounts AS (
 
@@ -11,7 +11,7 @@ WITH dim_billing_accounts AS (
     FROM {{ ref('dim_crm_account') }}
 
 ), dim_date AS (
-  
+
     SELECT DISTINCT first_day_of_month AS date_day
     FROM {{ ref('dim_date') }}
 
@@ -34,7 +34,7 @@ WITH dim_billing_accounts AS (
 
     SELECT *
     FROM {{ ref('dim_product_details')}}
-  
+
 ), dim_subscriptions AS (
 
     SELECT *
@@ -69,7 +69,7 @@ WITH dim_billing_accounts AS (
 
     SELECT *
     FROM {{ ref('monthly_usage_data') }}
-  
+
 ), fct_usage_ping_payloads AS (
 
     SELECT *
@@ -96,7 +96,7 @@ WITH dim_billing_accounts AS (
       dim_subscriptions.subscription_end_date,
       dim_subscriptions.subscription_start_month,
       dim_subscriptions.subscription_end_month,
-      dim_billing_accounts.billing_account_id,
+      dim_billing_account.dim_billing_account_id,
       dim_crm_accounts.crm_account_name,
       dim_crm_accounts.ultimate_parent_account_id,
       dim_crm_accounts.ultimate_parent_account_name,
@@ -130,10 +130,10 @@ WITH dim_billing_accounts AS (
       ON dim_product_details.product_details_id = fct_charges.product_details_id
       AND dim_product_details.delivery = 'Self-Managed'
       AND product_rate_plan_name NOT IN ('Premium - 1 Year - Eval')
-    LEFT JOIN dim_billing_accounts
-      ON dim_subscriptions.billing_account_id = dim_billing_accounts.billing_account_id
+    LEFT JOIN dim_billing_account
+      ON dim_subscriptions.billing_account_id = dim_billing_account.dim_billing_account_id
     LEFT JOIN dim_crm_accounts
-      ON dim_billing_accounts.crm_account_id = dim_crm_accounts.crm_account_id
+      ON dim_billing_account.dim_crm_account_id = dim_crm_accounts.crm_account_id
     INNER JOIN dim_date
       ON effective_start_month <= dim_date.date_day AND effective_end_month > dim_date.date_day
     {{ dbt_utils.group_by(n=20)}}
@@ -158,7 +158,7 @@ WITH dim_billing_accounts AS (
       license_subscriptions.product_rate_plan_name_array,
       license_subscriptions.subscription_start_month,
       license_subscriptions.subscription_end_month,
-      license_subscriptions.billing_account_id,
+      license_subscriptions.dim_billing_account_id,
       license_subscriptions.crm_account_name,
       license_subscriptions.ultimate_parent_account_id,
       license_subscriptions.ultimate_parent_account_name,
@@ -192,7 +192,7 @@ WITH dim_billing_accounts AS (
         AND fct_usage_ping_payloads.source_ip_hash = dim_hosts.source_ip_hash
         AND fct_usage_ping_payloads.uuid = dim_hosts.instance_id
     LEFT JOIN license_subscriptions
-      ON fct_usage_ping_payloads.license_md5 = license_subscriptions.license_md5 
+      ON fct_usage_ping_payloads.license_md5 = license_subscriptions.license_md5
         AND fct_monthly_usage_data.created_month = license_subscriptions.reporting_month
 
 ), renamed AS (
@@ -208,7 +208,7 @@ WITH dim_billing_accounts AS (
       host_id,
       original_linked_subscription_id,
       latest_active_subscription_id,
-      billing_account_id,
+      dim_billing_account_id,
       location_id,
       ultimate_parent_account_id,
 
@@ -239,7 +239,7 @@ WITH dim_billing_accounts AS (
       product_rate_plan_name_array,
       is_paid_subscription,
       is_edu_oss_subscription,
-      
+
       -- account metadata
       crm_account_name,
       ultimate_parent_account_name,
@@ -248,13 +248,13 @@ WITH dim_billing_accounts AS (
       ultimate_parent_industry,
       ultimate_parent_account_owner_team,
       ultimate_parent_territory,
-      
+
       created_at,
       recorded_at,
 
       -- monthly_usage_data
       monthly_metric_value
-      
+
     FROM joined
 
 )
@@ -262,7 +262,7 @@ WITH dim_billing_accounts AS (
 {{ dbt_audit(
     cte_ref="renamed",
     created_by="@mpeychet",
-    updated_by="@mpeychet",
+    updated_by="@iweeks",
     created_date="2020-12-01",
-    updated_date="2020-12-01"
+    updated_date="2020-12-15"
 ) }}

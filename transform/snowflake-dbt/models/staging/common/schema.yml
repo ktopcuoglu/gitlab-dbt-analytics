@@ -10,34 +10,6 @@ models:
           - unique
           - not_null
 
-  - name: dim_billing_accounts
-    description: '{{ doc("dim_billing_accounts") }}'
-    columns:
-      - name: billing_account_id
-        description: Unique id of the Zuora account
-        tests:
-          - not_null
-          - unique
-      - name: crm_account_id
-        description: CRM account ID for the account
-      - name: account_number
-        description: A unique Zuora account number
-      - name: account_name
-        description: Zuora account name
-      - name: account_status
-        description: Status of the account in the system. Can be draft, active, cancelled.
-      - name: parent_id
-        description: Identifier of the parent customer account
-      - name: sfdc_account_code
-      - name: account_currency
-        description: A currency as defined in Billing Settings in the Zuora UI
-      - name: sold_to_country
-        description: The country of the sold to contact
-      - name: is_deleted
-        description: flag indicating if account has been deleted
-      - name: is_excluded
-        description: Field used to exclude test accounts from downstream models
-
   - name: dim_billing_account
     description: '{{ doc("dim_billing_account") }}'
     columns:
