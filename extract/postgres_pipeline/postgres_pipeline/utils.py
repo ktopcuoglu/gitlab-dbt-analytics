@@ -8,6 +8,7 @@ from time import time
 from typing import Dict, List, Generator, Any, Tuple
 
 from gitlabdata.orchestration_utils import (
+    append_to_xcom_file,
     dataframe_uploader,
     dataframe_enricher,
     snowflake_engine_factory,
@@ -394,6 +395,7 @@ def id_query_generator(
 
     if max_source_id is None:
         logging.info("No source data found -- exiting")
+        append_to_xcom_file({target_table: 0, "load_ran": False})
         sys.exit(0)
 
     # Get the min ID from the source DB
