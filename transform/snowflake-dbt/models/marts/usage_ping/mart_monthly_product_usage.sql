@@ -140,8 +140,8 @@ WITH dim_billing_accounts AS (
       ON dim_subscriptions.billing_account_id = dim_billing_accounts.billing_account_id
     LEFT JOIN dim_crm_accounts
       ON dim_billing_accounts.crm_account_id = dim_crm_accounts.crm_account_id
-    INNER JOIN dim_dates
-      ON effective_start_month <= dim_dates.date_day AND effective_end_month > dim_dates.date_day
+    INNER JOIN dim_date
+      ON effective_start_month <= dim_date.date_day AND effective_end_month > dim_date.date_day
     {{ dbt_utils.group_by(n=21)}}
 
 ), joined AS (
