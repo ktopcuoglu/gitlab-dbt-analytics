@@ -1,7 +1,7 @@
 WITH source AS (
 
     SELECT *
-    FROM {{ ref('sheetload_engineering_contributing_organizations_source') }}
+    FROM {{ ref('engineering_infra_prod_console_access_source') }}
 
 )
 
