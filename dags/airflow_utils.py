@@ -224,9 +224,6 @@ gitlab_pod_env_vars = {
     "SNOWFLAKE_PROD_DATABASE": "PROD"
     if GIT_BRANCH == "master"
     else f"{GIT_BRANCH.upper()}_PROD",
-    "SNOWFLAKE_TRANSFORM_DATABASE": "ANALYTICS"
-    if GIT_BRANCH == "master"
-    else f"{GIT_BRANCH.upper()}_ANALYTICS",
 }
 
 # Warehouse variable declaration

@@ -43,7 +43,6 @@ include:
       - $SNOWFLAKE_SYSADMIN_ROLE
       - $SNOWFLAKE_LOAD_WAREHOUSE
       - $SNOWFLAKE_LOAD_DATABASE       # make sure the guard works
-      - $SNOWFLAKE_TRANSFORM_DATABASE  # make sure the guard works
       - $SNOWFLAKE_PREP_DATABASE  # make sure the guard works
       - $SNOWFLAKE_PROD_DATABASE  # make sure the guard works
   except:
@@ -51,7 +50,6 @@ include:
       - master
     variables:
       - $BRANCH_NAME == $SNOWFLAKE_LOAD_DATABASE
-      - $BRANCH_NAME == $SNOWFLAKE_TRANSFORM_DATABASE
       - $BRANCH_NAME == $SNOWFLAKE_PREP_DATABASE
       - $BRANCH_NAME == $SNOWFLAKE_PROD_DATABASE
       - $TEST_PIPELINE
@@ -70,7 +68,6 @@ include:
 📈clone_prod:
   <<: *snowflake_start_clone
   script:
-    - manage_snowflake.py manage_clones --database analytics --empty
     - manage_snowflake.py manage_clones --database prod --empty
     - manage_snowflake.py manage_clones --database prep --empty
   when: always
@@ -78,7 +75,6 @@ include:
 📈❗️clone_prod_real:
   <<: *snowflake_start_clone
   script:
-    - manage_snowflake.py manage_clones --force --database analytics
     - manage_snowflake.py manage_clones --force --database prod
     - manage_snowflake.py manage_clones --force --database prep
 
@@ -90,7 +86,6 @@ include:
 👥force_clone_both:
   <<: *snowflake_start_clone
   script:
-    - manage_snowflake.py manage_clones --force --database analytics --empty
     - manage_snowflake.py manage_clones --force --database prep --empty
     - manage_snowflake.py manage_clones --force --database prod --empty
     - manage_snowflake.py manage_clones --force --database raw
