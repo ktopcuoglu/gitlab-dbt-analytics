@@ -6,16 +6,6 @@ WITH projects AS (
     SELECT *
     FROM {{ref('gitlab_ops_projects')}}
 
-/* 
-),
--- This MR replicates https://gitlab.com/gitlab-data/analytics/-/blob/master/transform/snowflake-dbt/models/staging/gitlab_dotcom/xf/gitlab_ops_projects_xf.sql
--- Commented out tables are those that are missing from the data warehouse 
-namespaces AS (
-
-    SELECT *
-    FROM {{ref('gitlab_ops_namespaces')}}
-
-*/ 
 ),
 
 members AS (
@@ -24,30 +14,7 @@ members AS (
     FROM {{ref('gitlab_ops_members')}} members
     WHERE is_currently_valid = TRUE
       AND {{ filter_out_blocked_users('members', 'user_id') }}
-/*
-),
 
-namespace_lineage AS (
-
-    SELECT *
-    FROM {{ref('gitlab_ops_namespace_lineage')}}
-
-),
-
-gitlab_subscriptions AS (
-
-    SELECT *
-    FROM {{ref('gitlab_ops_gitlab_subscriptions_snapshots_namespace_id_base')}}
-
-),
-
-active_services AS (
-
-    SELECT *
-    FROM {{ref('gitlab_ops_services')}}
-    WHERE is_active = True
-
-*/
 ),
 
 joined AS (
@@ -109,44 +76,11 @@ joined AS (
         ELSE {{field}}
       END                                                          AS {{field}},
       {% endfor %}
-
-        /* 
-      namespaces.namespace_name,
-      namespaces.namespace_path,
-
-      namespace_lineage.namespace_is_internal,
-      namespace_lineage.namespace_plan_id,
-      namespace_lineage.namespace_plan_title,
-      namespace_lineage.namespace_plan_is_paid,
-      namespace_lineage.ultimate_parent_id,
-      namespace_lineage.ultimate_parent_plan_id,
-      namespace_lineage.ultimate_parent_plan_title,
-      namespace_lineage.ultimate_parent_plan_is_paid,
-
-      CASE
-        WHEN gitlab_subscriptions.is_trial
-          THEN 'trial'
-        ELSE COALESCE(gitlab_subscriptions.plan_id, 34)::VARCHAR
-      END                                                          AS plan_id_at_project_creation,
-
-      ARRAYAGG(active_services.service_type)                       AS active_service_types,
-      */ 
       COALESCE(COUNT(DISTINCT members.member_id), 0)               AS member_count
     FROM projects
       LEFT JOIN members
         ON projects.project_id = members.source_id
         AND members.member_source_type = 'Project'
-        /*
-      LEFT JOIN namespaces
-        ON projects.namespace_id = namespaces.namespace_id
-      LEFT JOIN namespace_lineage
-        ON namespaces.namespace_id = namespace_lineage.namespace_id
-      LEFT JOIN gitlab_subscriptions
-        ON namespace_lineage.ultimate_parent_id  = gitlab_subscriptions.namespace_id
-        AND projects.created_at BETWEEN gitlab_subscriptions.valid_from AND {{ coalesce_to_infinity("gitlab_subscriptions.valid_to") }}
-      LEFT JOIN active_services
-        ON projects.project_id = active_services.project_id
-        */ 
     {{ dbt_utils.group_by(n=56) }}
 )
 

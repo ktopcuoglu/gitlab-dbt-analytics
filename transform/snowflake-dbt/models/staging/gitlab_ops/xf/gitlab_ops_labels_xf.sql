@@ -11,15 +11,6 @@ WITH labels AS (
     namespace_id
   FROM {{ ref('gitlab_ops_projects') }}
 
-/*
-), internal_namespaces AS (
-
-    SELECT
-      namespace_id
-    FROM {{ref('gitlab_dotcom_namespace_lineage')}}
-    WHERE namespace_is_internal
-    
-*/
 ), joined AS (
 
     SELECT
