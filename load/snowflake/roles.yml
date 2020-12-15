@@ -850,12 +850,15 @@ roles:
             databases:
                 read:
                     - analytics
+                    - prep
             schemas:
                 read:
-                    - analytics.date
+                    - analytics.common
+                    - prep.date
             tables:
                 read:
-                    - analytics.date.*
+                    - analytics.common.dim_date
+                    - prep.date.*
 
     - db_dumps:
         privileges:
