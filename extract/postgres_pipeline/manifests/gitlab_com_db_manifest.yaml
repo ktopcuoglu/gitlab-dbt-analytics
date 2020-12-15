@@ -481,7 +481,8 @@ tables:
   ci_build_trace_sections:
     import_db: GITLAB_DB
     import_query: >
-      SELECT project_id
+      SELECT CONCAT(build_id,'_',section_name_id)
+      , project_id
       , date_start
       , date_end
       , build_id
