@@ -32,6 +32,15 @@ models:
       - name: dim_industry_id
         description: Unique identifier of a version of a industry
 
+  - name: map_ip_to_geo
+    description: '{{ doc("map_ip_to_geo") }}'
+    columns:
+      - name: ip_address_hash
+        tests:
+          - unique
+          - not_null
+      - name: location_id
+
   - name: map_product_tier
     description: '{{ doc("map_product_tier") }}'
     columns:
