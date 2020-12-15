@@ -419,7 +419,7 @@ models:
       - name: product_tier_name
         description: Name of the [GitLab tier](https://about.gitlab.com/handbook/marketing/strategic-marketing/tiers/) associated with the product.
         tags: [ "tdf", "common" ]
-        name: product_delivery_type
+      - name: product_delivery_type
         description: How a product is delivered to the customer; SaaS or Self-Managed (or Other).
       - name: product_ranking
         description: Numeric product pricing tier, independent of delivery type.
