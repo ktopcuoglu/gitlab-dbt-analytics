@@ -1,6 +1,7 @@
 {{config({
     "materialized": "table",
-    "schema": "staging"
+    "schema": "legacy",
+    "database": env_var('SNOWFLAKE_TRANSFORM_DATABASE'),
   })
 }}
 
@@ -112,6 +113,7 @@ WITH source AS (
         order_type_live__c                          AS order_type_live,
         order_type_test__c                          AS order_type_stamped,
         arr_net__c                                  AS net_arr,
+        days_in_sao__c                              AS days_in_sao,
 
       -- ************************************
       -- sales segmentation deprecated fields - 2020-09-03
@@ -166,6 +168,11 @@ division_sales_segment_stamped,
         fm_why_gitlab__c                            AS cp_why_gitlab,
         fm_why_now__c                               AS cp_why_now,
 
+        -- original issue: https://gitlab.com/gitlab-data/analytics/-/issues/6577
+        sa_validated_tech_evaluation_close_statu__c AS sa_tech_evaluation_close_status,
+        sa_validated_tech_evaluation_end_date__c    AS sa_tech_evaluation_end_date,
+        sa_validated_tech_evaluation_start_date__c  AS sa_tech_evaluation_start_date,
+
         -- metadata
         convert_timezone('America/Los_Angeles',convert_timezone('UTC',
                  CURRENT_TIMESTAMP()))              AS _last_dbt_run,
@@ -174,8 +181,6 @@ division_sales_segment_stamped,
         isdeleted                                   AS is_deleted,
         lastactivitydate                            AS last_activity_date,
         recordtypeid                                AS record_type_id
-
-
 
       FROM source
   )

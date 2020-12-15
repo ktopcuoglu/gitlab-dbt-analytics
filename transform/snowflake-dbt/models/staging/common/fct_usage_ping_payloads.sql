@@ -21,6 +21,11 @@ WITH license AS (
     WHERE is_deleted = FALSE
       AND exclude_from_analysis IN ('False', '')
 
+), dim_hosts AS (
+
+    SELECT *
+    FROM {{ ref('dim_hosts') }}
+
 ), usage_data AS (
 
     SELECT *
@@ -48,10 +53,16 @@ WITH license AS (
       usage_data.*,
       subscription_id,
       account_id,
-      array_product_details_id
+      array_product_details_id,
+      dim_hosts.location_id
+
     FROM usage_data
     LEFT JOIN license_product_details
       ON usage_data.license_md5 = license_product_details.license_md5
+    LEFT JOIN dim_hosts
+      ON usage_data.host_id = dim_hosts.host_id
+        AND usage_data.source_ip_hash = dim_hosts.source_ip_hash
+        AND usage_data.uuid = dim_hosts.instance_id
 
 ), renamed AS (
 
@@ -80,7 +91,8 @@ WITH license AS (
       license_plan,
       license_trial   AS is_trial,
       created_at,
-      recorded_at
+      recorded_at,
+      license_user_count
     FROM joined
 
 )
@@ -88,7 +100,7 @@ WITH license AS (
 {{ dbt_audit(
     cte_ref="renamed",
     created_by="@derekatwood",
-    updated_by="@msendal",
+    updated_by="@mpeychet_",
     created_date="2020-08-17",
-    updated_date="2020-10-26"
+    updated_date="2020-12-03"
 ) }}

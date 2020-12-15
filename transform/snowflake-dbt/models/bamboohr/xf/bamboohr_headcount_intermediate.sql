@@ -1,6 +1,7 @@
 {{ config({
     "materialized":"table",
-    "schema": "sensitive"
+    "schema": "sensitive",
+    "database": env_var('SNOWFLAKE_PREP_DATABASE'),
     })
 }}
 
@@ -285,9 +286,23 @@ WITH dates AS (
     WHERE department IS NOT NULL
     {{ dbt_utils.group_by(n=8) }} 
 
+), breakout_modified AS (
+
+    SELECT 
+      aggregated.*,
+      IFF(breakout_type = 'eeoc_breakout'
+          AND eeoc_field_name = 'no_eeoc', 'kpi_breakout', breakout_type)                   AS breakout_type_modified
+    FROM aggregated
+
+), final AS (
+
+    SELECT
+      {{ dbt_utils.surrogate_key(['month_date', 'breakout_type_modified','department','division',
+                                'job_role','job_grade', 'eeoc_field_name', 'eeoc_value']) }} AS unique_key,
+      breakout_modified.*                           
+    FROM breakout_modified
+
 )
 
-SELECT *,
-  IFF(breakout_type = 'eeoc_breakout' AND eeoc_field_name = 'no_eeoc', 'kpi_breakout', breakout_type) AS breakout_type_modified
-FROM aggregated
-
+SELECT *
+FROM final

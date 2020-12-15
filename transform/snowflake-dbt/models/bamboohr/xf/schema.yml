@@ -1,8 +1,19 @@
 version: 2
 
 models:
+  - name: bamboohr_base_mapping
+    description: This model ties all departments to the last 12 months and is used in downstream models to do rolling 12 month metrics
+
   - name: bamboohr_budget_vs_actual
     description: Compares promotion budget spend to the budget aggregated at the division level.
+    columns:
+    - name: fiscal_quarter_name
+    - name: division
+    - name: fiscal_year
+    - name: fiscal_quarter
+    - name: budget
+    - name: excess_from_previous_quarter
+    - name: total_spend
 
   - name: bamboohr_current_division_mapping
     description: This model accounts for the current mapping of department and divisions to allow for aggregatd models to reflect current division terminology used (as seen in bamboohr_rpt_headcount_aggregation)
@@ -28,7 +39,7 @@ models:
     - name: job_title
     - name: department
     - name: division
-    - name: jobtitle_speciality
+    - name: job_title_speciality
     - name: job_role_modified
       description: Introduces values of ['Senior Leadership', 'Manager', 'Individual Contributor'] for roles. There is no accepted values test since this field was not religiously populated prior to 2020-02.
     - name: location_factor
@@ -69,7 +80,7 @@ models:
     - name: division_mapped_current
       description: This is the division as used for the current month. We map back historically based on identifying the current division deparmtment mapping and then updating for months prior what the department would be mapped to currently.
     - name: cost_center
-    - name: jobtitle_speciality
+    - name: job_title_speciality
     - name: location_factor
     - name: total_direct_reports
       description: Identifies the number of team members that roll up to an individual for a given day.
@@ -127,12 +138,16 @@ models:
   - name: bamboohr_headcount_intermediate
     description: This is the intermediate model to creating out the headcount report. This report provides headcounts, hires, separations by diversity fields, department, and division. Note - division is mapped to the last month in the report to account for 12 month calculations. 
     columns:
+        - name: unique_key
+          tests:
+            - not_null
+            - unique
         - name: month_date
         - name: breakout_type
           description: Explains the breakout of the data in the columns associated to this field.
-        #   tests:
-        #     - accepted_values:
-        #         values: ['all_attributes_breakout', eeoc_breakout','division_breakout']
+          tests:
+            - accepted_values:
+                values: ['all_attributes_breakout','department_breakout', 'division_breakout', 'eeoc_breakout', 'kpi_breakout']
         - name: department
           description: This is using current department, and maps out historical department/divisions to the current mapping.
         - name: division

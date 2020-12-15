@@ -39,6 +39,14 @@ This model limits the gitlab dotcom emails table to only have records for emails
 
 {% enddocs %}
 
+{% docs gitlab_dotcom_gitlab_internal_sprints %}
+
+This model limits the gitlab dotcom sprints table to only have records from groups gitlab-org(9970) and gitlab-com(6543), or projects that are part of product.
+
+Useful to get sprint title and description information for GitLab internal sprints.
+
+{% enddocs %}
+
 {% docs gitlab_dotcom_gitlab_user_requests %}
 
 This model enables product managers to surface which issue has been requested by potential prospects and current customers. The final model creates a table where each row is unique tuple of a `issue_id` and a `sfdc_account_id`.
@@ -123,7 +131,7 @@ Additionally, this model calculates the field `is_billable` - i.e. if a member s
 
 ```
 SELECT COUNT(DISTINCT user_id)
-FROM analytics.gitlab_dotcom_memberships
+FROM legacy.gitlab_dotcom_memberships
 WHERE is_billable = TRUE
   AND ultimate_parent_id = 123456
 ```  
@@ -220,7 +228,9 @@ XF model that joins the base model `gitlab_dotcom_saml_providers` to the `gitlab
 
 {% docs gitlab_dotcom_secure_stage_ci_jobs %}
 
-This table is meant to isolate all ci_build jobs used to create the AMAU calculation for secure stage as described in [this handbook page](https://about.gitlab.com/handbook/product/metrics/#stage-monthly-active-users-smau)
+This table is meant to isolate all ci_build jobs used to create the AMAU calculation for secure stage as described in [this handbook page](https://about.gitlab.com/handbook/product/metrics/#stage-monthly-active-users-smau).
+
+This table is populated to try to catch customized setups. It leverages tables gitlab_dotcom_ci_job_artifacts, gitlab_dotcom_projects_xf, and gitlab_dotcom_ci_builds.
 
 {% enddocs %}
 
@@ -231,6 +241,45 @@ This table aggregates but does not manipulate a subset of columns from all of th
 This data is associated to the top-most namespace/project level, not necessarily the level at which the event occurred.
 
 The goal is to be able to reproduce the same usage dataset as the one sent weekly by self-managed instances to the version app.
+
+Data Team notes:
+
+The table normalizes all the gitlab_dotcom tables to always extract the same subset of column:
+* namespace_id, 
+* namespace_created_at,
+* project_created_at,
+* event_created_at
+
+Currently, the following tables are included in the model:
+
+* gitlab_dotcom_boards
+* gitlab_dotcom_ci_builds
+* gitlab_dotcom_ci_pipeline_schedules
+* gitlab_dotcom_ci_pipelines
+* gitlab_dotcom_ci_stages
+* gitlab_dotcom_ci_triggers
+* gitlab_dotcom_deployments
+* gitlab_dotcom_environments
+* gitlab_dotcom_issues
+* gitlab_dotcom_labels
+* gitlab_dotcom_lfs_objects_projects
+* gitlab_dotcom_merge_requests
+* gitlab_dotcom_milestones
+* gitlab_dotcom_notes
+* gitlab_dotcom_project_auto_devops
+* gitlab_dotcom_releases
+* gitlab_dotcom_snippets
+* gitlab_dotcom_todos
+
+{% enddocs %}
+
+{% docs gitlab_dotcom_usage_data_events_blocked_users %}
+
+This table aggregates but does not manipulate a subset of columns from all of the gitlab_dotcom database tables where the users account status is either Blocked or Deactivated. These tables are populated directly from gitlab-dot-com variables. The calculated columns are `stage_name` and `event_name`.
+
+This data is associated to the top-most namespace/project level, not necessarily the level at which the event occurred.
+
+The goal is to be table is to aggrigate data to analyse blocked and deactivated users historic usage.
 
 Data Team notes:
 
@@ -309,6 +358,51 @@ A `days_active` column is added by comparing `created_at` with `last_activity_on
 
 {% enddocs %}
 
+{% docs gitlab_dotcom_users_blocked_xf%}
+This model extends the base model `gitlab_dotcom_users` and adds several other dimensions as well a filter out active users
+
+### Age cohorts
+This model adds account age cohorts to the users table, the defined cohorts are:
+
+1-  1 day or less  
+2-  2 to 7 days  
+3-  8 to 14 days  
+4-  15 to 30 days  
+5-  31 to 60 days  
+6-  Over 60 days  
+
+The CTE does this by comparing the time of the dbt run with `created_at` in the users table.
+
+### Highest inherited subscription
+
+This model documents the highest subscription a user inherits from. Rules around inheritance are a bit complicated, as stated in the handbook [here](https://about.gitlab.com/handbook/marketing/product-marketing/enablement/dotcom-subscriptions/#common-misconceptions),
+
+>>>
+Reality: GitLab.com subscriptions are scoped to a namespace, and individual users could participate in many groups with different subscription types. For example, they might have personal projects on a Free subscription type, participate in an open-source project that has Gold features (because it's public) while their company has a Silver subscription.
+>>>
+
+A user inherits from a subscription when:
+* They are a member of a group/sub-group that has a paid subscription.
+* They are a member of a project which belongs to a group with a paid subscription
+* They have a personal subscription attached to their personal namespace.
+
+Some gotchas:
+* If a user is part of a public open-source (or edu) group/project, they will not inherit from the Gold subscription of the group/project.
+* If a user is part of a project created by another user's personal namespace, they won't inherit from the owner's namespace subscription.
+
+We then know for each user: what's the highest plan they inherit from and where they inherit it from.
+
+If a user inherits from 2+ subscriptions with the same plan, we choose one subscription over the other based on the inheritance source: First, user, then groups, then projects.
+
+### Subscription Portal (customers.gitlab.com) data 
+
+This model surfaces also if a user has created an account or not in the subscription portal by joining with the `customers_db_customers` table. It also informs us if a specific user has already started a trial and if so when. 
+
+### Misc
+
+A `days_active` column is added by comparing `created_at` with `last_activity_on`
+
+{% enddocs %}
 
 {% docs xf_visibility_documentation %}
 

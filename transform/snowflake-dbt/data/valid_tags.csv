@@ -3,15 +3,19 @@ arr,Annual Recurring Revenue
 arr_snapshots,For ARR Snapshots
 billing_accounts,For billing accounts
 common,For the common schema
-crm_accounts,For CRM Accounts
+crm_account,For CRM Accounts
 customers_db,Relates to Customers database
 daily,Used in Airflow runs
 data,dbt built-in
+datasiren,Relates to datasiren models
 dbt,Relates to dbt-generated data-sets
+discourse,Relates to Discourse data
 geo,Relates to geo data
 gitlab_dotcom,Relates to GitLab.com Database
+gitlab_ops,Relates to GitLab ops database
 license_db,Relates to License DB
 industry, Related to companies industry data
+invoice,Related to zuora invoice data
 keyhole_twitter,Relates to Twitter data provided by Keyhole
 mart,For data marts
 mrr,Monthly Recurring revenue

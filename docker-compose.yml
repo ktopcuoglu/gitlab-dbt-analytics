@@ -89,10 +89,13 @@ services:
       environment:
         DBT_PROFILES_DIR: /usr/local/dbt_profiles/
         DATA_TEST_BRANCH: "main"
+        DATA_SIREN_BRANCH: "master"
         SNOWFLAKE_SNAPSHOT_DATABASE: "SNOWFLAKE"
         SNOWFLAKE_LOAD_DATABASE: "RAW"
-        SNOWFLAKE_PREP_WAREHOUSE: "PREP"
-        SNOWFLAKE_PROD_WAREHOUSE: "PROD"
+        SNOWFLAKE_PREP_DATABASE: "PREP"
+        SNOWFLAKE_PREP_SCHEMA: "preparation"
+        SNOWFLAKE_PROD_DATABASE: "PROD"
+        SNOWFLAKE_TRANSFORM_DATABASE: "ANALYTICS"
         SNOWFLAKE_TRANSFORM_WAREHOUSE: "ANALYST_XS"
         SALT: "pizza"
         SALT_IP: "pie"

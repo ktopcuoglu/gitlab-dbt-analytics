@@ -1,6 +1,7 @@
 {{ config({
     "materialized":"table",
-    "schema": "sensitive"
+    "schema": "sensitive",
+    "database": env_var('SNOWFLAKE_PREP_DATABASE'),
     })
 }}
 
@@ -11,7 +12,7 @@ WITH RECURSIVE employee_directory AS (
       employee_number,	
       first_name,	
       last_name,	
-      (employee_directory.first_name ||' '|| employee_directory.last_name)   AS full_name,
+      (first_name ||' '|| last_name)   AS full_name,
       work_email,
       hire_date,
       rehire_date,
@@ -130,8 +131,10 @@ WITH RECURSIVE employee_directory AS (
       department_info.job_title,	
       department_info.department,	
       department_info.department_modified,
+      department_info.department_grouping,
       department_info.division,
       department_info.division_mapped_current,
+      department_info.division_grouping,
       COALESCE(job_role.cost_center, 
                cost_center_prior_to_bamboo.cost_center)                     AS cost_center,
       department_info.reports_to,
@@ -155,45 +158,34 @@ WITH RECURSIVE employee_directory AS (
       sales_geo_differential,
       direct_reports.total_direct_reports,
      --for the diversity KPIs we are looking to understand senior leadership representation and do so by job grade instead of role        
-      CASE WHEN COALESCE(job_role.job_grade, job_info_mapping_historical.job_grade) IN ('11','12','CXO')
-                AND total_direct_reports > 0
-                AND employment_status NOT IN ('Parental Leave','Garden Leave')
-            THEN 'Senior Leadership'
-            WHEN COALESCE(job_role.job_grade, job_info_mapping_historical.job_grade) IN ('11','12','CXO')
-                AND employment_status IN ('Parental Leave','Garden Leave')
-            THEN 'Senior Leadership'   
-            WHEN COALESCE(job_role.job_grade, job_info_mapping_historical.job_grade) = '10' 
-                AND total_direct_reports > 0
-                AND employment_status NOT IN ('Parental Leave','Garden Leave')
-            THEN 'Manager'
-            WHEN COALESCE(job_role.job_role, 
-                         job_info_mapping_historical.job_role,
-                         department_info.job_role) = 'Manager'
-                AND COALESCE(total_direct_reports,0) > 0 
-            THEN 'Manager'
-            WHEN (department_info.job_title LIKE '%Manager%' or department_info.job_title LIKE '%Director,%')
-                 AND COALESCE(job_role.job_role, 
-                         job_info_mapping_historical.job_role,
-                         department_info.job_role) = 'Leader'
-                 AND total_direct_reports > 0
-            THEN 'Manager'
-            WHEN (department_info.job_title LIKE '%VP%' 
-                    OR department_info.job_title LIKE '%Chief%' 
-                    OR department_info.job_title LIKE '%Senior Director%')
+      CASE 
+        WHEN (LEFT(department_info.job_title,5) = 'Staff' 
+                OR LEFT(department_info.job_title,13) = 'Distinguished'
+                OR LEFT(department_info.job_title,9) = 'Principal')
+            AND COALESCE(job_role.job_grade, job_info_mapping_historical.job_grade) IN ('8','9','9.5') 
+          THEN 'Staff'
+        WHEN COALESCE(job_role.job_grade, job_info_mapping_historical.job_grade) IN ('11','12','14','15','CXO')
+          THEN 'Senior Leadership'
+        WHEN COALESCE(job_role.job_grade, job_info_mapping_historical.job_grade) LIKE '%C%'
+          THEN 'Senior Leadership'   
+        WHEN (department_info.job_title LIKE '%VP%' 
+                OR department_info.job_title LIKE '%Chief%' 
+                OR department_info.job_title LIKE '%Senior Director%')
                 AND COALESCE(job_role.job_role, 
                          job_info_mapping_historical.job_role,
                          department_info.job_role) = 'Leader'
-                AND total_direct_reports > 0 
-                AND employment_status NOT IN ('Parental Leave','Garden Leave')
-            THEN 'Senior Leadership'
-            WHEN COALESCE(total_direct_reports,0) =0 AND 
-                    COALESCE(job_role.job_role, job_info_mapping_historical.job_role,department_info.job_role) = 'Manager'
-              THEN 'Staff'
-            WHEN COALESCE(total_direct_reports,0) = 0 
-            THEN 'Individual Contributor'
-             ELSE COALESCE(job_role.job_role, 
-                           job_info_mapping_historical.job_role,
-                           department_info.job_role) END                       AS job_role_modified,
+          THEN 'Senior Leadership'    
+        WHEN COALESCE(job_role.job_grade, job_info_mapping_historical.job_grade) = '10' 
+          THEN 'Manager'
+        WHEN COALESCE(job_role.job_role, 
+                      job_info_mapping_historical.job_role,
+                      department_info.job_role) = 'Manager'
+          THEN 'Manager'
+        WHEN COALESCE(total_direct_reports,0) = 0 
+          THEN 'Individual Contributor'
+        ELSE COALESCE(job_role.job_role, 
+                      job_info_mapping_historical.job_role,
+                      department_info.job_role) END                            AS job_role_modified,      
       IFF(compensation_change_reason IS NOT NULL,TRUE,FALSE)                   AS is_promotion,
       bamboohr_discretionary_bonuses_xf.total_discretionary_bonuses            AS discretionary_bonus,
       ROW_NUMBER() OVER 

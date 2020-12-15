@@ -1,5 +1,6 @@
 {{ config({
     "schema": "sensitive",
+    "database": env_var('SNOWFLAKE_PREP_DATABASE'),
     "materialized": "table"
     })
 }}
@@ -8,18 +9,21 @@
 
 WITH source AS (
 
-  SELECT *
-  FROM {{ref("comp_band_loc_factor_base")}}
+    SELECT *
+    FROM {{ source('snapshots', 'sheetload_employee_location_factor_snapshots') }}
+    WHERE "Employee_ID" != 'Not In Comp Calc'
+      AND "Employee_ID" NOT IN ('$72,124','S1453')
 
 ), renamed as (
 
     SELECT
-    NULLIF("Employee_ID",'')::VARCHAR                       AS bamboo_employee_number,
-    NULLIF("Location_Factor",'')                            AS location_factor,
-    CASE WHEN "DBT_VALID_FROM"::NUMBER::TIMESTAMP::DATE < '2019-07-20'::DATE
-             THEN '2000-01-20'::DATE
-             ELSE "DBT_VALID_FROM"::NUMBER::TIMESTAMP::DATE END AS valid_from,
-         "DBT_VALID_TO"::number::timestamp::DATE                AS valid_to
+      NULLIF("Employee_ID",'')::VARCHAR                       AS bamboo_employee_number,
+      NULLIF("Location_Factor",'')                            AS location_factor,
+      CASE
+        WHEN "DBT_VALID_FROM"::NUMBER::TIMESTAMP::DATE < '2019-07-20'::DATE
+          THEN '2000-01-20'::DATE
+        ELSE "DBT_VALID_FROM"::NUMBER::TIMESTAMP::DATE END AS valid_from,
+      "DBT_VALID_TO"::number::timestamp::DATE                AS valid_to
     FROM source
     WHERE LOWER(bamboo_employee_number) NOT LIKE '%not in comp calc%'
       AND location_factor IS NOT NULL
@@ -32,9 +36,9 @@ WITH source AS (
 ), unioned AS (
 
     SELECT 
-      bamboo_employee_number::NUMBER AS bamboo_employee_number,
-      NULL                           AS locality,
-      (location_factor::FLOAT)       AS location_factor,
+      bamboo_employee_number::NUMBER                            AS bamboo_employee_number,
+      NULL                                                      AS locality,
+      location_factor::FLOAT                                    AS location_factor,
       valid_from,
       valid_to
     FROM renamed
@@ -46,7 +50,7 @@ WITH source AS (
     SELECT 
       employee_number,
       bamboo_locality,
-      location_factor               AS location_factor,
+      location_factor                                                         AS location_factor,
       updated_at,
       LEAD(updated_at) OVER (PARTITION BY employee_number ORDER BY updated_at) AS valid_to
     FROM employee_locality
@@ -69,18 +73,21 @@ WITH source AS (
     FROM intermediate
     QUALIFY ROW_NUMBER() OVER (PARTITION BY bamboo_employee_number, locality, location_factor, next_location_factor ORDER BY valid_from) =1
 
+), final AS (
+
+    SELECT 
+      bamboo_employee_number,
+      locality,
+      location_factor,
+      valid_from                                                            AS valid_from,
+      COALESCE( 
+        LEAD(DATEADD(day,-1,valid_from)) 
+            OVER (PARTITION BY bamboo_employee_number ORDER BY valid_from),
+            {{max_date_in_analysis}})                                      AS valid_to
+    FROM deduplicated
+    GROUP BY 1, 2, 3, 4
+
 )
 
-SELECT 
-  bamboo_employee_number,
-  locality,
-  location_factor,
-  valid_from                                                            AS valid_from,
-  COALESCE( 
-    LEAD(DATEADD(day,-1,valid_from)) 
-    OVER (PARTITION BY bamboo_employee_number ORDER BY valid_from),
-    {{max_date_in_analysis}})                                           AS valid_to
-FROM deduplicated
-GROUP BY 1, 2, 3, 4
-
-
+SELECT * 
+FROM final

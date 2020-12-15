@@ -1,8 +1,13 @@
 /* grain: one record per subscription per month */
-WITH dim_dates AS (
+WITH dim_date AS (
 
     SELECT *
-    FROM {{ ref('dim_dates') }}
+    FROM {{ ref('dim_date') }}
+
+), map_merged_crm_accounts AS (
+
+    SELECT *
+    FROM {{ ref('map_merged_crm_accounts') }}
 
 ), zuora_account AS (
 
@@ -51,8 +56,8 @@ WITH dim_dates AS (
 ), rate_plan_charge_filtered AS (
 
   SELECT
-    zuora_account.account_id                           AS billing_account_id,
-    zuora_account.crm_id                               AS crm_account_id,
+    zuora_account.account_id                            AS billing_account_id,
+    map_merged_crm_accounts.dim_crm_account_id          AS crm_account_id,
     zuora_subscription_snapshots.subscription_id,
     zuora_subscription_snapshots.subscription_name,
     zuora_rate_plan_charge.product_rate_plan_charge_id AS product_details_id,
@@ -72,11 +77,13 @@ WITH dim_dates AS (
     AND zuora_subscription_snapshots.rank = 1
   INNER JOIN zuora_account
     ON zuora_account.account_id = zuora_subscription.account_id
+  LEFT JOIN map_merged_crm_accounts
+    ON zuora_account.crm_id = map_merged_crm_accounts.sfdc_account_id
 
 ), mrr_month_by_month AS (
 
   SELECT
-    dim_dates.date_id,
+    dim_date.date_id,
     billing_account_id,
     crm_account_id,
     subscription_id,
@@ -87,11 +94,11 @@ WITH dim_dates AS (
     SUM(quantity)                                        AS quantity,
     ARRAY_AGG(rate_plan_charge_filtered.unit_of_measure) AS unit_of_measure
   FROM rate_plan_charge_filtered
-  INNER JOIN dim_dates
-    ON rate_plan_charge_filtered.effective_start_month <= dim_dates.date_actual
-    AND (rate_plan_charge_filtered.effective_end_month > dim_dates.date_actual
+  INNER JOIN dim_date
+    ON rate_plan_charge_filtered.effective_start_month <= dim_date.date_actual
+    AND (rate_plan_charge_filtered.effective_end_month > dim_date.date_actual
       OR rate_plan_charge_filtered.effective_end_month IS NULL)
-    AND dim_dates.day_of_month = 1
+    AND dim_date.day_of_month = 1
   {{ dbt_utils.group_by(n=6) }}
 
 ), final AS (
@@ -115,11 +122,7 @@ WITH dim_dates AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@msendal",
-    updated_by="@msendal",
+    updated_by="@iweeks",
     created_date="2020-09-10",
-    updated_date="2020-09-17",
+    updated_date="2020-10-22",
 ) }}
-
-
-
-

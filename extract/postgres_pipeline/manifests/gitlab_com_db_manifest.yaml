@@ -930,6 +930,22 @@ tables:
     advanced_metadata: true
     dbt_source_model: true
     dbt_snapshots: true
+  group_custom_attributes:
+    import_db: GITLAB_DB
+    import_query: >
+      SELECT id
+      , created_at
+      , updated_at
+      , group_id
+      , key
+      , value
+      FROM group_custom_attributes
+      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
+        AND '{EXECUTION_DATE}'::timestamp
+    export_schema: 'gitlab_com'
+    export_table: 'group_custom_attributes'
+    export_table_primary_key: id
+    dbt_source_model: true
   group_group_links:
     import_db: GITLAB_DB
     import_query: >
@@ -1608,12 +1624,14 @@ tables:
       , updated_at
       , project_id
       , key
+      , value
       FROM project_custom_attributes
       WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
         AND '{EXECUTION_DATE}'::timestamp
     export_schema: 'gitlab_com'
     export_table: 'project_custom_attributes'
     export_table_primary_key: id
+    dbt_source_model: true
   project_features:
     import_db: GITLAB_DB
     import_query: >
@@ -2017,6 +2035,19 @@ tables:
     export_table: 'programming_languages'
     export_table_primary_key: id
     dbt_source_model: true
+  project_daily_statistics:
+    import_db: GITLAB_DB
+    import_query: >
+      SELECT id
+      , project_id
+      , fetch_count
+      , date
+      FROM project_daily_statistics
+      WHERE date >= '{EXECUTION_DATE}'::date - interval '{HOURS} hours'
+        AND date <= '{EXECUTION_DATE}'::date
+    export_schema: 'gitlab_com'
+    export_table: 'project_daily_statistics'
+    export_table_primary_key: id
   protected_environments:
     import_db: GITLAB_DB
     import_query: >
@@ -2265,6 +2296,22 @@ tables:
     export_table: 'users'
     export_table_primary_key: id
     dbt_source_model: true
+  user_custom_attributes:
+    import_db: GITLAB_DB
+    import_query: >
+      SELECT id
+      , created_at
+      , updated_at
+      , user_id
+      , key
+      , value
+      FROM user_custom_attributes
+      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
+        AND '{EXECUTION_DATE}'::timestamp
+    export_schema: 'gitlab_com'
+    export_table: 'user_custom_attributes'
+    export_table_primary_key: id
+    dbt_source_model: true
   user_preferences:
     import_db: GITLAB_DB
     import_query: >
@@ -2289,7 +2336,6 @@ tables:
       , setup_for_company
       , render_whitespace_in_code
       , tab_width
-      , feature_filter_type
       , experience_level
       FROM user_preferences
       WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
@@ -2302,7 +2348,14 @@ tables:
     import_db: GITLAB_DB
     import_query: >
       SELECT id
+      , confidence
+      , confidence_overridden
+      , confirmed_at
       , created_at
+      , dismissed_at
+      , resolved_at
+      , severity_overridden
+      , state
       , updated_at
       FROM vulnerabilities
       WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'

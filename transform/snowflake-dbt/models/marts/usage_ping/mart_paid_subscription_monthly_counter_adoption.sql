@@ -8,12 +8,12 @@ WITH self_managed_active_subscriptions AS (
       quantity
     FROM {{ ref('fct_mrr')}}
   
-), dim_dates AS (
+), dim_date AS (
   
     SELECT DISTINCT
       date_id,
       first_day_of_month
-    FROM {{ ref('dim_dates')}}
+    FROM {{ ref('dim_date')}}
     WHERE first_day_of_month < CURRENT_DATE
   
 ), dim_product_details AS (
@@ -36,6 +36,11 @@ WITH self_managed_active_subscriptions AS (
     SELECT *
     FROM {{ ref('fct_usage_ping_payloads') }}
   
+), gitlab_release_schedule AS (
+  
+    SELECT *
+    FROM {{ ref('gitlab_release_schedule')}}  
+
 ), transformed AS (
   
     SELECT 
@@ -52,7 +57,7 @@ WITH self_managed_active_subscriptions AS (
     INNER JOIN dim_product_details
       ON self_managed_active_subscriptions.product_details_id = dim_product_details.product_details_id
         AND delivery='Self-Managed'
-    INNER JOIN dim_dates ON self_managed_active_subscriptions.date_id = dim_dates.date_id
+    INNER JOIN dim_date ON self_managed_active_subscriptions.date_id = dim_date.date_id
     LEFT JOIN active_subscriptions ON self_managed_active_subscriptions.subscription_id = active_subscriptions.subscription_id
     LEFT JOIN all_subscriptions ON active_subscriptions.subscription_name_slugify = all_subscriptions.subscription_name_slugify
     LEFT JOIN fct_payloads ON all_subscriptions.subscription_id = fct_payloads.subscription_id AND first_day_of_month = DATE_TRUNC('month', fct_payloads.created_at)
@@ -72,7 +77,7 @@ WITH self_managed_active_subscriptions AS (
     INNER JOIN dim_product_details
       ON self_managed_active_subscriptions.product_details_id = dim_product_details.product_details_id
         AND delivery='Self-Managed'
-    INNER JOIN dim_dates ON self_managed_active_subscriptions.date_id = dim_dates.date_id
+    INNER JOIN dim_date ON self_managed_active_subscriptions.date_id = dim_date.date_id
     INNER JOIN active_subscriptions ON self_managed_active_subscriptions.subscription_id = active_subscriptions.subscription_id
     INNER JOIN all_subscriptions ON active_subscriptions.subscription_name_slugify = all_subscriptions.subscription_name_slugify
     INNER JOIN fct_payloads ON all_subscriptions.subscription_id = fct_payloads.subscription_id AND first_day_of_month = DATE_TRUNC('month', fct_payloads.created_at)
@@ -86,11 +91,6 @@ WITH self_managed_active_subscriptions AS (
     LEFT JOIN latest_versions
       ON transformed.reporting_month = latest_versions.reporting_month
         AND transformed.subscription_name_slugify = latest_versions.subscription_name_slugify
-
-), gitlab_releases AS (
-    
-    SELECT *
-    FROM {{ ref('gitlab_release_schedule') }}
 
 ), agg_total_subscriptions AS (
 
@@ -110,7 +110,7 @@ WITH self_managed_active_subscriptions AS (
       COUNT(DISTINCT subscription_name_slugify)                         AS major_minor_version_subscriptions,
       major_minor_version_subscriptions /  MAX(total_subscrption_count) AS pct_major_minor_version_subscriptions
     FROM paid_subscriptions_monthly_usage_ping_optin
-    INNER JOIN analytics_staging.gitlab_release_schedule AS gitlab_releases
+    INNER JOIN gitlab_release_schedule AS gitlab_releases
       ON paid_subscriptions_monthly_usage_ping_optin.latest_major_minor_version = gitlab_releases.major_minor_version
     LEFT JOIN agg_total_subscriptions AS agg ON paid_subscriptions_monthly_usage_ping_optin.reporting_month = agg.agg_month
     {{ dbt_utils.group_by(n=4) }}
@@ -158,7 +158,7 @@ WITH self_managed_active_subscriptions AS (
       edition
     FROM flattened_usage_data
     INNER JOIN section_metrics ON flattened_usage_data.ping_name = section_metrics.metrics_path
-    LEFT JOIN gitlab_releases ON flattened_usage_data.first_version_with_counter = gitlab_releases.major_minor_version
+    LEFT JOIN gitlab_release_schedule AS gitlab_releases  ON flattened_usage_data.first_version_with_counter = gitlab_releases.major_minor_version
     WHERE release_date < CURRENT_DATE AND (is_smau OR is_gmau)
 
 ), date_spine AS (

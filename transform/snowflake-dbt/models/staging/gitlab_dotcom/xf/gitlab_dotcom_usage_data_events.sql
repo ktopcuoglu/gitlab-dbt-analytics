@@ -43,6 +43,15 @@
     "is_representative_of_stage": "False"
   },
   {
+    "event_name": "api_fuzzing",
+    "source_cte_name": "api_fuzzing_jobs",
+    "user_column_name": "ci_build_user_id",
+    "key_to_parent_project": "ci_build_project_id",
+    "primary_key": "ci_build_id",
+    "stage_name": "secure",
+    "is_representative_of_stage": "False"
+  },
+  {
     "event_name": "boards",
     "source_table_name": "gitlab_dotcom_boards",
     "user_column_name": "NULL",
@@ -169,6 +178,15 @@
     "is_representative_of_stage": "False"
   },
   {
+    "event_name": "events",
+    "source_table_name": "gitlab_dotcom_events",
+    "user_column_name": "author_id",
+    "key_to_parent_group": "project_id",
+    "primary_key": "event_id",
+    "stage_name": "manage",
+    "is_representative_of_stage": "False"
+  },
+  {
     "event_name": "groups",
     "source_cte_name": "group_members",
     "user_column_name": "user_id",
@@ -247,15 +265,6 @@
     "key_to_parent_project": "project_id",
     "primary_key": "lfs_object_id",
     "stage_name": "create",
-    "is_representative_of_stage": "False"
-  },
-  {
-    "event_name": "license_management",
-    "source_cte_name": "license_management_jobs",
-    "user_column_name": "ci_build_user_id",
-    "key_to_parent_project": "ci_build_project_id",
-    "primary_key": "ci_build_id",
-    "stage_name": "secure",
     "is_representative_of_stage": "False"
   },
   {
@@ -500,6 +509,12 @@ WITH gitlab_subscriptions AS (
     WHERE target_type = 'WikiPage::Meta' 
       AND event_action_type_id IN (1, 2)
 
+), api_fuzzing_jobs AS (
+
+    SELECT *
+    FROM {{ ref('gitlab_dotcom_secure_stage_ci_jobs') }}
+    WHERE secure_ci_job_type = 'api_fuzzing'
+
 ), container_scanning_jobs AS (
 
     SELECT *
@@ -548,18 +563,15 @@ WITH gitlab_subscriptions AS (
     SELECT *
     FROM {{ref('gitlab_dotcom_resource_milestone_events_xf')}}
     WHERE issue_id IS NOT NULL
-  
-), license_management_jobs AS (
-
-    SELECT *
-    FROM {{ ref('gitlab_dotcom_secure_stage_ci_jobs') }}
-    WHERE secure_ci_job_type = 'license_management'
 
 ), license_scanning_jobs AS (
 
     SELECT *
     FROM {{ ref('gitlab_dotcom_secure_stage_ci_jobs') }}
-    WHERE secure_ci_job_type = 'license_scanning'
+    WHERE secure_ci_job_type IN (
+                                  'license_scanning',
+                                  'license_management'
+                                )
 
 ), merge_request_notes AS (
 

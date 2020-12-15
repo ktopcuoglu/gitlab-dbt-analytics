@@ -1,5 +1,5 @@
 {{ config({
-    "schema": "analytics"
+    "schema": "legacy"
     })
 }}
 
@@ -25,15 +25,6 @@ WITH headcount AS (
     SElECT *,
       IFF(DATE_TRUNC(month, month_date) = DATE_TRUNC(month, DATEADD(month, -1, CURRENT_DATE())),1,0) AS last_month
     FROM {{ ref ('hire_replan_xf') }}
-
-), division_mapping AS (
-
-    SELECT 
-      department,
-      division
-    FROM hire_plan
-    WHERE last_month = 1
-    GROUP BY 1,2
   
 ), final AS (
 
@@ -41,7 +32,7 @@ WITH headcount AS (
       hire_plan.month_date,
       hire_plan.breakout_type,
       hire_plan.department,
-      COALESCE(hire_plan.division, division_mapping.division)               AS division,
+      hire_plan.division,
       hire_plan.planned_headcount,
       hire_plan.planned_hires,
       COALESCE(headcount.headcount_actual,0)                                AS headcount_actual,
@@ -54,10 +45,6 @@ WITH headcount AS (
       AND headcount.department = hire_plan.department
       AND headcount.division = hire_plan.division
       AND headcount.month_date = DATE_TRUNC(month, hire_plan.month_date)
-    LEFT JOIN division_mapping
-      ON hire_plan.department = division_mapping.department
-      AND hire_plan.breakout_type = 'department_division_breakout'
-
        
 )
 

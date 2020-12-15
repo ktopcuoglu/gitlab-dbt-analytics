@@ -37,10 +37,10 @@ query-comment:
 on-run-start:
     - "{{ resume_warehouse(var('resume_warehouse', false), var('warehouse_name')) }}"
     - "{{ create_udfs() }}"
+    - "create schema if not exists \"{{generate_database_name(env_var('SNOWFLAKE_PREP_DATABASE'))}}\".snowplow_{{ var('year', run_started_at.strftime('%Y')) }}_{{ var('month', run_started_at.strftime('%m')) }}"
 
 on-run-end:
     - "{{ grant_usage_to_schemas() }}"
-    - "drop schema if exists {{ generate_schema_name('temporary') }}"
     - "{{ suspend_warehouse(var('suspend_warehouse', false), var('warehouse_name')) }}"
 
 # ======
@@ -48,23 +48,27 @@ on-run-end:
 # ======
 seeds:
   +enabled: true
-  +schema: staging
+  +database: "{{ env_var('SNOWFLAKE_TRANSFORM_DATABASE') }}" #ANALYTICS
+  +schema: legacy
   +quote_columns: False
 
   gitlab_snowflake:
-    zuora_country_geographic_region:
-      +schema: analytics
     gitlab_release_schedule:
       +column_types:
         major_minor_version: varchar
   
   data_tests:
+    +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
     +schema: tdf
 
 # ==================
 # Variable Configs
 # ==================
 vars:
+
+  datasiren:
+    'datasiren:sensorlist': ['datasiren_transform_db_email_column_name_sensor']
+
   warehouse_name: "{{ env_var('SNOWFLAKE_TRANSFORM_WAREHOUSE') }}"
   valid_at: '{{ run_started_at.strftime("%Y-%m-%d %H:%M:%S%z") }}'
 
@@ -85,15 +89,15 @@ vars:
 # Model Configs
 # ==================
 models:
+  +database: "{{ env_var('SNOWFLAKE_TRANSFORM_DATABASE') }}" # ANALYTICS, redundant, but good to be explicit
+  +schema: legacy  # Top level override since profiles defaults to PREP
 
   # ------------------
   # Snowplow Package https://hub.getdbt.com/fishtown-analytics/snowplow/latest/
   # ------------------
   snowplow:
+    +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
     +schema: "snowplow_{{ var('year', run_started_at.strftime('%Y')) }}_{{ var('month', run_started_at.strftime('%m')) }}"
-    +post-hook:
-      - "grant usage on schema {{this.schema}} to role snowplow"
-      - "grant select on {{this}} to role snowplow"
     +tags: ["product"]
     +incremental_strategy: "delete+insert"
     page_views:
@@ -106,9 +110,13 @@ models:
   # ------------------
   snowflake_spend:
     +materialized: table
-    xf:
-      +schema: analytics
 
+  datasiren:
+    +full_refresh: false
+    +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
+    +schema: datasiren
+    +tags: ["datasiren"]
+    
   # ==================
   # GitLab Models
   # ==================
@@ -119,6 +127,7 @@ models:
     # Sources
     # ------------------
     sources:
+      +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
       +tags: ["sources"]
 
       airflow:
@@ -131,6 +140,10 @@ models:
           +schema: sensitive
           secure: true
 
+      datasiren:
+        +schema: datasiren
+        +tags: ["datasiren"]
+
       date:
         +materialized: table
         +schema: date
@@ -141,6 +154,7 @@ models:
         +tags: ["dbt"]
 
       engineering:
+        +database: "{{ env_var('SNOWFLAKE_TRANSFORM_DATABASE') }}" # ANALYTICS
         +materialized: table
 
       gcp_billing:
@@ -153,9 +167,10 @@ models:
       gitlab_dotcom:
         +materialized: table
         +schema: gitlab_dotcom
-
-      gitter:
-        +enabled: false
+      
+      gitlab_ops:
+        +materialized: table
+        +schema: gitlab_ops
 
       google_analytics_360:
         +materialized: table
@@ -180,13 +195,13 @@ models:
           +schema: sensitive
           secure: true
 
-      qualtrics:
-        +materialized: table
-        +schema: qualtrics
-
       pmg:
         +materialized: table
         +schema: pmg
+
+      qualtrics:
+        +materialized: table
+        +schema: qualtrics
 
       rspec:
         +schema: rspec
@@ -202,6 +217,9 @@ models:
 
       snowflake:
         +schema: snowflake
+
+      snowflake_imports:
+        +schema: snowflake_imports
 
       snowplow:
         +tags: ["product"]
@@ -226,60 +244,33 @@ models:
     # Staging
     # ------------------
     staging:
-      +schema: staging
       +materialized: table
 
-      customers:
-        xf:
-          +schema: analytics
-
       date:
-        +schema: analytics
         +materialized: view
 
-      engineering:
-        +materialized: table
-
-      gcp_billing:
-        +schema: analytics
-
-      gitlab_data_yaml:
-        xf:
-          +schema: analytics
+      dbt:
+        +schema: workspace_data
+        +tags: ["dbt"]
 
       gitlab_dotcom:
         +tags: ["product"]
-        +materialized: table
-        +schema: analytics
         sensitive:
+          +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
           +materialized: view
           +schema: sensitive
         source_view:
           +materialized: view
-          +schema: staging
-        staging:
-          +schema: staging
 
-      gitter:
-        +enabled: false
-        +materialized: table
-
-      google_analytics_360:
-        xf:
-          +schema: analytics
+      gitlab_ops:
+        source_view:
+          +materialized: view
 
       greenhouse:
         xf:
+          +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
           +schema: sensitive
           secure: true
-        rpt:
-          +schema: analytics
-
-      handbook:
-        rpt:
-          +schema: analytics
-        xf:
-          +schema: analytics
 
       keyhole_twitter:
         +tags: [ "keyhole_twitter", "social" ]
@@ -287,87 +278,56 @@ models:
       license:
         +materialized: view
 
-      netsuite:
-        xf:
-          +schema: analytics
-
-      qualtrics:
-        +schema: analytics
-
-      pmg:
-        +schema: analytics
-
-      sfdc:
-        xf:
-          +schema: analytics
-
-      sheetload:
-        +schema: analytics
-
       snowflake:
-        +schema: analytics
         +materialized: view
 
       snowplow:
         +tags: ["product"]
-        +schema: analytics
         month_partition:
+          +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
           +schema: "snowplow_{{ var('year', run_started_at.strftime('%Y')) }}_{{ var('month', run_started_at.strftime('%m')) }}"
 
       version:
         +tags: ["product"]
-        xf:
-          +schema: analytics
-        ephemeral:
-          +schema: analytics
 
       trusted_data_framework:
-        +schema: analytics
-        +materialized: table
         +tags: ["tdf"]
 
-      zuora:
-        xf:
-          +schema: analytics
 
     # ------------------
     # Marts
     # ------------------
     marts:
-
-      arr:
-        +materialized: table
-
-      product_kpis:
-        +materialized: table
+      +materialized: table
 
       exports:
+        +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
         +materialized: view
         +schema: exports
 
         users_emails:
           enabled: false
-      usage_ping:
-        +materialized: table
 
     # ------------------
     # Legacy Structure
     # ------------------
     bamboohr:
+      +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
       +schema: sensitive
       secure: true
       base:
         +materialized: table
+      rpt:
+        +database: "{{ env_var('SNOWFLAKE_TRANSFORM_DATABASE') }}"
 
-    pipe2spend:
-      +enabled: false
-      +materialized: table
+
+    covid19:
+      +schema: covid19
 
     poc:
       +tags: ["poc"]
       +enabled: true
       +materialized: table
-      +schema: analytics
 
     retention:
       +materialized: table
@@ -376,10 +336,12 @@ models:
       +tags: ["product"]
       +materialized: table
 
+
     # ------------------
     # Trusted Data Framework
     # ------------------
     trusted_data_framework:
+      +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
       +materialized: table
       +schema: tdf
       secure: true
@@ -391,7 +353,7 @@ models:
 # ======
 snapshots:
   gitlab_snowflake:
-    target_database: "{{ env_var('SNOWFLAKE_SNAPSHOT_DATABASE') }}"
+    target_database: "{{ env_var('SNOWFLAKE_SNAPSHOT_DATABASE') }}" #RAW in production
     target_schema: "snapshots"
     transient: false
 
