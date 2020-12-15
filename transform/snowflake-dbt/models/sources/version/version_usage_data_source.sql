@@ -64,7 +64,6 @@ WITH source AS (
         container_registry_vendor::VARCHAR           AS container_registry_vendor,
         container_registry_version::VARCHAR          AS container_registry_version
     FROM source
-    WHERE 
 
 )
 
