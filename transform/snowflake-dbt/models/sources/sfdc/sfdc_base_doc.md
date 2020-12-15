@@ -62,6 +62,7 @@ The opportunity stage source table represents the stage of an Opportunity in the
 The opportunity source table contains info about your opportunities, which are sales or pending deals. [Link to Documentation](https://www.stitchdata.com/docs/integrations/saas/salesforce/#opportunity)
 
 {% enddocs %}
+
 {% docs sfdc_opportunity_split %}
 
 OpportunitySplit credits one or more opportunity team members with a portion of the opportunity amount. 
