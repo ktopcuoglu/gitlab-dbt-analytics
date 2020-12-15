@@ -6,6 +6,14 @@ models:
 
   - name: bamboohr_budget_vs_actual
     description: Compares promotion budget spend to the budget aggregated at the division level.
+    columns:
+    - name: fiscal_quarter_name
+    - name: division
+    - name: fiscal_year
+    - name: fiscal_quarter
+    - name: budget
+    - name: excess_from_previous_quarter
+    - name: total_spend
 
   - name: bamboohr_current_division_mapping
     description: This model accounts for the current mapping of department and divisions to allow for aggregatd models to reflect current division terminology used (as seen in bamboohr_rpt_headcount_aggregation)
@@ -130,12 +138,16 @@ models:
   - name: bamboohr_headcount_intermediate
     description: This is the intermediate model to creating out the headcount report. This report provides headcounts, hires, separations by diversity fields, department, and division. Note - division is mapped to the last month in the report to account for 12 month calculations. 
     columns:
+        - name: unique_key
+          tests:
+            - not_null
+            - unique
         - name: month_date
         - name: breakout_type
           description: Explains the breakout of the data in the columns associated to this field.
-        #   tests:
-        #     - accepted_values:
-        #         values: ['all_attributes_breakout', eeoc_breakout','division_breakout']
+          tests:
+            - accepted_values:
+                values: ['all_attributes_breakout','department_breakout', 'division_breakout', 'eeoc_breakout', 'kpi_breakout']
         - name: department
           description: This is using current department, and maps out historical department/divisions to the current mapping.
         - name: division
