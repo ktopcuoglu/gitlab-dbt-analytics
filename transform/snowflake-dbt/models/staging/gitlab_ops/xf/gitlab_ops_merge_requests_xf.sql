@@ -8,7 +8,7 @@ WITH merge_requests AS (
       created_at AS merge_request_created_at,
       updated_at  AS merge_request_updated_at
     FROM {{ref('gitlab_ops_merge_requests')}} merge_requests
-    WHERE {{ filter_out_blocked_users('merge_requests', 'author_id') }}
+    --  WHERE {{ filter_out_blocked_users('merge_requests', 'author_id') }} -- these ids are probably different 
 
 ), label_links AS (
 
@@ -107,10 +107,11 @@ WITH merge_requests AS (
       */
       IFF(projects.namespace_is_internal IS NOT NULL
           AND ARRAY_CONTAINS('community contribution'::variant, agg_labels.labels),
-        TRUE, FALSE)                                          AS is_community_contributor_related,
+        TRUE, FALSE)                                          AS is_community_contributor_related--,
+        /*
       TIMESTAMPDIFF(HOURS, merge_requests.merge_request_created_at,
-        --merge_request_metrics.merged_at)                      AS hours_to_merged_status,
-        merge_requests.merged_at                              AS hours_to_merged_status,
+        merge_request_metrics.merged_at)                      AS hours_to_merged_status,
+        */
     /*
     -- commenting out since we don't have gitlab_subscription table 
     CASE
