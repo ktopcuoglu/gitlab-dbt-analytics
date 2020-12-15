@@ -40,6 +40,7 @@ WITH source AS (
       {{ dbt_utils.surrogate_key(['pi_name', 'org_name', 'pi_definition','is_key','is_public','is_embedded','pi_target','pi_url']) }} AS unique_key,
       intermediate_stage.*
     FROM intermediate_stage
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY unique_key ORDER BY snapshot_date) = 1 
 
 )
 

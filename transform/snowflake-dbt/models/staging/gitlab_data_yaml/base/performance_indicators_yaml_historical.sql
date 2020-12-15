@@ -38,9 +38,9 @@ WITH unioned AS (
       pi_url,
       sisense_chart_id,
       sisense_dashboard_id,
-      date_first_added, 
-      valid_from_date,
-      valid_to_date
+      FIRST_VALUE(snapshot_date) OVER (PARTITION BY pi_name ORDER BY snapshot_date) AS date_first_added, 
+      MIN(snapshot_date) OVER (PARTITION BY unique_key ORDER BY snapshot_date)      AS valid_from_date,
+      MAX(snapshot_date) OVER (PARTITION BY unique_key ORDER BY snapshot_date DESC) AS valid_to_date
     FROM unioned
  
 )
