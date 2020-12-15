@@ -78,6 +78,7 @@ Added as references for the sfdc_opportunity_split data
 [Opportunity Split Type Docs](https://developer.salesforce.com/docs/atlas.en-us.api.meta/api/sforce_api_objects_opportunitysplittype.htm)
 
 {% enddocs %}
+
 {% docs sfdc_opportunity_team_member %}
 
 Represents a User on the opportunity team of an Opportunity.
