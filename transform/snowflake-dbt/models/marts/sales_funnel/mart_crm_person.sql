@@ -26,14 +26,14 @@ WITH dim_marketing_channel AS (
       fct_crm_person.mql_date_first,
       dim_marketing_channel.marketing_channel_name,
       CASE
-        WHEN LOWER(dim_sales_segment.dim_sales_segment_name) LIKE '%unknown%' THEN 'SMB'
-        WHEN LOWER(dim_sales_segment.dim_sales_segment_name) LIKE '%mid%' THEN 'Mid-Market'
-        ELSE dim_sales_segment.dim_sales_segment_name
-      END                                      AS dim_sales_segment_name,
+        WHEN LOWER(dim_sales_segment.sales_segment_name) LIKE '%unknown%' THEN 'SMB'
+        WHEN LOWER(dim_sales_segment.sales_segment_name) LIKE '%mid%' THEN 'Mid-Market'
+        ELSE dim_sales_segment.sales_segment_name
+      END                                      AS sales_segment_name,
       fct_crm_person.is_mql
     FROM fct_crm_person
     LEFT JOIN dim_sales_segment
-      ON fct_crm_person.dim_sales_segment_id = dim_sales_segment.dim_sales_segment_name_id
+      ON fct_crm_person.dim_sales_segment_id = dim_sales_segment.dim_sales_segment_id
     LEFT JOIN dim_marketing_channel
       ON fct_crm_person.dim_marketing_channel_id = dim_marketing_channel.dim_marketing_channel_id
 
@@ -42,7 +42,7 @@ WITH dim_marketing_channel AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@iweeks",
+    updated_by="@paul_armstrong",
     created_date="2020-12-07",
-    updated_date="2020-12-07",
+    updated_date="2020-12-10",
   ) }}

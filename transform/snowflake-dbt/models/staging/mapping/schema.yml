@@ -19,17 +19,17 @@ models:
         tests:
           - not_null
           - unique
-      - name: dim_sales_segment_name_id
+      - name: dim_sales_segment_id
         description: Unique identifier of a version of a sales segment
-      - name: dim_geo_region_name_id
+      - name: dim_geo_region_id
         description: "Dimension for geographical region built off ATAM_Region__C in SFDC. Example values : NORAM, LATAM, APAC, EMEA"
-      - name: dim_geo_sub_region_name_id
+      - name: dim_geo_sub_region_id
         description: "Dimension table for sub-region built off ATAM_Sub_Region__C in SFDC. Example values : Southern Europe, NA East, Nordics"
-      - name: dim_geo_area_name_id
+      - name: dim_geo_area_id
         description: "Dimension table for geographic area built off ATAM_Area__C in SFDC. Example values: Southern PNW, India, Northeast"
-      - name: dim_sales_territory_name_id
+      - name: dim_sales_territory_id
         description: Unique identifier of a version of a sales territory
-      - name: dim_industry_name_id
+      - name: dim_industry_id
         description: Unique identifier of a version of a industry
 
   - name: map_product_tier
