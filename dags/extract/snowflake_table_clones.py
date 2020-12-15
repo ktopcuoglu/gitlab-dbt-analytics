@@ -74,7 +74,7 @@ container_cmd = f"""
     {clone_repo_cmd} &&
     export PYTHONPATH="$CI_PROJECT_DIR/orchestration/:$PYTHONPATH" &&
     cd analytics/orchestration/ &&
-    python3 manage_snowflake.py create-table-clone --source_database analytics --source_schema legacy --source_table mart_arr --target_database raw --target_schema full_table_clones  --target_table "mart_arr_$CLONE_NAME_DATE" --timestamp "$CLONE_DATE 06:59:00"
+    python3 manage_snowflake.py create-table-clone --source_database ANALYTICS --source_schema legacy --source_table mart_arr --target_database RAW --target_schema full_table_clones  --target_table "mart_arr_$CLONE_NAME_DATE" --timestamp "$CLONE_DATE 06:59:00"
 """
 
 make_clone = KubernetesPodOperator(
