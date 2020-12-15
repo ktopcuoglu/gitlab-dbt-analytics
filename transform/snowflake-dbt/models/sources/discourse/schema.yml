@@ -5,6 +5,7 @@ models:
       description: '{{ doc("accepted_solutions") }}'
       columns:
           - name: report_start_date
+            tags: ["discourse", "social"]
             tests:
                 - not_null
           - name: report_title
@@ -20,6 +21,7 @@ models:
       description: '{{ doc("consolidated_page_views") }}'
       columns:
           - name: report_start_date
+            tags: ["discourse", "social"]
             tests:
                 - not_null
           - name: report_title
@@ -37,6 +39,7 @@ models:
       description: '{{ doc("daily_engaged_users") }}'
       columns:
           - name: report_start_date
+            tags: ["discourse", "social"]
             tests:
               - not_null
           - name: report_title
@@ -52,6 +55,7 @@ models:
       description: '{{ doc("page_view_total_reqs") }}'
       columns:
           - name: report_start_date
+            tags: ["discourse", "social"]
             tests:
             - not_null
           - name: report_title
@@ -67,6 +71,7 @@ models:
       description: '{{ doc("posts") }}'
       columns:
           - name: report_start_date
+            tags: ["discourse", "social"]
             tests:
               - not_null
           - name: report_title
@@ -82,6 +87,7 @@ models:
       description: '{{ doc("signups") }}'
       columns:
           - name: report_start_date
+            tags: ["discourse", "social"]
             tests:
                 - not_null
           - name: report_title
@@ -97,6 +103,7 @@ models:
       description: '{{ doc("time_to_first_response") }}'
       columns:
           - name: report_start_date
+            tags: ["discourse", "social"]
             tests:
                 - not_null
           - name: report_title
@@ -112,6 +119,7 @@ models:
       description: '{{ doc("topics_with_no_response") }}'
       columns:
           - name: report_start_date
+            tags: ["discourse", "social"]
             tests:
                 - not_null
           - name: report_title
@@ -127,6 +135,7 @@ models:
       description: '{{ doc("visits") }}'
       columns:
           - name: report_start_date
+            tags: ["discourse", "social"]
             tests:
                 - not_null
           - name: report_title
