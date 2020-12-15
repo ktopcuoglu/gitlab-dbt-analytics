@@ -249,7 +249,7 @@ models:
           - not_null
 
   - name: sfdc_opportunity_team_member_source
-    description: Source model for SFDC Opportunities
+    description: Source model for SFDC Opportunity Team Members
     columns:
       - name: opportunity_team_member_id
         tags: [ "tdf", "sfdc" ]
