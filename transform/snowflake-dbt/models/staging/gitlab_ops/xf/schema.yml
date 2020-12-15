@@ -14,8 +14,6 @@ models:
     description: This data model contains the data for the merge_request table in the ops.gitlab.net database 
     columns:
       - name: merge_request_id
-        tests:
-          - not_null
       - name: is_community_contributor_related
         description: Merge Request has 'community contribution' tag, and is on a project in the gitlab.org namespace.
 
