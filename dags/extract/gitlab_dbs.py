@@ -220,8 +220,14 @@ def dbt_tasks(dbt_name, dbt_task_identifier):
     current_seconds = timestamp.hour * 3600
     dag_interval = SCHEDULE_INTERVAL_HOURS * 3600
 
-    if dbt_name == "none" or dag_interval > current_seconds:
-        return freshness, None, None, None, None
+    dummy_test = DummyOperator(task_id=f"{dbt_task_identifier}-source-test")
+    dummy_snapshot = DummyOperator(task_id=f"{dbt_task_identifier}-source-snapshot")
+    dummy_model_run = DummyOperator(task_id=f"{dbt_task_identifier}-source-model-run")
+    dummy_model_test = DummyOperator(task_id=f"{dbt_task_identifier}-model-test")
+
+    # Only run everything past freshness once per day
+    if dbt_name == "none" or current_seconds < dag_interval:
+        return freshness, dummy_test, dummy_snapshot, dummy_model_run, dummy_model_test
 
     # Test raw source
     test_cmd = f"""
@@ -321,8 +327,8 @@ for source_name, config in config_dict.items():
         freshness, test, snapshot, model_run, model_test = dbt_tasks(
             dbt_name, dbt_task_identifier
         )
-        if test is not None:
-            freshness >> test >> snapshot >> model_run >> model_test
+
+        freshness >> test >> snapshot >> model_run >> model_test
 
         # Actual PGP extract
         file_path = f"analytics/extract/postgres_pipeline/manifests/{config['dag_name']}_db_manifest.yaml"

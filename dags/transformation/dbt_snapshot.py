@@ -170,7 +170,7 @@ dbt_test_snapshot_models = KubernetesPodOperator(
     image=DBT_IMAGE,
     task_id="dbt-test-snapshots",
     name="dbt-test-snapshots",
-    trigger_rule="all_done",
+    trigger_rule="all_success",
     secrets=task_secrets,
     env_vars=pod_env_vars,
     arguments=[dbt_test_snapshots_cmd],
@@ -178,14 +178,13 @@ dbt_test_snapshot_models = KubernetesPodOperator(
 )
 
 def run_or_skip_dbt(timestamp: datetime, dag: DAG) -> str:
-
+    # Only run models and tests once per day
     ## TODO: make this not hardcoded
     SCHEDULE_INTERVAL_HOURS = 8
     current_weekday = timestamp.isoweekday()
     current_seconds = timestamp.hour * 3600
     dag_interval = SCHEDULE_INTERVAL_HOURS * 3600
 
-    # run a full-refresh once per week (on sunday early AM)
     if dag_interval > current_seconds:
         return "dbt-run-model-snapshots"
     else:
