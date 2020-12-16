@@ -7,7 +7,6 @@ WITH merge_requests AS (
       created_at AS merge_request_created_at,
       updated_at  AS merge_request_updated_at
     FROM {{ref('gitlab_ops_merge_requests')}} merge_requests
-    --  WHERE {{ filter_out_blocked_users('merge_requests', 'author_id') }} -- these ids are probably different 
 
 ), label_links AS (
 
