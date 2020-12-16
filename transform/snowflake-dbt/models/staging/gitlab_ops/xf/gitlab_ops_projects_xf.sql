@@ -81,7 +81,7 @@ joined AS (
       LEFT JOIN members
         ON projects.project_id = members.source_id
         AND members.member_source_type = 'Project'
-    {{ dbt_utils.group_by(n=58) }}
+    {{ dbt_utils.group_by(n=57) }}
 )
 
 SELECT *
