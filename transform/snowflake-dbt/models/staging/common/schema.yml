@@ -483,7 +483,7 @@ models:
   - name: dim_subscription
     description: '{{ doc("dim_subscription") }}'
     columns:
-      - name: subscription_id
+      - name: dim_subscription_id
         description: Unique identifier of a version of a subscription
         tests:
           - not_null
@@ -494,9 +494,9 @@ models:
           - not_null
           - accepted_values:
               values: ['Active', 'Cancelled']
-      - name: crm_account_id
+      - name: dim_crm_account_id
         description: account id from SFDC identifing the customer
-      - name: billing_account_id
+      - name: dim_billing_account_id
         description: The id of the Zuora account the subscription is associated with
       - name: subscription_name_slugify
         description: The unique identifier of the subscription
