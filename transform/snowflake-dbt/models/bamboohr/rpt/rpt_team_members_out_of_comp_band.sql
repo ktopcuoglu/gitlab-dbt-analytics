@@ -13,11 +13,6 @@ WITH employee_directory_intermediate AS (
    SELECT *
    FROM {{ ref('comp_band_deviation_snapshots') }}
 
- ), percent_over_comp_band_historical AS (
-
-    SELECT *
-    FROM {{ref('sheetload_percent_over_comp_band_historical')}}
-
  ), date_details AS (
 
     SELECT DISTINCT last_day_of_month
@@ -105,11 +100,6 @@ WITH employee_directory_intermediate AS (
 
     SELECT * 
     FROM company_aggregated
-
-    UNION ALL
-
-    SELECT *
-    FROM percent_over_comp_band_historical
 
 ), final AS (
 
