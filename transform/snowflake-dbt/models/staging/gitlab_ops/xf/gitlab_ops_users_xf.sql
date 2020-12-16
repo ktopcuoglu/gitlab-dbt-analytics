@@ -2,10 +2,10 @@
 
 SELECT
     {{ dbt_utils.star(from=ref('gitlab_dotcom_users'), except=["created_at", "first_name", "last_name", "notification_email", "public_email", "updated_at", "users_name"]) }},
-    created_at AS user_created_at,
-    updated_at AS user_updated_at, 
-    TIMESTAMPDIFF(DAYS, user_created_at, last_activity_on)                       AS days_active,
-    TIMESTAMPDIFF(DAYS, user_created_at, CURRENT_TIMESTAMP(2))                   AS account_age,
+    created_at                                                                    AS user_created_at,
+    updated_at                                                                    AS user_updated_at, 
+    TIMESTAMPDIFF(DAYS, user_created_at, last_activity_on)                        AS days_active,
+    TIMESTAMPDIFF(DAYS, user_created_at, CURRENT_TIMESTAMP(2))                    AS account_age,
     CASE
       WHEN account_age <= 1 THEN '1 - 1 day or less'
       WHEN account_age <= 7 THEN '2 - 2 to 7 days'
