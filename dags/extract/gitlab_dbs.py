@@ -197,7 +197,7 @@ def extract_table_list_from_manifest(manifest_contents):
     return manifest_contents["tables"].keys()
 
 
-def run_or_skip_dbt(current_seconds:int, dag_interval:int) -> bool:
+def run_or_skip_dbt(current_seconds: int, dag_interval: int) -> bool:
     # If first run of the day, run dbt, else skip
     if current_seconds < dag_interval:
         return True

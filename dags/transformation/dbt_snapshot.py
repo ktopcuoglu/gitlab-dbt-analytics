@@ -179,12 +179,14 @@ dbt_test_snapshot_models = KubernetesPodOperator(
     dag=dag,
 )
 
-def run_or_skip_dbt(current_seconds:int, dag_interval:int) -> bool:
+
+def run_or_skip_dbt(current_seconds: int, dag_interval: int) -> bool:
     # Only run models and tests once per day
     if current_seconds < dag_interval:
         return True
     else:
         return False
+
 
 SCHEDULE_INTERVAL_HOURS = 8
 timestamp = datetime.now()
