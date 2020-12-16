@@ -269,6 +269,8 @@ models:
     - name: is_satellite_provider
     - name: registered_country_geoname_id
     - name: represented_country_geoname_id
+- name: sheetload_percent_over_comp_band_historical_source
+  description: Brings in aggregated values for 2020.01 - 2020.09 for percent over comp band for kpi.    
 - name: sheetload_planned_values_source
   description: Planned values for multiple metrics as defined by Finance Team via Chase
   columns:

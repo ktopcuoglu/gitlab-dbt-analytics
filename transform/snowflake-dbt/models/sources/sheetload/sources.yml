@@ -67,6 +67,7 @@ sources:
       - name: maxmind_countries
       - name: maxmind_ranges
       - name: osat
+      - name: percent_over_comp_band_historical
       - name: people_budget
       - name: planned_values
       - name: procurement_cost_savings

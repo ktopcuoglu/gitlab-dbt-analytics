@@ -76,6 +76,7 @@ models:
 - name: sheetload_marketing_core_users_from_docs_gitlab_com
 - name: sheetload_marketing_kpi_benchmarks
 - name: sheetload_osat
+- name: sheetload_percent_over_comp_band_historical
 - name: sheetload_planned_values
 - name: sheetload_procurement_cost_savings
 - name: sheetload_product_maturity_historical
