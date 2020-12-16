@@ -198,7 +198,7 @@ gitlab-org/gitlab-services/design.gitlab.com,4456656
 gitlab-org/terraform-images,18943607
 gitlab-org/gitlab-qa,1441932
 gitlab-org/quality/triage-ops,7776928
-gitlab-org/quality/performance-environment-builder,14292404
+gitlab-org/quality/gitlab-environment-toolkit,14292404
 gitlab-org/quality/performance,11511606
 gitlab-org/gitlab-triage,3430480
 gitlab-org/quality/nightly,7523614
