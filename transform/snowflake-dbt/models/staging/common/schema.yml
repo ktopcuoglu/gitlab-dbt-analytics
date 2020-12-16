@@ -493,7 +493,7 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: ['Active', 'Cancelled']
+              values: ['Active', 'Cancelled', 'Draft', 'Expired']
       - name: dim_crm_account_id
         description: account id from SFDC identifing the customer
       - name: dim_billing_account_id
