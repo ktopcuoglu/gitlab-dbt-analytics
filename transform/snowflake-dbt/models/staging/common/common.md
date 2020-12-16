@@ -25,19 +25,6 @@ Dimension that combines demographic data from salesforce leads and salesforce co
 
 {% enddocs %}
 
-{% docs dim_billing_accounts %}
-Dimensional table representing each individual Zuora account with details of person to bill for the account.
-
-The Zuora account creation and maintenance is part of the broader Quote Creation business process and can be found in the [handbook](https://about.gitlab.com/handbook/finance/sox-internal-controls/quote-to-cash/#3-quote-creation).
-
-Data comes from [Zuora Documentation](https://www.zuora.com/developer/api-reference/#tag/Accounts).
-
-The grain of the table is the Zuora Account.
-
-Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
-
-{% enddocs %}
-
 {% docs dim_billing_account %}
 Dimensional table representing each individual Zuora account with details of person to bill for the account.
 
