@@ -46,7 +46,7 @@ WITH biz_person AS (
 
     SELECT
       --id
-      {{ dbt_utils.surrogate_key(['contact_id']) }} AS crm_person_id,
+      {{ dbt_utils.surrogate_key(['contact_id']) }} AS dim_crm_person_id,
       contact_id                                    AS sfdc_record_id,
       bizible_person_id                             AS bizible_person_id,
       'contact'                                     AS sfdc_record_type,
@@ -57,9 +57,9 @@ WITH biz_person AS (
       master_record_id,
       owner_id,
       record_type_id,
-      account_id                                    AS crm_account_id,
+      account_id                                    AS dim_crm_account_id,
       reports_to_id,
-      owner_id                                      AS crm_sales_rep_id,
+      owner_id                                      AS dim_crm_sales_rep_id,
 
       --info
       person_score,
@@ -83,7 +83,7 @@ WITH biz_person AS (
 
     SELECT
       --id
-      {{ dbt_utils.surrogate_key(['lead_id']) }} AS crm_person_id,
+      {{ dbt_utils.surrogate_key(['lead_id']) }} AS dim_crm_person_id,
       lead_id                                    AS sfdc_record_id,
       bizible_person_id                          AS bizible_person_id,
       'lead'                                     AS sfdc_record_type,
@@ -94,9 +94,9 @@ WITH biz_person AS (
       master_record_id,
       owner_id,
       record_type_id,
-      lean_data_matched_account                  AS crm_account_id,
+      lean_data_matched_account                  AS dim_crm_account_id,
       NULL                                       AS reports_to_id,
-      owner_id                                   AS crm_sales_rep_id,
+      owner_id                                   AS dim_crm_sales_rep_id,
 
       --info
       person_score,

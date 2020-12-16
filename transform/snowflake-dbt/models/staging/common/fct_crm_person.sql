@@ -12,17 +12,17 @@ WITH account_dims_mapping AS (
 
   SELECT
 
-    crm_person_id,
+    dim_crm_person_id,
     sfdc_record_id,
     bizible_person_id,
     bizible_touchpoint_position,
     bizible_marketing_channel_path,
     bizible_touchpoint_date,
-    crm_account_id,
-    crm_sales_rep_id,
+    dim_crm_account_id,
+    dim_crm_sales_rep_id,
     person_score
 
-    FROM {{ref('prep_crm_person')}}
+    FROM {{ref('base_crm_person')}}
 
 ), geo_region AS (
 
@@ -76,14 +76,14 @@ WITH account_dims_mapping AS (
     SELECT
 
       {{ dbt_utils.surrogate_key(['COALESCE(converted_contact_id, lead_id)','marketo_qualified_lead_date::timestamp']) }} AS event_id,
-      marketo_qualified_lead_date::timestamp                                                                            AS event_timestamp,
-      lead_id                                                                                                           AS sfdc_record_id,
-      'lead'                                                                                                            AS sfdc_record,
+      marketo_qualified_lead_date::timestamp                                                                              AS event_timestamp,
+      lead_id                                                                                                             AS sfdc_record_id,
+      'lead'                                                                                                              AS sfdc_record,
       {{ dbt_utils.surrogate_key(['COALESCE(converted_contact_id, lead_id)']) }}                                          AS crm_person_id,
-      converted_contact_id                                                                                              AS contact_id,
-      converted_account_id                                                                                              AS account_id,
-      owner_id                                                                                                          AS crm_sales_rep_id,
-      person_score                                                                                                      AS person_score
+      converted_contact_id                                                                                                AS contact_id,
+      converted_account_id                                                                                                AS account_id,
+      owner_id                                                                                                            AS crm_sales_rep_id,
+      person_score                                                                                                        AS person_score
 
     FROM sfdc_leads
     WHERE marketo_qualified_lead_date IS NOT NULL
@@ -92,15 +92,15 @@ WITH account_dims_mapping AS (
 
     SELECT
 
-      {{ dbt_utils.surrogate_key(['contact_id','marketo_qualified_lead_date::timestamp']) }}  AS event_id,
-      marketo_qualified_lead_date::timestamp                                                  AS event_timestamp,
-      contact_id                                                                              AS sfdc_record_id,
-      'contact'                                                                               AS sfdc_record,
-      {{ dbt_utils.surrogate_key(['contact_id']) }}                                           AS crm_person_id,
-      contact_id                                                                              AS contact_id,
-      account_id                                                                              AS account_id,
-      owner_id                                                                                AS crm_sales_rep_id,
-      person_score                                                                            AS person_score
+      {{ dbt_utils.surrogate_key(['contact_id','marketo_qualified_lead_date::timestamp']) }}                              AS event_id,
+      marketo_qualified_lead_date::timestamp                                                                              AS event_timestamp,
+      contact_id                                                                                                          AS sfdc_record_id,
+      'contact'                                                                                                           AS sfdc_record,
+      {{ dbt_utils.surrogate_key(['contact_id']) }}                                                                       AS crm_person_id,
+      contact_id                                                                                                          AS contact_id,
+      account_id                                                                                                          AS account_id,
+      owner_id                                                                                                            AS crm_sales_rep_id,
+      person_score                                                                                                        AS person_score
 
     FROM sfdc_contacts
     WHERE marketo_qualified_lead_date IS NOT NULL
@@ -135,20 +135,20 @@ WITH account_dims_mapping AS (
 
     SELECT
     -- ids
-      crm_person.crm_person_id                                                                           AS dim_crm_person_id,
-      crm_person.sfdc_record_id                                                                          AS sfdc_record_id,
-      crm_person.bizible_person_id                                                                       AS bizible_person_id,
+      crm_person.dim_crm_person_id                                                                                        AS dim_crm_person_id,
+      crm_person.sfdc_record_id                                                                                           AS sfdc_record_id,
+      crm_person.bizible_person_id                                                                                        AS bizible_person_id,
 
      -- common dimension keys
 
-      crm_person.crm_sales_rep_id                                                                        AS dim_crm_sales_rep_id,
-      crm_person.crm_account_id                                                                          AS dim_crm_account_id,
-      COALESCE(account_dims_mapping.dim_sales_segment_name_id, sales_segment.dim_sales_segment_name_id, MD5(-1))          AS dim_sales_segment_id,
-      COALESCE(account_dims_mapping.dim_geo_region_name_id, geo_region.dim_geo_region_name_id, MD5(-1))                   AS dim_geo_region_id,
-      COALESCE(account_dims_mapping.dim_geo_sub_region_name_id, geo_sub_region.dim_geo_sub_region_name_id, MD5(-1))       AS dim_geo_sub_region_id,
-      COALESCE(account_dims_mapping.dim_geo_area_name_id, MD5(-1))                                                        AS dim_geo_area_id,
-      COALESCE(account_dims_mapping.dim_sales_territory_name_id, sales_territory.dim_sales_territory_name_id, MD5(-1))    AS dim_sales_territory_id,
-      COALESCE(account_dims_mapping.dim_industry_name_id, industry.dim_industry_name_id, MD5(-1))                         AS dim_industry_id,
+      crm_person.dim_crm_sales_rep_id                                                                                     AS dim_crm_sales_rep_id,
+      crm_person.dim_crm_account_id                                                                                       AS dim_crm_account_id,
+      COALESCE(account_dims_mapping.dim_sales_segment_id, sales_segment.dim_sales_segment_id, MD5(-1))                    AS dim_sales_segment_id,
+      COALESCE(account_dims_mapping.dim_geo_region_id, geo_region.dim_geo_region_id, MD5(-1))                             AS dim_geo_region_id,
+      COALESCE(account_dims_mapping.dim_geo_sub_region_id, geo_sub_region.dim_geo_sub_region_id, MD5(-1))                 AS dim_geo_sub_region_id,
+      COALESCE(account_dims_mapping.dim_geo_area_id, MD5(-1))                                                             AS dim_geo_area_id,
+      COALESCE(account_dims_mapping.dim_sales_territory_id, sales_territory.dim_sales_territory_id, MD5(-1))              AS dim_sales_territory_id,
+      COALESCE(account_dims_mapping.dim_industry_id, industry.dim_industry_id, MD5(-1))                                   AS dim_industry_id,
       COALESCE(marketing_channel.dim_marketing_channel_id, MD5(-1))                                                       AS dim_marketing_channel_id,
 
      -- important person dates
@@ -182,7 +182,7 @@ WITH account_dims_mapping AS (
 
      -- additive fields
 
-      crm_person.person_score                                                                            AS person_score,
+      crm_person.person_score                                                                                             AS person_score,
       mqls.mql_count                                                                                                      AS mql_count
 
     FROM crm_person
@@ -191,9 +191,9 @@ WITH account_dims_mapping AS (
     LEFT JOIN sfdc_contacts
       ON crm_person.sfdc_record_id = sfdc_contacts.contact_id
     LEFT JOIN mqls
-      ON crm_person.crm_person_id = mqls.crm_person_id
+      ON crm_person.dim_crm_person_id = mqls.crm_person_id
     LEFT JOIN account_dims_mapping
-      ON crm_person.crm_account_id = account_dims_mapping.crm_account_id
+      ON crm_person.dim_crm_account_id = account_dims_mapping.crm_account_id
     LEFT JOIN sales_segment
       ON sfdc_leads.sales_segmentation = sales_segment.sales_segment_name
     LEFT JOIN geo_region
@@ -216,5 +216,5 @@ WITH account_dims_mapping AS (
     created_by="@mcooperDD",
     updated_by="@paul_armstrong",
     created_date="2020-12-01",
-    updated_date="2020-12-10"
+    updated_date="2020-12-15"
 ) }}

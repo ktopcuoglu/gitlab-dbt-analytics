@@ -6,13 +6,13 @@
 WITH crm_person AS (
 
     SELECT *
-    FROM {{ ref('prep_crm_person') }}
+    FROM {{ ref('base_crm_person') }}
 
 ), final AS (
 
     SELECT
       --id
-      crm_person_id,
+      dim_crm_person_id,
       sfdc_record_id,
       bizible_person_id,
       sfdc_record_type,
@@ -23,9 +23,9 @@ WITH crm_person AS (
       master_record_id,
       owner_id,
       record_type_id,
-      crm_account_id,
+      dim_crm_account_id,
       reports_to_id,
-      crm_sales_rep_id,
+      dim_crm_sales_rep_id,
 
       --info
       person_score,
@@ -49,5 +49,5 @@ WITH crm_person AS (
     created_by="@jjstark",
     updated_by="@mcooperDD",
     created_date="2020-09-10",
-    updated_date="2020-12-08"
+    updated_date="2020-12-15"
 ) }}
