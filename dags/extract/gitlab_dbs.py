@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 
 from airflow import DAG
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
+from airflow.operators.dummy_operator import DummyOperator
 
 from airflow_utils import (
     DATA_IMAGE,
@@ -213,7 +214,13 @@ def dbt_tasks(dbt_name, dbt_task_identifier):
         arguments=[freshness_cmd],
     )
 
-    if dbt_name == "none":
+    ## TODO: make this not hardcoded
+    SCHEDULE_INTERVAL_HOURS = 6
+    timestamp = datetime.now()
+    current_seconds = timestamp.hour * 3600
+    dag_interval = SCHEDULE_INTERVAL_HOURS * 3600
+
+    if dbt_name == "none" or dag_interval > current_seconds:
         return freshness, None, None, None, None
 
     # Test raw source

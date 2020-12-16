@@ -3,6 +3,8 @@ from datetime import datetime, timedelta
 
 from airflow import DAG
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
+from airflow.operators.python_operator import BranchPythonOperator
+from airflow.operators.dummy_operator import DummyOperator
 from airflow.models import Variable
 from airflow.operators.python_operator import PythonOperator
 from airflow.utils.trigger_rule import TriggerRule
@@ -175,5 +177,29 @@ dbt_test_snapshot_models = KubernetesPodOperator(
     dag=dag,
 )
 
+def run_or_skip_dbt(timestamp: datetime, dag: DAG) -> str:
 
-dbt_commit_hash_setter >> dbt_commit_hash_exporter >> dbt_snapshot >> dbt_snapshot_models_run >> dbt_test_snapshot_models
+    ## TODO: make this not hardcoded
+    SCHEDULE_INTERVAL_HOURS = 8
+    current_weekday = timestamp.isoweekday()
+    current_seconds = timestamp.hour * 3600
+    dag_interval = SCHEDULE_INTERVAL_HOURS * 3600
+
+    # run a full-refresh once per week (on sunday early AM)
+    if dag_interval > current_seconds:
+        return "dbt-run-model-snapshots"
+    else:
+        return "do_nothing"
+
+
+branching_dbt_run = BranchPythonOperator(
+    task_id="branching-dbt-run",
+    python_callable=lambda: run_or_skip_dbt(datetime.now(), dag),
+    dag=dag,
+)
+
+do_nothing = DummyOperator(task_id="do_nothing", dag=dag)
+
+dbt_commit_hash_setter >> dbt_commit_hash_exporter >> dbt_snapshot >> branching_dbt_run
+branching_dbt_run >> dbt_snapshot_models_run >> dbt_test_snapshot_models
+branching_dbt_run >> do_nothing
