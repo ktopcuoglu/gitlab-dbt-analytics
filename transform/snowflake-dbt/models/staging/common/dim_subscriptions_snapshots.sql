@@ -8,7 +8,7 @@
 WITH snapshot_dates AS (
 
    SELECT *
-   FROM {{ ref('dim_dates') }}
+   FROM {{ ref('dim_date') }}
    WHERE date_actual >= '2020-03-01' and date_actual <= CURRENT_DATE
    {% if is_incremental() %}
 

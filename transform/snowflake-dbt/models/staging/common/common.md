@@ -15,11 +15,6 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
-{% docs dim_crm_opportunities %}
-Model for all dimensional opportunity columns from salesforce opportunity object
-
-{% enddocs %}
-
 {% docs dim_crm_opportunity %}
 Model for all dimensional opportunity columns from salesforce opportunity object
 
@@ -30,12 +25,20 @@ Dimension that combines demographic data from salesforce leads and salesforce co
 
 {% enddocs %}
 
-{% docs dim_crm_persons %}
-Dimension that combines demographic data from salesforce leads and salesforce contacts. They are combined with a union and a filter on leads excluding converted leads and leads where there is a corresponding contact.
+{% docs dim_billing_accounts %}
+Dimensional table representing each individual Zuora account with details of person to bill for the account.
+
+The Zuora account creation and maintenance is part of the broader Quote Creation business process and can be found in the [handbook](https://about.gitlab.com/handbook/finance/sox-internal-controls/quote-to-cash/#3-quote-creation).
+
+Data comes from [Zuora Documentation](https://www.zuora.com/developer/api-reference/#tag/Accounts).
+
+The grain of the table is the Zuora Account.
+
+Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
 
 {% enddocs %}
 
-{% docs dim_billing_accounts %}
+{% docs dim_billing_account %}
 Dimensional table representing each individual Zuora account with details of person to bill for the account.
 
 The Zuora account creation and maintenance is part of the broader Quote Creation business process and can be found in the [handbook](https://about.gitlab.com/handbook/finance/sox-internal-controls/quote-to-cash/#3-quote-creation).
@@ -84,15 +87,6 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
-{% docs dim_dates %}
-Dimensional table representing both calendar year and fiscal year date details.
-
-The grain of the table is a calendar day.
-
-Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
-
-{% enddocs %}
-
 {% docs dim_date %}
 Dimensional table representing both calendar year and fiscal year date details.
 
@@ -105,24 +99,6 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 {% docs fct_campaign %}
 
 Fact table representing marketing campaign details tracked in SFDC.
-
-{% enddocs %}
-
-{% docs fct_crm_lead_conversion %}
-
-A fact from the lead history and lead tables in Salesforce that has a record for every converted lead
-
-{% enddocs %}
-
-{% docs fct_crm_marketing_qualification %}
-
-A fact from the lead and contact tables that shows the date they were qualified. Ideally this should be using the lead and contact history tables as well, but, as of yet, the appropriate fields are not being tracked in Salesforce. For mor information on Marketing Qualification please refer to the [Marketing Operations handbook](https://about.gitlab.com/handbook/marketing/marketing-operations/marketo/#mql-definition).
-
-{% enddocs %}
-
-{% docs fct_crm_opportunities %}
-
-A fact table for salesforce opportunities
 
 {% enddocs %}
 
@@ -193,12 +169,6 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 
 {% docs dim_crm_sales_rep %}
-
-Dimension representing the associated sales rep from salesforce. Most often this will be the record owner, which is a ubiquitous field in salesforce.
-
-{% enddocs %}
-
-{% docs dim_crm_sales_representative %}
 
 Dimension representing the associated sales rep from salesforce. Most often this will be the record owner, which is a ubiquitous field in salesforce.
 

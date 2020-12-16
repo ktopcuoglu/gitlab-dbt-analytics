@@ -175,6 +175,10 @@ WITH account_dims_mapping AS (
           WHEN mqls.first_mql_date IS NOT NULL THEN 1
           ELSE 0
         END                                                                                                               AS is_mql,
+      CASE
+        WHEN COALESCE(LOWER(sfdc_contacts.contact_status), LOWER(sfdc_leads.lead_status)) = 'inquiry' THEN 1
+        ELSE 0
+      END                                                                                                                 AS is_inquiry,
 
      -- additive fields
 
@@ -191,25 +195,26 @@ WITH account_dims_mapping AS (
     LEFT JOIN account_dims_mapping
       ON crm_person.crm_account_id = account_dims_mapping.crm_account_id
     LEFT JOIN sales_segment
-      ON sfdc_leads.sales_segmentation = sales_segment.dim_sales_segment_name
+      ON sfdc_leads.sales_segmentation = sales_segment.sales_segment_name
     LEFT JOIN geo_region
-      ON sfdc_leads.tsp_region = geo_region.dim_geo_region_name
+      ON sfdc_leads.tsp_region = geo_region.geo_region_name
     LEFT JOIN geo_sub_region
-      ON sfdc_leads.tsp_sub_region = geo_sub_region.dim_geo_sub_region_name
+      ON sfdc_leads.tsp_sub_region = geo_sub_region.geo_sub_region_name
     LEFT JOIN sales_territory
-      ON sfdc_leads.tsp_territory = sales_territory.dim_sales_territory_name
+      ON sfdc_leads.tsp_territory = sales_territory.sales_territory_name
     LEFT JOIN industry
-      ON COALESCE(sfdc_contacts.industry, sfdc_leads.industry) = industry.dim_industry_name
+      ON COALESCE(sfdc_contacts.industry, sfdc_leads.industry) = industry.industry_name
     LEFT JOIN marketing_channel_mapping
       ON crm_person.bizible_marketing_channel_path = marketing_channel_mapping.bizible_marketing_channel_path
     LEFT JOIN marketing_channel
       ON marketing_channel_mapping.marketing_channel_name = marketing_channel.marketing_channel_name
 
 )
+
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mcooperDD",
-    updated_by="@iweeks",
+    updated_by="@paul_armstrong",
     created_date="2020-12-01",
-    updated_date="2020-12-08"
+    updated_date="2020-12-10"
 ) }}

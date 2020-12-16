@@ -8,10 +8,10 @@ WITH dim_billing_accounts AS (
     SELECT *
     FROM {{ ref('dim_crm_account') }}
 
-), dim_dates AS (
+), dim_date AS (
 
     SELECT *
-    FROM {{ ref('dim_dates') }}
+    FROM {{ ref('dim_date') }}
 
 ), dim_product_details AS (
 
@@ -31,7 +31,7 @@ WITH dim_billing_accounts AS (
 ), mart_arr AS (
 
     SELECT
-      dim_dates.date_actual                                                           AS arr_month,
+      dim_date.date_actual                                                           AS arr_month,
       IFF(is_first_day_of_last_month_of_fiscal_quarter, fiscal_quarter_name_fy, NULL) AS fiscal_quarter_name_fy,
       IFF(is_first_day_of_last_month_of_fiscal_year, fiscal_year, NULL)               AS fiscal_year,
       dim_crm_account.ultimate_parent_account_name,
@@ -48,8 +48,8 @@ WITH dim_billing_accounts AS (
       ON dim_product_details.product_details_id = fct_mrr.product_details_id
     INNER JOIN dim_billing_accounts
       ON dim_billing_accounts.billing_account_id= fct_mrr.billing_account_id
-    INNER JOIN dim_dates
-      ON dim_dates.date_id = fct_mrr.date_id
+    INNER JOIN dim_date
+      ON dim_date.date_id = fct_mrr.date_id
     LEFT JOIN dim_crm_account
       ON dim_billing_accounts.crm_account_id = dim_crm_account.crm_account_id
 
@@ -69,15 +69,15 @@ WITH dim_billing_accounts AS (
     SELECT
       ultimate_parent_account_name,
       ultimate_parent_account_id,
-      dim_dates.date_actual         AS arr_month,
-      dim_dates.fiscal_quarter_name_fy,
-      dim_dates.fiscal_year
+      dim_date.date_actual         AS arr_month,
+      dim_date.fiscal_quarter_name_fy,
+      dim_date.fiscal_year
     FROM max_min_month
-    INNER JOIN dim_dates
+    INNER JOIN dim_date
       -- all months after start date
-      ON  dim_dates.date_actual >= max_min_month.date_month_start
+      ON  dim_date.date_actual >= max_min_month.date_month_start
       -- up to and including end date
-      AND dim_dates.date_actual <=  max_min_month.date_month_end
+      AND dim_date.date_actual <=  max_min_month.date_month_end
       AND day_of_month = 1
 
 ), monthly_arr_parent_level AS (

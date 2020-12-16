@@ -101,6 +101,8 @@ gitlab-org/security-products/analyzers/secrets,10861561
 gitlab-org/security-products/analyzers/sobelow,11625232
 gitlab-org/security-products/analyzers/spotbugs,11139665
 gitlab-org/security-products/analyzers/tslint,10846951
+gitlab-org/security-products/analyzers/mobsf,21479276
+gitlab-org/security-products/analyzers/gemnasium-gradle-plugin,15369510
 gitlab-org/security-products/codequality,5498087
 gitlab-org/ci-cd/codequality,17035255
 gitlab-org/ci-cd/accessibility,17166102
@@ -222,4 +224,5 @@ gitlab-org/quality/ci/secure-test-project-orchestrator,19722963
 gitlab-com/gl-infra/production,7444821
 gitlab-com/runbooks,1148549
 gitlab-cookbooks/cookbook-wrapper-gitlab-runner,1755701
- 
+gitlab-org/gl-openshift/gitlab-runner-operator,22848448
+gitlab-org/gl-openshift/gitlab-operator,18899486

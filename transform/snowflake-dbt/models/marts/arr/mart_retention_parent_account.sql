@@ -3,10 +3,10 @@ WITH dim_crm_account AS (
     SELECT *
     FROM {{ ref('dim_crm_account') }}
 
-), dim_dates AS (
+), dim_date AS (
 
     SELECT *
-    FROM {{ ref('dim_dates') }}
+    FROM {{ ref('dim_date') }}
 
 ), dim_product_details AS (
 
@@ -29,8 +29,8 @@ WITH dim_crm_account AS (
       merged_accounts.ultimate_parent_account_id,
       MIN(subscription_end_month) OVER (PARTITION BY merged_accounts.ultimate_parent_account_id)    AS next_renewal_month
     FROM fct_mrr
-    INNER JOIN dim_dates
-      ON dim_dates.date_id = fct_mrr.date_id
+    INNER JOIN dim_date
+      ON dim_date.date_id = fct_mrr.date_id
     LEFT JOIN dim_crm_account AS crm_accounts
       ON crm_accounts.crm_account_id = fct_mrr.crm_account_id
     INNER JOIN dim_crm_account AS merged_accounts
@@ -46,8 +46,8 @@ WITH dim_crm_account AS (
       merged_accounts.ultimate_parent_account_id,
       MAX(subscription_end_month) OVER (PARTITION BY merged_accounts.ultimate_parent_account_id)    AS last_renewal_month
     FROM fct_mrr
-    INNER JOIN dim_dates
-      ON dim_dates.date_id = fct_mrr.date_id
+    INNER JOIN dim_date
+      ON dim_date.date_id = fct_mrr.date_id
     LEFT JOIN dim_crm_account AS crm_accounts
       ON crm_accounts.crm_account_id = fct_mrr.crm_account_id
     INNER JOIN dim_crm_account AS merged_accounts
@@ -61,7 +61,7 @@ WITH dim_crm_account AS (
 
     SELECT
       dim_crm_account.ultimate_parent_account_id,
-      dim_dates.date_actual                             AS mrr_month,
+      dim_date.date_actual                             AS mrr_month,
       dateadd('year', 1, date_actual)                   AS retention_month,
       next_renewal_month,
       last_renewal_month,
@@ -73,8 +73,8 @@ WITH dim_crm_account AS (
     FROM fct_mrr
     INNER JOIN dim_product_details
       ON dim_product_details.product_details_id = fct_mrr.product_details_id
-    INNER JOIN dim_dates
-      ON dim_dates.date_id = fct_mrr.date_id
+    INNER JOIN dim_date
+      ON dim_date.date_id = fct_mrr.date_id
     LEFT JOIN dim_crm_account
       ON dim_crm_account.crm_account_id = fct_mrr.crm_account_id
     LEFT JOIN next_renewal_month
@@ -112,8 +112,8 @@ WITH dim_crm_account AS (
       retention_subs.ultimate_parent_account_id,
       dim_crm_account.crm_account_name         AS ultimate_parent_account_name,
       retention_month,
-      dim_dates.fiscal_year                     AS retention_fiscal_year,
-      dim_dates.fiscal_quarter                  AS retention_fiscal_quarter,
+      dim_date.fiscal_year                     AS retention_fiscal_year,
+      dim_date.fiscal_quarter                  AS retention_fiscal_quarter,
       retention_subs.last_renewal_month,
       retention_subs.next_renewal_month,
       current_mrr                               AS prior_year_mrr,
@@ -139,8 +139,8 @@ WITH dim_crm_account AS (
       {{ reason_for_arr_change_tier_change('net_retention_product_ranking', 'prior_year_product_ranking', 'net_retention_quantity', 'prior_year_quantity', 'net_retention_arr', 'prior_year_arr') }},
       {{ annual_price_per_seat_change('net_retention_quantity', 'prior_year_quantity', 'net_retention_arr', 'prior_year_arr') }}
     FROM retention_subs
-    INNER JOIN dim_dates
-      ON dim_dates.date_actual = retention_subs.retention_month
+    INNER JOIN dim_date
+      ON dim_date.date_actual = retention_subs.retention_month
     LEFT JOIN dim_crm_account
       ON dim_crm_account.crm_account_id = retention_subs.ultimate_parent_account_id
     WHERE retention_month <= dateadd(month, -1, CURRENT_DATE)

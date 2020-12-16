@@ -692,15 +692,17 @@ roles:
             - snowflake_db
         owns:
             schemas:
-                - analytics.analytics_clones
                 - analytics.common
                 - analytics.common_mapping
+                - analytics.common_mart_marketing
+                - analytics.common_mart_sales
                 - analytics.legacy
                 - prep.sensitive
             tables:
-                - analytics.analytics_clones.*
                 - analytics.common.*
                 - analytics.common_mapping.*
+                - analytics.common_mart_marketing.*
+                - analytics.common_mart_sales.*
                 - analytics.legacy.*
                 - prep.sensitive.*
         privileges:
@@ -753,15 +755,10 @@ roles:
                     - analytics.common.*
                     - analytics.legacy.*
                     - prep.sensitive.employee_*
-                    - prep.sensitive.bamboohr_custom_bonus
                     - prep.sensitive.bamboohr_directory
-                    - prep.sensitive.bamboohr_emergency_contacts
-                    - prep.sensitive.bamboohr_id_employee_number_mapping
-                    - prep.sensitive.bamboohr_employment_status
                     - prep.sensitive.bamboohr_job_info
                     - prep.sensitive.bamboohr_job_role
                     - prep.sensitive.bamboohr_locality
-                    - prep.sensitive.bamboohr_employment_status_xf
                     - prep.sensitive.bamboohr_headcount_intermediate
 
     - bamboohr_raw:
@@ -839,22 +836,29 @@ roles:
                 read:
                     - analytics.common
                     - analytics.common_mapping
+                    - analytics.common_mart_marketing
+                    - analytics.common_mart_sales
             tables:
                 read:
                     - analytics.common.*
                     - analytics.common_mapping.*
+                    - analytics.common_mart_marketing.*
+                    - analytics.common_mart_sales.*
 
     - date:
         privileges:
             databases:
                 read:
                     - analytics
+                    - prep
             schemas:
                 read:
-                    - analytics.date
+                    - analytics.common
+                    - prep.date
             tables:
                 read:
-                    - analytics.date.*
+                    - analytics.common.dim_date
+                    - prep.date.*
 
     - db_dumps:
         privileges:
@@ -877,20 +881,27 @@ roles:
             databases:
                 read:
                     - analytics
+                    - prep
                     - raw
             schemas:
                 read:
                     - analytics.common
                     - analytics.common_mapping
-                    - analytics.dbt
+                    - analytics.common_mart_marketing
+                    - analytics.common_mart_sales
                     - analytics.legacy
+                    - analytics.workspace_data
+                    - prep.dbt
                     - raw.dbt
             tables:
                 read:
                     - analytics.common.*
                     - analytics.common_mapping.*
-                    - analytics.dbt.*
+                    - analytics.common_mart_marketing.*
+                    - analytics.common_mart_sales.*
                     - analytics.legacy.*
+                    - analytics.workspace_data.*
+                    - prep.dbt.*
                     - raw.dbt.*
 
     - dbt_analytics_clones:
@@ -899,13 +910,13 @@ roles:
         privileges:
             databases:
                 read:
-                    - analytics
+                    - raw
             schemas:
                 read:
-                    - analytics.analytics_clones
+                    - raw.full_table_clones
             tables:
                 read:
-                    - analytics.analytics_clones.*
+                    - raw.full_table_clones.*
 
     - dbt_analytics_sensitive:
         warehouses:
@@ -1434,6 +1445,18 @@ roles:
             - bamboohr
         warehouses:
             - analyst_xs 
+
+    - bmenegocci:
+        member_of:
+            - bamboohr
+        warehouses:
+            - analyst_xs
+
+    - brittany:
+        member_of:
+            - bamboohr_raw
+        warehouses:
+            - analyst_xs
 
     - cli:
         member_of:
@@ -2101,6 +2124,12 @@ roles:
                     - mwalker_prep.*.*
                     - mwalker_prod.*.*
 
+    - mwilkins:
+        member_of:
+            - bamboohr_raw
+        warehouses:
+            - analyst_xs
+
     - nfiguera:
         member_of:
             - analyst_sales
@@ -2635,6 +2664,17 @@ users:
         can_login: yes
         member_of:
             - amurray
+
+    - bmenegocci:
+        can_login: yes
+        member_of:
+            - bmenegocci
+
+    - brittany:
+        can_login: yes
+        member_of:
+            - brittany
+
     - cli:
         can_login: yes
         member_of:
@@ -2872,6 +2912,11 @@ users:
         can_login: yes
         member_of:
             - mvilain
+
+    - mwilkins:
+        can_login: yes
+        member_of:
+            - mwilkins
 
     - mwalker:
         can_login: yes
