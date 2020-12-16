@@ -42,16 +42,8 @@ WITH merge_requests AS (
     SELECT
       merge_requests.*, 
       projects.namespace_id,
-      projects.ultimate_parent_id,
-      projects.ultimate_parent_plan_id,
-      projects.ultimate_parent_plan_title,
-      projects.ultimate_parent_plan_is_paid,
-      projects.namespace_is_internal,
-      ARRAY_TO_STRING(agg_labels.labels,'|')                  AS masked_label_title,
-      agg_labels.labels,
-      IFF(projects.namespace_is_internal IS NOT NULL
-          AND ARRAY_CONTAINS('community contribution'::variant, agg_labels.labels),
-        TRUE, FALSE)                                          AS is_community_contributor_related
+      ARRAY_TO_STRING(agg_labels.labels,'|')                                              AS masked_label_title,
+      agg_labels.labels
     FROM merge_requests
     LEFT JOIN agg_labels
       ON merge_requests.merge_request_id = agg_labels.merge_request_id
