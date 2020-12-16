@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 
 from airflow import DAG
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
-from airflow.operators.dummy_operator import DummyOperator
+from airflow.operators.python_operator import ShortCircuitOperator
 
 from airflow_utils import (
     DATA_IMAGE,
@@ -197,6 +197,14 @@ def extract_table_list_from_manifest(manifest_contents):
     return manifest_contents["tables"].keys()
 
 
+def run_or_skip_dbt(current_seconds:int, dag_interval:int) -> bool:
+    # If first run of the day, run dbt, else skip
+    if current_seconds < dag_interval:
+        return True
+    else:
+        return False
+
+
 def dbt_tasks(dbt_name, dbt_task_identifier):
 
     freshness_cmd = f"""
@@ -214,20 +222,16 @@ def dbt_tasks(dbt_name, dbt_task_identifier):
         arguments=[freshness_cmd],
     )
 
-    ## TODO: make this not hardcoded
     SCHEDULE_INTERVAL_HOURS = 6
     timestamp = datetime.now()
     current_seconds = timestamp.hour * 3600
     dag_interval = SCHEDULE_INTERVAL_HOURS * 3600
 
-    dummy_test = DummyOperator(task_id=f"{dbt_task_identifier}-source-test")
-    dummy_snapshot = DummyOperator(task_id=f"{dbt_task_identifier}-source-snapshot")
-    dummy_model_run = DummyOperator(task_id=f"{dbt_task_identifier}-source-model-run")
-    dummy_model_test = DummyOperator(task_id=f"{dbt_task_identifier}-model-test")
-
     # Only run everything past freshness once per day
-    if dbt_name == "none" or current_seconds < dag_interval:
-        return freshness, dummy_test, dummy_snapshot, dummy_model_run, dummy_model_test
+    short_circuit = ShortCircuitOperator(
+        task_id="short_circuit",
+        python_callable=lambda: run_or_skip_dbt(current_seconds, dag_interval),
+    )
 
     # Test raw source
     test_cmd = f"""
@@ -292,7 +296,7 @@ def dbt_tasks(dbt_name, dbt_task_identifier):
         arguments=[model_test_cmd],
     )
 
-    return freshness, test, snapshot, model_run, model_test
+    return freshness, short_circuit, test, snapshot, model_run, model_test
 
 
 # Loop through each config_dict and generate a DAG
@@ -324,11 +328,9 @@ for source_name, config in config_dict.items():
         dbt_name = f"{config['dbt_name']}"
         dbt_task_identifier = f"{config['task_name']}-dbt-incremental"
 
-        freshness, test, snapshot, model_run, model_test = dbt_tasks(
+        freshness, short_circuit, test, snapshot, model_run, model_test = dbt_tasks(
             dbt_name, dbt_task_identifier
         )
-
-        freshness >> test >> snapshot >> model_run >> model_test
 
         # Actual PGP extract
         file_path = f"analytics/extract/postgres_pipeline/manifests/{config['dag_name']}_db_manifest.yaml"
@@ -370,7 +372,7 @@ for source_name, config in config_dict.items():
                 xcom_push=True,
             )
 
-            incremental_extract >> freshness
+            incremental_extract >> freshness >> short_circuit >> test >> snapshot >> model_run >> model_test
 
     globals()[f"{config['dag_name']}_db_extract"] = extract_dag
 
@@ -447,12 +449,9 @@ for source_name, config in config_dict.items():
         dbt_name = f"{config['dbt_name']}"
         dbt_task_identifier = f"{config['task_name']}-dbt-sync"
 
-        freshness, test, snapshot, model_run, model_test = dbt_tasks(
+        freshness, short_circuit, test, snapshot, model_run, model_test = dbt_tasks(
             dbt_name, dbt_task_identifier
         )
-
-        if test is not None:
-            freshness >> test >> snapshot >> model_run >> model_test
 
         # PGP Extract
         file_path = f"analytics/extract/postgres_pipeline/manifests/{config['dag_name']}_db_manifest.yaml"
@@ -492,7 +491,7 @@ for source_name, config in config_dict.items():
                     xcom_push=True,
                 )
 
-                scd_extract >> freshness
+                scd_extract >> freshness >> short_circuit >> test >> snapshot >> model_run >> model_test
 
     globals()[f"{config['dag_name']}_db_sync"] = sync_dag
 
