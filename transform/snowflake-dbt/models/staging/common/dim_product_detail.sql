@@ -1,3 +1,8 @@
+{{ config({
+        "schema": "common"
+    })
+}}
+
 WITH zuora_product AS (
 
     SELECT *
@@ -42,8 +47,8 @@ WITH zuora_product AS (
       zuora_product_rate_plan_charge.product_rate_plan_charge_name                      AS product_rate_plan_charge_name,
       zuora_product.product_name                                                        AS product_name,
       zuora_product.sku                                                                 AS product_sku,
-      common_product_tier.product_tier                                                  AS product_tier_name,
-      common_product_tier_mapping.product_delivery_type                                 AS product_delivery_type
+      common_product_tier.product_tier_name                                             AS product_tier_name,
+      common_product_tier_mapping.product_delivery_type                                 AS product_delivery_type,
       CASE
         WHEN LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE '%support%'
           THEN 'Support Only'
@@ -64,10 +69,10 @@ WITH zuora_product AS (
     LEFT JOIN common_product_tier_mapping
       ON zuora_product_rate_plan_charge.product_rate_plan_id = common_product_tier_mapping.product_rate_plan_id
     LEFT JOIN common_product_tier
-      ON common_product_tier_mapping.product_tier = common_product_tier.product_tier
+      ON common_product_tier_mapping.product_tier = common_product_tier.product_tier_name
     WHERE zuora_product.is_deleted = FALSE
       AND zuora_product_rate_plan_charge_tier.currency = 'USD'
-    {{ dbt_utils.group_by(n=12) }}
+    {{ dbt_utils.group_by(n=15) }}
     ORDER BY 1, 3
 
 ), final AS (--add annualized billing list price
