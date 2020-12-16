@@ -376,6 +376,44 @@ models:
           - not_null
           - unique
 
+  - name: dim_product_detail
+    description: '{{ doc("dim_product_detail") }}'
+    columns:
+      - name: dim_product_detail_id
+        description: The unique ID of each row in dim_product_detail, based on product rate plan charge ID.
+        tests:
+          - unique
+          - not_null
+        tags: [ "tdf", "common" ]
+      - name: dim_product_tier_id
+        description: The unique ID of a product tier deterined in dim_product_tier.
+        tests:
+          - not_null
+      - name: product_id
+        description: The ID of the product that contains the product rate plan.
+        tests:
+          - not_null
+      - name: product_name
+        description: The name of the product
+      - name: is_reporter_license
+        description: "Reporter licenses are in the Products with 'Additional Permission Types' in the name."
+      - name: billing_list_price
+        description: The price of the tier if the charge is a flat fee, or the price of each unit in the tier if the charge model is tiered pricing.
+      - name: product_rate_plan_charge_id
+        description: The unique ID of a product rate plan charge
+      - name: product_rate_plan_name
+        description: The name of the product rate plan. The name doesn't have to be unique in a Product Catalog, but the name has to be unique within a product.
+      - name: product_rate_plan_charge_name
+        description: The name of the product rate plan charge
+      - name: product_sku
+        description: The unique SKU for the product
+      - name: product_tier_name
+        description: Name of the [GitLab tier](https://about.gitlab.com/handbook/marketing/strategic-marketing/tiers/) associated with the product.
+      - name: effective_start_date
+        description: The date when the product becomes available and can be subscribed to
+      - name: effective_end_date
+        description: The date when the product expires and can't be subscribed to anymore
+
   - name: dim_product_details
     description: '{{ doc("dim_product_details") }}'
     columns:
