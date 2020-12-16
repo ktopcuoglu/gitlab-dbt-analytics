@@ -48,7 +48,7 @@
 .deps_and_seed: &deps_and_seed
   - python3 macro_name_check.py
   - dbt deps $CI_PROFILE_TARGET
-  - dbt seed $CI_PROFILE_TARGET #seed data from csv
+  - dbt seed --full-refresh $CI_PROFILE_TARGET #seed data from csv
   - dbt --warn-error --partial-parse run-operation tag_validation --profiles-dir profile --target ci
 
 .xl_warehouse: &xl_warehouse
@@ -117,7 +117,7 @@
     - python3 macro_name_check.py
     - dbt deps $CI_PROFILE_TARGET
     - echo $DBT_MODELS
-    - dbt seed $CI_PROFILE_TARGET --select $DBT_MODELS
+    - dbt seed --full-refresh $CI_PROFILE_TARGET --select $DBT_MODELS
     
 ➕📸🥩specify_snapshot:
   <<: *snowflake_dbt_jobs
