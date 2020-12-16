@@ -2994,6 +2994,11 @@ users:
         member_of:
             - sawezec
 
+    - securitybotsnowflakeapi:
+        can_login: yes
+        member_of:
+            - securityadmin
+
     - skerr:
         can_login: yes
         member_of:
