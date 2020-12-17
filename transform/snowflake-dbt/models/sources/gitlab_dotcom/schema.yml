@@ -1237,7 +1237,7 @@ models:
         tests:
           - unique
 
-  - name: gitlab_dotcom_namespace_lineage
+  - name: gitlab_dotcom_namespace_lineage_prep
     description: '{{ doc("gitlab_dotcom_namespace_lineage") }}'
     columns:
       - name: namespace_id
