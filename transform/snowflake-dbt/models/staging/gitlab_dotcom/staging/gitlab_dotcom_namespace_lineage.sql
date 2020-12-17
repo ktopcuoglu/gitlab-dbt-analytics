@@ -1,3 +1,8 @@
+{{ config({
+    "database":"ANALYTICS"
+    "schema": "legacy"
+    })
+}}
 WITH RECURSIVE namespaces AS (
 
     SELECT *

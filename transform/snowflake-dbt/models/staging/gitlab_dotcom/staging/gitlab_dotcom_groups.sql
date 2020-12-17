@@ -1,3 +1,8 @@
+{{ config({
+    "database":"ANALYTICS"
+    "schema": "legacy"
+    })
+}}
 WITH namespace_groups AS (
 
   SELECT 

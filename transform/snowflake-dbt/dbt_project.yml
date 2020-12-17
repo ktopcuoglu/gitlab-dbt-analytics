@@ -271,6 +271,9 @@ models:
           +schema: sensitive
         source_view:
           +materialized: view
+        staging: 
+          +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
+          +schema: preparation
 
       gitlab_ops:
         source_view:
