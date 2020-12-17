@@ -119,3 +119,12 @@ models:
         tags: ["tdf","gitlab_dotcom"]
         tests:
           - unique
+
+  - name: gitlab_dotcom_namespace_statistics_historical_monthly
+
+  - name: gitlab_dotcom_namespace_storage_statistics_historical_monthly
+
+
+
+
+          
