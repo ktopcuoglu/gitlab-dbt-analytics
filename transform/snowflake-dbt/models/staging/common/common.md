@@ -25,19 +25,6 @@ Dimension that combines demographic data from salesforce leads and salesforce co
 
 {% enddocs %}
 
-{% docs dim_billing_accounts %}
-Dimensional table representing each individual Zuora account with details of person to bill for the account.
-
-The Zuora account creation and maintenance is part of the broader Quote Creation business process and can be found in the [handbook](https://about.gitlab.com/handbook/finance/sox-internal-controls/quote-to-cash/#3-quote-creation).
-
-Data comes from [Zuora Documentation](https://www.zuora.com/developer/api-reference/#tag/Accounts).
-
-The grain of the table is the Zuora Account.
-
-Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
-
-{% enddocs %}
-
 {% docs dim_billing_account %}
 Dimensional table representing each individual Zuora account with details of person to bill for the account.
 
@@ -63,6 +50,19 @@ Dimensional table for geo locations.
 
 {% enddocs %}
 
+{% docs dim_product_detail %}
+Dimensional table representing GitLab's Product Catalog. The Product Catalog is created and maintained through the Price Master Management business process and can be found in the [handbook](https://about.gitlab.com/handbook/finance/sox-internal-controls/quote-to-cash/#2-price-master-management).
+
+The Rate Plan Charge that is created on a customer account and subscription inherits its value from the Product Catalog.
+
+Data comes from [Zuora Documentation](https://www.zuora.com/developer/api-reference/#tag/Product-Rate-Plan-Charges).
+
+The grain of the table is the Product Rate Plan Charge.
+
+Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+{% enddocs %}
+
 {% docs dim_product_details %}
 Dimensional table representing GitLab's Product Catalog. The Product Catalog is created and maintained through the Price Master Management business process and can be found in the [handbook](https://about.gitlab.com/handbook/finance/sox-internal-controls/quote-to-cash/#2-price-master-management).
 
@@ -82,6 +82,17 @@ Dimensional table representing [GitLab Tiers](https://about.gitlab.com/handbook/
 Data comes from [Zuora Documentation](https://www.zuora.com/developer/api-reference/#tag/Product-Rate-Plans).
 
 The grain of the table is the Product Tier Name.
+
+Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+{% enddocs %}
+
+{% docs dim_subscription %}
+Dimension table representing subscription details. The Zuora subscription is created and maintained as part of the broader Quote Creation business process and can be found in the [handbook](https://about.gitlab.com/handbook/finance/sox-internal-controls/quote-to-cash/#3-quote-creation).
+
+Data comes from [Zuora Documentation](https://www.zuora.com/developer/api-reference/#tag/Subscriptions).
+
+The grain of the table is the version of a Zuora subscription.
 
 Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
 

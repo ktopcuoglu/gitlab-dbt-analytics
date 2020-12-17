@@ -3,10 +3,10 @@ WITH dim_date AS (
     SELECT *
     FROM {{ ref('dim_date') }}
 
-), dim_billing_accounts AS (
+), dim_billing_account AS (
 
     SELECT *
-    FROM {{ ref('dim_billing_accounts') }}
+    FROM {{ ref('dim_billing_account') }}
 
 ), dim_crm_account AS (
 
@@ -113,8 +113,8 @@ WITH dim_date AS (
       ON arr_agg.dim_subscription_id = zuora_subscription.subscription_id
     INNER JOIN dim_product_details
       ON arr_agg.dim_product_details_id = dim_product_details.product_details_id
-    INNER JOIN dim_billing_accounts
-      ON arr_agg.dim_billing_account_id_invoice = dim_billing_accounts.billing_account_id
+    INNER JOIN dim_billing_account
+      ON arr_agg.dim_billing_account_id_invoice = dim_billing_account.dim_billing_account_id
     LEFT JOIN dim_crm_account AS dim_crm_account_invoice
       ON arr_agg.dim_crm_account_id_invoice = dim_crm_account_invoice.crm_account_id
     LEFT JOIN dim_crm_account AS dim_crm_account_subscription
@@ -143,5 +143,5 @@ WITH dim_date AS (
     created_by="@iweeks",
     updated_by="@iweeks",
     created_date="2020-10-21",
-    updated_date="2020-12-03",
+    updated_date="2020-12-15",
 ) }}
