@@ -26,13 +26,15 @@ WITH location_region AS (
       country_name                                              AS country_name,
       UPPER(country_iso_code)                                   AS iso_2_country_code,
       UPPER(iso_alpha_3_code)                                   AS iso_3_country_code,
+      continent_name,
       CASE
         WHEN continent_name IN ('Africa', 'Europe') THEN 'EMEA'
         WHEN continent_name IN ('North America')    THEN 'AMER'
         WHEN continent_name IN ('South America')    THEN 'LATAM'
         WHEN continent_name IN ('Oceania','Asia')   THEN 'APAC'
         ELSE 'Missing location_region_name'
-       END                                                      AS location_geo_name_map
+      END                                                      AS location_region_name_map,
+      is_in_european_union
 
     FROM maxmind_countries_source
     LEFT JOIN  zuora_country_geographic_region
@@ -42,11 +44,19 @@ WITH location_region AS (
 ), final AS (
 
     SELECT
-      joined.*,
-      location_region.dim_location_region_id
+
+      joined.dim_location_country_id,
+      location_region.dim_location_region_id,
+      joined.location_region_name_map,
+      joined.country_name,
+      joined.iso_2_country_code,
+      joined.iso_3_country_code,
+      joined.continent_name,
+      joined.is_in_european_union
+
     FROM joined
     LEFT JOIN location_region
-      ON joined.location_geo_name_map = location_region.location_region_name
+      ON joined.location_region_name_map = location_region.location_region_name
 
 )
 
