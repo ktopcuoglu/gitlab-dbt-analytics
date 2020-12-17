@@ -489,7 +489,8 @@ tables:
       FROM ci_build_trace_sections
     export_schema: 'gitlab_com'
     export_table: 'ci_build_trace_sections'
-    export_table_primary_key: CONCAT(build_id,'_',section_name_id)
+    # not actually primary key
+    export_table_primary_key: build_id 
     dbt_source_model: true
   cluster_groups:
     import_db: GITLAB_DB
