@@ -24,11 +24,13 @@ WITH dates AS (
     SELECT 
       CASE WHEN division = 'Engineering_Meltano'
             THEN 'Engineering/Meltano'
+           WHEN division ='People_CEO'
+            THEN 'People Group/CEO'
            WHEN division = 'Marketing'
             THEN 'Marketing - Including SDR'
-           ELSE division END                        AS division,
+           ELSE division END                          AS division,
       fiscal_year,
-      fiscal_quarter, 
+      fiscal_quarter,
       budget,
       excess_from_previous_quarter
     FROM sheetload_people_budget
@@ -59,15 +61,14 @@ WITH dates AS (
 ), promotions_aggregated AS (
 
     SELECT
-      division,
+      division_grouping                                         AS division,
       dates.fiscal_year,
       dates.fiscal_quarter,
-      dates.fiscal_quarter_name,
       SUM(total_change_in_comp)                                 AS total_spend
     FROM promotions
     LEFT JOIN dates
       ON promotions.promotion_month = dates.date_actual
-    GROUP BY 1,2,3,4
+    GROUP BY 1,2,3
 
     UNION ALL
 
@@ -75,14 +76,13 @@ WITH dates AS (
       'Marketing - Excluding SDR'                               AS division,
       dates.fiscal_year,
       dates.fiscal_quarter,
-      dates.fiscal_quarter_name,
       SUM(total_change_in_comp)                                 AS total_spend
     FROM promotions
     LEFT JOIN dates
       ON promotions.promotion_month = dates.date_actual
     WHERE division = 'Marketing'
       AND department != 'Sales Development'
-    GROUP BY 1,2,3,4
+    GROUP BY 1,2,3
 
     UNION ALL
 
@@ -90,14 +90,13 @@ WITH dates AS (
       'Sales Development'                                       AS division,
       dates.fiscal_year,
       dates.fiscal_quarter,
-      dates.fiscal_quarter_name,
       SUM(total_change_in_comp)                                 AS total_spend
     FROM promotions
     LEFT JOIN dates
       ON promotions.promotion_month = dates.date_actual
     WHERE division = 'Marketing'
       AND department = 'Sales Development'
-    GROUP BY 1,2,3,4
+    GROUP BY 1,2,3
 
     UNION ALL 
 
@@ -105,12 +104,11 @@ WITH dates AS (
       'Total - Including SDR'                                  AS division,
       dates.fiscal_year,
       dates.fiscal_quarter,
-      dates.fiscal_quarter_name,
       SUM(total_change_in_comp)                                AS total_spend
     FROM promotions
     LEFT JOIN dates
       ON promotions.promotion_month = dates.date_actual
-    GROUP BY 1,2,3,4
+    GROUP BY 1,2,3
 
     UNION ALL
 
@@ -118,19 +116,18 @@ WITH dates AS (
       'Total - Excluding SDR'                                  AS division,
       dates.fiscal_year,
       dates.fiscal_quarter,
-      dates.fiscal_quarter_name,
       SUM(total_change_in_comp)                                AS total_spend
     FROM promotions
     LEFT JOIN dates
       ON promotions.promotion_month = dates.date_actual
     WHERE department != 'Sales Development'
-    GROUP BY 1,2,3,4
+    GROUP BY 1,2,3
   
 ), final AS (
 
     SELECT 
+      'FY' || budget.fiscal_year || ' - Q' || budget.fiscal_quarter AS fiscal_quarter_name,
       budget.*,
-      promotions_aggregated.fiscal_quarter_name,
       promotions_aggregated.total_spend
     FROM budget
     LEFT JOIN promotions_aggregated

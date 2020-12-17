@@ -19,15 +19,41 @@ models:
         tests:
           - not_null
           - unique
-      - name: dim_sales_segment_name_id
+      - name: dim_sales_segment_id
         description: Unique identifier of a version of a sales segment
-      - name: dim_geo_region_name_id
+      - name: dim_geo_region_id
         description: "Dimension for geographical region built off ATAM_Region__C in SFDC. Example values : NORAM, LATAM, APAC, EMEA"
-      - name: dim_geo_sub_region_name_id
+      - name: dim_geo_sub_region_id
         description: "Dimension table for sub-region built off ATAM_Sub_Region__C in SFDC. Example values : Southern Europe, NA East, Nordics"
-      - name: dim_geo_area_name_id
+      - name: dim_geo_area_id
         description: "Dimension table for geographic area built off ATAM_Area__C in SFDC. Example values: Southern PNW, India, Northeast"
-      - name: dim_sales_territory_name_id
+      - name: dim_sales_territory_id
         description: Unique identifier of a version of a sales territory
-      - name: dim_industry_name_id
+      - name: dim_industry_id
         description: Unique identifier of a version of a industry
+
+  - name: map_ip_to_geo
+    description: '{{ doc("map_ip_to_geo") }}'
+    columns:
+      - name: ip_address_hash
+        tests:
+          - unique
+          - not_null
+      - name: location_id
+
+  - name: map_product_tier
+    description: '{{ doc("map_product_tier") }}'
+    columns:
+      - name: product_rate_plan_id
+        description: "Rate Plan ID for Zuora Product"
+        tests:
+          - not_null
+          - unique
+      - name: product_rate_plan_name
+        description: "rate plan name from Zuora product source"
+      - name: product_tier
+        description: "Product pricing tiers for both SaaS and Self-Managed customers (https://about.gitlab.com/handbook/marketing/strategic-marketing/tiers/)"
+      - name: product_delivery_type
+        description: "How product is delivered to customer; SaaS or Self-Managed (or Other)"
+      - name: product_ranking
+        description: "Numeric product pricing tier, independent of delivery type"

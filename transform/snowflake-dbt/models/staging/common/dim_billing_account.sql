@@ -1,3 +1,8 @@
+{{config({
+    "schema": "common"
+  })
+}}
+
 WITH map_merged_crm_accounts AS (
 
     SELECT *
@@ -22,8 +27,8 @@ WITH map_merged_crm_accounts AS (
 ), filtered AS (
 
     SELECT
-      zuora_account.account_id                              AS billing_account_id,
-      map_merged_crm_accounts.dim_crm_account_id            AS crm_account_id,
+      zuora_account.account_id                              AS dim_billing_account_id,
+      map_merged_crm_accounts.dim_crm_account_id            AS dim_crm_account_id,
       zuora_account.account_number                          AS billing_account_number,
       zuora_account.account_name                            AS billing_account_name,
       zuora_account.status                                  AS account_status,
@@ -49,7 +54,7 @@ WITH map_merged_crm_accounts AS (
 {{ dbt_audit(
     cte_ref="filtered",
     created_by="@msendal",
-    updated_by="@iweeks",
+    updated_by="@mcooperDD",
     created_date="2020-07-20",
-    updated_date="2020-10-22"
+    updated_date="2020-12-07"
 ) }}
