@@ -26,7 +26,7 @@ WITH RECURSIVE namespaces AS (
 
   UNION ALL
 
-  {# Recursively iterate through each of the children namespaces #}  
+  -- Recursively iterate through each of the children namespaces 
   
   SELECT
     iter.namespace_id,
