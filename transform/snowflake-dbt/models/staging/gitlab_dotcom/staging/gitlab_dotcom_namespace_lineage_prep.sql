@@ -16,7 +16,7 @@ WITH RECURSIVE namespaces AS (
 
 ), recursive_namespaces(namespace_id, parent_id, upstream_lineage) AS (
 
-  {# Select all namespaces without parents #}
+  -- Select all namespaces without parents
   SELECT
     namespace_id,
     namespaces.parent_id,
