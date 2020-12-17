@@ -111,20 +111,26 @@ def load_incremental(
       This block of code raises an Exception whenever replication is far enough behind that data will be missed.
     """
     if table_dict["export_schema"] == "gitlab_com":
-        try:
-            last_execution_date = datetime.datetime.strptime(
-                os.environ["LAST_EXECUTION_DATE"], "%Y-%m-%dT%H:%M:%S%z"
-            )
-            execution_date = datetime.datetime.strptime(
-                os.environ["EXECUTION_DATE"], "%Y-%m-%dT%H:%M:%S%z"
-            )
-        except:
-            last_execution_date = datetime.datetime.strptime(
-                os.environ["LAST_EXECUTION_DATE"], "%Y-%m-%dT%H:%M:%S.%f%z"
-            )
-            execution_date = datetime.datetime.strptime(
-                os.environ["EXECUTION_DATE"], "%Y-%m-%dT%H:%M:%S.%f%z"
-            )
+        last_execution_date = datetime.datetime.strptime(
+            os.environ["LAST_EXECUTION_DATE"], "%Y-%m-%dT%H:%M:%S%z"
+        )
+        execution_date = datetime.datetime.strptime(
+            os.environ["EXECUTION_DATE"], "%Y-%m-%dT%H:%M:%S%z"
+        )
+        # try:
+        #     last_execution_date = datetime.datetime.strptime(
+        #         os.environ["LAST_EXECUTION_DATE"], "%Y-%m-%dT%H:%M:%S%z"
+        #     )
+        #     execution_date = datetime.datetime.strptime(
+        #         os.environ["EXECUTION_DATE"], "%Y-%m-%dT%H:%M:%S%z"
+        #     )
+        # except:
+        #     last_execution_date = datetime.datetime.strptime(
+        #         os.environ["LAST_EXECUTION_DATE"], "%Y-%m-%dT%H:%M:%S.%f%z"
+        #     )
+        #     execution_date = datetime.datetime.strptime(
+        #         os.environ["EXECUTION_DATE"], "%Y-%m-%dT%H:%M:%S.%f%z"
+        #     )
 
         hours_difference = (execution_date - last_execution_date).seconds / 3600
 
