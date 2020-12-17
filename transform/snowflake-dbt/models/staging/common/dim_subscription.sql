@@ -45,7 +45,7 @@ WITH map_merged_crm_accounts AS (
     DATE_TRUNC('month', zuora_subscription.subscription_end_date)             AS subscription_end_month
   FROM zuora_subscription
   INNER JOIN zuora_account
-    ON zuora_account.account_id = zuora_subscription.account_id
+    ON zuora_subscription.account_id = zuora_account.account_id
   LEFT JOIN map_merged_crm_accounts
     ON zuora_account.crm_id = map_merged_crm_accounts.sfdc_account_id
 
