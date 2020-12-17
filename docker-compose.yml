@@ -89,6 +89,7 @@ services:
       environment:
         DBT_PROFILES_DIR: /usr/local/dbt_profiles/
         DATA_TEST_BRANCH: "main"
+        DATA_SIREN_BRANCH: "master"
         SNOWFLAKE_SNAPSHOT_DATABASE: "SNOWFLAKE"
         SNOWFLAKE_LOAD_DATABASE: "RAW"
         SNOWFLAKE_PREP_DATABASE: "PREP"

@@ -22,6 +22,9 @@ WITH source AS (
       userroleid       AS user_role_id,
       start_date__c    AS start_date,
       user_segment__c  AS user_segment,
+      user_geo__c      AS user_geo,
+      user_region__c   AS user_region,
+      user_area__c     AS user_area,
 
       --metadata
       createdbyid      AS created_by_id,
@@ -32,7 +35,7 @@ WITH source AS (
 
       --dbt last run
       convert_timezone('America/Los_Angeles',convert_timezone('UTC',current_timestamp())) AS _last_dbt_run
-    
+
     FROM source
 
 )

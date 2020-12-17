@@ -1,6 +1,140 @@
 version: 2
 
 models:
+  - name: mart_monthly_product_usage
+    description: '{{ doc("mart_monthly_product_usage") }}'
+    tests:
+      - unique:
+          column_name: "concat(reporting_month, metrics_path, ping_id)"
+    columns:
+      - name: reporting_month
+        description: '{{ doc("reporting_month") }}'
+        tests:
+            - not_null
+      - name: metrics_path
+        description: '{{ doc("metrics_path") }}'
+        tests:
+            - not_null
+      - name: ping_id
+        description: '{{ doc("ping_id") }}'
+        tests:
+            - not_null
+      - name: host_id
+        description: '{{ doc("host_id") }}'
+        tests:
+            - not_null
+      - name: original_linked_subscription_id
+        description: '{{ doc("original_linked_subscription_id") }}'
+      - name: latest_active_subscription_id
+        description: '{{ doc("latest_active_subscription_id") }}'
+      - name: billing_account_id
+        description: '{{ doc("billing_account_id") }}'
+      - name: location_id
+        description: '{{ doc("location_id") }}'
+      - name: ultimate_parent_account_id
+        description: '{{ doc("ultimate_parent_account_id") }}'
+      - name: delivery
+        description: '{{ doc("delivery_column") }}'
+        tests:
+            - not_null
+      - name: main_edition
+        description: '{{ doc("main_edition") }}'
+        tests:
+            - not_null
+      - name: ping_product_tier
+        description: '{{ doc("ping_product_tier") }}'
+        tests:
+            - not_null
+      - name: ping_main_edition_product_tier
+        description: '{{ doc("ping_main_edition_product_tier") }}'
+        tests:
+            - not_null
+      - name: major_version
+        description: '{{ doc("major_version") }}'
+        tests:
+            - not_null
+      - name: minor_version
+        description: '{{ doc("minor_version") }}'
+        tests:
+            - not_null
+      - name: major_minor_version
+        description: '{{ doc("major_minor_version") }}'
+        tests:
+            - not_null
+      - name: version
+        description: '{{ doc("version") }}'
+        tests:
+            - not_null
+      - name: source_ip_hash
+        description: '{{ doc("source_ip_hash") }}'
+        tests:
+            - not_null
+      - name: host_name
+        description: '{{ doc("host_name") }}'
+        tests:
+            - not_null
+      - name: subscription_name_slugify
+        description: '{{ doc("subscription_name_slugify") }}'
+      - name: subscription_start_month
+        description: '{{ doc("subscription_start_month") }}'
+      - name: subscription_end_month
+        description: '{{ doc("subscription_end_month") }}'
+      - name: product_category_array
+        description: '{{ doc("product_category_array") }}'
+      - name: product_rate_plan_name_array
+        description: '{{ doc("product_rate_plan_name_array") }}'
+      - name: is_paid_subscription
+        description: '{{ doc("is_paid_subscription") }}'
+      - name: is_program_subscription
+        description: '{{ doc("is_edu_oss_subscription") }}'
+      - name: crm_account_name
+        description: '{{ doc("crm_account_name") }}'
+      - name: ultimate_parent_account_name
+        description: '{{ doc("ultimate_parent_account_name") }}'
+      - name: ultimate_parent_billing_country
+        description: '{{ doc("ultimate_parent_billing_country") }}'
+      - name: ultimate_parent_account_segment
+        description: '{{ doc("ultimate_parent_account_segment") }}'
+      - name: ultimate_parent_industry
+        description: '{{ doc("ultimate_parent_industry") }}'
+      - name: ultimate_parent_account_owner_team
+        description: '{{ doc("ultimate_parent_account_owner_team") }}'
+      - name: ultimate_parent_territory
+        description: '{{ doc("ultimate_parent_territory") }}'
+      - name: created_at
+        description: '{{ doc("created_at") }}'
+      - name: recorded_at
+        description: '{{ doc("recorded_at") }}'
+        tests:
+            - not_null
+      - name: monthly_metric_value
+        description: '{{ doc("monthly_metric_value") }}'
+        tests:
+            - not_null
+      - name: created_by
+        description: '{{ doc("created_by") }}'
+        tests:
+            - not_null
+      - name: updated_by
+        description: '{{ doc("updated_by") }}'
+        tests:
+            - not_null
+      - name: model_created_date
+        description: '{{ doc("model_created_date") }}'
+        tests:
+            - not_null
+      - name: model_updated_date
+        description: '{{ doc("model_updated_date") }}'
+        tests:
+            - not_null
+      - name: dbt_updated_at
+        description: '{{ doc("dbt_updated_at") }}'
+        tests:
+            - not_null
+      - name: dbt_created_at
+        description: '{{ doc("dbt_created_at") }}'
+        tests:
+            - not_null
   - name: mart_usage_ping_counters_statistics
     description: '{{ doc("mart_usage_ping_counters_statistics") }}'
     tests:

@@ -1,6 +1,6 @@
 {{ config({
     "materialized":"table",
-    "schema": "analytics",
+    "schema": "legacy",
     "database": env_var('SNOWFLAKE_TRANSFORM_DATABASE'),
     })
 }}
@@ -39,7 +39,7 @@ WITH employee_directory_intermediate AS (
       hire_date,
       cost_center,
       layers,
-      IFF(sales_geo_differential!='n/a - Comp Calc', TRUE, FALSE) AS exclude_from_location_factor
+      IFF(sales_geo_differential = 'n/a - Comp Calc', TRUE, FALSE) AS exclude_from_location_factor
     FROM employee_directory_intermediate
 
 ), final AS (

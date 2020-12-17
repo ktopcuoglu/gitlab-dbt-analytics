@@ -310,6 +310,7 @@ roles:
             - boneyard
             - covid19
             - dbt_analytics
+            - db_dumps
             - gitlab_data_yaml
             - gitlab_dotcom
             - license_db
@@ -442,6 +443,7 @@ roles:
             - boneyard
             - covid19
             - dbt_analytics
+            - db_dumps
             - gitlab_data_yaml
             - gitlab_dotcom
             - license_db
@@ -528,6 +530,7 @@ roles:
                 - raw.snowflake_imports
                 - raw.tap_postgres
                 - raw.qualtrics_mailing_list
+                - raw.version_db
             tables:
                 - raw.bamboohr.*
                 - raw.engineering_extracts.*
@@ -542,6 +545,7 @@ roles:
                 - raw.tap_postgres.*
                 - raw.snowflake_imports.*
                 - raw.qualtrics_mailing_list.*
+                - raw.version_db.*
         privileges:
             databases:
                 read:
@@ -688,18 +692,18 @@ roles:
             - snowflake_db
         owns:
             schemas:
-                - analytics.analytics
-                - analytics.analytics_clones
-                - analytics.analytics_staging
                 - analytics.common
                 - analytics.common_mapping
+                - analytics.common_mart_marketing
+                - analytics.common_mart_sales
+                - analytics.legacy
                 - prep.sensitive
             tables:
-                - analytics.analytics.*
-                - analytics.analytics_clones.*
-                - analytics.analytics_staging.*
                 - analytics.common.*
                 - analytics.common_mapping.*
+                - analytics.common_mart_marketing.*
+                - analytics.common_mart_sales.*
+                - analytics.legacy.*
                 - prep.sensitive.*
         privileges:
             databases:
@@ -743,23 +747,18 @@ roles:
                     - prep
             schemas:
                 read:
-                    - analytics.analytics
                     - analytics.common
+                    - analytics.legacy
                     - prep.sensitive
             tables:
                 read:
-                    - analytics.analytics.*
                     - analytics.common.*
+                    - analytics.legacy.*
                     - prep.sensitive.employee_*
-                    - prep.sensitive.bamboohr_custom_bonus
                     - prep.sensitive.bamboohr_directory
-                    - prep.sensitive.bamboohr_emergency_contacts
-                    - prep.sensitive.bamboohr_id_employee_number_mapping
-                    - prep.sensitive.bamboohr_employment_status
                     - prep.sensitive.bamboohr_job_info
                     - prep.sensitive.bamboohr_job_role
                     - prep.sensitive.bamboohr_locality
-                    - prep.sensitive.bamboohr_employment_status_xf
                     - prep.sensitive.bamboohr_headcount_intermediate
 
     - bamboohr_raw:
@@ -773,13 +772,13 @@ roles:
                     - raw
             schemas:
                 read:
-                    - analytics.analytics
+                    - analytics.legacy
                     - prep.sensitive
                     - raw.bamboohr
 
             tables:
                 read:
-                    - analytics.analytics.*
+                    - analytics.legacy.*
                     - prep.sensitive.employee_*
                     - prep.sensitive.bamboohr_*
                     - raw.bamboohr.*
@@ -837,22 +836,29 @@ roles:
                 read:
                     - analytics.common
                     - analytics.common_mapping
+                    - analytics.common_mart_marketing
+                    - analytics.common_mart_sales
             tables:
                 read:
                     - analytics.common.*
                     - analytics.common_mapping.*
+                    - analytics.common_mart_marketing.*
+                    - analytics.common_mart_sales.*
 
     - date:
         privileges:
             databases:
                 read:
                     - analytics
+                    - prep
             schemas:
                 read:
-                    - analytics.date
+                    - analytics.common
+                    - prep.date
             tables:
                 read:
-                    - analytics.date.*
+                    - analytics.common.dim_date
+                    - prep.date.*
 
     - db_dumps:
         privileges:
@@ -875,22 +881,27 @@ roles:
             databases:
                 read:
                     - analytics
+                    - prep
                     - raw
             schemas:
                 read:
-                    - analytics.analytics
                     - analytics.common
                     - analytics.common_mapping
-                    - analytics.analytics_staging
-                    - analytics.dbt
+                    - analytics.common_mart_marketing
+                    - analytics.common_mart_sales
+                    - analytics.legacy
+                    - analytics.workspace_data
+                    - prep.dbt
                     - raw.dbt
             tables:
                 read:
-                    - analytics.analytics.*
                     - analytics.common.*
                     - analytics.common_mapping.*
-                    - analytics.analytics_staging.*
-                    - analytics.dbt.*
+                    - analytics.common_mart_marketing.*
+                    - analytics.common_mart_sales.*
+                    - analytics.legacy.*
+                    - analytics.workspace_data.*
+                    - prep.dbt.*
                     - raw.dbt.*
 
     - dbt_analytics_clones:
@@ -899,13 +910,13 @@ roles:
         privileges:
             databases:
                 read:
-                    - analytics
+                    - raw
             schemas:
                 read:
-                    - analytics.analytics_clones
+                    - raw.full_table_clones
             tables:
                 read:
-                    - analytics.analytics_clones.*
+                    - raw.full_table_clones.*
 
     - dbt_analytics_sensitive:
         warehouses:
@@ -1309,12 +1320,15 @@ roles:
             databases:
                 read:
                     - prep
+                    - raw
             schemas:
                 read:
                     - prep.version_db
+                    - raw.version_db
             tables:
                 read:
                     - prep.version_db.*
+                    - raw.version_db.*
 
 
     - zendesk:
@@ -1431,6 +1445,18 @@ roles:
             - bamboohr
         warehouses:
             - analyst_xs 
+
+    - bmenegocci:
+        member_of:
+            - bamboohr
+        warehouses:
+            - analyst_xs
+
+    - brittany:
+        member_of:
+            - bamboohr_raw
+        warehouses:
+            - analyst_xs
 
     - cli:
         member_of:
@@ -1906,8 +1932,8 @@ roles:
                     - ktam_prod.*.*
 
     - ksmith:
-        warehouses:
-            - reporting
+        member_of: []
+        warehouses: []
 
     - lmai:
         member_of:
@@ -2097,6 +2123,12 @@ roles:
                     - mwalker_analytics.*.*
                     - mwalker_prep.*.*
                     - mwalker_prod.*.*
+
+    - mwilkins:
+        member_of:
+            - bamboohr_raw
+        warehouses:
+            - analyst_xs
 
     - nfiguera:
         member_of:
@@ -2632,6 +2664,17 @@ users:
         can_login: yes
         member_of:
             - amurray
+
+    - bmenegocci:
+        can_login: yes
+        member_of:
+            - bmenegocci
+
+    - brittany:
+        can_login: yes
+        member_of:
+            - brittany
+
     - cli:
         can_login: yes
         member_of:
@@ -2817,10 +2860,8 @@ users:
             - ktam
 
     - ksmith:
-        can_login: yes
-        member_of:
-            - ksmith
-            - securityadmin
+        can_login: no
+        member_of: []
 
     - lmai:
         can_login: yes
@@ -2871,6 +2912,11 @@ users:
         can_login: yes
         member_of:
             - mvilain
+
+    - mwilkins:
+        can_login: yes
+        member_of:
+            - mwilkins
 
     - mwalker:
         can_login: yes
@@ -2947,6 +2993,11 @@ users:
         can_login: yes
         member_of:
             - sawezec
+
+    - securitybotsnowflakeapi:
+        can_login: yes
+        member_of:
+            - securityadmin
 
     - skerr:
         can_login: yes

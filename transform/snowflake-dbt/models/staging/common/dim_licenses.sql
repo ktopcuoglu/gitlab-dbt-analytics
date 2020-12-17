@@ -17,7 +17,7 @@ WITH licenses AS (
           LOWER(email) LIKE '%@gitlab.com' AND LOWER(company) LIKE '%gitlab%',
           TRUE, FALSE
       )                        AS is_internal,
-      company,
+      company                  AS company,
       starts_at::DATE          AS license_start_date,
       license_expires_at::DATE AS license_expire_date,
       created_at,
