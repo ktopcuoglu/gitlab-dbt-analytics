@@ -187,12 +187,12 @@ WITH first_contact  AS (
       COALESCE(order_type.dim_order_type_id, MD5(-1))                                                               AS dim_order_type_id,
       COALESCE(opportunity_source.dim_opportunity_source_id, MD5(-1))                                               AS dim_opportunity_source_id,
       COALESCE(purchase_channel.dim_purchase_channel_id, MD5(-1))                                                   AS dim_purchase_channel_id,
-      COALESCE(crm_account_dimensions.dim_sales_segment_name_id,sales_segment.dim_sales_segment_name_id, MD5(-1))   AS dim_sales_segment_name_id,
-      COALESCE(crm_account_dimensions.dim_geo_region_name_id, MD5(-1))                                              AS dim_geo_region_name_id,
-      COALESCE(crm_account_dimensions.dim_geo_sub_region_name_id, MD5(-1))                                          AS dim_geo_sub_region_name_id,
-      COALESCE(crm_account_dimensions.dim_geo_area_name_id, MD5(-1))                                                AS dim_geo_area_name_id,
-      COALESCE(crm_account_dimensions.dim_sales_territory_name_id, MD5(-1))                                         AS dim_sales_territory_name_id,
-      COALESCE(crm_account_dimensions.dim_industry_name_id, MD5(-1))                                                AS dim_industry_name_id,
+      COALESCE(crm_account_dimensions.dim_sales_segment_id,sales_segment.dim_sales_segment_id, MD5(-1))             AS dim_sales_segment_id,
+      COALESCE(crm_account_dimensions.dim_geo_region_id, MD5(-1))                                                   AS dim_geo_region_id,
+      COALESCE(crm_account_dimensions.dim_geo_sub_region_id, MD5(-1))                                               AS dim_geo_sub_region_id,
+      COALESCE(crm_account_dimensions.dim_geo_area_id, MD5(-1))                                                     AS dim_geo_area_id,
+      COALESCE(crm_account_dimensions.dim_sales_territory_id, MD5(-1))                                              AS dim_sales_territory_id,
+      COALESCE(crm_account_dimensions.dim_industry_id, MD5(-1))                                                     AS dim_industry_id,
 
       -- flags
       opportunity_fields.is_closed,
@@ -222,7 +222,7 @@ WITH first_contact  AS (
     LEFT JOIN purchase_channel
       ON opportunity_fields.deal_path = purchase_channel.purchase_channel_name
     LEFT JOIN sales_segment
-      ON opportunity_fields.sales_segment = sales_segment.dim_sales_segment_name
+      ON opportunity_fields.sales_segment = sales_segment.sales_segment_name
     LEFT JOIN is_sao
       ON opportunity_fields.crm_opportunity_id = is_sao.opportunity_id
     LEFT JOIN is_sdr_sao
@@ -233,7 +233,7 @@ WITH first_contact  AS (
 {{ dbt_audit(
     cte_ref="final_opportunities",
     created_by="@mcooperDD",
-    updated_by="@iweeks",
+    updated_by="@paul_armstrong",
     created_date="2020-11-30",
-    updated_date="2020-12-07"
+    updated_date="2020-12-10"
 ) }}

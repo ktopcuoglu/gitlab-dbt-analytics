@@ -692,7 +692,6 @@ roles:
             - snowflake_db
         owns:
             schemas:
-                - analytics.analytics_clones
                 - analytics.common
                 - analytics.common_mapping
                 - analytics.common_mart_marketing
@@ -700,7 +699,6 @@ roles:
                 - analytics.legacy
                 - prep.sensitive
             tables:
-                - analytics.analytics_clones.*
                 - analytics.common.*
                 - analytics.common_mapping.*
                 - analytics.common_mart_marketing.*
@@ -852,12 +850,15 @@ roles:
             databases:
                 read:
                     - analytics
+                    - prep
             schemas:
                 read:
-                    - analytics.date
+                    - analytics.common
+                    - prep.date
             tables:
                 read:
-                    - analytics.date.*
+                    - analytics.common.dim_date
+                    - prep.date.*
 
     - db_dumps:
         privileges:
@@ -909,13 +910,13 @@ roles:
         privileges:
             databases:
                 read:
-                    - analytics
+                    - raw
             schemas:
                 read:
-                    - analytics.analytics_clones
+                    - raw.full_table_clones
             tables:
                 read:
-                    - analytics.analytics_clones.*
+                    - raw.full_table_clones.*
 
     - dbt_analytics_sensitive:
         warehouses:
@@ -2992,6 +2993,11 @@ users:
         can_login: yes
         member_of:
             - sawezec
+
+    - securitybotsnowflakeapi:
+        can_login: yes
+        member_of:
+            - securityadmin
 
     - skerr:
         can_login: yes

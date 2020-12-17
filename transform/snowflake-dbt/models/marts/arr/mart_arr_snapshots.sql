@@ -5,10 +5,10 @@
     })
 }}
 
-WITH dim_billing_accounts AS (
+WITH dim_billing_account AS (
 
     SELECT *
-    FROM {{ ref('dim_billing_accounts') }}
+    FROM {{ ref('dim_billing_account') }}
 
 ), dim_crm_account AS (
 
@@ -75,11 +75,11 @@ WITH dim_billing_accounts AS (
       dim_subscriptions_snapshots.subscription_end_month,
 
       --account info
-      dim_billing_accounts.billing_account_id                                          AS zuora_account_id,
-      dim_billing_accounts.sold_to_country                                             AS zuora_sold_to_country,
-      dim_billing_accounts.billing_account_name                                        AS zuora_account_name,
-      dim_billing_accounts.billing_account_number                                      AS zuora_account_number,
-      COALESCE(dim_crm_account.merged_to_account_id, dim_crm_account.crm_account_id) AS crm_id,
+      dim_billing_account.dim_billing_account_id                                        AS zuora_account_id,
+      dim_billing_account.sold_to_country                                               AS zuora_sold_to_country,
+      dim_billing_account.billing_account_name                                          AS zuora_account_name,
+      dim_billing_account.billing_account_number                                        AS zuora_account_number,
+      COALESCE(dim_crm_account.merged_to_account_id, dim_crm_account.crm_account_id)    AS crm_id,
       dim_crm_account.ultimate_parent_account_id,
       dim_crm_account.ultimate_parent_account_name,
       dim_crm_account.ultimate_parent_billing_country,
@@ -111,14 +111,14 @@ WITH dim_billing_accounts AS (
       AND dim_subscriptions_snapshots.snapshot_id = fct_mrr_snapshots.snapshot_id
     INNER JOIN dim_product_details
       ON dim_product_details.product_details_id = fct_mrr_snapshots.product_details_id
-    INNER JOIN dim_billing_accounts
-      ON dim_billing_accounts.billing_account_id= fct_mrr_snapshots.billing_account_id
+    INNER JOIN dim_billing_account
+      ON dim_billing_account.dim_billing_account_id = fct_mrr_snapshots.billing_account_id
     INNER JOIN dim_date AS arr_month
       ON arr_month.date_id = fct_mrr_snapshots.date_id
     INNER JOIN dim_date AS snapshot_dates
       ON snapshot_dates.date_id = fct_mrr_snapshots.snapshot_id
     LEFT JOIN dim_crm_account
-        ON dim_billing_accounts.crm_account_id = dim_crm_account.crm_account_id
+        ON dim_billing_account.dim_crm_account_id = dim_crm_account.crm_account_id
 
 )
 
