@@ -1,5 +1,5 @@
 {{ config({
-    "database": env_var('SNOWFLAKE_TRANSFORM_DATABASE') 
+    "database": env_var('SNOWFLAKE_TRANSFORM_DATABASE') ,
     "schema": "legacy"
     })
 }}
