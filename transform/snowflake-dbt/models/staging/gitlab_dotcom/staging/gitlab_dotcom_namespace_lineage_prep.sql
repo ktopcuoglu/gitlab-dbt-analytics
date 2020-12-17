@@ -1,7 +1,7 @@
 WITH RECURSIVE namespaces AS (
 
     SELECT *
-    FROM {{ ref('gitlab_dotcom_namespace_source') }}
+    FROM {{ ref('gitlab_dotcom_namespaces_source') }}
 
 ), gitlab_subscriptions AS (
 
