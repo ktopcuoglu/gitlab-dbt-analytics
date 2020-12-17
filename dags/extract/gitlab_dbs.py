@@ -230,7 +230,9 @@ def dbt_tasks(dbt_name, dbt_task_identifier):
     # Only run everything past freshness once per day
     short_circuit = ShortCircuitOperator(
         task_id="short_circuit",
-        python_callable=lambda: run_or_skip_dbt(current_seconds, dag_interval, dbt_name),
+        python_callable=lambda: run_or_skip_dbt(
+            current_seconds, dag_interval, dbt_name
+        ),
     )
 
     # Test raw source
