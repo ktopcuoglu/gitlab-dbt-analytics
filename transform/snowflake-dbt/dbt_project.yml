@@ -67,7 +67,7 @@ seeds:
 vars:
 
   datasiren:
-    'datasiren:sensorlist': ['datasiren_transform_db_email_column_name_sensor']
+    'datasiren:sensorlist': ['datasiren_source_db_social_security_number_sensor', 'datasiren_transform_db_email_column_name_sensor']
 
   warehouse_name: "{{ env_var('SNOWFLAKE_TRANSFORM_WAREHOUSE') }}"
   valid_at: '{{ run_started_at.strftime("%Y-%m-%d %H:%M:%S%z") }}'

@@ -440,8 +440,10 @@ roles:
             - analyst_xs
         member_of:
             - analyst_core
+            - bamboohr
             - boneyard
             - covid19
+            - customers_db
             - dbt_analytics
             - db_dumps
             - gitlab_data_yaml
@@ -2993,6 +2995,11 @@ users:
         can_login: yes
         member_of:
             - sawezec
+
+    - securitybotsnowflakeapi:
+        can_login: yes
+        member_of:
+            - securityadmin
 
     - skerr:
         can_login: yes
