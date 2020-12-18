@@ -11,7 +11,7 @@ WITH contact_role AS (
 ), crm_person AS (
 
     SELECT *
-    FROM {{ ref('base_crm_person') }}
+    FROM {{ ref('prep_crm_person') }}
 
 ), final_opportunity_contacts AS (
 

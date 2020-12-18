@@ -22,7 +22,7 @@ WITH account_dims_mapping AS (
     dim_crm_sales_rep_id,
     person_score
 
-    FROM {{ref('base_crm_person')}}
+    FROM {{ref('prep_crm_person')}}
 
 ), geo_region AS (
 

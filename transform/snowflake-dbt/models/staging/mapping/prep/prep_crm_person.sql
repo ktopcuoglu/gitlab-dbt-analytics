@@ -1,5 +1,5 @@
 {{ config({
-        "schema": "common_base"
+        "schema": "common_mapping"
     })
 }}
 

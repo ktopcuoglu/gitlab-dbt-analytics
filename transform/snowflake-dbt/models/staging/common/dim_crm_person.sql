@@ -6,7 +6,7 @@
 WITH crm_person AS (
 
     SELECT *
-    FROM {{ ref('base_crm_person') }}
+    FROM {{ ref('prep_crm_person') }}
 
 ), final AS (
 
