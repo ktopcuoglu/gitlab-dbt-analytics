@@ -3,20 +3,19 @@
   })
 }}
 
+WITH industry AS (
 
-{{ generate_single_field_dimension(model_name="prep_sfdc_account",
-                                   id_column="dim_industry_name_source",
-                                   id_column_name="dim_industry_id",
-                                   dimension_column="dim_industry_name_source",
-                                   dimension_column_name="industry_name",
-                                   where_clause=None)
-}}
+    SELECT
+      dim_industry_id,
+      industry_name
+    FROM {{ ref('prep_industry') }}
 
+)
 
 {{ dbt_audit(
-    cte_ref="unioned",
+    cte_ref="industry",
     created_by="@paul_armstrong",
-    updated_by="@paul_armstrong",
+    updated_by="@mcooperDD",
     created_date="2020-10-26",
-    updated_date="2020-12-10"
+    updated_date="2020-12-18"
 ) }}

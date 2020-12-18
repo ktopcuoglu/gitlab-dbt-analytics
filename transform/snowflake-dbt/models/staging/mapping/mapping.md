@@ -10,6 +10,12 @@
 Table for mapping ip address ranges to location ids.
 {% enddocs %}
 
+{% docs map_merged_crm_account%}
+
+Table mapping current crm account ids to accounts merged in the past.
+
+{% enddocs %}
+
 {% docs map_product_tier %}
  Table for mapping Zuora Product Rate Plans to Product Tier, Delivery Type, and Ranking.
 {% enddocs %}

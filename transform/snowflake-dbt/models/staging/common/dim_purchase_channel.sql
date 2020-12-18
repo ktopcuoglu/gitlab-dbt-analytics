@@ -4,19 +4,18 @@
   })
 }}
 
-{{ generate_single_field_dimension (
-    model_name="sfdc_opportunity_source",
-    id_column="deal_path",
-    id_column_name="dim_purchase_channel_id",
-    dimension_column="deal_path",
-    dimension_column_name="purchase_channel_name",
-    where_clause="NOT is_deleted"
-) }}
+WITH purchase_channel AS (
+
+    SELECT
+      dim_purchase_channel_id,
+      purchase_channel_name
+    FROM {{ ref('prep_purchase_channel' )}}
+)
 
 {{ dbt_audit(
-    cte_ref="unioned",
+    cte_ref="purchase_channel",
     created_by="@paul_armstrong",
-    updated_by="@paul_armstrong",
-    created_date="2020-10-26",
-    updated_date="2020-10-26"
+    updated_by="@mcooperDD",
+    created_date="2020-12-18",
+    updated_date="2020-12-18"
 ) }}

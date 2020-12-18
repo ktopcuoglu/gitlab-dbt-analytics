@@ -22,22 +22,22 @@ WITH first_contact  AS (
 ), order_type AS (
 
     SELECT *
-    FROM {{ ref('dim_order_type')}}
+    FROM {{ ref('prep_order_type')}}
 
 ), opportunity_source AS (
 
     SELECT *
-    FROM {{ ref('dim_opportunity_source')}}
+    FROM {{ ref('prep_opportunity_source')}}
 
 ), purchase_channel AS (
 
     SELECT *
-    FROM {{ ref('dim_purchase_channel')}}
+    FROM {{ ref('prep_purchase_channel')}}
 
 ), sales_segment AS (
 
     SELECT *
-    FROM {{ ref('dim_sales_segment')}}
+    FROM {{ ref('prep_sales_segment')}}
 
 ), sfdc_opportunity AS (
 

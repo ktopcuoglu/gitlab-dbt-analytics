@@ -34,22 +34,22 @@ WITH account_dims_mapping AS (
 ), geo_region AS (
 
     SELECT *
-    FROM {{ ref('dim_geo_region') }}
+    FROM {{ ref('prep_geo_region') }}
 
 ), geo_sub_region AS (
 
     SELECT *
-    FROM {{ ref('dim_geo_sub_region') }}
+    FROM {{ ref('prep_geo_sub_region') }}
 
 ), industry AS (
 
     SELECT *
-    FROM {{ ref('dim_industry') }}
+    FROM {{ ref('prep_industry') }}
 
 ), marketing_channel AS (
 
     SELECT *
-    FROM {{ ref('dim_marketing_channel') }}
+    FROM {{ ref('prep_marketing_channel') }}
 
 ), marketing_channel_mapping AS (
 
@@ -59,7 +59,7 @@ WITH account_dims_mapping AS (
 ), sales_territory AS (
 
     SELECT *
-    FROM {{ ref('dim_sales_territory') }}
+    FROM {{ ref('prep_sales_territory') }}
 
 ), sfdc_contacts AS (
 
@@ -76,7 +76,7 @@ WITH account_dims_mapping AS (
 ), sales_segment AS (
 
     SELECT *
-    FROM {{ ref('dim_sales_segment') }}
+    FROM {{ ref('prep_sales_segment') }}
 
 ), crm_person_with_touchpoints AS (
 
