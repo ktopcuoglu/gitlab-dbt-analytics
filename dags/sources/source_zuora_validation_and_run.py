@@ -81,6 +81,7 @@ dag = DAG(
 # Raw source Freshness
 freshness_cmd = f"""
     {dbt_install_deps_nosha_cmd} &&
+    export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_XS" &&
     dbt source snapshot-freshness --profiles-dir profile --target prod --select {data_source}; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py freshness; exit $ret
 """
@@ -98,6 +99,7 @@ freshness = KubernetesPodOperator(
 # Test raw source
 test_cmd = f"""
     {dbt_install_deps_nosha_cmd} &&
+    export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_XS" &&
     dbt test --profiles-dir profile --target prod --models source:{data_source}; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py source_tests; exit $ret
 """
@@ -115,6 +117,7 @@ test = KubernetesPodOperator(
 # Snapshot source data
 snapshot_cmd = f"""
     {dbt_install_deps_nosha_cmd} &&
+    export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_XS" &&
     dbt snapshot --profiles-dir profile --target prod --select path:snapshots/{data_source}; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py snapshots; exit $ret
 """
@@ -132,6 +135,7 @@ snapshot = KubernetesPodOperator(
 # Run source models
 model_run_cmd = f"""
     {dbt_install_deps_nosha_cmd} &&
+    export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_XS" &&
     dbt run --profiles-dir profile --target prod --models +sources.{data_source}; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
@@ -149,6 +153,7 @@ model_run = KubernetesPodOperator(
 # Test all source models
 model_test_cmd = f"""
     {dbt_install_deps_nosha_cmd} &&
+    export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_XS" &&
     dbt test --profiles-dir profile --target prod --models +sources.{data_source}; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py test; exit $ret
 """

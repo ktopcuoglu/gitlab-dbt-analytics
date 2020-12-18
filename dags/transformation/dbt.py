@@ -100,7 +100,8 @@ branching_dbt_run = BranchPythonOperator(
 dbt_non_product_models_command = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
-    dbt run --profiles-dir profile --target prod --exclude tag:datasiren tag:product snapshots sources.gitlab_dotcom sources.sheetload+ sources.sfdc sources.zuora --vars {xs_warehouse}; ret=$?;
+    export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_XS" &&
+    dbt run --profiles-dir profile --target prod --exclude tag:datasiren tag:product snapshots sources.gitlab_dotcom sources.sheetload+ sources.sfdc sources.zuora; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
 
@@ -138,7 +139,8 @@ dbt_non_product_models_task = KubernetesPodOperator(
 dbt_product_models_command = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
-    dbt run --profiles-dir profile --target prod --models tag:product --vars {xl_warehouse}; ret=$?;
+    export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_L" &&
+    dbt run --profiles-dir profile --target prod --models tag:product; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
 
@@ -176,7 +178,8 @@ dbt_product_models_task = KubernetesPodOperator(
 dbt_full_refresh_cmd = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
-    dbt run --profiles-dir profile --target prod --full-refresh --exclude staging.common.dim_ip_to_geo mart_arr_snapshots --vars {xl_warehouse}; ret=$?;
+    export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_L" &&
+    dbt run --profiles-dir profile --target prod --full-refresh --exclude staging.common.dim_ip_to_geo mart_arr_snapshots; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
 dbt_full_refresh = KubernetesPodOperator(
@@ -215,6 +218,7 @@ dbt_full_refresh = KubernetesPodOperator(
 dbt_source_cmd = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
+    export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_XS" &&
     dbt source snapshot-freshness --profiles-dir profile; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py freshness; exit $ret
 """
@@ -251,7 +255,8 @@ dbt_source_freshness = KubernetesPodOperator(
 dbt_test_cmd = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
-    dbt test --profiles-dir profile --target prod --vars {xs_warehouse} --exclude tag:datasiren snowplow snapshots source:gitlab_dotcom source:sfdc source:zuora; ret=$?;
+    export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_XS" &&
+    dbt test --profiles-dir profile --target prod --exclude tag:datasiren snowplow snapshots source:gitlab_dotcom source:sfdc source:zuora; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py test; exit $ret
 """
 dbt_test = KubernetesPodOperator(
