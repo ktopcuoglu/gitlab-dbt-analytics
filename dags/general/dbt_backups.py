@@ -49,6 +49,7 @@ dag = DAG("dbt_backups", default_args=default_args, schedule_interval="5 4 * * *
 # dbt run-operation for backups
 dbt_backups_cmd = f"""
     {dbt_install_deps_nosha_cmd} &&
+    export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_XS" &&
     dbt run-operation backup_to_gcs --profiles-dir profile
 """
 

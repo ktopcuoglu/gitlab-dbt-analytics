@@ -238,6 +238,7 @@ def dbt_tasks(dbt_name, dbt_task_identifier):
     # Test raw source
     test_cmd = f"""
         {dbt_install_deps_nosha_cmd} &&
+        export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_XS" &&
         dbt test --profiles-dir profile --target prod --models source:{dbt_name}; ret=$?;
         python ../../orchestration/upload_dbt_file_to_snowflake.py source_tests; exit $ret
     """
@@ -254,7 +255,8 @@ def dbt_tasks(dbt_name, dbt_task_identifier):
     # Snapshot source data
     snapshot_cmd = f"""
         {dbt_install_deps_nosha_cmd} &&
-        dbt snapshot --profiles-dir profile --target prod --select source:{dbt_name} --vars {xl_warehouse}; ret=$?;
+        export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_L" &&
+        dbt snapshot --profiles-dir profile --target prod --select source:{dbt_name}; ret=$?;
         python ../../orchestration/upload_dbt_file_to_snowflake.py snapshots; exit $ret
     """
     snapshot = KubernetesPodOperator(
@@ -269,7 +271,8 @@ def dbt_tasks(dbt_name, dbt_task_identifier):
 
     model_run_cmd = f"""
         {dbt_install_deps_nosha_cmd} &&
-        dbt run --profiles-dir profile --target prod --models +sources.{dbt_name} --vars {xl_warehouse}; ret=$?;
+        export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_L" &&
+        dbt run --profiles-dir profile --target prod --models +sources.{dbt_name}; ret=$?;
         python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
     """
     model_run = KubernetesPodOperator(
@@ -285,6 +288,7 @@ def dbt_tasks(dbt_name, dbt_task_identifier):
     # Test all source models
     model_test_cmd = f"""
         {dbt_install_deps_nosha_cmd} &&
+        export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_XS" &&
         dbt test --profiles-dir profile --target prod --models +sources.{dbt_name}; ret=$?;
         python ../../orchestration/upload_dbt_file_to_snowflake.py test; exit $ret
     """

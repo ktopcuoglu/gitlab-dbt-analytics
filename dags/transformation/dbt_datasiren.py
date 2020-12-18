@@ -74,6 +74,7 @@ dag = DAG("dbt_datasiren", default_args=default_args, schedule_interval=dag_sche
 
 dbt_datasiren_command = f"""
         {dbt_install_deps_nosha_cmd} &&
+        export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_XS" &&
         dbt run --profiles-dir profile --target prod --models tag:datasiren; ret=$?;
         python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
         """

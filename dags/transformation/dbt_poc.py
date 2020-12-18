@@ -55,6 +55,7 @@ dag = DAG(
 # dbt-poc
 dbt_poc_cmd = f"""
     {dbt_install_deps_and_seed_nosha_cmd} &&
+    export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_XS" &&
     dbt run --profiles-dir profile --target prod --models tag:poc; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
