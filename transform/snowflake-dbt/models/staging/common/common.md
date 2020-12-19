@@ -178,6 +178,11 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
+{% docs fct_sales_funnel_target %}
+
+Sales funnel targets set by the Finance team to measure performance of important KPIs against goals, broken down by sales hierarchy, and order attributes.
+
+{% enddocs %}
 
 {% docs fct_usage_data_monthly %}
 
