@@ -1,3 +1,4 @@
+-- depends_on: {{ ref('projects_part_of_product_ops') }}
 -- These data models are required for this data model based on https://gitlab.com/gitlab-data/analytics/-/blob/master/transform/snowflake-dbt/models/staging/gitlab_dotcom/xf/gitlab_dotcom_merge_requests_xf.sql
 -- This data model is missing a lot of other source data models
 WITH merge_requests AS (
