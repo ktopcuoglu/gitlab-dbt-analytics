@@ -10,15 +10,15 @@ models:
           - unique
           - not_null
 
-  - name: dim_billing_accounts
-    description: '{{ doc("dim_billing_accounts") }}'
+  - name: dim_billing_account
+    description: '{{ doc("dim_billing_account") }}'
     columns:
-      - name: billing_account_id
+      - name: dim_billing_account_id
         description: Unique id of the Zuora account
         tests:
           - not_null
           - unique
-      - name: crm_account_id
+      - name: dim_crm_account_id
         description: CRM account ID for the account
       - name: account_number
         description: A unique Zuora account number
@@ -37,9 +37,6 @@ models:
         description: flag indicating if account has been deleted
       - name: is_excluded
         description: Field used to exclude test accounts from downstream models
-
-  - name: dim_billing_accounts_valid_at
-    description: Dimension table representing each individual account with details of person to bill for the account. Excludes deleted and test accounts. Required variable valid_at is timezone sensitive
 
   - name: dim_campaign
     description: Dimension table representing each individual Campaign. Excludes deleted campaigns. Based completely off SFDC campaign data.
@@ -116,14 +113,6 @@ models:
           - not_null
           - unique
 
-  - name: dim_dates
-    description: '{{ doc("dim_dates") }}'
-    columns:
-      - name: date_id
-        tests:
-          - not_null
-          - unique
-
   - name: dim_date
     description: '{{ doc("dim_date") }}'
     columns:
@@ -135,16 +124,17 @@ models:
   - name: dim_geo_region
     description: "Dimension for geographical region built off ATAM_Region__C in SFDC. Example values: NORAM, LATAM, APAC, EMEA"
     columns:
-      - name: dim_geo_region_name_id
+      - name: dim_geo_region_id
         tests:
           - unique
           - not_null
         tags: ["tdf", "common", "geo"]
-      - name: dim_geo_region_name
+      - name: geo_region_name
         tests:
           - unique
           - not_null
         tags: ["tdf", "common", "geo"]
+
   - name: dim_ip_to_geo
     description: '{{ doc("dim_ip_to_geo") }}'
     columns:
@@ -157,25 +147,26 @@ models:
   - name: dim_geo_sub_region
     description: "Dimension table for sub-region built off ATAM_Sub_Region__C in SFDC. Example values: Southern Europe, NA East, Nordics"
     columns:
-      - name: dim_geo_sub_region_name_id
+      - name: dim_geo_sub_region_id
         tests:
           - unique
           - not_null
         tags: ["tdf", "common", "geo"]
-      - name: dim_geo_sub_region_name
+      - name: geo_sub_region_name
         tests:
           - unique
           - not_null
         tags: ["tdf", "common", "geo"]
+
   - name: dim_geo_area
     description: "Dimension table for geographic area built off ATAM_Area__C in SFDC. Example values: Southern PNW, India, Northeast"
     columns:
-      - name: dim_geo_area_name_id
+      - name: dim_geo_area_id
         tests:
           - not_null
           - unique
         tags: ["tdf", "common", "geo"]
-      - name: dim_geo_area_name
+      - name: geo_area_name
         tests:
           - not_null
           - unique
@@ -212,13 +203,13 @@ models:
   - name: dim_industry
     description: '{{ doc("dim_industry") }}'
     columns:
-      - name: dim_industry_name_id
+      - name: dim_industry_id
         description: Unique identifier of a version of a industry
         tests:
           - not_null
           - unique
         tags: ["tdf", "industry", "common"]
-      - name: dim_industry_name
+      - name: industry_name
         description: Industry text
         tests:
           - not_null
@@ -353,6 +344,45 @@ models:
         tests:
           - not_null
           - unique
+
+  - name: dim_product_detail
+    description: '{{ doc("dim_product_detail") }}'
+    columns:
+      - name: dim_product_detail_id
+        description: The unique ID of each row in dim_product_detail, based on product rate plan charge ID.
+        tests:
+          - unique
+          - not_null
+        tags: [ "tdf", "common" ]
+      - name: dim_product_tier_id
+        description: The unique ID of a product tier deterined in dim_product_tier.
+        tests:
+          - not_null
+      - name: product_id
+        description: The ID of the product that contains the product rate plan.
+        tests:
+          - not_null
+      - name: product_name
+        description: The name of the product
+      - name: is_reporter_license
+        description: "Reporter licenses are in the Products with 'Additional Permission Types' in the name."
+      - name: billing_list_price
+        description: The price of the tier if the charge is a flat fee, or the price of each unit in the tier if the charge model is tiered pricing.
+      - name: product_rate_plan_charge_id
+        description: The unique ID of a product rate plan charge
+      - name: product_rate_plan_name
+        description: The name of the product rate plan. The name doesn't have to be unique in a Product Catalog, but the name has to be unique within a product.
+      - name: product_rate_plan_charge_name
+        description: The name of the product rate plan charge
+      - name: product_sku
+        description: The unique SKU for the product
+      - name: product_tier_name
+        description: Name of the [GitLab tier](https://about.gitlab.com/handbook/marketing/strategic-marketing/tiers/) associated with the product.
+      - name: effective_start_date
+        description: The date when the product becomes available and can be subscribed to
+      - name: effective_end_date
+        description: The date when the product expires and can't be subscribed to anymore
+
   - name: dim_product_details
     description: '{{ doc("dim_product_details") }}'
     columns:
@@ -383,6 +413,23 @@ models:
         description: The date when the product becomes available and can be subscribed to
       - name: effective_end_date
         description: The date when the product expires and can't be subscribed to anymore
+        
+  - name: dim_product_tier
+    description: '{{ doc("dim_product_tier") }}'
+    columns:
+      - name: dim_product_tier_id
+        description: ID of the product tier determined by the surrogate key macro.
+        tests:
+          - unique
+          - not_null
+        tags: [ "tdf", "common" ]
+      - name: product_tier_name
+        description: Name of the [GitLab tier](https://about.gitlab.com/handbook/marketing/strategic-marketing/tiers/) associated with the product.
+        tags: [ "tdf", "common" ]
+      - name: product_delivery_type
+        description: How a product is delivered to the customer; SaaS or Self-Managed (or Other).
+      - name: product_ranking
+        description: Numeric product pricing tier, independent of delivery type.
 
   - name: dim_crm_sales_rep
     description: '{{ doc("dim_crm_sales_rep") }}'
@@ -396,9 +443,9 @@ models:
         description: A boolean column that flags if the user is active in salesforce, which means that the user can login and use salesforce.
 
   - name: dim_crm_sales_representative
-    description: '{{ doc("dim_crm_sales_representative") }}'
+    description: '{{ doc("dim_crm_sales_rep") }}'
     columns:
-      - name: crm_sales_rep_id
+      - name: dim_crm_sales_rep_id
         description: Primary key for Salesforce users and the primary key for this dimension
         tests:
           - unique
@@ -411,13 +458,13 @@ models:
   - name: dim_sales_segment
     description: '{{ doc("dim_sales_segment") }}'
     columns:
-      - name: dim_sales_segment_name_id
+      - name: dim_sales_segment_id
         description: Unique identifier of a version of a sales segment
         tests:
           - not_null
           - unique
         tags: [ "tdf", "common" ]
-      - name: dim_sales_segment_name
+      - name: sales_segment_name
         description: Sales Segment text
         tests:
           - not_null
@@ -427,18 +474,65 @@ models:
   - name: dim_sales_territory
     description: '{{ doc("dim_sales_territory") }}'
     columns:
-      - name: dim_sales_territory_name_id
+      - name: dim_sales_territory_id
         description: Unique identifier of a version of a sales territory
         tests:
           - not_null
           - unique
         tags: [ "tdf", "sales_territory", "common" ]
-      - name: dim_sales_territory_name
+      - name: sales_territory_name
         description: Sales Territory text
         tests:
           - not_null
           - unique
         tags: [ "tdf", "sales_territory", "common" ]
+
+  - name: dim_subscription
+    description: '{{ doc("dim_subscription") }}'
+    columns:
+      - name: dim_subscription_id
+        description: Unique identifier of a version of a subscription
+        tests:
+          - not_null
+          - unique
+      - name: subscription_status
+        description: The status of the subscription
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Active', 'Cancelled', 'Draft', 'Expired']
+      - name: dim_crm_account_id
+        description: account id from SFDC identifing the customer
+      - name: dim_billing_account_id
+        description: The id of the Zuora account the subscription is associated with
+      - name: subscription_name_slugify
+        description: The unique identifier of the subscription
+      - name: subscription_version
+        description: The version number of the subscription
+      - name: is_auto_renew
+        description: Boolean field, if true, this subscription automatically renews at the end of the subscription term
+      - name: zuora_renewal_subscription_name
+        description: name of the linked subscription that renews the prior subscription in a lineage
+      - name: zuora_renewal_subscription_name_slugify
+        description: name of the linked subscription that renews the prior subscription in a lineage
+      - name: renewal_term
+        description: The length of the period for the subscription renewal term
+      - name: renewal_term_period_type
+        description: The period type for the subscription renewal term. This field is used with the renewal term field to specify the subscription renewal term.
+      - name: subscription_start_date
+        description: The date when the subscription term starts. This date is the same as the start date of the original term, which isn't necessarily the start date of the current or new term.
+      - name: subscription_end_date
+        description: The date when the subscription term ends, where the subscription ends at midnight the day before. For example, if the SubscriptionEndDate is 12/31/2016, the subscriptions ends at midnight (00:00:00 hours) on 12/30/2016. This date is the same as the term end date or the cancelation date, as appropriate.
+      - name: subscription_start_month
+        description: The month when the subscription term starts. This month is the same as the start month of the original term, which isn't necessarily the start month of the current or new term.
+      - name: subscription_end_month
+        description: The month when the subscription term ends. This month is the same as the term end month or the cancelation month, as appropriate.
+      - name: subscription_sales_type
+        description: Identifies whether a subscription is Sales-Assisted or Self-Service / Web Direct.
+        tests:
+          - not_null
+          - accepted_values:
+                  values: ['Sales-Assisted', 'Self-Service']
 
   - name: dim_subscriptions
     description: '{{ doc("dim_subscriptions") }}'
@@ -533,13 +627,13 @@ models:
       - name: effective_end_month
         description: Month when the segmented charge ends or ended
       - name: effective_start_date_id
-        description: Id of the date when the segmented charge starts or started. Use this field to join to dim_dates on id.
+        description: Id of the date when the segmented charge starts or started. Use this field to join to dim_date on id.
       - name: effective_end_date_id
-        description: Id of the date when the segmented charge ends or ended. Use this field to join to dim_dates on id.
+        description: Id of the date when the segmented charge ends or ended. Use this field to join to dim_date on id.
       - name: effective_start_month_id
-        description: Id of the month when the segmented charge starts or started. Use this field to join to dim_dates on id.
+        description: Id of the month when the segmented charge starts or started. Use this field to join to dim_date on id.
       - name: effective_end_month_id
-        description: Id of the month when the segmented charge ends or ended. Use this field to join to dim_dates on id.
+        description: Id of the month when the segmented charge ends or ended. Use this field to join to dim_date on id.
       - name: unit_of_measure
         description: Specifies the units to measure usage
       - name: quantity
@@ -648,23 +742,6 @@ models:
   - name: fct_invoice_items_agg_valid_at
     description: Parameterized model to recreate aggregate fact table with invoice items summarized on charge level at given timestamp {valid_at}. Required variable valid_at is timezone sensitive
 
-  - name: fct_crm_lead_conversion
-    description: '{{ doc("fct_crm_lead_conversion") }}'
-    columns:
-      - name: event_id
-        description: A dbt generated surrogate key combining the sfdc_record_id and the event_timestamp.
-        tests:
-          - unique
-          - not_null
-      - name: event_timestamp
-        description: The date and time the lead was converted.
-        tests:
-          - not_null
-      - name: crm_person_id
-        description: A surrogate key for use when joining to `fct_crm_conversion_event`. Created from the contact_id where there is a contact and a lead_id where there isn't.
-        tests:
-          - not_null
-
   - name: fct_crm_opportunity
     description: '{{ doc("fct_crm_opportunity") }}'
     columns:
@@ -708,7 +785,7 @@ models:
           - not_null
           - unique
       - name: date_id
-        description: The identifier of date month in dim_dates
+        description: The identifier of date month in dim_date
       - name: subscription_id
         description: The identifier of subscription in dim_subscriptions table
         tests:
@@ -743,9 +820,9 @@ models:
           - not_null
         tags: ["tdf", "arr"]
       - name: snapshot_id
-        description: The identifier of snapshot day in dim_dates
+        description: The identifier of snapshot day in dim_date
       - name: date_id
-        description: The identifier of date month in dim_dates
+        description: The identifier of date month in dim_date
       - name: subscription_id
         description: The identifier of subscription in dim_subscriptions_snapshots table
         tests:

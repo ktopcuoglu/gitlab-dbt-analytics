@@ -58,6 +58,15 @@ sources:
       - name: opportunity_stage
         identifier: opportunitystage         
         description: '{{ doc("sfdc_oppstage_source") }}'
+      - name: opportunity_split
+        identifier: opportunitysplit
+        description: '{{ doc("sfdc_opportunity_split") }}'
+      - name: opportunity_split_type
+        identifier: opportunitysplittype
+        description: '{{ doc("sfdc_opportunity_split_type") }}'
+      - name: opportunity_team_member
+        identifier: opportunityteammember
+        description: '{{ doc("sfdc_opportunity_team_member") }}'
       - name: opportunity
         description: '{{ doc("sfdc_opp_source") }}'
       - name: opportunity_contact_role

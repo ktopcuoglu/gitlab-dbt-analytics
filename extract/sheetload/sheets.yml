@@ -55,7 +55,6 @@ sheets:
   - name: engineering_contributing_organizations
     owner: '@kwiebers'
     tabs:
-      - engineering_contributing_organizations
       - gitlab_contributing_organizations
   - name: event_dictionary_simplified
     owner: '@mpeychet_'
@@ -225,6 +224,11 @@ sheets:
       - cert_customer_segmentation_sql
       - cert_product_geo_viewer
       - cert_customer_segmentation_viewer
+  - name: engineering_infra_prod_console_access
+    description: This data contains summarized rails-console and GCP read and write access data in support of an Engineering KPI
+    owner: '@kwiebers'
+    tabs:
+      - engineering_infra_prod_console_access
   - name: rfs_support_requests
     description: This contains data for the pipe risk and security metrics - https://gitlab.com/gitlab-data/analytics/-/issues/6995
     owner: '@mmaneval20'

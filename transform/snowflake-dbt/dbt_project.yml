@@ -65,6 +65,10 @@ seeds:
 # Variable Configs
 # ==================
 vars:
+
+  datasiren:
+    'datasiren:sensorlist': ['datasiren_source_db_social_security_number_sensor', 'datasiren_transform_db_email_column_name_sensor']
+
   warehouse_name: "{{ env_var('SNOWFLAKE_TRANSFORM_WAREHOUSE') }}"
   valid_at: '{{ run_started_at.strftime("%Y-%m-%d %H:%M:%S%z") }}'
 
@@ -107,6 +111,12 @@ models:
   snowflake_spend:
     +materialized: table
 
+  datasiren:
+    +full_refresh: false
+    +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
+    +schema: datasiren
+    +tags: ["datasiren"]
+    
   # ==================
   # GitLab Models
   # ==================
@@ -130,15 +140,23 @@ models:
           +schema: sensitive
           secure: true
 
+      datasiren:
+        +schema: datasiren
+        +tags: ["datasiren"]
+
       date:
         +materialized: table
         +schema: date
 
       dbt:
-        +database: "{{ env_var('SNOWFLAKE_TRANSFORM_DATABASE') }}" # ANALYTICS
         +materialized: table
         +schema: dbt
         +tags: ["dbt"]
+
+      discourse:
+        +materialized: table
+        +schema: discourse
+        +tags: ["discourse", "social"]
 
       engineering:
         +database: "{{ env_var('SNOWFLAKE_TRANSFORM_DATABASE') }}" # ANALYTICS
@@ -235,6 +253,15 @@ models:
 
       date:
         +materialized: view
+
+      discourse:
+        +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
+        +schema: preparation
+        +tags: ["discourse", "social"]
+
+      dbt:
+        +schema: workspace_data
+        +tags: ["dbt"]
 
       gitlab_dotcom:
         +tags: ["product"]

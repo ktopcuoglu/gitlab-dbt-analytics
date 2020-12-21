@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 
 from airflow import DAG
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
+from airflow.operators.python_operator import ShortCircuitOperator
 
 from airflow_utils import (
     DATA_IMAGE,
@@ -145,7 +146,7 @@ config_dict = {
     "gitlab_ops": {
         "cloudsql_instance_name": "ops-db-restore",
         "dag_name": "gitlab_ops",
-        "dbt_name": "none",
+        "dbt_name": "gitlab_ops",
         "env_vars": {"HOURS": "13"},
         "extract_schedule_interval": "0 */6 * * *",
         "secrets": [
@@ -196,6 +197,14 @@ def extract_table_list_from_manifest(manifest_contents):
     return manifest_contents["tables"].keys()
 
 
+def run_or_skip_dbt(current_seconds: int, dag_interval: int, dbt_name: str) -> bool:
+    # If first run of the day, run dbt, else skip
+    if current_seconds < dag_interval and dbt_name != "none":
+        return True
+    else:
+        return False
+
+
 def dbt_tasks(dbt_name, dbt_task_identifier):
 
     freshness_cmd = f"""
@@ -213,12 +222,23 @@ def dbt_tasks(dbt_name, dbt_task_identifier):
         arguments=[freshness_cmd],
     )
 
-    if dbt_name == "none":
-        return freshness, None, None, None, None
+    SCHEDULE_INTERVAL_HOURS = 6
+    timestamp = datetime.now()
+    current_seconds = timestamp.hour * 3600
+    dag_interval = SCHEDULE_INTERVAL_HOURS * 3600
+
+    # Only run everything past freshness once per day
+    short_circuit = ShortCircuitOperator(
+        task_id="short_circuit",
+        python_callable=lambda: run_or_skip_dbt(
+            current_seconds, dag_interval, dbt_name
+        ),
+    )
 
     # Test raw source
     test_cmd = f"""
         {dbt_install_deps_nosha_cmd} &&
+        export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_XS" &&
         dbt test --profiles-dir profile --target prod --models source:{dbt_name}; ret=$?;
         python ../../orchestration/upload_dbt_file_to_snowflake.py source_tests; exit $ret
     """
@@ -235,7 +255,8 @@ def dbt_tasks(dbt_name, dbt_task_identifier):
     # Snapshot source data
     snapshot_cmd = f"""
         {dbt_install_deps_nosha_cmd} &&
-        dbt snapshot --profiles-dir profile --target prod --select source:{dbt_name} --vars {xl_warehouse}; ret=$?;
+        export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_L" &&
+        dbt snapshot --profiles-dir profile --target prod --select source:{dbt_name}; ret=$?;
         python ../../orchestration/upload_dbt_file_to_snowflake.py snapshots; exit $ret
     """
     snapshot = KubernetesPodOperator(
@@ -250,7 +271,8 @@ def dbt_tasks(dbt_name, dbt_task_identifier):
 
     model_run_cmd = f"""
         {dbt_install_deps_nosha_cmd} &&
-        dbt run --profiles-dir profile --target prod --models +sources.{dbt_name} --vars {xl_warehouse}; ret=$?;
+        export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_L" &&
+        dbt run --profiles-dir profile --target prod --models +sources.{dbt_name}; ret=$?;
         python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
     """
     model_run = KubernetesPodOperator(
@@ -266,6 +288,7 @@ def dbt_tasks(dbt_name, dbt_task_identifier):
     # Test all source models
     model_test_cmd = f"""
         {dbt_install_deps_nosha_cmd} &&
+        export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_XS" &&
         dbt test --profiles-dir profile --target prod --models +sources.{dbt_name}; ret=$?;
         python ../../orchestration/upload_dbt_file_to_snowflake.py test; exit $ret
     """
@@ -279,7 +302,7 @@ def dbt_tasks(dbt_name, dbt_task_identifier):
         arguments=[model_test_cmd],
     )
 
-    return freshness, test, snapshot, model_run, model_test
+    return freshness, short_circuit, test, snapshot, model_run, model_test
 
 
 # Loop through each config_dict and generate a DAG
@@ -311,11 +334,9 @@ for source_name, config in config_dict.items():
         dbt_name = f"{config['dbt_name']}"
         dbt_task_identifier = f"{config['task_name']}-dbt-incremental"
 
-        freshness, test, snapshot, model_run, model_test = dbt_tasks(
+        freshness, short_circuit, test, snapshot, model_run, model_test = dbt_tasks(
             dbt_name, dbt_task_identifier
         )
-        if test is not None:
-            freshness >> test >> snapshot >> model_run >> model_test
 
         # Actual PGP extract
         file_path = f"analytics/extract/postgres_pipeline/manifests/{config['dag_name']}_db_manifest.yaml"
@@ -357,7 +378,7 @@ for source_name, config in config_dict.items():
                 xcom_push=True,
             )
 
-            incremental_extract >> freshness
+            incremental_extract >> freshness >> short_circuit >> test >> snapshot >> model_run >> model_test
 
     globals()[f"{config['dag_name']}_db_extract"] = extract_dag
 
@@ -434,12 +455,9 @@ for source_name, config in config_dict.items():
         dbt_name = f"{config['dbt_name']}"
         dbt_task_identifier = f"{config['task_name']}-dbt-sync"
 
-        freshness, test, snapshot, model_run, model_test = dbt_tasks(
+        freshness, short_circuit, test, snapshot, model_run, model_test = dbt_tasks(
             dbt_name, dbt_task_identifier
         )
-
-        if test is not None:
-            freshness >> test >> snapshot >> model_run >> model_test
 
         # PGP Extract
         file_path = f"analytics/extract/postgres_pipeline/manifests/{config['dag_name']}_db_manifest.yaml"
@@ -479,7 +497,7 @@ for source_name, config in config_dict.items():
                     xcom_push=True,
                 )
 
-                scd_extract >> freshness
+                scd_extract >> freshness >> short_circuit >> test >> snapshot >> model_run >> model_test
 
     globals()[f"{config['dag_name']}_db_sync"] = sync_dag
 

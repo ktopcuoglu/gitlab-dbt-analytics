@@ -1,17 +1,17 @@
-WITH dim_billing_accounts AS (
+WITH dim_billing_account AS (
 
     SELECT *
-    FROM {{ ref('dim_billing_accounts') }}
+    FROM {{ ref('dim_billing_account') }}
 
 ), dim_crm_account AS (
 
     SELECT *
     FROM {{ ref('dim_crm_account') }}
 
-), dim_dates AS (
+), dim_date AS (
 
     SELECT *
-    FROM {{ ref('dim_dates') }}
+    FROM {{ ref('dim_date') }}
 
 ), dim_product_details AS (
 
@@ -31,12 +31,12 @@ WITH dim_billing_accounts AS (
 ), mart_arr AS (
 
     SELECT
-      dim_dates.date_actual                                                           AS arr_month,
-      IFF(is_first_day_of_last_month_of_fiscal_quarter, fiscal_quarter_name_fy, NULL) AS fiscal_quarter_name_fy,
-      IFF(is_first_day_of_last_month_of_fiscal_year, fiscal_year, NULL)               AS fiscal_year,
+      dim_date.date_actual                                                                          AS arr_month,
+      IFF(is_first_day_of_last_month_of_fiscal_quarter, fiscal_quarter_name_fy, NULL)               AS fiscal_quarter_name_fy,
+      IFF(is_first_day_of_last_month_of_fiscal_year, fiscal_year, NULL)                             AS fiscal_year,
       dim_crm_account.ultimate_parent_account_name,
       dim_crm_account.ultimate_parent_account_id,
-      COALESCE(dim_crm_account.merged_to_account_id, dim_crm_account.crm_account_id)              AS crm_id,
+      COALESCE(dim_crm_account.merged_to_account_id, dim_crm_account.crm_account_id)                AS crm_id,
       dim_subscriptions.subscription_name,
       dim_subscriptions.subscription_id,
       dim_product_details.product_category,
@@ -49,12 +49,12 @@ WITH dim_billing_accounts AS (
       ON dim_subscriptions.subscription_id = fct_mrr.subscription_id
     INNER JOIN dim_product_details
       ON dim_product_details.product_details_id = fct_mrr.product_details_id
-    INNER JOIN dim_billing_accounts
-      ON dim_billing_accounts.billing_account_id= fct_mrr.billing_account_id
-    INNER JOIN dim_dates
-      ON dim_dates.date_id = fct_mrr.date_id
+    INNER JOIN dim_billing_account
+      ON dim_billing_account.dim_billing_account_id = fct_mrr.billing_account_id
+    INNER JOIN dim_date
+      ON dim_date.date_id = fct_mrr.date_id
     LEFT JOIN dim_crm_account
-      ON dim_billing_accounts.crm_account_id = dim_crm_account.crm_account_id
+      ON dim_billing_account.dim_crm_account_id = dim_crm_account.crm_account_id
 
 ), max_min_month AS (
 
@@ -78,15 +78,15 @@ WITH dim_billing_accounts AS (
       crm_id,
       subscription_name,
       subscription_id,
-      dim_dates.date_actual         AS arr_month,
-      dim_dates.fiscal_quarter_name_fy,
-      dim_dates.fiscal_year
+      dim_date.date_actual         AS arr_month,
+      dim_date.fiscal_quarter_name_fy,
+      dim_date.fiscal_year
     FROM max_min_month
-    INNER JOIN dim_dates
+    INNER JOIN dim_date
       -- all months after start date
-      ON  dim_dates.date_actual >= max_min_month.date_month_start
+      ON  dim_date.date_actual >= max_min_month.date_month_start
       -- up to and including end date
-      AND dim_dates.date_actual <=  max_min_month.date_month_end
+      AND dim_date.date_actual <=  max_min_month.date_month_end
       AND day_of_month = 1
 
 ), monthly_arr_subscription_level AS (
