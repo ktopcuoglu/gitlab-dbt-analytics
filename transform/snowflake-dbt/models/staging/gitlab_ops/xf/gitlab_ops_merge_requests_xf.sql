@@ -5,8 +5,8 @@ WITH merge_requests AS (
 
     SELECT 
       {{ dbt_utils.star(from=ref('gitlab_ops_merge_requests'), except=["created_at", "updated_at"]) }},
-      created_at AS merge_request_created_at,
-      updated_at  AS merge_request_updated_at
+      created_at                                                                           AS merge_request_created_at,
+      updated_at                                                                           AS merge_request_updated_at
     FROM {{ref('gitlab_ops_merge_requests')}} merge_requests
 
 ), label_links AS (
@@ -25,7 +25,7 @@ WITH merge_requests AS (
 
     SELECT
       merge_requests.merge_request_id,
-      ARRAY_AGG(LOWER(masked_label_title)) WITHIN GROUP (ORDER BY masked_label_title ASC) AS labels
+      ARRAY_AGG(LOWER(masked_label_title)) WITHIN GROUP (ORDER BY masked_label_title ASC)  AS labels
     FROM merge_requests
     LEFT JOIN label_links
       ON merge_requests.merge_request_id = label_links.target_id
@@ -43,10 +43,10 @@ WITH merge_requests AS (
     SELECT
       merge_requests.*, 
       projects.namespace_id,
-      ARRAY_TO_STRING(agg_labels.labels,'|')                                              AS masked_label_title,
+      ARRAY_TO_STRING(agg_labels.labels,'|')                                               AS masked_label_title,
       agg_labels.labels, 
       IFF(merge_requests.target_project_id IN ({{is_project_part_of_product_ops()}}),
-        TRUE, FALSE)                                                                      AS is_part_of_product_ops
+        TRUE, FALSE)                                                                       AS is_part_of_product_ops
     FROM merge_requests
     LEFT JOIN agg_labels
       ON merge_requests.merge_request_id = agg_labels.merge_request_id
