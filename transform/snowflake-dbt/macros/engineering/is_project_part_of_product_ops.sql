@@ -1,4 +1,4 @@
-{% macro is_project_part_of_product() %}
+{% macro is_project_part_of_product_ops() %}
 
     {%- call statement('get_project_ids', fetch_result=True) %}
 
