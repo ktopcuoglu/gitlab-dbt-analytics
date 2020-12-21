@@ -11,14 +11,14 @@ WITH contact_role AS (
 ), crm_person AS (
 
     SELECT *
-    FROM {{ ref('dim_crm_person') }}
+    FROM {{ ref('prep_crm_person') }}
 
 ), final_opportunity_contacts AS (
 
     SELECT
 
       contact_role.opportunity_contact_role_id,
-      crm_person.crm_person_id,
+      crm_person.dim_crm_person_id,
       crm_person.sfdc_record_id,
       contact_role.contact_id,
       contact_role.opportunity_id                           AS dim_crm_opportunity_id,

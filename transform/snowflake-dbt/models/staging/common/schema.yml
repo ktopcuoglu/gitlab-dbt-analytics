@@ -104,7 +104,7 @@ models:
   - name: dim_crm_person
     description: '{{ doc("dim_crm_person") }}'
     columns:
-      - name: crm_person_id
+      - name: dim_crm_person_id
         tests:
           - not_null
           - unique
