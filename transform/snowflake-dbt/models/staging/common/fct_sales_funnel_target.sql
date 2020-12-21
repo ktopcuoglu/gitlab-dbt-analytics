@@ -5,7 +5,9 @@
 
 WITH date AS (
 
-   SELECT *
+   SELECT DISTINCT
+     fiscal_month_name_fy,
+     first_day_of_month
    FROM {{ ref('date_details_source') }}
 
 ), opportunity_source AS (
@@ -26,20 +28,23 @@ WITH date AS (
 ), target_matrix AS (
 
     SELECT *
-    FROM ANALYTICS.legacy.sheetload_sales_funnel_targets_matrix
+    FROM {{ ref('sheetload_sales_funnel_targets_matrix_source' )}}
 
 ), final_targets AS (
 
   SELECT
 
     target_matrix.kpi_name,
-    date.fiscal_month_name_fy,
+    date.first_day_of_month,
     target_matrix.opportunity_source,
     opportunity_source.dim_opportunity_source_id,
     target_matrix.order_type,
     order_type.dim_order_type_id,
-    target_matrix.area,
     sfdc_user_hierarchy.dim_sales_hierarchy_id,
+    sfdc_user_hierarchy.dim_sales_segment_id,
+    sfdc_user_hierarchy.dim_location_region_id,
+    sfdc_user_hierarchy.dim_sales_region_id,
+    sfdc_user_hierarchy.dim_sales_area_id,
     target_matrix.allocated_target,
     target_matrix.kpi_total,
     target_matrix.month_percentage,

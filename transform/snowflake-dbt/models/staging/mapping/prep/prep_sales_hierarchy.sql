@@ -18,7 +18,7 @@ WITH sfdc_user AS (
     user_segment,
     {{ dbt_utils.surrogate_key(['user_segment']) }}                   AS dim_sales_segment_id,
     user_geo,
-    {{ dbt_utils.surrogate_key(['user_geo']) }}                       AS dim_sales_geo_id,
+    {{ dbt_utils.surrogate_key(['user_geo']) }}                       AS dim_location_region_id,
     user_region,
     {{ dbt_utils.surrogate_key(['user_region']) }}                    AS dim_sales_region_id,
     user_area,
