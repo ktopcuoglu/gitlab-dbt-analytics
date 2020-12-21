@@ -29,6 +29,7 @@ WITH sfdc_user AS (
     AND user_geo IS NOT NULL
     AND user_region IS NOT NULL
     AND user_area IS NOT NULL
+    AND user_region <> 'Sales Admin'
 
 )
 
