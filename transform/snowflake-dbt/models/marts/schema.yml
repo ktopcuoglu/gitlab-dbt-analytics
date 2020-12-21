@@ -51,7 +51,7 @@ models:
           - unique
         tags: ["tdf", "mart", "arr"]
 
-  - name: mart_delta_arr_product_month
+  - name: mart_delta_arr_parent_product_month
     description: "Mart table by month pursuant to the ARR Analysis Framework at the parent customer || product category level"
     columns:
       - name: primary_key
