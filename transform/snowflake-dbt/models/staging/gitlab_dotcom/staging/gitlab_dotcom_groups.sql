@@ -1,3 +1,8 @@
+{{ config({
+    "database": env_var('SNOWFLAKE_TRANSFORM_DATABASE') ,
+    "schema": "legacy"
+    })
+}}
 WITH namespace_groups AS (
 
   SELECT 

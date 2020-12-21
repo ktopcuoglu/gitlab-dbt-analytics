@@ -1,23 +1,18 @@
-{{ config({
-    "database": env_var('SNOWFLAKE_TRANSFORM_DATABASE') ,
-    "schema": "legacy"
-    })
-}}
 WITH RECURSIVE namespaces AS (
 
     SELECT *
-    FROM {{ref('gitlab_dotcom_namespaces')}}
+    FROM {{ ref('gitlab_dotcom_namespaces_source') }}
 
 ), gitlab_subscriptions AS (
 
     SELECT *
-    FROM {{ref('gitlab_dotcom_gitlab_subscriptions')}}
+    FROM {{ ref('gitlab_dotcom_gitlab_subscriptions_source') }}
     WHERE is_currently_valid = TRUE
 
 ), plans AS (
 
     SELECT *
-    FROM {{ref('gitlab_dotcom_plans')}}
+    FROM {{ ref('gitlab_dotcom_plans_source') }}
 
 ), recursive_namespaces(namespace_id, parent_id, upstream_lineage) AS (
 
@@ -31,7 +26,8 @@ WITH RECURSIVE namespaces AS (
 
   UNION ALL
 
-  -- Recursively iterate through each of the children namespaces
+  -- Recursively iterate through each of the children namespaces 
+  
   SELECT
     iter.namespace_id,
     iter.parent_id,
@@ -40,7 +36,8 @@ WITH RECURSIVE namespaces AS (
     INNER JOIN namespaces AS iter -- Child namespace
       ON anchor.namespace_id = iter.parent_id
 
-), extracted AS (
+)
+, extracted AS (
 
   SELECT
     *,
@@ -48,62 +45,21 @@ WITH RECURSIVE namespaces AS (
   FROM recursive_namespaces
 
   UNION ALL
-  /* Union all children with deleted ancestors. These are missed by the top-down recursive CTE.
-     This is quite rare (n=82 on 2020-01-06) but need to be included in this model for full coverage. */
+  /* Union  missed by the top-down recursive CTE. These all children with deleted parents. 
+     This is quite rare (n=82 on 2020-01-06, n=113 on 2020-12-17) but need to be included in this model for full coverage. */
   SELECT
     namespaces.namespace_id, 
     namespaces.parent_id,
     ARRAY_CONSTRUCT() AS upstream_lineage, -- Empty Array.
     0                 AS ultimate_parent_id
   FROM namespaces
-  WHERE parent_id NOT IN (SELECT DISTINCT namespace_id FROM namespaces)
-    OR namespace_id IN (
-                          6713278, 
-                          6142621, 
-                          4159925, 
-                          8370670, 
-                          8370671,
-                          8437164,
-                          8437147,
-                          8437148,
-                          8437172,
-                          8437156,
-                          8437159,
-                          8437146,
-                          8437176,
-                          8437165,
-                          8437179,
-                          8427708,
-                          8437167,
-                          8437110,
-                          8437178,
-                          8437175,
-                          8427717,
-                          8437153,
-                          8437161,
-                          8437169,
-                          8437177,
-                          8437160,
-                          8437157,
-                          8437154,
-                          8437162,
-                          8437150,
-                          8437149,
-                          8427716,
-                          8437142,
-                          8437145,
-                          8437151,
-                          8437171,
-                          8437155,
-                          8437173,
-                          8437170
-                        ) -- Grandparent or older is deleted.
-
+  WHERE namespace_id not in (SELECT DISTINCT namespace_id FROM recursive_namespaces)
+ 
+  
 ), with_plans AS (
 
   SELECT
     extracted.*,
-    COALESCE((ultimate_parent_id IN {{ get_internal_parent_namespaces() }}), FALSE)   AS namespace_is_internal,
     namespace_plans.plan_id                                                           AS namespace_plan_id,
     namespace_plans.plan_title                                                        AS namespace_plan_title,
     namespace_plans.plan_is_paid                                                      AS namespace_plan_is_paid,
@@ -135,6 +91,6 @@ WITH RECURSIVE namespaces AS (
       ON COALESCE(ultimate_parent_gitlab_subscriptions.plan_id, 34) = ultimate_parent_plans.plan_id
 
 )
-
 SELECT *
 FROM with_plans
+
