@@ -59,10 +59,5 @@ WITH merge_requests AS (
 
 )
 
-
-
-
-
-
 SELECT *
 FROM joined
