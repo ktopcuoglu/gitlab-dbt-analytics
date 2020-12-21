@@ -49,6 +49,7 @@ models:
 - name: sheetload_compensation_certificate
 - name: sheetload_data_certifications
   description: Identifies individuals who have taken the level 2 data certifications and have passed.
+- name: sheetload_data_team_csat_survey_FY2021_Q4
 - name: sheetload_data_team_capacity
 - name: sheetload_days_sales_outstanding
 - name: sheetload_days_to_close

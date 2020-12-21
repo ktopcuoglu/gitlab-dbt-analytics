@@ -64,6 +64,7 @@ models:
   - name: count_of_participants
     tests:
     - not_null
+- name: sheetload_data_team_csat_survey_FY2021_Q4_source
 - name: sheetload_days_sales_outstanding_source
   description: Days sales outstanding = Total Ending AR / Total Credit Sales (billing) x Number of Days in the Period
   columns:
