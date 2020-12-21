@@ -45,8 +45,12 @@ WITH merge_requests AS (
       projects.namespace_id,
       ARRAY_TO_STRING(agg_labels.labels,'|')                                               AS masked_label_title,
       agg_labels.labels, 
-      IFF(merge_requests.target_project_id IN ({{is_project_part_of_product_ops()}}), TRUE, FALSE)
-                                                                                           AS is_part_of_product_ops
+      {% set ops_projects = is_project_part_of_product_ops() %}
+      {% if ops_projects|length > 0 %}
+        IFF(merge_requests.target_project_id IN ({{ops_projects}}), TRUE, FALSE)           AS is_part_of_product_ops
+      {% else %}
+        FALSE                                                                              AS is_part_of_product_ops
+      {% endif %}
     FROM merge_requests
     LEFT JOIN agg_labels
       ON merge_requests.merge_request_id = agg_labels.merge_request_id
@@ -54,6 +58,11 @@ WITH merge_requests AS (
         ON merge_requests.target_project_id = projects.project_id
 
 )
+
+
+
+
+
 
 SELECT *
 FROM joined
