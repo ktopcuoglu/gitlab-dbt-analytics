@@ -18,8 +18,12 @@ sources:
 
     tables:
       - name: compensation
+      - name: custom_currency_conversion
+        identifier: customcurrencyconversion
       - name: custom_bonus
         identifier: custombonus
+      - name: custom_on_target_earnings
+        identifier: customontargetearnings
       - name: directory
       - name: emergency_contacts
         identifier: emergencycontacts
@@ -28,8 +32,3 @@ sources:
       - name: job_info
         identifier: jobinfo
       - name: id_employee_number_mapping
-      - name: custom_currency_conversion
-        identifier: customcurrencyconversion
-      - name: custom_on_target_earnings
-        identifier: customontargetearnings
-      
