@@ -296,6 +296,10 @@ models:
       license:
         +materialized: view
 
+      poc:
+        +tags: ["poc"]
+        +enabled: true
+
       smau_events:
         +tags: ["product"]
         snowflake:
@@ -349,11 +353,6 @@ models:
 
     covid19:
       +schema: covid19
-
-    poc:
-      +tags: ["poc"]
-      +enabled: true
-      +materialized: table
 
     # ------------------
     # Trusted Data Framework
