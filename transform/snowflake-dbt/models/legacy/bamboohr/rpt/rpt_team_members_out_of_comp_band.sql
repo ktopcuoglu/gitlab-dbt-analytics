@@ -1,8 +1,3 @@
-{{ config({
-    "schema": "legacy"
-    })
-}}
-
 WITH employee_directory_intermediate AS (
 
    SELECT *

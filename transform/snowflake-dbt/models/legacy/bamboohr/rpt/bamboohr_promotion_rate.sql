@@ -1,9 +1,3 @@
-{{ config({
-    "schema": "legacy"
-    })
-}}
-
-
 WITH promotions AS (
 
     SELECT *

@@ -1,8 +1,3 @@
-{{ config({
-    "schema": "legacy"
-    })
-}}
-
 WITH headcount AS (
   
     SELECT 
