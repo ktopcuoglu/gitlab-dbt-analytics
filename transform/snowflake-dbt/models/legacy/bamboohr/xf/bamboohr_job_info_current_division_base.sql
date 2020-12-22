@@ -6,7 +6,7 @@ WITH job_info AS (
 ), bamboo_mapping AS (
 
     SELECT *
-    FROM {{ ref ('bamboohr_id_employee_number_mapping') }}
+    FROM {{ ref ('bamboohr_id_employee_number_mapping_source') }}
 
 ), job_role AS (
 

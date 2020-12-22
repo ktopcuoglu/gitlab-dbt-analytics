@@ -28,7 +28,7 @@ WITH bamboohr_directory AS (
 ), mapping as (
 
     SELECT *
-    FROM {{ref('bamboohr_id_employee_number_mapping')}}
+    FROM {{ref('bamboohr_id_employee_number_mapping_source')}}
 
 ), location_factor as (
 
