@@ -24,7 +24,7 @@ WITH recruiting_xf AS (
     SELECT 
       greenhouse_candidate_id, 
       IFF(region = 'JAPAC','Asia Pacific', region) AS region
-    FROM  {{ref('bamboohr_id_employee_number_mapping')}} 
+    FROM  {{ref('bamboohr_id_employee_number_mapping_source')}} 
 
 ), location_cleaned AS (
 

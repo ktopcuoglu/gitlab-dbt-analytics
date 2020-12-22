@@ -1,18 +1,12 @@
-{{ config({
-    "schema": "legacy",
-    "database": env_var('SNOWFLAKE_TRANSFORM_DATABASE'),
-    })
-}}
-
 WITH job_info AS (
 
     SELECT *
-    FROM {{ ref ('bamboohr_job_info') }}
+    FROM {{ ref ('bamboohr_job_info_source') }}
 
 ), bamboo_mapping AS (
 
     SELECT *
-    FROM {{ ref ('bamboohr_id_employee_number_mapping') }}
+    FROM {{ ref ('bamboohr_id_employee_number_mapping_source') }}
 
 ), job_role AS (
 

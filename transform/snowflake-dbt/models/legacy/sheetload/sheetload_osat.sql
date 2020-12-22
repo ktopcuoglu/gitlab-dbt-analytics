@@ -1,7 +1,7 @@
 WITH bamboohr AS (
 
     SELECT *
-    FROM {{ ref('bamboohr_id_employee_number_mapping') }}
+    FROM {{ ref('bamboohr_id_employee_number_mapping_source') }}
   
 ), source AS (
 

@@ -1,9 +1,3 @@
-{{ config({
-    "schema": "sensitive",
-    "database": env_var('SNOWFLAKE_PREP_DATABASE'),
-    })
-}}
-
 WITH dates AS (
 
     SELECT *

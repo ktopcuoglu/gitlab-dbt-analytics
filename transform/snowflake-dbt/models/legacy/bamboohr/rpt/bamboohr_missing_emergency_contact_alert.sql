@@ -1,9 +1,3 @@
-{{ config({
-    "schema": "legacy",
-    "database": env_var('SNOWFLAKE_TRANSFORM_DATABASE'),
-    })
-}}
-
 WITH employees as (
 
     SELECT *
@@ -14,7 +8,7 @@ WITH employees as (
 ), contacts AS (
 
     SELECT *
-    FROM {{ ref ('bamboohr_emergency_contacts') }}
+    FROM {{ ref ('bamboohr_emergency_contacts_source') }}
 
 ), contacts_aggregated AS (
 

@@ -1,7 +1,7 @@
 WITH bamboohr_directory AS (
 
     SELECT *
-    FROM {{ ref ('bamboohr_directory') }}
+    FROM {{ ref ('bamboohr_directory_source') }}
 
 ), department_info as (
 
@@ -15,7 +15,7 @@ WITH bamboohr_directory AS (
           OVER (PARTITION BY employee_id ORDER BY job_id) AS last_department,
       LAST_VALUE(division) RESPECT NULLS
           OVER  (PARTITION BY employee_id ORDER BY job_id) AS last_division       
-    FROM {{ ref ('bamboohr_job_info') }}
+    FROM {{ ref ('bamboohr_job_info_source') }}
 
 ), cost_center AS (
 
@@ -28,7 +28,7 @@ WITH bamboohr_directory AS (
 ), mapping as (
 
     SELECT *
-    FROM {{ref('bamboohr_id_employee_number_mapping')}}
+    FROM {{ref('bamboohr_id_employee_number_mapping_source')}}
 
 ), location_factor as (
 
@@ -42,7 +42,7 @@ WITH bamboohr_directory AS (
     SELECT 
       employee_id,
       effective_date as hire_date
-    FROM {{ref('bamboohr_employment_status')}}
+    FROM {{ref('bamboohr_employment_status_source')}}
     WHERE employment_status != 'Terminated'
     QUALIFY ROW_NUMBER() OVER (PARTITION BY employee_id ORDER BY effective_date) = 1
 

@@ -1,13 +1,7 @@
-{{ config({
-    "schema": "sensitive",
-    "database": env_var('SNOWFLAKE_PREP_DATABASE'),
-    })
-}}
-
 WITH bamboohr_compensation AS (
 
     SELECT *
-    FROM {{ ref('bamboohr_compensation') }}
+    FROM {{ ref('bamboohr_compensation_source') }}
 
 ), bamboohr_compensation_changes AS (
 
@@ -34,7 +28,7 @@ WITH bamboohr_compensation AS (
 
     SELECT *,
       ROW_NUMBER() OVER (PARTITION BY employee_id, effective_date ORDER BY target_earnings_update_id)   AS rank_ote_effective_date
-    FROM {{ ref('bamboohr_ote') }}
+    FROM {{ ref('bamboohr_ote_source') }}
 
 ), employee_directory AS (
 
@@ -46,7 +40,7 @@ WITH bamboohr_compensation AS (
     SELECT *,
       LAG(currency_conversion_factor) OVER (PARTITION BY employee_id ORDER BY conversion_ID)        AS prior_conversion_factor,
       ROW_NUMBER() OVER (PARTITION BY employee_id ORDER BY conversion_ID)                           AS rank_conversion_id
-    FROM {{ ref('bamboohr_currency_conversion') }}
+    FROM {{ ref('bamboohr_currency_conversion_source') }}
   
 ), currency_conversion_factor_periods AS (
 

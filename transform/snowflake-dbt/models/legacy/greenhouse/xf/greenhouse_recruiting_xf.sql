@@ -72,7 +72,7 @@ WITH applications AS (
 ), bamboo AS (
 
     SELECT greenhouse_candidate_id, hire_date 
-    FROM {{ref('bamboohr_id_employee_number_mapping')}}
+    FROM {{ref('bamboohr_id_employee_number_mapping_source')}}
     WHERE greenhouse_candidate_id IS NOT NULL
 
 ), final AS (

@@ -134,6 +134,10 @@ models:
         +materialized: table
         +schema: airflow
 
+      bamboohr:
+        +materialized: table
+        +schema: bamboohr
+
       customers:
         +schema: customers
         sensitive:
@@ -262,6 +266,12 @@ models:
     legacy:
       +materialized: table
 
+      bamboohr:
+        sensitive:
+          +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
+          +schema: sensitive
+          secure: true
+      
       datasiren:
         +schema: workspace_data
         +materialized: view
@@ -353,15 +363,6 @@ models:
     # ------------------
     # Legacy Structure
     # ------------------
-    bamboohr:
-      +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
-      +schema: sensitive
-      secure: true
-      base:
-        +materialized: table
-      rpt:
-        +database: "{{ env_var('SNOWFLAKE_TRANSFORM_DATABASE') }}"
-
 
     covid19:
       +schema: covid19

@@ -256,4 +256,34 @@ models:
       - name: reports_to
         description: Who the team member directly reports to
 
-
+  - name: bamboohr_job_role
+    description: This model shows the job role an employee is in and when their role changes. The data for this table comes from bamboohr_id_emmployee_number_mapping raw. We started capturing data points not in other reports starting 2020.02.27
+    columns:
+      - name: employee_number
+        tests:
+            - not_null
+      - name: employee_id
+        tests:
+            - not_null
+      - name: job_role
+      - name: job_grade
+      - name: cost_center
+      - name: jobtitle_speciality
+        description: Started capturing on 2020.05.07
+      - name: gitlab_username       
+      - name: pay_frequency
+        description: The number of compensation periods. Started capturing on 2020.09.10
+      - name: sales_geo_differential
+      - name: effective_date
+        description: The date the role is effective until a change occurs. 
+  
+  - name: bamboohr_locality
+    description: This shows the locality for employees starting 2020.03.24 (the 1st date we started capturing from bamboohr) on a daily basis.
+    columns: 
+        - name: employee_number
+        - name: employee_id
+        - name: first_name
+        - name: last_name
+        - name: hire_date
+        - name: locality
+        - name: updated_at

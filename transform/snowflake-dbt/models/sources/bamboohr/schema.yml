@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: bamboohr_compensation
+  - name: bamboohr_compensation_source
     description: A log of compensation and compensation related updates. This model is temporary and is used for downstream models.
     columns:
       - name: compensation_update_id
@@ -28,7 +28,7 @@ models:
       - name: compensation_currency
       - name: uploaded_at    
 
-  - name: bamboohr_currency_conversion
+  - name: bamboohr_currency_conversion_source
     description: This table tells us what the conversion is for local salary to USD.
     columns:
       - name: conversion_id
@@ -46,7 +46,7 @@ models:
       - name: usd_annual_salary_amount
       - name: prior_bamboohr_annual_salary     
 
-  - name: bamboohr_custom_bonus
+  - name: bamboohr_custom_bonus_source
     description: There are multiple bonuses that a team member can earn that are captured here.
     columns:
       - name: bonus_id
@@ -63,7 +63,7 @@ models:
       - name: bonus_date
         tests:
           - not_null
-  - name: bamboohr_directory
+  - name: bamboohr_directory_source
     description: Base model for BambooHR Active Directory. This only shows currently active employees.
     columns:
       - name: employee_id
@@ -76,7 +76,7 @@ models:
             - not_null
       - name: job_title
   
-  - name: bamboohr_emergency_contacts
+  - name: bamboohr_emergency_contacts_source
     description: Bamboohr emergency contacts table. Used to create an alert in bamboohr_missing_emergency_contact_alert to identify individuals we do not have a contact for.
     columns:
       - name: employee_id
@@ -85,7 +85,7 @@ models:
       - name: mobile_phone
       - name: work_phone
 
-  - name: bamboohr_employment_status
+  - name: bamboohr_employment_status_source
     description: This model shows changes in employment status (active, terminated, on leave, etc). Updates are captured in log-style.
     columns:
       - name: status_id
@@ -96,14 +96,14 @@ models:
         tests:
             - not_null
             
-  - name: bamboohr_id_employee_number_mapping
+  - name: bamboohr_id_employee_number_mapping_source
     description: This model is the canonical source mapping bamboo employee numbers with employee IDs. It includes all employees for all time. The model also captures demographic information, and removes test accounts.
     columns:
       - name: greenhouse_candidate_id
         description: Captures the id associated to the employee in Greenhouse (our recruiting platform). This will only be applicable in Greenhouse starting 2019-12-13, and will help identify which candidates were hired.
         tests: 
             - unique          
-  - name: bamboohr_job_info
+  - name: bamboohr_job_info_source
     description: This model shows the details (manager, department, and division) that an employee is in at a given point in time. This includes historical information.
     columns:
       - name: job_id
@@ -128,38 +128,8 @@ models:
         tests:
             - not_null
       - name: job_role      
-  - name: bamboohr_job_role
-    description: This model shows the job role an employee is in and when their role changes. The data for this table comes from bamboohr_id_emmployee_number_mapping raw. We started capturing data points not in other reports starting 2020.02.27
-    columns:
-      - name: employee_number
-        tests:
-            - not_null
-      - name: employee_id
-        tests:
-            - not_null
-      - name: job_role
-      - name: job_grade
-      - name: cost_center
-      - name: jobtitle_speciality
-        description: Started capturing on 2020.05.07
-      - name: gitlab_username       
-      - name: pay_frequency
-        description: The number of compensation periods. Started capturing on 2020.09.10
-      - name: sales_geo_differential
-      - name: effective_date
-        description: The date the role is effective until a change occurs. 
-  - name: bamboohr_locality
-    description: This shows the locality for employees starting 2020.03.24 (the 1st date we started capturing from bamboohr) on a daily basis.
-    columns: 
-        - name: employee_number
-        - name: employee_id
-        - name: first_name
-        - name: last_name
-        - name: hire_date
-        - name: locality
-        - name: updated_at
 
-  - name: bamboohr_ote
+  - name: bamboohr_ote_source
     description: Provides on-target-earning as related to sales roles.
     columns:
       - name: target_earnings_update_id
