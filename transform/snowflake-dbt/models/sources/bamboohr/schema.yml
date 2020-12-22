@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: bamboohr_compensation
+  - name: bamboohr_compensation_source
     description: A log of compensation and compensation related updates. This model is temporary and is used for downstream models.
     columns:
       - name: compensation_update_id
@@ -28,7 +28,7 @@ models:
       - name: compensation_currency
       - name: uploaded_at    
 
-  - name: bamboohr_currency_conversion
+  - name: bamboohr_currency_conversion_source
     description: This table tells us what the conversion is for local salary to USD.
     columns:
       - name: conversion_id
