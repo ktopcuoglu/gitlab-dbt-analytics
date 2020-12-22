@@ -35,7 +35,9 @@ WITH source as (
            WHEN stage_name IN ('Hiring Manager Review','Preliminary Phone Screen')
              THEN 'Hiring Manager Review'
            WHEN LOWER(stage_name) LIKE '%reference%'
-             THEN 'Reference Check'          
+             THEN 'Reference Check'
+           WHEN LOWER(stage_name) LIKE '%background check & offer'
+             THEN 'Offer'           
            ELSE stage_name END::VARCHAR(100)                           AS stage_name_modified,
       IFF(stage_name_modified IN ('Application Review' 
                                  ,'Screen'

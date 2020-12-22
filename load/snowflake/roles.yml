@@ -115,6 +115,13 @@ databases:
     - rheannamistry_prep:
         shared: no
 
+    - rparker_analytics:
+        shared: no
+    - rparker_prod:
+        shared: no
+    - rparker_prep:
+        shared: no
+
     - snalamaru_analytics:
         shared: no
     - snalamaru_prod:
@@ -440,8 +447,10 @@ roles:
             - analyst_xs
         member_of:
             - analyst_core
+            - bamboohr
             - boneyard
             - covid19
+            - customers_db
             - dbt_analytics
             - db_dumps
             - gitlab_data_yaml
@@ -2349,6 +2358,47 @@ roles:
             - analyst_core
         warehouses:
             - analyst_xs
+        owns:
+            databases:
+                - rparker_analytics
+                - rparker_prep
+                - rparker_prod
+            schemas:
+                - rparker_analytics.*
+                - rparker_prep.*
+                - rparker_prod.*
+            tables:
+                - rparker_analytics.*.*
+                - rparker_prep.*.*
+                - rparker_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - rparker_analytics
+                    - rparker_prep
+                    - rparker_prod
+                write:
+                    - rparker_analytics
+                    - rparker_prep
+                    - rparker_prod
+            schemas:
+                read:
+                    - rparker_analytics.*
+                    - rparker_prep.*
+                    - rparker_prod.*
+                write:
+                    - rparker_analytics.*
+                    - rparker_prep.*
+                    - rparker_prod.*
+            tables:
+                read:
+                    - rparker_analytics.*.*
+                    - rparker_prep.*.*
+                    - rparker_prod.*.*
+                write:
+                    - rparker_analytics.*.*
+                    - rparker_prep.*.*
+                    - rparker_prod.*.*
 
     - sawezec:
         member_of:
@@ -2993,6 +3043,11 @@ users:
         can_login: yes
         member_of:
             - sawezec
+
+    - securitybotsnowflakeapi:
+        can_login: yes
+        member_of:
+            - securityadmin
 
     - skerr:
         can_login: yes

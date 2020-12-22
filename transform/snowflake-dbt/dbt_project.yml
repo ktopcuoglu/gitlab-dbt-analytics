@@ -67,7 +67,7 @@ seeds:
 vars:
 
   datasiren:
-    'datasiren:sensorlist': ['datasiren_transform_db_email_column_name_sensor']
+    'datasiren:sensorlist': ['datasiren_source_db_social_security_number_sensor', 'datasiren_transform_db_email_column_name_sensor']
 
   warehouse_name: "{{ env_var('SNOWFLAKE_TRANSFORM_WAREHOUSE') }}"
   valid_at: '{{ run_started_at.strftime("%Y-%m-%d %H:%M:%S%z") }}'
@@ -246,9 +246,20 @@ models:
         +tags: ["zuora"]
 
     # ------------------
-    # Staging
+    # Common
     # ------------------
-    staging:
+    common:
+      +materialized: table
+      +schema: common
+
+    common_mapping:
+      +materialized: table
+      +schema: common_mapping
+
+    # ------------------
+    # Legacy (formerly Staging)
+    # ------------------
+    legacy:
       +materialized: table
 
       date:
@@ -259,10 +270,6 @@ models:
         +schema: preparation
         +tags: ["discourse", "social"]
 
-      dbt:
-        +schema: workspace_data
-        +tags: ["dbt"]
-
       gitlab_dotcom:
         +tags: ["product"]
         sensitive:
@@ -271,6 +278,9 @@ models:
           +schema: sensitive
         source_view:
           +materialized: view
+        staging: 
+          +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
+          +schema: preparation
 
       gitlab_ops:
         source_view:
@@ -288,6 +298,13 @@ models:
       license:
         +materialized: view
 
+      poc:
+        +tags: ["poc"]
+        +enabled: true
+
+      smau_events:
+        +tags: ["product"]
+
       snowflake:
         +materialized: view
 
@@ -302,6 +319,16 @@ models:
 
       trusted_data_framework:
         +tags: ["tdf"]
+
+    # ------------------
+    # Workspaces
+    # ------------------
+
+    workspace_data:
+      +schema: workspace_data
+      
+      dbt:
+        +tags: ["dbt"]
 
 
     # ------------------
@@ -333,19 +360,6 @@ models:
 
     covid19:
       +schema: covid19
-
-    poc:
-      +tags: ["poc"]
-      +enabled: true
-      +materialized: table
-
-    retention:
-      +materialized: table
-
-    smau_events:
-      +tags: ["product"]
-      +materialized: table
-
 
     # ------------------
     # Trusted Data Framework

@@ -38,7 +38,7 @@ sources:
       - name: days_sales_outstanding
       - name: days_to_close
       - name: employee_location_factor
-      - name: engineering_contributing_organizations
+      - name: engineering_infra_prod_console_access
       - name: engineering_speciality_prior_to_capture
       - name: event_dictionary_simplified
       - name: gitlab_contributing_organizations
@@ -66,6 +66,7 @@ sources:
       - name: maxmind_countries
       - name: maxmind_ranges
       - name: osat
+      - name: percent_over_comp_band_historical
       - name: people_budget
       - name: planned_values
       - name: procurement_cost_savings
