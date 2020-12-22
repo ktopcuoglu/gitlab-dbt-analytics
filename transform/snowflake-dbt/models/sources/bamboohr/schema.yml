@@ -85,7 +85,7 @@ models:
       - name: mobile_phone
       - name: work_phone
 
-  - name: bamboohr_employment_status
+  - name: bamboohr_employment_status_source
     description: This model shows changes in employment status (active, terminated, on leave, etc). Updates are captured in log-style.
     columns:
       - name: status_id

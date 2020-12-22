@@ -42,7 +42,7 @@ WITH bamboohr_directory AS (
     SELECT 
       employee_id,
       effective_date as hire_date
-    FROM {{ref('bamboohr_employment_status')}}
+    FROM {{ref('bamboohr_employment_status_source')}}
     WHERE employment_status != 'Terminated'
     QUALIFY ROW_NUMBER() OVER (PARTITION BY employee_id ORDER BY effective_date) = 1
 
