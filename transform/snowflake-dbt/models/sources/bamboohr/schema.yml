@@ -46,7 +46,7 @@ models:
       - name: usd_annual_salary_amount
       - name: prior_bamboohr_annual_salary     
 
-  - name: bamboohr_custom_bonus
+  - name: bamboohr_custom_bonus_source
     description: There are multiple bonuses that a team member can earn that are captured here.
     columns:
       - name: bonus_id

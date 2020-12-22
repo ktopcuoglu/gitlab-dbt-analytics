@@ -1,7 +1,7 @@
 WITH source AS (
 
   SELECT *
-  FROM {{ ref('bamboohr_custom_bonus') }}
+  FROM {{ ref('bamboohr_custom_bonus_source') }}
 
 ), current_division_department_mapping AS (
 
