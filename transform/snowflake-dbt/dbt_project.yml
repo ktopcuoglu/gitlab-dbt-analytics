@@ -302,8 +302,9 @@ models:
 
       smau_events:
         +tags: ["product"]
-        snowflake:
-          +materialized: view
+
+      snowflake:
+        +materialized: view
 
       snowplow:
         +tags: ["product"]
