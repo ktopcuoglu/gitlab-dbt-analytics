@@ -296,8 +296,10 @@ models:
       license:
         +materialized: view
 
-      snowflake:
-        +materialized: view
+      smau_events:
+        +tags: ["product"]
+        snowflake:
+          +materialized: view
 
       snowplow:
         +tags: ["product"]
@@ -356,9 +358,6 @@ models:
     retention:
       +materialized: table
 
-    smau_events:
-      +tags: ["product"]
-      +materialized: table
 
 
     # ------------------
