@@ -317,6 +317,10 @@ models:
       trusted_data_framework:
         +tags: ["tdf"]
 
+    # ------------------
+    # Workspaces
+    # ------------------
+
     workspace_data:
       +schema: workspace_data
       
