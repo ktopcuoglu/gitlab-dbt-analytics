@@ -114,7 +114,6 @@ for sheet in sheets:
 dbt_sheetload_cmd = f"""
     export snowflake_load_database="RAW" &&
     {dbt_install_deps_and_seed_nosha_cmd} &&
-    export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_XS" &&
     dbt run --profiles-dir profile --target prod --models source:sheetload+; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """

@@ -236,7 +236,6 @@ def dbt_tasks(dbt_name, dbt_task_identifier):
     # Test raw source
     test_cmd = f"""
         {dbt_install_deps_nosha_cmd} &&
-        export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_XS" &&
         dbt test --profiles-dir profile --target prod --models source:{dbt_name}; ret=$?;
         python ../../orchestration/upload_dbt_file_to_snowflake.py source_tests; exit $ret
     """
@@ -286,7 +285,6 @@ def dbt_tasks(dbt_name, dbt_task_identifier):
     # Test all source models
     model_test_cmd = f"""
         {dbt_install_deps_nosha_cmd} &&
-        export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_XS" &&
         dbt test --profiles-dir profile --target prod --models +sources.{dbt_name}; ret=$?;
         python ../../orchestration/upload_dbt_file_to_snowflake.py test; exit $ret
     """
