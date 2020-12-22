@@ -1,5 +1,4 @@
 {{ config({
-    "schema": "legacy",
     "alias": "gitlab_dotcom_namespaces_snapshots"
     })
 }}

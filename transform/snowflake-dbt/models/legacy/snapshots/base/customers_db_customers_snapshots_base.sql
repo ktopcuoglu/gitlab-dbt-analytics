@@ -1,5 +1,4 @@
 {{ config({
-    "schema": "legacy",
     "alias": "customers_db_customers_snapshots"
     })
 }}
