@@ -1,0 +1,5 @@
+version: 2
+
+models:
+  - name: datasiren_report
+    description: A few columns from the datasiren audit report to be able to build high-level visualizations.
