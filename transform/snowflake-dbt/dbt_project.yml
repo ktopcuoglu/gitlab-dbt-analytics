@@ -246,9 +246,18 @@ models:
         +tags: ["zuora"]
 
     # ------------------
-    # Staging
+    # Common
     # ------------------
-    staging:
+    common:
+      +schema: common
+
+    common_mapping:
+      +schema: common_mapping
+
+    # ------------------
+    # Legacy (formerly Staging)
+    # ------------------
+    legacy:
       +materialized: table
 
       date:
@@ -258,10 +267,6 @@ models:
         +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
         +schema: preparation
         +tags: ["discourse", "social"]
-
-      dbt:
-        +schema: workspace_data
-        +tags: ["dbt"]
 
       gitlab_dotcom:
         +tags: ["product"]
@@ -305,6 +310,12 @@ models:
 
       trusted_data_framework:
         +tags: ["tdf"]
+
+    workspace_data:
+      +schema: workspace_data
+      
+      dbt:
+        +tags: ["dbt"]
 
 
     # ------------------
