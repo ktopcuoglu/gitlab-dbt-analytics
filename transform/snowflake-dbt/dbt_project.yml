@@ -251,6 +251,10 @@ models:
     staging:
       +materialized: table
 
+      datasiren:
+        +materialized: view
+        +tags: ["datasiren"]
+
       date:
         +materialized: view
 
