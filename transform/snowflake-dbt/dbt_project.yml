@@ -262,6 +262,11 @@ models:
     legacy:
       +materialized: table
 
+      datasiren:
+        +schema: workspace_data
+        +materialized: view
+        +tags: ["datasiren"]
+
       date:
         +materialized: view
 
