@@ -355,11 +355,6 @@ models:
       +enabled: true
       +materialized: table
 
-    retention:
-      +materialized: table
-
-
-
     # ------------------
     # Trusted Data Framework
     # ------------------
