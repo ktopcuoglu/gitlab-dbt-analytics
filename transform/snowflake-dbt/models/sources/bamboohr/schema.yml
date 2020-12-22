@@ -76,7 +76,7 @@ models:
             - not_null
       - name: job_title
   
-  - name: bamboohr_emergency_contacts
+  - name: bamboohr_emergency_contacts_source
     description: Bamboohr emergency contacts table. Used to create an alert in bamboohr_missing_emergency_contact_alert to identify individuals we do not have a contact for.
     columns:
       - name: employee_id

@@ -8,7 +8,7 @@ WITH employees as (
 ), contacts AS (
 
     SELECT *
-    FROM {{ ref ('bamboohr_emergency_contacts') }}
+    FROM {{ ref ('bamboohr_emergency_contacts_source') }}
 
 ), contacts_aggregated AS (
 
