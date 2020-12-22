@@ -1,7 +1,3 @@
-{{config({
-    "materialized": "table",
-  })
-}}
 
 WITH source_data AS (
 

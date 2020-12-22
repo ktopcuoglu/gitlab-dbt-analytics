@@ -253,9 +253,11 @@ models:
     # Common
     # ------------------
     common:
+      +materialized: table
       +schema: common
 
     common_mapping:
+      +materialized: table
       +schema: common_mapping
 
     # ------------------

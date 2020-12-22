@@ -249,10 +249,10 @@ models:
         tags: [ "tdf", "purchase_channel", "common" ]
 
   - name: dim_order_type
-    description: '{{ doc("dim_purchase_channel") }}'
+    description: '{{ doc("dim_order_type") }}'
     columns:
       - name: dim_order_type_id
-        description: Unique identifier for each opportunity source name
+        description: Unique identifier for each order type
         tests:
           - not_null
           - unique

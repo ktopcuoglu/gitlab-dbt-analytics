@@ -1,8 +1,3 @@
-{{config({
-    "materialized": "table",
-  })
-}}
-
 {{ generate_single_field_dimension (
     model_name="map_marketing_channel",
     id_column="marketing_channel_name",
