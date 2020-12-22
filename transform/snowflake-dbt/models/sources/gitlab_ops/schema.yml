@@ -13,10 +13,6 @@ models:
         tags: ["tdf","gitlab_ops"]
         tests:
           - not_null
-      - name: updated_at
-        tags: ["tdf","gitlab_ops"]
-        tests:
-          - not_null
   - name: gitlab_ops_ci_pipelines_source
     description: Base model for ops.gitlab.net ci_pipelines
     columns:
