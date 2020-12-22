@@ -54,11 +54,10 @@ tables:
       , scheduled_at
       , upstream_pipeline_id
       FROM ci_builds
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
     export_schema: 'gitlab_ops_net'
     export_table: ci_builds
-    export_table_primary_key: id 
+    export_table_primary_key: id
+    advanced_metadata: true 
     dbt_source_model: true
   ci_pipelines:
     import_db: GITLAB_OPS_DB
