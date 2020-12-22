@@ -271,6 +271,11 @@ models:
           +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
           +schema: sensitive
           secure: true
+      
+      datasiren:
+        +schema: workspace_data
+        +materialized: view
+        +tags: ["datasiren"]
 
       date:
         +materialized: view
