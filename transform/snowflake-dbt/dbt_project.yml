@@ -246,9 +246,20 @@ models:
         +tags: ["zuora"]
 
     # ------------------
-    # Staging
+    # Common
     # ------------------
-    staging:
+    common:
+      +materialized: table
+      +schema: common
+
+    common_mapping:
+      +materialized: table
+      +schema: common_mapping
+
+    # ------------------
+    # Legacy (formerly Staging)
+    # ------------------
+    legacy:
       +materialized: table
 
       date:
@@ -258,10 +269,6 @@ models:
         +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
         +schema: preparation
         +tags: ["discourse", "social"]
-
-      dbt:
-        +schema: workspace_data
-        +tags: ["dbt"]
 
       gitlab_dotcom:
         +tags: ["product"]
@@ -291,6 +298,13 @@ models:
       license:
         +materialized: view
 
+      poc:
+        +tags: ["poc"]
+        +enabled: true
+
+      smau_events:
+        +tags: ["product"]
+
       snowflake:
         +materialized: view
 
@@ -305,6 +319,16 @@ models:
 
       trusted_data_framework:
         +tags: ["tdf"]
+
+    # ------------------
+    # Workspaces
+    # ------------------
+
+    workspace_data:
+      +schema: workspace_data
+      
+      dbt:
+        +tags: ["dbt"]
 
 
     # ------------------
@@ -336,19 +360,6 @@ models:
 
     covid19:
       +schema: covid19
-
-    poc:
-      +tags: ["poc"]
-      +enabled: true
-      +materialized: table
-
-    retention:
-      +materialized: table
-
-    smau_events:
-      +tags: ["product"]
-      +materialized: table
-
 
     # ------------------
     # Trusted Data Framework
