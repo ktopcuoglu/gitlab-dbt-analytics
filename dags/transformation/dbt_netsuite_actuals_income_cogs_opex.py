@@ -14,7 +14,6 @@ from airflow_utils import (
     gitlab_pod_env_vars,
     number_of_dbt_threads_argument,
     slack_failed_task,
-    xs_warehouse,
 )
 from kube_secrets import (
     GIT_DATA_TESTS_PRIVATE_KEY,
@@ -81,7 +80,6 @@ dag = DAG(
 
 dbt_cmd = f"""
     {dbt_install_deps_nosha_cmd} &&
-    export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_XS" &&
     dbt run --profiles-dir profile --target prod --models +netsuite_actuals_income_cogs_opex {number_of_dbt_threads_argument(4)}; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """

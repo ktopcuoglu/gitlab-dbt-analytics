@@ -18,8 +18,6 @@ from airflow_utils import (
     gitlab_pod_env_vars,
     slack_failed_task,
     slack_snapshot_failed_task,
-    l_warehouse,
-    xs_warehouse,
     dbt_install_deps_and_seed_cmd,
     clone_repo_cmd,
 )
@@ -143,7 +141,6 @@ dbt_commit_hash_exporter = PythonOperator(
 dbt_snapshot_models_command = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_and_seed_cmd} &&
-    export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_XS" &&
     dbt run --profiles-dir profile --target prod --models snapshots; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
@@ -164,7 +161,6 @@ dbt_snapshot_models_run = KubernetesPodOperator(
 dbt_test_snapshots_cmd = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
-    export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_XS" &&
     dbt test --profiles-dir profile --target prod --models snapshots; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py test; exit $ret
 """

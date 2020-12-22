@@ -131,7 +131,6 @@ if __name__ == "__main__":
     config_dict = env.copy()
     snowflake_engine = snowflake_engine_factory(config_dict, "LOADER")
 
-
     for root, dirs, files in os.walk(
         "/usr/local/analytics/extract/gitlab_feature_flags_yaml"
     ):
