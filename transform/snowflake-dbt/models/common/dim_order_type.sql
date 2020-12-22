@@ -1,7 +1,4 @@
-{{config({
-    "materialized": "table",
-  })
-}}
+
 
 {{ generate_single_field_dimension (
     model_name="sfdc_opportunity_source",
