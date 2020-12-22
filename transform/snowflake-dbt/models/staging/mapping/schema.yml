@@ -2,7 +2,7 @@ version: 2
 
 models:
   - name: map_marketing_channel
-    description: '{{ doc("prep_sfdc_account") }}'
+    description: '{{ doc("map_marketing_channel") }}'
     columns:
       - name: bizible_marketing_channel_path
         description: Channel path to map
@@ -12,13 +12,42 @@ models:
         description: Mapped marketing channel name.
 
   - name: map_crm_account
-    description: '{{ doc("prep_sfdc_account") }}'
+    description: '{{ doc("map_crm_account") }}'
     columns:
       - name: crm_account_id
         description: CRM account ID for the account
         tests:
           - not_null
           - unique
+      - name: dim_sales_segment_id
+        description: Unique identifier of a version of a sales segment
+      - name: dim_geo_region_id
+        description: "Dimension for geographical region built off ATAM_Region__C in SFDC. Example values : NORAM, LATAM, APAC, EMEA"
+      - name: dim_geo_sub_region_id
+        description: "Dimension table for sub-region built off ATAM_Sub_Region__C in SFDC. Example values : Southern Europe, NA East, Nordics"
+      - name: dim_geo_area_id
+        description: "Dimension table for geographic area built off ATAM_Area__C in SFDC. Example values: Southern PNW, India, Northeast"
+      - name: dim_sales_territory_id
+        description: Unique identifier of a version of a sales territory
+      - name: dim_industry_id
+        description: Unique identifier of a version of a industry
+
+  - name: map_crm_opportunity
+    description: '{{ doc("map_crm_opportunity") }}'
+    columns:
+      - name: dim_crm_opportunity_id
+        description: unique identifier of an opporunity
+        tests:
+          - not_null
+          - unique
+      - name: dim_crm_sales_rep_id
+        description: Unique identifier for each Salesforce user
+      - name: dim_order_type_id
+        description: Unique identifier for each order type
+      - name: dim_opportunity_source_id
+        description: Unique identifier for each opportunity source name
+      - name: dim_purchase_channel_id
+        description: Unique identifier for each purchase channel name
       - name: dim_sales_segment_id
         description: Unique identifier of a version of a sales segment
       - name: dim_geo_region_id
