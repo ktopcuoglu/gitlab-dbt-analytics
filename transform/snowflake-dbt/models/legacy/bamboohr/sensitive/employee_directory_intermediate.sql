@@ -49,7 +49,7 @@ WITH RECURSIVE employee_directory AS (
       employee_id,
       effective_date,
       compensation_change_reason
-    FROM {{ ref('bamboohr_compensation') }}
+    FROM {{ ref('bamboohr_compensation_source') }}
     WHERE compensation_change_reason = 'Promotion'
     GROUP BY 1,2,3
 

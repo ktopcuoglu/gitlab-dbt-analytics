@@ -1,7 +1,7 @@
 WITH bamboohr_compensation AS (
 
     SELECT *
-    FROM {{ ref('bamboohr_compensation') }}
+    FROM {{ ref('bamboohr_compensation_source') }}
 
 ), bamboohr_compensation_changes AS (
 
