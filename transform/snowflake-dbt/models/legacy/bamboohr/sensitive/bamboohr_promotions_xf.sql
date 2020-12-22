@@ -40,7 +40,7 @@ WITH bamboohr_compensation AS (
     SELECT *,
       LAG(currency_conversion_factor) OVER (PARTITION BY employee_id ORDER BY conversion_ID)        AS prior_conversion_factor,
       ROW_NUMBER() OVER (PARTITION BY employee_id ORDER BY conversion_ID)                           AS rank_conversion_id
-    FROM {{ ref('bamboohr_currency_conversion') }}
+    FROM {{ ref('bamboohr_currency_conversion_source') }}
   
 ), currency_conversion_factor_periods AS (
 
