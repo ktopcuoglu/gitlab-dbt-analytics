@@ -1,8 +1,3 @@
-{{ config({
-        "schema": "common_mapping"
-    })
-}}
-
 WITH crm_account_dimensions AS (
 
     SELECT *
