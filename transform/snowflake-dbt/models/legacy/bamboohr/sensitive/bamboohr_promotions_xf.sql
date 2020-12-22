@@ -28,7 +28,7 @@ WITH bamboohr_compensation AS (
 
     SELECT *,
       ROW_NUMBER() OVER (PARTITION BY employee_id, effective_date ORDER BY target_earnings_update_id)   AS rank_ote_effective_date
-    FROM {{ ref('bamboohr_ote') }}
+    FROM {{ ref('bamboohr_ote_source') }}
 
 ), employee_directory AS (
 

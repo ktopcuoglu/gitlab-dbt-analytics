@@ -159,7 +159,7 @@ models:
         - name: locality
         - name: updated_at
 
-  - name: bamboohr_ote
+  - name: bamboohr_ote_source
     description: Provides on-target-earning as related to sales roles.
     columns:
       - name: target_earnings_update_id
