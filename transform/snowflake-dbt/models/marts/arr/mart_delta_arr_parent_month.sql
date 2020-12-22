@@ -1,7 +1,7 @@
-WITH dim_billing_accounts AS (
+WITH dim_billing_account AS (
 
     SELECT *
-    FROM {{ ref('dim_billing_accounts') }}
+    FROM {{ ref('dim_billing_account') }}
 
 ), dim_crm_account AS (
 
@@ -31,7 +31,7 @@ WITH dim_billing_accounts AS (
 ), mart_arr AS (
 
     SELECT
-      dim_date.date_actual                                                           AS arr_month,
+      dim_date.date_actual                                                            AS arr_month,
       IFF(is_first_day_of_last_month_of_fiscal_quarter, fiscal_quarter_name_fy, NULL) AS fiscal_quarter_name_fy,
       IFF(is_first_day_of_last_month_of_fiscal_year, fiscal_year, NULL)               AS fiscal_year,
       dim_crm_account.ultimate_parent_account_name,
@@ -46,12 +46,12 @@ WITH dim_billing_accounts AS (
       ON dim_subscriptions.subscription_id = fct_mrr.subscription_id
     INNER JOIN dim_product_details
       ON dim_product_details.product_details_id = fct_mrr.product_details_id
-    INNER JOIN dim_billing_accounts
-      ON dim_billing_accounts.billing_account_id= fct_mrr.billing_account_id
+    INNER JOIN dim_billing_account
+      ON dim_billing_account.dim_billing_account_id = fct_mrr.billing_account_id
     INNER JOIN dim_date
       ON dim_date.date_id = fct_mrr.date_id
     LEFT JOIN dim_crm_account
-      ON dim_billing_accounts.crm_account_id = dim_crm_account.crm_account_id
+      ON dim_billing_account.dim_crm_account_id = dim_crm_account.crm_account_id
 
 ), max_min_month AS (
 

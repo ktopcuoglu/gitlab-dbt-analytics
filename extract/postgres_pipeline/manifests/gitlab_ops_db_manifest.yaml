@@ -91,6 +91,7 @@ tables:
     export_schema: 'gitlab_ops_net'
     export_table: 'ci_pipelines'
     export_table_primary_key: id
+    dbt_source_model: true
   ci_stages:
     import_db: GITLAB_OPS_DB
     import_query: >
@@ -109,6 +110,7 @@ tables:
     export_schema: 'gitlab_ops_net'
     export_table: ci_stages
     export_table_primary_key: id
+    dbt_source_model: true
   labels:
     import_db: GITLAB_OPS_DB
     import_query: >
@@ -127,6 +129,7 @@ tables:
     export_schema: 'gitlab_ops_net'
     export_table: 'labels'
     export_table_primary_key: id
+    dbt_source_model: true
   label_links:
     import_db: GITLAB_OPS_DB
     import_query: >
@@ -141,6 +144,7 @@ tables:
     export_table: 'label_links'
     export_table_primary_key: id
     advanced_metadata: true  
+    dbt_source_model: true
   members:
     import_db: GITLAB_OPS_DB
     import_query: >
@@ -165,6 +169,7 @@ tables:
     export_table: 'members'
     export_table_primary_key: id
     advanced_metadata: true
+    dbt_source_model: true
   merge_requests:
     import_db: GITLAB_OPS_DB
     import_query: >
@@ -203,6 +208,7 @@ tables:
     export_schema: 'gitlab_ops_net'
     export_table: 'merge_requests'
     export_table_primary_key: id
+    dbt_source_model: true
   projects:
     import_db: GITLAB_OPS_DB
     import_query: >
@@ -269,6 +275,7 @@ tables:
     export_schema: 'gitlab_ops_net'
     export_table: 'projects'
     export_table_primary_key: id
+    dbt_source_model: true
   users:
     import_db: GITLAB_OPS_DB
     import_query: >
@@ -343,3 +350,4 @@ tables:
     export_schema: 'gitlab_ops_net'
     export_table: 'users'
     export_table_primary_key: id
+    dbt_source_model: true

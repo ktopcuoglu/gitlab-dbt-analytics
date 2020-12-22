@@ -33,15 +33,6 @@ macros:
     description: '{{ doc("generate_schema_name") }}'
   - name: get_date_id
     description: '{{ doc("get_date_id") }}'
-  - name: generate_single_field_dimension_from_prep
-    description: '{{ doc("generate_single_field_dimension_from_prep") }}'
-    arguments:
-      - name: model_name
-        type: string
-        description: Name of the prepped data model
-      - name: dimension_column
-        type: string
-        description: Name of the column in the source model to be used in the dimensions
   - name: monthly_change
     description: '{{ doc("monthly_change") }}'
   - name: monthly_is_used

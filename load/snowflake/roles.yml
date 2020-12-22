@@ -115,6 +115,13 @@ databases:
     - rheannamistry_prep:
         shared: no
 
+    - rparker_analytics:
+        shared: no
+    - rparker_prod:
+        shared: no
+    - rparker_prep:
+        shared: no
+
     - snalamaru_analytics:
         shared: no
     - snalamaru_prod:
@@ -363,7 +370,7 @@ roles:
             - analyst_xs
         member_of:
             - analyst_core
-            - bamboohr
+            - bamboohr_analytics
             - boneyard
             - covid19
             - dbt_analytics
@@ -440,8 +447,10 @@ roles:
             - analyst_xs
         member_of:
             - analyst_core
+            - bamboohr_analytics
             - boneyard
             - covid19
+            - customers_db
             - dbt_analytics
             - db_dumps
             - gitlab_data_yaml
@@ -574,7 +583,7 @@ roles:
             - analyst_xs
         member_of: 
             - analyst_core
-            - bamboohr
+            - bamboohr_analytics
             - boneyard
             - gitlab_data_yaml
             - gitlab_dotcom
@@ -692,7 +701,6 @@ roles:
             - snowflake_db
         owns:
             schemas:
-                - analytics.analytics_clones
                 - analytics.common
                 - analytics.common_mapping
                 - analytics.common_mart_marketing
@@ -700,7 +708,6 @@ roles:
                 - analytics.legacy
                 - prep.sensitive
             tables:
-                - analytics.analytics_clones.*
                 - analytics.common.*
                 - analytics.common_mapping.*
                 - analytics.common_mart_marketing.*
@@ -739,7 +746,7 @@ roles:
 # ==========================================
 # Object Roles
 # ==========================================
-    - bamboohr:
+    - bamboohr_analytics:
         warehouses:
             - analyst_xs
         privileges:
@@ -763,24 +770,23 @@ roles:
                     - prep.sensitive.bamboohr_locality
                     - prep.sensitive.bamboohr_headcount_intermediate
 
-    - bamboohr_raw:
+    - bamboohr:
         warehouses:
             - analyst_xs
         privileges:
             databases:
                 read:
-                    - analytics
                     - prep
                     - raw
             schemas:
                 read:
-                    - analytics.legacy
+                    - prep.bamboohr
                     - prep.sensitive
                     - raw.bamboohr
 
             tables:
                 read:
-                    - analytics.legacy.*
+                    - prep.bamboohr.*
                     - prep.sensitive.employee_*
                     - prep.sensitive.bamboohr_*
                     - raw.bamboohr.*
@@ -852,12 +858,15 @@ roles:
             databases:
                 read:
                     - analytics
+                    - prep
             schemas:
                 read:
-                    - analytics.date
+                    - analytics.common
+                    - prep.date
             tables:
                 read:
-                    - analytics.date.*
+                    - analytics.common.dim_date
+                    - prep.date.*
 
     - db_dumps:
         privileges:
@@ -880,6 +889,7 @@ roles:
             databases:
                 read:
                     - analytics
+                    - prep
                     - raw
             schemas:
                 read:
@@ -887,8 +897,9 @@ roles:
                     - analytics.common_mapping
                     - analytics.common_mart_marketing
                     - analytics.common_mart_sales
-                    - analytics.dbt
                     - analytics.legacy
+                    - analytics.workspace_data
+                    - prep.dbt
                     - raw.dbt
             tables:
                 read:
@@ -896,8 +907,9 @@ roles:
                     - analytics.common_mapping.*
                     - analytics.common_mart_marketing.*
                     - analytics.common_mart_sales.*
-                    - analytics.dbt.*
                     - analytics.legacy.*
+                    - analytics.workspace_data.*
+                    - prep.dbt.*
                     - raw.dbt.*
 
     - dbt_analytics_clones:
@@ -906,13 +918,13 @@ roles:
         privileges:
             databases:
                 read:
-                    - analytics
+                    - raw
             schemas:
                 read:
-                    - analytics.analytics_clones
+                    - raw.full_table_clones
             tables:
                 read:
-                    - analytics.analytics_clones.*
+                    - raw.full_table_clones.*
 
     - dbt_analytics_sensitive:
         warehouses:
@@ -1425,7 +1437,7 @@ roles:
     - alcurtis:
         member_of:
             - analyst_finance
-            - bamboohr
+            - bamboohr_analytics
         warehouses:
             - analyst_xs
 
@@ -1438,19 +1450,19 @@ roles:
     - amurray:
         member_of:
             - analyst_finance
-            - bamboohr
+            - bamboohr_analytics
         warehouses:
             - analyst_xs 
 
     - bmenegocci:
         member_of:
-            - bamboohr
+            - bamboohr_analytics
         warehouses:
             - analyst_xs
 
     - brittany:
         member_of:
-            - bamboohr_raw
+            - bamboohr
         warehouses:
             - analyst_xs
 
@@ -1467,7 +1479,7 @@ roles:
     - cmestel:
         member_of:
             - analyst_finance
-            - bamboohr
+            - bamboohr_analytics
         warehouses:
             - analyst_xs
 
@@ -1599,7 +1611,7 @@ roles:
     - fkurniadi:
         member_of:
             - analyst_finance
-            - bamboohr
+            - bamboohr_analytics
         warehouses:
             - analyst_xs        
 
@@ -1682,7 +1694,7 @@ roles:
     - iweeks:
         member_of:
             - analyst_finance
-            - bamboohr
+            - bamboohr_analytics
             - customers_db
         warehouses:
             - analyst_xs
@@ -2122,7 +2134,7 @@ roles:
 
     - mwilkins:
         member_of:
-            - bamboohr_raw
+            - bamboohr
         warehouses:
             - analyst_xs
 
@@ -2238,7 +2250,7 @@ roles:
     - pluthra:
         member_of:
             - analyst_people
-            - bamboohr_raw
+            - bamboohr
             - customers_db
             - qualtrics
             - qualtrics_sensitive
@@ -2345,6 +2357,47 @@ roles:
             - analyst_core
         warehouses:
             - analyst_xs
+        owns:
+            databases:
+                - rparker_analytics
+                - rparker_prep
+                - rparker_prod
+            schemas:
+                - rparker_analytics.*
+                - rparker_prep.*
+                - rparker_prod.*
+            tables:
+                - rparker_analytics.*.*
+                - rparker_prep.*.*
+                - rparker_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - rparker_analytics
+                    - rparker_prep
+                    - rparker_prod
+                write:
+                    - rparker_analytics
+                    - rparker_prep
+                    - rparker_prod
+            schemas:
+                read:
+                    - rparker_analytics.*
+                    - rparker_prep.*
+                    - rparker_prod.*
+                write:
+                    - rparker_analytics.*
+                    - rparker_prep.*
+                    - rparker_prod.*
+            tables:
+                read:
+                    - rparker_analytics.*.*
+                    - rparker_prep.*.*
+                    - rparker_prod.*.*
+                write:
+                    - rparker_analytics.*.*
+                    - rparker_prep.*.*
+                    - rparker_prod.*.*
 
     - sawezec:
         member_of:
@@ -2486,7 +2539,7 @@ roles:
 
     - tmurphy:
         member_of:
-            - bamboohr_raw
+            - bamboohr
             - engineer
         owns:
             databases:
@@ -2597,7 +2650,7 @@ roles:
     - ysun:
         member_of:
             - analyst_finance
-            - bamboohr
+            - bamboohr_analytics
         warehouses:
             - analyst_xs  
 
@@ -2989,6 +3042,11 @@ users:
         can_login: yes
         member_of:
             - sawezec
+
+    - securitybotsnowflakeapi:
+        can_login: yes
+        member_of:
+            - securityadmin
 
     - skerr:
         can_login: yes
