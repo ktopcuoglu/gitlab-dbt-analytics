@@ -9,7 +9,6 @@ from airflow_utils import (
     gitlab_defaults,
     gitlab_pod_env_vars,
     slack_failed_task,
-    xs_warehouse,
 )
 from kube_secrets import (
     GIT_DATA_TESTS_PRIVATE_KEY,

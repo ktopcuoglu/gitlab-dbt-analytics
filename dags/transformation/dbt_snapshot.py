@@ -18,8 +18,6 @@ from airflow_utils import (
     gitlab_pod_env_vars,
     slack_failed_task,
     slack_snapshot_failed_task,
-    l_warehouse,
-    xs_warehouse,
     dbt_install_deps_and_seed_cmd,
     clone_repo_cmd,
 )

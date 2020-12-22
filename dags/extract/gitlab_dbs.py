@@ -14,8 +14,6 @@ from airflow_utils import (
     DBT_IMAGE,
     dbt_install_deps_nosha_cmd,
     gitlab_pod_env_vars,
-    xl_warehouse,
-    xs_warehouse,
 )
 from kubernetes_helpers import get_affinity, get_toleration
 from kube_secrets import (
