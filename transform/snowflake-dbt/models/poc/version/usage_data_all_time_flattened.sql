@@ -1,7 +1,6 @@
 
 {% set metric_type = 'all_time' %}
 {% set json_to_parse = ['analytics_unique_visits', 'counts_monthly', 'usage_activity_by_stage_monthly', 'usage_activity_by_stage_monthly', 'redis_hll_counters', 'counts'] %}
-{% set columns_to_parse = ['usage_activity_by_stage_monthly', 'counts'] %}
 
 WITH data AS ( 
   

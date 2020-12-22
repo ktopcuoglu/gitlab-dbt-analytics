@@ -23,7 +23,7 @@ WITH source AS (
 
     SELECT
       {{ dbt_utils.star(from=ref('version_usage_data_source'), except=['EDITION']) }},
-      IFF(license_expires_at >= created_at OR license_expires_at IS NULL, edition, 'EE Free') AS edition,
+      IFF(license_expires_at >= created_at OR license_expires_at IS NULL, edition, 'EE Free') AS cleaned_edition,
       REGEXP_REPLACE(NULLIF(version, ''), '[^0-9.]+')                                         AS cleaned_version,
       IFF(version ILIKE '%-pre', True, False)                                                 AS version_is_prerelease,
       SPLIT_PART(cleaned_version, '.', 1)::NUMBER                                             AS major_version,
@@ -51,7 +51,7 @@ WITH source AS (
 
     SELECT 
       {{ dbt_utils.star(from=ref('version_usage_data_source'), relation_alias='usage_data', except=['EDITION']) }},
-      edition,
+      cleaned_edition                                                                       AS edition,
       cleaned_version,
       version_is_prerelease,
       major_version,
