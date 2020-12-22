@@ -63,7 +63,7 @@ models:
       - name: bonus_date
         tests:
           - not_null
-  - name: bamboohr_directory
+  - name: bamboohr_directory_source
     description: Base model for BambooHR Active Directory. This only shows currently active employees.
     columns:
       - name: employee_id

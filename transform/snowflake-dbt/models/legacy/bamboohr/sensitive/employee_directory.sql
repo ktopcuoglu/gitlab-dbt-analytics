@@ -1,7 +1,7 @@
 WITH bamboohr_directory AS (
 
     SELECT *
-    FROM {{ ref ('bamboohr_directory') }}
+    FROM {{ ref ('bamboohr_directory_source') }}
 
 ), department_info as (
 
