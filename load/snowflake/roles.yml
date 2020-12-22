@@ -370,7 +370,7 @@ roles:
             - analyst_xs
         member_of:
             - analyst_core
-            - bamboohr
+            - bamboohr_analytics
             - boneyard
             - covid19
             - dbt_analytics
@@ -447,7 +447,7 @@ roles:
             - analyst_xs
         member_of:
             - analyst_core
-            - bamboohr
+            - bamboohr_analytics
             - boneyard
             - covid19
             - customers_db
@@ -583,7 +583,7 @@ roles:
             - analyst_xs
         member_of: 
             - analyst_core
-            - bamboohr
+            - bamboohr_analytics
             - boneyard
             - gitlab_data_yaml
             - gitlab_dotcom
@@ -746,7 +746,7 @@ roles:
 # ==========================================
 # Object Roles
 # ==========================================
-    - bamboohr:
+    - bamboohr_analytics:
         warehouses:
             - analyst_xs
         privileges:
@@ -770,24 +770,23 @@ roles:
                     - prep.sensitive.bamboohr_locality
                     - prep.sensitive.bamboohr_headcount_intermediate
 
-    - bamboohr_raw:
+    - bamboohr:
         warehouses:
             - analyst_xs
         privileges:
             databases:
                 read:
-                    - analytics
                     - prep
                     - raw
             schemas:
                 read:
-                    - analytics.legacy
+                    - prep.bamboohr
                     - prep.sensitive
                     - raw.bamboohr
 
             tables:
                 read:
-                    - analytics.legacy.*
+                    - prep.bamboohr.*
                     - prep.sensitive.employee_*
                     - prep.sensitive.bamboohr_*
                     - raw.bamboohr.*
@@ -1438,7 +1437,7 @@ roles:
     - alcurtis:
         member_of:
             - analyst_finance
-            - bamboohr
+            - bamboohr_analytics
         warehouses:
             - analyst_xs
 
@@ -1451,19 +1450,19 @@ roles:
     - amurray:
         member_of:
             - analyst_finance
-            - bamboohr
+            - bamboohr_analytics
         warehouses:
             - analyst_xs 
 
     - bmenegocci:
         member_of:
-            - bamboohr
+            - bamboohr_analytics
         warehouses:
             - analyst_xs
 
     - brittany:
         member_of:
-            - bamboohr_raw
+            - bamboohr
         warehouses:
             - analyst_xs
 
@@ -1480,7 +1479,7 @@ roles:
     - cmestel:
         member_of:
             - analyst_finance
-            - bamboohr
+            - bamboohr_analytics
         warehouses:
             - analyst_xs
 
@@ -1612,7 +1611,7 @@ roles:
     - fkurniadi:
         member_of:
             - analyst_finance
-            - bamboohr
+            - bamboohr_analytics
         warehouses:
             - analyst_xs        
 
@@ -1695,7 +1694,7 @@ roles:
     - iweeks:
         member_of:
             - analyst_finance
-            - bamboohr
+            - bamboohr_analytics
             - customers_db
         warehouses:
             - analyst_xs
@@ -2135,7 +2134,7 @@ roles:
 
     - mwilkins:
         member_of:
-            - bamboohr_raw
+            - bamboohr
         warehouses:
             - analyst_xs
 
@@ -2251,7 +2250,7 @@ roles:
     - pluthra:
         member_of:
             - analyst_people
-            - bamboohr_raw
+            - bamboohr
             - customers_db
             - qualtrics
             - qualtrics_sensitive
@@ -2540,7 +2539,7 @@ roles:
 
     - tmurphy:
         member_of:
-            - bamboohr_raw
+            - bamboohr
             - engineer
         owns:
             databases:
@@ -2651,7 +2650,7 @@ roles:
     - ysun:
         member_of:
             - analyst_finance
-            - bamboohr
+            - bamboohr_analytics
         warehouses:
             - analyst_xs  
 
