@@ -15,7 +15,7 @@ WITH bamboohr_directory AS (
           OVER (PARTITION BY employee_id ORDER BY job_id) AS last_department,
       LAST_VALUE(division) RESPECT NULLS
           OVER  (PARTITION BY employee_id ORDER BY job_id) AS last_division       
-    FROM {{ ref ('bamboohr_job_info') }}
+    FROM {{ ref ('bamboohr_job_info_source') }}
 
 ), cost_center AS (
 

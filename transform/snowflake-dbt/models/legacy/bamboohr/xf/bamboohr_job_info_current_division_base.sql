@@ -1,7 +1,7 @@
 WITH job_info AS (
 
     SELECT *
-    FROM {{ ref ('bamboohr_job_info') }}
+    FROM {{ ref ('bamboohr_job_info_source') }}
 
 ), bamboo_mapping AS (
 
