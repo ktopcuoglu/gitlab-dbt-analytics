@@ -40,6 +40,7 @@ default_args = {
 # Set the command for the container
 container_cmd = f"""
     {clone_and_setup_extraction_cmd} &&
+    pwd &&
     cd /usr/local/ && 
     mkdir -p gitlab && 
     cd gitlab && 
@@ -51,7 +52,7 @@ container_cmd = f"""
     cat .git/info/sparse-checkout &&
     echo "git pull origin master" &&
     git pull origin master &&
-    git log --pretty="format:%H,%cN,%ci,%s" sites/handbook/source/handbook/values/index.html.md >> values.csv
+    git log --pretty="format:%H,%cN,%ci,%s" sites/handbook/source/handbook/values/index.html.md >> values.csv &&
     python3 /usr/local/analytics/extract/sheetload/sheetload.py csv --filename values.csv --schema git_log --tablename values_page --header None
 """
 
