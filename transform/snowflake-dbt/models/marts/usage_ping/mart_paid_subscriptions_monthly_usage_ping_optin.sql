@@ -32,7 +32,7 @@ WITH fct_mrr AS (
 ), active_subscriptions AS (
 
     SELECT *
-    FROM {{ ref('dim_subscriptions') }}
+    FROM {{ ref('dim_subscription') }}
 
 ), all_subscriptions AS (
 

@@ -98,17 +98,6 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
-{% docs dim_subscriptions %}
-Dimension table representing subscription details. The Zuora subscription is created and maintained as part of the broader Quote Creation business process and can be found in the [handbook](https://about.gitlab.com/handbook/finance/sox-internal-controls/quote-to-cash/#3-quote-creation).
-
-Data comes from [Zuora Documentation](https://www.zuora.com/developer/api-reference/#tag/Subscriptions).
-
-The grain of the table is the version of a Zuora subscription.
-
-Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
-
-{% enddocs %}
-
 {% docs dim_date %}
 Dimensional table representing both calendar year and fiscal year date details.
 

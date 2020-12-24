@@ -18,10 +18,10 @@ WITH dim_billing_account AS (
     SELECT *
     FROM {{ ref('dim_product_details') }}
 
-), dim_subscriptions AS (
+), dim_subscription AS (
 
     SELECT *
-    FROM {{ ref('dim_subscriptions') }}
+    FROM {{ ref('dim_subscription') }}
 
 ), fct_mrr AS (
 
@@ -42,8 +42,8 @@ WITH dim_billing_account AS (
       fct_mrr.mrr,
       fct_mrr.quantity
     FROM fct_mrr
-    INNER JOIN dim_subscriptions
-      ON dim_subscriptions.subscription_id = fct_mrr.subscription_id
+    INNER JOIN dim_subscription
+      ON dim_subscription.subscription_id = fct_mrr.subscription_id
     INNER JOIN dim_product_details
       ON dim_product_details.product_details_id = fct_mrr.product_details_id
     INNER JOIN dim_billing_account

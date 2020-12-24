@@ -24,7 +24,7 @@ WITH self_managed_active_subscriptions AS (
 ), active_subscriptions AS (
   
     SELECT *
-    FROM {{ ref('dim_subscriptions') }}
+    FROM {{ ref('dim_subscription') }}
   
 ), all_subscriptions AS (
   

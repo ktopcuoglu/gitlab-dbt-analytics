@@ -25,7 +25,7 @@ WITH dim_billing_account AS (
     SELECT *
     FROM {{ ref('dim_product_details') }}
 
-), dim_subscriptions_snapshots AS (
+), dim_subscription_snapshots AS (
 
     SELECT *
     FROM {{ ref('dim_subscriptions_snapshots') }}
@@ -71,8 +71,8 @@ WITH dim_billing_account AS (
         AS fiscal_quarter_name_fy,
       IFF(arr_month.is_first_day_of_last_month_of_fiscal_year, arr_month.fiscal_year, NULL)
         AS fiscal_year,
-      dim_subscriptions_snapshots.subscription_start_month,
-      dim_subscriptions_snapshots.subscription_end_month,
+      dim_subscription_snapshots.subscription_start_month,
+      dim_subscription_snapshots.subscription_end_month,
 
       --account info
       dim_billing_account.dim_billing_account_id                                        AS zuora_account_id,
@@ -89,9 +89,9 @@ WITH dim_billing_account AS (
       dim_crm_account.ultimate_parent_territory,
 
       --subscription info
-      dim_subscriptions_snapshots.subscription_name,
-      dim_subscriptions_snapshots.subscription_status,
-      dim_subscriptions_snapshots.subscription_sales_type,
+      dim_subscription_snapshots.subscription_name,
+      dim_subscription_snapshots.subscription_status,
+      dim_subscription_snapshots.subscription_sales_type,
 
       --product info
       dim_product_details.product_category,
@@ -106,9 +106,9 @@ WITH dim_billing_account AS (
       fct_mrr_snapshots.arr,
       fct_mrr_snapshots.quantity
     FROM fct_mrr_snapshots
-    INNER JOIN dim_subscriptions_snapshots
-      ON dim_subscriptions_snapshots.subscription_id = fct_mrr_snapshots.subscription_id
-      AND dim_subscriptions_snapshots.snapshot_id = fct_mrr_snapshots.snapshot_id
+    INNER JOIN dim_subscription_snapshots
+      ON dim_subscription_snapshots.subscription_id = fct_mrr_snapshots.subscription_id
+      AND dim_subscription_snapshots.snapshot_id = fct_mrr_snapshots.snapshot_id
     INNER JOIN dim_product_details
       ON dim_product_details.product_details_id = fct_mrr_snapshots.product_details_id
     INNER JOIN dim_billing_account
