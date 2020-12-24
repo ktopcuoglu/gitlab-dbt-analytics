@@ -63,7 +63,7 @@ dag = DAG(
 # Task 1
 sheetload_run = KubernetesPodOperator(
     **gitlab_defaults,
-    image=DATA_IMAGE,
+    image="registry.gitlab.com/gitlab-data/data-image/data-image:v0.0.12",
     task_id="value-page-extract",
     name="value-page-extract",
     secrets=[
