@@ -345,6 +345,8 @@ models:
       dbt:
         +tags: ["dbt"]
 
+    workspace_data:
+      +schema: workspace_marketing
 
     # ------------------
     # Marts
