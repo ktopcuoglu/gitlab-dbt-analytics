@@ -48,6 +48,8 @@ container_cmd = f"""
     git checkout -b master && 
     git config core.sparsecheckout true && 
     echo sites/handbook/source/handbook/values/ >> .git/info/sparse-checkout && 
+    cat .git/info/sparse-checkout &&
+    echo "git pull origin master" &&
     git pull origin master &&
     git log --pretty="format:%H,%cN,%ci,%s" sites/handbook/source/handbook/values/index.html.md >> values.csv
     python3 ../sheetload/sheetload.py csv --filename values.csv --schema git_log --tablename values_page --header None
