@@ -8,8 +8,8 @@ WITH gitlab_issues AS (
     SELECT 
       issue_id  AS noteable_id,
       'Issue'   AS noteable_type,
-      {{this.database}}.{{target.schema}}.regexp_to_array(issue_description, '(?<=(gitlab.my.|na34.)salesforce.com\/)[0-9a-zA-Z]{15,18}') AS sfdc_link_array,
-      {{this.database}}.{{target.schema}}.regexp_to_array(issue_description, '(?<=gitlab.zendesk.com\/agent\/tickets\/)[0-9]{1,18}')      AS zendesk_link_array
+      "{{this.database}}".{{target.schema}}.regexp_to_array(issue_description, '(?<=(gitlab.my.|na34.)salesforce.com\/)[0-9a-zA-Z]{15,18}') AS sfdc_link_array,
+      "{{this.database}}".{{target.schema}}.regexp_to_array(issue_description, '(?<=gitlab.zendesk.com\/agent\/tickets\/)[0-9]{1,18}')      AS zendesk_link_array
     FROM {{ ref('gitlab_dotcom_issues_xf')}}
     WHERE is_internal_issue
       AND issue_description IS NOT NULL
@@ -19,8 +19,8 @@ WITH gitlab_issues AS (
     SELECT 
       epic_id  AS noteable_id,
       'Epic'   AS noteable_type,
-      {{this.database}}.{{target.schema}}.regexp_to_array(epic_description, '(?<=(gitlab.my.|na34.)salesforce.com\/)[0-9a-zA-Z]{15,18}') AS sfdc_link_array,
-      {{this.database}}.{{target.schema}}.regexp_to_array(epic_description, '(?<=gitlab.zendesk.com\/agent\/tickets\/)[0-9]{1,18}')      AS zendesk_link_array
+      "{{this.database}}".{{target.schema}}.regexp_to_array(epic_description, '(?<=(gitlab.my.|na34.)salesforce.com\/)[0-9a-zA-Z]{15,18}') AS sfdc_link_array,
+      "{{this.database}}".{{target.schema}}.regexp_to_array(epic_description, '(?<=gitlab.zendesk.com\/agent\/tickets\/)[0-9]{1,18}')      AS zendesk_link_array
     FROM {{ ref('gitlab_dotcom_epics_xf')}}
     WHERE is_internal_epic
       AND epic_description IS NOT NULL
@@ -65,7 +65,7 @@ WITH gitlab_issues AS (
     SELECT
       noteable_id,
       noteable_type,
-      {{this.database}}.{{target.schema}}.id15to18(f.value::VARCHAR) AS sfdc_id_18char,
+      "{{this.database}}".{{target.schema}}.id15to18(f.value::VARCHAR) AS sfdc_id_18char,
       SUBSTR(sfdc_id_18char, 0, 3) AS sfdc_id_prefix
     FROM gitlab_issues_and_epics, 
       TABLE(flatten(sfdc_link_array)) f

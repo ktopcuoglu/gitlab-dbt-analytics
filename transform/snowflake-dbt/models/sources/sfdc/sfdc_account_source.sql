@@ -33,7 +33,7 @@ WITH source AS (
       technical_account_manager_lu__c            AS technical_account_manager_id,
 
       -- info
-      {{this.database}}.{{target.schema}}.id15to18(substring(regexp_replace(ultimate_parent_account__c,
+      "{{this.database}}".{{target.schema}}.id15to18(substring(regexp_replace(ultimate_parent_account__c,
                      '_HL_ENCODED_/|<a\\s+href="/', ''), 0, 15))
                                                  AS ultimate_parent_account_id,
       type                                       AS account_type,
