@@ -4,7 +4,6 @@ from datetime import datetime, timedelta
 from airflow import DAG
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
 from airflow_utils import (
-    DATA_IMAGE,
     clone_and_setup_extraction_cmd,
     gitlab_defaults,
     gitlab_pod_env_vars,
@@ -40,21 +39,23 @@ default_args = {
 # Set the command for the container
 container_cmd = f"""
     {clone_and_setup_extraction_cmd} &&
-    pwd &&
     cd /usr/local/ && 
     mkdir -p gitlab && 
     cd gitlab && 
-    git init && 
+    git init &&
     git remote add origin https://gitlab.com/gitlab-com/www-gitlab-com.git && 
     git checkout -b master && 
     git config core.sparsecheckout true && 
     echo sites/handbook/source/handbook/values/ >> .git/info/sparse-checkout && 
-    cat .git/info/sparse-checkout &&
-    echo "git pull origin master" &&
-    git pull origin master &&
-    git log --pretty="format:%H,%cN,%ci,%s" sites/handbook/source/handbook/values/index.html.md >> values.csv &&
-    python3 /usr/local/analytics/extract/sheetload/sheetload.py csv --filename values.csv --schema git_log --tablename values_page --header None
-"""
+    echo "      Running git pull origin master commands." &&
+    git pull origin master;
+    echo "      Running git log command.";
+    echo "sha,name,date,message" > /analytics/extract/sheetload/values.csv ;
+    git log --pretty='format:%H,%cN,%ci,"%s"' sites/handbook/source/handbook/values/index.html.md >> /analytics/extract/sheetload/values.csv ;
+    cd /analytics/extract/sheetload/ &&
+    export SNOWFLAKE_LOAD_DATABASE="RAW";
+    python sheetload.py csv --filename values.csv --schema git_log --tablename values_page
+ """
 
 # Create the DAG
 dag = DAG(
@@ -62,7 +63,7 @@ dag = DAG(
 )
 
 # Task 1
-sheetload_run = KubernetesPodOperator(
+values_run = KubernetesPodOperator(
     **gitlab_defaults,
     image="registry.gitlab.com/gitlab-data/data-image/data-image:v0.0.12",
     task_id="value-page-extract",
