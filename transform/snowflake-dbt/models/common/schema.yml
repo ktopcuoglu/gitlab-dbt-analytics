@@ -544,9 +544,6 @@ models:
           - unique
         tags: ["tdf", "arr"]
 
-  - name: dim_subscription_valid_at
-    description: Parameterized model to recreate dimension table representing subscription details as in Zuora at given date. Required variable valid_at is timezone sensitive
-
   - name: fct_campaign
     description: '{{ doc("fct_campaign") }}'
     columns:
@@ -777,7 +774,7 @@ models:
       - name: date_id
         description: The identifier of date month in dim_date
       - name: subscription_id
-        description: The identifier of subscription in dim_subscription_snapshots table
+        description: The identifier of subscription in dim_subscriptions_snapshots table
         tests:
           - not_null
         tags: ["tdf", "arr"]
