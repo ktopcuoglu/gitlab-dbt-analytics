@@ -345,7 +345,7 @@ models:
       dbt:
         +tags: ["dbt"]
 
-    workspace_data:
+    workspace_marketing:
       +schema: workspace_marketing
 
     # ------------------

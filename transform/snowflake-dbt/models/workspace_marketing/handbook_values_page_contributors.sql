@@ -1,7 +1,7 @@
 WITH source AS (
 
     SELECT *
-    FROM {{ ref('handbook_values_page_contributors')}}
+    FROM {{ ref('handbook_values_page_contributors_source')}}
 
 )
 
