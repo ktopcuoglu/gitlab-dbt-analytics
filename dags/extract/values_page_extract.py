@@ -52,7 +52,7 @@ container_cmd = f"""
     echo "git pull origin master" &&
     git pull origin master &&
     git log --pretty="format:%H,%cN,%ci,%s" sites/handbook/source/handbook/values/index.html.md >> values.csv
-    python3 ../analytics/sheetload/sheetload.py csv --filename values.csv --schema git_log --tablename values_page --header None
+    python3 /usr/local/analytics/extract/sheetload/sheetload.py csv --filename values.csv --schema git_log --tablename values_page --header None
 """
 
 # Create the DAG
