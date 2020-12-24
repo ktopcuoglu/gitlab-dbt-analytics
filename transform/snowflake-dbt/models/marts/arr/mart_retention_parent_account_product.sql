@@ -37,7 +37,7 @@ WITH dim_crm_account AS (
     INNER JOIN dim_crm_account AS merged_accounts
       ON merged_accounts.crm_account_id = COALESCE(crm_accounts.merged_to_account_id, crm_accounts.crm_account_id)
     LEFT JOIN dim_subscription
-      ON dim_subscription.subscription_id = fct_mrr.subscription_id
+      ON dim_subscription.dim_subscription_id = fct_mrr.subscription_id
       AND subscription_end_month <= DATEADD('year', 1, date_actual)
     INNER JOIN dim_product_details
       ON dim_product_details.product_details_id = fct_mrr.product_details_id
@@ -57,7 +57,7 @@ WITH dim_crm_account AS (
     INNER JOIN dim_crm_account AS merged_accounts
       ON merged_accounts.crm_account_id = COALESCE(crm_accounts.merged_to_account_id, crm_accounts.crm_account_id)
     LEFT JOIN dim_subscription
-      ON dim_subscription.subscription_id = fct_mrr.subscription_id
+      ON dim_subscription.dim_subscription_id = fct_mrr.subscription_id
       AND subscription_end_month <= DATEADD('year', 1, date_actual)
     INNER JOIN dim_product_details
       ON dim_product_details.product_details_id = fct_mrr.product_details_id

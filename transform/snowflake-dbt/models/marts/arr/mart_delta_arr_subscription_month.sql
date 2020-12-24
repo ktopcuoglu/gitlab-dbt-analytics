@@ -38,7 +38,7 @@ WITH dim_billing_account AS (
       dim_crm_account.ultimate_parent_account_id,
       COALESCE(dim_crm_account.merged_to_account_id, dim_crm_account.crm_account_id)                AS crm_id,
       dim_subscription.subscription_name,
-      dim_subscription.subscription_id,
+      dim_subscription.dim_subscription_id                                                          AS subscription_id,
       dim_product_details.product_category,
       dim_product_details.delivery,
       dim_product_details.product_ranking,
@@ -46,7 +46,7 @@ WITH dim_billing_account AS (
       fct_mrr.quantity
     FROM fct_mrr
     INNER JOIN dim_subscription
-      ON dim_subscription.subscription_id = fct_mrr.subscription_id
+      ON dim_subscription.dim_subscription_id = fct_mrr.subscription_id
     INNER JOIN dim_product_details
       ON dim_product_details.product_details_id = fct_mrr.product_details_id
     INNER JOIN dim_billing_account
