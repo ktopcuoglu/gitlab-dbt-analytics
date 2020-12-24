@@ -312,6 +312,7 @@ roles:
     - analyst_finance:
         warehouses:
             - analyst_xs
+            - analyst_l
         member_of:
             - analyst_core
             - boneyard
