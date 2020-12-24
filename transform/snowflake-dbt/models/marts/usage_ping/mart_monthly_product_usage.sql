@@ -44,8 +44,9 @@ WITH dim_billing_account AS (
 
     SELECT *
     FROM {{ ref('dim_subscription') }}
-    WHERE subscription_name_slugify <> zuora_renewal_subscription_name_slugify[0]::TEXT
-      OR zuora_renewal_subscription_name_slugify IS NULL
+    WHERE (subscription_name_slugify <> zuora_renewal_subscription_name_slugify[0]::TEXT
+      OR zuora_renewal_subscription_name_slugify IS NULL)
+      AND subscription_status NOT IN ('Draft', 'Expired')
 
 ),  zuora_subscription_snapshots AS (
 
@@ -97,7 +98,7 @@ WITH dim_billing_account AS (
       subscription_source.subscription_id                                          AS original_linked_subscription_id,
       subscription_source.account_id,
       subscription_source.subscription_name_slugify,
-      dim_subscription.subscription_id                                            AS latest_active_subscription_id,
+      dim_subscription.dim_subscription_id                                         AS latest_active_subscription_id,
       dim_subscription.subscription_start_date,
       dim_subscription.subscription_end_date,
       dim_subscription.subscription_start_month,
@@ -127,7 +128,7 @@ WITH dim_billing_account AS (
     LEFT JOIN subscription_source AS all_subscriptions
       ON subscription_source.subscription_name_slugify = all_subscriptions.subscription_name_slugify
     LEFT JOIN zuora_subscription_snapshots
-      ON zuora_subscription_snapshots.subscription_id = dim_subscription.subscription_id
+      ON zuora_subscription_snapshots.subscription_id = dim_subscription.dim_subscription_id
       AND zuora_subscription_snapshots.rank = 1
     INNER JOIN fct_charges
       ON all_subscriptions.subscription_id = fct_charges.subscription_id
@@ -137,7 +138,7 @@ WITH dim_billing_account AS (
       AND dim_product_details.delivery = 'Self-Managed'
       AND product_rate_plan_name NOT IN ('Premium - 1 Year - Eval')
     LEFT JOIN dim_billing_account
-      ON dim_subscription.billing_account_id = dim_billing_account.dim_billing_account_id
+      ON dim_subscription.dim_billing_account_id = dim_billing_account.dim_billing_account_id
     LEFT JOIN dim_crm_accounts
       ON dim_billing_account.dim_crm_account_id = dim_crm_accounts.crm_account_id
     INNER JOIN dim_date
@@ -258,7 +259,7 @@ WITH dim_billing_account AS (
       product_rate_plan_name_array,
       is_paid_subscription,
       is_program_subscription,
-      
+
       -- account metadata
       crm_account_name,
       ultimate_parent_account_name,
@@ -267,7 +268,7 @@ WITH dim_billing_account AS (
       ultimate_parent_industry,
       ultimate_parent_account_owner_team,
       ultimate_parent_territory,
-      
+
       -- location info
       country_name            AS ping_country_name,
       iso_2_country_code      AS ping_country_code,
@@ -287,5 +288,5 @@ WITH dim_billing_account AS (
     created_by="@mpeychet",
     updated_by="@iweeks",
     created_date="2020-12-01",
-    updated_date="2020-12-15"
+    updated_date="2020-12-24"
 ) }}
