@@ -1,0 +1,10 @@
+version: 2
+
+models:
+  - name: handbook_values_page_contributors
+    description: Git log of contributors to the Values handbook page.
+    columns:
+      - name: contributor_name
+      - name: git_sha
+      - name: git_timestamp
+      - name: git_message

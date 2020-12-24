@@ -8,3 +8,11 @@ models:
       - name: merge_request_version_diffs
       - name: plain_diff_url_path
       - name: source_branch_name
+  
+  - name: handbook_values_page_contributors_source
+    description: Git log of contributors to the Values handbook page.
+    columns:
+      - name: contributor_name
+      - name: git_sha
+      - name: git_timestamp
+      - name: git_message

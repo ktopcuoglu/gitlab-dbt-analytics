@@ -18,3 +18,7 @@ sources:
       - name: handbook_merge_requests
         description: '{{ doc("handbook_merge_requests") }}'
         loaded_at_field: uploaded_at
+      - name: values_after_2020_06
+        identifier: values_page_git_log
+      - name: values_before_2020_06
+        identifier: values_page_git_log_before_2020_06
