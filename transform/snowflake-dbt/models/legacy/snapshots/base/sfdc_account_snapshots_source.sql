@@ -36,7 +36,7 @@ WITH source AS (
       -- info
       ultimate_parent_sales_segment_employees__c AS sales_segment,
       sales_segmentation_new__c                  AS account_segment,
-      {{target.schema}}.id15to18(substring(regexp_replace(ultimate_parent_account__c,
+      {{this.database}}.{{target.schema}}.id15to18(substring(regexp_replace(ultimate_parent_account__c,
                      '_HL_ENCODED_/|<a\\s+href="/', ''), 0, 15))                 
                                                  AS ultimate_parent_account_id,
       type                                       AS account_type,
