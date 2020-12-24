@@ -54,12 +54,12 @@ container_cmd = f"""
     git log --pretty='format:%H,%cN,%ci,"%s"' sites/handbook/source/handbook/values/index.html.md >> /analytics/extract/sheetload/values.csv ;
     cd /analytics/extract/sheetload/ &&
     export SNOWFLAKE_LOAD_DATABASE="RAW";
-    python sheetload.py csv --filename values.csv --schema git_log --tablename values_page
+    python sheetload.py csv --filename values.csv --schema handbook --tablename values_page_git_log
  """
 
 # Create the DAG
 dag = DAG(
-    "value_page_extract", default_args=default_args, schedule_interval="0 2 */1 * *"
+    "value_page_extract", default_args=default_args, schedule_interval="0 2 * * */7"
 )
 
 # Task 1
