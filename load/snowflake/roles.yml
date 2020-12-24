@@ -2132,6 +2132,12 @@ roles:
                     - mwalker_prep.*.*
                     - mwalker_prod.*.*
 
+    - mwawrzyniak:
+        member_of:
+            - analyst_growth
+        warehouses:
+            - analyst_xs
+
     - mwilkins:
         member_of:
             - bamboohr
@@ -2971,6 +2977,11 @@ users:
         can_login: yes
         member_of:
             - mwalker
+
+    - mwawrzyniak:
+        can_login: yes
+        member_of:
+            - mwawrzyniak
 
     - nfiguera:
         can_login: yes
