@@ -149,10 +149,14 @@ models:
         +schema: date
 
       dbt:
-        +database: "{{ env_var('SNOWFLAKE_TRANSFORM_DATABASE') }}" # ANALYTICS
         +materialized: table
         +schema: dbt
         +tags: ["dbt"]
+
+      discourse:
+        +materialized: table
+        +schema: discourse
+        +tags: ["discourse", "social"]
 
       engineering:
         +database: "{{ env_var('SNOWFLAKE_TRANSFORM_DATABASE') }}" # ANALYTICS
@@ -249,6 +253,15 @@ models:
 
       date:
         +materialized: view
+
+      discourse:
+        +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
+        +schema: preparation
+        +tags: ["discourse", "social"]
+
+      dbt:
+        +schema: workspace_data
+        +tags: ["dbt"]
 
       gitlab_dotcom:
         +tags: ["product"]

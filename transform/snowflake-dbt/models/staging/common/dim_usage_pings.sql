@@ -4,12 +4,6 @@ WITH usage_ping_data AS (
     FROM {{ ref('version_usage_data_source') }}
     WHERE uuid IS NOT NULL
 
-), licenses AS (
-
-    SELECT *
-    FROM {{ ref('license_db_licenses_source') }}
-    
-    
 ), version_edition_cleaned AS (
 
      SELECT
