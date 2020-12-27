@@ -25,8 +25,8 @@ WITH unioned AS (
 
 ), final AS (
 
-    SELECT
-      unique_key,
+    SELECT *
+      {# unique_key,
       pi_name,
       org_name,
       pi_definition,
@@ -40,8 +40,9 @@ WITH unioned AS (
       sisense_dashboard_id,
       FIRST_VALUE(snapshot_date) OVER (PARTITION BY pi_name ORDER BY snapshot_date) AS date_first_added, 
       MIN(snapshot_date) OVER (PARTITION BY unique_key ORDER BY snapshot_date)      AS valid_from_date,
-      MAX(snapshot_date) OVER (PARTITION BY unique_key ORDER BY snapshot_date DESC) AS valid_to_date
+      MAX(snapshot_date) OVER (PARTITION BY unique_key ORDER BY snapshot_date DESC) AS valid_to_date #}
     FROM unioned
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY unique_key ORDER BY valid_from_date) =1 
  
 )
 
