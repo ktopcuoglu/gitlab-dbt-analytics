@@ -27,6 +27,7 @@ WITH source AS (
         WHEN age = -1               THEN 'Unreported'
           ELSE NULL END                                                                 AS age_cohort,
       COALESCE(gender_dropdown, gender,'Did Not Identify')                              AS gender,
+      country,
       nationality,
       region,
       CASE

@@ -146,7 +146,7 @@ WITH RECURSIVE employee_directory AS (
        COALESCE(sheetload_engineering_speciality.speciality, job_role.jobtitle_speciality) AS jobtitle_speciality,
       ---to capture speciality for engineering prior to 2020.09.30 we are using sheetload, and capturing from bamboohr afterwards
       location_factor.location_factor, 
-      IFF(hire_date = date_actual OR 
+      IFF(employee_directory.hire_date = date_actual OR 
           rehire_date = date_actual, True, False)                           AS is_hire_date,
       IFF(employment_status = 'Terminated', True, False)                    AS is_termination_date,
       IFF(rehire_date = date_actual, True, False)                           AS is_rehire_date,
