@@ -15,7 +15,7 @@ models:
     - name: excess_from_previous_quarter
     - name: total_spend
 
-  - name: bamboohr_id_emmployee_number_mapping
+  - name: bamboohr_id_employee_number_mapping
     description: This model is the canonical source mapping bamboo employee numbers with employee IDs. It includes all employees for all time. The model also captures demographic information, and removes test accounts.
     columns:
       - name: employee_id

@@ -1,11 +1,8 @@
 WITH source AS (
   
     SELECT *
-    FROM {{ ref ('bamboohr_id_employee_number_mapping_source_test') }}
+    FROM {{ ref ('bamboohr_id_employee_number_mapping_source') }}
     WHERE uploaded_row_number_desc = 1
-
-    {# uploaded_at >= hire_date #}
-    {# QUALIFY ROW_NUMBER() OVER (PARTITION BY employee_id ORDER BY uploaded_at DESC) = 1 #}
 
 ), intermediate AS (
 
@@ -15,9 +12,6 @@ WITH source AS (
       first_name,
       last_name,
       hire_date,
-      {# IFF(LAST_VALUE(hire_date) 
-            OVER (PARTITION BY employee_id ORDER BY uploaded_at) = hire_date, NULL,
-          LAST_VALUE (hire_date) OVER (PARTITION BY employee_id ORDER BY uploaded_at))  AS rehire_date, #}
       termination_date,
       CASE 
         WHEN age BETWEEN 18 AND 24 THEN '18-24'
