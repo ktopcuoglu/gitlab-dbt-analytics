@@ -1,7 +1,7 @@
 WITH source AS (
 
     SELECT *
-    FROM {{ ref ('bamboohr_id_employee_number_mapping_source_test') }}
+    FROM {{ ref ('bamboohr_id_employee_number_mapping_source') }}
     WHERE uploaded_at >= '2020-03-24'
     --1st time we started capturing locality
 
