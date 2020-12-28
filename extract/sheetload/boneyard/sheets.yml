@@ -12,6 +12,8 @@ sheets:
     owner: '@Jean Peguero'
     tabs:
       - do_not_email_contacts
+  - name: pricing_list
+    owner: '@Jean Peguero'
   - name: test_sheet
     owner: '@taylormurphy'
     tabs:
