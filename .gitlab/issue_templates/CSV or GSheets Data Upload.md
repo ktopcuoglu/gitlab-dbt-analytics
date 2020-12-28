@@ -43,6 +43,10 @@ If none, please include a description
     * [ ] Submitter to put spreadsheet data into a new file into the [Sheetload > Boneyard GDrive Folder](https://drive.google.com/open?id=1NdA5CDy2kT653qUdqtCiq_RkmRa-LKqs).
     * [ ] Submitter to share it with the required service account - [Email Address to share with](https://docs.google.com/document/d/1m8kky3DPv2yvH63W4NDYFURrhUwRiMKHI-himxn1r7k/edit?usp=sharing) (GitLab Internal)
     * [ ] Submitter to make an MR to [this file](https://gitlab.com/gitlab-data/analytics/-/blob/master/extract/sheetload/boneyard/sheets.yml) adding the new sheet in alphabetical order. 
+    * [ ]  Submitter to run the following CI Jobs on the MR: 
+         - [ ] `clone_prod`
+         - [ ] `clone_prod_real`
+         - [ ] `boneyard_sheetload`
     * [ ] Submitter to assign MR to member of the Data Team
     * [ ] Data Team member to check file name and sheet names to match: The file will be located and loaded based on its name `boneyard.<table_name>`. The names of the sheets shared with the runner must be unique and in the `<file_name>.<tab_name>` format.
     * [ ] Data Team member to merge update after validation of data and MR
