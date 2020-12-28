@@ -1,0 +1,20 @@
+version: 2
+
+models:
+  - name: bamboohr_base_mapping
+    description: This model ties all departments to the last 12 months and is used in downstream models to do rolling 12 month metrics
+
+  - name: bamboohr_budget_vs_actual
+    description: Compares promotion budget spend to the budget aggregated at the division level.
+    columns:
+    - name: fiscal_quarter_name
+    - name: division
+    - name: fiscal_year
+    - name: fiscal_quarter
+    - name: budget
+    - name: excess_from_previous_quarter
+    - name: total_spend
+
+  - name: bamboohr_id_emmployee_number_mapping
+    description: This model is the canonical source mapping bamboo employee numbers with employee IDs. It includes all employees for all time. The model also captures demographic information, and removes test accounts.
+    
