@@ -5,10 +5,9 @@ WITH bamboohr_directory AS (
 
 ), intermediate AS (
 
-    SELECT
-      employee_id,
-      work_email,
-      DATE_TRUNC(day, uploaded_at) AS uploaded_at
+    SELECT *,
+      LAST_VALUE(DATE_TRUNC(DAY, uploaded_at)) OVER 
+            (PARTITION BY employee_id ORDER BY uploaded_at)                         AS max_uploaded_date
     FROM bamboohr_directory
     QUALIFY ROW_NUMBER() OVER (PARTITION BY employee_id, work_email ORDER BY uploaded_at) = 1       
 

@@ -19,7 +19,7 @@ WITH source AS (
       data_by_row['jobTitle']::varchar 			AS job_title,
 	  data_by_row['supervisor']::varchar 		AS supervisor,
 	  data_by_row['workEmail']::varchar			AS work_email,
-      uploaded_at
+      DATE_TRUNC(day, uploaded_at)              AS uploaded_at
     FROM intermediate
 
 ), final AS (
