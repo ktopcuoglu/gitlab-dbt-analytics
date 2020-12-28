@@ -171,6 +171,12 @@ models:
           - not_null
           - unique
         tags: ["tdf", "common", "geo"]
+  
+  - name: dim_gitlab_dotcom_gitlab_emails
+    description: '{{ doc("dim_gitlab_dotcom_gitlab_emails") }}'
+
+  - name: dim_gitlab_versions
+    description: '{{ doc("dim_gitlab_versions") }}'
 
   - name: dim_gitlab_versions
     description: '{{ doc("dim_gitlab_versions") }}'
