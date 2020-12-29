@@ -30,8 +30,7 @@ WITH source AS (
       data_by_row['urls']::VARCHAR                         AS pi_url,
       data_by_row['sisense_data'].chart::VARCHAR           AS sisense_chart_id,
       data_by_row['sisense_data'].dashboard::VARCHAR       AS sisense_dashboard_id,
-      snapshot_date,
-      rank
+      snapshot_date
     FROM intermediate
 
 ), intermediate_stage AS (
