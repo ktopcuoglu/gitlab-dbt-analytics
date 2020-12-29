@@ -844,11 +844,11 @@ models:
       - name: quantity
         description: Total quantity
 
-- name: fct_usage_ci_minutes
+  - name: fct_usage_ci_minutes
     description: '{{ doc("fct_usage_ci_minutes") }}'
     columns:
       - name: snapshot_month
-        description: Month in which CI Minutes usage data was snapshotted, formatted as '20YY-MM-01' 
+        description: Month in which CI Minutes usage data was snapshotted, formatted as `20YY-MM-01`.
         tests:
           - not_null
       - name: namespace_id
@@ -885,7 +885,6 @@ models:
         description: Status of CI Minutes usage against the extra CI Minutes purchased limit by namespaces.
       - name: status_based_plan
         description: Status independent of whether there aren't projects with `shared_runners_enabled` inside the namespaces and only take into account how many minutes have been used from the monthly quota based in the plan of the namespace.
-
 
   - name: fct_usage_data_monthly
     description: '{{ doc("fct_usage_data_monthly") }}'
