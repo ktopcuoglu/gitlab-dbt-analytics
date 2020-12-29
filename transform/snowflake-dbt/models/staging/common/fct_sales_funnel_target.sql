@@ -34,6 +34,9 @@ WITH date AS (
 
   SELECT
 
+    {{ dbt_utils.surrogate_key(['CONCAT(target_matrix.kpi_name, date.first_day_of_month, opportunity_source.dim_opportunity_source_id,
+           order_type.dim_order_type_id, sfdc_user_hierarchy.dim_sales_hierarchy_id, sfdc_user_hierarchy.dim_sales_segment_id,
+           sfdc_user_hierarchy.dim_location_region_id, sfdc_user_hierarchy.dim_sales_region_id, sfdc_user_hierarchy.dim_sales_area_id)']) }}    AS sales_funnel_target_id,
     target_matrix.kpi_name,
     date.first_day_of_month,
     target_matrix.opportunity_source,
