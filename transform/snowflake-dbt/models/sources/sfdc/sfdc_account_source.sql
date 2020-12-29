@@ -33,7 +33,7 @@ WITH source AS (
       technical_account_manager_lu__c            AS technical_account_manager_id,
 
       -- info
-      {{target.schema}}.id15to18(substring(regexp_replace(ultimate_parent_account__c,
+      "{{this.database}}".{{target.schema}}.id15to18(substring(regexp_replace(ultimate_parent_account__c,
                      '_HL_ENCODED_/|<a\\s+href="/', ''), 0, 15))
                                                  AS ultimate_parent_account_id,
       type                                       AS account_type,
@@ -119,7 +119,15 @@ WITH source AS (
       jb_test_sales_segment__c                   AS tsp_test_sales_segment,
       ultimate_parent_sales_segment_employees__c AS sales_segment,
       sales_segmentation_new__c                  AS account_segment,
+      
+      -- ************************************
+      -- NF: 2020-12-17
+      -- these three fields are used to identify accounts owned by reps within hierarchies that they do not fully own
+      -- or even within different regions
 
+      locally_Managed__c                         AS is_locally_managed_account,
+      strategic__c                               AS is_strategic_account,
+      
      -- ************************************
 
       -- metadata
