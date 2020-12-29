@@ -165,6 +165,7 @@ models:
           tests: 
             - not_null 
             - unique
+        - name: gitlab_ops_user_name
         - name: notification_email
         - name: email_handle
         - name: number_of_emails
