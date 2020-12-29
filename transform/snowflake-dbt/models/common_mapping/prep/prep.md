@@ -5,8 +5,62 @@ Cleaning operations vary across columns, depending on the nature of the source d
 
 {% enddocs %}
 
-{% docs prep_crm_person%}
+{% docs prep_geo_area %}
 
-This table creates a singular source for crm_person logic to be used in dim_crm_person and fct_crm_person. It combines unconverted leads and contacts, and maps both to a bizible_person_id.
+Creates a base view with generated keys for the geo_area shared dimension and references in facts.
+
+{% enddocs %}
+
+{% docs prep_geo_region %}
+
+Creates a base view with generated keys for the geo_region shared dimension and references in facts.
+
+{% enddocs %}
+
+{% docs prep_geo_sub_region %}
+
+Creates a base view with generated keys for the geo_sub_region shared dimension and references in facts.
+
+{% enddocs %}
+
+{% docs prep_industry %}
+
+Creates a base view with generated keys for the industry shared dimension and references in facts.
+
+{% enddocs %}
+
+{% docs prep_marketing_channel %}
+
+Creates a base view with generated keys for the marketing channel shared dimension and references in facts.
+
+{% enddocs %}
+
+{% docs prep_opportunity_source %}
+
+Creates a base view with generated keys for the opportunity source shared dimension and references in facts.
+
+{% enddocs %}
+
+{% docs prep_order_type %}
+
+Creates a base view with generated keys for the order type shared dimension and references in facts.
+
+{% enddocs %}
+
+{% docs prep_purchase_channel %}
+
+Creates a base view with generated keys for the purchase channel shared dimension and references in facts.
+
+{% enddocs %}
+
+{% docs prep_sales_segment %}
+
+Creates a base view with generated keys for the sales segment shared dimension and references in facts.
+
+{% enddocs %}
+
+{% docs prep_sales_territory %}
+
+Creates a base view with generated keys for the sales territory shared dimension and references in facts.
 
 {% enddocs %}

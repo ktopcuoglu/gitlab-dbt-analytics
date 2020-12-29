@@ -281,18 +281,3 @@ Industry dimension, based off of salesforce account data, using the `generate_si
 Order type dimension, based off of salesforce opportunity data, using the `generate_single_field_dimension` macro to create the final formatted SQL
 
 {% enddocs %}
-
-{% docs map_merged_crm_account%}
-
-Table mapping current crm account ids to accounts merged in the past.
-
-{% enddocs %}
-
-{% docs dim_quote %}
-Dimensional table representing Zuora quotes and associated metadata.
-
-The grain of the table is a quote_id.
-
-Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
-
-{% enddocs %}
