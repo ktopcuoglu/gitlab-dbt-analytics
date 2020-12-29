@@ -844,6 +844,49 @@ models:
       - name: quantity
         description: Total quantity
 
+- name: fct_usage_ci_minutes
+    description: '{{ doc("fct_usage_ci_minutes") }}'
+    columns:
+      - name: snapshot_month
+        description: Month in which CI Minutes usage data was snapshotted, formatted as '20YY-MM-01' 
+        tests:
+          - not_null
+      - name: namespace_id
+        description: ID of the namespace responsible for the CI Minutes usage.
+        tests:
+          - not_null
+      - name: ultimate_parent_namespace_id
+        description: ID of the namespace's ultimate parent namespace.
+        tests:
+          - not_null
+      - name: namespace_type
+        description: Group, Individual, or NULL. For example https://gitlab.com/gitlab-data is a Group namespace.
+      - name: visibility_level
+        description: Public, Private, or NULL.
+      - name: shared_runners_minutes_used_overall
+        description: Total CI Minutes used in the snapshot month.
+        tests:
+          - not_null
+      - name: used
+        description: CI Minutes used against the tier-based limit in a given snapshot month.
+      - name: used_purchased
+        description: Purchased extra CI Minutes used in a given snapshot month.
+      - name:  limit
+        description: Monthly CI Minutes limit of the namespace, based on its [product tier](https://about.gitlab.com/pricing/).
+        tests:
+          - not_null
+      - name: limit_purchased
+        description: Limit of extra CI Minutes purchased once monthly minutes have been used up.
+      - name: limit_based_plan
+        description: Limit independent of whether there aren't projects with `shared_runners_enabled` inside the namespaces and only take into account how many minutes have been used from the monthly quota based in the plan of the namespace.
+      - name: status
+        description: Status of CI Minutes usage against the tier-based limit by namespaces with `shared_runners_minutes_limit` enabled. Over Quota, Under Quota, or Disabled.
+      - name: status_purchased
+        description: Status of CI Minutes usage against the extra CI Minutes purchased limit by namespaces.
+      - name: status_based_plan
+        description: Status independent of whether there aren't projects with `shared_runners_enabled` inside the namespaces and only take into account how many minutes have been used from the monthly quota based in the plan of the namespace.
+
+
   - name: fct_usage_data_monthly
     description: '{{ doc("fct_usage_data_monthly") }}'
     columns:
