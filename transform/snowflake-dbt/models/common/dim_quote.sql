@@ -3,7 +3,7 @@
     })
 }}
 
-WITH sfdc_quote_source AS (
+WITH sfdc_zqu_quote_source AS (
 
     SELECT *
     FROM {{ ref('sfdc_zqu_quote_source') }}
