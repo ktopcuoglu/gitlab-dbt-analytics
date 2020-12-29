@@ -12,12 +12,12 @@ WITH sfdc_quote_source AS (
 ), final AS (
 
     SELECT
-      quote_id                                         AS dim_quote_id,
-      quote_name,
-      quote_status,
-      is_primary_quote,
-      date_trunc('month', opps.closedate::DATE)        AS quote_close_month,
-      quote.zqu__startdate__c::DATE                    AS quote_start_date
+      quote_id                                      AS dim_quote_id,
+      zqu__number                                   AS quote_number,
+      zqu_quote_name                                AS quote_name,
+      zqu__status                                   AS quote_status,
+      zqu__primary                                  AS is_primary_quote,
+      zqu__start_date                               AS quote_start_date
     FROM sfdc_quote_source
 
 )
