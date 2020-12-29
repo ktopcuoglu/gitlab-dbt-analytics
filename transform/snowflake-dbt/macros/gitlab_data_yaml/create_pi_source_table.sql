@@ -2,16 +2,14 @@
 
 WITH source AS (
 
-    SELECT *,
-      RANK() OVER (PARTITION BY DATE_TRUNC('day', uploaded_at) ORDER BY uploaded_at DESC) AS rank
+    SELECT *
     FROM {{ source_performance_indicator }}
 
 ), intermediate AS (
 
     SELECT
       d.value                                 AS data_by_row,
-      date_trunc('day', uploaded_at)::date    AS snapshot_date,
-      rank
+      date_trunc('day', uploaded_at)::date    AS snapshot_date
     FROM source,
     LATERAL FLATTEN(INPUT => parse_json(jsontext), OUTER => TRUE) d
 
