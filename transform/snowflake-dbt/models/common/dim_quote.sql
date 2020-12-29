@@ -6,7 +6,7 @@
 WITH sfdc_quote_source AS (
 
     SELECT *
-    FROM {{ ref('sfdc_quote_source') }}
+    FROM {{ ref('sfdc_zqu_quote_source') }}
     WHERE is_deleted = FALSE
 
 ), final AS (
@@ -18,7 +18,7 @@ WITH sfdc_quote_source AS (
       zqu__status                                   AS quote_status,
       zqu__primary                                  AS is_primary_quote,
       zqu__start_date                               AS quote_start_date
-    FROM sfdc_quote_source
+    FROM sfdc_zqu_quote_source
 
 )
 
