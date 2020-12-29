@@ -3,18 +3,18 @@
   })
 }}
 
-{{ generate_single_field_dimension(model_name="sfdc_users_source",
-                                   id_column="user_geo",
-                                   id_column_name="dim_location_region_id",
-                                   dimension_column="user_geo",
-                                   dimension_column_name="location_region_name",
-                                   where_clause=None)
-}}
+WITH location_region AS (
+
+    SELECT
+      dim_location_region_id
+      ,location_region_name
+    FROM {{ ref('prep_location_region') }}
+)
 
 {{ dbt_audit(
-    cte_ref="unioned",
+    cte_ref="location_region",
     created_by="@mcooperDD",
     updated_by="@mcooperDD",
-    created_date="2020-12-15",
-    updated_date="2020-12-15"
+    created_date="2020-12-29",
+    updated_date="2020-12-29"
 ) }}

@@ -6,7 +6,7 @@
 WITH location_region AS (
 
     SELECT *
-    FROM {{ ref('dim_location_region') }}
+    FROM {{ ref('prep_location_region') }}
 
 ), maxmind_countries_source AS (
 
