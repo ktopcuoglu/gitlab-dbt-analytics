@@ -158,6 +158,20 @@ models:
           - not_null
         tags: ["tdf", "common", "geo"]
 
+  - name: dim_gitlab_ops_gitlab_emails
+    description: '{{ doc("gitlab_dotcom_gitlab_emails") }}'
+    columns:
+        - name: user_id
+          tests: 
+            - not_null 
+            - unique
+        - name: notification_email
+        - name: email_handle
+        - name: number_of_emails
+          tests:
+            - accepted_values:
+                values: ['1']
+
   - name: dim_geo_area
     description: "Dimension table for geographic area built off ATAM_Area__C in SFDC. Example values: Southern PNW, India, Northeast"
     columns:
