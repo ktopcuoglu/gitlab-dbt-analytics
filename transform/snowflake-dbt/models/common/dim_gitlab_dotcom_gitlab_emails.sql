@@ -46,9 +46,9 @@ WITH gitlab_dotcom_members AS (
       WHEN notification_email LIKE '%test%'                 THEN NULL   -- removes accounts with more than three xs
       WHEN notification_email NOT LIKE '%@gitlab.com'       THEN NULL  
     ELSE notification_email END                                AS notification_email
-    FROM gitlab_dotcom_user_ids
+    FROM gitlab_dotcom_team_members_user_id
     INNER JOIN gitlab_dotcom_users_xf AS users
-      ON gitlab_dotcom_user_ids.gitlab_dotcom_user_id = users.user_id
+      ON gitlab_dotcom_team_members_user_id.gitlab_dotcom_user_id = users.user_id
     WHERE user_name NOT ILIKE '%admin%'
   
 ), supplement_notification_emails_with_additional_gitlab_emails AS (
