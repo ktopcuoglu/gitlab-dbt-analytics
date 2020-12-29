@@ -59,8 +59,8 @@ WITH gitlab_dotcom_members AS (
       user_name                                                AS gitlab_dotcom_user_name,
       COALESCE(notification_email,email_address)               AS gitlab_dotcom_email_address
     FROM gitlab_dotcom_notification_emails
-    LEFT JOIN gitlab_dotcom_gitlab_emails 
-      ON gitlab_dotcom_notification_emails.gitlab_dotcom_user_id = gitlab_dotcom_gitlab_emails.user_id 
+    LEFT JOIN gitlab_dotcom_gitlab_emails_cleaned 
+      ON gitlab_dotcom_notification_emails.gitlab_dotcom_user_id = gitlab_dotcom_gitlab_emails_cleaned.user_id 
 
 ), all_known_employee_gitlab_emails AS (
 
