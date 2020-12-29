@@ -199,6 +199,11 @@ sheets:
     owner: '@kathleentam'
     tabs:
       - data_team_capacity
+
+  - name: percent_over_comp_band_historical
+    owner: '@pluthra'
+    tabs: 
+      - percent_over_comp_band_historical    
   - name: product_maturity_historical
     owner: '@pluthra'
     tabs:

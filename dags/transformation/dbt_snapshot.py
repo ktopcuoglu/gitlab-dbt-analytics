@@ -18,8 +18,6 @@ from airflow_utils import (
     gitlab_pod_env_vars,
     slack_failed_task,
     slack_snapshot_failed_task,
-    l_warehouse,
-    xs_warehouse,
     dbt_install_deps_and_seed_cmd,
     clone_repo_cmd,
 )
@@ -89,7 +87,7 @@ dag = DAG("dbt_snapshots", default_args=default_args, schedule_interval="0 */8 *
 # dbt-snapshot for daily tag
 dbt_snapshot_cmd = f"""
     {dbt_install_deps_nosha_cmd} &&
-    dbt snapshot -s tag:daily --profiles-dir profile --exclude path:snapshots/zuora; ret=$?;
+    dbt snapshot -s tag:daily --profiles-dir profile --exclude path:snapshots/zuora path:snapshots/sfdc; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py snapshots; exit $ret
 """
 
@@ -143,7 +141,8 @@ dbt_commit_hash_exporter = PythonOperator(
 dbt_snapshot_models_command = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_and_seed_cmd} &&
-    dbt run --profiles-dir profile --target prod --models snapshots --vars {l_warehouse}; ret=$?;
+    export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_L" &&
+    dbt run --profiles-dir profile --target prod --models +legacy.snapshots; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
 
@@ -163,7 +162,7 @@ dbt_snapshot_models_run = KubernetesPodOperator(
 dbt_test_snapshots_cmd = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
-    dbt test --profiles-dir profile --target prod --vars {xs_warehouse} --models snapshots; ret=$?;
+    dbt test --profiles-dir profile --target prod --models +legacy.snapshots; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py test; exit $ret
 """
 

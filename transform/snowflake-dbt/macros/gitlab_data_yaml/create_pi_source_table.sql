@@ -2,20 +2,18 @@
 
 WITH source AS (
 
-    SELECT *,
-      RANK() OVER (PARTITION BY DATE_TRUNC('day', uploaded_at) ORDER BY uploaded_at DESC) AS rank
+    SELECT *
     FROM {{ source_performance_indicator }}
 
 ), intermediate AS (
 
     SELECT
       d.value                                 AS data_by_row,
-      date_trunc('day', uploaded_at)::date    AS snapshot_date,
-      rank
+      date_trunc('day', uploaded_at)::date    AS snapshot_date
     FROM source,
     LATERAL FLATTEN(INPUT => parse_json(jsontext), OUTER => TRUE) d
 
-), intermediate_stage AS (
+), renamed AS (
 
      SELECT 
       data_by_row['name']::VARCHAR                         AS pi_name,
@@ -30,14 +28,28 @@ WITH source AS (
       data_by_row['urls']::VARCHAR                         AS pi_url,
       data_by_row['sisense_data'].chart::VARCHAR           AS sisense_chart_id,
       data_by_row['sisense_data'].dashboard::VARCHAR       AS sisense_dashboard_id,
-      snapshot_date,
-      rank
+      snapshot_date
     FROM intermediate
+
+), intermediate_stage AS (
+
+    SELECT 
+      {{ dbt_utils.surrogate_key(['pi_name', 'org_name', 'pi_definition','is_key','is_public','is_embedded','pi_target','pi_url']) }} AS unique_key,
+      renamed.*
+    FROM renamed
+
+), final AS (
+
+    SELECT *,
+      FIRST_VALUE(snapshot_date) OVER (PARTITION BY pi_name ORDER BY snapshot_date) AS date_first_added, 
+      MIN(snapshot_date) OVER (PARTITION BY unique_key ORDER BY snapshot_date)      AS valid_from_date,
+      MAX(snapshot_date) OVER (PARTITION BY unique_key ORDER BY snapshot_date DESC) AS valid_to_date
+    FROM intermediate_stage
 
 )
 
 SELECT *
-FROM intermediate_stage
+FROM final
 
 
- {% endmacro %}
+{% endmacro %}
