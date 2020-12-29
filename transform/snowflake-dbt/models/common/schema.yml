@@ -970,8 +970,8 @@ models:
         tests:
           - not_null
           - unique
-      - name: quote_number
       - name: quote_name
       - name: quote_status
+      - name: is_primary_quote
       - name: quote_close_month
       - name: quote_start_date

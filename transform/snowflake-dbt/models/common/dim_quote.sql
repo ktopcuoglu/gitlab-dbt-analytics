@@ -13,9 +13,9 @@ WITH sfdc_quote_source AS (
 
     SELECT
       quote_id                                         AS dim_quote_id,
-      quote_number,
       quote_name,
       quote_status,
+      is_primary_quote,
       date_trunc('month', opps.closedate::DATE)        AS quote_close_month,
       quote.zqu__startdate__c::DATE                    AS quote_start_date
     FROM sfdc_quote_source
