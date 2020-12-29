@@ -1,8 +1,3 @@
-{{ config({
-        "schema": "common"
-    })
-}}
-
 WITH sfdc_zqu_quote_source AS (
 
     SELECT *
