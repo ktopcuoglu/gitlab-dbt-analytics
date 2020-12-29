@@ -961,3 +961,17 @@ models:
         tests:
           - not_null
         tags: ["tdf", "common", "crm_account"]
+
+  - name: dim_quote
+    description: '{{ doc("dim_quote") }}'
+    columns:
+      - name: dim_quote_id
+        description: The unique identifier for each of the quotes.
+        tests:
+          - not_null
+          - unique
+      - name: quote_number
+      - name: quote_name
+      - name: quote_status
+      - name: quote_close_month
+      - name: quote_start_date
