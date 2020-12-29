@@ -312,6 +312,7 @@ roles:
     - analyst_finance:
         warehouses:
             - analyst_xs
+            - analyst_l
         member_of:
             - analyst_core
             - boneyard
@@ -899,6 +900,7 @@ roles:
                     - analytics.common_mart_sales
                     - analytics.legacy
                     - analytics.workspace_data
+                    - analytics.workspace_marketing
                     - prep.dbt
                     - raw.dbt
             tables:
@@ -909,6 +911,7 @@ roles:
                     - analytics.common_mart_sales.*
                     - analytics.legacy.*
                     - analytics.workspace_data.*
+                    - analytics.workspace_marketing.*
                     - prep.dbt.*
                     - raw.dbt.*
 
