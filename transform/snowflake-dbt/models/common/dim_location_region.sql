@@ -1,8 +1,8 @@
 WITH location_region AS (
 
     SELECT
-      dim_location_region_id
-      ,location_region_name
+      dim_location_region_id,
+      location_region_name
     FROM {{ ref('prep_location_region') }}
 )
 
