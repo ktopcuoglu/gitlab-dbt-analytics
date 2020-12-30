@@ -6,5 +6,5 @@ models:
     columns:
       - name: contributor_name
       - name: git_sha
-      - name: git_timestamp
+      - name: git_commit_at
       - name: git_message

@@ -22,7 +22,6 @@ from kubernetes_helpers import get_affinity, get_toleration
 # Load the env vars into a dict and set Secrets
 env = os.environ.copy()
 GIT_BRANCH = env["GIT_BRANCH"]
-pod_env_vars = {**gitlab_pod_env_vars, **{}}
 
 # Default arguments for the DAG
 default_args = {
@@ -31,7 +30,6 @@ default_args = {
     "on_failure_callback": slack_failed_task,
     "owner": "airflow",
     "retries": 0,
-    "retry_delay": timedelta(minutes=1),
     "start_date": datetime(2019, 1, 1),
     "dagrun_timeout": timedelta(hours=2),
 }
@@ -78,7 +76,7 @@ values_run = KubernetesPodOperator(
     ],
     affinity=get_affinity(False),
     tolerations=get_toleration(False),
-    env_vars=pod_env_vars,
+    env_vars=gitlab_pod_env_vars,
     arguments=[container_cmd],
     dag=dag,
 )
