@@ -22,7 +22,7 @@ WITH gitlab_dotcom_gitlab_emails AS (
       AND email_handle NOT LIKE '%hack%'  -- removes hack accounts
       AND email_handle NOT LIKE '%xxx%'   -- removes accounts with more than three xs
       AND email_handle NOT LIKE '%gitlab%'-- removes accounts that have the word gitlab
-      AND email_handle NOT LIKE '%test%'  -- removes accounts with more than three xs
+      AND email_handle NOT LIKE '%test%'  -- removes accounts with test in the name
       AND email_handle NOT IN (           -- removes duplicate emails 
                                 'mckai.javeion',
                                 'deandre',
