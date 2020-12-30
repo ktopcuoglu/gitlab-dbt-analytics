@@ -17,3 +17,12 @@ Table for mapping ip address ranges to location ids.
 {% docs map_product_tier %}
  Table for mapping Zuora Product Rate Plans to Product Tier, Delivery Type, and Ranking.
 {% enddocs %}
+
+{% docs prep_product_tier %}
+ This table creates keys for the common product tier dimension that is used across gitlab.com and Zuora data sources. 
+ The granularity of the table is product tier.
+{% enddocs %}
+
+{% docs map_namespace_internal %}
+This View contains the list of ultimate parent namespace ids that are internal to gitlab. In the future this list should be sourced from an upstream data sources or determined based on billing account in customer db if possible.
+{% enddocs %}

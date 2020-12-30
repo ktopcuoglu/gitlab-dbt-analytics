@@ -86,3 +86,30 @@ models:
         description: "How product is delivered to customer; SaaS or Self-Managed (or Other)"
       - name: product_ranking
         description: "Numeric product pricing tier, independent of delivery type"
+
+  - name: prep_product_tier
+    description: '{{ doc("prep_product_tier") }}'
+    columns:
+      - name: dim_product_tier_id
+        description: "The unique identifier of Pricing tiers for Zuora Products"
+        tests:
+          - not_null
+          - unique
+      - name: product_tier_name
+        description: "Product pricing tiers for both SaaS and Self-Managed customers (https://about.gitlab.com/handbook/marketing/strategic-marketing/tiers/)"
+        tests:
+          - not_null
+          - unique
+      - name: product_delivery_type
+        description: "How product is delivered to customer; SaaS or Self-Managed (or Other)"
+      - name: product_ranking
+        description: "Numeric product pricing tier, independent of delivery type"
+
+  - name: map_namespace_internal
+    description: '{{ doc("map_namespace_internal") }}'
+    columns:
+      - name: ultimate_parent_namespace_id
+        description: "The ultimate parent namespace identifiers that are internal to gitlab."
+        tests:
+          - not_null
+          - unique

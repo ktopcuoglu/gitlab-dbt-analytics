@@ -1,53 +1,23 @@
-WITH product_tier_mapping AS (
+WITH prep_product_tier AS (
 
     SELECT *
-    FROM {{ ref('map_product_tier') }}
-
-), mapping AS (
-
-    SELECT DISTINCT 
-      product_tier,
-      product_delivery_type,
-      product_ranking        
-    FROM product_tier_mapping
-    
-    UNION
-    
-    SELECT
-      'Free'                                        AS product_tier,
-      'SaaS'                                        AS product_delivery_type,
-      0                                             AS product_ranking
-    
-    UNION
-    
-    SELECT
-      'Core'                                        AS product_tier,
-      'Self-Managed'                                AS product_delivery_type,
-      0                                             AS product_ranking
+    FROM {{ ref('prep_product_tier') }}
 
 ), final AS (
 
   SELECT
-    {{ dbt_utils.surrogate_key(['product_tier']) }} AS dim_product_tier_id,
-    product_tier                                    AS product_tier_name,
+    dim_product_tier_id,
+    product_tier_name,
     product_delivery_type,
     product_ranking
-  FROM mapping
+  FROM prep_product_tier
   
-  UNION ALL
-  
-  SELECT
-    MD5('-1')                                       AS dim_product_tier_id,
-    '(Unknown Tier)'                                AS product_tier_name,
-    '(Unknown Delivery Type)'                       AS product_delivery_type,
-    -1                                              AS product_ranking
-
 )
 
 {{ dbt_audit(
     cte_ref="final",
-    created_by="@ischweickartDD",
-    updated_by="@ischweickartDD",
-    created_date="2020-12-15",
-    updated_date="2020-12-15"
+    created_by="@snalamaru",
+    updated_by="@snalamaru",
+    created_date="2020-12-28",
+    updated_date="2020-12-28"
 ) }}
