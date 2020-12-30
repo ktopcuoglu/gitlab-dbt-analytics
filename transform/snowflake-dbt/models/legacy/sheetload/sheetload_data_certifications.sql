@@ -9,6 +9,9 @@
                ref('sheetload_cert_product_geo_dashboard_source'),
                ref('sheetload_cert_product_geo_sql_source'),
                ref('sheetload_cert_product_geo_viewer_source'),
-               ref('sheetload_cert_customer_segmentation_viewer_source')]
+               ref('sheetload_cert_customer_segmentation_viewer_source'),
+               ref('sheetload_cert_pricing_customer_discount_dashboard_source'),
+               ref('sheetload_cert_pricing_customer_discount_viewer_source')
+               ]
 ) }}
 

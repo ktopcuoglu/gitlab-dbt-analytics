@@ -229,6 +229,8 @@ sheets:
       - cert_customer_segmentation_sql
       - cert_product_geo_viewer
       - cert_customer_segmentation_viewer
+      - cert_pricing_customer_discount_dashboard
+      - cert_pricing_customer_discount_viewer
   - name: engineering_infra_prod_console_access
     description: This data contains summarized rails-console and GCP read and write access data in support of an Engineering KPI
     owner: '@kwiebers'
