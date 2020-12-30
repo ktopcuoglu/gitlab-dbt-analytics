@@ -1,5 +1,4 @@
 {{ config({
-    "materialized": "incremental",
     "unique_key": "run_unique_key"
     })
 }}
