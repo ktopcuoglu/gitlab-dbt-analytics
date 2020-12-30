@@ -40,7 +40,7 @@ WITH product_tier_mapping AS (
 ), final AS (
 
   SELECT
-    md5(CAST(COALESCE(CAST(product_tier AS VARCHAR), '') AS VARCHAR))        AS dim_product_tier_id,
+    {{ dbt_utils.surrogate_key(['product_tier']) }}                          AS dim_product_tier_id,
     product_tier                                                             AS product_tier_name,
     product_delivery_type,
     product_ranking
