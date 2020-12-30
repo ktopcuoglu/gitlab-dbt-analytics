@@ -16,7 +16,7 @@ WITH map_namespace_internal AS (
 ), members AS (
 
     SELECT members.source_id,
-       COUNT(DISTINCT members.member_id) AS member_count
+      COUNT(DISTINCT members.member_id) AS member_count
     FROM {{ref('gitlab_dotcom_members')}} members
     WHERE is_currently_valid = TRUE
     AND members.member_source_type = 'Namespace'
@@ -26,7 +26,7 @@ WITH map_namespace_internal AS (
 ), projects AS (
 
     SELECT projects.namespace_id,
-       COUNT(DISTINCT projects.project_id) AS project_count 
+      COUNT(DISTINCT projects.project_id) AS project_count 
     FROM {{ref('gitlab_dotcom_projects')}} projects
     GROUP BY projects.namespace_id
   
@@ -42,7 +42,7 @@ WITH map_namespace_internal AS (
       entity_id AS group_id
     FROM {{ ref('gitlab_dotcom_audit_events') }} AS audit_events 
     JOIN {{ ref('gitlab_dotcom_audit_event_details_clean') }}  AS audit_event_details_clean
-        ON audit_event_details_clean.audit_event_id = audit_events.audit_event_id
+      ON audit_event_details_clean.audit_event_id = audit_events.audit_event_id
     WHERE entity_type = 'Group'
       AND key_name = 'add'
       AND key_value = 'group'
