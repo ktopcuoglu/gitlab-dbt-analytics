@@ -1002,10 +1002,12 @@ roles:
             schemas:
                 read:
                     - prep.gitlab_dotcom
+                    - prep.sensitive
                     - raw.tap_postgres
             tables:
                 read:
                     - prep.gitlab_dotcom.*
+                    - prep.sensitive.gitlab_dotcom*
                     - raw.tap_postgres.gitlab_db*
 
     - google_analytics_360:

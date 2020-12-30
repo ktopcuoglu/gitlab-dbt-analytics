@@ -158,6 +158,21 @@ models:
           - not_null
         tags: ["tdf", "common", "geo"]
 
+  - name: dim_gitlab_ops_gitlab_emails
+    description: '{{ doc("gitlab_dotcom_gitlab_emails") }}'
+    columns:
+        - name: user_id
+          tests:
+            - not_null
+            - unique
+        - name: gitlab_ops_user_name
+        - name: notification_email
+        - name: email_handle
+        - name: number_of_emails
+          tests:
+            - accepted_values:
+                values: ['1']
+
   - name: dim_geo_area
     description: "Dimension table for geographic area built off ATAM_Area__C in SFDC. Example values: Southern PNW, India, Northeast"
     columns:
@@ -171,6 +186,9 @@ models:
           - not_null
           - unique
         tags: ["tdf", "common", "geo"]
+  
+  - name: dim_gitlab_dotcom_gitlab_emails
+    description: '{{ doc("dim_gitlab_dotcom_gitlab_emails") }}'
 
   - name: dim_gitlab_versions
     description: '{{ doc("dim_gitlab_versions") }}'
@@ -345,6 +363,29 @@ models:
           - not_null
           - unique
 
+  - name: dim_location_country
+    description: '{{ doc("dim_location_country") }}'
+    columns:
+      - name: country_name
+        tests:
+          - not_null
+      - name: iso_2_country_code
+        tests:
+          - not_null
+          - unique
+      - name: dim_location_country_id
+        tests:
+          - not_null
+          - unique
+
+  - name: dim_location_region
+    description: '{{ doc("dim_location_region") }}'
+    columns:
+      - name: dim_location_region_id
+        tests:
+          - not_null
+          - unique
+
   - name: dim_product_detail
     description: '{{ doc("dim_product_detail") }}'
     columns:
@@ -413,7 +454,7 @@ models:
         description: The date when the product becomes available and can be subscribed to
       - name: effective_end_date
         description: The date when the product expires and can't be subscribed to anymore
-        
+
   - name: dim_product_tier
     description: '{{ doc("dim_product_tier") }}'
     columns:

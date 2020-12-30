@@ -50,6 +50,18 @@ Dimensional table for geo locations.
 
 {% enddocs %}
 
+{% docs dim_location_country %}
+
+Dimensional table for countries mapped to larger regions.
+
+{% enddocs %}
+
+{% docs dim_location_region %}
+
+Dimensional table for geographic regions.
+
+{% enddocs %}
+
 {% docs dim_product_detail %}
 Dimensional table representing GitLab's Product Catalog. The Product Catalog is created and maintained through the Price Master Management business process and can be found in the [handbook](https://about.gitlab.com/handbook/finance/sox-internal-controls/quote-to-cash/#2-price-master-management).
 
@@ -162,6 +174,25 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 Dimensional table representing generated licenses and associated metadata.
 
 The grain of the table is a license_id.
+
+Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+{% enddocs %}
+
+{% docs dim_gitlab_dotcom_gitlab_emails %}
+Dimensional table representing the best email address for GitLab employees from the GitLab.com data source 
+
+The grain of the table is a GitLab.com user_id.
+
+Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+{% enddocs %}
+
+
+{% docs dim_gitlab_ops_gitlab_emails %}
+Dimensional table representing the best email address for GitLab team members from the Ops.GitLab.Net data source using the gitlab email address to identify GitLab team members
+
+The grain of the table is a Ops.GitLab.Net user_id.
 
 Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
 
