@@ -29,6 +29,12 @@ Creates a base view with generated keys for the industry shared dimension and re
 
 {% enddocs %}
 
+{% docs prep_location_region %}
+
+Creates a base view with generated keys for the geographic region shared dimension and references in facts.
+
+{% enddocs %}
+
 {% docs prep_marketing_channel %}
 
 Creates a base view with generated keys for the marketing channel shared dimension and references in facts.

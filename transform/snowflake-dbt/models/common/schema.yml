@@ -363,6 +363,29 @@ models:
           - not_null
           - unique
 
+  - name: dim_location_country
+    description: '{{ doc("dim_location_country") }}'
+    columns:
+      - name: country_name
+        tests:
+          - not_null
+      - name: iso_2_country_code
+        tests:
+          - not_null
+          - unique
+      - name: dim_location_country_id
+        tests:
+          - not_null
+          - unique
+
+  - name: dim_location_region
+    description: '{{ doc("dim_location_region") }}'
+    columns:
+      - name: dim_location_region_id
+        tests:
+          - not_null
+          - unique
+
   - name: dim_product_detail
     description: '{{ doc("dim_product_detail") }}'
     columns:

@@ -50,6 +50,18 @@ Dimensional table for geo locations.
 
 {% enddocs %}
 
+{% docs dim_location_country %}
+
+Dimensional table for countries mapped to larger regions.
+
+{% enddocs %}
+
+{% docs dim_location_region %}
+
+Dimensional table for geographic regions.
+
+{% enddocs %}
+
 {% docs dim_product_detail %}
 Dimensional table representing GitLab's Product Catalog. The Product Catalog is created and maintained through the Price Master Management business process and can be found in the [handbook](https://about.gitlab.com/handbook/finance/sox-internal-controls/quote-to-cash/#2-price-master-management).
 
