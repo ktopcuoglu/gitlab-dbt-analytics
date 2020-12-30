@@ -1,7 +1,7 @@
 version: '3.7'
 services:
     airflow_webserver:
-        image: registry.gitlab.com/gitlab-data/data-image/airflow-image:v0.0.13
+        image: registry.gitlab.com/gitlab-data/data-image/airflow-image:v0.0.9
         restart: always
         ports:
           - "8080:8080"
@@ -33,7 +33,7 @@ services:
             read_only: True
 
     airflow_scheduler:
-        image: registry.gitlab.com/gitlab-data/data-image/airflow-image:v0.0.13
+        image: registry.gitlab.com/gitlab-data/data-image/airflow-image:v0.0.9
         restart: always
         ports:
           - "8793:8793"
