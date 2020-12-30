@@ -50,6 +50,18 @@ Dimensional table for geo locations.
 
 {% enddocs %}
 
+{% docs dim_location_country %}
+
+Dimensional table for countries mapped to larger regions.
+
+{% enddocs %}
+
+{% docs dim_location_region %}
+
+Dimensional table for geographic regions.
+
+{% enddocs %}
+
 {% docs dim_product_detail %}
 Dimensional table representing GitLab's Product Catalog. The Product Catalog is created and maintained through the Price Master Management business process and can be found in the [handbook](https://about.gitlab.com/handbook/finance/sox-internal-controls/quote-to-cash/#2-price-master-management).
 
@@ -167,6 +179,25 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
+{% docs dim_gitlab_dotcom_gitlab_emails %}
+Dimensional table representing the best email address for GitLab employees from the GitLab.com data source 
+
+The grain of the table is a GitLab.com user_id.
+
+Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+{% enddocs %}
+
+
+{% docs dim_gitlab_ops_gitlab_emails %}
+Dimensional table representing the best email address for GitLab team members from the Ops.GitLab.Net data source using the gitlab email address to identify GitLab team members
+
+The grain of the table is a Ops.GitLab.Net user_id.
+
+Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+{% enddocs %}
+
 {% docs dim_gitlab_versions %}
 Dimensional table representing released versions of GitLab.
 
@@ -273,8 +304,14 @@ Order type dimension, based off of salesforce opportunity data, using the `gener
 
 {% enddocs %}
 
-{% docs map_merged_crm_account%}
+{% docs dim_namespace%}
 
-Table mapping current crm account ids to accounts merged in the past.
+Includes all columns from the namespaces base model. The plan columns in this table (gitlab_plan_id, gitlab_plan_title, gitlab_plan_is_paid) reference the plan that is inheritted from the namespace's ultimate parent. 
+
+This table add a count of members and projects currently associated with the namespace.
+Boolean columns: gitlab_plan_is_paid, namespace_is_internal, namespace_is_ultimate_parent
+
+A NULL namespace type defaults to "Individual".
+This table joins to common product tier dimension via dim_product_tier_id to get the current product tier.
 
 {% enddocs %}

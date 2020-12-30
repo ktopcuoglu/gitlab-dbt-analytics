@@ -1,7 +1,7 @@
 WITH employees AS (
 
     SELECT * 
-    FROM {{ref('bamboohr_id_employee_number_mapping')}}
+    FROM {{ref('bamboohr_id_employee_number_mapping_source')}}
 
 ), greenhouse_applications AS (
 
@@ -21,7 +21,7 @@ WITH employees AS (
  ), bamboohr_job_info AS (
 
     SELECT *
-    FROM {{ ref('bamboohr_job_info') }}
+    FROM {{ ref('bamboohr_job_info_source') }}
     QUALIFY ROW_NUMBER() OVER (PARTITION BY employee_id ORDER BY effective_date) = 1
 
 ), aggregated AS (

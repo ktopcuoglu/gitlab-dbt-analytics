@@ -134,6 +134,10 @@ models:
         +materialized: table
         +schema: airflow
 
+      bamboohr:
+        +materialized: table
+        +schema: bamboohr
+
       customers:
         +schema: customers
         sensitive:
@@ -149,7 +153,7 @@ models:
         +schema: date
 
       dbt:
-        +materialized: table
+        +materialized: incremental
         +schema: dbt
         +tags: ["dbt"]
 
@@ -262,6 +266,17 @@ models:
     legacy:
       +materialized: table
 
+      bamboohr:
+        sensitive:
+          +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
+          +schema: sensitive
+          secure: true
+      
+      datasiren:
+        +schema: workspace_data
+        +materialized: view
+        +tags: ["datasiren"]
+
       date:
         +materialized: view
 
@@ -330,6 +345,8 @@ models:
       dbt:
         +tags: ["dbt"]
 
+    workspace_marketing:
+      +schema: workspace_marketing
 
     # ------------------
     # Marts
@@ -348,15 +365,6 @@ models:
     # ------------------
     # Legacy Structure
     # ------------------
-    bamboohr:
-      +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
-      +schema: sensitive
-      secure: true
-      base:
-        +materialized: table
-      rpt:
-        +database: "{{ env_var('SNOWFLAKE_TRANSFORM_DATABASE') }}"
-
 
     covid19:
       +schema: covid19

@@ -62,7 +62,7 @@ WITH greenhouse_openings AS (
 ), hires AS (
   
     SELECT *
-    FROM {{ref('bamboohr_id_employee_number_mapping')}}
+    FROM {{ref('bamboohr_id_employee_number_mapping_source')}}
 
 
 ), greenhouse_jobs_offices AS (
