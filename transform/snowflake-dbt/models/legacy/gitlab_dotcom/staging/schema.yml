@@ -1,6 +1,20 @@
 version: 2
 
 models:
+  - name: gitlab_dotcom_gitlab_emails_cleaned
+    description: '{{ doc("gitlab_dotcom_gitlab_emails_cleaned") }}'
+    columns:
+      - name: user_id
+        tests:
+          - not_null
+          - unique
+      - name: email_address
+      - name: email_handle
+      - name: number_of_emails
+        tests:
+          - accepted_values:
+              values: ['1']
+
   - name: gitlab_dotcom_groups
     description: '{{ doc("gitlab_dotcom_groups") }}'
     columns:
