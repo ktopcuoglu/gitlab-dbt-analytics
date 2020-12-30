@@ -22,6 +22,9 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'application_settings'
     export_table_primary_key: id
+    advanced_metadata: true
+    dbt_source_model: true
+    dbt_snapshots: true
   award_emoji:
     import_db: GITLAB_DB
     import_query: >
