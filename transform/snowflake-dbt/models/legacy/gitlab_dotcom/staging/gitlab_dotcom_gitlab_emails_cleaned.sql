@@ -16,7 +16,7 @@ WITH gitlab_dotcom_gitlab_emails AS (
     WHERE length (email_handle) > 3       -- removes records with just one number  
       AND email_handle IS NOT NULL 
       AND email_handle NOT LIKE '%-%'     -- removes any emails with special character - 
-      AND email_handle NOT LIKE '%~%'     -- removes admin accounts 
+      AND email_handle NOT LIKE '%~%'     -- removes emails with special character ~
       AND email_handle NOT LIKE '%+%'     -- removes any emails with special character + 
       AND email_handle NOT LIKE '%admin%' -- removes records with the word admin
       AND email_handle NOT LIKE '%hack%'  -- removes hack accounts
