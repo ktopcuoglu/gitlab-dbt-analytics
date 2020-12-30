@@ -902,6 +902,7 @@ roles:
                     - analytics.workspace_data
                     - analytics.workspace_marketing
                     - prep.dbt
+                    - prep.preparation
                     - raw.dbt
             tables:
                 read:
@@ -913,6 +914,7 @@ roles:
                     - analytics.workspace_data.*
                     - analytics.workspace_marketing.*
                     - prep.dbt.*
+                    - prep.preparation.*
                     - raw.dbt.*
 
     - dbt_analytics_clones:
@@ -1000,10 +1002,12 @@ roles:
             schemas:
                 read:
                     - prep.gitlab_dotcom
+                    - prep.sensitive
                     - raw.tap_postgres
             tables:
                 read:
                     - prep.gitlab_dotcom.*
+                    - prep.sensitive.gitlab_dotcom*
                     - raw.tap_postgres.gitlab_db*
 
     - google_analytics_360:

@@ -1,15 +1,15 @@
-{{ generate_single_field_dimension (
-    model_name="map_marketing_channel",
-    id_column="marketing_channel_name",
-    id_column_name="dim_marketing_channel_id",
-    dimension_column="marketing_channel_name",
-    dimension_column_name="marketing_channel_name",
-) }}
+WITH marketing_channel AS(
+
+    SELECT
+      dim_marketing_channel_id,
+      marketing_channel_name
+    FROM {{ ref('prep_marketing_channel') }}
+)
 
 {{ dbt_audit(
-    cte_ref="unioned",
+    cte_ref="marketing_channel",
     created_by="@paul_armstrong",
-    updated_by="@paul_armstrong",
+    updated_by="@mcooperDD",
     created_date="2020-11-13",
-    updated_date="2020-11-13"
+    updated_date="2020-12-18"
 ) }}
