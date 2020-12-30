@@ -10,7 +10,7 @@ use warehouse ADMIN;
 
 set username = (select upper(LEFT($email, CHARINDEX('@', $email) - 1)));
 
-set loginname = (select upper($email));
+set loginname = (select lower($email));
 
 CREATE USER identifier($username) 
 LOGIN_NAME = $loginname

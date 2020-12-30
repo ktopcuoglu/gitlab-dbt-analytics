@@ -76,3 +76,4 @@ sources:
               - relationships:
                   to: source('zuora', 'account')
                   field: id
+                  severity: warn

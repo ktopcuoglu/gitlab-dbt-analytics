@@ -19,14 +19,25 @@ WITH source AS (
       data_by_row['name']::VARCHAR            AS name,
       data_by_row['type']::VARCHAR            AS type,
       data_by_row['milestone']::VARCHAR       AS milestone,
-      data_by_row['default_enabled']::BOOLEAN AS is_default_enabled,
+      data_by_row['default_enabled']::VARCHAR AS is_default_enabled,
       data_by_row['group']::VARCHAR           AS gitlab_group,
       snapshot_date,
       rank
     FROM intermediate
 
+), casting AS (
+
+    SELECT
+      name,
+      type,
+      milestone,
+      TRY_TO_BOOLEAN(is_default_enabled) AS is_default_enabled,
+      gitlab_group,
+      snapshot_date,
+      rank
+    FROM renamed
 )
 
 SELECT *
-FROM renamed
+FROM casting
  

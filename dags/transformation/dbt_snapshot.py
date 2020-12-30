@@ -3,8 +3,12 @@ from datetime import datetime, timedelta
 
 from airflow import DAG
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
+from airflow.operators.python_operator import (
+    BranchPythonOperator,
+    ShortCircuitOperator,
+    PythonOperator,
+)
 from airflow.models import Variable
-from airflow.operators.python_operator import PythonOperator
 from airflow.utils.trigger_rule import TriggerRule
 from airflow_utils import (
     DBT_IMAGE,
@@ -14,8 +18,6 @@ from airflow_utils import (
     gitlab_pod_env_vars,
     slack_failed_task,
     slack_snapshot_failed_task,
-    l_warehouse,
-    xs_warehouse,
     dbt_install_deps_and_seed_cmd,
     clone_repo_cmd,
 )
@@ -85,7 +87,7 @@ dag = DAG("dbt_snapshots", default_args=default_args, schedule_interval="0 */8 *
 # dbt-snapshot for daily tag
 dbt_snapshot_cmd = f"""
     {dbt_install_deps_nosha_cmd} &&
-    dbt snapshot -s tag:daily --profiles-dir profile --exclude path:snapshots/zuora; ret=$?;
+    dbt snapshot -s tag:daily --profiles-dir profile --exclude path:snapshots/zuora path:snapshots/sfdc; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py snapshots; exit $ret
 """
 
@@ -139,7 +141,8 @@ dbt_commit_hash_exporter = PythonOperator(
 dbt_snapshot_models_command = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_and_seed_cmd} &&
-    dbt run --profiles-dir profile --target prod --models snapshots --vars {l_warehouse}; ret=$?;
+    export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_L" &&
+    dbt run --profiles-dir profile --target prod --models +legacy.snapshots; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
 
@@ -159,7 +162,7 @@ dbt_snapshot_models_run = KubernetesPodOperator(
 dbt_test_snapshots_cmd = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
-    dbt test --profiles-dir profile --target prod --vars {xs_warehouse} --models snapshots; ret=$?;
+    dbt test --profiles-dir profile --target prod --models +legacy.snapshots; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py test; exit $ret
 """
 
@@ -176,4 +179,23 @@ dbt_test_snapshot_models = KubernetesPodOperator(
 )
 
 
-dbt_commit_hash_setter >> dbt_commit_hash_exporter >> dbt_snapshot >> dbt_snapshot_models_run >> dbt_test_snapshot_models
+def run_or_skip_dbt(current_seconds: int, dag_interval: int) -> bool:
+    # Only run models and tests once per day
+    if current_seconds < dag_interval:
+        return True
+    else:
+        return False
+
+
+SCHEDULE_INTERVAL_HOURS = 8
+timestamp = datetime.now()
+current_seconds = timestamp.hour * 3600
+dag_interval = SCHEDULE_INTERVAL_HOURS * 3600
+
+short_circuit = ShortCircuitOperator(
+    task_id="short_circuit",
+    python_callable=lambda: run_or_skip_dbt(current_seconds, dag_interval),
+    dag=dag,
+)
+
+dbt_commit_hash_setter >> dbt_commit_hash_exporter >> dbt_snapshot >> short_circuit >> dbt_snapshot_models_run >> dbt_test_snapshot_models

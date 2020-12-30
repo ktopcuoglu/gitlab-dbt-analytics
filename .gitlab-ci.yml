@@ -217,6 +217,7 @@ permifrost_manual:
     - dbt deps --profiles-dir profile --target prod
     - dbt docs generate --profiles-dir profile --target prod
     - mkdir -p $CI_PROJECT_DIR/public/
+    - python $CI_PROJECT_DIR/orchestration/upload_dbt_file_to_snowflake.py manifest
     - cd target
     - cp *.json graph.gpickle $CI_PROJECT_DIR/public/
     - cd $CI_PROJECT_DIR/transform/snowflake-dbt/docs/

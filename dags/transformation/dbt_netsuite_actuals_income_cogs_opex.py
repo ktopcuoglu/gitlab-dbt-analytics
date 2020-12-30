@@ -14,7 +14,6 @@ from airflow_utils import (
     gitlab_pod_env_vars,
     number_of_dbt_threads_argument,
     slack_failed_task,
-    xs_warehouse,
 )
 from kube_secrets import (
     GIT_DATA_TESTS_PRIVATE_KEY,
