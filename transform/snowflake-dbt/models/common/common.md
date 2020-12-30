@@ -303,3 +303,15 @@ Industry dimension, based off of salesforce account data, using the `generate_si
 Order type dimension, based off of salesforce opportunity data, using the `generate_single_field_dimension` macro to create the final formatted SQL
 
 {% enddocs %}
+
+{% docs dim_namespace%}
+
+Includes all columns from the namespaces base model. The plan columns in this table (gitlab_plan_id, gitlab_plan_title, gitlab_plan_is_paid) reference the plan that is inheritted from the namespace's ultimate parent. 
+
+This table add a count of members and projects currently associated with the namespace.
+Boolean columns: gitlab_plan_is_paid, namespace_is_internal, namespace_is_ultimate_parent
+
+A NULL namespace type defaults to "Individual".
+This table joins to common product tier dimension via dim_product_tier_id to get the current product tier.
+
+{% enddocs %}
