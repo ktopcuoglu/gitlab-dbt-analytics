@@ -5,6 +5,23 @@ connection_info:
   database: GITLAB_COM_DB_NAME
   port: PG_PORT
 tables:
+  application_settings:
+    import_db: GITLAB_DB
+    import_query: >
+      SELECT id
+      , default_projects_limit
+      , signup_enabled
+      , created_at
+      , updated_at
+      , shared_runners_enabled
+      , shared_runners_text
+      , usage_ping_enabled
+      , shared_runners_minutes
+      , repository_size_limit
+      FROM application_settings
+    export_schema: 'gitlab_com'
+    export_table: 'application_settings'
+    export_table_primary_key: id
   award_emoji:
     import_db: GITLAB_DB
     import_query: >
