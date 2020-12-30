@@ -21,7 +21,6 @@ WITH map_namespace_internal AS (
     WHERE is_currently_valid = TRUE
     AND members.member_source_type = 'Namespace'
     AND {{ filter_out_blocked_users(members, user_id) }}
-    ) 
     GROUP BY members.source_id
 
 ), projects AS (
