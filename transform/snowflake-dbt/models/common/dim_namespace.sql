@@ -33,8 +33,8 @@ WITH map_namespace_internal AS (
 ), projects AS (
 
     SELECT projects.namespace_id,
-       COUNT(DISTINCT projects.project_id) AS project_count projects
-    FROM {{ref('gitlab_dotcom_projects')}}
+       COUNT(DISTINCT projects.project_id) AS project_count 
+    FROM {{ref('gitlab_dotcom_projects')}} projects
     GROUP BY projects.namespace_id
   
 ), namespace_lineage AS (
@@ -57,23 +57,20 @@ WITH map_namespace_internal AS (
 ), joined AS (
   
     SELECT
-      namespaces.namespace_id                                                         AS dim_namespace_id,
+      namespaces.namespace_id                                                           AS dim_namespace_id,
       namespaces.namespace_id,
-      COALESCE(map_namespace_internal.namespace_id IS NOT NULL, FALSE)                AS namespace_is_internal,
-      COALESCE(namespace_lineage.ultimate_parent_id = namespaces.namespace_id, FALSE) AS namespace_is_ultimate_parent
-  
+      COALESCE(map_namespace_internal.ultimate_parent_namespace_id IS NOT NULL, FALSE)  AS namespace_is_internal,
+      COALESCE(namespace_lineage.ultimate_parent_id = namespaces.namespace_id, FALSE)   AS namespace_is_ultimate_parent,
       CASE
         WHEN namespaces.visibility_level = 'public' OR namespace_is_internal THEN namespace_name
         WHEN namespaces.visibility_level = 'internal' THEN 'internal - masked'
         WHEN namespaces.visibility_level = 'private'  THEN 'private - masked'
       END                                                                             AS namespace_name,
-      
       CASE
-        WHEN namespaces.visibility_level = 'public' OR namespace_is_internal THEN namespace_path
-        WHEN namespaces.visibility_level = 'internal' THEN 'internal - masked'
-        WHEN namespaces.visibility_level = 'private'  THEN 'private - masked'
-      END                                                                             AS namespace_path,
-      
+       WHEN namespaces.visibility_level = 'public' OR namespace_is_internal THEN namespace_path
+       WHEN namespaces.visibility_level = 'internal' THEN 'internal - masked'
+       WHEN namespaces.visibility_level = 'private'  THEN 'private - masked'
+      END AS namespace_path,
       namespaces.owner_id,
       COALESCE(namespaces.namespace_type, 'Individual')                               AS namespace_type,
       namespaces.has_avatar,
@@ -116,9 +113,9 @@ WITH map_namespace_internal AS (
       LEFT JOIN creators
         ON namespaces.namespace_id = creators.group_id
       LEFT JOIN map_namespace_internal
-        ON namespaces.ultimate_parent_id = map_namespace_is_internal.ultimate_parent_namespace_id
+        ON namespace_lineage.ultimate_parent_id = map_namespace_internal.ultimate_parent_namespace_id
       LEFT JOIN prep_product_tier AS product_tier_ultimate_parent
-        ON LOWER(product_tier_ultimate_parent.product_tier) = LOWER(namespace_lineage.ultimate_parent_plan_title)
+        ON LOWER(product_tier_ultimate_parent.product_tier_name) = LOWER(namespace_lineage.ultimate_parent_plan_title)
   
 )
 
