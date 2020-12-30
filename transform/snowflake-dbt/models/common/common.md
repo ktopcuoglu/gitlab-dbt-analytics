@@ -304,12 +304,6 @@ Order type dimension, based off of salesforce opportunity data, using the `gener
 
 {% enddocs %}
 
-{% docs map_merged_crm_account%}
-
-Table mapping current crm account ids to accounts merged in the past.
-
-{% enddocs %}
-
 {% docs dim_namespace%}
 
 Includes all columns from the namespaces base model. The plan columns in this table (gitlab_plan_id, gitlab_plan_title, gitlab_plan_is_paid) reference the plan that is inheritted from the namespace's ultimate parent. 
