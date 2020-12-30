@@ -942,6 +942,7 @@ models:
           - not_null
       - name: recorded_at
         description: The timestamp when the usage ping was recorded.
+ 
   - name: dim_marketing_channel
     description: '{{ doc("prep_sfdc_account") }}'
     columns:
