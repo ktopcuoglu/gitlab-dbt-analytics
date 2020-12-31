@@ -49,6 +49,10 @@ models:
   description: All team members that passed the customer segmentation sql certification.
 - name: sheetload_cert_product_geo_viewer_source
 - name: sheetload_cert_customer_segmentation_viewer_source
+- name: sheetload_cert_pricing_customer_discount_dashboard_source
+  description: All team members that passed the pricing discount dashboard developer certification.
+- name: sheetload_cert_pricing_customer_discount_viewer_source
+  description: All team members that passed the pricing discount dashboard viewver certification.
 
 - name: sheetload_company_call_attendance_source
   description: This spreadsheet contains data from company call attendance (also called the "Take a Break Call"). The People Experience team pulls their data and updates their spreadsheet, which is imported into the sheetload sheet.
@@ -261,6 +265,8 @@ models:
     - name: is_satellite_provider
     - name: registered_country_geoname_id
     - name: represented_country_geoname_id
+- name: sheetload_percent_over_comp_band_historical_source
+  description: Brings in aggregated values for 2020.01 - 2020.09 for percent over comp band for kpi.    
 - name: sheetload_planned_values_source
   description: Planned values for multiple metrics as defined by Finance Team via Chase
   columns:

@@ -1,3 +1,12 @@
+{% docs gitlab_dotcom_gitlab_emails_cleaned %}
+
+This is a cleaned gitlab_dotcom_gitlab_emails data model (Also known as the gitlab_dotcom.emails table) where we apply special rules to remove non-relevant GitLab emails for GitLab Team Members. 
+
+The path to update this file: analytics > transform >  snowflake-dbt > models > sources > gitlab_dotcom > gitlab_dotcom_source_docs.md
+
+{% enddocs %}
+
+
 {% docs gitlab_dotcom_groups %}
 
 This is the base model for Gitlab.com groups. It is a subset of the namespaces table which includes both individual namespaces (when a user is created, a personal namespace is created) and groups (and subgroups) which is a collaborative namespace where several users can collaborate on specific projects.

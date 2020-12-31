@@ -51,6 +51,15 @@ models:
           - unique
         tags: ["tdf", "mart", "arr"]
 
+  - name: mart_delta_arr_parent_product_month
+    description: "Mart table by month pursuant to the ARR Analysis Framework at the parent customer || product category level"
+    columns:
+      - name: primary_key
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "mart", "arr"]
+
   - name: mart_delta_arr_subscription_month
     description: "Mart table by month purusant to the ARR Analysis Framework at the subscription level"
     columns:
@@ -62,6 +71,15 @@ models:
 
   - name: mart_retention_parent_account
     description: "Mart table to support drillable retention analysis"
+
+  - name: mart_retention_parent_account_product
+    description: "Mart table to support retention analysis at the ultimate_parent_account || product level."
+    columns:
+      - name: primary_key
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "mart", "arr"]
 
   - name: usage_ping_mart
     description: '{{ doc("usage_ping_mart") }}'
