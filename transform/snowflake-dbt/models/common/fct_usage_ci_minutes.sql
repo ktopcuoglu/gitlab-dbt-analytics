@@ -163,8 +163,8 @@ WITH project_snapshot_monthly_all AS (
         WHEN shared_runners_minutes_limit_enabled
           THEN monthly_minutes::VARCHAR
         WHEN monthly_minutes = 0
-          THEN 'Unlimited'
-        ELSE 'Not supported'
+          THEN 'Unlimited minutes'
+        ELSE 'Not supported minutes'
       END                                                       AS limit,
       IFF(monthly_minutes != 0,
           monthly_minutes, NULL)                                AS limit_based_plan,

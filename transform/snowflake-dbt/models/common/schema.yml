@@ -864,7 +864,7 @@ models:
       - name: visibility_level
         description: public, private, or internal.
       - name:  limit
-        description: Monthly CI Minutes limit of the namespace, based on its [product tier](https://about.gitlab.com/pricing/).
+        description: Monthly CI Minutes limit of the namespace, based on its [product tier](https://about.gitlab.com/pricing/). This value will be 'Not supported minutes' if shared runners are not enabled on the namespace and 'Unlimited minutes' for certain GitLab internal namespaces.
         tests:
           - not_null
       - name: shared_runners_minutes_used_overall
