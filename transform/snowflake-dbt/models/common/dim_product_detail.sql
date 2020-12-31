@@ -35,6 +35,7 @@ WITH zuora_product AS (
       zuora_product_rate_plan_charge.product_rate_plan_charge_id                        AS dim_product_detail_id,
       zuora_product.product_id                                                          AS product_id,
       common_product_tier.dim_product_tier_id                                           AS dim_product_tier_id,
+      zuora_product_rate_plan.product_rate_plan_id                                      AS product_rate_plan_id,
       zuora_product_rate_plan_charge.product_rate_plan_charge_id                        AS product_rate_plan_charge_id,
 
       -- fields
@@ -67,7 +68,7 @@ WITH zuora_product AS (
       ON common_product_tier_mapping.product_tier = common_product_tier.product_tier_name
     WHERE zuora_product.is_deleted = FALSE
       AND zuora_product_rate_plan_charge_tier.currency = 'USD'
-    {{ dbt_utils.group_by(n=15) }}
+    {{ dbt_utils.group_by(n=16) }}
     ORDER BY 1, 3
 
 ), final AS (--add annualized billing list price
@@ -104,7 +105,7 @@ WITH zuora_product AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@ischweickartDD",
-    updated_by="@ischweickartDD",
+    updated_by="@mcooperDD",
     created_date="2020-12-16",
-    updated_date="2020-12-16"
+    updated_date="2020-12-30"
 ) }}
