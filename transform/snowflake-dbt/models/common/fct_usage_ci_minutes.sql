@@ -76,9 +76,9 @@ WITH project_snapshot_monthly_all AS (
       extra_shared_runners_minutes_limit
     FROM {{ ref('gitlab_dotcom_namespaces_source') }} 
 
-), namespace_statistic_monthly_all AS (
+), namespace_statistics_monthly_all AS (
 
-    --namespace_statistic_monthly
+    --namespace_statistics_monthly
     SELECT 
       snapshot_month,
       namespace_id,
@@ -90,7 +90,7 @@ WITH project_snapshot_monthly_all AS (
 
     UNION ALL
 
-    --namespace_statistic_current
+    --namespace_statistics_current
     SELECT
       DATE_TRUNC('month', CURRENT_DATE)                         AS snapshot_month,
       namespace_id,
@@ -110,7 +110,7 @@ WITH project_snapshot_monthly_all AS (
       AND project_snapshot_monthly_all.snapshot_month = namespace_lineage_monthly_all.snapshot_month
     GROUP BY 1, 2
 
-), namespace_statistic_monthly_top_level AS (
+), namespace_statistics_monthly_top_level AS (
 
     SELECT
       namespace_snapshots_monthly_all.snapshot_month            AS namespace_snapshots_snapshot_month,
@@ -121,36 +121,36 @@ WITH project_snapshot_monthly_all AS (
       namespace_snapshots_monthly_all.visibility_level,
       namespace_snapshots_monthly_all.shared_runners_minutes_limit,
       namespace_snapshots_monthly_all.extra_shared_runners_minutes_limit,
-      namespace_statistic_monthly_all.snapshot_month            AS namespace_statistic_snapshot_month,
-      namespace_statistic_monthly_all.namespace_id              AS namespace_statistic_namespace_id,
-      namespace_statistic_monthly_all.shared_runners_seconds,
-      namespace_statistic_monthly_all.shared_runners_seconds_last_reset
+      namespace_statistics_monthly_all.snapshot_month            AS namespace_statistics_snapshot_month,
+      namespace_statistics_monthly_all.namespace_id              AS namespace_statistics_namespace_id,
+      namespace_statistics_monthly_all.shared_runners_seconds,
+      namespace_statistics_monthly_all.shared_runners_seconds_last_reset
     FROM namespace_snapshots_monthly_all
-    LEFT JOIN namespace_statistic_monthly_all
-      ON namespace_snapshots_monthly_all.namespace_id = namespace_statistic_monthly_all.namespace_id
-      AND namespace_snapshots_monthly_all.snapshot_month = namespace_statistic_monthly_all.snapshot_month
+    LEFT JOIN namespace_statistics_monthly_all
+      ON namespace_snapshots_monthly_all.namespace_id = namespace_statistics_monthly_all.namespace_id
+      AND namespace_snapshots_monthly_all.snapshot_month = namespace_statistics_monthly_all.snapshot_month
       AND namespace_snapshots_monthly_all.parent_id IS NULL  -- Only top level namespaces
       
 ), ci_minutes_logic AS (
     
     SELECT
-      namespace_statistic_monthly_top_level.namespace_snapshots_snapshot_month
+      namespace_statistics_monthly_top_level.namespace_snapshots_snapshot_month
                                                                 AS snapshot_month,
-      namespace_statistic_monthly_top_level.namespace_snapshots_namespace_id
+      namespace_statistics_monthly_top_level.namespace_snapshots_namespace_id
                                                                 AS namespace_id,
       IFNULL(child_projects_enabled_shared_runners_any.ultimate_parent_id,
              namespace_id)                                      AS ultimate_parent_namespace_id,
-      namespace_statistic_monthly_top_level.namespace_type,
-      namespace_statistic_monthly_top_level.visibility_level,
+      namespace_statistics_monthly_top_level.namespace_type,
+      namespace_statistics_monthly_top_level.visibility_level,
       IFNULL(child_projects_enabled_shared_runners_any.shared_runners_enabled,
              False)                                             AS shared_runners_enabled,
       IFF(snapshot_month >= '2020-10-01',
           400, 2000)                                            AS gitlab_current_settings_shared_runners_minutes,
-      IFNULL(namespace_statistic_monthly_top_level.shared_runners_minutes_limit,
+      IFNULL(namespace_statistics_monthly_top_level.shared_runners_minutes_limit,
              gitlab_current_settings_shared_runners_minutes)    AS monthly_minutes, 
-      IFNULL(namespace_statistic_monthly_top_level.extra_shared_runners_minutes_limit,
+      IFNULL(namespace_statistics_monthly_top_level.extra_shared_runners_minutes_limit,
              0)                                                 AS purchased_minutes,
-      IFNULL(namespace_statistic_monthly_top_level.shared_runners_seconds / 60,
+      IFNULL(namespace_statistics_monthly_top_level.shared_runners_seconds / 60,
              0)                                                 AS total_minutes_used,
       IFF(purchased_minutes = 0
             OR total_minutes_used < monthly_minutes,
@@ -181,10 +181,10 @@ WITH project_snapshot_monthly_all AS (
       IFF(purchased_minutes_used <= purchased_minutes
             OR NOT shared_runners_minutes_limit_enabled,
           'Under Quota', 'Over Quota')                          AS status_purchased
-    FROM namespace_statistic_monthly_top_level
+    FROM namespace_statistics_monthly_top_level
     LEFT JOIN child_projects_enabled_shared_runners_any
-      ON namespace_statistic_monthly_top_level.namespace_snapshots_namespace_id = child_projects_enabled_shared_runners_any.ultimate_parent_id
-      AND namespace_statistic_monthly_top_level.namespace_snapshots_snapshot_month = child_projects_enabled_shared_runners_any.snapshot_month
+      ON namespace_statistics_monthly_top_level.namespace_snapshots_namespace_id = child_projects_enabled_shared_runners_any.ultimate_parent_id
+      AND namespace_statistics_monthly_top_level.namespace_snapshots_snapshot_month = child_projects_enabled_shared_runners_any.snapshot_month
 
 ), final AS (
 
