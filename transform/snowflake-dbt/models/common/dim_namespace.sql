@@ -20,7 +20,7 @@ WITH map_namespace_internal AS (
       COUNT(DISTINCT members.member_id) AS member_count
     FROM {{ref('gitlab_dotcom_members_source')}} members
     WHERE is_currently_valid = TRUE
-    AND members.member_source_type = 'Namespace'
+      AND members.member_source_type = 'Namespace'
       AND NOT EXISTS ( SELECT 1
                        FROM {{ref('gitlab_dotcom_users_source')}} users_source
                        WHERE users_source.state = 'blocked'
