@@ -114,7 +114,7 @@ for sheet in sheets:
 dbt_sheetload_cmd = f"""
     export snowflake_load_database="RAW" &&
     {dbt_install_deps_and_seed_nosha_cmd} &&
-    dbt run --profiles-dir profile --target prod --models source:sheetload+; ret=$?;
+    dbt run --profiles-dir profile --target prod --models @source:sheetload; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
 dbt_sheetload = KubernetesPodOperator(
