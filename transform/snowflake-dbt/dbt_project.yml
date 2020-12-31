@@ -153,7 +153,7 @@ models:
         +schema: date
 
       dbt:
-        +materialized: table
+        +materialized: incremental
         +schema: dbt
         +tags: ["dbt"]
 
@@ -345,6 +345,8 @@ models:
       dbt:
         +tags: ["dbt"]
 
+    workspace_marketing:
+      +schema: workspace_marketing
 
     # ------------------
     # Marts

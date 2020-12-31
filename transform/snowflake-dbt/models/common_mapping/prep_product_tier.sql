@@ -1,8 +1,3 @@
-{{config({
-    "schema": "common_mapping"
-  })
-}}
-
 WITH product_tier_mapping AS (
 
     SELECT *
