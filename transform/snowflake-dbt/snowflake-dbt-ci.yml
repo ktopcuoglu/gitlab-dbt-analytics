@@ -72,7 +72,7 @@
     - dbt --partial-parse run $CI_PROFILE_TARGET --exclude $DBT_MODELS || true
     - dbt --partial-parse test $CI_PROFILE_TARGET --exclude $DBT_MODELS
 
-➖🦖specify_xl_exclude:
+➖🦖specify_l_exclude:
   <<: *snowflake_dbt_jobs
   script:
     - *l_warehouse
@@ -96,7 +96,7 @@
     - dbt --partial-parse run $CI_PROFILE_TARGET --models $DBT_MODELS || true
     - dbt --partial-parse test $CI_PROFILE_TARGET --models $DBT_MODELS
 
-➕🦖specify_xl_model:
+➕🦖specify_l_model:
   <<: *snowflake_dbt_jobs
   script:
     - *l_warehouse
