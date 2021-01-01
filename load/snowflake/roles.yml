@@ -872,7 +872,7 @@ roles:
                     - prod.common_mart_sales
                     - prod.legacy
                     - prod.workspace_data
-                    - analytics.workspace_marketing
+                    - prod.workspace_marketing
                     - prep.dbt
                     - prep.preparation
                     - raw.dbt
@@ -2435,7 +2435,6 @@ roles:
             - analyst_xs
         owns:
             databases:
-                - rparker_analytics
                 - rparker_prep
                 - rparker_prod
             schemas:
