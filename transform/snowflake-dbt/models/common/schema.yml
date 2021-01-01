@@ -467,6 +467,9 @@ models:
       - name: product_tier_name
         description: Name of the [GitLab tier](https://about.gitlab.com/handbook/marketing/strategic-marketing/tiers/) associated with the product.
         tags: [ "tdf", "common" ]
+        tests:
+          - not_null
+          - unique
       - name: product_delivery_type
         description: How a product is delivered to the customer; SaaS or Self-Managed (or Other).
       - name: product_ranking
@@ -885,6 +888,48 @@ models:
       - name: quantity
         description: Total quantity
 
+  - name: fct_usage_ci_minutes
+    description: '{{ doc("fct_usage_ci_minutes") }}'
+    columns:
+      - name: snapshot_month
+        description: Month in which CI Minutes usage data was snapshotted, formatted as `20YY-MM-01`.
+        tests:
+          - not_null
+      - name: namespace_id
+        description: ID of the namespace responsible for the CI Minutes usage.
+        tests:
+          - not_null
+      - name: ultimate_parent_namespace_id
+        description: ID of the namespace's ultimate parent namespace.
+        tests:
+          - not_null
+      - name: namespace_type
+        description: Group, Individual, or NULL. For example https://gitlab.com/gitlab-data is a Group namespace.
+      - name: visibility_level
+        description: public, private, or internal.
+      - name:  limit
+        description: Monthly CI Minutes limit of the namespace, based on its [product tier](https://about.gitlab.com/pricing/). This value will be 'Not supported minutes' if shared runners are not enabled on the namespace and 'Unlimited minutes' for certain GitLab internal namespaces.
+        tests:
+          - not_null
+      - name: shared_runners_minutes_used_overall
+        description: Total CI Minutes used in the snapshot month.
+        tests:
+          - not_null
+      - name: status
+        description: Status of CI Minutes usage against the tier-based limit by namespaces with `shared_runners_minutes_limit` enabled. Over Quota, Under Quota, or Disabled.
+      - name: status_based_plan
+        description: Status independent of whether there aren't projects with `shared_runners_enabled` inside the namespaces and only take into account how many minutes have been used from the monthly quota based in the plan of the namespace.
+      - name: used
+        description: CI Minutes used against the tier-based limit in a given snapshot month.
+      - name: limit_based_plan
+        description: Limit independent of whether there aren't projects with `shared_runners_enabled` inside the namespaces and only take into account how many minutes have been used from the monthly quota based in the plan of the namespace.
+      - name: limit_purchased
+        description: Limit of extra CI Minutes purchased once monthly minutes have been used up.
+      - name: used_purchased
+        description: Purchased extra CI Minutes used in a given snapshot month.
+      - name: status_purchased
+        description: Status of CI Minutes usage against the extra CI Minutes purchased limit by namespaces.
+
   - name: fct_usage_data_monthly
     description: '{{ doc("fct_usage_data_monthly") }}'
     columns:
@@ -980,6 +1025,7 @@ models:
           - not_null
       - name: recorded_at
         description: The timestamp when the usage ping was recorded.
+ 
   - name: dim_marketing_channel
     description: '{{ doc("prep_sfdc_account") }}'
     columns:
@@ -989,3 +1035,68 @@ models:
           - not_null
           - unique
       - name: marketing_channel_name
+
+  - name: dim_namespace
+    description: '{{ doc("dim_namespace") }}'
+    columns:
+      - name: dim_namespace_id
+        tests:
+          - not_null
+          - unique
+      - name: namespace_id
+        tests:
+          - not_null
+          - unique
+      - name: namespace_is_internal
+      - name: namespace_is_ultimate_parent
+      - name: namespace_name
+      - name: namespace_path
+        tests:
+          - not_null
+      - name: owner_id
+      - name: namespace_type
+        description: This field should be Group or Individual. A namespace is the first item to come after the / following the domain. For example https://www.gitlab.com/NicoleSchwartz/ is an Individual namespace. There are some namespace_IDs that are missing from this table, when doing certain joins (left) you may get NULL when this data is missing.
+        tests:
+          - not_null
+      - name: has_avatar
+      - name: namespace_created_at
+      - name: namespace_updated_at
+      - name: is_membership_locked
+      - name: has_request_access_enabled
+      - name: has_share_with_group_locked
+      - name: visibility_level
+      - name: dap_sync_status
+      - name: ldap_sync_error
+      - name: ldap_sync_last_update_at
+      - name: ldap_sync_last_successful_update_at
+      - name: ldap_sync_last_sync_at
+      - name: lfs_enabled
+      - name: parent_id
+      - name: shared_runners_minutes_limit
+      - name: extra_shared_runners_minutes_limit 
+      - name: repository_size_limit
+      - name: does_require_two_factor_authentication
+      - name: two_factor_grace_period
+      - name: project_creation_level
+      - name: push_rule_id
+      - name: creator_id
+      - name: ultimate_parent_namespace_id
+      - name: gitlab_plan_id
+        description: The **plan_id** associated with the namespace's subscription. This can be inheritted from the namespaces's ultimate parent.
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['2', '3', '4', '34', '67', 'trial']
+      - name: gitlab_plan_title
+        description: Whether or not the namespace associated with the project is subscribed to a paid plan. This can be inheritted from the namespaces's ultimate parent.
+        tests:
+          - not_null
+      - name: gitlab_plan_is_paid
+        description: Whether or not the namespace associated with the project is subscribed to a paid plan. This can be inheritted from the namespaces's ultimate parent.
+        tests:
+          - not_null
+      - name: dim_product_tier_id,
+      - name: current_member_count
+        description: The number of members that are presently associated with the namespace.
+      - name: current_project_count
+        description: The number of projects that are presently associated with the namespace.

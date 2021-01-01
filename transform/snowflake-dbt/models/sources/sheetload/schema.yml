@@ -49,6 +49,10 @@ models:
   description: All team members that passed the customer segmentation sql certification.
 - name: sheetload_cert_product_geo_viewer_source
 - name: sheetload_cert_customer_segmentation_viewer_source
+- name: sheetload_cert_pricing_customer_discount_dashboard_source
+  description: All team members that passed the pricing discount dashboard developer certification.
+- name: sheetload_cert_pricing_customer_discount_viewer_source
+  description: All team members that passed the pricing discount dashboard viewver certification.
 
 - name: sheetload_company_call_attendance_source
   description: This spreadsheet contains data from company call attendance (also called the "Take a Break Call"). The People Experience team pulls their data and updates their spreadsheet, which is imported into the sheetload sheet.

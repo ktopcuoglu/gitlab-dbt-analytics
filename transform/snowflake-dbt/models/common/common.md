@@ -227,6 +227,18 @@ Dimension representing the associated sales rep from salesforce. Most often this
 
 {% enddocs %}
 
+{% docs fct_usage_ci_minutes %}
+
+This table replicates the Gitlab UI logic that generates the CI minutes Usage Quota for both personal namespaces and top level group namespaces. The codebase logic used to build this model can be seen mapped in [this diagram](https://app.lucidchart.com/documents/view/0b8b66e6-8536-4a5d-b992-9e324581187d/0_0).
+
+Namespaces from the `namespace_snapshots_monthly_all` CTE that are not present in the `namespace_statistics_monthly_all` CTE are joined into the logic with NULL `shared_runners_seconds` since these namespaces have not used CI Minutes on GitLab-provided shared runners. Since these CI Minutes are neither trackable nor monetizable, they can be functionally thought of as 0 `shared_runners_minutes_used_overall`. The SQL code has been implemented with this logic as justification.
+
+It also adds two additional columns which aren't calculated in the UI, which are `limit_based_plan` and `status_based_plan` which are independent of whether there aren't projects with `shared_runners_enabled` inside the namespaces and only take into account how many minutes have been used from the monthly quota based in the plan of the namespace.
+
+Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+{% enddocs %}
+
 {% docs fct_usage_ping_payloads %}
 Factual table with metadata on usage ping payloads received.
 
@@ -301,5 +313,17 @@ Industry dimension, based off of salesforce account data, using the `generate_si
 {% docs dim_order_type %}
 
 Order type dimension, based off of salesforce opportunity data, using the `generate_single_field_dimension` macro to create the final formatted SQL
+
+{% enddocs %}
+
+{% docs dim_namespace%}
+
+Includes all columns from the namespaces base model. The plan columns in this table (gitlab_plan_id, gitlab_plan_title, gitlab_plan_is_paid) reference the plan that is inheritted from the namespace's ultimate parent. 
+
+This table add a count of members and projects currently associated with the namespace.
+Boolean columns: gitlab_plan_is_paid, namespace_is_internal, namespace_is_ultimate_parent
+
+A NULL namespace type defaults to "Individual".
+This table joins to common product tier dimension via dim_product_tier_id to get the current product tier.
 
 {% enddocs %}
