@@ -41,7 +41,7 @@ default_args = {
 container_cmd = f"""
     {clone_and_setup_extraction_cmd} &&
     cd sheetload/ &&
-    python3 sheetload.py sheets --sheet_file boneyard/sheets.yml --schema boneyard --database ANALYTICS
+    python3 sheetload.py sheets --sheet_file boneyard/sheets.yml --schema boneyard --database PROD
 """
 
 # Create the DAG

@@ -33,7 +33,6 @@ GRANT ROLE identifier($username) to user identifier($username);
 
 set prod_db = (select $username || '_PROD');
 set prep_db = (select $username || '_PREP');
-set analytics_db = (select $username || '_ANALYTICS');
 
 user role sysadmin;
 
@@ -44,7 +43,3 @@ GRANT ALL PRIVILEGES ON DATABASE identifier($prod_db) to role identifier($userna
 CREATE DATABASE identifier($prep_db);
 GRANT OWNERSHIP ON DATABASE identifier($prep_db) to role identifier($username);
 GRANT ALL PRIVILEGES ON DATABASE identifier($prep_db) to role identifier($username);
-
-CREATE DATABASE identifier($analytics_db);
-GRANT OWNERSHIP ON DATABASE identifier($analytics_db) to role identifier($username);
-GRANT ALL PRIVILEGES ON DATABASE identifier($analytics_db) to role identifier($username);

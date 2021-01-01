@@ -11,8 +11,9 @@ WITH contributors AS (
 ), rename AS (
 
     SELECT
-      name::VARCHAR     AS contributor_name,
+      name::VARCHAR     AS author_name,
       sha::VARCHAR      AS git_sha,
+      email::VARCHAR    AS author_email,
       date::TIMESTAMP   AS git_commit_at,
       message::VARCHAR  AS git_message
     FROM contributors
