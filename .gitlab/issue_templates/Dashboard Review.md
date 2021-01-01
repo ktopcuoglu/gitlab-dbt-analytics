@@ -14,7 +14,7 @@ Dashboard Owner/Editor:
 - [ ] What's the primary consumption for this dashboard (i.e. handbook page, key meeting,etc)
 - [ ] Does the dashboard provide the data requested?
 - [ ] How did you validate data on the dashboard? (i.e. compared against source, test cases)
-- [ ] Does the data align with the existing single source of truth and across applicable reporting in Periscope and/or Google Sheets? I.e. the data source is sourced from ANALYTICS.COMMON.*, AND REFERENCES FCT, DIM, or MART tables
+- [ ] Does the data align with the existing single source of truth and across applicable reporting in Periscope and/or Google Sheets? I.e. the data source is sourced from PROD.COMMON.*, AND REFERENCES FCT, DIM, or MART tables
 - [ ] SQL formatted using [GitLab Style Guide](https://about.gitlab.com/handbook/business-ops/data-team/platform/sql-style-guide/)
 - [ ] Is the underlying model built entirely on the Enterprise Dimensional Model? 
 - [ ] Does this dashboard adhere to the [SiSense Style Guide](https://about.gitlab.com/handbook/business-ops/data-team/platform/sisense-style-guide/)
@@ -41,7 +41,7 @@ Dashboard Owner/Editor:
 ## Dashboard Reviewer:
 <summary><i>Dashboard Reviewer complete this section/i></summary>
 - [ ] Validate the source of the dashboard's underlying queries.
-    * Are we we using tables sourced from ANALYTICS.COMMON when possible
+    * Are we we using tables sourced from PROD.COMMON when possible
     * Are we using the correct FCT, DIM, or MART tables
 - [ ] Validate filters are working correctly
 - [ ] Validate drill downs are working correctly

@@ -16,16 +16,13 @@
         This macro is hard to test, but here are some test cases and expected output.
         (custom_database_name, target.name, target.database) = <output>
 
-        (analytics, prod, analytics) = analytics
-        (analytics, ci, analytics) = analytics
-        (analytics, dev, tmurphy) = tmurphy_analytics
         
-        (prod, prod, analytics) = prod
-        (prod, ci, analytics) = prod
+        (prod, prod, prep) = prod
+        (prod, ci, prep) = prod
         (prod, dev, tmurphy) = tmurphy_prod
         
-        (prep, prod, analytics) = prep
-        (prep, ci, analytics) = prep
+        (prep, prod, prep) = prep
+        (prep, ci, prep) = prep
         (prep, dev, tmurphy) = tmurphy_prep
 
     #}

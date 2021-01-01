@@ -1,13 +1,11 @@
 .snowflake_dbt_jobs: &snowflake_dbt_jobs
-  image: registry.gitlab.com/gitlab-data/data-image/dbt-image:v0.0.10
+  image: registry.gitlab.com/gitlab-data/data-image/dbt-image:v0.0.13
   stage: ⚙️ dbt Run
   before_script:
     - cd transform/snowflake-dbt/
     - echo $BRANCH_NAME
-    - if [ $BRANCH_NAME = "master" ]; then export SNOWFLAKE_TRANSFORM_DATABASE="ANALYTICS"; else export SNOWFLAKE_TRANSFORM_DATABASE="${CI_COMMIT_REF_NAME^^}_ANALYTICS"; fi
     - if [ $BRANCH_NAME = "master" ]; then export SNOWFLAKE_PREP_DATABASE="PREP"; else export SNOWFLAKE_PREP_DATABASE="${CI_COMMIT_REF_NAME^^}_PREP"; fi
     - if [ $BRANCH_NAME = "master" ]; then export SNOWFLAKE_PROD_DATABASE="PROD"; else export SNOWFLAKE_PROD_DATABASE="${CI_COMMIT_REF_NAME^^}_PROD"; fi
-    - echo $SNOWFLAKE_TRANSFORM_DATABASE
     - echo $SNOWFLAKE_PREP_DATABASE
     - echo $SNOWFLAKE_PROD_DATABASE
     - export SNOWFLAKE_LOAD_DATABASE="RAW" # dbt pulls from RAW
@@ -178,7 +176,7 @@
 
 .periscope_check: &periscope_check
   stage: 🛠 dbt Misc
-  image: registry.gitlab.com/gitlab-data/data-image/data-image:v0.0.9
+  image: registry.gitlab.com/gitlab-data/data-image/data-image:v0.0.13
   tags:
     - analytics
   only:

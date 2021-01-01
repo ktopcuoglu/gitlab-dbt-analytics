@@ -24,8 +24,8 @@ def get_list_of_dev_schemas(engine: Engine) -> List[str]:
 
     query = """
     SELECT distinct table_schema
-    FROM analytics.information_schema.tables
-    WHERE table_catalog IN ('ANALYTICS')
+    FROM prod.information_schema.tables
+    WHERE table_catalog IN ('PROD')
     AND lower(table_schema) LIKE '%scratch%'
     """
 
@@ -44,7 +44,7 @@ def get_list_of_dev_schemas(engine: Engine) -> List[str]:
 
 def get_list_of_clones(engine: Engine) -> List[str]:
     """
-    Get a list of all databases besides analytics and raw.
+    Get a list of all databases besides the ones to keep.
     This will delete clones for open MRs, so users may need to rerun the review job.
     """
 
@@ -107,7 +107,7 @@ def drop_dev_schemas() -> None:
     logging.info(f"Dropping {len(schemas)} dev schemas...")
 
     for schema in schemas:
-        drop_query = f"""DROP SCHEMA analytics."{schema}";"""
+        drop_query = f"""DROP SCHEMA prod."{schema}";"""
         logging.info(f"Dropping Schema: {schema}")
         try:
             connection = engine.connect()

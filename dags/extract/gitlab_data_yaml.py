@@ -52,7 +52,7 @@ data_yaml_extract_cmd = f"""
 """
 data_yaml_extract = KubernetesPodOperator(
     **gitlab_defaults,
-    image="registry.gitlab.com/gitlab-data/data-image/data-image:v0.0.12",
+    image="registry.gitlab.com/gitlab-data/data-image/data-image:v0.0.13",
     task_id="data-yaml-extract",
     name="data-yaml-extract",
     secrets=[

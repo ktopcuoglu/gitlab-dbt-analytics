@@ -72,7 +72,7 @@ def sheet_loader(
 
     if database != "RAW":
         engine = snowflake_engine_factory(conn_dict or env, "ANALYTICS_LOADER", schema)
-        database = env["SNOWFLAKE_TRANSFORM_DATABASE"]
+        database = env["SNOWFLAKE_PROD_DATABASE"]
         # Trys to create the schema its about to write to
         # If it does exists, {schema} already exists, statement succeeded.
         # is returned.
