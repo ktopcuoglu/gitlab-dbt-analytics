@@ -49,10 +49,17 @@
   - dbt seed --full-refresh $CI_PROFILE_TARGET #seed data from csv
   - dbt --warn-error --partial-parse run-operation tag_validation --profiles-dir profile --target ci
 
+.l_warehouse: &l_warehouse
+  - export SNOWFLAKE_TRANSFORM_WAREHOUSE=$SNOWFLAKE_MR_L_WAREHOUSE
+  - echo $SNOWFLAKE_TRANSFORM_WAREHOUSE
+
 .xl_warehouse: &xl_warehouse
   - export SNOWFLAKE_TRANSFORM_WAREHOUSE=$SNOWFLAKE_MR_XL_WAREHOUSE
   - echo $SNOWFLAKE_TRANSFORM_WAREHOUSE
 
+.xs_warehouse: &xs_warehouse
+  - export SNOWFLAKE_TRANSFORM_WAREHOUSE=$SNOWFLAKE_MR_XS_WAREHOUSE
+  - echo $SNOWFLAKE_TRANSFORM_WAREHOUSE
 
 # MR Jobs
 ➖🐭specify_exclude:
@@ -68,12 +75,15 @@
 ➖🦖specify_xl_exclude:
   <<: *snowflake_dbt_jobs
   script:
-    - *xl_warehouse
+    - *l_warehouse
     - *deps_and_seed
     - echo $DBT_MODELS
     - dbt --partial-parse run $CI_PROFILE_TARGET --full-refresh --exclude $DBT_MODELS || true
+    - *xs_warehouse
     - dbt --partial-parse test $CI_PROFILE_TARGET --exclude $DBT_MODELS || true
+    - *l_warehouse
     - dbt --partial-parse run $CI_PROFILE_TARGET --exclude $DBT_MODELS || true
+    - *xs_warehouse
     - dbt --partial-parse test $CI_PROFILE_TARGET --exclude $DBT_MODELS
 
 ➕🐭specify_model:
@@ -89,12 +99,15 @@
 ➕🦖specify_xl_model:
   <<: *snowflake_dbt_jobs
   script:
-    - *xl_warehouse
+    - *l_warehouse
     - *deps_and_seed
     - echo $DBT_MODELS
     - dbt --partial-parse run $CI_PROFILE_TARGET --full-refresh --models $DBT_MODELS || true
+    - *xs_warehouse
     - dbt --partial-parse test $CI_PROFILE_TARGET --models $DBT_MODELS || true
+    - *l_warehouse
     - dbt --partial-parse run $CI_PROFILE_TARGET --models $DBT_MODELS || true
+    - *xs_warehouse
     - dbt --partial-parse test $CI_PROFILE_TARGET --models $DBT_MODELS
 
 ➕🐭🥩specify_raw_model:
@@ -107,7 +120,6 @@
     - dbt --partial-parse test $CI_PROFILE_TARGET --models $DBT_MODELS || true
     - dbt --partial-parse run $CI_PROFILE_TARGET --models $DBT_MODELS || true
     - dbt --partial-parse test $CI_PROFILE_TARGET --models $DBT_MODELS
-
 
 ➕specify_csv_seed:
   <<: *snowflake_dbt_jobs
