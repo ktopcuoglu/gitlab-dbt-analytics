@@ -49,7 +49,7 @@ container_cmd = f"""
     git pull origin master;
     echo "      Running git log command.";
     echo "sha,name,email,date,message" > /analytics/extract/sheetload/values.csv ;
-    git log --pretty='format:%H,"%cN","%aE",%ci,"%s"' sites/handbook/source/handbook/values/index.html.md >> /analytics/extract/sheetload/values.csv ;
+    git log --pretty='format:%H,"%aN","%aE",%ci,"%s"' sites/handbook/source/handbook/values/index.html.md >> /analytics/extract/sheetload/values.csv ;
     cd /analytics/extract/sheetload/ &&
     export SNOWFLAKE_LOAD_DATABASE="RAW";
     python sheetload.py csv --filename values.csv --schema handbook --tablename values_page_git_log

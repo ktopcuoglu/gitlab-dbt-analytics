@@ -12,7 +12,8 @@ models:
   - name: handbook_values_page_contributors_source
     description: Git log of contributors to the Values handbook page.
     columns:
-      - name: contributor_name
+      - name: author_name
+      - name: author_email
       - name: git_sha
       - name: git_commit_at
       - name: git_message
