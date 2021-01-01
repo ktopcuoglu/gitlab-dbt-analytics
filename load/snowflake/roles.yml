@@ -87,8 +87,6 @@ databases:
     - rheannamistry_prep:
         shared: no
 
-    - rparker_analytics:
-        shared: no
     - rparker_prod:
         shared: no
     - rparker_prep:
@@ -2441,39 +2439,31 @@ roles:
                 - rparker_prep
                 - rparker_prod
             schemas:
-                - rparker_analytics.*
                 - rparker_prep.*
                 - rparker_prod.*
             tables:
-                - rparker_analytics.*.*
                 - rparker_prep.*.*
                 - rparker_prod.*.*
         privileges:
             databases:
                 read:
-                    - rparker_analytics
                     - rparker_prep
                     - rparker_prod
                 write:
-                    - rparker_analytics
                     - rparker_prep
                     - rparker_prod
             schemas:
                 read:
-                    - rparker_analytics.*
                     - rparker_prep.*
                     - rparker_prod.*
                 write:
-                    - rparker_analytics.*
                     - rparker_prep.*
                     - rparker_prod.*
             tables:
                 read:
-                    - rparker_analytics.*.*
                     - rparker_prep.*.*
                     - rparker_prod.*.*
                 write:
-                    - rparker_analytics.*.*
                     - rparker_prep.*.*
                     - rparker_prod.*.*
 
