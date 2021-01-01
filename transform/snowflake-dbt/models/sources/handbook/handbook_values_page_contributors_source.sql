@@ -13,6 +13,7 @@ WITH contributors AS (
     SELECT
       name::VARCHAR     AS contributor_name,
       sha::VARCHAR      AS git_sha,
+      email::VARCHAR    AS user_email,
       date::TIMESTAMP   AS git_commit_at,
       message::VARCHAR  AS git_message
     FROM contributors
