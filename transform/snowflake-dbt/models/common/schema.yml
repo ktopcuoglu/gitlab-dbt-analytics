@@ -186,7 +186,7 @@ models:
           - not_null
           - unique
         tags: ["tdf", "common", "geo"]
-  
+
   - name: dim_gitlab_dotcom_gitlab_emails
     description: '{{ doc("dim_gitlab_dotcom_gitlab_emails") }}'
 
@@ -1025,7 +1025,7 @@ models:
           - not_null
       - name: recorded_at
         description: The timestamp when the usage ping was recorded.
- 
+
   - name: dim_marketing_channel
     description: '{{ doc("prep_sfdc_account") }}'
     columns:
@@ -1073,7 +1073,7 @@ models:
       - name: lfs_enabled
       - name: parent_id
       - name: shared_runners_minutes_limit
-      - name: extra_shared_runners_minutes_limit 
+      - name: extra_shared_runners_minutes_limit
       - name: repository_size_limit
       - name: does_require_two_factor_authentication
       - name: two_factor_grace_period

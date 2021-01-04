@@ -180,7 +180,7 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 {% enddocs %}
 
 {% docs dim_gitlab_dotcom_gitlab_emails %}
-Dimensional table representing the best email address for GitLab employees from the GitLab.com data source 
+Dimensional table representing the best email address for GitLab employees from the GitLab.com data source
 
 The grain of the table is a GitLab.com user_id.
 
@@ -318,7 +318,7 @@ Order type dimension, based off of salesforce opportunity data, using the `gener
 
 {% docs dim_namespace%}
 
-Includes all columns from the namespaces base model. The plan columns in this table (gitlab_plan_id, gitlab_plan_title, gitlab_plan_is_paid) reference the plan that is inheritted from the namespace's ultimate parent. 
+Includes all columns from the namespaces base model. The plan columns in this table (gitlab_plan_id, gitlab_plan_title, gitlab_plan_is_paid) reference the plan that is inheritted from the namespace's ultimate parent.
 
 This table add a count of members and projects currently associated with the namespace.
 Boolean columns: gitlab_plan_is_paid, namespace_is_internal, namespace_is_ultimate_parent
