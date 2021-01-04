@@ -37,6 +37,7 @@ sources:
       - name: compensation_certificate
       - name: comp_band
       - name: data_team_capacity
+      - name: data_team_csat_survey_fy2021_q4
       - name: days_sales_outstanding
       - name: days_to_close
       - name: employee_location_factor

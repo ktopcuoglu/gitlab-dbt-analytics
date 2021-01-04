@@ -1,6 +1,6 @@
 {{ config({
     "schema": "legacy",
-    "database": env_var('SNOWFLAKE_TRANSFORM_DATABASE'),
+    "database": env_var('SNOWFLAKE_PROD_DATABASE'),
     })
 }}
 
@@ -17,7 +17,7 @@ WITH hiring_team AS (
 ), employees AS (
 
     SELECT *
-    FROM {{ref('bamboohr_id_employee_number_mapping_source')}}      
+    FROM {{ref('employee_directory')}}      
 
 ), final AS (
 

@@ -21,8 +21,6 @@ models:
             - not_null
       - name: host_id
         description: '{{ doc("host_id") }}'
-        tests:
-            - not_null
       - name: original_linked_subscription_id
         description: '{{ doc("original_linked_subscription_id") }}'
       - name: latest_active_subscription_id
@@ -51,16 +49,10 @@ models:
             - not_null
       - name: major_version
         description: '{{ doc("major_version") }}'
-        tests:
-            - not_null
       - name: minor_version
-        description: '{{ doc("minor_version") }}'
-        tests:
-            - not_null
+        description: '{{ doc("minor_version") }}' 
       - name: major_minor_version
         description: '{{ doc("major_minor_version") }}'
-        tests:
-            - not_null
       - name: version
         description: '{{ doc("version") }}'
         tests:
@@ -71,8 +63,6 @@ models:
             - not_null
       - name: host_name
         description: '{{ doc("host_name") }}'
-        tests:
-            - not_null
       - name: subscription_name_slugify
         description: '{{ doc("subscription_name_slugify") }}'
       - name: subscription_start_month

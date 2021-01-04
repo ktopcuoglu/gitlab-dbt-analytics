@@ -1,9 +1,8 @@
 WITH source AS (
-
+    
     SELECT *
     FROM {{ source('bamboohr', 'id_employee_number_mapping') }}
-    ORDER BY uploaded_at DESC
-    LIMIT 1
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY DATE_TRUNC(day, uploaded_at) ORDER BY uploaded_at DESC) = 1 
 
 ), intermediate AS (
 
@@ -22,59 +21,41 @@ WITH source AS (
            WHEN d.value['terminationDate']= '0000-00-00'
             THEN NULL
            ELSE d.value['terminationDate']::VARCHAR END)::DATE        AS termination_date,
+        d.value['customCandidateID']::NUMBER                          AS greenhouse_candidate_id,
+        d.value['customCostCenter']::VARCHAR                          AS cost_center,
+        d.value['customGitLabUsername']::VARCHAR                      AS gitlab_username,
+        d.value['customJobTitleSpeciality']::VARCHAR                  AS jobtitle_speciality,
+        d.value['customLocality']::VARCHAR                            AS locality,
       d.value['customNationality']::VARCHAR                           AS nationality,
+        d.value['customOtherGenderOptions']::VARCHAR                  AS gender_dropdown, 
       d.value['customRegion']::VARCHAR                                AS region,
+      d.value['customRole']::VARCHAR                                  AS job_role,
+      d.value['customSalesGeoDifferential']::VARCHAR                  AS sales_geo_differential,
+      d.value['dateofBirth']::VARCHAR                                 AS date_of_birth,
+      d.value['employeeStatusDate']::VARCHAR                          AS employee_status_date,
+      d.value['employmentHistoryStatus']::VARCHAR                     AS employment_history_status,
       d.value['ethnicity']::VARCHAR                                   AS ethnicity,
       d.value['gender']::VARCHAR                                      AS gender, 
-      d.value['customOtherGenderOptions']::VARCHAR                    AS gender_dropdown, 
       TRIM(d.value['country']::VARCHAR)                               AS country,
       d.value['age']::NUMBER                                          AS age,
-      d.value['customCandidateID']::NUMBER                            AS greenhouse_candidate_id
+      d.value['customJobGrade']::VARCHAR                              AS job_grade,
+      d.value['customPayFrequency']::VARCHAR                          AS pay_frequency,
+      uploaded_at::TIMESTAMP                                          AS uploaded_at
     FROM source,
-    LATERAL FLATTEN(INPUT => PARSE_JSON(jsontext['employees']), outer => true) d
+    LATERAL FLATTEN(INPUT => PARSE_JSON(jsontext['employees']), OUTER => true) d
 
 ), final AS (
 
-    SELECT
-      employee_number,
-      employee_id,
-      first_name,
-      last_name,
-      hire_date,
-      termination_date,
-      CASE WHEN age BETWEEN 18 AND 24 THEN '18-24'
-          WHEN age BETWEEN 25 AND 29  THEN '25-29'
-          WHEN age BETWEEN 30 AND 34  THEN '30-34'
-          WHEN age BETWEEN 35 AND 39  THEN '35-39'
-          WHEN age BETWEEN 40 AND 44  THEN '40-44'
-          WHEN age BETWEEN 44 AND 49  THEN '44-49'
-          WHEN age BETWEEN 50 AND 54  THEN '50-54'
-          WHEN age BETWEEN 55 AND 59  THEN '55-59'
-          WHEN age>= 60               THEN '60+'
-          WHEN age IS NULL            THEN 'Unreported'
-          WHEN age = -1               THEN 'Unreported'
-          ELSE NULL END                                       AS age_cohort,
-      country,
-      ethnicity,
-      COALESCE(gender_dropdown, gender,'Did Not Identify')    AS gender,
-      nationality,
-      region,
-      CASE WHEN region = 'Americas' AND country IN ('United States', 'Canada','Mexico') 
-            THEN 'NORAM'
-         WHEN region = 'Americas' AND country NOT IN ('United States', 'Canada','Mexico') 
-            THEN 'LATAM'
-         ELSE region END                                        AS region_modified,
-      IFF(country='United States', COALESCE(gender_dropdown, gender,'Did Not Identify')  || '_' || country, 
-                                   COALESCE(gender_dropdown, gender,'Did Not Identify')  || '_'|| 'Non-US') AS gender_region,
-      greenhouse_candidate_id
-    FROM intermediate
+    SELECT *,
+      DENSE_RANK() OVER (ORDER BY uploaded_at DESC)                   AS uploaded_row_number_desc
+    FROM intermediate 
     WHERE hire_date IS NOT NULL
-        AND (LOWER(first_name) NOT LIKE '%greenhouse test%'
-            and LOWER(last_name) NOT LIKE '%test profile%'
-            and LOWER(last_name) != 'test-gitlab')
-        AND employee_id  NOT IN (42039, 42043)
+      AND (LOWER(first_name) NOT LIKE '%greenhouse test%'
+      AND LOWER(last_name) NOT LIKE '%test profile%'
+      AND LOWER(last_name) != 'test-gitlab')
+      AND employee_id != 42039
 
-)
+) 
 
-SELECT *
+SELECT * 
 FROM final

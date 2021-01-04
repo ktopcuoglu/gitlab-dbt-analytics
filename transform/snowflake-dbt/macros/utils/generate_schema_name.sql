@@ -16,12 +16,12 @@
         In all cases it will now write to the same schema. The database is what's 
         different. See generate_database_name.sql
 
-        (analytics, prod, analytics) = analytics
-        (analytics, ci, analytics) = analytics
-        (analytics, dev, preparation) = analytics
+        (legacy, prod, preparation) = legacy
+        (legacy, ci, preparationprod) = legacy
+        (legacy, dev, preparation) = legacy
         
-        (zuora, prod, analytics) = zuora
-        (zuora, ci, analytics) = zuora
+        (zuora, prod, preparation) = zuora
+        (zuora, ci, preparation) = zuora
         (zuora, dev, preparation) = zuora
 
     #}

@@ -48,7 +48,7 @@ on-run-end:
 # ======
 seeds:
   +enabled: true
-  +database: "{{ env_var('SNOWFLAKE_TRANSFORM_DATABASE') }}" #ANALYTICS
+  +database: "{{ env_var('SNOWFLAKE_PROD_DATABASE') }}" #PROD
   +schema: legacy
   +quote_columns: False
 
@@ -89,7 +89,7 @@ vars:
 # Model Configs
 # ==================
 models:
-  +database: "{{ env_var('SNOWFLAKE_TRANSFORM_DATABASE') }}" # ANALYTICS, redundant, but good to be explicit
+  +database: "{{ env_var('SNOWFLAKE_PROD_DATABASE') }}" # PROD
   +schema: legacy  # Top level override since profiles defaults to PREP
 
   # ------------------
@@ -163,7 +163,7 @@ models:
         +tags: ["discourse", "social"]
 
       engineering:
-        +database: "{{ env_var('SNOWFLAKE_TRANSFORM_DATABASE') }}" # ANALYTICS
+        +database: "{{ env_var('SNOWFLAKE_PROD_DATABASE') }}" # PROD
         +materialized: table
 
       gcp_billing:

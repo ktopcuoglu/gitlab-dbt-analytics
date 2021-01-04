@@ -66,7 +66,7 @@ WITH RECURSIVE employee_directory AS (
             reports_to
         FROM date_details
         LEFT JOIN employee_directory
-        ON hire_date::DATE <= date_actual
+        ON employee_directory.hire_date::DATE <= date_actual
         AND COALESCE(termination_date::DATE, {{max_date_in_bamboo_analyses()}}) >= date_actual
         LEFT JOIN department_info
             ON employee_directory.employee_id = department_info.employee_id
@@ -146,11 +146,11 @@ WITH RECURSIVE employee_directory AS (
        COALESCE(sheetload_engineering_speciality.speciality, job_role.jobtitle_speciality) AS jobtitle_speciality,
       ---to capture speciality for engineering prior to 2020.09.30 we are using sheetload, and capturing from bamboohr afterwards
       location_factor.location_factor, 
-      IFF(hire_date = date_actual OR 
+      IFF(employee_directory.hire_date = date_actual OR 
           rehire_date = date_actual, True, False)                           AS is_hire_date,
       IFF(employment_status = 'Terminated', True, False)                    AS is_termination_date,
       IFF(rehire_date = date_actual, True, False)                           AS is_rehire_date,
-      IFF(hire_date< employment_status_first_value,
+      IFF(employee_directory.hire_date< employment_status_first_value,
             'Active', employment_status)                                    AS employment_status,
       job_role.gitlab_username,
       sales_geo_differential,
@@ -190,7 +190,7 @@ WITH RECURSIVE employee_directory AS (
             (PARTITION BY employee_directory.employee_id ORDER BY date_actual) AS tenure_days
     FROM date_details
     LEFT JOIN employee_directory
-      ON hire_date::DATE <= date_actual
+      ON employee_directory.hire_date::DATE <= date_actual
       AND COALESCE(termination_date::DATE, {{max_date_in_bamboo_analyses()}}) >= date_actual
     LEFT JOIN department_info
       ON employee_directory.employee_id = department_info.employee_id

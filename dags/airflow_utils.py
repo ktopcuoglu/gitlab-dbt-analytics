@@ -8,8 +8,8 @@ from airflow.contrib.kubernetes.pod import Resources
 from airflow.operators.slack_operator import SlackAPIPostOperator
 
 REPO = "https://gitlab.com/gitlab-data/analytics.git"
-DATA_IMAGE = "registry.gitlab.com/gitlab-data/data-image/data-image:v0.0.9"
-DBT_IMAGE = "registry.gitlab.com/gitlab-data/data-image/dbt-image:v0.0.10"
+DATA_IMAGE = "registry.gitlab.com/gitlab-data/data-image/data-image:v0.0.13"
+DBT_IMAGE = "registry.gitlab.com/gitlab-data/data-image/dbt-image:v0.0.13"
 PERMIFROST_IMAGE = "registry.gitlab.com/gitlab-data/permifrost:v0.8.0"
 
 
@@ -224,9 +224,6 @@ gitlab_pod_env_vars = {
     "SNOWFLAKE_PROD_DATABASE": "PROD"
     if GIT_BRANCH == "master"
     else f"{GIT_BRANCH.upper()}_PROD",
-    "SNOWFLAKE_TRANSFORM_DATABASE": "ANALYTICS"
-    if GIT_BRANCH == "master"
-    else f"{GIT_BRANCH.upper()}_ANALYTICS",
 }
 
 # git commands
