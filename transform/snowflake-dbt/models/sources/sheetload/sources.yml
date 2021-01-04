@@ -28,6 +28,8 @@ sources:
       - name: cert_product_geo_dashboard
       - name: cert_product_geo_sql
       - name: cert_product_geo_viewer
+      - name: cert_pricing_customer_discount_dashboard
+      - name: cert_pricing_customer_discount_viewer
       - name: clari_ai_projection
       - name: clari_export_forecast_net_iacv
       - name: communication_certificate
@@ -67,6 +69,7 @@ sources:
       - name: maxmind_countries
       - name: maxmind_ranges
       - name: osat
+      - name: percent_over_comp_band_historical
       - name: people_budget
       - name: planned_values
       - name: procurement_cost_savings

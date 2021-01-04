@@ -65,6 +65,7 @@ WITH source AS (
         recording_ce_finished_at::TIMESTAMP          AS recording_ce_finished_at,
         recording_ee_finished_at::TIMESTAMP          AS recording_ee_finished_at,
         PARSE_JSON(stats)                            AS stats_used,
+        stats_used                                   AS counts,
         ingress_modsecurity_enabled::boolean         AS is_ingress_modsecurity_enabled,
         PARSE_JSON(topology)                         AS topology,
         grafana_link_enabled::BOOLEAN                AS is_grafana_link_enabled, 

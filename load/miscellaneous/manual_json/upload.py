@@ -39,7 +39,7 @@ def snowflake_engine_factory(
             "USER": "SNOWFLAKE_LOAD_USER",
             "PASSWORD": "SNOWFLAKE_LOAD_PASSWORD",
             "ACCOUNT": "SNOWFLAKE_ACCOUNT",
-            "DATABASE": "SNOWFLAKE_TRANSFORM_DATABASE",
+            "DATABASE": "SNOWFLAKE_PROD_DATABASE",
             "WAREHOUSE": "SNOWFLAKE_LOAD_WAREHOUSE",
             "ROLE": "LOADER",
         },
@@ -55,7 +55,7 @@ def snowflake_engine_factory(
             "USER": "SNOWFLAKE_USER",  ## this is the CI User
             "PASSWORD": "SNOWFLAKE_PASSWORD",
             "ACCOUNT": "SNOWFLAKE_ACCOUNT",
-            "DATABASE": "SNOWFLAKE_TRANSFORM_DATABASE",
+            "DATABASE": "SNOWFLAKE_PROD_DATABASE",
             "WAREHOUSE": "SNOWFLAKE_TRANSFORM_WAREHOUSE",
             "ROLE": "TRANSFORMER",
         },
@@ -130,7 +130,6 @@ if __name__ == "__main__":
 
     config_dict = env.copy()
     snowflake_engine = snowflake_engine_factory(config_dict, "LOADER")
-
 
     for root, dirs, files in os.walk(
         "/usr/local/analytics/extract/gitlab_feature_flags_yaml"

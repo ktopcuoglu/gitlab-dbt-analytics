@@ -8,8 +8,8 @@ from airflow.contrib.kubernetes.pod import Resources
 from airflow.operators.slack_operator import SlackAPIPostOperator
 
 REPO = "https://gitlab.com/gitlab-data/analytics.git"
-DATA_IMAGE = "registry.gitlab.com/gitlab-data/data-image/data-image:v0.0.9"
-DBT_IMAGE = "registry.gitlab.com/gitlab-data/data-image/dbt-image:v0.0.10"
+DATA_IMAGE = "registry.gitlab.com/gitlab-data/data-image/data-image:v0.0.13"
+DBT_IMAGE = "registry.gitlab.com/gitlab-data/data-image/dbt-image:v0.0.13"
 PERMIFROST_IMAGE = "registry.gitlab.com/gitlab-data/permifrost:v0.8.0"
 
 
@@ -224,17 +224,7 @@ gitlab_pod_env_vars = {
     "SNOWFLAKE_PROD_DATABASE": "PROD"
     if GIT_BRANCH == "master"
     else f"{GIT_BRANCH.upper()}_PROD",
-    "SNOWFLAKE_TRANSFORM_DATABASE": "ANALYTICS"
-    if GIT_BRANCH == "master"
-    else f"{GIT_BRANCH.upper()}_ANALYTICS",
 }
-
-# Warehouse variable declaration
-xs_warehouse = f"'{{warehouse_name: transforming_xs}}'"
-
-l_warehouse = f"'{{warehouse_name: transforming_l}}'"
-
-xl_warehouse = f"'{{warehouse_name: transforming_xl}}'"
 
 # git commands
 data_test_ssh_key_cmd = f"""
@@ -284,7 +274,7 @@ dbt_install_deps_cmd = f"""
 
 dbt_install_deps_and_seed_cmd = f"""
     {dbt_install_deps_cmd} &&
-    dbt seed --profiles-dir profile --target prod --full-refresh --vars {xs_warehouse}"""
+    dbt seed --profiles-dir profile --target prod --full-refresh"""
 
 clone_and_setup_dbt_nosha_cmd = f"""
     {clone_repo_cmd} &&
@@ -296,7 +286,7 @@ dbt_install_deps_nosha_cmd = f"""
 
 dbt_install_deps_and_seed_nosha_cmd = f"""
     {dbt_install_deps_nosha_cmd} &&
-    dbt seed --profiles-dir profile --target prod --full-refresh --vars {xs_warehouse}"""
+    dbt seed --profiles-dir profile --target prod --full-refresh"""
 
 
 def number_of_dbt_threads_argument(number_of_threads):
