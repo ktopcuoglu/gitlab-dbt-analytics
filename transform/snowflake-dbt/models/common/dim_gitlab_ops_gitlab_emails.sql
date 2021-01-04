@@ -12,9 +12,8 @@ WITH gitlab_ops_users_xf AS (
       SPLIT_PART(notification_email,'@', 0)                    AS email_handle, 
       COUNT(notification_email) OVER (PARTITION BY user_id)    AS number_of_emails 
     FROM gitlab_ops_users_xf
-    WHERE length (email_handle) > 3       -- removes records with just one number  
+    WHERE length (email_handle) > 1       -- removes records with just one number  
       AND notification_email ILIKE '%gitlab.com'
-      AND email_handle NOT LIKE '%-%'     -- removes any emails with special character - 
       AND email_handle NOT LIKE '%~%'     -- removes admin accounts 
       AND email_handle NOT LIKE '%+%'     -- removes any emails with special character + 
       AND email_handle NOT LIKE '%admin%' -- removes records with the word admin

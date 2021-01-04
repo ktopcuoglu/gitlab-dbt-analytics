@@ -35,8 +35,7 @@ WITH gitlab_dotcom_members AS (
     gitlab_dotcom_user_id, 
     user_name,
     CASE 
-      WHEN length (notification_email) < 3                  THEN NULL   -- removes records with just one number  
-      WHEN notification_email LIKE '%-%'                    THEN NULL   -- removes any emails with special character - 
+      WHEN length (notification_email) < 2                  THEN NULL   -- removes records with just one number  
       WHEN notification_email LIKE '%~%'                    THEN NULL   -- removes admin accounts 
       WHEN notification_email LIKE '%+%'                    THEN NULL   -- removes any emails with special character + 
       WHEN notification_email LIKE '%admin%'                THEN NULL   -- removes records with the word admin

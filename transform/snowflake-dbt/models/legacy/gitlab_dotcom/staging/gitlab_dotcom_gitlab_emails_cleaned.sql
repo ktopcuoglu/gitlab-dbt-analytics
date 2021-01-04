@@ -13,9 +13,8 @@ WITH gitlab_dotcom_gitlab_emails AS (
       SPLIT_PART(email_address,'@', 0)                    AS email_handle, 
       COUNT(email_address) OVER (PARTITION BY user_id)    AS number_of_emails 
     FROM gitlab_dotcom_gitlab_emails
-    WHERE length (email_handle) > 3       -- removes records with just one number  
+    WHERE length (email_handle) > 1       -- removes records with just one number  
       AND email_handle IS NOT NULL 
-      AND email_handle NOT LIKE '%-%'     -- removes any emails with special character - 
       AND email_handle NOT LIKE '%~%'     -- removes emails with special character ~
       AND email_handle NOT LIKE '%+%'     -- removes any emails with special character + 
       AND email_handle NOT LIKE '%admin%' -- removes records with the word admin
