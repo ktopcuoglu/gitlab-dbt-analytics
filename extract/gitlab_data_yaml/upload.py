@@ -64,7 +64,7 @@ if __name__ == "__main__":
         if private_token is not None:
             header = f'--header "PRIVATE-TOKEN: {private_token}"'
             try:
-                command = f"curl {header} {base_url}{file_name}%2Eyml/raw?ref=master | yaml2json -o {file_name}.json"
+                command = f"curl {header} '{base_url}{file_name}%2Eyml/raw?ref=master' | yaml2json -o {file_name}.json"
                 p = subprocess.run(command, shell=True)
                 p.check_returncode()
             except:
