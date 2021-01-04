@@ -162,4 +162,31 @@ if __name__ == "__main__":
             snowflake_engine,
         )
 
+    # Metadata
+    metadata_mapping = dict(meta_fields="fields")
+
+    for key, value in metadata_mapping.items():
+        logging.info(f"Getting metdata for fields...")
+        data = bamboo.get_meta_data(value)
+
+        with open(f"{key}.json", "w") as outfile:
+            json.dump(data, outfile)
+
+        # record_counts[key] = len(data["employees"])
+
+        # test_extraction(
+        #     data["employees"],
+        #     f"{snowflake_load_database}.bamboohr.{key}",
+        #     snowflake_engine,
+        #     tables_to_skip_test_list,
+        #     field_name="JSONTEXT:employees",
+        # )
+
+        snowflake_stage_load_copy_remove(
+            f"{key}.json",
+            f"{snowflake_load_database}.bamboohr.bamboohr_load",
+            f"{snowflake_load_database}.bamboohr.{key}",
+            snowflake_engine,
+        )        
+
     push_to_xcom_file(record_counts)
