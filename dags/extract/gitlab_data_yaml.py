@@ -16,6 +16,7 @@ from kube_secrets import (
     SNOWFLAKE_LOAD_ROLE,
     SNOWFLAKE_LOAD_USER,
     SNOWFLAKE_LOAD_WAREHOUSE,
+    GITLAB_ANALYTICS_PRIVATE_TOKEN,
 )
 from kubernetes_helpers import get_affinity, get_toleration
 

@@ -93,7 +93,7 @@ if __name__ == "__main__":
     #     curl_and_upload(key, value, pi_url)
 
     for key, value in comp_calc_dict.items():
-        curl_and_upload(key, value, comp_calc_url)
+        curl_and_upload(key, value, comp_calc_url, config_dict['GITLAB_ANALYTICS_PRIVATE_TOKEN'])
 
     if job_failed:
         sys.exit(1)
