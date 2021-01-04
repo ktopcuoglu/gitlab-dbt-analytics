@@ -122,7 +122,7 @@ WITH RECURSIVE employee_directory AS (
 ), fct_work_email AS (
 
     SELECT *
-    FROM {{ ref('bamboohr_directionary_bonuses_xf') }}   
+    FROM {{ ref('fct_employee_work_email') }}   
 
 ), enriched AS (
 

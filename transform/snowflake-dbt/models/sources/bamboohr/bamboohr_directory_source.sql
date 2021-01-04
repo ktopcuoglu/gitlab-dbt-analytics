@@ -19,7 +19,7 @@ WITH source AS (
       data_by_row['jobTitle']::varchar 			AS job_title,
 	  data_by_row['supervisor']::varchar 		AS supervisor,
 	  data_by_row['workEmail']::varchar			AS work_email,
-      DATE_TRUNC(day, uploaded_at)              AS uploaded_at
+      uploaded_at                               AS uploaded_at
     FROM intermediate
 
 ), final AS (
@@ -27,7 +27,8 @@ WITH source AS (
     SELECT *
     FROM renamed
     WHERE work_email != 't2test@gitlab.com'
-
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY employee_id ORDER BY uploaded_at DESC)=1
+    
 )
 
 SELECT *
