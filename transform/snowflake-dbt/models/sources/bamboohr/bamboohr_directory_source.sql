@@ -27,7 +27,7 @@ WITH source AS (
     SELECT *
     FROM renamed
     WHERE work_email != 't2test@gitlab.com'
-    QUALIFY ROW_NUMBER() OVER (PARTITION BY employee_id ORDER BY uploaded_at DESC)=1
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY employee_id ORDER BY uploaded_at DESC) = 1
     
 )
 
