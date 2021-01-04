@@ -2,6 +2,7 @@ WITH bamboohr_directory AS (
 
     SELECT *
     FROM {{ ref ('bamboohr_directory_source') }}
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY employee_id ORDER BY uploaded_at DESC) = 1
 
 ), intermediate AS (
 
@@ -21,7 +22,7 @@ WITH bamboohr_directory AS (
       IFF(max_uploaded_date< CURRENT_DATE(), 
         max_uploaded_date, 
         COALESCE(LEAD(DATEADD(day,-1,uploaded_at)) OVER (PARTITION BY employee_id ORDER BY uploaded_at),
-                {{max_date_in_bamboo_analyses()}}))                                  AS valid_to_date,
+                {{max_date_in_bamboo_analyses()}}))                                   AS valid_to_date,
       DENSE_RANK() OVER (PARTITION BY employee_id ORDER BY valid_from_date DESC)      AS rank_email_desc
     FROM intermediate
 )
