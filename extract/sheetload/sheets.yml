@@ -39,6 +39,10 @@ sheets:
     owner: '@pluthra'
     tabs:
       - company_call_attendance
+  - name: data_team_csat_survey_fy2021_q4
+    owner: '@ken_aguilar'
+    tabs:
+      - data_team_csat_survey_fy2021_q4
   - name: days_sales_outstanding
     owner: '@s_mccauley'
     tabs:
@@ -229,6 +233,8 @@ sheets:
       - cert_customer_segmentation_sql
       - cert_product_geo_viewer
       - cert_customer_segmentation_viewer
+      - cert_pricing_customer_discount_dashboard
+      - cert_pricing_customer_discount_viewer
   - name: engineering_infra_prod_console_access
     description: This data contains summarized rails-console and GCP read and write access data in support of an Engineering KPI
     owner: '@kwiebers'

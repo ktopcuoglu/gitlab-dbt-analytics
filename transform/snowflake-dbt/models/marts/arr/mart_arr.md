@@ -7,7 +7,7 @@ The below query will pull ARR by month. You can add additional dimensions to the
 SELECT
   arr_month,
   SUM(arr)  AS arr
-FROM "ANALYTICS"."LEGACY"."MART_ARR"
+FROM "PROD"."LEGACY"."MART_ARR"
 WHERE arr_month < DATE_TRUNC('month',CURRENT_DATE)
 GROUP BY 1
 ORDER BY 1 DESC
@@ -31,7 +31,7 @@ The below query will pull ARR by month as observed on selected snapshot_date.
 SELECT
   arr_month,
   SUM(arr)  AS arr
-FROM "ANALYTICS"."LEGACY"."MART_ARR_SNAPSHOTS"
+FROM "PROD"."LEGACY"."MART_ARR_SNAPSHOTS"
 WHERE arr_month < DATE_TRUNC('month',CURRENT_DATE)
 GROUP BY 1
 ORDER BY 1 DESC

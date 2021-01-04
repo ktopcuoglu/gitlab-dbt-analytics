@@ -16,7 +16,7 @@ from kube_secrets import (
 env = os.environ.copy()
 pod_env_vars = {
     "CI_PROJECT_DIR": "/analytics",
-    "SNOWFLAKE_TRANSFORM_DATABASE": "ANALYTICS",
+    "SNOWFLAKE_PROD_DATABASE": "PROD",
 }
 
 # Default arguments for the DAG

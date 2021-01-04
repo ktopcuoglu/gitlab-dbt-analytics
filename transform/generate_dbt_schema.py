@@ -20,7 +20,7 @@ def engine_factory(config_dict: Dict) -> Engine:
             account=config_dict["SNOWFLAKE_ACCOUNT"],
             user=config_dict["SNOWFLAKE_TRANSFORM_USER"],
             password=config_dict["SNOWFLAKE_PASSWORD"],
-            database=config_dict["SNOWFLAKE_TRANSFORM_DATABASE"],
+            database=config_dict["SNOWFLAKE_PROD_DATABASE"],
             schema="INFORMATION_SCHEMA",
             warehouse=config_dict["SNOWFLAKE_TRANSFORM_WAREHOUSE"],
             role=config_dict["SNOWFLAKE_TRANSFORM_ROLE"],
@@ -49,7 +49,7 @@ def write_schema(table_names: List[str]) -> None:
             SELECT lower(column_name) as column_name
             FROM COLUMNS
             WHERE table_name = '{}'
-            AND lower(TABLE_SCHEMA) = 'analytics'
+            AND lower(TABLE_SCHEMA) = 'prod'
             ORDER BY ORDINAL_POSITION
             """.format(
                 table_name

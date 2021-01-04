@@ -4,8 +4,8 @@ sources:
   - name: version
     tags: ["tdf","version_db"]
     database: '{{ env_var("SNOWFLAKE_LOAD_DATABASE") }}'
-    schema: version_db_dump_stitch
-    loaded_at_field: _sdc_batched_at
+    schema: version_db
+    loaded_at_field: updated_at
 
     quoting:
       database: true
@@ -17,11 +17,6 @@ sources:
       error_after: {count: 31, period: day}
 
     tables:
-      - name: avg_cycle_analytics
-        columns:
-          - name: id
-            tests:
-              - not_null
       - name: conversational_development_indices
         columns:
           - name: id
@@ -35,19 +30,7 @@ sources:
               - not_null
           - name: usage_data_id
             tests:
-              - not_null    
-      - name: current_host_stats
-        columns:
-          - name: id
-            tests:
-              - not_null
-          - name: created_at
-            tests:
-              - not_null 
-          - name: updated_at
-              - not_null
-          - name: host_id
-              - not_null             
+              - not_null              
       - name: fortune_companies
       - name: hosts
         columns:
@@ -66,7 +49,6 @@ sources:
             tests:
               - not_null
               - unique
-      - name: schema_migrations
       - name: usage_data
         columns:
           - name: id
@@ -78,6 +60,7 @@ sources:
           - name: updated_at
             tests:
               - not_null
+      - name: users  
       - name: version_checks
         columns:
           - name: id
@@ -99,5 +82,4 @@ sources:
               - not_null
           - name: updated_at
             tests:
-              - not_null
-      - name: users              
+              - not_null            

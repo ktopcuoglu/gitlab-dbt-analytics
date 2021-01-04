@@ -48,7 +48,7 @@ WITH namespace_snapshots_daily AS (
     
     SELECT
       recursive_namespace_ultimate.*,
-      upstream_lineage[ARRAY_SIZE(upstream_lineage) - 1]                                AS ultimate_parent_id,
+      upstream_lineage[ARRAY_SIZE(upstream_lineage) - 1]::INT                           AS ultimate_parent_id,
       COALESCE((ultimate_parent_id IN {{ get_internal_parent_namespaces() }}), FALSE)   AS namespace_is_internal,
       CASE
         WHEN namespace_subscription_snapshot.is_trial
