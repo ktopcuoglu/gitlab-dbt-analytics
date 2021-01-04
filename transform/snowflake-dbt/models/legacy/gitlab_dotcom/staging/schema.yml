@@ -125,7 +125,7 @@ models:
         tags: ["tdf","gitlab_dotcom"]
         tests:
           - not_null
-          - unique
+          # - unique, test too long, removed as part of https://gitlab.com/gitlab-data/analytics/-/issues/7409
   
   - name: gitlab_dotcom_namespace_lineage_historical_monthly
     columns:
