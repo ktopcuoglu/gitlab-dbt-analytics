@@ -50,7 +50,7 @@ dag = DAG(
     "bamboohr_extract", default_args=default_args, schedule_interval="0 */2 * * *"
 )
 
-# SFDC Extract
+# BambooHR Extract
 bamboohr_extract_cmd = f"""
     {clone_and_setup_extraction_cmd} &&
     python bamboohr/src/execute.py
