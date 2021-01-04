@@ -172,15 +172,14 @@ if __name__ == "__main__":
         with open(f"{key}.json", "w") as outfile:
             json.dump(data, outfile)
 
-        # record_counts[key] = len(data["employees"])
+        record_counts[key] = len(data)
 
-        # test_extraction(
-        #     data["employees"],
-        #     f"{snowflake_load_database}.bamboohr.{key}",
-        #     snowflake_engine,
-        #     tables_to_skip_test_list,
-        #     field_name="JSONTEXT:employees",
-        # )
+        test_extraction(
+            data,
+            f"{snowflake_load_database}.bamboohr.{key}",
+            snowflake_engine,
+            tables_to_skip_test_list,
+        )
 
         snowflake_stage_load_copy_remove(
             f"{key}.json",
