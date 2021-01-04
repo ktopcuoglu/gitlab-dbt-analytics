@@ -1,16 +1,6 @@
 version: 2
 
 models:
-    - name: version_avg_cycle_analytics_source
-      description: Cycle analytics data from self-managed instances https://docs.gitlab.com/ee/user/analytics/cycle_analytics.html.
-      columns:
-        - name: avg_cycle_analytics_id
-          tags:
-            - tdf
-            - version_db
-          tests:
-            - not_null
-            - unique
     
     - name: version_conversational_development_indices_source
       description: Conversational development index information by usage data id.
@@ -27,23 +17,6 @@ models:
             - version_db
           tests:
             - not_null    
-            
-    - name: version_current_host_stats_source
-      description: Current statistics for self-managed instances.
-      columns:
-        - name: host_stat_id
-          tags:
-            - tdf
-            - version_db
-          tests:
-            - not_null
-            - unique
-        - name: host_id
-          tags:
-            - tdf
-            - version_db
-          tests:
-            - not_null
 
     - name: version_hosts_source
       description: Basic information for self-managed instances.

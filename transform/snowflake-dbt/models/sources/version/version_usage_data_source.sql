@@ -11,6 +11,7 @@ WITH source AS (
     {% if is_incremental() %}
     WHERE updated_at >= (SELECT MAX(updated_at) FROM {{this}})
     {% endif %}
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY id ORDER BY updated_at DESC) = 1
 
 ), renamed AS (
 
@@ -24,7 +25,11 @@ WITH source AS (
         --licensee // removed for PII
         license_user_count::NUMBER                   AS license_user_count,
         license_starts_at::TIMESTAMP                 AS license_starts_at,
-        license_expires_at::TIMESTAMP                AS license_expires_at,
+        CASE 
+            WHEN license_expires_at IS NULL                               THEN NULL::TIMESTAMP
+            WHEN SPLIT_PART(license_expires_at, '-', 1)::NUMBER > 9999    THEN '9999-12-30 00:00:00.000 +00'::TIMESTAMP
+                                                                          ELSE license_expires_at::TIMESTAMP END
+                                                     AS license_expires_at,
         PARSE_JSON(license_add_ons)                  AS license_add_ons,
         recorded_at::TIMESTAMP                       AS recorded_at,
         created_at::TIMESTAMP                        AS created_at,
