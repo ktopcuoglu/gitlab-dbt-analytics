@@ -17,7 +17,7 @@ WITH hiring_team AS (
 ), employees AS (
 
     SELECT *
-    FROM {{ref('bamboohr_id_employee_number_mapping_source')}}      
+    FROM {{ref('employee_directory')}}      
 
 ), final AS (
 
