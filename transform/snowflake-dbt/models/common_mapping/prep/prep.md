@@ -5,6 +5,12 @@ Cleaning operations vary across columns, depending on the nature of the source d
 
 {% enddocs %}
 
+{% docs prep_crm_sales_hierarchy_live %}
+
+Creates a base view with generated keys for the live crm sales hierarchy shared dimensions and references in facts.
+
+{% enddocs %}
+
 {% docs prep_geo_area %}
 
 Creates a base view with generated keys for the geo_area shared dimension and references in facts.

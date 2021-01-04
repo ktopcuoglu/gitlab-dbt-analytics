@@ -25,6 +25,11 @@ Dimension that combines demographic data from salesforce leads and salesforce co
 
 {% enddocs %}
 
+{% docs dim_crm_sales_hierarchy_live %}
+Dimension table representing the current state of the sales hierarchy, including the user segment, geo, region, and area as it is in the crm user object.
+
+{% enddocs %}
+
 {% docs dim_billing_account %}
 Dimensional table representing each individual Zuora account with details of person to bill for the account.
 
