@@ -17,3 +17,7 @@ Table for mapping ip address ranges to location ids.
 {% docs map_product_tier %}
  Table for mapping Zuora Product Rate Plans to Product Tier, Delivery Type, and Ranking.
 {% enddocs %}
+
+{% docs map_team_member_bamboo_gitlab_dotcom_gitlab_ops %}
+ Table for mapping GitLab team members across bambooHR, GitLab.com Postgres DB, and GitLab Ops 
+{% enddocs %}
