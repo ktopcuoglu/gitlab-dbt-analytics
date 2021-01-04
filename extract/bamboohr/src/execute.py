@@ -77,90 +77,90 @@ if __name__ == "__main__":
 
     snowflake_engine = snowflake_engine_factory(config_dict, "LOADER")
 
-    # # Company Directory
-    # logging.info("Getting latest employee directory.")
+    # Company Directory
+    logging.info("Getting latest employee directory.")
 
-    # employees = bamboo.get_employee_directory()
+    employees = bamboo.get_employee_directory()
 
-    # record_counts["directory"] = len(employees)
+    record_counts["directory"] = len(employees)
 
-    # with open("directory.json", "w") as outfile:
-    #     json.dump(employees, outfile)
+    with open("directory.json", "w") as outfile:
+        json.dump(employees, outfile)
 
-    # test_extraction(
-    #     employees,
-    #     f"{snowflake_load_database}.bamboohr.directory",
-    #     snowflake_engine,
-    #     tables_to_skip_test_list,
-    # )
+    test_extraction(
+        employees,
+        f"{snowflake_load_database}.bamboohr.directory",
+        snowflake_engine,
+        tables_to_skip_test_list,
+    )
 
-    # snowflake_stage_load_copy_remove(
-    #     "directory.json",
-    #     f"{snowflake_load_database}.bamboohr.bamboohr_load",
-    #     f"{snowflake_load_database}.bamboohr.directory",
-    #     snowflake_engine,
-    # )
+    snowflake_stage_load_copy_remove(
+        "directory.json",
+        f"{snowflake_load_database}.bamboohr.bamboohr_load",
+        f"{snowflake_load_database}.bamboohr.directory",
+        snowflake_engine,
+    )
 
-    # # Tabular Data
-    # tabular_data = dict(
-    #     compensation="compensation",
-    #     jobinfo="jobInfo",
-    #     employmentstatus="employmentStatus",
-    #     custombonus="customBonus",
-    #     emergencyContacts="emergencyContacts",
-    #     customontargetearnings="customOnTargetEarnings",
-    #     customcurrencyconversion="customCurrencyConversion",
-    # )
+    # Tabular Data
+    tabular_data = dict(
+        compensation="compensation",
+        jobinfo="jobInfo",
+        employmentstatus="employmentStatus",
+        custombonus="customBonus",
+        emergencyContacts="emergencyContacts",
+        customontargetearnings="customOnTargetEarnings",
+        customcurrencyconversion="customCurrencyConversion",
+    )
 
-    # for key, value in tabular_data.items():
-    #     logging.info(f"Querying for {value} tabular data...")
-    #     data = bamboo.get_tabular_data(value)
+    for key, value in tabular_data.items():
+        logging.info(f"Querying for {value} tabular data...")
+        data = bamboo.get_tabular_data(value)
 
-    #     record_counts[key] = len(data)
+        record_counts[key] = len(data)
 
-    #     with open(f"{key}.json", "w") as outfile:
-    #         json.dump(data, outfile)
+        with open(f"{key}.json", "w") as outfile:
+            json.dump(data, outfile)
 
-    #     test_extraction(
-    #         data,
-    #         f"{snowflake_load_database}.bamboohr.{key}",
-    #         snowflake_engine,
-    #         tables_to_skip_test_list,
-    #     )
+        test_extraction(
+            data,
+            f"{snowflake_load_database}.bamboohr.{key}",
+            snowflake_engine,
+            tables_to_skip_test_list,
+        )
 
-    #     snowflake_stage_load_copy_remove(
-    #         f"{key}.json",
-    #         f"{snowflake_load_database}.bamboohr.bamboohr_load",
-    #         f"{snowflake_load_database}.bamboohr.{key}",
-    #         snowflake_engine,
-    #     )
+        snowflake_stage_load_copy_remove(
+            f"{key}.json",
+            f"{snowflake_load_database}.bamboohr.bamboohr_load",
+            f"{snowflake_load_database}.bamboohr.{key}",
+            snowflake_engine,
+        )
 
-    # # Custom Reports
-    # report_mapping = dict(id_employee_number_mapping="498")
+    # Custom Reports
+    report_mapping = dict(id_employee_number_mapping="498")
 
-    # for key, value in report_mapping.items():
-    #     logging.info(f"Querying for report number {value} into table {key}...")
-    #     data = bamboo.get_report(value)
+    for key, value in report_mapping.items():
+        logging.info(f"Querying for report number {value} into table {key}...")
+        data = bamboo.get_report(value)
 
-    #     with open(f"{key}.json", "w") as outfile:
-    #         json.dump(data, outfile)
+        with open(f"{key}.json", "w") as outfile:
+            json.dump(data, outfile)
 
-    #     record_counts[key] = len(data["employees"])
+        record_counts[key] = len(data["employees"])
 
-    #     test_extraction(
-    #         data["employees"],
-    #         f"{snowflake_load_database}.bamboohr.{key}",
-    #         snowflake_engine,
-    #         tables_to_skip_test_list,
-    #         field_name="JSONTEXT:employees",
-    #     )
+        test_extraction(
+            data["employees"],
+            f"{snowflake_load_database}.bamboohr.{key}",
+            snowflake_engine,
+            tables_to_skip_test_list,
+            field_name="JSONTEXT:employees",
+        )
 
-    #     snowflake_stage_load_copy_remove(
-    #         f"{key}.json",
-    #         f"{snowflake_load_database}.bamboohr.bamboohr_load",
-    #         f"{snowflake_load_database}.bamboohr.{key}",
-    #         snowflake_engine,
-    #     )
+        snowflake_stage_load_copy_remove(
+            f"{key}.json",
+            f"{snowflake_load_database}.bamboohr.bamboohr_load",
+            f"{snowflake_load_database}.bamboohr.{key}",
+            snowflake_engine,
+        )
 
     # Metadata
     metadata_mapping = dict(meta_fields="fields")
