@@ -1,6 +1,6 @@
 
 {% set metric_type = 'all_time' %}
-{% set columns_to_parse = ['analytics_unique_visits', 'usage_activity_by_stage_monthly', 'counts', 'usage_activity_by_stage_monthly', 'redis_hll_counters'] %}
+{% set json_to_parse = ['analytics_unique_visits', 'counts_monthly', 'usage_activity_by_stage_monthly', 'usage_activity_by_stage_monthly', 'redis_hll_counters', 'counts'] %}
 
 WITH data AS ( 
   
@@ -9,7 +9,7 @@ WITH data AS (
 )
 
 , flattened AS (
-    {% for column in columns_to_parse %}
+    {% for column in json_to_parse %}
       (
 
         SELECT 
@@ -26,6 +26,7 @@ WITH data AS (
         ORDER BY created_at DESC
 
       )
+
       {% if not loop.last %}
         UNION 
       {% endif %}
@@ -36,8 +37,9 @@ WITH data AS (
 SELECT 
   flattened.instance_id,
   flattened.ping_id,
-  flattened.host_id,
+  host_id,
   created_at,
+  flattened.metric_path AS flat_metrics_path,
   metrics.*, 
   flattened.metric_value
 FROM flattened

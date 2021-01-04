@@ -1,21 +1,15 @@
 {{ config({
-    "materialized": "incremental",
-    "unique_key": "freshness_unique_key"
+    "materialized": "view"
     })
 }}
-
 WITH source AS (
 
     SELECT *
     FROM {{ source('dbt', 'freshness') }}
-    {% if is_incremental() %}
-    WHERE uploaded_at >= (SELECT MAX(uploaded_at) FROM {{this}})
-    {% endif %}
 
 ), parsed AS (
 
     SELECT 
-      
       REPLACE(REGEXP_REPLACE(s.path, '\\[|\\]|''', ''), 'source.gitlab_snowflake.', '')::VARCHAR    AS schema_table_name,
       SPLIT_PART(schema_table_name, '.', 1)                                                         AS schema_name,
       SPLIT_PART(schema_table_name, '.', -1)                                                        AS table_name,
