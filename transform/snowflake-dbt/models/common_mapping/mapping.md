@@ -32,3 +32,7 @@ Table mapping current crm account ids to accounts merged in the past.
 {% docs map_namespace_internal %}
 This View contains the list of ultimate parent namespace ids that are internal to gitlab. In the future this list should be sourced from an upstream data sources or determined based on billing account in customer db if possible.
 {% enddocs %}
+
+{% docs map_team_member_bamboo_gitlab_dotcom_gitlab_ops %}
+Table for mapping GitLab team members across bambooHR, GitLab.com Postgres DB, and GitLab Ops
+{% enddocs %}
