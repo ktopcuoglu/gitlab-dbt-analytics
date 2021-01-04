@@ -1,8 +1,8 @@
 WITH crm_sales_hierarchy_live AS (
 
     SELECT
-      crm_sales_hierarchy_live,
       dim_crm_sales_hierarchy_live_id,
+      crm_sales_hierarchy_live,
       user_segment_live,
       dim_sales_segment_live_id,
       user_geo_live,
@@ -16,8 +16,8 @@ WITH crm_sales_hierarchy_live AS (
 
 {{ dbt_audit(
     cte_ref="crm_sales_hierarchy_live",
-    created_by="@msendal",
+    created_by="@mcooperDD",
     updated_by="@mcooperDD",
-    created_date="2020-11-04",
-    updated_date="2020-12-18"
+    created_date="2021-01-04",
+    updated_date="2021-01-04"
 ) }}
