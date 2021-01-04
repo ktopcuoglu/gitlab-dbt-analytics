@@ -21,11 +21,7 @@ WITH map_namespace_internal AS (
     FROM {{ref('gitlab_dotcom_members_source')}} members
     WHERE is_currently_valid = TRUE
       AND members.member_source_type = 'Namespace'
-      AND NOT EXISTS ( SELECT 1
-                       FROM {{ref('gitlab_dotcom_users_source')}} users_source
-                       WHERE users_source.state = 'blocked'
-                         AND users_source.user_id = members.user_id
-                     )
+      AND {{ filter_out_blocked_users('members', 'user_id') }}
     GROUP BY members.source_id
 
 ), projects AS (
