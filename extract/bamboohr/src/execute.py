@@ -186,6 +186,6 @@ if __name__ == "__main__":
             f"{snowflake_load_database}.bamboohr.bamboohr_load",
             f"{snowflake_load_database}.bamboohr.{key}",
             snowflake_engine,
-        )        
+        )
 
     push_to_xcom_file(record_counts)

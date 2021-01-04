@@ -75,10 +75,7 @@ class BambooAPI:
 
         return data
 
-
-    def get_meta_data(
-        self, meta_name: str
-    ) -> Dict[Any, Any]:
+    def get_meta_data(self, meta_name: str) -> Dict[Any, Any]:
         """
         API method to The Metadata API allows you to retrieve "data about data" for a given BambooHR account.
         See https://www.bamboohr.com/api/documentation/metadata.php for a list of available metadata types.
@@ -95,7 +92,6 @@ class BambooAPI:
         self.quality_check(data)
 
         return data
-
 
     def get_report(
         self, report_number: int, report_format: str = "JSON"
