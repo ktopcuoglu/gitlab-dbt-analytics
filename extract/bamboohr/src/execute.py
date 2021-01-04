@@ -166,7 +166,7 @@ if __name__ == "__main__":
     metadata_mapping = dict(meta_fields="fields")
 
     for key, value in metadata_mapping.items():
-        logging.info(f"Getting metdata for fields...")
+        logging.info(f"Getting metadata for fields...")
         data = bamboo.get_metadata(value)
 
         with open(f"{key}.json", "w") as outfile:
