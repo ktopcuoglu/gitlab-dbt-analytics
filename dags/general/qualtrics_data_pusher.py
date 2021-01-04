@@ -37,7 +37,7 @@ env = os.environ.copy()
 GIT_BRANCH = env["GIT_BRANCH"]
 pod_env_vars = {
     **gitlab_pod_env_vars,
-    **{"SNOWFLAKE_TRANSFORM_DATABASE": "ANALYTICS", "QUALTRICS_DATA_CENTER": "eu"},
+    **{"SNOWFLAKE_PROD_DATABASE": "PROD", "QUALTRICS_DATA_CENTER": "eu"},
 }
 
 # Default arguments for the DAG

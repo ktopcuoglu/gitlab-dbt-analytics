@@ -1,3 +1,9 @@
+{{ config({
+    "schema": "legacy",
+    "database": env_var('SNOWFLAKE_PROD_DATABASE'),
+    })
+}}
+
 WITH job_info AS (
 
     SELECT *

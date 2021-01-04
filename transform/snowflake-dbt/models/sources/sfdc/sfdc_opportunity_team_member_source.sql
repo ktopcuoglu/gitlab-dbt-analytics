@@ -1,7 +1,7 @@
 {{config({
     "materialized": "table",
     "schema": "legacy",
-    "database": env_var('SNOWFLAKE_TRANSFORM_DATABASE'),
+    "database": env_var('SNOWFLAKE_PROD_DATABASE'),
   })
 }}
 

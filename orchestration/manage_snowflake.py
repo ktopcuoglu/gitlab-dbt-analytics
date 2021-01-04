@@ -27,9 +27,6 @@ class SnowflakeManager:
 
         # Snowflake database name should be in CAPS
         # see https://gitlab.com/meltano/analytics/issues/491
-        self.analytics_database = "{}_ANALYTICS".format(
-            config_vars["BRANCH_NAME"].upper()
-        )
         self.prep_database = "{}_PREP".format(config_vars["BRANCH_NAME"].upper())
         self.prod_database = "{}_PROD".format(config_vars["BRANCH_NAME"].upper())
         self.raw_database = "{}_RAW".format(config_vars["BRANCH_NAME"].upper())
@@ -71,7 +68,6 @@ class SnowflakeManager:
         """
 
         databases = {
-            "analytics": self.analytics_database,
             "prep": self.prep_database,
             "prod": self.prod_database,
             "raw": self.raw_database,
@@ -117,7 +113,6 @@ class SnowflakeManager:
         Delete a clone.
         """
         db_list = [
-            self.analytics_database,
             self.prep_database,
             self.prod_database,
             self.raw_database,
