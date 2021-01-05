@@ -1,5 +1,5 @@
 <!---
-  Use this template when making changes to dbt code in a `workspace` folder.
+  Use this template when making changes to dbt code in a `workspace` folder. Review the handbook for more information https://about.gitlab.com/handbook/business-ops/data-team/platform/dbt-guide/index.html#workspaces
 --->
 
 ## Issue
@@ -10,6 +10,7 @@ Closes #
 
 - [ ] Is the code in a `/transform/snowflake-dbt/models/workspace_<yourspace>` directory?
 - [ ] Code runs - recommend you use CI jobs to validate tables are exported where you expect
+  * **Which pipeline job do I run?** See our [handbook page](https://about.gitlab.com/handbook/business-ops/data-team/platform/ci-jobs/) on our CI jobs to better understand which job to run.
 - [ ] Do you need an update in `dbt_project.yml`?
 - [ ] Do you need any CODEOWNERS for this?
 - [ ] Do you want any tests added? Not necessary for workspace models but could be a good validation.
