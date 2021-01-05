@@ -8,7 +8,8 @@ WITH bamboohr_directory AS (
 
     SELECT *,
       LAST_VALUE(DATE_TRUNC(DAY, uploaded_at)) OVER 
-            (PARTITION BY employee_id ORDER BY uploaded_at)                         AS max_uploaded_date
+            (PARTITION BY employee_id ORDER BY uploaded_at)                         AS max_uploaded_date,
+      DENSE_RANK() OVER (PARTITION BY employee_id ORDER BY uploaded_at DESC)        AS rank_email_desc        
     FROM bamboohr_directory
     QUALIFY ROW_NUMBER() OVER (PARTITION BY employee_id, work_email ORDER BY uploaded_at) = 1       
 
@@ -19,7 +20,7 @@ WITH bamboohr_directory AS (
       full_name,
       work_email,
       uploaded_at                                                                     AS valid_from_date,
-      IFF(max_uploaded_date< CURRENT_DATE(), 
+      IFF(max_uploaded_date< CURRENT_DATE() AND rank_email_desc = 1, 
         max_uploaded_date, 
         COALESCE(LEAD(DATEADD(day,-1,uploaded_at)) OVER (PARTITION BY employee_id ORDER BY uploaded_at),
                 {{max_date_in_bamboo_analyses()}}))                                   AS valid_to_date,
