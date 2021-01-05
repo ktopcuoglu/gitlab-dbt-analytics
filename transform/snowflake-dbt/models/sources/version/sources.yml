@@ -5,7 +5,7 @@ sources:
     tags: ["tdf","version_db"]
     database: '{{ env_var("SNOWFLAKE_LOAD_DATABASE") }}'
     schema: version_db
-    loaded_at_field: updated_at
+    loaded_at_field: updated_at::TIMESTAMP
 
     quoting:
       database: true
@@ -32,6 +32,7 @@ sources:
             tests:
               - not_null              
       - name: fortune_companies
+        freshness: null
       - name: hosts
         columns:
           - name: id
@@ -44,6 +45,7 @@ sources:
             tests:
               - not_null
       - name: raw_usage_data
+        loaded_at_field: created_at::TIMESTAMP
         columns:
           - name: id
             tests:
