@@ -4,13 +4,13 @@ WITH bamboo_hr_members AS (
       employee_id, 
       full_Name, 
       work_email
-    FROM legacy.employee_directory_analysis 
+    FROM {{ ref ('employee_directory_analysis') }}
     WHERE work_email IS NOT NULL 
 
 ), gitlab_dotcom_members AS (
 
     SELECT * 
-    FROM common.dim_gitlab_dotcom_gitlab_emails  
+    FROM {{ ref ('dim_gitlab_dotcom_gitlab_emails') }}
   
 ), gitlab_ops_members AS (
 
@@ -18,7 +18,7 @@ WITH bamboo_hr_members AS (
       user_id                   AS gitlab_ops_user_id,
       gitlab_ops_user_name, 
       notification_email        AS gitlab_ops_email_address
-    FROM common.dim_gitlab_ops_gitlab_emails
+    FROM {{ ref ('dim_gitlab_ops_gitlab_emails') }}
   
 ), final AS (
 
