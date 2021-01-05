@@ -64,17 +64,7 @@ models:
         tests:
           - not_null
   - name: bamboohr_directory_source
-    description: Base model for BambooHR Active Directory. This only shows currently active employees.
-    columns:
-      - name: employee_id
-        tests:
-            - unique
-            - not_null
-      - name: full_name
-        tests:
-            - unique
-            - not_null
-      - name: job_title
+    description: Base model for BambooHR Active Directory. Brings in directory data for each day.
   
   - name: bamboohr_emergency_contacts_source
     description: Bamboohr emergency contacts table. Used to create an alert in bamboohr_missing_emergency_contact_alert to identify individuals we do not have a contact for.
