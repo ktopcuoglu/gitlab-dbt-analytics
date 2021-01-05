@@ -9,15 +9,15 @@ Closes #
 ## Workspace Code Checks
 
 - [ ] Is the code in a `/transform/snowflake-dbt/models/workspace_<yourspace>` directory?
+- [ ] Validate there is no sensitive data being exposed.
 - [ ] Code runs - recommend you use CI jobs to validate tables are exported where you expect
   * **Which pipeline job do I run?** See our [handbook page](https://about.gitlab.com/handbook/business-ops/data-team/platform/ci-jobs/) on our CI jobs to better understand which job to run.
 - [ ] Do you need an update in `dbt_project.yml`?
 - [ ] Do you need any CODEOWNERS for this?
 - [ ] Do you want any tests added? Not necessary for workspace models but could be a good validation.
-- [ ] 
+- [ ] If this is a new schema, update the `dbt_analytics` role in the roles.yml file to include read access to the schema and all tables in it
 
 ## Submission Checklist
-- [ ] 
 - [ ] Branch set to delete. (Leave commits unsquashed)
 - [ ] Latest CI pipeline passes.
   - [ ] If not, an explanation has been provided.
