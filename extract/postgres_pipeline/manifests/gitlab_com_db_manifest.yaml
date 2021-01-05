@@ -5,6 +5,28 @@ connection_info:
   database: GITLAB_COM_DB_NAME
   port: PG_PORT
 tables:
+  application_settings:
+    import_db: GITLAB_DB
+    import_query: >
+      SELECT id
+      , default_projects_limit
+      , signup_enabled
+      , created_at
+      , updated_at
+      , shared_runners_enabled
+      , shared_runners_text
+      , usage_ping_enabled
+      , shared_runners_minutes
+      , repository_size_limit
+      FROM application_settings
+      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
+        AND '{EXECUTION_DATE}'::timestamp
+    export_schema: 'gitlab_com'
+    export_table: 'application_settings'
+    export_table_primary_key: id
+    advanced_metadata: true
+    dbt_source_model: true
+    dbt_snapshots: true
   award_emoji:
     import_db: GITLAB_DB
     import_query: >
@@ -477,6 +499,22 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'ci_pipelines'
     export_table_primary_key: id
+    dbt_source_model: true
+  ci_build_trace_sections:
+    import_db: GITLAB_DB
+    import_query: >
+      SELECT CONCAT(build_id,'_',section_name_id) AS ci_build_trace_section_id
+      , project_id
+      , date_start
+      , date_end
+      , build_id
+      , section_name_id
+      FROM ci_build_trace_sections
+      WHERE date_end BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
+        AND '{EXECUTION_DATE}'::timestamp
+    export_schema: 'gitlab_com'
+    export_table: 'ci_build_trace_sections'
+    export_table_primary_key: CONCAT(build_id,'_',section_name_id)
     dbt_source_model: true
   cluster_groups:
     import_db: GITLAB_DB

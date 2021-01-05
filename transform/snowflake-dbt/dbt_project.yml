@@ -145,6 +145,7 @@ models:
           secure: true
 
       datasiren:
+        +full_refresh: false
         +materialized: incremental
         +schema: datasiren
         +tags: ["datasiren"]

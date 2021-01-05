@@ -113,6 +113,14 @@ models:
           - not_null
           - unique
 
+  - name: dim_crm_sales_hierarchy_live
+    description: '{{ doc("dim_crm_sales_hierarchy_live") }}'
+    columns:
+      - name: dim_crm_sales_hierarchy_live_id
+        tests:
+          - not_null
+          - unique
+
   - name: dim_date
     description: '{{ doc("dim_date") }}'
     columns:
@@ -887,6 +895,17 @@ models:
         description: Annual Recurring Revenue value for given month
       - name: quantity
         description: Total quantity
+
+  - name: fct_sales_funnel_target
+    description: '{{ doc("fct_sales_funnel_target") }}'
+    columns:
+      - name: kpi_name
+        tests:
+          - not_null
+      - name: sales_funnel_target_id
+        tests:
+          - not_null
+          - unique
 
   - name: fct_usage_ci_minutes
     description: '{{ doc("fct_usage_ci_minutes") }}'
