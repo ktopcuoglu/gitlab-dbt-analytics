@@ -19,6 +19,8 @@ tables:
       , shared_runners_minutes
       , repository_size_limit
       FROM application_settings
+      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
+        AND '{EXECUTION_DATE}'::timestamp
     export_schema: 'gitlab_com'
     export_table: 'application_settings'
     export_table_primary_key: id
