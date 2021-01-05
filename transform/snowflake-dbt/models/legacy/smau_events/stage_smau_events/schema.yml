@@ -14,7 +14,6 @@ models:
       - name: event_surrogate_key
         tests:
           - not_null
-          - unique
       - name: data_source
         description: This is the source where the data has been collected
 
@@ -31,7 +30,6 @@ models:
       - name: event_surrogate_key
         tests:
           - not_null
-          - unique
       - name: data_source
         description: This is the source where the data has been collected
 
@@ -48,7 +46,6 @@ models:
       - name: event_surrogate_key
         tests:
           - not_null
-          - unique
       - name: data_source
         description: This is the source where the data has been collected
 
@@ -65,7 +62,6 @@ models:
       - name: event_surrogate_key
         tests:
           - not_null
-          - unique
       - name: data_source
         description: This is the source where the data has been collected
 
@@ -82,7 +78,6 @@ models:
       - name: event_surrogate_key
         tests:
           - not_null
-          - unique
       - name: data_source
         description: This is the source where the data has been collected
 
@@ -99,6 +94,5 @@ models:
       - name: event_surrogate_key
         tests:
           - not_null
-          - unique
       - name: data_source
         description: This is the source where the data has been collected

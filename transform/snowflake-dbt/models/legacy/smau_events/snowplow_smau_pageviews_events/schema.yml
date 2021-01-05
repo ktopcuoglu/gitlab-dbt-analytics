@@ -16,7 +16,6 @@ models:
       - name: event_surrogate_key
         tests:
           - not_null
-          - unique
 
   - name: create_snowplow_smau_pageviews_events
     description: '{{ doc("create_snowplow_smau_pageviews_events") }}'
@@ -33,7 +32,6 @@ models:
       - name: event_surrogate_key
         tests:
           - not_null
-          - unique
 
   - name: manage_snowplow_smau_pageviews_events
     description: '{{ doc("manage_snowplow_smau_pageviews_events") }}'
@@ -66,7 +64,6 @@ models:
       - name: event_surrogate_key
         tests:
           - not_null
-          - unique
 
   - name: plan_snowplow_smau_pageviews_events
     description: '{{ doc("plan_snowplow_smau_pageviews_events") }}'
@@ -83,7 +80,6 @@ models:
       - name: event_surrogate_key
         tests:
           - not_null
-          - unique
 
   - name: verify_snowplow_smau_pageviews_events
     description: '{{ doc("verify_snowplow_smau_pageviews_events") }}'
@@ -100,4 +96,3 @@ models:
       - name: event_surrogate_key
         tests:
           - not_null
-          - unique

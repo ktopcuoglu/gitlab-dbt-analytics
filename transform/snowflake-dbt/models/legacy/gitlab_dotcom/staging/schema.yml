@@ -35,14 +35,11 @@ models:
         tags: ["tdf","gitlab_dotcom"]
         tests:
           - not_null
-          - unique
   
   - name: gitlab_dotcom_namespace_historical_monthly
     columns:
       - name: CONCAT(snapshot_month, namespace_id)
         tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - unique
 
   - name: gitlab_dotcom_namespace_lineage
     description: '{{ doc("gitlab_dotcom_namespace_lineage") }}'
@@ -125,14 +122,11 @@ models:
         tags: ["tdf","gitlab_dotcom"]
         tests:
           - not_null
-          - unique
   
   - name: gitlab_dotcom_namespace_lineage_historical_monthly
     columns:
       - name: CONCAT(snapshot_month, namespace_id)
         tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - unique
 
   - name: gitlab_dotcom_namespace_statistics_historical_monthly
 

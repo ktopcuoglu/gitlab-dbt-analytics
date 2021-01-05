@@ -3,9 +3,6 @@ version: 2
 models:
     - name: monthly_usage_data_28_days
       description: '{{ doc("monthly_usage_data_28_days") }}'
-      tests:
-      - unique:
-          column_name: "concat(host_id, instance_id, created_month, metrics_path)"
       columns:
           - name: ping_id
             tests:
@@ -18,9 +15,6 @@ models:
               - not_null
     - name: monthly_usage_data_all_time
       description: '{{ doc("monthly_usage_data_all_time") }}'
-      tests:
-      - unique:
-          column_name: "concat(host_id, instance_id, created_month, metrics_path)"
       columns:
           - name: ping_id
             tests:
@@ -33,9 +27,6 @@ models:
               - not_null
     - name: usage_data_28_days_flattened
       description: '{{ doc("usage_data_28_days_flattened") }}'
-      tests:
-      - unique:
-          column_name: "concat(instance_id, created_at, metrics_path)"
       columns:
           - name: ping_id
             tests:
@@ -48,9 +39,6 @@ models:
               - not_null
     - name: usage_data_all_time_flattened
       description: '{{ doc("usage_data_all_time_flattened") }}'
-      tests:
-      - unique:
-          column_name: "concat(instance_id, created_at, clean_metrics_name)"
       columns:
           - name: ping_id
             tests:
