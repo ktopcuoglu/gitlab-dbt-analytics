@@ -123,7 +123,7 @@ WITH RECURSIVE employee_directory AS (
 ), fct_work_email AS (
 
     SELECT *
-    FROM {{ ref('fct_employee_work_email') }}   
+    FROM {{ ref('bamboohr_work_email') }}   
 
 ), enriched AS (
 
