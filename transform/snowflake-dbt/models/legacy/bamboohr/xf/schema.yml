@@ -274,7 +274,7 @@ models:
         - name: locality
         - name: updated_at
 
-  - name: fct_employee_work_email
+  - name: bamboohr_work_email
     description: This shows employee work emails as applicable to the valid_from_date and valid_to_date
     columns:
       - name: employee_id
