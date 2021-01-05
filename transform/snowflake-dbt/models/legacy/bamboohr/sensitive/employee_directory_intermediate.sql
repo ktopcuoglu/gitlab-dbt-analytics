@@ -14,7 +14,8 @@ WITH RECURSIVE employee_directory AS (
       hire_date,
       rehire_date,
       termination_date,
-      hire_location_factor
+      hire_location_factor,
+      Last_work_email
     FROM {{ ref('employee_directory') }}
 
 ), date_details AS (
@@ -129,7 +130,7 @@ WITH RECURSIVE employee_directory AS (
     SELECT
       date_details.date_actual,
       employee_directory.*,
-      fct_work_email.work_email,
+      COALESCE(fct_work_email.work_email, employee_directory.Last_work_email) AS work_email,
       department_info.job_title,	
       department_info.department,	
       department_info.department_modified,
