@@ -339,15 +339,17 @@ models:
     # ------------------
     # Workspaces
     # ------------------
-
-    workspace_data:
-      +schema: workspace_data
+    workspaces:
+      +tags: ["workspace"]
       
-      dbt:
-        +tags: ["dbt"]
+      workspace_data:
+        +schema: workspace_data
+        
+        dbt:
+          +tags: ["dbt"]
 
-    workspace_marketing:
-      +schema: workspace_marketing
+      workspace_marketing:
+        +schema: workspace_marketing
 
     # ------------------
     # Marts
