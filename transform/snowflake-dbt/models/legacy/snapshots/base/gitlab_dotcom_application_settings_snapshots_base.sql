@@ -14,7 +14,7 @@ WITH source AS (
   
     dbt_scd_id::VARCHAR                                           AS application_settings_snapshot_id,
     id::NUMBER                                                    AS application_settings_id,
-    shared_runnners_minutes::NUMBER                               AS shared_runners_seconds
+    shared_runners_minutes::NUMBER                                AS shared_runners_minutes
 
   FROM source
     

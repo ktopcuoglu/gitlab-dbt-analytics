@@ -33,6 +33,17 @@ models:
         tests:
           - not_null
       - name: valid_to
+  - name: gitlab_dotcom_application_settings_snapshots_base
+    description: This is the base model for snapshotted gitlab application settings data from the gitlab.com database.
+    columns:
+      - name: application_settings_snapshot_id
+        description: Auto-generated primary key when building the snapshot with dbt.
+        tests:
+          - not_null
+          - unique
+      - name: application_settings_id
+        tests:
+          - not_null
   - name: gitlab_dotcom_gitlab_subscriptions_snapshots_base
     description: This is the base model for snapshotted gitlab subscriptions data from the gitlab.com database.
     columns:
