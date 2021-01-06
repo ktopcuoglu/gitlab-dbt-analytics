@@ -89,7 +89,11 @@ WITH first_contact  AS (
       order_type_stamped                                        AS order_type,
       sales_segment,
       sales_qualified_source,
-      days_in_sao
+      days_in_sao,
+      user_segment_stamped,
+      user_geo_stamped,
+      user_region_stamped                                      AS location_region_stamped,
+      user_area_stamped
 
     FROM sfdc_opportunity
 
@@ -166,6 +170,10 @@ WITH first_contact  AS (
       opportunity_fields.days_in_4_proposal,
       opportunity_fields.days_in_5_negotiating,
       opportunity_fields.days_in_sao,
+      opportunity_fields.user_segment_stamped,
+      opportunity_fields.user_geo_stamped,
+      opportunity_fields.location_region_stamped,
+      opportunity_fields.user_area_stamped,
       CASE
         WHEN opportunity_fields.days_in_sao < 0                  THEN '1. Closed in < 0 days'
         WHEN opportunity_fields.days_in_sao BETWEEN 0 AND 30     THEN '2. Closed in 0-30 days'
@@ -228,7 +236,7 @@ WITH first_contact  AS (
 {{ dbt_audit(
     cte_ref="final_opportunities",
     created_by="@mcooperDD",
-    updated_by="@paul_armstrong",
+    updated_by="@mcooperDD",
     created_date="2020-11-30",
-    updated_date="2020-12-10"
+    updated_date="2021-01-05"
 ) }}

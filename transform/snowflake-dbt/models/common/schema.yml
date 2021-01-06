@@ -121,6 +121,14 @@ models:
           - not_null
           - unique
 
+  - name: dim_crm_sales_hierarchy_stamped
+    description: '{{ doc("dim_crm_sales_hierarchy_stamped") }}'
+    columns:
+      - name: dim_crm_sales_hierarchy_stamped_id
+        tests:
+          - not_null
+          - unique
+
   - name: dim_date
     description: '{{ doc("dim_date") }}'
     columns:
