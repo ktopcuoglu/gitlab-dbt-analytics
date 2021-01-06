@@ -50,7 +50,6 @@ sources:
           - name: id
             tests:
               - not_null
-              - unique
       - name: usage_data
         columns:
           - name: id
