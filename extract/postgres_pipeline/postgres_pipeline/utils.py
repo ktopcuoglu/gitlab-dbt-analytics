@@ -336,7 +336,7 @@ def check_if_schema_changed(
     target_query = "select * from {0} limit 1"
     target_columns = (
         pd.read_sql(
-            sql=target_query.format(target_table, table_index), con=target_engine
+            sql=target_query.format(target_table), con=target_engine
         )
         .drop(axis=1, columns=["_uploaded_at", "_task_instance"], errors="ignore")
         .columns
