@@ -3,6 +3,9 @@ version: 2
 models:
     - name: monthly_usage_data_28_days
       description: '{{ doc("monthly_usage_data_28_days") }}'
+      tests:
+      - unique:
+          column_name: "concat(host_id, instance_id, created_month, metrics_path)"
       columns:
           - name: ping_id
             tests:
