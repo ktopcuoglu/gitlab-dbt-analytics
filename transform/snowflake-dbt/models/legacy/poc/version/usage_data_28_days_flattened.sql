@@ -23,7 +23,7 @@ WITH data AS (
       (
 
         SELECT 
-          {{ dbt_utils.surrogate_key(['ping_id', 'path']) }} AS instance_path_id,
+          {{ dbt_utils.surrogate_key(['id', 'path']) }}      AS instance_path_id,
           uuid                                               AS instance_id, 
           id                                                 AS ping_id,
           host_id,
