@@ -1,3 +1,9 @@
+{{ config({
+    "materialized": "incremental",
+    "unique_key": "instance_path_id"
+    })
+}}
+
 
 {% set metric_type = 'all_time' %}
 {% set json_to_parse = ['analytics_unique_visits', 'counts_monthly', 'usage_activity_by_stage_monthly', 'usage_activity_by_stage_monthly', 'redis_hll_counters', 'counts'] %}
@@ -5,6 +11,11 @@
 WITH data AS ( 
   
     SELECT * FROM {{ ref('version_usage_data')}}
+    {% if is_incremental() %}
+
+      WHERE created_at >= (SELECT MAX(created_at) FROM {{this}})
+
+    {% endif %}
 
 )
 
@@ -13,12 +24,13 @@ WITH data AS (
       (
 
         SELECT 
-          uuid                          AS instance_id, 
-          id                            AS ping_id,
+          {{ dbt_utils.surrogate_key(['ping_id', 'path']) }} AS instance_path_id,
+          uuid                                               AS instance_id, 
+          id                                                 AS ping_id,
           host_id,
           created_at,
-          path                          AS metric_path, 
-          value                         AS metric_value
+          path                                               AS metric_path, 
+          value                                              AS metric_value
         FROM data,
         lateral flatten(input => raw_usage_data_payload, path => '{{ column }}',
         recursive => true) 
@@ -35,6 +47,7 @@ WITH data AS (
 )
 
 SELECT 
+  flattened.instance_path_id,
   flattened.instance_id,
   flattened.ping_id,
   host_id,

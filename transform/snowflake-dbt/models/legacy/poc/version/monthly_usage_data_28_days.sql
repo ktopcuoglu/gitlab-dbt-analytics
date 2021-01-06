@@ -1,7 +1,18 @@
+{{ config({
+    "materialized": "incremental",
+    "unique_key": "primary_key"
+    })
+}}
+
 WITH data AS ( 
   
     SELECT * 
     FROM {{ ref('usage_data_28_days_flattened')}}
+    {% if is_incremental() %}
+
+      WHERE created_at >= (SELECT MAX(created_month) FROM {{this}})
+
+    {% endif %}
 
 ), transformed AS (
 
@@ -45,7 +56,8 @@ WITH data AS (
 
 )
 
-SELECT 
+SELECT
+  {{ dbt_utils.surrogate_key(['instance_id', 'host_id', 'created_month']) }} AS primary_key,
   ping_id,
   instance_id,
   host_id,

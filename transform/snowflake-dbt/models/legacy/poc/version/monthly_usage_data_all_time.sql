@@ -1,3 +1,9 @@
+{{ config({
+    "materialized": "incremental",
+    "unique_key": "primary_key"
+    })
+}}
+
 WITH data AS ( 
   
     SELECT * 
@@ -28,7 +34,8 @@ WITH data AS (
 
 )
 
-SELECT 
+SELECT
+  {{ dbt_utils.surrogate_key(['instance_id', 'host_id', 'created_month']) }} AS primary_key,
   ping_id,
   instance_id,
   host_id,
