@@ -1730,6 +1730,17 @@ tables:
     export_table: 'project_mirror_data'
     export_table_primary_key: id
     dbt_source_model: true
+  project_repositories:
+    import_db: GITLAB_DB
+    import_query: >
+      SELECT id
+      , shard_id
+      , disk_path
+      , project_id
+      FROM project_repositories
+    export_schema: 'gitlab_com'
+    export_table: 'project_repositories'
+    export_table_primary_key: id
   project_repository_states:
     import_db: GITLAB_DB
     import_query: >
@@ -1740,6 +1751,20 @@ tables:
       FROM project_repository_states
     export_schema: 'gitlab_com'
     export_table: 'project_repository_states'
+    export_table_primary_key: id
+  project_repository_storage_moves:
+    import_db: GITLAB_DB
+    import_query: >
+      SELECT id
+      , created_at
+      , updated_at
+      , project_id
+      , state
+      , source_storage_name
+      , destination_storage_name
+      FROM project_repository_storage_moves
+    export_schema: 'gitlab_com'
+    export_table: 'project_repository_storage_moves'
     export_table_primary_key: id
   project_statistics:
     import_db: GITLAB_DB
@@ -2179,6 +2204,16 @@ tables:
     export_table: 'services'
     export_table_primary_key: id
     dbt_source_model: true
+  shards:
+    import_db: GITLAB_DB
+    import_query: >
+      SELECT id
+      , id
+      , name
+      FROM shards
+    export_schema: 'gitlab_com'
+    export_table: 'shards'
+    export_table_primary_key: id
   sprints:
     import_db: GITLAB_DB
     import_query: >
