@@ -1,7 +1,7 @@
 WITH bamboohr_directory AS (
 
     SELECT *
-    FROM {{ ref ('bamboohr_directory_source') }}
+    FROM {{ ref('bamboohr_directory_source') }}
     QUALIFY ROW_NUMBER() OVER (PARTITION BY employee_id, DATE_TRUNC(day, uploaded_at) ORDER BY uploaded_at DESC) = 1
 
 ), intermediate AS (
