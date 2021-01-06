@@ -12,9 +12,9 @@ WITH sfdc_opportunity_sales_hierarchy AS (
       {{ dbt_utils.surrogate_key(['crm_sales_hierarchy_stamped']) }}                                    AS dim_crm_sales_hierarchy_stamped_id,
       user_segment_stamped                                                                              AS user_segment_stamped,
       {{ dbt_utils.surrogate_key(['user_segment_stamped']) }}                                           AS dim_sales_segment_stamped_id,
-      user_geo_stamped                                                                                  AS user_geo_stamped,
+      user_geo_stamped                                                                                  AS location_region_stamped,
       {{ dbt_utils.surrogate_key(['user_geo_stamped']) }}                                               AS dim_location_region_stamped_id,
-      user_region_stamped                                                                               AS location_region_stamped,
+      user_region_stamped                                                                               AS user_region_stamped,
       {{ dbt_utils.surrogate_key(['user_region_stamped']) }}                                            AS dim_sales_region_stamped_id,
       user_area_stamped                                                                                 AS user_area_stamped,
       {{ dbt_utils.surrogate_key(['user_area_stamped']) }}                                              AS dim_sales_area_stamped_id

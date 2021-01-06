@@ -29,6 +29,11 @@ WITH first_contact  AS (
     SELECT *
     FROM {{ ref('prep_purchase_channel')}}
 
+), sales_hierarchy_stamped AS (
+
+    SELECT *
+    FROM {{ ref('prep_crm_sales_hierarchy_stamped') }}
+
 ), sales_segment AS (
 
     SELECT *
@@ -92,7 +97,7 @@ WITH first_contact  AS (
       days_in_sao,
       user_segment_stamped,
       user_geo_stamped,
-      user_region_stamped                                      AS location_region_stamped,
+      user_region_stamped,
       user_area_stamped
 
     FROM sfdc_opportunity
@@ -170,10 +175,6 @@ WITH first_contact  AS (
       opportunity_fields.days_in_4_proposal,
       opportunity_fields.days_in_5_negotiating,
       opportunity_fields.days_in_sao,
-      opportunity_fields.user_segment_stamped,
-      opportunity_fields.user_geo_stamped,
-      opportunity_fields.location_region_stamped,
-      opportunity_fields.user_area_stamped,
       CASE
         WHEN opportunity_fields.days_in_sao < 0                  THEN '1. Closed in < 0 days'
         WHEN opportunity_fields.days_in_sao BETWEEN 0 AND 30     THEN '2. Closed in 0-30 days'
@@ -196,8 +197,12 @@ WITH first_contact  AS (
       COALESCE(crm_account_dimensions.dim_geo_area_id, MD5(-1))                                                     AS dim_geo_area_id,
       COALESCE(crm_account_dimensions.dim_sales_territory_id, MD5(-1))                                              AS dim_sales_territory_id,
       COALESCE(crm_account_dimensions.dim_industry_id, MD5(-1))                                                     AS dim_industry_id,
+      COALESCE(sales_hierarchy_stamped_segment.dim_sales_segment_stamped_id, MD5(-1))                               AS dim_sales_segment_stamped_id,
+      COALESCE(sales_hierarchy_stamped_location_region.dim_location_region_stamped_id, MD5(-1))                     AS dim_location_region_stamped_id,
+      COALESCE(sales_hierarchy_stamped_user_region.dim_sales_region_stamped_id, MD5(-1))                            AS dim_sales_region_stamped_id,
+      COALESCE(sales_hierarchy_stamped_area.dim_sales_area_stamped_id, MD5(-1))                                     AS dim_sales_area_stamped_id,
 
-      -- flags
+            -- flags
       opportunity_fields.is_closed,
       opportunity_fields.is_won,
       opportunity_fields.is_refund,
@@ -230,6 +235,14 @@ WITH first_contact  AS (
       ON opportunity_fields.crm_opportunity_id = is_sao.opportunity_id
     LEFT JOIN is_sdr_sao
       ON opportunity_fields.crm_opportunity_id = is_sdr_sao.opportunity_id
+    LEFT JOIN sales_hierarchy_stamped as sales_hierarchy_stamped_segment
+      ON opportunity_fields.user_segment_stamped =sales_hierarchy_stamped_segment.user_segment_stamped
+    LEFT JOIN sales_hierarchy_stamped as sales_hierarchy_stamped_location_region
+      ON opportunity_fields.user_geo_stamped = sales_hierarchy_stamped_location_region.location_region_stamped
+    LEFT JOIN sales_hierarchy_stamped as sales_hierarchy_stamped_user_region
+      ON opportunity_fields.user_region_stamped = sales_hierarchy_stamped_user_region.user_region_stamped
+    LEFT JOIN sales_hierarchy_stamped as sales_hierarchy_stamped_area
+      ON opportunity_fields.user_area_stamped = sales_hierarchy_stamped_area.user_area_stamped
 
 )
 
