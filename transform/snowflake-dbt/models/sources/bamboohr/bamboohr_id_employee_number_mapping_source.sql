@@ -38,8 +38,10 @@ WITH source AS (
       d.value['gender']::VARCHAR                                      AS gender, 
       TRIM(d.value['country']::VARCHAR)                               AS country,
       d.value['age']::NUMBER                                          AS age,
-      d.value['customJobGrade']::VARCHAR                              AS job_grade,
-      d.value['customPayFrequency']::VARCHAR                          AS pay_frequency,
+      COALESCE(d.value['customJobGrade']::VARCHAR,
+                d.value['4659.0']::VARCHAR)                           AS job_grade,
+      COALESCE(d.value['customPayFrequency']::VARCHAR,
+               d.value['4657.0']::VARCHAR)                            AS pay_frequency,
       uploaded_at::TIMESTAMP                                          AS uploaded_at
     FROM source,
     LATERAL FLATTEN(INPUT => PARSE_JSON(jsontext['employees']), OUTER => true) d
