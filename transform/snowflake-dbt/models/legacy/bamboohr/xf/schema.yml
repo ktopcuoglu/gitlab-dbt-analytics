@@ -273,3 +273,14 @@ models:
         - name: hire_date
         - name: locality
         - name: updated_at
+
+  - name: bamboohr_work_email
+    description: This shows employee work emails as applicable to the valid_from_date and valid_to_date
+    columns:
+      - name: employee_id
+      - name: full_name
+      - name: work_email
+      - name: valid_from_date
+      - name: valid_to_date
+      - name: rank_email_desc
+        description: Identifies the email in descending order where 1 is equal to the the current email.

@@ -11,11 +11,11 @@ WITH RECURSIVE employee_directory AS (
       first_name,	
       last_name,	
       (first_name ||' '|| last_name)   AS full_name,
-      work_email,
       hire_date,
       rehire_date,
       termination_date,
-      hire_location_factor
+      hire_location_factor,
+      last_work_email
     FROM {{ ref('employee_directory') }}
 
 ), date_details AS (
@@ -120,12 +120,17 @@ WITH RECURSIVE employee_directory AS (
     SELECT *
     FROM {{ ref('bamboohr_directionary_bonuses_xf') }}  
 
+), fct_work_email AS (
+
+    SELECT *
+    FROM {{ ref('bamboohr_work_email') }}   
 
 ), enriched AS (
 
     SELECT
       date_details.date_actual,
       employee_directory.*,
+      COALESCE(fct_work_email.work_email, employee_directory.last_work_email) AS work_email,
       department_info.job_title,	
       department_info.department,	
       department_info.department_modified,
@@ -234,6 +239,9 @@ WITH RECURSIVE employee_directory AS (
     LEFT JOIN bamboohr_discretionary_bonuses_xf
       ON employee_directory.employee_id = bamboohr_discretionary_bonuses_xf.employee_id
       AND date_details.date_actual = bamboohr_discretionary_bonuses_xf.bonus_date
+    LEFT JOIN fct_work_email
+      ON employee_directory.employee_id = fct_work_email.employee_id
+      AND date_details.date_actual BETWEEN fct_work_email.valid_from_date AND fct_work_email.valid_to_date  
     WHERE employee_directory.employee_id IS NOT NULL
 
 ), base_layers as (
