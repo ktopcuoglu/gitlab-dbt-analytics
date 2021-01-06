@@ -896,7 +896,7 @@ models:
       - name: quantity
         description: Total quantity
 
-    - name: fct_namespace_member_summary
+  - name: fct_namespace_member_summary
     description: '{{ doc("fct_namespace_member_summary") }}'
     columns:
       - name: snapshot_month
