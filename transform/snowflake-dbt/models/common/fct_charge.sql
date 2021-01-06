@@ -31,7 +31,7 @@ WITH zuora_rate_plan AS (
       {{ product_category('zuora_rate_plan.rate_plan_name') }},
       {{ delivery('product_category')}},
       CASE
-        WHEN lower(rate_plan_name) like '%support%'
+        WHEN LOWER(rate_plan_name) LIKE '%support%'
           THEN 'Support Only'
         ELSE 'Full Service'
       END                                                               AS service_type,
