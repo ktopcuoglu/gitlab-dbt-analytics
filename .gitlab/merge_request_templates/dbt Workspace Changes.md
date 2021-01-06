@@ -15,7 +15,7 @@ Closes #
 - [ ] Do you need an update in `dbt_project.yml`?
 - [ ] Do you need any CODEOWNERS for this?
 - [ ] Do you want any tests added? Not necessary for workspace models but could be a good validation.
-- [ ] If this is a new schema, update the `dbt_analytics` role in the roles.yml file to include read access to the schema and all tables in it
+- [ ] If the model is being materialized in a new schema, update the `dbt_analytics` role in the roles.yml file to include read access to the schema and all tables in it
 
 ## Submission Checklist
 - [ ] Branch set to delete. (Leave commits unsquashed)
