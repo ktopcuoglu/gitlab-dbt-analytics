@@ -74,6 +74,11 @@ WITH dim_billing_account AS (
 
     SELECT *
     FROM {{ ref('monthly_usage_data') }}
+    {% if is_incremental() %}
+
+      WHERE created_month >= (SELECT MAX(reporting_month) FROM {{this}})
+
+    {% endif %}
 
 ), fct_usage_ping_payloads AS (
 

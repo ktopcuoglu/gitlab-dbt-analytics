@@ -8,6 +8,11 @@ WITH data AS (
   
     SELECT * 
     FROM {{ ref('usage_data_all_time_flattened')}}
+    {% if is_incremental() %}
+
+      WHERE created_at >= (SELECT MAX(created_at) FROM {{this}})
+
+    {% endif %}
 
 )
 
