@@ -7,7 +7,7 @@ WITH source AS (
 
     SELECT 
         NULLIF("Timestamp", '')::VARCHAR::TIMESTAMP                                                                                                 AS survey_timestamp,
-        NULLIF("Which_division_are_you_a_part_of?", '')::VARCHAR                                                                                    AS divsion,
+        NULLIF("Which_division_are_you_a_part_of?", '')::VARCHAR                                                                                    AS division,
         NULLIF("What_is_your_role_at_GitLab?", '')::VARCHAR                                                                                         AS role,
         NULLIF("Where_are_you_located?", '')::VARCHAR                                                                                               AS location,
         NULLIF("How_do_you_normally_interact_with_the_Data_Team?", '')::VARCHAR                                                                     AS interaction_with_data_team,
