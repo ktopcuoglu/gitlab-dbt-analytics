@@ -18,10 +18,10 @@ WITH dim_billing_account AS (
     SELECT *
     FROM {{ ref('dim_product_details') }}
 
-), dim_subscriptions AS (
+), dim_subscription AS (
 
     SELECT *
-    FROM {{ ref('dim_subscriptions') }}
+    FROM {{ ref('dim_subscription') }}
 
 ), fct_mrr AS (
 
@@ -37,16 +37,16 @@ WITH dim_billing_account AS (
       dim_crm_account.ultimate_parent_account_name,
       dim_crm_account.ultimate_parent_account_id,
       COALESCE(dim_crm_account.merged_to_account_id, dim_crm_account.crm_account_id)                AS crm_id,
-      dim_subscriptions.subscription_name,
-      dim_subscriptions.subscription_id,
+      dim_subscription.subscription_name,
+      dim_subscription.dim_subscription_id                                                          AS subscription_id,
       dim_product_details.product_category,
       dim_product_details.delivery,
       dim_product_details.product_ranking,
       fct_mrr.mrr,
       fct_mrr.quantity
     FROM fct_mrr
-    INNER JOIN dim_subscriptions
-      ON dim_subscriptions.subscription_id = fct_mrr.subscription_id
+    INNER JOIN dim_subscription
+      ON dim_subscription.dim_subscription_id = fct_mrr.subscription_id
     INNER JOIN dim_product_details
       ON dim_product_details.product_details_id = fct_mrr.product_details_id
     INNER JOIN dim_billing_account

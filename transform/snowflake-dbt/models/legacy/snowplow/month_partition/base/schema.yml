@@ -35,5 +35,3 @@ models:
       description: This is a view that references the duplicated event ids across the entire data set and is used to remove them from downstream models.
       columns:
           - name: event_id
-            tests:
-                - unique

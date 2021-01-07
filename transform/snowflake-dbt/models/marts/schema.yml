@@ -21,7 +21,6 @@ models:
       - name: primary_key
         tests:
           - not_null
-          - unique
         tags: ["tdf", "mart", "arr"]
 
   - name: mart_discount_arr

@@ -326,17 +326,17 @@ def check_if_schema_changed(
         return True
     # Get the columns from the current query
     query_stem = raw_query.lower().split("where")[0]
-    source_query = "{0} where {1} = (select max({1}) from {2}) limit 1"
+    source_query = "{0} limit 1"
     source_columns = pd.read_sql(
-        sql=source_query.format(query_stem, table_index, source_table),
+        sql=source_query.format(query_stem),
         con=source_engine,
     ).columns
 
     # Get the columns from the target_table
-    target_query = "select * from {0} where {1} = (select max({1}) from {0}) limit 1"
+    target_query = "select * from {0} limit 1"
     target_columns = (
         pd.read_sql(
-            sql=target_query.format(target_table, table_index), con=target_engine
+            sql=target_query.format(target_table), con=target_engine
         )
         .drop(axis=1, columns=["_uploaded_at", "_task_instance"], errors="ignore")
         .columns

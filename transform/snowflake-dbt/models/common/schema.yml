@@ -586,53 +586,6 @@ models:
           - accepted_values:
                   values: ['Sales-Assisted', 'Self-Service']
 
-  - name: dim_subscriptions
-    description: '{{ doc("dim_subscriptions") }}'
-    columns:
-      - name: subscription_id
-        description: Unique identifier of a version of a subscription
-        tests:
-          - not_null
-          - unique
-      - name: subscription_status
-        description: The status of the subscription
-        tests:
-          - not_null
-          - accepted_values:
-              values: ['Active', 'Cancelled']
-      - name: crm_account_id
-        description: account id from SFDC identifing the customer
-      - name: billing_account_id
-        description: The id of the Zuora account the subscription is associated with
-      - name: subscription_name_slugify
-        description: The unique identifier of the subscription
-      - name: subscription_version
-        description: The version number of the subscription
-      - name: is_auto_renew
-        description: Boolean field, if true, this subscription automatically renews at the end of the subscription term
-      - name: zuora_renewal_subscription_name
-        description: name of the linked subscription that renews the prior subscription in a lineage
-      - name: zuora_renewal_subscription_name_slugify
-        description: name of the linked subscription that renews the prior subscription in a lineage
-      - name: renewal_term
-        description: The length of the period for the subscription renewal term
-      - name: renewal_term_period_type
-        description: The period type for the subscription renewal term. This field is used with the renewal term field to specify the subscription renewal term.
-      - name: subscription_start_date
-        description: The date when the subscription term starts. This date is the same as the start date of the original term, which isn't necessarily the start date of the current or new term.
-      - name: subscription_end_date
-        description: The date when the subscription term ends, where the subscription ends at midnight the day before. For example, if the SubscriptionEndDate is 12/31/2016, the subscriptions ends at midnight (00:00:00 hours) on 12/30/2016. This date is the same as the term end date or the cancelation date, as appropriate.
-      - name: subscription_start_month
-        description: The month when the subscription term starts. This month is the same as the start month of the original term, which isn't necessarily the start month of the current or new term.
-      - name: subscription_end_month
-        description: The month when the subscription term ends. This month is the same as the term end month or the cancelation month, as appropriate.
-      - name: subscription_sales_type
-        description: Identifies whether a subscription is Sales-Assisted or Self-Service / Web Direct.
-        tests:
-          - not_null
-          - accepted_values:
-                  values: ['Sales-Assisted', 'Self-Service']
-
   - name: dim_subscriptions_snapshots
     description: Daily snapshot of subscriptions starting from 2020-03-01. Fiel
     columns:
@@ -642,9 +595,6 @@ models:
           - not_null
           - unique
         tags: ["tdf", "arr"]
-
-  - name: dim_subscriptions_valid_at
-    description: Parameterized model to recreate dimension table representing subscription details as in Zuora at given date. Required variable valid_at is timezone sensitive
 
   - name: fct_campaign
     description: '{{ doc("fct_campaign") }}'
@@ -669,6 +619,61 @@ models:
           - not_null
           - unique
       - name: product_details_id
+        description: The unique ID of a product rate plan charge
+      - name: rate_plan_charge_number
+        description: A unique number that identifies the charge
+      - name: rate_plan_charge_name
+        description: The name of the rate plan charge
+      - name: effective_start_month
+        description: Month when the segmented charge starts or started
+      - name: effective_end_month
+        description: Month when the segmented charge ends or ended
+      - name: effective_start_date_id
+        description: Id of the date when the segmented charge starts or started. Use this field to join to dim_date on id.
+      - name: effective_end_date_id
+        description: Id of the date when the segmented charge ends or ended. Use this field to join to dim_date on id.
+      - name: effective_start_month_id
+        description: Id of the month when the segmented charge starts or started. Use this field to join to dim_date on id.
+      - name: effective_end_month_id
+        description: Id of the month when the segmented charge ends or ended. Use this field to join to dim_date on id.
+      - name: unit_of_measure
+        description: Specifies the units to measure usage
+      - name: quantity
+        description: The default quantity of units
+      - name: mrr
+        description: Monthly recurring revenue (MRR) is the amount of recurring charges in a given month. The MRR calculation doesn't include one-time charges nor usage charges.
+      - name: delta_tcv
+        description: After an Amendment, the change in the total contract value (TCV) amount for this charge, compared with its previous value.
+      - name: rate_plan_name
+        description: The name of the rate plan
+      - name: product_category
+        description: Indicates product category such as Bronze, Silver, Gold, Starter, Premium, or Ultimate
+      - name: delivery
+        description: Indicates whether the product is SaaS, Self-Managed, or other
+      - name: service_type
+        description: Indicates whether the subscription is support service only or full service
+      - name: discount_level
+        description: Specifies if the discount applies to just the product rate plan, the entire subscription, or to any activity in the account.
+      - name: rate_plan_charge_segment
+        description: The identifying number of the subscription rate plan segment. Segments are numbered sequentially, starting with 1.
+      - name: rate_plan_charge_version
+        description: The version of the rate plan charge. Each time a charge is amended, Zuora creates a new version of the rate plan charge.
+      - name: charge_type
+        description: Specifies the type of charge
+
+  - name: fct_charge
+    description: '{{ doc("fct_charge") }}'
+    columns:
+      - name: dim_subscription_id
+        description: Unique identifier of a version of a subscription
+        tests:
+          - not_null
+      - name: charge_id
+        description: The unique identifier of a verion of a rate plan charge
+        tests:
+          - not_null
+          - unique
+      - name: dim_product_detail_id
         description: The unique ID of a product rate plan charge
       - name: rate_plan_charge_number
         description: A unique number that identifies the charge
@@ -839,7 +844,7 @@ models:
       - name: date_id
         description: The identifier of date month in dim_date
       - name: subscription_id
-        description: The identifier of subscription in dim_subscriptions table
+        description: The identifier of subscription in dim_subscription table
         tests:
           - not_null
       - name: product_details_id
@@ -1017,7 +1022,7 @@ models:
       - name: license_md5
         description: The md5 hash of the license file. Use this field to join to dim_licenses.
       - name: subscription_id
-        description: The zuora subscription id derived from the license. Use this field to join to dim_subscriptions.
+        description: The zuora subscription id derived from the license. Use this field to join to dim_subscription.
       - name: billing_account_id
         description: The zuora account id associated with the subscription. Use this field to join to dim_billing_accounts.
       - name: array_product_details_id
