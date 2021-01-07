@@ -26,7 +26,7 @@ WITH applications AS (
  ), bamboohr_mapping AS (
  
     SELECT *
-    FROM {{ ref ('bamboohr_id_employee_number_mapping_source') }}
+    FROM {{ ref ('bamboohr_id_employee_number_mapping') }}
    
 ), bamboo_hires AS (
 
