@@ -2,15 +2,14 @@ WITH crm_sales_hierarchy_live AS (
 
     SELECT
       dim_crm_sales_hierarchy_live_id,
-      crm_sales_hierarchy_live,
-      user_segment_live,
-      dim_sales_segment_live_id,
-      location_region_live,
-      dim_location_region_live_id,
-      user_region_live,
-      dim_sales_region_live_id,
-      user_area_live,
-      dim_sales_area_live_id
+      dim_crm_sales_hierarchy_sales_segment_live_id,
+      sales_segment_name_live,
+      dim_crm_sales_hierarchy_location_region_live_id,
+      location_region_name_live,
+      dim_crm_sales_hierarchy_sales_region_live_id,
+      sales_region_name_live,
+      dim_crm_sales_hierarchy_sales_area_live_id
+      sales_area_name_live
     FROM {{ ref('prep_crm_sales_hierarchy_live') }}
 )
 
