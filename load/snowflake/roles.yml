@@ -851,11 +851,9 @@ roles:
             schemas:
                 read:
                     - raw.license_db_dump
-                    - raw.version_db_dump_stitch
             tables:
                 read:
                     - raw.license_db_dump.*
-                    - raw.version_db_dump_stitch.*
 
     - dbt_analytics:
         warehouses:
@@ -2541,7 +2539,6 @@ roles:
                     - raw.license_db_dump
                     - raw.salesforce_stitch
                     - raw.stitch_google_sheets
-                    - raw.version_db_dump_stitch
                     - raw.zendesk_stitch
                     - raw.zendesk_community_relations_stitch
                     - raw.zuora_stitch
@@ -2549,7 +2546,6 @@ roles:
                     - raw.license_db_dump
                     - raw.salesforce_stitch
                     - raw.stitch_google_sheets
-                    - raw.version_db_dump_stitch
                     - raw.zendesk_stitch
                     - raw.zendesk_community_relations_stitch
                     - raw.zuora_stitch
@@ -2558,7 +2554,6 @@ roles:
                     - raw.license_db_dump.*
                     - raw.salesforce_stitch.*
                     - raw.stitch_google_sheets.*
-                    - raw.version_db_dump_stitch.*
                     - raw.zendesk_stitch.*
                     - raw.zendesk_community_relations_stitch.*
                     - raw.zuora_stitch.*
@@ -2566,7 +2561,6 @@ roles:
                     - raw.license_db_dump.*
                     - raw.salesforce_stitch.*
                     - raw.stitch_google_sheets.*
-                    - raw.version_db_dump_stitch.*
                     - raw.zendesk_stitch.*
                     - raw.zendesk_community_relations_stitch.*
                     - raw.zuora_stitch.*

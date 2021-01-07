@@ -7,7 +7,6 @@ models:
       - name: primary_key
         tests:
           - not_null
-          - unique
       - name: billing_account_id
         tests:
           - not_null

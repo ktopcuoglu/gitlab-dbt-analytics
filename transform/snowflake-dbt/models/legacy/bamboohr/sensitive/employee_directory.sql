@@ -7,6 +7,7 @@ WITH mapping as (
 
     SELECT *
     FROM {{ ref ('bamboohr_directory_source') }}
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY employee_id ORDER BY uploaded_at DESC) =1 
 
 ), department_info as (
 
@@ -63,7 +64,7 @@ WITH mapping as (
       mapping.first_name,
       mapping.last_name,
       mapping.first_name || ' ' || mapping.last_name                            AS full_name,
-      bamboohr_directory.work_email,
+      bamboohr_directory.work_email                                             AS last_work_email,
       IFF(rehire.is_rehire = 'True', initial_hire.hire_date, mapping.hire_date) AS hire_date,
       rehire.rehire_date,
       mapping.termination_date,
