@@ -27,6 +27,7 @@ configure,ops
 apm,ops
 health,ops
 monitor,ops
+verify, ops
 continuous integration,ops
 testing,ops
 runner,ops
