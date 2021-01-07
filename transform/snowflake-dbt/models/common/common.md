@@ -337,3 +337,13 @@ A NULL namespace type defaults to "Individual".
 This table joins to common product tier dimension via dim_product_tier_id to get the current product tier.
 
 {% enddocs %}
+
+{% docs dim_quote %}
+
+Dimensional table representing Zuora quotes and associated metadata.
+
+The grain of the table is a quote_id.
+
+Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+{% enddocs %}

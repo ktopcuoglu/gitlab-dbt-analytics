@@ -1124,3 +1124,17 @@ models:
         description: The number of members that are presently associated with the namespace.
       - name: current_project_count
         description: The number of projects that are presently associated with the namespace.
+
+  - name: dim_quote
+    description: '{{ doc("dim_quote") }}'
+    columns:
+      - name: dim_quote_id
+        description: The unique identifier for each of the quotes.
+        tests:
+          - not_null
+          - unique
+      - name: quote_number  
+      - name: quote_name
+      - name: quote_status
+      - name: is_primary_quote
+      - name: quote_start_date
