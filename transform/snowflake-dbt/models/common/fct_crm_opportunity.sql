@@ -220,10 +220,10 @@ WITH first_contact  AS (
       COALESCE(crm_account_dimensions.dim_geo_area_id, MD5(-1))                                                     AS dim_geo_area_id,
       COALESCE(crm_account_dimensions.dim_sales_territory_id, MD5(-1))                                              AS dim_sales_territory_id,
       COALESCE(crm_account_dimensions.dim_industry_id, MD5(-1))                                                     AS dim_industry_id,
-      COALESCE(sales_hierarchy_stamped_sales_segment.dim_crm_sales_hierarchy_sales_segment_stamped_id, MD5(-1))     AS dim_sales_segment_stamped_id,
-      COALESCE(sales_hierarchy_stamped_location_region.dim_crm_sales_hierarchy_location_region_stamped_id, MD5(-1)) AS dim_location_region_stamped_id,
-      COALESCE(sales_hierarchy_stamped_sales_region.dim_crm_sales_hierarchy_sales_region_stamped_id, MD5(-1))       AS dim_sales_region_stamped_id,
-      COALESCE(sales_hierarchy_stamped_sales_area.dim_crm_sales_hierarchy_sales_area_stamped_id, MD5(-1))           AS dim_sales_area_stamped_id,
+      COALESCE(sales_hierarchy_stamped_sales_segment.dim_crm_sales_hierarchy_sales_segment_stamped_id, MD5(-1))     AS dim_crm_sales_hierarchy_sales_segment_stamped_id,
+      COALESCE(sales_hierarchy_stamped_location_region.dim_crm_sales_hierarchy_location_region_stamped_id, MD5(-1)) AS dim_crm_sales_hierarchy_location_region_stamped_id,
+      COALESCE(sales_hierarchy_stamped_sales_region.dim_crm_sales_hierarchy_sales_region_stamped_id, MD5(-1))       AS dim_crm_sales_hierarchy_sales_region_stamped_id,
+      COALESCE(sales_hierarchy_stamped_sales_area.dim_crm_sales_hierarchy_sales_area_stamped_id, MD5(-1))           AS dim_crm_sales_hierarchy_sales_area_stamped_id,
 
             -- flags
       opportunity_fields.is_closed,
