@@ -32,3 +32,4 @@ sources:
       - name: job_info
         identifier: jobinfo
       - name: id_employee_number_mapping
+      - name: meta_fields

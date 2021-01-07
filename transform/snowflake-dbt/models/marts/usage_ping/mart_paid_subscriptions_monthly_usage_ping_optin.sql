@@ -32,26 +32,27 @@ WITH fct_mrr AS (
 ), active_subscriptions AS (
 
     SELECT *
-    FROM {{ ref('dim_subscriptions') }}
+    FROM {{ ref('dim_subscription') }}
+    WHERE subscription_status NOT IN ('Draft', 'Expired')
 
 ), all_subscriptions AS (
 
     SELECT *
     FROM {{ ref('zuora_subscription_source') }}
-  
+
 ), fct_payloads AS (
-  
+
     SELECT *
     FROM {{ ref('fct_usage_ping_payloads') }}
-  
+
 ), mau AS (
-    
+
     SELECT *
     FROM {{ ref('usage_data_28_days_flattened') }}
     WHERE metrics_path = 'usage_activity_by_stage_monthly.manage.events'
 
 ), transformed AS (
-  
+
     SELECT
       {{ dbt_utils.surrogate_key(['first_day_of_month', 'self_managed_active_subscriptions.subscription_id']) }}        AS month_subscription_id,
       first_day_of_month                                                                                                AS reporting_month,
@@ -68,7 +69,7 @@ WITH fct_mrr AS (
       MAX(metric_value)                                                                                                 AS umau
     FROM self_managed_active_subscriptions
     INNER JOIN dim_date ON self_managed_active_subscriptions.date_id = dim_date.date_id
-    LEFT JOIN active_subscriptions ON self_managed_active_subscriptions.subscription_id = active_subscriptions.subscription_id
+    LEFT JOIN active_subscriptions ON self_managed_active_subscriptions.subscription_id = active_subscriptions.dim_subscription_id
     LEFT JOIN all_subscriptions ON active_subscriptions.subscription_name_slugify = all_subscriptions.subscription_name_slugify
     LEFT JOIN fct_payloads ON all_subscriptions.subscription_id = fct_payloads.subscription_id AND first_day_of_month = DATE_TRUNC('month', fct_payloads.created_at)
     LEFT JOIN mau ON fct_payloads.usage_ping_id = mau.ping_id
@@ -86,7 +87,7 @@ WITH fct_mrr AS (
       ) AS latest_major_minor_version
     FROM self_managed_active_subscriptions
     INNER JOIN dim_date ON self_managed_active_subscriptions.date_id = dim_date.date_id
-    INNER JOIN active_subscriptions ON self_managed_active_subscriptions.subscription_id = active_subscriptions.subscription_id
+    INNER JOIN active_subscriptions ON self_managed_active_subscriptions.subscription_id = active_subscriptions.dim_subscription_id
     INNER JOIN all_subscriptions ON active_subscriptions.subscription_name_slugify = all_subscriptions.subscription_name_slugify
     INNER JOIN fct_payloads ON all_subscriptions.subscription_id = fct_payloads.subscription_id AND first_day_of_month = DATE_TRUNC('month', fct_payloads.created_at)
 
@@ -105,8 +106,7 @@ WITH fct_mrr AS (
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@mpeychet_",
-    updated_by="@mpeychet_",
+    updated_by="@iweeks",
     created_date="2020-10-16",
-    updated_date="2020-10-16"
+    updated_date="2020-12-24"
 ) }}
-
