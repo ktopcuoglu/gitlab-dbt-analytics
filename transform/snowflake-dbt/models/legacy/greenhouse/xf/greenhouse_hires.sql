@@ -43,7 +43,7 @@ WITH applications AS (
     LEFT JOIN rehire_date 
       ON rehire_date.employee_id = bamboohr_mapping.employee_id
 
-), final AS (
+), joined AS (
 
     SELECT 
       applications.application_id,  
@@ -83,7 +83,7 @@ WITH applications AS (
     hire_date_mod,
     hire_type,
     IFF(employee_id IS NOT NULL,TRUE,FALSE) AS hired_in_bamboohr
-    FROM final 
+    FROM joined 
 
 )
 
