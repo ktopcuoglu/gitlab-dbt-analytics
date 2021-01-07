@@ -82,3 +82,9 @@ Creates a base view with generated keys for the sales segment shared dimension a
 Creates a base view with generated keys for the sales territory shared dimension and references in facts.
 
 {% enddocs %}
+
+{% docs prep_subscription %}
+
+Creates a base view with generated keys for the subscription shared dimension and references in facts.
+
+{% enddocs %}

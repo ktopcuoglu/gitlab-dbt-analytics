@@ -547,18 +547,23 @@ models:
         tests:
           - not_null
           - unique
+      - name: dim_crm_account_id
+        description: account id from SFDC identifing the customer
+      - name: dim_billing_account_id
+        description: The id of the Zuora account the subscription is associated with
+      - name: dim_crm_person_id_invoice_owner
+      - name: dim_crm_opportunity_id
+      - name: dim_subscription_id_original
+      - name: dim_subscription_id_previous
+      - name: amendment_id
+      - name: subscription_name_slugify
+        description: The unique identifier of the subscription
       - name: subscription_status
         description: The status of the subscription
         tests:
           - not_null
           - accepted_values:
               values: ['Active', 'Cancelled', 'Draft', 'Expired']
-      - name: dim_crm_account_id
-        description: account id from SFDC identifing the customer
-      - name: dim_billing_account_id
-        description: The id of the Zuora account the subscription is associated with
-      - name: subscription_name_slugify
-        description: The unique identifier of the subscription
       - name: subscription_version
         description: The version number of the subscription
       - name: is_auto_renew
