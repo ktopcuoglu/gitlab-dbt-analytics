@@ -26,14 +26,15 @@ vulnerability management,secure
 configure,ops
 apm,ops
 health,ops
+monitor,ops
 continuous integration,ops
 testing,ops
 runner,ops
+pipeline authoring,ops
+release,ops
 release management,ops
 progressive delivery,ops
 package,ops
-pipeline authoring,ops
-release,ops
 container security,threat management
 insider threats,threat management
 rsponsible disclosure,threat management
