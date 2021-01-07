@@ -15,6 +15,7 @@ gitter,dev
 ecosystem,dev
 product planning,dev
 optimize,dev
+code review,dev
 static analysis,secure
 dynamic analysis,secure
 composition analysis,secure
