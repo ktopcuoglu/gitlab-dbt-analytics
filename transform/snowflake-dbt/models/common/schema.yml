@@ -921,6 +921,10 @@ models:
         description: Whether or not the namespace associated with the project is subscribed to a paid plan. This can be inherited from the namespaces's ultimate parent.
         tests:
           - not_null
+      - name: total_member_bot_requested_count
+        description: Count of all users with access, or awaiting access to the namespace. Includes active, deactivated, blocked, and bot users.
+        tests:
+          - not_null
       - name: active_member_count
         description: Count of _non-bot_ members that are active and not awaiting access approval to the namespace.
         tests:
@@ -931,6 +935,38 @@ models:
           - not_null
       - name: guest_member_count
         description: Count of members with lowest (guest) level access to the namespace.
+        tests:
+          - not_null
+      - name: deactivated_member_count
+        description: Count of members that have been deactivated by a GitLab administrator.
+        tests:
+          - not_null
+      - name: blocked_member_count
+        description: Count of members that have been blocked by a GitLab administrator.
+        tests:
+          - not_null
+      - name: project_bot_count
+        description: Count of [project bot users](https://docs.gitlab.com/ee/user/project/settings/project_access_tokens.html#project-bot-users) that inherited access to the namespace through project-group links.
+        tests:
+          - not_null
+      - name: gitlab_bot_count
+        description: Count of [GitLab bots](https://docs.gitlab.com/ee/user/project/service_desk.html#support-bot-user) with access to the namespace.
+        tests:
+          - not_null
+      - name: total_member_count
+        description: Total count of active, deactivated, and blocked (non-bot) members with access to the namespace.
+        tests:
+          - not_null
+      - name: total_bot_count
+        description: Total count of GitLab bots and project bot users.
+        tests:
+          - not_null
+      - name: total_member_bot_count
+        description: Total member count + total bot count.
+        tests:
+          - not_null
+      - name: member_awaiting_access_count
+        description: Count of users waiting to be granted membership to the namespace. 
         tests:
           - not_null
 

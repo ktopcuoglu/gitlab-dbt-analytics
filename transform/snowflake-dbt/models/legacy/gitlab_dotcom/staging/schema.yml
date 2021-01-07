@@ -62,6 +62,8 @@ models:
           - not_null
       - name: group_access
         description: Level of access given to user through inherited group membership.
+      - name: group_access_level
+        description: Minimun of access_level and group_access, used to determine guest users.
       - name: requested_at
         description: Timestamp when access/membership was requested.
       - name: user_id
@@ -81,6 +83,22 @@ models:
           - not_null
       - name: is_billable
         description: User is an active member in a non-gold tier group, or an active, non-guest member in a gold tier group.
+        tests:
+          - not_null
+      - name: is_deactivated
+        description: User has been deactivated by GitLab administrator.
+        tests:
+          - not_null
+      - name: is_blocked
+        description: User has been blocked by GitLab administrator.
+        tests:
+          - not_null
+      - name: is_project_bot
+        description: User is a [project bot users](https://docs.gitlab.com/ee/user/project/settings/project_access_tokens.html#project-bot-users) (`user_type = 6`).
+        tests:
+          - not_null
+      - name: is_gitlab_bot
+        description: User is a [GitLab bot](https://docs.gitlab.com/ee/user/project/service_desk.html#support-bot-user) or ghost (`user_type != 6 AND user_type IS NOT NULL`).
         tests:
           - not_null
 

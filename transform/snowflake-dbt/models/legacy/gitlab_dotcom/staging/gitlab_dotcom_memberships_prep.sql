@@ -2,8 +2,6 @@ WITH users AS ( -- active, non-bot users
 
     SELECT *
     FROM {{ ref('gitlab_dotcom_users_source') }}
-    WHERE state = 'active'
-      AND user_type IS NULL
 
 ), members AS ( -- direct group and project members
 
@@ -226,14 +224,17 @@ WITH users AS ( -- active, non-bot users
       membership_source_id,
       access_level,
       group_access,
+      IFF(access_level < group_access,
+          access_level, group_access)     AS group_level_access,
       requested_at,
       user_id,
       user_state,
       user_type,
-      IFF(access_level = 10
-            OR group_access = 10,
+      IFF(group_level_access <= 10,
           TRUE, FALSE)                    AS is_guest, -- exclude any user with guest access
-      IFF(requested_at IS NULL, 
+      IFF(user_state = 'active'
+            AND user_type IS NULL
+            AND requested_at IS NULL, 
           TRUE, FALSE)                    AS is_active, -- must be active, not a project bot or GitLab bot, and not awaiting access
       IFF(
           (ultimate_parent_plan_title = 'gold'
@@ -241,7 +242,18 @@ WITH users AS ( -- active, non-bot users
             AND is_guest = FALSE)
           OR (ultimate_parent_plan_title != 'gold'
             AND is_active = TRUE),
-          TRUE, FALSE)                    AS is_billable -- exclude guests if namespace has gold plan
+          TRUE, FALSE)                    AS is_billable, -- exclude guests if namespace has gold plan
+      IFF(user_state = 'deactivated'
+            AND user_type IS NULL,
+          TRUE, FALSE)                    AS is_deactivated,
+      IFF(user_state = 'blocked'
+            AND user_type IS NULL,
+          TRUE, FALSE)                    AS is_blocked,
+      IFF(user_type = 6,
+          TRUE, FALSE)                    AS is_project_bot,
+      IFF(user_type IS NOT NULL
+            AND user_type != 6,
+          TRUE, FALSE)                    AS is_gitlab_bot
     FROM joined
       
 )
@@ -250,6 +262,6 @@ WITH users AS ( -- active, non-bot users
 cte_ref="final",
 created_by="@ischweickartDD",
 updated_by="@ischweickartDD",
-created_date="2021-01-06",
-updated_date="2021-01-06"
+created_date="2021-01-07",
+updated_date="2021-01-07"
 ) }}

@@ -1,8 +1,10 @@
 {% docs gitlab_dotcom_memberships_prep %}
 
 Key logical differences between `gitlab_dotcom_memberships_prep` and `gitlab_dotcom_memberships`:
- - `_prep` only considers active users (filters out both blocked users _and_ deactivated users as opposed to just blocked users).
- - `_prep` filters out _all_ bots (`user_type IS NULL`) as opposed to just project bots (`user_type != 6`).
+ - `_prep` considers all users, as opposed to filtering out blocked users.
+ - `_prep` filters out _all_ bots (`user_type IS NULL`) from `is_active` and `is_billable`, as opposed to just project bots (`user_type != 6`).
+ - `_prep` includes flags beyond those included in `_memberships` for downstream summarization and reporting purposes.
+ - In `_prep` all users with `access_level <= 10 OR group_access <= 10` are considered guests as opposed to either access code being _equal to_ 10. 
 
 This model unions together all of the other models that represent a user having (full or partial) access to a namespace, AKA "membership". 
 
