@@ -42,6 +42,15 @@ models:
           - not_null
           - unique
 
+  - name: prep_crm_sales_hierarchy_stamped
+    description: '{{ doc("prep_crm_sales_hierarchy_stamped") }}'
+    columns:
+      - name: dim_crm_sales_hierarchy_stamped_id
+        description: Unique identifier of a sales hierarchy tier
+        tests:
+          - not_null
+          - unique
+
   - name: prep_geo_area
     description: '{{ doc("prep_geo_area") }}'
     columns:
