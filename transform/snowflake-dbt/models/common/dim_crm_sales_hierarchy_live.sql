@@ -8,7 +8,7 @@ WITH crm_sales_hierarchy_live AS (
       location_region_name_live,
       dim_crm_sales_hierarchy_sales_region_live_id,
       sales_region_name_live,
-      dim_crm_sales_hierarchy_sales_area_live_id
+      dim_crm_sales_hierarchy_sales_area_live_id,
       sales_area_name_live
     FROM {{ ref('prep_crm_sales_hierarchy_live') }}
 )
