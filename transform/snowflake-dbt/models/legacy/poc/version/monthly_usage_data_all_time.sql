@@ -10,7 +10,7 @@ WITH data AS (
     FROM {{ ref('usage_data_all_time_flattened')}}
     {% if is_incremental() %}
 
-      WHERE created_at >= (SELECT MAX(created_at) FROM {{this}})
+      WHERE created_at >= (SELECT MAX(created_month) FROM {{this}})
 
     {% endif %}
 
@@ -40,7 +40,7 @@ WITH data AS (
 )
 
 SELECT
-  {{ dbt_utils.surrogate_key(['instance_id', 'host_id', 'created_month']) }} AS primary_key,
+  {{ dbt_utils.surrogate_key(['instance_id', 'host_id', 'created_month', 'metrics_path']) }} AS primary_key,
   ping_id,
   instance_id,
   host_id,
