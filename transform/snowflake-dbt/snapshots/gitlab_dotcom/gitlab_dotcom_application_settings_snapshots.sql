@@ -5,7 +5,7 @@
           unique_key='id',
           strategy='check',
           check_cols=[
-              'shared_runnners_minutes'
+              'shared_runners_minutes'
           ],
         )
     }}
