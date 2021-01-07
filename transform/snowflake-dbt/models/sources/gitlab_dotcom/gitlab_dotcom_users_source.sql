@@ -49,7 +49,7 @@ WITH source AS (
       IFF(lower(location) = 'nan', NULL, location)                     AS location,
       public_email::VARCHAR                                            AS public_email,
       commit_email::VARCHAR                                            AS commit_email,
-      email_opted_in::BOOLEAN                                          AS email_opted_in,
+      email_opted_in::BOOLEAN                                          AS is_email_opted_in,
       email_opted_in_source_id::NUMBER                                 AS email_opted_in_source_id,
       email_opted_in_at::TIMESTAMP                                     AS email_opted_in_at,
       dashboard::NUMBER                                                AS dashboard,
