@@ -5,19 +5,18 @@ WITH users AS ( -- active, non-bot users
 
 ), members AS ( -- direct group and project members
 
-    SELECT members.*
-    FROM {{ ref('gitlab_dotcom_members_source') }} members
-    LEFT OUTER JOIN users
-      ON members.user_id = users.user_id
-    WHERE members.is_currently_valid = TRUE
-    QUALIFY RANK() OVER (
+    SELECT *
+    FROM {{ ref('gitlab_dotcom_members_source') }}
+    WHERE user_id IS NOT NULL
+      AND is_currently_valid = TRUE
+    QUALIFY ROW_NUMBER() OVER (
         PARTITION BY 
-          members.user_id, 
-          members.source_id, 
-          members.member_source_type 
+          user_id, 
+          source_id, 
+          member_source_type 
         ORDER BY 
-          members.access_level DESC, 
-          members.invite_created_at DESC
+          access_level DESC, 
+          invite_created_at DESC
         ) = 1 
     
 ), namespaces AS (
