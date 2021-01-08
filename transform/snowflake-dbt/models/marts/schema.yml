@@ -23,6 +23,33 @@ models:
           - not_null
         tags: ["tdf", "mart", "arr"]
 
+  - name: mart_crm_opportunity
+    description: Model with single pane of glass sales and marketing metrics.
+    columns:
+      - name: crm_opportunity_id
+        tests:
+            - not_null
+            - unique
+        tags: ["tdf", "mart", "sales_funnel"]
+
+  - name: mart_crm_person
+    description: Model with person and MQL business logic.
+    columns:
+      - name: dim_crm_person_id
+        tests:
+            - not_null
+            - unique
+        tags: ["tdf", "mart", "sales_funnel"]
+
+  - name: mart_sales_funnel_target
+    description: Model with Sales targets used for planning the go to market Sales and Marketing motion.
+    columns:
+      - name: sales_funnel_target_id
+        tests:
+            - not_null
+            - unique
+        tags: ["tdf", "mart", "sales_funnel"]
+
   - name: mart_discount_arr
     description: Model with Invoiced ARR used to calculate discounts across various dimensions.
     columns:
