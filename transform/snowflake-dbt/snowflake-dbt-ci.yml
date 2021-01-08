@@ -86,6 +86,20 @@
     - *xs_warehouse
     - dbt --partial-parse test $CI_PROFILE_TARGET --exclude $DBT_MODELS
 
+➖🦖specify_xl_exclude:
+  <<: *snowflake_dbt_jobs
+  script:
+    - *xl_warehouse
+    - *deps_and_seed
+    - echo $DBT_MODELS
+    - dbt --partial-parse run $CI_PROFILE_TARGET --full-refresh --exclude $DBT_MODELS || true
+    - *xs_warehouse
+    - dbt --partial-parse test $CI_PROFILE_TARGET --exclude $DBT_MODELS || true
+    - *xl_warehouse
+    - dbt --partial-parse run $CI_PROFILE_TARGET --exclude $DBT_MODELS || true
+    - *xs_warehouse
+    - dbt --partial-parse test $CI_PROFILE_TARGET --exclude $DBT_MODELS
+
 ➕🐭specify_model:
   <<: *snowflake_dbt_jobs
   script:
@@ -106,6 +120,20 @@
     - *xs_warehouse
     - dbt --partial-parse test $CI_PROFILE_TARGET --models $DBT_MODELS || true
     - *l_warehouse
+    - dbt --partial-parse run $CI_PROFILE_TARGET --models $DBT_MODELS || true
+    - *xs_warehouse
+    - dbt --partial-parse test $CI_PROFILE_TARGET --models $DBT_MODELS
+
+➕🦖specify_xl_model:
+  <<: *snowflake_dbt_jobs
+  script:
+    - *xl_warehouse
+    - *deps_and_seed
+    - echo $DBT_MODELS
+    - dbt --partial-parse run $CI_PROFILE_TARGET --full-refresh --models $DBT_MODELS || true
+    - *xs_warehouse
+    - dbt --partial-parse test $CI_PROFILE_TARGET --models $DBT_MODELS || true
+    - *xl_warehouse
     - dbt --partial-parse run $CI_PROFILE_TARGET --models $DBT_MODELS || true
     - *xs_warehouse
     - dbt --partial-parse test $CI_PROFILE_TARGET --models $DBT_MODELS
