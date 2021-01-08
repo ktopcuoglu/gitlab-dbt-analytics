@@ -86,7 +86,7 @@
     - *xs_warehouse
     - dbt --partial-parse test $CI_PROFILE_TARGET --exclude $DBT_MODELS
 
-➖🦖specify_xl_exclude:
+➖🐘specify_xl_exclude:
   <<: *snowflake_dbt_jobs
   script:
     - *xl_warehouse
@@ -124,7 +124,7 @@
     - *xs_warehouse
     - dbt --partial-parse test $CI_PROFILE_TARGET --models $DBT_MODELS
 
-➕🦖specify_xl_model:
+➕🐘specify_xl_model:
   <<: *snowflake_dbt_jobs
   script:
     - *xl_warehouse
