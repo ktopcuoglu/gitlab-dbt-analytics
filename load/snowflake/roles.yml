@@ -2001,6 +2001,13 @@ roles:
                     - jstark_prep.*.*
                     - jstark_prod.*.*
     
+    - jshen:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+        warehouses:
+            - analyst_xs
+
     - jurbanc:
         warehouses:
             - reporting
@@ -2904,6 +2911,11 @@ users:
         member_of:
             - jsalazar
             - securityadmin
+
+    - jshen:
+        can_login: yes
+        member_of:
+            - jshen
 
     - jstark:
         can_login: yes
