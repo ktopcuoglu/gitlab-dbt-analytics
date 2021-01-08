@@ -2972,7 +2972,7 @@ users:
             - lvandensteen
 
     - mbergeron:
-        can_login: yes
+        can_login: no
         member_of: []
 
     - mdewji:
