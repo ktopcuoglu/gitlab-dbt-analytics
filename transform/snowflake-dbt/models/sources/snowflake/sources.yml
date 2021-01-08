@@ -19,6 +19,9 @@ sources:
       - name: grants_to_user
       - name: grants_to_role
       - name: roles
+      - name: task_history
+        identifier: task_history_view
+        freshness: null
       - name: users
 
   - name: snowflake_account_usage
