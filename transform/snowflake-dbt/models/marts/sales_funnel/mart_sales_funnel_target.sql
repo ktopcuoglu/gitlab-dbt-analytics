@@ -35,6 +35,7 @@ WITH dim_crm_sales_hierarchy_stamped AS (
       dim_crm_sales_hierarchy_stamped.sales_area_name_stamped,
       dim_order_type.order_type_name,
       dim_opportunity_source.opportunity_source_name,
+      fct_sales_funnel_target.allocated_target,
       fct_sales_funnel_target.kpi_total
     FROM fct_sales_funnel_target
     LEFT JOIN dim_opportunity_source
