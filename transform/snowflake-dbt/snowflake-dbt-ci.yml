@@ -149,7 +149,7 @@
     - dbt --partial-parse run $CI_PROFILE_TARGET --models $DBT_MODELS || true
     - dbt --partial-parse test $CI_PROFILE_TARGET --models $DBT_MODELS
 
-➕specify_csv_seed:
+➕🌱specify_csv_seed:
   <<: *snowflake_dbt_jobs
   script:
     - python3 macro_name_check.py
