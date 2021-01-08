@@ -2971,6 +2971,10 @@ users:
         member_of:
             - lvandensteen
 
+    - mbergeron:
+        can_login: yes
+        member_of: []
+
     - mdewji:
         can_login: yes
         member_of:
