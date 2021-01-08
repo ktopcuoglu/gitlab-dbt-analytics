@@ -8,7 +8,7 @@ WITH RECURSIVE namespaces AS (
     SELECT *
     FROM {{ ref('gitlab_dotcom_gitlab_subscriptions_source') }}
     WHERE is_currently_valid = TRUE
-      AND gitlab_subscription_end_date >= CURRENT_DATE
+      AND COALESCE(gitlab_subscription_end_date, CURRENT_DATE) >= CURRENT_DATE
 
 ), plans AS (
 
