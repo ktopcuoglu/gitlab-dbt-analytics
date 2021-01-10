@@ -30,6 +30,11 @@ Dimension table representing the current state of the sales hierarchy, including
 
 {% enddocs %}
 
+{% docs dim_crm_sales_hierarchy_stamped %}
+Dimension table representing the sales hierarchy at the time of a closed opportunity, including the user segment, geo, region, and area. These fields are stamped on the opportunity object on the close date and are used in sales funnel analyses.
+
+{% enddocs %}
+
 {% docs dim_billing_account %}
 Dimensional table representing each individual Zuora account with details of person to bill for the account.
 
@@ -249,6 +254,27 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
+{% docs fct_namespace_member_summary %}
+
+This model summarizes namespace user counts by accounting for all of the ways that a user be granted (direct or inherited) access to a namespace, AKA "membership". Bots and users awaiting access to a namespace are also accounted for. These counts are reported at the `ultimate_parent_namespace_id` grain.
+
+Importantly, this model calculates the field [`billable_member_count`](https://docs.gitlab.com/ee/subscriptions/self_managed/#billable-users) - i.e. the number of members should be counted toward the seat count for a subscription (note: this also applies to namespaces without a subscription for the convenience of determining seats in use). 
+
+There are 5 general ways that a user can have access to a group A:
+* Be a **group member** of group A.
+* Be a **group member** of B, where B is a descendant (subgroup) of group A.
+* Be a **project member** of b, where b is owned by A or one of A's descendants.
+* Be a group member of N or a parent group of N, where N is invited to a project underneath A via [project group links](https://docs.gitlab.com/ee/user/group/#sharing-a-project-with-a-group).
+* Be a group member of Y or a parent group of Y, where Y is invited to A or one of A's descendants via [group group links](https://docs.gitlab.com/ee/user/group/#sharing-a-group-with-another-group).
+
+An example of these relationships is shown in this diagram:
+
+<div style="width: 720px; height: 480px; margin: 10px; position: relative;"><iframe allowfullscreen frameborder="0" style="width:720px; height:480px" src="https://app.lucidchart.com/documents/embeddedchart/9f529269-3e32-4343-9713-8eb311df7258" id="WRFbB73aKeB3"></iframe></div>
+
+Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+{% enddocs %}
+
 {% docs fct_usage_ping_payloads %}
 Factual table with metadata on usage ping payloads received.
 
@@ -335,5 +361,15 @@ Boolean columns: gitlab_plan_is_paid, namespace_is_internal, namespace_is_ultima
 
 A NULL namespace type defaults to "Individual".
 This table joins to common product tier dimension via dim_product_tier_id to get the current product tier.
+
+{% enddocs %}
+
+{% docs dim_quote %}
+
+Dimensional table representing Zuora quotes and associated metadata.
+
+The grain of the table is a quote_id.
+
+Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
 
 {% enddocs %}

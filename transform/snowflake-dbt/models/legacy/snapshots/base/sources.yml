@@ -15,6 +15,7 @@ sources:
     tables:
       - name: customers_db_customers_snapshots
       - name: customers_db_orders_snapshots
+      - name: gitlab_dotcom_application_settings_snapshots
       - name: gitlab_dotcom_gitlab_subscriptions_namespace_id_snapshots
       - name: gitlab_dotcom_gitlab_subscriptions_snapshots
       - name: gitlab_dotcom_members_snapshots
