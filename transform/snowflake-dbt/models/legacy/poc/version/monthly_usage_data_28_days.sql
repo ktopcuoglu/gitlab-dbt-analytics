@@ -17,7 +17,6 @@ WITH data AS (
 ), transformed AS (
 
     SELECT  
-      ping_id,
       DATE_TRUNC('week', created_at) AS created_week,
       instance_id,
       host_id,
@@ -37,7 +36,6 @@ WITH data AS (
 ), monthly AS (
 
     SELECT  
-      ping_id,
       DATE_TRUNC('month', created_week) AS created_month,
       instance_id,
       host_id,
@@ -52,13 +50,12 @@ WITH data AS (
       clean_metrics_name,
       weekly_metrics_value              AS monthly_metric_value
     FROM transformed
-    QUALIFY (ROW_NUMBER() OVER (PARTITION BY created_month, instance_id, host_id, metrics_path ORDER BY created_week DESC)) = 1
+    QUALIFY (ROW_NUMBER() OVER (PARTITION BY created_month, instance_id, host_id, metrics_path ORDER BY created_week DESC, created_at DESC)) = 1
 
 )
 
 SELECT
   {{ dbt_utils.surrogate_key(['instance_id', 'host_id', 'created_month', 'metrics_path']) }} AS primary_key,
-  ping_id,
   instance_id,
   host_id,
   created_month,
