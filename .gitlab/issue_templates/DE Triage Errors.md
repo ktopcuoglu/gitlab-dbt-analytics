@@ -7,6 +7,9 @@ log: <!-- link to airflow log with error -->
 {longer error description text from log}
 ```
 
+Downstream Airflow tasks that were skipped: 
+  <!-- list any downstream tasks that were skipped because of this error -->
+
 Urgency:
 - [ ] T1 - Needs resolution ASAP
 - [ ] T2 - Resolution Required / Keep on Milestone

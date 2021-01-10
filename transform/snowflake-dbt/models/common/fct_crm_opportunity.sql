@@ -29,6 +29,34 @@ WITH first_contact  AS (
     SELECT *
     FROM {{ ref('prep_purchase_channel')}}
 
+), sales_hierarchy_stamped_sales_segment AS (
+
+    SELECT DISTINCT
+      dim_crm_sales_hierarchy_sales_segment_stamped_id,
+      sales_segment_name_stamped
+    FROM {{ ref('prep_crm_sales_hierarchy_stamped') }}
+
+), sales_hierarchy_stamped_location_region AS (
+
+    SELECT DISTINCT
+      dim_crm_sales_hierarchy_location_region_stamped_id,
+      location_region_name_stamped
+    FROM {{ ref('prep_crm_sales_hierarchy_stamped') }}
+
+), sales_hierarchy_stamped_sales_region AS (
+
+    SELECT DISTINCT
+      dim_crm_sales_hierarchy_sales_region_stamped_id,
+      sales_region_name_stamped
+    FROM {{ ref('prep_crm_sales_hierarchy_stamped') }}
+
+), sales_hierarchy_stamped_sales_area AS (
+
+    SELECT DISTINCT
+      dim_crm_sales_hierarchy_sales_area_stamped_id,
+      sales_area_name_stamped
+    FROM {{ ref('prep_crm_sales_hierarchy_stamped') }}
+
 ), sales_segment AS (
 
     SELECT *
@@ -89,7 +117,11 @@ WITH first_contact  AS (
       order_type_stamped                                        AS order_type,
       sales_segment,
       sales_qualified_source,
-      days_in_sao
+      days_in_sao,
+      user_segment_stamped                                      AS sales_segment_name_stamped,
+      user_geo_stamped                                          AS location_region_name_stamped,
+      user_region_stamped                                       AS sales_region_name_stamped,
+      user_area_stamped                                         AS sales_area_name_stamped
 
     FROM sfdc_opportunity
 
@@ -188,8 +220,12 @@ WITH first_contact  AS (
       COALESCE(crm_account_dimensions.dim_geo_area_id, MD5(-1))                                                     AS dim_geo_area_id,
       COALESCE(crm_account_dimensions.dim_sales_territory_id, MD5(-1))                                              AS dim_sales_territory_id,
       COALESCE(crm_account_dimensions.dim_industry_id, MD5(-1))                                                     AS dim_industry_id,
+      COALESCE(sales_hierarchy_stamped_sales_segment.dim_crm_sales_hierarchy_sales_segment_stamped_id, MD5(-1))     AS dim_crm_sales_hierarchy_sales_segment_stamped_id,
+      COALESCE(sales_hierarchy_stamped_location_region.dim_crm_sales_hierarchy_location_region_stamped_id, MD5(-1)) AS dim_crm_sales_hierarchy_location_region_stamped_id,
+      COALESCE(sales_hierarchy_stamped_sales_region.dim_crm_sales_hierarchy_sales_region_stamped_id, MD5(-1))       AS dim_crm_sales_hierarchy_sales_region_stamped_id,
+      COALESCE(sales_hierarchy_stamped_sales_area.dim_crm_sales_hierarchy_sales_area_stamped_id, MD5(-1))           AS dim_crm_sales_hierarchy_sales_area_stamped_id,
 
-      -- flags
+            -- flags
       opportunity_fields.is_closed,
       opportunity_fields.is_won,
       opportunity_fields.is_refund,
@@ -222,13 +258,21 @@ WITH first_contact  AS (
       ON opportunity_fields.crm_opportunity_id = is_sao.opportunity_id
     LEFT JOIN is_sdr_sao
       ON opportunity_fields.crm_opportunity_id = is_sdr_sao.opportunity_id
+    LEFT JOIN sales_hierarchy_stamped_sales_segment
+      ON opportunity_fields.sales_segment_name_stamped = sales_hierarchy_stamped_sales_segment.sales_segment_name_stamped
+    LEFT JOIN sales_hierarchy_stamped_location_region
+      ON opportunity_fields.location_region_name_stamped = sales_hierarchy_stamped_location_region.location_region_name_stamped
+    LEFT JOIN sales_hierarchy_stamped_sales_region
+      ON opportunity_fields.sales_region_name_stamped = sales_hierarchy_stamped_sales_region.sales_region_name_stamped
+    LEFT JOIN sales_hierarchy_stamped_sales_area
+      ON opportunity_fields.sales_area_name_stamped = sales_hierarchy_stamped_sales_area.sales_area_name_stamped
 
 )
 
 {{ dbt_audit(
     cte_ref="final_opportunities",
     created_by="@mcooperDD",
-    updated_by="@paul_armstrong",
+    updated_by="@mcooperDD",
     created_date="2020-11-30",
-    updated_date="2020-12-10"
+    updated_date="2021-01-05"
 ) }}
