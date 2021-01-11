@@ -21,7 +21,7 @@ WITH license AS (
 ), crm_account AS (
 
     SELECT 
-      crm_account_id, 
+      crm_account_id      AS dim_crm_account_id, 
       ultimate_parent_account_id 
     FROM {{ ref('dim_crm_account') }} 
 
@@ -44,7 +44,7 @@ WITH license AS (
       crm_account.ultimate_parent_account_id
     FROM subscription 
     INNER JOIN crm_account
-      ON subscription.dim_crm_account_id = crm_account.crm_account_id
+      ON subscription.dim_crm_account_id = crm_account.dim_crm_account_id
     
 ), joined AS (
 

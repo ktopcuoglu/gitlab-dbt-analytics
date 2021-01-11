@@ -9,7 +9,8 @@
 WITH source AS (
 
     SELECT 
-      id AS dim_usage_ping_id, 
+      id     AS dim_usage_ping_id, 
+      *, 
       {{ nohash_sensitive_columns('version_usage_data_source', 'source_ip') }}, 
       OBJECT_CONSTRUCT(
         {% for column in columns %}  
