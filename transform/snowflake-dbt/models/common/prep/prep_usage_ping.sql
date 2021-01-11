@@ -115,7 +115,7 @@ WITH source AS (
       map_ip_location.iso_3_country_code  
     FROM joined 
     LEFT JOIN map_ip_location
-        ON joined.source_ip_hash = map_ip_location.source_ip_hash 
+      ON joined.source_ip_hash = map_ip_location.ip_address_hash 
 
 ), final AS (
 
@@ -134,6 +134,11 @@ WITH source AS (
       main_edition, 
       product_tier, 
       main_edition_product_tier, 
+      cleaned_version,
+      version_is_prerelease,
+      major_version,
+      minor_version,
+      major_minor_version,
       ping_source,
       is_internal, 
       is_staging, 

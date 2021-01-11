@@ -14,6 +14,8 @@
 Table for mapping ip address ranges to location ids.
 {% enddocs %}
 
+{% docs map_license_subscription_account%}
+Table with mapping keys for license_md5 to subscription_id to crm (Salesforce) account ids 
 {% docs map_merged_crm_account%}
 
 Table mapping current crm account ids to accounts merged in the past.
