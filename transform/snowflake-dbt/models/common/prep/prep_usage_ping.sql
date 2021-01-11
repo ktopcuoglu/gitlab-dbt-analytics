@@ -9,7 +9,8 @@
 WITH source AS (
 
     SELECT 
-      id     AS dim_usage_ping_id, 
+      id                                                                        AS dim_usage_ping_id, 
+      created_at                                                                AS ping_created_at,
       *, 
       {{ nohash_sensitive_columns('version_usage_data_source', 'source_ip') }}  AS ip_address_hash, 
       OBJECT_CONSTRUCT(
@@ -19,7 +20,7 @@ WITH source AS (
             ,
           {% endif %}
         {% endfor %}
-      ) AS raw_usage_data_payload_reconstructed
+      )                                                                         AS raw_usage_data_payload_reconstructed
     FROM {{ ref('version_usage_data_source') }}
 
 ), raw_usage_data AS (
@@ -41,14 +42,15 @@ WITH source AS (
 
     SELECT
       dim_usage_ping_id, 
-      {{ dbt_utils.star(from=ref('version_usage_data_source'), except=['EDITION']) }},
-      edition                                                                                   AS original_edition,
-      IFF(license_expires_at >= created_at OR license_expires_at IS NULL, edition, 'EE Free')   AS cleaned_edition,
-      REGEXP_REPLACE(NULLIF(version, ''), '[^0-9.]+')                                           AS cleaned_version,
-      IFF(version ILIKE '%-pre', True, False)                                                   AS version_is_prerelease,
-      SPLIT_PART(cleaned_version, '.', 1)::NUMBER                                               AS major_version,
-      SPLIT_PART(cleaned_version, '.', 2)::NUMBER                                               AS minor_version,
-      major_version || '.' || minor_version                                                     AS major_minor_version,
+      ping_created_at,
+      {{ dbt_utils.star(from=ref('version_usage_data_source'), except=['EDITION', 'CREATED_AT']) }},
+      edition                                                                                         AS original_edition,
+      IFF(license_expires_at >= ping_created_at OR license_expires_at IS NULL, edition, 'EE Free')    AS cleaned_edition,
+      REGEXP_REPLACE(NULLIF(version, ''), '[^0-9.]+')                                                 AS cleaned_version,
+      IFF(version ILIKE '%-pre', True, False)                                                         AS version_is_prerelease,
+      SPLIT_PART(cleaned_version, '.', 1)::NUMBER                                                     AS major_version,
+      SPLIT_PART(cleaned_version, '.', 2)::NUMBER                                                     AS minor_version,
+      major_version || '.' || minor_version                                                           AS major_minor_version,
       raw_usage_data_payload_reconstructed
     FROM source
     WHERE uuid IS NOT NULL
@@ -57,7 +59,8 @@ WITH source AS (
 ), joined AS (
 
     SELECT 
-      dim_usage_ping_id, 
+      dim_usage_ping_id,
+      ping_created_at, 
       {{ dbt_utils.star(from=ref('version_usage_data_source'), relation_alias='usage_data', except=['EDITION']) }},
       original_edition, 
       cleaned_edition                                                                           AS edition,
@@ -65,13 +68,13 @@ WITH source AS (
       CASE 
         WHEN original_edition = 'CE'                                     THEN 'Core'
         WHEN original_edition = 'EE Free'                                THEN 'Core'                                                      
-        WHEN license_expires_at < created_at                             THEN 'Core'
+        WHEN license_expires_at < ping_created_at                        THEN 'Core'
         WHEN original_edition = 'EE'                                     THEN 'Starter'
         WHEN original_edition = 'EES'                                    THEN 'Starter'
         WHEN original_edition = 'EEP'                                    THEN 'Premium'
         WHEN original_edition = 'EEU'                                    THEN 'Ultimate'
         ELSE NULL END                                                                           AS product_tier,
-      main_edition || ' - ' || product_tier                                                   AS main_edition_product_tier,
+      main_edition || ' - ' || product_tier                                                     AS main_edition_product_tier,
       cleaned_version,
       version_is_prerelease,
       major_version,
@@ -127,13 +130,13 @@ WITH source AS (
 
     SELECT 
       dim_usage_ping_id,
-      created_at                                    AS ping_created_at,
-      DATEADD('days', -28, created_at)              AS ping_created_at_28_days_earlier,
-      DATE_TRUNC('YEAR', created_at)                AS ping_created_at_year,
-      DATE_TRUNC('MONTH', created_at)               AS ping_created_at_month,
-      DATE_TRUNC('WEEK', created_at)                AS ping_created_at_week,
-      DATE_TRUNC('DAY', created_at)                 AS ping_created_at_date,
-      raw_usage_data_id                             AS raw_usage_data_id, 
+      ping_created_at,
+      DATEADD('days', -28, ping_created_at)              AS ping_created_at_28_days_earlier,
+      DATE_TRUNC('YEAR', ping_created_at)                AS ping_created_at_year,
+      DATE_TRUNC('MONTH', ping_created_at)               AS ping_created_at_month,
+      DATE_TRUNC('WEEK', ping_created_at)                AS ping_created_at_week,
+      DATE_TRUNC('DAY', ping_created_at)                 AS ping_created_at_date,
+      raw_usage_data_id                                  AS raw_usage_data_id, 
       raw_usage_data_payload, 
       original_edition, 
       edition, 
