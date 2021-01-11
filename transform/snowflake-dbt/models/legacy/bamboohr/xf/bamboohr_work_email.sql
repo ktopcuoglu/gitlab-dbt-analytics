@@ -1,4 +1,10 @@
-WITH bamboohr_directory AS (
+WITH mapping as (
+
+    SELECT *
+    FROM {{ref('bamboohr_id_employee_number_mapping')}}
+    --mapping on bamboohr_id_employee_number_mapping as this has accounted for all hired employees whereas bamboohr_directory_source has not
+
+), bamboohr_directory AS (
 
     SELECT *
     FROM {{ ref('bamboohr_directory_source') }}
@@ -6,12 +12,14 @@ WITH bamboohr_directory AS (
 
 ), intermediate AS (
 
-    SELECT *,
-      LAST_VALUE(DATE_TRUNC(DAY, uploaded_at)) OVER 
-            (PARTITION BY employee_id ORDER BY uploaded_at)                         AS max_uploaded_date,
-      DENSE_RANK() OVER (PARTITION BY employee_id ORDER BY uploaded_at DESC)        AS rank_email_desc        
-    FROM bamboohr_directory
-    QUALIFY ROW_NUMBER() OVER (PARTITION BY employee_id, work_email ORDER BY uploaded_at) = 1       
+    SELECT bamboohr_directory.*,
+      LAST_VALUE(DATE_TRUNC(DAY, bamboohr_directory.uploaded_at)) OVER 
+            (PARTITION BY bamboohr_directory.employee_id ORDER BY uploaded_at)                         AS max_uploaded_date,
+      DENSE_RANK() OVER (PARTITION BY bamboohr_directory.employee_id ORDER BY uploaded_at DESC)        AS rank_email_desc        
+    FROM mapping
+    LEFT JOIN bamboohr_directory
+      ON mapping.employee_id = bamboohr_directory.employee_id
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY bamboohr_directory.employee_id, work_email ORDER BY uploaded_at) = 1       
 
 ), final AS (
 

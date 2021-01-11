@@ -21,9 +21,9 @@ WITH bamboo_hr_members AS (
 ), final AS (
 
     SELECT 
+      employee_id               AS bamboohr_employee_id, 
       full_name                 AS bamboo_hr_full_name, 
       work_email                AS bamboo_hr_gitlab_email, 
-      employee_id               AS bamboo_hr_employee_id, 
       gitlab_dotcom_user_id, 
       gitlab_dotcom_user_name, 
       gitlab_ops_user_id, 

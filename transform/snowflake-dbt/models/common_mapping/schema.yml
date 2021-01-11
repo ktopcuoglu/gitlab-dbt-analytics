@@ -112,12 +112,12 @@ models:
   - name: map_team_member_bamboo_gitlab_dotcom_gitlab_ops
     description: '{{ doc("map_team_member_bamboo_gitlab_dotcom_gitlab_ops") }}'
     columns:
+      - name: bamboohr_employee_id
+        description: "GitLab Team Member Employee ID as shown in BambooHR. Can be used to join to employee_directory_analysis."
       - name: bamboohr_full_name
         description: "GitLab Team Member Full Name as shown in BambooHR"
       - name: bamboo_hr_gitlab_email
         description: "GitLab Team Member GitLab Email as shown in BambooHR. Can be used to join to employee_directory_analysis."
-      - name: bamboo_hr_employee_id
-        description: "GitLab Team Member Employee ID as shown in BambooHR. Can be used to join to employee_directory_analysis."
       - name: gitlab_dotcom_user_id
         description: "GitLab Team Member GitLab.com SaaS Database user_id. Can be used to join onto any user id field in the gitlab_dotcom data set "
       - name: gitlab_dotcom_user_name

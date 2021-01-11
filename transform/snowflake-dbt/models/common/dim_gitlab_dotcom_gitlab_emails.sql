@@ -1,15 +1,16 @@
-{% set column_name = 'notification_email' %}
+{% set column_name = 'notification_email_handle' %}
 
 WITH gitlab_dotcom_members AS (
 
     SELECT * 
     FROM {{ref('gitlab_dotcom_members')}} 
 
-), gitlab_dotcom_users_xf AS (
+), gitlab_dotcom_users AS (
 
     SELECT *,
+      SPLIT_PART(notification_email,'@', 0) AS notification_email_handle,
       {{include_gitlab_email(column_name)}} AS include_notification_email
-    FROM {{ref('gitlab_dotcom_users_xf')}} 
+    FROM {{ref('gitlab_dotcom_users')}} 
 
 ), gitlab_dotcom_gitlab_emails_cleaned AS (
 
@@ -43,14 +44,14 @@ WITH gitlab_dotcom_members AS (
       gitlab_dotcom_user_id, 
       user_name,
       CASE
-        WHEN length (gitlab_dotcom_users_xf.notification_email) < 3 
+        WHEN length (gitlab_dotcom_users.notification_email) < 3 
           THEN NULL
-        WHEN gitlab_dotcom_users_xf.include_notification_email = 'Exclude'
+        WHEN gitlab_dotcom_users.include_notification_email = 'Exclude'
           THEN NULL
-        ELSE gitlab_dotcom_users_xf.notification_email                        END AS notification_email
+        ELSE gitlab_dotcom_users.notification_email                        END AS notification_email
     FROM gitlab_dotcom_team_members_user_id
-    INNER JOIN gitlab_dotcom_users_xf
-      ON gitlab_dotcom_team_members_user_id.gitlab_dotcom_user_id = gitlab_dotcom_users_xf.user_id
+    INNER JOIN gitlab_dotcom_users
+      ON gitlab_dotcom_team_members_user_id.gitlab_dotcom_user_id = gitlab_dotcom_users.user_id
     WHERE user_name NOT ILIKE '%admin%'
   
 ), all_known_employee_gitlab_emails AS (
