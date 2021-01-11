@@ -42,7 +42,7 @@ WITH licenses AS (
                                           OR l.plan_code = '' THEN 'core' 
                                         ELSE l.plan_code END)
     LEFT JOIN original_subscription i 
-       ON i.Subscription_Id = l.zuora_subscription_id
+       ON l.zuora_subscription_id = i.subscription_id 
 
 )
 
