@@ -26,6 +26,7 @@ opportunity, Relates to customer opportunity data.
 poc,Proof of concept
 product,For large product analytics data
 purchase_channel, Related to identifying types of purchase channel data
+sales_funnel, related to Lead to Cash funnel
 sales_territory, Related to sales territory mappings
 schema,dbt built-in
 sfdc,Relates to Salesforce dotcom

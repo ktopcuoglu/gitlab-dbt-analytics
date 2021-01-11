@@ -179,6 +179,58 @@ models:
           - not_null
           - unique
 
+  - name: prep_subscription
+    description: '{{ doc("prep_subscription") }}'
+    columns:
+      - name: dim_subscription_id
+        description: Unique identifier of a version of a subscription
+        tests:
+          - not_null
+          - unique
+      - name: dim_crm_account_id
+        description: account id from SFDC identifing the customer
+      - name: dim_billing_account_id
+        description: The id of the Zuora account the subscription is associated with
+      - name: dim_crm_person_id_invoice_owner
+      - name: dim_crm_opportunity_id
+      - name: dim_subscription_id_original
+      - name: dim_subscription_id_previous
+      - name: amendment_id
+      - name: subscription_name_slugify
+        description: The unique identifier of the subscription
+      - name: subscription_status
+        description: The status of the subscription
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Active', 'Cancelled', 'Draft', 'Expired']
+      - name: subscription_version
+        description: The version number of the subscription
+      - name: is_auto_renew
+        description: Boolean field, if true, this subscription automatically renews at the end of the subscription term
+      - name: zuora_renewal_subscription_name
+        description: name of the linked subscription that renews the prior subscription in a lineage
+      - name: zuora_renewal_subscription_name_slugify
+        description: name of the linked subscription that renews the prior subscription in a lineage
+      - name: renewal_term
+        description: The length of the period for the subscription renewal term
+      - name: renewal_term_period_type
+        description: The period type for the subscription renewal term. This field is used with the renewal term field to specify the subscription renewal term.
+      - name: subscription_start_date
+        description: The date when the subscription term starts. This date is the same as the start date of the original term, which isn't necessarily the start date of the current or new term.
+      - name: subscription_end_date
+        description: The date when the subscription term ends, where the subscription ends at midnight the day before. For example, if the SubscriptionEndDate is 12/31/2016, the subscriptions ends at midnight (00:00:00 hours) on 12/30/2016. This date is the same as the term end date or the cancelation date, as appropriate.
+      - name: subscription_start_month
+        description: The month when the subscription term starts. This month is the same as the start month of the original term, which isn't necessarily the start month of the current or new term.
+      - name: subscription_end_month
+        description: The month when the subscription term ends. This month is the same as the term end month or the cancelation month, as appropriate.
+      - name: subscription_sales_type
+        description: Identifies whether a subscription is Sales-Assisted or Self-Service / Web Direct.
+        tests:
+          - not_null
+          - accepted_values:
+                  values: ['Sales-Assisted', 'Self-Service']
+
   - name: prep_product_tier
     description: '{{ doc("prep_product_tier") }}'
     columns:
@@ -210,3 +262,43 @@ models:
       - name: quote_status
       - name: is_primary_quote
       - name: quote_start_date
+
+  - name: prep_license
+    description: '{{ doc("prep_license") }}'
+    columns:
+      - name: dim_license_id
+        description: The unique ID of a generated license.
+        tests:
+          - not_null
+          - unique
+      - name: license_md5
+        description: The md5 hash of the license file. Use this field to join to fct_usage_ping_payloads.
+        tests:
+          - not_null
+          - unique
+      - name: dim_subscription_id
+        description: The unique identifier of a version of a subscription.
+      - name: subscription_name
+        description: The unique identifier of a subscription.
+      - name: dim_subscription_id_original
+      - name: dim_subscription_id_previous
+      - name: license_user_count
+        description: The user count of the license.
+      - name: license_plan
+        description: The plan code for the product tier of the license.
+      - name: dim_product_tier_id
+        description: The unique ID of a product tier deterimined in dim_product_tier.
+      - name: is_trial
+        description: Boolean flag noting if the license was generated as part of a trial.
+      - name: is_internal
+        description: Derived boolean flag noting if the email recipient and company associated with the license is part of GitLab.
+      - name: company
+        description: The company the license was generated for.
+      - name: license_start_date
+        description: The start date of the license.
+      - name: license_expire_date
+        description: The expiration date of the license.
+      - name: created_at
+        description: The timestamp of when the license was generated.
+      - name: updated_at
+        description: The timestamp of when the license was updated.
