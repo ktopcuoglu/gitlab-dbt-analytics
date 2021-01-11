@@ -1162,7 +1162,7 @@ models:
         tests:
           - not_null
       - name: active_user_count
-        description: Count of active users currently on the customer's subcription.
+        description: Count of active users currently on the customer's subcription. A count of 0 indicates that Seat Link has been turned off by the customer.
         tests:
           - not_null
       - name: license_user_count

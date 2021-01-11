@@ -2,7 +2,7 @@ WITH seat_links AS (
 
     SELECT
       order_id,
-      TRIM(zuora_subscription_id)                                   AS zuora_subscription_id,
+      TRIM(zuora_subscription_id)                                   AS dim_subscription_id,
       report_date,
       DATE_TRUNC('month', report_date)                              AS snapshot_month,
       active_user_count,
@@ -11,7 +11,7 @@ WITH seat_links AS (
     FROM {{ ref('customers_db_license_seat_links_source') }}
     QUALIFY ROW_NUMBER() OVER (
       PARTITION BY
-        zuora_subscription_id,
+        dim_subscription_id,
         snapshot_month
       ORDER BY report_date DESC
       ) = 1
@@ -55,11 +55,11 @@ WITH seat_links AS (
       seat_links.snapshot_month,
       seat_links.report_date     
     FROM seat_links 
-    JOIN customers_orders
+    INNER JOIN customers_orders
       ON seat_links.order_id = customers_orders.order_id
-    LEFT JOIN subscriptions
-      ON seat_links.zuora_subscription_id = subscriptions.dim_subscription_id
-    LEFT JOIN product_details
+    LEFT OUTER JOIN subscriptions
+      ON seat_links.dim_subscription_id = subscriptions.dim_subscription_id
+    LEFT OUTER JOIN product_details
       ON customers_orders.product_rate_plan_id = product_details.product_rate_plan_id
       
 )
