@@ -209,7 +209,7 @@ WITH dim_billing_account AS (
       ON fct_usage_ping_payloads.license_md5 = license_subscriptions.license_md5
         AND fct_monthly_usage_data.created_month = license_subscriptions.reporting_month
     LEFT JOIN dim_location
-      ON dim_hosts.location_id = dim_location.location_id
+      ON dim_hosts.location_id = dim_location.dim_location_id
 
 ), sorted AS (
 
