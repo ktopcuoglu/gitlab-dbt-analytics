@@ -38,12 +38,12 @@ WITH source AS (
 
     SELECT
       {{ dbt_utils.star(from=ref('version_usage_data_source'), except=['EDITION']) }},
-      IFF(license_expires_at >= created_at OR license_expires_at IS NULL, edition, 'EE Free') AS cleaned_edition,
-      REGEXP_REPLACE(NULLIF(version, ''), '[^0-9.]+')                                         AS cleaned_version,
-      IFF(version ILIKE '%-pre', True, False)                                                 AS version_is_prerelease,
-      SPLIT_PART(cleaned_version, '.', 1)::NUMBER                                             AS major_version,
-      SPLIT_PART(cleaned_version, '.', 2)::NUMBER                                             AS minor_version,
-      major_version || '.' || minor_version                                                   AS major_minor_version,
+      IFF(license_expires_at >= created_at OR license_expires_at IS NULL, edition, 'EE Free')   AS cleaned_edition,
+      REGEXP_REPLACE(NULLIF(version, ''), '[^0-9.]+')                                           AS cleaned_version,
+      IFF(version ILIKE '%-pre', True, False)                                                   AS version_is_prerelease,
+      SPLIT_PART(cleaned_version, '.', 1)::NUMBER                                               AS major_version,
+      SPLIT_PART(cleaned_version, '.', 2)::NUMBER                                               AS minor_version,
+      major_version || '.' || minor_version                                                     AS major_minor_version,
       raw_usage_data_payload_reconstructed
     FROM source
     WHERE uuid IS NOT NULL
@@ -53,19 +53,19 @@ WITH source AS (
 
     SELECT 
       {{ dbt_utils.star(from=ref('version_usage_data_source'), relation_alias='usage_data' }},
-      edition                                                                               AS original_edition
-      cleaned_edition                                                                       AS edition,
-      IFF(edition = 'CE', 'CE', 'EE')                                                       AS main_edition,
+      edition                                                                                   AS original_edition
+      cleaned_edition                                                                           AS edition,
+      IFF(edition = 'CE', 'CE', 'EE')                                                           AS main_edition,
       CASE 
         WHEN edition = 'CE'                                     THEN 'Core'
         WHEN edition = 'EE Free'                                THEN 'Core'                                                      
-        WHEN license_expires_at < usage_ping_data.created_at    THEN 'Core'
+        WHEN license_expires_at < created_at                    THEN 'Core'
         WHEN edition = 'EE'                                     THEN 'Starter'
         WHEN edition = 'EES'                                    THEN 'Starter'
         WHEN edition = 'EEP'                                    THEN 'Premium'
         WHEN edition = 'EEU'                                    THEN 'Ultimate'
-        ELSE NULL END                                                                       AS product_tier,
-        main_edition || ' - ' || product_tier                                               AS main_edition_product_tier,
+        ELSE NULL END                                                                           AS product_tier,
+        main_edition || ' - ' || product_tier                                                   AS main_edition_product_tier,
       cleaned_version,
       version_is_prerelease,
       major_version,
@@ -74,21 +74,21 @@ WITH source AS (
       CASE
         WHEN uuid = 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f'      THEN 'SaaS'
         ELSE 'Self-Managed'
-      END                                                                                   AS ping_source,
+      END                                                                                       AS ping_source,
       CASE
         WHEN ping_source = 'SaaS'                               THEN TRUE 
         WHEN installation_type = 'gitlab-development-kit'       THEN TRUE 
         WHEN hostname = 'gitlab.com'                            THEN TRUE 
         WHEN hostname ILIKE '%.gitlab.com'                      THEN TRUE 
-        ELSE FALSE END                                                                      AS is_internal, 
+        ELSE FALSE END                                                                          AS is_internal, 
       CASE
         WHEN hostname ilike 'staging.%'                         THEN TRUE
         WHEN hostname IN ( 
         'staging.gitlab.com',
         'dr.gitlab.com'
       )                                                         THEN TRUE
-        ELSE FALSE END                                                                      AS is_staging,     
-      COALESCE(raw_usage_data.raw_usage_data_payload, raw_usage_data_payload_reconstructed) AS raw_usage_data_payload
+        ELSE FALSE END                                                                          AS is_staging,     
+      COALESCE(raw_usage_data.raw_usage_data_payload, raw_usage_data_payload_reconstructed)     AS raw_usage_data_payload
     FROM usage_data
     LEFT JOIN raw_usage_data
       ON usage_data.raw_usage_data_id = raw_usage_data.raw_usage_data_id
@@ -120,14 +120,14 @@ WITH source AS (
 ), final AS (
 
     SELECT 
-      id                                          AS dim_usage_ping_id,
-      created_at                                  AS ping_created_at,
-      DATEADD('days', -28, created_at)            AS ping_created_at_28_days_earlier,
-      DATE_TRUNC('YEAR',created_at)               AS ping_created_at_year,
-      DATE_TRUNC('MONTH',created_at)              AS ping_created_at_month,
-      DATE_TRUNC('WEEK',created_at)               AS ping_created_at_week,
-      DATE_TRUNC('DAY',created_at)                AS ping_created_at_date,
-      raw_usage_data_id                           AS raw_usage_data_id, 
+      id                                            AS dim_usage_ping_id,
+      created_at                                    AS ping_created_at,
+      DATEADD('days', -28, created_at)              AS ping_created_at_28_days_earlier,
+      DATE_TRUNC('YEAR', created_at)                AS ping_created_at_year,
+      DATE_TRUNC('MONTH', created_at)               AS ping_created_at_month,
+      DATE_TRUNC('WEEK', created_at)                AS ping_created_at_week,
+      DATE_TRUNC('DAY', created_at)                 AS ping_created_at_date,
+      raw_usage_data_id                             AS raw_usage_data_id, 
       raw_usage_data_payload, 
       original_edition, 
       edition, 

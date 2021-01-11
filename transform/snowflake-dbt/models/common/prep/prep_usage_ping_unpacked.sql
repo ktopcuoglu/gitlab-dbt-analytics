@@ -3,7 +3,7 @@
     })
 }}
 
-WITH usage_data AS (
+WITH prep_usage_ping AS (
 
     SELECT * 
     FROM {{ ref('prep_usage_ping') }}
