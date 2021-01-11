@@ -58,7 +58,7 @@ WITH source AS (
 
     SELECT 
       dim_usage_ping_id, 
-      {{ dbt_utils.star(from=ref('version_usage_data_source'), relation_alias='usage_data') }},
+      {{ dbt_utils.star(from=ref('version_usage_data_source'), relation_alias='usage_data', except=['EDITION']) }},
       original_edition, 
       cleaned_edition                                                                           AS edition,
       IFF(original_edition = 'CE', 'CE', 'EE')                                                  AS main_edition,
