@@ -24,7 +24,7 @@ WITH base AS (
 ) 
 
 {{ dbt_audit(
-    cte_ref="usage_pings_no_license",
+    cte_ref="final",
     created_by="@kathleentam",
     updated_by="@kathleentam",
     created_date="2021-01-10",
