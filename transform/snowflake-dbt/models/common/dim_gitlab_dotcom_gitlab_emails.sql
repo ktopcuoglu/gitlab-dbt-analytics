@@ -10,8 +10,13 @@ WITH gitlab_dotcom_members AS (
 
 ), gitlab_dotcom_gitlab_emails_cleaned AS (
 
-    SELECT * 
-    FROM {{ref('gitlab_dotcom_gitlab_emails_cleaned')}} 
+    SELECT DISTINCT 
+      user_id, 
+      email_address, 
+      email_handle, 
+    FROM {{ref('gitlab_dotcom_gitlab_emails')}} 
+    WHERE length (email_handle) > 3
+      AND include_email_flg = 'Include'
 
 ), sheetload_infrastructure_gitlab_employee AS (
 

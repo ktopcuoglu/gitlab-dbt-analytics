@@ -26,3 +26,7 @@ WITH source AS (
 
 SELECT *
 FROM final
+WHERE (LOWER(full_name) NOT LIKE '%greenhouse test%'
+            and LOWER(full_name) NOT LIKE '%test profile%'
+            and LOWER(full_name) != 'test-gitlab')
+        OR employee_id  NOT IN (42039, 42043)
