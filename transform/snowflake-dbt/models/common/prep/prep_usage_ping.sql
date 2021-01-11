@@ -115,7 +115,7 @@ WITH source AS (
       map_ip_location.iso_3_country_code  
     FROM joined 
     LEFT JOIN map_ip_location
-        ON joined.source_ip_hash = map_ip_location.ip_address_hash 
+        ON joined.source_ip_hash = map_ip_location.source_ip_hash 
 
 ), final AS (
 
