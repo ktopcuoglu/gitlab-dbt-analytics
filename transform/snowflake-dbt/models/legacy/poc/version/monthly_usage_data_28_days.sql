@@ -73,4 +73,4 @@ SELECT
   clean_metrics_name,
   SUM(monthly_metric_value) AS monthly_metric_value
 FROM monthly
-{{ dbt_utils.group_by(n=13)}}
+{{ dbt_utils.group_by(n=14)}}
