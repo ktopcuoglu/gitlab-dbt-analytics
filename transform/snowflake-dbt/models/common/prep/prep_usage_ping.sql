@@ -1,119 +1,153 @@
 {{ config({
-    "materialized": "incremental",
-    "unique_key": "dim_usage_ping_id"
+    "materialized": "table"
     })
 }}
 
-WITH usage_ping_data AS (
+{%- set columns = adapter.get_columns_in_relation( ref('version_usage_data_source')) -%}
 
-    SELECT {{ hash_sensitive_columns('version_usage_data_source') }}
-    FROM {{ ref('version_usage_data_source') }}
-    WHERE uuid IS NOT NULL
-
-), ip_to_geo AS (
-
-    SELECT * 
-    FROM {{ ref('dim_ip_to_geo') }}
-    
-), location AS (
-
-    SELECT * 
-    FROM {{ ref('location_id') }}
-
-), location AS (
-
-    SELECT * 
-    FROM {{ ref('location_id') }}
-
-), location AS (
-
-    SELECT * 
-    FROM {{ ref('location_id') }}
-
-), location AS (
-
-    SELECT * 
-    FROM {{ ref('location_id') }}
-
-), location AS (
-
-    SELECT * 
-    FROM {{ ref('location_id') }}
-
-),
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-version_edition_cleaned AS (
-
-     SELECT
-        usage_ping_data.*,
-        {{ get_date_id('usage_ping_data.created_at') }}              AS created_date_id,
-        REGEXP_REPLACE(NULLIF(version, ''), '\-.*')                  AS cleaned_version,
-        SPLIT_PART(cleaned_version, '.', 1)                          AS major_version,
-        SPLIT_PART(cleaned_version, '.', 2)                          AS minor_version,
-        major_version || '.' || minor_version                        AS major_minor_version,
-        IFF(
-            version LIKE '%-pre%' OR version LIKE '%-rc%', 
-            TRUE, FALSE
-        )::BOOLEAN                                                   AS is_pre_release,
-        IFF(edition = 'CE', 'CE', 'EE')                              AS main_edition,
-        CASE 
-            WHEN edition = 'CE'                                   THEN 'Core'
-            WHEN edition = 'EE Free'                              THEN 'Core'                                                      
-            WHEN license_expires_at < usage_ping_data.created_at  THEN 'Core'
-            WHEN edition = 'EE'                                   THEN 'Starter'
-            WHEN edition = 'EES'                                  THEN 'Starter'
-            WHEN edition = 'EEP'                                  THEN 'Premium'
-            WHEN edition = 'EEU'                                  THEN 'Ultimate'
-            ELSE NULL END                                            AS product_tier,
-        main_edition || ' - ' || product_tier                        AS main_edition_product_tier, 
-        IFF( uuid = 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f',
-                'SaaS','Self-Managed')                               AS ping_source
-    FROM usage_ping_data
-
-), internal_identified AS (
+WITH source AS (
 
     SELECT 
-        *, 
-        CASE
-            WHEN ping_source = 'SaaS'                           THEN TRUE 
-            WHEN installation_type = 'gitlab-development-kit'   THEN TRUE 
-            WHEN hostname = 'gitlab.com'                        THEN TRUE 
-            WHEN hostname ILIKE '%.gitlab.com'                  THEN TRUE 
-            ELSE FALSE END                                           AS is_internal, 
-        IFF(hostname ilike 'staging.%', TRUE, FALSE)                AS is_staging
-    FROM version_edition_cleaned
+      {{ hash_sensitive_columns('version_usage_data_source') }}, 
+      OBJECT_CONSTRUCT(
+        {% for column in columns %}  
+          '{{ column.column | lower }}', {{ column.column | lower }}
+          {% if not loop.last %}
+            ,
+          {% endif %}
+        {% endfor %}
+      ) AS raw_usage_data_payload_reconstructed
+    FROM {{ ref('version_usage_data_source') }}
 
 ), raw_usage_data AS (
 
     SELECT *
     FROM {{ ref('version_raw_usage_data_source') }}
 
-), renamed AS (
+), map_ip_to_geo AS (
+
+    SELECT * 
+    FROM {{ ref('map_ip_to_geo') }}
+    
+), location AS (
+
+    SELECT * 
+    FROM {{ ref('dim_location') }}
+
+), usage_data AS (
+
+    SELECT
+      {{ dbt_utils.star(from=ref('version_usage_data_source'), except=['EDITION']) }},
+      IFF(license_expires_at >= created_at OR license_expires_at IS NULL, edition, 'EE Free') AS cleaned_edition,
+      REGEXP_REPLACE(NULLIF(version, ''), '[^0-9.]+')                                         AS cleaned_version,
+      IFF(version ILIKE '%-pre', True, False)                                                 AS version_is_prerelease,
+      SPLIT_PART(cleaned_version, '.', 1)::NUMBER                                             AS major_version,
+      SPLIT_PART(cleaned_version, '.', 2)::NUMBER                                             AS minor_version,
+      major_version || '.' || minor_version                                                   AS major_minor_version,
+      raw_usage_data_payload_reconstructed
+    FROM source
+    WHERE uuid IS NOT NULL
+      AND version NOT LIKE ('%VERSION%') -- Messy data that's not worth parsing
+
+), joined AS (
 
     SELECT 
-      internal_identified.*,
-      raw_usage_data.raw_usage_data_payload
-    FROM internal_identified
+      {{ dbt_utils.star(from=ref('version_usage_data_source'), relation_alias='usage_data' }},
+      edition                                                                               AS original_edition
+      cleaned_edition                                                                       AS edition,
+      IFF(edition = 'CE', 'CE', 'EE')                                                       AS main_edition,
+      CASE 
+        WHEN edition = 'CE'                                     THEN 'Core'
+        WHEN edition = 'EE Free'                                THEN 'Core'                                                      
+        WHEN license_expires_at < usage_ping_data.created_at    THEN 'Core'
+        WHEN edition = 'EE'                                     THEN 'Starter'
+        WHEN edition = 'EES'                                    THEN 'Starter'
+        WHEN edition = 'EEP'                                    THEN 'Premium'
+        WHEN edition = 'EEU'                                    THEN 'Ultimate'
+        ELSE NULL END                                                                       AS product_tier,
+        main_edition || ' - ' || product_tier                                               AS main_edition_product_tier,
+      cleaned_version,
+      version_is_prerelease,
+      major_version,
+      minor_version,
+      major_minor_version,
+      CASE
+        WHEN uuid = 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f'      THEN 'SaaS'
+        ELSE 'Self-Managed'
+      END                                                                                   AS ping_source,
+      CASE
+        WHEN ping_source = 'SaaS'                               THEN TRUE 
+        WHEN installation_type = 'gitlab-development-kit'       THEN TRUE 
+        WHEN hostname = 'gitlab.com'                            THEN TRUE 
+        WHEN hostname ILIKE '%.gitlab.com'                      THEN TRUE 
+        ELSE FALSE END                                                                      AS is_internal, 
+      CASE
+        WHEN hostname ilike 'staging.%'                         THEN TRUE
+        WHEN hostname IN ( 
+        'staging.gitlab.com',
+        'dr.gitlab.com'
+      )                                                         THEN TRUE
+        ELSE FALSE END                                                                      AS is_staging,     
+      COALESCE(raw_usage_data.raw_usage_data_payload, raw_usage_data_payload_reconstructed) AS raw_usage_data_payload
+    FROM usage_data
     LEFT JOIN raw_usage_data
-      ON internal_identified.raw_usage_data_id = raw_usage_data.raw_usage_data_id
+      ON usage_data.raw_usage_data_id = raw_usage_data.raw_usage_data_id
+
+), map_ip_location AS (
+
+    SELECT 
+      map_ip_to_geo.ip_address_hash, 
+      map_ip_to_geo.dim_location_id, 
+      location.country_name, 
+      location.iso_2_country_code, 
+      location.iso_3_country_code  
+    FROM map_ip_to_geo
+    INNER JOIN location 
+      WHERE map_ip_to_geo.dim_location_id = location.dim_location_id
+
+), add_country_info_to_usage_ping AS (
+
+    SELECT 
+      joined.*, 
+      map_ip_location.dim_location_id, 
+      map_ip_location.country_name, 
+      map_ip_location.iso_2_country_code, 
+      map_ip_location.iso_3_country_code  
+    FROM joined 
+    LEFT JOIN map_ip_location
+        ON joined.source_ip_hash = map_ip_location.ip_address_hash 
+
+), final AS (
+
+    SELECT 
+      id                                          AS dim_usage_ping_id,
+      created_at                                  AS ping_created_at,
+      DATEADD('days', -28, created_at)            AS ping_created_at_28_days_earlier,
+      DATE_TRUNC('YEAR',created_at)               AS ping_created_at_year,
+      DATE_TRUNC('MONTH',created_at)              AS ping_created_at_month,
+      DATE_TRUNC('WEEK',created_at)               AS ping_created_at_week,
+      DATE_TRUNC('DAY',created_at)                AS ping_created_at_date,
+      raw_usage_data_id                           AS raw_usage_data_id, 
+      raw_usage_data_payload, 
+      original_edition, 
+      edition, 
+      main_edition, 
+      product_tier, 
+      main_edition_product_tier, 
+      ping_source,
+      is_internal, 
+      is_staging, 
+      country_name, 
+      iso_2_country_code, 
+      iso_3_country_code  
+    FROM add_country_info_to_usage_ping
 
 )
 
-SELECT * 
-FROM renamed
-
-
+{{ dbt_audit(
+    cte_ref="final",
+    created_by="@kathleentam",
+    updated_by="@kathleentam",
+    created_date="2021-01-10",
+    updated_date="2021-01-10"
+) }}
