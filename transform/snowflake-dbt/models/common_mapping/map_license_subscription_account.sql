@@ -6,9 +6,9 @@
 WITH license AS (
 
     SELECT
-      license_id, 
+      license_id                            AS dim_license_id, 
       license_md5, 
-      susbcription_id 
+      subscription_id                       AS dim_subscription_id 
     FROM {{ ref('dim_licenses') }}
 
 ), subscription AS (
@@ -28,20 +28,20 @@ WITH license AS (
 ), license_mapped_to_subscription AS (
 
     SELECT 
-      license.license_id                        AS dim_license_id, 
-      license.license_md5                       AS license_md5, 
-      subscription.dim_subscription_id          AS dim_subscription_id, 
-      subcription.dim_crm_account_id            AS dim_crm_account_id
+      license.dim_license_id, 
+      license.license_md5, 
+      subscription.dim_subscription_id, 
+      subcription.dim_crm_account_id
     FROM license 
     INNER JOIN subscription
-      ON license.susbcription_id = subscription.dim_subscription_id
+      ON license.dim_subscription_id = subscription.dim_subscription_id
 
 ), subscription_mapped_to_crm_account AS (
 
     SELECT 
-      subscription.dim_subscription_id          AS dim_subscription_id, 
-      subcription.dim_crm_account_id            AS dim_crm_account_id, 
-      crm_account.ultimate_parent_account_id    AS ultimate_parent_account_id
+      subscription.dim_subscription_id, 
+      subcription.dim_crm_account_id, 
+      crm_account.ultimate_parent_account_id
     FROM subscription 
     INNER JOIN crm_account
       ON subscription.dim_crm_account_id = crm_account.crm_account_id

@@ -9,6 +9,7 @@
 WITH source AS (
 
     SELECT 
+      id AS dim_usage_ping_id, 
       {{ nohash_sensitive_columns('version_usage_data_source', 'source_ip') }}, 
       OBJECT_CONSTRUCT(
         {% for column in columns %}  
@@ -38,6 +39,7 @@ WITH source AS (
 ), usage_data AS (
 
     SELECT
+      dim_usage_ping_id, 
       {{ dbt_utils.star(from=ref('version_usage_data_source'), except=['EDITION']) }},
       IFF(license_expires_at >= created_at OR license_expires_at IS NULL, edition, 'EE Free')   AS cleaned_edition,
       REGEXP_REPLACE(NULLIF(version, ''), '[^0-9.]+')                                           AS cleaned_version,
@@ -53,6 +55,7 @@ WITH source AS (
 ), joined AS (
 
     SELECT 
+      dim_usage_ping_id, 
       {{ dbt_utils.star(from=ref('version_usage_data_source'), relation_alias='usage_data') }},
       edition                                                                                   AS original_edition,
       cleaned_edition                                                                           AS edition,
@@ -121,7 +124,7 @@ WITH source AS (
 ), final AS (
 
     SELECT 
-      id                                            AS dim_usage_ping_id,
+      dim_usage_ping_id,
       created_at                                    AS ping_created_at,
       DATEADD('days', -28, created_at)              AS ping_created_at_28_days_earlier,
       DATE_TRUNC('YEAR', created_at)                AS ping_created_at_year,
