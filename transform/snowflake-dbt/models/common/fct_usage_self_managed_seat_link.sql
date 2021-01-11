@@ -55,7 +55,7 @@ WITH seat_links AS (
       seat_links.snapshot_month,
       seat_links.report_date     
     FROM seat_links 
-    JOIN customers_orders
+    INNER JOIN customers_orders
       ON seat_links.order_id = customers_orders.order_id
     LEFT JOIN subscriptions
       ON seat_links.zuora_subscription_id = subscriptions.dim_subscription_id
