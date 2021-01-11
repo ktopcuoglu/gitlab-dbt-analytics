@@ -85,6 +85,6 @@ WITH prep_usage_ping AS (
     cte_ref="usage_pings_no_license",
     created_by="@kathleentam",
     updated_by="@kathleentam",
-    created_date="2021-01-10",
-    updated_date="2021-01-10"
+    created_date="2021-01-11",
+    updated_date="2021-01-11"
 ) }}

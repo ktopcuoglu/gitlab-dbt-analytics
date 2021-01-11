@@ -48,5 +48,5 @@ WITH usage_ping AS (
     created_by="@mpeychet",
     updated_by="@kathleentam",
     created_date="2020-11-24",
-    updated_date="2021-01-10"
+    updated_date="2021-01-11"
 ) }}

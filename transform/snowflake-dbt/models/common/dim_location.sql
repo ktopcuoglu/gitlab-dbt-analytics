@@ -27,5 +27,5 @@ WITH maxmind_countries_source AS (
     created_by="@m_walker",
     updated_by="@kathleentam",
     created_date="2020-08-25",
-    updated_date="2021-01-10"
+    updated_date="2021-01-11"
 ) }}

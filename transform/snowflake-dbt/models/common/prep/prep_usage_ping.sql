@@ -153,6 +153,6 @@ WITH source AS (
     cte_ref="final",
     created_by="@kathleentam",
     updated_by="@kathleentam",
-    created_date="2021-01-10",
-    updated_date="2021-01-10"
+    created_date="2021-01-11",
+    updated_date="2021-01-11"
 ) }}
