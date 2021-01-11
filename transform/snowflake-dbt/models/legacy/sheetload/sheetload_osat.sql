@@ -12,7 +12,7 @@ WITH bamboohr AS (
 
     SELECT
       source.completed_date,
-      DATE_TRUNC(month, bamboohr.hire_date) AS hire_month,
+      COALESCE(DATE_TRUNC(month, source.hire_date), DATE_TRUNC(month, bamboohr.hire_date)) AS hire_month,
       source.division,
       source.satisfaction_score,
       source.recommend_to_friend,
