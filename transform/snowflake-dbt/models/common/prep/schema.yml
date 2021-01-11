@@ -48,6 +48,40 @@ models:
       - name: iso_3_country_code
         description: The iso 3 country code where the instance reported the ping from 
 
+  - name: prep_usage_ping_no_license_key
+    description: '{{ doc("prep_usage_ping_no_license_key") }}'
+    columns:
+      - name: dim_usage_ping_id
+        description: JOIN key to dim_usage_pings and prep_usage_pings. Represents a single usage ping. 
+      - name: ping_created_at
+        description: The timestamp at which the usage ping was created_at 
+      - name: ping_created_at_28_days_earlier
+        description: The timestamp at which the usage ping was created_at minus 28 days for the monthly metric time period 
+      - name: ping_created_at_year
+        description: The year ('2017') the ping was created at
+      - name: ping_created_at_month
+        description: The month ('2017-01-01') the ping was created at
+      - name: ping_created_at_week
+        description: The week start ('2017-01-01') the ping was created at
+      - name: ping_created_at_date
+        description: The day the ping was created at (removes the extra time information in the timestamp)
+
+  - name: prep_usage_ping_saas_dates
+    description: '{{ doc("prep_usage_ping_saas_dates") }}'
+    columns:
+      - name: dim_usage_ping_id
+        description: JOIN key to dim_usage_pings and prep_usage_pings. Represents a single usage ping. 
+      - name: ping_created_at_date
+        description: The day the ping was created at (removes the extra time information in the timestamp)
+      - name: ping_created_at_28_days_earlier
+        description: The timestamp at which the usage ping was created_at minus 28 days for the monthly metric time period 
+      - name: ping_created_at_year
+        description: The year ('2017') the ping was created at
+      - name: ping_created_at_month
+        description: The month ('2017-01-01') the ping was created at
+      - name: ping_created_at_week
+        description: The week start ('2017-01-01') the ping was created at 
+
   - name: prep_usage_ping_subscription_mapped
     description: '{{ doc("prep_usage_ping_unpacked_for_sales") }}'
     columns:
@@ -57,10 +91,17 @@ models:
         description: JOIN key to dim_licenses and dim_license 
       - name: subscription_id 
         description: JOIN key to dim_subscription 
+      - name: ping_created_at
+        description: The timestamp at which the usage ping was created_at 
+      - name: ping_created_at_28_days_earlier
+        description: The timestamp at which the usage ping was created_at minus 28 days for the monthly metric time period 
+      - name: ping_created_at_year
+        description: The year ('2017') the ping was created at
+      - name: ping_created_at_month
+        description: The month ('2017-01-01') the ping was created at
+      - name: ping_created_at_week
+        description: The week start ('2017-01-01') the ping was created at
+      - name: ping_created_at_date
+        description: The day the ping was created at (removes the extra time information in the timestamp)
 
 
-  - name: prep_usage_ping_no_license_key
-    description: '{{ doc("prep_usage_ping_unpacked_for_sales_no_subscription") }}'
-    columns:
-      - name: dim_usage_ping_id
-        description: JOIN key to dim_usage_pings and prep_usage_pings. Represents a single usage ping. 
