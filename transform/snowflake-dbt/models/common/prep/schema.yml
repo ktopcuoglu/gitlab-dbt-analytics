@@ -83,7 +83,7 @@ models:
         description: The week start ('2017-01-01') the ping was created at 
 
   - name: prep_usage_ping_subscription_mapped
-    description: '{{ doc("prep_usage_ping_unpacked_for_sales") }}'
+    description: '{{ doc("prep_usage_ping_subscription_mapped") }}'
     columns:
       - name: dim_usage_ping_id
         description: JOIN key to dim_usage_pings and prep_usage_pings. Represents a single usage ping. 
