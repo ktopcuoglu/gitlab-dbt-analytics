@@ -89,6 +89,13 @@ Creates a base view with generated keys for the sales territory shared dimension
 
 {% enddocs %}
 
+
+{% docs prep_subscription %}
+
+Creates a base view with generated keys for the subscription shared dimension and references in facts.
+
+{% enddocs %}
+
 {% docs prep_product_tier %}
 
  This table creates keys for the common product tier dimension that is used across gitlab.com and Zuora data sources. 
@@ -104,4 +111,5 @@ Creates a Quote Prep table for representing Zuora quotes and associated metadata
 The grain of the table is a quote_id.
 
 {% enddocs %}
+
 
