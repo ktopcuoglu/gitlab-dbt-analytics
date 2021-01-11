@@ -1,7 +1,7 @@
 WITH base AS (
   
    SELECT * 
-   FROM PROD.legacy.dim_usage_pings
+   FROM {{ ref('prep_usage_ping') }}
    WHERE ping_source = 'SaaS'
 
 ), saas_pings AS (
