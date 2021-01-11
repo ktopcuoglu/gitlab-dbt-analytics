@@ -8,7 +8,7 @@
 WITH source AS (
 
     SELECT 
-      {{ hash_sensitive_columns('version_usage_data_source') }}, 
+      {{ nohash_sensitive_columns('version_usage_data_source', 'source_ip') }}, 
       OBJECT_CONSTRUCT(
         {% for column in columns %}  
           '{{ column.column | lower }}', {{ column.column | lower }}
