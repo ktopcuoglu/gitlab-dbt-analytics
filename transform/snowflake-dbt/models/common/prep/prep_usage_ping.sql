@@ -42,6 +42,7 @@ WITH source AS (
     SELECT
       dim_usage_ping_id, 
       {{ dbt_utils.star(from=ref('version_usage_data_source'), except=['EDITION']) }},
+      edition                                                                                   AS original_edition,
       IFF(license_expires_at >= created_at OR license_expires_at IS NULL, edition, 'EE Free')   AS cleaned_edition,
       REGEXP_REPLACE(NULLIF(version, ''), '[^0-9.]+')                                           AS cleaned_version,
       IFF(version ILIKE '%-pre', True, False)                                                   AS version_is_prerelease,
@@ -58,7 +59,7 @@ WITH source AS (
     SELECT 
       dim_usage_ping_id, 
       {{ dbt_utils.star(from=ref('version_usage_data_source'), relation_alias='usage_data') }},
-      edition                                                                                   AS original_edition,
+      original_edition, 
       cleaned_edition                                                                           AS edition,
       IFF(edition = 'CE', 'CE', 'EE')                                                           AS main_edition,
       CASE 
