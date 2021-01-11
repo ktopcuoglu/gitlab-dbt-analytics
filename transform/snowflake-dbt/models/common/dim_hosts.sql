@@ -30,7 +30,7 @@ WITH usage_ping AS (
 
     SELECT 
       hosts.*,
-      ip_to_geo.location_id
+      ip_to_geo.dim_location_id   AS location_id
     FROM hosts
     LEFT JOIN ip_to_geo
       ON hosts.source_ip_hash = ip_to_geo.ip_address_hash
@@ -46,7 +46,7 @@ WITH usage_ping AS (
 {{ dbt_audit(
     cte_ref="renamed",
     created_by="@mpeychet",
-    updated_by="@mpeychet",
+    updated_by="@kathleentam",
     created_date="2020-11-24",
-    updated_date="2020-11-24"
+    updated_date="2021-01-10"
 ) }}
