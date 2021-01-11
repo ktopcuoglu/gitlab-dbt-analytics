@@ -11,7 +11,7 @@ WITH source AS (
     SELECT 
       id     AS dim_usage_ping_id, 
       *, 
-      {{ nohash_sensitive_columns('version_usage_data_source', 'source_ip') }}, 
+      {{ nohash_sensitive_columns('version_usage_data_source', 'source_ip') }}  AS ip_address_hash, 
       OBJECT_CONSTRUCT(
         {% for column in columns %}  
           '{{ column.column | lower }}', {{ column.column | lower }}
@@ -120,7 +120,7 @@ WITH source AS (
       map_ip_location.iso_3_country_code  
     FROM joined 
     LEFT JOIN map_ip_location
-      ON joined.source_ip_hash = map_ip_location.ip_address_hash 
+      ON joined.ip_address_hash = map_ip_location.ip_address_hash 
 
 ), final AS (
 

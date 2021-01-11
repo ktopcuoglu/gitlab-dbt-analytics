@@ -31,7 +31,7 @@ WITH license AS (
       license.dim_license_id, 
       license.license_md5, 
       subscription.dim_subscription_id, 
-      subcription.dim_crm_account_id
+      subscription.dim_crm_account_id
     FROM license 
     INNER JOIN subscription
       ON license.dim_subscription_id = subscription.dim_subscription_id
@@ -40,7 +40,7 @@ WITH license AS (
 
     SELECT 
       subscription.dim_subscription_id, 
-      subcription.dim_crm_account_id, 
+      subscription.dim_crm_account_id, 
       crm_account.ultimate_parent_account_id
     FROM subscription 
     INNER JOIN crm_account
