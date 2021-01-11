@@ -15,9 +15,15 @@ models:
   - name: greenhouse_recruiting_xf
     description: This is shows all applications submitted and ties in offer data, greenhouse department (the associated division), and source data to be in 1 place.
     columns:
+        - name: unique_key
+          description: Unique key based on application_id, offer_id, candidate_id, requisition_id, and job_id
+          tests: 
+            - unique
+            - not_null
         - name: application_id
         - name: offer_id
         - name: candidate_id
+        - name: job_id
         - name: requisition_id
         - name: is_prospect
         - name: application_status
@@ -184,16 +190,21 @@ models:
   - name: greenhouse_hires
     description: This model is used to identify all greenhouse hires (including transfers within company). We want to capture the date the candidate truly started in bamboohr.
     columns:
-        - name: application_id
-        - name: candidate_id
-        - name: region
-          description: What area the hired candidate is in
-        - name: greenhouse_candidate_row_number
-          description: Indiciates the number of applications the candidate submitted and was hired for. For example, a 2 would be their second hire within the company.
-        - name: hire_date_mod
-          description: Note - this is a calculated field. In the case we don't have the candidate target hire date we are using the first record from the employment status table. If we do then we factor in the time between the candidate target hire and the bamboo hire date, and if it is less than 120 days we use the bamboo hire date, otherwise the targer_hire (the reason for this is because we don't have every application record for candidates hired prior to greenhouse. If this is the 2+ hired record in greenhouse we use the candidate target hire date as this candidate is a transfer.
-        - name: hire_type
-          description: Indicates whether the candidate is a hire, rehire, or transfer based on greenhouse_candidate_row_number.
+      - name: unique_key
+        tests:
+          - unique
+          - not_null
+      - name: application_id
+      - name: candidate_id
+      - name: region
+        description: What area the hired candidate is in
+      - name: greenhouse_candidate_row_number
+        description: Indiciates the number of applications the candidate submitted and was hired for. For example, a 2 would be their second hire within the company.
+      - name: hire_date_mod
+        description: Note - this is a calculated field. In the case we don't have the candidate target hire date we are using the first record from the employment status table. If we do then we factor in the time between the candidate target hire and the bamboo hire date, and if it is less than 120 days we use the bamboo hire date, otherwise the target_hire (the reason for this is because we don't have every application record for candidates hired prior to greenhouse. If this is the 2+ hired record in greenhouse we use the candidate target hire date as this candidate is a transfer.
+      - name: hire_type
+        description: Indicates whether the candidate is a hire, rehire, or transfer based on greenhouse_candidate_row_number.
+  
   - name: greenhouse_sourcer_metrics
     description: This provides recruiting metrics by sourcer and month.
     columns: 

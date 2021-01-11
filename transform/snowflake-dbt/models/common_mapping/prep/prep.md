@@ -11,6 +11,12 @@ Creates a base view with generated keys for the live crm sales hierarchy shared 
 
 {% enddocs %}
 
+{% docs prep_crm_sales_hierarchy_stamped %}
+
+Creates a base view with generated keys for the stamped/historical crm sales hierarchy shared dimensions and references in facts. This is built from the stamped fields in the opportunity object and will be used in sales funnel analyses.
+
+{% enddocs %}
+
 {% docs prep_geo_area %}
 
 Creates a base view with generated keys for the geo_area shared dimension and references in facts.
@@ -83,8 +89,27 @@ Creates a base view with generated keys for the sales territory shared dimension
 
 {% enddocs %}
 
+
 {% docs prep_subscription %}
 
 Creates a base view with generated keys for the subscription shared dimension and references in facts.
 
 {% enddocs %}
+
+{% docs prep_product_tier %}
+
+ This table creates keys for the common product tier dimension that is used across gitlab.com and Zuora data sources. 
+
+ The granularity of the table is product tier.
+
+{% enddocs %}
+
+{% docs prep_quote %}
+
+Creates a Quote Prep table for representing Zuora quotes and associated metadata for shared dimension and references in facts.
+
+The grain of the table is a quote_id.
+
+{% enddocs %}
+
+

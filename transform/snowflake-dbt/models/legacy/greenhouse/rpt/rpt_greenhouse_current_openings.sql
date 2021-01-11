@@ -57,12 +57,12 @@ WITH greenhouse_openings AS (
 ), cost_center_mapping AS (
 
     SELECT *
-    FROM {{ref('cost_center_division_department_mapping')}}
+    FROM {{ref('cost_center_division_department_mapping_current')}}
  
 ), hires AS (
   
     SELECT *
-    FROM {{ref('bamboohr_id_employee_number_mapping_source')}}
+    FROM {{ref('employee_directory')}}
 
 
 ), greenhouse_jobs_offices AS (

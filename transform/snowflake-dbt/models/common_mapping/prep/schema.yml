@@ -42,6 +42,15 @@ models:
           - not_null
           - unique
 
+  - name: prep_crm_sales_hierarchy_stamped
+    description: '{{ doc("prep_crm_sales_hierarchy_stamped") }}'
+    columns:
+      - name: dim_crm_sales_hierarchy_stamped_id
+        description: Unique identifier of a sales hierarchy tier
+        tests:
+          - not_null
+          - unique
+
   - name: prep_geo_area
     description: '{{ doc("prep_geo_area") }}'
     columns:
@@ -221,3 +230,35 @@ models:
           - not_null
           - accepted_values:
                   values: ['Sales-Assisted', 'Self-Service']
+
+  - name: prep_product_tier
+    description: '{{ doc("prep_product_tier") }}'
+    columns:
+      - name: dim_product_tier_id
+        description: "The unique identifier of Pricing tiers for Zuora Products"
+        tests:
+          - not_null
+          - unique
+      - name: product_tier_name
+        description: "Product pricing tiers for both SaaS and Self-Managed customers (https://about.gitlab.com/handbook/marketing/strategic-marketing/tiers/)"
+        tests:
+          - not_null
+          - unique
+      - name: product_delivery_type
+        description: "How product is delivered to customer; SaaS or Self-Managed (or Other)"
+      - name: product_ranking
+        description: "Numeric product pricing tier, independent of delivery type"
+
+  - name: prep_quote
+    description: '{{ doc("prep_quote") }}'
+    columns:
+      - name: dim_quote_id
+        description: The unique identifier for each of the quotes.
+        tests:
+          - not_null
+          - unique
+      - name: quote_number  
+      - name: quote_name
+      - name: quote_status
+      - name: is_primary_quote
+      - name: quote_start_date
