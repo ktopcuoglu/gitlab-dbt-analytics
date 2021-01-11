@@ -513,12 +513,7 @@ tables:
       WHERE date_end BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
         AND '{EXECUTION_DATE}'::timestamp 
     export_schema: 'gitlab_com'
-<<<<<<< HEAD
-    additional_filtering: AND project_id = 7764
-    export_table: 'ci_build_trace_sections'
-=======
     export_table: 'www_gitlab_com_ci_build_trace_sections'
->>>>>>> 26c43d728be90cd4af41e5d747fa2a1b85ce916a
     export_table_primary_key: CONCAT(build_id,'_',section_name_id)
 
 
