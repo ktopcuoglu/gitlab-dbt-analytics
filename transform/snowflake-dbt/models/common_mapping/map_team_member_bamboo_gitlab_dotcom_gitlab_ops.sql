@@ -1,11 +1,9 @@
 WITH bamboo_hr_members AS (
 
-    SELECT DISTINCT 
-      employee_id, 
-      full_Name, 
-      work_email
-    FROM {{ ref ('employee_directory_analysis') }}
+    SELECT *
+    FROM {{ ref ('bamboohr_work_email') }}
     WHERE work_email IS NOT NULL 
+      AND rank_email_desc = 1
 
 ), gitlab_dotcom_members AS (
 
