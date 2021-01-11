@@ -43,7 +43,8 @@ WITH source AS (
     SELECT
       dim_usage_ping_id, 
       ping_created_at,
-      {{ dbt_utils.star(from=ref('version_usage_data_source'), except=['EDITION', 'CREATED_AT']) }},
+      ip_address_hash,
+      {{ dbt_utils.star(from=ref('version_usage_data_source'), except=['EDITION', 'CREATED_AT', 'SOURCE_IP']) }},
       edition                                                                                         AS original_edition,
       IFF(license_expires_at >= ping_created_at OR license_expires_at IS NULL, edition, 'EE Free')    AS cleaned_edition,
       REGEXP_REPLACE(NULLIF(version, ''), '[^0-9.]+')                                                 AS cleaned_version,
@@ -61,7 +62,8 @@ WITH source AS (
     SELECT 
       dim_usage_ping_id,
       ping_created_at, 
-      {{ dbt_utils.star(from=ref('version_usage_data_source'), relation_alias='usage_data', except=['EDITION', 'CREATED_AT']) }},
+      ip_address_hash,
+      {{ dbt_utils.star(from=ref('version_usage_data_source'), relation_alias='usage_data', except=['EDITION', 'CREATED_AT', 'SOURCE_IP']) }},
       original_edition, 
       cleaned_edition                                                                           AS edition,
       IFF(original_edition = 'CE', 'CE', 'EE')                                                  AS main_edition,
