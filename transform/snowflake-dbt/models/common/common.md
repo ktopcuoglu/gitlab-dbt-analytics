@@ -25,6 +25,16 @@ Dimension that combines demographic data from salesforce leads and salesforce co
 
 {% enddocs %}
 
+{% docs dim_crm_sales_hierarchy_live %}
+Dimension table representing the current state of the sales hierarchy, including the user segment, geo, region, and area as it is in the crm user object.
+
+{% enddocs %}
+
+{% docs dim_crm_sales_hierarchy_stamped %}
+Dimension table representing the sales hierarchy at the time of a closed opportunity, including the user segment, geo, region, and area. These fields are stamped on the opportunity object on the close date and are used in sales funnel analyses.
+
+{% enddocs %}
+
 {% docs dim_billing_account %}
 Dimensional table representing each individual Zuora account with details of person to bill for the account.
 
@@ -110,17 +120,6 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
-{% docs dim_subscriptions %}
-Dimension table representing subscription details. The Zuora subscription is created and maintained as part of the broader Quote Creation business process and can be found in the [handbook](https://about.gitlab.com/handbook/finance/sox-internal-controls/quote-to-cash/#3-quote-creation).
-
-Data comes from [Zuora Documentation](https://www.zuora.com/developer/api-reference/#tag/Subscriptions).
-
-The grain of the table is the version of a Zuora subscription.
-
-Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
-
-{% enddocs %}
-
 {% docs dim_date %}
 Dimensional table representing both calendar year and fiscal year date details.
 
@@ -170,6 +169,17 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
+{% docs fct_charge %}
+Factual table with all rate plan charges coming from subscriptions or an amendment to a subscription.
+
+Rate Plan Charges are created as part of the Quote Creation business process and can be found in the [handbook](https://about.gitlab.com/handbook/finance/sox-internal-controls/quote-to-cash/#6-invoicing-to-customers).
+
+Data comes from [Zuora Documentation](https://www.zuora.com/developer/api-reference/#tag/Rate-Plan-Charges).
+
+Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+{% enddocs %}
+
 {% docs dim_licenses %}
 Dimensional table representing generated licenses and associated metadata.
 
@@ -180,7 +190,7 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 {% enddocs %}
 
 {% docs dim_gitlab_dotcom_gitlab_emails %}
-Dimensional table representing the best email address for GitLab employees from the GitLab.com data source 
+Dimensional table representing the best email address for GitLab employees from the GitLab.com data source
 
 The grain of the table is a GitLab.com user_id.
 
@@ -209,6 +219,11 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
+{% docs fct_sales_funnel_target %}
+
+Sales funnel targets set by the Finance team to measure performance of important KPIs against goals, broken down by sales hierarchy, and order attributes.
+
+{% enddocs %}
 
 {% docs fct_usage_data_monthly %}
 
@@ -234,6 +249,27 @@ This table replicates the Gitlab UI logic that generates the CI minutes Usage Qu
 Namespaces from the `namespace_snapshots_monthly_all` CTE that are not present in the `namespace_statistics_monthly_all` CTE are joined into the logic with NULL `shared_runners_seconds` since these namespaces have not used CI Minutes on GitLab-provided shared runners. Since these CI Minutes are neither trackable nor monetizable, they can be functionally thought of as 0 `shared_runners_minutes_used_overall`. The SQL code has been implemented with this logic as justification.
 
 It also adds two additional columns which aren't calculated in the UI, which are `limit_based_plan` and `status_based_plan` which are independent of whether there aren't projects with `shared_runners_enabled` inside the namespaces and only take into account how many minutes have been used from the monthly quota based in the plan of the namespace.
+
+Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+{% enddocs %}
+
+{% docs fct_namespace_member_summary %}
+
+This model summarizes namespace user counts by accounting for all of the ways that a user be granted (direct or inherited) access to a namespace, AKA "membership". Bots and users awaiting access to a namespace are also accounted for. These counts are reported at the `ultimate_parent_namespace_id` grain.
+
+Importantly, this model calculates the field [`billable_member_count`](https://docs.gitlab.com/ee/subscriptions/self_managed/#billable-users) - i.e. the number of members should be counted toward the seat count for a subscription (note: this also applies to namespaces without a subscription for the convenience of determining seats in use). 
+
+There are 5 general ways that a user can have access to a group A:
+* Be a **group member** of group A.
+* Be a **group member** of B, where B is a descendant (subgroup) of group A.
+* Be a **project member** of b, where b is owned by A or one of A's descendants.
+* Be a group member of N or a parent group of N, where N is invited to a project underneath A via [project group links](https://docs.gitlab.com/ee/user/group/#sharing-a-project-with-a-group).
+* Be a group member of Y or a parent group of Y, where Y is invited to A or one of A's descendants via [group group links](https://docs.gitlab.com/ee/user/group/#sharing-a-group-with-another-group).
+
+An example of these relationships is shown in this diagram:
+
+<div style="width: 720px; height: 480px; margin: 10px; position: relative;"><iframe allowfullscreen frameborder="0" style="width:720px; height:480px" src="https://app.lucidchart.com/documents/embeddedchart/9f529269-3e32-4343-9713-8eb311df7258" id="WRFbB73aKeB3"></iframe></div>
 
 Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
 
@@ -318,12 +354,22 @@ Order type dimension, based off of salesforce opportunity data, using the `gener
 
 {% docs dim_namespace%}
 
-Includes all columns from the namespaces base model. The plan columns in this table (gitlab_plan_id, gitlab_plan_title, gitlab_plan_is_paid) reference the plan that is inheritted from the namespace's ultimate parent. 
+Includes all columns from the namespaces base model. The plan columns in this table (gitlab_plan_id, gitlab_plan_title, gitlab_plan_is_paid) reference the plan that is inheritted from the namespace's ultimate parent.
 
 This table add a count of members and projects currently associated with the namespace.
 Boolean columns: gitlab_plan_is_paid, namespace_is_internal, namespace_is_ultimate_parent
 
 A NULL namespace type defaults to "Individual".
 This table joins to common product tier dimension via dim_product_tier_id to get the current product tier.
+
+{% enddocs %}
+
+{% docs dim_quote %}
+
+Dimensional table representing Zuora quotes and associated metadata.
+
+The grain of the table is a quote_id.
+
+Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
 
 {% enddocs %}

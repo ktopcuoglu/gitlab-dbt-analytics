@@ -13,7 +13,6 @@ models:
       - name: event_surrogate_key
         tests:
           - not_null
-          - unique
 
   - name: manage_gitlab_dotcom_smau_events
     description: '{{ doc("manage_gitlab_dotcom_smau_events") }}'

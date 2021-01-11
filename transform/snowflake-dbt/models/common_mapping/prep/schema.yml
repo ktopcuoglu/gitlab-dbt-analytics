@@ -33,6 +33,24 @@ models:
       - name: dim_sales_segment_name_source
         description: Dim sales segment name final source column
 
+  - name: prep_crm_sales_hierarchy_live
+    description: '{{ doc("prep_crm_sales_hierarchy_live") }}'
+    columns:
+      - name: dim_crm_sales_hierarchy_live_id
+        description: Unique identifier of a sales hierarchy tier
+        tests:
+          - not_null
+          - unique
+
+  - name: prep_crm_sales_hierarchy_stamped
+    description: '{{ doc("prep_crm_sales_hierarchy_stamped") }}'
+    columns:
+      - name: dim_crm_sales_hierarchy_stamped_id
+        description: Unique identifier of a sales hierarchy tier
+        tests:
+          - not_null
+          - unique
+
   - name: prep_geo_area
     description: '{{ doc("prep_geo_area") }}'
     columns:
@@ -114,6 +132,35 @@ models:
           - not_null
           - unique
 
+  - name: prep_recurring_charge
+    description: '{{ doc("prep_recurring_charge") }}'
+    columns:
+      - name: mrr_id
+        description: The unique identifier of the MRR.
+        tests:
+          - not_null
+          - unique
+      - name: date_id
+        description: The identifier of date month in dim_date
+      - name: subscription_id
+        description: The identifier of subscription in dim_subscriptions table
+        tests:
+          - not_null
+      - name: product_details_id
+        description: The identifier of product details in dim_product_details
+        tests:
+          - not_null
+      - name: billing_account_id
+        description: Zuora account id
+      - name:  crm_account_id
+        description: account id frm crm
+      - name: mrr
+        description: Monthly Recurring Revenue value for given month
+      - name: arr
+        description: Annual Recurring Revenue value for given month
+      - name: quantity
+        description: Total quantity
+
   - name: prep_sales_segment
     description: '{{ doc("prep_sales_segment") }}'
     columns:
@@ -131,3 +178,35 @@ models:
         tests:
           - not_null
           - unique
+
+  - name: prep_product_tier
+    description: '{{ doc("prep_product_tier") }}'
+    columns:
+      - name: dim_product_tier_id
+        description: "The unique identifier of Pricing tiers for Zuora Products"
+        tests:
+          - not_null
+          - unique
+      - name: product_tier_name
+        description: "Product pricing tiers for both SaaS and Self-Managed customers (https://about.gitlab.com/handbook/marketing/strategic-marketing/tiers/)"
+        tests:
+          - not_null
+          - unique
+      - name: product_delivery_type
+        description: "How product is delivered to customer; SaaS or Self-Managed (or Other)"
+      - name: product_ranking
+        description: "Numeric product pricing tier, independent of delivery type"
+
+  - name: prep_quote
+    description: '{{ doc("prep_quote") }}'
+    columns:
+      - name: dim_quote_id
+        description: The unique identifier for each of the quotes.
+        tests:
+          - not_null
+          - unique
+      - name: quote_number  
+      - name: quote_name
+      - name: quote_status
+      - name: is_primary_quote
+      - name: quote_start_date

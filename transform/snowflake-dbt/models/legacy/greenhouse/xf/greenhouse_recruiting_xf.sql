@@ -72,12 +72,17 @@ WITH applications AS (
 ), bamboo AS (
 
     SELECT greenhouse_candidate_id, hire_date 
-    FROM {{ref('bamboohr_id_employee_number_mapping_source')}}
+    FROM {{ref('bamboohr_id_employee_number_mapping')}}
     WHERE greenhouse_candidate_id IS NOT NULL
 
 ), final AS (
 
     SELECT 
+      {{ dbt_utils.surrogate_key(['applications.application_id', 
+                                  'offers.offer_id',
+                                  'applications.candidate_id',
+                                  'job_req.job_id',
+                                  'job_req.requisition_id']) }}                         AS unique_key,
         applications.application_id, 
         offers.offer_id,
         applications.candidate_id, 

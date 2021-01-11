@@ -1,26 +1,20 @@
-WITH sfdc_zqu_quote_source AS (
-
-    SELECT *
-    FROM {{ ref('sfdc_zqu_quote_source') }}
-    WHERE is_deleted = FALSE
-
-), final AS (
+WITH quote AS (
 
     SELECT
-      quote_id                                      AS dim_quote_id,
-      zqu__number                                   AS quote_number,
-      zqu_quote_name                                AS quote_name,
-      zqu__status                                   AS quote_status,
-      zqu__primary                                  AS is_primary_quote,
-      zqu__start_date                               AS quote_start_date
-    FROM sfdc_zqu_quote_source
+      dim_quote_id,
+      quote_number,
+      quote_name,
+      quote_status,
+      is_primary_quote,
+      quote_start_date
+    FROM {{ ref('prep_quote') }}
 
 )
 
 {{ dbt_audit(
-    cte_ref="final",
+    cte_ref="quote",
     created_by="@snalamaru",
     updated_by="@snalamaru",
-    created_date="2020-12-28",
-    updated_date="2020-12-28"
+    created_date="2021-01-07",
+    updated_date="2021-01-07"
 ) }}

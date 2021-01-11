@@ -641,6 +641,7 @@ roles:
     - transformer: # For automated jobs
         warehouses:
             - airflow_testing_l
+            - engineer_xl
             - merge_request_l
             - merge_request_xs
             - merge_request_xl
@@ -850,11 +851,9 @@ roles:
             schemas:
                 read:
                     - raw.license_db_dump
-                    - raw.version_db_dump_stitch
             tables:
                 read:
                     - raw.license_db_dump.*
-                    - raw.version_db_dump_stitch.*
 
     - dbt_analytics:
         warehouses:
@@ -2002,6 +2001,13 @@ roles:
                     - jstark_prep.*.*
                     - jstark_prod.*.*
     
+    - jshen:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+        warehouses:
+            - analyst_xs
+
     - jurbanc:
         warehouses:
             - reporting
@@ -2540,7 +2546,6 @@ roles:
                     - raw.license_db_dump
                     - raw.salesforce_stitch
                     - raw.stitch_google_sheets
-                    - raw.version_db_dump_stitch
                     - raw.zendesk_stitch
                     - raw.zendesk_community_relations_stitch
                     - raw.zuora_stitch
@@ -2548,7 +2553,6 @@ roles:
                     - raw.license_db_dump
                     - raw.salesforce_stitch
                     - raw.stitch_google_sheets
-                    - raw.version_db_dump_stitch
                     - raw.zendesk_stitch
                     - raw.zendesk_community_relations_stitch
                     - raw.zuora_stitch
@@ -2557,7 +2561,6 @@ roles:
                     - raw.license_db_dump.*
                     - raw.salesforce_stitch.*
                     - raw.stitch_google_sheets.*
-                    - raw.version_db_dump_stitch.*
                     - raw.zendesk_stitch.*
                     - raw.zendesk_community_relations_stitch.*
                     - raw.zuora_stitch.*
@@ -2565,7 +2568,6 @@ roles:
                     - raw.license_db_dump.*
                     - raw.salesforce_stitch.*
                     - raw.stitch_google_sheets.*
-                    - raw.version_db_dump_stitch.*
                     - raw.zendesk_stitch.*
                     - raw.zendesk_community_relations_stitch.*
                     - raw.zuora_stitch.*
@@ -2910,6 +2912,11 @@ users:
             - jsalazar
             - securityadmin
 
+    - jshen:
+        can_login: yes
+        member_of:
+            - jshen
+
     - jstark:
         can_login: yes
         member_of:
@@ -2963,6 +2970,10 @@ users:
         can_login: yes
         member_of:
             - lvandensteen
+
+    - mbergeron:
+        can_login: no
+        member_of: []
 
     - mdewji:
         can_login: yes

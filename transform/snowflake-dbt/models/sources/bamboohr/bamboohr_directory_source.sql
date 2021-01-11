@@ -1,28 +1,32 @@
 WITH source AS (
 
-			SELECT *
-	    FROM {{ source('bamboohr', 'directory') }}
-	    ORDER BY uploaded_at DESC
-	    LIMIT 1
-
+    SELECT *
+	FROM {{ source('bamboohr', 'directory') }}
+	
 ), intermediate AS (
 
-      SELECT d.value as data_by_row
-      FROM source,
-      LATERAL FLATTEN(INPUT => parse_json(jsontext), outer => true) d
+    SELECT 
+      value['id']::NUMBER 				    AS employee_id,
+	  value['displayName']::VARCHAR 	    AS full_name,
+      value['jobTitle']::VARCHAR 			AS job_title,
+	  value['supervisor']::VARCHAR 		    AS supervisor,
+	  value['workEmail']::VARCHAR			AS work_email,
 
-), renamed AS (
+      uploaded_at                           AS uploaded_at
+    FROM source,
+    LATERAL FLATTEN(INPUT => parse_json(jsontext), outer => true)
 
-    SELECT
-        data_by_row['id']::NUMBER 						AS employee_id,
-				data_by_row['displayName']::varchar 	AS full_name,
-        data_by_row['jobTitle']::varchar 			AS job_title,
-				data_by_row['supervisor']::varchar 		AS supervisor,
-				data_by_row['workEmail']::varchar			AS work_email
+), final AS (
+
+    SELECT *
     FROM intermediate
-
+    WHERE work_email != 't2test@gitlab.com'
+    
 )
 
 SELECT *
-FROM renamed
-WHERE work_email != 't2test@gitlab.com'
+FROM final
+WHERE (LOWER(full_name) NOT LIKE '%greenhouse test%'
+            and LOWER(full_name) NOT LIKE '%test profile%'
+            and LOWER(full_name) != 'test-gitlab')
+        OR employee_id  NOT IN (42039, 42043)

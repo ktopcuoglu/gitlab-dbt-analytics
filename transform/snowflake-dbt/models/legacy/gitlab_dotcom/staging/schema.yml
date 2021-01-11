@@ -29,20 +29,87 @@ models:
         tests:
           - not_null
 
+  - name: gitlab_dotcom_memberships_prep
+    description: '{{ doc("gitlab_dotcom_memberships_prep") }}'
+    columns:
+      - name: ultimate_parent_id
+        tests:
+          - not_null
+      - name: ultimate_parent_plan_id
+        description: The **plan_id** associated with the namespace's subscription. This can be inherited from the namespaces's ultimate parent.
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['2', '3', '4', '34', '67', 'trial']
+      - name: ultimate_parent_plan_title
+        description: Whether or not the namespace associated with the project is subscribed to a paid plan. This can be inherited from the namespaces's ultimate parent.
+        tests:
+          - not_null
+      - name: namespace_id
+        tests:
+          - not_null
+      - name: membership_source_type
+        description: This describes how the access is being granted ('group_membership', 'project_membership', 'group_group_links', 'project_group_links').
+        tests:
+          - not_null
+      - name: membership_source_id
+        description: The id of the record that is granting the access. If membership_source_type = 'group_membership', then this is the group_id.
+        tests:
+          - not_null
+      - name: access_level
+        description: Level of access given to user through direct group membership.
+        tests:
+          - not_null
+      - name: group_access
+        description: Level of access given to user through inherited group membership.
+      - name: group_access_level
+        description: Minimun of access_level and group_access, used to determine guest users.
+      - name: requested_at
+        description: Timestamp when access/membership was requested.
+      - name: user_id
+        tests:
+          - not_null
+      - name: user_state
+        description: Should always be 'active' for the purpose of this table. 'active', 'blocked', or 'deactivated' otherwise.
+      - name: user_type
+        description: NULL for non-bot users. Codes 1-8 for various bot user types otherwise.
+      - name: is_guest
+        description: User has lowest (guest) level access to direct and inherited groups.
+        tests:
+          - not_null
+      - name: is_active
+        description: User account must be active, not a project bot or GitLab bot, and not awaiting access to a group.
+        tests:
+          - not_null
+      - name: is_billable
+        description: User is an active member in a non-gold tier group, or an active, non-guest member in a gold tier group.
+        tests:
+          - not_null
+      - name: is_deactivated
+        description: User has been deactivated by GitLab administrator.
+        tests:
+          - not_null
+      - name: is_blocked
+        description: User has been blocked by GitLab administrator.
+        tests:
+          - not_null
+      - name: is_project_bot
+        description: User is a [project bot users](https://docs.gitlab.com/ee/user/project/settings/project_access_tokens.html#project-bot-users) (`user_type = 6`).
+        tests:
+          - not_null
+      - name: is_gitlab_bot
+        description: User is a [GitLab bot](https://docs.gitlab.com/ee/user/project/service_desk.html#support-bot-user) or ghost (`user_type != 6 AND user_type IS NOT NULL`).
+        tests:
+          - not_null
+
   - name: gitlab_dotcom_namespace_historical_daily
     columns:
       - name: snapshot_day_namespace_id
         tags: ["tdf","gitlab_dotcom"]
         tests:
           - not_null
-          - unique
   
   - name: gitlab_dotcom_namespace_historical_monthly
-    columns:
-      - name: CONCAT(snapshot_month, namespace_id)
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - unique
 
   - name: gitlab_dotcom_namespace_lineage
     description: '{{ doc("gitlab_dotcom_namespace_lineage") }}'
@@ -125,14 +192,8 @@ models:
         tags: ["tdf","gitlab_dotcom"]
         tests:
           - not_null
-          - unique
   
   - name: gitlab_dotcom_namespace_lineage_historical_monthly
-    columns:
-      - name: CONCAT(snapshot_month, namespace_id)
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - unique
 
   - name: gitlab_dotcom_namespace_statistics_historical_monthly
 
