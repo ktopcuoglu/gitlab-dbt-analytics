@@ -219,6 +219,12 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
+{% docs fct_quote_items %}
+
+A fact table of quote amendments which have quotes and product rate plan charges associated with them. This model connected opportunities to quotes, quote amendments, and products.
+
+{% enddocs %}
+
 {% docs fct_sales_funnel_target %}
 
 Sales funnel targets set by the Finance team to measure performance of important KPIs against goals, broken down by sales hierarchy, and order attributes.

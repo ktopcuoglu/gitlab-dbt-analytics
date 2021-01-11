@@ -909,6 +909,15 @@ models:
       - name: quantity
         description: Total quantity
 
+  - name: fct_quote_items
+    description: '{{ doc("fct_quote_items") }}'
+    columns:
+      - name: quote_item_id
+        description: A unique identifier of a product included in a quote amendment which is associated with a quote
+        tests:
+          - not_null
+          - unique
+
   - name: fct_sales_funnel_target
     description: '{{ doc("fct_sales_funnel_target") }}'
     columns:
@@ -1141,7 +1150,7 @@ models:
         tests:
           - not_null
           - unique
-      - name: quote_number  
+      - name: quote_number
       - name: quote_name
       - name: quote_status
       - name: is_primary_quote
