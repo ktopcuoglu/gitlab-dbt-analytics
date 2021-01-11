@@ -13,7 +13,7 @@ WITH licenses AS (
     SELECT *
     FROM {{ ref('zuora_subscription_source') }}
  
-),renamed AS (
+), renamed AS (
 
     SELECT
       license_id                      AS dim_license_id,
