@@ -61,17 +61,17 @@ WITH source AS (
       {{ dbt_utils.star(from=ref('version_usage_data_source'), relation_alias='usage_data') }},
       original_edition, 
       cleaned_edition                                                                           AS edition,
-      IFF(edition = 'CE', 'CE', 'EE')                                                           AS main_edition,
+      IFF(original_edition = 'CE', 'CE', 'EE')                                                  AS main_edition,
       CASE 
-        WHEN edition = 'CE'                                     THEN 'Core'
-        WHEN edition = 'EE Free'                                THEN 'Core'                                                      
-        WHEN license_expires_at < created_at                    THEN 'Core'
-        WHEN edition = 'EE'                                     THEN 'Starter'
-        WHEN edition = 'EES'                                    THEN 'Starter'
-        WHEN edition = 'EEP'                                    THEN 'Premium'
-        WHEN edition = 'EEU'                                    THEN 'Ultimate'
+        WHEN original_edition = 'CE'                                     THEN 'Core'
+        WHEN original_edition = 'EE Free'                                THEN 'Core'                                                      
+        WHEN license_expires_at < created_at                             THEN 'Core'
+        WHEN original_edition = 'EE'                                     THEN 'Starter'
+        WHEN original_edition = 'EES'                                    THEN 'Starter'
+        WHEN original_edition = 'EEP'                                    THEN 'Premium'
+        WHEN original_edition = 'EEU'                                    THEN 'Ultimate'
         ELSE NULL END                                                                           AS product_tier,
-        main_edition || ' - ' || product_tier                                                   AS main_edition_product_tier,
+      main_edition || ' - ' || product_tier                                                   AS main_edition_product_tier,
       cleaned_version,
       version_is_prerelease,
       major_version,
@@ -80,7 +80,7 @@ WITH source AS (
       CASE
         WHEN uuid = 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f'      THEN 'SaaS'
         ELSE 'Self-Managed'
-      END                                                                                       AS ping_source,
+        END                                                                                     AS ping_source,
       CASE
         WHEN ping_source = 'SaaS'                               THEN TRUE 
         WHEN installation_type = 'gitlab-development-kit'       THEN TRUE 
