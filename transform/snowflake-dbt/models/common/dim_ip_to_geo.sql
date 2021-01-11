@@ -33,7 +33,7 @@ WITH all_hashed_ips_version_usage AS (
 
     SELECT 
       source_ip_hash AS ip_address_hash,
-      geoname_id AS location_id
+      geoname_id AS dim_location_id
     FROM all_distinct_ips
     JOIN maxmind_ip_ranges
     WHERE all_distinct_ips.source_ip_numeric BETWEEN maxmind_ip_ranges.ip_range_first_ip_numeric AND maxmind_ip_ranges.ip_range_last_ip_numeric 
@@ -43,7 +43,7 @@ WITH all_hashed_ips_version_usage AS (
 {{ dbt_audit(
     cte_ref="newly_mapped_ips",
     created_by="@m_walker",
-    updated_by="@msendal",
+    updated_by="@kathleentam",
     created_date="2020-08-25",
-    updated_date="2020-09-17"
+    updated_date="2021-01-10"
 ) }}

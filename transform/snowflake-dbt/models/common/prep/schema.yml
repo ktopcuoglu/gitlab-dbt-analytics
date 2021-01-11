@@ -1,0 +1,31 @@
+version: 2
+
+models:
+  - name: prep_usage_ping
+    description: '{{ doc("prep_usage_ping") }}'
+    columns:
+      - name: id
+        tests:
+          - not_null
+          - unique
+      - name: uuid
+        description: This is a unique identifier for an instance. Please note that multiple instances may share this value. 
+      - name: host_id
+      - name: license_md5
+        description: 
+      - name: installation_type
+        description: segmentation for how instances are installed. See https://gitlab.com/gitlab-data/analytics/-/issues/6560#note_429097420 for how this field is populated and known data concerns, such as all the instances without installation_type seem to be between 9 and 10, which lines up with the date that installation_type was added to usage ping.
+      - name: main_edition
+        description: segmentation for Edition. Values - CE, EE
+      - name: product_tier
+        description: segmentation for Product Tier. Values - Core (CE, EE), Starter, Premium, Ultimate, NULL
+      - name: main_edition_product_tier
+        description: segmentation for the product tier, including separate records for Core CE and Core EE
+      - name: ping_source
+        description: segmentation for SaaS data (from the self-managed instance that hosts the SaaS GitLab.com website) and data sent from customer self-managed instances
+      - name: is_internal
+        description: this instance is used by the company or a GitLab team member
+      - name: is_staging
+        descrition: DRAFT - need to better identify instances used for staging environments
+      - name: location_id
+        description: JOIN key for country information derived. See https://gitlab.com/gitlab-data/analytics/-/issues/6560#note_427936012
