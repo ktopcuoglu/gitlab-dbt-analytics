@@ -1,6 +1,5 @@
 {% set column_name = 'notification_email' %}
 
-
 WITH gitlab_dotcom_members AS (
 
     SELECT * 
@@ -19,7 +18,7 @@ WITH gitlab_dotcom_members AS (
       email_address, 
       email_handle
     FROM {{ref('gitlab_dotcom_gitlab_emails')}} 
-    WHERE length (email_handle) > 3
+    WHERE LENGTH (email_handle) > 3
       AND include_email_flg = 'Include'
 
 ), sheetload_infrastructure_gitlab_employee AS (
