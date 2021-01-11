@@ -15,7 +15,7 @@ WITH license AS (
 
     SELECT 
       dim_subscription_id, 
-      dim_crm_account_id, 
+      dim_crm_account_id 
     FROM {{ ref('dim_subscription') }} 
 
 ), crm_account AS (

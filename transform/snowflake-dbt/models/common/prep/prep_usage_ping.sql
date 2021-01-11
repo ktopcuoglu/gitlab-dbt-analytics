@@ -1,5 +1,6 @@
 {{ config({
-    "materialized": "table"
+    "materialized": "incremental",
+    "unique_key": "dim_usage_ping_id"
     })
 }}
 
@@ -53,7 +54,7 @@ WITH source AS (
 
     SELECT 
       {{ dbt_utils.star(from=ref('version_usage_data_source'), relation_alias='usage_data') }},
-      edition                                                                                   AS original_edition
+      edition                                                                                   AS original_edition,
       cleaned_edition                                                                           AS edition,
       IFF(edition = 'CE', 'CE', 'EE')                                                           AS main_edition,
       CASE 
