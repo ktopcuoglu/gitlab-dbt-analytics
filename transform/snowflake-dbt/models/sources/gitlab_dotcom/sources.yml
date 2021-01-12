@@ -282,6 +282,8 @@ sources:
         identifier: gitlab_db_user_preferences
       - name: users
         identifier: gitlab_db_users
+      - name: user_custom_attributes
+        identifier: gitlab_db_user_custom_attributes  
       - name: vulnerabilities
         identifier: gitlab_db_vulnerabilities
       - name: vulnerability_occurrences
