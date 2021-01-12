@@ -3,3 +3,4 @@ version: 2
 models:
   - name: datasiren_source_db_social_security_number_sensor
   - name: datasiren_transform_db_email_column_name_sensor
+  - name: datasiren_transform_db_email_value_sensor
