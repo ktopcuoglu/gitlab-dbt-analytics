@@ -984,9 +984,17 @@ models:
         tests:
           - not_null
       - name: member_awaiting_access_count
-        description: Count of users waiting to be granted membership to the namespace. 
+        description: Count of users waiting to be granted membership to the namespace.
         tests:
           - not_null
+
+  - name: fct_quote
+    description: '{{ doc("fct_quote") }}'
+    columns:
+      - name: dim_quote_id
+        tests:
+          - not_null
+          - unique
 
   - name: fct_sales_funnel_target
     description: '{{ doc("fct_sales_funnel_target") }}'
@@ -1220,7 +1228,7 @@ models:
         tests:
           - not_null
           - unique
-      - name: quote_number  
+      - name: quote_number
       - name: quote_name
       - name: quote_status
       - name: is_primary_quote
