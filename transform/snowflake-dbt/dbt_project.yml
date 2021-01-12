@@ -257,6 +257,14 @@ models:
     common:
       +materialized: table
       +schema: common
+      prep: 
+        +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
+        +materialized: table
+        +schema: preparation   
+      sensitive:
+        +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
+        +materialized: view
+        +schema: sensitive     
 
     common_mapping:
       +materialized: table
