@@ -15,6 +15,7 @@ If none, please include a description
 
 
 ## DRI/Prioritization Owner Checklist
+* [ ] Prefix the issue name with 'New Data Source: ', e.g. 'New Data Source: NetSuite AP data'
 * [ ] This data does not exist live in the Data team's data warehouse? (https://dbt.gitlabdata.com) 
 * [ ] Do any objects in this data source need to be snapshotted? If yes, please open separate issues to have the objects snapshotted.
 * [ ] Please list and describe any data from this source that is sensitive (Classified as Red or Orange in our [Data Classification Policy](https://about.gitlab.com/handbook/engineering/security/data-classification-policy.html#data-classification-levels))?
