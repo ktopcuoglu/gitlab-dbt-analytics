@@ -140,6 +140,7 @@ WITH source AS (
       DATE_TRUNC('DAY', ping_created_at)                 AS ping_created_at_date,
       raw_usage_data_id                                  AS raw_usage_data_id, 
       raw_usage_data_payload, 
+      license_md5,
       original_edition, 
       edition, 
       main_edition, 

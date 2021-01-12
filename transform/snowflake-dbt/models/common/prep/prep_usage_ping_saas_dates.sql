@@ -7,12 +7,12 @@ WITH base AS (
 ), saas_pings AS (
   
     SELECT 
-      id                                                                AS dim_usage_ping_id, 
-      DATE_TRUNC('DAY', created_at)                                     AS ping_created_at_date,
-      DATE_TRUNC('DAY', DATEADD('days', -28, created_at))               AS ping_created_at_28_days_earlier,
-      DATE_TRUNC('YEAR', created_at)                                    AS ping_created_at_year,
-      DATE_TRUNC('MONTH', created_at)                                   AS ping_created_at_month,
-      DATE_TRUNC('WEEK', created_at)                                    AS ping_created_at_week
+      dim_usage_ping_id, 
+      ping_created_at_date,
+      ping_created_at_28_days_earlier,
+      ping_created_at_year,
+      ping_created_at_month,
+      ping_created_at_week
     FROM base 
 
 ), final AS (
