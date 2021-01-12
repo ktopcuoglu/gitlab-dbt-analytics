@@ -815,7 +815,7 @@ models:
   - name: fct_crm_opportunity
     description: '{{ doc("fct_crm_opportunity") }}'
     columns:
-      - name: crm_opportunity_id
+      - name: dim_crm_opportunity_id
         description: A dbt generated surrogate key combining the sfdc_record_id and the sales_accepted_date.
         tests:
           - unique
@@ -984,7 +984,7 @@ models:
         tests:
           - not_null
       - name: member_awaiting_access_count
-        description: Count of users waiting to be granted membership to the namespace. 
+        description: Count of users waiting to be granted membership to the namespace.
         tests:
           - not_null
 
@@ -1220,7 +1220,7 @@ models:
         tests:
           - not_null
           - unique
-      - name: quote_number  
+      - name: quote_number
       - name: quote_name
       - name: quote_status
       - name: is_primary_quote
