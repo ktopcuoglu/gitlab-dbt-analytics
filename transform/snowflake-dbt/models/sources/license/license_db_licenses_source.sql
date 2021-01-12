@@ -14,6 +14,7 @@ WITH source AS (
       expires_at::TIMESTAMP                        AS license_expires_at,
       plan_name::VARCHAR                           AS plan_name,
       starts_at::TIMESTAMP                         AS starts_at,
+      NULLIF(zuora_subscription_name, '')::VARCHAR AS zuora_subscription_name,
       NULLIF(zuora_subscription_id, '')::VARCHAR   AS zuora_subscription_id,
       previous_users_count::NUMBER                 AS previous_users_count,
       trueup_quantity::NUMBER                      AS trueup_quantity,
