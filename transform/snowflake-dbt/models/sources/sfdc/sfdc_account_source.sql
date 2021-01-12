@@ -33,7 +33,7 @@ WITH source AS (
       technical_account_manager_lu__c            AS technical_account_manager_id,
 
       -- info
-      {{target.schema}}.id15to18(substring(regexp_replace(ultimate_parent_account__c,
+      "{{this.database}}".{{target.schema}}.id15to18(substring(regexp_replace(ultimate_parent_account__c,
                      '_HL_ENCODED_/|<a\\s+href="/', ''), 0, 15))
                                                  AS ultimate_parent_account_id,
       type                                       AS account_type,
@@ -93,11 +93,11 @@ WITH source AS (
       abm_tier__c                                AS abm_tier,
       gtm_strategy__c                            AS gtm_strategy,
       gtm_acceleration_date__c                   AS gtm_acceleration_date,
-      gtm_account_based_date__c                  AS gtm_account_based_date, 
+      gtm_account_based_date__c                  AS gtm_account_based_date,
       gtm_account_centric_date__c                AS gtm_account_centric_date,
-      abm_tier_1_date__c                         AS abm_tier_1_date, 
-      abm_tier_2_date__c                         AS abm_tier_2_date, 
-      abm_tier_3_date__c                         AS abm_tier_3_date,    
+      abm_tier_1_date__c                         AS abm_tier_1_date,
+      abm_tier_2_date__c                         AS abm_tier_2_date,
+      abm_tier_3_date__c                         AS abm_tier_3_date,
 
       --demandbase fields
       account_list__c                            AS demandbase_account_list,
@@ -119,7 +119,7 @@ WITH source AS (
       jb_test_sales_segment__c                   AS tsp_test_sales_segment,
       ultimate_parent_sales_segment_employees__c AS sales_segment,
       sales_segmentation_new__c                  AS account_segment,
-      
+
       -- ************************************
       -- NF: 2020-12-17
       -- these three fields are used to identify accounts owned by reps within hierarchies that they do not fully own
@@ -127,8 +127,16 @@ WITH source AS (
 
       locally_Managed__c                         AS is_locally_managed_account,
       strategic__c                               AS is_strategic_account,
-      
+
      -- ************************************
+     -- New SFDC Account Fields for FY22 Planning
+     next_fy_account_owner_temp__c               AS next_fy_account_owner_temp,
+     next_fy_planning_notes_temp__c              AS next_fy_planning_notes_temp,
+     next_fy_tsp_territory_temp__c               AS next_fy_tsp_territory_temp,
+     next_fy_user_area_temp__c                   AS next_fy_user_area_temp,
+     next_fy_user_geo_temp__c                    AS next_fy_user_geo_temp,
+     next_fy_user_region_temp__c                 AS next_fy_user_region_temp,
+     next_fy_user_segment_temp__c                AS next_fy_user_segment_temp,
 
       -- metadata
       createdbyid                                AS created_by_id,

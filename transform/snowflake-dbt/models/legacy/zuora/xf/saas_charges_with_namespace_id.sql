@@ -34,10 +34,10 @@ WITH zuora_base_mrr AS (
 
 )
 
-, dim_subscriptions AS (
+, dim_subscription AS (
 
     SELECT *
-    FROM {{ ref('dim_subscriptions') }}
+    FROM {{ ref('dim_subscription') }}
 
 )
 

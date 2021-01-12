@@ -12,6 +12,8 @@ from gitlabdata.orchestration_utils import (
 def get_file_name(config_name):
     if config_name == "freshness":
         return "target/sources.json"
+    elif config_name == "manifest":
+        return "target/manifest.json"
     else:
         return "target/run_results.json"
 
@@ -25,6 +27,8 @@ def get_table_name(config_name, snowflake_database):
         return f'"{snowflake_database}".dbt.snapshots_run_results'
     elif config_name == "test":
         return f'"{snowflake_database}".dbt.test_run_results'
+    elif config_name == "manifest":
+        return f'"{snowflake_database}".dbt.manifest'
     else:
         return f'"{snowflake_database}".dbt.run_results'
 

@@ -11,11 +11,11 @@ WITH RECURSIVE employee_directory AS (
       first_name,	
       last_name,	
       (first_name ||' '|| last_name)   AS full_name,
-      work_email,
       hire_date,
       rehire_date,
       termination_date,
-      hire_location_factor
+      hire_location_factor,
+      last_work_email
     FROM {{ ref('employee_directory') }}
 
 ), date_details AS (
@@ -66,7 +66,7 @@ WITH RECURSIVE employee_directory AS (
             reports_to
         FROM date_details
         LEFT JOIN employee_directory
-        ON hire_date::DATE <= date_actual
+        ON employee_directory.hire_date::DATE <= date_actual
         AND COALESCE(termination_date::DATE, {{max_date_in_bamboo_analyses()}}) >= date_actual
         LEFT JOIN department_info
             ON employee_directory.employee_id = department_info.employee_id
@@ -120,12 +120,17 @@ WITH RECURSIVE employee_directory AS (
     SELECT *
     FROM {{ ref('bamboohr_directionary_bonuses_xf') }}  
 
+), fct_work_email AS (
+
+    SELECT *
+    FROM {{ ref('bamboohr_work_email') }}   
 
 ), enriched AS (
 
     SELECT
       date_details.date_actual,
       employee_directory.*,
+      COALESCE(fct_work_email.work_email, employee_directory.last_work_email) AS work_email,
       department_info.job_title,	
       department_info.department,	
       department_info.department_modified,
@@ -146,11 +151,11 @@ WITH RECURSIVE employee_directory AS (
        COALESCE(sheetload_engineering_speciality.speciality, job_role.jobtitle_speciality) AS jobtitle_speciality,
       ---to capture speciality for engineering prior to 2020.09.30 we are using sheetload, and capturing from bamboohr afterwards
       location_factor.location_factor, 
-      IFF(hire_date = date_actual OR 
+      IFF(employee_directory.hire_date = date_actual OR 
           rehire_date = date_actual, True, False)                           AS is_hire_date,
       IFF(employment_status = 'Terminated', True, False)                    AS is_termination_date,
       IFF(rehire_date = date_actual, True, False)                           AS is_rehire_date,
-      IFF(hire_date< employment_status_first_value,
+      IFF(employee_directory.hire_date< employment_status_first_value,
             'Active', employment_status)                                    AS employment_status,
       job_role.gitlab_username,
       sales_geo_differential,
@@ -160,7 +165,7 @@ WITH RECURSIVE employee_directory AS (
         WHEN (LEFT(department_info.job_title,5) = 'Staff' 
                 OR LEFT(department_info.job_title,13) = 'Distinguished'
                 OR LEFT(department_info.job_title,9) = 'Principal')
-            AND COALESCE(job_role.job_grade, job_info_mapping_historical.job_grade) IN ('8','9','9.5') 
+            AND COALESCE(job_role.job_grade, job_info_mapping_historical.job_grade) IN ('8','9','9.5','10') 
           THEN 'Staff'
         WHEN COALESCE(job_role.job_grade, job_info_mapping_historical.job_grade) IN ('11','12','14','15','CXO')
           THEN 'Senior Leadership'
@@ -190,7 +195,7 @@ WITH RECURSIVE employee_directory AS (
             (PARTITION BY employee_directory.employee_id ORDER BY date_actual) AS tenure_days
     FROM date_details
     LEFT JOIN employee_directory
-      ON hire_date::DATE <= date_actual
+      ON employee_directory.hire_date::DATE <= date_actual
       AND COALESCE(termination_date::DATE, {{max_date_in_bamboo_analyses()}}) >= date_actual
     LEFT JOIN department_info
       ON employee_directory.employee_id = department_info.employee_id
@@ -234,6 +239,9 @@ WITH RECURSIVE employee_directory AS (
     LEFT JOIN bamboohr_discretionary_bonuses_xf
       ON employee_directory.employee_id = bamboohr_discretionary_bonuses_xf.employee_id
       AND date_details.date_actual = bamboohr_discretionary_bonuses_xf.bonus_date
+    LEFT JOIN fct_work_email
+      ON employee_directory.employee_id = fct_work_email.employee_id
+      AND date_details.date_actual BETWEEN fct_work_email.valid_from_date AND fct_work_email.valid_to_date  
     WHERE employee_directory.employee_id IS NOT NULL
 
 ), base_layers as (

@@ -1,7 +1,13 @@
-WITH bamboohr_directory AS (
+WITH mapping as (
+
+    SELECT *
+    FROM {{ref('bamboohr_id_employee_number_mapping')}}
+
+), bamboohr_directory AS (
 
     SELECT *
     FROM {{ ref ('bamboohr_directory_source') }}
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY employee_id ORDER BY uploaded_at DESC) =1 
 
 ), department_info as (
 
@@ -24,11 +30,6 @@ WITH bamboohr_directory AS (
       LAST_VALUE(cost_center) RESPECT NULLS
           OVER ( PARTITION BY employee_id ORDER BY effective_date) AS last_cost_center  
     FROM {{ ref ('bamboohr_job_role') }}
-
-), mapping as (
-
-    SELECT *
-    FROM {{ref('bamboohr_id_employee_number_mapping_source')}}
 
 ), location_factor as (
 
@@ -63,7 +64,7 @@ WITH bamboohr_directory AS (
       mapping.first_name,
       mapping.last_name,
       mapping.first_name || ' ' || mapping.last_name                            AS full_name,
-      bamboohr_directory.work_email,
+      bamboohr_directory.work_email                                             AS last_work_email,
       IFF(rehire.is_rehire = 'True', initial_hire.hire_date, mapping.hire_date) AS hire_date,
       rehire.rehire_date,
       mapping.termination_date,
@@ -72,7 +73,8 @@ WITH bamboohr_directory AS (
       department_info.last_department,
       department_info.last_division,
       cost_center.last_cost_center,
-      location_factor.hire_location_factor
+      location_factor.hire_location_factor,
+      mapping.greenhouse_candidate_id
     FROM mapping
     LEFT JOIN bamboohr_directory
       ON bamboohr_directory.employee_id = mapping.employee_id

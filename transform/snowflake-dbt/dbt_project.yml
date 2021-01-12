@@ -48,7 +48,7 @@ on-run-end:
 # ======
 seeds:
   +enabled: true
-  +database: "{{ env_var('SNOWFLAKE_TRANSFORM_DATABASE') }}" #ANALYTICS
+  +database: "{{ env_var('SNOWFLAKE_PROD_DATABASE') }}" #PROD
   +schema: legacy
   +quote_columns: False
 
@@ -67,7 +67,7 @@ seeds:
 vars:
 
   datasiren:
-    'datasiren:sensorlist': ['datasiren_source_db_social_security_number_sensor', 'datasiren_transform_db_email_column_name_sensor']
+    'datasiren:sensorlist': ['datasiren_source_db_social_security_number_sensor', 'datasiren_transform_db_email_column_name_sensor', 'datasiren_canary_sensor']
 
   warehouse_name: "{{ env_var('SNOWFLAKE_TRANSFORM_WAREHOUSE') }}"
   valid_at: '{{ run_started_at.strftime("%Y-%m-%d %H:%M:%S%z") }}'
@@ -89,7 +89,7 @@ vars:
 # Model Configs
 # ==================
 models:
-  +database: "{{ env_var('SNOWFLAKE_TRANSFORM_DATABASE') }}" # ANALYTICS, redundant, but good to be explicit
+  +database: "{{ env_var('SNOWFLAKE_PROD_DATABASE') }}" # PROD
   +schema: legacy  # Top level override since profiles defaults to PREP
 
   # ------------------
@@ -145,6 +145,8 @@ models:
           secure: true
 
       datasiren:
+        +full_refresh: false
+        +materialized: incremental
         +schema: datasiren
         +tags: ["datasiren"]
 
@@ -153,7 +155,7 @@ models:
         +schema: date
 
       dbt:
-        +materialized: table
+        +materialized: incremental
         +schema: dbt
         +tags: ["dbt"]
 
@@ -163,7 +165,7 @@ models:
         +tags: ["discourse", "social"]
 
       engineering:
-        +database: "{{ env_var('SNOWFLAKE_TRANSFORM_DATABASE') }}" # ANALYTICS
+        +database: "{{ env_var('SNOWFLAKE_PROD_DATABASE') }}" # PROD
         +materialized: table
 
       gcp_billing:
@@ -338,13 +340,17 @@ models:
     # ------------------
     # Workspaces
     # ------------------
-
-    workspace_data:
-      +schema: workspace_data
+    workspaces:
+      +tags: ["workspace"]
       
-      dbt:
-        +tags: ["dbt"]
+      workspace_data:
+        +schema: workspace_data
+        
+        dbt:
+          +tags: ["dbt"]
 
+      workspace_marketing:
+        +schema: workspace_marketing
 
     # ------------------
     # Marts

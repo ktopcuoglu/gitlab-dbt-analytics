@@ -1,3 +1,9 @@
+{{ config({
+    "schema": "legacy",
+    "database": env_var('SNOWFLAKE_PROD_DATABASE'),
+    })
+}}
+
 WITH employees as (
 
     SELECT *
@@ -24,7 +30,7 @@ WITH employees as (
       employees.employee_id,
       employees.full_name,
       employees.hire_date,
-      employees.work_email,
+      employees.last_work_email,
       COALESCE(contacts_aggregated.total_emergency_contact_numbers,0) AS total_emergency_contacts
     FROM employees
     LEFT JOIN contacts_aggregated

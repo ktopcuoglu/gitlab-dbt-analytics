@@ -26,7 +26,7 @@ WITH applications AS (
  ), bamboohr_mapping AS (
  
     SELECT *
-    FROM {{ ref ('bamboohr_id_employee_number_mapping_source') }}
+    FROM {{ ref ('bamboohr_id_employee_number_mapping') }}
    
 ), bamboo_hires AS (
 
@@ -43,7 +43,7 @@ WITH applications AS (
     LEFT JOIN rehire_date 
       ON rehire_date.employee_id = bamboohr_mapping.employee_id
 
-), final AS (
+), joined AS (
 
     SELECT 
       applications.application_id,  
@@ -69,16 +69,23 @@ WITH applications AS (
       ON offers.application_id = applications.application_id
     LEFT JOIN bamboo_hires 
       ON bamboo_hires.greenhouse_candidate_id = applications.candidate_id
-)    
 
-SELECT 
-  application_id,
-  candidate_id,
-  employee_id,
-  employee_name,
-  region,
-  greenhouse_candidate_row_number,
-  hire_date_mod,
-  hire_type,
-  IFF(employee_id IS NOT NULL,TRUE,FALSE) AS hired_in_bamboohr
-FROM final 
+), final AS (    
+
+    SELECT 
+    {{ dbt_utils.surrogate_key(['application_id', 'candidate_id',]) }}  AS unique_key,
+    application_id,
+    candidate_id,
+    employee_id,
+    employee_name,
+    region,
+    greenhouse_candidate_row_number,
+    hire_date_mod,
+    hire_type,
+    IFF(employee_id IS NOT NULL,TRUE,FALSE) AS hired_in_bamboohr
+    FROM joined 
+
+)
+
+SELECT *
+FROM final

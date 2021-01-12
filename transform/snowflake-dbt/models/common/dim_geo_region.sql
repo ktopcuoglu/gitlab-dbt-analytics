@@ -1,15 +1,15 @@
-{{ generate_single_field_dimension(model_name="prep_sfdc_account",
-                                   id_column="dim_geo_region_name_source",
-                                   id_column_name="dim_geo_region_id",
-                                   dimension_column="dim_geo_region_name_source",
-                                   dimension_column_name="geo_region_name",
-                                   where_clause=None)
-}}
+WITH geo_region AS (
+
+    SELECT
+      dim_geo_region_id,
+      geo_region_name
+    FROM {{ ref('prep_geo_region') }}
+)
 
 {{ dbt_audit(
-    cte_ref="unioned",
+    cte_ref="geo_region",
     created_by="@msendal",
-    updated_by="@paul_armstrong",
+    updated_by="@mcooperDD",
     created_date="2020-11-04",
-    updated_date="2020-12-10"
+    updated_date="2020-12-18"
 ) }}

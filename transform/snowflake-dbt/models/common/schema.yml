@@ -113,6 +113,22 @@ models:
           - not_null
           - unique
 
+  - name: dim_crm_sales_hierarchy_live
+    description: '{{ doc("dim_crm_sales_hierarchy_live") }}'
+    columns:
+      - name: dim_crm_sales_hierarchy_live_id
+        tests:
+          - not_null
+          - unique
+
+  - name: dim_crm_sales_hierarchy_stamped
+    description: '{{ doc("dim_crm_sales_hierarchy_stamped") }}'
+    columns:
+      - name: dim_crm_sales_hierarchy_stamped_id
+        tests:
+          - not_null
+          - unique
+
   - name: dim_date
     description: '{{ doc("dim_date") }}'
     columns:
@@ -158,6 +174,21 @@ models:
           - not_null
         tags: ["tdf", "common", "geo"]
 
+  - name: dim_gitlab_ops_gitlab_emails
+    description: '{{ doc("gitlab_dotcom_gitlab_emails") }}'
+    columns:
+        - name: user_id
+          tests:
+            - not_null
+            - unique
+        - name: gitlab_ops_user_name
+        - name: notification_email
+        - name: email_handle
+        - name: number_of_emails
+          tests:
+            - accepted_values:
+                values: ['1']
+
   - name: dim_geo_area
     description: "Dimension table for geographic area built off ATAM_Area__C in SFDC. Example values: Southern PNW, India, Northeast"
     columns:
@@ -171,6 +202,9 @@ models:
           - not_null
           - unique
         tags: ["tdf", "common", "geo"]
+
+  - name: dim_gitlab_dotcom_gitlab_emails
+    description: '{{ doc("dim_gitlab_dotcom_gitlab_emails") }}'
 
   - name: dim_gitlab_versions
     description: '{{ doc("dim_gitlab_versions") }}'
@@ -345,6 +379,29 @@ models:
           - not_null
           - unique
 
+  - name: dim_location_country
+    description: '{{ doc("dim_location_country") }}'
+    columns:
+      - name: country_name
+        tests:
+          - not_null
+      - name: iso_2_country_code
+        tests:
+          - not_null
+          - unique
+      - name: dim_location_country_id
+        tests:
+          - not_null
+          - unique
+
+  - name: dim_location_region
+    description: '{{ doc("dim_location_region") }}'
+    columns:
+      - name: dim_location_region_id
+        tests:
+          - not_null
+          - unique
+
   - name: dim_product_detail
     description: '{{ doc("dim_product_detail") }}'
     columns:
@@ -413,7 +470,7 @@ models:
         description: The date when the product becomes available and can be subscribed to
       - name: effective_end_date
         description: The date when the product expires and can't be subscribed to anymore
-        
+
   - name: dim_product_tier
     description: '{{ doc("dim_product_tier") }}'
     columns:
@@ -426,6 +483,9 @@ models:
       - name: product_tier_name
         description: Name of the [GitLab tier](https://about.gitlab.com/handbook/marketing/strategic-marketing/tiers/) associated with the product.
         tags: [ "tdf", "common" ]
+        tests:
+          - not_null
+          - unique
       - name: product_delivery_type
         description: How a product is delivered to the customer; SaaS or Self-Managed (or Other).
       - name: product_ranking
@@ -534,53 +594,6 @@ models:
           - accepted_values:
                   values: ['Sales-Assisted', 'Self-Service']
 
-  - name: dim_subscriptions
-    description: '{{ doc("dim_subscriptions") }}'
-    columns:
-      - name: subscription_id
-        description: Unique identifier of a version of a subscription
-        tests:
-          - not_null
-          - unique
-      - name: subscription_status
-        description: The status of the subscription
-        tests:
-          - not_null
-          - accepted_values:
-              values: ['Active', 'Cancelled']
-      - name: crm_account_id
-        description: account id from SFDC identifing the customer
-      - name: billing_account_id
-        description: The id of the Zuora account the subscription is associated with
-      - name: subscription_name_slugify
-        description: The unique identifier of the subscription
-      - name: subscription_version
-        description: The version number of the subscription
-      - name: is_auto_renew
-        description: Boolean field, if true, this subscription automatically renews at the end of the subscription term
-      - name: zuora_renewal_subscription_name
-        description: name of the linked subscription that renews the prior subscription in a lineage
-      - name: zuora_renewal_subscription_name_slugify
-        description: name of the linked subscription that renews the prior subscription in a lineage
-      - name: renewal_term
-        description: The length of the period for the subscription renewal term
-      - name: renewal_term_period_type
-        description: The period type for the subscription renewal term. This field is used with the renewal term field to specify the subscription renewal term.
-      - name: subscription_start_date
-        description: The date when the subscription term starts. This date is the same as the start date of the original term, which isn't necessarily the start date of the current or new term.
-      - name: subscription_end_date
-        description: The date when the subscription term ends, where the subscription ends at midnight the day before. For example, if the SubscriptionEndDate is 12/31/2016, the subscriptions ends at midnight (00:00:00 hours) on 12/30/2016. This date is the same as the term end date or the cancelation date, as appropriate.
-      - name: subscription_start_month
-        description: The month when the subscription term starts. This month is the same as the start month of the original term, which isn't necessarily the start month of the current or new term.
-      - name: subscription_end_month
-        description: The month when the subscription term ends. This month is the same as the term end month or the cancelation month, as appropriate.
-      - name: subscription_sales_type
-        description: Identifies whether a subscription is Sales-Assisted or Self-Service / Web Direct.
-        tests:
-          - not_null
-          - accepted_values:
-                  values: ['Sales-Assisted', 'Self-Service']
-
   - name: dim_subscriptions_snapshots
     description: Daily snapshot of subscriptions starting from 2020-03-01. Fiel
     columns:
@@ -590,9 +603,6 @@ models:
           - not_null
           - unique
         tags: ["tdf", "arr"]
-
-  - name: dim_subscriptions_valid_at
-    description: Parameterized model to recreate dimension table representing subscription details as in Zuora at given date. Required variable valid_at is timezone sensitive
 
   - name: fct_campaign
     description: '{{ doc("fct_campaign") }}'
@@ -617,6 +627,61 @@ models:
           - not_null
           - unique
       - name: product_details_id
+        description: The unique ID of a product rate plan charge
+      - name: rate_plan_charge_number
+        description: A unique number that identifies the charge
+      - name: rate_plan_charge_name
+        description: The name of the rate plan charge
+      - name: effective_start_month
+        description: Month when the segmented charge starts or started
+      - name: effective_end_month
+        description: Month when the segmented charge ends or ended
+      - name: effective_start_date_id
+        description: Id of the date when the segmented charge starts or started. Use this field to join to dim_date on id.
+      - name: effective_end_date_id
+        description: Id of the date when the segmented charge ends or ended. Use this field to join to dim_date on id.
+      - name: effective_start_month_id
+        description: Id of the month when the segmented charge starts or started. Use this field to join to dim_date on id.
+      - name: effective_end_month_id
+        description: Id of the month when the segmented charge ends or ended. Use this field to join to dim_date on id.
+      - name: unit_of_measure
+        description: Specifies the units to measure usage
+      - name: quantity
+        description: The default quantity of units
+      - name: mrr
+        description: Monthly recurring revenue (MRR) is the amount of recurring charges in a given month. The MRR calculation doesn't include one-time charges nor usage charges.
+      - name: delta_tcv
+        description: After an Amendment, the change in the total contract value (TCV) amount for this charge, compared with its previous value.
+      - name: rate_plan_name
+        description: The name of the rate plan
+      - name: product_category
+        description: Indicates product category such as Bronze, Silver, Gold, Starter, Premium, or Ultimate
+      - name: delivery
+        description: Indicates whether the product is SaaS, Self-Managed, or other
+      - name: service_type
+        description: Indicates whether the subscription is support service only or full service
+      - name: discount_level
+        description: Specifies if the discount applies to just the product rate plan, the entire subscription, or to any activity in the account.
+      - name: rate_plan_charge_segment
+        description: The identifying number of the subscription rate plan segment. Segments are numbered sequentially, starting with 1.
+      - name: rate_plan_charge_version
+        description: The version of the rate plan charge. Each time a charge is amended, Zuora creates a new version of the rate plan charge.
+      - name: charge_type
+        description: Specifies the type of charge
+
+  - name: fct_charge
+    description: '{{ doc("fct_charge") }}'
+    columns:
+      - name: dim_subscription_id
+        description: Unique identifier of a version of a subscription
+        tests:
+          - not_null
+      - name: charge_id
+        description: The unique identifier of a verion of a rate plan charge
+        tests:
+          - not_null
+          - unique
+      - name: dim_product_detail_id
         description: The unique ID of a product rate plan charge
       - name: rate_plan_charge_number
         description: A unique number that identifies the charge
@@ -787,7 +852,7 @@ models:
       - name: date_id
         description: The identifier of date month in dim_date
       - name: subscription_id
-        description: The identifier of subscription in dim_subscriptions table
+        description: The identifier of subscription in dim_subscription table
         tests:
           - not_null
       - name: product_details_id
@@ -843,6 +908,133 @@ models:
         description: Annual Recurring Revenue value for given month
       - name: quantity
         description: Total quantity
+
+  - name: fct_namespace_member_summary
+    description: '{{ doc("fct_namespace_member_summary") }}'
+    columns:
+      - name: snapshot_month
+        description: Month in which the members counts are being reported snapshotted. Always current month until historical months are available in a future version of this table.
+        tests:
+          - not_null
+      - name: namespace_id
+        tests:
+          - not_null
+          - unique
+      - name: ultimate_parent_id
+        tests:
+          - not_null
+          - unique
+      - name: ultimate_parent_plan_id
+        description: The **plan_id** associated with the namespace's subscription. This can be inherited from the namespaces's ultimate parent.
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['2', '3', '4', '34', '67', 'trial']
+      - name: ultimate_parent_plan_title
+        description: Whether or not the namespace associated with the project is subscribed to a paid plan. This can be inherited from the namespaces's ultimate parent.
+        tests:
+          - not_null
+      - name: total_member_bot_requested_count
+        description: Count of all users with access, or awaiting access to the namespace. Includes active, deactivated, blocked, and bot users.
+        tests:
+          - not_null
+      - name: active_member_count
+        description: Count of _non-bot_ members that are active and not awaiting access approval to the namespace.
+        tests:
+          - not_null
+      - name: billabe_member_count
+        description: Count of active, _non-guest_ members if namespace is _gold_ tier. Count of active members otherwise.
+        tests:
+          - not_null
+      - name: guest_member_count
+        description: Count of members with lowest (guest) level access to the namespace.
+        tests:
+          - not_null
+      - name: deactivated_member_count
+        description: Count of members that have been deactivated by a GitLab administrator.
+        tests:
+          - not_null
+      - name: blocked_member_count
+        description: Count of members that have been blocked by a GitLab administrator.
+        tests:
+          - not_null
+      - name: project_bot_count
+        description: Count of [project bot users](https://docs.gitlab.com/ee/user/project/settings/project_access_tokens.html#project-bot-users) that inherited access to the namespace through project-group links.
+        tests:
+          - not_null
+      - name: gitlab_bot_count
+        description: Count of [GitLab bots](https://docs.gitlab.com/ee/user/project/service_desk.html#support-bot-user) with access to the namespace.
+        tests:
+          - not_null
+      - name: total_member_count
+        description: Total count of active, deactivated, and blocked (non-bot) members with access to the namespace.
+        tests:
+          - not_null
+      - name: total_bot_count
+        description: Total count of GitLab bots and project bot users.
+        tests:
+          - not_null
+      - name: total_member_bot_count
+        description: Total member count + total bot count.
+        tests:
+          - not_null
+      - name: member_awaiting_access_count
+        description: Count of users waiting to be granted membership to the namespace. 
+        tests:
+          - not_null
+
+  - name: fct_sales_funnel_target
+    description: '{{ doc("fct_sales_funnel_target") }}'
+    columns:
+      - name: kpi_name
+        tests:
+          - not_null
+      - name: sales_funnel_target_id
+        tests:
+          - not_null
+          - unique
+
+  - name: fct_usage_ci_minutes
+    description: '{{ doc("fct_usage_ci_minutes") }}'
+    columns:
+      - name: snapshot_month
+        description: Month in which CI Minutes usage data was snapshotted, formatted as `20YY-MM-01`.
+        tests:
+          - not_null
+      - name: namespace_id
+        description: ID of the namespace responsible for the CI Minutes usage.
+        tests:
+          - not_null
+      - name: ultimate_parent_namespace_id
+        description: ID of the namespace's ultimate parent namespace.
+        tests:
+          - not_null
+      - name: namespace_type
+        description: Group, Individual, or NULL. For example https://gitlab.com/gitlab-data is a Group namespace.
+      - name: visibility_level
+        description: public, private, or internal.
+      - name:  limit
+        description: Monthly CI Minutes limit of the namespace, based on its [product tier](https://about.gitlab.com/pricing/). This value will be 'Not supported minutes' if shared runners are not enabled on the namespace and 'Unlimited minutes' for certain GitLab internal namespaces.
+        tests:
+          - not_null
+      - name: shared_runners_minutes_used_overall
+        description: Total CI Minutes used in the snapshot month.
+        tests:
+          - not_null
+      - name: status
+        description: Status of CI Minutes usage against the tier-based limit by namespaces with `shared_runners_minutes_limit` enabled. Over Quota, Under Quota, or Disabled.
+      - name: status_based_plan
+        description: Status independent of whether there aren't projects with `shared_runners_enabled` inside the namespaces and only take into account how many minutes have been used from the monthly quota based in the plan of the namespace.
+      - name: used
+        description: CI Minutes used against the tier-based limit in a given snapshot month.
+      - name: limit_based_plan
+        description: Limit independent of whether there aren't projects with `shared_runners_enabled` inside the namespaces and only take into account how many minutes have been used from the monthly quota based in the plan of the namespace.
+      - name: limit_purchased
+        description: Limit of extra CI Minutes purchased once monthly minutes have been used up.
+      - name: used_purchased
+        description: Purchased extra CI Minutes used in a given snapshot month.
+      - name: status_purchased
+        description: Status of CI Minutes usage against the extra CI Minutes purchased limit by namespaces.
 
   - name: fct_usage_data_monthly
     description: '{{ doc("fct_usage_data_monthly") }}'
@@ -912,7 +1104,7 @@ models:
       - name: license_md5
         description: The md5 hash of the license file. Use this field to join to dim_licenses.
       - name: subscription_id
-        description: The zuora subscription id derived from the license. Use this field to join to dim_subscriptions.
+        description: The zuora subscription id derived from the license. Use this field to join to dim_subscription.
       - name: billing_account_id
         description: The zuora account id associated with the subscription. Use this field to join to dim_billing_accounts.
       - name: array_product_details_id
@@ -939,6 +1131,7 @@ models:
           - not_null
       - name: recorded_at
         description: The timestamp when the usage ping was recorded.
+
   - name: dim_marketing_channel
     description: '{{ doc("prep_sfdc_account") }}'
     columns:
@@ -949,15 +1142,81 @@ models:
           - unique
       - name: marketing_channel_name
 
-  - name: map_merged_crm_account
-    description: This table maps an original crm_account_id to its final, non-deleted crm_account_id if the original crm_id has been deleted and merged. If the account has not been deleted and merged, the non-deleted crm_account_id is equal to the original crm_account_id.
+  - name: dim_namespace
+    description: '{{ doc("dim_namespace") }}'
     columns:
-      - name: sfdc_account_id
+      - name: dim_namespace_id
         tests:
           - not_null
           - unique
-        tags: ["tdf", "common", "crm_account"]
-      - name: dim_crm_account_id
+      - name: namespace_id
         tests:
           - not_null
-        tags: ["tdf", "common", "crm_account"]
+          - unique
+      - name: namespace_is_internal
+      - name: namespace_is_ultimate_parent
+      - name: namespace_name
+      - name: namespace_path
+        tests:
+          - not_null
+      - name: owner_id
+      - name: namespace_type
+        description: This field should be Group or Individual. A namespace is the first item to come after the / following the domain. For example https://www.gitlab.com/NicoleSchwartz/ is an Individual namespace. There are some namespace_IDs that are missing from this table, when doing certain joins (left) you may get NULL when this data is missing.
+        tests:
+          - not_null
+      - name: has_avatar
+      - name: namespace_created_at
+      - name: namespace_updated_at
+      - name: is_membership_locked
+      - name: has_request_access_enabled
+      - name: has_share_with_group_locked
+      - name: visibility_level
+      - name: dap_sync_status
+      - name: ldap_sync_error
+      - name: ldap_sync_last_update_at
+      - name: ldap_sync_last_successful_update_at
+      - name: ldap_sync_last_sync_at
+      - name: lfs_enabled
+      - name: parent_id
+      - name: shared_runners_minutes_limit
+      - name: extra_shared_runners_minutes_limit
+      - name: repository_size_limit
+      - name: does_require_two_factor_authentication
+      - name: two_factor_grace_period
+      - name: project_creation_level
+      - name: push_rule_id
+      - name: creator_id
+      - name: ultimate_parent_namespace_id
+      - name: gitlab_plan_id
+        description: The **plan_id** associated with the namespace's subscription. This can be inheritted from the namespaces's ultimate parent.
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['2', '3', '4', '34', '67', 'trial']
+      - name: gitlab_plan_title
+        description: Whether or not the namespace associated with the project is subscribed to a paid plan. This can be inheritted from the namespaces's ultimate parent.
+        tests:
+          - not_null
+      - name: gitlab_plan_is_paid
+        description: Whether or not the namespace associated with the project is subscribed to a paid plan. This can be inheritted from the namespaces's ultimate parent.
+        tests:
+          - not_null
+      - name: dim_product_tier_id,
+      - name: current_member_count
+        description: The number of members that are presently associated with the namespace.
+      - name: current_project_count
+        description: The number of projects that are presently associated with the namespace.
+
+  - name: dim_quote
+    description: '{{ doc("dim_quote") }}'
+    columns:
+      - name: dim_quote_id
+        description: The unique identifier for each of the quotes.
+        tests:
+          - not_null
+          - unique
+      - name: quote_number  
+      - name: quote_name
+      - name: quote_status
+      - name: is_primary_quote
+      - name: quote_start_date

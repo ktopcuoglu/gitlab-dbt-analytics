@@ -1,20 +1,6 @@
 version: 2
 
 models:
-  - name: bamboohr_base_mapping
-    description: This model ties all departments to the last 12 months and is used in downstream models to do rolling 12 month metrics
-
-  - name: bamboohr_budget_vs_actual
-    description: Compares promotion budget spend to the budget aggregated at the division level.
-    columns:
-    - name: fiscal_quarter_name
-    - name: division
-    - name: fiscal_year
-    - name: fiscal_quarter
-    - name: budget
-    - name: excess_from_previous_quarter
-    - name: total_spend
-
   - name: bamboohr_current_division_mapping
     description: This model accounts for the current mapping of department and divisions to allow for aggregatd models to reflect current division terminology used (as seen in bamboohr_rpt_headcount_aggregation)
     columns:
@@ -287,3 +273,14 @@ models:
         - name: hire_date
         - name: locality
         - name: updated_at
+
+  - name: bamboohr_work_email
+    description: This shows employee work emails as applicable to the valid_from_date and valid_to_date
+    columns:
+      - name: employee_id
+      - name: full_name
+      - name: work_email
+      - name: valid_from_date
+      - name: valid_to_date
+      - name: rank_email_desc
+        description: Identifies the email in descending order where 1 is equal to the the current email.

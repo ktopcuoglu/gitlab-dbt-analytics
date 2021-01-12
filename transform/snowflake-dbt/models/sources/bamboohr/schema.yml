@@ -64,17 +64,7 @@ models:
         tests:
           - not_null
   - name: bamboohr_directory_source
-    description: Base model for BambooHR Active Directory. This only shows currently active employees.
-    columns:
-      - name: employee_id
-        tests:
-            - unique
-            - not_null
-      - name: full_name
-        tests:
-            - unique
-            - not_null
-      - name: job_title
+    description: Base model for BambooHR Active Directory. Brings in directory data for each day.
   
   - name: bamboohr_emergency_contacts_source
     description: Bamboohr emergency contacts table. Used to create an alert in bamboohr_missing_emergency_contact_alert to identify individuals we do not have a contact for.
@@ -97,12 +87,12 @@ models:
             - not_null
             
   - name: bamboohr_id_employee_number_mapping_source
-    description: This model is the canonical source mapping bamboo employee numbers with employee IDs. It includes all employees for all time. The model also captures demographic information, and removes test accounts.
+    description: This model is based off the custom report in bamboohr to capture additional bamboohr information. This captures a snapshot of custom fields in bamboohr everyday. Note - field names can be added at various times through this report depending on use case and it is important to understand when we started capturing these data points.
     columns:
+      - name: employee_id
+      - name: employee_number
       - name: greenhouse_candidate_id
-        description: Captures the id associated to the employee in Greenhouse (our recruiting platform). This will only be applicable in Greenhouse starting 2019-12-13, and will help identify which candidates were hired.
-        tests: 
-            - unique          
+        description: Captures the id associated to the employee in Greenhouse (our recruiting platform). This will only be applicable in Greenhouse starting 2019-12-13, and will help identify which candidates were hired.       
   - name: bamboohr_job_info_source
     description: This model shows the details (manager, department, and division) that an employee is in at a given point in time. This includes historical information.
     columns:

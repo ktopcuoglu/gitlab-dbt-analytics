@@ -41,7 +41,7 @@ WITH RECURSIVE namespaces AS (
 
   SELECT
     *,
-    GET(upstream_lineage, ARRAY_SIZE(upstream_lineage)-1) AS ultimate_parent_id -- Last item is the ultimate parent.
+    GET(upstream_lineage, ARRAY_SIZE(upstream_lineage)-1)::INT   AS ultimate_parent_id -- Last item is the ultimate parent.
   FROM recursive_namespaces
 
   UNION ALL
@@ -64,17 +64,17 @@ WITH RECURSIVE namespaces AS (
     namespace_plans.plan_title                                                        AS namespace_plan_title,
     namespace_plans.plan_is_paid                                                      AS namespace_plan_is_paid,
     CASE
-    WHEN ultimate_parent_gitlab_subscriptions.is_trial
-      THEN 'trial'
+    WHEN ultimate_parent_gitlab_subscriptions.is_trial AND COALESCE(ultimate_parent_gitlab_subscriptions.plan_id, 34) <> 34
+      THEN 'Trial'
       ELSE COALESCE(ultimate_parent_plans.plan_id, 34)::VARCHAR
     END                                                                               AS ultimate_parent_plan_id,
     CASE
-    WHEN ultimate_parent_gitlab_subscriptions.is_trial
-      THEN 'trial'
-      ELSE COALESCE(ultimate_parent_plans.plan_name, 'free')
+    WHEN ultimate_parent_gitlab_subscriptions.is_trial AND COALESCE(ultimate_parent_gitlab_subscriptions.plan_id, 34) <> 34
+      THEN 'Trial'
+      ELSE COALESCE(ultimate_parent_plans.plan_name, 'Free')
     END                                                                               AS ultimate_parent_plan_title,
     CASE
-    WHEN ultimate_parent_gitlab_subscriptions.is_trial
+    WHEN ultimate_parent_gitlab_subscriptions.is_trial AND COALESCE(ultimate_parent_gitlab_subscriptions.plan_id, 34) <> 34
       THEN FALSE
       ELSE COALESCE(ultimate_parent_plans.plan_is_paid, FALSE) 
     END                                                                               AS ultimate_parent_plan_is_paid
