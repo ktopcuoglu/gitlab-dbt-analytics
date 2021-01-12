@@ -1232,10 +1232,12 @@ roles:
             schemas:
                 read:
                     - prep.license_db
+                    - raw.license_db
                     - raw.license_db_dump
             tables:
                 read:
                     - prep.license_db.*
+                    - raw.license_db.*
                     - raw.license_db_dump.*
 
     - keyhole_twitter:

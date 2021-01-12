@@ -11,6 +11,8 @@ WITH source AS (
         -- id
         id                          AS contact_id,
         name                        AS contact_name,
+        firstname                   AS contact_first_name,
+        lastname                    AS contact_last_name,
         email                       AS contact_email,
         split_part(email,'@',2)     AS email_domain,
 
