@@ -13,6 +13,11 @@ WITH dim_crm_account AS (
     SELECT *
     FROM {{ ref('dim_crm_opportunity') }}
 
+), dim_crm_sales_representative AS (
+
+    SELECT *
+    FROM {{ ref('dim_crm_sales_representative') }}
+
 ), dim_opportunity_source AS (
 
     SELECT *
@@ -47,8 +52,9 @@ WITH dim_crm_account AS (
       fct_crm_opportunity.crm_opportunity_id,
       fct_crm_opportunity.is_won,
       fct_crm_opportunity.is_closed,
-      fct_crm_opportunity.iacv,
       fct_crm_opportunity.days_in_sao,
+      fct_crm_opportunity.iacv,
+      fct_crm_opportunity.net_arr,
       fct_crm_opportunity.total_contract_value,
       dim_crm_opportunity.is_edu_oss,
       dim_crm_opportunity.stage_name,
@@ -58,14 +64,17 @@ WITH dim_crm_account AS (
       dim_crm_sales_hierarchy_stamped.location_region_name_stamped,
       dim_crm_sales_hierarchy_stamped.sales_region_name_stamped,
       dim_crm_sales_hierarchy_stamped.sales_area_name_stamped,
+      dim_crm_sales_representative.user_segment                 AS sales_segment_name_live,
+      dim_crm_sales_representative.user_geo                     AS location_region_name_live,
+      dim_crm_sales_representative.user_region                  AS sales_region_name_live,
+      dim_crm_sales_representative.user_area                    AS sales_area_name_live,
       dim_purchase_channel.purchase_channel_name,
       dim_order_type.order_type_name,
       dim_opportunity_source.opportunity_source_name,
+      dim_crm_account.crm_account_gtm_strategy,
+      dim_crm_account.crm_account_focus_account,
       dim_crm_account.ultimate_parent_gtm_strategy,
-      CASE
-        WHEN LOWER(dim_crm_account.ultimate_parent_gtm_strategy) IN ('account centric', 'account based - net new', 'account based - expand') THEN 'Focus Account'
-        ELSE 'Non - Focus Account'
-      END                                                       AS focus_account,
+      dim_crm_account.ultimate_parent_focus_account,
       dim_crm_account.ultimate_parent_account_segment,
       fct_crm_opportunity.closed_buckets
     FROM fct_crm_opportunity
@@ -84,6 +93,8 @@ WITH dim_crm_account AS (
       AND fct_crm_opportunity.dim_crm_sales_hierarchy_location_region_stamped_id = dim_crm_sales_hierarchy_stamped.dim_crm_sales_hierarchy_location_region_stamped_id
       AND fct_crm_opportunity.dim_crm_sales_hierarchy_sales_region_stamped_id = dim_crm_sales_hierarchy_stamped.dim_crm_sales_hierarchy_sales_region_stamped_id
       AND fct_crm_opportunity.dim_crm_sales_hierarchy_sales_area_stamped_id = dim_crm_sales_hierarchy_stamped.dim_crm_sales_hierarchy_sales_area_stamped_id
+    LEFT JOIN dim_crm_sales_representative
+      ON fct_crm_opportunity.dim_crm_sales_rep_id = dim_crm_sales_representative.dim_crm_sales_rep_id
 
 )
 
@@ -92,5 +103,5 @@ WITH dim_crm_account AS (
     created_by="@iweeks",
     updated_by="@iweeks",
     created_date="2020-12-07",
-    updated_date="2021-01-08",
+    updated_date="2021-01-12",
   ) }}

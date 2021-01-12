@@ -57,6 +57,18 @@ WITH map_merged_crm_accounts AS (
     sfdc_account.account_id                       AS crm_account_id,
     sfdc_account.account_name                     AS crm_account_name,
     sfdc_account.billing_country                  AS crm_account_country,
+    sfdc_account.billing_country                  AS crm_account_billing_country,
+    sfdc_account.df_industry                      AS crm_account_industry,
+    sfdc_account.account_owner_team               AS crm_account_account_owner_team,
+    sfdc_account.tsp_territory                    AS crm_account_territory,
+    sfdc_account.tsp_region                       AS crm_account_tsp_region,
+    sfdc_account.tsp_sub_region                   AS crm_account_tsp_sub_region,
+    sfdc_account.tsp_area                         AS crm_account_tsp_area,
+    sfdc_account.gtm_strategy                     AS crm_account_gtm_strategy,
+    CASE
+      WHEN LOWER(sfdc_account.gtm_strategy) IN ('account centric', 'account based - net new', 'account based - expand') THEN 'Focus Account'
+      ELSE 'Non - Focus Account'
+    END                                           AS crm_account_focus_account,
     ultimate_parent_account.account_id            AS ultimate_parent_account_id,
     ultimate_parent_account.account_name          AS ultimate_parent_account_name,
     {{ sales_segment_cleaning('sfdc_account.ultimate_parent_sales_segment') }}
@@ -69,6 +81,10 @@ WITH map_merged_crm_accounts AS (
     ultimate_parent_account.tsp_sub_region        AS ultimate_parent_tsp_sub_region,
     ultimate_parent_account.tsp_area              AS ultimate_parent_tsp_area,
     ultimate_parent_account.gtm_strategy          AS ultimate_parent_gtm_strategy,
+    CASE
+      WHEN LOWER(ultimate_parent_account.gtm_strategy) IN ('account centric', 'account based - net new', 'account based - expand') THEN 'Focus Account'
+      ELSE 'Non - Focus Account'
+    END                                           AS ultimate_parent_focus_account,
     sfdc_account.record_type_id                   AS record_type_id,
     sfdc_account.federal_account                  AS federal_account,
     sfdc_account.gitlab_com_user,
@@ -86,7 +102,7 @@ WITH map_merged_crm_accounts AS (
   LEFT JOIN map_merged_crm_accounts
     ON sfdc_account.account_id = map_merged_crm_accounts.sfdc_account_id
   LEFT JOIN ultimate_parent_account
-    ON sfdc_account.ultimate_parent_account_id = ultimate_parent_account.account_id 
+    ON sfdc_account.ultimate_parent_account_id = ultimate_parent_account.account_id
   LEFT OUTER JOIN sfdc_users
     ON sfdc_account.technical_account_manager_id = sfdc_users.user_id
   LEFT JOIN sfdc_record_type
@@ -97,7 +113,7 @@ WITH map_merged_crm_accounts AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@msendal",
-    updated_by="@snalamaru",
+    updated_by="@iweeks",
     created_date="2020-06-01",
-    updated_date="2020-11-20"
+    updated_date="2021-01-12"
 ) }}
