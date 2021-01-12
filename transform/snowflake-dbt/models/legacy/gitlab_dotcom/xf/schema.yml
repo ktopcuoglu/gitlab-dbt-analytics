@@ -185,6 +185,8 @@ models:
         - name: user_id
           tests:
             - not_null
+        - name: include_email_flg
+          description: This takes into account the gitlab email and uses the `include_gitlab_email` macro to identify if there are reasons for why the email should be excluded (i.e. test accounts). This field is taken into account in map_team_member_bamboo_gitlab_dotcom_gitlab_ops. 
         - name: updated_at
 
   - name: gitlab_dotcom_gitlab_internal_sprints
