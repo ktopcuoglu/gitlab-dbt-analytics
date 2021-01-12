@@ -42,6 +42,15 @@ models:
           - not_null
           - unique
 
+  - name: prep_crm_sales_representative
+    description: '{{ doc("prep_crm_sales_representative") }}'
+    columns:
+      - name: dim_crm_sales_rep_id
+        description: Unique identifier of a sales representative
+        tests:
+          - not_null
+          - unique
+
   - name: prep_crm_sales_hierarchy_stamped
     description: '{{ doc("prep_crm_sales_hierarchy_stamped") }}'
     columns:
@@ -257,7 +266,7 @@ models:
         tests:
           - not_null
           - unique
-      - name: quote_number  
+      - name: quote_number
       - name: quote_name
       - name: quote_status
       - name: is_primary_quote
