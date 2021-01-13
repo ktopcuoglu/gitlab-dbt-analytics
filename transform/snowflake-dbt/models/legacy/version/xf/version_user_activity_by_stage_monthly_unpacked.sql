@@ -1,3 +1,9 @@
+{{ config({
+    "materialized": "incremental",
+    "unique_key": "id"
+    })
+}}
+
 WITH usage_data AS (
 
     SELECT *
