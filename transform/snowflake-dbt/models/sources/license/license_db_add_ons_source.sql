@@ -2,6 +2,7 @@ WITH source AS (
 
     SELECT *
     FROM {{ source('license', 'add_ons') }}
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY id ORDER BY updated_at::TIMESTAMP DESC) = 1
 
 ), renamed AS (
 
