@@ -256,7 +256,7 @@ models:
     # ------------------
     common:
       +materialized: table
-      +schema: common 
+      +schema: common
 
     common_mapping:
       +materialized: table
