@@ -6,8 +6,8 @@ WITH source AS (
 ), renamed AS (
 
     SELECT 
-      employee_id::VARCHAR          AS employee_id,
-      location_factor::FLOAT        AS location_factor
+      employee_number::VARCHAR          AS employee_number,
+      location_factor::FLOAT            AS location_factor
     FROM source
 
 )
