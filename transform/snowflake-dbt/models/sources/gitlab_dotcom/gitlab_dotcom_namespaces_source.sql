@@ -36,7 +36,8 @@ WITH source AS (
       require_two_factor_authentication::BOOLEAN                    AS does_require_two_factor_authentication,
       two_factor_grace_period::NUMBER                               AS two_factor_grace_period,
       project_creation_level::NUMBER                                AS project_creation_level,
-      push_rule_id::INTEGER                                         AS push_rule_id
+      push_rule_id::INTEGER                                         AS push_rule_id, 
+      shared_runners_enabled:BOOLEAN                                AS shared_runners_enabled
     FROM source
 
 )

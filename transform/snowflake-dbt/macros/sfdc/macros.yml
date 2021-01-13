@@ -7,3 +7,5 @@ macros:
     description: '{{ doc("sfdc_deal_size") }}'
   - name: sfdc_source_buckets
     description: '{{ doc("sfdc_source_buckets") }}'
+  - name: sales_hierarchy_sales_segment_cleaning
+    description: '{{ doc("sales_hierarchy_sales_segment_cleaning") }}'

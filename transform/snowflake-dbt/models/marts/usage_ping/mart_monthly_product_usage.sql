@@ -1,4 +1,9 @@
 /* grain: one record per host per metric per month */
+{{ config({
+    "materialized": "incremental",
+    "unique_key": "primary_key"
+    })
+}}
 
 WITH dim_billing_account AS (
 
@@ -75,6 +80,11 @@ WITH dim_billing_account AS (
 
     SELECT *
     FROM {{ ref('monthly_usage_data') }}
+    {% if is_incremental() %}
+
+      WHERE created_month >= (SELECT MAX(reporting_month) FROM {{this}})
+
+    {% endif %}
 
 ), dim_usage_pings AS (
 
@@ -224,6 +234,7 @@ WITH dim_billing_account AS (
     SELECT
 
       -- Primary Key
+      {{ dbt_utils.surrogate_key(['metrics_path', 'created_month', 'ping_id', 'host_id']) }} AS primary_key,
       created_month AS reporting_month,
       metrics_path,
       ping_id,

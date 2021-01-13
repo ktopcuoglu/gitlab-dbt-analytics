@@ -9,6 +9,8 @@ WITH source AS (
         --id
         id                                                      AS lead_id,
         name                                                    AS lead_name,
+        firstname                                               AS lead_first_name,
+        lastname                                                AS lead_last_name,
         email                                                   AS lead_email,
         split_part(email,'@',2)                                 AS email_domain,
 

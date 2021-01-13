@@ -66,6 +66,7 @@ projects AS (
       namespaces.ldap_sync_last_sync_at,
       namespaces.lfs_enabled,
       namespaces.parent_id,
+      namespaces.shared_runners_enabled, 
       namespaces.shared_runners_minutes_limit,
       namespaces.extra_shared_runners_minutes_limit,
       namespaces.repository_size_limit,
@@ -94,7 +95,7 @@ projects AS (
         ON namespaces.namespace_id = namespace_lineage.namespace_id
       LEFT JOIN creators
         ON namespaces.namespace_id = creators.group_id
-    {{ dbt_utils.group_by(n=32) }}
+    {{ dbt_utils.group_by(n=33) }}
 )
 
 SELECT *
