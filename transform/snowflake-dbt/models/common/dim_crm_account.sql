@@ -56,7 +56,6 @@ WITH map_merged_crm_accounts AS (
   SELECT
     sfdc_account.account_id                       AS crm_account_id,
     sfdc_account.account_name                     AS crm_account_name,
-    sfdc_account.billing_country                  AS crm_account_country,
     sfdc_account.billing_country                  AS crm_account_billing_country,
     sfdc_account.df_industry                      AS crm_account_industry,
     sfdc_account.account_owner_team               AS crm_account_account_owner_team,
