@@ -8,9 +8,6 @@
                                               base.job_grade, base.eeoc_field_name
                                               ORDER BY base.month_date)
                               " %}
-{% set ratio_to_report_criteria = "< 2 AND (breakout_type !='eeoc_breakout' and eeoc_field_name != 'no_eeoc')" %}
-
-
 
 WITH source AS (
 
