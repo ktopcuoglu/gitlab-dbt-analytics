@@ -22,6 +22,10 @@ models:
             - not_null
       - name: host_id
         description: '{{ doc("host_id") }}'
+      - name: license_id
+        description: '{{ doc("license_id") }}'
+      - name: host_id
+        description: '{{ doc("license_md5") }}'
       - name: original_linked_subscription_id
         description: '{{ doc("original_linked_subscription_id") }}'
       - name: latest_active_subscription_id
@@ -60,8 +64,28 @@ models:
             - not_null
       - name: source_ip_hash
         description: '{{ doc("source_ip_hash") }}'
-        tests:
-            - not_null
+      - name: is_pre_release
+        description: '{{ doc("is_pre_release") }}'
+      - name: is_internal
+        description: '{{ doc("is_internal") }}'
+      - name: is_staging
+        description: '{{ doc("is_staging") }}'
+      - name: is_trial
+        description: '{{ doc("is_trial") }}'
+      - name: group_name
+        description: '{{ doc("group_name") }}'
+      - name: stage_name
+        description: '{{ doc("stage_name") }}'
+      - name: section_name
+        description: '{{ doc("section_name") }}'
+      - name: is_smau
+        description: '{{ doc("is_smau") }}'
+      - name: is_gmau
+        description: '{{ doc("is_gmau") }}'
+      - name: is_paid_gmau
+        description: '{{ doc("is_paid_gmau") }}'
+      - name: is_umau
+        description: '{{ doc("is_umau") }}'
       - name: host_name
         description: '{{ doc("host_name") }}'
       - name: subscription_name_slugify
@@ -92,6 +116,8 @@ models:
         description: '{{ doc("ultimate_parent_account_owner_team") }}'
       - name: ultimate_parent_territory
         description: '{{ doc("ultimate_parent_territory") }}'
+      - name: technical_account_manager
+        description: '{{ doc("technical_account_manager") }}'
       - name: created_at
         description: '{{ doc("created_at") }}'
       - name: recorded_at
