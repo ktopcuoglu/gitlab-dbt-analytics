@@ -229,6 +229,8 @@ models:
   - name: location_factor_target
     tests:
     - not_null
+- name: sheetload_location_factor_temporary_2020_december    
+  description: Location factors for 2020.12 only. 
 - name: sheetload_manual_downgrade_dotcom_tracking_source
   description: This contains a list of namespaces identified for manual downgrading and the date of the downgrade.
   columns:
