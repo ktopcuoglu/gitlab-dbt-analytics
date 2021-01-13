@@ -512,11 +512,10 @@ tables:
       FROM ci_build_trace_sections
       WHERE date_end BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
         AND '{EXECUTION_DATE}'::timestamp 
+    additional_filtering: AND project_id = 7764
     export_schema: 'gitlab_com'
     export_table: 'www_gitlab_com_ci_build_trace_sections'
     export_table_primary_key: CONCAT(build_id,'_',section_name_id)
-
-
     dbt_source_model: true
   cluster_groups:
     import_db: GITLAB_DB
