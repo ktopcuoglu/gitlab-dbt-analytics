@@ -197,7 +197,7 @@ roles:
             - sheetload
             - snapshots
             - snowflake_db
-            - static                       
+            - static
                     
     - analyst_engineering:
         warehouses:
