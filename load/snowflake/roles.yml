@@ -197,44 +197,7 @@ roles:
             - sheetload
             - snapshots
             - snowflake_db
-            - static
-    
-    - data_team_analyst:
-        warehouses:
-            - analyst_xs
-            - analyst_l
-        member_of:
-            - boneyard
-            - covid19
-            - dbt_analytics
-            - dbt_analytics_clones
-            - gitlab_data_yaml
-            - handbook
-            - maxmind
-            - sheetload
-            - snapshots
-            - snowflake_db
-            - static
-            - common_sensitive
-
-
-    - common_sensitive: 
-        warehouses:
-            - analyst_xs
-            - analyst_l
-        privileges:
-        databases:
-            read:
-                - prep
-        schemas:
-            read:
-                - prep.sensitive
-                - prep.preparation
-        tables:
-            read:
-                - prep.sensitive.*
-                - prep.preparation.*
-                       
+            - static                       
                     
     - analyst_engineering:
         warehouses:
@@ -407,6 +370,23 @@ roles:
             - snowflake_db
             - version_db
             - zuora
+    
+    - common_sensitive: 
+        warehouses:
+            - analyst_xs
+            - analyst_l
+        privileges:
+            databases:
+                read:
+                    - prep
+            schemas:
+                read:
+                    - prep.sensitive
+                    - prep.preparation
+            tables:
+                read:
+                    - prep.sensitive.*
+                    - prep.preparation.*
 
     - data_manager:
         warehouses:
@@ -439,6 +419,24 @@ roles:
             - zendesk
             - zendesk_community_relations
             - zuora
+
+    - data_team_analyst:
+        warehouses:
+            - analyst_xs
+            - analyst_l
+        member_of:
+            - boneyard
+            - covid19
+            - dbt_analytics
+            - dbt_analytics_clones
+            - gitlab_data_yaml
+            - handbook
+            - maxmind
+            - sheetload
+            - snapshots
+            - snowflake_db
+            - static
+            - common_sensitive
 
     - decisive_data:
         warehouses:
