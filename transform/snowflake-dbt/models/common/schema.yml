@@ -158,7 +158,7 @@ models:
         tests:
           - unique
           - not_null
-      - name: location_id
+      - name: dim_location_id
 
   - name: dim_geo_sub_region
     description: "Dimension table for sub-region built off ATAM_Sub_Region__C in SFDC. Example values: Southern Europe, NA East, Nordics"
@@ -374,7 +374,7 @@ models:
         tests:
           - not_null
           - unique
-      - name: location_id
+      - name: dim_location_id
         tests:
           - not_null
           - unique
@@ -756,8 +756,6 @@ models:
         description: this instance is used by the company or a GitLab team member
       - name: is_staging
         descrition: DRAFT - need to better identify instances used for staging environments
-      - name: location_id
-        description: JOIN key for country information derived. See https://gitlab.com/gitlab-data/analytics/-/issues/6560#note_427936012
 
   - name: fct_charges_valid_at
     description: Factual table with all rate plan charges coming from subscriptions or an amendment to a subscription. Required variable valid_at is timezone sensitive

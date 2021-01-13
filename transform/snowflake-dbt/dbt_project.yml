@@ -337,6 +337,11 @@ models:
       trusted_data_framework:
         +tags: ["tdf"]
 
+    prep: 
+        +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
+        +materialized: table
+        +schema: preparation
+
     # ------------------
     # Workspaces
     # ------------------

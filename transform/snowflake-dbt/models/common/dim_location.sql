@@ -1,8 +1,3 @@
-{{config({
-    "schema": "legacy"
-  })
-}}
-
 WITH maxmind_countries_source AS (
 
     SELECT *
@@ -16,7 +11,7 @@ WITH maxmind_countries_source AS (
 ), joined AS (
 
     SELECT
-      geoname_id              AS location_id,
+      geoname_id              AS dim_location_id,
       country_name            AS country_name,
       UPPER(country_iso_code) AS iso_2_country_code,
       UPPER(iso_alpha_3_code) AS iso_3_country_code
@@ -30,7 +25,7 @@ WITH maxmind_countries_source AS (
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@m_walker",
-    updated_by="@msendal",
+    updated_by="@kathleentam",
     created_date="2020-08-25",
-    updated_date="2020-09-17"
+    updated_date="2021-01-11"
 ) }}

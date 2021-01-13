@@ -75,7 +75,7 @@ WITH dim_billing_account AS (
     LEFT JOIN dim_date
       ON fct_usage_ping_payloads.date_id = dim_date.date_id
     LEFT JOIN dim_location
-      ON fct_usage_ping_payloads.location_id = dim_location.location_id
+      ON fct_usage_ping_payloads.location_id = dim_location.dim_location_id
     LEFT JOIN product_details
       ON fct_usage_ping_payloads.usage_ping_id = product_details.usage_ping_id
 
