@@ -59,11 +59,13 @@ WITH dim_billing_account AS (
       ultimate_parent_account_name,
       ultimate_parent_account_id,
       product_category,
+      delivery,
+      product_ranking,
       MIN(arr_month)                      AS date_month_start,
       --add 1 month to generate churn month
       DATEADD('month',1,MAX(arr_month))   AS date_month_end
     FROM mart_arr
-    {{ dbt_utils.group_by(n=3) }}
+    {{ dbt_utils.group_by(n=5) }}
 
 ), base AS (
 
@@ -71,6 +73,8 @@ WITH dim_billing_account AS (
       ultimate_parent_account_name,
       ultimate_parent_account_id,
       product_category,
+      delivery,
+      product_ranking,
       dim_date.date_actual         AS arr_month,
       dim_date.fiscal_quarter_name_fy,
       dim_date.fiscal_year
@@ -89,8 +93,8 @@ WITH dim_billing_account AS (
       base.ultimate_parent_account_name,
       base.ultimate_parent_account_id,
       base.product_category                                                                  AS product_category,
-      delivery                                                                               AS delivery,
-      product_ranking                                                                        AS product_ranking,
+      base.delivery                                                                               AS delivery,
+      base.product_ranking                                                                        AS product_ranking,
       SUM(ZEROIFNULL(quantity))                                                              AS quantity,
       SUM(ZEROIFNULL(mrr)*12)                                                                AS arr
     FROM base

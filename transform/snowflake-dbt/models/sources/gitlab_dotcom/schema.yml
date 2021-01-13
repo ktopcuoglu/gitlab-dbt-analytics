@@ -1266,6 +1266,8 @@ models:
         description: '{{ doc("visibility_documentation") }}'
       - name: visbility_level
         description: '{{ doc("visibility_documentation") }}'
+      - name: shared_runners_enabled 
+        description: Indicates whether or not a namespace has shared_runners_enabled
 
   - name: gitlab_dotcom_notes_source
     description: >-

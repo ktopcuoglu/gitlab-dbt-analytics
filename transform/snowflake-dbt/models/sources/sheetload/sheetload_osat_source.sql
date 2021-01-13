@@ -11,7 +11,9 @@ WITH source AS (
       "DIVISION"::VARCHAR                                  AS division,
       NULLIF("SATISFACTION_SCORE",'')::NUMBER              AS satisfaction_score,
       NULLIF("RECOMMEND_TO_FRIEND",'')::NUMBER             AS recommend_to_friend,
-      NULLIF(ONBOARDING_BUDDY_EXPERIENCE_SCORE,'')::NUMBER AS buddy_experience_score
+      NULLIF(ONBOARDING_BUDDY_EXPERIENCE_SCORE,'')::NUMBER AS buddy_experience_score,
+      TRY_TO_TIMESTAMP_NTZ("HIRE_DATE")::DATE              AS hire_date
+
     FROM source
  
 )

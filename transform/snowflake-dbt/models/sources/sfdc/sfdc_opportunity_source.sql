@@ -107,7 +107,8 @@ WITH source AS (
         order_type_test__c                          AS order_type_stamped,
         arr_net__c                                  AS net_arr,
         days_in_sao__c                              AS days_in_sao,
-        user_segment_o__c                           AS user_segment_stamped,
+        {{ sales_hierarchy_sales_segment_cleaning('user_segment_o__c') }}
+                                                    AS user_segment_stamped,
         stamped_user_geo__c                         AS user_geo_stamped,
         stamped_user_region__c                      AS user_region_stamped,
         stamped_user_area__c                        AS user_area_stamped,
