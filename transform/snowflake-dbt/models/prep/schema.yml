@@ -1,6 +1,53 @@
 version: 2
 
 models:
+  - name: prep_usage_ping
+    description: '{{ doc("prep_usage_ping") }}'
+    columns:
+      - name: dim_usage_ping_id
+        description: This is a unique identifier for a usage ping sent by an instance. 
+        tests:
+          - not_null
+          - unique
+      - name: ping_created_at
+        description: The timestamp at which the usage ping was created_at 
+      - name: ping_created_at_28_days_earlier
+        description: The timestamp at which the usage ping was created_at minus 28 days for the monthly metric time period 
+      - name: ping_created_at_year
+        description: The year ('2017') the ping was created at
+      - name: ping_created_at_month
+        description: The month ('2017-01-01') the ping was created at
+      - name: ping_created_at_week
+        description: The week start ('2017-01-01') the ping was created at
+      - name: ping_created_at_date
+        description: The day the ping was created at (removes the extra time information in the timestamp)
+      - name: raw_usage_data_id
+        description: The JOIN key to version_raw_usage_data_source https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.version_raw_usage_data_source
+      - name: raw_usage_data_payload
+        description: Either the original payload value or a reconstructed value. See https://gitlab.com/gitlab-data/analytics/-/merge_requests/4064/diffs#bc1d7221ae33626053b22854f3ecbbfff3ffe633 for rationale. 
+      - name: original_edition
+        description: The original `edition` value that comes on the usage ping. This has a lot of data inaccuracies
+      - name: edition
+        description: The cleaned `edition` value to remove data inaccuracies 
+      - name: main_edition
+        description: segmentation for Edition. Values - CE, EE
+      - name: product_tier
+        description: segmentation for Product Tier. Values - Core (CE, EE), Starter, Premium, Ultimate, NULL
+      - name: main_edition_product_tier
+        description: segmentation for the product tier, including separate records for Core CE and Core EE
+      - name: ping_source
+        description: segmentation for SaaS data (from the self-managed instance that hosts the SaaS GitLab.com website) and data sent from customer self-managed instances
+      - name: is_internal
+        description: boolean flag that indicates that the instance is used by the company or a GitLab team member
+      - name: is_staging
+        description: DRAFT - need to better identify instances used for staging environments
+      - name: country_name
+        description: The name of the country where the instance reported the ping from 
+      - name: iso_2_country_code
+        description: The iso 2 country code where the instance reported the ping from 
+      - name: iso_3_country_code
+        description: The iso 3 country code where the instance reported the ping from 
+
   - name: prep_usage_ping_no_license_key
     description: '{{ doc("prep_usage_ping_no_license_key") }}'
     columns:
