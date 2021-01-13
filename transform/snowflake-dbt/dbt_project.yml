@@ -351,6 +351,9 @@ models:
 
       workspace_marketing:
         +schema: workspace_marketing
+      
+      workspace_sales:
+        +schema: workspace_sales
 
     # ------------------
     # Marts
