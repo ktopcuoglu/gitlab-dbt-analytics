@@ -182,7 +182,6 @@ tables:
       , title
       , created_at
       , updated_at
-      , merged_at
       , milestone_id
       , state_id
       , merge_status
