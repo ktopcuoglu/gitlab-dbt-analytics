@@ -370,23 +370,6 @@ roles:
             - snowflake_db
             - version_db
             - zuora
-    
-    - common_sensitive: 
-        warehouses:
-            - analyst_xs
-            - analyst_l
-        privileges:
-            databases:
-                read:
-                    - prep
-            schemas:
-                read:
-                    - prep.sensitive
-                    - prep.preparation
-            tables:
-                read:
-                    - prep.sensitive.*
-                    - prep.preparation.*
 
     - data_manager:
         warehouses:
@@ -420,24 +403,6 @@ roles:
             - zendesk_community_relations
             - zuora
 
-    - data_team_analyst:
-        warehouses:
-            - analyst_xs
-            - analyst_l
-        member_of:
-            - boneyard
-            - covid19
-            - dbt_analytics
-            - dbt_analytics_clones
-            - gitlab_data_yaml
-            - handbook
-            - maxmind
-            - sheetload
-            - snapshots
-            - snowflake_db
-            - static
-            - common_sensitive
-
     - decisive_data:
         warehouses:
             - analyst_xs
@@ -461,7 +426,6 @@ roles:
             - snowplow
             - version_db
             - zuora
-            - common_sensitive
 
     - engineer:
         member_of:
@@ -851,21 +815,18 @@ roles:
             databases:
                 read:
                     - prod
-                    - prep 
             schemas:
                 read:
                     - prod.common
                     - prod.common_mapping
                     - prod.common_mart_marketing
                     - prod.common_mart_sales
-                    - prep.preparation
             tables:
                 read:
                     - prod.common.*
                     - prod.common_mapping.*
                     - prod.common_mart_marketing.*
                     - prod.common_mart_sales.*
-                    - prep.preparation.*
 
     - date:
         privileges:
@@ -1907,7 +1868,6 @@ roles:
             - analyst_finance
             - bamboohr_analytics
             - customers_db
-            - data_team_analyst
         warehouses:
             - analyst_xs
         owns:
@@ -1961,7 +1921,6 @@ roles:
             - customers_db
             - netsuite
             - static_admin
-            - data_team_analyst
         warehouses:
             - analyst_xs
         owns:
@@ -2070,7 +2029,6 @@ roles:
         member_of:
             - analyst_engineering
             - customers_db
-            - data_team_analyst
         warehouses:
             - analyst_xs
 
@@ -2082,7 +2040,7 @@ roles:
 
     - ktam:
         member_of:
-            - data_team_analyst
+            - analyst_core
             - data_manager
             - dbt_analytics_sensitive
             - greenhouse
@@ -2199,7 +2157,6 @@ roles:
     - mpeychet:
         member_of:
             - analyst_growth
-            - data_team_analyst
         warehouses:
             - analyst_xs
             - analyst_l
@@ -2401,7 +2358,6 @@ roles:
             - customers_db
             - qualtrics
             - qualtrics_sensitive
-            - data_team_analyst
         warehouses:
             - analyst_xs
         owns:
@@ -2484,7 +2440,7 @@ roles:
     
     - rparker:
         member_of: 
-            - data_team_analyst
+            - analyst_core
         warehouses:
             - analyst_xs
         owns:
@@ -2536,7 +2492,6 @@ roles:
     - snalamaru:
         member_of:
             - engineer
-            - data_team_analyst
         warehouses:
             - engineer_xs
             - engineer_xl
