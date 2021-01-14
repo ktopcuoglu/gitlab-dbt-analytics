@@ -28,8 +28,15 @@ WITH product_tier_mapping AS (
     UNION
     
     SELECT
-      'Trial'                                                                AS product_tier,
+      'Trial: SaaS'                                                          AS product_tier,
       'SaaS'                                                                 AS product_delivery_type,
+      0                                                                      AS product_ranking
+  
+    UNION
+    
+    SELECT
+      'Trial: Self-Managed'                                                  AS product_tier,
+      'Self-Managed'                                                         AS product_delivery_type,
       0                                                                      AS product_ranking
 
 ), final AS (

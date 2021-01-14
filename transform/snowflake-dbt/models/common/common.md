@@ -4,6 +4,21 @@ A fact table bridging opportunities with contacts. One opportunity can have mult
 
 {% enddocs %}
 
+{% docs bdg_namespace_order_subscription_active %}
+
+This table expands the functionality of the orders by improving the join to ultimate parent namespaces and subscriptions.
+
+The purpose of this table is two-fold:
+1. Connect Ultimate Parent Namespace ID to Subscription (and hence Zuora billing account and CRM Account)
+2. Connect Customer DB Customer ID to Subscription for self managed purchases. This helps with marketing efforts.
+
+Namespaces listed in this table are all Active Namespaces with prior trials and currently paid plans. Orders listed in this table are all active orders. Subscriptions listed in this table are all active self-managed and SaaS.
+
+The tier(s) connected to the subscription are determined using the underlying Zuora recurring charges. This view uses a `FULL OUTER JOIN` to show all three sides of the Venn diagram. (namespace, orders, subscriptions)
+In doing so exceptions are noted within `namespace_order_subscription_match_status` to identify rows that do not match between systems.
+
+{% enddocs %}
+
 {% docs dim_crm_account %}
 Dimensional customer table representing all existing and historical customers from SalesForce. There are customer definitions for external reporting and additional customer definitions for internal reporting defined in the [handbook](https://about.gitlab.com/handbook/sales/#customer).
 

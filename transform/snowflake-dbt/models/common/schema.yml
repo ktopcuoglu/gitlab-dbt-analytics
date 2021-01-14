@@ -10,6 +10,40 @@ models:
           - unique
           - not_null
 
+models:
+  - name: bdg_namespace_order_subscription_active
+    description: '{{ doc("bdg_namespace_order_subscription_active") }}'
+    columns:
+      - name: dim_namespace_id
+      - name: dim_subscription_id
+      - name: order_id
+      - name: namespace_id_order
+      - name: subscription_id_order
+      - name: namespace_type
+      - name: dim_product_tier_id_namespace
+      - name: product_tier_name_namespace
+      - name: saas_trial_start_date
+      - name: saas_trial_expired_on
+      - name: namespace_was_trial
+      - name: customer_id
+      - name: dim_product_tier_id_with_trial
+      - name: product_delivery_type_with_trial
+      - name: product_tier_name_with_trial
+      - name: dim_product_tier_id_order
+      - name: product_delivery_type_order
+      - name: product_tier_name_order
+      - name: order_start_date
+      - name: order_end_date
+      - name: order_is_trial
+      - name: product_tier_name_subscription
+      - name: dim_product_tier_id_subscription
+      - name: dim_subscription_id_original
+      - name: dim_subscription_id_previous
+      - name: dim_billing_account_id
+      - name: dim_crm_account_id
+      - name: count_of_tiers_per_subscription
+      - name: namespace_order_subscription_match_status
+
   - name: dim_billing_account
     description: '{{ doc("dim_billing_account") }}'
     columns:

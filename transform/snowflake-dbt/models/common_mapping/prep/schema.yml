@@ -114,6 +114,71 @@ models:
           - not_null
           - unique
 
+  - name: prep_namespace
+    description: '{{ doc("dim_namespace") }}'
+    columns:
+      - name: dim_namespace_id
+        tests:
+          - not_null
+          - unique
+      - name: namespace_id
+        tests:
+          - not_null
+          - unique
+      - name: namespace_is_internal
+      - name: namespace_is_ultimate_parent
+      - name: namespace_name
+      - name: namespace_path
+        tests:
+          - not_null
+      - name: owner_id
+      - name: namespace_type
+        description: This field should be Group or Individual. A namespace is the first item to come after the / following the domain. For example https://www.gitlab.com/NicoleSchwartz/ is an Individual namespace. There are some namespace_IDs that are missing from this table, when doing certain joins (left) you may get NULL when this data is missing.
+        tests:
+          - not_null
+      - name: has_avatar
+      - name: namespace_created_at
+      - name: namespace_updated_at
+      - name: is_membership_locked
+      - name: has_request_access_enabled
+      - name: has_share_with_group_locked
+      - name: visibility_level
+      - name: dap_sync_status
+      - name: ldap_sync_error
+      - name: ldap_sync_last_update_at
+      - name: ldap_sync_last_successful_update_at
+      - name: ldap_sync_last_sync_at
+      - name: lfs_enabled
+      - name: parent_id
+      - name: shared_runners_minutes_limit
+      - name: extra_shared_runners_minutes_limit
+      - name: repository_size_limit
+      - name: does_require_two_factor_authentication
+      - name: two_factor_grace_period
+      - name: project_creation_level
+      - name: push_rule_id
+      - name: creator_id
+      - name: ultimate_parent_namespace_id
+      - name: gitlab_plan_id
+        description: The **plan_id** associated with the namespace's subscription. This can be inheritted from the namespaces's ultimate parent.
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['2', '3', '4', '34', '67', 'Trial']
+      - name: gitlab_plan_title
+        description: Whether or not the namespace associated with the project is subscribed to a paid plan. This can be inheritted from the namespaces's ultimate parent.
+        tests:
+          - not_null
+      - name: gitlab_plan_is_paid
+        description: Whether or not the namespace associated with the project is subscribed to a paid plan. This can be inheritted from the namespaces's ultimate parent.
+        tests:
+          - not_null
+      - name: dim_product_tier_id,
+      - name: current_member_count
+        description: The number of members that are presently associated with the namespace.
+      - name: current_project_count
+        description: The number of projects that are presently associated with the namespace.
+
   - name: prep_opportunity_source
     description: '{{ doc("prep_opportunity_source") }}'
     columns:
