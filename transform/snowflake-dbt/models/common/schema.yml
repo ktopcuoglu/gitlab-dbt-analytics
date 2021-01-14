@@ -158,7 +158,7 @@ models:
         tests:
           - unique
           - not_null
-      - name: location_id
+      - name: dim_location_id
 
   - name: dim_geo_sub_region
     description: "Dimension table for sub-region built off ATAM_Sub_Region__C in SFDC. Example values: Southern Europe, NA East, Nordics"
@@ -374,7 +374,7 @@ models:
         tests:
           - not_null
           - unique
-      - name: location_id
+      - name: dim_location_id
         tests:
           - not_null
           - unique
@@ -412,7 +412,7 @@ models:
           - not_null
         tags: [ "tdf", "common" ]
       - name: dim_product_tier_id
-        description: The unique ID of a product tier deterined in dim_product_tier.
+        description: The unique ID of a product tier determined in dim_product_tier.
         tests:
           - not_null
       - name: product_id
@@ -555,18 +555,23 @@ models:
         tests:
           - not_null
           - unique
+      - name: dim_crm_account_id
+        description: account id from SFDC identifing the customer
+      - name: dim_billing_account_id
+        description: The id of the Zuora account the subscription is associated with
+      - name: dim_crm_person_id_invoice_owner
+      - name: dim_crm_opportunity_id
+      - name: dim_subscription_id_original
+      - name: dim_subscription_id_previous
+      - name: amendment_id
+      - name: subscription_name_slugify
+        description: The unique identifier of the subscription
       - name: subscription_status
         description: The status of the subscription
         tests:
           - not_null
           - accepted_values:
               values: ['Active', 'Cancelled', 'Draft', 'Expired']
-      - name: dim_crm_account_id
-        description: account id from SFDC identifing the customer
-      - name: dim_billing_account_id
-        description: The id of the Zuora account the subscription is associated with
-      - name: subscription_name_slugify
-        description: The unique identifier of the subscription
       - name: subscription_version
         description: The version number of the subscription
       - name: is_auto_renew
@@ -751,8 +756,6 @@ models:
         description: this instance is used by the company or a GitLab team member
       - name: is_staging
         descrition: DRAFT - need to better identify instances used for staging environments
-      - name: location_id
-        description: JOIN key for country information derived. See https://gitlab.com/gitlab-data/analytics/-/issues/6560#note_427936012
 
   - name: fct_charges_valid_at
     description: Factual table with all rate plan charges coming from subscriptions or an amendment to a subscription. Required variable valid_at is timezone sensitive
@@ -810,7 +813,7 @@ models:
   - name: fct_crm_opportunity
     description: '{{ doc("fct_crm_opportunity") }}'
     columns:
-      - name: crm_opportunity_id
+      - name: dim_crm_opportunity_id
         description: A dbt generated surrogate key combining the sfdc_record_id and the sales_accepted_date.
         tests:
           - unique
@@ -909,6 +912,80 @@ models:
       - name: quantity
         description: Total quantity
 
+  - name: fct_namespace_member_summary
+    description: '{{ doc("fct_namespace_member_summary") }}'
+    columns:
+      - name: snapshot_month
+        description: Month in which the members counts are being reported snapshotted. Always current month until historical months are available in a future version of this table.
+        tests:
+          - not_null
+      - name: namespace_id
+        tests:
+          - not_null
+          - unique
+      - name: ultimate_parent_id
+        tests:
+          - not_null
+          - unique
+      - name: ultimate_parent_plan_id
+        description: The **plan_id** associated with the namespace's subscription. This can be inherited from the namespaces's ultimate parent.
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['2', '3', '4', '34', '67', 'trial']
+      - name: ultimate_parent_plan_title
+        description: Whether or not the namespace associated with the project is subscribed to a paid plan. This can be inherited from the namespaces's ultimate parent.
+        tests:
+          - not_null
+      - name: total_member_bot_requested_count
+        description: Count of all users with access, or awaiting access to the namespace. Includes active, deactivated, blocked, and bot users.
+        tests:
+          - not_null
+      - name: active_member_count
+        description: Count of _non-bot_ members that are active and not awaiting access approval to the namespace.
+        tests:
+          - not_null
+      - name: billabe_member_count
+        description: Count of active, _non-guest_ members if namespace is _gold_ tier. Count of active members otherwise.
+        tests:
+          - not_null
+      - name: guest_member_count
+        description: Count of members with lowest (guest) level access to the namespace.
+        tests:
+          - not_null
+      - name: deactivated_member_count
+        description: Count of members that have been deactivated by a GitLab administrator.
+        tests:
+          - not_null
+      - name: blocked_member_count
+        description: Count of members that have been blocked by a GitLab administrator.
+        tests:
+          - not_null
+      - name: project_bot_count
+        description: Count of [project bot users](https://docs.gitlab.com/ee/user/project/settings/project_access_tokens.html#project-bot-users) that inherited access to the namespace through project-group links.
+        tests:
+          - not_null
+      - name: gitlab_bot_count
+        description: Count of [GitLab bots](https://docs.gitlab.com/ee/user/project/service_desk.html#support-bot-user) with access to the namespace.
+        tests:
+          - not_null
+      - name: total_member_count
+        description: Total count of active, deactivated, and blocked (non-bot) members with access to the namespace.
+        tests:
+          - not_null
+      - name: total_bot_count
+        description: Total count of GitLab bots and project bot users.
+        tests:
+          - not_null
+      - name: total_member_bot_count
+        description: Total member count + total bot count.
+        tests:
+          - not_null
+      - name: member_awaiting_access_count
+        description: Count of users waiting to be granted membership to the namespace.
+        tests:
+          - not_null
+
   - name: fct_quote_items
     description: '{{ doc("fct_quote_items") }}'
     columns:
@@ -917,7 +994,7 @@ models:
         tests:
           - not_null
           - unique
-
+          
   - name: fct_sales_funnel_target
     description: '{{ doc("fct_sales_funnel_target") }}'
     columns:
@@ -1067,6 +1144,51 @@ models:
       - name: recorded_at
         description: The timestamp when the usage ping was recorded.
 
+  - name: fct_usage_self_managed_seat_link
+    description: '{{ doc("fct_usage_self_managed_seat_link") }}'
+    columns:
+      - name: customers_db_order_id
+        tests:
+          - not_null
+      - name: dim_subscription_id
+        tests:
+          - not_null
+      - name: dim_subscription_id_original
+        tests:
+          - not_null
+      - name: dim_subscription_id_previous
+        tests:
+          - not_null
+      - name: dim_crm_account_id
+        tests:
+          - not_null
+      - name: dim_billing_account_id
+        tests:
+          - not_null
+      - name: dim_product_tier_id
+        tests:
+          - not_null
+      - name: active_user_count
+        description: Count of active users currently on the customer's subcription. A count of 0 indicates that Seat Link has been turned off by the customer.
+        tests:
+          - not_null
+      - name: license_user_count
+        description: Count of licensed users purchased with the customer's subcription.
+        tests:
+          - not_null
+      - name: max_historical_user_count
+        description: Maximum active user count ever reported over the lifetime of the customer's subcription.
+        tests:
+          - not_null
+      - name: snapshot_month
+        description: Month in which Seat Link usage data is reported.
+        tests:
+          - not_null
+      - name: report_date
+        description: Day on which Seat Link usage data is reported. Should always be last day of month for historical months.
+        tests:
+          - not_null
+
   - name: dim_marketing_channel
     description: '{{ doc("prep_sfdc_account") }}'
     columns:
@@ -1127,7 +1249,7 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: ['2', '3', '4', '34', '67', 'trial']
+              values: ['2', '3', '4', '34', '67', 'Trial']
       - name: gitlab_plan_title
         description: Whether or not the namespace associated with the project is subscribed to a paid plan. This can be inheritted from the namespaces's ultimate parent.
         tests:
@@ -1155,3 +1277,43 @@ models:
       - name: quote_status
       - name: is_primary_quote
       - name: quote_start_date
+
+  - name: dim_license
+    description: '{{ doc("dim_license") }}'
+    columns:
+      - name: dim_license_id
+        description: The unique ID of a generated license.
+        tests:
+          - not_null
+          - unique
+      - name: license_md5
+        description: The md5 hash of the license file. Use this field to join to fct_usage_ping_payloads.
+        tests:
+          - not_null
+          - unique
+      - name: dim_subscription_id
+        description: The unique identifier of a version of a subscription.
+      - name: subscription_name
+        description: The unique identifier of a subscription.
+      - name: dim_subscription_id_original
+      - name: dim_subscription_id_previous
+      - name: license_user_count
+        description: The user count of the license.
+      - name: license_plan
+        description: The plan code for the product tier of the license.
+      - name: dim_product_tier_id
+        description: The unique ID of a product tier deterimined in dim_product_tier.
+      - name: is_trial
+        description: Boolean flag noting if the license was generated as part of a trial.
+      - name: is_internal
+        description: Derived boolean flag noting if the email recipient and company associated with the license is part of GitLab.
+      - name: company
+        description: The company the license was generated for.
+      - name: license_start_date
+        description: The start date of the license.
+      - name: license_expire_date
+        description: The expiration date of the license.
+      - name: created_at
+        description: The timestamp of when the license was generated.
+      - name: updated_at
+        description: The timestamp of when the license was updated.

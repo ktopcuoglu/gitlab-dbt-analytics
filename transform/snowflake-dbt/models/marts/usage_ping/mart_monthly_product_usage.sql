@@ -1,4 +1,9 @@
 /* grain: one record per host per metric per month */
+{{ config({
+    "materialized": "incremental",
+    "unique_key": "primary_key"
+    })
+}}
 
 WITH dim_billing_account AS (
 
@@ -75,6 +80,11 @@ WITH dim_billing_account AS (
 
     SELECT *
     FROM {{ ref('monthly_usage_data') }}
+    {% if is_incremental() %}
+
+      WHERE created_month >= (SELECT MAX(reporting_month) FROM {{this}})
+
+    {% endif %}
 
 ), fct_usage_ping_payloads AS (
 
@@ -209,13 +219,14 @@ WITH dim_billing_account AS (
       ON fct_usage_ping_payloads.license_md5 = license_subscriptions.license_md5
         AND fct_monthly_usage_data.created_month = license_subscriptions.reporting_month
     LEFT JOIN dim_location
-      ON dim_hosts.location_id = dim_location.location_id
+      ON dim_hosts.location_id = dim_location.dim_location_id
 
 ), sorted AS (
 
     SELECT
 
       -- Primary Key
+      {{ dbt_utils.surrogate_key(['metrics_path', 'created_month', 'ping_id', 'host_id']) }} AS primary_key,
       created_month AS reporting_month,
       metrics_path,
       ping_id,

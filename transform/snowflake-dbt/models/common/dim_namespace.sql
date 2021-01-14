@@ -82,6 +82,7 @@ WITH map_namespace_internal AS (
       namespaces.ldap_sync_last_sync_at,
       namespaces.lfs_enabled,
       namespaces.parent_id,
+      namespaces.shared_runners_enabled, 
       namespaces.shared_runners_minutes_limit,
       namespaces.extra_shared_runners_minutes_limit,
       namespaces.repository_size_limit,

@@ -35,7 +35,6 @@ WITH paid_subscriptions_monthly_usage_ping_optin AS (
   
     SELECT *
     FROM {{ ref('sheetload_usage_ping_metrics_sections') }}
-    WHERE is_smau OR is_gmau OR clean_metrics_name = 'monthly_active_users_28_days'
 
 ), flattened_usage_data AS (
 
@@ -84,7 +83,7 @@ WITH paid_subscriptions_monthly_usage_ping_optin AS (
     FROM transformed_flattened
     INNER JOIN section_metrics ON transformed_flattened.metrics_path = section_metrics.metrics_path
     LEFT JOIN gitlab_releases ON transformed_flattened.first_version_with_counter = gitlab_releases.major_minor_version
-    WHERE release_date < CURRENT_DATE AND (is_smau OR is_gmau OR is_umau OR is_paid_gmau)
+    WHERE release_date < CURRENT_DATE
 
 ), date_spine AS (
     

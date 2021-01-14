@@ -1232,10 +1232,12 @@ roles:
             schemas:
                 read:
                     - prep.license_db
+                    - raw.license_db
                     - raw.license_db_dump
             tables:
                 read:
                     - prep.license_db.*
+                    - raw.license_db.*
                     - raw.license_db_dump.*
 
     - keyhole_twitter:
@@ -2001,6 +2003,13 @@ roles:
                     - jstark_prep.*.*
                     - jstark_prod.*.*
     
+    - jshen:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+        warehouses:
+            - analyst_xs
+
     - jurbanc:
         warehouses:
             - reporting
@@ -2905,6 +2914,11 @@ users:
             - jsalazar
             - securityadmin
 
+    - jshen:
+        can_login: yes
+        member_of:
+            - jshen
+
     - jstark:
         can_login: yes
         member_of:
@@ -2958,6 +2972,10 @@ users:
         can_login: yes
         member_of:
             - lvandensteen
+
+    - mbergeron:
+        can_login: no
+        member_of: []
 
     - mdewji:
         can_login: yes
