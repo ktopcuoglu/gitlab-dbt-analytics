@@ -4,7 +4,7 @@ WITH first_contact  AS (
 
       opportunity_id,                                                             -- opportunity_id
       contact_id                                                                  AS sfdc_contact_id,
-      md5(cast(coalesce(cast(contact_id as varchar), '') as varchar))             AS crm_person_id,
+      md5(cast(coalesce(cast(contact_id as varchar), '') as varchar))             AS dim_crm_person_id,
       ROW_NUMBER() OVER (PARTITION BY opportunity_id ORDER BY created_date ASC)   AS row_num
 
     FROM {{ ref('sfdc_opportunity_contact_role_source')}}
@@ -57,6 +57,11 @@ WITH first_contact  AS (
       sales_area_name_stamped
     FROM {{ ref('prep_crm_sales_hierarchy_stamped') }}
 
+), sales_rep AS (
+
+    SELECT *
+    FROM {{ ref('prep_crm_sales_representative') }}
+
 ), sales_segment AS (
 
     SELECT *
@@ -71,10 +76,10 @@ WITH first_contact  AS (
 
     SELECT
 
-      opportunity_id                                            AS crm_opportunity_id,
+      opportunity_id                                            AS dim_crm_opportunity_id,
       merged_opportunity_id                                     AS merged_crm_opportunity_id,
-      account_id                                                AS crm_account_id,
-      owner_id                                                  AS crm_sales_rep_id,
+      account_id                                                AS dim_crm_account_id,
+      owner_id                                                  AS dim_crm_sales_rep_id,
       incremental_acv                                           AS iacv,
       net_arr,
       total_contract_value,
@@ -162,10 +167,10 @@ WITH first_contact  AS (
     SELECT
 
       -- opportunity and person ids
-      opportunity_fields.crm_opportunity_id,
+      opportunity_fields.dim_crm_opportunity_id,
       opportunity_fields.merged_crm_opportunity_id,
-      opportunity_fields.crm_account_id,
-      first_contact.crm_person_id,
+      opportunity_fields.dim_crm_account_id,
+      first_contact.dim_crm_person_id,
       first_contact.sfdc_contact_id,
 
       -- dates
@@ -210,7 +215,7 @@ WITH first_contact  AS (
       END                                                                                                           AS closed_buckets,
 
       -- common dimension keys
-      COALESCE(opportunity_fields.crm_sales_rep_id, MD5(-1))                                                        AS dim_crm_sales_rep_id,
+      COALESCE(opportunity_fields.dim_crm_sales_rep_id, MD5(-1))                                                    AS dim_crm_sales_rep_id,
       COALESCE(order_type.dim_order_type_id, MD5(-1))                                                               AS dim_order_type_id,
       COALESCE(opportunity_source.dim_opportunity_source_id, MD5(-1))                                               AS dim_opportunity_source_id,
       COALESCE(purchase_channel.dim_purchase_channel_id, MD5(-1))                                                   AS dim_purchase_channel_id,
@@ -224,6 +229,10 @@ WITH first_contact  AS (
       COALESCE(sales_hierarchy_stamped_location_region.dim_crm_sales_hierarchy_location_region_stamped_id, MD5(-1)) AS dim_crm_sales_hierarchy_location_region_stamped_id,
       COALESCE(sales_hierarchy_stamped_sales_region.dim_crm_sales_hierarchy_sales_region_stamped_id, MD5(-1))       AS dim_crm_sales_hierarchy_sales_region_stamped_id,
       COALESCE(sales_hierarchy_stamped_sales_area.dim_crm_sales_hierarchy_sales_area_stamped_id, MD5(-1))           AS dim_crm_sales_hierarchy_sales_area_stamped_id,
+      COALESCE(sales_rep.dim_crm_sales_hierarchy_sales_segment_live_id, MD5(-1))                                    AS dim_crm_sales_hierarchy_sales_segment_live_id,
+      COALESCE(sales_rep.dim_crm_sales_hierarchy_location_region_live_id, MD5(-1))                                  AS dim_crm_sales_hierarchy_location_region_live_id,
+      COALESCE(sales_rep.dim_crm_sales_hierarchy_sales_region_live_id, MD5(-1))                                     AS dim_crm_sales_hierarchy_sales_region_live_id,
+      COALESCE(sales_rep.dim_crm_sales_hierarchy_sales_area_live_id, MD5(-1))                                       AS dim_crm_sales_hierarchy_sales_area_live_id,
 
             -- flags
       opportunity_fields.is_closed,
@@ -243,9 +252,9 @@ WITH first_contact  AS (
 
     FROM opportunity_fields
     LEFT JOIN crm_account_dimensions
-      ON opportunity_fields.crm_account_id = crm_account_dimensions.crm_account_id
+      ON opportunity_fields.dim_crm_account_id = crm_account_dimensions.crm_account_id
     LEFT JOIN first_contact
-      ON opportunity_fields.crm_opportunity_id = first_contact.opportunity_id AND first_contact.row_num = 1
+      ON opportunity_fields.dim_crm_opportunity_id = first_contact.opportunity_id AND first_contact.row_num = 1
     LEFT JOIN opportunity_source
       ON opportunity_fields.sales_qualified_source = opportunity_source.opportunity_source_name
     LEFT JOIN order_type
@@ -255,9 +264,9 @@ WITH first_contact  AS (
     LEFT JOIN sales_segment
       ON opportunity_fields.sales_segment = sales_segment.sales_segment_name
     LEFT JOIN is_sao
-      ON opportunity_fields.crm_opportunity_id = is_sao.opportunity_id
+      ON opportunity_fields.dim_crm_opportunity_id = is_sao.opportunity_id
     LEFT JOIN is_sdr_sao
-      ON opportunity_fields.crm_opportunity_id = is_sdr_sao.opportunity_id
+      ON opportunity_fields.dim_crm_opportunity_id = is_sdr_sao.opportunity_id
     LEFT JOIN sales_hierarchy_stamped_sales_segment
       ON opportunity_fields.sales_segment_name_stamped = sales_hierarchy_stamped_sales_segment.sales_segment_name_stamped
     LEFT JOIN sales_hierarchy_stamped_location_region
@@ -266,6 +275,8 @@ WITH first_contact  AS (
       ON opportunity_fields.sales_region_name_stamped = sales_hierarchy_stamped_sales_region.sales_region_name_stamped
     LEFT JOIN sales_hierarchy_stamped_sales_area
       ON opportunity_fields.sales_area_name_stamped = sales_hierarchy_stamped_sales_area.sales_area_name_stamped
+    LEFT JOIN sales_rep
+      ON opportunity_fields.dim_crm_sales_rep_id = sales_rep.dim_crm_sales_rep_id
 
 )
 

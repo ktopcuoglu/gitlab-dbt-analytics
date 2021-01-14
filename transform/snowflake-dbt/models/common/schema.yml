@@ -158,7 +158,7 @@ models:
         tests:
           - unique
           - not_null
-      - name: location_id
+      - name: dim_location_id
 
   - name: dim_geo_sub_region
     description: "Dimension table for sub-region built off ATAM_Sub_Region__C in SFDC. Example values: Southern Europe, NA East, Nordics"
@@ -374,7 +374,7 @@ models:
         tests:
           - not_null
           - unique
-      - name: location_id
+      - name: dim_location_id
         tests:
           - not_null
           - unique
@@ -756,8 +756,6 @@ models:
         description: this instance is used by the company or a GitLab team member
       - name: is_staging
         descrition: DRAFT - need to better identify instances used for staging environments
-      - name: location_id
-        description: JOIN key for country information derived. See https://gitlab.com/gitlab-data/analytics/-/issues/6560#note_427936012
 
   - name: fct_charges_valid_at
     description: Factual table with all rate plan charges coming from subscriptions or an amendment to a subscription. Required variable valid_at is timezone sensitive
@@ -815,7 +813,7 @@ models:
   - name: fct_crm_opportunity
     description: '{{ doc("fct_crm_opportunity") }}'
     columns:
-      - name: crm_opportunity_id
+      - name: dim_crm_opportunity_id
         description: A dbt generated surrogate key combining the sfdc_record_id and the sales_accepted_date.
         tests:
           - unique
@@ -1144,6 +1142,51 @@ models:
           - not_null
       - name: recorded_at
         description: The timestamp when the usage ping was recorded.
+
+  - name: fct_usage_self_managed_seat_link
+    description: '{{ doc("fct_usage_self_managed_seat_link") }}'
+    columns:
+      - name: customers_db_order_id
+        tests:
+          - not_null
+      - name: dim_subscription_id
+        tests:
+          - not_null
+      - name: dim_subscription_id_original
+        tests:
+          - not_null
+      - name: dim_subscription_id_previous
+        tests:
+          - not_null
+      - name: dim_crm_account_id
+        tests:
+          - not_null
+      - name: dim_billing_account_id
+        tests:
+          - not_null
+      - name: dim_product_tier_id
+        tests:
+          - not_null
+      - name: active_user_count
+        description: Count of active users currently on the customer's subcription. A count of 0 indicates that Seat Link has been turned off by the customer.
+        tests:
+          - not_null
+      - name: license_user_count
+        description: Count of licensed users purchased with the customer's subcription.
+        tests:
+          - not_null
+      - name: max_historical_user_count
+        description: Maximum active user count ever reported over the lifetime of the customer's subcription.
+        tests:
+          - not_null
+      - name: snapshot_month
+        description: Month in which Seat Link usage data is reported.
+        tests:
+          - not_null
+      - name: report_date
+        description: Day on which Seat Link usage data is reported. Should always be last day of month for historical months.
+        tests:
+          - not_null
 
   - name: dim_marketing_channel
     description: '{{ doc("prep_sfdc_account") }}'
