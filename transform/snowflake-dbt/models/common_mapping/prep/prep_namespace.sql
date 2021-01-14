@@ -119,6 +119,6 @@ WITH map_namespace_internal AS (
     cte_ref="joined",
     created_by="@ischweickartDD",
     updated_by="@ischweickartDD",
-    created_date="2021-01-13",
-    updated_date="2021-01-13"
+    created_date="2021-01-14",
+    updated_date="2021-01-14"
 ) }}

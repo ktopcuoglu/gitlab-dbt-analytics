@@ -52,5 +52,5 @@ WITH prep_namespace AS (
     created_by="@snalamaru",
     updated_by="@ischweickartDD",
     created_date="2020-12-29",
-    updated_date="2021-01-13"
+    updated_date="2021-01-14"
 ) }}

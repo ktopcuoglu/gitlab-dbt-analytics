@@ -103,7 +103,7 @@ WITH namespace AS (
       product_tier_name,
       product_delivery_type
     FROM product_tier
-    WHERE product_tier_name IN ('Trial: SaaS', 'Trial: Self-Managed')
+    WHERE product_tier_name IN ('Trial - Gold', 'Trial - Ultimate')
 
 ), active_orders_list AS (
 
@@ -135,10 +135,10 @@ WITH namespace AS (
       ON orders.order_is_trial = TRUE 
         AND (
               (product_rate_plan.product_delivery_type = 'SaaS'
-               AND trial_tier.product_tier_name = 'Trial: SaaS')
+               AND trial_tier.product_tier_name = 'Trial - Gold')
              OR
               (product_rate_plan.product_delivery_type = 'Self-Managed'
-               AND trial_tier.product_tier_name = 'Trial: Self-Managed')
+               AND trial_tier.product_tier_name = 'Trial - Ultimate')
              )
     WHERE orders.order_end_date >= CURRENT_DATE
       OR orders.order_end_date IS NULL
@@ -227,6 +227,6 @@ WITH namespace AS (
     cte_ref="final",
     created_by="@ischweickartDD",
     updated_by="@ischweickartDD",
-    created_date="2021-01-13",
-    updated_date="2021-01-13"
+    created_date="2021-01-14",
+    updated_date="2021-01-14"
 ) }}
