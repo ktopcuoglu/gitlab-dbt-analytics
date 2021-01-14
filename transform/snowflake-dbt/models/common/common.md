@@ -386,6 +386,8 @@ The grain of the table is a quote_id.
 
 Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
 
+{% enddocs %}
+
 {% docs dim_license %}
 
 Dimensional table representing generated licenses and associated metadata.
