@@ -1,3 +1,7 @@
+{{ config(
+    tags=["product"]
+) }}
+
 WITH map_namespace_internal AS (
 
     SELECT *
