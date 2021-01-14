@@ -1239,8 +1239,6 @@ models:
       - name: namespace_is_ultimate_parent
       - name: namespace_name
       - name: namespace_path
-        tests:
-          - not_null
       - name: owner_id
       - name: namespace_type
         description: This field should be Group or Individual. A namespace is the first item to come after the / following the domain. For example https://www.gitlab.com/NicoleSchwartz/ is an Individual namespace. There are some namespace_IDs that are missing from this table, when doing certain joins (left) you may get NULL when this data is missing.
