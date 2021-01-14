@@ -56,7 +56,8 @@ WITH source AS (
       version_is_prerelease,
       major_version,
       minor_version,
-      major_minor_version
+      major_minor_version,
+      COALESCE(raw_usage_data.raw_usage_data_payload, raw_usage_data_payload_reconstructed) AS raw_usage_data_payload
     FROM usage_data
     LEFT JOIN raw_usage_data
       ON usage_data.raw_usage_data_id = raw_usage_data.raw_usage_data_id
