@@ -1,9 +1,3 @@
-{{ config({
-    "materialized": "incremental",
-    "unique_key": "id"
-    })
-}}
-
 
 {% set version_usage_stats_list = dbt_utils.get_column_values(table=ref('version_usage_stats_list'), column='full_ping_name', max_records=1000, default=['']) %}
 
@@ -11,11 +5,6 @@ WITH usage_data AS (
 
     SELECT {{ dbt_utils.star(from=ref('version_usage_data'), except=["LICENSE_STARTS_AT", "LICENSE_EXPIRES_AT"]) }}
     FROM {{ ref('version_usage_data') }}
-    {% if is_incremental() %}
-
-      WHERE created_at >= (SELECT MAX(created_at) FROM {{this}})
-
-    {% endif %}
 
 ), licenses AS ( -- Licenses app doesn't alter rows after creation so the snapshot is not necessary.
 
