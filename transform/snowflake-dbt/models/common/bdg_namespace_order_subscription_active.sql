@@ -177,10 +177,10 @@ WITH namespace AS (
       CASE
         WHEN active_namespace_list.product_tier_name_namespace = 'Free'
           THEN 'N/A Free'
-        WHEN active_namespace_list.product_tier_name_namespace = 'Trial'
+        WHEN LOWER(active_namespace_list.product_tier_name_namespace) LIKE '%trial%'
           AND active_orders_list.order_id IS NULL
           THEN 'Trial Namespace Missing Active Order' 
-        WHEN active_namespace_list.product_tier_name_namespace NOT IN ('Trial', 'Free')
+        WHEN active_namespace_list.product_tier_name_namespace IN ('Bronze', 'Silver', 'Gold')
           AND active_orders_list.order_id IS NULL
           THEN 'Paid Namespace Missing Active Order' 
         WHEN active_namespace_list.product_tier_name_namespace IN ('Bronze', 'Silver', 'Gold')
@@ -204,7 +204,7 @@ WITH namespace AS (
           AND active_orders_list.dim_subscription_id IS NOT NULL
           AND active_subscription_list.dim_subscription_id IS NOT NULL
           THEN 'Paid All Matching'
-        WHEN active_namespace_list.product_tier_name_namespace = 'Trial'
+        WHEN LOWER(active_namespace_list.product_tier_name_namespace) LIKE '%trial%'
           AND active_orders_list.order_id IS NOT NULL
           THEN 'Trial All Matching'
         WHEN active_orders_list.order_id IS NOT NULL
