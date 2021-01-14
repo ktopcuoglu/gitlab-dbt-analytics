@@ -41,20 +41,7 @@ WITH invoice AS (
       --dates
       quote.created_date,
       quote.quote_end_date,
-      quote.zqu__valid_until              AS quote_valid_until,
-
-      --additive fields
-      quote.charge_summary_sub_total,
-      quote.delta_arr,
-      quote.opportunity_amount,
-      quote.renewal_mrr,
-      quote.professional_services_amount,
-      quote.license_amount,
-      quote.true_up_amount,
-      quote.tcv_including_discount,
-      quote.total_partner_discount,
-      quote.quote_amendment_count,
-      quote.zqu__delta_tcv                AS delta_tcv
+      quote.zqu__valid_until              AS quote_valid_until
 
     FROM quote
     LEFT JOIN opportunity_dimensions
