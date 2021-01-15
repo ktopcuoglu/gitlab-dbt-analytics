@@ -48,7 +48,9 @@ Please prioritize this issue since we dedicate a day from your milestone to this
 
 * [ ] Notify Data Customers of [data refresh SLO](https://about.gitlab.com/handbook/business-ops/data-team/platform/#extract-and-load) breach by posting a message to the _#data_ Slack channel using the appropriate Data Notification Template
 * [ ] [Create an issue](https://gitlab.com/gitlab-data/analytics/issues/new?issuable_template=DE%20Triage%20Errors) for each new failure in **#data-prom-alerts**
+    * [ ] Link to all resulting issues and MRs in slack 
 * [ ] [Create an issue](https://gitlab.com/gitlab-data/analytics/issues/new?issuable_template=DE%20Triage%20Errors) for each new failure in **#dbt-runs** 
+    * [ ] Link to all resulting issues and MRs in slack 
 * [ ] [Create an issue](https://gitlab.com/gitlab-data/analytics/issues/new?issuable_template=DE%20Triage%20Errors) for each new failure in **#analytics-pipelines**
     * [ ] Link to all resulting issues and MRs in slack 
 * [ ] Check the DBT Source Freshness Dashboard for lagging or missing data. 
