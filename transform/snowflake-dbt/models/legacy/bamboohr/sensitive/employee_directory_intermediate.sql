@@ -250,7 +250,7 @@ WITH RECURSIVE employee_directory AS (
       AND date_details.date_actual BETWEEN fct_work_email.valid_from_date AND fct_work_email.valid_to_date  
     LEFT JOIN temporary_sheetload
       ON employee_directory.employee_number = temporary_sheetload.employee_number
-      AND DATE_TRUNC(month, date_details.date_actual) IN ('2020-12-01','2021-12-01')  
+      AND DATE_TRUNC(month, date_details.date_actual) IN ('2020-12-01','2021-01-01')  
     WHERE employee_directory.employee_id IS NOT NULL
 
 ), base_layers as (
