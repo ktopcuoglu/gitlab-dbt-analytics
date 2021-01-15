@@ -83,7 +83,6 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity.owner_id,
 
       -- logistical information
-      sfdc_opportunity.business_type,
       sfdc_opportunity.close_date,
       sfdc_opportunity.created_date,
       sfdc_opportunity.days_in_stage,
@@ -146,7 +145,6 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity.is_edu_oss,
       sfdc_opportunity_stage.is_won                                                               AS is_won,
       sfdc_opportunity.net_incremental_acv,
-      sfdc_opportunity.nrv,
       sfdc_opportunity.probability,
       sfdc_opportunity.professional_services_value,
       sfdc_opportunity.pushed_count,
