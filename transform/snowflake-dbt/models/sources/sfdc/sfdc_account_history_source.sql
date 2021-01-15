@@ -13,7 +13,6 @@ WITH base AS (
       newvalue__fl                  AS new_value_float,
       newvalue__st                  AS new_value_string,
       newvalue__bo                  AS new_value_boolean,
-      newvalue__de                  AS new_value_decimal,
       oldvalue__fl                  AS old_value_float,
       oldvalue__st                  AS old_value_string,
       oldvalue__bo                  AS old_value_boolean,

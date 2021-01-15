@@ -14,7 +14,6 @@ WITH base AS (
       newvalue__de          AS new_value_decimal,
       oldvalue__fl          AS old_value_float,
       oldvalue__de          AS old_value_decimal,
-      newvalue              as new_value,
       oldvalue              AS old_value,
       isdeleted             AS is_deleted,
       createdbyid           AS created_by_id
