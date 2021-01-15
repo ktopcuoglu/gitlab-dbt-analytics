@@ -760,6 +760,45 @@ models:
   - name: fct_charges_valid_at
     description: Factual table with all rate plan charges coming from subscriptions or an amendment to a subscription. Required variable valid_at is timezone sensitive
 
+  - name: fct_invoice_item
+    description: '{{ doc("fct_invoice_item") }}'
+    columns:
+      - name: charge_id
+        description: The unique identifier of a verion of a rate plan charge associated with the invoice item
+        tests:
+          - not_null
+        tags: ["tdf", "common", "invoice"]
+      - name: invoice_item_id
+        description: unique invoice item id that identifies a line item on the invoice
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "common", "invoice"]
+      - name: dim_invoice_id
+        description: The ID of the invoice that's associated with the invoice item
+        tests:
+          - not_null
+        tags: ["tdf", "common", "invoice"]
+      - name: invoice_number
+        description: The unique identification number of the invoice
+        tests:
+          - not_null
+        tags: ["tdf", "common", "invoice"]
+      - name: dim_crm_account_id_invoice
+        description: The ID of the customer account associated with the invoice
+      - name: invoice_date
+        description: The date the invoice was generated
+      - name: service_start_date
+        description: The start date of the service period associated with this invoice item. If the associated charge is a one-time fee, then this date is the date of that charge.
+      - name: service_end_date
+        description: The end date of the service period associated with this invoice item. Service ends one second before the date in this value.
+      - name: invoice_amount_without_tax
+        description: The invoice amount excluding tax
+      - name: invoice_item_charge_amount
+        description: The amount being charged for the invoice item. This amount doesn't include taxes regardless if the charge's tax mode is inclusive or exclusive.
+      - name: invoice_item_unit_price
+        description: The per-unit price of the invoice item. Calculated from multiple fields in Product Rate Plan Charge and Product Rate Plan Charge Tier objects.
+
   - name: fct_invoice_items
     description: '{{ doc("fct_invoice_items") }}'
     columns:
