@@ -31,7 +31,6 @@ WITH source AS (
         -- logistical information
         isclosed                                    AS is_closed,
         iswon                                       AS is_won,
-        business_type__c                            AS business_type,
         closedate                                   AS close_date,
         createddate                                 AS created_date,
         days_in_stage                               AS days_in_stage,
@@ -77,7 +76,6 @@ WITH source AS (
         swing_deal__c                               AS is_swing_deal,
         is_edu_oss_opportunity__c                   AS is_edu_oss,
         net_iacv__c                                 AS net_incremental_acv,
-        nrv__c                                      AS nrv,
         campaignid                                  AS primary_campaign_source_id,
         probability                                 AS probability,
         professional_services_value__c              AS professional_services_value,
@@ -119,7 +117,7 @@ WITH source AS (
         sales_segmentation_o__c                     AS segment,
         COALESCE({{ sales_segment_cleaning('sales_segmentation_employees_o__c') }}, {{ sales_segment_cleaning('sales_segmentation_o__c') }}, 'Unknown' )
                                                     AS sales_segment,
-        COALESCE({{ sales_segment_cleaning('ultimate_parent_sales_segment_emp_o__c') }}, {{ sales_segment_cleaning('ultimate_parent_sales_segment_o__c') }} )
+        {{ sales_segment_cleaning('ultimate_parent_sales_segment_emp_o__c') }}
                                                     AS parent_segment,
       -- ************************************
 
