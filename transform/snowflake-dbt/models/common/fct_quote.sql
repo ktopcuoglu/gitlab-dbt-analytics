@@ -1,18 +1,18 @@
 WITH invoice AS (
 
     SELECT *
-    FROM prep.zuora.zuora_invoice_source
+    FROM {{ ref('zuora_invoice_source') }}
     WHERE is_deleted = 'FALSE'
 
 ), opportunity_dimensions AS (
 
     SELECT *
-    FROM prod.common_mapping.map_crm_opportunity
+    FROM {{ ref('map_crm_opportunity') }}
 
 ), quote AS (
 
     SELECT *
-    FROM prep.sfdc.sfdc_zqu_quote_source
+    FROM {{ ref('sfdc_zqu_quote_source') }}
     WHERE is_deleted = 'FALSE'
 
 ), final_quotes AS (
@@ -27,8 +27,6 @@ WITH invoice AS (
       --shared dimension keys
       quote.zqu__opportunity              AS dim_crm_opportunity_id,
       quote.zqu__zuora_subscription_id    AS dim_subscription_id,
-      --dim_location_country_id,
-      --dim_location_region_id,
       quote.owner_id                      AS dim_crm_sales_rep_id,
       dim_order_type_id,
       dim_opportunity_source_id,
