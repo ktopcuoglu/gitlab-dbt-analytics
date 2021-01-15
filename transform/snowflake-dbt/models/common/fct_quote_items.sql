@@ -19,7 +19,6 @@ WITH invoice AS (
     SELECT *
     FROM {{ ref('sfdc_zqu_quote_source') }}
     WHERE is_deleted = 'FALSE'
-      AND zqu__primary = 'TRUE'
 
 ), quote_amendment AS (
 
