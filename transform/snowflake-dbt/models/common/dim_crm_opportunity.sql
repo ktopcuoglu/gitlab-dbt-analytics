@@ -18,7 +18,6 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity.owner_id                         AS dim_crm_sales_rep_id,
 
       -- logistical information
-      sfdc_opportunity.business_type,
       sfdc_opportunity.generated_source,
       sfdc_opportunity.lead_source,
       sfdc_opportunity.merged_opportunity_id,
@@ -53,7 +52,6 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity.is_swing_deal,
       sfdc_opportunity.is_edu_oss,
       sfdc_opportunity_stage.is_won                     AS is_won,
-      sfdc_opportunity.nrv,
       sfdc_opportunity.probability,
       sfdc_opportunity.reason_for_loss,
       sfdc_opportunity.reason_for_loss_details,
@@ -85,7 +83,7 @@ WITH sfdc_opportunity AS (
 {{ dbt_audit(
     cte_ref="layered",
     created_by="@iweeks",
-    updated_by="@iweeks",
+    updated_by="@m_walker",
     created_date="2020-11-20",
-    updated_date="2020-11-20"
+    updated_date="2020-01-15"
 ) }}
