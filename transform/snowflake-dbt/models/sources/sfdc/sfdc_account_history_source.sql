@@ -16,18 +16,15 @@ WITH base AS (
       oldvalue__fl                  AS old_value_float,
       oldvalue__st                  AS old_value_string,
       oldvalue__bo                  AS old_value_boolean,
-      oldvalue__de                  AS old_value_decimal,
       COALESCE(
         newvalue__fl::VARCHAR,
         newvalue__st::VARCHAR,
-        newvalue__bo::VARCHAR,
-        newvalue__de::VARCHAR
+        newvalue__bo::VARCHAR
       )                             AS new_value,
       COALESCE(
         oldvalue__fl::VARCHAR,
         oldvalue__st::VARCHAR,
-        oldvalue__bo::VARCHAR,
-        oldvalue__de::VARCHAR
+        oldvalue__bo::VARCHAR
       )                             AS old_value,
       isdeleted                     AS is_deleted,
       createdbyid                   AS created_by_id
