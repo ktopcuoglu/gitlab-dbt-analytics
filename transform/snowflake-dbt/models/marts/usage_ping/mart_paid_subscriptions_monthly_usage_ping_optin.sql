@@ -3,10 +3,10 @@ WITH fct_mrr AS (
     SELECT *
     FROM {{ ref('fct_mrr') }}
 
-), dim_product_details AS (
+), dim_product_detail AS (
 
     SELECT *
-    FROM {{ ref('dim_product_details') }}
+    FROM {{ ref('dim_product_detail') }}
 
 ), self_managed_active_subscriptions AS (
 
@@ -16,9 +16,9 @@ WITH fct_mrr AS (
       SUM(mrr)      AS mrr,
       SUM(quantity) AS quantity
     FROM fct_mrr
-    INNER JOIN dim_product_details
-      ON fct_mrr.product_details_id = dim_product_details.product_details_id
-        AND delivery='Self-Managed'
+    INNER JOIN dim_product_detail
+      ON fct_mrr.product_details_id = dim_product_detail.dim_product_detail_id
+        AND product_delivery_type = 'Self-Managed'
     {{ dbt_utils.group_by(n=2) }}
 
 ), dim_date AS (

@@ -440,37 +440,6 @@ models:
       - name: effective_end_date
         description: The date when the product expires and can't be subscribed to anymore
 
-  - name: dim_product_details
-    description: '{{ doc("dim_product_details") }}'
-    columns:
-      - name: product_id
-        description: The ID of the product that contains the product rate plan.
-        tests:
-          - not_null
-      - name: product_name
-        description: The name of the product
-      - name: is_reporter_license
-        description: "Reporter licenses are in the Products with 'Additional Permission Types' in the name."
-      - name: billing_list_price
-        description: The price of the tier if the charge is a flat fee, or the price of each unit in the tier if the charge model is tiered pricing.
-      - name: product_details_id
-        description: The unique ID of a product rate plan charge
-        tests:
-          - unique
-          - not_null
-      - name: product_rate_plan_name
-        description: The name of the product rate plan. The name doesn't have to be unique in a Product Catalog, but the name has to be unique within a product.
-      - name: product_rate_plan_charge_name
-        description: The name of the product rate plan charge
-      - name: product_sku
-        description: The unique SKU for the product
-      - name: product_category
-        description: Category of the product. Used by Zuora Quotes Guided Product Selector.
-      - name: effective_start_date
-        description: The date when the product becomes available and can be subscribed to
-      - name: effective_end_date
-        description: The date when the product expires and can't be subscribed to anymore
-
   - name: dim_product_tier
     description: '{{ doc("dim_product_tier") }}'
     columns:
@@ -619,61 +588,6 @@ models:
           - unique
         tags: ["tdf", "common"]
 
-  - name: fct_charges
-    description: '{{ doc("fct_charges") }}'
-    columns:
-      - name: subscription_id
-        description: Unique identifier of a version of a subscription
-        tests:
-          - not_null
-      - name: charge_id
-        description: The unique identifier of a verion of a rate plan charge
-        tests:
-          - not_null
-          - unique
-      - name: product_details_id
-        description: The unique ID of a product rate plan charge
-      - name: rate_plan_charge_number
-        description: A unique number that identifies the charge
-      - name: rate_plan_charge_name
-        description: The name of the rate plan charge
-      - name: effective_start_month
-        description: Month when the segmented charge starts or started
-      - name: effective_end_month
-        description: Month when the segmented charge ends or ended
-      - name: effective_start_date_id
-        description: Id of the date when the segmented charge starts or started. Use this field to join to dim_date on id.
-      - name: effective_end_date_id
-        description: Id of the date when the segmented charge ends or ended. Use this field to join to dim_date on id.
-      - name: effective_start_month_id
-        description: Id of the month when the segmented charge starts or started. Use this field to join to dim_date on id.
-      - name: effective_end_month_id
-        description: Id of the month when the segmented charge ends or ended. Use this field to join to dim_date on id.
-      - name: unit_of_measure
-        description: Specifies the units to measure usage
-      - name: quantity
-        description: The default quantity of units
-      - name: mrr
-        description: Monthly recurring revenue (MRR) is the amount of recurring charges in a given month. The MRR calculation doesn't include one-time charges nor usage charges.
-      - name: delta_tcv
-        description: After an Amendment, the change in the total contract value (TCV) amount for this charge, compared with its previous value.
-      - name: rate_plan_name
-        description: The name of the rate plan
-      - name: product_category
-        description: Indicates product category such as Bronze, Silver, Gold, Starter, Premium, or Ultimate
-      - name: delivery
-        description: Indicates whether the product is SaaS, Self-Managed, or other
-      - name: service_type
-        description: Indicates whether the subscription is support service only or full service
-      - name: discount_level
-        description: Specifies if the discount applies to just the product rate plan, the entire subscription, or to any activity in the account.
-      - name: rate_plan_charge_segment
-        description: The identifying number of the subscription rate plan segment. Segments are numbered sequentially, starting with 1.
-      - name: rate_plan_charge_version
-        description: The version of the rate plan charge. Each time a charge is amended, Zuora creates a new version of the rate plan charge.
-      - name: charge_type
-        description: Specifies the type of charge
-
   - name: fct_charge
     description: '{{ doc("fct_charge") }}'
     columns:
@@ -756,9 +670,6 @@ models:
         description: this instance is used by the company or a GitLab team member
       - name: is_staging
         descrition: DRAFT - need to better identify instances used for staging environments
-
-  - name: fct_charges_valid_at
-    description: Factual table with all rate plan charges coming from subscriptions or an amendment to a subscription. Required variable valid_at is timezone sensitive
 
   - name: fct_invoice_items
     description: '{{ doc("fct_invoice_items") }}'
@@ -859,7 +770,7 @@ models:
         tests:
           - not_null
       - name: product_details_id
-        description: The identifier of product details in dim_product_details
+        description: The identifier of product details in dim_product_detail
         tests:
           - not_null
       - name: billing_account_id
@@ -897,7 +808,7 @@ models:
           - not_null
         tags: ["tdf", "arr"]
       - name: product_details_id
-        description: The identifier of product details in dim_product_details
+        description: The identifier of product details in dim_product_detail
         tests:
           - not_null
         tags: ["tdf", "arr"]
@@ -1111,7 +1022,7 @@ models:
       - name: billing_account_id
         description: The zuora account id associated with the subscription. Use this field to join to dim_billing_accounts.
       - name: array_product_details_id
-        description: The array of distinct product detail ids associated with the subscription. Use this field to join to dim_product_details.
+        description: The array of distinct product detail ids associated with the subscription. Use this field to join to dim_product_detail.
       - name: hostname
         description: The name of the host of the instance.
       - name: edition
