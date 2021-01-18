@@ -125,6 +125,24 @@ models:
           - not_null
           - unique
 
+  - name: gitlab_dotcom_user_custom_attributes
+    columns:
+      - name: user_id
+        tests:
+          - not_null
+      - name: created_at
+        tests:
+          - not_null
+      - name: updated_at
+        tests:
+          - not_null
+      - name: user_custom_key
+        tests:
+          - not_null
+      - name: user_custom_value
+        tests:
+          - not_null
+          
   - name: gitlab_dotcom_daily_usage_data_events_90
     description: '{{ doc("gitlab_dotcom_daily_usage_data_events_90") }}'
     columns:
