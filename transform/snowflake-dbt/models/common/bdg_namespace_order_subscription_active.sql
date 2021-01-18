@@ -199,7 +199,7 @@ WITH namespace AS (
           AND active_orders_list.order_id IS NULL
           THEN 'Paid Subscription Missing Order'
         WHEN active_orders_list.ultimate_parent_namespace_id != active_orders_list.namespace_id
-          THEN 'Order Linked to Non-ultimate Parent Namespace'
+          THEN 'Order Linked to Non-Ultimate Parent Namespace'
         WHEN active_namespace_list.namespace_id IS NOT NULL
           AND active_orders_list.dim_subscription_id IS NOT NULL
           AND active_subscription_list.dim_subscription_id IS NOT NULL
