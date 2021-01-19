@@ -214,6 +214,7 @@ def dbt_tasks(dbt_name, dbt_task_identifier):
         **gitlab_defaults,
         image=DBT_IMAGE,
         task_id=f"{dbt_task_identifier}-source-freshness",
+        trigger_rule="all_done",
         name=f"{dbt_task_identifier}-source-freshness",
         secrets=standard_secrets + dbt_secrets,
         env_vars=gitlab_pod_env_vars,
@@ -228,6 +229,7 @@ def dbt_tasks(dbt_name, dbt_task_identifier):
     # Only run everything past freshness once per day
     short_circuit = ShortCircuitOperator(
         task_id="short_circuit",
+        trigger_rule="all_done",
         python_callable=lambda: run_or_skip_dbt(
             current_seconds, dag_interval, dbt_name
         ),
@@ -243,6 +245,7 @@ def dbt_tasks(dbt_name, dbt_task_identifier):
         **gitlab_defaults,
         image=DBT_IMAGE,
         task_id=f"{dbt_task_identifier}-source-test",
+        trigger_rule="all_done",
         name=f"{dbt_task_identifier}-source-test",
         secrets=standard_secrets + dbt_secrets,
         env_vars=gitlab_pod_env_vars,
@@ -260,6 +263,7 @@ def dbt_tasks(dbt_name, dbt_task_identifier):
         **gitlab_defaults,
         image=DBT_IMAGE,
         task_id=f"{dbt_task_identifier}-source-snapshot",
+        trigger_rule="all_done",
         name=f"{dbt_task_identifier}-source-snapshot",
         secrets=standard_secrets + dbt_secrets,
         env_vars=gitlab_pod_env_vars,
@@ -276,6 +280,7 @@ def dbt_tasks(dbt_name, dbt_task_identifier):
         **gitlab_defaults,
         image=DBT_IMAGE,
         task_id=f"{dbt_task_identifier}-source-model-run",
+        trigger_rule="all_done",
         name=f"{dbt_task_identifier}-source-model-run",
         secrets=standard_secrets + dbt_secrets,
         env_vars=gitlab_pod_env_vars,
@@ -292,6 +297,7 @@ def dbt_tasks(dbt_name, dbt_task_identifier):
         **gitlab_defaults,
         image=DBT_IMAGE,
         task_id=f"{dbt_task_identifier}-model-test",
+        trigger_rule="all_done",
         name=f"{dbt_task_identifier}-model-test",
         secrets=standard_secrets + dbt_secrets,
         env_vars=gitlab_pod_env_vars,
