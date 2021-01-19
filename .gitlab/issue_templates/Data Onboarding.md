@@ -18,7 +18,7 @@ Goal: To help bring you, our new data team member, up to speed in the GitLab Dat
    - [ ] Manager: Request addition to `@data-analysts` alias on Slack in PeopleOps Onboarding issue
    - [ ] Manager: Request addition to `Data Team` 1password vault in PeopleOps Onboarding issue
    - [ ] Join the following channels on Slack: `data`, `data-lounge`, `data-daily`, `data-triage`, and `business-operations`.
-   - [ ] Engineers, join `analytics-pipelines`
+   - [ ] Engineers, join `analytics-pipelines` and `data-prom-alerts`
    - [ ] Analytsts, join `dbt-runs`
 - [ ] Manager: Add to the `gitlab-data` namespace as a Developer.
 - [ ] Manager: Add to Airflow as Analyst
