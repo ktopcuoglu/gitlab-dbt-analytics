@@ -708,7 +708,6 @@ roles:
                 read:
                     - prod.common
                     - prod.legacy
-                    - prep.sensitive
             tables:
                 read:
                     - prod.common.*
@@ -1204,7 +1203,9 @@ roles:
             tables:
                 read:
                     - prep.greenhouse.*
+                    - prep.sensitive.greenhouse*
                     - raw.greenhouse.*
+
 
     - handbook:
         warehouses:
