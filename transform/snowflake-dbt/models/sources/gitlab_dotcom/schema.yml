@@ -1500,6 +1500,32 @@ models:
         tests:
           - not_null
 
+  - name: gitlab_dotcom_project_repositories_source
+      description: Base model for Gitlab.com project repositories
+      columns:
+        - name: project_repository_id
+          tags: ["tdf","gitlab_dotcom"]
+          tests:
+            - not_null
+            - unique
+        - name: project_id
+          tags: ["tdf","gitlab_dotcom"]
+          tests:
+            - unique
+        - name: disk_path
+          tags: ["tdf","gitlab_dotcom"]
+          tests:
+            - unique
+
+  - name: gitlab_dotcom_project_repository_storage_moves_source
+      description: Base model for Gitlab.com project repository moves
+      columns:
+        - name: project_repository_storage_move_id
+          tags: ["tdf","gitlab_dotcom"]
+          tests:
+            - not_null
+            - unique
+
   - name: gitlab_dotcom_project_statistics_source
     description: Base model for Gitlab.com project statistics
     columns:
@@ -1707,6 +1733,15 @@ models:
         tags: ["tdf","gitlab_dotcom"]
         tests:
           - not_null
+
+  - name: gitlab_dotcom_shards_source
+      description: Base model for Gitlab.com repo shards
+      columns:
+        - name: shard_id
+          tags: ["tdf","gitlab_dotcom"]
+          tests:
+            - not_null
+            - unique
 
   - name: gitlab_dotcom_snippets_source
     description: Base model for Gitlab.com snippets
