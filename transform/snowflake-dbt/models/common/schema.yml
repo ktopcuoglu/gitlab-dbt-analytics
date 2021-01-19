@@ -1059,6 +1059,15 @@ models:
         tests:
           - not_null
 
+  - name: fct_quote_item
+    description: '{{ doc("fct_quote_item") }}'
+    columns:
+      - name: quote_item_id
+        description: A unique identifier of a product included in a quote amendment which is associated with a quote
+        tests:
+          - not_null
+          - unique
+
   - name: fct_sales_funnel_target
     description: '{{ doc("fct_sales_funnel_target") }}'
     columns:

@@ -348,3 +348,21 @@ models:
         tests:
           - not_null
           - unique
+
+  - name: sfdc_zqu_quote_rate_plan_source
+    description: Source model for SFDC custom object representing a quote rate plan from Zuora
+    columns:
+      - name: zqu_quote_rate_plan_id
+        tags: ["tdf", "sfdc"]
+        tests:
+          - not_null
+          - unique
+
+  - name: sfdc_zqu_quote_rate_plan_charge_source
+    description: Source model for SFDC custom object representing a quote rate plan charge from Zuora
+    columns:
+      - name: zqu_quote_rate_plan_charge_id
+        tags: ["tdf", "sfdc"]
+        tests:
+          - not_null
+          - unique
