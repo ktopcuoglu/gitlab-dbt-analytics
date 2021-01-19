@@ -10,6 +10,40 @@ models:
           - unique
           - not_null
 
+models:
+  - name: bdg_namespace_order_subscription_active
+    description: '{{ doc("bdg_namespace_order_subscription_active") }}'
+    columns:
+      - name: dim_namespace_id
+      - name: dim_subscription_id
+      - name: order_id
+      - name: namespace_id_order
+      - name: subscription_id_order
+      - name: namespace_type
+      - name: dim_product_tier_id_namespace
+      - name: product_tier_name_namespace
+      - name: saas_trial_start_date
+      - name: saas_trial_expired_on
+      - name: namespace_was_trial
+      - name: customer_id
+      - name: dim_product_tier_id_with_trial
+      - name: product_delivery_type_with_trial
+      - name: product_tier_name_with_trial
+      - name: dim_product_tier_id_order
+      - name: product_delivery_type_order
+      - name: product_tier_name_order
+      - name: order_start_date
+      - name: order_end_date
+      - name: order_is_trial
+      - name: product_tier_name_subscription
+      - name: dim_product_tier_id_subscription
+      - name: dim_subscription_id_original
+      - name: dim_subscription_id_previous
+      - name: dim_billing_account_id
+      - name: dim_crm_account_id
+      - name: count_of_tiers_per_subscription
+      - name: namespace_order_subscription_match_status
+
   - name: dim_billing_account
     description: '{{ doc("dim_billing_account") }}'
     columns:
@@ -760,6 +794,45 @@ models:
   - name: fct_charges_valid_at
     description: Factual table with all rate plan charges coming from subscriptions or an amendment to a subscription. Required variable valid_at is timezone sensitive
 
+  - name: fct_invoice_item
+    description: '{{ doc("fct_invoice_item") }}'
+    columns:
+      - name: charge_id
+        description: The unique identifier of a verion of a rate plan charge associated with the invoice item
+        tests:
+          - not_null
+        tags: ["tdf", "common", "invoice"]
+      - name: invoice_item_id
+        description: unique invoice item id that identifies a line item on the invoice
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "common", "invoice"]
+      - name: dim_invoice_id
+        description: The ID of the invoice that's associated with the invoice item
+        tests:
+          - not_null
+        tags: ["tdf", "common", "invoice"]
+      - name: invoice_number
+        description: The unique identification number of the invoice
+        tests:
+          - not_null
+        tags: ["tdf", "common", "invoice"]
+      - name: dim_crm_account_id_invoice
+        description: The ID of the customer account associated with the invoice
+      - name: invoice_date
+        description: The date the invoice was generated
+      - name: service_start_date
+        description: The start date of the service period associated with this invoice item. If the associated charge is a one-time fee, then this date is the date of that charge.
+      - name: service_end_date
+        description: The end date of the service period associated with this invoice item. Service ends one second before the date in this value.
+      - name: invoice_amount_without_tax
+        description: The invoice amount excluding tax
+      - name: invoice_item_charge_amount
+        description: The amount being charged for the invoice item. This amount doesn't include taxes regardless if the charge's tax mode is inclusive or exclusive.
+      - name: invoice_item_unit_price
+        description: The per-unit price of the invoice item. Calculated from multiple fields in Product Rate Plan Charge and Product Rate Plan Charge Tier objects.
+
   - name: fct_invoice_items
     description: '{{ doc("fct_invoice_items") }}'
     columns:
@@ -1214,8 +1287,6 @@ models:
       - name: namespace_is_ultimate_parent
       - name: namespace_name
       - name: namespace_path
-        tests:
-          - not_null
       - name: owner_id
       - name: namespace_type
         description: This field should be Group or Individual. A namespace is the first item to come after the / following the domain. For example https://www.gitlab.com/NicoleSchwartz/ is an Individual namespace. There are some namespace_IDs that are missing from this table, when doing certain joins (left) you may get NULL when this data is missing.

@@ -1645,6 +1645,7 @@ roles:
 
     - bmenegocci:
         member_of:
+            - analyst_finance
             - bamboohr_analytics
         warehouses:
             - analyst_xs
