@@ -251,6 +251,12 @@ A fact table of quote amendments which have quotes and product rate plan charges
 
 {% enddocs %}
 
+{% docs fct_quote %}
+
+Fact table representing quotes pulled from the Zuora billing system. These are associated with crm accounts, billing accounts, opportunities, and subscriptions. 
+
+{% enddocs %}
+
 {% docs fct_sales_funnel_target %}
 
 Sales funnel targets set by the Finance team to measure performance of important KPIs against goals, broken down by sales hierarchy, and order attributes.

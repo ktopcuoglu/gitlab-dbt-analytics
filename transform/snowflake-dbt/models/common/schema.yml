@@ -10,7 +10,6 @@ models:
           - unique
           - not_null
 
-models:
   - name: bdg_namespace_order_subscription_active
     description: '{{ doc("bdg_namespace_order_subscription_active") }}'
     columns:
@@ -1064,6 +1063,14 @@ models:
     columns:
       - name: quote_item_id
         description: A unique identifier of a product included in a quote amendment which is associated with a quote
+        tests:
+          - not_null
+          - unique
+
+  - name: fct_quote
+    description: '{{ doc("fct_quote") }}'
+    columns:
+      - name: dim_quote_id
         tests:
           - not_null
           - unique
