@@ -10,6 +10,39 @@ models:
           - unique
           - not_null
 
+  - name: bdg_namespace_order_subscription_active
+    description: '{{ doc("bdg_namespace_order_subscription_active") }}'
+    columns:
+      - name: dim_namespace_id
+      - name: dim_subscription_id
+      - name: order_id
+      - name: namespace_id_order
+      - name: subscription_id_order
+      - name: namespace_type
+      - name: dim_product_tier_id_namespace
+      - name: product_tier_name_namespace
+      - name: saas_trial_start_date
+      - name: saas_trial_expired_on
+      - name: namespace_was_trial
+      - name: customer_id
+      - name: dim_product_tier_id_with_trial
+      - name: product_delivery_type_with_trial
+      - name: product_tier_name_with_trial
+      - name: dim_product_tier_id_order
+      - name: product_delivery_type_order
+      - name: product_tier_name_order
+      - name: order_start_date
+      - name: order_end_date
+      - name: order_is_trial
+      - name: product_tier_name_subscription
+      - name: dim_product_tier_id_subscription
+      - name: dim_subscription_id_original
+      - name: dim_subscription_id_previous
+      - name: dim_billing_account_id
+      - name: dim_crm_account_id
+      - name: count_of_tiers_per_subscription
+      - name: namespace_order_subscription_match_status
+
   - name: dim_billing_account
     description: '{{ doc("dim_billing_account") }}'
     columns:
@@ -843,7 +876,7 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: ['2', '3', '4', '34', '67', 'trial']
+              values: ['2', '3', '4', '34', '67', 'Trial']
       - name: ultimate_parent_plan_title
         description: Whether or not the namespace associated with the project is subscribed to a paid plan. This can be inherited from the namespaces's ultimate parent.
         tests:
@@ -896,6 +929,23 @@ models:
         description: Count of users waiting to be granted membership to the namespace.
         tests:
           - not_null
+
+  - name: fct_quote_item
+    description: '{{ doc("fct_quote_item") }}'
+    columns:
+      - name: quote_item_id
+        description: A unique identifier of a product included in a quote amendment which is associated with a quote
+        tests:
+          - not_null
+          - unique
+
+  - name: fct_quote
+    description: '{{ doc("fct_quote") }}'
+    columns:
+      - name: dim_quote_id
+        tests:
+          - not_null
+          - unique
 
   - name: fct_sales_funnel_target
     description: '{{ doc("fct_sales_funnel_target") }}'
@@ -1116,8 +1166,6 @@ models:
       - name: namespace_is_ultimate_parent
       - name: namespace_name
       - name: namespace_path
-        tests:
-          - not_null
       - name: owner_id
       - name: namespace_type
         description: This field should be Group or Individual. A namespace is the first item to come after the / following the domain. For example https://www.gitlab.com/NicoleSchwartz/ is an Individual namespace. There are some namespace_IDs that are missing from this table, when doing certain joins (left) you may get NULL when this data is missing.

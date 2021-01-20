@@ -72,6 +72,7 @@ models:
 - name: sheetload_kpi_status
 - name: sheetload_linkedin_recruiter
 - name: sheetload_location_factor_targets
+- name: sheetload_location_factor_temporary_2020_december
 - name: sheetload_manual_downgrade_dotcom_tracking
 - name: sheetload_marketing_core_users_from_docs_gitlab_com
 - name: sheetload_marketing_kpi_benchmarks

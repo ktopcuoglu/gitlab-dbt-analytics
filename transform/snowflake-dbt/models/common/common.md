@@ -4,6 +4,21 @@ A fact table bridging opportunities with contacts. One opportunity can have mult
 
 {% enddocs %}
 
+{% docs bdg_namespace_order_subscription_active %}
+
+This table expands the functionality of the orders by improving the join to ultimate parent namespaces and subscriptions.
+
+The purpose of this table is two-fold:
+1. Connect Ultimate Parent Namespace ID to Subscription (and hence Zuora billing account and CRM Account)
+2. Connect Customer DB Customer ID to Subscription for self managed purchases. This helps with marketing efforts.
+
+Namespaces listed in this table are all Active Namespaces with prior trials and currently paid plans. Orders listed in this table are all active orders. Subscriptions listed in this table are all active self-managed and SaaS.
+
+The tier(s) connected to the subscription are determined using the underlying Zuora recurring charges. This view uses a `FULL OUTER JOIN` to show all three sides of the Venn diagram. (namespace, orders, subscriptions)
+In doing so exceptions are noted within `namespace_order_subscription_match_status` to identify rows that do not match between systems.
+
+{% enddocs %}
+
 {% docs dim_crm_account %}
 Dimensional customer table representing all existing and historical customers from SalesForce. There are customer definitions for external reporting and additional customer definitions for internal reporting defined in the [handbook](https://about.gitlab.com/handbook/sales/#customer).
 
@@ -134,6 +149,17 @@ A fact table for Salesforce unconverted leads and contacts. The important stage 
 
 {% enddocs %}
 
+{% docs fct_invoice_item %}
+Fact table providing invoice line item details.
+
+The invoicing to customers business process can be found in the [handbook](https://about.gitlab.com/handbook/finance/sox-internal-controls/quote-to-cash/#6-invoicing-to-customers).
+
+Data comes from [Zuora Documentation](https://knowledgecenter.zuora.com/Billing/Reporting_and_Analytics/D_Data_Sources_and_Exports/C_Data_Source_Reference/Invoice_Item_Data_Source).
+
+Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+{% enddocs %}
+
 {% docs fct_invoice_items %}
 Fact table providing invoice line item details.
 
@@ -192,6 +218,18 @@ The grain of the table is a version_id.
 Additional information can be found on the [GitLab Releases](https://about.gitlab.com/releases/categories/releases/) page.
 
 Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+{% enddocs %}
+
+{% docs fct_quote_item %}
+
+A fact table of quote amendments which have quotes and product rate plan charges associated with them. This model connected opportunities to quotes, quote amendments, and products.
+
+{% enddocs %}
+
+{% docs fct_quote %}
+
+Fact table representing quotes pulled from the Zuora billing system. These are associated with crm accounts, billing accounts, opportunities, and subscriptions. 
 
 {% enddocs %}
 
