@@ -103,7 +103,7 @@ WITH map_merged_crm_accounts AS (
       invoice_charges.crm_account_id_invoice        AS dim_crm_account_id_invoice,
       base_charges.subscription_id                  AS dim_subscription_id,
       invoice_charges.charge_id,
-      invoice_charges.product_details_id            AS dim_product_details_id,
+      invoice_charges.product_details_id            AS dim_product_detail_id,
       invoice_charges.invoice_number,
       invoice_charges.invoice_date,
       invoice_charges.service_start_date,

@@ -18,10 +18,10 @@ WITH dim_date AS (
     SELECT *
     FROM {{ ref('dim_product_detail') }}
 
-), fct_invoice_items AS (
+), fct_invoice_item AS (
 
     SELECT *
-    FROM {{ ref('fct_invoice_items') }}
+    FROM {{ ref('fct_invoice_item') }}
     WHERE is_last_segment_version = TRUE
       AND arr != 0
 
@@ -35,8 +35,8 @@ WITH dim_date AS (
 ), arr_agg AS (
 
     SELECT
-      fct_invoice_items.effective_start_month,
-      fct_invoice_items.effective_end_month,
+      fct_invoice_item.effective_start_month,
+      fct_invoice_item.effective_end_month,
       dim_billing_account_id_subscription,
       dim_crm_account_id_subscription,
       dim_billing_account_id_invoice,
@@ -47,8 +47,8 @@ WITH dim_date AS (
       SUM(mrr)                                             AS mrr,
       SUM(arr)                                             AS arr,
       SUM(quantity)                                        AS quantity
-    FROM fct_invoice_items
-    WHERE fct_invoice_items.effective_end_month > fct_invoice_items.effective_start_month OR fct_invoice_items.effective_end_month IS NULL
+    FROM fct_invoice_item
+    WHERE fct_invoice_item.effective_end_month > fct_invoice_item.effective_start_month OR fct_invoice_item.effective_end_month IS NULL
       --filter out 2 subscription_ids with known data quality issues when comparing invoiced subscriptions to the Zuora UI.
       AND dim_subscription_id NOT IN ('2c92a0ff5e1dcf14015e3c191d4f7689','2c92a00e6a3477b5016a46aaec2f08bc')
     {{ dbt_utils.group_by(n=8) }}
@@ -143,5 +143,5 @@ WITH dim_date AS (
     created_by="@iweeks",
     updated_by="@iweeks",
     created_date="2020-10-21",
-    updated_date="2020-12-15",
+    updated_date="2021-01-20",
 ) }}

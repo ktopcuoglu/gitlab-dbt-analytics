@@ -704,8 +704,8 @@ models:
       - name: is_staging
         descrition: DRAFT - need to better identify instances used for staging environments
 
-  - name: fct_invoice_items
-    description: '{{ doc("fct_invoice_items") }}'
+  - name: fct_invoice_item
+    description: '{{ doc("fct_invoice_item") }}'
     columns:
       - name: charge_id
         description: The unique identifier of a verion of a rate plan charge associated with the invoice item
@@ -718,7 +718,7 @@ models:
           - not_null
           - unique
         tags: ["tdf", "common", "invoice"]
-      - name: invoice_id
+      - name: dim_invoice_id
         description: The ID of the invoice that's associated with the invoice item
         tests:
           - not_null
@@ -750,9 +750,6 @@ models:
         tests:
           - not_null
           - unique
-
-  - name: fct_invoice_items_agg_valid_at
-    description: Parameterized model to recreate aggregate fact table with invoice items summarized on charge level at given timestamp {valid_at}. Required variable valid_at is timezone sensitive
 
   - name: fct_crm_opportunity
     description: '{{ doc("fct_crm_opportunity") }}'
