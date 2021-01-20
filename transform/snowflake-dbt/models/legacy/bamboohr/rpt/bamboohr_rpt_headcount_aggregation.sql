@@ -106,11 +106,18 @@ WITH source AS (
       
       MIN(headcount_end_individual_contributor)
         {{ratio_to_report_partition_statement}}                                     AS min_headcount_end_contributor, 
+      SUM(headcount_end_individual_contributor)
+        {{ratio_to_report_partition_statement}}                                     AS total_headcount_end_contributor,   
       MIN(headcount_average)  {{ratio_to_report_partition_statement}}               AS min_headcount_average,
+      SUM(headcount_end)  {{ratio_to_report_partition_statement}}                   AS total_headcount_end,
       MIN(hire_count) {{ratio_to_report_partition_statement}}                       AS min_hire_count,
+      SUM(hire_count) {{ratio_to_report_partition_statement}}                       AS total_hire_count,
       MIN(headcount_average_leader) {{ratio_to_report_partition_statement}}         AS min_headcount_leader,
+      SUM(headcount_average_leader) {{ratio_to_report_partition_statement}}         AS total_headcount_leader,
       MIN(headcount_average_manager) {{ratio_to_report_partition_statement}}        AS min_headcount_manager,
+      SUM(headcount_average_manager) {{ratio_to_report_partition_statement}}        AS total_headcount_manager,
       MIN(headcount_average_staff) {{ratio_to_report_partition_statement}}          AS min_headcount_staff,
+      SUM(headcount_average_staff) {{ratio_to_report_partition_statement}}          AS total_headcount_staff,
       MIN(headcount_average_contributor) {{ratio_to_report_partition_statement}}    AS min_headcount_contributor,
 
 
@@ -224,13 +231,13 @@ WITH source AS (
       rolling_12_month_separations_management,
       retention_management,
 
-      IFF(headcount_end_staff < 0 AND eeoc_field_name != 'no_eeoc', 
+      IFF(headcount_end_staff < 3 AND eeoc_field_name != 'no_eeoc', 
         NULL, headcount_end_staff)                                              AS headcount_end_staff,
-      IFF(headcount_average_staff < 4 AND eeoc_field_name != 'no_eeoc', 
+      IFF(headcount_average_staff < 3 AND eeoc_field_name != 'no_eeoc', 
         NULL, headcount_average_staff)                                          AS headcount_average_staff,
-      IFF(hired_staff < 4 AND eeoc_field_name != 'no_eeoc', 
+      IFF(hired_staff < 3 AND eeoc_field_name != 'no_eeoc', 
         NULL, hired_staff)                                                      AS hired_staff,
-      IFF(separated_staff < 4 AND eeoc_field_name != 'no_eeoc',
+      IFF(separated_staff < 3 AND eeoc_field_name != 'no_eeoc',
         NULL, separated_staff)                                                  AS separated_staff,
 
       IFF(headcount_end_individual_contributor < 4 AND eeoc_field_name != 'no_eeoc', 
@@ -242,18 +249,19 @@ WITH source AS (
       IFF(separated_contributor < 4 AND eeoc_field_name != 'no_eeoc',
         NULL, separated_contributor)                                             AS separated_contributor,
 
-      IFF(min_headcount_average < 2 and show_value_criteria = FALSE, 
+      IFF(total_headcount_end < 5 AND show_value_criteria = FALSE, 
             NULL, percent_of_headcount)                                          AS percent_of_headcount,
-      IFF(min_hire_count < 2 and show_value_criteria = FALSE, 
+      IFF(total_hire_count < 5 AND show_value_criteria = FALSE, 
         NULL, percent_of_hires)                                                  AS percent_of_hires,
-      IFF(min_headcount_leader < 2 and show_value_criteria = FALSE, 
+      IFF(total_headcount_leader < 3 AND show_value_criteria = FALSE, 
         NULL, percent_of_headcount_leaders)                                      AS percent_of_headcount_leaders,
-      IFF(min_headcount_manager < 2 and show_value_criteria = FALSE,  
+      IFF(total_headcount_manager < 3 AND show_value_criteria = FALSE,  
         NULL, percent_of_headcount_manager)                                      AS percent_of_headcount_manager,    
-      IFF(headcount_end_staff <= 2 and show_value_criteria = FALSE, 
+      IFF((total_headcount_staff < 5 and show_value_criteria = FALSE) 
+           OR (breakout_type = 'all_attributes_breakout' AND eeoc_field_name !='no_eeoc'), 
         NULL, percent_of_headcount_staff)                                        AS percent_of_headcount_staff,  
-      IFF(min_headcount_contributor < 2 and show_value_criteria = FALSE, 
-        NULL, percent_of_headcount_leaders)                                      AS percent_of_headcount_contributor,
+      IFF(total_headcount_end_contributor < 5 AND show_value_criteria = FALSE, 
+        NULL, percent_of_headcount_contributor)                                  AS percent_of_headcount_contributor,
 
       CASE WHEN breakout_type IN ('kpi_breakout','division_breakout','department_breakout') 
             AND eeoc_value = 'no_eeoc'
