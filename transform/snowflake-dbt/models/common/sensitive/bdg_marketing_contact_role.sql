@@ -12,7 +12,6 @@ WITH gitlab_namespaces AS (
     FROM {{ref('gitlab_dotcom_users_source') }}
 
 ), customer_db_source AS (
-
     SELECT *
     FROM {{ref('customers_db_customers_source') }}
 
