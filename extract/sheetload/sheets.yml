@@ -236,6 +236,7 @@ sheets:
       - cert_customer_segmentation_viewer
       - cert_pricing_customer_discount_dashboard
       - cert_pricing_customer_discount_viewer
+      - cert_product_adoption_dashboard_user
       - cert_sales_funnel_dashboard_user
       - cert_sales_funnel_dashboard_developer
   - name: engineering_infra_prod_console_access
