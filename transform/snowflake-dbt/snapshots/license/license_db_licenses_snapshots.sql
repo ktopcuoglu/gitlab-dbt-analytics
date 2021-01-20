@@ -18,7 +18,7 @@
     )
 
     SELECT 
-      {{ dbt_utils.star(from=source('license', 'licenses'), except=["CREATED_AT", "UPDATED_AT", "EMAIL"]) }},
+      {{ dbt_utils.star(from=source('license', 'licenses'), except=["CREATED_AT", "UPDATED_AT"]) }},
       TO_TIMESTAMP_NTZ(created_at) AS created_at,
       TO_TIMESTAMP_NTZ(updated_at) AS updated_at
     FROM source
