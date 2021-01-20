@@ -219,7 +219,7 @@ models:
         tests:
           - not_null
       - name: product_details_id
-        description: The identifier of product details in dim_product_details
+        description: The identifier of product details in dim_product_detail
         tests:
           - not_null
       - name: billing_account_id

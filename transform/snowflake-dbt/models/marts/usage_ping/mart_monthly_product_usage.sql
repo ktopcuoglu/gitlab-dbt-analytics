@@ -40,10 +40,10 @@ WITH dim_billing_account AS (
     SELECT *
     FROM {{ ref('dim_location') }}
 
-), dim_product_details AS (
+), dim_product_detail AS (
 
     SELECT *
-    FROM {{ ref('dim_product_details')}}
+    FROM {{ ref('dim_product_detail')}}
 
 ), dim_subscription AS (
 
@@ -71,10 +71,10 @@ WITH dim_billing_account AS (
     AND CURRENT_TIMESTAMP()::TIMESTAMP_TZ >= dbt_valid_from
     AND {{ coalesce_to_infinity('dbt_valid_to') }} > current_timestamp()::TIMESTAMP_TZ
 
-), fct_charges AS (
+), fct_charge AS (
 
     SELECT *
-    FROM {{ ref('fct_charges')}}
+    FROM {{ ref('fct_charge')}}
 
 ), fct_monthly_usage_data AS (
 
@@ -125,8 +125,8 @@ WITH dim_billing_account AS (
       dim_crm_accounts.technical_account_manager,
       IFF(MAX(mrr) > 0, TRUE, FALSE)                                                AS is_paid_subscription,
       MAX(IFF(product_rate_plan_name ILIKE ANY ('%edu%', '%oss%'), TRUE, FALSE))    AS is_program_subscription,
-      ARRAY_AGG(DISTINCT dim_product_details.product_category)
-        WITHIN GROUP (ORDER BY dim_product_details.product_category ASC)            AS product_category_array,
+      ARRAY_AGG(DISTINCT dim_product_detail.product_tier_name)
+        WITHIN GROUP (ORDER BY dim_product_detail.product_tier_name ASC)            AS product_category_array,
       ARRAY_AGG(DISTINCT product_rate_plan_name)
         WITHIN GROUP (ORDER BY product_rate_plan_name ASC)                          AS product_rate_plan_name_array,
       SUM(quantity)                                                                 AS quantity,
@@ -141,12 +141,12 @@ WITH dim_billing_account AS (
     LEFT JOIN zuora_subscription_snapshots
       ON zuora_subscription_snapshots.subscription_id = dim_subscription.dim_subscription_id
       AND zuora_subscription_snapshots.rank = 1
-    INNER JOIN fct_charges
-      ON all_subscriptions.subscription_id = fct_charges.subscription_id
+    INNER JOIN fct_charge
+      ON all_subscriptions.subscription_id = fct_charge.dim_subscription_id
         AND charge_type = 'Recurring'
-    INNER JOIN dim_product_details
-      ON dim_product_details.product_details_id = fct_charges.product_details_id
-      AND dim_product_details.delivery = 'Self-Managed'
+    INNER JOIN dim_product_detail
+      ON dim_product_detail.dim_product_detail_id = fct_charge.dim_product_detail_id
+      AND dim_product_detail.product_delivery_type = 'Self-Managed'
       AND product_rate_plan_name NOT IN ('Premium - 1 Year - Eval')
     LEFT JOIN dim_billing_account
       ON dim_subscription.dim_billing_account_id = dim_billing_account.dim_billing_account_id

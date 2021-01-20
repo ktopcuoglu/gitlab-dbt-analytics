@@ -18,10 +18,10 @@ WITH dim_billing_account AS (
     SELECT *
     FROM {{ ref('dim_location') }}
 
-), dim_product_details AS (
+), dim_product_detail AS (
 
     SELECT *
-    FROM {{ ref('dim_product_details') }}
+    FROM {{ ref('dim_product_detail') }}
 
 ), fct_usage_ping_payloads AS (
 
@@ -41,10 +41,10 @@ WITH dim_billing_account AS (
     SELECT
       usage_ping_id,
       ARRAY_AGG(DISTINCT product_rate_plan_name) AS product_rate_plans,
-      ARRAY_AGG(DISTINCT product_category)       AS product_categories
+      ARRAY_AGG(DISTINCT product_tier_name)      AS product_categories
     FROM flattened
-    LEFT JOIN dim_product_details
-      ON flattened.product_details_id = dim_product_details.product_details_id
+    LEFT JOIN dim_product_detail
+      ON flattened.product_details_id = dim_product_detail.dim_product_detail_id
     GROUP BY 1
 
 ), joined AS (

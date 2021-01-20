@@ -13,10 +13,10 @@ WITH dim_date AS (
     SELECT *
     FROM {{ ref('dim_crm_account') }}
 
-), dim_product_details AS (
+), dim_product_detail AS (
 
     SELECT *
-    FROM {{ ref('dim_product_details') }}
+    FROM {{ ref('dim_product_detail') }}
 
 ), fct_invoice_items AS (
 
@@ -42,7 +42,7 @@ WITH dim_date AS (
       dim_billing_account_id_invoice,
       dim_crm_account_id_invoice,
       dim_subscription_id,
-      dim_product_details_id,
+      dim_product_detail_id,
       SUM(invoice_item_charge_amount)                      AS invoice_item_charge_amount,
       SUM(mrr)                                             AS mrr,
       SUM(arr)                                             AS arr,
@@ -56,7 +56,7 @@ WITH dim_date AS (
 ), combined AS (
 
     SELECT
-      {{ dbt_utils.surrogate_key(['dim_crm_account_invoice.ultimate_parent_account_id', 'arr_agg.effective_start_month', 'arr_agg.effective_end_month', 'zuora_subscription.subscription_name', 'arr_agg.dim_product_details_id']) }}
+      {{ dbt_utils.surrogate_key(['dim_crm_account_invoice.ultimate_parent_account_id', 'arr_agg.effective_start_month', 'arr_agg.effective_end_month', 'zuora_subscription.subscription_name', 'arr_agg.dim_product_detail_id']) }}
                                                                         AS primary_key,
       arr_agg.effective_start_month,
       arr_agg.effective_end_month,
@@ -85,21 +85,21 @@ WITH dim_date AS (
       zuora_subscription.current_term                                   AS current_term_months,
       ROUND(zuora_subscription.current_term / 12, 1)                    AS current_term_years,
       dim_crm_account_invoice.is_reseller,
-      dim_product_details.product_rate_plan_charge_name,
-      dim_product_details.product_category,
-      dim_product_details.delivery,
-      dim_product_details.service_type,
+      dim_product_detail.product_rate_plan_charge_name,
+      dim_product_detail.product_tier_name                              AS product_category,
+      dim_product_detail.product_delivery_type                          AS delivery,
+      dim_product_detail.service_type,
       CASE
-        WHEN LOWER(dim_product_details.product_rate_plan_charge_name) LIKE '%edu or oss%'   THEN TRUE
-        WHEN LOWER(dim_product_details.product_rate_plan_charge_name) LIKE '%education%'    THEN TRUE
-        WHEN LOWER(dim_product_details.product_rate_plan_charge_name) LIKE '%y combinator%' THEN TRUE
-        WHEN LOWER(dim_product_details.product_rate_plan_charge_name) LIKE '%support%'      THEN TRUE
-        WHEN LOWER(dim_product_details.product_rate_plan_charge_name) LIKE '%reporter%'     THEN TRUE
-        WHEN LOWER(dim_product_details.product_rate_plan_charge_name) LIKE '%guest%'        THEN TRUE
-        WHEN dim_product_details.annual_billing_list_price = 0                              THEN TRUE
+        WHEN LOWER(dim_product_detail.product_rate_plan_charge_name) LIKE '%edu or oss%'   THEN TRUE
+        WHEN LOWER(dim_product_detail.product_rate_plan_charge_name) LIKE '%education%'    THEN TRUE
+        WHEN LOWER(dim_product_detail.product_rate_plan_charge_name) LIKE '%y combinator%' THEN TRUE
+        WHEN LOWER(dim_product_detail.product_rate_plan_charge_name) LIKE '%support%'      THEN TRUE
+        WHEN LOWER(dim_product_detail.product_rate_plan_charge_name) LIKE '%reporter%'     THEN TRUE
+        WHEN LOWER(dim_product_detail.product_rate_plan_charge_name) LIKE '%guest%'        THEN TRUE
+        WHEN dim_product_detail.annual_billing_list_price = 0                              THEN TRUE
         ELSE FALSE
       END                                                               AS is_excluded_from_disc_analysis,
-      dim_product_details.annual_billing_list_price,
+      dim_product_detail.annual_billing_list_price,
       ARRAY_AGG(IFF(zuora_subscription.created_by_id = '2c92a0fd55822b4d015593ac264767f2', -- All Self-Service / Web direct subscriptions are identified by that created_by_id
                    'Self-Service', 'Sales-Assisted'))                   AS subscription_sales_type,
       SUM(arr_agg.invoice_item_charge_amount)                           AS invoice_item_charge_amount,
@@ -111,8 +111,8 @@ WITH dim_date AS (
     FROM arr_agg
     INNER JOIN zuora_subscription
       ON arr_agg.dim_subscription_id = zuora_subscription.subscription_id
-    INNER JOIN dim_product_details
-      ON arr_agg.dim_product_details_id = dim_product_details.product_details_id
+    INNER JOIN dim_product_detail
+      ON arr_agg.dim_product_detail_id = dim_product_detail.dim_product_detail_id
     INNER JOIN dim_billing_account
       ON arr_agg.dim_billing_account_id_invoice = dim_billing_account.dim_billing_account_id
     LEFT JOIN dim_crm_account AS dim_crm_account_invoice
