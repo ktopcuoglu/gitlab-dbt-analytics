@@ -23,14 +23,14 @@ WITH gitlab_namespaces AS (
     SELECT *
     FROM {{ref('zuora_account_source') }}
 
-), final
+), final AS (
     SELECT
-      owner_id                                                    AS "user_id",
-      NULL                                                        AS "customer_db_customer_id",
-      namespace_id                                                AS "namespace_id",
-      NULL                                                        AS "zuora_subscription_id",
-      CAST(NULL as varchar(100))                                  AS "zuora_billing_contact_id",
-      'Personal Namespace Owner'                                  AS "marketing_contact_role"
+      owner_id                                                    AS user_id,
+      NULL                                                        AS customer_db_customer_id,
+      namespace_id                                                AS namespace_id,
+      NULL                                                        AS zuora_subscription_id,
+      CAST(NULL as varchar(100))                                  AS zuora_billing_contact_id,
+      'Personal Namespace Owner'                                  AS marketing_contact_role
     FROM gitlab_namespaces
     WHERE owner_id IS NOT NULL
       AND namespace_type IS NULL
@@ -39,12 +39,12 @@ WITH gitlab_namespaces AS (
     UNION ALL
 
     SELECT
-      gitlab_users.user_id                                        AS "user_id",
-      NULL                                                        AS "customer_db_customer_id",
-      gitlab_members.source_id                                    AS "namespace_id",
-      NULL                                                        AS "zuora_subscription_id",
-      CAST(NULL as varchar(100))                                  AS "zuora_billing_contact_id",
-      'Group Namespace Owner'                                     AS "marketing_contact_role"
+      gitlab_users.user_id                                        AS user_id,
+      NULL                                                        AS customer_db_customer_id,
+      gitlab_members.source_id                                    AS namespace_id,
+      NULL                                                        AS zuora_subscription_id,
+      CAST(NULL as varchar(100))                                  AS zuora_billing_contact_id,
+      'Group Namespace Owner'                                     AS marketing_contact_role
       FROM gitlab_members
       JOIN gitlab_users
         ON gitlab_users.user_id = gitlab_members.user_id
@@ -54,12 +54,12 @@ WITH gitlab_namespaces AS (
     UNION ALL
 
     SELECT
-      gitlab_users.user_id                                        AS "user_id",
-      NULL                                                        AS "customer_db_customer_id",
-      gitlab_members.source_id                                    AS "namespace_id",
-      NULL                                                        AS "zuora_subscription_id",
-      CAST(NULL as varchar(100))                                  AS "zuora_billing_contact_id",
-      'Group Namespace Member'                                    AS "marketing_contact_role"
+      gitlab_users.user_id                                        AS user_id,
+      NULL                                                        AS customer_db_customer_id,
+      gitlab_members.source_id                                    AS namespace_id,
+      NULL                                                        AS zuora_subscription_id,
+      CAST(NULL as varchar(100))                                  AS zuora_billing_contact_id,
+      'Group Namespace Member'                                    AS marketing_contact_role
     FROM gitlab_members
     JOIN gitlab_users
       ON gitlab_users.user_id = gitlab_members.user_id
@@ -69,23 +69,23 @@ WITH gitlab_namespaces AS (
     UNION ALL
 
     SELECT
-      NULL                                                        AS "user_id",
-      customer_id                                                 AS "customer_db_customer_id",
-      NULL                                                        AS "namespace_id",
-      NULL                                                        AS "zuora_subscription_id",
-      CAST(NULL as varchar(100))                                  AS "zuora_billing_contact_id",
-      'Customer DB Owner'                                         AS "marketing_contact_role"
+      NULL                                                        AS user_id,
+      customer_id                                                 AS customer_db_customer_id,
+      NULL                                                        AS namespace_id,
+      NULL                                                        AS zuora_subscription_id,
+      CAST(NULL as varchar(100))                                  AS zuora_billing_contact_id,
+      'Customer DB Owner'                                         AS marketing_contact_role
     FROM customer_db_source
 
     UNION ALL
 
     SELECT
-      NULL                                                       AS "user_id",
-      NULL                                                       AS "customer_db_customer_id",
-      NULL                                                       AS "namespace_id",
-      zuora_subscription.subscription_id                         AS "zuora_subscription_id",
-      zuora_account.bill_to_contact_id                           AS "zuora_billing_contact_id",
-      'Zuora Billing Contact'                                    AS "marketing_contact_role"
+      NULL                                                       AS user_id,
+      NULL                                                       AS customer_db_customer_id,
+      NULL                                                       AS namespace_id,
+      zuora_subscription.subscription_id                         AS zuora_subscription_id,
+      zuora_account.bill_to_contact_id                           AS zuora_billing_contact_id,
+      'Zuora Billing Contact'                                    AS marketing_contact_role
     FROM zuora_subscription
     JOIN zuora_account
       ON zuora_account.account_id = zuora_subscription.account_id
@@ -97,5 +97,5 @@ WITH gitlab_namespaces AS (
     created_by="@rmistry",
     updated_by="@rmistry",
     created_date="2021-01-19",
-    updated_date="2021-01-19"
+    updated_date="2021-01-20"
 ) }}
