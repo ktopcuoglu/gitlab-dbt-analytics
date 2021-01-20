@@ -175,7 +175,7 @@ WITH source AS (
       IFF(separation_count <4 AND eeoc_field_name != 'no_eeoc', 
         NULL, separation_count)                                             AS separation_count,
       IFF(voluntary_separation <4, NULL, voluntary_separation)              AS voluntary_separation_count,
-      IFF(voluntary_separation < 4,  NULL, voluntary_separation)            AS involuntary_separation_count,  
+      IFF(voluntary_separation < 4,  NULL, involuntary_separation)          AS involuntary_separation_count,  
 
       rolling_12_month_headcount,
       rolling_12_month_separations,
@@ -224,7 +224,7 @@ WITH source AS (
       rolling_12_month_separations_management,
       retention_management,
 
-      IFF(headcount_end_staff < 4 AND eeoc_field_name != 'no_eeoc', 
+      IFF(headcount_end_staff < 0 AND eeoc_field_name != 'no_eeoc', 
         NULL, headcount_end_staff)                                              AS headcount_end_staff,
       IFF(headcount_average_staff < 4 AND eeoc_field_name != 'no_eeoc', 
         NULL, headcount_average_staff)                                          AS headcount_average_staff,
@@ -250,7 +250,7 @@ WITH source AS (
         NULL, percent_of_headcount_leaders)                                      AS percent_of_headcount_leaders,
       IFF(min_headcount_manager < 2 and show_value_criteria = FALSE,  
         NULL, percent_of_headcount_manager)                                      AS percent_of_headcount_manager,    
-      IFF(min_headcount_staff < 2 and show_value_criteria = FALSE, 
+      IFF(headcount_end_staff <= 2 and show_value_criteria = FALSE, 
         NULL, percent_of_headcount_staff)                                        AS percent_of_headcount_staff,  
       IFF(min_headcount_contributor < 2 and show_value_criteria = FALSE, 
         NULL, percent_of_headcount_leaders)                                      AS percent_of_headcount_contributor,
