@@ -1,3 +1,7 @@
+{{ config(
+    tags=["product"]
+) }}
+
 WITH namespace AS (
 
     SELECT *
