@@ -1180,6 +1180,57 @@ models:
         tests:
           - not_null
 
+  - name: fct_usage_storage
+    description: '{{ doc("fct_usage_storage") }}'
+    columns:
+      - name: snapshot_month
+        description: Month in which Storage usage data was snapshotted, formatted as `20YY-MM-01`.
+        tests:
+          - not_null
+      - name: dim_namespace_id
+        description: ID of the namespace responsible for the Storage usage.
+        tests:
+          - not_null
+      - name: ultimate_parent_namespace_id
+        description: ID of the namespace's ultimate parent namespace.
+        tests:
+          - not_null
+      - name: total_free_storage_limit
+        description: Sum of free repository level storage (10 GiB) over all repositories under the top level namespace. Since storage limits are provided in GiB, they are being reported in GiB. For certain GitLab internal namespaces this value is 0, implying **unlimited storage**.
+        tests:
+          - not_null
+      - name: total_purchased_storage_limit
+        description: Total extra storage purhaced across all namespaces under the top level namespace. Extra storage is currently purchased in 10 GiB increments and thus is reported in GiB.
+        tests:
+          - not_null
+      - name: has_repositories_above_free_limit
+        description: Flags for the presence of repositories with 10 GiB or more of billable storage.
+      - name: repositories_above_free_limit_count
+        description: Count of repositories with 10 GiB or more of billable storage.
+      - name: has_capped_repositories
+        description: Flags for the presence of repositories with 10 GiB or more of billable storage with no available purchased storage remaining.
+      - name: capped_repositories_count
+        description: Count of repositories with 10 GiB or more of billable storage and no available purchased storage remaining.
+      - name: total_free_storage_size
+        description: Total billable storage used _under_ the free 10 GiB limit across all repositories under the top level namespace.
+      - name: total_purchased_storage_size
+        description: Total billable storage used _over_ the free 10 GiB limit across all repositories under the top level namespace.
+      - name: billable_storage_size
+        description: This value consists of the only types of storage that GitLab currently limits, and thus are possible to be billable. This value is equivalent to `repository_size` + `lfs_objects_size` across all repositories under the top level namespace and is reported in bytes.
+      - name: repository_size
+        description: Total size of repository across all repositories under the top level namespace in bytes.
+      - name: lfs_objects_size
+        description: Total size of Large File Storage objects across all repositories under the top level namespace in bytes.
+      - name: build_artifacts_size
+        description: Total size of build artifacts across all repositories under the top level namespace in bytes.
+      - name: packages_size
+        description: Total size of packagess across all repositories under the top level namespace in bytes.
+      - name: wiki_size
+        description: Total size of wikis across all repositories under the top level namespace in bytes.
+      - name: storage_size
+        description: Sum of reposity, LFS objects, build artifacts, packages, and wiki storage sizes, in bytes.
+
+
   - name: dim_marketing_channel
     description: '{{ doc("prep_sfdc_account") }}'
     columns:
