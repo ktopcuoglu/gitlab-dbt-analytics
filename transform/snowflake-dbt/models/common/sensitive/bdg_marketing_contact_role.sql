@@ -4,26 +4,32 @@ WITH gitlab_namespaces AS (
     FROM {{ref('gitlab_dotcom_namespaces_source') }}
 
 ), gitlab_members AS (
+
     SELECT *
     FROM {{ref('gitlab_dotcom_members_source') }}
 
 ), gitlab_users AS (
+
     SELECT *
     FROM {{ref('gitlab_dotcom_users_source') }}
 
 ), customer_db_source AS (
+
     SELECT *
     FROM {{ref('customers_db_customers_source') }}
 
 ), zuora_subscription AS (
+
     SELECT *
     FROM {{ref('zuora_subscription_source') }}
 
 ),zuora_account AS (
+
     SELECT *
     FROM {{ref('zuora_account_source') }}
 
 ), final AS (
+
     SELECT
       owner_id                                                    AS user_id,
       NULL                                                        AS customer_db_customer_id,
@@ -90,6 +96,7 @@ WITH gitlab_namespaces AS (
     JOIN zuora_account
       ON zuora_account.account_id = zuora_subscription.account_id
     WHERE zuora_subscription.subscription_status = 'Active'
+    
 )
 
 {{ dbt_audit(
