@@ -92,24 +92,35 @@ WITH source AS (
         x3_technical_evaluation_date__c
                                                     AS technical_evaluation_date,
         amount                                      AS total_contract_value,
+        recurring_amount__c                         AS recurring_amount,
+        true_up_amount__c                           AS true_up_amount,
+        proserv_amount__c                           AS proserv_amount,
+        other_non_recurring_amount__c               AS other_non_recurring_amount,
         upside_iacv__c                              AS upside_iacv,
         upside_swing_deal_iacv__c                   AS upside_swing_deal_iacv,
         web_portal_purchase__c                      AS is_web_portal_purchase,
         opportunity_term__c                         AS opportunity_term,
         pio__c                                      AS partner_initiated_opportunity,
         user_segment_o__c                           AS user_segment,
-        start_date__c                               AS subscription_start_date,
-        end_date__c                                 AS subscription_end_date,
+        start_date__c::DATE                         AS subscription_start_date,
+        end_date__c::DATE                           AS subscription_end_date,
         true_up_value__c                            AS true_up_value,
         order_type_live__c                          AS order_type_live,
         order_type_test__c                          AS order_type_stamped,
         arr_net__c                                  AS net_arr,
+        arr_basis__c                                AS arr_basis,
+        arr__c                                      AS arr,
         days_in_sao__c                              AS days_in_sao,
         {{ sales_hierarchy_sales_segment_cleaning('user_segment_o__c') }}
                                                     AS user_segment_stamped,
         stamped_user_geo__c                         AS user_geo_stamped,
         stamped_user_region__c                      AS user_region_stamped,
         stamped_user_area__c                        AS user_area_stamped,
+
+        opportunity_health__c                       AS opportunity_health,
+        risk_type__c                                AS risk_type,
+        risk_reasons__c                             AS risk_reasons,
+        tam_notes__c                                AS tam_notes,
 
       -- ************************************
       -- sales segmentation deprecated fields - 2020-09-03

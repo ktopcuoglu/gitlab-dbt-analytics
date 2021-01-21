@@ -169,6 +169,16 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity.order_type_live,
       sfdc_opportunity.order_type_stamped,
       sfdc_opportunity.net_arr,
+      sfdc_opportunity.recurring_amount,
+      sfdc_opportunity.true_up_amount,
+      sfdc_opportunity.proserv_amount,
+      sfdc_opportunity.other_non_recurring_amount,
+      sfdc_opportunity.arr_basis,
+      sfdc_opportunity.arr,
+      sfdc_opportunity.opportunity_health,
+      sfdc_opportunity.risk_type,
+      sfdc_opportunity.risk_reasons,
+      sfdc_opportunity.tam_notes,
 
       -- days and dates per stage
       sfdc_opportunity.days_in_1_discovery,

@@ -82,7 +82,15 @@ WITH first_contact  AS (
       owner_id                                                  AS dim_crm_sales_rep_id,
       incremental_acv                                           AS iacv,
       net_arr,
-      total_contract_value,
+      amount,
+      recurring_amount,
+      true_up_amount,
+      proserv_amount,
+      other_non_recurring_amount,
+      arr_basis,
+      arr,
+      subscription_start_date,
+      subscription_end_date,
       created_date::DATE                                        AS created_date,
       {{ get_date_id('created_date') }}                         AS created_date_id,
       sales_accepted_date::DATE                                 AS sales_accepted_date,
@@ -213,6 +221,8 @@ WITH first_contact  AS (
         WHEN opportunity_fields.days_in_sao > 270                THEN '7. Closed in > 270 days'
         ELSE NULL
       END                                                                                                           AS closed_buckets,
+      opportunity_fields.subscription_start_date,
+      opportunity_fields.subscription_end_date,
 
       -- common dimension keys
       COALESCE(opportunity_fields.dim_crm_sales_rep_id, MD5(-1))                                                    AS dim_crm_sales_rep_id,
@@ -248,7 +258,13 @@ WITH first_contact  AS (
       -- additive fields
       opportunity_fields.iacv,
       opportunity_fields.net_arr,
-      opportunity_fields.total_contract_value
+      opportunity_fields.amount,
+      opportunity_fields.recurring_amount,
+      opportunity_fields.true_up_amount,
+      opportunity_fields.proserv_amount,
+      opportunity_fields.other_non_recurring_amount,
+      opportunity_fields.arr_basis,
+      opportunity_fields.arr
 
     FROM opportunity_fields
     LEFT JOIN crm_account_dimensions
@@ -283,7 +299,7 @@ WITH first_contact  AS (
 {{ dbt_audit(
     cte_ref="final_opportunities",
     created_by="@mcooperDD",
-    updated_by="@mcooperDD",
+    updated_by="@jpeguero",
     created_date="2020-11-30",
-    updated_date="2021-01-05"
+    updated_date="2021-01-21"
 ) }}
