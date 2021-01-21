@@ -244,6 +244,8 @@ roles:
                     - prep.sensitive.sheetload_ic_transparency_competency_source
                     - prep.sensitive.sheetload_osat_source
                     - prep.sensitive.sheetload_values_certificate_source
+                    - prep.sensitive.bdg_marketing_contact_role 
+                    - prep.sensitive.dim_marketing_contact
 
     ## For all analyst Roles 
     - analyst_core:  
