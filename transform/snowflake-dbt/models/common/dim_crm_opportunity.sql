@@ -67,7 +67,7 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity.opportunity_health,
       sfdc_opportunity.risk_type,
       sfdc_opportunity.risk_reasons,
-      sfdc_opportunity.tam_notes
+      sfdc_opportunity.tam_notes,
 
       -- ************************************
       -- channel reporting
