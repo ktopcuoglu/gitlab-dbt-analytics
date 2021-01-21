@@ -182,7 +182,71 @@ roles:
 # ==========================================
 # Functional Roles
 # ==========================================
-    - analyst_core:
+    ## For all Data Team analyst or DD given the sensitive data access 
+    - data_team_analysts:
+        warehouses:
+            - analyst_xs
+            - analyst_l
+        member_of:
+            - boneyard
+            - covid19
+            - dbt_analytics
+            - dbt_analytics_clones
+            - gitlab_data_yaml
+            - handbook
+            - maxmind
+            - sheetload
+            - snapshots
+            - snowflake_db
+            - static
+        privileges:
+            databases:
+                read:
+                    - prep
+                    - prod
+                    - raw
+            schemas:
+                read:
+                    - prep.*
+                    - prod.*
+                    - raw.*
+            tables:
+                read:
+                    - prod.*.*
+                    - prep.sensitive.gitlab_dotcom_audit_event_details
+                    - prep.sensitive.gitlab_dotcom_audit_event_details_pii
+                    - prep.sensitive.gitlab_dotcom_environments
+                    - prep.sensitive.gitlab_dotcom_epics
+                    - prep.sensitive.gitlab_dotcom_identities
+                    - prep.sensitive.gitlab_dotcom_issues
+                    - prep.sensitive.gitlab_dotcom_labels
+                    - prep.sensitive.gitlab_dotcom_merge_requests
+                    - prep.sensitive.gitlab_dotcom_milestones
+                    - prep.sensitive.gitlab_dotcom_namespaces
+                    - prep.sensitive.gitlab_dotcom_notes
+                    - prep.sensitive.gitlab_dotcom_projects
+                    - prep.sensitive.gitlab_dotcom_system_note_metadata
+                    - prep.sensitive.gitlab_dotcom_users
+                    - prep.sensitive.qualtrics_api_formatted_contacts
+                    - prep.sensitive.qualtrics_contact_mailing_send
+                    - prep.sensitive.qualtrics_mailing_contacts
+                    - prep.sensitive.qualtrics_nps_answers
+                    - prep.sensitive.qualtrics_nps_survey_responses
+                    - prep.sensitive.sheetload_ally_certificate_source
+                    - prep.sensitive.sheetload_communication_certificate_source
+                    - prep.sensitive.sheetload_compensation_certificate_source
+                    - prep.sensitive.sheetload_employee_location_factor
+                    - prep.sensitive.sheetload_ic_collaboration_competency_source
+                    - prep.sensitive.sheetload_ic_dib_comptency_source
+                    - prep.sensitive.sheetload_ic_efficiency_competency_source
+                    - prep.sensitive.sheetload_ic_iteration_competency_source
+                    - prep.sensitive.sheetload_ic_results_competency_source
+                    - prep.sensitive.sheetload_ic_transparency_competency_source
+                    - prep.sensitive.sheetload_osat_source
+                    - prep.sensitive.sheetload_values_certificate_source
+
+    ## For all analyst Roles 
+    - analyst_core:  
         warehouses:
             - analyst_xs
             - analyst_l
@@ -426,6 +490,7 @@ roles:
             - snowplow
             - version_db
             - zuora
+            - data_team_analysts
 
     - engineer:
         member_of:
@@ -1875,6 +1940,7 @@ roles:
             - analyst_finance
             - bamboohr_analytics
             - customers_db
+            - data_team_analysts
         warehouses:
             - analyst_xs
         owns:
@@ -1928,6 +1994,7 @@ roles:
             - customers_db
             - netsuite
             - static_admin
+            - data_team_analysts
         warehouses:
             - analyst_xs
         owns:
@@ -2036,6 +2103,7 @@ roles:
         member_of:
             - analyst_engineering
             - customers_db
+            - data_team_analysts
         warehouses:
             - analyst_xs
 
@@ -2051,6 +2119,7 @@ roles:
             - data_manager
             - dbt_analytics_sensitive
             - greenhouse
+            - data_team_analysts
         warehouses:
             - engineer_xs
             - engineer_xl
@@ -2164,6 +2233,7 @@ roles:
     - mpeychet:
         member_of:
             - analyst_growth
+            - data_team_analysts
         warehouses:
             - analyst_xs
             - analyst_l
@@ -2365,6 +2435,7 @@ roles:
             - customers_db
             - qualtrics
             - qualtrics_sensitive
+            - data_team_analysts
         warehouses:
             - analyst_xs
         owns:
