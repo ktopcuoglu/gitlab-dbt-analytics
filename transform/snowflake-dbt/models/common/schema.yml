@@ -139,12 +139,19 @@ models:
         tags: ["tdf", "common", "sales_funnel"]
       - name: dim_crm_account_id
         description: Key for joining on dim_crm_account, which is the primary key for Salesforce Accounts
-        # could pass a relationship test
+        tests:
+          - relationships:
+              to: ref('dim_crm_account')
+              field: crm_account_id
+        tags: ["tdf", "opportunity", "common", "sales_funnel"]
       - name: opportunity_name
       - name: dim_crm_sales_rep_id
         description: Sourced from the opportunity owner_id this key is for joining to dim_crm_sales_representative
-        # could pass a relationship test
-      - name: generated_source
+        tests:
+          - relationships:
+              to: ref('dim_crm_sales_representative')
+              field: dim_crm_sales_rep_id
+        tags: ["tdf", "opportunity", "common", "sales_funnel"]
       - name: lead_source
       - name: merged_opportunity_id
       - name: net_new_source_categories
