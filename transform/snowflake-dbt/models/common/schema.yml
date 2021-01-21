@@ -288,6 +288,16 @@ models:
           - unique
         tags: ["tdf", "industry", "common"]
 
+  - name: dim_invoice
+    description: '{{ doc("dim_invoice") }}'
+    columns:
+      - name: dim_invoice_id
+        description: The unique identifier of an invoice
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "common", "invoice"]
+
   - name: dim_opportunity_source
     description: '{{ doc("dim_opportunity_source") }}'
     columns:
@@ -708,6 +718,16 @@ models:
         description: this instance is used by the company or a GitLab team member
       - name: is_staging
         descrition: DRAFT - need to better identify instances used for staging environments
+
+  - name: fct_invoice
+    description: '{{ doc("fct_invoice") }}'
+    columns:
+      - name: dim_invoice_id
+        description: The unique identifier of an invoice
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "common", "invoice"]
 
   - name: fct_invoice_item
     description: '{{ doc("fct_invoice_item") }}'
