@@ -143,7 +143,7 @@ models:
           - relationships:
               to: ref('dim_crm_account')
               field: crm_account_id
-        tags: ["tdf", "opportunity", "common","sales_funnel"]
+        tags: ["tdf", "opportunity", "common", "sales_funnel"]
       - name: opportunity_name
       - name: dim_crm_sales_rep_id
         description: Sourced from the opportunity owner_id this key is for joining to dim_crm_sales_representative
