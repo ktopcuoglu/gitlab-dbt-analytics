@@ -82,7 +82,6 @@ WITH first_contact  AS (
       owner_id                                                  AS dim_crm_sales_rep_id,
       incremental_acv                                           AS iacv,
       net_arr,
-      total_contract_value,
       amount,
       recurring_amount,
       true_up_amount,
@@ -259,7 +258,6 @@ WITH first_contact  AS (
       -- additive fields
       opportunity_fields.iacv,
       opportunity_fields.net_arr,
-      opportunity_fields.total_contract_value,
       opportunity_fields.amount,
       opportunity_fields.recurring_amount,
       opportunity_fields.true_up_amount,
