@@ -39,7 +39,12 @@ WITH employee_directory_intermediate AS (
       hire_date,
       cost_center,
       layers,
-      IFF(sales_geo_differential = 'n/a - Comp Calc', TRUE, FALSE) AS exclude_from_location_factor
+      CASE
+        WHEN date_actual < '2020-06-09' 
+          THEN FALSE 
+        WHEN date_actual >= '2020-06-09' AND sales_geo_differential = 'n/a - Comp Calc'
+          THEN FALSE
+        ELSE TRUE END                             AS exclude_from_location_factor
     FROM employee_directory_intermediate
 
 ), final AS (

@@ -16,10 +16,10 @@ WITH self_managed_active_subscriptions AS (
     FROM {{ ref('dim_date')}}
     WHERE first_day_of_month < CURRENT_DATE
 
-), dim_product_details AS (
+), dim_product_detail AS (
 
     SELECT *
-    FROM {{ ref('dim_product_details') }}
+    FROM {{ ref('dim_product_detail') }}
 
 ), active_subscriptions AS (
 
@@ -55,9 +55,9 @@ WITH self_managed_active_subscriptions AS (
       COUNT(DISTINCT fct_payloads.usage_ping_id)                                      AS monthly_payload_counts,
       COUNT(DISTINCT host_id)                                                         AS monthly_host_counts
     FROM self_managed_active_subscriptions
-    INNER JOIN dim_product_details
-      ON self_managed_active_subscriptions.product_details_id = dim_product_details.product_details_id
-        AND delivery='Self-Managed'
+    INNER JOIN dim_product_detail
+      ON self_managed_active_subscriptions.product_details_id = dim_product_detail.dim_product_detail_id
+        AND product_delivery_type = 'Self-Managed'
     INNER JOIN dim_date ON self_managed_active_subscriptions.date_id = dim_date.date_id
     LEFT JOIN active_subscriptions ON self_managed_active_subscriptions.subscription_id = active_subscriptions.dim_subscription_id
     LEFT JOIN all_subscriptions ON active_subscriptions.subscription_name_slugify = all_subscriptions.subscription_name_slugify
@@ -75,9 +75,9 @@ WITH self_managed_active_subscriptions AS (
         ORDER BY created_at DESC
       ) AS latest_major_minor_version
     FROM self_managed_active_subscriptions
-    INNER JOIN dim_product_details
-      ON self_managed_active_subscriptions.product_details_id = dim_product_details.product_details_id
-        AND delivery='Self-Managed'
+    INNER JOIN dim_product_detail
+      ON self_managed_active_subscriptions.product_details_id = dim_product_detail.dim_product_detail_id
+        AND product_delivery_type = 'Self-Managed'
     INNER JOIN dim_date ON self_managed_active_subscriptions.date_id = dim_date.date_id
     INNER JOIN active_subscriptions ON self_managed_active_subscriptions.subscription_id = active_subscriptions.dim_subscription_id
     INNER JOIN all_subscriptions ON active_subscriptions.subscription_name_slugify = all_subscriptions.subscription_name_slugify

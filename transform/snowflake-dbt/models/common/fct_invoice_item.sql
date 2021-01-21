@@ -1,8 +1,3 @@
-{{config({
-    "schema": "legacy"
-  })
-}}
-
 WITH map_merged_crm_accounts AS (
 
     SELECT *
@@ -101,14 +96,14 @@ WITH map_merged_crm_accounts AS (
 
     SELECT
       invoice_charges.invoice_item_id,
-      invoice_charges.invoice_id,
+      invoice_charges.invoice_id                    AS dim_invoice_id,
       base_charges.billing_account_id_subscription  AS dim_billing_account_id_subscription,
       base_charges.crm_account_id_subscription      AS dim_crm_account_id_subscription,
       invoice_charges.billing_account_id_invoice    AS dim_billing_account_id_invoice,
       invoice_charges.crm_account_id_invoice        AS dim_crm_account_id_invoice,
       base_charges.subscription_id                  AS dim_subscription_id,
       invoice_charges.charge_id,
-      invoice_charges.product_details_id            AS dim_product_details_id,
+      invoice_charges.product_details_id            AS dim_product_detail_id,
       invoice_charges.invoice_number,
       invoice_charges.invoice_date,
       invoice_charges.service_start_date,
@@ -135,8 +130,8 @@ WITH map_merged_crm_accounts AS (
 
 {{ dbt_audit(
     cte_ref="final",
-    created_by="@msendal",
-    updated_by="@iweeks",
-    created_date="2020-04-07",
-    updated_date="2020-10-09"
+    created_by="@mcooperDD",
+    updated_by="@mcooperDD",
+    created_date="2021-01-15",
+    updated_date="2021-01-15"
 ) }}

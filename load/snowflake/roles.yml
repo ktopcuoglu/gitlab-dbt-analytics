@@ -708,7 +708,6 @@ roles:
                 read:
                     - prod.common
                     - prod.legacy
-                    - prep.sensitive
             tables:
                 read:
                     - prod.common.*
@@ -1204,7 +1203,9 @@ roles:
             tables:
                 read:
                     - prep.greenhouse.*
+                    - prep.sensitive.greenhouse*
                     - raw.greenhouse.*
+
 
     - handbook:
         warehouses:
@@ -1630,6 +1631,11 @@ roles:
         warehouses:
             - analyst_xs
 
+    - alpcohen:
+        member_of: []
+        warehouses:
+            - analyst_xs
+
     - amihaila:
         member_of:
             - analyst_growth
@@ -1645,6 +1651,7 @@ roles:
 
     - bmenegocci:
         member_of:
+            - analyst_finance
             - bamboohr_analytics
         warehouses:
             - analyst_xs
@@ -2749,6 +2756,11 @@ users:
         can_login: yes
         member_of:
             - alcurtis
+
+    - alpcohen:
+        can_login: yes
+        member_of:
+            - alpcohen
 
     - amihaila:
         can_login: yes

@@ -40,10 +40,10 @@ WITH dim_billing_account AS (
     SELECT *
     FROM {{ ref('dim_location') }}
 
-), dim_product_details AS (
+), dim_product_detail AS (
 
     SELECT *
-    FROM {{ ref('dim_product_details')}}
+    FROM {{ ref('dim_product_detail')}}
 
 ), dim_subscription AS (
 
@@ -71,10 +71,10 @@ WITH dim_billing_account AS (
     AND CURRENT_TIMESTAMP()::TIMESTAMP_TZ >= dbt_valid_from
     AND {{ coalesce_to_infinity('dbt_valid_to') }} > current_timestamp()::TIMESTAMP_TZ
 
-), fct_charges AS (
+), fct_charge AS (
 
     SELECT *
-    FROM {{ ref('fct_charges')}}
+    FROM {{ ref('fct_charge')}}
 
 ), fct_monthly_usage_data AS (
 
@@ -86,7 +86,7 @@ WITH dim_billing_account AS (
 
     {% endif %}
 
-), fct_usage_ping_payloads AS (
+), dim_usage_pings AS (
 
     SELECT *
     FROM {{ ref('dim_usage_pings') }}
@@ -122,10 +122,11 @@ WITH dim_billing_account AS (
       dim_crm_accounts.ultimate_parent_industry,
       dim_crm_accounts.ultimate_parent_account_owner_team,
       dim_crm_accounts.ultimate_parent_territory,
+      dim_crm_accounts.technical_account_manager,
       IFF(MAX(mrr) > 0, TRUE, FALSE)                                                AS is_paid_subscription,
       MAX(IFF(product_rate_plan_name ILIKE ANY ('%edu%', '%oss%'), TRUE, FALSE))    AS is_program_subscription,
-      ARRAY_AGG(DISTINCT dim_product_details.product_category)
-        WITHIN GROUP (ORDER BY dim_product_details.product_category ASC)            AS product_category_array,
+      ARRAY_AGG(DISTINCT dim_product_detail.product_tier_name)
+        WITHIN GROUP (ORDER BY dim_product_detail.product_tier_name ASC)            AS product_category_array,
       ARRAY_AGG(DISTINCT product_rate_plan_name)
         WITHIN GROUP (ORDER BY product_rate_plan_name ASC)                          AS product_rate_plan_name_array,
       SUM(quantity)                                                                 AS quantity,
@@ -140,12 +141,12 @@ WITH dim_billing_account AS (
     LEFT JOIN zuora_subscription_snapshots
       ON zuora_subscription_snapshots.subscription_id = dim_subscription.dim_subscription_id
       AND zuora_subscription_snapshots.rank = 1
-    INNER JOIN fct_charges
-      ON all_subscriptions.subscription_id = fct_charges.subscription_id
+    INNER JOIN fct_charge
+      ON all_subscriptions.subscription_id = fct_charge.dim_subscription_id
         AND charge_type = 'Recurring'
-    INNER JOIN dim_product_details
-      ON dim_product_details.product_details_id = fct_charges.product_details_id
-      AND dim_product_details.delivery = 'Self-Managed'
+    INNER JOIN dim_product_detail
+      ON dim_product_detail.dim_product_detail_id = fct_charge.dim_product_detail_id
+      AND dim_product_detail.product_delivery_type = 'Self-Managed'
       AND product_rate_plan_name NOT IN ('Premium - 1 Year - Eval')
     LEFT JOIN dim_billing_account
       ON dim_subscription.dim_billing_account_id = dim_billing_account.dim_billing_account_id
@@ -153,7 +154,7 @@ WITH dim_billing_account AS (
       ON dim_billing_account.dim_crm_account_id = dim_crm_accounts.crm_account_id
     INNER JOIN dim_date
       ON effective_start_month <= dim_date.date_day AND effective_end_month > dim_date.date_day
-    {{ dbt_utils.group_by(n=21)}}
+    {{ dbt_utils.group_by(n=22)}}
 
 ), joined AS (
 
@@ -168,6 +169,9 @@ WITH dim_billing_account AS (
       fct_monthly_usage_data.is_gmau,
       fct_monthly_usage_data.is_paid_gmau,
       fct_monthly_usage_data.is_umau,
+      dim_usage_pings.license_md5,
+      dim_usage_pings.license_trial_ends_on,
+      dim_usage_pings.is_trial,
       license_subscriptions.license_id,
       license_subscriptions.license_company_name,
       license_subscriptions.original_linked_subscription_id,
@@ -186,37 +190,41 @@ WITH dim_billing_account AS (
       license_subscriptions.ultimate_parent_industry,
       license_subscriptions.ultimate_parent_account_owner_team,
       license_subscriptions.ultimate_parent_territory,
+      license_subscriptions.technical_account_manager,
       COALESCE(is_paid_subscription, FALSE)             AS is_paid_subscription,
       COALESCE(is_program_subscription, FALSE)          AS is_program_subscription,
-      fct_usage_ping_payloads.ping_source               AS delivery,
-      fct_usage_ping_payloads.main_edition              AS main_edition,
-      fct_usage_ping_payloads.edition,
-      fct_usage_ping_payloads.product_tier              AS ping_product_tier,
-      fct_usage_ping_payloads.main_edition_product_tier AS ping_main_edition_product_tier,
-      fct_usage_ping_payloads.major_version,
-      fct_usage_ping_payloads.minor_version,
-      fct_usage_ping_payloads.major_minor_version,
-      fct_usage_ping_payloads.version,
-      fct_usage_ping_payloads.is_pre_release,
-      fct_usage_ping_payloads.instance_user_count,
-      fct_usage_ping_payloads.created_at,
-      fct_usage_ping_payloads.recorded_at,
+      dim_usage_pings.ping_source               AS delivery,
+      dim_usage_pings.main_edition              AS main_edition,
+      dim_usage_pings.edition,
+      dim_usage_pings.product_tier              AS ping_product_tier,
+      dim_usage_pings.main_edition_product_tier AS ping_main_edition_product_tier,
+      dim_usage_pings.major_version,
+      dim_usage_pings.minor_version,
+      dim_usage_pings.major_minor_version,
+      dim_usage_pings.version,
+      dim_usage_pings.is_pre_release,
+      dim_usage_pings.is_internal,
+      dim_usage_pings.is_staging,
+      dim_usage_pings.instance_user_count,
+      dim_usage_pings.created_at,
+      dim_usage_pings.recorded_at,
       monthly_metric_value,
       dim_hosts.host_id,
+      dim_hosts.source_ip_hash,
       dim_hosts.instance_id,
       dim_hosts.host_name,
       dim_hosts.location_id,
       dim_location.country_name,
       dim_location.iso_2_country_code
     FROM fct_monthly_usage_data
-    LEFT JOIN fct_usage_ping_payloads
-      ON fct_monthly_usage_data.ping_id = fct_usage_ping_payloads.id
+    LEFT JOIN dim_usage_pings
+      ON fct_monthly_usage_data.ping_id = dim_usage_pings.id
     LEFT JOIN dim_hosts
-      ON fct_usage_ping_payloads.host_id = dim_hosts.host_id
-        AND fct_usage_ping_payloads.source_ip_hash = dim_hosts.source_ip_hash
-        AND fct_usage_ping_payloads.uuid = dim_hosts.instance_id
+      ON dim_usage_pings.host_id = dim_hosts.host_id
+        AND dim_usage_pings.source_ip_hash = dim_hosts.source_ip_hash
+        AND dim_usage_pings.uuid = dim_hosts.instance_id
     LEFT JOIN license_subscriptions
-      ON fct_usage_ping_payloads.license_md5 = license_subscriptions.license_md5
+      ON dim_usage_pings.license_md5 = license_subscriptions.license_md5
         AND fct_monthly_usage_data.created_month = license_subscriptions.reporting_month
     LEFT JOIN dim_location
       ON dim_hosts.location_id = dim_location.dim_location_id
@@ -235,6 +243,7 @@ WITH dim_billing_account AS (
       host_id,
       instance_id,
       license_id,
+      license_md5,
       original_linked_subscription_id,
       latest_active_subscription_id,
       dim_billing_account_id,
@@ -251,7 +260,20 @@ WITH dim_billing_account AS (
       minor_version,
       major_minor_version,
       version,
-      is_pre_release
+      is_pre_release,
+      is_internal,
+      is_staging,
+      is_trial,
+
+      -- metadata metrics
+
+      group_name,
+      stage_name,
+      section_name,
+      is_smau,
+      is_gmau,
+      is_paid_gmau,
+      is_umau,
 
       --metatadata hosts
       source_ip_hash,
@@ -270,6 +292,7 @@ WITH dim_billing_account AS (
       product_rate_plan_name_array,
       is_paid_subscription,
       is_program_subscription,
+      license_trial_ends_on,
 
       -- account metadata
       crm_account_name,
@@ -279,6 +302,7 @@ WITH dim_billing_account AS (
       ultimate_parent_industry,
       ultimate_parent_account_owner_team,
       ultimate_parent_territory,
+      technical_account_manager,
 
       -- location info
       country_name            AS ping_country_name,
@@ -297,7 +321,7 @@ WITH dim_billing_account AS (
 {{ dbt_audit(
     cte_ref="sorted",
     created_by="@mpeychet",
-    updated_by="@iweeks",
+    updated_by="@mpeychet",
     created_date="2020-12-01",
-    updated_date="2020-12-24"
+    updated_date="2020-01-12"
 ) }}
