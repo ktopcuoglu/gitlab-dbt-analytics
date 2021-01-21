@@ -278,8 +278,8 @@ sources:
         identifier: gitlab_db_timelogs
       - name: todos
         identifier: gitlab_db_todos
-      - name: user_custom_attributes
-        identifier: gitlab_db_user_custom_attributes
+      - name: user_preferences
+        identifier: gitlab_db_user_preferences
       - name: users
         identifier: gitlab_db_users
       - name: user_custom_attributes
@@ -291,3 +291,4 @@ sources:
         identifier: gitlab_db_vulnerabilities
       - name: vulnerability_occurrences
         identifier: gitlab_db_vulnerability_occurrences
+
