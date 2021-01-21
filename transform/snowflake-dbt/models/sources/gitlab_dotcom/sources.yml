@@ -278,8 +278,8 @@ sources:
         identifier: gitlab_db_timelogs
       - name: todos
         identifier: gitlab_db_todos
-      - name: user_preferences
-        identifier: gitlab_db_user_preferences
+      - name: user_custom_attributes
+        identifier: gitlab_db_user_custom_attributes
       - name: users
         identifier: gitlab_db_users
       - name: user_custom_attributes
