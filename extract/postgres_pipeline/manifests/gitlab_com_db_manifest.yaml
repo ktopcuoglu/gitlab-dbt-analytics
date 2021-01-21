@@ -906,6 +906,8 @@ tables:
       , group_type
       , created_at
       , updated_at
+      , converted_at
+      , context
       FROM experiment_users
       WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
         AND '{EXECUTION_DATE}'::timestamp
@@ -1411,6 +1413,7 @@ tables:
       , project_creation_level
       , auto_devops_enabled
       , push_rule_id
+      , shared_runners_enabled
       FROM namespaces
       WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
         AND '{EXECUTION_DATE}'::timestamp

@@ -17,10 +17,10 @@ WITH dim_billing_account AS (
   SELECT *
   FROM {{ ref('dim_date') }}
 
-), dim_product_details AS (
+), dim_product_detail AS (
 
   SELECT *
-  FROM {{ ref('dim_product_details') }}
+  FROM {{ ref('dim_product_detail') }}
 
 ), dim_subscription AS (
 
@@ -66,10 +66,10 @@ SELECT
   dim_subscription.subscription_sales_type,
 
   --product info
-  dim_product_details.product_category,
-  dim_product_details.delivery,
-  dim_product_details.service_type,
-  dim_product_details.product_rate_plan_name                            AS rate_plan_name,
+  dim_product_detail.product_tier_name                                 AS product_category,
+  dim_product_detail.product_delivery_type                             AS delivery,
+  dim_product_detail.service_type,
+  dim_product_detail.product_rate_plan_name                            AS rate_plan_name,
   --  not needed as all charges in fct_mrr are recurring
   --  fct_mrr.charge_type,
   fct_mrr.unit_of_measure,
@@ -80,8 +80,8 @@ SELECT
   FROM fct_mrr
   INNER JOIN dim_subscription
     ON dim_subscription.dim_subscription_id = fct_mrr.subscription_id
-  INNER JOIN dim_product_details
-    ON dim_product_details.product_details_id = fct_mrr.product_details_id
+  INNER JOIN dim_product_detail
+    ON dim_product_detail.dim_product_detail_id = fct_mrr.product_details_id
   INNER JOIN dim_billing_account
     ON dim_billing_account.dim_billing_account_id = fct_mrr.billing_account_id
   INNER JOIN dim_date

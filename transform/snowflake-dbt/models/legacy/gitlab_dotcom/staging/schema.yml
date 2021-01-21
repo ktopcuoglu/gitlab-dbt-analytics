@@ -1,20 +1,6 @@
 version: 2
 
 models:
-  - name: gitlab_dotcom_gitlab_emails_cleaned
-    description: '{{ doc("gitlab_dotcom_gitlab_emails_cleaned") }}'
-    columns:
-      - name: user_id
-        tests:
-          - not_null
-          - unique
-      - name: email_address
-      - name: email_handle
-      - name: number_of_emails
-        tests:
-          - accepted_values:
-              values: ['1']
-
   - name: gitlab_dotcom_groups
     description: '{{ doc("gitlab_dotcom_groups") }}'
     columns:
@@ -40,7 +26,7 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: ['2', '3', '4', '34', '67', 'trial']
+              values: ['2', '3', '4', '34', '67', 'Trial']
       - name: ultimate_parent_plan_title
         description: Whether or not the namespace associated with the project is subscribed to a paid plan. This can be inherited from the namespaces's ultimate parent.
         tests:
@@ -199,7 +185,3 @@ models:
 
   - name: gitlab_dotcom_namespace_storage_statistics_historical_monthly
 
-
-
-
-          

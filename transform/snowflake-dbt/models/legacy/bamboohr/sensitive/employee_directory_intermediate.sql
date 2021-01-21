@@ -38,6 +38,11 @@ WITH RECURSIVE employee_directory AS (
     SELECT *
     FROM {{ ref('employee_location_factor_snapshots') }}
 
+), temporary_sheetload AS (
+
+    SELECT *
+    FROM  {{ ref('sheetload_location_factor_temporary_2020_december') }}
+
 ), employment_status AS (
     
     SELECT * 
@@ -150,7 +155,8 @@ WITH RECURSIVE employee_directory AS (
             job_role.job_grade)                                             AS job_grade,
        COALESCE(sheetload_engineering_speciality.speciality, job_role.jobtitle_speciality) AS jobtitle_speciality,
       ---to capture speciality for engineering prior to 2020.09.30 we are using sheetload, and capturing from bamboohr afterwards
-      location_factor.location_factor, 
+      IFF(DATE_TRUNC(month, date_actual) IN ('2020-12-01','2021-01-01'), temporary_sheetload.location_factor, 
+                location_factor.location_factor)                            AS location_factor,
       IFF(employee_directory.hire_date = date_actual OR 
           rehire_date = date_actual, True, False)                           AS is_hire_date,
       IFF(employment_status = 'Terminated', True, False)                    AS is_termination_date,
@@ -242,6 +248,9 @@ WITH RECURSIVE employee_directory AS (
     LEFT JOIN fct_work_email
       ON employee_directory.employee_id = fct_work_email.employee_id
       AND date_details.date_actual BETWEEN fct_work_email.valid_from_date AND fct_work_email.valid_to_date  
+    LEFT JOIN temporary_sheetload
+      ON employee_directory.employee_number = temporary_sheetload.employee_number
+      AND DATE_TRUNC(month, date_details.date_actual) IN ('2020-12-01','2021-01-01')  
     WHERE employee_directory.employee_id IS NOT NULL
 
 ), base_layers as (

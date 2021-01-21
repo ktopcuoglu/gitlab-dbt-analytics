@@ -10,6 +10,39 @@ models:
           - unique
           - not_null
 
+  - name: bdg_namespace_order_subscription_active
+    description: '{{ doc("bdg_namespace_order_subscription_active") }}'
+    columns:
+      - name: dim_namespace_id
+      - name: dim_subscription_id
+      - name: order_id
+      - name: namespace_id_order
+      - name: subscription_id_order
+      - name: namespace_type
+      - name: dim_product_tier_id_namespace
+      - name: product_tier_name_namespace
+      - name: saas_trial_start_date
+      - name: saas_trial_expired_on
+      - name: namespace_was_trial
+      - name: customer_id
+      - name: dim_product_tier_id_with_trial
+      - name: product_delivery_type_with_trial
+      - name: product_tier_name_with_trial
+      - name: dim_product_tier_id_order
+      - name: product_delivery_type_order
+      - name: product_tier_name_order
+      - name: order_start_date
+      - name: order_end_date
+      - name: order_is_trial
+      - name: product_tier_name_subscription
+      - name: dim_product_tier_id_subscription
+      - name: dim_subscription_id_original
+      - name: dim_subscription_id_previous
+      - name: dim_billing_account_id
+      - name: dim_crm_account_id
+      - name: count_of_tiers_per_subscription
+      - name: namespace_order_subscription_match_status
+
   - name: dim_billing_account
     description: '{{ doc("dim_billing_account") }}'
     columns:
@@ -63,6 +96,7 @@ models:
         description: account id from SFDC identifing the customer
         tests:
           - unique
+        tags: ["tdf", "common", "sales_funnel"]
       - name: crm_account_name
         description: account name from SFDC
       - name: crm_account_country
@@ -90,6 +124,7 @@ models:
         tests:
           - accepted_values:
                   values: ['TRUE', 'FALSE']
+        tags: ["tdf", "common", "sales_funnel"]
       - name: merged_to_account_id
         description: for deleted accounts this is the SFDC account they were merged to
 
@@ -100,6 +135,7 @@ models:
         tests:
           - unique
           - not_null
+        tags: ["tdf", "common", "sales_funnel"]
 
   - name: dim_crm_person
     description: '{{ doc("dim_crm_person") }}'
@@ -120,6 +156,7 @@ models:
         tests:
           - not_null
           - unique
+        tags: ["tdf", "common", "sales_funnel"]
 
   - name: dim_crm_sales_hierarchy_stamped
     description: '{{ doc("dim_crm_sales_hierarchy_stamped") }}'
@@ -128,6 +165,7 @@ models:
         tests:
           - not_null
           - unique
+        tags: ["tdf", "common", "sales_funnel"]
 
   - name: dim_date
     description: '{{ doc("dim_date") }}'
@@ -158,7 +196,7 @@ models:
         tests:
           - unique
           - not_null
-      - name: location_id
+      - name: dim_location_id
 
   - name: dim_geo_sub_region
     description: "Dimension table for sub-region built off ATAM_Sub_Region__C in SFDC. Example values: Southern Europe, NA East, Nordics"
@@ -250,6 +288,16 @@ models:
           - unique
         tags: ["tdf", "industry", "common"]
 
+  - name: dim_invoice
+    description: '{{ doc("dim_invoice") }}'
+    columns:
+      - name: dim_invoice_id
+        description: The unique identifier of an invoice
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "common", "invoice"]
+
   - name: dim_opportunity_source
     description: '{{ doc("dim_opportunity_source") }}'
     columns:
@@ -258,13 +306,13 @@ models:
         tests:
           - not_null
           - unique
-        tags: ["tdf", "opportunity", "common"]
+        tags: ["tdf", "opportunity", "common","sales_funnel"]
       - name: opportunity_source_name
         description: Opportunity source name
         tests:
           - not_null
           - unique
-        tags: ["tdf", "opportunity", "common"]
+        tags: ["tdf", "opportunity", "common", "sales_funnel"]
 
   - name: dim_purchase_channel
     description: '{{ doc("dim_purchase_channel") }}'
@@ -274,13 +322,13 @@ models:
         tests:
           - not_null
           - unique
-        tags: [ "tdf", "purchase_channel", "common" ]
+        tags: [ "tdf", "purchase_channel", "common", "sales_funnel" ]
       - name: purchase_channel_name
         description: Purchase channel name text
         tests:
           - not_null
           - unique
-        tags: [ "tdf", "purchase_channel", "common" ]
+        tags: [ "tdf", "purchase_channel", "common", "sales_funnel" ]
 
   - name: dim_order_type
     description: '{{ doc("dim_order_type") }}'
@@ -290,13 +338,13 @@ models:
         tests:
           - not_null
           - unique
-        tags: [ "tdf", "order_type", "common" ]
+        tags: [ "tdf", "order_type", "common", "sales_funnel" ]
       - name: order_type_name
         description: Opportunity source name
         tests:
           - not_null
           - unique
-        tags: [ "tdf", "order_type", "common" ]
+        tags: [ "tdf", "order_type", "common", "sales_funnel" ]
 
   - name: dim_instances
     description: '{{ doc("dim_instances") }}'
@@ -374,7 +422,7 @@ models:
         tests:
           - not_null
           - unique
-      - name: location_id
+      - name: dim_location_id
         tests:
           - not_null
           - unique
@@ -412,7 +460,7 @@ models:
           - not_null
         tags: [ "tdf", "common" ]
       - name: dim_product_tier_id
-        description: The unique ID of a product tier deterined in dim_product_tier.
+        description: The unique ID of a product tier determined in dim_product_tier.
         tests:
           - not_null
       - name: product_id
@@ -435,37 +483,6 @@ models:
         description: The unique SKU for the product
       - name: product_tier_name
         description: Name of the [GitLab tier](https://about.gitlab.com/handbook/marketing/strategic-marketing/tiers/) associated with the product.
-      - name: effective_start_date
-        description: The date when the product becomes available and can be subscribed to
-      - name: effective_end_date
-        description: The date when the product expires and can't be subscribed to anymore
-
-  - name: dim_product_details
-    description: '{{ doc("dim_product_details") }}'
-    columns:
-      - name: product_id
-        description: The ID of the product that contains the product rate plan.
-        tests:
-          - not_null
-      - name: product_name
-        description: The name of the product
-      - name: is_reporter_license
-        description: "Reporter licenses are in the Products with 'Additional Permission Types' in the name."
-      - name: billing_list_price
-        description: The price of the tier if the charge is a flat fee, or the price of each unit in the tier if the charge model is tiered pricing.
-      - name: product_details_id
-        description: The unique ID of a product rate plan charge
-        tests:
-          - unique
-          - not_null
-      - name: product_rate_plan_name
-        description: The name of the product rate plan. The name doesn't have to be unique in a Product Catalog, but the name has to be unique within a product.
-      - name: product_rate_plan_charge_name
-        description: The name of the product rate plan charge
-      - name: product_sku
-        description: The unique SKU for the product
-      - name: product_category
-        description: Category of the product. Used by Zuora Quotes Guided Product Selector.
       - name: effective_start_date
         description: The date when the product becomes available and can be subscribed to
       - name: effective_end_date
@@ -523,13 +540,13 @@ models:
         tests:
           - not_null
           - unique
-        tags: [ "tdf", "common" ]
+        tags: [ "tdf", "common", "sales_funnel" ]
       - name: sales_segment_name
         description: Sales Segment text
         tests:
           - not_null
           - unique
-        tags: [ "tdf", "common" ]
+        tags: [ "tdf", "common", "sales_funnel" ]
 
   - name: dim_sales_territory
     description: '{{ doc("dim_sales_territory") }}'
@@ -555,18 +572,23 @@ models:
         tests:
           - not_null
           - unique
+      - name: dim_crm_account_id
+        description: account id from SFDC identifing the customer
+      - name: dim_billing_account_id
+        description: The id of the Zuora account the subscription is associated with
+      - name: dim_crm_person_id_invoice_owner
+      - name: dim_crm_opportunity_id
+      - name: dim_subscription_id_original
+      - name: dim_subscription_id_previous
+      - name: amendment_id
+      - name: subscription_name_slugify
+        description: The unique identifier of the subscription
       - name: subscription_status
         description: The status of the subscription
         tests:
           - not_null
           - accepted_values:
               values: ['Active', 'Cancelled', 'Draft', 'Expired']
-      - name: dim_crm_account_id
-        description: account id from SFDC identifing the customer
-      - name: dim_billing_account_id
-        description: The id of the Zuora account the subscription is associated with
-      - name: subscription_name_slugify
-        description: The unique identifier of the subscription
       - name: subscription_version
         description: The version number of the subscription
       - name: is_auto_renew
@@ -613,61 +635,6 @@ models:
           - not_null
           - unique
         tags: ["tdf", "common"]
-
-  - name: fct_charges
-    description: '{{ doc("fct_charges") }}'
-    columns:
-      - name: subscription_id
-        description: Unique identifier of a version of a subscription
-        tests:
-          - not_null
-      - name: charge_id
-        description: The unique identifier of a verion of a rate plan charge
-        tests:
-          - not_null
-          - unique
-      - name: product_details_id
-        description: The unique ID of a product rate plan charge
-      - name: rate_plan_charge_number
-        description: A unique number that identifies the charge
-      - name: rate_plan_charge_name
-        description: The name of the rate plan charge
-      - name: effective_start_month
-        description: Month when the segmented charge starts or started
-      - name: effective_end_month
-        description: Month when the segmented charge ends or ended
-      - name: effective_start_date_id
-        description: Id of the date when the segmented charge starts or started. Use this field to join to dim_date on id.
-      - name: effective_end_date_id
-        description: Id of the date when the segmented charge ends or ended. Use this field to join to dim_date on id.
-      - name: effective_start_month_id
-        description: Id of the month when the segmented charge starts or started. Use this field to join to dim_date on id.
-      - name: effective_end_month_id
-        description: Id of the month when the segmented charge ends or ended. Use this field to join to dim_date on id.
-      - name: unit_of_measure
-        description: Specifies the units to measure usage
-      - name: quantity
-        description: The default quantity of units
-      - name: mrr
-        description: Monthly recurring revenue (MRR) is the amount of recurring charges in a given month. The MRR calculation doesn't include one-time charges nor usage charges.
-      - name: delta_tcv
-        description: After an Amendment, the change in the total contract value (TCV) amount for this charge, compared with its previous value.
-      - name: rate_plan_name
-        description: The name of the rate plan
-      - name: product_category
-        description: Indicates product category such as Bronze, Silver, Gold, Starter, Premium, or Ultimate
-      - name: delivery
-        description: Indicates whether the product is SaaS, Self-Managed, or other
-      - name: service_type
-        description: Indicates whether the subscription is support service only or full service
-      - name: discount_level
-        description: Specifies if the discount applies to just the product rate plan, the entire subscription, or to any activity in the account.
-      - name: rate_plan_charge_segment
-        description: The identifying number of the subscription rate plan segment. Segments are numbered sequentially, starting with 1.
-      - name: rate_plan_charge_version
-        description: The version of the rate plan charge. Each time a charge is amended, Zuora creates a new version of the rate plan charge.
-      - name: charge_type
-        description: Specifies the type of charge
 
   - name: fct_charge
     description: '{{ doc("fct_charge") }}'
@@ -751,14 +718,19 @@ models:
         description: this instance is used by the company or a GitLab team member
       - name: is_staging
         descrition: DRAFT - need to better identify instances used for staging environments
-      - name: location_id
-        description: JOIN key for country information derived. See https://gitlab.com/gitlab-data/analytics/-/issues/6560#note_427936012
 
-  - name: fct_charges_valid_at
-    description: Factual table with all rate plan charges coming from subscriptions or an amendment to a subscription. Required variable valid_at is timezone sensitive
+  - name: fct_invoice
+    description: '{{ doc("fct_invoice") }}'
+    columns:
+      - name: dim_invoice_id
+        description: The unique identifier of an invoice
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "common", "invoice"]
 
-  - name: fct_invoice_items
-    description: '{{ doc("fct_invoice_items") }}'
+  - name: fct_invoice_item
+    description: '{{ doc("fct_invoice_item") }}'
     columns:
       - name: charge_id
         description: The unique identifier of a verion of a rate plan charge associated with the invoice item
@@ -771,7 +743,7 @@ models:
           - not_null
           - unique
         tags: ["tdf", "common", "invoice"]
-      - name: invoice_id
+      - name: dim_invoice_id
         description: The ID of the invoice that's associated with the invoice item
         tests:
           - not_null
@@ -804,17 +776,15 @@ models:
           - not_null
           - unique
 
-  - name: fct_invoice_items_agg_valid_at
-    description: Parameterized model to recreate aggregate fact table with invoice items summarized on charge level at given timestamp {valid_at}. Required variable valid_at is timezone sensitive
-
   - name: fct_crm_opportunity
     description: '{{ doc("fct_crm_opportunity") }}'
     columns:
-      - name: crm_opportunity_id
+      - name: dim_crm_opportunity_id
         description: A dbt generated surrogate key combining the sfdc_record_id and the sales_accepted_date.
         tests:
           - unique
           - not_null
+        tags: ["tdf", "common", "sales_funnel"]
       - name: sales_accepted_date
         description: The sales_accepted_date from the sfdc_opportunity. Note that there can be opportunities with sales accepted dates that aren't sales accepted opportunities. This is indicated with the is_sao and is_sdr_sao booleans
       - name: crm_person_id
@@ -832,6 +802,7 @@ models:
         tests:
           - unique
           - not_null
+        tags: ["tdf", "common", "sales_funnel"]
       - name: bizible_person_id
         description: The unique identifier assigned to a lead or contact in Bizible used to join to touchpoint and attribution data.
       - name: mql_date_first
@@ -856,7 +827,7 @@ models:
         tests:
           - not_null
       - name: product_details_id
-        description: The identifier of product details in dim_product_details
+        description: The identifier of product details in dim_product_detail
         tests:
           - not_null
       - name: billing_account_id
@@ -894,7 +865,7 @@ models:
           - not_null
         tags: ["tdf", "arr"]
       - name: product_details_id
-        description: The identifier of product details in dim_product_details
+        description: The identifier of product details in dim_product_detail
         tests:
           - not_null
         tags: ["tdf", "arr"]
@@ -929,7 +900,7 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: ['2', '3', '4', '34', '67', 'trial']
+              values: ['2', '3', '4', '34', '67', 'Trial']
       - name: ultimate_parent_plan_title
         description: Whether or not the namespace associated with the project is subscribed to a paid plan. This can be inherited from the namespaces's ultimate parent.
         tests:
@@ -979,9 +950,26 @@ models:
         tests:
           - not_null
       - name: member_awaiting_access_count
-        description: Count of users waiting to be granted membership to the namespace. 
+        description: Count of users waiting to be granted membership to the namespace.
         tests:
           - not_null
+
+  - name: fct_quote_item
+    description: '{{ doc("fct_quote_item") }}'
+    columns:
+      - name: quote_item_id
+        description: A unique identifier of a product included in a quote amendment which is associated with a quote
+        tests:
+          - not_null
+          - unique
+
+  - name: fct_quote
+    description: '{{ doc("fct_quote") }}'
+    columns:
+      - name: dim_quote_id
+        tests:
+          - not_null
+          - unique
 
   - name: fct_sales_funnel_target
     description: '{{ doc("fct_sales_funnel_target") }}'
@@ -989,10 +977,13 @@ models:
       - name: kpi_name
         tests:
           - not_null
+        tags: ["tdf", "common", "sales_funnel"]
+
       - name: sales_funnel_target_id
         tests:
           - not_null
           - unique
+        tags: ["tdf", "common", "sales_funnel"]
 
   - name: fct_usage_ci_minutes
     description: '{{ doc("fct_usage_ci_minutes") }}'
@@ -1108,7 +1099,7 @@ models:
       - name: billing_account_id
         description: The zuora account id associated with the subscription. Use this field to join to dim_billing_accounts.
       - name: array_product_details_id
-        description: The array of distinct product detail ids associated with the subscription. Use this field to join to dim_product_details.
+        description: The array of distinct product detail ids associated with the subscription. Use this field to join to dim_product_detail.
       - name: hostname
         description: The name of the host of the instance.
       - name: edition
@@ -1132,6 +1123,51 @@ models:
       - name: recorded_at
         description: The timestamp when the usage ping was recorded.
 
+  - name: fct_usage_self_managed_seat_link
+    description: '{{ doc("fct_usage_self_managed_seat_link") }}'
+    columns:
+      - name: customers_db_order_id
+        tests:
+          - not_null
+      - name: dim_subscription_id
+        tests:
+          - not_null
+      - name: dim_subscription_id_original
+        tests:
+          - not_null
+      - name: dim_subscription_id_previous
+        tests:
+          - not_null
+      - name: dim_crm_account_id
+        tests:
+          - not_null
+      - name: dim_billing_account_id
+        tests:
+          - not_null
+      - name: dim_product_tier_id
+        tests:
+          - not_null
+      - name: active_user_count
+        description: Count of active users currently on the customer's subcription. A count of 0 indicates that Seat Link has been turned off by the customer.
+        tests:
+          - not_null
+      - name: license_user_count
+        description: Count of licensed users purchased with the customer's subcription.
+        tests:
+          - not_null
+      - name: max_historical_user_count
+        description: Maximum active user count ever reported over the lifetime of the customer's subcription.
+        tests:
+          - not_null
+      - name: snapshot_month
+        description: Month in which Seat Link usage data is reported.
+        tests:
+          - not_null
+      - name: report_date
+        description: Day on which Seat Link usage data is reported. Should always be last day of month for historical months.
+        tests:
+          - not_null
+
   - name: dim_marketing_channel
     description: '{{ doc("prep_sfdc_account") }}'
     columns:
@@ -1140,6 +1176,7 @@ models:
         tests:
           - not_null
           - unique
+        tags: ["tdf", "common", "sales_funnel"]
       - name: marketing_channel_name
 
   - name: dim_namespace
@@ -1157,8 +1194,6 @@ models:
       - name: namespace_is_ultimate_parent
       - name: namespace_name
       - name: namespace_path
-        tests:
-          - not_null
       - name: owner_id
       - name: namespace_type
         description: This field should be Group or Individual. A namespace is the first item to come after the / following the domain. For example https://www.gitlab.com/NicoleSchwartz/ is an Individual namespace. There are some namespace_IDs that are missing from this table, when doing certain joins (left) you may get NULL when this data is missing.
@@ -1192,7 +1227,7 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: ['2', '3', '4', '34', '67', 'trial']
+              values: ['2', '3', '4', '34', '67', 'Trial']
       - name: gitlab_plan_title
         description: Whether or not the namespace associated with the project is subscribed to a paid plan. This can be inheritted from the namespaces's ultimate parent.
         tests:
@@ -1215,8 +1250,48 @@ models:
         tests:
           - not_null
           - unique
-      - name: quote_number  
+      - name: quote_number
       - name: quote_name
       - name: quote_status
       - name: is_primary_quote
       - name: quote_start_date
+
+  - name: dim_license
+    description: '{{ doc("dim_license") }}'
+    columns:
+      - name: dim_license_id
+        description: The unique ID of a generated license.
+        tests:
+          - not_null
+          - unique
+      - name: license_md5
+        description: The md5 hash of the license file. Use this field to join to fct_usage_ping_payloads.
+        tests:
+          - not_null
+          - unique
+      - name: dim_subscription_id
+        description: The unique identifier of a version of a subscription.
+      - name: subscription_name
+        description: The unique identifier of a subscription.
+      - name: dim_subscription_id_original
+      - name: dim_subscription_id_previous
+      - name: license_user_count
+        description: The user count of the license.
+      - name: license_plan
+        description: The plan code for the product tier of the license.
+      - name: dim_product_tier_id
+        description: The unique ID of a product tier deterimined in dim_product_tier.
+      - name: is_trial
+        description: Boolean flag noting if the license was generated as part of a trial.
+      - name: is_internal
+        description: Derived boolean flag noting if the email recipient and company associated with the license is part of GitLab.
+      - name: company
+        description: The company the license was generated for.
+      - name: license_start_date
+        description: The start date of the license.
+      - name: license_expire_date
+        description: The expiration date of the license.
+      - name: created_at
+        description: The timestamp of when the license was generated.
+      - name: updated_at
+        description: The timestamp of when the license was updated.

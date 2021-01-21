@@ -65,7 +65,7 @@ The opportunity source table contains info about your opportunities, which are s
 
 {% docs sfdc_opportunity_split %}
 
-OpportunitySplit credits one or more opportunity team members with a portion of the opportunity amount. 
+OpportunitySplit credits one or more opportunity team members with a portion of the opportunity amount.
 [See original issue](https://gitlab.com/gitlab-data/analytics/-/issues/6073)
 [Opportunity Split Docs](https://developer.salesforce.com/docs/atlas.en-us.api.meta/api/sforce_api_objects_opportunitysplit.htm)
 
@@ -179,5 +179,17 @@ This is the source table for Account Field History.
 {% docs sfdc_opphistory_source %}
 
 This is the source table for Opportunity History.
+
+{% enddocs %}
+
+{% docs sfdc_zqu_quote_rate_plan_source %}
+
+Source model for SFDC custom object representing a quote rate plan from Zuora.
+
+{% enddocs %}
+
+{% docs sfdc_zqu_quote_rate_plan_charge_source %}
+
+Source model for SFDC custom object representing a quote rate plan charge from Zuora.
 
 {% enddocs %}

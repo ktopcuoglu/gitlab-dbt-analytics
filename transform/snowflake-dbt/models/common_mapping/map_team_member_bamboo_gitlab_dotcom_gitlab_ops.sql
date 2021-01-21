@@ -2,7 +2,8 @@ WITH bamboo_hr_members AS (
 
     SELECT *
     FROM {{ ref ('bamboohr_work_email') }}
-    WHERE rank_email_desc = 1
+    WHERE work_email IS NOT NULL 
+      AND rank_email_desc = 1
 
 ), gitlab_dotcom_members AS (
 
@@ -20,7 +21,7 @@ WITH bamboo_hr_members AS (
 ), final AS (
 
     SELECT 
-      employee_id               AS bamboo_hr_employee_id, 
+      employee_id               AS bamboohr_employee_id, 
       full_name                 AS bamboo_hr_full_name, 
       work_email                AS bamboo_hr_gitlab_email, 
       gitlab_dotcom_user_id, 

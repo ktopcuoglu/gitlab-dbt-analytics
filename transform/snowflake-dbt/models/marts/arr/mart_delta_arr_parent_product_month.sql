@@ -13,10 +13,10 @@ WITH dim_billing_account AS (
     SELECT *
     FROM {{ ref('dim_date') }}
 
-), dim_product_details AS (
+), dim_product_detail AS (
 
     SELECT *
-    FROM {{ ref('dim_product_details') }}
+    FROM {{ ref('dim_product_detail') }}
 
 ), dim_subscription AS (
 
@@ -36,16 +36,16 @@ WITH dim_billing_account AS (
       IFF(is_first_day_of_last_month_of_fiscal_year, fiscal_year, NULL)               AS fiscal_year,
       dim_crm_account.ultimate_parent_account_name,
       dim_crm_account.ultimate_parent_account_id,
-      dim_product_details.product_category,
-      dim_product_details.delivery,
-      dim_product_details.product_ranking,
+      dim_product_detail.product_tier_name                                            AS product_category,
+      dim_product_detail.product_delivery_type                                        AS delivery,
+      dim_product_detail.product_ranking,
       fct_mrr.mrr,
       fct_mrr.quantity
     FROM fct_mrr
     INNER JOIN dim_subscription
       ON dim_subscription.dim_subscription_id = fct_mrr.subscription_id
-    INNER JOIN dim_product_details
-      ON dim_product_details.product_details_id = fct_mrr.product_details_id
+    INNER JOIN dim_product_detail
+      ON dim_product_detail.dim_product_detail_id = fct_mrr.product_details_id
     INNER JOIN dim_billing_account
       ON dim_billing_account.dim_billing_account_id = fct_mrr.billing_account_id
     INNER JOIN dim_date
@@ -59,11 +59,13 @@ WITH dim_billing_account AS (
       ultimate_parent_account_name,
       ultimate_parent_account_id,
       product_category,
+      delivery,
+      product_ranking,
       MIN(arr_month)                      AS date_month_start,
       --add 1 month to generate churn month
       DATEADD('month',1,MAX(arr_month))   AS date_month_end
     FROM mart_arr
-    {{ dbt_utils.group_by(n=3) }}
+    {{ dbt_utils.group_by(n=5) }}
 
 ), base AS (
 
@@ -71,6 +73,8 @@ WITH dim_billing_account AS (
       ultimate_parent_account_name,
       ultimate_parent_account_id,
       product_category,
+      delivery,
+      product_ranking,
       dim_date.date_actual         AS arr_month,
       dim_date.fiscal_quarter_name_fy,
       dim_date.fiscal_year
@@ -89,8 +93,8 @@ WITH dim_billing_account AS (
       base.ultimate_parent_account_name,
       base.ultimate_parent_account_id,
       base.product_category                                                                  AS product_category,
-      delivery                                                                               AS delivery,
-      product_ranking                                                                        AS product_ranking,
+      base.delivery                                                                               AS delivery,
+      base.product_ranking                                                                        AS product_ranking,
       SUM(ZEROIFNULL(quantity))                                                              AS quantity,
       SUM(ZEROIFNULL(mrr)*12)                                                                AS arr
     FROM base

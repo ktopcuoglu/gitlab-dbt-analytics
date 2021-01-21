@@ -8,10 +8,10 @@ WITH dim_crm_account AS (
     SELECT *
     FROM {{ ref('dim_date') }}
 
-), dim_product_details AS (
+), dim_product_detail AS (
 
     SELECT *
-    FROM {{ ref('dim_product_details') }}
+    FROM {{ ref('dim_product_detail') }}
 
 ), dim_subscription AS (
 
@@ -61,18 +61,18 @@ WITH dim_crm_account AS (
 
     SELECT
       dim_crm_account.ultimate_parent_account_id,
-      dim_date.date_actual                             AS mrr_month,
+      dim_date.date_actual                              AS mrr_month,
       dateadd('year', 1, date_actual)                   AS retention_month,
       next_renewal_month,
       last_renewal_month,
       SUM(ZEROIFNULL(mrr))                              AS mrr_total,
       SUM(ZEROIFNULL(arr))                              AS arr_total,
       SUM(ZEROIFNULL(quantity))                         AS quantity_total,
-      ARRAY_AGG(product_category)                       AS product_category,
+      ARRAY_AGG(product_tier_name)                      AS product_category,
       MAX(product_ranking)                              AS product_ranking
     FROM fct_mrr
-    INNER JOIN dim_product_details
-      ON dim_product_details.product_details_id = fct_mrr.product_details_id
+    INNER JOIN dim_product_detail
+      ON dim_product_detail.dim_product_detail_id = fct_mrr.product_details_id
     INNER JOIN dim_date
       ON dim_date.date_id = fct_mrr.date_id
     LEFT JOIN dim_crm_account

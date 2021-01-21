@@ -74,11 +74,11 @@ dag = DAG("dbt_datasiren", default_args=default_args, schedule_interval=dag_sche
 
 dbt_datasiren_command = f"""
         {dbt_install_deps_nosha_cmd} &&
-        dbt run --profiles-dir profile --target prod --models tag:datasiren; ret=$?;
+        dbt run --profiles-dir profile --target prod --models tag:datasiren --exclude datasiren_audit_results+;  ret=$?;
         python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
         """
 
-KubernetesPodOperator(
+datasiren_operator = KubernetesPodOperator(
     **gitlab_defaults,
     image=DBT_IMAGE,
     task_id=f"dbt-datasiren",
@@ -88,3 +88,22 @@ KubernetesPodOperator(
     arguments=[dbt_datasiren_command],
     dag=dag,
 )
+
+dbt_datasiren_audit_results_command = f"""
+        {dbt_install_deps_nosha_cmd} &&
+        dbt run --profiles-dir profile --target prod --models datasiren_audit_results+; ret=$?;
+        python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
+        """
+
+audit_results_operator = KubernetesPodOperator(
+    **gitlab_defaults,
+    image=DBT_IMAGE,
+    task_id=f"dbt-datasiren-audit-results",
+    name=f"dbt-datasiren-audit-results",
+    secrets=task_secrets,
+    env_vars=pod_env_vars,
+    arguments=[dbt_datasiren_audit_results_command],
+    dag=dag,
+)
+
+datasiren_operator >> audit_results_operator

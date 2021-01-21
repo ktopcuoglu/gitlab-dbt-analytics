@@ -8,6 +8,7 @@ WITH RECURSIVE namespaces AS (
     SELECT *
     FROM {{ ref('gitlab_dotcom_gitlab_subscriptions_source') }}
     WHERE is_currently_valid = TRUE
+      AND COALESCE(gitlab_subscription_end_date, CURRENT_DATE) >= CURRENT_DATE
 
 ), plans AS (
 
@@ -71,7 +72,7 @@ WITH RECURSIVE namespaces AS (
     CASE
     WHEN ultimate_parent_gitlab_subscriptions.is_trial AND COALESCE(ultimate_parent_gitlab_subscriptions.plan_id, 34) <> 34
       THEN 'Trial'
-      ELSE COALESCE(ultimate_parent_plans.plan_name, 'Free')
+      ELSE COALESCE(ultimate_parent_plans.plan_title, 'Free')
     END                                                                               AS ultimate_parent_plan_title,
     CASE
     WHEN ultimate_parent_gitlab_subscriptions.is_trial AND COALESCE(ultimate_parent_gitlab_subscriptions.plan_id, 34) <> 34

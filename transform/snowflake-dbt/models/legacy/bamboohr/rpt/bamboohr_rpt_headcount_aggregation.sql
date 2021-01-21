@@ -4,8 +4,8 @@
                               " %}
 
 
-{% set ratio_to_report_partition_statement = "OVER (PARTITION BY base.breakout_type, base.department, base.division, base.job_role,
-                                              base.job_grade, base.eeoc_field_name, base.eeoc_value
+{% set ratio_to_report_partition_statement = "OVER (PARTITION BY base.month_date, base.breakout_type, base.department, base.division, base.job_role,
+                                              base.job_grade, base.eeoc_field_name
                                               ORDER BY base.month_date)
                               " %}
 
@@ -40,7 +40,8 @@ WITH source AS (
       base.job_grade,
       base.eeoc_field_name,
       base.eeoc_value,
-      IFF(base.eeoc_field_name = 'no_eeoc', TRUE, FALSE)                            AS show_value_criteria,
+      IFF(base.breakout_type !='eeoc_breakout' 
+            AND base.eeoc_field_name !='no_eeoc', FALSE, TRUE)                     AS show_value_criteria,
       headcount_start,
       headcount_end,
       headcount_end_excluding_sdr,
@@ -142,14 +143,6 @@ WITH source AS (
     FROM base
     LEFT JOIN source  
       ON base.unique_key = source.unique_key
-      {# ON base.month_date = source.month_date
-      AND base.breakout_type = source.breakout_type_modified
-      AND base.department = source.department
-      AND base.division = source.division
-      AND COALESCE(base.job_role,'NA') = COALESCE(source.job_role,'NA')
-      AND COALESCE(base.job_grade,'NA') = COALESCE(source.job_grade,'NA')
-      AND base.eeoc_field_name = source.eeoc_field_name
-      AND base.eeoc_value = source.eeoc_value #}
     WHERE base.month_date < DATE_TRUNC('month', CURRENT_DATE)   
 
  ), final AS (
@@ -249,17 +242,17 @@ WITH source AS (
       IFF(separated_contributor < 4 AND eeoc_field_name != 'no_eeoc',
         NULL, separated_contributor)                                             AS separated_contributor,
 
-      IFF(min_headcount_average <2 AND eeoc_field_name != 'no_eeoc', 
-        NULL, percent_of_headcount)                                              AS percent_of_headcount,
-      IFF(min_hire_count <2 AND eeoc_field_name != 'no_eeoc',
+      IFF(min_headcount_average < 2 and show_value_criteria = FALSE, 
+            NULL, percent_of_headcount)                                          AS percent_of_headcount,
+      IFF(min_hire_count < 2 and show_value_criteria = FALSE, 
         NULL, percent_of_hires)                                                  AS percent_of_hires,
-      IFF(min_headcount_leader <2 AND eeoc_field_name != 'no_eeoc', 
+      IFF(min_headcount_leader < 2 and show_value_criteria = FALSE, 
         NULL, percent_of_headcount_leaders)                                      AS percent_of_headcount_leaders,
-      IFF(min_headcount_manager <2 AND eeoc_field_name != 'no_eeoc', 
+      IFF(min_headcount_manager < 2 and show_value_criteria = FALSE,  
         NULL, percent_of_headcount_manager)                                      AS percent_of_headcount_manager,    
-      IFF(min_headcount_staff <2 AND eeoc_field_name != 'no_eeoc', 
+      IFF(min_headcount_staff < 2 and show_value_criteria = FALSE, 
         NULL, percent_of_headcount_staff)                                        AS percent_of_headcount_staff,  
-      IFF(min_headcount_contributor <2 AND eeoc_field_name != 'no_eeoc', 
+      IFF(min_headcount_contributor < 2 and show_value_criteria = FALSE, 
         NULL, percent_of_headcount_leaders)                                      AS percent_of_headcount_contributor,
 
       CASE WHEN breakout_type IN ('kpi_breakout','division_breakout','department_breakout') 
