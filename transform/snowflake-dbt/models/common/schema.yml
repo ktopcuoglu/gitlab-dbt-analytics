@@ -151,7 +151,7 @@ models:
           - relationships:
               to: ref('dim_crm_sales_representative')
               field: dim_crm_sales_rep_id
-        tags: ["tdf", "opportunity", "common","sales_funnel"]
+        tags: ["tdf", "opportunity", "common", "sales_funnel"]
       - name: lead_source
       - name: merged_opportunity_id
       - name: net_new_source_categories
