@@ -172,6 +172,7 @@ WITH dim_billing_account AS (
       dim_usage_pings.license_md5,
       dim_usage_pings.license_trial_ends_on,
       dim_usage_pings.is_trial,
+      dim_usage_pings.umau_value,
       license_subscriptions.license_id,
       license_subscriptions.license_company_name,
       license_subscriptions.original_linked_subscription_id,
@@ -264,6 +265,7 @@ WITH dim_billing_account AS (
       is_internal,
       is_staging,
       is_trial,
+      umau_value,
 
       -- metadata metrics
 
@@ -323,5 +325,5 @@ WITH dim_billing_account AS (
     created_by="@mpeychet",
     updated_by="@mpeychet",
     created_date="2020-12-01",
-    updated_date="2020-01-12"
+    updated_date="2020-01-21"
 ) }}

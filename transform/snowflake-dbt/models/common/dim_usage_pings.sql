@@ -58,8 +58,9 @@ WITH usage_ping_data AS (
 
     SELECT 
       internal_identified.*,
-      AS_DATE(raw_usage_data.raw_usage_data_payload:license_trial_ends_on)                  AS license_trial_ends_on,
-      IFF(internal_identified.created_at < license_trial_ends_on, TRUE, FALSE)              AS is_trial,
+      TO_DATE(raw_usage_data.raw_usage_data_payload:license_trial_ends_on::TEXT)                      AS license_trial_ends_on,
+      raw_usage_data.raw_usage_data_payload:usage_activity_by_stage_monthly.manage.events::NUMBER     AS umau_value,
+      IFF(internal_identified.created_at < license_trial_ends_on, TRUE, FALSE)                        AS is_trial,
       raw_usage_data.raw_usage_data_payload
     FROM internal_identified
     LEFT JOIN raw_usage_data
