@@ -1,11 +1,14 @@
-WITH project_statistics_snapshot_monthly_all AS ( -- Project level storage sizes converted to GiB (1 GiB = 2^30 bytes = 1,073,741,824 bytes)
+{% set bytes_to_gib_conversion = 1073741824 %} -- To convert storage (usage) sizes from bytes in source to GiB for reporting (1 GiB = 2^30 bytes = 1,073,741,824 bytes)
+{% set bytes_to_mib_conversion = 1048576 %} -- To convert storage (usage) sizes from bytes in source to MiB for reporting (1 MiB = 2^20 bytes = 1,048,576 bytes)
+{% set mib_to_gib_conversion = 1024 %} -- To convert storage limit sizes from GiB in "source" to MiB for reporting (1 GiB = 1024 MiB)
+WITH project_statistics_snapshot_monthly_all AS (
 
     --project_statistics_snapshot_monthly 
     SELECT
       snapshot_month,
       project_id,
       namespace_id,
-      (repository_size + lfs_objects_size) / 1073741824                         AS project_storage_size
+      (repository_size + lfs_objects_size) / {{bytes_to_gib_conversion}}        AS project_storage_size
     FROM {{ ref('gitlab_dotcom_project_statistic_historical_monthly') }}
     WHERE snapshot_month >= '2020-07-01'
       AND snapshot_month < DATE_TRUNC('month', CURRENT_DATE)
@@ -17,7 +20,7 @@ WITH project_statistics_snapshot_monthly_all AS ( -- Project level storage sizes
       DATE_TRUNC('month', CURRENT_DATE)                                         AS snapshot_month,
       project_id,
       namespace_id,
-      (repository_size + lfs_objects_size) / 1073741824                         AS project_storage_size
+      (repository_size + lfs_objects_size) / {{bytes_to_gib_conversion}}        AS project_storage_size
     FROM {{ ref('gitlab_dotcom_project_statistics_source') }}
 
 ), namespace_lineage_monthly_all AS (
@@ -151,45 +154,45 @@ WITH project_statistics_snapshot_monthly_all AS ( -- Project level storage sizes
     FROM repository_level_statistics
     GROUP BY 1,2  -- Only top level namespaces
     
-), joined AS ( -- All storage sizes converted to MiB (1 MiB = 2^20 bytes = 1,048,576 bytes), all limit sizes in GiB (1 GiB = 1024 MiB)
+), joined AS (
     
     SELECT
       repository.snapshot_month,
       repository.ultimate_parent_id                                             AS dim_namespace_id,
       repository.ultimate_parent_id                                             AS ultimate_parent_namespace_id,
-      repository.free_limit                                                     AS total_free_storage_limit,
-      namespace.purchased_storage_limit                                         AS total_purchased_storage_limit,
+      repository.free_limit                                                     AS total_free_storage_limit_gib,
+      namespace.purchased_storage_limit                                         AS total_purchased_storage_limit_gib,
       IFF(repository.repositories_above_free_limit_count = 0, FALSE, TRUE)      AS has_repositories_above_free_limit,
       repository.repositories_above_free_limit_count,
       IFF(repository.capped_repositories_count = 0, FALSE, TRUE)                AS has_capped_repositories,
       repository.capped_repositories_count,
-      repository.free_storage * 1073741824                                      AS total_free_storage_size,
-      repository.purchased_storage * 1073741824                                 AS total_purchased_storage_size,
-      namespace.billable_storage_size,
-      namespace.repository_size,
-      namespace.lfs_objects_size,
-      namespace.build_artifacts_size,
-      namespace.packages_size,
-      namespace.wiki_size,
-      namespace.storage_size,
-      repository.free_storage * 1024                                            AS total_free_storage_mib,
-      repository.purchased_storage * 1024                                       AS total_purchased_storage_mib,
-      namespace.billable_storage_size / 1048576                                 AS billable_storage_mib,
-      namespace.repository_size / 1048576                                       AS repository_mib,
-      namespace.lfs_objects_size / 1048576                                      AS lfs_objects_mib,
-      namespace.build_artifacts_size / 1048576                                  AS build_artifacts_mib,
-      namespace.packages_size / 1048576                                         AS packages_mib,
-      namespace.wiki_size / 1048576                                             AS wiki_mib,
-      namespace.storage_size / 1048576                                          AS storage_mib,
+      repository.free_storage * {{bytes_to_gib_conversion}}                     AS total_free_storage_bytes,
+      repository.purchased_storage * {{bytes_to_gib_conversion}}                AS total_purchased_storage_bytes,
+      namespace.billable_storage_size                                           AS billable_storage_bytes,
+      namespace.repository_size                                                 AS repository_bytes,
+      namespace.lfs_objects_size                                                AS lfs_objects_bytes,
+      namespace.build_artifacts_size                                            AS build_artifacts_bytes,
+      namespace.packages_size                                                   AS packages_bytes,
+      namespace.wiki_size                                                       AS wiki_bytes,
+      namespace.storage_size                                                    AS storage_bytes,
+      repository.free_storage * {{mib_to_gib_conversion}}                       AS total_free_storage_mib,
+      repository.purchased_storage * {{mib_to_gib_conversion}}                  AS total_purchased_storage_mib,
+      namespace.billable_storage_size / {{bytes_to_mib_conversion}}             AS billable_storage_mib,
+      namespace.repository_size / {{bytes_to_mib_conversion}}                   AS repository_mib,
+      namespace.lfs_objects_size / {{bytes_to_mib_conversion}}                  AS lfs_objects_mib,
+      namespace.build_artifacts_size / {{bytes_to_mib_conversion}}              AS build_artifacts_mib,
+      namespace.packages_size / {{bytes_to_mib_conversion}}                     AS packages_mib,
+      namespace.wiki_size / {{bytes_to_mib_conversion}}                         AS wiki_mib,
+      namespace.storage_size / {{bytes_to_mib_conversion}}                      AS storage_mib,
       repository.free_storage                                                   AS total_free_storage_gib,
       repository.purchased_storage                                              AS total_purchased_storage_gib,
-      namespace.billable_storage_size / 1048576                                 AS billable_storage_gib,
-      namespace.repository_size / 1048576                                       AS repository_gib,
-      namespace.lfs_objects_size / 1048576                                      AS lfs_objects_gib,
-      namespace.build_artifacts_size / 1048576                                  AS build_artifacts_gib,
-      namespace.packages_size / 1048576                                         AS packages_gib,
-      namespace.wiki_size / 1048576                                             AS wiki_gib,
-      namespace.storage_size / 1048576                                          AS storage_gib
+      namespace.billable_storage_size / {{bytes_to_gib_conversion}}             AS billable_storage_gib,
+      namespace.repository_size / {{bytes_to_gib_conversion}}                   AS repository_gib,
+      namespace.lfs_objects_size / {{bytes_to_gib_conversion}}                  AS lfs_objects_gib,
+      namespace.build_artifacts_size / {{bytes_to_gib_conversion}}              AS build_artifacts_gib,
+      namespace.packages_size / {{bytes_to_gib_conversion}}                     AS packages_gib,
+      namespace.wiki_size / {{bytes_to_gib_conversion}}                         AS wiki_gib,
+      namespace.storage_size / {{bytes_to_gib_conversion}}                      AS storage_gib
     FROM namespace_repository_storage_usage_summary repository
     LEFT JOIN namespace_storage_summary namespace
       ON repository.ultimate_parent_id = namespace.ultimate_parent_id

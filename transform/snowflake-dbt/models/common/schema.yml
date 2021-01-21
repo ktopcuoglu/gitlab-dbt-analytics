@@ -1365,11 +1365,11 @@ models:
         description: ID of the namespace's ultimate parent namespace.
         tests:
           - not_null
-      - name: total_free_storage_limit
+      - name: total_free_storage_limit_gib
         description: Sum of free repository level storage (10 GiB) over all repositories under the top level namespace. Since storage limits are provided in GiB, they are being reported in GiB. For certain GitLab internal namespaces this value is 0, implying **unlimited storage**.
         tests:
           - not_null
-      - name: total_purchased_storage_limit
+      - name: total_purchased_storage_limit_gib
         description: Total extra storage purhaced across all namespaces under the top level namespace. Extra storage is currently purchased in 10 GiB increments and thus is reported in GiB.
         tests:
           - not_null
@@ -1385,20 +1385,20 @@ models:
         description: Total billable storage used _under_ the free 10 GiB limit across all repositories under the top level namespace.
       - name: total_purchased_storage_size
         description: Total billable storage used _over_ the free 10 GiB limit across all repositories under the top level namespace.
-      - name: billable_storage_size
-        description: This value consists of the only types of storage that GitLab currently limits, and thus are possible to be billable. This value is equivalent to `repository_size` + `lfs_objects_size` across all repositories under the top level namespace and is reported in bytes.
-      - name: repository_size
-        description: Total size of repository across all repositories under the top level namespace in bytes.
-      - name: lfs_objects_size
-        description: Total size of Large File Storage objects across all repositories under the top level namespace in bytes.
-      - name: build_artifacts_size
-        description: Total size of build artifacts across all repositories under the top level namespace in bytes.
-      - name: packages_size
-        description: Total size of packagess across all repositories under the top level namespace in bytes.
-      - name: wiki_size
-        description: Total size of wikis across all repositories under the top level namespace in bytes.
-      - name: storage_size
-        description: Sum of reposity, LFS objects, build artifacts, packages, and wiki storage sizes, in bytes.
+      - name: billable_storage_bytes
+        description: This value consists of the only types of storage that GitLab currently limits, and thus are possible to be billable. This value is equivalent to `repository_size` + `lfs_objects_size` across all repositories under the top level namespace.
+      - name: repository_bytes
+        description: Total size of repository across all repositories under the top level namespace.
+      - name: lfs_objects_bytes
+        description: Total size of Large File Storage objects across all repositories under the top level namespace.
+      - name: build_artifacts_bytes
+        description: Total size of build artifacts across all repositories under the top level namespace.
+      - name: packages_bytes
+        description: Total size of packagess across all repositories under the top level namespace.
+      - name: wiki_bytes
+        description: Total size of wikis across all repositories under the top level namespace.
+      - name: storage_bytes
+        description: Sum of reposity, LFS objects, build artifacts, packages, and wiki storage sizes.
 
 
   - name: dim_marketing_channel
