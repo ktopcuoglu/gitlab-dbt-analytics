@@ -104,6 +104,60 @@ This macro takes a schema prefix and a table name and does a UNION ALL on all ta
 This macro takes a schema prefix, a table name, a column name, and an integer representing days. It returns a view that is limited to the last 30 days based on the column name. Note that this also calls schema union all which can be a heavy call.
 {% enddocs %}
 
+{% docs simple_cte %}
+Used to simplify CTE imports in a model.
+
+A large portion of import statements in a SQL model are simple `SELECT * FROM table`. Writing pure SQL is verbose and this macro aims to simplify the imports.
+
+The macro accepts once argument which is a list of tuples where each tuple has the alias name and the table reference.
+
+Below is an example and the expected output:
+
+```sql
+{{ simple_cte([
+    ('map_merged_crm_accounts','map_merged_crm_accounts'),
+    ('zuora_account','zuora_account_source'),
+    ('zuora_contact','zuora_contact_source')
+]) }}
+
+, excluded_accounts AS (
+
+    SELECT DISTINCT
+      account_id
+    FROM {{ref('zuora_excluded_accounts')}}
+
+)
+```
+
+```sql
+WITH map_merged_crm_accounts AS (
+
+    SELECT * 
+    FROM "PROD".common.map_merged_crm_accounts
+
+), zuora_account AS (
+
+    SELECT * 
+    FROM "PREP".zuora.zuora_account_source
+
+), zuora_contact AS (
+
+    SELECT * 
+    FROM "PREP".zuora.zuora_contact_source
+
+)
+
+, excluded_accounts AS (
+
+    SELECT DISTINCT
+      account_id
+    FROM "PROD".legacy.zuora_excluded_accounts
+
+)
+```
+
+{% enddocs %}
+
 {% docs generate_single_field_dimension %}
 Convenience macro created to assist in the creation of new Dimensions based off a single source field. This returns the compiled SQL for selecting from the Source model   
 {% enddocs %}
