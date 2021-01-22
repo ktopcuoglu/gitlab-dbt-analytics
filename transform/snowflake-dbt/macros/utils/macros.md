@@ -114,6 +114,7 @@ The macro accepts once argument which is a list of tuples where each tuple has t
 Below is an example and the expected output:
 
 ```sql
+{% raw %}
 {{ simple_cte([
     ('map_merged_crm_accounts','map_merged_crm_accounts'),
     ('zuora_account','zuora_account_source'),
@@ -127,6 +128,7 @@ Below is an example and the expected output:
     FROM {{ref('zuora_excluded_accounts')}}
 
 )
+{% endraw %}
 ```
 
 ```sql
