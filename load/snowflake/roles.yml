@@ -182,11 +182,11 @@ roles:
 # ==========================================
 # Functional Roles
 # ==========================================
-    ## For all Data Team analyst or DD given the sensitive data access 
-    - data_team_analysts:
+    ## For all Data Team analysts or Decisive Data
+    - data_team_analyst:
         member_of:
           - analyst_core
-          - gitlab_dotcom # covers the sensitive gitlab.com models
+          - gitlab_dotcom
           - qualtrics 
         privileges:
             databases:
@@ -445,7 +445,7 @@ roles:
             - snowplow
             - version_db
             - zuora
-            - data_team_analysts
+            - data_team_analyst
 
     - engineer:
         member_of:
@@ -1895,7 +1895,7 @@ roles:
             - analyst_finance
             - bamboohr_analytics
             - customers_db
-            - data_team_analysts
+            - data_team_analyst
         warehouses:
             - analyst_xs
         owns:
@@ -1949,7 +1949,7 @@ roles:
             - customers_db
             - netsuite
             - static_admin
-            - data_team_analysts
+            - data_team_analyst
         warehouses:
             - analyst_xs
         owns:
@@ -2058,7 +2058,7 @@ roles:
         member_of:
             - analyst_engineering
             - customers_db
-            - data_team_analysts
+            - data_team_analyst
         warehouses:
             - analyst_xs
 
@@ -2074,7 +2074,7 @@ roles:
             - data_manager
             - dbt_analytics_sensitive
             - greenhouse
-            - data_team_analysts
+            - data_team_analyst
         warehouses:
             - engineer_xs
             - engineer_xl
@@ -2188,7 +2188,7 @@ roles:
     - mpeychet:
         member_of:
             - analyst_growth
-            - data_team_analysts
+            - data_team_analyst
         warehouses:
             - analyst_xs
             - analyst_l
@@ -2390,7 +2390,7 @@ roles:
             - customers_db
             - qualtrics
             - qualtrics_sensitive
-            - data_team_analysts
+            - data_team_analyst
         warehouses:
             - analyst_xs
         owns:
