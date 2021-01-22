@@ -48,9 +48,10 @@ dag = DAG(
 # YAML Extract
 data_yaml_extract_cmd = f"""
     {clone_and_setup_extraction_cmd} &&
-    python gitlab_data_yaml/upload.py &&
-    python gitlab_feature_flags_yaml/upload.py
+    python gitlab_data_yaml/upload.py 
 """
+# &&
+    # python gitlab_feature_flags_yaml/upload.py
 data_yaml_extract = KubernetesPodOperator(
     **gitlab_defaults,
     image="registry.gitlab.com/gitlab-data/data-image/data-image:v0.0.13",

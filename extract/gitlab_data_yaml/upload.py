@@ -82,11 +82,11 @@ if __name__ == "__main__":
             snowflake_engine,
         )
 
-    for key, value in handbook_dict.items():
-        curl_and_upload(key, value, handbook_url)
+    # for key, value in handbook_dict.items():
+    #     curl_and_upload(key, value, handbook_url)
 
-    for key, value in pi_file_dict.items():
-        curl_and_upload(key, value, pi_url)
+    # for key, value in pi_file_dict.items():
+    #     curl_and_upload(key, value, pi_url)
 
     for key, value in comp_calc_dict.items():
         curl_and_upload(key, value, comp_calc_url, config_dict['GITLAB_ANALYTICS_PRIVATE_TOKEN'])
