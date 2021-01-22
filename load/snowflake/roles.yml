@@ -2330,6 +2330,12 @@ roles:
                     - nfiguera_prep.*.*
                     - nfiguera_prod.*.*
 
+    - ngalang:
+        member_of:
+            - analyst_growth
+        warehouses:
+            - analyst_xs
+
     - parmstrong:
         member_of:
             - engineer
@@ -2566,6 +2572,14 @@ roles:
     - ssichak:
         warehouses:
             - reporting
+
+    - statimatla:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+            - customers_db
+        warehouses:
+            - analyst_xs
 
     - stitch:
         warehouses:
@@ -3075,6 +3089,11 @@ users:
         member_of:
             - nfiguera
 
+    - ngalang:
+        can_login: yes
+        member_of:
+            - ngalang
+
     - parmstrong:
         can_login: yes
         member_of:
@@ -3164,6 +3183,11 @@ users:
         can_login: yes
         member_of:
             - ssichak
+
+    - statimatla:
+        can_login: yes
+        member_of:
+            - statimatla
 
     - stitch:
         can_login: yes
