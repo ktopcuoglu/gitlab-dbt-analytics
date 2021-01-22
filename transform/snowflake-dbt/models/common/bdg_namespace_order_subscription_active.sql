@@ -50,7 +50,7 @@ WITH namespace AS (
       COALESCE(trial_histories.gl_namespace_id IS NOT NULL,
                FALSE)                                               AS namespace_was_trial
     FROM namespace
-    JOIN product_tier
+    INNER JOIN product_tier
       ON namespace.dim_product_tier_id = product_tier.dim_product_tier_id
     LEFT JOIN trial_histories
       ON namespace.namespace_id = trial_histories.gl_namespace_id
@@ -73,7 +73,7 @@ WITH namespace AS (
       subscription.dim_crm_account_id,
       COUNT(*) OVER (PARTITION BY subscription.dim_subscription_id) AS count_of_tiers_per_subscription
     FROM subscription
-    JOIN (
+    INNER JOIN (
           --find only SaaS recurring charge subscriptions. Need to include OSS, EDU = Zero Rev. Add flag.
           SELECT DISTINCT
             dim_subscription_id     AS subscription_id,
@@ -81,7 +81,7 @@ WITH namespace AS (
             product_detail.dim_product_tier_id
           FROM recurring_charge
           --new prep table will be required AND new key in prep_recurring_charge
-          JOIN product_detail
+          INNER JOIN product_detail
             ON recurring_charge.dim_product_detail_id = product_detail.dim_product_detail_id
           WHERE recurring_charge.dim_date_id = TO_NUMBER(REPLACE(TO_CHAR(DATE_TRUNC('month', CURRENT_DATE)), '-', '')) --first day of current month --get Date ID
             AND product_detail.product_delivery_type IN ('SaaS', 'Self-Managed')
@@ -131,7 +131,7 @@ WITH namespace AS (
       namespace.ultimate_parent_namespace_id,
       orders.order_is_trial
     FROM orders
-    JOIN product_rate_plan
+    INNER JOIN product_rate_plan
       ON orders.product_rate_plan_id = product_rate_plan.product_rate_plan_id
     LEFT JOIN namespace
       ON orders.gitlab_namespace_id = namespace.dim_namespace_id
