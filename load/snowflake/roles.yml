@@ -182,7 +182,26 @@ roles:
 # ==========================================
 # Functional Roles
 # ==========================================
-    - analyst_core:
+    ## For all Data Team analysts or Decisive Data
+    - data_team_analyst:
+        member_of:
+          - analyst_core
+          - gitlab_dotcom
+          - qualtrics 
+        privileges:
+            databases:
+                read:
+                    - prep
+            schemas:
+                read:
+                    - prep.*
+            tables:
+                read:
+                    - prep.sensitive.bdg_marketing_contact_role 
+                    - prep.sensitive.dim_marketing_contact
+
+    ## For all analyst Roles 
+    - analyst_core:  
         warehouses:
             - analyst_xs
             - analyst_l
@@ -426,6 +445,7 @@ roles:
             - snowplow
             - version_db
             - zuora
+            - data_team_analyst
 
     - engineer:
         member_of:
@@ -1875,6 +1895,7 @@ roles:
             - analyst_finance
             - bamboohr_analytics
             - customers_db
+            - data_team_analyst
         warehouses:
             - analyst_xs
         owns:
@@ -1928,6 +1949,7 @@ roles:
             - customers_db
             - netsuite
             - static_admin
+            - data_team_analyst
         warehouses:
             - analyst_xs
         owns:
@@ -2036,6 +2058,7 @@ roles:
         member_of:
             - analyst_engineering
             - customers_db
+            - data_team_analyst
         warehouses:
             - analyst_xs
 
@@ -2051,6 +2074,7 @@ roles:
             - data_manager
             - dbt_analytics_sensitive
             - greenhouse
+            - data_team_analyst
         warehouses:
             - engineer_xs
             - engineer_xl
@@ -2164,6 +2188,7 @@ roles:
     - mpeychet:
         member_of:
             - analyst_growth
+            - data_team_analyst
         warehouses:
             - analyst_xs
             - analyst_l
@@ -2305,6 +2330,12 @@ roles:
                     - nfiguera_prep.*.*
                     - nfiguera_prod.*.*
 
+    - ngalang:
+        member_of:
+            - analyst_growth
+        warehouses:
+            - analyst_xs
+
     - parmstrong:
         member_of:
             - engineer
@@ -2365,6 +2396,7 @@ roles:
             - customers_db
             - qualtrics
             - qualtrics_sensitive
+            - data_team_analyst
         warehouses:
             - analyst_xs
         owns:
@@ -2540,6 +2572,14 @@ roles:
     - ssichak:
         warehouses:
             - reporting
+
+    - statimatla:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+            - customers_db
+        warehouses:
+            - analyst_xs
 
     - stitch:
         warehouses:
@@ -3049,6 +3089,11 @@ users:
         member_of:
             - nfiguera
 
+    - ngalang:
+        can_login: yes
+        member_of:
+            - ngalang
+
     - parmstrong:
         can_login: yes
         member_of:
@@ -3138,6 +3183,11 @@ users:
         can_login: yes
         member_of:
             - ssichak
+
+    - statimatla:
+        can_login: yes
+        member_of:
+            - statimatla
 
     - stitch:
         can_login: yes

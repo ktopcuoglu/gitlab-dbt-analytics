@@ -79,6 +79,16 @@ WITH sfdc_opportunity_snapshots AS (
       upside_swing_deal_iacv__c      AS upside_swing_deal_iacv,
       web_portal_purchase__c         AS is_web_portal_purchase,
       opportunity_term__c            AS opportunity_term,
+      arr_net__c                     AS net_arr,
+      arr_basis__c                   AS arr_basis,
+      arr__c                         AS arr,
+      amount                         AS amount,
+      recurring_amount__c            AS recurring_amount,
+      true_up_amount__c              AS true_up_amount,
+      proserv_amount__c              AS proserv_amount,
+      other_non_recurring_amount__c  AS other_non_recurring_amount,
+      start_date__c::DATE            AS subscription_start_date,
+      end_date__c::DATE              AS subscription_end_date,
 
       -- command plan fields
       fm_champion__c                 AS cp_champion,
