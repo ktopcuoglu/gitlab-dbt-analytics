@@ -9,7 +9,6 @@ Please complete all items. Ask questions in the #data slack channel
 * [ ] Assign this issue to both the Data Analyst and Data Engineer assigned to Triage 
 * [ ] [Add a weight to the issue](https://about.gitlab.com/handbook/business-ops/data-team/how-we-work/#issue-pointing)
 * [ ] Link any issues opened as a result of Data Triage to this `parent` issue. 
-* [ ] Close this issue once all the items below are completed. 
 
 ## Data Analyst tasks
 All tasks below should be checked off on your Triage day. 
