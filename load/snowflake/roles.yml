@@ -197,23 +197,6 @@ roles:
                     - prep.*
             tables:
                 read:
-                    - prep.sensitive.qualtrics_api_formatted_contacts
-                    - prep.sensitive.qualtrics_contact_mailing_send
-                    - prep.sensitive.qualtrics_mailing_contacts
-                    - prep.sensitive.qualtrics_nps_answers
-                    - prep.sensitive.qualtrics_nps_survey_responses
-                    - prep.sensitive.sheetload_ally_certificate_source
-                    - prep.sensitive.sheetload_communication_certificate_source
-                    - prep.sensitive.sheetload_compensation_certificate_source
-                    - prep.sensitive.sheetload_employee_location_factor
-                    - prep.sensitive.sheetload_ic_collaboration_competency_source
-                    - prep.sensitive.sheetload_ic_dib_comptency_source
-                    - prep.sensitive.sheetload_ic_efficiency_competency_source
-                    - prep.sensitive.sheetload_ic_iteration_competency_source
-                    - prep.sensitive.sheetload_ic_results_competency_source
-                    - prep.sensitive.sheetload_ic_transparency_competency_source
-                    - prep.sensitive.sheetload_osat_source
-                    - prep.sensitive.sheetload_values_certificate_source
                     - prep.sensitive.bdg_marketing_contact_role 
                     - prep.sensitive.dim_marketing_contact
 
