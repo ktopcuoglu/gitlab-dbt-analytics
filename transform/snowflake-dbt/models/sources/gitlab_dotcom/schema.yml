@@ -1512,10 +1512,6 @@ models:
         tags: ["tdf","gitlab_dotcom"]
         tests:
           - unique
-      - name: disk_path
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - unique
 
   - name: gitlab_dotcom_project_repository_storage_moves_source
     description: Base model for Gitlab.com project repository moves
