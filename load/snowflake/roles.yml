@@ -184,49 +184,19 @@ roles:
 # ==========================================
     ## For all Data Team analyst or DD given the sensitive data access 
     - data_team_analysts:
-        warehouses:
-            - analyst_xs
-            - analyst_l
         member_of:
-            - boneyard
-            - covid19
-            - dbt_analytics
-            - dbt_analytics_clones
-            - gitlab_data_yaml
-            - handbook
-            - maxmind
-            - sheetload
-            - snapshots
-            - snowflake_db
-            - static
+          - analyst_core
+          - gitlab_dotcom # covers the sensitive gitlab.com models
+          - qualtrics 
         privileges:
             databases:
                 read:
                     - prep
-                    - prod
-                    - raw
             schemas:
                 read:
                     - prep.*
-                    - prod.*
-                    - raw.*
             tables:
                 read:
-                    - prod.*.*
-                    - prep.sensitive.gitlab_dotcom_audit_event_details
-                    - prep.sensitive.gitlab_dotcom_audit_event_details_pii
-                    - prep.sensitive.gitlab_dotcom_environments
-                    - prep.sensitive.gitlab_dotcom_epics
-                    - prep.sensitive.gitlab_dotcom_identities
-                    - prep.sensitive.gitlab_dotcom_issues
-                    - prep.sensitive.gitlab_dotcom_labels
-                    - prep.sensitive.gitlab_dotcom_merge_requests
-                    - prep.sensitive.gitlab_dotcom_milestones
-                    - prep.sensitive.gitlab_dotcom_namespaces
-                    - prep.sensitive.gitlab_dotcom_notes
-                    - prep.sensitive.gitlab_dotcom_projects
-                    - prep.sensitive.gitlab_dotcom_system_note_metadata
-                    - prep.sensitive.gitlab_dotcom_users
                     - prep.sensitive.qualtrics_api_formatted_contacts
                     - prep.sensitive.qualtrics_contact_mailing_send
                     - prep.sensitive.qualtrics_mailing_contacts
