@@ -2573,6 +2573,14 @@ roles:
         warehouses:
             - reporting
 
+    - statimatla:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+            - customers_db
+        warehouses:
+            - analyst_xs
+
     - stitch:
         warehouses:
             - stitch
@@ -3175,6 +3183,11 @@ users:
         can_login: yes
         member_of:
             - ssichak
+
+    - statimatla:
+        can_login: yes
+        member_of:
+            - statimatla
 
     - stitch:
         can_login: yes
