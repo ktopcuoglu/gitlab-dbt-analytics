@@ -132,10 +132,68 @@ models:
     description: '{{ doc("dim_crm_opportunity") }}'
     columns:
       - name: dim_crm_opportunity_id
+        description: primary key for Salesforce Opportunities
         tests:
           - unique
           - not_null
         tags: ["tdf", "common", "sales_funnel"]
+      - name: dim_crm_account_id
+        description: Key for joining on dim_crm_account, which is the primary key for Salesforce Accounts
+        tests:
+          - relationships:
+              to: ref('dim_crm_account')
+              field: crm_account_id
+        tags: ["tdf", "opportunity", "common", "sales_funnel"]
+      - name: opportunity_name
+      - name: dim_crm_sales_rep_id
+        description: Sourced from the opportunity owner_id this key is for joining to dim_crm_sales_representative
+        tests:
+          - relationships:
+              to: ref('dim_crm_sales_representative')
+              field: dim_crm_sales_rep_id
+        tags: ["tdf", "opportunity", "common", "sales_funnel"]
+      - name: lead_source
+      - name: merged_opportunity_id
+      - name: net_new_source_categories
+      - name: account_owner_team_stamped
+      - name: primary_campaign_source_id
+      - name: sales_accepted_date
+      - name: sales_path
+      - name: sales_type
+      - name: source_buckets
+      - name: stage_name
+      - name: stage_is_active
+      - name: stage_is_closed
+      - name: technical_evaluation_date
+      - name: deal_path
+      - name: competitors
+      - name: critical_deal_flag
+      - name: forecast_category_name
+      - name: invoice_number
+      - name: is_refund
+      - name: is_downgrade
+      - name: is_risky
+        description: risk assessment based on a case statement (See SQL)
+      - name: is_swing_deal
+      - name: is_edu_oss
+      - name: is_won
+        description: Salesforce standard field which will be true if an opportunity is in any 'won' stage_is_active
+      - name: probability
+      - name: reason_for_loss
+      - name: reason_for_loss_details
+      - name: sales_qualified_source
+        description: sourced from salesforce with 'BDR' being replaced by 'SDR' for this table
+      - name: solutions_to_be_replaced
+      - name: is_web_portal_purchase
+      - name: partner_initiated_opportunity
+      - name: user_segment
+      - name: order_type
+        description: from order_type_stamped
+      - name: opportunity_health
+      - name: risk_type
+      - name: risk_reasons
+      - name: tam_notes
+
 
   - name: dim_crm_person
     description: '{{ doc("dim_crm_person") }}'
