@@ -194,7 +194,6 @@ models:
       - name: risk_reasons
       - name: tam_notes
 
-
   - name: dim_crm_person
     description: '{{ doc("dim_crm_person") }}'
     columns:
@@ -224,6 +223,15 @@ models:
           - not_null
           - unique
         tags: ["tdf", "common", "sales_funnel"]
+
+  - name: dim_crm_touchpoint
+    description: '{{ doc("dim_crm_touchpoint") }}'
+    columns:
+      - name: dim_crm_touchpoint_id
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "common"]
 
   - name: dim_date
     description: '{{ doc("dim_date") }}'
@@ -765,6 +773,24 @@ models:
         description: The version of the rate plan charge. Each time a charge is amended, Zuora creates a new version of the rate plan charge.
       - name: charge_type
         description: Specifies the type of charge
+
+  - name: fct_crm_attribution_touchpoint
+    description: '{{ doc("fct_crm_attribution_touchpoint") }}'
+    columns:
+      - name: dim_crm_touchpoint_id
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "common"]
+
+  - name: fct_crm_touchpoint
+    description: '{{ doc("fct_crm_touchpoint") }}'
+    columns:
+      - name: dim_crm_touchpoint_id
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "common"]
 
   - name: dim_usage_pings
     description: '{{ doc("dim_usage_pings") }}'

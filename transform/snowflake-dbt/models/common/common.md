@@ -30,6 +30,11 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
+{% docs dim_crm_touchpoint %}
+Descriptive fields for both attribution and non-attribution Bizible touchpoints.
+
+{% enddocs %}
+
 {% docs dim_crm_opportunity %}
 Model for all dimensional opportunity columns from salesforce opportunity object
 
@@ -144,6 +149,16 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 {% docs fct_campaign %}
 
 Fact table representing marketing campaign details tracked in SFDC.
+
+{% enddocs %}
+
+{% docs fct_crm_attribution_touchpoint %}
+Fact table for attribution Bizible touchpoints with shared dimension keys relating these touchpoints to dim_crm_person, dim_crm_opportunity, and dim_crm_account. These touchpoints have revenue associated with them.
+
+{% enddocs %}
+
+{% docs fct_crm_touchpoint %}
+Fact table for non-attribution Bizible touchpoints with shared dimension keys relating these touchpoints to dim_crm_person and dim_crm_account.
 
 {% enddocs %}
 
