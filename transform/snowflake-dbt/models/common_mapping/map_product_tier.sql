@@ -11,25 +11,37 @@ WITH zuora_product AS (
 ), final AS (
 
     SELECT
-      zuora_product_rate_plan.product_rate_plan_id                 AS product_rate_plan_id,
-      zuora_product_rate_plan.product_rate_plan_name               AS product_rate_plan_name,
+      zuora_product_rate_plan.product_rate_plan_id                  AS product_rate_plan_id,
+      zuora_product_rate_plan.product_rate_plan_name                AS product_rate_plan_name,
       CASE 
+        WHEN zuora_product_rate_plan.effective_start_date >= '2021-01-01' 
+          AND LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE '%saas%' 
+          AND LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE '%ultimate%'
+          THEN 'SaaS - Ultimate'
+        WHEN zuora_product_rate_plan.effective_start_date >= '2021-01-01' 
+          AND LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE '%saas%'   
+          AND LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE '%premium%'
+          THEN 'SaaS - Premium'
+        WHEN zuora_product_rate_plan.effective_start_date >= '2021-01-01' 
+          AND LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE '%self-managed%' 
+          AND LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE '%ultimate%'
+          THEN 'Self-Managed - Ultimate'
+        WHEN zuora_product_rate_plan.effective_start_date >= '2021-01-01' 
+          AND LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE '%self-managed%'   
+          AND LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE '%premium%'
+          THEN 'Self-Managed - Premium'       
         WHEN LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE 'gold%'
-          THEN 'Gold'
+          THEN 'SaaS Gold'
         WHEN LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE 'silver%'
-          THEN 'Silver'
+          THEN 'SaaS Silver'
         WHEN LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE 'bronze%'
-          THEN 'Bronze'
-        WHEN LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE '%ultimate%'
-          THEN 'Ultimate'
-        WHEN LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE '%premium%'
-          THEN 'Premium'
+          THEN 'SaaS Bronze'
         WHEN LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE '%starter%'
-          THEN 'Starter'
+          THEN 'Self-Managed Starter'
         WHEN LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE 'gitlab enterprise edition%'
-          THEN 'Starter'
+          THEN 'Self-Managed Starter'
         WHEN zuora_product_rate_plan.product_rate_plan_name = 'Pivotal Cloud Foundry Tile for GitLab EE'
-          THEN 'Starter'
+          THEN 'Self-Managed Starter'
         WHEN LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE 'plus%'
           THEN 'Plus'
         WHEN LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE 'standard%'
@@ -78,42 +90,55 @@ WITH zuora_product AS (
                                                                      )  
           THEN 'Other'
         ELSE 'Not Applicable'
-      END                                                          AS product_tier,
+      END                                                           AS product_tier_historical,
       CASE
-        WHEN product_tier IN (
-                              'Ultimate'
-                              , 'Premium'
-                              , 'Starter'
+        WHEN product_tier_historical IN (
+                              'Self-Managed - Ultimate'
+                              , 'Self-Managed - Premium'
+                              , 'Self-Managed Starter'
                              )
           THEN 'Self-Managed'
-        WHEN product_tier IN (
-                              'Gold'
-                              , 'Silver'
-                              , 'Bronze'
+        WHEN product_tier_historical IN (
+                              'SaaS Gold'
+                              , 'SaaS Silver'
+                              , 'SaaS Bronze'
+                              , 'SaaS - Ultimate'
+                              , 'SaaS - Premium'
                              )
           THEN 'SaaS'
         ELSE 'Others'
-      END                                                          AS product_delivery_type,
+      END                                                           AS product_delivery_type,
       CASE
-        WHEN product_tier IN (
-                              'Gold'
-                              , 'Ultimate'
+        WHEN product_tier_historical IN (
+                              'SaaS Gold'
+                              , 'Self-Managed - Ultimate'
+                              , 'SaaS - Ultimate'
                              )
           THEN 3
-        WHEN product_tier IN (
-                              'Silver'
-                              , 'Premium'
+        WHEN product_tier_historical IN (
+                              'SaaS Silver'
+                              , 'Self-Managed - Premium'
+                              , 'SaaS - Premium'
                              )
           THEN 2
-        WHEN product_tier IN (
-                              'Bronze'
-                              , 'Starter')
+        WHEN product_tier_historical IN (
+                              'SaaS Bronze'
+                              , 'Self-Managed Starter'
+                              )
           THEN 1
         ELSE 0
-      END                                                          AS product_ranking
+      END                                                           AS product_ranking,
+      CASE
+        WHEN product_tier_historical = 'SaaS Gold'
+          THEN 'SaaS - Ultimate'
+        WHEN product_tier_historical = 'SaaS Silver'
+          THEN 'SaaS - Premium'
+        ELSE product_tier_historical 
+      END                                                           AS product_tier    
     FROM zuora_product
     INNER JOIN zuora_product_rate_plan
       ON zuora_product.product_id = zuora_product_rate_plan.product_id
+
 )
 
 {{ dbt_audit(
@@ -121,5 +146,7 @@ WITH zuora_product AS (
     created_by="@ischweickartDD",
     updated_by="@ischweickartDD",
     created_date="2020-12-14",
-    updated_date="2020-12-14"
+    updated_date="2021-01-25"
 ) }}
+    
+    
