@@ -170,8 +170,8 @@ WITH RECURSIVE employee_directory AS (
       CASE 
         WHEN (LEFT(department_info.job_title,5) = 'Staff' 
                 OR LEFT(department_info.job_title,13) = 'Distinguished'
-                OR LEFT(department_info.job_title,9) = 'Principal'
-            AND COALESCE(job_role.job_grade, job_info_mapping_historical.job_grade) IN ('8','9','9.5','10')) 
+                OR LEFT(department_info.job_title,9) = 'Principal')
+            AND COALESCE(job_role.job_grade, job_info_mapping_historical.job_grade) IN ('8','9','9.5','10') 
           THEN 'Staff'
         WHEN department_info.job_title ILIKE '%Fellow%' THEN 'Staff'
         WHEN COALESCE(job_role.job_grade, job_info_mapping_historical.job_grade) IN ('11','12','14','15','CXO')
