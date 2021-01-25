@@ -6,44 +6,51 @@ WITH product_tier_mapping AS (
 ), mapping AS (
 
     SELECT DISTINCT 
+      product_tier_historical,
       product_tier,
       product_delivery_type,
       product_ranking        
     FROM product_tier_mapping
     
-    UNION
+    UNION ALL
     
     SELECT
-      'Free'                                                                 AS product_tier,
-      'SaaS'                                                                 AS product_delivery_type,
-      0                                                                      AS product_ranking
+      'SaaS - Free'                                                 AS product_tier_historical,
+      'SaaS - Free'                                                 AS product_tier,
+      'SaaS'                                                        AS product_delivery_type,
+      0                                                             AS product_ranking
     
-    UNION
+    UNION ALL
     
     SELECT
-      'Core'                                                                 AS product_tier,
-      'Self-Managed'                                                         AS product_delivery_type,
-      0                                                                      AS product_ranking
+      'Self-Managed - Core'                                         AS product_tier_historical,
+      'Self-Managed - Free'                                         AS product_tier,
+      'Self-Managed'                                                AS product_delivery_type,
+      0                                                             AS product_ranking
   
-    UNION
+    UNION ALL
     
     SELECT
-      'Trial - Gold'                                                         AS product_tier,
-      'SaaS'                                                                 AS product_delivery_type,
-      0                                                                      AS product_ranking
+      'SaaS - Trial: Gold'                                          AS product_tier_historical,
+      'SaaS - Trial: Ultimate'                                      AS product_tier,
+      'SaaS'                                                        AS product_delivery_type,
+      0                                                             AS product_ranking
   
-    UNION
+    UNION ALL
     
     SELECT
-      'Trial - Ultimate'                                                     AS product_tier,
-      'Self-Managed'                                                         AS product_delivery_type,
-      0                                                                      AS product_ranking
+      'Self-Managed - Trial: Ultimate'                              AS product_tier_historical,
+      'Self-Managed - Trial: Ultimate'                              AS product_tier,
+      'Self-Managed'                                                AS product_delivery_type,
+      0                                                             AS product_ranking
 
 ), final AS (
 
   SELECT
-    {{ dbt_utils.surrogate_key(['product_tier']) }}                          AS dim_product_tier_id,
-    product_tier                                                             AS product_tier_name,
+    {{ dbt_utils.surrogate_key(['product_tier_historical']) }}      AS dim_product_tier_id,
+    product_tier_historical,
+    product_tier                                                    AS product_tier_name,
+    SPLIT_PART(product_tier, ' - ', -1)                             AS product_tier_name_short,
     product_delivery_type,
     product_ranking
   FROM mapping
@@ -51,10 +58,12 @@ WITH product_tier_mapping AS (
   UNION ALL
   
   SELECT
-    MD5('-1')                                                                AS dim_product_tier_id,
-    '(Unknown Tier)'                                                         AS product_tier_name,
-    '(Unknown Delivery Type)'                                                AS product_delivery_type,
-    -1                                                                       AS product_ranking
+    MD5('-1')                                                       AS dim_product_tier_id,
+    '(Unknown Historical Tier)'                                     AS product_tier_historical,
+    '(Unknown Tier)'                                                AS product_tier_name,
+    '(Unknown Tier Name)'                                           AS product_tier_name_short,
+    '(Unknown Delivery Type)'                                       AS product_delivery_type,
+    -1                                                              AS product_ranking
 
 )
 
@@ -64,5 +73,5 @@ WITH product_tier_mapping AS (
     created_by="@snalamaru",
     updated_by="@ischweickartDD",
     created_date="2020-12-29",
-    updated_date="2021-01-14"
+    updated_date="2021-01-25"
 ) }}

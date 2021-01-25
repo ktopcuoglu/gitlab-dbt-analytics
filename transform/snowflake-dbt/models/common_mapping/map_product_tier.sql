@@ -31,17 +31,17 @@ WITH zuora_product AS (
           AND LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE '%premium%'
           THEN 'Self-Managed - Premium'       
         WHEN LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE 'gold%'
-          THEN 'SaaS Gold'
+          THEN 'SaaS - Gold'
         WHEN LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE 'silver%'
-          THEN 'SaaS Silver'
+          THEN 'SaaS - Silver'
         WHEN LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE 'bronze%'
-          THEN 'SaaS Bronze'
+          THEN 'SaaS - Bronze'
         WHEN LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE '%starter%'
-          THEN 'Self-Managed Starter'
+          THEN 'Self-Managed - Starter'
         WHEN LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE 'gitlab enterprise edition%'
-          THEN 'Self-Managed Starter'
+          THEN 'Self-Managed - Starter'
         WHEN zuora_product_rate_plan.product_rate_plan_name = 'Pivotal Cloud Foundry Tile for GitLab EE'
-          THEN 'Self-Managed Starter'
+          THEN 'Self-Managed - Starter'
         WHEN LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE 'plus%'
           THEN 'Plus'
         WHEN LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE 'standard%'
@@ -95,13 +95,13 @@ WITH zuora_product AS (
         WHEN product_tier_historical IN (
                               'Self-Managed - Ultimate'
                               , 'Self-Managed - Premium'
-                              , 'Self-Managed Starter'
+                              , 'Self-Managed - Starter'
                              )
           THEN 'Self-Managed'
         WHEN product_tier_historical IN (
-                              'SaaS Gold'
-                              , 'SaaS Silver'
-                              , 'SaaS Bronze'
+                              'SaaS - Gold'
+                              , 'SaaS - Silver'
+                              , 'SaaS - Bronze'
                               , 'SaaS - Ultimate'
                               , 'SaaS - Premium'
                              )
@@ -110,28 +110,28 @@ WITH zuora_product AS (
       END                                                           AS product_delivery_type,
       CASE
         WHEN product_tier_historical IN (
-                              'SaaS Gold'
+                              'SaaS - Gold'
                               , 'Self-Managed - Ultimate'
                               , 'SaaS - Ultimate'
                              )
           THEN 3
         WHEN product_tier_historical IN (
-                              'SaaS Silver'
+                              'SaaS - Silver'
                               , 'Self-Managed - Premium'
                               , 'SaaS - Premium'
                              )
           THEN 2
         WHEN product_tier_historical IN (
-                              'SaaS Bronze'
-                              , 'Self-Managed Starter'
+                              'SaaS - Bronze'
+                              , 'Self-Managed - Starter'
                               )
           THEN 1
         ELSE 0
       END                                                           AS product_ranking,
       CASE
-        WHEN product_tier_historical = 'SaaS Gold'
+        WHEN product_tier_historical = 'SaaS - Gold'
           THEN 'SaaS - Ultimate'
-        WHEN product_tier_historical = 'SaaS Silver'
+        WHEN product_tier_historical = 'SaaS - Silver'
           THEN 'SaaS - Premium'
         ELSE product_tier_historical 
       END                                                           AS product_tier    
