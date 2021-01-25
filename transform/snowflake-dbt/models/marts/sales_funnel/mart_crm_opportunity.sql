@@ -55,7 +55,6 @@ WITH dim_crm_account AS (
       fct_crm_opportunity.days_in_sao,
       fct_crm_opportunity.iacv,
       fct_crm_opportunity.net_arr,
-      fct_crm_opportunity.total_contract_value,
       dim_crm_opportunity.is_edu_oss,
       dim_crm_opportunity.stage_name,
       dim_crm_opportunity.reason_for_loss,
