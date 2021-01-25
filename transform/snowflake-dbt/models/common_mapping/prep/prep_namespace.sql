@@ -99,7 +99,7 @@ WITH map_namespace_internal AS (
       namespace_lineage.ultimate_parent_plan_id                                         AS gitlab_plan_id,
       namespace_lineage.ultimate_parent_plan_title                                      AS gitlab_plan_title,
       namespace_lineage.ultimate_parent_plan_is_paid                                    AS gitlab_plan_is_paid,
-      IFNULL(product_tier_ultimate_parent.dim_product_tier_id,MD5('-1'))                AS dim_product_tier_id,
+      COALESCE(product_tier_ultimate_parent.dim_product_tier_id, MD5('-1'))             AS dim_product_tier_id,
       COALESCE(member_count, 0)                                                         AS current_member_count,
       COALESCE(project_count, 0)                                                        AS current_project_count
 
@@ -115,7 +115,7 @@ WITH map_namespace_internal AS (
       LEFT JOIN map_namespace_internal
         ON namespace_lineage.ultimate_parent_id = map_namespace_internal.ultimate_parent_namespace_id
       LEFT JOIN prep_product_tier AS product_tier_ultimate_parent
-        ON LOWER(product_tier_ultimate_parent.product_tier_name) = LOWER(namespace_lineage.ultimate_parent_plan_title)
+        ON LOWER(product_tier_ultimate_parent.product_tier_historical_short) = LOWER(namespace_lineage.ultimate_parent_plan_title)
 
 )
 

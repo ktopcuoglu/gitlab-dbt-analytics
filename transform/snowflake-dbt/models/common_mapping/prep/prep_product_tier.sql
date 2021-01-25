@@ -49,6 +49,7 @@ WITH product_tier_mapping AS (
   SELECT
     {{ dbt_utils.surrogate_key(['product_tier_historical']) }}      AS dim_product_tier_id,
     product_tier_historical,
+    SPLIT_PART(product_tier_historical, ' - ', -1)                  AS product_tier_historical_short,
     product_tier                                                    AS product_tier_name,
     SPLIT_PART(product_tier, ' - ', -1)                             AS product_tier_name_short,
     product_delivery_type,
@@ -60,6 +61,7 @@ WITH product_tier_mapping AS (
   SELECT
     MD5('-1')                                                       AS dim_product_tier_id,
     '(Unknown Historical Tier)'                                     AS product_tier_historical,
+    '(Unknown Historical Tier Name)'                                AS product_tier_historical_short,
     '(Unknown Tier)'                                                AS product_tier_name,
     '(Unknown Tier Name)'                                           AS product_tier_name_short,
     '(Unknown Delivery Type)'                                       AS product_delivery_type,

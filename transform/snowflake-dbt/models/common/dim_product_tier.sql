@@ -8,6 +8,7 @@ WITH prep_product_tier AS (
   SELECT
     dim_product_tier_id,
     product_tier_historical,
+    product_tier_historical_short,
     product_tier_name,
     product_tier_name_short,
     product_delivery_type,
