@@ -122,8 +122,7 @@ models:
       - name: is_reseller
         description: Identify whether a crm_account is a reseller.
         tests:
-          - accepted_values:
-                  values: ['TRUE', 'FALSE']
+          - not_null
         tags: ["tdf", "common", "sales_funnel"]
       - name: merged_to_account_id
         description: for deleted accounts this is the SFDC account they were merged to
