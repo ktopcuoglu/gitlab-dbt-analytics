@@ -30,9 +30,6 @@ sources:
           error_after: { count: 30, period: day }
       - name: application_settings
         identifier: gitlab_db_application_settings
-        freshness:
-          warn_after: { count: 7, period: day }
-          error_after: { count: 30, period: day }
       - name: approval_merge_request_rules
         identifier: gitlab_db_approval_merge_request_rules
       - name: approvals
