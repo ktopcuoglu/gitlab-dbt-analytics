@@ -91,6 +91,7 @@ vars:
 models:
   +database: "{{ env_var('SNOWFLAKE_PROD_DATABASE') }}" # PROD
   +schema: legacy  # Top level override since profiles defaults to PREP
+  +copy_grants: true # Maintain any existing Permifrost grants
 
   # ------------------
   # Snowplow Package https://hub.getdbt.com/fishtown-analytics/snowplow/latest/
