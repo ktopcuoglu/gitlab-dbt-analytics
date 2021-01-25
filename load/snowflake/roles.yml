@@ -1225,7 +1225,7 @@ roles:
                     - prep.greenhouse.*
                     - prep.sensitive.greenhouse_diversity_intermediate
                     - prep.sensitive.greenhouse_hires
-                    - prep.sensitive.greenhouse_locations_cleaned
+                    - prep.sensitive.greenhouse_locations_cleaned_intermediate
                     - prep.sensitive.greenhouse_location_factors
                     - prep.sensitive.greenhouse_recruiting_xf
                     - prep.sensitive.greenhouse_sourcer
