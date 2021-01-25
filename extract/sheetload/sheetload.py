@@ -162,8 +162,8 @@ def gcs_loader(
     actual_size = query_executor(f"SELECT COUNT(*) FROM {table};", engine)[0][0]
     if (actual_size > max_size_of_relation) or (actual_size < min_size_of_relation):
         error(
-            f"Count in Snowflake for table {table} ({actual_size})" \
-            " did not match the range of what was read in code " \
+            f"Count in Snowflake for table {table} ({actual_size})"
+            " did not match the range of what was read in code "
             f"({min_size_of_relation} to {max_size_of_relation})"
         )
         sys.exit(1)
