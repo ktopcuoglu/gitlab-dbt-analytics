@@ -1,7 +1,7 @@
 {{ generate_single_field_dimension(model_name="prep_sfdc_account",
-                                   id_column="dim_sales_territory_name_source",
+                                   id_column="account_sales_territory_name_source",
                                    id_column_name="dim_sales_territory_id",
-                                   dimension_column="dim_sales_territory_name_source",
+                                   dimension_column="account_sales_territory_name_source",
                                    dimension_column_name="sales_territory_name",
                                    where_clause=None)
 }}

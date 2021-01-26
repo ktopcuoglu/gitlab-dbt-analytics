@@ -92,9 +92,9 @@ WITH sfdc_lead AS (
     LEFT JOIN sfdc_account
       ON sfdc_account.account_id = sfdc_contact.account_id
     LEFT JOIN crm_account
-      ON crm_account.crm_account_id = crm_person.dim_crm_account_id
+      ON crm_account.account_dim_crm_account_id = crm_person.dim_crm_account_id
     JOIN sales_segment
-      ON sales_segment.dim_sales_segment_id = crm_account.dim_sales_segment_id
+      ON sales_segment.dim_sales_segment_id = crm_account.account_dim_sales_segment_id
     WHERE  email_address IS NOT NULL
       AND email_address <> ''
     QUALIFY record_number = 1

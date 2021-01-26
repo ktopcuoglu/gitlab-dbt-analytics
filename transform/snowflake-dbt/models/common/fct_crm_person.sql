@@ -135,19 +135,28 @@ WITH account_dims_mapping AS (
       crm_person.bizible_person_id                                                                                        AS bizible_person_id,
 
      -- common dimension keys
-
       crm_person.dim_crm_sales_rep_id                                                                                     AS dim_crm_sales_rep_id,
       crm_person.dim_crm_account_id                                                                                       AS dim_crm_account_id,
-      COALESCE(account_dims_mapping.dim_sales_segment_id, sales_segment.dim_sales_segment_id, MD5(-1))                    AS dim_sales_segment_id,
-      COALESCE(account_dims_mapping.dim_geo_region_id, geo_region.dim_geo_region_id, MD5(-1))                             AS dim_geo_region_id,
-      COALESCE(account_dims_mapping.dim_geo_sub_region_id, geo_sub_region.dim_geo_sub_region_id, MD5(-1))                 AS dim_geo_sub_region_id,
-      COALESCE(account_dims_mapping.dim_geo_area_id, MD5(-1))                                                             AS dim_geo_area_id,
-      COALESCE(account_dims_mapping.dim_sales_territory_id, sales_territory.dim_sales_territory_id, MD5(-1))              AS dim_sales_territory_id,
-      COALESCE(account_dims_mapping.dim_industry_id, industry.dim_industry_id, MD5(-1))                                   AS dim_industry_id,
+      account_dims_mapping.parent_dim_crm_account_id,
+      COALESCE(account_dims_mapping.account_dim_sales_segment_id, sales_segment.dim_sales_segment_id)                     AS account_dim_sales_segment_id,
+      COALESCE(account_dims_mapping.account_dim_geo_region_id, geo_region.dim_geo_region_id)                              AS account_dim_geo_region_id,
+      COALESCE(account_dims_mapping.account_dim_geo_sub_region_id, geo_sub_region.dim_geo_sub_region_id)                  AS account_dim_geo_sub_region_id,
+      account_dims_mapping.account_dim_geo_area_id                                                                        AS account_dim_geo_area_id,
+      COALESCE(account_dims_mapping.account_dim_sales_territory_id, sales_territory.dim_sales_territory_id)               AS account_dim_sales_territory_id,
+      COALESCE(account_dims_mapping.account_dim_industry_id, industry.dim_industry_id)                                    AS account_dim_industry_id,
+      account_dims_mapping.account_dim_location_country_id,
+      account_dims_mapping.account_dim_location_region_id,
+      account_dims_mapping.parent_dim_sales_segment_id,
+      account_dims_mapping.parent_dim_geo_region_id,
+      account_dims_mapping.parent_dim_geo_sub_region_id,
+      account_dims_mapping.parent_dim_geo_area_id,
+      account_dims_mapping.parent_dim_sales_territory_id,
+      account_dims_mapping.parent_dim_industry_id,
+      account_dims_mapping.parent_dim_location_country_id,
+      account_dims_mapping.parent_dim_location_region_id,
       COALESCE(marketing_channel.dim_marketing_channel_id, MD5(-1))                                                       AS dim_marketing_channel_id,
 
      -- important person dates
-
       COALESCE(sfdc_contacts.created_date, sfdc_leads.created_date)::DATE                                                 AS created_date,
       {{ get_date_id('COALESCE(sfdc_contacts.created_date, sfdc_leads.created_date)') }}                                  AS created_date_id,
       COALESCE(sfdc_contacts.inquiry_datetime, sfdc_leads.inquiry_datetime)::DATE                                         AS inquiry_date,
@@ -188,7 +197,7 @@ WITH account_dims_mapping AS (
     LEFT JOIN mqls
       ON crm_person.dim_crm_person_id = mqls.crm_person_id
     LEFT JOIN account_dims_mapping
-      ON crm_person.dim_crm_account_id = account_dims_mapping.crm_account_id
+      ON crm_person.dim_crm_account_id = account_dims_mapping.account_dim_crm_account_id
     LEFT JOIN sales_segment
       ON sfdc_leads.sales_segmentation = sales_segment.sales_segment_name
     LEFT JOIN geo_region

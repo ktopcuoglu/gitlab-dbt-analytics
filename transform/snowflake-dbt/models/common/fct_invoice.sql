@@ -29,12 +29,23 @@ WITH crm_account_dimensions AS (
       --shared dimension keys
       zuora_invoice.account_id                                          AS dim_billing_account_id,
       map_merged_crm_accounts.dim_crm_account_id                        AS dim_crm_account_id,
-      COALESCE(crm_account_dimensions.dim_sales_segment_id, MD5(-1))    AS dim_sales_segment_id,
-      COALESCE(crm_account_dimensions.dim_geo_region_id, MD5(-1))       AS dim_geo_region_id,
-      COALESCE(crm_account_dimensions.dim_geo_sub_region_id, MD5(-1))   AS dim_geo_sub_region_id,
-      COALESCE(crm_account_dimensions.dim_geo_area_id, MD5(-1))         AS dim_geo_area_id,
-      COALESCE(crm_account_dimensions.dim_sales_territory_id, MD5(-1))  AS dim_sales_territory_id,
-      COALESCE(crm_account_dimensions.dim_industry_id, MD5(-1))         AS dim_industry_id,
+      crm_account_dimensions.parent_dim_crm_account_id,
+      crm_account_dimensions.parent_dim_sales_segment_id,
+      crm_account_dimensions.parent_dim_geo_region_id,
+      crm_account_dimensions.parent_dim_geo_sub_region_id,
+      crm_account_dimensions.parent_dim_geo_area_id,
+      crm_account_dimensions.parent_dim_sales_territory_id,
+      crm_account_dimensions.parent_dim_industry_id,
+      crm_account_dimensions.parent_dim_location_country_id,
+      crm_account_dimensions.parent_dim_location_region_id,
+      crm_account_dimensions.account_dim_sales_segment_id,
+      crm_account_dimensions.account_dim_geo_region_id,
+      crm_account_dimensions.account_dim_geo_sub_region_id,
+      crm_account_dimensions.account_dim_geo_area_id,
+      crm_account_dimensions.account_dim_sales_territory_id,
+      crm_account_dimensions.account_dim_industry_id,
+      crm_account_dimensions.account_dim_location_country_id,
+      crm_account_dimensions.account_dim_location_region_id,
 
       --invoice dates
       {{ get_date_id('zuora_invoice.invoice_date') }}                   AS invoice_date_id,
@@ -71,7 +82,7 @@ WITH crm_account_dimensions AS (
     LEFT JOIN map_merged_crm_accounts
       ON zuora_account.crm_id = map_merged_crm_accounts.sfdc_account_id
     LEFT JOIN crm_account_dimensions
-      ON map_merged_crm_accounts.dim_crm_account_id = crm_account_dimensions.crm_account_id
+      ON map_merged_crm_accounts.dim_crm_account_id = crm_account_dimensions.account_dim_crm_account_id
 )
 
 {{ dbt_audit(

@@ -178,6 +178,7 @@ WITH first_contact  AS (
       opportunity_fields.dim_crm_opportunity_id,
       opportunity_fields.merged_crm_opportunity_id,
       opportunity_fields.dim_crm_account_id,
+      crm_account_dimensions.parent_dim_crm_account_id,
       first_contact.dim_crm_person_id,
       first_contact.sfdc_contact_id,
 
@@ -229,12 +230,22 @@ WITH first_contact  AS (
       COALESCE(order_type.dim_order_type_id, MD5(-1))                                                               AS dim_order_type_id,
       COALESCE(opportunity_source.dim_opportunity_source_id, MD5(-1))                                               AS dim_opportunity_source_id,
       COALESCE(purchase_channel.dim_purchase_channel_id, MD5(-1))                                                   AS dim_purchase_channel_id,
-      COALESCE(crm_account_dimensions.dim_sales_segment_id,sales_segment.dim_sales_segment_id, MD5(-1))             AS dim_sales_segment_id,
-      COALESCE(crm_account_dimensions.dim_geo_region_id, MD5(-1))                                                   AS dim_geo_region_id,
-      COALESCE(crm_account_dimensions.dim_geo_sub_region_id, MD5(-1))                                               AS dim_geo_sub_region_id,
-      COALESCE(crm_account_dimensions.dim_geo_area_id, MD5(-1))                                                     AS dim_geo_area_id,
-      COALESCE(crm_account_dimensions.dim_sales_territory_id, MD5(-1))                                              AS dim_sales_territory_id,
-      COALESCE(crm_account_dimensions.dim_industry_id, MD5(-1))                                                     AS dim_industry_id,
+      crm_account_dimensions.parent_dim_sales_segment_id,
+      crm_account_dimensions.parent_dim_geo_region_id,
+      crm_account_dimensions.parent_dim_geo_sub_region_id,
+      crm_account_dimensions.parent_dim_geo_area_id,
+      crm_account_dimensions.parent_dim_sales_territory_id,
+      crm_account_dimensions.parent_dim_industry_id,
+      crm_account_dimensions.parent_dim_location_country_id,
+      crm_account_dimensions.parent_dim_location_region_id,
+      COALESCE(crm_account_dimensions.account_dim_sales_segment_id,sales_segment.dim_sales_segment_id, MD5(-1))     AS account_dim_sales_segment_id,
+      crm_account_dimensions.account_dim_geo_region_id,
+      crm_account_dimensions.account_dim_geo_sub_region_id,
+      crm_account_dimensions.account_dim_geo_area_id,
+      crm_account_dimensions.account_dim_sales_territory_id,
+      crm_account_dimensions.account_dim_industry_id,
+      crm_account_dimensions.account_dim_location_country_id,
+      crm_account_dimensions.account_dim_location_region_id,
       COALESCE(sales_hierarchy_stamped_sales_segment.dim_crm_sales_hierarchy_sales_segment_stamped_id, MD5(-1))     AS dim_crm_sales_hierarchy_sales_segment_stamped_id,
       COALESCE(sales_hierarchy_stamped_location_region.dim_crm_sales_hierarchy_location_region_stamped_id, MD5(-1)) AS dim_crm_sales_hierarchy_location_region_stamped_id,
       COALESCE(sales_hierarchy_stamped_sales_region.dim_crm_sales_hierarchy_sales_region_stamped_id, MD5(-1))       AS dim_crm_sales_hierarchy_sales_region_stamped_id,
@@ -268,7 +279,7 @@ WITH first_contact  AS (
 
     FROM opportunity_fields
     LEFT JOIN crm_account_dimensions
-      ON opportunity_fields.dim_crm_account_id = crm_account_dimensions.crm_account_id
+      ON opportunity_fields.dim_crm_account_id = crm_account_dimensions.account_dim_crm_account_id
     LEFT JOIN first_contact
       ON opportunity_fields.dim_crm_opportunity_id = first_contact.opportunity_id AND first_contact.row_num = 1
     LEFT JOIN opportunity_source

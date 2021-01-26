@@ -96,6 +96,15 @@ models:
           - not_null
           - unique
 
+  - name: prep_location_country
+    description: '{{ doc("prep_location_country") }}'
+    columns:
+      - name: dim_location_country_id
+        description: Unique identifier of a country
+        tests:
+          - not_null
+          - unique
+
   - name: prep_location_region
     description: '{{ doc("prep_location_region") }}'
     columns:
