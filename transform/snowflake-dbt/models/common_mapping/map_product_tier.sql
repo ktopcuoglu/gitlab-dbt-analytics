@@ -7,6 +7,7 @@ WITH zuora_product AS (
 
     SELECT *
     FROM {{ ref('zuora_product_rate_plan_source') }}
+    WHERE is_deleted = FALSE
 
 ), final AS (
 
@@ -140,7 +141,7 @@ WITH zuora_product AS (
     created_by="@ischweickartDD",
     updated_by="@ischweickartDD",
     created_date="2020-12-14",
-    updated_date="2021-01-25"
+    updated_date="2021-01-26"
 ) }}
     
     

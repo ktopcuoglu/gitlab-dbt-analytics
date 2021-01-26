@@ -75,5 +75,5 @@ WITH product_tier_mapping AS (
     created_by="@snalamaru",
     updated_by="@ischweickartDD",
     created_date="2020-12-29",
-    updated_date="2021-01-25"
+    updated_date="2021-01-26"
 ) }}

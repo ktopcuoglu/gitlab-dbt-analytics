@@ -237,5 +237,5 @@ WITH namespace AS (
     created_by="@ischweickartDD",
     updated_by="@ischweickartDD",
     created_date="2021-01-14",
-    updated_date="2021-01-14"
+    updated_date="2021-01-26"
 ) }}

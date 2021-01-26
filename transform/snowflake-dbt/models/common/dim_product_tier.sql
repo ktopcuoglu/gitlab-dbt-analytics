@@ -22,5 +22,5 @@ WITH prep_product_tier AS (
     created_by="@snalamaru",
     updated_by="@ischweickartDD",
     created_date="2020-12-28",
-    updated_date="2021-01-25"
+    updated_date="2021-01-26"
 ) }}

@@ -114,5 +114,5 @@ WITH zuora_product AS (
     created_by="@ischweickartDD",
     updated_by="@mcooperDD",
     created_date="2020-12-16",
-    updated_date="2020-12-30"
+    updated_date="2021-01-26"
 ) }}
