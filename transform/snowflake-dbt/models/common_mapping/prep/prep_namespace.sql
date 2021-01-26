@@ -116,6 +116,8 @@ WITH map_namespace_internal AS (
         ON namespace_lineage.ultimate_parent_id = map_namespace_internal.ultimate_parent_namespace_id
       LEFT JOIN prep_product_tier AS product_tier_ultimate_parent
         ON LOWER(product_tier_ultimate_parent.product_tier_historical_short) = LOWER(namespace_lineage.ultimate_parent_plan_title)
+        OR (LOWER(product_tier_ultimate_parent.product_tier_name_short) = LOWER(namespace_lineage.ultimate_parent_plan_title)
+            AND product_tier_ultimate_parent.product_delivery_type = 'SaaS') 
 
 )
 
@@ -124,5 +126,5 @@ WITH map_namespace_internal AS (
     created_by="@ischweickartDD",
     updated_by="@ischweickartDD",
     created_date="2021-01-14",
-    updated_date="2021-01-14"
+    updated_date="2021-01-25"
 ) }}
