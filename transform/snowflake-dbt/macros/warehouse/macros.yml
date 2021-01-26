@@ -11,3 +11,9 @@ macros:
     description: '{{ doc("get_backup_table_command") }}'
   - name: grant_usage_to_schemas
     description: '{{ doc("grant_usage_to_schemas") }}'
+  - name: gdpr_delete
+    description: '{{ doc("gdpr_delete") }}'
+    arguments:
+      - name: email_sha
+        type: string
+        description: SHA256 of the email to be removed/redacted
