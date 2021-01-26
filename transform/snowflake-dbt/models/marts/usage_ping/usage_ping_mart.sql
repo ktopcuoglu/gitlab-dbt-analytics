@@ -18,10 +18,10 @@ WITH dim_billing_account AS (
     SELECT *
     FROM {{ ref('dim_location') }}
 
-), dim_product_details AS (
+), dim_product_detail AS (
 
     SELECT *
-    FROM {{ ref('dim_product_details') }}
+    FROM {{ ref('dim_product_detail') }}
 
 ), fct_usage_ping_payloads AS (
 
@@ -41,10 +41,10 @@ WITH dim_billing_account AS (
     SELECT
       usage_ping_id,
       ARRAY_AGG(DISTINCT product_rate_plan_name) AS product_rate_plans,
-      ARRAY_AGG(DISTINCT product_category)       AS product_categories
+      ARRAY_AGG(DISTINCT product_tier_name)      AS product_categories
     FROM flattened
-    LEFT JOIN dim_product_details
-      ON flattened.product_details_id = dim_product_details.product_details_id
+    LEFT JOIN dim_product_detail
+      ON flattened.product_details_id = dim_product_detail.dim_product_detail_id
     GROUP BY 1
 
 ), joined AS (
@@ -53,7 +53,7 @@ WITH dim_billing_account AS (
       fct_usage_ping_payloads.*,
       dim_crm_account.crm_account_id,
       dim_crm_account.crm_account_name,
-      dim_crm_account.crm_account_country,
+      dim_crm_account.crm_account_billing_country,
       dim_crm_account.ultimate_parent_account_id,
       dim_crm_account.ultimate_parent_account_segment,
       dim_crm_account.ultimate_parent_billing_country,
@@ -75,7 +75,7 @@ WITH dim_billing_account AS (
     LEFT JOIN dim_date
       ON fct_usage_ping_payloads.date_id = dim_date.date_id
     LEFT JOIN dim_location
-      ON fct_usage_ping_payloads.location_id = dim_location.location_id
+      ON fct_usage_ping_payloads.location_id = dim_location.dim_location_id
     LEFT JOIN product_details
       ON fct_usage_ping_payloads.usage_ping_id = product_details.usage_ping_id
 
@@ -108,7 +108,7 @@ WITH dim_billing_account AS (
       account_id,
       crm_account_id,
       crm_account_name,
-      crm_account_country,
+      crm_account_billing_country,
       ultimate_parent_account_id,
       ultimate_parent_billing_country,
       ultimate_parent_industry,

@@ -44,6 +44,8 @@ threat management,threat management
 fulfillment,fulfillment
 purchase,fulfillment
 provision,fulfillment
+license,fulfillment
+utilization,fulfillment
 telemetry,growth
 acquisition,growth
 conversion,growth

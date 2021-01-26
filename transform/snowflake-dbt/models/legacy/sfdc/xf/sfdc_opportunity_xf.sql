@@ -83,7 +83,6 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity.owner_id,
 
       -- logistical information
-      sfdc_opportunity.business_type,
       sfdc_opportunity.close_date,
       sfdc_opportunity.created_date,
       sfdc_opportunity.days_in_stage,
@@ -146,7 +145,6 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity.is_edu_oss,
       sfdc_opportunity_stage.is_won                                                               AS is_won,
       sfdc_opportunity.net_incremental_acv,
-      sfdc_opportunity.nrv,
       sfdc_opportunity.probability,
       sfdc_opportunity.professional_services_value,
       sfdc_opportunity.pushed_count,
@@ -171,6 +169,16 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity.order_type_live,
       sfdc_opportunity.order_type_stamped,
       sfdc_opportunity.net_arr,
+      sfdc_opportunity.recurring_amount,
+      sfdc_opportunity.true_up_amount,
+      sfdc_opportunity.proserv_amount,
+      sfdc_opportunity.other_non_recurring_amount,
+      sfdc_opportunity.arr_basis,
+      sfdc_opportunity.arr,
+      sfdc_opportunity.opportunity_health,
+      sfdc_opportunity.risk_type,
+      sfdc_opportunity.risk_reasons,
+      sfdc_opportunity.tam_notes,
 
       -- days and dates per stage
       sfdc_opportunity.days_in_1_discovery,

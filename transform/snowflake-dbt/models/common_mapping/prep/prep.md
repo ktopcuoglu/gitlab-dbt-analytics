@@ -5,6 +5,12 @@ Cleaning operations vary across columns, depending on the nature of the source d
 
 {% enddocs %}
 
+{% docs prep_crm_sales_representative %}
+
+Creates a base view with generated keys for the sales representative and live crm sales hierarchy shared dimensions and references in facts.
+
+{% enddocs %}
+
 {% docs prep_crm_sales_hierarchy_live %}
 
 Creates a base view with generated keys for the live crm sales hierarchy shared dimensions and references in facts.
@@ -98,7 +104,7 @@ Creates a base view with generated keys for the subscription shared dimension an
 
 {% docs prep_product_tier %}
 
- This table creates keys for the common product tier dimension that is used across gitlab.com and Zuora data sources. 
+ This table creates keys for the common product tier dimension that is used across gitlab.com and Zuora data sources.
 
  The granularity of the table is product_tier.
 
@@ -119,5 +125,3 @@ Creates a License Prep table for representing generated licenses and associated 
 The grain of the table is license_id.
 
 {% enddocs %}
-
-
