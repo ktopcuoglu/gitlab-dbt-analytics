@@ -938,6 +938,15 @@ roles:
                 read:
                     - raw.discourse.*
 
+    - gainsight:
+        warehouses:
+            - gainsight_xs
+        privileges:
+            databases:
+                read:
+                    - prep
+                    - prod
+
     - gcp_billing:
         warehouses:
             - analyst_xs
@@ -2907,6 +2916,11 @@ users:
         member_of:
             - fkurniadi
 
+    - gainsight:
+        can_login: yes
+        member_of:
+            - gainsight
+
     - gitlab_ci:
         can_login: yes
         member_of:
@@ -3267,6 +3281,9 @@ warehouses:
         size: x-small
 
     - fivetran_warehouse:
+        size: x-small
+
+    - gainsight_xs:
         size: x-small
 
     - gitlab_postgres:
