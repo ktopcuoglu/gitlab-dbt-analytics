@@ -124,6 +124,18 @@ models:
         tests:
           - not_null 
 
+  - name: greenhouse_opening_custom_fields
+    description: Brings in greenhouse custom fields based on job opening. Note - we started capturing this data on a consistent basis starting 2020.05
+    columns:
+      - name: job_id
+      - name: opening_id
+      - name: type
+        description: Identifies if the field is a backfill or new hire
+      - name: hiring_manager
+      - name: finance_id
+      - name: if_backfill_what_s_the_member_s_name
+  
+
   - name: greenhouse_stage_intermediate
     description: This data model shows all the greenhouse stages a candidate is in, and adds in additional information about the recruiting process such as source type, source name, recruiter, sourcer.
     columns:

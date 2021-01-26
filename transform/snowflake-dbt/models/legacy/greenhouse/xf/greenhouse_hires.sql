@@ -16,10 +16,10 @@ WITH applications AS (
     SELECT *
     FROM {{ ref ('greenhouse_openings_source') }}
 
-), opening_custom_fields AS (
+), greenhouse_opening_custom_fields AS (
 
     SELECT *
-    FROM {{ ref ('greenhouse_opening_custom_fields_source') }}
+    FROM  {{ ref ('greenhouse_opening_custom_fields') }}
 
 ), initial_hire_date AS (
  
@@ -53,6 +53,11 @@ WITH applications AS (
     LEFT JOIN rehire_date 
       ON rehire_date.employee_id = bamboohr_mapping.employee_id
 
+), division_department AS (
+
+    SELECT *
+    FROM {{ ref ('employee_directory_intermediate') }}
+    
 ), joined AS (
 
     SELECT 
@@ -74,7 +79,9 @@ WITH applications AS (
            WHEN greenhouse_candidate_row_number>1 
             THEN 'transfer'
            ELSE NULL END                                            AS hire_type,
-      opening_custom_fields.opening_custom_field_display_value      AS job_opening_type
+      greenhouse_opening_custom_fields.job_opening_type,
+      division_department.division,
+      division_department.department
     FROM applications
     LEFT JOIN offers
       ON offers.application_id = applications.application_id
@@ -82,9 +89,13 @@ WITH applications AS (
       ON bamboo_hires.greenhouse_candidate_id = applications.candidate_id
     LEFT JOIN openings
       ON openings.hired_application_id = applications.application_id
-    LEFT JOIN opening_custom_fields
-      ON opening_custom_fields.opening_id = openings.job_opening_id
-      AND opening_custom_fields.opening_custom_field = 'type'  
+    LEFT JOIN greenhouse_opening_custom_fields
+      ON greenhouse_opening_custom_fields.job_opening_id = openings.job_opening_id
+    LEFT JOIN division_department
+      ON division_department.employee_id = bamboo_hires.employee_id
+      AND division_department.date_actual =  IFF(applications.greenhouse_candidate_row_number = 1 
+            AND applied_at < initial_hire_date, 
+              initial_hire_date, offers.start_date)
 
 ), final AS (    
 
