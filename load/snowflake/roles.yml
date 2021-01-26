@@ -946,6 +946,13 @@ roles:
                 read:
                     - prep
                     - prod
+            schemas:
+                read:
+                    - prep.preparation
+            tables:
+                read:
+                    - prep.preparation.prep_usage_ping_saas_dates
+                    - prep.preparation.prep_usage_ping_no_license_key
 
     - gcp_billing:
         warehouses:
