@@ -208,8 +208,6 @@ models:
           - not_null
       - name: application_id
       - name: candidate_id
-      - name: region
-        description: What area the hired candidate is in
       - name: greenhouse_candidate_row_number
         description: Indiciates the number of applications the candidate submitted and was hired for. For example, a 2 would be their second hire within the company.
       - name: hire_date_mod
@@ -218,6 +216,8 @@ models:
         description: Indicates whether the candidate is a hire, rehire, or transfer based on greenhouse_candidate_row_number.
       - name: job_opening_type
         description: Identifies if job is backfill, new hire, internal transfer, or open to current employees.
+      - name: division
+      - name: department
         
   - name: greenhouse_sourcer_metrics
     description: This provides recruiting metrics by sourcer and month.
