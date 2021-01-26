@@ -14,21 +14,15 @@ WITH zuora_product AS (
       zuora_product_rate_plan.product_rate_plan_id                  AS product_rate_plan_id,
       zuora_product_rate_plan.product_rate_plan_name                AS product_rate_plan_name,
       CASE 
-        WHEN zuora_product_rate_plan.effective_start_date >= '2021-01-01' 
-          AND LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE '%saas%' 
+        WHEN LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE '%saas%' 
           AND LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE '%ultimate%'
           THEN 'SaaS - Ultimate'
-        WHEN zuora_product_rate_plan.effective_start_date >= '2021-01-01' 
-          AND LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE '%saas%'   
+        WHEN LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE '%saas%'   
           AND LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE '%premium%'
           THEN 'SaaS - Premium'
-        WHEN zuora_product_rate_plan.effective_start_date >= '2021-01-01' 
-          AND LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE '%self-managed%' 
-          AND LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE '%ultimate%'
+        WHEN LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE '%ultimate%'
           THEN 'Self-Managed - Ultimate'
-        WHEN zuora_product_rate_plan.effective_start_date >= '2021-01-01' 
-          AND LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE '%self-managed%'   
-          AND LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE '%premium%'
+        WHEN LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE '%premium%'
           THEN 'Self-Managed - Premium'       
         WHEN LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE 'gold%'
           THEN 'SaaS - Gold'
@@ -55,7 +49,7 @@ WITH zuora_product AS (
         WHEN LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE '%quick start with ha%'
           THEN 'Support'
         WHEN TRIM(zuora_product_rate_plan.product_rate_plan_name) IN (
-                                                                      'GitLab Service Package'
+                                                                        'GitLab Service Package'
                                                                       , 'Implementation Services Quick Start'
                                                                       , 'Implementation Support'
                                                                       , 'Support Package'
@@ -81,7 +75,7 @@ WITH zuora_product AS (
         WHEN LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE 'discount%'
           THEN 'Other'
         WHEN TRIM(zuora_product_rate_plan.product_rate_plan_name) IN (
-                                                                      '#movingtogitlab'
+                                                                        '#movingtogitlab'
                                                                       , 'File Locking'
                                                                       , 'Payment Gateway Test'
                                                                       , 'Time Tracking'
@@ -92,39 +86,39 @@ WITH zuora_product AS (
         ELSE 'Not Applicable'
       END                                                           AS product_tier_historical,
       CASE
-        WHEN product_tier_historical IN (
-                              'Self-Managed - Ultimate'
-                              , 'Self-Managed - Premium'
-                              , 'Self-Managed - Starter'
-                             )
+        WHEN LOWER(product_tier_historical) LIKE 'self-managed'
           THEN 'Self-Managed'
-        WHEN product_tier_historical IN (
-                              'SaaS - Gold'
-                              , 'SaaS - Silver'
-                              , 'SaaS - Bronze'
-                              , 'SaaS - Ultimate'
-                              , 'SaaS - Premium'
-                             )
+        WHEN LOWER(product_tier_historical) LIKE 'saas'
           THEN 'SaaS'
-        ELSE 'Others'
+        WHEN product_tier_historical IN (
+                                          'Basic'
+                                        , 'GitHost'
+                                        , 'Other'
+                                        , 'Plus'
+                                        , 'Standard'
+                                        , 'Support'
+                                        , 'Trueup'
+                                        )
+          THEN 'Others'
+        ELSE NULL
       END                                                           AS product_delivery_type,
       CASE
         WHEN product_tier_historical IN (
-                              'SaaS - Gold'
-                              , 'Self-Managed - Ultimate'
-                              , 'SaaS - Ultimate'
-                             )
+                                          'SaaS - Gold'
+                                        , 'Self-Managed - Ultimate'
+                                        , 'SaaS - Ultimate'
+                                        )
           THEN 3
         WHEN product_tier_historical IN (
-                              'SaaS - Silver'
-                              , 'Self-Managed - Premium'
-                              , 'SaaS - Premium'
-                             )
+                                          'SaaS - Silver'
+                                        , 'Self-Managed - Premium'
+                                        , 'SaaS - Premium'
+                                        )
           THEN 2
         WHEN product_tier_historical IN (
-                              'SaaS - Bronze'
-                              , 'Self-Managed - Starter'
-                              )
+                                          'SaaS - Bronze'
+                                        , 'Self-Managed - Starter'
+                                        )
           THEN 1
         ELSE 0
       END                                                           AS product_ranking,
