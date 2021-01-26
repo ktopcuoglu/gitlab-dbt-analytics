@@ -31,16 +31,16 @@ WITH dim_crm_account AS (
       MIN(subscription_end_month) OVER (PARTITION BY merged_accounts.ultimate_parent_account_id, product_tier_name)   AS next_renewal_month_product
     FROM fct_mrr
     INNER JOIN dim_date
-      ON dim_date.date_id = fct_mrr.date_id
+      ON dim_date.date_id = fct_mrr.dim_date_id
     LEFT JOIN dim_crm_account AS crm_accounts
-      ON crm_accounts.crm_account_id = fct_mrr.crm_account_id
+      ON crm_accounts.crm_account_id = fct_mrr.dim_crm_account_id
     INNER JOIN dim_crm_account AS merged_accounts
       ON merged_accounts.crm_account_id = COALESCE(crm_accounts.merged_to_account_id, crm_accounts.crm_account_id)
     LEFT JOIN dim_subscription
-      ON dim_subscription.dim_subscription_id = fct_mrr.subscription_id
+      ON dim_subscription.dim_subscription_id = fct_mrr.dim_subscription_id
       AND subscription_end_month <= DATEADD('year', 1, date_actual)
     INNER JOIN dim_product_detail
-      ON dim_product_detail.dim_product_detail_id = fct_mrr.product_details_id
+      ON dim_product_detail.dim_product_detail_id = fct_mrr.dim_product_detail_id
     WHERE subscription_end_month >= DATE_TRUNC('month',CURRENT_DATE)
 
 ), last_renewal_month AS (
@@ -51,16 +51,16 @@ WITH dim_crm_account AS (
       MAX(subscription_end_month) OVER (PARTITION BY merged_accounts.ultimate_parent_account_id, product_tier_name)   AS last_renewal_month_product
     FROM fct_mrr
     INNER JOIN dim_date
-      ON dim_date.date_id = fct_mrr.date_id
+      ON dim_date.date_id = fct_mrr.dim_date_id
     LEFT JOIN dim_crm_account AS crm_accounts
-      ON crm_accounts.crm_account_id = fct_mrr.crm_account_id
+      ON crm_accounts.crm_account_id = fct_mrr.dim_crm_account_id
     INNER JOIN dim_crm_account AS merged_accounts
       ON merged_accounts.crm_account_id = COALESCE(crm_accounts.merged_to_account_id, crm_accounts.crm_account_id)
     LEFT JOIN dim_subscription
-      ON dim_subscription.dim_subscription_id = fct_mrr.subscription_id
+      ON dim_subscription.dim_subscription_id = fct_mrr.dim_subscription_id
       AND subscription_end_month <= DATEADD('year', 1, date_actual)
     INNER JOIN dim_product_detail
-      ON dim_product_detail.dim_product_detail_id = fct_mrr.product_details_id
+      ON dim_product_detail.dim_product_detail_id = fct_mrr.dim_product_detail_id
     WHERE subscription_end_month < DATE_TRUNC('month',CURRENT_DATE)
 
 ), parent_account_mrrs AS (
@@ -78,11 +78,11 @@ WITH dim_crm_account AS (
       SUM(ZEROIFNULL(quantity))                         AS quantity_total
     FROM fct_mrr
     INNER JOIN dim_date
-      ON dim_date.date_id = fct_mrr.date_id
+      ON dim_date.date_id = fct_mrr.dim_date_id
     INNER JOIN dim_product_detail
-      ON dim_product_detail.dim_product_detail_id = fct_mrr.product_details_id
+      ON dim_product_detail.dim_product_detail_id = fct_mrr.dim_product_detail_id
     LEFT JOIN dim_crm_account
-      ON dim_crm_account.crm_account_id = fct_mrr.crm_account_id
+      ON dim_crm_account.crm_account_id = fct_mrr.dim_crm_account_id
     LEFT JOIN next_renewal_month
       ON next_renewal_month.ultimate_parent_account_id = dim_crm_account.ultimate_parent_account_id
       AND next_renewal_month.product_category = dim_product_detail.product_tier_name
