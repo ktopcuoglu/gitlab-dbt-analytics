@@ -11,7 +11,7 @@ WITH marketing_categories AS (
 ), filtered_to_security AS (
 
     SELECT *
-    FROM handbook_categories
+    FROM marketing_categories
     WHERE ARRAY_CONTAINS('security'::VARIANT, merge_request_department_list)
 
 )
