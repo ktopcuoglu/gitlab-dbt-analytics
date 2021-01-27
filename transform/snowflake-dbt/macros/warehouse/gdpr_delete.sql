@@ -157,4 +157,6 @@
     
     {%- endif -%}
 
+    { log("Removal Complete!", info = True) }}
+
 {%- endmacro -%}
