@@ -63,7 +63,7 @@
       product_category,
       delivery,
       product_ranking,
-      dim_date.date_actual         AS arr_month,
+      dim_date.date_actual AS arr_month,
       dim_date.fiscal_quarter_name_fy,
       dim_date.fiscal_year
     FROM max_min_month
