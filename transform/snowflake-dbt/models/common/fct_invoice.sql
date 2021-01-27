@@ -27,14 +27,14 @@ WITH crm_account_dimensions AS (
       zuora_invoice.invoice_id                                          AS dim_invoice_id,
 
       --shared dimension keys
-      zuora_invoice.account_id                                          AS dim_billing_account_id,
-      map_merged_crm_accounts.dim_crm_account_id                        AS dim_crm_account_id,
-      COALESCE(crm_account_dimensions.dim_sales_segment_id, MD5(-1))    AS dim_sales_segment_id,
-      COALESCE(crm_account_dimensions.dim_geo_region_id, MD5(-1))       AS dim_geo_region_id,
-      COALESCE(crm_account_dimensions.dim_geo_sub_region_id, MD5(-1))   AS dim_geo_sub_region_id,
-      COALESCE(crm_account_dimensions.dim_geo_area_id, MD5(-1))         AS dim_geo_area_id,
-      COALESCE(crm_account_dimensions.dim_sales_territory_id, MD5(-1))  AS dim_sales_territory_id,
-      COALESCE(crm_account_dimensions.dim_industry_id, MD5(-1))         AS dim_industry_id,
+      zuora_invoice.account_id                                                AS dim_billing_account_id,
+      map_merged_crm_accounts.dim_crm_account_id                              AS dim_crm_account_id,
+      {{ get_keyed_nulls('crm_account_dimensions.dim_sales_segment_id') }}    AS dim_sales_segment_id,
+      {{ get_keyed_nulls('crm_account_dimensions.dim_geo_region_id') }}       AS dim_geo_region_id,
+      {{ get_keyed_nulls('crm_account_dimensions.dim_geo_sub_region_id') }}   AS dim_geo_sub_region_id,
+      {{ get_keyed_nulls('crm_account_dimensions.dim_geo_area_id') }}         AS dim_geo_area_id,
+      {{ get_keyed_nulls('crm_account_dimensions.dim_sales_territory_id') }}  AS dim_sales_territory_id,
+      {{ get_keyed_nulls('crm_account_dimensions.dim_industry_id') }}         AS dim_industry_id,
 
       --invoice dates
       {{ get_date_id('zuora_invoice.invoice_date') }}                   AS invoice_date_id,

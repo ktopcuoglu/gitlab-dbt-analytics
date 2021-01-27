@@ -38,13 +38,13 @@ WITH seat_links AS (
 
     SELECT
       -- ids & keys
-      customers_orders.order_id                                     AS customers_db_order_id,
-      COALESCE(subscriptions.dim_subscription_id, MD5(-1))          AS dim_subscription_id,
-      COALESCE(subscriptions.dim_subscription_id_original, MD5(-1)) AS dim_subscription_id_original,
-      COALESCE(subscriptions.dim_subscription_id_previous, MD5(-1)) AS dim_subscription_id_previous,
-      COALESCE(subscriptions.dim_crm_account_id, MD5(-1))           AS dim_crm_account_id,
-      COALESCE(subscriptions.dim_billing_account_id, MD5(-1))       AS dim_billing_account_id,
-      COALESCE(product_details.dim_product_tier_id, MD5(-1))        AS dim_product_tier_id,
+      customers_orders.order_id                                           AS customers_db_order_id,
+      {{ get_keyed_nulls('subscriptions.dim_subscription_id') }}          AS dim_subscription_id,
+      {{ get_keyed_nulls('subscriptions.dim_subscription_id_original') }} AS dim_subscription_id_original,
+      {{ get_keyed_nulls('subscriptions.dim_subscription_id_previous') }} AS dim_subscription_id_previous,
+      {{ get_keyed_nulls('subscriptions.dim_crm_account_id') }}           AS dim_crm_account_id,
+      {{ get_keyed_nulls('subscriptions.dim_billing_account_id') }}       AS dim_billing_account_id,
+      {{ get_keyed_nulls('product_details.dim_product_tier_id') }}        AS dim_product_tier_id,
       
       --counts
       COALESCE(seat_links.active_user_count, 0)                     AS active_user_count,

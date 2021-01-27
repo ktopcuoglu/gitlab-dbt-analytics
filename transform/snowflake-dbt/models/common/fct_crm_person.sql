@@ -138,13 +138,13 @@ WITH account_dims_mapping AS (
 
       crm_person.dim_crm_sales_rep_id                                                                                     AS dim_crm_sales_rep_id,
       crm_person.dim_crm_account_id                                                                                       AS dim_crm_account_id,
-      COALESCE(account_dims_mapping.dim_sales_segment_id, sales_segment.dim_sales_segment_id, MD5(-1))                    AS dim_sales_segment_id,
-      COALESCE(account_dims_mapping.dim_geo_region_id, geo_region.dim_geo_region_id, MD5(-1))                             AS dim_geo_region_id,
-      COALESCE(account_dims_mapping.dim_geo_sub_region_id, geo_sub_region.dim_geo_sub_region_id, MD5(-1))                 AS dim_geo_sub_region_id,
-      COALESCE(account_dims_mapping.dim_geo_area_id, MD5(-1))                                                             AS dim_geo_area_id,
-      COALESCE(account_dims_mapping.dim_sales_territory_id, sales_territory.dim_sales_territory_id, MD5(-1))              AS dim_sales_territory_id,
-      COALESCE(account_dims_mapping.dim_industry_id, industry.dim_industry_id, MD5(-1))                                   AS dim_industry_id,
-      COALESCE(marketing_channel.dim_marketing_channel_id, MD5(-1))                                                       AS dim_marketing_channel_id,
+      {{ get_keyed_nulls('account_dims_mapping.dim_sales_segment_id, sales_segment.dim_sales_segment_id') }}              AS dim_sales_segment_id,
+      {{ get_keyed_nulls('account_dims_mapping.dim_geo_region_id, geo_region.dim_geo_region_id') }}                       AS dim_geo_region_id,
+      {{ get_keyed_nulls('account_dims_mapping.dim_geo_sub_region_id, geo_sub_region.dim_geo_sub_region_id') }}           AS dim_geo_sub_region_id,
+      {{ get_keyed_nulls('account_dims_mapping.dim_geo_area_id') }}                                                       AS dim_geo_area_id,
+      {{ get_keyed_nulls('account_dims_mapping.dim_sales_territory_id, sales_territory.dim_sales_territory_id') }}        AS dim_sales_territory_id,
+      {{ get_keyed_nulls('account_dims_mapping.dim_industry_id, industry.dim_industry_id') }}                             AS dim_industry_id,
+      {{ get_keyed_nulls('marketing_channel.dim_marketing_channel_id') }}                                                 AS dim_marketing_channel_id,
 
      -- important person dates
 

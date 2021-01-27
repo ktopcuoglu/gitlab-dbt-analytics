@@ -44,7 +44,7 @@ WITH invoice AS (
 
       --ids
       {{ dbt_utils.surrogate_key(['CONCAT(quote_amendment.zqu_quote_amendment_id,
-                                   COALESCE(rate_plan_charge.zqu_quote_rate_plan_charge_id, MD5(-1)),
+                                   COALESCE(rate_plan_charge.zqu_quote_rate_plan_charge_id, MD5(-1)),  -- this should be the get_keyed_nulls macro
                                    COALESCE(rate_plan_charge.zqu_product_rate_plan_charge_zuora_id, MD5(-1)))']
                                 ) }}                                                                AS quote_item_id,
       quote_amendment.zqu_quote_amendment_id                                                        AS quote_amendment_id,
