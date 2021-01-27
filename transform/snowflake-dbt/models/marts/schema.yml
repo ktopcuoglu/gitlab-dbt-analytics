@@ -99,7 +99,7 @@ models:
         tags: ["tdf", "mart", "arr"]
 
   - name: mart_delta_arr_subscription_product_month
-    description: "Mart table by month purusant to the ARR Analysis Framework at the subscription level"
+    description: "Mart table by month purusant to the ARR Analysis Framework at the subscription || product_category level"
     columns:
       - name: primary_key
         tests:
