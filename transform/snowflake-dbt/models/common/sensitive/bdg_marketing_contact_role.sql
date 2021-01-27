@@ -127,7 +127,7 @@ WITH gitlab_namespaces AS (
     INNER JOIN zuora_contact
       ON zuora_contact.account_id = zuora_account.account_id
     LEFT JOIN dim_marketing_contact
-      ON dim_marketing_contact.email_address = zuora_account.work_email
+      ON dim_marketing_contact.email_address = zuora_contact.work_email
     WHERE zuora_subscription.subscription_status = 'Active'
     
 )
