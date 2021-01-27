@@ -87,9 +87,9 @@ WITH zuora_product AS (
         ELSE 'Not Applicable'
       END                                                           AS product_tier_historical,
       CASE
-        WHEN LOWER(product_tier_historical) LIKE 'self-managed'
+        WHEN LOWER(product_tier_historical) LIKE '%self-managed%'
           THEN 'Self-Managed'
-        WHEN LOWER(product_tier_historical) LIKE 'saas'
+        WHEN LOWER(product_tier_historical) LIKE '%saas%'
           THEN 'SaaS'
         WHEN product_tier_historical IN (
                                           'Basic'
