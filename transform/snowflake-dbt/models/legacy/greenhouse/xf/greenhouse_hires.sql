@@ -57,7 +57,8 @@ WITH applications AS (
       greenhouse_opening_custom_fields.job_opening_type,
       division_department.division,
       division_department.department,
-      division_department.employment_status
+      division_department.employment_status,
+      division_department.is_promotion
     FROM applications
     LEFT JOIN offers
       ON offers.application_id = applications.application_id
@@ -85,10 +86,11 @@ WITH applications AS (
       hire_date_mod,
       hire_type,
       job_opening_type,
-      IFF(employment_status IS NOT NULL ,TRUE,FALSE)                             AS hired_in_bamboohr,
+      IFF(employment_status IS NOT NULL,TRUE,FALSE)                             AS hired_in_bamboohr,
       division,
       department
     FROM joined 
+    WHERE is_promotion != TRUE --removing promotions
 
 )
 

@@ -58,6 +58,11 @@ WITH hire_replan AS (
     FROM {{ ref ('bamboohr_job_info_current_division_base') }}   
     WHERE department IS NOT NULL
 
+), department_name_changes AS (  
+    
+    SELECT *
+    FROM {{ ref ('department_name_changes') }}   
+
 ), all_company AS (
 
     SELECT 
@@ -91,7 +96,7 @@ WITH hire_replan AS (
     SELECT 
       unpivoted.month_date,
       'department_division_breakout'                                                  AS breakout_type,
-      unpivoted.department                                                            AS department,
+      unpivoted.department,
       department_division_mapping.division,
       SUM(headcount)                                                                  AS planned_headcount,
       planned_headcount - lag(planned_headcount) 
