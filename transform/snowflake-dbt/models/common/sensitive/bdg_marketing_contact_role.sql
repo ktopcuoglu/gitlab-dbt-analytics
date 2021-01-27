@@ -48,7 +48,7 @@ WITH gitlab_namespaces AS (
     INNER JOIN gitlab_users 
       ON gitlab_users.user_id = gitlab_namespaces.owner_id
     LEFT JOIN dim_marketing_contact
-      ON dim_marketing_contact.email_address = gitlab_namespaces.gitlab_users.notification_email 
+      ON dim_marketing_contact.email_address = gitlab_users.notification_email 
     WHERE owner_id IS NOT NULL
       AND namespace_type IS NULL
       AND parent_id IS NULL
