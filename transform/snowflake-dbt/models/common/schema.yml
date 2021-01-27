@@ -122,8 +122,7 @@ models:
       - name: is_reseller
         description: Identify whether a crm_account is a reseller.
         tests:
-          - accepted_values:
-                  values: ['TRUE', 'FALSE']
+          - not_null
         tags: ["tdf", "common", "sales_funnel"]
       - name: merged_to_account_id
         description: for deleted accounts this is the SFDC account they were merged to
@@ -854,14 +853,82 @@ models:
           - unique
           - not_null
         tags: ["tdf", "common", "sales_funnel"]
+      - name: merged_crm_opportunity_id
+      - name: dim_crm_account_id
+      - name: dim_crm_person_id
+        description: A surrogate key for use when joining to `dim_crm_person`. Created from the contact_id where there is a contact and a lead_id where there isn't.
+      - name: sfdc_contact_id
+      - name: created_date
+      - name: created_date_id
       - name: sales_accepted_date
         description: The sales_accepted_date from the sfdc_opportunity. Note that there can be opportunities with sales accepted dates that aren't sales accepted opportunities. This is indicated with the is_sao and is_sdr_sao booleans
-      - name: crm_person_id
-        description: A surrogate key for use when joining to `fct_crm_sales_accepted_opportunity`. Created from the contact_id where there is a contact and a lead_id where there isn't.
+      - name: sales_accepted_date_id
+      - name: close_date
+      - name: close_date_id
+      - name: stage_0_pending_acceptance_date
+      - name: stage_0_pending_acceptance_date_id
+      - name: stage_1_discovery_date
+      - name: stage_1_discovery_date_id
+      - name: stage_2_scoping_date
+      - name: stage_2_scoping_date_id
+      - name: stage_3_technical_evaluation_date
+      - name: stage_3_technical_evaluation_date_id
+      - name: stage_4_proposal_date
+      - name: stage_4_proposal_date_id
+      - name: stage_5_negotiating_date
+      - name: stage_5_negotiating_date_id
+      - name: stage_6_closed_won_date
+      - name: stage_6_closed_won_date_id
+      - name: stage_6_closed_lost_date
+      - name: stage_6_closed_lost_date_id
+      - name: days_in_0_pending_acceptance
+      - name: days_in_1_discovery
+      - name: days_in_2_scoping
+      - name: days_in_3_technical_evaluation
+      - name: days_in_4_proposal
+      - name: days_in_5_negotiating
+      - name: days_in_sao
+      - name: closed_buckets
+      - name: subscription_start_date
+      - name: subscription_end_date
+      - name: dim_crm_sales_rep_id
+      - name: dim_order_type_id
+      - name: dim_opportunity_source_id
+      - name: dim_purchase_channel_id
+      - name: dim_sales_segment_id
+      - name: dim_geo_region_id
+      - name: dim_geo_sub_region_id
+      - name: dim_geo_area_id
+      - name: dim_sales_territory_id
+      - name: dim_industry_id
+      - name: dim_crm_sales_hierarchy_sales_segment_stamped_id
+      - name: dim_crm_sales_hierarchy_location_region_stamped_id
+      - name: dim_crm_sales_hierarchy_sales_region_stamped_id
+      - name: dim_crm_sales_hierarchy_sales_area_stamped_id
+      - name: dim_crm_sales_hierarchy_sales_segment_live_id
+      - name: dim_crm_sales_hierarchy_location_region_live_id
+      - name: dim_crm_sales_hierarchy_sales_region_live_id
+      - name: dim_crm_sales_hierarchy_sales_area_live_id
+      - name: is_closed
+      - name: is_won
+      - name: is_refund
+      - name: is_downgrade
+      - name: is_swing_deal
+      - name: is_edu_oss
+      - name: is_web_portal_purchase
       - name: is_sao
         description: a boolean field created in the warehouse to flag Sales Accepted Opportunities. This field should be deprecated once sales accepted is in a more stable and consistent state in salesforce.
       - name: is_sdr_sao
         description: a boolean field created in the warehouse to flag Sales Accepted Opportunities from [Sales Development Reps](https://about.gitlab.com/handbook/marketing/revenue-marketing/sdr/). This field should be deprecated once sales accepted is in a more stable and consistent state in salesforce.
+      - name: iacv
+      - name: net_arr
+      - name: amount
+      - name: recurring_amount
+      - name: true_up_amount
+      - name: proserv_amount
+      - name: other_non_recurring_amount
+      - name: arr_basis
+      - name: arr
 
   - name: fct_crm_person
     description: '{{ doc("fct_crm_person") }}'
@@ -889,19 +956,19 @@ models:
         tests:
           - not_null
           - unique
-      - name: date_id
+      - name: dim_date_id
         description: The identifier of date month in dim_date
-      - name: subscription_id
+      - name: dim_subscription_id
         description: The identifier of subscription in dim_subscription table
         tests:
           - not_null
-      - name: product_details_id
+      - name: dim_product_detail_id
         description: The identifier of product details in dim_product_detail
         tests:
           - not_null
-      - name: billing_account_id
+      - name: dim_billing_account_id
         description: Zuora account id
-      - name:  crm_account_id
+      - name:  dim_crm_account_id
         description: account id frm crm
       - name: mrr
         description: Monthly Recurring Revenue value for given month

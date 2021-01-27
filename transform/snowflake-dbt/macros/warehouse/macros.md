@@ -18,3 +18,18 @@ This macro...
 {% enddocs %}
 
 
+{% docs gdpr_delete %}
+This macro is intended to be run as a dbt run-operation. The command to do this at the command line is:
+
+`dbt run-operation gdpr_delete --args '{email_sha: your_sha_here}'`
+
+The sha can be generated separately on the command line as well by doing the following:
+
+`echo -n email@redacted.com | shasum -a 256`
+
+The macro gathers all of the columns within the RAW database that match `email` anywhere in the name and delete the rows if they're not in the `snapshots` schema. If the columns are in the snapshot schema it will first update the columns that don't match `email` and also don't match `id`. It will then update all of the email columns to the sha256 value as well.
+
+The output from the run operation can be stored in a file by appending `>> file.txt` on the command line:
+
+`dbt run-operation gdpr_delete --args '{email_sha: your_sha_here}' >> file.txt`
+{% enddocs %}

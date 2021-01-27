@@ -212,19 +212,19 @@ models:
         tests:
           - not_null
           - unique
-      - name: date_id
+      - name: dim_date_id
         description: The identifier of date month in dim_date
-      - name: subscription_id
+      - name: dim_subscription_id
         description: The identifier of subscription in dim_subscriptions table
         tests:
           - not_null
-      - name: product_details_id
+      - name: dim_product_detail_id
         description: The identifier of product details in dim_product_detail
         tests:
           - not_null
-      - name: billing_account_id
+      - name: dim_billing_account_id
         description: Zuora account id
-      - name:  crm_account_id
+      - name:  dim_crm_account_id
         description: account id frm crm
       - name: mrr
         description: Monthly Recurring Revenue value for given month

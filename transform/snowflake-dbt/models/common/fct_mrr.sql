@@ -1,18 +1,13 @@
 /* grain: one record per subscription per month */
-{{config({
-    "schema": "legacy"
-  })
-}}
-
 WITH mrr AS (
 
     SELECT
       mrr_id,
-      date_id,
-      billing_account_id,
-      crm_account_id,
-      subscription_id,
-      product_details_id,
+      dim_date_id,
+      dim_billing_account_id,
+      dim_crm_account_id,
+      dim_subscription_id,
+      dim_product_detail_id,
       mrr,
       arr,
       quantity,
@@ -26,5 +21,5 @@ WITH mrr AS (
     created_by="@msendal",
     updated_by="@mcooperDD",
     created_date="2020-09-10",
-    updated_date="2021-01-04",
+    updated_date="2021-01-21",
 ) }}

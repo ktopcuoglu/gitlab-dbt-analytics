@@ -11,13 +11,13 @@ WITH fct_mrr AS (
 ), self_managed_active_subscriptions AS (
 
     SELECT
-      date_id,
-      subscription_id,
-      SUM(mrr)      AS mrr,
-      SUM(quantity) AS quantity
+      dim_date_id           AS date_id,
+      dim_subscription_id   AS subscription_id,
+      SUM(mrr)              AS mrr,
+      SUM(quantity)         AS quantity
     FROM fct_mrr
     INNER JOIN dim_product_detail
-      ON fct_mrr.product_details_id = dim_product_detail.dim_product_detail_id
+      ON fct_mrr.dim_product_detail_id = dim_product_detail.dim_product_detail_id
         AND product_delivery_type = 'Self-Managed'
     {{ dbt_utils.group_by(n=2) }}
 
@@ -106,7 +106,7 @@ WITH fct_mrr AS (
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@mpeychet_",
-    updated_by="@iweeks",
+    updated_by="@mcooperDD",
     created_date="2020-10-16",
-    updated_date="2020-12-24"
+    updated_date="2020-01-21"
 ) }}

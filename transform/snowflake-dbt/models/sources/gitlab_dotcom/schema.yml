@@ -1500,6 +1500,28 @@ models:
         tests:
           - not_null
 
+  - name: gitlab_dotcom_project_repositories_source
+    description: Base model for Gitlab.com
+    columns:
+      - name: project_repository_id
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+          - unique
+      - name: project_id
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - unique
+
+  - name: gitlab_dotcom_project_repository_storage_moves_source
+    description: Base model for Gitlab.com project repository moves
+    columns:
+      - name: project_repository_storage_move_id
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+          - unique
+
   - name: gitlab_dotcom_project_statistics_source
     description: Base model for Gitlab.com project statistics
     columns:
@@ -1613,10 +1635,6 @@ models:
         tests:
           - not_null
           - unique
-      - name: project_id
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
 
   - name: gitlab_dotcom_repository_languages_source
     description: >-
@@ -1707,6 +1725,15 @@ models:
         tags: ["tdf","gitlab_dotcom"]
         tests:
           - not_null
+
+  - name: gitlab_dotcom_shards_source
+    description: Base model for Gitlab.com repo shards
+    columns:
+      - name: shard_id
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+          - unique
 
   - name: gitlab_dotcom_snippets_source
     description: Base model for Gitlab.com snippets
@@ -1818,6 +1845,30 @@ models:
         tests:
           - not_null
 
+  - name: gitlab_dotcom_user_custom_attributes_source
+    description: Base model for Gitlab.com user custom attributes
+    columns:
+      - name: user_id
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+      - name: created_at
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+      - name: updated_at
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+      - name: user_custom_key
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+      - name: user_custom_value
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+
   - name: gitlab_dotcom_user_preferences_source
     description: Base model for Gitlab.com user_preferences
     columns:
@@ -1855,30 +1906,6 @@ models:
         tests:
           - accepted_values:
               values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 99]
-
-  - name: gitlab_dotcom_user_custom_attributes_source
-    description: Base model for Gitlab.com user custom attributes
-    columns:
-      - name: user_id
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-      - name: created_at
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-      - name: updated_at
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-      - name: user_custom_key
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-      - name: user_custom_value
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
               
   - name: gitlab_dotcom_vulnerabilities_source
     description: >-
