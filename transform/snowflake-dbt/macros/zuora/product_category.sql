@@ -1,20 +1,14 @@
 {%- macro product_category(product_column, output_column_name = 'product_category') -%}
 
 CASE
-  WHEN LOWER({{product_column}}) LIKE '%saas%'
-    AND LOWER({{product_column}}) LIKE '%ultimate%'
+  WHEN LOWER({{product_column}}) LIKE '%gold%'
     THEN 'SaaS - Ultimate'
-  WHEN LOWER({{product_column}}) LIKE '%saas%'
-    AND LOWER({{product_column}}) LIKE '%premium%'
+  WHEN LOWER({{product_column}}) LIKE '%silver%'
     THEN 'SaaS - Premium'
   WHEN LOWER({{product_column}}) LIKE '%ultimate%'
     THEN 'Self-Managed - Ultimate'
   WHEN LOWER({{product_column}}) LIKE '%premium%'
     THEN 'Self-Managed - Premium'
-  WHEN LOWER({{product_column}}) LIKE 'gold%'
-    THEN 'SaaS - Gold'
-  WHEN LOWER({{product_column}}) LIKE 'silver%'
-    THEN 'SaaS - Silver'
   WHEN LOWER({{product_column}}) LIKE 'bronze%'
     THEN 'SaaS - Bronze'
   WHEN LOWER({{product_column}}) LIKE '%starter%'
