@@ -11,13 +11,7 @@ from gitlabdata.orchestration_utils import (
 
 if __name__ == "__main__":
 
-    file_dict = dict(
-        categories="categories",
-        location_factors="location_factors",
-        roles="job_families",
-        stages="stages",
-        team="team",
-    )
+    handbook_dict = dict(categories="categories", stages="stages", team="team")
 
     pi_file_dict = dict(
         chief_of_staff_team_pi="chief_of_staff_team",
@@ -41,20 +35,35 @@ if __name__ == "__main__":
         ux_department_pi="ux_department",
     )
 
+    comp_calc_dict = dict(
+        location_factors="location_factors", roles="job_families", geo_zones="geo_zones"
+    )
+
     logging.basicConfig(stream=sys.stdout, level=20)
 
     config_dict = env.copy()
     snowflake_engine = snowflake_engine_factory(config_dict, "LOADER")
 
-    base_url = "https://gitlab.com/gitlab-com/www-gitlab-com/raw/master/data/"
-    pi_url = f"{base_url}performance_indicators/"
+    handbook_url = "https://gitlab.com/gitlab-com/www-gitlab-com/raw/master/data/"
+    pi_url = f"{handbook_url}performance_indicators/"
+
+    comp_calc_url = (
+        f"https://gitlab.com/api/v4/projects/21924975/repository/files/data%2F"
+    )
 
     job_failed = False
 
-    def curl_and_upload(table_name, file_name, base_url):
+    def curl_and_upload(table_name, file_name, base_url, private_token=None):
+
         logging.info(f"Downloading {file_name}.yml to {file_name}.json file.")
-        try:
+
+        if private_token is not None:
+            header = f'--header "PRIVATE-TOKEN: {private_token}"'
+            command = f"curl {header} '{base_url}{file_name}%2Eyml/raw?ref=master' | yaml2json -o {file_name}.json"
+        else:
             command = f"curl {base_url}{file_name}.yml | yaml2json -o {file_name}.json"
+
+        try:
             p = subprocess.run(command, shell=True)
             p.check_returncode()
         except:
@@ -69,11 +78,16 @@ if __name__ == "__main__":
             snowflake_engine,
         )
 
-    for key, value in file_dict.items():
-        curl_and_upload(key, value, base_url)
+    for key, value in handbook_dict.items():
+        curl_and_upload(key, value, handbook_url)
 
     for key, value in pi_file_dict.items():
         curl_and_upload(key, value, pi_url)
+
+    for key, value in comp_calc_dict.items():
+        curl_and_upload(
+            key, value, comp_calc_url, config_dict["GITLAB_ANALYTICS_PRIVATE_TOKEN"]
+        )
 
     if job_failed:
         sys.exit(1)

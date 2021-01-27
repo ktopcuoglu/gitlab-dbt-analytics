@@ -11,6 +11,16 @@ WITH applications AS (
     FROM  {{ ref ('greenhouse_offers_source') }}
     WHERE offer_status = 'accepted'
 
+), openings AS (
+    
+    SELECT *
+    FROM {{ ref ('greenhouse_openings_source') }}
+
+), opening_custom_fields AS (
+
+    SELECT *
+    FROM {{ ref ('greenhouse_opening_custom_fields_source') }}
+
 ), initial_hire_date AS (
  
     SELECT *
@@ -63,26 +73,33 @@ WITH applications AS (
             THEN 'rehire'
            WHEN greenhouse_candidate_row_number>1 
             THEN 'transfer'
-           ELSE NULL END                                            AS hire_type
+           ELSE NULL END                                            AS hire_type,
+      opening_custom_fields.opening_custom_field_display_value      AS job_opening_type
     FROM applications
     LEFT JOIN offers
       ON offers.application_id = applications.application_id
     LEFT JOIN bamboo_hires 
       ON bamboo_hires.greenhouse_candidate_id = applications.candidate_id
+    LEFT JOIN openings
+      ON openings.hired_application_id = applications.application_id
+    LEFT JOIN opening_custom_fields
+      ON opening_custom_fields.opening_id = openings.job_opening_id
+      AND opening_custom_fields.opening_custom_field = 'type'  
 
 ), final AS (    
 
     SELECT 
-    {{ dbt_utils.surrogate_key(['application_id', 'candidate_id',]) }}  AS unique_key,
-    application_id,
-    candidate_id,
-    employee_id,
-    employee_name,
-    region,
-    greenhouse_candidate_row_number,
-    hire_date_mod,
-    hire_type,
-    IFF(employee_id IS NOT NULL,TRUE,FALSE) AS hired_in_bamboohr
+      {{ dbt_utils.surrogate_key(['application_id', 'candidate_id',]) }}  AS unique_key,
+      application_id,
+      candidate_id,
+      employee_id,
+      employee_name,
+      region,
+      greenhouse_candidate_row_number,
+      hire_date_mod,
+      hire_type,
+      job_opening_type,
+      IFF(employee_id IS NOT NULL,TRUE,FALSE)                             AS hired_in_bamboohr
     FROM joined 
 
 )

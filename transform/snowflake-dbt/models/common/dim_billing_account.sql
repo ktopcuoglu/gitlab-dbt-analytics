@@ -1,19 +1,10 @@
-WITH map_merged_crm_accounts AS (
+{{ simple_cte([
+    ('map_merged_crm_accounts','map_merged_crm_accounts'),
+    ('zuora_account','zuora_account_source'),
+    ('zuora_contact','zuora_contact_source')
+]) }}
 
-    SELECT *
-    FROM {{ ref('map_merged_crm_accounts') }}
-
-), zuora_account AS (
-
-    SELECT *
-    FROM {{ ref('zuora_account_source') }}
-
-), zuora_contact AS (
-
-    SELECT *
-    FROM {{ ref('zuora_contact_source') }}
-
-), excluded_accounts AS (
+, excluded_accounts AS (
 
     SELECT DISTINCT
       account_id

@@ -30,6 +30,9 @@ sources:
           error_after: { count: 30, period: day }
       - name: application_settings
         identifier: gitlab_db_application_settings
+        freshness:
+          warn_after: { count: 7, period: day }
+          error_after: { count: 30, period: day }
       - name: approval_merge_request_rules
         identifier: gitlab_db_approval_merge_request_rules
       - name: approvals
@@ -237,6 +240,10 @@ sources:
         identifier: gitlab_db_project_import_data
       - name: project_mirror_data
         identifier: gitlab_db_project_mirror_data
+      - name: project_repositories
+        identifier: gitlab_db_project_repositories
+      - name: project_repository_storage_moves
+        identifier: gitlab_db_project_repository_storage_moves
       - name: project_statistics
         identifier: gitlab_db_project_statistics
       - name: projects
@@ -264,6 +271,8 @@ sources:
         identifier: gitlab_db_saml_providers
       - name: services
         identifier: gitlab_db_services
+      - name: shards
+        identifier: gitlab_db_shards
       - name: sprints
         identifier: gitlab_db_sprints
       - name: subscriptions
@@ -291,3 +300,4 @@ sources:
         identifier: gitlab_db_vulnerabilities
       - name: vulnerability_occurrences
         identifier: gitlab_db_vulnerability_occurrences
+

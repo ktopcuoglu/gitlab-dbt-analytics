@@ -7,6 +7,8 @@ seeds:
     description: '{{ doc("gitlab_dotcom_xmau_metrics_doc") }}'
   - name: handbook_file_classification_mapping
     description: This a csv loaded by dbt seed for mapping handbook file paths to divisions/department classifications.
+  - name: marketing_site_file_classification_mapping
+    description: This is a csv loaded by dbt seed for mapping marketing file paths to divisions/department classifications.
   - name: version_usage_stats_to_stage_mappings
     description: '{{ doc("version_usage_stats_to_stage_mappings_doc") }}'
   - name: zuora_excluded_accounts
