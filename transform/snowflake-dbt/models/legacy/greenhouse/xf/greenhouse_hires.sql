@@ -55,8 +55,8 @@ WITH applications AS (
             THEN 'transfer'
            ELSE NULL END                                            AS hire_type,
       greenhouse_opening_custom_fields.job_opening_type,
-      division_department.division,
-      division_department.department,
+      division_department.division_mapped_current                   AS division,
+      division_department.department_modified                       AS department,
       division_department.employment_status,
       division_department.is_promotion
     FROM applications

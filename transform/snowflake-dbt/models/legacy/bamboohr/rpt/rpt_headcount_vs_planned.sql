@@ -1,13 +1,15 @@
-{% set lines_to_repeat = "DATE_TRUNC(month,hire_date_mod)                                 AS hire_month,
-                            SUM(IFF(job_opening_type IN ('New Hire'),1,0))                AS new_hire,
-                            SUM(IFF(job_opening_type IN 
-                                ('Current Team Member','Internal Transfer'),1,0))         AS transfers,
-                            SUM(IFF(job_opening_type IN ('Backfill'),1,0))                AS backfill,
-                            SUM(IFF(job_opening_type IS NULL,1,0))                        AS unidentified_job_opening_type,
-                            COUNT(*)                                                      AS total_greenhouse_reqs_filled
-                            FROM greenhouse_hire_type
-                            WHERE hired_in_bamboohr= TRUE
-                            GROUP BY 1,2,3,4" %}
+{% set lines_to_repeat =
+          "DATE_TRUNC(month,hire_date_mod)                                                           AS hire_month,
+          SUM(IFF(job_opening_type = 'New Hire' AND hire_type != 'Transfer',1,0))                    AS new_hire,
+          SUM(IFF(job_opening_type = 'New Hire' AND hire_type = 'Transfer',1,0))                     AS new_position_filled_internally,
+          SUM(IFF(job_opening_type IN 
+                    ('Current Team Member','Internal Transfer'),1,0))                                AS transfers,
+          SUM(IFF(job_opening_type IN ('Backfill'),1,0))                                             AS backfill,
+          SUM(IFF(job_opening_type IS NULL,1,0))                                                     AS unidentified_job_opening_type,
+          COUNT(*)                                                                                   AS total_greenhouse_reqs_filled
+        FROM greenhouse_hire_type
+        WHERE hired_in_bamboohr= TRUE
+        GROUP BY 1,2,3,4" %}
 
 WITH headcount AS (
   
@@ -43,7 +45,7 @@ WITH headcount AS (
 ), greenhouse_hire_type AS (
 
     SELECT *
-    FROM {{ ref ('greenhouse_hires') }}
+    FROM {{ ref ('greenhouse_hires') }} 
 
 ), hire_type_aggregated AS (
 
@@ -87,7 +89,7 @@ WITH headcount AS (
       backfill,
       unidentified_job_opening_type,
       total_greenhouse_reqs_filled,
-      new_hire + backfill                                                   AS total_hires
+      new_hire + backfill                                                   AS total_hires_greenhouse
     FROM hire_plan
     LEFT JOIN department_name_changes
       ON department_name_changes.old_department_name = hire_plan.department
