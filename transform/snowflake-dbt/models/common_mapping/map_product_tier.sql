@@ -15,11 +15,9 @@ WITH zuora_product AS (
       zuora_product_rate_plan.product_rate_plan_id                  AS product_rate_plan_id,
       zuora_product_rate_plan.product_rate_plan_name                AS product_rate_plan_name,
       CASE 
-        WHEN LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE '%saas%' 
-          AND LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE '%ultimate%'
+        WHEN LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE '%saas - ultimate%' 
           THEN 'SaaS - Ultimate'
-        WHEN LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE '%saas%'   
-          AND LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE '%premium%'
+        WHEN LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE '%saas - premium%'
           THEN 'SaaS - Premium'
         WHEN LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE '%ultimate%'
           THEN 'Self-Managed - Ultimate'
