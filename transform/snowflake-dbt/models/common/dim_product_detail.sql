@@ -21,7 +21,7 @@ WITH zuora_product AS (
 ), common_product_tier AS (
 
     SELECT *
-    FROM {{ ref('dim_product_tier') }}
+    FROM {{ ref('prep_product_tier') }}
 
 ), common_product_tier_mapping AS (
 
@@ -44,6 +44,7 @@ WITH zuora_product AS (
       zuora_product.product_name                                                        AS product_name,
       zuora_product.sku                                                                 AS product_sku,
       common_product_tier.product_tier_historical                                       AS product_tier_historical,
+      common_product_tier.product_tier_historical_short                                 AS product_tier_historical_short,
       common_product_tier.product_tier_name                                             AS product_tier_name,
       common_product_tier.product_tier_name_short                                       AS product_tier_name_short,
       common_product_tier_mapping.product_delivery_type                                 AS product_delivery_type,
@@ -72,10 +73,10 @@ WITH zuora_product AS (
     LEFT JOIN common_product_tier_mapping
       ON zuora_product_rate_plan_charge.product_rate_plan_id = common_product_tier_mapping.product_rate_plan_id
     LEFT JOIN common_product_tier
-      ON common_product_tier_mapping.product_tier = common_product_tier.product_tier_name
+      ON common_product_tier_mapping.product_tier_historical = common_product_tier.product_tier_historical
     WHERE zuora_product.is_deleted = FALSE
       AND zuora_product_rate_plan_charge_tier.currency = 'USD'
-    {{ dbt_utils.group_by(n=19) }}
+    {{ dbt_utils.group_by(n=20) }}
     ORDER BY 1, 3
 
 ), final AS (--add annualized billing list price
