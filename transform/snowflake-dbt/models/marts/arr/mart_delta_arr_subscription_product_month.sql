@@ -1,34 +1,13 @@
-WITH dim_billing_account AS (
+{{ simple_cte([
+    ('dim_billing_account','dim_billing_account'),
+    ('dim_crm_account','dim_crm_account'),
+    ('dim_date','dim_date'),
+    ('dim_product_detail','dim_product_detail'),
+    ('dim_subscription','dim_subscription'),
+    ('fct_mrr', 'fct_mrr')
+]) }}
 
-    SELECT *
-    FROM {{ ref('dim_billing_account') }}
-
-), dim_crm_account AS (
-
-    SELECT *
-    FROM {{ ref('dim_crm_account') }}
-
-), dim_date AS (
-
-    SELECT *
-    FROM {{ ref('dim_date') }}
-
-), dim_product_detail AS (
-
-    SELECT *
-    FROM {{ ref('dim_product_detail') }}
-
-), dim_subscription AS (
-
-    SELECT *
-    FROM {{ ref('dim_subscription') }}
-
-), fct_mrr AS (
-
-    SELECT *
-    FROM {{ ref('fct_mrr') }}
-
-), mart_arr AS (
+, mart_arr AS (
 
     SELECT
       dim_date.date_actual                                                                          AS arr_month,
