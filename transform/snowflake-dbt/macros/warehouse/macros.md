@@ -21,7 +21,7 @@ This macro...
 {% docs gdpr_delete %}
 This macro is intended to be run as a dbt run-operation. The command to do this at the command line is:
 
-`dbt run-operation gdpr_delete --args '{email_sha: your_sha_here}'`
+`dbt run-operation gdpr_delete --args '{email_sha: your_sha_here, run_queries: True}'`
 
 The sha can be generated separately on the command line as well by doing the following:
 
@@ -32,4 +32,12 @@ The macro gathers all of the columns within the RAW database that match `email` 
 The output from the run operation can be stored in a file by appending `>> file.txt` on the command line:
 
 `dbt run-operation gdpr_delete --args '{email_sha: your_sha_here}' >> file.txt`
+
+Output will look like this:
+
+DELETE FROM db.schema.table WHERE SHA2(TRIM(LOWER("COLUMNAME"))) =  'your_sha_here';
+            
+| number of rows de... |
+| -------------------- |
+|                    0 |
 {% enddocs %}
