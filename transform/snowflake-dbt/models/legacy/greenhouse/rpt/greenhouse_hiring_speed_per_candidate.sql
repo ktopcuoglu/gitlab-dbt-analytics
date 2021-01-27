@@ -28,6 +28,8 @@ WITH offers AS (
       (candidate_names.first_name ||' '|| candidate_names.last_name) AS candidate_name,
       offers.division_modified                  AS division,
       offers.department_name                    AS department,
+      offers.candidate_recruiter                AS recruiter,
+      offers.job_id                             AS job_id,
       offers.job_name                           AS vacancy,
       offers.time_to_offer,
       offers.source_name                        AS source,
