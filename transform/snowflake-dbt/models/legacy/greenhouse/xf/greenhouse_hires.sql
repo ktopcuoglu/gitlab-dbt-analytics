@@ -76,7 +76,8 @@ WITH applications AS (
 
 ), final AS (    
 
-    SELECT 
+    SELECT
+      {{ dbt_utils.surrogate_key(['application_id', 'candidate_id',]) }}  AS unique_key,
       job_id,
       application_id,
       candidate_id,
