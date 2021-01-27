@@ -4,8 +4,13 @@ models:
   - name: dim_marketing_contact
     description: '{{ doc("dim_marketing_contact") }}'
     columns:
-      - name: email_address
+      - name: dim_marketing_contact_id
         description: A primary key for the marketing contact
+        tests: 
+          - unique
+          - not_null
+      - name: email_address
+        description: Email address for the marketing contact
         tests: 
           - unique
           - not_null
@@ -66,6 +71,10 @@ models:
   - name: bdg_marketing_contact_role
     description: '{{ doc("bdg_marketing_contact_role") }}'
     columns:
+      - name: dim_marketing_contact_id
+        description: ID for the marketing contact.
+      - name: email_address
+        description: Email address for the marketing contact.
       - name: user_id
         description: GitLab.com user id (if applicable) of the marketing contact.
       - name: customer_db_customer_id
