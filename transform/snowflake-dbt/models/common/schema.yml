@@ -564,12 +564,18 @@ models:
           - not_null
         tags: [ "tdf", "common" ]
       - name: product_tier_historical
+        description: Product pricing tiers prior to [tier renaming](https://gitlab-com.gitlab.io/packaging-and-pricing/pricing-handbook/handbook/renaming_tiers/) (early 2021).
+        tags: [ "tdf", "common" ]
+        tests:
+          - not_null
+          - unique
+      - name: product_tier_historical_short
+        description: Pulls the product tier from `product_tier_historical` with the delivery type removed
       - name: product_tier_name
         description: Name of the [GitLab tier](https://about.gitlab.com/handbook/marketing/strategic-marketing/tiers/) associated with the product.
         tags: [ "tdf", "common" ]
         tests:
           - not_null
-          - unique
       - name: product_tier_name_short
         description: Pulls the product tier from `product_tier_name` with the delivery type removed.
       - name: product_delivery_type

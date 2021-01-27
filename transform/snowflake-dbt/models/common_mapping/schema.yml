@@ -104,12 +104,16 @@ models:
         description: "rate plan name from Zuora product source"
       - name: product_tier_historical
         description: Product pricing tiers prior to [tier renaming](https://gitlab-com.gitlab.io/packaging-and-pricing/pricing-handbook/handbook/renaming_tiers/) (early 2021).
+        tests:
+          - not_null
       - name: product_delivery_type
         description: "How product is delivered to customer; SaaS or Self-Managed (or Other)"
       - name: product_ranking
         description: "Numeric product pricing tier, independent of delivery type"
       - name: product_tier
         description: Product [pricing tiers](https://about.gitlab.com/handbook/marketing/strategic-marketing/tiers/) for both SaaS and Self-Managed customers. Includes the mapping from SaaS - Silver to SaaS - Premium, and from SaaS - Gold to SaaS - Ultimate. 
+        tests:
+          - not_null
 
   - name: map_namespace_internal
     description: '{{ doc("map_namespace_internal") }}'
