@@ -24,12 +24,12 @@ WITH applications AS (
 ), bamboo_hires AS (
  
     SELECT *
-    FROM "PLUTHRA_PREP"."SENSITIVE"."EMPLOYEE_DIRECTORY"
+    FROM  {{ ref ('employee_directory') }}
    
 ), division_department AS (
 
     SELECT *
-    FROM "PLUTHRA_PREP"."SENSITIVE"."EMPLOYEE_DIRECTORY_INTERMEDIATE"   
+    FROM  {{ ref ('employee_directory_intermediate') }}
     
 ), joined AS (
 
