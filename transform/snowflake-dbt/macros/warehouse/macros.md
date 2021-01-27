@@ -21,7 +21,7 @@ This macro...
 {% docs gdpr_delete %}
 This macro is intended to be run as a dbt run-operation. The command to do this at the command line is:
 
-`dbt run-operation gdpr_delete --args '{email_sha: your_sha_here}'`
+`dbt run-operation gdpr_delete --args '{email_sha: your_sha_here, run_queries: True}'`
 
 The sha can be generated separately on the command line as well by doing the following:
 

@@ -1,4 +1,4 @@
-{% macro gdpr_delete(email_sha) %}
+{% macro gdpr_delete(email_sha, run_queries=False) %}
 
 
         {% set data_types = ('BOOLEAN', 'TIMESTAMP_TZ', 'TIMESTAMP_NTZ', 'FLOAT', 'DATE', 'NUMBER') %}
@@ -47,9 +47,14 @@
         {% for email_column in email_column_list %}
 
             {% set delete_sql %}
-                DELETE FROM {{fqd_name}} WHERE SHA2(TRIM(LOWER("{{email_column}}"))) =  $email_sha;
+                DELETE FROM {{fqd_name}} WHERE SHA2(TRIM(LOWER("{{email_column}}"))) =  '{{email_sha}}';
             {% endset %}
             {{ log(delete_sql, info = True) }}
+
+            {% if run_queries %}
+                {% set results = run_query(delete_sql) %}
+                {% set rows_deleted = results.print_table() %}
+            {% endif %}
 
         {% endfor %}
 
@@ -117,10 +122,15 @@
                 {% for non_email_column in non_email_column_list -%}
                     {{non_email_column}} =  'GDPR Redacted'{% if not loop.last %}, {% endif %}
                 {% endfor %}
-                WHERE SHA2(TRIM(LOWER("{{email_column}}"))) =  $email_sha;
+                WHERE SHA2(TRIM(LOWER("{{email_column}}"))) =  '{{email_sha}}';
 
             {% endset %}
             {{ log(sql, info = True) }}
+
+            {% if run_queries %}
+                {% set results = run_query(sql) %}
+                {% set rows_updated = results.print_table() %}
+            {% endif %}
 
         {% endfor %}
 
@@ -129,12 +139,17 @@
             {% set email_sql %}
                 UPDATE {{fqd_name}} SET
                 {% for email_column_inner in email_column_list -%}
-                    {{email_column_inner}} =  $email_sha{% if not loop.last %}, {% endif %}
+                    {{email_column_inner}} =  '{{email_sha}}'{% if not loop.last %}, {% endif %}
                 {% endfor %}
-                WHERE SHA2(TRIM(LOWER("{{email_column}}"))) =  $email_sha;
+                WHERE SHA2(TRIM(LOWER("{{email_column}}"))) =  '{{email_sha}}';
 
             {% endset %}
             {{ log(email_sql, info = True) }}
+
+            {% if email_sql %}
+                {% set results = run_query(email_sql) %}
+                {% set rows_updated = results.print_table() %}
+            {% endif %}
 
         {% endfor %}
 

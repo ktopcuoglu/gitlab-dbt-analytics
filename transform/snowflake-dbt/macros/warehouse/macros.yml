@@ -17,3 +17,6 @@ macros:
       - name: email_sha
         type: string
         description: SHA256 of the email to be removed/redacted
+      - name: run_queries
+        type: boolean
+        description: Flag used to run queries or just print them. Default is False which will only print queries to stdout.
