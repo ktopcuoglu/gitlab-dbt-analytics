@@ -28,6 +28,11 @@ WITH gitlab_namespaces AS (
     SELECT *
     FROM {{ref('zuora_account_source') }}
 
+),zuora_contact AS (
+
+    SELECT *
+    FROM {{ref('zuora_contact_source') }}
+
 ),dim_marketing_contact AS (
 
     SELECT *
@@ -109,7 +114,7 @@ WITH gitlab_namespaces AS (
 
     SELECT
       dim_marketing_contact_id,
-      zuora_account.work_email                                   AS email_address,
+      zuora_contact.work_email                                   AS email_address,
       NULL                                                       AS user_id,
       NULL                                                       AS customer_db_customer_id,
       NULL                                                       AS namespace_id,
@@ -119,6 +124,8 @@ WITH gitlab_namespaces AS (
     FROM zuora_subscription
     INNER JOIN zuora_account
       ON zuora_account.account_id = zuora_subscription.account_id
+    INNER JOIN zuora_contact
+      ON zuora_contact.account_id = zuora_account.account_id
     LEFT JOIN dim_marketing_contact
       ON dim_marketing_contact.email_address = zuora_account.work_email
     WHERE zuora_subscription.subscription_status = 'Active'
