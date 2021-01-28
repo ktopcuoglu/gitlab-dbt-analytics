@@ -1635,10 +1635,6 @@ models:
         tests:
           - not_null
           - unique
-      - name: project_id
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
 
   - name: gitlab_dotcom_repository_languages_source
     description: >-

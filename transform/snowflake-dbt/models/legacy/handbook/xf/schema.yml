@@ -136,8 +136,3 @@ models:
     - name: merge_request_updated_at
       tests:
         - not_null
-
-
-
-
-
