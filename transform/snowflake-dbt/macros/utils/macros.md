@@ -60,7 +60,7 @@ This creates a conformed date_id for use in with the date dimension in common. T
 
 {% docs get_keyed_nulls %}
 
-This macro generates a join key from MD5(-1) which should be matched in a dimension with a record describing a missing member as in
+This macro generates a key for facts with missing dimensions so when the fact table is joined to the dimension it joins to a record that says it's unknown as in
 
 ```sql
 SELECT * 
