@@ -62,7 +62,14 @@ WITH sfdc_opportunity_xf AS (
         WHEN sfdc_opportunity_xf.account_owner_team_vp_level = 'VP Comm SMB' 
           THEN 'SMB' 
         ELSE 'Other' 
-      END                                                                 AS adj_ultimate_parent_sales_segment,
+      END                                                                 AS account_owner_cro_level,
+
+      CASE 
+        WHEN sfdc_opportunity_xf.user_segment   IS NULL 
+          OR sfdc_opportunity_xf.user_segment   = 'Unknown' 
+        THEN 'SMB' 
+          ELSE sfdc_opportunity_xf.user_segment   
+      END                                                                 AS user_segment_stamped,
 
        -- check if renewal was closed on time or not
       CASE 
