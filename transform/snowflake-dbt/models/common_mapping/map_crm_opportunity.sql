@@ -45,7 +45,7 @@ WITH crm_account_dimensions AS (
 ), opportunities_with_keys AS (
 
     SELECT
-
+      opportunity_fields.dim_crm_opportunity_id,
       {{ get_keyed_nulls('opportunity_fields.dim_crm_sales_rep_id') }}                                         AS dim_crm_sales_rep_id,
       {{ get_keyed_nulls('order_type.dim_order_type_id') }}                                                    AS dim_order_type_id,
       {{ get_keyed_nulls('opportunity_source.dim_opportunity_source_id') }}                                    AS dim_opportunity_source_id,
