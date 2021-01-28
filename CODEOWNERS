@@ -119,6 +119,8 @@ docker-compose.yml  @tayloramurphy  @m_walker   @paul_armstrong
 /transform/snowflake-dbt/models/sources/zuora       @iweeks     @tayloramurphy      @paul_armstrong      @jeanpeguero
 /transform/snowflake-dbt/models/legacy/zuora        @iweeks     @tayloramurphy      @paul_armstrong      @jeanpeguero
 
+/transform/snowflake-dbt/models/workspaces/workspace_sales  @nfiguera @mvilain
+
 # ======
 # dbt data file Overwrites
 # ======

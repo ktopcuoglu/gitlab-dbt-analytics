@@ -9,7 +9,6 @@ Please complete all items. Ask questions in the #data slack channel
 * [ ] Assign this issue to both the Data Analyst and Data Engineer assigned to Triage 
 * [ ] [Add a weight to the issue](https://about.gitlab.com/handbook/business-ops/data-team/how-we-work/#issue-pointing)
 * [ ] Link any issues opened as a result of Data Triage to this `parent` issue. 
-* [ ] Close this issue once all the items below are completed. 
 
 ## Data Analyst tasks
 All tasks below should be checked off on your Triage day. 
@@ -58,38 +57,40 @@ Please prioritize this issue since we dedicate a day from your milestone to this
 
 In addition to these tasks the Data Engineer on triage should be focused on resolving these issues, including the backlog found on the [DE - Triage Errors board](https://gitlab.com/groups/gitlab-data/-/boards/1917859)
 
-## Finishing the Day
 
-* [ ] At the end of your working day post EOD message to slack along with a link to this issue in the above mentioned slack channels so that it is clear for the next triager what time to check for issues from.
-
-## Data Notification Templates
+### Data Notification Templates
 
 Use these to notify stakeholders of Data Delays.
 
 <details>
 <summary><i>Data Source Delay Templates</i></summary>
 
-### GitLab.com
+#### GitLab.com
 
 We have identified a delay in the `GitLab` data refresh and this problem potentially impacts any GitLab KPIs (e.g. MR Rate, TMAU) or SiSense dashboards. We are actively working on a resolution and will provide an update once the KPIs and SiSense dashboards have been brought up-to-date.  
 
 `CC @Mek Stittri, @Christopher Lefelhocz, @Hila Qu`
 
-### Salesforce
+#### Salesforce
 
 Message: We have identified a delay in the `Salesforce` data refresh and this problem potentially impacts any Sales related KPIs or SiSense dashboards. We are actively working on a resolution and will provide an update once the KPIs and SiSense dashboards have been brought up-to-date.
 
 `CC @Jake Bielecki, @Matt Benzaquen, @Jack Brennan, @Craig Mestel`
 
-### Zuora
+#### Zuora
 
 Message: We have identified a delay in the `Zuora` data refresh and this problem potentially impacts any Financial KPIs or SiSense dashboards. We are actively working on a resolution and will provide an update once the KPIs and SiSense dashboards have been brought up-to-date.  
 
 `CC @Jake Bielecki, @Matt Benzaquen, @Jack Brennan, @Craig Mestel`
 
-### General
+#### General
 
 We have identified a delay in the `DATA SOURCE` data refresh. We are actively working on a resolution and will provide an update once data has been brought up-to-date. 
 </details>
+
+## Finishing the Day
+
+* [ ] At the end of your working day post EOD message to slack along with a link to this issue in the above mentioned slack channels so that it is clear for the next triager what time to check for issues from.
+
 
 /label ~"workflow::In dev" ~"Housekeeping" ~"Data Team" ~"Documentation" ~"Triage" ~"Priority::1-Ops"

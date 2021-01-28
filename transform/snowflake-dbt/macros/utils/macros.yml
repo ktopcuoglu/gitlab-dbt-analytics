@@ -33,6 +33,8 @@ macros:
     description: '{{ doc("generate_schema_name") }}'
   - name: get_date_id
     description: '{{ doc("get_date_id") }}'
+  - name: get_keyed_nulls
+    description: '{{ doc("get_keyed_nulls") }}'
   - name: monthly_change
     description: '{{ doc("monthly_change") }}'
   - name: monthly_is_used
@@ -45,6 +47,12 @@ macros:
     description: '{{ doc("schema_union_all") }}'
   - name: schema_union_limit
     description: '{{ doc("schema_union_limit") }}'
+  - name: simple_cte
+    description: '{{ doc("simple_cte") }}'
+    arguments:
+      - name: tuple_list
+        type: list
+        description: List of tuples with the alias as the first item and the dbt table reference as the second item.
   - name: generate_single_field_dimension
     description: '{{ doc("generate_single_field_dimension") }}'
     arguments:

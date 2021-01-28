@@ -23,7 +23,7 @@ WITH prep_usage_ping AS (
       ping_created_at_date,
 
       -- instance settings 
-      raw_usage_data_payload:uuid, 
+      raw_usage_data_payload:uuid                                                                               AS uuid, 
       ping_source, 
       raw_usage_data_payload:version                                                                            AS instance_version, 
     --   cleaned_version,

@@ -182,7 +182,26 @@ roles:
 # ==========================================
 # Functional Roles
 # ==========================================
-    - analyst_core:
+    ## For all Data Team analysts or Decisive Data
+    - data_team_analyst:
+        member_of:
+          - analyst_core
+          - gitlab_dotcom
+          - qualtrics 
+        privileges:
+            databases:
+                read:
+                    - prep
+            schemas:
+                read:
+                    - prep.*
+            tables:
+                read:
+                    - prep.sensitive.bdg_marketing_contact_role 
+                    - prep.sensitive.dim_marketing_contact
+
+    ## For all analyst Roles 
+    - analyst_core:  
         warehouses:
             - analyst_xs
             - analyst_l
@@ -426,6 +445,7 @@ roles:
             - snowplow
             - version_db
             - zuora
+            - data_team_analyst
 
     - engineer:
         member_of:
@@ -716,8 +736,6 @@ roles:
                     - prep.sensitive.employee_directory_intermediate
                     - prep.sensitive.employee_locality
                     - prep.sensitive.employee_location_factor_snapshots
-                    - prep.sensitive.bamboohr_directory
-                    - prep.sensitive.bamboohr_job_info
                     - prep.sensitive.bamboohr_job_role
                     - prep.sensitive.bamboohr_locality
                     - prep.sensitive.bamboohr_headcount_intermediate
@@ -746,19 +764,11 @@ roles:
                     - prep.sensitive.employee_location_factor_snapshots
                     - prep.sensitive.bamboohr_base_mapping
                     - prep.sensitive.bamboohr_budget_vs_actual
-                    - prep.sensitive.bamboohr_compensation
-                    - prep.sensitive.bamboohr_custom_bonus
                     - prep.sensitive.bamboohr_directionary_bonuses_xf
-                    - prep.sensitive.bamboohr_directory
-                    - prep.sensitive.bamboohr_emergency_contacts
-                    - prep.sensitive.bamboohr_employment_status
                     - prep.sensitive.bamboohr_employment_status_xf
                     - prep.sensitive.bamboohr_engineering_division
-                    - prep.sensitive.bamboohr_headcount_aggregation_intermediate
                     - prep.sensitive.bamboohr_headcount_intermediate
-                    - prep.sensitive.bamboohr_headcount_intermediate_v2
                     - prep.sensitive.bamboohr_id_employee_number_mapping
-                    - prep.sensitive.bamboohr_job_info
                     - prep.sensitive.bamboohr_job_role
                     - prep.sensitive.bamboohr_locality
                     - prep.sensitive.bamboohr_missing_emergency_contact_alert
@@ -927,6 +937,22 @@ roles:
             tables:
                 read:
                     - raw.discourse.*
+
+    - gainsight:
+        warehouses:
+            - gainsight_xs
+        privileges:
+            databases:
+                read:
+                    - prep
+                    - prod
+            schemas:
+                read:
+                    - prep.preparation
+            tables:
+                read:
+                    - prep.preparation.prep_usage_ping_saas_dates
+                    - prep.preparation.prep_usage_ping_no_license_key
 
     - gcp_billing:
         warehouses:
@@ -1203,7 +1229,15 @@ roles:
             tables:
                 read:
                     - prep.greenhouse.*
-                    - prep.sensitive.greenhouse*
+                    - prep.sensitive.greenhouse_diversity_intermediate
+                    - prep.sensitive.greenhouse_hires
+                    - prep.sensitive.greenhouse_locations_cleaned_intermediate
+                    - prep.sensitive.greenhouse_location_factors
+                    - prep.sensitive.greenhouse_recruiting_xf
+                    - prep.sensitive.greenhouse_sourcer
+                    - prep.sensitive.greenhouse_sourcer_base
+                    - prep.sensitive.greenhouse_sourcer_metrics
+                    - prep.sensitive.greenhouse_stage_intermediate
                     - raw.greenhouse.*
 
 
@@ -1875,6 +1909,7 @@ roles:
             - analyst_finance
             - bamboohr_analytics
             - customers_db
+            - data_team_analyst
         warehouses:
             - analyst_xs
         owns:
@@ -1928,6 +1963,7 @@ roles:
             - customers_db
             - netsuite
             - static_admin
+            - data_team_analyst
         warehouses:
             - analyst_xs
         owns:
@@ -2036,6 +2072,7 @@ roles:
         member_of:
             - analyst_engineering
             - customers_db
+            - data_team_analyst
         warehouses:
             - analyst_xs
 
@@ -2051,6 +2088,7 @@ roles:
             - data_manager
             - dbt_analytics_sensitive
             - greenhouse
+            - data_team_analyst
         warehouses:
             - engineer_xs
             - engineer_xl
@@ -2164,6 +2202,7 @@ roles:
     - mpeychet:
         member_of:
             - analyst_growth
+            - data_team_analyst
         warehouses:
             - analyst_xs
             - analyst_l
@@ -2305,6 +2344,12 @@ roles:
                     - nfiguera_prep.*.*
                     - nfiguera_prod.*.*
 
+    - ngalang:
+        member_of:
+            - analyst_growth
+        warehouses:
+            - analyst_xs
+
     - parmstrong:
         member_of:
             - engineer
@@ -2365,6 +2410,7 @@ roles:
             - customers_db
             - qualtrics
             - qualtrics_sensitive
+            - data_team_analyst
         warehouses:
             - analyst_xs
         owns:
@@ -2540,6 +2586,14 @@ roles:
     - ssichak:
         warehouses:
             - reporting
+
+    - statimatla:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+            - customers_db
+        warehouses:
+            - analyst_xs
 
     - stitch:
         warehouses:
@@ -2869,6 +2923,11 @@ users:
         member_of:
             - fkurniadi
 
+    - gainsight:
+        can_login: yes
+        member_of:
+            - gainsight
+
     - gitlab_ci:
         can_login: yes
         member_of:
@@ -3049,6 +3108,11 @@ users:
         member_of:
             - nfiguera
 
+    - ngalang:
+        can_login: yes
+        member_of:
+            - ngalang
+
     - parmstrong:
         can_login: yes
         member_of:
@@ -3139,6 +3203,11 @@ users:
         member_of:
             - ssichak
 
+    - statimatla:
+        can_login: yes
+        member_of:
+            - statimatla
+
     - stitch:
         can_login: yes
         member_of:
@@ -3219,6 +3288,9 @@ warehouses:
         size: x-small
 
     - fivetran_warehouse:
+        size: x-small
+
+    - gainsight_xs:
         size: x-small
 
     - gitlab_postgres:
