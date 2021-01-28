@@ -14,15 +14,15 @@ WITH zuora_product AS (
     SELECT
       zuora_product_rate_plan.product_rate_plan_id                  AS product_rate_plan_id,
       zuora_product_rate_plan.product_rate_plan_name                AS product_rate_plan_name,
-      CASE 
-        WHEN LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE '%saas - ultimate%' 
+      CASE
+        WHEN LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE '%saas - ultimate%'
           THEN 'SaaS - Ultimate'
         WHEN LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE '%saas - premium%'
           THEN 'SaaS - Premium'
         WHEN LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE '%ultimate%'
           THEN 'Self-Managed - Ultimate'
         WHEN LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE '%premium%'
-          THEN 'Self-Managed - Premium'       
+          THEN 'Self-Managed - Premium'
         WHEN LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE 'gold%'
           THEN 'SaaS - Gold'
         WHEN LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE 'silver%'
@@ -65,6 +65,7 @@ WITH zuora_product AS (
                                                                       , 'InnerSourcing Training - Remote for your team'
                                                                       , 'GitLab DevOps Fundamentals Training'
                                                                       , 'Self-Managed Rapid Results Consulting'
+                                                                      , 'Gitlab.com Rapid Results Consulting'
                                                                      )
           THEN 'Support'
         WHEN LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE 'gitlab geo%'
@@ -80,7 +81,7 @@ WITH zuora_product AS (
                                                                       , 'Time Tracking'
                                                                       , '1,000 CI Minutes'
                                                                       , 'Gitlab Storage 10GB'
-                                                                     )  
+                                                                     )
           THEN 'Other'
         ELSE 'Not Applicable'
       END                                                           AS product_tier_historical,
@@ -126,8 +127,8 @@ WITH zuora_product AS (
           THEN 'SaaS - Ultimate'
         WHEN product_tier_historical = 'SaaS - Silver'
           THEN 'SaaS - Premium'
-        ELSE product_tier_historical 
-      END                                                           AS product_tier    
+        ELSE product_tier_historical
+      END                                                           AS product_tier
     FROM zuora_product
     INNER JOIN zuora_product_rate_plan
       ON zuora_product.product_id = zuora_product_rate_plan.product_id
@@ -141,5 +142,3 @@ WITH zuora_product AS (
     created_date="2020-12-14",
     updated_date="2021-01-26"
 ) }}
-    
-    

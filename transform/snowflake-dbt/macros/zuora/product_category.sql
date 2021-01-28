@@ -47,6 +47,7 @@ CASE
                                     , 'InnerSourcing Training - Remote for your team'
                                     , 'GitLab DevOps Fundamentals Training'
                                     , 'Self-Managed Rapid Results Consulting'
+                                    , 'Gitlab.com Rapid Results Consulting'
                                     )
     THEN 'Support'
   WHEN LOWER({{product_column}}) LIKE 'gitlab geo%'

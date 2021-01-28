@@ -126,7 +126,7 @@ WITH namespace AS (
       product_rate_plan.product_rate_plan_id                        AS product_rate_plan_id_order,
       product_rate_plan.product_delivery_type                       AS product_delivery_type_order,
       product_rate_plan.product_tier_name                           AS product_tier_name_order,
-      orders.subscription_id                                        AS dim_subscription_id, 
+      orders.subscription_id                                        AS dim_subscription_id,
       orders.subscription_name,
       orders.order_start_date,
       orders.order_end_date,
@@ -237,10 +237,5 @@ WITH namespace AS (
     created_by="@ischweickartDD",
     updated_by="@mcooperDD",
     created_date="2021-01-14",
-<<<<<<< HEAD
     updated_date="2021-01-26"
 ) }}
-=======
-    updated_date="2021-01-21"
-) }}
->>>>>>> master
