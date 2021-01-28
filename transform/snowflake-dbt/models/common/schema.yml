@@ -975,8 +975,19 @@ models:
           - unique
           - not_null
         tags: ["tdf", "common", "sales_funnel"]
+      - name: sfdc_record_id
+        description: the record id from Salesforce whether a contactId or a leadId
       - name: bizible_person_id
         description: The unique identifier assigned to a lead or contact in Bizible used to join to touchpoint and attribution data.
+      - name: dim_crm_sales_rep_id
+        description: the ownerid from the lead or contact respectively for joining on dim_crm_sales_rep
+      - name: dim_crm_account_id
+        description: the accountId from contacts and lean_data_matched_account from leads to join on dim_crm_account
+        tests:
+          - relationships:
+              to: ref('dim_crm_account')
+              field: crm_account_id
+        tags: ["tdf", "common", "sales_funnel"]      
       - name: mql_date_first
         description: The first date a lead or contact was assigned a Marketo Qualified Lead Date.
       - name: mql_date_latest
