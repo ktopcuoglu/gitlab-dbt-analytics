@@ -66,6 +66,7 @@ WITH namespace AS (
       subscription.dim_subscription_id,
       saas_subscriptions.product_tier_name                          AS product_tier_name_subscription,
       saas_subscriptions.dim_product_tier_id                        AS dim_product_tier_id_subscription,
+      saas_subscriptions.product_rate_plan_id                       AS product_rate_plan_id_subscription,
       subscription.dim_subscription_id_original,
       subscription.dim_subscription_id_previous,
       subscription.subscription_name,
@@ -78,7 +79,8 @@ WITH namespace AS (
           SELECT DISTINCT
             dim_subscription_id     AS subscription_id,
             product_detail.product_tier_name,
-            product_detail.dim_product_tier_id
+            product_detail.dim_product_tier_id,
+            product_rate_plan_id
           FROM recurring_charge
           --new prep table will be required AND new key in prep_recurring_charge
           INNER JOIN product_detail
@@ -107,7 +109,7 @@ WITH namespace AS (
       product_tier_name,
       product_delivery_type
     FROM product_tier
-    WHERE product_tier_name IN ('Trial - Gold', 'Trial - Ultimate')
+    WHERE product_tier_historical IN ('SaaS - Trial: Gold', 'Self-Managed - Trial: Ultimate')
 
 ), active_orders_list AS (
 
@@ -121,6 +123,7 @@ WITH namespace AS (
       COALESCE(trial_tier.product_tier_name,
                product_rate_plan.product_tier_name)                 AS product_tier_name_with_trial,
       product_rate_plan.dim_product_tier_id                         AS dim_product_tier_id_order,
+      product_rate_plan.product_rate_plan_id                        AS product_rate_plan_id_order,
       product_rate_plan.product_delivery_type                       AS product_delivery_type_order,
       product_rate_plan.product_tier_name                           AS product_tier_name_order,
       orders.subscription_id                                        AS dim_subscription_id,
@@ -139,10 +142,10 @@ WITH namespace AS (
       ON orders.order_is_trial = TRUE
         AND (
               (product_rate_plan.product_delivery_type = 'SaaS'
-               AND trial_tier.product_tier_name = 'Trial - Gold')
+               AND trial_tier.product_tier_name = 'SaaS - Trial: Gold')
              OR
               (product_rate_plan.product_delivery_type = 'Self-Managed'
-               AND trial_tier.product_tier_name = 'Trial - Ultimate')
+               AND trial_tier.product_tier_name = 'Self-Managed - Trial: Ultimate')
              )
     WHERE orders.order_end_date >= CURRENT_DATE
       OR orders.order_end_date IS NULL
@@ -171,6 +174,7 @@ WITH namespace AS (
       active_orders_list.order_start_date,
       active_orders_list.order_end_date,
       active_orders_list.order_is_trial,
+      active_orders_list.product_rate_plan_id_order,
       active_subscription_list.product_tier_name_subscription,
       active_subscription_list.dim_product_tier_id_subscription,
       active_subscription_list.dim_subscription_id_original,
@@ -178,6 +182,7 @@ WITH namespace AS (
       active_subscription_list.dim_billing_account_id,
       active_subscription_list.dim_crm_account_id,
       active_subscription_list.count_of_tiers_per_subscription,
+      active_subscription_list.product_rate_plan_id_subscription,
       CASE
         WHEN active_namespace_list.product_tier_name_namespace = 'Free'
           THEN 'N/A Free'
@@ -232,5 +237,5 @@ WITH namespace AS (
     created_by="@ischweickartDD",
     updated_by="@mcooperDD",
     created_date="2021-01-14",
-    updated_date="2021-01-21"
+    updated_date="2021-01-26"
 ) }}
