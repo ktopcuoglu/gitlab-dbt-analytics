@@ -864,7 +864,7 @@ models:
         description: join key for dim_crm_account from the accountid field in Salesforce
         tests:
           - relationships:
-              to: ref('dim_crm_account_id')
+              to: ref('dim_crm_account')
               field: crm_account_id
         tags: ["tdf", "common", "sales_funnel"]
       - name: dim_crm_person_id
