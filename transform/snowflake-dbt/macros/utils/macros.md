@@ -67,11 +67,11 @@ select * from DIM_GEO_AREA where DIM_GEO_AREA_ID = MD5(-1);
 ```
 
 which has:
+
 ```
 ***************************[ 1 ]***************************
 DIM_GEO_AREA_ID    | 6bb61e3b7bce0931da574d19d1d82c88
 GEO_AREA_NAME      | Missing geo_area_name
-
 ```
 
 Generally this should be used when creating and keying on new dimensions that might not be fully representing in the referencing tables
