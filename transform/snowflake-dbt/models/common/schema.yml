@@ -843,10 +843,13 @@ models:
           - unique
           - not_null
         tags: ["tdf", "common", "sales_funnel"]
-      - name: merged_crm_opportunity_id
-        description: If the closed lost reason is that the Opp was merged into another opportunity than this field will be the id for that opportunity record.
       - name: dim_crm_account_id
         description: join key for dim_crm_account from the accountid field in Salesforce
+        tests:
+          - relationships:
+              to: ref('dim_crm_account_id')
+              field: crm_account_id
+        tags: ["tdf", "common", "sales_funnel"]
       - name: dim_crm_person_id
         description: A surrogate key for use when joining to `dim_crm_person`. Created from the contact_id where there is a contact and a lead_id where there isn't.
       - name: sfdc_contact_id
