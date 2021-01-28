@@ -79,28 +79,53 @@ WITH date_details AS (
 
 ), net_iacv_to_net_arr_ratio AS (
 
-    SELECT 
-      opty.order_type_stamped,
-      
-      CASE 
-        WHEN opty.user_segment IS NULL 
-          OR opty.user_segment = 'Unknown' 
-        THEN 'SMB' 
-          ELSE opty.user_segment 
-      END                                               AS user_segment_stamped,
-      
-      sum(opty.net_incremental_acv)                     AS sum_net_iacv,
-      sum(opty.net_arr)                                 AS sum_net_arr,
-      sum(opty.net_arr) / sum(opty.net_incremental_acv) AS ratio_net_iacv_to_net_arr
-
-    FROM sfdc_opportunity_xf opty
-    WHERE opty.net_arr <> 0
-      AND (opty.is_won = 1 OR (opty.is_renewal = 1 AND opty.is_lost = 1))
-      AND opty.is_edu_oss = 0
-      AND opty.close_fiscal_year >= 2020
-      AND opty.order_type_stamped IN ('1. New - First Order','3. Growth','2. New - Connected') 
-    GROUP BY 1, 2
-    HAVING sum_net_iacv <> 0
+    SELECT '2. New - Connected'       AS "ORDER_TYPE_STAMPED", 
+          'Mid-Market'              AS "USER_SEGMENT_STAMPED", 
+          1.001856868               AS "RATIO_NET_IACV_TO_NET_ARR" 
+    UNION 
+    SELECT '1. New - First Order'   AS "ORDER_TYPE_STAMPED", 
+          'SMB'                     AS "USER_SEGMENT_STAMPED", 
+          0.9879780801              AS "RATIO_NET_IACV_TO_NET_ARR" 
+    UNION 
+    SELECT '1. New - First Order'   AS "ORDER_TYPE_STAMPED", 
+          'PubSec'                  AS "USER_SEGMENT_STAMPED", 
+          0.9999751852              AS "RATIO_NET_IACV_TO_NET_ARR" 
+    UNION 
+    SELECT '1. New - First Order'   AS "ORDER_TYPE_STAMPED", 
+          'Large'                   AS "USER_SEGMENT_STAMPED", 
+          0.9983306793              AS "RATIO_NET_IACV_TO_NET_ARR" 
+    UNION 
+    SELECT '3. Growth'              AS "ORDER_TYPE_STAMPED", 
+          'SMB'                     AS "USER_SEGMENT_STAMPED", 
+          0.9427320642              AS "RATIO_NET_IACV_TO_NET_ARR" 
+    UNION 
+    SELECT '3. Growth'              AS "ORDER_TYPE_STAMPED", 
+          'Large'                   AS "USER_SEGMENT_STAMPED", 
+          0.9072734284              AS "RATIO_NET_IACV_TO_NET_ARR" 
+    UNION 
+    SELECT '3. Growth'              AS "ORDER_TYPE_STAMPED", 
+          'PubSec'                  AS "USER_SEGMENT_STAMPED", 
+          1.035889715               AS "RATIO_NET_IACV_TO_NET_ARR" 
+    UNION 
+    SELECT '2. New - Connected'     AS "ORDER_TYPE_STAMPED", 
+          'SMB'                     AS "USER_SEGMENT_STAMPED", 
+          1                         AS "RATIO_NET_IACV_TO_NET_ARR" 
+    UNION 
+    SELECT '2. New - Connected'     AS "ORDER_TYPE_STAMPED", 
+          'PubSec'                  AS "USER_SEGMENT_STAMPED", 
+          1.002887983               AS "RATIO_NET_IACV_TO_NET_ARR" 
+    UNION 
+    SELECT '3. Growth'              AS "ORDER_TYPE_STAMPED", 
+          'Mid-Market'              AS "USER_SEGMENT_STAMPED", 
+          0.8504383811              AS "RATIO_NET_IACV_TO_NET_ARR" 
+    UNION 
+    SELECT '1. New - First Order'   AS "ORDER_TYPE_STAMPED", 
+          'Mid-Market'              AS "USER_SEGMENT_STAMPED", 
+          0.9897881218              AS "RATIO_NET_IACV_TO_NET_ARR" 
+    UNION 
+    SELECT '2. New - Connected'     AS "ORDER_TYPE_STAMPED", 
+          'Large'                   AS "USER_SEGMENT_STAMPED", 
+          1.012723079               AS "RATIO_NET_IACV_TO_NET_ARR" 
 
 ), sfdc_opportunity_snapshot_history_xf AS (
 
@@ -339,12 +364,12 @@ WITH date_details AS (
       ON close_date_detail.date_actual = opp_snapshot.close_date::date
     INNER JOIN date_details snapshot_date
       ON opp_snapshot.date_actual::date = snapshot_date.date_actual
+    INNER JOIN sfdc_opportunity_xf    
+      ON sfdc_opportunity_xf.opportunity_id = opp_snapshot.opportunity_id
     LEFT JOIN date_details created_date_detail
       ON created_date_detail.date_actual = opp_snapshot.created_date::date
     LEFT JOIN date_details iacv_created_date
       ON iacv_created_date.date_actual = opp_snapshot.iacv_created_date::DATE
-    LEFT JOIN sfdc_opportunity_xf    
-      ON sfdc_opportunity_xf.opportunity_id = opp_snapshot.opportunity_id
     LEFT JOIN sfdc_accounts_xf
       ON opp_snapshot.account_id = sfdc_accounts_xf.account_id 
     LEFT JOIN sfdc_users_xf account_owner
@@ -358,7 +383,7 @@ WITH date_details AS (
       ON net_iacv_to_net_arr_ratio.user_segment_stamped = sfdc_opportunity_xf.user_segment_stamped
       AND net_iacv_to_net_arr_ratio.order_type_stamped = sfdc_opportunity_xf.order_type_stamped
      -- remove test account
-    WHERE account_id not in ('0014M00001kGcORQA0')
+    WHERE opp_snapshot.account_id not in ('0014M00001kGcORQA0')
       AND opp_snapshot.is_deleted = 0
 )
 
