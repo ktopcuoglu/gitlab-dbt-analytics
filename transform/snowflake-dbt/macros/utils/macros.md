@@ -63,7 +63,9 @@ This creates a conformed date_id for use in with the date dimension in common. T
 This macro generates a join key from MD5(-1) which should be matched in a dimension with a record describing a missing member as in
 
 ```sql
-select * from DIM_GEO_AREA where DIM_GEO_AREA_ID = MD5(-1);
+SELECT * 
+FROM DIM_GEO_AREA 
+WHERE DIM_GEO_AREA_ID = MD5(-1);
 ```
 
 which has:
