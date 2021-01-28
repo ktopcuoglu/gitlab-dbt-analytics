@@ -9,7 +9,7 @@ WITH offers AS (
     SELECT *
     FROM {{ source('greenhouse', 'candidates') }}
    
-),hires AS ( 
+), hires AS ( 
   
     SELECT * 
     FROM {{ ref ('greenhouse_hires') }}

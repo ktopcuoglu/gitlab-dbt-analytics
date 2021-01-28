@@ -30,7 +30,7 @@ WITH headcount AS (
   
 ), hire_plan AS (
 
-    SElECT *,
+    SELECT *,
       IFF(DATE_TRUNC(month, month_date) = DATE_TRUNC(month, DATEADD(month, -1, CURRENT_DATE())),1,0) AS last_month
     FROM {{ ref ('hire_replan_xf') }}
 
