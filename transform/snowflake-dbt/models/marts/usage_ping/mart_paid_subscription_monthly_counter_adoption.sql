@@ -1,9 +1,9 @@
 WITH self_managed_active_subscriptions AS (
 
     SELECT
-      date_id,
-      subscription_id,
-      product_details_id,
+      dim_date_id           AS date_id,
+      dim_subscription_id   AS subscription_id,
+      dim_product_detail_id AS product_details_id,
       mrr,
       quantity
     FROM {{ ref('fct_mrr')}}
