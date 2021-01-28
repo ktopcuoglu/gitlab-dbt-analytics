@@ -1133,7 +1133,6 @@ models:
         tests:
           - not_null
         tags: ["tdf", "common", "sales_funnel"]
-
       - name: sales_funnel_target_id
         tests:
           - not_null
