@@ -1,6 +1,7 @@
 {% set bytes_to_gib_conversion = 1073741824 %} -- To convert storage (usage) sizes from bytes in source to GiB for reporting (1 GiB = 2^30 bytes = 1,073,741,824 bytes)
 {% set bytes_to_mib_conversion = 1048576 %} -- To convert storage (usage) sizes from bytes in source to MiB for reporting (1 MiB = 2^20 bytes = 1,048,576 bytes)
 {% set mib_to_gib_conversion = 1024 %} -- To convert storage limit sizes from GiB in "source" to MiB for reporting (1 GiB = 1024 MiB)
+
 WITH project_statistics_snapshot_monthly_all AS (
 
     --project_statistics_snapshot_monthly 
@@ -75,22 +76,31 @@ WITH project_statistics_snapshot_monthly_all AS (
       repository_size + lfs_objects_size                                        AS billable_storage_size
     FROM {{ ref('gitlab_dotcom_namespace_root_storage_statistics_source') }}
 
+), month_spine AS (
+
+    SELECT *
+    FROM {{ ref('dim_date') }}
+    WHERE date_actual = first_day_of_month
+
 ), purchased_storage AS (
 
-    SELECT DISTINCT
+    SELECT
       gitlab_namespace_id::INT                                                  AS namespace_id,
-      order_quantity,
-      order_start_date,
-      order_end_date
+      month_spine.first_day_of_month                                            AS snapshot_month,
+      SUM(order_quantity * 10)                                                  AS purchased_storage_gib
     FROM {{ ref('customers_db_orders_source') }}
-    WHERE product_rate_plan_id = '2c92a00f7279a6f5017279d299d01cf9' --only storage rate plan, 10GiB of storage 
+    INNER JOIN month_spine
+      ON month_spine.first_day_of_month BETWEEN DATE_TRUNC('month', order_start_date)
+                                          AND DATEADD(MONTH, -1, DATE_TRUNC('month', order_end_date))
+    WHERE product_rate_plan_id = '2c92a00f7279a6f5017279d299d01cf9' --only storage rate plan, 10GiB of storage
+    GROUP BY 1, 2
 
-), namespace_storage_summary AS (
+), top_level_namespace_storage_summary AS (
 
     SELECT
-      namespace_lineage_monthly_all.ultimate_parent_id,
+      namespace_lineage_monthly_all.ultimate_parent_id,                         -- Only top level namespaces
       namespace_lineage_monthly_all.snapshot_month,
-      SUM(COALESCE(purchased_storage.order_quantity * 10, 0))                   AS purchased_storage_limit,
+      SUM(COALESCE(purchased_storage.purchased_storage_gib, 0))                 AS purchased_storage_limit,
       SUM(namespace_storage_statistic_monthly_all.billable_storage_size)        AS billable_storage_size,
       SUM(namespace_storage_statistic_monthly_all.repository_size)              AS repository_size,
       SUM(namespace_storage_statistic_monthly_all.lfs_objects_size)             AS lfs_objects_size,
@@ -104,18 +114,18 @@ WITH project_statistics_snapshot_monthly_all AS (
       AND namespace_lineage_monthly_all.snapshot_month = namespace_storage_statistic_monthly_all.snapshot_month
     LEFT JOIN purchased_storage
       ON namespace_lineage_monthly_all.namespace_id = purchased_storage.namespace_id
-      AND namespace_lineage_monthly_all.snapshot_month BETWEEN purchased_storage.order_start_date AND purchased_storage.order_end_date
-    GROUP BY 1,2  -- Only top level namespaces
+      AND namespace_lineage_monthly_all.snapshot_month = purchased_storage.snapshot_month
+    GROUP BY 1, 2
 
 ), repository_level_statistics AS (
 
     SELECT DISTINCT
       namespace_lineage_monthly_all.snapshot_month,
       namespace_lineage_monthly_all.ultimate_parent_id,
-      IFF(ultimate_parent_id = 6543, 0, 10)                                     AS repository_size_limit,
-      COALESCE(purchased_storage.order_quantity * 10, 0)                        AS purchased_storage_limit,
       project_statistics_snapshot_monthly_all.project_id,
       COALESCE(project_statistics_snapshot_monthly_all.project_storage_size, 0) AS repository_storage_size,
+      IFF(namespace_lineage_monthly_all.ultimate_parent_id = 6543, 0, 10)       AS repository_size_limit,
+      top_level_namespace_storage_summary.purchased_storage_limit,
       IFF(repository_storage_size < repository_size_limit
             OR repository_size_limit = 0,
           FALSE, TRUE)                                                          AS is_free_storage_used_up,
@@ -126,7 +136,7 @@ WITH project_statistics_snapshot_monthly_all AS (
       SUM(purchased_storage_size)
         OVER(
              PARTITION BY
-               ultimate_parent_id,
+               namespace_lineage_monthly_all.ultimate_parent_id,
                namespace_lineage_monthly_all.snapshot_month
             )                                                                   AS total_purchased_storage_size,
       IFF(is_free_storage_used_up
@@ -134,25 +144,25 @@ WITH project_statistics_snapshot_monthly_all AS (
                   OR total_purchased_storage_size >= purchased_storage_limit),
           TRUE, FALSE)                                                          AS is_repository_capped
     FROM namespace_lineage_monthly_all
+    LEFT JOIN top_level_namespace_storage_summary
+      ON namespace_lineage_monthly_all.ultimate_parent_id = top_level_namespace_storage_summary.ultimate_parent_id
+      AND namespace_lineage_monthly_all.snapshot_month = top_level_namespace_storage_summary.snapshot_month
     LEFT JOIN project_statistics_snapshot_monthly_all
       ON namespace_lineage_monthly_all.namespace_id = project_statistics_snapshot_monthly_all.namespace_id
       AND namespace_lineage_monthly_all.snapshot_month = project_statistics_snapshot_monthly_all.snapshot_month
-    LEFT JOIN purchased_storage
-      ON namespace_lineage_monthly_all.namespace_id = purchased_storage.namespace_id
-      AND namespace_lineage_monthly_all.snapshot_month BETWEEN purchased_storage.order_start_date AND purchased_storage.order_end_date
 
 ), namespace_repository_storage_usage_summary AS (
 
     SELECT
-      ultimate_parent_id,
+      ultimate_parent_id,                           -- Only top level namespaces
       snapshot_month,
-      SUM(IFF(is_free_storage_used_up, 1, 0))       AS repositories_above_free_limit_count,
-      SUM(IFF(is_repository_capped, 1, 0))          AS capped_repositories_count,
       SUM(purchased_storage_size)                   AS purchased_storage,
       SUM(repository_size_limit)                    AS free_limit,
-      SUM(free_storage_size)                        AS free_storage
+      SUM(free_storage_size)                        AS free_storage,
+      SUM(IFF(is_free_storage_used_up, 1, 0))       AS repositories_above_free_limit_count,
+      SUM(IFF(is_repository_capped, 1, 0))          AS capped_repositories_count
     FROM repository_level_statistics
-    GROUP BY 1,2  -- Only top level namespaces
+    GROUP BY 1, 2
     
 ), joined AS (
     
@@ -194,7 +204,7 @@ WITH project_statistics_snapshot_monthly_all AS (
       namespace.wiki_size / {{bytes_to_gib_conversion}}                         AS wiki_gib,
       namespace.storage_size / {{bytes_to_gib_conversion}}                      AS storage_gib
     FROM namespace_repository_storage_usage_summary repository
-    LEFT JOIN namespace_storage_summary namespace
+    LEFT JOIN top_level_namespace_storage_summary namespace
       ON repository.ultimate_parent_id = namespace.ultimate_parent_id
       AND repository.snapshot_month = namespace.snapshot_month
 
@@ -204,6 +214,6 @@ WITH project_statistics_snapshot_monthly_all AS (
     cte_ref="joined",
     created_by="@ischweickartDD",
     updated_by="@ischweickartDD",
-    created_date="2021-01-20",
-    updated_date="2021-01-20"
+    created_date="2021-01-27",
+    updated_date="2021-01-27"
 ) }}
