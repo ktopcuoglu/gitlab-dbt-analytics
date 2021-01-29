@@ -882,6 +882,7 @@ roles:
                     - prod.legacy
                     - prod.workspace_data
                     - prod.workspace_marketing
+                    - prod.workspace_sales
                     - prep.dbt
                     - prep.preparation
                     - raw.dbt
@@ -894,6 +895,7 @@ roles:
                     - prod.legacy.*
                     - prod.workspace_data.*
                     - prod.workspace_marketing.*
+                    - prod.workspace_sales.*
                     - prep.dbt.*
                     - prep.preparation.*
                     - raw.dbt.*
