@@ -160,11 +160,3 @@ WITH source AS (
     FROM add_country_info_to_usage_ping
 
 )
-
-{{ dbt_audit(
-    cte_ref="final",
-    created_by="@kathleentam",
-    updated_by="@kathleentam",
-    created_date="2021-01-11",
-    updated_date="2021-01-11"
-) }}
