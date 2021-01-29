@@ -6,6 +6,12 @@ It also adds two additional columns which aren't calculated in the UI, which are
 
 {% enddocs %}
 
+{% docs gitlab_dotcom_user_custom_attributes %}
+
+This table contains all [Custom Attributes](https://docs.gitlab.com/ee/api/custom_attributes.html) associated with a User Namespace.
+
+{% enddocs %}
+
 {% docs gitlab_dotcom_daily_usage_data_events_90 %}
 
 This table selects all the rows from `gitlab_dotcom_usage_data_events` that have an `event_date` (date when the event happened) that is less than 90 days ago. 

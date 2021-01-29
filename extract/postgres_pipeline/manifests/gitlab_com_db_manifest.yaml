@@ -500,23 +500,22 @@ tables:
     export_table: 'ci_pipelines'
     export_table_primary_key: id
     dbt_source_model: true
-  www_gitlab_com_ci_build_trace_sections:
-    import_db: GITLAB_DB
-    import_query: >
-      SELECT CONCAT(build_id,'_',section_name_id) AS ci_build_trace_section_id
-      , project_id
-      , date_start
-      , date_end
-      , build_id
-      , section_name_id
-      FROM ci_build_trace_sections
-      WHERE date_end BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp 
-    additional_filtering: AND project_id = 7764
-    export_schema: 'gitlab_com'
-    export_table: 'www_gitlab_com_ci_build_trace_sections'
-    export_table_primary_key: CONCAT(build_id,'_',section_name_id)
-    dbt_source_model: true
+  # ci_build_trace_sections:
+  #   import_db: GITLAB_DB
+  #   import_query: >
+  #     SELECT CONCAT(build_id,'_',section_name_id) AS ci_build_trace_section_id
+  #     , project_id
+  #     , date_start
+  #     , date_end
+  #     , build_id
+  #     , section_name_id
+  #     FROM ci_build_trace_sections
+  #     WHERE date_end BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
+  #       AND '{EXECUTION_DATE}'::timestamp
+  #   export_schema: 'gitlab_com'
+  #   export_table: 'ci_build_trace_sections'
+  #   export_table_primary_key: CONCAT(build_id,'_',section_name_id)
+  #   dbt_source_model: true
   cluster_groups:
     import_db: GITLAB_DB
     import_query: >
@@ -907,6 +906,8 @@ tables:
       , group_type
       , created_at
       , updated_at
+      , converted_at
+      , context
       FROM experiment_users
       WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
         AND '{EXECUTION_DATE}'::timestamp

@@ -4,6 +4,21 @@ A fact table bridging opportunities with contacts. One opportunity can have mult
 
 {% enddocs %}
 
+{% docs bdg_namespace_order_subscription_active %}
+
+This table expands the functionality of the orders by improving the join to ultimate parent namespaces and subscriptions.
+
+The purpose of this table is two-fold:
+1. Connect Ultimate Parent Namespace ID to Subscription (and hence Zuora billing account and CRM Account)
+2. Connect Customer DB Customer ID to Subscription for self managed purchases. This helps with marketing efforts.
+
+Namespaces listed in this table are all Active Namespaces with prior trials and currently paid plans. Orders listed in this table are all active orders. Subscriptions listed in this table are all active self-managed and SaaS.
+
+The tier(s) connected to the subscription are determined using the underlying Zuora recurring charges. This view uses a `FULL OUTER JOIN` to show all three sides of the Venn diagram. (namespace, orders, subscriptions)
+In doing so exceptions are noted within `namespace_order_subscription_match_status` to identify rows that do not match between systems.
+
+{% enddocs %}
+
 {% docs dim_crm_account %}
 Dimensional customer table representing all existing and historical customers from SalesForce. There are customer definitions for external reporting and additional customer definitions for internal reporting defined in the [handbook](https://about.gitlab.com/handbook/sales/#customer).
 
@@ -48,6 +63,16 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
+{% docs dim_invoice %}
+
+Dimension table providing invoice details at the single invoice grain.
+
+The invoicing to customers business process can be found in the [handbook](https://about.gitlab.com/handbook/finance/sox-internal-controls/quote-to-cash/#6-invoicing-to-customers).
+
+Data comes from [Zuora Documentation](https://knowledgecenter.zuora.com/Billing/Reporting_and_Analytics/D_Data_Sources_and_Exports/C_Data_Source_Reference/Invoice_Item_Data_Source).
+
+{% enddocs %}
+
 {% docs dim_ip_to_geo %}
 
 Dimensional table mapping ip address ranges to location ids.
@@ -73,19 +98,6 @@ Dimensional table for geographic regions.
 {% enddocs %}
 
 {% docs dim_product_detail %}
-Dimensional table representing GitLab's Product Catalog. The Product Catalog is created and maintained through the Price Master Management business process and can be found in the [handbook](https://about.gitlab.com/handbook/finance/sox-internal-controls/quote-to-cash/#2-price-master-management).
-
-The Rate Plan Charge that is created on a customer account and subscription inherits its value from the Product Catalog.
-
-Data comes from [Zuora Documentation](https://www.zuora.com/developer/api-reference/#tag/Product-Rate-Plan-Charges).
-
-The grain of the table is the Product Rate Plan Charge.
-
-Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
-
-{% enddocs %}
-
-{% docs dim_product_details %}
 Dimensional table representing GitLab's Product Catalog. The Product Catalog is created and maintained through the Price Master Management business process and can be found in the [handbook](https://about.gitlab.com/handbook/finance/sox-internal-controls/quote-to-cash/#2-price-master-management).
 
 The Rate Plan Charge that is created on a customer account and subscription inherits its value from the Product Catalog.
@@ -147,23 +159,22 @@ A fact table for Salesforce unconverted leads and contacts. The important stage 
 
 {% enddocs %}
 
-{% docs fct_invoice_items %}
-Fact table providing invoice line item details.
+{% docs fct_invoice %}
+
+Fact table providing invoice details at the single invoice grain.
 
 The invoicing to customers business process can be found in the [handbook](https://about.gitlab.com/handbook/finance/sox-internal-controls/quote-to-cash/#6-invoicing-to-customers).
 
 Data comes from [Zuora Documentation](https://knowledgecenter.zuora.com/Billing/Reporting_and_Analytics/D_Data_Sources_and_Exports/C_Data_Source_Reference/Invoice_Item_Data_Source).
 
-Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
-
 {% enddocs %}
 
-{% docs fct_charges %}
-Factual table with all rate plan charges coming from subscriptions or an amendment to a subscription.
+{% docs fct_invoice_item %}
+Fact table providing invoice line item details.
 
-Rate Plan Charges are created as part of the Quote Creation business process and can be found in the [handbook](https://about.gitlab.com/handbook/finance/sox-internal-controls/quote-to-cash/#6-invoicing-to-customers).
+The invoicing to customers business process can be found in the [handbook](https://about.gitlab.com/handbook/finance/sox-internal-controls/quote-to-cash/#6-invoicing-to-customers).
 
-Data comes from [Zuora Documentation](https://www.zuora.com/developer/api-reference/#tag/Rate-Plan-Charges).
+Data comes from [Zuora Documentation](https://knowledgecenter.zuora.com/Billing/Reporting_and_Analytics/D_Data_Sources_and_Exports/C_Data_Source_Reference/Invoice_Item_Data_Source).
 
 Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
 
@@ -219,6 +230,18 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
+{% docs fct_quote_item %}
+
+A fact table of quote amendments which have quotes and product rate plan charges associated with them. This model connected opportunities to quotes, quote amendments, and products.
+
+{% enddocs %}
+
+{% docs fct_quote %}
+
+Fact table representing quotes pulled from the Zuora billing system. These are associated with crm accounts, billing accounts, opportunities, and subscriptions.
+
+{% enddocs %}
+
 {% docs fct_sales_funnel_target %}
 
 Sales funnel targets set by the Finance team to measure performance of important KPIs against goals, broken down by sales hierarchy, and order attributes.
@@ -258,7 +281,7 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 This model summarizes namespace user counts by accounting for all of the ways that a user be granted (direct or inherited) access to a namespace, AKA "membership". Bots and users awaiting access to a namespace are also accounted for. These counts are reported at the `ultimate_parent_namespace_id` grain.
 
-Importantly, this model calculates the field [`billable_member_count`](https://docs.gitlab.com/ee/subscriptions/self_managed/#billable-users) - i.e. the number of members should be counted toward the seat count for a subscription (note: this also applies to namespaces without a subscription for the convenience of determining seats in use). 
+Importantly, this model calculates the field [`billable_member_count`](https://docs.gitlab.com/ee/subscriptions/self_managed/#billable-users) - i.e. the number of members should be counted toward the seat count for a subscription (note: this also applies to namespaces without a subscription for the convenience of determining seats in use).
 
 There are 5 general ways that a user can have access to a group A:
 * Be a **group member** of group A.

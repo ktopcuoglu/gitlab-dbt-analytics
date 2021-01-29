@@ -20,7 +20,7 @@ WITH source AS (
         createddate::TIMESTAMP                                     AS created_date,
         lastmodifiedbyid::VARCHAR                                  AS last_modified_by_id,
         lastmodifieddate::TIMESTAMP                                AS last_modified_date,
-        employee_number__c::NUMBER                                 AS employee_number,
+        employee_number__c::VARCHAR                                AS employee_number,
         isdeleted::BOOLEAN                                         AS is_deleted,
         opp_owner_different__c::BOOLEAN                            AS is_opportunity_owner_different,
         split::NUMBER                                              AS split,

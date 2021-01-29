@@ -53,6 +53,10 @@ models:
   description: All team members that passed the pricing discount dashboard developer certification.
 - name: sheetload_cert_pricing_customer_discount_viewer_source
   description: All team members that passed the pricing discount dashboard viewver certification.
+- name: sheetload_cert_product_adoption_dashboard_user_source
+  description: All team members that passed the product adoption dashboard viewer certification
+- name: sheetload_cert_sales_funnel_dashboard_user_source
+- name: sheetload_cert_sales_funnel_dashboard_developer_source
 
 - name: sheetload_company_call_attendance_source
   description: This spreadsheet contains data from company call attendance (also called the "Take a Break Call"). The People Experience team pulls their data and updates their spreadsheet, which is imported into the sheetload sheet.
@@ -229,6 +233,8 @@ models:
   - name: location_factor_target
     tests:
     - not_null
+- name: sheetload_location_factor_temporary_2020_december_source    
+  description: Location factors for 2020.12 only. 
 - name: sheetload_manual_downgrade_dotcom_tracking_source
   description: This contains a list of namespaces identified for manual downgrading and the date of the downgrade.
   columns:

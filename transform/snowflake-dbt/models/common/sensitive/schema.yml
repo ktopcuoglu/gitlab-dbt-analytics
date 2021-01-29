@@ -1,0 +1,89 @@
+version: 2
+
+models:
+  - name: dim_marketing_contact
+    description: '{{ doc("dim_marketing_contact") }}'
+    columns:
+      - name: dim_marketing_contact_id
+        description: A primary key for the marketing contact
+        tests: 
+          - unique
+          - not_null
+      - name: email_address
+        description: Email address for the marketing contact
+        tests: 
+          - unique
+          - not_null
+      - name: first_name
+        description: First name of the marketing contact
+      - name: last_name
+        description: Last name of the marketing contact
+      - name: gitlab_user_name
+        description: Gitlab.com user name of the marketing contact
+      - name: company_name
+        description: Company of the marketing contact
+      - name: job_title
+        description: Job title of the marketing contact
+      - name: country
+        description: Country where marketing contacted is located
+      - name: sfdc_parent_sales_segment
+        description: Sales segment of the CRM account related to the marketing contact
+      - name: is_sfdc_lead_contract
+        description: Flags whether or not marketing contact is a Salesforce contact/lead
+      - name: sfdc_lead_contract
+        description: Lists whether marketing contact is a Lead or a Contact in Salesforce. 
+      - name: sfdc_created_date
+        description: Date that the Salesforce record was created for marketing contact.
+      - name: is_sfdc_opted_out
+        description: Flags whether or not contact is opted out of Salesforce. 
+      - name: is_gitlab.com_user
+        description: Flags whether or not marketing contact is in Gitlab.com
+      - name: gitlab.com_user_id
+        description: Gitlab.com user id of the marketing contact.
+      - name: gitlab.com_created_date
+        description: Date that the GitLab.com record was created for marketing contact. 
+      - name: gitlab.com_confirmed_date
+        description: Date that the GitLab.com record was confirmed for marketing contact.
+      - name: gitlab.com_active_state
+        description: Lists whether marketing contact is active or not in GitLab.com. Can be 'active', 'blocked', 'deactivated'
+      - name: gitlab.com_last_login_date
+        description: Most recent date that marketing contact logged into gitlab.com
+      - name: gitlab.com_email_opted_in
+        description: Flags whether or not contact is opted out of Gitlab.com. 
+      - name: is_customer_db_user
+        description: Flags whether or not marketing contact is in Customer_DB
+      - name: customer_db_customer_id
+        description: Customer_DB user id of the marketing contact.
+      - name: customer_db_created_date
+        description: Date that Customer_db record was created for marketing contact.
+      - name: customer_db_confirmed_date
+        description: Date that Customer_db record was confirmed for marketing contact.
+      - name: is_zuora_billing_contact
+        description: Flags whether or not marketing contact is in Zuora
+      - name: zuora_contact_id
+        description: Zuora contact id of the marketing contact.
+      - name: zuora_created_date
+        description: Date that Zuora record was created for marketing contact. 
+      - name: zuora_active_state
+        description: Lists if marketing contact is active in Zuora.
+      
+
+  - name: bdg_marketing_contact_role
+    description: '{{ doc("bdg_marketing_contact_role") }}'
+    columns:
+      - name: dim_marketing_contact_id
+        description: ID for the marketing contact.
+      - name: email_address
+        description: Email address for the marketing contact.
+      - name: user_id
+        description: GitLab.com user id (if applicable) of the marketing contact.
+      - name: customer_db_customer_id
+        description: Customer DB customer id (if applicable) of the marketing contact.
+      - name: zuora_subscription_id
+        description: Zuora subscription id (if applicable) of the marketing contact.
+      - name: namespace_id
+        description: Gitlab.com namespace id associated to the user_id. 
+      - name: marketing_contact_role
+        description: Role of the marketing contact. A marketing contact can have many roles. Could be 'Personal Namespace Owner', Group Namespace Owner', 'Group Namespace Member', 'Customer DB Owner', 'Zuora Billing Contact'
+     
+      
