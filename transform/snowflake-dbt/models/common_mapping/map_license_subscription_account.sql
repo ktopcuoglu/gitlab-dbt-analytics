@@ -31,9 +31,11 @@ WITH license AS (
       license.dim_license_id, 
       license.license_md5, 
       subscription.dim_subscription_id, 
-      subscription.dim_crm_account_id
+      subscription.dim_crm_account_id, 
+      IFF(license.dim_subscription_id IS NULL, FALSE, TRUE)          AS is_license_mapped_to_subscription, -- does the license table have a value in both license_id and subscription_id 
+      IFF(subscription.dim_subscription_id IS NULL, FALSE, TRUE)     AS is_license_subscription_id_valid   -- is the subscription_id in the license table valid (does it exist in the dim_subscription table?)
     FROM license 
-    INNER JOIN subscription
+    LEFT JOIN subscription
       ON license.dim_subscription_id = subscription.dim_subscription_id
 
 ), subscription_mapped_to_crm_account AS (
@@ -51,12 +53,43 @@ WITH license AS (
     SELECT 
       license_mapped_to_subscription.dim_license_id, 
       license_mapped_to_subscription.license_md5, 
+      license_mapped_to_subscription.is_license_mapped_to_subscription,
+      license_mapped_to_subscription.is_license_subscription_id_valid,
       license_mapped_to_subscription.dim_subscription_id, 
       license_mapped_to_subscription.dim_crm_account_id, 
       subscription_mapped_to_crm_account.ultimate_parent_account_id
     FROM license_mapped_to_subscription
-    LEFT JOIN subscription_mapped_to_crm_account
+    INNER JOIN subscription_mapped_to_crm_account
         ON license_mapped_to_subscription.dim_subscription_id = subscription_mapped_to_crm_account.dim_subscription_id
+
+), license_statistics AS (
+  
+    SELECT 
+      dim_license_id, 
+      COUNT(DISTINCT license_md5)                   AS total_number_md5_per_license, 
+      COUNT(DISTINCT dim_subscription_id)           AS total_number_subscription_per_license, 
+      COUNT(DISTINCT dim_crm_account_id)            AS total_number_crm_account_per_license, 
+      COUNT(DISTINCT ultimate_parent_account_id)    AS total_number_ultimate_parent_account_per_license
+    FROM joined 
+    GROUP BY 1
+  
+), final AS (
+    
+    SELECT 
+        joined.dim_license_id, 
+        joined.license_md5,
+        joined.is_license_mapped_to_subscription,
+        joined.is_license_subscription_id_valid,
+        joined.dim_subscription_id,
+        joined.dim_crm_account_id, 
+        joined.ultimate_parent_account_id, 
+        license_statistics.total_number_md5_per_license,
+        license_statistics.total_number_subscription_per_license,
+        license_statistics.total_number_crm_account_per_license,
+        license_statistics.total_number_ultimate_parent_account_per_license
+    FROM joined
+    INNER JOIN license_statistics 
+      ON joined.dim_license_id = license_statistics.dim_license_id 
 
 )
 
@@ -65,5 +98,5 @@ WITH license AS (
     created_by="@kathleentam",
     updated_by="@kathleentam",
     created_date="2021-01-10",
-    updated_date="2021-01-10"
+    updated_date="2021-01-29"
 ) }}
