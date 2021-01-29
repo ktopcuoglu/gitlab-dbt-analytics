@@ -45,11 +45,5 @@ WITH prep_usage_ping AS (
   
 )
 
-{{ dbt_audit(
-    cte_ref="final",
-    created_by="@kathleentam",
-    updated_by="@kathleentam",
-    created_date="2021-01-29",
-    updated_date="2021-01-29"
-) }}
-
+SELECT * 
+FROM final

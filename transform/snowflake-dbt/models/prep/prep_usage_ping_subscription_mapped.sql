@@ -16,7 +16,7 @@ WITH usage_pings_with_license_md5 AS (
     SELECT * 
     FROM  {{ ref('map_license_subscription_account') }} 
   
-), usage_ping_mapped_to_subscription AS (
+), final AS (
 
     SELECT 
       usage_pings_with_license_md5.*, 
@@ -32,11 +32,6 @@ WITH usage_pings_with_license_md5 AS (
   
 )
 
-{{ dbt_audit(
-    cte_ref="usage_ping_mapped_to_subscription",
-    created_by="@kathleentam",
-    updated_by="@kathleentam",
-    created_date="2021-01-11",
-    updated_date="2021-01-29"
-) }}
+SELECT * 
+FROM final
 

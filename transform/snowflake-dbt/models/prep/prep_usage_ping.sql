@@ -160,3 +160,6 @@ WITH source AS (
     FROM add_country_info_to_usage_ping
 
 )
+
+SELECT * 
+FROM final
