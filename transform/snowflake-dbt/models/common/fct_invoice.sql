@@ -90,5 +90,5 @@ WITH crm_account_dimensions AS (
     created_by="@mcooperDD",
     updated_by="@mcooperDD",
     created_date="2021-01-20",
-    updated_date="2021-01-20"
+    updated_date="2021-01-28"
 ) }}

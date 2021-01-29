@@ -310,7 +310,7 @@ WITH first_contact  AS (
 {{ dbt_audit(
     cte_ref="final_opportunities",
     created_by="@mcooperDD",
-    updated_by="@jpeguero",
+    updated_by="@mcooperDD",
     created_date="2020-11-30",
-    updated_date="2021-01-21"
+    updated_date="2021-01-28"
 ) }}

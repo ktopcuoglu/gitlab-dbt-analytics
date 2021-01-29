@@ -218,7 +218,7 @@ WITH account_dims_mapping AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mcooperDD",
-    updated_by="@paul_armstrong",
+    updated_by="@mcooperDD",
     created_date="2020-12-01",
-    updated_date="2020-12-15"
+    updated_date="2021-01-28"
 ) }}

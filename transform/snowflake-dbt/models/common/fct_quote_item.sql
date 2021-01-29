@@ -123,5 +123,5 @@ WITH crm_account AS (
     created_by="@mcooperDD",
     updated_by="@mcooperDD",
     created_date="2021-01-12",
-    updated_date="2021-01-12"
+    updated_date="2021-01-28"
 ) }}

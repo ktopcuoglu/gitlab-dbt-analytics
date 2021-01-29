@@ -4,34 +4,68 @@ models:
   - name: prep_sfdc_account
     description: '{{ doc("prep_sfdc_account") }}'
     columns:
-      - name: crm_account_id
+      - name: account_dim_crm_account_id
         description: CRM Account ID provided by Salesforce
         tests:
           - not_null
-      - name: tsp_sub_region_clean
-        description: Sales sub region, temp cleaning column
-      - name: tsp_region_clean
-        description: Sales region, temp cleaning column
-      - name: tsp_area_clean
-        description: Sales area, temp cleaning column
-      - name: tsp_territory_clean
-        description: Sales territory, temp cleaning column
-      - name: df_industry_clean
-        description: Industry, temp cleaning column
-      - name: ultimate_parent_sales_segment_clean
-        description: Ultimate parent sales segment, temp cleaning column
-      - name: dim_geo_area_name_source
+      - name: parent_dim_crm_account_id
+        description: Ulimate parent CRM Account ID provided by Salesforce
+      - name: account_tsp_region_clean
+        description: Sales region, temp cleaning column for account
+      - name: parent_tsp_region_clean
+        description: Sales region, temp cleaning column for parent
+      - name: account_tsp_sub_region_clean
+        description: Sales sub region, temp cleaning column for account
+      - name: parent_tsp_sub_region_clean
+        description: Sales sub region, temp cleaning column for parent
+      - name: account_tsp_area_clean
+        description: Sales area, temp cleaning column for account
+      - name: parent_tsp_area_clean
+        description: Sales area, temp cleaning column for parent
+      - name: account_tsp_territory_clean
+        description: Sales territory, temp cleaning column for account
+      - name: parent_tsp_territory_clean
+        description: Sales territory, temp cleaning column for parent
+      - name: account_df_industry_clean
+        description: Industry, temp cleaning column for account
+      - name: parent_df_industry_clean
+        description: Industry, temp cleaning column for parent
+      - name: account_sales_segment_clean
         description: Dim geo area name final source column
-      - name: dim_geo_region_name_source
+      - name: parent_sales_segment_clean
+        description: Dim geo area name final source column
+      - name: account_billing_country_clean
+        description: Dim location country name final source column
+      - name: parent_billing_country_clean
+        description: Dim location country name final source column
+      - name: account_geo_region_name_source
         description: Dim geo region name final source column
-      - name: dim_geo_sub_region_name_source
+      - name: parent_geo_region_name_source
+        description: Dim geo region name final source column
+      - name: account_geo_sub_region_name_source
         description: Dim geo sub region name final source column
-      - name: dim_sales_territory_name_source
+      - name: parent_geo_sub_region_name_source
+        description: Dim geo sub region name final source column
+      - name: account_geo_area_name_source
+        description: Dim geo area name final source column
+      - name: parent_geo_area_name_source
+        description: Dim geo area name final source column
+      - name: account_sales_territory_name_source
         description: Dim sales territory name final source column
-      - name: dim_industry_name_source
+      - name: parent_sales_territory_name_source
+        description: Dim sales territory name final source column
+      - name: account_industry_name_source
         description: Dim industry name final source column
-      - name: dim_sales_segment_name_source
+      - name: parent_industry_name_source
+        description: Dim industry name final source column
+      - name: account_sales_segment_name_source
         description: Dim sales segment name final source column
+      - name: parent_sales_segment_name_source
+        description: Dim sales segment name final source column
+      - name: account_location_country_name_source
+        description: Dim location country name final source column
+      - name: parent_location_country_name_source
+        description: Dim location country name final source column
 
   - name: prep_crm_sales_hierarchy_live
     description: '{{ doc("prep_crm_sales_hierarchy_live") }}'
@@ -328,7 +362,7 @@ models:
       - name: product_tier_historical_short
         description: Pulls the product tier from `product_tier_historical` with the delivery type removed
       - name: product_tier_name
-        description: Product [pricing tiers](https://about.gitlab.com/handbook/marketing/strategic-marketing/tiers/) for both SaaS and Self-Managed customers. Includes the mapping from SaaS - Silver to SaaS - Premium, and from SaaS - Gold to SaaS - Ultimate. 
+        description: Product [pricing tiers](https://about.gitlab.com/handbook/marketing/strategic-marketing/tiers/) for both SaaS and Self-Managed customers. Includes the mapping from SaaS - Silver to SaaS - Premium, and from SaaS - Gold to SaaS - Ultimate.
         tests:
           - not_null
       - name: product_tier_name_short

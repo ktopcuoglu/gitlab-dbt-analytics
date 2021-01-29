@@ -14,23 +14,15 @@ models:
   - name: map_crm_account
     description: '{{ doc("map_crm_account") }}'
     columns:
-      - name: crm_account_id
+      - name: account_dim_crm_account_id
         description: CRM account ID for the account
         tests:
           - not_null
           - unique
-      - name: dim_sales_segment_id
-        description: Unique identifier of a version of a sales segment
-      - name: dim_geo_region_id
-        description: "Dimension for geographical region built off ATAM_Region__C in SFDC. Example values : NORAM, LATAM, APAC, EMEA"
-      - name: dim_geo_sub_region_id
-        description: "Dimension table for sub-region built off ATAM_Sub_Region__C in SFDC. Example values : Southern Europe, NA East, Nordics"
-      - name: dim_geo_area_id
-        description: "Dimension table for geographic area built off ATAM_Area__C in SFDC. Example values: Southern PNW, India, Northeast"
-      - name: dim_sales_territory_id
-        description: Unique identifier of a version of a sales territory
-      - name: dim_industry_id
-        description: Unique identifier of a version of a industry
+      - name: parent_dim_crm_account_id
+        description: CRM account ID for the ultimate parent account_type
+        tests:
+          - not_null
 
   - name: map_crm_opportunity
     description: '{{ doc("map_crm_opportunity") }}'
@@ -48,18 +40,6 @@ models:
         description: Unique identifier for each opportunity source name
       - name: dim_purchase_channel_id
         description: Unique identifier for each purchase channel name
-      - name: dim_sales_segment_id
-        description: Unique identifier of a version of a sales segment
-      - name: dim_geo_region_id
-        description: "Dimension for geographical region built off ATAM_Region__C in SFDC. Example values : NORAM, LATAM, APAC, EMEA"
-      - name: dim_geo_sub_region_id
-        description: "Dimension table for sub-region built off ATAM_Sub_Region__C in SFDC. Example values : Southern Europe, NA East, Nordics"
-      - name: dim_geo_area_id
-        description: "Dimension table for geographic area built off ATAM_Area__C in SFDC. Example values: Southern PNW, India, Northeast"
-      - name: dim_sales_territory_id
-        description: Unique identifier of a version of a sales territory
-      - name: dim_industry_id
-        description: Unique identifier of a version of a industry
 
   - name: map_ip_to_geo
     description: '{{ doc("map_ip_to_geo") }}'
@@ -111,7 +91,7 @@ models:
       - name: product_ranking
         description: "Numeric product pricing tier, independent of delivery type"
       - name: product_tier
-        description: Product [pricing tiers](https://about.gitlab.com/handbook/marketing/strategic-marketing/tiers/) for both SaaS and Self-Managed customers. Includes the mapping from SaaS - Silver to SaaS - Premium, and from SaaS - Gold to SaaS - Ultimate. 
+        description: Product [pricing tiers](https://about.gitlab.com/handbook/marketing/strategic-marketing/tiers/) for both SaaS and Self-Managed customers. Includes the mapping from SaaS - Silver to SaaS - Premium, and from SaaS - Gold to SaaS - Ultimate.
         tests:
           - not_null
 
@@ -139,5 +119,5 @@ models:
         description: "GitLab Team Member GitLab.com SaaS Database user_name. Can be used to join onto any user name field in the gitlab_dotcom data set "
       - name: gitlab_ops_user_id
         description: "GitLab Team Member ops.gitlab.net SaaS Database user_id. Can be used to join onto any user id field in the gitlab_ops data set "
-      - name: gitlab_ops_user_name 
+      - name: gitlab_ops_user_name
         description: "GitLab Team Member ops.gitlab.net SaaS Database user_name. Can be used to join onto any user name field in the gitlab_ops data set "
