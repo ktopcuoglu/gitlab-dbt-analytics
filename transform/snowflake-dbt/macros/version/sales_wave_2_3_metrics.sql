@@ -66,3 +66,5 @@ SELECT
     raw_usage_data_payload:usage_activity_by_stage_monthly:plan:issues                                        AS issues_28_days_users                       
     -- raw_usage_data_payload
 FROM prep_usage_ping
+
+{%- endmacro -%}
