@@ -21,7 +21,6 @@ WITH usage_pings_with_license_md5 AS (
     SELECT 
       usage_pings_with_license_md5.*, 
       map_license_subscription_account.dim_license_id,
-      map_license_subscription_account.license_md5,
       map_license_subscription_account.is_license_mapped_to_subscription,
       map_license_subscription_account.is_license_subscription_id_valid,
       map_license_subscription_account.dim_crm_account_id,
