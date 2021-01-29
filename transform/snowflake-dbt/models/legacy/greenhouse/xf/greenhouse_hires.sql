@@ -71,7 +71,7 @@ WITH applications AS (
     LEFT JOIN bamboo_hires 
       ON bamboo_hires.greenhouse_candidate_id = applications.candidate_id
     LEFT JOIN bamboohr_mapping
-      oN bamboo_hires.employee_id = bamboohr_mapping.employee_id
+      ON bamboo_hires.employee_id = bamboohr_mapping.employee_id
     LEFT JOIN openings
       ON openings.hired_application_id = applications.application_id
     LEFT JOIN greenhouse_opening_custom_fields
