@@ -20,16 +20,16 @@ WITH usage_pings_with_license_md5 AS (
 
     SELECT 
       usage_pings_with_license_md5.*, 
-      license_mapped_to_subscription.dim_license_id,
-      license_mapped_to_subscription.license_md5,
-      license_mapped_to_subscription.is_license_mapped_to_subscription,
-      license_mapped_to_subscription.is_license_subscription_id_valid,
-      license_mapped_to_subscription.dim_crm_account_id,
-      license_mapped_to_subscription.ultimate_parent_account_id,
-      IFF(license_mapped_to_subscription.dim_license_id IS NULL, FALSE, TRUE)   AS is_usage_ping_license_in_licenseDot
+      map_license_subscription_account.dim_license_id,
+      map_license_subscription_account.license_md5,
+      map_license_subscription_account.is_license_mapped_to_subscription,
+      map_license_subscription_account.is_license_subscription_id_valid,
+      map_license_subscription_account.dim_crm_account_id,
+      map_license_subscription_account.ultimate_parent_account_id,
+      IFF(map_license_subscription_account.dim_license_id IS NULL, FALSE, TRUE)   AS is_usage_ping_license_in_licenseDot
     FROM usage_pings_with_license_md5
-    LEFT JOIN license_mapped_to_subscription
-      ON usage_pings_with_license_md5.license_md5 = license_mapped_to_subscription.dim_licenses_license_md5
+    LEFT JOIN map_license_subscription_account
+      ON usage_pings_with_license_md5.license_md5 = map_license_subscription_account.dim_licenses_license_md5
   
 )
 
