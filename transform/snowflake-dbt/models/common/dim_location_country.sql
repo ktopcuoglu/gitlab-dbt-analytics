@@ -1,4 +1,4 @@
-WITH location_region AS (
+WITH location_country AS (
 
     SELECT
 
@@ -16,9 +16,9 @@ WITH location_region AS (
 )
 
 {{ dbt_audit(
-    cte_ref="final",
+    cte_ref="location_country",
     created_by="@m_walker",
     updated_by="@mcooperDD",
     created_date="2020-08-25",
-    updated_date="2020-12-15"
+    updated_date="2020-01-28"
 ) }}

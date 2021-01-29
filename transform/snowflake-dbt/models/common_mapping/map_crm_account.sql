@@ -41,24 +41,24 @@ WITH account_prep AS (
 ), final AS (
 
     SELECT
-      COALESCE(account_prep.parent_dim_crm_account_id, MD5(-1))                     AS parent_dim_crm_account_id,
-      COALESCE(account_prep.account_dim_crm_account_id, MD5(-1))                    AS account_dim_crm_account_id,
-      COALESCE(sales_segment_ultimate_parent.dim_sales_segment_id, MD5(-1))         AS parent_dim_sales_segment_id,
-      COALESCE(geo_region_ultimate_parent.dim_geo_region_id, MD5(-1))               AS parent_dim_geo_region_id,
-      COALESCE(geo_sub_region_ultimate_parent.dim_geo_sub_region_id, MD5(-1))       AS parent_dim_geo_sub_region_id,
-      COALESCE(geo_area_ultimate_parent.dim_geo_area_id, MD5(-1))                   AS parent_dim_geo_area_id,
-      COALESCE(sales_territory_ultimate_parent.dim_sales_territory_id, MD5(-1))     AS parent_dim_sales_territory_id,
-      COALESCE(industry_ultimate_parent.dim_industry_id, MD5(-1))                   AS parent_dim_industry_id,
-      COALESCE('location_country_ultimate_parent.dim_location_country_id', MD5(-1)) AS parent_dim_location_country_id,
-      COALESCE(location_country_ultimate_parent.dim_location_region_id, MD5(-1))    AS parent_dim_location_region_id,
-      COALESCE(sales_segment.dim_sales_segment_id, MD5(-1))                         AS account_dim_sales_segment_id,
-      COALESCE(geo_region.dim_geo_region_id, MD5(-1))                               AS account_dim_geo_region_id,
-      COALESCE(geo_sub_region.dim_geo_sub_region_id, MD5(-1))                       AS account_dim_geo_sub_region_id,
-      COALESCE(geo_area.dim_geo_area_id, MD5(-1))                                   AS account_dim_geo_area_id,
-      COALESCE(sales_territory.dim_sales_territory_id, MD5(-1))                     AS account_dim_sales_territory_id,
-      COALESCE(industry.dim_industry_id, MD5(-1))                                   AS account_dim_industry_id,
-      COALESCE('location_country.dim_location_country_id', MD5(-1))                 AS account_dim_location_country_id,
-      COALESCE(location_country.dim_location_region_id, MD5(-1))                    AS account_dim_location_region_id
+      {{ get_nulled_keys ('account_prep.parent_dim_crm_account_id') }}                      AS parent_dim_crm_account_id,
+      {{ get_nulled_keys ('account_prep.account_dim_crm_account_id') }}                     AS account_dim_crm_account_id,
+      {{ get_nulled_keys ('sales_segment_ultimate_parent.dim_sales_segment_id') }}          AS parent_dim_sales_segment_id,
+      {{ get_nulled_keys ('geo_region_ultimate_parent.dim_geo_region_id') }}                AS parent_dim_geo_region_id,
+      {{ get_nulled_keys ('geo_sub_region_ultimate_parent.dim_geo_sub_region_id') }}        AS parent_dim_geo_sub_region_id,
+      {{ get_nulled_keys ('geo_area_ultimate_parent.dim_geo_area_id') }}                    AS parent_dim_geo_area_id,
+      {{ get_nulled_keys ('sales_territory_ultimate_parent.dim_sales_territory_id') }}      AS parent_dim_sales_territory_id,
+      {{ get_nulled_keys ('industry_ultimate_parent.dim_industry_id') }}                    AS parent_dim_industry_id,
+      {{ get_nulled_keys ('location_country_ultimate_parent.dim_location_country_id') }}    AS parent_dim_location_country_id,
+      {{ get_nulled_keys ('location_country_ultimate_parent.dim_location_region_id') }}     AS parent_dim_location_region_id,
+      {{ get_nulled_keys ('sales_segment.dim_sales_segment_id') }}                          AS account_dim_sales_segment_id,
+      {{ get_nulled_keys ('geo_region.dim_geo_region_id') }}                                AS account_dim_geo_region_id,
+      {{ get_nulled_keys ('geo_sub_region.dim_geo_sub_region_id') }}                        AS account_dim_geo_sub_region_id,
+      {{ get_nulled_keys ('geo_area.dim_geo_area_id') }}                                    AS account_dim_geo_area_id,
+      {{ get_nulled_keys ('sales_territory.dim_sales_territory_id') }}                      AS account_dim_sales_territory_id,
+      {{ get_nulled_keys ('industry.dim_industry_id') }}                                    AS account_dim_industry_id,
+      {{ get_nulled_keys ('location_country.dim_location_country_id') }}                    AS account_dim_location_country_id,
+      {{ get_nulled_keys ('location_country.dim_location_region_id') }}                     AS account_dim_location_region_id
     FROM account_prep
     LEFT JOIN geo_region AS geo_region_ultimate_parent
       ON account_prep.parent_geo_region_name_source = geo_region_ultimate_parent.geo_region_name

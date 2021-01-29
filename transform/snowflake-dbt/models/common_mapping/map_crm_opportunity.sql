@@ -45,12 +45,11 @@ WITH crm_account_dimensions AS (
 ), opportunities_with_keys AS (
 
     SELECT
-
       opportunity_fields.dim_crm_opportunity_id,
-      COALESCE(opportunity_fields.dim_crm_sales_rep_id, MD5(-1))                                                AS dim_crm_sales_rep_id,
-      COALESCE(order_type.dim_order_type_id, MD5(-1))                                                           AS dim_order_type_id,
-      COALESCE(opportunity_source.dim_opportunity_source_id, MD5(-1))                                           AS dim_opportunity_source_id,
-      COALESCE(purchase_channel.dim_purchase_channel_id, MD5(-1))                                               AS dim_purchase_channel_id,
+      {{ get_keyed_nulls('opportunity_fields.dim_crm_sales_rep_id') }}                                                 AS dim_crm_sales_rep_id,
+      {{ get_keyed_nulls('order_type.dim_order_type_id') }}                                                            AS dim_order_type_id,
+      {{ get_keyed_nulls('opportunity_source.dim_opportunity_source_id') }}                                            AS dim_opportunity_source_id,
+      {{ get_keyed_nulls('purchase_channel.dim_purchase_channel_id') }}                                                AS dim_purchase_channel_id,
       crm_account_dimensions.parent_dim_crm_account_id,
       crm_account_dimensions.account_dim_crm_account_id,
       crm_account_dimensions.parent_dim_sales_segment_id,
@@ -61,7 +60,7 @@ WITH crm_account_dimensions AS (
       crm_account_dimensions.parent_dim_industry_id,
       crm_account_dimensions.parent_dim_location_country_id,
       crm_account_dimensions.parent_dim_location_region_id,
-      COALESCE(crm_account_dimensions.account_dim_sales_segment_id,sales_segment.dim_sales_segment_id, MD5(-1))  AS account_dim_sales_segment_id,
+      {{ get_keyed_nulls('crm_account_dimensions.account_dim_sales_segment_id,sales_segment.dim_sales_segment_id') }}  AS account_dim_sales_segment_id,
       crm_account_dimensions.account_dim_geo_region_id,
       crm_account_dimensions.account_dim_geo_sub_region_id,
       crm_account_dimensions.account_dim_geo_area_id,

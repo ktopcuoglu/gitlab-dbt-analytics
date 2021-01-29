@@ -103,13 +103,12 @@ WITH dim_date AS (
 ), final AS (
 
   SELECT
-    {{ dbt_utils.surrogate_key(['date_id', 'subscription_name', 'product_details_id']) }}
-      AS mrr_id,
-    date_id,
-    billing_account_id,
-    crm_account_id,
-    subscription_id,
-    product_details_id,
+    {{ dbt_utils.surrogate_key(['date_id', 'subscription_name', 'product_details_id']) }}   AS mrr_id,
+    date_id                                                                                 AS dim_date_id,
+    billing_account_id                                                                      AS dim_billing_account_id,
+    crm_account_id                                                                          AS dim_crm_account_id,
+    subscription_id                                                                         AS dim_subscription_id,
+    product_details_id                                                                      AS dim_product_detail_id,
     mrr,
     arr,
     quantity,
@@ -123,5 +122,5 @@ WITH dim_date AS (
     created_by="@mcooperDD",
     updated_by="@mcooperDD",
     created_date="2021-01-04",
-    updated_date="2021-01-04",
+    updated_date="2021-01-21",
 ) }}

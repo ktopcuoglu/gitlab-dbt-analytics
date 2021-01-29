@@ -154,7 +154,7 @@ WITH account_dims_mapping AS (
       account_dims_mapping.parent_dim_industry_id,
       account_dims_mapping.parent_dim_location_country_id,
       account_dims_mapping.parent_dim_location_region_id,
-      COALESCE(marketing_channel.dim_marketing_channel_id, MD5(-1))                                                       AS dim_marketing_channel_id,
+      {{ get_keyed_nulls('marketing_channel.dim_marketing_channel_id') }}                                                 AS dim_marketing_channel_id,
 
      -- important person dates
       COALESCE(sfdc_contacts.created_date, sfdc_leads.created_date)::DATE                                                 AS created_date,

@@ -221,19 +221,19 @@ models:
         tests:
           - not_null
           - unique
-      - name: date_id
+      - name: dim_date_id
         description: The identifier of date month in dim_date
-      - name: subscription_id
+      - name: dim_subscription_id
         description: The identifier of subscription in dim_subscriptions table
         tests:
           - not_null
-      - name: product_details_id
+      - name: dim_product_detail_id
         description: The identifier of product details in dim_product_detail
         tests:
           - not_null
-      - name: billing_account_id
+      - name: dim_billing_account_id
         description: Zuora account id
-      - name:  crm_account_id
+      - name:  dim_crm_account_id
         description: account id frm crm
       - name: mrr
         description: Monthly Recurring Revenue value for given month
@@ -320,11 +320,19 @@ models:
         tests:
           - not_null
           - unique
-      - name: product_tier_name
-        description: "Product pricing tiers for both SaaS and Self-Managed customers (https://about.gitlab.com/handbook/marketing/strategic-marketing/tiers/)"
+      - name: product_tier_historical
+        description: Product pricing tiers prior to [tier renaming](https://gitlab-com.gitlab.io/packaging-and-pricing/pricing-handbook/handbook/renaming_tiers/) (early 2021).
         tests:
           - not_null
           - unique
+      - name: product_tier_historical_short
+        description: Pulls the product tier from `product_tier_historical` with the delivery type removed
+      - name: product_tier_name
+        description: Product [pricing tiers](https://about.gitlab.com/handbook/marketing/strategic-marketing/tiers/) for both SaaS and Self-Managed customers. Includes the mapping from SaaS - Silver to SaaS - Premium, and from SaaS - Gold to SaaS - Ultimate. 
+        tests:
+          - not_null
+      - name: product_tier_name_short
+        description: Pulls the product tier from `product_tier_name` with the delivery type removed
       - name: product_delivery_type
         description: "How product is delivered to customer; SaaS or Self-Managed (or Other)"
       - name: product_ranking
