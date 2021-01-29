@@ -29,7 +29,7 @@ WITH usage_pings_with_license_md5 AS (
       IFF(map_license_subscription_account.dim_license_id IS NULL, FALSE, TRUE)   AS is_usage_ping_license_in_licenseDot
     FROM usage_pings_with_license_md5
     LEFT JOIN map_license_subscription_account
-      ON usage_pings_with_license_md5.license_md5 = map_license_subscription_account.dim_licenses_license_md5
+      ON usage_pings_with_license_md5.license_md5 = map_license_subscription_account.license_md5
   
 )
 
