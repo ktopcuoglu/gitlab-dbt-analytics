@@ -105,7 +105,8 @@ WITH dim_billing_account AS (
       LAG(delivery) OVER (PARTITION BY ultimate_parent_account_id ORDER BY arr_month) AS previous_delivery,
       COALESCE(LAG(product_ranking) OVER (PARTITION BY ultimate_parent_account_id ORDER BY arr_month),0) AS previous_product_ranking,
       COALESCE(LAG(quantity) OVER (PARTITION BY ultimate_parent_account_id ORDER BY arr_month),0) AS previous_quantity,
-      COALESCE(LAG(arr) OVER (PARTITION BY ultimate_parent_account_id ORDER BY arr_month),0) AS previous_arr
+      COALESCE(LAG(arr) OVER (PARTITION BY ultimate_parent_account_id ORDER BY arr_month),0) AS previous_arr,
+      ROW_NUMBER() OVER (PARTITION BY ultimate_parent_account_id ORDER BY arr_month) AS row_number
     FROM monthly_arr_parent_level
 
 ), type_of_arr_change AS (
