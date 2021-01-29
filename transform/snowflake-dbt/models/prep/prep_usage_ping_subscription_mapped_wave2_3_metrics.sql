@@ -5,39 +5,48 @@
     })
 }}
 
-WITH usage_pings_with_license_md5 AS (
+WITH prep_usage_ping AS (
 
     SELECT * 
-    FROM {{ ref('prep_usage_ping') }}
+    FROM {{ ref('prep_usage_ping_subscription_mapped') }}
     WHERE license_md5 IS NOT NULL 
 
-), map_license_subscription_account AS (
-  
-    SELECT * 
-    FROM  {{ ref('map_license_subscription_account') }} 
-  
 ), usage_pings_with_license_md5 AS (
 
     {{ sales_wave_2_3_metrics() }}
-  
-), usage_ping_mapped_to_subscription AS (
+
+), subscription_info AS (
 
     SELECT 
-      usage_pings_with_license_md5.*, 
-      license_mapped_to_subscription.license_user_count, 
-      license_mapped_to_subscription.subscription_id, 
-      license_mapped_to_subscription.subscription_name, 
-      license_mapped_to_subscription.subscription_status,
-      license_mapped_to_subscription.is_license_mapped_to_subscription,
-      IFF(dim_licenses_license_md5 IS NULL, FALSE, TRUE)    AS is_license_md5_missing_in_licenseDot 
-    FROM usage_pings_with_license_md5
-    LEFT JOIN license_mapped_to_subscription
-      ON usage_pings_with_license_md5.license_md5 = license_mapped_to_subscription.dim_licenses_license_md5
+        dim_usage_ping_id, 
+        is_usage_ping_license_in_licenseDot,
+        dim_license_id,
+        license_md5,
+        is_license_mapped_to_subscription,
+        is_license_subscription_id_valid,
+        dim_crm_account_id,
+        ultimate_parent_account_id
+    FROM prep_usage_ping
+
+), final AS (
+
+    SELECT 
+        prep_usage_ping.*,
+        is_usage_ping_license_in_licenseDot,
+        dim_license_id,
+        license_md5,
+        is_license_mapped_to_subscription,
+        is_license_subscription_id_valid,
+        dim_crm_account_id,
+        ultimate_parent_account_id
+    FROM prep_usage_ping
+    INNER JOIN subscription_info
+      ON prep_usage_ping.dim_usage_ping_id = subscription_info.dim_usage_ping_id
   
 )
 
 {{ dbt_audit(
-    cte_ref="usage_ping_mapped_to_subscription",
+    cte_ref="final",
     created_by="@kathleentam",
     updated_by="@kathleentam",
     created_date="2021-01-29",

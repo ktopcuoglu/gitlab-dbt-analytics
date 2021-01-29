@@ -65,4 +65,4 @@ SELECT
     raw_usage_data_payload:usage_activity_by_stage_monthly:plan:epics                                         AS epics_28_days_users,                  
     raw_usage_data_payload:usage_activity_by_stage_monthly:plan:issues                                        AS issues_28_days_users                       
     -- raw_usage_data_payload
-FROM {{ ref('prep_usage_ping') }} 
+FROM prep_usage_ping
