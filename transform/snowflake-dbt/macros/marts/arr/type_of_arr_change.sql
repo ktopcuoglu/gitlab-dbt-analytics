@@ -1,4 +1,4 @@
-{%- macro type_of_arr_change(arr, previous_arr) -%}
+{%- macro type_of_arr_change(arr, previous_arr, row_number) -%}
 
    CASE
      WHEN {{ row_number }} = 1

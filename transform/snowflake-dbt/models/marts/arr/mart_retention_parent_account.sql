@@ -100,7 +100,9 @@ WITH dim_crm_account AS (
       current_mrr.product_ranking    AS current_product_ranking,
       future_mrr.product_ranking     AS future_product_ranking,
       current_mrr.last_renewal_month,
-      current_mrr.next_renewal_month
+      current_mrr.next_renewal_month,
+      --The type of arr change requires a row_number. Row_number = 1 indicates new in the macro; however, for retention, new is not a valid option since retention starts in month 12, well after the First Order transaction.
+      2                              AS row_number
     FROM parent_account_mrrs AS current_mrr
     LEFT JOIN parent_account_mrrs AS future_mrr
       ON current_mrr.ultimate_parent_account_id = future_mrr.ultimate_parent_account_id
@@ -133,7 +135,7 @@ WITH dim_crm_account AS (
       current_product_category                  AS prior_year_product_category,
       future_product_ranking                    AS net_retention_product_ranking,
       current_product_ranking                   AS prior_year_product_ranking,
-      {{ type_of_arr_change('net_retention_arr', 'prior_year_arr') }},
+      {{ type_of_arr_change('net_retention_arr', 'prior_year_arr','row_number') }},
       {{ reason_for_arr_change_seat_change('net_retention_quantity', 'prior_year_quantity', 'net_retention_arr', 'prior_year_arr') }},
       {{ reason_for_arr_change_price_change('net_retention_product_category', 'prior_year_product_category', 'net_retention_quantity', 'prior_year_quantity', 'net_retention_arr', 'prior_year_arr', 'net_retention_product_ranking','prior_year_product_ranking') }},
       {{ reason_for_arr_change_tier_change('net_retention_product_ranking', 'prior_year_product_ranking', 'net_retention_quantity', 'prior_year_quantity', 'net_retention_arr', 'prior_year_arr') }},

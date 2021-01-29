@@ -113,7 +113,7 @@ WITH dim_billing_account AS (
 
     SELECT
       prior_month.*,
-      {{ type_of_arr_change('arr','previous_arr') }}
+      {{ type_of_arr_change('arr','previous_arr','row_number') }}
     FROM prior_month
 
 ), reason_for_arr_change_beg AS (
