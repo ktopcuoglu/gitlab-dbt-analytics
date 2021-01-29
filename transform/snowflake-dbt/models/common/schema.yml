@@ -1365,6 +1365,8 @@ models:
         description: ID of the namespace's ultimate parent namespace.
         tests:
           - not_null
+      - name: largest_repository_size_gib
+        description: Size of the namespace's largest project repository, in GiB.
       - name: total_free_storage_limit_gib
         description: Sum of free repository level storage (10 GiB) over all repositories under the top level namespace. Since storage limits are provided in GiB, they are being reported in GiB. For certain GitLab internal namespaces this value is 0, implying **unlimited storage**.
         tests:

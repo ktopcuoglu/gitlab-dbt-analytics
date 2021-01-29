@@ -156,6 +156,7 @@ WITH project_statistics_snapshot_monthly_all AS (
     SELECT
       ultimate_parent_id,                           -- Only top level namespaces
       snapshot_month,
+      MAX(repository_storage_size)                  AS largest_repository_size,
       SUM(purchased_storage_size)                   AS purchased_storage,
       SUM(repository_size_limit)                    AS free_limit,
       SUM(free_storage_size)                        AS free_storage,
@@ -170,6 +171,7 @@ WITH project_statistics_snapshot_monthly_all AS (
       repository.snapshot_month,
       repository.ultimate_parent_id                                             AS dim_namespace_id,
       repository.ultimate_parent_id                                             AS ultimate_parent_namespace_id,
+      repository.largest_repository_size                                        AS largest_repository_size_gib,
       repository.free_limit                                                     AS total_free_storage_limit_gib,
       namespace.purchased_storage_limit                                         AS total_purchased_storage_limit_gib,
       IFF(repository.repositories_above_free_limit_count = 0, FALSE, TRUE)      AS has_repositories_above_free_limit,
@@ -214,6 +216,6 @@ WITH project_statistics_snapshot_monthly_all AS (
     cte_ref="joined",
     created_by="@ischweickartDD",
     updated_by="@ischweickartDD",
-    created_date="2021-01-27",
-    updated_date="2021-01-27"
+    created_date="2021-01-29",
+    updated_date="2021-01-29"
 ) }}
