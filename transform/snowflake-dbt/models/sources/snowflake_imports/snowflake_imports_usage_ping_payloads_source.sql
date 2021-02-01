@@ -7,7 +7,9 @@ WITH source AS (
 
     SELECT
       jsontext['active_user_count']::NUMBER                     AS active_user_count,
+      jsontext['avg_cycle_analytics']::VARIANT                  AS avg_cycle_analytics,
       jsontext['container_registry_enabled']::BOOLEAN           AS is_container_registry_enabled,
+      jsontext['counts']::VARIANT                               AS counts,
       jsontext['database']['adapter']::VARCHAR                  AS database_adapter, 
       jsontext['database']['version']::VARCHAR                  AS database_version,
       jsontext['edition']::VARCHAR                              AS edition, 
@@ -19,7 +21,10 @@ WITH source AS (
       jsontext['gitlab_pages']['enabled']::BOOLEAN              AS is_gitlab_pages_enabled,
       jsontext['gitlab_pages']['version']::VARCHAR              AS gitlab_pages_version, 
       jsontext['gitlab_shared_runners_enabled']::BOOLEAN        AS is_gitlab_shared_runners_enabled,
-      jsontext['git_version']::VARCHAR                          AS git_version,
+      COALESCE(
+        jsontext['git_version']::VARCHAR, 
+        jsontext['git']['version']::VARCHAR
+      )                                                         AS git_version,
       jsontext['gravatar_enabled']::BOOLEAN                     AS is_gravatar_enabled,
       jsontext['historical_max_users']::NUMBER                  AS historical_max_users,
       jsontext['hostname']::VARCHAR                             AS hostname,
