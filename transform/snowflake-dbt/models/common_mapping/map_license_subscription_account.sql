@@ -32,7 +32,7 @@ WITH license AS (
       license.license_md5, 
       subscription.dim_subscription_id, 
       subscription.dim_crm_account_id, 
-      IFF(license.dim_subscription_id IS NULL, FALSE, TRUE)          AS is_license_mapped_to_subscription, -- does the license table have a value in both license_id and subscription_id 
+      IFF(license.dim_subscription_id IS NOT NULL, TRUE, FALSE)          AS is_license_mapped_to_subscription, -- does the license table have a value in both license_id and subscription_id 
       IFF(subscription.dim_subscription_id IS NULL, FALSE, TRUE)     AS is_license_subscription_id_valid   -- is the subscription_id in the license table valid (does it exist in the dim_subscription table?)
     FROM license 
     LEFT JOIN subscription
