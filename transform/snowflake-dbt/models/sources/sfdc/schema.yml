@@ -45,7 +45,6 @@ models:
       - name: campaign_id
         tags: ["tdf", "sfdc"]
         tests:
-          - not_null
           - relationships:
               to: ref('sfdc_campaign')
               field: campaign_id
