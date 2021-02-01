@@ -34,16 +34,16 @@ WITH account_prep AS (
     FROM {{ ref('prep_industry') }}
 
 ), final AS (
-    
+
     SELECT
 
-      account_prep.crm_account_id          AS crm_account_id,
-      dim_sales_segment_id,
-      dim_geo_region_id,
-      dim_geo_sub_region_id,
-      dim_geo_area_id,
-      dim_sales_territory_id,
-      dim_industry_id
+      account_prep.crm_account_id                       AS crm_account_id,
+      {{  get_keyed_nulls('dim_sales_segment_id') }}     AS dim_sales_segment_id,
+      {{  get_keyed_nulls('dim_geo_region_id') }}        AS dim_geo_region_id,
+      {{  get_keyed_nulls('dim_geo_sub_region_id') }}    AS dim_geo_sub_region_id,
+      {{  get_keyed_nulls('dim_geo_area_id') }}          AS dim_geo_area_id,
+      {{  get_keyed_nulls('dim_sales_territory_id') }}   AS dim_sales_territory_id,
+      {{  get_keyed_nulls('dim_industry_id') }}          AS dim_industry_id
 
     FROM account_prep
     LEFT JOIN geo_region
