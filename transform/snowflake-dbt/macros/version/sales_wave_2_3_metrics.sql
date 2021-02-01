@@ -16,7 +16,7 @@
     raw_usage_data_payload['counts']['auto_devops_enabled']::BOOLEAN                                                                  AS auto_devops_enable_all_time_event,                          
     raw_usage_data_payload['gitlab_shared_runners_enabled']::BOOLEAN                                                                  AS gitlab_shared_runners_enabled_instance_setting,            
     raw_usage_data_payload['container_registry_enabled']::BOOLEAN                                                                     AS container_registry_enabled_instance_setting,   
-    raw_usage_data_payload['counts']['template_repositories'::NUMBER(38,0)                                                           AS template_repositories_all_time_event,                     
+    raw_usage_data_payload['counts']['template_repositories']::NUMBER(38,0)                                                           AS template_repositories_all_time_event,                     
     raw_usage_data_payload['usage_activity_by_stage_monthly']['create']['ci_pipeline_config_repository']::NUMBER(38,0)                AS ci_pipeline_config_repository_28_days_user,             
     raw_usage_data_payload['usage_activity_by_stage_monthly']['secure']['user_unique_users_all_secure_scanners']::NUMBER(38,0)        AS user_unique_users_all_secure_scanners_28_days_user,     
     raw_usage_data_payload['usage_activity_by_stage_monthly']['secure']['user_sast_jobs']::NUMBER(38,0)                               AS user_sast_jobs_28_days_user,                            
