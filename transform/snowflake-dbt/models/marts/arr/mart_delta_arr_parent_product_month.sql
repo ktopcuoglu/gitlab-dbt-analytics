@@ -43,13 +43,13 @@ WITH dim_billing_account AS (
       fct_mrr.quantity
     FROM fct_mrr
     INNER JOIN dim_subscription
-      ON dim_subscription.dim_subscription_id = fct_mrr.subscription_id
+      ON dim_subscription.dim_subscription_id = fct_mrr.dim_subscription_id
     INNER JOIN dim_product_detail
-      ON dim_product_detail.dim_product_detail_id = fct_mrr.product_details_id
+      ON dim_product_detail.dim_product_detail_id = fct_mrr.dim_product_detail_id
     INNER JOIN dim_billing_account
-      ON dim_billing_account.dim_billing_account_id = fct_mrr.billing_account_id
+      ON dim_billing_account.dim_billing_account_id = fct_mrr.dim_billing_account_id
     INNER JOIN dim_date
-      ON dim_date.date_id = fct_mrr.date_id
+      ON dim_date.date_id = fct_mrr.dim_date_id
     LEFT JOIN dim_crm_account
       ON dim_billing_account.dim_crm_account_id = dim_crm_account.crm_account_id
 
@@ -93,8 +93,8 @@ WITH dim_billing_account AS (
       base.ultimate_parent_account_name,
       base.ultimate_parent_account_id,
       base.product_category                                                                  AS product_category,
-      base.delivery                                                                               AS delivery,
-      base.product_ranking                                                                        AS product_ranking,
+      base.delivery                                                                          AS delivery,
+      base.product_ranking                                                                   AS product_ranking,
       SUM(ZEROIFNULL(quantity))                                                              AS quantity,
       SUM(ZEROIFNULL(mrr)*12)                                                                AS arr
     FROM base
@@ -109,14 +109,15 @@ WITH dim_billing_account AS (
     SELECT
       monthly_arr_parent_level.*,
       COALESCE(LAG(quantity) OVER (PARTITION BY ultimate_parent_account_id, product_category ORDER BY arr_month),0) AS previous_quantity,
-      COALESCE(LAG(arr) OVER (PARTITION BY ultimate_parent_account_id, product_category ORDER BY arr_month),0)      AS previous_arr
+      COALESCE(LAG(arr) OVER (PARTITION BY ultimate_parent_account_id, product_category ORDER BY arr_month),0)      AS previous_arr,
+      ROW_NUMBER() OVER (PARTITION BY ultimate_parent_account_id, product_category ORDER BY arr_month)              AS row_number
     FROM monthly_arr_parent_level
 
 ), type_of_arr_change AS (
 
     SELECT
       prior_month.*,
-      {{ type_of_arr_change('arr','previous_arr') }}
+      {{ type_of_arr_change('arr','previous_arr','row_number') }}
     FROM prior_month
 
 ), reason_for_arr_change_beg AS (

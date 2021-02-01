@@ -53,6 +53,10 @@ models:
   description: All team members that passed the pricing discount dashboard developer certification.
 - name: sheetload_cert_pricing_customer_discount_viewer_source
   description: All team members that passed the pricing discount dashboard viewver certification.
+- name: sheetload_cert_product_adoption_dashboard_user_source
+  description: All team members that passed the product adoption dashboard viewer certification
+- name: sheetload_cert_sales_funnel_dashboard_user_source
+- name: sheetload_cert_sales_funnel_dashboard_developer_source
 
 - name: sheetload_company_call_attendance_source
   description: This spreadsheet contains data from company call attendance (also called the "Take a Break Call"). The People Experience team pulls their data and updates their spreadsheet, which is imported into the sheetload sheet.
@@ -268,6 +272,10 @@ models:
     - name: is_satellite_provider
     - name: registered_country_geoname_id
     - name: represented_country_geoname_id
+- name: sheetload_net_arr_net_iacv_conversion_factors_agg_source
+  description: Net IACV conversion ratios to Net ARR aggregated at the order_type_stamped and user_segment level.
+- name: sheetload_net_arr_net_iacv_conversion_factors_source
+  description: Net IACV conversion ratios to Net ARR at the opportunity_id level.
 - name: sheetload_percent_over_comp_band_historical_source
   description: Brings in aggregated values for 2020.01 - 2020.09 for percent over comp band for kpi.    
 - name: sheetload_planned_values_source

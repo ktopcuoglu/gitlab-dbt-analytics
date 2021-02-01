@@ -134,10 +134,10 @@ def gcs_loader(
     credentials = service_account.Credentials.from_service_account_info(keyfile)
     scoped_credentials = credentials.with_scopes(scope)
     storage_client = storage.Client(credentials=scoped_credentials)
-    bucket = storage_client.get_bucket(bucket)
+    bucket_obj = storage_client.get_bucket(bucket)
 
     # Download the file and then pass it in chunks to dw_uploader
-    blob = bucket.blob(path)
+    blob = bucket_obj.blob(path)
     blob.download_to_filename(path)
     table = path.split(".")[0]
 
@@ -163,8 +163,8 @@ def gcs_loader(
     if (actual_size > max_size_of_relation) or (actual_size < min_size_of_relation):
         error(
             f"Count in Snowflake for table {table} ({actual_size})"
-            / " did not match the range of what was read in code "
-            / f"({min_size_of_relation} to {max_size_of_relation})"
+            " did not match the range of what was read in code "
+            f"({min_size_of_relation} to {max_size_of_relation})"
         )
         sys.exit(1)
 

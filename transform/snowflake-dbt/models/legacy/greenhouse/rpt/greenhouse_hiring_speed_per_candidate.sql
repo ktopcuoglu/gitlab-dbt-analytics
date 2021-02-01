@@ -9,7 +9,7 @@ WITH offers AS (
     SELECT *
     FROM {{ source('greenhouse', 'candidates') }}
    
-),hires AS ( 
+), hires AS ( 
   
     SELECT * 
     FROM {{ ref ('greenhouse_hires') }}
@@ -28,6 +28,8 @@ WITH offers AS (
       (candidate_names.first_name ||' '|| candidate_names.last_name) AS candidate_name,
       offers.division_modified                  AS division,
       offers.department_name                    AS department,
+      offers.candidate_recruiter,
+      offers.job_id,
       offers.job_name                           AS vacancy,
       offers.time_to_offer,
       offers.source_name                        AS source,

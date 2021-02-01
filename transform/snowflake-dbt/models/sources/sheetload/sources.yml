@@ -30,6 +30,9 @@ sources:
       - name: cert_product_geo_viewer
       - name: cert_pricing_customer_discount_dashboard
       - name: cert_pricing_customer_discount_viewer
+      - name: cert_product_adoption_dashboard_user
+      - name: cert_sales_funnel_dashboard_user
+      - name: cert_sales_funnel_dashboard_developer
       - name: clari_ai_projection
       - name: clari_export_forecast_net_iacv
       - name: communication_certificate
@@ -69,6 +72,8 @@ sources:
       - name: marketing_pipe_to_spend_headcount
       - name: maxmind_countries
       - name: maxmind_ranges
+      - name: net_arr_net_iacv_conversion_factors
+      - name: net_arr_net_iacv_conversion_factors_agg
       - name: osat
       - name: percent_over_comp_band_historical
       - name: people_budget

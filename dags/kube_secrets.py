@@ -5,6 +5,11 @@ BAMBOOHR_API_TOKEN = Secret(
     "env", "BAMBOOHR_API_TOKEN", "airflow", "BAMBOOHR_API_TOKEN"
 )
 
+# gitlab_analytics user private token
+GITLAB_ANALYTICS_PRIVATE_TOKEN = Secret(
+    "env", "GITLAB_ANALYTICS_PRIVATE_TOKEN", "airflow", "GITLAB_ANALYTICS_PRIVATE_TOKEN"
+)
+
 # GCP Related
 GCP_SERVICE_CREDS = Secret(
     "env", "GCP_SERVICE_CREDS", "airflow", "cloudsql-credentials"
