@@ -95,7 +95,6 @@ Creates a base view with generated keys for the sales territory shared dimension
 
 {% enddocs %}
 
-
 {% docs prep_subscription %}
 
 Creates a base view with generated keys for the subscription shared dimension and references in facts.
@@ -123,5 +122,15 @@ The grain of the table is quote_id.
 Creates a License Prep table for representing generated licenses and associated metadata for shared dimension and references in facts.
 
 The grain of the table is license_id.
+
+{% enddocs %}
+
+{% docs prep_usage_self_managed_seat_link %}
+
+This prep table contains Seat Link data at a daily grain for downstream aggregation and summarization.
+
+Self-managed EE instances send [Seat Link](https://docs.gitlab.com/ee/subscriptions/self_managed/#seat-link) usage data to [CustomerDot](https://gitlab.com/gitlab-org/customers-gitlab-com) on a daily basis. This information includes a count of active users and a maximum count of users historically in order to assist the [true up process](https://docs.gitlab.com/ee/subscriptions/self_managed/#users-over-license). Additional details can be found in [this doc](https://gitlab.com/gitlab-org/customers-gitlab-com/-/blob/staging/doc/reconciliations.md).
+
+Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
 
 {% enddocs %}

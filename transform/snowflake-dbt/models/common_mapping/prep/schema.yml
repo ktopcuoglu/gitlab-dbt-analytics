@@ -382,3 +382,50 @@ models:
         description: The timestamp of when the license was generated.
       - name: updated_at
         description: The timestamp of when the license was updated.
+
+  - name: prep_usage_self_managed_seat_link
+    description: '{{ doc("prep_usage_self_managed_seat_link") }}'
+    columns:
+      - name: customers_db_order_id
+        tests:
+          - not_null
+      - name: order_subscription_id
+        description: Zuora subscription ID listed on the order in the Customers source database.
+      - name: dim_subscription_id
+        tests:
+          - not_null
+      - name: dim_subscription_id_original
+        tests:
+          - not_null
+      - name: dim_subscription_id_previous
+        tests:
+          - not_null
+      - name: dim_crm_account_id
+        tests:
+          - not_null
+      - name: dim_billing_account_id
+        tests:
+          - not_null
+      - name: dim_product_tier_id
+        tests:
+          - not_null
+      - name: active_user_count
+        description: Count of active users currently on the customer's subcription. A count of 0 indicates that Seat Link has been turned off by the customer.
+      - name: license_user_count
+        description: Count of licensed users purchased with the customer's subcription.
+        tests:
+          - not_null
+      - name: max_historical_user_count
+        description: Maximum active user count ever reported over the lifetime of the customer's subcription.
+        tests:
+          - not_null
+      - name: report_date
+        description: Day on which Seat Link usage data is reported. Should always be last day of month for historical months.
+        tests:
+          - not_null
+      - name: is_subscription_data_quality_issue
+        description: Flags rows where the `zuora_subscription_id` from `customers_db_orders_source` is not found in `dim_subscription`.
+      - name: is_rate_plan_data_quality_issue
+        description: Flags rows where the `product_rate_plan_id` from `customers_db_orders_source` is not found in `dim_product_tier`.
+      - name: is_active_user_count_data_quality_issue
+        description: Flags rows where `active_user_count` is NULL in source.
