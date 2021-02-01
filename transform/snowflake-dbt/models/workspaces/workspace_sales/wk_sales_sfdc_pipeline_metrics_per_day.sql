@@ -80,6 +80,9 @@ WITH date_details AS (
       forecast_category_name,
       order_type_stamped,
       is_renewal,
+      is_won,
+      is_lost,
+      is_open,
 
       -- sales team - region fields
       account_owner_team_stamped,
@@ -109,7 +112,7 @@ WITH date_details AS (
                   WHERE date_actual = DATEADD(day,-1,CURRENT_DATE)) today_date 
       -- exclude current quarter
     WHERE snapshot_fiscal_quarter_name != today_date.fiscal_quarter_name_fy 
-    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29
+    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32
 
 --NF: Is this accounting correctly for Churn?
 ), pipeline_snapshot AS (
@@ -435,7 +438,7 @@ SELECT
   base_fields.sales_qualified_source,
   LOWER(base_fields.deal_category) || '_' || LOWER(base_fields.adj_ultimate_parent_sales_segment)                   AS key_segment_report,
   LOWER(base_fields.sales_qualified_source) || '_' || LOWER(base_fields.adj_ultimate_parent_sales_segment)          AS key_sqs_report,
-  base_fields.snapshot_fiscal_quarter_name                                                                               AS close_fiscal_quarter,
+  base_fields.snapshot_fiscal_quarter_name                                                                          AS close_fiscal_quarter,
   base_fields.snapshot_fiscal_quarter_name,
   
   base_fields.snapshot_fiscal_quarter_date                                                                          AS close_fiscal_quarter_date,
