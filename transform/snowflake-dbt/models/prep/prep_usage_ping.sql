@@ -161,10 +161,5 @@ WITH source AS (
 
 )
 
-{{ dbt_audit(
-    cte_ref="final",
-    created_by="@kathleentam",
-    updated_by="@kathleentam",
-    created_date="2021-01-11",
-    updated_date="2021-01-11"
-) }}
+SELECT * 
+FROM final
