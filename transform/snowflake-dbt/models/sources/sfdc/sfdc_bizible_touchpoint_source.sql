@@ -38,6 +38,13 @@ WITH source AS (
       bizible2__referrer_page__c              AS bizible_referrer_page,   
       bizible2__referrer_page_raw__c          AS bizible_referrer_page_raw, 
       bizible2__sf_campaign__c                AS bizible_salesforce_campaign,
+      utm_budget__c                           AS utm_budget,
+      utm_offersubtype__c                     AS utm_offersubtype,
+      utm_offertype__c                        AS utm_offertype,
+      utm_targetregion__c                     AS utm_targetregion,
+      utm_targetsubregion__c                  AS utm_targetsubregion,
+      utm_targetterritory__c                  AS utm_targetterritory,
+      utm_usecase__c                          AS utm_usecase,
 
       isdeleted                               AS is_deleted
 
