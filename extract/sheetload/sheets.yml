@@ -127,7 +127,7 @@ sheets:
     tabs:
       - maxmind_ranges
   - name: net_arr_net_iacv_conversion_factors
-    owner: '@jeanpeguero'
+    owner: '@nfiguera'
     tabs:
       - net_arr_net_iacv_conversion_factors
       - net_arr_net_iacv_conversion_factors_agg
