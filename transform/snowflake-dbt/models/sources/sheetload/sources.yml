@@ -72,6 +72,8 @@ sources:
       - name: marketing_pipe_to_spend_headcount
       - name: maxmind_countries
       - name: maxmind_ranges
+      - name: net_arr_net_iacv_conversion_factors
+      - name: net_arr_net_iacv_conversion_factors_agg
       - name: osat
       - name: percent_over_comp_band_historical
       - name: people_budget
