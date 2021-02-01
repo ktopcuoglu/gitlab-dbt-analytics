@@ -13,7 +13,10 @@ WITH prep_usage_ping AS (
 
 ), final AS (
 
+    SELECT
+    {{ default_usage_ping_information() }}
     {{ sales_wave_2_3_metrics() }}
+    FROM prep_usage_ping
   
 )
 

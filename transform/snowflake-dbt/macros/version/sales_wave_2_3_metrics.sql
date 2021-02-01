@@ -1,37 +1,5 @@
 {% macro sales_wave_2_3_metrics() %} 
 
-SELECT
-    -- usage ping meta data 
-    dim_usage_ping_id, 
-    ping_created_at,
-    ping_created_at_28_days_earlier,
-    ping_created_at_year,
-    ping_created_at_month,
-    ping_created_at_week,
-    ping_created_at_date,
-
-    -- instance settings 
-    raw_usage_data_payload:uuid                                                                               AS uuid, 
-    ping_source, 
-    raw_usage_data_payload:version                                                                            AS instance_version, 
-    cleaned_version,
-    version_is_prerelease,
-    major_version,
-    minor_version,
-    major_minor_version,
-    edition, 
-    main_edition, 
-    raw_usage_data_payload:hostname                                                                           AS hostname, 
-    raw_usage_data_payload:host_id                                                                            AS host_id, 
-    raw_usage_data_payload:installation_type                                                                  AS installation_type, 
-    is_internal, 
-    is_staging,    
-
-    -- instance user statistics 
-    raw_usage_data_payload:instance_user_count                                                                AS instance_user_count, 
-    raw_usage_data_payload:historical_max_users                                                               AS historical_max_users, 
-    raw_usage_data_payload:license_md5                                                                        AS license_md5,
-
     -- usage ping data 
     raw_usage_data_payload:usage_activity_by_stage_monthly:manage:events                                      AS umau_28_days_user,                                            
     raw_usage_data_payload:usage_activity_by_stage_monthly:create:action_monthly_active_users_project_repo    AS action_monthly_active_users_project_repo_28_days_user,       
@@ -64,7 +32,5 @@ SELECT
     raw_usage_data_payload:usage_activity_by_stage_monthly:release:releases                                   AS releases_28_days_users,                              
     raw_usage_data_payload:usage_activity_by_stage_monthly:plan:epics                                         AS epics_28_days_users,                  
     raw_usage_data_payload:usage_activity_by_stage_monthly:plan:issues                                        AS issues_28_days_users                       
-    -- raw_usage_data_payload
-FROM prep_usage_ping
 
 {%- endmacro -%}
