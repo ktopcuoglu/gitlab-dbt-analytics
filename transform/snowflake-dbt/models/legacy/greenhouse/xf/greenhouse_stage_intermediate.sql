@@ -49,12 +49,15 @@ WITH stages AS (
 
 ), hires_data AS (
 
-    SELECT *
+    SELECT
+      application_id,
+      candidate_id,
+      hire_date_mod
     FROM {{ ref ('greenhouse_hires') }}
 
 ), applications AS (
 
-        SELECT 
+    SELECT 
         application_id,
         candidate_id,
         'Application Submitted'                                                         AS application_stage,
@@ -62,8 +65,8 @@ WITH stages AS (
         DATE_TRUNC(MONTH, application_date)                                             AS application_month,
         application_date                                                                AS stage_entered_on,
         null                                                                            AS stage_exited_on,
-        {{repeated_column_names}}
-        FROM recruiting_xf 
+    {{repeated_column_names}}
+    FROM recruiting_xf 
 
 ), stages_intermediate AS (
     

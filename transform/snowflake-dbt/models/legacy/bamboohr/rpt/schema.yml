@@ -176,4 +176,19 @@ models:
       tests:
         - not_null
     - name: actual_headcount_vs_planned_headcount
+    - name: new_hire
+      description: The total number of hires that filled a new hire req
+    - name: new_position_filled_internally
+      description: New greenhouse job position that was filled with an internal candidate.
+    - name: transfers
+      description: Team members that with lateral transfer
+    - name: backfill
+      description: Job requsitions that are expected to be filled internally.
+    - name: unidentified_job_opening_type
+      description: The total number of positions that don't have an associated job opening type (note we started capturing this field in 2020.05)
+    - name: total_greenhouse_reqs_filled
+      description: New hires plus transfers + backfill + unidentified_job_opening_type
+    - name: total_hires_greenhouse
+      description: New hires plus backfills based on greenhouse data. 
+
 
