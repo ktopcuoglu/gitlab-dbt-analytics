@@ -1308,7 +1308,8 @@ models:
   - name: fct_usage_self_managed_seat_link
     description: '{{ doc("fct_usage_self_managed_seat_link") }}'
     columns:
-      - name: customers_db_order_id
+      - name: latest_order_id_in_month
+        description: Order ID that was associated with the subscription at month close.
         tests:
           - not_null
       - name: dim_subscription_id
@@ -1331,8 +1332,6 @@ models:
           - not_null
       - name: active_user_count
         description: Count of active users currently on the customer's subcription. A count of 0 indicates that Seat Link has been turned off by the customer.
-        tests:
-          - not_null
       - name: license_user_count
         description: Count of licensed users purchased with the customer's subcription.
         tests:
@@ -1341,6 +1340,10 @@ models:
         description: Maximum active user count ever reported over the lifetime of the customer's subcription.
         tests:
           - not_null
+      - name: is_last_seat_link_report_per_subscription
+        description: Flags if the row contains the most recent seat link record received for the subscription.
+      - name: is_last_seat_link_report_per_order
+        description: Flags if the row contains the most recent seat link record received for the order.
       - name: snapshot_month
         description: Month in which Seat Link usage data is reported.
         tests:

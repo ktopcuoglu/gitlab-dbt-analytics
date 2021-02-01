@@ -127,7 +127,7 @@ The grain of the table is license_id.
 
 {% docs prep_usage_self_managed_seat_link %}
 
-This prep table contains Seat Link data at a daily grain for downstream aggregation and summarization.
+This prep table contains Seat Link data at a daily grain for downstream aggregation and summarization, as well as flags for data quality.
 
 Self-managed EE instances send [Seat Link](https://docs.gitlab.com/ee/subscriptions/self_managed/#seat-link) usage data to [CustomerDot](https://gitlab.com/gitlab-org/customers-gitlab-com) on a daily basis. This information includes a count of active users and a maximum count of users historically in order to assist the [true up process](https://docs.gitlab.com/ee/subscriptions/self_managed/#users-over-license). Additional details can be found in [this doc](https://gitlab.com/gitlab-org/customers-gitlab-com/-/blob/staging/doc/reconciliations.md).
 

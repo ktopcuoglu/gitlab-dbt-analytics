@@ -44,9 +44,9 @@ WITH seat_links AS (
       seat_links.max_historical_user_count                                  AS max_historical_user_count,
       seat_links.report_date,
       IFF(IFNULL(seat_links.order_subscription_id, '') = subscriptions.dim_subscription_id,
-          FALSE, TRUE)                                                      AS is_subscription_data_quality_issue,
-      IFNULL(product_details.dim_product_tier_id IS NULL, FALSE)            AS is_rate_plan_data_quality_issue,
-      IFNULL(seat_links.active_user_count IS NULL, FALSE)                   AS is_active_user_count_data_quality_issue
+          FALSE, TRUE)                                                      AS is_subscription_in_zuora,
+      IFNULL(product_details.dim_product_tier_id IS NULL, FALSE)            AS is_rate_plan_in_zuora,
+      IFNULL(seat_links.active_user_count IS NULL, FALSE)                   AS is_active_user_count_available
     FROM seat_links 
     INNER JOIN customers_orders
       ON seat_links.order_id = customers_orders.order_id

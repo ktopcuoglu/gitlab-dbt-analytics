@@ -5,7 +5,11 @@ WITH seat_links AS (
       IFF(ROW_NUMBER() OVER (
             PARTITION BY order_subscription_id
             ORDER BY report_date DESC) = 1,
-          TRUE, FALSE)                                              AS is_last_reported
+          TRUE, FALSE)                                              AS is_last_seat_link_report_per_subscription,
+      IFF(ROW_NUMBER() OVER (
+            PARTITION BY customers_db_order_id
+            ORDER BY report_date DESC) = 1,
+          TRUE, FALSE)                                              AS is_last_seat_link_report_per_order
     FROM {{ ref('prep_usage_self_managed_seat_link') }}
     QUALIFY ROW_NUMBER() OVER (
       PARTITION BY
@@ -18,7 +22,7 @@ WITH seat_links AS (
 
     SELECT
       -- ids & keys
-      customers_db_order_id,
+      customers_db_order_id                                         AS latest_order_id_in_month,
       dim_subscription_id,
       dim_subscription_id_original,
       dim_subscription_id_previous,
@@ -27,12 +31,13 @@ WITH seat_links AS (
       dim_product_tier_id,
       
       --counts
-      IFNULL(seat_links.active_user_count, 0)                       AS active_user_count,
+      seat_links.active_user_count                                  AS active_user_count,
       seat_links.license_user_count,
       max_historical_user_count,
       
       --flags
-      is_last_reported,
+      is_last_seat_link_report_per_subscription,
+      is_last_seat_link_report_per_order,
 
       --dates
       seat_links.snapshot_month,
