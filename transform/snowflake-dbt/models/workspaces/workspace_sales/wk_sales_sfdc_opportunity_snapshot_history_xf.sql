@@ -290,7 +290,7 @@ WITH date_details AS (
           AND opp_snapshot.incremental_acv <> 0
             THEN opp_snapshot.incremental_acv * coalesce(net_iacv_to_net_arr_ratio.ratio_net_iacv_to_net_arr,0)
         ELSE opp_snapshot.raw_net_arr
-      END                                                        AS calculated_net_arr,
+      END                                                        AS net_arr,
 
       opp_snapshot.recurring_amount,
       opp_snapshot.true_up_amount,
@@ -310,7 +310,7 @@ WITH date_details AS (
           AND opp_snapshot.stage_name IN ('Closed Won')  
             THEN opp_snapshot.incremental_acv
         ELSE 0
-      END                                                         AS created_and_won_iacv,
+      END                                                         AS created_and_won_same_quarter_iacv,
 
       -- created within quarter
       CASE
@@ -326,7 +326,7 @@ WITH date_details AS (
           AND opp_snapshot.stage_name IN ('Closed Won')  
             THEN net_arr
         ELSE 0
-      END                                                         AS created_and_won_net_arr,
+      END                                                         AS created_and_won_same_quarter_net_arr,
 
       -- created within quarter
       CASE
@@ -347,8 +347,6 @@ WITH date_details AS (
       -- opportunity driven fields
       sfdc_opportunity_xf.opportunity_owner_manager,
       sfdc_opportunity_xf.account_owner_team_stamped, 
-      sfdc_opportunity_xf.user_segment_stamped,
-      sfdc_opportunity_xf.sales_qualified_source,
       sfdc_opportunity_xf.is_edu_oss,
 
       -- using current opportunity perspective instead of historical
@@ -405,7 +403,6 @@ WITH date_details AS (
             THEN 1												                         
         ELSE 0
       END                                                         AS is_stage_4_plus,
-
 
       CASE 
         WHEN opp_snapshot.stage_name = 'Closed Won' 
