@@ -23,7 +23,7 @@ WITH source AS (
       jsontext['gitlab_shared_runners_enabled']::BOOLEAN        AS is_gitlab_shared_runners_enabled,
       COALESCE(
         jsontext['git_version']::VARCHAR, 
-        jsontext['git']['version']
+        jsontext['git']['version']::VARCHAR
       )                                                         AS git_version,
       jsontext['gravatar_enabled']::BOOLEAN                     AS is_gravatar_enabled,
       jsontext['historical_max_users']::NUMBER                  AS historical_max_users,
