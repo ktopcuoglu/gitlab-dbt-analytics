@@ -31,6 +31,7 @@ WITH data AS (
       is_paid_gmau,
       is_umau,
       clean_metrics_name,
+      time_period,
       IFNULL(metric_value,0) AS weekly_metrics_value
     FROM data
 
@@ -50,7 +51,9 @@ WITH data AS (
       is_paid_gmau,
       is_umau,
       clean_metrics_name,
-      weekly_metrics_value              AS monthly_metric_value
+      time_period,
+      weekly_metrics_value              AS monthly_metric_value,
+      weekly_metrics_value              AS original_metric_value
     FROM transformed
     QUALIFY (ROW_NUMBER() OVER (PARTITION BY created_month, instance_id, host_id, metrics_path ORDER BY created_week DESC, created_at DESC)) = 1
 
@@ -71,6 +74,8 @@ SELECT
   is_paid_gmau,
   is_umau,
   clean_metrics_name,
-  SUM(monthly_metric_value) AS monthly_metric_value
+  time_period,
+  SUM(monthly_metric_value)   AS monthly_metric_value,
+  SUM(original_metric_value)  AS original_metric_value 
 FROM monthly
-{{ dbt_utils.group_by(n=14)}}
+{{ dbt_utils.group_by(n=15)}}

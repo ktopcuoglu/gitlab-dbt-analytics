@@ -54,5 +54,7 @@ SELECT
   is_paid_gmau,
   is_umau,
   clean_metrics_name,
-  IFF(monthly_metric_value < 0, 0, monthly_metric_value) AS monthly_metric_value
+  time_period,
+  IFF(monthly_metric_value < 0, 0, monthly_metric_value) AS monthly_metric_value,
+  metric_value                                           AS original_metric_value
 FROM monthly
