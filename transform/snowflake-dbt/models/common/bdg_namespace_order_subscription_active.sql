@@ -57,7 +57,7 @@ WITH namespace AS (
     LEFT JOIN trial_histories
       ON namespace.dim_namespace_id = trial_histories.gl_namespace_id
     WHERE namespace.namespace_is_ultimate_parent = TRUE
-      AND (product_tier.product_tier_name != 'Free'
+      AND (product_tier.product_tier_name != 'SaaS - Free'
            OR namespace_was_trial)
 
 
