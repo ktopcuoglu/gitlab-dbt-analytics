@@ -18,6 +18,7 @@ models:
       - name: order_id
       - name: namespace_id_order
       - name: subscription_id_order
+      - name: ultimate_parent_namespace_id
       - name: namespace_type
       - name: dim_product_tier_id_namespace
       - name: product_tier_name_namespace
@@ -41,7 +42,37 @@ models:
       - name: dim_billing_account_id
       - name: dim_crm_account_id
       - name: count_of_tiers_per_subscription
+      - name: product_rate_plan_id_subscription
+      - name: is_oss_or_edu_rate_plan_subscription
       - name: namespace_order_subscription_match_status
+
+
+  - name: bdg_self_managed_order_subscription_active
+    description: '{{ doc("bdg_self_managed_order_subscription_active") }}'
+    columns:
+      - name: dim_subscription_id
+      - name: order_id
+      - name: namespace_id_order
+      - name: subscription_id_order
+      - name: customer_id
+      - name: dim_product_tier_id_with_trial
+      - name: product_delivery_type_with_trial
+      - name: product_tier_name_with_trial
+      - name: dim_product_tier_id_order
+      - name: product_delivery_type_order
+      - name: product_tier_name_order
+      - name: order_start_date
+      - name: order_end_date
+      - name: order_is_trial
+      - name: product_tier_name_subscription
+      - name: dim_product_tier_id_subscription
+      - name: dim_subscription_id_original
+      - name: dim_subscription_id_previous
+      - name: dim_billing_account_id
+      - name: dim_crm_account_id
+      - name: count_of_tiers_per_subscription
+      - name: product_rate_plan_id_subscription
+      - name: is_oss_or_edu_rate_plan_subscription
 
   - name: dim_billing_account
     description: '{{ doc("dim_billing_account") }}'
