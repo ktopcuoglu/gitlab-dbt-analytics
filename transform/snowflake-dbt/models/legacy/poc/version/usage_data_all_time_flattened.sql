@@ -54,7 +54,7 @@ SELECT
   created_at,
   flattened.metric_path AS flat_metrics_path,
   metrics.*, 
-  flattened.metric_value
+  IFF(flattened.metric_value = -1, 0, flattened.metric_value) AS metric_value
 FROM flattened
 INNER JOIN {{ ref('sheetload_usage_ping_metrics_sections' )}} AS metrics 
   ON flattened.metric_path = metrics.metrics_path
