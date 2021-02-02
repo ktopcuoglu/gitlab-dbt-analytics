@@ -19,7 +19,6 @@ WITH applications AS (
     SELECT * 
     FROM  {{ ref ('greenhouse_jobs_source') }}
 
-
 ), job_req AS (
 
     SELECT 
@@ -150,7 +149,7 @@ WITH applications AS (
     LEFT JOIN cost_center
       ON TRIM(greenhouse_departments.department_name)=TRIM(cost_center.department)
     LEFT JOIN bamboo
-      ON bamboo.greenhouse_candidate_id = applications.candidate_id  
+      ON bamboo.greenhouse_candidate_id = applications.candidate_id
 
 )
 

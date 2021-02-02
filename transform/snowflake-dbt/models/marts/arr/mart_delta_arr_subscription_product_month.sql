@@ -100,14 +100,15 @@
     SELECT
       monthly_arr_subscription_level.*,
       COALESCE(LAG(quantity) OVER (PARTITION BY subscription_id, product_category ORDER BY arr_month),0) AS previous_quantity,
-      COALESCE(LAG(arr) OVER (PARTITION BY subscription_id, product_category ORDER BY arr_month),0) AS previous_arr
+      COALESCE(LAG(arr) OVER (PARTITION BY subscription_id, product_category ORDER BY arr_month),0) AS previous_arr,
+      ROW_NUMBER() OVER (PARTITION BY subscription_id, product_category ORDER BY arr_month) AS row_number
     FROM monthly_arr_subscription_level
 
 ), type_of_arr_change AS (
 
     SELECT
       prior_month.*,
-      {{ type_of_arr_change('arr','previous_arr') }}
+      {{ type_of_arr_change('arr','previous_arr','row_number') }}
     FROM prior_month
 
 ), reason_for_arr_change_beg AS (

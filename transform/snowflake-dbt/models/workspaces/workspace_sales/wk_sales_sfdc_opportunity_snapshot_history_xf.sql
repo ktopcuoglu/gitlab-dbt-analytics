@@ -22,7 +22,105 @@ WITH date_details AS (
 
 ), sfdc_opportunity_snapshot_history AS (
 
-    SELECT *
+    SELECT 
+      sfdc_opportunity_snapshot_history.date_actual,
+      sfdc_opportunity_snapshot_history.valid_from,
+      sfdc_opportunity_snapshot_history.valid_to,
+      sfdc_opportunity_snapshot_history.is_currently_valid,
+      sfdc_opportunity_snapshot_history.opportunity_snapshot_id,
+      sfdc_opportunity_snapshot_history.account_id,
+      sfdc_opportunity_snapshot_history.opportunity_id,
+      sfdc_opportunity_snapshot_history.opportunity_name,
+      sfdc_opportunity_snapshot_history.owner_id,
+      sfdc_opportunity_snapshot_history.business_type,
+      sfdc_opportunity_snapshot_history.close_date,
+      sfdc_opportunity_snapshot_history.created_date,
+      sfdc_opportunity_snapshot_history.deployment_preference,
+      sfdc_opportunity_snapshot_history.generated_source,
+      sfdc_opportunity_snapshot_history.lead_source,
+      sfdc_opportunity_snapshot_history.merged_opportunity_id,
+      sfdc_opportunity_snapshot_history.opportunity_owner,
+      sfdc_opportunity_snapshot_history.opportunity_owner_team,
+      sfdc_opportunity_snapshot_history.opportunity_owner_manager,
+      sfdc_opportunity_snapshot_history.opportunity_owner_department,
+      sfdc_opportunity_snapshot_history.opportunity_sales_development_representative,
+      sfdc_opportunity_snapshot_history.opportunity_business_development_representative,
+      sfdc_opportunity_snapshot_history.opportunity_development_representative,
+      sfdc_opportunity_snapshot_history.account_owner_team_stamped,
+      sfdc_opportunity_snapshot_history.parent_segment,
+      sfdc_opportunity_snapshot_history.sales_accepted_date,
+      sfdc_opportunity_snapshot_history.sales_path,
+      sfdc_opportunity_snapshot_history.sales_qualified_date,
+      sfdc_opportunity_snapshot_history.sales_segment,
+      sfdc_opportunity_snapshot_history.sales_type,
+      sfdc_opportunity_snapshot_history.net_new_source_categories,
+      sfdc_opportunity_snapshot_history.source_buckets,
+      sfdc_opportunity_snapshot_history.stage_name,
+      sfdc_opportunity_snapshot_history.order_type,
+      sfdc_opportunity_snapshot_history.acv,
+      sfdc_opportunity_snapshot_history.closed_deals,
+      sfdc_opportunity_snapshot_history.competitors,
+      sfdc_opportunity_snapshot_history.critical_deal_flag,
+      sfdc_opportunity_snapshot_history.deal_size,
+      sfdc_opportunity_snapshot_history.forecast_category_name,
+      sfdc_opportunity_snapshot_history.forecasted_iacv,
+      sfdc_opportunity_snapshot_history.iacv_created_date,
+      sfdc_opportunity_snapshot_history.incremental_acv,
+      sfdc_opportunity_snapshot_history.invoice_number,
+      sfdc_opportunity_snapshot_history.is_refund,
+      sfdc_opportunity_snapshot_history.is_downgrade,
+      sfdc_opportunity_snapshot_history.is_swing_deal,
+      sfdc_opportunity_snapshot_history.net_incremental_acv,
+      sfdc_opportunity_snapshot_history.nrv,
+      sfdc_opportunity_snapshot_history.primary_campaign_source_id,
+      sfdc_opportunity_snapshot_history.probability,
+      sfdc_opportunity_snapshot_history.professional_services_value,
+      sfdc_opportunity_snapshot_history.pushed_count,
+      sfdc_opportunity_snapshot_history.reason_for_loss,
+      sfdc_opportunity_snapshot_history.reason_for_loss_details,
+      sfdc_opportunity_snapshot_history.refund_iacv,
+      sfdc_opportunity_snapshot_history.downgrade_iacv,
+      sfdc_opportunity_snapshot_history.renewal_acv,
+      sfdc_opportunity_snapshot_history.renewal_amount,
+      sfdc_opportunity_snapshot_history.sales_qualified_source,
+      sfdc_opportunity_snapshot_history.segment,
+      sfdc_opportunity_snapshot_history.solutions_to_be_replaced,
+      sfdc_opportunity_snapshot_history.total_contract_value,
+      sfdc_opportunity_snapshot_history.upside_iacv,
+      sfdc_opportunity_snapshot_history.upside_swing_deal_iacv,
+      sfdc_opportunity_snapshot_history.is_web_portal_purchase,
+      sfdc_opportunity_snapshot_history.opportunity_term,
+      
+      sfdc_opportunity_snapshot_history.net_arr             AS raw_net_arr,
+      
+      sfdc_opportunity_snapshot_history.arr_basis,
+      sfdc_opportunity_snapshot_history.arr,
+      sfdc_opportunity_snapshot_history.amount,
+      sfdc_opportunity_snapshot_history.recurring_amount,
+      sfdc_opportunity_snapshot_history.true_up_amount,
+      sfdc_opportunity_snapshot_history.proserv_amount,
+      sfdc_opportunity_snapshot_history.other_non_recurring_amount,
+      sfdc_opportunity_snapshot_history.subscription_start_date,
+      sfdc_opportunity_snapshot_history.subscription_end_date,
+      sfdc_opportunity_snapshot_history.cp_champion,
+      sfdc_opportunity_snapshot_history.cp_close_plan,
+      sfdc_opportunity_snapshot_history.cp_competition,
+      sfdc_opportunity_snapshot_history.cp_decision_criteria,
+      sfdc_opportunity_snapshot_history.cp_decision_process,
+      sfdc_opportunity_snapshot_history.cp_economic_buyer,
+      sfdc_opportunity_snapshot_history.cp_identify_pain,
+      sfdc_opportunity_snapshot_history.cp_metrics,
+      sfdc_opportunity_snapshot_history.cp_risks,
+      sfdc_opportunity_snapshot_history.cp_use_cases,
+      sfdc_opportunity_snapshot_history.cp_value_driver,
+      sfdc_opportunity_snapshot_history.cp_why_do_anything_at_all,
+      sfdc_opportunity_snapshot_history.cp_why_gitlab,
+      sfdc_opportunity_snapshot_history.cp_why_now,
+      sfdc_opportunity_snapshot_history._last_dbt_run,
+      sfdc_opportunity_snapshot_history.is_deleted,
+      sfdc_opportunity_snapshot_history.last_activity_date,
+      sfdc_opportunity_snapshot_history.record_type_id
+
     FROM {{ref('sfdc_opportunity_snapshot_history')}}
 
 ), sfdc_opportunity_xf AS (
@@ -131,56 +229,6 @@ WITH date_details AS (
 
   SELECT DISTINCT
       opp_snapshot.date_actual                                  AS snapshot_date,  
-      opp_snapshot.account_id,
-      opp_snapshot.forecast_category_name,                
-      opp_snapshot.opportunity_id,
-      opp_snapshot.owner_id,    
-      opp_snapshot.stage_name,
-      opp_snapshot.sales_type,
-      opp_snapshot.is_deleted,
-      opp_snapshot.sales_qualified_source,
-      -- metrics
-      opp_snapshot.renewal_acv,
-      opp_snapshot.incremental_acv,
-      opp_snapshot.net_incremental_acv,
-      opp_snapshot.total_contract_value,
-      opp_snapshot.professional_services_value,
-
-      -- need to apply conversion ratio here
-      
-      CASE
-        WHEN opp_snapshot.net_arr IS NULL 
-          AND opp_snapshot.net_incremental_acv <> 0
-          THEN opp_snapshot.net_incremental_acv * coalesce(net_iacv_to_net_arr_ratio.ratio_net_iacv_to_net_arr,0)
-        WHEN opp_snapshot.net_arr IS NULL 
-          AND opp_snapshot.incremental_acv <> 0
-          THEN opp_snapshot.incremental_acv * coalesce(net_iacv_to_net_arr_ratio.ratio_net_iacv_to_net_arr,0)
-        ELSE opp_snapshot.net_arr
-      END                                                        AS calculated_net_arr,
-
-      opp_snapshot.net_arr,
-      opp_snapshot.recurring_amount,
-      opp_snapshot.true_up_amount,
-      opp_snapshot.proserv_amount,
-      opp_snapshot.other_non_recurring_amount,
-      opp_snapshot.arr_basis,
-      opp_snapshot.arr,
- 
-      -- opportunity driven fields
-      sfdc_opportunity_xf.opportunity_owner_manager,
-      sfdc_opportunity_xf.account_owner_team_stamped, 
-      sfdc_opportunity_xf.user_segment_stamped,
-           
-      CASE 
-        WHEN sfdc_opportunity_xf.order_type_stamped IS NULL 
-          THEN '3. Growth'
-        ELSE sfdc_opportunity_xf.order_type_stamped
-      END                                                        AS order_type_stamped,     
-     
-      -- account driven fields
-      sfdc_accounts_xf.tsp_region,
-      sfdc_accounts_xf.tsp_sub_region,
-      sfdc_accounts_xf.ultimate_parent_sales_segment,
 
       --date helpers
       snapshot_date.first_day_of_month                           AS snapshot_date_month,
@@ -203,7 +251,118 @@ WITH date_details AS (
       iacv_created_date.fiscal_year                              AS iacv_created_fiscal_year,
       iacv_created_date.fiscal_quarter_name_fy                   AS iacv_created_fiscal_quarter_name,
       iacv_created_date.first_day_of_fiscal_quarter              AS iacv_created_fiscal_quarter_date,
-       
+
+      -- this fields might change, isolating the field used from the purpose
+      -- alternatives are a future net_arr_created_date
+      created_date_detail.first_day_of_month                     AS pipeline_created_date_month,
+      created_date_detail.fiscal_year                            AS pipeline_created_fiscal_year,
+      created_date_detail.fiscal_quarter_name_fy                 AS pipeline_created_fiscal_quarter_name,
+      created_date_detail.first_day_of_fiscal_quarter            AS pipeline_created_fiscal_quarter_date,
+
+      -- base fields
+      opp_snapshot.account_id,
+      opp_snapshot.forecast_category_name,                
+      opp_snapshot.opportunity_id,
+      opp_snapshot.owner_id,    
+      opp_snapshot.stage_name,
+      opp_snapshot.sales_type,
+      opp_snapshot.is_deleted,
+      opp_snapshot.sales_qualified_source,
+
+      -- base metrics metrics
+      opp_snapshot.renewal_acv,
+      opp_snapshot.incremental_acv,
+      opp_snapshot.net_incremental_acv,
+      opp_snapshot.total_contract_value,
+      opp_snapshot.professional_services_value,
+
+      -- NF 2021-01-28 Not all historical opportunities have Net ARR set. To allow historical reporting 
+      -- we apply a ratio by segment / order type to convert IACV to Net ARR      
+      CASE
+        WHEN opp_snapshot.raw_net_arr IS NULL
+          AND sfdc_opportunity_xf.raw_net_arr IS NOT NULL
+          AND sfdc_opportunity_xf.net_incremental_acv <> 0 
+            THEN opp_snapshot.net_incremental_acv * coalesce(sfdc_opportunity_xf.raw_net_arr / sfdc_opportunity_xf.net_incremental_acv,0)
+        WHEN opp_snapshot.raw_net_arr IS NULL 
+          AND opp_snapshot.net_incremental_acv <> 0
+            THEN opp_snapshot.net_incremental_acv * coalesce(net_iacv_to_net_arr_ratio.ratio_net_iacv_to_net_arr,0)
+        WHEN opp_snapshot.raw_net_arr IS NULL 
+          AND opp_snapshot.incremental_acv <> 0
+            THEN opp_snapshot.incremental_acv * coalesce(net_iacv_to_net_arr_ratio.ratio_net_iacv_to_net_arr,0)
+        ELSE opp_snapshot.raw_net_arr
+      END                                                        AS net_arr,
+
+      opp_snapshot.recurring_amount,
+      opp_snapshot.true_up_amount,
+      opp_snapshot.proserv_amount,
+      opp_snapshot.other_non_recurring_amount,
+      opp_snapshot.arr_basis,
+      opp_snapshot.arr,
+
+      ---------------------
+      -- compound metrics for reporting
+
+      ------------------------------
+      -- DEPRECATED IACV METRICS
+      -- Use Net ARR instead
+      CASE 
+        WHEN created_date_detail.fiscal_quarter_name_fy = close_date_detail.fiscal_quarter_name_fy
+          AND opp_snapshot.stage_name IN ('Closed Won')  
+            THEN opp_snapshot.incremental_acv
+        ELSE 0
+      END                                                         AS created_and_won_same_quarter_iacv,
+
+      -- created within quarter
+      CASE
+        WHEN pipeline_created_fiscal_quarter_name = snapshot_date.fiscal_quarter_name_fy
+          THEN opp_snapshot.incremental_acv 
+        ELSE 0 
+      END                                                         AS created_in_snapshot_quarter_iacv,
+      ------------------------------
+
+      -- created and closed within the quarter net arr
+      CASE 
+        WHEN pipeline_created_fiscal_quarter_name = close_date_detail.fiscal_quarter_name_fy
+          AND opp_snapshot.stage_name IN ('Closed Won')  
+            THEN net_arr
+        ELSE 0
+      END                                                         AS created_and_won_same_quarter_net_arr,
+
+      -- created within quarter
+      CASE
+        WHEN pipeline_created_fiscal_quarter_name = snapshot_date.fiscal_quarter_name_fy
+          THEN net_arr
+        ELSE 0 
+      END                                                         AS created_in_snapshot_quarter_net_arr,
+
+      -- booked net arr (won + renewals / lost)
+      CASE
+        WHEN opp_snapshot.stage_name = 'Closed Won'
+          OR (opp_snapshot.stage_name = '8-Closed Lost'
+            AND LOWER(opp_snapshot.sales_type) like '%renewal%')
+          THEN net_arr
+        ELSE 0 
+      END                                                         AS booked_net_arr,
+ 
+      -- opportunity driven fields
+      sfdc_opportunity_xf.opportunity_owner_manager,
+      sfdc_opportunity_xf.account_owner_team_stamped, 
+      sfdc_opportunity_xf.is_edu_oss,
+
+      -- using current opportunity perspective instead of historical
+      -- NF 2020-01-26: this might change to order type live 2.1     
+      CASE 
+        WHEN sfdc_opportunity_xf.order_type_stamped IS NULL 
+          THEN '3. Growth'
+        ELSE sfdc_opportunity_xf.order_type_stamped
+      END                                                        AS order_type_stamped,     
+     
+      -- account driven fields
+      sfdc_accounts_xf.tsp_region,
+      sfdc_accounts_xf.tsp_sub_region,
+      sfdc_accounts_xf.ultimate_parent_sales_segment,
+      sfdc_accounts_xf.tsp_max_hierarchy_sales_segment,
+   
       CASE 
         WHEN opp_snapshot.stage_name IN ('00-Pre Opportunity', '0-Pending Acceptance', '0-Qualifying'
                               ,'Developing', '1-Discovery', '2-Developing', '2-Scoping')  
@@ -244,7 +403,6 @@ WITH date_details AS (
             THEN 1												                         
         ELSE 0
       END                                                         AS is_stage_4_plus,
-
 
       CASE 
         WHEN opp_snapshot.stage_name = 'Closed Won' 
@@ -303,20 +461,6 @@ WITH date_details AS (
         ELSE '4. Other' 
       END                                                         AS deal_category,
 
-      CASE 
-        WHEN created_date_detail.fiscal_quarter_name_fy = close_date_detail.fiscal_quarter_name_fy
-          AND opp_snapshot.stage_name IN ('Closed Won')  
-            THEN opp_snapshot.incremental_acv
-        ELSE 0
-      END                                                         AS created_and_won_iacv,
-
-      -- created within quarter
-      CASE
-        WHEN created_date_detail.fiscal_quarter_name_fy = snapshot_date.fiscal_quarter_name_fy
-          THEN opp_snapshot.incremental_acv 
-        ELSE 0 
-      END                                                         AS created_in_quarter_iacv,
-
       -- account owner hierarchies levels
       COALESCE(account_owner.sales_team_level_2,'n/a')            AS account_owner_team_level_2,
       COALESCE(account_owner.sales_team_level_3,'n/a')            AS account_owner_team_level_3,
@@ -361,13 +505,13 @@ WITH date_details AS (
 
     FROM sfdc_opportunity_snapshot_history opp_snapshot
     INNER JOIN date_details close_date_detail
-      ON close_date_detail.date_actual = opp_snapshot.close_date::date
+      ON close_date_detail.date_actual = opp_snapshot.close_date::DATE
     INNER JOIN date_details snapshot_date
-      ON opp_snapshot.date_actual::date = snapshot_date.date_actual
+      ON opp_snapshot.date_actual::DATE = snapshot_date.date_actual
     INNER JOIN sfdc_opportunity_xf    
       ON sfdc_opportunity_xf.opportunity_id = opp_snapshot.opportunity_id
     LEFT JOIN date_details created_date_detail
-      ON created_date_detail.date_actual = opp_snapshot.created_date::date
+      ON created_date_detail.date_actual = opp_snapshot.created_date::DATE
     LEFT JOIN date_details iacv_created_date
       ON iacv_created_date.date_actual = opp_snapshot.iacv_created_date::DATE
     LEFT JOIN sfdc_accounts_xf
@@ -383,7 +527,7 @@ WITH date_details AS (
       ON net_iacv_to_net_arr_ratio.user_segment_stamped = sfdc_opportunity_xf.user_segment_stamped
       AND net_iacv_to_net_arr_ratio.order_type_stamped = sfdc_opportunity_xf.order_type_stamped
      -- remove test account
-    WHERE opp_snapshot.account_id not in ('0014M00001kGcORQA0')
+    WHERE opp_snapshot.account_id NOT IN ('0014M00001kGcORQA0')
       AND opp_snapshot.is_deleted = 0
 )
 

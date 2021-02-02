@@ -208,6 +208,24 @@ tables:
     export_table: 'merge_requests'
     export_table_primary_key: id
     dbt_source_model: true
+  merge_request_metrics:
+    import_db: GITLAB_OPS_DB
+    import_query: >
+      SELECT id
+      , merge_request_id
+      , latest_build_started_at
+      , latest_build_finished_at
+      , first_deployed_to_production_at
+      , merged_at
+      , created_at
+      , updated_at
+      FROM merge_request_metrics
+      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
+        AND '{EXECUTION_DATE}'::timestamp
+    export_schema: 'gitlab_ops_net'
+    export_table: 'merge_request_metrics'
+    export_table_primary_key: id
+    dbt_source_model: true
   projects:
     import_db: GITLAB_OPS_DB
     import_query: >
