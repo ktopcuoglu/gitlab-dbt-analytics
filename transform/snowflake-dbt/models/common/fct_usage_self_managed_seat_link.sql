@@ -1,15 +1,7 @@
 WITH seat_links AS (
 
     SELECT *,
-      DATE_TRUNC('month', report_date)                              AS snapshot_month,
-      IFF(ROW_NUMBER() OVER (
-            PARTITION BY order_subscription_id
-            ORDER BY report_date DESC) = 1,
-          TRUE, FALSE)                                              AS is_last_seat_link_report_per_subscription,
-      IFF(ROW_NUMBER() OVER (
-            PARTITION BY customers_db_order_id
-            ORDER BY report_date DESC) = 1,
-          TRUE, FALSE)                                              AS is_last_seat_link_report_per_order
+      DATE_TRUNC('month', report_date)                              AS snapshot_month
     FROM {{ ref('prep_usage_self_managed_seat_link') }}
     QUALIFY ROW_NUMBER() OVER (
       PARTITION BY
@@ -51,5 +43,5 @@ WITH seat_links AS (
     created_by="@ischweickartDD",
     updated_by="@ischweickartDD",
     created_date="2021-01-11",
-    updated_date="2021-02-01"
+    updated_date="2021-02-02"
 ) }}

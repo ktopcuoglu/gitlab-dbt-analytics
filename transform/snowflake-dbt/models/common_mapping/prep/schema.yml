@@ -423,6 +423,10 @@ models:
         description: Day on which Seat Link usage data is reported. Should always be last day of month for historical months.
         tests:
           - not_null
+      - name: is_last_seat_link_report_per_subscription
+        description: Flags if the row contains the most recent seat link record received for the subscription.
+      - name: is_last_seat_link_report_per_order
+        description: Flags if the row contains the most recent seat link record received for the order.
       - name: is_subscription_data_quality_issue
         description: Flags rows where the `zuora_subscription_id` from `customers_db_orders_source` is not found in `dim_subscription`.
       - name: is_rate_plan_data_quality_issue

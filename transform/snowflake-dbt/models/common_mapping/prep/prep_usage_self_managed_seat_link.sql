@@ -7,7 +7,15 @@ WITH seat_links AS (
       report_date,
       active_user_count,
       license_user_count,
-      max_historical_user_count
+      max_historical_user_count,
+      IFF(ROW_NUMBER() OVER (
+            PARTITION BY order_subscription_id
+            ORDER BY report_date DESC) = 1,
+          TRUE, FALSE)                                                      AS is_last_seat_link_report_per_subscription,
+      IFF(ROW_NUMBER() OVER (
+            PARTITION BY order_id
+            ORDER BY report_date DESC) = 1,
+          TRUE, FALSE)                                                      AS is_last_seat_link_report_per_order
     FROM {{ ref('customers_db_license_seat_links_source') }}
 
 ), customers_orders AS (
@@ -43,6 +51,8 @@ WITH seat_links AS (
       seat_links.license_user_count,
       seat_links.max_historical_user_count                                  AS max_historical_user_count,
       seat_links.report_date,
+      seat_links.is_last_seat_link_report_per_subscription,
+      seat_links.is_last_seat_link_report_per_order,
       IFF(IFNULL(seat_links.order_subscription_id, '') = subscriptions.dim_subscription_id,
           FALSE, TRUE)                                                      AS is_subscription_in_zuora,
       IFNULL(product_details.dim_product_tier_id IS NULL, FALSE)            AS is_rate_plan_in_zuora,
@@ -61,6 +71,6 @@ WITH seat_links AS (
     cte_ref="joined",
     created_by="@ischweickartDD",
     updated_by="@ischweickartDD",
-    created_date="2021-02-01",
-    updated_date="2021-02-01"
+    created_date="2021-02-02",
+    updated_date="2021-02-02"
 ) }}

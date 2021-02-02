@@ -1340,10 +1340,6 @@ models:
         description: Maximum active user count ever reported over the lifetime of the customer's subcription.
         tests:
           - not_null
-      - name: is_last_seat_link_report_per_subscription
-        description: Flags if the row contains the most recent seat link record received for the subscription.
-      - name: is_last_seat_link_report_per_order
-        description: Flags if the row contains the most recent seat link record received for the order.
       - name: snapshot_month
         description: Month in which Seat Link usage data is reported.
         tests:
