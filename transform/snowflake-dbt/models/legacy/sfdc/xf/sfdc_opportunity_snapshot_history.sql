@@ -3,6 +3,11 @@ WITH sfdc_opportunity_snapshots AS (
     SELECT *
     FROM {{ref('sfdc_opportunity_snapshots_base')}}
 
+), net_arr_net_iacv_conversion_factors AS (
+
+    SELECT *
+    FROM {{ref('sheetload_net_arr_net_iacv_conversion_factors_source')}}
+
 ), final AS (
 
     SELECT
@@ -80,6 +85,10 @@ WITH sfdc_opportunity_snapshots AS (
       web_portal_purchase__c         AS is_web_portal_purchase,
       opportunity_term__c            AS opportunity_term,
       arr_net__c                     AS net_arr,
+      CASE
+        WHEN closedate::DATE >= '2018-02-01' THEN COALESCE((net_iacv__c * ratio_net_iacv_to_net_arr), net_iacv__c)
+        ELSE 99999999999999
+      END                            AS net_arr_converted,
       arr_basis__c                   AS arr_basis,
       arr__c                         AS arr,
       amount                         AS amount,
@@ -105,14 +114,16 @@ WITH sfdc_opportunity_snapshots AS (
       fm_why_do_anything_at_all__c   AS cp_why_do_anything_at_all,
       fm_why_gitlab__c               AS cp_why_gitlab,
       fm_why_now__c                  AS cp_why_now,
-    
+
       -- metadata
       convert_timezone('America/Los_Angeles',convert_timezone('UTC',
                CURRENT_TIMESTAMP())) AS _last_dbt_run,
       isdeleted                      AS is_deleted,
       lastactivitydate               AS last_activity_date,
-      recordtypeid                   AS record_type_id  
+      recordtypeid                   AS record_type_id
     FROM sfdc_opportunity_snapshots
+    LEFT JOIN net_arr_net_iacv_conversion_factors
+      ON sfdc_opportunity_snapshots.id = net_arr_net_iacv_conversion_factors.opportunity_id
 
 )
 
