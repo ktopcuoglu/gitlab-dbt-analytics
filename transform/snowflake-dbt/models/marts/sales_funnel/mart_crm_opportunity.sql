@@ -47,8 +47,11 @@ WITH dim_crm_account AS (
 
     SELECT
       fct_crm_opportunity.sales_accepted_date,
+      DATE_TRUNC(month, fct_crm_opportunity.sales_accepted_date)           AS sales_accepted_month,
       fct_crm_opportunity.close_date,
+      DATE_TRUNC(month, fct_crm_opportunity.close_date)                    AS close_month,
       fct_crm_opportunity.created_date,
+      DATE_TRUNC(month, fct_crm_opportunity.created_date)                  AS created_month,
       fct_crm_opportunity.dim_crm_opportunity_id,
       fct_crm_opportunity.is_won,
       fct_crm_opportunity.is_closed,
@@ -105,5 +108,5 @@ WITH dim_crm_account AS (
     created_by="@iweeks",
     updated_by="@iweeks",
     created_date="2020-12-07",
-    updated_date="2021-01-12",
+    updated_date="2021-02-01",
   ) }}

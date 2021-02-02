@@ -45,6 +45,13 @@ WITH sfdc_opportunity_snapshots AS (
       stagename                      AS stage_name,
       revenue_type__c                AS order_type,
 
+      --Stamped User Segment fields
+      {{ sales_hierarchy_sales_segment_cleaning('user_segment_o__c') }}
+                                     AS user_segment_stamped,
+      stamped_user_geo__c            AS user_geo_stamped,
+      stamped_user_region__c         AS user_region_stamped,
+      stamped_user_area__c           AS user_area_stamped,
+      
       -- opportunity information
       acv_2__c                       AS acv,
       IFF(acv_2__c >= 0, 1, 0)       AS closed_deals, -- so that you can exclude closed deals that had negative impact
@@ -105,13 +112,13 @@ WITH sfdc_opportunity_snapshots AS (
       fm_why_do_anything_at_all__c   AS cp_why_do_anything_at_all,
       fm_why_gitlab__c               AS cp_why_gitlab,
       fm_why_now__c                  AS cp_why_now,
-    
+
       -- metadata
       convert_timezone('America/Los_Angeles',convert_timezone('UTC',
                CURRENT_TIMESTAMP())) AS _last_dbt_run,
       isdeleted                      AS is_deleted,
       lastactivitydate               AS last_activity_date,
-      recordtypeid                   AS record_type_id  
+      recordtypeid                   AS record_type_id
     FROM sfdc_opportunity_snapshots
 
 )
