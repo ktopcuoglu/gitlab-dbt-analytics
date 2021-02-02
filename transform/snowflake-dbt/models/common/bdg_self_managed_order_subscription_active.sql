@@ -1,35 +1,44 @@
-WITH product_tier AS (
+{{ config(
+    tags=["product"]
+) }}
+
+WITH namespace AS (
 
     SELECT *
-    FROM common_mapping.prep_product_tier
+    FROM {{ ref('prep_namespace') }}
+
+), product_tier AS (
+
+    SELECT *
+    FROM {{ ref('prep_product_tier') }}
     WHERE product_delivery_type = 'Self-Managed'
 
 ), subscription AS (
 
     SELECT *
-    FROM common_mapping.prep_subscription
+    FROM {{ ref('prep_subscription') }}
     WHERE subscription_status = 'Active'
 
 ), recurring_charge AS (
 
     SELECT *
-    FROM common_mapping.prep_recurring_charge
+    FROM {{ ref('prep_recurring_charge') }}
 
 ), product_detail AS (
 
     SELECT *
-    FROM common.dim_product_detail
+    FROM {{ ref('dim_product_detail') }}
     WHERE product_delivery_type = 'Self-Managed'
 
 ), orders AS (
 
     SELECT *
-    FROM prep.customers.customers_db_orders_source
+    FROM {{ ref('customers_db_orders_source') }}
 
 ), trial_histories AS (
 
     SELECT *
-    FROM prep.customers.customers_db_trial_histories_source
+    FROM {{ ref('customers_db_trial_histories_source') }}
 
 ), active_subscription_list AS (
   
@@ -39,7 +48,7 @@ WITH product_tier AS (
       sm_subscriptions.product_tier_name                          AS product_tier_name_subscription,
       sm_subscriptions.dim_product_tier_id                        AS dim_product_tier_id_subscription,
       sm_subscriptions.product_rate_plan_id                       AS product_rate_plan_id_subscription,
-      saas_subscriptions.is_oss_or_edu_rate_plan                  AS is_oss_or_edu_rate_plan_subscription,
+      sm_subscriptions.is_oss_or_edu_rate_plan                  AS is_oss_or_edu_rate_plan_subscription,
       subscription.dim_subscription_id_original,
       subscription.dim_subscription_id_previous,
       subscription.subscription_name,
