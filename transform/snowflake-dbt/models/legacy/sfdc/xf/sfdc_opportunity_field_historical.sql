@@ -147,8 +147,12 @@ WITH date_spine AS (
       arr_net__c                         AS net_arr,
       CASE
         WHEN closedate::DATE >= '2018-02-01' THEN COALESCE((net_iacv * ratio_net_iacv_to_net_arr), net_iacv)
-        ELSE 99999999999999
+        ELSE NULL
       END                                AS net_arr_converted,
+      CASE
+        WHEN closedate::DATE <= '2021-01-31' THEN net_arr_converted
+        ELSE net_arr
+      END                                AS net_arr_final,
       arr_basis__c                       AS arr_basis,
       arr__c                             AS arr,
       recurring_amount__c                AS recurring_amount,
