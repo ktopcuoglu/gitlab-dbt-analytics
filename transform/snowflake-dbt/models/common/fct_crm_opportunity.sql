@@ -178,7 +178,7 @@ WITH first_contact  AS (
       opportunity_fields.dim_crm_opportunity_id,
       opportunity_fields.merged_crm_opportunity_id,
       opportunity_fields.dim_crm_account_id,
-      crm_account_dimensions.parent_dim_crm_account_id,
+      crm_account_dimensions.dim_parent_crm_account_id,
       first_contact.dim_crm_person_id,
       first_contact.sfdc_contact_id,
 
@@ -230,22 +230,22 @@ WITH first_contact  AS (
       {{ get_keyed_nulls('order_type.dim_order_type_id') }}                                                               AS dim_order_type_id,
       {{ get_keyed_nulls('opportunity_source.dim_opportunity_source_id') }}                                               AS dim_opportunity_source_id,
       {{ get_keyed_nulls('purchase_channel.dim_purchase_channel_id') }}                                                   AS dim_purchase_channel_id,
-      {{ get_keyed_nulls('crm_account_dimensions.parent_dim_sales_segment_id,sales_segment.dim_sales_segment_id') }}      AS parent_dim_sales_segment_id,
-      crm_account_dimensions.parent_dim_geo_region_id,
-      crm_account_dimensions.parent_dim_geo_sub_region_id,
-      crm_account_dimensions.parent_dim_geo_area_id,
-      crm_account_dimensions.parent_dim_sales_territory_id,
-      crm_account_dimensions.parent_dim_industry_id,
-      crm_account_dimensions.parent_dim_location_country_id,
-      crm_account_dimensions.parent_dim_location_region_id,
-      {{ get_keyed_nulls('crm_account_dimensions.account_dim_sales_segment_id,sales_segment.dim_sales_segment_id') }}     AS account_dim_sales_segment_id,
-      crm_account_dimensions.account_dim_geo_region_id,
-      crm_account_dimensions.account_dim_geo_sub_region_id,
-      crm_account_dimensions.account_dim_geo_area_id,
-      crm_account_dimensions.account_dim_sales_territory_id,
-      crm_account_dimensions.account_dim_industry_id,
-      crm_account_dimensions.account_dim_location_country_id,
-      crm_account_dimensions.account_dim_location_region_id,
+      {{ get_keyed_nulls('crm_account_dimensions.dim_parent_sales_segment_id,sales_segment.dim_sales_segment_id') }}      AS dim_parent_sales_segment_id,
+      crm_account_dimensions.dim_parent_geo_region_id,
+      crm_account_dimensions.dim_parent_geo_sub_region_id,
+      crm_account_dimensions.dim_parent_geo_area_id,
+      crm_account_dimensions.dim_parent_sales_territory_id,
+      crm_account_dimensions.dim_parent_industry_id,
+      crm_account_dimensions.dim_parent_location_country_id,
+      crm_account_dimensions.dim_parent_location_region_id,
+      {{ get_keyed_nulls('crm_account_dimensions.dim_account_sales_segment_id,sales_segment.dim_sales_segment_id') }}     AS dim_account_sales_segment_id,
+      crm_account_dimensions.dim_account_geo_region_id,
+      crm_account_dimensions.dim_account_geo_sub_region_id,
+      crm_account_dimensions.dim_account_geo_area_id,
+      crm_account_dimensions.dim_account_sales_territory_id,
+      crm_account_dimensions.dim_account_industry_id,
+      crm_account_dimensions.dim_account_location_country_id,
+      crm_account_dimensions.dim_account_location_region_id,
       {{ get_keyed_nulls('sales_hierarchy_stamped_sales_segment.dim_crm_sales_hierarchy_sales_segment_stamped_id') }}     AS dim_crm_sales_hierarchy_sales_segment_stamped_id,
       {{ get_keyed_nulls('sales_hierarchy_stamped_location_region.dim_crm_sales_hierarchy_location_region_stamped_id') }} AS dim_crm_sales_hierarchy_location_region_stamped_id,
       {{ get_keyed_nulls('sales_hierarchy_stamped_sales_region.dim_crm_sales_hierarchy_sales_region_stamped_id') }}       AS dim_crm_sales_hierarchy_sales_region_stamped_id,
@@ -279,7 +279,7 @@ WITH first_contact  AS (
 
     FROM opportunity_fields
     LEFT JOIN crm_account_dimensions
-      ON opportunity_fields.dim_crm_account_id = crm_account_dimensions.account_dim_crm_account_id
+      ON opportunity_fields.dim_crm_account_id = crm_account_dimensions.dim_account_crm_account_id
     LEFT JOIN first_contact
       ON opportunity_fields.dim_crm_opportunity_id = first_contact.opportunity_id AND first_contact.row_num = 1
     LEFT JOIN opportunity_source
@@ -312,5 +312,5 @@ WITH first_contact  AS (
     created_by="@mcooperDD",
     updated_by="@mcooperDD",
     created_date="2020-11-30",
-    updated_date="2021-01-28"
+    updated_date="2021-02-02"
 ) }}

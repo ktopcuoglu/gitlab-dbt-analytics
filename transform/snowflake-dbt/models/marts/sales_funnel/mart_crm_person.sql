@@ -33,7 +33,7 @@ WITH dim_marketing_channel AS (
       fct_crm_person.is_mql
     FROM fct_crm_person
     LEFT JOIN dim_sales_segment
-      ON fct_crm_person.account_dim_sales_segment_id = dim_sales_segment.dim_sales_segment_id
+      ON fct_crm_person.dim_account_sales_segment_id = dim_sales_segment.dim_sales_segment_id
     LEFT JOIN dim_marketing_channel
       ON fct_crm_person.dim_marketing_channel_id = dim_marketing_channel.dim_marketing_channel_id
 
@@ -44,5 +44,5 @@ WITH dim_marketing_channel AS (
     created_by="@iweeks",
     updated_by="@mcooperDD",
     created_date="2020-12-07",
-    updated_date="2021-01-28",
+    updated_date="2021-02-02",
   ) }}

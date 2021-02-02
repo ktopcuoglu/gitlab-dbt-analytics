@@ -50,28 +50,28 @@ WITH crm_account_dimensions AS (
       {{ get_keyed_nulls('order_type.dim_order_type_id') }}                                                            AS dim_order_type_id,
       {{ get_keyed_nulls('opportunity_source.dim_opportunity_source_id') }}                                            AS dim_opportunity_source_id,
       {{ get_keyed_nulls('purchase_channel.dim_purchase_channel_id') }}                                                AS dim_purchase_channel_id,
-      crm_account_dimensions.parent_dim_crm_account_id,
-      crm_account_dimensions.account_dim_crm_account_id,
-      crm_account_dimensions.parent_dim_sales_segment_id,
-      crm_account_dimensions.parent_dim_geo_region_id,
-      crm_account_dimensions.parent_dim_geo_sub_region_id,
-      crm_account_dimensions.parent_dim_geo_area_id,
-      crm_account_dimensions.parent_dim_sales_territory_id,
-      crm_account_dimensions.parent_dim_industry_id,
-      crm_account_dimensions.parent_dim_location_country_id,
-      crm_account_dimensions.parent_dim_location_region_id,
-      {{ get_keyed_nulls('crm_account_dimensions.account_dim_sales_segment_id,sales_segment.dim_sales_segment_id') }}  AS account_dim_sales_segment_id,
-      crm_account_dimensions.account_dim_geo_region_id,
-      crm_account_dimensions.account_dim_geo_sub_region_id,
-      crm_account_dimensions.account_dim_geo_area_id,
-      crm_account_dimensions.account_dim_sales_territory_id,
-      crm_account_dimensions.account_dim_industry_id,
-      crm_account_dimensions.account_dim_location_country_id,
-      crm_account_dimensions.account_dim_location_region_id
+      crm_account_dimensions.dim_parent_crm_account_id,
+      crm_account_dimensions.dim_account_crm_account_id,
+      crm_account_dimensions.dim_parent_sales_segment_id,
+      crm_account_dimensions.dim_parent_geo_region_id,
+      crm_account_dimensions.dim_parent_geo_sub_region_id,
+      crm_account_dimensions.dim_parent_geo_area_id,
+      crm_account_dimensions.dim_parent_sales_territory_id,
+      crm_account_dimensions.dim_parent_industry_id,
+      crm_account_dimensions.dim_parent_location_country_id,
+      crm_account_dimensions.dim_parent_location_region_id,
+      {{ get_keyed_nulls('crm_account_dimensions.dim_account_sales_segment_id,sales_segment.dim_sales_segment_id') }}  AS dim_account_sales_segment_id,
+      crm_account_dimensions.dim_account_geo_region_id,
+      crm_account_dimensions.dim_account_geo_sub_region_id,
+      crm_account_dimensions.dim_account_geo_area_id,
+      crm_account_dimensions.dim_account_sales_territory_id,
+      crm_account_dimensions.dim_account_industry_id,
+      crm_account_dimensions.dim_account_location_country_id,
+      crm_account_dimensions.dim_account_location_region_id
 
     FROM opportunity_fields
     LEFT JOIN crm_account_dimensions
-      ON opportunity_fields.dim_crm_account_id = crm_account_dimensions.account_dim_crm_account_id
+      ON opportunity_fields.dim_crm_account_id = crm_account_dimensions.dim_account_crm_account_id
     LEFT JOIN opportunity_source
       ON opportunity_fields.sales_qualified_source = opportunity_source.opportunity_source_name
     LEFT JOIN order_type
@@ -88,5 +88,5 @@ WITH crm_account_dimensions AS (
     created_by="@snalamaru",
     updated_by="@smcooperDD",
     created_date="2020-12-17",
-    updated_date="2021-01-28"
+    updated_date="2021-02-02"
 ) }}

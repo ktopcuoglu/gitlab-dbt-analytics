@@ -27,7 +27,7 @@ WITH crm_account AS (
       --ids
       quote.zqu_quote_id                                AS dim_quote_id,
       quote.zqu__account                                AS dim_crm_account_id,
-      crm_account.parent_dim_crm_account_id,
+      crm_account.dim_parent_crm_account_id,
       quote.zqu__zuora_account_id                       AS dim_billing_account_id,
 
       --shared dimension keys
@@ -38,22 +38,22 @@ WITH crm_account AS (
       opportunity_dimensions.dim_order_type_id          AS opp_dim_order_type_id,
       opportunity_dimensions.dim_opportunity_source_id  AS opp_dim_opportunity_source_id,
       opportunity_dimensions.dim_purchase_channel_id    AS opp_dim_purchase_channel_id,
-      crm_account.parent_dim_sales_segment_id,
-      crm_account.parent_dim_geo_region_id,
-      crm_account.parent_dim_geo_sub_region_id,
-      crm_account.parent_dim_geo_area_id,
-      crm_account.parent_dim_sales_territory_id,
-      crm_account.parent_dim_industry_id,
-      crm_account.parent_dim_location_country_id,
-      crm_account.parent_dim_location_region_id,
-      crm_account.account_dim_sales_segment_id,
-      crm_account.account_dim_geo_region_id,
-      crm_account.account_dim_geo_sub_region_id,
-      crm_account.account_dim_geo_area_id,
-      crm_account.account_dim_sales_territory_id,
-      crm_account.account_dim_industry_id,
-      crm_account.account_dim_location_country_id,
-      crm_account.account_dim_location_region_id,
+      crm_account.dim_parent_sales_segment_id,
+      crm_account.dim_parent_geo_region_id,
+      crm_account.dim_parent_geo_sub_region_id,
+      crm_account.dim_parent_geo_area_id,
+      crm_account.dim_parent_sales_territory_id,
+      crm_account.dim_parent_industry_id,
+      crm_account.dim_parent_location_country_id,
+      crm_account.dim_parent_location_region_id,
+      crm_account.dim_account_sales_segment_id,
+      crm_account.dim_account_geo_region_id,
+      crm_account.dim_account_geo_sub_region_id,
+      crm_account.dim_account_geo_area_id,
+      crm_account.dim_account_sales_territory_id,
+      crm_account.dim_account_industry_id,
+      crm_account.dim_account_location_country_id,
+      crm_account.dim_account_location_region_id,
       invoice.invoice_id                                AS dim_invoice_id,
 
       --dates
@@ -67,7 +67,7 @@ WITH crm_account AS (
     LEFT JOIN invoice
       ON quote.invoice_number = invoice.invoice_number
     LEFT JOIN crm_account
-      ON quote.zqu__account = crm_account.account_dim_crm_account_id
+      ON quote.zqu__account = crm_account.dim_account_crm_account_id
 
 )
 
@@ -76,5 +76,5 @@ cte_ref="final_quotes",
 created_by="@mcooperDD",
 updated_by="@mcooperDD",
 created_date="2021-01-11",
-updated_date="2021-01-28"
+updated_date="2021-02-02"
 ) }}

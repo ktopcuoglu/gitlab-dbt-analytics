@@ -50,8 +50,8 @@ WITH sfdc_account AS (
 ), sfdc_account_final AS (
 
     SELECT
-      crm_account_id                                                                                        AS account_dim_crm_account_id,
-      ultimate_parent_account_id                                                                            AS parent_dim_crm_account_id,
+      crm_account_id                                                                                        AS dim_account_crm_account_id,
+      ultimate_parent_account_id                                                                            AS dim_parent_crm_account_id,
       TRIM(SPLIT_PART(tsp_region, '-', 1))                                                                  AS account_tsp_region_clean,
       TRIM(SPLIT_PART(ultimate_parent_tsp_region, '-', 1))                                                  AS parent_tsp_region_clean,
       TRIM(SPLIT_PART(tsp_sub_region, '-', 1))                                                              AS account_tsp_sub_region_clean,
@@ -66,20 +66,20 @@ WITH sfdc_account AS (
       TRIM(SPLIT_PART(ultimate_parent_sales_segment, '-', 1))                                               AS parent_sales_segment_clean,
       TRIM(SPLIT_PART(billing_country, '-', 1))                                                             AS account_billing_country_clean,
       TRIM(SPLIT_PART(ultimate_parent_billing_country, '-', 1))                                             AS parent_billing_country_clean,
-      MAX(account_tsp_region_clean) OVER (PARTITION BY UPPER(TRIM(account_tsp_region_clean)))               AS account_geo_region_name_source,
-      MAX(parent_tsp_region_clean) OVER (PARTITION BY UPPER(TRIM(parent_tsp_region_clean)))                 AS parent_geo_region_name_source,
-      MAX(account_tsp_sub_region_clean) OVER (PARTITION BY UPPER(TRIM(account_tsp_sub_region_clean)))       AS account_geo_sub_region_name_source,
-      MAX(parent_tsp_sub_region_clean) OVER (PARTITION BY UPPER(TRIM(parent_tsp_sub_region_clean)))         AS parent_geo_sub_region_name_source,
-      MAX(account_tsp_area_clean) OVER (PARTITION BY UPPER(TRIM(account_tsp_area_clean)))                   AS account_geo_area_name_source,
-      MAX(parent_tsp_area_clean) OVER (PARTITION BY UPPER(TRIM(parent_tsp_area_clean)))                     AS parent_geo_area_name_source,
-      MAX(account_tsp_territory_clean) OVER (PARTITION BY UPPER(TRIM(account_tsp_territory_clean)))         AS account_sales_territory_name_source,
-      MAX(parent_tsp_territory_clean) OVER (PARTITION BY UPPER(TRIM(parent_tsp_territory_clean)))           AS parent_sales_territory_name_source,
-      MAX(account_df_industry_clean) OVER (PARTITION BY UPPER(TRIM(account_df_industry_clean)))             AS account_industry_name_source,
-      MAX(parent_df_industry_clean) OVER (PARTITION BY UPPER(TRIM(parent_df_industry_clean)))               AS parent_industry_name_source,
-      MAX(account_sales_segment_clean) OVER (PARTITION BY UPPER(TRIM(account_sales_segment_clean)))         AS account_sales_segment_name_source,
-      MAX(parent_sales_segment_clean) OVER (PARTITION BY UPPER(TRIM(parent_sales_segment_clean)))           AS parent_sales_segment_name_source,
-      MAX(account_billing_country_clean) OVER (PARTITION BY UPPER(TRIM(account_billing_country_clean)))     AS account_location_country_name_source,
-      MAX(parent_billing_country_clean) OVER (PARTITION BY UPPER(TRIM(parent_billing_country_clean)))       AS parent_location_country_name_source
+      MAX(account_tsp_region_clean) OVER (PARTITION BY UPPER(TRIM(account_tsp_region_clean)))               AS dim_account_geo_region_name_source,
+      MAX(parent_tsp_region_clean) OVER (PARTITION BY UPPER(TRIM(parent_tsp_region_clean)))                 AS dim_parent_geo_region_name_source,
+      MAX(account_tsp_sub_region_clean) OVER (PARTITION BY UPPER(TRIM(account_tsp_sub_region_clean)))       AS dim_account_geo_sub_region_name_source,
+      MAX(parent_tsp_sub_region_clean) OVER (PARTITION BY UPPER(TRIM(parent_tsp_sub_region_clean)))         AS dim_parent_geo_sub_region_name_source,
+      MAX(account_tsp_area_clean) OVER (PARTITION BY UPPER(TRIM(account_tsp_area_clean)))                   AS dim_account_geo_area_name_source,
+      MAX(parent_tsp_area_clean) OVER (PARTITION BY UPPER(TRIM(parent_tsp_area_clean)))                     AS dim_parent_geo_area_name_source,
+      MAX(account_tsp_territory_clean) OVER (PARTITION BY UPPER(TRIM(account_tsp_territory_clean)))         AS dim_account_sales_territory_name_source,
+      MAX(parent_tsp_territory_clean) OVER (PARTITION BY UPPER(TRIM(parent_tsp_territory_clean)))           AS dim_parent_sales_territory_name_source,
+      MAX(account_df_industry_clean) OVER (PARTITION BY UPPER(TRIM(account_df_industry_clean)))             AS dim_account_industry_name_source,
+      MAX(parent_df_industry_clean) OVER (PARTITION BY UPPER(TRIM(parent_df_industry_clean)))               AS dim_parent_industry_name_source,
+      MAX(account_sales_segment_clean) OVER (PARTITION BY UPPER(TRIM(account_sales_segment_clean)))         AS dim_account_sales_segment_name_source,
+      MAX(parent_sales_segment_clean) OVER (PARTITION BY UPPER(TRIM(parent_sales_segment_clean)))           AS dim_parent_sales_segment_name_source,
+      MAX(account_billing_country_clean) OVER (PARTITION BY UPPER(TRIM(account_billing_country_clean)))     AS dim_account_location_country_name_source,
+      MAX(parent_billing_country_clean) OVER (PARTITION BY UPPER(TRIM(parent_billing_country_clean)))       AS dim_parent_location_country_name_source
 
     FROM sfdc_account_with_ultimate_parent
 

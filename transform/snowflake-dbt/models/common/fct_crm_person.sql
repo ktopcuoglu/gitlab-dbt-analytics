@@ -137,23 +137,23 @@ WITH account_dims_mapping AS (
      -- common dimension keys
       crm_person.dim_crm_sales_rep_id                                                                                     AS dim_crm_sales_rep_id,
       crm_person.dim_crm_account_id                                                                                       AS dim_crm_account_id,
-      account_dims_mapping.parent_dim_crm_account_id,
-      COALESCE(account_dims_mapping.account_dim_sales_segment_id, sales_segment.dim_sales_segment_id)                     AS account_dim_sales_segment_id,
-      COALESCE(account_dims_mapping.account_dim_geo_region_id, geo_region.dim_geo_region_id)                              AS account_dim_geo_region_id,
-      COALESCE(account_dims_mapping.account_dim_geo_sub_region_id, geo_sub_region.dim_geo_sub_region_id)                  AS account_dim_geo_sub_region_id,
-      account_dims_mapping.account_dim_geo_area_id                                                                        AS account_dim_geo_area_id,
-      COALESCE(account_dims_mapping.account_dim_sales_territory_id, sales_territory.dim_sales_territory_id)               AS account_dim_sales_territory_id,
-      COALESCE(account_dims_mapping.account_dim_industry_id, industry.dim_industry_id)                                    AS account_dim_industry_id,
-      account_dims_mapping.account_dim_location_country_id,
-      account_dims_mapping.account_dim_location_region_id,
-      account_dims_mapping.parent_dim_sales_segment_id,
-      account_dims_mapping.parent_dim_geo_region_id,
-      account_dims_mapping.parent_dim_geo_sub_region_id,
-      account_dims_mapping.parent_dim_geo_area_id,
-      account_dims_mapping.parent_dim_sales_territory_id,
-      account_dims_mapping.parent_dim_industry_id,
-      account_dims_mapping.parent_dim_location_country_id,
-      account_dims_mapping.parent_dim_location_region_id,
+      account_dims_mapping.dim_parent_crm_account_id,
+      COALESCE(account_dims_mapping.dim_account_sales_segment_id, sales_segment.dim_sales_segment_id)                     AS dim_account_sales_segment_id,
+      COALESCE(account_dims_mapping.dim_account_geo_region_id, geo_region.dim_geo_region_id)                              AS dim_account_geo_region_id,
+      COALESCE(account_dims_mapping.dim_account_geo_sub_region_id, geo_sub_region.dim_geo_sub_region_id)                  AS dim_account_geo_sub_region_id,
+      account_dims_mapping.dim_account_geo_area_id                                                                        AS dim_account_geo_area_id,
+      COALESCE(account_dims_mapping.dim_account_sales_territory_id, sales_territory.dim_sales_territory_id)               AS dim_account_sales_territory_id,
+      COALESCE(account_dims_mapping.dim_account_industry_id, industry.dim_industry_id)                                    AS dim_account_industry_id,
+      account_dims_mapping.dim_account_location_country_id,
+      account_dims_mapping.dim_account_location_region_id,
+      account_dims_mapping.dim_parent_sales_segment_id,
+      account_dims_mapping.dim_parent_geo_region_id,
+      account_dims_mapping.dim_parent_geo_sub_region_id,
+      account_dims_mapping.dim_parent_geo_area_id,
+      account_dims_mapping.dim_parent_sales_territory_id,
+      account_dims_mapping.dim_parent_industry_id,
+      account_dims_mapping.dim_parent_location_country_id,
+      account_dims_mapping.dim_parent_location_region_id,
       {{ get_keyed_nulls('marketing_channel.dim_marketing_channel_id') }}                                                 AS dim_marketing_channel_id,
 
      -- important person dates
@@ -197,7 +197,7 @@ WITH account_dims_mapping AS (
     LEFT JOIN mqls
       ON crm_person.dim_crm_person_id = mqls.crm_person_id
     LEFT JOIN account_dims_mapping
-      ON crm_person.dim_crm_account_id = account_dims_mapping.account_dim_crm_account_id
+      ON crm_person.dim_crm_account_id = account_dims_mapping.dim_account_crm_account_id
     LEFT JOIN sales_segment
       ON sfdc_leads.sales_segmentation = sales_segment.sales_segment_name
     LEFT JOIN geo_region
@@ -220,5 +220,5 @@ WITH account_dims_mapping AS (
     created_by="@mcooperDD",
     updated_by="@mcooperDD",
     created_date="2020-12-01",
-    updated_date="2021-01-28"
+    updated_date="2021-02-02"
 ) }}
