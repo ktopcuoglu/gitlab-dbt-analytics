@@ -3,6 +3,11 @@ WITH sfdc_opportunity_snapshots AS (
     SELECT *
     FROM {{ref('sfdc_opportunity_snapshots_base')}}
 
+), net_arr_net_iacv_conversion_factors AS (
+
+    SELECT *
+    FROM {{ref('sheetload_net_arr_net_iacv_conversion_factors_source')}}
+
 ), final AS (
 
     SELECT
@@ -87,6 +92,14 @@ WITH sfdc_opportunity_snapshots AS (
       web_portal_purchase__c         AS is_web_portal_purchase,
       opportunity_term__c            AS opportunity_term,
       arr_net__c                     AS net_arr,
+      CASE
+        WHEN closedate::DATE >= '2018-02-01' THEN COALESCE((net_iacv__c * ratio_net_iacv_to_net_arr), net_iacv__c)
+        ELSE NULL
+      END                            AS net_arr_converted,
+      CASE
+        WHEN closedate::DATE <= '2021-01-31' THEN net_arr_converted
+        ELSE net_arr
+      END                            AS net_arr_final,
       arr_basis__c                   AS arr_basis,
       arr__c                         AS arr,
       amount                         AS amount,
@@ -120,6 +133,8 @@ WITH sfdc_opportunity_snapshots AS (
       lastactivitydate               AS last_activity_date,
       recordtypeid                   AS record_type_id
     FROM sfdc_opportunity_snapshots
+    LEFT JOIN net_arr_net_iacv_conversion_factors
+      ON sfdc_opportunity_snapshots.id = net_arr_net_iacv_conversion_factors.opportunity_id
 
 )
 
