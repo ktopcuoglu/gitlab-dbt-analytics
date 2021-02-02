@@ -87,7 +87,7 @@ WITH sfdc_opportunity_snapshots AS (
       arr_net__c                     AS net_arr,
       CASE
         WHEN closedate::DATE >= '2018-02-01' THEN COALESCE((net_iacv__c * ratio_net_iacv_to_net_arr), net_iacv__c)
-        ELSE 99999999999999
+        ELSE NULL
       END                            AS net_arr_converted,
       arr_basis__c                   AS arr_basis,
       arr__c                         AS arr,
