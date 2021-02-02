@@ -1,5 +1,5 @@
-{% set lines_to_repeat = 
-    "date_actual,
+{% set lines_to_repeat %}
+     date_actual,
      SUM(weighted_deviated_from_comp_calc) AS sum_weighted_deviated_from_comp_calc,
      COUNT(DISTINCT(employee_number))      AS current_employees,
      sum_weighted_deviated_from_comp_calc/
@@ -7,8 +7,7 @@
     FROM joined
     WHERE date_actual < CURRENT_DATE
     GROUP BY 1,2,3,4
-    "%}
-
+{% endset %}
 
 WITH employee_directory_intermediate AS (
 
