@@ -11,8 +11,11 @@ WITH source AS (
       company::VARCHAR                             AS company,
       users_count::NUMBER                          AS users_count,
       email::VARCHAR                               AS email,
-      license_md5::VARCHAR                         AS license_md5,
-      expires_at::TIMESTAMP                        AS license_expires_at,
+      md5(license_file::VARCHAR)                   AS license_md5,
+      CASE 
+        WHEN license_expires_at IS NULL                               THEN NULL::TIMESTAMP
+        WHEN SPLIT_PART(license_expires_at, '-', 1)::NUMBER > 9999    THEN '9999-12-30 00:00:00.000 +00'::TIMESTAMP
+        ELSE license_expires_at::TIMESTAMP END
       plan_name::VARCHAR                           AS plan_name,
       starts_at::TIMESTAMP                         AS starts_at,
       NULLIF(zuora_subscription_name, '')::VARCHAR AS zuora_subscription_name,
