@@ -2,12 +2,7 @@
     tags=["product"]
 ) }}
 
-WITH namespace AS (
-
-    SELECT *
-    FROM {{ ref('prep_namespace') }}
-
-), product_tier AS (
+WITH product_tier AS (
 
     SELECT *
     FROM {{ ref('prep_product_tier') }}
@@ -34,11 +29,6 @@ WITH namespace AS (
 
     SELECT *
     FROM {{ ref('customers_db_orders_source') }}
-
-), trial_histories AS (
-
-    SELECT *
-    FROM {{ ref('customers_db_trial_histories_source') }}
 
 ), active_subscription_list AS (
   
@@ -81,7 +71,6 @@ WITH namespace AS (
       product_tier_name,
       product_delivery_type
     FROM product_detail
-    WHERE product_delivery_type = 'Self-Managed'
   
 ), trial_tier AS ( 
   
@@ -155,5 +144,10 @@ WITH namespace AS (
               
 )
 
-SELECT * 
-FROM final 
+{{ dbt_audit(
+    cte_ref="final",
+    created_by="@ischweickartDD",
+    updated_by="@ischweickartDD",
+    created_date="2021-02-02",
+    updated_date="2021-02-02"
+) }}
