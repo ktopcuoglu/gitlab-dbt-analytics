@@ -18,6 +18,7 @@ WITH product_tier AS (
 
     SELECT *
     FROM {{ ref('prep_recurring_charge') }}
+    WHERE dim_date_id = TO_NUMBER(REPLACE(TO_CHAR(DATE_TRUNC('month', CURRENT_DATE)), '-', '')) --first day of current month date id
 
 ), product_detail AS (
 
@@ -30,15 +31,30 @@ WITH product_tier AS (
     SELECT *
     FROM {{ ref('customers_db_orders_source') }}
 
+), current_recurring AS (
+
+    --find only Self-Managed recurring charge subscriptions.
+    SELECT DISTINCT
+      recurring_charge.dim_subscription_id,
+      product_detail.product_tier_name,
+      product_detail.dim_product_tier_id,
+      product_detail.product_rate_plan_id,
+      product_detail.is_oss_or_edu_rate_plan
+    FROM recurring_charge
+    --new prep table will be required AND new key in prep_recurring_charge
+    INNER JOIN product_detail
+      ON recurring_charge.dim_product_detail_id = product_detail.dim_product_detail_id
+    WHERE LOWER(product_detail.product_name) NOT LIKE '%true%'
+
 ), active_subscription_list AS (
   
     --Active Self-Managed Subscriptions, waiting on prep_recurring_revenue
     SELECT
       subscription.dim_subscription_id,  
-      sm_subscriptions.product_tier_name                          AS product_tier_name_subscription,
-      sm_subscriptions.dim_product_tier_id                        AS dim_product_tier_id_subscription,
-      sm_subscriptions.product_rate_plan_id                       AS product_rate_plan_id_subscription,
-      sm_subscriptions.is_oss_or_edu_rate_plan                  AS is_oss_or_edu_rate_plan_subscription,
+      current_recurring.product_tier_name                           AS product_tier_name_subscription,
+      current_recurring.dim_product_tier_id                         AS dim_product_tier_id_subscription,
+      current_recurring.product_rate_plan_id                        AS product_rate_plan_id_subscription,
+      current_recurring.is_oss_or_edu_rate_plan                     AS is_oss_or_edu_rate_plan_subscription,
       subscription.dim_subscription_id_original,
       subscription.dim_subscription_id_previous,
       subscription.subscription_name,
@@ -46,22 +62,8 @@ WITH product_tier AS (
       subscription.dim_crm_account_id,
       COUNT(*) OVER (PARTITION BY subscription.dim_subscription_id) AS count_of_tiers_per_subscription
     FROM subscription
-    JOIN (
-          --find only Self-Managed recurring charge subscriptions.
-          SELECT DISTINCT
-            recurring_charge.dim_subscription_id,
-            product_detail.product_tier_name,
-            product_detail.dim_product_tier_id,
-            product_rate_plan_id,
-            product_detail.is_oss_or_edu_rate_plan
-          FROM recurring_charge
-          --new prep table will be required AND new key in prep_recurring_charge
-          JOIN product_detail
-            ON recurring_charge.dim_product_detail_id = product_detail.dim_product_detail_id
-          WHERE recurring_charge.dim_date_id = TO_NUMBER(REPLACE(TO_CHAR(DATE_TRUNC('month', CURRENT_DATE)), '-', '')) --first day of current month --get Date ID
-            AND LOWER(product_detail.product_name) NOT LIKE '%true%'
-         ) sm_subscriptions
-      ON subscription.dim_subscription_id = sm_subscriptions.dim_subscription_id
+    INNER JOIN current_recurring 
+      ON subscription.dim_subscription_id = current_recurring.dim_subscription_id
   
 ), product_rate_plan AS (
   
@@ -102,7 +104,7 @@ WITH product_tier AS (
       orders.order_end_date,
       orders.order_is_trial
     FROM orders
-    JOIN product_rate_plan
+    INNER JOIN product_rate_plan
       ON orders.product_rate_plan_id = product_rate_plan.product_rate_plan_id
     LEFT JOIN trial_tier 
       ON orders.order_is_trial = TRUE
