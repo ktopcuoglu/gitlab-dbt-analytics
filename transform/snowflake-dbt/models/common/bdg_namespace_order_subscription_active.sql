@@ -17,7 +17,7 @@ WITH namespace AS (
 
     SELECT *
     FROM {{ ref('prep_subscription') }}
-    WHERE subscription_status = 'Active'
+    WHERE subscription_end_date >= CURRENT_DATE
 
 ), recurring_charge AS (
 
@@ -172,6 +172,7 @@ WITH namespace AS (
       active_orders_list.order_end_date,
       active_orders_list.order_is_trial,
       active_orders_list.product_rate_plan_id_order,
+      active_subscription_list.subscription_name,
       active_subscription_list.product_tier_name_subscription,
       active_subscription_list.dim_product_tier_id_subscription,
       active_subscription_list.dim_subscription_id_original,
