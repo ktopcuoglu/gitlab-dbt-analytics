@@ -2924,6 +2924,17 @@ users:
         can_login: yes
         member_of: 
             - ewegscheider
+        privileges:
+            databases:
+                read:
+                    - prep
+            schemas:
+                read:
+                    - prep.sensitive
+            tables:
+                read:
+                    - prep.sensitive.bamboohr_id_employee_number_mapping
+
 
     - fivetran:
         can_login: yes
