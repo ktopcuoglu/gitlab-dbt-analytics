@@ -258,12 +258,7 @@ clone_repo_sha_cmd = f"""
     mkdir analytics &&
     cd analytics &&
     git init &&
-        if [[ -z "$GIT_DATA_TESTS_PRIVATE_KEY" ]]; then
-        export REPO="{HTTP_REPO}";
-        else
-        export REPO="{SSH_REPO}";
-    fi &&
-    git remote add origin $REPO &&
+    git remote add origin {SSH_REPO} &&
     echo "Fetching commit $GIT_COMMIT" &&
     git fetch origin --quiet &&
     git checkout $GIT_COMMIT"""
