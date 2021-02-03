@@ -94,13 +94,6 @@ models:
   +copy_grants: true # Maintain any existing Permifrost grants
 
   # ------------------
-  # GitLab Data Test https://gitlab.com/gitlab-data/data-tests
-  # ------------------
-  data_tests:
-    docs:
-      show: false
-
-  # ------------------
   # Snowplow Package https://hub.getdbt.com/fishtown-analytics/snowplow/latest/
   # ------------------
   snowplow:
