@@ -19,7 +19,7 @@ WITH category_marketing_security_merge_requests AS (
       merge_request_state,
 
       -- Security
-      IFF(LOWER(merge_request_path) LIKE '%/sites/marketing/source/security/%',1,0)      AS path_count_security,    
+      IFF(LOWER(merge_request_path) LIKE '%sites/marketing/source/security/%',1,0)      AS path_count_security,    
                 
       -- Metadata 
       merge_request_created_at,
