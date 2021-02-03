@@ -1,33 +1,28 @@
 WITH sfdc_users AS (
 
     SELECT *
-    FROM {{ ref('sfdc_users_source')}}
-
-), sfdc_user_roles AS (
-
-    SELECT *
-    FROM {{ ref('sfdc_user_roles_source')}}
+    FROM {{ ref('prep_crm_sales_representative')}}
 
 ), final_users AS (
 
     SELECT
-      sfdc_users.user_id              AS dim_crm_sales_rep_id,
-      sfdc_users.name                 AS rep_name,
-      sfdc_users.title,
-      sfdc_users.department,
-      sfdc_users.team,
-      sfdc_users.manager_id,
-      sfdc_users.is_active,
-      sfdc_users.start_date,
-      sfdc_users.user_role_id,
-      sfdc_user_roles.name            AS user_role_name,
-      sfdc_users.user_segment,
-      sfdc_users.user_geo,
-      sfdc_users.user_region,
-      sfdc_users.user_area
+
+      dim_crm_sales_rep_id,
+      rep_name,
+      title,
+      department,
+      team,
+      manager_id,
+      is_active,
+      start_date,
+      user_role_id,
+      user_role_name,
+      sales_segment_name_live,
+      location_region_name_live,
+      sales_region_name_live,
+      sales_area_name_live
+
     FROM sfdc_users
-    LEFT JOIN sfdc_user_roles
-      ON sfdc_users.user_role_id = sfdc_user_roles.id
 
 )
 

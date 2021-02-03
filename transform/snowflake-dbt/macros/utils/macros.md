@@ -58,6 +58,26 @@ This is the GitLab overwrite for the dbt internal macro. See our [dbt guide](htt
 This creates a conformed date_id for use in with the date dimension in common. This macro should always be used when the output for a column is meant to join with date_id in the date dimension. This macro does not include an alias so an alias must always be applied. 
 {% enddocs %}
 
+{% docs get_keyed_nulls %}
+
+This macro generates a key for facts with missing dimensions so when the fact table is joined to the dimension it joins to a record that says it's unknown as in
+
+```sql
+SELECT * 
+FROM DIM_GEO_AREA 
+WHERE DIM_GEO_AREA_ID = MD5(-1);
+```
+
+which has:
+
+```
+***************************[ 1 ]***************************
+DIM_GEO_AREA_ID    | 6bb61e3b7bce0931da574d19d1d82c88
+GEO_AREA_NAME      | Missing geo_area_name
+```
+
+Generally this should be used when creating and keying on new dimensions that might not be fully representing in the referencing tables
+{% enddocs %}
 
 {% docs monthly_change %}
 This macro calculates differences for each consecutive usage ping by uuid.
@@ -102,6 +122,62 @@ This macro takes a schema prefix and a table name and does a UNION ALL on all ta
 
 {% docs schema_union_limit %}
 This macro takes a schema prefix, a table name, a column name, and an integer representing days. It returns a view that is limited to the last 30 days based on the column name. Note that this also calls schema union all which can be a heavy call.
+{% enddocs %}
+
+{% docs simple_cte %}
+Used to simplify CTE imports in a model.
+
+A large portion of import statements in a SQL model are simple `SELECT * FROM table`. Writing pure SQL is verbose and this macro aims to simplify the imports.
+
+The macro accepts once argument which is a list of tuples where each tuple has the alias name and the table reference.
+
+Below is an example and the expected output:
+
+```sql
+{% raw %}
+{{ simple_cte([
+    ('map_merged_crm_accounts','map_merged_crm_accounts'),
+    ('zuora_account','zuora_account_source'),
+    ('zuora_contact','zuora_contact_source')
+]) }}
+
+, excluded_accounts AS (
+
+    SELECT DISTINCT
+      account_id
+    FROM {{ref('zuora_excluded_accounts')}}
+
+)
+{% endraw %}
+```
+
+```sql
+WITH map_merged_crm_accounts AS (
+
+    SELECT * 
+    FROM "PROD".common.map_merged_crm_accounts
+
+), zuora_account AS (
+
+    SELECT * 
+    FROM "PREP".zuora.zuora_account_source
+
+), zuora_contact AS (
+
+    SELECT * 
+    FROM "PREP".zuora.zuora_contact_source
+
+)
+
+, excluded_accounts AS (
+
+    SELECT DISTINCT
+      account_id
+    FROM "PROD".legacy.zuora_excluded_accounts
+
+)
+```
+
 {% enddocs %}
 
 {% docs generate_single_field_dimension %}

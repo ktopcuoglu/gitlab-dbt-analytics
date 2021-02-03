@@ -97,3 +97,6 @@ macros:
       - name: previous_arr
         type: number
         description: ARR in the prior month, quarter, or year time period.
+      - name: row_number
+        type: number
+        description: Row number used for identifying the first month of ARR.

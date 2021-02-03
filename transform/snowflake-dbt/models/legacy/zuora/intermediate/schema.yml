@@ -64,7 +64,7 @@ models:
             description: Product category is based on the rate plan name.
             tests:
               - accepted_values:
-                      values: ['GitHost', 'Other', 'Gold', 'Basic', 'Bronze', 'Premium', 'Starter', 'Ultimate', 'Support', 'Plus', 'Silver', 'Standard', 'Trueup']
+                      values: ['GitHost', 'Other', 'SaaS - Ultimate', 'Basic', 'SaaS - Bronze', 'Self-Managed - Premium', 'Self-Managed - Starter', 'Self-Managed - Ultimate', 'Support', 'Plus', 'SaaS - Premium', 'Standard', 'Trueup']
     - name: zuora_rate_plan_charge
       description: Base model for Zuora Rate Plan Charges
       columns:

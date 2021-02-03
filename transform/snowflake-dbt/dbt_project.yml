@@ -56,7 +56,7 @@ seeds:
     gitlab_release_schedule:
       +column_types:
         major_minor_version: varchar
-  
+
   data_tests:
     +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
     +schema: tdf
@@ -91,6 +91,7 @@ vars:
 models:
   +database: "{{ env_var('SNOWFLAKE_PROD_DATABASE') }}" # PROD
   +schema: legacy  # Top level override since profiles defaults to PREP
+  +copy_grants: true # Maintain any existing Permifrost grants
 
   # ------------------
   # Snowplow Package https://hub.getdbt.com/fishtown-analytics/snowplow/latest/
@@ -116,7 +117,7 @@ models:
     +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
     +schema: datasiren
     +tags: ["datasiren"]
-    
+
   # ==================
   # GitLab Models
   # ==================
@@ -178,7 +179,7 @@ models:
       gitlab_dotcom:
         +materialized: table
         +schema: gitlab_dotcom
-      
+
       gitlab_ops:
         +materialized: table
         +schema: gitlab_ops
@@ -257,6 +258,10 @@ models:
     common:
       +materialized: table
       +schema: common
+      sensitive:
+        +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
+        +schema: sensitive
+        secure: true
 
     common_mapping:
       +materialized: table
@@ -273,7 +278,7 @@ models:
           +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
           +schema: sensitive
           secure: true
-      
+
       datasiren:
         +schema: workspace_data
         +materialized: view
@@ -295,7 +300,7 @@ models:
           +schema: sensitive
         source_view:
           +materialized: view
-        staging: 
+        staging:
           +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
           +schema: preparation
 
@@ -337,20 +342,28 @@ models:
       trusted_data_framework:
         +tags: ["tdf"]
 
+    prep:
+        +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
+        +materialized: table
+        +schema: preparation
+
     # ------------------
     # Workspaces
     # ------------------
     workspaces:
       +tags: ["workspace"]
-      
+
       workspace_data:
         +schema: workspace_data
-        
+
         dbt:
           +tags: ["dbt"]
 
       workspace_marketing:
         +schema: workspace_marketing
+      
+      workspace_sales:
+        +schema: workspace_sales
 
     # ------------------
     # Marts

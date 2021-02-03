@@ -1,6 +1,13 @@
 version: 2
 
 models:
+  - name: datasiren_canary_sensor
+  - name: datasiren_prod_boneyard_email_value_sensor
+  - name: datasiren_prod_boneyard_ip_address_sensor
+  - name: datasiren_prod_common_email_value_sensor
+  - name: datasiren_prod_common_ip_address_sensor
+  - name: datasiren_prod_common_mapping_email_value_sensor
+  - name: datasiren_prod_common_mapping_ip_address_sensor
+  - name: datasiren_prod_legacy_email_value_sensor
+  - name: datasiren_prod_legacy_ip_address_sensor
   - name: datasiren_source_db_social_security_number_sensor
-  - name: datasiren_transform_db_email_column_name_sensor
-  - name: datasiren_transform_db_email_value_sensor

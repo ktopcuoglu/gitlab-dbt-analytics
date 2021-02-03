@@ -17,10 +17,10 @@ WITH dim_billing_account AS (
   SELECT *
   FROM {{ ref('dim_date') }}
 
-), dim_product_details AS (
+), dim_product_detail AS (
 
   SELECT *
-  FROM {{ ref('dim_product_details') }}
+  FROM {{ ref('dim_product_detail') }}
 
 ), dim_subscription AS (
 
@@ -36,10 +36,10 @@ WITH dim_billing_account AS (
 
 SELECT
   --primary_key
-  fct_mrr.mrr_id AS primary_key,
+  fct_mrr.mrr_id                                                                        AS primary_key,
 
   --date info
-  dim_date.date_actual AS arr_month,
+  dim_date.date_actual                                                                  AS arr_month,
   IFF(is_first_day_of_last_month_of_fiscal_quarter, fiscal_quarter_name_fy, NULL)       AS fiscal_quarter_name_fy,
   IFF(is_first_day_of_last_month_of_fiscal_year, fiscal_year, NULL)                     AS fiscal_year,
   dim_subscription.subscription_start_month,
@@ -59,6 +59,9 @@ SELECT
   dim_crm_account.ultimate_parent_industry,
   dim_crm_account.ultimate_parent_account_owner_team,
   dim_crm_account.ultimate_parent_territory,
+  dim_crm_account.health_score,
+  dim_crm_account.health_score_color,
+  dim_crm_account.health_number,
 
   --subscription info
   dim_subscription.subscription_name,
@@ -66,10 +69,10 @@ SELECT
   dim_subscription.subscription_sales_type,
 
   --product info
-  dim_product_details.product_category,
-  dim_product_details.delivery,
-  dim_product_details.service_type,
-  dim_product_details.product_rate_plan_name                            AS rate_plan_name,
+  dim_product_detail.product_tier_name                                                   AS product_category,
+  dim_product_detail.product_delivery_type                                               AS delivery,
+  dim_product_detail.service_type,
+  dim_product_detail.product_rate_plan_name                                              AS rate_plan_name,
   --  not needed as all charges in fct_mrr are recurring
   --  fct_mrr.charge_type,
   fct_mrr.unit_of_measure,
@@ -79,12 +82,12 @@ SELECT
   fct_mrr.quantity
   FROM fct_mrr
   INNER JOIN dim_subscription
-    ON dim_subscription.dim_subscription_id = fct_mrr.subscription_id
-  INNER JOIN dim_product_details
-    ON dim_product_details.product_details_id = fct_mrr.product_details_id
+    ON dim_subscription.dim_subscription_id = fct_mrr.dim_subscription_id
+  INNER JOIN dim_product_detail
+    ON dim_product_detail.dim_product_detail_id = fct_mrr.dim_product_detail_id
   INNER JOIN dim_billing_account
-    ON dim_billing_account.dim_billing_account_id = fct_mrr.billing_account_id
+    ON dim_billing_account.dim_billing_account_id = fct_mrr.dim_billing_account_id
   INNER JOIN dim_date
-    ON dim_date.date_id = fct_mrr.date_id
+    ON dim_date.date_id = fct_mrr.dim_date_id
   LEFT JOIN dim_crm_account
     ON dim_billing_account.dim_crm_account_id = dim_crm_account.crm_account_id
