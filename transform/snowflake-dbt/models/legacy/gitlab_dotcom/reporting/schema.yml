@@ -1,0 +1,18 @@
+version: 2
+
+models:
+  - name: rpt_gitlab_employees_merge_request_metrics
+    description: This model is an aggregated dataset that shows the number of merge requests teams make to projects as defined in is_project_part_of_product and projects_part_of_product_ops, as well as the average number of merge requests, and days taken off.
+    columns:
+      - name: month_date
+      - name: employee_id
+      - name: gitlab_dotcom_user_id
+      - name: division
+      - name: department
+      - name: job_role
+      - name: jobtitle_speciality
+      - name: reports_to
+      - name: total_days
+      - name: total_merged
+      - name: total_gitlab_dotcom_merge_requests
+      - name: total_gitlab_ops_merge_requests

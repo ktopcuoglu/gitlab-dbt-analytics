@@ -1,8 +1,9 @@
 WITH gitlab_dotcom_merge_requests AS (
 
-    SELECT * 
-    FROM {{ref('gitlab_dotcom_merge_requests_xf')}} 
+    SELECT *
+    FROM {{ref('gitlab_dotcom_merge_requests_xf')}}
     WHERE is_part_of_product = TRUE
+
 
 ), gitlab_ops_merge_requests AS (
 
@@ -20,25 +21,25 @@ WITH gitlab_dotcom_merge_requests AS (
     SELECT *
     FROM {{ref('employee_directory_analysis')}} 
 
-) joined AS (
+), joined AS (
 
     SELECT 
-      'gitlab_dotcom'                           AS data_source,
+      'gitlab_dotcom'                           AS merge_request_data_source,
       gitlab_dotcom_merge_requests.*,
-      mapped_employee.bamboo_hr_employee_id,
+      mapped_employee.bamboohr_employee_id,
       employee_directory.division,
       employee_directory.department
     FROM gitlab_dotcom_merge_requests
-    LEFT JOIN mapped_employee
+    INNER JOIN mapped_employee
       ON gitlab_dotcom_merge_requests.author_id = mapped_employee.gitlab_dotcom_user_id
     LEFT JOIN employee_directory
-      ON mapped_employee.bamboo_hr_employee_id = employee_directory.employee_id
+      ON mapped_employee.bamboohr_employee_id = employee_directory.employee_id
       AND DATE_TRUNC(day, gitlab_dotcom_merge_requests.merged_at) = employee_directory.date_actual
 
-     UNION ALL
+    UNION ALL
 
     SELECT 
-      'gitlab_ops'                           AS data_source,
+      'gitlab_ops'                           AS merge_request_data_source,
       gitlab_dotcom_merge_requests.*,
       mapped_employee.bamboo_hr_employee_id,
       employee_directory.division,
