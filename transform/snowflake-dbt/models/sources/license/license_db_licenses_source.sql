@@ -11,7 +11,7 @@ WITH source AS (
       company::VARCHAR                             AS company,
       users_count::NUMBER                          AS users_count,
       email::VARCHAR                               AS email,
-      md5(license_file::VARCHAR)                   AS license_md5,
+      license_md5                                  AS license_md5,
       CASE 
         WHEN expires_at IS NULL                               THEN NULL::TIMESTAMP
         WHEN SPLIT_PART(expires_at, '-', 1)::NUMBER > 9999    THEN '9999-12-30 00:00:00.000 +00'::TIMESTAMP
