@@ -107,7 +107,6 @@ dbt_commit_hash_setter = KubernetesPodOperator(
     image=DBT_IMAGE,
     task_id="dbt-commit-hash-setter",
     name="dbt-commit-hash-setter",
-    secrets=task_secrets,
     env_vars=pod_env_vars,
     arguments=[
         f"""{clone_repo_cmd} &&

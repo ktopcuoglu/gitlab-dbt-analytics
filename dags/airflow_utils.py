@@ -7,7 +7,8 @@ from typing import List
 from airflow.contrib.kubernetes.pod import Resources
 from airflow.operators.slack_operator import SlackAPIPostOperator
 
-REPO = "git@gitlab.com:gitlab-data/analytics.git"
+SSH_REPO = "git@gitlab.com:gitlab-data/analytics.git"
+HTTP_REPO = "https://gitlab.com/gitlab-data/analytics.git"
 DATA_IMAGE = "registry.gitlab.com/gitlab-data/data-image/data-image:v0.0.13"
 DBT_IMAGE = "registry.gitlab.com/gitlab-data/data-image/dbt-image:v0.0.13"
 PERMIFROST_IMAGE = "registry.gitlab.com/gitlab-data/permifrost:v0.8.0"
@@ -240,8 +241,13 @@ clone_repo_cmd = f"""
     if [[ -z "$GIT_COMMIT" ]]; then
         export GIT_COMMIT="HEAD"
     fi
-    echo "git clone -b {GIT_BRANCH} --single-branch --depth 1 {REPO}" &&
-    git clone -b {GIT_BRANCH} --single-branch --depth 1 {REPO} &&
+    if [[ -z "$GIT_DATA_TESTS_PRIVATE_KEY" ]]; then
+        export REPO="{HTTP_REPO}";
+        else
+        export REPO="{SSH_REPO}";
+    fi &&
+    echo "git clone -b {GIT_BRANCH} --single-branch --depth 1 $REPO" &&
+    git clone -b {GIT_BRANCH} --single-branch --depth 1 $REPO &&
     echo "checking out commit $GIT_COMMIT" &&
     cd analytics &&
     git checkout $GIT_COMMIT &&
@@ -252,7 +258,12 @@ clone_repo_sha_cmd = f"""
     mkdir analytics &&
     cd analytics &&
     git init &&
-    git remote add origin {REPO} &&
+        if [[ -z "$GIT_DATA_TESTS_PRIVATE_KEY" ]]; then
+        export REPO="{HTTP_REPO}";
+        else
+        export REPO="{SSH_REPO}";
+    fi &&
+    git remote add origin $REPO &&
     echo "Fetching commit $GIT_COMMIT" &&
     git fetch origin --quiet &&
     git checkout $GIT_COMMIT"""
