@@ -15,7 +15,7 @@ WITH source AS (
       CASE 
         WHEN expires_at IS NULL                               THEN NULL::TIMESTAMP
         WHEN SPLIT_PART(expires_at, '-', 1)::NUMBER > 9999    THEN '9999-12-30 00:00:00.000 +00'::TIMESTAMP
-        ELSE expires_at::TIMESTAMP END             AS expires_at,
+        ELSE expires_at::TIMESTAMP END             AS license_expires_at,
       plan_name::VARCHAR                           AS plan_name,
       starts_at::TIMESTAMP                         AS starts_at,
       NULLIF(zuora_subscription_name, '')::VARCHAR AS zuora_subscription_name,
