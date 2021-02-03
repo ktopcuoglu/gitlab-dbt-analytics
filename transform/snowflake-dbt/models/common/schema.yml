@@ -552,7 +552,7 @@ models:
       - name: product_tier_historical_short
         description: Pulls the product tier from `product_tier_historical` with the delivery type removed
       - name: product_tier_name
-        description: Product [pricing tiers](https://about.gitlab.com/handbook/marketing/strategic-marketing/tiers/) for both SaaS and Self-Managed customers. Includes the mapping from SaaS - Silver to SaaS - Premium, and from SaaS - Gold to SaaS - Ultimate. 
+        description: Product [pricing tiers](https://about.gitlab.com/handbook/marketing/strategic-marketing/tiers/) for both SaaS and Self-Managed customers. Includes the mapping from SaaS - Silver to SaaS - Premium, and from SaaS - Gold to SaaS - Ultimate.
       - name: product_tier_name_short
         description: Pulls the product tier from `product_tier_name` with the delivery type removed
       - name: effective_start_date

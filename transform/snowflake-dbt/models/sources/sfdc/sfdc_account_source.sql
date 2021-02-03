@@ -72,6 +72,8 @@ WITH source AS (
 
       -- present state info
       health__c                                  AS health_score,
+      gs_health_score__c                         AS health_number,
+      gs_health_score_color__c                   AS health_score_color,
 
       -- opportunity metrics
       count_of_active_subscription_charges__c    AS count_active_subscription_charges,
