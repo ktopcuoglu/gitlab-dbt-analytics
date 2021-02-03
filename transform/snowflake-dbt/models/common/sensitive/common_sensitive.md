@@ -10,3 +10,9 @@ A dimension table for marketing contacts, combining contacts from GitLab.com, Sa
 A bridge table that lists all roles for the marketing contacts.
 
 {% enddocs %}
+
+{% docs bdg_marketing_contact_order %}
+
+A bridge table that lists all the orders, subsciptions, and namespaces per role per contact.
+
+{% enddocs %}
