@@ -9,7 +9,7 @@ WITH check_data AS (
     SELECT
       SUM(
       {%- for column in gr_column_names %}
-          CASE WHEN golden_data.{{ column }} = source_table.{{ column }} THEN 0 ELSE 1 END
+          CASE WHEN golden_data.{{ column }}::VARCHAR = source_table.{{ column }}::VARCHAR THEN 0 ELSE 1 END
               {%- if not loop.last %}
                   +
               {% endif %}
@@ -18,7 +18,7 @@ WITH check_data AS (
     FROM {{ ref(golden_data_model) }} golden_data
     LEFT JOIN {{ source(source_name, table_name) }} source_table ON
     {%- for column in gr_column_names %}
-        source_table.{{ column }} = golden_data.{{ column }}
+        source_table.{{ column }}::VARCHAR = golden_data.{{ column }}::VARCHAR
         {% if not loop.last %}
             AND
         {% endif %}
