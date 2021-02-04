@@ -38,7 +38,7 @@
       ON dim_billing_account.dim_crm_account_id = dim_crm_account.crm_account_id
 
     WHERE charge_type = 'Recurring'
-      AND dim_subscription.subscription_Status NOT IN ('Draft', 'Expired')
+      AND dim_subscription.subscription_status NOT IN ('Draft', 'Expired')
 
 ), max_min_day AS (
 
