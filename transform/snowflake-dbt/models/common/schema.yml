@@ -1125,7 +1125,7 @@ models:
         description: Month in which the members counts are being reported snapshotted. Always current month until historical months are available in a future version of this table.
         tests:
           - not_null
-      - name: namespace_id
+      - name: dim_namespace_id
         tests:
           - not_null
           - unique
@@ -1151,7 +1151,7 @@ models:
         description: Count of _non-bot_ members that are active and not awaiting access approval to the namespace.
         tests:
           - not_null
-      - name: billabe_member_count
+      - name: billable_member_count
         description: Count of active, _non-guest_ members if namespace is _gold_ tier. Count of active members otherwise.
         tests:
           - not_null
@@ -1229,7 +1229,7 @@ models:
         description: Month in which CI Minutes usage data was snapshotted, formatted as `20YY-MM-01`.
         tests:
           - not_null
-      - name: namespace_id
+      - name: dim_namespace_id
         description: ID of the namespace responsible for the CI Minutes usage.
         tests:
           - not_null
