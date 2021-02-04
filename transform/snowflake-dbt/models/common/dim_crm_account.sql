@@ -68,6 +68,9 @@ WITH map_merged_crm_accounts AS (
       WHEN LOWER(sfdc_account.gtm_strategy) IN ('account centric', 'account based - net new', 'account based - expand') THEN 'Focus Account'
       ELSE 'Non - Focus Account'
     END                                           AS crm_account_focus_account,
+    sfdc_account.health_score,
+    sfdc_account.health_number,
+    sfdc_account.health_score_color,
     ultimate_parent_account.account_id            AS ultimate_parent_account_id,
     ultimate_parent_account.account_name          AS ultimate_parent_account_name,
     {{ sales_segment_cleaning('sfdc_account.ultimate_parent_sales_segment') }}
@@ -112,7 +115,7 @@ WITH map_merged_crm_accounts AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@msendal",
-    updated_by="@iweeks",
+    updated_by="@mcooperDD",
     created_date="2020-06-01",
-    updated_date="2021-01-12"
+    updated_date="2021-01-28"
 ) }}

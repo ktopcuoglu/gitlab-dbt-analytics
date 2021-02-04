@@ -3,7 +3,12 @@
   })
 }}
 
-WITH dim_marketing_channel AS (
+WITH dim_crm_person AS (
+
+    SELECT *
+    FROM {{ ref('dim_crm_person') }}
+
+), dim_marketing_channel AS (
 
     SELECT *
     FROM {{ ref('dim_marketing_channel') }}
@@ -22,16 +27,22 @@ WITH dim_marketing_channel AS (
 
     SELECT
       fct_crm_person.dim_crm_person_id,
+      dim_crm_person.email_hash,
+      dim_crm_person.lead_source,
+      dim_crm_person.source_buckets,
       fct_crm_person.mql_date_first_id,
       fct_crm_person.mql_date_first,
+      DATE_TRUNC(month, fct_crm_person.mql_date_first)           AS mql_month_first,
       dim_marketing_channel.marketing_channel_name,
       CASE
         WHEN LOWER(dim_sales_segment.sales_segment_name) LIKE '%unknown%' THEN 'SMB'
         WHEN LOWER(dim_sales_segment.sales_segment_name) LIKE '%mid%' THEN 'Mid-Market'
         ELSE dim_sales_segment.sales_segment_name
-      END                                      AS sales_segment_name,
+      END                                                        AS sales_segment_name,
       fct_crm_person.is_mql
     FROM fct_crm_person
+    LEFT JOIN dim_crm_person
+      ON fct_crm_person.dim_crm_person_id = dim_crm_person.dim_crm_person_id
     LEFT JOIN dim_sales_segment
       ON fct_crm_person.dim_account_sales_segment_id = dim_sales_segment.dim_sales_segment_id
     LEFT JOIN dim_marketing_channel
@@ -42,7 +53,7 @@ WITH dim_marketing_channel AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@mcooperDD",
+    updated_by="@iweeks",
     created_date="2020-12-07",
-    updated_date="2021-02-02",
+    updated_date="2021-02-01",
   ) }}

@@ -1815,6 +1815,16 @@ roles:
             - people_operations
         warehouses:
             - analyst_xs
+        privileges:
+            databases:
+                read:
+                    - prep
+            schemas:
+                read:
+                    - prep.sensitive
+            tables:
+                read:
+                    - prep.sensitive.bamboohr_id_employee_number_mapping
 
     - fivetran_role:
         warehouses:

@@ -214,6 +214,8 @@ permifrost_manual:
     - chmod 0400 ~/.ssh/id_rsa # Makes key read only
     - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config # Adds gitlab.com as known host
     - cd $CI_PROJECT_DIR/transform/snowflake-dbt/
+    - rm packages.yml
+    - mv docs-packages.yml packages.yml
     - dbt deps --profiles-dir profile --target prod
     - dbt docs generate --profiles-dir profile --target prod
     - mkdir -p $CI_PROJECT_DIR/public/

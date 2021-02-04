@@ -552,7 +552,7 @@ models:
       - name: product_tier_historical_short
         description: Pulls the product tier from `product_tier_historical` with the delivery type removed
       - name: product_tier_name
-        description: Product [pricing tiers](https://about.gitlab.com/handbook/marketing/strategic-marketing/tiers/) for both SaaS and Self-Managed customers. Includes the mapping from SaaS - Silver to SaaS - Premium, and from SaaS - Gold to SaaS - Ultimate. 
+        description: Product [pricing tiers](https://about.gitlab.com/handbook/marketing/strategic-marketing/tiers/) for both SaaS and Self-Managed customers. Includes the mapping from SaaS - Silver to SaaS - Premium, and from SaaS - Gold to SaaS - Ultimate.
       - name: product_tier_name_short
         description: Pulls the product tier from `product_tier_name` with the delivery type removed
       - name: effective_start_date
@@ -1334,7 +1334,8 @@ models:
   - name: fct_usage_self_managed_seat_link
     description: '{{ doc("fct_usage_self_managed_seat_link") }}'
     columns:
-      - name: customers_db_order_id
+      - name: latest_order_id_in_month
+        description: Order ID that was associated with the subscription at month close.
         tests:
           - not_null
       - name: dim_subscription_id
@@ -1357,8 +1358,6 @@ models:
           - not_null
       - name: active_user_count
         description: Count of active users currently on the customer's subcription. A count of 0 indicates that Seat Link has been turned off by the customer.
-        tests:
-          - not_null
       - name: license_user_count
         description: Count of licensed users purchased with the customer's subcription.
         tests:

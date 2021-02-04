@@ -59,6 +59,9 @@ SELECT
   dim_crm_account.ultimate_parent_industry,
   dim_crm_account.ultimate_parent_account_owner_team,
   dim_crm_account.ultimate_parent_territory,
+  dim_crm_account.health_score,
+  dim_crm_account.health_score_color,
+  dim_crm_account.health_number,
 
   --subscription info
   dim_subscription.subscription_name,
