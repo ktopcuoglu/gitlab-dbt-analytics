@@ -86,4 +86,42 @@ models:
       - name: marketing_contact_role
         description: Role of the marketing contact. A marketing contact can have many roles. Could be 'Personal Namespace Owner', Group Namespace Owner', 'Group Namespace Member', 'Customer DB Owner', 'Zuora Billing Contact'
      
-      
+  - name: bdg_marketing_contact_order
+    description: '{{ doc("bdg_marketing_contact_order") }}'
+    columns:
+      - name: dim_marketing_contact_id
+        description: ID for the marketing contact.
+      - name: email_address
+        description: Email address for the marketing contact.
+      - name: namespace_id
+        description: Gitlab.com namespace id associated to the user_id. 
+      - name: is_individual
+        description: Flags if the namespace id is individual (and not a group)
+      - name: customer_id
+        description: Customer DB customer id of the marketing contact.
+      - name: zuora_billing_contact_id
+        description: zuora billing contact id of the marketing contact.
+      - name: zuora_subscription_id
+        description: zuora subscription id of the marketing contact.
+      - name: saas_product_tier
+        description: Product tier name if it is SaaS
+      - name: self_managed_product_tier
+        description: Product tier name if it is Self-Managed
+      - name: is_saas_trial
+        description: Flags if it is a SaaS trial
+      - name: days_since_saas_trial_ended
+        description: Number of days since SaaS trial expired.
+      - name: is_saas_free_tier
+        description: Flags if product tier is SaaS free.
+      - name: is_saas_bronze_tier
+        description: Flags if product tier is SaaS bronze.
+      - name: is_saas_premium_tier
+        description: Flags if product tier is SaaS premium.
+      - name: is_saas_ultimate_tier
+        description: Flags if product tier is SaaS ultimate.
+      - name: is_self_managed_starter_tier
+        description: Flags if product tier is Self-Managed starter.
+      - name: is_self_managed_premium_tier
+        description: Flags if product tier is Self_Managed premium.
+      - name: is_self_managed_ultimate_tier
+        description: Flags if product tier is Self-Managed ultimate.
