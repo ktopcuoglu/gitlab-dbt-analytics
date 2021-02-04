@@ -235,6 +235,7 @@ def load_scd(
     )
     return True
 
+
 def check_new_tables(
     source_engine: Engine,
     target_engine: Engine,
