@@ -73,6 +73,7 @@ WITH dim_billing_account AS (
         AS fiscal_year,
       dim_subscriptions_snapshots.subscription_start_month,
       dim_subscriptions_snapshots.subscription_end_month,
+      dim_subscriptions_snapshots.subscription_end_date,
 
       --account info
       dim_billing_account.dim_billing_account_id                                        AS zuora_account_id,
