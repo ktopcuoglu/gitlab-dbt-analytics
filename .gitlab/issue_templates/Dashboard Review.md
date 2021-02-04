@@ -35,10 +35,11 @@ Dashboard Owner/Editor:
 - [ ] Legend for each of the charts is clear, and at bottom of chart
 - [ ] Text Tile for "What am I looking at?" and more detailed information, leveraging hyperlinks instead of URLs
 - [ ] Tooltips are used where appropriate and show relevant values
-- [ ] Assign to reviewer on the data team. Use @gitlab-data on the dashboard if you don't know who to assign t
+- [ ] Assign to reviewer on the data team. Use `@gitlab-data` on the dashboard if you don't know who to assign to
 </details>
 
 ## Dashboard Reviewer:
+<details>
 <summary><i>Dashboard Reviewer complete this section/i></summary>
 - [ ] Validate the source of the dashboard's underlying queries.
     * Are we we using tables sourced from PROD.COMMON when possible
