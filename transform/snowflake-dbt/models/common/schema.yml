@@ -43,7 +43,6 @@ models:
       - name: dim_crm_account_id
       - name: count_of_tiers_per_subscription
       - name: product_rate_plan_id_subscription
-      - name: is_oss_or_edu_rate_plan_subscription
       - name: namespace_order_subscription_match_status
 
 
@@ -72,7 +71,6 @@ models:
       - name: dim_crm_account_id
       - name: count_of_tiers_per_subscription
       - name: product_rate_plan_id_subscription
-      - name: is_oss_or_edu_rate_plan_subscription
 
   - name: dim_billing_account
     description: '{{ doc("dim_billing_account") }}'

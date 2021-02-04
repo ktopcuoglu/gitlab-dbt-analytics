@@ -48,8 +48,7 @@ WITH namespace AS (
       recurring_charge.dim_subscription_id,
       product_detail.product_tier_name,
       product_detail.dim_product_tier_id,
-      product_detail.product_rate_plan_id,
-      product_detail.is_oss_or_edu_rate_plan
+      product_detail.product_rate_plan_id
     FROM recurring_charge
     --new prep table will be required AND new key in prep_recurring_charge
     INNER JOIN product_detail
@@ -85,7 +84,6 @@ WITH namespace AS (
       current_recurring.product_tier_name                           AS product_tier_name_subscription,
       current_recurring.dim_product_tier_id                         AS dim_product_tier_id_subscription,
       current_recurring.product_rate_plan_id                        AS product_rate_plan_id_subscription,
-      current_recurring.is_oss_or_edu_rate_plan                     AS is_oss_or_edu_rate_plan_subscription,
       subscription.dim_subscription_id_original,
       subscription.dim_subscription_id_previous,
       subscription.subscription_name,
@@ -181,7 +179,6 @@ WITH namespace AS (
       active_subscription_list.dim_crm_account_id,
       active_subscription_list.count_of_tiers_per_subscription,
       active_subscription_list.product_rate_plan_id_subscription,
-      active_subscription_list.is_oss_or_edu_rate_plan_subscription,
       CASE
         WHEN active_namespace_list.product_tier_name_namespace = 'SaaS - Free'
           THEN 'N/A Free'
