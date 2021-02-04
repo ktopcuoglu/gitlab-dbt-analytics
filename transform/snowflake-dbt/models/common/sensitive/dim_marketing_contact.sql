@@ -138,6 +138,7 @@ WITH sfdc_lead AS (
     FROM customer_db_source
     WHERE email_address IS NOT NULL
       AND email_address <> ''
+      AND confirmed_at IS NOT NULL
     QUALIFY record_number = 1
 
 ), zuora AS (
