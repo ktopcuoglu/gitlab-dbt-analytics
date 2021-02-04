@@ -7,12 +7,32 @@
     ('fct_charge', 'fct_charge')
 ]) }}
 
-, mart_arr AS (
+, fct_charge_agg AS (
 
     SELECT
       dim_date.date_actual                                                                          AS arr_day,
       IFF(is_first_day_of_last_month_of_fiscal_quarter, fiscal_quarter_name_fy, NULL)               AS fiscal_quarter_name_fy,
       IFF(is_first_day_of_last_month_of_fiscal_year, fiscal_year, NULL)                             AS fiscal_year,
+      unit_of_measure,
+      dim_billing_account_id,
+      dim_product_detail_id,
+      dim_subscription_id,
+      SUM(fct_charge.mrr)                                                                           AS mrr,
+      SUM(fct_charge.quantity)                                                                      AS quantity
+    FROM fct_charge
+    INNER JOIN dim_date
+      ON dim_date.date_id >= fct_charge.effective_start_date_id
+      AND (dim_date.date_id < fct_charge.effective_end_date_id
+        OR fct_charge.effective_end_date_id IS NULL)
+    WHERE charge_type = 'Recurring'
+    {{ dbt_utils.group_by(n=7) }}
+
+), mart_arr AS (
+
+    SELECT
+      fct_charge_agg.arr_day,
+      fiscal_quarter_name_fy,
+      fiscal_year,
       dim_crm_account.ultimate_parent_account_name,
       dim_crm_account.ultimate_parent_account_id,
       COALESCE(dim_crm_account.merged_to_account_id, dim_crm_account.crm_account_id)                AS crm_id,
@@ -21,24 +41,20 @@
       dim_product_detail.product_tier_name                                                          AS product_category,
       dim_product_detail.product_delivery_type                                                      AS delivery,
       dim_product_detail.product_ranking,
-      fct_charge.mrr,
-      fct_charge.quantity
-    FROM fct_charge
+      mrr,
+      quantity
+    FROM fct_charge_agg
     INNER JOIN dim_subscription
-      ON dim_subscription.dim_subscription_id = fct_charge.dim_subscription_id
+      ON dim_subscription.dim_subscription_id = fct_charge_agg.dim_subscription_id
     INNER JOIN dim_product_detail
-      ON dim_product_detail.dim_product_detail_id = fct_charge.dim_product_detail_id
+      ON dim_product_detail.dim_product_detail_id = fct_charge_agg.dim_product_detail_id
     INNER JOIN dim_billing_account
-      ON dim_billing_account.dim_billing_account_id = fct_charge.dim_billing_account_id
-    INNER JOIN dim_date
-      ON dim_date.date_id >= fct_charge.effective_start_date_id
-      AND (dim_date.date_id < fct_charge.effective_end_date_id
-           OR fct_charge.effective_end_month IS NULL)
+      ON dim_billing_account.dim_billing_account_id = fct_charge_agg.dim_billing_account_id
     LEFT JOIN dim_crm_account
       ON dim_billing_account.dim_crm_account_id = dim_crm_account.crm_account_id
 
-    WHERE charge_type = 'Recurring'
-      AND dim_subscription.subscription_status NOT IN ('Draft', 'Expired')
+    WHERE dim_subscription.subscription_status NOT IN ('Draft', 'Expired')
+      AND mrr != 0
 
 ), max_min_day AS (
 
