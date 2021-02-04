@@ -87,6 +87,7 @@ WITH namespace AS (
       subscription.dim_subscription_id_original,
       subscription.dim_subscription_id_previous,
       subscription.subscription_name,
+      subscription.subscription_name_slugify,
       subscription.dim_billing_account_id,
       subscription.dim_crm_account_id,
       COUNT(*) OVER (PARTITION BY subscription.dim_subscription_id) AS count_of_tiers_per_subscription
@@ -129,6 +130,7 @@ WITH namespace AS (
       product_rate_plan.product_tier_name                           AS product_tier_name_order,
       orders.subscription_id                                        AS dim_subscription_id,
       orders.subscription_name,
+      orders.subscription_name_slugify,
       orders.order_start_date,
       orders.order_end_date,
       orders.gitlab_namespace_id                                    AS namespace_id,
@@ -223,7 +225,7 @@ WITH namespace AS (
     FULL OUTER JOIN active_subscription_list
       ON active_orders_list.dim_subscription_id = active_subscription_list.dim_subscription_id
       OR active_orders_list.dim_subscription_id = active_subscription_list.dim_subscription_id_original
-      OR active_orders_list.subscription_name = active_subscription_list.subscription_name --using name JOIN until slug or other field is available in all tables.
+      OR active_orders_list.subscription_name_slugify = active_subscription_list.subscription_name_slugify
       --joining on name above only works because we are only dealing with currently active subscriptions  
 
 )
