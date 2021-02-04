@@ -91,6 +91,7 @@ We have identified a delay in the `DATA SOURCE` data refresh. We are actively wo
 ## Finishing the Day
 
 * [ ] At the end of your working day post EOD message to slack along with a link to this issue in the above mentioned slack channels so that it is clear for the next triager what time to check for issues from.
+* [ ] Leave a comment tagging the next day's triager giving context on open items and issues. Consider commenting in the issue if it's relevant to the issue specifically.
 
 
 /label ~"workflow::In dev" ~"Housekeeping" ~"Data Team" ~"Documentation" ~"Triage" ~"Priority::1-Ops"
