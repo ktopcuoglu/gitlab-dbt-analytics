@@ -2079,11 +2079,8 @@ roles:
             - reporting
 
     - jwatson:
-        member_of:
-            - product_manager
-            - reporter
-        warehouses:
-            - reporting
+        member_of: []
+        warehouses: []
 
     - kaguilar:
         member_of:
@@ -3032,10 +3029,9 @@ users:
             - jwanjohi
             - securityadmin
 
-    - jwatson:
-        can_login: yes
-        member_of:
-            - jwatson
+    - jwatson: #https://gitlab.com/gitlab-data/analytics/-/issues/7853
+        can_login: no
+        member_of: []
    
     - kaguilar:
         can_login: yes
