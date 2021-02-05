@@ -1,6 +1,5 @@
 {{ config(
-    tags=["product"],
-    enabled=false
+    tags=["product"]
 ) }}
 
 WITH namespace AS (
