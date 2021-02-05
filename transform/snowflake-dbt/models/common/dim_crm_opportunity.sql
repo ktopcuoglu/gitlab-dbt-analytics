@@ -28,6 +28,9 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity.sales_path,
       sfdc_opportunity.sales_type,
       sfdc_opportunity.source_buckets,
+      sfdc_opportunity.opportunity_sales_development_representative,
+      sfdc_opportunity.opportunity_business_development_representative,
+      sfdc_opportunity.opportunity_development_representative,
       sfdc_opportunity.stage_name,
       sfdc_opportunity_stage.is_active                  AS stage_is_active,
       sfdc_opportunity_stage.is_closed                  AS stage_is_closed,
@@ -87,7 +90,7 @@ WITH sfdc_opportunity AS (
 {{ dbt_audit(
     cte_ref="layered",
     created_by="@iweeks",
-    updated_by="@m_walker",
+    updated_by="@iweeks",
     created_date="2020-11-20",
-    updated_date="2020-01-15"
+    updated_date="2020-02-05"
 ) }}
