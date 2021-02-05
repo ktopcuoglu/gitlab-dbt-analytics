@@ -65,12 +65,13 @@ class PostgresPipelineTable:
             target_table,
         )
 
-    def needs_incremental_backfill(self, source_engine: Engine, target_engine: Engine) -> bool:
+    def needs_incremental_backfill(
+        self, source_engine: Engine, target_engine: Engine
+    ) -> bool:
         """
         Temporary logic for now
         """
         return self.is_incremental()
-
 
     def do_incremental_backfill(
         self, source_engine: Engine, target_engine: Engine, use_temp_table: bool
