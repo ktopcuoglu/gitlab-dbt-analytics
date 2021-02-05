@@ -28,7 +28,7 @@ class PostgresPipelineTable:
     def do_scd(self, source_engine: Engine, target_engine: Engine, use_temp_table: bool) -> bool:
         if not self.is_scd():
             return True
-        target_table = self.get_temp_target_table_name() if use_temp_table else self.get_target_table_name
+        target_table = self.get_temp_target_table_name() if use_temp_table else self.get_target_table_name()
         return load_functions.load_scd(source_engine, target_engine, self.source_table_name, self.table_dict, target_table)
 
     def is_incremental(self) -> bool:
@@ -37,7 +37,7 @@ class PostgresPipelineTable:
     def do_incremental(self, source_engine: Engine, target_engine: Engine, use_temp_table: bool) -> bool:
         if not self.needs_incremental_backfill():
             return True
-        target_table = self.get_temp_target_table_name() if use_temp_table else self.get_target_table_name
+        target_table = self.get_temp_target_table_name() if use_temp_table else self.get_target_table_name()
         return load_functions.load_incremental(source_engine, target_engine, self.source_table_name, self.table_dict, target_table)
 
     def needs_incremental_backfill(self) -> bool:
@@ -47,11 +47,11 @@ class PostgresPipelineTable:
     def do_incremental_backfill(self, source_engine: Engine, target_engine: Engine, use_temp_table: bool) -> bool:
         if not self.needs_incremental_backfill():
             return True
-        target_table = self.get_temp_target_table_name() if use_temp_table else self.get_target_table_name
+        target_table = self.get_temp_target_table_name() if use_temp_table else self.get_target_table_name()
         return load_functions.sync_incremental_ids(source_engine, target_engine, self.source_table_name, self.table_dict, target_table)
 
     def check_new_table(self, source_engine: Engine, target_engine: Engine, use_temp_table: bool) -> bool:
-        target_table = self.get_temp_target_table_name() if use_temp_table else self.get_target_table_name
+        target_table = self.get_temp_target_table_name() if use_temp_table else self.get_target_table_name()
         return load_functions.check_new_tables(source_engine, target_engine, self.source_table_name, self.table_dict, target_table)
 
     def do_load(
