@@ -7,7 +7,7 @@ sources:
     schema: salesforce_stitch
     loader: Stitch
     loaded_at_field: _sdc_batched_at
-    
+
     quoting:
       database: true
       schema: false
@@ -17,7 +17,7 @@ sources:
         warn_after: {count: 8, period: hour}
         error_after: {count: 24, period: hour}
 
-    tables: 
+    tables:
       - name: account
         description: '{{ doc("sfdc_account_source") }}'
       - name: account_history
@@ -32,31 +32,31 @@ sources:
       - name: bizible_touchpoint
         identifier: bizible2__bizible_touchpoint__c
         description: '{{ doc("sfdc_bizible_source") }}'
-      - name: campaign        
+      - name: campaign
         description: '{{ doc("sfdc_campaign_source") }}'
       - name: campaign_member
         identifier: campaignmember
         description: '{{ doc("sfdc_campaignmember_source") }}'
-      - name: contact         
+      - name: contact
         description: '{{ doc("sfdc_contact_source") }}'
       - name: contact_history
         identifier: contacthistory
         description: '{{ doc("sfdc_contacthistory_source")}}'
       - name: event
         description: '{{ doc("sfdc_event_source") }}'
-      - name: executive_business_review 
-        identifier: executive_business_review__c        
+      - name: executive_business_review
+        identifier: executive_business_review__c
         description: '{{ doc("sfdc_execbus_source") }}'
-      - name: lead         
+      - name: lead
         description: '{{ doc("sfdc_lead_source") }}'
       - name: lead_history
         identifier: leadhistory
         description: '{{ doc("sfdc_leadhistory_source")}}'
       - name: opportunity_field_history
         identifier: opportunityfieldhistory
-        description: '{{ doc("sfdc_oppfieldhistory_source") }}'  
+        description: '{{ doc("sfdc_oppfieldhistory_source") }}'
       - name: opportunity_stage
-        identifier: opportunitystage         
+        identifier: opportunitystage
         description: '{{ doc("sfdc_oppstage_source") }}'
       - name: opportunity_split
         identifier: opportunitysplit
@@ -76,25 +76,31 @@ sources:
         identifier: opportunityhistory
         description: '{{ doc("sfdc_opphistory_source") }}'
       - name: proof_of_concept
-        identifier: proof_of_concept__c     
+        identifier: proof_of_concept__c
         description: '{{ doc("sfdc_pov_source") }}'
       - name: quote
         identifier: zqu__quote__c
-        description: '{{ doc("sfdc_quote_source") }}'  
+        description: '{{ doc("sfdc_quote_source") }}'
       - name: record_type
-        identifier: recordtype         
+        identifier: recordtype
         description: '{{ doc("sfdc_recordtype_source") }}'
       - name: statement_of_work
-        identifier: statement_of_work__c      
+        identifier: statement_of_work__c
         description: '{{ doc("sfdc_professional_services_engagement_source") }}'
-      - name: task         
+      - name: task
         description: '{{ doc("sfdc_task_source") }}'
       - name: user_role
-        identifier: userrole          
+        identifier: userrole
         description: '{{ doc("sfdc_userrole_source") }}'
-      - name: user         
+      - name: user
         description: '{{ doc("sfdc_user_source") }}'
       - name: zqu_quote
         identifier: zqu__quote__c
       - name: zqu_quote_amendment
         identifier: zqu__quoteamendment__c
+      - name: zqu_quote_rate_plan
+        identifier: zqu__quoterateplan__c
+        description: '{{ doc("sfdc_zqu_quote_rate_plan_source") }}'
+      - name: zqu_quote_rate_plan_charge
+        identifier: zqu__quoterateplancharge__c
+        description: '{{ doc("sfdc_zqu_quote_rate_plan_charge_source")}}'

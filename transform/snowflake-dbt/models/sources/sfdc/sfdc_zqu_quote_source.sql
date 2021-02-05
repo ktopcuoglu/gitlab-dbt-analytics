@@ -144,7 +144,6 @@ WITH source AS (
       total_partner_discount__c::FLOAT                       AS total_partner_discount,
       trigger_workflow__c::BOOLEAN                           AS trigger_workflow,
       true_up_amount__c::FLOAT                               AS true_up_amount,
-      uses_reseller__c::BOOLEAN                              AS uses_reseller,
       vat_tax_id__c::VARCHAR                                 AS vat_tax_id,
       vp_of_sales__c::VARCHAR                                AS vp_of_sales,
       wip_arr_iacv_delta__c::FLOAT                           AS wip_arr_iacv_delta,

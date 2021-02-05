@@ -125,6 +125,24 @@ models:
           - not_null
           - unique
 
+  - name: gitlab_dotcom_user_custom_attributes
+    columns:
+      - name: user_id
+        tests:
+          - not_null
+      - name: created_at
+        tests:
+          - not_null
+      - name: updated_at
+        tests:
+          - not_null
+      - name: user_custom_key
+        tests:
+          - not_null
+      - name: user_custom_value
+        tests:
+          - not_null
+          
   - name: gitlab_dotcom_daily_usage_data_events_90
     description: '{{ doc("gitlab_dotcom_daily_usage_data_events_90") }}'
     columns:
@@ -456,8 +474,6 @@ models:
           - not_null
           - unique
       - name: namespace_path
-        tests:
-          - not_null
       - name: namespace_type
         description: This field should be Group or Individual. A namespace is the first item to come after the / following the domain. For example https://www.gitlab.com/NicoleSchwartz/ is an Individual namespace. There are some namespace_IDs that are missing from this table, when doing certain joins (left) you may get NULL when this data is missing.
         tests:

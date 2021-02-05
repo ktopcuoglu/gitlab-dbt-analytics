@@ -11,12 +11,12 @@ WITH source AS (
       opportunity_source::VARCHAR                         AS opportunity_source,
       order_type::VARCHAR                                 AS order_type,
       area::VARCHAR                                       AS area,
-      allocated_target::NUMBER                            AS allocated_target,
-      kpi_total::NUMBER                                   AS kpi_total,
-      month_percentage::NUMBER                            AS month_percentage,
-      opportunity_source_percentage::NUMBER               AS opportunity_source_percentage,
-      order_type_percentage::NUMBER                       AS order_type_percentage,
-      area_percentage::NUMBER                             AS area_percentage,
+      allocated_target::FLOAT                             AS allocated_target,
+      kpi_total::FLOAT                                    AS kpi_total,
+      month_percentage::FLOAT                             AS month_percentage,
+      opportunity_source_percentage::FLOAT                AS opportunity_source_percentage,
+      order_type_percentage::FLOAT                        AS order_type_percentage,
+      area_percentage::FLOAT                              AS area_percentage,
       TO_TIMESTAMP(TO_NUMERIC("_UPDATED_AT"))::TIMESTAMP  AS last_updated_at
     FROM source
 
@@ -24,4 +24,3 @@ WITH source AS (
 
 SELECT *
 FROM renamed
-

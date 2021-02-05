@@ -82,7 +82,15 @@ WITH first_contact  AS (
       owner_id                                                  AS dim_crm_sales_rep_id,
       incremental_acv                                           AS iacv,
       net_arr,
-      total_contract_value,
+      amount,
+      recurring_amount,
+      true_up_amount,
+      proserv_amount,
+      other_non_recurring_amount,
+      arr_basis,
+      arr,
+      subscription_start_date,
+      subscription_end_date,
       created_date::DATE                                        AS created_date,
       {{ get_date_id('created_date') }}                         AS created_date_id,
       sales_accepted_date::DATE                                 AS sales_accepted_date,
@@ -212,27 +220,29 @@ WITH first_contact  AS (
         WHEN opportunity_fields.days_in_sao BETWEEN 181 AND 270  THEN '6. Closed in 181-270 days'
         WHEN opportunity_fields.days_in_sao > 270                THEN '7. Closed in > 270 days'
         ELSE NULL
-      END                                                                                                           AS closed_buckets,
+      END                                                                                                                 AS closed_buckets,
+      opportunity_fields.subscription_start_date,
+      opportunity_fields.subscription_end_date,
 
       -- common dimension keys
-      COALESCE(opportunity_fields.dim_crm_sales_rep_id, MD5(-1))                                                    AS dim_crm_sales_rep_id,
-      COALESCE(order_type.dim_order_type_id, MD5(-1))                                                               AS dim_order_type_id,
-      COALESCE(opportunity_source.dim_opportunity_source_id, MD5(-1))                                               AS dim_opportunity_source_id,
-      COALESCE(purchase_channel.dim_purchase_channel_id, MD5(-1))                                                   AS dim_purchase_channel_id,
-      COALESCE(crm_account_dimensions.dim_sales_segment_id,sales_segment.dim_sales_segment_id, MD5(-1))             AS dim_sales_segment_id,
-      COALESCE(crm_account_dimensions.dim_geo_region_id, MD5(-1))                                                   AS dim_geo_region_id,
-      COALESCE(crm_account_dimensions.dim_geo_sub_region_id, MD5(-1))                                               AS dim_geo_sub_region_id,
-      COALESCE(crm_account_dimensions.dim_geo_area_id, MD5(-1))                                                     AS dim_geo_area_id,
-      COALESCE(crm_account_dimensions.dim_sales_territory_id, MD5(-1))                                              AS dim_sales_territory_id,
-      COALESCE(crm_account_dimensions.dim_industry_id, MD5(-1))                                                     AS dim_industry_id,
-      COALESCE(sales_hierarchy_stamped_sales_segment.dim_crm_sales_hierarchy_sales_segment_stamped_id, MD5(-1))     AS dim_crm_sales_hierarchy_sales_segment_stamped_id,
-      COALESCE(sales_hierarchy_stamped_location_region.dim_crm_sales_hierarchy_location_region_stamped_id, MD5(-1)) AS dim_crm_sales_hierarchy_location_region_stamped_id,
-      COALESCE(sales_hierarchy_stamped_sales_region.dim_crm_sales_hierarchy_sales_region_stamped_id, MD5(-1))       AS dim_crm_sales_hierarchy_sales_region_stamped_id,
-      COALESCE(sales_hierarchy_stamped_sales_area.dim_crm_sales_hierarchy_sales_area_stamped_id, MD5(-1))           AS dim_crm_sales_hierarchy_sales_area_stamped_id,
-      COALESCE(sales_rep.dim_crm_sales_hierarchy_sales_segment_live_id, MD5(-1))                                    AS dim_crm_sales_hierarchy_sales_segment_live_id,
-      COALESCE(sales_rep.dim_crm_sales_hierarchy_location_region_live_id, MD5(-1))                                  AS dim_crm_sales_hierarchy_location_region_live_id,
-      COALESCE(sales_rep.dim_crm_sales_hierarchy_sales_region_live_id, MD5(-1))                                     AS dim_crm_sales_hierarchy_sales_region_live_id,
-      COALESCE(sales_rep.dim_crm_sales_hierarchy_sales_area_live_id, MD5(-1))                                       AS dim_crm_sales_hierarchy_sales_area_live_id,
+      {{ get_keyed_nulls('opportunity_fields.dim_crm_sales_rep_id') }}                                                    AS dim_crm_sales_rep_id,
+      {{ get_keyed_nulls('order_type.dim_order_type_id') }}                                                               AS dim_order_type_id,
+      {{ get_keyed_nulls('opportunity_source.dim_opportunity_source_id') }}                                               AS dim_opportunity_source_id,
+      {{ get_keyed_nulls('purchase_channel.dim_purchase_channel_id') }}                                                   AS dim_purchase_channel_id,
+      {{ get_keyed_nulls('crm_account_dimensions.dim_sales_segment_id,sales_segment.dim_sales_segment_id') }}             AS dim_sales_segment_id,
+      {{ get_keyed_nulls('crm_account_dimensions.dim_geo_region_id') }}                                                   AS dim_geo_region_id,
+      {{ get_keyed_nulls('crm_account_dimensions.dim_geo_sub_region_id') }}                                               AS dim_geo_sub_region_id,
+      {{ get_keyed_nulls('crm_account_dimensions.dim_geo_area_id') }}                                                     AS dim_geo_area_id,
+      {{ get_keyed_nulls('crm_account_dimensions.dim_sales_territory_id') }}                                              AS dim_sales_territory_id,
+      {{ get_keyed_nulls('crm_account_dimensions.dim_industry_id') }}                                                     AS dim_industry_id,
+      {{ get_keyed_nulls('sales_hierarchy_stamped_sales_segment.dim_crm_sales_hierarchy_sales_segment_stamped_id') }}     AS dim_crm_sales_hierarchy_sales_segment_stamped_id,
+      {{ get_keyed_nulls('sales_hierarchy_stamped_location_region.dim_crm_sales_hierarchy_location_region_stamped_id') }} AS dim_crm_sales_hierarchy_location_region_stamped_id,
+      {{ get_keyed_nulls('sales_hierarchy_stamped_sales_region.dim_crm_sales_hierarchy_sales_region_stamped_id') }}       AS dim_crm_sales_hierarchy_sales_region_stamped_id,
+      {{ get_keyed_nulls('sales_hierarchy_stamped_sales_area.dim_crm_sales_hierarchy_sales_area_stamped_id') }}           AS dim_crm_sales_hierarchy_sales_area_stamped_id,
+      {{ get_keyed_nulls('sales_rep.dim_crm_sales_hierarchy_sales_segment_live_id') }}                                    AS dim_crm_sales_hierarchy_sales_segment_live_id,
+      {{ get_keyed_nulls('sales_rep.dim_crm_sales_hierarchy_location_region_live_id') }}                                  AS dim_crm_sales_hierarchy_location_region_live_id,
+      {{ get_keyed_nulls('sales_rep.dim_crm_sales_hierarchy_sales_region_live_id') }}                                     AS dim_crm_sales_hierarchy_sales_region_live_id,
+      {{ get_keyed_nulls('sales_rep.dim_crm_sales_hierarchy_sales_area_live_id') }}                                       AS dim_crm_sales_hierarchy_sales_area_live_id,
 
             -- flags
       opportunity_fields.is_closed,
@@ -248,7 +258,13 @@ WITH first_contact  AS (
       -- additive fields
       opportunity_fields.iacv,
       opportunity_fields.net_arr,
-      opportunity_fields.total_contract_value
+      opportunity_fields.amount,
+      opportunity_fields.recurring_amount,
+      opportunity_fields.true_up_amount,
+      opportunity_fields.proserv_amount,
+      opportunity_fields.other_non_recurring_amount,
+      opportunity_fields.arr_basis,
+      opportunity_fields.arr
 
     FROM opportunity_fields
     LEFT JOIN crm_account_dimensions
@@ -283,7 +299,7 @@ WITH first_contact  AS (
 {{ dbt_audit(
     cte_ref="final_opportunities",
     created_by="@mcooperDD",
-    updated_by="@mcooperDD",
+    updated_by="@jpeguero",
     created_date="2020-11-30",
-    updated_date="2021-01-05"
+    updated_date="2021-01-21"
 ) }}

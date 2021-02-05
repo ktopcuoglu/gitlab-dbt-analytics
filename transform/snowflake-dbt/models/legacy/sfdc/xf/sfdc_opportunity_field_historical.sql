@@ -5,7 +5,9 @@
     'sales_qualified_date__c','sales_segmentation_employees_o__c',
     'sales_segmentation_o__c','sql_source__c','stagename','swing_deal__c',
     'type','ultimate_parent_sales_segment_emp_o__c','ultimate_parent_sales_segment_o__c',
-    'upside_iacv__c'
+    'upside_iacv__c', 'recurring_amount__c', 'true_up_amount__c', 'proserv_amount__c',
+    'other_non_recurring_amount__c', 'arr_net__c', 'arr_basis__c', 'arr__c', 'start_date__c',
+    'end_date__c'
 ] %}
 
 WITH date_spine AS (
@@ -114,6 +116,8 @@ WITH date_spine AS (
                                          AS parent_segment,
       sales_accepted_date__c::DATE       AS sales_accepted_date,
       sales_qualified_date__c::DATE      AS sales_qualified_date,
+      start_date__c::DATE                AS subscription_start_date,
+      end_date__c::DATE                  AS subscription_end_date,
       COALESCE({{ sales_segment_cleaning('sales_segmentation_employees_o__c') }}, 
                {{ sales_segment_cleaning('sales_segmentation_o__c') }}, 'Unknown') 
                                          AS sales_segment,
@@ -128,7 +132,15 @@ WITH date_spine AS (
       renewal_amount__c::FLOAT           AS renewal_amount,
       sales_segmentation_o__c            AS segment,
       amount::FLOAT                      AS total_contract_value,
-      upside_iacv__c::FLOAT              AS upside_iacv
+      amount::FLOAT                      AS amount,
+      upside_iacv__c::FLOAT              AS upside_iacv,
+      arr_net__c                         AS net_arr,
+      arr_basis__c                       AS arr_basis,
+      arr__c                             AS arr,
+      recurring_amount__c                AS recurring_amount,
+      true_up_amount__c                  AS true_up_amount,
+      proserv_amount__c                  AS proserv_amount,
+      other_non_recurring_amount__c      AS other_non_recurring_amount
     FROM cleaned  
     INNER JOIN date_spine
       ON cleaned.valid_from::DATE <= date_spine.date_actual

@@ -28,8 +28,15 @@ WITH product_tier_mapping AS (
     UNION
     
     SELECT
-      'Trial'                                                                AS product_tier,
+      'Trial - Gold'                                                         AS product_tier,
       'SaaS'                                                                 AS product_delivery_type,
+      0                                                                      AS product_ranking
+  
+    UNION
+    
+    SELECT
+      'Trial - Ultimate'                                                     AS product_tier,
+      'Self-Managed'                                                         AS product_delivery_type,
       0                                                                      AS product_ranking
 
 ), final AS (
@@ -55,7 +62,7 @@ WITH product_tier_mapping AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@snalamaru",
-    updated_by="@snalamaru",
+    updated_by="@ischweickartDD",
     created_date="2020-12-29",
-    updated_date="2020-12-29"
+    updated_date="2021-01-14"
 ) }}

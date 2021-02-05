@@ -12,7 +12,7 @@ Downstream Airflow tasks that were skipped:
 
 Urgency:
 - [ ] T1 - Needs resolution ASAP
-- [ ] T2 - Resolution Required / Keep on Milestone
+- [ ] T2 - Resolution Required
 - [ ] T3 - Backlog
  
 /label ~Triage ~Infrastructure ~Break-Fix ~"Priority::1-Ops" ~"workflow::1 - triage"
