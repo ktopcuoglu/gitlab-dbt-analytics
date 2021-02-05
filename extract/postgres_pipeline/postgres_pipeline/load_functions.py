@@ -21,7 +21,6 @@ from utils import (
 from validation import get_comparison_results
 
 
-
 def load_incremental(
     source_engine: Engine,
     target_engine: Engine,
