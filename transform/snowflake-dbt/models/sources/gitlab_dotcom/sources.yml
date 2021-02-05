@@ -158,6 +158,8 @@ sources:
         identifier: gitlab_db_gitlab_subscription_histories
       - name: gitlab_subscriptions
         identifier: gitlab_db_gitlab_subscriptions
+      - name: group_custom_attributes
+        identifier: gitlab_db_group_custom_attributes
       - name: group_group_links
         identifier: gitlab_db_group_group_links
       - name: identities
@@ -230,6 +232,8 @@ sources:
           error_after: {count: 30, period: day}    
       - name: project_auto_devops
         identifier: gitlab_db_project_auto_devops
+      - name: project_custom_attributes
+        identifier: gitlab_db_project_custom_attributes
       - name: project_features
         identifier: gitlab_db_project_features
       - name: project_group_links

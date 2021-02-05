@@ -816,6 +816,14 @@ models:
         tests:
           - dbt_utils.expression_is_true:
               expression: "valid_from <= valid_to"
+  - name: gitlab_dotcom_group_custom_attributes_source
+    description: Base model for Gitlab.com group custom attributes
+    columns:
+      - name: group_custom_attribute_id
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+          - unique
 
   - name: gitlab_dotcom_group_group_links_source
     description: This table represents groups being shared with groups. {{ doc("scd_type_two_documentation") }}'
@@ -1420,7 +1428,14 @@ models:
         tags: ["tdf","gitlab_dotcom"]
         tests:
           - not_null
-
+  - name: gitlab_dotcom_project_custom_attributes_source
+    description: Base model for Gitlab.com project custom attributes
+    columns:
+      - name: project_custom_attribute_id
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+          - unique
   - name: gitlab_dotcom_project_features_source
     description: Base model for Gitlab.com project features
     columns:
