@@ -34,9 +34,9 @@ WITH date AS (
 
   SELECT
 
-    {{ dbt_utils.surrogate_key(['CONCAT(target_matrix.kpi_name, date.first_day_of_month, opportunity_source.dim_opportunity_source_id,
-           order_type.dim_order_type_id, sfdc_user_hierarchy_live.dim_crm_sales_hierarchy_live_id, sfdc_user_hierarchy_live.dim_crm_sales_hierarchy_sales_segment_live_id,
-           sfdc_user_hierarchy_live.dim_crm_sales_hierarchy_location_region_live_id, sfdc_user_hierarchy_live.dim_crm_sales_hierarchy_sales_region_live_id, sfdc_user_hierarchy_live.dim_crm_sales_hierarchy_sales_area_live_id)']) }}    AS sales_funnel_target_id,
+    {{ dbt_utils.surrogate_key(['target_matrix.kpi_name', 'date.first_day_of_month', 'opportunity_source.dim_opportunity_source_id',
+           'order_type.dim_order_type_id', 'sfdc_user_hierarchy_live.dim_crm_sales_hierarchy_live_id', 'sfdc_user_hierarchy_live.dim_crm_sales_hierarchy_sales_segment_live_id',
+           'sfdc_user_hierarchy_live.dim_crm_sales_hierarchy_location_region_live_id', 'sfdc_user_hierarchy_live.dim_crm_sales_hierarchy_sales_region_live_id', 'sfdc_user_hierarchy_live.dim_crm_sales_hierarchy_sales_area_live_id']) }}    AS sales_funnel_target_id,
     target_matrix.kpi_name,
     date.first_day_of_month,
     target_matrix.opportunity_source,
