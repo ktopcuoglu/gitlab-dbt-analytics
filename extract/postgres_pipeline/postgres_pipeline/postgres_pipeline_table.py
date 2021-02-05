@@ -3,6 +3,7 @@ from typing import Dict, Any
 
 from sqlalchemy.engine.base import Engine
 
+import load_functions
 from utils import check_if_schema_changed
 
 class PostgresPipelineTable:
@@ -19,28 +20,39 @@ class PostgresPipelineTable:
             self.additional_filtering = table_config["additional_filtering"]
         self.advanced_metadata = ("advanced_metadata" in table_config) and table_config["advanced_metadata"] == "true"
         self.target_table_name = "{import_db}_{export_table}".format(**table_config).upper()
+        self.table_dict = table_config
 
     def is_scd(self) -> bool:
         return not self.is_incremental()
 
-    def do_scd(self) -> bool:
+    def do_scd(self, source_engine: Engine, target_engine: Engine, use_temp_table: bool) -> bool:
         if not self.is_scd():
             return True
+        target_table = self.get_temp_target_table_name() if use_temp_table else self.get_target_table_name
+        return load_functions.load_scd(source_engine, target_engine, self.source_table_name, self.table_dict, target_table)
 
     def is_incremental(self) -> bool:
         return "{EXECUTION_DATE}" in self.query
 
-    def do_incremental(self) -> bool:
+    def do_incremental(self, source_engine: Engine, target_engine: Engine, use_temp_table: bool) -> bool:
         if not self.needs_incremental_backfill():
             return True
+        target_table = self.get_temp_target_table_name() if use_temp_table else self.get_target_table_name
+        return load_functions.load_incremental(source_engine, target_engine, self.source_table_name, self.table_dict, target_table)
 
     def needs_incremental_backfill(self) -> bool:
         if not self.is_incremental():
             return False
 
-    def do_incremental_backfill(self) -> bool:
+    def do_incremental_backfill(self, source_engine: Engine, target_engine: Engine, use_temp_table: bool) -> bool:
         if not self.needs_incremental_backfill():
             return True
+        target_table = self.get_temp_target_table_name() if use_temp_table else self.get_target_table_name
+        return load_functions.sync_incremental_ids(source_engine, target_engine, self.source_table_name, self.table_dict, target_table)
+
+    def check_new_table(self, source_engine: Engine, target_engine: Engine, use_temp_table: bool) -> bool:
+        target_table = self.get_temp_target_table_name() if use_temp_table else self.get_target_table_name
+        return load_functions.check_new_tables(source_engine, target_engine, self.source_table_name, self.table_dict, target_table)
 
     def do_load(
         self, 
@@ -52,7 +64,8 @@ class PostgresPipelineTable:
         load_types = {
             "incremental": self.do_incremental,
             "scd": self.do_scd,
-            "backfill": self.do_incremental_backfill
+            "backfill": self.do_incremental_backfill,
+            "test": self.check_new_table,
         }
         return load_types[load_type](source_engine, target_engine, use_temp_table)
 
