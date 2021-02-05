@@ -43,6 +43,7 @@ WITH source AS (
 )
 
 SELECT *,
-  LAG(COALESCE(annual_amount_usd_value,0)) OVER (PARTITION BY employee_id ORDER BY target_earnings_update_id)   AS prior_annual_amount_usd,
+  LAG(COALESCE(annual_amount_usd_value,0)) OVER (PARTITION BY employee_id 
+                                            ORDER BY effective_date, target_earnings_update_id)                 AS prior_annual_amount_usd,
   annual_amount_usd_value - prior_annual_amount_usd                                                             AS change_in_annual_amount_usd
 FROM final
