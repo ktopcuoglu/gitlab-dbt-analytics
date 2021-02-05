@@ -87,3 +87,10 @@ WITH marketing_contact AS (
       ON namespace_lineage.namespace_id = marketing_contact_role.namespace_id
     )           
 
+{{ dbt_audit(
+    cte_ref="final",
+    created_by="@trevor31",
+    updated_by="@trevor31",
+    created_date="2021-02-04",
+    updated_date="2021-02-04"
+) }}
