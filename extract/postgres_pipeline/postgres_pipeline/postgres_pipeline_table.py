@@ -90,7 +90,7 @@ class PostgresPipelineTable:
         return self.target_table_name
 
     def get_temp_target_table_name(self):
-        return self.get_target_table_name + "_TEMP"
+        return self.get_target_table_name() + "_TEMP"
 
 
 
