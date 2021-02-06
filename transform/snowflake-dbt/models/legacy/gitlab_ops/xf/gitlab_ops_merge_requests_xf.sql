@@ -33,6 +33,19 @@ WITH merge_requests AS (
       ON label_links.label_id = all_labels.label_id
     GROUP BY merge_requests.merge_request_id
 
+),  latest_merge_request_metric AS (
+
+    SELECT MAX(merge_request_metric_id) AS target_id
+    FROM {{ref('gitlab_dotcom_merge_request_metrics')}}
+    GROUP BY merge_request_id
+
+),  merge_request_metrics AS (
+
+    SELECT *
+    FROM {{ref('gitlab_dotcom_merge_request_metrics')}}
+    INNER JOIN latest_merge_request_metric
+    ON merge_request_metric_id = target_id
+
 ), projects AS (
 
     SELECT *
@@ -41,7 +54,8 @@ WITH merge_requests AS (
 ), joined AS (
 
     SELECT
-      merge_requests.*, 
+      merge_requests.*,
+      merge_request_metrics.merged_at,
       projects.namespace_id,
       ARRAY_TO_STRING(agg_labels.labels,'|')                                               AS masked_label_title,
       agg_labels.labels, 
@@ -52,6 +66,8 @@ WITH merge_requests AS (
         FALSE                                                                              AS is_part_of_product_ops
       {% endif %}
     FROM merge_requests
+    LEFT JOIN merge_request_metrics
+        ON merge_requests.merge_request_id = merge_request_metrics.merge_request_id
     LEFT JOIN agg_labels
       ON merge_requests.merge_request_id = agg_labels.merge_request_id
     LEFT JOIN projects
