@@ -27,12 +27,26 @@ WITH dim_crm_person AS (
 
     SELECT
       fct_crm_person.dim_crm_person_id,
-      dim_crm_person.email_hash,
-      dim_crm_person.lead_source,
-      dim_crm_person.source_buckets,
       fct_crm_person.mql_date_first_id,
       fct_crm_person.mql_date_first,
       DATE_TRUNC(month, fct_crm_person.mql_date_first)           AS mql_month_first,
+      fct_crm_person.mql_date_latest,
+      DATE_TRUNC(month, fct_crm_person.mql_date_latest)          AS mql_month_latest,
+      fct_crm_person.created_date,
+      DATE_TRUNC(month, fct_crm_person.created_date)             AS created_month,
+      fct_crm_person.inquiry_date,
+      DATE_TRUNC(month, fct_crm_person.inquiry_date)             AS inquiry_month,
+      fct_crm_person.accepted_date,
+      DATE_TRUNC(month, fct_crm_person.accepted_date)            AS accepted_month,
+      fct_crm_person.qualifying_date,
+      DATE_TRUNC(month, fct_crm_person.qualifying_date)          AS qualifying_month,
+      fct_crm_person.qualified_date,
+      DATE_TRUNC(month, fct_crm_person.qualified_date)           AS qualified_month,
+      fct_crm_person.converted_date,
+      DATE_TRUNC(month, fct_crm_person.converted_date)           AS converted_month,
+      dim_crm_person.email_hash,
+      dim_crm_person.lead_source,
+      dim_crm_person.source_buckets,
       dim_marketing_channel.marketing_channel_name,
       CASE
         WHEN LOWER(dim_sales_segment.sales_segment_name) LIKE '%unknown%' THEN 'SMB'
@@ -55,5 +69,5 @@ WITH dim_crm_person AS (
     created_by="@iweeks",
     updated_by="@iweeks",
     created_date="2020-12-07",
-    updated_date="2021-02-01",
+    updated_date="2021-02-08",
   ) }}
