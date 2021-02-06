@@ -55,7 +55,8 @@ WITH dim_crm_person AS (
       END                                                        AS sales_segment_name,
       fct_crm_person.is_mql,
       CASE
-        WHEN marketing_channel_name = 'Trial' THEN TRUE ELSE FALSE
+        WHEN marketing_channel_name = 'Trial' THEN TRUE
+        ELSE FALSE
       END                                                        AS is_trial
     FROM fct_crm_person
     LEFT JOIN dim_crm_person
