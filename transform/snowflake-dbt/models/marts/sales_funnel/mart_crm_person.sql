@@ -53,7 +53,10 @@ WITH dim_crm_person AS (
         WHEN LOWER(dim_sales_segment.sales_segment_name) LIKE '%mid%' THEN 'Mid-Market'
         ELSE dim_sales_segment.sales_segment_name
       END                                                        AS sales_segment_name,
-      fct_crm_person.is_mql
+      fct_crm_person.is_mql,
+      CASE
+        WHEN marketing_channel_name = 'Trial' THEN TRUE ELSE FALSE
+      END                                                        AS is_trial
     FROM fct_crm_person
     LEFT JOIN dim_crm_person
       ON fct_crm_person.dim_crm_person_id = dim_crm_person.dim_crm_person_id
