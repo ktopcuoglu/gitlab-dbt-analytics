@@ -72,6 +72,28 @@ models:
       - name: count_of_tiers_per_subscription
       - name: product_rate_plan_id_subscription
 
+  - name: bdg_subscription_product_rate_plan
+    description: '{{ doc("bdg_subscription_product_rate_plan") }}'
+    columns:
+      - name: dim_subscription_id
+        tests:
+          - not_null
+      - name: dim_subscription_id_original
+      - name: subscription_name
+      - name: subscription_name_slugify
+      - name: subscription_status
+      - name: subscription_start_date
+      - name: subscription_end_date
+      - name: cancelled_date
+      - name: term_end_date
+      - name: term_start_date
+      - name: dim_product_detail_id
+      - name: product_rate_plan_id
+      - name: product_id
+      - name: dim_product_tier_id
+      - name: product_rate_plan_charge_name
+      - name: product_delivery_type
+
   - name: dim_billing_account
     description: '{{ doc("dim_billing_account") }}'
     columns:
@@ -1192,6 +1214,210 @@ models:
         tests:
           - not_null
 
+  - name: fct_product_usage_wave_1_3_metric_latest
+    description: '{{ doc("fct_product_usage_wave_1_3_metric_latest") }}'
+    columns:
+      - name: dim_subscription_id
+        description: 
+        tests:
+          - not_null
+      - name: dim_subscription_id_original
+        description:
+        tests:
+          - not_null
+      - name: seat_link_report_date
+        description: Day on which Seat Link usage data is reported. Should always be last day of month for historical months.
+      - name: license_utilization
+        description: Number of activated seats (`active_user_count`) divided by the number of purchased seats (`license_user_count`) on the subscription.
+      - name: active_user_count
+        description: Count of active users currently on the customer's subcription. It is possible for a customer to opt out of sending this information to GitLab.
+      - name: max_historical_user_count
+        description: Maximum active user count ever reported over the lifetime of the customer's subcription.
+      - name: license_user_count
+        description: Count of licensed users purchased with the customer's subcription.
+      - name: ping_created_at
+        description: The timestamp at which the usage ping was created.
+      - name: uuid
+        description: 
+      - name: hostname
+        description: 
+      - name: cleaned_version
+        description: 
+      - name: umau_28_days_user
+        description: 
+      - name: action_monthly_active_users_project_repo_28_days_user
+        description: 
+      - name: merge_requests_28_days_user
+        description: 
+      - name: projects_with_repositories_enabled_28_days_user
+        description: 
+      - name: commit_comment_all_time
+        description: 
+      - name: source_code_pushes_all_time
+        description: 
+      - name: ci_pipelines_28_days_user
+        description: 
+      - name: ci_internal_pipelines_28_days_user
+        description: 
+      - name: ci_builds_28_days_user_28_days_user
+        description: 
+      - name: ci_runners_all_time_event
+        description: 
+      - name: auto_devops_enable_all_time_event
+        description: 
+      - name: gitlab_shared_runners_enabled_instance_setting
+        description: 
+      - name: container_registry_enabled_instance_setting
+        description: 
+      - name: template_repositories_all_time_event
+        description: 
+      - name: ci_pipeline_config_repository_28_days_user
+        description: 
+      - name: user_unique_users_all_secure_scanners_28_days_user
+        description: 
+      - name: user_container_scanning_job_28_days_users
+        description: 
+      - name: user_sast_jobs_28_days_user
+        description: 
+      - name: user_dast_jobs_28_days_user
+        description: 
+      - name: user_dependency_scanning_jobs_28_days_user
+        description: 
+      - name: user_license_management_jobs_28_days_user
+        description: 
+      - name: user_secret_detection_jobs_28_days_user
+        description: 
+      - name: object_store_packages_enabled_instance_setting
+        description: 
+      - name: projects_with_packages_all_time_event
+        description: 
+      - name: projects_with_packages_28_days_users
+        description: 
+      - name: deployments_28_days_users
+        description: 
+      - name: releases_28_days_users
+        description: 
+      - name: epics_28_days_users
+        description: 
+      - name: issues_28_days_users
+        description: 
+      - name: instance_user_count_not_aligned
+        description: 
+      - name: historical_max_users_not_aligned
+        description: 
+      - name: is_seat_link_subscription_in_zuora
+        description: Flags rows where the `zuora_subscription_id` from `customers_db_orders_source` is not found in `dim_subscription`.
+      - name: is_seat_link_rate_plan_in_zuora
+        description: Flags rows where the `product_rate_plan_id` from `customers_db_orders_source` is not found in `dim_product_tier`.
+      - name: is_seat_link_active_user_count_available
+        description: Flags rows where `active_user_count` is NULL in source.
+      - name: is_usage_ping_license_mapped_to_subscription
+        description: 
+      - name: is_usage_ping_license_subscription_id_valid
+        description: 
+
+  - name: fct_product_usage_wave_1_3_metric_monthly
+    description: '{{ doc("fct_product_usage_wave_1_3_metric_monthly") }}'
+    columns:
+      - name: dim_subscription_id
+        description: 
+        tests:
+          - not_null
+      - name: dim_subscription_id_original
+        description:
+        tests:
+          - not_null
+      - name: seat_link_report_date
+        description: Day on which Seat Link usage data is reported. Should always be last day of month for historical months.
+      - name: license_utilization
+        description: Number of activated seats (`active_user_count`) divided by the number of purchased seats (`license_user_count`) on the subscription.
+      - name: active_user_count
+        description: Count of active users currently on the customer's subcription. It is possible for a customer to opt out of sending this information to GitLab.
+      - name: max_historical_user_count
+        description: Maximum active user count ever reported over the lifetime of the customer's subcription.
+      - name: license_user_count
+        description: Count of licensed users purchased with the customer's subcription.
+      - name: ping_created_at
+        description: The timestamp at which the usage ping was created.
+      - name: uuid
+        description: 
+      - name: hostname
+        description: 
+      - name: cleaned_version
+        description: 
+      - name: umau_28_days_user
+        description: 
+      - name: action_monthly_active_users_project_repo_28_days_user
+        description: 
+      - name: merge_requests_28_days_user
+        description: 
+      - name: projects_with_repositories_enabled_28_days_user
+        description: 
+      - name: commit_comment_all_time
+        description: 
+      - name: source_code_pushes_all_time
+        description: 
+      - name: ci_pipelines_28_days_user
+        description: 
+      - name: ci_internal_pipelines_28_days_user
+        description: 
+      - name: ci_builds_28_days_user_28_days_user
+        description: 
+      - name: ci_runners_all_time_event
+        description: 
+      - name: auto_devops_enable_all_time_event
+        description: 
+      - name: gitlab_shared_runners_enabled_instance_setting
+        description: 
+      - name: container_registry_enabled_instance_setting
+        description: 
+      - name: template_repositories_all_time_event
+        description: 
+      - name: ci_pipeline_config_repository_28_days_user
+        description: 
+      - name: user_unique_users_all_secure_scanners_28_days_user
+        description: 
+      - name: user_container_scanning_job_28_days_users
+        description: 
+      - name: user_sast_jobs_28_days_user
+        description: 
+      - name: user_dast_jobs_28_days_user
+        description: 
+      - name: user_dependency_scanning_jobs_28_days_user
+        description: 
+      - name: user_license_management_jobs_28_days_user
+        description: 
+      - name: user_secret_detection_jobs_28_days_user
+        description: 
+      - name: object_store_packages_enabled_instance_setting
+        description: 
+      - name: projects_with_packages_all_time_event
+        description: 
+      - name: projects_with_packages_28_days_users
+        description: 
+      - name: deployments_28_days_users
+        description: 
+      - name: releases_28_days_users
+        description: 
+      - name: epics_28_days_users
+        description: 
+      - name: issues_28_days_users
+        description: 
+      - name: instance_user_count_not_aligned
+        description: 
+      - name: historical_max_users_not_aligned
+        description: 
+      - name: is_seat_link_subscription_in_zuora
+        description: Flags rows where the `zuora_subscription_id` from `customers_db_orders_source` is not found in `dim_subscription`.
+      - name: is_seat_link_rate_plan_in_zuora
+        description: Flags rows where the `product_rate_plan_id` from `customers_db_orders_source` is not found in `dim_product_tier`.
+      - name: is_seat_link_active_user_count_available
+        description: Flags rows where `active_user_count` is NULL in source.
+      - name: is_usage_ping_license_mapped_to_subscription
+        description: 
+      - name: is_usage_ping_license_subscription_id_valid
+        description: 
+
   - name: fct_quote_item
     description: '{{ doc("fct_quote_item") }}'
     columns:
@@ -1395,6 +1621,16 @@ models:
         description: Maximum active user count ever reported over the lifetime of the customer's subcription.
         tests:
           - not_null
+      - name: is_last_seat_link_report_per_subscription
+        description: Flags if the row contains the most recent Seat Link record received for the subscription.
+      - name: is_last_seat_link_report_per_order
+        description: Flags if the row contains the most recent Seat Link record received for the order.
+      - name: is_subscription_in_zuora
+        description: Flags rows where the `zuora_subscription_id` from `customers_db_orders_source` is not found in `dim_subscription`.
+      - name: is_rate_plan_in_zuora
+        description: Flags rows where the `product_rate_plan_id` from `customers_db_orders_source` is not found in `dim_product_tier`.
+      - name: is_active_user_count_available
+        description: Flags rows where `active_user_count` is NULL in source.
       - name: snapshot_month
         description: Month in which Seat Link usage data is reported.
         tests:

@@ -25,6 +25,12 @@ The tier(s) connected to the subscription are determined using the underlying Zu
 
 {% enddocs %}
 
+{% docs bdg_subscription_product_rate_plan %}
+
+tbd
+
+{% enddocs %}
+
 {% docs dim_crm_account %}
 Dimensional customer table representing all existing and historical customers from SalesForce. There are customer definitions for external reporting and additional customer definitions for internal reporting defined in the [handbook](https://about.gitlab.com/handbook/sales/#customer).
 
@@ -314,6 +320,24 @@ There are 5 general ways that a user can have access to a group A:
 An example of these relationships is shown in this diagram:
 
 <div style="width: 720px; height: 480px; margin: 10px; position: relative;"><iframe allowfullscreen frameborder="0" style="width:720px; height:480px" src="https://app.lucidchart.com/documents/embeddedchart/9f529269-3e32-4343-9713-8eb311df7258" id="WRFbB73aKeB3"></iframe></div>
+
+Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+{% enddocs %}
+
+{% docs fct_product_usage_wave_1_3_metric_latest %}
+This table builds on the set of all Zuora subscriptions that are associated with a **Self-Managed** [rate plans](https://www.zuora.com/developer/api-reference/#tag/Rate-Plan). Seat Link data from Customers DB(`fct_usage_self_managed_seat_link`) are combined with high priority Usage Ping metrics (`prep_usage_ping_subscription_mapped_wave2_3_metrics`) to build out the set of facts included in this table. Only the most recently received Usage Ping (by `uuid` and `hostname`) and Seat Link (by `dim_subscription_id`) payload are reported included.
+
+The data from this table will be used to create a mart table (`mart_product_usage_wave_1_3_metrics_latest`) for Gainsight Customer Product Insights.
+
+Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+{% enddocs %}
+
+{% docs fct_product_usage_wave_1_3_metric_monthly %}
+This table builds on the set of all Zuora subscriptions that are associated with a **Self-Managed** [rate plans](https://www.zuora.com/developer/api-reference/#tag/Rate-Plan). Seat Link data from Customers DB(`fct_usage_self_managed_seat_link`) are combined with high priority Usage Ping metrics (`prep_usage_ping_subscription_mapped_wave2_3_metrics`) to build out the set of facts included in this table. Only the most last Usage Ping (by `uuid` and `hostname`) and Seat Link (by `dim_subscription_id`) payload from each month are reported in this table.
+
+The data from this table will be used to create a mart table (`mart_product_usage_wave_1_3_metrics_monthly`) for Gainsight Customer Product Insights.
 
 Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
 
