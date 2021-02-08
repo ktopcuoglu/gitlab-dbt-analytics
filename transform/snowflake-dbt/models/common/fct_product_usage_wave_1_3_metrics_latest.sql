@@ -1,18 +1,19 @@
 WITH subscriptions AS (
 
-    SELECT *
+    SELECT DISTINCT
+      dim_subscription_id,
+      dim_subscription_id_original
     FROM {{ ref('bdg_subscription_product_rate_plan') }}
     WHERE product_delivery_type = 'Self-Managed'
 
 ), usage_ping AS (
 
     SELECT *
-    FROM {{ ref('prep_usage_ping_subscription_mapped_wave2_3_metrics') }}
+    FROM {{ ref('fct_usage_ping_subscription_mapped_wave_2_3_metrics') }}
     WHERE ping_source = 'Self-Managed'
+      AND dim_subscription_id IS NOT NULL
     QUALIFY ROW_NUMBER() OVER (
-      PARTITION BY
-        uuid,
-        hostname
+      PARTITION BY dim_subscription_id
       ORDER BY ping_created_at DESC
       ) = 1
 
@@ -75,9 +76,9 @@ WITH subscriptions AS (
       usage_ping.is_license_mapped_to_subscription                              AS is_usage_ping_license_mapped_to_subscription,
       usage_ping.is_license_subscription_id_valid                               AS is_usage_ping_license_subscription_id_valid
     FROM subscriptions
-    FULL OUTER JOIN seat_link
+    LEFT JOIN seat_link
       ON subscriptions.dim_subscription_id = seat_link.dim_subscription_id
-    FULL OUTER JOIN usage_ping
+    LEFT JOIN usage_ping
       ON subscriptions.dim_subscription_id = usage_ping.dim_subscription_id
   
 )

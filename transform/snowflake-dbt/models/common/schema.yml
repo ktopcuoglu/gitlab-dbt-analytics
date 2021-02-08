@@ -1510,6 +1510,28 @@ models:
       - name: recorded_at
         description: The timestamp when the usage ping was recorded.
 
+  - name: fct_usage_ping_subscription_mapped_wave_2_3_metrics
+    description: '{{ doc("fct_usage_ping_subscription_mapped_wave_2_3_metrics") }}'
+    columns:
+      - name: dim_usage_ping_id
+        description: JOIN key to dim_usage_pings and prep_usage_pings. Represents a single usage ping. 
+      - name: license_md5 
+        description: JOIN key to dim_licenses and dim_license 
+      - name: subscription_id 
+        description: JOIN key to dim_subscription 
+      - name: ping_created_at
+        description: The timestamp at which the usage ping was created_at 
+      - name: ping_created_at_28_days_earlier
+        description: The timestamp at which the usage ping was created_at minus 28 days for the monthly metric time period 
+      - name: ping_created_at_year
+        description: The year ('2017') the ping was created at
+      - name: ping_created_at_month
+        description: The month ('2017-01-01') the ping was created at
+      - name: ping_created_at_week
+        description: The week start ('2017-01-01') the ping was created at
+      - name: ping_created_at_date
+        description: The day the ping was created at (removes the extra time information in the timestamp)
+
   - name: fct_usage_self_managed_seat_link
     description: '{{ doc("fct_usage_self_managed_seat_link") }}'
     columns:

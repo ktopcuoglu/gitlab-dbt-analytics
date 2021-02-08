@@ -1,18 +1,23 @@
 WITH subscriptions AS (
 
-    SELECT *
+    SELECT DISTINCT
+      dim_subscription_id,
+      dim_subscription_id_original,
+      first_day_or_month
     FROM {{ ref('bdg_subscription_product_rate_plan') }}
+      JOIN {{ ref('dim_date') }}
+        ON date_actual BETWEEN '2017-04-01' AND DATE_TRUNC('month', CURRENT_DATE)
     WHERE product_delivery_type = 'Self-Managed'
 
 ), usage_ping AS (
 
     SELECT *
-    FROM {{ ref('prep_usage_ping_subscription_mapped_wave2_3_metrics') }}
+    FROM {{ ref('fct_usage_ping_subscription_mapped_wave_2_3_metrics') }}
     WHERE ping_source = 'Self-Managed'
+      AND dim_subscription_id IS NOT NULL
     QUALIFY ROW_NUMBER() OVER (
       PARTITION BY
-        uuid,
-        hostname,
+        dim_subscription_id,
         ping_created_at_month
       ORDER BY ping_created_at DESC
       ) = 1
@@ -27,8 +32,9 @@ WITH subscriptions AS (
     SELECT
       subscriptions.dim_subscription_id,
       subscriptions.dim_subscription_id_original,
-      seat_link.report_date                                                     AS seat_link_report_date,
-      seat_link.active_user_count / seat_link.license_user_count                AS license_utilization,
+      subscriptions.first_day_or_month                              AS snapshot_month,
+      seat_link.report_date                                         AS seat_link_report_date,
+      seat_link.active_user_count / seat_link.license_user_count    AS license_utilization,
       seat_link.active_user_count,
       seat_link.max_historical_user_count,
       seat_link.license_user_count,
@@ -66,19 +72,21 @@ WITH subscriptions AS (
       usage_ping.epics_28_days_users,
       usage_ping.issues_28_days_users,
       IFF(usage_ping.instance_user_count != seat_link.active_user_count,
-          usage_ping.instance_user_count, NULL)                                 AS instance_user_count_not_aligned,
+          usage_ping.instance_user_count, NULL)                     AS instance_user_count_not_aligned,
       IFF(usage_ping.historical_max_users != seat_link.max_historical_user_count,
-          usage_ping.historical_max_users, NULL)                                AS historical_max_users_not_aligned,
-      seat_link.is_subscription_in_zuora                                        AS is_seat_link_subscription_in_zuora,
-      seat_link.is_rate_plan_in_zuora                                           AS is_seat_link_rate_plan_in_zuora,
-      seat_link.is_active_user_count_available                                  AS is_seat_link_active_user_count_available,
-      usage_ping.is_license_mapped_to_subscription                              AS is_usage_ping_license_mapped_to_subscription,
-      usage_ping.is_license_subscription_id_valid                               AS is_usage_ping_license_subscription_id_valid
+          usage_ping.historical_max_users, NULL)                    AS historical_max_users_not_aligned,
+      seat_link.is_subscription_in_zuora                            AS is_seat_link_subscription_in_zuora,
+      seat_link.is_rate_plan_in_zuora                               AS is_seat_link_rate_plan_in_zuora,
+      seat_link.is_active_user_count_available                      AS is_seat_link_active_user_count_available,
+      usage_ping.is_license_mapped_to_subscription                  AS is_usage_ping_license_mapped_to_subscription,
+      usage_ping.is_license_subscription_id_valid                   AS is_usage_ping_license_subscription_id_valid
     FROM subscriptions
-    LEFT JOIN seat_link
-      ON subscriptions.dim_subscription_id = seat_link.dim_subscription_id
     LEFT JOIN usage_ping
       ON subscriptions.dim_subscription_id = usage_ping.dim_subscription_id
+      AND subscriptions.first_day_or_month = usage_ping.ping_created_at_month
+    LEFT JOIN seat_link
+      ON subscriptions.dim_subscription_id = seat_link.dim_subscription_id
+      AND subscriptions.first_day_or_month = seat_link.snapshot_month
   
 )
 
