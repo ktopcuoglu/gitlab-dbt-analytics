@@ -49,7 +49,11 @@ WITH marketing_contact AS (
       END                                                                                                                                   AS is_saas_trial,    
       CURRENT_DATE - CAST(saas_namespace.saas_trial_expired_on AS DATE)                                                                     AS days_since_saas_trial_ended,    
       CASE 
-        WHEN saas_product_tier = 'SaaS - Free' THEN 1 ELSE 0 
+        WHEN saas_product_tier = 'SaaS - Free' 
+          OR (marketing_contact_role.namespace_id IS NOT NULL 
+            AND IFNULL(saas_product_tier, '') NOT IN ('SaaS - Bronze', 'SaaS - Premium', 'SaaS - Ultimate')) 
+          THEN 1
+        ELSE 0
       END                                                                                                                                   AS is_saas_free_tier,
       CASE 
         WHEN saas_product_tier = 'SaaS - Bronze' THEN 1 ELSE 0 
@@ -92,5 +96,5 @@ WITH marketing_contact AS (
     created_by="@trevor31",
     updated_by="@trevor31",
     created_date="2021-02-04",
-    updated_date="2021-02-04"
+    updated_date="2021-02-08"
 ) }}
