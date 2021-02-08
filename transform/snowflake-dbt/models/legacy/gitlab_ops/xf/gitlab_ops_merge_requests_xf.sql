@@ -1,6 +1,6 @@
 -- depends_on: {{ ref('projects_part_of_product_ops') }}
 -- depends_on: {{ ref('engineering_productivity_metrics_projects_to_include') }}
--- These data models are required for this data model based on https://gitlab.com/gitlab-data/analytics/-/blob/master/transform/snowflake-dbt/models/staging/gitlab_dotcom/xf/gitlab_dotcom_merge_requests_xf.sql
+-- These data models are required for this data model based on https://gitlab.com/gitlab-data/analytics/-/blob/master/transform/snowflake-dbt/models/staging/gitlab_ops/xf/gitlab_ops_merge_requests_xf.sql
 -- This data model is missing a lot of other source data models
 WITH merge_requests AS (
 
@@ -43,7 +43,7 @@ WITH merge_requests AS (
 ),  merge_request_metrics AS (
 
     SELECT *
-    FROM {{ref('gitlab_dotcom_merge_request_metrics')}}
+    FROM {{ref('gitlab_ops_merge_request_metrics')}}
     INNER JOIN latest_merge_request_metric
     ON merge_request_metric_id = target_id
 

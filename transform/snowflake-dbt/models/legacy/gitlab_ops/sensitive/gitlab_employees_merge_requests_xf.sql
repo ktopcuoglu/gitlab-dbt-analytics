@@ -56,7 +56,7 @@
       employee_directory.department
     FROM gitlab_ops_merge_requests
     INNER JOIN mapped_employee
-      ON gitlab_ops_merge_requests.author_id = mapped_employee.gitlab_dotcom_user_id
+      ON gitlab_ops_merge_requests.author_id = mapped_employee.gitlab_ops_user_id
     LEFT JOIN employee_directory
       ON mapped_employee.bamboohr_employee_id = employee_directory.employee_id
       AND DATE_TRUNC(day, gitlab_ops_merge_requests.merged_at) = employee_directory.date_actual

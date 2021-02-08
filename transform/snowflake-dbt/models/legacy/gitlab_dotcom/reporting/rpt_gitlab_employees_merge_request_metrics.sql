@@ -45,5 +45,7 @@ WITH merge_requests AS (
     FROM intermediate
     {{ dbt_utils.group_by(n=9) }}  
 
+    --aggregate to division/department, and add in % of tm with mr
+
 
 
