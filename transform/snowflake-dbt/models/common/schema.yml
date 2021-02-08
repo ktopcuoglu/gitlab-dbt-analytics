@@ -1058,12 +1058,32 @@ models:
         tests:
           - not_null
           - unique
+        tags: ["tdf", "common", "mrr"]
       - name: dim_date_id
         description: The identifier of date month in dim_date
+      - name: dim_billing_account_id
+        description: join key for dim_billing_account
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_billing_account')
+              field: dim_billing_account_id
+        tags: ["tdf", "common", "mrr"]
+      - name: dim_crm_account_id
+        description: join key for dim_crm_account
+        tests:
+          - relationships:
+              to: ref('dim_crm_account')
+              field: crm_account_id
+        tags: ["tdf", "common", "mrr"]
       - name: dim_subscription_id
         description: The identifier of subscription in dim_subscription table
         tests:
           - not_null
+          - relationships:
+              to: ref('dim_subscription')
+              field: dim_subscription_id
+        tags: ["tdf", "common", "mrr"]
       - name: dim_product_detail_id
         description: The identifier of product details in dim_product_detail
         tests:
