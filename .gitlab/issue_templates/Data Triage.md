@@ -65,7 +65,7 @@ Use these to notify stakeholders of Data Delays.
 <details>
 <summary><i>Data Source Delay Templates</i></summary>
 
-Post notices to #data and cross-post to #whats-ahppening-at-gitlab
+Post notices to #data and cross-post to #whats-happening-at-gitlab
 
 #### GitLab.com
 
