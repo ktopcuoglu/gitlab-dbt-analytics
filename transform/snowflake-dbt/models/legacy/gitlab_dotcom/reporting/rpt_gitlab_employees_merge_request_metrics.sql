@@ -36,7 +36,7 @@ WITH merge_requests AS (
     FROM employees
     LEFT JOIN merge_requests
       ON merge_requests.bamboohr_employee_id = employees.employee_id
-      AND DATE_TRUNC(day, merge_requests.merged_at) BETWEEN employees.valid_from AND COALESCE(employees.valid_to, '2020-02-28')
+      AND DATE_TRUNC(day, merge_requests.merged_at) BETWEEN employees.valid_from AND COALESCE(employees.valid_to, CURRENT_DATE())
 
 ), aggregated AS (
 
