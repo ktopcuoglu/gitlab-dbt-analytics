@@ -65,11 +65,14 @@ Use these to notify stakeholders of Data Delays.
 <details>
 <summary><i>Data Source Delay Templates</i></summary>
 
+Post notices to #data and cross-post to #whats-ahppening-at-gitlab
+
 #### GitLab.com
 
 We have identified a delay in the `GitLab` data refresh and this problem potentially impacts any GitLab KPIs (e.g. MR Rate, TMAU) or SiSense dashboards. We are actively working on a resolution and will provide an update once the KPIs and SiSense dashboards have been brought up-to-date.  
 
-`CC @Mek Stittri, @Christopher Lefelhocz, @Hila Qu`
+`CC @Mek Stittri, @Christopher Lefelhocz, @Hila Qu, @WayneHaber,  @Steve Loyd`
+
 
 #### Salesforce
 
