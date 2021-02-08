@@ -3,7 +3,7 @@ WITH subscriptions AS (
     SELECT DISTINCT
       dim_subscription_id,
       dim_subscription_id_original,
-      first_day_or_month
+      first_day_of_month
     FROM {{ ref('bdg_subscription_product_rate_plan') }}
       JOIN {{ ref('dim_date') }}
         ON date_actual BETWEEN '2017-04-01' AND DATE_TRUNC('month', CURRENT_DATE)
@@ -32,7 +32,7 @@ WITH subscriptions AS (
     SELECT
       subscriptions.dim_subscription_id,
       subscriptions.dim_subscription_id_original,
-      subscriptions.first_day_or_month                              AS snapshot_month,
+      subscriptions.first_day_of_month                              AS snapshot_month,
       seat_link.report_date                                         AS seat_link_report_date,
       seat_link.active_user_count / seat_link.license_user_count    AS license_utilization,
       seat_link.active_user_count,
@@ -83,10 +83,10 @@ WITH subscriptions AS (
     FROM subscriptions
     LEFT JOIN usage_ping
       ON subscriptions.dim_subscription_id = usage_ping.dim_subscription_id
-      AND subscriptions.first_day_or_month = usage_ping.ping_created_at_month
+      AND subscriptions.first_day_of_month = usage_ping.ping_created_at_month
     LEFT JOIN seat_link
       ON subscriptions.dim_subscription_id = seat_link.dim_subscription_id
-      AND subscriptions.first_day_or_month = seat_link.snapshot_month
+      AND subscriptions.first_day_of_month = seat_link.snapshot_month
   
 )
 

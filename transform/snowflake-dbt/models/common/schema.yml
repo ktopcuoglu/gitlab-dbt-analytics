@@ -1287,6 +1287,9 @@ models:
       - name: dim_subscription_id_original
         tests:
           - not_null
+      - name: snapshot_month
+        tests:
+          - not_null
       - name: seat_link_report_date
         description: Day on which Seat Link usage data is reported. Should always be last day of month for historical months.
       - name: license_utilization
