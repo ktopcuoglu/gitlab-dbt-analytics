@@ -3,6 +3,7 @@ WITH merge_requests AS (
     SELECT *
     FROM {{ ref('gitlab_employees_merge_requests_xf') }}
     WHERE merged_at IS NOT NULL
+      {# AND is_part_of_product = TRUE #}
   
 ), employees AS (
   
@@ -15,7 +16,9 @@ WITH merge_requests AS (
       employees.*,
       merge_requests.merge_request_id, 
       merge_requests.merge_request_data_source,
-      merge_requests.merged_at
+      merge_requests.merged_at,
+      merge_requests.is_part_of_product,
+      people_engineering_project
     FROM employees
     LEFT JOIN merge_requests
       ON merge_requests.bamboohr_employee_id = employees.employee_id
@@ -33,12 +36,14 @@ WITH merge_requests AS (
       jobtitle_speciality,
       reports_to,
       total_days,
-      COUNT(DISTINCT(merge_request_id)) AS total_merged,
-      COUNT(IFF(merge_request_data_source = 'gitlab_dotcom',merge_request_id,NULL)) AS total_gitlab_dotcom_merge_requests,
-      COUNT(IFF(merge_request_data_source = 'gitlab_ops',merge_request_id,NULL))    AS total_gitlab_ops_merge_requests
+      COUNT(IFF(is_part_of_product = TRUE, merge_request_id, NULL))                        AS total_merged_part_of_product,
+      COUNT(IFF(is_part_of_product = TRUE AND 
+                merge_request_data_source = 'gitlab_dotcom',merge_request_id,NULL))     AS total_gitlab_dotcom_product_merge_requests,
+      COUNT(IFF(is_part_of_product = TRUE 
+                AND merge_request_data_source = 'gitlab_ops',merge_request_id,NULL))    AS total_gitlab_ops_product_merge_requests,
+      SUM(people_engineering_project)                                                   AS total_people_engineering_merge_requests
     FROM intermediate
-    GROUP BY 1,2,3,4,5,6,7,8
-        {# {{ dbt_utils.group_by(n=8) }}   #}
+    {{ dbt_utils.group_by(n=9) }}  
 
 
 

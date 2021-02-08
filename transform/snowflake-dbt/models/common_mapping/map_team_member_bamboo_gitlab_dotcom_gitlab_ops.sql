@@ -17,15 +17,21 @@ WITH bamboo_hr_members AS (
       gitlab_ops_user_name, 
       notification_email        AS gitlab_ops_email_address
     FROM {{ ref ('dim_gitlab_ops_gitlab_emails') }}
+
+), missing_employees AS (
+
+    SELECT *
+    FROM {{ ref ('sheetload_infrastructure_missing_employees') }}
   
 ), final AS (
 
     SELECT 
-      employee_id               AS bamboohr_employee_id, 
-      full_name                 AS bamboo_hr_full_name, 
-      work_email                AS bamboo_hr_gitlab_email, 
-      gitlab_dotcom_user_id, 
-      gitlab_dotcom_user_name, 
+      bamboo_hr_members.employee_id                     AS bamboohr_employee_id, 
+      bamboo_hr_members.full_name                       AS bamboo_hr_full_name, 
+      bamboo_hr_members.work_email                      AS bamboo_hr_gitlab_email, 
+      COALESCE(gitlab_dotcom_members.gitlab_dotcom_user_id, 
+               missing_employees.gitlab_dotcom_user_id) AS gitlab_dotcom_user_id,
+      gitlab_dotcom_members.gitlab_dotcom_user_name, 
       gitlab_ops_user_id, 
       gitlab_ops_user_name
     FROM bamboo_hr_members
@@ -33,9 +39,10 @@ WITH bamboo_hr_members AS (
         ON bamboo_hr_members.work_email = gitlab_dotcom_members.gitlab_dotcom_email_address 
     LEFT JOIN gitlab_ops_members
         ON bamboo_hr_members.work_email = gitlab_ops_members.gitlab_ops_email_address 
+    LEFT JOIN missing_employees
+      ON bamboo_hr_members.employee_id = missing_employees.employee_id
 
 ) 
 
 SELECT * 
-FROM final 
-
+FROM final

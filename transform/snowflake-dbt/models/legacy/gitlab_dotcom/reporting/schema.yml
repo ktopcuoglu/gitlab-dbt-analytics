@@ -13,6 +13,9 @@ models:
       - name: jobtitle_speciality
       - name: reports_to
       - name: total_days
-      - name: total_merged
-      - name: total_gitlab_dotcom_merge_requests
-      - name: total_gitlab_ops_merge_requests
+      - name: total_merged_part_of_product
+        description: Total merge requests merged to products identified in projects_part_of_product -- this includes gitlab_dotcom and gitlab_ops
+      - name: total_gitlab_dotcom_product_merge_requests
+      - name: total_gitlab_ops_product_merge_requests
+      - name: total_people_engineering_merge_requests
+        description: Identified as merge requests in to the people engineering project or target_project_id = 14274989

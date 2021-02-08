@@ -1,4 +1,5 @@
 -- depends_on: {{ ref('projects_part_of_product_ops') }}
+-- depends_on: {{ ref('engineering_productivity_metrics_projects_to_include') }}
 -- These data models are required for this data model based on https://gitlab.com/gitlab-data/analytics/-/blob/master/transform/snowflake-dbt/models/staging/gitlab_dotcom/xf/gitlab_dotcom_merge_requests_xf.sql
 -- This data model is missing a lot of other source data models
 WITH merge_requests AS (
@@ -57,14 +58,12 @@ WITH merge_requests AS (
       merge_requests.*,
       merge_request_metrics.merged_at,
       projects.namespace_id,
-      ARRAY_TO_STRING(agg_labels.labels,'|')                                               AS masked_label_title,
+      ARRAY_TO_STRING(agg_labels.labels,'|')                                        AS masked_label_title,
       agg_labels.labels, 
-      {% set ops_projects = is_project_part_of_product_ops() %}
-      {% if ops_projects|length > 0 %}
-        IFF(merge_requests.target_project_id IN ({{ops_projects}}), TRUE, FALSE)           AS is_part_of_product_ops
-      {% else %}
-        FALSE                                                                              AS is_part_of_product_ops
-      {% endif %}
+     IFF(merge_requests.target_project_id IN ({{is_project_included_in_engineering_metrics()}}),
+        TRUE, FALSE)                                                                AS is_included_in_engineering_metrics,
+      IFF(merge_requests.target_project_id IN ({{is_project_part_of_product_ops()}}),
+        TRUE, FALSE)                                                                AS is_part_of_product_ops
     FROM merge_requests
     LEFT JOIN merge_request_metrics
         ON merge_requests.merge_request_id = merge_request_metrics.merge_request_id

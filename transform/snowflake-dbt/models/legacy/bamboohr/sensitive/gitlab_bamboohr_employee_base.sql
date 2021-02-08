@@ -43,7 +43,8 @@ WITH employee_directory AS (
     SELECT 
       month_date,
       valid_from,
-      LEAD(DATEADD(day, -1, valid_from)) OVER (PARTITION BY employee_id order by valid_from) AS valid_to,
+      COALESCE(LEAD(DATEADD(day, -1, valid_from)) OVER (PARTITION BY employee_id order by valid_from),
+               LAST_DAY(valid_from))                                                                    AS valid_to,
       employee_id,
       full_name,
       division,
