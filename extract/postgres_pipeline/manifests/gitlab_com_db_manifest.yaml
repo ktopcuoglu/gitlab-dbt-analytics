@@ -897,6 +897,26 @@ tables:
     export_table: 'epic_metrics'
     export_table_primary_key: id
     dbt_source_model: true
+  experiment_subjects:
+    import_db: GITLAB_DB
+    import_query: >
+      SELECT id
+      , experiment_id
+      , user_id
+      , group_id
+      , project_id
+      , variant
+      , created_at
+      , updated_at
+      , converted_at
+      , context
+      FROM experiment_subjects
+      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
+        AND '{EXECUTION_DATE}'::timestamp 
+    export_schema: 'gitlab_com'
+    export_table: 'experiment_subjects'
+    export_table_primary_key: id
+    dbt_source_model: true     
   experiment_users:
     import_db: GITLAB_DB
     import_query: >
@@ -1380,6 +1400,10 @@ tables:
       FROM namespace_onboarding_actions
       WHERE created_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
         AND '{EXECUTION_DATE}'::timestamp
+    export_schema: 'gitlab_com'
+    export_table: 'namespace_onboarding_actions'
+    export_table_primary_key: id
+    dbt_source_model: true
   namespace_statistics:
     import_db: GITLAB_DB
     import_query: >
