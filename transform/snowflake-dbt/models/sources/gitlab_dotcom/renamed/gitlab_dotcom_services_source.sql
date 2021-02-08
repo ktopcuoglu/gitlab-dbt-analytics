@@ -1,7 +1,7 @@
 WITH source AS (
 
     SELECT *
-    FROM { { ref('gitlab_dotcom_services') }}
+    FROM { { ref('gitlab_dotcom_services_dedupe_source') }}
     QUALIFY ROW_NUMBER() OVER (PARTITION BY id ORDER BY updated_at DESC) = 1
 
 ), renamed AS (
