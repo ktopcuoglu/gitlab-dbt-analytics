@@ -20,8 +20,8 @@ WITH source AS (
     created_at::TIMESTAMP AS created_at,
     updated_at::TIMESTAMP AS updated_at,
     project_id::NUMBER    AS project_id,
-    key::VARCHAR          AS group_custom_key,
-    value::VARCHAR        AS group_custom_value
+    key::VARCHAR          AS project_custom_key,
+    value::VARCHAR        AS project_custom_value
   FROM source
   QUALIFY ROW_NUMBER() OVER (PARTITION BY id ORDER BY updated_at DESC) = 1
   
