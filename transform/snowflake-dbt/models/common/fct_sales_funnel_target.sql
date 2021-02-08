@@ -78,5 +78,5 @@ WITH date AS (
     created_by="@mcooperDD",
     updated_by="@mcooperDD",
     created_date="2020-12-18",
-    updated_date="2020-12-18"
+    updated_date="2020-02-08"
 ) }}
