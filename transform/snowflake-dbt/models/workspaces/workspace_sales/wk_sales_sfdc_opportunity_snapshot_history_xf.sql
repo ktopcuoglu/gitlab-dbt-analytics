@@ -284,20 +284,22 @@ WITH date_details AS (
       -- NF 2021-01-28 Not all historical opportunities have Net ARR set. To allow historical reporting 
       -- we apply a ratio by segment / order type to convert IACV to Net ARR      
       CASE
-        WHEN (opp_snapshot.raw_net_arr IS NULL 
+        WHEN (COALESCE(opp_snapshot.raw_net_arr,0) = 0 
             OR opp_snapshot.date_actual <= '2021-01-30'::DATE) 
-          AND sfdc_opportunity_xf.raw_net_arr IS NOT NULL
+          AND COALESCE(sfdc_opportunity_xf.raw_net_arr,0) <> 0
           AND sfdc_opportunity_xf.net_incremental_acv <> 0 
+          AND opp_snapshot.net_incremental_acv <> 0
+          AND sfdc_opportunity_xf.is_won = 1
             THEN opp_snapshot.net_incremental_acv * coalesce(sfdc_opportunity_xf.raw_net_arr / sfdc_opportunity_xf.net_incremental_acv,0)
-        WHEN (opp_snapshot.raw_net_arr IS NULL 
+        WHEN (COALESCE(opp_snapshot.raw_net_arr,0) = 0 
             OR opp_snapshot.date_actual <= '2021-01-30'::DATE) 
           AND opp_snapshot.net_incremental_acv <> 0
             THEN opp_snapshot.net_incremental_acv * coalesce(net_iacv_to_net_arr_ratio.ratio_net_iacv_to_net_arr,0)
-        WHEN (opp_snapshot.raw_net_arr IS NULL 
+        WHEN (COALESCE(opp_snapshot.raw_net_arr,0) = 0 
             OR opp_snapshot.date_actual <= '2021-01-30'::DATE) 
           AND opp_snapshot.incremental_acv <> 0
             THEN opp_snapshot.incremental_acv * coalesce(net_iacv_to_net_arr_ratio.ratio_net_iacv_to_net_arr,0)
-        ELSE opp_snapshot.raw_net_arr
+        ELSE COALESCE(opp_snapshot.raw_net_arr,0) 
       END                                                        AS net_arr,
 
       opp_snapshot.recurring_amount,
