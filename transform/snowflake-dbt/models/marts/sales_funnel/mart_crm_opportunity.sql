@@ -87,7 +87,8 @@ WITH dim_crm_account AS (
       dim_crm_opportunity.source_buckets,
       dim_crm_opportunity.opportunity_sales_development_representative,
       dim_crm_opportunity.opportunity_business_development_representative,
-      dim_crm_opportunity.opportunity_development_representative
+      dim_crm_opportunity.opportunity_development_representative,
+      dim_crm_opportunity.is_web_portal_purchase
     FROM fct_crm_opportunity
     LEFT JOIN dim_crm_opportunity
       ON fct_crm_opportunity.dim_crm_opportunity_id = dim_crm_opportunity.dim_crm_opportunity_id
@@ -117,5 +118,5 @@ WITH dim_crm_account AS (
     created_by="@iweeks",
     updated_by="@iweeks",
     created_date="2020-12-07",
-    updated_date="2021-02-05",
+    updated_date="2021-02-08",
   ) }}
