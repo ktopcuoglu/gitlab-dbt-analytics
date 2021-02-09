@@ -69,7 +69,7 @@ Post notices to #data and cross-post to #whats-happening-at-gitlab
 
 #### GitLab.com
 
-We have identified a delay in the `GitLab.com` data refresh and this problem potentially impacts any GitLab KPIs (e.g. MR Rate, TMAU) or SiSense dashboards. We are actively working on a resolution and will provide an update once the KPIs and SiSense dashboards have been brought up-to-date.
+We have identified a delay in the `GitLab.com` data refresh and this problem potentially also delays data for GitLab KPIs (e.g. MR Rate, TMAU) or SiSense dashboards. We are actively working on a resolution and will provide an update once the KPIs and SiSense dashboards have been brought up-to-date.
 
 The `GitLab.com` data in the warehouse and downstream models is accurate as of YYYY-MM-DD HH:MM UTC (HH:MM PST).
 
