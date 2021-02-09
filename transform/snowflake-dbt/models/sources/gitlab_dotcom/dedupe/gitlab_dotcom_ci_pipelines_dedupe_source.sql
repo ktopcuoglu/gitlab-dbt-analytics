@@ -1,4 +1,10 @@
 
+{{ config({
+    "materialized": "incremental",
+    "unique_key": "id"
+    })
+}}
+
   SELECT *
   FROM {{ source('gitlab_dotcom', 'ci_pipelines') }}
   {% if is_incremental() %}

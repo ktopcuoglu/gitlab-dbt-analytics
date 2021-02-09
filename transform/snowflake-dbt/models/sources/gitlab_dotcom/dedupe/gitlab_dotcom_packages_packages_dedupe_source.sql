@@ -1,4 +1,10 @@
 
+{{ config({
+    "materialized": "incremental",
+    "unique_key": "id"
+    })
+}}
+
   SELECT *
   FROM {{ source('gitlab_dotcom', 'packages_packages') }}
   {% if is_incremental() %}

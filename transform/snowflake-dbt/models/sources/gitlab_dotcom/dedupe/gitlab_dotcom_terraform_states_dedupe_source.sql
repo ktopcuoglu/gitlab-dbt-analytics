@@ -1,4 +1,10 @@
 
+{{ config({
+    "materialized": "incremental",
+    "unique_key": "id"
+    })
+}}
+
   SELECT *
   FROM {{ source('gitlab_dotcom', 'terraform_states') }}
   {% if is_incremental() %}

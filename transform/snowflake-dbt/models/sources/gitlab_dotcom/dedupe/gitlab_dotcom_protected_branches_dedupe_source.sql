@@ -1,4 +1,10 @@
 
+{{ config({
+    "materialized": "incremental",
+    "unique_key": "id"
+    })
+}}
+
   SELECT *
   FROM {{ source('gitlab_dotcom', 'protected_branches') }}
   {% if is_incremental() %}
