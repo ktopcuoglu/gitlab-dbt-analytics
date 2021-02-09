@@ -281,6 +281,7 @@ WITH date_details AS (
       opp_snapshot.total_contract_value,
       opp_snapshot.professional_services_value,
 
+    /*
       -- NF 2021-01-28 Not all historical opportunities have Net ARR set. To allow historical reporting 
       -- we apply a ratio by segment / order type to convert IACV to Net ARR      
       CASE
@@ -301,6 +302,68 @@ WITH date_details AS (
             THEN opp_snapshot.incremental_acv * coalesce(net_iacv_to_net_arr_ratio.ratio_net_iacv_to_net_arr,0)
         ELSE COALESCE(opp_snapshot.raw_net_arr,0) 
       END                                                        AS net_arr,
+*/
+      ------------------------------------------------------------------------------------------------------
+      ------------------------------------------------------------------------------------------------------
+      
+      -- Historical Net ARR Logic Summary   
+      -- closed deals use net_incremental_acv
+      -- open deals use incremental acv
+      -- deals with opportunities and net_arr > 0 use that opportunity calculated ratio
+      -- deals with no opty with net_arr use a default ratio for segment / order type
+      -- deals before 2021-02-01 use always net_arr calculated from ratio
+      -- deals after 2021-02-01 use net_arr if > 0, if open and not net_arr uses ratio version
+
+      -- If the opportunity exists, use the ratio from the opportunity sheetload
+      -- I am faking that using the opportunity table directly
+      CASE -- open deal uses iacv
+        --WHEN sfdc_opportunity_xf.is_open = 1
+        --  AND COALESCE(sfdc_opportunity_xf.raw_net_arr,0) <> 0
+        --  AND COALESCE(sfdc_opportunity_xf.incremental_acv,0) <> 0
+        --    THEN COALESCE(sfdc_opportunity_xf.raw_net_arr / sfdc_opportunity_xf.incremental_acv,0)
+        -- close deal uses net iacv
+        WHEN sfdc_opportunity_xf.is_open = 0
+          AND COALESCE(sfdc_opportunity_xf.raw_net_arr,0) <> 0
+          AND COALESCE(sfdc_opportunity_xf.net_incremental_acv,0) <> 0
+            THEN COALESCE(sfdc_opportunity_xf.raw_net_arr / sfdc_opportunity_xf.net_incremental_acv,0)
+        ELSE NULL 
+      END                                                                     AS opportunity_based_iacv_to_net_arr_ratio,
+     
+      -- If there is no opportnity, use a default table ratio
+      -- I am faking that using the upper CTE, that should be replaced by the official table
+      COALESCE(net_iacv_to_net_arr_ratio.ratio_net_iacv_to_net_arr,0)         AS segment_order_type_iacv_to_net_arr_ratio,
+
+      -- calculated net_arr
+      -- uses ratios to estimate the net_arr based on iacv if open or net_iacv if closed
+      -- if there is an opportunity based ratio, use that, if not, use default from segment / order type
+
+      -- NUANCE: Lost deals might not have net_incremental_acv populated, so we must rely on iacv
+      CASE 
+        WHEN opp_snapshot.stage_name NOT IN ('8-Closed Lost', '9-Unqualified', 'Closed Won')  -- OPEN DEAL
+          THEN COALESCE(opp_snapshot.incremental_acv,0) * COALESCE(opportunity_based_iacv_to_net_arr_ratio,segment_order_type_iacv_to_net_arr_ratio)
+        WHEN opp_snapshot.stage_name IN ('8-Closed Lost')                       -- CLOSED LOST DEAL and no Net IACV
+          AND COALESCE(opp_snapshot.net_incremental_acv,0) = 0
+            THEN COALESCE(opp_snapshot.incremental_acv,0) * COALESCE(opportunity_based_iacv_to_net_arr_ratio,segment_order_type_iacv_to_net_arr_ratio)
+        WHEN opp_snapshot.stage_name IN ('8-Closed Lost', 'Closed Won')         -- REST of CLOSED DEAL
+            THEN COALESCE(opp_snapshot.net_incremental_acv,0) * COALESCE(opportunity_based_iacv_to_net_arr_ratio,segment_order_type_iacv_to_net_arr_ratio)
+        ELSE NULL
+      END                                                                     AS calculated_from_ratio_net_arr,
+      
+      -- For opportunities before start of FY22, as Net ARR was WIP, there are a lot of opties with IACV or Net IACV and no Net ARR
+      -- Those were later fixed in the opportunity object but stayed in the snapshot table.
+      -- To account for those issues and give a directionally correct answer, we apply a ratio to everything before FY22
+      CASE
+        WHEN  opp_snapshot.date_actual < '2021-02-01'::DATE -- All deals before cutoff
+          THEN calculated_from_ratio_net_arr
+        WHEN  opp_snapshot.date_actual >= '2021-02-01'::DATE -- Open deal with no Net ARR, after cut off
+          AND COALESCE(opp_snapshot.raw_net_arr,0) = 0
+          AND opp_snapshot.stage_name NOT IN ('8-Closed Lost', '9-Unqualified', 'Closed Won') 
+            THEN calculated_from_ratio_net_arr
+        ELSE COALESCE(opp_snapshot.raw_net_arr,0) -- Rest of deals after cut off date
+      END                                                                     AS net_arr,
+         
+      ------------------------------------------------------------------------------------------------------
+      ------------------------------------------------------------------------------------------------------
 
       opp_snapshot.recurring_amount,
       opp_snapshot.true_up_amount,
