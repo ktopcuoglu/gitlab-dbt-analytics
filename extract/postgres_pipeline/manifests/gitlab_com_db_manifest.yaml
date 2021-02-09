@@ -2957,7 +2957,6 @@ tables:
     import_db: GITLAB_DB
     import_query: |-
       SELECT id
-      , primary
       , oauth_application_id
       , enabled
       , access_key
