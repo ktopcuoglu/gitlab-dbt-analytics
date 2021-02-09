@@ -93,6 +93,11 @@ WITH sfdc_opportunity_xf AS (
       sfdc_opportunity_xf.arr_basis,
       sfdc_opportunity_xf.arr,
 
+      sfdc_opportunity_xf.user_segment_stamped,
+      sfdc_opportunity_xf.user_region_stamped,
+      sfdc_opportunity_xf.user_area_stamped,
+      sfdc_opportunity_xf.user_geo_stamped,
+
       sfdc_opportunity_xf.opportunity_health,
       sfdc_opportunity_xf.risk_type,
       sfdc_opportunity_xf.risk_reasons,
@@ -193,11 +198,11 @@ WITH sfdc_opportunity_xf AS (
 
 ), sfdc_users_xf AS (
 
-    SELECT * FROM {{ref('sfdc_users_xf')}}
+    SELECT * FROM {{ref('wk_sales_sfdc_users_xf')}}
 
-), sfdc_account AS (
+), sfdc_accounts_xf AS (
 
-    SELECT * FROM {{ref('sfdc_account')}}
+    SELECT * FROM {{ref('sfdc_accounts_xf')}}
 
 ), date_details AS (
  
@@ -273,6 +278,10 @@ WITH sfdc_opportunity_xf AS (
       sfdc_opportunity_xf.created_fiscal_year                      AS pipeline_created_fiscal_year,
       sfdc_opportunity_xf.created_fiscal_quarter_name              AS pipeline_created_fiscal_quarter_name,
       sfdc_opportunity_xf.created_fiscal_quarter_date              AS pipeline_created_fiscal_quarter_date,
+
+
+      -- account driven fields 
+      sfdc_accounts_xf.ultimate_parent_account_id,
   
       -- medium level grouping of the order type field
       CASE 
@@ -292,6 +301,18 @@ WITH sfdc_opportunity_xf AS (
           THEN '2. Growth' 
         ELSE '3. Other'
       END                                                                 AS deal_group,
+
+      -- Team Segment / ASM - RD 
+      CASE WHEN sfdc_opportunity_xf.user_segment_stamped IS NULL 
+          THEN opportunity_owner.user_segment 
+          ELSE COALESCE(sfdc_opportunity_xf.user_segment_stamped,'N/A')
+      END                                                                 AS opportunity_owner_user_segment,
+
+      CASE WHEN sfdc_opportunity_xf.user_region_stamped IS NULL 
+          THEN opportunity_owner.user_region
+          ELSE COALESCE(sfdc_opportunity_xf.user_region_stamped,'N/A')
+      END                                                                 AS opportunity_owner_user_region,
+
    
       -- PIO Flag for PIO reporting dashboard
       CASE 
@@ -313,13 +334,6 @@ WITH sfdc_opportunity_xf AS (
         ELSE 'Other' 
       END                                                                 AS account_owner_cro_level,
 
-      CASE 
-        WHEN sfdc_opportunity_xf.user_segment   IS NULL 
-          OR sfdc_opportunity_xf.user_segment   = 'Unknown' 
-        THEN 'SMB' 
-          ELSE sfdc_opportunity_xf.user_segment   
-      END                                                                 AS user_segment_stamped,
-
        -- check if renewal was closed on time or not
       CASE 
         WHEN sfdc_opportunity_xf.is_renewal = 1 
@@ -335,19 +349,26 @@ WITH sfdc_opportunity_xf AS (
       
       -- 20201021 NF: This should be replaced by a table that keeps track of excluded deals for forecasting purposes
       CASE 
-        WHEN sfdc_account.ultimate_parent_id IN ('001610000111bA3','0016100001F4xla','0016100001CXGCs','00161000015O9Yn','0016100001b9Jsc') 
+        WHEN sfdc_accounts_xf.ultimate_parent_id IN ('001610000111bA3','0016100001F4xla','0016100001CXGCs','00161000015O9Yn','0016100001b9Jsc') 
           AND sfdc_opportunity_xf.close_date < '2020-08-01' 
             THEN 1
         ELSE 0
       END                                                                 AS is_excluded_flag
 
     FROM sfdc_opportunity_xf
-    LEFT JOIN sfdc_account
-      ON sfdc_account.account_id = sfdc_opportunity_xf.account_id
+    INNER JOIN sfdc_users_xf opportunity_owner
+      ON opportunity_owner.user_id = sfdc_opportunity_xf.owner_id
+    LEFT JOIN sfdc_accounts_xf
+      ON sfdc_accounts_xf.account_id = sfdc_opportunity_xf.account_id
+    WHERE sfdc_accounts_xf.ultimate_parent_account_id NOT IN ('0016100001YUkWVAA1')   -- remove test account
+      AND sfdc_opportunity_xf.account_id NOT IN ('0014M00001kGcORQA0')                -- remove test account
+      AND sfdc_opportunity_xf.is_deleted = 0
+
 ), add_calculated_net_arr_to_opty_final AS (
 
     SELECT 
       oppty_final.*,
+      
       -- NF 2021-01-28 Not all historical opportunities have Net ARR set. To allow historical reporting 
       -- we apply a ratio by segment / order type to convert IACV to Net ARR      
       CASE

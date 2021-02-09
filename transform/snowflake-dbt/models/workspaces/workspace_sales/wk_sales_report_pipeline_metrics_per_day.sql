@@ -1,4 +1,4 @@
-{{ config(alias='sfdc_pipeline_metrics_per_day') }}
+{{ config(alias='report_pipeline_metrics_day') }}
 
 /*
 TODO:
@@ -425,7 +425,7 @@ WITH date_details AS (
                               day_of_fiscal_quarter_normalised                                                      AS snapshot_day_of_fiscal_quarter
               FROM date_details) d
       ON c.snapshot_fiscal_quarter_date = d.snapshot_fiscal_quarter_date 
-), sfdc_pipeline_coverage_pacing_per_day AS (
+), report_pipeline_metrics_day AS (
   
 SELECT 
   base_fields.adj_ultimate_parent_sales_segment                                                                     AS sales_segment, 
@@ -526,5 +526,6 @@ LEFT JOIN pipeline_gen
 LEFT JOIN date_details next_quarter_date
   ON next_quarter_date.date_actual = base_fields.snapshot_next_fiscal_quarter_date
 )
+
 SELECT *
-FROM sfdc_pipeline_coverage_pacing_per_day
+FROM report_pipeline_metrics_day

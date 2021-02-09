@@ -62,13 +62,13 @@ WITH date AS (
 
   FROM target_matrix
   LEFT JOIN sfdc_user_hierarchy_live
-    ON LOWER(target_matrix.area) = LOWER(sfdc_user_hierarchy_live.sales_area_name_live)
+    ON {{ sales_funnel_text_slugify("target_matrix.area") }} = {{ sales_funnel_text_slugify("sfdc_user_hierarchy_live.sales_area_name_live") }}
   LEFT JOIN date
-    ON target_matrix.month = date.fiscal_month_name_fy
+    ON {{ sales_funnel_text_slugify("target_matrix.month") }} = {{ sales_funnel_text_slugify("date.fiscal_month_name_fy") }}
   LEFT JOIN opportunity_source
-    ON target_matrix.opportunity_source = opportunity_source.opportunity_source_name
+    ON {{ sales_funnel_text_slugify("target_matrix.opportunity_source") }} = {{ sales_funnel_text_slugify("opportunity_source.opportunity_source_name") }}
   LEFT JOIN order_type
-    ON target_matrix.order_type = order_type.order_type_name
+    ON {{ sales_funnel_text_slugify("target_matrix.order_type") }} = {{ sales_funnel_text_slugify("order_type.order_type_name") }}
   LEFT JOIN sfdc_user_hierarchy_stamped
     ON sfdc_user_hierarchy_live.dim_crm_sales_hierarchy_live_id = sfdc_user_hierarchy_stamped.dim_crm_sales_hierarchy_stamped_id
 )
@@ -78,5 +78,5 @@ WITH date AS (
     created_by="@mcooperDD",
     updated_by="@mcooperDD",
     created_date="2020-12-18",
-    updated_date="2020-12-18"
+    updated_date="2020-02-08"
 ) }}
