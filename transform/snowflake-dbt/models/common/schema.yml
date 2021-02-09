@@ -18,6 +18,7 @@ models:
       - name: order_id
       - name: namespace_id_order
       - name: subscription_id_order
+      - name: ultimate_parent_namespace_id
       - name: namespace_type
       - name: dim_product_tier_id_namespace
       - name: product_tier_name_namespace
@@ -41,7 +42,35 @@ models:
       - name: dim_billing_account_id
       - name: dim_crm_account_id
       - name: count_of_tiers_per_subscription
+      - name: product_rate_plan_id_subscription
       - name: namespace_order_subscription_match_status
+
+
+  - name: bdg_self_managed_order_subscription_active
+    description: '{{ doc("bdg_self_managed_order_subscription_active") }}'
+    columns:
+      - name: dim_subscription_id
+      - name: order_id
+      - name: namespace_id_order
+      - name: subscription_id_order
+      - name: customer_id
+      - name: dim_product_tier_id_with_trial
+      - name: product_delivery_type_with_trial
+      - name: product_tier_name_with_trial
+      - name: dim_product_tier_id_order
+      - name: product_delivery_type_order
+      - name: product_tier_name_order
+      - name: order_start_date
+      - name: order_end_date
+      - name: order_is_trial
+      - name: product_tier_name_subscription
+      - name: dim_product_tier_id_subscription
+      - name: dim_subscription_id_original
+      - name: dim_subscription_id_previous
+      - name: dim_billing_account_id
+      - name: dim_crm_account_id
+      - name: count_of_tiers_per_subscription
+      - name: product_rate_plan_id_subscription
 
   - name: dim_billing_account
     description: '{{ doc("dim_billing_account") }}'
@@ -1029,12 +1058,32 @@ models:
         tests:
           - not_null
           - unique
+        tags: ["tdf", "common", "mrr"]
       - name: dim_date_id
         description: The identifier of date month in dim_date
+      - name: dim_billing_account_id
+        description: join key for dim_billing_account
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_billing_account')
+              field: dim_billing_account_id
+        tags: ["tdf", "common", "mrr"]
+      - name: dim_crm_account_id
+        description: join key for dim_crm_account
+        tests:
+          - relationships:
+              to: ref('dim_crm_account')
+              field: crm_account_id
+        tags: ["tdf", "common", "mrr"]
       - name: dim_subscription_id
         description: The identifier of subscription in dim_subscription table
         tests:
           - not_null
+          - relationships:
+              to: ref('dim_subscription')
+              field: dim_subscription_id
+        tags: ["tdf", "common", "mrr"]
       - name: dim_product_detail_id
         description: The identifier of product details in dim_product_detail
         tests:
@@ -1096,7 +1145,7 @@ models:
         description: Month in which the members counts are being reported snapshotted. Always current month until historical months are available in a future version of this table.
         tests:
           - not_null
-      - name: namespace_id
+      - name: dim_namespace_id
         tests:
           - not_null
           - unique
@@ -1122,7 +1171,7 @@ models:
         description: Count of _non-bot_ members that are active and not awaiting access approval to the namespace.
         tests:
           - not_null
-      - name: billabe_member_count
+      - name: billable_member_count
         description: Count of active, _non-guest_ members if namespace is _gold_ tier. Count of active members otherwise.
         tests:
           - not_null
@@ -1200,7 +1249,7 @@ models:
         description: Month in which CI Minutes usage data was snapshotted, formatted as `20YY-MM-01`.
         tests:
           - not_null
-      - name: namespace_id
+      - name: dim_namespace_id
         description: ID of the namespace responsible for the CI Minutes usage.
         tests:
           - not_null

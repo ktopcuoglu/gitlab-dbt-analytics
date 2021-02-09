@@ -190,7 +190,7 @@ WITH project_snapshot_monthly_all AS (
 
     SELECT
       snapshot_month,
-      namespace_id,
+      namespace_id                                              AS dim_namespace_id,
       ultimate_parent_namespace_id,
       namespace_type,
       visibility_level, 
@@ -212,5 +212,5 @@ WITH project_snapshot_monthly_all AS (
     created_by="@ischweickartDD",
     updated_by="@ischweickartDD",
     created_date="2020-12-31",
-    updated_date="2020-12-31"
+    updated_date="2021-02-02"
 ) }}

@@ -1,6 +1,16 @@
+/* grain: one record per host per metric per month */
+
 WITH flattened_usage_data AS (
 
-    SELECT *
+    SELECT DISTINCT
+      edition,
+      path, 
+      major_minor_version,
+      minor_version,
+      major_version,
+      version,
+      uuid,
+      value
     FROM {{ ref('version_usage_data') }},
       lateral flatten(input => version_usage_data.raw_usage_data_payload, recursive => True) f
 
@@ -33,7 +43,6 @@ WITH flattened_usage_data AS (
         PARTITION BY ping_name 
         ORDER BY major_version ASC, minor_version ASC
       )                                                       AS last_minor_version_with_counter,
-      COUNT(DISTINCT id) OVER (PARTITION BY ping_name)        AS count_pings,
       COUNT(DISTINCT uuid) OVER (PARTITION BY ping_name)      AS count_instances
     FROM flattened_usage_data
     WHERE TRY_TO_DECIMAL(value::TEXT) > 0

@@ -20,6 +20,7 @@ WITH prep_usage_ping AS (
     -- subscription_info 
     is_usage_ping_license_in_licenseDot,
     dim_license_id,
+    dim_subscription_id,
     is_license_mapped_to_subscription,
     is_license_subscription_id_valid,
     dim_crm_account_id,
