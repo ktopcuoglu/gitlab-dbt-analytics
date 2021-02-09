@@ -82,7 +82,7 @@ WITH crm_account_dimensions AS (
     LEFT JOIN map_merged_crm_accounts
       ON zuora_account.crm_id = map_merged_crm_accounts.sfdc_account_id
     LEFT JOIN crm_account_dimensions
-      ON map_merged_crm_accounts.dim_crm_account_id = crm_account_dimensions.dim_account_crm_account_id
+      ON map_merged_crm_accounts.dim_crm_account_id = crm_account_dimensions.dim_crm_account_id
 )
 
 {{ dbt_audit(

@@ -279,7 +279,7 @@ WITH first_contact  AS (
 
     FROM opportunity_fields
     LEFT JOIN crm_account_dimensions
-      ON opportunity_fields.dim_crm_account_id = crm_account_dimensions.dim_account_crm_account_id
+      ON opportunity_fields.dim_crm_account_id = crm_account_dimensions.dim_crm_account_id
     LEFT JOIN first_contact
       ON opportunity_fields.dim_crm_opportunity_id = first_contact.opportunity_id AND first_contact.row_num = 1
     LEFT JOIN opportunity_source

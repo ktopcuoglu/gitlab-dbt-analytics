@@ -28,7 +28,6 @@ WITH bizible_attribution_touchpoints AS (
       opportunity_dimensions.dim_order_type_id,
       opportunity_dimensions.dim_opportunity_source_id,
       opportunity_dimensions.dim_purchase_channel_id,
-      opportunity_dimensions.dim_account_crm_account_id,
       opportunity_dimensions.dim_parent_crm_account_id,
       opportunity_dimensions.dim_parent_sales_segment_id,
       opportunity_dimensions.dim_parent_geo_region_id,

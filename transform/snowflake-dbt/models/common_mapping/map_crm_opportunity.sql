@@ -51,7 +51,7 @@ WITH crm_account_dimensions AS (
       {{ get_keyed_nulls('opportunity_source.dim_opportunity_source_id') }}                                            AS dim_opportunity_source_id,
       {{ get_keyed_nulls('purchase_channel.dim_purchase_channel_id') }}                                                AS dim_purchase_channel_id,
       crm_account_dimensions.dim_parent_crm_account_id,
-      crm_account_dimensions.dim_account_crm_account_id,
+      crm_account_dimensions.dim_crm_account_id,
       crm_account_dimensions.dim_parent_sales_segment_id,
       crm_account_dimensions.dim_parent_geo_region_id,
       crm_account_dimensions.dim_parent_geo_sub_region_id,
@@ -71,7 +71,7 @@ WITH crm_account_dimensions AS (
 
     FROM opportunity_fields
     LEFT JOIN crm_account_dimensions
-      ON opportunity_fields.dim_crm_account_id = crm_account_dimensions.dim_account_crm_account_id
+      ON opportunity_fields.dim_crm_account_id = crm_account_dimensions.dim_crm_account_id
     LEFT JOIN opportunity_source
       ON opportunity_fields.sales_qualified_source = opportunity_source.opportunity_source_name
     LEFT JOIN order_type

@@ -23,7 +23,7 @@ WITH account_dimensions AS (
       -- shared dimension keys
       crm_person.dim_crm_person_id,
       campaign_id                                       AS dim_campaign_id,
-      account_dimensions.dim_account_crm_account_id,
+      account_dimensions.dim_crm_account_id,
       account_dimensions.dim_parent_crm_account_id,
       account_dimensions.dim_parent_sales_segment_id,
       account_dimensions.dim_parent_geo_region_id,
@@ -49,7 +49,7 @@ WITH account_dimensions AS (
 
     FROM bizible_touchpoints
     LEFT JOIN account_dimensions
-      ON bizible_touchpoints.bizible_account = account_dimensions.dim_account_crm_account_id
+      ON bizible_touchpoints.bizible_account = account_dimensions.dim_crm_account_id
     LEFT JOIN crm_person
       ON bizible_touchpoints.bizible_person_id = crm_person.bizible_person_id
 )

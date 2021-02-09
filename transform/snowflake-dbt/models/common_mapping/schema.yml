@@ -14,7 +14,7 @@ models:
   - name: map_crm_account
     description: '{{ doc("map_crm_account") }}'
     columns:
-      - name: dim_account_crm_account_id
+      - name: dim_crm_account_id
         description: CRM account ID for the account
         tests:
           - not_null

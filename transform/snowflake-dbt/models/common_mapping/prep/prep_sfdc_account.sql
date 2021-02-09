@@ -50,7 +50,7 @@ WITH sfdc_account AS (
 ), sfdc_account_final AS (
 
     SELECT
-      crm_account_id                                                                                        AS dim_account_crm_account_id,
+      crm_account_id                                                                                        AS dim_crm_account_id,
       ultimate_parent_account_id                                                                            AS dim_parent_crm_account_id,
       TRIM(SPLIT_PART(tsp_region, '-', 1))                                                                  AS account_tsp_region_clean,
       TRIM(SPLIT_PART(ultimate_parent_tsp_region, '-', 1))                                                  AS parent_tsp_region_clean,

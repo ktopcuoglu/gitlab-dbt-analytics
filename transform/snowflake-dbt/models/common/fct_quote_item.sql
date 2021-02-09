@@ -114,7 +114,7 @@ WITH crm_account AS (
     INNER JOIN rate_plan_charge
       ON rate_plan.zqu_quote_rate_plan_id = rate_plan_charge.zqu_quote_rate_plan_id
     LEFT JOIN crm_account
-      ON quote.zqu__account = crm_account.dim_account_crm_account_id
+      ON quote.zqu__account = crm_account.dim_crm_account_id
 
 )
 

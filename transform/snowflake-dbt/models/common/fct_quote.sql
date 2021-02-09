@@ -67,7 +67,7 @@ WITH crm_account AS (
     LEFT JOIN invoice
       ON quote.invoice_number = invoice.invoice_number
     LEFT JOIN crm_account
-      ON quote.zqu__account = crm_account.dim_account_crm_account_id
+      ON quote.zqu__account = crm_account.dim_crm_account_id
 
 )
 
