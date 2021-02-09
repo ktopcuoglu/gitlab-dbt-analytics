@@ -1,30 +1,76 @@
-with zuora_subscription_intermediate as (
+WITH RECURSIVE
 
-    SELECT *
-    FROM {{ ref ('zuora_subscription_intermediate')}}
+flattening AS (
 
-), zuora_subscription_lineage as (
+  SELECT
+	{{ dbt_utils.star(from=ref('prep_subscription_lineage_intermediate'), except=["ZUORA_RENEWAL_SUBSCRIPTION_NAME_SLUGIFY"]) }},
 
-    SELECT *
-    FROM {{ ref ('zuora_subscription_lineage')}}
+    IFF(array_to_string(ZUORA_RENEWAL_SUBSCRIPTION_NAME_SLUGIFY,',') IS NULL,
+    subscription_name_slugify,
+    subscription_name_slugify || ',' || array_to_string(ZUORA_RENEWAL_SUBSCRIPTION_NAME_SLUGIFY,','))
+     							AS lineage,
+    renewal.value::VARCHAR 		AS ZUORA_RENEWAL_SUBSCRIPTION_NAME_SLUGIFY
+  FROM {{ref('prep_subscription_lineage_intermediate')}},
+    LATERAL flatten(input => zuora_renewal_subscription_name_slugify, OUTER => TRUE) renewal
+  -- See issue: https://gitlab.com/gitlab-data/analytics/-/issues/6518
+  WHERE SUBSCRIPTION_ID
+  NOT IN ('2c92a00d6e59c212016e6432a2d70dee',
+   '2c92a0ff74357c7401744e2bf3ee614b',
+   '2c92a00f74e75dd60174e89220361bbc',
+   '2c92a00774ddaf190174de37f0eb147d')
+),
 
-), zuora_subscription_parentage as (
+zuora_sub (base_slug, renewal_slug, parent_slug, lineage, children_count) AS (
 
-    SELECT *
-    FROM {{ ref ('zuora_subscription_parentage_finish')}}
+  SELECT
+    subscription_name_slugify              	AS base_slug,
+    zuora_renewal_subscription_name_slugify	AS renewal_slug,
+    subscription_name_slugify              	AS parent_slug,
+    lineage 								AS lineage,
+    2     									AS children_count
+  FROM flattening
+
+  UNION ALL
+
+  SELECT
+    iter.subscription_name_slugify											AS base_slug,
+    iter.zuora_renewal_subscription_name_slugify							AS renewal_slug,
+    anchor.parent_slug														AS parent_slug,
+    anchor.lineage || ',' || iter.zuora_renewal_subscription_name_slugify 	AS lineage,
+    iff(iter.zuora_renewal_subscription_name_slugify IS NULL,
+		0,
+		anchor.children_count + 1) 											AS children_count
+  FROM zuora_sub anchor
+  JOIN flattening iter
+    ON anchor.renewal_slug = iter.subscription_name_slugify
+
+),
+
+pull_full_lineage AS (
+
+  SELECT
+	parent_slug,
+	base_slug,
+	renewal_slug,
+	first_value(lineage)
+		OVER (
+		  PARTITION BY parent_slug
+		  ORDER BY children_count DESC
+			) 			AS lineage,
+	children_count
+  FROM zuora_sub
+
+),
+
+deduped AS (
+
+    SELECT
+      parent_slug AS subscription_name_slugify,
+      lineage
+    FROM pull_full_lineage
+    GROUP BY 1, 2
 
 )
 
-SELECT  zuora_subscription_intermediate.subscription_id as dim_subscription_id,
-        zuora_subscription_lineage.lineage,
-        coalesce(zuora_subscription_parentage.ultimate_parent_sub,zuora_subscription_intermediate.subscription_name_slugify) AS oldest_subscription_in_cohort,
-        coalesce(zuora_subscription_parentage.cohort_month, zuora_subscription_intermediate.subscription_month) as cohort_month,
-        coalesce(zuora_subscription_parentage.cohort_quarter,zuora_subscription_intermediate.subscription_quarter) as cohort_quarter,
-        coalesce(zuora_subscription_parentage.cohort_year, zuora_subscription_intermediate.subscription_year) as cohort_year
-FROM zuora_subscription_intermediate
-LEFT JOIN zuora_subscription_lineage
-ON zuora_subscription_intermediate.subscription_name_slugify =
-    zuora_subscription_lineage.subscription_name_slugify
-LEFT JOIN zuora_subscription_parentage
-ON zuora_subscription_intermediate.subscription_name_slugify =
-	zuora_subscription_parentage.child_sub
+SELECT *
+FROM deduped

@@ -141,3 +141,33 @@ models:
         description: "GitLab Team Member ops.gitlab.net SaaS Database user_id. Can be used to join onto any user id field in the gitlab_ops data set "
       - name: gitlab_ops_user_name 
         description: "GitLab Team Member ops.gitlab.net SaaS Database user_name. Can be used to join onto any user name field in the gitlab_ops data set "
+
+  - name: map_subscription_lineage
+    description: This models takes the `prep_subscription_intermediate` model and joins it to the `prep_subscription_lineage` model. The end result is every subscription is linked to its lineage (or null).
+    columns:
+      - name: sub_row
+        tests:
+          - not_null
+          - accepted_values:
+              values: [ '1' ]
+      - name: dim_subscription_id
+        tests:
+          - not_null
+          - unique
+      - name: subscription_status
+        tests:
+          - not_null
+          - accepted_values:
+              values: [ 'Active','Cancelled' ]
+      - name: lineage
+        description: "All the subscriptions subsquent to the primary subscription, separated by commas."
+      - name: cohort_month
+        tests:
+          - not_null
+      - name: cohort_quarter
+        tests:
+          - not_null
+      - name: cohort_year
+        tests:
+          - not_null
+

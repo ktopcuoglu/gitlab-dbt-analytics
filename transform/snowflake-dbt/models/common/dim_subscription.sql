@@ -6,7 +6,7 @@ WITH subscription AS (
 ), subscription_lineage AS (
 
     SELECT *
-    FROM {{ ref('prep_subscription_lineage') }}
+    FROM {{ ref('map_subscription_lineage') }}
 
 ), final AS (
 
