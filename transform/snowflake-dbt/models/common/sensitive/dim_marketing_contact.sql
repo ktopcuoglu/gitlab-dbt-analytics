@@ -118,6 +118,7 @@ WITH sfdc_lead AS (
     FROM gitlab_users
     WHERE email_address IS NOT NULL
       AND email_address <> ''
+      AND active_state = 'active'
     QUALIFY record_number = 1
 
 ), customer_db AS (
@@ -137,6 +138,7 @@ WITH sfdc_lead AS (
     FROM customer_db_source
     WHERE email_address IS NOT NULL
       AND email_address <> ''
+      AND confirmed_at IS NOT NULL
     QUALIFY record_number = 1
 
 ), zuora AS (
@@ -159,6 +161,7 @@ WITH sfdc_lead AS (
       ON zuora_account_source.account_id = zuora_contact_source.account_id
     WHERE email_address IS NOT NULL
       AND email_address <> ''
+      AND zuora_contact_source.is_deleted = FALSE
     QUALIFY record_number = 1
 
 ), emails AS (
@@ -246,5 +249,5 @@ WITH sfdc_lead AS (
     created_by="@rmistry",
     updated_by="@rmistry",
     created_date="2021-01-19",
-    updated_date="2021-01-26"
+    updated_date="2021-02-03"
 ) }}

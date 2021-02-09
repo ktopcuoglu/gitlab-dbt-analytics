@@ -33,6 +33,10 @@ The output from the run operation can be stored in a file by appending `>> file.
 
 `dbt run-operation gdpr_delete --args '{email_sha: your_sha_here}' >> file.txt`
 
+The output can also be split between standard out and a file by using the `tee` command. If you're running this command multiple times in a row, adding `--partial-parse` to the operation will help it run faster so everything won't have to compile each time. A complete example command:
+
+`dbt --partial-parse run-operation gdpr_delete --args '{email_sha: your_sha_here, run_queries: True}' | tee file.txt`
+
 Output will look like this:
 
 DELETE FROM db.schema.table WHERE SHA2(TRIM(LOWER("COLUMNAME"))) =  'your_sha_here';
