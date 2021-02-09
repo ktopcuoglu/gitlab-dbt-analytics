@@ -42,7 +42,8 @@ WITH subscription AS (
     subscription_lineage.cohort_quarter,
     subscription_lineage.cohort_year
   FROM subscription
-  LEFT JOIN subscription_lineage ON subscription_lineage.dim_subscription_id = subscription.dim_subscription_id
+  LEFT JOIN subscription_lineage
+    ON subscription_lineage.dim_subscription_id = subscription.dim_subscription_id
 
 )
 
