@@ -3282,7 +3282,6 @@ tables:
       , updated_at
       , build_id
       , scan_type
-      , scanned_resources_count
       FROM security_scans
       WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
         AND '{EXECUTION_DATE}'::timestamp
