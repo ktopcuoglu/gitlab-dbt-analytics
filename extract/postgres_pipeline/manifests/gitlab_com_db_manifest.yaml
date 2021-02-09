@@ -2861,7 +2861,6 @@ tables:
     import_query: |-
       SELECT id
       , cluster_id
-      , created_by_user_id
       , num_nodes
       , status
       , created_at
