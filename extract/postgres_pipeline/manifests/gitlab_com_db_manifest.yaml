@@ -3327,7 +3327,7 @@ tables:
         AND '{EXECUTION_DATE}'::timestamp
     export_schema: "gitlab_com"
     export_table: status_page_settings
-    export_table_primary_key: id
+    export_table_primary_key: project_id
   suggestions:
     import_db: GITLAB_DB
     import_query: |-
