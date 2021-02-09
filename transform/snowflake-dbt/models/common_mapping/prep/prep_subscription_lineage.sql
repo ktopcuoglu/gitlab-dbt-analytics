@@ -1,14 +1,17 @@
 with zuora_subscription_intermediate as (
 
-    SELECT * FROM {{ ref ('zuora_subscription_intermediate')}}
+    SELECT *
+    FROM {{ ref ('zuora_subscription_intermediate')}}
 
 ), zuora_subscription_lineage as (
 
-    SELECT * FROM {{ ref ('zuora_subscription_lineage')}}
+    SELECT *
+    FROM {{ ref ('zuora_subscription_lineage')}}
 
 ), zuora_subscription_parentage as (
 
-    SELECT * FROM {{ ref ('zuora_subscription_parentage_finish')}}
+    SELECT *
+    FROM {{ ref ('zuora_subscription_parentage_finish')}}
 
 )
 
