@@ -7,7 +7,7 @@
 WITH source AS (
 
   SELECT *
-  FROM { { ref('gitlab_dotcom_ci_pipelines_dedupe_source') }}
+  FROM {{ ref('gitlab_dotcom_ci_pipelines_dedupe_source') }}
   WHERE created_at IS NOT NULL
   
     {% if is_incremental() %}

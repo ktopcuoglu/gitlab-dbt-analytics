@@ -7,7 +7,7 @@
 WITH source AS (
 
     SELECT *
-    FROM { { ref('gitlab_dotcom_users_dedupe_source') }}
+    FROM {{ ref('gitlab_dotcom_users_dedupe_source') }}
     {% if is_incremental() %}
     WHERE updated_at >= (SELECT MAX(updated_at) FROM {{this}})
     {% endif %}

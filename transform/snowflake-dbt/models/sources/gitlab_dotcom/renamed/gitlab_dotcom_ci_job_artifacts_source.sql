@@ -7,7 +7,7 @@
 WITH source AS (
 
   SELECT *
-  FROM { { ref('gitlab_dotcom_ci_job_artifacts_dedupe_source') }}
+  FROM {{ ref('gitlab_dotcom_ci_job_artifacts_dedupe_source') }}
 
   {% if is_incremental() %}
 
