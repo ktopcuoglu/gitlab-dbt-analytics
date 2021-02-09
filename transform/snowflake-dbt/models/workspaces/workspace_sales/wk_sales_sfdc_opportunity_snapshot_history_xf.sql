@@ -93,6 +93,11 @@ WITH date_details AS (
       
       sfdc_opportunity_snapshot_history.net_arr             AS raw_net_arr,
       
+      sfdc_opportunity_snapshot_history.user_segment_stamped,
+      sfdc_opportunity_snapshot_history.user_region_stamped,
+      sfdc_opportunity_snapshot_history.user_area_stamped,
+      sfdc_opportunity_snapshot_history.user_geo_stamped,
+      
       sfdc_opportunity_snapshot_history.arr_basis,
       sfdc_opportunity_snapshot_history.arr,
       sfdc_opportunity_snapshot_history.amount,
@@ -131,7 +136,7 @@ WITH date_details AS (
 ), sfdc_users_xf AS (
 
     SELECT * 
-    FROM {{ref('sfdc_users_xf')}}  
+    FROM {{ref('wk_sales_sfdc_users_xf')}}  
 
 ), sales_admin_hierarchy AS (
     
@@ -276,21 +281,89 @@ WITH date_details AS (
       opp_snapshot.total_contract_value,
       opp_snapshot.professional_services_value,
 
+    /*
       -- NF 2021-01-28 Not all historical opportunities have Net ARR set. To allow historical reporting 
       -- we apply a ratio by segment / order type to convert IACV to Net ARR      
       CASE
-        WHEN opp_snapshot.raw_net_arr IS NULL
-          AND sfdc_opportunity_xf.raw_net_arr IS NOT NULL
+        WHEN (COALESCE(opp_snapshot.raw_net_arr,0) = 0 
+            OR opp_snapshot.date_actual <= '2021-01-30'::DATE) 
+          AND COALESCE(sfdc_opportunity_xf.raw_net_arr,0) <> 0
           AND sfdc_opportunity_xf.net_incremental_acv <> 0 
+          AND opp_snapshot.net_incremental_acv <> 0
+          AND sfdc_opportunity_xf.is_won = 1
             THEN opp_snapshot.net_incremental_acv * coalesce(sfdc_opportunity_xf.raw_net_arr / sfdc_opportunity_xf.net_incremental_acv,0)
-        WHEN opp_snapshot.raw_net_arr IS NULL 
+        WHEN (COALESCE(opp_snapshot.raw_net_arr,0) = 0 
+            OR opp_snapshot.date_actual <= '2021-01-30'::DATE) 
           AND opp_snapshot.net_incremental_acv <> 0
             THEN opp_snapshot.net_incremental_acv * coalesce(net_iacv_to_net_arr_ratio.ratio_net_iacv_to_net_arr,0)
-        WHEN opp_snapshot.raw_net_arr IS NULL 
+        WHEN (COALESCE(opp_snapshot.raw_net_arr,0) = 0 
+            OR opp_snapshot.date_actual <= '2021-01-30'::DATE) 
           AND opp_snapshot.incremental_acv <> 0
             THEN opp_snapshot.incremental_acv * coalesce(net_iacv_to_net_arr_ratio.ratio_net_iacv_to_net_arr,0)
-        ELSE opp_snapshot.raw_net_arr
+        ELSE COALESCE(opp_snapshot.raw_net_arr,0) 
       END                                                        AS net_arr,
+*/
+      ------------------------------------------------------------------------------------------------------
+      ------------------------------------------------------------------------------------------------------
+      
+      -- Historical Net ARR Logic Summary   
+      -- closed deals use net_incremental_acv
+      -- open deals use incremental acv
+      -- deals with opportunities and net_arr > 0 use that opportunity calculated ratio
+      -- deals with no opty with net_arr use a default ratio for segment / order type
+      -- deals before 2021-02-01 use always net_arr calculated from ratio
+      -- deals after 2021-02-01 use net_arr if > 0, if open and not net_arr uses ratio version
+
+      -- If the opportunity exists, use the ratio from the opportunity sheetload
+      -- I am faking that using the opportunity table directly
+      CASE -- open deal uses iacv
+        --WHEN sfdc_opportunity_xf.is_open = 1
+        --  AND COALESCE(sfdc_opportunity_xf.raw_net_arr,0) <> 0
+        --  AND COALESCE(sfdc_opportunity_xf.incremental_acv,0) <> 0
+        --    THEN COALESCE(sfdc_opportunity_xf.raw_net_arr / sfdc_opportunity_xf.incremental_acv,0)
+        -- close deal uses net iacv
+        WHEN sfdc_opportunity_xf.is_open = 0
+          AND COALESCE(sfdc_opportunity_xf.raw_net_arr,0) <> 0
+          AND COALESCE(sfdc_opportunity_xf.net_incremental_acv,0) <> 0
+            THEN COALESCE(sfdc_opportunity_xf.raw_net_arr / sfdc_opportunity_xf.net_incremental_acv,0)
+        ELSE NULL 
+      END                                                                     AS opportunity_based_iacv_to_net_arr_ratio,
+     
+      -- If there is no opportnity, use a default table ratio
+      -- I am faking that using the upper CTE, that should be replaced by the official table
+      COALESCE(net_iacv_to_net_arr_ratio.ratio_net_iacv_to_net_arr,0)         AS segment_order_type_iacv_to_net_arr_ratio,
+
+      -- calculated net_arr
+      -- uses ratios to estimate the net_arr based on iacv if open or net_iacv if closed
+      -- if there is an opportunity based ratio, use that, if not, use default from segment / order type
+
+      -- NUANCE: Lost deals might not have net_incremental_acv populated, so we must rely on iacv
+      CASE 
+        WHEN opp_snapshot.stage_name NOT IN ('8-Closed Lost', '9-Unqualified', 'Closed Won')  -- OPEN DEAL
+          THEN COALESCE(opp_snapshot.incremental_acv,0) * COALESCE(opportunity_based_iacv_to_net_arr_ratio,segment_order_type_iacv_to_net_arr_ratio)
+        WHEN opp_snapshot.stage_name IN ('8-Closed Lost')                       -- CLOSED LOST DEAL and no Net IACV
+          AND COALESCE(opp_snapshot.net_incremental_acv,0) = 0
+            THEN COALESCE(opp_snapshot.incremental_acv,0) * COALESCE(opportunity_based_iacv_to_net_arr_ratio,segment_order_type_iacv_to_net_arr_ratio)
+        WHEN opp_snapshot.stage_name IN ('8-Closed Lost', 'Closed Won')         -- REST of CLOSED DEAL
+            THEN COALESCE(opp_snapshot.net_incremental_acv,0) * COALESCE(opportunity_based_iacv_to_net_arr_ratio,segment_order_type_iacv_to_net_arr_ratio)
+        ELSE NULL
+      END                                                                     AS calculated_from_ratio_net_arr,
+      
+      -- For opportunities before start of FY22, as Net ARR was WIP, there are a lot of opties with IACV or Net IACV and no Net ARR
+      -- Those were later fixed in the opportunity object but stayed in the snapshot table.
+      -- To account for those issues and give a directionally correct answer, we apply a ratio to everything before FY22
+      CASE
+        WHEN  opp_snapshot.date_actual < '2021-02-01'::DATE -- All deals before cutoff
+          THEN calculated_from_ratio_net_arr
+        WHEN  opp_snapshot.date_actual >= '2021-02-01'::DATE -- Open deal with no Net ARR, after cut off
+          AND COALESCE(opp_snapshot.raw_net_arr,0) = 0
+          AND opp_snapshot.stage_name NOT IN ('8-Closed Lost', '9-Unqualified', 'Closed Won') 
+            THEN calculated_from_ratio_net_arr
+        ELSE COALESCE(opp_snapshot.raw_net_arr,0) -- Rest of deals after cut off date
+      END                                                                     AS net_arr,
+         
+      ------------------------------------------------------------------------------------------------------
+      ------------------------------------------------------------------------------------------------------
 
       opp_snapshot.recurring_amount,
       opp_snapshot.true_up_amount,
@@ -351,11 +424,39 @@ WITH date_details AS (
 
       -- using current opportunity perspective instead of historical
       -- NF 2020-01-26: this might change to order type live 2.1     
+      sfdc_opportunity_xf.order_type_stamped,     
+
+      -- top level grouping of the order type field
       CASE 
-        WHEN sfdc_opportunity_xf.order_type_stamped IS NULL 
-          THEN '3. Growth'
-        ELSE sfdc_opportunity_xf.order_type_stamped
-      END                                                        AS order_type_stamped,     
+        WHEN sfdc_opportunity_xf.order_type_stamped = '1. New - First Order' 
+          THEN '1. New'
+        WHEN sfdc_opportunity_xf.order_type_stamped IN ('2. New - Connected', '3. Growth', '5. Churn - Partial', '4. Churn','4. Contraction','6. Churn - Final') 
+          THEN '2. Growth' 
+        ELSE '3. Other'
+      END                                                         AS deal_group,
+
+      -- medium level grouping of the order type field
+      CASE 
+        WHEN sfdc_opportunity_xf.order_type_stamped = '1. New - First Order' 
+          THEN '1. New'
+        WHEN sfdc_opportunity_xf.order_type_stamped IN ('2. New - Connected', '3. Growth') 
+          THEN '2. Growth' 
+        WHEN sfdc_opportunity_xf.order_type_stamped IN ('4. Churn','4. Contraction','5. Churn - Partial','6. Churn - Final')
+          THEN '3. Churn'
+        ELSE '4. Other' 
+      END                                                         AS deal_category,
+
+
+      -- Team Segment / ASM - RD 
+      CASE WHEN sfdc_opportunity_xf.user_segment_stamped IS NULL 
+          THEN opportunity_owner.user_segment 
+          ELSE COALESCE(sfdc_opportunity_xf.user_segment_stamped,'N/A')
+      END                                                         AS opportunity_owner_user_segment,
+
+      CASE WHEN sfdc_opportunity_xf.user_region_stamped IS NULL 
+          THEN opportunity_owner.user_region
+          ELSE COALESCE(sfdc_opportunity_xf.user_region_stamped,'N/A')
+      END                                                         AS opportunity_owner_user_region,
      
       -- account driven fields
       sfdc_accounts_xf.tsp_region,
@@ -441,26 +542,6 @@ WITH date_details AS (
         ELSE 0
       END                                                         AS is_renewal, 
       
-      -- top level grouping of the order type field
-      CASE 
-        WHEN sfdc_opportunity_xf.order_type_stamped = '1. New - First Order' 
-          THEN '1. New'
-        WHEN sfdc_opportunity_xf.order_type_stamped IN ('2. New - Connected', '3. Growth', '4. Churn','4. Contraction','6. Churn - Final') 
-          THEN '2. Growth' 
-        ELSE '3. Other'
-      END                                                         AS deal_group,
-
-      -- medium level grouping of the order type field
-      CASE 
-        WHEN sfdc_opportunity_xf.order_type_stamped = '1. New - First Order' 
-          THEN '1. New'
-        WHEN sfdc_opportunity_xf.order_type_stamped IN ('2. New - Connected', '3. Growth') 
-          THEN '2. Growth' 
-        WHEN sfdc_opportunity_xf.order_type_stamped IN ('4. Churn','4. Contraction','6. Churn - Final')
-          THEN '3. Churn'
-        ELSE '4. Other' 
-      END                                                         AS deal_category,
-
       -- account owner hierarchies levels
       COALESCE(account_owner.sales_team_level_2,'n/a')            AS account_owner_team_level_2,
       COALESCE(account_owner.sales_team_level_3,'n/a')            AS account_owner_team_level_3,
@@ -526,8 +607,8 @@ WITH date_details AS (
     LEFT JOIN net_iacv_to_net_arr_ratio
       ON net_iacv_to_net_arr_ratio.user_segment_stamped = sfdc_opportunity_xf.user_segment_stamped
       AND net_iacv_to_net_arr_ratio.order_type_stamped = sfdc_opportunity_xf.order_type_stamped
-     -- remove test account
-    WHERE opp_snapshot.account_id NOT IN ('0014M00001kGcORQA0')
+    WHERE opp_snapshot.account_id NOT IN ('0014M00001kGcORQA0')                 -- remove test account
+      AND sfdc_accounts_xf.ultimate_parent_account_id NOT IN ('0016100001YUkWVAA1')      -- remove test account
       AND opp_snapshot.is_deleted = 0
 )
 
