@@ -9,8 +9,7 @@ WITH source AS (
   SELECT *
   FROM {{ source('gitlab_dotcom','project_custom_attributes') }}
   {% if is_incremental() %}
-  WHERE created_at IS NOT NULL
-    AND updated_at >= (SELECT MAX(updated_at) FROM {{this}})
+  WHERE updated_at >= (SELECT MAX(updated_at) FROM {{this}})
   {% endif %}
 
 ), renamed AS (
