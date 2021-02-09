@@ -69,7 +69,7 @@ Post notices to #data and cross-post to #whats-happening-at-gitlab
 
 #### GitLab.com
 
-We have identified a delay in the `GitLab.com` data refresh and this problem potentially impacts any GitLab KPIs (e.g. MR Rate, TMAU) or SiSense dashboards. We are actively working on a resolution and will provide an update once the KPIs and SiSense dashboards have been brought up-to-date. 
+We have identified a delay in the `GitLab.com` data refresh and this problem potentially impacts any GitLab KPIs (e.g. MR Rate, TMAU) or SiSense dashboards. We are actively working on a resolution and will provide an update once the KPIs and SiSense dashboards have been brought up-to-date.
 
 The `GitLab.com` data in the warehouse and downstream models is accurate as of YYYY-MM-DD HH:MM UTC (HH:MM PST).
 
@@ -96,7 +96,7 @@ The link to the Data Team Incident issue is <link>
 
 #### Zuora
 
-Message: We have identified a delay in the `Zuora` data refresh and this problem potentially impacts any Financial KPIs or SiSense dashboards. We are actively working on a resolution and will provide an update once the KPIs and SiSense dashboards have been brought up-to-date.  
+Message: We have identified a delay in the `Zuora` data refresh and this problem potentially impacts any Financial KPIs or SiSense dashboards. We are actively working on a resolution and will provide an update once the KPIs and SiSense dashboards have been brought up-to-date.
 
 The `Zuora` data in the warehouse and downstream models is accurate as of YYYY-MM-DD HH:MM UTC (HH:MM PST).
 
@@ -108,7 +108,7 @@ The link to the Data Team Incident issue is <link>
 
 #### General
 
-We have identified a delay in the `DATA SOURCE` data refresh. We are actively working on a resolution and will provide an update once data has been brought up-to-date. 
+We have identified a delay in the `DATA SOURCE` data refresh. We are actively working on a resolution and will provide an update once data has been brought up-to-date.
 
 The `DATA SOURCE` data in the warehouse and downstream models is accurate as of YYYY-MM-DD HH:MM UTC (HH:MM PST).
 
