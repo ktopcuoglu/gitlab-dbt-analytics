@@ -8,4 +8,4 @@ For each request:
 1. Follow the hashing and deletion process documented [in the dbt gdpr deletion macro](https://dbt.gitlabdata.com/#!/macro/macro.gitlab_snowflake.gdpr_delete)
 1. Comment in the request that the removal has been processed with the attach results file
 1. Unassign data team members and remove the `~data-removal` tag
-1. check the box at for snowflake in the removal reqest issue description
+1. check the box for snowflake in the removal request issue description
