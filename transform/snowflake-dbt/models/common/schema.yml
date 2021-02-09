@@ -83,6 +83,10 @@ models:
         tests:
           - not_null
         tags: ["tdf", "gainsight"]
+      - name: dim_billing_account_id
+        tests:
+          - not_null
+        tags: ["tdf", "gainsight"]
       - name: subscription_name
       - name: subscription_name_slugify
       - name: subscription_status
@@ -1255,6 +1259,10 @@ models:
         tests:
           - not_null
         tags: ["tdf", "gainsight"]
+      - name: dim_billing_account_id
+        tests:
+          - not_null
+        tags: ["tdf", "gainsight"]
       - name: seat_link_report_date
         description: Day on which Seat Link usage data is reported. Should always be last day of month for historical months.
       - name: license_utilization
@@ -1318,6 +1326,10 @@ models:
           - not_null
         tags: ["tdf", "gainsight"]
       - name: dim_subscription_id_original
+        tests:
+          - not_null
+        tags: ["tdf", "gainsight"]
+      - name: dim_billing_account_id
         tests:
           - not_null
         tags: ["tdf", "gainsight"]

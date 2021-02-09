@@ -1,21 +1,14 @@
-WITH subscriptions AS (
-    
-    SELECT *
-    FROM {{ ref('zuora_subscription_source') }}
+{{ simple_cte([
+    ('subscriptions','zuora_subscription_source'),
+    ('rate_plans','zuora_rate_plan_source'),
+    ('product_details','dim_product_detail')
+]) }}
 
-), rate_plans AS (
-
-    SELECT *
-    FROM {{ ref('zuora_rate_plan_source') }}
-
-), product_details AS (
-    SELECT *
-    FROM {{ ref('dim_product_detail') }}
-
-), joined AS (
+, joined AS (
     SELECT DISTINCT
       subscriptions.subscription_id                     AS dim_subscription_id,
       subscriptions.original_id                         AS dim_subscription_id_original,
+      subscriptions.account_id                          AS dim_billing_account_id,
       subscriptions.subscription_name,
       subscriptions.subscription_name_slugify,
       subscriptions.subscription_status,

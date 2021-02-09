@@ -2,7 +2,8 @@ WITH subscriptions AS (
 
     SELECT DISTINCT
       dim_subscription_id,
-      dim_subscription_id_original
+      dim_subscription_id_original,
+      dim_billing_account_id
     FROM {{ ref('bdg_subscription_product_rate_plan') }}
     WHERE product_delivery_type = 'Self-Managed'
 
@@ -28,6 +29,7 @@ WITH subscriptions AS (
     SELECT
       subscriptions.dim_subscription_id,
       subscriptions.dim_subscription_id_original,
+      subscriptions.dim_billing_account_id,
       seat_link.report_date                                                     AS seat_link_report_date,
       seat_link.active_user_count / seat_link.license_user_count                AS license_utilization,
       seat_link.active_user_count,

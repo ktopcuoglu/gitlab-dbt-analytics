@@ -3,6 +3,7 @@ WITH subscriptions AS (
     SELECT DISTINCT
       dim_subscription_id,
       dim_subscription_id_original,
+      dim_billing_account_id,
       first_day_of_month
     FROM {{ ref('bdg_subscription_product_rate_plan') }}
       JOIN {{ ref('dim_date') }}
@@ -32,6 +33,7 @@ WITH subscriptions AS (
     SELECT
       subscriptions.dim_subscription_id,
       subscriptions.dim_subscription_id_original,
+      subscriptions.dim_billing_account_id,
       subscriptions.first_day_of_month                              AS snapshot_month,
       seat_link.report_date                                         AS seat_link_report_date,
       seat_link.active_user_count / seat_link.license_user_count    AS license_utilization,
