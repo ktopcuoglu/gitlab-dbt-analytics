@@ -1,7 +1,7 @@
 {{ config({
         "materialized": "view"
         })
-    }}
+}}
 
 WITH source AS (
 
