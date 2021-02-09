@@ -1,8 +1,7 @@
 {{ config({
-    "materialized": "incremental",
-    "unique_key": "runner_id"
-    })
-}}
+        "materialized": "view"
+        })
+    }}
 
 WITH source AS (
 

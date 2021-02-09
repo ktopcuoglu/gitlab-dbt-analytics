@@ -1,8 +1,7 @@
 {{ config({
-    "materialized": "incremental",
-    "unique_key": "user_id"
-    })
-}}
+        "materialized": "view"
+        })
+    }}
 WITH source AS (
 
     SELECT *

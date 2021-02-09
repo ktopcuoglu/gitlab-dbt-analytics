@@ -1,9 +1,8 @@
 
 {{ config({
-    "materialized": "incremental",
-    "unique_key": "merge_request_id"
-    })
-}}
+        "materialized": "view"
+        })
+    }}
 
 WITH source AS (
 

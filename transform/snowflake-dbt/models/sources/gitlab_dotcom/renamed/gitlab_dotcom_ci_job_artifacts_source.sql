@@ -1,8 +1,7 @@
 {{ config({
-    "materialized": "incremental",
-    "unique_key": "ci_job_artifact_id"
-    })
-}}
+        "materialized": "view"
+        })
+    }}
 
 WITH source AS (
 
