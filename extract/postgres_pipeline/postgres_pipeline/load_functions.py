@@ -18,7 +18,6 @@ from utils import (
     id_query_generator,
     manifest_reader,
 )
-from validation import get_comparison_results
 
 
 def load_incremental(
