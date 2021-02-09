@@ -145,22 +145,13 @@ models:
   - name: map_subscription_lineage
     description: This models takes the `prep_subscription_intermediate` model and joins it to the `prep_subscription_lineage` model. The end result is every subscription is linked to its lineage (or null).
     columns:
-      - name: sub_row
-        tests:
-          - not_null
-          - accepted_values:
-              values: [ '1' ]
       - name: dim_subscription_id
         tests:
           - not_null
           - unique
-      - name: subscription_status
-        tests:
-          - not_null
-          - accepted_values:
-              values: [ 'Active','Cancelled' ]
       - name: lineage
         description: "All the subscriptions subsquent to the primary subscription, separated by commas."
+      - name: oldest_subscription_in_cohort
       - name: cohort_month
         tests:
           - not_null

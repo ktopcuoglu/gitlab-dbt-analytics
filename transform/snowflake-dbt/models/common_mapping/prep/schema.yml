@@ -304,10 +304,9 @@ models:
                   values: ['Sales-Assisted', 'Self-Service']
 
   - name: prep_subscription_lineage
-    description:  '{{doc("zuora_subscription_lineage")}}'
+    description:  '{{doc("prep_subscription_lineage")}}'
     columns:
         - name: subscription_name_slugify
-          description: '{{ doc("zuora_mrr_totals_col_subscription_name_slugify") }}'
           tests:
             - not_null
             - unique
@@ -315,7 +314,7 @@ models:
           description: "All the subscriptions subsquent to the primary subscription, separated by commas."
 
   - name: prep_subscription_lineage_parentage_finish
-    description: '{{ doc("zuora_subscription_parentage_finish") }}'
+    description: '{{ doc("prep_subscription_lineage_parentage_finish") }}'
     columns:
         - name: ultimate_parent_sub
           tests:
@@ -334,10 +333,10 @@ models:
           tests:
             - not_null
   - name: prep_subscription_lineage_parentage_start
-    description: '{{doc("zuora_subscription_parentage_start")}}'
+    description: '{{doc("prep_subscription_lineage_parentage_start")}}'
 
   - name: prep_subscription_lineage_intermediate
-    description: '{{ doc("zuora_subscription_intermediate") }}'
+    description: '{{ doc("prep_subscription_lineage_intermediate") }}'
     columns:
       - name: sub_row
         tests:
