@@ -7,7 +7,7 @@ WITH source AS (
 
     SELECT
       month::DATE                                 AS month_date,
-      "Topic/Sprout Tag"::VARCHAR                 AS sprout_tag,
+      sprout_tag::VARCHAR                         AS sprout_tag,
       channel::VARCHAR                            AS channel,
       brand::VARCHAR                              AS brand,
       metric::VARCHAR                             AS metric,
