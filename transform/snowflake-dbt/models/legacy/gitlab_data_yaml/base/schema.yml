@@ -63,16 +63,6 @@ models:
           tests:
             - not_null
 
-area,
-      country,
-      location_factor,
-      TRIM(area ||', '||country)                                     AS yaml_locality,
-      valid_from_date,
-      COALESCE(LEAD(DATEADD(day,-1,valid_from_date)) 
-                    OVER (PARTITION BY area, country ORDER BY valid_from_date),
-                {{max_date_in_bamboo_analyses()}})                   AS valid_to_date
-
-
   - name: performance_indicators_yaml_current
     description: This provides all current KPIs and PIs and their current description and target.
     columns:
