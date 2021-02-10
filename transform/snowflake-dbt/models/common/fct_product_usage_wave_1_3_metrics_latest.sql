@@ -38,6 +38,8 @@ WITH subscriptions AS (
       usage_ping.ping_created_at,
       usage_ping.uuid,
       usage_ping.hostname,
+      usage_ping.dim_license_id,
+      usage_ping.license_md5,
       usage_ping.cleaned_version,
       usage_ping.umau_28_days_user,
       usage_ping.action_monthly_active_users_project_repo_28_days_user,
