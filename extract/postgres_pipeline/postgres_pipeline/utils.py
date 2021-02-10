@@ -163,14 +163,13 @@ def transform_dataframe_column(column_name: str, pg_type: str) -> List[Column]:
         or pg_type == "smallint"
         or pg_type == "numeric"
         or pg_type == "bigint"
-        or pg_type == "double precision"
     ):
         return Column(column_name, Integer)
     elif pg_type == "date":
         return Column(column_name, Date)
     elif pg_type == "boolean":
         return Column(column_name, Boolean)
-    elif pg_type == "float":
+    elif pg_type == "float" or pg_type == "double precision":
         return Column(column_name, Float)
     else:
         return Column(column_name, String)
@@ -193,8 +192,10 @@ def transform_source_types_to_snowflake_types(
     df: pd.DataFrame, source_table_name: str, source_engine: Engine
 ) -> List[Column]:
     pg_types = get_postgres_types(source_table_name, source_engine)
+
+    #defaulting to string for any renamed columns or results of functions -- can be cast downstream in dbt source model
     table_columns = [
-        transform_dataframe_column(column, pg_types[column]) for column in df
+        transform_dataframe_column(column, pg_types.get(column, "string")) for column in df
     ]
     return table_columns
 
