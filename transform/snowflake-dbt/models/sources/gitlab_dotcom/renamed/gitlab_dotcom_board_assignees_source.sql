@@ -1,7 +1,7 @@
 WITH source AS (
 
   SELECT *
-  FROM {{ source('gitlab_dotcom', 'board_assignees') }}
+  FROM {{ ref('gitlab_dotcom_board_assignees_dedupe_source') }}
   QUALIFY ROW_NUMBER() OVER (PARTITION BY id ORDER BY _uploaded_at DESC) = 1
 
 ), renamed AS (

@@ -1,7 +1,7 @@
 WITH source AS (
 
   SELECT *
-  FROM {{ source('gitlab_dotcom', 'ci_group_variables') }}
+  FROM {{ ref('gitlab_dotcom_ci_group_variables_dedupe_source') }}
   QUALIFY ROW_NUMBER() OVER (PARTITION BY id ORDER BY updated_at DESC) = 1
 
 ), renamed AS (

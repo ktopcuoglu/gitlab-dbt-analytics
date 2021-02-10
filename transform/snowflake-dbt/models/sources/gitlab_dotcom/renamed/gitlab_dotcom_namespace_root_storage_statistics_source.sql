@@ -1,7 +1,7 @@
 WITH source AS (
 
   SELECT *
-  FROM {{ source('gitlab_dotcom', 'namespace_root_storage_statistics') }}
+  FROM {{ ref('gitlab_dotcom_namespace_root_storage_statistics_dedupe_source') }}
   QUALIFY ROW_NUMBER() OVER (PARTITION BY namespace_id ORDER BY _uploaded_at DESC) = 1
 
 ), renamed AS (

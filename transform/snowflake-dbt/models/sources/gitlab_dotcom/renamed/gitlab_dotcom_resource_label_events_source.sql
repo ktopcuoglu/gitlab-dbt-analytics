@@ -7,7 +7,7 @@
 WITH source AS (
 
   SELECT *
-  FROM {{ source('gitlab_dotcom', 'resource_label_events') }}
+  FROM {{ ref('gitlab_dotcom_resource_label_events_dedupe_source') }}
     {% if is_incremental() %}
       WHERE created_at >= (SELECT MAX(created_at) FROM {{this}} WHERE created_at < CURRENT_TIMESTAMP)
     {% endif %}

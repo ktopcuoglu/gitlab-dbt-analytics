@@ -1,7 +1,7 @@
 WITH source AS (
 
   SELECT *
-  FROM {{ source('gitlab_dotcom', 'ci_pipeline_chat_data') }}
+  FROM {{ ref('gitlab_dotcom_ci_pipeline_chat_data_dedupe_source') }}
 
 ), renamed AS (
 

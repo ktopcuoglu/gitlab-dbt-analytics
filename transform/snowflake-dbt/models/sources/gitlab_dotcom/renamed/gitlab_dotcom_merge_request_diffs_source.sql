@@ -7,7 +7,7 @@
 WITH source AS (
 
   SELECT *
-  FROM {{ source('gitlab_dotcom', 'merge_request_diffs') }}
+  FROM {{ ref('gitlab_dotcom_merge_request_diffs_dedupe_source') }}
   WHERE created_at IS NOT NULL
     AND updated_at IS NOT NULL
     

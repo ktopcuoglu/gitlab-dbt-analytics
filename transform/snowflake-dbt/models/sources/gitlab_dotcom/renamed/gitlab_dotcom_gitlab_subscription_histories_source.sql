@@ -1,7 +1,7 @@
 WITH source AS (
 
   SELECT *
-  FROM {{ source('gitlab_dotcom', 'gitlab_subscription_histories') }}
+  FROM {{ ref('gitlab_dotcom_gitlab_subscription_histories_dedupe_source') }}
   QUALIFY ROW_NUMBER() OVER (PARTITION BY id ORDER BY _uploaded_at DESC) = 1 -- Each ID should always have the same data since it's a log table.
 
 ), renamed AS (

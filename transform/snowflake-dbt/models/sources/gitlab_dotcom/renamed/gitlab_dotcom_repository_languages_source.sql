@@ -1,7 +1,7 @@
 WITH source AS (
 
     SELECT *
-    FROM {{ source('gitlab_dotcom', 'repository_languages') }}
+    FROM {{ ref('gitlab_dotcom_repository_languages_dedupe_source') }}
     QUALIFY ROW_NUMBER() OVER (PARTITION BY project_programming_language_id ORDER BY _uploaded_at DESC) = 1
 
 ), renamed AS (

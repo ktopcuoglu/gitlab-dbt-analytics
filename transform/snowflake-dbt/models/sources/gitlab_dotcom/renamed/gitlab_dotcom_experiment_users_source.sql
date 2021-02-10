@@ -1,7 +1,7 @@
 WITH source AS (
 
     SELECT *
-    FROM {{ source('gitlab_dotcom', 'experiment_users') }}
+    FROM {{ ref('gitlab_dotcom_experiment_users_dedupe_source') }}
 
 ), renamed AS (
 
