@@ -29,6 +29,7 @@ from sqlalchemy import (
     Float,
     DateTime,
     Table,
+    Double
 )
 from sqlalchemy.engine.base import Engine
 from sqlalchemy.schema import CreateTable, DropTable
@@ -169,8 +170,10 @@ def transform_dataframe_column(column_name: str, pg_type: str) -> List[Column]:
         return Column(column_name, Date)
     elif pg_type == "boolean":
         return Column(column_name, Boolean)
-    elif pg_type == "float" or pg_type == "double precision":
+    elif pg_type == "float":
         return Column(column_name, Float)
+    elif pg_type == "double precision":
+        return Column(column_name, Double)
     else:
         return Column(column_name, String)
 
