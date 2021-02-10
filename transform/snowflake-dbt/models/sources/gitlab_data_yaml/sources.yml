@@ -27,6 +27,7 @@ sources:
       - name: enablement_section_pi
       - name: engineering_function_pi
       - name: finance_team_pi
+      - name: geo_zones
       - name: location_factors
       - name: marketing_pi
       - name: ops_section_pi

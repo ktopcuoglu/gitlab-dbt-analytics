@@ -2,14 +2,32 @@ WITH source AS (
 
     SELECT *
     FROM {{ ref('location_factors_yaml_source') }}
-
+  
 ), filtered as (
 
-    SELECT *
+    SELECT
+      IFF(area = 'Zug/Zurig','Zug/Zurich', area)                    AS area, 
+      country,
+      location_factor,
+      IFF(snapshot_date = '2021-01-03','2021-01-01', snapshot_date) AS valid_from_date
+      --we didn't start capturing data until 21.01.03 but adjusting for downstream models 
     FROM source
-    WHERE rank = 1
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY area, country, location_factor ORDER BY snapshot_date) = 1
+
+), final AS (
+
+    SELECT
+      area,
+      country,
+      location_factor,
+      TRIM(area ||', '||country)                                     AS yaml_locality,
+      valid_from_date,
+      COALESCE(LEAD(DATEADD(day,-1,valid_from_date)) 
+                    OVER (PARTITION BY area, country ORDER BY valid_from_date),
+                {{max_date_in_bamboo_analyses()}})                   AS valid_to_date
+    FROM filtered
 
 )
 
 SELECT *
-FROM filtered
+FROM final
