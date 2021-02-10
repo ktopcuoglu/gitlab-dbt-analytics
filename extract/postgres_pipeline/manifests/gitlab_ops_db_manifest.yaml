@@ -1,13 +1,18 @@
 connection_info:
-  user: GITLAB_OPS_DB_USER
-  pass: GITLAB_OPS_DB_PASS
-  host: GITLAB_OPS_DB_HOST
   database: GITLAB_OPS_DB_NAME
+  host: GITLAB_OPS_DB_HOST
+  pass: GITLAB_OPS_DB_PASS
   port: PG_PORT
+  user: GITLAB_OPS_DB_USER
 tables:
   ci_builds:
+    advanced_metadata: true
+    dbt_source_model: true
+    export_schema: 'gitlab_ops_net'
+    export_table: ci_builds
+    export_table_primary_key: id
     import_db: GITLAB_OPS_DB
-    import_query: >
+    import_query: |-
       SELECT id
       , status
       , finished_at
@@ -36,7 +41,7 @@ tables:
       , artifacts_metadata
       , erased_by_id
       , erased_at
-      , CASE WHEN artifacts_expire_at > '2262-01-01' THEN '2262-01-01' ELSE artifacts_expire_at END AS artifacts_expire_at
+      , CASE WHEN artifacts_expire_at |- '2262-01-01' THEN '2262-01-01' ELSE artifacts_expire_at END AS artifacts_expire_at
       , environment
       , artifacts_size
       , "when"
@@ -54,14 +59,13 @@ tables:
       , scheduled_at
       , upstream_pipeline_id
       FROM ci_builds
-    export_schema: 'gitlab_ops_net'
-    export_table: ci_builds
-    export_table_primary_key: id
-    advanced_metadata: true 
-    dbt_source_model: true
   ci_pipelines:
+    dbt_source_model: true
+    export_schema: 'gitlab_ops_net'
+    export_table: 'ci_pipelines'
+    export_table_primary_key: id
     import_db: GITLAB_OPS_DB
-    import_query: >
+    import_query: |-
       SELECT id
       , created_at
       , updated_at
@@ -87,13 +91,13 @@ tables:
       FROM ci_pipelines
       WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
         AND '{EXECUTION_DATE}'::timestamp
-    export_schema: 'gitlab_ops_net'
-    export_table: 'ci_pipelines'
-    export_table_primary_key: id
-    dbt_source_model: true
   ci_stages:
+    dbt_source_model: true
+    export_schema: 'gitlab_ops_net'
+    export_table: ci_stages
+    export_table_primary_key: id
     import_db: GITLAB_OPS_DB
-    import_query: >
+    import_query: |-
       SELECT id
       , project_id
       , pipeline_id
@@ -106,13 +110,28 @@ tables:
       FROM ci_stages
       WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
         AND '{EXECUTION_DATE}'::timestamp
-    export_schema: 'gitlab_ops_net'
-    export_table: ci_stages
-    export_table_primary_key: id
+  label_links:
+    advanced_metadata: true
     dbt_source_model: true
-  labels:
+    export_schema: 'gitlab_ops_net'
+    export_table: 'label_links'
+    export_table_primary_key: id
     import_db: GITLAB_OPS_DB
-    import_query: >
+    import_query: |-
+      SELECT id
+      , label_id
+      , target_id
+      , target_type
+      , created_at
+      , updated_at
+      FROM label_links
+  labels:
+    dbt_source_model: true
+    export_schema: 'gitlab_ops_net'
+    export_table: 'labels'
+    export_table_primary_key: id
+    import_db: GITLAB_OPS_DB
+    import_query: |-
       SELECT id
       , title
       , color
@@ -125,53 +144,56 @@ tables:
       FROM labels
       WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
         AND '{EXECUTION_DATE}'::timestamp
-    export_schema: 'gitlab_ops_net'
-    export_table: 'labels'
-    export_table_primary_key: id
-    dbt_source_model: true
-  label_links:
-    import_db: GITLAB_OPS_DB
-    import_query: >
-      SELECT id
-      , label_id
-      , target_id
-      , target_type
-      , created_at
-      , updated_at
-      FROM label_links
-    export_schema: 'gitlab_ops_net'
-    export_table: 'label_links'
-    export_table_primary_key: id
-    advanced_metadata: true  
-    dbt_source_model: true
   members:
-    import_db: GITLAB_OPS_DB
-    import_query: >
-        SELECT id
-        , access_level
-        , source_id
-        , source_type
-        , user_id
-        , notification_level
-        , type
-        , created_at
-        , created_by_id
-        , invite_email
-        , invite_accepted_at
-        , invite_token
-        , requested_at
-        , CASE WHEN expires_at > '2262-01-01' THEN '2262-01-01' ELSE expires_at END AS expires_at
-        , ldap
-        , override
-        FROM members
+    advanced_metadata: true
+    dbt_source_model: true
     export_schema: 'gitlab_ops_net'
     export_table: 'members'
     export_table_primary_key: id
-    advanced_metadata: true
-    dbt_source_model: true
-  merge_requests:
     import_db: GITLAB_OPS_DB
-    import_query: >
+    import_query: |-
+      SELECT id
+      , access_level
+      , source_id
+      , source_type
+      , user_id
+      , notification_level
+      , type
+      , created_at
+      , created_by_id
+      , invite_email
+      , invite_accepted_at
+      , invite_token
+      , requested_at
+      , CASE WHEN expires_at |- '2262-01-01' THEN '2262-01-01' ELSE expires_at END AS expires_at
+      , ldap
+      , override
+      FROM members
+  merge_request_metrics:
+    dbt_source_model: true
+    export_schema: 'gitlab_ops_net'
+    export_table: 'merge_request_metrics'
+    export_table_primary_key: id
+    import_db: GITLAB_OPS_DB
+    import_query: |-
+      SELECT id
+      , merge_request_id
+      , latest_build_started_at
+      , latest_build_finished_at
+      , first_deployed_to_production_at
+      , merged_at
+      , created_at
+      , updated_at
+      FROM merge_request_metrics
+      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
+        AND '{EXECUTION_DATE}'::timestamp
+  merge_requests:
+    dbt_source_model: true
+    export_schema: 'gitlab_ops_net'
+    export_table: 'merge_requests'
+    export_table_primary_key: id
+    import_db: GITLAB_OPS_DB
+    import_query: |-
       SELECT id
       , iid
       , target_branch
@@ -204,31 +226,13 @@ tables:
       FROM merge_requests
       WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
         AND '{EXECUTION_DATE}'::timestamp
-    export_schema: 'gitlab_ops_net'
-    export_table: 'merge_requests'
-    export_table_primary_key: id
-    dbt_source_model: true
-  merge_request_metrics:
-    import_db: GITLAB_OPS_DB
-    import_query: >
-      SELECT id
-      , merge_request_id
-      , latest_build_started_at
-      , latest_build_finished_at
-      , first_deployed_to_production_at
-      , merged_at
-      , created_at
-      , updated_at
-      FROM merge_request_metrics
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
-    export_schema: 'gitlab_ops_net'
-    export_table: 'merge_request_metrics'
-    export_table_primary_key: id
-    dbt_source_model: true
   projects:
+    dbt_source_model: true
+    export_schema: 'gitlab_ops_net'
+    export_table: 'projects'
+    export_table_primary_key: id
     import_db: GITLAB_OPS_DB
-    import_query: >
+    import_query: |-
       SELECT id
       , name
       , path
@@ -289,13 +293,13 @@ tables:
       FROM projects
       WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
         AND '{EXECUTION_DATE}'::timestamp
-    export_schema: 'gitlab_ops_net'
-    export_table: 'projects'
-    export_table_primary_key: id
-    dbt_source_model: true
   users:
+    dbt_source_model: true
+    export_schema: 'gitlab_ops_net'
+    export_table: 'users'
+    export_table_primary_key: id
     import_db: GITLAB_OPS_DB
-    import_query: >
+    import_query: |-
       SELECT id
       , email
       , commit_email
@@ -364,7 +368,3 @@ tables:
       FROM users
       WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
         AND '{EXECUTION_DATE}'::timestamp
-    export_schema: 'gitlab_ops_net'
-    export_table: 'users'
-    export_table_primary_key: id
-    dbt_source_model: true
