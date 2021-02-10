@@ -5,8 +5,7 @@ WITH source AS (
   FROM {{ ref('gitlab_dotcom_issues_dedupe_source') }}
   WHERE created_at::VARCHAR NOT IN ('0001-01-01 12:00:00','1000-01-01 12:00:00','10000-01-01 12:00:00')
     AND LEFT(created_at::VARCHAR , 10) != '1970-01-01'
-  QUALIFY ROW_NUMBER() OVER (PARTITION BY id ORDER BY updated_at DESC) = 1
-
+  
 ), renamed AS (
 
     SELECT

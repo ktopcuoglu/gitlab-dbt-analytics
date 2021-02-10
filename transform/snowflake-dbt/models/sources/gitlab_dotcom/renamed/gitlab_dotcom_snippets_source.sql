@@ -3,8 +3,7 @@ WITH source AS (
 
     SELECT *
     FROM {{ ref('gitlab_dotcom_snippets_dedupe_source') }}
-    QUALIFY ROW_NUMBER() OVER (PARTITION BY id ORDER BY _uploaded_at DESC) = 1
-
+    
 ), renamed AS (
   
     SELECT

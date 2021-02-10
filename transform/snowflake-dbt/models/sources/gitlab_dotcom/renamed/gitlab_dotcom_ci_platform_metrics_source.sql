@@ -9,8 +9,7 @@ WITH source AS (
 
     {% endif %}
 
-    QUALIFY ROW_NUMBER() OVER (PARTITION BY id ORDER BY recorded_at DESC) = 1
-
+    
 ), renamed AS (
 
     SELECT

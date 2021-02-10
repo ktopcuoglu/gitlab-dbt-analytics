@@ -3,8 +3,7 @@ WITH source AS (
   SELECT *
   FROM {{ ref('gitlab_dotcom_ci_stages_dedupe_source') }}
   WHERE created_at IS NOT NULL
-  QUALIFY ROW_NUMBER() OVER (PARTITION BY id ORDER BY updated_at DESC) = 1
-  
+    
     {% if is_incremental() %}
 
     AND updated_at >= (SELECT MAX(updated_at) FROM {{this}})

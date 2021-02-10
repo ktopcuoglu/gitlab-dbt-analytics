@@ -2,8 +2,7 @@ WITH source AS (
 
   SELECT *
   FROM {{ ref('gitlab_dotcom_epic_issues_dedupe_source') }}
-  QUALIFY ROW_NUMBER() OVER (PARTITION BY issue_id ORDER BY _uploaded_at DESC) = 1
-
+  
 ), renamed AS (
 
     SELECT

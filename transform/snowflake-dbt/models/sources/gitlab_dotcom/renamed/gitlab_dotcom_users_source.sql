@@ -83,8 +83,7 @@ WITH source AS (
       user_type::NUMBER                                                AS user_type
 
     FROM source
-    QUALIFY ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY updated_at DESC) = 1
-
+    
 )
 
 SELECT  *

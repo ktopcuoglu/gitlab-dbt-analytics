@@ -37,8 +37,7 @@ WITH source AS (
       experience_level::NUMBER            AS experience_level
 
     FROM source
-    QUALIFY ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY updated_at DESC) = 1
-
+    
 )
 
 SELECT  *
