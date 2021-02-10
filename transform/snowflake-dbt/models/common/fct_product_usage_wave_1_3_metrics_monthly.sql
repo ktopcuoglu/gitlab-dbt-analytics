@@ -6,7 +6,7 @@ WITH subscriptions AS (
       dim_billing_account_id,
       first_day_of_month
     FROM {{ ref('bdg_subscription_product_rate_plan') }}
-      JOIN {{ ref('dim_date') }}
+      INNER JOIN {{ ref('dim_date') }}
         ON date_actual BETWEEN '2017-04-01' AND DATE_TRUNC('month', CURRENT_DATE)
     WHERE product_delivery_type = 'Self-Managed'
 
