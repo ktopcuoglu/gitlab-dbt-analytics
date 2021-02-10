@@ -4,7 +4,7 @@ WITH source AS (
       jsontext,
       DATE_TRUNC(day, uploaded_at) AS uploaded_at,
       RANK() OVER (PARTITION BY DATE_TRUNC('day', uploaded_at) ORDER BY uploaded_at DESC) AS rank
-    FROM "RAW"."GITLAB_DATA_YAML"."GEO_ZONES"
+    FROM {{ source('gitlab_data_yaml', 'geo_zones') }}
     ORDER BY uploaded_at DESC
 
 ), intermediate AS (
@@ -49,5 +49,3 @@ SELECT
   {{ dbt_utils.surrogate_key(['geozone_title', 'geozone_factor', 'country', 'state_or_province','geozone_factor']) }}        AS unique_key,
   unioned.*
 FROM unioned
-
-
