@@ -1,3 +1,8 @@
+{{ config({
+    "materialized": "incremental",
+    "unique_key": "id"
+    })
+}}
 
 SELECT *
 FROM {{ source('gitlab_dotcom', 'design_management_versions') }}

@@ -1,3 +1,8 @@
+{{ config({
+    "materialized": "incremental",
+    "unique_key": "pipeline_id"
+    })
+}}
 
 SELECT *
 FROM {{ source('gitlab_dotcom', 'ci_pipeline_chat_data') }}

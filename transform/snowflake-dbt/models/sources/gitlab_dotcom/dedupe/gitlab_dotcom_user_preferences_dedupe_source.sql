@@ -1,3 +1,8 @@
+{{ config({
+    "materialized": "incremental",
+    "unique_key": "user_id"
+    })
+}}
 
 SELECT *
 FROM {{ source('gitlab_dotcom', 'user_preferences') }}

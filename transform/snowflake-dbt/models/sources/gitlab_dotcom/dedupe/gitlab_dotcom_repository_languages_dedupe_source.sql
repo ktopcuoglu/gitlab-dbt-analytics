@@ -1,3 +1,8 @@
+{{ config({
+    "materialized": "incremental",
+    "unique_key": "project_programming_language_id"
+    })
+}}
 
 SELECT *
 FROM {{ source('gitlab_dotcom', 'repository_languages') }}

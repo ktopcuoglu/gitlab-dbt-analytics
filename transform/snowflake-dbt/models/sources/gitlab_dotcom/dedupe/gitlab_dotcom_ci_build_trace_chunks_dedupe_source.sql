@@ -1,3 +1,8 @@
+{{ config({
+    "materialized": "incremental",
+    "unique_key": "build_id"
+    })
+}}
 
 SELECT *
 FROM {{ source('gitlab_dotcom', 'ci_build_trace_chunks') }}

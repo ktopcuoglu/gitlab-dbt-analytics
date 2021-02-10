@@ -1,3 +1,8 @@
+{{ config({
+    "materialized": "incremental",
+    "unique_key": "namespace_id"
+    })
+}}
 
 SELECT *
 FROM {{ source('gitlab_dotcom', 'elasticsearch_indexed_namespaces') }}

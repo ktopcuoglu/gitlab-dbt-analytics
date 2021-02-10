@@ -1,3 +1,8 @@
+{{ config({
+    "materialized": "incremental",
+    "unique_key": "deployment_merge_request_id"
+    })
+}}
 
 SELECT *
 FROM {{ source('gitlab_dotcom', 'deployment_merge_requests') }}
