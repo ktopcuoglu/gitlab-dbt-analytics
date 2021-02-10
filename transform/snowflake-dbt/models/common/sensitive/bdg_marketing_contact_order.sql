@@ -66,13 +66,13 @@ WITH marketing_contact AS (
       END                                                                                                                                   AS is_saas_ultimate_tier,       
       CASE 
         WHEN self_managed_product_tier = 'Self-Managed - Starter' THEN 1 ELSE 0 
-      END                                                                                                                                   AS is_Self_Managed_Starter_Tier,
+      END                                                                                                                                   AS is_self_managed_starter_tier,
       CASE 
         WHEN self_managed_product_tier = 'Self-Managed - Premium' THEN 1 ELSE 0 
-      END                                                                                                                                   AS is_Self_Managed_Premium_Tier,
+      END                                                                                                                                   AS is_self_managed_premium_tier,
       CASE 
         WHEN self_managed_product_tier = 'Self-Managed - Ultimate' THEN 1 ELSE 0 
-      END                                                                                                                                   AS is_Self_Managed_Ultimate_Tier
+      END                                                                                                                                   AS is_self_managed_ultimate_tier
     
     FROM marketing_contact_role 
     INNER JOIN marketing_contact 
