@@ -11,7 +11,7 @@ from gitlabdata.orchestration_utils import (
 
 if __name__ == "__main__":
 
-    handbook_dict = dict(categories="categories", stages="stages", team="team")
+    handbook_dict = dict(categories="categories", stages="stages")
 
     pi_file_dict = dict(
         chief_of_staff_team_pi="chief_of_staff_team",
@@ -51,6 +51,8 @@ if __name__ == "__main__":
         f"https://gitlab.com/api/v4/projects/21924975/repository/files/data%2F"
     )
 
+    team_url = "https://about.gitlab.com/company/team/"
+
     job_failed = False
 
     def curl_and_upload(table_name, file_name, base_url, private_token=None):
@@ -88,6 +90,10 @@ if __name__ == "__main__":
         curl_and_upload(
             key, value, comp_calc_url, config_dict["GITLAB_ANALYTICS_PRIVATE_TOKEN"]
         )
+    
+    curl_and_upload(
+        "team", "team", team_url
+    )
 
     if job_failed:
         sys.exit(1)
