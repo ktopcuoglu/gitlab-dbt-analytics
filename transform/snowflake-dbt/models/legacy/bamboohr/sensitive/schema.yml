@@ -73,8 +73,8 @@ models:
   - name: employee_locality
     description: This idenitifes the location factor for an employee on a given day starting 2020.03.24 by joining the locality value from bamboohr to the location_factor yaml or geo_zones yaml file to capture the location factor.
     columns:
-      name: employee_number
-      name: employee_id
-      name: updated_at
-      name: bamboo_locality
-      name: location_factor
+      - name: employee_number
+      - name: employee_id
+      - name: updated_at
+      - name: bamboo_locality
+      - name: location_factor
