@@ -764,7 +764,7 @@ models:
           - not_null
           - accepted_values:
                   values: ['Sales-Assisted', 'Self-Service']
-        tags: ["tdf"]
+        tags: ["tdf", "gainsight"
 
   - name: dim_subscriptions_snapshots
     description: Daily snapshot of subscriptions starting from 2020-03-01. Fiel
