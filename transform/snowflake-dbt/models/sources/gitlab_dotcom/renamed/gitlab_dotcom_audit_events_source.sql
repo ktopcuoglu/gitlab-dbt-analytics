@@ -1,9 +1,3 @@
-{{ config({
-    "materialized": "incremental",
-    "unique_key": "audit_event_id"
-    })
-}}
-
 WITH source AS (
 
   SELECT *

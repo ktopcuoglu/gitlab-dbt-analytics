@@ -1,9 +1,3 @@
-{{ config({
-    "materialized": "incremental",
-    "unique_key": "resource_label_event_id"
-    })
-}}
-
 WITH source AS (
 
   SELECT *

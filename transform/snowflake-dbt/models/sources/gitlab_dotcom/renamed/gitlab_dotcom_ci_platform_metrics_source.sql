@@ -1,9 +1,3 @@
-{{ config({
-    "materialized": "incremental",
-    "unique_key": "metric_id"
-    })
-}}
-
 WITH source AS (
 
     SELECT *

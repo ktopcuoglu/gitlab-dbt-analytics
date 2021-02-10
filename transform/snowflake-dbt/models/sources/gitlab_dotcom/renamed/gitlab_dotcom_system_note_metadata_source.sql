@@ -1,9 +1,3 @@
-{{ config({
-    "materialized": "incremental",
-    "unique_key": "note_id"
-    })
-}}
-
 WITH source AS (
 
     SELECT *
