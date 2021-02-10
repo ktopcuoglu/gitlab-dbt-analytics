@@ -92,6 +92,7 @@ sources:
       - name: territory_mapping
       - name: scalable_employment_values
       - name: social_marketing_metrics
+      - name: social_marketing_topic_metrics
       - name: usage_ping_metrics_sections
       - name: values_certificate
       - name: yc_companies
