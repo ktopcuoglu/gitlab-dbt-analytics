@@ -53,10 +53,10 @@ WITH dim_crm_account AS (
       fct_crm_opportunity.created_date,
       DATE_TRUNC(month, fct_crm_opportunity.created_date)                  AS created_month,
       fct_crm_opportunity.dim_crm_opportunity_id,
-      dim_crm_account.ultimate_parent_account_name,
-      dim_crm_account.ultimate_parent_account_id,
+      dim_crm_account.parent_crm_account_name,
+      dim_crm_account.dim_parent_crm_account_id,
       dim_crm_account.crm_account_name,
-      dim_crm_account.crm_account_id,
+      dim_crm_account.dim_crm_account_id,
       fct_crm_opportunity.is_won,
       fct_crm_opportunity.is_closed,
       fct_crm_opportunity.days_in_sao,
@@ -80,9 +80,9 @@ WITH dim_crm_account AS (
       dim_opportunity_source.opportunity_source_name,
       dim_crm_account.crm_account_gtm_strategy,
       dim_crm_account.crm_account_focus_account,
-      dim_crm_account.ultimate_parent_gtm_strategy,
-      dim_crm_account.ultimate_parent_focus_account,
-      dim_crm_account.ultimate_parent_account_segment,
+      dim_crm_account.parent_crm_account_gtm_strategy,
+      dim_crm_account.parent_crm_account_focus_account,
+      dim_crm_account.parent_crm_account_sales_segment,
       fct_crm_opportunity.closed_buckets,
       dim_crm_opportunity.source_buckets,
       dim_crm_opportunity.opportunity_sales_development_representative,
@@ -93,7 +93,7 @@ WITH dim_crm_account AS (
     LEFT JOIN dim_crm_opportunity
       ON fct_crm_opportunity.dim_crm_opportunity_id = dim_crm_opportunity.dim_crm_opportunity_id
     LEFT JOIN dim_crm_account
-      ON dim_crm_opportunity.dim_crm_account_id = dim_crm_account.crm_account_id
+      ON dim_crm_opportunity.dim_crm_account_id = dim_crm_account.dim_crm_account_id
     LEFT JOIN dim_opportunity_source
       ON fct_crm_opportunity.dim_opportunity_source_id = dim_opportunity_source.dim_opportunity_source_id
     LEFT JOIN dim_purchase_channel
@@ -116,7 +116,7 @@ WITH dim_crm_account AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@iweeks",
+    updated_by="@mcooperDD",
     created_date="2020-12-07",
-    updated_date="2021-02-08",
+    updated_date="2021-02-09",
   ) }}

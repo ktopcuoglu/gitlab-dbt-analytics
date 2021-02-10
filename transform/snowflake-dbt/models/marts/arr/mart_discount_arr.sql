@@ -56,26 +56,26 @@ WITH dim_date AS (
 ), combined AS (
 
     SELECT
-      {{ dbt_utils.surrogate_key(['dim_crm_account_invoice.ultimate_parent_account_id', 'arr_agg.effective_start_month', 'arr_agg.effective_end_month', 'zuora_subscription.subscription_name', 'arr_agg.dim_product_detail_id']) }}
+      {{ dbt_utils.surrogate_key(['dim_crm_account_invoice.dim_parent_crm_account_id', 'arr_agg.effective_start_month', 'arr_agg.effective_end_month', 'zuora_subscription.subscription_name', 'arr_agg.dim_product_detail_id']) }}
                                                                         AS primary_key,
       arr_agg.effective_start_month,
       arr_agg.effective_end_month,
       DATE_TRUNC('month',zuora_subscription.subscription_start_date)    AS subscription_start_month,
       DATE_TRUNC('month',zuora_subscription.subscription_end_date)      AS subscription_end_month,
-      dim_crm_account_invoice.ultimate_parent_account_id               AS parent_account_id_invoice,
-      dim_crm_account_invoice.ultimate_parent_account_name             AS parent_account_name_invoice,
-      dim_crm_account_invoice.ultimate_parent_billing_country          AS parent_billing_country_invoice,
-      dim_crm_account_invoice.ultimate_parent_account_segment          AS parent_account_segment_invoice,
-      dim_crm_account_invoice.crm_account_id                           AS crm_account_id_invoice,
-      dim_crm_account_invoice.crm_account_name                         AS crm_account_name_invoice,
-      dim_crm_account_invoice.account_owner_team                       AS account_owner_team_invoice,
-      dim_crm_account_subscription.ultimate_parent_account_id          AS parent_account_id_subscription,
-      dim_crm_account_subscription.ultimate_parent_account_name        AS parent_account_name_subscription,
-      dim_crm_account_subscription.ultimate_parent_billing_country     AS parent_billing_country_subscription,
-      dim_crm_account_subscription.ultimate_parent_account_segment     AS parent_account_segment_subscription,
-      dim_crm_account_subscription.crm_account_id                      AS crm_account_id_subscription,
-      dim_crm_account_subscription.crm_account_name                    AS crm_account_name_subscription,
-      dim_crm_account_subscription.account_owner_team                  AS account_owner_team_subscription,
+      dim_crm_account_invoice.dim_parent_crm_account_id                 AS parent_crm_account_id_invoice,
+      dim_crm_account_invoice.parent_crm_account_name                   AS parent_crm_account_name_invoice,
+      dim_crm_account_invoice.parent_crm_account_billing_country        AS parent_crm_account_billing_country_invoice,
+      dim_crm_account_invoice.parent_crm_account_sales_segment          AS parent_crm_account_sales_segment_invoice,
+      dim_crm_account_invoice.dim_crm_account_id                        AS dim_crm_account_id_invoice,
+      dim_crm_account_invoice.crm_account_name                          AS crm_account_name_invoice,
+      dim_crm_account_invoice.crm_account_owner_team                    AS crm_account_owner_team_invoice,
+      dim_crm_account_subscription.dim_parent_crm_account_id            AS parent_crm_account_id_subscription,
+      dim_crm_account_subscription.parent_crm_account_name              AS parent_crm_account_name_subscription,
+      dim_crm_account_subscription.parent_crm_account_billing_country   AS parent_crm_account_billing_country_subscription,
+      dim_crm_account_subscription.parent_crm_account_sales_segment     AS parent_crm_account_sales_segment_subscription,
+      dim_crm_account_subscription.dim_crm_account_id                   AS dim_crm_account_id_subscription,
+      dim_crm_account_subscription.crm_account_name                     AS crm_account_name_subscription,
+      dim_crm_account_subscription.crm_account_owner_team               AS crm_account_owner_team_subscription,
       zuora_subscription.subscription_name,
       CASE
         WHEN zuora_subscription.current_term <= 12 THEN FALSE
@@ -116,9 +116,9 @@ WITH dim_date AS (
     INNER JOIN dim_billing_account
       ON arr_agg.dim_billing_account_id_invoice = dim_billing_account.dim_billing_account_id
     LEFT JOIN dim_crm_account AS dim_crm_account_invoice
-      ON arr_agg.dim_crm_account_id_invoice = dim_crm_account_invoice.crm_account_id
+      ON arr_agg.dim_crm_account_id_invoice = dim_crm_account_invoice.dim_crm_account_id
     LEFT JOIN dim_crm_account AS dim_crm_account_subscription
-      ON arr_agg.dim_crm_account_id_subscription = dim_crm_account_subscription.crm_account_id
+      ON arr_agg.dim_crm_account_id_subscription = dim_crm_account_subscription.dim_crm_account_id
     {{ dbt_utils.group_by(n=30) }}
     ORDER BY 3 DESC
 
@@ -141,7 +141,7 @@ WITH dim_date AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@iweeks",
+    updated_by="@mcooperDD",
     created_date="2020-10-21",
-    updated_date="2021-01-20",
+    updated_date="2021-02-09",
 ) }}

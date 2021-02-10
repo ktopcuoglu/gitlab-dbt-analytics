@@ -47,12 +47,12 @@ WITH zuora_base_mrr AS (
     SELECT
       zuora_base_mrr.rate_plan_charge_id,
       zuora_base_mrr.subscription_name_slugify,
-      dim_billing_account.dim_billing_account_id                                AS zuora_account_id,
-      COALESCE(merged_accounts.crm_account_id, dim_crm_account.crm_account_id)  AS sfdc_account_id,
-      COALESCE(merged_accounts.ultimate_parent_account_id,
-                dim_crm_account.ultimate_parent_account_id)                     AS ultimate_parent_account_id,
-      COALESCE(merged_accounts.ultimate_parent_account_name,
-                dim_crm_account.ultimate_parent_account_name)                   AS ultimate_parent_account_name,
+      dim_billing_account.dim_billing_account_id                                        AS dim_billing_account_id,
+      COALESCE(merged_accounts.dim_crm_account_id, dim_crm_account.dim_crm_account_id)  AS dim_crm_account_id,
+      COALESCE(merged_accounts.dim_parent_crm_account_id,
+                dim_crm_account.dim_parent_crm_account_id)                              AS dim_parent_crm_account_id,
+      COALESCE(merged_accounts.parent_crm_account_name,
+                dim_crm_account.parent_crm_account_name)                                AS parent_crm_account_name,
       customers_db_charges.current_customer_id,
       namespaces.namespace_id
     FROM zuora_base_mrr
@@ -63,9 +63,9 @@ WITH zuora_base_mrr AS (
     LEFT JOIN dim_billing_account
       ON zuora_base_mrr.account_number = dim_billing_account.billing_account_number
     LEFT JOIN dim_crm_account
-      ON dim_billing_account.dim_crm_account_id = dim_crm_account.crm_account_id
+      ON dim_billing_account.dim_crm_account_id = dim_crm_account.dim_crm_account_id
     LEFT JOIN dim_crm_account AS merged_accounts
-      ON dim_crm_account.merged_to_account_id = merged_accounts.crm_account_id
+      ON dim_crm_account.merged_to_account_id = merged_accounts.dim_crm_account_id
 
 )
 

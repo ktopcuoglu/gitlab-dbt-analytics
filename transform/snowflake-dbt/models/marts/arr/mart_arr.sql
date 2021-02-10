@@ -50,15 +50,15 @@ SELECT
   dim_billing_account.sold_to_country                                                   AS zuora_sold_to_country,
   dim_billing_account.billing_account_name                                              AS zuora_account_name,
   dim_billing_account.billing_account_number                                            AS zuora_account_number,
-  dim_crm_account.crm_account_id                                                        AS crm_id,
+  dim_crm_account.dim_crm_account_id                                                    AS dim_crm_account_id,
   dim_crm_account.crm_account_name,
-  dim_crm_account.ultimate_parent_account_id,
-  dim_crm_account.ultimate_parent_account_name,
-  dim_crm_account.ultimate_parent_billing_country,
-  dim_crm_account.ultimate_parent_account_segment,
-  dim_crm_account.ultimate_parent_industry,
-  dim_crm_account.ultimate_parent_account_owner_team,
-  dim_crm_account.ultimate_parent_territory,
+  dim_crm_account.dim_parent_crm_account_id,
+  dim_crm_account.parent_crm_account_name,
+  dim_crm_account.parent_crm_account_billing_country,
+  dim_crm_account.parent_crm_account_sales_segment,
+  dim_crm_account.parent_crm_account_industry,
+  dim_crm_account.parent_crm_account_owner_team,
+  dim_crm_account.parent_crm_account_sales_territory,
   dim_crm_account.health_score,
   dim_crm_account.health_score_color,
   dim_crm_account.health_number,
@@ -90,4 +90,4 @@ SELECT
   INNER JOIN dim_date
     ON dim_date.date_id = fct_mrr.dim_date_id
   LEFT JOIN dim_crm_account
-    ON dim_billing_account.dim_crm_account_id = dim_crm_account.crm_account_id
+    ON dim_billing_account.dim_crm_account_id = dim_crm_account.dim_crm_account_id
