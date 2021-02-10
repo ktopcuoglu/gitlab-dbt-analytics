@@ -99,9 +99,9 @@ models:
         description: Flags if the namespace id is individual (and not a group)
       - name: customer_id
         description: Customer DB customer id of the marketing contact.
-      - name: zuora_billing_contact_id
+      - name: zuora_contact_id
         description: zuora billing contact id of the marketing contact.
-      - name: zuora_subscription_id
+      - name: dim_subscription_id
         description: zuora subscription id of the marketing contact.
       - name: saas_product_tier
         description: Product tier name if it is SaaS

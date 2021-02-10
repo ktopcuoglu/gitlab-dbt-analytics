@@ -30,49 +30,82 @@ WITH marketing_contact AS (
       marketing_contact.email_address,
       marketing_contact_role.namespace_id,    
       CASE 
-        WHEN saas_namespace.namespace_type = 'Individual' THEN 1 ELSE 0 
-      END                                                                                                                                   AS is_individual,
-      marketing_contact_role.customer_db_customer_id                                                                                        AS customer_id,
-      marketing_contact_role.zuora_billing_contact_id,
-      marketing_contact_role.zuora_subscription_id,
+        WHEN saas_namespace.namespace_type = 'Individual' 
+          THEN 1 
+        ELSE 0 
+      END                                                                                     AS is_individual,
+      marketing_contact_role.customer_db_customer_id                                          AS customer_id,
+      marketing_contact_role.zuora_billing_contact_id                                         AS zuora_contact_id,
+      marketing_contact_role.zuora_subscription_id                                            AS dim_subscription_id,
       CASE 
-        WHEN marketing_contact_role.marketing_contact_role IN ('Personal Namespace Owner','Group Namespace Owner','Group Namespace Member') THEN saas_namespace.product_tier_name_namespace
-        WHEN marketing_contact_role.marketing_contact_role IN ('Customer DB Owner') THEN saas_customer.product_tier_name_order   
-        WHEN marketing_contact_role.marketing_contact_role IN ('Zuora Billing Contact') THEN saas_billing_account.product_tier_name_subscription     
-      END                                                                                                                                   AS saas_product_tier,
+        WHEN marketing_contact_role.marketing_contact_role IN (
+                                                                'Personal Namespace Owner'
+                                                                , 'Group Namespace Owner'
+                                                                , 'Group Namespace Member'
+                                                              ) 
+          THEN saas_namespace.product_tier_name_namespace
+        WHEN marketing_contact_role.marketing_contact_role IN (
+                                                                'Customer DB Owner'
+                                                              ) 
+          THEN saas_customer.product_tier_name_order   
+        WHEN marketing_contact_role.marketing_contact_role IN (
+                                                                'Zuora Billing Contact'
+                                                              ) 
+          THEN saas_billing_account.product_tier_name_subscription     
+      END                                                                                     AS saas_product_tier,
       CASE 
-        WHEN marketing_contact_role.marketing_contact_role IN ('Customer DB Owner') THEN self_managed_customer.product_tier_name_order   
-        WHEN marketing_contact_role.marketing_contact_role IN ('Zuora Billing Contact') THEN self_managed_billing_account.product_tier_name_subscription     
-      END                                                                                                                                   AS self_managed_product_tier,
+        WHEN marketing_contact_role.marketing_contact_role IN (
+                                                                'Customer DB Owner'
+                                                              ) 
+          THEN self_managed_customer.product_tier_name_order   
+        WHEN marketing_contact_role.marketing_contact_role IN (
+                                                                'Zuora Billing Contact'
+                                                              ) 
+          THEN self_managed_billing_account.product_tier_name_subscription     
+      END                                                                                     AS self_managed_product_tier,
       CASE 
-        WHEN saas_namespace.product_tier_name_with_trial = 'SaaS - Trial: Ultimate' OR saas_customer.order_is_trial = TRUE THEN 1 ELSE 0 
-      END                                                                                                                                   AS is_saas_trial,    
-      CURRENT_DATE - CAST(saas_namespace.saas_trial_expired_on AS DATE)                                                                     AS days_since_saas_trial_ended,    
+        WHEN saas_namespace.product_tier_name_with_trial = 'SaaS - Trial: Ultimate' 
+          OR saas_customer.order_is_trial = TRUE 
+          THEN 1 
+        ELSE 0 
+      END                                                                                     AS is_saas_trial,    
+      CURRENT_DATE - CAST(saas_namespace.saas_trial_expired_on AS DATE)                       AS days_since_saas_trial_ended,    
       CASE 
         WHEN saas_product_tier = 'SaaS - Free' 
           OR (marketing_contact_role.namespace_id IS NOT NULL 
-            AND IFNULL(saas_product_tier, '') NOT IN ('SaaS - Bronze', 'SaaS - Premium', 'SaaS - Ultimate')) 
+            AND IFNULL(saas_product_tier, '') NOT IN (
+                                                      'SaaS - Bronze'
+                                                      , 'SaaS - Premium'
+                                                      , 'SaaS - Ultimate'
+                                                     )
+             ) 
           THEN 1
         ELSE 0
-      END                                                                                                                                   AS is_saas_free_tier,
+      END                                                                                     AS is_saas_free_tier,
       CASE 
-        WHEN saas_product_tier = 'SaaS - Bronze' THEN 1 ELSE 0 
-      END                                                                                                                                   AS is_saas_bronze_tier,
+        WHEN saas_product_tier = 'SaaS - Bronze' THEN 1 
+        ELSE 0 
+      END                                                                                     AS is_saas_bronze_tier,
       CASE 
-        WHEN saas_product_tier = 'SaaS - Premium' THEN 1 ELSE 0 
-      END                                                                                                                                   AS is_saas_premium_tier,
+        WHEN saas_product_tier = 'SaaS - Premium' THEN 1 
+        ELSE 0 
+      END                                                                                     AS is_saas_premium_tier,
       CASE 
-        WHEN saas_product_tier = 'SaaS - Ultimate' THEN 1 ELSE 0 
-      END                                                                                                                                   AS is_saas_ultimate_tier,       
+        WHEN saas_product_tier = 'SaaS - Ultimate' THEN 1 
+        ELSE 0 
+      END                                                                                     AS is_saas_ultimate_tier,       
       CASE 
-        WHEN self_managed_product_tier = 'Self-Managed - Starter' THEN 1 ELSE 0 
-      END                                                                                                                                   AS is_Self_Managed_Starter_Tier,
+        WHEN self_managed_product_tier = 'Self-Managed - Starter' THEN 1 
+        ELSE 0 
+      END                                                                                     AS is_Self_Managed_Starter_Tier,
       CASE 
-        WHEN self_managed_product_tier = 'Self-Managed - Premium' THEN 1 ELSE 0 
-      END                                                                                                                                   AS is_Self_Managed_Premium_Tier,
+        WHEN self_managed_product_tier = 'Self-Managed - Premium' THEN 1 
+        ELSE 0 
+      END                                                                                     AS is_Self_Managed_Premium_Tier,
       CASE 
-        WHEN self_managed_product_tier = 'Self-Managed - Ultimate' THEN 1 ELSE 0 
-      END                                                                                                                                   AS is_Self_Managed_Ultimate_Tier
+        WHEN self_managed_product_tier = 'Self-Managed - Ultimate' THEN 1 
+        ELSE 0 
+      END                                                                                     AS is_Self_Managed_Ultimate_Tier
     
     FROM marketing_contact_role 
     INNER JOIN marketing_contact 
