@@ -67,7 +67,12 @@ WITH date_details AS (
       sfdc_opportunity_snapshot_history.iacv_created_date,
       sfdc_opportunity_snapshot_history.incremental_acv,
       sfdc_opportunity_snapshot_history.invoice_number,
-      sfdc_opportunity_snapshot_history.is_refund,
+
+      -- logic needs to be added here once the oppotunity category fields is merged
+      -- https://gitlab.com/gitlab-data/analytics/-/issues/7888
+      0                                                           AS is_refund,
+      --sfdc_opportunity_snapshot_history.is_refund,
+      
       sfdc_opportunity_snapshot_history.is_downgrade,
       sfdc_opportunity_snapshot_history.is_swing_deal,
       sfdc_opportunity_snapshot_history.net_incremental_acv,
@@ -264,6 +269,89 @@ WITH date_details AS (
       created_date_detail.fiscal_quarter_name_fy                 AS pipeline_created_fiscal_quarter_name,
       created_date_detail.first_day_of_fiscal_quarter            AS pipeline_created_fiscal_quarter_date,
 
+      ------------------------------------------------------------------------------------------------------
+      -- Base helpers for reporting
+      CASE 
+        WHEN opp_snapshot.stage_name IN ('00-Pre Opportunity', '0-Pending Acceptance', '0-Qualifying'
+                              ,'Developing', '1-Discovery', '2-Developing', '2-Scoping')  
+          THEN 'Pipeline'
+        WHEN opp_snapshot.stage_name IN ('3-Technical Evaluation', '4-Proposal', '5-Negotiating'
+                              , '6-Awaiting Signature', '7-Closing')                         
+          THEN '3+ Pipeline'
+        WHEN opp_snapshot.stage_name IN ('8-Closed Lost', 'Closed Lost')                                                                                       
+          THEN 'Lost'
+        WHEN opp_snapshot.stage_name IN ('Closed Won')                                                                                                         
+          THEN 'Closed Won'
+        ELSE 'Other'
+      END                                                         AS stage_name_3plus,
+      
+      CASE 
+        WHEN opp_snapshot.stage_name IN ('00-Pre Opportunity', '0-Pending Acceptance', '0-Qualifying'
+                            , 'Developing', '1-Discovery', '2-Developing', '2-Scoping', '3-Technical Evaluation')     
+          THEN 'Pipeline'
+        WHEN opp_snapshot.stage_name IN ('4-Proposal', '5-Negotiating', '6-Awaiting Signature', '7-Closing')                                                                               
+          THEN '4+ Pipeline'
+        WHEN opp_snapshot.stage_name IN ('8-Closed Lost', 'Closed Lost')                                                                                                                   
+          THEN 'Lost'
+        WHEN opp_snapshot.stage_name IN ('Closed Won')                                                                                                                                     
+          THEN 'Closed Won'
+        ELSE 'Other'
+      END                                                         AS stage_name_4plus,
+
+      CASE 
+        WHEN opp_snapshot.stage_name 
+          IN ('3-Technical Evaluation', '4-Proposal', 'Closed Won','5-Negotiating', '6-Awaiting Signature', '7-Closing')                               
+            THEN 1												                         
+        ELSE 0
+      END                                                         AS is_stage_3_plus,
+
+      CASE 
+        WHEN opp_snapshot.stage_name 
+          IN ('4-Proposal', 'Closed Won','5-Negotiating', '6-Awaiting Signature', '7-Closing')                               
+            THEN 1												                         
+        ELSE 0
+      END                                                         AS is_stage_4_plus,
+
+      CASE 
+        WHEN opp_snapshot.stage_name = 'Closed Won' 
+          THEN 1 ELSE 0
+      END                                                         AS is_won,
+
+      CASE 
+        WHEN opp_snapshot.stage_name = '8-Closed Lost'  
+          THEN 1 ELSE 0
+      END                                                         AS is_lost,
+
+      CASE 
+        WHEN (opp_snapshot.stage_name = '8-Closed Lost' 
+          OR opp_snapshot.stage_name = '9-Unqualified'
+          OR opp_snapshot.stage_name = 'Closed Won' ) 
+            THEN 0
+        ELSE 1  
+      END                                                         AS is_open,
+
+      CASE 
+        WHEN is_open = 0
+          THEN 1
+        ELSE 0
+      END                                                         AS is_closed,
+      
+      CASE 
+        WHEN opp_snapshot.stage_name = 'Closed Won' THEN '1.Won'
+        WHEN is_lost = 1 THEN '2.Lost'
+        WHEN is_open = 1 THEN '0. Open' 
+        ELSE 'N/A'
+      END                                                         AS stage_category,
+
+      CASE 
+        WHEN LOWER(opp_snapshot.sales_type) like '%renewal%' 
+          THEN 1
+        ELSE 0
+      END                                                         AS is_renewal, 
+
+  
+      ------------------------------------------------------------------------------------------------------
+
       -- base fields
       opp_snapshot.account_id,
       opp_snapshot.forecast_category_name,                
@@ -281,28 +369,6 @@ WITH date_details AS (
       opp_snapshot.total_contract_value,
       opp_snapshot.professional_services_value,
 
-    /*
-      -- NF 2021-01-28 Not all historical opportunities have Net ARR set. To allow historical reporting 
-      -- we apply a ratio by segment / order type to convert IACV to Net ARR      
-      CASE
-        WHEN (COALESCE(opp_snapshot.raw_net_arr,0) = 0 
-            OR opp_snapshot.date_actual <= '2021-01-30'::DATE) 
-          AND COALESCE(sfdc_opportunity_xf.raw_net_arr,0) <> 0
-          AND sfdc_opportunity_xf.net_incremental_acv <> 0 
-          AND opp_snapshot.net_incremental_acv <> 0
-          AND sfdc_opportunity_xf.is_won = 1
-            THEN opp_snapshot.net_incremental_acv * coalesce(sfdc_opportunity_xf.raw_net_arr / sfdc_opportunity_xf.net_incremental_acv,0)
-        WHEN (COALESCE(opp_snapshot.raw_net_arr,0) = 0 
-            OR opp_snapshot.date_actual <= '2021-01-30'::DATE) 
-          AND opp_snapshot.net_incremental_acv <> 0
-            THEN opp_snapshot.net_incremental_acv * coalesce(net_iacv_to_net_arr_ratio.ratio_net_iacv_to_net_arr,0)
-        WHEN (COALESCE(opp_snapshot.raw_net_arr,0) = 0 
-            OR opp_snapshot.date_actual <= '2021-01-30'::DATE) 
-          AND opp_snapshot.incremental_acv <> 0
-            THEN opp_snapshot.incremental_acv * coalesce(net_iacv_to_net_arr_ratio.ratio_net_iacv_to_net_arr,0)
-        ELSE COALESCE(opp_snapshot.raw_net_arr,0) 
-      END                                                        AS net_arr,
-*/
       ------------------------------------------------------------------------------------------------------
       ------------------------------------------------------------------------------------------------------
       
@@ -316,12 +382,7 @@ WITH date_details AS (
 
       -- If the opportunity exists, use the ratio from the opportunity sheetload
       -- I am faking that using the opportunity table directly
-      CASE -- open deal uses iacv
-        --WHEN sfdc_opportunity_xf.is_open = 1
-        --  AND COALESCE(sfdc_opportunity_xf.raw_net_arr,0) <> 0
-        --  AND COALESCE(sfdc_opportunity_xf.incremental_acv,0) <> 0
-        --    THEN COALESCE(sfdc_opportunity_xf.raw_net_arr / sfdc_opportunity_xf.incremental_acv,0)
-        -- close deal uses net iacv
+      CASE 
         WHEN sfdc_opportunity_xf.is_open = 0
           AND COALESCE(sfdc_opportunity_xf.raw_net_arr,0) <> 0
           AND COALESCE(sfdc_opportunity_xf.net_incremental_acv,0) <> 0
@@ -416,6 +477,15 @@ WITH date_details AS (
           THEN net_arr
         ELSE 0 
       END                                                         AS booked_net_arr,
+
+
+      -- fields for counting new logos, these fields count refund as negative
+      CASE 
+        WHEN opp_snapshot.is_refund = 1
+          THEN -1
+        ELSE 1
+      END                                                         AS calculated_deal_count,
+
  
       -- opportunity driven fields
       sfdc_opportunity_xf.opportunity_owner_manager,
@@ -457,6 +527,10 @@ WITH date_details AS (
           THEN opportunity_owner.user_region
           ELSE COALESCE(sfdc_opportunity_xf.user_region_stamped,'N/A')
       END                                                         AS opportunity_owner_user_region,
+
+      -- these two fields will be used to do cuts in X-Ray
+      opportunity_owner_user_segment                                            AS opportunity_owner_cro_level,
+      CONCAT(opportunity_owner_user_segment,'_',opportunity_owner_user_region)  AS opportunity_owner_rd_asm_level,
      
       -- account driven fields
       sfdc_accounts_xf.tsp_region,
@@ -464,83 +538,7 @@ WITH date_details AS (
       sfdc_accounts_xf.ultimate_parent_sales_segment,
       sfdc_accounts_xf.tsp_max_hierarchy_sales_segment,
    
-      CASE 
-        WHEN opp_snapshot.stage_name IN ('00-Pre Opportunity', '0-Pending Acceptance', '0-Qualifying'
-                              ,'Developing', '1-Discovery', '2-Developing', '2-Scoping')  
-          THEN 'Pipeline'
-        WHEN opp_snapshot.stage_name IN ('3-Technical Evaluation', '4-Proposal', '5-Negotiating'
-                              , '6-Awaiting Signature', '7-Closing')                         
-          THEN '3+ Pipeline'
-        WHEN opp_snapshot.stage_name IN ('8-Closed Lost', 'Closed Lost')                                                                                       
-          THEN 'Lost'
-        WHEN opp_snapshot.stage_name IN ('Closed Won')                                                                                                         
-          THEN 'Closed Won'
-        ELSE 'Other'
-      END                                                         AS stage_name_3plus,
-      
-      CASE 
-        WHEN opp_snapshot.stage_name IN ('00-Pre Opportunity', '0-Pending Acceptance', '0-Qualifying'
-                            , 'Developing', '1-Discovery', '2-Developing', '2-Scoping', '3-Technical Evaluation')     
-          THEN 'Pipeline'
-        WHEN opp_snapshot.stage_name IN ('4-Proposal', '5-Negotiating', '6-Awaiting Signature', '7-Closing')                                                                               
-          THEN '4+ Pipeline'
-        WHEN opp_snapshot.stage_name IN ('8-Closed Lost', 'Closed Lost')                                                                                                                   
-          THEN 'Lost'
-        WHEN opp_snapshot.stage_name IN ('Closed Won')                                                                                                                                     
-          THEN 'Closed Won'
-        ELSE 'Other'
-      END                                                         AS stage_name_4plus,
-
-      CASE 
-        WHEN opp_snapshot.stage_name 
-          IN ('3-Technical Evaluation', '4-Proposal', 'Closed Won','5-Negotiating', '6-Awaiting Signature', '7-Closing')                               
-            THEN 1												                         
-        ELSE 0
-      END                                                         AS is_stage_3_plus,
-
-      CASE 
-        WHEN opp_snapshot.stage_name 
-          IN ('4-Proposal', 'Closed Won','5-Negotiating', '6-Awaiting Signature', '7-Closing')                               
-            THEN 1												                         
-        ELSE 0
-      END                                                         AS is_stage_4_plus,
-
-      CASE 
-        WHEN opp_snapshot.stage_name = 'Closed Won' 
-          THEN 1 ELSE 0
-      END                                                         AS is_won,
-
-      CASE 
-        WHEN opp_snapshot.stage_name = '8-Closed Lost'  
-          THEN 1 ELSE 0
-      END                                                         AS is_lost,
-
-      CASE 
-        WHEN (opp_snapshot.stage_name = '8-Closed Lost' 
-          OR opp_snapshot.stage_name = '9-Unqualified'
-          OR opp_snapshot.stage_name = 'Closed Won' ) 
-            THEN 0
-        ELSE 1  
-      END                                                         AS is_open,
-
-      CASE 
-        WHEN is_open = 0
-          THEN 1
-        ELSE 0
-      END                                                         AS is_closed,
-      
-      CASE 
-        WHEN opp_snapshot.stage_name = 'Closed Won' THEN '1.Won'
-        WHEN is_lost = 1 THEN '2.Lost'
-        WHEN is_open = 1 THEN '0. Open' 
-        ELSE 'N/A'
-      END                                                         AS stage_category,
-
-      CASE 
-        WHEN LOWER(opp_snapshot.sales_type) like '%renewal%' 
-          THEN 1
-        ELSE 0
-      END                                                         AS is_renewal, 
+ 
       
       -- account owner hierarchies levels
       COALESCE(account_owner.sales_team_level_2,'n/a')            AS account_owner_team_level_2,
