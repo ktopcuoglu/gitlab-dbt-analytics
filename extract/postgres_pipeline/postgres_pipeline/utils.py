@@ -193,9 +193,10 @@ def transform_source_types_to_snowflake_types(
 ) -> List[Column]:
     pg_types = get_postgres_types(source_table_name, source_engine)
 
-    #defaulting to string for any renamed columns or results of functions -- can be cast downstream in dbt source model
+    # defaulting to string for any renamed columns or results of functions -- can be cast downstream in dbt source model
     table_columns = [
-        transform_dataframe_column(column, pg_types.get(column, "string")) for column in df
+        transform_dataframe_column(column, pg_types.get(column, "string"))
+        for column in df
     ]
     return table_columns
 
