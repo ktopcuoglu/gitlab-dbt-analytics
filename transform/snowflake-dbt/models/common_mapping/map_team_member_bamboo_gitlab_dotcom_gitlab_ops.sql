@@ -27,8 +27,8 @@ WITH bamboo_hr_members AS (
 
     SELECT 
       bamboo_hr_members.employee_id                     AS bamboohr_employee_id, 
-      bamboo_hr_members.full_name                       AS bamboo_hr_full_name, 
-      bamboo_hr_members.work_email                      AS bamboo_hr_gitlab_email, 
+      bamboo_hr_members.full_name                       AS bamboohr_full_name, 
+      bamboo_hr_members.work_email                      AS bamboohr_gitlab_email, 
       COALESCE(gitlab_dotcom_members.gitlab_dotcom_user_id, 
                missing_employees.gitlab_dotcom_user_id) AS gitlab_dotcom_user_id,
       gitlab_dotcom_members.gitlab_dotcom_user_name, 
