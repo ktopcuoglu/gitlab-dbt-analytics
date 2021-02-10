@@ -116,17 +116,10 @@ WITH date_details AS (
       -------------------------------------
       -- report keys
       pipeline_snapshot_base.opportunity_owner_user_segment,
+      pipeline_snapshot_base.opportunity_owner_rd_asm_level,
       pipeline_snapshot_base.sales_qualified_source,
       pipeline_snapshot_base.deal_category,
       pipeline_snapshot_base.deal_group,
-
-      -- sales team - region fields
-      pipeline_snapshot_base.opportunity_owner_rd_asm_level,
-      --pipeline_snapshot_base.account_owner_team_vp_level,
-      --pipeline_snapshot_base.account_owner_team_rd_level,
-      --pipeline_snapshot_base.account_owner_team_asm_level,
-      --pipeline_snapshot_base.account_owner_sales_region,
-
       -------------------------------------
       
       pipeline_snapshot_base.stage_name,
@@ -149,35 +142,17 @@ WITH date_details AS (
 
       pipeline_snapshot_base.opps                                                                           AS deal_count,
 
-     -- CASE 
-    --    WHEN pipeline_snapshot_base.is_lost = 0 
-    --      THEN pipeline_snapshot_base.opps  
-    --    ELSE 0                                                                                              
-    --  END                                                                                                   AS open_won_deal_count,
-
       CASE 
         WHEN pipeline_snapshot_base.is_open = 1
           THEN pipeline_snapshot_base.opps  
         ELSE 0                                                                                              
       END                                                                                                   AS open_deal_count,
 
-     -- CASE 
-    --    WHEN pipeline_snapshot_base.stage_name_3plus IN ('3+ Pipeline','Closed Won')
-    --      THEN pipeline_snapshot_base.opps
-    --    ELSE 0
-   --   END                                                                                                   AS open_won_3plus_deal_count,
-
       CASE 
         WHEN pipeline_snapshot_base.stage_name_3plus IN ('3+ Pipeline')
           THEN pipeline_snapshot_base.opps
         ELSE 0
       END                                                                                                   AS open_3plus_deal_count,
-
-     -- CASE 
-    --    WHEN pipeline_snapshot_base.stage_name_4plus IN ('4+ Pipeline','Closed Won')
-    --      THEN pipeline_snapshot_base.opps
-    --    ELSE 0
-    --  END                                                                                                   AS open_won_4plus_deal_count,
 
       CASE 
         WHEN pipeline_snapshot_base.stage_name_4plus IN ('4+ Pipeline')
@@ -194,43 +169,23 @@ WITH date_details AS (
       -----------------------------------------------------------------------------------
       -- NF: 20210201 DEPRECATED IACV fields
       
-     -- CASE 
-    --    WHEN pipeline_snapshot_base.is_lost = 0 
-    --      THEN pipeline_snapshot_base.incremental_acv
-    --    ELSE 0                                                                                              
-   --   END                                                                                                   AS open_won_iacv,
-
       CASE 
         WHEN pipeline_snapshot_base.is_open = 1 
           THEN pipeline_snapshot_base.incremental_acv
         ELSE 0                                                                                              
       END                                                                                                   AS open_iacv,
 
-    --  CASE 
-    --    WHEN pipeline_snapshot_base.stage_name_3plus IN ('3+ Pipeline','Closed Won')
-     --     THEN pipeline_snapshot_base.incremental_acv
-    --    ELSE 0
-    --  END                                                                                                   AS open_won_3plus_iacv,
-  
         CASE 
         WHEN pipeline_snapshot_base.stage_name_3plus IN ('3+ Pipeline')
           THEN pipeline_snapshot_base.incremental_acv
         ELSE 0
       END                                                                                                   AS open_3plus_iacv,
   
-
-     -- CASE 
-     --   WHEN pipeline_snapshot_base.stage_name_4plus IN ('4+ Pipeline','Closed Won')
-     --     THEN pipeline_snapshot_base.incremental_acv
-    --    ELSE 0
-    --  END                                                                                                   AS open_won_4plus_iacv,
-
       CASE 
         WHEN pipeline_snapshot_base.stage_name_4plus IN ('4+ Pipeline')
           THEN pipeline_snapshot_base.incremental_acv
         ELSE 0
       END                                                                                                   AS open_4plus_iacv,
-
 
       CASE 
        WHEN pipeline_snapshot_base.is_won = 1 
@@ -306,9 +261,6 @@ WITH date_details AS (
       pipeline_snapshot.opportunity_owner_rd_asm_level,
       pipeline_snapshot.sales_qualified_source,
       
-      --SUM(pipeline_snapshot.open_won_deal_count)                                      AS open_won_deal_count,
-      --SUM(pipeline_snapshot.open_won_3plus_deal_count)                                AS open_won_3plus_deal_count,
-      --SUM(pipeline_snapshot.open_won_4plus_deal_count)                                AS open_won_4plus_deal_count,
       SUM(pipeline_snapshot.won_deal_count)                                           AS won_deal_count,
       SUM(pipeline_snapshot.open_deal_count)                                          AS open_deal_count,
       SUM(pipeline_snapshot.open_3plus_deal_count)                                    AS open_3plus_deal_count,
@@ -318,12 +270,9 @@ WITH date_details AS (
       -- NF: 20210201 DEPRECATED IACV fields   
       -- open / won pipeline in quarter
       
-      --SUM(pipeline_snapshot.open_won_iacv)                                            AS open_won_iacv,
-      SUM(pipeline_snapshot.open_iacv)                                                 AS open_iacv,
-     -- SUM(pipeline_snapshot.open_won_3plus_iacv)                                      AS open_won_3plus_iacv,
+      SUM(pipeline_snapshot.open_iacv)                                                AS open_iacv,
       SUM(pipeline_snapshot.open_3plus_iacv)                                          AS open_3plus_iacv,
-     -- SUM(pipeline_snapshot.open_won_4plus_iacv)                                      AS open_won_4plus_iacv,
-      --SUM(pipeline_snapshot.open_won_4plus_iacv)                                      AS open_4plus_iacv,
+      SUM(pipeline_snapshot.open_4plus_iacv)                                          AS open_4plus_iacv,
       SUM(pipeline_snapshot.won_iacv)                                                 AS won_iacv,
       SUM(pipeline_snapshot.won_net_iacv)                                             AS won_net_iacv,
       SUM(pipeline_snapshot.created_and_won_iacv)                                     AS created_and_won_iacv,
@@ -363,16 +312,16 @@ WITH date_details AS (
       pipeline_snapshot.opportunity_owner_rd_asm_level,
       pipeline_snapshot.sales_qualified_source,
       
-      SUM(pipeline_snapshot.deal_count)                                            AS next_open_deal_count,
-      SUM(pipeline_snapshot.open_won_3plus_deal_count)                             AS next_open_3plus_deal_count,
-      SUM(pipeline_snapshot.open_won_4plus_deal_count)                             AS next_open_4plus_deal_count,
+      SUM(pipeline_snapshot.deal_count)                                        AS next_open_deal_count,
+      SUM(pipeline_snapshot.open_3plus_deal_count)                             AS next_open_3plus_deal_count,
+      SUM(pipeline_snapshot.open_4plus_deal_count)                             AS next_open_4plus_deal_count,
 
       ------------------------------
       -- DEPRECATED IACV METRICS
 
-      SUM(pipeline_snapshot.incremental_acv)                                       AS next_open_iacv,
-      SUM(pipeline_snapshot.open_won_3plus_iacv)                                   AS next_open_3plus_iacv,
-      SUM(pipeline_snapshot.open_won_4plus_iacv)                                   AS next_open_4plus_iacv,
+      SUM(pipeline_snapshot.incremental_acv)                                   AS next_open_iacv,
+      SUM(pipeline_snapshot.open_3plus_iacv)                                   AS next_open_3plus_iacv,
+      SUM(pipeline_snapshot.open_4plus_iacv)                                   AS next_open_4plus_iacv,
 
       ------------------------------
       -- Net ARR 
@@ -427,30 +376,25 @@ WITH date_details AS (
 ), base_fields AS (
     
     SELECT DISTINCT 
+      -----------------------------
+      -- keys
       a.opportunity_owner_user_segment,
+      e.opportunity_owner_rd_asm_level,
       b.deal_category,
       b.deal_group,
-      e.opportunity_owner_rd_asm_level,
-      COALESCE(e.account_owner_sales_region,'n/a') AS account_owner_sales_region,
-      e.account_owner_team_vp_level,
-      e.account_owner_team_rd_level,
-      e.account_owner_team_asm_level,
+      -----------------------------
+      f.sales_qualified_source,
       c.snapshot_fiscal_quarter_date,
       d.snapshot_fiscal_quarter_name,
       d.snapshot_day_of_fiscal_quarter,
-      d.snapshot_next_fiscal_quarter_date,
-      f.sales_qualified_source
+      d.snapshot_next_fiscal_quarter_date
     FROM (SELECT DISTINCT opportunity_owner_user_segment FROM pipeline_snapshot_base) a
     CROSS JOIN (SELECT DISTINCT deal_category,
                                 deal_group 
                 FROM pipeline_snapshot_base) b
     CROSS JOIN (SELECT DISTINCT snapshot_fiscal_quarter_date FROM pipeline_snapshot_base) c
     CROSS JOIN (SELECT DISTINCT sales_qualified_source FROM pipeline_snapshot_base) f
-    CROSS JOIN (SELECT DISTINCT opportunity_owner_rd_asm_level,
-                                account_owner_sales_region,
-                                account_owner_team_vp_level,
-                                account_owner_team_rd_level,
-                                account_owner_team_asm_level
+    CROSS JOIN (SELECT DISTINCT opportunity_owner_rd_asm_level
                 FROM pipeline_snapshot_base) e
     INNER JOIN (SELECT DISTINCT fiscal_quarter_name_fy                                                              AS snapshot_fiscal_quarter_name,
                               first_day_of_fiscal_quarter                                                           AS snapshot_fiscal_quarter_date, 
@@ -461,16 +405,18 @@ WITH date_details AS (
 ), report_pipeline_metrics_day AS (
   
 SELECT 
+  -----------------------------
+  -- keys
   base_fields.opportunity_owner_user_segment, 
-  base_fields.deal_category,
   base_fields.opportunity_owner_rd_asm_level,
-  base_fields.account_owner_team_vp_level,
-  base_fields.account_owner_team_rd_level,
-  base_fields.account_owner_team_asm_level,
-  base_fields.account_owner_sales_region,
+  base_fields.deal_category,
+  base_fields.deal_group,
   base_fields.sales_qualified_source,
+  -----------------------------
+
   LOWER(base_fields.deal_category) || '_' || LOWER(base_fields.opportunity_owner_user_segment)                      AS key_segment_report,
   LOWER(base_fields.sales_qualified_source) || '_' || LOWER(base_fields.opportunity_owner_user_segment)             AS key_sqs_report,
+  
   base_fields.snapshot_fiscal_quarter_name                                                                          AS close_fiscal_quarter,
   base_fields.snapshot_fiscal_quarter_name,
   
@@ -479,7 +425,6 @@ SELECT
   
   base_fields.snapshot_day_of_fiscal_quarter,
 
-  --  COALESCE(reported_quarter.open_won_3plus_iacv,0) - COALESCE(reported_quarter.won_iacv,0)                          AS open_3plus_pipeline_iacv, 
   COALESCE(reported_quarter.open_deal_count,0)                AS open_pipeline_deal_count,
   COALESCE(reported_quarter.open_3plus_deal_count,0)          AS open_3plus_deal_count,
   COALESCE(reported_quarter.open_4plus_deal_count,0)          AS open_4plus_deal_count, 

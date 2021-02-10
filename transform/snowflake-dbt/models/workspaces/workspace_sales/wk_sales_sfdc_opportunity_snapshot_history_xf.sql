@@ -72,7 +72,7 @@ WITH date_details AS (
       -- https://gitlab.com/gitlab-data/analytics/-/issues/7888
       0                                                           AS is_refund,
       --sfdc_opportunity_snapshot_history.is_refund,
-      
+
       sfdc_opportunity_snapshot_history.is_downgrade,
       sfdc_opportunity_snapshot_history.is_swing_deal,
       sfdc_opportunity_snapshot_history.net_incremental_acv,
@@ -432,6 +432,7 @@ WITH date_details AS (
       opp_snapshot.other_non_recurring_amount,
       opp_snapshot.arr_basis,
       opp_snapshot.arr,
+      opp_snapshot.raw_net_arr,
 
       ---------------------
       -- compound metrics for reporting
