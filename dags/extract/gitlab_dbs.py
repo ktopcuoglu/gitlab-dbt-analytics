@@ -414,7 +414,7 @@ for source_name, config in config_dict.items():
 
                 sync_cmd = generate_cmd(
                     config["dag_name"],
-                    f"--load_type sync --load_only_table {table}",
+                    f"--load_type backfill --load_only_table {table}",
                     config["cloudsql_instance_name"],
                 )
                 sync_extract = KubernetesPodOperator(

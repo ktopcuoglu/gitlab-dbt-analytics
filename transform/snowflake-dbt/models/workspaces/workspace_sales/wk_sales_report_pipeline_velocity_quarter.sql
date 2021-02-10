@@ -30,22 +30,14 @@ WITH date_details AS (
       close_fiscal_quarter_name,
       close_fiscal_quarter_date,
       close_fiscal_year,
+      opportunity_owner_user_segment                          AS cro_level,
       order_type_stamped,
-      CASE 
-          WHEN account_owner_team_vp_level = 'VP Ent'
-            THEN 'Large'
-          WHEN account_owner_team_vp_level = 'VP Comm MM'
-            THEN 'Mid-Market'
-          WHEN account_owner_team_vp_level = 'VP Comm SMB' 
-            THEN 'SMB' 
-            ELSE 'Other' 
-        END                                                  AS sales_segment,
       stage_name_3plus,
       stage_name_4plus,
       is_excluded_flag,
       stage_name,
       forecast_category_name,
-      COUNT(DISTINCT opportunity_id)                          AS opps,
+      SUM(calculated_deal_count)                              AS opps,
       SUM(net_arr)                                            AS net_arr,
       SUM(net_incremental_acv)                                AS net_iacv,
       SUM(incremental_acv)                                    AS incremental_acv,

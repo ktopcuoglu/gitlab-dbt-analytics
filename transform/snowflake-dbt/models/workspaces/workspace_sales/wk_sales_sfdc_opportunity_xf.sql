@@ -54,7 +54,13 @@ WITH sfdc_opportunity_xf AS (
       sfdc_opportunity_xf.incremental_acv,
       sfdc_opportunity_xf.pre_covid_iacv,
       sfdc_opportunity_xf.invoice_number,
-      sfdc_opportunity_xf.is_refund,
+
+      -- logic needs to be added here once the oppotunity category fields is merged
+      -- https://gitlab.com/gitlab-data/analytics/-/issues/7888
+      0                                                           AS is_refund,
+      --sfdc_opportunity_xf.is_refund,
+
+
       sfdc_opportunity_xf.is_downgrade,
       sfdc_opportunity_xf.is_risky,
       sfdc_opportunity_xf.is_swing_deal,
@@ -311,7 +317,18 @@ WITH sfdc_opportunity_xf AS (
       CASE WHEN sfdc_opportunity_xf.user_region_stamped IS NULL 
           THEN opportunity_owner.user_region
           ELSE COALESCE(sfdc_opportunity_xf.user_region_stamped,'N/A')
-      END                                                                 AS opportunity_owner_user_region,
+      END                                                                       AS opportunity_owner_user_region,
+
+
+      opportunity_owner_user_segment                                            AS opportunity_owner_cro_level,
+      CONCAT(opportunity_owner_user_segment,'_',opportunity_owner_user_region)  AS opportunity_owner_rd_asm_level,
+
+      -- fields for counting new logos, these fields count refund as negative
+      CASE 
+        WHEN sfdc_opportunity_xf.is_refund = 1
+          THEN -1
+        ELSE 1
+      END                                                                       AS calculated_deal_count,
 
    
       -- PIO Flag for PIO reporting dashboard
@@ -322,7 +339,7 @@ WITH sfdc_opportunity_xf AS (
             AND sfdc_opportunity_xf.created_date >= '2020-08-01'::DATE)
           THEN 1 
         ELSE 0 
-      END                                                                 AS partner_engaged_opportunity_flag,
+      END                                                                       AS partner_engaged_opportunity_flag,
 
       CASE 
         WHEN sfdc_opportunity_xf.account_owner_team_vp_level = 'VP Ent'
@@ -332,7 +349,7 @@ WITH sfdc_opportunity_xf AS (
         WHEN sfdc_opportunity_xf.account_owner_team_vp_level = 'VP Comm SMB' 
           THEN 'SMB' 
         ELSE 'Other' 
-      END                                                                 AS account_owner_cro_level,
+      END                                                                     AS account_owner_cro_level,
 
        -- check if renewal was closed on time or not
       CASE 
@@ -342,7 +359,7 @@ WITH sfdc_opportunity_xf AS (
         WHEN sfdc_opportunity_xf.is_renewal = 1 
           AND sfdc_opportunity_xf.subscription_start_date_fiscal_quarter_date < sfdc_opportunity_xf.close_fiscal_quarter_date 
             THEN 'Late' 
-      END                                                                 AS renewal_timing_status,
+      END                                                                     AS renewal_timing_status,
 
       --********************************************************
       -- calculated fields for pipeline velocity report
@@ -353,7 +370,7 @@ WITH sfdc_opportunity_xf AS (
           AND sfdc_opportunity_xf.close_date < '2020-08-01' 
             THEN 1
         ELSE 0
-      END                                                                 AS is_excluded_flag
+      END                                                                     AS is_excluded_flag
 
     FROM sfdc_opportunity_xf
     INNER JOIN sfdc_users_xf opportunity_owner
@@ -402,7 +419,7 @@ WITH sfdc_opportunity_xf AS (
     FROM oppty_final
     -- Net IACV to Net ARR conversion table
     LEFT JOIN net_iacv_to_net_arr_ratio
-      ON net_iacv_to_net_arr_ratio.user_segment_stamped = oppty_final.user_segment_stamped
+      ON net_iacv_to_net_arr_ratio.user_segment_stamped = oppty_final.opportunity_owner_user_segment
       AND net_iacv_to_net_arr_ratio.order_type_stamped = oppty_final.order_type_stamped
 
 )

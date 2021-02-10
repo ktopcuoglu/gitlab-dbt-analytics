@@ -1,4 +1,4 @@
-{{ config(alias='report_pipeline_metrics_day') }}
+{{ config(alias='report_pipeline_metrics_day_fy21') }}
 
 /*
 TODO:
@@ -40,18 +40,23 @@ WITH date_details AS (
 ), pipeline_snapshot_base AS (
     
     SELECT
-      -----------------
       -- report keys
-      opportunity_owner_user_segment,
+            CASE 
+          WHEN account_owner_team_vp_level = 'VP Ent'
+            THEN 'Large'
+          WHEN account_owner_team_vp_level = 'VP Comm MM'
+            THEN 'Mid-Market'
+          WHEN account_owner_team_vp_level = 'VP Comm SMB' 
+            THEN 'SMB' 
+            ELSE 'Other' 
+        END                                                 AS adj_ultimate_parent_sales_segment,
       COALESCE(sales_qualified_source, 'n/a')               AS sales_qualified_source,
       deal_category,
       deal_group,
     
       -- the account hierarchy can be related to the VP / ASM / RD levels
       -- and to an approximate region
-      opportunity_owner_rd_asm_level,
-
-      -----------------
+      account_owner_min_team_level,
 
       close_fiscal_quarter_name,
       close_fiscal_quarter_date,
@@ -86,7 +91,7 @@ WITH date_details AS (
       account_owner_team_asm_level,
       account_owner_sales_region,
 
-      SUM(calculated_deal_count)                      AS opps,
+      COUNT(DISTINCT opportunity_id)                  AS opps,
       SUM(incremental_acv)                            AS incremental_acv,
       SUM(net_incremental_acv)                        AS net_iacv,
 
@@ -115,11 +120,18 @@ WITH date_details AS (
     SELECT 
       -------------------------------------
       -- report keys
-      pipeline_snapshot_base.opportunity_owner_user_segment,
-      pipeline_snapshot_base.opportunity_owner_rd_asm_level,
+      pipeline_snapshot_base.adj_ultimate_parent_sales_segment,
       pipeline_snapshot_base.sales_qualified_source,
       pipeline_snapshot_base.deal_category,
       pipeline_snapshot_base.deal_group,
+
+      -- sales team - region fields
+      pipeline_snapshot_base.account_owner_min_team_level,
+      pipeline_snapshot_base.account_owner_team_vp_level,
+      pipeline_snapshot_base.account_owner_team_rd_level,
+      pipeline_snapshot_base.account_owner_team_asm_level,
+      pipeline_snapshot_base.account_owner_sales_region,
+
       -------------------------------------
       
       pipeline_snapshot_base.stage_name,
@@ -143,25 +155,25 @@ WITH date_details AS (
       pipeline_snapshot_base.opps                                                                           AS deal_count,
 
       CASE 
-        WHEN pipeline_snapshot_base.is_open = 1
+        WHEN LOWER(pipeline_snapshot_base.stage_name) not like '%lost%' 
           THEN pipeline_snapshot_base.opps  
         ELSE 0                                                                                              
-      END                                                                                                   AS open_deal_count,
+      END                                                                                                   AS open_won_deal_count,
 
       CASE 
-        WHEN pipeline_snapshot_base.stage_name_3plus IN ('3+ Pipeline')
+        WHEN pipeline_snapshot_base.stage_name_3plus IN ('3+ Pipeline','Closed Won')
           THEN pipeline_snapshot_base.opps
         ELSE 0
-      END                                                                                                   AS open_3plus_deal_count,
+      END                                                                                                   AS open_won_3plus_deal_count,
 
       CASE 
-        WHEN pipeline_snapshot_base.stage_name_4plus IN ('4+ Pipeline')
+        WHEN pipeline_snapshot_base.stage_name_4plus IN ('4+ Pipeline','Closed Won')
           THEN pipeline_snapshot_base.opps
         ELSE 0
-      END                                                                                                   AS open_4plus_deal_count,
+      END                                                                                                   AS open_won_4plus_deal_count,
 
       CASE 
-        WHEN pipeline_snapshot_base.is_won = 1 
+        WHEN LOWER(pipeline_snapshot_base.stage_name) LIKE '%won%'
           THEN pipeline_snapshot_base.opps
         ELSE 0
       END                                                                                                   AS won_deal_count,
@@ -170,25 +182,32 @@ WITH date_details AS (
       -- NF: 20210201 DEPRECATED IACV fields
       
       CASE 
-        WHEN pipeline_snapshot_base.is_open = 1 
+        WHEN LOWER(pipeline_snapshot_base.stage_name) not like '%lost%' 
           THEN pipeline_snapshot_base.incremental_acv
         ELSE 0                                                                                              
-      END                                                                                                   AS open_iacv,
+      END                                                                                                   AS open_won_iacv,
 
+      CASE 
+        WHEN pipeline_snapshot_base.stage_name_3plus IN ('3+ Pipeline','Closed Won')
+          THEN pipeline_snapshot_base.incremental_acv
+        ELSE 0
+      END                                                                                                   AS open_won_3plus_iacv,
+  
         CASE 
         WHEN pipeline_snapshot_base.stage_name_3plus IN ('3+ Pipeline')
           THEN pipeline_snapshot_base.incremental_acv
         ELSE 0
       END                                                                                                   AS open_3plus_iacv,
   
-      CASE 
-        WHEN pipeline_snapshot_base.stage_name_4plus IN ('4+ Pipeline')
-          THEN pipeline_snapshot_base.incremental_acv
-        ELSE 0
-      END                                                                                                   AS open_4plus_iacv,
 
       CASE 
-       WHEN pipeline_snapshot_base.is_won = 1 
+        WHEN pipeline_snapshot_base.stage_name_4plus IN ('4+ Pipeline','Closed Won')
+          THEN pipeline_snapshot_base.incremental_acv
+        ELSE 0
+      END                                                                                                   AS open_won_4plus_iacv,
+
+      CASE 
+        WHEN LOWER(pipeline_snapshot_base.stage_name) LIKE '%won%'
           THEN pipeline_snapshot_base.incremental_acv
         ELSE 0  
       END                                                                                                   AS won_iacv,
@@ -201,7 +220,8 @@ WITH date_details AS (
       -- NF: 20210201  NET ARR fields
 
       CASE 
-        WHEN pipeline_snapshot_base.is_open = 1 
+        WHEN LOWER(pipeline_snapshot_base.stage_name) NOT LIKE '%lost%' 
+            AND LOWER(pipeline_snapshot_base.stage_name) NOT LIKE '%won%' 
           THEN pipeline_snapshot_base.net_arr
         ELSE 0                                                                                              
       END                                                                                                   AS open_net_arr,
@@ -219,7 +239,7 @@ WITH date_details AS (
       END                                                                                                   AS open_4plus_net_arr,
 
       CASE
-        WHEN pipeline_snapshot_base.is_won = 1 
+        WHEN LOWER(pipeline_snapshot_base.stage_name) LIKE '%won%' 
           OR (pipeline_snapshot_base.is_renewal = 1 AND pipeline_snapshot_base.is_lost = 1)
           THEN pipeline_snapshot_base.net_arr  
         ELSE 0
@@ -252,27 +272,28 @@ WITH date_details AS (
       pipeline_snapshot.close_fiscal_quarter_date,
       pipeline_snapshot.snapshot_fiscal_quarter_date,
 
-      pipeline_snapshot.opportunity_owner_user_segment,
+      pipeline_snapshot.adj_ultimate_parent_sales_segment,
       pipeline_snapshot.deal_category,
       pipeline_snapshot.deal_group,
 
       pipeline_snapshot.snapshot_day_of_fiscal_quarter,
   
-      pipeline_snapshot.opportunity_owner_rd_asm_level,
+      pipeline_snapshot.account_owner_min_team_level,
       pipeline_snapshot.sales_qualified_source,
       
+      SUM(pipeline_snapshot.open_won_deal_count)                                      AS open_won_deal_count,
+      SUM(pipeline_snapshot.open_won_3plus_deal_count)                                AS open_won_3plus_deal_count,
+      SUM(pipeline_snapshot.open_won_4plus_deal_count)                                AS open_won_4plus_deal_count,
       SUM(pipeline_snapshot.won_deal_count)                                           AS won_deal_count,
-      SUM(pipeline_snapshot.open_deal_count)                                          AS open_deal_count,
-      SUM(pipeline_snapshot.open_3plus_deal_count)                                    AS open_3plus_deal_count,
-      SUM(pipeline_snapshot.open_4plus_deal_count)                                    AS open_4plus_deal_count,
 
       -----------------------------------------------------------------------------------
       -- NF: 20210201 DEPRECATED IACV fields   
       -- open / won pipeline in quarter
       
-      SUM(pipeline_snapshot.open_iacv)                                                AS open_iacv,
-      SUM(pipeline_snapshot.open_3plus_iacv)                                          AS open_3plus_iacv,
-      SUM(pipeline_snapshot.open_4plus_iacv)                                          AS open_4plus_iacv,
+      SUM(pipeline_snapshot.open_won_iacv)                                            AS open_won_iacv,
+      SUM(pipeline_snapshot.open_won_3plus_iacv)                                      AS open_won_3plus_iacv,
+      SUM(open_3plus_iacv)                                                            AS open_3plus_iacv,
+      SUM(pipeline_snapshot.open_won_4plus_iacv)                                      AS open_won_4plus_iacv,
       SUM(pipeline_snapshot.won_iacv)                                                 AS won_iacv,
       SUM(pipeline_snapshot.won_net_iacv)                                             AS won_net_iacv,
       SUM(pipeline_snapshot.created_and_won_iacv)                                     AS created_and_won_iacv,
@@ -304,24 +325,24 @@ WITH date_details AS (
       pipeline_snapshot.close_fiscal_quarter_name                                  AS next_close_fiscal_quarter,
       pipeline_snapshot.close_fiscal_quarter_date                                  AS next_close_fiscal_quarter_date,
      
-      pipeline_snapshot.opportunity_owner_user_segment,
+      pipeline_snapshot.adj_ultimate_parent_sales_segment,
       pipeline_snapshot.deal_category,
       pipeline_snapshot.deal_group,
 
       pipeline_snapshot.snapshot_day_of_fiscal_quarter,
-      pipeline_snapshot.opportunity_owner_rd_asm_level,
+      pipeline_snapshot.account_owner_min_team_level,
       pipeline_snapshot.sales_qualified_source,
       
-      SUM(pipeline_snapshot.deal_count)                                        AS next_open_deal_count,
-      SUM(pipeline_snapshot.open_3plus_deal_count)                             AS next_open_3plus_deal_count,
-      SUM(pipeline_snapshot.open_4plus_deal_count)                             AS next_open_4plus_deal_count,
+      SUM(pipeline_snapshot.deal_count)                                            AS next_open_deal_count,
+      SUM(pipeline_snapshot.open_won_3plus_deal_count)                             AS next_open_3plus_deal_count,
+      SUM(pipeline_snapshot.open_won_4plus_deal_count)                             AS next_open_4plus_deal_count,
 
       ------------------------------
       -- DEPRECATED IACV METRICS
 
-      SUM(pipeline_snapshot.incremental_acv)                                   AS next_open_iacv,
-      SUM(pipeline_snapshot.open_3plus_iacv)                                   AS next_open_3plus_iacv,
-      SUM(pipeline_snapshot.open_4plus_iacv)                                   AS next_open_4plus_iacv,
+      SUM(pipeline_snapshot.incremental_acv)                                       AS next_open_iacv,
+      SUM(pipeline_snapshot.open_won_3plus_iacv)                                   AS next_open_3plus_iacv,
+      SUM(pipeline_snapshot.open_won_4plus_iacv)                                   AS next_open_4plus_iacv,
 
       ------------------------------
       -- Net ARR 
@@ -344,15 +365,12 @@ WITH date_details AS (
     SELECT
       pipeline_snapshot_base.snapshot_fiscal_quarter_date,
       pipeline_snapshot_base.snapshot_day_of_fiscal_quarter,
-
-      -------------------
-      -- report keys
-      pipeline_snapshot_base.opportunity_owner_user_segment,
+      pipeline_snapshot_base.adj_ultimate_parent_sales_segment,
       pipeline_snapshot_base.deal_category, 
       pipeline_snapshot_base.deal_group,
-      pipeline_snapshot_base.opportunity_owner_rd_asm_level,
+
+      pipeline_snapshot_base.account_owner_min_team_level,
       pipeline_snapshot_base.sales_qualified_source,
-      -------------------
 
       SUM(pipeline_snapshot_base.opps)                      AS created_in_quarter_count,
 
@@ -376,25 +394,30 @@ WITH date_details AS (
 ), base_fields AS (
     
     SELECT DISTINCT 
-      -----------------------------
-      -- keys
-      a.opportunity_owner_user_segment,
-      e.opportunity_owner_rd_asm_level,
+      a.adj_ultimate_parent_sales_segment,
       b.deal_category,
       b.deal_group,
-      -----------------------------
-      f.sales_qualified_source,
+      e.account_owner_min_team_level,
+      COALESCE(e.account_owner_sales_region,'n/a') AS account_owner_sales_region,
+      e.account_owner_team_vp_level,
+      e.account_owner_team_rd_level,
+      e.account_owner_team_asm_level,
       c.snapshot_fiscal_quarter_date,
       d.snapshot_fiscal_quarter_name,
       d.snapshot_day_of_fiscal_quarter,
-      d.snapshot_next_fiscal_quarter_date
-    FROM (SELECT DISTINCT opportunity_owner_user_segment FROM pipeline_snapshot_base) a
+      d.snapshot_next_fiscal_quarter_date,
+      f.sales_qualified_source
+    FROM (SELECT DISTINCT adj_ultimate_parent_sales_segment FROM pipeline_snapshot_base) a
     CROSS JOIN (SELECT DISTINCT deal_category,
                                 deal_group 
                 FROM pipeline_snapshot_base) b
     CROSS JOIN (SELECT DISTINCT snapshot_fiscal_quarter_date FROM pipeline_snapshot_base) c
     CROSS JOIN (SELECT DISTINCT sales_qualified_source FROM pipeline_snapshot_base) f
-    CROSS JOIN (SELECT DISTINCT opportunity_owner_rd_asm_level
+    CROSS JOIN (SELECT DISTINCT account_owner_min_team_level,
+                                account_owner_sales_region,
+                                account_owner_team_vp_level,
+                                account_owner_team_rd_level,
+                                account_owner_team_asm_level
                 FROM pipeline_snapshot_base) e
     INNER JOIN (SELECT DISTINCT fiscal_quarter_name_fy                                                              AS snapshot_fiscal_quarter_name,
                               first_day_of_fiscal_quarter                                                           AS snapshot_fiscal_quarter_date, 
@@ -405,18 +428,16 @@ WITH date_details AS (
 ), report_pipeline_metrics_day AS (
   
 SELECT 
-  -----------------------------
-  -- keys
-  base_fields.opportunity_owner_user_segment, 
-  base_fields.opportunity_owner_rd_asm_level,
+  base_fields.adj_ultimate_parent_sales_segment                                                                     AS sales_segment, 
   base_fields.deal_category,
-  base_fields.deal_group,
+  base_fields.account_owner_min_team_level,
+  base_fields.account_owner_team_vp_level,
+  base_fields.account_owner_team_rd_level,
+  base_fields.account_owner_team_asm_level,
+  base_fields.account_owner_sales_region,
   base_fields.sales_qualified_source,
-  -----------------------------
-
-  LOWER(base_fields.deal_category) || '_' || LOWER(base_fields.opportunity_owner_user_segment)                      AS key_segment_report,
-  LOWER(base_fields.sales_qualified_source) || '_' || LOWER(base_fields.opportunity_owner_user_segment)             AS key_sqs_report,
-  
+  LOWER(base_fields.deal_category) || '_' || LOWER(base_fields.adj_ultimate_parent_sales_segment)                   AS key_segment_report,
+  LOWER(base_fields.sales_qualified_source) || '_' || LOWER(base_fields.adj_ultimate_parent_sales_segment)          AS key_sqs_report,
   base_fields.snapshot_fiscal_quarter_name                                                                          AS close_fiscal_quarter,
   base_fields.snapshot_fiscal_quarter_name,
   
@@ -425,80 +446,81 @@ SELECT
   
   base_fields.snapshot_day_of_fiscal_quarter,
 
-  COALESCE(reported_quarter.open_deal_count,0)                AS open_pipeline_deal_count,
-  COALESCE(reported_quarter.open_3plus_deal_count,0)          AS open_3plus_deal_count,
-  COALESCE(reported_quarter.open_4plus_deal_count,0)          AS open_4plus_deal_count, 
-  COALESCE(reported_quarter.won_deal_count,0)                 AS won_deal_count,
+  --  COALESCE(reported_quarter.open_won_3plus_iacv,0) - COALESCE(reported_quarter.won_iacv,0)                          AS open_3plus_pipeline_iacv, 
+  COALESCE(reported_quarter.open_won_deal_count,0) - COALESCE(reported_quarter.won_deal_count,0)                    AS open_pipeline_deal_count,
+  COALESCE(reported_quarter.open_won_3plus_deal_count,0) - COALESCE(reported_quarter.won_deal_count,0)              AS open_3plus_deal_count,
+  COALESCE(reported_quarter.open_won_4plus_deal_count,0) - COALESCE(reported_quarter.won_deal_count,0)              AS open_4plus_deal_count, 
+  COALESCE(reported_quarter.won_deal_count,0)                                                                       AS won_deal_count,
   pipeline_gen.created_in_quarter_count,
 
-  COALESCE(next_quarter.next_open_deal_count,0)               AS next_open_deal_count,
-  COALESCE(next_quarter.next_open_3plus_deal_count,0)         AS next_open_3plus_deal_count,
-  COALESCE(next_quarter.next_open_4plus_deal_count,0)         AS next_open_4plus_deal_count,
+  COALESCE(next_quarter.next_open_deal_count,0)                                                                     AS next_open_deal_count,
+  COALESCE(next_quarter.next_open_3plus_deal_count,0)                                                               AS next_open_3plus_deal_count,
+  COALESCE(next_quarter.next_open_4plus_deal_count,0)                                                               AS next_open_4plus_deal_count,
 
   ------------------------------
   -- DEPRECATED IACV METRICS  
 
-  COALESCE(reported_quarter.won_net_iacv,0)                   AS won_net_iacv,
-  COALESCE(reported_quarter.won_iacv,0)                       AS won_iacv,
-  COALESCE(reported_quarter.open_3plus_iacv,0)                AS open_3plus_pipeline_iacv, 
-  COALESCE(reported_quarter.open_4plus_iacv,0)                AS open_4plus_pipeline_iacv, 
-  COALESCE(reported_quarter.open_iacv,0)                      AS open_pipeline_iacv,
+  COALESCE(reported_quarter.won_net_iacv,0)                                                                         AS won_net_iacv,
+  COALESCE(reported_quarter.won_iacv,0)                                                                             AS won_iacv,
+  COALESCE(reported_quarter.open_3plus_iacv,0)                                                                      AS open_3plus_pipeline_iacv, 
+  COALESCE(reported_quarter.open_won_4plus_iacv,0) - COALESCE(reported_quarter.won_iacv,0)                          AS open_4plus_pipeline_iacv, 
+  COALESCE(reported_quarter.open_won_iacv,0) - COALESCE(reported_quarter.won_iacv,0)                                AS open_pipeline_iacv,
 
   reported_quarter.created_and_won_iacv,
   pipeline_gen.created_in_quarter_iacv,
 
-  COALESCE(next_quarter.next_open_iacv,0)                     AS next_open_iacv,
-  COALESCE(next_quarter.next_open_3plus_iacv,0)               AS next_open_3plus_iacv,
-  COALESCE(next_quarter.next_open_4plus_iacv,0)               AS next_open_4plus_iacv,
+  COALESCE(next_quarter.next_open_iacv,0)                 AS next_open_iacv,
+  COALESCE(next_quarter.next_open_3plus_iacv,0)           AS next_open_3plus_iacv,
+  COALESCE(next_quarter.next_open_4plus_iacv,0)           AS next_open_4plus_iacv,
 
   ------------------------------
   -- Net ARR 
   -- Use Net ARR instead     
   -- created and closed
   
-  COALESCE(reported_quarter.won_net_arr,0)                    AS won_net_arr,
-  COALESCE(reported_quarter.open_3plus_net_arr,0)             AS open_3plus_pipeline_net_arr, 
-  COALESCE(reported_quarter.open_4plus_net_arr,0)             AS open_4plus_pipeline_net_arr, 
-  COALESCE(reported_quarter.open_net_arr,0)                   AS open_pipeline_net_arr,
+  COALESCE(reported_quarter.won_net_arr,0)                       AS won_net_arr,
+  COALESCE(reported_quarter.open_3plus_net_arr,0)                AS open_3plus_pipeline_net_arr, 
+  COALESCE(reported_quarter.open_4plus_net_arr,0)                AS open_4plus_pipeline_net_arr, 
+  COALESCE(reported_quarter.open_net_arr,0)                      AS open_pipeline_net_arr,
   
   reported_quarter.created_and_won_same_quarter_net_arr,
   pipeline_gen.created_in_quarter_net_arr,
 
-  COALESCE(next_quarter.next_open_net_arr,0)                  AS next_open_net_arr,
-  COALESCE(next_quarter.next_open_3plus_net_arr,0)            AS next_open_3plus_net_arr,
-  COALESCE(next_quarter.next_open_4plus_net_arr,0)            AS next_open_4plus_net_arr,
+  COALESCE(next_quarter.next_open_net_arr,0)                 AS next_open_net_arr,
+  COALESCE(next_quarter.next_open_3plus_net_arr,0)           AS next_open_3plus_net_arr,
+  COALESCE(next_quarter.next_open_4plus_net_arr,0)           AS next_open_4plus_net_arr,
 
   -- next quarter 
-  next_quarter_date.fiscal_quarter_name_fy                    AS next_close_fiscal_quarter,
-  next_quarter_date.first_day_of_fiscal_quarter               AS next_close_fiscal_quarter_date                   
+  next_quarter_date.fiscal_quarter_name_fy                  AS next_close_fiscal_quarter,
+  next_quarter_date.first_day_of_fiscal_quarter             AS next_close_fiscal_quarter_date                   
 
 
 -- created a list of all options to avoid having blanks when attaching totals in the reporting phase
 FROM base_fields
 -- historical quarter
 LEFT JOIN reported_quarter
-  ON base_fields.opportunity_owner_user_segment = reported_quarter.opportunity_owner_user_segment
+  ON base_fields.adj_ultimate_parent_sales_segment = reported_quarter.adj_ultimate_parent_sales_segment
   AND base_fields.snapshot_fiscal_quarter_date = reported_quarter.snapshot_fiscal_quarter_date
   AND base_fields.deal_category = reported_quarter.deal_category
   AND base_fields.snapshot_day_of_fiscal_quarter = reported_quarter.snapshot_day_of_fiscal_quarter
-  AND base_fields.opportunity_owner_rd_asm_level = reported_quarter.opportunity_owner_rd_asm_level
+  AND base_fields.account_owner_min_team_level = reported_quarter.account_owner_min_team_level
   AND base_fields.sales_qualified_source = reported_quarter.sales_qualified_source
   AND base_fields.deal_group = reported_quarter.deal_group
 -- next quarter in relation to the considered reported quarter
 LEFT JOIN  next_quarter
   ON next_quarter.snapshot_fiscal_quarter_date = base_fields.snapshot_fiscal_quarter_date
-  AND next_quarter.opportunity_owner_user_segment = base_fields.opportunity_owner_user_segment
+  AND next_quarter.adj_ultimate_parent_sales_segment = base_fields.adj_ultimate_parent_sales_segment
   AND next_quarter.deal_category = base_fields.deal_category
   AND next_quarter.snapshot_day_of_fiscal_quarter = base_fields.snapshot_day_of_fiscal_quarter
-  AND next_quarter.opportunity_owner_rd_asm_level = base_fields.opportunity_owner_rd_asm_level
+  AND next_quarter.account_owner_min_team_level = base_fields.account_owner_min_team_level
   AND next_quarter.sales_qualified_source = base_fields.sales_qualified_source
   AND next_quarter.deal_group = base_fields.deal_group
 LEFT JOIN pipeline_gen 
   ON pipeline_gen.snapshot_fiscal_quarter_date = base_fields.snapshot_fiscal_quarter_date
-  AND pipeline_gen.opportunity_owner_user_segment = base_fields.opportunity_owner_user_segment
+  AND pipeline_gen.adj_ultimate_parent_sales_segment = base_fields.adj_ultimate_parent_sales_segment
   AND pipeline_gen.deal_category = base_fields.deal_category
   AND pipeline_gen.snapshot_day_of_fiscal_quarter = base_fields.snapshot_day_of_fiscal_quarter
-  AND pipeline_gen.opportunity_owner_rd_asm_level = base_fields.opportunity_owner_rd_asm_level
+  AND pipeline_gen.account_owner_min_team_level = base_fields.account_owner_min_team_level
   AND pipeline_gen.sales_qualified_source = base_fields.sales_qualified_source
   AND pipeline_gen.deal_group = base_fields.deal_group
 LEFT JOIN date_details next_quarter_date
