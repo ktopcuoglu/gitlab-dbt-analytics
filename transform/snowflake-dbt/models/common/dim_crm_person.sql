@@ -28,6 +28,7 @@ WITH crm_person AS (
       has_opted_out_email,
       email_bounced_date,
       email_bounced_reason,
+      status,
       lead_source,
       lead_source_type,
       source_buckets,
