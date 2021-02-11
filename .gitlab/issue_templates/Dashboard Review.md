@@ -9,6 +9,7 @@ Dashboard Owner/Editor:
 #### Dashboard Creator:
 <details>
 <summary><i>Dashboard Creator complete this section/i></summary>
+
 - [ ] What is the goal of this dashboard?
 - [ ] Who is the primary audience?
 - [ ] What's the primary consumption for this dashboard (i.e. handbook page, key meeting,etc)
@@ -35,11 +36,14 @@ Dashboard Owner/Editor:
 - [ ] Legend for each of the charts is clear, and at bottom of chart
 - [ ] Text Tile for "What am I looking at?" and more detailed information, leveraging hyperlinks instead of URLs
 - [ ] Tooltips are used where appropriate and show relevant values
-- [ ] Assign to reviewer on the data team. Use @gitlab-data on the dashboard if you don't know who to assign t
+- [ ] Assign to reviewer on the data team. Use `@gitlab-data` on the dashboard if you don't know who to assign to
+
 </details>
 
 ## Dashboard Reviewer:
+<details>
 <summary><i>Dashboard Reviewer complete this section/i></summary>
+
 - [ ] Validate the source of the dashboard's underlying queries.
     * Are we we using tables sourced from PROD.COMMON when possible
     * Are we using the correct FCT, DIM, or MART tables
@@ -54,6 +58,7 @@ Dashboard Owner/Editor:
 - [ ] Axes labelled correctly
 - [ ] Added to topics 
 - [ ] Associated handbook page
+
 </details>
 
 ## After Review Process is Completed and reccomendations from reviewer accounted for:

@@ -6,16 +6,27 @@ A fact table bridging opportunities with contacts. One opportunity can have mult
 
 {% docs bdg_namespace_order_subscription_active %}
 
-This table expands the functionality of the orders by improving the join to ultimate parent namespaces and subscriptions.
-
 The purpose of this table is two-fold:
-1. Connect Ultimate Parent Namespace ID to Subscription (and hence Zuora billing account and CRM Account)
+1. Connect **Ultimate Parent** Namespace ID to Subscription (and hence Zuora billing account and CRM Account)
 2. Connect Customer DB Customer ID to Subscription for self managed purchases. This helps with marketing efforts.
 
-Namespaces listed in this table are all Active Namespaces with prior trials and currently paid plans. Orders listed in this table are all active orders. Subscriptions listed in this table are all active self-managed and SaaS.
+This table expands the functionality of the orders by improving the join to ultimate parent namespaces and subscriptions. Namespaces listed in this table are all Active with prior trials and currently paid plans. Subscriptions and Orders listed in this table are all SaaS and currently active.
 
 The tier(s) connected to the subscription are determined using the underlying Zuora recurring charges. This view uses a `FULL OUTER JOIN` to show all three sides of the Venn diagram. (namespace, orders, subscriptions)
 In doing so exceptions are noted within `namespace_order_subscription_match_status` to identify rows that do not match between systems.
+
+{% enddocs %}
+
+{% docs bdg_self_managed_order_subscription_active %}
+
+The purpose of this table to connect Order IDs from Customer DB to Subscription for self managed purchases. This table expands the functionality of the subscriptions by improving the join to orders. Subscriptions and Orders listed in this table are all self-managed and currently active.
+
+The tier(s) connected to the subscription are determined using the underlying Zuora recurring charges. This view uses a `FULL OUTER JOIN` to show all three parts of the Venn diagram (orders, subscriptions, and the overlap between the two).
+
+{% enddocs %}
+
+{% docs bdg_subscription_product_rate_plan %}
+The goal of this table is to build a bridge from the entire "universe" of subscriptions in Zuora (`zuora_subscription_source` without any filters applied) to all of the [product rate plans](https://www.zuora.com/developer/api-reference/#tag/Product-Rate-Plan) to which those subscriptions are mapped. This provides the ability to filter subscriptions by delivery type ('SaaS' or 'Self-Managed').
 
 {% enddocs %}
 
@@ -313,6 +324,24 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
+{% docs fct_product_usage_wave_1_3_metrics_latest %}
+This table builds on the set of all Zuora subscriptions that are associated with a **Self-Managed** rate plans. Seat Link data from Customers DB(`fct_usage_self_managed_seat_link`) are combined with high priority Usage Ping metrics (`prep_usage_ping_subscription_mapped_wave2_3_metrics`) to build out the set of facts included in this table. Only the most recently received Usage Ping (by `uuid` and `hostname`) and Seat Link (by `dim_subscription_id`) payload are reported included.
+
+The data from this table will be used to create a mart table (`mart_product_usage_wave_1_3_metrics_latest`) for Gainsight Customer Product Insights.
+
+Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+{% enddocs %}
+
+{% docs fct_product_usage_wave_1_3_metrics_monthly %}
+This table builds on the set of all Zuora subscriptions that are associated with a **Self-Managed** rate plans. Seat Link data from Customers DB(`fct_usage_self_managed_seat_link`) are combined with high priority Usage Ping metrics (`prep_usage_ping_subscription_mapped_wave2_3_metrics`) to build out the set of facts included in this table. Only the most last Usage Ping (by `uuid` and `hostname`) and Seat Link (by `dim_subscription_id`) payload from each month are reported in this table.
+
+The data from this table will be used to create a mart table (`mart_product_usage_wave_1_3_metrics_monthly`) for Gainsight Customer Product Insights.
+
+Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+{% enddocs %}
+
 {% docs fct_usage_ping_payloads %}
 Factual table with metadata on usage ping payloads received.
 
@@ -334,6 +363,16 @@ Factual table on the grain of an individual metric received as part of a usage p
 
 Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
 
+{% enddocs %}
+
+{% docs fct_usage_ping_subscription_mapped_wave_2_3_metrics %}
+The purpose of this data model is to identify the usage pings that can be mapped to a subscription and to unpack an initial set ([wave 2-3](https://gitlab.com/gitlab-data/analytics/-/blob/master/transform/snowflake-dbt/macros/version/sales_wave_2_3_metrics.sql)) of priority metrics from the `raw_usage_data_payload` column, strip all the sensitive data out, and then report one value for each metric in that column.
+
+In this iteration, the grain is `hostname` per `uuid` per `dim_subscription_id` per `ping_created_at_month`. This current version is for Sales team only. 
+
+This data model is a fact table built on top of the `prep_usage_ping_subscription_mapped_wave2_3_metrics` model, which depends on `prep_usage_ping` and supports the creation of `dim_usage_ping`, which will replace `PROD.legacy.version_usage_data`, `dim_usage_pings`, `version_usage_data_source`, and `version_raw_usage_data_source` in the future. 
+
+The metric list identifed can be found in the macro [`sales_wave_2_3_metrics`](https://gitlab.com/gitlab-data/analytics/-/blob/master/transform/snowflake-dbt/macros/version/sales_wave_2_3_metrics.sql).
 {% enddocs %}
 
 {% docs fct_usage_self_managed_seat_link %}

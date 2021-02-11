@@ -10,6 +10,7 @@ data,dbt built-in
 datasiren,Relates to datasiren models
 dbt,Relates to dbt-generated data-sets
 discourse,Relates to Discourse data
+gainsight,Relates to Customer Product Usage data
 geo,Relates to geo data
 gitlab_dotcom,Relates to GitLab.com Database
 gitlab_ops,Relates to GitLab ops database

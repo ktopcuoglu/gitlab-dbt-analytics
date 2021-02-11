@@ -10,3 +10,15 @@ A dimension table for marketing contacts, combining contacts from GitLab.com, Sa
 A bridge table that lists all roles for the marketing contacts.
 
 {% enddocs %}
+
+{% docs bdg_marketing_contact_order %}
+
+A bridge table that lists all the orders, subsciptions, and namespaces per role per contact.
+
+{% enddocs %}
+
+{% docs mart_marketing_contact %}
+
+This table aggregates data from namespaces, orders, and subscriptions to the level of a marketing contact. Therefore a marketing contact can fall into multiple plan types. An individual could be a Free Individual namespace owner, a member of an Ultimate Group Namespace, and an Owner of a Premium Group Namespace. Each column aggregates data to answers a specific question at the contact level.
+
+{% enddocs %}

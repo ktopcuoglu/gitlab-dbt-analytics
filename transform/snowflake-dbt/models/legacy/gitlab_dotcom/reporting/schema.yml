@@ -1,0 +1,26 @@
+version: 2
+
+models:
+  - name: rpt_gitlab_employees_merge_request_metrics
+    description: This model is an aggregated dataset that shows the number of merge requests teams make to projects as defined in is_project_part_of_product and projects_part_of_product_ops, as well as the average number of merge requests.
+    columns:
+      - name: breakout_level
+        description: Indicates whether this data is aggregated at the division, department, or team member breakout_level
+      - name: division
+      - name: department
+      - name: employee_id
+      - name: month_date
+      - name: total_employees
+        description: This is the total employees active for that month for the breakout level
+      - name: total_employees_with_mr_part_of_product
+        description: This is the total employees that have a merge request to product specific project for the specific breakout level
+      - name: total_merged_part_of_product
+        description: Total merge requests merged to products identified in projects_part_of_product -- this includes gitlab_dotcom and gitlab_ops
+      - name: total_gitlab_dotcom_product_merge_requests
+      - name: total_gitlab_ops_product_merge_requests
+      - name: narrow_mr_rate
+      - name: percent_of_employees_with_mr
+      - name: total_people_engineering_merge_requests
+        description: Identified as merge requests in to the people engineering project or target_project_id = 14274989
+
+        

@@ -13,3 +13,7 @@ This macro buckets a unit into a deal size (Small, Medium, Big, or Jumbo) based 
 {% docs sfdc_source_buckets %}
 This macro is a CASE WHEN statement that groups the lead sources into new marketing-defined buckets. @rkohnke is the DRI on any changes made to this macro.
 {% enddocs %}
+
+{% docs sales_funnel_text_slugify %}
+This macro is a removes spaces, special characters, and capital letters from text fields taken from a sheetload filled out by the Finance team to complete the sales funnel targets.
+{% enddocs %}

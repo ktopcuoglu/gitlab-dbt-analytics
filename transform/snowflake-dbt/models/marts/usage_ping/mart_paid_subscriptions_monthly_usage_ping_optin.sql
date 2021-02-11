@@ -27,7 +27,7 @@ WITH fct_mrr AS (
       date_id,
       first_day_of_month
     FROM {{ ref('dim_date')}}
-    WHERE first_day_of_month < CURRENT_DATE
+    WHERE first_day_of_month <= CURRENT_DATE
 
 ), active_subscriptions AS (
 

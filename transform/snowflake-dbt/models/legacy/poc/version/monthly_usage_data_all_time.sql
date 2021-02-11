@@ -54,5 +54,6 @@ SELECT
   is_paid_gmau,
   is_umau,
   clean_metrics_name,
-  IFF(monthly_metric_value < 0, 0, monthly_metric_value) AS monthly_metric_value
+  IFF(monthly_metric_value < 0, 0, monthly_metric_value) AS monthly_metric_value,
+  has_timed_out
 FROM monthly
