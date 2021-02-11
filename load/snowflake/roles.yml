@@ -951,10 +951,13 @@ roles:
             schemas:
                 read:
                     - prep.preparation
+                    - prod.common
             tables:
                 read:
                     - prep.preparation.prep_usage_ping_saas_dates
                     - prep.preparation.prep_usage_ping_no_license_key
+                    - prod.common.fct_product_usage_wave_1_3_metrics_latest
+                    - prod.common.fct_product_usage_wave_1_3_metrics_monthly
 
     - gcp_billing:
         warehouses:
