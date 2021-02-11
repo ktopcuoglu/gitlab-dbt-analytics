@@ -31,6 +31,11 @@ def get_targets():
         "sitespeed_io.desktop.pageSummary.gitlab_com.GitLab_Issue_Detail.chrome.cable.browsertime.statistics.timings.largestContentfulPaint.renderTime.*",
         "sitespeed_io.desktop.pageSummary.gitlab_com.GitLab_Merge_List.chrome.cable.browsertime.statistics.timings.largestContentfulPaint.renderTime.*",
         "sitespeed_io.desktop.pageSummary.gitlab_com.GitLab_Merge_Detail.chrome.cable.browsertime.statistics.timings.largestContentfulPaint.renderTime.*",
+        "sitespeed_io.desktop.pageSummary.github_com.GitHub_Project_Home.chrome.cable.browsertime.statistics.timings.largestContentfulPaint.renderTime.*",
+        "sitespeed_io.desktop.pageSummary.github_com.GitHub_Issue_list.chrome.cable.browsertime.statistics.timings.largestContentfulPaint.renderTime.*",
+        "sitespeed_io.desktop.pageSummary.github_com.GitHub_Issue_Detail.chrome.cable.browsertime.statistics.timings.largestContentfulPaint.renderTime.*",
+        "sitespeed_io.desktop.pageSummary.github_com.GitHub_Merge_List.chrome.cable.browsertime.statistics.timings.largestContentfulPaint.renderTime.*",
+        "sitespeed_io.desktop.pageSummary.github_com.GitHub_Merge_Detail.chrome.cable.browsertime.statistics.timings.largestContentfulPaint.renderTime.*",
     ]
 
 
