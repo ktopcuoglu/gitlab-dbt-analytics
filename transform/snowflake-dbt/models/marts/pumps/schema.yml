@@ -20,6 +20,10 @@ models:
   - name: mart_product_usage_wave_1_3_metrics_latest
     description: '{{ doc("mart_product_usage_wave_1_3_metrics_latest") }}'
     columns:
+      - name: dim_subscription_id
+        tests:
+          - not_null
+        tags: ["tdf", "common", "gainsight"]
       - name: dim_subscription_id_original
         tests:
           - not_null
@@ -90,10 +94,16 @@ models:
         description: Flags rows where `active_user_count` is NULL in source.
       - name: is_usage_ping_license_mapped_to_subscription
       - name: is_usage_ping_license_subscription_id_valid
+      - name: is_data_in_subscription_month
+        description: Flags rows where there is Usage Ping data and/or Seat Link data present
 
   - name: mart_product_usage_wave_1_3_metrics_monthly
     description: '{{ doc("mart_product_usage_wave_1_3_metrics_monthly") }}'
     columns:
+      - name: dim_subscription_id
+        tests:
+          - not_null
+        tags: ["tdf", "common", "gainsight"]
       - name: dim_subscription_id_original
         tests:
           - not_null
@@ -109,7 +119,7 @@ models:
           - not_null
         tags: ["tdf", "common", "gainsight"]
       - name: snapshot_month
-        description: Month from which product usage data is reported (reported as the first day of the month - '2020-01-01').
+        description: Month from which Usage Ping and/or Seat Link data is reported (reported as the first day of the month - '2020-01-01').
         tests:
           - not_null
         tags: ["tdf", "common", "gainsight"]
@@ -165,3 +175,5 @@ models:
         description: Flags rows where `active_user_count` is NULL in source.
       - name: is_usage_ping_license_mapped_to_subscription
       - name: is_usage_ping_license_subscription_id_valid
+      - name: is_data_in_subscription_month
+        description: Flags rows where there is Usage Ping data and/or Seat Link data present

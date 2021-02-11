@@ -1339,6 +1339,8 @@ models:
         description: Flags rows where `active_user_count` is NULL in source.
       - name: is_usage_ping_license_mapped_to_subscription
       - name: is_usage_ping_license_subscription_id_valid
+      - name: is_data_in_subscription_month
+        description: Flags rows where there is Usage Ping data and/or Seat Link data present
 
   - name: fct_product_usage_wave_1_3_metrics_monthly
     description: '{{ doc("fct_product_usage_wave_1_3_metrics_monthly") }}'
@@ -1415,6 +1417,8 @@ models:
         description: Flags rows where `active_user_count` is NULL in source.
       - name: is_usage_ping_license_mapped_to_subscription
       - name: is_usage_ping_license_subscription_id_valid
+      - name: is_data_in_subscription_month
+        description: Flags rows where there is Usage Ping data and/or Seat Link data present
 
   - name: fct_quote_item
     description: '{{ doc("fct_quote_item") }}'

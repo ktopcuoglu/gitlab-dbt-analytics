@@ -12,6 +12,7 @@
 , joined AS (
 
     SELECT
+      monthly_metrics.dim_subscription_id,
       monthly_metrics.dim_subscription_id_original,
       {{ get_keyed_nulls('billing_accounts.dim_billing_account_id') }}      AS dim_billing_account_id,
       {{ get_keyed_nulls('crm_accounts.crm_account_id') }}                  AS dim_crm_account_id,
@@ -60,7 +61,8 @@
       monthly_metrics.is_seat_link_rate_plan_in_zuora,
       monthly_metrics.is_seat_link_active_user_count_available,
       monthly_metrics.is_usage_ping_license_mapped_to_subscription,
-      monthly_metrics.is_usage_ping_license_subscription_id_valid
+      monthly_metrics.is_usage_ping_license_subscription_id_valid,
+      monthly_metrics.is_data_in_subscription_month
     FROM monthly_metrics
     LEFT JOIN billing_accounts
       ON monthly_metrics.dim_billing_account_id = billing_accounts.dim_billing_account_id
