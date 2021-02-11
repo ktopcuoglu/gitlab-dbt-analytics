@@ -37,6 +37,7 @@ WITH map_merged_crm_accounts AS (
     zuora_subscription.zuora_renewal_subscription_name_slugify,
     zuora_subscription.renewal_term,
     zuora_subscription.renewal_term_period_type,
+    zuora_subscription.eoa_starter_bronze_offer_accepted,
     zuora_subscription.subscription_start_date                                AS subscription_start_date,
     zuora_subscription.subscription_end_date                                  AS subscription_end_date,
     IFF(zuora_subscription.created_by_id = '2c92a0fd55822b4d015593ac264767f2', -- All Self-Service / Web direct subscriptions are identified by that created_by_id
@@ -54,7 +55,7 @@ WITH map_merged_crm_accounts AS (
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@ischweickartDD",
-    updated_by="@ischweickartDD",
+    updated_by="@iweeks",
     created_date="2021-01-07",
-    updated_date="2021-01-07"
+    updated_date="2021-02-10"
 ) }}

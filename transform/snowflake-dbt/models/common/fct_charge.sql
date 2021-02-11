@@ -15,6 +15,7 @@ WITH zuora_rate_plan AS (
       zuora_rate_plan_charge.product_rate_plan_charge_id                AS dim_product_detail_id,
       zuora_rate_plan.subscription_id                                   AS dim_subscription_id,
       zuora_rate_plan_charge.account_id                                 AS dim_billing_account_id,
+      zuora_rate_plan.amendement_id                                     AS dim_amendment_id,
       zuora_rate_plan_charge.rate_plan_charge_number,
       zuora_rate_plan_charge.rate_plan_charge_name,
       zuora_rate_plan_charge.effective_start_month,
@@ -38,7 +39,8 @@ WITH zuora_rate_plan AS (
       zuora_rate_plan_charge.discount_level,
       zuora_rate_plan_charge.segment                                    AS rate_plan_charge_segment,
       zuora_rate_plan_charge.version                                    AS rate_plan_charge_version,
-      zuora_rate_plan_charge.charge_type
+      zuora_rate_plan_charge.charge_type,
+      zuora_rate_plan.amendement_type
     FROM zuora_rate_plan
     INNER JOIN zuora_rate_plan_charge
       ON zuora_rate_plan.rate_plan_id = zuora_rate_plan_charge.rate_plan_id
@@ -48,7 +50,7 @@ WITH zuora_rate_plan AS (
 {{ dbt_audit(
     cte_ref="base_charges",
     created_by="@msendal",
-    updated_by="@mcooperDD",
+    updated_by="@iweeks",
     created_date="2020-06-01",
-    updated_date="2021-01-05"
+    updated_date="2021-02-10"
 ) }}
