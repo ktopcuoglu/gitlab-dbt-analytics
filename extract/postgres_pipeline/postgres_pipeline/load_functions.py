@@ -129,6 +129,13 @@ def sync_incremental_ids(
     )
     return True
 
+def get_highest_xmin(source_engine: Engine, source_table_name: str):
+    query = f"SELECT MAX(xmin::text) FROM {source_table_name};"
+    return query_executor(source_engine, query)[0][0]
+
+
+def append_latest_xmin_to_xcom(source_engine: Engine, source_table: str):
+    append_to_xcom_file({"max_xmin": get_highest_xmin(source_engine, source_table)})
 
 def load_scd(
     source_engine: Engine,
@@ -141,12 +148,11 @@ def load_scd(
     Load tables that are slow-changing dimensions.
     """
 
+    append_latest_xmin_to_xcom(source_engine, source_table_name)
+
     raw_query = table_dict["import_query"]
     additional_filter = table_dict.get("additional_filtering", "")
     advanced_metadata = table_dict.get("advanced_metadata", False)
-    if "{EXECUTION_DATE}" in raw_query:
-        logging.info(f"Table {source_table_name} does not need SCD processing.")
-        return False
 
     # If the schema has changed for the SCD table, treat it like a backfill
     if "_TEMP" == table_name[-5:] or target_engine.has_table(f"{table_name}_TEMP"):
