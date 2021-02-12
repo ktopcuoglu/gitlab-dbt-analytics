@@ -35,6 +35,8 @@ macros:
     description: '{{ doc("get_date_id") }}'
   - name: get_keyed_nulls
     description: '{{ doc("get_keyed_nulls") }}'
+  - name: hash_diff
+    description: doc("hash_diff")
   - name: monthly_change
     description: '{{ doc("monthly_change") }}'
   - name: monthly_is_used
