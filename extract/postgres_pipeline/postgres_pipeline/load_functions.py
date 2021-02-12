@@ -175,11 +175,11 @@ def load_scd(
         return True
 
     raw_query = table_dict["import_query"]
-    additional_filter = table_dict.get("additional_filtering", "")
+    additional_filter = table_dict.get("additional_filtering", "WHERE 1=1")
     advanced_metadata = table_dict.get("advanced_metadata", False)
 
     logging.info(f"Processing table: {source_table_name}")
-    query = f"{raw_query} {additional_filter}"
+    query = f"{raw_query} {additional_filter} AND xmin::text::bigint > {last_xmin}"
     logging.info(query)
     chunk_and_upload(
         query,
