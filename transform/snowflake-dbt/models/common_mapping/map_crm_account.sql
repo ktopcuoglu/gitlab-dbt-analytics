@@ -42,7 +42,7 @@ WITH account_prep AS (
 
     SELECT
       {{ get_keyed_nulls ('account_prep.dim_parent_crm_account_id') }}                              AS dim_parent_crm_account_id,
-      {{ get_keyed_nulls ('account_prep.dim_crm_account_id') }}                             AS dim_crm_account_id,
+      {{ get_keyed_nulls ('account_prep.dim_crm_account_id') }}                                     AS dim_crm_account_id,
       {{ get_keyed_nulls ('sales_segment_ultimate_parent.dim_sales_segment_id') }}                  AS dim_parent_sales_segment_id,
       {{ get_keyed_nulls ('geo_region_ultimate_parent.dim_geo_region_id') }}                        AS dim_parent_geo_region_id,
       {{ get_keyed_nulls ('geo_sub_region_ultimate_parent.dim_geo_sub_region_id') }}                AS dim_parent_geo_sub_region_id,

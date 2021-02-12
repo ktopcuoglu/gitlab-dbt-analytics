@@ -27,7 +27,7 @@ WITH sfdc_account AS (
 ), sfdc_account_with_ultimate_parent AS (
 
     SELECT
-      sfdc_account.account_id                                                               AS crm_account_id,
+      sfdc_account.account_id                                                               AS dim_crm_account_id,
       ultimate_parent_account.account_id                                                    AS ultimate_parent_account_id,
       {{ sales_segment_cleaning("sfdc_account.ultimate_parent_sales_segment") }}            AS ultimate_parent_sales_segment,
       ultimate_parent_account.billing_country                                               AS ultimate_parent_billing_country,
@@ -50,7 +50,7 @@ WITH sfdc_account AS (
 ), sfdc_account_final AS (
 
     SELECT
-      crm_account_id                                                                                        AS dim_crm_account_id,
+      dim_crm_account_id                                                                                    AS dim_crm_account_id,
       ultimate_parent_account_id                                                                            AS dim_parent_crm_account_id,
       TRIM(SPLIT_PART(tsp_region, '-', 1))                                                                  AS account_tsp_region_clean,
       TRIM(SPLIT_PART(ultimate_parent_tsp_region, '-', 1))                                                  AS parent_tsp_region_clean,
