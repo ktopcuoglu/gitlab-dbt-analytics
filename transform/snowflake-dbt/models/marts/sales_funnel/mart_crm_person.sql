@@ -44,7 +44,9 @@ WITH dim_crm_person AS (
       DATE_TRUNC(month, fct_crm_person.qualified_date)           AS qualified_month,
       fct_crm_person.converted_date,
       DATE_TRUNC(month, fct_crm_person.converted_date)           AS converted_month,
+      dim_crm_person.email_domain,
       dim_crm_person.email_hash,
+      dim_crm_person.status,
       dim_crm_person.lead_source,
       dim_crm_person.source_buckets,
       dim_marketing_channel.marketing_channel_name,
@@ -73,5 +75,5 @@ WITH dim_crm_person AS (
     created_by="@iweeks",
     updated_by="@iweeks",
     created_date="2020-12-07",
-    updated_date="2021-02-08",
+    updated_date="2021-02-12",
   ) }}
