@@ -17,7 +17,6 @@ with zuora_subscription as (
 
   SELECT *  
   FROM zuora_subscription
-  WHERE subscription_status IN ('Active', 'Cancelled')
 
 ), zuora_partitioned_filter AS(
 
