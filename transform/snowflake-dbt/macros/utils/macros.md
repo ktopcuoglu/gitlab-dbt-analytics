@@ -80,6 +80,12 @@ Generally this should be used when creating and keying on new dimensions that mi
 {% enddocs %}
 
 {% docs monthly_change %}
+This macro calculates differences for each consecutive usage ping by uuid.
+{% enddocs %}
+
+
+{% docs hash_diff %}
+
 Built for use in data pumps this macro is inserted at the end of the model, before the `dbt_audit` macro and adds two columns to the model. 
 
 1. `prev_hash` - the hashed value from designated columns using `dbt_utils.surrogate_key()` from the last dbt run
@@ -93,9 +99,11 @@ In order to do this it requires three arguments
 
 Example: 
 
-```
-{{  hash_diff(
-  cte_ref="test_data",
+```sql
+WITH my_cte AS (...)
+{% raw %}
+{{ hash_diff(
+  cte_ref="my_cte",
   return_cte="final",
   columns=[
     'col1',
@@ -103,14 +111,11 @@ Example:
     'col3'
     ]
 ) }}
+{% endraw %}
 ```
 
 In the above example this macro would query the `test_data` cte in the referencing model, create and compare a hash for `col1`, `col2`, and `col3`, and name the resulting cte `final` for reference in the `dbt_audit` macro.
 
-{% enddocs %}
-
-{% docs monthly_change %}
-This macro calculates differences for each consecutive usage ping by uuid.
 {% enddocs %}
 
 

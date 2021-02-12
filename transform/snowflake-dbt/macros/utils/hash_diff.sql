@@ -3,7 +3,7 @@
   , hashing AS (
 
     SELECT *,
-  
+
       {{ dbt_utils.surrogate_key( columns ) }} as prev_hash
 
     FROM {{ cte_ref }}
@@ -13,7 +13,7 @@
     {%- set columns = adapter.get_columns_in_relation(this) -%}
 
     {%- set column_names = [] -%}
-  
+
     {%- for column in columns -%}
 
       {%- set _ = column_names.append(column.name) -%}
@@ -31,12 +31,12 @@
         LEFT JOIN {{ this }} as t on t.prev_hash = hashing.prev_hash
 
       {% else %}
-        
+
         SELECT *,
         CURRENT_TIMESTAMP() AS last_changed
         FROM hashing
 
-      {% endif %}	
+      {% endif %}
 
   )
 {% endmacro %}

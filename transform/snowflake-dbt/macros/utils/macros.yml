@@ -44,7 +44,7 @@ macros:
       - name: return_cte
         type: string
         description: the name of the cte that will result from the macro
-      - columns:
+      - name: columns
         type: list
         description: a list of columns to be hashed and compared to previous values
   - name: monthly_change

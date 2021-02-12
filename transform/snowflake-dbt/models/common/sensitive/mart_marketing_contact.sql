@@ -210,7 +210,7 @@ WITH marketing_contact AS (
       ON marketing_contact_role.dim_marketing_contact_id = marketing_contact.dim_marketing_contact_id
     GROUP BY marketing_contact.dim_marketing_contact_id
 
-), final AS (
+), joined AS (
 
     SELECT 
       prep.*, 
@@ -245,6 +245,63 @@ WITH marketing_contact AS (
       ON marketing_contact.dim_marketing_contact_id = prep.dim_marketing_contact_id
 
 )
+
+{{ hash_diff(
+    cte_ref="joined",
+    return_cte="final",
+    columns=[
+      'is_group_namespace_owner',
+      'is_group_namespace_member',
+      'is_personal_namespace_owner',
+      'is_customer_db_owner',
+      'is_zuora_billing_contact',
+      'days_since_saas_trial_ended',
+      'individual_is_saas_trial',
+      'individual_is_saas_free_tier',
+      'individual_is_saas_bronze_tier',
+      'individual_is_saas_premium_tier',
+      'individual_is_saas_ultimate_tier',
+      'group_member_is_saas_trial',
+      'group_member_is_saas_free_tier',
+      'group_member_is_saas_bronze_tier',
+      'group_member_is_saas_premium_tier',
+      'group_member_is_saas_ultimate_tier',
+      'group_owner_is_saas_trial',
+      'group_owner_is_saas_free_tier',
+      'group_owner_is_saas_bronze_tier',
+      'group_owner_is_saas_premium_tier',
+      'group_owner_is_saas_ultimate_tier',
+      'is_self_managed_starter_tier',
+      'is_self_managed_premium_tier',
+      'is_self_managed_ultimate_tier',
+      'email_address',
+      'first_name',
+      'last_name',
+      'gitlab_user_name',
+      'company_name',
+      'job_title',
+      'country',
+      'sfdc_parent_sales_segment',
+      'is_sfdc_lead_contact',
+      'sfdc_lead_contact',
+      'sfdc_created_date',
+      'is_sfdc_opted_out',
+      'is_gitlab_dotcom_user',
+      'gitlab_dotcom_user_id',
+      'gitlab_dotcom_created_date',
+      'gitlab_dotcom_confirmed_date',
+      'gitlab_dotcom_active_state',
+      'gitlab_dotcom_last_login_date',
+      'gitlab_dotcom_email_opted_in',
+      'is_customer_db_user',
+      'customer_db_customer_id',
+      'customer_db_created_date',
+      'customer_db_confirmed_date',
+      'zuora_contact_id',
+      'zuora_created_date',
+      'zuora_active_state'
+      ]
+) }}
 
 {{ dbt_audit(
     cte_ref="final",
