@@ -4,39 +4,39 @@
 
   SELECT *,
     
-		{{ dbt_utils.surrogate_key( columns ) }} as prev_hash
+    {{ dbt_utils.surrogate_key( columns ) }} as prev_hash
   
-	FROM {{ cte_ref }}
+  FROM {{ cte_ref }}
 
 ), {{ return_cte }} as (
  
   {%- set columns = adapter.get_columns_in_relation(this) -%}
   
-	{%- set column_names = [] -%}
+  {%- set column_names = [] -%}
   
-	{%- for column in columns -%}
+  {%- for column in columns -%}
 	
-		{%- set _ = column_names.append(column.name) -%}
+    {%- set _ = column_names.append(column.name) -%}
   
-	{% endfor %}
+  {% endfor %}
 
-      {% if 'LAST_CHANGED' in column_names %}
+    {% if 'LAST_CHANGED' in column_names %}
 	
-	      SELECT hashing.*,
-          CASE
-	          WHEN hashing.prev_hash = t.prev_hash THEN last_changed
-	          ELSE current_timestamp
-          END AS last_changed
-				FROM hashing
-				LEFT JOIN {{ this }} as t on t.prev_hash = hashing.prev_hash
+      SELECT hashing.*,
+        CASE
+          WHEN hashing.prev_hash = t.prev_hash THEN last_changed
+          ELSE current_timestamp
+        END AS last_changed
+      FROM hashing
+      LEFT JOIN {{ this }} as t on t.prev_hash = hashing.prev_hash
 
-      {% else %}
+    {% else %}
         
-				SELECT *,
-        CURRENT_TIMESTAMP() AS last_changed
-        FROM hashing
+      SELECT *,
+      CURRENT_TIMESTAMP() AS last_changed
+      FROM hashing
 
-	    {% endif %}	
+    {% endif %}	
 
 )
 {% endmacro %}
