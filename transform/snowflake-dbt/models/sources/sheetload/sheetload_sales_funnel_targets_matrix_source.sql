@@ -11,7 +11,7 @@ WITH source AS (
       opportunity_source::VARCHAR                         AS opportunity_source,
       order_type::VARCHAR                                 AS order_type,
       area::VARCHAR                                       AS area,
-      REPLACE(allocated_target, ',', '.')::FLOAT           AS allocated_target,
+      REPLACE(allocated_target, ',', '')::INTEGER         AS allocated_target,
       kpi_total::FLOAT                                    AS kpi_total,
       month_percentage::FLOAT                             AS month_percentage,
       opportunity_source_percentage::FLOAT                AS opportunity_source_percentage,
