@@ -131,7 +131,7 @@ def sync_incremental_ids(
 
 
 def get_highest_xmin(source_engine: Engine, source_table_name: str) -> int:
-    query = f"SELECT MAX(xmin::text) FROM {source_table_name};"
+    query = f"SELECT MAX(xmin::text::bigint) FROM {source_table_name};"
     return int(query_executor(source_engine, query)[0][0])
 
 
