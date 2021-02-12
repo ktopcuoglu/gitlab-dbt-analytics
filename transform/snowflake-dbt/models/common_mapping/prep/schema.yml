@@ -41,6 +41,9 @@ models:
         tests:
           - not_null
           - unique
+      - name: dim_crm_sales_hierarchy_sales_area_live_id
+        tests:
+          - unique
 
   - name: prep_crm_sales_representative
     description: '{{ doc("prep_crm_sales_representative") }}'
@@ -330,7 +333,7 @@ models:
       - name: product_tier_historical_short
         description: Pulls the product tier from `product_tier_historical` with the delivery type removed
       - name: product_tier_name
-        description: Product [pricing tiers](https://about.gitlab.com/handbook/marketing/strategic-marketing/tiers/) for both SaaS and Self-Managed customers. Includes the mapping from SaaS - Silver to SaaS - Premium, and from SaaS - Gold to SaaS - Ultimate. 
+        description: Product [pricing tiers](https://about.gitlab.com/handbook/marketing/strategic-marketing/tiers/) for both SaaS and Self-Managed customers. Includes the mapping from SaaS - Silver to SaaS - Premium, and from SaaS - Gold to SaaS - Ultimate.
         tests:
           - not_null
         tags: ["tdf", "common", "gainsight"]
