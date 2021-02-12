@@ -129,12 +129,12 @@ def sync_incremental_ids(
     )
     return True
 
-def get_highest_xmin(source_engine: Engine, source_table_name: str):
+def get_highest_xmin(source_engine: Engine, source_table_name: str) -> int:
     query = f"SELECT MAX(xmin::text) FROM {source_table_name};"
-    return query_executor(source_engine, query)[0][0]
+    return int(query_executor(source_engine, query)[0][0])
 
 
-def append_latest_xmin_to_xcom(source_engine: Engine, source_table: str):
+def append_latest_xmin_to_xcom(source_engine: Engine, source_table: str) -> None:
     append_to_xcom_file({"max_xmin": get_highest_xmin(source_engine, source_table)})
 
 def load_scd(
