@@ -25,7 +25,7 @@
       SELECT hashing.*,
         CASE
           WHEN hashing.prev_hash = t.prev_hash THEN last_changed
-          ELSE current_timestamp
+          ELSE CURRENT_TIMESTAMP()
         END AS last_changed
       FROM hashing
       LEFT JOIN {{ this }} as t on t.prev_hash = hashing.prev_hash
