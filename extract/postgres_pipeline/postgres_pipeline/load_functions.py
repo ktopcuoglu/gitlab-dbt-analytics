@@ -129,9 +129,11 @@ def sync_incremental_ids(
     )
     return True
 
+
 def get_highest_xmin(source_engine: Engine, source_table_name: str) -> int:
     query = f"SELECT MAX(xmin::text) FROM {source_table_name};"
     return int(query_executor(source_engine, query)[0][0])
+
 
 def get_last_xmin() -> int:
     last_xmin = os.environ["LAST_XMIN"]
@@ -139,8 +141,10 @@ def get_last_xmin() -> int:
         last_xmin = "0"
     return int(last_xmin)
 
+
 def append_latest_xmin_to_xcom(xmin: int) -> None:
     append_to_xcom_file({"max_xmin": xmin})
+
 
 def load_scd(
     source_engine: Engine,
@@ -169,7 +173,7 @@ def load_scd(
     if last_xmin == highest_xmin and not backfill:
         logging.info("No new data to load... aborting load")
         return True
-    
+
     raw_query = table_dict["import_query"]
     additional_filter = table_dict.get("additional_filtering", "")
     advanced_metadata = table_dict.get("advanced_metadata", False)
