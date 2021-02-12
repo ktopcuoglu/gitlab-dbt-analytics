@@ -2037,6 +2037,34 @@ tables:
       , created_at
       , scopes
       FROM oauth_access_tokens
+  onboarding_progresses:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'onboarding_progresses'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , namespace_id
+      , created_at
+      , updated_at
+      , git_pull_at
+      , git_write_at
+      , merge_request_created_at
+      , pipeline_created_at
+      , user_added_at
+      , trial_started_at
+      , subscription_created_at
+      , required_mr_approvals_enabled_at
+      , code_owners_enabled_at
+      , scoped_label_created_at
+      , security_scan_created_at
+      , issue_auto_closed_at
+      , repository_imported_at
+      , repository_mirrored_at
+      FROM onboarding_progresses
+      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
+        AND '{EXECUTION_DATE}'::timestamp
   operations_feature_flags:
     export_schema: "gitlab_com"
     export_table: operations_feature_flags
