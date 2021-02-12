@@ -75,5 +75,5 @@ WITH dim_crm_person AS (
     created_by="@iweeks",
     updated_by="@iweeks",
     created_date="2020-12-07",
-    updated_date="2021-02-08",
+    updated_date="2021-02-12",
   ) }}

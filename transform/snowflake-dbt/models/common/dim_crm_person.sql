@@ -43,7 +43,7 @@ WITH crm_person AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@jjstark",
-    updated_by="@mcooperDD",
+    updated_by="@iweeks",
     created_date="2020-09-10",
-    updated_date="2020-12-15"
+    updated_date="2021-02-12"
 ) }}

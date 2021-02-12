@@ -62,7 +62,7 @@ WITH biz_person AS (
       has_opted_out_email,
       email_bounced_date,
       email_bounced_reason,
-      lead_status                                   AS status,
+      contact_status                                AS status,
       lead_source,
       lead_source_type,
       source_buckets,
@@ -100,7 +100,7 @@ WITH biz_person AS (
       has_opted_out_email,
       email_bounced_date,
       email_bounced_reason,
-      contact_status                             AS status,
+      lead_status                                AS status,
       lead_source,
       lead_source_type,
       source_buckets,
@@ -118,7 +118,7 @@ WITH biz_person AS (
 {{ dbt_audit(
     cte_ref="crm_person_final",
     created_by="@mcooperDD",
-    updated_by="@mcooperDD",
+    updated_by="@iweeks",
     created_date="2020-12-08",
-    updated_date="2020-12-08"
+    updated_date="2021-02-12"
 ) }}
