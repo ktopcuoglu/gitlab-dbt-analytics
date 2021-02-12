@@ -88,7 +88,7 @@ This macro calculates differences for each consecutive usage ping by uuid.
 Built for use in data pumps this macro is inserted at the end of the model, before the `dbt_audit` macro and adds two columns to the model. 
 
 1. `prev_hash` - the hashed value from designated columns using `dbt_utils.surrogate_key()` from the last dbt run
-2. `last_changed` - the timestamp of hte last dbt run where the new hashed values didn't match the previous hashed values
+2. `last_changed` - the timestamp of the last dbt run where the new hashed values didn't match the previous hashed values
 
 In order to do this it requires three arguments
 
