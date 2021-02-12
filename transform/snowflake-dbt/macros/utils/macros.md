@@ -83,7 +83,6 @@ Generally this should be used when creating and keying on new dimensions that mi
 This macro calculates differences for each consecutive usage ping by uuid.
 {% enddocs %}
 
-
 {% docs hash_diff %}
 
 Built for use in data pumps this macro is inserted at the end of the model, before the `dbt_audit` macro and adds two columns to the model. 
