@@ -2058,7 +2058,7 @@ tables:
       , required_mr_approvals_enabled_at
       , code_owners_enabled_at
       , scoped_label_created_at
-      , security_scan_created_at
+      , security_scan_enabled_at
       , issue_auto_closed_at
       , repository_imported_at
       , repository_mirrored_at
