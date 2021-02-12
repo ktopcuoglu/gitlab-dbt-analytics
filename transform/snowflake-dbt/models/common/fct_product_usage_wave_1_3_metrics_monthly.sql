@@ -40,6 +40,7 @@ WITH subscriptions AS (
       seat_link.active_user_count,
       seat_link.max_historical_user_count,
       seat_link.license_user_count,
+      usage_ping.dim_usage_ping_id,
       usage_ping.ping_created_at,
       usage_ping.uuid,
       usage_ping.hostname,
@@ -50,11 +51,13 @@ WITH subscriptions AS (
       usage_ping.action_monthly_active_users_project_repo_28_days_user,
       usage_ping.merge_requests_28_days_user,
       usage_ping.projects_with_repositories_enabled_28_days_user,
-      usage_ping.commit_comment_all_time,
-      usage_ping.source_code_pushes_all_time,
+      usage_ping.commit_comment_all_time_event,
+      usage_ping.source_code_pushes_all_time_event,
       usage_ping.ci_pipelines_28_days_user,
       usage_ping.ci_internal_pipelines_28_days_user,
-      usage_ping.ci_builds_28_days_user_28_days_user,
+      usage_ping.ci_builds_28_days_user,
+      usage_ping.ci_builds_all_time_user,
+      usage_ping.ci_builds_all_time_event,
       usage_ping.ci_runners_all_time_event,
       usage_ping.auto_devops_enable_all_time_event,
       usage_ping.gitlab_shared_runners_enabled_instance_setting,
@@ -102,5 +105,5 @@ WITH subscriptions AS (
     created_by="@ischweickartDD",
     updated_by="@ischweickartDD",
     created_date="2021-02-08",
-    updated_date="2021-02-08"
+    updated_date="2021-02-16"
 ) }}

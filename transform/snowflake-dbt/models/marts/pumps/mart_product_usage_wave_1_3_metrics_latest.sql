@@ -21,6 +21,7 @@
       latest_metrics.active_user_count,
       latest_metrics.max_historical_user_count,
       latest_metrics.license_user_count,
+      latest_metrics.dim_usage_ping_id,
       latest_metrics.ping_created_at,
       latest_metrics.uuid,
       latest_metrics.hostname,
@@ -31,11 +32,13 @@
       latest_metrics.action_monthly_active_users_project_repo_28_days_user,
       latest_metrics.merge_requests_28_days_user,
       latest_metrics.projects_with_repositories_enabled_28_days_user,
-      latest_metrics.commit_comment_all_time,
-      latest_metrics.source_code_pushes_all_time,
+      latest_metrics.commit_comment_all_time_event,
+      latest_metrics.source_code_pushes_all_time_event,
       latest_metrics.ci_pipelines_28_days_user,
       latest_metrics.ci_internal_pipelines_28_days_user,
-      latest_metrics.ci_builds_28_days_user_28_days_user,
+      latest_metrics.ci_builds_28_days_user,
+      latest_metrics.ci_builds_all_time_user,
+      latest_metrics.ci_builds_all_time_event,
       latest_metrics.ci_runners_all_time_event,
       latest_metrics.auto_devops_enable_all_time_event,
       latest_metrics.gitlab_shared_runners_enabled_instance_setting,
@@ -77,5 +80,5 @@
     created_by="@ischweickartDD",
     updated_by="@ischweickartDD",
     created_date="2021-02-11",
-    updated_date="2021-02-11"
+    updated_date="2021-02-16"
 ) }}

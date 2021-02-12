@@ -21,6 +21,7 @@
       monthly_metrics.active_user_count,
       monthly_metrics.max_historical_user_count,
       monthly_metrics.license_user_count,
+      monthly_metrics.dim_usage_ping_id,
       monthly_metrics.uuid,
       monthly_metrics.hostname,
       monthly_metrics.dim_license_id,
@@ -30,11 +31,13 @@
       monthly_metrics.action_monthly_active_users_project_repo_28_days_user,
       monthly_metrics.merge_requests_28_days_user,
       monthly_metrics.projects_with_repositories_enabled_28_days_user,
-      monthly_metrics.commit_comment_all_time,
-      monthly_metrics.source_code_pushes_all_time,
+      monthly_metrics.commit_comment_all_time_event,
+      monthly_metrics.source_code_pushes_all_time_event,
       monthly_metrics.ci_pipelines_28_days_user,
       monthly_metrics.ci_internal_pipelines_28_days_user,
-      monthly_metrics.ci_builds_28_days_user_28_days_user,
+      monthly_metrics.ci_builds_28_days_user,
+      monthly_metrics.ci_builds_all_time_user,
+      monthly_metrics.ci_builds_all_time_event,
       monthly_metrics.ci_runners_all_time_event,
       monthly_metrics.auto_devops_enable_all_time_event,
       monthly_metrics.gitlab_shared_runners_enabled_instance_setting,
@@ -76,5 +79,5 @@
     created_by="@ischweickartDD",
     updated_by="@ischweickartDD",
     created_date="2021-02-11",
-    updated_date="2021-02-11"
+    updated_date="2021-02-16"
 ) }}

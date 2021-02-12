@@ -19,3 +19,11 @@ The purpose of this mart table is to act as a data pump of **Self-Managed** cust
 Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
 
 {% enddocs %}
+
+{% docs mart_product_usage_wave_1_3_metrics_monthly_diff %}
+
+The purpose of this mart table is to act as a data pump of **Self-Managed** customer product data at a _monthly grain_ into Gainsight for Customer Product Insights. This table also includes columns for the monthly _diff_ erences in the `_all_time_` columns included in the wave 1-3 Usage Ping metrics.
+
+Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+{% enddocs %}

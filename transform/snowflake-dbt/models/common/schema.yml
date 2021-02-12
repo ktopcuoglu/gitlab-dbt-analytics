@@ -1293,6 +1293,7 @@ models:
         description: Maximum active user count ever reported over the lifetime of the customer's subcription.
       - name: license_user_count
         description: Count of licensed users purchased with the customer's subcription.
+      - name: dim_usage_ping_id
       - name: ping_created_at
         description: The timestamp at which the usage ping was created.
       - name: uuid
@@ -1304,11 +1305,13 @@ models:
       - name: action_monthly_active_users_project_repo_28_days_user
       - name: merge_requests_28_days_user
       - name: projects_with_repositories_enabled_28_days_user
-      - name: commit_comment_all_time
-      - name: source_code_pushes_all_time
+      - name: commit_comment_all_time_event
+      - name: source_code_pushes_all_time_event
       - name: ci_pipelines_28_days_user
       - name: ci_internal_pipelines_28_days_user
-      - name: ci_builds_28_days_user_28_days_user
+      - name: ci_builds_28_days_user
+      - name: ci_builds_all_time_user
+      - name: ci_builds_all_time_event
       - name: ci_runners_all_time_event
       - name: auto_devops_enable_all_time_event
       - name: gitlab_shared_runners_enabled_instance_setting
@@ -1371,6 +1374,7 @@ models:
         description: Maximum active user count ever reported over the lifetime of the customer's subcription.
       - name: license_user_count
         description: Count of licensed users purchased with the customer's subcription.
+      - name: dim_usage_ping_id
       - name: ping_created_at
         description: The timestamp at which the usage ping was created.
       - name: uuid
@@ -1386,7 +1390,9 @@ models:
       - name: source_code_pushes_all_time
       - name: ci_pipelines_28_days_user
       - name: ci_internal_pipelines_28_days_user
-      - name: ci_builds_28_days_user_28_days_user
+      - name: ci_builds_28_days_user
+      - name: ci_builds_all_time_user
+      - name: ci_builds_all_time_event
       - name: ci_runners_all_time_event
       - name: auto_devops_enable_all_time_event
       - name: gitlab_shared_runners_enabled_instance_setting
