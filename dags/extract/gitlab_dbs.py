@@ -486,6 +486,8 @@ for source_name, config in config_dict.items():
                         **gitlab_pod_env_vars,
                         **config["env_vars"],
                         "TASK_INSTANCE": "{{ task_instance_key_str }}",
+                        "LAST_XMIN": "{{ task_instance.xcom_pull(include_prior_dates=True)['max_xmin'] }}",
+                        "task_id": task_identifier
                     },
                     arguments=[scd_cmd],
                     affinity=get_affinity(True),
