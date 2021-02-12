@@ -1888,20 +1888,6 @@ tables:
       FROM milestones
       WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
         AND '{EXECUTION_DATE}'::timestamp
-  namespace_onboarding_actions:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'namespace_onboarding_actions'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , namespace_id
-      , created_at
-      , action
-      FROM namespace_onboarding_actions
-      WHERE created_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
   namespace_root_storage_statistics:
     dbt_snapshots: true
     dbt_source_model: true
