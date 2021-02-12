@@ -205,8 +205,6 @@ sources:
         identifier: gitlab_db_merge_requests_closing_issues
       - name: milestones
         identifier: gitlab_db_milestones
-      - name: namespace_onboarding_actions
-        identifier: gitlab_db_namespace_onboarding_actions
       - name: namespace_root_storage_statistics
         identifier: gitlab_db_namespace_root_storage_statistics
       - name: namespace_statistics
