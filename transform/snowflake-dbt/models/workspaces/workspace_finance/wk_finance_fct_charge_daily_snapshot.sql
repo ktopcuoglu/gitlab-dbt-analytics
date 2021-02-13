@@ -60,8 +60,6 @@ WITH dim_date AS (
 
     SELECT *
     FROM {{ ref('zuora_rate_plan_charge_snapshots_source') }}
-    WHERE charge_type = 'Recurring'
-      AND mrr != 0 /* This excludes Education customers (charge name EDU or OSS) with free subscriptions */
 
 ), zuora_rate_plan_charge_spined AS (
 
@@ -98,25 +96,26 @@ WITH dim_date AS (
 
     SELECT
       zuora_rate_plan_charge_spined.snapshot_id,
-      zuora_account_spined.account_id                                           AS dim_billing_account_id,
-      zuora_account_spined.crm_id                                               AS dim_crm_account_id,
-      zuora_rate_plan_charge_spined.rate_plan_charge_id                         AS charge_id,
+      zuora_account_spined.account_id                                                   AS dim_billing_account_id,
+      zuora_account_spined.crm_id                                                       AS dim_crm_account_id,
+      zuora_rate_plan_charge_spined.rate_plan_charge_id                                 AS charge_id,
       zuora_rate_plan_charge_spined.rate_plan_charge_name,
-      zuora_subscription_spined.subscription_id                                 AS dim_subscription_id,
+      zuora_subscription_spined.subscription_id                                         AS dim_subscription_id,
       zuora_subscription_spined.subscription_name,
-      zuora_rate_plan_charge_spined.product_rate_plan_charge_id                 AS dim_product_details_id,
+      zuora_rate_plan_charge_spined.product_rate_plan_charge_id                         AS dim_product_details_id,
       zuora_rate_plan_charge_spined.mrr,
-      zuora_rate_plan_charge_spined.delta_mrc                                   AS delta_mrr,
+      zuora_rate_plan_charge_spined.delta_mrc                                           AS delta_mrr,
       zuora_rate_plan_charge_spined.unit_of_measure,
       zuora_rate_plan_charge_spined.quantity,
-      DATE_TRUNC('month', zuora_subscription_spined.subscription_start_date)    AS subscription_start_month,
-      DATE_TRUNC('month', zuora_subscription_spined.subscription_end_date)      AS subscription_end_month,
-      zuora_subscription_spined.subscription_start_date,
-      zuora_subscription_spined.subscription_end_date,
+      zuora_rate_plan_charge_spined.charge_type,
+      DATE_TRUNC('month', zuora_subscription_spined.subscription_start_date::DATE)      AS subscription_start_month,
+      DATE_TRUNC('month', zuora_subscription_spined.subscription_end_date::DATE)        AS subscription_end_month,
+      zuora_subscription_spined.subscription_start_date::DATE                           AS subscription_start_date,
+      zuora_subscription_spined.subscription_end_date::DATE                             AS subscription_end_date,
       zuora_rate_plan_charge_spined.effective_start_month,
       zuora_rate_plan_charge_spined.effective_end_month,
-      zuora_rate_plan_charge_spined.effective_start_date,
-      zuora_rate_plan_charge_spined.effective_end_date
+      zuora_rate_plan_charge_spined.effective_start_date::DATE                          AS effective_start_date,
+      zuora_rate_plan_charge_spined.effective_end_date::DATE                            AS effective_end_date
     FROM zuora_rate_plan_charge_spined
     INNER JOIN zuora_rate_plan_spined
       ON zuora_rate_plan_spined.rate_plan_id = zuora_rate_plan_charge_spined.rate_plan_id
@@ -148,6 +147,7 @@ WITH dim_date AS (
       effective_end_date,
       subscription_name,
       rate_plan_charge_name,
+      charge_type,
       SUM(delta_mrr)                                       AS delta_mrr,
       SUM(mrr)                                             AS mrr,
       SUM(delta_mrr)* 12                                   AS delta_arr,
@@ -157,7 +157,7 @@ WITH dim_date AS (
     FROM rate_plan_charge_filtered
     INNER JOIN dim_date
       ON rate_plan_charge_filtered.snapshot_id = dim_date.date_id
-    {{ dbt_utils.group_by(n=17) }}
+    {{ dbt_utils.group_by(n=18) }}
 
 ), final AS (
 
@@ -170,7 +170,6 @@ WITH dim_date AS (
       charge_id,
       dim_subscription_id,
       dim_product_details_id,
-      subscription_name,
       subscription_start_month,
       subscription_end_month,
       subscription_start_date,
@@ -179,6 +178,9 @@ WITH dim_date AS (
       effective_end_month,
       effective_start_date,
       effective_end_date,
+      subscription_name,
+      rate_plan_charge_name,
+      charge_type,
       delta_mrr,
       mrr,
       delta_arr,
