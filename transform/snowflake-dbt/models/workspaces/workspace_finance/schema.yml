@@ -1,0 +1,20 @@
+version: 2
+
+models:
+  - name: wk_finance_fct_mrr_daily_snapshots
+    description: Provides MRR snapshots on a daily basis.
+    columns:
+      - name: mrr_snapshot_id
+        description: A primary key for the daily MRR record at the subscription, charge_id grain.
+        tests:
+          - unique
+          - not_null
+
+  - name: wk_finance_fct_charge_daily_snapshots
+    description: Provides rate plan charge snapshots on a daily basis.
+    columns:
+      - name: mrr_snapshot_id
+        description: A primary key for daily rate_plan_charges at the subscription, charge_id grain.
+        tests:
+          - unique
+          - not_null
