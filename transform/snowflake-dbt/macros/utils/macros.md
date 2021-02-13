@@ -91,7 +91,7 @@ This macro includes the total counts for a given feature's usage cumulatively.
 {% enddocs %}
 
 {% docs null_negative_numbers %}
-This macro takes in either a number or varchar field, converts it to a number [(TRY_TO_NUMBER)](https://docs.snowflake.com/en/sql-reference/functions/try_to_decimal.html#), and then NULLs out the value if it is less than zero or shows the original value if it is greater than zero. 
+This macro takes in either a number or varchar field, converts it to a number, and then NULLs out the value if it is less than zero or shows the original value if it is greater than zero. 
 {% enddocs %}
 
 {% docs query_comment %}
