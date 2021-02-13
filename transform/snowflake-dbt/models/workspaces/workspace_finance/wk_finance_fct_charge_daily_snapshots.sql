@@ -1,6 +1,6 @@
 {{ config({
         "materialized": "incremental",
-        "unique_key": "mrr_snapshot_id",
+        "unique_key": "charge_snapshot_id",
         "tags": ["arr_snapshots"],
         "schema": "workspace_finance"
     })
@@ -131,7 +131,6 @@ WITH dim_date AS (
 ), charges_day_by_day AS (
 
     SELECT
-      dim_date.date_id,
       dim_date.date_actual                                 AS snapshot_date,
       snapshot_id,
       dim_billing_account_id,
@@ -158,23 +157,20 @@ WITH dim_date AS (
     FROM rate_plan_charge_filtered
     INNER JOIN dim_date
       ON rate_plan_charge_filtered.snapshot_id = dim_date.date_id
-    {{ dbt_utils.group_by(n=18) }}
+    {{ dbt_utils.group_by(n=17) }}
 
 ), final AS (
 
     SELECT
-      {{ dbt_utils.surrogate_key(['snapshot_id', 'date_id', 'subscription_name', 'dim_product_details_id', 'charge_id']) }}
-          AS mrr_snapshot_id,
-      {{ dbt_utils.surrogate_key(['date_id', 'subscription_name', 'dim_product_details_id', 'charge_id']) }}
-          AS mrr_id,
-      snapshot_id,
+      {{ dbt_utils.surrogate_key(['snapshot_id', 'subscription_name', 'dim_product_details_id', 'charge_id']) }}
+          AS charge_snapshot_id,
       snapshot_date,
       dim_billing_account_id,
       dim_crm_account_id,
       charge_id,
       dim_subscription_id,
-      subscription_name,
       dim_product_details_id,
+      subscription_name,
       subscription_start_month,
       subscription_end_month,
       subscription_start_date,
@@ -183,7 +179,9 @@ WITH dim_date AS (
       effective_end_month,
       effective_start_date,
       effective_end_date,
+      delta_mrr,
       mrr,
+      delta_arr,
       arr,
       quantity,
       unit_of_measure
