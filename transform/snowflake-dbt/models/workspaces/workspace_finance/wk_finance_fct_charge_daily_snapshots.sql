@@ -132,7 +132,7 @@ WITH dim_date AS (
 
     SELECT
       dim_date.date_id,
-      dim_date.day_actual                                  AS snapshot_date,
+      dim_date.date_actual                                 AS snapshot_date,
       snapshot_id,
       dim_billing_account_id,
       dim_crm_account_id,
