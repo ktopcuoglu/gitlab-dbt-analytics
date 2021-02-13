@@ -102,12 +102,18 @@ WITH dim_date AS (
       zuora_rate_plan_charge_spined.rate_plan_charge_name,
       zuora_subscription_spined.subscription_id                                         AS dim_subscription_id,
       zuora_subscription_spined.subscription_name,
+      zuora_subscription_spined.subscription_status,
+      zuora_subscription_spined.version                                                 AS subscription_version,
+      zuora_subscription_spined.current_term,
       zuora_rate_plan_charge_spined.product_rate_plan_charge_id                         AS dim_product_details_id,
       zuora_rate_plan_charge_spined.mrr,
       zuora_rate_plan_charge_spined.delta_mrc                                           AS delta_mrr,
       zuora_rate_plan_charge_spined.unit_of_measure,
       zuora_rate_plan_charge_spined.quantity,
       zuora_rate_plan_charge_spined.charge_type,
+      zuora_rate_plan_charge_spined.rate_plan_charge_number,
+      zuora_rate_plan_charge_spined.segment                                             AS charge_segment,
+      zuora_rate_plan_charge_spined.version                                             AS charge_version,
       DATE_TRUNC('month', zuora_subscription_spined.subscription_start_date::DATE)      AS subscription_start_month,
       DATE_TRUNC('month', zuora_subscription_spined.subscription_end_date::DATE)        AS subscription_end_month,
       zuora_subscription_spined.subscription_start_date::DATE                           AS subscription_start_date,
@@ -146,8 +152,14 @@ WITH dim_date AS (
       effective_start_date,
       effective_end_date,
       subscription_name,
+      subscription_status,
+      subscription_version,
+      current_term,
       rate_plan_charge_name,
       charge_type,
+      rate_plan_charge_number,
+      charge_segment,
+      charge_version,
       SUM(delta_mrr)                                       AS delta_mrr,
       SUM(mrr)                                             AS mrr,
       SUM(delta_mrr)* 12                                   AS delta_arr,
@@ -157,36 +169,14 @@ WITH dim_date AS (
     FROM rate_plan_charge_filtered
     INNER JOIN dim_date
       ON rate_plan_charge_filtered.snapshot_id = dim_date.date_id
-    {{ dbt_utils.group_by(n=18) }}
+    {{ dbt_utils.group_by(n=24) }}
 
 ), final AS (
 
     SELECT
       {{ dbt_utils.surrogate_key(['snapshot_id', 'subscription_name', 'dim_product_details_id', 'charge_id']) }}
           AS charge_snapshot_id,
-      snapshot_date,
-      dim_billing_account_id,
-      dim_crm_account_id,
-      charge_id,
-      dim_subscription_id,
-      dim_product_details_id,
-      subscription_start_month,
-      subscription_end_month,
-      subscription_start_date,
-      subscription_end_date,
-      effective_start_month,
-      effective_end_month,
-      effective_start_date,
-      effective_end_date,
-      subscription_name,
-      rate_plan_charge_name,
-      charge_type,
-      delta_mrr,
-      mrr,
-      delta_arr,
-      arr,
-      quantity,
-      unit_of_measure
+      charges_day_by_day.*
     FROM charges_day_by_day
 
 )
