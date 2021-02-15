@@ -45,45 +45,31 @@ WITH paid_subscriptions_monthly_usage_ping_optin AS (
 ), transformed_flattened AS (
   
     SELECT DISTINCT
-      path                                                                        AS metrics_path, 
-      IFF(edition='CE', edition, 'EE')                                            AS edition,
-      SPLIT_PART(path, '.', 1)                                                    AS main_json_name,
-      SPLIT_PART(path, '.', -1)                                                   AS feature_name,
-      REPLACE(path, '.', '_')                                                     AS full_metrics_path,
-      major_minor_version,
-      major_version,
-      minor_version,
-      COUNT(DISTINCT host_id || uuid) OVER (
-        PARTITION BY path, IFF(edition='CE', edition, 'EE'), major_minor_version) AS installations_with_counter,
-      COUNT(DISTINCT CASE WHEN TRY_TO_DECIMAL(value::TEXT) = 0 THEN host_id || uuid END) OVER (
-        PARTITION BY path, IFF(edition='CE', edition, 'EE'), major_minor_version) AS installations_with_zero_counter,
-      COUNT(DISTINCT host_id || uuid) OVER (
-        PARTITION BY IFF(edition='CE', edition, 'EE'), major_minor_version)       AS total_installations
+      path                                                                  AS metrics_path, 
+      IFF(edition='CE', edition, 'EE')                                      AS edition,
+      SPLIT_PART(path, '.', 1)                                              AS main_json_name,
+      SPLIT_PART(path, '.', -1)                                             AS feature_name,
+      REPLACE(path, '.', '_')                                               AS full_metrics_path,
+      FIRST_VALUE(major_minor_version ) OVER (PARTITION BY path, edition 
+                                                ORDER BY major_version ASC,
+                                                         minor_version ASC) AS first_version_with_counter
     FROM flattened_usage_data
-    WHERE TRY_TO_DECIMAL(value::TEXT) >= 0
+    WHERE TRY_TO_DECIMAL(value::TEXT) > 0
       -- Removing SaaS
       AND uuid <> 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f'
       -- Removing pre-releases
       AND version NOT LIKE '%pre'
   
-), counter_threshold AS (
-
-    SELECT *
-    FROM transformed_flattened
-    WHERE installations_with_counter / total_installations > 0.9
-      AND installations_with_zero_counter / total_installations < 0.99
-
 ), counter_data AS (
   
     SELECT DISTINCT
-      FIRST_VALUE(gitlab_releases.major_version) OVER (PARTITION BY counter_threshold.metrics_path, edition
-                                        ORDER BY release_date ASC)                                 AS major_version,
-      FIRST_VALUE(gitlab_releases.major_version) OVER (PARTITION BY counter_threshold.metrics_path, edition
-                                         ORDER BY release_date ASC)                                AS minor_version,
-      FIRST_VALUE(DATE_TRUNC('month', release_date)) OVER (PARTITION BY counter_threshold.metrics_path, edition 
-                                                            ORDER BY counter_threshold.major_version ASC, 
-                                                              counter_threshold.minor_version ASC) AS release_month,
-      counter_threshold.metrics_path,
+      FIRST_VALUE(major_version) OVER (PARTITION BY transformed_flattened.metrics_path, edition
+                                        ORDER BY release_date ASC)                           AS major_version,
+      FIRST_VALUE(minor_version) OVER (PARTITION BY transformed_flattened.metrics_path, edition
+                                         ORDER BY release_date ASC)                          AS minor_version,
+      FIRST_VALUE(DATE_TRUNC('month', release_date)) OVER (PARTITION BY transformed_flattened.metrics_path, edition ORDER BY
+                                 major_version ASC, minor_version ASC)                       AS release_month,
+      transformed_flattened.metrics_path,
       stage_name, 
       section_name,
       group_name,
@@ -92,12 +78,11 @@ WITH paid_subscriptions_monthly_usage_ping_optin AS (
       is_umau,
       is_paid_gmau,
       edition,
-      FIRST_VALUE(counter_threshold.major_minor_version) OVER (PARTITION BY counter_threshold.metrics_path, edition 
-                                              ORDER BY counter_threshold.major_version ASC, 
-                                                        counter_threshold.minor_version ASC)       AS first_version_with_counter
-    FROM counter_threshold
-    INNER JOIN section_metrics ON counter_threshold.metrics_path = section_metrics.metrics_path
-    LEFT JOIN gitlab_releases ON counter_threshold.major_minor_version = gitlab_releases.major_minor_version
+      FIRST_VALUE(major_minor_version) OVER (PARTITION BY transformed_flattened.metrics_path, edition 
+                                              ORDER BY major_version ASC, minor_version ASC) AS first_version_with_counter
+    FROM transformed_flattened
+    INNER JOIN section_metrics ON transformed_flattened.metrics_path = section_metrics.metrics_path
+    LEFT JOIN gitlab_releases ON transformed_flattened.first_version_with_counter = gitlab_releases.major_minor_version
     WHERE release_date < CURRENT_DATE
 
 ), date_spine AS (
@@ -136,4 +121,3 @@ WITH paid_subscriptions_monthly_usage_ping_optin AS (
   
 SELECT *
 FROM date_joined
-

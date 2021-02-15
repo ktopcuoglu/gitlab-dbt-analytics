@@ -31,13 +31,10 @@ WITH data AS (
       is_paid_gmau,
       is_umau,
       clean_metrics_name,
-<<<<<<< HEAD
       time_period,
       IFNULL(metric_value,0) AS weekly_metrics_value
-=======
       IFNULL(metric_value,0) AS weekly_metrics_value,
       has_timed_out
->>>>>>> master
     FROM data
 
 ), monthly AS (
