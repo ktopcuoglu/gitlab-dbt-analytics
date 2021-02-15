@@ -75,6 +75,9 @@ models:
         tests:
           - not_null
           - unique
+      - name: dim_crm_sales_hierarchy_sales_area_live_id
+        tests:
+          - unique
 
   - name: prep_crm_sales_representative
     description: '{{ doc("prep_crm_sales_representative") }}'
