@@ -2,7 +2,7 @@ version: 2
 
 models:
 
-  - name: wk_finance_fct_charge_daily_snapshot
+  - name: wk_finance_fct_recurring_charge_daily_snapshot
     description: Provides rate plan charge snapshots on a daily basis.
     columns:
       - name: charge_snapshot_id

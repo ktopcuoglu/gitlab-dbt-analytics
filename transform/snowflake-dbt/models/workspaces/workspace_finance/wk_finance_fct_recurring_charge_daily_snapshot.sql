@@ -60,6 +60,9 @@ WITH dim_date AS (
 
     SELECT *
     FROM {{ ref('zuora_rate_plan_charge_snapshots_source') }}
+    WHERE charge_type = 'Recurring'
+      AND mrr != 0 /* This excludes Education customers (charge name EDU or OSS) with free subscriptions */
+      AND effective_end_month > effective_start_month /* Only include charges that have effective dates in 2 or more months. This aligns to the ARR calc used in mart_arr */
 
 ), zuora_rate_plan_charge_spined AS (
 
@@ -76,7 +79,7 @@ WITH dim_date AS (
     SELECT *
     FROM {{ ref('zuora_subscription_snapshots_source') }}
     WHERE subscription_status NOT IN ('Draft', 'Expired')
-       AND is_deleted = FALSE
+      AND is_deleted = FALSE
       AND exclude_from_analysis IN ('False', '')
 
 ), zuora_subscription_spined AS (
@@ -178,6 +181,7 @@ WITH dim_date AS (
           AS charge_snapshot_id,
       charges_day_by_day.*
     FROM charges_day_by_day
+    ORDER BY snapshot_date DESC, subscription_name, rate_plan_charge_name
 
 )
 
