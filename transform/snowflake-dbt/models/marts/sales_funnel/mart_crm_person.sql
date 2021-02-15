@@ -64,7 +64,7 @@ WITH dim_crm_person AS (
     LEFT JOIN dim_crm_person
       ON fct_crm_person.dim_crm_person_id = dim_crm_person.dim_crm_person_id
     LEFT JOIN dim_sales_segment
-      ON fct_crm_person.dim_sales_segment_id = dim_sales_segment.dim_sales_segment_id
+      ON fct_crm_person.dim_account_sales_segment_id = dim_sales_segment.dim_sales_segment_id
     LEFT JOIN dim_marketing_channel
       ON fct_crm_person.dim_marketing_channel_id = dim_marketing_channel.dim_marketing_channel_id
 
