@@ -100,14 +100,23 @@ models:
         tests:
           - not_null
           - unique
+        tags: ["tdf", "common", "gainsight"]
       - name: product_rate_plan_name
         description: "rate plan name from Zuora product source"
-      - name: product_tier
-        description: "Product pricing tiers for both SaaS and Self-Managed customers (https://about.gitlab.com/handbook/marketing/strategic-marketing/tiers/)"
+      - name: product_tier_historical
+        description: Product pricing tiers prior to [tier renaming](https://gitlab-com.gitlab.io/packaging-and-pricing/pricing-handbook/handbook/renaming_tiers/) (early 2021).
+        tests:
+          - not_null
+        tags: ["tdf", "common", "gainsight"]
       - name: product_delivery_type
         description: "How product is delivered to customer; SaaS or Self-Managed (or Other)"
       - name: product_ranking
         description: "Numeric product pricing tier, independent of delivery type"
+      - name: product_tier
+        description: Product [pricing tiers](https://about.gitlab.com/handbook/marketing/strategic-marketing/tiers/) for both SaaS and Self-Managed customers. Includes the mapping from SaaS - Silver to SaaS - Premium, and from SaaS - Gold to SaaS - Ultimate. 
+        tests:
+          - not_null
+        tags: ["tdf", "common", "gainsight"]
 
   - name: map_namespace_internal
     description: '{{ doc("map_namespace_internal") }}'
@@ -125,7 +134,7 @@ models:
         description: "GitLab Team Member Employee ID as shown in BambooHR. Can be used to join to employee_directory_analysis."
       - name: bamboohr_full_name
         description: "GitLab Team Member Full Name as shown in BambooHR"
-      - name: bamboo_hr_gitlab_email
+      - name: bamboohr_gitlab_email
         description: "GitLab Team Member GitLab Email as shown in BambooHR. Can be used to join to employee_directory_analysis."
       - name: gitlab_dotcom_user_id
         description: "GitLab Team Member GitLab.com SaaS Database user_id. Can be used to join onto any user id field in the gitlab_dotcom data set "

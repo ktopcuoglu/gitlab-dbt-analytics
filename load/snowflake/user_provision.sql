@@ -34,7 +34,7 @@ GRANT ROLE identifier($username) to user identifier($username);
 set prod_db = (select $username || '_PROD');
 set prep_db = (select $username || '_PREP');
 
-user role sysadmin;
+use role sysadmin;
 
 CREATE DATABASE identifier($prod_db);
 GRANT OWNERSHIP ON DATABASE identifier($prod_db) to role identifier($username);

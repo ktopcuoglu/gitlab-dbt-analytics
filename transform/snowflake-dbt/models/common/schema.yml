@@ -18,6 +18,7 @@ models:
       - name: order_id
       - name: namespace_id_order
       - name: subscription_id_order
+      - name: ultimate_parent_namespace_id
       - name: namespace_type
       - name: dim_product_tier_id_namespace
       - name: product_tier_name_namespace
@@ -41,7 +42,65 @@ models:
       - name: dim_billing_account_id
       - name: dim_crm_account_id
       - name: count_of_tiers_per_subscription
+      - name: product_rate_plan_id_subscription
       - name: namespace_order_subscription_match_status
+
+
+  - name: bdg_self_managed_order_subscription_active
+    description: '{{ doc("bdg_self_managed_order_subscription_active") }}'
+    columns:
+      - name: dim_subscription_id
+      - name: order_id
+      - name: namespace_id_order
+      - name: subscription_id_order
+      - name: customer_id
+      - name: dim_product_tier_id_with_trial
+      - name: product_delivery_type_with_trial
+      - name: product_tier_name_with_trial
+      - name: dim_product_tier_id_order
+      - name: product_delivery_type_order
+      - name: product_tier_name_order
+      - name: order_start_date
+      - name: order_end_date
+      - name: order_is_trial
+      - name: product_tier_name_subscription
+      - name: dim_product_tier_id_subscription
+      - name: dim_subscription_id_original
+      - name: dim_subscription_id_previous
+      - name: dim_billing_account_id
+      - name: dim_crm_account_id
+      - name: count_of_tiers_per_subscription
+      - name: product_rate_plan_id_subscription
+
+  - name: bdg_subscription_product_rate_plan
+    description: '{{ doc("bdg_subscription_product_rate_plan") }}'
+    columns:
+      - name: dim_subscription_id
+        tests:
+          - not_null
+        tags: ["tdf", "common", "gainsight"]
+      - name: dim_subscription_id_original
+        tests:
+          - not_null
+        tags: ["tdf", "common", "gainsight"]
+      - name: dim_billing_account_id
+        tests:
+          - not_null
+        tags: ["tdf", "common", "gainsight"]
+      - name: subscription_name
+      - name: subscription_name_slugify
+      - name: subscription_status
+      - name: subscription_start_date
+      - name: subscription_end_date
+      - name: cancelled_date
+      - name: term_end_date
+      - name: term_start_date
+      - name: dim_product_detail_id
+      - name: product_rate_plan_id
+      - name: product_id
+      - name: dim_product_tier_id
+      - name: product_rate_plan_charge_name
+      - name: product_delivery_type
 
   - name: dim_billing_account
     description: '{{ doc("dim_billing_account") }}'
@@ -152,7 +211,8 @@ models:
               field: dim_crm_sales_rep_id
         tags: ["tdf", "opportunity", "common", "sales_funnel"]
       - name: lead_source
-      - name: merged_opportunity_id
+      - name: merged_crm_opportunity_id
+        description: If the closed lost reason is that the Opp was merged into another opportunity than this field will be the id for that opportunity record.
       - name: net_new_source_categories
       - name: account_owner_team_stamped
       - name: primary_campaign_source_id
@@ -193,7 +253,6 @@ models:
       - name: risk_reasons
       - name: tam_notes
 
-
   - name: dim_crm_person
     description: '{{ doc("dim_crm_person") }}'
     columns:
@@ -223,6 +282,15 @@ models:
           - not_null
           - unique
         tags: ["tdf", "common", "sales_funnel"]
+
+  - name: dim_crm_touchpoint
+    description: '{{ doc("dim_crm_touchpoint") }}'
+    columns:
+      - name: dim_crm_touchpoint_id
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "common"]
 
   - name: dim_date
     description: '{{ doc("dim_date") }}'
@@ -515,15 +583,17 @@ models:
         tests:
           - unique
           - not_null
-        tags: [ "tdf", "common" ]
+        tags: [ "tdf", "common", "gainsight"]
       - name: dim_product_tier_id
         description: The unique ID of a product tier determined in dim_product_tier.
         tests:
           - not_null
+        tags: [ "tdf", "common", "gainsight"]
       - name: product_id
         description: The ID of the product that contains the product rate plan.
         tests:
           - not_null
+        tags: [ "tdf", "common", "gainsight"]
       - name: product_name
         description: The name of the product
       - name: is_reporter_license
@@ -538,12 +608,20 @@ models:
         description: The name of the product rate plan charge
       - name: product_sku
         description: The unique SKU for the product
+      - name: product_tier_historical
+        description: Product pricing tiers prior to [tier renaming](https://gitlab-com.gitlab.io/packaging-and-pricing/pricing-handbook/handbook/renaming_tiers/) (early 2021).
+      - name: product_tier_historical_short
+        description: Pulls the product tier from `product_tier_historical` with the delivery type removed
       - name: product_tier_name
-        description: Name of the [GitLab tier](https://about.gitlab.com/handbook/marketing/strategic-marketing/tiers/) associated with the product.
+        description: Product [pricing tiers](https://about.gitlab.com/handbook/marketing/strategic-marketing/tiers/) for both SaaS and Self-Managed customers. Includes the mapping from SaaS - Silver to SaaS - Premium, and from SaaS - Gold to SaaS - Ultimate.
+      - name: product_tier_name_short
+        description: Pulls the product tier from `product_tier_name` with the delivery type removed
       - name: effective_start_date
         description: The date when the product becomes available and can be subscribed to
       - name: effective_end_date
         description: The date when the product expires and can't be subscribed to anymore
+      - name: is_oss_or_edu_rate_plan
+        description: Flag for rate plans containing OSS or EDU
 
   - name: dim_product_tier
     description: '{{ doc("dim_product_tier") }}'
@@ -553,13 +631,22 @@ models:
         tests:
           - unique
           - not_null
-        tags: [ "tdf", "common" ]
-      - name: product_tier_name
-        description: Name of the [GitLab tier](https://about.gitlab.com/handbook/marketing/strategic-marketing/tiers/) associated with the product.
-        tags: [ "tdf", "common" ]
+        tags: [ "tdf", "common", "gainsight"]
+      - name: product_tier_historical
+        description: Product pricing tiers prior to [tier renaming](https://gitlab-com.gitlab.io/packaging-and-pricing/pricing-handbook/handbook/renaming_tiers/) (early 2021).
+        tags: [ "tdf", "common", "gainsight"]
         tests:
           - not_null
           - unique
+      - name: product_tier_historical_short
+        description: Pulls the product tier from `product_tier_historical` with the delivery type removed
+      - name: product_tier_name
+        description: Name of the [GitLab tier](https://about.gitlab.com/handbook/marketing/strategic-marketing/tiers/) associated with the product.
+        tags: [ "tdf", "common", "gainsight"]
+        tests:
+          - not_null
+      - name: product_tier_name_short
+        description: Pulls the product tier from `product_tier_name` with the delivery type removed.
       - name: product_delivery_type
         description: How a product is delivered to the customer; SaaS or Self-Managed (or Other).
       - name: product_ranking
@@ -629,6 +716,7 @@ models:
         tests:
           - not_null
           - unique
+        tags: ["tdf", "common", "gainsight"]
       - name: dim_crm_account_id
         description: account id from SFDC identifing the customer
       - name: dim_billing_account_id
@@ -636,6 +724,9 @@ models:
       - name: dim_crm_person_id_invoice_owner
       - name: dim_crm_opportunity_id
       - name: dim_subscription_id_original
+        tests:
+          - not_null
+        tags: ["tdf", "common", "gainsight"]
       - name: dim_subscription_id_previous
       - name: amendment_id
       - name: subscription_name_slugify
@@ -646,6 +737,7 @@ models:
           - not_null
           - accepted_values:
               values: ['Active', 'Cancelled', 'Draft', 'Expired']
+        tags: ["tdf", "common", "gainsight"]
       - name: subscription_version
         description: The version number of the subscription
       - name: is_auto_renew
@@ -672,6 +764,7 @@ models:
           - not_null
           - accepted_values:
                   values: ['Sales-Assisted', 'Self-Service']
+        tags: ["tdf", "common", "gainsight"]
 
   - name: dim_subscriptions_snapshots
     description: Daily snapshot of subscriptions starting from 2020-03-01. Fiel
@@ -748,6 +841,24 @@ models:
       - name: charge_type
         description: Specifies the type of charge
 
+  - name: fct_crm_attribution_touchpoint
+    description: '{{ doc("fct_crm_attribution_touchpoint") }}'
+    columns:
+      - name: dim_crm_touchpoint_id
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "common"]
+
+  - name: fct_crm_touchpoint
+    description: '{{ doc("fct_crm_touchpoint") }}'
+    columns:
+      - name: dim_crm_touchpoint_id
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "common"]
+
   - name: dim_usage_pings
     description: '{{ doc("dim_usage_pings") }}'
     columns:
@@ -755,6 +866,7 @@ models:
         tests:
           - not_null
           - unique
+        tags: ["tdf", "common", "gainsight"]
       - name: uuid
         description: concatenate this field with host_id for a unique identifier for instances. See https://gitlab.com/gitlab-data/analytics/-/issues/6413#note_428426837. Business Process Issue - https://gitlab.com/gitlab-data/analytics/-/issues/6413#note_429177832 and https://gitlab.com/gitlab-data/analytics/-/issues/6560#note_428035384 and https://gitlab.com/gitlab-org/gitlab/-/merge_requests/44972
       - name: host_id
@@ -842,82 +954,111 @@ models:
           - unique
           - not_null
         tags: ["tdf", "common", "sales_funnel"]
-      - name: merged_crm_opportunity_id
       - name: dim_crm_account_id
+        description: join key for dim_crm_account from the accountid field in Salesforce
+        tests:
+          - relationships:
+              to: ref('dim_crm_account')
+              field: crm_account_id
+        tags: ["tdf", "common", "sales_funnel"]
       - name: dim_crm_person_id
         description: A surrogate key for use when joining to `dim_crm_person`. Created from the contact_id where there is a contact and a lead_id where there isn't.
       - name: sfdc_contact_id
+        description: the contact id from the fist contact by opportunity contact role created date for the given opportunity record
       - name: created_date
+        description: timestamp for the opportunity record creation in Salesforce
       - name: created_date_id
+        description: a foreign key generated from `get_date_id` macro with created_date the for use with dim_date
       - name: sales_accepted_date
         description: The sales_accepted_date from the sfdc_opportunity. Note that there can be opportunities with sales accepted dates that aren't sales accepted opportunities. This is indicated with the is_sao and is_sdr_sao booleans
       - name: sales_accepted_date_id
+        description: a foreign key generated from `get_date_id` macro with sales_accepted_date the for use with dim_date
       - name: close_date
+        description: a date entered by the sales team that is the expected close date for open opportunities and the actual close date for closed opportunities.
       - name: close_date_id
+        description: a foreign key generated from `get_date_id` macro with close_date the for use with dim_date
       - name: stage_0_pending_acceptance_date
+        description: a Salesforce [workflow generated](https://gitlab.my.salesforce.com/04Y4M000000g0GE) date
       - name: stage_0_pending_acceptance_date_id
+        description: a foreign key generated from `get_date_id` macro with stage_0_pending_acceptance_date the for use with dim_date
       - name: stage_1_discovery_date
+        description: a Salesforce [workflow generated](https://gitlab.my.salesforce.com/01Q4M000000kSb5) date
       - name: stage_1_discovery_date_id
+        description: a foreign key generated from `get_date_id` macro with D the for use with dim_date
       - name: stage_2_scoping_date
+        description: a Salesforce [workflow generated](https://gitlab.my.salesforce.com/01Q4M000000kSb6) date
       - name: stage_2_scoping_date_id
+        description: a foreign key generated from `get_date_id` macro with stage_1_discovery_date the for use with dim_date
       - name: stage_3_technical_evaluation_date
+        description: a Salesforce [workflow generated](https://gitlab.my.salesforce.com/01Q4M000000kSb7) date
       - name: stage_3_technical_evaluation_date_id
+        description: a foreign key generated from `get_date_id` macro with stage_3_technical_evaluation_date the for use with dim_date
       - name: stage_4_proposal_date
+        description: a Salesforce [workflow generated](https://gitlab.my.salesforce.com/01Q4M000000kSb8) date
       - name: stage_4_proposal_date_id
+        description: a foreign key generated from `get_date_id` macro with stage_4_proposal_date the for use with dim_date
       - name: stage_5_negotiating_date
+        description: a Salesforce [workflow generated](https://gitlab.my.salesforce.com/01Q4M000000kSb9) date
       - name: stage_5_negotiating_date_id
+        description: a foreign key generated from `get_date_id` macro with stage_5_negotiating_date the for use with dim_date
       - name: stage_6_closed_won_date
+        description: a Salesforce [workflow generated](https://gitlab.my.salesforce.com/01Q4M000000kSbE) date
       - name: stage_6_closed_won_date_id
+        description: a foreign key generated from `get_date_id` macro with stage_6_closed_won_date the for use with dim_date
       - name: stage_6_closed_lost_date
+        description: a Salesforce [workflow generated](https://gitlab.my.salesforce.com/01Q4M000000kSbD) date
       - name: stage_6_closed_lost_date_id
+        description: a foreign key generated from `get_date_id` macro with stage_6_closed_lost_date the for use with dim_date
       - name: days_in_0_pending_acceptance
+        description: a Salesforce [formula field](https://gitlab.my.salesforce.com/00N6100000HlNEI)
       - name: days_in_1_discovery
+        description: a Salesforce [formula field](https://gitlab.my.salesforce.com/00N6100000HlNES)
       - name: days_in_2_scoping
+        description: a Salesforce [formula field](https://gitlab.my.salesforce.com/00N6100000HlNEX)
       - name: days_in_3_technical_evaluation
+        description: a Salesforce [formula field](https://gitlab.my.salesforce.com/00N6100000HlNEc)
       - name: days_in_4_proposal
+        description: a Salesforce [formula field](https://gitlab.my.salesforce.com/00N6100000HlNEh)
       - name: days_in_5_negotiating
+        description: a Salesforce [formula field](https://gitlab.my.salesforce.com/00N6100000HlNEm)
       - name: days_in_sao
+        description: a Salesforce [formula field](https://gitlab.my.salesforce.com/00N4M00000Ib8xV)
       - name: closed_buckets
+        description: a case generated column that uses the days_in_sao column. See SQL for this model.
       - name: subscription_start_date
+        description: The Start Date from the Zuora quote that is either Primary or was Sent to Zuora.
       - name: subscription_end_date
-      - name: dim_crm_sales_rep_id
-      - name: dim_order_type_id
-      - name: dim_opportunity_source_id
-      - name: dim_purchase_channel_id
-      - name: dim_sales_segment_id
-      - name: dim_geo_region_id
-      - name: dim_geo_sub_region_id
-      - name: dim_geo_area_id
-      - name: dim_sales_territory_id
-      - name: dim_industry_id
-      - name: dim_crm_sales_hierarchy_sales_segment_stamped_id
-      - name: dim_crm_sales_hierarchy_location_region_stamped_id
-      - name: dim_crm_sales_hierarchy_sales_region_stamped_id
-      - name: dim_crm_sales_hierarchy_sales_area_stamped_id
-      - name: dim_crm_sales_hierarchy_sales_segment_live_id
-      - name: dim_crm_sales_hierarchy_location_region_live_id
-      - name: dim_crm_sales_hierarchy_sales_region_live_id
-      - name: dim_crm_sales_hierarchy_sales_area_live_id
+        description: The End Date from the Zuora quote that is either Primary or was Sent to Zuora.
       - name: is_closed
+        description: a Salesforce boolean field which is true when the Opportunity stage is a closed stage
       - name: is_won
+        description: a Salesforce boolean field which is true when the Opportunity stage is a won stage
       - name: is_refund
+        description: a Salesforce [formula field](https://gitlab.my.salesforce.com/00N6100000IOu5u)
       - name: is_downgrade
+        description: a Salesforce [formula field](https://gitlab.my.salesforce.com/00N6100000IOu5y)
       - name: is_swing_deal
+        description: a checkbox used in salesforce with the help text "A swing deal is an opportunity with a Close Date in a future period that has the potential to be pulled into the current period."
       - name: is_edu_oss
+        description: a Salesforce [formula field](https://gitlab.my.salesforce.com/00N6100000IOu68)
       - name: is_web_portal_purchase
       - name: is_sao
         description: a boolean field created in the warehouse to flag Sales Accepted Opportunities. This field should be deprecated once sales accepted is in a more stable and consistent state in salesforce.
       - name: is_sdr_sao
         description: a boolean field created in the warehouse to flag Sales Accepted Opportunities from [Sales Development Reps](https://about.gitlab.com/handbook/marketing/revenue-marketing/sdr/). This field should be deprecated once sales accepted is in a more stable and consistent state in salesforce.
       - name: iacv
+        description: a Salesforce [formula field](https://gitlab.my.salesforce.com/00N6100000HJpyB) with the help text "For New Business or Add On, takes all first year recurring revenue + true ups. If Renewal, the recurring revenue + true ups minus the Renewal ACV. If the Renewal ACV is null, then the Incremental ACV is null"
       - name: net_arr
+        description: a Salesforce [formula field](https://gitlab.my.salesforce.com/00N4M00000Ib5n8) which is marked as [WIP]
       - name: amount
+        description: from salesforce "This is the same as Total Contract Value. It takes the value of the entire agreement"
       - name: recurring_amount
       - name: true_up_amount
       - name: proserv_amount
       - name: other_non_recurring_amount
       - name: arr_basis
       - name: arr
+        description: a WIP Salesforce [formula field](https://gitlab.my.salesforce.com/00N4M00000IbIE2) that returns 0
 
   - name: fct_crm_person
     description: '{{ doc("fct_crm_person") }}'
@@ -928,8 +1069,19 @@ models:
           - unique
           - not_null
         tags: ["tdf", "common", "sales_funnel"]
+      - name: sfdc_record_id
+        description: the record id from Salesforce whether a contactId or a leadId
       - name: bizible_person_id
         description: The unique identifier assigned to a lead or contact in Bizible used to join to touchpoint and attribution data.
+      - name: dim_crm_sales_rep_id
+        description: the ownerid from the lead or contact respectively for joining on dim_crm_sales_rep
+      - name: dim_crm_account_id
+        description: the accountId from contacts and lean_data_matched_account from leads to join on dim_crm_account
+        tests:
+          - relationships:
+              to: ref('dim_crm_account')
+              field: crm_account_id
+        tags: ["tdf", "common", "sales_funnel"]      
       - name: mql_date_first
         description: The first date a lead or contact was assigned a Marketo Qualified Lead Date.
       - name: mql_date_latest
@@ -945,12 +1097,32 @@ models:
         tests:
           - not_null
           - unique
+        tags: ["tdf", "common", "mrr"]
       - name: dim_date_id
         description: The identifier of date month in dim_date
+      - name: dim_billing_account_id
+        description: join key for dim_billing_account
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_billing_account')
+              field: dim_billing_account_id
+        tags: ["tdf", "common", "mrr"]
+      - name: dim_crm_account_id
+        description: join key for dim_crm_account
+        tests:
+          - relationships:
+              to: ref('dim_crm_account')
+              field: crm_account_id
+        tags: ["tdf", "common", "mrr"]
       - name: dim_subscription_id
         description: The identifier of subscription in dim_subscription table
         tests:
           - not_null
+          - relationships:
+              to: ref('dim_subscription')
+              field: dim_subscription_id
+        tags: ["tdf", "common", "mrr"]
       - name: dim_product_detail_id
         description: The identifier of product details in dim_product_detail
         tests:
@@ -1012,72 +1184,241 @@ models:
         description: Month in which the members counts are being reported snapshotted. Always current month until historical months are available in a future version of this table.
         tests:
           - not_null
-      - name: namespace_id
+        tags: ["tdf", "common", "gainsight"]
+      - name: dim_namespace_id
         tests:
           - not_null
           - unique
+        tags: ["tdf", "common", "gainsight"]
       - name: ultimate_parent_id
         tests:
           - not_null
           - unique
+        tags: ["tdf", "common", "gainsight"]
       - name: ultimate_parent_plan_id
         description: The **plan_id** associated with the namespace's subscription. This can be inherited from the namespaces's ultimate parent.
         tests:
           - not_null
           - accepted_values:
               values: ['2', '3', '4', '34', '67', 'Trial']
+        tags: ["tdf", "common", "gainsight"]
       - name: ultimate_parent_plan_title
         description: Whether or not the namespace associated with the project is subscribed to a paid plan. This can be inherited from the namespaces's ultimate parent.
         tests:
           - not_null
+        tags: ["tdf", "common", "gainsight"]
       - name: total_member_bot_requested_count
         description: Count of all users with access, or awaiting access to the namespace. Includes active, deactivated, blocked, and bot users.
         tests:
           - not_null
+        tags: ["tdf", "common", "gainsight"]
       - name: active_member_count
         description: Count of _non-bot_ members that are active and not awaiting access approval to the namespace.
         tests:
           - not_null
-      - name: billabe_member_count
+        tags: ["tdf", "common", "gainsight"]
+      - name: billable_member_count
         description: Count of active, _non-guest_ members if namespace is _gold_ tier. Count of active members otherwise.
         tests:
           - not_null
+        tags: ["tdf", "common", "gainsight"]
       - name: guest_member_count
         description: Count of members with lowest (guest) level access to the namespace.
         tests:
           - not_null
+        tags: ["tdf", "common", "gainsight"]
       - name: deactivated_member_count
         description: Count of members that have been deactivated by a GitLab administrator.
         tests:
           - not_null
+        tags: ["tdf", "common", "gainsight"]
       - name: blocked_member_count
         description: Count of members that have been blocked by a GitLab administrator.
         tests:
           - not_null
+        tags: ["tdf", "common", "gainsight"]
       - name: project_bot_count
         description: Count of [project bot users](https://docs.gitlab.com/ee/user/project/settings/project_access_tokens.html#project-bot-users) that inherited access to the namespace through project-group links.
         tests:
           - not_null
+        tags: ["tdf", "common", "gainsight"]
       - name: gitlab_bot_count
         description: Count of [GitLab bots](https://docs.gitlab.com/ee/user/project/service_desk.html#support-bot-user) with access to the namespace.
         tests:
           - not_null
+        tags: ["tdf", "common", "gainsight"]
       - name: total_member_count
         description: Total count of active, deactivated, and blocked (non-bot) members with access to the namespace.
         tests:
           - not_null
+        tags: ["tdf", "common", "gainsight"]
       - name: total_bot_count
         description: Total count of GitLab bots and project bot users.
         tests:
           - not_null
+        tags: ["tdf", "common", "gainsight"]
       - name: total_member_bot_count
         description: Total member count + total bot count.
         tests:
           - not_null
+        tags: ["tdf", "common", "gainsight"]
       - name: member_awaiting_access_count
         description: Count of users waiting to be granted membership to the namespace.
         tests:
           - not_null
+        tags: ["tdf", "common", "gainsight"]
+
+  - name: fct_product_usage_wave_1_3_metrics_latest
+    description: '{{ doc("fct_product_usage_wave_1_3_metrics_latest") }}'
+    columns:
+      - name: dim_subscription_id
+        tests:
+          - not_null
+        tags: ["tdf", "common", "gainsight"]
+      - name: dim_subscription_id_original
+        tests:
+          - not_null
+        tags: ["tdf", "common", "gainsight"]
+      - name: dim_billing_account_id
+        tests:
+          - not_null
+        tags: ["tdf", "common", "gainsight"]
+      - name: seat_link_report_date
+        description: Day on which Seat Link usage data is reported. Should always be last day of month for historical months.
+      - name: license_utilization
+        description: Number of activated seats (`active_user_count`) divided by the number of purchased seats (`license_user_count`) on the subscription.
+      - name: active_user_count
+        description: Count of active users currently on the customer's subcription. It is possible for a customer to opt out of sending this information to GitLab.
+      - name: max_historical_user_count
+        description: Maximum active user count ever reported over the lifetime of the customer's subcription.
+      - name: license_user_count
+        description: Count of licensed users purchased with the customer's subcription.
+      - name: ping_created_at
+        description: The timestamp at which the usage ping was created.
+      - name: uuid
+      - name: hostname
+      - name: dim_license_id
+      - name: license_md5
+      - name: cleaned_version
+      - name: umau_28_days_user
+      - name: action_monthly_active_users_project_repo_28_days_user
+      - name: merge_requests_28_days_user
+      - name: projects_with_repositories_enabled_28_days_user
+      - name: commit_comment_all_time
+      - name: source_code_pushes_all_time
+      - name: ci_pipelines_28_days_user
+      - name: ci_internal_pipelines_28_days_user
+      - name: ci_builds_28_days_user_28_days_user
+      - name: ci_runners_all_time_event
+      - name: auto_devops_enable_all_time_event
+      - name: gitlab_shared_runners_enabled_instance_setting
+      - name: container_registry_enabled_instance_setting
+      - name: template_repositories_all_time_event
+      - name: ci_pipeline_config_repository_28_days_user
+      - name: user_unique_users_all_secure_scanners_28_days_user
+      - name: user_container_scanning_job_28_days_users
+      - name: user_sast_jobs_28_days_user
+      - name: user_dast_jobs_28_days_user
+      - name: user_dependency_scanning_jobs_28_days_user
+      - name: user_license_management_jobs_28_days_user
+      - name: user_secret_detection_jobs_28_days_user
+      - name: object_store_packages_enabled_instance_setting
+      - name: projects_with_packages_all_time_event
+      - name: projects_with_packages_28_days_users
+      - name: deployments_28_days_users
+      - name: releases_28_days_users
+      - name: epics_28_days_users
+      - name: issues_28_days_users
+      - name: instance_user_count_not_aligned
+      - name: historical_max_users_not_aligned
+      - name: is_seat_link_subscription_in_zuora
+        description: Flags rows where the `zuora_subscription_id` from `customers_db_orders_source` is not found in `dim_subscription`.
+      - name: is_seat_link_rate_plan_in_zuora
+        description: Flags rows where the `product_rate_plan_id` from `customers_db_orders_source` is not found in `dim_product_tier`.
+      - name: is_seat_link_active_user_count_available
+        description: Flags rows where `active_user_count` is NULL in source.
+      - name: is_usage_ping_license_mapped_to_subscription
+      - name: is_usage_ping_license_subscription_id_valid
+      - name: is_data_in_subscription_month
+        description: Flags rows where there is Usage Ping data and/or Seat Link data present
+
+  - name: fct_product_usage_wave_1_3_metrics_monthly
+    description: '{{ doc("fct_product_usage_wave_1_3_metrics_monthly") }}'
+    columns:
+      - name: dim_subscription_id
+        tests:
+          - not_null
+        tags: ["tdf", "common", "gainsight"]
+      - name: dim_subscription_id_original
+        tests:
+          - not_null
+        tags: ["tdf", "common", "gainsight"]
+      - name: dim_billing_account_id
+        tests:
+          - not_null
+        tags: ["tdf", "common", "gainsight"]
+      - name: snapshot_month
+        tests:
+          - not_null
+        tags: ["tdf", "common", "gainsight"]
+      - name: seat_link_report_date
+        description: Day on which Seat Link usage data is reported. Should always be last day of month for historical months.
+      - name: license_utilization
+        description: Number of activated seats (`active_user_count`) divided by the number of purchased seats (`license_user_count`) on the subscription.
+      - name: active_user_count
+        description: Count of active users currently on the customer's subcription. It is possible for a customer to opt out of sending this information to GitLab.
+      - name: max_historical_user_count
+        description: Maximum active user count ever reported over the lifetime of the customer's subcription.
+      - name: license_user_count
+        description: Count of licensed users purchased with the customer's subcription.
+      - name: ping_created_at
+        description: The timestamp at which the usage ping was created.
+      - name: uuid
+      - name: hostname
+      - name: dim_license_id
+      - name: license_md5
+      - name: cleaned_version
+      - name: umau_28_days_user
+      - name: action_monthly_active_users_project_repo_28_days_user
+      - name: merge_requests_28_days_user
+      - name: projects_with_repositories_enabled_28_days_user
+      - name: commit_comment_all_time
+      - name: source_code_pushes_all_time
+      - name: ci_pipelines_28_days_user
+      - name: ci_internal_pipelines_28_days_user
+      - name: ci_builds_28_days_user_28_days_user
+      - name: ci_runners_all_time_event
+      - name: auto_devops_enable_all_time_event
+      - name: gitlab_shared_runners_enabled_instance_setting
+      - name: container_registry_enabled_instance_setting
+      - name: template_repositories_all_time_event
+      - name: ci_pipeline_config_repository_28_days_user
+      - name: user_unique_users_all_secure_scanners_28_days_user
+      - name: user_container_scanning_job_28_days_users
+      - name: user_sast_jobs_28_days_user
+      - name: user_dast_jobs_28_days_user
+      - name: user_dependency_scanning_jobs_28_days_user
+      - name: user_license_management_jobs_28_days_user
+      - name: user_secret_detection_jobs_28_days_user
+      - name: object_store_packages_enabled_instance_setting
+      - name: projects_with_packages_all_time_event
+      - name: projects_with_packages_28_days_users
+      - name: deployments_28_days_users
+      - name: releases_28_days_users
+      - name: epics_28_days_users
+      - name: issues_28_days_users
+      - name: instance_user_count_not_aligned
+      - name: historical_max_users_not_aligned
+      - name: is_seat_link_subscription_in_zuora
+        description: Flags rows where the `zuora_subscription_id` from `customers_db_orders_source` is not found in `dim_subscription`.
+      - name: is_seat_link_rate_plan_in_zuora
+        description: Flags rows where the `product_rate_plan_id` from `customers_db_orders_source` is not found in `dim_product_tier`.
+      - name: is_seat_link_active_user_count_available
+        description: Flags rows where `active_user_count` is NULL in source.
+      - name: is_usage_ping_license_mapped_to_subscription
+      - name: is_usage_ping_license_subscription_id_valid
+      - name: is_data_in_subscription_month
+        description: Flags rows where there is Usage Ping data and/or Seat Link data present
 
   - name: fct_quote_item
     description: '{{ doc("fct_quote_item") }}'
@@ -1103,7 +1444,6 @@ models:
         tests:
           - not_null
         tags: ["tdf", "common", "sales_funnel"]
-
       - name: sales_funnel_target_id
         tests:
           - not_null
@@ -1117,14 +1457,17 @@ models:
         description: Month in which CI Minutes usage data was snapshotted, formatted as `20YY-MM-01`.
         tests:
           - not_null
-      - name: namespace_id
+        tags: ["tdf", "common", "gainsight"]
+      - name: dim_namespace_id
         description: ID of the namespace responsible for the CI Minutes usage.
         tests:
           - not_null
+        tags: ["tdf", "common", "gainsight"]
       - name: ultimate_parent_namespace_id
         description: ID of the namespace's ultimate parent namespace.
         tests:
           - not_null
+        tags: ["tdf", "common", "gainsight"]
       - name: namespace_type
         description: Group, Individual, or NULL. For example https://gitlab.com/gitlab-data is a Group namespace.
       - name: visibility_level
@@ -1133,10 +1476,12 @@ models:
         description: Monthly CI Minutes limit of the namespace, based on its [product tier](https://about.gitlab.com/pricing/). This value will be 'Not supported minutes' if shared runners are not enabled on the namespace and 'Unlimited minutes' for certain GitLab internal namespaces.
         tests:
           - not_null
+        tags: ["tdf", "common", "gainsight"]
       - name: shared_runners_minutes_used_overall
         description: Total CI Minutes used in the snapshot month.
         tests:
           - not_null
+        tags: ["tdf", "common", "gainsight"]
       - name: status
         description: Status of CI Minutes usage against the tier-based limit by namespaces with `shared_runners_minutes_limit` enabled. Over Quota, Under Quota, or Disabled.
       - name: status_based_plan
@@ -1158,16 +1503,20 @@ models:
       - name: metric_name
         tests:
           - not_null
+        tags: ["tdf", "common", "gainsight"]
       - name: metric_value
         tests:
           - not_null
+        tags: ["tdf", "common", "gainsight"]
       - name: recorded_at
         tests:
           - not_null
+        tags: ["tdf", "common", "gainsight"]
       - name: stage_name
       - name: usage_ping_id
         tests:
           - not_null
+        tags: ["tdf", "common", "gainsight"]
 
   - name: fct_usage_ping_metric_28_days
     description: '{{ doc("fct_usage_ping_metric_28_days") }}'
@@ -1175,16 +1524,20 @@ models:
       - name: metric_name
         tests:
           - not_null
+        tags: ["tdf", "common", "gainsight"]
       - name: metric_value
         tests:
           - not_null
+        tags: ["tdf", "common", "gainsight"]
       - name: recorded_at
         tests:
           - not_null
+        tags: ["tdf", "common", "gainsight"]
       - name: stage_name
       - name: usage_ping_id
         tests:
           - not_null
+        tags: ["tdf", "common", "gainsight"]
 
   - name: fct_usage_ping_metric_all_time
     description: '{{ doc("fct_usage_ping_metric_all_time") }}'
@@ -1192,16 +1545,20 @@ models:
       - name: metric_name
         tests:
           - not_null
+        tags: ["tdf", "common", "gainsight"]
       - name: metric_value
         tests:
           - not_null
+        tags: ["tdf", "common", "gainsight"]
       - name: recorded_at
         tests:
           - not_null
+        tags: ["tdf", "common", "gainsight"]
       - name: stage_name
       - name: usage_ping_id
         tests:
           - not_null
+        tags: ["tdf", "common", "gainsight"]
 
   - name: fct_usage_ping_payloads
     description: '{{ doc("fct_usage_ping_payloads") }}'
@@ -1211,10 +1568,12 @@ models:
         tests:
           - not_null
           - unique
+        tags: ["tdf", "common", "gainsight"]
       - name: uuid
         description: The unique identifier of the self-managed instance.
         tests:
           - not_null
+        tags: ["tdf", "common", "gainsight"]
       - name: host_id
         description: The identifier of the host of the instance.
       - name: license_md5
@@ -1245,53 +1604,176 @@ models:
         description: The timestamp when the usage ping was created.
         tests:
           - not_null
+        tags: ["tdf", "common", "gainsight"]
       - name: recorded_at
         description: The timestamp when the usage ping was recorded.
+
+  - name: fct_usage_ping_subscription_mapped_wave_2_3_metrics
+    description: '{{ doc("fct_usage_ping_subscription_mapped_wave_2_3_metrics") }}'
+    columns:
+      - name: dim_usage_ping_id
+        description: JOIN key to dim_usage_pings and prep_usage_pings. Represents a single usage ping. 
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "common", "gainsight"]
+      - name: license_md5 
+        description: JOIN key to dim_licenses and dim_license 
+      - name: subscription_id 
+        description: JOIN key to dim_subscription 
+      - name: ping_created_at
+        description: The timestamp at which the usage ping was created_at 
+        tests:
+          - not_null
+        tags: ["tdf", "common", "gainsight"]
+      - name: ping_created_at_28_days_earlier
+        description: The timestamp at which the usage ping was created_at minus 28 days for the monthly metric time period 
+        tests:
+          - not_null
+        tags: ["tdf", "common", "gainsight"]
+      - name: ping_created_at_year
+        description: The year ('2020-01-01') the ping was created at
+        tests:
+          - not_null
+        tags: ["tdf", "common", "gainsight"]
+      - name: ping_created_at_month
+        description: The month ('2020-12-01') the ping was created at
+        tests:
+          - not_null
+        tags: ["tdf", "common", "gainsight"]
+      - name: ping_created_at_week
+        description: The week start ('2017-11-30') the ping was created at
+        tests:
+          - not_null
+        tags: ["tdf", "common", "gainsight"]
+      - name: ping_created_at_date
+        description: The day the ping was created at ('2020-12-05', removes the extra time information in the timestamp)
+        tests:
+          - not_null
+        tags: ["tdf", "common", "gainsight"]
 
   - name: fct_usage_self_managed_seat_link
     description: '{{ doc("fct_usage_self_managed_seat_link") }}'
     columns:
-      - name: customers_db_order_id
+      - name: latest_order_id_in_month
+        description: Order ID that was associated with the subscription at month close.
         tests:
           - not_null
+        tags: ["tdf", "common", "gainsight"]
       - name: dim_subscription_id
         tests:
           - not_null
+        tags: ["tdf", "common", "gainsight"]
       - name: dim_subscription_id_original
         tests:
           - not_null
+        tags: ["tdf", "common", "gainsight"]
       - name: dim_subscription_id_previous
         tests:
           - not_null
+        tags: ["tdf", "common", "gainsight"]
       - name: dim_crm_account_id
         tests:
           - not_null
+        tags: ["tdf", "common", "gainsight"]
       - name: dim_billing_account_id
         tests:
           - not_null
+        tags: ["tdf", "common", "gainsight"]
       - name: dim_product_tier_id
         tests:
           - not_null
+        tags: ["tdf", "common", "gainsight"]
       - name: active_user_count
         description: Count of active users currently on the customer's subcription. A count of 0 indicates that Seat Link has been turned off by the customer.
-        tests:
-          - not_null
       - name: license_user_count
         description: Count of licensed users purchased with the customer's subcription.
         tests:
           - not_null
+        tags: ["tdf", "common", "gainsight"]
       - name: max_historical_user_count
         description: Maximum active user count ever reported over the lifetime of the customer's subcription.
         tests:
           - not_null
+        tags: ["tdf", "common", "gainsight"]
+      - name: is_last_seat_link_report_per_subscription
+        description: Flags if the row contains the most recent Seat Link record received for the subscription.
+      - name: is_last_seat_link_report_per_order
+        description: Flags if the row contains the most recent Seat Link record received for the order.
+      - name: is_subscription_in_zuora
+        description: Flags rows where the `zuora_subscription_id` from `customers_db_orders_source` is not found in `dim_subscription`.
+      - name: is_rate_plan_in_zuora
+        description: Flags rows where the `product_rate_plan_id` from `customers_db_orders_source` is not found in `dim_product_tier`.
+      - name: is_active_user_count_available
+        description: Flags rows where `active_user_count` is NULL in source.
       - name: snapshot_month
         description: Month in which Seat Link usage data is reported.
         tests:
           - not_null
+        tags: ["tdf", "common", "gainsight"]
       - name: report_date
         description: Day on which Seat Link usage data is reported. Should always be last day of month for historical months.
         tests:
           - not_null
+        tags: ["tdf", "common", "gainsight"]
+
+  - name: fct_usage_storage
+    description: '{{ doc("fct_usage_storage") }}'
+    columns:
+      - name: snapshot_month
+        description: Month in which Storage usage data was snapshotted, formatted as `20YY-MM-01`.
+        tests:
+          - not_null
+        tags: ["tdf", "common", "gainsight"]
+      - name: dim_namespace_id
+        description: ID of the namespace responsible for the Storage usage.
+        tests:
+          - not_null
+        tags: ["tdf", "common", "gainsight"]
+      - name: ultimate_parent_namespace_id
+        description: ID of the namespace's ultimate parent namespace.
+        tests:
+          - not_null
+        tags: ["tdf", "common", "gainsight"]
+      - name: largest_repository_size_gib
+        description: Size of the namespace's largest project repository, in GiB.
+      - name: total_free_storage_limit_gib
+        description: Sum of free repository level storage (10 GiB) over all repositories under the top level namespace. Since storage limits are provided in GiB, they are being reported in GiB. For certain GitLab internal namespaces this value is 0, implying **unlimited storage**.
+        tests:
+          - not_null
+        tags: ["tdf", "common", "gainsight"]
+      - name: total_purchased_storage_limit_gib
+        description: Total extra storage purhaced across all namespaces under the top level namespace. Extra storage is currently purchased in 10 GiB increments and thus is reported in GiB.
+        tests:
+          - not_null
+        tags: ["tdf", "common", "gainsight"]
+      - name: has_repositories_above_free_limit
+        description: Flags for the presence of repositories with 10 GiB or more of billable storage.
+      - name: repositories_above_free_limit_count
+        description: Count of repositories with 10 GiB or more of billable storage.
+      - name: has_capped_repositories
+        description: Flags for the presence of repositories with 10 GiB or more of billable storage with no available purchased storage remaining.
+      - name: capped_repositories_count
+        description: Count of repositories with 10 GiB or more of billable storage and no available purchased storage remaining.
+      - name: total_free_storage_size
+        description: Total billable storage used _under_ the free 10 GiB limit across all repositories under the top level namespace.
+      - name: total_purchased_storage_size
+        description: Total billable storage used _over_ the free 10 GiB limit across all repositories under the top level namespace.
+      - name: billable_storage_bytes
+        description: This value consists of the only types of storage that GitLab currently limits, and thus are possible to be billable. This value is equivalent to `repository_size` + `lfs_objects_size` across all repositories under the top level namespace.
+      - name: repository_bytes
+        description: Total size of repository across all repositories under the top level namespace.
+      - name: lfs_objects_bytes
+        description: Total size of Large File Storage objects across all repositories under the top level namespace.
+      - name: build_artifacts_bytes
+        description: Total size of build artifacts across all repositories under the top level namespace.
+      - name: packages_bytes
+        description: Total size of packagess across all repositories under the top level namespace.
+      - name: wiki_bytes
+        description: Total size of wikis across all repositories under the top level namespace.
+      - name: storage_bytes
+        description: Sum of reposity, LFS objects, build artifacts, packages, and wiki storage sizes.
+
 
   - name: dim_marketing_channel
     description: '{{ doc("prep_sfdc_account") }}'
@@ -1311,10 +1793,12 @@ models:
         tests:
           - not_null
           - unique
+        tags: ["tdf", "common", "gainsight"]
       - name: namespace_id
         tests:
           - not_null
           - unique
+        tags: ["tdf", "common", "gainsight"]
       - name: namespace_is_internal
       - name: namespace_is_ultimate_parent
       - name: namespace_name
@@ -1324,6 +1808,7 @@ models:
         description: This field should be Group or Individual. A namespace is the first item to come after the / following the domain. For example https://www.gitlab.com/NicoleSchwartz/ is an Individual namespace. There are some namespace_IDs that are missing from this table, when doing certain joins (left) you may get NULL when this data is missing.
         tests:
           - not_null
+        tags: ["tdf", "common", "gainsight"]
       - name: has_avatar
       - name: namespace_created_at
       - name: namespace_updated_at
@@ -1353,14 +1838,17 @@ models:
           - not_null
           - accepted_values:
               values: ['2', '3', '4', '34', '67', 'Trial']
+        tags: ["tdf", "common", "gainsight"]
       - name: gitlab_plan_title
         description: Whether or not the namespace associated with the project is subscribed to a paid plan. This can be inheritted from the namespaces's ultimate parent.
         tests:
           - not_null
+        tags: ["tdf", "common", "gainsight"]
       - name: gitlab_plan_is_paid
         description: Whether or not the namespace associated with the project is subscribed to a paid plan. This can be inheritted from the namespaces's ultimate parent.
         tests:
           - not_null
+        tags: ["tdf", "common", "gainsight"]
       - name: dim_product_tier_id,
       - name: current_member_count
         description: The number of members that are presently associated with the namespace.
@@ -1389,11 +1877,13 @@ models:
         tests:
           - not_null
           - unique
+        tags: ["tdf", "common", "gainsight"]
       - name: license_md5
         description: The md5 hash of the license file. Use this field to join to fct_usage_ping_payloads.
         tests:
           - not_null
           - unique
+        tags: ["tdf", "common", "gainsight"]
       - name: dim_subscription_id
         description: The unique identifier of a version of a subscription.
       - name: subscription_name

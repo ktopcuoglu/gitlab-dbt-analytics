@@ -2,7 +2,7 @@ WITH counts AS (
 
     SELECT DISTINCT
       DATE_TRUNC('month', CURRENT_DATE)                   AS snapshot_month,
-      namespace_id,
+      namespace_id                                        AS dim_namespace_id,
       ultimate_parent_id,
       ultimate_parent_plan_id,
       ultimate_parent_plan_title,
@@ -11,7 +11,7 @@ WITH counts AS (
       COUNT(DISTINCT IFF(is_active, user_id, NULL))
         OVER(PARTITION BY ultimate_parent_id)             AS active_member_count,
       COUNT(DISTINCT IFF(is_billable, user_id, NULL))
-        OVER(PARTITION BY ultimate_parent_id)             AS billabe_member_count,
+        OVER(PARTITION BY ultimate_parent_id)             AS billable_member_count,
       COUNT(DISTINCT IFF(is_guest, user_id, NULL))
         OVER(PARTITION BY ultimate_parent_id)             AS guest_member_count,
       COUNT(DISTINCT IFF(is_deactivated, user_id, NULL))
@@ -41,5 +41,5 @@ cte_ref="counts",
 created_by="@ischweickartDD",
 updated_by="@ischweickartDD",
 created_date="2021-01-07",
-updated_date="2021-01-07"
+updated_date="2021-02-02"
 ) }}

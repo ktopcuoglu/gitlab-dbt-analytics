@@ -58,6 +58,26 @@ This is the GitLab overwrite for the dbt internal macro. See our [dbt guide](htt
 This creates a conformed date_id for use in with the date dimension in common. This macro should always be used when the output for a column is meant to join with date_id in the date dimension. This macro does not include an alias so an alias must always be applied. 
 {% enddocs %}
 
+{% docs get_keyed_nulls %}
+
+This macro generates a key for facts with missing dimensions so when the fact table is joined to the dimension it joins to a record that says it's unknown as in
+
+```sql
+SELECT * 
+FROM DIM_GEO_AREA 
+WHERE DIM_GEO_AREA_ID = MD5(-1);
+```
+
+which has:
+
+```
+***************************[ 1 ]***************************
+DIM_GEO_AREA_ID    | 6bb61e3b7bce0931da574d19d1d82c88
+GEO_AREA_NAME      | Missing geo_area_name
+```
+
+Generally this should be used when creating and keying on new dimensions that might not be fully representing in the referencing tables
+{% enddocs %}
 
 {% docs monthly_change %}
 This macro calculates differences for each consecutive usage ping by uuid.

@@ -64,14 +64,10 @@ WITH RECURSIVE namespaces AS (
     namespace_plans.plan_id                                                           AS namespace_plan_id,
     namespace_plans.plan_title                                                        AS namespace_plan_title,
     namespace_plans.plan_is_paid                                                      AS namespace_plan_is_paid,
+    COALESCE(ultimate_parent_plans.plan_id, 34)                                       AS ultimate_parent_plan_id,
     CASE
     WHEN ultimate_parent_gitlab_subscriptions.is_trial AND COALESCE(ultimate_parent_gitlab_subscriptions.plan_id, 34) <> 34
-      THEN 'Trial'
-      ELSE COALESCE(ultimate_parent_plans.plan_id, 34)::VARCHAR
-    END                                                                               AS ultimate_parent_plan_id,
-    CASE
-    WHEN ultimate_parent_gitlab_subscriptions.is_trial AND COALESCE(ultimate_parent_gitlab_subscriptions.plan_id, 34) <> 34
-      THEN 'Trial'
+      THEN 'Trial: Ultimate'
       ELSE COALESCE(ultimate_parent_plans.plan_title, 'Free')
     END                                                                               AS ultimate_parent_plan_title,
     CASE

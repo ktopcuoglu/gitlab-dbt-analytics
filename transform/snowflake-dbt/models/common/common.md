@@ -6,16 +6,27 @@ A fact table bridging opportunities with contacts. One opportunity can have mult
 
 {% docs bdg_namespace_order_subscription_active %}
 
-This table expands the functionality of the orders by improving the join to ultimate parent namespaces and subscriptions.
-
 The purpose of this table is two-fold:
-1. Connect Ultimate Parent Namespace ID to Subscription (and hence Zuora billing account and CRM Account)
+1. Connect **Ultimate Parent** Namespace ID to Subscription (and hence Zuora billing account and CRM Account)
 2. Connect Customer DB Customer ID to Subscription for self managed purchases. This helps with marketing efforts.
 
-Namespaces listed in this table are all Active Namespaces with prior trials and currently paid plans. Orders listed in this table are all active orders. Subscriptions listed in this table are all active self-managed and SaaS.
+This table expands the functionality of the orders by improving the join to ultimate parent namespaces and subscriptions. Namespaces listed in this table are all Active with prior trials and currently paid plans. Subscriptions and Orders listed in this table are all SaaS and currently active.
 
 The tier(s) connected to the subscription are determined using the underlying Zuora recurring charges. This view uses a `FULL OUTER JOIN` to show all three sides of the Venn diagram. (namespace, orders, subscriptions)
 In doing so exceptions are noted within `namespace_order_subscription_match_status` to identify rows that do not match between systems.
+
+{% enddocs %}
+
+{% docs bdg_self_managed_order_subscription_active %}
+
+The purpose of this table to connect Order IDs from Customer DB to Subscription for self managed purchases. This table expands the functionality of the subscriptions by improving the join to orders. Subscriptions and Orders listed in this table are all self-managed and currently active.
+
+The tier(s) connected to the subscription are determined using the underlying Zuora recurring charges. This view uses a `FULL OUTER JOIN` to show all three parts of the Venn diagram (orders, subscriptions, and the overlap between the two).
+
+{% enddocs %}
+
+{% docs bdg_subscription_product_rate_plan %}
+The goal of this table is to build a bridge from the entire "universe" of subscriptions in Zuora (`zuora_subscription_source` without any filters applied) to all of the [product rate plans](https://www.zuora.com/developer/api-reference/#tag/Product-Rate-Plan) to which those subscriptions are mapped. This provides the ability to filter subscriptions by delivery type ('SaaS' or 'Self-Managed').
 
 {% enddocs %}
 
@@ -27,6 +38,11 @@ The Customer Account Management business process can be found in the [handbook](
 The grain of the table is the SalesForce Account, also referred to as CRM_ID.
 
 Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+{% enddocs %}
+
+{% docs dim_crm_touchpoint %}
+Descriptive fields for both attribution and non-attribution Bizible touchpoints.
 
 {% enddocs %}
 
@@ -144,6 +160,16 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 {% docs fct_campaign %}
 
 Fact table representing marketing campaign details tracked in SFDC.
+
+{% enddocs %}
+
+{% docs fct_crm_attribution_touchpoint %}
+Fact table for attribution Bizible touchpoints with shared dimension keys relating these touchpoints to dim_crm_person, dim_crm_opportunity, and dim_crm_account. These touchpoints have revenue associated with them.
+
+{% enddocs %}
+
+{% docs fct_crm_touchpoint %}
+Fact table for non-attribution Bizible touchpoints with shared dimension keys relating these touchpoints to dim_crm_person and dim_crm_account.
 
 {% enddocs %}
 
@@ -298,6 +324,24 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
+{% docs fct_product_usage_wave_1_3_metrics_latest %}
+This table builds on the set of all Zuora subscriptions that are associated with a **Self-Managed** rate plans. Seat Link data from Customers DB(`fct_usage_self_managed_seat_link`) are combined with high priority Usage Ping metrics (`prep_usage_ping_subscription_mapped_wave2_3_metrics`) to build out the set of facts included in this table. Only the most recently received Usage Ping (by `uuid` and `hostname`) and Seat Link (by `dim_subscription_id`) payload are reported included.
+
+The data from this table will be used to create a mart table (`mart_product_usage_wave_1_3_metrics_latest`) for Gainsight Customer Product Insights.
+
+Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+{% enddocs %}
+
+{% docs fct_product_usage_wave_1_3_metrics_monthly %}
+This table builds on the set of all Zuora subscriptions that are associated with a **Self-Managed** rate plans. Seat Link data from Customers DB(`fct_usage_self_managed_seat_link`) are combined with high priority Usage Ping metrics (`prep_usage_ping_subscription_mapped_wave2_3_metrics`) to build out the set of facts included in this table. Only the most last Usage Ping (by `uuid` and `hostname`) and Seat Link (by `dim_subscription_id`) payload from each month are reported in this table.
+
+The data from this table will be used to create a mart table (`mart_product_usage_wave_1_3_metrics_monthly`) for Gainsight Customer Product Insights.
+
+Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+{% enddocs %}
+
 {% docs fct_usage_ping_payloads %}
 Factual table with metadata on usage ping payloads received.
 
@@ -321,9 +365,32 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
+{% docs fct_usage_ping_subscription_mapped_wave_2_3_metrics %}
+The purpose of this data model is to identify the usage pings that can be mapped to a subscription and to unpack an initial set ([wave 2-3](https://gitlab.com/gitlab-data/analytics/-/blob/master/transform/snowflake-dbt/macros/version/sales_wave_2_3_metrics.sql)) of priority metrics from the `raw_usage_data_payload` column, strip all the sensitive data out, and then report one value for each metric in that column.
+
+In this iteration, the grain is `hostname` per `uuid` per `dim_subscription_id` per `ping_created_at_month`. This current version is for Sales team only. 
+
+This data model is a fact table built on top of the `prep_usage_ping_subscription_mapped_wave2_3_metrics` model, which depends on `prep_usage_ping` and supports the creation of `dim_usage_ping`, which will replace `PROD.legacy.version_usage_data`, `dim_usage_pings`, `version_usage_data_source`, and `version_raw_usage_data_source` in the future. 
+
+The metric list identifed can be found in the macro [`sales_wave_2_3_metrics`](https://gitlab.com/gitlab-data/analytics/-/blob/master/transform/snowflake-dbt/macros/version/sales_wave_2_3_metrics.sql).
+{% enddocs %}
+
 {% docs fct_usage_self_managed_seat_link %}
 
 Self-managed EE instances send [Seat Link](https://docs.gitlab.com/ee/subscriptions/self_managed/#seat-link) usage data to [CustomerDot](https://gitlab.com/gitlab-org/customers-gitlab-com) on a daily basis. This information includes a count of active users and a maximum count of users historically in order to assist the [true up process](https://docs.gitlab.com/ee/subscriptions/self_managed/#users-over-license). Counts are reported from the last day of the month for historical months, and the most recent `reported_date` for the current month. Additional details can be found in [this doc](https://gitlab.com/gitlab-org/customers-gitlab-com/-/blob/staging/doc/reconciliations.md).
+
+Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+{% enddocs %}
+
+{% docs fct_usage_storage %}
+This table replicates the Gitlab UI logic that generates the Storage Usage Quotas for top level group namespaces. The logic used to build this model is explained in [this epic](https://gitlab.com/groups/gitlab-org/-/epics/4237). The specific front end logic is described [here](https://gitlab.com/groups/gitlab-org/-/epics/4237#note_400257377).
+
+Storage usage is reported in bytes in source and this is reflected in the `_size` columns. These sizes are then converted into GiB (1 GiB = 2^30 bytes = 1,073,741,824 bytes), and MiB (1 MiB = 2^20 bytes = 1,048,576 bytes), which is most often displayed in the UI. Since storage limits are allocated in GiB, they were left as such in the `_limit` columns.
+
+Since this table reports at the top level namespace grain, aggregation of the individual underlying repositories is required. To increase visibility of the underlying repositories, two count columns (and their associated flags) are added that aren't calculated in the UI: which are `repositories_above_free_limit_count` and `capped_repositories_count`. These columns can serve as helpful indicators for when a customer will likely need to purchase extra storage.
+
+For the purpose of this table, all child namespaces under a top level namespace with unlimited storage are also assumed to have unlimited storage. Also, storage sizes are converted to MiB and GiB in this table because these are the values being reported under the hood, even though on a project page storage is reported as "MB" or "GB".
 
 Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
 

@@ -87,7 +87,7 @@ dag = DAG("dbt_snapshots", default_args=default_args, schedule_interval="0 */8 *
 # dbt-snapshot for daily tag
 dbt_snapshot_cmd = f"""
     {dbt_install_deps_nosha_cmd} &&
-    dbt snapshot -s tag:daily --profiles-dir profile --exclude path:snapshots/zuora path:snapshots/sfdc; ret=$?;
+    dbt snapshot -s tag:daily --profiles-dir profile --exclude path:snapshots/zuora path:snapshots/sfdc path:snapshots/gitlab_dotcom; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py snapshots; exit $ret
 """
 

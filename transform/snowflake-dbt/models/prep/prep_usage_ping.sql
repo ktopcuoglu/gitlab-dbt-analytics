@@ -10,7 +10,7 @@ WITH source AS (
 
     SELECT 
       id                                                                        AS dim_usage_ping_id, 
-      created_at                                                                AS ping_created_at,
+      created_at::TIMESTAMP(0)                                                  AS ping_created_at,
       *, 
       {{ nohash_sensitive_columns('version_usage_data_source', 'source_ip') }}  AS ip_address_hash, 
       OBJECT_CONSTRUCT(
@@ -161,10 +161,5 @@ WITH source AS (
 
 )
 
-{{ dbt_audit(
-    cte_ref="final",
-    created_by="@kathleentam",
-    updated_by="@kathleentam",
-    created_date="2021-01-11",
-    updated_date="2021-01-11"
-) }}
+SELECT * 
+FROM final

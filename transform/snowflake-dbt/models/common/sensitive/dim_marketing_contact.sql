@@ -93,7 +93,7 @@ WITH sfdc_lead AS (
       ON sfdc_account.account_id = sfdc_contact.account_id
     LEFT JOIN crm_account
       ON crm_account.crm_account_id = crm_person.dim_crm_account_id
-    JOIN sales_segment
+    INNER JOIN sales_segment
       ON sales_segment.dim_sales_segment_id = crm_account.dim_sales_segment_id
     WHERE  email_address IS NOT NULL
       AND email_address <> ''
@@ -118,6 +118,7 @@ WITH sfdc_lead AS (
     FROM gitlab_users
     WHERE email_address IS NOT NULL
       AND email_address <> ''
+      AND active_state = 'active'
     QUALIFY record_number = 1
 
 ), customer_db AS (
@@ -137,6 +138,7 @@ WITH sfdc_lead AS (
     FROM customer_db_source
     WHERE email_address IS NOT NULL
       AND email_address <> ''
+      AND confirmed_at IS NOT NULL
     QUALIFY record_number = 1
 
 ), zuora AS (
@@ -155,10 +157,11 @@ WITH sfdc_lead AS (
       END                                                                                                                   AS active_state,
       (ROW_NUMBER() OVER (PARTITION BY email_address ORDER BY zuora_contact_source.created_date DESC))                                           AS record_number
     FROM zuora_contact_source
-    JOIN zuora_account_source
+    INNER JOIN zuora_account_source
       ON zuora_account_source.account_id = zuora_contact_source.account_id
     WHERE email_address IS NOT NULL
       AND email_address <> ''
+      AND zuora_contact_source.is_deleted = FALSE
     QUALIFY record_number = 1
 
 ), emails AS (
@@ -188,6 +191,7 @@ WITH sfdc_lead AS (
 ), final AS (
 
     SELECT
+      {{ dbt_utils.surrogate_key(['emails.email_address']) }}                                                            AS dim_marketing_contact_id,
       emails.email_address,
       COALESCE(zuora.first_name, sfdc.first_name, customer_db.first_name, gitlab_dotcom.first_name)                      AS first_name,
       COALESCE(zuora.last_name, sfdc.last_name, customer_db.last_name, gitlab_dotcom.last_name)                          AS last_name,
@@ -245,5 +249,5 @@ WITH sfdc_lead AS (
     created_by="@rmistry",
     updated_by="@rmistry",
     created_date="2021-01-19",
-    updated_date="2021-01-20"
+    updated_date="2021-02-03"
 ) }}

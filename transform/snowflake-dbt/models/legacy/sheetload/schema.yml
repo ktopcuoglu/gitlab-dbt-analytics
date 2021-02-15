@@ -89,6 +89,9 @@ models:
 - name: sheetload_sales_training_completion_dates
 - name: sheetload_scalable_employment_values
 - name: sheetload_social_marketing_metrics
+- name: sheetload_social_marketing_topic_metrics
+- name: sheetload_net_arr_net_iacv_conversion_factors
+- name: sheetload_net_arr_net_iacv_conversion_factors_agg
 - name: sheetload_usage_ping_metrics_sections
 - name: sheetload_territory_mapping
   description: Base model for marketing territory mapping.

@@ -1,0 +1,20 @@
+version: 2
+
+exposures:
+  
+  - name: product_adoption_dashboard
+    type: dashboard
+    maturity: medium
+    url: https://app.periscopedata.com/app/gitlab/771580/Product-Adoption-Dashboard
+    description: >
+      High-level dashboard showing Top Product KPIs such as TMAU, UMAU, SpU...
+    
+    depends_on:
+      - ref('mart_monthly_product_usage')
+      - ref('gitlab_dotcom_dev_xmau_mart')
+      - ref('mart_paid_subscriptions_monthly_usage_ping_optin')
+      - ref('sheetload_usage_ping_metrics_sections')
+      
+    owner:
+      name: Mathieu Peychet
+      email: gitlab_id@mpeychet_

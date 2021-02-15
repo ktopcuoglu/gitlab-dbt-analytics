@@ -126,6 +126,11 @@ sheets:
     owner: '@m_walker'
     tabs:
       - maxmind_ranges
+  - name: net_arr_net_iacv_conversion_factors
+    owner: '@nfiguera'
+    tabs:
+      - net_arr_net_iacv_conversion_factors
+      - net_arr_net_iacv_conversion_factors_agg
   - name: osat
     owner: '@pluthra'
     tabs:
@@ -171,6 +176,7 @@ sheets:
     owner: '@jeanpeguero'
     tabs:
       - social_marketing_metrics
+      - social_marketing_topic_metrics
   - name: usage_ping_metrics_sections
     owner: '@mpeychet_'
     tabs:

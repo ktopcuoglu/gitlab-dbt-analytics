@@ -11,6 +11,7 @@ WITH map_namespace_internal AS (
 
     SELECT *
     FROM {{ ref('prep_product_tier') }}
+    WHERE product_delivery_type = 'SaaS'
 
 ), namespaces AS (
 
@@ -55,7 +56,7 @@ WITH map_namespace_internal AS (
 
 ), joined AS (
 
-    SELECT
+    SELECT DISTINCT
       namespaces.namespace_id                                                           AS dim_namespace_id,
       namespaces.namespace_id,
       COALESCE(map_namespace_internal.ultimate_parent_namespace_id IS NOT NULL, FALSE)  AS namespace_is_internal,
@@ -99,7 +100,9 @@ WITH map_namespace_internal AS (
       namespace_lineage.ultimate_parent_plan_id                                         AS gitlab_plan_id,
       namespace_lineage.ultimate_parent_plan_title                                      AS gitlab_plan_title,
       namespace_lineage.ultimate_parent_plan_is_paid                                    AS gitlab_plan_is_paid,
-      IFNULL(product_tier_ultimate_parent.dim_product_tier_id,MD5('-1'))                AS dim_product_tier_id,
+      COALESCE(prep_product_tier_historical.dim_product_tier_id,
+                prep_product_tier.dim_product_tier_id,
+                MD5('-1'))                                                              AS dim_product_tier_id,
       COALESCE(member_count, 0)                                                         AS current_member_count,
       COALESCE(project_count, 0)                                                        AS current_project_count
 
@@ -114,8 +117,10 @@ WITH map_namespace_internal AS (
         ON namespaces.namespace_id = creators.group_id
       LEFT JOIN map_namespace_internal
         ON namespace_lineage.ultimate_parent_id = map_namespace_internal.ultimate_parent_namespace_id
-      LEFT JOIN prep_product_tier AS product_tier_ultimate_parent
-        ON LOWER(product_tier_ultimate_parent.product_tier_name) = LOWER(namespace_lineage.ultimate_parent_plan_title)
+      LEFT JOIN prep_product_tier AS prep_product_tier_historical
+        ON LOWER(prep_product_tier_historical.product_tier_historical_short) = LOWER(namespace_lineage.ultimate_parent_plan_title)
+      LEFT JOIN prep_product_tier 
+        ON LOWER(prep_product_tier.product_tier_name_short) = LOWER(namespace_lineage.ultimate_parent_plan_title)
 
 )
 
@@ -124,5 +129,5 @@ WITH map_namespace_internal AS (
     created_by="@ischweickartDD",
     updated_by="@ischweickartDD",
     created_date="2021-01-14",
-    updated_date="2021-01-14"
+    updated_date="2021-01-26"
 ) }}

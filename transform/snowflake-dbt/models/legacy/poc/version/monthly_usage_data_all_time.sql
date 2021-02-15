@@ -57,4 +57,6 @@ SELECT
   time_period,
   IFF(monthly_metric_value < 0, 0, monthly_metric_value) AS monthly_metric_value,
   metric_value                                           AS original_metric_value
+  IFF(monthly_metric_value < 0, 0, monthly_metric_value) AS monthly_metric_value,
+  has_timed_out
 FROM monthly

@@ -51,9 +51,10 @@ SELECT
   flattened.ping_id,
   host_id,
   created_at,
-  flattened.metric_path AS flat_metrics_path,
+  flattened.metric_path                                       AS flat_metrics_path,
   metrics.*, 
-  flattened.metric_value
+  IFF(flattened.metric_value = -1, 0, flattened.metric_value) AS metric_value,
+  IFF(flattened.metric_value = -1, TRUE, FALSE)               AS has_timed_out
 FROM flattened
 INNER JOIN {{ ref('sheetload_usage_ping_metrics_sections' )}} AS metrics 
   ON flattened.metric_path = metrics.metrics_path

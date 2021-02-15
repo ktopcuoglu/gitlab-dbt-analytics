@@ -105,14 +105,15 @@ WITH dim_billing_account AS (
       LAG(delivery) OVER (PARTITION BY ultimate_parent_account_id ORDER BY arr_month) AS previous_delivery,
       COALESCE(LAG(product_ranking) OVER (PARTITION BY ultimate_parent_account_id ORDER BY arr_month),0) AS previous_product_ranking,
       COALESCE(LAG(quantity) OVER (PARTITION BY ultimate_parent_account_id ORDER BY arr_month),0) AS previous_quantity,
-      COALESCE(LAG(arr) OVER (PARTITION BY ultimate_parent_account_id ORDER BY arr_month),0) AS previous_arr
+      COALESCE(LAG(arr) OVER (PARTITION BY ultimate_parent_account_id ORDER BY arr_month),0) AS previous_arr,
+      ROW_NUMBER() OVER (PARTITION BY ultimate_parent_account_id ORDER BY arr_month) AS row_number
     FROM monthly_arr_parent_level
 
 ), type_of_arr_change AS (
 
     SELECT
       prior_month.*,
-      {{ type_of_arr_change('arr','previous_arr') }}
+      {{ type_of_arr_change('arr','previous_arr','row_number') }}
     FROM prior_month
 
 ), reason_for_arr_change_beg AS (
@@ -209,7 +210,6 @@ WITH dim_billing_account AS (
     LEFT JOIN annual_price_per_seat_change
       ON type_of_arr_change.ultimate_parent_account_id = annual_price_per_seat_change.ultimate_parent_account_id
       AND type_of_arr_change.arr_month = annual_price_per_seat_change.arr_month
-    WHERE type_of_arr_change.arr_month < DATE_TRUNC('month',CURRENT_DATE)
 
 )
 

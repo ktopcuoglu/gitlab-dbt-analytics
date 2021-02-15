@@ -98,6 +98,48 @@ models:
           - not_null
         tags: ["tdf", "mart", "arr"]
 
+  - name: mart_delta_arr_subscription_product_daily
+    description: "Mart table by day purusant to the ARR Analysis Framework at the subscription || product_category level"
+    columns:
+      - name: primary_key
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "mart", "arr"]
+      - name: product_category
+        tests:
+          - not_null
+        tags: ["tdf", "mart", "arr"]
+      - name: delivery
+        tests:
+          - not_null
+        tags: ["tdf", "mart", "arr"]
+      - name: product_ranking
+        tests:
+          - not_null
+        tags: ["tdf", "mart", "arr"]
+
+  - name: mart_delta_arr_subscription_product_month
+    description: "Mart table by month purusant to the ARR Analysis Framework at the subscription || product_category level"
+    columns:
+      - name: primary_key
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "mart", "arr"]
+      - name: product_category
+        tests:
+          - not_null
+        tags: ["tdf", "mart", "arr"]
+      - name: delivery
+        tests:
+          - not_null
+        tags: ["tdf", "mart", "arr"]
+      - name: product_ranking
+        tests:
+          - not_null
+        tags: ["tdf", "mart", "arr"]
+
   - name: mart_delta_arr_subscription_month
     description: "Mart table by month purusant to the ARR Analysis Framework at the subscription level"
     columns:

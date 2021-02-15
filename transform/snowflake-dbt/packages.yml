@@ -1,3 +1,4 @@
+# Update docs-packages.yml as well to have the docs site be accurate.
 packages:
   - package: gitlabhq/snowflake_spend
     version: 1.2.0

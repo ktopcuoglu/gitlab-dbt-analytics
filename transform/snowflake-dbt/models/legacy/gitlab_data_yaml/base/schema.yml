@@ -45,9 +45,17 @@ models:
   - name: location_factors_yaml_historical
     description: This is the base table built on the snapshots of the [location_factors.yml file](https://gitlab.com/gitlab-com/www-gitlab-com/blob/master/data/location_factors.yml) in the GitLab Handbook.
     columns:
-      -   name: snapshot_date
-          tests:
-            - not_null
+      - name: area
+      - name: country
+      - name: location_factor
+      - name: yaml_locality
+      - name: valid_from_date
+        tests:
+          - not_null
+      - name: valid_to_date
+        tests:
+          - not_null
+          
   - name: location_factors_yaml_latest
     description: This is the latest version of the [location_factors.yml file](https://gitlab.com/gitlab-com/www-gitlab-com/blob/master/data/location_factors.yml) in the GitLab Handbook, pulled from the historical base table.
     columns:

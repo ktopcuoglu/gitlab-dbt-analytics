@@ -272,6 +272,10 @@ models:
     - name: is_satellite_provider
     - name: registered_country_geoname_id
     - name: represented_country_geoname_id
+- name: sheetload_net_arr_net_iacv_conversion_factors_agg_source
+  description: Net IACV conversion ratios to Net ARR aggregated at the order_type_stamped and user_segment level.
+- name: sheetload_net_arr_net_iacv_conversion_factors_source
+  description: Net IACV conversion ratios to Net ARR at the opportunity_id level.
 - name: sheetload_percent_over_comp_band_historical_source
   description: Brings in aggregated values for 2020.01 - 2020.09 for percent over comp band for kpi.    
 - name: sheetload_planned_values_source
@@ -348,6 +352,27 @@ models:
   tests:
     - unique:
         column_name: "CONCAT(month_date, channel, brand, metric, is_organic)"
+- name: sheetload_social_marketing_topic_metrics_source
+  description: This is the model that captures data from social marketing metrics at the Organic Social topic/campaign level. This data is sourced from Sprout Social (currently there is no API).
+  columns:
+    - name: month_date
+      tests:
+      - not_null
+    - name: sprout_tag
+      tests:
+      - not_null
+    - name: channel
+      tests:
+      - not_null
+    - name: brand
+      tests:
+      - not_null
+    - name: metric
+      tests:
+      - not_null
+  tests:
+    - unique:
+        column_name: "CONCAT(month_date, sprout_tag, channel, brand, metric, is_organic)"
 - name: sheetload_territory_mapping_source
   description: Base model for marketing territory mapping.
   columns:

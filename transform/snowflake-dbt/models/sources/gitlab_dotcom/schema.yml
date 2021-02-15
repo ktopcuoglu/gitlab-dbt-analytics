@@ -663,6 +663,19 @@ models:
           - not_null
       - name: updated_at
 
+  - name: gitlab_dotcom_experiment_subjects_source
+    description: Base model for GitLab.com experiment_subjects.
+    columns:
+      - name: experiment_subject_id
+        tags: ["tdf", "gitlab_dotcom"]
+        tests:
+          - not_null
+          - unique
+      - name: experiment_id
+        tags: ["tdf", "gitlab_dotcom"]
+        tests:
+          - not_null
+
   - name: gitlab_dotcom_environments_source
     description: Base model for GitLab.com environments.
     columns:
@@ -1230,6 +1243,18 @@ models:
           - not_null
 
 
+  - name: gitlab_dotcom_namespace_onboarding_actions
+    description: Base model for Gitlab.com namespace onboarding actions
+    columns:
+      - name: namespace_onboarding_action_id
+        tags: ["tdf", "gitlab_dotcom"]
+        tests:
+          - not_null
+          - unique
+      - name: action_id
+        tags: ["tdf", "gitlab_dotcom"]
+        tests:
+          - not_null
 
   - name: gitlab_dotcom_namespace_statistics_source
     description: Base model for Gitlab.com namespace statistics
@@ -1420,7 +1445,14 @@ models:
         tags: ["tdf","gitlab_dotcom"]
         tests:
           - not_null
-
+  - name: gitlab_dotcom_project_custom_attributes_source
+    description: Base model for Gitlab.com project custom attributes
+    columns:
+      - name: project_custom_attribute_id
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+          - unique
   - name: gitlab_dotcom_project_features_source
     description: Base model for Gitlab.com project features
     columns:
@@ -1635,10 +1667,6 @@ models:
         tests:
           - not_null
           - unique
-      - name: project_id
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
 
   - name: gitlab_dotcom_repository_languages_source
     description: >-

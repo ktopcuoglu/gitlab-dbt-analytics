@@ -72,6 +72,8 @@ sources:
       - name: marketing_pipe_to_spend_headcount
       - name: maxmind_countries
       - name: maxmind_ranges
+      - name: net_arr_net_iacv_conversion_factors
+      - name: net_arr_net_iacv_conversion_factors_agg
       - name: osat
       - name: percent_over_comp_band_historical
       - name: people_budget
@@ -90,6 +92,7 @@ sources:
       - name: territory_mapping
       - name: scalable_employment_values
       - name: social_marketing_metrics
+      - name: social_marketing_topic_metrics
       - name: usage_ping_metrics_sections
       - name: values_certificate
       - name: yc_companies

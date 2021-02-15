@@ -25,9 +25,7 @@ sources:
         identifier: gitlab_db_alert_management_alerts
       - name: alerts_service_data
         identifier: gitlab_db_alerts_service_data
-        freshness:
-          warn_after: { count: 7, period: day }
-          error_after: { count: 30, period: day }
+        freshness: null
       - name: application_settings
         identifier: gitlab_db_application_settings
         freshness:
@@ -152,6 +150,8 @@ sources:
         identifier: gitlab_db_epics
       - name: events
         identifier: gitlab_db_events
+      - name: experiment_subjects
+        identifier: gitlab_db_experiment_subjects
       - name: experiment_users
         identifier: gitlab_db_experiment_users
       - name: experiments
@@ -205,6 +205,8 @@ sources:
         identifier: gitlab_db_merge_requests_closing_issues
       - name: milestones
         identifier: gitlab_db_milestones
+      - name: namespace_onboarding_actions
+        identifier: gitlab_db_namespace_onboarding_actions
       - name: namespace_root_storage_statistics
         identifier: gitlab_db_namespace_root_storage_statistics
       - name: namespace_statistics
@@ -232,6 +234,8 @@ sources:
           error_after: {count: 30, period: day}    
       - name: project_auto_devops
         identifier: gitlab_db_project_auto_devops
+      - name: project_custom_attributes
+        identifier: gitlab_db_project_custom_attributes
       - name: project_features
         identifier: gitlab_db_project_features
       - name: project_group_links
