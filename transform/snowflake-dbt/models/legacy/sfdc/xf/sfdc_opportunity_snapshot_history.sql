@@ -91,6 +91,7 @@ WITH sfdc_opportunity_snapshots AS (
       upside_swing_deal_iacv__c      AS upside_swing_deal_iacv,
       web_portal_purchase__c         AS is_web_portal_purchase,
       opportunity_term__c            AS opportunity_term,
+      opportunity_category__c        AS opportunity_category,
       arr_net__c                     AS net_arr,
       CASE
         WHEN closedate::DATE >= '2018-02-01' THEN COALESCE((net_iacv__c * ratio_net_iacv_to_net_arr), net_iacv__c)
