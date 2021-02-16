@@ -22,9 +22,7 @@ flattening AS (
   NOT IN ('2c92a00d6e59c212016e6432a2d70dee',
    '2c92a0ff74357c7401744e2bf3ee614b',
    '2c92a00f74e75dd60174e89220361bbc',
-   '2c92a00774ddaf190174de37f0eb147d',
-   '2c92a0fe6799332701679cc4dce91367',
-   '2c92a0ff5925c66c015941a8ca40536d')
+   '2c92a00774ddaf190174de37f0eb147d')
 ),
 
 zuora_sub (base_slug, renewal_slug, parent_slug, lineage, children_count) AS (
