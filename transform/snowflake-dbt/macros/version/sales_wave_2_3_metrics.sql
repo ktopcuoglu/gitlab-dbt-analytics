@@ -24,13 +24,13 @@
     {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['secure']['user_dependency_scanning_jobs']") }}                 AS user_dependency_scanning_jobs_28_days_user,       
     {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['secure']['user_license_management_jobs']") }}                  AS user_license_management_jobs_28_days_user,         
     {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['secure']['user_secret_detection_jobs']") }}                    AS user_secret_detection_jobs_28_days_user,          
-    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['secure']['user_container_scanning_jobs']") }}                  AS user_container_scanning_job_28_days_users,       
+    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['secure']['user_container_scanning_jobs']") }}                  AS user_container_scanning_job_28_days_user,       
     {{ convert_variant_to_boolean_field("raw_usage_data_payload['object_store']['packages']['enabled']") }}                                             AS object_store_packages_enabled_instance_setting,       
     {{ null_negative_numbers("raw_usage_data_payload['counts']['projects_with_packages']") }}                                                           AS projects_with_packages_all_time_event,             
-    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['package']['projects_with_packages']") }}                       AS projects_with_packages_28_days_users,  
-    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['release']['deployments']") }}                                  AS deployments_28_days_users,       
-    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['release']['releases']") }}                                     AS releases_28_days_users,              
-    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['plan']['epics']") }}                                           AS epics_28_days_users,   
-    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['plan']['issues']") }}                                          AS issues_28_days_users          
+    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['package']['projects_with_packages']") }}                       AS projects_with_packages_28_days_user,  
+    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['release']['deployments']") }}                                  AS deployments_28_days_user,       
+    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['release']['releases']") }}                                     AS releases_28_days_user,              
+    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['plan']['epics']") }}                                           AS epics_28_days_user,   
+    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['plan']['issues']") }}                                          AS issues_28_days_user          
 
 {%- endmacro -%}
