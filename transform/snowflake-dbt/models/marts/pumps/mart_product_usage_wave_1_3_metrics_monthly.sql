@@ -42,7 +42,7 @@
       monthly_metrics.template_repositories_all_time_event,
       monthly_metrics.ci_pipeline_config_repository_28_days_user,
       monthly_metrics.user_unique_users_all_secure_scanners_28_days_user,
-      monthly_metrics.user_container_scanning_job_28_days_users,
+      monthly_metrics.user_container_scanning_job_28_days_user,
       monthly_metrics.user_sast_jobs_28_days_user,
       monthly_metrics.user_dast_jobs_28_days_user,
       monthly_metrics.user_dependency_scanning_jobs_28_days_user,

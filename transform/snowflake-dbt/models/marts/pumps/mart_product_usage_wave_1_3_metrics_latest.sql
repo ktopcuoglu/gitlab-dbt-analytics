@@ -43,7 +43,7 @@
       latest_metrics.template_repositories_all_time_event,
       latest_metrics.ci_pipeline_config_repository_28_days_user,
       latest_metrics.user_unique_users_all_secure_scanners_28_days_user,
-      latest_metrics.user_container_scanning_job_28_days_users,
+      latest_metrics.user_container_scanning_job_28_days_user,
       latest_metrics.user_sast_jobs_28_days_user,
       latest_metrics.user_dast_jobs_28_days_user,
       latest_metrics.user_dependency_scanning_jobs_28_days_user,
