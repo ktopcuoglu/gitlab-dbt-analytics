@@ -15,7 +15,7 @@
       latest_metrics.dim_subscription_id,
       latest_metrics.dim_subscription_id_original,
       {{ get_keyed_nulls('billing_accounts.dim_billing_account_id') }}      AS dim_billing_account_id,
-      {{ get_keyed_nulls('crm_accounts.crm_account_id') }}                  AS dim_crm_account_id,
+      {{ get_keyed_nulls('crm_accounts.dim_crm_account_id') }}              AS dim_crm_account_id,
       latest_metrics.seat_link_report_date,
       latest_metrics.license_utilization,
       latest_metrics.active_user_count,
@@ -68,7 +68,7 @@
     LEFT JOIN billing_accounts
       ON latest_metrics.dim_billing_account_id = billing_accounts.dim_billing_account_id
     LEFT JOIN crm_accounts
-      ON billing_accounts.dim_crm_account_id = crm_accounts.crm_account_id
+      ON billing_accounts.dim_crm_account_id = crm_accounts.dim_crm_account_id
 
 )
 
