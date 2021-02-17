@@ -25,7 +25,7 @@ WITH category_handbook_people_group_merge_requests_path_count AS (
       MAX(path_count_people_group)         AS mr_count_people_group,
     
       -- People Group departments
-      MAX(path_count_people_engineering)         AS mr_count_people_engineering,
+      MAX(path_count_people_engineering)         AS mr_count_people_engineering
         
     FROM category_handbook_people_group_merge_requests_path_count
     {{ dbt_utils.group_by(n=6) }}
