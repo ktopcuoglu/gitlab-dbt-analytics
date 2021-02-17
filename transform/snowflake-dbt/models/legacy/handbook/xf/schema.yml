@@ -171,7 +171,7 @@ models:
     - name: path_count_people_group
       tests:
         - not_null
-    - name: path_count_people_engineering
+    - name: path_count_people_group_engineering
       tests:
         - not_null
     - name: merge_request_created_at
@@ -192,7 +192,7 @@ models:
     - name: mr_count_people_group
       tests:
         - not_null
-    - name: mr_count_people_engineering
+    - name: mr_count_people_group_engineering
       tests:
         - not_null
     - name: merge_request_created_at

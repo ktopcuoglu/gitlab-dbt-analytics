@@ -37,6 +37,6 @@ models:
     - name: mr_count_people_group
       tests:
         - not_null
-    - name: mr_count_people_engineering
+    - name: mr_count_people_group_engineering
       tests:
         - not_null

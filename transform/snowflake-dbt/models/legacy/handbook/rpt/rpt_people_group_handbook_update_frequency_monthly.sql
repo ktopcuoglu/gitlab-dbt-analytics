@@ -13,7 +13,7 @@ WITH category_handbook_people_group_merge_requests_count AS (
     SELECT
       DATE_TRUNC('MONTH', merge_request_merged_at)    AS month_merged_at,
       SUM(mr_count_people_group)                      AS mr_count_people_group,
-      SUM(mr_count_people_engineering)                AS mr_count_people_engineering
+      SUM(mr_count_people_group_engineering)          AS mr_count_people_group_engineering
     FROM category_handbook_people_group_merge_requests_count
     WHERE merge_request_state = 'merged'
       AND merge_request_merged_at IS NOT NULL

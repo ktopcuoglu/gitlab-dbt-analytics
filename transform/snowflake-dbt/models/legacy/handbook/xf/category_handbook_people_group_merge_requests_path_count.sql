@@ -21,7 +21,7 @@ WITH category_handbook_people_group_merge_requests AS (
            ELSE 0 END                                                                     AS path_count_people_group,
 
       -- People Group departments 
-      IFF(LOWER(merge_request_path) LIKE '%/handbook/people-group/engineering/%',1,0)     AS path_count_people_engineering,    
+      IFF(LOWER(merge_request_path) LIKE '%/handbook/people-group/engineering/%',1,0)     AS path_count_people_group_engineering,    
 
       -- Metadata 
       merge_request_created_at,
