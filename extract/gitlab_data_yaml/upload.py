@@ -90,10 +90,8 @@ if __name__ == "__main__":
         curl_and_upload(
             key, value, comp_calc_url, config_dict["GITLAB_ANALYTICS_PRIVATE_TOKEN"]
         )
-    
-    curl_and_upload(
-        "team", "team", team_url
-    )
+
+    curl_and_upload("team", "team", team_url)
 
     if job_failed:
         sys.exit(1)

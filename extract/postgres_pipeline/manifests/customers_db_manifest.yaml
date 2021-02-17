@@ -1,13 +1,18 @@
 connection_info:
-  user: CUSTOMERS_DB_USER
-  pass: CUSTOMERS_DB_PASS
-  host: CUSTOMERS_DB_HOST
   database: CUSTOMERS_DB_NAME
+  host: CUSTOMERS_DB_HOST
+  pass: CUSTOMERS_DB_PASS
   port: PG_PORT
+  user: CUSTOMERS_DB_USER
 tables:
   customers:
+    advanced_metadata: true
+    export_db: EXPORT_DB
+    export_schema: 'customers'
+    export_table: 'customers'
+    export_table_primary_key: id
     import_db: CUSTOMERS_DB
-    import_query: >
+    import_query: |-
       SELECT id
       , created_at
       , updated_at
@@ -32,14 +37,14 @@ tables:
       , email
       , phone_number
       FROM customers
+  eula_requests:
+    advanced_metadata: true
     export_db: EXPORT_DB
     export_schema: 'customers'
-    export_table: 'customers'
+    export_table: 'eula_requests'
     export_table_primary_key: id
-    advanced_metadata: true
-  eula_requests:
     import_db: CUSTOMERS_DB
-    import_query: >
+    import_query: |-
       SELECT id
       , customer_id
       , subscription_id
@@ -50,28 +55,28 @@ tables:
       , subscription_name
       , eula_id
       FROM eula_requests
-    export_db: EXPORT_DB  
-    export_schema: 'customers'
-    export_table: 'eula_requests'
-    export_table_primary_key: id
-    advanced_metadata: true
   eulas:
+    advanced_metadata: true
+    export_db: EXPORT_DB
+    export_schema: 'customers'
+    export_table: 'eulas'
+    export_table_primary_key: id
     import_db: CUSTOMERS_DB
-    import_query: >
+    import_query: |-
       SELECT id
       , name
       , content
       , created_at
       , updated_at
       FROM eulas
+  license_seat_links:
+    advanced_metadata: true
     export_db: EXPORT_DB
     export_schema: 'customers'
-    export_table: 'eulas'
-    export_table_primary_key: id
-    advanced_metadata: true
-  license_seat_links:
+    export_table: 'license_seat_links'
+    export_table_primary_key: zuora_subscription_id
     import_db: CUSTOMERS_DB
-    import_query: >
+    import_query: |-
       SELECT zuora_subscription_id
       , created_at
       , updated_at
@@ -83,14 +88,14 @@ tables:
       , license_starts_on
       , zuora_subscription_name
       FROM license_seat_links
+  orders:
+    advanced_metadata: true
     export_db: EXPORT_DB
     export_schema: 'customers'
-    export_table: 'license_seat_links'
-    export_table_primary_key: zuora_subscription_id
-    advanced_metadata: true
-  orders:
+    export_table: 'orders'
+    export_table_primary_key: id
     import_db: CUSTOMERS_DB
-    import_query: >
+    import_query: |-
       SELECT id
       , customer_id
       , product_rate_plan_id
@@ -109,14 +114,14 @@ tables:
       , zuora_account_id
       , increased_billing_rate_notified_at
       FROM orders
+  reconciliations:
+    advanced_metadata: true
     export_db: EXPORT_DB
     export_schema: 'customers'
-    export_table: 'orders'
-    export_table_primary_key: id
-    advanced_metadata: true
-  reconciliations:
+    export_table: 'reconciliations'
+    export_table_primary_key: order_id
     import_db: CUSTOMERS_DB
-    import_query: >
+    import_query: |-
       SELECT order_id
       , user_count
       , reconcile_done_at
@@ -125,14 +130,24 @@ tables:
       , error_message
       , reconcile_on
       FROM reconciliations
+  schema_migrations:
+    advanced_metadata: true
     export_db: EXPORT_DB
     export_schema: 'customers'
-    export_table: 'reconciliations'
-    export_table_primary_key: order_id
-    advanced_metadata: true  
-  trial_histories:
+    export_table: 'schema_migrations'
+    export_table_primary_key: version
     import_db: CUSTOMERS_DB
-    import_query: >
+    import_query: |-
+      SELECT version
+      FROM schema_migrations
+  trial_histories:
+    advanced_metadata: true
+    export_db: EXPORT_DB
+    export_schema: 'customers'
+    export_table: 'trial_histories'
+    export_table_primary_key: gl_namespace_id
+    import_db: CUSTOMERS_DB
+    import_query: |-
       SELECT gl_namespace_id
         , start_date
         , expired_on
@@ -142,27 +157,26 @@ tables:
         , glm_content
         , trial_entity
       FROM trial_histories
+  version_associations:
     export_db: EXPORT_DB
     export_schema: 'customers'
-    export_table: 'trial_histories'
-    export_table_primary_key: gl_namespace_id
-    advanced_metadata: true
-  version_associations:
+    export_table: 'version_associations'
+    export_table_primary_key: id
     import_db: CUSTOMERS_DB
-    import_query: >
+    import_query: |-
       SELECT id
       , version_id
       , foreign_key_name
       , foreign_key_id
       , foreign_type
       FROM version_associations
+  versions:
     export_db: EXPORT_DB
     export_schema: 'customers'
-    export_table: 'version_associations'
-    export_table_primary_key: id  
-  versions:
+    export_table: 'versions'
+    export_table_primary_key: id
     import_db: CUSTOMERS_DB
-    import_query: >
+    import_query: |-
       SELECT id
       , item_type
       , item_id
@@ -173,17 +187,3 @@ tables:
       , transaction_id
       , object_changes
       FROM versions
-    export_db: EXPORT_DB
-    export_schema: 'customers'
-    export_table: 'versions'
-    export_table_primary_key: id
-  schema_migrations:
-    import_db: CUSTOMERS_DB
-    import_query: >
-      SELECT version
-      FROM schema_migrations
-    export_db: EXPORT_DB
-    export_schema: 'customers'
-    export_table: 'schema_migrations'
-    export_table_primary_key: version
-    advanced_metadata: true

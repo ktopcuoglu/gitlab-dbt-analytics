@@ -22,11 +22,25 @@ WITH account_dimensions AS (
 
       -- shared dimension keys
       crm_person.dim_crm_person_id,
-      campaign_id                               AS dim_campaign_id,
-      bizible_account                           AS dim_crm_account_id,
-      account_dimensions.dim_sales_segment_id   AS dim_sales_segment_id,
-      account_dimensions.dim_sales_territory_id AS dim_sales_territory_id,
-      account_dimensions.dim_industry_id        AS dim_industry_id,
+      campaign_id                                       AS dim_campaign_id,
+      account_dimensions.dim_crm_account_id,
+      account_dimensions.dim_parent_crm_account_id,
+      account_dimensions.dim_parent_sales_segment_id,
+      account_dimensions.dim_parent_geo_region_id,
+      account_dimensions.dim_parent_geo_sub_region_id,
+      account_dimensions.dim_parent_geo_area_id,
+      account_dimensions.dim_parent_sales_territory_id,
+      account_dimensions.dim_parent_industry_id,
+      account_dimensions.dim_parent_location_country_id,
+      account_dimensions.dim_parent_location_region_id,
+      account_dimensions.dim_account_sales_segment_id,
+      account_dimensions.dim_account_geo_region_id,
+      account_dimensions.dim_account_geo_sub_region_id,
+      account_dimensions.dim_account_geo_area_id,
+      account_dimensions.dim_account_sales_territory_id,
+      account_dimensions.dim_account_industry_id,
+      account_dimensions.dim_account_location_country_id,
+      account_dimensions.dim_account_location_region_id,
 
       -- attribution counts
       bizible_count_first_touch,
@@ -35,7 +49,7 @@ WITH account_dimensions AS (
 
     FROM bizible_touchpoints
     LEFT JOIN account_dimensions
-      ON bizible_touchpoints.bizible_account = account_dimensions.crm_account_id
+      ON bizible_touchpoints.bizible_account = account_dimensions.dim_crm_account_id
     LEFT JOIN crm_person
       ON bizible_touchpoints.bizible_person_id = crm_person.bizible_person_id
 )
@@ -45,5 +59,5 @@ WITH account_dimensions AS (
     created_by="@mcooperDD",
     updated_by="@mcooperDD",
     created_date="2021-01-21",
-    updated_date="2021-01-21"
+    updated_date="2021-02-02"
 ) }}

@@ -150,6 +150,8 @@ sources:
         identifier: gitlab_db_epics
       - name: events
         identifier: gitlab_db_events
+      - name: experiment_subjects
+        identifier: gitlab_db_experiment_subjects
       - name: experiment_users
         identifier: gitlab_db_experiment_users
       - name: experiments

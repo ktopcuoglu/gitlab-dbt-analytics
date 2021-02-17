@@ -53,12 +53,14 @@
           THEN 0.7
         WHEN locality = 'Global Director Minimum' 
           THEN 0.8
+        WHEN DATE_TRUNC(month, updated_at) IN ('2020-12-01','2021-01-01')
+          THEN temporary_sheetload.location_factor 
+        ---using sheetload file for these 2 months as we are still using FY21 location factors, but the yaml file reflects the change for FY22 in 2021.01
         ELSE      
          COALESCE(location_factor_yaml.location_factor/100, 
                   location_factor_yaml_everywhere_else.location_factor/100,
                   location_factor_mexico.location_factor/100,
-                  geozones_modified.geozone_factor, 
-                  temporary_sheetload.location_factor) END              AS location_factor
+                  geozones_modified.geozone_factor) END              AS location_factor
     FROM locality
     LEFT JOIN location_factor_yaml
       ON LOWER(locality.locality) = LOWER(location_factor_yaml.yaml_locality)
@@ -75,7 +77,7 @@
       AND locality.updated_at BETWEEN geozones_modified.valid_from_date AND geozones_modified.valid_to_date
     LEFT JOIN temporary_sheetload
         ON locality.employee_number = temporary_sheetload.employee_number
-        AND DATE_TRUNC(month, locality.updated_at) = '2020-12-01'
+        AND DATE_TRUNC(month, locality.updated_at) IN ('2020-12-01','2021-01-01')
 
 )
 

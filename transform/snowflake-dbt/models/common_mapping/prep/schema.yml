@@ -4,34 +4,68 @@ models:
   - name: prep_sfdc_account
     description: '{{ doc("prep_sfdc_account") }}'
     columns:
-      - name: crm_account_id
+      - name: dim_crm_account_id
         description: CRM Account ID provided by Salesforce
         tests:
           - not_null
-      - name: tsp_sub_region_clean
-        description: Sales sub region, temp cleaning column
-      - name: tsp_region_clean
-        description: Sales region, temp cleaning column
-      - name: tsp_area_clean
-        description: Sales area, temp cleaning column
-      - name: tsp_territory_clean
-        description: Sales territory, temp cleaning column
-      - name: df_industry_clean
-        description: Industry, temp cleaning column
-      - name: ultimate_parent_sales_segment_clean
-        description: Ultimate parent sales segment, temp cleaning column
-      - name: dim_geo_area_name_source
+      - name: dim_parent_crm_account_id
+        description: Ulimate parent CRM Account ID provided by Salesforce
+      - name: account_tsp_region_clean
+        description: Sales region, temp cleaning column for account
+      - name: parent_tsp_region_clean
+        description: Sales region, temp cleaning column for parent
+      - name: account_tsp_sub_region_clean
+        description: Sales sub region, temp cleaning column for account
+      - name: parent_tsp_sub_region_clean
+        description: Sales sub region, temp cleaning column for parent
+      - name: account_tsp_area_clean
+        description: Sales area, temp cleaning column for account
+      - name: parent_tsp_area_clean
+        description: Sales area, temp cleaning column for parent
+      - name: account_tsp_territory_clean
+        description: Sales territory, temp cleaning column for account
+      - name: parent_tsp_territory_clean
+        description: Sales territory, temp cleaning column for parent
+      - name: account_df_industry_clean
+        description: Industry, temp cleaning column for account
+      - name: parent_df_industry_clean
+        description: Industry, temp cleaning column for parent
+      - name: account_sales_segment_clean
         description: Dim geo area name final source column
-      - name: dim_geo_region_name_source
+      - name: parent_sales_segment_clean
+        description: Dim geo area name final source column
+      - name: account_billing_country_clean
+        description: Dim location country name final source column
+      - name: parent_billing_country_clean
+        description: Dim location country name final source column
+      - name: dim_account_geo_region_name_source
         description: Dim geo region name final source column
-      - name: dim_geo_sub_region_name_source
+      - name: dim_parent_geo_region_name_source
+        description: Dim geo region name final source column
+      - name: dim_account_geo_sub_region_name_source
         description: Dim geo sub region name final source column
-      - name: dim_sales_territory_name_source
+      - name: dim_parent_geo_sub_region_name_source
+        description: Dim geo sub region name final source column
+      - name: dim_account_geo_area_name_source
+        description: Dim geo area name final source column
+      - name: dim_parent_geo_area_name_source
+        description: Dim geo area name final source column
+      - name: dim_account_sales_territory_name_source
         description: Dim sales territory name final source column
-      - name: dim_industry_name_source
+      - name: dim_parent_sales_territory_name_source
+        description: Dim sales territory name final source column
+      - name: dim_account_industry_name_source
         description: Dim industry name final source column
-      - name: dim_sales_segment_name_source
+      - name: dim_parent_industry_name_source
+        description: Dim industry name final source column
+      - name: dim_account_sales_segment_name_source
         description: Dim sales segment name final source column
+      - name: dim_parent_sales_segment_name_source
+        description: Dim sales segment name final source column
+      - name: dim_account_location_country_name_source
+        description: Dim location country name final source column
+      - name: dim_parent_location_country_name_source
+        description: Dim location country name final source column
 
   - name: prep_crm_sales_hierarchy_live
     description: '{{ doc("prep_crm_sales_hierarchy_live") }}'
@@ -40,6 +74,9 @@ models:
         description: Unique identifier of a sales hierarchy tier
         tests:
           - not_null
+          - unique
+      - name: dim_crm_sales_hierarchy_sales_area_live_id
+        tests:
           - unique
 
   - name: prep_crm_sales_representative
@@ -96,6 +133,15 @@ models:
           - not_null
           - unique
 
+  - name: prep_location_country
+    description: '{{ doc("prep_location_country") }}'
+    columns:
+      - name: dim_location_country_id
+        description: Unique identifier of a country
+        tests:
+          - not_null
+          - unique
+
   - name: prep_location_region
     description: '{{ doc("prep_location_region") }}'
     columns:
@@ -121,10 +167,12 @@ models:
         tests:
           - not_null
           - unique
+        tags: ["tdf", "common", "gainsight"]
       - name: namespace_id
         tests:
           - not_null
           - unique
+        tags: ["tdf", "common", "gainsight"]
       - name: namespace_is_internal
       - name: namespace_is_ultimate_parent
       - name: namespace_name
@@ -134,6 +182,7 @@ models:
         description: This field should be Group or Individual. A namespace is the first item to come after the / following the domain. For example https://www.gitlab.com/NicoleSchwartz/ is an Individual namespace. There are some namespace_IDs that are missing from this table, when doing certain joins (left) you may get NULL when this data is missing.
         tests:
           - not_null
+        tags: ["tdf", "common", "gainsight"]
       - name: has_avatar
       - name: namespace_created_at
       - name: namespace_updated_at
@@ -163,14 +212,17 @@ models:
           - not_null
           - accepted_values:
               values: ['2', '3', '4', '34', '67', 'Trial']
+        tags: ["tdf", "common", "gainsight"]
       - name: gitlab_plan_title
         description: Whether or not the namespace associated with the project is subscribed to a paid plan. This can be inherited from the namespace's ultimate parent.
         tests:
           - not_null
+        tags: ["tdf", "common", "gainsight"]
       - name: gitlab_plan_is_paid
         description: Whether or not the namespace associated with the project is subscribed to a paid plan. This can be inherited from the namespace's ultimate parent.
         tests:
           - not_null
+        tags: ["tdf", "common", "gainsight"]
       - name: dim_product_tier_id,
       - name: current_member_count
         description: The number of members that are presently associated with the namespace.
@@ -259,6 +311,7 @@ models:
         tests:
           - not_null
           - unique
+        tags: ["tdf", "common", "gainsight"]
       - name: dim_crm_account_id
         description: account id from SFDC identifing the customer
       - name: dim_billing_account_id
@@ -276,6 +329,7 @@ models:
           - not_null
           - accepted_values:
               values: ['Active', 'Cancelled', 'Draft', 'Expired']
+        tags: ["tdf", "common", "gainsight"]
       - name: subscription_version
         description: The version number of the subscription
       - name: is_auto_renew
@@ -302,6 +356,7 @@ models:
           - not_null
           - accepted_values:
                   values: ['Sales-Assisted', 'Self-Service']
+        tags: ["tdf"]
 
   - name: prep_product_tier
     description: '{{ doc("prep_product_tier") }}'
@@ -311,17 +366,20 @@ models:
         tests:
           - not_null
           - unique
+        tags: ["tdf", "common", "gainsight"]
       - name: product_tier_historical
         description: Product pricing tiers prior to [tier renaming](https://gitlab-com.gitlab.io/packaging-and-pricing/pricing-handbook/handbook/renaming_tiers/) (early 2021).
         tests:
           - not_null
           - unique
+        tags: ["tdf", "common", "gainsight"]
       - name: product_tier_historical_short
         description: Pulls the product tier from `product_tier_historical` with the delivery type removed
       - name: product_tier_name
-        description: Product [pricing tiers](https://about.gitlab.com/handbook/marketing/strategic-marketing/tiers/) for both SaaS and Self-Managed customers. Includes the mapping from SaaS - Silver to SaaS - Premium, and from SaaS - Gold to SaaS - Ultimate. 
+        description: Product [pricing tiers](https://about.gitlab.com/handbook/marketing/strategic-marketing/tiers/) for both SaaS and Self-Managed customers. Includes the mapping from SaaS - Silver to SaaS - Premium, and from SaaS - Gold to SaaS - Ultimate.
         tests:
           - not_null
+        tags: ["tdf", "common", "gainsight"]
       - name: product_tier_name_short
         description: Pulls the product tier from `product_tier_name` with the delivery type removed
       - name: product_delivery_type
@@ -351,11 +409,13 @@ models:
         tests:
           - not_null
           - unique
+        tags: ["tdf", "common", "gainsight"]
       - name: license_md5
         description: The md5 hash of the license file. Use this field to join to fct_usage_ping_payloads.
         tests:
           - not_null
           - unique
+        tags: ["tdf", "common", "gainsight"]
       - name: dim_subscription_id
         description: The unique identifier of a version of a subscription.
       - name: subscription_name
@@ -389,47 +449,57 @@ models:
       - name: customers_db_order_id
         tests:
           - not_null
+        tags: ["tdf", "common", "gainsight"]
       - name: order_subscription_id
         description: Zuora subscription ID listed on the order in the Customers source database.
       - name: dim_subscription_id
         tests:
           - not_null
+        tags: ["tdf", "common", "gainsight"]
       - name: dim_subscription_id_original
         tests:
           - not_null
+        tags: ["tdf", "common", "gainsight"]
       - name: dim_subscription_id_previous
         tests:
           - not_null
+        tags: ["tdf", "common", "gainsight"]
       - name: dim_crm_account_id
         tests:
           - not_null
+        tags: ["tdf", "common", "gainsight"]
       - name: dim_billing_account_id
         tests:
           - not_null
+        tags: ["tdf", "common", "gainsight"]
       - name: dim_product_tier_id
         tests:
           - not_null
+        tags: ["tdf", "common", "gainsight"]
       - name: active_user_count
         description: Count of active users currently on the customer's subcription. A count of 0 indicates that Seat Link has been turned off by the customer.
       - name: license_user_count
         description: Count of licensed users purchased with the customer's subcription.
         tests:
           - not_null
+        tags: ["tdf", "common", "gainsight"]
       - name: max_historical_user_count
         description: Maximum active user count ever reported over the lifetime of the customer's subcription.
         tests:
           - not_null
+        tags: ["tdf", "common", "gainsight"]
       - name: report_date
         description: Day on which Seat Link usage data is reported. Should always be last day of month for historical months.
         tests:
           - not_null
+        tags: ["tdf", "common", "gainsight"]
       - name: is_last_seat_link_report_per_subscription
         description: Flags if the row contains the most recent seat link record received for the subscription.
       - name: is_last_seat_link_report_per_order
         description: Flags if the row contains the most recent seat link record received for the order.
-      - name: is_subscription_data_quality_issue
+      - name: is_subscription_in_zuora
         description: Flags rows where the `zuora_subscription_id` from `customers_db_orders_source` is not found in `dim_subscription`.
-      - name: is_rate_plan_data_quality_issue
+      - name: is_rate_plan_in_zuora
         description: Flags rows where the `product_rate_plan_id` from `customers_db_orders_source` is not found in `dim_product_tier`.
-      - name: is_active_user_count_data_quality_issue
+      - name: is_active_user_count_available
         description: Flags rows where `active_user_count` is NULL in source.
