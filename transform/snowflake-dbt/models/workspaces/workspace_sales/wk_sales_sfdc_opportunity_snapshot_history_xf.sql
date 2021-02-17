@@ -39,13 +39,16 @@ WITH date_details AS (
       sfdc_opportunity_snapshot_history.lead_source,
       sfdc_opportunity_snapshot_history.merged_opportunity_id,
       sfdc_opportunity_snapshot_history.opportunity_owner,
-      sfdc_opportunity_snapshot_history.opportunity_owner_team,
-      sfdc_opportunity_snapshot_history.opportunity_owner_manager,
+ 
       sfdc_opportunity_snapshot_history.opportunity_owner_department,
       sfdc_opportunity_snapshot_history.opportunity_sales_development_representative,
       sfdc_opportunity_snapshot_history.opportunity_business_development_representative,
       sfdc_opportunity_snapshot_history.opportunity_development_representative,
-      sfdc_opportunity_snapshot_history.account_owner_team_stamped,
+
+      --sfdc_opportunity_snapshot_history.order_type,
+      --sfdc_opportunity_snapshot_history.opportunity_owner_team,
+      --sfdc_opportunity_snapshot_history.opportunity_owner_manager,
+      --sfdc_opportunity_snapshot_history.account_owner_team_stamped,
       sfdc_opportunity_snapshot_history.parent_segment,
       sfdc_opportunity_snapshot_history.sales_accepted_date,
       sfdc_opportunity_snapshot_history.sales_path,
@@ -55,7 +58,7 @@ WITH date_details AS (
       sfdc_opportunity_snapshot_history.net_new_source_categories,
       sfdc_opportunity_snapshot_history.source_buckets,
       sfdc_opportunity_snapshot_history.stage_name,
-      sfdc_opportunity_snapshot_history.order_type,
+
       sfdc_opportunity_snapshot_history.acv,
       sfdc_opportunity_snapshot_history.closed_deals,
       sfdc_opportunity_snapshot_history.competitors,
@@ -279,11 +282,36 @@ WITH date_details AS (
           'Large'                   AS "USER_SEGMENT_STAMPED", 
           1.012723079               AS "RATIO_NET_IACV_TO_NET_ARR" 
 
+
+), pipeline_type_quarter_start AS (
+
+    SELECT 
+      opportunity_id,
+      snapshot_fiscal_quarter_date
+    FROM sfdc_opportunity_snapshot_history        
+    WHERE snapshot_fiscal_quarter_date = close_fiscal_quarter_date -- closing in the same quarter of the snapshot
+      -- not created within quarter
+      AND snapshot_fiscal_quarter_date <> pipeline_created_fiscal_quarter_date
+      -- set day 5 as start of the quarter for pipeline purposes
+      AND snapshot_day_of_fiscal_quarter_normalised = 5
+    GROUP BY 1, 2
+
+), pipeline_type_quarter_created AS (
+
+    SELECT 
+      opportunity_id,
+      snapshot_fiscal_quarter_date
+    FROM sfdc_opportunity_snapshot_history
+    WHERE snapshot_fiscal_quarter_date = close_fiscal_quarter_date -- closing in the same quarter of the snapshot
+      -- created same quarter
+      AND snapshot_fiscal_quarter_date = pipeline_created_fiscal_quarter_date
+    GROUP BY 1, 2
+
 ), sfdc_opportunity_snapshot_history_xf AS (
 
   SELECT DISTINCT
-      opp_snapshot.snapshot_date                                  AS snapshot_date,  
 
+      opp_snapshot.*,
 
       ------------------------------------------------------------------------------------------------------
       -- Base helpers for reporting
@@ -353,9 +381,12 @@ WITH date_details AS (
       END                                                         AS is_closed,
       
       CASE 
-        WHEN opp_snapshot.stage_name = 'Closed Won' THEN '1.Won'
-        WHEN is_lost = 1 THEN '2.Lost'
-        WHEN is_open = 1 THEN '0. Open' 
+        WHEN is_won = 1  
+          THEN '1.Won'
+        WHEN is_lost = 1 
+          THEN '2.Lost'
+        WHEN is_open = 1 
+          THEN '0. Open' 
         ELSE 'N/A'
       END                                                         AS stage_category,
 
@@ -367,8 +398,9 @@ WITH date_details AS (
 
   
       ------------------------------------------------------------------------------------------------------
-
+/*
       -- base fields
+      opp_snapshot.snapshot_date                                  AS snapshot_date,  
       opp_snapshot.account_id,
       opp_snapshot.forecast_category_name,                
       opp_snapshot.opportunity_id,
@@ -387,6 +419,14 @@ WITH date_details AS (
       opp_snapshot.total_contract_value,
       opp_snapshot.professional_services_value,
 
+        opp_snapshot.recurring_amount,
+      opp_snapshot.true_up_amount,
+      opp_snapshot.proserv_amount,
+      opp_snapshot.other_non_recurring_amount,
+      opp_snapshot.arr_basis,
+      opp_snapshot.arr,
+      opp_snapshot.raw_net_arr,
+*/
       ------------------------------------------------------------------------------------------------------
       ------------------------------------------------------------------------------------------------------
       
@@ -445,13 +485,7 @@ WITH date_details AS (
       ------------------------------------------------------------------------------------------------------
       ------------------------------------------------------------------------------------------------------
 
-      opp_snapshot.recurring_amount,
-      opp_snapshot.true_up_amount,
-      opp_snapshot.proserv_amount,
-      opp_snapshot.other_non_recurring_amount,
-      opp_snapshot.arr_basis,
-      opp_snapshot.arr,
-      opp_snapshot.raw_net_arr,
+    
 
       ---------------------
       -- compound metrics for reporting
@@ -559,9 +593,7 @@ WITH date_details AS (
       sfdc_accounts_xf.tsp_sub_region,
       sfdc_accounts_xf.ultimate_parent_sales_segment,
       sfdc_accounts_xf.tsp_max_hierarchy_sales_segment,
-   
- 
-      
+        
       -- account owner hierarchies levels
       COALESCE(account_owner.sales_team_level_2,'n/a')            AS account_owner_team_level_2,
       COALESCE(account_owner.sales_team_level_3,'n/a')            AS account_owner_team_level_3,
@@ -601,8 +633,18 @@ WITH date_details AS (
           AND opp_snapshot.close_date < '2020-08-01' 
             THEN 1
         ELSE 0
-      END                                                         AS is_excluded_flag
-      
+      END                                                         AS is_excluded_flag,
+
+      -- pipeline type, identifies if the opty was there at the begging of the quarter or not
+      CASE
+        WHEN pipeline_type_quarter_start.opportunity_id IS NOT NULL
+          THEN '1. Starting Pipeline'
+        WHEN pipeline_type_quarter_created.opportunity_id IS NOT NULL
+          THEN '2. Created Pipeline'
+        WHEN opp_snapshot.close_fiscal_quarter_date = opp_snapshot.snapshot_fiscal_quarter_date
+          THEN '3. Pulled in Pipeline'
+        ELSE '4. Not in Quarter'
+      END                                                         AS pipeline_type
 
     FROM sfdc_opportunity_snapshot_history opp_snapshot
     INNER JOIN sfdc_opportunity_xf    
@@ -619,8 +661,16 @@ WITH date_details AS (
     LEFT JOIN net_iacv_to_net_arr_ratio
       ON net_iacv_to_net_arr_ratio.user_segment_stamped = sfdc_opportunity_xf.user_segment_stamped
       AND net_iacv_to_net_arr_ratio.order_type_stamped = sfdc_opportunity_xf.order_type_stamped
-    WHERE opp_snapshot.account_id NOT IN ('0014M00001kGcORQA0')                 -- remove test account
-      AND sfdc_accounts_xf.ultimate_parent_account_id NOT IN ('0016100001YUkWVAA1')      -- remove test account
+    -- Pipeline type - Starting pipeline
+    LEFT JOIN pipeline_type_quarter_start 
+      ON pipeline_type_quarter_start.opportunity_id = opp_snapshot.opportunity_id
+      AND pipeline_type_quarter_start.snapshot_fiscal_quarter_date = opp_snapshot.snapshot_fiscal_quarter_date 
+    -- Pipeline type - Created in Quarter
+    LEFT JOIN pipeline_type_quarter_created 
+      ON pipeline_type_quarter_created.opportunity_id = opp_snapshot.opportunity_id
+      AND pipeline_type_quarter_created.snapshot_fiscal_quarter_date = opp_snapshot.snapshot_fiscal_quarter_date 
+    WHERE opp_snapshot.account_id NOT IN ('0014M00001kGcORQA0')                           -- remove test account
+      AND sfdc_accounts_xf.ultimate_parent_account_id NOT IN ('0016100001YUkWVAA1')       -- remove test account
       AND opp_snapshot.is_deleted = 0
 )
 
