@@ -897,6 +897,7 @@ roles:
                     - prod.common_mart_sales.*
                     - prod.legacy.*
                     - prod.workspace_data.*
+                    - prod.workspace_finance.*
                     - prod.workspace_marketing.*
                     - prod.workspace_sales.*
                     - prep.dbt.*
