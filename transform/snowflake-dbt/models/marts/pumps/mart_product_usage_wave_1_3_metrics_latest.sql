@@ -37,7 +37,7 @@
       latest_metrics.ci_internal_pipelines_28_days_user,
       latest_metrics.ci_builds_28_days_user,
       latest_metrics.ci_runners_all_time_event,
-      latest_metrics.auto_devops_enable_all_time_event,
+      latest_metrics.auto_devops_enabled_all_time_event,
       latest_metrics.gitlab_shared_runners_enabled_instance_setting,
       latest_metrics.container_registry_enabled_instance_setting,
       latest_metrics.template_repositories_all_time_event,

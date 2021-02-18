@@ -56,7 +56,7 @@ WITH subscriptions AS (
       usage_ping.ci_internal_pipelines_28_days_user,
       usage_ping.ci_builds_28_days_user,
       usage_ping.ci_runners_all_time_event,
-      usage_ping.auto_devops_enable_all_time_event,
+      usage_ping.auto_devops_enabled_all_time_event,
       usage_ping.gitlab_shared_runners_enabled_instance_setting,
       usage_ping.container_registry_enabled_instance_setting,
       usage_ping.template_repositories_all_time_event,

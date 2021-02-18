@@ -13,7 +13,7 @@
     {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage']['create']['ci_builds']") }}                                             AS ci_builds_all_time_user,                            
     {{ null_negative_numbers("raw_usage_data_payload['counts']['ci_builds']") }}                                                                        AS ci_builds_all_time_event,         
     {{ null_negative_numbers("raw_usage_data_payload['counts']['ci_runners']") }}                                                                       AS ci_runners_all_time_event,
-    {{ convert_variant_to_boolean_field("raw_usage_data_payload['counts']['auto_devops_enabled']") }}                                                   AS auto_devops_enable_all_time_event,                  
+    {{ convert_variant_to_boolean_field("raw_usage_data_payload['counts']['auto_devops_enabled']") }}                                                   AS auto_devops_enabled_all_time_event,                  
     {{ convert_variant_to_boolean_field("raw_usage_data_payload['gitlab_shared_runners_enabled']") }}                                                   AS gitlab_shared_runners_enabled_instance_setting,     
     {{ convert_variant_to_boolean_field("raw_usage_data_payload['container_registry_enabled']") }}                                                      AS container_registry_enabled_instance_setting,   
     {{ null_negative_numbers("raw_usage_data_payload['counts']['template_repositories']") }}                                                            AS template_repositories_all_time_event,     

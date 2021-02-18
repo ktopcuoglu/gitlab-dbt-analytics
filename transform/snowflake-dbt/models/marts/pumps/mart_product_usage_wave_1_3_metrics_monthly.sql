@@ -36,7 +36,7 @@
       monthly_metrics.ci_internal_pipelines_28_days_user,
       monthly_metrics.ci_builds_28_days_user,
       monthly_metrics.ci_runners_all_time_event,
-      monthly_metrics.auto_devops_enable_all_time_event,
+      monthly_metrics.auto_devops_enabled_all_time_event,
       monthly_metrics.gitlab_shared_runners_enabled_instance_setting,
       monthly_metrics.container_registry_enabled_instance_setting,
       monthly_metrics.template_repositories_all_time_event,
