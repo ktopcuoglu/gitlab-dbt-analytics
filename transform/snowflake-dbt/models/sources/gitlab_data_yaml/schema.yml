@@ -16,6 +16,16 @@ models:
       - name: milestone
       - name: default_enabled
   
+  - name: geozones_yaml_source
+    description: Source layer for extracting and cleaning data from [geo_zones.yml](https://gitlab.com/gitlab-com/people-group/peopleops-eng/compensation-calculator/-/blob/master/data/geo_zones.yml)
+    columns:
+      - name: unique_key
+      - name: geozone_title
+      - name: geozone_factor
+      - name: country
+      - name: state_or_province
+      - name: uploaded_at
+  
   - name: location_factors_yaml_source
     description: Emphemeral layer for extracting and cleaning data from [location_factors.yml file](https://gitlab.com/gitlab-com/www-gitlab-com/blob/master/data/location_factors.yml) in the GitLab Handbook.
 

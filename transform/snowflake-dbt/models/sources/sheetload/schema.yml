@@ -352,6 +352,27 @@ models:
   tests:
     - unique:
         column_name: "CONCAT(month_date, channel, brand, metric, is_organic)"
+- name: sheetload_social_marketing_topic_metrics_source
+  description: This is the model that captures data from social marketing metrics at the Organic Social topic/campaign level. This data is sourced from Sprout Social (currently there is no API).
+  columns:
+    - name: month_date
+      tests:
+      - not_null
+    - name: sprout_tag
+      tests:
+      - not_null
+    - name: channel
+      tests:
+      - not_null
+    - name: brand
+      tests:
+      - not_null
+    - name: metric
+      tests:
+      - not_null
+  tests:
+    - unique:
+        column_name: "CONCAT(month_date, sprout_tag, channel, brand, metric, is_organic)"
 - name: sheetload_territory_mapping_source
   description: Base model for marketing territory mapping.
   columns:

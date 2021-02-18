@@ -34,6 +34,7 @@ WITH source AS (
       currenttermperiodtype                       AS current_term_period_type,
       clickthrougheularequired__c                 AS sfdc_click_through_eula_required,
       endcustomerdetails__c                       AS sfdc_end_customer_details,
+      eoastarterbronzeofferaccepted__c            AS eoa_starter_bronze_offer_accepted,
 
       --key_dates
       cancelleddate                               AS cancelled_date,

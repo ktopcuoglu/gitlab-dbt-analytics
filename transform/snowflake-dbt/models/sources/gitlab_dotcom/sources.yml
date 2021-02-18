@@ -150,6 +150,8 @@ sources:
         identifier: gitlab_db_epics
       - name: events
         identifier: gitlab_db_events
+      - name: experiment_subjects
+        identifier: gitlab_db_experiment_subjects
       - name: experiment_users
         identifier: gitlab_db_experiment_users
       - name: experiments
@@ -230,6 +232,8 @@ sources:
           error_after: {count: 30, period: day}    
       - name: project_auto_devops
         identifier: gitlab_db_project_auto_devops
+      - name: project_custom_attributes
+        identifier: gitlab_db_project_custom_attributes
       - name: project_features
         identifier: gitlab_db_project_features
       - name: project_group_links

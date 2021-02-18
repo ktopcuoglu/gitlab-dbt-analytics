@@ -9,3 +9,5 @@ macros:
     description: '{{ doc("sfdc_source_buckets") }}'
   - name: sales_hierarchy_sales_segment_cleaning
     description: '{{ doc("sales_hierarchy_sales_segment_cleaning") }}'
+  - name: sales_funnel_text_slugify
+    description: '{{ doc("sales_funnel_text_slugify")}}'

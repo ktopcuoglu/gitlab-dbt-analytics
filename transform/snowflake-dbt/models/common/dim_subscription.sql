@@ -31,6 +31,7 @@ WITH subscription AS (
     subscription.zuora_renewal_subscription_name_slugify,
     subscription.renewal_term,
     subscription.renewal_term_period_type,
+    subscription.eoa_starter_bronze_offer_accepted,
     subscription.subscription_start_date,
     subscription.subscription_end_date,
     subscription.subscription_sales_type,
@@ -50,7 +51,8 @@ WITH subscription AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@snalamaru",
+    updated_by="@iweeks",
     updated_by="@paul_armstrong",
     created_date="2020-12-16",
-    updated_date="2021-01-29"
+    updated_date="2021-02-18"
 ) }}

@@ -210,7 +210,6 @@ WITH dim_billing_account AS (
       ON type_of_arr_change.ultimate_parent_account_id = annual_price_per_seat_change.ultimate_parent_account_id
       AND type_of_arr_change.arr_month = annual_price_per_seat_change.arr_month
       AND type_of_arr_change.product_category = annual_price_per_seat_change.product_category
-    WHERE type_of_arr_change.arr_month < DATE_TRUNC('month',CURRENT_DATE)
 
 )
 
