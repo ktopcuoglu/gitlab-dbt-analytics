@@ -130,6 +130,7 @@ WITH dim_crm_account AS (
       dim_crm_account.ultimate_parent_focus_account,
       dim_crm_account.ultimate_parent_account_segment,
       fct_crm_opportunity.closed_buckets,
+      dim_crm_opportunity.opportunity_category,
       dim_crm_opportunity.source_buckets,
       dim_crm_opportunity.opportunity_sales_development_representative,
       dim_crm_opportunity.opportunity_business_development_representative,

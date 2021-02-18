@@ -116,7 +116,7 @@ WITH source AS (
         stamped_user_geo__c                         AS user_geo_stamped,
         stamped_user_region__c                      AS user_region_stamped,
         stamped_user_area__c                        AS user_area_stamped,
-
+        opportunity_category__c                     AS opportunity_category,
         opportunity_health__c                       AS opportunity_health,
         risk_type__c                                AS risk_type,
         risk_reasons__c                             AS risk_reasons,
