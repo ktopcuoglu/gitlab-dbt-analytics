@@ -118,6 +118,7 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity.technical_evaluation_date,
       sfdc_opportunity.order_type,
       sfdc_opportunity.deal_path,
+      sfdc_opportunity.opportunity_category,
 
       -- opportunity information
       sfdc_opportunity.acv,
