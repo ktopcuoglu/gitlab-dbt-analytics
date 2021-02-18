@@ -30,11 +30,11 @@ WITH dates AS (
 
       SELECT
            mrr_totals.mrr_id                                                AS mrr_id,
-           mrr_totals.dim_date_id                                           AS dim_date_id,
            mrr_totals.dim_billing_account_id                                AS dim_billing_account_id,
            mrr_totals.dim_crm_account_id                                    AS dim_crm_account_id,
            mrr_totals.dim_subscription_id                                   AS dim_subscription_id,
            mrr_totals.dim_product_detail_id                                 AS dim_product_detail_id,
+           mrr_totals.dim_date_id                                           AS dim_date_id,
            mrr_totals.mrr                                                   AS mrr,
            mrr_totals.arr                                                   AS arr,
            mrr_totals.quantity                                              AS quantity,
