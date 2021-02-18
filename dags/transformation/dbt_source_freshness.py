@@ -74,7 +74,7 @@ dag = DAG("monitor_dbt_source_freshness", default_args=default_args, schedule_in
 
 monitor_dbt_source_freshness_cmd = f"""
     {dbt_install_deps_nosha_cmd} &&
-    dbt source snapshot-freshness --profiles-dir profile;  ret=$?;
+    dbt source snapshot-freshness --profiles-dir profile; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py freshness; exit $ret
     """
 
