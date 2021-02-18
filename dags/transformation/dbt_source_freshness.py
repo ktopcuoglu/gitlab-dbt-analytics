@@ -76,7 +76,7 @@ dbt_source_freshness_cmd = f"""
         {dbt_install_deps_nosha_cmd} &&
 				export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_XS" &&
         dbt source snapshot-freshness --profiles-dir profile --target prod;  ret=$?;
-        python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
+        python ../../orchestration/upload_dbt_file_to_snowflake.py freshness; exit $ret
         """
 
 dbt_source_freshness = KubernetesPodOperator(
