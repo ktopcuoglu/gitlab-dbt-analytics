@@ -70,7 +70,7 @@ default_args = {
 dag_schedule = "30 */3 * * *"
 
 # Create the DAG
-dag = DAG("dbt_source_freshness", default_args=default_args, schedule_interval=dag_schedule)
+dag = DAG("dbt_source_freshness_monitor", default_args=default_args, schedule_interval=dag_schedule)
 
 dbt_source_freshness_cmd = f"""
     {dbt_install_deps_nosha_cmd} &&
@@ -79,11 +79,11 @@ dbt_source_freshness_cmd = f"""
     python ../../orchestration/upload_dbt_file_to_snowflake.py freshness; exit $ret
     """
 
-dbt_source_freshness = KubernetesPodOperator(
+dbt_source_freshness_monitor = KubernetesPodOperator(
     **gitlab_defaults,
     image=DBT_IMAGE,
-    task_id=f"dbt-source-freshness",
-    name=f"dbt-source-freshness",
+    task_id=f"dbt-source-freshness-monitor",
+    name=f"dbt-source-freshness-monitor",
     secrets=task_secrets,
     env_vars=pod_env_vars,
     arguments=[dbt_source_freshness_cmd],
