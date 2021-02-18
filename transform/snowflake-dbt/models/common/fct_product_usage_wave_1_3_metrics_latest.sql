@@ -30,8 +30,8 @@ WITH subscriptions AS (
       subscriptions.dim_subscription_id,
       subscriptions.dim_subscription_id_original,
       subscriptions.dim_billing_account_id,
-      seat_link.report_date                                                     AS seat_link_report_date,
-      seat_link.active_user_count / seat_link.license_user_count                AS license_utilization,
+      seat_link.report_date                                         AS seat_link_report_date,
+      seat_link.active_user_count / seat_link.license_user_count    AS license_utilization,
       seat_link.active_user_count,
       seat_link.max_historical_user_count,
       seat_link.license_user_count,
@@ -71,14 +71,17 @@ WITH subscriptions AS (
       usage_ping.epics_28_days_users,
       usage_ping.issues_28_days_users,
       IFF(usage_ping.instance_user_count != seat_link.active_user_count,
-          usage_ping.instance_user_count, NULL)                                 AS instance_user_count_not_aligned,
+          usage_ping.instance_user_count, NULL)                     AS instance_user_count_not_aligned,
       IFF(usage_ping.historical_max_users != seat_link.max_historical_user_count,
-          usage_ping.historical_max_users, NULL)                                AS historical_max_users_not_aligned,
-      seat_link.is_subscription_in_zuora                                        AS is_seat_link_subscription_in_zuora,
-      seat_link.is_rate_plan_in_zuora                                           AS is_seat_link_rate_plan_in_zuora,
-      seat_link.is_active_user_count_available                                  AS is_seat_link_active_user_count_available,
-      usage_ping.is_license_mapped_to_subscription                              AS is_usage_ping_license_mapped_to_subscription,
-      usage_ping.is_license_subscription_id_valid                               AS is_usage_ping_license_subscription_id_valid
+          usage_ping.historical_max_users, NULL)                    AS historical_max_users_not_aligned,
+      seat_link.is_subscription_in_zuora                            AS is_seat_link_subscription_in_zuora,
+      seat_link.is_rate_plan_in_zuora                               AS is_seat_link_rate_plan_in_zuora,
+      seat_link.is_active_user_count_available                      AS is_seat_link_active_user_count_available,
+      usage_ping.is_license_mapped_to_subscription                  AS is_usage_ping_license_mapped_to_subscription,
+      usage_ping.is_license_subscription_id_valid                   AS is_usage_ping_license_subscription_id_valid,
+      IFF(usage_ping.ping_created_at IS NOT NULL
+          OR seat_link.report_date IS NOT NULL,
+          TRUE, FALSE)                                              AS is_data_in_subscription_month
     FROM subscriptions
     LEFT JOIN seat_link
       ON subscriptions.dim_subscription_id = seat_link.dim_subscription_id

@@ -9,3 +9,6 @@ For each request:
 1. Comment in the request that the removal has been processed with the attach results file
 1. Unassign data team members and remove the `~data-removal` tag
 1. check the box for snowflake in the removal request issue description
+
+
+/label ~Infrastructure ~Legal ~Housekeeping ~Snowflake ~"Priority::1-Ops" ~"workflow::4 - scheduled" 

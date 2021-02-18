@@ -44,7 +44,9 @@ WITH dim_crm_person AS (
       DATE_TRUNC(month, fct_crm_person.qualified_date)           AS qualified_month,
       fct_crm_person.converted_date,
       DATE_TRUNC(month, fct_crm_person.converted_date)           AS converted_month,
+      dim_crm_person.email_domain,
       dim_crm_person.email_hash,
+      dim_crm_person.status,
       dim_crm_person.lead_source,
       dim_crm_person.source_buckets,
       dim_marketing_channel.marketing_channel_name,
@@ -62,7 +64,7 @@ WITH dim_crm_person AS (
     LEFT JOIN dim_crm_person
       ON fct_crm_person.dim_crm_person_id = dim_crm_person.dim_crm_person_id
     LEFT JOIN dim_sales_segment
-      ON fct_crm_person.dim_sales_segment_id = dim_sales_segment.dim_sales_segment_id
+      ON fct_crm_person.dim_account_sales_segment_id = dim_sales_segment.dim_sales_segment_id
     LEFT JOIN dim_marketing_channel
       ON fct_crm_person.dim_marketing_channel_id = dim_marketing_channel.dim_marketing_channel_id
 
@@ -73,5 +75,5 @@ WITH dim_crm_person AS (
     created_by="@iweeks",
     updated_by="@iweeks",
     created_date="2020-12-07",
-    updated_date="2021-02-08",
+    updated_date="2021-02-12",
   ) }}

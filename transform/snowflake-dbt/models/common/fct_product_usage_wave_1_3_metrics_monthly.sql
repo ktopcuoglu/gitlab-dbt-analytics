@@ -83,7 +83,10 @@ WITH subscriptions AS (
       seat_link.is_rate_plan_in_zuora                               AS is_seat_link_rate_plan_in_zuora,
       seat_link.is_active_user_count_available                      AS is_seat_link_active_user_count_available,
       usage_ping.is_license_mapped_to_subscription                  AS is_usage_ping_license_mapped_to_subscription,
-      usage_ping.is_license_subscription_id_valid                   AS is_usage_ping_license_subscription_id_valid
+      usage_ping.is_license_subscription_id_valid                   AS is_usage_ping_license_subscription_id_valid,
+      IFF(usage_ping.ping_created_at IS NOT NULL
+          OR seat_link.report_date IS NOT NULL,
+          TRUE, FALSE)                                              AS is_data_in_subscription_month
     FROM subscriptions
     LEFT JOIN usage_ping
       ON subscriptions.dim_subscription_id = usage_ping.dim_subscription_id
