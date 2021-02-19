@@ -507,10 +507,7 @@ WITH sfdc_opportunity AS (
             AND LOWER(oppty_final.sales_type) LIKE '%renewal%')
           THEN net_arr
         ELSE 0 
-      END                                                         AS booked_net_arr,
-
-
-
+      END                                                         AS booked_net_arr
 
     FROM oppty_final
     -- Net IACV to Net ARR conversion table
