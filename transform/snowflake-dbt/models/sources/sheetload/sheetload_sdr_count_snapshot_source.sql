@@ -6,9 +6,9 @@ WITH source AS (
 ), renamed as (
 
     SELECT
-      quarter::VARCHAR                            AS fiscal_quarter,
-      sales_segment::VARCHAR                      AS sales_segment,
-      sdr_count::NUMERIC                          AS sdr_count
+      "Quarter"::VARCHAR                            AS fiscal_quarter,
+      "Sales_Segment"::VARCHAR                      AS sales_segment,
+      "SDR_Count"::NUMERIC                          AS sdr_count
       
     FROM source
 )
