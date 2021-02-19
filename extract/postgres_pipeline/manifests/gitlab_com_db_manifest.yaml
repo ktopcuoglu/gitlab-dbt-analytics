@@ -718,8 +718,6 @@ tables:
       , subnet_ids
       , security_group_id
       , instance_type
-      , access_key_id
-      , session_token
       , status_reason
       , kubernetes_version
       FROM cluster_providers_aws
