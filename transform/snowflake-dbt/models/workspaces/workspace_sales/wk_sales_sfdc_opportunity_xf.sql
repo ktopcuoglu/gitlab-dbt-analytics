@@ -33,7 +33,6 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity_xf.opportunity_owner_title,
       sfdc_opportunity_xf.opportunity_sales_development_representative,
       sfdc_opportunity_xf.opportunity_development_representative,
-      sfdc_opportunity_xf.account_owner_team_stamped,
       sfdc_opportunity_xf.opportunity_term,
       sfdc_opportunity_xf.primary_campaign_source_id,
       sfdc_opportunity_xf.sales_accepted_date,
@@ -46,7 +45,6 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity_xf.stage_is_active,
       sfdc_opportunity_xf.stage_is_closed,
       sfdc_opportunity_xf.technical_evaluation_date,
-      sfdc_opportunity_xf.order_type,
       sfdc_opportunity_xf.deal_path,
       sfdc_opportunity_xf.acv,
       sfdc_opportunity_xf.amount,
@@ -93,11 +91,14 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity_xf.upside_swing_deal_iacv,
       sfdc_opportunity_xf.weighted_iacv,
       sfdc_opportunity_xf.is_web_portal_purchase,
-      sfdc_opportunity_xf.partner_initiated_opportunity,
-      sfdc_opportunity_xf.user_segment,
       sfdc_opportunity_xf.subscription_start_date,
       sfdc_opportunity_xf.subscription_end_date,
       sfdc_opportunity_xf.true_up_value,
+
+      -----------------------------------------------------------
+      -----------------------------------------------------------
+      -- New fields for FY22 - including user segment / region fields
+
       sfdc_opportunity_xf.order_type_live,
       sfdc_opportunity_xf.order_type_stamped,
 
@@ -113,6 +114,9 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity_xf.user_region_stamped,
       sfdc_opportunity_xf.user_area_stamped,
       sfdc_opportunity_xf.user_geo_stamped,
+
+      -----------------------------------------------------------
+      -----------------------------------------------------------
 
       sfdc_opportunity_xf.opportunity_health,
       sfdc_opportunity_xf.risk_type,
@@ -146,6 +150,14 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity_xf.cp_why_do_anything_at_all,
       sfdc_opportunity_xf.cp_why_gitlab,
       sfdc_opportunity_xf.cp_why_now,
+      
+      -----------------------------------------------------------
+      -----------------------------------------------------------
+
+      -- used for segment reporting in FY21 and before
+      sfdc_opportunity_xf.account_owner_team_stamped,
+
+      -- NF: why do we need these fields now?
       sfdc_opportunity_xf.division_sales_segment_stamped,
       sfdc_opportunity_xf.tsp_max_hierarchy_sales_segment,
       sfdc_opportunity_xf.division_sales_segment,
@@ -153,8 +165,21 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity_xf.segment,
       sfdc_opportunity_xf.sales_segment,
       sfdc_opportunity_xf.parent_segment,
+
+      -----------------------------------------------------------
+      -----------------------------------------------------------
+      -- Partner Org. fields
+
       sfdc_opportunity_xf.dr_partner_deal_type,
       sfdc_opportunity_xf.dr_partner_engagement,
+      
+      -- NF: I think this one is deprecated too
+      sfdc_opportunity_xf.partner_initiated_opportunity,
+      
+      -----------------------------------------------------------
+      -----------------------------------------------------------
+      -- role hierarchy team fields, from the opportunity owner and account owner
+      -- NF: 2020-02-18 TO BE REMOVED
       sfdc_opportunity_xf.account_owner_team_level_2,
       sfdc_opportunity_xf.account_owner_team_level_3,
       sfdc_opportunity_xf.account_owner_team_level_4,
@@ -165,11 +190,25 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity_xf.account_owner_sales_region,
       sfdc_opportunity_xf.opportunity_owner_team_level_2,
       sfdc_opportunity_xf.opportunity_owner_team_level_3,
+      
+      -- 2021-02-18 NF: I think this field is not needed
+      sfdc_opportunity_xf.user_segment,
+      -----------------------------------------------------------
+      -----------------------------------------------------------
+      
       sfdc_opportunity_xf.stage_name_3plus,
       sfdc_opportunity_xf.stage_name_4plus,
       sfdc_opportunity_xf.is_stage_3_plus,
       sfdc_opportunity_xf.is_lost,
-      sfdc_opportunity_xf.is_open,
+      
+      --sfdc_opportunity_xf.is_open,
+      -- NF: Added the 'Duplicate' stage to the is_open definition
+      CASE 
+        WHEN sfdc_opportunity_xf.stage_name IN ('8-Closed Lost', '9-Unqualified', 'Closed Won', '10-Duplicate') 
+            THEN 0
+        ELSE 1  
+      END                                                         AS is_open,
+      
       sfdc_opportunity_xf.is_closed,
       sfdc_opportunity_xf.stage_category,
       sfdc_opportunity_xf.is_renewal,
@@ -290,8 +329,6 @@ WITH sfdc_opportunity AS (
 
       sfdc_opportunity_xf.*,
 
-
-
       -- date helpers
       
       -- pipeline created, tracks the date pipeline value was created for the first time
@@ -303,6 +340,21 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity_xf.created_fiscal_quarter_name              AS pipeline_created_fiscal_quarter_name,
       sfdc_opportunity_xf.created_fiscal_quarter_date              AS pipeline_created_fiscal_quarter_date,
 
+
+      CASE
+        WHEN sfdc_opportunity.stage_name
+          IN ('1-Discovery', '2-Developing', '2-Scoping','3-Technical Evaluation', '4-Proposal', 'Closed Won','5-Negotiating', '6-Awaiting Signature', '7-Closing')
+            THEN 1
+        ELSE 0
+      END                                                                                               AS is_stage_1_plus,
+
+
+      CASE
+        WHEN sfdc_opportunity.stage_name
+          IN ('4-Proposal', 'Closed Won','5-Negotiating', '6-Awaiting Signature', '7-Closing')
+            THEN 1
+        ELSE 0
+      END                                                                                               AS is_stage_4_plus,
 
       -- account driven fields 
       sfdc_accounts_xf.ultimate_parent_account_id,
@@ -326,12 +378,17 @@ WITH sfdc_opportunity AS (
         ELSE '3. Other'
       END                                                                 AS deal_group,
 
+      ----------------------------------------------------------------
+      ----------------------------------------------------------------
+
       -- Team Segment / ASM - RD 
+      --  stamped field is not maintained for open deals
       CASE WHEN sfdc_opportunity_xf.user_segment_stamped IS NULL 
           THEN opportunity_owner.user_segment 
           ELSE COALESCE(sfdc_opportunity_xf.user_segment_stamped,'N/A')
-      END                                                                 AS opportunity_owner_user_segment,
+      END                                                                        AS opportunity_owner_user_segment,
 
+      --  stamped field is not maintained for open deals
       CASE WHEN sfdc_opportunity_xf.user_region_stamped IS NULL 
           THEN opportunity_owner.user_region
           ELSE COALESCE(sfdc_opportunity_xf.user_region_stamped,'N/A')
@@ -340,6 +397,32 @@ WITH sfdc_opportunity AS (
 
       opportunity_owner_user_segment                                            AS opportunity_owner_cro_level,
       CONCAT(opportunity_owner_user_segment,'_',opportunity_owner_user_region)  AS opportunity_owner_rd_asm_level,
+
+      /* --DEPRECATED This field is substituted by the opportunity_owner_cro_level
+      CASE 
+        WHEN sfdc_opportunity_xf.account_owner_team_vp_level = 'VP Ent'
+          THEN 'Large'
+        WHEN sfdc_opportunity_xf.account_owner_team_vp_level = 'VP Comm MM'
+          THEN 'Mid-Market'
+        WHEN sfdc_opportunity_xf.account_owner_team_vp_level = 'VP Comm SMB' 
+          THEN 'SMB' 
+        ELSE 'Other' 
+      END                                                                       AS account_owner_cro_level,
+    */
+
+      -- temporary, to deal with global Bookings FY21 reports that use account_owner_team_stamp field
+      CASE 
+        WHEN oppty_final.account_owner_team_stamped IN ('Commercial - SMB','SMB','SMB - US','SMB - International')
+          THEN 'SMB'
+        WHEN oppty_final.account_owner_team_stamped IN ('APAC','EMEA','Channel','US West','US East','Public Sector')
+          THEN 'Large'
+        WHEN oppty_final.account_owner_team_stamped IN ('MM - APAC','MM - East','MM - EMEA','Commercial - MM','MM - West','MM-EMEA')
+          THEN 'Mid-Market'
+        ELSE 'SMB'
+      END                                                                     AS account_owner_team_stamped_cro_level   
+
+      ----------------------------------------------------------------
+      ----------------------------------------------------------------
 
       -- fields for counting new logos, these fields count refund as negative
       CASE 
@@ -359,16 +442,7 @@ WITH sfdc_opportunity AS (
         ELSE 0 
       END                                                                       AS partner_engaged_opportunity_flag,
 
-      CASE 
-        WHEN sfdc_opportunity_xf.account_owner_team_vp_level = 'VP Ent'
-          THEN 'Large'
-        WHEN sfdc_opportunity_xf.account_owner_team_vp_level = 'VP Comm MM'
-          THEN 'Mid-Market'
-        WHEN sfdc_opportunity_xf.account_owner_team_vp_level = 'VP Comm SMB' 
-          THEN 'SMB' 
-        ELSE 'Other' 
-      END                                                                     AS account_owner_cro_level,
-
+      
        -- check if renewal was closed on time or not
       CASE 
         WHEN sfdc_opportunity_xf.is_renewal = 1 
@@ -433,7 +507,10 @@ WITH sfdc_opportunity AS (
             AND LOWER(oppty_final.sales_type) LIKE '%renewal%')
           THEN net_arr
         ELSE 0 
-      END                                                         AS booked_net_arr   
+      END                                                         AS booked_net_arr,
+
+
+
 
     FROM oppty_final
     -- Net IACV to Net ARR conversion table
