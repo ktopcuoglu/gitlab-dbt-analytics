@@ -1,6 +1,12 @@
 {{ config(alias='sfdc_opportunity_xf') }}
 
-WITH sfdc_opportunity_xf AS (
+WITH sfdc_opportunity AS (
+
+    SELECT opportunity_id,
+          opportunity_category
+    FROM {{ref('sfdc_opportunity')}}
+
+), sfdc_opportunity_xf AS (
 
     SELECT 
       sfdc_opportunity_xf.account_id,
@@ -57,7 +63,11 @@ WITH sfdc_opportunity_xf AS (
 
       -- logic needs to be added here once the oppotunity category fields is merged
       -- https://gitlab.com/gitlab-data/analytics/-/issues/7888
-      0                                                           AS is_refund,
+      CASE
+        WHEN sfdc_opportunity.opportunity_category IN ('Credit', 'Decommission','Decommissioned')
+          THEN 1
+        ELSE 0
+      END                                                          AS is_refund,
       --sfdc_opportunity_xf.is_refund,
 
 
@@ -198,9 +208,15 @@ WITH sfdc_opportunity_xf AS (
       sfdc_opportunity_xf.record_type_modifying_object_type,
       sfdc_opportunity_xf.record_type_name,
       sfdc_opportunity_xf.region_quota_id,
-      sfdc_opportunity_xf.sales_quota_id
+      sfdc_opportunity_xf.sales_quota_id,
+      
+      -- fields form opportunity source
+      sfdc_opportunity.opportunity_category
     
     FROM {{ref('sfdc_opportunity_xf')}}
+    -- not all fields are in opportunity xf
+    INNER JOIN sfdc_opportunity
+      ON sfdc_opportunity.opportunity_id = sfdc_opportunity_xf.opportunity_id
 
 ), sfdc_users_xf AS (
 
@@ -273,6 +289,8 @@ WITH sfdc_opportunity_xf AS (
     SELECT 
 
       sfdc_opportunity_xf.*,
+
+
 
       -- date helpers
       
@@ -377,6 +395,7 @@ WITH sfdc_opportunity_xf AS (
       ON opportunity_owner.user_id = sfdc_opportunity_xf.owner_id
     LEFT JOIN sfdc_accounts_xf
       ON sfdc_accounts_xf.account_id = sfdc_opportunity_xf.account_id
+    
     WHERE sfdc_accounts_xf.ultimate_parent_account_id NOT IN ('0016100001YUkWVAA1')   -- remove test account
       AND sfdc_opportunity_xf.account_id NOT IN ('0014M00001kGcORQA0')                -- remove test account
       AND sfdc_opportunity_xf.is_deleted = 0
