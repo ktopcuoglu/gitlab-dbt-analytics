@@ -36,7 +36,7 @@ WITH counts AS (
    UNION ALL
 
    SELECT 
-    'customers_db_license_seat_links_source' AS model_name
+    'customers_db_license_seat_links_source' AS model_name,
     COUNT(*) AS row_count
    FROM  {{ ref('customers_db_license_seat_links_source') }}
 
