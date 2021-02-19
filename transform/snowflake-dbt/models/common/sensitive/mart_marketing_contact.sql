@@ -217,7 +217,11 @@ WITH marketing_contact AS (
         WHEN MAX(is_self_managed_ultimate_tier) >= 1 
           THEN TRUE 
         ELSE FALSE 
-      END                                                                                        AS is_self_managed_ultimate_tier   
+      END                                                                                        AS is_self_managed_ultimate_tier,
+      ARRAY_AGG(
+                DISTINCT marketing_contact_order.marketing_contact_role || ': ' || 
+                  IFNULL(saas_product_tier,'') || IFNULL(self_managed_product_tier,'') 
+               )                                                                                 AS role_tier_text
     FROM marketing_contact
     LEFT JOIN  marketing_contact_order
       ON marketing_contact_order.dim_marketing_contact_id = marketing_contact.dim_marketing_contact_id
