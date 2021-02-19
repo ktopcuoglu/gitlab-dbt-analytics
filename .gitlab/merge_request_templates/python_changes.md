@@ -2,11 +2,11 @@ Closes
 
 #### Code Changes
 
-* [ ] _action items_
+* _action items_
 
 #### Steps to confirm
 
-* [ ] _action items_
+* _action items_
 
 #### Testing
 
