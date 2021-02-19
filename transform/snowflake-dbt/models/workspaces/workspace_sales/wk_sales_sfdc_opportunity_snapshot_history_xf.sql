@@ -486,7 +486,7 @@ WITH date_details AS (
       -- created and closed within the quarter net arr
       CASE 
         WHEN opp_snapshot.pipeline_created_fiscal_quarter_name = opp_snapshot.close_fiscal_quarter_name
-          AND opp_snapshot.stage_name IN ('Closed Won')  
+          AND (is_won = 1 OR (is_renewal = 1 AND is_lost = 1))  
             THEN net_arr
         ELSE 0
       END                                                         AS created_and_won_same_quarter_net_arr,
@@ -500,13 +500,10 @@ WITH date_details AS (
 
       -- booked net arr (won + renewals / lost)
       CASE
-        WHEN opp_snapshot.stage_name = 'Closed Won'
-          OR (opp_snapshot.stage_name = '8-Closed Lost'
-            AND LOWER(opp_snapshot.sales_type) like '%renewal%')
+        WHEN is_won = 1 OR (is_renewal = 1 AND is_lost = 1)
           THEN net_arr
         ELSE 0 
       END                                                         AS booked_net_arr,
-
 
       -- fields for counting new logos, these fields count refund as negative
       CASE 
@@ -542,8 +539,11 @@ WITH date_details AS (
       -- of the truth ato cut the data, that's why instead of using the stampped version, I take the current fields.
       sfdc_opportunity_xf.opportunity_owner_user_segment,
       sfdc_opportunity_xf.opportunity_owner_user_region,
-      sfdc_opportunity_xf.opportunity_owner_cro_level,
-      sfdc_opportunity_xf.opportunity_owner_rd_asm_level,
+
+      --- target fields for reporting, changing their name might help to isolate their logic from the actual field
+      -- in FY21, there were multiple ways of getting this done, and it meant changing downwards reports
+      sfdc_opportunity_xf.sales_team_cro_level,
+      sfdc_opportunity_xf.sales_team_rd_asm_level,
 
       /*CASE WHEN sfdc_opportunity_xf.user_segment_stamped IS NULL 
           THEN opportunity_owner.user_segment 

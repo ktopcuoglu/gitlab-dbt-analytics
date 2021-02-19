@@ -342,7 +342,7 @@ WITH sfdc_opportunity AS (
 
 
       CASE
-        WHEN sfdc_opportunity.stage_name
+        WHEN sfdc_opportunity_xf.stage_name
           IN ('1-Discovery', '2-Developing', '2-Scoping','3-Technical Evaluation', '4-Proposal', 'Closed Won','5-Negotiating', '6-Awaiting Signature', '7-Closing')
             THEN 1
         ELSE 0
@@ -350,7 +350,7 @@ WITH sfdc_opportunity AS (
 
 
       CASE
-        WHEN sfdc_opportunity.stage_name
+        WHEN sfdc_opportunity_xf.stage_name
           IN ('4-Proposal', 'Closed Won','5-Negotiating', '6-Awaiting Signature', '7-Closing')
             THEN 1
         ELSE 0
@@ -395,8 +395,8 @@ WITH sfdc_opportunity AS (
       END                                                                       AS opportunity_owner_user_region,
 
 
-      opportunity_owner_user_segment                                            AS opportunity_owner_cro_level,
-      CONCAT(opportunity_owner_user_segment,'_',opportunity_owner_user_region)  AS opportunity_owner_rd_asm_level,
+      opportunity_owner_user_segment                                            AS sales_team_cro_level,
+      CONCAT(opportunity_owner_user_segment,'_',opportunity_owner_user_region)  AS sales_team_rd_asm_level,
 
       /* --DEPRECATED This field is substituted by the opportunity_owner_cro_level
       CASE 
@@ -412,14 +412,14 @@ WITH sfdc_opportunity AS (
 
       -- temporary, to deal with global Bookings FY21 reports that use account_owner_team_stamp field
       CASE 
-        WHEN oppty_final.account_owner_team_stamped IN ('Commercial - SMB','SMB','SMB - US','SMB - International')
+        WHEN sfdc_opportunity_xf.account_owner_team_stamped IN ('Commercial - SMB','SMB','SMB - US','SMB - International')
           THEN 'SMB'
-        WHEN oppty_final.account_owner_team_stamped IN ('APAC','EMEA','Channel','US West','US East','Public Sector')
+        WHEN sfdc_opportunity_xf.account_owner_team_stamped IN ('APAC','EMEA','Channel','US West','US East','Public Sector')
           THEN 'Large'
-        WHEN oppty_final.account_owner_team_stamped IN ('MM - APAC','MM - East','MM - EMEA','Commercial - MM','MM - West','MM-EMEA')
+        WHEN sfdc_opportunity_xf.account_owner_team_stamped IN ('MM - APAC','MM - East','MM - EMEA','Commercial - MM','MM - West','MM-EMEA')
           THEN 'Mid-Market'
         ELSE 'SMB'
-      END                                                                     AS account_owner_team_stamped_cro_level   
+      END                                                                       AS account_owner_team_stamped_cro_level,   
 
       ----------------------------------------------------------------
       ----------------------------------------------------------------
@@ -451,7 +451,7 @@ WITH sfdc_opportunity AS (
         WHEN sfdc_opportunity_xf.is_renewal = 1 
           AND sfdc_opportunity_xf.subscription_start_date_fiscal_quarter_date < sfdc_opportunity_xf.close_fiscal_quarter_date 
             THEN 'Late' 
-      END                                                                     AS renewal_timing_status,
+      END                                                                       AS renewal_timing_status,
 
       --********************************************************
       -- calculated fields for pipeline velocity report
@@ -462,7 +462,7 @@ WITH sfdc_opportunity AS (
           AND sfdc_opportunity_xf.close_date < '2020-08-01' 
             THEN 1
         ELSE 0
-      END                                                                     AS is_excluded_flag
+      END                                                                       AS is_excluded_flag
 
     FROM sfdc_opportunity_xf
     INNER JOIN sfdc_users_xf opportunity_owner
@@ -495,16 +495,15 @@ WITH sfdc_opportunity AS (
       -- created and closed within the quarter net arr
       CASE 
         WHEN oppty_final.pipeline_created_fiscal_quarter_date = oppty_final.close_fiscal_quarter_date
-          AND oppty_final.stage_name IN ('Closed Won')  
+          AND (oppty_final.is_won = 1 
+                OR (oppty_final.is_renewal = 1 AND oppty_final.is_lost = 1)) 
             THEN net_arr
         ELSE 0
       END                                                         AS created_and_won_net_arr,
 
       -- booked net arr (won + renewals / lost)
       CASE
-        WHEN oppty_final.stage_name = 'Closed Won'
-          OR (oppty_final.stage_name = '8-Closed Lost'
-            AND LOWER(oppty_final.sales_type) LIKE '%renewal%')
+        WHEN oppty_final.is_won = 1 OR (oppty_final.is_renewal = 1 AND oppty_final.is_lost = 1)
           THEN net_arr
         ELSE 0 
       END                                                         AS booked_net_arr
