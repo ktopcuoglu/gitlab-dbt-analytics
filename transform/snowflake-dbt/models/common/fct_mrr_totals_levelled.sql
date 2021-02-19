@@ -100,5 +100,5 @@ WITH dates AS (
     created_by="@paul_armstrong",
     updated_by="@paul_armstrong",
     created_date="2021-01-07",
-    updated_date="2021-01-07"
+    updated_date="2021-02-19"
 ) }}
