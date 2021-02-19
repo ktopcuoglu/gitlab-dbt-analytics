@@ -61,22 +61,6 @@ tables:
       FROM alert_management_http_integrations
       WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
         AND '{EXECUTION_DATE}'::timestamp
-  alerts_service_data:
-    dbt_source_model: true
-    export_schema: 'gitlab_dotcom'
-    export_table: 'alerts_service_data'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , service_id
-      , created_at
-      , updated_at
-      , encrypted_token
-      , encrypted_token_iv
-      FROM alerts_service_data
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
   analytics_cycle_analytics_group_stages:
     export_schema: "gitlab_com"
     export_table: analytics_cycle_analytics_group_stages
