@@ -335,9 +335,9 @@ WITH marketing_contact AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@trevor31",
-    updated_by="@jjstark",
+    updated_by="@trevor31",
     created_date="2021-02-09",
-    updated_date="2021-02-16"
+    updated_date="2021-02-19"
 ) }}
 
 
