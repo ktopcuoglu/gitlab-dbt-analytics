@@ -681,6 +681,7 @@ roles:
                 - prod.common_mapping
                 - prod.common_mart_marketing
                 - prod.common_mart_sales
+                - prod.common_mart_product
                 - prod.legacy
                 - prep.sensitive
             tables:
@@ -688,6 +689,7 @@ roles:
                 - prod.common_mapping.*
                 - prod.common_mart_marketing.*
                 - prod.common_mart_sales.*
+                - prod.common_mart_product.*
                 - prod.legacy.*
                 - prep.sensitive.*
         privileges:
@@ -881,6 +883,7 @@ roles:
                     - prod.common_mapping
                     - prod.common_mart_marketing
                     - prod.common_mart_sales
+                    - prod.common_mart_product
                     - prod.legacy
                     - prod.workspace_data
                     - prod.workspace_finance
@@ -895,8 +898,10 @@ roles:
                     - prod.common_mapping.*
                     - prod.common_mart_marketing.*
                     - prod.common_mart_sales.*
+                    - prod.common_mart_product.*
                     - prod.legacy.*
                     - prod.workspace_data.*
+                    - prod.workspace_finance.*
                     - prod.workspace_marketing.*
                     - prod.workspace_sales.*
                     - prep.dbt.*
