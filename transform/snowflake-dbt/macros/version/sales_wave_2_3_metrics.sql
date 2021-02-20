@@ -17,7 +17,7 @@
     {{ convert_variant_to_boolean_field("raw_usage_data_payload['gitlab_shared_runners_enabled']") }}                                                   AS gitlab_shared_runners_enabled_instance_setting,     
     {{ convert_variant_to_boolean_field("raw_usage_data_payload['container_registry_enabled']") }}                                                      AS container_registry_enabled_instance_setting,   
     {{ null_negative_numbers("raw_usage_data_payload['counts']['template_repositories']") }}                                                            AS template_repositories_all_time_event,     
-    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['create']['ci_pipeline_config_repository']") }}                 AS ci_pipeline_config_repository_28_days_user,         
+    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['verify']['ci_pipeline_config_repository']") }}                 AS ci_pipeline_config_repository_28_days_user,         
     {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['secure']['user_unique_users_all_secure_scanners']") }}         AS user_unique_users_all_secure_scanners_28_days_user,     
     {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['secure']['user_sast_jobs']") }}                                AS user_sast_jobs_28_days_user,       
     {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['secure']['user_dast_jobs']") }}                                AS user_dast_jobs_28_days_user,   
