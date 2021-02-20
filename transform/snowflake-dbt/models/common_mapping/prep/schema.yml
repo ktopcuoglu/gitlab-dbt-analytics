@@ -358,6 +358,56 @@ models:
                   values: ['Sales-Assisted', 'Self-Service']
         tags: ["tdf"]
 
+  - name: prep_subscription_lineage
+    description:  '{{doc("prep_subscription_lineage")}}'
+    columns:
+        - name: subscription_name_slugify
+          tests:
+            - not_null
+            - unique
+        - name: lineage
+          description: "All the subscriptions subsquent to the primary subscription, separated by commas."
+
+  - name: prep_subscription_lineage_parentage_finish
+    description: '{{ doc("prep_subscription_lineage_parentage_finish") }}'
+    columns:
+        - name: ultimate_parent_sub
+          tests:
+            - not_null
+        - name: child_sub
+          tests:
+            - not_null
+            - unique
+        - name: cohort_month
+          tests:
+            - not_null
+        - name: cohort_quarter
+          tests:
+            - not_null
+        - name: cohort_year
+          tests:
+            - not_null
+  - name: prep_subscription_lineage_parentage_start
+    description: '{{doc("prep_subscription_lineage_parentage_start")}}'
+
+  - name: prep_subscription_lineage_intermediate
+    description: '{{ doc("prep_subscription_lineage_intermediate") }}'
+    columns:
+      - name: sub_row
+        tests:
+          - not_null
+          - accepted_values:
+              values: [ '1' ]
+      - name: subscription_id
+        tests:
+          - not_null
+          - unique
+      - name: subscription_status
+        tests:
+          - not_null
+          - accepted_values:
+              values: [ 'Active','Cancelled' ]
+
   - name: prep_product_tier
     description: '{{ doc("prep_product_tier") }}'
     columns:

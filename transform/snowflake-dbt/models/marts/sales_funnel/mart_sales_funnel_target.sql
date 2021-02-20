@@ -35,8 +35,7 @@ WITH dim_crm_sales_hierarchy_live AS (
       dim_crm_sales_hierarchy_live.sales_area_name_live,
       dim_order_type.order_type_name,
       dim_opportunity_source.opportunity_source_name,
-      fct_sales_funnel_target.allocated_target,
-      fct_sales_funnel_target.kpi_total
+      fct_sales_funnel_target.allocated_target
     FROM fct_sales_funnel_target
     LEFT JOIN dim_opportunity_source
       ON fct_sales_funnel_target.dim_opportunity_source_id = dim_opportunity_source.dim_opportunity_source_id
@@ -55,5 +54,5 @@ WITH dim_crm_sales_hierarchy_live AS (
     created_by="@iweeks",
     updated_by="@iweeks",
     created_date="2021-01-08",
-    updated_date="2021-01-08",
+    updated_date="2021-02-18",
   ) }}

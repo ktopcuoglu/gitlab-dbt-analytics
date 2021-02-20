@@ -37,6 +37,18 @@ macros:
     description: '{{ doc("get_date_id") }}'
   - name: get_keyed_nulls
     description: '{{ doc("get_keyed_nulls") }}'
+  - name: hash_diff
+    description: '{{ doc("hash_diff") }}'
+    arguments:
+      - name: cte_ref
+        type: string
+        description: The CTE immediately preceding the macro call
+      - name: return_cte
+        type: string
+        description: the name of the cte that will result from the macro
+      - name: columns
+        type: list
+        description: a list of columns to be hashed and compared to previous values
   - name: monthly_change
     description: '{{ doc("monthly_change") }}'
   - name: monthly_is_used
