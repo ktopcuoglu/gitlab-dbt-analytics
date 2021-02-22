@@ -40,12 +40,11 @@ WITH counts AS (
     COUNT(*) AS row_count
    FROM  {{ ref('customers_db_license_seat_links_source') }}
 
-), final AS (
+)
 
     SELECT *
     FROM counts
 
-)
 
 
 {{ dbt_audit(
