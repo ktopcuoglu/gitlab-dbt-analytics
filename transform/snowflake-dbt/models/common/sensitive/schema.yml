@@ -83,8 +83,8 @@ models:
         description: GitLab.com user id (if applicable) of the marketing contact.
       - name: customer_db_customer_id
         description: Customer DB customer id (if applicable) of the marketing contact.
-      - name: zuora_subscription_id
-        description: Zuora subscription id (if applicable) of the marketing contact.
+      - name: zuora_billing_account_id
+        description: Zuora billing account id (if applicable) of the marketing contact.
       - name: namespace_id
         description: Gitlab.com namespace id associated to the user_id. 
       - name: marketing_contact_role
