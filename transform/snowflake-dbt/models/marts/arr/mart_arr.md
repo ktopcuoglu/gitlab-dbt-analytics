@@ -13,7 +13,7 @@ GROUP BY 1
 ORDER BY 1 DESC
 
 Charges_month_by_month CTE:
-
+mart_arr_totals_col_account_number
 This CTE amortizes the ARR by month over the effective term of the rate plan charges. There are 4 subscription statuses in Zuora: active, cancelled, draft and expired. The Zuora UI reporting modules use a filter of WHERE subscription_status NOT IN ('Draft','Expired') which is also applied in this query. Please see the column definitions for additional details.
 
 Here is an image documenting the ERD for this table:
@@ -44,26 +44,26 @@ WHERE snapshot_date = '2020-08-01'
 
 {% enddocs %}
 
-{% docs fct_mrr_totals_levelled_col_months_since_parent_cohort_start %}
+{% docs mart_arr_totals_levelled_col_months_since_parent_cohort_start %}
 
 The number of months between the MRR being reported in that row and the parent account cohort month. Must be a positive number.
 
 {% enddocs %}
 
-{% docs fct_mrr_totals_levelled_col_quarters_since_parent_cohort_start %}
+{% docs mart_arr_totals_levelled_col_quarters_since_parent_cohort_start %}
 
 The number of quarters between the MRR being reported in that row and the parent account cohort quarter. Must be a positive number.
 
 {% enddocs %}
 
-{% docs fct_mrr_totals_levelled_col_parent_account_cohort_quarter %}
+{% docs mart_arr_totals_levelled_col_parent_account_cohort_quarter %}
 
 The cohort quarter of the ultimate parent account.
 
 {% enddocs %}
 
 
-{% docs fct_mrr_totals_levelled_col_parent_account_cohort_month %}
+{% docs mart_arr_totals_levelled_col_parent_account_cohort_month %}
 
 The cohort month of the ultimate parent account.
 
