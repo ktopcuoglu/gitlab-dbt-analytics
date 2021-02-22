@@ -125,9 +125,9 @@ WITH dim_date AS (
             (PARTITION BY fiscal_year, breakout_type, division, department
             ORDER BY month_date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)   AS cumulative_hires_actual,
         IFF(cumulative_planned_hires = 0, NULL,
-             ROUND((cumulative_hires_actual/cumulative_planned_hires),2))            AS cumulative_hires_vs_plan
+             ROUND((cumulative_hires_actual/cumulative_planned_hires),2))           AS cumulative_hires_vs_plan
     FROM joined
-
+    WHERE month_date BETWEEN DATEADD(month, -24, CURRENT_DATE()) AND DATEADD(month, 12, CURRENT_DATE())
 )
 
 SELECT *
