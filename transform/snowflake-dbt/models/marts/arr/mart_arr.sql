@@ -64,9 +64,26 @@ WITH dim_billing_account AS (
       dim_crm_account.health_number,
 
       --subscription info
-      dim_subscription.subscription_name,
       dim_subscription.subscription_status,
       dim_subscription.subscription_sales_type,
+      dim_subscription.subscription_name                                              AS subscription_name,
+      dim_subscription.subscription_name_slugify                                      AS subscription_name_slugify,
+      dim_subscription.oldest_subscription_in_cohort                                  AS oldest_subscription_in_cohort,
+      dim_subscription.lineage                                                        AS subscription_lineage,
+      dim_subscription.cohort_month                                                   AS subscription_cohort_month,
+      dim_subscription.cohort_quarter                                                 AS subscription_cohort_quarter,
+      min(dim_subscription.cohort_month) OVER (
+          PARTITION BY dim_billing_account.dim_billing_account_id)                    AS billing_account_cohort_month,
+      min(dim_subscription.cohort_quarter) OVER (
+          PARTITION BY dim_billing_account.dim_billing_account_id)                    AS billing_account_cohort_quarter,
+      min(dim_subscription.cohort_month) OVER (
+          PARTITION BY dim_crm_account.crm_account_id)                                AS crm_account_cohort_month,
+      min(dim_subscription.cohort_quarter) OVER (
+          PARTITION BY dim_crm_account.crm_account_id)                                AS crm_account_cohort_quarter,
+      min(dim_subscription.cohort_month) OVER (
+          PARTITION BY dim_crm_account.ultimate_parent_account_id)                    AS parent_account_cohort_month,
+      min(dim_subscription.cohort_quarter) OVER (
+          PARTITION BY dim_crm_account.ultimate_parent_account_id)                    AS parent_account_cohort_quarter,
 
       --product info
       dim_product_detail.product_tier_name                                            AS product_category,
@@ -79,26 +96,8 @@ WITH dim_billing_account AS (
 
       fct_mrr.mrr,
       fct_mrr.arr,
-      fct_mrr.quantity,
+      fct_mrr.quantity
 
-      dim_subscription.subscription_name                                              AS subscription_name,
-      dim_subscription.subscription_name_slugify                                      AS subscription_name_slugify,
-      dim_subscription.oldest_subscription_in_cohort                                  AS oldest_subscription_in_cohort,
-      dim_subscription.lineage                                                        AS subscription_lineage,
-      dim_subscription.cohort_month                                                   AS subscription_cohort_month,
-      dim_subscription.cohort_quarter                                                 AS subscription_cohort_quarter,
-      min(dim_subscription.cohort_month) OVER (
-          PARTITION BY billing_account.dim_billing_account_id)                        AS billing_account_cohort_month,
-      min(dim_subscription.cohort_quarter) OVER (
-          PARTITION BY billing_account.dim_billing_account_id)                        AS billing_account_cohort_quarter,
-      min(dim_subscription.cohort_month) OVER (
-          PARTITION BY crm_account.crm_account_id)                                    AS crm_account_cohort_month,
-      min(dim_subscription.cohort_quarter) OVER (
-          PARTITION BY crm_account.crm_account_id)                                    AS crm_account_cohort_quarter,
-      min(dim_subscription.cohort_month) OVER (
-          PARTITION BY crm_account.ultimate_parent_account_id)                        AS parent_account_cohort_month,
-      min(dim_subscription.cohort_quarter) OVER (
-          PARTITION BY crm_account.ultimate_parent_account_id)                        AS parent_account_cohort_quarter
     FROM fct_mrr
     INNER JOIN dim_subscription
       ON dim_subscription.dim_subscription_id = fct_mrr.dim_subscription_id
