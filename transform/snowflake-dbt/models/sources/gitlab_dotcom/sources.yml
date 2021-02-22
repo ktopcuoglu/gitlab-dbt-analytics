@@ -78,6 +78,7 @@ sources:
         identifier: gitlab_db_ci_pipeline_schedules
       - name: ci_pipeline_variables
         identifier: gitlab_db_ci_pipeline_variables
+        freshness: null
       - name: ci_pipelines
         identifier: gitlab_db_ci_pipelines
       - name: ci_platform_metrics
