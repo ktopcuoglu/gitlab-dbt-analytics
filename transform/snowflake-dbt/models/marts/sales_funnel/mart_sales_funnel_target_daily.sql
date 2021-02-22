@@ -42,6 +42,7 @@
       monthly_targets.*,
       DATEDIFF('day', first_day_of_month, last_day_of_month) + 1  AS days_of_month,
       fiscal_quarter_name,
+      fiscal_year,
       allocated_target / days_of_month                            AS daily_allocated_target
     FROM monthly_targets
     INNER JOIN dim_date
@@ -55,6 +56,8 @@
       date_day                                                                                                                                      AS target_date,
       DATEADD('day', 1, target_date)                                                                                                                AS report_target_date,
       target_month,
+      fiscal_quarter_name,
+      fiscal_year,
       kpi_name,
       sales_segment_name_live,
       location_region_name_live,
@@ -67,7 +70,9 @@
       SUM(daily_allocated_target) OVER(PARTITION BY kpi_name, sales_segment_name_live, location_region_name_live, sales_region_name_live,
                              sales_area_name_live, order_type_name, opportunity_source_name, target_month ORDER BY date_day)                        AS mtd_allocated_target,
       SUM(daily_allocated_target) OVER(PARTITION BY kpi_name, sales_segment_name_live, location_region_name_live, sales_region_name_live,
-                             sales_area_name_live, order_type_name, opportunity_source_name, fiscal_quarter_name ORDER BY date_day)                 AS qtd_allocated_target
+                             sales_area_name_live, order_type_name, opportunity_source_name, fiscal_quarter_name ORDER BY date_day)                 AS qtd_allocated_target,
+      SUM(daily_allocated_target) OVER(PARTITION BY kpi_name, sales_segment_name_live, location_region_name_live, sales_region_name_live,
+                             sales_area_name_live, order_type_name, opportunity_source_name, fiscal_year ORDER BY date_day)                         AS ytd_allocated_target
       
     FROM monthly_targets_daily
 
