@@ -140,7 +140,7 @@ WITH marketing_contact AS (
       END                                                                                        AS group_member_of_saas_ultimate_tier,      
       CASE 
         WHEN MAX(CASE 
-                  WHEN marketing_contact_order.is_group_namespace = 1 
+                  WHEN marketing_contact_order.is_individual_namespace = 0
                     AND marketing_contact_order.marketing_contact_role IN (
                                                                           'Group Namespace Owner'
                                                                           , 'Customer DB Owner'
@@ -153,7 +153,7 @@ WITH marketing_contact AS (
       END                                                                                        AS responsible_for_group_saas_trial,    
       CASE 
         WHEN MAX(CASE 
-                  WHEN marketing_contact_order.is_group_namespace = 1  
+                  WHEN marketing_contact_order.is_individual_namespace = 0
                     AND marketing_contact_order.marketing_contact_role IN (
                                                                           'Group Namespace Owner'
                                                                           , 'Customer DB Owner'
@@ -166,7 +166,7 @@ WITH marketing_contact AS (
       END                                                                                        AS responsible_for_group_saas_free_tier,
       CASE 
         WHEN MAX(CASE 
-                  WHEN marketing_contact_order.is_group_namespace = 1 
+                  WHEN marketing_contact_order.is_individual_namespace = 0
                     AND marketing_contact_order.marketing_contact_role IN (
                                                                           'Group Namespace Owner'
                                                                           , 'Customer DB Owner'
@@ -179,7 +179,7 @@ WITH marketing_contact AS (
       END                                                                                        AS responsible_for_group_saas_bronze_tier,
       CASE 
         WHEN MAX(CASE 
-                  WHEN marketing_contact_order.is_group_namespace = 1 
+                  WHEN marketing_contact_order.is_individual_namespace = 0 
                     AND marketing_contact_order.marketing_contact_role IN (
                                                                           'Group Namespace Owner'
                                                                           , 'Customer DB Owner'
@@ -192,7 +192,7 @@ WITH marketing_contact AS (
       END                                                                                        AS responsible_for_group_saas_premium_tier,
       CASE 
         WHEN MAX(CASE 
-                  WHEN marketing_contact_order.is_group_namespace = 1  
+                  WHEN marketing_contact_order.is_individual_namespace = 0
                     AND marketing_contact_order.marketing_contact_role IN (
                                                                           'Group Namespace Owner'
                                                                           , 'Customer DB Owner'
