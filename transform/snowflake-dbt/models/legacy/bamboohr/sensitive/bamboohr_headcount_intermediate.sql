@@ -56,6 +56,7 @@
       SUM(percent_change_in_comp_excluding_sdr)         AS percent_change_in_comp_excluding_sdr,
 
       AVG(location_factor)                              AS location_factor,
+      AVG(new_hire_location_factor)                     AS new_hire_location_factor,
       SUM(discretionary_bonus)                          AS discretionary_bonus, 
       AVG(tenure_months)                                AS tenure_months,
       SUM(tenure_zero_to_six_months)                    AS tenure_zero_to_six_months,
@@ -191,8 +192,11 @@ WITH dates AS (
         NULL,percent_change_in_comp)                                                AS percent_change_in_comp_excluding_sdr,
 
       IFF(dates.end_date = date_actual 
-            AND sales_geo_differential = 'n/a - Comp Calc',
+            AND COALESCE(sales_geo_differential,'n/a - Comp Calc') = 'n/a - Comp Calc',
             location_factor, NULL)                                                  AS location_factor,
+      IFF(is_hire_date = TRUE
+            AND COALESCE(sales_geo_differential,'n/a - Comp Calc') = 'n/a - Comp Calc',
+            location_factor, NULL)                                                  AS new_hire_location_factor,      
       discretionary_bonus,      
       ROUND((tenure_days/30),2)                                                     AS tenure_months,
       IFF(tenure_months BETWEEN 0 AND 6 AND dates.end_date = date_actual, 1, 0)     AS tenure_zero_to_six_months,

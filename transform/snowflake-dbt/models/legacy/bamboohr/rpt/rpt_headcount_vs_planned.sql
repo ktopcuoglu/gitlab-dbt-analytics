@@ -11,7 +11,14 @@
         WHERE hired_in_bamboohr= TRUE
         GROUP BY 1,2,3,4" %}
 
-WITH headcount AS (
+WITH dim_date AS (
+
+    SELECT DISTINCT 
+      fiscal_year, 
+      last_day_of_month AS month_date
+    FROM {{ ref ('dim_date') }}
+ 
+), headcount AS (
   
     SELECT 
       month_date, 
@@ -71,26 +78,30 @@ WITH headcount AS (
       'all_company_breakout'                                        AS department,
       {{lines_to_repeat}} 
 
-), final AS (
+), joined AS (
 
     SELECT 
+      dim_date.fiscal_year,
       hire_plan.month_date,
       hire_plan.breakout_type,
       COALESCE(TRIM(department_name_changes.new_department_name), hire_plan.department) AS department,
       hire_plan.division,
       hire_plan.planned_headcount,
       hire_plan.planned_hires,
-      COALESCE(headcount.headcount_actual,0)                                AS headcount_actual,
-      COALESCE(headcount.hires_actual,0)                                    AS hires_actual,
+      COALESCE(headcount.headcount_actual,0)                                       AS headcount_actual,
+      COALESCE(headcount.hires_actual,0)                                           AS hires_actual,
       IFF(hire_plan.planned_headcount = 0, NULL, 
-        ROUND((headcount.headcount_actual/hire_plan.planned_headcount),4))  AS actual_headcount_vs_planned_headcount,
+        ROUND((headcount.headcount_actual/hire_plan.planned_headcount),4))         AS actual_headcount_vs_planned_headcount,   
+
       new_hire,
       transfers,
       backfill,
       unidentified_job_opening_type,
       total_greenhouse_reqs_filled,
-      new_hire + backfill                                                   AS total_hires_greenhouse
-    FROM hire_plan
+      new_hire + backfill                                                         AS total_hires_greenhouse
+    FROM dim_date
+    LEFT JOIN hire_plan
+      ON dim_date.month_date = hire_plan.month_date
     LEFT JOIN department_name_changes
       ON department_name_changes.old_department_name = hire_plan.department
     LEFT JOIN headcount
@@ -103,6 +114,19 @@ WITH headcount AS (
       AND hire_type_aggregated.department = COALESCE(department_name_changes.new_department_name, hire_plan.department)
       AND hire_type_aggregated.division = hire_plan.division
       AND hire_type_aggregated.hire_month = DATE_TRUNC(month, hire_plan.month_date)
+
+), final AS (
+
+    SELECT *,
+      SUM(planned_hires) OVER 
+            (PARTITION BY fiscal_year, breakout_type, division, department
+            ORDER BY month_date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)   AS cumulative_planned_hires,
+      SUM(hires_actual) OVER
+            (PARTITION BY fiscal_year, breakout_type, division, department
+            ORDER BY month_date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)   AS cumulative_hires_actual,
+        IFF(cumulative_planned_hires = 0, NULL,
+             ROUND((cumulative_hires_actual/cumulative_planned_hires),2))            AS cumulative_hires_vs_plan
+    FROM joined
 
 )
 

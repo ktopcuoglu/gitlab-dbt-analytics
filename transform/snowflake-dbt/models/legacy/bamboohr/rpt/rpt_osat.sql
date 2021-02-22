@@ -11,27 +11,27 @@ WITH sheetload_osat AS (
       SUM(buddy_experience_score)       AS buddy_experience_score,
       COUNT(*)                          AS total_responses,
       COUNT(IFF(buddy_experience_score IS NOT NULL,1,0)) AS total_buddy_score_Responses
-    FROM intermediate
+    FROM sheetload_osat
     GROUP BY 1
    
 ), rolling_3_month AS (
 
   SELECT *,
     SUM(osat_score) OVER (ORDER BY completed_month
-                                       ROWS BETWEEN 2 PRECEDING AND CURRENT ROW) AS rolling_3_month_score,
+                                       ROWS BETWEEN 2 PRECEDING AND CURRENT ROW) AS sum_of_rolling_3_month_score,
     SUM(total_responses)  OVER (ORDER BY completed_month
                                        ROWS BETWEEN 2 PRECEDING AND CURRENT ROW) AS rolling_3_month_respondents,
     SUM(buddy_experience_score) OVER (ORDER BY completed_month
-                                       ROWS BETWEEN 2 PRECEDING AND CURRENT ROW) AS rolling_3_month_buddy_score,
+                                       ROWS BETWEEN 2 PRECEDING AND CURRENT ROW) AS sum_of_rolling_3_month_buddy_score,
     SUM(total_buddy_score_Responses)  OVER (ORDER BY completed_month 
                                        ROWS BETWEEN 2 PRECEDING AND CURRENT ROW) AS rolling_3_month_buddy_respondents
-  FROM data
+  FROM intermediate
   
 ), final AS (
 
     SELECT *,
-      rolling_3_month_score / rolling_3_month_respondents                        AS rolling_3_month_osat,
-      rolling_3_month_buddy_score/ rolling_3_month_buddy_respondents             AS rolling_3_month_buddy_score
+      sum_of_rolling_3_month_score / rolling_3_month_respondents                        AS rolling_3_month_osat,
+      sum_of_rolling_3_month_buddy_score/ rolling_3_month_buddy_respondents             AS rolling_3_month_buddy_score
     FROM rolling_3_month
 
 )
