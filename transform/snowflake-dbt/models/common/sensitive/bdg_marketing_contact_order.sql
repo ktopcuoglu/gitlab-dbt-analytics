@@ -59,7 +59,7 @@ WITH marketing_contact AS (
         WHEN marketing_contact_role.marketing_contact_role IN (
                                                                 'Customer DB Owner'
                                                               ) 
-          THEN saas_customer.product_tier_name_order   
+          THEN saas_customer.product_tier_name_with_trial   
         WHEN marketing_contact_role.marketing_contact_role IN (
                                                                 'Zuora Billing Contact'
                                                               ) 
@@ -69,7 +69,7 @@ WITH marketing_contact AS (
         WHEN marketing_contact_role.marketing_contact_role IN (
                                                                 'Customer DB Owner'
                                                               ) 
-          THEN self_managed_customer.product_tier_name_order   
+          THEN self_managed_customer.product_tier_name_with_trial   
         WHEN marketing_contact_role.marketing_contact_role IN (
                                                                 'Zuora Billing Contact'
                                                               ) 
