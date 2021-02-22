@@ -43,7 +43,6 @@ WITH counts AS (
 )
 
     SELECT *
-    FROM counts
 
 
 
