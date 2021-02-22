@@ -43,8 +43,6 @@ WITH counts AS (
 )
 
 
-
-
 {{ dbt_audit(
     cte_ref="counts",
     created_by="@snalamaru",
