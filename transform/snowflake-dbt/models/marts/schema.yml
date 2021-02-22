@@ -23,6 +23,22 @@ models:
           - not_null
         tags: ["tdf", "mart", "arr"]
 
+  - name: mart_crm_attribution_touchpoint
+    description: Model containing Bizible attribution touchpoints along with contact, lead, account, campaign, and opportunity details.
+    columns:
+      - name: dim_crm_touchpoint_id
+        tests:
+            - not_null
+            - unique
+
+  - name: mart_crm_touchpoint
+    description: Model containing Bizible touchpoints (non-attribution) along with contact, lead, account, and campaign details.
+    columns:
+      - name: dim_crm_touchpoint_id
+        tests:
+            - not_null
+            - unique
+
   - name: mart_crm_opportunity
     description: Model with single pane of glass sales and marketing metrics.
     columns:
