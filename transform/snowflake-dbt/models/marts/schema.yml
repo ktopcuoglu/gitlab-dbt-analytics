@@ -28,8 +28,6 @@ models:
           - not_null
       - name: oldest_subscription_in_cohort
         description: '{{ doc("zuora_mrr_totals_col_subscription_slug_for_counting") }}'
-        tests:
-          - not_null
       - name: subscription_lineage
       - name: arr_month
         description: '{{ doc("zuora_mrr_totals_col_mrr_month") }}'
@@ -37,12 +35,8 @@ models:
           - not_null
       - name: subscription_cohort_month
         description: '{{ doc("zuora_mrr_totals_col_cohort_month") }}'
-        tests:
-          - not_null
       - name: subscription_cohort_quarter
         description: '{{ doc("zuora_mrr_totals_col_cohort_quarter") }}'
-        tests:
-          - not_null
       - name: mrr
         description: '{{ doc("zuora_mrr_totals_col_mrr") }}'
         tests:
