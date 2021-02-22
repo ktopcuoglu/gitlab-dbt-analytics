@@ -214,6 +214,8 @@ sources:
         identifier: gitlab_db_notification_settings
       - name: oauth_access_tokens
         identifier: gitlab_db_oauth_access_tokens
+      - name: onboarding_progresses
+        identifier: gitlab_db_onboarding_progresses
       - name: packages_packages
         identifier: gitlab_db_packages_packages
       - name: plans
