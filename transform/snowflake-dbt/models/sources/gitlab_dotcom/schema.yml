@@ -25,22 +25,6 @@ models:
         tags: ["tdf","gitlab_dotcom"]
         tests:
           - not_null
-  - name: gitlab_dotcom_alerts_service_data_source
-    description: Base model for Gitlab.com alerts_service_data
-    columns:
-      - name: alerts_service_data_id
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-          - unique
-      - name: created_at
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-      - name: updated_at
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
   - name: gitlab_dotcom_application_settings_source
     description: Base model for Gitlab.com application settings data
     columns:

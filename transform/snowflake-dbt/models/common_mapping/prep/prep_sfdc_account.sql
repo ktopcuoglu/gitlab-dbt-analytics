@@ -62,8 +62,8 @@ WITH sfdc_account AS (
       TRIM(ultimate_parent_tsp_territory)                                                                   AS parent_tsp_territory_clean,
       TRIM(SPLIT_PART(df_industry, '-', 1))                                                                 AS account_df_industry_clean,
       TRIM(SPLIT_PART(ultimate_parent_df_industry, '-', 1))                                                 AS parent_df_industry_clean,
-      TRIM(SPLIT_PART(sales_segment, '-', 1))                                                               AS account_sales_segment_clean,
-      TRIM(SPLIT_PART(ultimate_parent_sales_segment, '-', 1))                                               AS parent_sales_segment_clean,
+      sales_segment                                                                                         AS account_sales_segment_clean,
+      ultimate_parent_sales_segment                                                                         AS parent_sales_segment_clean,
       TRIM(SPLIT_PART(billing_country, '-', 1))                                                             AS account_billing_country_clean,
       TRIM(SPLIT_PART(ultimate_parent_billing_country, '-', 1))                                             AS parent_billing_country_clean,
       MAX(account_tsp_region_clean) OVER (PARTITION BY UPPER(TRIM(account_tsp_region_clean)))               AS dim_account_geo_region_name_source,
@@ -90,5 +90,5 @@ WITH sfdc_account AS (
     created_by="@paul_armstrong",
     updated_by="@mcooperDD",
     created_date="2020-10-30",
-    updated_date="2021-01-28"
+    updated_date="2021-02-18"
 ) }}
