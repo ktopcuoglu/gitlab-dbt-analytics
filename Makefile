@@ -33,8 +33,9 @@ help:
 	init-airflow: initializes a new Airflow db and creates a generic admin user, required on a fresh db. \n \
 	\n \
 	++ dbt Related ++ \n \
-	dbt-docs: spins up a webserver with the dbt docs. Access the docs server at localhost:8081 \n \
-	dbt-image: attaches a shell to the dbt image and mounts the repo for testing. \n \
+	run-dbt: attaches a shell to the dbt virtual environment and changes to the dbt directory. \n \
+	run-dbt-docs: spins up a webserver with the dbt docs. Access the docs server at localhost:8081 \n \
+	clean-dbt: deletes all virtual environment artifacts \n \
 	\n \
 	++ Python Related ++ \n \
 	data-image: attaches to a shell in the data-image and mounts the repo for testing. \n \
@@ -89,6 +90,13 @@ $(VENV_NAME)/bin/activate: setup.py
 
 run-dbt: check-venv
 	$(VENV_ACTIVATE) && cd transform/snowflake-dbt/; dbt clean && dbt deps; exec bash;
+
+run-dbt-docs: check-venv
+	$(VENV_ACTIVATE) && cd transform/snowflake-dbt/; dbt clean && dbt deps && dbt docs generate --target docs && dbt docs serve --port 8081;
+
+clean-dbt:
+	find . -name '*.pyc' -delete
+	rm -rf $(VENV_NAME) *.eggs *.egg-info
 
 init-airflow:
 	@echo "Initializing the Airflow DB..."
