@@ -120,11 +120,11 @@ WITH marketing_contact AS (
     LEFT JOIN saas_namespace_subscription saas_customer 
       ON saas_customer.customer_id = marketing_contact_role.customer_db_customer_id
     LEFT JOIN saas_namespace_subscription saas_billing_account 
-      ON saas_billing_account.dim_billing_account_id = marketing_contact_role.zuora_billing_contact_id   
+      ON saas_billing_account.dim_billing_account_id = marketing_contact_role.zuora_billing_account_id   
     LEFT JOIN self_managed_namespace_subscription self_managed_customer 
       ON self_managed_customer.customer_id = marketing_contact_role.customer_db_customer_id
     LEFT JOIN self_managed_namespace_subscription self_managed_billing_account 
-      ON self_managed_billing_account.dim_billing_account_id = marketing_contact_role.zuora_billing_contact_id   
+      ON self_managed_billing_account.dim_billing_account_id = marketing_contact_role.zuora_billing_account_id   
     LEFT JOIN namespace_lineage 
       ON namespace_lineage.namespace_id = COALESCE(marketing_contact_role.namespace_id,
                                                    saas_namespace.dim_namespace_id,
