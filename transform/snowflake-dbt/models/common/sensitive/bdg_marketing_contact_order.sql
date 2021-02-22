@@ -45,7 +45,7 @@ WITH marketing_contact AS (
         ELSE 0 
       END                                                                                     AS is_group_namespace,
       marketing_contact_role.customer_db_customer_id                                          AS customer_id,
-      marketing_contact_role.zuora_billing_contact_id                                         AS zuora_contact_id,
+      marketing_contact_role.zuora_billing_account_id                                         AS dim_billing_account_id,
       CASE 
         WHEN marketing_contact_role.namespace_id IS NOT NULL 
           AND saas_namespace.product_tier_name_namespace is NULL
