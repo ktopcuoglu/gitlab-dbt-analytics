@@ -47,9 +47,6 @@ models:
       - name: unit_of_measure
       - name: quantity
       - name: dim_crm_account_id
-        tests:
-          - not_null:
-              severity: warn
       - name: sfdc_account_name
       - name: ultimate_parent_account_id
       - name: ultimate_parent_account_name
