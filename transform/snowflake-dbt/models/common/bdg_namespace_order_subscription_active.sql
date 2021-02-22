@@ -18,6 +18,7 @@ WITH namespace AS (
     SELECT *
     FROM {{ ref('prep_subscription') }}
     WHERE subscription_end_date >= CURRENT_DATE
+    AND subscription_status in ('Active','Cancelled')
 
 ), recurring_charge AS (
 
