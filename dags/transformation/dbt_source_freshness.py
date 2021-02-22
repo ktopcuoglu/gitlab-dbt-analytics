@@ -70,7 +70,11 @@ default_args = {
 dag_schedule = "30 */3 * * *"
 
 # Create the DAG
-dag = DAG("monitor_dbt_source_freshness", default_args=default_args, schedule_interval=dag_schedule)
+dag = DAG(
+    "monitor_dbt_source_freshness",
+    default_args=default_args,
+    schedule_interval=dag_schedule,
+)
 
 monitor_dbt_source_freshness_cmd = f"""
     {dbt_install_deps_nosha_cmd} &&
