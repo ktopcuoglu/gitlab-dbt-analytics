@@ -17,7 +17,7 @@ WITH namespace AS (
 
     SELECT *
     FROM {{ ref('prep_subscription') }}
-    WHERE subscription_end_date >= CURRENT_DATE
+    WHERE subscription_end_date > CURRENT_DATE
     AND subscription_status in ('Active','Cancelled')
 
 ), recurring_charge AS (
@@ -112,7 +112,7 @@ WITH namespace AS (
       product_tier_name,
       product_delivery_type
     FROM product_tier
-    WHERE product_tier_historical = 'SaaS - Trial: Gold'
+    WHERE product_tier_name = 'SaaS - Trial: Ultimate'
 
 ), active_orders_list AS (
 
