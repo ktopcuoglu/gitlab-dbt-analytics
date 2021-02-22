@@ -42,7 +42,6 @@ WITH counts AS (
 
 )
 
-    SELECT *
 
 
 
