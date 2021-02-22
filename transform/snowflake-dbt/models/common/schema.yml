@@ -1182,7 +1182,6 @@ models:
       - name: quantity
         description: Total quantity
 
-
   - name: fct_namespace_member_summary
     description: '{{ doc("fct_namespace_member_summary") }}'
     columns:
