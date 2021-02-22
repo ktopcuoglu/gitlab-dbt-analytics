@@ -154,6 +154,7 @@ SELECT
   IFF(month_date = DATEADD(month, -1, DATE_TRUNC(month, CURRENT_DATE())), TRUE, FALSE) AS current_reporting_month,
   IFF(month_date = DATEADD(month, -2, DATE_TRUNC(month, CURRENT_DATE())), TRUE, FALSE) AS previous_reporting_month,
   IFF(month_date = DATEADD(month, -13, DATE_TRUNC(month, CURRENT_DATE())), TRUE, FALSE) AS last_year_reporting_month,
+  DENSE_RANK() OVER (ORDER BY fiscal_quarter_name DESC) AS rank_fiscal_quarter_desc,
   final.*
 FROM final
 WHERE month_date BETWEEN DATEADD(month, -13, DATE_TRUNC(month, CURRENT_DATE()))
