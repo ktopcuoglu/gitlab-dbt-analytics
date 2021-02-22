@@ -482,39 +482,3 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
-{% docs fct_mrr_totals_levelled %}
-
-This model extends `fct_mrr` by joining it to `dim_crm_account` data through the `billing_accounts`'s `crm_id` value.  From the account, we get the ultimate parent account information. It now holds details for _every_ level of analysis, including cohort months and cohort quarters for each level and product information.
-
-We want to guarantee that each subscription has a linked CRM account. Every billing subscription is linked to a CRM account through the `crm_id`. This is done in the CTE `initial_join_to_sfdc`. The `LEFT JOIN` can potentially return a null value for the column `sfdc_account_id_int`. CRM accounts can be deleted/merged, see the doc [here](https://help.salesforce.com/articleView?id=000320023&language=en_US&type=1&mode=1).   
-
-For the subscriptions that fail to be joined with `sfdc_accounts_xf` in the CTE `initial_join_to_sfdc` because they were referencing a deleted SFDC account, we use the model `sfdc_deleted_accounts` that stores all deleted SFDC accounts and a `sfdc_master_record_id` which is the SFDC account they were merged to. We get this SFDC master record as the SFDC account linked to the subscription.
-
-All retention analyses start at this table.
-
-{% enddocs %}
-
-{% docs fct_mrr_totals_levelled_col_months_since_parent_cohort_start %}
-
-The number of months between the MRR being reported in that row and the parent account cohort month. Must be a positive number.
-
-{% enddocs %}
-
-{% docs fct_mrr_totals_levelled_col_quarters_since_parent_cohort_start %}
-
-The number of quarters between the MRR being reported in that row and the parent account cohort quarter. Must be a positive number.
-
-{% enddocs %}
-
-{% docs fct_mrr_totals_levelled_col_parent_account_cohort_quarter %}
-
-The cohort quarter of the ultimate parent account.
-
-{% enddocs %}
-
-
-{% docs fct_mrr_totals_levelled_col_parent_account_cohort_month %}
-
-The cohort month of the ultimate parent account.
-
-{% enddocs %}
