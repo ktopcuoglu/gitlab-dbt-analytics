@@ -15,36 +15,36 @@ models:
       - name: subscription_sales_type
         description: Identifies whether a subscription is Sales-Assisted or Self-Service / Web Direct.
       - name: billing_account_number
-        description: '{{ doc("zuora_mrr_totals_col_account_number") }}'
+        description: '{{ doc("mart_arr_totals_col_account_number") }}'
         tests:
           - not_null
       - name: subscription_name_slugify
-        description: '{{ doc("zuora_mrr_totals_col_subscription_name_slugify") }}'
+        description: '{{ doc("mart_arr_totals_col_subscription_name_slugify") }}'
         tests:
           - not_null
       - name: subscription_name
-        description: '{{ doc("zuora_mrr_totals_col_subscription_name") }}'
+        description: '{{ doc("mart_arr_totals_col_subscription_name") }}'
         tests:
           - not_null
       - name: oldest_subscription_in_cohort
-        description: '{{ doc("zuora_mrr_totals_col_subscription_slug_for_counting") }}'
+        description: '{{ doc("mart_arr_totals_col_subscription_slug_for_counting") }}'
       - name: subscription_lineage
       - name: arr_month
-        description: '{{ doc("zuora_mrr_totals_col_mrr_month") }}'
+        description: '{{ doc("mart_arr_totals_col_mrr_month") }}'
         tests:
           - not_null
       - name: subscription_cohort_month
-        description: '{{ doc("zuora_mrr_totals_col_cohort_month") }}'
+        description: '{{ doc("mart_arr_totals_col_cohort_month") }}'
       - name: subscription_cohort_quarter
-        description: '{{ doc("zuora_mrr_totals_col_cohort_quarter") }}'
+        description: '{{ doc("mart_arr_totals_col_cohort_quarter") }}'
       - name: mrr
-        description: '{{ doc("zuora_mrr_totals_col_mrr") }}'
+        description: '{{ doc("mart_arr_totals_col_mrr") }}'
         tests:
           - not_null
       - name: months_since_subscription_cohort_start
-        description: '{{ doc("zuora_mrr_totals_col_months_since_cohort_start") }}'
+        description: '{{ doc("mart_arr_totals_col_months_since_cohort_start") }}'
       - name: quarters_since_subscription_cohort_start
-        description: '{{ doc("zuora_mrr_totals_col_quarters_since_cohort_start") }}'
+        description: '{{ doc("mart_arr_totals_col_quarters_since_cohort_start") }}'
       - name: dim_billing_account_id
         tests:
           - not_null
@@ -62,25 +62,25 @@ models:
               severity: warn
       - name: sfdc_account_name
       - name: ultimate_parent_account_id
-        description: '{{ doc("sfdc_accounts_xf_col_ultimate_parent_account_id") }}'
+        description: '{{ doc("crm_account_col_ultimate_parent_account_id") }}'
       - name: ultimate_parent_account_name
-        description: '{{ doc("sfdc_accounts_xf_col_ultimate_parent_account_name") }}'
+        description: '{{ doc("crm_account_col_ultimate_parent_account_name") }}'
       - name: billing_account_cohort_month
       - name: billing_account_cohort_quarter
       - name: crm_account_cohort_month
       - name: crm_account_cohort_quarter
         tests:
-        description: '{{ doc("fct_mrr_totals_levelled_col_parent_account_cohort_month") }}'
+        description: '{{ doc("mart_arr_totals_levelled_col_parent_account_cohort_month") }}'
       - name: parent_account_cohort_quarter
-        description: '{{ doc("fct_mrr_totals_levelled_col_parent_account_cohort_quarter") }}'
+        description: '{{ doc("mart_arr_totals_levelled_col_parent_account_cohort_quarter") }}'
       - name: months_since_billing_account_cohort_start
       - name: quarters_since_billing_account_cohort_start
       - name: months_since_crm_account_cohort_start
       - name: quarters_since_crm_account_cohort_start
       - name: months_since_parent_account_cohort_start
-        description: '{{ doc("fct_mrr_totals_levelled_col_months_since_parent_cohort_start") }}'
+        description: '{{ doc("mart_arr_totals_levelled_col_months_since_parent_cohort_start") }}'
       - name: quarters_since_parent_account_cohort_start
-        description: '{{ doc("fct_mrr_totals_levelled_col_quarters_since_parent_cohort_start") }}'
+        description: '{{ doc("mart_arr_totals_levelled_col_quarters_since_parent_cohort_start") }}'
 
   - name: mart_arr_snapshots
     description: Daily snapshots of MRR/ARR by month values per customer, subscription and product
