@@ -21,6 +21,7 @@ class PostgresPipelineTable:
         self.target_table_name = "{import_db}_{export_table}".format(
             **table_config
         ).upper()
+        self.has_xmin = table_config.get("has_xmin", True)
         self.table_dict = table_config
 
     def is_scd(self) -> bool:

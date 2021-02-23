@@ -152,14 +152,16 @@ def load_scd(
     source_table_name: str,
     table_dict: Dict[Any, Any],
     table_name: str,
+    has_xmin: bool
 ) -> bool:
     """
     Load tables that are slow-changing dimensions.
     """
 
-    last_xmin = get_last_xmin()
-    highest_xmin = get_highest_xmin(source_engine, source_table_name)
-    append_latest_xmin_to_xcom(highest_xmin)
+    if has_xmin:
+        last_xmin = get_last_xmin()
+        highest_xmin = get_highest_xmin(source_engine, source_table_name)
+        append_latest_xmin_to_xcom(highest_xmin)
 
     # If the schema has changed for the SCD table, treat it like a backfill
     if "_TEMP" == table_name[-5:] or target_engine.has_table(f"{table_name}_TEMP"):
