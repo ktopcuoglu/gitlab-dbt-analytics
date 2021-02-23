@@ -179,6 +179,8 @@ models:
       gitlab_dotcom:
         +materialized: table
         +schema: gitlab_dotcom
+        renamed:
+          +materialized: view
 
       gitlab_ops:
         +materialized: table
