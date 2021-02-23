@@ -2,13 +2,8 @@ WITH source AS (
 
   SELECT *
   FROM {{ ref('gitlab_dotcom_resource_label_events_dedupe_source') }}
-    {% if is_incremental() %}
-      WHERE created_at >= (SELECT MAX(created_at) FROM {{this}} WHERE created_at < CURRENT_TIMESTAMP)
-    {% endif %}
   
-)
-
-, renamed AS (
+), renamed AS (
 
     SELECT
       id                                             AS resource_label_event_id,

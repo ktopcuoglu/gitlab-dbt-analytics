@@ -1,17 +1,7 @@
-{{ config({
-    "materialized": "incremental",
-    "unique_key": "user_id"
-    })
-}}
-
 WITH source AS (
 
   SELECT *
-  FROM {{ source('gitlab_dotcom','user_custom_attributes') }}
-  {% if is_incremental() %}
-  WHERE created_at IS NOT NULL
-    AND updated_at >= (SELECT MAX(updated_at) FROM {{this}})
-  {% endif %}
+  FROM {{ ref('gitlab_dotcom_user_custom_attributes_dedupe_source') }}
 
 ), renamed AS (
   

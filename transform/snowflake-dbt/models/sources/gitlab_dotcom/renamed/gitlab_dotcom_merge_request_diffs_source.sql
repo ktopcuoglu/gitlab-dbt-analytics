@@ -4,13 +4,7 @@ WITH source AS (
   FROM {{ ref('gitlab_dotcom_merge_request_diffs_dedupe_source') }}
   WHERE created_at IS NOT NULL
     AND updated_at IS NOT NULL
-    
-    {% if is_incremental() %}
 
-    AND updated_at >= (SELECT MAX(updated_at) FROM {{this}})
-
-    {% endif %}
-  
 ), renamed AS (
 
     SELECT

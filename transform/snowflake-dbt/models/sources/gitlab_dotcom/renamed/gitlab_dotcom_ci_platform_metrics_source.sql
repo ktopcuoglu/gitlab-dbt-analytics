@@ -2,13 +2,6 @@ WITH source AS (
 
     SELECT *
     FROM {{ ref('gitlab_dotcom_ci_platform_metrics_dedupe_source') }}
-
-    {% if is_incremental() %}
-
-      WHERE recorded_at >= (SELECT MAX(recorded_at) FROM {{this}})
-
-    {% endif %}
-
     
 ), renamed AS (
 

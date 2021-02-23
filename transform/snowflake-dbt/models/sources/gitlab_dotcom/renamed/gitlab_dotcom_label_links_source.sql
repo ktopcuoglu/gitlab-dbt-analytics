@@ -1,8 +1,3 @@
-{{ config({
-        "materialized": "view"
-        })
-}}
-    
 WITH
 {{ distinct_source(source=source('gitlab_dotcom', 'label_links'))}}
 
