@@ -109,7 +109,7 @@
       dim_crm_sales_representative.sales_area_name_live                    AS campaign_crm_user_area_name_live,
 
       -- account info
-      dim_crm_account.crm_account_id,
+      dim_crm_account.dim_crm_account_id,
       dim_crm_account.crm_account_name,
       dim_crm_account.crm_account_billing_country,
       dim_crm_account.crm_account_industry,
@@ -159,7 +159,7 @@
     LEFT JOIN fct_crm_person
       ON fct_crm_touchpoint.dim_crm_person_id = fct_crm_person.dim_crm_person_id
     LEFT JOIN dim_crm_account
-      ON fct_crm_touchpoint.dim_crm_account_id = dim_crm_account.crm_account_id
+      ON fct_crm_touchpoint.dim_crm_account_id = dim_crm_account.dim_crm_account_id
     LEFT JOIN dim_crm_sales_representative
       ON fct_campaign.campaign_owner_id = dim_crm_sales_representative.dim_crm_sales_rep_id
 
