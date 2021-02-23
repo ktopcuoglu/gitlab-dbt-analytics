@@ -70,20 +70,20 @@ WITH dim_billing_account AS (
       dim_subscription.subscription_name                                              AS subscription_name,
       dim_subscription.subscription_name_slugify                                      AS subscription_name_slugify,
       dim_subscription.oldest_subscription_in_cohort                                  AS oldest_subscription_in_cohort,
-      dim_subscription.lineage                                                        AS subscription_lineage,
-      dim_subscription.cohort_month                                                   AS subscription_cohort_month,
-      dim_subscription.cohort_quarter                                                 AS subscription_cohort_quarter,
-      min(dim_subscription.cohort_month) OVER (
+      dim_subscription.subscription_lineage                                           AS subscription_lineage,
+      dim_subscription.subscription_cohort_month                                      AS subscription_cohort_month,
+      dim_subscription.subscription_cohort_quarter                                    AS subscription_cohort_quarter,
+      min(dim_subscription.subscription_cohort_month) OVER (
           PARTITION BY dim_billing_account.dim_billing_account_id)                    AS billing_account_cohort_month,
-      min(dim_subscription.cohort_quarter) OVER (
+      min(dim_subscription.subscription_cohort_quarter) OVER (
           PARTITION BY dim_billing_account.dim_billing_account_id)                    AS billing_account_cohort_quarter,
-      min(dim_subscription.cohort_month) OVER (
+      min(dim_subscription.subscription_cohort_month) OVER (
           PARTITION BY dim_crm_account.crm_account_id)                                AS crm_account_cohort_month,
-      min(dim_subscription.cohort_quarter) OVER (
+      min(dim_subscription.subscription_cohort_quarter) OVER (
           PARTITION BY dim_crm_account.crm_account_id)                                AS crm_account_cohort_quarter,
-      min(dim_subscription.cohort_month) OVER (
+      min(dim_subscription.subscription_cohort_month) OVER (
           PARTITION BY dim_crm_account.ultimate_parent_account_id)                    AS parent_account_cohort_month,
-      min(dim_subscription.cohort_quarter) OVER (
+      min(dim_subscription.subscription_cohort_quarter) OVER (
           PARTITION BY dim_crm_account.ultimate_parent_account_id)                    AS parent_account_cohort_quarter,
 
       --product info
