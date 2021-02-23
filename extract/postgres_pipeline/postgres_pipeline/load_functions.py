@@ -172,7 +172,7 @@ def load_scd(
     else:
         backfill = False
 
-    if last_xmin == highest_xmin and not backfill:
+    if has_xmin and last_xmin == highest_xmin and not backfill:
         logging.info("No new data to load... aborting load")
         return True
 
