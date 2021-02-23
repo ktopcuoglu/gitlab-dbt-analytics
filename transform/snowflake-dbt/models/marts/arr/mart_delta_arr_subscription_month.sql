@@ -225,7 +225,6 @@ WITH dim_billing_account AS (
     LEFT JOIN annual_price_per_seat_change
       ON type_of_arr_change.subscription_id = annual_price_per_seat_change.subscription_id
       AND type_of_arr_change.arr_month = annual_price_per_seat_change.arr_month
-    WHERE type_of_arr_change.arr_month < DATE_TRUNC('month',CURRENT_DATE)
 
 )
 

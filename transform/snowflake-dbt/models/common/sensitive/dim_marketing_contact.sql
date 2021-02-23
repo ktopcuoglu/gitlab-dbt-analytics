@@ -92,9 +92,9 @@ WITH sfdc_lead AS (
     LEFT JOIN sfdc_account
       ON sfdc_account.account_id = sfdc_contact.account_id
     LEFT JOIN crm_account
-      ON crm_account.crm_account_id = crm_person.dim_crm_account_id
+      ON crm_account.dim_crm_account_id = crm_person.dim_crm_account_id
     INNER JOIN sales_segment
-      ON sales_segment.dim_sales_segment_id = crm_account.dim_sales_segment_id
+      ON sales_segment.dim_sales_segment_id = crm_account.dim_account_sales_segment_id
     WHERE  email_address IS NOT NULL
       AND email_address <> ''
     QUALIFY record_number = 1
@@ -118,6 +118,7 @@ WITH sfdc_lead AS (
     FROM gitlab_users
     WHERE email_address IS NOT NULL
       AND email_address <> ''
+      AND active_state = 'active'
     QUALIFY record_number = 1
 
 ), customer_db AS (
@@ -137,6 +138,7 @@ WITH sfdc_lead AS (
     FROM customer_db_source
     WHERE email_address IS NOT NULL
       AND email_address <> ''
+      AND confirmed_at IS NOT NULL
     QUALIFY record_number = 1
 
 ), zuora AS (
@@ -159,6 +161,7 @@ WITH sfdc_lead AS (
       ON zuora_account_source.account_id = zuora_contact_source.account_id
     WHERE email_address IS NOT NULL
       AND email_address <> ''
+      AND zuora_contact_source.is_deleted = FALSE
     QUALIFY record_number = 1
 
 ), emails AS (
@@ -214,6 +217,7 @@ WITH sfdc_lead AS (
       gitlab_dotcom.active_state                                                                                         AS gitlab_dotcom_active_state,
       gitlab_dotcom.last_login_date                                                                                      AS gitlab_dotcom_last_login_date,
       gitlab_dotcom.email_opted_in                                                                                       AS gitlab_dotcom_email_opted_in,
+      DATEDIFF(DAY, gitlab_dotcom.confirmed_date, GETDATE())                                                             AS days_since_saas_signup,
       CASE
         WHEN customer_db.email_address IS NOT NULL THEN TRUE
         ELSE FALSE
@@ -221,6 +225,7 @@ WITH sfdc_lead AS (
       customer_db.customer_id                                                                                            AS customer_db_customer_id,
       customer_db.created_date                                                                                           AS customer_db_created_date,
       customer_db.confirmed_date                                                                                         AS customer_db_confirmed_date,
+      DATEDIFF(DAY, customer_db.confirmed_date, GETDATE())                                                               AS days_since_self_managed_owner_signup,
       CASE
         WHEN zuora.email_address IS NOT NULL THEN TRUE
         ELSE FALSE
@@ -244,7 +249,7 @@ WITH sfdc_lead AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@rmistry",
-    updated_by="@rmistry",
+    updated_by="@trevor31",
     created_date="2021-01-19",
-    updated_date="2021-01-26"
+    updated_date="2021-02-16"
 ) }}

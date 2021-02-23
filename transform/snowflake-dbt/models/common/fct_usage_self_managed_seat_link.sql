@@ -30,6 +30,9 @@ WITH seat_links AS (
       --flags
       is_last_seat_link_report_per_subscription,
       is_last_seat_link_report_per_order,
+      is_subscription_in_zuora,
+      is_rate_plan_in_zuora,
+      is_active_user_count_available,
 
       --dates
       seat_links.snapshot_month,
@@ -43,5 +46,5 @@ WITH seat_links AS (
     created_by="@ischweickartDD",
     updated_by="@ischweickartDD",
     created_date="2021-01-11",
-    updated_date="2021-02-02"
+    updated_date="2021-02-08"
 ) }}

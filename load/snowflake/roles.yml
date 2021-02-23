@@ -6,18 +6,18 @@ version: "1.0"
 databases:
   # Production
     - covid19:
-        shared: yes    
+        shared: yes
     - prep:
         shared: no
     - prod:
-        shared: no        
+        shared: no
     - raw:
         shared: no
     - snowflake:
         shared: yes
     - static:
         shared: no
- 
+
 # User / Testing
     - testing_db:
         shared: no
@@ -36,52 +36,52 @@ databases:
         shared: no
     - iweeks_prep:
         shared: no
-        
+
     - jpeguero_prod:
         shared: no
     - jpeguero_prep:
         shared: no
-        
+
     - jstark_prod:
         shared: no
     - jstark_prep:
         shared: no
-        
+
     - ktam_prod:
         shared: no
     - ktam_prep:
         shared: no
-        
+
     - michellecooper_prod:
         shared: no
     - michellecooper_prep:
         shared: no
-        
+
     - mpeychet_prod:
         shared: no
     - mpeychet_prep:
         shared: no
-        
+
     - mwalker_prod:
         shared: no
     - mwalker_prep:
         shared: no
-        
+
     - nfiguera_prod:
         shared: no
     - nfiguera_prep:
         shared: no
-        
+
     - parmstrong_prod:
         shared: no
     - parmstrong_prep:
         shared: no
-        
+
     - pluthra_prod:
         shared: no
     - pluthra_prep:
         shared: no
-  
+
     - rheannamistry_prod:
         shared: no
     - rheannamistry_prep:
@@ -98,7 +98,7 @@ databases:
         shared: no
     - snalamaru_prep:
         shared: no
-  
+
     - trevorromero_prod:
         shared: no
     - trevorromero_prep:
@@ -187,7 +187,7 @@ roles:
         member_of:
           - analyst_core
           - gitlab_dotcom
-          - qualtrics 
+          - qualtrics
         privileges:
             databases:
                 read:
@@ -197,11 +197,13 @@ roles:
                     - prep.*
             tables:
                 read:
-                    - prep.sensitive.bdg_marketing_contact_role 
+                    - prep.sensitive.bdg_marketing_contact_role
                     - prep.sensitive.dim_marketing_contact
+                    - prep.sensitive.bdg_marketing_contact_order
+                    - prep.sensitive.mart_marketing_contact
 
-    ## For all analyst Roles 
-    - analyst_core:  
+    ## For all analyst Roles
+    - analyst_core:
         warehouses:
             - analyst_xs
             - analyst_l
@@ -217,7 +219,7 @@ roles:
             - snapshots
             - snowflake_db
             - static
-                    
+
     - analyst_engineering:
         warehouses:
             - analyst_xs
@@ -326,7 +328,7 @@ roles:
                     - raw.stitch_google_sheets.*
                 write:
                     - raw.stitch_google_sheets.*
-    
+
     - analyst_marketing:
         warehouses:
             - analyst_xs
@@ -556,7 +558,7 @@ roles:
     - people_operations:
         warehouses:
             - analyst_xs
-        member_of: 
+        member_of:
             - analyst_core
             - bamboohr_analytics
             - boneyard
@@ -679,6 +681,7 @@ roles:
                 - prod.common_mapping
                 - prod.common_mart_marketing
                 - prod.common_mart_sales
+                - prod.common_mart_product
                 - prod.legacy
                 - prep.sensitive
             tables:
@@ -686,6 +689,7 @@ roles:
                 - prod.common_mapping.*
                 - prod.common_mart_marketing.*
                 - prod.common_mart_sales.*
+                - prod.common_mart_product.*
                 - prod.legacy.*
                 - prep.sensitive.*
         privileges:
@@ -879,8 +883,10 @@ roles:
                     - prod.common_mapping
                     - prod.common_mart_marketing
                     - prod.common_mart_sales
+                    - prod.common_mart_product
                     - prod.legacy
                     - prod.workspace_data
+                    - prod.workspace_finance
                     - prod.workspace_marketing
                     - prod.workspace_sales
                     - prep.dbt
@@ -892,8 +898,10 @@ roles:
                     - prod.common_mapping.*
                     - prod.common_mart_marketing.*
                     - prod.common_mart_sales.*
+                    - prod.common_mart_product.*
                     - prod.legacy.*
                     - prod.workspace_data.*
+                    - prod.workspace_finance.*
                     - prod.workspace_marketing.*
                     - prod.workspace_sales.*
                     - prep.dbt.*
@@ -951,11 +959,16 @@ roles:
             schemas:
                 read:
                     - prep.preparation
+                    - prod.common
+                    - prod.common_mart_product
             tables:
                 read:
                     - prep.preparation.prep_usage_ping_saas_dates
                     - prep.preparation.prep_usage_ping_no_license_key
-
+                    - prod.common.fct_product_usage_wave_1_3_metrics_latest
+                    - prod.common.fct_product_usage_wave_1_3_metrics_monthly
+                    - prod.common_mart_product.mart_product_usage_wave_1_3_metrics_latest
+                    - prod.common_mart_product.mart_product_usage_wave_1_3_metrics_monthly
     - gcp_billing:
         warehouses:
             - analyst_xs
@@ -1020,7 +1033,6 @@ roles:
                     - prep.sensitive.gitlab_dotcom_projects
                     - prep.sensitive.gitlab_dotcom_system_note_metadata
                     - prep.sensitive.gitlab_dotcom_users
-                    - raw.tap_postgres.gitlab_db_alerts_service_data
                     - raw.tap_postgres.gitlab_db_alert_management_alerts
                     - raw.tap_postgres.gitlab_db_alert_management_alert_assignees
                     - raw.tap_postgres.gitlab_db_approvals
@@ -1123,6 +1135,7 @@ roles:
                     - raw.tap_postgres.gitlab_db_notes
                     - raw.tap_postgres.gitlab_db_notification_settings
                     - raw.tap_postgres.gitlab_db_oauth_access_tokens
+                    - raw.tap_postgres.gitlab_db_onboarding_progresses
                     - raw.tap_postgres.gitlab_db_packages_build_infos
                     - raw.tap_postgres.gitlab_db_packages_dependencies
                     - raw.tap_postgres.gitlab_db_packages_dependency_links
@@ -1361,7 +1374,7 @@ roles:
             tables:
                 read:
                     - prep.qualtrics.*
-    
+
     - qualtrics_sensitive:
         warehouses:
             - analyst_xs
@@ -1412,7 +1425,7 @@ roles:
             tables:
                 read:
                     - prep.sfdc.*
-                    - raw.salesforce_stitch.*      
+                    - raw.salesforce_stitch.*
 
     - sheetload:
         warehouses:
@@ -1442,7 +1455,7 @@ roles:
                     - prep.sensitive.sheetload_osat_source
                     - prep.sensitive.sheetload_values_certificate_source
                     - prep.sheetload.*
-                    - raw.sheetload.*  
+                    - raw.sheetload.*
 
     - snapshots:
         warehouses:
@@ -1456,7 +1469,7 @@ roles:
                     - raw.snapshots
             tables:
                 read:
-                    - raw.snapshots.*  
+                    - raw.snapshots.*
 
     - snowflake_db:
         privileges:
@@ -1623,8 +1636,8 @@ roles:
         member_of:
             - analyst_growth
         warehouses:
-            - analyst_xs    
-    
+            - analyst_xs
+
     - acarella:
         warehouses: []
 
@@ -1688,7 +1701,7 @@ roles:
             - analyst_finance
             - bamboohr_analytics
         warehouses:
-            - analyst_xs 
+            - analyst_xs
 
     - bmenegocci:
         member_of:
@@ -1851,7 +1864,7 @@ roles:
             - analyst_finance
             - bamboohr_analytics
         warehouses:
-            - analyst_xs        
+            - analyst_xs
 
     - gitlab_ci:
         member_of:
@@ -1913,7 +1926,7 @@ roles:
                     - ianschweickart_prod.*.*
                 write:
                     - ianschweickart_prep.*.*
-                    - ianschweickart_prod.*.*           
+                    - ianschweickart_prod.*.*
 
     - iroussos:
         member_of:
@@ -1961,7 +1974,7 @@ roles:
                 write:
                     - iweeks_prep.*.*
                     - iweeks_prod.*.*
-            
+
     - iwiedler:
         member_of:
            - analyst_engineering
@@ -2062,7 +2075,7 @@ roles:
                 write:
                     - jstark_prep.*.*
                     - jstark_prod.*.*
-    
+
     - jshen:
         member_of:
             - analyst_finance
@@ -2157,14 +2170,14 @@ roles:
                     - prep.sensitive
             tables: # https://gitlab.com/gitlab-com/team-member-epics/access-requests/-/issues/6311
                 read:
-                    - prep.sensitive.bamboohr_id_employee_number_mapping 
+                    - prep.sensitive.bamboohr_id_employee_number_mapping
         warehouses:
             - analyst_xs
 
     - lvandensteen:
         member_of:
             - analyst_people
-        warehouses: 
+        warehouses:
             - reporting
 
     - mdewji:
@@ -2259,7 +2272,7 @@ roles:
             - admin
 
     - msendal:
-        warehouses: []  
+        warehouses: []
 
     - mvilain:
         member_of:
@@ -2504,9 +2517,9 @@ roles:
             - reporter
         warehouses:
             - analyst_xs
-    
+
     - rparker:
-        member_of: 
+        member_of:
             - analyst_core
         warehouses:
             - analyst_xs
@@ -2773,7 +2786,7 @@ roles:
             - analyst_finance
             - bamboohr_analytics
         warehouses:
-            - analyst_xs  
+            - analyst_xs
 
 
 # ==========================================
@@ -2872,17 +2885,17 @@ users:
             - cmestel
 
     - datwood: # https://gitlab.com/gitlab-data/analytics/-/issues/6551
-        can_login: no 
+        can_login: no
         member_of: []
-    
+
     - dknox: # https://gitlab.com/gitlab-data/analytics/-/issues/6970
         can_login: no
         member_of: []
-    
+
     - dmack:
         can_login: yes
         member_of:
-            - dmack   
+            - dmack
 
     - dparker:
         can_login: yes
@@ -2917,19 +2930,19 @@ users:
         member_of: []
 
     - eurie:
-        can_login: yes 
+        can_login: yes
         member_of:
             - eurie
             - securityadmin
 
     - evan:
-        can_login: yes 
+        can_login: yes
         member_of:
             - evan
 
     - ewegscheider:
         can_login: yes
-        member_of: 
+        member_of:
             - ewegscheider
 
     - fivetran:
@@ -2965,7 +2978,7 @@ users:
             - securityadmin
 
     - ianschweickart:
-        can_login: yes 
+        can_login: yes
         member_of:
             - ianschweickart
 
@@ -3032,17 +3045,17 @@ users:
     - jwatson: #https://gitlab.com/gitlab-data/analytics/-/issues/7853
         can_login: no
         member_of: []
-   
+
     - kaguilar:
         can_login: yes
         member_of:
             - kaguilar
-    
+
     - kchu:
         can_login: yes
         member_of:
             - kchu
- 
+
     - ktam:
         can_login: yes
         member_of:
@@ -3073,7 +3086,7 @@ users:
             - securityadmin
 
     - michellecooper:
-        can_login: yes 
+        can_login: yes
         member_of:
             - michellecooper
 
@@ -3343,10 +3356,9 @@ warehouses:
 
     - transforming_xl:
         size: x-large
-    
+
     - transforming_xs:
         size: x-small
-    
+
     - transforming_4xl:
         size: "4-x-large"
-        

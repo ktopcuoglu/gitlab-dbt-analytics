@@ -84,7 +84,6 @@ dbt_secrets = [
     SNOWFLAKE_USER,
 ]
 
-validation_schedule_interval = "0 1 * * 0"
 every_eighth_hour = "0 */8 * * *"
 every_day_at_four = "0 4 */1 * *"
 
@@ -105,7 +104,6 @@ config_dict = {
         "start_date": datetime(2019, 5, 30),
         "sync_schedule_interval": "0 3 */1 * *",
         "task_name": "customers",
-        "validation_schedule_interval": validation_schedule_interval,
     },
     "gitlab_com": {
         "cloudsql_instance_name": None,
@@ -122,7 +120,6 @@ config_dict = {
         "start_date": datetime(2019, 5, 30),
         "sync_schedule_interval": "0 2 */1 * *",
         "task_name": "gitlab-com",
-        "validation_schedule_interval": validation_schedule_interval,
     },
     "gitlab_profiler": {
         "cloudsql_instance_name": None,
@@ -139,7 +136,6 @@ config_dict = {
         "start_date": datetime(2019, 5, 30),
         "sync_schedule_interval": every_day_at_four,
         "task_name": "gitlab-profiler",
-        "validation_schedule_interval": validation_schedule_interval,
     },
     "gitlab_ops": {
         "cloudsql_instance_name": "ops-db-restore",
@@ -158,7 +154,6 @@ config_dict = {
         "start_date": datetime(2019, 5, 30),
         "sync_schedule_interval": "0 2 */1 * *",
         "task_name": "gitlab-ops",
-        "validation_schedule_interval": validation_schedule_interval,
     },
 }
 
@@ -419,7 +414,7 @@ for source_name, config in config_dict.items():
 
                 sync_cmd = generate_cmd(
                     config["dag_name"],
-                    f"--load_type sync --load_only_table {table}",
+                    f"--load_type backfill --load_only_table {table}",
                     config["cloudsql_instance_name"],
                 )
                 sync_extract = KubernetesPodOperator(
@@ -491,6 +486,10 @@ for source_name, config in config_dict.items():
                         **gitlab_pod_env_vars,
                         **config["env_vars"],
                         "TASK_INSTANCE": "{{ task_instance_key_str }}",
+                        "LAST_XMIN": "{{{{ task_instance.xcom_pull('{}', include_prior_dates=True)['max_xmin'] }}}}".format(
+                            task_identifier
+                        ),
+                        "task_id": task_identifier,
                     },
                     arguments=[scd_cmd],
                     affinity=get_affinity(True),
@@ -502,53 +501,3 @@ for source_name, config in config_dict.items():
                 scd_extract >> freshness >> short_circuit >> test >> snapshot >> model_run >> model_test
 
     globals()[f"{config['dag_name']}_db_sync"] = sync_dag
-
-    # Validation DAG
-    validation_dag_args = {
-        "catchup": True,
-        "concurrency": 1,
-        "depends_on_past": False,
-        "on_failure_callback": slack_failed_task,
-        "owner": "airflow",
-        "retries": 0,
-        "retry_delay": timedelta(minutes=1),
-        "start_date": datetime(2019, 1, 1),
-    }
-    validation_dag = DAG(
-        f"{config['dag_name']}_db_validate",
-        default_args=validation_dag_args,
-        schedule_interval=config["validation_schedule_interval"],
-    )
-
-    with validation_dag:
-
-        file_path = f"analytics/extract/postgres_pipeline/manifests/{config['dag_name']}_db_manifest.yaml"
-        manifest = extract_manifest(file_path)
-        table_list = extract_table_list_from_manifest(manifest)
-        for table in table_list:
-            # Validate Task
-            validate_cmd = generate_cmd(
-                config["dag_name"],
-                f"--load_type validate --load_only_table {table}",
-                config["cloudsql_instance_name"],
-            )
-            validate_ids = KubernetesPodOperator(
-                **gitlab_defaults,
-                image=DATA_IMAGE,
-                task_id=f"{config['task_name']}-{table.replace('_', '-')}-db-validation",
-                name=f"{config['task_name']}-{table.replace('_', '-')}-db-validation",
-                pool=f"{config['task_name']}_pool",
-                secrets=standard_secrets + config["secrets"],
-                env_vars={
-                    **gitlab_pod_env_vars,
-                    **config["env_vars"],
-                    "TASK_INSTANCE": "{{ task_instance_key_str }}",
-                },
-                affinity=get_affinity(False),
-                tolerations=get_toleration(False),
-                arguments=[validate_cmd],
-                dag=validation_dag,
-                do_xcom_push=True,
-                xcom_push=True,
-            )
-    globals()[f"{config['dag_name']}_db_validation"] = validation_dag

@@ -19,6 +19,7 @@ sources:
     tables:
       - name: add_ons
         identifier: add_ons
+        freshness: null
         columns:
           - name: id
             tests:

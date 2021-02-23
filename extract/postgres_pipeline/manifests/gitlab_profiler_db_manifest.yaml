@@ -1,13 +1,17 @@
 connection_info:
-  user: GITLAB_PROFILER_DB_USER
-  pass: GITLAB_PROFILER_DB_PASS
-  host: GITLAB_PROFILER_DB_HOST
   database: GITLAB_PROFILER_DB_NAME
+  host: GITLAB_PROFILER_DB_HOST
+  pass: GITLAB_PROFILER_DB_PASS
   port: PG_PORT
+  user: GITLAB_PROFILER_DB_USER
 tables:
   request_stats:
+    export_db: EXPORT_DB
+    export_schema: 'gitlab_profiler'
+    export_table: 'request_stats'
+    export_table_primary_key: id
     import_db: GITLAB_PROFILER_DB
-    import_query: >
+    import_query: |-
       SELECT id
       , url
       , auth_type
@@ -22,7 +26,3 @@ tables:
       , started_at
       , ended_at
       FROM request_stats
-    export_db: EXPORT_DB
-    export_schema: 'gitlab_profiler'
-    export_table: 'request_stats'
-    export_table_primary_key: id

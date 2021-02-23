@@ -325,6 +325,12 @@ models:
     - name: nbr_in_scalable_solution
     - name: nbr_in_process
     - name: nbr_to_be_converted
+- name: sheetload_sdr_count_snapshot_source
+  description: Source model for SDR counts by fiscal quarter and sales segment.
+  columns:
+    - name: fiscal_quarter
+      tests:
+        - not_null
 - name: sheetload_social_marketing_metrics_source
   description: This is the model that captures data from social marketing metrics
   columns:
@@ -352,6 +358,27 @@ models:
   tests:
     - unique:
         column_name: "CONCAT(month_date, channel, brand, metric, is_organic)"
+- name: sheetload_social_marketing_topic_metrics_source
+  description: This is the model that captures data from social marketing metrics at the Organic Social topic/campaign level. This data is sourced from Sprout Social (currently there is no API).
+  columns:
+    - name: month_date
+      tests:
+      - not_null
+    - name: sprout_tag
+      tests:
+      - not_null
+    - name: channel
+      tests:
+      - not_null
+    - name: brand
+      tests:
+      - not_null
+    - name: metric
+      tests:
+      - not_null
+  tests:
+    - unique:
+        column_name: "CONCAT(month_date, sprout_tag, channel, brand, metric, is_organic)"
 - name: sheetload_territory_mapping_source
   description: Base model for marketing territory mapping.
   columns:

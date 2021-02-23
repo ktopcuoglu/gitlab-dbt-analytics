@@ -36,7 +36,8 @@ WITH date AS (
 
     {{ dbt_utils.surrogate_key(['target_matrix.kpi_name', 'date.first_day_of_month', 'opportunity_source.dim_opportunity_source_id',
            'order_type.dim_order_type_id', 'sfdc_user_hierarchy_live.dim_crm_sales_hierarchy_live_id', 'sfdc_user_hierarchy_live.dim_crm_sales_hierarchy_sales_segment_live_id',
-           'sfdc_user_hierarchy_live.dim_crm_sales_hierarchy_location_region_live_id', 'sfdc_user_hierarchy_live.dim_crm_sales_hierarchy_sales_region_live_id', 'sfdc_user_hierarchy_live.dim_crm_sales_hierarchy_sales_area_live_id']) }}    AS sales_funnel_target_id,
+           'sfdc_user_hierarchy_live.dim_crm_sales_hierarchy_location_region_live_id', 'sfdc_user_hierarchy_live.dim_crm_sales_hierarchy_sales_region_live_id', 'sfdc_user_hierarchy_live.dim_crm_sales_hierarchy_sales_area_live_id']) }}
+                                            AS sales_funnel_target_id,
     target_matrix.kpi_name,
     date.first_day_of_month,
     target_matrix.opportunity_source,
@@ -53,30 +54,27 @@ WITH date AS (
     sfdc_user_hierarchy_stamped.dim_crm_sales_hierarchy_location_region_stamped_id,
     sfdc_user_hierarchy_stamped.dim_crm_sales_hierarchy_sales_region_stamped_id,
     sfdc_user_hierarchy_stamped.dim_crm_sales_hierarchy_sales_area_stamped_id,
-    target_matrix.allocated_target,
-    target_matrix.kpi_total,
-    target_matrix.month_percentage,
-    target_matrix.opportunity_source_percentage,
-    target_matrix.order_type_percentage,
-    target_matrix.area_percentage
+    SUM(target_matrix.allocated_target)     AS allocated_target
 
   FROM target_matrix
   LEFT JOIN sfdc_user_hierarchy_live
-    ON LOWER(target_matrix.area) = LOWER(sfdc_user_hierarchy_live.sales_area_name_live)
+    ON {{ sales_funnel_text_slugify("target_matrix.area") }} = {{ sales_funnel_text_slugify("sfdc_user_hierarchy_live.sales_area_name_live") }}
   LEFT JOIN date
-    ON target_matrix.month = date.fiscal_month_name_fy
+    ON {{ sales_funnel_text_slugify("target_matrix.month") }} = {{ sales_funnel_text_slugify("date.fiscal_month_name_fy") }}
   LEFT JOIN opportunity_source
-    ON target_matrix.opportunity_source = opportunity_source.opportunity_source_name
+    ON {{ sales_funnel_text_slugify("target_matrix.opportunity_source") }} = {{ sales_funnel_text_slugify("opportunity_source.opportunity_source_name") }}
   LEFT JOIN order_type
-    ON target_matrix.order_type = order_type.order_type_name
+    ON {{ sales_funnel_text_slugify("target_matrix.order_type") }} = {{ sales_funnel_text_slugify("order_type.order_type_name") }}
   LEFT JOIN sfdc_user_hierarchy_stamped
     ON sfdc_user_hierarchy_live.dim_crm_sales_hierarchy_live_id = sfdc_user_hierarchy_stamped.dim_crm_sales_hierarchy_stamped_id
+  {{ dbt_utils.group_by(n=17) }}
+
 )
 
 {{ dbt_audit(
     cte_ref="final_targets",
     created_by="@mcooperDD",
-    updated_by="@mcooperDD",
+    updated_by="@iweeks",
     created_date="2020-12-18",
-    updated_date="2020-12-18"
+    updated_date="2020-02-18"
 ) }}

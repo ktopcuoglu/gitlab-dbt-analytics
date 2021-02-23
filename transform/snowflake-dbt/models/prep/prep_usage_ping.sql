@@ -10,7 +10,7 @@ WITH source AS (
 
     SELECT 
       id                                                                        AS dim_usage_ping_id, 
-      created_at                                                                AS ping_created_at,
+      created_at::TIMESTAMP(0)                                                  AS ping_created_at,
       *, 
       {{ nohash_sensitive_columns('version_usage_data_source', 'source_ip') }}  AS ip_address_hash, 
       OBJECT_CONSTRUCT(

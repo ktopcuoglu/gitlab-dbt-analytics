@@ -16,7 +16,7 @@ WITH license AS (
     SELECT 
       dim_subscription_id, 
       dim_crm_account_id 
-    FROM {{ ref('dim_subscription') }} 
+    FROM {{ ref('prep_subscription') }} 
 
 ), crm_account AS (
 
@@ -96,7 +96,7 @@ WITH license AS (
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@kathleentam",
-    updated_by="@kathleentam",
+    updated_by="@ischweickartDD",
     created_date="2021-01-10",
-    updated_date="2021-01-29"
+    updated_date="2021-02-11"
 ) }}
