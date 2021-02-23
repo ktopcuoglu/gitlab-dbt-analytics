@@ -1,3 +1,8 @@
+{{ config({
+        "materialized": "table"
+        })
+}}
+
 WITH 
 {{ distinct_source(source=source('gitlab_dotcom', 'group_group_links')) }}
 
