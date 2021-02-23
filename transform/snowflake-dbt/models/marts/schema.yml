@@ -54,17 +54,17 @@ models:
       - name: billing_account_cohort_quarter
       - name: crm_account_cohort_month
       - name: crm_account_cohort_quarter
-        description: '{{ doc("mart_arr_totals_levelled_col_parent_account_cohort_month") }}'
+        description: '{{ doc("mart_arr_col_parent_account_cohort_month") }}'
       - name: parent_account_cohort_quarter
-        description: '{{ doc("mart_arr_totals_levelled_col_parent_account_cohort_quarter") }}'
+        description: '{{ doc("mart_arr_col_parent_account_cohort_quarter") }}'
       - name: months_since_billing_account_cohort_start
       - name: quarters_since_billing_account_cohort_start
       - name: months_since_crm_account_cohort_start
       - name: quarters_since_crm_account_cohort_start
       - name: months_since_parent_account_cohort_start
-        description: '{{ doc("mart_arr_totals_levelled_col_months_since_parent_cohort_start") }}'
+        description: '{{ doc("mart_arr_col_months_since_parent_cohort_start") }}'
       - name: quarters_since_parent_account_cohort_start
-        description: '{{ doc("mart_arr_totals_levelled_col_quarters_since_parent_cohort_start") }}'
+        description: '{{ doc("mart_arr_col_quarters_since_parent_cohort_start") }}'
 
   - name: mart_arr_snapshots
     description: Daily snapshots of MRR/ARR by month values per customer, subscription and product
