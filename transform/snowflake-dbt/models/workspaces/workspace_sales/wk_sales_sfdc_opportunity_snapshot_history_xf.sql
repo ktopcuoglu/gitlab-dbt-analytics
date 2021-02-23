@@ -455,10 +455,10 @@ WITH date_details AS (
       CASE
         WHEN  opp_snapshot.snapshot_date < '2021-02-01'::DATE -- All deals before cutoff
           THEN calculated_from_ratio_net_arr
-        WHEN  opp_snapshot.snapshot_date >= '2021-02-01'::DATE -- Open deal with no Net ARR, after cut off
-          AND COALESCE(opp_snapshot.raw_net_arr,0) = 0
-          AND opp_snapshot.stage_name NOT IN ('8-Closed Lost', '9-Unqualified', 'Closed Won') 
-            THEN calculated_from_ratio_net_arr
+      --  WHEN  opp_snapshot.snapshot_date >= '2021-02-01'::DATE -- Open deal with no Net ARR, after cut off
+      --    AND COALESCE(opp_snapshot.raw_net_arr,0) = 0
+       --   AND opp_snapshot.stage_name NOT IN ('8-Closed Lost', '9-Unqualified', 'Closed Won') 
+       --     THEN calculated_from_ratio_net_arr
         ELSE COALESCE(opp_snapshot.raw_net_arr,0) -- Rest of deals after cut off date
       END                                                                     AS net_arr,
          
@@ -548,26 +548,11 @@ WITH date_details AS (
       sfdc_opportunity_xf.sales_team_cro_level,
       sfdc_opportunity_xf.sales_team_rd_asm_level,
 
-      /*CASE WHEN sfdc_opportunity_xf.user_segment_stamped IS NULL 
-          THEN opportunity_owner.user_segment 
-          ELSE COALESCE(sfdc_opportunity_xf.user_segment_stamped,'N/A')
-      END                                                         AS opportunity_owner_user_segment,
-
-      CASE WHEN sfdc_opportunity_xf.user_region_stamped IS NULL 
-          THEN opportunity_owner.user_region
-          ELSE COALESCE(sfdc_opportunity_xf.user_region_stamped,'N/A')
-      END                                                         AS opportunity_owner_user_region,
-
-      -- these two fields will be used to do cuts in X-Ray
-      opportunity_owner_user_segment                                            AS opportunity_owner_cro_level,
-      CONCAT(opportunity_owner_user_segment,'_',opportunity_owner_user_region)  AS opportunity_owner_rd_asm_level,
-      
-      */
-
-      
+          
       --------------------------------------------------------------------------------------------
       -- TO BE REMOVED
       -- account owner hierarchies levels
+      
       COALESCE(account_owner.sales_team_level_2,'n/a')            AS account_owner_team_level_2,
       COALESCE(account_owner.sales_team_level_3,'n/a')            AS account_owner_team_level_3,
       COALESCE(account_owner.sales_team_level_4,'n/a')            AS account_owner_team_level_4,
@@ -591,6 +576,7 @@ WITH date_details AS (
 
       
       -- opportunity owner hierarchies levels
+      
       CASE 
         WHEN sales_admin_hierarchy.level_2 IS NOT NULL 
           THEN sales_admin_hierarchy.level_2 
@@ -602,6 +588,8 @@ WITH date_details AS (
           THEN sales_admin_hierarchy.level_3 
         ELSE opportunity_owner.sales_team_level_3
       END                                                         AS opportunity_owner_team_level_3,    
+
+      
       --------------------------------------------------------------------------------------------
 
 

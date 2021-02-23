@@ -275,7 +275,7 @@ WITH sfdc_opportunity AS (
 
 ), net_iacv_to_net_arr_ratio AS (
 
-    SELECT '2. New - Connected'       AS "ORDER_TYPE_STAMPED", 
+    SELECT '2. New - Connected'     AS "ORDER_TYPE_STAMPED", 
           'Mid-Market'              AS "USER_SEGMENT_STAMPED", 
           1.001856868               AS "RATIO_NET_IACV_TO_NET_ARR" 
     UNION 
@@ -393,7 +393,6 @@ WITH sfdc_opportunity AS (
           THEN opportunity_owner.user_region
           ELSE COALESCE(sfdc_opportunity_xf.user_region_stamped,'N/A')
       END                                                                       AS opportunity_owner_user_region,
-
 
       opportunity_owner_user_segment                                            AS sales_team_cro_level,
       CONCAT(opportunity_owner_user_segment,'_',opportunity_owner_user_region)  AS sales_team_rd_asm_level,
