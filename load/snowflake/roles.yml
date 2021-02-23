@@ -1135,6 +1135,7 @@ roles:
                     - raw.tap_postgres.gitlab_db_notes
                     - raw.tap_postgres.gitlab_db_notification_settings
                     - raw.tap_postgres.gitlab_db_oauth_access_tokens
+                    - raw.tap_postgres.gitlab_db_onboarding_progresses
                     - raw.tap_postgres.gitlab_db_packages_build_infos
                     - raw.tap_postgres.gitlab_db_packages_dependencies
                     - raw.tap_postgres.gitlab_db_packages_dependency_links
