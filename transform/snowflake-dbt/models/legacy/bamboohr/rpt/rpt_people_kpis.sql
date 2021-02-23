@@ -1,8 +1,3 @@
-{{ config({
-    "schema": "legacy",
-    "database": env_var('SNOWFLAKE_PROD_DATABASE'),
-    })
-}}
 
 {{ simple_cte([
     ('dim_dates','dim_date'),
