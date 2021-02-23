@@ -20,8 +20,6 @@ Here is an image documenting the ERD for this table:
 
 <div style="width: 640px; height: 480px; margin: 10px; position: relative;"><iframe allowfullscreen frameborder="0" style="width:640px; height:480px" src="https://app.lucidchart.com/documents/embeddedchart/998dbbae-f04e-4310-9d85-0c360a40a018" id="T0XuoGn786sQ"></iframe></div>
 
-
-
 {% enddocs %}
 
 {% docs mart_arr_snapshots %}
