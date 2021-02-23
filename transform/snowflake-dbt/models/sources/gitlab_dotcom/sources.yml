@@ -23,9 +23,6 @@ sources:
         identifier: gitlab_db_alert_management_alert_assignees
       - name: alert_management_alerts
         identifier: gitlab_db_alert_management_alerts
-      - name: alerts_service_data
-        identifier: gitlab_db_alerts_service_data
-        freshness: null
       - name: application_settings
         identifier: gitlab_db_application_settings
         freshness:
@@ -217,6 +214,8 @@ sources:
         identifier: gitlab_db_notification_settings
       - name: oauth_access_tokens
         identifier: gitlab_db_oauth_access_tokens
+      - name: onboarding_progresses
+        identifier: gitlab_db_onboarding_progresses
       - name: packages_packages
         identifier: gitlab_db_packages_packages
       - name: plans

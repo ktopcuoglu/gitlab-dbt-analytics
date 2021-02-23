@@ -140,3 +140,11 @@ models:
         description: The week start ('2017-01-01') the ping was created at
       - name: ping_created_at_date
         description: The day the ping was created at (removes the extra time information in the timestamp)
+
+  - name: prep_gainsight_source_model_counts
+    description: '{{ doc("prep_gainsight_source_model_counts") }}'
+    columns:
+      - name: model_name
+        description: Name of the Model 
+      - name: row_count 
+        description: Number of records in the table

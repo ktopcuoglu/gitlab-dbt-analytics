@@ -765,6 +765,11 @@ models:
           - accepted_values:
                   values: ['Sales-Assisted', 'Self-Service']
         tags: ["tdf", "common", "gainsight"]
+      - name: lineage
+        description: "All the subscriptions subsquent to the primary subscription, separated by commas."
+      - name: cohort_month
+      - name: cohort_quarter
+      - name: cohort_year
 
   - name: dim_subscriptions_snapshots
     description: Daily snapshot of subscriptions starting from 2020-03-01. Fiel
