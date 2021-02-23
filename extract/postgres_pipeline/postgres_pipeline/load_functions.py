@@ -152,7 +152,7 @@ def load_scd(
     source_table_name: str,
     table_dict: Dict[Any, Any],
     table_name: str,
-    has_xmin: bool
+    has_xmin: bool,
 ) -> bool:
     """
     Load tables that are slow-changing dimensions.
