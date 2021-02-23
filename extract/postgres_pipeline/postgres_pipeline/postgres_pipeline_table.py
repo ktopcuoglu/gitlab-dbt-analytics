@@ -43,6 +43,7 @@ class PostgresPipelineTable:
             self.source_table_name,
             self.table_dict,
             target_table,
+            self.has_xmin
         )
 
     def is_incremental(self) -> bool:
