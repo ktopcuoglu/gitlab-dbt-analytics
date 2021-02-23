@@ -33,7 +33,7 @@ WITH date_details AS (
       is_excluded_flag = 0
       AND stage_name NOT IN ('9-Unqualified','10-Duplicate','Unqualified','00-Pre Opportunity','0-Pending Acceptance') 
       AND (forecast_category_name != 'Omitted'
-         OR lower(stage_name) LIKE '%lost%')
+         OR is_lost = 1)
       AND snapshot_fiscal_quarter_name != today_date.fiscal_quarter_name_fy 
   
   
@@ -236,8 +236,8 @@ WITH date_details AS (
     -- restrict the rows to pipeline of the quarter the snapshot was taken
     WHERE pipeline_snapshot.snapshot_fiscal_quarter_name = pipeline_snapshot.close_fiscal_quarter_name
     -- to account for net iacv, it is needed to include lost renewal deals
-    AND (LOWER(pipeline_snapshot.stage_name) NOT LIKE '%lost%' 
-      OR (pipeline_snapshot.is_renewal = 1 AND LOWER(pipeline_snapshot.stage_name) LIKE '%lost%'))     
+    AND (pipeline_snapshot.is_lost = 0
+      OR (pipeline_snapshot.is_renewal = 1 AND pipeline_snapshot.is_lost = 1))   
     GROUP BY 1,2,3,4,5,6,7,8,9,10
   
 ), next_quarter AS (
@@ -282,7 +282,7 @@ WITH date_details AS (
     -- without this we would get results for multiple quarters
     WHERE pipeline_snapshot.snapshot_fiscal_quarter_date = DATEADD(month, -3,pipeline_snapshot.close_fiscal_quarter_date) 
       -- exclude lost deals from pipeline
-      AND LOWER(pipeline_snapshot.stage_name) NOT LIKE '%lost%'   
+      AND pipeline_snapshot.is_lost = 0  
     GROUP BY 1,2,3,4,5,6,7,8,9,10
 
 ), pipeline_gen AS (

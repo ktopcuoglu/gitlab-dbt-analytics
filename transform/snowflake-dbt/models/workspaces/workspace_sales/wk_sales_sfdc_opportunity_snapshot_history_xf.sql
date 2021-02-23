@@ -561,20 +561,7 @@ WITH date_details AS (
       COALESCE(account_owner.sales_team_asm_level,'n/a')          AS account_owner_team_asm_level,
       COALESCE(account_owner.sales_min_hierarchy_level,'n/a')     AS account_owner_min_team_level,
       account_owner.sales_region                                  AS account_owner_sales_region,
-  
-      /*
-      CASE 
-          WHEN COALESCE(account_owner.sales_team_vp_level,'n/a') = 'VP Ent'
-            THEN 'Large'
-          WHEN COALESCE(account_owner.sales_team_vp_level,'n/a') = 'VP Comm MM'
-            THEN 'Mid-Market'
-          WHEN COALESCE(account_owner.sales_team_vp_level,'n/a') = 'VP Comm SMB' 
-            THEN 'SMB' 
-          ELSE 'Other' 
-      END                                                         AS account_owner_cro_level,*/
-  
-
-      
+       
       -- opportunity owner hierarchies levels
       
       CASE 
@@ -588,10 +575,6 @@ WITH date_details AS (
           THEN sales_admin_hierarchy.level_3 
         ELSE opportunity_owner.sales_team_level_3
       END                                                         AS opportunity_owner_team_level_3,    
-
-      
-      --------------------------------------------------------------------------------------------
-
 
       ------------------------------------------------------------------------------------------------------
       ------------------------------------------------------------------------------------------------------
