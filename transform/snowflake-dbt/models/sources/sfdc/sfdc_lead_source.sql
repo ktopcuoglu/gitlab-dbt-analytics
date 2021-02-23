@@ -71,6 +71,8 @@ WITH source AS (
         {{ sales_segment_cleaning('sales_segmentation__c') }}   AS sales_segmentation,
         mkto71_Lead_Score__c                                    AS person_score,
         status                                                  AS lead_status,
+        last_utm_campaign__c                                    AS last_utm_campaign, 
+        last_utm_content__c                                     AS last_utm_content,
         {{  sfdc_source_buckets('leadsource') }}
 
         -- territory success planning info
