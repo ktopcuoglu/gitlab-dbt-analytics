@@ -1,15 +1,11 @@
 WITH source AS (
 
-    SELECT *
+    SELECT *, 
+      ROW_NUMBER() OVER (PARTITION BY area, country ORDER BY valid_from_date DESC) AS rank_location_factor_desc
     FROM {{ ref('location_factors_yaml_historical') }}
-
-), max_date AS (
-
-    SELECT *
-    FROM source
-    WHERE snapshot_date = (SELECT max(valid_from_date) FROM source)
 
 )
 
 SELECT *
-FROM max_date
+FROM source
+WHERE rank_location_factor_desc = 1
