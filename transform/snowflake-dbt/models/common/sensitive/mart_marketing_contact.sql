@@ -271,7 +271,7 @@ WITH marketing_contact AS (
       ARRAY_AGG(
                 DISTINCT IFNULL(marketing_contact_order.marketing_contact_role || ': ' || 
                   IFNULL(marketing_contact_order.saas_product_tier, '') || IFNULL(marketing_contact_order.self_managed_product_tier, ''), 'No Role') 
-               )                                                                                 AS role_tier_text
+               )                                                                                 AS role_tier_text,
       ARRAY_AGG(
                 DISTINCT IFNULL(marketing_contact_role || ': ' || 
                   IFNULL(namespace_path, CASE 
