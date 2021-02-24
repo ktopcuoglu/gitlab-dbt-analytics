@@ -120,6 +120,7 @@ tables:
     export_schema: 'customers'
     export_table: 'reconciliations'
     export_table_primary_key: order_id
+    has_xmin: false
     import_db: CUSTOMERS_DB
     import_query: |-
       SELECT order_id

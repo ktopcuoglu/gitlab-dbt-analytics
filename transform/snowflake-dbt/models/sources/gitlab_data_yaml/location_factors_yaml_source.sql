@@ -53,7 +53,6 @@ WITH source AS (
     TABLE(FLATTEN(input => countries.value, RECURSIVE => TRUE))  countries_info
     WHERE snapshot_date >= '2021-01-04'
       AND countries_info.index IS NOT NULL
-      AND country != 'United States'
     
 ), countries_without_metro_areas AS (
 
@@ -97,6 +96,7 @@ WITH source AS (
       snapshot_date,
       rank
     FROM other
+    WHERE country != 'United States'
 
     UNION  ALL
 
@@ -107,6 +107,20 @@ WITH source AS (
       snapshot_date,
       rank
     FROM countries_without_metro_areas
+
+    UNION ALL 
+  
+    SELECT
+      metro_area,
+      country,
+      location_factor,
+      snapshot_date,
+      rank
+    FROM other
+    WHERE country = 'United States'
+      AND location_factor IS NOT NULL
+      AND metro_area IN ('Hawaii','Washington DC')
+    ---this is to capture data points with just metro area  
 
 )
 

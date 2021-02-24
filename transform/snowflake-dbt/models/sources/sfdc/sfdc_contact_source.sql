@@ -74,6 +74,8 @@ WITH source AS (
         web_portal_purchase_datetime__c AS web_portal_purchase_datetime,
         mkto_si__last_interesting_moment__c AS marketo_last_interesting_moment,
         mkto_si__last_interesting_moment_date__c AS marketo_last_interesting_moment_date,
+        last_utm_campaign__c        AS last_utm_campaign, 
+        last_utm_content__c         AS last_utm_content,
 
         {{  sfdc_source_buckets('leadsource') }}
 
