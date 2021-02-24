@@ -457,5 +457,3 @@ sources:
         identifier: gitlab_db_users_ops_dashboard_projects
       - name: zoom_meetings
         identifier: gitlab_db_zoom_meetings
-
-
