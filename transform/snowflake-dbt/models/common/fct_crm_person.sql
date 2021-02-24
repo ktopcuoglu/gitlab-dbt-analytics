@@ -130,49 +130,57 @@ WITH account_dims_mapping AS (
 
     SELECT
     -- ids
-      crm_person.dim_crm_person_id                                                                                        AS dim_crm_person_id,
-      crm_person.sfdc_record_id                                                                                           AS sfdc_record_id,
-      crm_person.bizible_person_id                                                                                        AS bizible_person_id,
+      crm_person.dim_crm_person_id    AS dim_crm_person_id,
+      crm_person.sfdc_record_id       AS sfdc_record_id,
+      crm_person.bizible_person_id    AS bizible_person_id,
 
      -- common dimension keys
-      crm_person.dim_crm_sales_rep_id                                                                                     AS dim_crm_sales_rep_id,
-      crm_person.dim_crm_account_id                                                                                       AS dim_crm_account_id,
-      account_dims_mapping.dim_parent_crm_account_id,
-      COALESCE(account_dims_mapping.dim_account_sales_segment_id, sales_segment.dim_sales_segment_id)                     AS dim_account_sales_segment_id,
-      COALESCE(account_dims_mapping.dim_account_geo_region_id, geo_region.dim_geo_region_id)                              AS dim_account_geo_region_id,
-      COALESCE(account_dims_mapping.dim_account_geo_sub_region_id, geo_sub_region.dim_geo_sub_region_id)                  AS dim_account_geo_sub_region_id,
-      account_dims_mapping.dim_account_geo_area_id                                                                        AS dim_account_geo_area_id,
-      COALESCE(account_dims_mapping.dim_account_sales_territory_id, sales_territory.dim_sales_territory_id)               AS dim_account_sales_territory_id,
-      COALESCE(account_dims_mapping.dim_account_industry_id, industry.dim_industry_id)                                    AS dim_account_industry_id,
-      account_dims_mapping.dim_account_location_country_id,
-      account_dims_mapping.dim_account_location_region_id,
-      account_dims_mapping.dim_parent_sales_segment_id,
-      account_dims_mapping.dim_parent_geo_region_id,
-      account_dims_mapping.dim_parent_geo_sub_region_id,
-      account_dims_mapping.dim_parent_geo_area_id,
-      account_dims_mapping.dim_parent_sales_territory_id,
-      account_dims_mapping.dim_parent_industry_id,
-      account_dims_mapping.dim_parent_location_country_id,
-      account_dims_mapping.dim_parent_location_region_id,
-      {{ get_keyed_nulls('marketing_channel.dim_marketing_channel_id') }}                                                 AS dim_marketing_channel_id,
+      crm_person.dim_crm_sales_rep_id                                                                          AS dim_crm_sales_rep_id,
+      crm_person.dim_crm_account_id                                                                            AS dim_crm_account_id,
+      account_dims_mapping.dim_parent_crm_account_id,                                                          -- dim_parent_crm_account_id
+      COALESCE(account_dims_mapping.dim_account_sales_segment_id, sales_segment.dim_sales_segment_id)          AS dim_account_sales_segment_id,
+      COALESCE(account_dims_mapping.dim_account_geo_region_id, geo_region.dim_geo_region_id)                   AS dim_account_geo_region_id,
+      COALESCE(account_dims_mapping.dim_account_geo_sub_region_id, geo_sub_region.dim_geo_sub_region_id)       AS dim_account_geo_sub_region_id,
+      account_dims_mapping.dim_account_geo_area_id                                                             AS dim_account_geo_area_id,
+      COALESCE(account_dims_mapping.dim_account_sales_territory_id, sales_territory.dim_sales_territory_id)    AS dim_account_sales_territory_id,
+      COALESCE(account_dims_mapping.dim_account_industry_id, industry.dim_industry_id)                         AS dim_account_industry_id,
+      account_dims_mapping.dim_account_location_country_id,                                                    -- dim_account_location_country_id
+      account_dims_mapping.dim_account_location_region_id,                                                     -- dim_account_location_region_id
+      account_dims_mapping.dim_parent_sales_segment_id,                                                        -- dim_parent_sales_segment_id
+      account_dims_mapping.dim_parent_geo_region_id,                                                           -- dim_parent_geo_region_id
+      account_dims_mapping.dim_parent_geo_sub_region_id,                                                       -- dim_parent_geo_sub_region_id
+      account_dims_mapping.dim_parent_geo_area_id,                                                             -- dim_parent_geo_area_id
+      account_dims_mapping.dim_parent_sales_territory_id,                                                      -- dim_parent_sales_territory_id
+      account_dims_mapping.dim_parent_industry_id,                                                             -- dim_parent_industry_id
+      account_dims_mapping.dim_parent_location_country_id,                                                     -- dim_parent_location_country_id
+      account_dims_mapping.dim_parent_location_region_id,                                                      -- dim_parent_location_region_id
+      {{ get_keyed_nulls('marketing_channel.dim_marketing_channel_id') }}                                       AS dim_marketing_channel_id,
 
      -- important person dates
-      COALESCE(sfdc_contacts.created_date, sfdc_leads.created_date)::DATE                                                 AS created_date,
-      {{ get_date_id('COALESCE(sfdc_contacts.created_date, sfdc_leads.created_date)') }}                                  AS created_date_id,
-      COALESCE(sfdc_contacts.inquiry_datetime, sfdc_leads.inquiry_datetime)::DATE                                         AS inquiry_date,
-      {{ get_date_id('inquiry_date') }}                                                                                   AS inquiry_date_id,
-      mqls.first_mql_date::DATE                                                                                           AS mql_date_first,
-      {{ get_date_id('mql_date_first') }}                                                                                 AS mql_date_first_id,
-      mqls.last_mql_date::DATE                                                                                            AS mql_date_latest,
-      {{ get_date_id('last_mql_date') }}                                                                                  AS mql_date_latest_id,
-      COALESCE(sfdc_contacts.accepted_datetime, sfdc_leads.accepted_datetime)::DATE                                       AS accepted_date,
-      {{ get_date_id('accepted_date') }}                                                                                  AS accepted_date_id,
-      COALESCE(sfdc_contacts.qualifying_datetime, sfdc_leads.qualifying_datetime)::DATE                                   AS qualifying_date,
-      {{ get_date_id('qualifying_date') }}                                                                                AS qualifying_date_id,
-      COALESCE(sfdc_contacts.qualified_datetime, sfdc_leads.qualified_datetime)::DATE                                     AS qualified_date,
-      {{ get_date_id('qualified_date') }}                                                                                 AS qualified_date_id,
-      sfdc_leads.converted_date::DATE                                                                                     AS converted_date,
-      {{ get_date_id('converted_date') }}                                                                                 AS converted_date_id,
+      COALESCE(sfdc_contacts.created_date, sfdc_leads.created_date)::DATE                      AS created_date,
+      {{ get_date_id('COALESCE(sfdc_contacts.created_date, sfdc_leads.created_date)') }}       AS created_date_id,
+      {{ get_date_pt_id('COALESCE(sfdc_contacts.created_date, sfdc_leads.created_date)') }}    AS created_date_pt_id,
+      COALESCE(sfdc_contacts.inquiry_datetime, sfdc_leads.inquiry_datetime)::DATE              AS inquiry_date,
+      {{ get_date_id('inquiry_date') }}                                                        AS inquiry_date_id,
+      {{ get_date_pt_id('inquiry_date') }}                                                     AS inquiry_date_pt_id,
+      mqls.first_mql_date::DATE                                                                AS mql_date_first,
+      {{ get_date_id('mql_date_first') }}                                                      AS mql_date_first_id,
+      {{ get_date_pt_id('mql_date_first') }}                                                   AS mql_date_first_pt_id,
+      mqls.last_mql_date::DATE                                                                 AS mql_date_latest,
+      {{ get_date_id('last_mql_date') }}                                                       AS mql_date_latest_id,
+      {{ get_date_pt_id('last_mql_date') }}                                                    AS mql_date_latest_pt_id,
+      COALESCE(sfdc_contacts.accepted_datetime, sfdc_leads.accepted_datetime)::DATE            AS accepted_date,
+      {{ get_date_id('accepted_date') }}                                                       AS accepted_date_id,
+      {{ get_date_pt_id('accepted_date') }}                                                    AS accepted_date_pt_id,
+      COALESCE(sfdc_contacts.qualifying_datetime, sfdc_leads.qualifying_datetime)::DATE        AS qualifying_date,
+      {{ get_date_id('qualifying_date') }}                                                     AS qualifying_date_id,
+      {{ get_date_pt_id('qualifying_date') }}                                                  AS qualifying_date_pt_id,
+      COALESCE(sfdc_contacts.qualified_datetime, sfdc_leads.qualified_datetime)::DATE          AS qualified_date,
+      {{ get_date_id('qualified_date') }}                                                      AS qualified_date_id,
+      {{ get_date_pt_id('qualified_date') }}                                                   AS qualified_date_pt_id,
+      sfdc_leads.converted_date::DATE                                                          AS converted_date,
+      {{ get_date_id('converted_date') }}                                                      AS converted_date_id,
+      {{ get_date_pt_id('converted_date') }}                                                   AS converted_date_pt_id,
 
      -- flags
       CASE
@@ -218,7 +226,7 @@ WITH account_dims_mapping AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mcooperDD",
-    updated_by="@mcooperDD",
+    updated_by="@jjstark",
     created_date="2020-12-01",
-    updated_date="2021-02-02"
+    updated_date="2021-02-23"
 ) }}

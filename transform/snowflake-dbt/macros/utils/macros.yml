@@ -35,6 +35,8 @@ macros:
     description: '{{ doc("generate_schema_name") }}'
   - name: get_date_id
     description: '{{ doc("get_date_id") }}'
+  - name: get_date_pt_id
+    description: '{{ doc("get_date_pt_id") }}'
   - name: get_keyed_nulls
     description: '{{ doc("get_keyed_nulls") }}'
   - name: hash_diff
