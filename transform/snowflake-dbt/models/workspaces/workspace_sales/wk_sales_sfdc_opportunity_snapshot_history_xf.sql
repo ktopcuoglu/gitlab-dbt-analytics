@@ -332,13 +332,13 @@ WITH date_details AS (
 
 ), net_iacv_to_net_arr_ratio AS (
 
-    SELECT '2. New - Connected'       AS "ORDER_TYPE_STAMPED", 
+    SELECT '2. New - Connected'     AS "ORDER_TYPE_STAMPED", 
           'Mid-Market'              AS "USER_SEGMENT_STAMPED", 
           0.999691784               AS "RATIO_NET_IACV_TO_NET_ARR" 
     UNION 
     SELECT '1. New - First Order'   AS "ORDER_TYPE_STAMPED", 
           'SMB'                     AS "USER_SEGMENT_STAMPED", 
-          0.998590143              AS "RATIO_NET_IACV_TO_NET_ARR" 
+          0.998590143               AS "RATIO_NET_IACV_TO_NET_ARR" 
     UNION 
     SELECT '1. New - First Order'   AS "ORDER_TYPE_STAMPED", 
           'Large'                   AS "USER_SEGMENT_STAMPED", 
@@ -346,7 +346,7 @@ WITH date_details AS (
     UNION 
     SELECT '3. Growth'              AS "ORDER_TYPE_STAMPED", 
           'SMB'                     AS "USER_SEGMENT_STAMPED", 
-          0.927846192              AS "RATIO_NET_IACV_TO_NET_ARR" 
+          0.927846192               AS "RATIO_NET_IACV_TO_NET_ARR" 
     UNION 
     SELECT '3. Growth'              AS "ORDER_TYPE_STAMPED", 
           'Large'                   AS "USER_SEGMENT_STAMPED", 
@@ -358,7 +358,7 @@ WITH date_details AS (
     UNION 
     SELECT '3. Growth'              AS "ORDER_TYPE_STAMPED", 
           'Mid-Market'              AS "USER_SEGMENT_STAMPED", 
-          0.793618079              AS "RATIO_NET_IACV_TO_NET_ARR" 
+          0.793618079               AS "RATIO_NET_IACV_TO_NET_ARR" 
     UNION 
     SELECT '1. New - First Order'   AS "ORDER_TYPE_STAMPED", 
           'Mid-Market'              AS "USER_SEGMENT_STAMPED", 
@@ -370,15 +370,15 @@ WITH date_details AS (
     UNION 
     SELECT '1. New - First Order'   AS "ORDER_TYPE_STAMPED", 
           'PubSec'                  AS "USER_SEGMENT_STAMPED", 
-          0.9999751852              AS "RATIO_NET_IACV_TO_NET_ARR" 
+          1.000000000               AS "RATIO_NET_IACV_TO_NET_ARR" 
     UNION 
     SELECT '2. New - Connected'     AS "ORDER_TYPE_STAMPED", 
           'PubSec'                  AS "USER_SEGMENT_STAMPED", 
-          1.002887983               AS "RATIO_NET_IACV_TO_NET_ARR" 
+          1.002741689               AS "RATIO_NET_IACV_TO_NET_ARR" 
     UNION 
     SELECT '3. Growth'              AS "ORDER_TYPE_STAMPED", 
           'PubSec'                  AS "USER_SEGMENT_STAMPED", 
-          1.035889715               AS "RATIO_NET_IACV_TO_NET_ARR" 
+          0.965670500               AS "RATIO_NET_IACV_TO_NET_ARR" 
 
 ), pipeline_type_quarter_start AS (
 
@@ -469,12 +469,13 @@ WITH date_details AS (
       -- Those were later fixed in the opportunity object but stayed in the snapshot table.
       -- To account for those issues and give a directionally correct answer, we apply a ratio to everything before FY22
       CASE
-        WHEN  opp_snapshot.snapshot_date < '2021-02-01'::DATE -- All deals before cutoff
+        WHEN  opp_snapshot.snapshot_date < '2021-02-01'::DATE -- All deals before cutoff and that were not updated to Net ARR
           THEN calculated_from_ratio_net_arr
-      --  WHEN  opp_snapshot.snapshot_date >= '2021-02-01'::DATE -- Open deal with no Net ARR, after cut off
-      --    AND COALESCE(opp_snapshot.raw_net_arr,0) = 0
-       --   AND opp_snapshot.stage_name NOT IN ('8-Closed Lost', '9-Unqualified', 'Closed Won') 
-       --     THEN calculated_from_ratio_net_arr
+        WHEN  opp_snapshot.snapshot_date >= '2021-02-01'::DATE  -- After cutoff date, for all deals earlier than FY19 that are closed and have no net arr
+              AND opp_snapshot.close_date < '2018-02-01'::DATE 
+              AND opp_snapshot.is_open = 0
+              AND COALESCE(opp_snapshot.raw_net_arr,0) = 0 
+          THEN calculated_from_ratio_net_arr
         ELSE COALESCE(opp_snapshot.raw_net_arr,0) -- Rest of deals after cut off date
       END                                                                     AS net_arr,
          
@@ -591,9 +592,7 @@ WITH date_details AS (
 
       ------------------------------------------------------------------------------------------------------
       ------------------------------------------------------------------------------------------------------
-     
-    
-   
+
       -- account driven fields
       sfdc_accounts_xf.tsp_region,
       sfdc_accounts_xf.tsp_sub_region,
