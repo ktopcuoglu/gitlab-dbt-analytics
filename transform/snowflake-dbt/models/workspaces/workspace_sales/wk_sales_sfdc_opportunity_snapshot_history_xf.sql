@@ -164,7 +164,7 @@ WITH date_details AS (
       iacv_created_date.first_day_of_fiscal_quarter              AS iacv_created_fiscal_quarter_date,
 
       -- this fields might change, isolating the field used from the purpose
-      -- alternatives are a future net_arr_created_date
+      -- alternative is future net_arr_created_date
       created_date_detail.first_day_of_month                     AS pipeline_created_date_month,
       created_date_detail.fiscal_year                            AS pipeline_created_fiscal_year,
       created_date_detail.fiscal_quarter_name_fy                 AS pipeline_created_fiscal_quarter_name,
@@ -314,6 +314,7 @@ WITH date_details AS (
       opp_snapshot.*,
 
       ------------------------------------------------------------------------------------------------------
+      ------------------------------------------------------------------------------------------------------
       -- Base helpers for reporting
       CASE 
         WHEN opp_snapshot.stage_name IN ('00-Pre Opportunity', '0-Pending Acceptance', '0-Qualifying'
@@ -342,6 +343,14 @@ WITH date_details AS (
         ELSE 'Other'
       END                                                         AS stage_name_4plus,
 
+
+      CASE
+        WHEN opp_snapshot.stage_name
+          IN ('1-Discovery', '2-Developing', '2-Scoping','3-Technical Evaluation', '4-Proposal', 'Closed Won','5-Negotiating', '6-Awaiting Signature', '7-Closing')
+            THEN 1
+        ELSE 0
+      END                                                         AS is_stage_1_plus,
+
       CASE 
         WHEN opp_snapshot.stage_name 
           IN ('3-Technical Evaluation', '4-Proposal', 'Closed Won','5-Negotiating', '6-Awaiting Signature', '7-Closing')                               
@@ -367,9 +376,7 @@ WITH date_details AS (
       END                                                         AS is_lost,
 
       CASE 
-        WHEN (opp_snapshot.stage_name = '8-Closed Lost' 
-          OR opp_snapshot.stage_name = '9-Unqualified'
-          OR opp_snapshot.stage_name = 'Closed Won' ) 
+        WHEN opp_snapshot.stage_name IN ('8-Closed Lost', '9-Unqualified', 'Closed Won', '10-Duplicate') 
             THEN 0
         ELSE 1  
       END                                                         AS is_open,
@@ -397,36 +404,6 @@ WITH date_details AS (
       END                                                         AS is_renewal, 
 
   
-      ------------------------------------------------------------------------------------------------------
-/*
-      -- base fields
-      opp_snapshot.snapshot_date                                  AS snapshot_date,  
-      opp_snapshot.account_id,
-      opp_snapshot.forecast_category_name,                
-      opp_snapshot.opportunity_id,
-      opp_snapshot.owner_id,    
-      opp_snapshot.stage_name,
-      opp_snapshot.sales_type,
-      opp_snapshot.is_deleted,
-      opp_snapshot.is_refund,
-      opp_snapshot.opportunity_category,
-      opp_snapshot.sales_qualified_source,
-
-      -- base metrics metrics
-      opp_snapshot.renewal_acv,
-      opp_snapshot.incremental_acv,
-      opp_snapshot.net_incremental_acv,
-      opp_snapshot.total_contract_value,
-      opp_snapshot.professional_services_value,
-
-        opp_snapshot.recurring_amount,
-      opp_snapshot.true_up_amount,
-      opp_snapshot.proserv_amount,
-      opp_snapshot.other_non_recurring_amount,
-      opp_snapshot.arr_basis,
-      opp_snapshot.arr,
-      opp_snapshot.raw_net_arr,
-*/
       ------------------------------------------------------------------------------------------------------
       ------------------------------------------------------------------------------------------------------
       
@@ -458,12 +435,15 @@ WITH date_details AS (
       -- if there is an opportunity based ratio, use that, if not, use default from segment / order type
 
       -- NUANCE: Lost deals might not have net_incremental_acv populated, so we must rely on iacv
+      -- Using opty ratio for open deals doesn't seem to work well
       CASE 
-        WHEN opp_snapshot.stage_name NOT IN ('8-Closed Lost', '9-Unqualified', 'Closed Won')  -- OPEN DEAL
-          THEN COALESCE(opp_snapshot.incremental_acv,0) * COALESCE(opportunity_based_iacv_to_net_arr_ratio,segment_order_type_iacv_to_net_arr_ratio)
+        WHEN opp_snapshot.stage_name NOT IN ('8-Closed Lost', '9-Unqualified', 'Closed Won', '10-Duplicate')  -- OPEN DEAL
+--          THEN COALESCE(opp_snapshot.incremental_acv,0) * COALESCE(opportunity_based_iacv_to_net_arr_ratio,segment_order_type_iacv_to_net_arr_ratio)
+            THEN COALESCE(opp_snapshot.incremental_acv,0) * COALESCE(segment_order_type_iacv_to_net_arr_ratio,0)
         WHEN opp_snapshot.stage_name IN ('8-Closed Lost')                       -- CLOSED LOST DEAL and no Net IACV
           AND COALESCE(opp_snapshot.net_incremental_acv,0) = 0
-            THEN COALESCE(opp_snapshot.incremental_acv,0) * COALESCE(opportunity_based_iacv_to_net_arr_ratio,segment_order_type_iacv_to_net_arr_ratio)
+--            THEN COALESCE(opp_snapshot.incremental_acv,0) * COALESCE(opportunity_based_iacv_to_net_arr_ratio,segment_order_type_iacv_to_net_arr_ratio)
+            THEN COALESCE(opp_snapshot.incremental_acv,0) * COALESCE(segment_order_type_iacv_to_net_arr_ratio,0)
         WHEN opp_snapshot.stage_name IN ('8-Closed Lost', 'Closed Won')         -- REST of CLOSED DEAL
             THEN COALESCE(opp_snapshot.net_incremental_acv,0) * COALESCE(opportunity_based_iacv_to_net_arr_ratio,segment_order_type_iacv_to_net_arr_ratio)
         ELSE NULL
@@ -484,8 +464,6 @@ WITH date_details AS (
          
       ------------------------------------------------------------------------------------------------------
       ------------------------------------------------------------------------------------------------------
-
-    
 
       ---------------------
       -- compound metrics for reporting
@@ -511,7 +489,7 @@ WITH date_details AS (
       -- created and closed within the quarter net arr
       CASE 
         WHEN opp_snapshot.pipeline_created_fiscal_quarter_name = opp_snapshot.close_fiscal_quarter_name
-          AND opp_snapshot.stage_name IN ('Closed Won')  
+          AND (is_won = 1 OR (is_renewal = 1 AND is_lost = 1))  
             THEN net_arr
         ELSE 0
       END                                                         AS created_and_won_same_quarter_net_arr,
@@ -525,13 +503,10 @@ WITH date_details AS (
 
       -- booked net arr (won + renewals / lost)
       CASE
-        WHEN opp_snapshot.stage_name = 'Closed Won'
-          OR (opp_snapshot.stage_name = '8-Closed Lost'
-            AND LOWER(opp_snapshot.sales_type) like '%renewal%')
+        WHEN is_won = 1 OR (is_renewal = 1 AND is_lost = 1)
           THEN net_arr
         ELSE 0 
       END                                                         AS booked_net_arr,
-
 
       -- fields for counting new logos, these fields count refund as negative
       CASE 
@@ -543,9 +518,96 @@ WITH date_details AS (
  
       -- opportunity driven fields
       sfdc_opportunity_xf.opportunity_owner_manager,
-      sfdc_opportunity_xf.account_owner_team_stamped, 
       sfdc_opportunity_xf.is_edu_oss,
 
+      ------------------------------------------------------------------------------------------------------
+      ------------------------------------------------------------------------------------------------------
+     
+     -- field used for FY21 bookings reporitng
+      sfdc_opportunity_xf.account_owner_team_stamped, 
+     
+      -- temporary, to deal with global reports that use account_owner_team_stamp field
+      CASE 
+        WHEN sfdc_opportunity_xf.account_owner_team_stamped IN ('Commercial - SMB','SMB','SMB - US','SMB - International')
+          THEN 'SMB'
+        WHEN sfdc_opportunity_xf.account_owner_team_stamped IN ('APAC','EMEA','Channel','US West','US East','Public Sector')
+          THEN 'Large'
+        WHEN sfdc_opportunity_xf.account_owner_team_stamped IN ('MM - APAC','MM - East','MM - EMEA','Commercial - MM','MM - West','MM-EMEA')
+          THEN 'Mid-Market'
+        ELSE 'SMB'
+      END                                                         AS account_owner_team_stamped_cro_level,   
+
+      -- Team Segment / ASM - RD 
+      -- As the snapshot history table is used to compare current perspective with the past, I leverage the most recent version
+      -- of the truth ato cut the data, that's why instead of using the stampped version, I take the current fields.
+      sfdc_opportunity_xf.opportunity_owner_user_segment,
+      sfdc_opportunity_xf.opportunity_owner_user_region,
+
+      --- target fields for reporting, changing their name might help to isolate their logic from the actual field
+      -- in FY21, there were multiple ways of getting this done, and it meant changing downwards reports
+      sfdc_opportunity_xf.sales_team_cro_level,
+      sfdc_opportunity_xf.sales_team_rd_asm_level,
+
+      /*CASE WHEN sfdc_opportunity_xf.user_segment_stamped IS NULL 
+          THEN opportunity_owner.user_segment 
+          ELSE COALESCE(sfdc_opportunity_xf.user_segment_stamped,'N/A')
+      END                                                         AS opportunity_owner_user_segment,
+
+      CASE WHEN sfdc_opportunity_xf.user_region_stamped IS NULL 
+          THEN opportunity_owner.user_region
+          ELSE COALESCE(sfdc_opportunity_xf.user_region_stamped,'N/A')
+      END                                                         AS opportunity_owner_user_region,
+
+      -- these two fields will be used to do cuts in X-Ray
+      opportunity_owner_user_segment                                            AS opportunity_owner_cro_level,
+      CONCAT(opportunity_owner_user_segment,'_',opportunity_owner_user_region)  AS opportunity_owner_rd_asm_level,
+      
+      */
+
+      
+      --------------------------------------------------------------------------------------------
+      -- TO BE REMOVED
+      -- account owner hierarchies levels
+      COALESCE(account_owner.sales_team_level_2,'n/a')            AS account_owner_team_level_2,
+      COALESCE(account_owner.sales_team_level_3,'n/a')            AS account_owner_team_level_3,
+      COALESCE(account_owner.sales_team_level_4,'n/a')            AS account_owner_team_level_4,
+      COALESCE(account_owner.sales_team_vp_level,'n/a')           AS account_owner_team_vp_level,
+      COALESCE(account_owner.sales_team_rd_level,'n/a')           AS account_owner_team_rd_level,
+      COALESCE(account_owner.sales_team_asm_level,'n/a')          AS account_owner_team_asm_level,
+      COALESCE(account_owner.sales_min_hierarchy_level,'n/a')     AS account_owner_min_team_level,
+      account_owner.sales_region                                  AS account_owner_sales_region,
+  
+      /*
+      CASE 
+          WHEN COALESCE(account_owner.sales_team_vp_level,'n/a') = 'VP Ent'
+            THEN 'Large'
+          WHEN COALESCE(account_owner.sales_team_vp_level,'n/a') = 'VP Comm MM'
+            THEN 'Mid-Market'
+          WHEN COALESCE(account_owner.sales_team_vp_level,'n/a') = 'VP Comm SMB' 
+            THEN 'SMB' 
+          ELSE 'Other' 
+      END                                                         AS account_owner_cro_level,*/
+  
+
+      
+      -- opportunity owner hierarchies levels
+      CASE 
+        WHEN sales_admin_hierarchy.level_2 IS NOT NULL 
+          THEN sales_admin_hierarchy.level_2 
+        ELSE opportunity_owner.sales_team_level_2
+      END                                                         AS opportunity_owner_team_level_2,
+      
+      CASE 
+        WHEN sales_admin_hierarchy.level_3 IS NOT NULL 
+          THEN sales_admin_hierarchy.level_3 
+        ELSE opportunity_owner.sales_team_level_3
+      END                                                         AS opportunity_owner_team_level_3,    
+      --------------------------------------------------------------------------------------------
+
+
+      ------------------------------------------------------------------------------------------------------
+      ------------------------------------------------------------------------------------------------------
+     
       -- using current opportunity perspective instead of historical
       -- NF 2020-01-26: this might change to order type live 2.1     
       sfdc_opportunity_xf.order_type_stamped,     
@@ -569,64 +631,13 @@ WITH date_details AS (
           THEN '3. Churn'
         ELSE '4. Other' 
       END                                                         AS deal_category,
-
-
-      -- Team Segment / ASM - RD 
-      -- NF: At the moment of coding, the stamped version is not fully populated for all deals
-      -- so we need to use a live version of the user segment and region until
-      CASE WHEN sfdc_opportunity_xf.user_segment_stamped IS NULL 
-          THEN opportunity_owner.user_segment 
-          ELSE COALESCE(sfdc_opportunity_xf.user_segment_stamped,'N/A')
-      END                                                         AS opportunity_owner_user_segment,
-
-      CASE WHEN sfdc_opportunity_xf.user_region_stamped IS NULL 
-          THEN opportunity_owner.user_region
-          ELSE COALESCE(sfdc_opportunity_xf.user_region_stamped,'N/A')
-      END                                                         AS opportunity_owner_user_region,
-
-      -- these two fields will be used to do cuts in X-Ray
-      opportunity_owner_user_segment                                            AS opportunity_owner_cro_level,
-      CONCAT(opportunity_owner_user_segment,'_',opportunity_owner_user_region)  AS opportunity_owner_rd_asm_level,
-     
+   
       -- account driven fields
       sfdc_accounts_xf.tsp_region,
       sfdc_accounts_xf.tsp_sub_region,
       sfdc_accounts_xf.ultimate_parent_sales_segment,
       sfdc_accounts_xf.tsp_max_hierarchy_sales_segment,
         
-      -- account owner hierarchies levels
-      COALESCE(account_owner.sales_team_level_2,'n/a')            AS account_owner_team_level_2,
-      COALESCE(account_owner.sales_team_level_3,'n/a')            AS account_owner_team_level_3,
-      COALESCE(account_owner.sales_team_level_4,'n/a')            AS account_owner_team_level_4,
-      COALESCE(account_owner.sales_team_vp_level,'n/a')           AS account_owner_team_vp_level,
-      COALESCE(account_owner.sales_team_rd_level,'n/a')           AS account_owner_team_rd_level,
-      COALESCE(account_owner.sales_team_asm_level,'n/a')          AS account_owner_team_asm_level,
-      COALESCE(account_owner.sales_min_hierarchy_level,'n/a')     AS account_owner_min_team_level,
-      account_owner.sales_region                                  AS account_owner_sales_region,
-  
-      CASE 
-          WHEN COALESCE(account_owner.sales_team_vp_level,'n/a') = 'VP Ent'
-            THEN 'Large'
-          WHEN COALESCE(account_owner.sales_team_vp_level,'n/a') = 'VP Comm MM'
-            THEN 'Mid-Market'
-          WHEN COALESCE(account_owner.sales_team_vp_level,'n/a') = 'VP Comm SMB' 
-            THEN 'SMB' 
-          ELSE 'Other' 
-      END                                                         AS account_owner_cro_level,
-  
-      -- opportunity owner hierarchies levels
-      CASE 
-        WHEN sales_admin_hierarchy.level_2 IS NOT NULL 
-          THEN sales_admin_hierarchy.level_2 
-        ELSE opportunity_owner.sales_team_level_2
-      END                                                         AS opportunity_owner_team_level_2,
-      
-      CASE 
-        WHEN sales_admin_hierarchy.level_3 IS NOT NULL 
-          THEN sales_admin_hierarchy.level_3 
-        ELSE opportunity_owner.sales_team_level_3
-      END                                                         AS opportunity_owner_team_level_3,    
-
       -- 20201021 NF: This should be replaced by a table that keeps track of excluded deals for forecasting purposes
       CASE 
         WHEN sfdc_accounts_xf.ultimate_parent_id IN ('001610000111bA3','0016100001F4xla','0016100001CXGCs','00161000015O9Yn','0016100001b9Jsc') 

@@ -1033,7 +1033,6 @@ roles:
                     - prep.sensitive.gitlab_dotcom_projects
                     - prep.sensitive.gitlab_dotcom_system_note_metadata
                     - prep.sensitive.gitlab_dotcom_users
-                    - raw.tap_postgres.gitlab_db_alerts_service_data
                     - raw.tap_postgres.gitlab_db_alert_management_alerts
                     - raw.tap_postgres.gitlab_db_alert_management_alert_assignees
                     - raw.tap_postgres.gitlab_db_approvals
