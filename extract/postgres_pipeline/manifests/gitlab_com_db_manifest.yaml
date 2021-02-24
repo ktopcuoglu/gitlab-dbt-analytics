@@ -765,6 +765,11 @@ tables:
       , cluster_type
       , domain
       , managed
+      , namespace_per_environment
+      , management_project_id
+      , cleanup_status
+      , cleanup_status_reason
+      , helm_major_version
       FROM clusters
       WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
         AND '{EXECUTION_DATE}'::timestamp
@@ -1481,6 +1486,7 @@ tables:
       , duplicated_to_id
       , promoted_to_epic_id
       , sprint_id
+      , health_status
       FROM issues
       WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
         AND '{EXECUTION_DATE}'::timestamp
@@ -1615,6 +1621,7 @@ tables:
       , created_at
       , updated_at
       , template
+      , description
       , type
       , group_id
       FROM labels
@@ -2832,6 +2839,9 @@ tables:
       , confidential_note_events
       , deployment_events
       , comment_on_event_enabled
+      , group_id
+      , inherit_from_id
+      , instance
       FROM services
       WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
         AND '{EXECUTION_DATE}'::timestamp
