@@ -115,13 +115,13 @@ WITH dim_billing_account AS (
       dim_subscription.subscription_end_month,
       dim_billing_account.dim_billing_account_id,
       dim_crm_accounts.crm_account_name,
-      dim_crm_accounts.ultimate_parent_account_id,
-      dim_crm_accounts.ultimate_parent_account_name,
-      dim_crm_accounts.ultimate_parent_billing_country,
-      dim_crm_accounts.ultimate_parent_account_segment,
-      dim_crm_accounts.ultimate_parent_industry,
-      dim_crm_accounts.ultimate_parent_account_owner_team,
-      dim_crm_accounts.ultimate_parent_territory,
+      dim_crm_accounts.dim_parent_crm_account_id,
+      dim_crm_accounts.parent_crm_account_name,
+      dim_crm_accounts.parent_crm_account_billing_country,
+      dim_crm_accounts.parent_crm_account_sales_segment,
+      dim_crm_accounts.parent_crm_account_industry,
+      dim_crm_accounts.parent_crm_account_owner_team,
+      dim_crm_accounts.parent_crm_account_sales_territory,
       dim_crm_accounts.technical_account_manager,
       IFF(MAX(mrr) > 0, TRUE, FALSE)                                                AS is_paid_subscription,
       MAX(IFF(product_rate_plan_name ILIKE ANY ('%edu%', '%oss%'), TRUE, FALSE))    AS is_program_subscription,
@@ -151,7 +151,7 @@ WITH dim_billing_account AS (
     LEFT JOIN dim_billing_account
       ON dim_subscription.dim_billing_account_id = dim_billing_account.dim_billing_account_id
     LEFT JOIN dim_crm_accounts
-      ON dim_billing_account.dim_crm_account_id = dim_crm_accounts.crm_account_id
+      ON dim_billing_account.dim_crm_account_id = dim_crm_accounts.dim_crm_account_id
     INNER JOIN dim_date
       ON effective_start_month <= dim_date.date_day AND effective_end_month > dim_date.date_day
     {{ dbt_utils.group_by(n=22)}}
@@ -184,13 +184,13 @@ WITH dim_billing_account AS (
       license_subscriptions.subscription_end_month,
       license_subscriptions.dim_billing_account_id,
       license_subscriptions.crm_account_name,
-      license_subscriptions.ultimate_parent_account_id,
-      license_subscriptions.ultimate_parent_account_name,
-      license_subscriptions.ultimate_parent_billing_country,
-      license_subscriptions.ultimate_parent_account_segment,
-      license_subscriptions.ultimate_parent_industry,
-      license_subscriptions.ultimate_parent_account_owner_team,
-      license_subscriptions.ultimate_parent_territory,
+      license_subscriptions.dim_parent_crm_account_id,
+      license_subscriptions.parent_crm_account_name,
+      license_subscriptions.parent_crm_account_billing_country,
+      license_subscriptions.parent_crm_account_sales_segment,
+      license_subscriptions.parent_crm_account_industry,
+      license_subscriptions.parent_crm_account_owner_team,
+      license_subscriptions.parent_crm_account_sales_territory,
       license_subscriptions.technical_account_manager,
       COALESCE(is_paid_subscription, FALSE)             AS is_paid_subscription,
       COALESCE(is_program_subscription, FALSE)          AS is_program_subscription,
@@ -249,7 +249,7 @@ WITH dim_billing_account AS (
       latest_active_subscription_id,
       dim_billing_account_id,
       location_id,
-      ultimate_parent_account_id,
+      dim_parent_crm_account_id,
 
       -- metadata usage ping
       delivery,
@@ -298,12 +298,12 @@ WITH dim_billing_account AS (
 
       -- account metadata
       crm_account_name,
-      ultimate_parent_account_name,
-      ultimate_parent_billing_country,
-      ultimate_parent_account_segment,
-      ultimate_parent_industry,
-      ultimate_parent_account_owner_team,
-      ultimate_parent_territory,
+      parent_crm_account_name,
+      parent_crm_account_billing_country,
+      parent_crm_account_sales_segment,
+      parent_crm_account_industry,
+      parent_crm_account_owner_team,
+      parent_crm_account_sales_territory,
       technical_account_manager,
 
       -- location info
@@ -323,7 +323,7 @@ WITH dim_billing_account AS (
 {{ dbt_audit(
     cte_ref="sorted",
     created_by="@mpeychet",
-    updated_by="@mpeychet",
+    updated_by="@mcooperDD",
     created_date="2020-12-01",
-    updated_date="2020-01-21"
+    updated_date="2020-02-09"
 ) }}

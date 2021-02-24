@@ -373,4 +373,87 @@ sources:
       - name: vulnerability_occurrences
         identifier: gitlab_db_vulnerability_occurrences
         freshness: null
-
+      - name: alert_management_http_integrations
+        identifier: gitlab_db_alert_management_http_integrations
+      - name: analytics_cycle_analytics_group_stages
+        identifier: gitlab_db_analytics_cycle_analytics_group_stages
+      - name: approval_merge_request_rule_sources
+        identifier: gitlab_db_approval_merge_request_rule_sources
+      - name: approval_project_rules
+        identifier: gitlab_db_approval_project_rules
+      - name: approval_project_rules_protected_branches
+        identifier: gitlab_db_approval_project_rules_protected_branches
+      - name: authentication_events
+        identifier: gitlab_db_authentication_events
+      - name: bulk_imports
+        identifier: gitlab_db_bulk_imports
+      - name: cluster_agent_tokens
+        identifier: gitlab_db_cluster_agent_tokens
+      - name: cluster_agents
+        identifier: gitlab_db_cluster_agents
+      - name: cluster_providers_aws
+        identifier: gitlab_db_cluster_providers_aws
+      - name: cluster_providers_gcp
+        identifier: gitlab_db_cluster_providers_gcp
+      - name: clusters_applications_cilium
+        identifier: gitlab_db_clusters_applications_cilium
+      - name: container_expiration_policies
+        identifier: gitlab_db_container_expiration_policies
+      - name: csv_issue_imports
+        identifier: gitlab_db_csv_issue_imports
+      - name: geo_nodes
+        identifier: gitlab_db_geo_nodes
+      - name: grafana_integrations
+        identifier: gitlab_db_grafana_integrations
+      - name: group_import_states
+        identifier: gitlab_db_group_import_states
+      - name: issues_prometheus_alert_events
+        identifier: gitlab_db_issues_prometheus_alert_events
+      - name: issues_self_managed_prometheus_alert_events
+        identifier: gitlab_db_issues_self_managed_prometheus_alert_events
+      - name: jira_imports
+        identifier: gitlab_db_jira_imports
+      - name: jira_tracker_data
+        identifier: gitlab_db_jira_tracker_data
+      - name: ldap_group_links
+        identifier: gitlab_db_ldap_group_links
+      - name: lfs_file_locks
+        identifier: gitlab_db_lfs_file_locks
+      - name: lfs_objects
+        identifier: gitlab_db_lfs_objects
+      - name: operations_feature_flags
+        identifier: gitlab_db_operations_feature_flags
+      - name: path_locks
+        identifier: gitlab_db_path_locks
+      - name: pool_repositories
+        identifier: gitlab_db_pool_repositories
+      - name: project_compliance_framework_settings
+        identifier: gitlab_db_project_compliance_framework_settings
+      - name: project_error_tracking_settings
+        identifier: gitlab_db_project_error_tracking_settings
+      - name: project_feature_usages
+        identifier: gitlab_db_project_feature_usages
+      - name: project_incident_management_settings
+        identifier: gitlab_db_project_incident_management_settings
+      - name: project_tracing_settings
+        identifier: gitlab_db_project_tracing_settings
+      - name: remote_mirrors
+        identifier: gitlab_db_remote_mirrors
+      - name: requirements_management_test_reports
+        identifier: gitlab_db_requirements_management_test_reports
+      - name: security_scans
+        identifier: gitlab_db_security_scans
+      - name: sentry_issues
+        identifier: gitlab_db_sentry_issues
+      - name: status_page_published_incidents
+        identifier: gitlab_db_status_page_published_incidents
+      - name: status_page_settings
+        identifier: gitlab_db_status_page_settings
+      - name: suggestions
+        identifier: gitlab_db_suggestions
+      - name: uploads
+        identifier: gitlab_db_uploads
+      - name: users_ops_dashboard_projects
+        identifier: gitlab_db_users_ops_dashboard_projects
+      - name: zoom_meetings
+        identifier: gitlab_db_zoom_meetings

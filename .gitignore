@@ -26,3 +26,4 @@ config.json
 !cost_center_division_department_mapping.csv
 !excluded.csv
 .ipynb_checkpoints/*
+/transform/snowflake-dbt/*.ipynb

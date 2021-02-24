@@ -15,7 +15,7 @@
       monthly_metrics.dim_subscription_id,
       monthly_metrics.dim_subscription_id_original,
       {{ get_keyed_nulls('billing_accounts.dim_billing_account_id') }}      AS dim_billing_account_id,
-      {{ get_keyed_nulls('crm_accounts.crm_account_id') }}                  AS dim_crm_account_id,
+      {{ get_keyed_nulls('crm_accounts.dim_crm_account_id') }}              AS dim_crm_account_id,
       monthly_metrics.snapshot_month,
       monthly_metrics.license_utilization,
       monthly_metrics.active_user_count,
@@ -67,7 +67,7 @@
     LEFT JOIN billing_accounts
       ON monthly_metrics.dim_billing_account_id = billing_accounts.dim_billing_account_id
     LEFT JOIN crm_accounts
-      ON billing_accounts.dim_crm_account_id = crm_accounts.crm_account_id
+      ON billing_accounts.dim_crm_account_id = crm_accounts.dim_crm_account_id
 
 )
 
