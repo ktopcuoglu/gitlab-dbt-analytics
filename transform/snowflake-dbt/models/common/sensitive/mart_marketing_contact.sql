@@ -284,6 +284,7 @@ WITH marketing_contact AS (
       CASE 
         WHEN (responsible_for_group_saas_free_tier
               OR individual_namespace_is_saas_free_tier
+              OR group_owner_of_saas_free_tier
              ) 
              AND NOT (responsible_for_group_saas_ultimate_tier
                       OR responsible_for_group_saas_premium_tier
@@ -291,6 +292,9 @@ WITH marketing_contact AS (
                       OR individual_namespace_is_saas_bronze_tier
                       OR individual_namespace_is_saas_premium_tier
                       OR individual_namespace_is_saas_ultimate_tier
+                      OR group_owner_of_saas_bronze_tier
+                      OR group_owner_of_saas_premium_tier
+                      OR group_owner_of_saas_ultimate_tier
                      )
           THEN TRUE 
         ELSE FALSE 
