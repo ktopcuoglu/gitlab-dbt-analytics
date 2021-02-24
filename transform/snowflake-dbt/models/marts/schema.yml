@@ -14,7 +14,7 @@ models:
         description: Identify whether a crm_account is a reseller.
       - name: subscription_sales_type
         description: Identifies whether a subscription is Sales-Assisted or Self-Service / Web Direct.
-      - name: billing_account_number
+      - name: zuora_account_number
         tests:
           - not_null
       - name: subscription_name_slugify
@@ -35,10 +35,10 @@ models:
           - not_null
       - name: months_since_subscription_cohort_start
       - name: quarters_since_subscription_cohort_start
-      - name: dim_billing_account_id
+      - name: zuora_account_id
         tests:
           - not_null
-      - name: billing_account_name
+      - name: zuora_account_name
         tests:
           - not_null
       - name: product_category
@@ -46,7 +46,7 @@ models:
           - not_null
       - name: unit_of_measure
       - name: quantity
-      - name: dim_crm_account_id
+      - name: crm_id
       - name: sfdc_account_name
       - name: ultimate_parent_account_id
       - name: ultimate_parent_account_name

@@ -1,7 +1,6 @@
 /* This table needs to be permanent to allow zero cloning at specific timestamps */
 {{ config(materialized='table',
-  transient=false,
-  schema="common_mart_sales")}}
+  transient=false)}}
 
 WITH dim_billing_account AS (
 
@@ -47,11 +46,11 @@ WITH dim_billing_account AS (
       dim_subscription.subscription_end_month,
 
       --account info
-      dim_billing_account.dim_billing_account_id                                      AS dim_billing_account_id,
-      dim_billing_account.sold_to_country                                             AS sold_to_country,
-      dim_billing_account.billing_account_name                                        AS billing_account_name,
-      dim_billing_account.billing_account_number                                      AS billing_account_number,
-      dim_crm_account.crm_account_id                                                  AS dim_crm_account_id,
+      dim_billing_account.dim_billing_account_id                                      AS zuora_account_id,
+      dim_billing_account.sold_to_country                                             AS zuora_sold_to_country,
+      dim_billing_account.billing_account_name                                        AS zuora_account_name,
+      dim_billing_account.billing_account_number                                      AS zuora_account_number,
+      dim_crm_account.crm_account_id                                                  AS crm_id,
       dim_crm_account.crm_account_name,
       dim_crm_account.ultimate_parent_account_id,
       dim_crm_account.ultimate_parent_account_name,
