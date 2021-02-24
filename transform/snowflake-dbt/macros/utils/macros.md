@@ -8,7 +8,7 @@ This macro expects a timestamp or date column as an input. If a non-null value i
 {% enddocs %}
 
 {% docs convert_variant_to_boolean_field %}
-This macro takes in either a variant or varchar field, converts it to a varchar field and then to a boolean field with UPPER case values. 
+This macro takes in either a variant or varchar field, converts it to a varchar field and then to a boolean field with lower case values. 
 {% enddocs %}
 
 {% docs create_snapshot_base %}
