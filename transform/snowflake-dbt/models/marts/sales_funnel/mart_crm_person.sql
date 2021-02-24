@@ -48,8 +48,6 @@
 			converted_date_pt.date_day                          AS converted_date_pt,
       converted_date.first_day_of_month                   AS converted_month,
       converted_date_pt.first_day_of_month                AS converted_month_pt,
-
-
 			dim_crm_person.email_domain,
       dim_crm_person.email_hash,
       dim_crm_person.status,
