@@ -1,7 +1,7 @@
 WITH source AS (
 
     SELECT *
-    FROM {{ ref('location_factors_yaml_historical') }}
+    FROM {{ ref('location_factors_yaml_source') }}
 
 ), max_date AS (
 
