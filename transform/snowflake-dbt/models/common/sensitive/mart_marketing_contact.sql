@@ -278,7 +278,7 @@ WITH marketing_contact AS (
                                           WHEN self_managed_product_tier IS NOT NULL
                                             THEN 'Self-Managed' 
                                           ELSE '' 
-                                        END, '')  || ' | ' || 
+                                        END)  || ' | ' || 
                   IFNULL(saas_product_tier, '') || 
                   IFNULL(self_managed_product_tier, ''), 'No Namespace')
                )                                                                                 AS role_tier_namespace_text
