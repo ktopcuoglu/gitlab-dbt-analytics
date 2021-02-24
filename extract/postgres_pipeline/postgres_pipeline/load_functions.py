@@ -181,7 +181,9 @@ def load_scd(
     advanced_metadata = table_dict.get("advanced_metadata", False)
 
     logging.info(f"Processing table: {source_table_name}")
-    query = f"{raw_query} {additional_filter} AND xmin::text::bigint > {last_xmin}"
+    query = f"{raw_query} {additional_filter}"
+    if has_xmin:
+        query = query + " AND xmin::text::bigint > {last_xmin}"
     logging.info(query)
     chunk_and_upload(
         query,
