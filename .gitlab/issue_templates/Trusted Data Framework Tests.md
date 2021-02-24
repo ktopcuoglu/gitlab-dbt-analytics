@@ -1,5 +1,3 @@
-
-
 #### Trusted Data Framework Test Requirements for a source
 
 * [ ] [Schema tests](https://about.gitlab.com/handbook/business-ops/data-team/platform/dbt-guide/#schema-tests) to validate the integrity of a schema

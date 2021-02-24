@@ -50,6 +50,8 @@ models:
         description: Most recent date that marketing contact logged into gitlab.com
       - name: gitlab_com_email_opted_in
         description: Flags whether or not contact is opted out of Gitlab.com. 
+      - name: days_since_saas_signup
+        description: Number of days since gitlab_com_confirmed_date
       - name: is_customer_db_user
         description: Flags whether or not marketing contact is in Customer_DB
       - name: customer_db_customer_id
@@ -58,6 +60,8 @@ models:
         description: Date that Customer_db record was created for marketing contact.
       - name: customer_db_confirmed_date
         description: Date that Customer_db record was confirmed for marketing contact.
+      - name: days_since_self_managed_owner_signup
+        description: Number of days since customer_db_confirmed_date
       - name: is_zuora_billing_contact
         description: Flags whether or not marketing contact is in Zuora
       - name: zuora_contact_id
@@ -79,8 +83,8 @@ models:
         description: GitLab.com user id (if applicable) of the marketing contact.
       - name: customer_db_customer_id
         description: Customer DB customer id (if applicable) of the marketing contact.
-      - name: zuora_subscription_id
-        description: Zuora subscription id (if applicable) of the marketing contact.
+      - name: zuora_billing_account_id
+        description: Zuora billing account id (if applicable) of the marketing contact.
       - name: namespace_id
         description: Gitlab.com namespace id associated to the user_id. 
       - name: marketing_contact_role
@@ -93,14 +97,16 @@ models:
         description: ID for the marketing contact.
       - name: email_address
         description: Email address for the marketing contact.
-      - name: namespace_id
-        description: Gitlab.com namespace id associated to the user_id. 
-      - name: is_individual
+      - name: dim_namespace_id
+        description: Namespace id associated to the user_id. 
+      - name: is_individual_namespace
         description: Flags if the namespace id is individual (and not a group)
+      - name: is_group_namespace
+        description: Flags if the namespace id a group
       - name: customer_id
         description: Customer DB customer id of the marketing contact.
-      - name: zuora_contact_id
-        description: zuora billing contact id of the marketing contact.
+      - name: dim_billing_account_id
+        description: zuora billing account id of the marketing contact.
       - name: dim_subscription_id
         description: zuora subscription id of the marketing contact.
       - name: saas_product_tier
@@ -146,35 +152,35 @@ models:
         description: Flags if zuora billing contact
       - name: days_since_saas_trial_ended
         description: Number of days since saas trial ended
-      - name: individual_is_saas_trial
+      - name: individual_namespace_is_saas_trial
         description: Flags if individual namespace is on saas trial
-      - name: individual_is_saas_free_tier
+      - name: individual_namespace_is_saas_free_tier
         description: Flags if individual namespace is on free saas tier
-      - name: individual_is_saas_bronze_tier
+      - name: individual_namespace_is_saas_bronze_tier
         description: Flags if individual namespace is on bronze saas tier
-      - name: individual_is_saas_premium_tier
+      - name: individual_namespace_is_saas_premium_tier
         description: Flags if individual namespace is on premium saas tier
-      - name: individual_is_saas_ultimate_tier
+      - name: individual_namespace_is_saas_ultimate_tier
         description: Flags if individual namespace is on ultimate saas tier
-      - name: group_member_is_saas_trial
+      - name: group_member_of_saas_trial
         description: Flags if namespace of group member is on saas trial
-      - name: group_member_is_saas_free_tier
+      - name: group_member_of_saas_free_tier
         description: Flags if namespace of group member is on free saas tier
-      - name: group_member_is_saas_bronze_tier
+      - name: group_member_of_saas_bronze_tier
         description: Flags if namespace of group member is on bronze saas tier
-      - name: group_member_is_saas_premium_tier
+      - name: group_member_of_saas_premium_tier
         description: Flags if namespace of group member is on premium saas tier
-      - name: group_member_is_saas_ultimate_tier
+      - name: group_member_of_saas_ultimate_tier
         description: Flags if namespace of group member is on ultimate saas tier
-      - name: group_owner_is_saas_trial
+      - name: responsible_for_group_saas_trial
         description: Flags if namespace of group owner is on saas trial
-      - name: group_owner_is_saas_free_tier
+      - name: responsible_for_group_saas_free_tier
         description: Flags if namespace of group owner is on free saas tier
-      - name: group_owner_is_saas_bronze_tier
+      - name: responsible_for_group_saas_bronze_tier
         description: Flags if namespace of group owner is on bronze saas tier
-      - name: group_owner_is_saas_premium_tier
+      - name: responsible_for_group_saas_premium_tier
         description: Flags if namespace of group owner is on premium saas tier
-      - name: group_owner_is_saas_ultimate_tier
+      - name: responsible_for_group_saas_ultimate_tier
         description: Flags if namespace of group owner is on ultimate saas tier
       - name: is_self_managed_starter_tier
         description: Flags if customer db owner or zuora billing account is self managed and is on starter tier
@@ -182,6 +188,8 @@ models:
         description: Flags if customer db owner or zuora billing account is self managed and is on premium tier
       - name: is_self_managed_ultimate_tier
         description: Flags if customer db owner or zuora billing account is self managed and is on ultimate tier
+      - name: responsible_for_free_tier_only
+        description: Flags if responsible for or individual namespace of only free tier
       - name: email_address
         description: Email address for the marketing contact
       - name: first_name
@@ -220,6 +228,8 @@ models:
         description: Most recent date that marketing contact logged into gitlab.com
       - name: gitlab_com_email_opted_in
         description: Flags whether or not contact is opted out of Gitlab.com. 
+      - name: days_since_saas_signup
+        description: Number of days since gitlab_com_confirmed_date
       - name: is_customer_db_user
         description: Flags whether or not marketing contact is in Customer_DB
       - name: customer_db_customer_id
@@ -228,6 +238,8 @@ models:
         description: Date that Customer_db record was created for marketing contact.
       - name: customer_db_confirmed_date
         description: Date that Customer_db record was confirmed for marketing contact.
+      - name: days_since_self_managed_owner_signup
+        description: Number of days since customer_db_confirmed_date
       - name: is_zuora_billing_contact
         description: Flags whether or not marketing contact is in Zuora
       - name: zuora_contact_id

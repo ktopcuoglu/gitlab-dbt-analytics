@@ -24,7 +24,7 @@ WITH source AS (
         historical_max_users::NUMBER                 AS historical_max_users,
         --licensee // removed for PII
         license_user_count::NUMBER                   AS license_user_count,
-        license_starts_at::TIMESTAMP                 AS license_starts_at,
+        TRY_CAST(license_starts_at AS TIMESTAMP)     AS license_starts_at,
         CASE 
             WHEN license_expires_at IS NULL                               THEN NULL::TIMESTAMP
             WHEN SPLIT_PART(license_expires_at, '-', 1)::NUMBER > 9999    THEN '9999-12-30 00:00:00.000 +00'::TIMESTAMP

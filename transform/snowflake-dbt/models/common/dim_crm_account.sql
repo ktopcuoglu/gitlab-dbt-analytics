@@ -94,6 +94,8 @@ WITH map_merged_crm_accounts AS (
     sfdc_account.account_owner_team,
     sfdc_account.account_type,
     sfdc_account.gtm_strategy,
+    sfdc_account.tsp_account_employees,
+    sfdc_account.tsp_max_family_employees,
     sfdc_users.name                               AS technical_account_manager,
     sfdc_account.is_deleted                       AS is_deleted,
     map_merged_crm_accounts.dim_crm_account_id    AS merged_to_account_id,
@@ -117,5 +119,5 @@ WITH map_merged_crm_accounts AS (
     created_by="@msendal",
     updated_by="@mcooperDD",
     created_date="2020-06-01",
-    updated_date="2021-01-28"
+    updated_date="2021-02-12"
 ) }}

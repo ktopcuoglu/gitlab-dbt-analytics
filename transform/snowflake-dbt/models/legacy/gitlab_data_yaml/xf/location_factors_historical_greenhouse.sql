@@ -1,7 +1,7 @@
 WITH location_factor_base AS (
   
   SELECT *
-  FROM {{ ref('location_factors_yaml_historical') }} 
+  FROM {{ ref('location_factors_yaml_source') }} 
 
 ), area_partition AS (
   

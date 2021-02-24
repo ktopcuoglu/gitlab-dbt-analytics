@@ -14,7 +14,7 @@ models:
   - name: map_crm_account
     description: '{{ doc("map_crm_account") }}'
     columns:
-      - name: crm_account_id
+      - name: dim_crm_account_id
         description: CRM account ID for the account
         tests:
           - not_null
@@ -113,7 +113,7 @@ models:
       - name: product_ranking
         description: "Numeric product pricing tier, independent of delivery type"
       - name: product_tier
-        description: Product [pricing tiers](https://about.gitlab.com/handbook/marketing/strategic-marketing/tiers/) for both SaaS and Self-Managed customers. Includes the mapping from SaaS - Silver to SaaS - Premium, and from SaaS - Gold to SaaS - Ultimate. 
+        description: Product [pricing tiers](https://about.gitlab.com/handbook/marketing/strategic-marketing/tiers/) for both SaaS and Self-Managed customers. Includes the mapping from SaaS - Silver to SaaS - Premium, and from SaaS - Gold to SaaS - Ultimate.
         tests:
           - not_null
         tags: ["tdf", "common", "gainsight"]
@@ -142,5 +142,26 @@ models:
         description: "GitLab Team Member GitLab.com SaaS Database user_name. Can be used to join onto any user name field in the gitlab_dotcom data set "
       - name: gitlab_ops_user_id
         description: "GitLab Team Member ops.gitlab.net SaaS Database user_id. Can be used to join onto any user id field in the gitlab_ops data set "
-      - name: gitlab_ops_user_name 
+      - name: gitlab_ops_user_name
         description: "GitLab Team Member ops.gitlab.net SaaS Database user_name. Can be used to join onto any user name field in the gitlab_ops data set "
+
+  - name: map_subscription_lineage
+    description: This models takes the `prep_subscription_intermediate` model and joins it to the `prep_subscription_lineage` model. The end result is every subscription is linked to its lineage (or null).
+    columns:
+      - name: dim_subscription_id
+        tests:
+          - not_null
+          - unique
+      - name: lineage
+        description: "All the subscriptions subsquent to the primary subscription, separated by commas."
+      - name: oldest_subscription_in_cohort
+      - name: cohort_month
+        tests:
+          - not_null
+      - name: cohort_quarter
+        tests:
+          - not_null
+      - name: cohort_year
+        tests:
+          - not_null
+

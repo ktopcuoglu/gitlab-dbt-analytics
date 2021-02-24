@@ -681,6 +681,7 @@ roles:
                 - prod.common_mapping
                 - prod.common_mart_marketing
                 - prod.common_mart_sales
+                - prod.common_mart_product
                 - prod.legacy
                 - prep.sensitive
             tables:
@@ -688,6 +689,7 @@ roles:
                 - prod.common_mapping.*
                 - prod.common_mart_marketing.*
                 - prod.common_mart_sales.*
+                - prod.common_mart_product.*
                 - prod.legacy.*
                 - prep.sensitive.*
         privileges:
@@ -881,8 +883,10 @@ roles:
                     - prod.common_mapping
                     - prod.common_mart_marketing
                     - prod.common_mart_sales
+                    - prod.common_mart_product
                     - prod.legacy
                     - prod.workspace_data
+                    - prod.workspace_finance
                     - prod.workspace_marketing
                     - prod.workspace_sales
                     - prep.dbt
@@ -894,8 +898,10 @@ roles:
                     - prod.common_mapping.*
                     - prod.common_mart_marketing.*
                     - prod.common_mart_sales.*
+                    - prod.common_mart_product.*
                     - prod.legacy.*
                     - prod.workspace_data.*
+                    - prod.workspace_finance.*
                     - prod.workspace_marketing.*
                     - prod.workspace_sales.*
                     - prep.dbt.*
@@ -954,13 +960,15 @@ roles:
                 read:
                     - prep.preparation
                     - prod.common
+                    - prod.common_mart_product
             tables:
                 read:
                     - prep.preparation.prep_usage_ping_saas_dates
                     - prep.preparation.prep_usage_ping_no_license_key
                     - prod.common.fct_product_usage_wave_1_3_metrics_latest
                     - prod.common.fct_product_usage_wave_1_3_metrics_monthly
-
+                    - prod.common_mart_product.mart_product_usage_wave_1_3_metrics_latest
+                    - prod.common_mart_product.mart_product_usage_wave_1_3_metrics_monthly
     - gcp_billing:
         warehouses:
             - analyst_xs
@@ -1025,7 +1033,6 @@ roles:
                     - prep.sensitive.gitlab_dotcom_projects
                     - prep.sensitive.gitlab_dotcom_system_note_metadata
                     - prep.sensitive.gitlab_dotcom_users
-                    - raw.tap_postgres.gitlab_db_alerts_service_data
                     - raw.tap_postgres.gitlab_db_alert_management_alerts
                     - raw.tap_postgres.gitlab_db_alert_management_alert_assignees
                     - raw.tap_postgres.gitlab_db_approvals
@@ -1128,6 +1135,7 @@ roles:
                     - raw.tap_postgres.gitlab_db_notes
                     - raw.tap_postgres.gitlab_db_notification_settings
                     - raw.tap_postgres.gitlab_db_oauth_access_tokens
+                    - raw.tap_postgres.gitlab_db_onboarding_progresses
                     - raw.tap_postgres.gitlab_db_packages_build_infos
                     - raw.tap_postgres.gitlab_db_packages_dependencies
                     - raw.tap_postgres.gitlab_db_packages_dependency_links

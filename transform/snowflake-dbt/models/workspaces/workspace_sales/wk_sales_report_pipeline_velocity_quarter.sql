@@ -30,7 +30,8 @@ WITH date_details AS (
       close_fiscal_quarter_name,
       close_fiscal_quarter_date,
       close_fiscal_year,
-      opportunity_owner_user_segment                          AS cro_level,
+      sales_team_cro_level,
+      sales_team_rd_asm_level,
       order_type_stamped,
       stage_name_3plus,
       stage_name_4plus,
@@ -49,7 +50,7 @@ WITH date_details AS (
       snapshot_date <= DATEADD(month,3,close_fiscal_quarter_date)
       -- 2 quarters before start
       AND snapshot_date >= DATEADD(month,-6,close_fiscal_quarter_date)
-    GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,12, 13, 14, 15
+    GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,12, 13, 14, 15, 16
 
 )
 

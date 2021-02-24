@@ -765,6 +765,11 @@ models:
           - accepted_values:
                   values: ['Sales-Assisted', 'Self-Service']
         tags: ["tdf", "common", "gainsight"]
+      - name: lineage
+        description: "All the subscriptions subsquent to the primary subscription, separated by commas."
+      - name: cohort_month
+      - name: cohort_quarter
+      - name: cohort_year
 
   - name: dim_subscriptions_snapshots
     description: Daily snapshot of subscriptions starting from 2020-03-01. Fiel
@@ -1339,6 +1344,8 @@ models:
         description: Flags rows where `active_user_count` is NULL in source.
       - name: is_usage_ping_license_mapped_to_subscription
       - name: is_usage_ping_license_subscription_id_valid
+      - name: is_data_in_subscription_month
+        description: Flags rows where there is Usage Ping data and/or Seat Link data present
 
   - name: fct_product_usage_wave_1_3_metrics_monthly
     description: '{{ doc("fct_product_usage_wave_1_3_metrics_monthly") }}'
@@ -1415,6 +1422,8 @@ models:
         description: Flags rows where `active_user_count` is NULL in source.
       - name: is_usage_ping_license_mapped_to_subscription
       - name: is_usage_ping_license_subscription_id_valid
+      - name: is_data_in_subscription_month
+        description: Flags rows where there is Usage Ping data and/or Seat Link data present
 
   - name: fct_quote_item
     description: '{{ doc("fct_quote_item") }}'
@@ -1608,22 +1617,22 @@ models:
     description: '{{ doc("fct_usage_ping_subscription_mapped_wave_2_3_metrics") }}'
     columns:
       - name: dim_usage_ping_id
-        description: JOIN key to dim_usage_pings and prep_usage_pings. Represents a single usage ping. 
+        description: JOIN key to dim_usage_pings and prep_usage_pings. Represents a single usage ping.
         tests:
           - not_null
           - unique
         tags: ["tdf", "common", "gainsight"]
-      - name: license_md5 
-        description: JOIN key to dim_licenses and dim_license 
-      - name: subscription_id 
-        description: JOIN key to dim_subscription 
+      - name: license_md5
+        description: JOIN key to dim_licenses and dim_license
+      - name: subscription_id
+        description: JOIN key to dim_subscription
       - name: ping_created_at
-        description: The timestamp at which the usage ping was created_at 
+        description: The timestamp at which the usage ping was created_at
         tests:
           - not_null
         tags: ["tdf", "common", "gainsight"]
       - name: ping_created_at_28_days_earlier
-        description: The timestamp at which the usage ping was created_at minus 28 days for the monthly metric time period 
+        description: The timestamp at which the usage ping was created_at minus 28 days for the monthly metric time period
         tests:
           - not_null
         tags: ["tdf", "common", "gainsight"]

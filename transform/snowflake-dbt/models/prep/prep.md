@@ -39,3 +39,9 @@ Ideally, the purpose of this data model is to identify the usage pings that can 
 
 The metric list identifed can be found in the macro sales_wave_2_3_metrics.
 {% enddocs %}
+
+{% docs prep_gainsight_source_model_counts %}
+This data model is used to capture the counts for all the source tables used for Gainsight. 
+
+{% enddocs %}
+

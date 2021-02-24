@@ -1,13 +1,13 @@
 WITH source AS (
 
     SELECT *
-    FROM {{ ref('location_factors_yaml_historical') }}
+    FROM {{ ref('location_factors_yaml_source') }}
 
 ), max_date AS (
 
     SELECT *
     FROM source
-    WHERE snapshot_date = (SELECT max(valid_from_date) FROM source)
+    WHERE snapshot_date = (SELECT max(snapshot_date) FROM source)
 
 )
 
