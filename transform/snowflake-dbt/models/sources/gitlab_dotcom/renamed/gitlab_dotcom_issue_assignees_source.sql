@@ -3,7 +3,7 @@ WITH source AS (
   SELECT DISTINCT
     user_id,
     issue_id
-  FROM { { ref('gitlab_dotcom_issue_assignees_dedupe_source') }}
+  FROM {{ ref('gitlab_dotcom_issue_assignees_dedupe_source') }}
 
 ), renamed AS (
 
