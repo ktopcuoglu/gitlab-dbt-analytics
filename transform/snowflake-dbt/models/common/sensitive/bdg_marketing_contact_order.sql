@@ -45,7 +45,7 @@ WITH marketing_contact AS (
         ELSE 0 
       END                                                                                     AS is_group_namespace,
       marketing_contact_role.customer_db_customer_id                                          AS customer_id,
-      marketing_contact_role.zuora_billing_contact_id                                         AS zuora_contact_id,
+      marketing_contact_role.zuora_billing_account_id                                         AS dim_billing_account_id,
       CASE 
         WHEN marketing_contact_role.namespace_id IS NOT NULL 
           AND saas_namespace.product_tier_name_namespace is NULL
@@ -59,7 +59,7 @@ WITH marketing_contact AS (
         WHEN marketing_contact_role.marketing_contact_role IN (
                                                                 'Customer DB Owner'
                                                               ) 
-          THEN saas_customer.product_tier_name_order   
+          THEN saas_customer.product_tier_name_with_trial   
         WHEN marketing_contact_role.marketing_contact_role IN (
                                                                 'Zuora Billing Contact'
                                                               ) 
@@ -69,7 +69,7 @@ WITH marketing_contact AS (
         WHEN marketing_contact_role.marketing_contact_role IN (
                                                                 'Customer DB Owner'
                                                               ) 
-          THEN self_managed_customer.product_tier_name_order   
+          THEN self_managed_customer.product_tier_name_with_trial   
         WHEN marketing_contact_role.marketing_contact_role IN (
                                                                 'Zuora Billing Contact'
                                                               ) 
@@ -120,11 +120,11 @@ WITH marketing_contact AS (
     LEFT JOIN saas_namespace_subscription saas_customer 
       ON saas_customer.customer_id = marketing_contact_role.customer_db_customer_id
     LEFT JOIN saas_namespace_subscription saas_billing_account 
-      ON saas_billing_account.dim_billing_account_id = marketing_contact_role.zuora_billing_contact_id   
+      ON saas_billing_account.dim_billing_account_id = marketing_contact_role.zuora_billing_account_id   
     LEFT JOIN self_managed_namespace_subscription self_managed_customer 
       ON self_managed_customer.customer_id = marketing_contact_role.customer_db_customer_id
     LEFT JOIN self_managed_namespace_subscription self_managed_billing_account 
-      ON self_managed_billing_account.dim_billing_account_id = marketing_contact_role.zuora_billing_contact_id   
+      ON self_managed_billing_account.dim_billing_account_id = marketing_contact_role.zuora_billing_account_id   
     LEFT JOIN namespace_lineage 
       ON namespace_lineage.namespace_id = COALESCE(marketing_contact_role.namespace_id,
                                                    saas_namespace.dim_namespace_id,

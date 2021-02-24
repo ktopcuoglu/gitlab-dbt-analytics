@@ -27,6 +27,7 @@ WITH source AS (
         WHEN age = -1               THEN 'Unreported'
           ELSE NULL END                                                                 AS age_cohort,
       COALESCE(gender_dropdown, gender,'Did Not Identify')                              AS gender,
+      COALESCE(ethnicity, 'Did Not Identify')                                           AS ethnicity, 
       country,
       nationality,
       region,
@@ -40,7 +41,13 @@ WITH source AS (
             COALESCE(gender_dropdown, gender,'Did Not Identify')  || '_' || country, 
             COALESCE(gender_dropdown, gender,'Did Not Identify')  || '_'|| 'Non-US')   AS gender_region,
         greenhouse_candidate_id,
-        uploaded_at                                                                    AS last_updated_date
+        uploaded_at                                                                    AS last_updated_date,
+      CASE
+        WHEN COALESCE(gender_dropdown, gender,'Did Not Identify') NOT IN ('Male', 'Did Not Identify')
+            THEN TRUE
+        WHEN COALESCE(ethnicity, 'Did Not Identify') NOT IN ('White','Did Not Identify')
+            THEN TRUE
+        ELSE FALSE END                                                                  AS urg_group
     FROM source
     WHERE hire_date IS NOT NULL
         OR (LOWER(first_name) NOT LIKE '%greenhouse test%'
