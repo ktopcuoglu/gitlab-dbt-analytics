@@ -140,6 +140,10 @@ WITH source AS (
       SUM(COALESCE(percent_change_in_comp,0)) {{partition_statement}}               AS rolling_12_month_promotions_percent_change_in_comp,
       SUM(COALESCE(percent_change_in_comp_excluding_sdr,0)) {{partition_statement}} AS rolling_12_month_promotions_percent_change_in_comp_excluding_sdr,
       location_factor,
+      AVG(new_hire_location_factor)
+        OVER (PARTITION BY base.breakout_type, base.department, base.division, base.job_role,
+                           base.job_grade, base.eeoc_field_name, base.eeoc_value
+              ORDER BY base.month_date DESC ROWS BETWEEN CURRENT ROW AND 2 FOLLOWING) AS new_hire_location_factor_rolling_3_month,
       discretionary_bonus,
       tenure_months,
       tenure_zero_to_six_months,
@@ -303,6 +307,8 @@ WITH source AS (
 
       IFF(headcount_end <4 AND show_value_criteria = FALSE,
         NULL,location_factor)                                                    AS location_factor,
+
+      new_hire_location_factor_rolling_3_month,        
       IFF(discretionary_bonus<4 AND show_value_criteria = FALSE,
         NULL, discretionary_bonus)                                               AS discretionary_bonus,
       IFF(tenure_months<4 AND show_value_criteria = FALSE,
