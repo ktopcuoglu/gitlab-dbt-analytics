@@ -4,7 +4,7 @@ WITH source AS (
     user_id,
     project_id,
     access_level
-  FROM {{ source('gitlab_dotcom', 'project_authorizations') }}
+  FROM { { ref('gitlab_dotcom_project_authorizations_dedupe_source') }}
 
 ), renamed AS (
 
