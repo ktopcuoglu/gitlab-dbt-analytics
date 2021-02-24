@@ -183,7 +183,7 @@ def load_scd(
     logging.info(f"Processing table: {source_table_name}")
     query = f"{raw_query} {additional_filter}"
     if has_xmin:
-        query = query + " AND xmin::text::bigint > {last_xmin}"
+        query = query + f" AND xmin::text::bigint > {last_xmin}"
     logging.info(query)
     chunk_and_upload(
         query,
