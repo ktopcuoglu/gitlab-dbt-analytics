@@ -34,8 +34,8 @@ models:
         description: '{{ doc("billing_account_id") }}'
       - name: location_id
         description: '{{ doc("location_id") }}'
-      - name: ultimate_parent_account_id
-        description: '{{ doc("ultimate_parent_account_id") }}'
+      - name: dim_parent_crm_account_id
+        description: '{{ doc("dim_parent_crm_account_id") }}'
       - name: delivery
         description: '{{ doc("delivery_column") }}'
         tests:
@@ -55,7 +55,7 @@ models:
       - name: major_version
         description: '{{ doc("major_version") }}'
       - name: minor_version
-        description: '{{ doc("minor_version") }}' 
+        description: '{{ doc("minor_version") }}'
       - name: major_minor_version
         description: '{{ doc("major_minor_version") }}'
       - name: version
@@ -104,18 +104,18 @@ models:
         description: '{{ doc("is_edu_oss_subscription") }}'
       - name: crm_account_name
         description: '{{ doc("crm_account_name") }}'
-      - name: ultimate_parent_account_name
-        description: '{{ doc("ultimate_parent_account_name") }}'
-      - name: ultimate_parent_billing_country
-        description: '{{ doc("ultimate_parent_billing_country") }}'
-      - name: ultimate_parent_account_segment
-        description: '{{ doc("ultimate_parent_account_segment") }}'
-      - name: ultimate_parent_industry
-        description: '{{ doc("ultimate_parent_industry") }}'
-      - name: ultimate_parent_account_owner_team
-        description: '{{ doc("ultimate_parent_account_owner_team") }}'
-      - name: ultimate_parent_territory
-        description: '{{ doc("ultimate_parent_territory") }}'
+      - name: parent_crm_account_name
+        description: '{{ doc("parent_crm_account_name") }}'
+      - name: parent_crm_account_billing_country
+        description: '{{ doc("parent_crm_account_billing_country") }}'
+      - name: parent_crm_account_sales_segment
+        description: '{{ doc("parent_crm_account_sales_segment") }}'
+      - name: parent_crm_account_industry
+        description: '{{ doc("parent_crm_account_industry") }}'
+      - name: parent_crm_account_owner_team
+        description: '{{ doc("parent_crm_account_owner_team") }}'
+      - name: parent_crm_account_sales_territory
+        description: '{{ doc("parent_crm_account_sales_territory") }}'
       - name: technical_account_manager
         description: '{{ doc("technical_account_manager") }}'
       - name: created_at
