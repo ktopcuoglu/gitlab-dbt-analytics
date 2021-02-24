@@ -109,6 +109,10 @@ databases:
     - tmurphy_prep:
         shared: no
 
+    - vprakash_prod:
+        shared: no
+    - vprakash_prep:
+        shared: n
 
 
 # ==========================================
@@ -2777,6 +2781,47 @@ roles:
         warehouses:
             - analyst_xs
 
+    - vprakash:
+        member_of:
+            - engineer
+        warehouses:
+            - engineer_xs
+            - engineer_xl
+            - loading
+            - reporting
+        owns:
+            databases:
+                - vprakash_prep
+                - vprakash_prod
+            schemas:
+                - vprakash_prep.*
+                - vprakash_prod.*
+            tables:
+                - vprakash_prep.*.*
+                - vprakash_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - vprakash_prep
+                    - vprakash_prod
+                write:
+                    - vprakash_prep
+                    - vprakash_prod
+            schemas:
+                read:
+                    - vprakash_prod.*
+                    - vprakash_prep.*
+                write:
+                    - vprakash_prep.*
+                    - vprakash_prod.*
+            tables:
+                read:
+                    - vprakash_prep.*.*
+                    - vprakash_prod.*.*
+                write:
+                    - vprakash_prep.*.*
+                    - vprakash_prod.*.*
+
     - wwright:
         member_of: []
         warehouses: []
@@ -3283,6 +3328,11 @@ users:
         can_login: yes
         member_of:
             - vjuhasz
+
+    - vprakash:
+        can_login: yes
+        member_of:
+            - vprakash
 
     - wwright: #https://gitlab.com/gitlab-data/analytics/-/issues/6552
         can_login: no
