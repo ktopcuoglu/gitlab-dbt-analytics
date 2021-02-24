@@ -143,7 +143,61 @@ WITH marketing_contact AS (
                   WHEN marketing_contact_order.is_individual_namespace = 0
                     AND marketing_contact_order.marketing_contact_role IN (
                                                                           'Group Namespace Owner'
-                                                                          , 'Customer DB Owner'
+                                                                         ) 
+                    THEN is_saas_trial 
+                  ELSE NULL 
+                END) >= 1 THEN TRUE 
+        ELSE FALSE 
+      END                                                                                        AS group_owner_of_saas_trial,    
+      CASE 
+        WHEN MAX(CASE 
+                  WHEN marketing_contact_order.is_individual_namespace = 0
+                    AND marketing_contact_order.marketing_contact_role IN (
+                                                                          'Group Namespace Owner'
+                                                                         )
+                    THEN is_saas_free_tier 
+                  ELSE NULL 
+                END) >= 1 THEN TRUE 
+        ELSE FALSE 
+      END                                                                                        AS group_owner_of_saas_free_tier,
+      CASE 
+        WHEN MAX(CASE 
+                  WHEN marketing_contact_order.is_individual_namespace = 0
+                    AND marketing_contact_order.marketing_contact_role IN (
+                                                                          'Group Namespace Owner'
+                                                                         )
+                    THEN is_saas_bronze_tier 
+                  ELSE NULL 
+                END) >= 1 THEN TRUE 
+        ELSE FALSE
+      END                                                                                        AS group_owner_of_saas_bronze_tier,
+      CASE 
+        WHEN MAX(CASE 
+                  WHEN marketing_contact_order.is_individual_namespace = 0 
+                    AND marketing_contact_order.marketing_contact_role IN (
+                                                                          'Group Namespace Owner'
+                                                                         )
+                    THEN is_saas_premium_tier 
+                  ELSE NULL 
+                END) >= 1 THEN TRUE 
+        ELSE FALSE 
+      END                                                                                        AS group_owner_of_saas_premium_tier,
+      CASE 
+        WHEN MAX(CASE 
+                  WHEN marketing_contact_order.is_individual_namespace = 0
+                    AND marketing_contact_order.marketing_contact_role IN (
+                                                                          'Group Namespace Owner'
+                                                                         )
+                    THEN is_saas_ultimate_tier 
+                  ELSE NULL 
+                END) >= 1 THEN TRUE 
+        ELSE FALSE
+      END                                                                                        AS group_owner_of_saas_ultimate_tier,
+      CASE 
+        WHEN MAX(CASE 
+                  WHEN marketing_contact_order.is_individual_namespace = 0
+                    AND marketing_contact_order.marketing_contact_role IN (
+                                                                          'Customer DB Owner'
                                                                           , 'Zuora Billing Contact'
                                                                          ) 
                     THEN is_saas_trial 
@@ -155,8 +209,7 @@ WITH marketing_contact AS (
         WHEN MAX(CASE 
                   WHEN marketing_contact_order.is_individual_namespace = 0
                     AND marketing_contact_order.marketing_contact_role IN (
-                                                                          'Group Namespace Owner'
-                                                                          , 'Customer DB Owner'
+                                                                          'Customer DB Owner'
                                                                           , 'Zuora Billing Contact'
                                                                          )
                     THEN is_saas_free_tier 
@@ -168,8 +221,7 @@ WITH marketing_contact AS (
         WHEN MAX(CASE 
                   WHEN marketing_contact_order.is_individual_namespace = 0
                     AND marketing_contact_order.marketing_contact_role IN (
-                                                                          'Group Namespace Owner'
-                                                                          , 'Customer DB Owner'
+                                                                          'Customer DB Owner'
                                                                           , 'Zuora Billing Contact'
                                                                          )
                     THEN is_saas_bronze_tier 
@@ -181,8 +233,7 @@ WITH marketing_contact AS (
         WHEN MAX(CASE 
                   WHEN marketing_contact_order.is_individual_namespace = 0 
                     AND marketing_contact_order.marketing_contact_role IN (
-                                                                          'Group Namespace Owner'
-                                                                          , 'Customer DB Owner'
+                                                                          'Customer DB Owner'
                                                                           , 'Zuora Billing Contact'
                                                                          )
                     THEN is_saas_premium_tier 
@@ -194,8 +245,7 @@ WITH marketing_contact AS (
         WHEN MAX(CASE 
                   WHEN marketing_contact_order.is_individual_namespace = 0
                     AND marketing_contact_order.marketing_contact_role IN (
-                                                                          'Group Namespace Owner'
-                                                                          , 'Customer DB Owner'
+                                                                          'Customer DB Owner'
                                                                           , 'Zuora Billing Contact'
                                                                          )
                     THEN is_saas_ultimate_tier 
