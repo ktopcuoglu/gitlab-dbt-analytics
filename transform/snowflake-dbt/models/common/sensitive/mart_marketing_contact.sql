@@ -270,8 +270,19 @@ WITH marketing_contact AS (
       END                                                                                        AS is_self_managed_ultimate_tier,
       ARRAY_AGG(
                 DISTINCT IFNULL(marketing_contact_order.marketing_contact_role || ': ' || 
-                  IFNULL(marketing_contact_order.saas_product_tier,'') || IFNULL(marketing_contact_order.self_managed_product_tier,''), 'No Role') 
+                  IFNULL(marketing_contact_order.saas_product_tier, '') || IFNULL(marketing_contact_order.self_managed_product_tier, ''), 'No Role') 
                )                                                                                 AS role_tier_text
+      ARRAY_AGG(
+                DISTINCT IFNULL(marketing_contact_role || ': ' || 
+                  IFNULL(namespace_path, CASE 
+                                          WHEN self_managed_product_tier IS NOT NULL
+                                            THEN 'Self-Managed' 
+                                          ELSE '' 
+                                        END, '')  || ' | ' || 
+                  IFNULL(saas_product_tier, '') || 
+                  IFNULL(self_managed_product_tier, ''), 'No Namespace')
+               )                                                                                 AS role_tier_namespace_text
+
     FROM marketing_contact
     LEFT JOIN  marketing_contact_order
       ON marketing_contact_order.dim_marketing_contact_id = marketing_contact.dim_marketing_contact_id
