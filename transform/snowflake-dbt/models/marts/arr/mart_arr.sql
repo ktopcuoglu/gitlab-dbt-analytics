@@ -46,22 +46,22 @@ WITH dim_billing_account AS (
       dim_subscription.subscription_end_month,
 
   --account info
-  dim_billing_account.dim_billing_account_id                                            AS zuora_account_id,
-  dim_billing_account.sold_to_country                                                   AS zuora_sold_to_country,
-  dim_billing_account.billing_account_name                                              AS zuora_account_name,
-  dim_billing_account.billing_account_number                                            AS zuora_account_number,
-  dim_crm_account.dim_crm_account_id                                                    AS dim_crm_account_id,
-  dim_crm_account.crm_account_name,
-  dim_crm_account.dim_parent_crm_account_id,
-  dim_crm_account.parent_crm_account_name,
-  dim_crm_account.parent_crm_account_billing_country,
-  dim_crm_account.parent_crm_account_sales_segment,
-  dim_crm_account.parent_crm_account_industry,
-  dim_crm_account.parent_crm_account_owner_team,
-  dim_crm_account.parent_crm_account_sales_territory,
-  dim_crm_account.health_score,
-  dim_crm_account.health_score_color,
-  dim_crm_account.health_number,
+      dim_billing_account.dim_billing_account_id                                            AS zuora_account_id,
+      dim_billing_account.sold_to_country                                                   AS zuora_sold_to_country,
+      dim_billing_account.billing_account_name                                              AS zuora_account_name,
+      dim_billing_account.billing_account_number                                            AS zuora_account_number,
+      dim_crm_account.dim_crm_account_id                                                    AS dim_crm_account_id,
+      dim_crm_account.crm_account_name,
+      dim_crm_account.dim_parent_crm_account_id,
+      dim_crm_account.parent_crm_account_name,
+      dim_crm_account.parent_crm_account_billing_country,
+      dim_crm_account.parent_crm_account_sales_segment,
+      dim_crm_account.parent_crm_account_industry,
+      dim_crm_account.parent_crm_account_owner_team,
+      dim_crm_account.parent_crm_account_sales_territory,
+      dim_crm_account.health_score,
+      dim_crm_account.health_score_color,
+      dim_crm_account.health_number,
 
       --subscription info
       dim_subscription.subscription_status,
@@ -77,13 +77,13 @@ WITH dim_billing_account AS (
       min(dim_subscription.subscription_cohort_quarter) OVER (
           PARTITION BY dim_billing_account.dim_billing_account_id)                    AS billing_account_cohort_quarter,
       min(dim_subscription.subscription_cohort_month) OVER (
-          PARTITION BY dim_crm_account.crm_account_id)                                AS crm_account_cohort_month,
+          PARTITION BY dim_crm_account.dim_crm_account_id)                            AS crm_account_cohort_month,
       min(dim_subscription.subscription_cohort_quarter) OVER (
-          PARTITION BY dim_crm_account.crm_account_id)                                AS crm_account_cohort_quarter,
+          PARTITION BY dim_crm_account.dim_crm_account_id)                            AS crm_account_cohort_quarter,
       min(dim_subscription.subscription_cohort_month) OVER (
-          PARTITION BY dim_crm_account.ultimate_parent_account_id)                    AS parent_account_cohort_month,
+          PARTITION BY dim_crm_account.dim_parent_crm_account_id)                    AS parent_account_cohort_month,
       min(dim_subscription.subscription_cohort_quarter) OVER (
-          PARTITION BY dim_crm_account.ultimate_parent_account_id)                    AS parent_account_cohort_quarter,
+          PARTITION BY dim_crm_account.dim_parent_crm_account_id)                    AS parent_account_cohort_quarter,
 
       --product info
       dim_product_detail.product_tier_name                                            AS product_category,
@@ -108,7 +108,7 @@ WITH dim_billing_account AS (
     INNER JOIN dim_date
       ON dim_date.date_id = fct_mrr.dim_date_id
     LEFT JOIN dim_crm_account
-      ON dim_billing_account.dim_crm_account_id = dim_crm_account.crm_account_id
+      ON dim_billing_account.dim_crm_account_id = dim_crm_account.dim_crm_account_id
 
 ), final_table AS (
 
