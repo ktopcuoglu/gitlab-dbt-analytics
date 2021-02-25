@@ -2094,6 +2094,13 @@ roles:
         warehouses:
             - analyst_xs
 
+    - jswain:
+        member_of:
+            - snowplow
+            - reporter
+        warehouses:
+            - reporting
+
     - jurbanc:
         warehouses:
             - reporting
@@ -3094,6 +3101,11 @@ users:
             - jstark
             - securityadmin
             - sysadmin
+
+    - jswain:
+        can_login: yes
+        member_of:
+            - jswain
 
     - jurbanc:
         can_login: yes
