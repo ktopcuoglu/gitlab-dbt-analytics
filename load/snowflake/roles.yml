@@ -112,7 +112,7 @@ databases:
     - vprakash_prod:
         shared: no
     - vprakash_prep:
-        shared: n
+        shared: no
 
 
 # ==========================================
