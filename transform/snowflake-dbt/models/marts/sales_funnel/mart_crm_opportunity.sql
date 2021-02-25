@@ -135,7 +135,28 @@ WITH dim_crm_account AS (
       dim_crm_opportunity.opportunity_sales_development_representative,
       dim_crm_opportunity.opportunity_business_development_representative,
       dim_crm_opportunity.opportunity_development_representative,
-      dim_crm_opportunity.is_web_portal_purchase
+      dim_crm_opportunity.is_web_portal_purchase,
+      fct_crm_opportunity.primary_solution_architect,
+      fct_crm_opportunity.product_details,
+    
+      -- channel fields
+      fct_crm_opportunity.lead_source,
+      fct_crm_opportunity.dr_partner_deal_type,
+      fct_crm_opportunity.dr_partner_engagement,
+      fct_crm_opportunity.partner_account,
+      fct_crm_opportunity.dr_status,
+      fct_crm_opportunity.distributor,
+      fct_crm_opportunity.influence_partner,
+      fct_crm_opportunity.fulfillment_partner,
+      fct_crm_opportunity.platform_partner,
+      fct_crm_opportunity.partner_track,
+      fct_crm_opportunity.is_public_sector_opp,
+      fct_crm_opportunity.is_registration_from_portal,
+      fct_crm_opportunity.calculated_discount,
+      fct_crm_opportunity.partner_discount,
+      fct_crm_opportunity.partner_discount_calc,
+      fct_crm_opportunity.comp_channel_neutral
+
     FROM fct_crm_opportunity
     LEFT JOIN dim_crm_opportunity
       ON fct_crm_opportunity.dim_crm_opportunity_id = dim_crm_opportunity.dim_crm_opportunity_id

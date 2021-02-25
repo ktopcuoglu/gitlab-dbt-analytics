@@ -130,11 +130,29 @@ WITH first_contact  AS (
       order_type_stamped                                        AS order_type,
       sales_segment,
       sales_qualified_source,
+      lead_source,
       days_in_sao,
       user_segment_stamped                                      AS sales_segment_name_stamped,
       user_geo_stamped                                          AS location_region_name_stamped,
       user_region_stamped                                       AS sales_region_name_stamped,
-      user_area_stamped                                         AS sales_area_name_stamped
+      user_area_stamped                                         AS sales_area_name_stamped,
+      primary_solution_architect,
+      product_details,
+      dr_partner_deal_type,
+      dr_partner_engagement,
+      partner_account,
+      dr_status,
+      distributor,
+      influence_partner,
+      fulfillment_partner,
+      platform_partner,
+      partner_track,
+      is_public_sector_opp,
+      is_registration_from_portal,
+      calculated_discount,
+      partner_discount,
+      partner_discount_calc,
+      comp_channel_neutral
 
     FROM sfdc_opportunity
 
@@ -265,6 +283,27 @@ WITH first_contact  AS (
       opportunity_fields.is_web_portal_purchase,
       is_sao.is_sao,
       is_sdr_sao.is_sdr_sao,
+
+      opportunity_fields.primary_solution_architect,
+      opportunity_fields.product_details,
+
+      -- channel fields
+      opportunity_fields.lead_source,
+      opportunity_fields.dr_partner_deal_type,
+      opportunity_fields.dr_partner_engagement,
+      opportunity_fields.partner_account,
+      opportunity_fields.dr_status,
+      opportunity_fields.distributor,
+      opportunity_fields.influence_partner,
+      opportunity_fields.fulfillment_partner,
+      opportunity_fields.platform_partner,
+      opportunity_fields.partner_track,
+      opportunity_fields.is_public_sector_opp,
+      opportunity_fields.is_registration_from_portal,
+      opportunity_fields.calculated_discount,
+      opportunity_fields.partner_discount,
+      opportunity_fields.partner_discount_calc,
+      opportunity_fields.comp_channel_neutral,
 
       -- additive fields
       opportunity_fields.iacv,
