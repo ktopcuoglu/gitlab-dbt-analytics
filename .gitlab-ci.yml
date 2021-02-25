@@ -78,10 +78,22 @@ include:
     - manage_snowflake.py manage_clones --force --database prod
     - manage_snowflake.py manage_clones --force --database prep
 
-🥩clone_raw:
+🥩clone_raw_full:
   <<: *snowflake_start_clone
   script:
     - manage_snowflake.py manage_clones --database raw
+
+🥩📜clone_raw_sheetload:
+  <<: *snowflake_start_clone
+  script:
+    - manage_snowflake.py manage_clones --database raw --schema sheetload
+
+🥩🛢clone_raw_postgres_pipeline:
+  <<: *snowflake_start_clone
+  script:
+    - manage_snowflake.py manage_clones --database raw --schema tap_postgres
+
+
 
 👥force_clone_both:
   <<: *snowflake_start_clone
