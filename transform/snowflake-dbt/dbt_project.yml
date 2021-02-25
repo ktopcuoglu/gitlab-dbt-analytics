@@ -181,6 +181,8 @@ models:
         +schema: gitlab_dotcom
         renamed:
           +materialized: view
+          scd:
+            +materialized: table
 
       gitlab_ops:
         +materialized: table
