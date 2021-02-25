@@ -37,11 +37,11 @@ WITH subscription AS (
     subscription.subscription_sales_type,
     subscription.subscription_start_month,
     subscription.subscription_end_month,
-    subscription_lineage.lineage,
+    subscription_lineage.subscription_lineage,
     subscription_lineage.oldest_subscription_in_cohort,
-    subscription_lineage.cohort_month,
-    subscription_lineage.cohort_quarter,
-    subscription_lineage.cohort_year
+    subscription_lineage.subscription_cohort_month,
+    subscription_lineage.subscription_cohort_quarter,
+    subscription_lineage.subscription_cohort_year
   FROM subscription
   LEFT JOIN subscription_lineage
     ON subscription_lineage.dim_subscription_id = subscription.dim_subscription_id
