@@ -13,6 +13,11 @@ WITH marketing_contact AS (
     SELECT *
     FROM {{ref('prep_namespace')}}
 
+), gitlab_namespaces AS (
+
+    SELECT *
+    FROM {{ ref('gitlab_dotcom_namespaces_source') }}
+
 ), saas_namespace_subscription AS (
     
     SELECT *
@@ -33,7 +38,7 @@ WITH marketing_contact AS (
                saas_namespace.dim_namespace_id, 
                saas_customer.dim_namespace_id, 
                saas_billing_account.dim_namespace_id)                                         AS dim_namespace_id,
-      
+      gitlab_namespaces.namespace_path,
       CASE 
         WHEN namespace_lineage.namespace_type = 'Individual' 
           THEN 1 
@@ -130,6 +135,8 @@ WITH marketing_contact AS (
                                                    saas_namespace.dim_namespace_id,
                                                    saas_customer.dim_namespace_id,
                                                    saas_billing_account.dim_namespace_id)
+    left join gitlab_namespaces 
+      ON gitlab_namespaces.namespace_id = namespace_lineage.namespace_id
       
     )    
     
@@ -139,5 +146,5 @@ WITH marketing_contact AS (
     created_by="@trevor31",
     updated_by="@trevor31",
     created_date="2021-02-04",
-    updated_date="2021-02-16"
+    updated_date="2021-02-24"
 ) }}
