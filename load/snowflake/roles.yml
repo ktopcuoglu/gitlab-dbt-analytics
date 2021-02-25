@@ -2044,6 +2044,13 @@ roles:
         warehouses:
             - reporting
 
+    - jshen:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+        warehouses:
+            - analyst_xs
+
     - jstark:
         member_of:
             - analyst_core
@@ -2086,13 +2093,6 @@ roles:
                 write:
                     - jstark_prep.*.*
                     - jstark_prod.*.*
-
-    - jshen:
-        member_of:
-            - analyst_finance
-            - bamboohr_analytics
-        warehouses:
-            - analyst_xs
 
     - jswain:
         member_of:
