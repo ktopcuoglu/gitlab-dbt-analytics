@@ -32,7 +32,7 @@ class SnowflakeManager:
         self.raw_database = "{}_RAW".format(config_vars["BRANCH_NAME"].upper())
 
     def generate_db_queries(
-        self, database_name: str, cloned_database: str, optional_schema_to_clone: str
+        self, database_name: str, cloned_database: str, optional_schema_to_clone: str, source_db: str
     ) -> List[str]:
         """
         Generate the queries to clone and provide permissions for databases.
@@ -63,7 +63,7 @@ class SnowflakeManager:
 
         if optional_schema_to_clone != "":
             queries = queries + [clone_schema_query.format(
-                cloned_database, optional_schema_to_clone, database_name
+                database_name.upper(), optional_schema_to_clone.upper(), source_db.upper()
             )]
 
         return queries
@@ -86,7 +86,7 @@ class SnowflakeManager:
 
         create_db = databases[database]
         clone_db = f"clone {database}" if not empty else ""
-        queries = self.generate_db_queries(create_db, clone_db, schema)
+        queries = self.generate_db_queries(create_db, clone_db, schema, database)
 
         # if force is false, check if the database exists
         if force:
