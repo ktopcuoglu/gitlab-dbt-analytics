@@ -62,7 +62,9 @@ class SnowflakeManager:
         ] + usage_grant_queries
 
         if optional_schema_to_clone != "":
-            queries = queries + clone_schema_query.format(cloned_database, optional_schema_to_clone, database_name)
+            queries = queries + clone_schema_query.format(
+                cloned_database, optional_schema_to_clone, database_name
+            )
 
         return queries
 
@@ -116,7 +118,6 @@ class SnowflakeManager:
                 finally:
                     connection.close()
                     self.engine.dispose()
-        
 
     def delete_clones(self):
         """
