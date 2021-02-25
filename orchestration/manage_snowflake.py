@@ -32,7 +32,11 @@ class SnowflakeManager:
         self.raw_database = "{}_RAW".format(config_vars["BRANCH_NAME"].upper())
 
     def generate_db_queries(
-        self, database_name: str, cloned_database: str, optional_schema_to_clone: str, source_db: str
+        self,
+        database_name: str,
+        cloned_database: str,
+        optional_schema_to_clone: str,
+        source_db: str,
     ) -> List[str]:
         """
         Generate the queries to clone and provide permissions for databases.
@@ -63,10 +67,19 @@ class SnowflakeManager:
 
         if optional_schema_to_clone != "":
             create_schema = clone_schema_query.format(
-                database_name.upper(), optional_schema_to_clone.upper(), source_db.upper()
+                database_name.upper(),
+                optional_schema_to_clone.upper(),
+                source_db.upper(),
             )
-            grant_on_schema_query_with_params = """grant create table, usage on schema "{0}"."{1}" to "{2}";"""  
-            schema_grants = [grant_on_schema_query_with_params.format(database_name.upper(), optional_schema_to_clone.upper(), role) for role in usage_roles]
+            grant_on_schema_query_with_params = (
+                """grant create table, usage on schema "{0}"."{1}" to "{2}";"""
+            )
+            schema_grants = [
+                grant_on_schema_query_with_params.format(
+                    database_name.upper(), optional_schema_to_clone.upper(), role
+                )
+                for role in usage_roles
+            ]
             queries = queries + [create_schema] + schema_grants
 
         return queries
