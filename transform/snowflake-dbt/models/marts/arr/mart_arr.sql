@@ -43,8 +43,8 @@ WITH dim_billing_account AS (
       dim_date.date_actual                                                            AS arr_month,
       IFF(is_first_day_of_last_month_of_fiscal_quarter, fiscal_quarter_name_fy, NULL) AS fiscal_quarter_name_fy,
       IFF(is_first_day_of_last_month_of_fiscal_year, fiscal_year, NULL)               AS fiscal_year,
-      dim_subscription.subscription_start_month,
-      dim_subscription.subscription_end_month,
+      dim_subscription.subscription_start_month                                       AS subscription_start_month,
+      dim_subscription.subscription_end_month                                         AS subscription_end_month,
 
       --billing account info
       dim_billing_account.dim_billing_account_id                                      AS dim_billing_account_id,
@@ -67,32 +67,32 @@ WITH dim_billing_account AS (
       dim_crm_account.health_number                                                   AS health_number,
 
       --subscription info
-      dim_subscription.subscription_status,
-      dim_subscription.subscription_sales_type,
-      dim_subscription.subscription_name                                             AS subscription_name,
-      dim_subscription.subscription_name_slugify                                     AS subscription_name_slugify,
-      dim_subscription.oldest_subscription_in_cohort                                 AS oldest_subscription_in_cohort,
-      dim_subscription.subscription_lineage                                          AS subscription_lineage,
-      dim_subscription.subscription_cohort_month                                     AS subscription_cohort_month,
-      dim_subscription.subscription_cohort_quarter                                   AS subscription_cohort_quarter,
+      dim_subscription.subscription_status                                            AS subscription_status,
+      dim_subscription.subscription_sales_type                                        AS subscription_sales_type,
+      dim_subscription.subscription_name                                              AS subscription_name,
+      dim_subscription.subscription_name_slugify                                      AS subscription_name_slugify,
+      dim_subscription.oldest_subscription_in_cohort                                  AS oldest_subscription_in_cohort,
+      dim_subscription.subscription_lineage                                           AS subscription_lineage,
+      dim_subscription.subscription_cohort_month                                      AS subscription_cohort_month,
+      dim_subscription.subscription_cohort_quarter                                    AS subscription_cohort_quarter,
       min(dim_subscription.subscription_cohort_month) OVER (
-          PARTITION BY dim_billing_account.dim_billing_account_id)                   AS billing_account_cohort_month,
+          PARTITION BY dim_billing_account.dim_billing_account_id)                    AS billing_account_cohort_month,
       min(dim_subscription.subscription_cohort_quarter) OVER (
-          PARTITION BY dim_billing_account.dim_billing_account_id)                   AS billing_account_cohort_quarter,
+          PARTITION BY dim_billing_account.dim_billing_account_id)                    AS billing_account_cohort_quarter,
       min(dim_subscription.subscription_cohort_month) OVER (
-          PARTITION BY dim_crm_account.dim_crm_account_id)                           AS crm_account_cohort_month,
+          PARTITION BY dim_crm_account.dim_crm_account_id)                            AS crm_account_cohort_month,
       min(dim_subscription.subscription_cohort_quarter) OVER (
-          PARTITION BY dim_crm_account.dim_crm_account_id)                           AS crm_account_cohort_quarter,
+          PARTITION BY dim_crm_account.dim_crm_account_id)                            AS crm_account_cohort_quarter,
       min(dim_subscription.subscription_cohort_month) OVER (
-          PARTITION BY dim_crm_account.dim_parent_crm_account_id)                    AS parent_account_cohort_month,
+          PARTITION BY dim_crm_account.dim_parent_crm_account_id)                     AS parent_account_cohort_month,
       min(dim_subscription.subscription_cohort_quarter) OVER (
-          PARTITION BY dim_crm_account.dim_parent_crm_account_id)                    AS parent_account_cohort_quarter,
+          PARTITION BY dim_crm_account.dim_parent_crm_account_id)                     AS parent_account_cohort_quarter,
 
       --product info
-      dim_product_detail.product_tier_name                                           AS product_tier_name,
-      dim_product_detail.product_delivery_type                                       AS product_delivery_type,
-      dim_product_detail.service_type                                                AS service_type,
-      dim_product_detail.product_rate_plan_name                                      AS product_rate_plan_name,
+      dim_product_detail.product_tier_name                                            AS product_tier_name,
+      dim_product_detail.product_delivery_type                                        AS product_delivery_type,
+      dim_product_detail.service_type                                                 AS service_type,
+      dim_product_detail.product_rate_plan_name                                       AS product_rate_plan_name,
 
       -- MRR values
       --  not needed as all charges in fct_mrr are recurring
