@@ -2230,6 +2230,13 @@ roles:
         warehouses:
             - reporting
 
+    - mkarampalas:
+        member_of:
+            - snowplow
+            - reporter
+        warehouses:
+            - reporting
+
     - mpeychet:
         member_of:
             - analyst_growth
@@ -3140,6 +3147,11 @@ users:
         member_of:
             - mjozenazemian
             - securityadmin
+
+    - mkarampalas:
+        can_login: yes
+        member_of:
+            - mkarampalas
 
     - mpeychet:
         can_login: yes
