@@ -62,9 +62,12 @@ class SnowflakeManager:
         ] + usage_grant_queries
 
         if optional_schema_to_clone != "":
-            queries = queries + [clone_schema_query.format(
+            create_schema = clone_schema_query.format(
                 database_name.upper(), optional_schema_to_clone.upper(), source_db.upper()
-            )]
+            )
+            grant_on_schema_query_with_params = """grant create table, usage on schema "{0}"."{1}" to "{2}";"""  
+            schema_grants = [grant_on_schema_query_with_params.format(database_name.upper(), optional_schema_to_clone.upper(), role) for role in usage_roles]
+            queries = queries + [create_schema] + schema_grants
 
         return queries
 
