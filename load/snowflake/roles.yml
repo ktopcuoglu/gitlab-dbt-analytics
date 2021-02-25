@@ -2570,6 +2570,7 @@ roles:
     - sawezec:
         member_of:
             - product_manager
+            - snowplow
             - reporter
         warehouses:
             - reporting
