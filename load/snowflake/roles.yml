@@ -1985,6 +1985,13 @@ roles:
         warehouses:
            - analyst_xs
 
+    - jjackson:
+        member_of:
+            - snowplow
+            - reporter
+        warehouses:
+            - reporting
+
     - jng:
         member_of:
             - analyst_growth
@@ -3049,6 +3056,11 @@ users:
         can_login: yes
         member_of:
             - iwiedler
+
+    - jjackson:
+        can_login: yes
+        member_of:
+            - jjackson
 
     - jng:
         can_login: yes
