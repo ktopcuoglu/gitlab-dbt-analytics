@@ -4,9 +4,9 @@
 }}
 
 {{ simple_cte([
-    ('monthly_metrics','fct_product_usage_wave_1_3_metrics_monthly'),
-    ('billing_accounts','dim_billing_account'),
-    ('crm_accounts','dim_crm_account')
+    ('monthly_metrics', 'fct_product_usage_wave_1_3_metrics_monthly'),
+    ('billing_accounts', 'dim_billing_account'),
+    ('crm_accounts', 'dim_crm_account')
 ]) }}
 
 , joined AS (
@@ -17,11 +17,16 @@
       {{ get_keyed_nulls('billing_accounts.dim_billing_account_id') }}      AS dim_billing_account_id,
       {{ get_keyed_nulls('crm_accounts.dim_crm_account_id') }}              AS dim_crm_account_id,
       monthly_metrics.snapshot_month,
+      monthly_metrics.snapshot_date_id,
+      monthly_metrics.seat_link_report_date,
+      monthly_metrics.seat_link_report_date_id,
       monthly_metrics.license_utilization,
       monthly_metrics.active_user_count,
       monthly_metrics.max_historical_user_count,
       monthly_metrics.license_user_count,
       monthly_metrics.dim_usage_ping_id,
+      monthly_metrics.ping_created_at,
+      monthly_metrics.ping_created_date_id,
       monthly_metrics.uuid,
       monthly_metrics.hostname,
       monthly_metrics.dim_license_id,
@@ -79,10 +84,5 @@
     created_by="@ischweickartDD",
     updated_by="@ischweickartDD",
     created_date="2021-02-11",
-<<<<<<< HEAD
-    updated_date="2021-02-11"
+    updated_date="2021-02-24"
 ) }}
-=======
-    updated_date="2021-02-16"
-) }}
->>>>>>> 992abdc2870b62384f970f40e3f9d5fe15726eaf

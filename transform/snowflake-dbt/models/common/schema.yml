@@ -1290,6 +1290,7 @@ models:
         tags: ["tdf", "common", "gainsight"]
       - name: seat_link_report_date
         description: Day on which Seat Link usage data is reported. Should always be last day of month for historical months.
+      - name: seat_link_report_date_id
       - name: license_utilization
         description: Number of activated seats (`active_user_count`) divided by the number of purchased seats (`license_user_count`) on the subscription.
       - name: active_user_count
@@ -1301,6 +1302,7 @@ models:
       - name: dim_usage_ping_id
       - name: ping_created_at
         description: The timestamp at which the usage ping was created.
+      - name: ping_created_date_id
       - name: uuid
       - name: hostname
       - name: dim_license_id
@@ -1366,11 +1368,17 @@ models:
           - not_null
         tags: ["tdf", "common", "gainsight"]
       - name: snapshot_month
+        description: First day of the month in which data is being reported.
+        tests:
+          - not_null
+        tags: ["tdf", "common", "gainsight"]
+      - name: snapshot_date_id
         tests:
           - not_null
         tags: ["tdf", "common", "gainsight"]
       - name: seat_link_report_date
         description: Day on which Seat Link usage data is reported. Should always be last day of month for historical months.
+      - name: seat_link_report_date_id
       - name: license_utilization
         description: Number of activated seats (`active_user_count`) divided by the number of purchased seats (`license_user_count`) on the subscription.
       - name: active_user_count
@@ -1382,6 +1390,7 @@ models:
       - name: dim_usage_ping_id
       - name: ping_created_at
         description: The timestamp at which the usage ping was created.
+      - name: ping_created_date_id
       - name: uuid
       - name: hostname
       - name: dim_license_id
