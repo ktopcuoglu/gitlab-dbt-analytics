@@ -75,8 +75,8 @@ def get_metadata(file, google_sheet_client):
     n = 0
     while maximum_backoff_sec > (2 ** n):
         try:
-            file_name = file.title
-            tab = file.sheet1.title
+            file_name = file.title.strip()
+            tab = file.sheet1.title.strip()
             return file_name, tab
         except APIError as gspread_error:
             if (
