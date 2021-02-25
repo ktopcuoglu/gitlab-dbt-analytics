@@ -403,6 +403,7 @@ sources:
         identifier: gitlab_db_csv_issue_imports
       - name: geo_nodes
         identifier: gitlab_db_geo_nodes
+        freshness: null
       - name: grafana_integrations
         identifier: gitlab_db_grafana_integrations
       - name: group_import_states
