@@ -12,15 +12,15 @@ WITH source_data AS (
 ), unioned AS (
 
     SELECT DISTINCT
-      MD5(CAST(COALESCE(CAST(sales_qualified_source AS varchar), '') AS varchar))  AS dim_opportunity_source_id,
-      sales_qualified_source                                                       AS opportunity_source_name
+      MD5(CAST(COALESCE(CAST(sales_qualified_source AS varchar), '') AS varchar))  AS dim_sales_qualified_source_id,
+      sales_qualified_source                                                       AS sales_qualified_source_name
     FROM source_data
 
     UNION ALL
 
     SELECT
-      MD5('-1')                                                                    AS dim_opportunity_source_id,
-      'Missing opportunity_source_name'                                            AS opportunity_source_name
+      MD5('-1')                                                                    AS dim_sales_qualified_source_id,
+      'Missing opportunity_source_name'                                            AS sales_qualified_source_name
 
 )
 
@@ -29,5 +29,5 @@ WITH source_data AS (
     created_by="@mcooperDD",
     updated_by="@mcooperDD",
     created_date="2020-10-26",
-    updated_date="2020-12-18"
+    updated_date="2021-02-26"
 ) }}

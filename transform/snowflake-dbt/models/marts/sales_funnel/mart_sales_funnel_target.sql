@@ -8,10 +8,10 @@ WITH dim_crm_sales_hierarchy_live AS (
     SELECT *
     FROM {{ ref('dim_crm_sales_hierarchy_live') }}
 
-), dim_opportunity_source AS (
+), dim_sales_qualified_source AS (
 
     SELECT *
-    FROM {{ ref('dim_opportunity_source') }}
+    FROM {{ ref('dim_sales_qualified_source') }}
 
 ), dim_order_type AS (
 
@@ -34,11 +34,11 @@ WITH dim_crm_sales_hierarchy_live AS (
       dim_crm_sales_hierarchy_live.sales_region_name_live,
       dim_crm_sales_hierarchy_live.sales_area_name_live,
       dim_order_type.order_type_name,
-      dim_opportunity_source.opportunity_source_name,
+      dim_sales_qualified_source.sales_qualified_source_name,
       fct_sales_funnel_target.allocated_target
     FROM fct_sales_funnel_target
-    LEFT JOIN dim_opportunity_source
-      ON fct_sales_funnel_target.dim_opportunity_source_id = dim_opportunity_source.dim_opportunity_source_id
+    LEFT JOIN dim_sales_qualified_source
+      ON fct_sales_funnel_target.dim_sales_qualified_source_id = dim_sales_qualified_source.dim_sales_qualified_source_id
     LEFT JOIN dim_order_type
       ON fct_sales_funnel_target.dim_order_type_id = dim_order_type.dim_order_type_id
     LEFT JOIN dim_crm_sales_hierarchy_live
@@ -52,7 +52,7 @@ WITH dim_crm_sales_hierarchy_live AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@iweeks",
+    updated_by="@mcooperDD",
     created_date="2021-01-08",
-    updated_date="2021-02-18",
+    updated_date="2021-02-26",
   ) }}

@@ -368,9 +368,9 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 {% docs fct_usage_ping_subscription_mapped_wave_2_3_metrics %}
 The purpose of this data model is to identify the usage pings that can be mapped to a subscription and to unpack an initial set ([wave 2-3](https://gitlab.com/gitlab-data/analytics/-/blob/master/transform/snowflake-dbt/macros/version/sales_wave_2_3_metrics.sql)) of priority metrics from the `raw_usage_data_payload` column, strip all the sensitive data out, and then report one value for each metric in that column.
 
-In this iteration, the grain is `hostname` per `uuid` per `dim_subscription_id` per `ping_created_at_month`. This current version is for Sales team only. 
+In this iteration, the grain is `hostname` per `uuid` per `dim_subscription_id` per `ping_created_at_month`. This current version is for Sales team only.
 
-This data model is a fact table built on top of the `prep_usage_ping_subscription_mapped_wave2_3_metrics` model, which depends on `prep_usage_ping` and supports the creation of `dim_usage_ping`, which will replace `PROD.legacy.version_usage_data`, `dim_usage_pings`, `version_usage_data_source`, and `version_raw_usage_data_source` in the future. 
+This data model is a fact table built on top of the `prep_usage_ping_subscription_mapped_wave2_3_metrics` model, which depends on `prep_usage_ping` and supports the creation of `dim_usage_ping`, which will replace `PROD.legacy.version_usage_data`, `dim_usage_pings`, `version_usage_data_source`, and `version_raw_usage_data_source` in the future.
 
 The metric list identifed can be found in the macro [`sales_wave_2_3_metrics`](https://gitlab.com/gitlab-data/analytics/-/blob/master/transform/snowflake-dbt/macros/version/sales_wave_2_3_metrics.sql).
 {% enddocs %}
@@ -413,15 +413,21 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
-{% docs dim_opportunity_source %}
+{% docs dim_sales_qualified_source %}
 
-Opportunity source dimension, based off of salesforce opportunity data, using the `generate_single_field_dimension` macro to create the final formatted SQL
+Sales qualified source dimension, based off of salesforce opportunity data, using the `generate_single_field_dimension` macro to create the final formatted SQL
 
 {% enddocs %}
 
-{% docs dim_purchase_channel %}
+{% docs dim_deal_path %}
 
-Purchase channel dimension, based off of salesforce opportunity data, using the `generate_single_field_dimension` macro to create the final formatted SQL
+Deal path dimension, based off of salesforce opportunity data, using the `generate_single_field_dimension` macro to create the final formatted SQL
+
+{% enddocs %}
+
+{% docs dim_bizible_marketing_channel_path %}
+
+Bizible marketing channel path dimension, based off a grouping of Bizible marketing channel paths in `map_bizible_marketing_channel_path`.
 
 {% enddocs %}
 
