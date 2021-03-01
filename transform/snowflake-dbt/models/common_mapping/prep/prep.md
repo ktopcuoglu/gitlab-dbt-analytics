@@ -83,6 +83,12 @@ Creates a base view with generated keys for the purchase channel shared dimensio
 
 {% enddocs %}
 
+{% docs prep_recurring_charge_subscription_monthly %}
+
+tbd
+
+{% enddocs %}
+
 {% docs prep_recurring_charge %}
 
 Creates a base view of charges, including paid and free subscriptions. This base view is used to create fct_mrr by filtering out those free subscriptions.
