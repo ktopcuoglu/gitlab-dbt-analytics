@@ -368,6 +368,7 @@ models:
 
       workspace_sales:
         +schema: workspace_sales
+        +materialized: table
 
       workspace_finance:
         +schema: workspace_finance
