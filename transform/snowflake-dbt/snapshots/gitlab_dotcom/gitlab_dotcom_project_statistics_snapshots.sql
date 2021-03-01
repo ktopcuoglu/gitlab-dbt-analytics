@@ -13,6 +13,7 @@
               'packages_size',
               'wiki_size',
               'uploads_size',
+              'snippets_size',
               'build_artifacts_size', 
               'shared_runners_seconds', 
               'shared_runners_seconds_last_reset',
