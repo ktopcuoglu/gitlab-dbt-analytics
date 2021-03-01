@@ -1,5 +1,5 @@
 {{ simple_cte([
-    ('sheetload_usage_ping_metrics_sections','usage_ping_metrics')
+    ('usage_ping_metrics','sheetload_usage_ping_metrics_sections')
 ]) }}
 
 , final AS (
