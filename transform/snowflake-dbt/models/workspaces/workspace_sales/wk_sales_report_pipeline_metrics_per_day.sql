@@ -325,7 +325,7 @@ WITH date_details AS (
       -----------------------------
       -- keys
       a.sales_team_cro_level,
-      e.sales_team_rd_asm_level,
+      a.sales_team_rd_asm_level,
       b.deal_category,
       b.deal_group,
       -----------------------------
@@ -334,14 +334,13 @@ WITH date_details AS (
       d.snapshot_fiscal_quarter_name,
       d.snapshot_day_of_fiscal_quarter_normalised,
       d.snapshot_next_fiscal_quarter_date
-    FROM (SELECT DISTINCT sales_team_cro_level FROM pipeline_snapshot) a
+    FROM (SELECT DISTINCT sales_team_cro_level
+                    , sales_team_rd_asm_level FROM pipeline_snapshot) a
     CROSS JOIN (SELECT DISTINCT deal_category,
                                 deal_group 
                 FROM pipeline_snapshot) b
     CROSS JOIN (SELECT DISTINCT snapshot_fiscal_quarter_date FROM pipeline_snapshot) c
     CROSS JOIN (SELECT DISTINCT sales_qualified_source FROM pipeline_snapshot) f
-    CROSS JOIN (SELECT DISTINCT sales_team_rd_asm_level
-                FROM pipeline_snapshot) e
     INNER JOIN (SELECT DISTINCT fiscal_quarter_name_fy                                                              AS snapshot_fiscal_quarter_name,
                               first_day_of_fiscal_quarter                                                           AS snapshot_fiscal_quarter_date, 
                               DATEADD(month,3,first_day_of_fiscal_quarter)                                          AS snapshot_next_fiscal_quarter_date,
