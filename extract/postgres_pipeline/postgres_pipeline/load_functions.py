@@ -158,6 +158,8 @@ def load_scd(
     Load tables that are slow-changing dimensions.
     """
 
+    has_xmin = False
+
     if has_xmin:
         last_xmin = get_last_xmin()
         highest_xmin = get_highest_xmin(source_engine, source_table_name)
