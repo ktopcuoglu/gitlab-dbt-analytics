@@ -65,6 +65,23 @@ models:
             - not_null
             - unique
         tags: ["tdf", "mart", "sales_funnel"]
+        
+  - name: mart_sales_funnel_target_daily
+    description: Model with Sales targets at a daily level and with QTD (Quater To Date), MTD (Month To Date) and YTD (Year To Date) target calculations.
+    columns:
+      - name: primary_key
+        tests:
+            - not_null
+            - unique
+        tags: ["tdf", "mart", "sales_funnel"]
+      - name: report_target_date
+        description: Target_Date + 1. This is used in Sisense when comparing QTD targets vs actuals for the current date.
+      - name: mtd_allocated_target
+        description: Month To Date allocated target.
+      - name: qtd_allocated_target
+        description: Quarter To Date allocated target.
+      - name: ytd_allocated_target
+        description: Year To Date allocated target.
 
   - name: mart_discount_arr
     description: Model with Invoiced ARR used to calculate discounts across various dimensions.

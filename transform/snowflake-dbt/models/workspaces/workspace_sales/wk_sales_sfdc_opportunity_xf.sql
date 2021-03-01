@@ -275,7 +275,7 @@ WITH sfdc_opportunity AS (
 
 ), net_iacv_to_net_arr_ratio AS (
 
-    SELECT '2. New - Connected'       AS "ORDER_TYPE_STAMPED", 
+    SELECT '2. New - Connected'     AS "ORDER_TYPE_STAMPED", 
           'Mid-Market'              AS "USER_SEGMENT_STAMPED", 
           1.001856868               AS "RATIO_NET_IACV_TO_NET_ARR" 
     UNION 
@@ -394,22 +394,6 @@ WITH sfdc_opportunity AS (
           ELSE COALESCE(sfdc_opportunity_xf.user_region_stamped,'N/A')
       END                                                                       AS opportunity_owner_user_region,
 
-
-      opportunity_owner_user_segment                                            AS sales_team_cro_level,
-      CONCAT(opportunity_owner_user_segment,'_',opportunity_owner_user_region)  AS sales_team_rd_asm_level,
-
-      /* --DEPRECATED This field is substituted by the opportunity_owner_cro_level
-      CASE 
-        WHEN sfdc_opportunity_xf.account_owner_team_vp_level = 'VP Ent'
-          THEN 'Large'
-        WHEN sfdc_opportunity_xf.account_owner_team_vp_level = 'VP Comm MM'
-          THEN 'Mid-Market'
-        WHEN sfdc_opportunity_xf.account_owner_team_vp_level = 'VP Comm SMB' 
-          THEN 'SMB' 
-        ELSE 'Other' 
-      END                                                                       AS account_owner_cro_level,
-    */
-
       -- temporary, to deal with global Bookings FY21 reports that use account_owner_team_stamp field
       CASE 
         WHEN sfdc_opportunity_xf.account_owner_team_stamped IN ('Commercial - SMB','SMB','SMB - US','SMB - International')
@@ -431,8 +415,7 @@ WITH sfdc_opportunity AS (
         ELSE 1
       END                                                                       AS calculated_deal_count,
 
-   
-      -- PIO Flag for PIO reporting dashboard
+        -- PIO Flag for PIO reporting dashboard
       CASE 
         WHEN (sfdc_opportunity_xf.partner_initiated_opportunity = TRUE -- up to the first half of the year 2020
             AND sfdc_opportunity_xf.created_date < '2020-08-01'::DATE)
@@ -479,6 +462,9 @@ WITH sfdc_opportunity AS (
     SELECT 
       oppty_final.*,
       
+      oppty_final.opportunity_owner_user_segment                                                        AS sales_team_cro_level,
+      CONCAT(oppty_final.opportunity_owner_user_segment,'_',oppty_final.opportunity_owner_user_region)  AS sales_team_rd_asm_level,
+
       -- NF 2021-01-28 Not all historical opportunities have Net ARR set. To allow historical reporting 
       -- we apply a ratio by segment / order type to convert IACV to Net ARR      
       CASE

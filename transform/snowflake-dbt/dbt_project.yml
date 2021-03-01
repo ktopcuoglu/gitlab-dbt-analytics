@@ -179,6 +179,10 @@ models:
       gitlab_dotcom:
         +materialized: table
         +schema: gitlab_dotcom
+        renamed:
+          +materialized: view
+          scd:
+            +materialized: table
 
       gitlab_ops:
         +materialized: table
@@ -363,6 +367,7 @@ models:
         +schema: workspace_marketing
 
       workspace_sales:
+        +materialized: table
         +schema: workspace_sales
 
       workspace_finance:

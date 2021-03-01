@@ -5,6 +5,8 @@ macros:
     description: '{{ doc("case_when_boolean_int") }}'
   - name: coalesce_to_infinity
     description: '{{ doc("coalesce_to_infinity") }}'
+  - name: convert_variant_to_boolean_field
+    description: '{{ doc("convert_variant_to_boolean_field") }}'
   - name: create_snapshot_base
     description: '{{ doc("create_snapshot_base") }}'
   - name: current_date_schema
@@ -33,6 +35,8 @@ macros:
     description: '{{ doc("generate_schema_name") }}'
   - name: get_date_id
     description: '{{ doc("get_date_id") }}'
+  - name: get_date_pt_id
+    description: '{{ doc("get_date_pt_id") }}'
   - name: get_keyed_nulls
     description: '{{ doc("get_keyed_nulls") }}'
   - name: hash_diff
@@ -51,6 +55,8 @@ macros:
     description: '{{ doc("monthly_change") }}'
   - name: monthly_is_used
     description: '{{ doc("monthly_is_used") }}'
+  - name: null_negative_numbers
+    description: '{{ doc("null_negative_numbers") }}'
   - name: query_comment
     description: '{{ doc("query_comment") }}'
   - name: scd_type_2

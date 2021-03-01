@@ -32,7 +32,11 @@ class SnowflakeManager:
         self.raw_database = "{}_RAW".format(config_vars["BRANCH_NAME"].upper())
 
     def generate_db_queries(
-        self, database_name: str, cloned_database: str
+        self,
+        database_name: str,
+        cloned_database: str,
+        optional_schema_to_clone: str,
+        source_db: str,
     ) -> List[str]:
         """
         Generate the queries to clone and provide permissions for databases.
@@ -42,6 +46,9 @@ class SnowflakeManager:
         check_db_exists_query = """use database "{0}";"""
         create_query = """create or replace database "{0}" {1};"""
         grant_query = """grant ownership on database "{0}" to TRANSFORMER;"""
+
+        clone_schema_query = """create schema "{0}"."{1}" clone "{2}"."{1}"; """
+
         usage_roles = ["LOADER", "TRANSFORMER", "ENGINEER"]
         usage_grant_query_with_params = (
             """grant create schema, usage on database "{0}" to {1}"""
@@ -58,14 +65,34 @@ class SnowflakeManager:
             grant_query.format(database_name),
         ] + usage_grant_queries
 
+        if optional_schema_to_clone != "":
+            create_schema = clone_schema_query.format(
+                database_name.upper(),
+                optional_schema_to_clone.upper(),
+                source_db.upper(),
+            )
+            grant_on_schema_query_with_params = (
+                """grant create table, usage on schema "{0}"."{1}" to "{2}";"""
+            )
+            schema_grants = [
+                grant_on_schema_query_with_params.format(
+                    database_name.upper(), optional_schema_to_clone.upper(), role
+                )
+                for role in usage_roles
+            ]
+            queries = queries + [create_schema] + schema_grants
+
         return queries
 
     def manage_clones(
-        self, database: str, empty: bool = False, force: bool = False
+        self, database: str, empty: bool = False, force: bool = False, schema: str = ""
     ) -> None:
         """
         For the creation of zero copy clones in Snowflake.
         """
+
+        if schema != "":
+            empty = True
 
         databases = {
             "prep": self.prep_database,
@@ -75,7 +102,7 @@ class SnowflakeManager:
 
         create_db = databases[database]
         clone_db = f"clone {database}" if not empty else ""
-        queries = self.generate_db_queries(create_db, clone_db)
+        queries = self.generate_db_queries(create_db, clone_db, schema, database)
 
         # if force is false, check if the database exists
         if force:

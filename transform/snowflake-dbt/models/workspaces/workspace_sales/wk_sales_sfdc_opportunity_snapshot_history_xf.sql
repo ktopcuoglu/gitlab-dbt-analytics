@@ -23,19 +23,19 @@ WITH date_details AS (
 ), sfdc_opportunity_snapshot_history AS (
 
     SELECT 
-      sfdc_opportunity_snapshot_history.valid_from,
-      sfdc_opportunity_snapshot_history.valid_to,
-      sfdc_opportunity_snapshot_history.is_currently_valid,
+      --sfdc_opportunity_snapshot_history.valid_from,
+      --sfdc_opportunity_snapshot_history.valid_to,
+      --sfdc_opportunity_snapshot_history.is_currently_valid,
       sfdc_opportunity_snapshot_history.opportunity_snapshot_id,
       sfdc_opportunity_snapshot_history.account_id,
       sfdc_opportunity_snapshot_history.opportunity_id,
       sfdc_opportunity_snapshot_history.opportunity_name,
       sfdc_opportunity_snapshot_history.owner_id,
-      sfdc_opportunity_snapshot_history.business_type,
+      --sfdc_opportunity_snapshot_history.business_type,
       sfdc_opportunity_snapshot_history.close_date,
       sfdc_opportunity_snapshot_history.created_date,
       sfdc_opportunity_snapshot_history.deployment_preference,
-      sfdc_opportunity_snapshot_history.generated_source,
+      --sfdc_opportunity_snapshot_history.generated_source,
       sfdc_opportunity_snapshot_history.lead_source,
       sfdc_opportunity_snapshot_history.merged_opportunity_id,
       sfdc_opportunity_snapshot_history.opportunity_owner,
@@ -49,23 +49,23 @@ WITH date_details AS (
       --sfdc_opportunity_snapshot_history.opportunity_owner_team,
       --sfdc_opportunity_snapshot_history.opportunity_owner_manager,
       --sfdc_opportunity_snapshot_history.account_owner_team_stamped,
-      sfdc_opportunity_snapshot_history.parent_segment,
+      --sfdc_opportunity_snapshot_history.parent_segment,
       sfdc_opportunity_snapshot_history.sales_accepted_date,
       sfdc_opportunity_snapshot_history.sales_path,
       sfdc_opportunity_snapshot_history.sales_qualified_date,
-      sfdc_opportunity_snapshot_history.sales_segment,
+      --sfdc_opportunity_snapshot_history.sales_segment,
       sfdc_opportunity_snapshot_history.sales_type,
       sfdc_opportunity_snapshot_history.net_new_source_categories,
       sfdc_opportunity_snapshot_history.source_buckets,
       sfdc_opportunity_snapshot_history.stage_name,
 
       sfdc_opportunity_snapshot_history.acv,
-      sfdc_opportunity_snapshot_history.closed_deals,
-      sfdc_opportunity_snapshot_history.competitors,
-      sfdc_opportunity_snapshot_history.critical_deal_flag,
+      --sfdc_opportunity_snapshot_history.closed_deals,
+      --sfdc_opportunity_snapshot_history.competitors,
+      --sfdc_opportunity_snapshot_history.critical_deal_flag,
       sfdc_opportunity_snapshot_history.deal_size,
       sfdc_opportunity_snapshot_history.forecast_category_name,
-      sfdc_opportunity_snapshot_history.forecasted_iacv,
+      --sfdc_opportunity_snapshot_history.forecasted_iacv,
       sfdc_opportunity_snapshot_history.iacv_created_date,
       sfdc_opportunity_snapshot_history.incremental_acv,
       sfdc_opportunity_snapshot_history.invoice_number,
@@ -79,35 +79,35 @@ WITH date_details AS (
       END                                                          AS is_refund,
       --sfdc_opportunity_snapshot_history.is_refund,
 
-      sfdc_opportunity_snapshot_history.is_downgrade,
-      sfdc_opportunity_snapshot_history.is_swing_deal,
+      --sfdc_opportunity_snapshot_history.is_downgrade,
+      --sfdc_opportunity_snapshot_history.is_swing_deal,
       sfdc_opportunity_snapshot_history.net_incremental_acv,
-      sfdc_opportunity_snapshot_history.nrv,
+      --sfdc_opportunity_snapshot_history.nrv,
       sfdc_opportunity_snapshot_history.primary_campaign_source_id,
-      sfdc_opportunity_snapshot_history.probability,
+      --sfdc_opportunity_snapshot_history.probability,
       sfdc_opportunity_snapshot_history.professional_services_value,
-      sfdc_opportunity_snapshot_history.pushed_count,
-      sfdc_opportunity_snapshot_history.reason_for_loss,
-      sfdc_opportunity_snapshot_history.reason_for_loss_details,
+      --sfdc_opportunity_snapshot_history.pushed_count,
+      --sfdc_opportunity_snapshot_history.reason_for_loss,
+      --sfdc_opportunity_snapshot_history.reason_for_loss_details,
       sfdc_opportunity_snapshot_history.refund_iacv,
       sfdc_opportunity_snapshot_history.downgrade_iacv,
       sfdc_opportunity_snapshot_history.renewal_acv,
       sfdc_opportunity_snapshot_history.renewal_amount,
-      sfdc_opportunity_snapshot_history.sales_qualified_source,
-      sfdc_opportunity_snapshot_history.segment,
-      sfdc_opportunity_snapshot_history.solutions_to_be_replaced,
+      --sfdc_opportunity_snapshot_history.sales_qualified_source,
+      --sfdc_opportunity_snapshot_history.segment,
+      --sfdc_opportunity_snapshot_history.solutions_to_be_replaced,
       sfdc_opportunity_snapshot_history.total_contract_value,
-      sfdc_opportunity_snapshot_history.upside_iacv,
-      sfdc_opportunity_snapshot_history.upside_swing_deal_iacv,
+      --sfdc_opportunity_snapshot_history.upside_iacv,
+      --sfdc_opportunity_snapshot_history.upside_swing_deal_iacv,
       sfdc_opportunity_snapshot_history.is_web_portal_purchase,
       sfdc_opportunity_snapshot_history.opportunity_term,
       
       sfdc_opportunity_snapshot_history.net_arr             AS raw_net_arr,
       
-      sfdc_opportunity_snapshot_history.user_segment_stamped,
-      sfdc_opportunity_snapshot_history.user_region_stamped,
-      sfdc_opportunity_snapshot_history.user_area_stamped,
-      sfdc_opportunity_snapshot_history.user_geo_stamped,
+      --sfdc_opportunity_snapshot_history.user_segment_stamped,
+      --sfdc_opportunity_snapshot_history.user_region_stamped,
+      --sfdc_opportunity_snapshot_history.user_area_stamped,
+      --sfdc_opportunity_snapshot_history.user_geo_stamped,
       
       sfdc_opportunity_snapshot_history.arr_basis,
       sfdc_opportunity_snapshot_history.arr,
@@ -118,6 +118,7 @@ WITH date_details AS (
       sfdc_opportunity_snapshot_history.other_non_recurring_amount,
       sfdc_opportunity_snapshot_history.subscription_start_date,
       sfdc_opportunity_snapshot_history.subscription_end_date,
+      /*
       sfdc_opportunity_snapshot_history.cp_champion,
       sfdc_opportunity_snapshot_history.cp_close_plan,
       sfdc_opportunity_snapshot_history.cp_competition,
@@ -132,6 +133,7 @@ WITH date_details AS (
       sfdc_opportunity_snapshot_history.cp_why_do_anything_at_all,
       sfdc_opportunity_snapshot_history.cp_why_gitlab,
       sfdc_opportunity_snapshot_history.cp_why_now,
+      */
       sfdc_opportunity_snapshot_history._last_dbt_run,
       sfdc_opportunity_snapshot_history.is_deleted,
       sfdc_opportunity_snapshot_history.last_activity_date,
@@ -168,7 +170,90 @@ WITH date_details AS (
       created_date_detail.first_day_of_month                     AS pipeline_created_date_month,
       created_date_detail.fiscal_year                            AS pipeline_created_fiscal_year,
       created_date_detail.fiscal_quarter_name_fy                 AS pipeline_created_fiscal_quarter_name,
-      created_date_detail.first_day_of_fiscal_quarter            AS pipeline_created_fiscal_quarter_date
+      created_date_detail.first_day_of_fiscal_quarter            AS pipeline_created_fiscal_quarter_date,
+
+      ------------------------------------------------------------------------------------------------------
+      ------------------------------------------------------------------------------------------------------
+      -- Base helpers for reporting
+      CASE 
+        WHEN sfdc_opportunity_snapshot_history.stage_name IN ('00-Pre Opportunity', '0-Pending Acceptance', '0-Qualifying'
+                              ,'Developing', '1-Discovery', '2-Developing', '2-Scoping')  
+          THEN 'Pipeline'
+        WHEN sfdc_opportunity_snapshot_history.stage_name IN ('3-Technical Evaluation', '4-Proposal', '5-Negotiating'
+                              , '6-Awaiting Signature', '7-Closing')                         
+          THEN '3+ Pipeline'
+        WHEN sfdc_opportunity_snapshot_history.stage_name IN ('8-Closed Lost', 'Closed Lost')                                                                                       
+          THEN 'Lost'
+        WHEN sfdc_opportunity_snapshot_history.stage_name IN ('Closed Won')                                                                                                         
+          THEN 'Closed Won'
+        ELSE 'Other'
+      END                                                         AS stage_name_3plus,
+      
+      CASE 
+        WHEN sfdc_opportunity_snapshot_history.stage_name IN ('00-Pre Opportunity', '0-Pending Acceptance', '0-Qualifying'
+                            , 'Developing', '1-Discovery', '2-Developing', '2-Scoping', '3-Technical Evaluation')     
+          THEN 'Pipeline'
+        WHEN sfdc_opportunity_snapshot_history.stage_name IN ('4-Proposal', '5-Negotiating', '6-Awaiting Signature', '7-Closing')                                                                               
+          THEN '4+ Pipeline'
+        WHEN sfdc_opportunity_snapshot_history.stage_name IN ('8-Closed Lost', 'Closed Lost')                                                                                                                   
+          THEN 'Lost'
+        WHEN sfdc_opportunity_snapshot_history.stage_name IN ('Closed Won')                                                                                                                                     
+          THEN 'Closed Won'
+        ELSE 'Other'
+      END                                                         AS stage_name_4plus,
+
+
+      CASE
+        WHEN sfdc_opportunity_snapshot_history.stage_name
+          IN ('1-Discovery', '2-Developing', '2-Scoping','3-Technical Evaluation', '4-Proposal', 'Closed Won','5-Negotiating', '6-Awaiting Signature', '7-Closing')
+            THEN 1
+        ELSE 0
+      END                                                         AS is_stage_1_plus,
+
+      CASE 
+        WHEN sfdc_opportunity_snapshot_history.stage_name 
+          IN ('3-Technical Evaluation', '4-Proposal', 'Closed Won','5-Negotiating', '6-Awaiting Signature', '7-Closing')                               
+            THEN 1												                         
+        ELSE 0
+      END                                                         AS is_stage_3_plus,
+
+      CASE 
+        WHEN sfdc_opportunity_snapshot_history.stage_name 
+          IN ('4-Proposal', 'Closed Won','5-Negotiating', '6-Awaiting Signature', '7-Closing')                               
+            THEN 1												                         
+        ELSE 0
+      END                                                         AS is_stage_4_plus,
+
+      CASE 
+        WHEN sfdc_opportunity_snapshot_history.stage_name = 'Closed Won' 
+          THEN 1 ELSE 0
+      END                                                         AS is_won,
+
+      CASE 
+        WHEN sfdc_opportunity_snapshot_history.stage_name = '8-Closed Lost'  
+          THEN 1 ELSE 0
+      END                                                         AS is_lost,
+
+      CASE 
+        WHEN sfdc_opportunity_snapshot_history.stage_name IN ('8-Closed Lost', '9-Unqualified', 'Closed Won', '10-Duplicate') 
+            THEN 0
+        ELSE 1  
+      END                                                         AS is_open,
+
+      CASE 
+        WHEN sfdc_opportunity_snapshot_history.stage_name IN ('8-Closed Lost', '9-Unqualified', 'Closed Won', '10-Duplicate') 
+          THEN 1
+        ELSE 0
+      END                                                         AS is_closed,
+      
+
+      CASE 
+        WHEN LOWER(sfdc_opportunity_snapshot_history.sales_type) like '%renewal%' 
+          THEN 1
+        ELSE 0
+      END                                                         AS is_renewal 
+
+
 
     FROM {{ref('sfdc_opportunity_snapshot_history')}}
     INNER JOIN date_details close_date_detail
@@ -182,7 +267,29 @@ WITH date_details AS (
 
 ), sfdc_opportunity_xf AS (
 
-    SELECT *
+    SELECT 
+      opportunity_id,
+      owner_id,
+      order_type_stamped,
+      opportunity_owner_manager,
+      is_edu_oss,
+      account_owner_team_stamped, 
+      opportunity_owner_user_segment,
+      opportunity_owner_user_region,
+      sales_team_cro_level,
+      sales_team_rd_asm_level,
+
+      user_segment_stamped,
+      user_region_stamped,
+      user_area_stamped,
+      user_geo_stamped,
+
+      is_won,
+      opportunity_category,
+      raw_net_arr,
+      net_incremental_acv,
+      sales_qualified_source,
+      incremental_acv
     FROM {{ref('wk_sales_sfdc_opportunity_xf')}}  
 
 ), sfdc_users_xf AS (
@@ -234,54 +341,53 @@ WITH date_details AS (
 
 ), net_iacv_to_net_arr_ratio AS (
 
-    SELECT '2. New - Connected'       AS "ORDER_TYPE_STAMPED", 
+    SELECT '2. New - Connected'     AS "ORDER_TYPE_STAMPED", 
           'Mid-Market'              AS "USER_SEGMENT_STAMPED", 
-          1.001856868               AS "RATIO_NET_IACV_TO_NET_ARR" 
+          0.999691784               AS "RATIO_NET_IACV_TO_NET_ARR" 
     UNION 
     SELECT '1. New - First Order'   AS "ORDER_TYPE_STAMPED", 
           'SMB'                     AS "USER_SEGMENT_STAMPED", 
-          0.9879780801              AS "RATIO_NET_IACV_TO_NET_ARR" 
-    UNION 
-    SELECT '1. New - First Order'   AS "ORDER_TYPE_STAMPED", 
-          'PubSec'                  AS "USER_SEGMENT_STAMPED", 
-          0.9999751852              AS "RATIO_NET_IACV_TO_NET_ARR" 
+          0.998590143               AS "RATIO_NET_IACV_TO_NET_ARR" 
     UNION 
     SELECT '1. New - First Order'   AS "ORDER_TYPE_STAMPED", 
           'Large'                   AS "USER_SEGMENT_STAMPED", 
-          0.9983306793              AS "RATIO_NET_IACV_TO_NET_ARR" 
+          0.992289340               AS "RATIO_NET_IACV_TO_NET_ARR" 
     UNION 
     SELECT '3. Growth'              AS "ORDER_TYPE_STAMPED", 
           'SMB'                     AS "USER_SEGMENT_STAMPED", 
-          0.9427320642              AS "RATIO_NET_IACV_TO_NET_ARR" 
+          0.927846192               AS "RATIO_NET_IACV_TO_NET_ARR" 
     UNION 
     SELECT '3. Growth'              AS "ORDER_TYPE_STAMPED", 
           'Large'                   AS "USER_SEGMENT_STAMPED", 
-          0.9072734284              AS "RATIO_NET_IACV_TO_NET_ARR" 
-    UNION 
-    SELECT '3. Growth'              AS "ORDER_TYPE_STAMPED", 
-          'PubSec'                  AS "USER_SEGMENT_STAMPED", 
-          1.035889715               AS "RATIO_NET_IACV_TO_NET_ARR" 
+          0.852915435               AS "RATIO_NET_IACV_TO_NET_ARR" 
     UNION 
     SELECT '2. New - Connected'     AS "ORDER_TYPE_STAMPED", 
           'SMB'                     AS "USER_SEGMENT_STAMPED", 
-          1                         AS "RATIO_NET_IACV_TO_NET_ARR" 
-    UNION 
-    SELECT '2. New - Connected'     AS "ORDER_TYPE_STAMPED", 
-          'PubSec'                  AS "USER_SEGMENT_STAMPED", 
-          1.002887983               AS "RATIO_NET_IACV_TO_NET_ARR" 
+          1.009262672               AS "RATIO_NET_IACV_TO_NET_ARR" 
     UNION 
     SELECT '3. Growth'              AS "ORDER_TYPE_STAMPED", 
           'Mid-Market'              AS "USER_SEGMENT_STAMPED", 
-          0.8504383811              AS "RATIO_NET_IACV_TO_NET_ARR" 
+          0.793618079               AS "RATIO_NET_IACV_TO_NET_ARR" 
     UNION 
     SELECT '1. New - First Order'   AS "ORDER_TYPE_STAMPED", 
           'Mid-Market'              AS "USER_SEGMENT_STAMPED", 
-          0.9897881218              AS "RATIO_NET_IACV_TO_NET_ARR" 
+          0.988527875               AS "RATIO_NET_IACV_TO_NET_ARR" 
     UNION 
     SELECT '2. New - Connected'     AS "ORDER_TYPE_STAMPED", 
           'Large'                   AS "USER_SEGMENT_STAMPED", 
-          1.012723079               AS "RATIO_NET_IACV_TO_NET_ARR" 
-
+          1.010081083               AS "RATIO_NET_IACV_TO_NET_ARR" 
+    UNION 
+    SELECT '1. New - First Order'   AS "ORDER_TYPE_STAMPED", 
+          'PubSec'                  AS "USER_SEGMENT_STAMPED", 
+          1.000000000               AS "RATIO_NET_IACV_TO_NET_ARR" 
+    UNION 
+    SELECT '2. New - Connected'     AS "ORDER_TYPE_STAMPED", 
+          'PubSec'                  AS "USER_SEGMENT_STAMPED", 
+          1.002741689               AS "RATIO_NET_IACV_TO_NET_ARR" 
+    UNION 
+    SELECT '3. Growth'              AS "ORDER_TYPE_STAMPED", 
+          'PubSec'                  AS "USER_SEGMENT_STAMPED", 
+          0.965670500               AS "RATIO_NET_IACV_TO_NET_ARR" 
 
 ), pipeline_type_quarter_start AS (
 
@@ -313,97 +419,16 @@ WITH date_details AS (
 
       opp_snapshot.*,
 
-      ------------------------------------------------------------------------------------------------------
-      ------------------------------------------------------------------------------------------------------
-      -- Base helpers for reporting
+    
       CASE 
-        WHEN opp_snapshot.stage_name IN ('00-Pre Opportunity', '0-Pending Acceptance', '0-Qualifying'
-                              ,'Developing', '1-Discovery', '2-Developing', '2-Scoping')  
-          THEN 'Pipeline'
-        WHEN opp_snapshot.stage_name IN ('3-Technical Evaluation', '4-Proposal', '5-Negotiating'
-                              , '6-Awaiting Signature', '7-Closing')                         
-          THEN '3+ Pipeline'
-        WHEN opp_snapshot.stage_name IN ('8-Closed Lost', 'Closed Lost')                                                                                       
-          THEN 'Lost'
-        WHEN opp_snapshot.stage_name IN ('Closed Won')                                                                                                         
-          THEN 'Closed Won'
-        ELSE 'Other'
-      END                                                         AS stage_name_3plus,
-      
-      CASE 
-        WHEN opp_snapshot.stage_name IN ('00-Pre Opportunity', '0-Pending Acceptance', '0-Qualifying'
-                            , 'Developing', '1-Discovery', '2-Developing', '2-Scoping', '3-Technical Evaluation')     
-          THEN 'Pipeline'
-        WHEN opp_snapshot.stage_name IN ('4-Proposal', '5-Negotiating', '6-Awaiting Signature', '7-Closing')                                                                               
-          THEN '4+ Pipeline'
-        WHEN opp_snapshot.stage_name IN ('8-Closed Lost', 'Closed Lost')                                                                                                                   
-          THEN 'Lost'
-        WHEN opp_snapshot.stage_name IN ('Closed Won')                                                                                                                                     
-          THEN 'Closed Won'
-        ELSE 'Other'
-      END                                                         AS stage_name_4plus,
-
-
-      CASE
-        WHEN opp_snapshot.stage_name
-          IN ('1-Discovery', '2-Developing', '2-Scoping','3-Technical Evaluation', '4-Proposal', 'Closed Won','5-Negotiating', '6-Awaiting Signature', '7-Closing')
-            THEN 1
-        ELSE 0
-      END                                                         AS is_stage_1_plus,
-
-      CASE 
-        WHEN opp_snapshot.stage_name 
-          IN ('3-Technical Evaluation', '4-Proposal', 'Closed Won','5-Negotiating', '6-Awaiting Signature', '7-Closing')                               
-            THEN 1												                         
-        ELSE 0
-      END                                                         AS is_stage_3_plus,
-
-      CASE 
-        WHEN opp_snapshot.stage_name 
-          IN ('4-Proposal', 'Closed Won','5-Negotiating', '6-Awaiting Signature', '7-Closing')                               
-            THEN 1												                         
-        ELSE 0
-      END                                                         AS is_stage_4_plus,
-
-      CASE 
-        WHEN opp_snapshot.stage_name = 'Closed Won' 
-          THEN 1 ELSE 0
-      END                                                         AS is_won,
-
-      CASE 
-        WHEN opp_snapshot.stage_name = '8-Closed Lost'  
-          THEN 1 ELSE 0
-      END                                                         AS is_lost,
-
-      CASE 
-        WHEN opp_snapshot.stage_name IN ('8-Closed Lost', '9-Unqualified', 'Closed Won', '10-Duplicate') 
-            THEN 0
-        ELSE 1  
-      END                                                         AS is_open,
-
-      CASE 
-        WHEN is_open = 0
-          THEN 1
-        ELSE 0
-      END                                                         AS is_closed,
-      
-      CASE 
-        WHEN is_won = 1  
+        WHEN opp_snapshot.is_won = 1  
           THEN '1.Won'
-        WHEN is_lost = 1 
+        WHEN opp_snapshot.is_lost = 1 
           THEN '2.Lost'
-        WHEN is_open = 1 
+        WHEN opp_snapshot.is_open = 1 
           THEN '0. Open' 
         ELSE 'N/A'
       END                                                         AS stage_category,
-
-      CASE 
-        WHEN LOWER(opp_snapshot.sales_type) like '%renewal%' 
-          THEN 1
-        ELSE 0
-      END                                                         AS is_renewal, 
-
-  
       ------------------------------------------------------------------------------------------------------
       ------------------------------------------------------------------------------------------------------
       
@@ -453,27 +478,23 @@ WITH date_details AS (
       -- Those were later fixed in the opportunity object but stayed in the snapshot table.
       -- To account for those issues and give a directionally correct answer, we apply a ratio to everything before FY22
       CASE
-        WHEN  opp_snapshot.snapshot_date < '2021-02-01'::DATE -- All deals before cutoff
+        WHEN  opp_snapshot.snapshot_date < '2021-02-01'::DATE -- All deals before cutoff and that were not updated to Net ARR
           THEN calculated_from_ratio_net_arr
-        WHEN  opp_snapshot.snapshot_date >= '2021-02-01'::DATE -- Open deal with no Net ARR, after cut off
-          AND COALESCE(opp_snapshot.raw_net_arr,0) = 0
-          AND opp_snapshot.stage_name NOT IN ('8-Closed Lost', '9-Unqualified', 'Closed Won') 
-            THEN calculated_from_ratio_net_arr
+        WHEN  opp_snapshot.snapshot_date >= '2021-02-01'::DATE  -- After cutoff date, for all deals earlier than FY19 that are closed and have no net arr
+              AND opp_snapshot.close_date < '2018-02-01'::DATE 
+              AND opp_snapshot.is_open = 0
+              AND COALESCE(opp_snapshot.raw_net_arr,0) = 0 
+          THEN calculated_from_ratio_net_arr
         ELSE COALESCE(opp_snapshot.raw_net_arr,0) -- Rest of deals after cut off date
       END                                                                     AS net_arr,
          
       ------------------------------------------------------------------------------------------------------
       ------------------------------------------------------------------------------------------------------
-
-      ---------------------
-      -- compound metrics for reporting
-
-      ------------------------------
       -- DEPRECATED IACV METRICS
       -- Use Net ARR instead
       CASE 
         WHEN opp_snapshot.created_fiscal_quarter_name= opp_snapshot.close_fiscal_quarter_name
-          AND opp_snapshot.stage_name IN ('Closed Won')  
+          AND opp_snapshot.is_won = 1 
             THEN opp_snapshot.incremental_acv
         ELSE 0
       END                                                         AS created_and_won_same_quarter_iacv,
@@ -484,30 +505,8 @@ WITH date_details AS (
           THEN opp_snapshot.incremental_acv 
         ELSE 0 
       END                                                         AS created_in_snapshot_quarter_iacv,
+      
       ------------------------------
-
-      -- created and closed within the quarter net arr
-      CASE 
-        WHEN opp_snapshot.pipeline_created_fiscal_quarter_name = opp_snapshot.close_fiscal_quarter_name
-          AND (is_won = 1 OR (is_renewal = 1 AND is_lost = 1))  
-            THEN net_arr
-        ELSE 0
-      END                                                         AS created_and_won_same_quarter_net_arr,
-
-      -- created within quarter
-      CASE
-        WHEN opp_snapshot.pipeline_created_fiscal_quarter_name = opp_snapshot.snapshot_fiscal_quarter_name
-          THEN net_arr
-        ELSE 0 
-      END                                                         AS created_in_snapshot_quarter_net_arr,
-
-      -- booked net arr (won + renewals / lost)
-      CASE
-        WHEN is_won = 1 OR (is_renewal = 1 AND is_lost = 1)
-          THEN net_arr
-        ELSE 0 
-      END                                                         AS booked_net_arr,
-
       -- fields for counting new logos, these fields count refund as negative
       CASE 
         WHEN opp_snapshot.is_refund = 1
@@ -515,15 +514,19 @@ WITH date_details AS (
         ELSE 1
       END                                                         AS calculated_deal_count,
 
- 
+      ------------------------------------------------------------------------------------------------------
+      ------------------------------------------------------------------------------------------------------
       -- opportunity driven fields
+      
       sfdc_opportunity_xf.opportunity_owner_manager,
       sfdc_opportunity_xf.is_edu_oss,
+      sfdc_opportunity_xf.sales_qualified_source,
+      sfdc_opportunity_xf.user_segment_stamped,
+      sfdc_opportunity_xf.user_region_stamped,
+      sfdc_opportunity_xf.user_area_stamped,
+      sfdc_opportunity_xf.user_geo_stamped,
 
-      ------------------------------------------------------------------------------------------------------
-      ------------------------------------------------------------------------------------------------------
-     
-     -- field used for FY21 bookings reporitng
+      -- field used for FY21 bookings reporitng
       sfdc_opportunity_xf.account_owner_team_stamped, 
      
       -- temporary, to deal with global reports that use account_owner_team_stamp field
@@ -547,68 +550,8 @@ WITH date_details AS (
       -- in FY21, there were multiple ways of getting this done, and it meant changing downwards reports
       sfdc_opportunity_xf.sales_team_cro_level,
       sfdc_opportunity_xf.sales_team_rd_asm_level,
-
-      /*CASE WHEN sfdc_opportunity_xf.user_segment_stamped IS NULL 
-          THEN opportunity_owner.user_segment 
-          ELSE COALESCE(sfdc_opportunity_xf.user_segment_stamped,'N/A')
-      END                                                         AS opportunity_owner_user_segment,
-
-      CASE WHEN sfdc_opportunity_xf.user_region_stamped IS NULL 
-          THEN opportunity_owner.user_region
-          ELSE COALESCE(sfdc_opportunity_xf.user_region_stamped,'N/A')
-      END                                                         AS opportunity_owner_user_region,
-
-      -- these two fields will be used to do cuts in X-Ray
-      opportunity_owner_user_segment                                            AS opportunity_owner_cro_level,
-      CONCAT(opportunity_owner_user_segment,'_',opportunity_owner_user_region)  AS opportunity_owner_rd_asm_level,
       
-      */
-
-      
-      --------------------------------------------------------------------------------------------
-      -- TO BE REMOVED
-      -- account owner hierarchies levels
-      COALESCE(account_owner.sales_team_level_2,'n/a')            AS account_owner_team_level_2,
-      COALESCE(account_owner.sales_team_level_3,'n/a')            AS account_owner_team_level_3,
-      COALESCE(account_owner.sales_team_level_4,'n/a')            AS account_owner_team_level_4,
-      COALESCE(account_owner.sales_team_vp_level,'n/a')           AS account_owner_team_vp_level,
-      COALESCE(account_owner.sales_team_rd_level,'n/a')           AS account_owner_team_rd_level,
-      COALESCE(account_owner.sales_team_asm_level,'n/a')          AS account_owner_team_asm_level,
-      COALESCE(account_owner.sales_min_hierarchy_level,'n/a')     AS account_owner_min_team_level,
-      account_owner.sales_region                                  AS account_owner_sales_region,
-  
-      /*
-      CASE 
-          WHEN COALESCE(account_owner.sales_team_vp_level,'n/a') = 'VP Ent'
-            THEN 'Large'
-          WHEN COALESCE(account_owner.sales_team_vp_level,'n/a') = 'VP Comm MM'
-            THEN 'Mid-Market'
-          WHEN COALESCE(account_owner.sales_team_vp_level,'n/a') = 'VP Comm SMB' 
-            THEN 'SMB' 
-          ELSE 'Other' 
-      END                                                         AS account_owner_cro_level,*/
-  
-
-      
-      -- opportunity owner hierarchies levels
-      CASE 
-        WHEN sales_admin_hierarchy.level_2 IS NOT NULL 
-          THEN sales_admin_hierarchy.level_2 
-        ELSE opportunity_owner.sales_team_level_2
-      END                                                         AS opportunity_owner_team_level_2,
-      
-      CASE 
-        WHEN sales_admin_hierarchy.level_3 IS NOT NULL 
-          THEN sales_admin_hierarchy.level_3 
-        ELSE opportunity_owner.sales_team_level_3
-      END                                                         AS opportunity_owner_team_level_3,    
-      --------------------------------------------------------------------------------------------
-
-
-      ------------------------------------------------------------------------------------------------------
-      ------------------------------------------------------------------------------------------------------
-     
-      -- using current opportunity perspective instead of historical
+        -- using current opportunity perspective instead of historical
       -- NF 2020-01-26: this might change to order type live 2.1     
       sfdc_opportunity_xf.order_type_stamped,     
 
@@ -631,7 +574,41 @@ WITH date_details AS (
           THEN '3. Churn'
         ELSE '4. Other' 
       END                                                         AS deal_category,
-   
+          
+
+      ------------------------------------------------------------------------------------------------------
+      ------------------------------------------------------------------------------------------------------
+         
+      --------------------------------------------------------------------------------------------
+      -- TO BE REMOVED
+      -- account owner hierarchies levels
+      
+      COALESCE(account_owner.sales_team_level_2,'n/a')            AS account_owner_team_level_2,
+      COALESCE(account_owner.sales_team_level_3,'n/a')            AS account_owner_team_level_3,
+      COALESCE(account_owner.sales_team_level_4,'n/a')            AS account_owner_team_level_4,
+      COALESCE(account_owner.sales_team_vp_level,'n/a')           AS account_owner_team_vp_level,
+      COALESCE(account_owner.sales_team_rd_level,'n/a')           AS account_owner_team_rd_level,
+      COALESCE(account_owner.sales_team_asm_level,'n/a')          AS account_owner_team_asm_level,
+      COALESCE(account_owner.sales_min_hierarchy_level,'n/a')     AS account_owner_min_team_level,
+      account_owner.sales_region                                  AS account_owner_sales_region,
+       
+      -- opportunity owner hierarchies levels
+      
+      CASE 
+        WHEN sales_admin_hierarchy.level_2 IS NOT NULL 
+          THEN sales_admin_hierarchy.level_2 
+        ELSE opportunity_owner.sales_team_level_2
+      END                                                         AS opportunity_owner_team_level_2,
+      
+      CASE 
+        WHEN sales_admin_hierarchy.level_3 IS NOT NULL 
+          THEN sales_admin_hierarchy.level_3 
+        ELSE opportunity_owner.sales_team_level_3
+      END                                                         AS opportunity_owner_team_level_3,    
+
+      ------------------------------------------------------------------------------------------------------
+      ------------------------------------------------------------------------------------------------------
+
       -- account driven fields
       sfdc_accounts_xf.tsp_region,
       sfdc_accounts_xf.tsp_sub_region,
@@ -670,7 +647,7 @@ WITH date_details AS (
       ON opp_snapshot.opportunity_id = sales_admin_hierarchy.opportunity_id
     -- Net IACV to Net ARR conversion table
     LEFT JOIN net_iacv_to_net_arr_ratio
-      ON net_iacv_to_net_arr_ratio.user_segment_stamped = sfdc_opportunity_xf.user_segment_stamped
+      ON net_iacv_to_net_arr_ratio.user_segment_stamped = sfdc_opportunity_xf.opportunity_owner_user_segment
       AND net_iacv_to_net_arr_ratio.order_type_stamped = sfdc_opportunity_xf.order_type_stamped
     -- Pipeline type - Starting pipeline
     LEFT JOIN pipeline_type_quarter_start 
@@ -683,9 +660,37 @@ WITH date_details AS (
     WHERE opp_snapshot.account_id NOT IN ('0014M00001kGcORQA0')                           -- remove test account
       AND sfdc_accounts_xf.ultimate_parent_account_id NOT IN ('0016100001YUkWVAA1')       -- remove test account
       AND opp_snapshot.is_deleted = 0
+), add_compound_metrics AS (
+    SELECT 
+      *,
+
+      ------------------------------
+      -- compound metrics for reporting
+      ------------------------------
+
+      -- created and closed within the quarter net arr
+      CASE 
+        WHEN opp_snapshot.pipeline_created_fiscal_quarter_name = opp_snapshot.close_fiscal_quarter_name
+          AND (is_won = 1 OR (is_renewal = 1 AND is_lost = 1))  
+            THEN opp_snapshot.net_arr
+        ELSE 0
+      END                                                         AS created_and_won_same_quarter_net_arr,
+
+      -- created within quarter
+      CASE
+        WHEN opp_snapshot.pipeline_created_fiscal_quarter_name = opp_snapshot.snapshot_fiscal_quarter_name
+          THEN opp_snapshot.net_arr
+        ELSE 0 
+      END                                                         AS created_in_snapshot_quarter_net_arr,
+
+      -- booked net arr (won + renewals / lost)
+      CASE
+        WHEN opp_snapshot.is_won = 1 OR (opp_snapshot.is_renewal = 1 AND opp_snapshot.is_lost = 1)
+          THEN opp_snapshot.net_arr
+        ELSE 0 
+      END                                                         AS booked_net_arr
+    FROM sfdc_opportunity_snapshot_history_xf opp_snapshot
 )
 
 SELECT *
-FROM sfdc_opportunity_snapshot_history_xf
-  
- 
+FROM add_compound_metrics
