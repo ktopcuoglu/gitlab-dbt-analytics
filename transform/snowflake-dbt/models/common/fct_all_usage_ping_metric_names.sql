@@ -12,20 +12,20 @@ WITH prep_usage_ping AS (
     
 ), usage_ping_full_name AS (
 
-        SELECT DISTINCT 
+    SELECT DISTINCT 
         TRIM(LOWER(f.path))                                                     AS metrics_path,
         REPLACE(ping_name, '.','_')                                             AS metrics_path_column_name,
         'raw_usage_data_payload::' || REPLACE(ping_name, '.','::')              AS full_metrics_path,
         SPLIT_PART(ping_name, '.', 1)                                           AS main_json_name, 
         SPLIT_PART(ping_name, '.', -1)                                          AS feature_name
-        FROM prep_usage_ping,
-        lateral flatten(input => prep_usage_ping.raw_usage_data_payload, recursive => True) f
+    FROM prep_usage_ping,
+    lateral flatten(input => prep_usage_ping.raw_usage_data_payload, recursive => True) f
 
-        {% if is_incremental() %}
-    
-            WHERE ping_created_at_date > (SELECT MAX(ping_created_at_date) FROM {{ this }})
-    
-        {% endif %}
+    {% if is_incremental() %}
+
+        WHERE ping_created_at_date > (SELECT MAX(ping_created_at_date) FROM {{ this }})
+
+    {% endif %}
 
 ), final AS (
 
