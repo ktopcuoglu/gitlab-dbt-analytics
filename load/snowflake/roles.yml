@@ -1588,10 +1588,12 @@ roles:
             schemas:
                 read:
                     - prep.version_db
+                    - raw.saas_usage_ping
                     - raw.version_db
             tables:
                 read:
                     - prep.version_db.*
+                    - raw.saas_usage_ping.*
                     - raw.version_db.*
 
 
