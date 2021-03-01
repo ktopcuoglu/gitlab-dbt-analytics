@@ -481,3 +481,11 @@ The grain of the table is a license_id.
 Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
 
 {% enddocs %}
+
+
+{% docs fct_key_xmau_metrics %}
+
+A fact table that contains only the metrics that is a UMAU, SMAU, or GMAU metric that appears on the [Stages and Groups Performance Indicator handbook page](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/)
+
+{% enddocs %}
+
