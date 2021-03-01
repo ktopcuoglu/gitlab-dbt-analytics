@@ -1773,6 +1773,7 @@ roles:
         member_of:
             - reporter
             - postgres_pipeline
+            - integration_engineer
         warehouses:
             - reporting
             - analyst_xs
