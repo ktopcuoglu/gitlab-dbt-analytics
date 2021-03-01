@@ -1,7 +1,6 @@
 {{ 
     config({
-        "materialized": "incremental",
-        "unique_key": "full_metrics_path"
+        "materialized": "table"
     })
 }}
 
@@ -20,12 +19,6 @@ WITH prep_usage_ping AS (
         SPLIT_PART(metrics_path, '.', -1)                                          AS feature_name
     FROM prep_usage_ping,
     lateral flatten(input => prep_usage_ping.raw_usage_data_payload, recursive => True) f
-
-    {% if is_incremental() %}
-
-        WHERE ping_created_at_date > (SELECT MAX(ping_created_at_date) FROM {{ this }})
-
-    {% endif %}
 
 ), final AS (
 
