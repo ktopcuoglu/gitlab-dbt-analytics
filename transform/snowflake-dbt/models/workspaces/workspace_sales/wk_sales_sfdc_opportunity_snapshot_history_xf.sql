@@ -1,4 +1,4 @@
-{{ config(alias='sfdc_opportunity_snapshot_history_xf', materialized='table') }}
+{{ config(alias='sfdc_opportunity_snapshot_history_xf') }}
 
 WITH date_details AS (
 
