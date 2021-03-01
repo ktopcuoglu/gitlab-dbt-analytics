@@ -7,7 +7,7 @@
 WITH data AS ( 
   
     SELECT * 
-    FROM {{ ref('usage_data_28_days_flattened')}}
+    FROM {{ ref('prep_usage_data_28_days_flattened')}}
     {% if is_incremental() %}
 
       WHERE created_at >= (SELECT MAX(created_month) FROM {{this}})
@@ -18,7 +18,7 @@ WITH data AS (
 
     SELECT  
       DATE_TRUNC('week', created_at) AS created_week,
-      ping_id,
+      dim_usage_ping_id,
       created_at,
       instance_id,
       host_id,
@@ -41,7 +41,7 @@ WITH data AS (
       DATE_TRUNC('month', created_week) AS created_month,
       instance_id,
       host_id,
-      ping_id,
+      dim_usage_ping_id,
       metrics_path,
       group_name,
       stage_name,
@@ -60,7 +60,7 @@ WITH data AS (
 
 SELECT
   {{ dbt_utils.surrogate_key(['instance_id', 'host_id', 'created_month', 'metrics_path']) }} AS primary_key,
-  ping_id,
+  dim_usage_ping_id,
   instance_id,
   host_id,
   created_month,
