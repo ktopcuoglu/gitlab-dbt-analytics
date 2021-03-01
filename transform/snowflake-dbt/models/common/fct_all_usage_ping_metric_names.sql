@@ -13,11 +13,11 @@ WITH prep_usage_ping AS (
 ), usage_ping_full_name AS (
 
     SELECT DISTINCT 
-        TRIM(LOWER(f.path))                                                     AS metrics_path,
-        REPLACE(ping_name, '.','_')                                             AS metrics_path_column_name,
-        'raw_usage_data_payload::' || REPLACE(ping_name, '.','::')              AS full_metrics_path,
-        SPLIT_PART(ping_name, '.', 1)                                           AS main_json_name, 
-        SPLIT_PART(ping_name, '.', -1)                                          AS feature_name
+        TRIM(LOWER(f.path))                                                        AS metrics_path,
+        REPLACE(metrics_path, '.','_')                                             AS metrics_path_column_name,
+        'raw_usage_data_payload::' || REPLACE(metrics_path, '.','::')              AS full_metrics_path,
+        SPLIT_PART(metrics_path, '.', 1)                                           AS main_json_name, 
+        SPLIT_PART(metrics_path, '.', -1)                                          AS feature_name
     FROM prep_usage_ping,
     lateral flatten(input => prep_usage_ping.raw_usage_data_payload, recursive => True) f
 
