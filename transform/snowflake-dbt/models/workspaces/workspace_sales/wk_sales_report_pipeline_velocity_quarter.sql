@@ -1,4 +1,4 @@
-{{ config(alias='report_pipeline_velocity_quarter') }}
+{{ config(alias='report_pipeline_velocity_quarter',materialized='table') }}
 WITH date_details AS (
 
     SELECT

@@ -1,4 +1,4 @@
-{{ config(alias='sfdc_opportunity_xf') }}
+{{ config(alias='sfdc_opportunity_xf',materialized='table') }}
 
 WITH sfdc_opportunity AS (
 

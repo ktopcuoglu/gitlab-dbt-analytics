@@ -1,4 +1,4 @@
-{{ config(alias='report_pipeline_metrics_day') }}
+{{ config(alias='report_pipeline_metrics_day',materialized='table') }}
 
 WITH date_details AS (
 
