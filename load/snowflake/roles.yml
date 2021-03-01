@@ -1985,6 +1985,13 @@ roles:
         warehouses:
            - analyst_xs
 
+    - jjackson:
+        member_of:
+            - snowplow
+            - reporter
+        warehouses:
+            - reporting
+
     - jng:
         member_of:
             - analyst_growth
@@ -2037,6 +2044,13 @@ roles:
         warehouses:
             - reporting
 
+    - jshen:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+        warehouses:
+            - analyst_xs
+
     - jstark:
         member_of:
             - analyst_core
@@ -2080,12 +2094,12 @@ roles:
                     - jstark_prep.*.*
                     - jstark_prod.*.*
 
-    - jshen:
+    - jswain:
         member_of:
-            - analyst_finance
-            - bamboohr_analytics
+            - snowplow
+            - reporter
         warehouses:
-            - analyst_xs
+            - reporting
 
     - jurbanc:
         warehouses:
@@ -2227,6 +2241,13 @@ roles:
                     - michellecooper_prod.*.*
 
     - mjozenazemian:
+        warehouses:
+            - reporting
+
+    - mkarampalas:
+        member_of:
+            - snowplow
+            - reporter
         warehouses:
             - reporting
 
@@ -2563,6 +2584,7 @@ roles:
     - sawezec:
         member_of:
             - product_manager
+            - snowplow
             - reporter
         warehouses:
             - reporting
@@ -3042,6 +3064,11 @@ users:
         member_of:
             - iwiedler
 
+    - jjackson:
+        can_login: yes
+        member_of:
+            - jjackson
+
     - jng:
         can_login: yes
         member_of:
@@ -3074,6 +3101,11 @@ users:
             - jstark
             - securityadmin
             - sysadmin
+
+    - jswain:
+        can_login: yes
+        member_of:
+            - jswain
 
     - jurbanc:
         can_login: yes
@@ -3140,6 +3172,11 @@ users:
         member_of:
             - mjozenazemian
             - securityadmin
+
+    - mkarampalas:
+        can_login: yes
+        member_of:
+            - mkarampalas
 
     - mpeychet:
         can_login: yes

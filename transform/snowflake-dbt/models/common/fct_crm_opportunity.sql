@@ -129,8 +129,8 @@ WITH first_contact  AS (
       deal_path,
       order_type_stamped                                        AS order_type,
       sales_segment,
-      sales_qualified_source,
-      lead_source,
+      {{ sales_qualified_source_cleaning('sales_qualified_source') }}
+                                                                AS sales_qualified_source,
       days_in_sao,
       user_segment_stamped                                      AS sales_segment_name_stamped,
       user_geo_stamped                                          AS location_region_name_stamped,

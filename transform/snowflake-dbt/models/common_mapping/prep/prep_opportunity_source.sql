@@ -1,10 +1,7 @@
 WITH source_data AS (
 
     SELECT
-      CASE
-        WHEN sales_qualified_source = 'BDR Generated' THEN 'SDR Generated'
-        ELSE sales_qualified_source
-      END                                               AS sales_qualified_source
+      {{ sales_qualified_source_cleaning('sales_qualified_source') }}               AS sales_qualified_source
     FROM {{ref('sfdc_opportunity_source')}}
     WHERE sales_qualified_source IS NOT NULL
       AND NOT is_deleted
