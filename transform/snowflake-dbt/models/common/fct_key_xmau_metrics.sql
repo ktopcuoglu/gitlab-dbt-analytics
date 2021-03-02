@@ -15,7 +15,7 @@
       is_umau, 
       is_smau, 
       is_gmau, 
-      is_paid_gmau 
+      is_paid_gmau,
       time_period 
     FROM usage_ping_metrics
     WHERE 
