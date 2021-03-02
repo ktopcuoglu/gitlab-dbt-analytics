@@ -152,16 +152,16 @@ models:
         tests:
           - not_null
           - unique
-      - name: lineage
+      - name: subscription_lineage
         description: "All the subscriptions subsquent to the primary subscription, separated by commas."
       - name: oldest_subscription_in_cohort
-      - name: cohort_month
+      - name: subscription_cohort_month
         tests:
           - not_null
-      - name: cohort_quarter
+      - name: subscription_cohort_quarter
         tests:
           - not_null
-      - name: cohort_year
+      - name: subscription_cohort_year
         tests:
           - not_null
 
