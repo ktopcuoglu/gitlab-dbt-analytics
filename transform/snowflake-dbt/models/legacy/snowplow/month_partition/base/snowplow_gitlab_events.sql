@@ -195,15 +195,20 @@ WITH filtered_source as (
     FROM filtered_source
 
 ), events_with_context_flattened AS (
-    """
+    /*
     we need to extract the web_page_id from the contexts JSON provided in the raw events
     A contexts json look like a list of context attached to an event:
 
     The context we are looking for containing the web_page_id is this one:
-
+      {
+      'data': {
+      'id': 'de5069f7-32cf-4ad4-98e4-dafe05667089'
+      },
+      'schema': 'iglu:com.snowplowanalytics.snowplow/web_page/jsonschema/1-0-0'
+      }
     To in this CTE for any event, we use LATERAL FLATTEN to create one row per context per event.
     We then extract the context schema and the context data (where the web_page_id will be contained)
-    """
+    */
     SELECT 
       event_id,
       f.value['schema']::TEXT     AS context_data_schema,
@@ -212,11 +217,11 @@ WITH filtered_source as (
     lateral flatten(input => TRY_PARSE_JSON(contexts), path => 'data') f
 
 ), events_with_web_page_id AS (
-    """
+    /*
     in this CTE we take the results from the previous CTE and isolate the only context we are interested in:
     the web_page context, which has this context schema: iglu:com.snowplowanalytics.snowplow/web_page/jsonschema/1-0-0
     Then we extract the id from the context_data column
-    """
+    */
     SELECT 
       event_id,
       context_data['id']::TEXT AS web_page_id
