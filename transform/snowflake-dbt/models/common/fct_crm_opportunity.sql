@@ -72,6 +72,17 @@ WITH first_contact  AS (
     SELECT *
     FROM {{ ref('sfdc_opportunity')}}
 
+), attribution_touchpoints AS (
+
+    SELECT *
+    FROM {{ ref('sfdc_bizible_attribution_touchpoint_source') }}
+    WHERE is_deleted = 'FALSE'
+
+), sfdc_campaigns AS (
+
+    SELECT *
+    FROM {{ ref('prep_campaign') }}
+
 ), opportunity_fields AS(
 
     SELECT
@@ -152,9 +163,26 @@ WITH first_contact  AS (
       calculated_discount,
       partner_discount,
       partner_discount_calc,
-      comp_channel_neutral
+      comp_channel_neutral,
+      lead_source
 
     FROM sfdc_opportunity
+
+), linear_attribution_base AS ( --the number of attribution touches a given opp has in total
+    --linear attribution IACV of an opp / all touches (count_touches) for each opp - weighted by the number of touches in the given bucket (campaign,channel,etc)
+    SELECT
+     opportunity_id                                         AS dim_crm_opportunity_id,
+     COUNT(DISTINCT attribution_touchpoints.touchpoint_id)  AS count_crm_attribution_touchpoints
+    FROM  attribution_touchpoints
+    GROUP BY 1
+
+), campaigns_per_opp as (
+
+    SELECT
+      opportunity_id                                        AS dim_crm_opportunity_id,
+      COUNT(DISTINCT attribution_touchpoints.campaign_id)   AS count_campaigns
+    FROM attribution_touchpoints
+    GROUP BY 1
 
 ), is_sao AS (
 
@@ -314,7 +342,10 @@ WITH first_contact  AS (
       opportunity_fields.proserv_amount,
       opportunity_fields.other_non_recurring_amount,
       opportunity_fields.arr_basis,
-      opportunity_fields.arr
+      opportunity_fields.arr,
+      linear_attribution_base.count_crm_attribution_touchpoints,
+      opportunity_fields.iacv/linear_attribution_base.count_crm_attribution_touchpoints                                        AS weighted_linear_iacv,
+      campaigns_per_opp.count_campaigns
 
     FROM opportunity_fields
     LEFT JOIN crm_account_dimensions
@@ -343,6 +374,10 @@ WITH first_contact  AS (
       ON opportunity_fields.sales_area_name_stamped = sales_hierarchy_stamped_sales_area.sales_area_name_stamped
     LEFT JOIN sales_rep
       ON opportunity_fields.dim_crm_sales_rep_id = sales_rep.dim_crm_sales_rep_id
+    LEFT JOIN linear_attribution_base
+      ON opportunity_fields.dim_crm_opportunity_id = linear_attribution_base.dim_crm_opportunity_id
+    LEFT JOIN campaigns_per_opp
+      ON opportunity_fields.dim_crm_opportunity_id = campaigns_per_opp.dim_crm_opportunity_id
 
 )
 

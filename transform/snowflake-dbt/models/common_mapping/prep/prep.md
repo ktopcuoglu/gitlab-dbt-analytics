@@ -5,6 +5,12 @@ Cleaning operations vary across columns, depending on the nature of the source d
 
 {% enddocs %}
 
+{% docs prep_campaign %}
+
+Creates a base view with generated keys for the campaign shared dimension and fact and references in facts.
+
+{% enddocs %}
+
 {% docs prep_crm_sales_representative %}
 
 Creates a base view with generated keys for the sales representative and live crm sales hierarchy shared dimensions and references in facts.

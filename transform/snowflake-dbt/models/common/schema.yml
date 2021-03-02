@@ -133,7 +133,7 @@ models:
   - name: dim_campaign
     description: Dimension table representing each individual Campaign. Excludes deleted campaigns. Based completely off SFDC campaign data.
     columns:
-      - name: campaign_id
+      - name: dim_campaign_id
         description: Campaign unique identifier
         tests:
           - not_null

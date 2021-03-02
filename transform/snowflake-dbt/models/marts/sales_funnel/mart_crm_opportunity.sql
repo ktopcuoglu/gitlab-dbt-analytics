@@ -138,7 +138,7 @@ WITH dim_crm_account AS (
       dim_crm_opportunity.is_web_portal_purchase,
       fct_crm_opportunity.primary_solution_architect,
       fct_crm_opportunity.product_details,
-    
+
       -- channel fields
       fct_crm_opportunity.lead_source,
       fct_crm_opportunity.dr_partner_deal_type,
@@ -155,7 +155,10 @@ WITH dim_crm_account AS (
       fct_crm_opportunity.calculated_discount,
       fct_crm_opportunity.partner_discount,
       fct_crm_opportunity.partner_discount_calc,
-      fct_crm_opportunity.comp_channel_neutral
+      fct_crm_opportunity.comp_channel_neutral,
+      fct_crm_opportunity.count_crm_attribution_touchpoints,
+      fct_crm_opportunity.weighted_linear_iacv,
+      fct_crm_opportunity.count_campaigns
 
     FROM fct_crm_opportunity
     LEFT JOIN dim_crm_opportunity
@@ -192,5 +195,5 @@ WITH dim_crm_account AS (
     created_by="@iweeks",
     updated_by="@mcooperDD",
     created_date="2020-12-07",
-    updated_date="2021-02-17",
+    updated_date="2021-03-01",
   ) }}
