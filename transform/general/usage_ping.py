@@ -73,18 +73,15 @@ class UsagePing(object):
         results_all = {"testing": "datemath"}
 
         for key, query in saas_queries.items():
-            #     try:
-            #         results = pd.read_sql(sql=query, con=connection)
-            #         counter_value = results["counter_value"].values[0]
-            #         data_to_write = str(counter_value)
-            #     except SQLAlchemyError as e:
-            #         error = str(e.__dict__["orig"])
-            #         data_to_write = error
+                try:
+                    results = pd.read_sql(sql=query, con=connection)
+                    counter_value = results["counter_value"].values[0]
+                    data_to_write = str(counter_value)
+                except SQLAlchemyError as e:
+                    error = str(e.__dict__["orig"])
+                    data_to_write = error
 
-            #     results_all[key] = data_to_write
-
-            #     print(key, data_to_write)
-            print(key)
+                results_all[key] = data_to_write
 
         connection.close()
         self.sysadmin_engine.dispose()
