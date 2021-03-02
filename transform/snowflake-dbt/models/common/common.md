@@ -482,10 +482,15 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
+{% docs fct_key_xmau_metrics %}
+
+A fact table that contains only the metrics that is a UMAU, SMAU, or GMAU metric that appears on the [Stages and Groups Performance Indicator handbook page](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/)
+
+{% enddocs %}
+
 {% docs fct_all_usage_ping_metric_names %}
 
 A fact table that contains all the usage ping metric names 
 
 {% enddocs %}
-
 
