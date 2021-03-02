@@ -1,15 +1,27 @@
-WITH sfdc_campaigns AS (
+WITH sfdc_campaign_info AS (
 
     SELECT *
-    FROM {{ ref('prep_campaign') }}
+    FROM {{ ref('sfdc_campaign_source') }}
+    WHERE NOT is_deleted
 
-), final_campaigns AS (
+), final AS (
 
     SELECT
-
       -- campaign ids
-      dim_campaign_id,
-      dim_parent_campaign_id,
+      campaign_id                                   AS dim_campaign_id,
+      campaign_parent_id                            AS dim_parent_campaign_id,
+
+      -- campaign details
+      campaign_name,
+      is_active,
+      status,
+      type,
+      description,
+      budget_holder,
+      bizible_touchpoint_enabled_setting,
+      strategic_marketing_contribution,
+      region,
+      sub_region,
 
       -- user ids
       campaign_owner_id,
@@ -18,18 +30,10 @@ WITH sfdc_campaigns AS (
 
       -- dates
       start_date,
-      {{ get_date_id('start_date') }}              AS start_date_id,
       end_date,
-      {{ get_date_id('end_date') }}                AS end_date_id,
       created_date,
-      {{ get_date_id('created_date') }}            AS created_date_id,
       last_modified_date,
-      {{ get_date_id('last_modified_date') }}      AS last_modified_date_id,
       last_activity_date,
-      {{ get_date_id('last_activity_date') }}      AS last_activity_date_id,
-
-      region,
-      sub_region,
 
       -- additive fields
       budgeted_cost,
@@ -46,14 +50,14 @@ WITH sfdc_campaigns AS (
       count_won_opportunities,
       count_sent
 
-    FROM sfdc_campaigns
+    FROM sfdc_campaign_info
 
 )
 
 {{ dbt_audit(
-    cte_ref="final_campaigns",
+    cte_ref="final",
     created_by="@mcooperDD",
     updated_by="@mcooperDD",
-    created_date="2020-11-19",
+    created_date="2021-03-01",
     updated_date="2021-03-01"
 ) }}

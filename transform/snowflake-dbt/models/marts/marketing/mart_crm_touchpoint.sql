@@ -34,6 +34,10 @@
       dim_crm_touchpoint.bizible_medium,
       dim_crm_touchpoint.bizible_referrer_page,
       dim_crm_touchpoint.bizible_referrer_page_raw,
+      dim_crm_touchpoint.bizible_integrated_campaign_grouping,
+      dim_crm_touchpoint.touchpoint_segment,
+      dim_crm_touchpoint.gtm_motion,
+      dim_crm_touchpoint.integrated_campaign_grouping,
       fct_crm_touchpoint.bizible_count_first_touch,
       fct_crm_touchpoint.bizible_count_lead_creation_touch,
       fct_crm_touchpoint.bizible_count_u_shaped,
@@ -73,7 +77,7 @@
       dim_campaign.budget_holder,
       dim_campaign.bizible_touchpoint_enabled_setting,
       dim_campaign.strategic_marketing_contribution,
-      fct_campaign.campaign_parent_id,
+      fct_campaign.dim_parent_campaign_id,
       fct_campaign.campaign_owner_id,
       fct_campaign.created_by_id                                           AS campaign_created_by_id,
       fct_campaign.start_date                                              AS camapaign_start_date,
@@ -148,7 +152,7 @@
     LEFT JOIN dim_crm_touchpoint
       ON fct_crm_touchpoint.dim_crm_touchpoint_id = dim_crm_touchpoint.dim_crm_touchpoint_id
     LEFT JOIN dim_campaign
-      ON fct_crm_touchpoint.dim_campaign_id = dim_campaign.campaign_id
+      ON fct_crm_touchpoint.dim_campaign_id = dim_campaign.dim_campaign_id
     LEFT JOIN fct_campaign
       ON fct_crm_touchpoint.dim_campaign_id = fct_campaign.dim_campaign_id
     LEFT JOIN dim_crm_person
@@ -167,5 +171,5 @@
     created_by="@mcooperDD",
     updated_by="@mcooperDD",
     created_date="2020-02-18",
-    updated_date="2020-02-18"
+    updated_date="2020-03-01"
 ) }}
