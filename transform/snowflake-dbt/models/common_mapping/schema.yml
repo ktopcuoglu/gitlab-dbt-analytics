@@ -11,6 +11,14 @@ models:
       - name: marketing_channel_name
         description: Mapped marketing channel name.
 
+  - name: map_bizible_campaign_grouping
+    description: '{{ doc("map_bizible_campaign_grouping") }}'
+    columns:
+      - name: bizible_campaign_grouping_id
+        tests:
+          - unique
+          - not_null
+
   - name: map_crm_account
     description: '{{ doc("map_crm_account") }}'
     columns:
