@@ -69,7 +69,7 @@ To understand the difference between source and staging models, please refer to 
 ## CI Jobs to run*
 Run the following CI Jobs on the MR: 
 
-* [ ] `❄️ Snowflake: clone_raw (to run extract job)`
+* [ ] `❄️ Snowflake: clone_raw_sheetload`
 * [ ] `Extract: sheetload`
 * [ ] `⚙️ dbt Run: specify_raw_model`
     * Pass `DBT_MODELS` as key and `sources.sheetload` for value (alternatively, you can pass `sources.sheetload_file_name_source`)

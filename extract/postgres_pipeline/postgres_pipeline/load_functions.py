@@ -158,6 +158,8 @@ def load_scd(
     Load tables that are slow-changing dimensions.
     """
 
+    has_xmin = False  # Hopefully temporary -- see https://gitlab.com/gitlab-data/analytics/-/issues/8086
+
     if has_xmin:
         last_xmin = get_last_xmin()
         highest_xmin = get_highest_xmin(source_engine, source_table_name)

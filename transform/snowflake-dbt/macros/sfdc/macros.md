@@ -2,6 +2,10 @@
 This macro is a CASE WHEN statement that applies formatting to the sales hierarchy sales segment taken from both the user and opportunity objects to form the live and stamped sales hierarchy.
 {% enddocs %}
 
+{% docs sales_qualified_source_cleaning %}
+This macro applies correct mapping to the sales_qualified_source field. This is mapping BDR Generated sales qualified source to SDR Generated.
+{% enddocs %}
+
 {% docs sales_segment_cleaning %}
 This macro applies proper formatting to sales segment data with the end result being one of SMB, Mid-Market, Strategic, Large or Unknown.
 {% enddocs %}
