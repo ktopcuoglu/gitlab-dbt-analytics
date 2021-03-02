@@ -52,6 +52,11 @@ databases:
     - ktam_prep:
         shared: no
 
+    - laddula_prod:
+        shared: no
+    - laddula_prep:
+        shared: no
+
     - michellecooper_prod:
         shared: no
     - michellecooper_prep:
@@ -2195,6 +2200,47 @@ roles:
         member_of: []
         warehouses: []
 
+    - laddula:
+        member_of:
+            - engineer
+        warehouses:
+            - engineer_xs
+            - engineer_xl
+            - loading
+            - reporting
+        owns:
+            databases:
+                - laddula_prep
+                - laddula_prod
+            schemas:
+                - laddula_prep.*
+                - laddula_prod.*
+            tables:
+                - laddula_prep.*.*
+                - laddula_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - laddula_prep
+                    - laddula_prod
+                write:
+                    - laddula_prep
+                    - laddula_prod
+            schemas:
+                read:
+                    - laddula_prep.*
+                    - laddula_prod.*
+                write:
+                    - laddula_prep.*
+                    - laddula_prod.*
+            tables:
+                read:
+                    - laddula_prep.*.*
+                    - laddula_prod.*.*
+                write:
+                    - laddula_prep.*.*
+                    - laddula_prod.*.*
+
     - lmai:
         member_of:
             - analyst_engineering
@@ -3160,6 +3206,11 @@ users:
     - ksmith:
         can_login: no
         member_of: []
+
+    - laddula:
+        can_login: yes
+        member_of:
+            - laddula
 
     - lmai:
         can_login: yes
