@@ -34,7 +34,8 @@ WITH date_details AS (
       AND stage_name NOT IN ('9-Unqualified','10-Duplicate','Unqualified','00-Pre Opportunity','0-Pending Acceptance') 
       AND (forecast_category_name != 'Omitted'
          OR is_lost = 1)
-      AND snapshot_fiscal_quarter_name != today_date.fiscal_quarter_name_fy 
+      -- include current quarter
+      AND snapshot_date <= today_date.date_actual 
   
   
 --NF: Is this accounting correctly for Churn?
@@ -333,7 +334,8 @@ WITH date_details AS (
       c.snapshot_fiscal_quarter_date,
       d.snapshot_fiscal_quarter_name,
       d.snapshot_day_of_fiscal_quarter_normalised,
-      d.snapshot_next_fiscal_quarter_date
+      d.snapshot_next_fiscal_quarter_date,
+      d.snapshot_fiscal_year
     FROM (SELECT DISTINCT sales_team_cro_level
                     , sales_team_rd_asm_level FROM pipeline_snapshot) a
     CROSS JOIN (SELECT DISTINCT deal_category,
@@ -344,8 +346,11 @@ WITH date_details AS (
     INNER JOIN (SELECT DISTINCT fiscal_quarter_name_fy                                                              AS snapshot_fiscal_quarter_name,
                               first_day_of_fiscal_quarter                                                           AS snapshot_fiscal_quarter_date, 
                               DATEADD(month,3,first_day_of_fiscal_quarter)                                          AS snapshot_next_fiscal_quarter_date,
-                              day_of_fiscal_quarter_normalised                                                      AS snapshot_day_of_fiscal_quarter_normalised
-              FROM date_details) d
+                              day_of_fiscal_quarter_normalised                                                      AS snapshot_day_of_fiscal_quarter_normalised,
+                              fiscal_year                                                                           AS snapshot_fiscal_year
+              FROM date_details
+              -- avoid extra lines outside of the current date
+              WHERE date_actual < CURRENT_DATE) d
       ON c.snapshot_fiscal_quarter_date = d.snapshot_fiscal_quarter_date 
 ), report_pipeline_metrics_day AS (
       
@@ -364,7 +369,8 @@ WITH date_details AS (
       
       base_fields.snapshot_fiscal_quarter_date                    AS close_fiscal_quarter_date,
       base_fields.snapshot_fiscal_quarter_date,
-      
+      base_fields.snapshot_fiscal_year,
+
       base_fields.snapshot_day_of_fiscal_quarter_normalised,
 
       COALESCE(reported_quarter.open_1plus_deal_count,0)          AS open_1plus_deal_count,

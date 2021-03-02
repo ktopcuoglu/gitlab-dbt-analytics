@@ -154,23 +154,36 @@ WITH date_details AS (
       close_date_detail.fiscal_year                              AS close_fiscal_year,
       close_date_detail.fiscal_quarter_name_fy                   AS close_fiscal_quarter_name,
       close_date_detail.first_day_of_fiscal_quarter              AS close_fiscal_quarter_date,
+      90 - DATEDIFF(day, snapshot_date.date_actual, close_date_detail.last_day_of_fiscal_quarter)           AS close_day_of_fiscal_quarter_normalised,
+
+
 
       created_date_detail.first_day_of_month                     AS created_date_month,
       created_date_detail.fiscal_year                            AS created_fiscal_year,
       created_date_detail.fiscal_quarter_name_fy                 AS created_fiscal_quarter_name,
       created_date_detail.first_day_of_fiscal_quarter            AS created_fiscal_quarter_date,
 
-      iacv_created_date.first_day_of_month                       AS iacv_created_date_month,
-      iacv_created_date.fiscal_year                              AS iacv_created_fiscal_year,
-      iacv_created_date.fiscal_quarter_name_fy                   AS iacv_created_fiscal_quarter_name,
-      iacv_created_date.first_day_of_fiscal_quarter              AS iacv_created_fiscal_quarter_date,
+      net_arr_created_date.first_day_of_month                       AS iacv_created_date_month,
+      net_arr_created_date.fiscal_year                              AS iacv_created_fiscal_year,
+      net_arr_created_date.fiscal_quarter_name_fy                   AS iacv_created_fiscal_quarter_name,
+      net_arr_created_date.first_day_of_fiscal_quarter              AS iacv_created_fiscal_quarter_date,
+
+      net_arr_created_date.first_day_of_month                       AS net_arr_created_date_month,
+      net_arr_created_date.fiscal_year                              AS net_arr_created_fiscal_year,
+      net_arr_created_date.fiscal_quarter_name_fy                   AS net_arr_created_fiscal_quarter_name,
+      net_arr_created_date.first_day_of_fiscal_quarter              AS net_arr_created_fiscal_quarter_date,
 
       -- this fields might change, isolating the field used from the purpose
       -- alternative is future net_arr_created_date
-      created_date_detail.first_day_of_month                     AS pipeline_created_date_month,
-      created_date_detail.fiscal_year                            AS pipeline_created_fiscal_year,
-      created_date_detail.fiscal_quarter_name_fy                 AS pipeline_created_fiscal_quarter_name,
-      created_date_detail.first_day_of_fiscal_quarter            AS pipeline_created_fiscal_quarter_date,
+      --created_date_detail.first_day_of_month                     AS pipeline_created_date_month,
+      --created_date_detail.fiscal_year                            AS pipeline_created_fiscal_year,
+      --created_date_detail.fiscal_quarter_name_fy                 AS pipeline_created_fiscal_quarter_name,
+      --created_date_detail.first_day_of_fiscal_quarter            AS pipeline_created_fiscal_quarter_date,
+
+      net_arr_created_date.first_day_of_month                     AS pipeline_created_date_month,
+      net_arr_created_date.fiscal_year                            AS pipeline_created_fiscal_year,
+      net_arr_created_date.fiscal_quarter_name_fy                 AS pipeline_created_fiscal_quarter_name,
+      net_arr_created_date.first_day_of_fiscal_quarter            AS pipeline_created_fiscal_quarter_date,
 
       ------------------------------------------------------------------------------------------------------
       ------------------------------------------------------------------------------------------------------
@@ -262,8 +275,8 @@ WITH date_details AS (
       ON sfdc_opportunity_snapshot_history.date_actual::DATE = snapshot_date.date_actual
     LEFT JOIN date_details created_date_detail
       ON created_date_detail.date_actual = sfdc_opportunity_snapshot_history.created_date::DATE
-    LEFT JOIN date_details iacv_created_date
-      ON iacv_created_date.date_actual = sfdc_opportunity_snapshot_history.iacv_created_date::DATE
+    LEFT JOIN date_details net_arr_created_date
+      ON net_arr_created_date.date_actual = sfdc_opportunity_snapshot_history.iacv_created_date::DATE
 
 ), sfdc_opportunity_xf AS (
 
@@ -274,15 +287,15 @@ WITH date_details AS (
       opportunity_owner_manager,
       is_edu_oss,
       account_owner_team_stamped, 
-      opportunity_owner_user_segment,
-      opportunity_owner_user_region,
+
       sales_team_cro_level,
       sales_team_rd_asm_level,
 
-      user_segment_stamped,
-      user_region_stamped,
-      user_area_stamped,
-      user_geo_stamped,
+      -- Opportunity Owner Stamped fields
+      opportunity_owner_user_segment,
+      opportunity_owner_user_region,
+      opportunity_owner_user_area,
+      opportunity_owner_user_geo,
 
       is_won,
       opportunity_category,
@@ -521,10 +534,7 @@ WITH date_details AS (
       sfdc_opportunity_xf.opportunity_owner_manager,
       sfdc_opportunity_xf.is_edu_oss,
       sfdc_opportunity_xf.sales_qualified_source,
-      sfdc_opportunity_xf.user_segment_stamped,
-      sfdc_opportunity_xf.user_region_stamped,
-      sfdc_opportunity_xf.user_area_stamped,
-      sfdc_opportunity_xf.user_geo_stamped,
+
 
       -- field used for FY21 bookings reporitng
       sfdc_opportunity_xf.account_owner_team_stamped, 
@@ -543,8 +553,11 @@ WITH date_details AS (
       -- Team Segment / ASM - RD 
       -- As the snapshot history table is used to compare current perspective with the past, I leverage the most recent version
       -- of the truth ato cut the data, that's why instead of using the stampped version, I take the current fields.
+      -- https://gitlab.my.salesforce.com/00N6100000ICcrD?setupid=OpportunityFields
       sfdc_opportunity_xf.opportunity_owner_user_segment,
       sfdc_opportunity_xf.opportunity_owner_user_region,
+      sfdc_opportunity_xf.opportunity_owner_user_area,
+      sfdc_opportunity_xf.opportunity_owner_user_geo,
 
       --- target fields for reporting, changing their name might help to isolate their logic from the actual field
       -- in FY21, there were multiple ways of getting this done, and it meant changing downwards reports
