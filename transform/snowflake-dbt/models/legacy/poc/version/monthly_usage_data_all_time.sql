@@ -1,3 +1,9 @@
+{{ config({
+    "materialized": "incremental",
+    "unique_key": "primary_key"
+    })
+}}
+
 WITH data AS ( 
   
     SELECT * 
