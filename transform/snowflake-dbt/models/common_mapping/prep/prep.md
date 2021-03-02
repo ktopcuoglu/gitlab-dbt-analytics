@@ -87,6 +87,8 @@ Creates a base view with generated keys for the purchase channel shared dimensio
 
 Sums MRR and ARR charges by subscription by month. MRR and ARR values are also broken out by delivery type (Self-Managed, SaaS, Others) at the same grain.
 
+To align the subscriptions in this table with `prep_recurring_charge`, filter on `subscription_status IN ('Active', Cancelled')`.
+
 {% enddocs %}
 
 {% docs prep_recurring_charge %}

@@ -24,7 +24,6 @@
     FROM {{ ref('zuora_subscription_source') }}
     WHERE is_deleted = FALSE
       AND exclude_from_analysis IN ('False', '')
-      AND subscription_status NOT IN ('Expired', 'Draft')
 
 ), rate_plan_charge_filtered AS (
 
@@ -33,6 +32,7 @@
       map_merged_crm_account.dim_crm_account_id                     AS dim_crm_account_id,
       zuora_subscription.subscription_id                            AS dim_subscription_id,
       zuora_subscription.original_id                                AS dim_subscription_id_original,
+      zuora_subscription.subscription_status,
       zuora_rate_plan_charge.mrr,
       zuora_rate_plan_charge.unit_of_measure,
       zuora_rate_plan_charge.quantity,
@@ -59,6 +59,7 @@
       dim_crm_account_id,
       dim_subscription_id,
       dim_subscription_id_original,
+      subscription_status,
       product_delivery_type,
       unit_of_measure,
       {{ dbt_utils.surrogate_key(['dim_date_id',
@@ -74,7 +75,7 @@
       AND (rate_plan_charge_filtered.effective_end_month > dim_date.date_actual
            OR rate_plan_charge_filtered.effective_end_month IS NULL)
       AND dim_date.day_of_month = 1
-    {{ dbt_utils.group_by(n=8) }}
+    {{ dbt_utils.group_by(n=9) }}
 
 ), mrr_by_subscription AS (
 
@@ -83,6 +84,7 @@
       subscription.dim_crm_account_id,
       subscription.dim_subscription_id,
       subscription.dim_subscription_id_original,
+      subscription.subscription_status,
       subscription.dim_date_id,
       SUM(sm.mrr)                                                       AS sm_mrr,
       SUM(sm.arr)                                                       AS sm_arr,
@@ -110,7 +112,7 @@
     LEFT JOIN mrr_by_delivery_type other
       ON other.product_delivery_type = 'Others'
       AND subscription.mrr_id = other.mrr_id
-    {{ dbt_utils.group_by(n=5) }}
+    {{ dbt_utils.group_by(n=6) }}
 
 ), final AS (
 
@@ -120,6 +122,7 @@
       dim_billing_account_id,
       dim_crm_account_id,
       dim_date_id,
+      subscription_status,
       unit_of_measure,
       total_mrr,
       total_arr,

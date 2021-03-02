@@ -260,23 +260,33 @@ models:
     description: '{{ doc("prep_recurring_charge_subscription_monthly") }}'
     columns:
       - name: dim_subscription_id
-        description: The identifier of subscription in dim_subscriptions table
+        description: Unique identifier of a version of a subscription
         tests:
           - not_null
+        tags: ["tdf", "common", "gainsight"]
       - name: dim_subscription_id_original
-        description: The identifier of the original subscription in dim_subscriptions table
+        description: Identifier of the original subscription in lineage of a given Subscription ID
         tests:
           - not_null
+        tags: ["tdf", "common", "gainsight"]
       - name: dim_billing_account_id
+        description: ID of the Zuora account associated with a given Subscription ID
         tests:
           - not_null
         description: Zuora account id
       - name:  dim_crm_account_id
-        description: account id from crm
+        description: Account ID from SFDC identifing the customer
       - name: dim_date_id
         description: The identifier of date month in dim_date
         tests:
           - not_null
+      - name: subscription_status
+        description: Status of the subscription
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Active', 'Cancelled', 'Draft', 'Expired']
+        tags: ["tdf", "common", "gainsight"]
       - name: unit_of_measure
       - name: total_mrr
         description: Monthly Recurring Revenue value for given month for a given Subscription ID
