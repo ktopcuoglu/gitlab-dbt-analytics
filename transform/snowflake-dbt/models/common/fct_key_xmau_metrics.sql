@@ -20,7 +20,7 @@
     FROM usage_ping_metrics
     WHERE 
       is_smau = TRUE OR 
-      is_gmau = TRUE or 
+      is_gmau = TRUE OR 
       is_umau = TRUE OR 
       is_paid_GMAU = TRUE 
 
