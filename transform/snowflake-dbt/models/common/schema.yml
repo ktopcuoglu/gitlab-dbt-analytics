@@ -301,6 +301,7 @@ models:
           - unique
       - name: days_in_month_count
         description: Number of calendar days in the given month.
+        tests:
           - not_null
 
   - name: dim_geo_region

@@ -259,17 +259,12 @@ models:
   - name: prep_recurring_charge_subscription_monthly
     description: '{{ doc("prep_recurring_charge_subscription_monthly") }}'
     columns:
-      - name: mrr_id
-        description: The unique identifier of the MRR.
-        tests:
-          - not_null
-          - unique
-      - name: dim_date_id
-        description: The identifier of date month in dim_date
-        tests:
-          - not_null
       - name: dim_subscription_id
         description: The identifier of subscription in dim_subscriptions table
+        tests:
+          - not_null
+      - name: dim_subscription_id_original
+        description: The identifier of the original subscription in dim_subscriptions table
         tests:
           - not_null
       - name: dim_billing_account_id
@@ -278,6 +273,8 @@ models:
         description: Zuora account id
       - name:  dim_crm_account_id
         description: account id from crm
+      - name: dim_date_id
+        description: The identifier of date month in dim_date
         tests:
           - not_null
       - name: unit_of_measure
@@ -305,6 +302,8 @@ models:
         description: Annual Recurring Revenue value for given month from products that are neither Self-Managed nor SaaS
       - name: other_quantity
         description: Total quantity of products that are neither Self-Managed nor SaaS
+      - name: is_latest_record_per_subscription
+        description: Flags if the row contains the most recent record received for the subscription.
 
   - name: prep_recurring_charge
     description: '{{ doc("prep_recurring_charge") }}'

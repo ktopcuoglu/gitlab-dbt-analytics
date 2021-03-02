@@ -2,7 +2,7 @@
 {{ simple_cte([
     ('zuora_rate_plan', 'zuora_rate_plan_source'),
     ('map_merged_crm_account', 'map_merged_crm_account'),
-    ('product_details', 'dim_product_detail')
+    ('product_details', 'dim_product_detail'),
     ('dim_date', 'dim_date'),
 ]) }}
 
@@ -32,6 +32,7 @@
       zuora_account.account_id                                      AS dim_billing_account_id,
       map_merged_crm_account.dim_crm_account_id                     AS dim_crm_account_id,
       zuora_subscription.subscription_id                            AS dim_subscription_id,
+      zuora_subscription.original_id                                AS dim_subscription_id_original,
       zuora_rate_plan_charge.mrr,
       zuora_rate_plan_charge.unit_of_measure,
       zuora_rate_plan_charge.quantity,
@@ -57,11 +58,12 @@
       dim_billing_account_id,
       dim_crm_account_id,
       dim_subscription_id,
+      dim_subscription_id_original,
       product_delivery_type,
       unit_of_measure,
       {{ dbt_utils.surrogate_key(['dim_date_id',
                                   'dim_subscription_id',
-                                  'product_delivery_type'
+                                  'product_delivery_type',
                                   'unit_of_measure']) }}                AS mrr_id,
       SUM(mrr)                                                          AS mrr,
       SUM(mrr) * 12                                                     AS arr,
@@ -72,7 +74,7 @@
       AND (rate_plan_charge_filtered.effective_end_month > dim_date.date_actual
            OR rate_plan_charge_filtered.effective_end_month IS NULL)
       AND dim_date.day_of_month = 1
-    {{ dbt_utils.group_by(n=7) }}
+    {{ dbt_utils.group_by(n=8) }}
 
 ), mrr_by_subscription AS (
 
@@ -80,6 +82,7 @@
       subscription.dim_billing_account_id,
       subscription.dim_crm_account_id,
       subscription.dim_subscription_id,
+      subscription.dim_subscription_id_original,
       subscription.dim_date_id,
       SUM(sm.mrr)                                                       AS sm_mrr,
       SUM(sm.arr)                                                       AS sm_arr,
@@ -107,12 +110,13 @@
     LEFT JOIN mrr_by_delivery_type other
       ON other.product_delivery_type = 'Others'
       AND subscription.mrr_id = other.mrr_id
-    {{ dbt_utils.group_by(n=4) }}
+    {{ dbt_utils.group_by(n=5) }}
 
 ), final AS (
 
     SELECT
       dim_subscription_id,
+      dim_subscription_id_original,
       dim_billing_account_id,
       dim_crm_account_id,
       dim_date_id,
@@ -128,7 +132,11 @@
       saas_quantity,
       other_mrr,
       other_arr,
-      other_quantity
+      other_quantity,
+      IFF(ROW_NUMBER() OVER (
+            PARTITION BY dim_subscription_id
+            ORDER BY dim_date_id DESC) = 1,
+          TRUE, FALSE)                                                      AS is_latest_record_per_subscription
     FROM mrr_by_subscription
 
 )
@@ -137,6 +145,6 @@
     cte_ref="final",
     created_by="@ischweickartDD",
     updated_by="@ischweickartDD",
-    created_date="2021-02-29",
-    updated_date="2021-02-29",
+    created_date="2021-03-01",
+    updated_date="2021-03-01"
 ) }}
