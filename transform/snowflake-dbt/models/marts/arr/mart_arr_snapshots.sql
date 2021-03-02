@@ -57,12 +57,12 @@ WITH dim_billing_account AS (
 
     {% endif %}
 
-), final AS (
+), joined AS (
 
     SELECT
       --primary_key
       fct_mrr_snapshots.mrr_snapshot_id                                                     AS primary_key,
-      fct_mrr_snapshots.mrr_id,
+      fct_mrr_snapshots.mrr_id                                                              AS mrr_id,
 
       --date info
       snapshot_dates.date_actual                                                            AS snapshot_date,
@@ -71,41 +71,63 @@ WITH dim_billing_account AS (
         AS fiscal_quarter_name_fy,
       IFF(arr_month.is_first_day_of_last_month_of_fiscal_year, arr_month.fiscal_year, NULL)
         AS fiscal_year,
-      dim_subscriptions_snapshots.subscription_start_month,
-      dim_subscriptions_snapshots.subscription_end_month,
-      dim_subscriptions_snapshots.subscription_end_date,
+      dim_subscriptions_snapshots.subscription_start_month                                  AS subscription_start_month,
+      dim_subscriptions_snapshots.subscription_end_month                                    AS subscription_end_month,
+      dim_subscriptions_snapshots.subscription_end_date                                     AS subscription_end_date,
 
       --account info
-      dim_billing_account.dim_billing_account_id                                            AS zuora_account_id,
-      dim_billing_account.sold_to_country                                                   AS zuora_sold_to_country,
-      dim_billing_account.billing_account_name                                              AS zuora_account_name,
-      dim_billing_account.billing_account_number                                            AS zuora_account_number,
+      dim_billing_account.dim_billing_account_id                                            AS dim_billing_account_id,
+      dim_billing_account.sold_to_country                                                   AS sold_to_country,
+      dim_billing_account.billing_account_name                                              AS billing_account_name,
+      dim_billing_account.billing_account_number                                            AS billing_account_number,
       COALESCE(dim_crm_account.merged_to_account_id, dim_crm_account.dim_crm_account_id)    AS dim_crm_account_id,
-      dim_crm_account.dim_parent_crm_account_id,
-      dim_crm_account.parent_crm_account_name,
-      dim_crm_account.parent_crm_account_billing_country,
-      dim_crm_account.parent_crm_account_sales_segment,
-      dim_crm_account.parent_crm_account_industry,
-      dim_crm_account.parent_crm_account_owner_team,
-      dim_crm_account.parent_crm_account_sales_territory,
+      dim_crm_account.crm_account_name                                                      AS crm_account_name,
+      dim_crm_account.dim_parent_crm_account_id                                             AS dim_parent_crm_account_id,
+      dim_crm_account.parent_crm_account_name                                               AS parent_crm_account_name,
+      dim_crm_account.parent_crm_account_billing_country                                    AS parent_crm_account_billing_country,
+      dim_crm_account.parent_crm_account_sales_segment                                      AS parent_crm_account_sales_segment,
+      dim_crm_account.parent_crm_account_industry                                           AS parent_crm_account_industry,
+      dim_crm_account.parent_crm_account_owner_team                                         AS parent_crm_account_owner_team,
+      dim_crm_account.parent_crm_account_sales_territory                                    AS parent_crm_account_sales_territory,
+      dim_crm_account.health_score                                                          AS health_score,
+      dim_crm_account.health_score_color                                                    AS health_score_color,
+      dim_crm_account.health_number                                                         AS health_number,
 
       --subscription info
-      dim_subscriptions_snapshots.subscription_name,
-      dim_subscriptions_snapshots.subscription_status,
-      dim_subscriptions_snapshots.subscription_sales_type,
+      dim_subscriptions_snapshots.subscription_status                                        AS subscription_status,
+      dim_subscriptions_snapshots.subscription_sales_type                                    AS subscription_sales_type,
+      dim_subscriptions_snapshots.subscription_name                                          AS subscription_name,
+      dim_subscriptions_snapshots.subscription_name_slugify                                  AS subscription_name_slugify,
+      dim_subscriptions_snapshots.oldest_subscription_in_cohort                              AS oldest_subscription_in_cohort,
+      dim_subscriptions_snapshots.subscription_lineage                                       AS subscription_lineage,
+      dim_subscriptions_snapshots.subscription_cohort_month                                  AS subscription_cohort_month,
+      dim_subscriptions_snapshots.subscription_cohort_quarter                                AS subscription_cohort_quarter,
+      min(dim_subscriptions_snapshots.subscription_cohort_month) OVER (
+          PARTITION BY dim_billing_account.dim_billing_account_id)                          AS billing_account_cohort_month,
+      min(dim_subscriptions_snapshots.subscription_cohort_quarter) OVER (
+          PARTITION BY dim_billing_account.dim_billing_account_id)                          AS billing_account_cohort_quarter,
+      min(dim_subscriptions_snapshots.subscription_cohort_month) OVER (
+          PARTITION BY dim_crm_account.dim_crm_account_id)                                  AS crm_account_cohort_month,
+      min(dim_subscriptions_snapshots.subscription_cohort_quarter) OVER (
+          PARTITION BY dim_crm_account.dim_crm_account_id)                                  AS crm_account_cohort_quarter,
+      min(dim_subscriptions_snapshots.subscription_cohort_month) OVER (
+          PARTITION BY dim_crm_account.dim_parent_crm_account_id)                           AS parent_account_cohort_month,
+      min(dim_subscriptions_snapshots.subscription_cohort_quarter) OVER (
+          PARTITION BY dim_crm_account.dim_parent_crm_account_id)                           AS parent_account_cohort_quarter,
 
       --product info
-      dim_product_detail.product_tier_name                                                  AS product_category,
-      dim_product_detail.product_delivery_type                                              AS delivery,
-      dim_product_detail.service_type,
-      dim_product_detail.product_rate_plan_name                                             AS rate_plan_name,
+      dim_product_detail.product_tier_name                                                  AS product_tier_name,
+      dim_product_detail.product_delivery_type                                              AS product_delivery_type,
+      dim_product_detail.service_type                                                       AS service_type,
+      dim_product_detail.product_rate_plan_name                                             AS product_rate_plan_name,
+
+      -- MRR values
       --  not needed as all charges in fct_mrr are recurring
       --  fct_mrr.charge_type,
-      fct_mrr_snapshots.unit_of_measure,
-
-      fct_mrr_snapshots.mrr,
-      fct_mrr_snapshots.arr,
-      fct_mrr_snapshots.quantity
+      fct_mrr_snapshots.unit_of_measure                                                     AS unit_of_measure,
+      fct_mrr_snapshots.mrr                                                                 AS mrr,
+      fct_mrr_snapshots.arr                                                                 AS arr,
+      fct_mrr_snapshots.quantity                                                            AS quantity
     FROM fct_mrr_snapshots
     INNER JOIN dim_subscriptions_snapshots
       ON dim_subscriptions_snapshots.subscription_id = fct_mrr_snapshots.subscription_id
@@ -121,7 +143,21 @@ WITH dim_billing_account AS (
     LEFT JOIN dim_crm_account
         ON dim_billing_account.dim_crm_account_id = dim_crm_account.dim_crm_account_id
 
+), final_table AS (
+
+  SELECT
+    joined.*,
+    datediff(month, billing_account_cohort_month, arr_month)     AS months_since_billing_account_cohort_start,
+    datediff(quarter, billing_account_cohort_quarter, arr_month) AS quarters_since_billing_account_cohort_start,
+    datediff(month, crm_account_cohort_month, arr_month)         AS months_since_crm_account_cohort_start,
+    datediff(quarter, crm_account_cohort_quarter, arr_month)     AS quarters_since_crm_account_cohort_start,
+    datediff(month, parent_account_cohort_month, arr_month)      AS months_since_parent_account_cohort_start,
+    datediff(quarter, parent_account_cohort_quarter, arr_month)  AS quarters_since_parent_account_cohort_start,
+    datediff(month, subscription_cohort_month, arr_month)        AS months_since_subscription_cohort_start,
+    datediff(quarter, subscription_cohort_quarter, arr_month)    AS quarters_since_subscription_cohort_start
+  FROM joined
+
 )
 
 SELECT *
-FROM final
+FROM final_table
