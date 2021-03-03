@@ -274,7 +274,7 @@ models:
         tests:
           - not_null
         description: Zuora account id
-      - name:  dim_crm_account_id
+      - name: dim_crm_account_id
         description: Account ID from SFDC identifing the customer
       - name: dim_date_id
         description: The identifier of date month in dim_date
