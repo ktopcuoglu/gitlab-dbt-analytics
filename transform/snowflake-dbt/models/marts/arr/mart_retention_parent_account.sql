@@ -68,7 +68,7 @@ WITH dim_crm_account AS (
       SUM(ZEROIFNULL(mrr))                              AS mrr_total,
       SUM(ZEROIFNULL(arr))                              AS arr_total,
       SUM(ZEROIFNULL(quantity))                         AS quantity_total,
-      ARRAY_AGG(product_tier_name)                      AS product_category,
+      ARRAY_AGG(product_tier_name)                      AS product_tier_name,
       MAX(product_ranking)                              AS product_ranking
     FROM fct_mrr
     INNER JOIN dim_product_detail
@@ -95,8 +95,8 @@ WITH dim_crm_account AS (
       future_mrr.arr_total           AS future_arr,
       current_mrr.quantity_total     AS current_quantity,
       future_mrr.quantity_total      AS future_quantity,
-      current_mrr.product_category   AS current_product_category,
-      future_mrr.product_category    AS future_product_category,
+      current_mrr.product_tier_name  AS current_product_tier_name,
+      future_mrr.product_tier_name   AS future_product_tier_name,
       current_mrr.product_ranking    AS current_product_ranking,
       future_mrr.product_ranking     AS future_product_ranking,
       current_mrr.last_renewal_month,
@@ -131,13 +131,13 @@ WITH dim_crm_account AS (
       current_quantity                          AS prior_year_quantity,
       COALESCE(future_quantity, 0)              AS net_retention_quantity,
       {{ reason_for_quantity_change_seat_change('net_retention_quantity', 'prior_year_quantity') }},
-      future_product_category                   AS net_retention_product_category,
-      current_product_category                  AS prior_year_product_category,
+      future_product_product_tier_name          AS net_retention_product_product_tier_name,
+      current_product_product_tier_name         AS prior_year_product_product_tier_name,
       future_product_ranking                    AS net_retention_product_ranking,
       current_product_ranking                   AS prior_year_product_ranking,
       {{ type_of_arr_change('net_retention_arr', 'prior_year_arr','row_number') }},
       {{ reason_for_arr_change_seat_change('net_retention_quantity', 'prior_year_quantity', 'net_retention_arr', 'prior_year_arr') }},
-      {{ reason_for_arr_change_price_change('net_retention_product_category', 'prior_year_product_category', 'net_retention_quantity', 'prior_year_quantity', 'net_retention_arr', 'prior_year_arr', 'net_retention_product_ranking','prior_year_product_ranking') }},
+      {{ reason_for_arr_change_price_change('net_retention_product_product_tier_name', 'prior_year_product_product_tier_name', 'net_retention_quantity', 'prior_year_quantity', 'net_retention_arr', 'prior_year_arr', 'net_retention_product_ranking','prior_year_product_ranking') }},
       {{ reason_for_arr_change_tier_change('net_retention_product_ranking', 'prior_year_product_ranking', 'net_retention_quantity', 'prior_year_quantity', 'net_retention_arr', 'prior_year_arr') }},
       {{ annual_price_per_seat_change('net_retention_quantity', 'prior_year_quantity', 'net_retention_arr', 'prior_year_arr') }}
     FROM retention_subs

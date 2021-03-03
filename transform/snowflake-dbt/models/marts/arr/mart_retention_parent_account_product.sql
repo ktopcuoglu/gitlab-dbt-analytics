@@ -27,7 +27,7 @@ WITH dim_crm_account AS (
 
     SELECT DISTINCT
       merged_accounts.dim_parent_crm_account_id,
-      product_tier_name                                                                                               AS product_category,
+      product_tier_name                                                                                               AS product_tier_name,
       MIN(subscription_end_month) OVER (PARTITION BY merged_accounts.dim_parent_crm_account_id, product_tier_name)    AS next_renewal_month_product
     FROM fct_mrr
     INNER JOIN dim_date
@@ -47,7 +47,7 @@ WITH dim_crm_account AS (
 
     SELECT DISTINCT
       merged_accounts.dim_parent_crm_account_id,
-      product_tier_name                                                                                               AS product_category,
+      product_tier_name                                                                                               AS product_tier_name,
       MAX(subscription_end_month) OVER (PARTITION BY merged_accounts.dim_parent_crm_account_id, product_tier_name)    AS last_renewal_month_product
     FROM fct_mrr
     INNER JOIN dim_date
@@ -67,7 +67,7 @@ WITH dim_crm_account AS (
 
     SELECT
       dim_crm_account.dim_parent_crm_account_id,
-      dim_product_detail.product_tier_name              AS product_category,
+      dim_product_detail.product_tier_name              AS product_tier_name,
       dim_product_detail.product_ranking,
       dim_date.date_actual                              AS mrr_month,
       dateadd('year', 1, date_actual)                   AS retention_month,
@@ -85,17 +85,17 @@ WITH dim_crm_account AS (
       ON dim_crm_account.dim_crm_account_id = fct_mrr.dim_crm_account_id
     LEFT JOIN next_renewal_month
       ON next_renewal_month.dim_parent_crm_account_id = dim_crm_account.dim_parent_crm_account_id
-      AND next_renewal_month.product_category = dim_product_detail.product_tier_name
+      AND next_renewal_month.product_tier_name = dim_product_detail.product_tier_name
     LEFT JOIN last_renewal_month
       ON last_renewal_month.dim_parent_crm_account_id = dim_crm_account.dim_parent_crm_account_id
-      AND last_renewal_month.product_category = dim_product_detail.product_tier_name
+      AND last_renewal_month.product_tier_name = dim_product_detail.product_tier_name
     {{ dbt_utils.group_by(n=7) }}
 
 ), retention_subs AS (
 
     SELECT
       current_mrr.dim_parent_crm_account_id,
-      current_mrr.product_category,
+      current_mrr.product_tier_name,
       current_mrr.product_ranking,
       current_mrr.mrr_month          AS current_mrr_month,
       current_mrr.retention_month,
@@ -112,16 +112,16 @@ WITH dim_crm_account AS (
     FROM parent_account_mrrs AS current_mrr
     LEFT JOIN parent_account_mrrs AS future_mrr
       ON current_mrr.dim_parent_crm_account_id = future_mrr.dim_parent_crm_account_id
-      AND current_mrr.product_category = future_mrr.product_category
+      AND current_mrr.product_tier_name = future_mrr.product_tier_name
       AND current_mrr.retention_month = future_mrr.mrr_month
 
 ), final AS (
 
     SELECT
-      {{ dbt_utils.surrogate_key(['retention_subs.dim_parent_crm_account_id', 'product_category', 'retention_month']) }} AS primary_key,
+      {{ dbt_utils.surrogate_key(['retention_subs.dim_parent_crm_account_id', 'product_tier_name', 'retention_month']) }} AS primary_key,
       retention_subs.dim_parent_crm_account_id,
       dim_crm_account.crm_account_name          AS parent_crm_account_name,
-      product_category,
+      product_tier_name,
       product_ranking,
       retention_month,
       dim_date.fiscal_year                      AS retention_fiscal_year,
@@ -143,7 +143,7 @@ WITH dim_crm_account AS (
       {{ reason_for_quantity_change_seat_change('net_retention_quantity', 'prior_year_quantity') }},
       {{ type_of_arr_change('net_retention_arr', 'prior_year_arr','row_number') }},
       {{ reason_for_arr_change_seat_change('net_retention_quantity', 'prior_year_quantity', 'net_retention_arr', 'prior_year_arr') }},
-      {{ reason_for_arr_change_price_change('product_category', 'product_category', 'net_retention_quantity', 'prior_year_quantity', 'net_retention_arr', 'prior_year_arr', 'product_ranking','product_ranking') }},
+      {{ reason_for_arr_change_price_change('product_tier_name', 'product_tier_name', 'net_retention_quantity', 'prior_year_quantity', 'net_retention_arr', 'prior_year_arr', 'product_ranking','product_ranking') }},
       {{ annual_price_per_seat_change('net_retention_quantity', 'prior_year_quantity', 'net_retention_arr', 'prior_year_arr') }}
     FROM retention_subs
     INNER JOIN dim_date
