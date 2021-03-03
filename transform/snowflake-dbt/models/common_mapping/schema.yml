@@ -16,7 +16,6 @@ models:
     columns:
       - name: bizible_campaign_grouping_id
         tests:
-          - unique
           - not_null
 
   - name: map_crm_account
