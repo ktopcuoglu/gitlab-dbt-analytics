@@ -656,7 +656,7 @@ WITH date_details AS (
     INNER JOIN sfdc_opportunity_xf    
       ON sfdc_opportunity_xf.opportunity_id = opp_snapshot.opportunity_id
     LEFT JOIN sfdc_accounts_xf
-      ON opp_snapshot.account_id = sfdc_accounts_xf.account_id 
+      ON sfdc_opportunity_xf.account_id = sfdc_accounts_xf.account_id 
     LEFT JOIN sfdc_users_xf account_owner
       ON account_owner.user_id = sfdc_accounts_xf.owner_id
     LEFT JOIN sfdc_users_xf opportunity_owner
@@ -675,7 +675,7 @@ WITH date_details AS (
     LEFT JOIN pipeline_type_quarter_created 
       ON pipeline_type_quarter_created.opportunity_id = opp_snapshot.opportunity_id
       AND pipeline_type_quarter_created.snapshot_fiscal_quarter_date = opp_snapshot.snapshot_fiscal_quarter_date 
-    WHERE opp_snapshot.account_id NOT IN ('0014M00001kGcORQA0')                           -- remove test account
+    WHERE opp_snapshot.raw_account_id NOT IN ('0014M00001kGcORQA0')                           -- remove test account
       AND (sfdc_accounts_xf.ultimate_parent_account_id NOT IN ('0016100001YUkWVAA1')
             OR sfdc_accounts_xf.account_id IS NULL)                                        -- remove test account
       AND opp_snapshot.is_deleted = 0
