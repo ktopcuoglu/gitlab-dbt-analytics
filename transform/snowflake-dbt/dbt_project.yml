@@ -379,6 +379,9 @@ models:
     marts:
       +materialized: table
 
+      arr:
+        +schema: common_mart_sales
+
       exports:
         +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
         +materialized: view
