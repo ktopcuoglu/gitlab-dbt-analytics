@@ -223,7 +223,7 @@ WITH filtered_source as (
     Then we extract the id from the context_data column
     */
     SELECT 
-      event_id,
+      events_with_context_flattened.*,
       context_data['id']::TEXT AS web_page_id
     FROM events_with_context_flattened
     WHERE context_data_schema = 'iglu:com.snowplowanalytics.snowplow/web_page/jsonschema/1-0-0'
@@ -232,7 +232,7 @@ WITH filtered_source as (
   
     SELECT 
       events_with_web_page_id.app_id,
-      events_with_web_page_id.events_with_web_page_id_currency,
+      events_with_web_page_id.base_currency,
       events_with_web_page_id.br_colordepth,
       events_with_web_page_id.br_cookies,
       events_with_web_page_id.br_family,
@@ -338,7 +338,7 @@ WITH filtered_source as (
       events_with_web_page_id.ti_name,
       events_with_web_page_id.ti_orderid,
       events_with_web_page_id.ti_price,
-      events_with_web_page_id.ti_price_events_with_web_page_id,
+      events_with_web_page_id.ti_price_base,
       events_with_web_page_id.ti_quantity,
       events_with_web_page_id.ti_sku,
       events_with_web_page_id.tr_affiliation,
@@ -347,12 +347,12 @@ WITH filtered_source as (
       events_with_web_page_id.tr_currency,
       events_with_web_page_id.tr_orderid,
       events_with_web_page_id.tr_shipping,
-      events_with_web_page_id.tr_shipping_events_with_web_page_id,
+      events_with_web_page_id.tr_shipping_base,
       events_with_web_page_id.tr_state,
       events_with_web_page_id.tr_tax,
-      events_with_web_page_id.tr_tax_events_with_web_page_id,
+      events_with_web_page_id.tr_tax_base,
       events_with_web_page_id.tr_total,
-      events_with_web_page_id.tr_total_events_with_web_page_id,
+      events_with_web_page_id.tr_total_base,
       events_with_web_page_id.true_tstamp,
       events_with_web_page_id.txn_id,
       events_with_web_page_id.unstruct_event,
@@ -387,7 +387,7 @@ WITH filtered_source as (
     {{ unpack_unstructured_event(focus_form, 'focus_form', 'ff') }},
     {{ unpack_unstructured_event(link_click, 'link_click', 'lc') }},
     {{ unpack_unstructured_event(track_timing, 'track_timing', 'tt') }}
-    FROM base
+    FROM base_with_sorted_columns
 
 )
 
