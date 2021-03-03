@@ -19,3 +19,9 @@ The purpose of this mart table is to act as a data pump of **Self-Managed** cust
 Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
 
 {% enddocs %}
+
+{% docs pump_hash_marketing_contact %}
+
+a copy of mart_marketing_contact with the email hashed
+
+{% enddocs %}
