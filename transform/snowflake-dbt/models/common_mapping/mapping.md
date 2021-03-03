@@ -2,6 +2,10 @@
  Intermediate table to expose the mapped marketing channel data.
 {% enddocs %}
 
+{% docs map_bizible_campaign_grouping %}
+ Mapping table for Bizible marketing campaigns which groups the campaigns based on the touchpoint type, ad campaign name, parent campaign id, among other attributes. This generates the `bizible_itegrated_campaign_grouping`, `integrated_campaign_grouping`, `touchpoint_segment`, and `gtm_motion` mapping.
+{% enddocs %}
+
 {% docs map_crm_account %}
  Mapping table for dimension keys related to crm accounts so they can be reused in fact tables containing account ids.
 {% enddocs %}

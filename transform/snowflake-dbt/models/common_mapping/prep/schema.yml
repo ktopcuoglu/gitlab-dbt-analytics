@@ -67,6 +67,15 @@ models:
       - name: dim_parent_location_country_name_source
         description: Dim location country name final source column
 
+  - name: prep_campaign
+    description: '{{ doc("prep_campaign") }}'
+    columns:
+      - name: dim_campaign_id
+        description: Unique identifier of a marketing campaign
+        tests:
+          - not_null
+          - unique
+
   - name: prep_crm_sales_hierarchy_live
     description: '{{ doc("prep_crm_sales_hierarchy_live") }}'
     columns:
