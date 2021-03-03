@@ -177,3 +177,5 @@ models:
       - name: is_usage_ping_license_subscription_id_valid
       - name: is_data_in_subscription_month
         description: Flags rows where there is Usage Ping data and/or Seat Link data present
+  - name: pump_hash_marketing_contact
+    description: '{{ doc("pump_hash_marketing_contact") }}'

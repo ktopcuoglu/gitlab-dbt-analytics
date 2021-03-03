@@ -387,6 +387,16 @@ models:
         users_emails:
           enabled: false
 
+      pumps: 
+        +database: "{{ env_var('SNOWFLAKE_PROD_DATABASE') }}" #PROD
+        +schema: pumps
+        +materialized: table
+
+      pumps_sensitive:
+        +database: "{{ env_var('SNOWFLAKE_PROD_DATABASE') }}" #PROD
+        +schema: pumps_sensitive
+        +materialized: table
+
     # ------------------
     # Legacy Structure
     # ------------------

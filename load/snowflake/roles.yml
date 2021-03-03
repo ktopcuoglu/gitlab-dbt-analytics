@@ -52,6 +52,11 @@ databases:
     - ktam_prep:
         shared: no
 
+    - laddula_prod:
+        shared: no
+    - laddula_prep:
+        shared: no
+
     - michellecooper_prod:
         shared: no
     - michellecooper_prep:
@@ -502,6 +507,29 @@ roles:
             - dbt_analytics
             - snowflake_db
 
+    - integration_engineer:
+        warehouses:
+            - engineer_xs
+        member_of:
+            - boneyard
+            - dbt_analytics
+            - snowflake_db
+        privileges:
+            databases:
+                read:
+                    - prep
+                    - prod
+            schemas:
+                read:
+                    - prep.sensitive
+                    - prod.pumps
+                    - prod.pumps_sensitive
+            tables:
+                read:
+                    - prep.sensitive.mart_marketing_contact
+                    - prod.pumps.*
+                    - prod.pumps_sensitive.pump_marketing_contact
+
     - loader:
         warehouses:
             - loading
@@ -893,6 +921,7 @@ roles:
                     - prod.workspace_finance
                     - prod.workspace_marketing
                     - prod.workspace_sales
+                    - prod.pumps
                     - prep.dbt
                     - prep.preparation
                     - raw.dbt
@@ -908,6 +937,7 @@ roles:
                     - prod.workspace_finance.*
                     - prod.workspace_marketing.*
                     - prod.workspace_sales.*
+                    - prod.pumps.*
                     - prep.dbt.*
                     - prep.preparation.*
                     - raw.dbt.*
@@ -1755,6 +1785,7 @@ roles:
         member_of:
             - reporter
             - postgres_pipeline
+            - integration_engineer
         warehouses:
             - reporting
             - analyst_xs
@@ -2175,6 +2206,47 @@ roles:
     - ksmith:
         member_of: []
         warehouses: []
+
+    - laddula:
+        member_of:
+            - engineer
+        warehouses:
+            - engineer_xs
+            - engineer_xl
+            - loading
+            - reporting
+        owns:
+            databases:
+                - laddula_prep
+                - laddula_prod
+            schemas:
+                - laddula_prep.*
+                - laddula_prod.*
+            tables:
+                - laddula_prep.*.*
+                - laddula_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - laddula_prep
+                    - laddula_prod
+                write:
+                    - laddula_prep
+                    - laddula_prod
+            schemas:
+                read:
+                    - laddula_prep.*
+                    - laddula_prod.*
+                write:
+                    - laddula_prep.*
+                    - laddula_prod.*
+            tables:
+                read:
+                    - laddula_prep.*.*
+                    - laddula_prod.*.*
+                write:
+                    - laddula_prep.*.*
+                    - laddula_prod.*.*
 
     - lmai:
         member_of:
@@ -3141,6 +3213,11 @@ users:
     - ksmith:
         can_login: no
         member_of: []
+
+    - laddula:
+        can_login: yes
+        member_of:
+            - laddula
 
     - lmai:
         can_login: yes
