@@ -427,33 +427,33 @@ models:
           - unique
         tags: ["tdf", "common", "invoice"]
 
-  - name: dim_opportunity_source
-    description: '{{ doc("dim_opportunity_source") }}'
+  - name: dim_sales_qualified_source
+    description: '{{ doc("dim_sales_qualified_source") }}'
     columns:
-      - name: dim_opportunity_source_id
-        description: Unique identifier for each opportunity source name
+      - name: dim_sales_qualified_source_id
+        description: Unique identifier for each sales qualified source name
         tests:
           - not_null
           - unique
         tags: ["tdf", "opportunity", "common","sales_funnel"]
-      - name: opportunity_source_name
-        description: Opportunity source name
+      - name: sales_qualified_source_name
+        description: Sales qualified source name
         tests:
           - not_null
           - unique
         tags: ["tdf", "opportunity", "common", "sales_funnel"]
 
-  - name: dim_purchase_channel
-    description: '{{ doc("dim_purchase_channel") }}'
+  - name: dim_deal_path
+    description: '{{ doc("dim_deal_path") }}'
     columns:
-      - name: dim_purchase_channel_id
+      - name: dim_deal_path_id
         description: Unique identifier for each purchase channel name
         tests:
           - not_null
           - unique
         tags: [ "tdf", "purchase_channel", "common", "sales_funnel" ]
-      - name: purchase_channel_name
-        description: Purchase channel name text
+      - name: deal_path_name
+        description: Deal path name text
         tests:
           - not_null
           - unique
@@ -1784,10 +1784,10 @@ models:
         description: Sum of reposity, LFS objects, build artifacts, packages, and wiki storage sizes.
 
 
-  - name: dim_marketing_channel
-    description: '{{ doc("prep_sfdc_account") }}'
+  - name: dim_bizible_marketing_channel_path
+    description: '{{ doc("dim_bizible_marketing_channel_path") }}'
     columns:
-      - name: dim_marketing_channel_id
+      - name: dim_bizible_marketing_channel_path_id
         description: Unique identifier for the marketing channel.
         tests:
           - not_null

@@ -5,7 +5,7 @@
 
 {{ simple_cte([
     ('dim_crm_sales_hierarchy_live','dim_crm_sales_hierarchy_live'),
-    ('dim_opportunity_source','dim_opportunity_source'),
+    ('dim_sales_qualified_source','dim_sales_qualified_source'),
     ('dim_order_type','dim_order_type'),
     ('fct_sales_funnel_target','fct_sales_funnel_target'),
     ('dim_date','dim_date')
@@ -22,11 +22,11 @@
       dim_crm_sales_hierarchy_live.sales_region_name_live,
       dim_crm_sales_hierarchy_live.sales_area_name_live,
       dim_order_type.order_type_name,
-      dim_opportunity_source.opportunity_source_name,
+      dim_sales_qualified_source.sales_qualified_source_name,
       fct_sales_funnel_target.allocated_target
     FROM fct_sales_funnel_target
-    LEFT JOIN dim_opportunity_source
-      ON fct_sales_funnel_target.dim_opportunity_source_id = dim_opportunity_source.dim_opportunity_source_id
+    LEFT JOIN dim_sales_qualified_source
+      ON fct_sales_funnel_target.dim_sales_qualified_source_id = dim_sales_qualified_source.dim_sales_qualified_source_id
     LEFT JOIN dim_order_type
       ON fct_sales_funnel_target.dim_order_type_id = dim_order_type.dim_order_type_id
     LEFT JOIN dim_crm_sales_hierarchy_live
@@ -47,12 +47,12 @@
     FROM monthly_targets
     INNER JOIN dim_date
       ON monthly_targets.target_month = dim_date.first_day_of_month
-  
+
 ), qtd_mtd_target AS (
 
     SELECT
       {{ dbt_utils.surrogate_key(['date_day', 'kpi_name', 'sales_segment_name_live', 'location_region_name_live', 'sales_region_name_live',
-        'sales_area_name_live', 'order_type_name', 'opportunity_source_name']) }}                                                                   AS primary_key,
+        'sales_area_name_live', 'order_type_name', 'sales_qualified_source_name']) }}                                                                   AS primary_key,
       date_day                                                                                                                                      AS target_date,
       DATEADD('day', 1, target_date)                                                                                                                AS report_target_date,
       target_month,
@@ -64,16 +64,16 @@
       sales_region_name_live,
       sales_area_name_live,
       order_type_name,
-      opportunity_source_name,
+      sales_qualified_source_name,
       allocated_target                                                                                                                              AS monthly_allocated_target,
       daily_allocated_target,
       SUM(daily_allocated_target) OVER(PARTITION BY kpi_name, sales_segment_name_live, location_region_name_live, sales_region_name_live,
-                             sales_area_name_live, order_type_name, opportunity_source_name, target_month ORDER BY date_day)                        AS mtd_allocated_target,
+                             sales_area_name_live, order_type_name, sales_qualified_source_name, target_month ORDER BY date_day)                        AS mtd_allocated_target,
       SUM(daily_allocated_target) OVER(PARTITION BY kpi_name, sales_segment_name_live, location_region_name_live, sales_region_name_live,
-                             sales_area_name_live, order_type_name, opportunity_source_name, fiscal_quarter_name ORDER BY date_day)                 AS qtd_allocated_target,
+                             sales_area_name_live, order_type_name, sales_qualified_source_name, fiscal_quarter_name ORDER BY date_day)                 AS qtd_allocated_target,
       SUM(daily_allocated_target) OVER(PARTITION BY kpi_name, sales_segment_name_live, location_region_name_live, sales_region_name_live,
-                             sales_area_name_live, order_type_name, opportunity_source_name, fiscal_year ORDER BY date_day)                         AS ytd_allocated_target
-      
+                             sales_area_name_live, order_type_name, sales_qualified_source_name, fiscal_year ORDER BY date_day)                         AS ytd_allocated_target
+
     FROM monthly_targets_daily
 
 )
@@ -81,7 +81,7 @@
 {{ dbt_audit(
     cte_ref="qtd_mtd_target",
     created_by="@jpeguero",
-    updated_by="@jpeguero",
+    updated_by="@mcooperDD",
     created_date="2021-02-18",
-    updated_date="2021-02-18",
+    updated_date="2021-02-26",
   ) }}

@@ -34,15 +34,15 @@ WITH account_dims_mapping AS (
     SELECT *
     FROM {{ ref('prep_industry') }}
 
-), marketing_channel AS (
+), bizible_marketing_channel_path AS (
 
     SELECT *
-    FROM {{ ref('prep_marketing_channel') }}
+    FROM {{ ref('prep_bizible_marketing_channel_path') }}
 
-), marketing_channel_mapping AS (
+), bizible_marketing_channel_path_mapping AS (
 
     SELECT *
-    FROM {{ ref('map_marketing_channel') }}
+    FROM {{ ref('map_bizible_marketing_channel_path') }}
 
 ), sales_segment AS (
 
@@ -154,33 +154,33 @@ WITH account_dims_mapping AS (
       account_dims_mapping.dim_parent_industry_id,                                                             -- dim_parent_industry_id
       account_dims_mapping.dim_parent_location_country_id,                                                     -- dim_parent_location_country_id
       account_dims_mapping.dim_parent_location_region_id,                                                      -- dim_parent_location_region_id
-      {{ get_keyed_nulls('marketing_channel.dim_marketing_channel_id') }}                                       AS dim_marketing_channel_id,
+      {{ get_keyed_nulls('bizible_marketing_channel_path.dim_bizible_marketing_channel_path_id') }}            AS dim_bizible_marketing_channel_path_id,
 
      -- important person dates
-      COALESCE(sfdc_contacts.created_date, sfdc_leads.created_date)::DATE                      AS created_date,
-      {{ get_date_id('COALESCE(sfdc_contacts.created_date, sfdc_leads.created_date)') }}       AS created_date_id,
-      {{ get_date_pt_id('COALESCE(sfdc_contacts.created_date, sfdc_leads.created_date)') }}    AS created_date_pt_id,
-      COALESCE(sfdc_contacts.inquiry_datetime, sfdc_leads.inquiry_datetime)::DATE              AS inquiry_date,
-      {{ get_date_id('inquiry_date') }}                                                        AS inquiry_date_id,
-      {{ get_date_pt_id('inquiry_date') }}                                                     AS inquiry_date_pt_id,
-      mqls.first_mql_date::DATE                                                                AS mql_date_first,
-      {{ get_date_id('mql_date_first') }}                                                      AS mql_date_first_id,
-      {{ get_date_pt_id('mql_date_first') }}                                                   AS mql_date_first_pt_id,
-      mqls.last_mql_date::DATE                                                                 AS mql_date_latest,
-      {{ get_date_id('last_mql_date') }}                                                       AS mql_date_latest_id,
-      {{ get_date_pt_id('last_mql_date') }}                                                    AS mql_date_latest_pt_id,
-      COALESCE(sfdc_contacts.accepted_datetime, sfdc_leads.accepted_datetime)::DATE            AS accepted_date,
-      {{ get_date_id('accepted_date') }}                                                       AS accepted_date_id,
-      {{ get_date_pt_id('accepted_date') }}                                                    AS accepted_date_pt_id,
-      COALESCE(sfdc_contacts.qualifying_datetime, sfdc_leads.qualifying_datetime)::DATE        AS qualifying_date,
-      {{ get_date_id('qualifying_date') }}                                                     AS qualifying_date_id,
-      {{ get_date_pt_id('qualifying_date') }}                                                  AS qualifying_date_pt_id,
-      COALESCE(sfdc_contacts.qualified_datetime, sfdc_leads.qualified_datetime)::DATE          AS qualified_date,
-      {{ get_date_id('qualified_date') }}                                                      AS qualified_date_id,
-      {{ get_date_pt_id('qualified_date') }}                                                   AS qualified_date_pt_id,
-      sfdc_leads.converted_date::DATE                                                          AS converted_date,
-      {{ get_date_id('converted_date') }}                                                      AS converted_date_id,
-      {{ get_date_pt_id('converted_date') }}                                                   AS converted_date_pt_id,
+      COALESCE(sfdc_contacts.created_date, sfdc_leads.created_date)::DATE                                       AS created_date,
+      {{ get_date_id('COALESCE(sfdc_contacts.created_date, sfdc_leads.created_date)') }}                        AS created_date_id,
+      {{ get_date_pt_id('COALESCE(sfdc_contacts.created_date, sfdc_leads.created_date)') }}                     AS created_date_pt_id,
+      COALESCE(sfdc_contacts.inquiry_datetime, sfdc_leads.inquiry_datetime)::DATE                               AS inquiry_date,
+      {{ get_date_id('inquiry_date') }}                                                                         AS inquiry_date_id,
+      {{ get_date_pt_id('inquiry_date') }}                                                                      AS inquiry_date_pt_id,
+      mqls.first_mql_date::DATE                                                                                 AS mql_date_first,
+      {{ get_date_id('mql_date_first') }}                                                                       AS mql_date_first_id,
+      {{ get_date_pt_id('mql_date_first') }}                                                                    AS mql_date_first_pt_id,
+      mqls.last_mql_date::DATE                                                                                  AS mql_date_latest,
+      {{ get_date_id('last_mql_date') }}                                                                        AS mql_date_latest_id,
+      {{ get_date_pt_id('last_mql_date') }}                                                                     AS mql_date_latest_pt_id,
+      COALESCE(sfdc_contacts.accepted_datetime, sfdc_leads.accepted_datetime)::DATE                             AS accepted_date,
+      {{ get_date_id('accepted_date') }}                                                                        AS accepted_date_id,
+      {{ get_date_pt_id('accepted_date') }}                                                                     AS accepted_date_pt_id,
+      COALESCE(sfdc_contacts.qualifying_datetime, sfdc_leads.qualifying_datetime)::DATE                         AS qualifying_date,
+      {{ get_date_id('qualifying_date') }}                                                                      AS qualifying_date_id,
+      {{ get_date_pt_id('qualifying_date') }}                                                                   AS qualifying_date_pt_id,
+      COALESCE(sfdc_contacts.qualified_datetime, sfdc_leads.qualified_datetime)::DATE                           AS qualified_date,
+      {{ get_date_id('qualified_date') }}                                                                       AS qualified_date_id,
+      {{ get_date_pt_id('qualified_date') }}                                                                    AS qualified_date_pt_id,
+      sfdc_leads.converted_date::DATE                                                                           AS converted_date,
+      {{ get_date_id('converted_date') }}                                                                       AS converted_date_id,
+      {{ get_date_pt_id('converted_date') }}                                                                    AS converted_date_pt_id,
 
      -- flags
       CASE
@@ -216,17 +216,17 @@ WITH account_dims_mapping AS (
       ON sfdc_leads.tsp_territory = sales_territory.sales_territory_name
     LEFT JOIN industry
       ON COALESCE(sfdc_contacts.industry, sfdc_leads.industry) = industry.industry_name
-    LEFT JOIN marketing_channel_mapping
-      ON crm_person.bizible_marketing_channel_path = marketing_channel_mapping.bizible_marketing_channel_path
-    LEFT JOIN marketing_channel
-      ON marketing_channel_mapping.marketing_channel_name = marketing_channel.marketing_channel_name
+    LEFT JOIN bizible_marketing_channel_path_mapping
+      ON crm_person.bizible_marketing_channel_path = bizible_marketing_channel_path_mapping.bizible_marketing_channel_path
+    LEFT JOIN bizible_marketing_channel_path
+      ON bizible_marketing_channel_path_mapping.bizible_marketing_channel_path_name_grouped = bizible_marketing_channel_path.bizible_marketing_channel_path_name
 
 )
 
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mcooperDD",
-    updated_by="@jjstark",
+    updated_by="@mcooperDD",
     created_date="2020-12-01",
-    updated_date="2021-02-23"
+    updated_date="2021-02-26"
 ) }}

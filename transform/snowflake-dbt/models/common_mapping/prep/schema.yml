@@ -151,11 +151,11 @@ models:
           - not_null
           - unique
 
-  - name: prep_marketing_channel
-    description: '{{ doc("prep_marketing_channel") }}'
+  - name: prep_bizible_marketing_channel_path
+    description: '{{ doc("prep_bizible_marketing_channel_path") }}'
     columns:
-      - name: dim_marketing_channel_id
-        description: Unique identifier of a marketing channel
+      - name: dim_bizible_marketing_channel_path_id
+        description: Unique identifier of a Bizible marketing channel path
         tests:
           - not_null
           - unique
@@ -229,11 +229,11 @@ models:
       - name: current_project_count
         description: The number of projects that are presently associated with the namespace.
 
-  - name: prep_opportunity_source
-    description: '{{ doc("prep_opportunity_source") }}'
+  - name: prep_sales_qualified_source
+    description: '{{ doc("prep_sales_qualified_source") }}'
     columns:
-      - name: dim_opportunity_source_id
-        description: Unique identifier of an opportunity source
+      - name: dim_sales_qualified_source_id
+        description: Unique identifier of a sales qualified opportunity source
         tests:
           - not_null
           - unique
@@ -247,11 +247,11 @@ models:
           - not_null
           - unique
 
-  - name: prep_purchase_channel
-    description: '{{ doc("prep_purchase_channel") }}'
+  - name: prep_deal_path
+    description: '{{ doc("prep_deal_path") }}'
     columns:
-      - name: dim_purchase_channel_id
-        description: Unique identifier of a purchase channel
+      - name: dim_deal_path_id
+        description: Unique identifier of a deal_path
         tests:
           - not_null
           - unique
