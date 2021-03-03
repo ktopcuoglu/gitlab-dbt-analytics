@@ -1,4 +1,4 @@
-{% docs map_marketing_channel %}
+{% docs map_bizible_marketing_channel_path %}
  Intermediate table to expose the mapped marketing channel data.
 {% enddocs %}
 
@@ -19,7 +19,7 @@ Table for mapping ip address ranges to location ids.
 {% enddocs %}
 
 {% docs map_license_subscription_account%}
-Table with mapping keys for license_md5 to subscription_id to crm (Salesforce) account ids 
+Table with mapping keys for license_md5 to subscription_id to crm (Salesforce) account ids
 {% enddocs %}
 
 {% docs map_merged_crm_account%}

@@ -19,15 +19,15 @@ WITH first_contact  AS (
     SELECT *
     FROM {{ ref('prep_order_type')}}
 
-), opportunity_source AS (
+), sales_qualified_source AS (
 
     SELECT *
-    FROM {{ ref('prep_opportunity_source')}}
+    FROM {{ ref('prep_sales_qualified_source')}}
 
-), purchase_channel AS (
+), deal_path AS (
 
     SELECT *
-    FROM {{ ref('prep_purchase_channel')}}
+    FROM {{ ref('prep_deal_path')}}
 
 ), sales_hierarchy_stamped_sales_segment AS (
 
@@ -268,16 +268,16 @@ WITH first_contact  AS (
         WHEN opportunity_fields.days_in_sao BETWEEN 181 AND 270  THEN '6. Closed in 181-270 days'
         WHEN opportunity_fields.days_in_sao > 270                THEN '7. Closed in > 270 days'
         ELSE NULL
-      END                                                                                                                 AS closed_buckets,
+      END                                                                                                                   AS closed_buckets,
       opportunity_fields.subscription_start_date,
       opportunity_fields.subscription_end_date,
 
       -- common dimension keys
-      {{ get_keyed_nulls('opportunity_fields.dim_crm_sales_rep_id') }}                                                    AS dim_crm_sales_rep_id,
-      {{ get_keyed_nulls('order_type.dim_order_type_id') }}                                                               AS dim_order_type_id,
-      {{ get_keyed_nulls('opportunity_source.dim_opportunity_source_id') }}                                               AS dim_opportunity_source_id,
-      {{ get_keyed_nulls('purchase_channel.dim_purchase_channel_id') }}                                                   AS dim_purchase_channel_id,
-      {{ get_keyed_nulls('crm_account_dimensions.dim_parent_sales_segment_id,sales_segment.dim_sales_segment_id') }}      AS dim_parent_sales_segment_id,
+      {{ get_keyed_nulls('opportunity_fields.dim_crm_sales_rep_id') }}                                                      AS dim_crm_sales_rep_id,
+      {{ get_keyed_nulls('order_type.dim_order_type_id') }}                                                                 AS dim_order_type_id,
+      {{ get_keyed_nulls('sales_qualified_source.dim_sales_qualified_source_id') }}                                         AS dim_sales_qualified_source_id,
+      {{ get_keyed_nulls('deal_path.dim_deal_path_id') }}                                                                   AS dim_deal_path_id,
+      {{ get_keyed_nulls('crm_account_dimensions.dim_parent_sales_segment_id,sales_segment.dim_sales_segment_id') }}        AS dim_parent_sales_segment_id,
       crm_account_dimensions.dim_parent_geo_region_id,
       crm_account_dimensions.dim_parent_geo_sub_region_id,
       crm_account_dimensions.dim_parent_geo_area_id,
@@ -285,7 +285,7 @@ WITH first_contact  AS (
       crm_account_dimensions.dim_parent_industry_id,
       crm_account_dimensions.dim_parent_location_country_id,
       crm_account_dimensions.dim_parent_location_region_id,
-      {{ get_keyed_nulls('crm_account_dimensions.dim_account_sales_segment_id,sales_segment.dim_sales_segment_id') }}     AS dim_account_sales_segment_id,
+      {{ get_keyed_nulls('crm_account_dimensions.dim_account_sales_segment_id,sales_segment.dim_sales_segment_id') }}       AS dim_account_sales_segment_id,
       crm_account_dimensions.dim_account_geo_region_id,
       crm_account_dimensions.dim_account_geo_sub_region_id,
       crm_account_dimensions.dim_account_geo_area_id,
@@ -293,14 +293,14 @@ WITH first_contact  AS (
       crm_account_dimensions.dim_account_industry_id,
       crm_account_dimensions.dim_account_location_country_id,
       crm_account_dimensions.dim_account_location_region_id,
-      {{ get_keyed_nulls('sales_hierarchy_stamped_sales_segment.dim_crm_sales_hierarchy_sales_segment_stamped_id') }}     AS dim_crm_sales_hierarchy_sales_segment_stamped_id,
-      {{ get_keyed_nulls('sales_hierarchy_stamped_location_region.dim_crm_sales_hierarchy_location_region_stamped_id') }} AS dim_crm_sales_hierarchy_location_region_stamped_id,
-      {{ get_keyed_nulls('sales_hierarchy_stamped_sales_region.dim_crm_sales_hierarchy_sales_region_stamped_id') }}       AS dim_crm_sales_hierarchy_sales_region_stamped_id,
-      {{ get_keyed_nulls('sales_hierarchy_stamped_sales_area.dim_crm_sales_hierarchy_sales_area_stamped_id') }}           AS dim_crm_sales_hierarchy_sales_area_stamped_id,
-      {{ get_keyed_nulls('sales_rep.dim_crm_sales_hierarchy_sales_segment_live_id') }}                                    AS dim_crm_sales_hierarchy_sales_segment_live_id,
-      {{ get_keyed_nulls('sales_rep.dim_crm_sales_hierarchy_location_region_live_id') }}                                  AS dim_crm_sales_hierarchy_location_region_live_id,
-      {{ get_keyed_nulls('sales_rep.dim_crm_sales_hierarchy_sales_region_live_id') }}                                     AS dim_crm_sales_hierarchy_sales_region_live_id,
-      {{ get_keyed_nulls('sales_rep.dim_crm_sales_hierarchy_sales_area_live_id') }}                                       AS dim_crm_sales_hierarchy_sales_area_live_id,
+      {{ get_keyed_nulls('sales_hierarchy_stamped_sales_segment.dim_crm_sales_hierarchy_sales_segment_stamped_id') }}       AS dim_crm_sales_hierarchy_sales_segment_stamped_id,
+      {{ get_keyed_nulls('sales_hierarchy_stamped_location_region.dim_crm_sales_hierarchy_location_region_stamped_id') }}   AS dim_crm_sales_hierarchy_location_region_stamped_id,
+      {{ get_keyed_nulls('sales_hierarchy_stamped_sales_region.dim_crm_sales_hierarchy_sales_region_stamped_id') }}         AS dim_crm_sales_hierarchy_sales_region_stamped_id,
+      {{ get_keyed_nulls('sales_hierarchy_stamped_sales_area.dim_crm_sales_hierarchy_sales_area_stamped_id') }}             AS dim_crm_sales_hierarchy_sales_area_stamped_id,
+      {{ get_keyed_nulls('sales_rep.dim_crm_sales_hierarchy_sales_segment_live_id') }}                                      AS dim_crm_sales_hierarchy_sales_segment_live_id,
+      {{ get_keyed_nulls('sales_rep.dim_crm_sales_hierarchy_location_region_live_id') }}                                    AS dim_crm_sales_hierarchy_location_region_live_id,
+      {{ get_keyed_nulls('sales_rep.dim_crm_sales_hierarchy_sales_region_live_id') }}                                       AS dim_crm_sales_hierarchy_sales_region_live_id,
+      {{ get_keyed_nulls('sales_rep.dim_crm_sales_hierarchy_sales_area_live_id') }}                                         AS dim_crm_sales_hierarchy_sales_area_live_id,
 
             -- flags
       opportunity_fields.is_closed,
@@ -353,12 +353,12 @@ WITH first_contact  AS (
       ON opportunity_fields.dim_crm_account_id = crm_account_dimensions.dim_crm_account_id
     LEFT JOIN first_contact
       ON opportunity_fields.dim_crm_opportunity_id = first_contact.opportunity_id AND first_contact.row_num = 1
-    LEFT JOIN opportunity_source
-      ON opportunity_fields.sales_qualified_source = opportunity_source.opportunity_source_name
+    LEFT JOIN sales_qualified_source
+      ON opportunity_fields.sales_qualified_source = sales_qualified_source.sales_qualified_source_name
     LEFT JOIN order_type
       ON opportunity_fields.order_type = order_type.order_type_name
-    LEFT JOIN purchase_channel
-      ON opportunity_fields.deal_path = purchase_channel.purchase_channel_name
+    LEFT JOIN deal_path
+      ON opportunity_fields.deal_path = deal_path.deal_path_name
     LEFT JOIN sales_segment
       ON opportunity_fields.sales_segment = sales_segment.sales_segment_name
     LEFT JOIN is_sao
@@ -387,5 +387,5 @@ WITH first_contact  AS (
     created_by="@mcooperDD",
     updated_by="@mcooperDD",
     created_date="2020-11-30",
-    updated_date="2021-02-02"
+    updated_date="2021-02-26"
 ) }}

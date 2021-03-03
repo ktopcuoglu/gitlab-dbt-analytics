@@ -65,15 +65,15 @@ Creates a base view with generated keys for the geographic region shared dimensi
 
 {% enddocs %}
 
-{% docs prep_marketing_channel %}
+{% docs prep_bizible_marketing_channel_path %}
 
-Creates a base view with generated keys for the marketing channel shared dimension and references in facts.
+Creates a base view with generated keys for the marketing channel path shared dimension and references in facts.
 
 {% enddocs %}
 
-{% docs prep_opportunity_source %}
+{% docs prep_sales_qualified_source %}
 
-Creates a base view with generated keys for the opportunity source shared dimension and references in facts.
+Creates a base view with generated keys for the sales qualified source (source of an opportunity) shared dimension and references in facts.
 
 {% enddocs %}
 
@@ -83,9 +83,9 @@ Creates a base view with generated keys for the order type shared dimension and 
 
 {% enddocs %}
 
-{% docs prep_purchase_channel %}
+{% docs prep_deal_path %}
 
-Creates a base view with generated keys for the purchase channel shared dimension and references in facts.
+Creates a base view with generated keys for the deal path shared dimension and references in facts.
 
 {% enddocs %}
 
