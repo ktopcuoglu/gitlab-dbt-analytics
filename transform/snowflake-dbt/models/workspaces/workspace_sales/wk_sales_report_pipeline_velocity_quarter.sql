@@ -21,8 +21,12 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
       order_type_stamped,
       stage_name_3plus,
       stage_name_4plus,
+      is_stage_1_plus,
       is_stage_3_plus,
       is_stage_4_plus,
+      is_open,
+      is_lost,
+      is_won,
       is_excluded_flag,
       stage_name,
       forecast_category_name,
@@ -38,7 +42,7 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
       snapshot_date <= DATEADD(month,3,close_fiscal_quarter_date)
       -- 2 quarters before start
       AND snapshot_date >= DATEADD(month,-6,close_fiscal_quarter_date)
-    GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,12, 13, 14, 15, 16,17,18,19
+    GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,12, 13, 14, 15, 16,17,18,19,20,21,22,23
 
 )
 
