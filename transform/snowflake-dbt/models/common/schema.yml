@@ -299,6 +299,10 @@ models:
         tests:
           - not_null
           - unique
+      - name: days_in_month_count
+        description: Number of calendar days in the given month.
+        tests:
+          - not_null
 
   - name: dim_geo_region
     description: "Dimension for geographical region built off ATAM_Region__C in SFDC. Example values: NORAM, LATAM, APAC, EMEA"
