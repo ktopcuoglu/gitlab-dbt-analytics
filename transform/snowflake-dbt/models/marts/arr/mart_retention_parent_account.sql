@@ -131,13 +131,13 @@ WITH dim_crm_account AS (
       current_quantity                          AS prior_year_quantity,
       COALESCE(future_quantity, 0)              AS net_retention_quantity,
       {{ reason_for_quantity_change_seat_change('net_retention_quantity', 'prior_year_quantity') }},
-      future_product_tier_name                  AS net_retention_product_tier_name,
-      current_product_tier_name                 AS prior_year_product_tier_name,
+      future_product_product_tier_name          AS net_retention_product_product_tier_name,
+      current_product_product_tier_name         AS prior_year_product_product_tier_name,
       future_product_ranking                    AS net_retention_product_ranking,
       current_product_ranking                   AS prior_year_product_ranking,
       {{ type_of_arr_change('net_retention_arr', 'prior_year_arr','row_number') }},
       {{ reason_for_arr_change_seat_change('net_retention_quantity', 'prior_year_quantity', 'net_retention_arr', 'prior_year_arr') }},
-      {{ reason_for_arr_change_price_change('net_retention_product_tier_name', 'prior_year_product_tier_name', 'net_retention_quantity', 'prior_year_quantity', 'net_retention_arr', 'prior_year_arr', 'net_retention_product_ranking','prior_year_product_ranking') }},
+      {{ reason_for_arr_change_price_change('net_retention_product_product_tier_name', 'prior_year_product_product_tier_name', 'net_retention_quantity', 'prior_year_quantity', 'net_retention_arr', 'prior_year_arr', 'net_retention_product_ranking','prior_year_product_ranking') }},
       {{ reason_for_arr_change_tier_change('net_retention_product_ranking', 'prior_year_product_ranking', 'net_retention_quantity', 'prior_year_quantity', 'net_retention_arr', 'prior_year_arr') }},
       {{ annual_price_per_seat_change('net_retention_quantity', 'prior_year_quantity', 'net_retention_arr', 'prior_year_arr') }}
     FROM retention_subs

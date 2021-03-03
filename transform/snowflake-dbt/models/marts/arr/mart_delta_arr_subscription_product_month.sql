@@ -200,7 +200,7 @@
       AND type_of_arr_change.arr_month = reason_for_arr_change_end.arr_month
       AND type_of_arr_change.product_tier_name = reason_for_arr_change_end.product_tier_name
     LEFT JOIN annual_price_per_seat_change
-      ON type_of_arr_change.dim_subscription_id = annual_price_per_seat_change.dim_subscription_id
+      ON type_of_arr_change.dim_subscription_id = annual_price_per_seat_change.subscription_id
       AND type_of_arr_change.arr_month = annual_price_per_seat_change.arr_month
       AND type_of_arr_change.product_tier_name = annual_price_per_seat_change.product_tier_name
 
