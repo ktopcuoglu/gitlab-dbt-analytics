@@ -38,8 +38,8 @@
       COALESCE(dim_crm_account.merged_to_account_id, dim_crm_account.dim_crm_account_id)            AS dim_crm_account_id,
       dim_subscription.subscription_name,
       dim_subscription.dim_subscription_id                                                          AS subscription_id,
-      dim_product_detail.product_tier_name                                                          AS product_tier_name,
-      dim_product_detail.product_delivery_type                                                      AS product_delivery_type,
+      dim_product_detail.product_tier_name                                                          AS product_category,
+      dim_product_detail.product_delivery_type                                                      AS delivery,
       dim_product_detail.product_ranking,
       mrr,
       quantity
@@ -64,8 +64,8 @@
       dim_crm_account_id,
       subscription_name,
       subscription_id,
-      product_tier_name,
-      product_delivery_type,
+      product_category,
+      delivery,
       product_ranking,
       MIN(arr_day)                        AS date_day_start,
       --add 1 month to generate churn month
@@ -81,8 +81,8 @@
       dim_crm_account_id,
       subscription_name,
       subscription_id,
-      product_tier_name,
-      product_delivery_type,
+      product_category,
+      delivery,
       product_ranking,
       dim_date.date_actual AS arr_day,
       dim_date.fiscal_quarter_name_fy,
@@ -103,8 +103,8 @@
       base.dim_crm_account_id,
       base.subscription_name,
       base.subscription_id,
-      base.product_tier_name,
-      base.product_delivery_type,
+      base.product_category,
+      base.delivery,
       base.product_ranking,
       SUM(ZEROIFNULL(quantity))                                                               AS quantity,
       SUM(ZEROIFNULL(mrr)*12)                                                                 AS arr
@@ -112,16 +112,16 @@
     LEFT JOIN mart_arr
       ON base.arr_day = mart_arr.arr_day
       AND base.subscription_id = mart_arr.subscription_id
-      AND base.product_tier_name = mart_arr.product_tier_name
+      AND base.product_category = mart_arr.product_category
     {{ dbt_utils.group_by(n=9) }}
 
 ), prior_day AS (
 
     SELECT
       daily_arr_subscription_level.*,
-      COALESCE(LAG(quantity) OVER (PARTITION BY subscription_id, product_tier_name ORDER BY arr_day),0) AS previous_quantity,
-      COALESCE(LAG(arr) OVER (PARTITION BY subscription_id, product_tier_name ORDER BY arr_day),0) AS previous_arr,
-      ROW_NUMBER() OVER (PARTITION BY subscription_id, product_tier_name ORDER BY arr_day) AS row_number
+      COALESCE(LAG(quantity) OVER (PARTITION BY subscription_id, product_category ORDER BY arr_day),0) AS previous_quantity,
+      COALESCE(LAG(arr) OVER (PARTITION BY subscription_id, product_category ORDER BY arr_day),0) AS previous_arr,
+      ROW_NUMBER() OVER (PARTITION BY subscription_id, product_category ORDER BY arr_day) AS row_number
     FROM daily_arr_subscription_level
 
 ), type_of_arr_change AS (
@@ -136,7 +136,7 @@
     SELECT
       arr_day,
       subscription_id,
-      product_tier_name,
+      product_category,
       previous_arr      AS beg_arr,
       previous_quantity AS beg_quantity
     FROM type_of_arr_change
@@ -146,7 +146,7 @@
     SELECT
       arr_day,
       subscription_id,
-      product_tier_name,
+      product_category,
       {{ reason_for_arr_change_seat_change('quantity', 'previous_quantity', 'arr', 'previous_arr') }},
       {{ reason_for_quantity_change_seat_change('quantity', 'previous_quantity') }}
     FROM type_of_arr_change
@@ -156,8 +156,8 @@
     SELECT
       arr_day,
       subscription_id,
-      product_tier_name,
-      {{ reason_for_arr_change_price_change('product_tier_name', 'product_tier_name', 'quantity', 'previous_quantity', 'arr', 'previous_arr', 'product_ranking',' product_ranking') }}
+      product_category,
+      {{ reason_for_arr_change_price_change('product_category', 'product_category', 'quantity', 'previous_quantity', 'arr', 'previous_arr', 'product_ranking',' product_ranking') }}
     FROM type_of_arr_change
 
 ), reason_for_arr_change_end AS (
@@ -165,7 +165,7 @@
     SELECT
       arr_day,
       subscription_id,
-      product_tier_name,
+      product_category,
       arr                   AS end_arr,
       quantity              AS end_quantity
     FROM type_of_arr_change
@@ -175,14 +175,14 @@
     SELECT
       arr_day,
       subscription_id,
-      product_tier_name,
+      product_category,
       {{ annual_price_per_seat_change('quantity', 'previous_quantity', 'arr', 'previous_arr') }}
     FROM type_of_arr_change
 
 ), combined AS (
 
     SELECT
-      {{ dbt_utils.surrogate_key(['type_of_arr_change.arr_day', 'type_of_arr_change.subscription_id','type_of_arr_change.product_tier_name']) }}
+      {{ dbt_utils.surrogate_key(['type_of_arr_change.arr_day', 'type_of_arr_change.subscription_id','type_of_arr_change.product_category']) }}
                                                                     AS primary_key,
       type_of_arr_change.arr_day,
       type_of_arr_change.parent_crm_account_name,
@@ -190,8 +190,8 @@
       type_of_arr_change.dim_crm_account_id,
       type_of_arr_change.subscription_name,
       type_of_arr_change.subscription_id,
-      type_of_arr_change.product_tier_name,
-      type_of_arr_change.product_delivery_type,
+      type_of_arr_change.product_category,
+      type_of_arr_change.delivery,
       type_of_arr_change.product_ranking,
       type_of_arr_change.type_of_arr_change,
       reason_for_arr_change_beg.beg_arr,
@@ -206,23 +206,23 @@
     LEFT JOIN reason_for_arr_change_beg
       ON type_of_arr_change.subscription_id = reason_for_arr_change_beg.subscription_id
       AND type_of_arr_change.arr_day = reason_for_arr_change_beg.arr_day
-      AND type_of_arr_change.product_tier_name = reason_for_arr_change_beg.product_tier_name
+      AND type_of_arr_change.product_category = reason_for_arr_change_beg.product_category
     LEFT JOIN reason_for_arr_change_seat_change
       ON type_of_arr_change.subscription_id = reason_for_arr_change_seat_change.subscription_id
       AND type_of_arr_change.arr_day = reason_for_arr_change_seat_change.arr_day
-      AND type_of_arr_change.product_tier_name = reason_for_arr_change_seat_change.product_tier_name
+      AND type_of_arr_change.product_category = reason_for_arr_change_seat_change.product_category
     LEFT JOIN reason_for_arr_change_price_change
       ON type_of_arr_change.subscription_id = reason_for_arr_change_price_change.subscription_id
       AND type_of_arr_change.arr_day = reason_for_arr_change_price_change.arr_day
-      AND type_of_arr_change.product_tier_name = reason_for_arr_change_price_change.product_tier_name
+      AND type_of_arr_change.product_category = reason_for_arr_change_price_change.product_category
     LEFT JOIN reason_for_arr_change_end
       ON type_of_arr_change.subscription_id = reason_for_arr_change_end.subscription_id
       AND type_of_arr_change.arr_day = reason_for_arr_change_end.arr_day
-      AND type_of_arr_change.product_tier_name = reason_for_arr_change_end.product_tier_name
+      AND type_of_arr_change.product_category = reason_for_arr_change_end.product_category
     LEFT JOIN annual_price_per_seat_change
       ON type_of_arr_change.subscription_id = annual_price_per_seat_change.subscription_id
       AND type_of_arr_change.arr_day = annual_price_per_seat_change.arr_day
-      AND type_of_arr_change.product_tier_name = annual_price_per_seat_change.product_tier_name
+      AND type_of_arr_change.product_category = annual_price_per_seat_change.product_category
 
 )
 

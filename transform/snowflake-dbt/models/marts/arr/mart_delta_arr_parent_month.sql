@@ -36,8 +36,8 @@ WITH dim_billing_account AS (
       IFF(is_first_day_of_last_month_of_fiscal_year, fiscal_year, NULL)               AS fiscal_year,
       dim_crm_account.parent_crm_account_name,
       dim_crm_account.dim_parent_crm_account_id,
-      dim_product_detail.product_tier_name                                            AS product_tier_name,
-      dim_product_detail.product_delivery_type                                        AS product_delivery_type,
+      dim_product_detail.product_tier_name                                            AS product_category,
+      dim_product_detail.product_delivery_type                                        AS delivery,
       dim_product_detail.product_ranking,
       fct_mrr.mrr,
       fct_mrr.quantity
@@ -86,8 +86,8 @@ WITH dim_billing_account AS (
       base.arr_month,
       base.parent_crm_account_name,
       base.dim_parent_crm_account_id,
-      ARRAY_AGG(DISTINCT product_tier_name) WITHIN GROUP (ORDER BY product_tier_name ASC)      AS product_tier_name,
-      ARRAY_AGG(DISTINCT product_delivery_type) WITHIN GROUP (ORDER BY product_delivery_type ASC)                      AS product_delivery_type,
+      ARRAY_AGG(DISTINCT product_category) WITHIN GROUP (ORDER BY product_category ASC)      AS product_category,
+      ARRAY_AGG(DISTINCT delivery) WITHIN GROUP (ORDER BY delivery ASC)                      AS delivery,
       MAX(product_ranking)                                                                   AS product_ranking,
       SUM(ZEROIFNULL(quantity))                                                              AS quantity,
       SUM(ZEROIFNULL(mrr)*12)                                                                AS arr
@@ -101,8 +101,8 @@ WITH dim_billing_account AS (
 
     SELECT
       monthly_arr_parent_level.*,
-      LAG(product_tier_name) OVER (PARTITION BY dim_parent_crm_account_id ORDER BY arr_month) AS previous_product_tier_name,
-      LAG(product_delivery_type) OVER (PARTITION BY dim_parent_crm_account_id ORDER BY arr_month) AS previous_product_delivery_type,
+      LAG(product_category) OVER (PARTITION BY dim_parent_crm_account_id ORDER BY arr_month) AS previous_product_category,
+      LAG(delivery) OVER (PARTITION BY dim_parent_crm_account_id ORDER BY arr_month) AS previous_delivery,
       COALESCE(LAG(product_ranking) OVER (PARTITION BY dim_parent_crm_account_id ORDER BY arr_month),0) AS previous_product_ranking,
       COALESCE(LAG(quantity) OVER (PARTITION BY dim_parent_crm_account_id ORDER BY arr_month),0) AS previous_quantity,
       COALESCE(LAG(arr) OVER (PARTITION BY dim_parent_crm_account_id ORDER BY arr_month),0) AS previous_arr,
@@ -139,7 +139,7 @@ WITH dim_billing_account AS (
     SELECT
       arr_month,
       dim_parent_crm_account_id,
-      {{ reason_for_arr_change_price_change('product_tier_name', 'previous_product_tier_name', 'quantity', 'previous_quantity', 'arr', 'previous_arr', 'product_ranking',' previous_product_ranking') }}
+      {{ reason_for_arr_change_price_change('product_category', 'previous_product_category', 'quantity', 'previous_quantity', 'arr', 'previous_arr', 'product_ranking',' previous_product_ranking') }}
     FROM type_of_arr_change
 
 ), reason_for_arr_change_tier_change AS (
@@ -175,10 +175,10 @@ WITH dim_billing_account AS (
       type_of_arr_change.arr_month,
       type_of_arr_change.parent_crm_account_name,
       type_of_arr_change.dim_parent_crm_account_id,
-      type_of_arr_change.product_tier_name,
-      type_of_arr_change.previous_product_tier_name                  AS previous_month_product_category,
-      type_of_arr_change.product_delivery_type,
-      type_of_arr_change.previous_product_delivery_type                          AS previous_month_product_delivery_type,
+      type_of_arr_change.product_category,
+      type_of_arr_change.previous_product_category                  AS previous_month_product_category,
+      type_of_arr_change.delivery,
+      type_of_arr_change.previous_delivery                          AS previous_month_delivery,
       type_of_arr_change.product_ranking,
       type_of_arr_change.previous_product_ranking                   AS previous_month_product_ranking,
       type_of_arr_change.type_of_arr_change,

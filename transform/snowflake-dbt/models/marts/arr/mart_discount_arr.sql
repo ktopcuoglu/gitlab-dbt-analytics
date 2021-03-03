@@ -86,8 +86,8 @@ WITH dim_date AS (
       ROUND(zuora_subscription.current_term / 12, 1)                    AS current_term_years,
       dim_crm_account_invoice.is_reseller,
       dim_product_detail.product_rate_plan_charge_name,
-      dim_product_detail.product_tier_name                              AS product_tier_name,
-      dim_product_detail.product_delivery_type                          AS product_delivery_type,
+      dim_product_detail.product_tier_name                              AS product_category,
+      dim_product_detail.product_delivery_type                          AS delivery,
       dim_product_detail.service_type,
       CASE
         WHEN LOWER(dim_product_detail.product_rate_plan_charge_name) LIKE '%edu or oss%'   THEN TRUE
