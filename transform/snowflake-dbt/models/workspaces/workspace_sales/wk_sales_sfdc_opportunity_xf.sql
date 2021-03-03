@@ -117,7 +117,7 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity_xf.order_type_live,
       sfdc_opportunity_xf.order_type_stamped,
 
-      sfdc_opportunity_xf.net_arr                 AS raw_net_arr,
+      COALESCE(sfdc_opportunity_xf.net_arr,0)                 AS raw_net_arr,
       sfdc_opportunity_xf.recurring_amount,
       sfdc_opportunity_xf.true_up_amount,
       sfdc_opportunity_xf.proserv_amount,
@@ -318,51 +318,51 @@ WITH sfdc_opportunity AS (
 
     SELECT '2. New - Connected'     AS "ORDER_TYPE_STAMPED", 
           'Mid-Market'              AS "USER_SEGMENT_STAMPED", 
-          1.001856868               AS "RATIO_NET_IACV_TO_NET_ARR" 
+          0.999691784               AS "RATIO_NET_IACV_TO_NET_ARR" 
     UNION 
     SELECT '1. New - First Order'   AS "ORDER_TYPE_STAMPED", 
           'SMB'                     AS "USER_SEGMENT_STAMPED", 
-          0.9879780801              AS "RATIO_NET_IACV_TO_NET_ARR" 
-    UNION 
-    SELECT '1. New - First Order'   AS "ORDER_TYPE_STAMPED", 
-          'PubSec'                  AS "USER_SEGMENT_STAMPED", 
-          0.9999751852              AS "RATIO_NET_IACV_TO_NET_ARR" 
+          0.998590143               AS "RATIO_NET_IACV_TO_NET_ARR" 
     UNION 
     SELECT '1. New - First Order'   AS "ORDER_TYPE_STAMPED", 
           'Large'                   AS "USER_SEGMENT_STAMPED", 
-          0.9983306793              AS "RATIO_NET_IACV_TO_NET_ARR" 
+          0.992289340               AS "RATIO_NET_IACV_TO_NET_ARR" 
     UNION 
     SELECT '3. Growth'              AS "ORDER_TYPE_STAMPED", 
           'SMB'                     AS "USER_SEGMENT_STAMPED", 
-          0.9427320642              AS "RATIO_NET_IACV_TO_NET_ARR" 
+          0.927846192               AS "RATIO_NET_IACV_TO_NET_ARR" 
     UNION 
     SELECT '3. Growth'              AS "ORDER_TYPE_STAMPED", 
           'Large'                   AS "USER_SEGMENT_STAMPED", 
-          0.9072734284              AS "RATIO_NET_IACV_TO_NET_ARR" 
-    UNION 
-    SELECT '3. Growth'              AS "ORDER_TYPE_STAMPED", 
-          'PubSec'                  AS "USER_SEGMENT_STAMPED", 
-          1.035889715               AS "RATIO_NET_IACV_TO_NET_ARR" 
+          0.852915435               AS "RATIO_NET_IACV_TO_NET_ARR" 
     UNION 
     SELECT '2. New - Connected'     AS "ORDER_TYPE_STAMPED", 
           'SMB'                     AS "USER_SEGMENT_STAMPED", 
-          1                         AS "RATIO_NET_IACV_TO_NET_ARR" 
-    UNION 
-    SELECT '2. New - Connected'     AS "ORDER_TYPE_STAMPED", 
-          'PubSec'                  AS "USER_SEGMENT_STAMPED", 
-          1.002887983               AS "RATIO_NET_IACV_TO_NET_ARR" 
+          1.009262672               AS "RATIO_NET_IACV_TO_NET_ARR" 
     UNION 
     SELECT '3. Growth'              AS "ORDER_TYPE_STAMPED", 
           'Mid-Market'              AS "USER_SEGMENT_STAMPED", 
-          0.8504383811              AS "RATIO_NET_IACV_TO_NET_ARR" 
+          0.793618079               AS "RATIO_NET_IACV_TO_NET_ARR" 
     UNION 
     SELECT '1. New - First Order'   AS "ORDER_TYPE_STAMPED", 
           'Mid-Market'              AS "USER_SEGMENT_STAMPED", 
-          0.9897881218              AS "RATIO_NET_IACV_TO_NET_ARR" 
+          0.988527875               AS "RATIO_NET_IACV_TO_NET_ARR" 
     UNION 
     SELECT '2. New - Connected'     AS "ORDER_TYPE_STAMPED", 
           'Large'                   AS "USER_SEGMENT_STAMPED", 
-          1.012723079               AS "RATIO_NET_IACV_TO_NET_ARR" 
+          1.010081083               AS "RATIO_NET_IACV_TO_NET_ARR" 
+    UNION 
+    SELECT '1. New - First Order'   AS "ORDER_TYPE_STAMPED", 
+          'PubSec'                  AS "USER_SEGMENT_STAMPED", 
+          1.000000000               AS "RATIO_NET_IACV_TO_NET_ARR" 
+    UNION 
+    SELECT '2. New - Connected'     AS "ORDER_TYPE_STAMPED", 
+          'PubSec'                  AS "USER_SEGMENT_STAMPED", 
+          1.002741689               AS "RATIO_NET_IACV_TO_NET_ARR" 
+    UNION 
+    SELECT '3. Growth'              AS "ORDER_TYPE_STAMPED", 
+          'PubSec'                  AS "USER_SEGMENT_STAMPED", 
+          0.965670500               AS "RATIO_NET_IACV_TO_NET_ARR" 
 
 ), oppty_final AS (
 
@@ -486,17 +486,36 @@ WITH sfdc_opportunity AS (
       oppty_final.opportunity_owner_user_segment                                                        AS sales_team_cro_level,
       CONCAT(oppty_final.opportunity_owner_user_segment,'_',oppty_final.opportunity_owner_user_region)  AS sales_team_rd_asm_level,
 
-      -- NF 2021-01-28 Not all historical opportunities have Net ARR set. To allow historical reporting 
-      -- we apply a ratio by segment / order type to convert IACV to Net ARR      
+      ---------------------------------------------------------------------------------------------
+      ---------------------------------------------------------------------------------------------
+      -- I am faking that using the upper CTE, that should be replaced by the official table
+      COALESCE(net_iacv_to_net_arr_ratio.ratio_net_iacv_to_net_arr,0)         AS segment_order_type_iacv_to_net_arr_ratio,
+
+      -- calculated net_arr
+      -- uses ratios to estimate the net_arr based on iacv if open or net_iacv if closed
+      -- NUANCE: Lost deals might not have net_incremental_acv populated, so we must rely on iacv
+      -- Using opty ratio for open deals doesn't seem to work well
+      CASE 
+        WHEN oppty_final.stage_name NOT IN ('8-Closed Lost', '9-Unqualified', 'Closed Won', '10-Duplicate')  -- OPEN DEAL
+            THEN COALESCE(oppty_final.incremental_acv,0) * COALESCE(segment_order_type_iacv_to_net_arr_ratio,0)
+        WHEN oppty_final.stage_name IN ('8-Closed Lost')                       -- CLOSED LOST DEAL and no Net IACV
+          AND COALESCE(oppty_final.net_incremental_acv,0) = 0
+           THEN COALESCE(oppty_final.incremental_acv,0) * COALESCE(segment_order_type_iacv_to_net_arr_ratio,0)
+        WHEN oppty_final.stage_name IN ('8-Closed Lost', 'Closed Won')         -- REST of CLOSED DEAL
+            THEN COALESCE(oppty_final.net_incremental_acv,0) * COALESCE(segment_order_type_iacv_to_net_arr_ratio,0)
+        ELSE NULL
+      END                                                                     AS calculated_from_ratio_net_arr,
+
+      -- Calculated NET ARR is only used for deals closed earlier than FY19 and that have no raw_net_arr
       CASE
-        WHEN oppty_final.raw_net_arr IS NULL 
-          AND oppty_final.net_incremental_acv <> 0
-          THEN oppty_final.net_incremental_acv * coalesce(net_iacv_to_net_arr_ratio.ratio_net_iacv_to_net_arr,0)
-        WHEN oppty_final.raw_net_arr IS NULL 
-          AND oppty_final.incremental_acv <> 0
-          THEN oppty_final.incremental_acv * coalesce(net_iacv_to_net_arr_ratio.ratio_net_iacv_to_net_arr,0)
-        ELSE oppty_final.raw_net_arr
-     END                                                          AS net_arr,
+        WHEN oppty_final.close_date < '2018-02-01'::DATE 
+              AND COALESCE(oppty_final.raw_net_arr,0) = 0 
+          THEN calculated_from_ratio_net_arr
+        ELSE COALESCE(oppty_final.raw_net_arr,0) -- Rest of deals after cut off date
+      END                                                                     AS net_arr,
+
+      ---------------------------------------------------------------------------------------------
+      ---------------------------------------------------------------------------------------------
 
       -- compound metrics to facilitate reporting
       -- created and closed within the quarter net arr

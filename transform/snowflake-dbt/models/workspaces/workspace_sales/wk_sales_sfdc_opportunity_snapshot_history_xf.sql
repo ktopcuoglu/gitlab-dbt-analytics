@@ -27,7 +27,11 @@ WITH date_details AS (
       --sfdc_opportunity_snapshot_history.valid_to,
       --sfdc_opportunity_snapshot_history.is_currently_valid,
       sfdc_opportunity_snapshot_history.opportunity_snapshot_id,
-      sfdc_opportunity_snapshot_history.account_id,
+
+      -- Accounts might get deleted or merged, I am selecting the latest account id from the opty object
+      -- to avoid showing non-valid account ids
+      sfdc_opportunity_snapshot_history.account_id AS raw_account_id,
+      
       sfdc_opportunity_snapshot_history.opportunity_id,
       sfdc_opportunity_snapshot_history.opportunity_name,
       sfdc_opportunity_snapshot_history.owner_id,
@@ -283,6 +287,7 @@ WITH date_details AS (
     SELECT 
       opportunity_id,
       owner_id,
+      account_id,
       order_type_stamped,
       opportunity_owner_manager,
       is_edu_oss,
@@ -476,11 +481,9 @@ WITH date_details AS (
       -- Using opty ratio for open deals doesn't seem to work well
       CASE 
         WHEN opp_snapshot.stage_name NOT IN ('8-Closed Lost', '9-Unqualified', 'Closed Won', '10-Duplicate')  -- OPEN DEAL
---          THEN COALESCE(opp_snapshot.incremental_acv,0) * COALESCE(opportunity_based_iacv_to_net_arr_ratio,segment_order_type_iacv_to_net_arr_ratio)
             THEN COALESCE(opp_snapshot.incremental_acv,0) * COALESCE(segment_order_type_iacv_to_net_arr_ratio,0)
         WHEN opp_snapshot.stage_name IN ('8-Closed Lost')                       -- CLOSED LOST DEAL and no Net IACV
           AND COALESCE(opp_snapshot.net_incremental_acv,0) = 0
---            THEN COALESCE(opp_snapshot.incremental_acv,0) * COALESCE(opportunity_based_iacv_to_net_arr_ratio,segment_order_type_iacv_to_net_arr_ratio)
             THEN COALESCE(opp_snapshot.incremental_acv,0) * COALESCE(segment_order_type_iacv_to_net_arr_ratio,0)
         WHEN opp_snapshot.stage_name IN ('8-Closed Lost', 'Closed Won')         -- REST of CLOSED DEAL
             THEN COALESCE(opp_snapshot.net_incremental_acv,0) * COALESCE(opportunity_based_iacv_to_net_arr_ratio,segment_order_type_iacv_to_net_arr_ratio)
@@ -534,7 +537,8 @@ WITH date_details AS (
       sfdc_opportunity_xf.opportunity_owner_manager,
       sfdc_opportunity_xf.is_edu_oss,
       sfdc_opportunity_xf.sales_qualified_source,
-
+      sfdc_opportunity_xf.account_id,
+      
 
       -- field used for FY21 bookings reporitng
       sfdc_opportunity_xf.account_owner_team_stamped, 
@@ -627,6 +631,7 @@ WITH date_details AS (
       sfdc_accounts_xf.tsp_sub_region,
       sfdc_accounts_xf.ultimate_parent_sales_segment,
       sfdc_accounts_xf.tsp_max_hierarchy_sales_segment,
+      sfdc_accounts_xf.ultimate_parent_account_id,
         
       -- 20201021 NF: This should be replaced by a table that keeps track of excluded deals for forecasting purposes
       CASE 
@@ -651,7 +656,7 @@ WITH date_details AS (
     INNER JOIN sfdc_opportunity_xf    
       ON sfdc_opportunity_xf.opportunity_id = opp_snapshot.opportunity_id
     LEFT JOIN sfdc_accounts_xf
-      ON opp_snapshot.account_id = sfdc_accounts_xf.account_id 
+      ON sfdc_opportunity_xf.account_id = sfdc_accounts_xf.account_id 
     LEFT JOIN sfdc_users_xf account_owner
       ON account_owner.user_id = sfdc_accounts_xf.owner_id
     LEFT JOIN sfdc_users_xf opportunity_owner
@@ -670,8 +675,9 @@ WITH date_details AS (
     LEFT JOIN pipeline_type_quarter_created 
       ON pipeline_type_quarter_created.opportunity_id = opp_snapshot.opportunity_id
       AND pipeline_type_quarter_created.snapshot_fiscal_quarter_date = opp_snapshot.snapshot_fiscal_quarter_date 
-    WHERE opp_snapshot.account_id NOT IN ('0014M00001kGcORQA0')                           -- remove test account
-      AND sfdc_accounts_xf.ultimate_parent_account_id NOT IN ('0016100001YUkWVAA1')       -- remove test account
+    WHERE opp_snapshot.raw_account_id NOT IN ('0014M00001kGcORQA0')                           -- remove test account
+      AND (sfdc_accounts_xf.ultimate_parent_account_id NOT IN ('0016100001YUkWVAA1')
+            OR sfdc_accounts_xf.account_id IS NULL)                                        -- remove test account
       AND opp_snapshot.is_deleted = 0
 ), add_compound_metrics AS (
     SELECT 
