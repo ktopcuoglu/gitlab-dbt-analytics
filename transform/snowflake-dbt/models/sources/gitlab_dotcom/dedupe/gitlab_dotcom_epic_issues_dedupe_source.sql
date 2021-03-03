@@ -1,6 +1,6 @@
 {{ config({
     "materialized": "incremental",
-    "unique_key": "id"
+    "unique_key": "issue_id"
     })
 }}
 
@@ -11,4 +11,4 @@ FROM {{ source('gitlab_dotcom', 'epic_issues') }}
 WHERE _uploaded_at >= (SELECT MAX(_uploaded_at) FROM {{this}})
 
 {% endif %}
-QUALIFY ROW_NUMBER() OVER (PARTITION BY id ORDER BY _uploaded_at DESC) = 1
+QUALIFY ROW_NUMBER() OVER (PARTITION BY issue_id ORDER BY _uploaded_at DESC) = 1
