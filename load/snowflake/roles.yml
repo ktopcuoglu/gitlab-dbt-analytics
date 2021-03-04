@@ -505,6 +505,7 @@ roles:
     - loader:
         warehouses:
             - loading
+            - usage_ping
         owns:
             schemas:
                 - raw.bamboohr
@@ -3454,3 +3455,6 @@ warehouses:
 
     - transforming_4xl:
         size: "4-x-large"
+
+    - usage_ping:
+        size: small

@@ -69,8 +69,8 @@ dag = DAG(
 # Instance Level Usage Ping
 instance_cmd = f"""
     {clone_repo_cmd} &&
-    export PYTHONPATH="$CI_PROJECT_DIR/orchestration/:$PYTHONPATH" &&
-    cd analytics/extract/ &&
+    export SNOWFLAKE_LOAD_WAREHOUSE="USAGE_PING" &&
+    cd analytics/transform/general/ &&
     python3 usage_ping.py saas_instance_ping
 """
 
@@ -86,20 +86,20 @@ instance_ping = KubernetesPodOperator(
 )
 
 # Namespace, Group, Project, User Level Usage Ping
-levels_cmd = f"""
+namespace_cmd = f"""
     {clone_repo_cmd} &&
-    export PYTHONPATH="$CI_PROJECT_DIR/orchestration/:$PYTHONPATH" &&
-    cd analytics/extract/ &&
-    python3 usage_ping.py saas_level_ping --ping_date=$RUN_DATE
+    export SNOWFLAKE_LOAD_WAREHOUSE="USAGE_PING" &&
+    cd analytics/transform/general/ &&
+    python3 usage_ping.py saas_namespace_ping --ping_date=$RUN_DATE
 """
 
-levels_ping = KubernetesPodOperator(
+namespace_ping = KubernetesPodOperator(
     **gitlab_defaults,
     image=DATA_IMAGE,
-    task_id="saas-levels-usage-ping",
-    name="saas-levels-usage-ping",
+    task_id="saas-namespace-usage-ping",
+    name="saas-namespace-usage-ping",
     secrets=secrets,
     env_vars=pod_env_vars,
-    arguments=[levels_cmd],
+    arguments=[namespace_cmd],
     dag=dag,
 )
