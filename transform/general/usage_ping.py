@@ -73,15 +73,15 @@ class UsagePing(object):
         results_all = {"testing": "datemath"}
 
         for key, query in saas_queries.items():
-                try:
-                    results = pd.read_sql(sql=query, con=connection)
-                    counter_value = results["counter_value"].values[0]
-                    data_to_write = str(counter_value)
-                except SQLAlchemyError as e:
-                    error = str(e.__dict__["orig"])
-                    data_to_write = error
+            try:
+                results = pd.read_sql(sql=query, con=connection)
+                counter_value = results["counter_value"].values[0]
+                data_to_write = str(counter_value)
+            except SQLAlchemyError as e:
+                error = str(e.__dict__["orig"])
+                data_to_write = error
 
-                results_all[key] = data_to_write
+            results_all[key] = data_to_write
 
         connection.close()
         self.sysadmin_engine.dispose()
@@ -96,7 +96,7 @@ class UsagePing(object):
 
         self.loader_engine.dispose()
 
-    def _get_level_queries(self) -> Dict:
+    def _get_namespace_queries(self) -> List[Dict]:
         """
         can be updated to query an end point or query other functions
         to generate:
@@ -111,27 +111,29 @@ class UsagePing(object):
         """
         # with open(
         #     os.path.join(
-        #         os.path.dirname(__file__), "saas_usage_pings/levels_sql_queries.json"
+        #         os.path.dirname(__file__), "saas_usage_pings/usage_ping_namespace_queries.json"
         #     )
         # ) as f:
         #     saas_queries = json.load(f)
 
-        saas_queries = {
-            "counts_monthly.deployments": {
-                "query_base": "SELECT namespaces_xf.namespace_id as id, 123 as parent_namespace,  COUNT(deployments.id) AS counter_value  FROM prep.gitlab_dotcom.gitlab_dotcom_deployments_dedupe_source AS deployments  LEFT JOIN prep.gitlab_dotcom.gitlab_dotcom_projects_dedupe_source AS projects ON projects.id = deployments.project_id  LEFT JOIN prep.gitlab_dotcom.gitlab_dotcom_namespaces_dedupe_source AS namespaces ON projects.namespace_id = namespaces.id LEFT JOIN prod.legacy.gitlab_dotcom_namespaces_xf AS namespaces_xf ON namespaces.id = namespaces_xf.namespace_id WHERE deployments.created_at BETWEEN between_start_date AND between_end_date GROUP BY 1",
+        saas_queries = [
+            {
+                "counter_name": "counts_monthly.deployments",
+                "counter_query": "SELECT namespaces_xf.namespace_ultimate_parent_id AS id, namespaces_xf.namespace_ultimate_parent_id,  COUNT(deployments.id) AS counter_value  FROM prep.gitlab_dotcom.gitlab_dotcom_deployments_dedupe_source AS deployments  LEFT JOIN prep.gitlab_dotcom.gitlab_dotcom_projects_dedupe_source AS projects ON projects.id = deployments.project_id  LEFT JOIN prep.gitlab_dotcom.gitlab_dotcom_namespaces_dedupe_source AS namespaces ON projects.namespace_id = namespaces.id LEFT JOIN prod.legacy.gitlab_dotcom_namespaces_xf AS namespaces_xf ON namespaces.id = namespaces_xf.namespace_id WHERE deployments.created_at BETWEEN between_start_date AND between_end_date GROUP BY 1",
+                "time_window_query": True,
                 "level": "namespace",
-                "between": True,
             },
-            "bad_query": {
-                "query_base": "SELECT a bad query",
-                "level": "project",
-                "between": False,
+            {
+                "counter_name": "bad_query",
+                "counter_query": "SELECT a bad query",
+                "time_window_query": False,
+                "level": "namespace",
             },
-        }
+        ]
 
         return saas_queries
 
-    def saas_level_ping(self):
+    def saas_namespace_ping(self):
         """
         Take a dictionary of the following type and run each
         query to then upload to a table in raw.
@@ -144,14 +146,14 @@ class UsagePing(object):
             }
         }
         """
-        saas_queries = self._get_level_queries()
+        saas_queries = self._get_namespace_queries()
 
         connection = self.sysadmin_engine.connect()
 
-        for key, query_dict in saas_queries.items():
-            base_query = query_dict.get("query_base")
+        for query_dict in saas_queries:
+            base_query = query_dict.get("counter_query")
 
-            if query_dict.get("between", False):
+            if query_dict.get("time_window_query", False):
                 base_query = base_query.replace(
                     "between_end_date", f"'{str(self.end_date)}'"
                 )
@@ -162,22 +164,27 @@ class UsagePing(object):
                 # Expecting [id, parent_namespace, counter_value]
                 print(base_query)
                 results = pd.read_sql(sql=base_query, con=connection)
+                error = "Success"
             except SQLAlchemyError as e:
                 error = str(e.__dict__["orig"])
                 results = pd.DataFrame(
-                    columns=["id", "parent_namespace", "counter_value"]
+                    columns=["id", "namespace_ultimate_parent_id", "counter_value"]
                 )
-                results.loc[0] = ["Error", "Error", error]
+                results.loc[0] = [None, None, None]
 
-            results["ping_name"] = key
+            results["ping_name"] = query_dict.get("counter_name", "Missing Name")
             results["level"] = query_dict.get("level", None)
             results["query_ran"] = base_query
+            results["error"] = error
             results["ping_date"] = self.end_date
 
-            print(key, results)
+            print(results)
 
             dataframe_uploader(
-                results, self.sysadmin_engine, "gitlab_dotcom_level", "saas_usage_ping"
+                results,
+                self.sysadmin_engine,
+                "gitlab_dotcom_namespace",
+                "saas_usage_ping",
             )
 
         connection.close()
