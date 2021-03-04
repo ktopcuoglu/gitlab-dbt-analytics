@@ -54,16 +54,15 @@ default_args = {
     "depends_on_past": False,
     "on_failure_callback": slack_failed_task,
     "owner": "airflow",
-    "retries": 1,
-    "retry_delay": timedelta(minutes=1),
+    "retries": 0,
     "start_date": datetime(2020, 6, 7),
-    "dagrun_timeout": timedelta(hours=2),
+    "dagrun_timeout": timedelta(hours=4),
 }
 
 # Create the DAG
-#  DAG will be triggered at 06:59am UTC which is 23:59 PM PST
+#  Sunday at 0900 UTC
 dag = DAG(
-    "saas_usage_ping", default_args=default_args, schedule_interval="0 7 * * *"
+    "saas_usage_ping", default_args=default_args, schedule_interval="0 9 * * 0"
 )
 
 # Instance Level Usage Ping
