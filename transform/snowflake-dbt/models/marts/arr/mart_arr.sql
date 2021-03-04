@@ -1,7 +1,10 @@
 /* This table needs to be permanent to allow zero cloning at specific timestamps */
-{{ config(materialized='table',
-  transient=false,
-  schema="common_mart_sales")}}
+{{ config({
+        "materialized": "table",
+        "transient": false,
+        "schema": "common_mart_sales"
+    })
+}}
 
 WITH dim_billing_account AS (
 
