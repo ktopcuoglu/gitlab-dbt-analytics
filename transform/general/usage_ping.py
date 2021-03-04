@@ -1,7 +1,9 @@
 import datetime
 import json
+import logging
 import re
 import os
+import sys
 from os import environ as env
 from typing import Dict, List
 
@@ -69,6 +71,7 @@ class UsagePing(object):
         results_all = {}
 
         for key, query in saas_queries.items():
+            logging.info(f"Running ping {key}...")
             try:
                 results = pd.read_sql(sql=query, con=connection)
                 counter_value = results["counter_value"].values[0]
@@ -147,6 +150,8 @@ class UsagePing(object):
 
         for query_dict in saas_queries:
             base_query = query_dict.get("counter_query")
+            ping_name = query_dict.get("counter_name", "Missing Name")
+            logging.info(f"Running ping {ping_name}...")
 
             if query_dict.get("time_window_query", False):
                 base_query = base_query.replace(
@@ -166,7 +171,7 @@ class UsagePing(object):
                 )
                 results.loc[0] = [None, None, None]
 
-            results["ping_name"] = query_dict.get("counter_name", "Missing Name")
+            results["ping_name"] = ping_name
             results["level"] = query_dict.get("level", None)
             results["query_ran"] = base_query
             results["error"] = error
@@ -184,4 +189,6 @@ class UsagePing(object):
 
 
 if __name__ == "__main__":
+    logging.basicConfig(stream=sys.stdout, level=20)
     Fire(UsagePing)
+    logging.info("Done with pings.")
