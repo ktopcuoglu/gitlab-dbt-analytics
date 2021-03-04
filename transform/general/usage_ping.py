@@ -83,7 +83,7 @@ class UsagePing(object):
             results_all[key] = data_to_write
 
         connection.close()
-        self.sysadmin_engine.dispose()
+        self.loader_engine.dispose()
 
         ping_to_upload = pd.DataFrame(columns=["query_map", "run_results", "ping_date"])
 
