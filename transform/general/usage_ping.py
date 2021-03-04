@@ -11,7 +11,14 @@ import sql_metadata
 
 from fire import Fire
 from flatten_dict import flatten
+from gitlabdata.orchestration_utils import (
+    dataframe_uploader,
+    dataframe_enricher,
+    snowflake_engine_factory,
+)
 from pprint import pprint
+from sqlalchemy.engine.base import Engine
+from sqlalchemy.exc import SQLAlchemyError
 from sqlparse.sql import (
     Identifier,
     IdentifierList,
@@ -23,21 +30,10 @@ from sqlparse.sql import (
 from sqlparse.tokens import Keyword, Name, Punctuation, String, Whitespace
 from sqlparse.utils import imt
 
-from gitlabdata.orchestration_utils import (
-    dataframe_uploader,
-    dataframe_enricher,
-    snowflake_engine_factory,
-)
-
-import pandas as pd
-from sqlalchemy.engine.base import Engine
-from sqlalchemy.exc import SQLAlchemyError
-
 
 class UsagePing(object):
     def __init__(self, ping_date=None):
         self.config_vars = env.copy()
-        self.sysadmin_engine = snowflake_engine_factory(self.config_vars, "SYSADMIN")
         self.loader_engine = snowflake_engine_factory(self.config_vars, "LOADER")
 
         if ping_date is not None:
@@ -68,9 +64,9 @@ class UsagePing(object):
         """
         saas_queries = self._get_instance_queries()
 
-        connection = self.sysadmin_engine.connect()
+        connection = self.loader_engine.connect()
 
-        results_all = {"testing": "datemath"}
+        results_all = {}
 
         for key, query in saas_queries.items():
             try:
@@ -101,11 +97,10 @@ class UsagePing(object):
         can be updated to query an end point or query other functions
         to generate:
         {
-            ping_name: 
-            {
-              query_base: sql_query,
+            { couner_name: ping_name,
+              counter_query: sql_query,
+              time_window_query: true,
               level: namespace,
-              between: true
             }
         }
         """
@@ -148,7 +143,7 @@ class UsagePing(object):
         """
         saas_queries = self._get_namespace_queries()
 
-        connection = self.sysadmin_engine.connect()
+        connection = self.loader_engine.connect()
 
         for query_dict in saas_queries:
             base_query = query_dict.get("counter_query")
@@ -161,8 +156,7 @@ class UsagePing(object):
                     "between_start_date", f"'{str(self.start_date_28)}'"
                 )
             try:
-                # Expecting [id, parent_namespace, counter_value]
-                print(base_query)
+                # Expecting [id, namespace_ultimate_parent_id, counter_value]
                 results = pd.read_sql(sql=base_query, con=connection)
                 error = "Success"
             except SQLAlchemyError as e:
@@ -178,17 +172,15 @@ class UsagePing(object):
             results["error"] = error
             results["ping_date"] = self.end_date
 
-            print(results)
-
             dataframe_uploader(
                 results,
-                self.sysadmin_engine,
+                self.loader_engine,
                 "gitlab_dotcom_namespace",
                 "saas_usage_ping",
             )
 
         connection.close()
-        self.sysadmin_engine.dispose()
+        self.loader_engine.dispose()
 
 
 if __name__ == "__main__":
