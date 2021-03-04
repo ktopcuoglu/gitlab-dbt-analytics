@@ -149,7 +149,6 @@ WITH first_contact  AS (
       user_area_stamped                                         AS sales_area_name_stamped,
       primary_solution_architect,
       product_details,
-      lead_source,
       dr_partner_deal_type,
       dr_partner_engagement,
       partner_account,
