@@ -50,7 +50,7 @@ The query mainly selects some columns and some basic transformations. The column
 }
 ```
 
-The context JSON we are interested into is the `web_page`ß context:
+The context JSON we are interested in is the `web_page` context:
 
 ```
     {
