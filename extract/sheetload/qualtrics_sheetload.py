@@ -31,12 +31,12 @@ def get_qualtrics_request_table_name(file_id):
 
 def should_file_be_processed(file_name, tab, qualtrics_mailing_lists):
     _, file_name_split = file_name.split(".")
-    if tab.strip() in qualtrics_mailing_lists:
+    if tab in qualtrics_mailing_lists:
         info(
             f"{file_name}: Qualtrics already has mailing list with corresponding name -- not processing."
         )
         return False
-    if tab.strip() != file_name_split.strip():
+    if tab != file_name_split:
         error(
             f"{file_name}: First worksheet did not match expected name of {file_name_split}"
         )
@@ -50,7 +50,7 @@ def push_contacts_to_qualtrics(
     final_status = "processed"
     try:
         mailing_id = qualtrics_client.create_mailing_list(
-            env["QUALTRICS_POOL_ID"], tab_name.strip(), env["QUALTRICS_GROUP_ID"]
+            env["QUALTRICS_POOL_ID"], tab_name, env["QUALTRICS_GROUP_ID"]
         )
     except:
         file.sheet1.update_acell(
@@ -159,8 +159,7 @@ def qualtrics_loader(load_type: str):
         )
 
         qualtrics_mailing_lists = [
-            mailing_list.strip()
-            for mailing_list in qualtrics_client.get_mailing_lists()
+            mailing_list for mailing_list in qualtrics_client.get_mailing_lists()
         ]
 
     else:
