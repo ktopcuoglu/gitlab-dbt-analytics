@@ -263,7 +263,6 @@ roles:
             - analyst_core
             - boneyard
             - covid19
-            - db_dumps
             - dbt_analytics
             - gitlab_data_yaml
             - handbook
@@ -308,7 +307,6 @@ roles:
             - boneyard
             - covid19
             - dbt_analytics
-            - db_dumps
             - gitlab_data_yaml
             - gitlab_dotcom
             - license_db
@@ -443,7 +441,6 @@ roles:
             - covid19
             - customers_db
             - dbt_analytics
-            - db_dumps
             - gitlab_data_yaml
             - gitlab_dotcom
             - license_db
