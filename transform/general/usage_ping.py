@@ -148,6 +148,7 @@ class UsagePing(object):
             
             if "namespace_ultimate_parent_id" not in base_query:
                 logging.info(f"Skipping ping {ping_name} due to no namespace information.")
+                continue
 
             try:
                 # Expecting [id, namespace_ultimate_parent_id, counter_value]
