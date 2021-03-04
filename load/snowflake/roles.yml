@@ -564,6 +564,7 @@ roles:
         privileges:
             databases:
                 read:
+                    - prep
                     - prod
                     - raw
                 write:
@@ -571,6 +572,7 @@ roles:
                     - raw
             schemas:
                 read:
+                    - prep.gitlab_docom
                     - prod.boneyard
                     - raw.*
                 write:
@@ -578,6 +580,7 @@ roles:
                     - raw.*
             tables:
                 read:
+                    - prep.gitlab_dotcom.*
                     - prod.boneyard.*
                     - raw.*.*
                 write:
