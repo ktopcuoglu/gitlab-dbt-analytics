@@ -159,7 +159,8 @@ def qualtrics_loader(load_type: str):
         )
 
         qualtrics_mailing_lists = [
-            mailing_list.strip() for mailing_list in qualtrics_client.get_mailing_lists()
+            mailing_list.strip()
+            for mailing_list in qualtrics_client.get_mailing_lists()
         ]
 
     else:
