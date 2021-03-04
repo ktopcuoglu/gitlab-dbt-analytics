@@ -113,21 +113,6 @@ class UsagePing(object):
             )
         ) as f:
             saas_queries = json.load(f)
- 
-        # saas_queries = [
-        #     {
-        #         "counter_name": "counts_monthly.deployments",
-        #         "counter_query": "SELECT namespaces_xf.namespace_ultimate_parent_id AS id, namespaces_xf.namespace_ultimate_parent_id,  COUNT(deployments.id) AS counter_value  FROM prep.gitlab_dotcom.gitlab_dotcom_deployments_dedupe_source AS deployments  LEFT JOIN prep.gitlab_dotcom.gitlab_dotcom_projects_dedupe_source AS projects ON projects.id = deployments.project_id  LEFT JOIN prep.gitlab_dotcom.gitlab_dotcom_namespaces_dedupe_source AS namespaces ON projects.namespace_id = namespaces.id LEFT JOIN prod.legacy.gitlab_dotcom_namespaces_xf AS namespaces_xf ON namespaces.id = namespaces_xf.namespace_id WHERE deployments.created_at BETWEEN between_start_date AND between_end_date GROUP BY 1",
-        #         "time_window_query": True,
-        #         "level": "namespace",
-        #     },
-        #     {
-        #         "counter_name": "bad_query",
-        #         "counter_query": "SELECT a bad query",
-        #         "time_window_query": False,
-        #         "level": "namespace",
-        #     },
-        # ]
 
         return saas_queries
 
@@ -160,6 +145,10 @@ class UsagePing(object):
                 base_query = base_query.replace(
                     "between_start_date", f"'{str(self.start_date_28)}'"
                 )
+            
+            if "namespace_ultimate_parent_id" not in base_query:
+                logging.info(f"Skipping ping {ping_name} due to no namespace information.")
+
             try:
                 # Expecting [id, namespace_ultimate_parent_id, counter_value]
                 results = pd.read_sql(sql=base_query, con=connection)
