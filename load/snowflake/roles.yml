@@ -550,6 +550,7 @@ roles:
                 read:
                     - prep.gitlab_docom
                     - prod.boneyard
+                    - prod.legacy
                     - raw.*
                 write:
                     - prod.boneyard
@@ -558,6 +559,7 @@ roles:
                 read:
                     - prep.gitlab_dotcom.*
                     - prod.boneyard.*
+                    - prod.legacy.gitlab_dotcom_namespaces_xf
                     - raw.*.*
                 write:
                     - prod.boneyard.*
