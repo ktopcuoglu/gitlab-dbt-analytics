@@ -263,7 +263,6 @@ roles:
             - analyst_core
             - boneyard
             - covid19
-            - db_dumps
             - dbt_analytics
             - gitlab_data_yaml
             - handbook
@@ -308,7 +307,6 @@ roles:
             - boneyard
             - covid19
             - dbt_analytics
-            - db_dumps
             - gitlab_data_yaml
             - gitlab_dotcom
             - license_db
@@ -443,7 +441,6 @@ roles:
             - covid19
             - customers_db
             - dbt_analytics
-            - db_dumps
             - gitlab_data_yaml
             - gitlab_dotcom
             - license_db
@@ -888,18 +885,6 @@ roles:
                     - prod.common.dim_date
                     - prep.date.*
 
-    - db_dumps:
-        privileges:
-            databases:
-                read:
-                    - raw
-            schemas:
-                read:
-                    - raw.license_db_dump
-            tables:
-                read:
-                    - raw.license_db_dump.*
-
     - dbt_analytics:
         warehouses:
             - analyst_xs
@@ -1317,12 +1302,10 @@ roles:
                 read:
                     - prep.license_db
                     - raw.license_db
-                    - raw.license_db_dump
             tables:
                 read:
                     - prep.license_db.*
                     - raw.license_db.*
-                    - raw.license_db_dump.*
 
     - keyhole_twitter:
         privileges:
@@ -2731,14 +2714,12 @@ roles:
                     - raw
             schemas:
                 read:
-                    - raw.license_db_dump
                     - raw.salesforce_stitch
                     - raw.stitch_google_sheets
                     - raw.zendesk_stitch
                     - raw.zendesk_community_relations_stitch
                     - raw.zuora_stitch
                 write:
-                    - raw.license_db_dump
                     - raw.salesforce_stitch
                     - raw.stitch_google_sheets
                     - raw.zendesk_stitch
@@ -2746,14 +2727,12 @@ roles:
                     - raw.zuora_stitch
             tables:
                 read:
-                    - raw.license_db_dump.*
                     - raw.salesforce_stitch.*
                     - raw.stitch_google_sheets.*
                     - raw.zendesk_stitch.*
                     - raw.zendesk_community_relations_stitch.*
                     - raw.zuora_stitch.*
                 write:
-                    - raw.license_db_dump.*
                     - raw.salesforce_stitch.*
                     - raw.stitch_google_sheets.*
                     - raw.zendesk_stitch.*
