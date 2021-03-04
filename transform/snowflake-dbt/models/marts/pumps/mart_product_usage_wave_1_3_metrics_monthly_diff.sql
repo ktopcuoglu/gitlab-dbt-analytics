@@ -104,43 +104,43 @@
       FIRST_VALUE(commit_comment_since_last_ping / days_since_last_ping)
         IGNORE NULLS OVER (PARTITION BY dim_subscription_id ORDER BY snapshot_month
                            ROWS BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING)            AS commit_comment_per_day,
-      (commit_comment_per_day * days_in_month)::INT                                     AS commit_comment_smoothed,
+      (commit_comment_per_day * days_in_month_count)::INT                               AS commit_comment_smoothed,
       source_code_pushes_all_time_event,
       source_code_pushes_since_last_ping,
       FIRST_VALUE(source_code_pushes_since_last_ping / days_since_last_ping)
         IGNORE NULLS OVER (PARTITION BY dim_subscription_id ORDER BY snapshot_month
                            ROWS BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING)            AS source_code_pushes_per_day,
-      (source_code_pushes_per_day * days_in_month)::INT                                 AS source_code_pushes_smoothed,
+      (source_code_pushes_per_day * days_in_month_count)::INT                           AS source_code_pushes_smoothed,
       ci_builds_all_time_event,
       ci_builds_since_last_ping,
       FIRST_VALUE(ci_builds_since_last_ping / days_since_last_ping)
         IGNORE NULLS OVER (PARTITION BY dim_subscription_id ORDER BY snapshot_month
                            ROWS BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING)            AS ci_builds_per_day,
-      (ci_builds_per_day * days_in_month)::INT                                          AS ci_builds_smoothed,
+      (ci_builds_per_day * days_in_month_count)::INT                                    AS ci_builds_smoothed,
       ci_runners_all_time_event,
       ci_runners_since_last_ping,
       FIRST_VALUE(ci_runners_since_last_ping / days_since_last_ping)
         IGNORE NULLS OVER (PARTITION BY dim_subscription_id ORDER BY snapshot_month
                            ROWS BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING)            AS ci_runners_per_day,
-      (ci_runners_per_day * days_in_month)::INT                                         AS ci_runners_smoothed,
+      (ci_runners_per_day * days_in_month_count)::INT                                   AS ci_runners_smoothed,
       template_repositories_all_time_event,
       template_repositories_since_last_ping,
       FIRST_VALUE(template_repositories_since_last_ping / days_since_last_ping)
         IGNORE NULLS OVER (PARTITION BY dim_subscription_id ORDER BY snapshot_month
                            ROWS BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING)            AS template_repositories_per_day,
-      (template_repositories_per_day * days_in_month)::INT                              AS template_repositories_smoothed,
+      (template_repositories_per_day * days_in_month_count)::INT                        AS template_repositories_smoothed,
       projects_with_packages_all_time_event,
       projects_with_packages_since_last_ping,
       FIRST_VALUE(projects_with_packages_since_last_ping / days_since_last_ping)
         IGNORE NULLS OVER (PARTITION BY dim_subscription_id ORDER BY snapshot_month
                            ROWS BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING)            AS projects_with_packages_per_day,
-      (projects_with_packages_per_day * days_in_month)::INT                             AS projects_with_packages_smoothed,
+      (projects_with_packages_per_day * days_in_month_count)::INT                       AS projects_with_packages_smoothed,
       auto_devops_enabled_all_time_event,
       auto_devops_enabled_since_last_ping,
       FIRST_VALUE(auto_devops_enabled_since_last_ping / days_since_last_ping)
         IGNORE NULLS OVER (PARTITION BY dim_subscription_id ORDER BY snapshot_month
                            ROWS BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING)            AS auto_devops_enabled_per_day,
-      (auto_devops_enabled_per_day * days_in_month)::INT                                AS auto_devops_enabled_smoothed,
+      (auto_devops_enabled_per_day * days_in_month_count)::INT                          AS auto_devops_enabled_smoothed,
       ci_builds_all_time_user,
       ci_build_users_since_last_ping
     FROM diffs
