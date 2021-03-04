@@ -69,6 +69,7 @@ dag = DAG(
 instance_cmd = f"""
     {clone_repo_cmd} &&
     export SNOWFLAKE_LOAD_WAREHOUSE="USAGE_PING" &&
+    export SNOWFLAKE_LOAD_DATABASE="RAW" &&
     cd analytics/transform/general/ &&
     python3 usage_ping.py saas_instance_ping
 """
@@ -88,6 +89,7 @@ instance_ping = KubernetesPodOperator(
 namespace_cmd = f"""
     {clone_repo_cmd} &&
     export SNOWFLAKE_LOAD_WAREHOUSE="USAGE_PING" &&
+    export SNOWFLAKE_LOAD_DATABASE="RAW" &&
     cd analytics/transform/general/ &&
     python3 usage_ping.py saas_namespace_ping --ping_date=$RUN_DATE
 """
