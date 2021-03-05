@@ -1915,3 +1915,45 @@ models:
         description: The timestamp of when the license was generated.
       - name: updated_at
         description: The timestamp of when the license was updated.
+
+  - name: fct_key_xmau_metrics
+    description: '{{ doc("fct_key_xmau_metrics") }}'
+    columns:
+      - name: section_name
+        description: Section that the xmau metric belongs to 
+      - name: stage_name
+        description: Stage that the xmau metric belongs to 
+      - name: group_name
+        description: Group that the xmau metric belongs to 
+      - name: metrics_path
+        description: path name of metric (counts.ci_builds instead of ci_builds given there are three ci_builds metrics)
+      - name: full_metrics_path
+        description: raw_usage_data_payload appended with path name of metric to easily query prep_usage_ping with 
+      - name: clean_metrics_name
+        description: Name of metric without the path       
+      - name: periscope_metrics_name
+        description: Name change by PMs 
+      - name: is_umau
+        description: Boolean field representing if the xmau metric represents Unique Monthly Active User (UMAU) metric 
+      - name: is_smau
+        description: Boolean field representing if the xmau metric represents a Stage Monthly Active User (SMAU) metric 
+      - name: is_gmau
+        description: Boolean field representing if the xmau metric represents a Group Monthly Active user (GMAU) metric 
+      - name: is_paid_gmau
+        description: Boolean field representing if the xmau metric represents a Paid Group Monthly Active user (GMAU) metric 
+      - name: time_period
+        description: Metrics can be all-time counters, 28 day counters, or weekly counters. This signifies which it is
+
+  - name: fct_all_usage_ping_metric_names
+    description: '{{ doc("fct_all_usage_ping_metric_names") }}'
+    columns:
+      - name: metrics_path
+        description: path name of metric (counts.ci_builds instead of ci_builds given there are three ci_builds metrics)
+      - name: metrics_path_column_name
+        description: metric path name converted to a column name for ease of macro population 
+      - name: full_metrics_path
+        description: raw_usage_data_payload appended with path name of metric 
+      - name: main_json_name
+        description: the main json this usage metric comes from 
+      - name: feature_name
+        description: the name of the feature that this usage metric is meant to capture 

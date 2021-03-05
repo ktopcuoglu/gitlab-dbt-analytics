@@ -16,11 +16,11 @@ with zuora_subscription_intermediate as (
 ), final AS (
 
     SELECT  zuora_subscription_intermediate.subscription_id AS dim_subscription_id,
-            zuora_subscription_lineage.lineage,
+            zuora_subscription_lineage.lineage AS subscription_lineage,
             coalesce(zuora_subscription_parentage.ultimate_parent_sub,zuora_subscription_intermediate.subscription_name_slugify) AS oldest_subscription_in_cohort,
-            coalesce(zuora_subscription_parentage.cohort_month, zuora_subscription_intermediate.subscription_month) AS cohort_month,
-            coalesce(zuora_subscription_parentage.cohort_quarter,zuora_subscription_intermediate.subscription_quarter) AS cohort_quarter,
-            coalesce(zuora_subscription_parentage.cohort_year, zuora_subscription_intermediate.subscription_year) AS cohort_year
+            coalesce(zuora_subscription_parentage.cohort_month, zuora_subscription_intermediate.subscription_month) AS subscription_cohort_month,
+            coalesce(zuora_subscription_parentage.cohort_quarter,zuora_subscription_intermediate.subscription_quarter) AS subscription_cohort_quarter,
+            coalesce(zuora_subscription_parentage.cohort_year, zuora_subscription_intermediate.subscription_year) AS subscription_cohort_year
     FROM zuora_subscription_intermediate
     LEFT JOIN zuora_subscription_lineage
     ON zuora_subscription_intermediate.subscription_name_slugify =

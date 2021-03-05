@@ -6,6 +6,22 @@ WITH sfdc_opportunity AS (
           opportunity_category
     FROM {{ref('sfdc_opportunity')}}
 
+), sfdc_users_xf AS (
+
+    SELECT * FROM {{ref('wk_sales_sfdc_users_xf')}}
+
+), sfdc_accounts_xf AS (
+
+    SELECT * FROM {{ref('sfdc_accounts_xf')}}
+
+), date_details AS (
+ 
+    SELECT
+      *,
+      DENSE_RANK() OVER (ORDER BY first_day_of_fiscal_quarter) AS quarter_number
+    FROM {{ ref('date_details') }}
+    ORDER BY 1 DESC
+
 ), sfdc_opportunity_xf AS (
 
     SELECT 
@@ -56,7 +72,7 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity_xf.forecasted_iacv,
       sfdc_opportunity_xf.iacv_created_date,
       sfdc_opportunity_xf.incremental_acv,
-      sfdc_opportunity_xf.pre_covid_iacv,
+      --sfdc_opportunity_xf.pre_covid_iacv,
       sfdc_opportunity_xf.invoice_number,
 
       -- logic needs to be added here once the oppotunity category fields is merged
@@ -70,30 +86,29 @@ WITH sfdc_opportunity AS (
 
 
       sfdc_opportunity_xf.is_downgrade,
-      sfdc_opportunity_xf.is_risky,
-      sfdc_opportunity_xf.is_swing_deal,
+      --sfdc_opportunity_xf.is_swing_deal,
       sfdc_opportunity_xf.is_edu_oss,
       sfdc_opportunity_xf.is_won,
       sfdc_opportunity_xf.net_incremental_acv,
-      sfdc_opportunity_xf.probability,
+      --sfdc_opportunity_xf.probability,
       sfdc_opportunity_xf.professional_services_value,
-      sfdc_opportunity_xf.pushed_count,
+      --sfdc_opportunity_xf.pushed_count,
       sfdc_opportunity_xf.reason_for_loss,
       sfdc_opportunity_xf.reason_for_loss_details,
-      sfdc_opportunity_xf.refund_iacv,
-      sfdc_opportunity_xf.downgrade_iacv,
+      --sfdc_opportunity_xf.refund_iacv,
+      --sfdc_opportunity_xf.downgrade_iacv,
       sfdc_opportunity_xf.renewal_acv,
       sfdc_opportunity_xf.renewal_amount,
       sfdc_opportunity_xf.sales_qualified_source,
       sfdc_opportunity_xf.solutions_to_be_replaced,
       sfdc_opportunity_xf.total_contract_value,
       sfdc_opportunity_xf.upside_iacv,
-      sfdc_opportunity_xf.upside_swing_deal_iacv,
-      sfdc_opportunity_xf.weighted_iacv,
+      --sfdc_opportunity_xf.upside_swing_deal_iacv,
+      --sfdc_opportunity_xf.weighted_iacv,
       sfdc_opportunity_xf.is_web_portal_purchase,
       sfdc_opportunity_xf.subscription_start_date,
       sfdc_opportunity_xf.subscription_end_date,
-      sfdc_opportunity_xf.true_up_value,
+      --sfdc_opportunity_xf.true_up_value,
 
       -----------------------------------------------------------
       -----------------------------------------------------------
@@ -110,15 +125,11 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity_xf.arr_basis,
       sfdc_opportunity_xf.arr,
 
-      sfdc_opportunity_xf.user_segment_stamped,
-      sfdc_opportunity_xf.user_region_stamped,
-      sfdc_opportunity_xf.user_area_stamped,
-      sfdc_opportunity_xf.user_geo_stamped,
-
       -----------------------------------------------------------
       -----------------------------------------------------------
 
       sfdc_opportunity_xf.opportunity_health,
+      sfdc_opportunity_xf.is_risky,
       sfdc_opportunity_xf.risk_type,
       sfdc_opportunity_xf.risk_reasons,
       sfdc_opportunity_xf.tam_notes,
@@ -168,13 +179,26 @@ WITH sfdc_opportunity AS (
 
       -----------------------------------------------------------
       -----------------------------------------------------------
-      -- Partner Org. fields
+      -- Channel Org. fields
 
       sfdc_opportunity_xf.dr_partner_deal_type,
       sfdc_opportunity_xf.dr_partner_engagement,
-      
+      sfdc_opportunity_xf.partner_account,
+      sfdc_opportunity_xf.dr_status,
+      sfdc_opportunity_xf.distributor,
+      sfdc_opportunity_xf.influence_partner,
+      sfdc_opportunity_xf.fulfillment_partner,
+      sfdc_opportunity_xf.platform_partner,
+      sfdc_opportunity_xf.partner_track,
+      sfdc_opportunity_xf.is_public_sector_opp,
+      sfdc_opportunity_xf.is_registration_from_portal,
+      sfdc_opportunity_xf.calculated_discount,
+      sfdc_opportunity_xf.partner_discount,
+      sfdc_opportunity_xf.partner_discount_calc,
+      sfdc_opportunity_xf.comp_channel_neutral,
+     
       -- NF: I think this one is deprecated too
-      sfdc_opportunity_xf.partner_initiated_opportunity,
+      --sfdc_opportunity_xf.partner_initiated_opportunity,
       
       -----------------------------------------------------------
       -----------------------------------------------------------
@@ -191,8 +215,6 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity_xf.opportunity_owner_team_level_2,
       sfdc_opportunity_xf.opportunity_owner_team_level_3,
       
-      -- 2021-02-18 NF: I think this field is not needed
-      sfdc_opportunity_xf.user_segment,
       -----------------------------------------------------------
       -----------------------------------------------------------
       
@@ -232,10 +254,19 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity_xf.sales_qualified_fiscal_quarter_date,
       sfdc_opportunity_xf.sales_qualified_fiscal_year,
       sfdc_opportunity_xf.sales_qualified_date_month,
+
       sfdc_opportunity_xf.iacv_created_fiscal_quarter_name,
       sfdc_opportunity_xf.iacv_created_fiscal_quarter_date,
       sfdc_opportunity_xf.iacv_created_fiscal_year,
       sfdc_opportunity_xf.iacv_created_date_month,
+
+      -- Net ARR Created Date uses the same old IACV Created date field in SFDC
+      -- As long as the field in the legacy model is not renamed, this will work
+      sfdc_opportunity_xf.iacv_created_fiscal_quarter_name    AS net_arr_created_fiscal_quarter_name,
+      sfdc_opportunity_xf.iacv_created_fiscal_quarter_date    AS net_arr_created_fiscal_quarter_date,
+      sfdc_opportunity_xf.iacv_created_fiscal_year            AS net_arr_created_fiscal_year,
+      sfdc_opportunity_xf.iacv_created_date_month             AS net_arr_created_date_month,
+
       sfdc_opportunity_xf._last_dbt_run,
       sfdc_opportunity_xf.business_process_id,
       sfdc_opportunity_xf.days_since_last_activity,
@@ -248,7 +279,31 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity_xf.record_type_name,
       sfdc_opportunity_xf.region_quota_id,
       sfdc_opportunity_xf.sales_quota_id,
-      
+
+      -----------------------------------------------------------------------------------------------------      
+      -----------------------------------------------------------------------------------------------------
+      -- Opportunity User fields
+      -- https://gitlab.my.salesforce.com/00N6100000ICcrD?setupid=OpportunityFields
+
+      sfdc_opportunity_xf.user_area_stamped                                 AS opportunity_owner_user_area,
+      sfdc_opportunity_xf.user_geo_stamped                                  AS opportunity_owner_user_geo,
+
+      -- Team Segment / ASM - RD 
+      --  stamped field is not maintained for open deals
+      CASE WHEN sfdc_opportunity_xf.user_segment_stamped IS NULL 
+          THEN opportunity_owner.user_segment 
+          ELSE COALESCE(sfdc_opportunity_xf.user_segment_stamped,'N/A')
+      END                                                                    AS opportunity_owner_user_segment,
+
+      --  stamped field is not maintained for open deals
+      CASE WHEN sfdc_opportunity_xf.user_region_stamped IS NULL 
+          THEN opportunity_owner.user_region
+          ELSE COALESCE(sfdc_opportunity_xf.user_region_stamped,'N/A')
+      END                                                                    AS opportunity_owner_user_region,
+
+      -----------------------------------------------------------------------------------------------------      
+      -----------------------------------------------------------------------------------------------------
+
       -- fields form opportunity source
       sfdc_opportunity.opportunity_category
     
@@ -256,22 +311,8 @@ WITH sfdc_opportunity AS (
     -- not all fields are in opportunity xf
     INNER JOIN sfdc_opportunity
       ON sfdc_opportunity.opportunity_id = sfdc_opportunity_xf.opportunity_id
-
-), sfdc_users_xf AS (
-
-    SELECT * FROM {{ref('wk_sales_sfdc_users_xf')}}
-
-), sfdc_accounts_xf AS (
-
-    SELECT * FROM {{ref('sfdc_accounts_xf')}}
-
-), date_details AS (
- 
-    SELECT
-      *,
-      DENSE_RANK() OVER (ORDER BY first_day_of_fiscal_quarter) AS quarter_number
-    FROM {{ ref('date_details') }}
-    ORDER BY 1 DESC
+    INNER JOIN sfdc_users_xf opportunity_owner
+      ON opportunity_owner.user_id = sfdc_opportunity_xf.owner_id
 
 ), net_iacv_to_net_arr_ratio AS (
 
@@ -335,18 +376,17 @@ WITH sfdc_opportunity AS (
       -- used for performance reporting on pipeline generation
       -- these fields might change, isolating the field from the purpose
       -- alternatives are a future net_arr_created_date
-      sfdc_opportunity_xf.created_date_month                       AS pipeline_created_date_month,
-      sfdc_opportunity_xf.created_fiscal_year                      AS pipeline_created_fiscal_year,
-      sfdc_opportunity_xf.created_fiscal_quarter_name              AS pipeline_created_fiscal_quarter_name,
-      sfdc_opportunity_xf.created_fiscal_quarter_date              AS pipeline_created_fiscal_quarter_date,
-
+      sfdc_opportunity_xf.net_arr_created_date_month                       AS pipeline_created_date_month,
+      sfdc_opportunity_xf.net_arr_created_fiscal_year                      AS pipeline_created_fiscal_year,
+      sfdc_opportunity_xf.net_arr_created_fiscal_quarter_name              AS pipeline_created_fiscal_quarter_name,
+      sfdc_opportunity_xf.net_arr_created_fiscal_quarter_date              AS pipeline_created_fiscal_quarter_date,
 
       CASE
         WHEN sfdc_opportunity_xf.stage_name
           IN ('1-Discovery', '2-Developing', '2-Scoping','3-Technical Evaluation', '4-Proposal', 'Closed Won','5-Negotiating', '6-Awaiting Signature', '7-Closing')
             THEN 1
         ELSE 0
-      END                                                                                               AS is_stage_1_plus,
+      END                                                                   AS is_stage_1_plus,
 
 
       CASE
@@ -354,7 +394,7 @@ WITH sfdc_opportunity AS (
           IN ('4-Proposal', 'Closed Won','5-Negotiating', '6-Awaiting Signature', '7-Closing')
             THEN 1
         ELSE 0
-      END                                                                                               AS is_stage_4_plus,
+      END                                                                   AS is_stage_4_plus,
 
       -- account driven fields 
       sfdc_accounts_xf.ultimate_parent_account_id,
@@ -368,7 +408,7 @@ WITH sfdc_opportunity AS (
         WHEN sfdc_opportunity_xf.order_type_stamped IN ('4. Churn','4. Contraction','6. Churn - Final')
           THEN '3. Churn'
         ELSE '4. Other' 
-      END                                                                 AS deal_category,
+      END                                                                   AS deal_category,
 
       CASE 
         WHEN sfdc_opportunity_xf.order_type_stamped = '1. New - First Order' 
@@ -376,27 +416,10 @@ WITH sfdc_opportunity AS (
         WHEN sfdc_opportunity_xf.order_type_stamped IN ('2. New - Connected', '3. Growth', '4. Churn','4. Contraction','6. Churn - Final') 
           THEN '2. Growth' 
         ELSE '3. Other'
-      END                                                                 AS deal_group,
+      END                                                                   AS deal_group,
 
       ----------------------------------------------------------------
       ----------------------------------------------------------------
-
-      -- Team Segment / ASM - RD 
-      --  stamped field is not maintained for open deals
-      CASE WHEN sfdc_opportunity_xf.user_segment_stamped IS NULL 
-          THEN opportunity_owner.user_segment 
-          ELSE COALESCE(sfdc_opportunity_xf.user_segment_stamped,'N/A')
-      END                                                                        AS opportunity_owner_user_segment,
-
-      --  stamped field is not maintained for open deals
-      CASE WHEN sfdc_opportunity_xf.user_region_stamped IS NULL 
-          THEN opportunity_owner.user_region
-          ELSE COALESCE(sfdc_opportunity_xf.user_region_stamped,'N/A')
-      END                                                                       AS opportunity_owner_user_region,
-
-      opportunity_owner_user_segment                                            AS sales_team_cro_level,
-      CONCAT(opportunity_owner_user_segment,'_',opportunity_owner_user_region)  AS sales_team_rd_asm_level,
-
       -- temporary, to deal with global Bookings FY21 reports that use account_owner_team_stamp field
       CASE 
         WHEN sfdc_opportunity_xf.account_owner_team_stamped IN ('Commercial - SMB','SMB','SMB - US','SMB - International')
@@ -406,7 +429,7 @@ WITH sfdc_opportunity AS (
         WHEN sfdc_opportunity_xf.account_owner_team_stamped IN ('MM - APAC','MM - East','MM - EMEA','Commercial - MM','MM - West','MM-EMEA')
           THEN 'Mid-Market'
         ELSE 'SMB'
-      END                                                                       AS account_owner_team_stamped_cro_level,   
+      END                                                                     AS account_owner_team_stamped_cro_level,   
 
       ----------------------------------------------------------------
       ----------------------------------------------------------------
@@ -416,15 +439,11 @@ WITH sfdc_opportunity AS (
         WHEN sfdc_opportunity_xf.is_refund = 1
           THEN -1
         ELSE 1
-      END                                                                       AS calculated_deal_count,
+      END                                                                      AS calculated_deal_count,
 
-   
-      -- PIO Flag for PIO reporting dashboard
+        -- PIO Flag for PIO reporting dashboard
       CASE 
-        WHEN (sfdc_opportunity_xf.partner_initiated_opportunity = TRUE -- up to the first half of the year 2020
-            AND sfdc_opportunity_xf.created_date < '2020-08-01'::DATE)
-          OR (sfdc_opportunity_xf.dr_partner_engagement = 'PIO' -- second half and moving forward  
-            AND sfdc_opportunity_xf.created_date >= '2020-08-01'::DATE)
+        WHEN sfdc_opportunity_xf.dr_partner_engagement = 'PIO' 
           THEN 1 
         ELSE 0 
       END                                                                       AS partner_engaged_opportunity_flag,
@@ -452,8 +471,6 @@ WITH sfdc_opportunity AS (
       END                                                                       AS is_excluded_flag
 
     FROM sfdc_opportunity_xf
-    INNER JOIN sfdc_users_xf opportunity_owner
-      ON opportunity_owner.user_id = sfdc_opportunity_xf.owner_id
     LEFT JOIN sfdc_accounts_xf
       ON sfdc_accounts_xf.account_id = sfdc_opportunity_xf.account_id
     
@@ -466,6 +483,9 @@ WITH sfdc_opportunity AS (
     SELECT 
       oppty_final.*,
       
+      oppty_final.opportunity_owner_user_segment                                                        AS sales_team_cro_level,
+      CONCAT(oppty_final.opportunity_owner_user_segment,'_',oppty_final.opportunity_owner_user_region)  AS sales_team_rd_asm_level,
+
       -- NF 2021-01-28 Not all historical opportunities have Net ARR set. To allow historical reporting 
       -- we apply a ratio by segment / order type to convert IACV to Net ARR      
       CASE

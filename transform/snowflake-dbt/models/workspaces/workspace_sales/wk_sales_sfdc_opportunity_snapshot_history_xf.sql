@@ -23,19 +23,19 @@ WITH date_details AS (
 ), sfdc_opportunity_snapshot_history AS (
 
     SELECT 
-      sfdc_opportunity_snapshot_history.valid_from,
-      sfdc_opportunity_snapshot_history.valid_to,
-      sfdc_opportunity_snapshot_history.is_currently_valid,
+      --sfdc_opportunity_snapshot_history.valid_from,
+      --sfdc_opportunity_snapshot_history.valid_to,
+      --sfdc_opportunity_snapshot_history.is_currently_valid,
       sfdc_opportunity_snapshot_history.opportunity_snapshot_id,
       sfdc_opportunity_snapshot_history.account_id,
       sfdc_opportunity_snapshot_history.opportunity_id,
       sfdc_opportunity_snapshot_history.opportunity_name,
       sfdc_opportunity_snapshot_history.owner_id,
-      sfdc_opportunity_snapshot_history.business_type,
+      --sfdc_opportunity_snapshot_history.business_type,
       sfdc_opportunity_snapshot_history.close_date,
       sfdc_opportunity_snapshot_history.created_date,
       sfdc_opportunity_snapshot_history.deployment_preference,
-      sfdc_opportunity_snapshot_history.generated_source,
+      --sfdc_opportunity_snapshot_history.generated_source,
       sfdc_opportunity_snapshot_history.lead_source,
       sfdc_opportunity_snapshot_history.merged_opportunity_id,
       sfdc_opportunity_snapshot_history.opportunity_owner,
@@ -49,23 +49,23 @@ WITH date_details AS (
       --sfdc_opportunity_snapshot_history.opportunity_owner_team,
       --sfdc_opportunity_snapshot_history.opportunity_owner_manager,
       --sfdc_opportunity_snapshot_history.account_owner_team_stamped,
-      sfdc_opportunity_snapshot_history.parent_segment,
+      --sfdc_opportunity_snapshot_history.parent_segment,
       sfdc_opportunity_snapshot_history.sales_accepted_date,
       sfdc_opportunity_snapshot_history.sales_path,
       sfdc_opportunity_snapshot_history.sales_qualified_date,
-      sfdc_opportunity_snapshot_history.sales_segment,
+      --sfdc_opportunity_snapshot_history.sales_segment,
       sfdc_opportunity_snapshot_history.sales_type,
       sfdc_opportunity_snapshot_history.net_new_source_categories,
       sfdc_opportunity_snapshot_history.source_buckets,
       sfdc_opportunity_snapshot_history.stage_name,
 
       sfdc_opportunity_snapshot_history.acv,
-      sfdc_opportunity_snapshot_history.closed_deals,
-      sfdc_opportunity_snapshot_history.competitors,
-      sfdc_opportunity_snapshot_history.critical_deal_flag,
+      --sfdc_opportunity_snapshot_history.closed_deals,
+      --sfdc_opportunity_snapshot_history.competitors,
+      --sfdc_opportunity_snapshot_history.critical_deal_flag,
       sfdc_opportunity_snapshot_history.deal_size,
       sfdc_opportunity_snapshot_history.forecast_category_name,
-      sfdc_opportunity_snapshot_history.forecasted_iacv,
+      --sfdc_opportunity_snapshot_history.forecasted_iacv,
       sfdc_opportunity_snapshot_history.iacv_created_date,
       sfdc_opportunity_snapshot_history.incremental_acv,
       sfdc_opportunity_snapshot_history.invoice_number,
@@ -79,35 +79,35 @@ WITH date_details AS (
       END                                                          AS is_refund,
       --sfdc_opportunity_snapshot_history.is_refund,
 
-      sfdc_opportunity_snapshot_history.is_downgrade,
-      sfdc_opportunity_snapshot_history.is_swing_deal,
+      --sfdc_opportunity_snapshot_history.is_downgrade,
+      --sfdc_opportunity_snapshot_history.is_swing_deal,
       sfdc_opportunity_snapshot_history.net_incremental_acv,
-      sfdc_opportunity_snapshot_history.nrv,
+      --sfdc_opportunity_snapshot_history.nrv,
       sfdc_opportunity_snapshot_history.primary_campaign_source_id,
-      sfdc_opportunity_snapshot_history.probability,
+      --sfdc_opportunity_snapshot_history.probability,
       sfdc_opportunity_snapshot_history.professional_services_value,
-      sfdc_opportunity_snapshot_history.pushed_count,
-      sfdc_opportunity_snapshot_history.reason_for_loss,
-      sfdc_opportunity_snapshot_history.reason_for_loss_details,
+      --sfdc_opportunity_snapshot_history.pushed_count,
+      --sfdc_opportunity_snapshot_history.reason_for_loss,
+      --sfdc_opportunity_snapshot_history.reason_for_loss_details,
       sfdc_opportunity_snapshot_history.refund_iacv,
       sfdc_opportunity_snapshot_history.downgrade_iacv,
       sfdc_opportunity_snapshot_history.renewal_acv,
       sfdc_opportunity_snapshot_history.renewal_amount,
-      sfdc_opportunity_snapshot_history.sales_qualified_source,
-      sfdc_opportunity_snapshot_history.segment,
-      sfdc_opportunity_snapshot_history.solutions_to_be_replaced,
+      --sfdc_opportunity_snapshot_history.sales_qualified_source,
+      --sfdc_opportunity_snapshot_history.segment,
+      --sfdc_opportunity_snapshot_history.solutions_to_be_replaced,
       sfdc_opportunity_snapshot_history.total_contract_value,
-      sfdc_opportunity_snapshot_history.upside_iacv,
-      sfdc_opportunity_snapshot_history.upside_swing_deal_iacv,
+      --sfdc_opportunity_snapshot_history.upside_iacv,
+      --sfdc_opportunity_snapshot_history.upside_swing_deal_iacv,
       sfdc_opportunity_snapshot_history.is_web_portal_purchase,
       sfdc_opportunity_snapshot_history.opportunity_term,
       
       sfdc_opportunity_snapshot_history.net_arr             AS raw_net_arr,
       
-      sfdc_opportunity_snapshot_history.user_segment_stamped,
-      sfdc_opportunity_snapshot_history.user_region_stamped,
-      sfdc_opportunity_snapshot_history.user_area_stamped,
-      sfdc_opportunity_snapshot_history.user_geo_stamped,
+      --sfdc_opportunity_snapshot_history.user_segment_stamped,
+      --sfdc_opportunity_snapshot_history.user_region_stamped,
+      --sfdc_opportunity_snapshot_history.user_area_stamped,
+      --sfdc_opportunity_snapshot_history.user_geo_stamped,
       
       sfdc_opportunity_snapshot_history.arr_basis,
       sfdc_opportunity_snapshot_history.arr,
@@ -118,6 +118,7 @@ WITH date_details AS (
       sfdc_opportunity_snapshot_history.other_non_recurring_amount,
       sfdc_opportunity_snapshot_history.subscription_start_date,
       sfdc_opportunity_snapshot_history.subscription_end_date,
+      /*
       sfdc_opportunity_snapshot_history.cp_champion,
       sfdc_opportunity_snapshot_history.cp_close_plan,
       sfdc_opportunity_snapshot_history.cp_competition,
@@ -132,6 +133,7 @@ WITH date_details AS (
       sfdc_opportunity_snapshot_history.cp_why_do_anything_at_all,
       sfdc_opportunity_snapshot_history.cp_why_gitlab,
       sfdc_opportunity_snapshot_history.cp_why_now,
+      */
       sfdc_opportunity_snapshot_history._last_dbt_run,
       sfdc_opportunity_snapshot_history.is_deleted,
       sfdc_opportunity_snapshot_history.last_activity_date,
@@ -152,23 +154,36 @@ WITH date_details AS (
       close_date_detail.fiscal_year                              AS close_fiscal_year,
       close_date_detail.fiscal_quarter_name_fy                   AS close_fiscal_quarter_name,
       close_date_detail.first_day_of_fiscal_quarter              AS close_fiscal_quarter_date,
+      90 - DATEDIFF(day, snapshot_date.date_actual, close_date_detail.last_day_of_fiscal_quarter)           AS close_day_of_fiscal_quarter_normalised,
+
+
 
       created_date_detail.first_day_of_month                     AS created_date_month,
       created_date_detail.fiscal_year                            AS created_fiscal_year,
       created_date_detail.fiscal_quarter_name_fy                 AS created_fiscal_quarter_name,
       created_date_detail.first_day_of_fiscal_quarter            AS created_fiscal_quarter_date,
 
-      iacv_created_date.first_day_of_month                       AS iacv_created_date_month,
-      iacv_created_date.fiscal_year                              AS iacv_created_fiscal_year,
-      iacv_created_date.fiscal_quarter_name_fy                   AS iacv_created_fiscal_quarter_name,
-      iacv_created_date.first_day_of_fiscal_quarter              AS iacv_created_fiscal_quarter_date,
+      net_arr_created_date.first_day_of_month                       AS iacv_created_date_month,
+      net_arr_created_date.fiscal_year                              AS iacv_created_fiscal_year,
+      net_arr_created_date.fiscal_quarter_name_fy                   AS iacv_created_fiscal_quarter_name,
+      net_arr_created_date.first_day_of_fiscal_quarter              AS iacv_created_fiscal_quarter_date,
+
+      net_arr_created_date.first_day_of_month                       AS net_arr_created_date_month,
+      net_arr_created_date.fiscal_year                              AS net_arr_created_fiscal_year,
+      net_arr_created_date.fiscal_quarter_name_fy                   AS net_arr_created_fiscal_quarter_name,
+      net_arr_created_date.first_day_of_fiscal_quarter              AS net_arr_created_fiscal_quarter_date,
 
       -- this fields might change, isolating the field used from the purpose
       -- alternative is future net_arr_created_date
-      created_date_detail.first_day_of_month                     AS pipeline_created_date_month,
-      created_date_detail.fiscal_year                            AS pipeline_created_fiscal_year,
-      created_date_detail.fiscal_quarter_name_fy                 AS pipeline_created_fiscal_quarter_name,
-      created_date_detail.first_day_of_fiscal_quarter            AS pipeline_created_fiscal_quarter_date,
+      --created_date_detail.first_day_of_month                     AS pipeline_created_date_month,
+      --created_date_detail.fiscal_year                            AS pipeline_created_fiscal_year,
+      --created_date_detail.fiscal_quarter_name_fy                 AS pipeline_created_fiscal_quarter_name,
+      --created_date_detail.first_day_of_fiscal_quarter            AS pipeline_created_fiscal_quarter_date,
+
+      net_arr_created_date.first_day_of_month                     AS pipeline_created_date_month,
+      net_arr_created_date.fiscal_year                            AS pipeline_created_fiscal_year,
+      net_arr_created_date.fiscal_quarter_name_fy                 AS pipeline_created_fiscal_quarter_name,
+      net_arr_created_date.first_day_of_fiscal_quarter            AS pipeline_created_fiscal_quarter_date,
 
       ------------------------------------------------------------------------------------------------------
       ------------------------------------------------------------------------------------------------------
@@ -260,8 +275,8 @@ WITH date_details AS (
       ON sfdc_opportunity_snapshot_history.date_actual::DATE = snapshot_date.date_actual
     LEFT JOIN date_details created_date_detail
       ON created_date_detail.date_actual = sfdc_opportunity_snapshot_history.created_date::DATE
-    LEFT JOIN date_details iacv_created_date
-      ON iacv_created_date.date_actual = sfdc_opportunity_snapshot_history.iacv_created_date::DATE
+    LEFT JOIN date_details net_arr_created_date
+      ON net_arr_created_date.date_actual = sfdc_opportunity_snapshot_history.iacv_created_date::DATE
 
 ), sfdc_opportunity_xf AS (
 
@@ -272,14 +287,21 @@ WITH date_details AS (
       opportunity_owner_manager,
       is_edu_oss,
       account_owner_team_stamped, 
-      opportunity_owner_user_segment,
-      opportunity_owner_user_region,
+
       sales_team_cro_level,
       sales_team_rd_asm_level,
+
+      -- Opportunity Owner Stamped fields
+      opportunity_owner_user_segment,
+      opportunity_owner_user_region,
+      opportunity_owner_user_area,
+      opportunity_owner_user_geo,
+
       is_won,
       opportunity_category,
       raw_net_arr,
       net_incremental_acv,
+      sales_qualified_source,
       incremental_acv
     FROM {{ref('wk_sales_sfdc_opportunity_xf')}}  
 
@@ -508,8 +530,12 @@ WITH date_details AS (
       ------------------------------------------------------------------------------------------------------
       ------------------------------------------------------------------------------------------------------
       -- opportunity driven fields
+      
       sfdc_opportunity_xf.opportunity_owner_manager,
       sfdc_opportunity_xf.is_edu_oss,
+      sfdc_opportunity_xf.sales_qualified_source,
+
+
       -- field used for FY21 bookings reporitng
       sfdc_opportunity_xf.account_owner_team_stamped, 
      
@@ -527,8 +553,11 @@ WITH date_details AS (
       -- Team Segment / ASM - RD 
       -- As the snapshot history table is used to compare current perspective with the past, I leverage the most recent version
       -- of the truth ato cut the data, that's why instead of using the stampped version, I take the current fields.
+      -- https://gitlab.my.salesforce.com/00N6100000ICcrD?setupid=OpportunityFields
       sfdc_opportunity_xf.opportunity_owner_user_segment,
       sfdc_opportunity_xf.opportunity_owner_user_region,
+      sfdc_opportunity_xf.opportunity_owner_user_area,
+      sfdc_opportunity_xf.opportunity_owner_user_geo,
 
       --- target fields for reporting, changing their name might help to isolate their logic from the actual field
       -- in FY21, there were multiple ways of getting this done, and it meant changing downwards reports
