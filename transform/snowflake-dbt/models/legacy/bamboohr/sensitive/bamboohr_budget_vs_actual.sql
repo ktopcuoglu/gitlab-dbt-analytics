@@ -27,7 +27,7 @@ WITH dates AS (
       fiscal_quarter,
       budget,
       excess_from_previous_quarter,
-      annual_comp_review,
+      annual_comp_review
     FROM sheetload_people_budget
 
     UNION ALL
