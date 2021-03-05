@@ -377,12 +377,14 @@ sources:
         identifier: gitlab_db_alert_management_http_integrations
       - name: analytics_cycle_analytics_group_stages
         identifier: gitlab_db_analytics_cycle_analytics_group_stages
+        freshness: null
       - name: approval_merge_request_rule_sources
         identifier: gitlab_db_approval_merge_request_rule_sources
       - name: approval_project_rules
         identifier: gitlab_db_approval_project_rules
       - name: approval_project_rules_protected_branches
         identifier: gitlab_db_approval_project_rules_protected_branches
+        freshness: null
       - name: authentication_events
         identifier: gitlab_db_authentication_events
       - name: bulk_imports
@@ -425,6 +427,7 @@ sources:
         freshness: null
       - name: jira_imports
         identifier: gitlab_db_jira_imports
+        freshness: null
       - name: jira_tracker_data
         identifier: gitlab_db_jira_tracker_data
       - name: ldap_group_links
@@ -442,14 +445,19 @@ sources:
         identifier: gitlab_db_pool_repositories
       - name: project_compliance_framework_settings
         identifier: gitlab_db_project_compliance_framework_settings
+        freshness: null
       - name: project_error_tracking_settings
         identifier: gitlab_db_project_error_tracking_settings
+        freshness: null
       - name: project_feature_usages
         identifier: gitlab_db_project_feature_usages
+        freshness: null
       - name: project_incident_management_settings
         identifier: gitlab_db_project_incident_management_settings
+        freshness: null
       - name: project_tracing_settings
         identifier: gitlab_db_project_tracing_settings
+        freshness: null
       - name: remote_mirrors
         identifier: gitlab_db_remote_mirrors
       - name: requirements_management_test_reports
@@ -458,6 +466,7 @@ sources:
         identifier: gitlab_db_security_scans
       - name: sentry_issues
         identifier: gitlab_db_sentry_issues
+        freshness: null
       - name: status_page_published_incidents
         identifier: gitlab_db_status_page_published_incidents
         freshness: null
@@ -466,6 +475,7 @@ sources:
         freshness: null
       - name: suggestions
         identifier: gitlab_db_suggestions
+        freshness: null
       - name: uploads
         identifier: gitlab_db_uploads
       - name: users_ops_dashboard_projects
