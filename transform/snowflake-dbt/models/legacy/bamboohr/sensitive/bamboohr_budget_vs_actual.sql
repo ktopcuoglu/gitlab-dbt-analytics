@@ -26,7 +26,8 @@ WITH dates AS (
       fiscal_year,
       fiscal_quarter,
       budget,
-      excess_from_previous_quarter
+      excess_from_previous_quarter,
+      annual_comp_review,
     FROM sheetload_people_budget
 
     UNION ALL
@@ -36,7 +37,8 @@ WITH dates AS (
       fiscal_year,
       fiscal_quarter, 
       SUM(budget)                                               AS budget,
-      SUM(excess_from_previous_quarter)                         AS excess_from_previous_quarter
+      SUM(excess_from_previous_quarter)                         AS excess_from_previous_quarter,
+      SUM(annual_comp_review)                                   AS annual_comp_review
     FROM sheetload_people_budget
     GROUP BY 1,2,3
 
@@ -47,7 +49,8 @@ WITH dates AS (
       fiscal_year,
       fiscal_quarter, 
       SUM(budget)                                               AS budget,
-      SUM(excess_from_previous_quarter)                         AS excess_from_previous_quarter
+      SUM(excess_from_previous_quarter)                         AS excess_from_previous_quarter,
+      SUM(annual_comp_review)                                   AS annual_comp_review
     FROM sheetload_people_budget
     WHERE division != 'Sales Development'
     GROUP BY 1,2,3
@@ -126,7 +129,7 @@ WITH dates AS (
       budget.division,
       budget.budget,
       budget.excess_from_previous_quarter,
-      COALESCE(promotions_aggregated_fy.total_spend, promotions_aggregated.total_spend) AS total_spend
+      COALESCE(promotions_aggregated_fy.total_spend, promotions_aggregated.total_spend) - budget.annual_comp_review AS total_spend
     FROM budget
     LEFT JOIN promotions_aggregated
       ON budget.division = promotions_aggregated.division
@@ -140,5 +143,6 @@ WITH dates AS (
 
 )
 
-SELECT *
+SELECT *,
+      1- (budget - total_spend)/budget AS percent_of_budget_remaining
 FROM final
