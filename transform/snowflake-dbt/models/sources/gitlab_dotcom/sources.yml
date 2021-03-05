@@ -128,6 +128,9 @@ sources:
             error_after: {count: 30, period: day}
       - name: clusters_applications_knative
         identifier: gitlab_db_clusters_applications_knative
+        freshness:
+            warn_after: {count: 2, period: day}
+            error_after: {count: 4, period: day}
       - name: clusters_applications_prometheus
         identifier: gitlab_db_clusters_applications_prometheus
       - name: clusters_applications_runners
@@ -380,6 +383,7 @@ sources:
         freshness: null
       - name: approval_merge_request_rule_sources
         identifier: gitlab_db_approval_merge_request_rule_sources
+        freshness: null
       - name: approval_project_rules
         identifier: gitlab_db_approval_project_rules
       - name: approval_project_rules_protected_branches
@@ -443,6 +447,7 @@ sources:
         identifier: gitlab_db_path_locks
       - name: pool_repositories
         identifier: gitlab_db_pool_repositories
+        freshness: null
       - name: project_compliance_framework_settings
         identifier: gitlab_db_project_compliance_framework_settings
         freshness: null
