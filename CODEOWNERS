@@ -80,8 +80,8 @@ docker-compose.yml  @tayloramurphy  @m_walker   @paul_armstrong
 /transform/snowflake-dbt/models/legacy/gitlab_data_yaml/feature_flags_yaml_latest.sql      @ayufan  @m_walker
 /transform/snowflake-dbt/models/legacy/gitlab_data_yaml/feature_flags_yaml_historical.sql  @ayufan  @m_walker
 
-/transform/snowflake-dbt/models/sources/gitlab_dotcom/      @mpeychet_		@m_walker       @kathleentam       @jeanpeguero
-/transform/snowflake-dbt/models/legacy/gitlab_dotcom/       @mpeychet_		@m_walker       @kathleentam       @jeanpeguero
+/transform/snowflake-dbt/models/sources/gitlab_dotcom/      @mpeychet_		@m_walker       @jjstark      @kathleentam       @jeanpeguero
+/transform/snowflake-dbt/models/legacy/gitlab_dotcom/       @mpeychet_		@m_walker       @kathleentam  @jeanpeguero
 
 /transform/snowflake-dbt/models/sources/google_analytics_360/   @mpeychet_	@jjstark  @paul_armstrong	@jeanpeguero
 /transform/snowflake-dbt/models/legacy/google_analytics_360/    @mpeychet_	@jjstark  @paul_armstrong	@jeanpeguero
