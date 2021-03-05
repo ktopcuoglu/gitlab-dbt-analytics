@@ -31,25 +31,13 @@ models:
       - name: parent_df_industry_clean
         description: Industry, temp cleaning column for parent
       - name: account_sales_segment_clean
-        description: Dim geo area name final source column
+        description: Dim sales segment name final source column
       - name: parent_sales_segment_clean
-        description: Dim geo area name final source column
+        description: Dim sales segment name final source column
       - name: account_billing_country_clean
         description: Dim location country name final source column
       - name: parent_billing_country_clean
         description: Dim location country name final source column
-      - name: dim_account_geo_region_name_source
-        description: Dim geo region name final source column
-      - name: dim_parent_geo_region_name_source
-        description: Dim geo region name final source column
-      - name: dim_account_geo_sub_region_name_source
-        description: Dim geo sub region name final source column
-      - name: dim_parent_geo_sub_region_name_source
-        description: Dim geo sub region name final source column
-      - name: dim_account_geo_area_name_source
-        description: Dim geo area name final source column
-      - name: dim_parent_geo_area_name_source
-        description: Dim geo area name final source column
       - name: dim_account_sales_territory_name_source
         description: Dim sales territory name final source column
       - name: dim_parent_sales_territory_name_source
@@ -102,33 +90,6 @@ models:
     columns:
       - name: dim_crm_sales_hierarchy_stamped_id
         description: Unique identifier of a sales hierarchy tier
-        tests:
-          - not_null
-          - unique
-
-  - name: prep_geo_area
-    description: '{{ doc("prep_geo_area") }}'
-    columns:
-      - name: dim_geo_area_id
-        description: Unique identifier of a geo area
-        tests:
-          - not_null
-          - unique
-
-  - name: prep_geo_region
-    description: '{{ doc("prep_geo_region") }}'
-    columns:
-      - name: dim_geo_region_id
-        description: Unique identifier of a geo region
-        tests:
-          - not_null
-          - unique
-
-  - name: prep_geo_sub_region
-    description: '{{ doc("prep_geo_sub_region") }}'
-    columns:
-      - name: dim_geo_sub_region_id
-        description: Unique identifier of a geo sub region
         tests:
           - not_null
           - unique
