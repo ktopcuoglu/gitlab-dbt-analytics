@@ -131,7 +131,7 @@ SELECT
   stage_name,
   group_name,
   product_tier,
-  IFF(delivery = 'Self-Managed', 'Estimated Self-Managed Uplift', delivery) AS breakdown,
+  'Estimated Self-Managed Uplift' AS breakdown,
   delivery,
   edition,
   SUM(estimated_monthly_metric_value_sum - monthly_metric_value_sum) AS mau_value
