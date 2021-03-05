@@ -2785,6 +2785,7 @@ tables:
       , enforced_sso
       , enforced_group_managed_accounts
       , prohibited_outer_forks
+      , default_membership_role
       FROM saml_providers
   security_scans:
     export_schema: "gitlab_com"
