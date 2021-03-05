@@ -18,7 +18,7 @@ WITH data AS (
 
     SELECT  
       DATE_TRUNC('week', created_at) AS created_week,
-      dim_usage_ping_id,
+      ping_id,
       created_at,
       instance_id,
       host_id,
