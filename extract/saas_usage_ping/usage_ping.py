@@ -74,7 +74,7 @@ class UsagePing(object):
             logging.info(f"Running ping {key}...")
             try:
                 results = pd.read_sql(sql=query, con=connection)
-                counter_value = results["counter_value"].values[0]
+                counter_value = results.loc[0, "counter_value"]
                 data_to_write = str(counter_value)
             except SQLAlchemyError as e:
                 error = str(e.__dict__["orig"])
