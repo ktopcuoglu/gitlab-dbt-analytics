@@ -81,7 +81,11 @@ def load_incremental(
             logging.info(f"Replication is good at {replication_timestamp}")
 
         append_to_xcom_file(
-            {"max_data_available": min(replication_timestamp, execution_date).strftime("%Y-%m-%dT%H:%M:%S%z")}
+            {
+                "max_data_available": min(
+                    replication_timestamp, execution_date
+                ).strftime("%Y-%m-%dT%H:%M:%S%z")
+            }
         )
 
     # If _TEMP exists in the table name, skip it because it needs a full sync
