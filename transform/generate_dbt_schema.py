@@ -92,4 +92,3 @@ if __name__ == "__main__":
     logging.info("Creating schema file...")
     main(engine)
     logging.info("Schema generated successfully.")
-
