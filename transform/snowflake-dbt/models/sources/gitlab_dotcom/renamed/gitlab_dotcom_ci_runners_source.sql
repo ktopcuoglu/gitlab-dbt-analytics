@@ -13,7 +13,6 @@ WITH source AS (
     description::VARCHAR                            AS description,
     contacted_at::TIMESTAMP                         AS contacted_at,
     active::BOOLEAN                                 AS is_active,
-    is_shared::BOOLEAN                              AS is_shared,
     name::VARCHAR                                   AS runner_name,
     version::VARCHAR                                AS version,
     revision::VARCHAR                               AS revision,
