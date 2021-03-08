@@ -50,11 +50,7 @@ class UsagePing(object):
         can be updated to query an end point or query other functions
         to generate the {ping_name: sql_query} dictionary
         """
-        with open(
-            os.path.join(
-                os.path.dirname(__file__), "all_sql_queries.json"
-            )
-        ) as f:
+        with open(os.path.join(os.path.dirname(__file__), "all_sql_queries.json")) as f:
             saas_queries = json.load(f)
 
         return saas_queries
@@ -108,9 +104,7 @@ class UsagePing(object):
         }
         """
         with open(
-            os.path.join(
-                os.path.dirname(__file__), "usage_ping_namespace_queries.json"
-            )
+            os.path.join(os.path.dirname(__file__), "usage_ping_namespace_queries.json")
         ) as f:
             saas_queries = json.load(f)
 
@@ -145,9 +139,11 @@ class UsagePing(object):
                 base_query = base_query.replace(
                     "between_start_date", f"'{str(self.start_date_28)}'"
                 )
-            
+
             if "namespace_ultimate_parent_id" not in base_query:
-                logging.info(f"Skipping ping {ping_name} due to no namespace information.")
+                logging.info(
+                    f"Skipping ping {ping_name} due to no namespace information."
+                )
                 continue
 
             try:
