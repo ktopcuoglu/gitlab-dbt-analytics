@@ -175,6 +175,7 @@ models:
         tests:
           - not_null
 
+
   - name: gitlab_dotcom_ci_group_variables_source
     description: Base model for Gitlab.com ci_group_variables
     columns:
