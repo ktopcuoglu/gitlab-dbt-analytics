@@ -135,7 +135,7 @@ def load_scd(
     target_engine: Engine,
     source_table_name: str,
     table_dict: Dict[Any, Any],
-    table_name: str
+    table_name: str,
 ) -> bool:
     """
     Load tables that are slow-changing dimensions.
@@ -149,7 +149,6 @@ def load_scd(
         backfill = True
     else:
         backfill = False
-
 
     raw_query = table_dict["import_query"]
     additional_filter = table_dict.get("additional_filtering", "")
