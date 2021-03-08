@@ -1,4 +1,4 @@
-WITH source AS (
+fWITH source AS (
 
     SELECT
       opportunity.*,
