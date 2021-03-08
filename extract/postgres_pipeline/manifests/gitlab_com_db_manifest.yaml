@@ -366,8 +366,6 @@ tables:
       , auto_canceled_by_id
       , retried
       , stage_id
-      , artifacts_file_store
-      , artifacts_metadata_store
       , protected
       , failure_reason
       , scheduled_at
