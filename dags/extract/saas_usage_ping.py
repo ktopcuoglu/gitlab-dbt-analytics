@@ -55,7 +55,7 @@ default_args = {
     "owner": "airflow",
     "retries": 0,
     "start_date": datetime(2020, 6, 7),
-    "dagrun_timeout": timedelta(hours=4),
+    "dagrun_timeout": timedelta(hours=8),
 }
 
 # Create the DAG
