@@ -68,8 +68,8 @@ models:
       - name: dim_industry_id
         description: Unique identifier of a version of a industry
 
-  - name: map_ip_to_geo
-    description: '{{ doc("map_ip_to_geo") }}'
+  - name: map_ip_to_country
+    description: '{{ doc("map_ip_to_country") }}'
     columns:
       - name: ip_address_hash
         tests:

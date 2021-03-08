@@ -89,18 +89,6 @@ Data comes from [Zuora Documentation](https://knowledgecenter.zuora.com/Billing/
 
 {% enddocs %}
 
-{% docs dim_ip_to_geo %}
-
-Dimensional table mapping ip address ranges to location ids.
-
-{% enddocs %}
-
-{% docs dim_location %}
-
-Dimensional table for geo locations.
-
-{% enddocs %}
-
 {% docs dim_location_country %}
 
 Dimensional table for countries mapped to larger regions.

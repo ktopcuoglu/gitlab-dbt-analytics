@@ -318,15 +318,6 @@ models:
           - not_null
         tags: ["tdf", "common", "geo"]
 
-  - name: dim_ip_to_geo
-    description: '{{ doc("dim_ip_to_geo") }}'
-    columns:
-      - name: ip_address_hash
-        tests:
-          - unique
-          - not_null
-      - name: dim_location_id
-
   - name: dim_geo_sub_region
     description: "Dimension table for sub-region built off ATAM_Sub_Region__C in SFDC. Example values: Southern Europe, NA East, Nordics"
     columns:
@@ -540,21 +531,6 @@ models:
         description: The timestamp of when the license was generated.
       - name: updated_at
         description: The timestamp of when the license was updated.
-
-  - name: dim_location
-    description: '{{ doc("dim_location") }}'
-    columns:
-      - name: country_name
-        tests:
-          - not_null
-      - name: iso_2_country_code
-        tests:
-          - not_null
-          - unique
-      - name: dim_location_id
-        tests:
-          - not_null
-          - unique
 
   - name: dim_location_country
     description: '{{ doc("dim_location_country") }}'

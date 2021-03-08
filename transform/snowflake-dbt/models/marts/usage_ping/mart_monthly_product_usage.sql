@@ -38,7 +38,7 @@ WITH dim_billing_account AS (
 ), dim_location AS (
 
     SELECT *
-    FROM {{ ref('dim_location') }}
+    FROM {{ ref('dim_location_country') }}
 
 ), dim_product_detail AS (
 
@@ -228,7 +228,7 @@ WITH dim_billing_account AS (
       ON dim_usage_pings.license_md5 = license_subscriptions.license_md5
         AND fct_monthly_usage_data.created_month = license_subscriptions.reporting_month
     LEFT JOIN dim_location
-      ON dim_hosts.location_id = dim_location.dim_location_id
+      ON dim_hosts.location_id = dim_location.dim_location_country_id
 
 ), sorted AS (
 
@@ -325,5 +325,5 @@ WITH dim_billing_account AS (
     created_by="@mpeychet",
     updated_by="@mcooperDD",
     created_date="2020-12-01",
-    updated_date="2020-02-09"
+    updated_date="2020-03-05"
 ) }}

@@ -28,15 +28,15 @@ WITH source AS (
     SELECT *
     FROM {{ ref('version_raw_usage_data_source') }}
 
-), map_ip_to_geo AS (
+), map_ip_to_country AS (
 
     SELECT * 
-    FROM {{ ref('map_ip_to_geo') }}
+    FROM {{ ref('map_ip_to_country') }}
     
 ), location AS (
 
     SELECT * 
-    FROM {{ ref('dim_location') }}
+    FROM {{ ref('dim_location_country') }}
 
 ), usage_data AS (
 
@@ -107,20 +107,20 @@ WITH source AS (
 ), map_ip_location AS (
 
     SELECT 
-      map_ip_to_geo.ip_address_hash, 
-      map_ip_to_geo.dim_location_id, 
+      map_ip_to_country.ip_address_hash, 
+      map_ip_to_country.dim_location_country_id, 
       location.country_name, 
       location.iso_2_country_code, 
       location.iso_3_country_code  
-    FROM map_ip_to_geo
+    FROM map_ip_to_country
     INNER JOIN location 
-      WHERE map_ip_to_geo.dim_location_id = location.dim_location_id
+      WHERE map_ip_to_country.dim_location_country_id = location.dim_location_country_id
 
 ), add_country_info_to_usage_ping AS (
 
     SELECT 
       joined.*, 
-      map_ip_location.dim_location_id, 
+      map_ip_location.dim_location_country_id, 
       map_ip_location.country_name, 
       map_ip_location.iso_2_country_code, 
       map_ip_location.iso_3_country_code  
