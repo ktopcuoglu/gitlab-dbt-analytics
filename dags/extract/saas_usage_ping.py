@@ -34,7 +34,6 @@ pod_env_vars = {
 }
 
 pod_env_vars = {**gitlab_pod_env_vars, **pod_env_vars}
-pod_env_vars["BRANCH_NAME"] = env["GIT_BRANCH"].upper()
 
 logging.info(pod_env_vars)
 
