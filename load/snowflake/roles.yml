@@ -775,7 +775,7 @@ roles:
                     - prep.sensitive.bamboohr_headcount_intermediate
 
     - bamboohr_sensitive_separations:
-      warehouses:
+        warehouses:
             - analyst_xs
         privileges:
             databases:
