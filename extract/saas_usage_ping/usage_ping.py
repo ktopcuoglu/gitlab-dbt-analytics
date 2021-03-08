@@ -52,7 +52,7 @@ class UsagePing(object):
         """
         with open(
             os.path.join(
-                os.path.dirname(__file__), "saas_usage_pings/all_sql_queries.json"
+                os.path.dirname(__file__), "all_sql_queries.json"
             )
         ) as f:
             saas_queries = json.load(f)
@@ -109,7 +109,7 @@ class UsagePing(object):
         """
         with open(
             os.path.join(
-                os.path.dirname(__file__), "saas_usage_pingsusage_ping_namespace_queries.json"
+                os.path.dirname(__file__), "usage_ping_namespace_queries.json"
             )
         ) as f:
             saas_queries = json.load(f)
