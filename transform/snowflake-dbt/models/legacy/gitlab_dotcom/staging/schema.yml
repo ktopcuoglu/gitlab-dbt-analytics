@@ -26,7 +26,7 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: ['2', '3', '4', '34', '67', 'Trial']
+              values: [2, 3, 4, 34, 67, 100, 101]
       - name: ultimate_parent_plan_title
         description: Whether or not the namespace associated with the project is subscribed to a paid plan. This can be inherited from the namespaces's ultimate parent.
         tests:
@@ -134,8 +134,6 @@ models:
           The plan_id of the namespace's ultimate parent namespace. This is inheritted downwards,
           meaning a namespace's ultimate_parent_plan_id will supersede its own plan_id whenever its plan
           is higher (ex: a Silver ultimate parent plan will override a namespace's Bronze plan.)
-        tests:
-          - not_null
           
   - name: gitlab_dotcom_namespace_lineage_prep
     description: '{{ doc("gitlab_dotcom_namespace_lineage") }}'
@@ -164,6 +162,8 @@ models:
       - name: namespace_plan_id
         tests:
           - not_null
+          - accepted_values:
+              values: [2, 3, 4, 34, 67, 100, 101]
       - name: ultimate_parent_plan_id
         description: >-
           The plan_id of the namespace's ultimate parent namespace. This is inheritted downwards,
@@ -171,6 +171,8 @@ models:
           is higher (ex: a Silver ultimate parent plan will override a namespace's Bronze plan.)
         tests:
           - not_null
+          - accepted_values:
+              values: [2, 3, 4, 34, 67, 100, 101]
   
   - name: gitlab_dotcom_namespace_lineage_historical_daily
     columns:

@@ -360,6 +360,7 @@ roles:
         member_of:
             - analyst_core
             - bamboohr_analytics
+            - bamboohr_sensitive_separations
             - boneyard
             - covid19
             - dbt_analytics
@@ -778,6 +779,22 @@ roles:
                     - prep.sensitive.bamboohr_job_role
                     - prep.sensitive.bamboohr_locality
                     - prep.sensitive.bamboohr_headcount_intermediate
+
+    - bamboohr_sensitive_separations:
+      warehouses:
+            - analyst_xs
+        privileges:
+            databases:
+                read:
+                    - prod
+                    - prep
+            schemas:
+                read:
+                    - prod.common
+                    - prod.legacy
+            tables:
+                read:
+                  - prep.bamboohr_separations
 
     - bamboohr:
         warehouses:
@@ -1852,6 +1869,7 @@ roles:
     - ewegscheider:
         member_of:
             - people_operations
+            - bamboohr_sensitive_separations
         warehouses:
             - analyst_xs
         privileges:
