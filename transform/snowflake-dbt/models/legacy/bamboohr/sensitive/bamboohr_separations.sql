@@ -22,7 +22,7 @@ WITH dim_date AS (
 
     SELECT *
     FROM {{ ref('bamboohr_employment_status_source') }}
-    WHERE employment_status = 'Terminated'
+    WHERE LOWER(employment_status) = 'terminated'
 
 ), eeoc AS (
 
@@ -43,7 +43,7 @@ WITH dim_date AS (
       ON separations.separation_date = dim_date.date_actual
     LEFT JOIN separation_type 
       ON separations.employee_id = separation_type.employee_id
-      AND separations.separation_date = separation_type.effective_Date
+      AND separations.separation_date = separation_type.effective_date
     LEFT JOIN eeoc 
       ON separations.employee_id = eeoc.employee_id
 
