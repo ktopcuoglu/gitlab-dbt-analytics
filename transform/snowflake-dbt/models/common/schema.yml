@@ -1209,7 +1209,7 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: ['2', '3', '4', '34', '67', 'Trial']
+              values: [2, 3, 4, 34, 67, 100, 101]
         tags: ["tdf", "common", "gainsight"]
       - name: ultimate_parent_plan_title
         description: Whether or not the namespace associated with the project is subscribed to a paid plan. This can be inherited from the namespaces's ultimate parent.
@@ -1294,6 +1294,7 @@ models:
         tags: ["tdf", "common", "gainsight"]
       - name: seat_link_report_date
         description: Day on which Seat Link usage data is reported. Should always be last day of month for historical months.
+      - name: seat_link_report_date_id
       - name: license_utilization
         description: Number of activated seats (`active_user_count`) divided by the number of purchased seats (`license_user_count`) on the subscription.
       - name: active_user_count
@@ -1302,8 +1303,10 @@ models:
         description: Maximum active user count ever reported over the lifetime of the customer's subcription.
       - name: license_user_count
         description: Count of licensed users purchased with the customer's subcription.
+      - name: dim_usage_ping_id
       - name: ping_created_at
         description: The timestamp at which the usage ping was created.
+      - name: ping_created_date_id
       - name: uuid
       - name: hostname
       - name: dim_license_id
@@ -1313,11 +1316,13 @@ models:
       - name: action_monthly_active_users_project_repo_28_days_user
       - name: merge_requests_28_days_user
       - name: projects_with_repositories_enabled_28_days_user
-      - name: commit_comment_all_time
-      - name: source_code_pushes_all_time
+      - name: commit_comment_all_time_event
+      - name: source_code_pushes_all_time_event
       - name: ci_pipelines_28_days_user
       - name: ci_internal_pipelines_28_days_user
-      - name: ci_builds_28_days_user_28_days_user
+      - name: ci_builds_28_days_user
+      - name: ci_builds_all_time_user
+      - name: ci_builds_all_time_event
       - name: ci_runners_all_time_event
       - name: auto_devops_enable_all_time_event
       - name: gitlab_shared_runners_enabled_instance_setting
@@ -1367,11 +1372,17 @@ models:
           - not_null
         tags: ["tdf", "common", "gainsight"]
       - name: snapshot_month
+        description: First day of the month in which data is being reported.
+        tests:
+          - not_null
+        tags: ["tdf", "common", "gainsight"]
+      - name: snapshot_date_id
         tests:
           - not_null
         tags: ["tdf", "common", "gainsight"]
       - name: seat_link_report_date
         description: Day on which Seat Link usage data is reported. Should always be last day of month for historical months.
+      - name: seat_link_report_date_id
       - name: license_utilization
         description: Number of activated seats (`active_user_count`) divided by the number of purchased seats (`license_user_count`) on the subscription.
       - name: active_user_count
@@ -1380,8 +1391,10 @@ models:
         description: Maximum active user count ever reported over the lifetime of the customer's subcription.
       - name: license_user_count
         description: Count of licensed users purchased with the customer's subcription.
+      - name: dim_usage_ping_id
       - name: ping_created_at
         description: The timestamp at which the usage ping was created.
+      - name: ping_created_date_id
       - name: uuid
       - name: hostname
       - name: dim_license_id
@@ -1395,7 +1408,9 @@ models:
       - name: source_code_pushes_all_time
       - name: ci_pipelines_28_days_user
       - name: ci_internal_pipelines_28_days_user
-      - name: ci_builds_28_days_user_28_days_user
+      - name: ci_builds_28_days_user
+      - name: ci_builds_all_time_user
+      - name: ci_builds_all_time_event
       - name: ci_runners_all_time_event
       - name: auto_devops_enable_all_time_event
       - name: gitlab_shared_runners_enabled_instance_setting
@@ -1846,7 +1861,7 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: ['2', '3', '4', '34', '67', 'Trial']
+              values: [2, 3, 4, 34, 67, 100, 101]
         tags: ["tdf", "common", "gainsight"]
       - name: gitlab_plan_title
         description: Whether or not the namespace associated with the project is subscribed to a paid plan. This can be inheritted from the namespaces's ultimate parent.

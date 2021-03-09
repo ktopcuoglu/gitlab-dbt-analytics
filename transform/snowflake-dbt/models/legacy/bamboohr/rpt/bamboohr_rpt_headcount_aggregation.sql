@@ -33,6 +33,8 @@ WITH source AS (
 
    SELECT
       base.month_date,
+      IFF(base.month_date = DATEADD(month, -1, DATE_TRUNC(month, CURRENT_DATE())), 
+                TRUE, FALSE)                                                       AS is_last_month,
       base.breakout_type, 
       base.department,
       base.division,
@@ -160,6 +162,7 @@ WITH source AS (
      
     SELECT   
       month_date,
+      is_last_month,
       breakout_type, 
       department,
       division,

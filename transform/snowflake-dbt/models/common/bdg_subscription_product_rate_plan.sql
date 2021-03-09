@@ -1,22 +1,23 @@
 {{ simple_cte([
-    ('subscriptions','zuora_subscription_source'),
     ('rate_plans','zuora_rate_plan_source'),
     ('product_details','dim_product_detail')
 ]) }}
 
-, joined AS (
+, subscriptions AS (
+
+    SELECT *
+    FROM {{ ref('zuora_subscription_source') }}
+    WHERE is_deleted = FALSE
+      AND exclude_from_analysis IN ('False', '')
+
+), joined AS (
+
     SELECT DISTINCT
       subscriptions.subscription_id                     AS dim_subscription_id,
       subscriptions.original_id                         AS dim_subscription_id_original,
       subscriptions.account_id                          AS dim_billing_account_id,
       subscriptions.subscription_name,
       subscriptions.subscription_name_slugify,
-      subscriptions.subscription_status,
-      subscriptions.subscription_start_date,
-      subscriptions.subscription_end_date,
-      subscriptions.cancelled_date,
-      subscriptions.term_end_date,
-      subscriptions.term_start_date,
       product_details.dim_product_detail_id,
       product_details.product_rate_plan_id,
       product_details.product_id,
@@ -28,6 +29,7 @@
       ON rate_plans.subscription_id = subscriptions.subscription_id
     LEFT JOIN product_details
       ON rate_plans.product_rate_plan_id = product_details.product_rate_plan_id
+
 )
 
 {{ dbt_audit(
@@ -35,5 +37,5 @@
     created_by="@ischweickartDD",
     updated_by="@ischweickartDD",
     created_date="2021-02-08",
-    updated_date="2021-02-08"
+    updated_date="2021-02-16"
 ) }}
