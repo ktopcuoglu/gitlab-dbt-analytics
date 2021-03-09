@@ -67,6 +67,15 @@ models:
       - name: dim_parent_location_country_name_source
         description: Dim location country name final source column
 
+  - name: prep_campaign
+    description: '{{ doc("prep_campaign") }}'
+    columns:
+      - name: dim_campaign_id
+        description: Unique identifier of a marketing campaign
+        tests:
+          - not_null
+          - unique
+
   - name: prep_crm_sales_hierarchy_live
     description: '{{ doc("prep_crm_sales_hierarchy_live") }}'
     columns:
@@ -151,11 +160,11 @@ models:
           - not_null
           - unique
 
-  - name: prep_marketing_channel
-    description: '{{ doc("prep_marketing_channel") }}'
+  - name: prep_bizible_marketing_channel_path
+    description: '{{ doc("prep_bizible_marketing_channel_path") }}'
     columns:
-      - name: dim_marketing_channel_id
-        description: Unique identifier of a marketing channel
+      - name: dim_bizible_marketing_channel_path_id
+        description: Unique identifier of a Bizible marketing channel path
         tests:
           - not_null
           - unique
@@ -211,7 +220,7 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: ['2', '3', '4', '34', '67', 'Trial']
+              values: [2, 3, 4, 34, 67, 100, 101]
         tags: ["tdf", "common", "gainsight"]
       - name: gitlab_plan_title
         description: Whether or not the namespace associated with the project is subscribed to a paid plan. This can be inherited from the namespace's ultimate parent.
@@ -229,11 +238,11 @@ models:
       - name: current_project_count
         description: The number of projects that are presently associated with the namespace.
 
-  - name: prep_opportunity_source
-    description: '{{ doc("prep_opportunity_source") }}'
+  - name: prep_sales_qualified_source
+    description: '{{ doc("prep_sales_qualified_source") }}'
     columns:
-      - name: dim_opportunity_source_id
-        description: Unique identifier of an opportunity source
+      - name: dim_sales_qualified_source_id
+        description: Unique identifier of a sales qualified opportunity source
         tests:
           - not_null
           - unique
@@ -247,14 +256,73 @@ models:
           - not_null
           - unique
 
-  - name: prep_purchase_channel
-    description: '{{ doc("prep_purchase_channel") }}'
+  - name: prep_deal_path
+    description: '{{ doc("prep_deal_path") }}'
     columns:
-      - name: dim_purchase_channel_id
-        description: Unique identifier of a purchase channel
+      - name: dim_deal_path_id
+        description: Unique identifier of a deal_path
         tests:
           - not_null
           - unique
+
+  - name: prep_recurring_charge_subscription_monthly
+    description: '{{ doc("prep_recurring_charge_subscription_monthly") }}'
+    columns:
+      - name: dim_subscription_id
+        description: Unique identifier of a version of a subscription
+        tests:
+          - not_null
+        tags: ["tdf", "common", "gainsight"]
+      - name: dim_subscription_id_original
+        description: Identifier of the original subscription in lineage of a given Subscription ID
+        tests:
+          - not_null
+        tags: ["tdf", "common", "gainsight"]
+      - name: dim_billing_account_id
+        description: ID of the Zuora account associated with a given Subscription ID
+        tests:
+          - not_null
+        description: Zuora account id
+      - name: dim_crm_account_id
+        description: Account ID from SFDC identifing the customer
+      - name: dim_date_id
+        description: The identifier of date month in dim_date
+        tests:
+          - not_null
+      - name: subscription_status
+        description: Status of the subscription
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Active', 'Cancelled', 'Draft', 'Expired']
+        tags: ["tdf", "common", "gainsight"]
+      - name: unit_of_measure
+      - name: total_mrr
+        description: Monthly Recurring Revenue value for given month for a given Subscription ID
+      - name: total_arr
+        description: Annual Recurring Revenue value for given month for a given Subscription ID
+      - name: total_quantity
+        description: Total quantity
+      - name: sm_mrr
+        description: Monthly Recurring Revenue value for given month from Self-Managed products
+      - name: sm_arr
+        description: Annual Recurring Revenue value for given month from Self-Managed products
+      - name: sm_quantity
+        description: Total quantity of Self-Managed products
+      - name: saas_mrr
+        description: Monthly Recurring Revenue value for given month from SaaS products
+      - name: saas_arr
+        description: Annual Recurring Revenue value for given month from SaaS products
+      - name: saas_quantity
+        description: Total quantity of SaaS products
+      - name: other_mrr
+        description: Monthly Recurring Revenue value for given month from products that are neither Self-Managed nor SaaS
+      - name: other_arr
+        description: Annual Recurring Revenue value for given month from products that are neither Self-Managed nor SaaS
+      - name: other_quantity
+        description: Total quantity of products that are neither Self-Managed nor SaaS
+      - name: is_latest_record_per_subscription
+        description: Flags if the row contains the most recent record received for the subscription.
 
   - name: prep_recurring_charge
     description: '{{ doc("prep_recurring_charge") }}'

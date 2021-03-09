@@ -10,7 +10,7 @@ WITH data AS (
     FROM {{ ref('prep_usage_data_all_time_flattened')}}
     {% if is_incremental() %}
 
-      WHERE created_at >= (SELECT MAX(DATEADD('month', -1. created_month)) FROM {{this}})
+      WHERE created_at >= (SELECT MAX(DATEADD('month', -1, created_month)) FROM {{this}})
 
     {% endif %}
 

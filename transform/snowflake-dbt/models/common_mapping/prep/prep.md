@@ -5,6 +5,12 @@ Cleaning operations vary across columns, depending on the nature of the source d
 
 {% enddocs %}
 
+{% docs prep_campaign %}
+
+Creates a base view with generated keys for the campaign shared dimension and fact and references in facts.
+
+{% enddocs %}
+
 {% docs prep_crm_sales_representative %}
 
 Creates a base view with generated keys for the sales representative and live crm sales hierarchy shared dimensions and references in facts.
@@ -59,15 +65,15 @@ Creates a base view with generated keys for the geographic region shared dimensi
 
 {% enddocs %}
 
-{% docs prep_marketing_channel %}
+{% docs prep_bizible_marketing_channel_path %}
 
-Creates a base view with generated keys for the marketing channel shared dimension and references in facts.
+Creates a base view with generated keys for the marketing channel path shared dimension and references in facts.
 
 {% enddocs %}
 
-{% docs prep_opportunity_source %}
+{% docs prep_sales_qualified_source %}
 
-Creates a base view with generated keys for the opportunity source shared dimension and references in facts.
+Creates a base view with generated keys for the sales qualified source (source of an opportunity) shared dimension and references in facts.
 
 {% enddocs %}
 
@@ -77,9 +83,17 @@ Creates a base view with generated keys for the order type shared dimension and 
 
 {% enddocs %}
 
-{% docs prep_purchase_channel %}
+{% docs prep_deal_path %}
 
-Creates a base view with generated keys for the purchase channel shared dimension and references in facts.
+Creates a base view with generated keys for the deal path shared dimension and references in facts.
+
+{% enddocs %}
+
+{% docs prep_recurring_charge_subscription_monthly %}
+
+Sums MRR and ARR charges by subscription by month. MRR and ARR values are also broken out by delivery type (Self-Managed, SaaS, Others) at the same grain.
+
+To align the subscriptions in this table with `prep_recurring_charge`, filter on `subscription_status IN ('Active', Cancelled')`.
 
 {% enddocs %}
 

@@ -1,5 +1,9 @@
-{% docs map_marketing_channel %}
+{% docs map_bizible_marketing_channel_path %}
  Intermediate table to expose the mapped marketing channel data.
+{% enddocs %}
+
+{% docs map_bizible_campaign_grouping %}
+ Mapping table for Bizible marketing campaigns which groups the campaigns based on the touchpoint type, ad campaign name, parent campaign id, among other attributes. This generates the `bizible_itegrated_campaign_grouping`, `integrated_campaign_grouping`, `touchpoint_segment`, and `gtm_motion` mapping.
 {% enddocs %}
 
 {% docs map_crm_account %}
@@ -15,7 +19,7 @@ Table for mapping ip address ranges to location ids.
 {% enddocs %}
 
 {% docs map_license_subscription_account%}
-Table with mapping keys for license_md5 to subscription_id to crm (Salesforce) account ids 
+Table with mapping keys for license_md5 to subscription_id to crm (Salesforce) account ids
 {% enddocs %}
 
 {% docs map_merged_crm_account%}

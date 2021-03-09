@@ -26,8 +26,8 @@ WITH bizible_attribution_touchpoints AS (
       crm_person.dim_crm_person_id,
       opportunity_dimensions.dim_crm_sales_rep_id,
       opportunity_dimensions.dim_order_type_id,
-      opportunity_dimensions.dim_opportunity_source_id,
-      opportunity_dimensions.dim_purchase_channel_id,
+      opportunity_dimensions.dim_sales_qualified_source_id,
+      opportunity_dimensions.dim_deal_path_id,
       opportunity_dimensions.dim_parent_crm_account_id,
       opportunity_dimensions.dim_parent_sales_segment_id,
       opportunity_dimensions.dim_parent_geo_region_id,
@@ -73,5 +73,5 @@ WITH bizible_attribution_touchpoints AS (
     created_by="@mcooperDD",
     updated_by="@mcooperDD",
     created_date="2021-01-21",
-    updated_date="2021-02-02"
+    updated_date="2021-02-26"
 ) }}
