@@ -786,15 +786,13 @@ roles:
         privileges:
             databases:
                 read:
-                    - prod
                     - prep
             schemas:
                 read:
-                    - prod.common
-                    - prod.legacy
+                    prep.sensitive
             tables:
                 read:
-                  - prep.bamboohr_separations
+                  - prep.sensitive.bamboohr_separations
 
     - bamboohr:
         warehouses:
