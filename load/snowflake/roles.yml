@@ -531,6 +531,7 @@ roles:
     - loader:
         warehouses:
             - loading
+            - usage_ping
         owns:
             schemas:
                 - raw.bamboohr
@@ -565,6 +566,7 @@ roles:
         privileges:
             databases:
                 read:
+                    - prep
                     - prod
                     - raw
                 write:
@@ -572,14 +574,18 @@ roles:
                     - raw
             schemas:
                 read:
+                    - prep.gitlab_docom
                     - prod.boneyard
+                    - prod.legacy
                     - raw.*
                 write:
                     - prod.boneyard
                     - raw.*
             tables:
                 read:
+                    - prep.gitlab_dotcom.*
                     - prod.boneyard.*
+                    - prod.legacy.gitlab_dotcom_namespaces_xf
                     - raw.*.*
                 write:
                     - prod.boneyard.*
@@ -1605,10 +1611,12 @@ roles:
             schemas:
                 read:
                     - prep.version_db
+                    - raw.saas_usage_ping
                     - raw.version_db
             tables:
                 read:
                     - prep.version_db.*
+                    - raw.saas_usage_ping.*
                     - raw.version_db.*
 
 
@@ -3523,3 +3531,6 @@ warehouses:
 
     - transforming_4xl:
         size: "4-x-large"
+
+    - usage_ping:
+        size: small
