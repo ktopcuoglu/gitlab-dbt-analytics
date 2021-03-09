@@ -9,4 +9,3 @@ pumps:
     sensitive: True
     schedule: daily
     owner: '@jjstark'
-    
