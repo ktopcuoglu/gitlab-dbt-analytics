@@ -31,6 +31,7 @@ GIT_BRANCH = env["GIT_BRANCH"]
 pod_env_vars = {
     "RUN_DATE": "{{ ds }}",
     "SNOWFLAKE_SYSADMIN_ROLE": "TRANSFORMER",
+    "SNOWFLAKE_LOAD_WAREHOUSE": "USAGE_PING",
 }
 
 pod_env_vars = {**gitlab_pod_env_vars, **pod_env_vars}
@@ -67,8 +68,6 @@ dag = DAG(
 # Instance Level Usage Ping
 instance_cmd = f"""
     {clone_repo_cmd} &&
-    export SNOWFLAKE_LOAD_WAREHOUSE="USAGE_PING" &&
-    export SNOWFLAKE_LOAD_DATABASE="RAW" &&
     cd analytics/extract/saas_usage_ping/ &&
     python3 usage_ping.py saas_instance_ping
 """
@@ -87,8 +86,6 @@ instance_ping = KubernetesPodOperator(
 # Namespace, Group, Project, User Level Usage Ping
 namespace_cmd = f"""
     {clone_repo_cmd} &&
-    export SNOWFLAKE_LOAD_WAREHOUSE="USAGE_PING" &&
-    export SNOWFLAKE_LOAD_DATABASE="RAW" &&
     cd analytics/extract/saas_usage_ping/ &&
     python3 usage_ping.py saas_namespace_ping --ping_date=$RUN_DATE
 """
