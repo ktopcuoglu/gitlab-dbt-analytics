@@ -53,7 +53,6 @@ WITH skeleton AS (
     FROM skeleton
     LEFT JOIN events
         ON event_date BETWEEN DATEADD('days', -28, last_day_of_month) AND last_day_of_month
-    WHERE plan_name_at_event_date IN ('bronze', 'silver', 'gold')
     {{ dbt_utils.group_by(n=9) }}
 
 )
