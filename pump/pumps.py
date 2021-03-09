@@ -19,11 +19,11 @@ def get_copy_command(
     model, sensitive, timestamp, schedule, owner, inc_start, inc_end, timename
 ):
 
-    from_statement = "FROM PROD.{schema}.{model} ".format(
+    from_statement = "FROM PROD.{schema}.{model}".format(
         model=model, schema="pumps" if sensitive == False else "pumps_sensitive"
     )
 
-    where_statement = "WHERE {timestamp} between {inc_start} and {inc_end} ".format(
+    where_statement = "WHERE {timestamp} between {inc_start} and {inc_end}".format(
         timestamp=timestamp,
         inc_start=inc_start,
         inc_end=inc_end,
