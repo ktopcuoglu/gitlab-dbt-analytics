@@ -41,7 +41,7 @@ WITH data AS (
       DATE_TRUNC('month', created_week) AS created_month,
       instance_id,
       host_id,
-      dim_usage_ping_id,
+      ping_id,
       metrics_path,
       group_name,
       stage_name,
