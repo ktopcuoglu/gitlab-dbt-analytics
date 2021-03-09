@@ -557,7 +557,6 @@ tables:
       , description
       , contacted_at
       , active
-      , is_shared
       , name
       , version
       , revision
