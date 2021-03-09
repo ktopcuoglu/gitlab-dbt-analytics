@@ -353,9 +353,7 @@ tables:
       , type
       , target_url
       , description
-      , artifacts_file
       , project_id
-      , artifacts_metadata
       , erased_by_id
       , erased_at
       , CASE WHEN artifacts_expire_at > '2262-01-01' THEN '2262-01-01' ELSE artifacts_expire_at END AS artifacts_expire_at
@@ -563,7 +561,6 @@ tables:
       , description
       , contacted_at
       , active
-      , is_shared
       , name
       , version
       , revision
