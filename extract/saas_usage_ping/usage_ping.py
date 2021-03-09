@@ -96,7 +96,7 @@ class UsagePing(object):
         can be updated to query an end point or query other functions
         to generate:
         {
-            { couner_name: ping_name,
+            { counter_name: ping_name,
               counter_query: sql_query,
               time_window_query: true,
               level: namespace,
