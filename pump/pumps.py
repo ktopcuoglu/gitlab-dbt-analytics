@@ -12,12 +12,12 @@ with open("pump/pumps.yml", "r") as file:
         for pump in stream["pumps"]
     ]
 
-# placeholders
+# placeholders for DAG
 inc_start = "2021-02-26"
 inc_end = "2021-02-27"
 timename ="20210207_080000"
 
-# command generation
+# command generation (will need to remove owner and schedule arguments)
 def get_copy_command(model, sensitive, timestamp, schedule, owner, inc_start, inc_end, timename):
 
     from_statement = "FROM PROD.{schema}.{model} ".format(
