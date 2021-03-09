@@ -50,7 +50,7 @@ def get_copy_command(
     return copy_command
 
 
-# usage
+# output for testing
 for pump_models in pumps:
 
     print(pump_models)
