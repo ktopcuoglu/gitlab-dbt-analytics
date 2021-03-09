@@ -180,6 +180,8 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity.risk_type,
       sfdc_opportunity.risk_reasons,
       sfdc_opportunity.tam_notes,
+      sfdc_opportunity.primary_solution_architect,
+      sfdc_opportunity.product_details,
 
       -- days and dates per stage
       sfdc_opportunity.days_in_1_discovery,
@@ -239,6 +241,19 @@ WITH sfdc_opportunity AS (
 
       sfdc_opportunity.dr_partner_deal_type,
       sfdc_opportunity.dr_partner_engagement,
+      sfdc_opportunity.partner_account,
+      sfdc_opportunity.dr_status,
+      sfdc_opportunity.distributor,
+      sfdc_opportunity.influence_partner,
+      sfdc_opportunity.fulfillment_partner,
+      sfdc_opportunity.platform_partner,
+      sfdc_opportunity.partner_track,
+      sfdc_opportunity.is_public_sector_opp,
+      sfdc_opportunity.is_registration_from_portal,
+      sfdc_opportunity.calculated_discount,
+      sfdc_opportunity.partner_discount,
+      sfdc_opportunity.partner_discount_calc,
+      sfdc_opportunity.comp_channel_neutral,
 
       -- account owner hierarchies levels
       account_owner.sales_team_level_2                                                                    AS account_owner_team_level_2,

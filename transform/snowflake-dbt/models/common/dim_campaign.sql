@@ -1,18 +1,12 @@
-{{config({
-    "schema": "legacy"
-  })
-}}
-
 WITH sfdc_campaign_info AS (
 
     SELECT *
-    FROM {{ ref('sfdc_campaign_source') }}
-    WHERE NOT is_deleted
+    FROM {{ ref('prep_campaign') }}
 
 ), final AS (
 
     SELECT
-      campaign_id,
+      dim_campaign_id,
       campaign_name,
       is_active,
       status,
@@ -28,10 +22,7 @@ WITH sfdc_campaign_info AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@paul_armstrong",
-    updated_by="@paul_armstrong",
+    updated_by="@mcooperDD",
     created_date="2020-11-13",
-    updated_date="2020-11-13"
+    updated_date="2021-03-01"
 ) }}
-
-
-

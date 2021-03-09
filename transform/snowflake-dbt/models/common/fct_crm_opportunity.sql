@@ -19,15 +19,15 @@ WITH first_contact  AS (
     SELECT *
     FROM {{ ref('prep_order_type')}}
 
-), opportunity_source AS (
+), sales_qualified_source AS (
 
     SELECT *
-    FROM {{ ref('prep_opportunity_source')}}
+    FROM {{ ref('prep_sales_qualified_source')}}
 
-), purchase_channel AS (
+), deal_path AS (
 
     SELECT *
-    FROM {{ ref('prep_purchase_channel')}}
+    FROM {{ ref('prep_deal_path')}}
 
 ), sales_hierarchy_stamped_sales_segment AS (
 
@@ -71,6 +71,17 @@ WITH first_contact  AS (
 
     SELECT *
     FROM {{ ref('sfdc_opportunity')}}
+
+), attribution_touchpoints AS (
+
+    SELECT *
+    FROM {{ ref('sfdc_bizible_attribution_touchpoint_source') }}
+    WHERE is_deleted = 'FALSE'
+
+), sfdc_campaigns AS (
+
+    SELECT *
+    FROM {{ ref('prep_campaign') }}
 
 ), opportunity_fields AS(
 
@@ -129,14 +140,49 @@ WITH first_contact  AS (
       deal_path,
       order_type_stamped                                        AS order_type,
       sales_segment,
-      sales_qualified_source,
+      {{ sales_qualified_source_cleaning('sales_qualified_source') }}
+                                                                AS sales_qualified_source,
       days_in_sao,
       user_segment_stamped                                      AS sales_segment_name_stamped,
       user_geo_stamped                                          AS location_region_name_stamped,
       user_region_stamped                                       AS sales_region_name_stamped,
-      user_area_stamped                                         AS sales_area_name_stamped
+      user_area_stamped                                         AS sales_area_name_stamped,
+      primary_solution_architect,
+      product_details,
+      dr_partner_deal_type,
+      dr_partner_engagement,
+      partner_account,
+      dr_status,
+      distributor,
+      influence_partner,
+      fulfillment_partner,
+      platform_partner,
+      partner_track,
+      is_public_sector_opp,
+      is_registration_from_portal,
+      calculated_discount,
+      partner_discount,
+      partner_discount_calc,
+      comp_channel_neutral,
+      lead_source
 
     FROM sfdc_opportunity
+
+), linear_attribution_base AS ( --the number of attribution touches a given opp has in total
+    --linear attribution IACV of an opp / all touches (count_touches) for each opp - weighted by the number of touches in the given bucket (campaign,channel,etc)
+    SELECT
+     opportunity_id                                         AS dim_crm_opportunity_id,
+     COUNT(DISTINCT attribution_touchpoints.touchpoint_id)  AS count_crm_attribution_touchpoints
+    FROM  attribution_touchpoints
+    GROUP BY 1
+
+), campaigns_per_opp as (
+
+    SELECT
+      opportunity_id                                        AS dim_crm_opportunity_id,
+      COUNT(DISTINCT attribution_touchpoints.campaign_id)   AS count_campaigns
+    FROM attribution_touchpoints
+    GROUP BY 1
 
 ), is_sao AS (
 
@@ -221,16 +267,16 @@ WITH first_contact  AS (
         WHEN opportunity_fields.days_in_sao BETWEEN 181 AND 270  THEN '6. Closed in 181-270 days'
         WHEN opportunity_fields.days_in_sao > 270                THEN '7. Closed in > 270 days'
         ELSE NULL
-      END                                                                                                                 AS closed_buckets,
+      END                                                                                                                   AS closed_buckets,
       opportunity_fields.subscription_start_date,
       opportunity_fields.subscription_end_date,
 
       -- common dimension keys
-      {{ get_keyed_nulls('opportunity_fields.dim_crm_sales_rep_id') }}                                                    AS dim_crm_sales_rep_id,
-      {{ get_keyed_nulls('order_type.dim_order_type_id') }}                                                               AS dim_order_type_id,
-      {{ get_keyed_nulls('opportunity_source.dim_opportunity_source_id') }}                                               AS dim_opportunity_source_id,
-      {{ get_keyed_nulls('purchase_channel.dim_purchase_channel_id') }}                                                   AS dim_purchase_channel_id,
-      {{ get_keyed_nulls('crm_account_dimensions.dim_parent_sales_segment_id,sales_segment.dim_sales_segment_id') }}      AS dim_parent_sales_segment_id,
+      {{ get_keyed_nulls('opportunity_fields.dim_crm_sales_rep_id') }}                                                      AS dim_crm_sales_rep_id,
+      {{ get_keyed_nulls('order_type.dim_order_type_id') }}                                                                 AS dim_order_type_id,
+      {{ get_keyed_nulls('sales_qualified_source.dim_sales_qualified_source_id') }}                                         AS dim_sales_qualified_source_id,
+      {{ get_keyed_nulls('deal_path.dim_deal_path_id') }}                                                                   AS dim_deal_path_id,
+      {{ get_keyed_nulls('crm_account_dimensions.dim_parent_sales_segment_id,sales_segment.dim_sales_segment_id') }}        AS dim_parent_sales_segment_id,
       crm_account_dimensions.dim_parent_geo_region_id,
       crm_account_dimensions.dim_parent_geo_sub_region_id,
       crm_account_dimensions.dim_parent_geo_area_id,
@@ -238,7 +284,7 @@ WITH first_contact  AS (
       crm_account_dimensions.dim_parent_industry_id,
       crm_account_dimensions.dim_parent_location_country_id,
       crm_account_dimensions.dim_parent_location_region_id,
-      {{ get_keyed_nulls('crm_account_dimensions.dim_account_sales_segment_id,sales_segment.dim_sales_segment_id') }}     AS dim_account_sales_segment_id,
+      {{ get_keyed_nulls('crm_account_dimensions.dim_account_sales_segment_id,sales_segment.dim_sales_segment_id') }}       AS dim_account_sales_segment_id,
       crm_account_dimensions.dim_account_geo_region_id,
       crm_account_dimensions.dim_account_geo_sub_region_id,
       crm_account_dimensions.dim_account_geo_area_id,
@@ -246,14 +292,14 @@ WITH first_contact  AS (
       crm_account_dimensions.dim_account_industry_id,
       crm_account_dimensions.dim_account_location_country_id,
       crm_account_dimensions.dim_account_location_region_id,
-      {{ get_keyed_nulls('sales_hierarchy_stamped_sales_segment.dim_crm_sales_hierarchy_sales_segment_stamped_id') }}     AS dim_crm_sales_hierarchy_sales_segment_stamped_id,
-      {{ get_keyed_nulls('sales_hierarchy_stamped_location_region.dim_crm_sales_hierarchy_location_region_stamped_id') }} AS dim_crm_sales_hierarchy_location_region_stamped_id,
-      {{ get_keyed_nulls('sales_hierarchy_stamped_sales_region.dim_crm_sales_hierarchy_sales_region_stamped_id') }}       AS dim_crm_sales_hierarchy_sales_region_stamped_id,
-      {{ get_keyed_nulls('sales_hierarchy_stamped_sales_area.dim_crm_sales_hierarchy_sales_area_stamped_id') }}           AS dim_crm_sales_hierarchy_sales_area_stamped_id,
-      {{ get_keyed_nulls('sales_rep.dim_crm_sales_hierarchy_sales_segment_live_id') }}                                    AS dim_crm_sales_hierarchy_sales_segment_live_id,
-      {{ get_keyed_nulls('sales_rep.dim_crm_sales_hierarchy_location_region_live_id') }}                                  AS dim_crm_sales_hierarchy_location_region_live_id,
-      {{ get_keyed_nulls('sales_rep.dim_crm_sales_hierarchy_sales_region_live_id') }}                                     AS dim_crm_sales_hierarchy_sales_region_live_id,
-      {{ get_keyed_nulls('sales_rep.dim_crm_sales_hierarchy_sales_area_live_id') }}                                       AS dim_crm_sales_hierarchy_sales_area_live_id,
+      {{ get_keyed_nulls('sales_hierarchy_stamped_sales_segment.dim_crm_sales_hierarchy_sales_segment_stamped_id') }}       AS dim_crm_sales_hierarchy_sales_segment_stamped_id,
+      {{ get_keyed_nulls('sales_hierarchy_stamped_location_region.dim_crm_sales_hierarchy_location_region_stamped_id') }}   AS dim_crm_sales_hierarchy_location_region_stamped_id,
+      {{ get_keyed_nulls('sales_hierarchy_stamped_sales_region.dim_crm_sales_hierarchy_sales_region_stamped_id') }}         AS dim_crm_sales_hierarchy_sales_region_stamped_id,
+      {{ get_keyed_nulls('sales_hierarchy_stamped_sales_area.dim_crm_sales_hierarchy_sales_area_stamped_id') }}             AS dim_crm_sales_hierarchy_sales_area_stamped_id,
+      {{ get_keyed_nulls('sales_rep.dim_crm_sales_hierarchy_sales_segment_live_id') }}                                      AS dim_crm_sales_hierarchy_sales_segment_live_id,
+      {{ get_keyed_nulls('sales_rep.dim_crm_sales_hierarchy_location_region_live_id') }}                                    AS dim_crm_sales_hierarchy_location_region_live_id,
+      {{ get_keyed_nulls('sales_rep.dim_crm_sales_hierarchy_sales_region_live_id') }}                                       AS dim_crm_sales_hierarchy_sales_region_live_id,
+      {{ get_keyed_nulls('sales_rep.dim_crm_sales_hierarchy_sales_area_live_id') }}                                         AS dim_crm_sales_hierarchy_sales_area_live_id,
 
             -- flags
       opportunity_fields.is_closed,
@@ -266,6 +312,27 @@ WITH first_contact  AS (
       is_sao.is_sao,
       is_sdr_sao.is_sdr_sao,
 
+      opportunity_fields.primary_solution_architect,
+      opportunity_fields.product_details,
+
+      -- channel fields
+      opportunity_fields.lead_source,
+      opportunity_fields.dr_partner_deal_type,
+      opportunity_fields.dr_partner_engagement,
+      opportunity_fields.partner_account,
+      opportunity_fields.dr_status,
+      opportunity_fields.distributor,
+      opportunity_fields.influence_partner,
+      opportunity_fields.fulfillment_partner,
+      opportunity_fields.platform_partner,
+      opportunity_fields.partner_track,
+      opportunity_fields.is_public_sector_opp,
+      opportunity_fields.is_registration_from_portal,
+      opportunity_fields.calculated_discount,
+      opportunity_fields.partner_discount,
+      opportunity_fields.partner_discount_calc,
+      opportunity_fields.comp_channel_neutral,
+
       -- additive fields
       opportunity_fields.iacv,
       opportunity_fields.net_arr,
@@ -275,19 +342,22 @@ WITH first_contact  AS (
       opportunity_fields.proserv_amount,
       opportunity_fields.other_non_recurring_amount,
       opportunity_fields.arr_basis,
-      opportunity_fields.arr
+      opportunity_fields.arr,
+      linear_attribution_base.count_crm_attribution_touchpoints,
+      opportunity_fields.iacv/linear_attribution_base.count_crm_attribution_touchpoints                                        AS weighted_linear_iacv,
+      campaigns_per_opp.count_campaigns
 
     FROM opportunity_fields
     LEFT JOIN crm_account_dimensions
       ON opportunity_fields.dim_crm_account_id = crm_account_dimensions.dim_crm_account_id
     LEFT JOIN first_contact
       ON opportunity_fields.dim_crm_opportunity_id = first_contact.opportunity_id AND first_contact.row_num = 1
-    LEFT JOIN opportunity_source
-      ON opportunity_fields.sales_qualified_source = opportunity_source.opportunity_source_name
+    LEFT JOIN sales_qualified_source
+      ON opportunity_fields.sales_qualified_source = sales_qualified_source.sales_qualified_source_name
     LEFT JOIN order_type
       ON opportunity_fields.order_type = order_type.order_type_name
-    LEFT JOIN purchase_channel
-      ON opportunity_fields.deal_path = purchase_channel.purchase_channel_name
+    LEFT JOIN deal_path
+      ON opportunity_fields.deal_path = deal_path.deal_path_name
     LEFT JOIN sales_segment
       ON opportunity_fields.sales_segment = sales_segment.sales_segment_name
     LEFT JOIN is_sao
@@ -304,6 +374,10 @@ WITH first_contact  AS (
       ON opportunity_fields.sales_area_name_stamped = sales_hierarchy_stamped_sales_area.sales_area_name_stamped
     LEFT JOIN sales_rep
       ON opportunity_fields.dim_crm_sales_rep_id = sales_rep.dim_crm_sales_rep_id
+    LEFT JOIN linear_attribution_base
+      ON opportunity_fields.dim_crm_opportunity_id = linear_attribution_base.dim_crm_opportunity_id
+    LEFT JOIN campaigns_per_opp
+      ON opportunity_fields.dim_crm_opportunity_id = campaigns_per_opp.dim_crm_opportunity_id
 
 )
 
@@ -312,5 +386,5 @@ WITH first_contact  AS (
     created_by="@mcooperDD",
     updated_by="@mcooperDD",
     created_date="2020-11-30",
-    updated_date="2021-02-02"
+    updated_date="2021-02-26"
 ) }}

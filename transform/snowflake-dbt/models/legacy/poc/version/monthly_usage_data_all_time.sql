@@ -10,7 +10,7 @@ WITH data AS (
     FROM {{ ref('usage_data_all_time_flattened')}}
     {% if is_incremental() %}
 
-      WHERE created_at >= (SELECT MAX(created_month) FROM {{this}})
+      WHERE created_at >= (SELECT MAX(DATEADD('month', -1, created_month)) FROM {{this}})
 
     {% endif %}
 
@@ -57,3 +57,8 @@ SELECT
   IFF(monthly_metric_value < 0, 0, monthly_metric_value) AS monthly_metric_value,
   has_timed_out
 FROM monthly
+  {% if is_incremental() %}
+
+    WHERE created_month >= (SELECT MAX(created_month) FROM {{this}})
+
+  {% endif %}

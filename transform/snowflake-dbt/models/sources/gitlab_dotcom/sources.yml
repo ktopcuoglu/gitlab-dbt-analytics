@@ -128,6 +128,9 @@ sources:
             error_after: {count: 30, period: day}
       - name: clusters_applications_knative
         identifier: gitlab_db_clusters_applications_knative
+        freshness:
+            warn_after: {count: 2, period: day}
+            error_after: {count: 4, period: day}
       - name: clusters_applications_prometheus
         identifier: gitlab_db_clusters_applications_prometheus
       - name: clusters_applications_runners
@@ -377,26 +380,35 @@ sources:
         identifier: gitlab_db_alert_management_http_integrations
       - name: analytics_cycle_analytics_group_stages
         identifier: gitlab_db_analytics_cycle_analytics_group_stages
+        freshness: null
       - name: approval_merge_request_rule_sources
         identifier: gitlab_db_approval_merge_request_rule_sources
+        freshness: null
       - name: approval_project_rules
         identifier: gitlab_db_approval_project_rules
       - name: approval_project_rules_protected_branches
         identifier: gitlab_db_approval_project_rules_protected_branches
+        freshness: null
       - name: authentication_events
         identifier: gitlab_db_authentication_events
       - name: bulk_imports
         identifier: gitlab_db_bulk_imports
+        freshness:
+          warn_after: { count: 14, period: day }
+          error_after: { count: 30, period: day }
       - name: cluster_agent_tokens
         identifier: gitlab_db_cluster_agent_tokens
+        freshness: null
       - name: cluster_agents
         identifier: gitlab_db_cluster_agents
+        freshness: null
       - name: cluster_providers_aws
         identifier: gitlab_db_cluster_providers_aws
       - name: cluster_providers_gcp
         identifier: gitlab_db_cluster_providers_gcp
       - name: clusters_applications_cilium
         identifier: gitlab_db_clusters_applications_cilium
+        freshness: null
       - name: container_expiration_policies
         identifier: gitlab_db_container_expiration_policies
       - name: csv_issue_imports
@@ -406,18 +418,25 @@ sources:
         freshness: null
       - name: grafana_integrations
         identifier: gitlab_db_grafana_integrations
+        freshness:
+          warn_after: {count: 7, period: day}
+          error_after: {count: 14, period: day}
       - name: group_import_states
         identifier: gitlab_db_group_import_states
       - name: issues_prometheus_alert_events
         identifier: gitlab_db_issues_prometheus_alert_events
+        freshness: null
       - name: issues_self_managed_prometheus_alert_events
         identifier: gitlab_db_issues_self_managed_prometheus_alert_events
+        freshness: null
       - name: jira_imports
         identifier: gitlab_db_jira_imports
+        freshness: null
       - name: jira_tracker_data
         identifier: gitlab_db_jira_tracker_data
       - name: ldap_group_links
         identifier: gitlab_db_ldap_group_links
+        freshness: null
       - name: lfs_file_locks
         identifier: gitlab_db_lfs_file_locks
       - name: lfs_objects
@@ -428,16 +447,22 @@ sources:
         identifier: gitlab_db_path_locks
       - name: pool_repositories
         identifier: gitlab_db_pool_repositories
+        freshness: null
       - name: project_compliance_framework_settings
         identifier: gitlab_db_project_compliance_framework_settings
+        freshness: null
       - name: project_error_tracking_settings
         identifier: gitlab_db_project_error_tracking_settings
+        freshness: null
       - name: project_feature_usages
         identifier: gitlab_db_project_feature_usages
+        freshness: null
       - name: project_incident_management_settings
         identifier: gitlab_db_project_incident_management_settings
+        freshness: null
       - name: project_tracing_settings
         identifier: gitlab_db_project_tracing_settings
+        freshness: null
       - name: remote_mirrors
         identifier: gitlab_db_remote_mirrors
       - name: requirements_management_test_reports
@@ -446,15 +471,22 @@ sources:
         identifier: gitlab_db_security_scans
       - name: sentry_issues
         identifier: gitlab_db_sentry_issues
+        freshness: null
       - name: status_page_published_incidents
         identifier: gitlab_db_status_page_published_incidents
+        freshness: null
       - name: status_page_settings
         identifier: gitlab_db_status_page_settings
+        freshness: null
       - name: suggestions
         identifier: gitlab_db_suggestions
+        freshness: null
       - name: uploads
         identifier: gitlab_db_uploads
       - name: users_ops_dashboard_projects
         identifier: gitlab_db_users_ops_dashboard_projects
       - name: zoom_meetings
         identifier: gitlab_db_zoom_meetings
+        freshness:
+          warn_after: { count: 7, period: day }
+          error_after: { count: 30, period: day }

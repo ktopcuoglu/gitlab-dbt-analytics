@@ -52,6 +52,11 @@ databases:
     - ktam_prep:
         shared: no
 
+    - laddula_prod:
+        shared: no
+    - laddula_prep:
+        shared: no
+
     - michellecooper_prod:
         shared: no
     - michellecooper_prep:
@@ -258,7 +263,6 @@ roles:
             - analyst_core
             - boneyard
             - covid19
-            - db_dumps
             - dbt_analytics
             - gitlab_data_yaml
             - handbook
@@ -303,7 +307,6 @@ roles:
             - boneyard
             - covid19
             - dbt_analytics
-            - db_dumps
             - gitlab_data_yaml
             - gitlab_dotcom
             - license_db
@@ -357,6 +360,7 @@ roles:
         member_of:
             - analyst_core
             - bamboohr_analytics
+            - bamboohr_sensitive_separations
             - boneyard
             - covid19
             - dbt_analytics
@@ -438,7 +442,6 @@ roles:
             - covid19
             - customers_db
             - dbt_analytics
-            - db_dumps
             - gitlab_data_yaml
             - gitlab_dotcom
             - license_db
@@ -501,6 +504,29 @@ roles:
             - boneyard
             - dbt_analytics
             - snowflake_db
+
+    - integration_engineer:
+        warehouses:
+            - engineer_xs
+        member_of:
+            - boneyard
+            - dbt_analytics
+            - snowflake_db
+        privileges:
+            databases:
+                read:
+                    - prep
+                    - prod
+            schemas:
+                read:
+                    - prep.sensitive
+                    - prod.pumps
+                    - prod.pumps_sensitive
+            tables:
+                read:
+                    - prep.sensitive.mart_marketing_contact
+                    - prod.pumps.*
+                    - prod.pumps_sensitive.pump_marketing_contact
 
     - loader:
         warehouses:
@@ -748,6 +774,22 @@ roles:
                     - prep.sensitive.bamboohr_locality
                     - prep.sensitive.bamboohr_headcount_intermediate
 
+    - bamboohr_sensitive_separations:
+        warehouses:
+            - analyst_xs
+        privileges:
+            databases:
+                read:
+                    - prod
+                    - prep
+            schemas:
+                read:
+                    - prod.common
+                    - prod.legacy
+            tables:
+                read:
+                  - prep.bamboohr_separations
+
     - bamboohr:
         warehouses:
             - analyst_xs
@@ -860,18 +902,6 @@ roles:
                     - prod.common.dim_date
                     - prep.date.*
 
-    - db_dumps:
-        privileges:
-            databases:
-                read:
-                    - raw
-            schemas:
-                read:
-                    - raw.license_db_dump
-            tables:
-                read:
-                    - raw.license_db_dump.*
-
     - dbt_analytics:
         warehouses:
             - analyst_xs
@@ -893,6 +923,7 @@ roles:
                     - prod.workspace_finance
                     - prod.workspace_marketing
                     - prod.workspace_sales
+                    - prod.pumps
                     - prep.dbt
                     - prep.preparation
                     - raw.dbt
@@ -908,6 +939,7 @@ roles:
                     - prod.workspace_finance.*
                     - prod.workspace_marketing.*
                     - prod.workspace_sales.*
+                    - prod.pumps.*
                     - prep.dbt.*
                     - prep.preparation.*
                     - raw.dbt.*
@@ -1287,12 +1319,10 @@ roles:
                 read:
                     - prep.license_db
                     - raw.license_db
-                    - raw.license_db_dump
             tables:
                 read:
                     - prep.license_db.*
                     - raw.license_db.*
-                    - raw.license_db_dump.*
 
     - keyhole_twitter:
         privileges:
@@ -1755,6 +1785,7 @@ roles:
         member_of:
             - reporter
             - postgres_pipeline
+            - integration_engineer
         warehouses:
             - reporting
             - analyst_xs
@@ -1830,6 +1861,7 @@ roles:
     - ewegscheider:
         member_of:
             - people_operations
+            - bamboohr_sensitive_separations
         warehouses:
             - analyst_xs
         privileges:
@@ -2175,6 +2207,47 @@ roles:
     - ksmith:
         member_of: []
         warehouses: []
+
+    - laddula:
+        member_of:
+            - engineer
+        warehouses:
+            - engineer_xs
+            - engineer_xl
+            - loading
+            - reporting
+        owns:
+            databases:
+                - laddula_prep
+                - laddula_prod
+            schemas:
+                - laddula_prep.*
+                - laddula_prod.*
+            tables:
+                - laddula_prep.*.*
+                - laddula_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - laddula_prep
+                    - laddula_prod
+                write:
+                    - laddula_prep
+                    - laddula_prod
+            schemas:
+                read:
+                    - laddula_prep.*
+                    - laddula_prod.*
+                write:
+                    - laddula_prep.*
+                    - laddula_prod.*
+            tables:
+                read:
+                    - laddula_prep.*.*
+                    - laddula_prod.*.*
+                write:
+                    - laddula_prep.*.*
+                    - laddula_prod.*.*
 
     - lmai:
         member_of:
@@ -2659,14 +2732,12 @@ roles:
                     - raw
             schemas:
                 read:
-                    - raw.license_db_dump
                     - raw.salesforce_stitch
                     - raw.stitch_google_sheets
                     - raw.zendesk_stitch
                     - raw.zendesk_community_relations_stitch
                     - raw.zuora_stitch
                 write:
-                    - raw.license_db_dump
                     - raw.salesforce_stitch
                     - raw.stitch_google_sheets
                     - raw.zendesk_stitch
@@ -2674,14 +2745,12 @@ roles:
                     - raw.zuora_stitch
             tables:
                 read:
-                    - raw.license_db_dump.*
                     - raw.salesforce_stitch.*
                     - raw.stitch_google_sheets.*
                     - raw.zendesk_stitch.*
                     - raw.zendesk_community_relations_stitch.*
                     - raw.zuora_stitch.*
                 write:
-                    - raw.license_db_dump.*
                     - raw.salesforce_stitch.*
                     - raw.stitch_google_sheets.*
                     - raw.zendesk_stitch.*
@@ -3141,6 +3210,11 @@ users:
     - ksmith:
         can_login: no
         member_of: []
+
+    - laddula:
+        can_login: yes
+        member_of:
+            - laddula
 
     - lmai:
         can_login: yes

@@ -5,7 +5,7 @@
 
 {{ simple_cte([
     ('dim_crm_person','dim_crm_person'),
-    ('dim_marketing_channel','dim_marketing_channel'),
+    ('dim_bizible_marketing_channel_path','dim_bizible_marketing_channel_path'),
     ('dim_sales_segment','dim_sales_segment'),
     ('fct_crm_person','fct_crm_person'),
     ('dim_date','dim_date')
@@ -16,8 +16,8 @@
     SELECT
       fct_crm_person.dim_crm_person_id,
       mql_date_first.date_id                   AS mql_date_first_id,
-      mql_date_first.date_day                  AS mql_date_first, 
-      mql_date_first_pt.date_day               AS mql_date_first_pt, 
+      mql_date_first.date_day                  AS mql_date_first,
+      mql_date_first_pt.date_day               AS mql_date_first_pt,
       mql_date_first.first_day_of_month        AS mql_month_first,
       mql_date_first_pt.first_day_of_month     AS mql_month_first_pt,
       mql_date_latest.date_day                 AS mql_date_lastest,
@@ -53,7 +53,7 @@
       dim_crm_person.status,
       dim_crm_person.lead_source,
       dim_crm_person.source_buckets,
-      dim_marketing_channel.marketing_channel_name,
+      dim_bizible_marketing_channel_path.bizible_marketing_channel_path_name,
       CASE
         WHEN LOWER(dim_sales_segment.sales_segment_name) LIKE '%unknown%' THEN 'SMB'
         WHEN LOWER(dim_sales_segment.sales_segment_name) LIKE '%mid%' THEN 'Mid-Market'
@@ -61,7 +61,7 @@
       END                                                        AS sales_segment_name,
       fct_crm_person.is_mql,
       CASE
-        WHEN marketing_channel_name = 'Trial' THEN TRUE
+        WHEN bizible_marketing_channel_path_name = 'Trial' THEN TRUE
         ELSE FALSE
       END                                                        AS is_trial
     FROM fct_crm_person
@@ -69,8 +69,8 @@
       ON fct_crm_person.dim_crm_person_id = dim_crm_person.dim_crm_person_id
     LEFT JOIN dim_sales_segment
       ON fct_crm_person.dim_account_sales_segment_id = dim_sales_segment.dim_sales_segment_id
-    LEFT JOIN dim_marketing_channel
-      ON fct_crm_person.dim_marketing_channel_id = dim_marketing_channel.dim_marketing_channel_id
+    LEFT JOIN dim_bizible_marketing_channel_path
+      ON fct_crm_person.dim_bizible_marketing_channel_path_id = dim_bizible_marketing_channel_path.dim_bizible_marketing_channel_path_id
     LEFT JOIN dim_date AS created_date
       ON fct_crm_person.created_date_id = created_date.date_id
     LEFT JOIN dim_date AS created_date_pt
