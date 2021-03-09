@@ -70,7 +70,6 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity_xf.deal_size,
       sfdc_opportunity_xf.forecast_category_name,
       sfdc_opportunity_xf.forecasted_iacv,
-      sfdc_opportunity_xf.iacv_created_date,
       sfdc_opportunity_xf.incremental_acv,
       --sfdc_opportunity_xf.pre_covid_iacv,
       sfdc_opportunity_xf.invoice_number,
@@ -259,13 +258,30 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity_xf.iacv_created_fiscal_quarter_date,
       sfdc_opportunity_xf.iacv_created_fiscal_year,
       sfdc_opportunity_xf.iacv_created_date_month,
+      sfdc_opportunity_xf.iacv_created_date,
 
       -- Net ARR Created Date uses the same old IACV Created date field in SFDC
       -- As long as the field in the legacy model is not renamed, this will work
+
+      sfdc_opportunity_xf.iacv_created_date                   AS net_arr_created_date,
       sfdc_opportunity_xf.iacv_created_fiscal_quarter_name    AS net_arr_created_fiscal_quarter_name,
       sfdc_opportunity_xf.iacv_created_fiscal_quarter_date    AS net_arr_created_fiscal_quarter_date,
       sfdc_opportunity_xf.iacv_created_fiscal_year            AS net_arr_created_fiscal_year,
       sfdc_opportunity_xf.iacv_created_date_month             AS net_arr_created_date_month,
+
+      stage_1_date.date_actual                                AS stage_1_date,
+      stage_1_date.first_day_of_month                         AS stage_1_date_month,
+      stage_1_date.fiscal_year                                AS stage_1_fiscal_year,
+      stage_1_date.fiscal_quarter_name_fy                     AS stage_1_fiscal_quarter_name,
+      stage_1_date.first_day_of_fiscal_quarter                AS stage_1_fiscal_quarter_date,
+
+      stage_3_date.date_actual                                AS stage_3_date,
+      stage_3_date.first_day_of_month                         AS stage_3_date_month,
+      stage_3_date.fiscal_year                                AS stage_3_fiscal_year,
+      stage_3_date.fiscal_quarter_name_fy                     AS stage_3_fiscal_quarter_name,
+      stage_3_date.first_day_of_fiscal_quarter                AS stage_3_fiscal_quarter_date,
+
+      ------------------------------------
 
       sfdc_opportunity_xf._last_dbt_run,
       sfdc_opportunity_xf.business_process_id,
@@ -313,6 +329,12 @@ WITH sfdc_opportunity AS (
       ON sfdc_opportunity.opportunity_id = sfdc_opportunity_xf.opportunity_id
     INNER JOIN sfdc_users_xf opportunity_owner
       ON opportunity_owner.user_id = sfdc_opportunity_xf.owner_id
+    -- pipeline creation date
+    LEFT JOIN date_details stage_1_date 
+      ON stage_1_date.date_actual = sfdc_opportunity_xf.stage_1_discovery_date::date
+      -- pipeline creation date
+    LEFT JOIN date_details stage_3_date 
+      ON stage_3_date.date_actual = sfdc_opportunity_xf.stage_3_technical_evaluation_date::date
 
 ), net_iacv_to_net_arr_ratio AS (
 
@@ -376,10 +398,54 @@ WITH sfdc_opportunity AS (
       -- used for performance reporting on pipeline generation
       -- these fields might change, isolating the field from the purpose
       -- alternatives are a future net_arr_created_date
-      sfdc_opportunity_xf.net_arr_created_date_month                       AS pipeline_created_date_month,
-      sfdc_opportunity_xf.net_arr_created_fiscal_year                      AS pipeline_created_fiscal_year,
-      sfdc_opportunity_xf.net_arr_created_fiscal_quarter_name              AS pipeline_created_fiscal_quarter_name,
-      sfdc_opportunity_xf.net_arr_created_fiscal_quarter_date              AS pipeline_created_fiscal_quarter_date,
+      --sfdc_opportunity_xf.stage_1_date                             AS pipeline_created_date,
+      --sfdc_opportunity_xf.stage_1_date_month                       AS pipeline_created_date_month,
+      --sfdc_opportunity_xf.stage_1_fiscal_year                      AS pipeline_created_fiscal_year,
+      --sfdc_opportunity_xf.stage_1_fiscal_quarter_name              AS pipeline_created_fiscal_quarter_name,
+      --sfdc_opportunity_xf.stage_1_fiscal_quarter_date              AS pipeline_created_fiscal_quarter_date,
+
+      --sfdc_opportunity_xf.net_arr_created_date                        AS pipeline_created_date,
+      --sfdc_opportunity_xf.net_arr_created_date_month                  AS pipeline_created_date_month,
+      --sfdc_opportunity_xf.net_arr_created_fiscal_year                 AS pipeline_created_fiscal_year,
+      --sfdc_opportunity_xf.net_arr_created_fiscal_quarter_name         AS pipeline_created_fiscal_quarter_name,
+      --sfdc_opportunity_xf.net_arr_created_fiscal_quarter_date         AS pipeline_created_fiscal_quarter_date,
+
+      sfdc_opportunity_xf.created_date                        AS pipeline_created_date,
+      sfdc_opportunity_xf.created_date_month                  AS pipeline_created_date_month,
+      sfdc_opportunity_xf.created_fiscal_year                 AS pipeline_created_fiscal_year,
+      sfdc_opportunity_xf.created_fiscal_quarter_name         AS pipeline_created_fiscal_quarter_name,
+      sfdc_opportunity_xf.created_fiscal_quarter_date         AS pipeline_created_fiscal_quarter_date,
+
+      /*
+      COALESCE(sfdc_opportunity_xf.stage_1_date
+              ,sfdc_opportunity_xf.net_arr_created_date
+              ,sfdc_opportunity_xf.created_date::DATE)                        AS pipeline_created_date,  
+
+      COALESCE(sfdc_opportunity_xf.stage_1_date_month
+              ,sfdc_opportunity_xf.net_arr_created_date_month
+              ,sfdc_opportunity_xf.created_date_month::DATE)                  AS pipeline_created_date_month, 
+
+      COALESCE(sfdc_opportunity_xf.stage_1_fiscal_year
+              ,sfdc_opportunity_xf.net_arr_created_fiscal_year
+              ,sfdc_opportunity_xf.created_fiscal_year)                       AS pipeline_created_fiscal_year, 
+
+      COALESCE(sfdc_opportunity_xf.stage_1_fiscal_quarter_name
+              ,sfdc_opportunity_xf.net_arr_created_fiscal_quarter_name
+              ,sfdc_opportunity_xf.created_fiscal_quarter_name)                AS pipeline_created_fiscal_quarter_name, 
+
+      COALESCE(sfdc_opportunity_xf.stage_1_fiscal_quarter_date
+              ,sfdc_opportunity_xf.net_arr_created_fiscal_quarter_date
+              ,sfdc_opportunity_xf.created_fiscal_quarter_date)                AS pipeline_created_fiscal_quarter_date, 
+      
+      CASE
+        WHEN sfdc_opportunity_xf.stage_1_date IS NOT NULL 
+          THEN 'Stage 1 Date'
+        WHEN sfdc_opportunity_xf.net_arr_created_date IS NOT NULL 
+          THEN 'Net ARR Created Date'
+        WHEN sfdc_opportunity_xf.created_date IS NOT NULL 
+          THEN 'Opty Created Date'
+      END                                                             AS pipeline_created_date_source,
+      */
 
       CASE
         WHEN sfdc_opportunity_xf.stage_name
@@ -520,7 +586,7 @@ WITH sfdc_opportunity AS (
       -- compound metrics to facilitate reporting
       -- created and closed within the quarter net arr
       CASE 
-        WHEN oppty_final.pipeline_created_fiscal_quarter_date = oppty_final.close_fiscal_quarter_date
+        WHEN oppty_final.created_fiscal_quarter_date = oppty_final.close_fiscal_quarter_date
           AND (oppty_final.is_won = 1 
                 OR (oppty_final.is_renewal = 1 AND oppty_final.is_lost = 1)) 
             THEN net_arr
