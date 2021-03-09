@@ -60,7 +60,7 @@ WITH data AS (
 
 SELECT
   {{ dbt_utils.surrogate_key(['instance_id', 'host_id', 'created_month', 'metrics_path']) }} AS primary_key,
-  dim_usage_ping_id,
+  ping_id,
   instance_id,
   host_id,
   created_month,
