@@ -467,6 +467,9 @@ sources:
         identifier: gitlab_db_remote_mirrors
       - name: requirements_management_test_reports
         identifier: gitlab_db_requirements_management_test_reports
+        freshness:
+          warn_after: {count: 3, period: day}
+          error_after: {count: 7, period: day}
       - name: security_scans
         identifier: gitlab_db_security_scans
       - name: sentry_issues
