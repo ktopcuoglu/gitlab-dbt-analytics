@@ -53,7 +53,7 @@ def get_copy_command(
 # output for testing
 for pump_models in pumps:
 
-    print(pump_models) # for audit
+    print(pump_models)  # for audit
 
     out = get_copy_command(
         **pump_models,
