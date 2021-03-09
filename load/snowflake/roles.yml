@@ -789,10 +789,10 @@ roles:
                     - prep
             schemas:
                 read:
-                    prep.sensitive
+                    - prep.sensitive
             tables:
                 read:
-                  - prep.sensitive.bamboohr_separations
+                    - prep.sensitive.bamboohr_separations
 
     - bamboohr:
         warehouses:
