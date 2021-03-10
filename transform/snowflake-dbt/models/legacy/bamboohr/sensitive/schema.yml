@@ -112,6 +112,9 @@ models:
         tests: 
             - unique     
 
+  - name: bamboohr_separations
+    description: Provides a report of all separated team members. 
+
   - name: employee_directory
     description: Provides most recent record for all GitLab employees (active and separated).
     columns:
