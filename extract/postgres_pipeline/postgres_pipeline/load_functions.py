@@ -79,7 +79,7 @@ def load_incremental(
                 hours=hours_looking_back
             )
 
-        logging.info(f"Replication is good at {replication_timestamp}")
+        logging.info(f"Replication is at {replication_timestamp}")
 
         end_timestamp = min(
             replication_timestamp,

@@ -202,7 +202,7 @@ tables:
       , details
       , created_at
       FROM audit_events
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+      WHERE created_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   authentication_events:
     export_schema: "gitlab_com"
@@ -218,7 +218,7 @@ tables:
       , provider
       , user_name
       FROM authentication_events
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+      WHERE created_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   award_emoji:
     export_schema: 'gitlab_com'
@@ -528,7 +528,7 @@ tables:
       , platform_target
       , count
       FROM ci_platform_metrics
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+      WHERE recorded_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   ci_runner_projects:
     dbt_source_model: true
@@ -1648,7 +1648,7 @@ tables:
       , created_at
       , path
       FROM lfs_file_locks
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+      WHERE created_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   lfs_objects:
     export_schema: "gitlab_com"
@@ -3049,7 +3049,7 @@ tables:
       , mount_point
       , secret
       FROM uploads
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+      WHERE created_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   user_custom_attributes:
     dbt_source_model: true
