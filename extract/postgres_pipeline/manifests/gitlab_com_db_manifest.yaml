@@ -2632,8 +2632,8 @@ tables:
       , error_notification_sent
       , keep_divergent_refs
       FROM remote_mirrors
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   repository_languages:
     advanced_metadata: true
     dbt_source_model: true

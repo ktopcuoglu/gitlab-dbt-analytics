@@ -365,8 +365,10 @@ for source_name, config in config_dict.items():
                 env_vars={
                     **gitlab_pod_env_vars,
                     **config["env_vars"],
-                    "LAST_EXECUTION_DATE": "{{ execution_date }}",
                     "TASK_INSTANCE": "{{ task_instance_key_str }}",
+                    "LAST_LOADED": "{{{{ task_instance.xcom_pull('{}', include_prior_dates=True)['max_data_available'] }}}}".format(
+                        task_identifier
+                    ),
                 },
                 affinity=get_affinity(False),
                 tolerations=get_toleration(False),
@@ -486,9 +488,6 @@ for source_name, config in config_dict.items():
                         **gitlab_pod_env_vars,
                         **config["env_vars"],
                         "TASK_INSTANCE": "{{ task_instance_key_str }}",
-                        "LAST_XMIN": "{{{{ task_instance.xcom_pull('{}', include_prior_dates=True)['max_xmin'] }}}}".format(
-                            task_identifier
-                        ),
                         "task_id": task_identifier,
                     },
                     arguments=[scd_cmd],
