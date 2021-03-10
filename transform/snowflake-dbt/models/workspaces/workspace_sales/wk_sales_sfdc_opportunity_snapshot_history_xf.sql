@@ -27,7 +27,11 @@ WITH date_details AS (
       --sfdc_opportunity_snapshot_history.valid_to,
       --sfdc_opportunity_snapshot_history.is_currently_valid,
       sfdc_opportunity_snapshot_history.opportunity_snapshot_id,
-      sfdc_opportunity_snapshot_history.account_id,
+
+      -- Accounts might get deleted or merged, I am selecting the latest account id from the opty object
+      -- to avoid showing non-valid account ids
+      sfdc_opportunity_snapshot_history.account_id AS raw_account_id,
+      
       sfdc_opportunity_snapshot_history.opportunity_id,
       sfdc_opportunity_snapshot_history.opportunity_name,
       sfdc_opportunity_snapshot_history.owner_id,
@@ -154,23 +158,36 @@ WITH date_details AS (
       close_date_detail.fiscal_year                              AS close_fiscal_year,
       close_date_detail.fiscal_quarter_name_fy                   AS close_fiscal_quarter_name,
       close_date_detail.first_day_of_fiscal_quarter              AS close_fiscal_quarter_date,
+      90 - DATEDIFF(day, snapshot_date.date_actual, close_date_detail.last_day_of_fiscal_quarter)           AS close_day_of_fiscal_quarter_normalised,
+
+
 
       created_date_detail.first_day_of_month                     AS created_date_month,
       created_date_detail.fiscal_year                            AS created_fiscal_year,
       created_date_detail.fiscal_quarter_name_fy                 AS created_fiscal_quarter_name,
       created_date_detail.first_day_of_fiscal_quarter            AS created_fiscal_quarter_date,
 
-      iacv_created_date.first_day_of_month                       AS iacv_created_date_month,
-      iacv_created_date.fiscal_year                              AS iacv_created_fiscal_year,
-      iacv_created_date.fiscal_quarter_name_fy                   AS iacv_created_fiscal_quarter_name,
-      iacv_created_date.first_day_of_fiscal_quarter              AS iacv_created_fiscal_quarter_date,
+      net_arr_created_date.first_day_of_month                       AS iacv_created_date_month,
+      net_arr_created_date.fiscal_year                              AS iacv_created_fiscal_year,
+      net_arr_created_date.fiscal_quarter_name_fy                   AS iacv_created_fiscal_quarter_name,
+      net_arr_created_date.first_day_of_fiscal_quarter              AS iacv_created_fiscal_quarter_date,
+
+      net_arr_created_date.first_day_of_month                       AS net_arr_created_date_month,
+      net_arr_created_date.fiscal_year                              AS net_arr_created_fiscal_year,
+      net_arr_created_date.fiscal_quarter_name_fy                   AS net_arr_created_fiscal_quarter_name,
+      net_arr_created_date.first_day_of_fiscal_quarter              AS net_arr_created_fiscal_quarter_date,
 
       -- this fields might change, isolating the field used from the purpose
       -- alternative is future net_arr_created_date
-      created_date_detail.first_day_of_month                     AS pipeline_created_date_month,
-      created_date_detail.fiscal_year                            AS pipeline_created_fiscal_year,
-      created_date_detail.fiscal_quarter_name_fy                 AS pipeline_created_fiscal_quarter_name,
-      created_date_detail.first_day_of_fiscal_quarter            AS pipeline_created_fiscal_quarter_date,
+      --created_date_detail.first_day_of_month                     AS pipeline_created_date_month,
+      --created_date_detail.fiscal_year                            AS pipeline_created_fiscal_year,
+      --created_date_detail.fiscal_quarter_name_fy                 AS pipeline_created_fiscal_quarter_name,
+      --created_date_detail.first_day_of_fiscal_quarter            AS pipeline_created_fiscal_quarter_date,
+
+      net_arr_created_date.first_day_of_month                     AS pipeline_created_date_month,
+      net_arr_created_date.fiscal_year                            AS pipeline_created_fiscal_year,
+      net_arr_created_date.fiscal_quarter_name_fy                 AS pipeline_created_fiscal_quarter_name,
+      net_arr_created_date.first_day_of_fiscal_quarter            AS pipeline_created_fiscal_quarter_date,
 
       ------------------------------------------------------------------------------------------------------
       ------------------------------------------------------------------------------------------------------
@@ -262,27 +279,28 @@ WITH date_details AS (
       ON sfdc_opportunity_snapshot_history.date_actual::DATE = snapshot_date.date_actual
     LEFT JOIN date_details created_date_detail
       ON created_date_detail.date_actual = sfdc_opportunity_snapshot_history.created_date::DATE
-    LEFT JOIN date_details iacv_created_date
-      ON iacv_created_date.date_actual = sfdc_opportunity_snapshot_history.iacv_created_date::DATE
+    LEFT JOIN date_details net_arr_created_date
+      ON net_arr_created_date.date_actual = sfdc_opportunity_snapshot_history.iacv_created_date::DATE
 
 ), sfdc_opportunity_xf AS (
 
     SELECT 
       opportunity_id,
       owner_id,
+      account_id,
       order_type_stamped,
       opportunity_owner_manager,
       is_edu_oss,
       account_owner_team_stamped, 
-      opportunity_owner_user_segment,
-      opportunity_owner_user_region,
+
       sales_team_cro_level,
       sales_team_rd_asm_level,
 
-      user_segment_stamped,
-      user_region_stamped,
-      user_area_stamped,
-      user_geo_stamped,
+      -- Opportunity Owner Stamped fields
+      opportunity_owner_user_segment,
+      opportunity_owner_user_region,
+      opportunity_owner_user_area,
+      opportunity_owner_user_geo,
 
       is_won,
       opportunity_category,
@@ -463,11 +481,9 @@ WITH date_details AS (
       -- Using opty ratio for open deals doesn't seem to work well
       CASE 
         WHEN opp_snapshot.stage_name NOT IN ('8-Closed Lost', '9-Unqualified', 'Closed Won', '10-Duplicate')  -- OPEN DEAL
---          THEN COALESCE(opp_snapshot.incremental_acv,0) * COALESCE(opportunity_based_iacv_to_net_arr_ratio,segment_order_type_iacv_to_net_arr_ratio)
             THEN COALESCE(opp_snapshot.incremental_acv,0) * COALESCE(segment_order_type_iacv_to_net_arr_ratio,0)
         WHEN opp_snapshot.stage_name IN ('8-Closed Lost')                       -- CLOSED LOST DEAL and no Net IACV
           AND COALESCE(opp_snapshot.net_incremental_acv,0) = 0
---            THEN COALESCE(opp_snapshot.incremental_acv,0) * COALESCE(opportunity_based_iacv_to_net_arr_ratio,segment_order_type_iacv_to_net_arr_ratio)
             THEN COALESCE(opp_snapshot.incremental_acv,0) * COALESCE(segment_order_type_iacv_to_net_arr_ratio,0)
         WHEN opp_snapshot.stage_name IN ('8-Closed Lost', 'Closed Won')         -- REST of CLOSED DEAL
             THEN COALESCE(opp_snapshot.net_incremental_acv,0) * COALESCE(opportunity_based_iacv_to_net_arr_ratio,segment_order_type_iacv_to_net_arr_ratio)
@@ -521,10 +537,8 @@ WITH date_details AS (
       sfdc_opportunity_xf.opportunity_owner_manager,
       sfdc_opportunity_xf.is_edu_oss,
       sfdc_opportunity_xf.sales_qualified_source,
-      sfdc_opportunity_xf.user_segment_stamped,
-      sfdc_opportunity_xf.user_region_stamped,
-      sfdc_opportunity_xf.user_area_stamped,
-      sfdc_opportunity_xf.user_geo_stamped,
+      sfdc_opportunity_xf.account_id,
+      
 
       -- field used for FY21 bookings reporitng
       sfdc_opportunity_xf.account_owner_team_stamped, 
@@ -543,8 +557,11 @@ WITH date_details AS (
       -- Team Segment / ASM - RD 
       -- As the snapshot history table is used to compare current perspective with the past, I leverage the most recent version
       -- of the truth ato cut the data, that's why instead of using the stampped version, I take the current fields.
+      -- https://gitlab.my.salesforce.com/00N6100000ICcrD?setupid=OpportunityFields
       sfdc_opportunity_xf.opportunity_owner_user_segment,
       sfdc_opportunity_xf.opportunity_owner_user_region,
+      sfdc_opportunity_xf.opportunity_owner_user_area,
+      sfdc_opportunity_xf.opportunity_owner_user_geo,
 
       --- target fields for reporting, changing their name might help to isolate their logic from the actual field
       -- in FY21, there were multiple ways of getting this done, and it meant changing downwards reports
@@ -614,6 +631,7 @@ WITH date_details AS (
       sfdc_accounts_xf.tsp_sub_region,
       sfdc_accounts_xf.ultimate_parent_sales_segment,
       sfdc_accounts_xf.tsp_max_hierarchy_sales_segment,
+      sfdc_accounts_xf.ultimate_parent_account_id,
         
       -- 20201021 NF: This should be replaced by a table that keeps track of excluded deals for forecasting purposes
       CASE 
@@ -638,7 +656,7 @@ WITH date_details AS (
     INNER JOIN sfdc_opportunity_xf    
       ON sfdc_opportunity_xf.opportunity_id = opp_snapshot.opportunity_id
     LEFT JOIN sfdc_accounts_xf
-      ON opp_snapshot.account_id = sfdc_accounts_xf.account_id 
+      ON sfdc_opportunity_xf.account_id = sfdc_accounts_xf.account_id 
     LEFT JOIN sfdc_users_xf account_owner
       ON account_owner.user_id = sfdc_accounts_xf.owner_id
     LEFT JOIN sfdc_users_xf opportunity_owner
@@ -657,8 +675,9 @@ WITH date_details AS (
     LEFT JOIN pipeline_type_quarter_created 
       ON pipeline_type_quarter_created.opportunity_id = opp_snapshot.opportunity_id
       AND pipeline_type_quarter_created.snapshot_fiscal_quarter_date = opp_snapshot.snapshot_fiscal_quarter_date 
-    WHERE opp_snapshot.account_id NOT IN ('0014M00001kGcORQA0')                           -- remove test account
-      AND sfdc_accounts_xf.ultimate_parent_account_id NOT IN ('0016100001YUkWVAA1')       -- remove test account
+    WHERE opp_snapshot.raw_account_id NOT IN ('0014M00001kGcORQA0')                           -- remove test account
+      AND (sfdc_accounts_xf.ultimate_parent_account_id NOT IN ('0016100001YUkWVAA1')
+            OR sfdc_accounts_xf.account_id IS NULL)                                        -- remove test account
       AND opp_snapshot.is_deleted = 0
 ), add_compound_metrics AS (
     SELECT 

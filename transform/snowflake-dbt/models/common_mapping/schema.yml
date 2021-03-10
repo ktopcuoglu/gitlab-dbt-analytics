@@ -1,15 +1,22 @@
 version: 2
 
 models:
-  - name: map_marketing_channel
-    description: '{{ doc("map_marketing_channel") }}'
+  - name: map_bizible_marketing_channel_path
+    description: '{{ doc("map_bizible_marketing_channel_path") }}'
     columns:
       - name: bizible_marketing_channel_path
         description: Channel path to map
         tests:
           - not_null
-      - name: marketing_channel_name
+      - name: bizible_marketing_channel_path_name_grouped
         description: Mapped marketing channel name.
+
+  - name: map_bizible_campaign_grouping
+    description: '{{ doc("map_bizible_campaign_grouping") }}'
+    columns:
+      - name: bizible_campaign_grouping_id
+        tests:
+          - not_null
 
   - name: map_crm_account
     description: '{{ doc("map_crm_account") }}'
@@ -44,10 +51,10 @@ models:
         description: Unique identifier for each Salesforce user
       - name: dim_order_type_id
         description: Unique identifier for each order type
-      - name: dim_opportunity_source_id
-        description: Unique identifier for each opportunity source name
-      - name: dim_purchase_channel_id
-        description: Unique identifier for each purchase channel name
+      - name: dim_sales_qualified_source_id
+        description: Unique identifier for each sales qualified source name
+      - name: dim_deal_path_id
+        description: Unique identifier for each deal path name
       - name: dim_sales_segment_id
         description: Unique identifier of a version of a sales segment
       - name: dim_geo_region_id
@@ -164,4 +171,3 @@ models:
       - name: subscription_cohort_year
         tests:
           - not_null
-

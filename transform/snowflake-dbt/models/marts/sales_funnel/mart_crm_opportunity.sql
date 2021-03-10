@@ -13,20 +13,20 @@ WITH dim_crm_account AS (
     SELECT *
     FROM {{ ref('dim_crm_opportunity') }}
 
-), dim_opportunity_source AS (
+), dim_sales_qualified_source AS (
 
     SELECT *
-    FROM {{ ref('dim_opportunity_source') }}
+    FROM {{ ref('dim_sales_qualified_source') }}
 
 ), dim_order_type AS (
 
     SELECT *
     FROM {{ ref('dim_order_type') }}
 
-), dim_purchase_channel AS (
+), dim_deal_path AS (
 
     SELECT *
-    FROM {{ ref('dim_purchase_channel') }}
+    FROM {{ ref('dim_deal_path') }}
 
 ), dim_crm_sales_hierarchy_live_sales_segment AS (
 
@@ -121,9 +121,9 @@ WITH dim_crm_account AS (
       dim_crm_sales_hierarchy_live_location_region.location_region_name_live,
       dim_crm_sales_hierarchy_live_sales_region.sales_region_name_live,
       dim_crm_sales_hierarchy_live_sales_area.sales_area_name_live,
-      dim_purchase_channel.purchase_channel_name,
+      dim_deal_path.deal_path_name,
       dim_order_type.order_type_name                                       AS order_type,
-      dim_opportunity_source.opportunity_source_name,
+      dim_sales_qualified_source.sales_qualified_source_name,
       dim_crm_account.crm_account_gtm_strategy,
       dim_crm_account.crm_account_focus_account,
       dim_crm_account.parent_crm_account_gtm_strategy,
@@ -138,7 +138,7 @@ WITH dim_crm_account AS (
       dim_crm_opportunity.is_web_portal_purchase,
       fct_crm_opportunity.primary_solution_architect,
       fct_crm_opportunity.product_details,
-    
+
       -- channel fields
       fct_crm_opportunity.lead_source,
       fct_crm_opportunity.dr_partner_deal_type,
@@ -155,17 +155,20 @@ WITH dim_crm_account AS (
       fct_crm_opportunity.calculated_discount,
       fct_crm_opportunity.partner_discount,
       fct_crm_opportunity.partner_discount_calc,
-      fct_crm_opportunity.comp_channel_neutral
+      fct_crm_opportunity.comp_channel_neutral,
+      fct_crm_opportunity.count_crm_attribution_touchpoints,
+      fct_crm_opportunity.weighted_linear_iacv,
+      fct_crm_opportunity.count_campaigns
 
     FROM fct_crm_opportunity
     LEFT JOIN dim_crm_opportunity
       ON fct_crm_opportunity.dim_crm_opportunity_id = dim_crm_opportunity.dim_crm_opportunity_id
     LEFT JOIN dim_crm_account
       ON dim_crm_opportunity.dim_crm_account_id = dim_crm_account.dim_crm_account_id
-    LEFT JOIN dim_opportunity_source
-      ON fct_crm_opportunity.dim_opportunity_source_id = dim_opportunity_source.dim_opportunity_source_id
-    LEFT JOIN dim_purchase_channel
-      ON fct_crm_opportunity.dim_purchase_channel_id = dim_purchase_channel.dim_purchase_channel_id
+    LEFT JOIN dim_sales_qualified_source
+      ON fct_crm_opportunity.dim_sales_qualified_source_id = dim_sales_qualified_source.dim_sales_qualified_source_id
+    LEFT JOIN dim_deal_path
+      ON fct_crm_opportunity.dim_deal_path_id = dim_deal_path.dim_deal_path_id
     LEFT JOIN dim_order_type
       ON fct_crm_opportunity.dim_order_type_id = dim_order_type.dim_order_type_id
     LEFT JOIN dim_crm_sales_hierarchy_stamped_sales_segment
@@ -192,5 +195,5 @@ WITH dim_crm_account AS (
     created_by="@iweeks",
     updated_by="@mcooperDD",
     created_date="2020-12-07",
-    updated_date="2021-02-17",
+    updated_date="2021-03-01",
   ) }}

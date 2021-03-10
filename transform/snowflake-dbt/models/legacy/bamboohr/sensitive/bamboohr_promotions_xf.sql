@@ -45,6 +45,7 @@ WITH bamboohr_compensation AS (
 ), currency_conversion_factor_periods AS (
 
     SELECT *,
+      LEAD(annual_amount_usd_value) OVER (PARTITION BY employee_id ORDER BY conversion_ID)          AS next_usd_value,
       LEAD(DATEADD(day,-1,effective_date)) OVER (PARTITION BY employee_id ORDER BY conversion_ID)   AS next_effective_date
     FROM currency_conversion
     WHERE currency_conversion_factor <> prior_conversion_factor
@@ -76,7 +77,9 @@ WITH bamboohr_compensation AS (
       ote.annual_amount_usd_value AS ote_usd,
       ote.prior_annual_amount_usd AS prior_ote_usd,
       ote.change_in_annual_amount_usd AS ote_change,
-      rank_ote_effective_date
+      rank_ote_effective_date,
+      currency_conversion_factor_periods.annual_amount_usd_value,
+      currency_conversion_factor_periods.next_usd_value
     FROM bamboohr_compensation_changes
     LEFT JOIN employee_directory
       ON bamboohr_compensation_changes.employee_id = employee_directory.employee_id
@@ -115,13 +118,15 @@ WITH bamboohr_compensation AS (
       pay_frequency,
       LAG(pay_frequency) OVER (PARTITION BY employee_id ORDER BY compensation_update_id) AS prior_pay_frequency,
       compensation_value                                                                 AS new_compensation_value,
-      prior_compensation_value,
+      prior_compensation_value                                                           AS prior_compensation_value,
       compensation_currency                                                              AS new_compensation_currency,
       prior_compensation_currency,
       variable_pay,
       ote_usd,
       prior_ote_usd,
-      ote_change
+      ote_change,
+      next_usd_value,
+      annual_amount_usd_value
     FROM joined 
   
 ), promotions AS (
@@ -139,8 +144,12 @@ WITH bamboohr_compensation AS (
       department_grouping,
       job_title,
       variable_pay,
-      new_compensation_value * pay_frequency * currency_conversion_factor                             AS new_compensation_value_usd,
-      CASE WHEN new_compensation_currency = prior_compensation_currency 
+      IFF(compensation_update_id = 21917, next_usd_value, 
+            new_compensation_value * pay_frequency * currency_conversion_factor)                      AS new_compensation_value_usd,
+      CASE 
+        WHEN compensation_update_id = 21917
+          THEN annual_amount_usd_value
+        WHEN new_compensation_currency = prior_compensation_currency 
            THEN prior_compensation_value * prior_pay_frequency * currency_conversion_factor 
            ELSE prior_compensation_value * prior_pay_frequency * prior_currency_conversion_factor END AS prior_compensation_value_usd,
       new_compensation_value_usd - prior_compensation_value_usd                                       AS change_in_comp_usd,

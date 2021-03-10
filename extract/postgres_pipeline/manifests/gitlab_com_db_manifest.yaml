@@ -341,7 +341,6 @@ tables:
       , runner_id
       , coverage
       , commit_id
-      , commands
       , name
       , options
       , allow_failure
@@ -354,14 +353,11 @@ tables:
       , type
       , target_url
       , description
-      , artifacts_file
       , project_id
-      , artifacts_metadata
       , erased_by_id
       , erased_at
       , CASE WHEN artifacts_expire_at > '2262-01-01' THEN '2262-01-01' ELSE artifacts_expire_at END AS artifacts_expire_at
       , environment
-      , artifacts_size
       , "when"
       , yaml_variables
       , queued_at
@@ -370,8 +366,6 @@ tables:
       , auto_canceled_by_id
       , retried
       , stage_id
-      , artifacts_file_store
-      , artifacts_metadata_store
       , protected
       , failure_reason
       , scheduled_at
@@ -564,7 +558,6 @@ tables:
       , description
       , contacted_at
       , active
-      , is_shared
       , name
       , version
       , revision
@@ -975,7 +968,6 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'columns'
     export_table_primary_key: CONCAT(table_name, '_', column_name, table_schema)
-    has_xmin: false
     import_db: GITLAB_DB
     import_query: |-
       SELECT CONCAT(table_name, '_', column_name, table_schema) AS column_id
@@ -2440,6 +2432,8 @@ tables:
       , shared_runners_seconds_last_reset
       , packages_size
       , wiki_size
+      , snippets_size
+      , uploads_size
       FROM project_statistics
   project_tracing_settings:
     export_schema: "gitlab_com"
@@ -2785,6 +2779,7 @@ tables:
       , enforced_sso
       , enforced_group_managed_accounts
       , prohibited_outer_forks
+      , default_membership_role
       FROM saml_providers
   security_scans:
     export_schema: "gitlab_com"
