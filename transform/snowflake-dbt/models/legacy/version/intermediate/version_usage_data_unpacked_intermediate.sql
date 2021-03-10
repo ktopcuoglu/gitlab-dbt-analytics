@@ -101,7 +101,7 @@ WITH usage_data AS (
 ), final AS (
 
     SELECT
-      {{ dbt_utils.star(from=ref('version_usage_data'), except=["STATS_USED", "COUNTS", "USAGE_ACTIVITY_BY_STAGE", "USAGE_ACTIVITY_BY_STAGE_MONTHLY"]) }},
+      {{ dbt_utils.star(from=ref('version_usage_data'), except=["STATS_USED", "COUNTS", "USAGE_ACTIVITY_BY_STAGE"]) }},
       unpacked.usage_activity_by_stage_monthly['manage']['events'] AS monthly_active_users_last_28_days,
       unpacked.ping_source,
       unpacked.main_edition,
@@ -120,7 +120,7 @@ WITH usage_data AS (
         {{ "," if not loop.last }}
       {% endfor %}
     FROM unpacked
-    {{ dbt_utils.group_by(n=70) }}
+    {{ dbt_utils.group_by(n=71) }}
 
 
 )
