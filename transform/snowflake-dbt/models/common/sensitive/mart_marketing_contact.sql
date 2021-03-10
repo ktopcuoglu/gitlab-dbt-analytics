@@ -8,6 +8,17 @@ WITH marketing_contact AS (
     SELECT * 
     FROM {{ref('bdg_marketing_contact_order')}}
 
+), subscription_aggregate AS (
+
+    SELECT 
+      dim_marketing_contact_id,
+      MIN(subscription_start_date)                                                               AS min_subscription_start_date,
+      MAX(subscription_end_date)                                                                 AS max_subscription_end_date,
+      COUNT(*)                                                                                   AS nbr_of_subscriptions
+    FROM marketing_contact_order
+    WHERE subscription_start_date is not null
+    GROUP BY dim_marketing_contact_id
+
 ), prep AS (
   
     SELECT     
@@ -292,6 +303,9 @@ WITH marketing_contact AS (
 
     SELECT 
       prep.*, 
+      subscription_aggregate.min_subscription_start_date,
+      subscription_aggregate.max_subscription_end_date,
+      subscription_aggregate.nbr_of_subscriptions,
       CASE 
         WHEN (responsible_for_group_saas_free_tier
               OR individual_namespace_is_saas_free_tier
@@ -341,6 +355,8 @@ WITH marketing_contact AS (
     FROM prep
     LEFT JOIN marketing_contact 
       ON marketing_contact.dim_marketing_contact_id = prep.dim_marketing_contact_id
+    LEFT JOIN subscription_aggregate
+      ON subscription_aggregate.dim_marketing_contact_id = marketing_contact.dim_marketing_contact_id
 
 )
 
@@ -377,6 +393,9 @@ WITH marketing_contact AS (
       'is_self_managed_starter_tier',
       'is_self_managed_premium_tier',
       'is_self_managed_ultimate_tier',
+      'min_subscription_start_date',
+      'max_subscription_end_date',
+      'nbr_of_subscriptions',
       'email_address',
       'first_name',
       'last_name',
@@ -411,7 +430,7 @@ WITH marketing_contact AS (
     created_by="@trevor31",
     updated_by="@trevor31",
     created_date="2021-02-09",
-    updated_date="2021-02-24"
+    updated_date="2021-03-10"
 ) }}
 
 
