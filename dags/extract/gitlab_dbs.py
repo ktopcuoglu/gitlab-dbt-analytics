@@ -157,6 +157,9 @@ config_dict = {
     },
 }
 
+def is_incremental(raw_query):
+    return "{EXECUTION_DATE}" in raw_query or "{BEGIN_TIMESTAMP}" in raw_query
+
 
 def use_cloudsql_proxy(dag_name, operation, instance_name):
     return f"""
@@ -341,7 +344,7 @@ for source_name, config in config_dict.items():
         table_list = extract_table_list_from_manifest(manifest)
         for table in table_list:
             # tables without execution_date in the query won't be processed incrementally
-            if "{EXECUTION_DATE}" not in manifest["tables"][table]["import_query"]:
+            if not is_incremental(manifest["tables"][table]["import_query"]):
                 continue
 
             task_type = "db-incremental"
@@ -407,7 +410,7 @@ for source_name, config in config_dict.items():
         manifest = extract_manifest(file_path)
         table_list = extract_table_list_from_manifest(manifest)
         for table in table_list:
-            if "{EXECUTION_DATE}" in manifest["tables"][table]["import_query"]:
+            if is_incremental(manifest["tables"][table]["import_query"]):
                 task_type = "backfill"
 
                 task_identifier = (
@@ -463,7 +466,7 @@ for source_name, config in config_dict.items():
         manifest = extract_manifest(file_path)
         table_list = extract_table_list_from_manifest(manifest)
         for table in table_list:
-            if "{EXECUTION_DATE}" not in manifest["tables"][table]["import_query"]:
+            if not is_incremental(manifest["tables"][table]["import_query"]):
                 task_type = "db-scd"
 
                 task_identifier = (
