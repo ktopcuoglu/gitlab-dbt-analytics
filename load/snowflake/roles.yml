@@ -2801,36 +2801,36 @@ roles:
             - analyst_xs
         owns:
             databases:
-                - michellecooper_prep
-                - michellecooper_prod
+                - tullylanterdd_prep
+                - tullylanterdd_prod
             schemas:
-                - michellecooper_prep.*
-                - michellecooper_prod.*
+                - tullylanterdd_prep.*
+                - tullylanterdd_prod.*
             tables:
-                - michellecooper_prep.*.*
-                - michellecooper_prod.*.*
+                - tullylanterdd_prep.*.*
+                - tullylanterdd_prod.*.*
         privileges:
             databases:
                 read:
-                    - michellecooper_prep
-                    - michellecooper_prod
+                    - tullylanterdd_prep
+                    - tullylanterdd_prod
                 write:
-                    - michellecooper_prep
-                    - michellecooper_prod
+                    - tullylanterdd_prep
+                    - tullylanterdd_prod
             schemas:
                 read:
-                    - michellecooper_prep.*
-                    - michellecooper_prod.*
+                    - tullylanterdd_prep.*
+                    - tullylanterdd_prod.*
                 write:
-                    - michellecooper_prep.*
-                    - michellecooper_prod.*
+                    - tullylanterdd_prep.*
+                    - tullylanterdd_prod.*
             tables:
                 read:
-                    - michellecooper_prep.*.*
-                    - michellecooper_prod.*.*
+                    - tullylanterdd_prep.*.*
+                    - tullylanterdd_prod.*.*
                 write:
-                    - michellecooper_prep.*.*
-                    - michellecooper_prod.*.*
+                    - tullylanterdd_prep.*.*
+                    - tullylanterdd_prod.*.*
 
     - tmurphy:
         member_of:
