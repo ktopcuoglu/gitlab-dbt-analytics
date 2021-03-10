@@ -204,6 +204,12 @@ models:
         description: Json array of the person's roles and product tiers
       - name: role_tier_namespace_text
         description: Json array of the person's roles and namespaces and product tiers
+      - name: min_subscription_start_date
+        description: Earliest subscription start date
+      - name: max_subscription_end_date
+        description: Latest subscription end date
+      - name: nbr_of_subscriptions
+        description: Number of subscriptions the user is on
       - name: responsible_for_free_tier_only
         description: Flags if responsible for or individual namespace of only free tier
       - name: email_address
