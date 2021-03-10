@@ -21,9 +21,12 @@ from utils import (
 
 def get_last_load_time() -> datetime:
     last_load_tstamp = os.environ["LAST_LOADED"]
-    return datetime.datetime.strptime(
-                last_load_tstamp, "%Y-%m-%dT%H:%M:%S%z"
-            )
+    if last_load_tstamp != "":
+        return datetime.datetime.strptime(
+                    last_load_tstamp, "%Y-%m-%dT%H:%M:%S%z"
+                )
+    else:
+        return None
 
 def load_incremental(
     source_engine: Engine,
@@ -58,8 +61,7 @@ def load_incremental(
 
         last_load_time = get_last_load_time()
 
-        this_run_beginning_timestamp = last_load_time - datetime.timedelta(minutes=30) #Allow for 30 minute overlap to ensure late arriving data is not skipped
-
+        hours_looking_back = int(env["HOURS"])
 
         try:
             execution_date = datetime.datetime.strptime(
@@ -70,7 +72,11 @@ def load_incremental(
                 env["EXECUTION_DATE"], "%Y-%m-%dT%H:%M:%S.%f%z"
             )
 
-        hours_looking_back = int(env["HOURS"])
+        if last_load_time is not None:
+            this_run_beginning_timestamp = last_load_time - datetime.timedelta(minutes=30) #Allow for 30 minute overlap to ensure late arriving data is not skipped
+        else:
+            this_run_beginning_timestamp = execution_date - datetime.timedelta(hours=hours_looking_back)
+
 
         logging.info(f"Replication is good at {replication_timestamp}")
 
