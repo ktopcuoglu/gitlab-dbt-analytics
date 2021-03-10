@@ -118,9 +118,6 @@ def sync_incremental_ids(
     raw_query = table_dict["import_query"]
     additional_filtering = table_dict.get("additional_filtering", "")
     primary_key = table_dict["export_table_primary_key"]
-    if "{EXECUTION_DATE}" not in raw_query:
-        logging.info(f"Table {table} does not need sync processing.")
-        return False
     # If temp isn't in the name, we don't need to full sync.
     # If a temp table exists, we know the sync didn't complete successfully
     if "_TEMP" != table_name[-5:] and not target_engine.has_table(f"{table_name}_TEMP"):
