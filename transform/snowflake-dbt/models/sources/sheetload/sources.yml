@@ -91,7 +91,9 @@ sources:
       - name: sales_funnel_targets_matrix
       - name: territory_mapping
       - name: scalable_employment_values
+      - name: sdr_count_snapshot
       - name: social_marketing_metrics
+      - name: social_marketing_topic_metrics
       - name: usage_ping_metrics_sections
       - name: values_certificate
       - name: yc_companies

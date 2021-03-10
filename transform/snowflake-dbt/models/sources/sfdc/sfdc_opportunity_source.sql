@@ -116,11 +116,13 @@ WITH source AS (
         stamped_user_geo__c                         AS user_geo_stamped,
         stamped_user_region__c                      AS user_region_stamped,
         stamped_user_area__c                        AS user_area_stamped,
-
+        opportunity_category__c                     AS opportunity_category,
         opportunity_health__c                       AS opportunity_health,
         risk_type__c                                AS risk_type,
         risk_reasons__c                             AS risk_reasons,
         tam_notes__c                                AS tam_notes,
+        solution_architect__c                       AS primary_solution_architect,
+        product_details__c                          AS product_details,
 
       -- ************************************
       -- sales segmentation deprecated fields - 2020-09-03
@@ -152,12 +154,25 @@ WITH source AS (
 
         -- sales segment fields
         COALESCE({{ sales_segment_cleaning('sales_segmentation_employees_o__c') }}, {{ sales_segment_cleaning('sales_segmentation_o__c') }}, 'Unknown' )
-                                                   AS
-division_sales_segment_stamped,
+                                                   AS division_sales_segment_stamped,
         -- channel reporting
         -- original issue: https://gitlab.com/gitlab-data/analytics/-/issues/6072
         dr_partner_deal_type__c                     AS dr_partner_deal_type,
         dr_partner_engagement__c                    AS dr_partner_engagement,
+
+        impartnerprm__partneraccount__c             AS partner_account,
+        vartopiadrs__dr_status1__c                  AS dr_status,
+        distributor__c                              AS distributor,
+        influence_partner__c                        AS influence_partner,
+        fulfillment_partner__c                      AS fulfillment_partner,
+        platform_partner__c                         AS platform_partner,
+        partner_track__c                            AS partner_track,
+        public_sector_opp__c::BOOLEAN               AS is_public_sector_opp,
+        registration_from_portal__c::BOOLEAN        AS is_registration_from_portal,
+        calculated_discount__c                      AS calculated_discount,
+        partner_discount__c                         AS partner_discount,
+        partner_discount_calc__c                    AS partner_discount_calc,
+        comp_channel_neutral__c                     AS comp_channel_neutral,
 
         -- command plan fields
         fm_champion__c                              AS cp_champion,

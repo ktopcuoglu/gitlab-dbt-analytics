@@ -60,6 +60,7 @@ WITH source AS (
         matched_account_top_list__c                             AS matched_account_top_list,
         mql_date__c                                             AS marketo_qualified_lead_date,
         mql_datetime__c                                         AS marketo_qualified_lead_datetime,
+        mql_datetime_inferred__c                                AS mql_datetime_inferred,
         inquiry_datetime__c                                     AS inquiry_datetime,
         accepted_datetime__c                                    AS accepted_datetime,
         qualifying_datetime__c                                  AS qualifying_datetime,
@@ -71,6 +72,8 @@ WITH source AS (
         {{ sales_segment_cleaning('sales_segmentation__c') }}   AS sales_segmentation,
         mkto71_Lead_Score__c                                    AS person_score,
         status                                                  AS lead_status,
+        last_utm_campaign__c                                    AS last_utm_campaign, 
+        last_utm_content__c                                     AS last_utm_content,
         {{  sfdc_source_buckets('leadsource') }}
 
         -- territory success planning info

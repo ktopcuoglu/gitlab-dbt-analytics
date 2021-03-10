@@ -12,7 +12,7 @@ models:
       description: This is the base table for bad event data sent to Fishtown's infrastructure.
 
     - name: snowplow_gitlab_events
-      description: This is the base table for snowplow events captured by GitLab's infrastructure. The data is written to S3 as a TSV, so this model simply reorders the columns and unpacks the unstructured events.
+      description: '{{ doc("snowplow_gitlab_events") }}'
       columns:
           - name: uploaded_at
             tests:

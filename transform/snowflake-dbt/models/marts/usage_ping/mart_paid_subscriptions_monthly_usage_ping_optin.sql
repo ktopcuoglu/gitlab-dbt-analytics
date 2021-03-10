@@ -27,7 +27,7 @@ WITH fct_mrr AS (
       date_id,
       first_day_of_month
     FROM {{ ref('dim_date')}}
-    WHERE first_day_of_month < CURRENT_DATE
+    WHERE first_day_of_month <= CURRENT_DATE
 
 ), active_subscriptions AS (
 
@@ -48,7 +48,7 @@ WITH fct_mrr AS (
 ), mau AS (
 
     SELECT *
-    FROM {{ ref('usage_data_28_days_flattened') }}
+    FROM {{ ref('prep_usage_data_28_days_flattened') }}
     WHERE metrics_path = 'usage_activity_by_stage_monthly.manage.events'
 
 ), transformed AS (

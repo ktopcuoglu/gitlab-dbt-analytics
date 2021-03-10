@@ -54,9 +54,9 @@ WITH seat_links AS (
       seat_links.is_last_seat_link_report_per_subscription,
       seat_links.is_last_seat_link_report_per_order,
       IFF(IFNULL(seat_links.order_subscription_id, '') = subscriptions.dim_subscription_id,
-          FALSE, TRUE)                                                      AS is_subscription_in_zuora,
-      IFNULL(product_details.dim_product_tier_id IS NULL, FALSE)            AS is_rate_plan_in_zuora,
-      IFNULL(seat_links.active_user_count IS NULL, FALSE)                   AS is_active_user_count_available
+          TRUE, FALSE)                                                      AS is_subscription_in_zuora,
+      IFF(product_details.dim_product_tier_id IS NOT NULL, TRUE, FALSE)     AS is_rate_plan_in_zuora,
+      IFF(seat_links.active_user_count IS NOT NULL, TRUE, FALSE)            AS is_active_user_count_available
     FROM seat_links 
     INNER JOIN customers_orders
       ON seat_links.order_id = customers_orders.order_id
@@ -72,5 +72,5 @@ WITH seat_links AS (
     created_by="@ischweickartDD",
     updated_by="@ischweickartDD",
     created_date="2021-02-02",
-    updated_date="2021-02-02"
+    updated_date="2021-02-16"
 ) }}

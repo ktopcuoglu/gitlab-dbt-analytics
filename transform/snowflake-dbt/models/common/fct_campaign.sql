@@ -1,16 +1,15 @@
 WITH sfdc_campaigns AS (
 
     SELECT *
-    FROM {{ ref('sfdc_campaign_source') }}
-    WHERE NOT is_deleted
+    FROM {{ ref('prep_campaign') }}
 
 ), final_campaigns AS (
 
     SELECT
 
       -- campaign ids
-      campaign_id                                   AS dim_campaign_id,
-      campaign_parent_id,
+      dim_campaign_id,
+      dim_parent_campaign_id,
 
       -- user ids
       campaign_owner_id,
@@ -56,5 +55,5 @@ WITH sfdc_campaigns AS (
     created_by="@mcooperDD",
     updated_by="@mcooperDD",
     created_date="2020-11-19",
-    updated_date="2020-11-19"
+    updated_date="2021-03-01"
 ) }}

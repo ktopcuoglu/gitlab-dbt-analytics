@@ -8,12 +8,63 @@ models:
         description: "Calculated as 12 * MRR value"
       - name: primary_key
         tests:
-            - not_null
-            - unique
+          - not_null
+          - unique
       - name: is_reseller
         description: Identify whether a crm_account is a reseller.
       - name: subscription_sales_type
         description: Identifies whether a subscription is Sales-Assisted or Self-Service / Web Direct.
+      - name: zuora_account_number
+        tests:
+          - not_null
+      - name: subscription_name_slugify
+        tests:
+          - not_null
+      - name: subscription_name
+        tests:
+          - not_null
+      - name: oldest_subscription_in_cohort
+      - name: subscription_lineage
+      - name: arr_month
+        tests:
+          - not_null
+      - name: subscription_cohort_month
+      - name: subscription_cohort_quarter
+      - name: mrr
+        tests:
+          - not_null
+      - name: months_since_subscription_cohort_start
+      - name: quarters_since_subscription_cohort_start
+      - name: zuora_account_id
+        tests:
+          - not_null
+      - name: zuora_account_name
+        tests:
+          - not_null
+      - name: product_category
+        tests:
+          - not_null
+      - name: unit_of_measure
+      - name: quantity
+      - name: crm_id
+      - name: sfdc_account_name
+      - name: ultimate_parent_account_id
+      - name: ultimate_parent_account_name
+      - name: billing_account_cohort_month
+      - name: billing_account_cohort_quarter
+      - name: crm_account_cohort_month
+      - name: crm_account_cohort_quarter
+        description: '{{ doc("mart_arr_col_parent_account_cohort_month") }}'
+      - name: parent_account_cohort_quarter
+        description: '{{ doc("mart_arr_col_parent_account_cohort_quarter") }}'
+      - name: months_since_billing_account_cohort_start
+      - name: quarters_since_billing_account_cohort_start
+      - name: months_since_crm_account_cohort_start
+      - name: quarters_since_crm_account_cohort_start
+      - name: months_since_parent_account_cohort_start
+        description: '{{ doc("mart_arr_col_months_since_parent_cohort_start") }}'
+      - name: quarters_since_parent_account_cohort_start
+        description: '{{ doc("mart_arr_col_quarters_since_parent_cohort_start") }}'
 
   - name: mart_arr_snapshots
     description: Daily snapshots of MRR/ARR by month values per customer, subscription and product
@@ -22,6 +73,22 @@ models:
         tests:
           - not_null
         tags: ["tdf", "mart", "arr"]
+
+  - name: mart_crm_attribution_touchpoint
+    description: Model containing Bizible attribution touchpoints along with contact, lead, account, campaign, and opportunity details.
+    columns:
+      - name: dim_crm_touchpoint_id
+        tests:
+            - not_null
+            - unique
+
+  - name: mart_crm_touchpoint
+    description: Model containing Bizible touchpoints (non-attribution) along with contact, lead, account, and campaign details.
+    columns:
+      - name: dim_crm_touchpoint_id
+        tests:
+            - not_null
+            - unique
 
   - name: mart_crm_opportunity
     description: Model with single pane of glass sales and marketing metrics.
@@ -49,6 +116,23 @@ models:
             - not_null
             - unique
         tags: ["tdf", "mart", "sales_funnel"]
+        
+  - name: mart_sales_funnel_target_daily
+    description: Model with Sales targets at a daily level and with QTD (Quater To Date), MTD (Month To Date) and YTD (Year To Date) target calculations.
+    columns:
+      - name: primary_key
+        tests:
+            - not_null
+            - unique
+        tags: ["tdf", "mart", "sales_funnel"]
+      - name: report_target_date
+        description: Target_Date + 1. This is used in Sisense when comparing QTD targets vs actuals for the current date.
+      - name: mtd_allocated_target
+        description: Month To Date allocated target.
+      - name: qtd_allocated_target
+        description: Quarter To Date allocated target.
+      - name: ytd_allocated_target
+        description: Year To Date allocated target.
 
   - name: mart_discount_arr
     description: Model with Invoiced ARR used to calculate discounts across various dimensions.

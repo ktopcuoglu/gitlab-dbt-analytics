@@ -7,7 +7,7 @@
 WITH data AS ( 
   
     SELECT * 
-    FROM {{ ref('usage_data_28_days_flattened')}}
+    FROM {{ ref('prep_usage_data_28_days_flattened')}}
     {% if is_incremental() %}
 
       WHERE created_at >= (SELECT MAX(created_month) FROM {{this}})
@@ -31,7 +31,8 @@ WITH data AS (
       is_paid_gmau,
       is_umau,
       clean_metrics_name,
-      IFNULL(metric_value,0) AS weekly_metrics_value
+      IFNULL(metric_value,0) AS weekly_metrics_value,
+      has_timed_out
     FROM data
 
 ), monthly AS (
@@ -50,7 +51,8 @@ WITH data AS (
       is_paid_gmau,
       is_umau,
       clean_metrics_name,
-      weekly_metrics_value              AS monthly_metric_value
+      weekly_metrics_value              AS monthly_metric_value,
+      has_timed_out
     FROM transformed
     QUALIFY (ROW_NUMBER() OVER (PARTITION BY created_month, instance_id, host_id, metrics_path ORDER BY created_week DESC, created_at DESC)) = 1
 
@@ -71,6 +73,8 @@ SELECT
   is_paid_gmau,
   is_umau,
   clean_metrics_name,
-  SUM(monthly_metric_value) AS monthly_metric_value
+  SUM(monthly_metric_value) AS monthly_metric_value,
+  -- if several records and 1 has not timed out, then display FALSE
+  MIN(has_timed_out)        AS has_timed_out
 FROM monthly
 {{ dbt_utils.group_by(n=14)}}

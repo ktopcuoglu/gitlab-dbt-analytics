@@ -7,6 +7,9 @@ This macro returns a 1 if some value is greater than 0; otherwise, it returns a 
 This macro expects a timestamp or date column as an input. If a non-null value is inputted, the same value is returned. If a null value is inputted, a large date representing 'infinity' is returned. This is useful for writing `BETWEEN` clauses using date columns that are sometimes NULL.
 {% enddocs %}
 
+{% docs convert_variant_to_boolean_field %}
+This macro takes in either a variant or varchar field, converts it to a varchar field and then to a boolean field with lower case values. 
+{% enddocs %}
 
 {% docs create_snapshot_base %}
 This macro creates a base model for dbt snapshots. A single entry is generated from the chosen start date through the current date for the specified primary key(s) and unit of time.
@@ -58,6 +61,10 @@ This is the GitLab overwrite for the dbt internal macro. See our [dbt guide](htt
 This creates a conformed date_id for use in with the date dimension in common. This macro should always be used when the output for a column is meant to join with date_id in the date dimension. This macro does not include an alias so an alias must always be applied. 
 {% enddocs %}
 
+{% docs get_date_pt_id %}
+The same as get_date_id, but includes a conversion to the Pacific timezone for use in facts. 
+{% enddocs %}
+
 {% docs get_keyed_nulls %}
 
 This macro generates a key for facts with missing dimensions so when the fact table is joined to the dimension it joins to a record that says it's unknown as in
@@ -83,16 +90,52 @@ Generally this should be used when creating and keying on new dimensions that mi
 This macro calculates differences for each consecutive usage ping by uuid.
 {% enddocs %}
 
+{% docs hash_diff %}
+
+Built for use in data pumps this macro is inserted at the end of the model, before the `dbt_audit` macro and adds two columns to the model. 
+
+1. `prev_hash` - the hashed value from designated columns using `dbt_utils.surrogate_key()` from the last dbt run
+2. `last_changed` - the timestamp of the last dbt run where the new hashed values didn't match the previous hashed values
+
+In order to do this it requires three arguments
+
+1. the source cte name
+2. a cte name to return (usually to use in the `dbt_audit macro`)
+3. a **list** of columns to hash and compare for changes
+
+Example: 
+
+```sql
+WITH my_cte AS (...)
+{% raw %}
+{{ hash_diff(
+  cte_ref="my_cte",
+  return_cte="final",
+  columns=[
+    'col1',
+    'col2',
+    'col3'
+    ]
+) }}
+{% endraw %}
+```
+
+In the above example this macro would query the `test_data` cte in the referencing model, create and compare a hash for `col1`, `col2`, and `col3`, and name the resulting cte `final` for reference in the `dbt_audit` macro.
+
+{% enddocs %}
+
 
 {% docs monthly_is_used %}
 This macro includes the total counts for a given feature's usage cumulatively.
 {% enddocs %}
 
+{% docs null_negative_numbers %}
+This macro takes in either a number or varchar field, converts it to a number, and then NULLs out the value if it is less than zero or shows the original value if it is greater than zero. 
+{% enddocs %}
 
 {% docs query_comment %}
 Defines the format for how comments are added to queries. See [dbt documentation](https://docs.getdbt.com/docs/building-a-dbt-project/dbt-projects/configuring-query-comments/).
 {% enddocs %}
-
 
 {% docs scd_type_2 %}
 This macro inserts SQL statements that turn the inputted CTE into a [type 2 slowly changing dimension model](https://en.wikipedia.org/wiki/Slowly_changing_dimension#Type_2:_add_new_row). According to [Orcale](https://www.oracle.com/webfolder/technetwork/tutorials/obe/db/10g/r2/owb/owb10gr2_gs/owb/lesson3/slowlychangingdimensions.htm), "a Type 2 SCD retains the full history of values. When the value of a chosen attribute changes, the current record is closed. A new record is created with the changed data values and this new record becomes the current record. Each record contains the effective time and expiration time to identify the time period between which the record was active."
