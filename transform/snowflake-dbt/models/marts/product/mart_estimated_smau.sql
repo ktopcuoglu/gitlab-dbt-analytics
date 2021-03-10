@@ -49,10 +49,11 @@ WITh estimated_value AS (
       COALESCE(estimated_value.pct_subscriptions_with_counters, 1) AS pct_subscriptions_with_counters
     FROM smau
     LEFT JOIN estimated_value
-      ON smau.created_month  = estimated_value.reporting_month
-        AND estimated_value.is_smau 
-        AND smau.stage_name = estimated_value.stage_name AND smau.section_name = estimated_value.section_name
-        AND ping_source = 'Self-Managed'
+      ON estimated_value.is_smau
+        AND smau.ping_source = 'Self-Managed'
+        AND smau.created_month  = estimated_value.reporting_month
+        AND smau.stage_name = estimated_value.stage_name 
+        AND smau.section_name = estimated_value.section_name
         AND smau.edition = estimated_value.edition
   
 ), estimated_monthly_metric_value_sum AS (
@@ -67,7 +68,7 @@ WITh estimated_value AS (
       IFF(delivery='SaaS', delivery, product_tier)                         AS product_tier,
       IFF(delivery='SaaS', delivery, edition)                              AS edition,
       'version'       AS data_source,
-      SUM(monthly_metric_value_sum)                                        AS monthly_metric_value_sum,
+      SUM(monthly_metric_value_sum)                                        AS recorded_monthly_metric_value_sum,
       SUM(monthly_metric_value_sum) / MAX(pct_subscriptions_with_counters) AS estimated_monthly_metric_value_sum
     FROM smau_joined
     WHERE is_smau
@@ -75,34 +76,36 @@ WITh estimated_value AS (
 
 ), combined AS (
 
-SELECT
-  reporting_month,
-  section_name,
-  stage_name,
-  group_name,
-  product_tier,
-  IFF(delivery = 'Self-Managed', 'Recorded Self-Managed', delivery) AS breakdown,
-  delivery,
-  edition,
-  SUM(monthly_metric_value_sum)  AS mau_value
-FROM estimated_monthly_metric_value_sum
-GROUP BY 1,2,3,4,5,6,7,8
+    SELECT
+      reporting_month,
+      section_name,
+      stage_name,
+      group_name,
+      product_tier,
+      IFF(delivery = 'Self-Managed', 'Recorded Self-Managed', delivery) AS breakdown,
+      delivery,
+      edition,
+      SUM(recorded_monthly_metric_value_sum)                            AS recorded_monthly_metric_value_sum,
+      SUM(estimated_monthly_metric_value_sum)                           AS estimated_monthly_metric_value_sum
+    FROM estimated_monthly_metric_value_sum
+    GROUP BY 1,2,3,4,5,6,7,8
 
-UNION 
+    UNION 
 
-SELECT
-  reporting_month,
-  section_name,
-  stage_name,
-  group_name,
-  product_tier,
-  'Estimated Self-Managed Uplift' AS breakdown,
-  delivery,
-  edition,
-  SUM(estimated_monthly_metric_value_sum - monthly_metric_value_sum) AS mau_value
-FROM estimated_monthly_metric_value_sum
-WHERE delivery = 'Self-Managed'
-GROUP BY 1,2,3,4,5,6,7,8
+    SELECT
+      reporting_month,
+      section_name,
+      stage_name,
+      group_name,
+      product_tier,
+      'Estimated Self-Managed Uplift' AS breakdown,
+      delivery,
+      edition,
+      0                                                                           AS recorded_monthly_metric_value_sum,
+      SUM(estimated_monthly_metric_value_sum - recorded_monthly_metric_value_sum) AS estimated_monthly_metric_value_sum
+    FROM estimated_monthly_metric_value_sum
+    WHERE delivery = 'Self-Managed'
+    GROUP BY 1,2,3,4,5,6,7,8
   
 )
 
