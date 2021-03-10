@@ -90,6 +90,8 @@ WITH namespace AS (
       subscription.subscription_name_slugify,
       subscription.dim_billing_account_id,
       subscription.dim_crm_account_id,
+      subscription.subscription_start_date,
+      subscription.subscription_end_date,
       COUNT(*) OVER (PARTITION BY subscription.dim_subscription_id) AS count_of_tiers_per_subscription
     FROM subscription
     INNER JOIN current_recurring
@@ -181,6 +183,8 @@ WITH namespace AS (
       active_subscription_list.dim_crm_account_id,
       active_subscription_list.count_of_tiers_per_subscription,
       active_subscription_list.product_rate_plan_id_subscription,
+      active_subscription_list.subscription_start_date,
+      active_subscription_list.subscription_end_date,
       CASE
         WHEN active_namespace_list.product_tier_name_namespace = 'SaaS - Free'
           THEN 'N/A Free'
@@ -233,7 +237,7 @@ WITH namespace AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@ischweickartDD",
-    updated_by="@ischweickartDD",
+    updated_by="@trevor31",
     created_date="2021-01-14",
-    updated_date="2021-02-02"
+    updated_date="2021-03-10"
 ) }}

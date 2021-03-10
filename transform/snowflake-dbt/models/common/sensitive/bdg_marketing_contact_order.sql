@@ -51,6 +51,30 @@ WITH marketing_contact AS (
       END                                                                                     AS is_group_namespace,
       marketing_contact_role.customer_db_customer_id                                          AS customer_id,
       marketing_contact_role.zuora_billing_account_id                                         AS dim_billing_account_id,
+      CASE
+        WHEN saas_namespace.dim_namespace_id IS NOT NULL
+          THEN saas_namespace.subscription_start_date
+        WHEN saas_customer.dim_namespace_id IS NOT NULL
+          THEN saas_customer.subscription_start_date
+        WHEN saas_billing_account.dim_namespace_id IS NOT NULL
+          THEN saas_billing_account.subscription_start_date
+        WHEN self_managed_customer.customer_id IS NOT NULL
+          THEN self_managed_customer.subscription_start_date
+        WHEN self_managed_billing_account.customer_id IS NOT NULL
+          THEN self_managed_billing_account.subscription_start_date
+      END                                                                                     AS subscription_start_date,
+      CASE
+        WHEN saas_namespace.dim_namespace_id IS NOT NULL
+          THEN saas_namespace.subscription_end_date
+        WHEN saas_customer.dim_namespace_id IS NOT NULL
+          THEN saas_customer.subscription_end_date
+        WHEN saas_billing_account.dim_namespace_id IS NOT NULL
+          THEN saas_billing_account.subscription_end_date
+        WHEN self_managed_customer.customer_id IS NOT NULL
+          THEN self_managed_customer.subscription_end_date
+        WHEN self_managed_billing_account.customer_id IS NOT NULL
+          THEN self_managed_billing_account.subscription_end_date
+      END                                                                                     AS subscription_end_date,
       CASE 
         WHEN marketing_contact_role.namespace_id IS NOT NULL 
           AND saas_namespace.product_tier_name_namespace is NULL
@@ -146,5 +170,5 @@ WITH marketing_contact AS (
     created_by="@trevor31",
     updated_by="@trevor31",
     created_date="2021-02-04",
-    updated_date="2021-02-24"
+    updated_date="2021-03-10"
 ) }}
