@@ -37,7 +37,7 @@ Goal: To help bring you, our new data team member, up to speed in the GitLab Dat
 - [ ] Manager: Add to `gitlab-analytics` GCP group
     - [ ] Manager: Provision service account credentials in GCP
 - [ ] Manager: Add to Stitch
-- [ ] Manager: Add to Fivetran
+- [ ] Manager: Add to Fivetran.(For enabling Fivetran in Okta a new process for provisioning apps has been introduced ,which involve adding the new users to the google-group okta-fivetran-users in order for them to get access to the application through Okta) 
 - [ ] Manager: Add to Airflow as Admin
 
 ## WELCOME TO THE TEAM! WE'RE SO EXCITED TO HAVE YOU!!!
