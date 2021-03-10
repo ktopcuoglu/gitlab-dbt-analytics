@@ -32,7 +32,6 @@ WITH data AS (
       is_umau,
       clean_metrics_name,
       time_period,
-      IFNULL(metric_value,0) AS weekly_metrics_value
       IFNULL(metric_value,0) AS weekly_metrics_value,
       has_timed_out
     FROM data
@@ -79,8 +78,7 @@ SELECT
   clean_metrics_name,
   time_period,
   SUM(monthly_metric_value)   AS monthly_metric_value,
-  SUM(original_metric_value)  AS original_metric_value 
-  SUM(monthly_metric_value) AS monthly_metric_value,
+  SUM(original_metric_value)  AS original_metric_value,
   -- if several records and 1 has not timed out, then display FALSE
   MIN(has_timed_out)        AS has_timed_out
 FROM monthly
