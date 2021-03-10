@@ -80,6 +80,14 @@ def load_incremental(
         else:
             logging.info(f"Replication is good at {replication_timestamp}")
 
+        append_to_xcom_file(
+            {
+                "max_data_available": min(
+                    replication_timestamp, execution_date
+                ).strftime("%Y-%m-%dT%H:%M:%S%z")
+            }
+        )
+
     # If _TEMP exists in the table name, skip it because it needs a full sync
     # If a temp table exists then it needs to finish syncing so don't load incrementally
     if "_TEMP" == table_name[-5:] or target_engine.has_table(f"{table_name}_TEMP"):

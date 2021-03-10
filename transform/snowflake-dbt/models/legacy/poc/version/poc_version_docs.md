@@ -25,7 +25,7 @@ Union of models `monthly_usage_data_28_days` and `monthly_usage_data_all_time`
 {% enddocs %}
 
 
-{% docs usage_data_28_days_flattened %}
+{% docs prep_usage_data_28_days_flattened %}
 
 The granularity of this model is one row per tuple (metric_name, instance_id).
 
@@ -79,7 +79,7 @@ into this table:
 
 {% enddocs %}
 
-{% docs usage_data_all_time_flattened %}
+{% docs prep_usage_data_all_time_flattened %}
 
 The granularity of this model is one row per tuple (metric_name, instance_id).
 
