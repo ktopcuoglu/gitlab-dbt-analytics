@@ -370,7 +370,7 @@ for source_name, config in config_dict.items():
                     **config["env_vars"],
                     "TASK_INSTANCE": "{{ task_instance_key_str }}",
                     "LAST_LOADED": "{{{{ task_instance.xcom_pull('{}', include_prior_dates=True)['max_data_available'] }}}}".format(
-                        task_identifier
+                        task_identifier + "-pgp-extract"
                     ),
                 },
                 affinity=get_affinity(False),
