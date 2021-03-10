@@ -109,6 +109,11 @@ databases:
     - trevorromero_prep:
         shared: no
 
+    - tullylanterdd_prod:
+        shared: no
+    - tullylanterdd_prep:
+        shared: no
+
     - tmurphy_prod:
         shared: no
     - tmurphy_prep:
@@ -2789,6 +2794,43 @@ roles:
                     - testing_db.*.*
                 write:
                     - testing_db.*.*
+    - tullylanterdd:
+        member_of:
+            - decisive_data
+        warehouses:
+            - analyst_xs
+        owns:
+            databases:
+                - michellecooper_prep
+                - michellecooper_prod
+            schemas:
+                - michellecooper_prep.*
+                - michellecooper_prod.*
+            tables:
+                - michellecooper_prep.*.*
+                - michellecooper_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - michellecooper_prep
+                    - michellecooper_prod
+                write:
+                    - michellecooper_prep
+                    - michellecooper_prod
+            schemas:
+                read:
+                    - michellecooper_prep.*
+                    - michellecooper_prod.*
+                write:
+                    - michellecooper_prep.*
+                    - michellecooper_prod.*
+            tables:
+                read:
+                    - michellecooper_prep.*.*
+                    - michellecooper_prod.*.*
+                write:
+                    - michellecooper_prep.*.*
+                    - michellecooper_prod.*.*
 
     - tmurphy:
         member_of:
@@ -3419,6 +3461,11 @@ users:
         can_login: yes
         member_of:
             - target_snowflake
+
+    - tullylanterdd:
+        can_login: yes
+        member_of:
+            - tullylanterdd
 
     - tlapiana:
         can_login: no
