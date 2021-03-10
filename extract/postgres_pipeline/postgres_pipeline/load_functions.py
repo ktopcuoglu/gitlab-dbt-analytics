@@ -40,11 +40,7 @@ def load_incremental(
     """
 
     raw_query = table_dict["import_query"]
-    additional_filter = table_dict.get("additional_filtering", "")
-    if "{EXECUTION_DATE}" not in raw_query:
-        logging.info(f"Table {source_table_name} does not need incremental processing.")
-        return False
-    
+    additional_filter = table_dict.get("additional_filtering", "")    
 
     env = os.environ.copy()
 

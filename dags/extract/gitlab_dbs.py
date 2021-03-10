@@ -343,7 +343,7 @@ for source_name, config in config_dict.items():
         manifest = extract_manifest(file_path)
         table_list = extract_table_list_from_manifest(manifest)
         for table in table_list:
-            # tables without execution_date in the query won't be processed incrementally
+            # tables that aren't incremental won't be processed by the incremental dag
             if not is_incremental(manifest["tables"][table]["import_query"]):
                 continue
 
