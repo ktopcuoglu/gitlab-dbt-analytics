@@ -27,6 +27,11 @@ databases:
     - dtownsend_prep:
         shared: no
 
+    - dvanrooijen_prod:
+        shared: no
+    - dvanrooijen_prep:
+        shared: no
+
     - ianschweickart_prod:
         shared: no
     - ianschweickart_prep:
@@ -1849,6 +1854,45 @@ roles:
                     - dtownsend_prep.*.*
                     - dtownsend_prod.*.*
 
+    - dvanrooijen:
+        member_of:
+            - analyst_core
+            - data_manager
+        warehouses:
+            - analyst_xs
+        owns:
+            databases:
+                - dvanrooijen_prep
+                - dvanrooijen_prod
+            schemas:
+                - dvanrooijen_prep.*
+                - dvanrooijen_prod.*
+            tables:
+                - dvanrooijen_prep.*.*
+                - dvanrooijen_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - rdvanrooijen_prep
+                    - rdvanrooijen_prod
+                write:
+                    - dvanrooijen_prep
+                    - dvanrooijen_prod
+            schemas:
+                read:
+                    - dvanrooijen_prep.*
+                    - dvanrooijen_prod.*
+                write:
+                    - dvanrooijen_prep.*
+                    - dvanrooijen_prod.*
+            tables:
+                read:
+                    - dvanrooijen_prep.*.*
+                    - dvanrooijen_prod.*.*
+                write:
+                    - dvanrooijen_prep.*.*
+                    - dvanrooijen_prod.*.*
+
     - eburke:
         member_of: []
         warehouses: []
@@ -3100,6 +3144,12 @@ users:
         can_login: yes
         member_of:
             - dtownsend
+
+    - dvanrooijen:
+        can_login: yes
+        member_of:
+            - dvanrooijen
+            - accountadmin
 
     - eburke:
         can_login: no
