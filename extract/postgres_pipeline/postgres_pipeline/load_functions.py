@@ -2,7 +2,7 @@ import datetime
 import logging
 import os
 import sys
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 
 from gitlabdata.orchestration_utils import (
     snowflake_engine_factory,
@@ -20,7 +20,7 @@ from utils import (
 )
 
 
-def get_last_load_time() -> datetime:
+def get_last_load_time() -> Optional[datetime.datetime]:
     last_load_tstamp = os.environ["LAST_LOADED"]
     if last_load_tstamp != "":
         return datetime.datetime.strptime(last_load_tstamp, "%Y-%m-%dT%H:%M:%S%z")
