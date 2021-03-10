@@ -62,7 +62,7 @@ WITH usage_data AS (
 ), unpacked AS (
 
     SELECT
-      {{ dbt_utils.star(from=ref('version_usage_data'), except=["STATS_USED"]) }},
+      {{ dbt_utils.star(from=ref('version_usage_data'), except=["STATS_USED", "COUNTS", "USAGE_ACTIVITY_BY_STAGE", "USAGE_ACTIVITY_BY_STAGE_MONTHLY"]) }},
       CASE
         WHEN uuid = 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f' THEN 'SaaS'
         ELSE 'Self-Managed'
@@ -120,7 +120,7 @@ WITH usage_data AS (
         {{ "," if not loop.last }}
       {% endfor %}
     FROM unpacked
-    {{ dbt_utils.group_by(n=74) }}
+    {{ dbt_utils.group_by(n=71) }}
 
 
 )
