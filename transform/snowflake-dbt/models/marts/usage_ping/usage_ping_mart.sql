@@ -51,15 +51,15 @@ WITH dim_billing_account AS (
 
     SELECT
       fct_usage_ping_payloads.*,
-      dim_crm_account.crm_account_id,
+      dim_crm_account.dim_crm_account_id,
       dim_crm_account.crm_account_name,
       dim_crm_account.crm_account_billing_country,
-      dim_crm_account.ultimate_parent_account_id,
-      dim_crm_account.ultimate_parent_account_segment,
-      dim_crm_account.ultimate_parent_billing_country,
-      dim_crm_account.ultimate_parent_industry,
-      dim_crm_account.ultimate_parent_account_owner_team,
-      dim_crm_account.ultimate_parent_territory,
+      dim_crm_account.dim_parent_crm_account_id,
+      dim_crm_account.parent_crm_account_sales_segment,
+      dim_crm_account.parent_crm_account_billing_country,
+      dim_crm_account.parent_crm_account_industry,
+      dim_crm_account.parent_crm_account_owner_team,
+      dim_crm_account.parent_crm_account_sales_territory,
       dim_date.date_actual,
       dim_date.first_day_of_month,
       dim_date.fiscal_quarter_name_fy,
@@ -71,7 +71,7 @@ WITH dim_billing_account AS (
     LEFT JOIN dim_billing_account
       ON fct_usage_ping_payloads.account_id = dim_billing_account.dim_billing_account_id
     LEFT JOIN dim_crm_account
-      ON dim_billing_account.dim_crm_account_id = dim_crm_account.crm_account_id
+      ON dim_billing_account.dim_crm_account_id = dim_crm_account.dim_crm_account_id
     LEFT JOIN dim_date
       ON fct_usage_ping_payloads.date_id = dim_date.date_id
     LEFT JOIN dim_location
@@ -106,15 +106,15 @@ WITH dim_billing_account AS (
 
       -- customer info
       account_id,
-      crm_account_id,
+      dim_crm_account_id,
       crm_account_name,
       crm_account_billing_country,
-      ultimate_parent_account_id,
-      ultimate_parent_billing_country,
-      ultimate_parent_industry,
-      ultimate_parent_account_owner_team,
-      ultimate_parent_account_segment,
-      ultimate_parent_territory,
+      dim_parent_crm_account_id,
+      parent_crm_account_billing_country,
+      parent_crm_account_industry,
+      parent_crm_account_owner_team,
+      parent_crm_account_sales_segment,
+      parent_crm_account_sales_territory,
 
       -- product info
       license_md5,

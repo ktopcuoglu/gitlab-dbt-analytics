@@ -89,8 +89,7 @@ WITH paid_subscriptions_monthly_usage_ping_optin AS (
     
     SELECT DISTINCT first_day_of_month AS reporting_month
     FROM {{ ref('date_details') }}
-    WHERE first_day_of_month < CURRENT_DATE
-      AND first_day_of_month >= '2018-01-01'
+    WHERE first_day_of_month >= '2018-01-01'
 
 ), date_joined AS (
   
@@ -114,7 +113,6 @@ WITH paid_subscriptions_monthly_usage_ping_optin AS (
       ON date_spine.reporting_month = monthly_subscription_optin_counts.reporting_month
         AND (counter_data.major_version < monthly_subscription_optin_counts.major_version OR
         (counter_data.major_version = monthly_subscription_optin_counts.major_version AND counter_data.minor_version <= monthly_subscription_optin_counts.minor_version))
-    WHERE date_spine.reporting_month < DATE_TRUNC('month', CURRENT_DATE)
     {{ dbt_utils.group_by(n=11) }}
   
 )

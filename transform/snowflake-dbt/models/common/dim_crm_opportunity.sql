@@ -67,6 +67,7 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity.partner_initiated_opportunity,
       sfdc_opportunity.user_segment,
       sfdc_opportunity.order_type_stamped               AS order_type,
+      sfdc_opportunity.opportunity_category,
       sfdc_opportunity.opportunity_health,
       sfdc_opportunity.risk_type,
       sfdc_opportunity.risk_reasons,

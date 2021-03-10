@@ -11,7 +11,12 @@ WITH marketing_contact AS (
 ), namespace_lineage AS (
     
     SELECT *
-    FROM {{ref('gitlab_dotcom_namespace_lineage')}}
+    FROM {{ref('prep_namespace')}}
+
+), gitlab_namespaces AS (
+
+    SELECT *
+    FROM {{ ref('gitlab_dotcom_namespaces_source') }}
 
 ), saas_namespace_subscription AS (
     
@@ -25,19 +30,31 @@ WITH marketing_contact AS (
 
 ), final AS (
 
-    SELECT DISTINCT 
+     SELECT   
       marketing_contact.dim_marketing_contact_id,
-      marketing_contact.email_address,
-      marketing_contact_role.namespace_id,    
+      marketing_contact_role.marketing_contact_role,
+      marketing_contact.email_address, 
+      COALESCE(marketing_contact_role.namespace_id, 
+               saas_namespace.dim_namespace_id, 
+               saas_customer.dim_namespace_id, 
+               saas_billing_account.dim_namespace_id)                                         AS dim_namespace_id,
+      gitlab_namespaces.namespace_path,
       CASE 
-        WHEN saas_namespace.namespace_type = 'Individual' 
+        WHEN namespace_lineage.namespace_type = 'Individual' 
           THEN 1 
         ELSE 0 
-      END                                                                                     AS is_individual,
-      marketing_contact_role.customer_db_customer_id                                          AS customer_id,
-      marketing_contact_role.zuora_billing_contact_id                                         AS zuora_contact_id,
-      marketing_contact_role.zuora_subscription_id                                            AS dim_subscription_id,
+      END                                                                                     AS is_individual_namespace,
       CASE 
+        WHEN namespace_lineage.namespace_type = 'Group' 
+          THEN 1 
+        ELSE 0 
+      END                                                                                     AS is_group_namespace,
+      marketing_contact_role.customer_db_customer_id                                          AS customer_id,
+      marketing_contact_role.zuora_billing_account_id                                         AS dim_billing_account_id,
+      CASE 
+        WHEN marketing_contact_role.namespace_id IS NOT NULL 
+          AND saas_namespace.product_tier_name_namespace is NULL
+          THEN 'SaaS - Free' 
         WHEN marketing_contact_role.marketing_contact_role IN (
                                                                 'Personal Namespace Owner'
                                                                 , 'Group Namespace Owner'
@@ -47,7 +64,7 @@ WITH marketing_contact AS (
         WHEN marketing_contact_role.marketing_contact_role IN (
                                                                 'Customer DB Owner'
                                                               ) 
-          THEN saas_customer.product_tier_name_order   
+          THEN saas_customer.product_tier_name_with_trial   
         WHEN marketing_contact_role.marketing_contact_role IN (
                                                                 'Zuora Billing Contact'
                                                               ) 
@@ -57,7 +74,7 @@ WITH marketing_contact AS (
         WHEN marketing_contact_role.marketing_contact_role IN (
                                                                 'Customer DB Owner'
                                                               ) 
-          THEN self_managed_customer.product_tier_name_order   
+          THEN self_managed_customer.product_tier_name_with_trial   
         WHEN marketing_contact_role.marketing_contact_role IN (
                                                                 'Zuora Billing Contact'
                                                               ) 
@@ -72,13 +89,6 @@ WITH marketing_contact AS (
       CURRENT_DATE - CAST(saas_namespace.saas_trial_expired_on AS DATE)                       AS days_since_saas_trial_ended,    
       CASE 
         WHEN saas_product_tier = 'SaaS - Free' 
-          OR (marketing_contact_role.namespace_id IS NOT NULL 
-            AND IFNULL(saas_product_tier, '') NOT IN (
-                                                      'SaaS - Bronze'
-                                                      , 'SaaS - Premium'
-                                                      , 'SaaS - Ultimate'
-                                                     )
-             ) 
           THEN 1
         ELSE 0
       END                                                                                     AS is_saas_free_tier,
@@ -115,19 +125,26 @@ WITH marketing_contact AS (
     LEFT JOIN saas_namespace_subscription saas_customer 
       ON saas_customer.customer_id = marketing_contact_role.customer_db_customer_id
     LEFT JOIN saas_namespace_subscription saas_billing_account 
-      ON saas_billing_account.dim_billing_account_id = marketing_contact_role.zuora_billing_contact_id   
+      ON saas_billing_account.dim_billing_account_id = marketing_contact_role.zuora_billing_account_id   
     LEFT JOIN self_managed_namespace_subscription self_managed_customer 
       ON self_managed_customer.customer_id = marketing_contact_role.customer_db_customer_id
     LEFT JOIN self_managed_namespace_subscription self_managed_billing_account 
-      ON self_managed_billing_account.dim_billing_account_id = marketing_contact_role.zuora_billing_contact_id   
+      ON self_managed_billing_account.dim_billing_account_id = marketing_contact_role.zuora_billing_account_id   
     LEFT JOIN namespace_lineage 
-      ON namespace_lineage.namespace_id = marketing_contact_role.namespace_id
-    )           
+      ON namespace_lineage.namespace_id = COALESCE(marketing_contact_role.namespace_id,
+                                                   saas_namespace.dim_namespace_id,
+                                                   saas_customer.dim_namespace_id,
+                                                   saas_billing_account.dim_namespace_id)
+    left join gitlab_namespaces 
+      ON gitlab_namespaces.namespace_id = namespace_lineage.namespace_id
+      
+    )    
+    
 
 {{ dbt_audit(
     cte_ref="final",
     created_by="@trevor31",
     updated_by="@trevor31",
     created_date="2021-02-04",
-    updated_date="2021-02-08"
+    updated_date="2021-02-24"
 ) }}

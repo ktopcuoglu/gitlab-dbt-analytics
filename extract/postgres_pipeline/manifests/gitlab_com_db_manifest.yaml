@@ -61,22 +61,6 @@ tables:
       FROM alert_management_http_integrations
       WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
         AND '{EXECUTION_DATE}'::timestamp
-  alerts_service_data:
-    dbt_source_model: true
-    export_schema: 'gitlab_dotcom'
-    export_table: 'alerts_service_data'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , service_id
-      , created_at
-      , updated_at
-      , encrypted_token
-      , encrypted_token_iv
-      FROM alerts_service_data
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
   analytics_cycle_analytics_group_stages:
     export_schema: "gitlab_com"
     export_table: analytics_cycle_analytics_group_stages
@@ -734,8 +718,6 @@ tables:
       , subnet_ids
       , security_group_id
       , instance_type
-      , access_key_id
-      , session_token
       , status_reason
       , kubernetes_version
       FROM cluster_providers_aws
@@ -783,6 +765,11 @@ tables:
       , cluster_type
       , domain
       , managed
+      , namespace_per_environment
+      , management_project_id
+      , cleanup_status
+      , cleanup_status_reason
+      , helm_major_version
       FROM clusters
       WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
         AND '{EXECUTION_DATE}'::timestamp
@@ -1498,6 +1485,7 @@ tables:
       , duplicated_to_id
       , promoted_to_epic_id
       , sprint_id
+      , health_status
       FROM issues
       WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
         AND '{EXECUTION_DATE}'::timestamp
@@ -1632,6 +1620,7 @@ tables:
       , created_at
       , updated_at
       , template
+      , description
       , type
       , group_id
       FROM labels
@@ -1888,20 +1877,6 @@ tables:
       FROM milestones
       WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
         AND '{EXECUTION_DATE}'::timestamp
-  namespace_onboarding_actions:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'namespace_onboarding_actions'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , namespace_id
-      , created_at
-      , action
-      FROM namespace_onboarding_actions
-      WHERE created_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
   namespace_root_storage_statistics:
     dbt_snapshots: true
     dbt_source_model: true
@@ -2051,6 +2026,34 @@ tables:
       , created_at
       , scopes
       FROM oauth_access_tokens
+  onboarding_progresses:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'onboarding_progresses'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , namespace_id
+      , created_at
+      , updated_at
+      , git_pull_at
+      , git_write_at
+      , merge_request_created_at
+      , pipeline_created_at
+      , user_added_at
+      , trial_started_at
+      , subscription_created_at
+      , required_mr_approvals_enabled_at
+      , code_owners_enabled_at
+      , scoped_label_created_at
+      , security_scan_enabled_at
+      , issue_auto_closed_at
+      , repository_imported_at
+      , repository_mirrored_at
+      FROM onboarding_progresses
+      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
+        AND '{EXECUTION_DATE}'::timestamp
   operations_feature_flags:
     export_schema: "gitlab_com"
     export_table: operations_feature_flags
@@ -2835,6 +2838,9 @@ tables:
       , confidential_note_events
       , deployment_events
       , comment_on_event_enabled
+      , group_id
+      , inherit_from_id
+      , instance
       FROM services
       WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
         AND '{EXECUTION_DATE}'::timestamp

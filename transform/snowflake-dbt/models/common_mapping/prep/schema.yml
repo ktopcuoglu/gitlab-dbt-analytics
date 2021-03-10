@@ -4,34 +4,77 @@ models:
   - name: prep_sfdc_account
     description: '{{ doc("prep_sfdc_account") }}'
     columns:
-      - name: crm_account_id
+      - name: dim_crm_account_id
         description: CRM Account ID provided by Salesforce
         tests:
           - not_null
-      - name: tsp_sub_region_clean
-        description: Sales sub region, temp cleaning column
-      - name: tsp_region_clean
-        description: Sales region, temp cleaning column
-      - name: tsp_area_clean
-        description: Sales area, temp cleaning column
-      - name: tsp_territory_clean
-        description: Sales territory, temp cleaning column
-      - name: df_industry_clean
-        description: Industry, temp cleaning column
-      - name: ultimate_parent_sales_segment_clean
-        description: Ultimate parent sales segment, temp cleaning column
-      - name: dim_geo_area_name_source
+      - name: dim_parent_crm_account_id
+        description: Ulimate parent CRM Account ID provided by Salesforce
+      - name: account_tsp_region_clean
+        description: Sales region, temp cleaning column for account
+      - name: parent_tsp_region_clean
+        description: Sales region, temp cleaning column for parent
+      - name: account_tsp_sub_region_clean
+        description: Sales sub region, temp cleaning column for account
+      - name: parent_tsp_sub_region_clean
+        description: Sales sub region, temp cleaning column for parent
+      - name: account_tsp_area_clean
+        description: Sales area, temp cleaning column for account
+      - name: parent_tsp_area_clean
+        description: Sales area, temp cleaning column for parent
+      - name: account_tsp_territory_clean
+        description: Sales territory, temp cleaning column for account
+      - name: parent_tsp_territory_clean
+        description: Sales territory, temp cleaning column for parent
+      - name: account_df_industry_clean
+        description: Industry, temp cleaning column for account
+      - name: parent_df_industry_clean
+        description: Industry, temp cleaning column for parent
+      - name: account_sales_segment_clean
         description: Dim geo area name final source column
-      - name: dim_geo_region_name_source
+      - name: parent_sales_segment_clean
+        description: Dim geo area name final source column
+      - name: account_billing_country_clean
+        description: Dim location country name final source column
+      - name: parent_billing_country_clean
+        description: Dim location country name final source column
+      - name: dim_account_geo_region_name_source
         description: Dim geo region name final source column
-      - name: dim_geo_sub_region_name_source
+      - name: dim_parent_geo_region_name_source
+        description: Dim geo region name final source column
+      - name: dim_account_geo_sub_region_name_source
         description: Dim geo sub region name final source column
-      - name: dim_sales_territory_name_source
+      - name: dim_parent_geo_sub_region_name_source
+        description: Dim geo sub region name final source column
+      - name: dim_account_geo_area_name_source
+        description: Dim geo area name final source column
+      - name: dim_parent_geo_area_name_source
+        description: Dim geo area name final source column
+      - name: dim_account_sales_territory_name_source
         description: Dim sales territory name final source column
-      - name: dim_industry_name_source
+      - name: dim_parent_sales_territory_name_source
+        description: Dim sales territory name final source column
+      - name: dim_account_industry_name_source
         description: Dim industry name final source column
-      - name: dim_sales_segment_name_source
+      - name: dim_parent_industry_name_source
+        description: Dim industry name final source column
+      - name: dim_account_sales_segment_name_source
         description: Dim sales segment name final source column
+      - name: dim_parent_sales_segment_name_source
+        description: Dim sales segment name final source column
+      - name: dim_account_location_country_name_source
+        description: Dim location country name final source column
+      - name: dim_parent_location_country_name_source
+        description: Dim location country name final source column
+
+  - name: prep_campaign
+    description: '{{ doc("prep_campaign") }}'
+    columns:
+      - name: dim_campaign_id
+        description: Unique identifier of a marketing campaign
+        tests:
+          - not_null
+          - unique
 
   - name: prep_crm_sales_hierarchy_live
     description: '{{ doc("prep_crm_sales_hierarchy_live") }}'
@@ -40,6 +83,9 @@ models:
         description: Unique identifier of a sales hierarchy tier
         tests:
           - not_null
+          - unique
+      - name: dim_crm_sales_hierarchy_sales_area_live_id
+        tests:
           - unique
 
   - name: prep_crm_sales_representative
@@ -96,6 +142,15 @@ models:
           - not_null
           - unique
 
+  - name: prep_location_country
+    description: '{{ doc("prep_location_country") }}'
+    columns:
+      - name: dim_location_country_id
+        description: Unique identifier of a country
+        tests:
+          - not_null
+          - unique
+
   - name: prep_location_region
     description: '{{ doc("prep_location_region") }}'
     columns:
@@ -105,11 +160,11 @@ models:
           - not_null
           - unique
 
-  - name: prep_marketing_channel
-    description: '{{ doc("prep_marketing_channel") }}'
+  - name: prep_bizible_marketing_channel_path
+    description: '{{ doc("prep_bizible_marketing_channel_path") }}'
     columns:
-      - name: dim_marketing_channel_id
-        description: Unique identifier of a marketing channel
+      - name: dim_bizible_marketing_channel_path_id
+        description: Unique identifier of a Bizible marketing channel path
         tests:
           - not_null
           - unique
@@ -165,7 +220,7 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: ['2', '3', '4', '34', '67', 'Trial']
+              values: [2, 3, 4, 34, 67, 100, 101]
         tags: ["tdf", "common", "gainsight"]
       - name: gitlab_plan_title
         description: Whether or not the namespace associated with the project is subscribed to a paid plan. This can be inherited from the namespace's ultimate parent.
@@ -183,11 +238,11 @@ models:
       - name: current_project_count
         description: The number of projects that are presently associated with the namespace.
 
-  - name: prep_opportunity_source
-    description: '{{ doc("prep_opportunity_source") }}'
+  - name: prep_sales_qualified_source
+    description: '{{ doc("prep_sales_qualified_source") }}'
     columns:
-      - name: dim_opportunity_source_id
-        description: Unique identifier of an opportunity source
+      - name: dim_sales_qualified_source_id
+        description: Unique identifier of a sales qualified opportunity source
         tests:
           - not_null
           - unique
@@ -201,14 +256,73 @@ models:
           - not_null
           - unique
 
-  - name: prep_purchase_channel
-    description: '{{ doc("prep_purchase_channel") }}'
+  - name: prep_deal_path
+    description: '{{ doc("prep_deal_path") }}'
     columns:
-      - name: dim_purchase_channel_id
-        description: Unique identifier of a purchase channel
+      - name: dim_deal_path_id
+        description: Unique identifier of a deal_path
         tests:
           - not_null
           - unique
+
+  - name: prep_recurring_charge_subscription_monthly
+    description: '{{ doc("prep_recurring_charge_subscription_monthly") }}'
+    columns:
+      - name: dim_subscription_id
+        description: Unique identifier of a version of a subscription
+        tests:
+          - not_null
+        tags: ["tdf", "common", "gainsight"]
+      - name: dim_subscription_id_original
+        description: Identifier of the original subscription in lineage of a given Subscription ID
+        tests:
+          - not_null
+        tags: ["tdf", "common", "gainsight"]
+      - name: dim_billing_account_id
+        description: ID of the Zuora account associated with a given Subscription ID
+        tests:
+          - not_null
+        description: Zuora account id
+      - name: dim_crm_account_id
+        description: Account ID from SFDC identifing the customer
+      - name: dim_date_id
+        description: The identifier of date month in dim_date
+        tests:
+          - not_null
+      - name: subscription_status
+        description: Status of the subscription
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Active', 'Cancelled', 'Draft', 'Expired']
+        tags: ["tdf", "common", "gainsight"]
+      - name: unit_of_measure
+      - name: total_mrr
+        description: Monthly Recurring Revenue value for given month for a given Subscription ID
+      - name: total_arr
+        description: Annual Recurring Revenue value for given month for a given Subscription ID
+      - name: total_quantity
+        description: Total quantity
+      - name: sm_mrr
+        description: Monthly Recurring Revenue value for given month from Self-Managed products
+      - name: sm_arr
+        description: Annual Recurring Revenue value for given month from Self-Managed products
+      - name: sm_quantity
+        description: Total quantity of Self-Managed products
+      - name: saas_mrr
+        description: Monthly Recurring Revenue value for given month from SaaS products
+      - name: saas_arr
+        description: Annual Recurring Revenue value for given month from SaaS products
+      - name: saas_quantity
+        description: Total quantity of SaaS products
+      - name: other_mrr
+        description: Monthly Recurring Revenue value for given month from products that are neither Self-Managed nor SaaS
+      - name: other_arr
+        description: Annual Recurring Revenue value for given month from products that are neither Self-Managed nor SaaS
+      - name: other_quantity
+        description: Total quantity of products that are neither Self-Managed nor SaaS
+      - name: is_latest_record_per_subscription
+        description: Flags if the row contains the most recent record received for the subscription.
 
   - name: prep_recurring_charge
     description: '{{ doc("prep_recurring_charge") }}'
@@ -312,6 +426,56 @@ models:
                   values: ['Sales-Assisted', 'Self-Service']
         tags: ["tdf"]
 
+  - name: prep_subscription_lineage
+    description:  '{{doc("prep_subscription_lineage")}}'
+    columns:
+        - name: subscription_name_slugify
+          tests:
+            - not_null
+            - unique
+        - name: lineage
+          description: "All the subscriptions subsquent to the primary subscription, separated by commas."
+
+  - name: prep_subscription_lineage_parentage_finish
+    description: '{{ doc("prep_subscription_lineage_parentage_finish") }}'
+    columns:
+        - name: ultimate_parent_sub
+          tests:
+            - not_null
+        - name: child_sub
+          tests:
+            - not_null
+            - unique
+        - name: cohort_month
+          tests:
+            - not_null
+        - name: cohort_quarter
+          tests:
+            - not_null
+        - name: cohort_year
+          tests:
+            - not_null
+  - name: prep_subscription_lineage_parentage_start
+    description: '{{doc("prep_subscription_lineage_parentage_start")}}'
+
+  - name: prep_subscription_lineage_intermediate
+    description: '{{ doc("prep_subscription_lineage_intermediate") }}'
+    columns:
+      - name: sub_row
+        tests:
+          - not_null
+          - accepted_values:
+              values: [ '1' ]
+      - name: subscription_id
+        tests:
+          - not_null
+          - unique
+      - name: subscription_status
+        tests:
+          - not_null
+          - accepted_values:
+              values: [ 'Active','Cancelled' ]
+
   - name: prep_product_tier
     description: '{{ doc("prep_product_tier") }}'
     columns:
@@ -330,7 +494,7 @@ models:
       - name: product_tier_historical_short
         description: Pulls the product tier from `product_tier_historical` with the delivery type removed
       - name: product_tier_name
-        description: Product [pricing tiers](https://about.gitlab.com/handbook/marketing/strategic-marketing/tiers/) for both SaaS and Self-Managed customers. Includes the mapping from SaaS - Silver to SaaS - Premium, and from SaaS - Gold to SaaS - Ultimate. 
+        description: Product [pricing tiers](https://about.gitlab.com/handbook/marketing/strategic-marketing/tiers/) for both SaaS and Self-Managed customers. Includes the mapping from SaaS - Silver to SaaS - Premium, and from SaaS - Gold to SaaS - Ultimate.
         tests:
           - not_null
         tags: ["tdf", "common", "gainsight"]

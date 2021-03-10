@@ -1,3 +1,8 @@
+{{config({
+    "schema": "legacy"
+  })
+}}
+
 WITH customers_db_license_seat_links AS (
 
     SELECT *

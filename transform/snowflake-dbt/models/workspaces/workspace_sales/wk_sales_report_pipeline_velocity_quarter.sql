@@ -1,20 +1,5 @@
 {{ config(alias='report_pipeline_velocity_quarter') }}
-WITH date_details AS (
-
-    SELECT
-      *,
-      90 - DATEDIFF(day, date_actual, last_day_of_fiscal_quarter)           AS day_of_fiscal_quarter_normalised,
-      12-floor((DATEDIFF(day, date_actual, last_day_of_fiscal_quarter)/7))  AS week_of_fiscal_quarter_normalised,
-      CASE 
-        WHEN ((DATEDIFF(day, date_actual, last_day_of_fiscal_quarter)-6) % 7 = 0 
-                OR date_actual = first_day_of_fiscal_quarter) 
-          THEN 1 
-          ELSE 0 
-      END                                                                   AS first_day_of_fiscal_quarter_week_normalised 
-    FROM {{ ref('date_details') }} 
-    ORDER BY 1 DESC
-
-), sfdc_opportunity_snapshot_history_xf AS (
+WITH sfdc_opportunity_snapshot_history_xf AS (
 
     SELECT *
     FROM {{ref('wk_sales_sfdc_opportunity_snapshot_history_xf')}}  
@@ -27,13 +12,21 @@ WITH date_details AS (
       snapshot_fiscal_quarter_date,
       snapshot_fiscal_year,
       snapshot_day_of_fiscal_quarter_normalised,
+      close_day_of_fiscal_quarter_normalised,
       close_fiscal_quarter_name,
       close_fiscal_quarter_date,
       close_fiscal_year,
-      opportunity_owner_user_segment                          AS cro_level,
+      sales_team_cro_level,
+      sales_team_rd_asm_level,
       order_type_stamped,
       stage_name_3plus,
       stage_name_4plus,
+      is_stage_1_plus,
+      is_stage_3_plus,
+      is_stage_4_plus,
+      is_open,
+      is_lost,
+      is_won,
       is_excluded_flag,
       stage_name,
       forecast_category_name,
@@ -49,7 +42,7 @@ WITH date_details AS (
       snapshot_date <= DATEADD(month,3,close_fiscal_quarter_date)
       -- 2 quarters before start
       AND snapshot_date >= DATEADD(month,-6,close_fiscal_quarter_date)
-    GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,12, 13, 14, 15
+    GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,12, 13, 14, 15, 16,17,18,19,20,21,22,23
 
 )
 

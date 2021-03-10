@@ -1,4 +1,9 @@
-WITH invoice AS (
+WITH crm_account AS (
+
+    SELECT *
+    FROM {{ ref('map_crm_account') }}
+
+), invoice AS (
 
     SELECT *
     FROM {{ ref('zuora_invoice_source') }}
@@ -53,16 +58,30 @@ WITH invoice AS (
 
       --relational keys
       quote.zqu__account                                                                            AS dim_crm_account_id,
+      crm_account.dim_parent_crm_account_id,
       quote.zqu__zuora_account_id                                                                   AS dim_billing_account_id,
       quote.zqu__zuora_subscription_id                                                              AS dim_subscription_id,
       opp.opportunity_id                                                                            AS dim_crm_opportunity_id,
       opp_relational_fields.dim_crm_sales_rep_id                                                    AS opp_dim_crm_sales_rep_id,
       opp_relational_fields.dim_order_type_id                                                       AS opp_dim_order_type_id,
-      opp_relational_fields.dim_opportunity_source_id                                               AS opp_dim_opportunity_source_id,
-      opp_relational_fields.dim_purchase_channel_id                                                 AS opp_dim_purchase_channel_id,
-      opp_relational_fields.dim_sales_segment_id                                                    AS opp_dim_sales_segment_id,
-      opp_relational_fields.dim_sales_territory_id                                                  AS opp_dim_sales_territory_id,
-      opp_relational_fields.dim_industry_id                                                         AS opp_dim_industry_id,
+      opp_relational_fields.dim_sales_qualified_source_id                                           AS opp_dim_sales_qualified_source_id,
+      opp_relational_fields.dim_deal_path_id                                                        AS opp_dim_deal_path_id,
+      crm_account.dim_parent_sales_segment_id,
+      crm_account.dim_parent_geo_region_id,
+      crm_account.dim_parent_geo_sub_region_id,
+      crm_account.dim_parent_geo_area_id,
+      crm_account.dim_parent_sales_territory_id,
+      crm_account.dim_parent_industry_id,
+      crm_account.dim_parent_location_country_id,
+      crm_account.dim_parent_location_region_id,
+      crm_account.dim_account_sales_segment_id,
+      crm_account.dim_account_geo_region_id,
+      crm_account.dim_account_geo_sub_region_id,
+      crm_account.dim_account_geo_area_id,
+      crm_account.dim_account_sales_territory_id,
+      crm_account.dim_account_industry_id,
+      crm_account.dim_account_location_country_id,
+      crm_account.dim_account_location_region_id,
       invoice.invoice_id                                                                            AS dim_invoice_id,
       rate_plan.zqu_subscription_rate_plan_zuora_id                                                 AS rate_plan_id,
       rate_plan.zqu_product_rate_plan_zuora_id                                                      AS product_rate_plan_id,
@@ -94,6 +113,8 @@ WITH invoice AS (
       ON  quote_amendment.zqu_quote_amendment_id = rate_plan.zqu_quote_amendment_id
     INNER JOIN rate_plan_charge
       ON rate_plan.zqu_quote_rate_plan_id = rate_plan_charge.zqu_quote_rate_plan_id
+    LEFT JOIN crm_account
+      ON quote.zqu__account = crm_account.dim_crm_account_id
 
 )
 
@@ -102,5 +123,5 @@ WITH invoice AS (
     created_by="@mcooperDD",
     updated_by="@mcooperDD",
     created_date="2021-01-12",
-    updated_date="2021-01-12"
+    updated_date="2021-02-26"
 ) }}

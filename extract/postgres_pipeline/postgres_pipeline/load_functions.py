@@ -141,13 +141,6 @@ def load_scd(
     Load tables that are slow-changing dimensions.
     """
 
-    raw_query = table_dict["import_query"]
-    additional_filter = table_dict.get("additional_filtering", "")
-    advanced_metadata = table_dict.get("advanced_metadata", False)
-    if "{EXECUTION_DATE}" in raw_query:
-        logging.info(f"Table {source_table_name} does not need SCD processing.")
-        return False
-
     # If the schema has changed for the SCD table, treat it like a backfill
     if "_TEMP" == table_name[-5:] or target_engine.has_table(f"{table_name}_TEMP"):
         logging.info(
@@ -157,8 +150,13 @@ def load_scd(
     else:
         backfill = False
 
+    raw_query = table_dict["import_query"]
+    additional_filter = table_dict.get("additional_filtering", "")
+    advanced_metadata = table_dict.get("advanced_metadata", False)
+
     logging.info(f"Processing table: {source_table_name}")
     query = f"{raw_query} {additional_filter}"
+
     logging.info(query)
     chunk_and_upload(
         query,

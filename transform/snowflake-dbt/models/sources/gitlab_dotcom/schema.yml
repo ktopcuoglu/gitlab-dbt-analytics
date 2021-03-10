@@ -25,22 +25,6 @@ models:
         tags: ["tdf","gitlab_dotcom"]
         tests:
           - not_null
-  - name: gitlab_dotcom_alerts_service_data_source
-    description: Base model for Gitlab.com alerts_service_data
-    columns:
-      - name: alerts_service_data_id
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-          - unique
-      - name: created_at
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-      - name: updated_at
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
   - name: gitlab_dotcom_application_settings_source
     description: Base model for Gitlab.com application settings data
     columns:
@@ -1242,20 +1226,6 @@ models:
         tests:
           - not_null
 
-
-  - name: gitlab_dotcom_namespace_onboarding_actions
-    description: Base model for Gitlab.com namespace onboarding actions
-    columns:
-      - name: namespace_onboarding_action_id
-        tags: ["tdf", "gitlab_dotcom"]
-        tests:
-          - not_null
-          - unique
-      - name: action_id
-        tags: ["tdf", "gitlab_dotcom"]
-        tests:
-          - not_null
-
   - name: gitlab_dotcom_namespace_statistics_source
     description: Base model for Gitlab.com namespace statistics
     columns:
@@ -1349,6 +1319,23 @@ models:
           - not_null
           - unique
 
+  - name: gitlab_dotcom_onboarding_progresses_source
+    description: >-
+      A base model for Gitlab.com onboarding_progresses.
+    columns:
+      - name: onboarding_progress_id
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+          - unique
+      - name: created_at
+        tags: ["tdf", "gitlab_dotcom"]
+        tests:
+          - not_null
+      - name: updated_at
+        tags: ["tdf", "gitlab_dotcom"]
+        tests:
+          - not_null
   - name: gitlab_dotcom_plans_source
     description: >-
       A base model for Gitlab.com plans.

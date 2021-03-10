@@ -13,9 +13,9 @@
       dim_date.date_actual                                                                          AS arr_month,
       IFF(is_first_day_of_last_month_of_fiscal_quarter, fiscal_quarter_name_fy, NULL)               AS fiscal_quarter_name_fy,
       IFF(is_first_day_of_last_month_of_fiscal_year, fiscal_year, NULL)                             AS fiscal_year,
-      dim_crm_account.ultimate_parent_account_name,
-      dim_crm_account.ultimate_parent_account_id,
-      COALESCE(dim_crm_account.merged_to_account_id, dim_crm_account.crm_account_id)                AS crm_id,
+      dim_crm_account.parent_crm_account_name,
+      dim_crm_account.dim_parent_crm_account_id,
+      COALESCE(dim_crm_account.merged_to_account_id, dim_crm_account.dim_crm_account_id)            AS dim_crm_account_id,
       dim_subscription.subscription_name,
       dim_subscription.dim_subscription_id                                                          AS subscription_id,
       dim_product_detail.product_tier_name                                                          AS product_category,
@@ -33,14 +33,14 @@
     INNER JOIN dim_date
       ON dim_date.date_id = fct_mrr.dim_date_id
     LEFT JOIN dim_crm_account
-      ON dim_billing_account.dim_crm_account_id = dim_crm_account.crm_account_id
+      ON dim_billing_account.dim_crm_account_id = dim_crm_account.dim_crm_account_id
 
 ), max_min_month AS (
 
     SELECT
-      ultimate_parent_account_name,
-      ultimate_parent_account_id,
-      crm_id,
+      parent_crm_account_name,
+      dim_parent_crm_account_id,
+      dim_crm_account_id,
       subscription_name,
       subscription_id,
       product_category,
@@ -55,9 +55,9 @@
 ), base AS (
 
     SELECT
-      ultimate_parent_account_name,
-      ultimate_parent_account_id,
-      crm_id,
+      parent_crm_account_name,
+      dim_parent_crm_account_id,
+      dim_crm_account_id,
       subscription_name,
       subscription_id,
       product_category,
@@ -78,9 +78,9 @@
 
     SELECT
       base.arr_month,
-      base.ultimate_parent_account_name,
-      base.ultimate_parent_account_id,
-      base.crm_id,
+      base.parent_crm_account_name,
+      base.dim_parent_crm_account_id,
+      base.dim_crm_account_id,
       base.subscription_name,
       base.subscription_id,
       base.product_category,
@@ -165,9 +165,9 @@
       {{ dbt_utils.surrogate_key(['type_of_arr_change.arr_month', 'type_of_arr_change.subscription_id','type_of_arr_change.product_category']) }}
                                                                     AS primary_key,
       type_of_arr_change.arr_month,
-      type_of_arr_change.ultimate_parent_account_name,
-      type_of_arr_change.ultimate_parent_account_id,
-      type_of_arr_change.crm_id,
+      type_of_arr_change.parent_crm_account_name,
+      type_of_arr_change.dim_parent_crm_account_id,
+      type_of_arr_change.dim_crm_account_id,
       type_of_arr_change.subscription_name,
       type_of_arr_change.subscription_id,
       type_of_arr_change.product_category,
