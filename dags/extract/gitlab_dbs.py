@@ -157,6 +157,7 @@ config_dict = {
     },
 }
 
+
 def is_incremental(raw_query):
     return "{EXECUTION_DATE}" in raw_query or "{BEGIN_TIMESTAMP}" in raw_query
 

@@ -19,14 +19,14 @@ from utils import (
     manifest_reader,
 )
 
+
 def get_last_load_time() -> datetime:
     last_load_tstamp = os.environ["LAST_LOADED"]
     if last_load_tstamp != "":
-        return datetime.datetime.strptime(
-                    last_load_tstamp, "%Y-%m-%dT%H:%M:%S%z"
-                )
+        return datetime.datetime.strptime(last_load_tstamp, "%Y-%m-%dT%H:%M:%S%z")
     else:
         return None
+
 
 def load_incremental(
     source_engine: Engine,
@@ -40,7 +40,7 @@ def load_incremental(
     """
 
     raw_query = table_dict["import_query"]
-    additional_filter = table_dict.get("additional_filtering", "")    
+    additional_filter = table_dict.get("additional_filtering", "")
 
     env = os.environ.copy()
 
@@ -53,7 +53,9 @@ def load_incremental(
 
         replication_check_query = "select pg_last_xact_replay_timestamp();"
 
-        replication_timestamp = query_executor(source_engine, replication_check_query)[0][0]
+        replication_timestamp = query_executor(source_engine, replication_check_query)[
+            0
+        ][0]
 
         last_load_time = get_last_load_time()
 
@@ -69,26 +71,35 @@ def load_incremental(
             )
 
         if last_load_time is not None:
-            this_run_beginning_timestamp = last_load_time - datetime.timedelta(minutes=30) #Allow for 30 minute overlap to ensure late arriving data is not skipped
+            this_run_beginning_timestamp = last_load_time - datetime.timedelta(
+                minutes=30
+            )  # Allow for 30 minute overlap to ensure late arriving data is not skipped
         else:
-            this_run_beginning_timestamp = execution_date - datetime.timedelta(hours=hours_looking_back)
-
+            this_run_beginning_timestamp = execution_date - datetime.timedelta(
+                hours=hours_looking_back
+            )
 
         logging.info(f"Replication is good at {replication_timestamp}")
 
-        end_timestamp = min(replication_timestamp, execution_date, this_run_beginning_timestamp + datetime.timedelta(hours=hours_looking_back))
-
-        if this_run_beginning_timestamp > end_timestamp:
-            raise Exception("beginning timestamp is after end timestamp -- shouldn't be possible -- erroring")
-
-        append_to_xcom_file(
-            {
-                "max_data_available": end_timestamp.strftime("%Y-%m-%dT%H:%M:%S%z")
-            }
+        end_timestamp = min(
+            replication_timestamp,
+            execution_date,
+            this_run_beginning_timestamp + datetime.timedelta(hours=hours_looking_back),
         )
 
-        env["BEGIN_TIMESTAMP"] = this_run_beginning_timestamp.strftime("%Y-%m-%dT%H:%M:%S")
-        env["END_TIMESTAMP"] = end_timestamp.strftime("%Y-%m-%dT%H:%M:%S") 
+        if this_run_beginning_timestamp > end_timestamp:
+            raise Exception(
+                "beginning timestamp is after end timestamp -- shouldn't be possible -- erroring"
+            )
+
+        append_to_xcom_file(
+            {"max_data_available": end_timestamp.strftime("%Y-%m-%dT%H:%M:%S%z")}
+        )
+
+        env["BEGIN_TIMESTAMP"] = this_run_beginning_timestamp.strftime(
+            "%Y-%m-%dT%H:%M:%S"
+        )
+        env["END_TIMESTAMP"] = end_timestamp.strftime("%Y-%m-%dT%H:%M:%S")
 
     # If _TEMP exists in the table name, skip it because it needs a full sync
     # If a temp table exists then it needs to finish syncing so don't load incrementally
