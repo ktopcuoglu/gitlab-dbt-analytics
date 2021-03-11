@@ -1873,8 +1873,8 @@ roles:
         privileges:
             databases:
                 read:
-                    - rdvanrooijen_prep
-                    - rdvanrooijen_prod
+                    - dvanrooijen_prep
+                    - dvanrooijen_prod
                 write:
                     - dvanrooijen_prep
                     - dvanrooijen_prod
