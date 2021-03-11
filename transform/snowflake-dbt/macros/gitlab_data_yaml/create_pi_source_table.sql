@@ -24,6 +24,7 @@ WITH source AS (
       data_by_row['public']::BOOLEAN                       AS is_public,
       data_by_row['sisense_data'] IS NOT NULL              AS is_embedded,
       data_by_row['target']::VARCHAR                       AS pi_target,
+      data_by_row['target_name']::VARCHAR                  AS pi_metric_target_name,
       data_by_row['monthly_recorded_targets']::VARCHAR     AS pi_monthly_recorded_targets,
       data_by_row['monthly_estimated_targets']::VARCHAR    AS pi_monthly_estimated_targets,
       data_by_row['metric_name']::VARCHAR                  AS pi_metric_name,
