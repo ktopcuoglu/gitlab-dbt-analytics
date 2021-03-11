@@ -1,23 +1,10 @@
-WITh estimated_value AS (
-  
-    SELECT *
-    FROM {{ref('mart_monthly_counter_adoption') }}
-  
-)
+{{ simple_cte([
+    ('estimated_value','mart_monthly_counter_adoption'),
+    ('fct_usage_ping_payloads','fct_usage_ping_payloads'),
+    ('monthly_usage_data','monthly_usage_data')
+]) }}
 
-, base AS (
-  
-    SELECT *
-    FROM {{ref('monthly_usage_data')}}
-    WHERE TRUE
-      AND is_smau
-
-), fct_usage_ping_payloads AS (
-
-    SELECT *
-    FROM {{ ref('fct_usage_ping_payloads') }}
-
-), smau AS (
+, smau AS (
 
     SELECT 
       created_month,
@@ -33,9 +20,10 @@ WITh estimated_value AS (
       is_umau,
       ping_source,
       SUM(monthly_metric_value) AS monthly_metric_value_sum
-    FROM base
+    FROM monthly_usage_data
     INNER JOIN fct_usage_ping_payloads
-      ON base.ping_id = fct_usage_ping_payloads.usage_ping_id
+      ON monthly_usage_data.ping_id = fct_usage_ping_payloads.usage_ping_id
+    WHERE is_smau = TRUE
     {{ dbt_utils.group_by(n=12) }}
 
 
@@ -72,7 +60,7 @@ WITh estimated_value AS (
       SUM(monthly_metric_value_sum) / MAX(pct_subscriptions_with_counters) AS estimated_monthly_metric_value_sum
     FROM smau_joined
     WHERE is_smau
-    GROUP BY 1,2,3,4,5,6,7,8
+    {{ dbt_utils.group_by(n=8) }}
 
 ), combined AS (
 
@@ -88,7 +76,7 @@ WITh estimated_value AS (
       SUM(recorded_monthly_metric_value_sum)                            AS recorded_monthly_metric_value_sum,
       SUM(estimated_monthly_metric_value_sum)                           AS estimated_monthly_metric_value_sum
     FROM estimated_monthly_metric_value_sum
-    GROUP BY 1,2,3,4,5,6,7,8
+    {{ dbt_utils.group_by(n=8) }}
 
     UNION 
 
@@ -105,7 +93,7 @@ WITh estimated_value AS (
       SUM(estimated_monthly_metric_value_sum - recorded_monthly_metric_value_sum) AS estimated_monthly_metric_value_sum
     FROM estimated_monthly_metric_value_sum
     WHERE delivery = 'Self-Managed'
-    GROUP BY 1,2,3,4,5,6,7,8
+    {{ dbt_utils.group_by(n=8) }}
   
 )
 
