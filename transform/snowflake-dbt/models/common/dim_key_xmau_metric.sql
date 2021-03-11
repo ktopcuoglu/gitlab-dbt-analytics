@@ -9,9 +9,14 @@
       stage_name, 
       group_name, 
       metrics_path,
-      'raw_usage_data_payload::' || REPLACE(metrics_path,'.','::') AS full_metrics_path,                              
+      'raw_usage_data_payload::'
+        || REPLACE(metrics_path,'.','::')       AS full_metrics_path,
+      'raw_usage_data_payload['''
+        || REPLACE(metrics_path, '.', '''][''')
+        || ''']'                                AS sql_friendly_path,                              
       clean_metrics_name, 
-      periscope_metrics_name, 
+      periscope_metrics_name,
+      REPLACE(periscope_metrics_name, '.', '_') AS sql_friendly_name,
       is_umau, 
       is_smau, 
       is_gmau, 
@@ -29,7 +34,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@kathleentam",
-    updated_by="@kathleentam",
+    updated_by="@ischweickartDD",
     created_date="2021-03-01",
-    updated_date="2021-03-01"
+    updated_date="2021-03-11"
 ) }}

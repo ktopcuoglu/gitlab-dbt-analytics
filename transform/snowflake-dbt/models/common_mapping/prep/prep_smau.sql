@@ -1,9 +1,10 @@
 {%- set smau_metrics = dbt_utils.get_query_results_as_dict(
     "SELECT
-       REPLACE(periscope_metrics_name, '.', '_')                                    AS name,
-       'raw_usage_data_payload[''' || REPLACE(metrics_path, '.', '''][''') || ''']' AS path
-    FROM " ~ ref('fct_key_xmau_metrics') ~
-    " WHERE is_smau"
+       stage_name || '_' || sql_friendly_name   AS name,
+       sql_friendly_path                        AS path
+    FROM " ~ ref('dim_key_xmau_metric') ~
+    " WHERE is_smau
+    ORDER BY name"
     )
 -%}
 
@@ -41,6 +42,6 @@ WITH prep_usage_ping AS (
     cte_ref="pivoted",
     created_by="@ischweickartDD",
     updated_by="@ischweickartDD",
-    created_date="2021-03-10",
-    updated_date="2021-03-10"
+    created_date="2021-03-11",
+    updated_date="2021-03-11"
 ) }}
