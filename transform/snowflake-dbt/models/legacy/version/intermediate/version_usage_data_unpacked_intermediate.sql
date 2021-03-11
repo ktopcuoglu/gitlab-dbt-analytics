@@ -1,4 +1,4 @@
-{% set version_usage_stats_list = dbt_utils.get_column_values(table=ref('version_usage_stats_list'), column='full_ping_name', max_records=1000, default=['']) %}
+{% set version_usage_stats_list = dbt_utils.get_column_values(table=ref ('version_usage_stats_list'), column='full_ping_name', max_records=1000, default=['']) %}
 
 {{ config({
     "materialized": "incremental",
@@ -34,7 +34,7 @@ WITH usage_data AS (
 ), stats_used_unpacked AS (
   
     SELECT *
-    FROM version_usage_data_unpacked_stats_used
+    FROM {{ ref('version_usage_data_unpacked_stats_used') }}
   
   
 ), joined AS (
@@ -74,7 +74,7 @@ WITH usage_data AS (
 ), unpacked AS (
 
     SELECT
-      {{ dbt_utils.star(from=ref('version_usage_data'), except=["STATS_USED", "COUNTS", "USAGE_ACTIVITY_BY_STAGE"]) }},
+      {{ dbt_utils.star(from=ref('version_usage_data'), except=["STATS_USED", "COUNTS", "USAGE_ACTIVITY_BY_STAGE"], relation_alias='joined') }},
       CASE
         WHEN uuid = 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f' THEN 'SaaS'
         ELSE 'Self-Managed'
