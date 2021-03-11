@@ -38,7 +38,7 @@ WITH source AS (
 ), intermediate_stage AS (
 
     SELECT 
-      {{ dbt_utils.surrogate_key(['pi_name', 'org_name', 'pi_definition','is_key','is_public','is_embedded','pi_target', 'pi_monthly_recorded_targets', 'pi_monthly_estimated_targets', 'pi_url']) }} AS unique_key,
+      {{ dbt_utils.surrogate_key(['pi_name', 'org_name', 'pi_definition','is_key','is_public','is_embedded','pi_target', 'pi_metric_target_name', 'pi_monthly_recorded_targets', 'pi_monthly_estimated_targets', 'pi_url']) }} AS unique_key,
       renamed.*
     FROM renamed
 
