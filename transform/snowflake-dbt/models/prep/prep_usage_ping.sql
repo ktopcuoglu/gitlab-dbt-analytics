@@ -128,10 +128,17 @@ WITH source AS (
     LEFT JOIN map_ip_location
       ON joined.ip_address_hash = map_ip_location.ip_address_hash 
 
+), dim_product_tier AS (
+  
+  SELECT * 
+  FROM {{ ref('dim_product_tier') }}
+  WHERE product_delivery_type = 'Self-Managed'
+
 ), final AS (
 
     SELECT 
       dim_usage_ping_id,
+      dim_product_tier.DIM_PRODUCT_TIER_ID as dim_product_tier_id,
       ping_created_at,
       DATEADD('days', -28, ping_created_at)              AS ping_created_at_28_days_earlier,
       DATE_TRUNC('YEAR', ping_created_at)                AS ping_created_at_year,
@@ -158,6 +165,9 @@ WITH source AS (
       iso_2_country_code, 
       iso_3_country_code  
     FROM add_country_info_to_usage_ping
+    LEFT OUTER JOIN dim_product_tier
+    ON TRIM(LOWER(dim_product_tier.PRODUCT_TIER_HISTORICAL_SHORT)) = TRIM(LOWER(add_country_info_to_usage_ping.product_tier))
+    AND MAIN_EDITION = 'EE'
 
 )
 
