@@ -1,5 +1,11 @@
 {% set version_usage_stats_list = dbt_utils.get_column_values(table=ref('version_usage_stats_list'), column='full_ping_name', max_records=1000, default=['']) %}
 
+{{ config({
+    "materialized": "incremental",
+    "unique_key": "id"
+    })
+}}
+
 WITH usage_data AS (
 
     SELECT {{ dbt_utils.star(from=ref('version_usage_data'), except=["LICENSE_STARTS_AT", "LICENSE_EXPIRES_AT"]) }}
@@ -25,6 +31,12 @@ WITH usage_data AS (
     SELECT *
     FROM {{ ref('version_releases') }}
 
+), stats_used_unpacked AS (
+  
+    SELECT *
+    FROM version_usage_data_unpacked_stats_used
+  
+  
 ), joined AS (
 
     SELECT
@@ -85,18 +97,13 @@ WITH usage_data AS (
       days_after_version_release_date,
       latest_version_available_at_ping_creation,
       versions_behind_latest,
-      f.path                                                                          AS ping_name,
-      REPLACE(f.path, '.','_')                                                        AS full_ping_name,
-      f.value                                                                         AS ping_value
+      ping_name,
+      full_ping_name,
+      ping_value
 
-    FROM joined,
-      lateral flatten(input => joined.stats_used, recursive => True) f
-    WHERE IS_OBJECT(f.value) = FALSE
-      AND stats_used IS NOT NULL
-
-    {% if is_incremental() %}
-        AND created_at > (SELECT max(created_at) FROM {{ this }})
-    {% endif %}
+    FROM joined
+    LEFT JOIN stats_used_unpacked
+      ON joined.id = stats_used_unpacked.id
 
 ), final AS (
 
