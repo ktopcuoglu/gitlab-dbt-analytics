@@ -3,32 +3,16 @@
   })
 }}
 
-WITH dim_crm_account AS (
+{{ simple_cte([
+    ('dim_crm_account','dim_crm_account'),
+    ('dim_crm_opportunity','dim_crm_opportunity'),
+    ('dim_sales_qualified_source','dim_sales_qualified_source'),
+    ('dim_order_type','dim_order_type'),
+    ('dim_deal_path','dim_deal_path'),
+    ('fct_crm_opportunity','fct_crm_opportunity')
+]) }}
 
-    SELECT *
-    FROM {{ ref('dim_crm_account') }}
-
-), dim_crm_opportunity AS (
-
-    SELECT *
-    FROM {{ ref('dim_crm_opportunity') }}
-
-), dim_sales_qualified_source AS (
-
-    SELECT *
-    FROM {{ ref('dim_sales_qualified_source') }}
-
-), dim_order_type AS (
-
-    SELECT *
-    FROM {{ ref('dim_order_type') }}
-
-), dim_deal_path AS (
-
-    SELECT *
-    FROM {{ ref('dim_deal_path') }}
-
-), dim_crm_sales_hierarchy_live_sales_segment AS (
+, dim_crm_sales_hierarchy_live_sales_segment AS (
 
     SELECT DISTINCT
       dim_crm_sales_hierarchy_sales_segment_live_id,
@@ -83,11 +67,6 @@ WITH dim_crm_account AS (
       dim_crm_sales_hierarchy_sales_area_stamped_id,
       sales_area_name_stamped
     FROM {{ ref('dim_crm_sales_hierarchy_stamped') }}
-
-), fct_crm_opportunity AS (
-
-    SELECT *
-    FROM {{ ref('fct_crm_opportunity') }}
 
 ), final AS (
 
@@ -195,5 +174,5 @@ WITH dim_crm_account AS (
     created_by="@iweeks",
     updated_by="@mcooperDD",
     created_date="2020-12-07",
-    updated_date="2021-03-01",
+    updated_date="2021-03-10",
   ) }}
