@@ -166,7 +166,7 @@ WITH source AS (
       iso_3_country_code  
     FROM add_country_info_to_usage_ping
     LEFT OUTER JOIN dim_product_tier
-    ON TRIM(LOWER(dim_product_tier.PRODUCT_TIER_HISTORICAL_SHORT)) = TRIM(LOWER(add_country_info_to_usage_ping.product_tier))
+    ON TRIM(LOWER(add_country_info_to_usage_ping.product_tier)) = TRIM(LOWER(dim_product_tier.product_tier_historical_short))
     AND MAIN_EDITION = 'EE'
 
 )
