@@ -584,7 +584,7 @@ roles:
                     - raw
             schemas:
                 read:
-                    - prep.gitlab_docom
+                    - prep.gitlab_dotcom
                     - prod.boneyard
                     - prod.legacy
                     - raw.*
