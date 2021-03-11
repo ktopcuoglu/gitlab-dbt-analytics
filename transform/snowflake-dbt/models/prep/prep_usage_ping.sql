@@ -138,7 +138,7 @@ WITH source AS (
 
     SELECT 
       dim_usage_ping_id,
-      dim_product_tier.DIM_PRODUCT_TIER_ID as dim_product_tier_id,
+      dim_product_tier.dim_product_tier_id AS dim_product_tier_id,
       ping_created_at,
       DATEADD('days', -28, ping_created_at)              AS ping_created_at_28_days_earlier,
       DATE_TRUNC('YEAR', ping_created_at)                AS ping_created_at_year,
