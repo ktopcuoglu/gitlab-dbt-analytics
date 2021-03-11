@@ -217,16 +217,9 @@ WITH filtered_source as (
     lateral flatten(input => TRY_PARSE_JSON(contexts), path => 'data') f
 
 ), events_with_web_page_id AS (
-    /*
-    in this CTE we take the results from the previous CTE and isolate the only context we are interested in:
-    the web_page context, which has this context schema: iglu:com.snowplowanalytics.snowplow/web_page/jsonschema/1-0-0
-    Then we extract the id from the context_data column
-    */
-    SELECT 
-      events_with_context_flattened.event_id,
-      context_data['id']::TEXT AS web_page_id
-    FROM events_with_context_flattened
-    WHERE context_data_schema = 'iglu:com.snowplowanalytics.snowplow/web_page/jsonschema/1-0-0'
+
+    SELECT *
+    FROM {{ ref('snowplow_gitlab_events_web_page_id')}}
 
 ), base_with_sorted_columns AS (
   
@@ -390,6 +383,7 @@ WITH filtered_source as (
     {{ unpack_unstructured_event(link_click, 'link_click', 'lc') }},
     {{ unpack_unstructured_event(track_timing, 'track_timing', 'tt') }}
     FROM base_with_sorted_columns
+
 
 )
 
