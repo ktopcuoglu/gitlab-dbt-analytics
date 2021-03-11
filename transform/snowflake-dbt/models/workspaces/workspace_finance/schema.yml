@@ -1,0 +1,12 @@
+version: 2
+
+models:
+
+  - name: wk_finance_fct_recurring_charge_daily_snapshot
+    description: Provides rate plan charge snapshots on a daily basis.
+    columns:
+      - name: charge_snapshot_id
+        description: A primary key for daily rate_plan_charges at the subscription, charge_id grain.
+        tests:
+          - unique
+          - not_null

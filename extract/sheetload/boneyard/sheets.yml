@@ -8,6 +8,10 @@ sheets:
     tabs:
       - interviews
       - rubric_max_points
+  - name: gainsight_golden_records
+    owner: '@snalamaru'
+    tabs:
+      - sample_gainsight_golden_records
   - name: gitlab_product_mrs_size
     owner: '@kwiebers'
     tabs:

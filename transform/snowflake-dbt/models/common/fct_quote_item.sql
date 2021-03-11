@@ -64,8 +64,8 @@ WITH crm_account AS (
       opp.opportunity_id                                                                            AS dim_crm_opportunity_id,
       opp_relational_fields.dim_crm_sales_rep_id                                                    AS opp_dim_crm_sales_rep_id,
       opp_relational_fields.dim_order_type_id                                                       AS opp_dim_order_type_id,
-      opp_relational_fields.dim_opportunity_source_id                                               AS opp_dim_opportunity_source_id,
-      opp_relational_fields.dim_purchase_channel_id                                                 AS opp_dim_purchase_channel_id,
+      opp_relational_fields.dim_sales_qualified_source_id                                           AS opp_dim_sales_qualified_source_id,
+      opp_relational_fields.dim_deal_path_id                                                        AS opp_dim_deal_path_id,
       crm_account.dim_parent_sales_segment_id,
       crm_account.dim_parent_geo_region_id,
       crm_account.dim_parent_geo_sub_region_id,
@@ -123,5 +123,5 @@ WITH crm_account AS (
     created_by="@mcooperDD",
     updated_by="@mcooperDD",
     created_date="2021-01-12",
-    updated_date="2021-02-02"
+    updated_date="2021-02-26"
 ) }}

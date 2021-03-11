@@ -38,7 +38,7 @@ WITH usage_data AS (
       DATEADD('days', -28, usage_data.created_at)                        AS period_start,
       usage_data.created_at                                              AS period_end,
       f.key                                                              AS usage_action_name,
-      f.value                                                            AS usage_action_count
+      IFF(f.value = -1, 0, f.value)                                      AS usage_action_count
 
     FROM usage_data,
       LATERAL FLATTEN(input => usage_data.analytics_unique_visits) f
@@ -68,7 +68,7 @@ WITH usage_data AS (
       DATEADD('days', -28, usage_data.created_at)                        AS period_start,
       usage_data.created_at                                              AS period_end,
       f.key                                                              AS usage_action_name,
-      f.value                                                            AS usage_action_count
+      IFF(f.value = -1, 0, f.value)                                      AS usage_action_count
 
     FROM usage_data,
       LATERAL FLATTEN (input => usage_data.raw_usage_data_payload, recursive => True, path => 'redis_hll_counters') f
@@ -99,7 +99,7 @@ WITH usage_data AS (
       DATEADD('days', -28, unpacked_stage_json.created_at) AS period_start,
       unpacked_stage_json.created_at                       AS period_end,
       f.key                                                AS usage_action_name,
-      f.value                                              AS usage_action_count
+      IFF(f.value = -1, 0, f.value)                        AS usage_action_count
     FROM unpacked_stage_json,
       lateral flatten(input => unpacked_stage_json.stage_activity_count_json) f
 

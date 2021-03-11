@@ -179,6 +179,10 @@ models:
       gitlab_dotcom:
         +materialized: table
         +schema: gitlab_dotcom
+        renamed:
+          +materialized: view
+          scd:
+            +materialized: table
 
       gitlab_ops:
         +materialized: table
@@ -361,9 +365,13 @@ models:
 
       workspace_marketing:
         +schema: workspace_marketing
-      
+
       workspace_sales:
+        +materialized: table
         +schema: workspace_sales
+
+      workspace_finance:
+        +schema: workspace_finance
 
     # ------------------
     # Marts
@@ -378,6 +386,16 @@ models:
 
         users_emails:
           enabled: false
+
+      pumps: 
+        +database: "{{ env_var('SNOWFLAKE_PROD_DATABASE') }}" #PROD
+        +schema: pumps
+        +materialized: table
+
+      pumps_sensitive:
+        +database: "{{ env_var('SNOWFLAKE_PROD_DATABASE') }}" #PROD
+        +schema: pumps_sensitive
+        +materialized: table
 
     # ------------------
     # Legacy Structure

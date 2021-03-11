@@ -61,12 +61,12 @@ WITH dim_billing_account AS (
 
     SELECT
       --primary_key
-      fct_mrr_snapshots.mrr_snapshot_id                                                AS primary_key,
+      fct_mrr_snapshots.mrr_snapshot_id                                                     AS primary_key,
       fct_mrr_snapshots.mrr_id,
 
       --date info
-      snapshot_dates.date_actual                                                       AS snapshot_date,
-      arr_month.date_actual                                                            AS arr_month,
+      snapshot_dates.date_actual                                                            AS snapshot_date,
+      arr_month.date_actual                                                                 AS arr_month,
       IFF(arr_month.is_first_day_of_last_month_of_fiscal_quarter, arr_month.fiscal_quarter_name_fy, NULL)
         AS fiscal_quarter_name_fy,
       IFF(arr_month.is_first_day_of_last_month_of_fiscal_year, arr_month.fiscal_year, NULL)
@@ -76,18 +76,18 @@ WITH dim_billing_account AS (
       dim_subscriptions_snapshots.subscription_end_date,
 
       --account info
-      dim_billing_account.dim_billing_account_id                                        AS zuora_account_id,
-      dim_billing_account.sold_to_country                                               AS zuora_sold_to_country,
-      dim_billing_account.billing_account_name                                          AS zuora_account_name,
-      dim_billing_account.billing_account_number                                        AS zuora_account_number,
-      COALESCE(dim_crm_account.merged_to_account_id, dim_crm_account.crm_account_id)    AS crm_id,
-      dim_crm_account.ultimate_parent_account_id,
-      dim_crm_account.ultimate_parent_account_name,
-      dim_crm_account.ultimate_parent_billing_country,
-      dim_crm_account.ultimate_parent_account_segment,
-      dim_crm_account.ultimate_parent_industry,
-      dim_crm_account.ultimate_parent_account_owner_team,
-      dim_crm_account.ultimate_parent_territory,
+      dim_billing_account.dim_billing_account_id                                            AS zuora_account_id,
+      dim_billing_account.sold_to_country                                                   AS zuora_sold_to_country,
+      dim_billing_account.billing_account_name                                              AS zuora_account_name,
+      dim_billing_account.billing_account_number                                            AS zuora_account_number,
+      COALESCE(dim_crm_account.merged_to_account_id, dim_crm_account.dim_crm_account_id)    AS dim_crm_account_id,
+      dim_crm_account.dim_parent_crm_account_id,
+      dim_crm_account.parent_crm_account_name,
+      dim_crm_account.parent_crm_account_billing_country,
+      dim_crm_account.parent_crm_account_sales_segment,
+      dim_crm_account.parent_crm_account_industry,
+      dim_crm_account.parent_crm_account_owner_team,
+      dim_crm_account.parent_crm_account_sales_territory,
 
       --subscription info
       dim_subscriptions_snapshots.subscription_name,
@@ -95,10 +95,10 @@ WITH dim_billing_account AS (
       dim_subscriptions_snapshots.subscription_sales_type,
 
       --product info
-      dim_product_detail.product_tier_name                                             AS product_category,
-      dim_product_detail.product_delivery_type                                         AS delivery,
+      dim_product_detail.product_tier_name                                                  AS product_category,
+      dim_product_detail.product_delivery_type                                              AS delivery,
       dim_product_detail.service_type,
-      dim_product_detail.product_rate_plan_name                                        AS rate_plan_name,
+      dim_product_detail.product_rate_plan_name                                             AS rate_plan_name,
       --  not needed as all charges in fct_mrr are recurring
       --  fct_mrr.charge_type,
       fct_mrr_snapshots.unit_of_measure,
@@ -119,7 +119,7 @@ WITH dim_billing_account AS (
     INNER JOIN dim_date AS snapshot_dates
       ON snapshot_dates.date_id = fct_mrr_snapshots.snapshot_id
     LEFT JOIN dim_crm_account
-        ON dim_billing_account.dim_crm_account_id = dim_crm_account.crm_account_id
+        ON dim_billing_account.dim_crm_account_id = dim_crm_account.dim_crm_account_id
 
 )
 

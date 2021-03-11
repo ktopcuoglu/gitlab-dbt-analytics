@@ -24,6 +24,9 @@ WITH source AS (
       data_by_row['public']::BOOLEAN                       AS is_public,
       data_by_row['sisense_data'] IS NOT NULL              AS is_embedded,
       data_by_row['target']::VARCHAR                       AS pi_target,
+      data_by_row['monthly_recorded_targets']::VARCHAR     AS pi_monthly_recorded_targets,
+      data_by_row['monthly_estimated_targets']::VARCHAR    AS pi_monthly_estimated_targets,
+      data_by_row['metric_name']::VARCHAR                  AS pi_metric_name,
       data_by_row['telemetry_type']::VARCHAR               AS telemetry_type,
       data_by_row['urls']::VARCHAR                         AS pi_url,
       data_by_row['sisense_data'].chart::VARCHAR           AS sisense_chart_id,
@@ -34,7 +37,7 @@ WITH source AS (
 ), intermediate_stage AS (
 
     SELECT 
-      {{ dbt_utils.surrogate_key(['pi_name', 'org_name', 'pi_definition','is_key','is_public','is_embedded','pi_target','pi_url']) }} AS unique_key,
+      {{ dbt_utils.surrogate_key(['pi_name', 'org_name', 'pi_definition','is_key','is_public','is_embedded','pi_target', 'pi_monthly_recorded_targets', 'pi_monthly_estimated_targets', 'pi_url']) }} AS unique_key,
       renamed.*
     FROM renamed
 

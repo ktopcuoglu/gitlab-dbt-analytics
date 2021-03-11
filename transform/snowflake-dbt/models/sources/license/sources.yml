@@ -13,8 +13,8 @@ sources:
       identifier: false
 
     freshness:
-      warn_after: {count: 15, period: day}
-      error_after: {count: 31, period: day}
+      warn_after: {count: 4, period: day}
+      error_after: {count: 7, period: day}
 
     tables:
       - name: add_ons
@@ -52,6 +52,9 @@ sources:
 
       - name: licenses
         identifier: licenses
+        freshness:
+          warn_after: {count: 36, period: hour}
+          error_after: {count: 48, period: hour}
         columns:
           - name: id
             tests:
