@@ -294,7 +294,10 @@ Dimension representing the associated sales rep from salesforce. Most often this
 
 {% docs fct_smau %}
 
-tbd
+This data model is at the **month | subscription_id** grain for **self-managed** instances. It contains for every month, for a given subscription, the smau metric value from the last usage ping value in that month. 
+
+This data model is used for the Customer Health Dashboards.
+
 
 {% enddocs %}
 
