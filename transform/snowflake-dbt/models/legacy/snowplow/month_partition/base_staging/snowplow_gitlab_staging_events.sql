@@ -338,14 +338,14 @@ WITH filtered_source as (
     FROM base
     LEFT JOIN events_with_web_page_id
       ON base.event_id = events_with_web_page_id.event_id
-), events_to_ignore as (
+), events_to_ignore AS (
 
     SELECT event_id
     FROM base_with_sorted_columns
     GROUP BY 1
     HAVING count (*) > 1
 
-), unnested_unstruct as (
+), unnested_unstruct AS (
 
     SELECT *,
     {{dbt_utils.get_url_parameter(field='page_urlquery', url_parameter='glm_source')}} AS glm_source,
