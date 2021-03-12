@@ -584,7 +584,7 @@ roles:
                     - raw
             schemas:
                 read:
-                    - prep.gitlab_docom
+                    - prep.gitlab_dotcom
                     - prod.boneyard
                     - prod.legacy
                     - raw.*
@@ -1873,8 +1873,8 @@ roles:
         privileges:
             databases:
                 read:
-                    - rdvanrooijen_prep
-                    - rdvanrooijen_prod
+                    - dvanrooijen_prep
+                    - dvanrooijen_prod
                 write:
                     - dvanrooijen_prep
                     - dvanrooijen_prod

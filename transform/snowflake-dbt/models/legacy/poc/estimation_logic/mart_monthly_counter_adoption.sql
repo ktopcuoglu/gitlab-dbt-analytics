@@ -119,4 +119,3 @@ WITH paid_subscriptions_monthly_usage_ping_optin AS (
   
 SELECT *
 FROM date_joined
-
