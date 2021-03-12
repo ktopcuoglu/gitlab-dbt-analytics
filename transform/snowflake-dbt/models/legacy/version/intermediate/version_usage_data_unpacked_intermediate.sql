@@ -8,7 +8,7 @@
 
 WITH usage_data AS (
 
-    SELECT {{ dbt_utils.star(from=ref('version_usage_data'), except=["LICENSE_STARTS_AT", "LICENSE_EXPIRES_AT"]) }}
+    SELECT {{ dbt_utils.star(from=ref('version_usage_data'), except=["LICENSE_STARTS_AT", "LICENSE_EXPIRES_AT", "RAW_USAGE_DATA_PAYLOAD"]) }}
     FROM {{ ref('version_usage_data') }}
 
 ), licenses AS ( -- Licenses app doesn't alter rows after creation so the snapshot is not necessary.
@@ -74,7 +74,7 @@ WITH usage_data AS (
 ), unpacked AS (
 
     SELECT
-      {{ dbt_utils.star(from=ref('version_usage_data'), except=["STATS_USED", "COUNTS", "USAGE_ACTIVITY_BY_STAGE"], relation_alias='joined') }},
+      {{ dbt_utils.star(from=ref('version_usage_data'), except=["STATS_USED", "COUNTS", "USAGE_ACTIVITY_BY_STAGE", "RAW_USAGE_DATA_PAYLOAD", "ANALYTICS_UNIQUE_VISIT"], relation_alias='joined') }},
       CASE
         WHEN uuid = 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f' THEN 'SaaS'
         ELSE 'Self-Managed'
@@ -108,7 +108,7 @@ WITH usage_data AS (
 ), final AS (
 
     SELECT
-      {{ dbt_utils.star(from=ref('version_usage_data'), except=["STATS_USED", "COUNTS", "USAGE_ACTIVITY_BY_STAGE"]) }},
+      {{ dbt_utils.star(from=ref('version_usage_data'), except=["STATS_USED", "COUNTS", "USAGE_ACTIVITY_BY_STAGE", ""USAGE_ACTIVITY_BY_STAGE_MONTHLY", "RAW_USAGE_DATA_PAYLOAD", "ANALYTICS_UNIQUE_VISIT"]) }},
       unpacked.usage_activity_by_stage_monthly['manage']['events'] AS monthly_active_users_last_28_days,
       unpacked.ping_source,
       unpacked.main_edition,
@@ -127,7 +127,7 @@ WITH usage_data AS (
         {{ "," if not loop.last }}
       {% endfor %}
     FROM unpacked
-    {{ dbt_utils.group_by(n=72) }}
+    {{ dbt_utils.group_by(n=69) }}
 
 
 )
