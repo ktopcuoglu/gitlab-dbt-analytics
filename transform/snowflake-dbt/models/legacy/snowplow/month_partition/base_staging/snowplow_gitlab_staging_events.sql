@@ -13,9 +13,14 @@
 {% set track_timing = ['category','variable','timing','label'] %}
 
 
-WITH filtered_source as (
+WITH events_with_web_page_id AS (
 
-    SELECT
+    SELECT *
+    FROM {{ ref('snowplow_gitlab_events_web_page_id') }}
+
+), filtered_source as (
+
+    SELECT DISTINCT
       app_id,
       base_currency,
       br_colordepth,
@@ -187,17 +192,7 @@ WITH filtered_source as (
       AND TRY_TO_TIMESTAMP(derived_tstamp) is not null
 )
 
-, base AS (
-  
-    SELECT DISTINCT * 
-    FROM filtered_source
-
-), events_with_web_page_id AS (
-
-    SELECT *
-    FROM {{ ref('snowplow_gitlab_events_web_page_id') }}
-
-), base_with_sorted_columns AS (
+, base_with_sorted_columns AS (
   
     SELECT 
       base.app_id,
