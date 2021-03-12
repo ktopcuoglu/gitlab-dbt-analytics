@@ -1,7 +1,7 @@
 {{ simple_cte([
     ('subscriptions', 'bdg_subscription_product_rate_plan'),
     ('dates', 'dim_date'),
-    ('smau_metrics','prep_smau')
+    ('smau_metrics','prep_usage_ping_subscription_mapped_smau')
 ]) }}
 
 , sm_subscriptions AS (
@@ -72,6 +72,6 @@
     cte_ref="joined",
     created_by="@ischweickartDD",
     updated_by="@ischweickartDD",
-    created_date="2021-03-11",
-    updated_date="2021-03-11"
+    created_date="2021-03-15",
+    updated_date="2021-03-15"
 ) }}

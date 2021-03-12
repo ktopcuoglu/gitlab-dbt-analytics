@@ -292,7 +292,7 @@ Dimension representing the associated sales rep from salesforce. Most often this
 {% enddocs %}
 
 
-{% docs fct_usage_ping_mapped_to_subscription_smau %}
+{% docs fct_usage_ping_subscription_mapped_smau %}
 
 This data model is at the **month | dim_subscription_id** grain for **Self-Managed** instances. In every month _that a Usage Ping payload was received_, for a given subscription, values of each SMAU metric from the last Usage Ping value in that month are reported. 
 

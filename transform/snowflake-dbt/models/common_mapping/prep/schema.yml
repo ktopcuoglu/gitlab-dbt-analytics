@@ -561,8 +561,22 @@ models:
       - name: updated_at
         description: The timestamp of when the license was updated.
 
-  - name: prep_usage_ping_mapped_to_subscription_smau
-    description: '{{ doc("prep_usage_ping_mapped_to_subscription_smau") }}'
+  - name: prep_usage_ping_metric_name
+    description: '{{ doc("prep_usage_ping_metric_name") }}'
+    columns:
+      - name: metrics_path
+        description: path name of metric (counts.ci_builds instead of ci_builds given there are three ci_builds metrics)
+      - name: metrics_path_column_name
+        description: metric path name converted to a column name for ease of macro population 
+      - name: full_metrics_path
+        description: raw_usage_data_payload appended with path name of metric 
+      - name: main_json_name
+        description: the main json this usage metric comes from 
+      - name: feature_name
+        description: the name of the feature that this usage metric is meant to capture 
+
+  - name: prep_usage_ping_subscription_mapped_smau
+    description: '{{ doc("prep_usage_ping_subscription_mapped_smau") }}'
     columns:
       - name: dim_usage_ping_id
         description: JOIN key to dim_usage_pings and prep_usage_pings. Represents a single usage ping. 
@@ -618,20 +632,6 @@ models:
         description: Number of unique monthly users performing Secure CI builds. CI builds are classified as Secure if they fall under any of the [Secure Domains of Expertise](https://about.gitlab.com/handbook/engineering/development/secure/#domains-of-expertise)
       - name: verify_ci_pipelines_users_28_days
         description: Number of unique monthly users running CI pipelines
-
-  - name: prep_usage_ping_metric_name
-    description: '{{ doc("prep_usage_ping_metric_name") }}'
-    columns:
-      - name: metrics_path
-        description: path name of metric (counts.ci_builds instead of ci_builds given there are three ci_builds metrics)
-      - name: metrics_path_column_name
-        description: metric path name converted to a column name for ease of macro population 
-      - name: full_metrics_path
-        description: raw_usage_data_payload appended with path name of metric 
-      - name: main_json_name
-        description: the main json this usage metric comes from 
-      - name: feature_name
-        description: the name of the feature that this usage metric is meant to capture 
 
   - name: prep_usage_self_managed_seat_link
     description: '{{ doc("prep_usage_self_managed_seat_link") }}'

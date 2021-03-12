@@ -31,7 +31,7 @@
     cte_ref="final",
     created_by="@ischweickartDD",
     updated_by="@ischweickartDD",
-    created_date="2021-03-10",
-    updated_date="2021-03-10"
+    created_date="2021-03-15",
+    updated_date="2021-03-15"
 ) }}
 

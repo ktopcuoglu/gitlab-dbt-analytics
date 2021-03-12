@@ -1474,64 +1474,6 @@ models:
           - unique
         tags: ["tdf", "common", "sales_funnel"]
 
-  - name: fct_usage_ping_mapped_to_subscription_smau
-    description: '{{ doc("fct_usage_ping_mapped_to_subscription_smau") }}'
-    columns:
-      - name: dim_subscription_id
-        tests:
-          - not_null
-        tags: ["tdf", "common", "gainsight"]
-      - name: snapshot_month
-        description: First day of the month in which data is being reported.
-        tests:
-          - not_null
-        tags: ["tdf", "common", "gainsight"]
-      - name: snapshot_date_id
-        tests:
-          - not_null
-        tags: ["tdf", "common", "gainsight"]
-      - name: dim_subscription_id_original
-        tests:
-          - not_null
-        tags: ["tdf", "common", "gainsight"]
-      - name: dim_billing_account_id
-        tests:
-          - not_null
-        tags: ["tdf", "common", "gainsight"]
-      - name: dim_crm_account_id
-      - name: dim_parent_crm_account_id
-      - name: dim_usage_ping_id
-        description: JOIN key to dim_usage_pings and prep_usage_pings. Uniquely identifies a single usage ping. 
-      - name: uuid
-      - name: hostname
-      - name: dim_license_id
-      - name: license_md5 
-        description: JOIN key to dim_licenses and dim_license 
-      - name: cleaned_version
-      - name: ping_created_at
-        description: The timestamp at which the usage ping was created_at 
-      - name: ping_created_date_id
-      - name: manage_analytics_total_unique_counts_monthly
-        description: Number of unique monthly visits to Analytics
-      - name: plan_redis_hll_counters_issues_edit_issues_edit_total_unique_counts_monthly
-        description: Number of unique monthly actions taken on project management issues
-      - name: create_repo_writes
-        description: Number of unique monthly users writing to project repositories
-      - name: verify_ci_pipelines_users_28_days
-        description: Number of unique monthly users running CI pipelines
-      - name: package_redis_hll_counters_user_packages_user_packages_total_unique_counts_monthly
-        description: Number of unique monthly packages used
-      - name: release_release_creation_users_28_days
-        description: Number of unique monthly users making deployments
-      - name: configure_redis_hll_counters_terraform_p_terraform_state_api_unique_users_monthly
-        description: Number of unique monthly [Terraform](https://about.gitlab.com/handbook/engineering/development/ops/configure/#sts=GitLab%20Terraform%20Provider) users
-      - name: monitor_incident_management_activer_user_28_days
-        description: Number of unique monthly Incident Management actions taken
-      - name: secure_secure_scanners_users_28_days
-        description: Number of unique monthly users performing Secure CI builds. CI builds are classified as Secure if they fall under any of the [Secure Domains of Expertise](https://about.gitlab.com/handbook/engineering/development/secure/#domains-of-expertise)
-      - name: protect_container_scanning_jobs_users_28_days
-        description: Number of unique monthly users performing [container scanning jobs](https://docs.gitlab.com/ee/user/application_security/container_scanning/)
-
   - name: fct_usage_ci_minutes
     description: '{{ doc("fct_usage_ci_minutes") }}'
     columns:
@@ -1689,6 +1631,64 @@ models:
         tags: ["tdf", "common", "gainsight"]
       - name: recorded_at
         description: The timestamp when the usage ping was recorded.
+
+  - name: fct_usage_ping_subscription_mapped_smau
+    description: '{{ doc("fct_usage_ping_subscription_mapped_smau") }}'
+    columns:
+      - name: dim_subscription_id
+        tests:
+          - not_null
+        tags: ["tdf", "common", "gainsight"]
+      - name: snapshot_month
+        description: First day of the month in which data is being reported.
+        tests:
+          - not_null
+        tags: ["tdf", "common", "gainsight"]
+      - name: snapshot_date_id
+        tests:
+          - not_null
+        tags: ["tdf", "common", "gainsight"]
+      - name: dim_subscription_id_original
+        tests:
+          - not_null
+        tags: ["tdf", "common", "gainsight"]
+      - name: dim_billing_account_id
+        tests:
+          - not_null
+        tags: ["tdf", "common", "gainsight"]
+      - name: dim_crm_account_id
+      - name: dim_parent_crm_account_id
+      - name: dim_usage_ping_id
+        description: JOIN key to dim_usage_pings and prep_usage_pings. Uniquely identifies a single usage ping. 
+      - name: uuid
+      - name: hostname
+      - name: dim_license_id
+      - name: license_md5 
+        description: JOIN key to dim_licenses and dim_license 
+      - name: cleaned_version
+      - name: ping_created_at
+        description: The timestamp at which the usage ping was created_at 
+      - name: ping_created_date_id
+      - name: manage_analytics_total_unique_counts_monthly
+        description: Number of unique monthly visits to Analytics
+      - name: plan_redis_hll_counters_issues_edit_issues_edit_total_unique_counts_monthly
+        description: Number of unique monthly actions taken on project management issues
+      - name: create_repo_writes
+        description: Number of unique monthly users writing to project repositories
+      - name: verify_ci_pipelines_users_28_days
+        description: Number of unique monthly users running CI pipelines
+      - name: package_redis_hll_counters_user_packages_user_packages_total_unique_counts_monthly
+        description: Number of unique monthly packages used
+      - name: release_release_creation_users_28_days
+        description: Number of unique monthly users making deployments
+      - name: configure_redis_hll_counters_terraform_p_terraform_state_api_unique_users_monthly
+        description: Number of unique monthly [Terraform](https://about.gitlab.com/handbook/engineering/development/ops/configure/#sts=GitLab%20Terraform%20Provider) users
+      - name: monitor_incident_management_activer_user_28_days
+        description: Number of unique monthly Incident Management actions taken
+      - name: secure_secure_scanners_users_28_days
+        description: Number of unique monthly users performing Secure CI builds. CI builds are classified as Secure if they fall under any of the [Secure Domains of Expertise](https://about.gitlab.com/handbook/engineering/development/secure/#domains-of-expertise)
+      - name: protect_container_scanning_jobs_users_28_days
+        description: Number of unique monthly users performing [container scanning jobs](https://docs.gitlab.com/ee/user/application_security/container_scanning/)
 
   - name: fct_usage_ping_subscription_mapped_wave_2_3_metrics
     description: '{{ doc("fct_usage_ping_subscription_mapped_wave_2_3_metrics") }}'

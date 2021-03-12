@@ -145,7 +145,7 @@ The grain of the table is license_id.
 
 {% enddocs %}
 
-{% docs prep_usage_ping_mapped_to_subscription_smau %}
+{% docs prep_usage_ping_subscription_mapped_smau %}
 
 This data model contains the values of each SMAU metric for **Self-Managed** instances with a non-null `license_md5`. Rows missing a `dim_subscription_id` indicate that either no matching license was found in `map_license_subscription_account`, or no `dim_subscription_id` exists in `map_license_subscription_account` associated with the given `license_md5`.
 
