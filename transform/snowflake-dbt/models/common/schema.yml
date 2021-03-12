@@ -1474,8 +1474,8 @@ models:
           - unique
         tags: ["tdf", "common", "sales_funnel"]
 
-  - name: fct_smau
-    description: '{{ doc("fct_smau") }}'
+  - name: fct_usage_ping_mapped_to_subscription_smau
+    description: '{{ doc("fct_usage_ping_mapped_to_subscription_smau") }}'
     columns:
       - name: dim_subscription_id
         tests:
@@ -1993,8 +1993,8 @@ models:
       - name: updated_at
         description: The timestamp of when the license was updated.
 
-  - name: dim_key_xmau_metrics
-    description: '{{ doc("dim_key_xmau_metrics") }}'
+  - name: dim_key_xmau_metric
+    description: '{{ doc("dim_key_xmau_metric") }}'
     columns:
       - name: section_name
         description: Section that the xmau metric belongs to 
@@ -2004,12 +2004,14 @@ models:
         description: Group that the xmau metric belongs to 
       - name: metrics_path
         description: path name of metric (counts.ci_builds instead of ci_builds given there are three ci_builds metrics)
-      - name: full_metrics_path
+      - name: sql_friendly_path
         description: raw_usage_data_payload appended with path name of metric to easily query prep_usage_ping with 
       - name: clean_metrics_name
         description: Name of metric without the path       
       - name: periscope_metrics_name
         description: Name change by PMs 
+      - name: sql_friendly_name
+        description: Name change by PMs with '.' instead of '_' 
       - name: is_umau
         description: Boolean field representing if the xmau metric represents Unique Monthly Active User (UMAU) metric 
       - name: is_smau
@@ -2020,17 +2022,3 @@ models:
         description: Boolean field representing if the xmau metric represents a Paid Group Monthly Active user (GMAU) metric 
       - name: time_period
         description: Metrics can be all-time counters, 28 day counters, or weekly counters. This signifies which it is
-
-  - name: fct_all_usage_ping_metric_names
-    description: '{{ doc("fct_all_usage_ping_metric_names") }}'
-    columns:
-      - name: metrics_path
-        description: path name of metric (counts.ci_builds instead of ci_builds given there are three ci_builds metrics)
-      - name: metrics_path_column_name
-        description: metric path name converted to a column name for ease of macro population 
-      - name: full_metrics_path
-        description: raw_usage_data_payload appended with path name of metric 
-      - name: main_json_name
-        description: the main json this usage metric comes from 
-      - name: feature_name
-        description: the name of the feature that this usage metric is meant to capture 

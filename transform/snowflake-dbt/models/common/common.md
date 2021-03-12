@@ -292,12 +292,13 @@ Dimension representing the associated sales rep from salesforce. Most often this
 {% enddocs %}
 
 
-{% docs fct_smau %}
+{% docs fct_usage_ping_mapped_to_subscription_smau %}
 
-This data model is at the **month | subscription_id** grain for **self-managed** instances. It contains for every month, for a given subscription, the smau metric value from the last usage ping value in that month. 
+This data model is at the **month | dim_subscription_id** grain for **Self-Managed** instances. In every month _that a Usage Ping payload was received_, for a given subscription, values of each SMAU metric from the last Usage Ping value in that month are reported. 
 
 This data model is used for the Customer Health Dashboards.
 
+Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
 
 {% enddocs %}
 
@@ -498,15 +499,9 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
-{% docs dim_key_xmau_metrics %}
+{% docs dim_key_xmau_metric %}
 
 A fact table that contains only the metrics that is a UMAU, SMAU, or GMAU metric that appears on the [Stages and Groups Performance Indicator handbook page](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/)
-
-{% enddocs %}
-
-{% docs fct_all_usage_ping_metric_names %}
-
-A fact table that contains all the usage ping metric names 
 
 {% enddocs %}
 

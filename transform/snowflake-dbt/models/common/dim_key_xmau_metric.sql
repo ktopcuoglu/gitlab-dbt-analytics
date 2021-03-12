@@ -1,5 +1,5 @@
 {{ simple_cte([
-    ('usage_ping_metrics','sheetload_usage_ping_metrics_sections')
+    ('usage_ping_metrics','sheetload_usage_ping_metrics_sections_source')
 ]) }}
 
 , final AS (
@@ -9,8 +9,6 @@
       stage_name, 
       group_name, 
       metrics_path,
-      'raw_usage_data_payload::'
-        || REPLACE(metrics_path,'.','::')       AS full_metrics_path,
       'raw_usage_data_payload['''
         || REPLACE(metrics_path, '.', '''][''')
         || ''']'                                AS sql_friendly_path,                              
@@ -27,7 +25,7 @@
       is_smau = TRUE OR 
       is_gmau = TRUE OR 
       is_umau = TRUE OR 
-      is_paid_GMAU = TRUE 
+      is_paid_gmau = TRUE 
 
 ) 
 

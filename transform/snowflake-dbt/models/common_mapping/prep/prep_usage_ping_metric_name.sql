@@ -13,8 +13,7 @@
     SELECT DISTINCT 
       TRIM(LOWER(flattened_payload.path))                                           AS metric_path,
       REPLACE(metric_path, '.','_')                                                 AS metric_path_column_name,
-      'raw_usage_data_payload::' || REPLACE(metric_path, '.','::')                  AS full_metric_path,
-      'raw_usage_data_payload[''' || REPLACE(metric_path, '.', '''][''') || ''']'   AS full_metric_path_sql,
+      'raw_usage_data_payload[''' || REPLACE(metric_path, '.', '''][''') || ''']'   AS full_metric_path,
       SPLIT_PART(metric_path, '.', 1)                                               AS main_json_name, 
       SPLIT_PART(metric_path, '.', -1)                                              AS feature_name
     FROM prep_usage_ping,
