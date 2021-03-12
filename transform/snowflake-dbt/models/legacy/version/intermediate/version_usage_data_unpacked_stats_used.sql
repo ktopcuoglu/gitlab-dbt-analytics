@@ -12,7 +12,7 @@ WITH usage_data AS (
 )
 
 SELECT
-  {{ dbt_utils.surrogate_key(['id', 'path'] }}                                    AS id_full_ping_name,
+  {{ dbt_utils.surrogate_key(['id', 'path']) }}                                    AS id_full_ping_name,
   id,
   f.path                                                                          AS ping_name,
   created_at,
