@@ -87,11 +87,6 @@ databases:
     - parmstrong_prep:
         shared: no
 
-    - pluthra_prod:
-        shared: no
-    - pluthra_prep:
-        shared: no
-
     - rheannamistry_prod:
         shared: no
     - rheannamistry_prep:
@@ -2584,47 +2579,8 @@ roles:
             - admin
 
     - pluthra:
-        member_of:
-            - analyst_people
-            - bamboohr
-            - customers_db
-            - qualtrics
-            - qualtrics_sensitive
-            - data_team_analyst
-        warehouses:
-            - analyst_xs
-        owns:
-            databases:
-                - pluthra_prep
-                - pluthra_prod
-            schemas:
-                - pluthra_prep.*
-                - pluthra_prod.*
-            tables:
-                - pluthra_prep.*.*
-                - pluthra_prod.*.*
-        privileges:
-            databases:
-                read:
-                    - pluthra_prep
-                    - pluthra_prod
-                write:
-                    - pluthra_prep
-                    - pluthra_prod
-            schemas:
-                read:
-                    - pluthra_prep.*
-                    - pluthra_prod.*
-                write:
-                    - pluthra_prep.*
-                    - pluthra_prod.*
-            tables:
-                read:
-                    - pluthra_prep.*.*
-                    - pluthra_prod.*.*
-                write:
-                    - pluthra_prep.*.*
-                    - pluthra_prod.*.*
+        member_of: []
+        warehouses: []
 
     - rheannamistry:
         member_of:
@@ -3426,9 +3382,8 @@ users:
             - sysadmin
 
     - pluthra:
-        can_login: yes
-        member_of:
-            - pluthra
+        can_login: no
+        member_of: []
 
     - pwc_jblessing:
         can_login: no
