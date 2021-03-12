@@ -108,7 +108,7 @@ WITH usage_data AS (
 ), final AS (
 
     SELECT
-      {{ dbt_utils.star(from=ref('version_usage_data'), except=["STATS_USED", "COUNTS", "USAGE_ACTIVITY_BY_STAGE", ""USAGE_ACTIVITY_BY_STAGE_MONTHLY", "RAW_USAGE_DATA_PAYLOAD", "ANALYTICS_UNIQUE_VISIT"]) }},
+      {{ dbt_utils.star(from=ref('version_usage_data'), except=["STATS_USED", "COUNTS", "USAGE_ACTIVITY_BY_STAGE", "USAGE_ACTIVITY_BY_STAGE_MONTHLY", "RAW_USAGE_DATA_PAYLOAD", "ANALYTICS_UNIQUE_VISITS"]) }},
       unpacked.usage_activity_by_stage_monthly['manage']['events'] AS monthly_active_users_last_28_days,
       unpacked.ping_source,
       unpacked.main_edition,
