@@ -1,6 +1,6 @@
 {{ config({
     "materialized": "incremental",
-    "unique_key": "id"
+    "unique_key": "id_full_ping_name"
     })
 }}
 
@@ -12,11 +12,12 @@ WITH usage_data AS (
 )
 
 SELECT
-    id,
-    f.path                                                                          AS ping_name,
-    created_at,
-    REPLACE(f.path, '.','_')                                                        AS full_ping_name,
-    f.value                                                                         AS ping_value
+  {{ dbt_utils.surrogate_key(['id', 'path'] }}                                    AS id_full_ping_name,
+  id,
+  f.path                                                                          AS ping_name,
+  created_at,
+  REPLACE(f.path, '.','_')                                                        AS full_ping_name,
+  f.value                                                                         AS ping_value
 
 FROM usage_data,
     lateral flatten(input => usage_data.stats_used, recursive => True) f
