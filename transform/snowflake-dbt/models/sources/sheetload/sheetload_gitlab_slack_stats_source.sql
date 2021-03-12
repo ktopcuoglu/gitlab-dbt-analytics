@@ -8,8 +8,8 @@ WITH source AS (
   SELECT
     date::DATE                                             AS entry_date,
     -- running totals
-    full_members::NUMBER                                   AS full_members,
-    guests::NUMBER                                         AS guests,
+    total_full_members::NUMBER                             AS full_members,
+    total_guests::NUMBER                                   AS guests,
     public_channels_in_single_workspace::NUMBER            AS public_channels_in_single_workspace,
     total_membership::NUMBER                               AS total_membership,
     -- daily totals
