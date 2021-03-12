@@ -52,11 +52,6 @@ databases:
     - jstark_prep:
         shared: no
 
-    - ktam_prod:
-        shared: no
-    - ktam_prep:
-        shared: no
-
     - laddula_prod:
         shared: no
     - laddula_prep:
@@ -2210,49 +2205,8 @@ roles:
             - analyst_xs
 
     - ktam:
-        member_of:
-            - analyst_core
-            - data_manager
-            - dbt_analytics_sensitive
-            - greenhouse
-            - data_team_analyst
-        warehouses:
-            - engineer_xs
-            - engineer_xl
-            - loading
-            - reporting
-        owns:
-            databases:
-                - ktam_prep
-                - ktam_prod
-            schemas:
-                - ktam_prep.*
-                - ktam_prod.*
-            tables:
-                - ktam_prep.*.*
-                - ktam_prod.*.*
-        privileges:
-            databases:
-                read:
-                    - ktam_prep
-                    - ktam_prod
-                write:
-                    - ktam_prep
-                    - ktam_prod
-            schemas:
-                read:
-                    - ktam_prep.*
-                    - ktam_prod.*
-                write:
-                    - ktam_prep.*
-                    - ktam_prod.*
-            tables:
-                read:
-                    - ktam_prep.*.*
-                    - ktam_prod.*.*
-                write:
-                    - ktam_prep.*.*
-                    - ktam_prod.*.*
+        member_of: []
+        warehouses: []
 
     - ksmith:
         member_of: []
@@ -3257,9 +3211,8 @@ users:
             - kchu
 
     - ktam:
-        can_login: yes
-        member_of:
-            - ktam
+        can_login: no
+        member_of: []
 
     - ksmith:
         can_login: no
