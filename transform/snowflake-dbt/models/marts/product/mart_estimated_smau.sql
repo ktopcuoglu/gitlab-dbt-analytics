@@ -60,7 +60,7 @@
       SUM(monthly_metric_value_sum) / MAX(pct_subscriptions_with_counters) AS estimated_monthly_metric_value_sum
     FROM smau_joined
     WHERE is_smau
-    {{ dbt_utils.group_by(n=8) }}
+    {{ dbt_utils.group_by(n=9) }}
 
 ), combined AS (
 
