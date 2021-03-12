@@ -174,9 +174,7 @@ WITH filtered_source as (
           (
             -- js backend tracker
             v_tracker LIKE 'js%'
-            AND lower(page_url) NOT LIKE 'https://staging.gitlab.com/%'
-            AND lower(page_url) NOT LIKE 'https://customers.stg.gitlab.com/%'
-            AND lower(page_url) NOT LIKE 'http://localhost:%'
+            AND app_id  = 'gitlab-staging'
           )
           
           OR
