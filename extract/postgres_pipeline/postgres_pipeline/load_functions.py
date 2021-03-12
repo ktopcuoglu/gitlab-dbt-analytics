@@ -144,7 +144,7 @@ def load_scd(
     source_table_name: str,
     table_dict: Dict[Any, Any],
     table_name: str,
-    is_append_only: bool = False
+    is_append_only: bool = False,
 ) -> bool:
     """
     Load tables that are slow-changing dimensions.
@@ -175,7 +175,7 @@ def load_scd(
             source_table_name,
             table_name,
             target_engine,
-            backfill=backfill
+            backfill=backfill,
         )
         return True
 
@@ -201,7 +201,7 @@ def load_ids(
     table_name: str,
     target_engine: Engine,
     id_range: int = 750_000,
-    backfill: bool = True
+    backfill: bool = True,
 ) -> None:
     """ Load a query by chunks of IDs instead of all at once."""
 
