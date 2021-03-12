@@ -330,7 +330,7 @@ WITH events_with_web_page_id AS (
       base.uploaded_at,
       base.infra_source
 
-    FROM base
+    FROM filtered_source AS base
     LEFT JOIN events_with_web_page_id
       ON base.event_id = events_with_web_page_id.event_id
 ), events_to_ignore AS (
