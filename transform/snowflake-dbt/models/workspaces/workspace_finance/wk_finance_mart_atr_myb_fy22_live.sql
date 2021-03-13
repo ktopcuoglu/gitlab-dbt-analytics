@@ -39,6 +39,28 @@ WITH dim_billing_account AS (
   SELECT *
   FROM {{ ref('fct_quote_item') }}
 
+), zuora_subscription_snapshots AS (
+
+    SELECT *
+    FROM {{ ref('zuora_subscription_snapshots_source') }}
+    WHERE subscription_status NOT IN ('Draft', 'Expired')
+      AND is_deleted = FALSE
+      AND exclude_from_analysis IN ('False', '')
+
+), zuora_subscription_snapshots_spined AS (
+
+    SELECT
+      dim_date.date_id                  AS snapshot_id,
+      zuora_subscription_snapshots.*
+    FROM zuora_subscription_snapshots
+    INNER JOIN dim_date
+      ON dim_date.date_actual >= zuora_subscription_snapshots.dbt_valid_from
+      AND dim_date.date_actual < {{ coalesce_to_infinity('zuora_subscription_snapshots.dbt_valid_to') }}
+      AND dim_date.date_actual = '2021-01-31'
+    QUALIFY rank() OVER (
+         PARTITION BY subscription_name, dim_date.date_actual
+         ORDER BY dbt_valid_from DESC ) = 1
+
 ), opportunity AS (
 
     SELECT DISTINCT
@@ -87,7 +109,7 @@ WITH dim_billing_account AS (
      END                                                                                  AS is_myb_with_multi_subs,
      fct_charge.effective_start_month,
      fct_charge.effective_end_month,
-     DATE_TRUNC('month',dim_subscription.subscription_end_date)                           AS subscription_end_month,
+     DATE_TRUNC('month',zuora_subscription_snapshots_spined.subscription_end_date::DATE)  AS subscription_end_month,
      DATEDIFF(month,fct_charge.effective_start_month,fct_charge.effective_end_month)      AS charge_term,
      SUM(fct_charge.mrr*12)                                                               AS arr
    FROM dim_billing_account
@@ -101,6 +123,8 @@ WITH dim_billing_account AS (
      ON dim_crm_account.dim_crm_account_id = dim_billing_account.dim_crm_account_id
    LEFT JOIN renewal_subscriptions
      ON dim_subscription.subscription_name = renewal_subscriptions.subscription_name
+   LEFT JOIN zuora_subscription_snapshots_spined
+     ON dim_subscription.subscription_name = zuora_subscription_snapshots_spined.subscription_name
    WHERE fct_charge.charge_type = 'Recurring'
      AND fct_charge.mrr != 0
      AND fct_charge.effective_start_month <= '2021-01-01'
@@ -239,6 +263,10 @@ WITH dim_billing_account AS (
       product_category,
       delivery,
       renewal_type,
+      CASE
+        WHEN subscription_end_month BETWEEN '2021-02-01' AND '2022-01-01' AND is_myb_with_multi_subs = FALSE THEN TRUE
+        ELSE FALSE
+      END                       AS is_atr,
       is_myb_with_multi_subs,
       current_term              AS subscription_term,
       charge_term,
