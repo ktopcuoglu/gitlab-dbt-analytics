@@ -10,3 +10,11 @@ models:
         tests:
           - unique
           - not_null
+  - name: wk_finance_mart_atr_myb_fy22_live
+    description: Provides a view into Multi-year bookings and available to renew ARR.
+    columns:
+      - name: charge_id
+        description: A primary key for unique subscription charges.
+        tests:
+          - unique
+          - not_null
