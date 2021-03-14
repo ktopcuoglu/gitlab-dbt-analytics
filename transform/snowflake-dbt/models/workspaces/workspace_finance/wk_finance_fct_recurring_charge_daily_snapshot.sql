@@ -108,7 +108,7 @@ WITH dim_date AS (
       zuora_subscription_spined.subscription_status,
       zuora_subscription_spined.version                                                 AS subscription_version,
       zuora_subscription_spined.current_term,
-      zuora_rate_plan_charge_spined.product_rate_plan_charge_id                         AS dim_product_details_id,
+      zuora_rate_plan_charge_spined.product_rate_plan_charge_id                         AS dim_product_detail_id,
       zuora_rate_plan_charge_spined.mrr,
       zuora_rate_plan_charge_spined.delta_mrc                                           AS delta_mrr,
       zuora_rate_plan_charge_spined.unit_of_measure,
@@ -145,7 +145,7 @@ WITH dim_date AS (
       dim_crm_account_id,
       charge_id,
       dim_subscription_id,
-      dim_product_details_id,
+      dim_product_detail_id,
       subscription_start_month,
       subscription_end_month,
       subscription_start_date,
@@ -177,7 +177,7 @@ WITH dim_date AS (
 ), final AS (
 
     SELECT
-      {{ dbt_utils.surrogate_key(['snapshot_id', 'subscription_name', 'dim_product_details_id', 'charge_id']) }}
+      {{ dbt_utils.surrogate_key(['snapshot_id', 'subscription_name', 'dim_product_detail_id', 'charge_id']) }}
           AS charge_snapshot_id,
       charges_day_by_day.*
     FROM charges_day_by_day
@@ -190,5 +190,5 @@ WITH dim_date AS (
     created_by="@iweeks",
     updated_by="@iweeks",
     created_date="2021-02-13",
-    updated_date="2020-02-13",
+    updated_date="2020-03-15",
  	) }}
