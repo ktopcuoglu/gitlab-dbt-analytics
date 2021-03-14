@@ -62,12 +62,14 @@ WITH dim_billing_account AS (
    SELECT DISTINCT
      sub_1.subscription_name,
      sub_1.zuora_renewal_subscription_name,
-     DATE_TRUNC('month',sub_2.subscription_end_date) AS subscription_end_month
+     DATE_TRUNC('month',sub_2.subscription_end_date) AS subscription_end_month,
+     RANK() OVER (PARTITION BY sub_1.subscription_name ORDER BY sub_1.zuora_renewal_subscription_name, sub_2.subscription_end_date ) AS rank
    FROM dim_subscription sub_1
    INNER JOIN dim_subscription sub_2
      ON sub_1.zuora_renewal_subscription_name = sub_2.subscription_name
      AND DATE_TRUNC('month',sub_2.subscription_end_date) >= '2022-02-01'
    WHERE sub_1.zuora_renewal_subscription_name != ''
+   QUALIFY rank = 1
 
 ), base AS (--get the base data set of recurring charges.
 
