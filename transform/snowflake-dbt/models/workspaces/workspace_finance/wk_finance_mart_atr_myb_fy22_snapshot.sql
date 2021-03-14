@@ -255,7 +255,9 @@ WITH dim_billing_account AS (
 ), renewal_report AS (--create the renewal report for the applicable fiscal year.
 
     SELECT
+      dim_date.fiscal_year,
       dim_date.fiscal_quarter_name_fy,
+      dim_date.first_day_of_month   AS month,
       base.charge_id,
       base.dim_crm_account_id,
       base.dim_billing_account_id,
