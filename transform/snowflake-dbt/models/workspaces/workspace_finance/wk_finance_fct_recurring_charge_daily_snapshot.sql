@@ -114,6 +114,7 @@ WITH dim_date AS (
       zuora_rate_plan_charge_spined.unit_of_measure,
       zuora_rate_plan_charge_spined.quantity,
       zuora_rate_plan_charge_spined.charge_type,
+      zuora_rate_plan_charge_spined.charged_through_date,
       zuora_rate_plan_charge_spined.rate_plan_charge_number,
       zuora_rate_plan_charge_spined.segment                                             AS charge_segment,
       zuora_rate_plan_charge_spined.version                                             AS charge_version,
@@ -160,6 +161,7 @@ WITH dim_date AS (
       current_term,
       rate_plan_charge_name,
       charge_type,
+      charged_through_date,
       rate_plan_charge_number,
       charge_segment,
       charge_version,
@@ -172,7 +174,7 @@ WITH dim_date AS (
     FROM rate_plan_charge_filtered
     INNER JOIN dim_date
       ON rate_plan_charge_filtered.snapshot_id = dim_date.date_id
-    {{ dbt_utils.group_by(n=24) }}
+    {{ dbt_utils.group_by(n=25) }}
 
 ), final AS (
 

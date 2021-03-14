@@ -97,11 +97,28 @@ WITH dim_billing_account AS (
        WHEN dim_subscription.subscription_name IN (SELECT DISTINCT subscription_name FROM renewal_subscriptions) THEN TRUE
        ELSE FALSE
      END                                                                                  AS is_myb_with_multi_subs,
+     CASE
+       WHEN DATE_TRUNC('month',fct_charge.charged_through_date) = fct_charge.effective_end_month THEN TRUE
+       ELSE FALSE
+     END                                                                                  AS is_paid_in_full,
+     CASE
+       WHEN charged_through_date IS NULL THEN dim_subscription.current_term
+       ELSE DATEDIFF('month',DATE_TRUNC('month',fct_charge.charged_through_date), fct_charge.effective_end_month)
+     END AS months_of_future_billings,
+     CASE
+       WHEN is_paid_in_full = FALSE THEN months_of_future_billings * fct_charge.mrr
+       ELSE 0
+     END                                                                                  AS estimated_total_future_billings,
+     CASE
+       WHEN is_paid_in_full = FALSE AND fct_charge.effective_end_month <= '2022-01-01' AND is_myb = TRUE THEN months_of_future_billings * fct_charge.mrr
+       ELSE 0
+     END                                                                                  AS estimated_fy22_future_billings,
      fct_charge.effective_start_month,
      fct_charge.effective_end_month,
+     fct_charge.subscription_start_month,
      fct_charge.subscription_end_month,
      DATEDIFF(month,fct_charge.effective_start_month,fct_charge.effective_end_month)      AS charge_term,
-     SUM(fct_charge.arr)                                                                  AS arr
+     fct_charge.arr
    FROM fct_charge
    LEFT JOIN dim_subscription
      ON fct_charge.dim_subscription_id = dim_subscription.dim_subscription_id
@@ -117,7 +134,6 @@ WITH dim_billing_account AS (
      ON fct_charge.dim_product_detail_id = dim_product_detail.dim_product_detail_id
    WHERE fct_charge.effective_start_month <= '2021-01-01'
      AND fct_charge.effective_end_month > '2021-01-01'
-   {{ dbt_utils.group_by(n=20) }}
 
 ), agg_charge_term_less_than_equal_12 AS (--get the starting and ending month ARR for charges with charge terms <= 12 months. These charges do not need additional logic.
 
@@ -239,33 +255,41 @@ WITH dim_billing_account AS (
 ), renewal_report AS (--create the renewal report for the applicable fiscal year.
 
     SELECT
-      fiscal_quarter_name_fy,
-      charge_id,
-      dim_crm_account_id,
-      dim_billing_account_id,
-      dim_crm_opportunity_id,
-      dim_subscription_id,
-      dim_product_detail_id,
-      subscription_name,
-      effective_start_month,
-      effective_end_month,
-      subscription_end_month,
-      product_tier_name,
-      product_delivery_type,
-      renewal_type,
+      dim_date.fiscal_quarter_name_fy,
+      base.charge_id,
+      base.dim_crm_account_id,
+      base.dim_billing_account_id,
+      base.dim_crm_opportunity_id,
+      base.dim_subscription_id,
+      base.dim_product_detail_id,
+      base.subscription_name,
+      combined.effective_start_month,
+      combined.effective_end_month,
+      base.subscription_start_month,
+      base.subscription_end_month,
+      base.parent_crm_account_name,
+      base.crm_account_name,
+      base.parent_crm_account_sales_segment,
+      base.product_tier_name,
+      base.product_delivery_type,
+      combined.renewal_type,
       CASE
-        WHEN subscription_end_month BETWEEN '2021-02-01' AND '2022-01-01' AND is_myb_with_multi_subs = FALSE THEN TRUE
+        WHEN base.subscription_end_month BETWEEN '2021-02-01' AND '2022-01-01' AND base.is_myb_with_multi_subs = FALSE THEN TRUE
         ELSE FALSE
-      END                       AS is_atr,
-      is_myb,
-      is_myb_with_multi_subs,
-      current_term              AS subscription_term,
-      charge_term,
-      arr
+      END                            AS is_atr,
+      base.is_myb,
+      base.is_myb_with_multi_subs,
+      base.current_term              AS subscription_term,
+      base.charge_term,
+      base.arr,
+      base.estimated_total_future_billings,
+      base.estimated_fy22_future_billings
     FROM combined
     LEFT JOIN dim_date
       ON combined.effective_end_month = dim_date.first_day_of_month
-    WHERE effective_end_month BETWEEN '2021-02-01' AND '2022-01-01'
+    LEFT JOIN base
+      ON combined.charge_id = base.charge_id
+    WHERE combined.effective_end_month BETWEEN '2021-02-01' AND '2022-01-01'
       AND day_of_month = 1
     ORDER BY fiscal_quarter_name_fy
 
