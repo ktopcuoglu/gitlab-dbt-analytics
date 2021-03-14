@@ -10,7 +10,7 @@ models:
         tests:
           - unique
           - not_null
-  - name: wk_finance_mart_atr_myb_fy22
+  - name: wk_finance_mart_atr_myb_fy22_snapshot
     description: Provides a view into Multi-year bookings and available to renew ARR.
     columns:
       - name: charge_id

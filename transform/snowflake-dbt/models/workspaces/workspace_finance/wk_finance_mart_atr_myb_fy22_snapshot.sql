@@ -75,10 +75,10 @@ WITH dim_billing_account AS (
 
    SELECT
      fct_charge.charge_id,
-     dim_billing_account.dim_crm_account_id,
-     dim_billing_account.dim_billing_account_id,
+     fct_charge.dim_crm_account_id,
+     fct_charge.dim_billing_account_id,
      opportunity.dim_crm_opportunity_id,
-     dim_subscription.dim_subscription_id,
+     fct_charge.dim_subscription_id,
      fct_charge.dim_product_detail_id,
      dim_crm_account.parent_crm_account_name,
      dim_crm_account.crm_account_name,
