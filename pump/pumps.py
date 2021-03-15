@@ -31,7 +31,8 @@ def get_copy_command(model, sensitive, timestamp, inc_start, inc_end):
         else:
             query = "SELECT * " + from_statement + where_statement
 
-            copy_command_tmp = """
+        
+        copy_command_tmp = """
         COPY INTO @RAW.PUBLIC.S3_DATA_PUMP/{model}
         FROM ({query})
         FILE_FORMAT = (TYPE = CSV, NULL_IF = (), FIELD_OPTIONALLY_ENCLOSED_BY = '"', COMPRESSION=NONE)
@@ -39,10 +40,10 @@ def get_copy_command(model, sensitive, timestamp, inc_start, inc_end):
         INCLUDE_QUERY_ID = TRUE;
       """
 
-            copy_command = copy_command_tmp.format(
-                model=model,
-                query=query,
-            )
+        copy_command = copy_command_tmp.format(
+            model=model,
+            query=query,
+        )
     except:
         logging.info("Failed to get copy command...")
     finally:
