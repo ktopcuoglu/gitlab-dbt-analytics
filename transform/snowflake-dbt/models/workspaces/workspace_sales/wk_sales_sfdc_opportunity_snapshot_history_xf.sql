@@ -222,6 +222,11 @@ WITH date_details AS (
       created_date_detail.fiscal_quarter_name_fy                   AS net_arr_created_fiscal_quarter_name,
       created_date_detail.first_day_of_fiscal_quarter              AS net_arr_created_fiscal_quarter_date,
 
+      net_arr_created_date.first_day_of_month                     AS pipeline_created_date_month,
+      net_arr_created_date.fiscal_year                            AS pipeline_created_fiscal_year,
+      net_arr_created_date.fiscal_quarter_name_fy                 AS pipeline_created_fiscal_quarter_name,
+      net_arr_created_date.first_day_of_fiscal_quarter            AS pipeline_created_fiscal_quarter_date,
+
       ------------------------------------------------------------------------------------------------------
       ------------------------------------------------------------------------------------------------------
       -- Base helpers for reporting
@@ -552,56 +557,12 @@ WITH date_details AS (
         ELSE NULL
       END                                               AS stage_1_fiscal_quarter_date,
 
-
-      -- this fields might change, isolating the field used from the purpose
-      -- alternative is future net_arr_created_date
-      opp_snapshot.created_date_month                     AS pipeline_created_date_month,
-      opp_snapshot.created_fiscal_year                    AS pipeline_created_fiscal_year,
-      opp_snapshot.created_fiscal_quarter_name            AS pipeline_created_fiscal_quarter_name,
-      opp_snapshot.created_fiscal_quarter_date            AS pipeline_created_fiscal_quarter_date,
-
-      --net_arr_created_date.first_day_of_month                     AS pipeline_created_date_month,
-      --net_arr_created_date.fiscal_year                            AS pipeline_created_fiscal_year,
-      --net_arr_created_date.fiscal_quarter_name_fy                 AS pipeline_created_fiscal_quarter_name,
-      --net_arr_created_date.first_day_of_fiscal_quarter            AS pipeline_created_fiscal_quarter_date,
-      /*
-      COALESCE(stage_1_date
-              ,opp_snapshot.net_arr_created_date
-              ,opp_snapshot.created_date::DATE)                        AS pipeline_created_date,  
-
-      COALESCE(stage_1_date_month
-              ,opp_snapshot.net_arr_created_date_month
-              ,opp_snapshot.created_date_month::DATE)                  AS pipeline_created_date_month, 
-
-      COALESCE(stage_1_fiscal_year
-              ,opp_snapshot.net_arr_created_fiscal_year
-              ,opp_snapshot.created_fiscal_year)                       AS pipeline_created_fiscal_year, 
-
-      COALESCE(stage_1_fiscal_quarter_name
-              ,opp_snapshot.net_arr_created_fiscal_quarter_name
-              ,opp_snapshot.created_fiscal_quarter_name)               AS pipeline_created_fiscal_quarter_name, 
-
-      COALESCE(stage_1_fiscal_quarter_date
-              ,opp_snapshot.net_arr_created_fiscal_quarter_date
-              ,opp_snapshot.created_fiscal_quarter_date)               AS pipeline_created_fiscal_quarter_date, 
-
-
-      CASE
-        WHEN stage_1_date IS NOT NULL 
-          THEN 'Stage 1 Date'
-        WHEN opp_snapshot.net_arr_created_date IS NOT NULL 
-          THEN 'Net ARR Created Date'
-        WHEN opp_snapshot.created_date IS NOT NULL 
-          THEN 'Opty Created Date'
-      END                                                              AS pipeline_created_date_source,
-      */
-
-       ------------------------------------------------------------------------------------------------------
+      ------------------------------------------------------------------------------------------------------
       ------------------------------------------------------------------------------------------------------
       -- DEPRECATED IACV METRICS
       -- Use Net ARR instead
       CASE 
-        WHEN opp_snapshot.created_fiscal_quarter_name= opp_snapshot.close_fiscal_quarter_name
+        WHEN opp_snapshot.pipeline_created_fiscal_quarter_name= opp_snapshot.close_fiscal_quarter_name
           AND opp_snapshot.is_won = 1 
             THEN opp_snapshot.incremental_acv
         ELSE 0
@@ -609,7 +570,7 @@ WITH date_details AS (
 
       -- created within quarter
       CASE
-        WHEN opp_snapshot.created_fiscal_quarter_name = opp_snapshot.snapshot_fiscal_quarter_name
+        WHEN opp_snapshot.pipeline_created_fiscal_quarter_name = opp_snapshot.snapshot_fiscal_quarter_name
           THEN opp_snapshot.incremental_acv 
         ELSE 0 
       END                                                         AS created_in_snapshot_quarter_iacv,
@@ -765,7 +726,7 @@ WITH date_details AS (
 
       -- created and closed within the quarter net arr
       CASE 
-        WHEN opp_snapshot.created_fiscal_quarter_name = opp_snapshot.close_fiscal_quarter_name
+        WHEN opp_snapshot.pipeline_created_fiscal_quarter_name = opp_snapshot.close_fiscal_quarter_name
           AND (is_won = 1 OR (is_renewal = 1 AND is_lost = 1))  
             THEN opp_snapshot.net_arr
         ELSE 0
@@ -773,8 +734,15 @@ WITH date_details AS (
 
       -- created within quarter
       CASE
-        WHEN opp_snapshot.created_fiscal_quarter_name = opp_snapshot.snapshot_fiscal_quarter_name
-          THEN opp_snapshot.net_arr
+        WHEN opp_snapshot.pipeline_created_fiscal_quarter_name = opp_snapshot.snapshot_fiscal_quarter_name
+          -- Open not omitted deals or lost over stage 1 deals (net arr created implies stage 1+)
+          AND ((opp_snapshot.forecast_category_name != 'Omitted'
+                AND opp_snapshot.is_stage_1_plus = 1)
+            OR (opp_snapshot.is_lost = 1))    
+          AND opp_snapshot.is_edu_oss = 0
+          AND opp_snapshot.deal_group LIKE ANY ('%Growth%', '%New%')
+          AND opp_snapshot.net_arr > 0
+            THEN opp_snapshot.net_arr
         ELSE 0 
       END                                                         AS created_in_snapshot_quarter_net_arr,
 

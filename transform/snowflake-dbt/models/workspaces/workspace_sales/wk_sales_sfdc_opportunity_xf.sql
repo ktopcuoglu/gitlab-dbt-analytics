@@ -308,13 +308,13 @@ WITH sfdc_opportunity AS (
       --  stamped field is not maintained for open deals
       CASE WHEN sfdc_opportunity_xf.user_segment_stamped IS NULL 
           THEN opportunity_owner.user_segment 
-          ELSE COALESCE(sfdc_opportunity_xf.user_segment_stamped,'N/A')
+          ELSE sfdc_opportunity_xf.user_segment_stamped
       END                                                                    AS opportunity_owner_user_segment,
 
       --  stamped field is not maintained for open deals
       CASE WHEN sfdc_opportunity_xf.user_region_stamped IS NULL 
           THEN opportunity_owner.user_region
-          ELSE COALESCE(sfdc_opportunity_xf.user_region_stamped,'N/A')
+          ELSE sfdc_opportunity_xf.user_region_stamped
       END                                                                    AS opportunity_owner_user_region,
 
       -----------------------------------------------------------------------------------------------------      
@@ -398,54 +398,11 @@ WITH sfdc_opportunity AS (
       -- used for performance reporting on pipeline generation
       -- these fields might change, isolating the field from the purpose
       -- alternatives are a future net_arr_created_date
-      --sfdc_opportunity_xf.stage_1_date                             AS pipeline_created_date,
-      --sfdc_opportunity_xf.stage_1_date_month                       AS pipeline_created_date_month,
-      --sfdc_opportunity_xf.stage_1_fiscal_year                      AS pipeline_created_fiscal_year,
-      --sfdc_opportunity_xf.stage_1_fiscal_quarter_name              AS pipeline_created_fiscal_quarter_name,
-      --sfdc_opportunity_xf.stage_1_fiscal_quarter_date              AS pipeline_created_fiscal_quarter_date,
-
-      --sfdc_opportunity_xf.net_arr_created_date                        AS pipeline_created_date,
-      --sfdc_opportunity_xf.net_arr_created_date_month                  AS pipeline_created_date_month,
-      --sfdc_opportunity_xf.net_arr_created_fiscal_year                 AS pipeline_created_fiscal_year,
-      --sfdc_opportunity_xf.net_arr_created_fiscal_quarter_name         AS pipeline_created_fiscal_quarter_name,
-      --sfdc_opportunity_xf.net_arr_created_fiscal_quarter_date         AS pipeline_created_fiscal_quarter_date,
-
-      sfdc_opportunity_xf.created_date                        AS pipeline_created_date,
-      sfdc_opportunity_xf.created_date_month                  AS pipeline_created_date_month,
-      sfdc_opportunity_xf.created_fiscal_year                 AS pipeline_created_fiscal_year,
-      sfdc_opportunity_xf.created_fiscal_quarter_name         AS pipeline_created_fiscal_quarter_name,
-      sfdc_opportunity_xf.created_fiscal_quarter_date         AS pipeline_created_fiscal_quarter_date,
-
-      /*
-      COALESCE(sfdc_opportunity_xf.stage_1_date
-              ,sfdc_opportunity_xf.net_arr_created_date
-              ,sfdc_opportunity_xf.created_date::DATE)                        AS pipeline_created_date,  
-
-      COALESCE(sfdc_opportunity_xf.stage_1_date_month
-              ,sfdc_opportunity_xf.net_arr_created_date_month
-              ,sfdc_opportunity_xf.created_date_month::DATE)                  AS pipeline_created_date_month, 
-
-      COALESCE(sfdc_opportunity_xf.stage_1_fiscal_year
-              ,sfdc_opportunity_xf.net_arr_created_fiscal_year
-              ,sfdc_opportunity_xf.created_fiscal_year)                       AS pipeline_created_fiscal_year, 
-
-      COALESCE(sfdc_opportunity_xf.stage_1_fiscal_quarter_name
-              ,sfdc_opportunity_xf.net_arr_created_fiscal_quarter_name
-              ,sfdc_opportunity_xf.created_fiscal_quarter_name)                AS pipeline_created_fiscal_quarter_name, 
-
-      COALESCE(sfdc_opportunity_xf.stage_1_fiscal_quarter_date
-              ,sfdc_opportunity_xf.net_arr_created_fiscal_quarter_date
-              ,sfdc_opportunity_xf.created_fiscal_quarter_date)                AS pipeline_created_fiscal_quarter_date, 
-      
-      CASE
-        WHEN sfdc_opportunity_xf.stage_1_date IS NOT NULL 
-          THEN 'Stage 1 Date'
-        WHEN sfdc_opportunity_xf.net_arr_created_date IS NOT NULL 
-          THEN 'Net ARR Created Date'
-        WHEN sfdc_opportunity_xf.created_date IS NOT NULL 
-          THEN 'Opty Created Date'
-      END                                                             AS pipeline_created_date_source,
-      */
+      sfdc_opportunity_xf.net_arr_created_date                        AS pipeline_created_date,
+      sfdc_opportunity_xf.net_arr_created_date_month                  AS pipeline_created_date_month,
+      sfdc_opportunity_xf.net_arr_created_fiscal_year                 AS pipeline_created_fiscal_year,
+      sfdc_opportunity_xf.net_arr_created_fiscal_quarter_name         AS pipeline_created_fiscal_quarter_name,
+      sfdc_opportunity_xf.net_arr_created_fiscal_quarter_date         AS pipeline_created_fiscal_quarter_date,
 
       CASE
         WHEN sfdc_opportunity_xf.stage_name
@@ -586,7 +543,7 @@ WITH sfdc_opportunity AS (
       -- compound metrics to facilitate reporting
       -- created and closed within the quarter net arr
       CASE 
-        WHEN oppty_final.created_fiscal_quarter_date = oppty_final.close_fiscal_quarter_date
+        WHEN oppty_final.pipeline_created_fiscal_quarter_date = oppty_final.close_fiscal_quarter_date
           AND (oppty_final.is_won = 1 
                 OR (oppty_final.is_renewal = 1 AND oppty_final.is_lost = 1)) 
             THEN net_arr
