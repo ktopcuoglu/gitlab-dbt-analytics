@@ -3,8 +3,8 @@ import sys
 from os import environ as env
 
 from fire import Fire
-# from gitlabdata.orchestration_utils import snowflake_engine_factory
-# from sqlalchemy.engine import Engine
+from gitlabdata.orchestration_utils import snowflake_engine_factory
+from sqlalchemy.engine import Engine
 
 
 def get_copy_command(model, sensitive, timestamp, inc_start, inc_end):
@@ -74,5 +74,5 @@ def copy_data(model, sensitive, timestamp, inc_start, inc_end):
 
 if __name__ == "__main__":
     logging.basicConfig(level=20)
-    Fire(get_copy_command)
+    Fire(copy_data)
     logging.info("Complete.")
