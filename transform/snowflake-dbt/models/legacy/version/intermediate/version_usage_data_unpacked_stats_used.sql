@@ -16,7 +16,7 @@ SELECT
   id,
   f.path                                                                          AS ping_name,
   created_at,
-  REPLACE(f.path, '.','_')                                                        AS full_ping_name,
+  REPLACE(f.path, '.', '_')                                                        AS full_ping_name,
   f.value                                                                         AS ping_value
 
 FROM usage_data,
