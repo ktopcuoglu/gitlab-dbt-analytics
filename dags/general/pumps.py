@@ -14,6 +14,7 @@ from kube_secrets import (
     SNOWFLAKE_PASSWORD,
     SNOWFLAKE_USER,
 )
+from kubernetes_helpers import get_affinity, get_toleration
 
 # Load the env vars into a dict and set Secrets
 env = os.environ.copy()
@@ -55,12 +56,10 @@ for pump_model in pumps:
 
     run_pumps_command = f"""
       {clone_repo_cmd} &&
-      python pump/pumps.py \
+      python /analytics/pump/pumps.py \
         --model={pump_model["model"]} \
         --sensitive={pump_model["sensitive"]} \
         --timestamp={pump_model["timestamp"]} \
-        --inc_start="2021-02-26" \
-        --inc_end="2021-02-27"  \
         /
   """
 
@@ -76,7 +75,15 @@ for pump_model in pumps:
             SNOWFLAKE_LOAD_DATABASE,
             SNOWFLAKE_LOAD_WAREHOUSE,
         ],
-        env_vars=pod_env_vars,
+        env_vars={
+            **pod_env_vars,
+            **{
+                "START": "{{ execution_date.isoformat() }}",
+                "END": "{{ next_execution_date.isoformat() }}",
+            },
+        },  # merge the dictionaries into one
+        affinity=get_affinity(False),
+        tolerations=get_toleration(False),
         arguments=[run_pumps_command],
         dag=dag,
     )
