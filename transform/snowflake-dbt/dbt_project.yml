@@ -206,7 +206,7 @@ models:
         +schema: license_db
 
       marts:
-        usage_pings:
+        usage_ping:
           +tags: ["product"]
       netsuite:
         +schema: netsuite
