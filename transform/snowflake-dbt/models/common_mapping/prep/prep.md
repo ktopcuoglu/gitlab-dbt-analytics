@@ -145,6 +145,22 @@ The grain of the table is license_id.
 
 {% enddocs %}
 
+{% docs prep_usage_ping_subscription_mapped_smau %}
+
+This data model contains the values of each SMAU metric for **Self-Managed** instances with a non-null `license_md5`. Rows missing a `dim_subscription_id` indicate that either no matching license was found in `map_license_subscription_account`, or no `dim_subscription_id` exists in `map_license_subscription_account` associated with the given `license_md5`.
+
+This data model is used for the Customer Health Dashboards.
+
+Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+{% enddocs %}
+
+{% docs prep_usage_ping_metric_name %}
+
+This table contains every Usage Ping metric name.
+
+{% enddocs %}
+
 {% docs prep_usage_self_managed_seat_link %}
 
 This prep table contains Seat Link data at a daily grain for downstream aggregation and summarization, as well as flags for data quality.

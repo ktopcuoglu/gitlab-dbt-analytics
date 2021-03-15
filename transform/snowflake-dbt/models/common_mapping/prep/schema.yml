@@ -561,6 +561,78 @@ models:
       - name: updated_at
         description: The timestamp of when the license was updated.
 
+  - name: prep_usage_ping_metric_name
+    description: '{{ doc("prep_usage_ping_metric_name") }}'
+    columns:
+      - name: metrics_path
+        description: path name of metric (counts.ci_builds instead of ci_builds given there are three ci_builds metrics)
+      - name: metrics_path_column_name
+        description: metric path name converted to a column name for ease of macro population 
+      - name: full_metrics_path
+        description: raw_usage_data_payload appended with path name of metric 
+      - name: main_json_name
+        description: the main json this usage metric comes from 
+      - name: feature_name
+        description: the name of the feature that this usage metric is meant to capture 
+
+  - name: prep_usage_ping_subscription_mapped_smau
+    description: '{{ doc("prep_usage_ping_subscription_mapped_smau") }}'
+    columns:
+      - name: dim_usage_ping_id
+        description: JOIN key to dim_usage_pings and prep_usage_pings. Represents a single usage ping. 
+        tests:
+          - not_null
+      - name: license_md5 
+        description: JOIN key to dim_licenses and dim_license 
+        tests:
+          - not_null
+      - name: dim_subscription_id 
+        description: JOIN key to dim_subscription 
+      - name: ping_created_at
+        description: The timestamp at which the usage ping was created_at 
+        tests:
+          - not_null
+      - name: ping_created_at_28_days_earlier
+        description: The timestamp at which the usage ping was created_at minus 28 days for the monthly metric time period
+        tests:
+          - not_null 
+      - name: ping_created_at_year
+        description: The year ('2017') the ping was created at
+        tests:
+          - not_null
+      - name: ping_created_at_month
+        description: The month ('2017-01-01') the ping was created at
+        tests:
+          - not_null
+      - name: ping_created_at_week
+        description: The week start ('2017-01-01') the ping was created at
+        tests:
+          - not_null
+      - name: ping_created_at_date
+        description: The day the ping was created at (removes the extra time information in the timestamp)
+        tests:
+          - not_null
+      - name: configure_redis_hll_counters_terraform_p_terraform_state_api_unique_users_monthly
+        description: Number of unique monthly [Terraform](https://about.gitlab.com/handbook/engineering/development/ops/configure/#sts=GitLab%20Terraform%20Provider) users
+      - name: create_repo_writes
+        description: Number of unique monthly users writing to project repositories
+      - name: manage_analytics_total_unique_counts_monthly
+        description: Number of unique monthly visits to Analytics
+      - name: monitor_incident_management_activer_user_28_days
+        description: Number of unique monthly Incident Management actions taken
+      - name: package_redis_hll_counters_user_packages_user_packages_total_unique_counts_monthly
+        description: Number of unique monthly packages used
+      - name: plan_redis_hll_counters_issues_edit_issues_edit_total_unique_counts_monthly
+        description: Number of unique monthly actions taken on project management issues
+      - name: protect_container_scanning_jobs_users_28_days
+        description: Number of unique monthly users performing [container scanning jobs](https://docs.gitlab.com/ee/user/application_security/container_scanning/)
+      - name: release_release_creation_users_28_days
+        description: Number of unique monthly users making deployments
+      - name: secure_secure_scanners_users_28_days
+        description: Number of unique monthly users performing Secure CI builds. CI builds are classified as Secure if they fall under any of the [Secure Domains of Expertise](https://about.gitlab.com/handbook/engineering/development/secure/#domains-of-expertise)
+      - name: verify_ci_pipelines_users_28_days
+        description: Number of unique monthly users running CI pipelines
+
   - name: prep_usage_self_managed_seat_link
     description: '{{ doc("prep_usage_self_managed_seat_link") }}'
     columns:
