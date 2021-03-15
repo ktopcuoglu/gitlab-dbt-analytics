@@ -44,9 +44,11 @@ def get_copy_command(model, sensitive, timestamp, inc_start, inc_end):
             model=model,
             query=query,
         )
+    
     except:
         logging.info("Failed to get copy command...")
     finally:
+        logging.info({copy_command})
         return copy_command
 
 
