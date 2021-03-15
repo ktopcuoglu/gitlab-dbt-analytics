@@ -205,6 +205,9 @@ models:
       license:
         +schema: license_db
 
+      marts:
+        usage_ping:
+          +tags: ["product"]
       netsuite:
         +schema: netsuite
         sensitive:
@@ -214,6 +217,10 @@ models:
       pmg:
         +materialized: table
         +schema: pmg
+
+      poc:
+        version:
+          +tags: ["product"]
 
       qualtrics:
         +materialized: table
