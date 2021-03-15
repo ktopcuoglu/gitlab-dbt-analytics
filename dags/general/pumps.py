@@ -2,11 +2,17 @@ import os
 from os import environ as env
 from datetime import datetime, timedelta
 from yaml import load, safe_load, YAMLError
-from fire import Fire
 
 from airflow import DAG
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
-from airflow_utils import DATA_IMAGE, clone_repo_cmd, gitlab_defaults, slack_failed_task
+from airflow_utils import (
+    DATA_IMAGE,
+    clone_repo_cmd,
+    gitlab_defaults,
+    slack_failed_task,
+    gitlab_pod_env_vars,
+    clone_and_setup_extraction_cmd,
+)
 from kube_secrets import (
     SNOWFLAKE_ACCOUNT,
     SNOWFLAKE_LOAD_DATABASE,
@@ -30,9 +36,9 @@ default_args = {
     "depends_on_past": False,
     "on_failure_callback": slack_failed_task,
     "owner": "airflow",
-    "retries": 1,
+    "retries": 0,
     "retry_delay": timedelta(minutes=1),
-    "start_date": datetime(2021, 3, 18),
+    "start_date": datetime(2021, 3, 14),
     "dagrun_timeout": timedelta(hours=1),
 }
 
@@ -50,24 +56,33 @@ with open(f"{airflow_home}/analytics/pump/pumps.yml", "r") as file:
     # there has to be a better way to do this
     pumps = [(pump) for pump in stream["pumps"]]
 
+
+# inc_start= '{{ execution_date.isoformat() }}'
+# inc_end= '{{ next_execution_date.isoformat() }}'
+
 # Loop through pumps to create tasks
 
 for pump_model in pumps:
 
+    task_identifier = pump_model["model"].replace('_','-')
+
     run_pumps_command = f"""
       {clone_repo_cmd} &&
-      python /analytics/pump/pumps.py \
+      export PYTHONPATH="$CI_PROJECT_DIR/orchestration/:$PYTHONPATH" &&
+      python3 /analytics/pump/pumps.py \
         --model={pump_model["model"]} \
         --sensitive={pump_model["sensitive"]} \
         --timestamp={pump_model["timestamp"]} \
+        --inc_start="2021-02-26" \
+        --inc_end="2021-02-27" \
         /
   """
 
     run_pumps = KubernetesPodOperator(
         **gitlab_defaults,
         image=DATA_IMAGE,
-        task_id=pump_model["model"],
-        name=pump_model["model"],
+        task_id=task_identifier,
+        name=task_identifier,
         secrets=[
             SNOWFLAKE_USER,
             SNOWFLAKE_PASSWORD,
@@ -75,13 +90,7 @@ for pump_model in pumps:
             SNOWFLAKE_LOAD_DATABASE,
             SNOWFLAKE_LOAD_WAREHOUSE,
         ],
-        env_vars={
-            **pod_env_vars,
-            **{
-                "START": "{{ execution_date.isoformat() }}",
-                "END": "{{ next_execution_date.isoformat() }}",
-            },
-        },  # merge the dictionaries into one
+        env_vars=pod_env_vars,
         affinity=get_affinity(False),
         tolerations=get_toleration(False),
         arguments=[run_pumps_command],

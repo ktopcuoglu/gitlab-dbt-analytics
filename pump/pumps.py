@@ -3,18 +3,14 @@ import sys
 from os import environ as env
 
 from fire import Fire
-from gitlabdata.orchestration_utils import snowflake_engine_factory
-from sqlalchemy.engine import Engine
+# from gitlabdata.orchestration_utils import snowflake_engine_factory
+# from sqlalchemy.engine import Engine
 
 
-def get_copy_command(model, sensitive, timestamp) -> str:
+def get_copy_command(model, sensitive, timestamp, inc_start, inc_end):
     """
     Generate a copy command based on data passed from pumps.yml
     """
-    config_dict = env.copy()
-    inc_start = config_dict["START"]
-    inc_end = config_dict["END"]
-
     try:
         logging.info("Getting copy command...")
 
@@ -53,7 +49,7 @@ def get_copy_command(model, sensitive, timestamp) -> str:
         return copy_command
 
 
-def copy_data(model, sensitive, timestamp) -> None:
+def copy_data(model, sensitive, timestamp, inc_start, inc_end):
     """
     run copy command to copy data from snowflake
     """
@@ -76,5 +72,5 @@ def copy_data(model, sensitive, timestamp) -> None:
 
 if __name__ == "__main__":
     logging.basicConfig(level=20)
-    fire.Fire(copy_data)
+    Fire(get_copy_command)
     logging.info("Complete.")
