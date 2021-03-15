@@ -7,7 +7,7 @@
 WITH data AS ( 
   
     SELECT * 
-    FROM {{ ref('usage_data_all_time_flattened')}}
+    FROM {{ ref('prep_usage_data_all_time_flattened')}}
     {% if is_incremental() %}
 
       WHERE created_at >= (SELECT MAX(DATEADD('month', -1, created_month)) FROM {{this}})
@@ -54,7 +54,9 @@ SELECT
   is_paid_gmau,
   is_umau,
   clean_metrics_name,
+  time_period,
   IFF(monthly_metric_value < 0, 0, monthly_metric_value) AS monthly_metric_value,
+  metric_value                                           AS original_metric_value,
   has_timed_out
 FROM monthly
   {% if is_incremental() %}

@@ -80,6 +80,14 @@ def load_incremental(
         else:
             logging.info(f"Replication is good at {replication_timestamp}")
 
+        append_to_xcom_file(
+            {
+                "max_data_available": min(
+                    replication_timestamp, execution_date
+                ).strftime("%Y-%m-%dT%H:%M:%S%z")
+            }
+        )
+
     # If _TEMP exists in the table name, skip it because it needs a full sync
     # If a temp table exists then it needs to finish syncing so don't load incrementally
     if "_TEMP" == table_name[-5:] or target_engine.has_table(f"{table_name}_TEMP"):
@@ -130,40 +138,16 @@ def sync_incremental_ids(
     return True
 
 
-def get_highest_xmin(source_engine: Engine, source_table_name: str) -> int:
-    query = f"SELECT MAX(xmin::text::bigint) FROM {source_table_name};"
-    return int(query_executor(source_engine, query)[0][0])
-
-
-def get_last_xmin() -> int:
-    last_xmin = os.environ["LAST_XMIN"]
-    if last_xmin == "":
-        last_xmin = "0"
-    return int(last_xmin)
-
-
-def append_latest_xmin_to_xcom(xmin: int) -> None:
-    append_to_xcom_file({"max_xmin": xmin})
-
-
 def load_scd(
     source_engine: Engine,
     target_engine: Engine,
     source_table_name: str,
     table_dict: Dict[Any, Any],
     table_name: str,
-    has_xmin: bool,
 ) -> bool:
     """
     Load tables that are slow-changing dimensions.
     """
-
-    has_xmin = False  # Hopefully temporary -- see https://gitlab.com/gitlab-data/analytics/-/issues/8086
-
-    if has_xmin:
-        last_xmin = get_last_xmin()
-        highest_xmin = get_highest_xmin(source_engine, source_table_name)
-        append_latest_xmin_to_xcom(highest_xmin)
 
     # If the schema has changed for the SCD table, treat it like a backfill
     if "_TEMP" == table_name[-5:] or target_engine.has_table(f"{table_name}_TEMP"):
@@ -174,18 +158,13 @@ def load_scd(
     else:
         backfill = False
 
-    if has_xmin and last_xmin == highest_xmin and not backfill:
-        logging.info("No new data to load... aborting load")
-        return True
-
     raw_query = table_dict["import_query"]
-    additional_filter = table_dict.get("additional_filtering", "WHERE 1=1")
+    additional_filter = table_dict.get("additional_filtering", "")
     advanced_metadata = table_dict.get("advanced_metadata", False)
 
     logging.info(f"Processing table: {source_table_name}")
     query = f"{raw_query} {additional_filter}"
-    if has_xmin:
-        query = query + f" AND xmin::text::bigint > {last_xmin}"
+
     logging.info(query)
     chunk_and_upload(
         query,

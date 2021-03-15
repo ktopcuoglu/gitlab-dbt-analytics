@@ -27,6 +27,11 @@ databases:
     - dtownsend_prep:
         shared: no
 
+    - dvanrooijen_prod:
+        shared: no
+    - dvanrooijen_prep:
+        shared: no
+
     - ianschweickart_prod:
         shared: no
     - ianschweickart_prep:
@@ -45,11 +50,6 @@ databases:
     - jstark_prod:
         shared: no
     - jstark_prep:
-        shared: no
-
-    - ktam_prod:
-        shared: no
-    - ktam_prep:
         shared: no
 
     - laddula_prod:
@@ -82,11 +82,6 @@ databases:
     - parmstrong_prep:
         shared: no
 
-    - pluthra_prod:
-        shared: no
-    - pluthra_prep:
-        shared: no
-
     - rheannamistry_prod:
         shared: no
     - rheannamistry_prep:
@@ -107,6 +102,11 @@ databases:
     - trevorromero_prod:
         shared: no
     - trevorromero_prep:
+        shared: no
+
+    - tullylanterdd_prod:
+        shared: no
+    - tullylanterdd_prep:
         shared: no
 
     - tmurphy_prod:
@@ -360,6 +360,7 @@ roles:
         member_of:
             - analyst_core
             - bamboohr_analytics
+            - bamboohr_sensitive_separations
             - boneyard
             - covid19
             - dbt_analytics
@@ -530,6 +531,7 @@ roles:
     - loader:
         warehouses:
             - loading
+            - usage_ping
         owns:
             schemas:
                 - raw.bamboohr
@@ -564,6 +566,7 @@ roles:
         privileges:
             databases:
                 read:
+                    - prep
                     - prod
                     - raw
                 write:
@@ -571,14 +574,18 @@ roles:
                     - raw
             schemas:
                 read:
+                    - prep.gitlab_dotcom
                     - prod.boneyard
+                    - prod.legacy
                     - raw.*
                 write:
                     - prod.boneyard
                     - raw.*
             tables:
                 read:
+                    - prep.gitlab_dotcom.*
                     - prod.boneyard.*
+                    - prod.legacy.gitlab_dotcom_namespaces_xf
                     - raw.*.*
                 write:
                     - prod.boneyard.*
@@ -772,6 +779,20 @@ roles:
                     - prep.sensitive.bamboohr_job_role
                     - prep.sensitive.bamboohr_locality
                     - prep.sensitive.bamboohr_headcount_intermediate
+
+    - bamboohr_sensitive_separations:
+        warehouses:
+            - analyst_xs
+        privileges:
+            databases:
+                read:
+                    - prep
+            schemas:
+                read:
+                    - prep.sensitive
+            tables:
+                read:
+                    - prep.sensitive.bamboohr_separations
 
     - bamboohr:
         warehouses:
@@ -1588,10 +1609,12 @@ roles:
             schemas:
                 read:
                     - prep.version_db
+                    - raw.saas_usage_ping
                     - raw.version_db
             tables:
                 read:
                     - prep.version_db.*
+                    - raw.saas_usage_ping.*
                     - raw.version_db.*
 
 
@@ -1821,6 +1844,45 @@ roles:
                     - dtownsend_prep.*.*
                     - dtownsend_prod.*.*
 
+    - dvanrooijen:
+        member_of:
+            - analyst_core
+            - data_manager
+        warehouses:
+            - analyst_xs
+        owns:
+            databases:
+                - dvanrooijen_prep
+                - dvanrooijen_prod
+            schemas:
+                - dvanrooijen_prep.*
+                - dvanrooijen_prod.*
+            tables:
+                - dvanrooijen_prep.*.*
+                - dvanrooijen_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - dvanrooijen_prep
+                    - dvanrooijen_prod
+                write:
+                    - dvanrooijen_prep
+                    - dvanrooijen_prod
+            schemas:
+                read:
+                    - dvanrooijen_prep.*
+                    - dvanrooijen_prod.*
+                write:
+                    - dvanrooijen_prep.*
+                    - dvanrooijen_prod.*
+            tables:
+                read:
+                    - dvanrooijen_prep.*.*
+                    - dvanrooijen_prod.*.*
+                write:
+                    - dvanrooijen_prep.*.*
+                    - dvanrooijen_prod.*.*
+
     - eburke:
         member_of: []
         warehouses: []
@@ -1844,6 +1906,7 @@ roles:
     - ewegscheider:
         member_of:
             - people_operations
+            - bamboohr_sensitive_separations
         warehouses:
             - analyst_xs
         privileges:
@@ -2142,49 +2205,8 @@ roles:
             - analyst_xs
 
     - ktam:
-        member_of:
-            - analyst_core
-            - data_manager
-            - dbt_analytics_sensitive
-            - greenhouse
-            - data_team_analyst
-        warehouses:
-            - engineer_xs
-            - engineer_xl
-            - loading
-            - reporting
-        owns:
-            databases:
-                - ktam_prep
-                - ktam_prod
-            schemas:
-                - ktam_prep.*
-                - ktam_prod.*
-            tables:
-                - ktam_prep.*.*
-                - ktam_prod.*.*
-        privileges:
-            databases:
-                read:
-                    - ktam_prep
-                    - ktam_prod
-                write:
-                    - ktam_prep
-                    - ktam_prod
-            schemas:
-                read:
-                    - ktam_prep.*
-                    - ktam_prod.*
-                write:
-                    - ktam_prep.*
-                    - ktam_prod.*
-            tables:
-                read:
-                    - ktam_prep.*.*
-                    - ktam_prod.*.*
-                write:
-                    - ktam_prep.*.*
-                    - ktam_prod.*.*
+        member_of: []
+        warehouses: []
 
     - ksmith:
         member_of: []
@@ -2511,47 +2533,8 @@ roles:
             - admin
 
     - pluthra:
-        member_of:
-            - analyst_people
-            - bamboohr
-            - customers_db
-            - qualtrics
-            - qualtrics_sensitive
-            - data_team_analyst
-        warehouses:
-            - analyst_xs
-        owns:
-            databases:
-                - pluthra_prep
-                - pluthra_prod
-            schemas:
-                - pluthra_prep.*
-                - pluthra_prod.*
-            tables:
-                - pluthra_prep.*.*
-                - pluthra_prod.*.*
-        privileges:
-            databases:
-                read:
-                    - pluthra_prep
-                    - pluthra_prod
-                write:
-                    - pluthra_prep
-                    - pluthra_prod
-            schemas:
-                read:
-                    - pluthra_prep.*
-                    - pluthra_prod.*
-                write:
-                    - pluthra_prep.*
-                    - pluthra_prod.*
-            tables:
-                read:
-                    - pluthra_prep.*.*
-                    - pluthra_prod.*.*
-                write:
-                    - pluthra_prep.*.*
-                    - pluthra_prod.*.*
+        member_of: []
+        warehouses: []
 
     - rheannamistry:
         member_of:
@@ -2765,6 +2748,43 @@ roles:
                     - testing_db.*.*
                 write:
                     - testing_db.*.*
+    - tullylanterdd:
+        member_of:
+            - decisive_data
+        warehouses:
+            - analyst_xs
+        owns:
+            databases:
+                - tullylanterdd_prep
+                - tullylanterdd_prod
+            schemas:
+                - tullylanterdd_prep.*
+                - tullylanterdd_prod.*
+            tables:
+                - tullylanterdd_prep.*.*
+                - tullylanterdd_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - tullylanterdd_prep
+                    - tullylanterdd_prod
+                write:
+                    - tullylanterdd_prep
+                    - tullylanterdd_prod
+            schemas:
+                read:
+                    - tullylanterdd_prep.*
+                    - tullylanterdd_prod.*
+                write:
+                    - tullylanterdd_prep.*
+                    - tullylanterdd_prod.*
+            tables:
+                read:
+                    - tullylanterdd_prep.*.*
+                    - tullylanterdd_prod.*.*
+                write:
+                    - tullylanterdd_prep.*.*
+                    - tullylanterdd_prod.*.*
 
     - tmurphy:
         member_of:
@@ -3035,6 +3055,12 @@ users:
         member_of:
             - dtownsend
 
+    - dvanrooijen:
+        can_login: yes
+        member_of:
+            - dvanrooijen
+            - accountadmin
+
     - eburke:
         can_login: no
         member_of: []
@@ -3185,9 +3211,8 @@ users:
             - kchu
 
     - ktam:
-        can_login: yes
-        member_of:
-            - ktam
+        can_login: no
+        member_of: []
 
     - ksmith:
         can_login: no
@@ -3266,6 +3291,9 @@ users:
         can_login: yes
         member_of:
             - mwalker
+            - accountadmin
+            - securityadmin
+            - sysadmin
 
     - mwawrzyniak:
         can_login: yes
@@ -3307,9 +3335,8 @@ users:
             - sysadmin
 
     - pluthra:
-        can_login: yes
-        member_of:
-            - pluthra
+        can_login: no
+        member_of: []
 
     - pwc_jblessing:
         can_login: no
@@ -3395,6 +3422,11 @@ users:
         can_login: yes
         member_of:
             - target_snowflake
+
+    - tullylanterdd:
+        can_login: yes
+        member_of:
+            - tullylanterdd
 
     - tlapiana:
         can_login: no
@@ -3505,3 +3537,6 @@ warehouses:
 
     - transforming_4xl:
         size: "4-x-large"
+
+    - usage_ping:
+        size: small

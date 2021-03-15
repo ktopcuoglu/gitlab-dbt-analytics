@@ -29,6 +29,13 @@ WITH source AS (
       
 )
 
-SELECT *
+SELECT
+  compensation_update_id,
+  employee_id,
+  effective_date,
+  compensation_type,
+  compensation_change_reason,
+  pay_rate,
+  IFF(compensation_type = 'Hourly', compensation_value * 80, compensation_value) AS compensation_value,
+  compensation_currency
 FROM renamed
-{# WHERE compensation_update_id != 20263 ---incorrectly labeled  #}
