@@ -36,7 +36,6 @@ sources:
       - name: clari_ai_projection
       - name: clari_export_forecast_net_iacv
       - name: communication_certificate
-      - name: company_call_attendance
       - name: compensation_certificate
       - name: comp_band
       - name: data_team_capacity
