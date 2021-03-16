@@ -57,8 +57,8 @@ with open(f"{airflow_home}/analytics/pump/pumps.yml", "r") as file:
     pumps = [(pump) for pump in stream["pumps"]]
 
 
-# inc_start= '{{ execution_date.isoformat() }}'
-# inc_end= '{{ next_execution_date.isoformat() }}'
+execution_date = '{{ execution_date }}'
+next_execution_date = '{{ next_execution_date }}'
 
 # Loop through pumps to create tasks
 
@@ -73,8 +73,8 @@ for pump_model in pumps:
         --model={pump_model["model"]} \
         --sensitive={pump_model["sensitive"]} \
         --timestamp={pump_model["timestamp"]} \
-        --inc_start='{{ execution_date.isoformat() }}' \
-        --inc_end='{{ next_execution_date.isoformat() }}'
+        --inc_start={execution_date} \
+        --inc_end={next_execution_date}
       """
 
     run_pumps = KubernetesPodOperator(
