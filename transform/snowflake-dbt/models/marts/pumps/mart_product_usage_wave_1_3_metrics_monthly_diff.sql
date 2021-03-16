@@ -160,37 +160,37 @@
       commit_comment_since_last_ping,
       IFF(snapshot_month <= commit_comment_first_ping_month
             OR snapshot_month > commit_comment_last_ping_month,
-          NULL, commit_comment_smoothed)                                                AS commit_comment_normalized_monthly,
+          NULL, commit_comment_smoothed)                                                AS commit_comment_estimated_monthly,
       source_code_pushes_all_time_event,
       source_code_pushes_since_last_ping,
       IFF(snapshot_month <= source_code_pushes_first_ping_month
             OR snapshot_month > source_code_pushes_last_ping_month,
-          NULL, source_code_pushes_smoothed)                                            AS source_code_pushes_normalized_monthly,
+          NULL, source_code_pushes_smoothed)                                            AS source_code_pushes_estimated_monthly,
       ci_builds_all_time_event,
       ci_builds_since_last_ping,
       IFF(snapshot_month <= ci_builds_first_ping_month
             OR snapshot_month > ci_builds_last_ping_month,
-          NULL, ci_builds_smoothed)                                                     AS ci_builds_normalized_monthly,
+          NULL, ci_builds_smoothed)                                                     AS ci_builds_estimated_monthly,
       ci_runners_all_time_event,
       ci_runners_since_last_ping,
       IFF(snapshot_month <= ci_runners_first_ping_month
             OR snapshot_month > ci_runners_last_ping_month,
-          NULL, ci_runners_smoothed)                                                    AS ci_runners_normalized_monthly,
+          NULL, ci_runners_smoothed)                                                    AS ci_runners_estimated_monthly,
       template_repositories_all_time_event,
       template_repositories_since_last_ping,
       IFF(snapshot_month <= template_repositories_first_ping_month
             OR snapshot_month > template_repositories_last_ping_month,
-          NULL, template_repositories_smoothed)                                         AS template_repositories_normalized_monthly,
+          NULL, template_repositories_smoothed)                                         AS template_repositories_estimated_monthly,
       projects_with_packages_all_time_event,
       projects_with_packages_since_last_ping,
       IFF(snapshot_month <= projects_with_packages_first_ping_month
             OR snapshot_month > projects_with_packages_last_ping_month,
-          NULL, projects_with_packages_smoothed)                                        AS projects_with_packages_normalized_monthly,
+          NULL, projects_with_packages_smoothed)                                        AS projects_with_packages_estimated_monthly,
       auto_devops_enabled_all_time_event,
       auto_devops_enabled_since_last_ping,
       IFF(snapshot_month <= auto_devops_enabled_first_ping_month
             OR snapshot_month > auto_devops_enabled_last_ping_month,
-          NULL, auto_devops_enabled_smoothed)                                           AS auto_devops_enabled_normalized_monthly,
+          NULL, auto_devops_enabled_smoothed)                                           AS auto_devops_enabled_estimated_monthly,
       ci_builds_all_time_user,
       ci_build_users_since_last_ping
     FROM smoothed_diffs
@@ -202,7 +202,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@ischweickartDD",
-    updated_by="@ischweickartDD",
+    updated_by="@vedprakash2021",
     created_date="2021-03-04",
-    updated_date="2021-03-04"
+    updated_date="2021-03-16"
 ) }}
