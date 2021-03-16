@@ -11,7 +11,7 @@ WITH source AS (
     total_full_members::NUMBER                             AS full_members,
     total_guests::NUMBER                                   AS guests,
     public_channels_in_single_workspace::NUMBER            AS public_channels_in_single_workspace,
-    total_membership::NUMBER                               AS total_membership,
+    total_enabled_membership::NUMBER                       AS total_membership,
     -- daily totals
     daily_active_members::NUMBER                           AS daily_active_members,
     daily_members_posting_messages::NUMBER                 AS daily_members_posting_messages,
