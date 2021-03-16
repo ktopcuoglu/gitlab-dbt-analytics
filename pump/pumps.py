@@ -19,7 +19,7 @@ def get_copy_command(model, sensitive, timestamp, inc_start, inc_end):
         )
 
         where_statement = (
-            "WHERE {timestamp} between '{inc_start}' and '{inc_end}'".format(
+            " WHERE {timestamp} between '{inc_start}' and '{inc_end}'".format(
                 timestamp=timestamp,
                 inc_start=inc_start,
                 inc_end=inc_end,
