@@ -169,7 +169,7 @@ WITH filtered_source as (
     WHERE app_id IS NOT NULL
       AND DATE_PART(month, TRY_TO_TIMESTAMP(derived_tstamp)) = '{{ month_value }}'
       AND DATE_PART(year, TRY_TO_TIMESTAMP(derived_tstamp)) = '{{ year_value }}'
-      AND app_id  = 'gitlab-staging'        )
+      AND app_id  = 'gitlab-staging'
 
 )
 
