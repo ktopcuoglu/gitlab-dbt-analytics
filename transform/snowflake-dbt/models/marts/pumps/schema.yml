@@ -221,25 +221,25 @@ models:
       - name: hostname
       - name: commit_comment_all_time_event
       - name: commit_comment_since_last_ping
-      - name: commit_comment_normalized_monthly
+      - name: commit_comment_estimated_monthly
       - name: source_code_pushes_all_time_event
       - name: source_code_pushes_since_last_ping
-      - name: source_code_pushes_normalized_monthly
+      - name: source_code_pushes_estimated_monthly
       - name: ci_builds_all_time_event
       - name: ci_builds_since_last_ping
-      - name: ci_builds_normalized_monthly
+      - name: ci_builds_estimated_monthly
       - name: ci_runners_all_time_event
       - name: ci_runners_since_last_ping
-      - name: ci_runners_normalized_monthly
+      - name: ci_runners_estimated_monthly
       - name: template_repositories_all_time_event
       - name: template_repositories_since_last_ping
-      - name: template_repositories_normalized_monthly
+      - name: template_repositories_estimated_monthly
       - name: projects_with_packages_all_time_event
       - name: projects_with_packages_since_last_ping
-      - name: projects_with_packages_normalized_monthly
+      - name: projects_with_packages_estimated_monthly
       - name: auto_devops_enable_all_time_event
       - name: auto_devops_enable_since_last_ping
-      - name: auto_devops_enable_normalized_monthly
+      - name: auto_devops_enable_estimated_monthly
       - name: ci_builds_all_time_user
       - name: ci_builds_since_last_ping
 
