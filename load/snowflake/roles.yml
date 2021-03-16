@@ -348,6 +348,7 @@ roles:
             - google_analytics_360
             - netsuite
             - keyhole_twitter
+            - marketing_dnc
             - pmg
             - snowflake_db
             - zendesk
@@ -1327,6 +1328,21 @@ roles:
                 read:
                     - prep.license_db.*
                     - raw.license_db.*
+
+    - marketing_dnc:
+        privileges:
+            databases:
+                read:
+                    - prep
+                    - raw
+            schemas:
+                read:
+                    - prep.marketing_dnc
+                    - raw.marketing_dnc
+            tables:
+                read:
+                    - prep.marketing_dnc.*
+                    - raw.marketing_dnc.*
 
     - keyhole_twitter:
         privileges:

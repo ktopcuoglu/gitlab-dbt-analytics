@@ -1,0 +1,14 @@
+version: 2
+
+models:
+  - name: dnc_list
+    description: a static list for unmarketable contacts in the email marketing db
+    columns:
+      - name: email_address
+      - name: is_role
+      - name: is_disposable
+      - name: did_you_mean
+      - name: result
+      - name: reason
+      - name: risk
+      - name: root_email_address
