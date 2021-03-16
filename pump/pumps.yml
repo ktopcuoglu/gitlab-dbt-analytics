@@ -2,10 +2,8 @@ pumps:
   - model: pump_hash_marketing_contact
     timestamp: last_changed
     sensitive: False
-    schedule: daily
     owner: '@jjstark'
   - model: pump_marketing_contact
     timestamp: last_changed
     sensitive: True
-    schedule: daily
     owner: '@jjstark'
