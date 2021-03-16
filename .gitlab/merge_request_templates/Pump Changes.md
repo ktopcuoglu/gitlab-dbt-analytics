@@ -1,6 +1,6 @@
 ## Issue
-<!--- Link the Issue this MR closes --->
-Closes #
+
+Closes # <!--- Link the Issue this MR closes --->
 
 ## Background
 
