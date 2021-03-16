@@ -57,14 +57,14 @@ with open(f"{airflow_home}/analytics/pump/pumps.yml", "r") as file:
     pumps = [(pump) for pump in stream["pumps"]]
 
 
-execution_date = '{{ execution_date }}'
-next_execution_date = '{{ next_execution_date }}'
+execution_date = "{{ execution_date }}"
+next_execution_date = "{{ next_execution_date }}"
 
 # Loop through pumps to create tasks
 
 for pump_model in pumps:
 
-    task_identifier = pump_model["model"].replace('_','-')
+    task_identifier = pump_model["model"].replace("_", "-")
 
     run_pumps_command = f"""
       {clone_repo_cmd} &&

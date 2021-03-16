@@ -31,7 +31,6 @@ def get_copy_command(model, sensitive, timestamp, inc_start, inc_end):
         else:
             query = "SELECT * " + from_statement + where_statement
 
-        
         copy_command_tmp = """
         COPY INTO @RAW.PUBLIC.S3_DATA_PUMP/{model}
         FROM ({query})
@@ -44,7 +43,7 @@ def get_copy_command(model, sensitive, timestamp, inc_start, inc_end):
             model=model,
             query=query,
         )
-    
+
     except:
         logging.info("Failed to get copy command...")
     finally:
