@@ -181,7 +181,7 @@ WITH filtered_source as (
       SELECT 1
       FROM filtered_source fe2
       WHERE fe1.event_id = fe2.event_id
-      GROUP BY event_id
+      GROUP BY fe2.event_id
       HAVING COUNT(*) > 1
     )
 
@@ -334,7 +334,8 @@ WITH filtered_source as (
       SELECT event_id
       FROM events_with_web_page_id web_page_events
       WHERE events_with_web_page_id.event_id = web_page_events.event_id
-      GROUP BY event_id HAVING COUNT(1) > 1
+      GROUP BY event_id 
+      HAVING COUNT(1) > 1
 
     )
 
