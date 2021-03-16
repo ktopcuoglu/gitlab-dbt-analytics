@@ -19,6 +19,22 @@ WITH marketing_contact AS (
     WHERE subscription_start_date is not null
     GROUP BY dim_marketing_contact_id
 
+), paid_subscription_aggregate AS (
+
+    SELECT 
+      dim_marketing_contact_id,
+      COUNT(*)                                                                                   AS nbr_of_paid_subscriptions
+    FROM marketing_contact_order
+    WHERE subscription_start_date is not null
+      AND (is_saas_bronze_tier 
+           OR is_saas_premium_tier 
+           OR is_saas_ultimate_tier 
+           OR is_self_managed_starter_tier
+           OR is_self_managed_premium_tier
+           OR is_self_managed_ultimate_tier
+          )
+    GROUP BY dim_marketing_contact_id
+
 ), prep AS (
   
     SELECT     
@@ -305,7 +321,7 @@ WITH marketing_contact AS (
       prep.*, 
       subscription_aggregate.min_subscription_start_date,
       subscription_aggregate.max_subscription_end_date,
-      subscription_aggregate.nbr_of_subscriptions,
+      paid_subscription_aggregate.nbr_of_paid_subscriptions,
       CASE 
         WHEN (responsible_for_group_saas_free_tier
               OR individual_namespace_is_saas_free_tier
@@ -357,6 +373,8 @@ WITH marketing_contact AS (
       ON marketing_contact.dim_marketing_contact_id = prep.dim_marketing_contact_id
     LEFT JOIN subscription_aggregate
       ON subscription_aggregate.dim_marketing_contact_id = marketing_contact.dim_marketing_contact_id
+    LEFT JOIN paid_subscription_aggregate
+      ON paid_subscription_aggregate.dim_marketing_contact_id = marketing_contact.dim_marketing_contact_id
 
 )
 
@@ -395,7 +413,7 @@ WITH marketing_contact AS (
       'is_self_managed_ultimate_tier',
       'min_subscription_start_date',
       'max_subscription_end_date',
-      'nbr_of_subscriptions',
+      'nbr_of_paid_subscriptions',
       'email_address',
       'first_name',
       'last_name',
