@@ -70,10 +70,10 @@ models:
         description: Date that Zuora record was created for marketing contact. 
       - name: zuora_active_state
         description: Lists if marketing contact is active in Zuora.
-      - name: is_email_address_valid
-        description: Flags if the email address is valid
-      - name: invalid_email_address_reason
-        description: Reason why the email address is invalid
+      - name: wip_is_email_address_valid
+        description: Flags if the email address is valid. Work in progress - full list of invalid emails is not loaded
+      - name: wip_invalid_email_address_reason
+        description: Reason why the email address is invalid. Work in progress - full list of invalid emails is not loaded
       
 
   - name: bdg_marketing_contact_role
@@ -284,7 +284,7 @@ models:
         description: Date that Zuora record was created for marketing contact. 
       - name: zuora_active_state
         description: Lists if marketing contact is active in Zuora.
-      - name: is_email_address_valid
-        description: Flags if the email address is valid
-      - name: invalid_email_address_reason
-        description: Reason why the email address is invalid
+      - name: wip_is_email_address_valid
+        description: Flags if the email address is valid. Work in progress - full list of invalid emails is not loaded
+      - name: wip_invalid_email_address_reason
+        description: Reason why the email address is invalid. Work in progress - full list of invalid emails is not loaded

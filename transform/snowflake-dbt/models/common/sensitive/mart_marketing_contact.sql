@@ -446,8 +446,8 @@ WITH marketing_contact AS (
       'zuora_contact_id',
       'zuora_created_date',
       'zuora_active_state',
-      'is_valid_email_address',
-      'invalid_email_address_reason'
+      'wip_is_valid_email_address',
+      'wip_invalid_email_address_reason'
       ]
 ) }}
 

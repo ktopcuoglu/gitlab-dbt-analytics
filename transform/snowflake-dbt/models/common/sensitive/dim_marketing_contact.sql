@@ -245,11 +245,11 @@ WITH sfdc_lead AS (
         WHEN dnc_list.result IN ('undeliverable', 'do_not_send')
           THEN FALSE
         ELSE TRUE
-      END                                                                                                                AS is_valid_email_address,
+      END                                                                                                                AS wip_is_valid_email_address,
       CASE
         WHEN NOT is_valid_email_address
           THEN dnc_list.result
-      END                                                                                                                AS invalid_email_address_reason
+      END                                                                                                                AS wip_invalid_email_address_reason
 
     FROM emails
     LEFT JOIN sfdc
