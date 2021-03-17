@@ -47,48 +47,34 @@
       gmau_monthly.cleaned_version,
       gmau_monthly.ping_created_at,
       {{ get_date_id('gmau_monthly.ping_created_at') }}             AS ping_created_date_id,
-      /* Missing: */
-        --> Manage:Access (user_auth_by_provider)
-        --> Enablement:Infrastructure (COUNT_EVENTS_ACTIVE_USERS_LAST_28_DAYS_BY_PLAN_WAS_PAID)
-        --> Package:Package (user_packages_total_unique_counts_monthly)
-        --> Secure:Threat Insights ()
-      /* Different metric definition: */
-        --> Enablement:Geo (geo_nodes)
-        --> Release:Release (deployments)
-        --> Secure:Fuzz Testing ()
-      /* Manage:Optimize */gmau_monthly.analytics_analytics_total_unique_counts_monthly,
-      /* Manage:Compliance */gmau_monthly.compliance_compliance_total_unique_counts_monthly,
-      /* */gmau_monthly.knowledge_action_monthly_active_users_design_management,
-      /* Manage:Import */gmau_monthly.import_usage_activity_by_stage_monthly_manage_projects_imported_total,
-      /* Plan:Product Planning */gmau_monthly.portfolio_management_epic_creation_users_28_days,
-      /* Plan:Project Management */gmau_monthly.project_management_redis_hll_counters_issues_edit_issues_edit_total_unique_counts_monthly,
-      /* Create:Source Code */gmau_monthly.source_code_repo_writes,
-      /* Create:Editor  */gmau_monthly.editor_ide_edit_users_28_days,
-      /*  */gmau_monthly.static_site_editor_static_site_editor_views_28_days,
-      /* Create:Ecosystem */gmau_monthly.ecosystem_redis_hll_counters_ecosystem_ecosystem_total_unique_counts_monthly,
-      /* Enablement:Geo */gmau_monthly.geo_usage_activity_by_stage_monthly_enablement_usage_activity_by_stage_monthly_manage_groups,
-      /* Enablement:Global Search(?) */gmau_monthly.global_search_paid_search_28_days
-                                     + gmau_monthly.global_search_search_users_28_days,
-      /* Verify:CI */gmau_monthly.continuous_integration_ci_pipelines_users_28_days,
-      /* Verify:Pipeline Authoring */gmau_monthly.code_review_merge_request_interaction_users_28_days,
-      /* Verify:Testing */gmau_monthly.testing_counts_monthly_aggregated_metrics_i_testing_paid_monthly_active_user_total,
-      /* Release:Release */gmau_monthly.release_management_release_creation_users_28_days,
-      /* Configure:Configure */gmau_monthly.configure_redis_hll_counters_terraform_p_terraform_state_api_unique_users_monthly,
-      /* Monitor:Monitor */gmau_monthly.monitor_incident_management_activer_user_28_days,
-      /* Secure:Static Analysis */CASE
-                                    WHEN gmau_monthly.static_analysis_static_analysis_jobs_users_28_days > gmau_monthly.static_analysis_static_analysis_jobs_users_28_days(1)
-                                    THEN gmau_monthly.static_analysis_static_analysis_jobs_users_28_days
-                                    ELSE gmau_monthly.static_analysis_static_analysis_jobs_users_28_days(1)
-                                  END AS static_analysis_static_analysis_jobs_users_28_days,
-      /* Secure:Dynamic Analysis */gmau_monthly.dynamic_analysis_dast_jobs_users_28_days,
-      /* Secure:Composition Analysis */CASE 
-                                        WHEN gmau_monthly.composition_analysis_dependency_scanning_jobs_users_28_days > gmau_monthly.composition_analysis_license_management_jobs_user_28_days
-                                        THEN gmau_monthly.composition_analysis_dependency_scanning_jobs_users_28_days
-                                        ELSE gmau_monthly.composition_analysis_license_management_jobs_user_28_days
-                                       END AS [Secure:Composition Analysis](?),
-      /*  */gmau_monthly.composition_analysis_license_scanning_jobs_users_28_days,
-      /* Secure:Fuzz Testing */gmau_monthly.fuzz_testing_fuzz_testing_jobs_users_28_days,
-      /* Protect:Container Security */gmau_monthly.container_security_container_scanning_jobs_users_28_days,
+      gmau_monthly.analytics_analytics_total_unique_counts_monthly,                                                 /* Manage:Optimize */
+      gmau_monthly.compliance_compliance_total_unique_counts_monthly,                                               /* Manage:Compliance */
+      --gmau_monthly.knowledge_action_monthly_active_users_design_management,                                       /*  */
+      gmau_monthly.import_usage_activity_by_stage_monthly_manage_unique_users_all_imports,                          /* Manage:Import */
+      gmau_monthly.portfolio_management_epic_creation_users_28_days,                                                /* Plan:Product Planning */
+      gmau_monthly.project_management_redis_hll_counters_issues_edit_issues_edit_total_unique_counts_monthly,       /* Plan:Project Management */
+      gmau_monthly.source_code_repo_writes,                                                                         /* Create:Source Code */
+      gmau_monthly.editor_ide_edit_users_28_days,                                                                   /* Create:Editor  */
+      --gmau_monthly.static_site_editor_static_site_editor_views_28_days,                                           /*  */
+      gmau_monthly.ecosystem_redis_hll_counters_ecosystem_ecosystem_total_unique_counts_monthly,                    /* Create:Ecosystem */
+      gmau_monthly.geo_usage_activity_by_stage_monthly_enablement_usage_activity_by_stage_monthly_manage_groups,    /* Enablement:Geo */
+      gmau_monthly.global_search_paid_search_28_days,                                                               /* Enablement:Global Search(?) */
+      gmau_monthly.global_search_search_users_28_days,                                                              /* Enablement:Global Search(?) */
+      gmau_monthly.continuous_integration_ci_pipelines_users_28_days,                                               /* Verify:CI */
+      gmau_monthly.code_review_merge_request_interaction_users_28_days,                                             /* Verify:Pipeline Authoring */
+      gmau_monthly.testing_counts_monthly_aggregated_metrics_i_testing_paid_monthly_active_user_total,              /* Verify:Testing */
+      gmau_monthly.package_redis_hll_counters_user_packages_user_packages_total_unique_counts_monthly,              /* Package:Package */
+      gmau_monthly.release_management_release_creation_users_28_days,                                               /* Release:Release */
+      gmau_monthly.configure_redis_hll_counters_terraform_p_terraform_state_api_unique_users_monthly,               /* Configure:Configure */
+      gmau_monthly.monitor_incident_management_activer_user_28_days,                                                /* Monitor:Monitor */
+      gmau_monthly.static_analysis_static_analysis_sast_jobs_users_28_days,                                         /* Secure:Static Analysis */
+      gmau_monthly.static_analysis_static_analysis_secret_detection_jobs_users_28_days,                             /* Secure:Static Analysis */
+      gmau_monthly.dynamic_analysis_dast_jobs_users_28_days,                                                        /* Secure:Dynamic Analysis */
+      gmau_monthly.composition_analysis_dependency_scanning_jobs_users_28_days,                                     /* Secure:Composition Analysis */
+      gmau_monthly.composition_analysis_license_management_jobs_user_28_days,                                       /* Secure:Composition Analysis */
+      gmau_monthly.composition_analysis_license_scanning_jobs_users_28_days,                                        /* Secure:Composition Analysis */
+      gmau_monthly.fuzz_testing_fuzz_testing_jobs_users_28_days,                                                    /* Secure:Fuzz Testing */
+      gmau_monthly.container_security_container_scanning_jobs_users_28_days,                                        /* Protect:Container Security */
       IFF(ROW_NUMBER() OVER (
             PARTITION BY gmau_monthly.dim_subscription_id
             ORDER BY gmau_monthly.ping_created_at DESC) = 1,
