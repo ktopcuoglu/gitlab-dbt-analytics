@@ -338,8 +338,8 @@ WITH marketing_contact AS (
       marketing_contact.zuora_contact_id,
       marketing_contact.zuora_created_date,
       marketing_contact.zuora_active_state,
-			'Raw'                                                                                      AS lead_status,
-			'Snowflake Email Marketing Database'                                                       AS lead_source
+      'Raw'                                                                                      AS lead_status,
+      'Snowflake Email Marketing Database'                                                       AS lead_source
     FROM prep
     LEFT JOIN marketing_contact 
       ON marketing_contact.dim_marketing_contact_id = prep.dim_marketing_contact_id
