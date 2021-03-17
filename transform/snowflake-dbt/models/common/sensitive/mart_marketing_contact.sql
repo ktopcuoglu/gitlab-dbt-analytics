@@ -370,7 +370,9 @@ WITH marketing_contact AS (
       marketing_contact.zuora_created_date,
       marketing_contact.zuora_active_state,
       'Raw'                                                                                      AS lead_status,
-      'Snowflake Email Marketing Database'                                                       AS lead_source
+      'Snowflake Email Marketing Database'                                                       AS lead_source,
+      marketing_contact.is_valid_email_address,
+      marketing_contact.invalid_email_address_reason
     FROM prep
     LEFT JOIN marketing_contact 
       ON marketing_contact.dim_marketing_contact_id = prep.dim_marketing_contact_id
@@ -443,7 +445,9 @@ WITH marketing_contact AS (
       'customer_db_confirmed_date',
       'zuora_contact_id',
       'zuora_created_date',
-      'zuora_active_state'
+      'zuora_active_state',
+      'is_valid_email_address',
+      'invalid_email_address_reason'
       ]
 ) }}
 
@@ -452,7 +456,7 @@ WITH marketing_contact AS (
     created_by="@trevor31",
     updated_by="@trevor31",
     created_date="2021-02-09",
-    updated_date="2021-03-16"
+    updated_date="2021-03-17"
 ) }}
 
 
