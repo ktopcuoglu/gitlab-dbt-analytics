@@ -343,9 +343,9 @@ WITH marketing_contact AS (
       END                                                                                        AS responsible_for_free_tier_only,
       marketing_contact.email_address,
       marketing_contact.first_name,
-      marketing_contact.last_name,
+      IFNULL(marketing_contact.last_name, 'Unknown')                                             AS last_name,
       marketing_contact.gitlab_user_name,
-      marketing_contact.company_name,
+      IFNULL(marketing_contact.company_name, 'Unknown')                                          AS company_name,
       marketing_contact.job_title,
       marketing_contact.country,
       marketing_contact.sfdc_parent_sales_segment,
@@ -370,7 +370,8 @@ WITH marketing_contact AS (
       marketing_contact.zuora_created_date,
       marketing_contact.zuora_active_state,
       marketing_contact.wip_is_valid_email_address,
-      marketing_contact.wip_invalid_email_address_reason
+      marketing_contact.wip_invalid_email_address_reason,'Raw'                                                                                      AS lead_status,
+      'Snowflake Email Marketing Database'                                                       AS lead_source      
     FROM prep
     LEFT JOIN marketing_contact 
       ON marketing_contact.dim_marketing_contact_id = prep.dim_marketing_contact_id

@@ -2846,6 +2846,7 @@ roles:
     - trevorromero:
         member_of:
             - decisive_data
+            - marketing_dnc
         warehouses:
             - analyst_xs
         owns:
