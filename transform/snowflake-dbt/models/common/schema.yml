@@ -304,15 +304,6 @@ models:
         tests:
           - not_null
 
-  - name: dim_ip_to_geo
-    description: '{{ doc("dim_ip_to_geo") }}'
-    columns:
-      - name: ip_address_hash
-        tests:
-          - unique
-          - not_null
-      - name: dim_location_id
-
   - name: dim_gitlab_ops_gitlab_emails
     description: '{{ doc("gitlab_dotcom_gitlab_emails") }}'
     columns:
@@ -498,21 +489,6 @@ models:
         description: The timestamp of when the license was generated.
       - name: updated_at
         description: The timestamp of when the license was updated.
-
-  - name: dim_location
-    description: '{{ doc("dim_location") }}'
-    columns:
-      - name: country_name
-        tests:
-          - not_null
-      - name: iso_2_country_code
-        tests:
-          - not_null
-          - unique
-      - name: dim_location_id
-        tests:
-          - not_null
-          - unique
 
   - name: dim_location_country
     description: '{{ doc("dim_location_country") }}'
@@ -1617,15 +1593,15 @@ models:
       - name: dim_crm_account_id
       - name: dim_parent_crm_account_id
       - name: dim_usage_ping_id
-        description: JOIN key to dim_usage_pings and prep_usage_pings. Uniquely identifies a single usage ping. 
+        description: JOIN key to dim_usage_pings and prep_usage_pings. Uniquely identifies a single usage ping.
       - name: uuid
       - name: hostname
       - name: dim_license_id
-      - name: license_md5 
-        description: JOIN key to dim_licenses and dim_license 
+      - name: license_md5
+        description: JOIN key to dim_licenses and dim_license
       - name: cleaned_version
       - name: ping_created_at
-        description: The timestamp at which the usage ping was created_at 
+        description: The timestamp at which the usage ping was created_at
       - name: ping_created_date_id
       - name: manage_analytics_total_unique_counts_monthly
         description: Number of unique monthly visits to Analytics
@@ -1969,7 +1945,7 @@ models:
       - name: periscope_metrics_name
         description: Name change by PMs 
       - name: sql_friendly_name
-        description: Name change by PMs with '.' instead of '_' 
+        description: Name change by PMs with '.' instead of '_'
       - name: is_umau
         description: Boolean field representing if the xmau metric represents Unique Monthly Active User (UMAU) metric 
       - name: is_smau
