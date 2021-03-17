@@ -35,10 +35,6 @@ sheets:
     owner: '@mvilain'
     tabs:
       - clari_ai_projection
-  - name: company_call_attendance
-    owner: '@pluthra'
-    tabs:
-      - company_call_attendance
   - name: data_team_csat_survey_fy2021_q4
     owner: '@ken_aguilar'
     tabs:
@@ -52,7 +48,7 @@ sheets:
     tabs:
       - days_to_close
   - name: employee_location_factor
-    owner: '@pluthra'
+    owner: '@ken_aguilar'
     tabs:
       - employee_location_factor
       - comp_band
@@ -66,7 +62,7 @@ sheets:
     tabs:
       - event_dictionary_simplified
   - name: gitlab_slack_stats
-    owner: '@pluthra'
+    owner: '@ken_aguilar'
     tabs:
       - gitlab_slack_stats
   - name: google_referrals
@@ -78,7 +74,7 @@ sheets:
     tabs:
       - headcount
   - name: hire_plan_forecast
-    owner: '@pluthra'
+    owner: '@iweeks'
     tabs:
       - hire_plan
       - hire_forecast
@@ -99,7 +95,7 @@ sheets:
     tabs:
       - linkedin_recruiter
   - name: location_factor_targets
-    owner: '@pluthra'
+    owner: '@ken_aguilar'
     tabs:
       - location_factor_targets
   - name: manual_downgrade_dotcom_tracking
@@ -132,12 +128,12 @@ sheets:
       - net_arr_net_iacv_conversion_factors
       - net_arr_net_iacv_conversion_factors_agg
   - name: osat
-    owner: '@pluthra'
+    owner: '@ken_aguilar'
     tabs:
       - osat
   - name: people_budget
     description: Data used by people team for budget spend.
-    owner: '@pluthra'
+    owner: '@mwilkins'
     tabs:
       - people_budget
   - name: planned_values
@@ -207,7 +203,7 @@ sheets:
     tabs:
       - abm_account_baselines
   - name: hire_replan
-    owner: '@pluthra'
+    owner: '@iweeks'
     tabs:
       - hire_replan
   - name: data_team_capacity
@@ -216,15 +212,15 @@ sheets:
       - data_team_capacity
 
   - name: percent_over_comp_band_historical
-    owner: '@pluthra'
+    owner: '@ken_aguilar'
     tabs: 
       - percent_over_comp_band_historical    
   - name: product_maturity_historical
-    owner: '@pluthra'
+    owner: '@dpeterson1'
     tabs:
       - product_maturity_historical
   - name: engineering_speciality_prior_to_capture
-    owner: '@pluthra'
+    owner: '@lmai1'
     tabs:
       - engineering_speciality_prior_to_capture
   - name: sales_funnel_targets
@@ -236,7 +232,7 @@ sheets:
       - sales_funnel_targets_matrix
   - name: data_certifications
     description: This identifies team members who have taken the level 2 certifications and have passed.
-    owner: '@pluthra'
+    owner: '@iweeks'
     tabs:
       - cert_product_geo_dashboard
       - cert_product_geo_sql

@@ -483,7 +483,7 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: ['2', '3', '4', '34', '67', 'trial']
+              values: [2, 3, 4, 34, 67, 100, 101]
       - name: plan_title
         description: Whether or not the namespace associated with the project is subscribed to a paid plan. This can be inheritted from the namespaces's ultimate parent.
         tests:

@@ -65,6 +65,7 @@ WITH source AS (
         gitaly_version::VARCHAR                      AS gitaly_version,
         gitaly_servers::NUMBER                       AS gitaly_servers,
         gitaly_filesystems::VARCHAR                  AS gitaly_filesystems,
+        gitpod_enabled::VARCHAR                      AS gitpod_enabled,
         PARSE_JSON(object_store)                     AS object_store,
         dependency_proxy_enabled::BOOLEAN            AS is_dependency_proxy_enabled,
         recording_ce_finished_at::TIMESTAMP          AS recording_ce_finished_at,

@@ -16,7 +16,6 @@ If none, please include a description
 
 ## DRI/Prioritization Owner Checklist
 * [ ] Prefix the issue name with 'New Data Source: ', e.g. 'New Data Source: NetSuite AP data'
-* [ ] Add the label 'New Data Source' to this issue
 * [ ] Review the [current data available in the EDW](https://about.gitlab.com/handbook/business-ops/data-team/platform/#extract-and-load) and confirm the data does no already exist: `YES the data does exist / NO the data does not exist` 
 * [ ] Do any objects in this data source need to be snapshotted? If yes, please open separate issues to have the objects snapshotted.
 * [ ] Please list and describe any data from this source that is sensitive (Classified as Red or Orange in our [Data Classification Policy](https://about.gitlab.com/handbook/engineering/security/data-classification-policy.html#data-classification-levels))?
@@ -60,3 +59,9 @@ use contact the Data Engineer assigned below for confirmation.
 - Data Engineer: <!-- please tag them -->
 
 **Who will be using this data, and where (dashboards, snowflake UI, etc.)?**
+
+
+
+<!-- Do not edit below this line -->
+
+/label ~"new data source" ~"workflow::1 - triage" ~Infrastructure ~"Priority::3-Other" 

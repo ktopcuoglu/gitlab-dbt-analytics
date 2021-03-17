@@ -35,6 +35,7 @@ WITH map_merged_crm_accounts AS (
     zuora_subscription.auto_renew                                             AS is_auto_renew,
     zuora_subscription.zuora_renewal_subscription_name,
     zuora_subscription.zuora_renewal_subscription_name_slugify,
+    zuora_subscription.current_term,
     zuora_subscription.renewal_term,
     zuora_subscription.renewal_term_period_type,
     zuora_subscription.eoa_starter_bronze_offer_accepted,
@@ -57,5 +58,5 @@ WITH map_merged_crm_accounts AS (
     created_by="@ischweickartDD",
     updated_by="@iweeks",
     created_date="2021-01-07",
-    updated_date="2021-02-10"
+    updated_date="2021-03-15"
 ) }}
