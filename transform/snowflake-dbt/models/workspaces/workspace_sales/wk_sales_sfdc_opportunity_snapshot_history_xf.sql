@@ -740,8 +740,7 @@ WITH date_details AS (
                 AND opp_snapshot.is_stage_1_plus = 1)
             OR (opp_snapshot.is_lost = 1))    
           AND opp_snapshot.is_edu_oss = 0
-          AND opp_snapshot.deal_group LIKE ANY ('%Growth%', '%New%')
-          AND opp_snapshot.net_arr > 0
+          AND lower(opp_snapshot.deal_group) LIKE ANY ('%growth%', '%new%')
             THEN opp_snapshot.net_arr
         ELSE 0 
       END                                                         AS created_in_snapshot_quarter_net_arr,
