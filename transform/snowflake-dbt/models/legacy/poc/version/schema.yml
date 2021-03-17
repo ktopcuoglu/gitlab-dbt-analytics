@@ -33,8 +33,8 @@ models:
           - name: clean_metrics_name
             tests:
               - not_null
-    - name: usage_data_28_days_flattened
-      description: '{{ doc("usage_data_28_days_flattened") }}'
+    - name: prep_usage_data_28_days_flattened
+      description: '{{ doc("prep_usage_data_28_days_flattened") }}'
       columns:
           - name: instance_path_id
             tests:
@@ -49,8 +49,8 @@ models:
           - name: clean_metrics_name
             tests:
               - not_null
-    - name: usage_data_all_time_flattened
-      description: '{{ doc("usage_data_all_time_flattened") }}'
+    - name: prep_usage_data_all_time_flattened
+      description: '{{ doc("prep_usage_data_all_time_flattened") }}'
       columns:
           - name: instance_path_id
             tests:

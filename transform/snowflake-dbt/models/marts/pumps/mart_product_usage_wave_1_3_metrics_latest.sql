@@ -17,11 +17,14 @@
       {{ get_keyed_nulls('billing_accounts.dim_billing_account_id') }}      AS dim_billing_account_id,
       {{ get_keyed_nulls('crm_accounts.dim_crm_account_id') }}              AS dim_crm_account_id,
       latest_metrics.seat_link_report_date,
+      latest_metrics.seat_link_report_date_id,
       latest_metrics.license_utilization,
       latest_metrics.active_user_count,
       latest_metrics.max_historical_user_count,
       latest_metrics.license_user_count,
+      latest_metrics.dim_usage_ping_id,
       latest_metrics.ping_created_at,
+      latest_metrics.ping_created_date_id,
       latest_metrics.uuid,
       latest_metrics.hostname,
       latest_metrics.dim_license_id,
@@ -36,6 +39,8 @@
       latest_metrics.ci_pipelines_28_days_user,
       latest_metrics.ci_internal_pipelines_28_days_user,
       latest_metrics.ci_builds_28_days_user,
+      latest_metrics.ci_builds_all_time_user,
+      latest_metrics.ci_builds_all_time_event,
       latest_metrics.ci_runners_all_time_event,
       latest_metrics.auto_devops_enabled_all_time_event,
       latest_metrics.gitlab_shared_runners_enabled_instance_setting,
@@ -77,5 +82,5 @@
     created_by="@ischweickartDD",
     updated_by="@ischweickartDD",
     created_date="2021-02-11",
-    updated_date="2021-02-11"
+    updated_date="2021-02-16"
 ) }}

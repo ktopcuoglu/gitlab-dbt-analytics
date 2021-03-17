@@ -108,12 +108,13 @@ WITH dim_date AS (
       zuora_subscription_spined.subscription_status,
       zuora_subscription_spined.version                                                 AS subscription_version,
       zuora_subscription_spined.current_term,
-      zuora_rate_plan_charge_spined.product_rate_plan_charge_id                         AS dim_product_details_id,
+      zuora_rate_plan_charge_spined.product_rate_plan_charge_id                         AS dim_product_detail_id,
       zuora_rate_plan_charge_spined.mrr,
       zuora_rate_plan_charge_spined.delta_mrc                                           AS delta_mrr,
       zuora_rate_plan_charge_spined.unit_of_measure,
       zuora_rate_plan_charge_spined.quantity,
       zuora_rate_plan_charge_spined.charge_type,
+      zuora_rate_plan_charge_spined.charged_through_date,
       zuora_rate_plan_charge_spined.rate_plan_charge_number,
       zuora_rate_plan_charge_spined.segment                                             AS charge_segment,
       zuora_rate_plan_charge_spined.version                                             AS charge_version,
@@ -145,7 +146,7 @@ WITH dim_date AS (
       dim_crm_account_id,
       charge_id,
       dim_subscription_id,
-      dim_product_details_id,
+      dim_product_detail_id,
       subscription_start_month,
       subscription_end_month,
       subscription_start_date,
@@ -160,6 +161,7 @@ WITH dim_date AS (
       current_term,
       rate_plan_charge_name,
       charge_type,
+      charged_through_date,
       rate_plan_charge_number,
       charge_segment,
       charge_version,
@@ -172,12 +174,12 @@ WITH dim_date AS (
     FROM rate_plan_charge_filtered
     INNER JOIN dim_date
       ON rate_plan_charge_filtered.snapshot_id = dim_date.date_id
-    {{ dbt_utils.group_by(n=24) }}
+    {{ dbt_utils.group_by(n=25) }}
 
 ), final AS (
 
     SELECT
-      {{ dbt_utils.surrogate_key(['snapshot_id', 'subscription_name', 'dim_product_details_id', 'charge_id']) }}
+      {{ dbt_utils.surrogate_key(['snapshot_id', 'subscription_name', 'dim_product_detail_id', 'charge_id']) }}
           AS charge_snapshot_id,
       charges_day_by_day.*
     FROM charges_day_by_day
@@ -190,5 +192,5 @@ WITH dim_date AS (
     created_by="@iweeks",
     updated_by="@iweeks",
     created_date="2021-02-13",
-    updated_date="2020-02-13",
+    updated_date="2020-03-15",
  	) }}

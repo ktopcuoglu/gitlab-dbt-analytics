@@ -209,7 +209,9 @@ WITH dim_billing_account AS (
       dim_usage_pings.instance_user_count,
       dim_usage_pings.created_at,
       dim_usage_pings.recorded_at,
+      time_period,
       monthly_metric_value,
+      original_metric_value,
       dim_hosts.host_id,
       dim_hosts.source_ip_hash,
       dim_hosts.instance_id,
@@ -314,7 +316,9 @@ WITH dim_billing_account AS (
       recorded_at,
 
       -- monthly_usage_data
-      monthly_metric_value
+      time_period,
+      monthly_metric_value,
+      original_metric_value
 
     FROM joined
 

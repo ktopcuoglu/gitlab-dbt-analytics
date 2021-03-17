@@ -31,11 +31,14 @@ WITH subscriptions AS (
       subscriptions.dim_subscription_id_original,
       subscriptions.dim_billing_account_id,
       seat_link.report_date                                         AS seat_link_report_date,
+      {{ get_date_id('seat_link.report_date') }}                    AS seat_link_report_date_id,
       seat_link.active_user_count / seat_link.license_user_count    AS license_utilization,
       seat_link.active_user_count,
       seat_link.max_historical_user_count,
       seat_link.license_user_count,
+      usage_ping.dim_usage_ping_id,
       usage_ping.ping_created_at,
+      {{ get_date_id('usage_ping.ping_created_at') }}               AS ping_created_date_id,
       usage_ping.uuid,
       usage_ping.hostname,
       usage_ping.dim_license_id,
@@ -50,6 +53,8 @@ WITH subscriptions AS (
       usage_ping.ci_pipelines_28_days_user,
       usage_ping.ci_internal_pipelines_28_days_user,
       usage_ping.ci_builds_28_days_user,
+      usage_ping.ci_builds_all_time_user,
+      usage_ping.ci_builds_all_time_event,
       usage_ping.ci_runners_all_time_event,
       usage_ping.auto_devops_enabled_all_time_event,
       usage_ping.gitlab_shared_runners_enabled_instance_setting,
@@ -95,5 +100,5 @@ WITH subscriptions AS (
     created_by="@ischweickartDD",
     updated_by="@ischweickartDD",
     created_date="2021-02-08",
-    updated_date="2021-02-08"
+    updated_date="2021-02-16"
 ) }}

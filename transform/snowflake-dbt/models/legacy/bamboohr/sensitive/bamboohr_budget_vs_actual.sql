@@ -26,7 +26,8 @@ WITH dates AS (
       fiscal_year,
       fiscal_quarter,
       budget,
-      excess_from_previous_quarter
+      excess_from_previous_quarter,
+      annual_comp_review
     FROM sheetload_people_budget
 
     UNION ALL
@@ -36,7 +37,8 @@ WITH dates AS (
       fiscal_year,
       fiscal_quarter, 
       SUM(budget)                                               AS budget,
-      SUM(excess_from_previous_quarter)                         AS excess_from_previous_quarter
+      SUM(excess_from_previous_quarter)                         AS excess_from_previous_quarter,
+      SUM(annual_comp_review)                                   AS annual_comp_review
     FROM sheetload_people_budget
     GROUP BY 1,2,3
 
@@ -47,7 +49,8 @@ WITH dates AS (
       fiscal_year,
       fiscal_quarter, 
       SUM(budget)                                               AS budget,
-      SUM(excess_from_previous_quarter)                         AS excess_from_previous_quarter
+      SUM(excess_from_previous_quarter)                         AS excess_from_previous_quarter,
+      SUM(annual_comp_review)                                   AS annual_comp_review
     FROM sheetload_people_budget
     WHERE division != 'Sales Development'
     GROUP BY 1,2,3
@@ -119,17 +122,27 @@ WITH dates AS (
   
 ), final AS (
 
-    SELECT 
-      'FY' || budget.fiscal_year || ' - Q' || budget.fiscal_quarter AS fiscal_quarter_name,
-      budget.*,
-      promotions_aggregated.total_spend
+    SELECT
+      IFF(budget.fiscal_year = 2021, 'FY' || budget.fiscal_year || ' - Q' || budget.fiscal_quarter, 'FY'||budget.fiscal_year) AS fiscal_quarter_name,
+      budget.fiscal_year,
+      budget.fiscal_quarter,
+      budget.division,
+      budget.budget,
+      budget.excess_from_previous_quarter,
+      COALESCE(promotions_aggregated_fy.total_spend, promotions_aggregated.total_spend) - budget.annual_comp_review AS total_spend
     FROM budget
     LEFT JOIN promotions_aggregated
       ON budget.division = promotions_aggregated.division
       AND budget.fiscal_year = promotions_aggregated.fiscal_year
       AND budget.fiscal_quarter = promotions_aggregated.fiscal_quarter
+      AND budget.fiscal_year = 2021
+  LEFT JOIN promotions_aggregated AS promotions_aggregated_fy
+      ON budget.division = promotions_aggregated_fy.division
+      AND budget.fiscal_year = promotions_aggregated_fy.fiscal_year
+      AND budget.fiscal_year >= 2022 --Prior to FY22 the budget was determined by quarter, and since then it is based at fiscal year budget level
 
 )
 
-SELECT *
+SELECT *,
+      1- (budget - total_spend)/budget AS percent_of_budget_remaining
 FROM final
