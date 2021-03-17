@@ -111,6 +111,10 @@ models:
         description: zuora billing account id of the marketing contact.
       - name: dim_subscription_id
         description: zuora subscription id of the marketing contact.
+        name: subscription_start_date
+        description: zuora subscription start date
+      - name: subscription_end_date
+        description: zuora subscription end date
       - name: saas_product_tier
         description: Product tier name if it is SaaS
       - name: self_managed_product_tier
@@ -119,6 +123,10 @@ models:
         description: Flags if it is a SaaS trial
       - name: days_since_saas_trial_ended
         description: Number of days since SaaS trial expired.
+      - name: trial_end_date
+        description: Date the SaaS trial expires.
+      - name: days_until_saas_trial_ends
+        description: Number of days until SaaS trial expires.
       - name: is_saas_free_tier
         description: Flags if product tier is SaaS free.
       - name: is_saas_bronze_tier
@@ -154,6 +162,8 @@ models:
         description: Flags if zuora billing contact
       - name: days_since_saas_trial_ended
         description: Number of days since saas trial ended
+      - name: days_until_saas_trial_ends
+        description: Number of days until saas trial ends
       - name: individual_namespace_is_saas_trial
         description: Flags if individual namespace is on saas trial
       - name: individual_namespace_is_saas_free_tier
@@ -208,8 +218,8 @@ models:
         description: Earliest subscription start date
       - name: max_subscription_end_date
         description: Latest subscription end date
-      - name: nbr_of_subscriptions
-        description: Number of subscriptions the user is on
+      - name: nbr_of_paid_subscriptions
+        description: Number of paid subscriptions the user is on
       - name: responsible_for_free_tier_only
         description: Flags if responsible for or individual namespace of only free tier
       - name: email_address

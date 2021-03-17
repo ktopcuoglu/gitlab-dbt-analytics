@@ -53,6 +53,18 @@ WITH marketing_contact AS (
       marketing_contact_role.zuora_billing_account_id                                         AS dim_billing_account_id,
       CASE
         WHEN saas_namespace.dim_namespace_id IS NOT NULL
+          THEN saas_namespace.dim_subscription_id
+        WHEN saas_customer.dim_namespace_id IS NOT NULL
+          THEN saas_customer.dim_subscription_id
+        WHEN saas_billing_account.dim_namespace_id IS NOT NULL
+          THEN saas_billing_account.dim_subscription_id
+        WHEN self_managed_customer.customer_id IS NOT NULL
+          THEN self_managed_customer.dim_subscription_id
+        WHEN self_managed_billing_account.customer_id IS NOT NULL
+          THEN self_managed_billing_account.dim_subscription_id
+      END                                                                                     AS dim_subscription_id,
+      CASE
+        WHEN saas_namespace.dim_namespace_id IS NOT NULL
           THEN saas_namespace.subscription_start_date
         WHEN saas_customer.dim_namespace_id IS NOT NULL
           THEN saas_customer.subscription_start_date
@@ -110,7 +122,17 @@ WITH marketing_contact AS (
           THEN 1 
         ELSE 0 
       END                                                                                     AS is_saas_trial,    
-      CURRENT_DATE - CAST(saas_namespace.saas_trial_expired_on AS DATE)                       AS days_since_saas_trial_ended,    
+      CURRENT_DATE - CAST(saas_namespace.saas_trial_expired_on AS DATE)                       AS days_since_saas_trial_ended,
+      CASE 
+        WHEN saas_customer.order_is_trial 
+          THEN CAST(saas_customer.order_end_date AS DATE)
+        WHEN saas_namespace.product_tier_name_with_trial = 'SaaS - Trial: Ultimate'
+          THEN CAST(COALESCE(saas_namespace.saas_trial_expired_on, saas_namespace.order_end_date) AS DATE)
+      END                                                                                     AS trial_end_date,
+      CASE 
+        WHEN trial_end_date IS NOT NULL AND CURRENT_DATE <= trial_end_date
+          THEN trial_end_date - CURRENT_DATE
+      END                                                                                     AS days_until_saas_trial_ends,
       CASE 
         WHEN saas_product_tier = 'SaaS - Free' 
           THEN 1
@@ -170,5 +192,5 @@ WITH marketing_contact AS (
     created_by="@trevor31",
     updated_by="@trevor31",
     created_date="2021-02-04",
-    updated_date="2021-03-10"
+    updated_date="2021-03-16"
 ) }}
