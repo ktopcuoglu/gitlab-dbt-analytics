@@ -80,7 +80,7 @@ WITH marketing_contact AS (
         ELSE FALSE 
       END                                                                                        AS is_zuora_billing_contact,
       MIN(marketing_contact_order.days_since_saas_trial_ended)                                   AS days_since_saas_trial_ended,
-      MAX(marketing_contact_order.days_until_saas_trial_ends)                                         AS days_until_saas_trial_ends,
+      MAX(marketing_contact_order.days_until_saas_trial_ends)                                    AS days_until_saas_trial_ends,
       CASE 
         WHEN MAX(CASE 
                   WHEN marketing_contact_order.is_individual_namespace = 1 
