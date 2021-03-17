@@ -29,6 +29,4 @@ In order to make it easy for anyone to send data from Snowflake to other applica
 * sensitive - `True` if this model contains sensitive data and is in the pumps_sensitive directory and schema
 * onwer - your (or the business DRI's) gitlab handle
 
-**Step 3:** Create an integration issue in the [integrations](https://gitlab.com/gitlab-com/business-ops/enterprise-apps/integrations/integrations-work/-/issues/new) project using the New Data Pump issue template.
-
-Once the model, pumps.yml have merge the data will become available to the integrations team in AWS S3. 
+**Step 3:** Create an integration issue in the [integrations](https://gitlab.com/gitlab-com/business-ops/enterprise-apps/integrations/integrations-work/-/issues/new) project using the New Data Pump issue template. So that the Integration team can map and integrate the data into the target application.
