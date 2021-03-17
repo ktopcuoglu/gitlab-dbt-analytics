@@ -62,7 +62,7 @@ Dimension table representing the current state of the sales hierarchy, including
 {% enddocs %}
 
 {% docs dim_crm_sales_hierarchy_stamped %}
-Dimension table representing the sales hierarchy at the time of a closed opportunity, including the user segment, geo, region, and area. These fields are stamped on the opportunity object on the close date and are used in sales funnel analyses.
+Dimension table representing the sales hierarchy at the time of a closed opportunity, including the user segment. These fields are stamped on the opportunity object on the close date and are used in sales funnel analyses.
 
 {% enddocs %}
 

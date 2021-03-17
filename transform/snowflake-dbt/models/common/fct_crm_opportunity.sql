@@ -1,4 +1,16 @@
-WITH first_contact  AS (
+
+{{ simple_cte([
+    ('crm_account_dimensions', 'map_crm_account'),
+    ('order_type', 'prep_order_type'),
+    ('sales_qualified_source', 'prep_sales_qualified_source'),
+    ('deal_path', 'prep_deal_path'),
+    ('sales_rep', 'prep_crm_sales_representative'),
+    ('sales_segment', 'prep_sales_segment'),
+    ('sfdc_campaigns', 'prep_campaign')
+
+]) }}
+
+, first_contact  AS (
 
     SELECT
 
@@ -8,26 +20,6 @@ WITH first_contact  AS (
       ROW_NUMBER() OVER (PARTITION BY opportunity_id ORDER BY created_date ASC)   AS row_num
 
     FROM {{ ref('sfdc_opportunity_contact_role_source')}}
-
-), crm_account_dimensions AS (
-
-    SELECT *
-    FROM {{ ref('map_crm_account')}}
-
-), order_type AS (
-
-    SELECT *
-    FROM {{ ref('prep_order_type')}}
-
-), sales_qualified_source AS (
-
-    SELECT *
-    FROM {{ ref('prep_sales_qualified_source')}}
-
-), deal_path AS (
-
-    SELECT *
-    FROM {{ ref('prep_deal_path')}}
 
 ), sales_hierarchy_stamped_sales_segment AS (
 
@@ -57,31 +49,17 @@ WITH first_contact  AS (
       sales_area_name_stamped
     FROM {{ ref('prep_crm_sales_hierarchy_stamped') }}
 
-), sales_rep AS (
-
-    SELECT *
-    FROM {{ ref('prep_crm_sales_representative') }}
-
-), sales_segment AS (
-
-    SELECT *
-    FROM {{ ref('prep_sales_segment')}}
-
 ), sfdc_opportunity AS (
 
     SELECT *
-    FROM {{ ref('sfdc_opportunity')}}
+    FROM {{ ref('sfdc_opportunity_source')}}
+    WHERE is_deleted = 'FALSE'
 
 ), attribution_touchpoints AS (
 
     SELECT *
     FROM {{ ref('sfdc_bizible_attribution_touchpoint_source') }}
     WHERE is_deleted = 'FALSE'
-
-), sfdc_campaigns AS (
-
-    SELECT *
-    FROM {{ ref('prep_campaign') }}
 
 ), opportunity_fields AS(
 
@@ -277,17 +255,11 @@ WITH first_contact  AS (
       {{ get_keyed_nulls('sales_qualified_source.dim_sales_qualified_source_id') }}                                         AS dim_sales_qualified_source_id,
       {{ get_keyed_nulls('deal_path.dim_deal_path_id') }}                                                                   AS dim_deal_path_id,
       {{ get_keyed_nulls('crm_account_dimensions.dim_parent_sales_segment_id,sales_segment.dim_sales_segment_id') }}        AS dim_parent_sales_segment_id,
-      crm_account_dimensions.dim_parent_geo_region_id,
-      crm_account_dimensions.dim_parent_geo_sub_region_id,
-      crm_account_dimensions.dim_parent_geo_area_id,
       crm_account_dimensions.dim_parent_sales_territory_id,
       crm_account_dimensions.dim_parent_industry_id,
       crm_account_dimensions.dim_parent_location_country_id,
       crm_account_dimensions.dim_parent_location_region_id,
       {{ get_keyed_nulls('crm_account_dimensions.dim_account_sales_segment_id,sales_segment.dim_sales_segment_id') }}       AS dim_account_sales_segment_id,
-      crm_account_dimensions.dim_account_geo_region_id,
-      crm_account_dimensions.dim_account_geo_sub_region_id,
-      crm_account_dimensions.dim_account_geo_area_id,
       crm_account_dimensions.dim_account_sales_territory_id,
       crm_account_dimensions.dim_account_industry_id,
       crm_account_dimensions.dim_account_location_country_id,
@@ -386,5 +358,5 @@ WITH first_contact  AS (
     created_by="@mcooperDD",
     updated_by="@mcooperDD",
     created_date="2020-11-30",
-    updated_date="2021-02-26"
+    updated_date="2021-03-10"
 ) }}

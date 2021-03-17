@@ -29,24 +29,6 @@ Creates a base view with generated keys for the stamped/historical crm sales hie
 
 {% enddocs %}
 
-{% docs prep_geo_area %}
-
-Creates a base view with generated keys for the geo_area shared dimension and references in facts.
-
-{% enddocs %}
-
-{% docs prep_geo_region %}
-
-Creates a base view with generated keys for the geo_region shared dimension and references in facts.
-
-{% enddocs %}
-
-{% docs prep_geo_sub_region %}
-
-Creates a base view with generated keys for the geo_sub_region shared dimension and references in facts.
-
-{% enddocs %}
-
 {% docs prep_industry %}
 
 Creates a base view with generated keys for the industry shared dimension and references in facts.

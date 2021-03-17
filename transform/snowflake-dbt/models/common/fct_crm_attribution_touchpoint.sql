@@ -30,17 +30,11 @@ WITH bizible_attribution_touchpoints AS (
       opportunity_dimensions.dim_deal_path_id,
       opportunity_dimensions.dim_parent_crm_account_id,
       opportunity_dimensions.dim_parent_sales_segment_id,
-      opportunity_dimensions.dim_parent_geo_region_id,
-      opportunity_dimensions.dim_parent_geo_sub_region_id,
-      opportunity_dimensions.dim_parent_geo_area_id,
       opportunity_dimensions.dim_parent_sales_territory_id,
       opportunity_dimensions.dim_parent_industry_id,
       opportunity_dimensions.dim_parent_location_country_id,
       opportunity_dimensions.dim_parent_location_region_id,
       opportunity_dimensions.dim_account_sales_segment_id,
-      opportunity_dimensions.dim_account_geo_region_id,
-      opportunity_dimensions.dim_account_geo_sub_region_id,
-      opportunity_dimensions.dim_account_geo_area_id,
       opportunity_dimensions.dim_account_sales_territory_id,
       opportunity_dimensions.dim_account_industry_id,
       opportunity_dimensions.dim_account_location_country_id,
@@ -73,5 +67,5 @@ WITH bizible_attribution_touchpoints AS (
     created_by="@mcooperDD",
     updated_by="@mcooperDD",
     created_date="2021-01-21",
-    updated_date="2021-02-26"
+    updated_date="2021-03-04"
 ) }}
