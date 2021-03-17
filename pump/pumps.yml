@@ -1,0 +1,9 @@
+pumps:
+  - model: pump_hash_marketing_contact
+    timestamp_column: last_changed
+    sensitive: False
+    owner: '@jjstark'
+  - model: pump_marketing_contact
+    timestamp_column: last_changed
+    sensitive: True
+    owner: '@jjstark'
