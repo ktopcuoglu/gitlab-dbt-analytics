@@ -1,4 +1,6 @@
 SELECT
+
+  -- MAPPED COLUMNS: ANY ADDITIONAL COLUMNS SHOULD BE ADDED TO THE END OF THIS LIST
   company_name,
   country,
   customer_db_confirmed_date,
@@ -58,4 +60,8 @@ SELECT
   zuora_active_state,
   zuora_contact_id,
   zuora_created_date
+
+	-- METADATA COLUMNS FOR USE IN PUMP (NOT INTEGRATION)
+	last_changed
+
 FROM {{ ref('mart_marketing_contact' )}}
