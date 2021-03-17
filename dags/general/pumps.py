@@ -1,5 +1,4 @@
 import os
-from os import environ as env
 from datetime import datetime, timedelta
 from yaml import load, safe_load, YAMLError
 
@@ -54,7 +53,7 @@ with open(f"{airflow_home}/analytics/pump/pumps.yml", "r") as file:
         print(exc)
 
     # there has to be a better way to do this
-    pumps = [(pump) for pump in stream["pumps"]]
+    pumps = stream["pumps"]
 
 
 execution_date = "{{ execution_date }}"
