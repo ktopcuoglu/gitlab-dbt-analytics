@@ -369,8 +369,8 @@ WITH marketing_contact AS (
       marketing_contact.zuora_contact_id,
       marketing_contact.zuora_created_date,
       marketing_contact.zuora_active_state,
-      marketing_contact.is_valid_email_address,
-      marketing_contact.invalid_email_address_reason
+      marketing_contact.wip_is_valid_email_address,
+      marketing_contact.wip_invalid_email_address_reason
     FROM prep
     LEFT JOIN marketing_contact 
       ON marketing_contact.dim_marketing_contact_id = prep.dim_marketing_contact_id
@@ -444,8 +444,8 @@ WITH marketing_contact AS (
       'zuora_contact_id',
       'zuora_created_date',
       'zuora_active_state',
-      'is_valid_email_address',
-      'invalid_email_address_reason'
+      'wip_is_valid_email_address',
+      'wip_invalid_email_address_reason'
       ]
 ) }}
 
