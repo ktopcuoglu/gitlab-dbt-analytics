@@ -58,20 +58,6 @@ models:
 - name: sheetload_cert_sales_funnel_dashboard_user_source
 - name: sheetload_cert_sales_funnel_dashboard_developer_source
 
-- name: sheetload_company_call_attendance_source
-  description: This spreadsheet contains data from company call attendance (also called the "Take a Break Call"). The People Experience team pulls their data and updates their spreadsheet, which is imported into the sheetload sheet.
-  columns:
-  - name: call_date
-  - name: meeting_topic
-    tests:
-    - not_null
-  - name: day_of_the_week
-  - name: call_time
-    tests:
-    - not_null
-  - name: count_of_participants
-    tests:
-    - not_null
 - name: sheetload_data_team_csat_survey_fy2021_q4_source
 - name: sheetload_days_sales_outstanding_source
   description: Days sales outstanding = Total Ending AR / Total Credit Sales (billing) x Number of Days in the Period

@@ -33,16 +33,10 @@ WITH sfdc_account AS (
       ultimate_parent_account.billing_country                                               AS ultimate_parent_billing_country,
       ultimate_parent_account.df_industry                                                   AS ultimate_parent_df_industry,
       ultimate_parent_account.tsp_territory                                                 AS ultimate_parent_tsp_territory,
-      ultimate_parent_account.tsp_region                                                    AS ultimate_parent_tsp_region,
-      ultimate_parent_account.tsp_sub_region                                                AS ultimate_parent_tsp_sub_region,
-      ultimate_parent_account.tsp_area                                                      AS ultimate_parent_tsp_area,
       {{ sales_segment_cleaning("sfdc_account.ultimate_parent_sales_segment") }}            AS sales_segment,
       sfdc_account.billing_country,
       sfdc_account.df_industry,
-      sfdc_account.tsp_territory,
-      sfdc_account.tsp_region,
-      sfdc_account.tsp_sub_region,
-      sfdc_account.tsp_area
+      sfdc_account.tsp_territory
     FROM sfdc_account
     LEFT JOIN ultimate_parent_account
       ON sfdc_account.ultimate_parent_account_id = ultimate_parent_account.account_id
@@ -52,12 +46,6 @@ WITH sfdc_account AS (
     SELECT
       dim_crm_account_id                                                                                    AS dim_crm_account_id,
       ultimate_parent_account_id                                                                            AS dim_parent_crm_account_id,
-      TRIM(SPLIT_PART(tsp_region, '-', 1))                                                                  AS account_tsp_region_clean,
-      TRIM(SPLIT_PART(ultimate_parent_tsp_region, '-', 1))                                                  AS parent_tsp_region_clean,
-      TRIM(SPLIT_PART(tsp_sub_region, '-', 1))                                                              AS account_tsp_sub_region_clean,
-      TRIM(SPLIT_PART(ultimate_parent_tsp_sub_region, '-', 1))                                              AS parent_tsp_sub_region_clean,
-      TRIM(SPLIT_PART(REPLACE(tsp_area,'Mid - Atlantic', 'Mid Atlantic'), '-', 1))                          AS account_tsp_area_clean,
-      TRIM(SPLIT_PART(REPLACE(ultimate_parent_tsp_area,'Mid - Atlantic', 'Mid Atlantic'), '-', 1))          AS parent_tsp_area_clean,
       TRIM(tsp_territory)                                                                                   AS account_tsp_territory_clean,
       TRIM(ultimate_parent_tsp_territory)                                                                   AS parent_tsp_territory_clean,
       TRIM(SPLIT_PART(df_industry, '-', 1))                                                                 AS account_df_industry_clean,
@@ -66,12 +54,6 @@ WITH sfdc_account AS (
       ultimate_parent_sales_segment                                                                         AS parent_sales_segment_clean,
       TRIM(SPLIT_PART(billing_country, '-', 1))                                                             AS account_billing_country_clean,
       TRIM(SPLIT_PART(ultimate_parent_billing_country, '-', 1))                                             AS parent_billing_country_clean,
-      MAX(account_tsp_region_clean) OVER (PARTITION BY UPPER(TRIM(account_tsp_region_clean)))               AS dim_account_geo_region_name_source,
-      MAX(parent_tsp_region_clean) OVER (PARTITION BY UPPER(TRIM(parent_tsp_region_clean)))                 AS dim_parent_geo_region_name_source,
-      MAX(account_tsp_sub_region_clean) OVER (PARTITION BY UPPER(TRIM(account_tsp_sub_region_clean)))       AS dim_account_geo_sub_region_name_source,
-      MAX(parent_tsp_sub_region_clean) OVER (PARTITION BY UPPER(TRIM(parent_tsp_sub_region_clean)))         AS dim_parent_geo_sub_region_name_source,
-      MAX(account_tsp_area_clean) OVER (PARTITION BY UPPER(TRIM(account_tsp_area_clean)))                   AS dim_account_geo_area_name_source,
-      MAX(parent_tsp_area_clean) OVER (PARTITION BY UPPER(TRIM(parent_tsp_area_clean)))                     AS dim_parent_geo_area_name_source,
       MAX(account_tsp_territory_clean) OVER (PARTITION BY UPPER(TRIM(account_tsp_territory_clean)))         AS dim_account_sales_territory_name_source,
       MAX(parent_tsp_territory_clean) OVER (PARTITION BY UPPER(TRIM(parent_tsp_territory_clean)))           AS dim_parent_sales_territory_name_source,
       MAX(account_df_industry_clean) OVER (PARTITION BY UPPER(TRIM(account_df_industry_clean)))             AS dim_account_industry_name_source,
@@ -90,5 +72,5 @@ WITH sfdc_account AS (
     created_by="@paul_armstrong",
     updated_by="@mcooperDD",
     created_date="2020-10-30",
-    updated_date="2021-02-18"
+    updated_date="2021-03-10"
 ) }}

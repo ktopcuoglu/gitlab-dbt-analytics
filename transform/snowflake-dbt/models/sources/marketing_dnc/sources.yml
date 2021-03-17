@@ -1,0 +1,15 @@
+version: 2
+
+sources:
+  - name: marketing_dnc
+    database: '{{ env_var("SNOWFLAKE_LOAD_DATABASE") }}'
+    schema: marketing_dnc
+
+    quoting:
+      database: true
+      schema: false
+      identifier: false
+
+    tables:
+      - name: dnc_list
+        identifier: dnc_list

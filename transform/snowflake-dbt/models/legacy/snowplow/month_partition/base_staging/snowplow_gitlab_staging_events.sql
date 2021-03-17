@@ -169,23 +169,7 @@ WITH filtered_source as (
     WHERE app_id IS NOT NULL
       AND DATE_PART(month, TRY_TO_TIMESTAMP(derived_tstamp)) = '{{ month_value }}'
       AND DATE_PART(year, TRY_TO_TIMESTAMP(derived_tstamp)) = '{{ year_value }}'
-      AND 
-        (
-          (
-            -- js backend tracker
-            v_tracker LIKE 'js%'
-            AND lower(page_url) NOT LIKE 'https://staging.gitlab.com/%'
-            AND lower(page_url) NOT LIKE 'https://customers.stg.gitlab.com/%'
-            AND lower(page_url) NOT LIKE 'http://localhost:%'
-          )
-          
-          OR
-          
-          (
-            -- ruby backend tracker
-            v_tracker LIKE 'rb%'
-          )
-        )
+      AND app_id  = 'gitlab-staging'
 
 )
 
@@ -197,7 +181,7 @@ WITH filtered_source as (
       SELECT 1
       FROM filtered_source fe2
       WHERE fe1.event_id = fe2.event_id
-      GROUP BY event_id
+      GROUP BY fe2.event_id
       HAVING COUNT(*) > 1
     )
 
@@ -350,7 +334,8 @@ WITH filtered_source as (
       SELECT event_id
       FROM events_with_web_page_id web_page_events
       WHERE events_with_web_page_id.event_id = web_page_events.event_id
-      GROUP BY event_id HAVING COUNT(1) > 1
+      GROUP BY event_id 
+      HAVING COUNT(1) > 1
 
     )
 
@@ -368,7 +353,6 @@ WITH filtered_source as (
     {{ unpack_unstructured_event(link_click, 'link_click', 'lc') }},
     {{ unpack_unstructured_event(track_timing, 'track_timing', 'tt') }}
     FROM base_with_sorted_columns
-
 
 )
 

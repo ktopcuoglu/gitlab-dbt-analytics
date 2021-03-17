@@ -31,17 +31,11 @@ WITH crm_account_dimensions AS (
       map_merged_crm_accounts.dim_crm_account_id                        AS dim_crm_account_id,
       crm_account_dimensions.dim_parent_crm_account_id,
       crm_account_dimensions.dim_parent_sales_segment_id,
-      crm_account_dimensions.dim_parent_geo_region_id,
-      crm_account_dimensions.dim_parent_geo_sub_region_id,
-      crm_account_dimensions.dim_parent_geo_area_id,
       crm_account_dimensions.dim_parent_sales_territory_id,
       crm_account_dimensions.dim_parent_industry_id,
       crm_account_dimensions.dim_parent_location_country_id,
       crm_account_dimensions.dim_parent_location_region_id,
       crm_account_dimensions.dim_account_sales_segment_id,
-      crm_account_dimensions.dim_account_geo_region_id,
-      crm_account_dimensions.dim_account_geo_sub_region_id,
-      crm_account_dimensions.dim_account_geo_area_id,
       crm_account_dimensions.dim_account_sales_territory_id,
       crm_account_dimensions.dim_account_industry_id,
       crm_account_dimensions.dim_account_location_country_id,
@@ -90,5 +84,5 @@ WITH crm_account_dimensions AS (
     created_by="@mcooperDD",
     updated_by="@mcooperDD",
     created_date="2021-01-20",
-    updated_date="2021-02-02"
+    updated_date="2021-03-04"
 ) }}

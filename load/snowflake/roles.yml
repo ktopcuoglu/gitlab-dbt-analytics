@@ -348,6 +348,7 @@ roles:
             - google_analytics_360
             - netsuite
             - keyhole_twitter
+            - marketing_dnc
             - pmg
             - snowflake_db
             - zendesk
@@ -1003,12 +1004,10 @@ roles:
                     - prod.common_mart_product
             tables:
                 read:
-                    - prep.preparation.prep_usage_ping_saas_dates
                     - prep.preparation.prep_usage_ping_no_license_key
-                    - prod.common.fct_product_usage_wave_1_3_metrics_latest
-                    - prod.common.fct_product_usage_wave_1_3_metrics_monthly
                     - prod.common_mart_product.mart_product_usage_wave_1_3_metrics_latest
                     - prod.common_mart_product.mart_product_usage_wave_1_3_metrics_monthly
+                    - prod.common_mart_product.mart_product_usage_wave_1_3_metrics_monthly_diff
     - gcp_billing:
         warehouses:
             - analyst_xs
@@ -1327,6 +1326,21 @@ roles:
                 read:
                     - prep.license_db.*
                     - raw.license_db.*
+
+    - marketing_dnc:
+        privileges:
+            databases:
+                read:
+                    - prep
+                    - raw
+            schemas:
+                read:
+                    - prep.marketing_dnc
+                    - raw.marketing_dnc
+            tables:
+                read:
+                    - prep.marketing_dnc.*
+                    - raw.marketing_dnc.*
 
     - keyhole_twitter:
         privileges:

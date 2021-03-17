@@ -62,9 +62,9 @@ WITH map_merged_crm_accounts AS (
     sfdc_account.account_owner                    AS crm_account_owner,
     sfdc_account.account_owner_team               AS crm_account_owner_team,
     sfdc_account.tsp_territory                    AS crm_account_sales_territory,
-    sfdc_account.tsp_region                       AS crm_account_geo_region,
-    sfdc_account.tsp_sub_region                   AS crm_account_geo_sub_region,
-    sfdc_account.tsp_area                         AS crm_account_geo_area,
+    sfdc_account.tsp_region                       AS crm_account_tsp_region,
+    sfdc_account.tsp_sub_region                   AS crm_account_tsp_sub_region,
+    sfdc_account.tsp_area                         AS crm_account_tsp_area,
     sfdc_account.gtm_strategy                     AS crm_account_gtm_strategy,
     CASE
       WHEN LOWER(sfdc_account.gtm_strategy) IN ('account centric', 'account based - net new', 'account based - expand') THEN 'Focus Account'
@@ -81,9 +81,9 @@ WITH map_merged_crm_accounts AS (
     ultimate_parent_account.df_industry           AS parent_crm_account_industry,
     ultimate_parent_account.account_owner_team    AS parent_crm_account_owner_team,
     ultimate_parent_account.tsp_territory         AS parent_crm_account_sales_territory,
-    ultimate_parent_account.tsp_region            AS parent_crm_account_geo_region,
-    ultimate_parent_account.tsp_sub_region        AS parent_crm_account_geo_sub_region,
-    ultimate_parent_account.tsp_area              AS parent_crm_account_geo_area,
+    ultimate_parent_account.tsp_region            AS parent_crm_account_tsp_region,
+    ultimate_parent_account.tsp_sub_region        AS parent_crm_account_tsp_sub_region,
+    ultimate_parent_account.tsp_area              AS parent_crm_account_tsp_area,
     ultimate_parent_account.gtm_strategy          AS parent_crm_account_gtm_strategy,
     CASE
       WHEN LOWER(ultimate_parent_account.gtm_strategy) IN ('account centric', 'account based - net new', 'account based - expand') THEN 'Focus Account'
@@ -117,5 +117,5 @@ WITH map_merged_crm_accounts AS (
     created_by="@msendal",
     updated_by="@mcooperDD",
     created_date="2020-06-01",
-    updated_date="2021-02-17"
+    updated_date="2021-03-04"
 ) }}
