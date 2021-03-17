@@ -43,6 +43,6 @@ WITH prep_usage_ping AS (
     cte_ref="pivoted",
     created_by="@ischweickartDD",
     updated_by="@ischweickartDD",
-    created_date="2021-03-15",
-    updated_date="2021-03-15"
+    created_date="2021-03-18",
+    updated_date="2021-03-18"
 ) }}
