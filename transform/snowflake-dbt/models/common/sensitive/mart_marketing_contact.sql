@@ -23,9 +23,9 @@ WITH marketing_contact AS (
 
     SELECT 
       dim_marketing_contact_id,
-      COUNT(*)                                                                                   AS nbr_of_paid_subscriptions
+      COUNT(DISTINCT dim_subscription_id)                                                        AS nbr_of_paid_subscriptions
     FROM marketing_contact_order
-    WHERE subscription_start_date is not null
+    WHERE dim_subscription_id is not null
       AND (is_saas_bronze_tier 
            OR is_saas_premium_tier 
            OR is_saas_ultimate_tier 
@@ -80,6 +80,7 @@ WITH marketing_contact AS (
         ELSE FALSE 
       END                                                                                        AS is_zuora_billing_contact,
       MIN(marketing_contact_order.days_since_saas_trial_ended)                                   AS days_since_saas_trial_ended,
+      MAX(marketing_contact_order.days_until_saas_trial_ends)                                         AS days_until_saas_trial_ends,
       CASE 
         WHEN MAX(CASE 
                   WHEN marketing_contact_order.is_individual_namespace = 1 
@@ -390,6 +391,7 @@ WITH marketing_contact AS (
       'is_customer_db_owner',
       'is_zuora_billing_contact',
       'days_since_saas_trial_ended',
+      'days_until_saas_trial_ends',
       'individual_namespace_is_saas_trial',
       'individual_namespace_is_saas_free_tier',
       'individual_namespace_is_saas_bronze_tier',
@@ -450,7 +452,7 @@ WITH marketing_contact AS (
     created_by="@trevor31",
     updated_by="@trevor31",
     created_date="2021-02-09",
-    updated_date="2021-03-10"
+    updated_date="2021-03-16"
 ) }}
 
 
