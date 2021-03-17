@@ -61,7 +61,7 @@ SELECT
   zuora_contact_id,
   zuora_created_date
 
-	-- METADATA COLUMNS FOR USE IN PUMP (NOT INTEGRATION)
-	last_changed
+  -- METADATA COLUMNS FOR USE IN PUMP (NOT INTEGRATION)
+  last_changed
 
 FROM {{ ref('mart_marketing_contact' )}}
