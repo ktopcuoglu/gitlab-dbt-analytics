@@ -247,7 +247,7 @@ WITH sfdc_lead AS (
         ELSE TRUE
       END                                                                                                                AS wip_is_valid_email_address,
       CASE
-        WHEN NOT is_valid_email_address
+        WHEN NOT wip_is_valid_email_address
           THEN dnc_list.result
       END                                                                                                                AS wip_invalid_email_address_reason
 
