@@ -304,34 +304,6 @@ models:
         tests:
           - not_null
 
-  - name: dim_geo_region
-    description: "Dimension for geographical region built off ATAM_Region__C in SFDC. Example values: NORAM, LATAM, APAC, EMEA"
-    columns:
-      - name: dim_geo_region_id
-        tests:
-          - unique
-          - not_null
-        tags: ["tdf", "common", "geo"]
-      - name: geo_region_name
-        tests:
-          - unique
-          - not_null
-        tags: ["tdf", "common", "geo"]
-
-  - name: dim_geo_sub_region
-    description: "Dimension table for sub-region built off ATAM_Sub_Region__C in SFDC. Example values: Southern Europe, NA East, Nordics"
-    columns:
-      - name: dim_geo_sub_region_id
-        tests:
-          - unique
-          - not_null
-        tags: ["tdf", "common", "geo"]
-      - name: geo_sub_region_name
-        tests:
-          - unique
-          - not_null
-        tags: ["tdf", "common", "geo"]
-
   - name: dim_gitlab_ops_gitlab_emails
     description: '{{ doc("gitlab_dotcom_gitlab_emails") }}'
     columns:
