@@ -48,6 +48,13 @@ WITH sfdc_lead AS (
     SELECT *
     FROM {{ref('zuora_account_source') }}
 
+), dnc_list AS (
+
+    SELECT *,
+      ROW_NUMBER() OVER (PARTITION BY email_address ORDER BY CASE WHEN result IN ('undeliverable', 'do_not_send') THEN 2 ELSE 1 END DESC)                                                    AS record_number
+    FROM {{ref('dnc_list')}}
+    QUALIFY record_number = 1
+
 ), sfdc AS (
 
     SELECT
@@ -232,7 +239,17 @@ WITH sfdc_lead AS (
       END                                                                                                                AS is_zuora_billing_contact,
       zuora.contact_id                                                                                                   AS zuora_contact_id,
       zuora.created_date                                                                                                 AS zuora_created_date,
-      zuora.active_state                                                                                                 AS zuora_active_state
+      zuora.active_state                                                                                                 AS zuora_active_state,
+      dnc_list.result                                                                                                    AS dnc_list_result,
+      CASE 
+        WHEN dnc_list.result IN ('undeliverable', 'do_not_send')
+          THEN FALSE
+        ELSE TRUE
+      END                                                                                                                AS is_valid_email_address,
+      CASE
+        WHEN NOT is_valid_email_address
+          THEN dnc_list.result
+      END                                                                                                                AS invalid_email_address_reason
 
     FROM emails
     LEFT JOIN sfdc
@@ -243,6 +260,8 @@ WITH sfdc_lead AS (
       ON customer_db.email_address = emails.email_address
     LEFT JOIN zuora
       ON zuora.email_address = emails.email_address
+    LEFT JOIN dnc_list
+      ON dnc_list.email_address = emails.email_address
 
 )
 
@@ -251,5 +270,5 @@ WITH sfdc_lead AS (
     created_by="@rmistry",
     updated_by="@trevor31",
     created_date="2021-01-19",
-    updated_date="2021-02-16"
+    updated_date="2021-03-17"
 ) }}
