@@ -370,7 +370,8 @@ WITH marketing_contact AS (
       marketing_contact.zuora_created_date,
       marketing_contact.zuora_active_state,
       marketing_contact.wip_is_valid_email_address,
-      marketing_contact.wip_invalid_email_address_reason,'Raw'                                                                                      AS lead_status,
+      marketing_contact.wip_invalid_email_address_reason,
+      'Raw'                                                                                      AS lead_status,
       'Snowflake Email Marketing Database'                                                       AS lead_source      
     FROM prep
     LEFT JOIN marketing_contact 
