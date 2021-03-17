@@ -29,6 +29,7 @@ __init__.py     @jjstark  @m_walker   @paul_armstrong @rparker2   @iweeks @snala
 /extract/           @jjstark  @m_walker   @paul_armstrong   @snalamaru  @mpeychet_  @rparker2
 /load/              @jjstark  @m_walker   @paul_armstrong   @snalamaru  @mpeychet_  @rparker2    @iweeks
 /orchestrate/       @jjstark  @m_walker   @paul_armstrong   @snalamaru  @mpeychet_  @rparker2
+/pump/              @jjstark  @m_walker
 
 Makefile            @jjstark  @m_walker   @paul_armstrong   @snalamaru  @mpeychet_  @rparker2
 docker-compose.yml  @jjstark  @m_walker   @paul_armstrong   @snalamaru  @mpeychet_  @rparker2
