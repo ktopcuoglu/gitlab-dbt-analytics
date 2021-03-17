@@ -39,6 +39,8 @@ help:
 	\n \
 	++ Python Related ++ \n \
 	data-image: attaches to a shell in the data-image and mounts the repo for testing. \n \
+	yq-lint: Runs a linter against a YAML file. Pass in the file with the variable YAML \n \
+	  Ex. make yq-lint YAML="extract/postgres_pipeline/manifests/gitlab_com_db_manifest.yaml" \n \
 	lint: Runs a linter (Black) over the whole repo. \n \
 	mypy: Runs a type-checker in the extract dir. \n \
 	pylint: Runs the pylint checker over the whole repo. Does not check for code formatting, only errors/warnings. \n \
@@ -109,6 +111,15 @@ init-airflow:
 lint:
 	@echo "Linting the repo..."
 	@black .
+
+yq-lint:
+ifdef YAML
+	@echo "Linting the YAML file... "
+	@echo "Running: yq eval 'sortKeys(..)' $(YAML)"
+	@"$(DOCKER_RUN)" data_image bash -c "yq eval 'sortKeys(..)' $(YAML)"
+else
+	@echo "No file. Exiting."
+endif
 
 mypy:
 	@echo "Running mypy..."
