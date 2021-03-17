@@ -205,6 +205,9 @@ models:
       license:
         +schema: license_db
 
+      marketing_dnc:
+        +schema: marketing_dnc
+
       netsuite:
         +schema: netsuite
         sensitive:

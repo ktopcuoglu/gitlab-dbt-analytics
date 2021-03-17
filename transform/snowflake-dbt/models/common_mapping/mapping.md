@@ -14,7 +14,7 @@
  Mapping table for dimension keys related to opportunities so they can be reused in fact tables containing quotes.
 {% enddocs %}
 
-{% docs map_ip_to_geo %}
+{% docs map_ip_to_country %}
 Table for mapping ip address ranges to location ids.
 {% enddocs %}
 

@@ -40,7 +40,7 @@ WITH filtered_source as (
       collector_tstamp,
       contexts,
       derived_contexts,
-      -- correctting bugs on ruby tracker which was sending wrong timestamp
+      -- correcting bugs on ruby tracker which was sending wrong timestamp
       -- https://gitlab.com/gitlab-data/analytics/issues/3097
       IFF(DATE_PART('year', TRY_TO_TIMESTAMP(derived_tstamp)) > 1970, 
             derived_tstamp, collector_tstamp) AS derived_tstamp,
@@ -169,30 +169,21 @@ WITH filtered_source as (
     WHERE app_id IS NOT NULL
       AND DATE_PART(month, TRY_TO_TIMESTAMP(derived_tstamp)) = '{{ month_value }}'
       AND DATE_PART(year, TRY_TO_TIMESTAMP(derived_tstamp)) = '{{ year_value }}'
-      AND 
-        (
-          (
-            -- js backend tracker
-            v_tracker LIKE 'js%'
-            AND lower(page_url) NOT LIKE 'https://staging.gitlab.com/%'
-            AND lower(page_url) NOT LIKE 'https://customers.stg.gitlab.com/%'
-            AND lower(page_url) NOT LIKE 'http://localhost:%'
-          )
-          
-          OR
-          
-          (
-            -- ruby backend tracker
-            v_tracker LIKE 'rb%'
-          )
-        )
-      AND TRY_TO_TIMESTAMP(derived_tstamp) is not null
+      AND app_id  = 'gitlab-staging'
+
 )
 
 , base AS (
   
-    SELECT DISTINCT * 
-    FROM filtered_source
+    SELECT * 
+    FROM filtered_source fe1
+    WHERE NOT EXISTS (
+      SELECT 1
+      FROM filtered_source fe2
+      WHERE fe1.event_id = fe2.event_id
+      GROUP BY fe2.event_id
+      HAVING COUNT(*) > 1
+    )
 
 ), events_with_web_page_id AS (
 
@@ -336,16 +327,17 @@ WITH filtered_source as (
       base.v_tracker,
       base.uploaded_at,
       base.infra_source
-
     FROM base
     LEFT JOIN events_with_web_page_id
       ON base.event_id = events_with_web_page_id.event_id
-), events_to_ignore as (
+    WHERE NOT EXISTS (
+      SELECT event_id
+      FROM events_with_web_page_id web_page_events
+      WHERE events_with_web_page_id.event_id = web_page_events.event_id
+      GROUP BY event_id 
+      HAVING COUNT(1) > 1
 
-    SELECT event_id
-    FROM base_with_sorted_columns
-    GROUP BY 1
-    HAVING count (*) > 1
+    )
 
 ), unnested_unstruct as (
 
@@ -362,11 +354,9 @@ WITH filtered_source as (
     {{ unpack_unstructured_event(track_timing, 'track_timing', 'tt') }}
     FROM base_with_sorted_columns
 
-
 )
 
 
 SELECT *
 FROM unnested_unstruct
-WHERE event_id NOT IN (SELECT * FROM events_to_ignore)
 ORDER BY derived_tstamp

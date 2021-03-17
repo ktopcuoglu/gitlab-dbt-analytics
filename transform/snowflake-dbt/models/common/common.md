@@ -62,7 +62,7 @@ Dimension table representing the current state of the sales hierarchy, including
 {% enddocs %}
 
 {% docs dim_crm_sales_hierarchy_stamped %}
-Dimension table representing the sales hierarchy at the time of a closed opportunity, including the user segment, geo, region, and area. These fields are stamped on the opportunity object on the close date and are used in sales funnel analyses.
+Dimension table representing the sales hierarchy at the time of a closed opportunity, including the user segment. These fields are stamped on the opportunity object on the close date and are used in sales funnel analyses.
 
 {% enddocs %}
 
@@ -86,18 +86,6 @@ Dimension table providing invoice details at the single invoice grain.
 The invoicing to customers business process can be found in the [handbook](https://about.gitlab.com/handbook/finance/sox-internal-controls/quote-to-cash/#6-invoicing-to-customers).
 
 Data comes from [Zuora Documentation](https://knowledgecenter.zuora.com/Billing/Reporting_and_Analytics/D_Data_Sources_and_Exports/C_Data_Source_Reference/Invoice_Item_Data_Source).
-
-{% enddocs %}
-
-{% docs dim_ip_to_geo %}
-
-Dimensional table mapping ip address ranges to location ids.
-
-{% enddocs %}
-
-{% docs dim_location %}
-
-Dimensional table for geo locations.
 
 {% enddocs %}
 

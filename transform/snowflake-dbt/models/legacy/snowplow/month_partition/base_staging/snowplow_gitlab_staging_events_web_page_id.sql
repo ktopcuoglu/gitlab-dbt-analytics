@@ -13,9 +13,9 @@
 {% set track_timing = ['category','variable','timing','label'] %}
 
 
-WITH filtered_source as (
+WITH base as (
 
-    SELECT
+    SELECT DISTINCT 
         event_id,
         contexts
     {% if target.name not in ("prod") -%}
@@ -47,12 +47,6 @@ WITH filtered_source as (
           )
         )
       AND TRY_TO_TIMESTAMP(derived_tstamp) is not null
-)
-
-, base AS (
-  
-    SELECT DISTINCT * 
-    FROM filtered_source
 
 ), events_with_context_flattened AS (
     /*
