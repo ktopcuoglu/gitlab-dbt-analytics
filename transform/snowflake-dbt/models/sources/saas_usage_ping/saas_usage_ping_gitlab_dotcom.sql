@@ -1,7 +1,7 @@
 WITH base AS (
 
     SELECT *
-    FROM {{ source('saas_usage_ping', 'gitlab_dotcom') }}
+    FROM {{ source('saas_usage_ping', 'instance') }}
 
 ), renamed AS (
 

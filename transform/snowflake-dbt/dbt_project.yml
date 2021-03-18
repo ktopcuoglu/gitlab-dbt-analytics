@@ -225,6 +225,10 @@ models:
       rspec:
         +schema: rspec
 
+      saas_usage_ping:
+        +schema: saas_usage_ping
+        
+
       sfdc:
         +schema: sfdc
         sensitive:

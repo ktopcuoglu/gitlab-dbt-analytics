@@ -15,5 +15,7 @@ sources:
       identifier: false
 
     tables:
-      - name: gitlab_dotcom
-      - name: gitlab_dotcom_namespace
+      - name: instance
+        identifier: gitlab_dotcom
+      - name: namespace
+        identifier: gitlab_dotcom_namespace
