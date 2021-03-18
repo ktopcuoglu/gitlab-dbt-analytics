@@ -1638,24 +1638,24 @@ models:
       - name: dim_subscription_id
         tests:
           - not_null
-        tags: ["tdf", "common", "gainsight"]
+        tags: ["tdf", "common"]
       - name: snapshot_month
         description: First day of the month in which data is being reported.
         tests:
           - not_null
-        tags: ["tdf", "common", "gainsight"]
+        tags: ["tdf", "common"]
       - name: snapshot_date_id
         tests:
           - not_null
-        tags: ["tdf", "common", "gainsight"]
+        tags: ["tdf", "common"]
       - name: dim_subscription_id_original
         tests:
           - not_null
-        tags: ["tdf", "common", "gainsight"]
+        tags: ["tdf", "common"]
       - name: dim_billing_account_id
         tests:
           - not_null
-        tags: ["tdf", "common", "gainsight"]
+        tags: ["tdf", "common"]
       - name: dim_crm_account_id
       - name: dim_parent_crm_account_id
       - name: dim_usage_ping_id
@@ -1728,24 +1728,24 @@ models:
       - name: dim_subscription_id
         tests:
           - not_null
-        tags: ["tdf", "common", "gainsight"]
+        tags: ["tdf", "common"]
       - name: snapshot_month
         description: First day of the month in which data is being reported.
         tests:
           - not_null
-        tags: ["tdf", "common", "gainsight"]
+        tags: ["tdf", "common"]
       - name: snapshot_date_id
         tests:
           - not_null
-        tags: ["tdf", "common", "gainsight"]
+        tags: ["tdf", "common"]
       - name: dim_subscription_id_original
         tests:
           - not_null
-        tags: ["tdf", "common", "gainsight"]
+        tags: ["tdf", "common"]
       - name: dim_billing_account_id
         tests:
           - not_null
-        tags: ["tdf", "common", "gainsight"]
+        tags: ["tdf", "common"]
       - name: dim_crm_account_id
       - name: dim_parent_crm_account_id
       - name: dim_usage_ping_id
