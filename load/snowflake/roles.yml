@@ -2781,43 +2781,7 @@ roles:
                     - testing_db.*.*
                 write:
                     - testing_db.*.*
-    - tullylanterdd:
-        member_of:
-            - decisive_data
-        warehouses:
-            - analyst_xs
-        owns:
-            databases:
-                - tullylanterdd_prep
-                - tullylanterdd_prod
-            schemas:
-                - tullylanterdd_prep.*
-                - tullylanterdd_prod.*
-            tables:
-                - tullylanterdd_prep.*.*
-                - tullylanterdd_prod.*.*
-        privileges:
-            databases:
-                read:
-                    - tullylanterdd_prep
-                    - tullylanterdd_prod
-                write:
-                    - tullylanterdd_prep
-                    - tullylanterdd_prod
-            schemas:
-                read:
-                    - tullylanterdd_prep.*
-                    - tullylanterdd_prod.*
-                write:
-                    - tullylanterdd_prep.*
-                    - tullylanterdd_prod.*
-            tables:
-                read:
-                    - tullylanterdd_prep.*.*
-                    - tullylanterdd_prod.*.*
-                write:
-                    - tullylanterdd_prep.*.*
-                    - tullylanterdd_prod.*.*
+ 
 
     - tmurphy:
         member_of:
@@ -2907,6 +2871,43 @@ roles:
                     - trevorromero_prep.*.*
                     - trevorromero_prod.*.*
 
+    - tullylanterdd:
+        member_of:
+            - decisive_data
+        warehouses:
+            - analyst_xs
+        owns:
+            databases:
+                - tullylanterdd_prep
+                - tullylanterdd_prod
+            schemas:
+                - tullylanterdd_prep.*
+                - tullylanterdd_prod.*
+            tables:
+                - tullylanterdd_prep.*.*
+                - tullylanterdd_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - tullylanterdd_prep
+                    - tullylanterdd_prod
+                write:
+                    - tullylanterdd_prep
+                    - tullylanterdd_prod
+            schemas:
+                read:
+                    - tullylanterdd_prep.*
+                    - tullylanterdd_prod.*
+                write:
+                    - tullylanterdd_prep.*
+                    - tullylanterdd_prod.*
+            tables:
+                read:
+                    - tullylanterdd_prep.*.*
+                    - tullylanterdd_prod.*.*
+                write:
+                    - tullylanterdd_prep.*.*
+                    - tullylanterdd_prod.*.*
 
     - vjuhasz:
         member_of:
