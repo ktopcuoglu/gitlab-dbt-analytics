@@ -13,7 +13,7 @@ WITH base AS (
     WHERE DATEADD('s', _uploaded_at, '1970-01-01') >= (SELECT MAX(_uploaded_at) FROM {{this}})
 
     {% endif %}
-    QUALIFY ROW_NUMBER() OVER (PARTITION BY id ORDER BY _uploaded_at DESC) = 1
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY namespace_ultimate_parent_id, ping_name, ping_date ORDER BY _uploaded_at DESC) = 1
 
 ), renamed AS (
 
