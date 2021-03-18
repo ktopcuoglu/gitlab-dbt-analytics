@@ -52,7 +52,6 @@ with open(f"{airflow_home}/analytics/pump/pumps.yml", "r") as file:
     except YAMLError as exc:
         print(exc)
 
-    # there has to be a better way to do this
     pumps = stream["pumps"]
 
 
