@@ -67,8 +67,8 @@
       gmau_monthly.release_management_release_creation_users_28_days,                                               /* Release:Release */
       gmau_monthly.configure_redis_hll_counters_terraform_p_terraform_state_api_unique_users_monthly,               /* Configure:Configure */
       gmau_monthly.monitor_incident_management_activer_user_28_days,                                                /* Monitor:Monitor */
-      gmau_monthly.static_analysis_static_analysis_sast_jobs_users_28_days,                                         /* Secure:Static Analysis */
-      gmau_monthly.static_analysis_static_analysis_secret_detection_jobs_users_28_days,                             /* Secure:Static Analysis */
+      gmau_monthly.static_analysis_sast_jobs_users_28_days,                                                         /* Secure:Static Analysis */
+      gmau_monthly.static_analysis_secret_detection_jobs_users_28_days,                                             /* Secure:Static Analysis */
       gmau_monthly.dynamic_analysis_dast_jobs_users_28_days,                                                        /* Secure:Dynamic Analysis */
       gmau_monthly.composition_analysis_dependency_scanning_jobs_users_28_days,                                     /* Secure:Composition Analysis */
       gmau_monthly.composition_analysis_license_management_jobs_user_28_days,                                       /* Secure:Composition Analysis */
