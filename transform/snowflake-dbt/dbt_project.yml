@@ -227,7 +227,7 @@ models:
 
       saas_usage_ping:
         +schema: saas_usage_ping
-        
+        +tags: ["product"]
 
       sfdc:
         +schema: sfdc
