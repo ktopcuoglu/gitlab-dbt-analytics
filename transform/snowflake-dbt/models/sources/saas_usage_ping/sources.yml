@@ -1,0 +1,19 @@
+version: 2
+
+sources:
+  - name: saas_usage_ping
+    tags: ["saas_usage_ping"]
+    database: '{{ env_var("SNOWFLAKE_LOAD_DATABASE") }}'
+    schema: saas_usage_ping
+    loaded_at_field: DATEADD(sec, _uploaded_at, '1970-01-01')
+    loader: Airflow
+    description: Test
+
+    quoting:
+      database: true
+      schema: false
+      identifier: false
+
+    tables:
+      - name: gitlab_dotcom
+      - name: gitlab_dotcom_namespace

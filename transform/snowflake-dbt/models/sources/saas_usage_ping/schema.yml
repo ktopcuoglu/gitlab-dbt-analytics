@@ -1,0 +1,15 @@
+version: 2
+
+models:
+    - name: saas_usage_ping_gitlab_dotcom
+      columns:
+        - name: saas_usage_ping_gitlab_dotcom_id
+          tests:
+            - not_null
+            - unique
+    - name: saas_usage_ping_gitlab_dotcom_namespace
+      columns:
+        - name: saas_usage_ping_gitlab_dotcom_namespace_id
+          tests:
+            - not_null
+            - unique
