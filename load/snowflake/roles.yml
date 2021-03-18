@@ -1770,6 +1770,12 @@ roles:
         warehouses:
             - analyst_xs
 
+    - brufener:
+        member_of:
+            - bamboohr_sensitive_separations
+        warehouses:
+            - analyst_xs
+
     - cli:
         member_of:
             - product_manager
@@ -2082,6 +2088,12 @@ roles:
             - reporter
         warehouses:
             - reporting
+
+    - jmitchell:
+        member_of:
+            - bamboohr_sensitive_separations
+        warehouses:
+            - analyst_xs
 
     - jng:
         member_of:
@@ -2534,6 +2546,13 @@ roles:
                     - parmstrong_prep.*.*
                     - parmstrong_prod.*.*
 
+    - pegan:
+        member_of:
+            - analyst_people
+            - bamboohr_sensitive_separations
+        warehouses:
+            - analyst_xs
+
     - periscope:
         warehouses:
             - reporting
@@ -2843,6 +2862,12 @@ roles:
             - loading
             - reporting
 
+    - tknudsen:
+        member_of:
+            - bamboohr_sensitive_separations
+        warehouses:
+            - analyst_xs
+
     - trevorromero:
         member_of:
             - decisive_data
@@ -3021,6 +3046,11 @@ users:
         member_of:
             - brittany
 
+    - brufener:
+        can_login: yes
+        member_of:
+            - brufener
+
     - cli:
         can_login: yes
         member_of:
@@ -3165,6 +3195,11 @@ users:
         can_login: yes
         member_of:
             - jng
+
+    - jmitchell:
+        can_login: yes
+        member_of:
+            - jmitchell
 
     - jmahdi:
         can_login: no
@@ -3330,6 +3365,11 @@ users:
         member_of:
             - parmstrong
 
+    - pegan:
+        can_login: yes
+        member_of:
+            - pegan
+
     - periscope:
         can_login: yes
         member_of:
@@ -3442,6 +3482,10 @@ users:
         can_login: yes
         member_of:
             - tullylanterdd
+    - tknudsen:
+        can_login: yes
+        member_of:
+            - tknudsen
 
     - tlapiana:
         can_login: no
