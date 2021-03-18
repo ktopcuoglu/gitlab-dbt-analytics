@@ -21,25 +21,11 @@ WITH usage_data AS (
 
     SELECT
       {{ dbt_utils.surrogate_key(['namespace_id', 'user_id', 'event_name', 'TO_DATE(event_created_at)']) }} AS daily_usage_data_event_id,
-      daily_usage_data_event_id,
-      namespace_id,
-      namespace_created_at,
-      user_id,
-      namespace_is_internal,
-      is_representative_of_stage,
-      event_name,
-      stage_name,
-      plan_id_at_event_date,
-      plan_name_at_event_date,
-      user_created_at,
-      days_since_namespace_creation,
-      weeks_since_namespace_creation,
-      days_since_user_creation,
-      weeks_since_user_creation,
+      {{ dbt_utils.star(from=ref('gitlab_dotcom_usage_data_events'), except=["EVENT_CREATED_AT", "PARENT_TYPE", "PARENT_ID", "PARENT_CREATED_AT"]) }},
       TO_DATE(event_created_at) AS event_date,
       COUNT(*)                  AS event_count
     FROM usage_data
-    {{ dbt_utils.group_by(n=16) }}
+    {{ dbt_utils.group_by(n=18) }}
 
 )
 
