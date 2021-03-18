@@ -7,7 +7,7 @@
 WITH base AS (
 
     SELECT *
-    FROM {{ source('saas_usage_ping', 'gitlab_dotcom_namespace') }}
+    FROM {{ source('saas_usage_ping', 'namespace') }}
     {% if is_incremental() %}
 
     WHERE DATEADD('s', _uploaded_at, '1970-01-01') >= (SELECT MAX(_uploaded_at) FROM {{this}})
