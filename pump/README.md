@@ -27,6 +27,6 @@ In order to make it easy for anyone to send data from Snowflake to other applica
 * model - the name of the model in dbt and snowflake
 * timestamp_column - the name of the column that should be used to batch the data (or `null` if there is none and the table is small)
 * sensitive - `True` if this model contains sensitive data and is in the pumps_sensitive directory and schema
-* onwer - your (or the business DRI's) gitlab handle
+* owner - your (or the business DRI's) gitlab handle
 
 **Step 3:** Create an [integration issue in the integrations project](https://gitlab.com/gitlab-com/business-ops/enterprise-apps/integrations/integrations-work/-/issues/new) using the 'New Data Pump' issue template so that the Integration team can map and integrate the data into the target application.
