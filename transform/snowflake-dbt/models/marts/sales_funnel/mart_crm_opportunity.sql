@@ -123,6 +123,8 @@
       dim_crm_opportunity.opportunity_business_development_representative,
       dim_crm_opportunity.opportunity_development_representative,
       dim_crm_opportunity.is_web_portal_purchase,
+      dim_crm_opportunity.sales_path,
+      dim_crm_opportunity.professional_services_value,
       fct_crm_opportunity.primary_solution_architect,
       fct_crm_opportunity.product_details,
 
