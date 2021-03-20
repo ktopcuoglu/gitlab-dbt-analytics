@@ -1,7 +1,7 @@
 WITH source AS (
 
     SELECT *
-    FROM {{ source('airflow_dag_run') }}
+    FROM {{ ref('airflow_dag_run_source') }}
 
 ), renamed AS (
 
