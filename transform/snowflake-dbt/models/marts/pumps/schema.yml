@@ -89,6 +89,39 @@ models:
       - name: releases_28_days_users
       - name: epics_28_days_users
       - name: issues_28_days_users
+      - name: ci_internal_pipelines_all_time_event
+      - name: ci_external_pipelines_all_time_event
+      - name: merge_requests_all_time_event
+      - name: todos_all_time_event
+      - name: epics_all_time_event
+      - name: issues_all_time_event
+      - name: projects_all_time_event
+      - name: deployments_28_days_event
+      - name: packages_28_days_event
+      - name: sast_jobs_all_time_event
+      - name: dast_jobs_all_time_event
+      - name: dependency_scanning_jobs_all_time_event
+      - name: user_license_management_jobs_all_time_event
+      - name: secret_detection_jobs_all_time_event
+      - name: container_scanning_jobs_all_time_event
+      - name: projects_jenkins_active_all_time_event
+      - name: projects_bamboo_active_all_time_event
+      - name: projects_jira_active_all_time_event
+      - name: projects_drone_ci_active_all_time_event
+      - name: jira_imports_28_days_event
+      - name: projects_github_active_all_time_event
+      - name: projects_jira_server_active_all_time_event
+      - name: projects_jira_dvcs_cloud_active_all_time_event
+      - name: projects_with_repositories_enabled_all_time_event
+      - name: protected_branches_all_time_event
+      - name: remote_mirrors_all_time_event
+      - name: projects_enforcing_code_owner_approval_28_days_user
+      - name: project_clusters_enabled_28_days_user
+      - name: analytics_total_unique_counts_monthly
+      - name: issues_edit_total_unique_counts_monthly
+      - name: user_packages_total_unique_counts_monthly
+      - name: terraform_state_api_unique_users_monthly
+      - name: incident_management_total_unique_counts_monthly
       - name: instance_user_count_not_aligned
       - name: historical_max_users_not_aligned
       - name: is_seat_link_subscription_in_zuora
@@ -183,6 +216,39 @@ models:
       - name: releases_28_days_users
       - name: epics_28_days_users
       - name: issues_28_days_users
+      - name: ci_internal_pipelines_all_time_event
+      - name: ci_external_pipelines_all_time_event
+      - name: merge_requests_all_time_event
+      - name: todos_all_time_event
+      - name: epics_all_time_event
+      - name: issues_all_time_event
+      - name: projects_all_time_event
+      - name: deployments_28_days_event
+      - name: packages_28_days_event
+      - name: sast_jobs_all_time_event
+      - name: dast_jobs_all_time_event
+      - name: dependency_scanning_jobs_all_time_event
+      - name: user_license_management_jobs_all_time_event
+      - name: secret_detection_jobs_all_time_event
+      - name: container_scanning_jobs_all_time_event
+      - name: projects_jenkins_active_all_time_event
+      - name: projects_bamboo_active_all_time_event
+      - name: projects_jira_active_all_time_event
+      - name: projects_drone_ci_active_all_time_event
+      - name: jira_imports_28_days_event
+      - name: projects_github_active_all_time_event
+      - name: projects_jira_server_active_all_time_event
+      - name: projects_jira_dvcs_cloud_active_all_time_event
+      - name: projects_with_repositories_enabled_all_time_event
+      - name: protected_branches_all_time_event
+      - name: remote_mirrors_all_time_event
+      - name: projects_enforcing_code_owner_approval_28_days_user
+      - name: project_clusters_enabled_28_days_user
+      - name: analytics_total_unique_counts_monthly
+      - name: issues_edit_total_unique_counts_monthly
+      - name: user_packages_total_unique_counts_monthly
+      - name: terraform_state_api_unique_users_monthly
+      - name: incident_management_total_unique_counts_monthly
       - name: instance_user_count_not_aligned
       - name: historical_max_users_not_aligned
       - name: is_seat_link_subscription_in_zuora
