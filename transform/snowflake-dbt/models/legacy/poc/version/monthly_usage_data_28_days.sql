@@ -78,6 +78,7 @@ SELECT
   clean_metrics_name,
   time_period,
   SUM(monthly_metric_value)   AS monthly_metric_value,
+
   SUM(original_metric_value)  AS original_metric_value,
   -- if several records and 1 has not timed out, then display FALSE
   MIN(has_timed_out)        AS has_timed_out
