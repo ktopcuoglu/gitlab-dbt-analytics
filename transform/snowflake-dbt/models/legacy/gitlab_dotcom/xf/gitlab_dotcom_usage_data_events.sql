@@ -10,7 +10,7 @@
     * primary_key
     * stage_name": "create",
     * "is_representative_of_stage
-    * primary_key
+    * primary_key"
   Must have ONE of the following:
     * source_cte_name OR source_table_name
     * key_to_parent_project OR key_to_group_project (NOT both, see how clusters_applications_helm is included twice for group and project.
@@ -181,7 +181,7 @@
     "event_name": "events",
     "source_table_name": "gitlab_dotcom_events",
     "user_column_name": "author_id",
-    "key_to_parent_group": "project_id",
+    "key_to_parent_project": "project_id",
     "primary_key": "event_id",
     "stage_name": "manage",
     "is_representative_of_stage": "False"

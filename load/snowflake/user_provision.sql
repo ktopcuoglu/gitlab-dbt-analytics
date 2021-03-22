@@ -43,3 +43,5 @@ GRANT ALL PRIVILEGES ON DATABASE identifier($prod_db) to role identifier($userna
 CREATE DATABASE identifier($prep_db);
 GRANT OWNERSHIP ON DATABASE identifier($prep_db) to role identifier($username);
 GRANT ALL PRIVILEGES ON DATABASE identifier($prep_db) to role identifier($username);
+
+use role securityadmin;

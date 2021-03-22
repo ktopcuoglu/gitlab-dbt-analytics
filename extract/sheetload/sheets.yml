@@ -35,10 +35,6 @@ sheets:
     owner: '@mvilain'
     tabs:
       - clari_ai_projection
-  - name: company_call_attendance
-    owner: '@ken_aguilar, @alex_venter'
-    tabs:
-      - company_call_attendance
   - name: data_team_csat_survey_fy2021_q4
     owner: '@ken_aguilar'
     tabs:

@@ -315,9 +315,11 @@ WITH date_details AS (
     FROM sfdc_opportunity_snapshot_history_xf_restricted opp_history
     -- restrict the rows to pipeline of the quarter the snapshot was taken
     WHERE opp_history.snapshot_fiscal_quarter_name = opp_history.pipeline_created_fiscal_quarter_name
-      -- remove pre-opty deals
-      -- remove pre-opty deals and stage 0
-      AND opp_history.stage_name NOT IN ('0-Pending Acceptance','10-Duplicate','00-Pre Opportunity','9-Unqualified')
+      AND ((opp_history.forecast_category_name != 'Omitted'
+          AND opp_history.is_stage_1_plus = 1)
+            OR (opp_history.is_lost = 1))    
+          AND opp_history.is_edu_oss = 0
+          AND lower(opp_history.deal_group) LIKE ANY ('%growth%', '%new%')
     GROUP BY 1,2,3,4,5,6,7
 
 ), base_fields AS (
@@ -352,6 +354,7 @@ WITH date_details AS (
               -- avoid extra lines outside of the current date
               WHERE date_actual < CURRENT_DATE) d
       ON c.snapshot_fiscal_quarter_date = d.snapshot_fiscal_quarter_date 
+      
 ), report_pipeline_metrics_day AS (
       
     SELECT 

@@ -65,6 +65,12 @@ WITH dim_billing_account AS (
       dim_crm_account.parent_crm_account_industry                                     AS parent_crm_account_industry,
       dim_crm_account.parent_crm_account_owner_team                                   AS parent_crm_account_owner_team,
       dim_crm_account.parent_crm_account_sales_territory                              AS parent_crm_account_sales_territory,
+      dim_crm_account.parent_crm_account_tsp_region                                   AS parent_crm_account_tsp_region,
+      dim_crm_account.parent_crm_account_tsp_sub_region                               AS parent_crm_account_tsp_sub_region,
+      dim_crm_account.parent_crm_account_tsp_area                                     AS parent_crm_account_tsp_area,
+      dim_crm_account.crm_account_tsp_region                                          AS crm_account_tsp_region,
+      dim_crm_account.crm_account_tsp_sub_region                                      AS crm_account_tsp_sub_region,
+      dim_crm_account.crm_account_tsp_area                                            AS crm_account_tsp_area,
       dim_crm_account.health_score                                                    AS health_score,
       dim_crm_account.health_score_color                                              AS health_score_color,
       dim_crm_account.health_number                                                   AS health_number,
@@ -136,7 +142,7 @@ WITH dim_billing_account AS (
 {{ dbt_audit(
     cte_ref="final_table",
     created_by="@msendal",
-    updated_by="@paul_armstrong",
+    updated_by="@mcooperDD",
     created_date="2020-09-04",
-    updated_date="2021-02-25"
+    updated_date="2021-03-10"
 ) }}

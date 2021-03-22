@@ -109,11 +109,6 @@ databases:
     - tullylanterdd_prep:
         shared: no
 
-    - tmurphy_prod:
-        shared: no
-    - tmurphy_prep:
-        shared: no
-
     - vprakash_prod:
         shared: no
     - vprakash_prep:
@@ -348,6 +343,7 @@ roles:
             - google_analytics_360
             - netsuite
             - keyhole_twitter
+            - marketing_dnc
             - pmg
             - snowflake_db
             - zendesk
@@ -1003,12 +999,10 @@ roles:
                     - prod.common_mart_product
             tables:
                 read:
-                    - prep.preparation.prep_usage_ping_saas_dates
                     - prep.preparation.prep_usage_ping_no_license_key
-                    - prod.common.fct_product_usage_wave_1_3_metrics_latest
-                    - prod.common.fct_product_usage_wave_1_3_metrics_monthly
                     - prod.common_mart_product.mart_product_usage_wave_1_3_metrics_latest
                     - prod.common_mart_product.mart_product_usage_wave_1_3_metrics_monthly
+                    - prod.common_mart_product.mart_product_usage_wave_1_3_metrics_monthly_diff
     - gcp_billing:
         warehouses:
             - analyst_xs
@@ -1327,6 +1321,21 @@ roles:
                 read:
                     - prep.license_db.*
                     - raw.license_db.*
+
+    - marketing_dnc:
+        privileges:
+            databases:
+                read:
+                    - prep
+                    - raw
+            schemas:
+                read:
+                    - prep.marketing_dnc
+                    - raw.marketing_dnc
+            tables:
+                read:
+                    - prep.marketing_dnc.*
+                    - raw.marketing_dnc.*
 
     - keyhole_twitter:
         privileges:
@@ -1756,6 +1765,12 @@ roles:
         warehouses:
             - analyst_xs
 
+    - brufener:
+        member_of:
+            - bamboohr_sensitive_separations
+        warehouses:
+            - analyst_xs
+
     - cli:
         member_of:
             - product_manager
@@ -2068,6 +2083,12 @@ roles:
             - reporter
         warehouses:
             - reporting
+
+    - jmitchell:
+        member_of:
+            - bamboohr_sensitive_separations
+        warehouses:
+            - analyst_xs
 
     - jng:
         member_of:
@@ -2520,6 +2541,13 @@ roles:
                     - parmstrong_prep.*.*
                     - parmstrong_prod.*.*
 
+    - pegan:
+        member_of:
+            - analyst_people
+            - bamboohr_sensitive_separations
+        warehouses:
+            - analyst_xs
+
     - periscope:
         warehouses:
             - reporting
@@ -2748,6 +2776,57 @@ roles:
                     - testing_db.*.*
                 write:
                     - testing_db.*.*
+ 
+
+    - tmurphy:
+        member_of: []
+        warehouses: []
+
+    - tknudsen:
+        member_of:
+            - bamboohr_sensitive_separations
+        warehouses:
+            - analyst_xs
+
+    - trevorromero:
+        member_of:
+            - decisive_data
+            - marketing_dnc
+        warehouses:
+            - analyst_xs
+        owns:
+            databases:
+                - trevorromero_prep
+                - trevorromero_prod
+            schemas:
+                - trevorromero_prep.*
+                - trevorromero_prod.*
+            tables:
+                - trevorromero_prep.*.*
+                - trevorromero_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - trevorromero_prep
+                    - trevorromero_prod
+                write:
+                    - trevorromero_prep
+                    - trevorromero_prod
+            schemas:
+                read:
+                    - trevorromero_prep.*
+                    - trevorromero_prod.*
+                write:
+                    - trevorromero_prep.*
+                    - trevorromero_prod.*
+            tables:
+                read:
+                    - trevorromero_prep.*.*
+                    - trevorromero_prod.*.*
+                write:
+                    - trevorromero_prep.*.*
+                    - trevorromero_prod.*.*
+
     - tullylanterdd:
         member_of:
             - decisive_data
@@ -2785,88 +2864,6 @@ roles:
                 write:
                     - tullylanterdd_prep.*.*
                     - tullylanterdd_prod.*.*
-
-    - tmurphy:
-        member_of:
-            - bamboohr
-            - engineer
-        owns:
-            databases:
-                - tmurphy_prep
-                - tmurphy_prod
-            schemas:
-                - tmurphy_prep.*
-                - tmurphy_prod.*
-            tables:
-                - tmurphy_prep.*.*
-                - tmurphy_prod.*.*
-        privileges:
-            databases:
-                read:
-                    - tmurphy_prep
-                    - tmurphy_prod
-                write:
-                    - tmurphy_prep
-                    - tmurphy_prod
-            schemas:
-                read:
-                    - tmurphy_prep.*
-                    - tmurphy_prod.*
-                write:
-                    - tmurphy_prep.*
-                    - tmurphy_prod.*
-            tables:
-                read:
-                    - tmurphy_prep.*.*
-                    - tmurphy_prod.*.*
-                write:
-                    - tmurphy_prep.*.*
-                    - tmurphy_prod.*.*
-        warehouses:
-            - admin
-            - engineer_xs
-            - engineer_xl
-            - loading
-            - reporting
-
-    - trevorromero:
-        member_of:
-            - decisive_data
-        warehouses:
-            - analyst_xs
-        owns:
-            databases:
-                - trevorromero_prep
-                - trevorromero_prod
-            schemas:
-                - trevorromero_prep.*
-                - trevorromero_prod.*
-            tables:
-                - trevorromero_prep.*.*
-                - trevorromero_prod.*.*
-        privileges:
-            databases:
-                read:
-                    - trevorromero_prep
-                    - trevorromero_prod
-                write:
-                    - trevorromero_prep
-                    - trevorromero_prod
-            schemas:
-                read:
-                    - trevorromero_prep.*
-                    - trevorromero_prod.*
-                write:
-                    - trevorromero_prep.*
-                    - trevorromero_prod.*
-            tables:
-                read:
-                    - trevorromero_prep.*.*
-                    - trevorromero_prod.*.*
-                write:
-                    - trevorromero_prep.*.*
-                    - trevorromero_prod.*.*
-
 
     - vjuhasz:
         member_of:
@@ -3005,6 +3002,11 @@ users:
         can_login: yes
         member_of:
             - brittany
+
+    - brufener:
+        can_login: yes
+        member_of:
+            - brufener
 
     - cli:
         can_login: yes
@@ -3150,6 +3152,11 @@ users:
         can_login: yes
         member_of:
             - jng
+
+    - jmitchell:
+        can_login: yes
+        member_of:
+            - jmitchell
 
     - jmahdi:
         can_login: no
@@ -3315,6 +3322,11 @@ users:
         member_of:
             - parmstrong
 
+    - pegan:
+        can_login: yes
+        member_of:
+            - pegan
+
     - periscope:
         can_login: yes
         member_of:
@@ -3428,17 +3440,18 @@ users:
         member_of:
             - tullylanterdd
 
+    - tknudsen:
+        can_login: yes
+        member_of:
+            - tknudsen
+
     - tlapiana:
         can_login: no
         member_of: []
 
     - tmurphy:
-        can_login: yes
-        member_of:
-            - accountadmin
-            - securityadmin
-            - sysadmin
-            - tmurphy
+        can_login: no
+        member_of: []
 
     - trevorromero:
         can_login: yes

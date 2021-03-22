@@ -10,6 +10,8 @@ models:
           - not_null
           - unique
         tags: ["tdf", "gainsight"]
+      - name: dim_product_tier_id
+        description: The unique ID of a product tier determined in dim_product_tier.
       - name: ping_created_at
         description: The timestamp at which the usage ping was created_at 
       - name: ping_created_at_28_days_earlier

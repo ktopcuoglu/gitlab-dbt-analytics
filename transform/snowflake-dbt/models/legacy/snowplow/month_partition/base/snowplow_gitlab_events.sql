@@ -369,6 +369,7 @@ WITH filtered_source as (
     {{ unpack_unstructured_event(track_timing, 'track_timing', 'tt') }}
     FROM base_with_sorted_columns
 
+
 )
 
 
