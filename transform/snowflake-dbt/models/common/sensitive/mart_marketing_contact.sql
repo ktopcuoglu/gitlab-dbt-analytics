@@ -455,7 +455,7 @@ WITH marketing_contact AS (
     created_by="@trevor31",
     updated_by="@trevor31",
     created_date="2021-02-09",
-    updated_date="2021-03-19"
+    updated_date="2021-03-22"
 ) }}
 
 
