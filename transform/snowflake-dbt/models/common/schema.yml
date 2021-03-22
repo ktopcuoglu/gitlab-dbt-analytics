@@ -1279,7 +1279,7 @@ models:
       - name: releases_28_days_users
       - name: epics_28_days_users
       - name: issues_28_days_users
-            - name: ci_internal_pipelines_all_time_event
+      - name: ci_internal_pipelines_all_time_event
       - description: Total pipelines in GitLab repositories
       - name: ci_external_pipelines_all_time_event
       - description: Total pipelines in external repositories
