@@ -19,7 +19,7 @@ WITH memberships AS (
       ) AS membership_source_type_order,
       IFF(namespace_id = ultimate_parent_id, TRUE, FALSE) AS is_ultimate_parent
     FROM {{ ref('gitlab_dotcom_memberships') }}
-    WHERE ultimate_parent_plan_id != '34'
+    WHERE ultimate_parent_plan_id != 34
 
 ), plans AS (
 
@@ -52,7 +52,6 @@ WITH memberships AS (
     FIRST_VALUE(namespace_id) OVER (
       PARTITION BY user_id
       ORDER BY
-        (ultimate_parent_plan_id = 'trial'),
         ultimate_parent_plan_id DESC,
         membership_source_type_order,
         is_ultimate_parent DESC,
@@ -62,7 +61,6 @@ WITH memberships AS (
     FIRST_VALUE(ultimate_parent_id) OVER (
       PARTITION BY user_id
       ORDER BY
-        (ultimate_parent_plan_id = 'trial'),
         ultimate_parent_plan_id DESC,
         membership_source_type_order,
         is_ultimate_parent DESC,
@@ -72,7 +70,6 @@ WITH memberships AS (
     FIRST_VALUE(membership_source_type) OVER (
       PARTITION BY user_id
       ORDER BY
-        (ultimate_parent_plan_id = 'trial'),
         ultimate_parent_plan_id DESC,
         membership_source_type_order,
         is_ultimate_parent DESC,
@@ -82,7 +79,6 @@ WITH memberships AS (
     FIRST_VALUE(membership_source_id) OVER (
       PARTITION BY user_id
       ORDER BY
-        (ultimate_parent_plan_id = 'trial'),
         ultimate_parent_plan_id DESC,
         membership_source_type_order,
         is_ultimate_parent DESC,
@@ -91,7 +87,7 @@ WITH memberships AS (
 
   FROM memberships
     LEFT JOIN plans
-      ON memberships.ultimate_parent_plan_id = plans.plan_id::VARCHAR
+      ON memberships.ultimate_parent_plan_id = plans.plan_id
 
 )
 
