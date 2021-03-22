@@ -79,7 +79,7 @@ WITH sfdc_lead AS (
         WHEN sfdc_lead_contact = 'lead' AND sfdc_lead.company <>  '[[unknown]]' THEN sfdc_lead.company
       END                                                                                                                   AS company_name,
       crm_person.title                                                                                                      AS job_title,
-      sales_segment.sales_segment_name                                                                                      AS sales_segment,
+      sales_segment.sales_segment_name                                                                                      AS parent_sales_segment,
       CASE
         WHEN sfdc_lead_contact = 'contact' THEN sfdc_contact.mailing_country
         ELSE sfdc_lead.country
@@ -101,7 +101,7 @@ WITH sfdc_lead AS (
     LEFT JOIN crm_account
       ON crm_account.dim_crm_account_id = crm_person.dim_crm_account_id
     INNER JOIN sales_segment
-      ON sales_segment.dim_sales_segment_id = crm_account.dim_account_sales_segment_id
+      ON sales_segment.dim_sales_segment_id = crm_account.dim_parent_sales_segment_id
     WHERE  email_address IS NOT NULL
       AND email_address <> ''
     QUALIFY record_number = 1
@@ -206,7 +206,7 @@ WITH sfdc_lead AS (
       COALESCE(zuora.company_name,  sfdc.company_name, customer_db.company_name, gitlab_dotcom.company_name)             AS company_name,
       COALESCE(sfdc.job_title, gitlab_dotcom.job_title)                                                                  AS job_title,
       COALESCE(zuora.country, sfdc.country, customer_db.country)                                                         AS country,
-      sfdc.sales_segment                                                                                                 AS sfdc_parent_sales_segment,
+      sfdc.parent_sales_segment                                                                                          AS sfdc_parent_sales_segment,
       CASE
         WHEN sfdc.email_address IS NOT NULL THEN TRUE
         ELSE FALSE
