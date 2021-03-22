@@ -1566,30 +1566,120 @@ models:
       - name: recorded_at
         description: The timestamp when the usage ping was recorded.
 
+  - name: fct_usage_ping_subscription_mapped_gmau
+    description: '{{ doc("fct_usage_ping_subscription_mapped_gmau") }}'
+    columns:
+      - name: dim_subscription_id
+        tests:
+          - not_null
+        tags: ["tdf", "common"]
+      - name: snapshot_month
+        description: First day of the month in which data is being reported.
+        tests:
+          - not_null
+        tags: ["tdf", "common"]
+      - name: snapshot_date_id
+        tests:
+          - not_null
+        tags: ["tdf", "common"]
+      - name: dim_subscription_id_original
+        tests:
+          - not_null
+        tags: ["tdf", "common"]
+      - name: dim_billing_account_id
+        tests:
+          - not_null
+        tags: ["tdf", "common"]
+      - name: dim_crm_account_id
+      - name: dim_parent_crm_account_id
+      - name: dim_usage_ping_id
+        description: JOIN key to dim_usage_pings and prep_usage_pings. Uniquely identifies a single usage ping. 
+      - name: uuid
+      - name: hostname
+      - name: dim_license_id
+      - name: license_md5 
+        description: JOIN key to dim_licenses and dim_license 
+      - name: cleaned_version
+      - name: ping_created_at
+        description: The timestamp at which the usage ping was created_at 
+      - name: ping_created_date_id
+      - name: analytics_analytics_total_unique_counts_monthly
+        description: The number of unique users viewing any [Analytics page](https://docs.gitlab.com/ee/user/analytics/) ([source](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/#manage-manageoptimize---smau-gmau---mau-viewing-analytics-features))
+      - name: compliance_compliance_total_unique_counts_monthly
+        description: The number of unique users viewing Audit Events, Compliance Dashboard, or Credential Inventory ([source](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/#managecompliance---paid-gmau---mau-viewing-compliance-features))
+      - name: import_usage_activity_by_stage_monthly_manage_unique_users_all_imports
+        description: A monthly count of the unique number of users performing an import ([source](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/#manageimport---gmau---mau-importing))
+      - name: project_management_redis_hll_counters_issues_edit_issues_edit_total_unique_counts_monthly
+        description: Number of unique users interacting with an issue (open, close, reopen, adjust label, adjust milestone, adjust weight, comment) ([source](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/#plan-planproject-management---smau-paid-gmau---mau-interacting-with-issues))
+      - name: portfolio_management_epic_creation_users_28_days
+        description: The number of unique users creating Epics each month ([source](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/#planproduct-planning---paid-gmau---mau-creating-epics-each-month))
+      - name: source_code_repo_writes
+        description: A rolling count of the number of unique users who performed any Git write operation within the last 28 days ([source](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/#createsource-code---gmau---unique-users-writing-to-a-project-git-repository))
+      - name: editor_ide_edit_users_28_days
+        description: A rolling count of the number of unique users who performed a Git write operation to any respository using the Web IDE, Web Editor or Snippet within a stage in the last 28 days ([source](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/#createeditor---gmau---unique-users-committing-via-any-web-editor))
+      - name: ecosystem_redis_hll_counters_ecosystem_ecosystem_total_unique_counts_monthly
+        description: Monthly Unique Users of any GitLab integration ([source](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/#createecosystem---gmau---mau-of-any-integration))
+      - name: geo_usage_activity_by_stage_monthly_enablement_usage_activity_by_stage_monthly_manage_groups
+        description: Number of unique users utilizing a Geo secondary. This adoption metric helps us understand whether end users are actually seeing value in, and are using, geo secondaries ([source](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/#enablementgeo---paid-gmau---number-of-unique-users-utilizing-a-geo-secondary))
+      - name: global_search_paid_search_28_days
+        description: The number of unique **paid** users interacting with either Basic Search or Advanced Search per month ([source](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/#enablementglobal-search---paid-gmau---the-number-of-unique-paid-users-per-month))
+      - name: global_search_search_users_28_days
+        description: The number of unique **active** users interacting with either Basic Search or Advanced Search per month ([source](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/#enablementglobal-search---paid-gmau---the-number-of-unique-paid-users-per-month))
+      - name: continuous_integration_ci_pipelines_users_28_days
+        description: A rolling count of unique users triggering pipelines in the last 28 days ([source](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/#verify-verifyci---gmau-smau---unique-users-triggering-pipelines))
+      - name: code_review_merge_request_interaction_users_28_days
+        description: Count the number of users that are pushing MRs to gitlab-ci.yml files ([source](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/#verifypipeline-authoring---gmau---number-of-unique-users-interacting-with-gitlab-ciyml-file))
+      - name: testing_counts_monthly_aggregated_metrics_i_testing_paid_monthly_active_user_total
+        description: A rolling count of unique users who have interacted with a paid testing feature in the last 28 days ([source](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/#verifytesting---paid-gmau---count-of-active-paid-testing-feature-users))
+      - name: package_redis_hll_counters_user_packages_user_packages_total_unique_counts_monthly
+        description: The maximum distinct count of users who published a package to the Package Registry. In the future, this value will the distinct count of users across all Package AMAUs ([source](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/#packagepackage---smau-gmau---count-of-users-publishing-packages))
+      - name: release_management_release_creation_users_28_days
+        description: A rolling count of unique users triggering deployments with Gitlab in the last 28 days ([source](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/#releaserelease---smau---count-of-users-triggering-deployments-using-gitlab))
+      - name: configure_redis_hll_counters_terraform_p_terraform_state_api_unique_users_monthly
+        description: Monthly active users of GitLab Managed Terraform State ([source](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/#configureconfigure---smau-gmau---mau-of-gitlab-managed-terraform-state))
+      - name: monitor_incident_management_activer_user_28_days
+        description: Unique users that interact with alerts or incidents ([source](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/#monitormonitor---smau-gmau---unique-users-that-interact-with-alerts-and-incidents))
+      - name: static_analysis_static_analysis_sast_jobs_users_28_days
+        description: Represents the count of unique users running Static Analysis jobs if greater than `static_analysis_static_analysis_secret_detection_jobs_users_28_days` ([source](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/#securestatic-analysis---gmau---users-running-static-analysis-jobs))
+      - name: static_analysis_static_analysis_secret_detection_jobs_users_28_days
+        description: Represents the count of unique users running Static Analysis jobs if greater than `static_analysis_static_analysis_sast_jobs_users_28_days` ([source](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/#securestatic-analysis---gmau---users-running-static-analysis-jobs))
+      - name: dynamic_analysis_dast_jobs_users_28_days
+        description: Number of unique users who have run one or more DAST jobs ([source](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/#securedynamic-analysis---gmau---users-running-dast))
+      - name: composition_analysis_dependency_scanning_jobs_users_28_days
+        description: Represents the count of unique users running any SCA scanners if greater than `composition_analysis_license_management_jobs_user_28_days` and `composition_analysis_license_scanning_jobs_users_28_days` ([source](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/#securecomposition-analysis---gmau---users-running-any-sca-scanners))
+      - name: composition_analysis_license_management_jobs_user_28_days
+        description: Represents the count of unique users running any SCA scanners if greater than `composition_analysis_dependency_scanning_jobs_users_28_days` and `composition_analysis_license_scanning_jobs_users_28_days` ([source](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/#securecomposition-analysis---gmau---users-running-any-sca-scanners))
+      - name: composition_analysis_license_scanning_jobs_users_28_days
+        description: Represents the count of unique users running any SCA scanners if greater than `composition_analysis_dependency_scanning_jobs_users_28_days` and `composition_analysis_license_management_jobs_user_28_days` ([source](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/#securecomposition-analysis---gmau---users-running-any-sca-scanners))
+      - name: fuzz_testing_fuzz_testing_jobs_users_28_days
+        description: The number of unique users who have run one or more Fuzz Testing jobs ([source](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/#securefuzz-testing---gmau---users-running-fuzz-testing))
+      - name: container_security_container_scanning_jobs_users_28_days
+        description: The number of users who have run a container scanning job or interacted with the Protect UI in the last 28 days of the month ([source](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/#protectcontainer-security---smau-gmau---users-running-container-scanning-or-interacting-with-protect-ui))
+
   - name: fct_usage_ping_subscription_mapped_smau
     description: '{{ doc("fct_usage_ping_subscription_mapped_smau") }}'
     columns:
       - name: dim_subscription_id
         tests:
           - not_null
-        tags: ["tdf", "common", "gainsight"]
+        tags: ["tdf", "common"]
       - name: snapshot_month
         description: First day of the month in which data is being reported.
         tests:
           - not_null
-        tags: ["tdf", "common", "gainsight"]
+        tags: ["tdf", "common"]
       - name: snapshot_date_id
         tests:
           - not_null
-        tags: ["tdf", "common", "gainsight"]
+        tags: ["tdf", "common"]
       - name: dim_subscription_id_original
         tests:
           - not_null
-        tags: ["tdf", "common", "gainsight"]
+        tags: ["tdf", "common"]
       - name: dim_billing_account_id
         tests:
           - not_null
-        tags: ["tdf", "common", "gainsight"]
+        tags: ["tdf", "common"]
       - name: dim_crm_account_id
       - name: dim_parent_crm_account_id
       - name: dim_usage_ping_id
@@ -1604,25 +1694,25 @@ models:
         description: The timestamp at which the usage ping was created_at
       - name: ping_created_date_id
       - name: manage_analytics_total_unique_counts_monthly
-        description: Number of unique monthly visits to Analytics
+        description: The number of unique users viewing any [Analytics page](https://docs.gitlab.com/ee/user/analytics/) ([source](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/#manage-manageoptimize---smau-gmau---mau-viewing-analytics-features))
       - name: plan_redis_hll_counters_issues_edit_issues_edit_total_unique_counts_monthly
-        description: Number of unique monthly actions taken on project management issues
+        description: Number of unique users interacting with an issue (open, close, reopen, adjust label, adjust milestone, adjust weight, comment) ([source](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/#plan-planproject-management---smau-paid-gmau---mau-interacting-with-issues))
       - name: create_repo_writes
-        description: Number of unique monthly users writing to project repositories
+        description: A rolling count of the number of unique users who performed any Git write operation within the last 28 days ([source](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/#create---smau---unique-users-writing-to-a-git-repository))
       - name: verify_ci_pipelines_users_28_days
-        description: Number of unique monthly users running CI pipelines
+        description: A rolling count of unique users triggering pipelines in the last 28 days ([source](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/#verify-verifyci---gmau-smau---unique-users-triggering-pipelines))
       - name: package_redis_hll_counters_user_packages_user_packages_total_unique_counts_monthly
-        description: Number of unique monthly packages used
+        description: The maximum distinct count of users who published a package to the Package Registry. In the future, this value will the distinct count of users across all Package AMAUs ([source](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/#packagepackage---smau-gmau---count-of-users-publishing-packages))
       - name: release_release_creation_users_28_days
-        description: Number of unique monthly users making deployments
+        description: A rolling count of unique users triggering deployments with Gitlab in the last 28 days ([source](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/#releaserelease---smau---count-of-users-triggering-deployments-using-gitlab))
       - name: configure_redis_hll_counters_terraform_p_terraform_state_api_unique_users_monthly
-        description: Number of unique monthly [Terraform](https://about.gitlab.com/handbook/engineering/development/ops/configure/#sts=GitLab%20Terraform%20Provider) users
+        description: Monthly active users of GitLab Managed Terraform State ([source](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/#configureconfigure---smau-gmau---mau-of-gitlab-managed-terraform-state))
       - name: monitor_incident_management_activer_user_28_days
-        description: Number of unique monthly Incident Management actions taken
+        description: Unique users that interact with alerts or incidents ([source](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/#monitormonitor---smau-gmau---unique-users-that-interact-with-alerts-and-incidents))
       - name: secure_secure_scanners_users_28_days
-        description: Number of unique monthly users performing Secure CI builds. CI builds are classified as Secure if they fall under any of the [Secure Domains of Expertise](https://about.gitlab.com/handbook/engineering/development/secure/#domains-of-expertise)
+        description: The number of unique users who have run one or more Secure scanners ([source](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/#sec-secure---section-mau-smau---unique-users-who-have-used-a-secure-scanner))
       - name: protect_container_scanning_jobs_users_28_days
-        description: Number of unique monthly users performing [container scanning jobs](https://docs.gitlab.com/ee/user/application_security/container_scanning/)
+        description: The number of users who have run a container scanning job or interacted with the Protect UI in the last 28 days of the month ([source](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/#protectcontainer-security---smau-gmau---users-running-container-scanning-or-interacting-with-protect-ui))
 
   - name: fct_usage_ping_subscription_mapped_wave_2_3_metrics
     description: '{{ doc("fct_usage_ping_subscription_mapped_wave_2_3_metrics") }}'
