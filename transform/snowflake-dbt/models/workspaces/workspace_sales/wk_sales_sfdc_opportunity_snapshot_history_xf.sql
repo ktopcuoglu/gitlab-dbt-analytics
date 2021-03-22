@@ -420,7 +420,7 @@ WITH date_details AS (
     FROM sfdc_opportunity_snapshot_history        
     WHERE snapshot_fiscal_quarter_date = close_fiscal_quarter_date -- closing in the same quarter of the snapshot
       -- not created within quarter
-      AND snapshot_fiscal_quarter_date <> created_fiscal_quarter_date
+      AND snapshot_fiscal_quarter_date <> pipeline_created_fiscal_quarter_date
       -- set day 5 as start of the quarter for pipeline purposes
       AND snapshot_day_of_fiscal_quarter_normalised = 5
     GROUP BY 1, 2
@@ -432,8 +432,8 @@ WITH date_details AS (
       snapshot_fiscal_quarter_date
     FROM sfdc_opportunity_snapshot_history
     WHERE snapshot_fiscal_quarter_date = close_fiscal_quarter_date -- closing in the same quarter of the snapshot
-      -- created same quarter
-      AND snapshot_fiscal_quarter_date = created_fiscal_quarter_date
+      -- pipeline created same quarter
+      AND snapshot_fiscal_quarter_date = pipeline_created_fiscal_quarter_date
     GROUP BY 1, 2
 
 ), sfdc_opportunity_snapshot_history_xf AS (

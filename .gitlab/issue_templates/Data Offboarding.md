@@ -9,9 +9,10 @@
 - [ ] Update `roles.yml`
 - [ ] Remove from Calendar
 - [ ] Remove from Geekbot
-- [ ] Rempve from Airflow
+- [ ] Remove from Airflow
+- [ ] Remove from Periscope (permissions and/or Admin license) 
 - [ ] Remove from Google Groups- finance@
 - [ ] Remove from Google Groups- analyticsapi@
 - [ ] Unassign from issues
-
+ 
 /label ~Provisioning ~Housekeeping ~"Data Team" ~"engineering::Security" ~"Priority::1-Ops" 
