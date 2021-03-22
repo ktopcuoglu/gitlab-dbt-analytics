@@ -1332,7 +1332,6 @@ models:
       - name: remote_mirrors_all_time_event
       - description: Counts of remote mirrors
       - name: projects_enforcing_code_owner_approval_28_days_user
-      - description: 
       - name: project_clusters_enabled_28_days_user
       - description: Total GitLab Managed enabled clusters attached to projects
       - name: analytics_total_unique_counts_monthly
@@ -1348,15 +1347,15 @@ models:
       - name: instance_user_count_not_aligned
       - name: historical_max_users_not_aligned
       - name: is_seat_link_subscription_in_zuora
-        description: Flags rows where the `zuora_subscription_id` from `customers_db_orders_source` is not found in `dim_subscription`.
+      - description: Flags rows where the `zuora_subscription_id` from `customers_db_orders_source` is not found in `dim_subscription`.
       - name: is_seat_link_rate_plan_in_zuora
-        description: Flags rows where the `product_rate_plan_id` from `customers_db_orders_source` is not found in `dim_product_tier`.
+      - description: Flags rows where the `product_rate_plan_id` from `customers_db_orders_source` is not found in `dim_product_tier`.
       - name: is_seat_link_active_user_count_available
-        description: Flags rows where `active_user_count` is NULL in source.
+      - description: Flags rows where `active_user_count` is NULL in source.
       - name: is_usage_ping_license_mapped_to_subscription
       - name: is_usage_ping_license_subscription_id_valid
       - name: is_data_in_subscription_month
-        description: Flags rows where there is Usage Ping data and/or Seat Link data present
+      - description: Flags rows where there is Usage Ping data and/or Seat Link data present
 
   - name: fct_product_usage_wave_1_3_metrics_monthly
     description: '{{ doc("fct_product_usage_wave_1_3_metrics_monthly") }}'
