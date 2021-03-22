@@ -109,11 +109,6 @@ databases:
     - tullylanterdd_prep:
         shared: no
 
-    - tmurphy_prod:
-        shared: no
-    - tmurphy_prep:
-        shared: no
-
     - vprakash_prod:
         shared: no
     - vprakash_prep:
@@ -2784,47 +2779,8 @@ roles:
  
 
     - tmurphy:
-        member_of:
-            - bamboohr
-            - engineer
-        owns:
-            databases:
-                - tmurphy_prep
-                - tmurphy_prod
-            schemas:
-                - tmurphy_prep.*
-                - tmurphy_prod.*
-            tables:
-                - tmurphy_prep.*.*
-                - tmurphy_prod.*.*
-        privileges:
-            databases:
-                read:
-                    - tmurphy_prep
-                    - tmurphy_prod
-                write:
-                    - tmurphy_prep
-                    - tmurphy_prod
-            schemas:
-                read:
-                    - tmurphy_prep.*
-                    - tmurphy_prod.*
-                write:
-                    - tmurphy_prep.*
-                    - tmurphy_prod.*
-            tables:
-                read:
-                    - tmurphy_prep.*.*
-                    - tmurphy_prod.*.*
-                write:
-                    - tmurphy_prep.*.*
-                    - tmurphy_prod.*.*
-        warehouses:
-            - admin
-            - engineer_xs
-            - engineer_xl
-            - loading
-            - reporting
+        member_of: []
+        warehouses: []
 
     - tknudsen:
         member_of:
@@ -3494,12 +3450,8 @@ users:
         member_of: []
 
     - tmurphy:
-        can_login: yes
-        member_of:
-            - accountadmin
-            - securityadmin
-            - sysadmin
-            - tmurphy
+        can_login: no
+        member_of: []
 
     - trevorromero:
         can_login: yes
