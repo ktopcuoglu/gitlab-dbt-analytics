@@ -14,8 +14,6 @@ WITH date_details AS (
 ), application_settings_snapshot_monthly AS (
   
     SELECT
-      {{ dbt_utils.surrogate_key(['DATE_TRUNC('month', date_details.date_actual)', 'application_settings_snapshot.application_settings_id']) }}
-                                                                    AS primary_key,
       DATE_TRUNC('month', date_details.date_actual) AS snapshot_month,
       application_settings_snapshot.application_settings_id,
       application_settings_snapshot.shared_runners_minutes,
@@ -27,5 +25,7 @@ WITH date_details AS (
   
 )
 
-SELECT *
+SELECT
+  {{ dbt_utils.surrogate_key(['snapshot_month', 'application_settings_id']) }} AS primary_key,
+  *
 FROM application_settings_snapshot_monthly
