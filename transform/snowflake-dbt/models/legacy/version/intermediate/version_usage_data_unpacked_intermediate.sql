@@ -19,14 +19,14 @@ WITH usage_data AS (
 ), unpacked AS (
 
     SELECT
-      {{ dbt_utils.star(from=ref('version_usage_data_with_metadata'), except=["STATS_USED", "COUNTS", "USAGE_ACTIVITY_BY_STAGE", "ANALYTICS_UNIQUE_VISIT"], relation_alias='version_usage_data_with_metadata') }},
+      {{ dbt_utils.star(from=ref('version_usage_data_with_metadata'), except=["STATS_USED", "COUNTS", "USAGE_ACTIVITY_BY_STAGE", "ANALYTICS_UNIQUE_VISIT"], relation_alias='usage_data') }},
       ping_name,
       full_ping_name,
       ping_value
 
     FROM usage_data
     LEFT JOIN stats_used_unpacked
-      ON usage_data.id = stats_used_unpacked.id
+      ON usage_data .id = stats_used_unpacked.id
 
 ), final AS (
 
@@ -37,7 +37,7 @@ WITH usage_data AS (
         {{ "," if not loop.last }}
       {% endfor %}
     FROM unpacked
-    {{ dbt_utils.group_by(n=70) }}
+    {{ dbt_utils.group_by(n=71) }}
 
 
 )
