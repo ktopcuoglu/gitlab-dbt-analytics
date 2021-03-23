@@ -26,7 +26,7 @@ WITH usage_data AS (
 
     FROM usage_data
     LEFT JOIN stats_used_unpacked
-      ON joined.id = stats_used_unpacked.id
+      ON usage_data.id = stats_used_unpacked.id
 
 ), final AS (
 
