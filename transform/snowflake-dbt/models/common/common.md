@@ -279,6 +279,15 @@ Dimension representing the associated sales rep from salesforce. Most often this
 
 {% enddocs %}
 
+{% docs fct_usage_ping_subscription_mapped_gmau %}
+
+This data model is at the **month | dim_subscription_id** grain for **Self-Managed** instances. In every month _that a Usage Ping payload was received_, for a given subscription, values of each GMAU and Paid GMAU metric from the last Usage Ping value in that month are reported. 
+
+This data model is used for the Customer Health Dashboards.
+
+Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+{% enddocs %}
 
 {% docs fct_usage_ping_subscription_mapped_smau %}
 
