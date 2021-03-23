@@ -348,6 +348,7 @@ WITH marketing_contact AS (
       marketing_contact.job_title,
       marketing_contact.country,
       marketing_contact.sfdc_parent_sales_segment,
+      marketing_contact.sfdc_parent_crm_account_tsp_region,
       marketing_contact.is_sfdc_lead_contact,
       marketing_contact.sfdc_lead_contact,
       marketing_contact.sfdc_created_date,
