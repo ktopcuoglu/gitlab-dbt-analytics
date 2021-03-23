@@ -19,4 +19,12 @@ macros:
       - name: channel_path_column
         type: string
         description: Name of the column which has channel path data in it.
-
+  - name: sales_segment_region_grouped
+    description: This macro creates a custom grouping for sales segment and sales region.
+    arguments:
+      - name: segment
+        type: string
+        description: Sales segment field to use for grouping
+      - name: sales_region
+        type: string
+        description: Sales region field to use for grouping

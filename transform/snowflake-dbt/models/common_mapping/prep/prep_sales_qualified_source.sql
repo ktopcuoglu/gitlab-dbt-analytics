@@ -17,7 +17,7 @@ WITH source_data AS (
 
     SELECT
       MD5('-1')                                                                    AS dim_sales_qualified_source_id,
-      'Missing opportunity_source_name'                                            AS sales_qualified_source_name
+      'Missing sales_qualified_source_name'                                            AS sales_qualified_source_name
 
 )
 

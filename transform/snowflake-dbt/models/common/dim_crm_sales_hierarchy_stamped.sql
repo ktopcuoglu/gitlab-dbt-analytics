@@ -4,10 +4,12 @@ WITH crm_sales_hierarchy_stamped AS (
       dim_crm_sales_hierarchy_stamped_id,
       dim_crm_sales_hierarchy_sales_segment_stamped_id,
       sales_segment_name_stamped,
+      sales_segment_name_stamped_grouped,
       dim_crm_sales_hierarchy_location_region_stamped_id,
       location_region_name_stamped,
       dim_crm_sales_hierarchy_sales_region_stamped_id,
       sales_region_name_stamped,
+      segment_region_stamped_grouped,
       dim_crm_sales_hierarchy_sales_area_stamped_id,
       sales_area_name_stamped
     FROM {{ ref('prep_crm_sales_hierarchy_stamped') }}

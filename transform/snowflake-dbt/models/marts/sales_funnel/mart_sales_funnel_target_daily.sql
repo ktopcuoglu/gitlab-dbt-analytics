@@ -21,7 +21,9 @@
       dim_crm_sales_hierarchy_live.location_region_name_live,
       dim_crm_sales_hierarchy_live.sales_region_name_live,
       dim_crm_sales_hierarchy_live.sales_area_name_live,
+      dim_crm_sales_hierarchy_live.segment_region_live_grouped,
       dim_order_type.order_type_name,
+      dim_order_type.order_type_grouped,
       dim_sales_qualified_source.sales_qualified_source_name,
       fct_sales_funnel_target.allocated_target
     FROM fct_sales_funnel_target
@@ -63,7 +65,9 @@
       location_region_name_live,
       sales_region_name_live,
       sales_area_name_live,
+      segment_region_live_grouped,
       order_type_name,
+      order_type_grouped,
       sales_qualified_source_name,
       allocated_target                                                                                                                              AS monthly_allocated_target,
       daily_allocated_target,
