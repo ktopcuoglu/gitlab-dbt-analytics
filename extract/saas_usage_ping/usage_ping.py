@@ -40,6 +40,8 @@ class UsagePing(object):
 
         print(self.config_vars["RUN_DATE"])
 
+        sys.exit()
+
         if ping_date is not None:
             self.end_date = datetime.datetime.strptime(ping_date, "%Y-%m-%d").date()
         else:
