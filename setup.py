@@ -9,10 +9,10 @@ requires = [
 ]
 
 setup(
-   name='GitLab dbt dev',
-   version='1.0',
-   description='dbt module for development',
-   author='Taylor Murphy, Michael Walker',
-   author_email='mwalker@gitlab.com',
-   install_requires=requires
+    name="GitLab dbt dev",
+    version="1.0",
+    description="dbt module for development",
+    author="Taylor Murphy, Michael Walker",
+    author_email="mwalker@gitlab.com",
+    install_requires=requires,
 )
