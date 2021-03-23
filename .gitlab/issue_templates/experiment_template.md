@@ -17,6 +17,10 @@ Link to Event Tracking Issue:
 
 Other Relevant Links: 
 
+#### Please define the components of any calculations needed for this analysis.
+
+For example, what is the numerator and denominator?
+
 #### If applicable, please provide any detail on event sequences of interest.
 
 For example, if this experiment is tracking a conversion funnel through 4 different events, what order of events is desired to be tracked.
@@ -64,4 +68,4 @@ This section is to help provide clarity into the current stage of the experiment
 |Analysis of Experiment Results|Product Analysis|
 
 
-/label ~Reporting ~"Data Team" ~"Product Analysis" ~Experiment
+ /label ~"Data Team" ~"product analysis" ~Experiment
