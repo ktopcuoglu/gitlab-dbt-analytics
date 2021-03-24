@@ -81,6 +81,7 @@ WITH sfdc_lead AS (
       crm_person.title                                                                                                      AS job_title,
       crm_account.parent_crm_account_sales_segment,
       crm_account.parent_crm_account_tsp_region,
+      crm_person.region                                                                                                     AS crm_person_region,
       CASE
         WHEN sfdc_lead_contact = 'contact' THEN sfdc_contact.mailing_country
         ELSE sfdc_lead.country
@@ -206,7 +207,7 @@ WITH sfdc_lead AS (
       COALESCE(sfdc.job_title, gitlab_dotcom.job_title)                                                                  AS job_title,
       COALESCE(zuora.country, sfdc.country, customer_db.country)                                                         AS country,
       sfdc.parent_crm_account_sales_segment                                                                              AS sfdc_parent_sales_segment,
-      sfdc.parent_crm_account_tsp_region                                                                                 AS sfdc_parent_crm_account_tsp_region,
+      COALESCE(sfdc.parent_crm_account_tsp_region, sfdc.crm_person_region)                                               AS sfdc_parent_crm_account_tsp_region,
       CASE
         WHEN sfdc.email_address IS NOT NULL THEN TRUE
         ELSE FALSE
