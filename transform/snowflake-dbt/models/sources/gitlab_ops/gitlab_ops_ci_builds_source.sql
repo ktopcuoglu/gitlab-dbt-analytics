@@ -34,7 +34,6 @@ WITH source AS (
     erased_at::TIMESTAMP              AS ci_build_erased_at,
     artifacts_expire_at::TIMESTAMP    AS ci_build_artifacts_expire_at,
     environment::VARCHAR              AS environment,
-    artifacts_size::VARCHAR           AS artifacts_size,
     SHA2(yaml_variables::VARCHAR)     AS yaml_variables,
     queued_at::TIMESTAMP              AS ci_build_queued_at,
     lock_version::VARCHAR             AS lock_version,
