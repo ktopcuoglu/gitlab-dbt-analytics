@@ -1,7 +1,7 @@
 WITH usage_data AS (
 
     SELECT *
-    FROM {{ ref('version_usage_data_unpacked_intermediate') }}
+    FROM {{ ref('version_usage_data_with_metadata') }}
 
 ), unpacked_stage_json AS (
 
