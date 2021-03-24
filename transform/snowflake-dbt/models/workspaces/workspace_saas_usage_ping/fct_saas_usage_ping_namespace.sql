@@ -8,9 +8,10 @@
 
     SELECT 
       saas_usage_ping_gitlab_dotcom_namespace_id,
-      namespace_ultimate_parent_id                           AS dim_namespace_id,
-      ping_name                                              AS ping_name, --potentially renamed
-      IFF(ping_date < '2021-03-31', _uploaded_at, ping_date) AS ping_date, --currently wrong date input in the airflow run
+      namespace_ultimate_parent_id                                    AS dim_namespace_id,
+      ping_name                                                       AS ping_name, --potentially renamed
+      ping_date, --currently wrong date input in the airflow run
+      TO_DATE(_uploaded_at)                                           AS run_date,
       counter_value
     FROM saas_usage_ping_namespace
     WHERE error = 'Success'
