@@ -56,6 +56,7 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity.is_edu_oss,
       sfdc_opportunity_stage.is_won                     AS is_won,
       sfdc_opportunity.probability,
+      sfdc_opportunity.professional_services_value,
       sfdc_opportunity.reason_for_loss,
       sfdc_opportunity.reason_for_loss_details,
       CASE
@@ -101,7 +102,7 @@ WITH sfdc_opportunity AS (
 {{ dbt_audit(
     cte_ref="layered",
     created_by="@iweeks",
-    updated_by="@mcooperDD",
+    updated_by="@iweeks",
     created_date="2020-11-20",
-    updated_date="2021-03-12"
+    updated_date="2021-03-23"
 ) }}

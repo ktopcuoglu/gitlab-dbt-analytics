@@ -32,7 +32,6 @@ WITH source AS (
       isinvoiceseparate                           AS is_invoice_separate,
       currentterm                                 AS current_term,
       currenttermperiodtype                       AS current_term_period_type,
-      clickthrougheularequired__c                 AS sfdc_click_through_eula_required,
       endcustomerdetails__c                       AS sfdc_end_customer_details,
 
       --key_dates
