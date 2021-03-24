@@ -38,6 +38,7 @@ WITH usage_data AS (
       DATEDIFF('week', TO_DATE(user_created_at), event_date)            AS weeks_since_user_creation,
       COUNT(*)                                                          AS event_count
     FROM usage_data
+    WHERE days_since_user_creation >= 0
     {{ dbt_utils.group_by(n=16) }}
 
 )
