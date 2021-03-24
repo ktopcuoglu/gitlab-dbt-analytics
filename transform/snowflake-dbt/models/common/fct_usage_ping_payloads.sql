@@ -97,7 +97,8 @@ WITH license AS (
       license_trial   AS is_trial,
       created_at,
       recorded_at,
-      license_user_count
+      license_user_count,
+      gitpod_enabled
     FROM joined
 
 )
@@ -107,5 +108,5 @@ WITH license AS (
     created_by="@derekatwood",
     updated_by="@mpeychet_",
     created_date="2020-08-17",
-    updated_date="2020-12-03"
+    updated_date="2021-03-24"
 ) }}
