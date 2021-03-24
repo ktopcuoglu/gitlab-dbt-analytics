@@ -23,7 +23,6 @@ tables:
       , runner_id
       , coverage
       , commit_id
-      , commands
       , name
       , options
       , allow_failure
