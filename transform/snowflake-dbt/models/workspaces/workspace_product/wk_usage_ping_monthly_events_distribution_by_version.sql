@@ -53,7 +53,7 @@ WITH filtered_counters AS (
       ON product_usage.metrics_path = outlier_detection_formula.metrics_path 
       AND product_usage.created_month = outlier_detection_formula.reporting_month
       AND product_usage.monthly_metric_value <= outter_boundary
-    WHERE delivery = 'Self-Managed'
+    WHERE ping_source = 'Self-Managed'
       AND product_usage.metrics_path ILIKE 'counts.%'
       AND product_usage.created_month > '2020-02-01'
       AND product_usage.created_month < '2021-03-01'
