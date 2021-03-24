@@ -29,7 +29,6 @@ WITH source AS (
     type::VARCHAR                     AS type,
     target_url::VARCHAR               AS target_url,
     description::VARCHAR              AS description,
-    artifacts_file::VARCHAR           AS artifacts_file,
     project_id::NUMBER                AS ci_build_project_id,
     artifacts_metadata::VARCHAR       AS artifacts_metadata,
     erased_by_id::NUMBER              AS ci_build_erased_by_id,

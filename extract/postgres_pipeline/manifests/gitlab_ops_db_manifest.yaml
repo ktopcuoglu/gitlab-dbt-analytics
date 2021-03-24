@@ -35,7 +35,6 @@ tables:
       , type
       , target_url
       , description
-      , artifacts_file
       , project_id
       , artifacts_metadata
       , erased_by_id
