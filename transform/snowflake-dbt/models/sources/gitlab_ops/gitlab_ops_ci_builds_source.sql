@@ -41,8 +41,6 @@ WITH source AS (
     auto_canceled_by_id::NUMBER       AS ci_build_auto_canceled_by_id,
     retried::BOOLEAN                  AS retried,
     stage_id::NUMBER                  AS ci_build_stage_id,
-    artifacts_file_store::VARCHAR     AS artifacts_file_store,
-    artifacts_metadata_store::VARCHAR AS artifacts_metadata_store,
     protected::BOOLEAN                AS protected,
     failure_reason::VARCHAR           AS failure_reason,
     scheduled_at::TIMESTAMP           AS ci_build_scheduled_at,
