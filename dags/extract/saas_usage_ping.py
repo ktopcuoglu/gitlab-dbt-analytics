@@ -29,7 +29,7 @@ GIT_BRANCH = env["GIT_BRANCH"]
 # tomorrow_ds -  the day after the execution date as YYYY-MM-DD
 # ds - the execution date as YYYY-MM-DD
 pod_env_vars = {
-    "RUN_DATE": "{{ ds }}",
+    "RUN_DATE": "{{ next_ds }}",
     "SNOWFLAKE_SYSADMIN_ROLE": "TRANSFORMER",
     "SNOWFLAKE_LOAD_WAREHOUSE": "USAGE_PING",
 }
@@ -61,9 +61,7 @@ default_args = {
 
 # Create the DAG
 #  Sunday at 0900 UTC
-dag = DAG(
-    "saas_usage_ping", default_args=default_args, schedule_interval="0 9 * * 0"
-)
+dag = DAG("saas_usage_ping", default_args=default_args, schedule_interval="0 9 * * 0")
 
 # Instance Level Usage Ping
 instance_cmd = f"""
