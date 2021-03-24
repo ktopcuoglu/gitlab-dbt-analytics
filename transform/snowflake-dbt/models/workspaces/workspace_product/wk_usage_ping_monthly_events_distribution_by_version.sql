@@ -1,3 +1,8 @@
+{{ config({
+    "materialized": "table"
+    })
+}}
+
 WITH filtered_counters AS (
  
   SELECT *
@@ -30,6 +35,7 @@ WITH filtered_counters AS (
     FROM monthly_usage_data
     WHERE monthly_metric_value > 0
       AND metrics_path ILIKE 'counts.%'
+      AND created_month >= '2020-01-01'
     GROUP BY 1,2
   
 ), data AS (
@@ -55,7 +61,7 @@ WITH filtered_counters AS (
       AND product_usage.monthly_metric_value <= outter_boundary
     WHERE ping_source = 'Self-Managed'
       AND product_usage.metrics_path ILIKE 'counts.%'
-      AND product_usage.created_month > '2020-02-01'
+      AND product_usage.created_month > '2020-01-01'
       AND product_usage.created_month < '2021-03-01'
       AND is_trial = False
   
