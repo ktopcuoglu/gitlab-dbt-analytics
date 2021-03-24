@@ -107,15 +107,30 @@ WITH source AS (
         true_up_value__c                            AS true_up_value,
         order_type_live__c                          AS order_type_live,
         order_type_test__c                          AS order_type_stamped,
+        CASE 
+          WHEN order_type_stamped = '1. New - First Order'
+            THEN '1) New - First Order'
+          WHEN order_type_stamped IN ('2. New - Connected', '3. Growth', '4. Contraction', '5. Churn - Partial', '6. Churn - Final')
+            THEN '2) Growth (Growth / New - Connected / Churn / Contraction)'
+          WHEN order_type_stamped IN ('7. PS / Other')
+            THEN '3) Consumption / PS / Other'
+          ELSE 'Missing order_type_name_grouped'
+        END                                         AS order_type_grouped,
         arr_net__c                                  AS net_arr,
         arr_basis__c                                AS arr_basis,
         arr__c                                      AS arr,
         days_in_sao__c                              AS days_in_sao,
         {{ sales_hierarchy_sales_segment_cleaning('user_segment_o__c') }}
                                                     AS user_segment_stamped,
+        CASE 
+          WHEN user_segment_stamped IN ('Large', 'PubSec') THEN 'Large'
+          ELSE user_segment_stamped
+        END                                         AS sales_segment_name_stamped_grouped,                                            
         stamped_user_geo__c                         AS user_geo_stamped,
         stamped_user_region__c                      AS user_region_stamped,
         stamped_user_area__c                        AS user_area_stamped,
+        {{ sales_segment_region_grouped('user_segment_stamped', 'user_region_stamped') }}
+                                                    AS segment_region_stamped_grouped,
         stamped_opportunity_owner__c                AS crm_opp_owner_stamped_name,
         stamped_account_owner__c                    AS crm_account_owner_stamped_name,
         sao_opportunity_owner__c                    AS sao_crm_opp_owner_stamped_name,

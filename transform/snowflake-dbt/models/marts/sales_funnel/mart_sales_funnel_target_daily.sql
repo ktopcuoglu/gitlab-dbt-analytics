@@ -18,6 +18,7 @@
       fct_sales_funnel_target.first_day_of_month AS target_month,
       fct_sales_funnel_target.kpi_name,
       dim_crm_sales_hierarchy_live.sales_segment_name_live,
+      dim_crm_sales_hierarchy_live.sales_segment_name_live_grouped,
       dim_crm_sales_hierarchy_live.location_region_name_live,
       dim_crm_sales_hierarchy_live.sales_region_name_live,
       dim_crm_sales_hierarchy_live.sales_area_name_live,
@@ -62,6 +63,7 @@
       fiscal_year,
       kpi_name,
       sales_segment_name_live,
+      sales_segment_name_live_grouped,
       location_region_name_live,
       sales_region_name_live,
       sales_area_name_live,
@@ -84,8 +86,8 @@
 
 {{ dbt_audit(
     cte_ref="qtd_mtd_target",
-    created_by="@jpeguero",
-    updated_by="@mcooperDD",
+    created_by="@mcooperDD",
+    updated_by="@jpeguero",
     created_date="2021-02-18",
-    updated_date="2021-02-26",
+    updated_date="2021-03-24",
   ) }}

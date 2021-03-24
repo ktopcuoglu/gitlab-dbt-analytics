@@ -30,6 +30,7 @@ WITH dim_crm_sales_hierarchy_live AS (
       fct_sales_funnel_target.first_day_of_month AS target_month,
       fct_sales_funnel_target.kpi_name,
       dim_crm_sales_hierarchy_live.sales_segment_name_live,
+      dim_crm_sales_hierarchy_live.sales_segment_name_live_grouped,
       dim_crm_sales_hierarchy_live.location_region_name_live,
       dim_crm_sales_hierarchy_live.sales_region_name_live,
       dim_crm_sales_hierarchy_live.sales_area_name_live,
