@@ -89,14 +89,79 @@ models:
       - name: releases_28_days_users
       - name: epics_28_days_users
       - name: issues_28_days_users
+      - name: ci_internal_pipelines_all_time_event
+        description: Total pipelines in GitLab repositories
+      - name: ci_external_pipelines_all_time_event
+        description: Total pipelines in external repositories
+      - name: merge_requests_all_time_event
+        description: Total number of Merge Requests
+      - name: todos_all_time_event
+        description: Count of ToDos
+      - name: epics_all_time_event
+        description: Count of Epics created
+      - name: issues_all_time_event
+        description: Count of Issues created
+      - name: projects_all_time_event
+        description: Count of Projects
+      - name: deployments_28_days_event
+        description: Monthly count of deployments
+      - name: packages_28_days_event
+        description: Monthly count of Packages
+      - name: sast_jobs_all_time_event
+        description: Count of SAST CI jobs. Job names ending in '-sast'
+      - name: dast_jobs_all_time_event
+        description: Count of DAST jobs
+      - name: dependency_scanning_jobs_all_time_event
+        description: Count of Dependency Scanning jobs run
+      - name: user_license_management_jobs_all_time_event
+        description: no idea, Count of License Scanning jobs run, it implies user and monthly, but AFAIK we don't track per user
+      - name: secret_detection_jobs_all_time_event
+        description: Count of ‘secret-detection’ CI jobs.
+      - name: container_scanning_jobs_all_time_event
+        description: Count of Container Scanning jobs run
+      - name: projects_jenkins_active_all_time_event
+        description: Count of projects with active integrations for Jenkins
+      - name: projects_bamboo_active_all_time_event
+        description: Count of projects with active integrations for Bamboo CI
+      - name: projects_jira_active_all_time_event
+        description: Count of projects with active integrations for Jira
+      - name: projects_drone_ci_active_all_time_event
+        description: Count of projects with active integrations for Drone CI
+      - name: jira_imports_28_days_event
+        description: Count of Issues imported from Jira per month
+      - name: projects_github_active_all_time_event
+        description: Count of projects with active integrations for GitHub
+      - name: projects_jira_server_active_all_time_event
+        description: Count of active integrations with Jira Software (server)
+      - name: projects_jira_dvcs_cloud_active_all_time_event
+        description: Count of active integrations with Jira Cloud (DVCS Connector)
+      - name: projects_with_repositories_enabled_all_time_event
+        description: Counts of projects with repositories enabled
+      - name: protected_branches_all_time_event
+        description: Counts of protected branches
+      - name: remote_mirrors_all_time_event
+        description: Counts of remote mirrors
+      - name: projects_enforcing_code_owner_approval_28_days_user
+      - name: project_clusters_enabled_28_days_user
+        description: Total GitLab Managed enabled clusters attached to projects
+      - name: analytics_total_unique_counts_monthly
+        description: SMAU Metric
+      - name: issues_edit_total_unique_counts_monthly
+        description: SMAU Metric
+      - name: user_packages_total_unique_counts_monthly
+        description: SMAU Metric
+      - name: terraform_state_api_unique_users_monthly
+        description: SMAU Metric
+      - name: incident_management_total_unique_counts_monthly
+        description: SMAU Metric
       - name: instance_user_count_not_aligned
       - name: historical_max_users_not_aligned
       - name: is_seat_link_subscription_in_zuora
-        description: Flags rows where the `zuora_subscription_id` from `customers_db_orders_source` is not found in `dim_subscription`.
+        description: Flags rows where the 'zuora_subscription_id' from 'customers_db_orders_source' is not found in 'dim_subscription'.
       - name: is_seat_link_rate_plan_in_zuora
-        description: Flags rows where the `product_rate_plan_id` from `customers_db_orders_source` is not found in `dim_product_tier`.
+        description: Flags rows where the 'product_rate_plan_id' from 'customers_db_orders_source' is not found in 'dim_product_tier'.
       - name: is_seat_link_active_user_count_available
-        description: Flags rows where `active_user_count` is NULL in source.
+        description: Flags rows where 'active_user_count' is NULL in source.
       - name: is_usage_ping_license_mapped_to_subscription
       - name: is_usage_ping_license_subscription_id_valid
       - name: is_data_in_subscription_month
@@ -183,14 +248,79 @@ models:
       - name: releases_28_days_users
       - name: epics_28_days_users
       - name: issues_28_days_users
+      - name: ci_internal_pipelines_all_time_event
+        description: Total pipelines in GitLab repositories
+      - name: ci_external_pipelines_all_time_event
+        description: Total pipelines in external repositories
+      - name: merge_requests_all_time_event
+        description: Total number of Merge Requests
+      - name: todos_all_time_event
+        description: Count of ToDos
+      - name: epics_all_time_event
+        description: Count of Epics created
+      - name: issues_all_time_event
+        description: Count of Issues created
+      - name: projects_all_time_event
+        description: Count of Projects
+      - name: deployments_28_days_event
+        description: Monthly count of deployments
+      - name: packages_28_days_event
+        description: Monthly count of Packages
+      - name: sast_jobs_all_time_event
+        description: Count of SAST CI jobs. Job names ending in '-sast'
+      - name: dast_jobs_all_time_event
+        description: Count of DAST jobs
+      - name: dependency_scanning_jobs_all_time_event
+        description: Count of Dependency Scanning jobs run
+      - name: user_license_management_jobs_all_time_event
+        description: no idea, Count of License Scanning jobs run, it implies user and monthly, but AFAIK we don't track per user
+      - name: secret_detection_jobs_all_time_event
+        description: Count of ‘secret-detection’ CI jobs.
+      - name: container_scanning_jobs_all_time_event
+        description: Count of Container Scanning jobs run
+      - name: projects_jenkins_active_all_time_event
+        description: Count of projects with active integrations for Jenkins
+      - name: projects_bamboo_active_all_time_event
+        description: Count of projects with active integrations for Bamboo CI
+      - name: projects_jira_active_all_time_event
+        description: Count of projects with active integrations for Jira
+      - name: projects_drone_ci_active_all_time_event
+        description: Count of projects with active integrations for Drone CI
+      - name: jira_imports_28_days_event
+        description: Count of Issues imported from Jira per month
+      - name: projects_github_active_all_time_event
+        description: Count of projects with active integrations for GitHub
+      - name: projects_jira_server_active_all_time_event
+        description: Count of active integrations with Jira Software (server)
+      - name: projects_jira_dvcs_cloud_active_all_time_event
+        description: Count of active integrations with Jira Cloud (DVCS Connector)
+      - name: projects_with_repositories_enabled_all_time_event
+        description: Counts of projects with repositories enabled
+      - name: protected_branches_all_time_event
+        description: Counts of protected branches
+      - name: remote_mirrors_all_time_event
+        description: Counts of remote mirrors
+      - name: projects_enforcing_code_owner_approval_28_days_user
+      - name: project_clusters_enabled_28_days_user
+        description: Total GitLab Managed enabled clusters attached to projects
+      - name: analytics_total_unique_counts_monthly
+        description: SMAU Metric
+      - name: issues_edit_total_unique_counts_monthly
+        description: SMAU Metric
+      - name: user_packages_total_unique_counts_monthly
+        description: SMAU Metric
+      - name: terraform_state_api_unique_users_monthly
+        description: SMAU Metric
+      - name: incident_management_total_unique_counts_monthly
+        description: SMAU Metric
       - name: instance_user_count_not_aligned
       - name: historical_max_users_not_aligned
       - name: is_seat_link_subscription_in_zuora
-        description: Flags rows where the `zuora_subscription_id` from `customers_db_orders_source` is not found in `dim_subscription`.
+        description: Flags rows where the 'zuora_subscription_id' from 'customers_db_orders_source' is not found in 'dim_subscription'.
       - name: is_seat_link_rate_plan_in_zuora
-        description: Flags rows where the `product_rate_plan_id` from `customers_db_orders_source` is not found in `dim_product_tier`.
+        description: Flags rows where the 'product_rate_plan_id' from 'customers_db_orders_source' is not found in 'dim_product_tier'.
       - name: is_seat_link_active_user_count_available
-        description: Flags rows where `active_user_count` is NULL in source.
+        description: Flags rows where 'active_user_count' is NULL in source.
       - name: is_usage_ping_license_mapped_to_subscription
       - name: is_usage_ping_license_subscription_id_valid
       - name: is_data_in_subscription_month
