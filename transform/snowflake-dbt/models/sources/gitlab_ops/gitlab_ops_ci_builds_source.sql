@@ -17,7 +17,6 @@ WITH source AS (
     runner_id::NUMBER                 AS ci_build_runner_id,
     coverage::VARCHAR                 AS coverage,
     commit_id::NUMBER                 AS ci_build_commit_id,
-    commands::VARCHAR                 AS commands,
     name::VARCHAR                     AS ci_build_name,
     options::VARCHAR                  AS options,
     allow_failure::VARCHAR            AS allow_failure,
