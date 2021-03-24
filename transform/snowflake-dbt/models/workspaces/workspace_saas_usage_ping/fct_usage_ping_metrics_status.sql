@@ -17,7 +17,7 @@
 
 ), joined AS (
 
-    SELECT *
+    SELECT transformed.*
     FROM transformed
     INNER JOIN dim_date ON ping_date = date_day
 
