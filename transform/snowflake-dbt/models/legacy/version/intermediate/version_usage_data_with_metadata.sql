@@ -1,41 +1,21 @@
-{% set version_usage_stats_list = dbt_utils.get_column_values(table=ref ('version_usage_stats_list'), column='full_ping_name', max_records=1000, default=['']) %}
-
 {{ config({
     "materialized": "incremental",
     "unique_key": "id"
     })
 }}
 
-WITH usage_data AS (
+
+{{ simple_cte([
+    ('licenses', 'license_db_licenses'),
+    ('zuora_subscriptions', 'zuora_subscription'),
+    ('zuora_accounts', 'zuora_account'),
+    ('version_releases', 'version_releases')
+]) }}
+
+, usage_data AS (
 
     SELECT {{ dbt_utils.star(from=ref('version_usage_data'), except=["LICENSE_STARTS_AT", "LICENSE_EXPIRES_AT"]) }}
     FROM {{ ref('version_usage_data') }}
-
-), licenses AS ( -- Licenses app doesn't alter rows after creation so the snapshot is not necessary.
-
-    SELECT *
-    FROM {{ ref('license_db_licenses') }}
-
-), zuora_subscriptions AS (
-
-    SELECT *
-    FROM {{ ref('zuora_subscription')}}
-
-), zuora_accounts AS (
-
-    SELECT *
-    FROM {{ ref('zuora_account')}}
-
-), version_releases AS (
-
-    SELECT *
-    FROM {{ ref('version_releases') }}
-
-), stats_used_unpacked AS (
-  
-    SELECT *
-    FROM {{ ref('version_usage_data_unpacked_stats_used') }}
-  
   
 ), joined AS (
 
