@@ -30,7 +30,6 @@ WITH source AS (
     target_url::VARCHAR               AS target_url,
     description::VARCHAR              AS description,
     project_id::NUMBER                AS ci_build_project_id,
-    artifacts_metadata::VARCHAR       AS artifacts_metadata,
     erased_by_id::NUMBER              AS ci_build_erased_by_id,
     erased_at::TIMESTAMP              AS ci_build_erased_at,
     artifacts_expire_at::TIMESTAMP    AS ci_build_artifacts_expire_at,
