@@ -38,6 +38,7 @@
       reporting_month,
       {{ dbt_utils.pivot('ping_name', gainsight_wave_metrics, then_value='counter_value') }}
     FROM joined
+    {{ dbt_utils.group_by(n=3)}}
 
 )
 
