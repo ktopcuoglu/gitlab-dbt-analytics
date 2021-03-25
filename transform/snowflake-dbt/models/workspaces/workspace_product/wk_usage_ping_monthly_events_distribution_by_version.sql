@@ -68,7 +68,7 @@ WITH filtered_counters AS (
       AND product_usage.created_month > '2020-01-01'
       AND product_usage.created_month < '2021-03-01'
       AND is_trial = False
-    GROUP BY 1,2,3,4,5
+    GROUP BY 1,2,3,4
   
 ), data_with_unique_key AS (
 
