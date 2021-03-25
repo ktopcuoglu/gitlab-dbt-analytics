@@ -675,6 +675,10 @@ WITH date_details AS (
         WHEN sfdc_accounts_xf.ultimate_parent_id IN ('001610000111bA3','0016100001F4xla','0016100001CXGCs','00161000015O9Yn','0016100001b9Jsc') 
           AND opp_snapshot.close_date < '2020-08-01' 
             THEN 1
+        -- NF 2021 - Pubsec extreme deals
+        WHEN opp_snapshot.opportunity_id IN ('0064M00000WtZKUQA3','0064M00000Xb975QAB')
+          AND opp_snapshot.snapshot_date < '2021-05-01' 
+          THEN 1
         ELSE 0
       END                                                         AS is_excluded_flag,
 
