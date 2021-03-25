@@ -15,7 +15,7 @@ WITH filtered_counters AS (
     SELECT *
     FROM {{ ref('monthly_usage_data') }}
     WHERE monthly_metric_value > 0
-      AND product_usage.metrics_path ILIKE 'counts.%'
+      AND metrics_path ILIKE 'counts.%'
 
 ), gitlab_release_schedule AS (
 
