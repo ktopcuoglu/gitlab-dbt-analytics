@@ -14,6 +14,8 @@ WITH filtered_counters AS (
 
     SELECT *
     FROM {{ ref('monthly_usage_data') }}
+    WHERE monthly_metric_value > 0
+      AND product_usage.metrics_path ILIKE 'counts.%'
 
 ), gitlab_release_schedule AS (
 
@@ -40,14 +42,12 @@ WITH filtered_counters AS (
   
 ), data AS (
   
-    SELECT DISTINCT 
+    SELECT 
       product_usage.created_month, 
       dim_usage_pings.major_minor_version,
       DATEDIFF('month', DATE_TRUNC('month', release_date), product_usage.created_month)                                      AS months_since_release, 
       IFF(main_edition = 'CE', 'CE', IFF(product_tier = 'Core', 'EE - Core', 'EE - Paid'))                                   AS reworked_main_edition, 
-      SUM(monthly_metric_value) OVER (PARTITION BY product_usage.created_month, reworked_main_edition)                       AS total_counts, 
-      SUM(monthly_metric_value) OVER (PARTITION BY product_usage.created_month, reworked_main_edition, months_since_release) AS counts_by_version, 
-      counts_by_version / total_counts                                                                                       AS pct_by_version
+      SUM(monthly_metric_value)                                                                                              AS total_counts
     FROM monthly_usage_data AS product_usage
     LEFT JOIN dim_usage_pings
       ON product_usage.ping_id = dim_usage_pings.id
@@ -60,10 +60,10 @@ WITH filtered_counters AS (
       AND product_usage.created_month = outlier_detection_formula.reporting_month
       AND product_usage.monthly_metric_value <= outter_boundary
     WHERE ping_source = 'Self-Managed'
-      AND product_usage.metrics_path ILIKE 'counts.%'
       AND product_usage.created_month > '2020-01-01'
       AND product_usage.created_month < '2021-03-01'
       AND is_trial = False
+    GROUP BY 1,2,3,4
   
 )
 
