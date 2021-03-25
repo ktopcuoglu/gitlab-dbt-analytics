@@ -42,55 +42,55 @@ WITH marketing_contact AS (
 
     SELECT 
       dim_subscription_id,
-      SUM(manage_analytics_total_unique_counts_monthly)                                              AS manage_analytics_total_unique_counts_monthly,
-      SUM(plan_redis_hll_counters_issues_edit_issues_edit_total_unique_counts_monthly)               AS plan_redis_hll_counters_issues_edit_issues_edit_total_unique_counts_monthly,
-      SUM(create_repo_writes)                                                                        AS create_repo_writes,
-      SUM(verify_ci_pipelines_users_28_days)                                                         AS verify_ci_pipelines_users_28_days,
-      SUM(package_redis_hll_counters_user_packages_user_packages_total_unique_counts_monthly)        AS package_redis_hll_counters_user_packages_user_packages_total_unique_counts_monthly,
-      SUM(release_release_creation_users_28_days)                                                    AS release_release_creation_users_28_days,
-      SUM(configure_redis_hll_counters_terraform_p_terraform_state_api_unique_users_monthly)         AS configure_redis_hll_counters_terraform_p_terraform_state_api_unique_users_monthly,
-      SUM(monitor_incident_management_activer_user_28_days)                                          AS monitor_incident_management_activer_user_28_days,
-      SUM(secure_secure_scanners_users_28_days)                                                      AS secure_secure_scanners_users_28_days,
-      SUM(protect_container_scanning_jobs_users_28_days)                                             AS protect_container_scanning_jobs_users_28_days
+      manage_analytics_total_unique_counts_monthly,
+      plan_redis_hll_counters_issues_edit_issues_edit_total_unique_counts_monthly,
+      create_repo_writes,
+      verify_ci_pipelines_users_28_days,
+      package_redis_hll_counters_user_packages_user_packages_total_unique_counts_monthly,
+      release_release_creation_users_28_days,
+      configure_redis_hll_counters_terraform_p_terraform_state_api_unique_users_monthly,
+      monitor_incident_management_activer_user_28_days,
+      secure_secure_scanners_users_28_days,
+      protect_container_scanning_jobs_users_28_days
     FROM usage_ping_subscription_smau
-    group by dim_subscription_id
+    WHERE snapshot_month = DATE_TRUNC(MONTH, CURRENT_DATE)
 
 ), product_usage_wave_1_3_aggregate AS (
 
     SELECT 
       dim_subscription_id,
-      SUM(umau_28_days_user)                                      AS umau_28_days_user,
-      SUM(action_monthly_active_users_project_repo_28_days_user)  AS action_monthly_active_users_project_repo_28_days_user,
-      SUM(merge_requests_28_days_user)                            AS merge_requests_28_days_user,
-      SUM(commit_comment_all_time_event)                          AS commit_comment_all_time_event,
-      SUM(source_code_pushes_all_time_event)                      AS source_code_pushes_all_time_event,
-      SUM(ci_pipelines_28_days_user)                              AS ci_pipelines_28_days_user,
-      SUM(ci_internal_pipelines_28_days_user)                     AS ci_internal_pipelines_28_days_user,
-      SUM(ci_builds_28_days_user)                                 AS ci_builds_28_days_user,
-      SUM(ci_builds_all_time_user)                                AS ci_builds_all_time_user,
-      SUM(ci_builds_all_time_event)                               AS ci_builds_all_time_event,
-      SUM(ci_runners_all_time_event)                              AS ci_runners_all_time_event,
-      SUM(auto_devops_enabled_all_time_event)                     AS auto_devops_enabled_all_time_event,
-      SUM(template_repositories_all_time_event)                   AS template_repositories_all_time_event,
-      SUM(ci_pipeline_config_repository_28_days_user)             AS ci_pipeline_config_repository_28_days_user,
-      SUM(user_unique_users_all_secure_scanners_28_days_user)     AS user_unique_users_all_secure_scanners_28_days_user,
-      SUM(user_container_scanning_job_28_days_user)               AS user_container_scanning_job_28_days_user,
-      SUM(user_sast_jobs_28_days_user)                            AS user_sast_jobs_28_days_user,
-      SUM(user_dast_jobs_28_days_user)                            AS user_dast_jobs_28_days_user,
-      SUM(user_dependency_scanning_jobs_28_days_user)             AS user_dependency_scanning_jobs_28_days_user,
-      SUM(user_license_management_jobs_28_days_user)              AS user_license_management_jobs_28_days_user,
-      SUM(user_secret_detection_jobs_28_days_user)                AS user_secret_detection_jobs_28_days_user,
-      SUM(projects_with_packages_all_time_event)                  AS projects_with_packages_all_time_event,
-      SUM(projects_with_packages_28_days_user)                    AS projects_with_packages_28_days_user,
-      SUM(deployments_28_days_user)                               AS deployments_28_days_user,
-      SUM(releases_28_days_user)                                  AS releases_28_days_user,
-      SUM(epics_28_days_user)                                     AS epics_28_days_user,
-      SUM(issues_28_days_user)                                    AS issues_28_days_user,
-      SUM(instance_user_count_not_aligned)                        AS instance_user_count_not_aligned,
-      SUM(historical_max_users_not_aligned)                       AS historical_max_users_not_aligned
+      umau_28_days_user,
+      action_monthly_active_users_project_repo_28_days_user,
+      merge_requests_28_days_user,
+      commit_comment_all_time_event,
+      source_code_pushes_all_time_event,
+      ci_pipelines_28_days_user,
+      ci_internal_pipelines_28_days_user,
+      ci_builds_28_days_user,
+      ci_builds_all_time_user,
+      ci_builds_all_time_event,
+      ci_runners_all_time_event,
+      auto_devops_enabled_all_time_event,
+      template_repositories_all_time_event,
+      ci_pipeline_config_repository_28_days_user,
+      user_unique_users_all_secure_scanners_28_days_user,
+      user_container_scanning_job_28_days_user,
+      user_sast_jobs_28_days_user,
+      user_dast_jobs_28_days_user,
+      user_dependency_scanning_jobs_28_days_user,
+      user_license_management_jobs_28_days_user,
+      user_secret_detection_jobs_28_days_user,
+      projects_with_packages_all_time_event,
+      projects_with_packages_28_days_user,
+      deployments_28_days_user,
+      releases_28_days_user,
+      epics_28_days_user,
+      issues_28_days_user,
+      instance_user_count_not_aligned,
+      historical_max_users_not_aligned
     FROM product_usage_wave_1_3
-    GROUP BY dim_subscription_id
-    
+    WHERE snapshot_month = DATE_TRUNC(MONTH, CURRENT_DATE)
+
 ), prep AS (
 
      SELECT   
