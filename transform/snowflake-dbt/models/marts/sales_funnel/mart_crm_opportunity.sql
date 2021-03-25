@@ -12,61 +12,61 @@
     ('fct_crm_opportunity','fct_crm_opportunity')
 ]) }}
 
-, dim_crm_sales_hierarchy_live_sales_segment AS (
+, dim_crm_user_hierarchy_live_sales_segment AS (
 
     SELECT DISTINCT
-      dim_crm_sales_hierarchy_sales_segment_live_id,
-      sales_segment_name_live
-    FROM {{ ref('dim_crm_sales_hierarchy_live') }}
+      dim_crm_user_sales_segment_id,
+      crm_user_sales_segment
+    FROM {{ ref('dim_crm_user_hierarchy_live') }}
 
-), dim_crm_sales_hierarchy_live_location_region AS (
-
-    SELECT DISTINCT
-      dim_crm_sales_hierarchy_location_region_live_id,
-      location_region_name_live
-    FROM {{ ref('dim_crm_sales_hierarchy_live') }}
-
-), dim_crm_sales_hierarchy_live_sales_region AS (
+), dim_crm_user_hierarchy_live_geo AS (
 
     SELECT DISTINCT
-      dim_crm_sales_hierarchy_sales_region_live_id,
-      sales_region_name_live
-    FROM {{ ref('dim_crm_sales_hierarchy_live') }}
+      dim_crm_user_geo_id,
+      crm_user_geo
+    FROM {{ ref('dim_crm_user_hierarchy_live') }}
 
-), dim_crm_sales_hierarchy_live_sales_area AS (
-
-    SELECT DISTINCT
-      dim_crm_sales_hierarchy_sales_area_live_id,
-      sales_area_name_live
-    FROM {{ ref('dim_crm_sales_hierarchy_live') }}
-
-), dim_crm_sales_hierarchy_stamped_sales_segment AS (
+), dim_crm_user_hierarchy_live_region AS (
 
     SELECT DISTINCT
-      dim_crm_sales_hierarchy_sales_segment_stamped_id,
-      sales_segment_name_stamped
-    FROM {{ ref('dim_crm_sales_hierarchy_stamped') }}
+      dim_crm_user_region_id,
+      crm_user_region
+    FROM {{ ref('dim_crm_user_hierarchy_live') }}
 
-), dim_crm_sales_hierarchy_stamped_location_region AS (
-
-    SELECT DISTINCT
-      dim_crm_sales_hierarchy_location_region_stamped_id,
-      location_region_name_stamped
-    FROM {{ ref('dim_crm_sales_hierarchy_stamped') }}
-
-), dim_crm_sales_hierarchy_stamped_sales_region AS (
+), dim_crm_user_hierarchy_live_area AS (
 
     SELECT DISTINCT
-      dim_crm_sales_hierarchy_sales_region_stamped_id,
-      sales_region_name_stamped
-    FROM {{ ref('dim_crm_sales_hierarchy_stamped') }}
+      dim_crm_user_area_id,
+      crm_user_area
+    FROM {{ ref('dim_crm_user_hierarchy_live') }}
 
-), dim_crm_sales_hierarchy_stamped_sales_area AS (
+), dim_crm_user_hierarchy_stamped_sales_segment AS (
 
     SELECT DISTINCT
-      dim_crm_sales_hierarchy_sales_area_stamped_id,
-      sales_area_name_stamped
-    FROM {{ ref('dim_crm_sales_hierarchy_stamped') }}
+      dim_crm_opp_owner_sales_segment_stamped_id,
+      crm_opp_owner_sales_segment_stamped
+    FROM {{ ref('dim_crm_user_hierarchy_stamped') }}
+
+), dim_crm_user_hierarchy_stamped_geo AS (
+
+    SELECT DISTINCT
+      dim_crm_opp_owner_geo_stamped_id,
+      crm_opp_owner_geo_stamped
+    FROM {{ ref('dim_crm_user_hierarchy_stamped') }}
+
+), dim_crm_user_hierarchy_stamped_region AS (
+
+    SELECT DISTINCT
+      dim_crm_opp_owner_region_stamped_id,
+      crm_opp_owner_region_stamped
+    FROM {{ ref('dim_crm_user_hierarchy_stamped') }}
+
+), dim_crm_user_hierarchy_stamped_area AS (
+
+    SELECT DISTINCT
+      dim_crm_opp_owner_area_stamped_id,
+      crm_opp_owner_area_stamped
+    FROM {{ ref('dim_crm_user_hierarchy_stamped') }}
 
 ), final AS (
 
@@ -82,6 +82,8 @@
       dim_crm_account.dim_parent_crm_account_id,
       dim_crm_account.crm_account_name,
       dim_crm_account.dim_crm_account_id,
+
+      -- opportunity attributes & additive fields
       fct_crm_opportunity.is_won,
       fct_crm_opportunity.is_closed,
       fct_crm_opportunity.days_in_sao,
@@ -92,22 +94,6 @@
       dim_crm_opportunity.stage_name,
       dim_crm_opportunity.reason_for_loss,
       fct_crm_opportunity.is_sao,
-      dim_crm_opportunity.crm_opp_owner_stamped_name,
-      dim_crm_opportunity.crm_account_owner_stamped_name,
-      dim_crm_opportunity.sao_crm_opp_owner_stamped_name,
-      dim_crm_opportunity.sao_crm_account_owner_stamped_name,
-      dim_crm_opportunity.sao_crm_opp_owner_sales_segment_stamped,
-      dim_crm_opportunity.sao_crm_opp_owner_geo_stamped,
-      dim_crm_opportunity.sao_crm_opp_owner_region_stamped,
-      dim_crm_opportunity.sao_crm_opp_owner_area_stamped,
-      dim_crm_sales_hierarchy_stamped_sales_segment.sales_segment_name_stamped,
-      dim_crm_sales_hierarchy_stamped_location_region.location_region_name_stamped,
-      dim_crm_sales_hierarchy_stamped_sales_region.sales_region_name_stamped,
-      dim_crm_sales_hierarchy_stamped_sales_area.sales_area_name_stamped,
-      dim_crm_sales_hierarchy_live_sales_segment.sales_segment_name_live,
-      dim_crm_sales_hierarchy_live_location_region.location_region_name_live,
-      dim_crm_sales_hierarchy_live_sales_region.sales_region_name_live,
-      dim_crm_sales_hierarchy_live_sales_area.sales_area_name_live,
       dim_deal_path.deal_path_name,
       dim_order_type.order_type_name                                       AS order_type,
       dim_sales_qualified_source.sales_qualified_source_name,
@@ -127,6 +113,28 @@
       dim_crm_opportunity.professional_services_value,
       fct_crm_opportunity.primary_solution_architect,
       fct_crm_opportunity.product_details,
+      
+      -- crm opp owner/account owner fields stamped at SAO date
+      dim_crm_opportunity.sao_crm_opp_owner_stamped_name,
+      dim_crm_opportunity.sao_crm_account_owner_stamped_name,
+      dim_crm_opportunity.sao_crm_opp_owner_sales_segment_stamped,
+      dim_crm_opportunity.sao_crm_opp_owner_geo_stamped,
+      dim_crm_opportunity.sao_crm_opp_owner_region_stamped,
+      dim_crm_opportunity.sao_crm_opp_owner_area_stamped,
+      
+      -- crm opp owner/account owner stamped fields stamped at close date
+      dim_crm_opportunity.crm_opp_owner_stamped_name,
+      dim_crm_opportunity.crm_account_owner_stamped_name,
+      dim_crm_user_hierarchy_stamped_sales_segment.crm_opp_owner_sales_segment_stamped,
+      dim_crm_user_hierarchy_stamped_geo.crm_opp_owner_geo_stamped,
+      dim_crm_user_hierarchy_stamped_region.crm_opp_owner_region_stamped,
+      dim_crm_user_hierarchy_stamped_area.crm_opp_owner_area_stamped,
+      
+      -- crm owner/sales rep live fields
+      dim_crm_user_hierarchy_live_sales_segment.crm_user_sales_segment,
+      dim_crm_user_hierarchy_live_geo.crm_user_geo,
+      dim_crm_user_hierarchy_live_region.crm_user_region,
+      dim_crm_user_hierarchy_live_area.crm_user_area,
 
       -- channel fields
       fct_crm_opportunity.lead_source,
@@ -160,22 +168,22 @@
       ON fct_crm_opportunity.dim_deal_path_id = dim_deal_path.dim_deal_path_id
     LEFT JOIN dim_order_type
       ON fct_crm_opportunity.dim_order_type_id = dim_order_type.dim_order_type_id
-    LEFT JOIN dim_crm_sales_hierarchy_stamped_sales_segment
-      ON fct_crm_opportunity.dim_crm_sales_hierarchy_sales_segment_stamped_id = dim_crm_sales_hierarchy_stamped_sales_segment.dim_crm_sales_hierarchy_sales_segment_stamped_id
-    LEFT JOIN dim_crm_sales_hierarchy_stamped_location_region
-      ON fct_crm_opportunity.dim_crm_sales_hierarchy_location_region_stamped_id = dim_crm_sales_hierarchy_stamped_location_region.dim_crm_sales_hierarchy_location_region_stamped_id
-    LEFT JOIN dim_crm_sales_hierarchy_stamped_sales_region
-      ON fct_crm_opportunity.dim_crm_sales_hierarchy_sales_region_stamped_id = dim_crm_sales_hierarchy_stamped_sales_region.dim_crm_sales_hierarchy_sales_region_stamped_id
-    LEFT JOIN dim_crm_sales_hierarchy_stamped_sales_area
-      ON fct_crm_opportunity.dim_crm_sales_hierarchy_sales_area_stamped_id = dim_crm_sales_hierarchy_stamped_sales_area.dim_crm_sales_hierarchy_sales_area_stamped_id
-    LEFT JOIN dim_crm_sales_hierarchy_live_sales_segment
-      ON fct_crm_opportunity.dim_crm_sales_hierarchy_sales_segment_live_id = dim_crm_sales_hierarchy_live_sales_segment.dim_crm_sales_hierarchy_sales_segment_live_id
-    LEFT JOIN dim_crm_sales_hierarchy_live_location_region
-      ON fct_crm_opportunity.dim_crm_sales_hierarchy_location_region_live_id = dim_crm_sales_hierarchy_live_location_region.dim_crm_sales_hierarchy_location_region_live_id
-    LEFT JOIN dim_crm_sales_hierarchy_live_sales_region
-      ON fct_crm_opportunity.dim_crm_sales_hierarchy_sales_region_live_id = dim_crm_sales_hierarchy_live_sales_region.dim_crm_sales_hierarchy_sales_region_live_id
-    LEFT JOIN dim_crm_sales_hierarchy_live_sales_area
-      ON fct_crm_opportunity.dim_crm_sales_hierarchy_sales_area_live_id = dim_crm_sales_hierarchy_live_sales_area.dim_crm_sales_hierarchy_sales_area_live_id
+    LEFT JOIN dim_crm_user_hierarchy_stamped_sales_segment
+      ON fct_crm_opportunity.dim_crm_opp_owner_sales_segment_stamped_id = dim_crm_user_hierarchy_stamped_sales_segment.dim_crm_opp_owner_sales_segment_stamped_id
+    LEFT JOIN dim_crm_user_hierarchy_stamped_geo
+      ON fct_crm_opportunity.dim_crm_opp_owner_geo_stamped_id = dim_crm_user_hierarchy_stamped_geo.dim_crm_opp_owner_geo_stamped_id
+    LEFT JOIN dim_crm_user_hierarchy_stamped_region
+      ON fct_crm_opportunity.dim_crm_opp_owner_region_stamped_id = dim_crm_user_hierarchy_stamped_region.dim_crm_opp_owner_region_stamped_id
+    LEFT JOIN dim_crm_user_hierarchy_stamped_area
+      ON fct_crm_opportunity.dim_crm_opp_owner_area_stamped_id = dim_crm_user_hierarchy_stamped_area.dim_crm_opp_owner_area_stamped_id
+    LEFT JOIN dim_crm_user_hierarchy_live_sales_segment
+      ON fct_crm_opportunity.dim_crm_user_sales_segment_id = dim_crm_user_hierarchy_live_sales_segment.dim_crm_user_sales_segment_id
+    LEFT JOIN dim_crm_user_hierarchy_live_geo
+      ON fct_crm_opportunity.dim_crm_user_geo_id = dim_crm_user_hierarchy_live_geo.dim_crm_user_geo_id
+    LEFT JOIN dim_crm_user_hierarchy_live_region
+      ON fct_crm_opportunity.dim_crm_user_region_id = dim_crm_user_hierarchy_live_region.dim_crm_user_region_id
+    LEFT JOIN dim_crm_user_hierarchy_live_area
+      ON fct_crm_opportunity.dim_crm_user_area_id = dim_crm_user_hierarchy_live_area.dim_crm_user_area_id
 
 )
 
@@ -184,5 +192,5 @@
     created_by="@iweeks",
     updated_by="@iweeks",
     created_date="2020-12-07",
-    updated_date="2021-03-23",
+    updated_date="2021-03-25",
   ) }}

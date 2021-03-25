@@ -17,10 +17,10 @@ WITH sfdc_users AS (
       start_date,
       user_role_id,
       user_role_name,
-      sales_segment_name_live,
-      location_region_name_live,
-      sales_region_name_live,
-      sales_area_name_live
+      crm_user_sales_segment,
+      crm_user_geo,
+      crm_user_region,
+      crm_user_area
 
     FROM sfdc_users
 
@@ -31,5 +31,5 @@ WITH sfdc_users AS (
     created_by="@mcooperDD",
     updated_by="@mcooperDD",
     created_date="2020-11-20",
-    updated_date="2020-12-11"
+    updated_date="2021-03-25"
 ) }}

@@ -21,14 +21,14 @@ WITH sfdc_users AS (
       sfdc_users.start_date,
       sfdc_users.user_role_id,
       sfdc_user_roles.name                                          AS user_role_name,
-      {{ dbt_utils.surrogate_key(['sfdc_users.user_segment']) }}    AS dim_crm_sales_hierarchy_sales_segment_live_id,
-      sfdc_users.user_segment                                       AS sales_segment_name_live,
-      {{ dbt_utils.surrogate_key(['sfdc_users.user_geo']) }}        AS dim_crm_sales_hierarchy_location_region_live_id,
-      sfdc_users.user_geo                                           AS location_region_name_live,
-      {{ dbt_utils.surrogate_key(['sfdc_users.user_region']) }}     AS dim_crm_sales_hierarchy_sales_region_live_id,
-      sfdc_users.user_region                                        AS sales_region_name_live,
-      {{ dbt_utils.surrogate_key(['sfdc_users.user_area']) }}       AS dim_crm_sales_hierarchy_sales_area_live_id,
-      sfdc_users.user_area                                          AS sales_area_name_live
+      {{ dbt_utils.surrogate_key(['sfdc_users.user_segment']) }}    AS dim_crm_user_sales_segment_id,
+      sfdc_users.user_segment                                       AS crm_user_sales_segment,
+      {{ dbt_utils.surrogate_key(['sfdc_users.user_geo']) }}        AS dim_crm_user_geo_id,
+      sfdc_users.user_geo                                           AS crm_user_geo,
+      {{ dbt_utils.surrogate_key(['sfdc_users.user_region']) }}     AS dim_crm_user_region_id,
+      sfdc_users.user_region                                        AS crm_user_region,
+      {{ dbt_utils.surrogate_key(['sfdc_users.user_area']) }}       AS dim_crm_user_area_id,
+      sfdc_users.user_area                                          AS crm_user_area
     FROM sfdc_users
     LEFT JOIN sfdc_user_roles
       ON sfdc_users.user_role_id = sfdc_user_roles.id
@@ -40,5 +40,5 @@ WITH sfdc_users AS (
     created_by="@mcooperDD",
     updated_by="@mcooperDD",
     created_date="2021-01-12",
-    updated_date="2020-01-12"
+    updated_date="2021-03-25"
 ) }}
