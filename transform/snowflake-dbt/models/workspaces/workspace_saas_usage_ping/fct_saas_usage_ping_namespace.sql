@@ -22,7 +22,8 @@
       saas_usage_ping_gitlab_dotcom_namespace_id,
       dim_namespace_id,
       ping_name,
-      ping_date
+      ping_date,
+      counter_value
     FROM transformed
     INNER JOIN dim_date ON ping_date = date_day
 
