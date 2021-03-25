@@ -490,6 +490,9 @@ WITH sfdc_opportunity AS (
         WHEN sfdc_accounts_xf.ultimate_parent_id IN ('001610000111bA3','0016100001F4xla','0016100001CXGCs','00161000015O9Yn','0016100001b9Jsc') 
           AND sfdc_opportunity_xf.close_date < '2020-08-01' 
             THEN 1
+        -- NF 2021 - Pubsec extreme deals
+        WHEN sfdc_opportunity_xf.opportunity_id IN ('0064M00000WtZKUQA3','0064M00000Xb975QAB')
+          THEN 1
         ELSE 0
       END                                                                       AS is_excluded_flag
 
