@@ -1,5 +1,6 @@
 {{ config({
-    "materialized": "table"
+    "materialized": "incremental",
+    "unique_key": "month_version_id"
     })
 }}
 
@@ -16,7 +17,11 @@ WITH filtered_counters AS (
     FROM {{ ref('monthly_usage_data') }}
     WHERE monthly_metric_value > 0
       AND metrics_path ILIKE 'counts.%'
+      {% if is_incremental() %}
 
+      AND created_month >= (SELECT MAX(reporting_month) FROM {{this}})
+
+      {% endif %}
 ), gitlab_release_schedule AS (
 
     SELECT *
@@ -43,7 +48,10 @@ WITH filtered_counters AS (
 ), data AS (
   
     SELECT 
-      product_usage.created_month, 
+      {{ dbt_utils.surrogate_key(['product_usage.created_month', 
+                                  'dim_usage_pings.major_minor_version']) }}                                                 AS unique_key,
+
+      product_usage.created_month                                                                                            AS reporting_month, 
       dim_usage_pings.major_minor_version,
       DATEDIFF('month', DATE_TRUNC('month', release_date), product_usage.created_month)                                      AS months_since_release, 
       IFF(main_edition = 'CE', 'CE', IFF(product_tier = 'Core', 'EE - Core', 'EE - Paid'))                                   AS reworked_main_edition, 
@@ -63,7 +71,7 @@ WITH filtered_counters AS (
       AND product_usage.created_month > '2020-01-01'
       AND product_usage.created_month < '2021-03-01'
       AND is_trial = False
-    GROUP BY 1,2,3,4
+    GROUP BY 1,2,3,4,5
   
 )
 
