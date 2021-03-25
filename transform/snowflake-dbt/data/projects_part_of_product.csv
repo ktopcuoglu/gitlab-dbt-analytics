@@ -153,6 +153,7 @@ gitlab-org/security-products/analyzers/report,23545481
 gitlab-org/security-products/analyzers/ruleset,23455079
 gitlab-org/security-products/post-analyzers/tracking-calculator,24257614
 gitlab-org/security-products/taggr,24249085
+gitlab-org/security-products/analyzers/container-scanning,24673064
 gitlab-org/security-products/security-report-schemas,16683102
 gitlab-org/security-products/tests/apex-salesforce,13348998
 gitlab-org/security-products/tests/c,5727416
