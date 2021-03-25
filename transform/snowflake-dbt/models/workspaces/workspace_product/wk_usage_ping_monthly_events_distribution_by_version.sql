@@ -45,12 +45,9 @@ WITH filtered_counters AS (
       AND created_month >= '2020-01-01'
     GROUP BY 1,2
   
-), data AS (
+), joined AS (
   
     SELECT 
-      {{ dbt_utils.surrogate_key(['product_usage.created_month', 
-                                  'dim_usage_pings.major_minor_version']) }}                                                 AS month_version_id,
-
       product_usage.created_month                                                                                            AS reporting_month, 
       dim_usage_pings.major_minor_version,
       DATEDIFF('month', DATE_TRUNC('month', release_date), product_usage.created_month)                                      AS months_since_release, 
@@ -73,7 +70,16 @@ WITH filtered_counters AS (
       AND is_trial = False
     GROUP BY 1,2,3,4,5
   
+), data_with_unique_key AS (
+
+    SELECT
+      {{ dbt_utils.surrogate_key(['reporting_month', 
+                                  'major_minor_version', 
+                                  'reworked_main_edition']) }} AS month_version_id,
+      *
+    FROM joined
+
 )
 
 SELECT *
-FROM data
+FROM data_with_unique_key
