@@ -31,10 +31,6 @@
         OVER (PARTITION BY dim_subscription_id)                                         AS ci_builds_first_ping_month,
       MAX(IFF(ci_builds_all_time_event IS NOT NULL, snapshot_month, NULL))
         OVER (PARTITION BY dim_subscription_id)                                         AS ci_builds_last_ping_month,  
-      MIN(IFF(ci_builds_all_time_user IS NOT NULL, snapshot_month, NULL))
-        OVER (PARTITION BY dim_subscription_id)                                         AS ci_build_users_first_ping_month,
-      MAX(IFF(ci_builds_all_time_user IS NOT NULL, snapshot_month, NULL))
-        OVER (PARTITION BY dim_subscription_id)                                         AS ci_build_users_event_last_ping_month,   
       MIN(IFF(ci_runners_all_time_event IS NOT NULL, snapshot_month, NULL))
         OVER (PARTITION BY dim_subscription_id)                                         AS ci_runners_first_ping_month,
       MAX(IFF(ci_runners_all_time_event IS NOT NULL, snapshot_month, NULL))
@@ -177,9 +173,6 @@
       auto_devops_enabled_all_time_event,
       auto_devops_enabled_all_time_event - LAG(auto_devops_enabled_all_time_event)
         IGNORE NULLS OVER (PARTITION BY dim_subscription_id ORDER BY snapshot_month)    AS auto_devops_enabled_since_last_ping,
-      ci_builds_all_time_user,
-      ci_builds_all_time_user - LAG(ci_builds_all_time_user)
-        IGNORE NULLS OVER (PARTITION BY dim_subscription_id ORDER BY snapshot_month)    AS ci_build_users_since_last_ping,
       ci_internal_pipelines_all_time_event,
       ci_internal_pipelines_all_time_event - LAG(ci_internal_pipelines_all_time_event)
         IGNORE NULLS OVER (PARTITION BY dim_subscription_id ORDER BY snapshot_month)    AS ci_internal_pipelines_since_last_ping,
@@ -302,8 +295,6 @@
         IGNORE NULLS OVER (PARTITION BY dim_subscription_id ORDER BY snapshot_month
                            ROWS BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING)            AS auto_devops_enabled_per_day,
       (auto_devops_enabled_per_day * days_in_month_count)::INT                          AS auto_devops_enabled_smoothed,
-      ci_builds_all_time_user,
-      ci_build_users_since_last_ping,
       ci_internal_pipelines_all_time_event,
       ci_internal_pipelines_since_last_ping,
       FIRST_VALUE(ci_internal_pipelines_since_last_ping / days_since_last_ping)
@@ -490,8 +481,6 @@
       IFF(snapshot_month <= auto_devops_enabled_first_ping_month
             OR snapshot_month > auto_devops_enabled_last_ping_month,
           NULL, auto_devops_enabled_smoothed)                                           AS auto_devops_enabled_estimated_monthly,
-      ci_builds_all_time_user,
-      ci_build_users_since_last_ping,
       ci_internal_pipelines_all_time_event,
       ci_internal_pipelines_since_last_ping,
       IFF(snapshot_month <= ci_internal_pipelines_first_ping_month

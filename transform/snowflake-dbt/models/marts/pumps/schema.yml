@@ -370,7 +370,6 @@ models:
       - name: auto_devops_enable_all_time_event
       - name: auto_devops_enable_since_last_ping
       - name: auto_devops_enable_estimated_monthly
-      - name: ci_builds_all_time_user
       - name: ci_builds_since_last_ping
       - name: ci_internal_pipelines_all_time_event
         description: Total pipelines in GitLab repositories
