@@ -1303,8 +1303,8 @@ models:
         description: Count of DAST jobs
       - name: dependency_scanning_jobs_all_time_event
         description: Count of Dependency Scanning jobs run
-      - name: user_license_management_jobs_all_time_event
-        description: no idea, Count of License Scanning jobs run, it implies user and monthly, but AFAIK we don't track per user
+      - name: license_management_jobs_all_time_event
+        description: Count of License Management jobs run
       - name: secret_detection_jobs_all_time_event
         description: Count of ‘secret-detection’ CI jobs
       - name: container_scanning_jobs_all_time_event
@@ -1458,8 +1458,8 @@ models:
         description: Count of DAST jobs
       - name: dependency_scanning_jobs_all_time_event
         description: Count of Dependency Scanning jobs run
-      - name: user_license_management_jobs_all_time_event
-        description: no idea, Count of License Scanning jobs run, it implies user and monthly, but AFAIK we don't track per user
+      - name: license_management_jobs_all_time_event
+        description: Count of License Management jobs run
       - name: secret_detection_jobs_all_time_event
         description: Count of ‘secret-detection’ CI jobs
       - name: container_scanning_jobs_all_time_event

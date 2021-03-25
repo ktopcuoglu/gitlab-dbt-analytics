@@ -75,7 +75,7 @@
       monthly_metrics.sast_jobs_all_time_event,
       monthly_metrics.dast_jobs_all_time_event,
       monthly_metrics.dependency_scanning_jobs_all_time_event,
-      monthly_metrics.user_license_management_jobs_all_time_event,
+      monthly_metrics.license_management_jobs_all_time_event,
       monthly_metrics.secret_detection_jobs_all_time_event,
       monthly_metrics.container_scanning_jobs_all_time_event,
       monthly_metrics.projects_jenkins_active_all_time_event,
