@@ -49,7 +49,7 @@ WITH filtered_counters AS (
   
     SELECT 
       {{ dbt_utils.surrogate_key(['product_usage.created_month', 
-                                  'dim_usage_pings.major_minor_version']) }}                                                 AS unique_key,
+                                  'dim_usage_pings.major_minor_version']) }}                                                 AS month_version_id,
 
       product_usage.created_month                                                                                            AS reporting_month, 
       dim_usage_pings.major_minor_version,
