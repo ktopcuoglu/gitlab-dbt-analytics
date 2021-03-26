@@ -237,7 +237,7 @@ WITH dim_billing_account AS (
     SELECT
 
       -- Primary Key
-      {{ dbt_utils.surrogate_key(['metrics_path', 'created_month', 'ping_id', 'host_id']) }} AS primary_key,
+      {{ dbt_utils.surrogate_key(['metrics_path', 'created_month', 'instance_id', 'host_id']) }} AS primary_key,
       created_month AS reporting_month,
       metrics_path,
       ping_id,
