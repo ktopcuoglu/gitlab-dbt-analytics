@@ -214,8 +214,8 @@ WITH dim_billing_account AS (
       original_metric_value,
       dim_hosts.host_id,
       dim_hosts.source_ip_hash,
-      dim_hosts.instance_id,
-      dim_hosts.host_name,
+      dim_usage_pings.id                        AS instance_id,
+      dim_usage_pings.hostname                  AS host_name,
       dim_hosts.location_id,
       dim_location.country_name,
       dim_location.iso_2_country_code
@@ -237,7 +237,7 @@ WITH dim_billing_account AS (
     SELECT
 
       -- Primary Key
-      {{ dbt_utils.surrogate_key(['metrics_path', 'created_month', 'instance_id', 'host_id']) }} AS primary_key,
+      {{ dbt_utils.surrogate_key(['metrics_path', 'created_month', 'instance_id', 'host_id', 'host_name']) }} AS primary_key,
       created_month AS reporting_month,
       metrics_path,
       ping_id,
