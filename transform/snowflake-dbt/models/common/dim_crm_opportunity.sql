@@ -55,7 +55,7 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity.is_swing_deal,
       sfdc_opportunity.is_edu_oss,
       sfdc_opportunity_stage.is_won                     AS is_won,
-      sfdc_opportunity.is_ps_opportunity,
+      sfdc_opportunity.is_ps_opp,
       sfdc_opportunity.probability,
       sfdc_opportunity.professional_services_value,
       sfdc_opportunity.reason_for_loss,
