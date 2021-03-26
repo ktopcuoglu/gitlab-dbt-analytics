@@ -75,6 +75,7 @@ WITH source AS (
         is_downgrade_opportunity__c                 AS is_downgrade,
         swing_deal__c                               AS is_swing_deal,
         is_edu_oss_opportunity__c                   AS is_edu_oss,
+        is_ps_opportunity__c                        AS is_ps_opp,
         net_iacv__c                                 AS net_incremental_acv,
         campaignid                                  AS primary_campaign_source_id,
         probability                                 AS probability,
