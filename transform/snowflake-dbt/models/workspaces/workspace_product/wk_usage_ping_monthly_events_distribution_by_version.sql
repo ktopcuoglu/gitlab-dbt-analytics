@@ -38,7 +38,7 @@ WITH filtered_counters AS (
       created_month AS reporting_month,
       metrics_path,
       (APPROX_PERCENTILE(monthly_metric_value , 0.75 ) -
-      APPROX_PERCENTILE(monthly_metric_value , 0.25 )) * 3 + APPROX_PERCENTILE(monthly_metric_value , 0.75 ) AS outter_boundary
+      APPROX_PERCENTILE(monthly_metric_value , 0.25 )) * 3 + APPROX_PERCENTILE(monthly_metric_value , 0.75 ) AS outer_boundary
     FROM monthly_usage_data
     WHERE monthly_metric_value > 0
       AND metrics_path ILIKE 'counts.%'
@@ -57,13 +57,13 @@ WITH filtered_counters AS (
     LEFT JOIN dim_usage_pings
       ON product_usage.ping_id = dim_usage_pings.id
     LEFT JOIN gitlab_release_schedule AS release 
-      ON  dim_usage_pings.major_minor_version = release.major_minor_version
+      ON dim_usage_pings.major_minor_version = release.major_minor_version
     INNER JOIN filtered_counters 
       ON product_usage.metrics_path = filtered_counters.ping_name
     INNER JOIN outlier_detection_formula 
       ON product_usage.metrics_path = outlier_detection_formula.metrics_path 
       AND product_usage.created_month = outlier_detection_formula.reporting_month
-      AND product_usage.monthly_metric_value <= outter_boundary
+      AND product_usage.monthly_metric_value <= outer_boundary
     WHERE ping_source = 'Self-Managed'
       AND product_usage.created_month > '2020-01-01'
       AND product_usage.created_month < '2021-03-01'
