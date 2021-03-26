@@ -83,7 +83,7 @@ WITH sfdc_opportunity AS (
       END                                                          AS is_refund,
 
       CASE
-        WHEN sfdc_opportunity_snapshot_history.opportunity_category IN ('Credit','Contract Reset')
+        WHEN sfdc_opportunity.opportunity_category IN ('Credit','Contract Reset')
           THEN 1
         ELSE 0
       END                                                          AS is_credit_contract_reset,
