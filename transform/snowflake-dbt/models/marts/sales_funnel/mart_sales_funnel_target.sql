@@ -30,10 +30,13 @@ WITH dim_crm_user_hierarchy_live AS (
       fct_sales_funnel_target.first_day_of_month      AS target_month,
       fct_sales_funnel_target.kpi_name,
       dim_crm_user_hierarchy_live.crm_user_sales_segment,
+      dim_crm_user_hierarchy_live.crm_user_sales_segment_grouped,
       dim_crm_user_hierarchy_live.crm_user_geo,
       dim_crm_user_hierarchy_live.crm_user_region,
       dim_crm_user_hierarchy_live.crm_user_area,
+      dim_crm_user_hierarchy_live.crm_user_sales_segment_region_grouped,
       dim_order_type.order_type_name,
+      dim_order_type.order_type_grouped,
       dim_sales_qualified_source.sales_qualified_source_name,
       fct_sales_funnel_target.allocated_target
     FROM fct_sales_funnel_target
@@ -54,5 +57,5 @@ WITH dim_crm_user_hierarchy_live AS (
     created_by="@iweeks",
     updated_by="@mcooperDD",
     created_date="2021-01-08",
-    updated_date="2021-03-25",
+    updated_date="2021-03-26",
   ) }}

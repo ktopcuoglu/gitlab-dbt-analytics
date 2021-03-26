@@ -77,7 +77,7 @@ WITH source AS (
         mkto_si__last_interesting_moment_date__c AS marketo_last_interesting_moment_date,
         last_utm_campaign__c        AS last_utm_campaign, 
         last_utm_content__c         AS last_utm_content,
-
+        region__c                   AS region,
         {{  sfdc_source_buckets('leadsource') }}
 
         --path factory info

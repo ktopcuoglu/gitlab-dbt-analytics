@@ -87,15 +87,18 @@
       fct_crm_opportunity.is_won,
       fct_crm_opportunity.is_closed,
       fct_crm_opportunity.days_in_sao,
+      fct_crm_opportunity.arr_basis,
       fct_crm_opportunity.iacv,
       fct_crm_opportunity.net_arr,
       fct_crm_opportunity.amount,
       dim_crm_opportunity.is_edu_oss,
       dim_crm_opportunity.stage_name,
       dim_crm_opportunity.reason_for_loss,
+      dim_crm_opportunity.sales_type,
       fct_crm_opportunity.is_sao,
       dim_deal_path.deal_path_name,
       dim_order_type.order_type_name                                       AS order_type,
+      dim_order_type.order_type_grouped,
       dim_sales_qualified_source.sales_qualified_source_name,
       dim_crm_account.crm_account_gtm_strategy,
       dim_crm_account.crm_account_focus_account,
@@ -129,12 +132,18 @@
       dim_crm_user_hierarchy_stamped_geo.crm_opp_owner_geo_stamped,
       dim_crm_user_hierarchy_stamped_region.crm_opp_owner_region_stamped,
       dim_crm_user_hierarchy_stamped_area.crm_opp_owner_area_stamped,
+      {{ sales_segment_region_grouped('dim_crm_user_hierarchy_stamped_sales_segment.crm_opp_owner_sales_segment_stamped',
+        'dim_crm_user_hierarchy_stamped_region.crm_opp_owner_region_stamped') }}
+                                                                           AS crm_opp_owner_sales_segment_region_stamped_grouped,
       
       -- crm owner/sales rep live fields
       dim_crm_user_hierarchy_live_sales_segment.crm_user_sales_segment,
       dim_crm_user_hierarchy_live_geo.crm_user_geo,
       dim_crm_user_hierarchy_live_region.crm_user_region,
       dim_crm_user_hierarchy_live_area.crm_user_area,
+      {{ sales_segment_region_grouped('dim_crm_user_hierarchy_live_sales_segment.crm_user_sales_segment',
+        'dim_crm_user_hierarchy_live_region.crm_user_region') }}
+                                                                           AS crm_user_sales_segment_region_grouped,
 
       -- channel fields
       fct_crm_opportunity.lead_source,
@@ -190,7 +199,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@iweeks",
+    updated_by="@mcooperDD",
     created_date="2020-12-07",
-    updated_date="2021-03-25",
+    updated_date="2021-03-26",
   ) }}

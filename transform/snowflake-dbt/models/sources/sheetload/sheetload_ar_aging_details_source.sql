@@ -18,7 +18,6 @@ WITH source AS (
     invoice_date::DATE                                  AS invoice_date,
     regexp_replace(invoice_amount, '[(),]','')::NUMBER  AS invoice_amount,
     due_date::DATE                                      AS due_date,
-    REPLACE(terms, '-', 0)::NUMBER                      AS terms,
     days_aging::NUMBER                                  AS days_aging,
     aging_bucket::VARCHAR                               AS aging_bucket,
     regexp_replace(invoice_balance, '[(),]','')::NUMBER AS invoice_balance,
