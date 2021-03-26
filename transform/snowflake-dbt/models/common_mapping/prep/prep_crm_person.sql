@@ -69,7 +69,8 @@ WITH biz_person AS (
       net_new_source_categories,
       bizible_touchpoint_position,
       bizible_marketing_channel_path,
-      bizible_touchpoint_date
+      bizible_touchpoint_date,
+      region
 
     FROM sfdc_contacts
     LEFT JOIN biz_person_with_touchpoints
@@ -107,7 +108,8 @@ WITH biz_person AS (
       net_new_source_categories,
       bizible_touchpoint_position,
       bizible_marketing_channel_path,
-      bizible_touchpoint_date
+      bizible_touchpoint_date,
+      region
 
     FROM sfdc_leads
     LEFT JOIN biz_person_with_touchpoints

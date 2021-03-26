@@ -4,10 +4,12 @@ WITH crm_sales_hierarchy_live AS (
       dim_crm_sales_hierarchy_live_id,
       dim_crm_sales_hierarchy_sales_segment_live_id,
       sales_segment_name_live,
+      sales_segment_name_live_grouped,
       dim_crm_sales_hierarchy_location_region_live_id,
       location_region_name_live,
       dim_crm_sales_hierarchy_sales_region_live_id,
       sales_region_name_live,
+      segment_region_live_grouped,
       dim_crm_sales_hierarchy_sales_area_live_id,
       sales_area_name_live
     FROM {{ ref('prep_crm_sales_hierarchy_live') }}
