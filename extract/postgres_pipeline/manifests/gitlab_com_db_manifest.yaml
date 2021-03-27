@@ -7,7 +7,7 @@ connection_info:
 tables:
   alert_management_alert_assignees:
     dbt_source_model: true
-    export_schema: 'gitlab_dotcom'
+    export_schema: 'gitlab_com'
     export_table: 'alert_management_alert_assignees'
     export_table_primary_key: id
     import_db: GITLAB_DB
@@ -18,7 +18,7 @@ tables:
       FROM alert_management_alert_assignees
   alert_management_alerts:
     dbt_source_model: true
-    export_schema: 'gitlab_dotcom'
+    export_schema: 'gitlab_com'
     export_table: 'alert_management_alerts'
     export_table_primary_key: id
     import_db: GITLAB_DB
@@ -288,7 +288,7 @@ tables:
         AND '{END_TIMESTAMP}'::timestamp
   ci_build_trace_chunks:
     dbt_source_model: true
-    export_schema: 'gitlab_dotcom'
+    export_schema: 'gitlab_com'
     export_table: ci_build_trace_chunks
     export_table_primary_key: build_id
     import_db: GITLAB_DB
@@ -315,7 +315,7 @@ tables:
   #       AND '{EXECUTION_DATE}'::timestamp
   ci_build_trace_section_names:
     dbt_source_model: true
-    export_schema: 'gitlab_dotcom'
+    export_schema: 'gitlab_com'
     export_table: ci_build_trace_section_names
     export_table_primary_key: id
     import_db: GITLAB_DB
@@ -326,7 +326,7 @@ tables:
       FROM ci_build_trace_section_names
   ci_builds:
     dbt_source_model: true
-    export_schema: 'gitlab_dotcom'
+    export_schema: 'gitlab_com'
     export_table: ci_builds
     export_table_primary_key: id
     import_db: GITLAB_DB
@@ -374,7 +374,7 @@ tables:
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   ci_builds_runner_session:
-    export_schema: 'gitlab_dotcom'
+    export_schema: 'gitlab_com'
     export_table: ci_builds_runner_session
     export_table_primary_key: build_id
     import_db: GITLAB_DB
@@ -386,7 +386,7 @@ tables:
       FROM ci_builds_runner_session
   ci_group_variables:
     dbt_source_model: true
-    export_schema: 'gitlab_dotcom'
+    export_schema: 'gitlab_com'
     export_table: ci_group_variables
     export_table_primary_key: id
     import_db: GITLAB_DB
@@ -404,7 +404,7 @@ tables:
   ci_job_artifacts:
     additional_filtering: AND created_at NOT IN ( '0001-01-01 00:00:00+00', '1000-01-01 00:00:00+00', '10000-01-01 00:00:00+00')
     dbt_source_model: true
-    export_schema: 'gitlab_dotcom'
+    export_schema: 'gitlab_com'
     export_table: ci_job_artifacts
     export_table_primary_key: id
     import_db: GITLAB_DB
@@ -426,7 +426,7 @@ tables:
         AND '{END_TIMESTAMP}'::timestamp
   ci_pipeline_chat_data:
     dbt_source_model: true
-    export_schema: 'gitlab_dotcom'
+    export_schema: 'gitlab_com'
     export_table: ci_pipeline_chat_data
     export_table_primary_key: pipeline_id
     import_db: GITLAB_DB
@@ -437,7 +437,7 @@ tables:
       FROM ci_pipeline_chat_data
   ci_pipeline_schedule_variables:
     dbt_source_model: true
-    export_schema: 'gitlab_dotcom'
+    export_schema: 'gitlab_com'
     export_table: ci_pipeline_schedule_variables
     export_table_primary_key: id
     import_db: GITLAB_DB
@@ -453,7 +453,7 @@ tables:
         AND '{END_TIMESTAMP}'::timestamp
   ci_pipeline_schedules:
     dbt_source_model: true
-    export_schema: 'gitlab_dotcom'
+    export_schema: 'gitlab_com'
     export_table: ci_pipeline_schedules
     export_table_primary_key: id
     import_db: GITLAB_DB
@@ -474,7 +474,7 @@ tables:
         AND '{END_TIMESTAMP}'::timestamp
   ci_pipeline_variables:
     dbt_source_model: true
-    export_schema: 'gitlab_dotcom'
+    export_schema: 'gitlab_com'
     export_table: ci_pipeline_variables
     export_table_primary_key: id
     import_db: GITLAB_DB
@@ -532,7 +532,7 @@ tables:
         AND '{END_TIMESTAMP}'::timestamp
   ci_runner_projects:
     dbt_source_model: true
-    export_schema: 'gitlab_dotcom'
+    export_schema: 'gitlab_com'
     export_table: ci_runner_projects
     export_table_primary_key: id
     import_db: GITLAB_DB
@@ -547,7 +547,7 @@ tables:
         AND '{END_TIMESTAMP}'::timestamp
   ci_runners:
     dbt_source_model: true
-    export_schema: 'gitlab_dotcom'
+    export_schema: 'gitlab_com'
     export_table: ci_runners
     export_table_primary_key: id
     import_db: GITLAB_DB
@@ -576,7 +576,7 @@ tables:
         AND '{END_TIMESTAMP}'::timestamp
   ci_stages:
     dbt_source_model: true
-    export_schema: 'gitlab_dotcom'
+    export_schema: 'gitlab_com'
     export_table: ci_stages
     export_table_primary_key: id
     import_db: GITLAB_DB
@@ -595,7 +595,7 @@ tables:
         AND '{END_TIMESTAMP}'::timestamp
   ci_trigger_requests:
     dbt_source_model: true
-    export_schema: 'gitlab_dotcom'
+    export_schema: 'gitlab_com'
     export_table: ci_trigger_requests
     export_table_primary_key: id
     import_db: GITLAB_DB
@@ -611,7 +611,7 @@ tables:
         AND '{END_TIMESTAMP}'::timestamp
   ci_triggers:
     dbt_source_model: true
-    export_schema: 'gitlab_dotcom'
+    export_schema: 'gitlab_com'
     export_table: ci_triggers
     export_table_primary_key: id
     import_db: GITLAB_DB
@@ -626,7 +626,7 @@ tables:
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   ci_variables:
-    export_schema: 'gitlab_dotcom'
+    export_schema: 'gitlab_com'
     export_table: ci_variables
     export_table_primary_key: id
     import_db: GITLAB_DB
@@ -3343,7 +3343,7 @@ tables:
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
 #   web_hook_logs:  # breaking extract 04-23-2020
-#     export_schema: 'gitlab_dotcom'
+#     export_schema: 'gitlab_com'
 #     export_table: web_hook_logs
 #     export_table_primary_key: id
 #     import_db: GITLAB_DB
