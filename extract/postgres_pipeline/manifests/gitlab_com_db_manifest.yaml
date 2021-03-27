@@ -41,8 +41,8 @@ tables:
       , hosts
       , payload
       FROM alert_management_alerts
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   alert_management_http_integrations:
     export_schema: "gitlab_com"
     export_table: alert_management_http_integrations
@@ -59,8 +59,8 @@ tables:
       , payload_example
       , payload_attribute_mapping
       FROM alert_management_http_integrations
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   analytics_cycle_analytics_group_stages:
     export_schema: "gitlab_com"
     export_table: analytics_cycle_analytics_group_stages
@@ -81,8 +81,8 @@ tables:
       , name
       , group_value_stream_id
       FROM analytics_cycle_analytics_group_stages
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   application_settings:
     advanced_metadata: true
     dbt_snapshots: true
@@ -103,8 +103,8 @@ tables:
       , shared_runners_minutes
       , repository_size_limit
       FROM application_settings
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   approval_merge_request_rule_sources:
     export_schema: "gitlab_com"
     export_table: approval_merge_request_rule_sources
@@ -131,8 +131,8 @@ tables:
       , rule_type
       , report_type
       FROM approval_merge_request_rules
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   approval_project_rules:
     export_schema: "gitlab_com"
     export_table: approval_project_rules
@@ -147,8 +147,8 @@ tables:
       , name
       , rule_type
       FROM approval_project_rules
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   approval_project_rules_protected_branches:
     export_schema: "gitlab_com"
     export_table: approval_project_rules_protected_branches
@@ -171,8 +171,8 @@ tables:
       , created_at
       , updated_at
       FROM approvals
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   approver_groups:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -186,8 +186,8 @@ tables:
       , created_at
       , updated_at
       FROM approver_groups
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   audit_events:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -202,8 +202,8 @@ tables:
       , details
       , created_at
       FROM audit_events
-      WHERE created_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE created_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   authentication_events:
     export_schema: "gitlab_com"
     export_table: authentication_events
@@ -218,8 +218,8 @@ tables:
       , provider
       , user_name
       FROM authentication_events
-      WHERE created_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE created_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   award_emoji:
     export_schema: 'gitlab_com'
     export_table: 'award_emoji'
@@ -269,8 +269,8 @@ tables:
       , group_id
       , weight
       FROM boards
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   bulk_imports:
     export_schema: "gitlab_com"
     export_table: bulk_imports
@@ -284,8 +284,8 @@ tables:
       , created_at
       , updated_at
       FROM bulk_imports
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   ci_build_trace_chunks:
     dbt_source_model: true
     export_schema: 'gitlab_dotcom'
@@ -371,8 +371,8 @@ tables:
       , scheduled_at
       , upstream_pipeline_id
       FROM ci_builds
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   ci_builds_runner_session:
     export_schema: 'gitlab_dotcom'
     export_table: ci_builds_runner_session
@@ -399,8 +399,8 @@ tables:
       , masked
       , variable_type
       FROM ci_group_variables
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   ci_job_artifacts:
     additional_filtering: AND created_at NOT IN ( '0001-01-01 00:00:00+00', '1000-01-01 00:00:00+00', '10000-01-01 00:00:00+00')
     dbt_source_model: true
@@ -422,8 +422,8 @@ tables:
       , file_format
       , file_location
       FROM ci_job_artifacts
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   ci_pipeline_chat_data:
     dbt_source_model: true
     export_schema: 'gitlab_dotcom'
@@ -449,8 +449,8 @@ tables:
       , updated_at
       , variable_type
       FROM ci_pipeline_schedule_variables
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   ci_pipeline_schedules:
     dbt_source_model: true
     export_schema: 'gitlab_dotcom'
@@ -470,8 +470,8 @@ tables:
       , created_at
       , updated_at
       FROM ci_pipeline_schedules
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   ci_pipeline_variables:
     dbt_source_model: true
     export_schema: 'gitlab_dotcom'
@@ -514,8 +514,8 @@ tables:
       , iid
       , merge_request_id
       FROM ci_pipelines
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   ci_platform_metrics:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -528,8 +528,8 @@ tables:
       , platform_target
       , count
       FROM ci_platform_metrics
-      WHERE recorded_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-      AND '{EXECUTION_DATE}'::timestamp
+      WHERE recorded_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   ci_runner_projects:
     dbt_source_model: true
     export_schema: 'gitlab_dotcom'
@@ -543,8 +543,8 @@ tables:
       , updated_at
       , project_id
       FROM ci_runner_projects
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   ci_runners:
     dbt_source_model: true
     export_schema: 'gitlab_dotcom'
@@ -572,8 +572,8 @@ tables:
       , public_projects_minutes_cost_factor
       , private_projects_minutes_cost_factor
       FROM ci_runners
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   ci_stages:
     dbt_source_model: true
     export_schema: 'gitlab_dotcom'
@@ -591,8 +591,8 @@ tables:
       , lock_version
       , position
       FROM ci_stages
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   ci_trigger_requests:
     dbt_source_model: true
     export_schema: 'gitlab_dotcom'
@@ -607,8 +607,8 @@ tables:
       , updated_at
       , commit_id
       FROM ci_trigger_requests
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   ci_triggers:
     dbt_source_model: true
     export_schema: 'gitlab_dotcom'
@@ -623,8 +623,8 @@ tables:
       , owner_id
       , description
       FROM ci_triggers
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   ci_variables:
     export_schema: 'gitlab_dotcom'
     export_table: ci_variables
@@ -650,8 +650,8 @@ tables:
       , updated_at
       , agent_id
       FROM cluster_agent_tokens
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   cluster_agents:
     export_schema: "gitlab_com"
     export_table: cluster_agents
@@ -664,8 +664,8 @@ tables:
       , project_id
       , name
       FROM cluster_agents
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   cluster_groups:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -690,8 +690,8 @@ tables:
       , created_at
       , updated_at
       FROM cluster_projects
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   cluster_providers_aws:
     export_schema: "gitlab_com"
     export_table: cluster_providers_aws
@@ -714,8 +714,8 @@ tables:
       , status_reason
       , kubernetes_version
       FROM cluster_providers_aws
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   cluster_providers_gcp:
     export_schema: "gitlab_com"
     export_table: cluster_providers_gcp
@@ -737,8 +737,8 @@ tables:
       , legacy_abac
       , cloud_run
       FROM cluster_providers_gcp
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   clusters:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -764,8 +764,8 @@ tables:
       , cleanup_status_reason
       , helm_major_version
       FROM clusters
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   clusters_applications_cert_managers:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -781,8 +781,8 @@ tables:
       , updated_at
       , status_reason
       FROM clusters_applications_cert_managers
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-          AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   clusters_applications_cilium:
     export_schema: "gitlab_com"
     export_table: clusters_applications_cilium
@@ -796,8 +796,8 @@ tables:
       , status
       , status_reason
       FROM clusters_applications_cilium
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   clusters_applications_crossplane:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -814,8 +814,8 @@ tables:
       , updated_at
       , status_reason
       FROM clusters_applications_crossplane
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-          AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   clusters_applications_elastic_stacks:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -831,8 +831,8 @@ tables:
       , updated_at
       , status_reason
       FROM clusters_applications_elastic_stacks
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-          AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   clusters_applications_helm:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -848,8 +848,8 @@ tables:
       , version
       , status_reason
       FROM clusters_applications_helm
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-          AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   clusters_applications_ingress:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -869,8 +869,8 @@ tables:
       , external_ip
       , external_hostname
       FROM clusters_applications_ingress
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-          AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   clusters_applications_jupyter:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -888,8 +888,8 @@ tables:
       , updated_at
       , status_reason
       FROM clusters_applications_jupyter
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-          AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   clusters_applications_knative:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -908,8 +908,8 @@ tables:
       , external_ip
       , external_hostname
       FROM clusters_applications_knative
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-          AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   clusters_applications_prometheus:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -926,8 +926,8 @@ tables:
       , updated_at
       , last_update_started_at
       FROM clusters_applications_prometheus
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-          AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   clusters_applications_runners:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -945,8 +945,8 @@ tables:
       , status_reason
       , privileged
       FROM clusters_applications_runners
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-          AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   clusters_kubernetes_namespaces:
     export_schema: 'gitlab_com'
     export_table: 'clusters_kubernetes_namespaces'
@@ -961,8 +961,8 @@ tables:
       , namespace
       , service_account_name
       FROM clusters_kubernetes_namespaces
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-          AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   columns:
     advanced_metadata: true
     export_schema: 'gitlab_com'
@@ -995,8 +995,8 @@ tables:
       , enabled
       , name_regex_keep
       FROM container_expiration_policies
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   csv_issue_imports:
     export_schema: "gitlab_com"
     export_table: csv_issue_imports
@@ -1009,8 +1009,8 @@ tables:
       , created_at
       , updated_at
       FROM csv_issue_imports
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   deployment_merge_requests:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -1046,8 +1046,8 @@ tables:
       , finished_at
       , cluster_id
       FROM deployments
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-          AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   design_management_designs:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -1114,8 +1114,8 @@ tables:
       , confirmed_at
       , confirmation_sent_at
       FROM emails
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-          AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   environments:
     advanced_metadata: true
     dbt_source_model: true
@@ -1134,8 +1134,8 @@ tables:
       , state
       , slug
       FROM environments
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-          AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   epic_issues:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -1160,8 +1160,8 @@ tables:
       , created_at
       , updated_at
       FROM epic_metrics
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   epics:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -1192,8 +1192,8 @@ tables:
       , external_key
       , confidential
       FROM epics
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   events:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -1210,8 +1210,8 @@ tables:
       , action
       , target_type
       FROM events
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   experiment_subjects:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -1235,8 +1235,8 @@ tables:
       , converted_at
       , context
       FROM experiment_users
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   experiments:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -1272,8 +1272,8 @@ tables:
       , updated_at
       , sync_object_storage
       FROM geo_nodes
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   gitlab_subscription_histories:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -1332,8 +1332,8 @@ tables:
       , grafana_url
       , enabled
       FROM grafana_integrations
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   group_custom_attributes:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -1348,8 +1348,8 @@ tables:
       , key
       , value
       FROM group_custom_attributes
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   group_group_links:
     advanced_metadata: true
     dbt_source_model: true
@@ -1380,8 +1380,8 @@ tables:
       , last_error
       , user_id
       FROM group_import_states
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   identities:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -1398,8 +1398,8 @@ tables:
       , secondary_extern_uid
       , saml_provider_id
       FROM identities
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   issue_assignees:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -1439,8 +1439,8 @@ tables:
       , created_at
       , updated_at
       FROM issue_metrics
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   issues:
     additional_filtering: AND created_at NOT IN ( '0001-01-01 00:00:00+00', '1000-01-01 00:00:00+00', '10000-01-01 00:00:00+00')
     dbt_snapshots: true
@@ -1480,8 +1480,8 @@ tables:
       , sprint_id
       , health_status
       FROM issues
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   issues_prometheus_alert_events:
     export_schema: "gitlab_com"
     export_table: issues_prometheus_alert_events
@@ -1493,8 +1493,8 @@ tables:
       , created_at
       , updated_at
       FROM issues_prometheus_alert_events
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   issues_self_managed_prometheus_alert_events:
     export_schema: "gitlab_com"
     export_table: issues_self_managed_prometheus_alert_events
@@ -1506,8 +1506,8 @@ tables:
       , created_at
       , updated_at
       FROM issues_self_managed_prometheus_alert_events
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   jira_imports:
     export_schema: "gitlab_com"
     export_table: jira_imports
@@ -1532,8 +1532,8 @@ tables:
       , scheduled_at
       , error_message
       FROM jira_imports
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   jira_tracker_data:
     export_schema: "gitlab_com"
     export_table: jira_tracker_data
@@ -1551,8 +1551,8 @@ tables:
       , vulnerabilities_issuetype
       , vulnerabilities_enabled
       FROM jira_tracker_data
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   keys:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -1597,8 +1597,8 @@ tables:
       , created_at
       , updated_at
       FROM label_priorities
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   labels:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -1617,8 +1617,8 @@ tables:
       , type
       , group_id
       FROM labels
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   ldap_group_links:
     export_schema: "gitlab_com"
     export_table: ldap_group_links
@@ -1634,8 +1634,8 @@ tables:
       , provider
       , filter
       FROM ldap_group_links
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   lfs_file_locks:
     export_schema: "gitlab_com"
     export_table: lfs_file_locks
@@ -1648,8 +1648,8 @@ tables:
       , created_at
       , path
       FROM lfs_file_locks
-      WHERE created_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE created_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   lfs_objects:
     export_schema: "gitlab_com"
     export_table: lfs_objects
@@ -1664,8 +1664,8 @@ tables:
       , file
       , file_store
       FROM lfs_objects
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   lfs_objects_projects:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -1680,8 +1680,8 @@ tables:
       , updated_at
       , repository_type
       FROM lfs_objects_projects
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   licenses:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -1693,8 +1693,8 @@ tables:
       , created_at
       , updated_at
       FROM licenses
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   lists:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -1715,8 +1715,8 @@ tables:
       , max_issue_weight
       , limit_metric
       FROM lists
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   members:
     advanced_metadata: true
     dbt_snapshots: true
@@ -1761,8 +1761,8 @@ tables:
       , start_commit_sha
       , commits_count
       FROM merge_request_diffs
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   merge_request_metrics:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -1793,8 +1793,8 @@ tables:
       , added_lines
       , removed_lines
       FROM merge_request_metrics
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   merge_requests:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -1832,8 +1832,8 @@ tables:
       , latest_merge_request_diff_id
       , allow_maintainer_to_push
       FROM merge_requests
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   merge_requests_closing_issues:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -1847,8 +1847,8 @@ tables:
       , created_at
       , updated_at
       FROM merge_requests_closing_issues
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   milestones:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -1868,8 +1868,8 @@ tables:
       , start_date
       , group_id
       FROM milestones
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   namespace_root_storage_statistics:
     dbt_snapshots: true
     dbt_source_model: true
@@ -1887,8 +1887,8 @@ tables:
       , packages_size
       , updated_at
       FROM namespace_root_storage_statistics
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   namespace_statistics:
     dbt_snapshots: true
     dbt_source_model: true
@@ -1939,8 +1939,8 @@ tables:
       , push_rule_id
       , shared_runners_enabled
       FROM namespaces
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   notes:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -1973,8 +1973,8 @@ tables:
       , change_position
       , resolved_by_push
       FROM notes
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   notification_settings:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -2002,8 +2002,8 @@ tables:
       , failed_pipeline
       , success_pipeline
       FROM notification_settings
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   oauth_access_tokens:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -2045,8 +2045,8 @@ tables:
       , repository_imported_at
       , repository_mirrored_at
       FROM onboarding_progresses
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   operations_feature_flags:
     export_schema: "gitlab_com"
     export_table: operations_feature_flags
@@ -2063,8 +2063,8 @@ tables:
       , iid
       , version
       FROM operations_feature_flags
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   packages_build_infos:
     export_schema: 'gitlab_com'
     export_table: 'packages_build_infos'
@@ -2111,8 +2111,8 @@ tables:
       , file_name
       , file
       FROM packages_package_files
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   packages_packages:
     export_schema: 'gitlab_com'
     export_table: 'packages_packages'
@@ -2128,8 +2128,8 @@ tables:
       , package_type
       , creator_id
       FROM packages_packages
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   packages_tags:
     export_schema: 'gitlab_com'
     export_table: 'packages_tags'
@@ -2142,8 +2142,8 @@ tables:
       , created_at
       , updated_at
       FROM packages_tags
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   pages_domains:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -2177,8 +2177,8 @@ tables:
       , created_at
       , updated_at
       FROM path_locks
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   plans:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -2238,8 +2238,8 @@ tables:
       , updated_at
       , enabled
       FROM project_auto_devops
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   project_compliance_framework_settings:
     export_schema: "gitlab_com"
     export_table: project_compliance_framework_settings
@@ -2264,8 +2264,8 @@ tables:
       , key
       , value
       FROM project_custom_attributes
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   project_daily_statistics:
     export_schema: 'gitlab_com'
     export_table: 'project_daily_statistics'
@@ -2319,8 +2319,8 @@ tables:
       , updated_at
       , repository_access_level
       FROM project_features
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   project_group_links:
     advanced_metadata: true
     dbt_source_model: true
@@ -2447,8 +2447,8 @@ tables:
       , project_id
       , external_url
       FROM project_tracing_settings
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   projects:
     dbt_snapshots: true
     dbt_source_model: true
@@ -2515,8 +2515,8 @@ tables:
       , mirror_overwrites_diverged_branches
       , external_authorization_classification_label
       FROM projects
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   prometheus_alerts:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -2530,8 +2530,8 @@ tables:
       , environment_id
       , project_id
       FROM prometheus_alerts
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   protected_branches:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -2546,8 +2546,8 @@ tables:
       , updated_at
       , code_owner_approval_required
       FROM protected_branches
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   protected_environments:
     advanced_metadata: true
     export_schema: 'gitlab_com'
@@ -2561,8 +2561,8 @@ tables:
       , updated_at
       , name
       FROM protected_environments
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   push_rules:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -2590,8 +2590,8 @@ tables:
       , regexp_uses_re2
       , commit_message_negative_regex
       FROM push_rules
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   releases:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -2608,8 +2608,8 @@ tables:
       , author_id
       , sha
       FROM releases
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   remote_mirrors:
     export_schema: "gitlab_com"
     export_table: remote_mirrors
@@ -2632,8 +2632,8 @@ tables:
       , error_notification_sent
       , keep_divergent_refs
       FROM remote_mirrors
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   repository_languages:
     advanced_metadata: true
     dbt_source_model: true
@@ -2662,8 +2662,8 @@ tables:
       , iid
       , state
       FROM requirements
-      WHERE created_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE created_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   requirements_management_test_reports:
     export_schema: "gitlab_com"
     export_table: requirements_management_test_reports
@@ -2677,8 +2677,8 @@ tables:
       , state
       , build_id
       FROM requirements_management_test_reports
-      WHERE created_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE created_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   resource_label_events:
     advanced_metadata: true
     dbt_source_model: true
@@ -2699,8 +2699,8 @@ tables:
       , reference
       , reference_html
       FROM resource_label_events
-      WHERE created_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE created_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   resource_milestone_events:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -2717,8 +2717,8 @@ tables:
       , state
       , created_at
       FROM resource_milestone_events
-      WHERE created_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE created_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
 #  resource_state_events:
 #    export_schema: 'gitlab_com'
 #    export_table: 'resource_state_events'
@@ -2747,8 +2747,8 @@ tables:
       , weight
       , created_at
       FROM resource_weight_events
-      WHERE created_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE created_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   routes:
     export_schema: 'gitlab_com'
     export_table: 'routes'
@@ -2762,8 +2762,8 @@ tables:
       , created_at
       , updated_at
       FROM routes
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   saml_providers:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -2793,8 +2793,8 @@ tables:
       , build_id
       , scan_type
       FROM security_scans
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   sentry_issues:
     export_schema: "gitlab_com"
     export_table: sentry_issues
@@ -2838,8 +2838,8 @@ tables:
       , inherit_from_id
       , instance
       FROM services
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   shards:
     export_schema: 'gitlab_com'
     export_table: 'shards'
@@ -2867,8 +2867,8 @@ tables:
       , type
       , visibility_level
       FROM snippets
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   sprints:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -2891,8 +2891,8 @@ tables:
       , description_html
       , state_enum
       FROM sprints
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-      AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   status_page_published_incidents:
     export_schema: "gitlab_com"
     export_table: status_page_published_incidents
@@ -2904,8 +2904,8 @@ tables:
       , updated_at
       , issue_id
       FROM status_page_published_incidents
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   status_page_settings:
     export_schema: "gitlab_com"
     export_table: status_page_settings
@@ -2921,8 +2921,8 @@ tables:
       , aws_access_key
       , status_page_url
       FROM status_page_settings
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   subscriptions:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -2939,8 +2939,8 @@ tables:
       , updated_at
       , project_id
       FROM subscriptions
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   suggestions:
     export_schema: "gitlab_com"
     export_table: suggestions
@@ -2973,8 +2973,8 @@ tables:
       , updated_at
       , description_version_id
       FROM system_note_metadata
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   terraform_states:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -2988,8 +2988,8 @@ tables:
       , updated_at
       , file_store
       FROM terraform_states
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   timelogs:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -3006,8 +3006,8 @@ tables:
       , merge_request_id
       , CASE WHEN spent_at < '1970-01-01' THEN NULL ELSE spent_at END AS spent_at
       FROM timelogs
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   todos:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -3029,8 +3029,8 @@ tables:
       , commit_id
       , group_id
       FROM todos
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   uploads:
     export_schema: "gitlab_com"
     export_table: uploads
@@ -3049,8 +3049,8 @@ tables:
       , mount_point
       , secret
       FROM uploads
-      WHERE created_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE created_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   user_custom_attributes:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -3065,8 +3065,8 @@ tables:
       , key
       , value
       FROM user_custom_attributes
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   user_preferences:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -3097,8 +3097,8 @@ tables:
       , tab_width
       , experience_level
       FROM user_preferences
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   users:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -3172,8 +3172,8 @@ tables:
       , last_name
       , user_type
       FROM users
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   users_ops_dashboard_projects:
     export_schema: "gitlab_com"
     export_table: users_ops_dashboard_projects
@@ -3186,8 +3186,8 @@ tables:
       , user_id
       , project_id
       FROM users_ops_dashboard_projects
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   vulnerabilities:
     export_schema: 'gitlab_com'
     export_table: 'vulnerabilities'
@@ -3205,8 +3205,8 @@ tables:
       , state
       , updated_at
       FROM vulnerabilities
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   vulnerability_feedback:
     export_schema: 'gitlab_com'
     export_table: 'vulnerability_feedback'
@@ -3228,8 +3228,8 @@ tables:
       , comment
       , comment_timestamp
       FROM vulnerability_feedback
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   vulnerability_identifiers:
     export_schema: 'gitlab_com'
     export_table: 'vulnerability_identifiers'
@@ -3245,8 +3245,8 @@ tables:
       , name
       , url
       FROM vulnerability_identifiers
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   vulnerability_issue_links:
     export_schema: 'gitlab_com'
     export_table: 'vulnerability_issue_links'
@@ -3260,8 +3260,8 @@ tables:
       , created_at
       , updated_at
       FROM vulnerability_issue_links
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   vulnerability_occurrence_identifiers:
     export_schema: 'gitlab_com'
     export_table: 'vulnerability_occurrence_identifiers'
@@ -3274,8 +3274,8 @@ tables:
       , occurrence_id
       , identifier_id
       FROM vulnerability_occurrence_identifiers
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   vulnerability_occurrence_pipelines:
     export_schema: 'gitlab_com'
     export_table: 'vulnerability_occurrence_pipelines'
@@ -3288,8 +3288,8 @@ tables:
       , occurrence_id
       , pipeline_id
       FROM vulnerability_occurrence_pipelines
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   vulnerability_occurrences:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -3325,8 +3325,8 @@ tables:
       , external_id
       , name
       FROM vulnerability_scanners
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   web_hooks:
     export_schema: 'gitlab_dotcom'
     export_table: web_hooks
@@ -3340,8 +3340,8 @@ tables:
       , type
       , service_id
       FROM web_hooks
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
 #   web_hook_logs:  # breaking extract 04-23-2020
 #     export_schema: 'gitlab_dotcom'
 #     export_table: web_hook_logs
@@ -3378,5 +3378,5 @@ tables:
       , issue_status
       , url
       FROM zoom_meetings
-      WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-        AND '{EXECUTION_DATE}'::timestamp
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
