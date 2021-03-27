@@ -3328,7 +3328,7 @@ tables:
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   web_hooks:
-    export_schema: 'gitlab_dotcom'
+    export_schema: 'gitlab_com'
     export_table: web_hooks
     export_table_primary_key: id
     import_db: GITLAB_DB
