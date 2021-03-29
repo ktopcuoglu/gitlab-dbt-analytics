@@ -11,13 +11,15 @@ Goal: To help bring you, our new data team member, up to speed in the GitLab Dat
 - [ ] Manager: Add to Data Team calendar 
 - [ ] Manager: Add to the `GitLab Data Team` project as a Developer.
 - [ ] Manager: Customize this template for the analysts specialty, if any. Delete sections, if appropriate
+- [ ] Manager: Add to Lucidchart via Okta
+- [ ] ManageR: Add to Lucidchart `Data Team` team folder
 
 ### For Central or Embedded Analyst/Engineers
 - [ ] Manager: Create access request 
    - [ ] Manager: Request addition to `@datateam` alias on Slack in PeopleOps Onboarding issue
    - [ ] Manager: Request addition to `@data-analysts` alias on Slack in PeopleOps Onboarding issue
    - [ ] Manager: Request addition to `Data Team` 1password vault in PeopleOps Onboarding issue
-   - [ ] Join the following channels on Slack: `data`, `data-lounge`, `data-daily`, `data-triage`, and `business-operations`.
+   - [ ] Join the following channels on Slack: `data`, `data-lounge`, `data-daily`, `data-triage`, and `enterprise-apps`.
    - [ ] Engineers, join `analytics-pipelines` and `data-prom-alerts`
    - [ ] Analysts & Engineers, join `dbt-runs`
 - [ ] Manager: Add to the `gitlab-data` namespace as a Developer.
@@ -296,6 +298,11 @@ Also referred as SFDC, Salesforce.com (Sales Force Dot Com).
 - [ ] Check out [10 Reads for Data Scientists Getting Started with Business Models](https://www.conordewey.com/blog/10-reads-for-data-scientists-getting-started-with-business-models/) and read through the collection of articles to deepen your understanding of SaaS metrics.
 - [ ] Familiarize yourself with the GitLab Metrics Sheet (search in Google Drive, it should come up) which contains most of the key metrics we use at GitLab and the [definitions of these metrics](https://about.gitlab.com/handbook/business-ops/data-team/kpi-index/).
 - [ ] Optional, for more information on Finance KPIs, you can watch this working session between the Manager, Financial Planning and Analysis and Data Analyst, Finance: [Finance KPIs](https://www.youtube.com/watch?v=dmdilBQb9PY&feature=youtu.be)
+
+## Triage
+Data triagers are the first responders to requests and problems for the Data team.
+- [ ] Read about the Triage  proces in our [handbook](##%20Triage%20%20Data%20triagers%20are%20the%20first%20responders%20to%20requests%20and%20problems%20for%20the%20Data%20team.%20-%20%5B%20%5D) 
+- [ ] Checkout the Triage [template](https://gitlab.com/gitlab-data/analytics/-/blob/master/.gitlab/issue_templates/Data%20Triage.md)
 
 ## Good First Issues:
 - [ ] [Replace]
