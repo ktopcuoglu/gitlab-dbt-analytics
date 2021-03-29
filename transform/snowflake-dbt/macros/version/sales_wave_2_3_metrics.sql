@@ -47,7 +47,7 @@
     {{ null_negative_numbers("raw_usage_data_payload['counts']['sast_jobs']") }}                                                                        AS sast_jobs_all_time_event,                             
     {{ null_negative_numbers("raw_usage_data_payload['counts']['dast_jobs']") }}                                                                        AS dast_jobs_all_time_event,                             
     {{ null_negative_numbers("raw_usage_data_payload['counts']['dependency_scanning_jobs']") }}                                                         AS dependency_scanning_jobs_all_time_event,                             
-    {{ null_negative_numbers("raw_usage_data_payload['counts']['user_license_management_jobs']") }}                                                     AS user_license_management_jobs_all_time_event,                             
+    {{ null_negative_numbers("raw_usage_data_payload['counts']['license_management_jobs']") }}                                                          AS license_management_jobs_all_time_event,                             
     {{ null_negative_numbers("raw_usage_data_payload['counts']['secret_detection_jobs']") }}                                                            AS secret_detection_jobs_all_time_event,                             
     {{ null_negative_numbers("raw_usage_data_payload['counts']['container_scanning_jobs']") }}                                                          AS container_scanning_jobs_all_time_event,                             
     {{ null_negative_numbers("raw_usage_data_payload['counts']['projects_jenkins_active']") }}                                                          AS projects_jenkins_active_all_time_event,                             
