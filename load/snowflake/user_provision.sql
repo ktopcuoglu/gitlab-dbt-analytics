@@ -1,6 +1,6 @@
 -- SET THE FOLLOWING VARIABLES BEFORE THE SCRIPT (with correct values) using the SECURITYADMIN role
 -- ====================
--- set (email, firstname, lastname) = ('email@gitlab.com', 'Sasha', 'Ulyanov');
+-- set (email, firstname, lastname) = ('email@gitlab.com', 'Vovchik', 'Ulyanov');
 -- ====================
 use role securityadmin;
 
