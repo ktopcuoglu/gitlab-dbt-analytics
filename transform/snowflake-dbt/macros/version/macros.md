@@ -15,5 +15,6 @@ This macro takes in a product stage name, such as 'Verify', and returns a SQL ag
 Used in:
 {% enddocs %}
 
+{% docs usage_ping_month_range %}
 This macro returns two columns containing the first month and last month in which an `_all_time_event` metric is included in a Usage Ping payload.
 {% enddocs %}
