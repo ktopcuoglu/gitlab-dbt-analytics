@@ -22,6 +22,11 @@ databases:
     - testing_db:
         shared: no
 
+    - dpeterson_prod:
+        shared: no
+    - dpeterson_prep:
+        shared: no
+
     - dtownsend_prod:
         shared: no
     - dtownsend_prep:
@@ -1822,6 +1827,38 @@ roles:
             - analyst_growth
         warehouses:
             - analyst_xs
+        owns:
+            databases:
+                - dpeterson_prep
+                - dpeterson_prod
+            schemas:
+                - dpeterson_prep.*
+                - dpeterson_prod.*
+            tables:
+                - dpeterson_prep.*.*
+                - dpeterson_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - dpeterson_prep
+                    - dpeterson_prod
+                write:
+                    - dpeterson_prep
+                    - dpeterson_prod
+            schemas:
+                read:
+                    - dpeterson_prep.*
+                    - dpeterson_prod.*
+                write:
+                    - dpeterson_prep.*
+                    - dpeterson_prod.*
+            tables:
+                read:
+                    - dpeterson_prep.*.*
+                    - dpeterson_prod.*.*
+                write:
+                    - dpeterson_prep.*.*
+                    - dpeterson_prod.*.*
 
     - dtang:
         member_of:
