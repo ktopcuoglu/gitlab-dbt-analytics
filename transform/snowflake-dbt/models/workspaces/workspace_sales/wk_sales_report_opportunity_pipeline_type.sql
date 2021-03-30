@@ -5,6 +5,8 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
   SELECT *
   FROM {{ref('wk_sales_sfdc_opportunity_snapshot_history_xf')}}  
   WHERE snapshot_fiscal_quarter_date = close_fiscal_quarter_date -- closing in the same quarter of the snapshot
+    AND is_deleted = 0
+    AND is_edu_oss = 0
 
 ), sfdc_opportunity_xf AS (
   
@@ -16,7 +18,9 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
     is_open
   FROM {{ref('wk_sales_sfdc_opportunity_xf')}}  
   WHERE stage_name NOT IN ('9-Unqualified','10-Duplicate','Unqualified','00-Pre Opportunity','0-Pending Acceptance') 
-  
+    AND is_deleted = 0
+    AND is_edu_oss = 0
+
 ), today_date AS (
   
    SELECT DISTINCT first_day_of_fiscal_quarter AS current_fiscal_quarter_date,
@@ -69,6 +73,10 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
     -- pipeline created same quarter
       AND snapshot_fiscal_quarter_date = pipeline_created_fiscal_quarter_date
       AND pipeline_created_fiscal_quarter_date = close_fiscal_quarter_date  
+      AND ((snapshot_fiscal_quarter_name = 'FY21-Q2' 
+                    AND (snapshot_day_of_fiscal_quarter_normalised > 80
+                          OR snapshot_day_of_fiscal_quarter_normalised < 45))
+            OR snapshot_fiscal_quarter_name != 'FY21-Q2')
     GROUP BY 1, 2
   
 ), pipeline_type AS (

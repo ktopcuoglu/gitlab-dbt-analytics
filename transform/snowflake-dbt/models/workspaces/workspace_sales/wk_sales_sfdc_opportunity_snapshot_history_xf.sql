@@ -121,10 +121,18 @@ WITH date_details AS (
       -- logic needs to be added here once the oppotunity category fields is merged
       -- https://gitlab.com/gitlab-data/analytics/-/issues/7888
       CASE
-        WHEN sfdc_opportunity_snapshot_history.opportunity_category IN ('Credit', 'Decommission','Decommissioned')
+        WHEN sfdc_opportunity_snapshot_history.opportunity_category IN ('Decommission')
           THEN 1
         ELSE 0
       END                                                          AS is_refund,
+
+
+      CASE
+        WHEN sfdc_opportunity_snapshot_history.opportunity_category IN ('Credit','Contract Reset')
+          THEN 1
+        ELSE 0
+      END                                                          AS is_credit_contract_reset,
+
       --sfdc_opportunity_snapshot_history.is_refund,
 
       --sfdc_opportunity_snapshot_history.is_downgrade,
@@ -514,6 +522,8 @@ WITH date_details AS (
       CASE 
         WHEN opp_snapshot.is_refund = 1
           THEN -1
+        WHEN opp_snapshot.is_credit_contract_reset = 1
+          THEN 0
         ELSE 1
       END                                                         AS calculated_deal_count,
 

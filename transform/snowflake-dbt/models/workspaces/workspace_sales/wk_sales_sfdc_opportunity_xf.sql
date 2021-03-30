@@ -77,10 +77,16 @@ WITH sfdc_opportunity AS (
       -- logic needs to be added here once the oppotunity category fields is merged
       -- https://gitlab.com/gitlab-data/analytics/-/issues/7888
       CASE
-        WHEN sfdc_opportunity.opportunity_category IN ('Credit', 'Decommission','Decommissioned')
+        WHEN sfdc_opportunity.opportunity_category IN ('Decommission')
           THEN 1
         ELSE 0
       END                                                          AS is_refund,
+
+      CASE
+        WHEN sfdc_opportunity.opportunity_category IN ('Credit','Contract Reset')
+          THEN 1
+        ELSE 0
+      END                                                          AS is_credit_contract_reset,
       --sfdc_opportunity_xf.is_refund,
 
 
@@ -98,7 +104,14 @@ WITH sfdc_opportunity AS (
       --sfdc_opportunity_xf.downgrade_iacv,
       sfdc_opportunity_xf.renewal_acv,
       sfdc_opportunity_xf.renewal_amount,
-      sfdc_opportunity_xf.sales_qualified_source,
+      --sfdc_opportunity_xf.sales_qualified_source,
+      CASE
+        WHEN sfdc_opportunity_xf.sales_qualified_source = 'BDR Generated'
+            THEN 'SDR Generated'
+        ELSE sfdc_opportunity_xf.sales_qualified_source
+      END                                                       AS sales_qualified_source,
+
+
       sfdc_opportunity_xf.solutions_to_be_replaced,
       sfdc_opportunity_xf.total_contract_value,
       sfdc_opportunity_xf.upside_iacv,
@@ -461,6 +474,8 @@ WITH sfdc_opportunity AS (
       CASE 
         WHEN sfdc_opportunity_xf.is_refund = 1
           THEN -1
+        WHEN sfdc_opportunity_xf.is_credit_contract_reset = 1
+          THEN 0
         ELSE 1
       END                                                                      AS calculated_deal_count,
 
