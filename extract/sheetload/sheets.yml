@@ -255,3 +255,9 @@ sheets:
     owner: '@mmaneval20'
     tabs:
       - rfs_support_requests
+  - name: host_instance_type
+    description: This contains data about the type of host Instance(Production/Test etc.) for analyzing the Usage Ping data.
+    owner: '@snalamaru'
+    tabs:
+      - host_instance_type
+
