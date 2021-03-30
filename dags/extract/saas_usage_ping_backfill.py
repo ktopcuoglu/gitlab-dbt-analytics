@@ -28,8 +28,6 @@ from kube_secrets import (
 env = os.environ.copy()
 GIT_BRANCH = env["GIT_BRANCH"]
 
-logging.info(pod_env_vars)
-
 secrets = [
     SNOWFLAKE_ACCOUNT,
     SNOWFLAKE_LOAD_ROLE,
