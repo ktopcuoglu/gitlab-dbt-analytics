@@ -143,9 +143,13 @@ gitlab-org/security-products/analyzers/go-ast-scanner,5971589
 gitlab-org/security-products/analyzers/security-code-scan,6535935
 gitlab-org/security-products/analyzers/api-fuzzing,19617580
 gitlab-org/security-products/analyzers/api-fuzzing-src,5964710
+gitlab-org/security-products/protocol-fuzzer-ce,24111720
+gitlab-org/security-products/protocol-fuzzer-ee,24112430
 gitlab-org/security-products/analyzers/gitlab-cov-fuzz,19413101
 gitlab-org/security-products/analyzers/gitlab-cov-fuzz-src,19413012
 gitlab-org/security-products/analyzers/fuzzers/javafuzz,19871573
+gitlab-org/security-products/analyzers/fuzzers/pythonfuzz,19904939
+gitlab-org/security-products/analyzers/fuzzers/jsfuzz,19871264
 gitlab-org/security-products/analyzers/kubesec,14853550
 gitlab-org/security-products/analyzers/semgrep,24075172
 gitlab-org/security-products/analyzers/command,23597850
