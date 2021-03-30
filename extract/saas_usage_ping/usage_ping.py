@@ -146,12 +146,12 @@ class UsagePing(object):
             results["error"] = error
             results["ping_date"] = self.end_date
 
-            # dataframe_uploader(
-            #     results,
-            #     self.loader_engine,
-            #     "gitlab_dotcom_namespace",
-            #     "saas_usage_ping",
-            # )
+            dataframe_uploader(
+                results,
+                self.loader_engine,
+                "gitlab_dotcom_namespace",
+                "saas_usage_ping",
+            )
 
     def saas_namespace_ping(self, filter=lambda _: True):
         """
