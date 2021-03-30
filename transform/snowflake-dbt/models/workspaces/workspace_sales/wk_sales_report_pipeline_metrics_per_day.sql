@@ -19,7 +19,7 @@ WITH date_details AS (
 
     SELECT *
     FROM {{ref('wk_sales_sfdc_opportunity_snapshot_history_xf')}}  
-    AND is_deleted = 0
+    WHERE is_deleted = 0
     AND is_edu_oss = 0
   
 ), sfdc_opportunity_snapshot_history_xf_restricted AS (
