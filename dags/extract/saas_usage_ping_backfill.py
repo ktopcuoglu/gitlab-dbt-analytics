@@ -52,12 +52,14 @@ default_args = {
 #  Sunday at 0900 UTC
 dag = DAG("saas_usage_ping_backfill", default_args=default_args, schedule_interval=None)
 
-def generate_task(month):
+def generate_task(vars_dict):
 
-    run_date = month.isoformat()
+    run_date = datetime(year=int(vars_dict["year"]), month=int(vars_dict["month"]), day=1)
+
+    run_date_formatted = run_date.isoformat()
 
     pod_env_vars = {
-        "RUN_DATE": run_date,
+        "RUN_DATE": run_date_formatted,
         "SNOWFLAKE_SYSADMIN_ROLE": "TRANSFORMER",
         "SNOWFLAKE_LOAD_WAREHOUSE": "USAGE_PING",
     }
@@ -74,8 +76,8 @@ def generate_task(month):
     KubernetesPodOperator(
         **gitlab_defaults,
         image=DATA_IMAGE,
-        task_id=f"saas-namespace-usage-ping-{run_date}",
-        name=f"saas-namespace-usage-ping-{run_date}",
+        task_id=f"saas-namespace-usage-ping-{vars_dict['year']}-{vars_dict['month']}",
+        name=f"saas-namespace-usage-ping-{vars_dict['year']}-{vars_dict['month']}",
         secrets=secrets,
         env_vars=pod_env_vars,
         arguments=[namespace_cmd],
@@ -83,7 +85,7 @@ def generate_task(month):
     )
 
 for month in partitions(
-    date.today() - timedelta(months=12), 
+    date.today() - timedelta(days=365), 
     date.today().replace(day=1) - timedelta(days=1), 
     "month"
 ):
