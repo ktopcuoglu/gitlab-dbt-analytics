@@ -22,6 +22,11 @@ databases:
     - testing_db:
         shared: no
 
+    - dpeterson_prod:
+        shared: no
+    - dpeterson_prep:
+        shared: no
+
     - dtownsend_prod:
         shared: no
     - dtownsend_prep:
@@ -1753,6 +1758,10 @@ roles:
             - bamboohr_analytics
         warehouses:
             - analyst_xs
+    
+    - blutz:
+        warehouses:
+            - admin
 
     - bmenegocci:
         member_of:
@@ -1818,6 +1827,38 @@ roles:
             - analyst_growth
         warehouses:
             - analyst_xs
+        owns:
+            databases:
+                - dpeterson_prep
+                - dpeterson_prod
+            schemas:
+                - dpeterson_prep.*
+                - dpeterson_prod.*
+            tables:
+                - dpeterson_prep.*.*
+                - dpeterson_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - dpeterson_prep
+                    - dpeterson_prod
+                write:
+                    - dpeterson_prep
+                    - dpeterson_prod
+            schemas:
+                read:
+                    - dpeterson_prep.*
+                    - dpeterson_prod.*
+                write:
+                    - dpeterson_prep.*
+                    - dpeterson_prod.*
+            tables:
+                read:
+                    - dpeterson_prep.*.*
+                    - dpeterson_prod.*.*
+                write:
+                    - dpeterson_prep.*.*
+                    - dpeterson_prod.*.*
 
     - dtang:
         member_of:
@@ -2994,6 +3035,12 @@ users:
         can_login: yes
         member_of:
             - amurray
+
+    - blutz:
+        can_login: yes
+        member_of:
+            - blutz
+            - securityadmin
 
     - bmenegocci:
         can_login: yes
