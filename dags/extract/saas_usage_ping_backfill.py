@@ -54,7 +54,7 @@ dag = DAG("saas_usage_ping_backfill", default_args=default_args, schedule_interv
 
 def generate_task(vars_dict):
 
-    run_date = datetime(year=int(vars_dict["year"]), month=int(vars_dict["month"]), day=1)
+    run_date = date(year=int(vars_dict["year"]), month=int(vars_dict["month"]), day=1)
 
     run_date_formatted = run_date.isoformat()
 
