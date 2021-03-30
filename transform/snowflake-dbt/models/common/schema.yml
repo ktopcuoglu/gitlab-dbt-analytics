@@ -1238,6 +1238,7 @@ models:
       - name: license_user_count
         description: Count of licensed users purchased with the customer's subcription.
       - name: dim_usage_ping_id
+        description: JOIN key to dim_usage_pings and prep_usage_pings. Represents a single usage ping.
       - name: ping_created_at
         description: The timestamp at which the usage ping was created.
       - name: ping_created_date_id
@@ -1245,6 +1246,7 @@ models:
       - name: hostname
       - name: dim_license_id
       - name: license_md5
+        description: JOIN key to dim_licenses and dim_license
       - name: cleaned_version
       - name: umau_28_days_user
       - name: action_monthly_active_users_project_repo_28_days_user
@@ -1277,14 +1279,79 @@ models:
       - name: releases_28_days_users
       - name: epics_28_days_users
       - name: issues_28_days_users
+      - name: ci_internal_pipelines_all_time_event
+        description: Total pipelines in GitLab repositories
+      - name: ci_external_pipelines_all_time_event
+        description: Total pipelines in external repositories
+      - name: merge_requests_all_time_event
+        description: Total number of Merge Requests
+      - name: todos_all_time_event
+        description: Count of ToDos
+      - name: epics_all_time_event
+        description: Count of Epics created
+      - name: issues_all_time_event
+        description: Count of Issues created
+      - name: projects_all_time_event
+        description: Count of Projects
+      - name: deployments_28_days_event
+        description: Monthly count of deployments
+      - name: packages_28_days_event
+        description: Monthly count of Packages
+      - name: sast_jobs_all_time_event
+        description: Count of SAST CI jobs. Job names ending in '-sast'
+      - name: dast_jobs_all_time_event
+        description: Count of DAST jobs
+      - name: dependency_scanning_jobs_all_time_event
+        description: Count of Dependency Scanning jobs run
+      - name: license_management_jobs_all_time_event
+        description: Count of License Management jobs run
+      - name: secret_detection_jobs_all_time_event
+        description: Count of ‘secret-detection’ CI jobs
+      - name: container_scanning_jobs_all_time_event
+        description: Count of Container Scanning jobs run
+      - name: projects_jenkins_active_all_time_event
+        description: Count of projects with active integrations for Jenkins
+      - name: projects_bamboo_active_all_time_event
+        description: Count of projects with active integrations for Bamboo CI
+      - name: projects_jira_active_all_time_event
+        description: Count of projects with active integrations for Jira
+      - name: projects_drone_ci_active_all_time_event
+        description: Count of projects with active integrations for Drone CI
+      - name: jira_imports_28_days_event
+        description: Count of Issues imported from Jira per month
+      - name: projects_github_active_all_time_event
+        description: Count of projects with active integrations for GitHub
+      - name: projects_jira_server_active_all_time_event
+        description: Count of active integrations with Jira Software (server)
+      - name: projects_jira_dvcs_cloud_active_all_time_event
+        description: Count of active integrations with Jira Cloud (DVCS Connector)
+      - name: projects_with_repositories_enabled_all_time_event
+        description: Counts of projects with repositories enabled
+      - name: protected_branches_all_time_event
+        description: Counts of protected branches
+      - name: remote_mirrors_all_time_event
+        description: Counts of remote mirrors
+      - name: projects_enforcing_code_owner_approval_28_days_user
+      - name: project_clusters_enabled_28_days_user
+        description: Total GitLab Managed enabled clusters attached to projects
+      - name: analytics_total_unique_counts_monthly
+        description: SMAU Metric
+      - name: issues_edit_total_unique_counts_monthly
+        description: SMAU Metric
+      - name: user_packages_total_unique_counts_monthly
+        description: SMAU Metric
+      - name: terraform_state_api_unique_users_monthly
+        description: SMAU Metric
+      - name: incident_management_total_unique_counts_monthly
+        description: SMAU Metric
       - name: instance_user_count_not_aligned
       - name: historical_max_users_not_aligned
       - name: is_seat_link_subscription_in_zuora
-        description: Flags rows where the `zuora_subscription_id` from `customers_db_orders_source` is not found in `dim_subscription`.
+        description: Flags rows where the 'zuora_subscription_id' from 'customers_db_orders_source' is not found in 'dim_subscription'
       - name: is_seat_link_rate_plan_in_zuora
-        description: Flags rows where the `product_rate_plan_id` from `customers_db_orders_source` is not found in `dim_product_tier`.
+        description: Flags rows where the 'product_rate_plan_id' from 'customers_db_orders_source' is not found in 'dim_product_tier'
       - name: is_seat_link_active_user_count_available
-        description: Flags rows where `active_user_count` is NULL in source.
+        description: Flags rows where 'active_user_count' is NULL in source.
       - name: is_usage_ping_license_mapped_to_subscription
       - name: is_usage_ping_license_subscription_id_valid
       - name: is_data_in_subscription_month
@@ -1326,6 +1393,7 @@ models:
       - name: license_user_count
         description: Count of licensed users purchased with the customer's subcription.
       - name: dim_usage_ping_id
+        description: JOIN key to dim_usage_pings and prep_usage_pings. Represents a single usage ping.
       - name: ping_created_at
         description: The timestamp at which the usage ping was created.
       - name: ping_created_date_id
@@ -1333,6 +1401,7 @@ models:
       - name: hostname
       - name: dim_license_id
       - name: license_md5
+        description: JOIN key to dim_licenses and dim_license
       - name: cleaned_version
       - name: umau_28_days_user
       - name: action_monthly_active_users_project_repo_28_days_user
@@ -1365,14 +1434,79 @@ models:
       - name: releases_28_days_users
       - name: epics_28_days_users
       - name: issues_28_days_users
+      - name: ci_internal_pipelines_all_time_event
+        description: Total pipelines in GitLab repositories
+      - name: ci_external_pipelines_all_time_event
+        description: Total pipelines in external repositories
+      - name: merge_requests_all_time_event
+        description: Total number of Merge Requests
+      - name: todos_all_time_event
+        description: Count of ToDos
+      - name: epics_all_time_event
+        description: Count of Epics created
+      - name: issues_all_time_event
+        description: Count of Issues created
+      - name: projects_all_time_event
+        description: Count of Projects
+      - name: deployments_28_days_event
+        description: Monthly count of deployments
+      - name: packages_28_days_event
+        description: Monthly count of Packages
+      - name: sast_jobs_all_time_event
+        description: Count of SAST CI jobs. Job names ending in '-sast'
+      - name: dast_jobs_all_time_event
+        description: Count of DAST jobs
+      - name: dependency_scanning_jobs_all_time_event
+        description: Count of Dependency Scanning jobs run
+      - name: license_management_jobs_all_time_event
+        description: Count of License Management jobs run
+      - name: secret_detection_jobs_all_time_event
+        description: Count of ‘secret-detection’ CI jobs
+      - name: container_scanning_jobs_all_time_event
+        description: Count of Container Scanning jobs run
+      - name: projects_jenkins_active_all_time_event
+        description: Count of projects with active integrations for Jenkins
+      - name: projects_bamboo_active_all_time_event
+        description: Count of projects with active integrations for Bamboo CI
+      - name: projects_jira_active_all_time_event
+        description: Count of projects with active integrations for Jira
+      - name: projects_drone_ci_active_all_time_event
+        description: Count of projects with active integrations for Drone CI
+      - name: jira_imports_28_days_event
+        description: Count of Issues imported from Jira per month
+      - name: projects_github_active_all_time_event
+        description: Count of projects with active integrations for GitHub
+      - name: projects_jira_server_active_all_time_event
+        description: Count of active integrations with Jira Software (server)
+      - name: projects_jira_dvcs_cloud_active_all_time_event
+        description: Count of active integrations with Jira Cloud (DVCS Connector)
+      - name: projects_with_repositories_enabled_all_time_event
+        description: Counts of projects with repositories enabled
+      - name: protected_branches_all_time_event
+        description: Counts of protected branches
+      - name: remote_mirrors_all_time_event
+        description: Counts of remote mirrors
+      - name: projects_enforcing_code_owner_approval_28_days_user
+      - name: project_clusters_enabled_28_days_user
+        description: Total GitLab Managed enabled clusters attached to projects
+      - name: analytics_total_unique_counts_monthly
+        description: SMAU Metric
+      - name: issues_edit_total_unique_counts_monthly
+        description: SMAU Metric
+      - name: user_packages_total_unique_counts_monthly
+        description: SMAU Metric
+      - name: terraform_state_api_unique_users_monthly
+        description: SMAU Metric
+      - name: incident_management_total_unique_counts_monthly
+        description: SMAU Metric
       - name: instance_user_count_not_aligned
       - name: historical_max_users_not_aligned
       - name: is_seat_link_subscription_in_zuora
-        description: Flags rows where the `zuora_subscription_id` from `customers_db_orders_source` is not found in `dim_subscription`.
+        description: Flags rows where the 'zuora_subscription_id' from 'customers_db_orders_source' is not found in 'dim_subscription'
       - name: is_seat_link_rate_plan_in_zuora
-        description: Flags rows where the `product_rate_plan_id` from `customers_db_orders_source` is not found in `dim_product_tier`.
+        description: Flags rows where the 'product_rate_plan_id' from 'customers_db_orders_source' is not found in 'dim_product_tier'
       - name: is_seat_link_active_user_count_available
-        description: Flags rows where `active_user_count` is NULL in source.
+        description: Flags rows where 'active_user_count' is NULL in source.
       - name: is_usage_ping_license_mapped_to_subscription
       - name: is_usage_ping_license_subscription_id_valid
       - name: is_data_in_subscription_month
@@ -1713,50 +1847,6 @@ models:
         description: The number of unique users who have run one or more Secure scanners ([source](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/#sec-secure---section-mau-smau---unique-users-who-have-used-a-secure-scanner))
       - name: protect_container_scanning_jobs_users_28_days
         description: The number of users who have run a container scanning job or interacted with the Protect UI in the last 28 days of the month ([source](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/#protectcontainer-security---smau-gmau---users-running-container-scanning-or-interacting-with-protect-ui))
-
-  - name: fct_usage_ping_subscription_mapped_wave_2_3_metrics
-    description: '{{ doc("fct_usage_ping_subscription_mapped_wave_2_3_metrics") }}'
-    columns:
-      - name: dim_usage_ping_id
-        description: JOIN key to dim_usage_pings and prep_usage_pings. Represents a single usage ping.
-        tests:
-          - not_null
-          - unique
-        tags: ["tdf", "common", "gainsight"]
-      - name: license_md5
-        description: JOIN key to dim_licenses and dim_license
-      - name: subscription_id
-        description: JOIN key to dim_subscription
-      - name: ping_created_at
-        description: The timestamp at which the usage ping was created_at
-        tests:
-          - not_null
-        tags: ["tdf", "common", "gainsight"]
-      - name: ping_created_at_28_days_earlier
-        description: The timestamp at which the usage ping was created_at minus 28 days for the monthly metric time period
-        tests:
-          - not_null
-        tags: ["tdf", "common", "gainsight"]
-      - name: ping_created_at_year
-        description: The year ('2020-01-01') the ping was created at
-        tests:
-          - not_null
-        tags: ["tdf", "common", "gainsight"]
-      - name: ping_created_at_month
-        description: The month ('2020-12-01') the ping was created at
-        tests:
-          - not_null
-        tags: ["tdf", "common", "gainsight"]
-      - name: ping_created_at_week
-        description: The week start ('2017-11-30') the ping was created at
-        tests:
-          - not_null
-        tags: ["tdf", "common", "gainsight"]
-      - name: ping_created_at_date
-        description: The day the ping was created at ('2020-12-05', removes the extra time information in the timestamp)
-        tests:
-          - not_null
-        tags: ["tdf", "common", "gainsight"]
 
   - name: fct_usage_self_managed_seat_link
     description: '{{ doc("fct_usage_self_managed_seat_link") }}'

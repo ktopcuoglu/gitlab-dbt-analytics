@@ -45,7 +45,7 @@ class PostgresPipelineTable:
         )
 
     def is_incremental(self) -> bool:
-        return "{EXECUTION_DATE}" in self.query
+        return "{EXECUTION_DATE}" in self.query or "{BEGIN_TIMESTAMP}" in self.query
 
     def do_incremental(
         self, source_engine: Engine, target_engine: Engine, use_temp_table: bool

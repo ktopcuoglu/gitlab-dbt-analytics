@@ -721,8 +721,8 @@ WITH gitlab_subscriptions AS (
 
       LEFT JOIN gitlab_subscriptions
         ON ultimate_namespace.namespace_id = gitlab_subscriptions.namespace_id
-        AND {{ event_cte.event_name }}.created_at BETWEEN gitlab_subscriptions.valid_from
-        AND {{ coalesce_to_infinity("gitlab_subscriptions.valid_to") }}
+        AND {{ event_cte.event_name }}.created_at BETWEEN TO_DATE(gitlab_subscriptions.valid_from)
+        AND {{ coalesce_to_infinity("TO_DATE(gitlab_subscriptions.valid_to)") }}
       LEFT JOIN plans
         ON gitlab_subscriptions.plan_id = plans.plan_id
     {% if 'NULL' not in event_cte.user_column_name %}

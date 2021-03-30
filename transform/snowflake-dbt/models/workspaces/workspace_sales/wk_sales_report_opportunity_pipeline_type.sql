@@ -25,11 +25,17 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
    FROM {{ ref('date_details') }} 
    WHERE date_actual = CURRENT_DATE 
   
+  
 ), pipeline_type_quarter_start AS (
 
     SELECT 
       opportunity_id,
-      close_fiscal_quarter_date
+      close_fiscal_quarter_date,
+      net_arr                         AS starting_net_arr,
+      stage_name                      AS starting_stage,
+      snapshot_date                   AS starting_snapshot_date,
+      is_won                          AS starting_is_won,
+      is_open                         AS starting_is_open
     FROM sfdc_opportunity_snapshot_history_xf        
     WHERE snapshot_fiscal_quarter_date = close_fiscal_quarter_date -- closing in the same quarter of the snapshot
     AND stage_name NOT IN ('9-Unqualified','10-Duplicate','Unqualified','00-Pre Opportunity','0-Pending Acceptance') 
@@ -37,18 +43,32 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
     AND snapshot_fiscal_quarter_date <> pipeline_created_fiscal_quarter_date
     -- set day 5 as start of the quarter for pipeline purposes
     AND snapshot_day_of_fiscal_quarter_normalised = 5
-    GROUP BY 1, 2
+
+), pipeline_type_quarter_end AS (
+
+    SELECT 
+      opportunity_id,
+      close_fiscal_quarter_date,
+      net_arr                         AS end_net_arr,
+      stage_name                      AS end_stage,
+      snapshot_date                   AS end_snapshot_date,
+      is_won                          AS end_is_won,
+      is_open                         AS end_is_open
+    FROM sfdc_opportunity_snapshot_history_xf        
+    WHERE snapshot_fiscal_quarter_date = close_fiscal_quarter_date -- closing in the same quarter of the snapshot
+    AND snapshot_day_of_fiscal_quarter_normalised = 90
 
 ), pipeline_type_quarter_created AS (
 
     SELECT 
       opportunity_id,
-      close_fiscal_quarter_date
+      close_fiscal_quarter_date,
+      min(snapshot_date)            AS created_snapshot_date
     FROM sfdc_opportunity_snapshot_history_xf
-    WHERE snapshot_fiscal_quarter_date = close_fiscal_quarter_date -- closing in the same quarter of the snapshot
-    AND stage_name NOT IN ('9-Unqualified','10-Duplicate','Unqualified','00-Pre Opportunity','0-Pending Acceptance') 
+    WHERE stage_name NOT IN ('9-Unqualified','10-Duplicate','Unqualified','00-Pre Opportunity','0-Pending Acceptance') 
     -- pipeline created same quarter
       AND snapshot_fiscal_quarter_date = pipeline_created_fiscal_quarter_date
+      AND pipeline_created_fiscal_quarter_date = close_fiscal_quarter_date  
     GROUP BY 1, 2
   
 ), pipeline_type AS (
@@ -66,6 +86,29 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
           THEN '3. Pulled in Pipeline'
         ELSE '4. Not in Quarter'
       END                                                         AS pipeline_type,
+      pipe_start.starting_net_arr,
+      pipe_start.starting_stage,
+      pipe_end.end_net_arr,
+      pipe_end.end_stage,
+      pipe_end.end_is_open,
+      pipe_end.end_is_won,
+      MAX(pipe_created.created_snapshot_date)                     AS pipeline_created_snapshot_date,
+      MAX(CASE
+            WHEN pipe_created.created_snapshot_date = opp_snap.snapshot_date
+                THEN opp_snap.net_arr
+                ELSE 0
+          END)                                                    AS pipeline_created_net_arr,
+      MAX(CASE
+            WHEN pipe_created.created_snapshot_date = opp_snap.snapshot_date
+                THEN opp_snap.stage_name
+                ELSE ''
+          END)                                                    AS pipeline_created_stage_name,
+        MAX(CASE
+            WHEN pipe_created.created_snapshot_date = opp_snap.snapshot_date
+                THEN opp_snap.close_date
+                ELSE Null
+          END)                                                    AS pipeline_created_close_date,
+
       MIN(opp_snap.snapshot_day_of_fiscal_quarter_normalised)     AS min_snapshot_day_of_fiscal_quarter_normalised,
       MAX(opp_snap.snapshot_day_of_fiscal_quarter_normalised)     AS max_snapshot_day_of_fiscal_quarter_normalised,
       MIN(opp_snap.snapshot_date)                                 AS min_snapshot_date,
@@ -80,10 +123,13 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
   LEFT JOIN pipeline_type_quarter_start pipe_start
       ON pipe_start.opportunity_id = opp_snap.opportunity_id
       AND pipe_start.close_fiscal_quarter_date = opp_snap.close_fiscal_quarter_date
+  LEFT JOIN pipeline_type_quarter_end pipe_end
+      ON pipe_end.opportunity_id = opp_snap.opportunity_id
+      AND pipe_end.close_fiscal_quarter_date = opp_snap.close_fiscal_quarter_date
   LEFT JOIN pipeline_type_quarter_created pipe_created
       ON pipe_created.opportunity_id = opp_snap.opportunity_id
       AND pipe_created.close_fiscal_quarter_date = opp_snap.close_fiscal_quarter_date
-  GROUP BY 1, 2, 3
+  GROUP BY 1,2,3,4,5,6,7,8,9
 
 ), report_opportunity_pipeline_type AS (
 

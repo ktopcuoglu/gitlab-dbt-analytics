@@ -1,6 +1,6 @@
 {% macro sales_wave_2_3_metrics() %} 
 
-    -- usage ping data - devops metrics
+    -- usage ping data - devops metrics (wave 2 & 3.0)
     {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['manage']['events']") }}                                        AS umau_28_days_user,        
     {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['create']['action_monthly_active_users_project_repo']") }}      AS action_monthly_active_users_project_repo_28_days_user,
     {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['create']['merge_requests']") }}                                AS merge_requests_28_days_user,           
@@ -31,6 +31,37 @@
     {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['release']['deployments']") }}                                  AS deployments_28_days_user,       
     {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['release']['releases']") }}                                     AS releases_28_days_user,              
     {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['plan']['epics']") }}                                           AS epics_28_days_user,   
-    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['plan']['issues']") }}                                          AS issues_28_days_user          
+    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['plan']['issues']") }}                                          AS issues_28_days_user,          
+
+    -- 3.1 metrics
+                            
+    {{ null_negative_numbers("raw_usage_data_payload['counts']['ci_internal_pipelines']") }}                                                            AS ci_internal_pipelines_all_time_event,    
+    {{ null_negative_numbers("raw_usage_data_payload['counts']['ci_external_pipelines']") }}                                                            AS ci_external_pipelines_all_time_event,                             
+    {{ null_negative_numbers("raw_usage_data_payload['counts']['merge_requests']") }}                                                                   AS merge_requests_all_time_event,                             
+    {{ null_negative_numbers("raw_usage_data_payload['counts']['todos']") }}                                                                            AS todos_all_time_event,                             
+    {{ null_negative_numbers("raw_usage_data_payload['counts']['epics']") }}                                                                            AS epics_all_time_event,                             
+    {{ null_negative_numbers("raw_usage_data_payload['counts']['issues']") }}                                                                           AS issues_all_time_event,                             
+    {{ null_negative_numbers("raw_usage_data_payload['counts']['projects']") }}                                                                         AS projects_all_time_event,                             
+    {{ null_negative_numbers("raw_usage_data_payload['counts_monthly']['deployments']") }}                                                              AS deployments_28_days_event,                             
+    {{ null_negative_numbers("raw_usage_data_payload['counts_monthly']['packages']") }}                                                                 AS packages_28_days_event,                             
+    {{ null_negative_numbers("raw_usage_data_payload['counts']['sast_jobs']") }}                                                                        AS sast_jobs_all_time_event,                             
+    {{ null_negative_numbers("raw_usage_data_payload['counts']['dast_jobs']") }}                                                                        AS dast_jobs_all_time_event,                             
+    {{ null_negative_numbers("raw_usage_data_payload['counts']['dependency_scanning_jobs']") }}                                                         AS dependency_scanning_jobs_all_time_event,                             
+    {{ null_negative_numbers("raw_usage_data_payload['counts']['license_management_jobs']") }}                                                          AS license_management_jobs_all_time_event,                             
+    {{ null_negative_numbers("raw_usage_data_payload['counts']['secret_detection_jobs']") }}                                                            AS secret_detection_jobs_all_time_event,                             
+    {{ null_negative_numbers("raw_usage_data_payload['counts']['container_scanning_jobs']") }}                                                          AS container_scanning_jobs_all_time_event,                             
+    {{ null_negative_numbers("raw_usage_data_payload['counts']['projects_jenkins_active']") }}                                                          AS projects_jenkins_active_all_time_event,                             
+    {{ null_negative_numbers("raw_usage_data_payload['counts']['projects_bamboo_active']") }}                                                           AS projects_bamboo_active_all_time_event,                             
+    {{ null_negative_numbers("raw_usage_data_payload['counts']['projects_jira_active']") }}                                                             AS projects_jira_active_all_time_event,                             
+    {{ null_negative_numbers("raw_usage_data_payload['counts']['projects_drone_ci_active']") }}                                                         AS projects_drone_ci_active_all_time_event,              
+    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['manage']['issue_imports']['jira']") }}                         AS jira_imports_28_days_event,     
+    {{ null_negative_numbers("raw_usage_data_payload['counts']['projects_github_active']") }}                                                           AS projects_github_active_all_time_event,                             
+    {{ null_negative_numbers("raw_usage_data_payload['counts']['projects_jira_server_active']") }}                                                      AS projects_jira_server_active_all_time_event,                             
+    {{ null_negative_numbers("raw_usage_data_payload['counts']['projects_jira_dvcs_cloud_active']") }}                                                  AS projects_jira_dvcs_cloud_active_all_time_event,                             
+    {{ null_negative_numbers("raw_usage_data_payload['counts']['projects_with_repositories_enabled']") }}                                               AS projects_with_repositories_enabled_all_time_event,                             
+    {{ null_negative_numbers("raw_usage_data_payload['counts']['protected_branches']") }}                                                               AS protected_branches_all_time_event,                             
+    {{ null_negative_numbers("raw_usage_data_payload['counts']['remote_mirrors']") }}                                                                   AS remote_mirrors_all_time_event,  
+    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['create']['projects_enforcing_code_owner_approval']") }}        AS projects_enforcing_code_owner_approval_28_days_user,  
+    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['configure']['project_clusters_enabled']") }}                   AS project_clusters_enabled_28_days_user
 
 {%- endmacro -%}

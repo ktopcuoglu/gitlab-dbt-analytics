@@ -7,4 +7,6 @@ macros:
     description: '{{ doc("sales_wave_2_3_metrics") }}'
   - name: stage_mapping
     description: '{{ doc("stage_mapping") }}'
+  - name: usage_ping_month_range
+    description: '{{ doc("usage_ping_month_range") }}'
 

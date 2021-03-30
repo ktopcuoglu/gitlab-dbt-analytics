@@ -28,7 +28,9 @@ WITH sfdc_users AS (
       {{ dbt_utils.surrogate_key(['sfdc_users.user_region']) }}     AS dim_crm_sales_hierarchy_sales_region_live_id,
       sfdc_users.user_region                                        AS sales_region_name_live,
       {{ dbt_utils.surrogate_key(['sfdc_users.user_area']) }}       AS dim_crm_sales_hierarchy_sales_area_live_id,
-      sfdc_users.user_area                                          AS sales_area_name_live
+      sfdc_users.user_area                                          AS sales_area_name_live,
+      sfdc_users.sales_segment_name_live_grouped,
+      sfdc_users.segment_region_live_grouped
     FROM sfdc_users
     LEFT JOIN sfdc_user_roles
       ON sfdc_users.user_role_id = sfdc_user_roles.id
@@ -38,7 +40,7 @@ WITH sfdc_users AS (
 {{ dbt_audit(
     cte_ref="final_users",
     created_by="@mcooperDD",
-    updated_by="@mcooperDD",
+    updated_by="@jpeguero",
     created_date="2021-01-12",
-    updated_date="2020-01-12"
+    updated_date="2021-03-24"
 ) }}

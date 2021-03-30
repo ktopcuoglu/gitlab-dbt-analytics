@@ -115,7 +115,7 @@ class UsagePing(object):
         Take a dictionary of the following type and run each
         query to then upload to a table in raw.
         {
-            ping_name: 
+            ping_name:
             {
               query_base: sql_query,
               level: namespace,
