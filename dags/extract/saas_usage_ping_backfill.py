@@ -1,7 +1,6 @@
-import date
 import logging
 import os
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 
 
 from airflow import DAG
