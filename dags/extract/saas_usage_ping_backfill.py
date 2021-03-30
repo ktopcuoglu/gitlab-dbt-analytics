@@ -83,8 +83,8 @@ def generate_task(month):
     )
 
 for month in partitions(
-    date.today() - datetime.timedelta(months=12), 
-    date.today().replace(day=1) - datetime.timedelta(days=1), 
+    date.today() - timedelta(months=12), 
+    date.today().replace(day=1) - timedelta(days=1), 
     "month"
 ):
     generate_task(month)
