@@ -104,7 +104,14 @@ WITH sfdc_opportunity AS (
       --sfdc_opportunity_xf.downgrade_iacv,
       sfdc_opportunity_xf.renewal_acv,
       sfdc_opportunity_xf.renewal_amount,
-      sfdc_opportunity_xf.sales_qualified_source,
+      --sfdc_opportunity_xf.sales_qualified_source,
+      CASE
+        WHEN sfdc_opportunity_xf.sales_qualified_source = 'BDR Generated'
+            THEN 'SDR Generated'
+        ELSE sfdc_opportunity_xf.sales_qualified_source
+      END                                                       AS sales_qualified_source,
+
+
       sfdc_opportunity_xf.solutions_to_be_replaced,
       sfdc_opportunity_xf.total_contract_value,
       sfdc_opportunity_xf.upside_iacv,
