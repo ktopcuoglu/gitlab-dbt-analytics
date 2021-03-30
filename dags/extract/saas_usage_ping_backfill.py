@@ -12,7 +12,7 @@ from airflow_utils import (
     slack_failed_task,
     gitlab_pod_env_vars,
     clone_and_setup_extraction_cmd,
-    partitions
+    partitions,
 )
 from kube_secrets import (
     SNOWFLAKE_ACCOUNT,
@@ -52,6 +52,7 @@ default_args = {
 #  Sunday at 0900 UTC
 dag = DAG("saas_usage_ping_backfill", default_args=default_args, schedule_interval=None)
 
+
 def generate_task(vars_dict):
 
     run_date = date(year=int(vars_dict["year"]), month=int(vars_dict["month"]), day=1)
@@ -84,9 +85,10 @@ def generate_task(vars_dict):
         dag=dag,
     )
 
+
 for month in partitions(
-    date.today() - timedelta(days=365), 
-    date.today().replace(day=1) - timedelta(days=1), 
-    "month"
+    date.today() - timedelta(days=365),
+    date.today().replace(day=1) - timedelta(days=1),
+    "month",
 ):
     generate_task(month)
