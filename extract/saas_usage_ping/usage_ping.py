@@ -110,24 +110,7 @@ class UsagePing(object):
 
         return saas_queries
 
-    def saas_namespace_ping(self):
-        """
-        Take a dictionary of the following type and run each
-        query to then upload to a table in raw.
-        {
-            ping_name:
-            {
-              query_base: sql_query,
-              level: namespace,
-              between: true
-            }
-        }
-        """
-        saas_queries = self._get_namespace_queries()
-
-        connection = self.loader_engine.connect()
-
-        for query_dict in saas_queries:
+    def process_namespace_ping(self, query_dict, connection):
             base_query = query_dict.get("counter_query")
             ping_name = query_dict.get("counter_name", "Missing Name")
             logging.info(f"Running ping {ping_name}...")
@@ -144,7 +127,7 @@ class UsagePing(object):
                 logging.info(
                     f"Skipping ping {ping_name} due to no namespace information."
                 )
-                continue
+                return
 
             try:
                 # Expecting [id, namespace_ultimate_parent_id, counter_value]
@@ -170,8 +153,35 @@ class UsagePing(object):
                 "saas_usage_ping",
             )
 
+    def saas_namespace_ping(self, filter=lambda _: True):
+        """
+        Take a dictionary of the following type and run each
+        query to then upload to a table in raw.
+        {
+            ping_name:
+            {
+              query_base: sql_query,
+              level: namespace,
+              between: true
+            }
+        }
+        """
+        saas_queries = self._get_namespace_queries()
+
+        connection = self.loader_engine.connect()
+
+        for query_dict in saas_queries:
+            if filter(query_dict):
+                self.process_namespace_ping(query_dict, connection)
+
         connection.close()
         self.loader_engine.dispose()
+
+    def backfill(self):
+        filter = lambda query_dict: query_dict.get("time_window_query", False)
+        self.saas_namespace_ping(filter)
+
+
 
 
 if __name__ == "__main__":
