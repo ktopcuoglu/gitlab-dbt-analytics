@@ -1753,6 +1753,10 @@ roles:
             - bamboohr_analytics
         warehouses:
             - analyst_xs
+    
+    - blutz:
+        warehouses:
+            - admin
 
     - bmenegocci:
         member_of:
@@ -2994,6 +2998,12 @@ users:
         can_login: yes
         member_of:
             - amurray
+
+    - blutz:
+        can_login: yes
+        member_of:
+            - blutz
+            - securityadmin
 
     - bmenegocci:
         can_login: yes

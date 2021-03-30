@@ -96,7 +96,7 @@ WITH subscriptions AS (
       usage_ping.sast_jobs_all_time_event,
       usage_ping.dast_jobs_all_time_event,
       usage_ping.dependency_scanning_jobs_all_time_event,
-      usage_ping.user_license_management_jobs_all_time_event,
+      usage_ping.license_management_jobs_all_time_event,
       usage_ping.secret_detection_jobs_all_time_event,
       usage_ping.container_scanning_jobs_all_time_event,
       usage_ping.projects_jenkins_active_all_time_event,

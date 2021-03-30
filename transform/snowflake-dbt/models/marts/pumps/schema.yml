@@ -113,8 +113,8 @@ models:
         description: Count of DAST jobs
       - name: dependency_scanning_jobs_all_time_event
         description: Count of Dependency Scanning jobs run
-      - name: user_license_management_jobs_all_time_event
-        description: no idea, Count of License Scanning jobs run, it implies user and monthly, but AFAIK we don't track per user
+      - name: license_management_jobs_all_time_event
+        description: Count of License Management jobs run
       - name: secret_detection_jobs_all_time_event
         description: Count of ‘secret-detection’ CI jobs.
       - name: container_scanning_jobs_all_time_event
@@ -272,8 +272,8 @@ models:
         description: Count of DAST jobs
       - name: dependency_scanning_jobs_all_time_event
         description: Count of Dependency Scanning jobs run
-      - name: user_license_management_jobs_all_time_event
-        description: no idea, Count of License Scanning jobs run, it implies user and monthly, but AFAIK we don't track per user
+      - name: license_management_jobs_all_time_event
+        description: Count of License Management jobs run
       - name: secret_detection_jobs_all_time_event
         description: Count of ‘secret-detection’ CI jobs.
       - name: container_scanning_jobs_all_time_event
@@ -370,8 +370,99 @@ models:
       - name: auto_devops_enable_all_time_event
       - name: auto_devops_enable_since_last_ping
       - name: auto_devops_enable_estimated_monthly
-      - name: ci_builds_all_time_user
       - name: ci_builds_since_last_ping
+      - name: ci_internal_pipelines_all_time_event
+        description: Total pipelines in GitLab repositories
+      - name: ci_internal_pipelines_since_last_ping
+      - name: ci_internal_pipelines_estimated_monthly
+      - name: ci_external_pipelines_all_time_event
+        description: Total pipelines in external repositories
+      - name: ci_external_pipelines_since_last_ping
+      - name: ci_external_pipelines_estimated_monthly
+      - name: merge_requests_all_time_event
+        description: Total number of Merge Requests
+      - name: merge_requests_since_last_ping
+      - name: merge_requests_estimated_monthly
+      - name: todos_all_time_event
+        description: Count of ToDos
+      - name: todos_since_last_ping
+      - name: todos_estimated_monthly
+      - name: epics_all_time_event
+        description: Count of Epics created
+      - name: epics_since_last_ping
+      - name: epics_estimated_monthly
+      - name: issues_all_time_event
+        description: Count of Issues created
+      - name: issues_since_last_ping
+      - name: issues_estimated_monthly
+      - name: projects_all_time_event
+        description: Count of Projects
+      - name: projects_since_last_ping
+      - name: projects_estimated_monthly
+      - name: sast_jobs_all_time_event
+        description: Count of SAST CI jobs. Job names ending in '-sast'
+      - name: sast_jobs_since_last_ping
+      - name: sast_jobs_estimated_monthly
+      - name: dast_jobs_all_time_event
+        description: Count of DAST jobs
+      - name: dast_jobs_since_last_ping
+      - name: dast_jobs_all_time_event
+      - name: dependency_scanning_jobs_all_time_event
+        description: Count of Dependency Scanning jobs run
+      - name: dependency_scanning_jobs_since_last_ping
+      - name: dependency_scanning_jobs_estimated_monthly
+      - name: license_management_jobs_all_time_event
+        description: Count of License Management jobs run
+      - name: license_management_jobs_since_last_ping
+      - name: license_management_jobs_estimated_monthly
+      - name: secret_detection_jobs_all_time_event
+        description: Count of ‘secret-detection’ CI jobs
+      - name: secret_detection_jobs_since_last_ping
+      - name: secret_detection_jobs_estimated_monthly
+      - name: container_scanning_jobs_all_time_event
+        description: Count of Container Scanning jobs run
+      - name: container_scanning_jobs_since_last_ping
+      - name: container_scanning_jobs_estimated_monthly
+      - name: projects_jenkins_active_all_time_event
+        description: Count of projects with active integrations for Jenkins
+      - name: projects_jenkins_active_since_last_ping
+      - name: projects_jenkins_active_estimated_monthly
+      - name: projects_bamboo_active_all_time_event
+        description: Count of projects with active integrations for Bamboo CI
+      - name: projects_bamboo_active_since_last_ping
+      - name: projects_bamboo_active_estimated_monthly
+      - name: projects_jira_active_all_time_event
+        description: Count of projects with active integrations for Jira
+      - name: projects_jira_active_since_last_ping
+      - name: projects_jira_active_estimated_monthly
+      - name: projects_drone_ci_active_all_time_event
+        description: Count of projects with active integrations for Drone CI
+      - name: projects_drone_ci_active_since_last_ping
+      - name: projects_drone_ci_active_estimated_monthly
+      - name: projects_github_active_all_time_event
+        description: Count of projects with active integrations for GitHub
+      - name: projects_github_active_since_last_ping
+      - name: projects_github_active_estimated_monthly
+      - name: projects_jira_server_active_all_time_event
+        description: Count of active integrations with Jira Software (server)
+      - name: projects_jira_server_active_since_last_ping
+      - name: projects_jira_server_active_estimated_monthly
+      - name: projects_jira_dvcs_cloud_active_all_time_event
+        description: Count of active integrations with Jira Cloud (DVCS Connector)
+      - name: projects_jira_dvcs_cloud_active_since_last_ping
+      - name: projects_jira_dvcs_cloud_active_estimated_monthly
+      - name: projects_with_repositories_enabled_all_time_event
+        description: Counts of projects with repositories enabled
+      - name: projects_with_repositories_enabled_since_last_ping
+      - name: projects_with_repositories_enabled_estimated_monthly
+      - name: protected_branches_all_time_event
+        description: Counts of protected branches
+      - name: protected_branches_since_last_ping
+      - name: protected_branches_estimated_monthly
+      - name: remote_mirrors_all_time_event
+        description: Counts of remote mirrors
+      - name: remote_mirrors_since_last_ping
+      - name: remote_mirrors_estimated_monthly
 
   - name: pump_hash_marketing_contact
     description: '{{ doc("pump_hash_marketing_contact") }}'
