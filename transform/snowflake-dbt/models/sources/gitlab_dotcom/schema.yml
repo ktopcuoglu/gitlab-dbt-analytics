@@ -32,13 +32,6 @@ models:
         tests:
           - not_null
           - unique
-  - name: gitlab_dotcom_application_settings_monthly
-    description: Model with monthly snapshot information for application settings table
-    columns:
-      - name: primary_key
-        tests:
-          - not_null
-          - unique
   - name: gitlab_dotcom_approval_merge_request_rules_source
     description: Base model for Gitlab.com approval_merge_request_rules
     columns:
