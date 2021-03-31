@@ -3549,6 +3549,9 @@ warehouses:
     - analyst_xs:
         size: x-small
 
+    - datasiren:
+        size: "4-x-large"
+
     - engineer_xl:
         size: x-large
 
