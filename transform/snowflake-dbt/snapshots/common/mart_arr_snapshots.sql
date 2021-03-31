@@ -3,15 +3,15 @@
     {{
         config(
           unique_key='primary_key',
-          strategy='check',
+          strategy='timestamp',
+          updated_at='dbt_updated_at',
         )
     }}
     
     SELECT
     {{
           dbt_utils.star(
-            from=ref('mart_arr'),
-            except=['DBT_UPDATED_AT', 'DBT_CREATED_AT']
+            from=ref('mart_arr')
             )
       }}
     FROM {{ ref('mart_arr') }}
