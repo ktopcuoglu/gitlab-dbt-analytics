@@ -44,7 +44,7 @@
                                AND application_settings_historical.valid_to
     QUALIFY ROW_NUMBER() OVER(
       PARTITION BY snapshot_month
-      ORDER BY valid_to DESC
+      ORDER BY valid_from DESC
       ) = 1
   
 ), keyed AS (
