@@ -3,7 +3,6 @@ WITH source AS (
     SELECT
       opportunity.*,
       CASE
-        WHEN stagename = '00-Pre Opportunity'       THEN createddate
         WHEN stagename = '0-Pending Acceptance'     THEN x0_pending_acceptance_date__c
         WHEN stagename = '1-Discovery'              THEN x1_discovery_date__c
         WHEN stagename = '2-Scoping'                THEN x2_scoping_date__c
