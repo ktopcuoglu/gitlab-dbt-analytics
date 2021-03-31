@@ -709,6 +709,7 @@ roles:
             - transforming_xl
             - transforming_xs
             - transforming_4xl
+            - datasiren
         member_of:
             - covid19
             - snowflake_db
