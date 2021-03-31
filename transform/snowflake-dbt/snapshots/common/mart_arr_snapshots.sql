@@ -4,13 +4,16 @@
         config(
           unique_key='primary_key',
           strategy='check',
-          check_cols=[
-              'shared_runners_minutes'
-          ],
         )
     }}
     
-    SELECT *
+    SELECT
+    {{
+          dbt_utils.star(
+            from=ref('mart_arr'),
+            except=['DBT_UPDATED_AT', 'DBT_CREATED_AT']
+            )
+      }}
     FROM {{ ref('mart_arr') }}
     QUALIFY ROW_NUMBER() OVER (PARTITION BY primary_key ORDER BY arr_month DESC) = 1
 
