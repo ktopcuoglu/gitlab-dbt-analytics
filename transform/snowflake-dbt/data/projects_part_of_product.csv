@@ -143,6 +143,8 @@ gitlab-org/security-products/analyzers/go-ast-scanner,5971589
 gitlab-org/security-products/analyzers/security-code-scan,6535935
 gitlab-org/security-products/analyzers/api-fuzzing,19617580
 gitlab-org/security-products/analyzers/api-fuzzing-src,5964710
+gitlab-org/security-products/demos/api-fuzzing/graphql-api-fuzzing-example,24298348
+gitlab-org/security-products/demos/api-fuzzing/postman-api-fuzzing-example,22111360
 gitlab-org/security-products/tests/api-fuzzing-e2e/openapi-v2-tls,25538517
 gitlab-org/security-products/tests/api-fuzzing-e2e/postman-v2.1-tls,25537666
 gitlab-org/security-products/tests/api-fuzzing-e2e/har-tls,25298439
