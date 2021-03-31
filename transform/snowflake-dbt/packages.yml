@@ -3,7 +3,7 @@ packages:
   - package: gitlabhq/snowflake_spend
     version: 1.2.0
   - git: git@gitlab.com:gitlab-data/data-tests.git
-    revision: "{{env_var('DATA_TEST_BRANCH')}}"
+    revision: "fix-to-run-snapshts"
     warn-unpinned: false
   - git: git@gitlab.com:gitlab-data/datasiren.git
     revision: "{{env_var('DATA_SIREN_BRANCH')}}"
