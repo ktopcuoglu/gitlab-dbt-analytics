@@ -43,7 +43,7 @@ def get_pmg_reporting_data_query(start_date: str, end_date: str) -> str:
         f"  content_type "
         f"FROM "
         f"  `pmg-datawarehouse.gitlab.reporting_data`"
-        # f"  WHERE date >= '{end_date}' and date < '{start_date}'"
+        f"  WHERE date >= '{end_date}' and date < '{start_date}'"
     )
 
 
