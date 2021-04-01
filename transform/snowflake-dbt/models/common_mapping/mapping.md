@@ -44,3 +44,8 @@ This View contains the list of ultimate parent namespace ids that are internal t
 Table for mapping GitLab team members across bambooHR, GitLab.com Postgres DB, and GitLab Ops
 
 {% enddocs %}
+
+{% docs map_subscription_instance_type %}
+Table for mapping the current Subscription IDs related to an account to an instance type (Production/test/Staging etc.) for Product Usage data
+
+{% enddocs %}

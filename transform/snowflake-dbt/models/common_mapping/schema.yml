@@ -159,3 +159,15 @@ models:
       - name: subscription_cohort_year
         tests:
           - not_null
+    
+    - name: map_subscription_instance_type
+    description: This model maps the current Subscription IDs related to an account to an instance type (Production/test/Staging etc.) for Product Usage data.
+    columns:
+      - name: dim_subscription_id
+        tests:
+          - not_null
+      - name: uuid
+      - name: hostname
+      - name: company_sfdc_id
+      - name: company_name
+      - name: instance_type
