@@ -141,7 +141,7 @@ models:
         description: "GitLab Team Member ops.gitlab.net SaaS Database user_name. Can be used to join onto any user name field in the gitlab_ops data set "
 
   - name: map_subscription_lineage
-    description: '{{ doc("map_subscription_lineage") }}'
+    description: This models takes the `prep_subscription_intermediate` model and joins it to the `prep_subscription_lineage` model. The end result is every subscription is linked to its lineage (or null).
     columns:
       - name: dim_subscription_id
         tests:
