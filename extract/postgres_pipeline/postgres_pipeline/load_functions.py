@@ -103,7 +103,7 @@ def load_incremental(
 
     # If _TEMP exists in the table name, skip it because it needs a full sync
     # If a temp table exists then it needs to finish syncing so don't load incrementally
-    if "_TEMP" == table_name[-5:] or target_engine.has_table(f"{table_name}_TEMP"):
+    if "_TEMP" == table_name[-5:]:
         logging.info(
             f"Table {source_table_name} needs to be backfilled due to schema change, aborting incremental load."
         )
@@ -131,7 +131,7 @@ def sync_incremental_ids(
     primary_key = table_dict["export_table_primary_key"]
     # If temp isn't in the name, we don't need to full sync.
     # If a temp table exists, we know the sync didn't complete successfully
-    if "_TEMP" != table_name[-5:] and not target_engine.has_table(f"{table_name}_TEMP"):
+    if "_TEMP" != table_name[-5:]:
         logging.info(f"Table {table} doesn't need a full sync.")
         return False
 
