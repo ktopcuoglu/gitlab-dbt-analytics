@@ -160,7 +160,7 @@ models:
         tests:
           - not_null
     
-    - name: map_subscription_instance_type
+  - name: map_subscription_instance_type
     description: This model maps the current Subscription IDs related to an account to an instance type (Production/test/Staging etc.) for Product Usage data.
     columns:
       - name: dim_subscription_id
