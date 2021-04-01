@@ -49,9 +49,7 @@ default_args = {
     "depends_on_past": False,
     "on_failure_callback": slack_failed_task,
     "owner": "airflow",
-    "params": {
-        "slack_channel_override": "#dbt-runs"
-    },
+    "params": {"slack_channel_override": "#dbt-runs"},
     "retries": 0,
     "sla": timedelta(hours=8),
     "sla_miss_callback": slack_failed_task,
