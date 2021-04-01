@@ -66,11 +66,8 @@ default_args = {
     "start_date": datetime(2020, 12, 8, 0, 0, 0),
 }
 
-# Runs every Saturday at 530
-dag_schedule = "30 5 * * 6"
-
 # Create the DAG
-dag = DAG("dbt_datasiren", default_args=default_args, schedule_interval=dag_schedule)
+dag = DAG("dbt_datasiren", default_args=default_args, schedule_interval=None)
 
 dbt_datasiren_command = f"""
         {dbt_install_deps_nosha_cmd} &&
