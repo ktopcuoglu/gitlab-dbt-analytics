@@ -226,6 +226,28 @@ models:
           - not_null
           - unique
 
+  - name: prep_gitlab_dotcom_application_settings_monthly
+    description: '{{ doc("prep_gitlab_dotcom_application_settings_monthly") }}'
+    columns:
+      - name: primary_key
+        tests:
+          - not_null
+          - unique
+      - name: snapshot_month
+        tests:
+          - not_null
+      - name: application_settings_id
+        tests:
+          - not_null
+      - name: shared_runners_minutes
+        description: Default CI minutes limit for new all namespaces when no paid plan has been purchased.
+        tests:
+          - not_null
+      - name: repository_size_limit
+        description: Default storage limit (per project reposity) for new all namespaces when no paid plan has been purchased.
+        tests:
+          - not_null
+
   - name: prep_recurring_charge_subscription_monthly
     description: '{{ doc("prep_recurring_charge_subscription_monthly") }}'
     columns:
