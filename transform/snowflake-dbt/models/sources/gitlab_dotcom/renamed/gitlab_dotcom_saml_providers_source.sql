@@ -14,6 +14,7 @@ WITH source AS (
       enforced_sso::BOOLEAN                    AS is_enforced_sso,
       enforced_group_managed_accounts::BOOLEAN AS is_enforced_group_managed_accounts,
       prohibited_outer_forks::BOOLEAN          AS is_prohibited_outer_forks
+      default_membership_role::NUMBER          AS default_membership_role_id,
     FROM source
 
 )
