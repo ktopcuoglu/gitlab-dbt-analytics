@@ -204,28 +204,12 @@ def run_or_skip_dbt(current_seconds: int, dag_interval: int, dbt_name: str) -> b
 
 def dbt_tasks(dbt_name, dbt_task_identifier):
 
-    freshness_cmd = f"""
-        {dbt_install_deps_nosha_cmd} &&
-        dbt source snapshot-freshness --profiles-dir profile --target prod --select {dbt_name}; ret=$?;
-        python ../../orchestration/upload_dbt_file_to_snowflake.py freshness; exit $ret
-    """
-    freshness = KubernetesPodOperator(
-        **gitlab_defaults,
-        image=DBT_IMAGE,
-        task_id=f"{dbt_task_identifier}-source-freshness",
-        trigger_rule="all_done",
-        name=f"{dbt_task_identifier}-source-freshness",
-        secrets=standard_secrets + dbt_secrets,
-        env_vars=gitlab_pod_env_vars,
-        arguments=[freshness_cmd],
-    )
-
     SCHEDULE_INTERVAL_HOURS = 6
     timestamp = datetime.now()
     current_seconds = timestamp.hour * 3600
     dag_interval = SCHEDULE_INTERVAL_HOURS * 3600
 
-    # Only run everything past freshness once per day
+    # Only run dbt once per day
     short_circuit = ShortCircuitOperator(
         task_id="short_circuit",
         trigger_rule="all_done",
@@ -303,7 +287,7 @@ def dbt_tasks(dbt_name, dbt_task_identifier):
         arguments=[model_test_cmd],
     )
 
-    return freshness, short_circuit, test, snapshot, model_run, model_test
+    return short_circuit, test, snapshot, model_run, model_test
 
 
 # Loop through each config_dict and generate a DAG
@@ -335,7 +319,7 @@ for source_name, config in config_dict.items():
         dbt_name = f"{config['dbt_name']}"
         dbt_task_identifier = f"{config['task_name']}-dbt-incremental"
 
-        freshness, short_circuit, test, snapshot, model_run, model_test = dbt_tasks(
+        short_circuit, test, snapshot, model_run, model_test = dbt_tasks(
             dbt_name, dbt_task_identifier
         )
 
@@ -381,7 +365,7 @@ for source_name, config in config_dict.items():
                 xcom_push=True,
             )
 
-            incremental_extract >> freshness >> short_circuit >> test >> snapshot >> model_run >> model_test
+            incremental_extract >> short_circuit >> test >> snapshot >> model_run >> model_test
 
     globals()[f"{config['dag_name']}_db_extract"] = extract_dag
 
@@ -458,7 +442,7 @@ for source_name, config in config_dict.items():
         dbt_name = f"{config['dbt_name']}"
         dbt_task_identifier = f"{config['task_name']}-dbt-sync"
 
-        freshness, short_circuit, test, snapshot, model_run, model_test = dbt_tasks(
+        short_circuit, test, snapshot, model_run, model_test = dbt_tasks(
             dbt_name, dbt_task_identifier
         )
 
@@ -501,6 +485,6 @@ for source_name, config in config_dict.items():
                     xcom_push=True,
                 )
 
-                scd_extract >> freshness >> short_circuit >> test >> snapshot >> model_run >> model_test
+                scd_extract >> short_circuit >> test >> snapshot >> model_run >> model_test
 
     globals()[f"{config['dag_name']}_db_sync"] = sync_dag

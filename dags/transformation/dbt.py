@@ -51,7 +51,7 @@ default_args = {
     "owner": "airflow",
     "params": {
         "slack_channel_override": "#dbt-runs"
-    },  # Overriden for dbt-source-freshness in airflow_utils.py
+    },
     "retries": 0,
     "sla": timedelta(hours=8),
     "sla_miss_callback": slack_failed_task,
@@ -207,45 +207,6 @@ dbt_full_refresh = KubernetesPodOperator(
     dag=dag,
 )
 
-""" 
-    dbt-source-freshness
-    The ret=$? part preserves the return value of the dbt command which is then used as the final return value of the command
-"""
-dbt_source_cmd = f"""
-    {pull_commit_hash} &&
-    {dbt_install_deps_cmd} &&
-    dbt source snapshot-freshness --profiles-dir profile; ret=$?;
-    python ../../orchestration/upload_dbt_file_to_snowflake.py freshness; exit $ret
-"""
-dbt_source_freshness = KubernetesPodOperator(
-    **gitlab_defaults,
-    image=DBT_IMAGE,
-    task_id="dbt-source-freshness",
-    name="dbt-source-freshness",
-    secrets=[
-        GIT_DATA_TESTS_PRIVATE_KEY,
-        GIT_DATA_TESTS_CONFIG,
-        SALT,
-        SALT_EMAIL,
-        SALT_IP,
-        SALT_NAME,
-        SALT_PASSWORD,
-        SNOWFLAKE_ACCOUNT,
-        SNOWFLAKE_USER,
-        SNOWFLAKE_PASSWORD,
-        SNOWFLAKE_TRANSFORM_ROLE,
-        SNOWFLAKE_TRANSFORM_WAREHOUSE,
-        SNOWFLAKE_TRANSFORM_SCHEMA,
-        SNOWFLAKE_LOAD_PASSWORD,
-        SNOWFLAKE_LOAD_ROLE,
-        SNOWFLAKE_LOAD_USER,
-        SNOWFLAKE_LOAD_WAREHOUSE,
-    ],
-    env_vars=pod_env_vars,
-    arguments=[dbt_source_cmd],
-    dag=dag,
-)
-
 # dbt-test
 dbt_test_cmd = f"""
     {pull_commit_hash} &&
@@ -282,10 +243,6 @@ dbt_test = KubernetesPodOperator(
     arguments=[dbt_test_cmd],
     dag=dag,
 )
-
-
-# Source Freshness
-dbt_source_freshness >> branching_dbt_run
 
 # Branching for run
 branching_dbt_run >> dbt_non_product_models_task >> dbt_product_models_task >> dbt_test
