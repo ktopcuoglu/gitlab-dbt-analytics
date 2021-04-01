@@ -3184,11 +3184,7 @@ tables:
       SELECT user_id
       , job_title
       , other_role
-      , created_at
-      , updated_at
       FROM user_details
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
   users_ops_dashboard_projects:
     export_schema: "gitlab_com"
     export_table: users_ops_dashboard_projects
