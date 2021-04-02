@@ -14,7 +14,7 @@ WITH host_instance_type AS (
             {{ get_keyed_nulls('subscriptions.dim_subscription_id') }} AS dim_subscription_id,
             host_instance_type.uuid                                    AS uuid,
             host_instance_type.hostname                                AS hostname,
-            host_instance_type.company_sfdc_id                         AS company_sfdc_id,
+            host_instance_type.company_sfdc_id                         AS dim_crm_account_id,
             host_instance_type.company_name                            AS company_name,
             host_instance_type.instance_type                           AS instance_type
 
