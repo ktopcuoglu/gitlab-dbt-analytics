@@ -709,6 +709,7 @@ roles:
             - transforming_xl
             - transforming_xs
             - transforming_4xl
+            - datasiren
         member_of:
             - covid19
             - snowflake_db
@@ -3548,6 +3549,9 @@ warehouses:
 
     - analyst_xs:
         size: x-small
+
+    - datasiren:
+        size: "4-x-large"
 
     - engineer_xl:
         size: x-large

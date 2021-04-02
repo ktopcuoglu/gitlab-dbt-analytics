@@ -29,6 +29,12 @@ Creates a base view with generated keys for the stamped/historical crm sales hie
 
 {% enddocs %}
 
+{% docs prep_gitlab_dotcom_application_settings_monthly %}
+
+This model captures a historical record of GitLab's default application settings for CI minutes and storage at a monthly grain.
+
+{% enddocs %}
+
 {% docs prep_industry %}
 
 Creates a base view with generated keys for the industry shared dimension and references in facts.
