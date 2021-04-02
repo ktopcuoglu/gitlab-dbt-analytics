@@ -29,6 +29,7 @@
       monthly_metrics.ping_created_date_id,
       monthly_metrics.uuid,
       monthly_metrics.hostname,
+      monthly_metrics.isntance_type,
       monthly_metrics.dim_license_id,
       monthly_metrics.license_md5,
       monthly_metrics.cleaned_version,
@@ -115,7 +116,7 @@
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@ischweickartDD",
-    updated_by="@ischweickartDD",
+    updated_by="@mcooperDD",
     created_date="2021-02-11",
-    updated_date="2021-02-24"
+    updated_date="2021-04-02"
 ) }}

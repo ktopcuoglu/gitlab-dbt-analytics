@@ -30,6 +30,11 @@ WITH subscriptions AS (
     FROM {{ ref('fct_usage_ping_subscription_mapped_smau') }}
     WHERE is_latest_smau_reported = TRUE
 
+), map_subscription_instance_type AS (
+
+    SELECT *
+    FROM {{ ref('map_subscription_instance_type') }}
+
 ), joined AS (
 
     SELECT
@@ -43,6 +48,7 @@ WITH subscriptions AS (
       {{ get_date_id('usage_ping.ping_created_at') }}                                         AS ping_created_date_id,
       usage_ping.uuid,
       usage_ping.hostname,
+      map_subscription_instance_type.instance_type,
       usage_ping.dim_license_id,
       usage_ping.license_md5,
       usage_ping.cleaned_version,
@@ -137,13 +143,16 @@ WITH subscriptions AS (
       ON subscriptions.dim_subscription_id = usage_ping.dim_subscription_id
     LEFT JOIN smau
       ON subscriptions.dim_subscription_id = smau.dim_subscription_id
+    LEFT JOIN map_subscription_instance_type
+      ON usage_ping.uuid = map_subscription_instance_type.uuid
+        AND usage_ping.hostname = map_subscription_instance_type.hostname
   
 )
 
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@ischweickartDD",
-    updated_by="@ischweickartDD",
+    updated_by="@mcooperDD",
     created_date="2021-02-08",
-    updated_date="2021-03-19"
+    updated_date="2021-04-02"
 ) }}
