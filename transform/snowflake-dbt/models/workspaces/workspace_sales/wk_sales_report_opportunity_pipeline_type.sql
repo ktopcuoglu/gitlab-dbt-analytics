@@ -202,7 +202,7 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
       AND pipe_pull.snapshot_fiscal_quarter_date = opp_snap.snapshot_fiscal_quarter_date
   -- closing in the same quarter of the snapshot
   WHERE opp_snap.snapshot_fiscal_quarter_date = opp_snap.close_fiscal_quarter_date 
-  GROUP BY 1,2,3,4,5,6,7,8,9
+  GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13
   HAVING pipeline_type IS NOT NULL
 
 ), report_opportunity_pipeline_type AS (
