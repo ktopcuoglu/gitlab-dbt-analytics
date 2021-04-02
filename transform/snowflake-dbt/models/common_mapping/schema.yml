@@ -168,6 +168,6 @@ models:
           - not_null
       - name: uuid
       - name: hostname
-      - name: company_sfdc_id
+      - name: dim_crm_account_id
       - name: company_name
       - name: instance_type
