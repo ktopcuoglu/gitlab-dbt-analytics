@@ -29,7 +29,7 @@
       monthly_metrics.ping_created_date_id,
       monthly_metrics.uuid,
       monthly_metrics.hostname,
-      monthly_metrics.isntance_type,
+      monthly_metrics.instance_type,
       monthly_metrics.dim_license_id,
       monthly_metrics.license_md5,
       monthly_metrics.cleaned_version,
