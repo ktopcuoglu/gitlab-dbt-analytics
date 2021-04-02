@@ -211,12 +211,13 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
       p.opportunity_id,
       
       -- descriptive cuts
-      o.order_type_stamped,
-      o.sales_qualified_source,
-      o.deal_category,
-      o.deal_group,
-      o.sales_team_cro_level,
-      o.sales_team_rd_asm_level,
+
+      --o.order_type_stamped,
+      --o.sales_qualified_source,
+      --o.deal_category,
+      --o.deal_group,
+      --o.sales_team_cro_level,
+      --o.sales_team_rd_asm_level,
 
       -- pipeline fields
       p.close_fiscal_quarter_date,
@@ -250,12 +251,12 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
         ELSE NULL 
       END                                                                                 AS pipe_resolution,
 
+      -- basic net arr
+      
       COALESCE(p.starting_net_arr,p.pipeline_created_net_arr,p.pipeline_pull_net_arr,0)   AS beg_net_arr,
       COALESCE(p.starting_stage,p.pipeline_created_stage)                                 AS beg_stage,
       COALESCE(p.starting_forecast_category,p.pipeline_created_forecast_category)         AS beg_forecast_category,
       COALESCE(p.starting_close_date,p.pipeline_created_close_date)                       AS beg_close_date,
-
-     
 
       p.end_net_arr,                                                   
       p.end_stage,                                                
