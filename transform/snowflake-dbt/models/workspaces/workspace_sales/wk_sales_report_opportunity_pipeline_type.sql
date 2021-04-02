@@ -122,6 +122,7 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
       pipe_start.starting_forecast_category,
       pipe_start.starting_net_arr,
       pipe_start.starting_stage,
+      pipe_start.starting_close_date,
 
       pipe_end.end_forecast_category,
       pipe_end.end_net_arr,
@@ -252,7 +253,7 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
       END                                                                                 AS pipe_resolution,
 
       -- basic net arr
-      
+
       COALESCE(p.starting_net_arr,p.pipeline_created_net_arr,p.pipeline_pull_net_arr,0)   AS beg_net_arr,
       COALESCE(p.starting_stage,p.pipeline_created_stage)                                 AS beg_stage,
       COALESCE(p.starting_forecast_category,p.pipeline_created_forecast_category)         AS beg_forecast_category,
