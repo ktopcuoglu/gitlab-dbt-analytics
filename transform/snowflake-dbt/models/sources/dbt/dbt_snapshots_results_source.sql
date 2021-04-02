@@ -8,7 +8,7 @@ WITH source AS (
     SELECT *
     FROM {{ source('dbt', 'snapshots') }}
     {% if is_incremental() %}
-    WHERE uploaded_at >= (SELECT MAX(uploaded_at) FROM {{this}})
+    WHERE uploaded_at > (SELECT MAX(uploaded_at) FROM {{this}})
     {% endif %}
 ), flattened AS (
 
