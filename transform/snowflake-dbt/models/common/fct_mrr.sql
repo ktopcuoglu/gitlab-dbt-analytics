@@ -1,4 +1,4 @@
-/* grain: one record per subscription per month */
+/* grain: one record per subscription, rate_plan_charge per month */
 WITH mrr AS (
 
     SELECT
@@ -8,6 +8,7 @@ WITH mrr AS (
       dim_crm_account_id,
       dim_subscription_id,
       dim_product_detail_id,
+      dim_charge_id,
       mrr,
       arr,
       quantity,

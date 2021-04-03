@@ -39,6 +39,7 @@ WITH dim_date AS (
   SELECT
     zuora_account.account_id                            AS billing_account_id,
     map_merged_crm_account.dim_crm_account_id           AS crm_account_id,
+    zuora_rate_plan_charge.rate_plan_charge_id,
     zuora_subscription.subscription_id,
     zuora_subscription.subscription_name,
     zuora_rate_plan_charge.product_rate_plan_charge_id  AS product_details_id,
@@ -67,6 +68,7 @@ WITH dim_date AS (
     subscription_id,
     subscription_name,
     product_details_id,
+    rate_plan_charge_id,
     SUM(mrr)                                             AS mrr,
     SUM(mrr)* 12                                         AS arr,
     SUM(quantity)                                        AS quantity,
@@ -77,17 +79,19 @@ WITH dim_date AS (
     AND (rate_plan_charge_filtered.effective_end_month > dim_date.date_actual
       OR rate_plan_charge_filtered.effective_end_month IS NULL)
     AND dim_date.day_of_month = 1
-  {{ dbt_utils.group_by(n=6) }}
+  {{ dbt_utils.group_by(n=7) }}
 
 ), final AS (
 
   SELECT
-    {{ dbt_utils.surrogate_key(['date_id', 'subscription_name', 'product_details_id']) }}   AS mrr_id,
+    {{ dbt_utils.surrogate_key(['date_id', 'subscription_name', 'product_details_id','rate_plan_charge_id']) }}
+                                                                                            AS mrr_id,
     date_id                                                                                 AS dim_date_id,
     billing_account_id                                                                      AS dim_billing_account_id,
     crm_account_id                                                                          AS dim_crm_account_id,
     subscription_id                                                                         AS dim_subscription_id,
     product_details_id                                                                      AS dim_product_detail_id,
+    rate_plan_charge_id                                                                     AS dim_charge_id,
     mrr,
     arr,
     quantity,
@@ -99,7 +103,7 @@ WITH dim_date AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mcooperDD",
-    updated_by="@mcooperDD",
+    updated_by="@iweeks",
     created_date="2021-01-04",
-    updated_date="2021-01-21",
+    updated_date="2021-04-05",
 ) }}
