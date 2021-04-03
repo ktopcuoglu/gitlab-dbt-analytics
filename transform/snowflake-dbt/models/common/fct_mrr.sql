@@ -20,7 +20,7 @@ WITH mrr AS (
 {{ dbt_audit(
     cte_ref="mrr",
     created_by="@msendal",
-    updated_by="@mcooperDD",
+    updated_by="@iweeks",
     created_date="2020-09-10",
-    updated_date="2021-01-21",
+    updated_date="2021-04-03",
 ) }}
