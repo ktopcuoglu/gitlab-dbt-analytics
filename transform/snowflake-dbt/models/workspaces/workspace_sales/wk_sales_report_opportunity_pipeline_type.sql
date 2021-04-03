@@ -108,16 +108,7 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
       opp_snap.opportunity_id,
       opp_snap.close_fiscal_quarter_date,
 
-      -- pipeline type, identifies if the opty was there at the begging of the quarter or not
-      CASE
-        WHEN pipe_start.opportunity_id IS NOT NULL
-          THEN '1. Starting'
-        WHEN pipe_created.opportunity_id IS NOT NULL
-          THEN '2. Created & Landed'
-        WHEN opp_snap.close_fiscal_quarter_date = opp_snap.snapshot_fiscal_quarter_date
-          THEN '3. Pulled in'
-        ELSE NULL
-      END                                                         AS pipeline_type,
+
 
       pipe_start.starting_forecast_category,
       pipe_start.starting_net_arr,
@@ -131,6 +122,16 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
       pipe_end.end_is_won,
       pipe_end.end_close_date,
 
+      -- pipeline type, identifies if the opty was there at the begging of the quarter or not
+      CASE
+        WHEN pipe_start.opportunity_id IS NOT NULL
+          THEN '1. Starting'
+        WHEN pipe_created.opportunity_id IS NOT NULL
+          THEN '2. Created & Landed'
+        WHEN pipe_pull.opportunity_id IS NOT NULL
+          THEN '3. Pulled in'
+        ELSE Null
+      END                                                         AS pipeline_type,
 
       -- created pipe
       MAX(pipe_created.created_snapshot_date)                     AS pipeline_created_snapshot_date,
@@ -203,7 +204,6 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
   -- closing in the same quarter of the snapshot
   WHERE opp_snap.snapshot_fiscal_quarter_date = opp_snap.close_fiscal_quarter_date 
   GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13
-  HAVING pipeline_type IS NOT NULL
 
 ), report_opportunity_pipeline_type AS (
 
