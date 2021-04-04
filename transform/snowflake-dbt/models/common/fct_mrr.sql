@@ -1,14 +1,14 @@
-/* grain: one record per subscription, rate_plan_charge per month */
+/* grain: one record per rate_plan_charge per month */
 WITH mrr AS (
 
     SELECT
       mrr_id,
       dim_date_id,
+      dim_charge_id,
+      dim_product_detail_id,
+      dim_subscription_id,
       dim_billing_account_id,
       dim_crm_account_id,
-      dim_subscription_id,
-      dim_product_detail_id,
-      dim_charge_id,
       mrr,
       arr,
       quantity,
