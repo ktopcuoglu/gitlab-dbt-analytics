@@ -117,10 +117,10 @@ WITH dim_billing_account AS (
       -- MRR values
       --  not needed as all charges in fct_mrr are recurring
       --  fct_mrr.charge_type,
-      fct_mrr.unit_of_measure,
-      fct_mrr.mrr,
-      fct_mrr.arr,
-      fct_mrr.quantity
+      fct_mrr.unit_of_measure                                                         AS unit_of_measure,
+      fct_mrr.mrr                                                                     AS mrr,
+      fct_mrr.arr                                                                     AS arr,
+      fct_mrr.quantity                                                                AS quantity
     FROM fct_mrr
     INNER JOIN dim_subscription
       ON dim_subscription.dim_subscription_id = fct_mrr.dim_subscription_id
