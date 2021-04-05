@@ -30,11 +30,6 @@
       ORDER BY ping_created_at DESC
       ) = 1
 
-), map_subscription_instance_type AS (
-
-    SELECT *
-    FROM {{ ref('map_subscription_instance_type') }}
-
 ), joined AS (
 
     SELECT
@@ -50,7 +45,7 @@
       {{ get_date_id('usage_ping.ping_created_at') }}               AS ping_created_date_id,
       usage_ping.uuid,
       usage_ping.hostname,
-      map_subscription_instance_type.instance_type,
+      usage_ping.instance_type,
       usage_ping.dim_license_id,
       usage_ping.license_md5,
       usage_ping.cleaned_version,
@@ -148,16 +143,13 @@
     LEFT JOIN smau
       ON sm_subscriptions.dim_subscription_id = smau.dim_subscription_id
       AND sm_subscriptions.snapshot_month = smau.snapshot_month
-    LEFT JOIN map_subscription_instance_type
-      ON usage_ping.uuid = map_subscription_instance_type.uuid
-        AND usage_ping.hostname = map_subscription_instance_type.hostname
   
 )
 
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@ischweickartDD",
-    updated_by="@mcooperDD",
+    updated_by="@ischweickartDD",
     created_date="2021-02-08",
-    updated_date="2021-04-02"
+    updated_date="2021-04-05"
 ) }}

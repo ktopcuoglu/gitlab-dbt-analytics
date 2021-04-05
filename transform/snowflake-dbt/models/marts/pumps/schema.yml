@@ -55,6 +55,8 @@ models:
       - name: ping_created_date_id
       - name: uuid
       - name: hostname
+      - name: instance_type
+        description: Type of the instance
       - name: dim_license_id
       - name: license_md5
       - name: cleaned_version
@@ -214,6 +216,8 @@ models:
       - name: ping_created_date_id
       - name: uuid
       - name: hostname
+      - name: instance_type
+        description: Type of the instance
       - name: dim_license_id
       - name: license_md5
       - name: cleaned_version
