@@ -11,7 +11,6 @@ from gitlabdata.orchestration_utils import (
 )
 from sqlalchemy.engine.base import Engine
 
-from postgres_pipeline_table import PostgresPipelineTable
 from utils import (
     chunk_and_upload,
     get_engines,
