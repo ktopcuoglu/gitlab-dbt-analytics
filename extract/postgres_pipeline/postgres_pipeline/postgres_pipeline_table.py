@@ -89,7 +89,9 @@ class PostgresPipelineTable:
         self, source_engine: Engine, target_engine: Engine, schema_changed: bool
     ) -> bool:
         if not schema_changed:
-            logging.info(f"Table {self.get_target_table_name()} already exists and won't be tested.")
+            logging.info(
+                f"Table {self.get_target_table_name()} already exists and won't be tested."
+            )
             return False
         target_table = self.get_temp_target_table_name()
         return load_functions.check_new_tables(
