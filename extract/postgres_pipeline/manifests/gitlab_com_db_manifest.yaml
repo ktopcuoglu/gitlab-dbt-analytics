@@ -1902,6 +1902,7 @@ tables:
       , shared_runners_seconds
       , shared_runners_seconds_last_reset
       FROM namespace_statistics
+    is_append_only: true
   namespaces:
     dbt_snapshots: true
     dbt_source_model: true
