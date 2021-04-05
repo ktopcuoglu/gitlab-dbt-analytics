@@ -159,15 +159,3 @@ models:
       - name: subscription_cohort_year
         tests:
           - not_null
-    
-  - name: map_subscription_instance_type
-    description: '{{ doc("map_subscription_instance_type") }}'
-    columns:
-      - name: dim_subscription_id
-        tests:
-          - not_null
-      - name: uuid
-      - name: hostname
-      - name: dim_crm_account_id
-      - name: company_name
-      - name: instance_type
