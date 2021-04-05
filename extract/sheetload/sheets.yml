@@ -230,6 +230,10 @@ sheets:
       - sales_funnel_targets_kpi_values
       - sales_funnel_targets_opportunity
       - sales_funnel_targets_matrix
+  - name: sales_funnel_partner_alliance_targets
+    owner: '@jeanpeguero'
+    tabs:
+      - sales_funnel_partner_alliance_targets_matrix
   - name: data_certifications
     description: This identifies team members who have taken the level 2 certifications and have passed.
     owner: '@iweeks'
