@@ -74,7 +74,8 @@ class PostgresPipelineTable:
     def do_incremental_backfill(
         self, source_engine: Engine, target_engine: Engine, schema_changed: bool
     ) -> bool:
-        if not self.is_incremental():
+        if not self.is_incremental() or not schema_changed:
+            logging.info("table does not need incremental backfill")
             return False
         target_table = self.get_temp_target_table_name()
         return load_functions.sync_incremental_ids(
