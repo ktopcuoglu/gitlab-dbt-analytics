@@ -216,7 +216,7 @@ def load_ids(
     )
     # Iterate through the generated queries
     for query in id_queries:
-        filtered_query = f"{query} {additional_filtering} ORDER BY {primary_key}"
+        filtered_query = f"{query}  {additional_filtering} ORDER BY {primary_key}"
         logging.info(filtered_query)
         chunk_and_upload(
             filtered_query,
