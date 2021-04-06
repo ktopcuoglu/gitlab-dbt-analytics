@@ -62,6 +62,11 @@ databases:
     - laddula_prep:
         shared: no
 
+    - mcooper_prod:
+        shared: no
+    - mcooper_prep:
+        shared: no
+
     - mpeychet_prod:
         shared: no
     - mpeychet_prep:
@@ -2335,6 +2340,46 @@ roles:
         warehouses:
             - reporting
 
+    - mcooper:
+        member_of:
+            - analyst_finance
+            - customers_db
+            - data_team_analyst
+        warehouses:
+            - analyst_xs
+        owns:
+            databases:
+                - mcooper_prep
+                - mcooper_prod
+            schemas:
+                - mcooper_prep.*
+                - mcooper_prod.*
+            tables:
+                - mcooper_prep.*.*
+                - mcooper_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - mcooper_prep
+                    - mcooper_prod
+                write:
+                    - mcooper_prep
+                    - mcooper_prod
+            schemas:
+                read:
+                    - mcooper_prep.*
+                    - mcooper_prod.*
+                write:
+                    - mcooper_prep.*
+                    - mcooper_prod.*
+            tables:
+                read:
+                    - mcooper_prep.*.*
+                    - mcooper_prod.*.*
+                write:
+                    - mcooper_prep.*.*
+                    - mcooper_prod.*.*
+
     - mdewji:
         warehouses:
             - admin
@@ -3254,6 +3299,11 @@ users:
     - mbergeron:
         can_login: no
         member_of: []
+
+    - mcooper:
+        can_login: yes
+        member_of:
+            - mcooper
 
     - mdewji:
         can_login: yes
