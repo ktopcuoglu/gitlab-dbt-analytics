@@ -58,7 +58,6 @@ if __name__ == "__main__":
     with open("directory.json", "w") as outfile:
         json.dump(employees, outfile)
 
-
     snowflake_stage_load_copy_remove(
         "directory.json",
         f"{snowflake_load_database}.bamboohr.bamboohr_load",
