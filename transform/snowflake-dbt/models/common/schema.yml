@@ -109,7 +109,7 @@ models:
         description: Alliance type from prep table identifying the type of alliance relationship the partner has with GitLab.
         tests:
           - unique
-          - not null
+          - not_null
         tags: ["tdf", "common", "sales_funnel"]
 
   - name: dim_billing_account
