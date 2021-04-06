@@ -321,7 +321,7 @@ models:
         description: Identifies the type of business engagement relationship a partner has with GitLab.
         tests:
           - unique
-          - not null
+          - not_null
         tags: ["tdf", "common", "sales_funnel"]
 
   - name: dim_gitlab_ops_gitlab_emails
