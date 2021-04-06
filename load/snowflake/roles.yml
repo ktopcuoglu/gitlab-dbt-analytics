@@ -3300,6 +3300,11 @@ users:
         can_login: no
         member_of: []
 
+    - mcooper:
+        can_login: yes
+        member_of:
+            - mcooper
+
     - mdewji:
         can_login: yes
         member_of:
