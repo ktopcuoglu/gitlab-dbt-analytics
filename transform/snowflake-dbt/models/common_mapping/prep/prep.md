@@ -1,3 +1,15 @@
+{% docs prep_alliance_type %}
+
+Creates a base view with generated keys for the alliance type shared dimension and references in facts.
+
+{% enddocs %}
+
+{% docs prep_dr_partner_engagement %}
+
+Creates a base view with generated keys for the dr partner engagement shared dimension and references in facts.
+
+{% enddocs %}
+
 {% docs prep_sfdc_account %}
 
 SFDC Account Prep table, used to clean and dedupe fields from a common source for use in further downstream dimensions.
