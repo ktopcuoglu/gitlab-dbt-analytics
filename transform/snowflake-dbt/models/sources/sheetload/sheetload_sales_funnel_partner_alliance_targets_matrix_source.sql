@@ -10,8 +10,8 @@ WITH source AS (
       month::VARCHAR                                      AS month,
       partner_engagement_type::VARCHAR                    AS partner_engagement_type,
       alliance_partner::VARCHAR                           AS alliance_partner,
-      order_type::VARCHAR                                 AS alliance_partner,
-      area:VARCHAR                                        AS area,
+      order_type::VARCHAR                                 AS order_type,
+      area::VARCHAR                                       AS area,
       REPLACE(allocated_target, ',', '')::FLOAT           AS allocated_target,
       TO_TIMESTAMP(TO_NUMERIC("_UPDATED_AT"))::TIMESTAMP  AS last_updated_at
     FROM source
