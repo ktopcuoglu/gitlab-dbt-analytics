@@ -62,9 +62,9 @@ databases:
     - laddula_prep:
         shared: no
 
-    - michellecooper_prod:
+    - mcooper_prod:
         shared: no
-    - michellecooper_prep:
+    - mcooper_prep:
         shared: no
 
     - mpeychet_prod:
@@ -2340,47 +2340,53 @@ roles:
         warehouses:
             - reporting
 
+    - mcooper:
+        member_of:
+            - analyst_finance
+            - customers_db
+            - data_team_analyst
+        warehouses:
+            - analyst_xs
+        owns:
+            databases:
+                - mcooper_prep
+                - mcooper_prod
+            schemas:
+                - mcooper_prep.*
+                - mcooper_prod.*
+            tables:
+                - mcooper_prep.*.*
+                - mcooper_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - mcooper_prep
+                    - mcooper_prod
+                write:
+                    - mcooper_prep
+                    - mcooper_prod
+            schemas:
+                read:
+                    - mcooper_prep.*
+                    - mcooper_prod.*
+                write:
+                    - mcooper_prep.*
+                    - mcooper_prod.*
+            tables:
+                read:
+                    - mcooper_prep.*.*
+                    - mcooper_prod.*.*
+                write:
+                    - mcooper_prep.*.*
+                    - mcooper_prod.*.*
+
     - mdewji:
         warehouses:
             - admin
 
     - michellecooper:
-        member_of:
-            - decisive_data
-        warehouses:
-            - analyst_xs
-        owns:
-            databases:
-                - michellecooper_prep
-                - michellecooper_prod
-            schemas:
-                - michellecooper_prep.*
-                - michellecooper_prod.*
-            tables:
-                - michellecooper_prep.*.*
-                - michellecooper_prod.*.*
-        privileges:
-            databases:
-                read:
-                    - michellecooper_prep
-                    - michellecooper_prod
-                write:
-                    - michellecooper_prep
-                    - michellecooper_prod
-            schemas:
-                read:
-                    - michellecooper_prep.*
-                    - michellecooper_prod.*
-                write:
-                    - michellecooper_prep.*
-                    - michellecooper_prod.*
-            tables:
-                read:
-                    - michellecooper_prep.*.*
-                    - michellecooper_prod.*.*
-                write:
-                    - michellecooper_prep.*.*
-                    - michellecooper_prod.*.*
+        member_of: []
+        warehouses: []
 
     - mjozenazemian:
         warehouses:
@@ -3294,6 +3300,11 @@ users:
         can_login: no
         member_of: []
 
+    - mcooper:
+        can_login: yes
+        member_of:
+            - mcooper
+
     - mdewji:
         can_login: yes
         member_of:
@@ -3301,9 +3312,8 @@ users:
             - securityadmin
 
     - michellecooper:
-        can_login: yes
-        member_of:
-            - michellecooper
+        can_login: no
+        member_of: []
 
     - mjozenazemian:
         can_login: yes

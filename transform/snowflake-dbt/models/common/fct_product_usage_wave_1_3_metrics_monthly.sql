@@ -45,6 +45,7 @@
       {{ get_date_id('usage_ping.ping_created_at') }}               AS ping_created_date_id,
       usage_ping.uuid,
       usage_ping.hostname,
+      usage_ping.instance_type,
       usage_ping.dim_license_id,
       usage_ping.license_md5,
       usage_ping.cleaned_version,
@@ -150,5 +151,5 @@
     created_by="@ischweickartDD",
     updated_by="@ischweickartDD",
     created_date="2021-02-08",
-    updated_date="2021-03-19"
+    updated_date="2021-04-05"
 ) }}
