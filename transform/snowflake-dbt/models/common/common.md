@@ -404,6 +404,12 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
+{% docs dim_host_instance_type %}
+
+Dimension table providing instance type for a given UUID/Host Name pair.
+
+{% enddocs %}
+
 {% docs dim_instances %}
 Dimension that contains statistical data for instances from usage ping data
 

@@ -50,7 +50,7 @@ class GoogleSheetsClient:
                 sheet_df = pd.DataFrame(sheet[1:], columns=sheet[0])
                 return sheet_df
             except APIError as gspread_error:
-                if gspread_error.response.status_code == 429:
+                if gspread_error.response.status_code in (429, 500, 502):
                     self.wait_exponential_backoff(n)
                     n = n + 1
                 else:

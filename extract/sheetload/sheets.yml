@@ -1,8 +1,8 @@
 sheets:
-  - name: test_sheet
-    owner: '@jjstark'
+  - name: abm_account_baselines
+    owner: '@jeanpeguero'
     tabs:
-      - test_sheet
+      - abm_account_baselines
   - name: abuse_mitigation
     owner: '@ken_aguilar'
     tabs:
@@ -35,6 +35,25 @@ sheets:
     owner: '@mvilain'
     tabs:
       - clari_ai_projection
+  - description: This identifies team members who have taken the level 2 certifications and have passed.
+    name: data_certifications
+    owner: '@iweeks'
+    tabs:
+      - cert_product_geo_dashboard
+      - cert_product_geo_sql
+      - cert_customer_segmentation_dashboard
+      - cert_customer_segmentation_sql
+      - cert_product_geo_viewer
+      - cert_customer_segmentation_viewer
+      - cert_pricing_customer_discount_dashboard
+      - cert_pricing_customer_discount_viewer
+      - cert_product_adoption_dashboard_user
+      - cert_sales_funnel_dashboard_user
+      - cert_sales_funnel_dashboard_developer
+  - name: data_team_capacity
+    owner: '@kathleentam'
+    tabs:
+      - data_team_capacity
   - name: data_team_csat_survey_fy2021_q4
     owner: '@ken_aguilar'
     tabs:
@@ -57,6 +76,15 @@ sheets:
     owner: '@kwiebers'
     tabs:
       - gitlab_contributing_organizations
+  - description: This data contains summarized rails-console and GCP read and write access data in support of an Engineering KPI
+    name: engineering_infra_prod_console_access
+    owner: '@kwiebers'
+    tabs:
+      - engineering_infra_prod_console_access
+  - name: engineering_speciality_prior_to_capture
+    owner: '@lmai1'
+    tabs:
+      - engineering_speciality_prior_to_capture
   - name: event_dictionary_simplified
     owner: '@mpeychet_'
     tabs:
@@ -78,6 +106,15 @@ sheets:
     tabs:
       - hire_plan
       - hire_forecast
+  - name: hire_replan
+    owner: '@iweeks'
+    tabs:
+      - hire_replan
+  - description: This contains data about the type of host Instance(Production/Test etc.) for analyzing the Usage Ping data.
+    name: host_instance_type
+    owner: '@snalamaru'
+    tabs:
+      - host_instance_type
   - name: infrastructure_missing_employees
     owner: '@ken_aguilar'
     tabs:
@@ -131,11 +168,15 @@ sheets:
     owner: '@ken_aguilar'
     tabs:
       - osat
-  - name: people_budget
-    description: Data used by people team for budget spend.
+  - description: Data used by people team for budget spend.
+    name: people_budget
     owner: '@mwilkins'
     tabs:
       - people_budget
+  - name: percent_over_comp_band_historical
+    owner: '@ken_aguilar'
+    tabs:
+      - percent_over_comp_band_historical
   - name: planned_values
     owner: '@iweeks'
     tabs:
@@ -144,6 +185,10 @@ sheets:
     owner: '@iweeks'
     tabs:
       - procurement_cost_savings
+  - name: product_maturity_historical
+    owner: '@dpeterson1'
+    tabs:
+      - product_maturity_historical
   - name: release_blog_posts
     owner: '@m_walker'
     tabs:
@@ -156,6 +201,22 @@ sheets:
     owner: '@mbenza'
     tabs:
       - rep_quotas_full_ps_fy2020
+  - description: This contains data for the pipe risk and security metrics - https://gitlab.com/gitlab-data/analytics/-/issues/6995
+    name: rfs_support_requests
+    owner: '@mmaneval20'
+    tabs:
+      - rfs_support_requests
+  - name: sales_funnel_partner_alliance_targets
+    owner: '@jeanpeguero'
+    tabs:
+      - sales_funnel_partner_alliance_targets_matrix
+  - name: sales_funnel_targets
+    owner: '@paul_armstrong'
+    tabs:
+      - sales_funnel_targets_dates
+      - sales_funnel_targets_kpi_values
+      - sales_funnel_targets_opportunity
+      - sales_funnel_targets_matrix
   - name: sales_training_completion_dates
     owner: '@paul_armstrong'
     tabs:
@@ -164,6 +225,10 @@ sheets:
     owner: '@rkohnke'
     tabs:
       - territory_mapping
+  - name: test_sheet
+    owner: '@jjstark'
+    tabs:
+      - test_sheet
   - name: scalable_employment_values
     owner: '@iweeks'
     tabs:
@@ -198,70 +263,3 @@ sheets:
     owner: '@jeanpeguero'
     tabs:
       - yc_companies
-  - name: abm_account_baselines
-    owner: '@jeanpeguero'
-    tabs:
-      - abm_account_baselines
-  - name: hire_replan
-    owner: '@iweeks'
-    tabs:
-      - hire_replan
-  - name: data_team_capacity
-    owner: '@kathleentam'
-    tabs:
-      - data_team_capacity
-
-  - name: percent_over_comp_band_historical
-    owner: '@ken_aguilar'
-    tabs: 
-      - percent_over_comp_band_historical    
-  - name: product_maturity_historical
-    owner: '@dpeterson1'
-    tabs:
-      - product_maturity_historical
-  - name: engineering_speciality_prior_to_capture
-    owner: '@lmai1'
-    tabs:
-      - engineering_speciality_prior_to_capture
-  - name: sales_funnel_targets
-    owner: '@paul_armstrong'
-    tabs:
-      - sales_funnel_targets_dates
-      - sales_funnel_targets_kpi_values
-      - sales_funnel_targets_opportunity
-      - sales_funnel_targets_matrix
-  - name: sales_funnel_partner_alliance_targets
-    owner: '@jeanpeguero'
-    tabs:
-      - sales_funnel_partner_alliance_targets_matrix
-  - name: data_certifications
-    description: This identifies team members who have taken the level 2 certifications and have passed.
-    owner: '@iweeks'
-    tabs:
-      - cert_product_geo_dashboard
-      - cert_product_geo_sql
-      - cert_customer_segmentation_dashboard
-      - cert_customer_segmentation_sql
-      - cert_product_geo_viewer
-      - cert_customer_segmentation_viewer
-      - cert_pricing_customer_discount_dashboard
-      - cert_pricing_customer_discount_viewer
-      - cert_product_adoption_dashboard_user
-      - cert_sales_funnel_dashboard_user
-      - cert_sales_funnel_dashboard_developer
-  - name: engineering_infra_prod_console_access
-    description: This data contains summarized rails-console and GCP read and write access data in support of an Engineering KPI
-    owner: '@kwiebers'
-    tabs:
-      - engineering_infra_prod_console_access
-  - name: rfs_support_requests
-    description: This contains data for the pipe risk and security metrics - https://gitlab.com/gitlab-data/analytics/-/issues/6995
-    owner: '@mmaneval20'
-    tabs:
-      - rfs_support_requests
-  - name: host_instance_type
-    description: This contains data about the type of host Instance(Production/Test etc.) for analyzing the Usage Ping data.
-    owner: '@snalamaru'
-    tabs:
-      - host_instance_type
-
