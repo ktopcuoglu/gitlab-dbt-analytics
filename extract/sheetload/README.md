@@ -18,7 +18,7 @@ Loading a Google Sheet:
   - Run the command `python3 sheetload.py sheets <path/to/yml/file>`
   - Logging from the script will tell you table successes/failures and the number of rows uploaded to each table.
 
-
+ 
 Loading a CSV from GCS:
 
   - Put it in a bucket in the gitlab-analysis project
