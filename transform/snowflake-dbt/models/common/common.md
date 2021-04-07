@@ -31,7 +31,9 @@ The goal of this table is to build a bridge from the entire "universe" of subscr
 {% enddocs %}
 
 {% docs dim_alliance_type %}
-Model to identify Channel partners that are alliance partners.
+Model to identify Channel partners that are alliance partners. Technology Partners are identified and discussed in the handbook link referenced below. The specific groupings to report out on were determined by FP&A and Sales Analytics.
+
+[Technology Partners Handbook Reference](https://about.gitlab.com/handbook/alliances/#technology-partners)
 
 {% enddocs %}
 
@@ -151,7 +153,9 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 {% enddocs %}
 
 {% docs dim_dr_partner_engagement %}
-Model to identify the type of business engagement relationship a Partner has with GitLab.
+Model to identify the type of business engagement relationship a Partner has with GitLab. The Partner definitions are discussed in the handbook.
+
+[Partner Definitions Handbook Reference](https://about.gitlab.com/handbook/alliances/#partner-definitions)
 
 {% enddocs %}
 
