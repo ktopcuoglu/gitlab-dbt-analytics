@@ -441,15 +441,18 @@ WITH sfdc_opportunity AS (
           THEN '1. New'
         WHEN sfdc_opportunity_xf.order_type_stamped IN ('2. New - Connected', '3. Growth') 
           THEN '2. Growth' 
-        WHEN sfdc_opportunity_xf.order_type_stamped IN ('4. Churn','4. Contraction','6. Churn - Final')
+        WHEN sfdc_opportunity_xf.order_type_stamped IN ('4. Contraction')
+          THEN '3. Contraction'
+        WHEN sfdc_opportunity_xf.order_type_stamped IN ('5. Churn - Partial','6. Churn - Final')
           THEN '3. Churn'
         ELSE '4. Other' 
       END                                                                   AS deal_category,
 
+
       CASE 
         WHEN sfdc_opportunity_xf.order_type_stamped = '1. New - First Order' 
           THEN '1. New'
-        WHEN sfdc_opportunity_xf.order_type_stamped IN ('2. New - Connected', '3. Growth', '4. Churn','4. Contraction','6. Churn - Final') 
+        WHEN sfdc_opportunity_xf.order_type_stamped IN ('2. New - Connected', '3. Growth', '5. Churn - Partial','6. Churn - Final','4. Contraction') 
           THEN '2. Growth' 
         ELSE '3. Other'
       END                                                                   AS deal_group,

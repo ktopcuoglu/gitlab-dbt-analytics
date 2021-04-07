@@ -27,6 +27,8 @@ WITH date_details AS (
       owner_id,
       account_id,
       order_type_stamped,
+      deal_category,
+      deal_group,
       opportunity_owner_manager,
       is_edu_oss,
       account_owner_team_stamped, 
@@ -620,24 +622,10 @@ WITH date_details AS (
       sfdc_opportunity_xf.order_type_stamped,     
 
       -- top level grouping of the order type field
-      CASE 
-        WHEN sfdc_opportunity_xf.order_type_stamped = '1. New - First Order' 
-          THEN '1. New'
-        WHEN sfdc_opportunity_xf.order_type_stamped IN ('2. New - Connected', '3. Growth', '5. Churn - Partial', '4. Churn','4. Contraction','6. Churn - Final') 
-          THEN '2. Growth' 
-        ELSE '3. Other'
-      END                                                         AS deal_group,
+      sfdc_opportunity_xf.deal_group,
 
       -- medium level grouping of the order type field
-      CASE 
-        WHEN sfdc_opportunity_xf.order_type_stamped = '1. New - First Order' 
-          THEN '1. New'
-        WHEN sfdc_opportunity_xf.order_type_stamped IN ('2. New - Connected', '3. Growth') 
-          THEN '2. Growth' 
-        WHEN sfdc_opportunity_xf.order_type_stamped IN ('4. Churn','4. Contraction','5. Churn - Partial','6. Churn - Final')
-          THEN '3. Churn'
-        ELSE '4. Other' 
-      END                                                         AS deal_category,
+      sfdc_opportunity_xf.deal_category,
           
 
       ------------------------------------------------------------------------------------------------------

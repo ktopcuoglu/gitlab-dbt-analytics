@@ -100,7 +100,8 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
       is_won                          AS end_is_won,
       is_open                         AS end_is_open
     FROM sfdc_opportunity_snapshot_history_xf        
-    WHERE snapshot_day_of_fiscal_quarter_normalised = 90 OR (snapshot_date = CURRENT_DATE)
+    WHERE (snapshot_day_of_fiscal_quarter_normalised = 90 
+          OR snapshot_date = dateadd(day,-1,CURRENT_DATE))
 
 ), pipeline_type AS (
 
@@ -228,11 +229,11 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
         WHEN p.close_fiscal_quarter_date = o.close_fiscal_quarter_date
           THEN 1
         ELSE 0
-      END                                                             AS closed_in_quarter_flag,
+      END                                                             AS is_closed_in_quarter_flag,
 
       CASE 
           WHEN p.close_fiscal_quarter_date = o.close_fiscal_quarter_date
-              AND o.is_won = 1
+              AND o.is_won = 1 
                   THEN '1. Closed Won'
           WHEN p.close_fiscal_quarter_date = o.close_fiscal_quarter_date
               AND o.is_lost = 1
