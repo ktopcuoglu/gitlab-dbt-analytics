@@ -726,10 +726,37 @@ WITH date_details AS (
       -- compound metrics for reporting
       ------------------------------
 
+            -- Open pipeline eligibility definition
+      CASE 
+        WHEN opp_snapshot.deal_group IN ('1. New','2. Growth')
+          AND opp_snapshot.is_edu_oss = 0
+          AND opp_snapshot.is_stage_1_plus = 1
+          AND opp_snapshot.forecast_category_name != 'Omitted'
+          AND opp_snapshot.is_open = 1
+         THEN 1
+         ELSE 0
+      END                                                         AS is_eligible_open_pipeline_flag,
+
+
+      -- Created pipeline eligibility definition
+      CASE 
+        WHEN opp_snapshot.order_type_stamped IN ('1. New - First Order' ,'2. New - Connected', '3. Growth')
+          AND opp_snapshot.is_edu_oss = 0
+          AND opp_snapshot.pipeline_created_fiscal_quarter_date IS NOT NULL
+          AND opp_snapshot.opportunity_category IN ('Standard','Internal Correction','Ramp Deal','Credit','Contract Reset')  
+          AND ((opp_snapshot.is_stage_1_plus = 1
+                AND opp_snapshot.forecast_category_name != 'Omitted')
+            OR opp_snapshot.is_lost = 1)
+          AND (opp_snapshot.net_arr > 0 
+            OR opp_snapshot.opportunity_category = 'Credit')
+         THEN 1
+         ELSE 0
+      END                                                          AS is_eligible_created_pipeline_flag,
+
       -- created and closed within the quarter net arr
       CASE 
         WHEN opp_snapshot.pipeline_created_fiscal_quarter_name = opp_snapshot.close_fiscal_quarter_name
-          AND (is_won = 1 OR (is_renewal = 1 AND is_lost = 1))  
+          AND (is_won = 1 OR (is_renewal = 1 AND is_lost = 1))
             THEN opp_snapshot.net_arr
         ELSE 0
       END                                                         AS created_and_won_same_quarter_net_arr,
@@ -738,11 +765,12 @@ WITH date_details AS (
       CASE
         WHEN opp_snapshot.pipeline_created_fiscal_quarter_name = opp_snapshot.snapshot_fiscal_quarter_name
           -- Open not omitted deals or lost over stage 1 deals (net arr created implies stage 1+)
-          AND ((opp_snapshot.forecast_category_name != 'Omitted'
-                AND opp_snapshot.is_stage_1_plus = 1)
-            OR (opp_snapshot.is_lost = 1))    
-          AND opp_snapshot.is_edu_oss = 0
-          AND lower(opp_snapshot.deal_group) LIKE ANY ('%growth%', '%new%')
+        --  AND ((opp_snapshot.forecast_category_name != 'Omitted'
+        --        AND opp_snapshot.is_stage_1_plus = 1)
+        --    OR (opp_snapshot.is_lost = 1))    
+        --  AND opp_snapshot.is_edu_oss = 0
+        --  AND lower(opp_snapshot.deal_group) LIKE ANY ('%growth%', '%new%')
+          AND is_eligible_created_pipeline_flag = 1
             THEN opp_snapshot.net_arr
         ELSE 0 
       END                                                         AS created_in_snapshot_quarter_net_arr,
