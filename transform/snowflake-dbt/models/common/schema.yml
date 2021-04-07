@@ -1611,27 +1611,6 @@ models:
       - name: status_purchased
         description: Status of CI Minutes usage against the extra CI Minutes purchased limit by namespaces.
 
-  - name: fct_usage_data_monthly
-    description: '{{ doc("fct_usage_data_monthly") }}'
-    columns:
-      - name: metric_name
-        tests:
-          - not_null
-        tags: ["tdf", "common", "gainsight"]
-      - name: metric_value
-        tests:
-          - not_null
-        tags: ["tdf", "common", "gainsight"]
-      - name: recorded_at
-        tests:
-          - not_null
-        tags: ["tdf", "common", "gainsight"]
-      - name: stage_name
-      - name: usage_ping_id
-        tests:
-          - not_null
-        tags: ["tdf", "common", "gainsight"]
-
   - name: fct_usage_ping_metric_28_days
     description: '{{ doc("fct_usage_ping_metric_28_days") }}'
     columns:
