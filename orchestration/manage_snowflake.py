@@ -80,6 +80,11 @@ class SnowflakeManager:
                 )
                 for role in usage_roles
             ]
+            future_grant_on_tables_in_schema = """grant select,insert on future tables in schema "{0}"."{1}" to role {2};"""
+            schema_grants = schema_grants + [
+                future_grant_on_tables_in_schema.format(database_name.upper(), optional_schema_to_clone.upper(), role)
+                for role in usage_roles
+            ]
             queries = queries + [create_schema] + schema_grants
 
         return queries
