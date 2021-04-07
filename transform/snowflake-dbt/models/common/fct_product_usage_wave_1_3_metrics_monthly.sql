@@ -1,7 +1,8 @@
 {{ simple_cte([
     ('subscriptions', 'bdg_subscription_product_rate_plan'),
     ('dates', 'dim_date'),
-    ('seat_link', 'fct_usage_self_managed_seat_link')
+    ('seat_link', 'fct_usage_self_managed_seat_link'),
+    ('smau', 'fct_usage_ping_subscription_mapped_smau')
 ]) }}
 
 , sm_subscriptions AS (
@@ -19,7 +20,7 @@
 ), usage_ping AS (
 
     SELECT *
-    FROM {{ ref('fct_usage_ping_subscription_mapped_wave_2_3_metrics') }}
+    FROM {{ ref('prep_usage_ping_subscription_mapped_wave_2_3_metrics') }}
     WHERE dim_subscription_id IS NOT NULL
       AND ping_source = 'Self-Managed'
     QUALIFY ROW_NUMBER() OVER (
@@ -39,18 +40,21 @@
       {{ get_date_id('sm_subscriptions.snapshot_month') }}          AS snapshot_date_id,
       seat_link.report_date                                         AS seat_link_report_date,
       {{ get_date_id('seat_link.report_date') }}                    AS seat_link_report_date_id,
-      seat_link.active_user_count / seat_link.license_user_count    AS license_utilization,
-      seat_link.active_user_count,
-      seat_link.max_historical_user_count,
-      seat_link.license_user_count,
       usage_ping.dim_usage_ping_id,
       usage_ping.ping_created_at,
       {{ get_date_id('usage_ping.ping_created_at') }}               AS ping_created_date_id,
       usage_ping.uuid,
       usage_ping.hostname,
+      usage_ping.instance_type,
       usage_ping.dim_license_id,
       usage_ping.license_md5,
       usage_ping.cleaned_version,
+      -- Wave 1
+      seat_link.active_user_count / seat_link.license_user_count    AS license_utilization,
+      seat_link.active_user_count,
+      seat_link.max_historical_user_count,
+      seat_link.license_user_count,
+      -- Wave 2 & 3
       usage_ping.umau_28_days_user,
       usage_ping.action_monthly_active_users_project_repo_28_days_user,
       usage_ping.merge_requests_28_days_user,
@@ -82,6 +86,41 @@
       usage_ping.releases_28_days_user,
       usage_ping.epics_28_days_user,
       usage_ping.issues_28_days_user,
+      -- Wave 3.1
+      usage_ping.ci_internal_pipelines_all_time_event,
+      usage_ping.ci_external_pipelines_all_time_event,
+      usage_ping.merge_requests_all_time_event,
+      usage_ping.todos_all_time_event,
+      usage_ping.epics_all_time_event,
+      usage_ping.issues_all_time_event,
+      usage_ping.projects_all_time_event,
+      usage_ping.deployments_28_days_event,
+      usage_ping.packages_28_days_event,
+      usage_ping.sast_jobs_all_time_event,
+      usage_ping.dast_jobs_all_time_event,
+      usage_ping.dependency_scanning_jobs_all_time_event,
+      usage_ping.license_management_jobs_all_time_event,
+      usage_ping.secret_detection_jobs_all_time_event,
+      usage_ping.container_scanning_jobs_all_time_event,
+      usage_ping.projects_jenkins_active_all_time_event,
+      usage_ping.projects_bamboo_active_all_time_event,
+      usage_ping.projects_jira_active_all_time_event,
+      usage_ping.projects_drone_ci_active_all_time_event,
+      usage_ping.jira_imports_28_days_event,
+      usage_ping.projects_github_active_all_time_event,
+      usage_ping.projects_jira_server_active_all_time_event,
+      usage_ping.projects_jira_dvcs_cloud_active_all_time_event,
+      usage_ping.projects_with_repositories_enabled_all_time_event,
+      usage_ping.protected_branches_all_time_event,
+      usage_ping.remote_mirrors_all_time_event,
+      usage_ping.projects_enforcing_code_owner_approval_28_days_user,
+      usage_ping.project_clusters_enabled_28_days_user,
+      smau.manage_analytics_total_unique_counts_monthly                                       AS analytics_total_unique_counts_monthly,
+      smau.plan_redis_hll_counters_issues_edit_issues_edit_total_unique_counts_monthly        AS issues_edit_total_unique_counts_monthly,
+      smau.package_redis_hll_counters_user_packages_user_packages_total_unique_counts_monthly AS user_packages_total_unique_counts_monthly,
+      smau.configure_redis_hll_counters_terraform_p_terraform_state_api_unique_users_monthly  AS terraform_state_api_unique_users_monthly,
+      smau.monitor_incident_management_activer_user_28_days                                   AS incident_management_total_unique_counts_monthly,
+      -- Data Quality Flags
       IFF(usage_ping.instance_user_count != seat_link.active_user_count,
           usage_ping.instance_user_count, NULL)                     AS instance_user_count_not_aligned,
       IFF(usage_ping.historical_max_users != seat_link.max_historical_user_count,
@@ -101,6 +140,9 @@
     LEFT JOIN seat_link
       ON sm_subscriptions.dim_subscription_id = seat_link.dim_subscription_id
       AND sm_subscriptions.snapshot_month = seat_link.snapshot_month
+    LEFT JOIN smau
+      ON sm_subscriptions.dim_subscription_id = smau.dim_subscription_id
+      AND sm_subscriptions.snapshot_month = smau.snapshot_month
   
 )
 
@@ -109,5 +151,5 @@
     created_by="@ischweickartDD",
     updated_by="@ischweickartDD",
     created_date="2021-02-08",
-    updated_date="2021-02-24"
+    updated_date="2021-04-05"
 ) }}

@@ -3,7 +3,6 @@ WITH source AS (
     SELECT
       opportunity.*,
       CASE
-        WHEN stagename = '00-Pre Opportunity'       THEN createddate
         WHEN stagename = '0-Pending Acceptance'     THEN x0_pending_acceptance_date__c
         WHEN stagename = '1-Discovery'              THEN x1_discovery_date__c
         WHEN stagename = '2-Scoping'                THEN x2_scoping_date__c
@@ -75,6 +74,7 @@ WITH source AS (
         is_downgrade_opportunity__c                 AS is_downgrade,
         swing_deal__c                               AS is_swing_deal,
         is_edu_oss_opportunity__c                   AS is_edu_oss,
+        is_ps_opportunity__c                        AS is_ps_opp,
         net_iacv__c                                 AS net_incremental_acv,
         campaignid                                  AS primary_campaign_source_id,
         probability                                 AS probability,
@@ -107,15 +107,38 @@ WITH source AS (
         true_up_value__c                            AS true_up_value,
         order_type_live__c                          AS order_type_live,
         order_type_test__c                          AS order_type_stamped,
+        CASE 
+          WHEN order_type_stamped = '1. New - First Order'
+            THEN '1) New - First Order'
+          WHEN order_type_stamped IN ('2. New - Connected', '3. Growth', '4. Contraction', '5. Churn - Partial', '6. Churn - Final')
+            THEN '2) Growth (Growth / New - Connected / Churn / Contraction)'
+          WHEN order_type_stamped IN ('7. PS / Other')
+            THEN '3) Consumption / PS / Other'
+          ELSE 'Missing order_type_name_grouped'
+        END                                         AS order_type_grouped,
         arr_net__c                                  AS net_arr,
         arr_basis__c                                AS arr_basis,
         arr__c                                      AS arr,
         days_in_sao__c                              AS days_in_sao,
         {{ sales_hierarchy_sales_segment_cleaning('user_segment_o__c') }}
                                                     AS user_segment_stamped,
+        CASE 
+          WHEN user_segment_stamped IN ('Large', 'PubSec') THEN 'Large'
+          ELSE user_segment_stamped
+        END                                         AS sales_segment_name_stamped_grouped,                                            
         stamped_user_geo__c                         AS user_geo_stamped,
         stamped_user_region__c                      AS user_region_stamped,
         stamped_user_area__c                        AS user_area_stamped,
+        {{ sales_segment_region_grouped('user_segment_stamped', 'user_region_stamped') }}
+                                                    AS segment_region_stamped_grouped,
+        stamped_opportunity_owner__c                AS crm_opp_owner_stamped_name,
+        stamped_account_owner__c                    AS crm_account_owner_stamped_name,
+        sao_opportunity_owner__c                    AS sao_crm_opp_owner_stamped_name,
+        sao_account_owner__c                        AS sao_crm_account_owner_stamped_name,
+        sao_user_segment__c                         AS sao_crm_opp_owner_sales_segment_stamped,
+        sao_user_geo__c                             AS sao_crm_opp_owner_geo_stamped,
+        sao_user_region__c                          AS sao_crm_opp_owner_region_stamped,
+        sao_user_area__c                            AS sao_crm_opp_owner_area_stamped,
         opportunity_category__c                     AS opportunity_category,
         opportunity_health__c                       AS opportunity_health,
         risk_type__c                                AS risk_type,

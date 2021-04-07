@@ -205,6 +205,9 @@ models:
       license:
         +schema: license_db
 
+      marketing_dnc:
+        +schema: marketing_dnc
+
       netsuite:
         +schema: netsuite
         sensitive:
@@ -221,6 +224,10 @@ models:
 
       rspec:
         +schema: rspec
+
+      saas_usage_ping:
+        +schema: saas_usage_ping
+        +tags: ["product"]
 
       sfdc:
         +schema: sfdc

@@ -55,7 +55,9 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity.is_swing_deal,
       sfdc_opportunity.is_edu_oss,
       sfdc_opportunity_stage.is_won                     AS is_won,
+      sfdc_opportunity.is_ps_opp,
       sfdc_opportunity.probability,
+      sfdc_opportunity.professional_services_value,
       sfdc_opportunity.reason_for_loss,
       sfdc_opportunity.reason_for_loss_details,
       CASE
@@ -72,6 +74,16 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity.risk_type,
       sfdc_opportunity.risk_reasons,
       sfdc_opportunity.tam_notes,
+
+      -- stamped fields
+      sfdc_opportunity.crm_opp_owner_stamped_name,
+      sfdc_opportunity.crm_account_owner_stamped_name,
+      sfdc_opportunity.sao_crm_opp_owner_stamped_name,
+      sfdc_opportunity.sao_crm_account_owner_stamped_name,
+      sfdc_opportunity.sao_crm_opp_owner_sales_segment_stamped,
+      sfdc_opportunity.sao_crm_opp_owner_geo_stamped,
+      sfdc_opportunity.sao_crm_opp_owner_region_stamped,
+      sfdc_opportunity.sao_crm_opp_owner_area_stamped,
 
       -- ************************************
       -- channel reporting
@@ -93,5 +105,5 @@ WITH sfdc_opportunity AS (
     created_by="@iweeks",
     updated_by="@iweeks",
     created_date="2020-11-20",
-    updated_date="2020-02-05"
+    updated_date="2021-03-23"
 ) }}

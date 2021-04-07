@@ -40,7 +40,7 @@ WITH filtered_source as (
       collector_tstamp,
       contexts,
       derived_contexts,
-      -- correctting bugs on ruby tracker which was sending wrong timestamp
+      -- correcting bugs on ruby tracker which was sending wrong timestamp
       -- https://gitlab.com/gitlab-data/analytics/issues/3097
       IFF(DATE_PART('year', TRY_TO_TIMESTAMP(derived_tstamp)) > 1970, 
             derived_tstamp, collector_tstamp) AS derived_tstamp,
@@ -186,47 +186,25 @@ WITH filtered_source as (
             v_tracker LIKE 'rb%'
           )
         )
-      AND TRY_TO_TIMESTAMP(derived_tstamp) is not null
+
 )
 
 , base AS (
   
-    SELECT DISTINCT * 
-    FROM filtered_source
-
-), events_with_context_flattened AS (
-    /*
-    we need to extract the web_page_id from the contexts JSON provided in the raw events
-    A contexts json look like a list of context attached to an event:
-
-    The context we are looking for containing the web_page_id is this one:
-      {
-      'data': {
-      'id': 'de5069f7-32cf-4ad4-98e4-dafe05667089'
-      },
-      'schema': 'iglu:com.snowplowanalytics.snowplow/web_page/jsonschema/1-0-0'
-      }
-    To in this CTE for any event, we use LATERAL FLATTEN to create one row per context per event.
-    We then extract the context schema and the context data (where the web_page_id will be contained)
-    */
-    SELECT 
-      base.*,
-      f.value['schema']::TEXT     AS context_data_schema,
-      f.value['data']             AS context_data
-    FROM base,
-    lateral flatten(input => TRY_PARSE_JSON(contexts), path => 'data') f
+    SELECT * 
+    FROM filtered_source fe1
+    WHERE NOT EXISTS (
+      SELECT 1
+      FROM filtered_source fe2
+      WHERE fe1.event_id = fe2.event_id
+      GROUP BY event_id
+      HAVING COUNT(*) > 1
+    )
 
 ), events_with_web_page_id AS (
-    /*
-    in this CTE we take the results from the previous CTE and isolate the only context we are interested in:
-    the web_page context, which has this context schema: iglu:com.snowplowanalytics.snowplow/web_page/jsonschema/1-0-0
-    Then we extract the id from the context_data column
-    */
-    SELECT 
-      events_with_context_flattened.event_id,
-      context_data['id']::TEXT AS web_page_id
-    FROM events_with_context_flattened
-    WHERE context_data_schema = 'iglu:com.snowplowanalytics.snowplow/web_page/jsonschema/1-0-0'
+
+    SELECT *
+    FROM {{ ref('snowplow_gitlab_events_web_page_id') }}
 
 ), base_with_sorted_columns AS (
   
@@ -365,16 +343,16 @@ WITH filtered_source as (
       base.v_tracker,
       base.uploaded_at,
       base.infra_source
-
     FROM base
     LEFT JOIN events_with_web_page_id
       ON base.event_id = events_with_web_page_id.event_id
-), events_to_ignore as (
+    WHERE NOT EXISTS (
+      SELECT event_id
+      FROM events_with_web_page_id web_page_events
+      WHERE events_with_web_page_id.event_id = web_page_events.event_id
+      GROUP BY event_id HAVING COUNT(1) > 1
 
-    SELECT event_id
-    FROM base_with_sorted_columns
-    GROUP BY 1
-    HAVING count (*) > 1
+    )
 
 ), unnested_unstruct as (
 
@@ -391,10 +369,10 @@ WITH filtered_source as (
     {{ unpack_unstructured_event(track_timing, 'track_timing', 'tt') }}
     FROM base_with_sorted_columns
 
+
 )
 
 
 SELECT *
 FROM unnested_unstruct
-WHERE event_id NOT IN (SELECT * FROM events_to_ignore)
 ORDER BY derived_tstamp

@@ -3,32 +3,16 @@
   })
 }}
 
-WITH dim_crm_account AS (
+{{ simple_cte([
+    ('dim_crm_account','dim_crm_account'),
+    ('dim_crm_opportunity','dim_crm_opportunity'),
+    ('dim_sales_qualified_source','dim_sales_qualified_source'),
+    ('dim_order_type','dim_order_type'),
+    ('dim_deal_path','dim_deal_path'),
+    ('fct_crm_opportunity','fct_crm_opportunity')
+]) }}
 
-    SELECT *
-    FROM {{ ref('dim_crm_account') }}
-
-), dim_crm_opportunity AS (
-
-    SELECT *
-    FROM {{ ref('dim_crm_opportunity') }}
-
-), dim_sales_qualified_source AS (
-
-    SELECT *
-    FROM {{ ref('dim_sales_qualified_source') }}
-
-), dim_order_type AS (
-
-    SELECT *
-    FROM {{ ref('dim_order_type') }}
-
-), dim_deal_path AS (
-
-    SELECT *
-    FROM {{ ref('dim_deal_path') }}
-
-), dim_crm_sales_hierarchy_live_sales_segment AS (
+, dim_crm_sales_hierarchy_live_sales_segment AS (
 
     SELECT DISTINCT
       dim_crm_sales_hierarchy_sales_segment_live_id,
@@ -84,11 +68,6 @@ WITH dim_crm_account AS (
       sales_area_name_stamped
     FROM {{ ref('dim_crm_sales_hierarchy_stamped') }}
 
-), fct_crm_opportunity AS (
-
-    SELECT *
-    FROM {{ ref('fct_crm_opportunity') }}
-
 ), final AS (
 
     SELECT
@@ -106,23 +85,41 @@ WITH dim_crm_account AS (
       fct_crm_opportunity.is_won,
       fct_crm_opportunity.is_closed,
       fct_crm_opportunity.days_in_sao,
+      fct_crm_opportunity.arr_basis,
       fct_crm_opportunity.iacv,
       fct_crm_opportunity.net_arr,
       fct_crm_opportunity.amount,
       dim_crm_opportunity.is_edu_oss,
+      dim_crm_opportunity.is_ps_opp,
       dim_crm_opportunity.stage_name,
       dim_crm_opportunity.reason_for_loss,
       fct_crm_opportunity.is_sao,
+      dim_crm_opportunity.crm_opp_owner_stamped_name,
+      dim_crm_opportunity.crm_account_owner_stamped_name,
+      dim_crm_opportunity.sao_crm_opp_owner_stamped_name,
+      dim_crm_opportunity.sao_crm_account_owner_stamped_name,
+      dim_crm_opportunity.sao_crm_opp_owner_sales_segment_stamped,
+      dim_crm_opportunity.sao_crm_opp_owner_geo_stamped,
+      dim_crm_opportunity.sao_crm_opp_owner_region_stamped,
+      dim_crm_opportunity.sao_crm_opp_owner_area_stamped,
+      dim_crm_opportunity.sales_type,
       dim_crm_sales_hierarchy_stamped_sales_segment.sales_segment_name_stamped,
       dim_crm_sales_hierarchy_stamped_location_region.location_region_name_stamped,
       dim_crm_sales_hierarchy_stamped_sales_region.sales_region_name_stamped,
       dim_crm_sales_hierarchy_stamped_sales_area.sales_area_name_stamped,
+      {{ sales_segment_region_grouped('dim_crm_sales_hierarchy_stamped_sales_segment.sales_segment_name_stamped',
+        'dim_crm_sales_hierarchy_stamped_sales_region.sales_region_name_stamped') }}
+                                                                           AS segment_region_stamped_grouped,
       dim_crm_sales_hierarchy_live_sales_segment.sales_segment_name_live,
       dim_crm_sales_hierarchy_live_location_region.location_region_name_live,
       dim_crm_sales_hierarchy_live_sales_region.sales_region_name_live,
       dim_crm_sales_hierarchy_live_sales_area.sales_area_name_live,
+      {{ sales_segment_region_grouped('dim_crm_sales_hierarchy_live_sales_segment.sales_segment_name_live',
+        'dim_crm_sales_hierarchy_live_sales_region.sales_region_name_live') }}
+                                                                           AS segment_region_live_grouped,
       dim_deal_path.deal_path_name,
       dim_order_type.order_type_name                                       AS order_type,
+      dim_order_type.order_type_grouped                                    AS order_type_grouped,
       dim_sales_qualified_source.sales_qualified_source_name,
       dim_crm_account.crm_account_gtm_strategy,
       dim_crm_account.crm_account_focus_account,
@@ -136,6 +133,8 @@ WITH dim_crm_account AS (
       dim_crm_opportunity.opportunity_business_development_representative,
       dim_crm_opportunity.opportunity_development_representative,
       dim_crm_opportunity.is_web_portal_purchase,
+      dim_crm_opportunity.sales_path,
+      dim_crm_opportunity.professional_services_value,
       fct_crm_opportunity.primary_solution_architect,
       fct_crm_opportunity.product_details,
 
@@ -193,7 +192,7 @@ WITH dim_crm_account AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@mcooperDD",
+    updated_by="@jpeguero",
     created_date="2020-12-07",
-    updated_date="2021-03-01",
+    updated_date="2021-03-23",
   ) }}

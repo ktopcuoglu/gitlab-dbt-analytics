@@ -20,6 +20,50 @@ WITH date_details AS (
     SELECT *
     FROM {{ref('sfdc_accounts_xf')}} 
 
+), sfdc_opportunity_xf AS (
+
+    SELECT 
+      opportunity_id,
+      owner_id,
+      account_id,
+      order_type_stamped,
+      opportunity_owner_manager,
+      is_edu_oss,
+      account_owner_team_stamped, 
+
+      sales_team_cro_level,
+      sales_team_rd_asm_level,
+
+      -- Opportunity Owner Stamped fields
+      opportunity_owner_user_segment,
+      opportunity_owner_user_region,
+      opportunity_owner_user_area,
+      opportunity_owner_user_geo,
+
+-------------------------------------
+-- NF: These fields are not exposed yet in opty history, just for check
+-- I am adding this logic
+
+      stage_1_date,
+      stage_1_date_month,
+      stage_1_fiscal_year,
+      stage_1_fiscal_quarter_name,
+      stage_1_fiscal_quarter_date,
+--------------------------------------
+
+      is_won,
+      opportunity_category,
+      raw_net_arr,
+      net_incremental_acv,
+      sales_qualified_source,
+      incremental_acv
+    FROM {{ref('wk_sales_sfdc_opportunity_xf')}}  
+
+), sfdc_users_xf AS (
+
+    SELECT * 
+    FROM {{ref('wk_sales_sfdc_users_xf')}}  
+
 ), sfdc_opportunity_snapshot_history AS (
 
     SELECT 
@@ -77,10 +121,18 @@ WITH date_details AS (
       -- logic needs to be added here once the oppotunity category fields is merged
       -- https://gitlab.com/gitlab-data/analytics/-/issues/7888
       CASE
-        WHEN sfdc_opportunity_snapshot_history.opportunity_category IN ('Credit', 'Decommission','Decommissioned')
+        WHEN sfdc_opportunity_snapshot_history.opportunity_category IN ('Decommission')
           THEN 1
         ELSE 0
       END                                                          AS is_refund,
+
+
+      CASE
+        WHEN sfdc_opportunity_snapshot_history.opportunity_category IN ('Credit','Contract Reset')
+          THEN 1
+        ELSE 0
+      END                                                          AS is_credit_contract_reset,
+
       --sfdc_opportunity_snapshot_history.is_refund,
 
       --sfdc_opportunity_snapshot_history.is_downgrade,
@@ -172,17 +224,11 @@ WITH date_details AS (
       net_arr_created_date.fiscal_quarter_name_fy                   AS iacv_created_fiscal_quarter_name,
       net_arr_created_date.first_day_of_fiscal_quarter              AS iacv_created_fiscal_quarter_date,
 
-      net_arr_created_date.first_day_of_month                       AS net_arr_created_date_month,
-      net_arr_created_date.fiscal_year                              AS net_arr_created_fiscal_year,
-      net_arr_created_date.fiscal_quarter_name_fy                   AS net_arr_created_fiscal_quarter_name,
-      net_arr_created_date.first_day_of_fiscal_quarter              AS net_arr_created_fiscal_quarter_date,
-
-      -- this fields might change, isolating the field used from the purpose
-      -- alternative is future net_arr_created_date
-      --created_date_detail.first_day_of_month                     AS pipeline_created_date_month,
-      --created_date_detail.fiscal_year                            AS pipeline_created_fiscal_year,
-      --created_date_detail.fiscal_quarter_name_fy                 AS pipeline_created_fiscal_quarter_name,
-      --created_date_detail.first_day_of_fiscal_quarter            AS pipeline_created_fiscal_quarter_date,
+      created_date_detail.date_actual                              AS net_arr_created_date,
+      created_date_detail.first_day_of_month                       AS net_arr_created_date_month,
+      created_date_detail.fiscal_year                              AS net_arr_created_fiscal_year,
+      created_date_detail.fiscal_quarter_name_fy                   AS net_arr_created_fiscal_quarter_name,
+      created_date_detail.first_day_of_fiscal_quarter              AS net_arr_created_fiscal_quarter_date,
 
       net_arr_created_date.first_day_of_month                     AS pipeline_created_date_month,
       net_arr_created_date.fiscal_year                            AS pipeline_created_fiscal_year,
@@ -281,39 +327,6 @@ WITH date_details AS (
       ON created_date_detail.date_actual = sfdc_opportunity_snapshot_history.created_date::DATE
     LEFT JOIN date_details net_arr_created_date
       ON net_arr_created_date.date_actual = sfdc_opportunity_snapshot_history.iacv_created_date::DATE
-
-), sfdc_opportunity_xf AS (
-
-    SELECT 
-      opportunity_id,
-      owner_id,
-      account_id,
-      order_type_stamped,
-      opportunity_owner_manager,
-      is_edu_oss,
-      account_owner_team_stamped, 
-
-      sales_team_cro_level,
-      sales_team_rd_asm_level,
-
-      -- Opportunity Owner Stamped fields
-      opportunity_owner_user_segment,
-      opportunity_owner_user_region,
-      opportunity_owner_user_area,
-      opportunity_owner_user_geo,
-
-      is_won,
-      opportunity_category,
-      raw_net_arr,
-      net_incremental_acv,
-      sales_qualified_source,
-      incremental_acv
-    FROM {{ref('wk_sales_sfdc_opportunity_xf')}}  
-
-), sfdc_users_xf AS (
-
-    SELECT * 
-    FROM {{ref('wk_sales_sfdc_users_xf')}}  
 
 ), sales_admin_hierarchy AS (
     
@@ -427,7 +440,7 @@ WITH date_details AS (
       snapshot_fiscal_quarter_date
     FROM sfdc_opportunity_snapshot_history
     WHERE snapshot_fiscal_quarter_date = close_fiscal_quarter_date -- closing in the same quarter of the snapshot
-      -- created same quarter
+      -- pipeline created same quarter
       AND snapshot_fiscal_quarter_date = pipeline_created_fiscal_quarter_date
     GROUP BY 1, 2
 
@@ -503,30 +516,14 @@ WITH date_details AS (
           THEN calculated_from_ratio_net_arr
         ELSE COALESCE(opp_snapshot.raw_net_arr,0) -- Rest of deals after cut off date
       END                                                                     AS net_arr,
-         
-      ------------------------------------------------------------------------------------------------------
-      ------------------------------------------------------------------------------------------------------
-      -- DEPRECATED IACV METRICS
-      -- Use Net ARR instead
-      CASE 
-        WHEN opp_snapshot.created_fiscal_quarter_name= opp_snapshot.close_fiscal_quarter_name
-          AND opp_snapshot.is_won = 1 
-            THEN opp_snapshot.incremental_acv
-        ELSE 0
-      END                                                         AS created_and_won_same_quarter_iacv,
-
-      -- created within quarter
-      CASE
-        WHEN opp_snapshot.pipeline_created_fiscal_quarter_name = opp_snapshot.snapshot_fiscal_quarter_name
-          THEN opp_snapshot.incremental_acv 
-        ELSE 0 
-      END                                                         AS created_in_snapshot_quarter_iacv,
       
       ------------------------------
       -- fields for counting new logos, these fields count refund as negative
       CASE 
         WHEN opp_snapshot.is_refund = 1
           THEN -1
+        WHEN opp_snapshot.is_credit_contract_reset = 1
+          THEN 0
         ELSE 1
       END                                                         AS calculated_deal_count,
 
@@ -538,7 +535,57 @@ WITH date_details AS (
       sfdc_opportunity_xf.is_edu_oss,
       sfdc_opportunity_xf.sales_qualified_source,
       sfdc_opportunity_xf.account_id,
+
       
+      CASE 
+        WHEN sfdc_opportunity_xf.stage_1_date <= opp_snapshot.snapshot_date
+          THEN sfdc_opportunity_xf.stage_1_date 
+        ELSE NULL
+      END                                               AS stage_1_date,
+
+      CASE 
+        WHEN sfdc_opportunity_xf.stage_1_date <= opp_snapshot.snapshot_date
+          THEN sfdc_opportunity_xf.stage_1_date_month 
+        ELSE NULL
+      END                                               AS stage_1_date_month,
+
+      CASE 
+        WHEN sfdc_opportunity_xf.stage_1_date <= opp_snapshot.snapshot_date
+          THEN sfdc_opportunity_xf.stage_1_fiscal_year 
+        ELSE NULL
+      END                                               AS stage_1_fiscal_year,
+
+      CASE 
+        WHEN sfdc_opportunity_xf.stage_1_date <= opp_snapshot.snapshot_date
+          THEN sfdc_opportunity_xf.stage_1_fiscal_quarter_name 
+        ELSE NULL
+      END                                               AS stage_1_fiscal_quarter_name,
+
+      CASE 
+        WHEN sfdc_opportunity_xf.stage_1_date <= opp_snapshot.snapshot_date
+          THEN sfdc_opportunity_xf.stage_1_fiscal_quarter_date 
+        ELSE NULL
+      END                                               AS stage_1_fiscal_quarter_date,
+
+      ------------------------------------------------------------------------------------------------------
+      ------------------------------------------------------------------------------------------------------
+      -- DEPRECATED IACV METRICS
+      -- Use Net ARR instead
+      CASE 
+        WHEN opp_snapshot.pipeline_created_fiscal_quarter_name= opp_snapshot.close_fiscal_quarter_name
+          AND opp_snapshot.is_won = 1 
+            THEN opp_snapshot.incremental_acv
+        ELSE 0
+      END                                                         AS created_and_won_same_quarter_iacv,
+
+      -- created within quarter
+      CASE
+        WHEN opp_snapshot.pipeline_created_fiscal_quarter_name = opp_snapshot.snapshot_fiscal_quarter_name
+          THEN opp_snapshot.incremental_acv 
+        ELSE 0 
+      END                                                         AS created_in_snapshot_quarter_iacv,
+
+
 
       -- field used for FY21 bookings reporitng
       sfdc_opportunity_xf.account_owner_team_stamped, 
@@ -638,6 +685,10 @@ WITH date_details AS (
         WHEN sfdc_accounts_xf.ultimate_parent_id IN ('001610000111bA3','0016100001F4xla','0016100001CXGCs','00161000015O9Yn','0016100001b9Jsc') 
           AND opp_snapshot.close_date < '2020-08-01' 
             THEN 1
+        -- NF 2021 - Pubsec extreme deals
+        WHEN opp_snapshot.opportunity_id IN ('0064M00000WtZKUQA3','0064M00000Xb975QAB')
+          AND opp_snapshot.snapshot_date < '2021-05-01' 
+          THEN 1
         ELSE 0
       END                                                         AS is_excluded_flag,
 
@@ -698,7 +749,13 @@ WITH date_details AS (
       -- created within quarter
       CASE
         WHEN opp_snapshot.pipeline_created_fiscal_quarter_name = opp_snapshot.snapshot_fiscal_quarter_name
-          THEN opp_snapshot.net_arr
+          -- Open not omitted deals or lost over stage 1 deals (net arr created implies stage 1+)
+          AND ((opp_snapshot.forecast_category_name != 'Omitted'
+                AND opp_snapshot.is_stage_1_plus = 1)
+            OR (opp_snapshot.is_lost = 1))    
+          AND opp_snapshot.is_edu_oss = 0
+          AND lower(opp_snapshot.deal_group) LIKE ANY ('%growth%', '%new%')
+            THEN opp_snapshot.net_arr
         ELSE 0 
       END                                                         AS created_in_snapshot_quarter_net_arr,
 

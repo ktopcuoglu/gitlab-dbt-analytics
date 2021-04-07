@@ -1,8 +1,6 @@
--- RUN THE FOLLOWING BEFORE THE SCRIPT (with correct values) using the SECURITYADMIN role
+-- SET THE FOLLOWING VARIABLES BEFORE THE SCRIPT (with correct values) using the SECURITYADMIN role
 -- ====================
--- set email = 'email@gitlab.com';
--- set firstname  = 'Sasha';
--- set lastname = 'Ulyanov';
+-- set (email, firstname, lastname) = ('email@gitlab.com', 'Vovchik', 'Ulyanov');
 -- ====================
 use role securityadmin;
 
@@ -43,3 +41,5 @@ GRANT ALL PRIVILEGES ON DATABASE identifier($prod_db) to role identifier($userna
 CREATE DATABASE identifier($prep_db);
 GRANT OWNERSHIP ON DATABASE identifier($prep_db) to role identifier($username);
 GRANT ALL PRIVILEGES ON DATABASE identifier($prep_db) to role identifier($username);
+
+use role securityadmin;

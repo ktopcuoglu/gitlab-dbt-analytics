@@ -70,7 +70,6 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity_xf.deal_size,
       sfdc_opportunity_xf.forecast_category_name,
       sfdc_opportunity_xf.forecasted_iacv,
-      sfdc_opportunity_xf.iacv_created_date,
       sfdc_opportunity_xf.incremental_acv,
       --sfdc_opportunity_xf.pre_covid_iacv,
       sfdc_opportunity_xf.invoice_number,
@@ -78,10 +77,16 @@ WITH sfdc_opportunity AS (
       -- logic needs to be added here once the oppotunity category fields is merged
       -- https://gitlab.com/gitlab-data/analytics/-/issues/7888
       CASE
-        WHEN sfdc_opportunity.opportunity_category IN ('Credit', 'Decommission','Decommissioned')
+        WHEN sfdc_opportunity.opportunity_category IN ('Decommission')
           THEN 1
         ELSE 0
       END                                                          AS is_refund,
+
+      CASE
+        WHEN sfdc_opportunity.opportunity_category IN ('Credit','Contract Reset')
+          THEN 1
+        ELSE 0
+      END                                                          AS is_credit_contract_reset,
       --sfdc_opportunity_xf.is_refund,
 
 
@@ -99,7 +104,14 @@ WITH sfdc_opportunity AS (
       --sfdc_opportunity_xf.downgrade_iacv,
       sfdc_opportunity_xf.renewal_acv,
       sfdc_opportunity_xf.renewal_amount,
-      sfdc_opportunity_xf.sales_qualified_source,
+      --sfdc_opportunity_xf.sales_qualified_source,
+      CASE
+        WHEN sfdc_opportunity_xf.sales_qualified_source = 'BDR Generated'
+            THEN 'SDR Generated'
+        ELSE sfdc_opportunity_xf.sales_qualified_source
+      END                                                       AS sales_qualified_source,
+
+
       sfdc_opportunity_xf.solutions_to_be_replaced,
       sfdc_opportunity_xf.total_contract_value,
       sfdc_opportunity_xf.upside_iacv,
@@ -259,13 +271,30 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity_xf.iacv_created_fiscal_quarter_date,
       sfdc_opportunity_xf.iacv_created_fiscal_year,
       sfdc_opportunity_xf.iacv_created_date_month,
+      sfdc_opportunity_xf.iacv_created_date,
 
       -- Net ARR Created Date uses the same old IACV Created date field in SFDC
       -- As long as the field in the legacy model is not renamed, this will work
+
+      sfdc_opportunity_xf.iacv_created_date                   AS net_arr_created_date,
       sfdc_opportunity_xf.iacv_created_fiscal_quarter_name    AS net_arr_created_fiscal_quarter_name,
       sfdc_opportunity_xf.iacv_created_fiscal_quarter_date    AS net_arr_created_fiscal_quarter_date,
       sfdc_opportunity_xf.iacv_created_fiscal_year            AS net_arr_created_fiscal_year,
       sfdc_opportunity_xf.iacv_created_date_month             AS net_arr_created_date_month,
+
+      stage_1_date.date_actual                                AS stage_1_date,
+      stage_1_date.first_day_of_month                         AS stage_1_date_month,
+      stage_1_date.fiscal_year                                AS stage_1_fiscal_year,
+      stage_1_date.fiscal_quarter_name_fy                     AS stage_1_fiscal_quarter_name,
+      stage_1_date.first_day_of_fiscal_quarter                AS stage_1_fiscal_quarter_date,
+
+      stage_3_date.date_actual                                AS stage_3_date,
+      stage_3_date.first_day_of_month                         AS stage_3_date_month,
+      stage_3_date.fiscal_year                                AS stage_3_fiscal_year,
+      stage_3_date.fiscal_quarter_name_fy                     AS stage_3_fiscal_quarter_name,
+      stage_3_date.first_day_of_fiscal_quarter                AS stage_3_fiscal_quarter_date,
+
+      ------------------------------------
 
       sfdc_opportunity_xf._last_dbt_run,
       sfdc_opportunity_xf.business_process_id,
@@ -292,13 +321,13 @@ WITH sfdc_opportunity AS (
       --  stamped field is not maintained for open deals
       CASE WHEN sfdc_opportunity_xf.user_segment_stamped IS NULL 
           THEN opportunity_owner.user_segment 
-          ELSE COALESCE(sfdc_opportunity_xf.user_segment_stamped,'N/A')
+          ELSE sfdc_opportunity_xf.user_segment_stamped
       END                                                                    AS opportunity_owner_user_segment,
 
       --  stamped field is not maintained for open deals
       CASE WHEN sfdc_opportunity_xf.user_region_stamped IS NULL 
           THEN opportunity_owner.user_region
-          ELSE COALESCE(sfdc_opportunity_xf.user_region_stamped,'N/A')
+          ELSE sfdc_opportunity_xf.user_region_stamped
       END                                                                    AS opportunity_owner_user_region,
 
       -----------------------------------------------------------------------------------------------------      
@@ -313,6 +342,12 @@ WITH sfdc_opportunity AS (
       ON sfdc_opportunity.opportunity_id = sfdc_opportunity_xf.opportunity_id
     INNER JOIN sfdc_users_xf opportunity_owner
       ON opportunity_owner.user_id = sfdc_opportunity_xf.owner_id
+    -- pipeline creation date
+    LEFT JOIN date_details stage_1_date 
+      ON stage_1_date.date_actual = sfdc_opportunity_xf.stage_1_discovery_date::date
+      -- pipeline creation date
+    LEFT JOIN date_details stage_3_date 
+      ON stage_3_date.date_actual = sfdc_opportunity_xf.stage_3_technical_evaluation_date::date
 
 ), net_iacv_to_net_arr_ratio AS (
 
@@ -376,10 +411,11 @@ WITH sfdc_opportunity AS (
       -- used for performance reporting on pipeline generation
       -- these fields might change, isolating the field from the purpose
       -- alternatives are a future net_arr_created_date
-      sfdc_opportunity_xf.net_arr_created_date_month                       AS pipeline_created_date_month,
-      sfdc_opportunity_xf.net_arr_created_fiscal_year                      AS pipeline_created_fiscal_year,
-      sfdc_opportunity_xf.net_arr_created_fiscal_quarter_name              AS pipeline_created_fiscal_quarter_name,
-      sfdc_opportunity_xf.net_arr_created_fiscal_quarter_date              AS pipeline_created_fiscal_quarter_date,
+      sfdc_opportunity_xf.net_arr_created_date                        AS pipeline_created_date,
+      sfdc_opportunity_xf.net_arr_created_date_month                  AS pipeline_created_date_month,
+      sfdc_opportunity_xf.net_arr_created_fiscal_year                 AS pipeline_created_fiscal_year,
+      sfdc_opportunity_xf.net_arr_created_fiscal_quarter_name         AS pipeline_created_fiscal_quarter_name,
+      sfdc_opportunity_xf.net_arr_created_fiscal_quarter_date         AS pipeline_created_fiscal_quarter_date,
 
       CASE
         WHEN sfdc_opportunity_xf.stage_name
@@ -438,6 +474,8 @@ WITH sfdc_opportunity AS (
       CASE 
         WHEN sfdc_opportunity_xf.is_refund = 1
           THEN -1
+        WHEN sfdc_opportunity_xf.is_credit_contract_reset = 1
+          THEN 0
         ELSE 1
       END                                                                      AS calculated_deal_count,
 
@@ -467,6 +505,9 @@ WITH sfdc_opportunity AS (
         WHEN sfdc_accounts_xf.ultimate_parent_id IN ('001610000111bA3','0016100001F4xla','0016100001CXGCs','00161000015O9Yn','0016100001b9Jsc') 
           AND sfdc_opportunity_xf.close_date < '2020-08-01' 
             THEN 1
+        -- NF 2021 - Pubsec extreme deals
+        WHEN sfdc_opportunity_xf.opportunity_id IN ('0064M00000WtZKUQA3','0064M00000Xb975QAB')
+          THEN 1
         ELSE 0
       END                                                                       AS is_excluded_flag
 

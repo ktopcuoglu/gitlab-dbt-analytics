@@ -45,7 +45,6 @@ models:
 - name: sheetload_clari_forecast
 - name: sheetload_clari_ai_projection
 - name: sheetload_communication_certificate
-- name: sheetload_company_call_attendance
 - name: sheetload_compensation_certificate
 - name: sheetload_data_certifications
   description: Identifies individuals who have taken the level 2 data certifications and have passed.

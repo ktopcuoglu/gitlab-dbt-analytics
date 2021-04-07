@@ -140,7 +140,7 @@ models:
         description: Maximum account sales segment within the account hierarchy.
         tests:
           - accepted_values:
-              values: ['SMB', 'Mid-Market', 'Strategic', 'Large', 'Unknown', Null]
+              values: ['SMB', 'Mid-Market', 'Strategic', 'Large', 'Unknown', 'Pubsec', Null]
       - name: division_sales_segment_stamped
         description: Stamped version of the account division sales segment.
       - name: division_sales_segment

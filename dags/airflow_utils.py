@@ -112,7 +112,7 @@ def slack_defaults(context, task_type):
         task_text = "Task succeeded!"
 
     if task_type == "failure":
-        if task_name == "dbt-source-freshness":
+        if task_name == "monitor-dbt-source-freshness":
             slack_channel = "#analytics-pipelines"
         else:
             slack_channel = dag_context.params.get(

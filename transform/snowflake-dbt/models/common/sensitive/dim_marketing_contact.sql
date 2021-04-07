@@ -16,7 +16,7 @@ WITH sfdc_lead AS (
 ), crm_account AS (
 
     SELECT *
-    FROM {{ref('map_crm_account') }}
+    FROM {{ref('dim_crm_account') }}
 
 ), sales_segment AS (
 
@@ -48,6 +48,13 @@ WITH sfdc_lead AS (
     SELECT *
     FROM {{ref('zuora_account_source') }}
 
+), dnc_list AS (
+
+    SELECT *,
+      ROW_NUMBER() OVER (PARTITION BY email_address ORDER BY CASE WHEN result IN ('undeliverable', 'do_not_send') THEN 2 ELSE 1 END DESC)                                                    AS record_number
+    FROM {{ref('dnc_list')}}
+    QUALIFY record_number = 1
+
 ), sfdc AS (
 
     SELECT
@@ -72,7 +79,10 @@ WITH sfdc_lead AS (
         WHEN sfdc_lead_contact = 'lead' AND sfdc_lead.company <>  '[[unknown]]' THEN sfdc_lead.company
       END                                                                                                                   AS company_name,
       crm_person.title                                                                                                      AS job_title,
-      sales_segment.sales_segment_name                                                                                      AS sales_segment,
+      crm_account.parent_crm_account_sales_segment,
+      crm_account.parent_crm_account_tsp_region,
+      sfdc_account.tsp_region,
+      crm_person.region                                                                                                     AS crm_person_region,
       CASE
         WHEN sfdc_lead_contact = 'contact' THEN sfdc_contact.mailing_country
         ELSE sfdc_lead.country
@@ -82,7 +92,7 @@ WITH sfdc_lead AS (
         ELSE sfdc_lead.created_date
       END                                                                                                                   AS sfdc_created_date,
       crm_person.has_opted_out_email                                                                                        AS opted_out_salesforce,
-      (ROW_NUMBER() OVER (PARTITION BY email_address ORDER BY sfdc_created_date DESC))                                           AS record_number
+      (ROW_NUMBER() OVER (PARTITION BY email_address ORDER BY sfdc_created_date DESC))                                      AS record_number
 
     FROM crm_person
     LEFT JOIN sfdc_contact
@@ -93,8 +103,6 @@ WITH sfdc_lead AS (
       ON sfdc_account.account_id = sfdc_contact.account_id
     LEFT JOIN crm_account
       ON crm_account.dim_crm_account_id = crm_person.dim_crm_account_id
-    INNER JOIN sales_segment
-      ON sales_segment.dim_sales_segment_id = crm_account.dim_account_sales_segment_id
     WHERE  email_address IS NOT NULL
       AND email_address <> ''
     QUALIFY record_number = 1
@@ -199,7 +207,8 @@ WITH sfdc_lead AS (
       COALESCE(zuora.company_name,  sfdc.company_name, customer_db.company_name, gitlab_dotcom.company_name)             AS company_name,
       COALESCE(sfdc.job_title, gitlab_dotcom.job_title)                                                                  AS job_title,
       COALESCE(zuora.country, sfdc.country, customer_db.country)                                                         AS country,
-      sfdc.sales_segment                                                                                                 AS sfdc_parent_sales_segment,
+      sfdc.parent_crm_account_sales_segment                                                                              AS sfdc_parent_sales_segment,
+      COALESCE(sfdc.parent_crm_account_tsp_region, sfdc.tsp_region, sfdc.crm_person_region)                              AS sfdc_parent_crm_account_tsp_region,
       CASE
         WHEN sfdc.email_address IS NOT NULL THEN TRUE
         ELSE FALSE
@@ -232,7 +241,17 @@ WITH sfdc_lead AS (
       END                                                                                                                AS is_zuora_billing_contact,
       zuora.contact_id                                                                                                   AS zuora_contact_id,
       zuora.created_date                                                                                                 AS zuora_created_date,
-      zuora.active_state                                                                                                 AS zuora_active_state
+      zuora.active_state                                                                                                 AS zuora_active_state,
+      dnc_list.result                                                                                                    AS dnc_list_result,
+      CASE 
+        WHEN dnc_list.result IN ('undeliverable', 'do_not_send')
+          THEN FALSE
+        ELSE TRUE
+      END                                                                                                                AS wip_is_valid_email_address,
+      CASE
+        WHEN NOT wip_is_valid_email_address
+          THEN dnc_list.result
+      END                                                                                                                AS wip_invalid_email_address_reason
 
     FROM emails
     LEFT JOIN sfdc
@@ -243,6 +262,8 @@ WITH sfdc_lead AS (
       ON customer_db.email_address = emails.email_address
     LEFT JOIN zuora
       ON zuora.email_address = emails.email_address
+    LEFT JOIN dnc_list
+      ON dnc_list.email_address = emails.email_address
 
 )
 
@@ -251,5 +272,5 @@ WITH sfdc_lead AS (
     created_by="@rmistry",
     updated_by="@trevor31",
     created_date="2021-01-19",
-    updated_date="2021-02-16"
+    updated_date="2021-03-22"
 ) }}

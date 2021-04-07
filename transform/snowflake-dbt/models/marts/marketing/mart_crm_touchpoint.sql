@@ -119,9 +119,9 @@
       dim_crm_account.crm_account_industry,
       dim_crm_account.crm_account_owner_team,
       dim_crm_account.crm_account_sales_territory,
-      dim_crm_account.crm_account_geo_region,
-      dim_crm_account.crm_account_geo_sub_region,
-      dim_crm_account.crm_account_geo_area,
+      dim_crm_account.crm_account_tsp_region,
+      dim_crm_account.crm_account_tsp_sub_region,
+      dim_crm_account.crm_account_tsp_area,
       dim_crm_account.crm_account_gtm_strategy,
       dim_crm_account.crm_account_focus_account,
       dim_crm_account.health_score,
@@ -134,9 +134,9 @@
       dim_crm_account.parent_crm_account_industry,
       dim_crm_account.parent_crm_account_owner_team,
       dim_crm_account.parent_crm_account_sales_territory,
-      dim_crm_account.parent_crm_account_geo_region,
-      dim_crm_account.parent_crm_account_geo_sub_region,
-      dim_crm_account.parent_crm_account_geo_area,
+      dim_crm_account.parent_crm_account_tsp_region,
+      dim_crm_account.parent_crm_account_tsp_sub_region,
+      dim_crm_account.parent_crm_account_tsp_area,
       dim_crm_account.parent_crm_account_gtm_strategy,
       dim_crm_account.parent_crm_account_focus_account,
       dim_crm_account.record_type_id,
@@ -171,5 +171,5 @@
     created_by="@mcooperDD",
     updated_by="@mcooperDD",
     created_date="2020-02-18",
-    updated_date="2020-03-01"
+    updated_date="2020-03-04"
 ) }}

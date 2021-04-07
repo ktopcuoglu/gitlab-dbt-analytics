@@ -159,6 +159,10 @@ models:
       - name: event_date
         tests:
           - not_null
+      - name: daily_usage_data_event_id
+        tests:
+          - unique
+          - not_null
 
   - name: gitlab_dotcom_daily_usage_data_events
     description: '{{ doc("gitlab_dotcom_daily_usage_data_events") }}'
@@ -176,6 +180,11 @@ models:
       - name: event_date
         tests:
           - not_null
+      - name: daily_usage_data_event_id
+        tests:
+          - unique
+          - not_null
+
   - name: gitlab_dotcom_environments_xf
     description: '{{ doc("gitlab_dotcom_environments_xf") }}'
     columns:

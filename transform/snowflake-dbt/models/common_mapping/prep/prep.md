@@ -29,21 +29,9 @@ Creates a base view with generated keys for the stamped/historical crm sales hie
 
 {% enddocs %}
 
-{% docs prep_geo_area %}
+{% docs prep_gitlab_dotcom_application_settings_monthly %}
 
-Creates a base view with generated keys for the geo_area shared dimension and references in facts.
-
-{% enddocs %}
-
-{% docs prep_geo_region %}
-
-Creates a base view with generated keys for the geo_region shared dimension and references in facts.
-
-{% enddocs %}
-
-{% docs prep_geo_sub_region %}
-
-Creates a base view with generated keys for the geo_sub_region shared dimension and references in facts.
+This model captures a historical record of GitLab's default application settings for CI minutes and storage at a monthly grain.
 
 {% enddocs %}
 
@@ -142,6 +130,32 @@ The grain of the table is quote_id.
 Creates a License Prep table for representing generated licenses and associated metadata for shared dimension and references in facts.
 
 The grain of the table is license_id.
+
+{% enddocs %}
+
+{% docs prep_usage_ping_subscription_mapped_gmau %}
+
+This data model contains the values of each GMAU metric for **Self-Managed** instances with a non-null `license_md5`. Rows missing a `dim_subscription_id` indicate that either no matching license was found in `map_license_subscription_account`, or no `dim_subscription_id` exists in `map_license_subscription_account` associated with the given `license_md5`.
+
+This data model is used for the Customer Health Dashboards.
+
+Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+{% enddocs %}
+
+{% docs prep_usage_ping_subscription_mapped_smau %}
+
+This data model contains the values of each SMAU metric for **Self-Managed** instances with a non-null `license_md5`. Rows missing a `dim_subscription_id` indicate that either no matching license was found in `map_license_subscription_account`, or no `dim_subscription_id` exists in `map_license_subscription_account` associated with the given `license_md5`.
+
+This data model is used for the Customer Health Dashboards.
+
+Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+{% enddocs %}
+
+{% docs prep_usage_ping_metric_detail %}
+
+This table contains every Usage Ping metric name and path.
 
 {% enddocs %}
 

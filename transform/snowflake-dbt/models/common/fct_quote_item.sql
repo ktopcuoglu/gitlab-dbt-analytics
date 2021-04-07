@@ -67,17 +67,11 @@ WITH crm_account AS (
       opp_relational_fields.dim_sales_qualified_source_id                                           AS opp_dim_sales_qualified_source_id,
       opp_relational_fields.dim_deal_path_id                                                        AS opp_dim_deal_path_id,
       crm_account.dim_parent_sales_segment_id,
-      crm_account.dim_parent_geo_region_id,
-      crm_account.dim_parent_geo_sub_region_id,
-      crm_account.dim_parent_geo_area_id,
       crm_account.dim_parent_sales_territory_id,
       crm_account.dim_parent_industry_id,
       crm_account.dim_parent_location_country_id,
       crm_account.dim_parent_location_region_id,
       crm_account.dim_account_sales_segment_id,
-      crm_account.dim_account_geo_region_id,
-      crm_account.dim_account_geo_sub_region_id,
-      crm_account.dim_account_geo_area_id,
       crm_account.dim_account_sales_territory_id,
       crm_account.dim_account_industry_id,
       crm_account.dim_account_location_country_id,
@@ -123,5 +117,5 @@ WITH crm_account AS (
     created_by="@mcooperDD",
     updated_by="@mcooperDD",
     created_date="2021-01-12",
-    updated_date="2021-02-26"
+    updated_date="2021-03-04"
 ) }}

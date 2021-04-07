@@ -53,17 +53,11 @@ WITH crm_account_dimensions AS (
       crm_account_dimensions.dim_parent_crm_account_id,
       crm_account_dimensions.dim_crm_account_id,
       crm_account_dimensions.dim_parent_sales_segment_id,
-      crm_account_dimensions.dim_parent_geo_region_id,
-      crm_account_dimensions.dim_parent_geo_sub_region_id,
-      crm_account_dimensions.dim_parent_geo_area_id,
       crm_account_dimensions.dim_parent_sales_territory_id,
       crm_account_dimensions.dim_parent_industry_id,
       crm_account_dimensions.dim_parent_location_country_id,
       crm_account_dimensions.dim_parent_location_region_id,
       {{ get_keyed_nulls('crm_account_dimensions.dim_account_sales_segment_id,sales_segment.dim_sales_segment_id') }}  AS dim_account_sales_segment_id,
-      crm_account_dimensions.dim_account_geo_region_id,
-      crm_account_dimensions.dim_account_geo_sub_region_id,
-      crm_account_dimensions.dim_account_geo_area_id,
       crm_account_dimensions.dim_account_sales_territory_id,
       crm_account_dimensions.dim_account_industry_id,
       crm_account_dimensions.dim_account_location_country_id,
@@ -88,5 +82,5 @@ WITH crm_account_dimensions AS (
     created_by="@snalamaru",
     updated_by="@smcooperDD",
     created_date="2020-12-17",
-    updated_date="2021-02-26"
+    updated_date="2021-03-04"
 ) }}

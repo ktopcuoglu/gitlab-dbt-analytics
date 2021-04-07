@@ -38,7 +38,7 @@ WITH dim_billing_account AS (
 ), dim_location AS (
 
     SELECT *
-    FROM {{ ref('dim_location') }}
+    FROM {{ ref('dim_location_country') }}
 
 ), dim_product_detail AS (
 
@@ -209,11 +209,13 @@ WITH dim_billing_account AS (
       dim_usage_pings.instance_user_count,
       dim_usage_pings.created_at,
       dim_usage_pings.recorded_at,
+      time_period,
       monthly_metric_value,
+      original_metric_value,
       dim_hosts.host_id,
       dim_hosts.source_ip_hash,
-      dim_hosts.instance_id,
-      dim_hosts.host_name,
+      dim_usage_pings.id                        AS instance_id,
+      dim_usage_pings.hostname                  AS host_name,
       dim_hosts.location_id,
       dim_location.country_name,
       dim_location.iso_2_country_code
@@ -228,14 +230,14 @@ WITH dim_billing_account AS (
       ON dim_usage_pings.license_md5 = license_subscriptions.license_md5
         AND fct_monthly_usage_data.created_month = license_subscriptions.reporting_month
     LEFT JOIN dim_location
-      ON dim_hosts.location_id = dim_location.dim_location_id
+      ON dim_hosts.location_id = dim_location.dim_location_country_id
 
 ), sorted AS (
 
     SELECT
 
       -- Primary Key
-      {{ dbt_utils.surrogate_key(['metrics_path', 'created_month', 'ping_id', 'host_id']) }} AS primary_key,
+      {{ dbt_utils.surrogate_key(['metrics_path', 'created_month', 'instance_id', 'host_id', 'host_name']) }} AS primary_key,
       created_month AS reporting_month,
       metrics_path,
       ping_id,
@@ -314,7 +316,9 @@ WITH dim_billing_account AS (
       recorded_at,
 
       -- monthly_usage_data
-      monthly_metric_value
+      time_period,
+      monthly_metric_value,
+      original_metric_value
 
     FROM joined
 
@@ -325,5 +329,5 @@ WITH dim_billing_account AS (
     created_by="@mpeychet",
     updated_by="@mcooperDD",
     created_date="2020-12-01",
-    updated_date="2020-02-09"
+    updated_date="2020-03-05"
 ) }}
