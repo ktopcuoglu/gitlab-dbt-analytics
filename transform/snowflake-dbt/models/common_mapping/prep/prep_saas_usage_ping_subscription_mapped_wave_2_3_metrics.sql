@@ -9,7 +9,7 @@
 {{ simple_cte([
     ('prep_saas_usage_ping_namespace','prep_saas_usage_ping_namespace'),
     ('dim_date','dim_date'),
-    ('bdg_namespace_subscription','bdg_namespace_order_subscription_active'),
+    ('bdg_namespace_subscription','bdg_namespace_order_subscription'),
     ('gainsight_wave_2_3_metrics','gainsight_wave_2_3_metrics')
 ]) }}
 
@@ -53,5 +53,5 @@
     created_by="@mpeychet_",
     updated_by="@ischweickartDD",
     created_date="2021-03-22",
-    updated_date="2021-04-05"
+    updated_date="2021-04-06"
 ) }}
