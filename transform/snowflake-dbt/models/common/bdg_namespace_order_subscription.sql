@@ -80,7 +80,7 @@
       product_rate_plans.dim_product_tier_id                        AS dim_product_tier_id_subscription,
       product_rate_plans.product_tier_name                          AS product_tier_name_subscription,
       COUNT(*) OVER(PARTITION BY subscriptions.dim_subscription_id) AS count_of_tiers_per_subscription,
-      IFNULL(current_recurring.dim_subscription_id,
+      IFF(current_recurring.dim_subscription_id IS NULL,
              FALSE, TRUE)                                           AS is_subscription_active
     FROM subscriptions
     INNER JOIN saas_subscriptions
