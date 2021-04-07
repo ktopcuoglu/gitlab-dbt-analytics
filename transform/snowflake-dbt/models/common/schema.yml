@@ -10,8 +10,8 @@ models:
           - unique
           - not_null
 
-  - name: bdg_namespace_order_subscription_active
-    description: '{{ doc("bdg_namespace_order_subscription_active") }}'
+  - name: bdg_namespace_order_subscription
+    description: '{{ doc("bdg_namespace_order_subscription") }}'
     columns:
       - name: dim_namespace_id
       - name: dim_subscription_id
@@ -27,27 +27,30 @@ models:
       - name: namespace_was_trial
       - name: customer_id
       - name: dim_product_tier_id_with_trial
-      - name: product_delivery_type_with_trial
       - name: product_tier_name_with_trial
       - name: dim_product_tier_id_order
-      - name: product_delivery_type_order
       - name: product_tier_name_order
       - name: order_start_date
       - name: order_end_date
       - name: order_is_trial
-      - name: product_tier_name_subscription
-      - name: dim_product_tier_id_subscription
+      - name: product_rate_plan_id_order
+      - name: subscription_name
       - name: dim_subscription_id_original
       - name: dim_subscription_id_previous
       - name: dim_billing_account_id
       - name: dim_crm_account_id
-      - name: count_of_tiers_per_subscription
       - name: product_rate_plan_id_subscription
+      - name: dim_product_tier_id_subscription
+      - name: product_tier_name_subscription
+      - name: count_of_tiers_per_subscription
+      - name: subscription_start_date
+      - name: subscription_end_date
+      - name: is_subscription_active
       - name: namespace_order_subscription_match_status
 
 
-  - name: bdg_self_managed_order_subscription_active
-    description: '{{ doc("bdg_self_managed_order_subscription_active") }}'
+  - name: bdg_self_managed_order_subscription
+    description: '{{ doc("bdg_self_managed_order_subscription") }}'
     columns:
       - name: dim_subscription_id
       - name: order_id
@@ -55,22 +58,25 @@ models:
       - name: subscription_id_order
       - name: customer_id
       - name: dim_product_tier_id_with_trial
-      - name: product_delivery_type_with_trial
       - name: product_tier_name_with_trial
       - name: dim_product_tier_id_order
-      - name: product_delivery_type_order
       - name: product_tier_name_order
       - name: order_start_date
       - name: order_end_date
       - name: order_is_trial
-      - name: product_tier_name_subscription
-      - name: dim_product_tier_id_subscription
+      - name: product_rate_plan_id_order
+      - name: subscription_name
       - name: dim_subscription_id_original
       - name: dim_subscription_id_previous
       - name: dim_billing_account_id
       - name: dim_crm_account_id
-      - name: count_of_tiers_per_subscription
       - name: product_rate_plan_id_subscription
+      - name: dim_product_tier_id_subscription
+      - name: product_tier_name_subscription
+      - name: count_of_tiers_per_subscription
+      - name: subscription_start_date
+      - name: subscription_end_date
+      - name: is_subscription_active
 
   - name: bdg_subscription_product_rate_plan
     description: '{{ doc("bdg_subscription_product_rate_plan") }}'
@@ -1617,20 +1623,20 @@ models:
       - name: metric_name
         tests:
           - not_null
-        tags: ["tdf", "common", "gainsight"]
+        tags: ["tdf", "common"]
       - name: metric_value
         tests:
           - not_null
-        tags: ["tdf", "common", "gainsight"]
+        tags: ["tdf", "common"]
       - name: recorded_at
         tests:
           - not_null
-        tags: ["tdf", "common", "gainsight"]
+        tags: ["tdf", "common"]
       - name: stage_name
       - name: usage_ping_id
         tests:
           - not_null
-        tags: ["tdf", "common", "gainsight"]
+        tags: ["tdf", "common"]
 
   - name: fct_usage_ping_metric_28_days
     description: '{{ doc("fct_usage_ping_metric_28_days") }}'
@@ -1638,20 +1644,20 @@ models:
       - name: metric_name
         tests:
           - not_null
-        tags: ["tdf", "common", "gainsight"]
+        tags: ["tdf", "common"]
       - name: metric_value
         tests:
           - not_null
-        tags: ["tdf", "common", "gainsight"]
+        tags: ["tdf", "common"]
       - name: recorded_at
         tests:
           - not_null
-        tags: ["tdf", "common", "gainsight"]
+        tags: ["tdf", "common"]
       - name: stage_name
       - name: usage_ping_id
         tests:
           - not_null
-        tags: ["tdf", "common", "gainsight"]
+        tags: ["tdf", "common"]
 
   - name: fct_usage_ping_metric_all_time
     description: '{{ doc("fct_usage_ping_metric_all_time") }}'
@@ -1659,20 +1665,20 @@ models:
       - name: metric_name
         tests:
           - not_null
-        tags: ["tdf", "common", "gainsight"]
+        tags: ["tdf", "common"]
       - name: metric_value
         tests:
           - not_null
-        tags: ["tdf", "common", "gainsight"]
+        tags: ["tdf", "common"]
       - name: recorded_at
         tests:
           - not_null
-        tags: ["tdf", "common", "gainsight"]
+        tags: ["tdf", "common"]
       - name: stage_name
       - name: usage_ping_id
         tests:
           - not_null
-        tags: ["tdf", "common", "gainsight"]
+        tags: ["tdf", "common"]
 
   - name: fct_usage_ping_payloads
     description: '{{ doc("fct_usage_ping_payloads") }}'
@@ -1682,12 +1688,12 @@ models:
         tests:
           - not_null
           - unique
-        tags: ["tdf", "common", "gainsight"]
+        tags: ["tdf", "common"]
       - name: uuid
         description: The unique identifier of the self-managed instance.
         tests:
           - not_null
-        tags: ["tdf", "common", "gainsight"]
+        tags: ["tdf", "common"]
       - name: host_id
         description: The identifier of the host of the instance.
       - name: license_md5
@@ -1718,7 +1724,7 @@ models:
         description: The timestamp when the usage ping was created.
         tests:
           - not_null
-        tags: ["tdf", "common", "gainsight"]
+        tags: ["tdf", "common"]
       - name: recorded_at
         description: The timestamp when the usage ping was recorded.
 
