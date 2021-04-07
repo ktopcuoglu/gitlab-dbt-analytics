@@ -432,6 +432,7 @@ WITH sfdc_opportunity AS (
         ELSE 0
       END                                                                   AS is_stage_4_plus,
 
+
       -- account driven fields 
       sfdc_accounts_xf.ultimate_parent_account_id,
   
@@ -441,15 +442,18 @@ WITH sfdc_opportunity AS (
           THEN '1. New'
         WHEN sfdc_opportunity_xf.order_type_stamped IN ('2. New - Connected', '3. Growth') 
           THEN '2. Growth' 
-        WHEN sfdc_opportunity_xf.order_type_stamped IN ('4. Churn','4. Contraction','6. Churn - Final')
-          THEN '3. Churn'
-        ELSE '4. Other' 
+        WHEN sfdc_opportunity_xf.order_type_stamped IN ('4. Contraction')
+          THEN '3. Contraction'
+        WHEN sfdc_opportunity_xf.order_type_stamped IN ('5. Churn - Partial','6. Churn - Final')
+          THEN '4. Churn'
+        ELSE '5. Other' 
       END                                                                   AS deal_category,
+
 
       CASE 
         WHEN sfdc_opportunity_xf.order_type_stamped = '1. New - First Order' 
           THEN '1. New'
-        WHEN sfdc_opportunity_xf.order_type_stamped IN ('2. New - Connected', '3. Growth', '4. Churn','4. Contraction','6. Churn - Final') 
+        WHEN sfdc_opportunity_xf.order_type_stamped IN ('2. New - Connected', '3. Growth', '5. Churn - Partial','6. Churn - Final','4. Contraction') 
           THEN '2. Growth' 
         ELSE '3. Other'
       END                                                                   AS deal_group,
@@ -557,6 +561,33 @@ WITH sfdc_opportunity AS (
 
       ---------------------------------------------------------------------------------------------
       ---------------------------------------------------------------------------------------------
+
+      -- Open pipeline eligibility definition
+      CASE 
+        WHEN oppty_final.deal_group IN ('1. New','2. Growth')
+          AND oppty_final.is_edu_oss = 0
+          AND oppty_final.is_stage_1_plus = 1
+          AND oppty_final.forecast_category_name != 'Omitted'
+          AND oppty_final.is_open = 1
+         THEN 1
+         ELSE 0
+      END                                                                   AS is_eligible_open_pipeline_flag,
+
+
+      -- Created pipeline eligibility definition
+      CASE 
+        WHEN oppty_final.order_type_stamped IN ('1. New - First Order' ,'2. New - Connected', '3. Growth')
+          AND oppty_final.is_edu_oss = 0
+          AND oppty_final.pipeline_created_fiscal_quarter_date IS NOT NULL
+          AND oppty_final.opportunity_category IN ('Standard','Internal Correction','Ramp Deal','Credit','Contract Reset')  
+          AND ((oppty_final.is_stage_1_plus = 1
+                AND oppty_final.forecast_category_name != 'Omitted')
+            OR oppty_final.is_lost = 1)
+          AND (net_arr > 0 
+            OR oppty_final.opportunity_category = 'Credit')
+         THEN 1
+         ELSE 0
+      END                                                                   AS is_eligible_created_pipeline_flag,
 
       -- compound metrics to facilitate reporting
       -- created and closed within the quarter net arr
