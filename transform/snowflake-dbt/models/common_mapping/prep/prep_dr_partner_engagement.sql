@@ -3,7 +3,7 @@
                                    id_column_name="dim_dr_partner_engagement_id",
                                    dimension_column="dr_partner_engagement",
                                    dimension_column_name="dr_partner_engagement_name",
-                                   where_clause=None)
+                                   where_clause="NOT is_deleted")
 }}
 
 
