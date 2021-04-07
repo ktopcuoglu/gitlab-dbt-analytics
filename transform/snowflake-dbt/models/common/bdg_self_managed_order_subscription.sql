@@ -33,6 +33,12 @@
     FROM subscription_delivery_types
     WHERE product_delivery_type = 'Self-Managed'
 
+), current_recurring AS (
+
+    SELECT *
+    FROM {{ ref('prep_recurring_charge') }}
+    WHERE dim_date_id = {{ get_date_id("DATE_TRUNC('month', CURRENT_DATE)") }}
+    
 ), active_subscription_list AS (
   
     SELECT
@@ -49,14 +55,15 @@
       product_rate_plans.dim_product_tier_id                        AS dim_product_tier_id_subscription,
       product_rate_plans.product_tier_name                          AS product_tier_name_subscription,
       COUNT(*) OVER(PARTITION BY subscriptions.dim_subscription_id) AS count_of_tiers_per_subscription,
-      IFF(subscription_end_date > CURRENT_DATE
-            AND subscription_status IN ('Active','Cancelled'),
-          TRUE, FALSE)                                              AS is_subscription_active
+      IFNULL(current_recurring.dim_subscription_id,
+             FALSE, TRUE)                                           AS is_subscription_active
     FROM subscriptions
     INNER JOIN sm_subscriptions
       ON subscriptions.dim_subscription_id = sm_subscriptions.dim_subscription_id
     INNER JOIN product_rate_plans
       ON sm_subscriptions.product_rate_plan_id = product_rate_plans.product_rate_plan_id
+    LEFT JOIN current_recurring
+      ON sm_subscriptions.dim_subscription_id = current_recurring.dim_subscription_id
 
 ), active_orders_list AS (
 

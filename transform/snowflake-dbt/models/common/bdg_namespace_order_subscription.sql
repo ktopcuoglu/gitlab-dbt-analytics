@@ -37,6 +37,12 @@
     FROM product_tiers
     WHERE product_tier_name = 'SaaS - Trial: Ultimate'
 
+), current_recurring AS (
+
+    SELECT *
+    FROM {{ ref('prep_recurring_charge') }}
+    WHERE dim_date_id = {{ get_date_id("DATE_TRUNC('month', CURRENT_DATE)") }}
+    
 ), active_namespace_list AS (
 
     --contains non-free namespaces + prior trial namespaces.
@@ -74,14 +80,15 @@
       product_rate_plans.dim_product_tier_id                        AS dim_product_tier_id_subscription,
       product_rate_plans.product_tier_name                          AS product_tier_name_subscription,
       COUNT(*) OVER(PARTITION BY subscriptions.dim_subscription_id) AS count_of_tiers_per_subscription,
-      IFF(subscription_end_date > CURRENT_DATE
-            AND subscription_status IN ('Active','Cancelled'),
-          TRUE, FALSE)                                              AS is_subscription_active
+      IFNULL(current_recurring.dim_subscription_id,
+             FALSE, TRUE)                                           AS is_subscription_active
     FROM subscriptions
     INNER JOIN saas_subscriptions
       ON subscriptions.dim_subscription_id = saas_subscriptions.dim_subscription_id
     INNER JOIN product_rate_plans
       ON saas_subscriptions.product_rate_plan_id = product_rate_plans.product_rate_plan_id
+    LEFT JOIN current_recurring
+      ON saas_subscriptions.dim_subscription_id = current_recurring.dim_subscription_id
 
 ), active_orders_list AS (
 
