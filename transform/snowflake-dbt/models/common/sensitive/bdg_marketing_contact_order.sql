@@ -7,7 +7,7 @@
     ('product_usage_wave_1_3', 'fct_product_usage_wave_1_3_metrics_monthly')
 ]) }}
 
-), saas_namespace_subscription AS (
+, saas_namespace_subscription AS (
     
     SELECT *
     FROM {{ref('bdg_namespace_order_subscription')}}
