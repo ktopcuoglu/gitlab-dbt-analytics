@@ -8,6 +8,7 @@
     ('orders', 'customers_db_orders_source'),
     ('product_tiers', 'prep_product_tier'),
     ('product_details', 'dim_product_detail'),
+    ('recurring_charges', 'prep_recurring_charge'),
     ('trial_histories', 'customers_db_trial_histories_source'),
     ('subscription_delivery_types', 'bdg_subscription_product_rate_plan')
 ]) }}
@@ -41,8 +42,11 @@
 ), current_recurring AS (
 
     SELECT *
-    FROM {{ ref('prep_recurring_charge') }}
-    WHERE dim_date_id = {{ get_date_id("DATE_TRUNC('month', CURRENT_DATE)") }}
+    FROM recurring_charges
+    JOIN product_details
+      ON recurring_charges.dim_product_detail_id = product_details.dim_product_detail_id
+      AND product_details.product_delivery_type = 'SaaS'
+    WHERE recurring_charges.dim_date_id = {{ get_date_id("DATE_TRUNC('month', CURRENT_DATE)") }}
     
 ), active_namespace_list AS (
 
@@ -81,8 +85,7 @@
       product_rate_plans.dim_product_tier_id                        AS dim_product_tier_id_subscription,
       product_rate_plans.product_tier_name                          AS product_tier_name_subscription,
       COUNT(*) OVER(PARTITION BY subscriptions.dim_subscription_id) AS count_of_tiers_per_subscription,
-      IFF(current_recurring.dim_subscription_id IS NULL
-            AND LOWER(saas_subscriptions.product_rate_plan_charge_name) NOT LIKE '%true%up%',
+      IFF(current_recurring.dim_subscription_id IS NULL,
           FALSE, TRUE)                                              AS is_subscription_active
     FROM subscriptions
     INNER JOIN saas_subscriptions
@@ -210,5 +213,5 @@
     created_by="@ischweickartDD",
     updated_by="@ischweickartDD",
     created_date="2021-01-14",
-    updated_date="2021-04-07"
+    updated_date="2021-04-08"
 ) }}
