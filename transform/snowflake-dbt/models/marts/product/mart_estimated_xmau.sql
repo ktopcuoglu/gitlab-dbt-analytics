@@ -32,7 +32,7 @@
 
     SELECT 
       smau.*,
-      ping_source        AS delivery,
+      ping_source                                                         AS delivery,
       'SMAU'                                                              AS xmau_level,
       product_tier NOT IN ('Core', 'CE') AND ping_source = 'Self-Managed' AS is_paid,
       COALESCE(estimated_value.pct_subscriptions_with_counters, 1)        AS pct_subscriptions_with_counters
@@ -73,7 +73,7 @@
 
     SELECT 
       umau.*,
-      ping_source        AS delivery,
+      ping_source                                                         AS delivery,
       'UMAU'                                                              AS xmau_level,
       product_tier NOT IN ('Core', 'CE') AND ping_source = 'Self-Managed' AS is_paid,
       COALESCE(estimated_value.pct_subscriptions_with_counters, 1)        AS pct_subscriptions_with_counters
