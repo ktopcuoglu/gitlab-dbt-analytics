@@ -27,6 +27,7 @@
       latest_metrics.ping_created_date_id,
       latest_metrics.uuid,
       latest_metrics.hostname,
+      latest_metrics.instance_type,
       latest_metrics.dim_license_id,
       latest_metrics.license_md5,
       latest_metrics.cleaned_version,
@@ -113,7 +114,7 @@
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@ischweickartDD",
-    updated_by="@ischweickartDD",
+    updated_by="@mcooperDD",
     created_date="2021-02-11",
-    updated_date="2021-02-16"
+    updated_date="2021-04-02"
 ) }}

@@ -12,6 +12,10 @@ sheets:
     owner: '@snalamaru'
     tabs:
       - sample_gainsight_golden_records
+  - name: gainsight_product_usage_metrics
+    owner: '@snalamaru'
+    tabs:
+      - gainsight_product_usage_metrics
   - name: gitlab_product_mrs_size
     owner: '@kwiebers'
     tabs:

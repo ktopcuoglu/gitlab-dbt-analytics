@@ -24,7 +24,13 @@ models:
         - name: clicks
         - name: conversion
         - name: cost
+        - name: sends
+        - name: opens
+        - name: inquiries
+        - name: mqls
+        - name: linear_sao
         - name: ga_conversion
         - name: compaign_code_type
         - name: content_type
+
 

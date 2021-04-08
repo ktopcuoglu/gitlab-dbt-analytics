@@ -30,6 +30,13 @@ The goal of this table is to build a bridge from the entire "universe" of subscr
 
 {% enddocs %}
 
+{% docs dim_alliance_type %}
+Model to identify Channel partners that are alliance partners. Technology Partners are identified and discussed in the handbook link referenced below. The specific groupings to report out on were determined by FP&A and Sales Analytics.
+
+[Technology Partners Handbook Reference](https://about.gitlab.com/handbook/alliances/#technology-partners)
+
+{% enddocs %}
+
 {% docs dim_crm_account %}
 Dimensional customer table representing all existing and historical customers from SalesForce. There are customer definitions for external reporting and additional customer definitions for internal reporting defined in the [handbook](https://about.gitlab.com/handbook/sales/#customer).
 
@@ -142,6 +149,13 @@ Dimensional table representing both calendar year and fiscal year date details.
 The grain of the table is a calendar day.
 
 Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+{% enddocs %}
+
+{% docs dim_dr_partner_engagement %}
+Model to identify the type of business engagement relationship a Partner has with GitLab. The Partner definitions are discussed in the handbook.
+
+[Partner Definitions Handbook Reference](https://about.gitlab.com/handbook/alliances/#partner-definitions)
 
 {% enddocs %}
 
@@ -281,7 +295,7 @@ Dimension representing the associated sales rep from salesforce. Most often this
 
 {% docs fct_usage_ping_subscription_mapped_gmau %}
 
-This data model is at the **month | dim_subscription_id** grain for **Self-Managed** instances. In every month _that a Usage Ping payload was received_, for a given subscription, values of each GMAU and Paid GMAU metric from the last Usage Ping value in that month are reported. 
+This data model is at the **month | dim_subscription_id** grain for **Self-Managed** instances. In every month _that a Usage Ping payload was received_, for a given subscription, values of each GMAU and Paid GMAU metric from the last Usage Ping value in that month are reported.
 
 This data model is used for the Customer Health Dashboards.
 
@@ -291,7 +305,7 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% docs fct_usage_ping_subscription_mapped_smau %}
 
-This data model is at the **month | dim_subscription_id** grain for **Self-Managed** instances. In every month _that a Usage Ping payload was received_, for a given subscription, values of each SMAU metric from the last Usage Ping value in that month are reported. 
+This data model is at the **month | dim_subscription_id** grain for **Self-Managed** instances. In every month _that a Usage Ping payload was received_, for a given subscription, values of each SMAU metric from the last Usage Ping value in that month are reported.
 
 This data model is used for the Customer Health Dashboards.
 
@@ -404,6 +418,12 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
+{% docs dim_host_instance_type %}
+
+Dimension table providing instance type for a given UUID/Host Name pair.
+
+{% enddocs %}
+
 {% docs dim_instances %}
 Dimension that contains statistical data for instances from usage ping data
 
@@ -491,4 +511,3 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 A fact table that contains only the metrics that is a UMAU, SMAU, or GMAU metric that appears on the [Stages and Groups Performance Indicator handbook page](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/)
 
 {% enddocs %}
-

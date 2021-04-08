@@ -22,7 +22,7 @@ WITH saml_providers AS (
     LEFT JOIN identities 
       ON saml_providers.saml_provider_id = identities.saml_provider_id
       AND {{ filter_out_blocked_users('identities', 'user_id') }}
-    {{ dbt_utils.group_by(n=8) }}
+    {{ dbt_utils.group_by(n=9) }}
 )
 
 SELECT *

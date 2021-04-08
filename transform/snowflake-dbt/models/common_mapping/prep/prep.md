@@ -1,3 +1,15 @@
+{% docs prep_alliance_type %}
+
+Creates a base view with generated keys for the alliance type shared dimension and references in facts.
+
+{% enddocs %}
+
+{% docs prep_dr_partner_engagement %}
+
+Creates a base view with generated keys for the dr partner engagement shared dimension and references in facts.
+
+{% enddocs %}
+
 {% docs prep_sfdc_account %}
 
 SFDC Account Prep table, used to clean and dedupe fields from a common source for use in further downstream dimensions.
@@ -26,6 +38,12 @@ Creates a base view with generated keys for the live crm sales hierarchy shared 
 {% docs prep_crm_sales_hierarchy_stamped %}
 
 Creates a base view with generated keys for the stamped/historical crm sales hierarchy shared dimensions and references in facts. This is built from the stamped fields in the opportunity object and will be used in sales funnel analyses.
+
+{% enddocs %}
+
+{% docs prep_gitlab_dotcom_application_settings_monthly %}
+
+This model captures a historical record of GitLab's default application settings for CI minutes and storage at a monthly grain.
 
 {% enddocs %}
 

@@ -3,7 +3,6 @@ WITH source AS (
     SELECT
       opportunity.*,
       CASE
-        WHEN stagename = '00-Pre Opportunity'       THEN createddate
         WHEN stagename = '0-Pending Acceptance'     THEN x0_pending_acceptance_date__c
         WHEN stagename = '1-Discovery'              THEN x1_discovery_date__c
         WHEN stagename = '2-Scoping'                THEN x2_scoping_date__c
@@ -75,6 +74,7 @@ WITH source AS (
         is_downgrade_opportunity__c                 AS is_downgrade,
         swing_deal__c                               AS is_swing_deal,
         is_edu_oss_opportunity__c                   AS is_edu_oss,
+        is_ps_opportunity__c                        AS is_ps_opp,
         net_iacv__c                                 AS net_incremental_acv,
         campaignid                                  AS primary_campaign_source_id,
         probability                                 AS probability,
