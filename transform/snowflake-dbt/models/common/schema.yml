@@ -1081,6 +1081,11 @@ models:
         tags: ["tdf", "common", "mrr"]
       - name: dim_date_id
         description: The identifier of date month in dim_date
+      - name: dim_charge_id
+        description: join key for dim_charge
+        tests:
+          - not_null
+          - unique
       - name: dim_billing_account_id
         description: join key for dim_billing_account
         tests:
