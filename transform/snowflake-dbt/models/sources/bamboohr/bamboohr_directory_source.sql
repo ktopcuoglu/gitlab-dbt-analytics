@@ -23,7 +23,7 @@ WITH source AS (
       AND (LOWER(full_name) NOT LIKE '%greenhouse test%'
             AND LOWER(full_name) NOT LIKE '%test profile%'
             AND LOWER(full_name) != 'test-gitlab')
-      AND employee_id  NOT IN (42039, 42043)
+      AND employee_id NOT IN (42039, 42043)
       AND uploaded_at NOT IN ('2021-03-24 22:00:47.283','2021-03-24 20:01:27.458','2021-03-24 18:01:33.370')
 
 )
