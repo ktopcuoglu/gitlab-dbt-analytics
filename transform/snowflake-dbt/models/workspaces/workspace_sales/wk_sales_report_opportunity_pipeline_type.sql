@@ -15,7 +15,14 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
     stage_name,
     is_won,
     is_lost,
-    is_open
+    is_open,
+    order_type_stamped,
+    sales_qualified_source,
+    deal_category,
+    deal_group,
+    sales_team_cro_level,
+    sales_team_rd_asm_level
+
   FROM {{ref('wk_sales_sfdc_opportunity_xf')}}  
   WHERE stage_name NOT IN ('9-Unqualified','Unqualified','00-Pre Opportunity','0-Pending Acceptance') 
     AND is_deleted = 0
@@ -108,8 +115,7 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
   SELECT 
       opp_snap.opportunity_id,
       opp_snap.close_fiscal_quarter_date,
-
-
+      opp_snap.close_fiscal_quarter_name,
 
       pipe_start.starting_forecast_category,
       pipe_start.starting_net_arr,
@@ -204,7 +210,12 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
       AND pipe_pull.snapshot_fiscal_quarter_date = opp_snap.snapshot_fiscal_quarter_date
   -- closing in the same quarter of the snapshot
   WHERE opp_snap.snapshot_fiscal_quarter_date = opp_snap.close_fiscal_quarter_date 
-  GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13
+    -- Exclude duplicate deals that were not created or started within the quarter
+    AND (pipe_start.opportunity_id IS NOT NULL
+          OR pipe_created.opportunity_id IS NOT NULL        
+          OR pipe_pull.opportunity_id IS NOT NULL   
+        )
+  GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14
 
 ), report_opportunity_pipeline_type AS (
 
@@ -214,15 +225,17 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
       
       -- descriptive cuts
 
-      --o.order_type_stamped,
-      --o.sales_qualified_source,
-      --o.deal_category,
-      --o.deal_group,
-      --o.sales_team_cro_level,
-      --o.sales_team_rd_asm_level,
+      o.order_type_stamped,
+      o.sales_qualified_source,
+      o.deal_category,
+      o.deal_group,
+      o.sales_team_cro_level,
+      o.sales_team_rd_asm_level,
 
       -- pipeline fields
       p.close_fiscal_quarter_date,
+      p.close_fiscal_quarter_name,
+      
       p.pipeline_type,
 
       CASE 
@@ -264,6 +277,8 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
       p.end_stage,                                                
       p.end_forecast_category,
       p.end_close_date,
+      p.end_is_won,
+      p.end_is_open,
 
       p.end_net_arr - beg_net_arr                                     AS delta_net_arr,
 
@@ -284,7 +299,6 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
 
       p.min_stage_name,
       p.max_stage_name,
-
 
       ----------
       current_date                                                    AS last_updated_at

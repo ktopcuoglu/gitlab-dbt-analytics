@@ -28,6 +28,7 @@ WITH date_details AS (
       account_id,
       order_type_stamped,
       deal_category,
+      opportunity_category,
       deal_group,
       opportunity_owner_manager,
       is_edu_oss,
@@ -54,7 +55,6 @@ WITH date_details AS (
 --------------------------------------
 
       is_won,
-      opportunity_category,
       raw_net_arr,
       net_incremental_acv,
       sales_qualified_source,
@@ -196,7 +196,7 @@ WITH date_details AS (
       sfdc_opportunity_snapshot_history.is_deleted,
       sfdc_opportunity_snapshot_history.last_activity_date,
       sfdc_opportunity_snapshot_history.record_type_id,
-      sfdc_opportunity_snapshot_history.opportunity_category,
+      --sfdc_opportunity_snapshot_history.opportunity_category,
 
 
       --date helpers
@@ -527,7 +527,7 @@ WITH date_details AS (
         WHEN opp_snapshot.is_credit_contract_reset = 1
           THEN 0
         ELSE 1
-      END                                                         AS calculated_deal_count,
+      END                                                                     AS calculated_deal_count,
 
       ------------------------------------------------------------------------------------------------------
       ------------------------------------------------------------------------------------------------------
@@ -537,6 +537,7 @@ WITH date_details AS (
       sfdc_opportunity_xf.is_edu_oss,
       sfdc_opportunity_xf.sales_qualified_source,
       sfdc_opportunity_xf.account_id,
+      sfdc_opportunity_xf.opportunity_category,
 
       
       CASE 
