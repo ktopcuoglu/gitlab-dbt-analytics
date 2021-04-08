@@ -25,7 +25,8 @@
 
     SELECT DISTINCT
       dim_subscription_id,
-      product_rate_plan_id
+      product_rate_plan_id,
+      product_rate_plan_charge_name
     FROM subscription_delivery_types
     WHERE product_delivery_type = 'SaaS'
 
@@ -80,8 +81,9 @@
       product_rate_plans.dim_product_tier_id                        AS dim_product_tier_id_subscription,
       product_rate_plans.product_tier_name                          AS product_tier_name_subscription,
       COUNT(*) OVER(PARTITION BY subscriptions.dim_subscription_id) AS count_of_tiers_per_subscription,
-      IFF(current_recurring.dim_subscription_id IS NULL,
-             FALSE, TRUE)                                           AS is_subscription_active
+      IFF(current_recurring.dim_subscription_id IS NULL
+            AND LOWER(saas_subscriptions.product_rate_plan_charge_name) NOT LIKE '%true%up%',
+          FALSE, TRUE)                                              AS is_subscription_active
     FROM subscriptions
     INNER JOIN saas_subscriptions
       ON subscriptions.dim_subscription_id = saas_subscriptions.dim_subscription_id
