@@ -1,7 +1,6 @@
 tag,description
 arr,Annual Recurring Revenue
 arr_snapshots,For ARR Snapshots
-bamboohr,Related to bamboohr data source
 billing_account,For billing accounts
 common,For the common schema
 crm_account,For CRM Accounts
