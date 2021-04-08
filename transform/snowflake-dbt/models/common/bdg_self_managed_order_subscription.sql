@@ -5,6 +5,8 @@
 {{ simple_cte([
     ('subscriptions', 'prep_subscription'),
     ('orders', 'customers_db_orders_source'),
+    ('product_details', 'dim_product_detail'),
+    ('recurring_charges', 'prep_recurring_charge'),
     ('subscription_delivery_types', 'bdg_subscription_product_rate_plan')
 ]) }}
 
@@ -22,7 +24,7 @@
       product_rate_plan_id,
       dim_product_tier_id,
       product_tier_name
-    FROM {{ ref('dim_product_detail') }}
+    FROM product_details
     WHERE product_delivery_type = 'Self-Managed'
 
 ), sm_subscriptions AS (
@@ -37,8 +39,11 @@
 ), current_recurring AS (
 
     SELECT *
-    FROM {{ ref('prep_recurring_charge') }}
-    WHERE dim_date_id = {{ get_date_id("DATE_TRUNC('month', CURRENT_DATE)") }}
+    FROM recurring_charges
+    JOIN product_details
+      ON recurring_charges.dim_product_detail_id = product_details.dim_product_detail_id
+      AND product_details.product_delivery_type = 'Self-Managed'
+    WHERE recurring_charges.dim_date_id = {{ get_date_id("DATE_TRUNC('month', CURRENT_DATE)") }}
     
 ), active_subscription_list AS (
   
@@ -56,8 +61,7 @@
       product_rate_plans.dim_product_tier_id                        AS dim_product_tier_id_subscription,
       product_rate_plans.product_tier_name                          AS product_tier_name_subscription,
       COUNT(*) OVER(PARTITION BY subscriptions.dim_subscription_id) AS count_of_tiers_per_subscription,
-      IFF(current_recurring.dim_subscription_id IS NULL
-            AND LOWER(sm_subscriptions.product_rate_plan_charge_name) NOT LIKE '%true%up%',
+      IFF(current_recurring.dim_subscription_id IS NULL,
           FALSE, TRUE)                                              AS is_subscription_active
     FROM subscriptions
     INNER JOIN sm_subscriptions
@@ -134,5 +138,5 @@
     created_by="@ischweickartDD",
     updated_by="@ischweickartDD",
     created_date="2021-02-02",
-    updated_date="2021-04-06"
+    updated_date="2021-04-08"
 ) }}
