@@ -211,6 +211,10 @@ sheets:
     owner: '@mmaneval20'
     tabs:
       - rfs_support_requests
+  - name: sales_funnel_partner_alliance_targets
+    owner: '@jeanpeguero'
+    tabs:
+      - sales_funnel_partner_alliance_targets_matrix
   - name: sales_funnel_targets
     owner: '@paul_armstrong'
     tabs:

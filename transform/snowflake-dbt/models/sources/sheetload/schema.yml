@@ -455,6 +455,15 @@ models:
     - name: month
       tests:
       - not_null
+- name: sheetload_sales_funnel_partner_alliance_targets_matrix_source
+  description: Sales funnel matrix source data for partner and alliances targets
+  columns:
+    - name: kpi_name
+      tests:
+      - not_null
+    - name: month
+      tests:
+      - not_null
 - name: sheetload_rfs_support_requests_source
   description: This contains data for the pipe risk and security metrics - https://gitlab.com/gitlab-data/analytics/-/issues/6995
   columns:
