@@ -6,11 +6,19 @@
     ('deal_path', 'prep_deal_path'),
     ('sales_rep', 'prep_crm_sales_representative'),
     ('sales_segment', 'prep_sales_segment'),
-    ('sfdc_campaigns', 'prep_campaign')
+    ('sfdc_campaigns', 'prep_campaign'),
+    ('dr_partner_engagement', 'prep_dr_partner_engagement'),
+    ('alliance_type', 'prep_alliance_type')
 
 ]) }}
 
-, first_contact  AS (
+, sfdc_account AS (
+
+    SELECT *
+    FROM {{ ref('sfdc_account_source') }}
+    WHERE account_id IS NOT NULL
+
+), first_contact  AS (
 
     SELECT
 
@@ -65,86 +73,93 @@
 
     SELECT
 
-      opportunity_id                                            AS dim_crm_opportunity_id,
-      merged_opportunity_id                                     AS merged_crm_opportunity_id,
-      account_id                                                AS dim_crm_account_id,
-      owner_id                                                  AS dim_crm_sales_rep_id,
-      incremental_acv                                           AS iacv,
-      net_arr,
-      amount,
-      recurring_amount,
-      true_up_amount,
-      proserv_amount,
-      other_non_recurring_amount,
-      arr_basis,
-      arr,
-      subscription_start_date,
-      subscription_end_date,
-      created_date::DATE                                        AS created_date,
-      {{ get_date_id('created_date') }}                         AS created_date_id,
-      sales_accepted_date::DATE                                 AS sales_accepted_date,
-      {{ get_date_id('sales_accepted_date') }}                  AS sales_accepted_date_id,
-      close_date::DATE                                          AS close_date,
-      {{ get_date_id('close_date') }}                           AS close_date_id,
-      stage_0_pending_acceptance_date::DATE                     AS stage_0_pending_acceptance_date,
-      {{ get_date_id('stage_0_pending_acceptance_date') }}      AS stage_0_pending_acceptance_date_id,
-      stage_1_discovery_date::DATE                              AS stage_1_discovery_date,
-      {{ get_date_id('stage_1_discovery_date') }}               AS stage_1_discovery_date_id,
-      stage_2_scoping_date::DATE                                AS stage_2_scoping_date,
-      {{ get_date_id('stage_2_scoping_date') }}                 AS stage_2_scoping_date_id,
-      stage_3_technical_evaluation_date::DATE                   AS stage_3_technical_evaluation_date,
-      {{ get_date_id('stage_3_technical_evaluation_date') }}    AS stage_3_technical_evaluation_date_id,
-      stage_4_proposal_date::DATE                               AS stage_4_proposal_date,
-      {{ get_date_id('stage_4_proposal_date') }}                AS stage_4_proposal_date_id,
-      stage_5_negotiating_date::DATE                            AS stage_5_negotiating_date,
-      {{ get_date_id('stage_5_negotiating_date') }}             AS stage_5_negotiating_date_id,
-      stage_6_closed_won_date::DATE                             AS stage_6_closed_won_date,
-      {{ get_date_id('stage_6_closed_won_date') }}              AS stage_6_closed_won_date_id,
-      stage_6_closed_lost_date::DATE                            AS stage_6_closed_lost_date,
-      {{ get_date_id('stage_6_closed_lost_date') }}             AS stage_6_closed_lost_date_id,
-      days_in_0_pending_acceptance,
-      days_in_1_discovery,
-      days_in_2_scoping,
-      days_in_3_technical_evaluation,
-      days_in_4_proposal,
-      days_in_5_negotiating,
-      is_closed,
-      is_won,
-      is_refund,
-      is_downgrade,
-      is_swing_deal,
-      is_edu_oss,
-      is_web_portal_purchase,
-      deal_path,
-      order_type_stamped                                        AS order_type,
-      sales_segment,
-      {{ sales_qualified_source_cleaning('sales_qualified_source') }}
-                                                                AS sales_qualified_source,
-      days_in_sao,
-      user_segment_stamped                                      AS crm_opp_owner_sales_segment_stamped,
-      user_geo_stamped                                          AS crm_opp_owner_geo_stamped,
-      user_region_stamped                                       AS crm_opp_owner_region_stamped,
-      user_area_stamped                                         AS crm_opp_owner_area_stamped,
-      primary_solution_architect,
-      product_details,
-      dr_partner_deal_type,
-      dr_partner_engagement,
-      partner_account,
-      dr_status,
-      distributor,
-      influence_partner,
-      fulfillment_partner,
-      platform_partner,
-      partner_track,
-      is_public_sector_opp,
-      is_registration_from_portal,
-      calculated_discount,
-      partner_discount,
-      partner_discount_calc,
-      comp_channel_neutral,
-      lead_source
+      sfdc_opportunity.opportunity_id                                            AS dim_crm_opportunity_id,
+      sfdc_opportunity.merged_opportunity_id                                     AS merged_crm_opportunity_id,
+      sfdc_opportunity.account_id                                                AS dim_crm_account_id,
+      sfdc_opportunity.owner_id                                                  AS dim_crm_sales_rep_id,
+      sfdc_opportunity.incremental_acv                                           AS iacv,
+      sfdc_opportunity.net_arr,
+      sfdc_opportunity.amount,
+      sfdc_opportunity.recurring_amount,
+      sfdc_opportunity.true_up_amount,
+      sfdc_opportunity.proserv_amount,
+      sfdc_opportunity.other_non_recurring_amount,
+      sfdc_opportunity.arr_basis,
+      sfdc_opportunity.arr,
+      sfdc_opportunity.subscription_start_date,
+      sfdc_opportunity.subscription_end_date,
+      sfdc_opportunity.created_date::DATE                                        AS created_date,
+      {{ get_date_id('sfdc_opportunity.created_date') }}                         AS created_date_id,
+      sfdc_opportunity.sales_accepted_date::DATE                                 AS sales_accepted_date,
+      {{ get_date_id('sfdc_opportunity.sales_accepted_date') }}                  AS sales_accepted_date_id,
+      sfdc_opportunity.close_date::DATE                                          AS close_date,
+      {{ get_date_id('sfdc_opportunity.close_date') }}                           AS close_date_id,
+      sfdc_opportunity.stage_0_pending_acceptance_date::DATE                     AS stage_0_pending_acceptance_date,
+      {{ get_date_id('sfdc_opportunity.stage_0_pending_acceptance_date') }}      AS stage_0_pending_acceptance_date_id,
+      sfdc_opportunity.stage_1_discovery_date::DATE                              AS stage_1_discovery_date,
+      {{ get_date_id('sfdc_opportunity.stage_1_discovery_date') }}               AS stage_1_discovery_date_id,
+      sfdc_opportunity.stage_2_scoping_date::DATE                                AS stage_2_scoping_date,
+      {{ get_date_id('sfdc_opportunity.stage_2_scoping_date') }}                 AS stage_2_scoping_date_id,
+      sfdc_opportunity.stage_3_technical_evaluation_date::DATE                   AS stage_3_technical_evaluation_date,
+      {{ get_date_id('sfdc_opportunity.stage_3_technical_evaluation_date') }}    AS stage_3_technical_evaluation_date_id,
+      sfdc_opportunity.stage_4_proposal_date::DATE                               AS stage_4_proposal_date,
+      {{ get_date_id('sfdc_opportunity.stage_4_proposal_date') }}                AS stage_4_proposal_date_id,
+      sfdc_opportunity.stage_5_negotiating_date::DATE                            AS stage_5_negotiating_date,
+      {{ get_date_id('sfdc_opportunity.stage_5_negotiating_date') }}             AS stage_5_negotiating_date_id,
+      sfdc_opportunity.stage_6_closed_won_date::DATE                             AS stage_6_closed_won_date,
+      {{ get_date_id('sfdc_opportunity.stage_6_closed_won_date') }}              AS stage_6_closed_won_date_id,
+      sfdc_opportunity.stage_6_closed_lost_date::DATE                            AS stage_6_closed_lost_date,
+      {{ get_date_id('sfdc_opportunity.stage_6_closed_lost_date') }}             AS stage_6_closed_lost_date_id,
+      sfdc_opportunity.days_in_0_pending_acceptance,
+      sfdc_opportunity.days_in_1_discovery,
+      sfdc_opportunity.days_in_2_scoping,
+      sfdc_opportunity.days_in_3_technical_evaluation,
+      sfdc_opportunity.days_in_4_proposal,
+      sfdc_opportunity.days_in_5_negotiating,
+      sfdc_opportunity.is_closed,
+      sfdc_opportunity.is_won,
+      sfdc_opportunity.is_refund,
+      sfdc_opportunity.is_downgrade,
+      sfdc_opportunity.is_swing_deal,
+      sfdc_opportunity.is_edu_oss,
+      sfdc_opportunity.is_web_portal_purchase,
+      sfdc_opportunity.deal_path,
+      sfdc_opportunity.order_type_stamped                                        AS order_type,
+      sfdc_opportunity.sales_segment,
+      {{ sales_qualified_source_cleaning('sfdc_opportunity.sales_qualified_source') }}
+                                                                                 AS sales_qualified_source,
+      sfdc_opportunity.days_in_sao,
+      sfdc_opportunity.user_segment_stamped                                      AS crm_opp_owner_sales_segment_stamped,
+      sfdc_opportunity.user_geo_stamped                                          AS crm_opp_owner_geo_stamped,
+      sfdc_opportunity.user_region_stamped                                       AS crm_opp_owner_region_stamped,
+      sfdc_opportunity.user_area_stamped                                         AS crm_opp_owner_area_stamped,
+      sfdc_opportunity.primary_solution_architect,
+      sfdc_opportunity.product_details,
+      sfdc_opportunity.dr_partner_deal_type,
+      sfdc_opportunity.dr_partner_engagement,
+      {{ alliance_type('partner_account.account_name', 'influence_partner.account_name', 'sfdc_opportunity.partner_account', 'sfdc_opportunity.influence_partner') }},
+      {{ alliance_type_short('partner_account.account_name', 'influence_partner.account_name', 'sfdc_opportunity.partner_account', 'sfdc_opportunity.influence_partner') }},
+      sfdc_opportunity.channel_type,
+      sfdc_opportunity.partner_account,
+      sfdc_opportunity.dr_status,
+      sfdc_opportunity.distributor,
+      sfdc_opportunity.influence_partner,
+      sfdc_opportunity.fulfillment_partner,
+      sfdc_opportunity.platform_partner,
+      sfdc_opportunity.partner_track,
+      sfdc_opportunity.is_public_sector_opp,
+      sfdc_opportunity.is_registration_from_portal,
+      sfdc_opportunity.calculated_discount,
+      sfdc_opportunity.partner_discount,
+      sfdc_opportunity.partner_discount_calc,
+      sfdc_opportunity.comp_channel_neutral,
+      sfdc_opportunity.lead_source
 
     FROM sfdc_opportunity
+    LEFT JOIN sfdc_account AS partner_account
+      ON sfdc_opportunity.account_id = partner_account.account_id
+    LEFT JOIN sfdc_account AS influence_partner
+      ON sfdc_opportunity.account_id = influence_partner.account_id
 
 ), linear_attribution_base AS ( --the number of attribution touches a given opp has in total
     --linear attribution IACV of an opp / all touches (count_touches) for each opp - weighted by the number of touches in the given bucket (campaign,channel,etc)
@@ -249,9 +264,12 @@
       opportunity_fields.subscription_start_date,
       opportunity_fields.subscription_end_date,
 
+
       -- common dimension keys
       {{ get_keyed_nulls('opportunity_fields.dim_crm_sales_rep_id') }}                                                      AS dim_crm_sales_rep_id,
       {{ get_keyed_nulls('order_type.dim_order_type_id') }}                                                                 AS dim_order_type_id,
+      {{ get_keyed_nulls('dr_partner_engagement.dim_dr_partner_engagement_id') }}                                           AS dim_dr_partner_engagement_id,
+      {{ get_keyed_nulls('alliance_type.dim_alliance_type_id') }}                                                           AS dim_alliance_type_id,
       {{ get_keyed_nulls('sales_qualified_source.dim_sales_qualified_source_id') }}                                         AS dim_sales_qualified_source_id,
       {{ get_keyed_nulls('deal_path.dim_deal_path_id') }}                                                                   AS dim_deal_path_id,
       {{ get_keyed_nulls('crm_account_dimensions.dim_parent_sales_segment_id,sales_segment.dim_sales_segment_id') }}        AS dim_parent_sales_segment_id,
@@ -304,6 +322,7 @@
       opportunity_fields.partner_discount,
       opportunity_fields.partner_discount_calc,
       opportunity_fields.comp_channel_neutral,
+      opportunity_fields.channel_type,
 
       -- additive fields
       opportunity_fields.iacv,
@@ -344,6 +363,10 @@
       ON opportunity_fields.crm_opp_owner_region_stamped = user_hierarchy_stamped_region.crm_opp_owner_region_stamped
     LEFT JOIN user_hierarchy_stamped_area
       ON opportunity_fields.crm_opp_owner_area_stamped = user_hierarchy_stamped_area.crm_opp_owner_area_stamped
+    LEFT JOIN dr_partner_engagement
+      ON opportunity_fields.dr_partner_engagement = dr_partner_engagement.dr_partner_engagement_name
+    LEFT JOIN alliance_type
+      ON opportunity_fields.alliance_type = alliance_type.alliance_type_name
     LEFT JOIN sales_rep
       ON opportunity_fields.dim_crm_sales_rep_id = sales_rep.dim_crm_sales_rep_id
     LEFT JOIN linear_attribution_base
@@ -356,7 +379,7 @@
 {{ dbt_audit(
     cte_ref="final_opportunities",
     created_by="@mcooperDD",
-    updated_by="@mcooperDD",
-    created_date="2020-11-30",
-    updated_date="2021-03-25"
+    updated_by="@jpeguero",
+    created_date="2021-04-08",
+    updated_date="2021-04-08"
 ) }}

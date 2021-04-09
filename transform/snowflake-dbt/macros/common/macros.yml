@@ -58,3 +58,10 @@ macros:
       - name: influence_account
         type: string
         description: Abbreviated influence partner account id from the opportunity object.
+  - name: channel_type
+    description: This macro applies business logic to bucket dr_partner_engagement and order_type into the respective channel type.
+    arguments:
+      - name: dr_partner_engegament
+        type: string
+      - name: order_type
+        type: string

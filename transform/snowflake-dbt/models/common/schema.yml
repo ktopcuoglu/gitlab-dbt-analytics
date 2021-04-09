@@ -1575,6 +1575,19 @@ models:
         tests:
           - not_null
           - unique
+  
+  - name: fct_sales_funnel_partner_alliance_target
+    description: '{{ doc("fct_sales_funnel_partner_alliance_target") }}'
+    columns:
+      - name: kpi_name
+        tests:
+          - not_null
+        tags: ["tdf", "common", "sales_funnel"]
+      - name: sales_funnel_partner_alliance_target_id
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "common", "sales_funnel"]
 
   - name: fct_sales_funnel_target
     description: '{{ doc("fct_sales_funnel_target") }}'
