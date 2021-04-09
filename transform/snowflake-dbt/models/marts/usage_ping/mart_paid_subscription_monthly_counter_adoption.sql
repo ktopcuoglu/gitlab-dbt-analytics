@@ -4,9 +4,10 @@ WITH self_managed_active_subscriptions AS (
       dim_date_id           AS date_id,
       dim_subscription_id   AS subscription_id,
       dim_product_detail_id AS product_details_id,
-      mrr,
-      quantity
+      SUM(mrr)              AS mrr,
+      SUM(quantity)         AS quantity
     FROM {{ ref('fct_mrr')}}
+    {{ dbt_utils.group_by(n=3) }}
 
 ), dim_date AS (
 

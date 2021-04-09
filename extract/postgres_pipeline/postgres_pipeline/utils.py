@@ -420,7 +420,7 @@ def id_query_generator(
     ):
         id_range_query = (
             "".join(raw_query.lower().split("where")[0])
-            + f"WHERE {primary_key} BETWEEN {id_pair[0]} AND {id_pair[1]}"
+            + f" WHERE {primary_key} BETWEEN {id_pair[0]} AND {id_pair[1]}"
         )
         logging.info(f"ID Range: {id_pair}")
         yield id_range_query

@@ -28,11 +28,6 @@ WITH dim_billing_account AS (
   SELECT *
   FROM {{ ref('dim_quote') }}
 
-), dim_subscription AS (
-
-  SELECT *
-  FROM {{ ref('dim_subscription') }}
-
 ), fct_charge AS (
 
   SELECT *
@@ -43,6 +38,28 @@ WITH dim_billing_account AS (
 
   SELECT *
   FROM {{ ref('fct_quote_item') }}
+
+), zuora_subscription AS (
+
+  SELECT *
+  FROM {{ ref('zuora_subscription_snapshots_source') }}
+  WHERE subscription_status NOT IN ('Draft', 'Expired')
+    AND is_deleted = FALSE
+    AND exclude_from_analysis IN ('False', '')
+
+), zuora_subscription_spined AS (
+
+    SELECT
+      snapshot_dates.date_id AS snapshot_id,
+      zuora_subscription.*
+    FROM zuora_subscription
+    INNER JOIN dim_date snapshot_dates
+      ON snapshot_dates.date_actual >= zuora_subscription.dbt_valid_from
+      AND snapshot_dates.date_actual < {{ coalesce_to_infinity('zuora_subscription.dbt_valid_to') }}
+      AND date_actual = '2021-02-04'
+    QUALIFY rank() OVER (
+         PARTITION BY subscription_name, snapshot_dates.date_actual
+         ORDER BY dbt_valid_from DESC) = 1
 
 ), opportunity AS (
 
@@ -64,8 +81,8 @@ WITH dim_billing_account AS (
      sub_1.zuora_renewal_subscription_name,
      DATE_TRUNC('month',sub_2.subscription_end_date) AS subscription_end_month,
      RANK() OVER (PARTITION BY sub_1.subscription_name ORDER BY sub_1.zuora_renewal_subscription_name, sub_2.subscription_end_date ) AS rank
-   FROM dim_subscription sub_1
-   INNER JOIN dim_subscription sub_2
+   FROM zuora_subscription_spined sub_1
+   INNER JOIN zuora_subscription_spined sub_2
      ON sub_1.zuora_renewal_subscription_name = sub_2.subscription_name
      AND DATE_TRUNC('month',sub_2.subscription_end_date) >= '2022-02-01'
    WHERE sub_1.zuora_renewal_subscription_name != ''
@@ -120,8 +137,8 @@ WITH dim_billing_account AS (
      DATEDIFF(month,fct_charge.effective_start_month,fct_charge.effective_end_month)      AS charge_term,
      fct_charge.arr
    FROM fct_charge
-   LEFT JOIN dim_subscription
-     ON fct_charge.dim_subscription_id = dim_subscription.dim_subscription_id
+   LEFT JOIN zuora_subscription_spined dim_subscription
+     ON fct_charge.dim_subscription_id = dim_subscription.subscription_id
    LEFT JOIN dim_billing_account
      ON fct_charge.dim_billing_account_id = dim_billing_account.dim_billing_account_id
    LEFT JOIN opportunity

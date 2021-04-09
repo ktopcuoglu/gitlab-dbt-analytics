@@ -42,6 +42,7 @@ class PostgresPipelineTable:
             self.source_table_name,
             self.table_dict,
             target_table,
+            is_append_only=self.table_dict.get("append_only", False),
         )
 
     def is_incremental(self) -> bool:
