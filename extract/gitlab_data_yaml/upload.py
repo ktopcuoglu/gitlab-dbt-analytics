@@ -52,13 +52,11 @@ if __name__ == "__main__":
     )
 
     team_url = "https://about.gitlab.com/company/team/"
-    usage_ping_metrics_url = "http://gitlab.com/api/v4/usage_data/metric_definitions/"
+    usage_ping_metrics_url = "https://gitlab.com/api/v4/usage_data/metric_definitions/"
 
     job_failed = False
 
     def curl_and_upload(table_name, file_name, base_url, private_token=None):
-
-        logging.info(f"Downloading {file_name} to {file_name}.json file.")
 
         if file_name == "":
             json_file_name = "ymltemp"
@@ -67,12 +65,13 @@ if __name__ == "__main__":
         else:
             json_file_name = file_name
 
+        logging.info(f"Downloading {file_name} to {json_file_name}.json file.")
+
+
         if private_token is not None:
             header = f'--header "PRIVATE-TOKEN: {private_token}"'
             command = f"curl {header} '{base_url}{file_name}%2Eyml/raw?ref=main' | yaml2json -o {json_file_name}.json"
         else:
-            if ".yml" in file_name:
-                file_name.split(".yml")
             command = f"curl {base_url}{file_name} | yaml2json -o {json_file_name}.json"
 
         try:
