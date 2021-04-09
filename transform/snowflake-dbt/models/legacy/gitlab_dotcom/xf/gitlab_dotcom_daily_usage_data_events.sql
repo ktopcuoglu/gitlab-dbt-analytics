@@ -11,7 +11,7 @@ WITH usage_data AS (
     FROM {{ ref('gitlab_dotcom_usage_data_events') }}
     {% if is_incremental() %}
 
-      WHERE event_created_at >= (SELECT MAX(DATEADD(day, -1, event_date)) FROM {{this}})
+      WHERE event_created_at >= (SELECT MAX(DATEADD(day, -8, event_date)) FROM {{this}})
 
     {% endif %}
 
