@@ -108,7 +108,7 @@ WITH sfdc_opportunity AS (
       CASE
         WHEN sfdc_opportunity_xf.sales_qualified_source = 'BDR Generated'
             THEN 'SDR Generated'
-        ELSE sfdc_opportunity_xf.sales_qualified_source
+        ELSE COALESCE(sfdc_opportunity_xf.sales_qualified_source,'NA')
       END                                                       AS sales_qualified_source,
 
 

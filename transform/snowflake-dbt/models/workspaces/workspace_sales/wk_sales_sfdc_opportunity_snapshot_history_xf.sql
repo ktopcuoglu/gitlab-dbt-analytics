@@ -729,7 +729,7 @@ WITH date_details AS (
 
             -- Open pipeline eligibility definition
       CASE 
-        WHEN opp_snapshot.deal_group IN ('1. New','2. Growth')
+        WHEN lower(opp_snapshot.deal_group) LIKE ANY ('%growth%', '%new%')
           AND opp_snapshot.is_edu_oss = 0
           AND opp_snapshot.is_stage_1_plus = 1
           AND opp_snapshot.forecast_category_name != 'Omitted'

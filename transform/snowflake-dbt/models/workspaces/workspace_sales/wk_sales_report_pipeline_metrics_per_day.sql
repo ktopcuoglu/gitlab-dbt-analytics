@@ -317,11 +317,7 @@ WITH date_details AS (
     FROM sfdc_opportunity_snapshot_history_xf_restricted opp_history
     -- restrict the rows to pipeline of the quarter the snapshot was taken
     WHERE opp_history.snapshot_fiscal_quarter_name = opp_history.pipeline_created_fiscal_quarter_name
-      AND ((opp_history.forecast_category_name != 'Omitted'
-          AND opp_history.is_stage_1_plus = 1)
-            OR (opp_history.is_lost = 1))    
-          AND opp_history.is_edu_oss = 0
-          AND lower(opp_history.deal_group) LIKE ANY ('%growth%', '%new%')
+    AND opp_history.is_eligible_created_pipeline_flag = 1
     GROUP BY 1,2,3,4,5,6,7
 
 ), base_fields AS (
