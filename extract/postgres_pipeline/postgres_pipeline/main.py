@@ -11,8 +11,6 @@ from gitlabdata.orchestration_utils import (
     append_to_xcom_file,
 )
 from sqlalchemy.engine.base import Engine
-
-from load_functions import load_ids
 from postgres_pipeline_table import PostgresPipelineTable
 from utils import (
     check_if_schema_changed,

@@ -10,7 +10,7 @@ WITH source AS (
       month,
       partner_engagement_type,
       alliance_partner,
-      alliance_partner,
+      order_type,
       area,
       allocated_target
     FROM source
