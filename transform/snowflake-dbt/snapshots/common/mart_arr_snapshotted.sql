@@ -1,4 +1,4 @@
-{% snapshot mart_arr_snapshots %}
+{% snapshot mart_arr_snapshotted %}
 
     {{
         config(
