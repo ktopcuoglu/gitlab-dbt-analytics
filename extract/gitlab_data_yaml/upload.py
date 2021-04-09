@@ -67,7 +67,6 @@ if __name__ == "__main__":
 
         logging.info(f"Downloading {file_name} to {json_file_name}.json file.")
 
-
         if private_token is not None:
             header = f'--header "PRIVATE-TOKEN: {private_token}"'
             command = f"curl {header} '{base_url}{file_name}%2Eyml/raw?ref=main' | yaml2json -o {json_file_name}.json"
@@ -97,7 +96,10 @@ if __name__ == "__main__":
 
     for key, value in comp_calc_dict.items():
         curl_and_upload(
-            key, value + ".yml", comp_calc_url, config_dict["GITLAB_ANALYTICS_PRIVATE_TOKEN"]
+            key,
+            value + ".yml",
+            comp_calc_url,
+            config_dict["GITLAB_ANALYTICS_PRIVATE_TOKEN"],
         )
 
     curl_and_upload("team", "team.yml", team_url)
