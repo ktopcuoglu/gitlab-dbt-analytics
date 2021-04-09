@@ -62,7 +62,7 @@ if __name__ == "__main__":
 
         if file_name == "":
             json_file_name = "ymltemp"
-        elif file_name.contains(".yml"):
+        elif ".yml" in file_name:
             json_file_name = file_name.split(".yml")[0]
         else:
             json_file_name = file_name
