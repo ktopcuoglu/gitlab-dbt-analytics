@@ -93,7 +93,7 @@ sheets:
     name: gcp_active_cud
     owner: '@dtownsend'
     tabs:
-      - cud
+      - gcp_active_cud
   - name: gitlab_slack_stats
     owner: '@ken_aguilar'
     tabs:
