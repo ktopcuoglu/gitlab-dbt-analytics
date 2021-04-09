@@ -1,6 +1,24 @@
 version: 2
 
 models:
+  - name: prep_alliance_type
+    description: '{{ doc("prep_alliance_type") }}'
+    columns:
+      - name: dim_alliance_type_id
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "common", "sales_funnel"]
+
+  - name: prep_dr_partner_engagement
+    description: '{{ doc("prep_dr_partner_engagement") }}'
+    columns:
+      - name: dim_dr_partner_engagement_id
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "common", "sales_funnel"]
+
   - name: prep_sfdc_account
     description: '{{ doc("prep_sfdc_account") }}'
     columns:
@@ -64,15 +82,15 @@ models:
           - not_null
           - unique
 
-  - name: prep_crm_sales_hierarchy_live
-    description: '{{ doc("prep_crm_sales_hierarchy_live") }}'
+  - name: prep_crm_user_hierarchy_live
+    description: '{{ doc("prep_crm_user_hierarchy_live") }}'
     columns:
-      - name: dim_crm_sales_hierarchy_live_id
+      - name: dim_crm_user_hierarchy_live_id
         description: Unique identifier of a sales hierarchy tier
         tests:
           - not_null
           - unique
-      - name: dim_crm_sales_hierarchy_sales_area_live_id
+      - name: dim_crm_user_area_id
         tests:
           - unique
 
@@ -85,10 +103,10 @@ models:
           - not_null
           - unique
 
-  - name: prep_crm_sales_hierarchy_stamped
-    description: '{{ doc("prep_crm_sales_hierarchy_stamped") }}'
+  - name: prep_crm_user_hierarchy_stamped
+    description: '{{ doc("prep_crm_user_hierarchy_stamped") }}'
     columns:
-      - name: dim_crm_sales_hierarchy_stamped_id
+      - name: dim_crm_user_hierarchy_stamped_id
         description: Unique identifier of a sales hierarchy tier
         tests:
           - not_null
@@ -225,6 +243,28 @@ models:
         tests:
           - not_null
           - unique
+
+  - name: prep_gitlab_dotcom_application_settings_monthly
+    description: '{{ doc("prep_gitlab_dotcom_application_settings_monthly") }}'
+    columns:
+      - name: primary_key
+        tests:
+          - not_null
+          - unique
+      - name: snapshot_month
+        tests:
+          - not_null
+      - name: application_settings_id
+        tests:
+          - not_null
+      - name: shared_runners_minutes
+        description: Default CI minutes limit for new all namespaces when no paid plan has been purchased.
+        tests:
+          - not_null
+      - name: repository_size_limit
+        description: Default storage limit (per project reposity) for new all namespaces when no paid plan has been purchased.
+        tests:
+          - not_null
 
   - name: prep_recurring_charge_subscription_monthly
     description: '{{ doc("prep_recurring_charge_subscription_monthly") }}'
@@ -528,35 +568,35 @@ models:
       - name: metrics_path
         description: path name of metric (counts.ci_builds instead of ci_builds given there are three ci_builds metrics)
       - name: metrics_path_column_name
-        description: metric path name converted to a column name for ease of macro population 
+        description: metric path name converted to a column name for ease of macro population
       - name: full_metrics_path
-        description: raw_usage_data_payload appended with path name of metric 
+        description: raw_usage_data_payload appended with path name of metric
       - name: main_json_name
-        description: the main json this usage metric comes from 
+        description: the main json this usage metric comes from
       - name: feature_name
-        description: the name of the feature that this usage metric is meant to capture 
+        description: the name of the feature that this usage metric is meant to capture
 
   - name: prep_usage_ping_subscription_mapped_gmau
     description: '{{ doc("prep_usage_ping_subscription_mapped_gmau") }}'
     columns:
       - name: dim_usage_ping_id
-        description: JOIN key to dim_usage_pings and prep_usage_pings. Represents a single usage ping. 
+        description: JOIN key to dim_usage_pings and prep_usage_pings. Represents a single usage ping.
         tests:
           - not_null
-      - name: license_md5 
-        description: JOIN key to dim_licenses and dim_license 
+      - name: license_md5
+        description: JOIN key to dim_licenses and dim_license
         tests:
           - not_null
-      - name: dim_subscription_id 
-        description: JOIN key to dim_subscription 
+      - name: dim_subscription_id
+        description: JOIN key to dim_subscription
       - name: ping_created_at
-        description: The timestamp at which the usage ping was created_at 
+        description: The timestamp at which the usage ping was created_at
         tests:
           - not_null
       - name: ping_created_at_28_days_earlier
         description: The timestamp at which the usage ping was created_at minus 28 days for the monthly metric time period
         tests:
-          - not_null 
+          - not_null
       - name: ping_created_at_year
         description: The year ('2017') the ping was created at
         tests:
@@ -634,23 +674,23 @@ models:
     description: '{{ doc("prep_usage_ping_subscription_mapped_smau") }}'
     columns:
       - name: dim_usage_ping_id
-        description: JOIN key to dim_usage_pings and prep_usage_pings. Represents a single usage ping. 
+        description: JOIN key to dim_usage_pings and prep_usage_pings. Represents a single usage ping.
         tests:
           - not_null
-      - name: license_md5 
-        description: JOIN key to dim_licenses and dim_license 
+      - name: license_md5
+        description: JOIN key to dim_licenses and dim_license
         tests:
           - not_null
-      - name: dim_subscription_id 
-        description: JOIN key to dim_subscription 
+      - name: dim_subscription_id
+        description: JOIN key to dim_subscription
       - name: ping_created_at
-        description: The timestamp at which the usage ping was created_at 
+        description: The timestamp at which the usage ping was created_at
         tests:
           - not_null
       - name: ping_created_at_28_days_earlier
         description: The timestamp at which the usage ping was created_at minus 28 days for the monthly metric time period
         tests:
-          - not_null 
+          - not_null
       - name: ping_created_at_year
         description: The year ('2017') the ping was created at
         tests:

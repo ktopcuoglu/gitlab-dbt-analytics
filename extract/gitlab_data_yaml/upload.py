@@ -61,7 +61,7 @@ if __name__ == "__main__":
 
         if private_token is not None:
             header = f'--header "PRIVATE-TOKEN: {private_token}"'
-            command = f"curl {header} '{base_url}{file_name}%2Eyml/raw?ref=master' | yaml2json -o {file_name}.json"
+            command = f"curl {header} '{base_url}{file_name}%2Eyml/raw?ref=main' | yaml2json -o {file_name}.json"
         else:
             command = f"curl {base_url}{file_name}.yml | yaml2json -o {file_name}.json"
 

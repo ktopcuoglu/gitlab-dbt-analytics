@@ -27,6 +27,9 @@ WITH date_details AS (
       owner_id,
       account_id,
       order_type_stamped,
+      deal_category,
+      opportunity_category,
+      deal_group,
       opportunity_owner_manager,
       is_edu_oss,
       account_owner_team_stamped, 
@@ -52,7 +55,6 @@ WITH date_details AS (
 --------------------------------------
 
       is_won,
-      opportunity_category,
       raw_net_arr,
       net_incremental_acv,
       sales_qualified_source,
@@ -121,10 +123,18 @@ WITH date_details AS (
       -- logic needs to be added here once the oppotunity category fields is merged
       -- https://gitlab.com/gitlab-data/analytics/-/issues/7888
       CASE
-        WHEN sfdc_opportunity_snapshot_history.opportunity_category IN ('Credit', 'Decommission','Decommissioned')
+        WHEN sfdc_opportunity_snapshot_history.opportunity_category IN ('Decommission')
           THEN 1
         ELSE 0
       END                                                          AS is_refund,
+
+
+      CASE
+        WHEN sfdc_opportunity_snapshot_history.opportunity_category IN ('Credit','Contract Reset')
+          THEN 1
+        ELSE 0
+      END                                                          AS is_credit_contract_reset,
+
       --sfdc_opportunity_snapshot_history.is_refund,
 
       --sfdc_opportunity_snapshot_history.is_downgrade,
@@ -186,7 +196,7 @@ WITH date_details AS (
       sfdc_opportunity_snapshot_history.is_deleted,
       sfdc_opportunity_snapshot_history.last_activity_date,
       sfdc_opportunity_snapshot_history.record_type_id,
-      sfdc_opportunity_snapshot_history.opportunity_category,
+      --sfdc_opportunity_snapshot_history.opportunity_category,
 
 
       --date helpers
@@ -514,8 +524,10 @@ WITH date_details AS (
       CASE 
         WHEN opp_snapshot.is_refund = 1
           THEN -1
+        WHEN opp_snapshot.is_credit_contract_reset = 1
+          THEN 0
         ELSE 1
-      END                                                         AS calculated_deal_count,
+      END                                                                     AS calculated_deal_count,
 
       ------------------------------------------------------------------------------------------------------
       ------------------------------------------------------------------------------------------------------
@@ -525,6 +537,7 @@ WITH date_details AS (
       sfdc_opportunity_xf.is_edu_oss,
       sfdc_opportunity_xf.sales_qualified_source,
       sfdc_opportunity_xf.account_id,
+      sfdc_opportunity_xf.opportunity_category,
 
       
       CASE 
@@ -610,24 +623,10 @@ WITH date_details AS (
       sfdc_opportunity_xf.order_type_stamped,     
 
       -- top level grouping of the order type field
-      CASE 
-        WHEN sfdc_opportunity_xf.order_type_stamped = '1. New - First Order' 
-          THEN '1. New'
-        WHEN sfdc_opportunity_xf.order_type_stamped IN ('2. New - Connected', '3. Growth', '5. Churn - Partial', '4. Churn','4. Contraction','6. Churn - Final') 
-          THEN '2. Growth' 
-        ELSE '3. Other'
-      END                                                         AS deal_group,
+      sfdc_opportunity_xf.deal_group,
 
       -- medium level grouping of the order type field
-      CASE 
-        WHEN sfdc_opportunity_xf.order_type_stamped = '1. New - First Order' 
-          THEN '1. New'
-        WHEN sfdc_opportunity_xf.order_type_stamped IN ('2. New - Connected', '3. Growth') 
-          THEN '2. Growth' 
-        WHEN sfdc_opportunity_xf.order_type_stamped IN ('4. Churn','4. Contraction','5. Churn - Partial','6. Churn - Final')
-          THEN '3. Churn'
-        ELSE '4. Other' 
-      END                                                         AS deal_category,
+      sfdc_opportunity_xf.deal_category,
           
 
       ------------------------------------------------------------------------------------------------------
@@ -728,10 +727,37 @@ WITH date_details AS (
       -- compound metrics for reporting
       ------------------------------
 
+            -- Open pipeline eligibility definition
+      CASE 
+        WHEN opp_snapshot.deal_group IN ('1. New','2. Growth')
+          AND opp_snapshot.is_edu_oss = 0
+          AND opp_snapshot.is_stage_1_plus = 1
+          AND opp_snapshot.forecast_category_name != 'Omitted'
+          AND opp_snapshot.is_open = 1
+         THEN 1
+         ELSE 0
+      END                                                         AS is_eligible_open_pipeline_flag,
+
+
+      -- Created pipeline eligibility definition
+      CASE 
+        WHEN opp_snapshot.order_type_stamped IN ('1. New - First Order' ,'2. New - Connected', '3. Growth')
+          AND opp_snapshot.is_edu_oss = 0
+          AND opp_snapshot.pipeline_created_fiscal_quarter_date IS NOT NULL
+          AND opp_snapshot.opportunity_category IN ('Standard','Internal Correction','Ramp Deal','Credit','Contract Reset')  
+          AND ((opp_snapshot.is_stage_1_plus = 1
+                AND opp_snapshot.forecast_category_name != 'Omitted')
+            OR opp_snapshot.is_lost = 1)
+          AND (opp_snapshot.net_arr > 0 
+            OR opp_snapshot.opportunity_category = 'Credit')
+         THEN 1
+         ELSE 0
+      END                                                          AS is_eligible_created_pipeline_flag,
+
       -- created and closed within the quarter net arr
       CASE 
         WHEN opp_snapshot.pipeline_created_fiscal_quarter_name = opp_snapshot.close_fiscal_quarter_name
-          AND (is_won = 1 OR (is_renewal = 1 AND is_lost = 1))  
+          AND (is_won = 1 OR (is_renewal = 1 AND is_lost = 1))
             THEN opp_snapshot.net_arr
         ELSE 0
       END                                                         AS created_and_won_same_quarter_net_arr,
@@ -740,11 +766,12 @@ WITH date_details AS (
       CASE
         WHEN opp_snapshot.pipeline_created_fiscal_quarter_name = opp_snapshot.snapshot_fiscal_quarter_name
           -- Open not omitted deals or lost over stage 1 deals (net arr created implies stage 1+)
-          AND ((opp_snapshot.forecast_category_name != 'Omitted'
-                AND opp_snapshot.is_stage_1_plus = 1)
-            OR (opp_snapshot.is_lost = 1))    
-          AND opp_snapshot.is_edu_oss = 0
-          AND lower(opp_snapshot.deal_group) LIKE ANY ('%growth%', '%new%')
+        --  AND ((opp_snapshot.forecast_category_name != 'Omitted'
+        --        AND opp_snapshot.is_stage_1_plus = 1)
+        --    OR (opp_snapshot.is_lost = 1))    
+        --  AND opp_snapshot.is_edu_oss = 0
+        --  AND lower(opp_snapshot.deal_group) LIKE ANY ('%growth%', '%new%')
+          AND is_eligible_created_pipeline_flag = 1
             THEN opp_snapshot.net_arr
         ELSE 0 
       END                                                         AS created_in_snapshot_quarter_net_arr,

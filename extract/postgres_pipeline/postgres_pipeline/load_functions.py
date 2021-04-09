@@ -11,7 +11,6 @@ from gitlabdata.orchestration_utils import (
 )
 from sqlalchemy.engine.base import Engine
 
-from postgres_pipeline_table import PostgresPipelineTable
 from utils import (
     chunk_and_upload,
     get_engines,
@@ -153,6 +152,7 @@ def load_scd(
     source_table_name: str,
     table_dict: Dict[Any, Any],
     table_name: str,
+    is_append_only: bool = False,
 ) -> bool:
     """
     Load tables that are slow-changing dimensions.
@@ -173,6 +173,19 @@ def load_scd(
 
     logging.info(f"Processing table: {source_table_name}")
     query = f"{raw_query} {additional_filter}"
+
+    if is_append_only:
+        load_ids(
+            additional_filter,
+            table_dict["export_table_primary_key"],
+            raw_query,
+            source_engine,
+            source_table_name,
+            table_name,
+            target_engine,
+            backfill=backfill,
+        )
+        return True
 
     logging.info(query)
     chunk_and_upload(
@@ -196,6 +209,7 @@ def load_ids(
     table_name: str,
     target_engine: Engine,
     id_range: int = 750_000,
+    backfill: bool = True,
 ) -> None:
     """ Load a query by chunks of IDs instead of all at once."""
 
@@ -210,7 +224,6 @@ def load_ids(
         id_range=id_range,
     )
     # Iterate through the generated queries
-    backfill = True
     for query in id_queries:
         filtered_query = f"{query} {additional_filtering} ORDER BY {primary_key}"
         logging.info(filtered_query)
