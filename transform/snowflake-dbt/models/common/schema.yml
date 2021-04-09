@@ -102,6 +102,16 @@ models:
       - name: product_rate_plan_charge_name
       - name: product_delivery_type
 
+  - name: dim_alliance_type
+    description: '{{ doc("dim_alliance_type") }}'
+    columns:
+      - name: dim_alliance_type_id
+        description: Alliance type from prep table identifying the type of alliance relationship the partner has with GitLab.
+        tests:
+          - unique
+          - not_null
+        tags: ["tdf", "common", "sales_funnel"]
+
   - name: dim_billing_account
     description: '{{ doc("dim_billing_account") }}'
     columns:
@@ -265,19 +275,19 @@ models:
           - not_null
           - unique
 
-  - name: dim_crm_sales_hierarchy_live
-    description: '{{ doc("dim_crm_sales_hierarchy_live") }}'
+  - name: dim_crm_user_hierarchy_live
+    description: '{{ doc("dim_crm_user_hierarchy_live") }}'
     columns:
-      - name: dim_crm_sales_hierarchy_live_id
+      - name: dim_crm_user_hierarchy_live_id
         tests:
           - not_null
           - unique
         tags: ["tdf", "common", "sales_funnel"]
 
-  - name: dim_crm_sales_hierarchy_stamped
-    description: '{{ doc("dim_crm_sales_hierarchy_stamped") }}'
+  - name: dim_crm_user_hierarchy_stamped
+    description: '{{ doc("dim_crm_user_hierarchy_stamped") }}'
     columns:
-      - name: dim_crm_sales_hierarchy_stamped_id
+      - name: dim_crm_user_hierarchy_stamped_id
         tests:
           - not_null
           - unique
@@ -303,6 +313,16 @@ models:
         description: Number of calendar days in the given month.
         tests:
           - not_null
+
+  - name: dim_dr_partner_engagement
+    description: '{{ doc("dim_dr_partner_engagement") }}'
+    columns:
+      - name: dim_dr_partner_engagement_id
+        description: Identifies the type of business engagement relationship a partner has with GitLab.
+        tests:
+          - unique
+          - not_null
+        tags: ["tdf", "common", "sales_funnel"]
 
   - name: dim_gitlab_ops_gitlab_emails
     description: '{{ doc("gitlab_dotcom_gitlab_emails") }}'
@@ -1061,6 +1081,11 @@ models:
         tags: ["tdf", "common", "mrr"]
       - name: dim_date_id
         description: The identifier of date month in dim_date
+      - name: dim_charge_id
+        description: join key for dim_charge
+        tests:
+          - not_null
+          - unique
       - name: dim_billing_account_id
         description: join key for dim_billing_account
         tests:
@@ -1611,27 +1636,6 @@ models:
       - name: status_purchased
         description: Status of CI Minutes usage against the extra CI Minutes purchased limit by namespaces.
 
-  - name: fct_usage_data_monthly
-    description: '{{ doc("fct_usage_data_monthly") }}'
-    columns:
-      - name: metric_name
-        tests:
-          - not_null
-        tags: ["tdf", "common", "gainsight"]
-      - name: metric_value
-        tests:
-          - not_null
-        tags: ["tdf", "common", "gainsight"]
-      - name: recorded_at
-        tests:
-          - not_null
-        tags: ["tdf", "common", "gainsight"]
-      - name: stage_name
-      - name: usage_ping_id
-        tests:
-          - not_null
-        tags: ["tdf", "common", "gainsight"]
-
   - name: fct_usage_ping_metric_28_days
     description: '{{ doc("fct_usage_ping_metric_28_days") }}'
     columns:
@@ -1749,15 +1753,15 @@ models:
       - name: dim_crm_account_id
       - name: dim_parent_crm_account_id
       - name: dim_usage_ping_id
-        description: JOIN key to dim_usage_pings and prep_usage_pings. Uniquely identifies a single usage ping. 
+        description: JOIN key to dim_usage_pings and prep_usage_pings. Uniquely identifies a single usage ping.
       - name: uuid
       - name: hostname
       - name: dim_license_id
-      - name: license_md5 
-        description: JOIN key to dim_licenses and dim_license 
+      - name: license_md5
+        description: JOIN key to dim_licenses and dim_license
       - name: cleaned_version
       - name: ping_created_at
-        description: The timestamp at which the usage ping was created_at 
+        description: The timestamp at which the usage ping was created_at
       - name: ping_created_date_id
       - name: analytics_analytics_total_unique_counts_monthly
         description: The number of unique users viewing any [Analytics page](https://docs.gitlab.com/ee/user/analytics/) ([source](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/#manage-manageoptimize---smau-gmau---mau-viewing-analytics-features))
@@ -2133,28 +2137,28 @@ models:
     description: '{{ doc("dim_key_xmau_metric") }}'
     columns:
       - name: section_name
-        description: Section that the xmau metric belongs to 
+        description: Section that the xmau metric belongs to
       - name: stage_name
-        description: Stage that the xmau metric belongs to 
+        description: Stage that the xmau metric belongs to
       - name: group_name
-        description: Group that the xmau metric belongs to 
+        description: Group that the xmau metric belongs to
       - name: metrics_path
         description: path name of metric (counts.ci_builds instead of ci_builds given there are three ci_builds metrics)
       - name: sql_friendly_path
-        description: raw_usage_data_payload appended with path name of metric to easily query prep_usage_ping with 
+        description: raw_usage_data_payload appended with path name of metric to easily query prep_usage_ping with
       - name: clean_metrics_name
-        description: Name of metric without the path       
+        description: Name of metric without the path
       - name: periscope_metrics_name
-        description: Name change by PMs 
+        description: Name change by PMs
       - name: sql_friendly_name
         description: Name change by PMs with '.' instead of '_'
       - name: is_umau
-        description: Boolean field representing if the xmau metric represents Unique Monthly Active User (UMAU) metric 
+        description: Boolean field representing if the xmau metric represents Unique Monthly Active User (UMAU) metric
       - name: is_smau
-        description: Boolean field representing if the xmau metric represents a Stage Monthly Active User (SMAU) metric 
+        description: Boolean field representing if the xmau metric represents a Stage Monthly Active User (SMAU) metric
       - name: is_gmau
-        description: Boolean field representing if the xmau metric represents a Group Monthly Active user (GMAU) metric 
+        description: Boolean field representing if the xmau metric represents a Group Monthly Active user (GMAU) metric
       - name: is_paid_gmau
-        description: Boolean field representing if the xmau metric represents a Paid Group Monthly Active user (GMAU) metric 
+        description: Boolean field representing if the xmau metric represents a Paid Group Monthly Active user (GMAU) metric
       - name: time_period
         description: Metrics can be all-time counters, 28 day counters, or weekly counters. This signifies which it is
