@@ -9,9 +9,7 @@
     ('dim_sales_qualified_source','dim_sales_qualified_source'),
     ('dim_order_type','dim_order_type'),
     ('dim_deal_path','dim_deal_path'),
-    ('fct_crm_opportunity','fct_crm_opportunity'),
-    ('dim_dr_partner_engagement', 'dim_dr_partner_engagement'),
-    ('dim_alliance_type', 'dim_alliance_type')
+    ('fct_crm_opportunity','fct_crm_opportunity')
 ]) }}
 
 , dim_crm_user_hierarchy_live_sales_segment AS (
@@ -102,9 +100,6 @@
       dim_deal_path.deal_path_name,
       dim_order_type.order_type_name                                       AS order_type,
       dim_order_type.order_type_grouped,
-      dim_dr_partner_engagement.dr_partner_engagement_name,
-      dim_alliance_type.alliance_type_name,
-      dim_alliance_type.alliance_type_short_name,
       dim_sales_qualified_source.sales_qualified_source_name,
       dim_crm_account.crm_account_gtm_strategy,
       dim_crm_account.crm_account_focus_account,
@@ -170,8 +165,7 @@
       fct_crm_opportunity.comp_channel_neutral,
       fct_crm_opportunity.count_crm_attribution_touchpoints,
       fct_crm_opportunity.weighted_linear_iacv,
-      fct_crm_opportunity.count_campaigns,
-      fct_crm_opportunity.channel_type
+      fct_crm_opportunity.count_campaigns
 
     FROM fct_crm_opportunity
     LEFT JOIN dim_crm_opportunity
@@ -184,10 +178,6 @@
       ON fct_crm_opportunity.dim_deal_path_id = dim_deal_path.dim_deal_path_id
     LEFT JOIN dim_order_type
       ON fct_crm_opportunity.dim_order_type_id = dim_order_type.dim_order_type_id
-    LEFT JOIN dim_dr_partner_engagement
-      ON fct_crm_opportunity.dim_dr_partner_engagement_id = dim_dr_partner_engagement.dim_dr_partner_engagement_id
-    LEFT JOIN dim_alliance_type
-      ON fct_crm_opportunity.dim_alliance_type_id = dim_alliance_type.dim_alliance_type_id
     LEFT JOIN dim_crm_user_hierarchy_stamped_sales_segment
       ON fct_crm_opportunity.dim_crm_opp_owner_sales_segment_stamped_id = dim_crm_user_hierarchy_stamped_sales_segment.dim_crm_opp_owner_sales_segment_stamped_id
     LEFT JOIN dim_crm_user_hierarchy_stamped_geo
@@ -210,7 +200,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@jpeguero",
+    updated_by="@mcooperDD",
     created_date="2020-12-07",
-    updated_date="2021-04-08",
+    updated_date="2021-03-26",
   ) }}
