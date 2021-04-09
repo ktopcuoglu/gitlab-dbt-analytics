@@ -1071,7 +1071,7 @@ models:
         description: a boolean field created in the warehouse to flag Marketing Qualified Leads.
 
   - name: fct_mrr
-    description: One row represents Monthly Recurring Revenue per one month, subscription_id, product_details_id
+    description: One row represents Monthly Recurring Revenue per month, by rate plan charge.
     columns:
       - name: mrr_id
         description: The unique identifier of the MRR.
@@ -1085,7 +1085,6 @@ models:
         description: join key for dim_charge
         tests:
           - not_null
-          - unique
       - name: dim_billing_account_id
         description: join key for dim_billing_account
         tests:
