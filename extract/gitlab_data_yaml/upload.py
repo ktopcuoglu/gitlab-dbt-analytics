@@ -52,6 +52,7 @@ if __name__ == "__main__":
     )
 
     team_url = "https://about.gitlab.com/company/team/"
+    usage_ping_metrics_url = "http://gitlab.com/api/v4/usage_data/metric_definitions"
 
     job_failed = False
 
@@ -92,6 +93,7 @@ if __name__ == "__main__":
         )
 
     curl_and_upload("team", "team", team_url)
+    curl_and_upload("usage_ping_metrics", "usage_ping_metrics", usage_ping_metrics_url)
 
     if job_failed:
         sys.exit(1)
