@@ -74,7 +74,7 @@ date AS (
 {{ dbt_audit(
     cte_ref="final_targets",
     created_by="@jpeguero",
-    updated_by="@jpeguero",
+    updated_by="@iweeks",
     created_date="2021-04-08",
-    updated_date="2021-04-08"
+    updated_date="2021-04-12"
 ) }}
