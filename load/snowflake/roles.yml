@@ -1669,6 +1669,20 @@ roles:
                       - prep.zendesk_community_relations.*
                       - raw.zendesk_community_relations_stitch.*
 
+    - zoom:
+        warehouses:
+            - analyst_xs
+        privileges:
+            databases:
+                read:
+                    - raw
+            schemas:
+                read:
+                    - raw.tap_zoom
+            tables:
+                read:
+                    - raw.tap_zoom.*
+
     - zuora:
         warehouses:
             - analyst_xs
