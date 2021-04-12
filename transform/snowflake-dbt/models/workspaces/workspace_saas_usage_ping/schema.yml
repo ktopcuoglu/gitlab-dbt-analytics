@@ -1,7 +1,5 @@
 version: 2
 
 models:
-  - name: fct_saas_usage_ping_namespace
-    description: fct table from the usage_ping_namespace. Granularity of one row per namespace per metric per run
-  - name: fct_saas_usage_ping_metrics_status
+  - name: fct_usage_ping_metrics_status
     description: fct table that gets statistics for the metrics. to understand if the metrics succeeded and failed and how many rows we have per metrics
