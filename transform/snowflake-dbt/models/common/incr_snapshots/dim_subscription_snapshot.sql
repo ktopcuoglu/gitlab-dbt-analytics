@@ -39,27 +39,20 @@ WITH snapshot_dates AS (
            subscription.*
     FROM subscription
     INNER JOIN snapshot_dates
-                        ON snapshot_dates.date_actual >= subscription.dbt_valid_from
+                        ON snapshot_dates.date_actual >= subscription.subscription_start_date
                             AND snapshot_dates.date_actual <
-       {{ coalesce_to_infinity('subscription.dbt_valid_to') }}
+       {{ coalesce_to_infinity('subscription.subscription_end_date') }}
         QUALIFY rank() OVER (
         PARTITION BY subscription_name
        , snapshot_dates.date_actual
-        ORDER BY DBT_VALID_FROM DESC) = 1
+        ORDER BY subscription_start_date DESC) = 1
 
 ),   final AS (
 
   SELECT
-    {{ dbt_utils.surrogate_key(['snapshot_id', 'subscription_id']) }},
+    {{ dbt_utils.surrogate_key(['snapshot_id', 'dim_subscription_id']) }},
    *
   FROM zuora_subscription_spined
 )
 
-
-{{ dbt_audit(
-    cte_ref="final",
-    created_by="@paul_armstrong",
-    updated_by="@paul_armstrong",
-    created_date="2021-03-02",
-    updated_date="2021-03-02"
-) }}
+SELECT * FROM final
