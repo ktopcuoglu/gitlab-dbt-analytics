@@ -25,10 +25,10 @@ WITH snapshot_dates AS (
     {% if is_incremental() %}
 
     -- this filter will only be applied on an incremental run
-    WHERE snapshot_id > (SELECT max(dim_date.date_id)
+    WHERE subscription_end_date > (SELECT max(snapshot_dates.date_actual)
                             FROM {{ this }}
-                            INNER JOIN dim_date
-                            ON dim_date.date_actual = snapshot_date
+                            INNER JOIN snapshot_dates
+                            ON snapshot_dates.date_id = snapshot_id
                             )
 
     {% endif %}
@@ -50,7 +50,7 @@ WITH snapshot_dates AS (
 ),   final AS (
 
   SELECT
-    {{ dbt_utils.surrogate_key(['snapshot_id', 'dim_subscription_id']) }},
+    {{ dbt_utils.surrogate_key(['snapshot_id', 'dim_subscription_id']) }} AS subscription_snapshot_id,
    *
   FROM zuora_subscription_spined
 )
