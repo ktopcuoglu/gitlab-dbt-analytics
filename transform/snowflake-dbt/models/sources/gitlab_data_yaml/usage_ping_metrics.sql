@@ -15,6 +15,7 @@ WITH source AS (
 
      SELECT 
       data_by_row['key_path']         AS metrics_path,
+      data_by_row['data_source']      AS data_source,
       data_by_row['product_category'] AS product_category,
       data_by_row['product_group']    AS product_group,
       data_by_row['product_section']  AS product_section,
