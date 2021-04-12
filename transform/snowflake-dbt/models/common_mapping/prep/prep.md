@@ -29,15 +29,15 @@ Creates a base view with generated keys for the sales representative and live cr
 
 {% enddocs %}
 
-{% docs prep_crm_sales_hierarchy_live %}
+{% docs prep_crm_user_hierarchy_live %}
 
-Creates a base view with generated keys for the live crm sales hierarchy shared dimensions and references in facts.
+Creates a base view with generated keys for the live crm user hierarchy shared dimensions and references in facts.
 
 {% enddocs %}
 
-{% docs prep_crm_sales_hierarchy_stamped %}
+{% docs prep_crm_user_hierarchy_stamped %}
 
-Creates a base view with generated keys for the stamped/historical crm sales hierarchy shared dimensions and references in facts. This is built from the stamped fields in the opportunity object and will be used in sales funnel analyses.
+Creates a base view with generated keys for the stamped/historical crm user hierarchy shared dimensions and references in facts. This is built from the stamped fields in the opportunity object and will be used in sales funnel analyses.
 
 {% enddocs %}
 

@@ -275,19 +275,19 @@ models:
           - not_null
           - unique
 
-  - name: dim_crm_sales_hierarchy_live
-    description: '{{ doc("dim_crm_sales_hierarchy_live") }}'
+  - name: dim_crm_user_hierarchy_live
+    description: '{{ doc("dim_crm_user_hierarchy_live") }}'
     columns:
-      - name: dim_crm_sales_hierarchy_live_id
+      - name: dim_crm_user_hierarchy_live_id
         tests:
           - not_null
           - unique
         tags: ["tdf", "common", "sales_funnel"]
 
-  - name: dim_crm_sales_hierarchy_stamped
-    description: '{{ doc("dim_crm_sales_hierarchy_stamped") }}'
+  - name: dim_crm_user_hierarchy_stamped
+    description: '{{ doc("dim_crm_user_hierarchy_stamped") }}'
     columns:
-      - name: dim_crm_sales_hierarchy_stamped_id
+      - name: dim_crm_user_hierarchy_stamped_id
         tests:
           - not_null
           - unique
@@ -1071,7 +1071,7 @@ models:
         description: a boolean field created in the warehouse to flag Marketing Qualified Leads.
 
   - name: fct_mrr
-    description: One row represents Monthly Recurring Revenue per one month, subscription_id, product_details_id
+    description: One row represents Monthly Recurring Revenue per month, by rate plan charge.
     columns:
       - name: mrr_id
         description: The unique identifier of the MRR.
@@ -1085,7 +1085,6 @@ models:
         description: join key for dim_charge
         tests:
           - not_null
-          - unique
       - name: dim_billing_account_id
         description: join key for dim_billing_account
         tests:
@@ -1575,6 +1574,19 @@ models:
         tests:
           - not_null
           - unique
+  
+  - name: fct_sales_funnel_partner_alliance_target
+    description: '{{ doc("fct_sales_funnel_partner_alliance_target") }}'
+    columns:
+      - name: kpi_name
+        tests:
+          - not_null
+        tags: ["tdf", "common", "sales_funnel"]
+      - name: sales_funnel_partner_alliance_target_id
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "common", "sales_funnel"]
 
   - name: fct_sales_funnel_target
     description: '{{ doc("fct_sales_funnel_target") }}'

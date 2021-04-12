@@ -63,12 +63,12 @@ Dimension that combines demographic data from salesforce leads and salesforce co
 
 {% enddocs %}
 
-{% docs dim_crm_sales_hierarchy_live %}
+{% docs dim_crm_user_hierarchy_live %}
 Dimension table representing the current state of the sales hierarchy, including the user segment, geo, region, and area as it is in the crm user object.
 
 {% enddocs %}
 
-{% docs dim_crm_sales_hierarchy_stamped %}
+{% docs dim_crm_user_hierarchy_stamped %}
 Dimension table representing the sales hierarchy at the time of a closed opportunity, including the user segment. These fields are stamped on the opportunity object on the close date and are used in sales funnel analyses.
 
 {% enddocs %}
@@ -267,6 +267,12 @@ A fact table of quote amendments which have quotes and product rate plan charges
 {% docs fct_quote %}
 
 Fact table representing quotes pulled from the Zuora billing system. These are associated with crm accounts, billing accounts, opportunities, and subscriptions.
+
+{% enddocs %}
+
+{% docs fct_sales_funnel_partner_alliance_target %}
+
+Sales funnel targets set by the Finance team to measure performance of Partner and Alliances Net ARR, broken down by sales hierarchy, and order attributes.
 
 {% enddocs %}
 
