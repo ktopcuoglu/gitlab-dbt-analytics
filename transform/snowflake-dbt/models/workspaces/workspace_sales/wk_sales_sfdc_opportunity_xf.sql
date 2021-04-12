@@ -15,12 +15,9 @@ WITH sfdc_opportunity AS (
     SELECT * FROM {{ref('sfdc_accounts_xf')}}
 
 ), date_details AS (
- 
-    SELECT
-      *,
-      DENSE_RANK() OVER (ORDER BY first_day_of_fiscal_quarter) AS quarter_number
-    FROM {{ ref('date_details') }}
-    ORDER BY 1 DESC
+
+    SELECT * 
+    FROM {{ ref('wk_sales_date_details') }} 
 
 ), sfdc_opportunity_xf AS (
 
@@ -528,8 +525,8 @@ WITH sfdc_opportunity AS (
     SELECT 
       oppty_final.*,
       
-      oppty_final.opportunity_owner_user_segment                                                        AS sales_team_cro_level,
-      CONCAT(oppty_final.opportunity_owner_user_segment,'_',oppty_final.opportunity_owner_user_region)  AS sales_team_rd_asm_level,
+      COALESCE(oppty_final.opportunity_owner_user_segment ,'NA')                                                       AS sales_team_cro_level,
+      COALESCE(CONCAT(oppty_final.opportunity_owner_user_segment,'_',oppty_final.opportunity_owner_user_region),'NA')  AS sales_team_rd_asm_level,
 
       ---------------------------------------------------------------------------------------------
       ---------------------------------------------------------------------------------------------

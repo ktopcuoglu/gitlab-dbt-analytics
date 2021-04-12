@@ -2,18 +2,8 @@
 
 WITH date_details AS (
 
-    SELECT
-      *,
-      90 - DATEDIFF(day, date_actual, last_day_of_fiscal_quarter)           AS day_of_fiscal_quarter_normalised,
-      12-floor((DATEDIFF(day, date_actual, last_day_of_fiscal_quarter)/7))  AS week_of_fiscal_quarter_normalised,
-      CASE 
-        WHEN ((DATEDIFF(day, date_actual, last_day_of_fiscal_quarter)-6) % 7 = 0 
-                OR date_actual = first_day_of_fiscal_quarter) 
-          THEN 1 
-          ELSE 0 
-      END                                                                   AS first_day_of_fiscal_quarter_week_normalised 
-    FROM {{ ref('date_details') }} 
-    ORDER BY 1 DESC
+    SELECT * 
+    FROM {{ ref('wk_sales_date_details') }} 
 
 ), sfdc_opportunity_snapshot_history_xf AS (
 
