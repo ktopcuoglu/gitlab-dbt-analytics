@@ -37,8 +37,8 @@ WITH source AS (
 
     SELECT *,
       FIRST_VALUE(snapshot_date) OVER (PARTITION BY metrics_path ORDER BY snapshot_date) AS date_first_added, 
-      MIN(snapshot_date) OVER (PARTITION BY unique_key ORDER BY snapshot_date)      AS valid_from_date,
-      MAX(snapshot_date) OVER (PARTITION BY unique_key ORDER BY snapshot_date DESC) AS valid_to_date
+      MIN(snapshot_date) OVER (PARTITION BY metrics_path ORDER BY snapshot_date)         AS valid_from_date,
+      MAX(snapshot_date) OVER (PARTITION BY metrics_path ORDER BY snapshot_date DESC)    AS valid_to_date
     FROM intermediate_stage
 
 )
