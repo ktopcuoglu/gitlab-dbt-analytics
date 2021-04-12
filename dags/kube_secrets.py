@@ -38,7 +38,7 @@ GREENHOUSE_SECRET_ACCESS_KEY = Secret(
     "env", "GREENHOUSE_SECRET_ACCESS_KEY", "airflow", "GREENHOUSE_SECRET_ACCESS_KEY"
 )
 
-# Gainsight S3 Bucket 
+# Gainsight S3 Bucket
 GAINSIGHT_ACCESS_KEY_ID = Secret(
     "env", "GAINSIGHT_ACCESS_KEY_ID", "airflow", "GAINSIGHT_ACCESS_KEY_ID"
 )
