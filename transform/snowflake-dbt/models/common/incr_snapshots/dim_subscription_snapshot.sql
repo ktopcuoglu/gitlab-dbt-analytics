@@ -51,6 +51,7 @@ WITH snapshot_dates AS (
 
   SELECT
     {{ dbt_utils.surrogate_key(['snapshot_id', 'dim_subscription_id']) }} AS subscription_snapshot_id,
+    cast(GETDATE() as date) snapshot_date,
    *
   FROM zuora_subscription_spined
 )
