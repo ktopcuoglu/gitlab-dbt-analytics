@@ -19,6 +19,7 @@ WITH source AS (
       data_by_row['product_group']    AS product_group,
       data_by_row['product_section']  AS product_section,
       data_by_row['product_stage']    AS product_stage,
+      data_by_row['milestone']        AS milestone,
       data_by_row['skip_validation']  AS skip_validation,
       data_by_row['status']           AS metrics_status,
       data_by_row['tier']             AS tier,
