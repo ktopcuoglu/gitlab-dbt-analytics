@@ -2154,6 +2154,12 @@ roles:
         warehouses:
             - analyst_xs
 
+    - jordan:
+        member_of:
+            - zoom
+        warehouses:
+            - analyst_xs
+
     - jpeguero:
         member_of:
             - analyst_marketing
@@ -3231,6 +3237,11 @@ users:
     - jmahdi:
         can_login: no
         member_of: []
+
+    - jordan:
+        can_login: yes
+        member_of:
+            - jordan
 
     - jpeguero:
         can_login: yes
