@@ -65,7 +65,7 @@ gainsight_run = KubernetesPodOperator(
     secrets=[
         GAINSIGHT_ACCESS_KEY_ID,
         GAINSIGHT_SECRET_ACCESS_KEY,
-        GAINSIGHT_BUCKET_NAME
+        GAINSIGHT_BUCKET_NAME,
         SNOWFLAKE_ACCOUNT,
         SNOWFLAKE_LOAD_ROLE,
         SNOWFLAKE_LOAD_USER,
