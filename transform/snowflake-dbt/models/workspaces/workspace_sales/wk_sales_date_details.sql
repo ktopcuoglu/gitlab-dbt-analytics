@@ -11,7 +11,7 @@ WITH date_details AS (
                 OR date_actual = first_day_of_fiscal_quarter) 
           THEN 1 
           ELSE 0 
-      END                                                                   AS first_day_of_fiscal_quarter_week_normalised,
+      END                                                                   AS is_first_day_of_fiscal_quarter_week_flag,
       DENSE_RANK() OVER (ORDER BY first_day_of_fiscal_quarter)              AS quarter_number 
 
     FROM {{ ref('date_details') }} 
