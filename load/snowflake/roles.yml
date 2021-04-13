@@ -767,18 +767,18 @@ roles:
 # Object Roles
 # ==========================================
     - adaptive:
-      warehouses:
-          - analyst_xs
-      privileges:
-          databases:
-              read:
-                  - raw
-          schemas:
-              read:
-                  - raw.tap_adaptive
-          tables:
-              read:
-                  - raw.tap_adaptive.*
+        warehouses:
+            - analyst_xs
+        privileges:
+            databases:
+                read:
+                    - raw
+            schemas:
+                read:
+                    - raw.tap_adaptive
+            tables:
+                read:
+                    - raw.tap_adaptive.*
 
     - bamboohr_analytics:
         warehouses:
@@ -1657,18 +1657,18 @@ roles:
                     - raw.version_db.*
 
     - xactly:
-      warehouses:
-          - analyst_xs
-      privileges:
-          databases:
-              read:
-                  - raw
-          schemas:
-              read:
-                  - raw.tap_xactly
-          tables:
-              read:
-                  - raw.tap_xactly.*
+        warehouses:
+            - analyst_xs
+        privileges:
+            databases:
+                read:
+                    - raw
+            schemas:
+                read:
+                    - raw.tap_xactly
+            tables:
+                read:
+                    - raw.tap_xactly.*
 
     - zendesk:
         warehouses:
