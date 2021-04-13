@@ -41,17 +41,17 @@ default_args = {
 }
 
 dag = DAG(
-    "qualtrics_nps_extract", default_args=default_args, schedule_interval="0 */12 * * *"
+    "qualtrics_survey_extract", default_args=default_args, schedule_interval="0 */12 * * *"
 )
 
 # don't add a newline at the end of this because it gets added to in the K8sPodOperator arguments
-qualtrics_extract_command = f"{clone_and_setup_extraction_cmd} && python qualtrics/src/download_nps_responses.py"
+qualtrics_extract_command = f"{clone_and_setup_extraction_cmd} && python qualtrics/src/download_survey_responses.py"
 
 qualtrics_operator = KubernetesPodOperator(
     **gitlab_defaults,
     image=DATA_IMAGE,
-    task_id="qualtrics-nps-extract",
-    name="qualtrics-nps-extract",
+    task_id="qualtrics-survey-extract",
+    name="qualtrics-survey-extract",
     secrets=[
         QUALTRICS_API_TOKEN,
         QUALTRICS_NPS_ID,
