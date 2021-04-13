@@ -592,6 +592,14 @@ roles:
                     - prod.boneyard.*
                     - raw.*.*
 
+    - mashey:
+        warehouses:
+            - engineer_xs
+        member_of:
+            - zoom
+            - xactly
+            - adaptive
+
     - people_operations:
         warehouses:
             - analyst_xs
@@ -758,6 +766,20 @@ roles:
 # ==========================================
 # Object Roles
 # ==========================================
+    - adaptive:
+        warehouses:
+            - analyst_xs
+        privileges:
+            databases:
+                read:
+                    - raw
+            schemas:
+                read:
+                    - raw.tap_adaptive
+            tables:
+                read:
+                    - raw.tap_adaptive.*
+
     - bamboohr_analytics:
         warehouses:
             - analyst_xs
@@ -1634,6 +1656,19 @@ roles:
                     - prep.saas_usage_ping.*
                     - raw.version_db.*
 
+    - xactly:
+        warehouses:
+            - analyst_xs
+        privileges:
+            databases:
+                read:
+                    - raw
+            schemas:
+                read:
+                    - raw.tap_xactly
+            tables:
+                read:
+                    - raw.tap_xactly.*
 
     - zendesk:
         warehouses:
@@ -2156,7 +2191,7 @@ roles:
 
     - jordan:
         member_of:
-            - zoom
+            - mashey
         warehouses:
             - analyst_xs
 
