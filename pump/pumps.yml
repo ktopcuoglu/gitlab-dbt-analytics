@@ -7,3 +7,7 @@ pumps:
     timestamp_column: last_changed
     sensitive: True
     owner: '@jjstark'
+  - model: pump_subscription_product_usage
+    timestamp_column: report_date
+    sensitive: True
+    owner: '@m_walker'
