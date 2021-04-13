@@ -48,12 +48,12 @@ default_args = {
 # Set the command for the container
 container_cmd = f"""
     {clone_and_setup_extraction_cmd} &&
-    python3 sheetload/sheetload.py s3 $GAINSIGHT_BUCKET_NAME sheetload
+    python3 sheetload/sheetload.py s3 $GAINSIGHT_BUCKET_NAME gainsight
 """
 
 # Create the DAG
 dag = DAG(
-    "gainsight_extract", default_args=default_args, schedule_interval="0 22 */1 * *"
+    "gainsight_extract", default_args=default_args, schedule_interval="0 10 * * 0"
 )
 
 # Task 1
