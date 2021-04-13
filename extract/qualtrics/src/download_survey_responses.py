@@ -14,7 +14,9 @@ from qualtrics_client import QualtricsClient
 def extract_survey_information(qualtrics_client, survey_id, survey_table_name):
     snowflake_engine = snowflake_engine_factory(config_dict, "LOADER")
 
-    questions_format_list = [question for question in qualtrics_client.get_questions(survey_id)]
+    questions_format_list = [
+        question for question in qualtrics_client.get_questions(survey_id)
+    ]
     for question in questions_format_list:
         question["survey_id"] = survey_id
     if questions_format_list:
@@ -36,6 +38,7 @@ def extract_survey_information(qualtrics_client, survey_id, survey_table_name):
             f"raw.qualtrics.{survey_table_name}",
             snowflake_engine,
         )
+
 
 if __name__ == "__main__":
     config_dict = env.copy()

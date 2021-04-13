@@ -42,7 +42,9 @@ default_args = {
 }
 
 dag = DAG(
-    "qualtrics_survey_extract", default_args=default_args, schedule_interval="0 */12 * * *"
+    "qualtrics_survey_extract",
+    default_args=default_args,
+    schedule_interval="0 */12 * * *",
 )
 
 # don't add a newline at the end of this because it gets added to in the K8sPodOperator arguments
