@@ -270,6 +270,12 @@ Fact table representing quotes pulled from the Zuora billing system. These are a
 
 {% enddocs %}
 
+{% docs fct_sales_funnel_partner_alliance_target %}
+
+Sales funnel targets set by the Finance team to measure performance of Partner and Alliances Net ARR, broken down by sales hierarchy, and order attributes.
+
+{% enddocs %}
+
 {% docs fct_sales_funnel_target %}
 
 Sales funnel targets set by the Finance team to measure performance of important KPIs against goals, broken down by sales hierarchy, and order attributes.
