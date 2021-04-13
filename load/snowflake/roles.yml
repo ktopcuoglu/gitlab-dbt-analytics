@@ -2419,6 +2419,10 @@ roles:
         warehouses:
             - reporting
 
+    - mlancini:
+        warehouses:
+            - reporting
+
     - mpeychet:
         member_of:
             - analyst_growth
@@ -3350,6 +3354,12 @@ users:
         can_login: yes
         member_of:
             - mkarampalas
+
+    - mlancini:
+        can_login: yes
+        member_of:
+            - mlancini
+            - securityadmin
 
     - mpeychet:
         can_login: yes
