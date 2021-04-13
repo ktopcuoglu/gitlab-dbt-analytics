@@ -766,7 +766,7 @@ roles:
 # ==========================================
 # Object Roles
 # ==========================================
-  - xactly:
+  - adaptive:
     warehouses:
         - analyst_xs
     privileges:
@@ -775,10 +775,10 @@ roles:
                 - raw
         schemas:
             read:
-                - raw.tap_xactly
+                - raw.tap_adaptive
         tables:
             read:
-                - raw.tap_xactly.*
+                - raw.tap_adaptive.*
 
   - bamboohr_analytics:
         warehouses:
