@@ -135,7 +135,8 @@ WITH dim_billing_account AS (
       edition,
       version,
       is_pre_release,
-      instance_user_count
+      instance_user_count,
+      gitpod_enabled
     FROM joined
     WHERE hostname NOT IN ('staging.gitlab.com', 'dr.gitlab.com')
 
