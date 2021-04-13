@@ -14,6 +14,7 @@ from kube_secrets import (
     QUALTRICS_API_TOKEN,
     QUALTRICS_POOL_ID,
     QUALTRICS_NPS_ID,
+    QUALTRICS_POST_PURCHASE_ID,
     SNOWFLAKE_ACCOUNT,
     SNOWFLAKE_LOAD_DATABASE,
     SNOWFLAKE_LOAD_PASSWORD,
@@ -56,6 +57,7 @@ qualtrics_operator = KubernetesPodOperator(
         QUALTRICS_API_TOKEN,
         QUALTRICS_NPS_ID,
         QUALTRICS_POOL_ID,
+        QUALTRICS_POST_PURCHASE_ID,
         SNOWFLAKE_ACCOUNT,
         SNOWFLAKE_LOAD_DATABASE,
         SNOWFLAKE_LOAD_ROLE,
@@ -66,8 +68,6 @@ qualtrics_operator = KubernetesPodOperator(
     env_vars={
         **pod_env_vars,
         **{
-            "START_TIME": "{{ execution_date.isoformat() }}",
-            "END_TIME": "{{ next_execution_date.isoformat() }}",
             "QUALTRICS_DATA_CENTER": "eu",
         },
     },

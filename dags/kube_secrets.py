@@ -194,6 +194,8 @@ QUALTRICS_POOL_ID = Secret("env", "QUALTRICS_POOL_ID", "airflow", "QUALTRICS_POO
 
 QUALTRICS_NPS_ID = Secret("env", "QUALTRICS_NPS_ID", "airflow", "QUALTRICS_NPS_ID")
 
+QUALTRICS_POST_PURCHASE_ID = Secret("env", "QUALTRICS_POST_PURCHASE_ID", "airflow", "QUALTRICS_POST_PURCHASE_ID")
+
 SALT = Secret("env", "SALT", "airflow", "SALT")
 
 SALT_EMAIL = Secret("env", "SALT_EMAIL", "airflow", "SALT_EMAIL")
