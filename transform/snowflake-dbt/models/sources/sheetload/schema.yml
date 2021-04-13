@@ -77,6 +77,8 @@ models:
 - name: sheetload_engineering_infra_prod_console_access_source
 - name: sheetload_event_dictionary_simplified_source
   description: Simplified version of Events dictionary sheet
+- name: sheetload_gcp_active_cud
+  description: table of committed use discounts (CUD) in GCP 
 - name: sheetload_gitlab_contributing_organizations_source
   description: Source of contributing users mapped to customer organizations used to support MRARR.
 - name: sheetload_gitlab_slack_stats_source

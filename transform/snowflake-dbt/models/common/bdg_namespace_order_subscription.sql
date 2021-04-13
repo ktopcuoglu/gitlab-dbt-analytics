@@ -2,148 +2,124 @@
     tags=["product"]
 ) }}
 
-WITH namespace AS (
+{{ simple_cte([
+    ('namespaces', 'prep_namespace'),
+    ('subscriptions', 'prep_subscription'),
+    ('orders', 'customers_db_orders_source'),
+    ('product_tiers', 'prep_product_tier'),
+    ('product_details', 'dim_product_detail'),
+    ('recurring_charges', 'prep_recurring_charge'),
+    ('trial_histories', 'customers_db_trial_histories_source'),
+    ('subscription_delivery_types', 'bdg_subscription_product_rate_plan')
+]) }}
 
-    SELECT *
-    FROM {{ ref('prep_namespace') }}
+, product_rate_plans AS (
 
-), product_tier AS (
-
-    SELECT *
-    FROM {{ ref('prep_product_tier') }}
+    SELECT DISTINCT
+      product_rate_plan_id,
+      dim_product_tier_id,
+      product_tier_name
+    FROM product_details
     WHERE product_delivery_type = 'SaaS'
 
-), subscription AS (
+), saas_subscriptions AS (
 
-    SELECT *
-    FROM {{ ref('prep_subscription') }}
-    WHERE subscription_end_date > CURRENT_DATE
-    AND subscription_status in ('Active','Cancelled')
-
-), recurring_charge AS (
-
-    SELECT *
-    FROM {{ ref('prep_recurring_charge') }}
-    WHERE dim_date_id = TO_NUMBER(REPLACE(TO_CHAR(DATE_TRUNC('month', CURRENT_DATE)), '-', '')) --first day of current month date id
-
-), product_detail AS (
-
-    SELECT *
-    FROM {{ ref('dim_product_detail') }}
+    SELECT DISTINCT
+      dim_subscription_id,
+      product_rate_plan_id,
+      product_rate_plan_charge_name
+    FROM subscription_delivery_types
     WHERE product_delivery_type = 'SaaS'
 
-), orders AS (
+), trial_tiers AS (
 
-    SELECT *
-    FROM {{ ref('customers_db_orders_source') }}
-
-), trial_histories AS (
-
-    SELECT *
-    FROM {{ ref('customers_db_trial_histories_source') }}
+    SELECT
+      dim_product_tier_id,
+      product_tier_name
+    FROM product_tiers
+    WHERE product_tier_name = 'SaaS - Trial: Ultimate'
 
 ), current_recurring AS (
 
-    --find only SaaS recurring charge subscriptions.
-    SELECT DISTINCT
-      recurring_charge.dim_subscription_id,
-      product_detail.product_tier_name,
-      product_detail.dim_product_tier_id,
-      product_detail.product_rate_plan_id
-    FROM recurring_charge
-    --new prep table will be required AND new key in prep_recurring_charge
-    INNER JOIN product_detail
-      ON recurring_charge.dim_product_detail_id = product_detail.dim_product_detail_id
-    WHERE LOWER(product_detail.product_name) NOT LIKE '%true%'
-
+    SELECT *
+    FROM recurring_charges
+    JOIN product_details
+      ON recurring_charges.dim_product_detail_id = product_details.dim_product_detail_id
+      AND product_details.product_delivery_type = 'SaaS'
+    WHERE recurring_charges.dim_date_id = {{ get_date_id("DATE_TRUNC('month', CURRENT_DATE)") }}
+    
 ), active_namespace_list AS (
 
     --contains non-free namespaces + prior trial namespaces.
     SELECT
-      namespace.dim_namespace_id,
-      namespace.namespace_type,
-      product_tier.dim_product_tier_id                              AS dim_product_tier_id_namespace,
-      product_tier.product_tier_name                                AS product_tier_name_namespace,
+      namespaces.dim_namespace_id,
+      namespaces.namespace_type,
+      product_tiers.dim_product_tier_id                             AS dim_product_tier_id_namespace,
+      product_tiers.product_tier_name                               AS product_tier_name_namespace,
       trial_histories.start_date                                    AS saas_trial_start_date,
       trial_histories.expired_on                                    AS saas_trial_expired_on,
       COALESCE(trial_histories.gl_namespace_id IS NOT NULL, FALSE)  AS namespace_was_trial
-    FROM namespace
-    INNER JOIN product_tier
-      ON namespace.dim_product_tier_id = product_tier.dim_product_tier_id
+    FROM namespaces
+    INNER JOIN product_tiers
+      ON product_tiers.product_delivery_type = 'SaaS'
+      AND namespaces.dim_product_tier_id = product_tiers.dim_product_tier_id
     LEFT JOIN trial_histories
-      ON namespace.dim_namespace_id = trial_histories.gl_namespace_id
-    WHERE (product_tier.product_tier_name != 'SaaS - Free'
+      ON namespaces.dim_namespace_id = trial_histories.gl_namespace_id
+    WHERE (product_tiers.product_tier_name != 'SaaS - Free'
            OR namespace_was_trial)
 
 
 ), active_subscription_list AS (
   
-    --Active SaaS Subscriptions, waiting on prep_recurring_revenue
     SELECT
-      subscription.dim_subscription_id,  
-      current_recurring.product_tier_name                           AS product_tier_name_subscription,
-      current_recurring.dim_product_tier_id                         AS dim_product_tier_id_subscription,
-      current_recurring.product_rate_plan_id                        AS product_rate_plan_id_subscription,
-      subscription.dim_subscription_id_original,
-      subscription.dim_subscription_id_previous,
-      subscription.subscription_name,
-      subscription.subscription_name_slugify,
-      subscription.dim_billing_account_id,
-      subscription.dim_crm_account_id,
-      subscription.subscription_start_date,
-      subscription.subscription_end_date,
-      COUNT(*) OVER (PARTITION BY subscription.dim_subscription_id) AS count_of_tiers_per_subscription
-    FROM subscription
-    INNER JOIN current_recurring
-      ON subscription.dim_subscription_id = current_recurring.dim_subscription_id
-  
-), product_rate_plan AS (
-
-    SELECT DISTINCT
-      product_rate_plan_id,
-      dim_product_tier_id,
-      product_tier_name,
-      product_delivery_type
-    FROM product_detail
-
-), trial_tier AS (
-
-    SELECT
-      dim_product_tier_id,
-      product_tier_name,
-      product_delivery_type
-    FROM product_tier
-    WHERE product_tier_name = 'SaaS - Trial: Ultimate'
+      subscriptions.dim_subscription_id,
+      subscriptions.dim_subscription_id_original,
+      subscriptions.dim_subscription_id_previous,
+      subscriptions.subscription_name,
+      subscriptions.subscription_name_slugify,
+      subscriptions.dim_billing_account_id,
+      subscriptions.dim_crm_account_id,
+      subscriptions.subscription_start_date,
+      subscriptions.subscription_end_date,
+      product_rate_plans.product_rate_plan_id                       AS product_rate_plan_id_subscription,
+      product_rate_plans.dim_product_tier_id                        AS dim_product_tier_id_subscription,
+      product_rate_plans.product_tier_name                          AS product_tier_name_subscription,
+      COUNT(*) OVER(PARTITION BY subscriptions.dim_subscription_id) AS count_of_tiers_per_subscription,
+      IFF(current_recurring.dim_subscription_id IS NULL,
+          FALSE, TRUE)                                              AS is_subscription_active
+    FROM subscriptions
+    INNER JOIN saas_subscriptions
+      ON subscriptions.dim_subscription_id = saas_subscriptions.dim_subscription_id
+    INNER JOIN product_rate_plans
+      ON saas_subscriptions.product_rate_plan_id = product_rate_plans.product_rate_plan_id
+    LEFT JOIN current_recurring
+      ON saas_subscriptions.dim_subscription_id = current_recurring.dim_subscription_id
 
 ), active_orders_list AS (
 
     SELECT
       orders.order_id,
       orders.customer_id,
-      COALESCE(trial_tier.dim_product_tier_id,
-               product_rate_plan.dim_product_tier_id)               AS dim_product_tier_id_with_trial,
-      COALESCE(trial_tier.product_delivery_type,
-               product_rate_plan.product_delivery_type)             AS product_delivery_type_with_trial,
-      COALESCE(trial_tier.product_tier_name,
-               product_rate_plan.product_tier_name)                 AS product_tier_name_with_trial,
-      product_rate_plan.dim_product_tier_id                         AS dim_product_tier_id_order,
-      product_rate_plan.product_rate_plan_id                        AS product_rate_plan_id_order,
-      product_rate_plan.product_delivery_type                       AS product_delivery_type_order,
-      product_rate_plan.product_tier_name                           AS product_tier_name_order,
+      COALESCE(trial_tiers.dim_product_tier_id,
+               product_rate_plans.dim_product_tier_id)              AS dim_product_tier_id_with_trial,
+      COALESCE(trial_tiers.product_tier_name,
+               product_rate_plans.product_tier_name)                AS product_tier_name_with_trial,
+      product_rate_plans.dim_product_tier_id                        AS dim_product_tier_id_order,
+      product_rate_plans.product_rate_plan_id                       AS product_rate_plan_id_order,
+      product_rate_plans.product_tier_name                          AS product_tier_name_order,
       orders.subscription_id                                        AS dim_subscription_id,
       orders.subscription_name,
       orders.subscription_name_slugify,
       orders.order_start_date,
       orders.order_end_date,
       orders.gitlab_namespace_id                                    AS namespace_id,
-      namespace.ultimate_parent_namespace_id,
       orders.order_is_trial
     FROM orders
-    INNER JOIN product_rate_plan
-      ON orders.product_rate_plan_id = product_rate_plan.product_rate_plan_id
-    LEFT JOIN namespace
-      ON orders.gitlab_namespace_id = namespace.dim_namespace_id
-    LEFT JOIN trial_tier
+    INNER JOIN product_rate_plans
+      ON orders.product_rate_plan_id = product_rate_plans.product_rate_plan_id
+    LEFT JOIN namespaces
+      ON orders.gitlab_namespace_id = namespaces.dim_namespace_id
+    LEFT JOIN trial_tiers
       ON orders.order_is_trial = TRUE
     WHERE orders.order_end_date >= CURRENT_DATE
       OR orders.order_end_date IS NULL
@@ -165,26 +141,25 @@ WITH namespace AS (
       active_namespace_list.namespace_was_trial,
       active_orders_list.customer_id,
       active_orders_list.dim_product_tier_id_with_trial,
-      active_orders_list.product_delivery_type_with_trial,
       active_orders_list.product_tier_name_with_trial,
       active_orders_list.dim_product_tier_id_order,
-      active_orders_list.product_delivery_type_order,
       active_orders_list.product_tier_name_order,
       active_orders_list.order_start_date,
       active_orders_list.order_end_date,
       active_orders_list.order_is_trial,
       active_orders_list.product_rate_plan_id_order,
       active_subscription_list.subscription_name,
-      active_subscription_list.product_tier_name_subscription,
-      active_subscription_list.dim_product_tier_id_subscription,
       active_subscription_list.dim_subscription_id_original,
       active_subscription_list.dim_subscription_id_previous,
       active_subscription_list.dim_billing_account_id,
       active_subscription_list.dim_crm_account_id,
-      active_subscription_list.count_of_tiers_per_subscription,
       active_subscription_list.product_rate_plan_id_subscription,
+      active_subscription_list.dim_product_tier_id_subscription,
+      active_subscription_list.product_tier_name_subscription,
+      active_subscription_list.count_of_tiers_per_subscription,
       active_subscription_list.subscription_start_date,
       active_subscription_list.subscription_end_date,
+      active_subscription_list.is_subscription_active,
       CASE
         WHEN active_namespace_list.product_tier_name_namespace = 'SaaS - Free'
           THEN 'N/A Free'
@@ -209,8 +184,8 @@ WITH namespace AS (
         WHEN active_subscription_list.dim_subscription_id IS NOT NULL
           AND active_orders_list.order_id IS NULL
           THEN 'Paid Subscription Missing Order'
-        WHEN active_orders_list.ultimate_parent_namespace_id != active_orders_list.namespace_id
-          THEN 'Order Linked to Non-Ultimate Parent Namespace'
+        -- WHEN active_namespace_list.dim_namespace_id != active_orders_list.namespace_id
+        --   THEN 'Order Linked to Non-Ultimate Parent Namespace'
         WHEN active_namespace_list.dim_namespace_id IS NOT NULL
           AND active_orders_list.dim_subscription_id IS NOT NULL
           AND active_subscription_list.dim_subscription_id IS NOT NULL
@@ -225,11 +200,10 @@ WITH namespace AS (
     FROM active_namespace_list
     FULL OUTER JOIN active_orders_list
       ON active_namespace_list.dim_namespace_id = active_orders_list.namespace_id
-      OR active_namespace_list.dim_namespace_id = active_orders_list.ultimate_parent_namespace_id
     FULL OUTER JOIN active_subscription_list
-      ON active_orders_list.dim_subscription_id = active_subscription_list.dim_subscription_id
+      ON active_orders_list.subscription_name_slugify = active_subscription_list.subscription_name_slugify
+      OR active_orders_list.dim_subscription_id = active_subscription_list.dim_subscription_id
       OR active_orders_list.dim_subscription_id = active_subscription_list.dim_subscription_id_original
-      OR active_orders_list.subscription_name_slugify = active_subscription_list.subscription_name_slugify
       --joining on name above only works because we are only dealing with currently active subscriptions  
 
 )
@@ -237,7 +211,7 @@ WITH namespace AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@ischweickartDD",
-    updated_by="@trevor31",
+    updated_by="@ischweickartDD",
     created_date="2021-01-14",
-    updated_date="2021-03-10"
+    updated_date="2021-04-08"
 ) }}

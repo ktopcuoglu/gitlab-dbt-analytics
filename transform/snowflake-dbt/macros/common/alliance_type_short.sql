@@ -9,7 +9,6 @@ CASE
     THEN 'IBM'
   WHEN {{ partner_account }} IS NOT NULL OR {{ influence_partner }} IS NOT NULL
     THEN 'Non-Alliance Partners'
-  ELSE 'Missing alliance_type_short_name'
 END  AS alliance_type_short
 
 {%- endmacro -%}
