@@ -1324,9 +1324,9 @@ models:
         description: All-time count of CI Runners ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsci_runners))
       - name: auto_devops_enabled_all_time_event
         description: All-time count of Projects with auto DevOps template enabled ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsauto_devops_enabled))
-      - name: instance_gitlab_shared_runners_enabled
+      - name: gitlab_shared_runners_enabled
         description: Flags whether shared runners are enabled ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#gitlab_shared_runners_enabled))
-      - name: instance_container_registry_enabled
+      - name: container_registry_enabled
         description: Flags whether container registry is enabled ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#container_registry_enabled))
       - name: template_repositories_all_time_event
         description: All-time total of custom project templates and projects without namespaces ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countstemplate_repositories))
@@ -1346,7 +1346,7 @@ models:
         description: Monthly count of unique users running secret detection CI builds ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlysecureuser_secret_detection_jobs))
       - name: user_container_scanning_jobs_28_days_user
         description: Monthly count of unique users running container scanning CI builds ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlysecureuser_container_scanning_jobs))
-      - name: instance_object_store_packages_enabled
+      - name: object_store_packages_enabled
         description: Flags whether Object Storage is enabled for Uploads ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#object_storepackagesenabled))
       - name: projects_with_packages_all_time_event
         description: All-time count of projects with package registry configured ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsprojects_with_packages))
@@ -1426,11 +1426,11 @@ models:
         description: Monthly active users of GitLab Managed Terraform State ([source](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/#configureconfigure---smau-gmau---mau-of-gitlab-managed-terraform-state))
       - name: incident_management_28_days_user
         description: Unique users that interact with alerts or incidents ([source](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/#monitormonitor---smau-gmau---unique-users-that-interact-with-alerts-and-incidents))
-      - name: instance_auto_devops_enabled
+      - name: auto_devops_enabled
         description: Flags whether auto DevOps is enabled on an instance ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#instance_auto_devops_enabled))
-      - name: instance_gitaly_clusters
+      - name: gitaly_clusters_instance
         description: Number of GitLab Managed clusters both enabled and disabled on an instance ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#gitalyclusters))
-      - name: instance_epics_deepest_relationship_level
+      - name: epics_deepest_relationship_level_instance
         description: Numeric level of the deepest relationship of all epics on an instance ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsepics_deepest_relationship_level))
       - name: clusters_applications_cilium_all_time_event
         description: All-time total of GitLab Managed clusters with GitLab Managed App:Cilium installed ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsclusters_applications_cilium))
@@ -1563,9 +1563,9 @@ models:
         description: All-time count of CI Runners ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsci_runners))
       - name: auto_devops_enabled_all_time_event
         description: All-time count of Projects with auto DevOps template enabled on an instance ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsauto_devops_enabled))
-      - name: instance_gitlab_shared_runners_enabled
+      - name: gitlab_shared_runners_enabled
         description: Flags whether shared runners are enabled on an instance ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#gitlab_shared_runners_enabled))
-      - name: instance_container_registry_enabled
+      - name: container_registry_enabled
         description: Flags whether container registry is enabled ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#container_registry_enabled))
       - name: template_repositories_all_time_event
         description: All-time total of custom project templates and projects without namespaces ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countstemplate_repositories))
@@ -1585,7 +1585,7 @@ models:
         description: Monthly count of unique users running secret detection CI builds ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlysecureuser_secret_detection_jobs))
       - name: user_container_scanning_jobs_28_days_user
         description: Monthly count of unique users running container scanning CI builds ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlysecureuser_container_scanning_jobs))
-      - name: instance_object_store_packages_enabled
+      - name: object_store_packages_enabled
         description: Flags whether Object Storage is enabled for Uploads on an instance ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#object_storepackagesenabled))
       - name: projects_with_packages_all_time_event
         description: All-time count of projects with package registry configured ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsprojects_with_packages))
@@ -1665,11 +1665,11 @@ models:
         description: Monthly active users of GitLab Managed Terraform State ([source](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/#configureconfigure---smau-gmau---mau-of-gitlab-managed-terraform-state))
       - name: incident_management_28_days_user
         description: Unique users that interact with alerts or incidents ([source](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/#monitormonitor---smau-gmau---unique-users-that-interact-with-alerts-and-incidents))
-      - name: instance_auto_devops_enabled
+      - name: auto_devops_enabled
         description: Flags whether auto DevOps is enabled on an instance ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#instance_auto_devops_enabled))
-      - name: instance_gitaly_clusters
+      - name: gitaly_clusters_instance
         description: Number of GitLab Managed clusters both enabled and disabled on an instance ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#gitalyclusters))
-      - name: instance_epics_deepest_relationship_level
+      - name: epics_deepest_relationship_level_instance
         description: Numeric level of the deepest relationship of all epics on an instance ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsepics_deepest_relationship_level))
       - name: clusters_applications_cilium_all_time_event
         description: All-time total of GitLab Managed clusters with GitLab Managed App:Cilium installed ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsclusters_applications_cilium))
