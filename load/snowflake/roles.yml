@@ -599,6 +599,21 @@ roles:
             - zoom
             - xactly
             - adaptive
+        privileges:
+            databases:
+                write:
+                   - raw
+            schemas:
+              write:
+                  -raw.tap_zoom
+                  -raw.tap_adaptive
+                  -raw.tap_xactly
+            tables:
+              write:
+                  -raw.tap_zoom.*
+                  -raw.tap_adaptive.*
+                  -raw.tap_xactly.*   
+
 
     - people_operations:
         warehouses:
@@ -773,17 +788,11 @@ roles:
             databases:
                 read:
                     - raw
-                write:
-                    - raw
             schemas:
                 read:
                     - raw.tap_adaptive
-                write:
-                    - raw.tap_adaptive
             tables:
                 read:
-                    - raw.tap_adaptive.*
-                write:
                     - raw.tap_adaptive.*
 
     - bamboohr_analytics:
@@ -1669,17 +1678,11 @@ roles:
             databases:
                 read:
                     - raw
-                write:
-                    - raw
             schemas:
                 read:
                     - raw.tap_xactly
-                write:
-                    - raw.tap_xactly
             tables:
                 read:
-                    - raw.tap_xactly.*
-                write:
                     - raw.tap_xactly.*
 
     - zendesk:
@@ -1723,17 +1726,11 @@ roles:
             databases:
                 read:
                     - raw
-                write:
-                    - raw
             schemas:
                 read:
                     - raw.tap_zoom
-                write:
-                    - raw.tap_zoom
             tables:
                 read:
-                    - raw.tap_zoom.*
-                write:
                     - raw.tap_zoom.*
 
     - zuora:
