@@ -188,50 +188,54 @@ models:
         description: Monthly active users of GitLab Managed Terraform State ([source](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/#configureconfigure---smau-gmau---mau-of-gitlab-managed-terraform-state))
       - name: incident_management_28_days_user
         description: Unique users that interact with alerts or incidents ([source](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/#monitormonitor---smau-gmau---unique-users-that-interact-with-alerts-and-incidents))
+      - name: instance_auto_devops_enabled
+        description: Flags whether auto DevOps is enabled on an instance ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#instance_auto_devops_enabled))
+      - name: instance_gitaly_clusters
+        description: Number of GitLab Managed clusters both enabled and disabled on an instance ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#gitalyclusters))
+      - name: instance_epics_deepest_relationship_level
+        description: Numeric level of the deepest relationship of all epics on an instance ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsepics_deepest_relationship_level))
       - name: clusters_applications_cilium_all_time_event
-        description: Total GitLab Managed clusters with GitLab Managed App:Cilium installed ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsclusters_applications_cilium))
+        description: All-time total of GitLab Managed clusters with GitLab Managed App:Cilium installed ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsclusters_applications_cilium))
       - name: network_policy_forwards_all_time_event
         description: Cumulative count of packets forwarded by Cilium (Container Network Security) ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsnetwork_policy_forwards))
       - name: network_policy_drops_all_time_event
         description: Cumulative count of packets dropped by Cilium (Container Network Security) ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsnetwork_policy_drops))
-      - name: gitaly_clusters_all_time_event
-        description: Total GitLab Managed clusters both enabled and disabled ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#gitalyclusters))
-      - name: merge_requests_with_required_code_owners_28_days_user
-        description: Monthly count of users creating merge requests with required code owners ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlycreatemerge_requests_with_required_codeowners))
-      - name: code_review_user_approve_mr_28_days_user
-        description: Monthly count of users approving merge requests ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#redis_hll_counterscode_reviewi_code_review_user_approve_mr_monthly))
-      - name: auto_devops_enabled_instance_setting
-        description: Flags whether auto DevOps is enabled ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#instance_auto_devops_enabled))
-      - name: ci_templates_usage_28_days_event
-        description: Monthly count of CI templates ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#redis_hll_countersci_templatesci_templates_total_unique_counts_monthly))
-      - name: ci_pipelines_all_time_user
-        description: All-time count of distinct Users triggering Total pipelines ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stageverifyci_pipelines))
-      - name: epics_usage_28_days_user
-        description: Monthly users count for epics_usage ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#redis_hll_countersepics_usageepics_usage_total_unique_counts_monthly))
+      - name: requirements_with_test_report_all_time_event
+        description: All-time count of requirements having a test report ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsrequirements_with_test_report))
       - name: requirement_test_reports_ci_all_time_event
         description: All-time count of requirement test reports created from CI ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsrequirement_test_reports_ci))
-      - name: project_management_issue_milestone_changed_28_days_user
-        description: Monthly count of MAU changing an issue’s milestone ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#redis_hll_countersissues_editg_project_management_issue_milestone_changed_monthly))
-      - name: project_management_issue_iteration_changed_28_days_user
-        description: Monthly count of MAU changing an issue’s iteration ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#redis_hll_countersissues_editg_project_management_issue_iteration_changed_monthly))
-      - name: analytics_value_stream_28_days_event
-        description: Monthly count of visits to [Value Stream Analytics](https://about.gitlab.com/stages-devops-lifecycle/value-stream-analytics/) ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#redis_hll_countersanalyticsg_analytics_valuestream_monthly))
       - name: projects_imported_from_github_all_time_event
         description: All-time count of project imported from GitHub ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsprojects_imported_from_github))
       - name: projects_jira_cloud_active_all_time_event
-        description: All-time count of active integrations with Jira Cloud (Saas) ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsprojects_jira_cloud_active))
+        description: All-time count of active integrations with Jira Cloud ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsprojects_jira_cloud_active))
       - name: projects_jira_dvcs_server_active_all_time_event
         description: All-time count of active integrations with Jira Software (DVCS connector) ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsprojects_jira_dvcs_server_active))
+      - name: service_desk_issues_all_time_event
+        description: All-time count of service desk issues ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsservice_desk_issues))
+      - name: ci_pipelines_all_time_user
+        description: All-time count of distinct Users triggering Total pipelines ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stageverifyci_pipelines))
+      - name: service_desk_issues_28_days_user
+        description: Monthly count of users opening service desk issues ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlyplanservice_desk_issues))
       - name: projects_jira_active_28_days_user
         description: Monthly count of users interacting with active integrations of Jira Software ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlyplanprojects_jira_active))
       - name: projects_jira_dvcs_cloud_active_28_days_user
         description: Monthly count of users interacting with active integrations of Jira Cloud (DVCS connector) ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlyplanprojects_jira_dvcs_cloud_active))
       - name: projects_jira_dvcs_server_active_28_days_user
         description: Monthly count of users interacting with active integrations of Jira Software (DVCS connector) ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlyplanprojects_jira_dvcs_server_active))
-      - name: service_desk_issues_28_days_user
-        description: Monthly count of users opening service desk issues ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlyplanservice_desk_issues))
-      - name: service_desk_issues_all_time_event
-        description: All-time count of service desk issues ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsservice_desk_issues))
+      - name: merge_requests_with_required_code_owners_28_days_user
+        description: Monthly count of users creating merge requests with required code owners ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlycreatemerge_requests_with_required_codeowners))
+      - name: analytics_value_stream_28_days_event
+        description: Monthly count of visits to [Value Stream Analytics](https://about.gitlab.com/stages-devops-lifecycle/value-stream-analytics/) ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#redis_hll_countersanalyticsg_analytics_valuestream_monthly))
+      - name: code_review_user_approve_mr_28_days_user
+        description: Monthly count of users approving merge requests ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#redis_hll_counterscode_reviewi_code_review_user_approve_mr_monthly))
+      - name: epics_usage_28_days_user
+        description: Monthly users count for epics_usage ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#redis_hll_countersepics_usageepics_usage_total_unique_counts_monthly))
+      - name: ci_templates_usage_28_days_event
+        description: Monthly count of CI templates ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#redis_hll_countersci_templatesci_templates_total_unique_counts_monthly))
+      - name: project_management_issue_milestone_changed_28_days_user
+        description: Monthly count of MAU changing an issue’s milestone ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#redis_hll_countersissues_editg_project_management_issue_milestone_changed_monthly))
+      - name: project_management_issue_iteration_changed_28_days_user
+        description: Monthly count of MAU changing an issue’s iteration ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#redis_hll_countersissues_editg_project_management_issue_iteration_changed_monthly))
       - name: instance_user_count_not_aligned
         description: Checks if the instance user count sent with the Usage Ping aligns with `active_user_count` from Seat Link source. Returns NULL if counts are aligned, if not the instance user count from the Usage Ping is displayed.
       - name: historical_max_users_not_aligned
@@ -427,50 +431,54 @@ models:
         description: Monthly active users of GitLab Managed Terraform State ([source](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/#configureconfigure---smau-gmau---mau-of-gitlab-managed-terraform-state))
       - name: incident_management_28_days_user
         description: Unique users that interact with alerts or incidents ([source](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/#monitormonitor---smau-gmau---unique-users-that-interact-with-alerts-and-incidents))
+      - name: instance_auto_devops_enabled
+        description: Flags whether auto DevOps is enabled on an instance ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#instance_auto_devops_enabled))
+      - name: instance_gitaly_clusters
+        description: Number of GitLab Managed clusters both enabled and disabled on an instance ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#gitalyclusters))
+      - name: instance_epics_deepest_relationship_level
+        description: Numeric level of the deepest relationship of all epics on an instance ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsepics_deepest_relationship_level))
       - name: clusters_applications_cilium_all_time_event
-        description: Total GitLab Managed clusters with GitLab Managed App:Cilium installed ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsclusters_applications_cilium))
+        description: All-time total of GitLab Managed clusters with GitLab Managed App:Cilium installed ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsclusters_applications_cilium))
       - name: network_policy_forwards_all_time_event
         description: Cumulative count of packets forwarded by Cilium (Container Network Security) ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsnetwork_policy_forwards))
       - name: network_policy_drops_all_time_event
         description: Cumulative count of packets dropped by Cilium (Container Network Security) ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsnetwork_policy_drops))
-      - name: gitaly_clusters_all_time_event
-        description: Total GitLab Managed clusters both enabled and disabled ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#gitalyclusters))
-      - name: merge_requests_with_required_code_owners_28_days_user
-        description: Monthly count of users creating merge requests with required code owners ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlycreatemerge_requests_with_required_codeowners))
-      - name: code_review_user_approve_mr_28_days_user
-        description: Monthly count of users approving merge requests ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#redis_hll_counterscode_reviewi_code_review_user_approve_mr_monthly))
-      - name: auto_devops_enabled_instance_setting
-        description: Flags whether auto DevOps is enabled ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#instance_auto_devops_enabled))
-      - name: ci_templates_usage_28_days_event
-        description: Monthly count of CI templates ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#redis_hll_countersci_templatesci_templates_total_unique_counts_monthly))
-      - name: ci_pipelines_all_time_user
-        description: All-time count of distinct Users triggering Total pipelines ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stageverifyci_pipelines))
-      - name: epics_usage_28_days_user
-        description: Monthly users count for epics_usage ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#redis_hll_countersepics_usageepics_usage_total_unique_counts_monthly))
+      - name: requirements_with_test_report_all_time_event
+        description: All-time count of requirements having a test report ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsrequirements_with_test_report))
       - name: requirement_test_reports_ci_all_time_event
         description: All-time count of requirement test reports created from CI ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsrequirement_test_reports_ci))
-      - name: project_management_issue_milestone_changed_28_days_user
-        description: Monthly count of MAU changing an issue’s milestone ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#redis_hll_countersissues_editg_project_management_issue_milestone_changed_monthly))
-      - name: project_management_issue_iteration_changed_28_days_user
-        description: Monthly count of MAU changing an issue’s iteration ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#redis_hll_countersissues_editg_project_management_issue_iteration_changed_monthly))
-      - name: analytics_value_stream_28_days_event
-        description: Monthly count of visits to [Value Stream Analytics](https://about.gitlab.com/stages-devops-lifecycle/value-stream-analytics/) ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#redis_hll_countersanalyticsg_analytics_valuestream_monthly))
       - name: projects_imported_from_github_all_time_event
         description: All-time count of project imported from GitHub ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsprojects_imported_from_github))
       - name: projects_jira_cloud_active_all_time_event
-        description: All-time count of active integrations with Jira Cloud (Saas) ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsprojects_jira_cloud_active))
+        description: All-time count of active integrations with Jira Cloud ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsprojects_jira_cloud_active))
       - name: projects_jira_dvcs_server_active_all_time_event
         description: All-time count of active integrations with Jira Software (DVCS connector) ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsprojects_jira_dvcs_server_active))
+      - name: service_desk_issues_all_time_event
+        description: All-time count of service desk issues ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsservice_desk_issues))
+      - name: ci_pipelines_all_time_user
+        description: All-time count of distinct Users triggering Total pipelines ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stageverifyci_pipelines))
+      - name: service_desk_issues_28_days_user
+        description: Monthly count of users opening service desk issues ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlyplanservice_desk_issues))
       - name: projects_jira_active_28_days_user
         description: Monthly count of users interacting with active integrations of Jira Software ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlyplanprojects_jira_active))
       - name: projects_jira_dvcs_cloud_active_28_days_user
         description: Monthly count of users interacting with active integrations of Jira Cloud (DVCS connector) ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlyplanprojects_jira_dvcs_cloud_active))
       - name: projects_jira_dvcs_server_active_28_days_user
         description: Monthly count of users interacting with active integrations of Jira Software (DVCS connector) ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlyplanprojects_jira_dvcs_server_active))
-      - name: service_desk_issues_28_days_user
-        description: Monthly count of users opening service desk issues ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlyplanservice_desk_issues))
-      - name: service_desk_issues_all_time_event
-        description: All-time count of service desk issues ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsservice_desk_issues))
+      - name: merge_requests_with_required_code_owners_28_days_user
+        description: Monthly count of users creating merge requests with required code owners ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlycreatemerge_requests_with_required_codeowners))
+      - name: analytics_value_stream_28_days_event
+        description: Monthly count of visits to [Value Stream Analytics](https://about.gitlab.com/stages-devops-lifecycle/value-stream-analytics/) ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#redis_hll_countersanalyticsg_analytics_valuestream_monthly))
+      - name: code_review_user_approve_mr_28_days_user
+        description: Monthly count of users approving merge requests ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#redis_hll_counterscode_reviewi_code_review_user_approve_mr_monthly))
+      - name: epics_usage_28_days_user
+        description: Monthly users count for epics_usage ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#redis_hll_countersepics_usageepics_usage_total_unique_counts_monthly))
+      - name: ci_templates_usage_28_days_event
+        description: Monthly count of CI templates ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#redis_hll_countersci_templatesci_templates_total_unique_counts_monthly))
+      - name: project_management_issue_milestone_changed_28_days_user
+        description: Monthly count of MAU changing an issue’s milestone ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#redis_hll_countersissues_editg_project_management_issue_milestone_changed_monthly))
+      - name: project_management_issue_iteration_changed_28_days_user
+        description: Monthly count of MAU changing an issue’s iteration ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#redis_hll_countersissues_editg_project_management_issue_iteration_changed_monthly))
       - name: instance_user_count_not_aligned
         description: Checks if the instance user count sent with the Usage Ping aligns with `active_user_count` from Seat Link source. Returns NULL if counts are aligned, if not the instance user count from the Usage Ping is displayed.
       - name: historical_max_users_not_aligned
@@ -641,10 +649,10 @@ models:
         description: Cumulative count of packets dropped by Cilium (Container Network Security) ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsnetwork_policy_drops))
       - name: network_policy_drops_all_time_event_since_last_ping
       - name: network_policy_drops_all_time_event_estimated_monthly
-      - name: gitaly_clusters_all_time_event
-        description: Total GitLab Managed clusters both enabled and disabled ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#gitalyclusters))
-      - name: gitaly_clusters_all_time_event_since_last_ping
-      - name: gitaly_clusters_all_time_event_estimated_monthly
+      - name: requirements_with_test_report_all_time_event
+        description: All-time count of requirements having a test report ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsrequirements_with_test_report))
+      - name: requirements_with_test_report_all_time_event_since_last_ping
+      - name: requirements_with_test_report_all_time_event_estimated_monthly
       - name: requirement_test_reports_ci_all_time_event
         description: All-time count of requirement test reports created from CI ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsrequirement_test_reports_ci))
       - name: requirement_test_reports_ci_all_time_event_since_last_ping
@@ -654,7 +662,7 @@ models:
       - name: projects_imported_from_github_all_time_event_since_last_ping
       - name: projects_imported_from_github_all_time_event_estimated_monthly
       - name: projects_jira_cloud_active_all_time_event
-        description: All-time count of active integrations with Jira Cloud (Saas) ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsprojects_jira_cloud_active))
+        description: All-time count of active integrations with Jira Cloud ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsprojects_jira_cloud_active))
       - name: projects_jira_cloud_active_all_time_event_since_last_ping
       - name: projects_jira_cloud_active_all_time_event_estimated_monthly
       - name: projects_jira_dvcs_server_active_all_time_event
