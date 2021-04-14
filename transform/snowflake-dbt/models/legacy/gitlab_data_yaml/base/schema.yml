@@ -161,3 +161,12 @@ models:
       -   name: snapshot_date
           tests:
             - not_null
+  - name: usage_ping_metrics_latest
+    description: This is the latest version of the usage ping metrics definition file pulled from the historical base table.
+    columns:
+      -   name: snapshot_date
+          tests:
+            - not_null
+      -   name: metrics_path
+          tests:
+            - unique
