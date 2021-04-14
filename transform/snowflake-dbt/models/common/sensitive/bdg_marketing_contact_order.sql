@@ -57,7 +57,7 @@
       template_repositories_all_time_event,
       ci_pipeline_config_repository_28_days_user,
       user_unique_users_all_secure_scanners_28_days_user,
-      user_container_scanning_job_28_days_user,
+      user_container_scanning_jobs_28_days_user,
       user_sast_jobs_28_days_user,
       user_dast_jobs_28_days_user,
       user_dependency_scanning_jobs_28_days_user,
