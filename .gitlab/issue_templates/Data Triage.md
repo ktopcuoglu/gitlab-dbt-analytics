@@ -52,7 +52,7 @@ Please prioritize this issue since we dedicate a day from your milestone to this
     * [ ] Link to all resulting issues and MRs in slack 
 * [ ] [Create an issue](https://gitlab.com/gitlab-data/analytics/issues/new?issuable_template=DE%20Triage%20Errors) for each new failure in **#analytics-pipelines**
     * [ ] Link to all resulting issues and MRs in slack 
-* [ ] Investigate all pings to the `@gitlab-data/engineers` group from merge requests to the gitlab.com database schema.  If any MR needs action from the data team, create an issue in the analytics project. Link each issue created, as well as each MR reviewed, to this issue.
+* [ ] Investigate all pings to the `@gitlab-data/engineers` group from merge requests to the gitlab.com database schema.  If an MR contains any breaking changes to tables in [our extraction](https://gitlab.com/gitlab-data/analytics/-/blob/master/extract/postgres_pipeline/manifests/gitlab_com_db_manifest.yaml), create an issue in the analytics project. Link each issue created, as well as each MR reviewed, to this issue.
 
 In addition to these tasks the Data Engineer on triage should be focused on resolving these issues, including the backlog found on the [DE - Triage Errors board](https://gitlab.com/groups/gitlab-data/-/boards/1917859)
 
