@@ -168,5 +168,5 @@ models:
           tests:
             - not_null
       -   name: metrics_path
-            tests:
-              - unique
+          tests:
+            - unique
