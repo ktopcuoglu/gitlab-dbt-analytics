@@ -55,6 +55,7 @@ models:
 - name: sheetload_engineering_speciality_prior_to_capture
 - name: sheetload_engineering_infra_prod_console_access
 - name: sheetload_event_dictionary_simplified
+- name: sheetload_gcp_active_cud
 - name: sheetload_gitlab_contributing_organizations
 - name: sheetload_gitlab_slack_stats
 - name: sheetload_google_referrals
