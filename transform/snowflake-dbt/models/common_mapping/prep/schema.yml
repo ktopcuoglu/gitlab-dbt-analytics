@@ -770,9 +770,6 @@ models:
         tags: ["tdf", "common", "gainsight"]
       - name: max_historical_user_count
         description: Maximum active user count ever reported over the lifetime of the customer's subcription.
-        tests:
-          - not_null
-        tags: ["tdf", "common", "gainsight"]
       - name: report_date
         description: Day on which Seat Link usage data is reported. Should always be last day of month for historical months.
         tests:

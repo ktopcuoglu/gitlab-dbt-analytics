@@ -2097,8 +2097,6 @@ models:
         tags: ["tdf", "common", "gainsight"]
       - name: max_historical_user_count
         description: Maximum active user count ever reported over the lifetime of the customer's subcription.
-        tests:
-          - not_null
         tags: ["tdf", "common", "gainsight"]
       - name: is_last_seat_link_report_per_subscription
         description: Flags if the row contains the most recent Seat Link record received for the subscription.
