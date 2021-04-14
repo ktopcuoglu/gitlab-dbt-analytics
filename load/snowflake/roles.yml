@@ -2389,6 +2389,13 @@ roles:
         warehouses:
             - analyst_xs
 
+    - lnewbury:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+        warehouses:
+            - analyst_xs
+
     - lvandensteen:
         member_of:
             - analyst_people
@@ -3354,6 +3361,11 @@ users:
         can_login: yes
         member_of:
             - lmai
+
+    - lnewbury:
+        can_login: yes
+        member_of:
+            - lnewbury
 
     - lvandensteen:
         can_login: yes
