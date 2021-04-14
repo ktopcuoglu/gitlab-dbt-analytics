@@ -167,3 +167,6 @@ models:
       -   name: snapshot_date
           tests:
             - not_null
+      -   name: metrics_path
+            tests:
+              - unique
