@@ -2,18 +2,8 @@
 
 WITH date_details AS (
 
-    SELECT
-      *,
-      90 - DATEDIFF(day, date_actual, last_day_of_fiscal_quarter)           AS day_of_fiscal_quarter_normalised,
-      12-floor((DATEDIFF(day, date_actual, last_day_of_fiscal_quarter)/7))  AS week_of_fiscal_quarter_normalised,
-      CASE 
-        WHEN ((DATEDIFF(day, date_actual, last_day_of_fiscal_quarter)-6) % 7 = 0 
-                OR date_actual = first_day_of_fiscal_quarter) 
-          THEN 1 
-          ELSE 0 
-      END                                                                   AS first_day_of_fiscal_quarter_week_normalised 
-    FROM {{ ref('date_details') }} 
-    ORDER BY 1 DESC
+    SELECT * 
+    FROM {{ ref('wk_sales_date_details') }} 
 
 ), sfdc_opportunity_snapshot_history_xf AS (
 
@@ -317,11 +307,7 @@ WITH date_details AS (
     FROM sfdc_opportunity_snapshot_history_xf_restricted opp_history
     -- restrict the rows to pipeline of the quarter the snapshot was taken
     WHERE opp_history.snapshot_fiscal_quarter_name = opp_history.pipeline_created_fiscal_quarter_name
-      AND ((opp_history.forecast_category_name != 'Omitted'
-          AND opp_history.is_stage_1_plus = 1)
-            OR (opp_history.is_lost = 1))    
-          AND opp_history.is_edu_oss = 0
-          AND lower(opp_history.deal_group) LIKE ANY ('%growth%', '%new%')
+    AND opp_history.is_eligible_created_pipeline_flag = 1
     GROUP BY 1,2,3,4,5,6,7
 
 ), base_fields AS (

@@ -21,16 +21,16 @@ date AS (
 
     {{ dbt_utils.surrogate_key([
                                 'target_matrix.kpi_name',
-                                'date.first_day_of_month', 
-                                'order_type.dim_order_type_id', 
+                                'date.first_day_of_month',
+                                'order_type.dim_order_type_id',
                                 'sfdc_user_hierarchy_live.dim_crm_user_hierarchy_live_id',
                                 'sfdc_user_hierarchy_live.dim_crm_user_sales_segment_id',
-                                'sfdc_user_hierarchy_live.dim_crm_user_geo_id', 
-                                'sfdc_user_hierarchy_live.dim_crm_user_region_id', 
+                                'sfdc_user_hierarchy_live.dim_crm_user_geo_id',
+                                'sfdc_user_hierarchy_live.dim_crm_user_region_id',
                                 'sfdc_user_hierarchy_live.dim_crm_user_area_id',
                                 'dr_partner_engagement.dim_dr_partner_engagement_id',
                                 'alliance_type.dim_alliance_type_id'
-                                ]) 
+                                ])
     }}
                                                                                     AS sales_funnel_partner_alliance_target_id,
     target_matrix.kpi_name,
@@ -38,7 +38,7 @@ date AS (
     target_matrix.partner_engagement_type                                           AS dr_partner_engagement,
     dr_partner_engagement.dim_dr_partner_engagement_id,
     target_matrix.alliance_partner                                                  AS alliance_type,
-    alliance_type.dim_alliance_type_id,
+    {{ get_keyed_nulls('alliance_type.dim_alliance_type_id') }}                     AS dim_alliance_type_id,
     target_matrix.order_type,
     order_type.dim_order_type_id,
     {{ channel_type('target_matrix.partner_engagement_type', 'target_matrix.order_type') }},
@@ -74,7 +74,7 @@ date AS (
 {{ dbt_audit(
     cte_ref="final_targets",
     created_by="@jpeguero",
-    updated_by="@jpeguero",
+    updated_by="@iweeks",
     created_date="2021-04-08",
-    updated_date="2021-04-08"
+    updated_date="2021-04-12"
 ) }}

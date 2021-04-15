@@ -592,6 +592,14 @@ roles:
                     - prod.boneyard.*
                     - raw.*.*
 
+    - mashey:
+        warehouses:
+            - engineer_xs
+        member_of:
+            - zoom
+            - xactly
+            - adaptive
+
     - people_operations:
         warehouses:
             - analyst_xs
@@ -758,6 +766,20 @@ roles:
 # ==========================================
 # Object Roles
 # ==========================================
+    - adaptive:
+        warehouses:
+            - analyst_xs
+        privileges:
+            databases:
+                read:
+                    - raw
+            schemas:
+                read:
+                    - raw.tap_adaptive
+            tables:
+                read:
+                    - raw.tap_adaptive.*
+
     - bamboohr_analytics:
         warehouses:
             - analyst_xs
@@ -1634,6 +1656,19 @@ roles:
                     - prep.saas_usage_ping.*
                     - raw.version_db.*
 
+    - xactly:
+        warehouses:
+            - analyst_xs
+        privileges:
+            databases:
+                read:
+                    - raw
+            schemas:
+                read:
+                    - raw.tap_xactly
+            tables:
+                read:
+                    - raw.tap_xactly.*
 
     - zendesk:
         warehouses:
@@ -2154,6 +2189,12 @@ roles:
         warehouses:
             - analyst_xs
 
+    - jordan:
+        member_of:
+            - mashey
+        warehouses:
+            - analyst_xs
+
     - jpeguero:
         member_of:
             - analyst_marketing
@@ -2348,6 +2389,13 @@ roles:
         warehouses:
             - analyst_xs
 
+    - lnewbury:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+        warehouses:
+            - analyst_xs
+
     - lvandensteen:
         member_of:
             - analyst_people
@@ -2410,6 +2458,10 @@ roles:
         member_of:
             - snowplow
             - reporter
+        warehouses:
+            - reporting
+
+    - mlancini:
         warehouses:
             - reporting
 
@@ -3232,6 +3284,11 @@ users:
         can_login: no
         member_of: []
 
+    - jordan:
+        can_login: yes
+        member_of:
+            - jordan
+
     - jpeguero:
         can_login: yes
         member_of:
@@ -3305,6 +3362,11 @@ users:
         member_of:
             - lmai
 
+    - lnewbury:
+        can_login: yes
+        member_of:
+            - lnewbury
+
     - lvandensteen:
         can_login: yes
         member_of:
@@ -3339,6 +3401,12 @@ users:
         can_login: yes
         member_of:
             - mkarampalas
+
+    - mlancini:
+        can_login: yes
+        member_of:
+            - mlancini
+            - securityadmin
 
     - mpeychet:
         can_login: yes

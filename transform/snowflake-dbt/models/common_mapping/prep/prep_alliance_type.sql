@@ -22,6 +22,8 @@ WITH sfdc_opportunity_source AS (
       ON sfdc_opportunity_source.partner_account = partner_account.account_id
     LEFT JOIN sfdc_account_source      AS influence_partner
       ON sfdc_opportunity_source.influence_partner = influence_partner.account_id
+    WHERE sfdc_opportunity_source.partner_account IS NOT NULL
+      OR sfdc_opportunity_source.influence_partner IS NOT NULL
 
 ), final AS (
 
@@ -31,6 +33,13 @@ WITH sfdc_opportunity_source AS (
       alliance_type_short                               AS alliance_type_short_name
     FROM alliance_type
 
+    UNION ALL
+
+    SELECT
+      MD5('-1')                                         AS dim_alliance_type_id,
+      'Missing alliance_type_name'                      AS alliance_type_name,
+      'Missing alliance_type_short_name'                AS alliance_type_short_name
+
 )
 
 {{ dbt_audit(
@@ -38,5 +47,5 @@ WITH sfdc_opportunity_source AS (
     created_by="@iweeks",
     updated_by="@iweeks",
     created_date="2021-04-07",
-    updated_date="2021-04-07"
+    updated_date="2021-04-12"
 ) }}

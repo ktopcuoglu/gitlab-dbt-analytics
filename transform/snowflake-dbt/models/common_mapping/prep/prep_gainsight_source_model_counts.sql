@@ -46,7 +46,7 @@ WITH counts AS (
 {{ dbt_audit(
     cte_ref="counts",
     created_by="@snalamaru",
-    updated_by="@snalamaru",
+    updated_by="@ischweickartDD",
     created_date="2021-02-19",
-    updated_date="2021-02-19"
+    updated_date="2021-04-05"
 ) }}

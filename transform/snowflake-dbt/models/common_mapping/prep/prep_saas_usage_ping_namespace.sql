@@ -1,4 +1,3 @@
-
 {{ simple_cte([
     ('saas_usage_ping_namespace', 'saas_usage_ping_namespace'),
     ('dim_date', 'dim_date')
@@ -29,5 +28,10 @@
 
 )
 
-SELECT *
-FROM joined
+{{ dbt_audit(
+    cte_ref="joined",
+    created_by="@mpeychet_",
+    updated_by="@ischweickartDD",
+    created_date="2021-03-22",
+    updated_date="2021-04-05"
+) }}
