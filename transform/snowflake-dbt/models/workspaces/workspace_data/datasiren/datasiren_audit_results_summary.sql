@@ -21,7 +21,7 @@ WITH datasiren_summary AS (
       MAX(time_detected)               AS last_detected,
       MIN(time_detected)               AS first_detected
     
-		FROM datasiren_summary
+    FROM datasiren_summary
     {{ dbt_utils.group_by(n=5) }}
 
 )
