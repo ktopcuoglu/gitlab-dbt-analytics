@@ -5,7 +5,7 @@ WITH date_details AS (
 ), blocked_users AS (
   
     SELECT *
-    FROM {{ ref('GITLAB_DOTCOM_USERS_BLOCKED_XF') }}
+    FROM {{ ref('gitlab_dotcom_users_blocked_xf') }}
 
 ), all_namespaces AS (
   
@@ -33,7 +33,7 @@ WITH date_details AS (
 , all_events AS (
   
     SELECT *
-    FROM {{ ref('gitlab_dotcom_data_usage_events') }}
+    FROM {{ ref('gitlab_dotcom_usage_data_events') }}
   
 )
 
