@@ -52,18 +52,26 @@ if __name__ == "__main__":
     )
 
     team_url = "https://about.gitlab.com/company/team/"
+    usage_ping_metrics_url = "https://gitlab.com/api/v4/usage_data/metric_definitions/"
 
     job_failed = False
 
     def curl_and_upload(table_name, file_name, base_url, private_token=None):
 
-        logging.info(f"Downloading {file_name}.yml to {file_name}.json file.")
+        if file_name == "":
+            json_file_name = "ymltemp"
+        elif ".yml" in file_name:
+            json_file_name = file_name.split(".yml")[0]
+        else:
+            json_file_name = file_name
+
+        logging.info(f"Downloading {file_name} to {json_file_name}.json file.")
 
         if private_token is not None:
             header = f'--header "PRIVATE-TOKEN: {private_token}"'
-            command = f"curl {header} '{base_url}{file_name}%2Eyml/raw?ref=main' | yaml2json -o {file_name}.json"
+            command = f"curl {header} '{base_url}{file_name}%2Eyml/raw?ref=main' | yaml2json -o {json_file_name}.json"
         else:
-            command = f"curl {base_url}{file_name}.yml | yaml2json -o {file_name}.json"
+            command = f"curl {base_url}{file_name} | yaml2json -o {json_file_name}.json"
 
         try:
             p = subprocess.run(command, shell=True)
@@ -71,27 +79,31 @@ if __name__ == "__main__":
         except:
             job_failed = True
 
-        logging.info(f"Uploading to {file_name}.json to Snowflake stage.")
+        logging.info(f"Uploading to {json_file_name}.json to Snowflake stage.")
 
         snowflake_stage_load_copy_remove(
-            f"{file_name}.json",
+            f"{json_file_name}.json",
             "raw.gitlab_data_yaml.gitlab_data_yaml_load",
             f"raw.gitlab_data_yaml.{table_name}",
             snowflake_engine,
         )
 
     for key, value in handbook_dict.items():
-        curl_and_upload(key, value, handbook_url)
+        curl_and_upload(key, value + ".yml", handbook_url)
 
     for key, value in pi_file_dict.items():
-        curl_and_upload(key, value, pi_url)
+        curl_and_upload(key, value + ".yml", pi_url)
 
     for key, value in comp_calc_dict.items():
         curl_and_upload(
-            key, value, comp_calc_url, config_dict["GITLAB_ANALYTICS_PRIVATE_TOKEN"]
+            key,
+            value,
+            comp_calc_url,
+            config_dict["GITLAB_ANALYTICS_PRIVATE_TOKEN"],
         )
 
-    curl_and_upload("team", "team", team_url)
+    curl_and_upload("team", "team.yml", team_url)
+    curl_and_upload("usage_ping_metrics", "", usage_ping_metrics_url)
 
     if job_failed:
         sys.exit(1)

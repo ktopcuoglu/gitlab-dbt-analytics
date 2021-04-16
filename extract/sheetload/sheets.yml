@@ -89,6 +89,11 @@ sheets:
     owner: '@mpeychet_'
     tabs:
       - event_dictionary_simplified
+  - description:  table of active GCP Committed Use Discount (CUD)
+    name: gcp_active_cud
+    owner: '@dtownsend'
+    tabs:
+      - gcp_active_cud
   - name: gitlab_slack_stats
     owner: '@ken_aguilar'
     tabs:

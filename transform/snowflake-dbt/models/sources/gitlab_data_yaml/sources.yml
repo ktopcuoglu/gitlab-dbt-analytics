@@ -40,4 +40,5 @@ sources:
       - name: security_department_pi
       - name: stages
       - name: team
+      - name: usage_ping_metrics
       - name: ux_department_pi
