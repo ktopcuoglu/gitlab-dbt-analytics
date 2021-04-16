@@ -202,6 +202,8 @@ WITH date_details AS (
       close_date_detail.fiscal_year                              AS close_fiscal_year,
       close_date_detail.fiscal_quarter_name_fy                   AS close_fiscal_quarter_name,
       close_date_detail.first_day_of_fiscal_quarter              AS close_fiscal_quarter_date,
+
+      -- This refers to the closing quarter perspective instead of the snapshot quarter
       90 - DATEDIFF(day, snapshot_date.date_actual, close_date_detail.last_day_of_fiscal_quarter)           AS close_day_of_fiscal_quarter_normalised,
 
 
@@ -622,7 +624,7 @@ WITH date_details AS (
             OR opp_snapshot.opportunity_category = 'Credit')
          THEN 1
          ELSE 0
-      END                                                          AS is_eligible_created_pipeline_flag,
+      END                                                   AS is_eligible_created_pipeline_flag,
 
       -- created and closed within the quarter net arr
       CASE 
@@ -630,7 +632,7 @@ WITH date_details AS (
           AND (is_won = 1 OR (is_renewal = 1 AND is_lost = 1))
             THEN opp_snapshot.net_arr
         ELSE 0
-      END                                                         AS created_and_won_same_quarter_net_arr,
+      END                                                   AS created_and_won_same_quarter_net_arr,
 
       -- created within quarter
       CASE
@@ -644,14 +646,72 @@ WITH date_details AS (
           AND is_eligible_created_pipeline_flag = 1
             THEN opp_snapshot.net_arr
         ELSE 0 
-      END                                                         AS created_in_snapshot_quarter_net_arr,
+      END                                                  AS created_in_snapshot_quarter_net_arr,
+
+      ---------------------------------------------------------------------------------------------------------
+      ---------------------------------------------------------------------------------------------------------
+      -- Fields created to simplify report building down the road. Specially the pipeline velocity.
+
+      -- deal count
+      CASE 
+        WHEN opp_snapshot.is_open = 1
+          AND opp_snapshot.is_stage_1_plus = 1
+          THEN opp_snapshot.calculated_deal_count  
+        ELSE 0                                                                                              
+      END                                               AS open_1plus_deal_count,
+
+      CASE 
+        WHEN opp_snapshot.is_open = 1
+         AND opp_snapshot.is_stage_3_plus = 1
+          THEN opp_snapshot.calculated_deal_count
+        ELSE 0
+      END                                               AS open_3plus_deal_count,
+
+      CASE 
+        WHEN opp_snapshot.is_open = 1
+          AND opp_snapshot.is_stage_4_plus = 1
+          THEN opp_snapshot.calculated_deal_count
+        ELSE 0
+      END                                               AS open_4plus_deal_count,
+
+      -- booked deal count
+      CASE 
+        WHEN opp_snapshot.is_won = 1
+          THEN opp_snapshot.calculated_deal_count
+        ELSE 0
+      END                                               AS booked_deal_count,
+    
+      -----------------
+      -- Net ARR
+
+      CASE 
+        WHEN is_eligible_open_pipeline_flag = 1
+          THEN opp_snapshot.net_arr
+        ELSE 0                                                                                              
+      END                                                AS open_1plus_net_arr,
+
+      CASE 
+        WHEN is_eligible_open_pipeline_flag = 1
+          AND opp_snapshot.is_stage_3_plus = 1   
+          THEN opp_snapshot.net_arr
+        ELSE 0
+      END                                                AS open_3plus_net_arr,
+  
+      CASE 
+        WHEN is_eligible_open_pipeline_flag = 1  
+          AND opp_snapshot.is_stage_4_plus = 1
+          THEN opp_snapshot.net_arr
+        ELSE 0
+      END                                                AS open_4plus_net_arr,
 
       -- booked net arr (won + renewals / lost)
       CASE
         WHEN opp_snapshot.is_won = 1 OR (opp_snapshot.is_renewal = 1 AND opp_snapshot.is_lost = 1)
           THEN opp_snapshot.net_arr
         ELSE 0 
-      END                                                         AS booked_net_arr
+      END                                                 AS booked_net_arr
+
+
     FROM sfdc_opportunity_snapshot_history_xf opp_snapshot
 )
 
