@@ -143,8 +143,6 @@ WITH date_details AS (
       opties.created_fiscal_quarter_name,
       opties.created_fiscal_quarter_date,
 
-      opties.incremental_acv,
-      opties.net_incremental_acv,
       opties.net_arr,
 
       opties.calculated_deal_count                AS deal_count,
@@ -170,7 +168,13 @@ WITH date_details AS (
       opties.created_and_won_same_quarter_net_arr,
       
       -- created within quarter
-      opties.created_in_snapshot_quarter_net_arr
+      CASE
+        WHEN opties.pipeline_created_fiscal_quarter_name = opties.snapshot_fiscal_quarter_name
+          AND opties.is_eligible_created_pipeline_flag = 1
+            THEN opties.net_arr
+        ELSE 0 
+      END                                                AS created_in_snapshot_quarter_net_arr
+  
 
     FROM sfdc_opportunity_xf opties
   
