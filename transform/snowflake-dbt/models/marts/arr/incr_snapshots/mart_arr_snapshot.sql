@@ -13,7 +13,7 @@ WITH snapshot_dates AS (
    {% if is_incremental() %}
 
    -- this filter will only be applied on an incremental run
-   AND date_id > (SELECT max(snapshot_id) FROM {{ this }})
+   AND date_id > (SELECT max(mart_arr_snapshot_id) FROM {{ this }})
 
    {% endif %}
 
@@ -25,10 +25,10 @@ WITH snapshot_dates AS (
     {% if is_incremental() %}
 
     -- this filter will only be applied on an incremental run
-    WHERE snapshot_id > (SELECT max(dim_date.date_id)
+    WHERE arr_month > (SELECT max(snapshot_dates.date_actual)
                             FROM {{ this }}
-                            INNER JOIN dim_date
-                            ON dim_date.date_actual = snapshot_date
+                            INNER JOIN snapshot_dates
+                            ON snapshot_dates.date_actual = snapshot_date
                             )
 
     {% endif %}
@@ -39,18 +39,19 @@ WITH snapshot_dates AS (
            mart_arr.*
     FROM mart_arr
     INNER JOIN snapshot_dates
-                        ON snapshot_dates.date_actual >= mart_arr.dbt_valid_from
+                        ON snapshot_dates.date_actual >= mart_arr.arr_month
                             AND snapshot_dates.date_actual <
-       {{ coalesce_to_infinity('mart_arr.dbt_valid_to') }}
+       {{ coalesce_to_infinity('mart_arr.arr_month') }}
         QUALIFY rank() OVER (
         PARTITION BY subscription_name
        , snapshot_dates.date_actual
-        ORDER BY DBT_VALID_FROM DESC) = 1
+        ORDER BY arr_month DESC) = 1
 
 ),  final AS (
 
   SELECT
-    {{ dbt_utils.surrogate_key(['snapshot_id', 'primary_key']) }},
+    {{ dbt_utils.surrogate_key(['snapshot_id', 'primary_key']) }} as mart_arr_snapshot_id,
+     cast(GETDATE() as date) snapshot_date,
    *
   FROM mart_arr_spined
 )
