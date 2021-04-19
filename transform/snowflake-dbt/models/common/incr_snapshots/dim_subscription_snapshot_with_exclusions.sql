@@ -33,7 +33,7 @@ WITH snapshot_dates AS (
       AND exclude_from_analysis IN ('False', '')
     GROUP BY 1
 
-), zuora_subscription_spined AS (
+), dim_subscription_spined AS (
 
     SELECT
       snapshot_dates.date_id AS snapshot_id,
@@ -51,7 +51,7 @@ WITH snapshot_dates AS (
       {{ dbt_utils.surrogate_key(['snapshot_id', 'dim_subscription_id']) }} AS subscription_snapshot_id,
       cast(GETDATE() as date) snapshot_date,
       *
-    FROM zuora_subscription_spined
+    FROM dim_subscription_spined
 
 )
 
