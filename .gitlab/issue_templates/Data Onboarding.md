@@ -117,7 +117,7 @@ Some important parts of the script that you will definitely want to do in some w
     * [ ] Clone the analytics project at git@gitlab.com:gitlab-data/analytics.git
     * [ ] Make sure to globally configure git with at least your name and email.
     * [ ] Ensure you have [git completion](https://stackoverflow.com/questions/24315201/warning-this-script-is-deprecated-please-see-git-completion-zsh/41767727#41767727) configured to make your life easier
-* [ ] Install docker & docker-compose. The easiest way to do this now is to use the desktop install from [Docker](https://www.docker.com/products/docker-desktop). 
+* [ ] Install docker & docker-compose. The easiest way to do this for Mac now is to use the desktop install from [Docker](https://www.docker.com/products/docker-desktop). If working on Linux you will need to follow these [install instructions](https://docs.docker.com/engine/install/ubuntu/) instead. 
 * [ ] Install Python3. [The Hitchhiker's Guide to Python](https://docs.python-guide.org/starting/install3/osx/) is a good resource
     * [ ] Install pip3
     * [ ] Make sure to install the setuptools library as dbt will not install without it
