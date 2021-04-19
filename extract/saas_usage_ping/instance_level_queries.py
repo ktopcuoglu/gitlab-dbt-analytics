@@ -130,7 +130,7 @@ def rename_query_tables(sql_query):
                     i += 1
                     
                 next_token = tokens[index + i]
-                if str(next_token).startswith('prep') is False and str(next_token).startswith('prod') is False:
+                if not str(next_token).startswith('prep') and not str(next_token).startswith('prod'):
 
                     # insert, token list to string list, create the SQL query, reparse it
                     # there is FOR sure a beter way to do that
