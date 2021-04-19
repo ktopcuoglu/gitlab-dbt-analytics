@@ -16,5 +16,26 @@ Used in:
 {% enddocs %}
 
 {% docs usage_ping_month_range %}
-This macro returns two columns containing the first month and last month in which an `_all_time_event` metric is included in a Usage Ping payload.
+For a given subscription and `_all_time_event` metric, this macro returns two columns containing the first month and last month in which the input metric is included in a Usage Ping payload associated with the subscription.
+{% enddocs %}
+
+{% docs usage_ping_over_ping_difference %}
+This macro returns two columns for a given subscription in a given month: 
+1. The `_all_time_event` metric used as the input for the macro
+2. The difference in the input metric count between consecutive Usage Pings
+{% enddocs %}
+
+{% docs usage_ping_over_ping_estimated %}
+This macro returns three columns for a given subscription in a given month:
+1. The `_all_time_event` metric used as the input for the macro
+2. The difference in the input metric count between consecutive Usage Pings
+3. If the metric is not null in the given month, an estimated monthly metric count, calculated by multiplying the above daily count by the number of days in the given fiscal month, else `NULL`
+{% enddocs %}
+
+{% docs usage_ping_over_ping_smoothed %}
+This macro returns four columns for a given subscription in a given month:
+1. The `_all_time_event` metric used as the input for the macro
+2. The difference in the input metric count between consecutive Usage Pings
+3. A daily metric count, calculated by dividing the above difference by the number of days between the consecutive Usage Pings used to calculate the above difference
+4. An estimated monthly metric count, calculated by multiplying the above daily count by the number of days in the given fiscal month
 {% enddocs %}
