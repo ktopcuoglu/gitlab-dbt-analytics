@@ -44,6 +44,7 @@ WITH snapshot_dates AS (
     INNER JOIN snapshot_dates
       ON snapshot_dates.date_actual >= subscription_valid_dates.dbt_valid_from
       AND snapshot_dates.date_actual < {{ coalesce_to_infinity('subscription_valid_dates.dbt_valid_to') }}
+      AND snapshot_dates.date_actual = dim_subscription.snapshot_date
 
 ), final AS (
 
