@@ -1,27 +1,15 @@
-#imported libraries
-#not all of them are useful for this use case I believe
+import json
+import re
+import os
 
-import json 
+from flatten_dict import flatten
+from flatten_dict.reducer import make_reducer
+import pandas as pd
+import sql_metadata
 import sqlparse
 from sqlparse.sql import Identifier, IdentifierList, remove_quotes, Token, TokenList, Where
 from sqlparse.tokens import Keyword, Name, Punctuation, String, Whitespace
 from sqlparse.utils import imt
-import pandas as pd
-from flatten_dict import flatten
-from pprint import pprint
-import sql_metadata
-import re
-import os
-import urllib.request as request
-
-
-
-## Files imported
-
-## counter queries (sql+redis): this is generated manually by the product intelligence team
-## available here
-
-json_file_path = '/Users/mathieupeychet/Downloads/usage_ping_sql_jan.json'
 
 
 
@@ -35,20 +23,16 @@ def sql_queries_dict(json_file):
     with open(json_file) as f:
         data = json.load(f)
 
-    from flatten_dict.reducer import make_reducer
     full_payload_dict = flatten(data, reducer=make_reducer(delimiter='.'))
 
     sql_queries_dict  = {}
 
-    for (key, value) in full_payload_dict.items():
+    for key, value in full_payload_dict.items():
        # Check if key is even then add pair to new dictionary
-       if isinstance(value, str) and str.startswith(value, 'SELECT') is True:
+       if isinstance(value, str) and value.startswith('SELECT'):
            sql_queries_dict[key] = value
     
     return sql_queries_dict
-
-sql_queries_dictionary = sql_queries_dict(json_file_path)
-print(sql_queries_dictionary)
 
 
 def add_counter_name_as_column(sql_metrics_name, sql_query):
@@ -73,17 +57,19 @@ def add_counter_name_as_column(sql_metrics_name, sql_query):
     # split the query in tokens
     # get a list of tokens
     token_list = sql_query_parsed[0].tokens
-    from_index = 0
     
+    select_index = 0
     for index, token in enumerate(token_list):
 
         # identify if it is a select statement
-        if (token.is_keyword and str(token) == 'SELECT') is True:
+        if token.is_keyword and str(token) == 'SELECT':
             # set the select_index
             select_index = index
             break
+
+    from_index = 0
     for index, token in enumerate(token_list):
-        if (token.is_keyword and str(token) == 'FROM') is True:
+        if token.is_keyword and str(token) == 'FROM':
             from_index = index
             break
     token_list_with_counter_name = token_list[:]
@@ -101,11 +87,6 @@ def add_counter_name_as_column(sql_metrics_name, sql_query):
     enhanced_query = ''.join(enhanced_query_list)
     
     return enhanced_query
-
-
-
-sql_queries_dict_with_new_column = { metric_name:add_counter_name_as_column(metric_name, sql_queries_dictionary[metric_name]) for metric_name in sql_queries_dictionary}
-sql_queries_dict_with_new_column
 
 
 def rename_query_tables(sql_query):
@@ -166,6 +147,17 @@ def rename_query_tables(sql_query):
     return token_query
         
 
-final_sql_query_dict = {metric_name: rename_query_tables(sql_queries_dict_with_new_column[metric_name]) for metric_name in sql_queries_dict_with_new_column}
-final_sql_query_dict
+if __name__ == '__main__':
+    ## Files imported
+
+    ## counter queries (sql+redis): this is generated manually by the product intelligence team
+    ## available here
+
+    json_file_path = './usage_ping_instance_queries.json'
+
+    sql_queries_dictionary = sql_queries_dict(json_file_path)
+
+    sql_queries_dict_with_new_column = { metric_name:add_counter_name_as_column(metric_name, sql_queries_dictionary[metric_name]) for metric_name in sql_queries_dictionary}
+
+    final_sql_query_dict = {metric_name: rename_query_tables(sql_queries_dict_with_new_column[metric_name]) for metric_name in sql_queries_dict_with_new_column}
 
