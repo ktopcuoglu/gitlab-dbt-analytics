@@ -95,16 +95,9 @@ def rename_query_tables(sql_query):
     '''
     
     ### comprehensive list of all the keywords that are followed by a table name
-    keyword_to_look_at = [            
+    keywords_to_look_at = [            
                 'FROM',
                 "JOIN",
-                "INNER JOIN",
-                "FULL JOIN",
-                "FULL OUTER JOIN",
-                "LEFT JOIN",
-                "RIGHT JOIN",
-                "LEFT OUTER JOIN",
-                "RIGHT OUTER JOIN",
     ]
 
     
@@ -112,39 +105,26 @@ def rename_query_tables(sql_query):
     parsed = sqlparse.parse(sql_query)
     tokens = list(TokenList(parsed[0].tokens).flatten())
 
-    # setting up to -1 to start
-    # I don't think this is clean but I was not sure what the best practice was
-    keyword_token_index = -1
-    
-    while keyword_token_index != 0:
-        keyword_token_index = 0
-        
-        # go through the tokens to find the tables that should be renamed
-        # I find this for loop very confusing... there might be better ways to do it for sure
-        for index, token in enumerate(tokens):
-            if str(token) in keyword_to_look_at:
-                keyword_token_index = index
-                i = 1
-                # Whitespaces are considered as tokens and should be skipped
-                while tokens[index + i].ttype is Whitespace:
-                    i += 1
-                    
-                next_token = tokens[index + i]
-                if not str(next_token).startswith('prep') and not str(next_token).startswith('prod'):
+    token_string_list = [str(token) for token in tokens]
 
-                    # insert, token list to string list, create the SQL query, reparse it
-                    # there is FOR sure a beter way to do that
-                    tokens.insert(keyword_token_index + i, "prep.gitlab_dotcom.gitlab_dotcom_" + str(next_token) + "_dedupe_source AS " )
-                    tokens = [str(token) for token in tokens]
-                    token_query = ''.join(tokens)
-                    parsed = sqlparse.parse(token_query)
-                    tokens = list(TokenList(parsed[0].tokens).flatten())
-                    break
-                else:
-                    keyword_token_index = 0
-            if keyword_token_index > 0:
-                break
-    return token_query
+    # go through the tokens to find the tables that should be renamed
+    # I find this for loop very confusing... there might be better ways to do it for sure
+    for index in range(len(tokens)):
+        token = tokens[index]
+        if any(str(token) in keyword for keyword in keywords_to_look_at):
+            i = 1
+            # Whitespaces are considered as tokens and should be skipped
+            while tokens[index + i].ttype is Whitespace:
+                i += 1
+                
+            next_token = tokens[index + i]
+            if not str(next_token).startswith('prep') and not str(next_token).startswith('prod'):
+
+                # insert, token list to string list, create the SQL query, reparse it
+                # there is FOR sure a beter way to do that
+                token_string_list[index + i] = "prep.gitlab_dotcom.gitlab_dotcom_" + str(next_token) + "_dedupe_source AS "
+
+    return ''.join(token_string_list)
         
 
 if __name__ == '__main__':
