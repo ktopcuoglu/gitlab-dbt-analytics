@@ -1847,6 +1847,13 @@ roles:
         warehouses:
             - analyst_xs
 
+    - camsmith:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+        warehouses:
+            - analyst_xs
+
     - cli:
         member_of:
             - product_manager
@@ -3144,6 +3151,11 @@ users:
         can_login: yes
         member_of:
             - brufener
+
+    - camsmith:
+        can_login: yes
+        member_of:
+            - camsmith
 
     - cli:
         can_login: yes
