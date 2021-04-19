@@ -1,7 +1,7 @@
 {{ config({
         "materialized": "incremental",
         "unique_key": "subscription_snapshot_id",
-        "tags": ["arr_snapshots"]
+        "tags": ["incremental_snapshot"]
     })
 }}
 

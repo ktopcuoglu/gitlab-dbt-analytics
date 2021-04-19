@@ -1,7 +1,7 @@
 {{ config({
         "materialized": "incremental",
         "unique_key": "fct_mrr_snapshot_id",
-        "tags": ["arr_snapshots"]
+        "tags": ["incremental_snapshot"]
     })
 }}
 
