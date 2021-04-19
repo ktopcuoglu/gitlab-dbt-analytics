@@ -1,6 +1,6 @@
 {{ config({
         "materialized": "incremental",
-        "unique_key": "subscription_snapshot_id",
+        "unique_key": "dim_subscription_snapshot_id",
         "tags": ["arr_snapshots"]
     })
 }}
@@ -26,7 +26,7 @@ WITH snapshot_dates AS (
 
 ), subscription_valid_dates AS (
 
-    SELECT DISTINCT subscription_id, MAX(dbt_valid_from) dbt_valid_from, MAX(dbt_valid_to) dbt_valid_to
+    SELECT DISTINCT subscription_id, dbt_valid_from, dbt_valid_to
     FROM {{ ref('zuora_subscription_snapshots_source') }}
     WHERE subscription_status NOT IN ('Draft', 'Expired')
       AND is_deleted = FALSE
@@ -44,14 +44,12 @@ WITH snapshot_dates AS (
     INNER JOIN snapshot_dates
       ON snapshot_dates.date_actual >= subscription_valid_dates.dbt_valid_from
       AND snapshot_dates.date_actual < {{ coalesce_to_infinity('subscription_valid_dates.dbt_valid_to') }}
-      AND snapshot_dates.date_actual = dim_subscription.snapshot_date
 
 ), final AS (
 
     SELECT
-      {{ dbt_utils.surrogate_key(['snapshot_id', 'dim_subscription_id']) }} AS subscription_snapshot_id,
-      cast(GETDATE() as date) snapshot_date,
-      *
+      {{ dbt_utils.surrogate_key(['snapshot_id', 'dim_subscription_id']) }} AS dim_subscription_snapshot_id,
+       *
     FROM dim_subscription_spined
 
 )
