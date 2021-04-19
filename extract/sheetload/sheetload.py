@@ -242,6 +242,7 @@ def s3_loader(bucket: str, schema: str, conn_dict: Dict[str, str] = None) -> Non
     elif schema == "gainsight":
         aws_access_key_id = env["GAINSIGHT_ACCESS_KEY_ID"]
         aws_secret_access_key = env["GAINSIGHT_SECRET_ACCESS_KEY"]
+        # The file is located in  subfolder fixed by gainsight team.
         path_prefix = "gainsight-to-snowflake"
 
     session = boto3.Session(
@@ -263,7 +264,9 @@ def s3_loader(bucket: str, schema: str, conn_dict: Dict[str, str] = None) -> Non
 
             sheet_df = pd.read_csv(StringIO(csv_string), engine="c", low_memory=False)
 
-            table, extension = file.split(".")[0:2]
+            table_name, extension = file.split(".")[0:2]
+            # To pick up the file name alone  not the whole path to the file for as table name
+            table = table_name.split("/")[-1]
 
             dw_uploader(engine, table, sheet_df, truncate=True)
 
