@@ -2,9 +2,13 @@
 
 The "usage ping" is collected from self-installed instances of GitLab for those instances that have the feature enabled. This feature allows GitLab to understand usage data for self-installed instances broken down on an instance and namespace level.
 
-GitLab.com, which is essentially a GitLab-hosted version of GitLab, has historically not sent usage ping data to the usage ping collector because all of the usage data is available in an unaggregated state within the GitLab.com database.  This has led to the need to segment usage data analytics into analyses that are based on self-hosted instances, and separately analyses that are based on the SaaS offering.
+GitLab.com, which is essentially a GitLab-hosted version of GitLab, has sent usage ping data in the past, but this process had problems:
+* The usage ping process from GitLab.com took too long to run
+* Running the same queries in the SaaS instance as other instances resulted in data that was not granular enough. Data was needed from the namespace grain for better analytics.
 
-The purpose of this "extract" is to transform data from GitLab.com in a way that creates generated usage pings for the SaaS instance as well as each namespace.
+This extract addresses these issues:  
+* This extract offloads the SaaS usage ping process to processes in Airflow and Snowflake so it doesn't take production resources to complete.  The queries may still be long-running and costly, but Snowflake is much better suited for large data transformations such as the usage ping queries.  Additionally, the data team can monitor durations and costs on this draft dashboard [here](https://app.periscopedata.com/app/gitlab/839683/SaaS-Usage-Ping-Monitoring) to ensure that the costs stay within acceptable bounds. 
+* This extract runs queries for the namespace level so that metrics can be gathered in fine enough detail to serve the product and technical account manager teams.
 
 ### Technical Implementation
 
