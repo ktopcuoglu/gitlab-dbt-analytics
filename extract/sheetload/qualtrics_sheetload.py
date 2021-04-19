@@ -74,7 +74,7 @@ def get_metadata(
     file,
     google_sheet_client,
     maximum_backoff_sec: int = 300,
-) -> gspread.metadata:
+):
     """
     Returns the google sheet name and file name
     """
