@@ -629,7 +629,7 @@ WITH date_details AS (
       -- created and closed within the quarter net arr
       CASE 
         WHEN opp_snapshot.pipeline_created_fiscal_quarter_name = opp_snapshot.close_fiscal_quarter_name
-          AND (is_won = 1 OR (is_renewal = 1 AND is_lost = 1))
+          AND (opp_snapshot.is_won = 1 OR (opp_snapshot.is_renewal = 1 AND opp_snapshot.is_lost = 1))
             THEN opp_snapshot.net_arr
         ELSE 0
       END                                                   AS created_and_won_same_quarter_net_arr,
