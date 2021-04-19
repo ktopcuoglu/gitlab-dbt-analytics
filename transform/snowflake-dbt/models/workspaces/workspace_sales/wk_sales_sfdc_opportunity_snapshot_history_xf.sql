@@ -654,23 +654,23 @@ WITH date_details AS (
 
       -- deal count
       CASE 
-        WHEN opp_snapshot.is_open = 1
+        WHEN is_eligible_open_pipeline_flag = 1
           AND opp_snapshot.is_stage_1_plus = 1
-          THEN opp_snapshot.calculated_deal_count  
+            THEN opp_snapshot.calculated_deal_count  
         ELSE 0                                                                                              
       END                                               AS open_1plus_deal_count,
 
       CASE 
-        WHEN opp_snapshot.is_open = 1
-         AND opp_snapshot.is_stage_3_plus = 1
-          THEN opp_snapshot.calculated_deal_count
+        WHEN is_eligible_open_pipeline_flag = 1
+          AND opp_snapshot.is_stage_3_plus = 1
+            THEN opp_snapshot.calculated_deal_count
         ELSE 0
       END                                               AS open_3plus_deal_count,
 
       CASE 
-        WHEN opp_snapshot.is_open = 1
+        WHEN is_eligible_open_pipeline_flag = 1
           AND opp_snapshot.is_stage_4_plus = 1
-          THEN opp_snapshot.calculated_deal_count
+            THEN opp_snapshot.calculated_deal_count
         ELSE 0
       END                                               AS open_4plus_deal_count,
 
@@ -693,20 +693,22 @@ WITH date_details AS (
       CASE 
         WHEN is_eligible_open_pipeline_flag = 1
           AND opp_snapshot.is_stage_3_plus = 1   
-          THEN opp_snapshot.net_arr
+            THEN opp_snapshot.net_arr
         ELSE 0
       END                                                AS open_3plus_net_arr,
   
       CASE 
         WHEN is_eligible_open_pipeline_flag = 1  
           AND opp_snapshot.is_stage_4_plus = 1
-          THEN opp_snapshot.net_arr
+            THEN opp_snapshot.net_arr
         ELSE 0
       END                                                AS open_4plus_net_arr,
 
       -- booked net arr (won + renewals / lost)
       CASE
-        WHEN opp_snapshot.is_won = 1 OR (opp_snapshot.is_renewal = 1 AND opp_snapshot.is_lost = 1)
+        WHEN opp_snapshot.is_won = 1 
+          OR (opp_snapshot.is_renewal = 1 
+            AND opp_snapshot.is_lost = 1)
           THEN opp_snapshot.net_arr
         ELSE 0 
       END                                                 AS booked_net_arr

@@ -440,7 +440,7 @@ WITH sfdc_opportunity AS (
         WHEN sfdc_opportunity_xf.account_owner_team_stamped IN ('MM - APAC','MM - East','MM - EMEA','Commercial - MM','MM - West','MM-EMEA')
           THEN 'Mid-Market'
         ELSE 'SMB'
-      END                                                                     AS account_owner_team_stamped_cro_level,   
+      END                                                                   AS account_owner_team_stamped_cro_level,   
 
       ----------------------------------------------------------------
       ----------------------------------------------------------------
@@ -452,14 +452,14 @@ WITH sfdc_opportunity AS (
         WHEN sfdc_opportunity_xf.is_credit_contract_reset = 1
           THEN 0
         ELSE 1
-      END                                                                      AS calculated_deal_count,
+      END                                                                    AS calculated_deal_count,
 
         -- PIO Flag for PIO reporting dashboard
       CASE 
         WHEN sfdc_opportunity_xf.dr_partner_engagement = 'PIO' 
           THEN 1 
         ELSE 0 
-      END                                                                       AS partner_engaged_opportunity_flag,
+      END                                                                    AS partner_engaged_opportunity_flag,
 
       
        -- check if renewal was closed on time or not
@@ -578,21 +578,21 @@ WITH sfdc_opportunity AS (
 
       -- deal count
       CASE 
-        WHEN oppty_final.is_open = 1
+        WHEN is_eligible_open_pipeline_flag = 1
           AND oppty_final.is_stage_1_plus = 1
           THEN oppty_final.calculated_deal_count  
         ELSE 0                                                                                              
       END                                               AS open_1plus_deal_count,
 
       CASE 
-        WHEN oppty_final.is_open = 1
+        WHEN is_eligible_open_pipeline_flag = 1
          AND oppty_final.is_stage_3_plus = 1
           THEN oppty_final.calculated_deal_count
         ELSE 0
       END                                               AS open_3plus_deal_count,
 
       CASE 
-        WHEN oppty_final.is_open = 1
+        WHEN is_eligible_open_pipeline_flag = 1
           AND oppty_final.is_stage_4_plus = 1
           THEN oppty_final.calculated_deal_count
         ELSE 0
