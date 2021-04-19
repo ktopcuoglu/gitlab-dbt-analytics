@@ -59,7 +59,7 @@ SELECT
   sfdc_parent_sales_segment,
   zuora_active_state,
   zuora_contact_id,
-  zuora_created_date
+  zuora_created_date,
 
   -- METADATA COLUMNS FOR USE IN PUMP (NOT INTEGRATION)
   last_changed

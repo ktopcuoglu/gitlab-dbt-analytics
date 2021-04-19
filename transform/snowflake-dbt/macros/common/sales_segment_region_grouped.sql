@@ -8,7 +8,7 @@ CASE
   WHEN {{ segment }} IN ('Large', 'PubSec') AND {{ sales_region }} IN ('APAC', 'PubSec','EMEA', 'Global')
     THEN {{ sales_region }}
   WHEN {{ segment }} IN ('Large', 'PubSec') AND {{ sales_region }} NOT IN ('West', 'East', 'APAC', 'PubSec','EMEA', 'Global')
-    THEN 'Other'
+    THEN 'Large Other'
   WHEN {{ segment }} NOT IN ('Large', 'PubSec')
     THEN {{ segment }}
   ELSE 'Missing segment_region_grouped'

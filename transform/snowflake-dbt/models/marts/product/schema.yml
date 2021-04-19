@@ -1,5 +1,5 @@
 version: 2
 
 models:
-  - name: mart_estimated_smau
-    description: '{{ doc("mart_estimated_smau") }}'
+  - name: mart_estimated_xmau
+    description: '{{ doc("mart_estimated_xmau") }}'
