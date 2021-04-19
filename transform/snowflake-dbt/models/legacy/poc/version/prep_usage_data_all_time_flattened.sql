@@ -4,47 +4,19 @@
     })
 }}
 
+{% set metric_type = '28_days' %}
 
-{% set metric_type = 'all_time' %}
-{% set json_to_parse = ['analytics_unique_visits', 'counts_monthly', 'usage_activity_by_stage_monthly', 'usage_activity_by_stage_monthly', 'redis_hll_counters', 'counts'] %}
-
-WITH data AS ( 
+WITH flattened AS ( 
   
-    SELECT * FROM {{ ref('version_usage_data')}}
-    {% if is_incremental() %}
+    SELECT * FROM {{ ref('prep_usage_data_flattened') }}
 
-      WHERE created_at >= (SELECT MAX(created_at) FROM {{this}})
+), usage_ping_metrics AS (
 
-    {% endif %}
-
-)
-
-, flattened AS (
-    {% for column in json_to_parse %}
-      (
-
-        SELECT 
-          {{ dbt_utils.surrogate_key(['id', 'path']) }}      AS instance_path_id,
-          uuid                                               AS instance_id, 
-          id                                                 AS ping_id,
-          host_id,
-          created_at,
-          path                                               AS metric_path, 
-          value                                              AS metric_value
-        FROM data,
-        lateral flatten(input => raw_usage_data_payload, path => '{{ column }}',
-        recursive => true) 
-        WHERE typeof(value) IN ('INTEGER', 'DECIMAL')
-        ORDER BY created_at DESC
-
-      )
-
-      {% if not loop.last %}
-        UNION 
-      {% endif %}
-      {% endfor %}
+    SELECT *
+    FROM {{ ref('usage_ping_metrics_latest') }}
 
 )
+
 
 SELECT 
   flattened.instance_path_id,
@@ -52,11 +24,14 @@ SELECT
   flattened.ping_id,
   host_id,
   created_at,
-  flattened.metric_path AS flat_metrics_path,
+  flattened.metrics_path                                       AS flat_metrics_path,
   metrics.*, 
-  IFF(flattened.metric_value = -1, 0, flattened.metric_value) AS metric_value,
-  IFF(flattened.metric_value = -1, TRUE, FALSE)               AS has_timed_out
+  IFF(flattened.metric_value = -1, 0, flattened.metric_value)  AS metric_value,
+  IFF(flattened.metric_value = -1, TRUE, FALSE)                AS has_timed_out,
+  time_frame
 FROM flattened
-INNER JOIN {{ ref('sheetload_usage_ping_metrics_sections' )}} AS metrics 
-  ON flattened.metric_path = metrics.metrics_path
-    AND time_period = '{{metric_type}}'
+INNER JOIN usage_ping_metrics
+  ON flattened.metrics_path = usage_ping_metrics.metrics_path
+    AND time_frame = 'all'
+LEFT JOIN {{ ref('sheetload_usage_ping_metrics_sections' )}} AS metrics 
+  ON flattened.metrics_path = metrics.metrics_path
