@@ -24,10 +24,10 @@ SELECT
   flattened.ping_id,
   host_id,
   created_at,
-  flattened.metrics_path                                       AS flat_metrics_path,
+  flattened.metrics_path                                        AS flat_metrics_path,
   metrics.*, 
-  IFF(flattened.metric_value = -1, 0, flattened.metric_value)  AS metric_value,
-  IFF(flattened.metric_value = -1, TRUE, FALSE)                AS has_timed_out,
+  IFF(flattened.metric_value = -1, 0, flattened.metric_value)   AS metric_value,
+  IFF(flattened.metric_value = -1, TRUE, FALSE)                 AS has_timed_out,
   time_frame
 FROM flattened
 INNER JOIN usage_ping_metrics

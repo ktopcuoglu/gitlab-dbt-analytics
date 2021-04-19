@@ -14,8 +14,8 @@ WITH flattened_usage_data AS (
     SELECT DISTINCT
       metrics_path, 
       IFF(edition='CE', edition, 'EE')                        AS edition,
-      SPLIT_PART(metrics_path, '.', 1)                         AS main_json_name,
-      SPLIT_PART(metrics_path, '.', -1)                        AS feature_name,
+      SPLIT_PART(metrics_path, '.', 1)                        AS main_json_name,
+      SPLIT_PART(metrics_path, '.', -1)                       AS feature_name,
       FIRST_VALUE(flattened_usage_data.major_minor_version) OVER (
         PARTITION BY metrics_path 
         ORDER BY release_date ASC
@@ -42,7 +42,7 @@ WITH flattened_usage_data AS (
     FROM flattened_usage_data
     LEFT JOIN gitlab_release_schedule
       ON flattened_usage_data.major_minor_version = gitlab_release_schedule.major_minor_version
-    WHERE TRY_TO_DECIMAL(metrics_value::TEXT) > 0
+    WHERE TRY_TO_DECIMAL(metric_value::TEXT) > 0
       -- Removing SaaS
       AND instance_id <> 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f'
       -- Removing pre-releases

@@ -2,7 +2,8 @@
     ('mart_monthly_product_usage','mart_monthly_product_usage'),
     ('mart_usage_ping_counters_statistics','mart_usage_ping_counters_statistics'),
     ('gitlab_release_schedule','gitlab_release_schedule'),
-    ('mart_paid_subscriptions_monthly_usage_ping_optin','mart_paid_subscriptions_monthly_usage_ping_optin')
+    ('mart_paid_subscriptions_monthly_usage_ping_optin','mart_paid_subscriptions_monthly_usage_ping_optin'),
+    ('wk_usage_ping_monthly_events_distribution_by_version','wk_usage_ping_monthly_events_distribution_by_version')
 ]) }}
 
 , cte_joined AS (
@@ -16,7 +17,7 @@
     FROM mart_monthly_product_usage
     LEFT JOIN mart_usage_ping_counters_statistics
       ON mart_monthly_product_usage.main_edition = mart_usage_ping_counters_statistics.edition
-      AND mart_monthly_product_usage.metrics_path = mart_usage_ping_counters_statistics.ping_name
+      AND mart_monthly_product_usage.metrics_path = mart_usage_ping_counters_statistics.metrics_path
     LEFT JOIN gitlab_release_schedule
       ON gitlab_release_schedule.major_minor_version = mart_usage_ping_counters_statistics.first_version_with_counter
     WHERE is_smau
@@ -32,7 +33,7 @@
       cte_joined.reworked_main_edition,
       SUM(CASE WHEN distrib.months_since_release <= cte_joined.months_since_release THEN total_counts END) / SUM(total_counts) AS pct_of_instances
     FROM cte_joined
-    LEFT JOIN legacy.wk_usage_ping_monthly_events_distribution_by_version  AS distrib 
+    LEFT JOIN wk_usage_ping_monthly_events_distribution_by_version  AS distrib 
       ON cte_joined.reporting_month = distrib.reporting_month
         AND distrib.reworked_main_edition = cte_joined.reworked_main_edition
     GROUP BY 1,2,3,4
@@ -52,7 +53,7 @@
 )
 
 SELECT 
-  pct_of_instances.reporting_month:: ,
+  pct_of_instances.reporting_month::DATE AS reporting_month,
   stage_name,
   reworked_main_edition,
   IFF(reworked_main_edition = 'CE', 'CE', 'EE') AS main_edition,
