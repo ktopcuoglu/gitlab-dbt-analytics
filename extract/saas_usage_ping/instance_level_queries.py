@@ -111,7 +111,7 @@ def rename_query_tables(sql_query):
     # I find this for loop very confusing... there might be better ways to do it for sure
     for index in range(len(tokens)):
         token = tokens[index]
-        if any(str(token) in keyword for keyword in keywords_to_look_at):
+        if any(token_word in keywords_to_look_at for token_word in str(token).split(' ')):
             i = 1
             # Whitespaces are considered as tokens and should be skipped
             while tokens[index + i].ttype is Whitespace:
