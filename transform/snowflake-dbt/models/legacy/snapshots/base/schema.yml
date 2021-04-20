@@ -120,7 +120,7 @@ models:
         tests:
           - not_null
           - unique
-      - name: valid_from
+      - name: dbt_valid_from
         tests:
           - not_null
 
