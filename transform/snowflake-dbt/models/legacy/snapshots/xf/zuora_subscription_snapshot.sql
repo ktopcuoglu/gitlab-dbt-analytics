@@ -22,8 +22,7 @@ WITH snapshot_dates AS (
 
     SELECT *
     FROM {{ ref('zuora_subscription_snapshots_source') }}
-    WHERE subscription_status NOT IN ('Draft', 'Expired')
-      AND is_deleted = FALSE
+    WHERE is_deleted = FALSE
       AND exclude_from_analysis IN ('False', '')
 
 ), zuora_subscription_spined AS (
