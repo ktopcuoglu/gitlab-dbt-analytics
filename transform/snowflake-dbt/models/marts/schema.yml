@@ -74,7 +74,7 @@ models:
           - not_null
         tags: ["tdf", "mart", "arr"]
 
-  - name: mart_arr_snapshot
+  - name: mart_arr_snapshot_model
     description: Simpler incremental version of the mart_arr snapshot model
     columns:
         - name: primary_key
