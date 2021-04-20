@@ -858,6 +858,11 @@ models:
       - name: created_at
       - name: updated_at
 
+  - name: gitlab_dotcom_in_product_marketing_emails
+    description: >-
+      Base model for Gitlab.com in_product_marketing emails table
+    
+
   - name: gitlab_dotcom_issue_assignees_source
     description: >-
       Base model for Gitlab.com issue assignees, duplicate rows have not been
