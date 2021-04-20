@@ -99,20 +99,18 @@ def add_counter_name_as_column(sql_metrics_name, sql_query):
 
     return enhanced_query
 
+
 def rename_table_name(keywords_to_look_at, token, tokens, index, token_string_list):
-    if any(
-        token_word in keywords_to_look_at 
-        for token_word in str(token).split(" ")
-    ):
+    if any(token_word in keywords_to_look_at for token_word in str(token).split(" ")):
         i = 1
         # Whitespaces are considered as tokens and should be skipped
         while tokens[index + i].ttype is Whitespace:
             i += 1
 
         next_token = tokens[index + i]
-        if not str(next_token).startswith("prep") and not str(
-            next_token
-        ).startswith("prod"):
+        if not str(next_token).startswith("prep") and not str(next_token).startswith(
+            "prod"
+        ):
 
             # insert, token list to string list, create the SQL query, reparse it
             # there is FOR sure a beter way to do that
@@ -122,6 +120,7 @@ def rename_table_name(keywords_to_look_at, token, tokens, index, token_string_li
                 + "_dedupe_source AS "
             )
             token_string_list.insert(index + i + 1, str(next_token))
+
 
 def rename_query_tables(sql_query):
     """
