@@ -1,8 +1,8 @@
 version: 2
 
 models:
-  - name: fct_mrr_snapshot
+  - name: fct_mrr_snapshot_model
     description: '{{ doc("fct_mrr_snapshot") }}'
 
-  - name: dim_subscription_snapshot
+  - name: dim_subscription_snapshot_model
     description: '{{ doc("dim_subscription_snapshot") }}'
