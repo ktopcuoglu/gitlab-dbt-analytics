@@ -11,7 +11,8 @@
     SELECT
     {{
           dbt_utils.star(
-            from=ref('fct_mrr')
+            from=ref('fct_mrr'),
+            except=['DBT_UPDATED_AT', 'DBT_CREATED_AT']
             )
       }}
     FROM {{ ref('fct_mrr') }}

@@ -28,10 +28,6 @@ WITH snapshot_dates AS (
 
     SELECT DISTINCT subscription_id, dbt_valid_from, dbt_valid_to
     FROM {{ ref('zuora_subscription_snapshots_source') }}
-    WHERE subscription_status NOT IN ('Draft', 'Expired')
-      AND is_deleted = FALSE
-      AND exclude_from_analysis IN ('False', '')
-    GROUP BY 1
 
 ), dim_subscription_spined AS (
 
