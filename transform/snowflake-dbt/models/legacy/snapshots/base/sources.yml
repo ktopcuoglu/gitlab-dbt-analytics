@@ -15,6 +15,8 @@ sources:
     tables:
       - name: customers_db_customers_snapshots
       - name: customers_db_orders_snapshots
+      - name: dim_subscription_snapshot
+      - name: fct_mrr_snapshot
       - name: gitlab_dotcom_application_settings_snapshots
       - name: gitlab_dotcom_gitlab_subscriptions_namespace_id_snapshots
       - name: gitlab_dotcom_gitlab_subscriptions_snapshots
@@ -24,8 +26,6 @@ sources:
       - name: gitlab_dotcom_namespace_root_storage_statistics_snapshots
       - name: gitlab_dotcom_projects_snapshots
       - name: gitlab_dotcom_project_statistics_snapshots
-      - name: dim_subscription_snapshot
-      - name: fct_mrr_snapshot
       - name: mart_arr_snapshot
       - name: license_db_licenses_snapshots
       - name: sfdc_account_snapshots
