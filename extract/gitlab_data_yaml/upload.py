@@ -97,7 +97,7 @@ if __name__ == "__main__":
     for key, value in comp_calc_dict.items():
         curl_and_upload(
             key,
-            value + ".yml",
+            value,
             comp_calc_url,
             config_dict["GITLAB_ANALYTICS_PRIVATE_TOKEN"],
         )

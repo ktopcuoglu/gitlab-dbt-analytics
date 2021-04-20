@@ -600,6 +600,21 @@ roles:
             - zoom
             - xactly
             - adaptive
+        privileges:
+            databases:
+                write:
+                   - raw
+            schemas:
+              write:
+                  -raw.tap_zoom
+                  -raw.tap_adaptive
+                  -raw.tap_xactly
+            tables:
+              write:
+                  -raw.tap_zoom.*
+                  -raw.tap_adaptive.*
+                  -raw.tap_xactly.*   
+
 
     - people_operations:
         warehouses:
@@ -1837,6 +1852,13 @@ roles:
         warehouses:
             - analyst_xs
 
+    - camsmith:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+        warehouses:
+            - analyst_xs
+
     - cli:
         member_of:
             - product_manager
@@ -2391,6 +2413,13 @@ roles:
             tables: # https://gitlab.com/gitlab-com/team-member-epics/access-requests/-/issues/6311
                 read:
                     - prep.sensitive.bamboohr_id_employee_number_mapping
+        warehouses:
+            - analyst_xs
+
+    - lnewbury:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
         warehouses:
             - analyst_xs
 
@@ -3128,6 +3157,11 @@ users:
         member_of:
             - brufener
 
+    - camsmith:
+        can_login: yes
+        member_of:
+            - camsmith
+
     - cli:
         can_login: yes
         member_of:
@@ -3359,6 +3393,11 @@ users:
         can_login: yes
         member_of:
             - lmai
+
+    - lnewbury:
+        can_login: yes
+        member_of:
+            - lnewbury
 
     - lvandensteen:
         can_login: yes

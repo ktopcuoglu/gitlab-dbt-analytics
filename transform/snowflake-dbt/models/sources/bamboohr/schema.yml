@@ -65,7 +65,12 @@ models:
           - not_null
   - name: bamboohr_directory_source
     description: Base model for BambooHR Active Directory. Brings in directory data for each day.
-  
+    columns:
+      - name: work_email
+        tags: ["tdf"]
+        tests:
+            - dbt_utils.expression_is_true:
+                expression: work_email ILIKE '%@%.%'
   - name: bamboohr_emergency_contacts_source
     description: Bamboohr emergency contacts table. Used to create an alert in bamboohr_missing_emergency_contact_alert to identify individuals we do not have a contact for.
     columns:
