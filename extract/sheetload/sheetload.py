@@ -221,7 +221,7 @@ def check_s3_csv_count_integrity(
 def get_s3_credentials(schema: str) -> tuple:
 
     """
-    This function return the set of ws_access_key_id,aws_secret_access_key,path_prefix
+    This function returns the set of aws_access_key_id,aws_secret_access_key,path_prefix
     based on the the schema name provided.
     """
 
