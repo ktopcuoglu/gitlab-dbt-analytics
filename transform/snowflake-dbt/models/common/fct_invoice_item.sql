@@ -1,7 +1,7 @@
 WITH map_merged_crm_accounts AS (
 
     SELECT *
-    FROM {{ ref('map_merged_crm_accounts') }}
+    FROM {{ ref('map_merged_crm_account') }}
 
 ), zuora_account AS (
 

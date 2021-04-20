@@ -1,5 +1,5 @@
 {{ simple_cte([
-    ('map_merged_crm_accounts','map_merged_crm_accounts'),
+    ('map_merged_crm_account','map_merged_crm_accounts'),
     ('zuora_account','zuora_account_source'),
     ('zuora_contact','zuora_contact_source')
 ]) }}
