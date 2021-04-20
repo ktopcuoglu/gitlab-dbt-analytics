@@ -218,6 +218,25 @@ def check_s3_csv_count_integrity(
         sys.exit(1)
 
 
+def get_s3_credentials(schema: str) -> tuple:
+
+    """
+    This function returns the set of aws_access_key_id,aws_secret_access_key,path_prefix
+    based on the the schema name provided.
+    """
+
+    if schema == "greenhouse":
+        aws_access_key_id = env["GREENHOUSE_ACCESS_KEY_ID"]
+        aws_secret_access_key = env["GREENHOUSE_SECRET_ACCESS_KEY"]
+        path_prefix = ""
+    elif schema == "gainsight":
+        aws_access_key_id = env["GAINSIGHT_ACCESS_KEY_ID"]
+        aws_secret_access_key = env["GAINSIGHT_SECRET_ACCESS_KEY"]
+        # The file is located in  subfolder fixed by gainsight team.
+        path_prefix = "gainsight-to-snowflake/"
+    return aws_access_key_id, aws_secret_access_key, path_prefix
+
+
 def s3_loader(bucket: str, schema: str, conn_dict: Dict[str, str] = None) -> None:
 
     """
@@ -234,16 +253,14 @@ def s3_loader(bucket: str, schema: str, conn_dict: Dict[str, str] = None) -> Non
     engine = snowflake_engine_factory(conn_dict or env, "LOADER", schema)
     info(engine)
 
-    # Set S3 Client
-    if schema == "greenhouse":
-        aws_access_key_id = env["GREENHOUSE_ACCESS_KEY_ID"]
-        aws_secret_access_key = env["GREENHOUSE_SECRET_ACCESS_KEY"]
+    # Set S3 Client variable
+    aws_access_key_id, aws_secret_access_key, path_prefix = get_s3_credentials(schema)
 
     session = boto3.Session(
         aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key
     )
     s3_client = session.client("s3")
-    s3_bucket = s3_client.list_objects(Bucket=bucket)
+    s3_bucket = s3_client.list_objects(Bucket=bucket, Prefix=path_prefix)
 
     # Iterate through files and upload
     for obj in s3_bucket["Contents"]:
@@ -258,7 +275,9 @@ def s3_loader(bucket: str, schema: str, conn_dict: Dict[str, str] = None) -> Non
 
             sheet_df = pd.read_csv(StringIO(csv_string), engine="c", low_memory=False)
 
-            table, extension = file.split(".")[0:2]
+            table_name, extension = file.split(".")[0:2]
+            # To pick up the file name alone  not the whole path to the file for as table name
+            table = table_name.split("/")[-1]
 
             dw_uploader(engine, table, sheet_df, truncate=True)
 
