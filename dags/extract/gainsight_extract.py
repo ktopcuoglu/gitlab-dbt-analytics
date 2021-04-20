@@ -48,7 +48,7 @@ default_args = {
 # Set the command for the container
 container_cmd = f"""
     {clone_and_setup_extraction_cmd} &&
-    python3 sheetload/sheetload.py s3 $GAINSIGHT_BUCKET_NAME gainsight
+    python3 sheetload/sheetload.py s3 --bucket $GAINSIGHT_BUCKET_NAME --schema gainsight
 """
 
 # Create the DAG

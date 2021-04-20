@@ -243,7 +243,7 @@ def s3_loader(bucket: str, schema: str, conn_dict: Dict[str, str] = None) -> Non
         aws_access_key_id = env["GAINSIGHT_ACCESS_KEY_ID"]
         aws_secret_access_key = env["GAINSIGHT_SECRET_ACCESS_KEY"]
         # The file is located in  subfolder fixed by gainsight team.
-        path_prefix = "gainsight-to-snowflake"
+        path_prefix = "gainsight-to-snowflake/"
 
     session = boto3.Session(
         aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key
