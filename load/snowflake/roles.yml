@@ -624,7 +624,7 @@ roles:
             - boneyard
             - gitlab_data_yaml
             - gitlab_dotcom
-            - greenhouse            
+            - greenhouse
             - sheetload
             - snapshots
 
