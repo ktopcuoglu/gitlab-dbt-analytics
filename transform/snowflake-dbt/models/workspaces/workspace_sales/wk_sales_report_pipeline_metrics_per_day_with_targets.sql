@@ -1,4 +1,4 @@
-{{ config(alias='report_targets_totals_per_quarter_with_targets') }}
+{{ config(alias='report_pipeline_metricss_per_day_with_targets') }}
 
 WITH date_details AS (
   
@@ -116,6 +116,16 @@ WITH date_details AS (
   FROM report_targets_totals_per_quarter
   GROUP BY 1,2,3,4,5,6,7
 
+), consolidated_targets_per_day AS (
+  
+  SELECT 
+        targets.*,
+        close_day_of_fiscal_quarter_normalised
+  FROM consolidated_targets targets
+  CROSS JOIN (SELECT day_of_fiscal_quarter_normalised AS close_day_of_fiscal_quarter_normalised
+                FROM date_details
+                WHERE day_of_fiscal_quarter_normalised > 0
+                GROUP BY 1)
   
 ), key_fields AS (
     
@@ -151,10 +161,14 @@ WITH date_details AS (
 ), final AS (
   
     SELECT 
+
+        --------------------------
+        -- keys
         base.sales_team_cro_level, 
         base.sales_team_rd_asm_level,
         base.deal_group,
         base.sales_qualified_source,
+        --------------------------
   
         base.snapshot_fiscal_quarter_date,
         base.snapshot_fiscal_quarter_name,
@@ -228,14 +242,15 @@ WITH date_details AS (
       AND metrics.sales_team_rd_asm_level = base.sales_team_rd_asm_leveL
       AND metrics.sales_qualified_source = base.sales_qualified_source
       AND metrics.deal_group = base.deal_group
+      AND metrics.snapshot_fiscal_quarter_date = base.snapshot_fiscal_quarter_date
       AND metrics.snapshot_day_of_fiscal_quarter_normalised = base.snapshot_day_of_fiscal_quarter_normalised
-      AND metrics.snapshot_fiscal_quarter_date = base.snapshot_fiscal_quarter_date
-    LEFT JOIN consolidated_targets targets 
-    ON metrics.sales_team_cro_level = base.sales_team_cro_level
-      AND metrics.sales_team_rd_asm_level = base.sales_team_rd_asm_leveL
-      AND metrics.sales_qualified_source = base.sales_qualified_source
-      AND metrics.deal_group = base.deal_group
-      AND metrics.snapshot_fiscal_quarter_date = base.snapshot_fiscal_quarter_date
+    LEFT JOIN consolidated_targets_per_day targets 
+    ON targets.sales_team_cro_level = base.sales_team_cro_level
+      AND targets.sales_team_rd_asm_level = base.sales_team_rd_asm_leveL
+      AND targets.sales_qualified_source = base.sales_qualified_source
+      AND targets.deal_group = base.deal_group
+      AND targets.close_fiscal_quarter_date = base.snapshot_fiscal_quarter_date
+      AND targets.close_day_of_fiscal_quarter_normalised = base.snapshot_day_of_fiscal_quarter_normalised
  )
  
  SELECT *
