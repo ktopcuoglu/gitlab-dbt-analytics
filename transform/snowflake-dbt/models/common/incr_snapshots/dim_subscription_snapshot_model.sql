@@ -43,4 +43,5 @@ WITH snapshot_dates AS (
 
 )
 
-SELECT * FROM final
+SELECT * 
+FROM final
