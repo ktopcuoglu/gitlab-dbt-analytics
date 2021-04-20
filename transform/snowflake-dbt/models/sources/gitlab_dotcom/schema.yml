@@ -878,7 +878,7 @@ models:
     
   - name: gitlab_dotcom_issue_assignees_source
     description: >-
-      Base model for Gitlab.com issue assignees, duplicate rows have not been
+    Base model for Gitlab.com issue assignees, duplicate rows have not been
       included.
     columns:
       - name: user_issue_relation_id

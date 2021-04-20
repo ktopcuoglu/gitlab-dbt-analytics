@@ -143,7 +143,7 @@ models:
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_identities_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
-  - name: gitlab_dotcom_in_product_marketing_emails_source
+  - name: gitlab_dotcom_in_product_marketing_emails_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_issue_assignees_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
