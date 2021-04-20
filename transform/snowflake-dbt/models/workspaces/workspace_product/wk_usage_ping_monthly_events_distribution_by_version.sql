@@ -5,7 +5,7 @@
 }}
 
 WITH filtered_counters AS (
- 
+  
   SELECT *
   FROM {{ ref('mart_usage_ping_counters_statistics') }}
   WHERE metrics_path ILIKE 'counts.%' AND edition = 'CE'
