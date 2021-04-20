@@ -10,7 +10,7 @@
 WITH fct_mrr AS (
 
     SELECT
-      cast(GETDATE() as date)                                       AS snapshot_date,
+      current_date                                                  AS snapshot_date,
       to_number(to_char(current_date,'YYYYMMDD'),'99999999')        AS snapshot_id,
       *
     FROM {{ ref('fct_mrr')}}

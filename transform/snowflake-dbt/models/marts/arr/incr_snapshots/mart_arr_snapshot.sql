@@ -8,8 +8,8 @@
 WITH mart_arr AS (
 
     SELECT
-      cast(GETDATE() as date) snapshot_date,
-      to_number(to_char(current_date,'YYYYMMDD'),'99999999') AS snapshot_id,
+      current_date                                                       AS snapshot_date,
+      to_number(to_char(current_date,'YYYYMMDD'),'99999999')             AS snapshot_id,
       *
     FROM {{ ref('mart_arr') }}
 
