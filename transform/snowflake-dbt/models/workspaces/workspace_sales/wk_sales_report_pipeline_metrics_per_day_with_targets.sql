@@ -1,4 +1,4 @@
-{{ config(alias='report_pipeline_metricss_per_day_with_targets') }}
+{{ config(alias='report_pipeline_metrics_day_with_targets') }}
 
 WITH date_details AS (
   
@@ -17,6 +17,7 @@ WITH date_details AS (
 
   
 -- make sure the aggregation works at the level we want it
+-- make sure the aggregation works at the level we want it
 ), consolidated_metrics AS (
 
     SELECT 
@@ -30,16 +31,7 @@ WITH date_details AS (
 
         close_fiscal_quarter_date,
         close_fiscal_quarter_name,
-        snapshot_fiscal_quarter_date,
-        snapshot_fiscal_quarter_name,
-        snapshot_fiscal_year,
-        snapshot_day_of_fiscal_quarter_normalised,
-
-        -- report quarter plus 1 / 2 date fields
-        rq_plus_1_close_fiscal_quarter_name,
-        rq_plus_1_close_fiscal_quarter_date,
-        rq_plus_2_close_fiscal_quarter_name,
-        rq_plus_2_close_fiscal_quarter_date,    
+        snapshot_day_of_fiscal_quarter_normalised AS close_day_of_fiscal_quarter_normalised,
 
         -- reported quarter
         SUM(deal_count)                 AS deal_count,
@@ -84,7 +76,8 @@ WITH date_details AS (
         SUM(rq_plus_2_open_3plus_net_arr)       AS rq_plus_2_open_3plus_net_arr,
         SUM(rq_plus_2_open_4plus_net_arr)       AS rq_plus_2_open_4plus_net_arr
     FROM report_pipeline_metrics_day
-    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14
+    WHERE snapshot_day_of_fiscal_quarter_normalised > 0
+    GROUP BY 1,2,3,4,5,6,7
   
 ), consolidated_targets AS (
 
@@ -134,7 +127,7 @@ WITH date_details AS (
         sales_team_rd_asm_level,
         deal_group,
         sales_qualified_source,
-        close_fiscal_quarter_date AS snapshot_fiscal_quarter_date
+        close_fiscal_quarter_date
   FROM consolidated_targets
   UNION
   SELECT         
@@ -142,21 +135,27 @@ WITH date_details AS (
         sales_team_rd_asm_level,
         deal_group,
         sales_qualified_source,
-        snapshot_fiscal_quarter_date
+        close_fiscal_quarter_date
     FROM consolidated_metrics
   
 ), base_fields AS (
   
  SELECT 
     key_fields.*,
-    snap_date.snapshot_day_of_fiscal_quarter_normalised,
-    snap_date.snapshot_fiscal_quarter_name
+    close_date.fiscal_quarter_name_fy              AS close_fiscal_quarter_name,
+    close_date.fiscal_year                         AS close_fiscal_year,
+    close_date.day_of_fiscal_quarter_normalised    AS close_day_of_fiscal_quarter_normalised,
+    rq_plus_1.first_day_of_fiscal_quarter          AS rq_plus_1_close_fiscal_quarter_date,
+    rq_plus_1.fiscal_quarter_name_fy               AS rq_plus_1_close_fiscal_quarter_name,
+    rq_plus_2.first_day_of_fiscal_quarter          AS rq_plus_2_close_fiscal_quarter_date,
+    rq_plus_2.fiscal_quarter_name_fy               AS rq_plus_2_close_fiscal_quarter_name
  FROM key_fields
- INNER JOIN (SELECT first_day_of_fiscal_quarter         AS snapshot_fiscal_quarter_date,
-                    fiscal_quarter_name_fy              AS snapshot_fiscal_quarter_name,
-                    day_of_fiscal_quarter_normalised    AS snapshot_day_of_fiscal_quarter_normalised
-             FROM date_details) snap_date
- ON snap_date.snapshot_fiscal_quarter_date = key_fields.snapshot_fiscal_quarter_date
+ INNER JOIN date_details close_date
+    ON close_date.first_day_of_fiscal_quarter = key_fields.close_fiscal_quarter_date
+ LEFT JOIN date_details rq_plus_1
+    ON rq_plus_1.date_actual = dateadd(month,3,close_date.first_day_of_fiscal_quarter) 
+ LEFT JOIN date_details rq_plus_2
+    ON rq_plus_2.date_actual = dateadd(month,6,close_date.first_day_of_fiscal_quarter)  
   
 ), final AS (
   
@@ -170,16 +169,16 @@ WITH date_details AS (
         base.sales_qualified_source,
         --------------------------
   
-        base.snapshot_fiscal_quarter_date,
-        base.snapshot_fiscal_quarter_name,
-        metrics.snapshot_fiscal_year,
-        metrics.snapshot_day_of_fiscal_quarter_normalised,
+        base.close_fiscal_quarter_date,
+        base.close_fiscal_quarter_name,
+        base.close_fiscal_year,
+        base.close_day_of_fiscal_quarter_normalised,
 
         -- report quarter plus 1 / 2 date fields
-        metrics.rq_plus_1_close_fiscal_quarter_name,
-        metrics.rq_plus_1_close_fiscal_quarter_date,
-        metrics.rq_plus_2_close_fiscal_quarter_name,
-        metrics.rq_plus_2_close_fiscal_quarter_date,    
+        base.rq_plus_1_close_fiscal_quarter_name,
+        base.rq_plus_1_close_fiscal_quarter_date,
+        base.rq_plus_2_close_fiscal_quarter_name,
+        base.rq_plus_2_close_fiscal_quarter_date,    
 
         -- reported quarter
         metrics.deal_count,
@@ -224,17 +223,34 @@ WITH date_details AS (
         metrics.rq_plus_2_open_3plus_net_arr,
         metrics.rq_plus_2_open_4plus_net_arr,
 
-        targets.target_net_arr,
-        targets.target_deal_count,
-        targets.target_pipe_generation_net_arr, 
+        -- targets current quarter
+        COALESCE(targets.target_net_arr,0)                        AS target_net_arr,
+        COALESCE(targets.target_deal_count,0)                     AS target_deal_count,
+        COALESCE(targets.target_pipe_generation_net_arr,0)        AS target_pipe_generation_net_arr, 
   
-        targets.total_booked_net_arr,
-        targets.total_booked_deal_count,
-        targets.total_pipe_generation_net_arr,
+        COALESCE(targets.total_booked_net_arr,0)                  AS total_booked_net_arr,
+        COALESCE(targets.total_booked_deal_count,0)               AS total_booked_deal_count,
+        COALESCE(targets.total_pipe_generation_net_arr,0)         AS total_pipe_generation_net_arr,
   
-        targets.calculated_target_net_arr, 
-        targets.calculated_target_deal_count,  
-        targets.calculated_target_pipe_generation
+        COALESCE(targets.calculated_target_net_arr,0)             AS calculated_target_net_arr, 
+        COALESCE(targets.calculated_target_deal_count,0)          AS calculated_target_deal_count,  
+        COALESCE(targets.calculated_target_pipe_generation,0)     AS calculated_target_pipe_generation,
+  
+        -- totals quarter plus 1
+        COALESCE(rq_plus_one.total_booked_net_arr,0)            AS rq_plus_1_total_booked_net_arr,
+        COALESCE(rq_plus_one.total_booked_deal_count,0)         AS rq_plus_1_total_booked_deal_count,
+        COALESCE(rq_plus_one.target_net_arr,0)                  AS rq_plus_1_target_net_arr,
+        COALESCE(rq_plus_one.target_deal_count,0)               AS rq_plus_1_target_deal_count,
+        COALESCE(rq_plus_one.calculated_target_net_arr,0)       AS rq_plus_1_calculated_target_net_arr,
+        COALESCE(rq_plus_one.calculated_target_deal_count,0)    AS rq_plus_1_calculated_target_deal_count,
+  
+         -- totals quarter plus 2
+        COALESCE(rq_plus_two.total_booked_net_arr,0)            AS rq_plus_2_total_booked_net_arr,
+        COALESCE(rq_plus_two.total_booked_deal_count,0)          AS rq_plus_2_total_booked_deal_count,
+        COALESCE(rq_plus_two.target_net_arr,0)                   AS rq_plus_2_target_net_arr,
+        COALESCE(rq_plus_two.target_deal_count,0)                AS rq_plus_2_target_deal_count,
+        COALESCE(rq_plus_two.calculated_target_net_arr,0)        AS rq_plus_2_calculated_target_net_arr,
+        COALESCE(rq_plus_two.calculated_target_deal_count,0)     AS rq_plus_2_calculated_target_deal_count
   
     FROM base_fields base 
     LEFT JOIN consolidated_metrics metrics
@@ -242,16 +258,33 @@ WITH date_details AS (
       AND metrics.sales_team_rd_asm_level = base.sales_team_rd_asm_leveL
       AND metrics.sales_qualified_source = base.sales_qualified_source
       AND metrics.deal_group = base.deal_group
-      AND metrics.snapshot_fiscal_quarter_date = base.snapshot_fiscal_quarter_date
-      AND metrics.snapshot_day_of_fiscal_quarter_normalised = base.snapshot_day_of_fiscal_quarter_normalised
+      AND metrics.close_fiscal_quarter_date = base.close_fiscal_quarter_date
+      AND metrics.close_day_of_fiscal_quarter_normalised = base.close_day_of_fiscal_quarter_normalised
+    -- current quarter
     LEFT JOIN consolidated_targets_per_day targets 
-    ON targets.sales_team_cro_level = base.sales_team_cro_level
-      AND targets.sales_team_rd_asm_level = base.sales_team_rd_asm_leveL
-      AND targets.sales_qualified_source = base.sales_qualified_source
-      AND targets.deal_group = base.deal_group
-      AND targets.close_fiscal_quarter_date = base.snapshot_fiscal_quarter_date
-      AND targets.close_day_of_fiscal_quarter_normalised = base.snapshot_day_of_fiscal_quarter_normalised
- )
- 
+      ON targets.sales_team_cro_level = base.sales_team_cro_level
+        AND targets.sales_team_rd_asm_level = base.sales_team_rd_asm_leveL
+        AND targets.sales_qualified_source = base.sales_qualified_source
+        AND targets.deal_group = base.deal_group
+        AND targets.close_fiscal_quarter_date = base.close_fiscal_quarter_date
+        AND targets.close_day_of_fiscal_quarter_normalised = base.close_day_of_fiscal_quarter_normalised
+    -- quarter plus 1 targets
+    LEFT JOIN consolidated_targets_per_day rq_plus_one
+      ON rq_plus_one.sales_team_cro_level = base.sales_team_cro_level
+        AND rq_plus_one.sales_team_rd_asm_level = base.sales_team_rd_asm_leveL
+        AND rq_plus_one.sales_qualified_source = base.sales_qualified_source
+        AND rq_plus_one.deal_group = base.deal_group
+        AND rq_plus_one.close_fiscal_quarter_date = base.rq_plus_1_close_fiscal_quarter_date
+        AND rq_plus_one.close_day_of_fiscal_quarter_normalised = base.close_day_of_fiscal_quarter_normalised
+    -- quarter plus 2 targets
+    LEFT JOIN consolidated_targets_per_day rq_plus_two
+      ON rq_plus_two.sales_team_cro_level = base.sales_team_cro_level
+        AND rq_plus_two.sales_team_rd_asm_level = base.sales_team_rd_asm_leveL
+        AND rq_plus_two.sales_qualified_source = base.sales_qualified_source
+        AND rq_plus_two.deal_group = base.deal_group
+        AND rq_plus_two.close_fiscal_quarter_date = base.rq_plus_2_close_fiscal_quarter_date
+        AND rq_plus_two.close_day_of_fiscal_quarter_normalised = base.close_day_of_fiscal_quarter_normalised
+)
  SELECT *
  FROM final
+ 
