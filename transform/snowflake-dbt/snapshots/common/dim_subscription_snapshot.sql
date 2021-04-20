@@ -1,4 +1,4 @@
-{% snapshot fct_mrr_snapshot %}
+{% snapshot dim_subscription_snapshot %}
 
     {{
         config(
