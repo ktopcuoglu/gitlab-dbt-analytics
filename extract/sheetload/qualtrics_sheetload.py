@@ -109,7 +109,7 @@ def process_qualtrics_file(
 
     dataframe = google_sheet_client.load_google_sheet(None, file_name, tab)
     if list(dataframe.columns.values)[0].lower() != "id":
-        warning(f"{file.title}: First column did not match expected name of id")
+        info(f"{file.title}: First column did not match expected name of id")
         return
     if not is_test:
         file.sheet1.update_acell("A1", "processing")
