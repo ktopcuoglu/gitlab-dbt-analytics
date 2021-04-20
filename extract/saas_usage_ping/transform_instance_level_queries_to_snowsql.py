@@ -4,8 +4,6 @@ import os
 
 from flatten_dict import flatten
 from flatten_dict.reducer import make_reducer
-import pandas as pd
-import sql_metadata
 import sqlparse
 from sqlparse.sql import (
     Identifier,
