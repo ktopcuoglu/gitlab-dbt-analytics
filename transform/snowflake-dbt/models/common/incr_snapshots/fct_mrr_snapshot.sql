@@ -7,7 +7,7 @@
 
 /* grain: one record per subscription, product per month */
 
-WITH subscription AS (
+WITH fct_mrr AS (
 
     SELECT
       cast(GETDATE() as date)                                       AS snapshot_date,
@@ -19,7 +19,7 @@ WITH subscription AS (
 
     SELECT {{ dbt_utils.surrogate_key(['snapshot_id', 'mrr_id']) }} AS fct_mrr_snapshot_id,
         *
-    FROM subscription
+    FROM fct_mrr
 
 )
 
