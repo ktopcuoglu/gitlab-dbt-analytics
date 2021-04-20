@@ -217,13 +217,14 @@ def check_s3_csv_count_integrity(
         )
         sys.exit(1)
 
+
 def get_s3_credentials(schema: str) -> tuple:
 
     """
     This function return the set of ws_access_key_id,aws_secret_access_key,path_prefix
-    based on the the schema name provided. 
+    based on the the schema name provided.
     """
-    
+
     if schema == "greenhouse":
         aws_access_key_id = env["GREENHOUSE_ACCESS_KEY_ID"]
         aws_secret_access_key = env["GREENHOUSE_SECRET_ACCESS_KEY"]
