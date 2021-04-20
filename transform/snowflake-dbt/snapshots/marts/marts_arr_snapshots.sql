@@ -1,11 +1,11 @@
-{% snapshot mart_arr_snapshots %}
+{% snapshot marts_arr_snapshots %}
 
     {{
         config(
           unique_key='primary_key',
-          strategy='timestamp',
-          updated_at='dbt_updated_at',
-        )
+          strategy='check',
+          check_cols=['mrr', 'arr', 'quantity']
+         )
     }}
     
     SELECT
