@@ -16,6 +16,5 @@
             )
       }}
     FROM {{ ref('dim_subscription') }}
-    QUALIFY ROW_NUMBER() OVER (PARTITION BY dim_subscription_id ORDER BY subscription_start_date DESC) = 1
 
 {% endsnapshot %}

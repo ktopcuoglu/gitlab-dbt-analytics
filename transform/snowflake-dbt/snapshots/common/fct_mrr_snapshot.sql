@@ -16,6 +16,5 @@
             )
       }}
     FROM {{ ref('fct_mrr') }}
-    QUALIFY ROW_NUMBER() OVER (PARTITION BY mrr_id ORDER BY dim_date_id DESC) = 1
 
 {% endsnapshot %}
