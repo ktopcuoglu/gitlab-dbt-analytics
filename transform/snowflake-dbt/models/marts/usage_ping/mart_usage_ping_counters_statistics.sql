@@ -2,7 +2,8 @@
 
 WITH flattened_usage_data AS (
 
-    SELECT * FROM {{ ref('prep_usage_data_flattened') }}
+    SELECT * 
+    FROM {{ ref('prep_usage_data_flattened') }}
 
 ), gitlab_release_schedule AS (
   
