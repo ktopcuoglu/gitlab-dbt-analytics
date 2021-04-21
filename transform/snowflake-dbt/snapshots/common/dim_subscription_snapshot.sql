@@ -4,7 +4,7 @@
         config(
           unique_key='dim_subscription_id',
           strategy='timestamp',
-          updated_at='dbt_updated_at'
+          updated_at='dbt_created_at'
          )
     }}
     
@@ -12,7 +12,7 @@
     {{
           dbt_utils.star(
             from=ref('dim_subscription'),
-            except=['DBT_UPDATED_AT', 'DBT_CREATED_AT']
+            except=['DBT_UPDATED_AT']
             )
       }}
     FROM {{ ref('dim_subscription') }}

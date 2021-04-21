@@ -4,7 +4,7 @@
         config(
           unique_key='mrr_id',
           strategy='timestamp',
-          updated_at='dbt_updated_at'
+          updated_at='dbt_created_at'
          )
     }}
     
@@ -12,7 +12,7 @@
     {{
           dbt_utils.star(
             from=ref('fct_mrr'),
-            except=['DBT_UPDATED_AT', 'DBT_CREATED_AT']
+            except=['DBT_UPDATED_AT']
             )
       }}
     FROM {{ ref('fct_mrr') }}
