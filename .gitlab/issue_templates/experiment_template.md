@@ -67,5 +67,4 @@ This section is to help provide clarity into the current stage of the experiment
 |Experiment has concluded|Product/Engineering|
 |Analysis of Experiment Results|Product Analysis|
 
-
- /label ~"Data Team" ~"product analysis" ~Experiment
+/label ~Data Team ~product analysis ~Experiment
