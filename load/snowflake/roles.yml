@@ -605,14 +605,14 @@ roles:
                    - raw
             schemas:
               write:
-                  -raw.tap_zoom
-                  -raw.tap_adaptive
-                  -raw.tap_xactly
+                  - raw.tap_zoom
+                  - raw.tap_adaptive
+                  - raw.tap_xactly
             tables:
               write:
-                  -raw.tap_zoom.*
-                  -raw.tap_adaptive.*
-                  -raw.tap_xactly.*   
+                  - raw.tap_zoom.*
+                  - raw.tap_adaptive.*
+                  - raw.tap_xactly.*   
 
 
     - people_operations:
