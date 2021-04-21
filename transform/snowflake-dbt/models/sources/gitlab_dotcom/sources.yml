@@ -192,6 +192,8 @@ sources:
           # error_after: {count: 48, period: hour}
       - name: identities
         identifier: gitlab_db_identities
+      - name: in_product_marketing_emails
+        identifier: gitlab_db_in_product_marketing_emails
       - name: issue_assignees
         identifier: gitlab_db_issue_assignees
         # freshness:

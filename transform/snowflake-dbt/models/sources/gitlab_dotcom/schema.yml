@@ -858,10 +858,27 @@ models:
       - name: created_at
       - name: updated_at
 
+  - name: gitlab_dotcom_in_product_marketing_emails_source
+    description: >-
+      Base model for Gitlab.com in_product_marketing emails table
+    columns:
+      - name: created_at
+      - name: cta_clicked_at
+      - name: in_product_marketing_email_id
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+          - unique
+      - name: series
+      - name: track
+      - name: updated_at
+        tests:
+          - not_null
+      - name: user_id
+    
   - name: gitlab_dotcom_issue_assignees_source
     description: >-
-      Base model for Gitlab.com issue assignees, duplicate rows have not been
-      included.
+      Base model for Gitlab.com issue assignees, duplicate rows have not been included.
     columns:
       - name: user_issue_relation_id
         description: unique key created with an md5 hash of user_id and issue_id
