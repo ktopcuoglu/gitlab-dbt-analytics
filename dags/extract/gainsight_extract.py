@@ -9,13 +9,11 @@ from airflow_utils import (
     gitlab_defaults,
     slack_failed_task,
 )
-
 from kube_secrets import (
-    QUALTRICS_API_TOKEN,
-    QUALTRICS_POOL_ID,
-    QUALTRICS_NPS_ID,
+    GAINSIGHT_ACCESS_KEY_ID,
+    GAINSIGHT_SECRET_ACCESS_KEY,
+    GAINSIGHT_BUCKET_NAME,
     SNOWFLAKE_ACCOUNT,
-    SNOWFLAKE_LOAD_DATABASE,
     SNOWFLAKE_LOAD_PASSWORD,
     SNOWFLAKE_LOAD_ROLE,
     SNOWFLAKE_LOAD_USER,
@@ -23,56 +21,60 @@ from kube_secrets import (
 )
 from kubernetes_helpers import get_affinity, get_toleration
 
-
+# Load the env vars into a dict and set Secrets
 env = os.environ.copy()
-pod_env_vars = {"CI_PROJECT_DIR": "/analytics"}
+GIT_BRANCH = env["GIT_BRANCH"]
+pod_env_vars = {
+    "SNOWFLAKE_LOAD_DATABASE": "RAW"
+    if GIT_BRANCH == "master"
+    else f"{GIT_BRANCH.upper()}_RAW",
+    "CI_PROJECT_DIR": "/analytics",
+}
 
+# Default arguments for the DAG
 default_args = {
-    "catchup": True,
+    "catchup": False,
     "depends_on_past": False,
     "on_failure_callback": slack_failed_task,
     "owner": "airflow",
     "retries": 1,
     "retry_delay": timedelta(minutes=1),
-    "sla": timedelta(hours=12),
+    "sla": timedelta(hours=24),
     "sla_miss_callback": slack_failed_task,
     "start_date": datetime(2019, 1, 1),
     "dagrun_timeout": timedelta(hours=6),
 }
 
+# Set the command for the container
+container_cmd = f"""
+    {clone_and_setup_extraction_cmd} &&
+    python3 sheetload/sheetload.py s3 --bucket $GAINSIGHT_BUCKET_NAME --schema gainsight
+"""
+
+# Create the DAG
 dag = DAG(
-    "qualtrics_nps_extract", default_args=default_args, schedule_interval="0 */12 * * *"
+    "gainsight_extract", default_args=default_args, schedule_interval="0 10 * * 0"
 )
 
-# don't add a newline at the end of this because it gets added to in the K8sPodOperator arguments
-qualtrics_extract_command = f"{clone_and_setup_extraction_cmd} && python qualtrics/src/download_nps_responses.py"
-
-qualtrics_operator = KubernetesPodOperator(
+# Task 1
+gainsight_run = KubernetesPodOperator(
     **gitlab_defaults,
     image=DATA_IMAGE,
-    task_id="qualtrics-nps-extract",
-    name="qualtrics-nps-extract",
+    task_id="gainsight",
+    name="gainsight",
     secrets=[
-        QUALTRICS_API_TOKEN,
-        QUALTRICS_NPS_ID,
-        QUALTRICS_POOL_ID,
+        GAINSIGHT_ACCESS_KEY_ID,
+        GAINSIGHT_SECRET_ACCESS_KEY,
+        GAINSIGHT_BUCKET_NAME,
         SNOWFLAKE_ACCOUNT,
-        SNOWFLAKE_LOAD_DATABASE,
         SNOWFLAKE_LOAD_ROLE,
         SNOWFLAKE_LOAD_USER,
         SNOWFLAKE_LOAD_WAREHOUSE,
         SNOWFLAKE_LOAD_PASSWORD,
     ],
-    env_vars={
-        **pod_env_vars,
-        **{
-            "START_TIME": "{{ execution_date.isoformat() }}",
-            "END_TIME": "{{ next_execution_date.isoformat() }}",
-            "QUALTRICS_DATA_CENTER": "eu",
-        },
-    },
+    env_vars=pod_env_vars,
     affinity=get_affinity(False),
     tolerations=get_toleration(False),
-    arguments=[qualtrics_extract_command],
+    arguments=[container_cmd],
     dag=dag,
 )

@@ -38,6 +38,17 @@ GREENHOUSE_SECRET_ACCESS_KEY = Secret(
     "env", "GREENHOUSE_SECRET_ACCESS_KEY", "airflow", "GREENHOUSE_SECRET_ACCESS_KEY"
 )
 
+# Gainsight S3 Bucket
+GAINSIGHT_ACCESS_KEY_ID = Secret(
+    "env", "GAINSIGHT_ACCESS_KEY_ID", "airflow", "GAINSIGHT_ACCESS_KEY_ID"
+)
+GAINSIGHT_SECRET_ACCESS_KEY = Secret(
+    "env", "GAINSIGHT_SECRET_ACCESS_KEY", "airflow", "GAINSIGHT_SECRET_ACCESS_KEY"
+)
+GAINSIGHT_BUCKET_NAME = Secret(
+    "env", "GAINSIGHT_BUCKET_NAME", "airflow", "GAINSIGHT_BUCKET_NAME"
+)
+
 # Postgres
 PG_USERNAME = Secret("env", "PG_USERNAME", "airflow", "PG_USERNAME")
 PG_ADDRESS = Secret("env", "PG_ADDRESS", "airflow", "PG_ADDRESS")
@@ -193,6 +204,10 @@ QUALTRICS_GROUP_ID = Secret(
 QUALTRICS_POOL_ID = Secret("env", "QUALTRICS_POOL_ID", "airflow", "QUALTRICS_POOL_ID")
 
 QUALTRICS_NPS_ID = Secret("env", "QUALTRICS_NPS_ID", "airflow", "QUALTRICS_NPS_ID")
+
+QUALTRICS_POST_PURCHASE_ID = Secret(
+    "env", "QUALTRICS_POST_PURCHASE_ID", "airflow", "QUALTRICS_POST_PURCHASE_ID"
+)
 
 SALT = Secret("env", "SALT", "airflow", "SALT")
 
