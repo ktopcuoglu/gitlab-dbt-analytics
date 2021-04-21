@@ -4,6 +4,7 @@
 }}
 
 WITH date_details AS (
+    
     SELECT *
     FROM {{ ref('date_details') }}
   
