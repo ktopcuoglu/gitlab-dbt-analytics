@@ -25,6 +25,9 @@ For example, what is the numerator and denominator?
 
 For example, if this experiment is tracking a conversion funnel through 4 different events, what order of events is desired to be tracked.
 
+#### Please list any unique/special event names and provide any relevant context around this event
+
+
 #### Please link to where this (or these) performance indicator/s are defined in the handbook. 
 
 
@@ -38,10 +41,10 @@ For example, if this experiment is tracking a conversion funnel through 4 differ
 
 |                                                             | Test    | Control |      
 |-------------------------------------------------------------|---------|---------|
-| number of project page views                                | 20000   | 20000   |
-| number of clicks on the integration CTA                     | 1000    | 0       |
-| number of view of /-/settings/integrations for the project  | 1500    | 1000    |
-| number of projects with an integration set up               | 750     | 500     | 
+| (Example) number of project page views                                | 20000   | 20000   |
+| (Example) number of clicks on the integration CTA                     | 1000    | 0       |
+| (Example) number of view of /-/settings/integrations for the project  | 1500    | 1000    |
+| (Example) number of projects with an integration set up               | 750     | 500     | 
 
 
 #### What is the visualization you are trying to create?
