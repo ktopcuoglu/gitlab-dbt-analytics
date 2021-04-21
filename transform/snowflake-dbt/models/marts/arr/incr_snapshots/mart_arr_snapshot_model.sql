@@ -1,7 +1,7 @@
 {{ config({
         "materialized": "incremental",
         "unique_key": "mart_arr_snapshot_id",
-        "tags": ["edm_snapshot", "mart_arr_snapshot"],
+        "tags": ["edm_snapshot", "arr_snapshots"],
         "schema": "common"
     })
 }}
