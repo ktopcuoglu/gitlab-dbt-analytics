@@ -1,7 +1,7 @@
 {{ config({
         "materialized": "incremental",
         "unique_key": "dim_subscription_snapshot_id",
-        "tags": ["arr_snapshots"]
+        "tags": ["edm_snapshot", "dim_subscription_snapshot"]
     })
 }}
 
