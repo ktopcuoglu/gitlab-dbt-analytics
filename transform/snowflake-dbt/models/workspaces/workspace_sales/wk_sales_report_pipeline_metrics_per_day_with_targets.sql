@@ -1,5 +1,8 @@
 {{ config(alias='report_pipeline_metrics_day_with_targets') }}
 
+-- TODO
+-- Create a daily version of this table with QTD targets for metrics in the daily funnel targets
+
 WITH date_details AS (
   
   SELECT *
@@ -31,7 +34,7 @@ WITH date_details AS (
 
         close_fiscal_quarter_date,
         close_fiscal_quarter_name,
-        snapshot_day_of_fiscal_quarter_normalised AS close_day_of_fiscal_quarter_normalised,
+        close_day_of_fiscal_quarter_normalised,
 
         -- reported quarter
         SUM(deal_count)                 AS deal_count,
@@ -76,7 +79,7 @@ WITH date_details AS (
         SUM(rq_plus_2_open_3plus_net_arr)       AS rq_plus_2_open_3plus_net_arr,
         SUM(rq_plus_2_open_4plus_net_arr)       AS rq_plus_2_open_4plus_net_arr
     FROM report_pipeline_metrics_day
-    WHERE snapshot_day_of_fiscal_quarter_normalised > 0
+    WHERE close_day_of_fiscal_quarter_normalised > 0
     GROUP BY 1,2,3,4,5,6,7
   
 ), consolidated_targets AS (
@@ -99,9 +102,10 @@ WITH date_details AS (
         SUM(target_deal_count)                      AS target_deal_count,
         SUM(target_pipe_generation_net_arr)         AS target_pipe_generation_net_arr, 
   
-        SUM(total_booked_net_arr)                   AS total_booked_net_arr,
-        SUM(total_booked_deal_count)                AS total_booked_deal_count,
-        SUM(total_pipe_generation_net_arr)          AS total_pipe_generation_net_arr,
+        SUM(total_booked_net_arr)                           AS total_booked_net_arr,
+        SUM(total_booked_deal_count)                        AS total_booked_deal_count,
+        SUM(total_pipe_generation_net_arr)                  AS total_pipe_generation_net_arr,
+        SUM(total_created_and_booked_same_quarter_net_arr)  AS total_created_and_booked_same_quarter_net_arr,
   
         SUM(calculated_target_net_arr)              AS calculated_target_net_arr, 
         SUM(calculated_target_deal_count)           AS calculated_target_deal_count,  
@@ -228,9 +232,10 @@ WITH date_details AS (
         COALESCE(targets.target_deal_count,0)                     AS target_deal_count,
         COALESCE(targets.target_pipe_generation_net_arr,0)        AS target_pipe_generation_net_arr, 
   
-        COALESCE(targets.total_booked_net_arr,0)                  AS total_booked_net_arr,
-        COALESCE(targets.total_booked_deal_count,0)               AS total_booked_deal_count,
-        COALESCE(targets.total_pipe_generation_net_arr,0)         AS total_pipe_generation_net_arr,
+        COALESCE(targets.total_booked_net_arr,0)                            AS total_booked_net_arr,
+        COALESCE(targets.total_booked_deal_count,0)                         AS total_booked_deal_count,
+        COALESCE(targets.total_pipe_generation_net_arr,0)                   AS total_pipe_generation_net_arr,
+        COALESCE(targets.total_created_and_booked_same_quarter_net_arr,0)   AS total_created_and_booked_same_quarter_net_arr,
   
         COALESCE(targets.calculated_target_net_arr,0)             AS calculated_target_net_arr, 
         COALESCE(targets.calculated_target_deal_count,0)          AS calculated_target_deal_count,  

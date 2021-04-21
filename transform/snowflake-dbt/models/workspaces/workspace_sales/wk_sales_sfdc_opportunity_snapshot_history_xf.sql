@@ -1,5 +1,9 @@
 {{ config(alias='sfdc_opportunity_snapshot_history_xf') }}
 
+-- TODO:
+-- Add logic to exclude vision opps from created pipeline metric
+
+
 WITH date_details AS (
 
     SELECT * 
