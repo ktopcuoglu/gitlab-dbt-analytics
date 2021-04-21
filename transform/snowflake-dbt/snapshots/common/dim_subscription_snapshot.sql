@@ -3,8 +3,9 @@
     {{
         config(
           unique_key='dim_subscription_id',
-          strategy='check',
-          check_cols=['subscription_status', 'is_auto_renew']
+          strategy='timestamp',
+          -- Using dbt updated at field as we want a new set of data everyday.
+          updated_at='dbt_updated_at'
          )
     }}
     

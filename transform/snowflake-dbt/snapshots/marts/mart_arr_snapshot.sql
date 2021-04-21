@@ -3,8 +3,9 @@
     {{
         config(
           unique_key='primary_key',
-          strategy='check',
-          check_cols=['mrr', 'arr', 'quantity']
+          strategy='timestamp',
+          -- Using dbt updated at field as we want a new set of data everyday.
+          updated_at='dbt_updated_at'
          )
     }}
     
