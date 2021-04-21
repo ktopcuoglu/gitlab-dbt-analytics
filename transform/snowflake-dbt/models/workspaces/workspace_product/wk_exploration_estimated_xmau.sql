@@ -20,7 +20,7 @@
       AND mart_monthly_product_usage.metrics_path = mart_usage_ping_counters_statistics.metrics_path
     LEFT JOIN gitlab_release_schedule
       ON gitlab_release_schedule.major_minor_version = mart_usage_ping_counters_statistics.first_version_with_counter
-    WHERE is_smau
+    WHERE is_smau = TRUE
       AND delivery = 'Self-Managed'
     GROUP BY 1,2,3,4
   
