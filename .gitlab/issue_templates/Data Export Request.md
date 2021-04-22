@@ -64,7 +64,7 @@ After the dataset has been copied into the GCS stage, it can be downloaded from 
 * [ ] Encrypt the data into zip file (use `zip -er`)
   - [ ] create a password in 1password and name it the name of the file
   - [ ] If there are multiple files put them in a folder
-  - [ ] run `zip -er <zipfilename.zip> <path to file or folder>` as in `zip -er datafile.zip downloads/list.csv`
+  - [ ] run `zip -er <zipfilename.zip> <path to file or folder>` and paste the password you created in 1password when prompted
 * [ ] Share the file's password with the submitter over a secure channel separate from the channel you will use to send the file.  [One time secret](https://onetimesecret.com/) may be a good option to share passwords, just make sure to not put in any context with the password. 
 
 </details>
