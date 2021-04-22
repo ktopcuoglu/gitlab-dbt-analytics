@@ -11,4 +11,4 @@ FROM {{ source('gitlab_dotcom', 'user_details') }}
 WHERE _uploaded_at >= (SELECT MAX(_uploaded_at) FROM {{this}})
 
 {% endif %}
-QUALIFY ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY updated_at DESC) = 1
+QUALIFY ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY _uploaded_at DESC) = 1
