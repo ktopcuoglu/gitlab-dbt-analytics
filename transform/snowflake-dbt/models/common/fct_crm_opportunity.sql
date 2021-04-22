@@ -288,6 +288,8 @@
 
       opportunity_fields.primary_solution_architect,
       opportunity_fields.product_details,
+      opportunity_fields.product_category,
+      opportunity_fields.products_purchased,
 
       -- channel fields
       opportunity_fields.lead_source,
