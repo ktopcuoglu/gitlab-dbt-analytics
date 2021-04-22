@@ -86,7 +86,7 @@ WITH date_details AS (
       stage_name,
       plan_name_at_reporting_month,
       created_by_blocked_user,
-      IFF(plan_name_at_reporting_month IN ('free','trial'),'free','paid')     AS plan_is_paid,
+      IFF(plan_name_at_reporting_month IN ('free','trial'), TRUE, FALSE)     AS plan_is_paid,
       SUM(event_count)                                                        AS monthly_stage_events,
       COUNT(DISTINCT user_id)                                                 AS monthly_stage_users,
       COUNT(DISTINCT event_date)                                              AS stage_active_days,
@@ -107,7 +107,7 @@ WITH date_details AS (
 
 SELECT
   reporting_month,
-  organization_id,
+  organization_id::VARCHAR AS organization_id,
   delivery,
   organization_type,
   plan_name_at_reporting_month,
