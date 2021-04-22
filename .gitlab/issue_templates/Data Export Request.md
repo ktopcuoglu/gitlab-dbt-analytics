@@ -1,22 +1,22 @@
-## Request for data extraction
+## Request for data export
 
-<!--
-Please complete all items. Ask questions in the #data slack channel
---->
+### Receiving contact Info: 
+* [X] Assign team member(s) who should be receiving this export to the issue and tag them below:
+  - `@`
+* [ ] Slack handle(s) for those assigned: 
+  - `@handle`
 
-**Original Issue Link**:
-<!--
-If none, please include a description
---->
+### Business Use Case (Please explain what this data will be used for and appropriate data filters): 
 
-**Editor Slack Handle**: @`handle`
+<!-- please describe what you will be doing with this data (where is it going, how will it be used, etc) -->
 
-**Business Use Case** (Please explain what this data will be used for and appropriate data filters): 
-
+---
 
 ### Submitter Checklist
-* [ ]  Provide link to dashboard that you wanted to export from Periscope that was greater than 5MB. Link: _____ 
-* [ ]  Provide information on what data you want exported. If the query needs to be written still, please indicate. (Table name, Columns, SQL statements, etc)
+* [ ] Data Location - Which data do you need exported? Please provide at least one of the following:
+  - [ ] URL to dashboard that you wanted to export from Periscope that was greater than 5MB. Link: _____ 
+  - [ ] Database, Schema, & Table (or view) in Snowflake (dot notation preferred): `database.schema.table`
+  - [ ] [Link to SQL Code Snippet](https://gitlab.com/gitlab-data/analytics/-/snippets/2108714)
 * [ ]  Provide a file name for the file. File Name: ___________ 
 * [ ]  Select the type of format you would like the data exported in: 
   - [ ] TSV (tab-separated values)
@@ -24,18 +24,17 @@ If none, please include a description
 * [ ]  Does this data contain `RED` or `ORANGE` data as defined in [GitLab's data classification policy?](https://about.gitlab.com/handbook/engineering/security/data-classification-policy.html#data-classification-levels)
   - [ ] Yes (You will need to already have [approved access](https://about.gitlab.com/handbook/business-ops/it-ops-team/access-requests/) to this data) 
   - [ ] No (I verify that this data that will be extracted does not contain sensitive information.)
-* [ ]  How soon do you need this data ? Timeline: _________
+* [ ]  Add a due date to the issue for when the data is desdired by.
 * [ ]  cc: `@gitlab-data` to have this issue prioritized and assigned.  
 
-  ### Reviewer Checklist 
-* [ ]  Review the Submitter Checklist. 
-* [ ]  Check if the data requested. If it is and the requester does not have access, close the issue and comment : "This request has been denied due to access to the information being requested." 
-* [ ]  If not, continue with the steps below: 
-  - [ ] Run the query in Snowflake. 
+---
+
+### Reviewer Checklist 
+* [ ] Review the Submitter Checklist. 
+* [ ] Verify Requestors access 
 
 #### Small Data Set
 * [ ] Export the file in the requested format using the Snowflake UI's export functionality.
-
 
 #### Large Data Set
 * [ ] Load the dataset in the requested format to the `"RAW"."PUBLIC".SNOWFLAKE_EXPORTS` stage by running:
