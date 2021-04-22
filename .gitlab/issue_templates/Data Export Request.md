@@ -63,3 +63,8 @@ After the dataset has been copied into the GCS stage, it can be downloaded from 
 * [ ] Share the file with the submitter over a secure channel
 * [ ] Reassign this issue to the Submitter for verification of receipt 
 * [ ] Once the submitter has verified receipt, delete the file from your computer
+
+<!-- DO NOT EDIT BELOW THIS LINE -->
+
+/label ~Infrastructure ~Snowflake ~"Data Pump"
+/confidential 
