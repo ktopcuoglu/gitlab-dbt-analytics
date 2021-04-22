@@ -106,7 +106,7 @@ WITH sfdc_opportunity AS (
 {{ dbt_audit(
     cte_ref="layered",
     created_by="@iweeks",
-    updated_by="@iweeks",
+    updated_by="@jpeguero",
     created_date="2020-11-20",
-    updated_date="2021-03-23"
+    updated_date="2021-04-22"
 ) }}

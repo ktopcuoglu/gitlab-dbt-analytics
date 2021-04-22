@@ -360,7 +360,7 @@
 {{ dbt_audit(
     cte_ref="final_opportunities",
     created_by="@mcooperDD",
-    updated_by="@mcooperDD",
+    updated_by="@jpeguero",
     created_date="2020-11-30",
-    updated_date="2021-03-25"
+    updated_date="2021-04-22"
 ) }}
