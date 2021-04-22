@@ -52,7 +52,7 @@ WITH date_details AS (
   
     SELECT
       namespace_id,
-      DATE(event_date)                                            AS event_date,
+      event_date,
       DATE_TRUNC('month', event_date)                             AS event_month,
       plan_name_at_event_date,
       user_id,
