@@ -295,7 +295,7 @@ models:
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_uploads_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
-  - name: gitlab_dotcom_user_details_source
+  - name: gitlab_dotcom_user_details_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_user_preferences_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
