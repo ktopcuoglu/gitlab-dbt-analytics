@@ -14,7 +14,7 @@ models:
           - name: instance_id
             tests:
               - not_null
-          - name: clean_metrics_name
+          - name: metrics_path
             tests:
               - not_null
     - name: monthly_usage_data_all_time
@@ -30,7 +30,7 @@ models:
           - name: instance_id
             tests:
               - not_null
-          - name: clean_metrics_name
+          - name: metrics_path
             tests:
               - not_null
     - name: prep_usage_data_28_days_flattened
@@ -46,7 +46,7 @@ models:
           - name: instance_id
             tests:
               - not_null
-          - name: clean_metrics_name
+          - name: metrics_path
             tests:
               - not_null
     - name: prep_usage_data_all_time_flattened
@@ -62,6 +62,6 @@ models:
           - name: instance_id
             tests:
               - not_null
-          - name: clean_metrics_name
+          - name: metrics_path
             tests:
               - not_null

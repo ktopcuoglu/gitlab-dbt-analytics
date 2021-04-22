@@ -90,6 +90,7 @@ WITH paid_subscriptions_monthly_usage_ping_optin AS (
     SELECT DISTINCT first_day_of_month AS reporting_month
     FROM {{ ref('date_details') }}
     WHERE first_day_of_month >= '2018-01-01'
+      AND first_day_of_month < CURRENT_DATE
 
 ), date_joined AS (
   
