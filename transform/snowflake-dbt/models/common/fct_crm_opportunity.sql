@@ -127,6 +127,8 @@
       user_area_stamped                                         AS crm_opp_owner_area_stamped,
       primary_solution_architect,
       product_details,
+      product_category,
+      products_purchased,
       dr_partner_deal_type,
       dr_partner_engagement,
       partner_account,
@@ -286,6 +288,8 @@
 
       opportunity_fields.primary_solution_architect,
       opportunity_fields.product_details,
+      opportunity_fields.product_category,
+      opportunity_fields.products_purchased,
 
       -- channel fields
       opportunity_fields.lead_source,
@@ -356,7 +360,7 @@
 {{ dbt_audit(
     cte_ref="final_opportunities",
     created_by="@mcooperDD",
-    updated_by="@mcooperDD",
+    updated_by="@jpeguero",
     created_date="2020-11-30",
-    updated_date="2021-03-25"
+    updated_date="2021-04-22"
 ) }}

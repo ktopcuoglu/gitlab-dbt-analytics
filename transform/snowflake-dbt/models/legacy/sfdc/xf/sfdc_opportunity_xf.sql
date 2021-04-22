@@ -182,6 +182,8 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity.tam_notes,
       sfdc_opportunity.primary_solution_architect,
       sfdc_opportunity.product_details,
+      sfdc_opportunity.product_category,
+      sfdc_opportunity.products_purchased,
 
       -- days and dates per stage
       sfdc_opportunity.days_in_1_discovery,
