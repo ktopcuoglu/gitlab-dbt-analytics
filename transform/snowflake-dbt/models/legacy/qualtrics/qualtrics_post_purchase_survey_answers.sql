@@ -42,7 +42,7 @@ WITH responses AS (
 
     SELECT
       GET(answer_choices, d.value)['Display']::TEXT AS answer_display,
-      d.value::VARCHAR || question_id         AS answer_id,
+      d.value::VARCHAR || question_id               AS answer_id,
       response_id,
       question_id
     FROM parsed_out_qas,
