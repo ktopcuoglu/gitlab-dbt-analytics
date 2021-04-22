@@ -22,7 +22,7 @@ WITH date_details AS (
       namespace_created_at
     FROM {{ ref('gitlab_dotcom_namespaces_xf') }}
     WHERE namespace_id = namespace_ultimate_parent_id
-        AND namespace_is_internal = FALSE
+      AND namespace_is_internal = FALSE
 
 )
 
@@ -51,27 +51,26 @@ WITH date_details AS (
 ), events AS (
   
     SELECT
-      namespace_id,
+      all_events.namespace_id,
       event_date,
       DATE_TRUNC('month', event_date)                             AS event_month,
       plan_name_at_event_date,
       user_id,
       all_events.stage_name,
-      created_by_blocked_user,
       IFF(all_events.stage_name='manage',user_id,NULL)            AS umau,
-        FIRST_VALUE(plan_name_at_event_date) OVER (
-            PARTITION BY event_month, namespace_id 
-            ORDER BY event_date ASC)                              AS plan_name_at_reporting_month,
-            FIRST_VALUE(plan_name_at_event_date) OVER (
-                PARTITION BY namespace_id 
-            ORDER BY event_date ASC)                              AS plan_name_at_creation,
+      FIRST_VALUE(plan_name_at_event_date) OVER (
+        PARTITION BY event_month, all_events.namespace_id 
+        ORDER BY event_date ASC)                                  AS plan_name_at_reporting_month,
+      FIRST_VALUE(plan_name_at_event_date) OVER (
+        PARTITION BY all_events.namespace_id 
+        ORDER BY event_date ASC)                                  AS plan_name_at_creation,
       COUNT(event_date)                                           AS event_count
     FROM all_events
     INNER JOIN metrics ON all_events.event_name = metrics.events_to_include
     WHERE (metrics.smau = TRUE OR metrics.is_umau = TRUE)
-        AND all_events.stage_name != 'monitor'
-        AND namespace_is_internal = FALSE
-        AND days_since_namespace_creation >= 0
+      AND all_events.stage_name != 'monitor'
+      AND namespace_is_internal = FALSE
+      AND days_since_namespace_creation >= 0
     GROUP BY 1,2,3,4,5,6,7
                                                                                   
 ), joined AS (                                               
@@ -90,28 +89,38 @@ WITH date_details AS (
       COUNT(DISTINCT user_id)                                                 AS monthly_stage_users,
       COUNT(DISTINCT event_date)                                              AS stage_active_days,
       COUNT(DISTINCT umau)                                                    AS umau_stage,
-        SUM(umau_stage) OVER (
-            PARTITION BY organization_id, first_day_of_month, plan_name_at_reporting_month
-            )                                                                 AS umau
+      SUM(umau_stage) OVER (
+        PARTITION BY organization_id, first_day_of_month, plan_name_at_reporting_month
+      )                                                                       AS umau
     FROM events
-    INNER JOIN date_details ON events.event_month = date_details.date_day
-    INNER JOIN namespaces ON namespaces.namespace_id = events.namespace_id
+    INNER JOIN date_details 
+      ON events.event_month = date_details.date_day
+    INNER JOIN namespaces 
+      ON namespaces.namespace_id = events.namespace_id
     WHERE event_date >= DATEADD('day',-28, date_details.last_day_of_month)
-    GROUP BY 1,2,3,4,5,6,7,8
+      AND stage_name != 'manage'
+    GROUP BY 1,2,3,4,5,6,7,8,9
   
 )
 
-    SELECT
-        delivery,
-        organization_id,
-        organization_type,
-        organization_creation_date,
-        plan_name_at_reporting_month,
-        plan_is_paid,
-        created_by_blocked_user,
-        first_day_of_month,
-        stage_name,
-        monthly_stage_users,
-        umau
-    FROM joined
-    WHERE stage_name != 'manage'
+SELECT
+  delivery,
+  organization_id,
+  organization_type,
+  organization_creation_date,
+  plan_name_at_reporting_month,
+  plan_is_paid,
+  created_by_blocked_user,
+  first_day_of_month,
+  umau,
+  {{ dbt_utils.pivot(
+  'stage_name', 
+  stage_names,
+  agg = 'MAX',
+  then_value = 'monthly_stage_users',
+  else_value = 'NULL',
+  suffix='_stage',
+  quote_identifiers = False
+  ) }}
+FROM joined
+GROUP BY 1,2,3,4,5,6,7,8,9
