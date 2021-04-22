@@ -57,9 +57,18 @@ After the dataset has been copied into the GCS stage, it can be downloaded from 
 
 
 #### Sharing
-* For Sensitive Data
-  - [ ] Encrypt the data into zip file (use `zip -er`)
-  - [ ] Share the file's password with the submitter over a secure channel separate from the channel you will use to send the file.  [One time secret](https://onetimesecret.com/) may be a good option to share passwords, just make sure to not put in any context with the password. 
+
+<details>
+  <summary>For Sensitive Data</summary>
+  
+* [ ] Encrypt the data into zip file (use `zip -er`)
+  - [ ] create a password in 1password and name it the name of the file
+  - [ ] If there are multiple files put them in a folder
+  - [ ] run `zip -er <zipfilename.zip> <path to file or folder>` and, when prompted, copy and paste the password you created in 1password.
+* [ ] Share the file's password with the submitter over a secure channel separate from the channel you will use to send the file.  [One time secret](https://onetimesecret.com/) may be a good option to share passwords, just make sure to not put in any context with the password. 
+
+</details>
+
 * [ ] Share the file with the submitter over a secure channel
 * [ ] Reassign this issue to the Submitter for verification of receipt 
 * [ ] Once the submitter has verified receipt, delete the file from your computer
