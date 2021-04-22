@@ -1,3 +1,5 @@
+{%- set stage_names = dbt_utils.get_column_values(ref('wk_prep_stages_to_include'), 'stage_name') -%}
+
 {{ config({
     "materialized": "table"
     })
@@ -80,7 +82,7 @@ WITH date_details AS (
       namespaces.namespace_id                                                 AS organization_id,
       namespace_type                                                          AS organization_type,
       DATE(namespace_created_at)                                              AS organization_creation_date,
-      first_day_of_month,
+      first_day_of_month                                                      AS reporting_month,
       stage_name,
       plan_name_at_reporting_month,
       created_by_blocked_user,
@@ -104,14 +106,14 @@ WITH date_details AS (
 )
 
 SELECT
-  delivery,
+  reporting_month,
   organization_id,
+  delivery,
   organization_type,
-  organization_creation_date,
   plan_name_at_reporting_month,
   plan_is_paid,
-  created_by_blocked_user,
-  first_day_of_month,
+  --organization_creation_date,
+  --created_by_blocked_user,
   umau,
   {{ dbt_utils.pivot(
   'stage_name', 
@@ -123,4 +125,4 @@ SELECT
   quote_identifiers = False
   ) }}
 FROM joined
-GROUP BY 1,2,3,4,5,6,7,8,9
+GROUP BY 1,2,3,4,5,6,7
