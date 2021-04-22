@@ -127,6 +127,8 @@
       user_area_stamped                                         AS crm_opp_owner_area_stamped,
       primary_solution_architect,
       product_details,
+      product_category,
+      products_purchased,
       dr_partner_deal_type,
       dr_partner_engagement,
       partner_account,

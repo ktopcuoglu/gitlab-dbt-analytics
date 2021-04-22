@@ -38,7 +38,10 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity.deal_path,
 
       -- opportunity information
-
+      
+      sfdc_opportunity.product_category,
+      sfdc_opportunity.product_details,
+      sfdc_opportunity.products_purchased,
       sfdc_opportunity.competitors,
       sfdc_opportunity.critical_deal_flag,
       sfdc_opportunity.forecast_category_name,
