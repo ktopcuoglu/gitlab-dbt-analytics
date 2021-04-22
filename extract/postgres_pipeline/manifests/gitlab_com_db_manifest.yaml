@@ -3191,6 +3191,17 @@ tables:
       FROM users
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
+  user_details:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'user_details'
+    export_table_primary_key: user_id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT user_id
+      , job_title
+      , other_role
+      FROM user_details
   users_ops_dashboard_projects:
     export_schema: "gitlab_com"
     export_table: users_ops_dashboard_projects
