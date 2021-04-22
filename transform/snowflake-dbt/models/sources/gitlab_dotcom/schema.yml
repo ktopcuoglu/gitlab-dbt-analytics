@@ -1905,6 +1905,15 @@ models:
         tests:
           - not_null
 
+  - name: gitlab_dotcom_user_details_source
+    description: Base model for Gitlab.com user_details
+    columns:
+      - name: user_id
+        tags: ["tdf", "gitlab_dotcom"]
+        tests:
+          - not_null
+          - unique
+
   - name: gitlab_dotcom_user_preferences_source
     description: Base model for Gitlab.com user_preferences
     columns:
