@@ -194,6 +194,52 @@
 
     FROM sfdc_opportunity
 
+), is_net_arr_closed_deal AS (
+
+    SELECT
+
+      opportunity_id,
+      CASE
+        WHEN (is_won = 'TRUE' OR (sales_type = 'Renewal' AND stage_name = '8-Closed Lost'))
+            THEN TRUE
+        ELSE FALSE 
+      END                                                                         AS is_net_arr_closed_deal
+
+    FROM sfdc_opportunity
+
+), is_new_logo_first_order_asp AS (
+
+    SELECT
+
+      opportunity_id,
+      CASE
+        WHEN is_won = 'TRUE'
+          AND is_closed = 'TRUE'
+          AND is_edu_oss = 0
+          AND order_type = '1. New - First Order'
+            THEN TRUE
+        ELSE FALSE
+      END                                                                         AS is_new_logo_first_order_asp
+
+    FROM sfdc_opportunity
+
+), is_net_arr_pipeline_created AS (
+
+    SELECT
+
+      opportunity_id,
+      CASE
+        WHEN is_edu_oss = 0
+          AND stage_name NOT IN (
+                                '00-Pre Opportunity'
+                                , '10-Duplicate'
+                                )
+            THEN TRUE
+        ELSE FALSE
+      END                                                                         AS is_net_arr_pipeline_created
+
+    FROM sfdc_opportunity
+
 ), final_opportunities AS (
 
     SELECT
@@ -283,6 +329,9 @@
       opportunity_fields.is_web_portal_purchase,
       is_sao.is_sao,
       is_sdr_sao.is_sdr_sao,
+      is_net_arr_closed_deal.is_net_arr_closed_deal,
+      is_new_logo_first_order_asp.is_new_logo_first_order_asp,
+      is_net_arr_pipeline_created.is_net_arr_pipeline_created,
 
       opportunity_fields.primary_solution_architect,
       opportunity_fields.product_details,
@@ -336,6 +385,12 @@
       ON opportunity_fields.dim_crm_opportunity_id = is_sao.opportunity_id
     LEFT JOIN is_sdr_sao
       ON opportunity_fields.dim_crm_opportunity_id = is_sdr_sao.opportunity_id
+    LEFT JOIN is_net_arr_closed_deal
+      ON opportunity_fields.dim_crm_opportunity_id = is_net_arr_closed_deal.opportunity_id
+    LEFT JOIN is_new_logo_first_order_asp
+      ON opportunity_fields.dim_crm_opportunity_id = is_new_logo_first_order_asp.opportunity_id
+    LEFT JOIN is_net_arr_pipeline_created
+      ON opportunity_fields.dim_crm_opportunity_id = is_net_arr_pipeline_created.opportunity_id
     LEFT JOIN user_hierarchy_stamped_sales_segment
       ON opportunity_fields.crm_opp_owner_sales_segment_stamped = user_hierarchy_stamped_sales_segment.crm_opp_owner_sales_segment_stamped
     LEFT JOIN user_hierarchy_stamped_geo
