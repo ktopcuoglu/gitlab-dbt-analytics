@@ -38,37 +38,25 @@ WITH responses AS (
       ON GET(response_values, question_id) IS NOT NULL
     WHERE QUESTION_ID != 'QID4_TEXT' AND ARRAY_SIZE(QUESTION_RESPONSE) > 0
 
-), responses_cleaned_up AS (
+), final AS (
 
     SELECT
       GET(answer_choices, d.value)['Display']::VARCHAR AS answer_display,
       d.value::VARCHAR || question_id                  AS answer_id,
-      response_id,
-      question_id
-    FROM parsed_out_qas,
-    LATERAL FLATTEN(input => question_response) d 
-      
-
-), final AS (
-
-    SELECT
-      responses_cleaned_up.response_id,
-      responses_cleaned_up.question_id,
-      question_description,
-      answer_display,
-      answer_id,
       distribution_channel,
       has_finished_survey,
-      survey_start_date,
-      survey_end_date,
+      response_id,
+      question_description,
+      question_id,
       response_recorded_at,
+      survey_end_date,
+      survey_start_date,
       user_language,
       user_plan
-    FROM responses_cleaned_up
-    INNER JOIN parsed_out_qas 
-      ON responses_cleaned_up.response_id = parsed_out_qas.response_id
-        AND responses_cleaned_up.question_id = parsed_out_qas.question_id
+    FROM parsed_out_qas,
+    LATERAL FLATTEN(input => question_response) d 
     WHERE answer_display IS NOT NULL
+      
 
 )
 
