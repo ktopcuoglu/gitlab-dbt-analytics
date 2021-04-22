@@ -942,6 +942,20 @@ models:
               to: ref('dim_crm_account')
               field: dim_crm_account_id
         tags: ["tdf", "common", "sales_funnel"]
+      - name: dim_alliance_type_id
+        description: join key for dim_alliance_type
+        tests:
+          - relationships:
+              to: ref('dim_alliance_type')
+              field: dim_alliance_type_id
+        tags: ["tdf", "common", "sales_funnel"]
+      - name: dim_dr_partner_engagement_id
+        description: join key for dim_dr_partner_engagement
+        tests:
+          - relationships:
+              to: ref('dim_dr_partner_engagement')
+              field: dim_dr_partner_engagement_id
+        tags: ["tdf", "common", "sales_funnel"]
       - name: dim_crm_person_id
         description: A surrogate key for use when joining to `dim_crm_person`. Created from the contact_id where there is a contact and a lead_id where there isn't.
       - name: sfdc_contact_id
