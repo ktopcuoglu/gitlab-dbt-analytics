@@ -41,7 +41,7 @@ WITH responses AS (
 ), responses_cleaned_up AS (
 
     SELECT
-      GET(answer_choices, d.value)['Display'] AS answer_display,
+      GET(answer_choices, d.value)['Display']::TEXT AS answer_display,
       d.value::VARCHAR || question_id         AS answer_id,
       response_id,
       question_id
