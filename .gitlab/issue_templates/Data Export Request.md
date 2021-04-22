@@ -4,7 +4,7 @@ Please complete all items. Ask questions in the #data slack channel
 --->
 ### Receiving contact Info: 
 * [ ] Assign team member(s) who should be receiving this export to the issue and tag them below:
-  - `@`
+  - `@gitlab handle`
 * [ ] Slack handle(s) for those assigned: 
   - `@handle`
 
