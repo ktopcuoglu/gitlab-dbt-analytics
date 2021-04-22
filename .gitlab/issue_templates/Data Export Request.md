@@ -1,5 +1,7 @@
 ## Request for data export
-
+<!--
+Please complete all items. Ask questions in the #data slack channel
+--->
 ### Receiving contact Info: 
 * [ ] Assign team member(s) who should be receiving this export to the issue and tag them below:
   - `@`
@@ -8,7 +10,9 @@
 
 ### Business Use Case (Please explain what this data will be used for and appropriate data filters): 
 
-<!-- please describe what you will be doing with this data (where is it going, how will it be used, etc) -->
+<!--
+please describe what you will be doing with this data (where is it going, how will it be used, etc)
+--->
 
 ---
 
