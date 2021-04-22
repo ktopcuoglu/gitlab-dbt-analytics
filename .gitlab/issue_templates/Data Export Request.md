@@ -1,7 +1,7 @@
 ## Request for data export
 
 ### Receiving contact Info: 
-* [X] Assign team member(s) who should be receiving this export to the issue and tag them below:
+* [ ] Assign team member(s) who should be receiving this export to the issue and tag them below:
   - `@`
 * [ ] Slack handle(s) for those assigned: 
   - `@handle`
