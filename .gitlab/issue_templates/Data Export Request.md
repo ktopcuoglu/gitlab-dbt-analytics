@@ -66,5 +66,5 @@ After the dataset has been copied into the GCS stage, it can be downloaded from 
 
 <!-- DO NOT EDIT BELOW THIS LINE -->
 
-/label ~Infrastructure ~Snowflake ~"Data Pump"
+/label ~Infrastructure ~Snowflake ~Analytics ~"Data Pump"
 /confidential 
