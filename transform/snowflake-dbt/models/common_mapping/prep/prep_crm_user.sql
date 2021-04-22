@@ -11,8 +11,8 @@ WITH sfdc_users AS (
 ), final_users AS (
 
     SELECT
-      sfdc_users.user_id                                            AS dim_crm_sales_rep_id,
-      sfdc_users.name                                               AS rep_name,
+      sfdc_users.user_id                                            AS dim_crm_user_id,
+      sfdc_users.name                                               AS user_name,
       sfdc_users.title,
       sfdc_users.department,
       sfdc_users.team,
@@ -40,7 +40,7 @@ WITH sfdc_users AS (
 {{ dbt_audit(
     cte_ref="final_users",
     created_by="@mcooperDD",
-    updated_by="@mcooperDD",
+    updated_by="@iweeks",
     created_date="2021-01-12",
-    updated_date="2021-03-26"
+    updated_date="2021-04-22"
 ) }}

@@ -1,7 +1,7 @@
 WITH sfdc_user AS (
 
     SELECT *
-    FROM {{ ref('prep_crm_sales_representative') }}
+    FROM {{ ref('prep_crm_user') }}
     WHERE is_active = 'TRUE'
 
 ), final_sales_hierarchy AS (
@@ -32,7 +32,7 @@ WITH sfdc_user AS (
 {{ dbt_audit(
     cte_ref="final_sales_hierarchy",
     created_by="@mcooperDD",
-    updated_by="@mcooperDD",
+    updated_by="@iweeks",
     created_date="2020-12-18",
-    updated_date="2021-03-26"
+    updated_date="2021-04-22"
 ) }}
