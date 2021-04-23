@@ -33,7 +33,7 @@ SELECT
   MAX(CASE WHEN column_key = 'quantity' THEN column_value END) AS order_quantity,
   MAX(CASE WHEN column_key = 'end_date' THEN column_value END) AS order_end_date,
   MAX(CASE WHEN column_key = 'amendment_type' THEN column_value END) AS amendment_type,
-  MAX(CASE WHEN column_key = 'gl_namespace_id' THEN REPLACE(column_value, '\'', '') END)::INTEGER AS dim_namespace_id,
+  MAX(CASE WHEN column_key = 'gl_namespace_id' AND column_value <> '' THEN TRIM(column_value, '\'') END)::INTEGER AS dim_namespace_id,
   MAX(CASE WHEN column_key = 'gl_namespace_name' THEN column_value END) AS dim_namespace_name,
   MAX(CASE WHEN column_key = 'trial' THEN column_value END)::BOOLEAN AS is_trial,
   MAX(CASE WHEN column_key = 'last_extra_ci_minutes_sync_at' THEN column_value END) AS last_extra_ci_minutes_sync_at,
