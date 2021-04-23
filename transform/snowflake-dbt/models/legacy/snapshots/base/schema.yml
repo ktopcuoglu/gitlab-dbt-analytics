@@ -40,7 +40,6 @@ models:
       - name: dim_subscription_id
         tests:
           - not_null
-          - unique
       - name: dbt_valid_from
         tests:
           - not_null
@@ -119,7 +118,6 @@ models:
       - name: mrr_id
         tests:
           - not_null
-          - unique
       - name: dbt_valid_from
         tests:
           - not_null
@@ -146,7 +144,6 @@ models:
       - name: primary_key
         tests:
           - not_null
-          - unique
       - name: dbt_valid_from
         tests:
           - not_null
