@@ -109,7 +109,7 @@
     - dbt --partial-parse test $CI_PROFILE_TARGET --models $DBT_MODELS || FAILED=true
     - dbt --partial-parse run $CI_PROFILE_TARGET --models $DBT_MODELS || FAILED=true
     - dbt --partial-parse test $CI_PROFILE_TARGET --models $DBT_MODELS
-    - if [ $FAILED ] then exit 1; fi
+    - $FAILED
 
 ➕🦖specify_l_model:
   <<: *snowflake_dbt_jobs
