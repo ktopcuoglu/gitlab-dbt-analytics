@@ -41,8 +41,8 @@ WITH base as (
 
     SELECT 
       base.*,
-      f.value['schema']::TEXT         AS context_data_schema,
-      TRY_PARSE_JSON(f.value['data']) AS context_data
+      f.value['schema']::VARCHAR         AS context_data_schema,
+      TRY_PARSE_JSON(f.value['data'])    AS context_data
     FROM base,
     lateral flatten(input => TRY_PARSE_JSON(contexts), path => 'data') f
 
@@ -50,9 +50,9 @@ WITH base as (
 
     SELECT
       event_id,
-      context_data:experiment::TEXT AS experiment_name,
-      context_data:key::TEXT        AS context_key,
-      context_data:variant::TEXT    AS experiment_variant
+      context_data:experiment::VARCHAR AS experiment_name,
+      context_data:key::VARCHAR        AS context_key,
+      context_data:variant::VARCHAR    AS experiment_variant
     FROM events_with_context_flattened
     WHERE context_data_schema ILIKE 'iglu:com.gitlab/gitlab_experiment/jsonschema/%'
   
