@@ -1830,11 +1830,8 @@ roles:
             - admin
 
     - bmenegocci:
-        member_of:
-            - analyst_finance
-            - bamboohr_analytics
-        warehouses:
-            - analyst_xs
+        member_of: []
+        warehouses: []
 
     - brittany:
         member_of:
@@ -3139,9 +3136,8 @@ users:
             - securityadmin
 
     - bmenegocci:
-        can_login: yes
-        member_of:
-            - bmenegocci
+        can_login: no
+        member_of: []
 
     - brittany:
         can_login: yes
