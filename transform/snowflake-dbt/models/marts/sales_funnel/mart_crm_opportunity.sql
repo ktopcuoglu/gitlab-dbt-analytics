@@ -100,6 +100,7 @@
       fct_crm_opportunity.is_net_arr_closed_deal,
       fct_crm_opportunity.is_new_logo_first_order_asp,
       fct_crm_opportunity.is_net_arr_pipeline_created,
+      fct_crm_opportunity.is_win_rate_calc,
       dim_deal_path.deal_path_name,
       dim_order_type.order_type_name                                       AS order_type,
       dim_order_type.order_type_grouped,

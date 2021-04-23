@@ -240,6 +240,20 @@
 
     FROM sfdc_opportunity
 
+), is_win_rate_calc AS (
+
+      SELECT
+        
+        opportunity_id,
+        CASE
+          WHEN stage_name IN ('Closed Won', '8-Closed Lost')
+            AND amount >= 0
+            AND (reason_for_loss IS NULL OR reason_for_loss != 'Merged into another opportunity')
+            AND is_edu_oss = 0
+              THEN TRUE
+          ELSE FALSE
+        END                                                                       AS is_win_rate_calc
+
 ), final_opportunities AS (
 
     SELECT
@@ -332,6 +346,7 @@
       is_net_arr_closed_deal.is_net_arr_closed_deal,
       is_new_logo_first_order_asp.is_new_logo_first_order_asp,
       is_net_arr_pipeline_created.is_net_arr_pipeline_created,
+      is_win_rate_calc.is_win_rate_calc,
 
       opportunity_fields.primary_solution_architect,
       opportunity_fields.product_details,
@@ -391,6 +406,8 @@
       ON opportunity_fields.dim_crm_opportunity_id = is_new_logo_first_order_asp.opportunity_id
     LEFT JOIN is_net_arr_pipeline_created
       ON opportunity_fields.dim_crm_opportunity_id = is_net_arr_pipeline_created.opportunity_id
+    LEFT JOIN is_win_rate_calc
+      ON opportunity_fields.dim_crm_opportunity_id = is_win_rate_calc.opportunity_id
     LEFT JOIN user_hierarchy_stamped_sales_segment
       ON opportunity_fields.crm_opp_owner_sales_segment_stamped = user_hierarchy_stamped_sales_segment.crm_opp_owner_sales_segment_stamped
     LEFT JOIN user_hierarchy_stamped_geo
