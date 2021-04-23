@@ -67,10 +67,11 @@
   script:
     - *deps_and_seed
     - echo $DBT_MODELS
-    - dbt --partial-parse run $CI_PROFILE_TARGET --full-refresh --exclude $DBT_MODELS || true
-    - dbt --partial-parse test $CI_PROFILE_TARGET --exclude $DBT_MODELS || true
-    - dbt --partial-parse run $CI_PROFILE_TARGET --exclude $DBT_MODELS || true
-    - dbt --partial-parse test $CI_PROFILE_TARGET --exclude $DBT_MODELS
+    - dbt --partial-parse run $CI_PROFILE_TARGET --full-refresh --exclude $DBT_MODELS || FAILED=true
+    - dbt --partial-parse test $CI_PROFILE_TARGET --exclude $DBT_MODELS || FAILED=true
+    - dbt --partial-parse run $CI_PROFILE_TARGET --exclude $DBT_MODELS || FAILED=true
+    - dbt --partial-parse test $CI_PROFILE_TARGET --exclude $DBT_MODELS || FAILED=true
+    - if [ $FAILED ]; then exit 1; fi
 
 ➖🦖specify_l_exclude:
   <<: *snowflake_dbt_jobs
@@ -78,13 +79,14 @@
     - *l_warehouse
     - *deps_and_seed
     - echo $DBT_MODELS
-    - dbt --partial-parse run $CI_PROFILE_TARGET --full-refresh --exclude $DBT_MODELS || true
+    - dbt --partial-parse run $CI_PROFILE_TARGET --full-refresh --exclude $DBT_MODELS || FAILED=true
     - *xs_warehouse
-    - dbt --partial-parse test $CI_PROFILE_TARGET --exclude $DBT_MODELS || true
+    - dbt --partial-parse test $CI_PROFILE_TARGET --exclude $DBT_MODELS || FAILED=true
     - *l_warehouse
-    - dbt --partial-parse run $CI_PROFILE_TARGET --exclude $DBT_MODELS || true
+    - dbt --partial-parse run $CI_PROFILE_TARGET --exclude $DBT_MODELS || FAILED=true
     - *xs_warehouse
-    - dbt --partial-parse test $CI_PROFILE_TARGET --exclude $DBT_MODELS
+    - dbt --partial-parse test $CI_PROFILE_TARGET --exclude $DBT_MODELS || FAILED=true
+    - if [ $FAILED ]; then exit 1; fi
 
 ➖🐘specify_xl_exclude:
   <<: *snowflake_dbt_jobs
@@ -92,13 +94,14 @@
     - *xl_warehouse
     - *deps_and_seed
     - echo $DBT_MODELS
-    - dbt --partial-parse run $CI_PROFILE_TARGET --full-refresh --exclude $DBT_MODELS || true
+    - dbt --partial-parse run $CI_PROFILE_TARGET --full-refresh --exclude $DBT_MODELS || FAILED=true
     - *xs_warehouse
-    - dbt --partial-parse test $CI_PROFILE_TARGET --exclude $DBT_MODELS || true
+    - dbt --partial-parse test $CI_PROFILE_TARGET --exclude $DBT_MODELS || FAILED=true
     - *xl_warehouse
-    - dbt --partial-parse run $CI_PROFILE_TARGET --exclude $DBT_MODELS || true
+    - dbt --partial-parse run $CI_PROFILE_TARGET --exclude $DBT_MODELS || FAILED=true
     - *xs_warehouse
-    - dbt --partial-parse test $CI_PROFILE_TARGET --exclude $DBT_MODELS
+    - dbt --partial-parse test $CI_PROFILE_TARGET --exclude $DBT_MODELS || FAILED=true
+    - if [ $FAILED ]; then exit 1; fi
 
 ➕🐭specify_model:
   <<: *snowflake_dbt_jobs
@@ -108,7 +111,7 @@
     - dbt --partial-parse run $CI_PROFILE_TARGET --full-refresh --models $DBT_MODELS || FAILED=true
     - dbt --partial-parse test $CI_PROFILE_TARGET --models $DBT_MODELS || FAILED=true
     - dbt --partial-parse run $CI_PROFILE_TARGET --models $DBT_MODELS || FAILED=true
-    - dbt --partial-parse test $CI_PROFILE_TARGET --models $DBT_MODELS
+    - dbt --partial-parse test $CI_PROFILE_TARGET --models $DBT_MODELS || FAILED=true
     - if [ $FAILED ]; then exit 1; fi
 
 ➕🦖specify_l_model:
@@ -117,13 +120,14 @@
     - *l_warehouse
     - *deps_and_seed
     - echo $DBT_MODELS
-    - dbt --partial-parse run $CI_PROFILE_TARGET --full-refresh --models $DBT_MODELS || true
+    - dbt --partial-parse run $CI_PROFILE_TARGET --full-refresh --models $DBT_MODELS || FAILED=true
     - *xs_warehouse
-    - dbt --partial-parse test $CI_PROFILE_TARGET --models $DBT_MODELS || true
+    - dbt --partial-parse test $CI_PROFILE_TARGET --models $DBT_MODELS || FAILED=true
     - *l_warehouse
-    - dbt --partial-parse run $CI_PROFILE_TARGET --models $DBT_MODELS || true
+    - dbt --partial-parse run $CI_PROFILE_TARGET --models $DBT_MODELS || FAILED=true
     - *xs_warehouse
-    - dbt --partial-parse test $CI_PROFILE_TARGET --models $DBT_MODELS
+    - dbt --partial-parse test $CI_PROFILE_TARGET --models $DBT_MODELS || FAILED=true
+    - if [ $FAILED ]; then exit 1; fi
 
 ➕🐘specify_xl_model:
   <<: *snowflake_dbt_jobs
@@ -131,13 +135,14 @@
     - *xl_warehouse
     - *deps_and_seed
     - echo $DBT_MODELS
-    - dbt --partial-parse run $CI_PROFILE_TARGET --full-refresh --models $DBT_MODELS || true
+    - dbt --partial-parse run $CI_PROFILE_TARGET --full-refresh --models $DBT_MODELS || FAILED=true
     - *xs_warehouse
-    - dbt --partial-parse test $CI_PROFILE_TARGET --models $DBT_MODELS || true
+    - dbt --partial-parse test $CI_PROFILE_TARGET --models $DBT_MODELS || FAILED=true
     - *xl_warehouse
-    - dbt --partial-parse run $CI_PROFILE_TARGET --models $DBT_MODELS || true
+    - dbt --partial-parse run $CI_PROFILE_TARGET --models $DBT_MODELS || FAILED=true
     - *xs_warehouse
-    - dbt --partial-parse test $CI_PROFILE_TARGET --models $DBT_MODELS
+    - dbt --partial-parse test $CI_PROFILE_TARGET --models $DBT_MODELS || FAILED=true
+    - if [ $FAILED ]; then exit 1; fi
 
 ➕🐭🥩specify_raw_model:
   <<: *snowflake_dbt_jobs
@@ -145,10 +150,11 @@
     - *deps_and_seed
     - *clone_raw # Reads from raw clone 
     - echo $DBT_MODELS
-    - dbt run $CI_PROFILE_TARGET --full-refresh --models $DBT_MODELS || true
-    - dbt --partial-parse test $CI_PROFILE_TARGET --models $DBT_MODELS || true
-    - dbt --partial-parse run $CI_PROFILE_TARGET --models $DBT_MODELS || true
-    - dbt --partial-parse test $CI_PROFILE_TARGET --models $DBT_MODELS
+    - dbt run $CI_PROFILE_TARGET --full-refresh --models $DBT_MODELS || FAILED=true
+    - dbt --partial-parse test $CI_PROFILE_TARGET --models $DBT_MODELS || FAILED=true
+    - dbt --partial-parse run $CI_PROFILE_TARGET --models $DBT_MODELS || FAILED=true
+    - dbt --partial-parse test $CI_PROFILE_TARGET --models $DBT_MODELS || FAILED=true
+    - if [ $FAILED ]; then exit 1; fi
 
 ➕🌱specify_csv_seed:
   <<: *snowflake_dbt_jobs
