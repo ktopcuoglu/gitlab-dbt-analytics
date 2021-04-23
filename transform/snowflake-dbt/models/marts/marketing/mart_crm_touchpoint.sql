@@ -107,10 +107,10 @@
       dim_crm_sales_representative.team,
       dim_crm_sales_representative.is_active                               AS rep_is_active,
       dim_crm_sales_representative.user_role_name,
-      dim_crm_sales_representative.sales_segment_name_live                 AS campaign_crm_user_segment_name_live,
-      dim_crm_sales_representative.location_region_name_live               AS campaign_crm_user_geo_name_live,
-      dim_crm_sales_representative.sales_region_name_live                  AS campaign_crm_user_region_name_live,
-      dim_crm_sales_representative.sales_area_name_live                    AS campaign_crm_user_area_name_live,
+      dim_crm_sales_representative.crm_user_sales_segment                  AS campaign_crm_user_segment_name_live,
+      dim_crm_sales_representative.crm_user_geo                            AS campaign_crm_user_geo_name_live,
+      dim_crm_sales_representative.crm_user_region                         AS campaign_crm_user_region_name_live,
+      dim_crm_sales_representative.crm_user_area                           AS campaign_crm_user_area_name_live,
 
       -- account info
       dim_crm_account.dim_crm_account_id,
@@ -171,5 +171,5 @@
     created_by="@mcooperDD",
     updated_by="@mcooperDD",
     created_date="2020-02-18",
-    updated_date="2020-03-04"
+    updated_date="2020-03-25"
 ) }}

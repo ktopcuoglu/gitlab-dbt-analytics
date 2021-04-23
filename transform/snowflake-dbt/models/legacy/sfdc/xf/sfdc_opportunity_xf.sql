@@ -280,7 +280,7 @@ WITH sfdc_opportunity AS (
       -- reporting helper flags
       CASE
         WHEN sfdc_opportunity.stage_name
-          IN ('00-Pre Opportunity','0-Pending Acceptance','0-Qualifying','Developing', '1-Discovery', '2-Developing', '2-Scoping')
+          IN ('0-Pending Acceptance','0-Qualifying','Developing', '1-Discovery', '2-Developing', '2-Scoping')
             THEN 'Pipeline'
         WHEN sfdc_opportunity.stage_name
           IN ('3-Technical Evaluation', '4-Proposal', '5-Negotiating', '6-Awaiting Signature', '7-Closing')
@@ -295,7 +295,7 @@ WITH sfdc_opportunity AS (
 
       CASE
         WHEN sfdc_opportunity.stage_name
-          IN ('00-Pre Opportunity','0-Pending Acceptance','0-Qualifying','Developing','1-Discovery', '2-Developing', '2-Scoping', '3-Technical Evaluation')
+          IN ('0-Pending Acceptance','0-Qualifying','Developing','1-Discovery', '2-Developing', '2-Scoping', '3-Technical Evaluation')
             THEN 'Pipeline'
         WHEN sfdc_opportunity.stage_name
           IN ('4-Proposal', '5-Negotiating', '6-Awaiting Signature', '7-Closing')

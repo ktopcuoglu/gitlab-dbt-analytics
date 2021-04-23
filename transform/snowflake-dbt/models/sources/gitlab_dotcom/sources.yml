@@ -14,9 +14,9 @@ sources:
       schema: false
       identifier: false
 
-    freshness:
-      warn_after: {count: 6, period: hour}
-      error_after: {count: 12, period: hour}
+    # freshness:
+      # warn_after: {count: 12, period: hour}
+      # error_after: {count: 18, period: hour}
 
     tables:
       - name: alert_management_alert_assignees
@@ -26,9 +26,9 @@ sources:
         identifier: gitlab_db_alert_management_alerts
       - name: application_settings
         identifier: gitlab_db_application_settings
-        freshness:
-          warn_after: { count: 7, period: day }
-          error_after: { count: 30, period: day }
+        # freshness:
+          # warn_after: { count: 7, period: day }
+          # error_after: { count: 30, period: day }
       - name: approval_merge_request_rules
         identifier: gitlab_db_approval_merge_request_rules
         freshness: null
@@ -36,14 +36,14 @@ sources:
         identifier: gitlab_db_approvals
       - name: approver_groups
         identifier: gitlab_db_approver_groups
-        freshness:
-            warn_after: {count: 7, period: day}
-            error_after: {count: 30, period: day}
+        # freshness:
+            # warn_after: {count: 7, period: day}
+            # error_after: {count: 30, period: day}
       - name: audit_events
         identifier: gitlab_db_audit_events
-        freshness:
-          warn_after: {count: 7, period: day}
-          error_after: {count: 30, period: day}
+        # freshness:
+          # warn_after: {count: 7, period: day}
+          # error_after: {count: 30, period: day}
       - name: board_assignees
         identifier: gitlab_db_board_assignees
         freshness: null
@@ -69,9 +69,9 @@ sources:
         identifier: gitlab_db_ci_job_artifacts
       - name: ci_pipeline_chat_data
         identifier: gitlab_db_ci_pipeline_chat_data
-        freshness:
-          warn_after: {count: 24, period: hour}
-          error_after: {count: 48, period: hour}
+        # freshness:
+          # warn_after: {count: 24, period: hour}
+          # error_after: {count: 48, period: hour}
       - name: ci_pipeline_schedule_variables
         identifier: gitlab_db_ci_pipeline_schedule_variables
       - name: ci_pipeline_schedules
@@ -98,9 +98,9 @@ sources:
         freshness: null
       - name: cluster_groups
         identifier: gitlab_db_cluster_groups
-        freshness:
-          warn_after: {count: 24, period: hour}
-          error_after: {count: 48, period: hour}
+        # freshness:
+          # warn_after: {count: 24, period: hour}
+          # error_after: {count: 48, period: hour}
       - name: cluster_projects
         identifier: gitlab_db_cluster_projects
       - name: clusters
@@ -109,28 +109,28 @@ sources:
         identifier: gitlab_db_clusters_applications_cert_managers
       - name: clusters_applications_crossplane
         identifier: gitlab_db_clusters_applications_crossplane
-        freshness:
-            warn_after: {count: 2, period: day}
-            error_after: {count: 4, period: day}
+        # freshness:
+            # warn_after: {count: 2, period: day}
+            # error_after: {count: 4, period: day}
       - name: clusters_applications_elastic_stacks
         identifier: gitlab_db_clusters_applications_elastic_stacks
       - name: clusters_applications_helm
         identifier: gitlab_db_clusters_applications_helm
-        freshness:
-          warn_after: {count: 7, period: day}
-          error_after: {count: 30, period: day}
+        # freshness:
+          # warn_after: {count: 7, period: day}
+          # error_after: {count: 30, period: day}
       - name: clusters_applications_ingress
         identifier: gitlab_db_clusters_applications_ingress
       - name: clusters_applications_jupyter
         identifier: gitlab_db_clusters_applications_jupyter
-        freshness:
-            warn_after: {count: 7, period: day}
-            error_after: {count: 30, period: day}
+        # freshness:
+            # warn_after: {count: 7, period: day}
+            # error_after: {count: 30, period: day}
       - name: clusters_applications_knative
         identifier: gitlab_db_clusters_applications_knative
-        freshness:
-            warn_after: {count: 2, period: day}
-            error_after: {count: 4, period: day}
+        # freshness:
+            # warn_after: {count: 2, period: day}
+            # error_after: {count: 4, period: day}
       - name: clusters_applications_prometheus
         identifier: gitlab_db_clusters_applications_prometheus
       - name: clusters_applications_runners
@@ -151,18 +151,18 @@ sources:
         freshness: null
       - name: elasticsearch_indexed_namespaces
         identifier: gitlab_db_elasticsearch_indexed_namespaces
-        freshness:
-          warn_after: {count: 7, period: day}
-          error_after: {count: 30, period: day}
+        # freshness:
+          # warn_after: {count: 7, period: day}
+          # error_after: {count: 30, period: day}
       - name: emails
         identifier: gitlab_db_emails
       - name: environments
         identifier: gitlab_db_environments
       - name: epic_issues
         identifier: gitlab_db_epic_issues
-        freshness:
-          warn_after: {count: 24, period: hour}
-          error_after: {count: 48, period: hour}
+        # freshness:
+          # warn_after: {count: 24, period: hour}
+          # error_after: {count: 48, period: hour}
       - name: epic_metrics
         identifier: gitlab_db_epic_metrics
         freshness: null
@@ -182,42 +182,44 @@ sources:
         freshness: null
       - name: gitlab_subscriptions
         identifier: gitlab_db_gitlab_subscriptions
-        freshness:
-          warn_after: {count: 24, period: hour}
-          error_after: {count: 48, period: hour}
+        # freshness:
+          # warn_after: {count: 24, period: hour}
+          # error_after: {count: 48, period: hour}
       - name: group_group_links
         identifier: gitlab_db_group_group_links
-        freshness:
-          warn_after: {count: 24, period: hour}
-          error_after: {count: 48, period: hour}
+        # freshness:
+          # warn_after: {count: 24, period: hour}
+          # error_after: {count: 48, period: hour}
       - name: identities
         identifier: gitlab_db_identities
+      - name: in_product_marketing_emails
+        identifier: gitlab_db_in_product_marketing_emails
       - name: issue_assignees
         identifier: gitlab_db_issue_assignees
-        freshness:
-          warn_after: {count: 24, period: hour}
-          error_after: {count: 48, period: hour}
+        # freshness:
+          # warn_after: {count: 24, period: hour}
+          # error_after: {count: 48, period: hour}
       - name: issue_links
         identifier: gitlab_db_issue_links
         freshness: null
       - name: issue_metrics
         identifier: gitlab_db_issue_metrics
-        freshness:
-          warn_after: {count: 6, period: hour}
-          error_after: {count: 12, period: hour}   
+        # freshness:
+          # warn_after: {count: 6, period: hour}
+          # error_after: {count: 12, period: hour}   
       - name: issues
         identifier: gitlab_db_issues
-        freshness:
-          warn_after: {count: 6, period: hour}
-          error_after: {count: 12, period: hour}
+        # freshness:
+          # warn_after: {count: 6, period: hour}
+          # error_after: {count: 12, period: hour}
       - name: keys
         identifier: gitlab_db_keys
         freshness: null
       - name: label_links
         identifier: gitlab_db_label_links
-        freshness:
-          warn_after: {count: 24, period: hour}
-          error_after: {count: 48, period: hour}
+        # freshness:
+          # warn_after: {count: 24, period: hour}
+          # error_after: {count: 48, period: hour}
       - name: label_priorities
         identifier: gitlab_db_label_priorities
       - name: labels
@@ -231,21 +233,21 @@ sources:
         identifier: gitlab_db_lists
       - name: members
         identifier: gitlab_db_members
-        freshness:
-          warn_after: {count: 24, period: hour}
-          error_after: {count: 48, period: hour}
+        # freshness:
+          # warn_after: {count: 24, period: hour}
+          # error_after: {count: 48, period: hour}
       - name: merge_request_diffs
         identifier: gitlab_db_merge_request_diffs
       - name: merge_request_metrics
         identifier: gitlab_db_merge_request_metrics
-        freshness:
-          warn_after: {count: 6, period: hour}
-          error_after: {count: 12, period: hour}          
+        # freshness:
+          # warn_after: {count: 6, period: hour}
+          # error_after: {count: 12, period: hour}          
       - name: merge_requests
         identifier: gitlab_db_merge_requests
-        freshness:
-          warn_after: {count: 12, period: hour}
-          error_after: {count: 24, period: hour}      
+        # freshness:
+          # warn_after: {count: 12, period: hour}
+          # error_after: {count: 24, period: hour}      
       - name: merge_requests_closing_issues
         identifier: gitlab_db_merge_requests_closing_issues
       - name: milestones
@@ -254,9 +256,9 @@ sources:
         identifier: gitlab_db_namespace_root_storage_statistics
       - name: namespace_statistics
         identifier: gitlab_db_namespace_statistics
-        freshness:
-          warn_after: {count: 24, period: hour}
-          error_after: {count: 48, period: hour}
+        # freshness:
+          # warn_after: {count: 24, period: hour}
+          # error_after: {count: 48, period: hour}
       - name: namespaces
         identifier: gitlab_db_namespaces
       - name: notes
@@ -272,9 +274,9 @@ sources:
         identifier: gitlab_db_packages_packages
       - name: plans
         identifier: gitlab_db_plans
-        freshness:
-          warn_after: {count: 24, period: hour}
-          error_after: {count: 48, period: hour}
+        # freshness:
+          # warn_after: {count: 24, period: hour}
+          # error_after: {count: 48, period: hour}
       - name: pages_domains
         identifier: gitlab_db_pages_domains
         freshness: null
@@ -283,9 +285,9 @@ sources:
         freshness: null
       - name: project_authorizations
         identifier: gitlab_db_project_authorizations
-        freshness:
-          warn_after: {count: 7, period: day}
-          error_after: {count: 30, period: day}    
+        # freshness:
+          # warn_after: {count: 7, period: day}
+          # error_after: {count: 30, period: day}    
       - name: project_auto_devops
         identifier: gitlab_db_project_auto_devops
       - name: project_custom_attributes
@@ -296,9 +298,9 @@ sources:
         freshness: null
       - name: project_group_links
         identifier: gitlab_db_project_group_links
-        freshness:
-          warn_after: {count: 24, period: hour}
-          error_after: {count: 48, period: hour}
+        # freshness:
+          # warn_after: {count: 24, period: hour}
+          # error_after: {count: 48, period: hour}
       - name: project_import_data
         identifier: gitlab_db_project_import_data
         freshness: null
@@ -313,9 +315,9 @@ sources:
         freshness: null
       - name: project_statistics
         identifier: gitlab_db_project_statistics
-        freshness:
-          warn_after: {count: 24, period: hour}
-          error_after: {count: 48, period: hour}
+        # freshness:
+          # warn_after: {count: 24, period: hour}
+          # error_after: {count: 48, period: hour}
       - name: projects
         identifier: gitlab_db_projects
       - name: prometheus_alerts
@@ -340,9 +342,9 @@ sources:
         identifier: gitlab_db_resource_weight_events
       - name: saml_providers
         identifier: gitlab_db_saml_providers
-        freshness:
-          warn_after: {count: 24, period: hour}
-          error_after: {count: 48, period: hour}
+        # freshness:
+          # warn_after: {count: 24, period: hour}
+          # error_after: {count: 48, period: hour}
       - name: services
         identifier: gitlab_db_services
       - name: shards
@@ -368,9 +370,9 @@ sources:
         identifier: gitlab_db_users
       - name: user_custom_attributes
         identifier: gitlab_db_user_custom_attributes
-        freshness:
-          warn_after: { count: 7, period: day }
-          error_after: { count: 30, period: day }
+        # freshness:
+          # warn_after: { count: 7, period: day }
+          # error_after: { count: 30, period: day }
       - name: vulnerabilities
         identifier: gitlab_db_vulnerabilities
       - name: vulnerability_occurrences
@@ -393,9 +395,9 @@ sources:
         identifier: gitlab_db_authentication_events
       - name: bulk_imports
         identifier: gitlab_db_bulk_imports
-        freshness:
-          warn_after: { count: 14, period: day }
-          error_after: { count: 30, period: day }
+        # freshness:
+          # warn_after: { count: 14, period: day }
+          # error_after: { count: 30, period: day }
       - name: cluster_agent_tokens
         identifier: gitlab_db_cluster_agent_tokens
         freshness: null
@@ -418,9 +420,9 @@ sources:
         freshness: null
       - name: grafana_integrations
         identifier: gitlab_db_grafana_integrations
-        freshness:
-          warn_after: {count: 7, period: day}
-          error_after: {count: 14, period: day}
+        # freshness:
+          # warn_after: {count: 7, period: day}
+          # error_after: {count: 14, period: day}
       - name: group_import_states
         identifier: gitlab_db_group_import_states
       - name: issues_prometheus_alert_events
@@ -467,9 +469,9 @@ sources:
         identifier: gitlab_db_remote_mirrors
       - name: requirements_management_test_reports
         identifier: gitlab_db_requirements_management_test_reports
-        freshness:
-          warn_after: {count: 3, period: day}
-          error_after: {count: 7, period: day}
+        # freshness:
+          # warn_after: {count: 3, period: day}
+          # error_after: {count: 7, period: day}
       - name: security_scans
         identifier: gitlab_db_security_scans
       - name: sentry_issues
@@ -490,6 +492,6 @@ sources:
         identifier: gitlab_db_users_ops_dashboard_projects
       - name: zoom_meetings
         identifier: gitlab_db_zoom_meetings
-        freshness:
-          warn_after: { count: 7, period: day }
-          error_after: { count: 30, period: day }
+        # freshness:
+          # warn_after: { count: 7, period: day }
+          # error_after: { count: 30, period: day }

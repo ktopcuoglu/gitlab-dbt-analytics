@@ -55,6 +55,7 @@ models:
 - name: sheetload_engineering_speciality_prior_to_capture
 - name: sheetload_engineering_infra_prod_console_access
 - name: sheetload_event_dictionary_simplified
+- name: sheetload_gcp_active_cud
 - name: sheetload_gitlab_contributing_organizations
 - name: sheetload_gitlab_slack_stats
 - name: sheetload_google_referrals
@@ -160,3 +161,5 @@ models:
   description: Sales funnel target dates
 - name: sheetload_sales_funnel_targets_matrix
   description: Sales funnel target Matrix
+- name: sheetload_sales_funnel_partner_alliance_targets_matrix
+  description: Sales funnel Matrix for partner and alliances targets

@@ -3,7 +3,6 @@ WITH source AS (
     SELECT
       opportunity.*,
       CASE
-        WHEN stagename = '00-Pre Opportunity'       THEN createddate
         WHEN stagename = '0-Pending Acceptance'     THEN x0_pending_acceptance_date__c
         WHEN stagename = '1-Discovery'              THEN x1_discovery_date__c
         WHEN stagename = '2-Scoping'                THEN x2_scoping_date__c
@@ -75,6 +74,7 @@ WITH source AS (
         is_downgrade_opportunity__c                 AS is_downgrade,
         swing_deal__c                               AS is_swing_deal,
         is_edu_oss_opportunity__c                   AS is_edu_oss,
+        is_ps_opportunity__c                        AS is_ps_opp,
         net_iacv__c                                 AS net_incremental_acv,
         campaignid                                  AS primary_campaign_source_id,
         probability                                 AS probability,
@@ -125,12 +125,12 @@ WITH source AS (
         CASE 
           WHEN user_segment_stamped IN ('Large', 'PubSec') THEN 'Large'
           ELSE user_segment_stamped
-        END                                         AS sales_segment_name_stamped_grouped,                                            
+        END                                         AS user_segment_stamped_grouped,                                            
         stamped_user_geo__c                         AS user_geo_stamped,
         stamped_user_region__c                      AS user_region_stamped,
         stamped_user_area__c                        AS user_area_stamped,
         {{ sales_segment_region_grouped('user_segment_stamped', 'user_region_stamped') }}
-                                                    AS segment_region_stamped_grouped,
+                                                    AS user_segment_region_stamped_grouped,
         stamped_opportunity_owner__c                AS crm_opp_owner_stamped_name,
         stamped_account_owner__c                    AS crm_account_owner_stamped_name,
         sao_opportunity_owner__c                    AS sao_crm_opp_owner_stamped_name,

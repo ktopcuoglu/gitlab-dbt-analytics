@@ -22,6 +22,11 @@ databases:
     - testing_db:
         shared: no
 
+    - dpeterson_prod:
+        shared: no
+    - dpeterson_prep:
+        shared: no
+
     - dtownsend_prod:
         shared: no
     - dtownsend_prep:
@@ -57,9 +62,9 @@ databases:
     - laddula_prep:
         shared: no
 
-    - michellecooper_prod:
+    - mcooper_prod:
         shared: no
-    - michellecooper_prep:
+    - mcooper_prep:
         shared: no
 
     - mpeychet_prod:
@@ -587,6 +592,29 @@ roles:
                     - prod.boneyard.*
                     - raw.*.*
 
+    - mashey:
+        warehouses:
+            - engineer_xs
+        member_of:
+            - zoom
+            - xactly
+            - adaptive
+        privileges:
+            databases:
+                write:
+                   - raw
+            schemas:
+              write:
+                  -raw.tap_zoom
+                  -raw.tap_adaptive
+                  -raw.tap_xactly
+            tables:
+              write:
+                  -raw.tap_zoom.*
+                  -raw.tap_adaptive.*
+                  -raw.tap_xactly.*   
+
+
     - people_operations:
         warehouses:
             - analyst_xs
@@ -704,6 +732,7 @@ roles:
             - transforming_xl
             - transforming_xs
             - transforming_4xl
+            - datasiren
         member_of:
             - covid19
             - snowflake_db
@@ -752,6 +781,20 @@ roles:
 # ==========================================
 # Object Roles
 # ==========================================
+    - adaptive:
+        warehouses:
+            - analyst_xs
+        privileges:
+            databases:
+                read:
+                    - raw
+            schemas:
+                read:
+                    - raw.tap_adaptive
+            tables:
+                read:
+                    - raw.tap_adaptive.*
+
     - bamboohr_analytics:
         warehouses:
             - analyst_xs
@@ -1628,6 +1671,19 @@ roles:
                     - prep.saas_usage_ping.*
                     - raw.version_db.*
 
+    - xactly:
+        warehouses:
+            - analyst_xs
+        privileges:
+            databases:
+                read:
+                    - raw
+            schemas:
+                read:
+                    - raw.tap_xactly
+            tables:
+                read:
+                    - raw.tap_xactly.*
 
     - zendesk:
         warehouses:
@@ -1662,6 +1718,20 @@ roles:
                   read:
                       - prep.zendesk_community_relations.*
                       - raw.zendesk_community_relations_stitch.*
+
+    - zoom:
+        warehouses:
+            - analyst_xs
+        privileges:
+            databases:
+                read:
+                    - raw
+            schemas:
+                read:
+                    - raw.tap_zoom
+            tables:
+                read:
+                    - raw.tap_zoom.*
 
     - zuora:
         warehouses:
@@ -1753,6 +1823,10 @@ roles:
             - bamboohr_analytics
         warehouses:
             - analyst_xs
+    
+    - blutz:
+        warehouses:
+            - admin
 
     - bmenegocci:
         member_of:
@@ -1770,6 +1844,13 @@ roles:
     - brufener:
         member_of:
             - bamboohr_sensitive_separations
+        warehouses:
+            - analyst_xs
+
+    - camsmith:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
         warehouses:
             - analyst_xs
 
@@ -1818,6 +1899,38 @@ roles:
             - analyst_growth
         warehouses:
             - analyst_xs
+        owns:
+            databases:
+                - dpeterson_prep
+                - dpeterson_prod
+            schemas:
+                - dpeterson_prep.*
+                - dpeterson_prod.*
+            tables:
+                - dpeterson_prep.*.*
+                - dpeterson_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - dpeterson_prep
+                    - dpeterson_prod
+                write:
+                    - dpeterson_prep
+                    - dpeterson_prod
+            schemas:
+                read:
+                    - dpeterson_prep.*
+                    - dpeterson_prod.*
+                write:
+                    - dpeterson_prep.*
+                    - dpeterson_prod.*
+            tables:
+                read:
+                    - dpeterson_prep.*.*
+                    - dpeterson_prod.*.*
+                write:
+                    - dpeterson_prep.*.*
+                    - dpeterson_prod.*.*
 
     - dtang:
         member_of:
@@ -2098,6 +2211,12 @@ roles:
         warehouses:
             - analyst_xs
 
+    - jordan:
+        member_of:
+            - mashey
+        warehouses:
+            - analyst_xs
+
     - jpeguero:
         member_of:
             - analyst_marketing
@@ -2292,53 +2411,66 @@ roles:
         warehouses:
             - analyst_xs
 
+    - lnewbury:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+        warehouses:
+            - analyst_xs
+
     - lvandensteen:
         member_of:
             - analyst_people
         warehouses:
             - reporting
 
+    - mcooper:
+        member_of:
+            - analyst_finance
+            - customers_db
+            - data_team_analyst
+        warehouses:
+            - analyst_xs
+        owns:
+            databases:
+                - mcooper_prep
+                - mcooper_prod
+            schemas:
+                - mcooper_prep.*
+                - mcooper_prod.*
+            tables:
+                - mcooper_prep.*.*
+                - mcooper_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - mcooper_prep
+                    - mcooper_prod
+                write:
+                    - mcooper_prep
+                    - mcooper_prod
+            schemas:
+                read:
+                    - mcooper_prep.*
+                    - mcooper_prod.*
+                write:
+                    - mcooper_prep.*
+                    - mcooper_prod.*
+            tables:
+                read:
+                    - mcooper_prep.*.*
+                    - mcooper_prod.*.*
+                write:
+                    - mcooper_prep.*.*
+                    - mcooper_prod.*.*
+
     - mdewji:
         warehouses:
             - admin
 
     - michellecooper:
-        member_of:
-            - decisive_data
-        warehouses:
-            - analyst_xs
-        owns:
-            databases:
-                - michellecooper_prep
-                - michellecooper_prod
-            schemas:
-                - michellecooper_prep.*
-                - michellecooper_prod.*
-            tables:
-                - michellecooper_prep.*.*
-                - michellecooper_prod.*.*
-        privileges:
-            databases:
-                read:
-                    - michellecooper_prep
-                    - michellecooper_prod
-                write:
-                    - michellecooper_prep
-                    - michellecooper_prod
-            schemas:
-                read:
-                    - michellecooper_prep.*
-                    - michellecooper_prod.*
-                write:
-                    - michellecooper_prep.*
-                    - michellecooper_prod.*
-            tables:
-                read:
-                    - michellecooper_prep.*.*
-                    - michellecooper_prod.*.*
-                write:
-                    - michellecooper_prep.*.*
-                    - michellecooper_prod.*.*
+        member_of: []
+        warehouses: []
 
     - mjozenazemian:
         warehouses:
@@ -2348,6 +2480,10 @@ roles:
         member_of:
             - snowplow
             - reporter
+        warehouses:
+            - reporting
+
+    - mlancini:
         warehouses:
             - reporting
 
@@ -2995,6 +3131,12 @@ users:
         member_of:
             - amurray
 
+    - blutz:
+        can_login: yes
+        member_of:
+            - blutz
+            - securityadmin
+
     - bmenegocci:
         can_login: yes
         member_of:
@@ -3009,6 +3151,11 @@ users:
         can_login: yes
         member_of:
             - brufener
+
+    - camsmith:
+        can_login: yes
+        member_of:
+            - camsmith
 
     - cli:
         can_login: yes
@@ -3164,6 +3311,11 @@ users:
         can_login: no
         member_of: []
 
+    - jordan:
+        can_login: yes
+        member_of:
+            - jordan
+
     - jpeguero:
         can_login: yes
         member_of:
@@ -3237,6 +3389,11 @@ users:
         member_of:
             - lmai
 
+    - lnewbury:
+        can_login: yes
+        member_of:
+            - lnewbury
+
     - lvandensteen:
         can_login: yes
         member_of:
@@ -3246,6 +3403,11 @@ users:
         can_login: no
         member_of: []
 
+    - mcooper:
+        can_login: yes
+        member_of:
+            - mcooper
+
     - mdewji:
         can_login: yes
         member_of:
@@ -3253,9 +3415,8 @@ users:
             - securityadmin
 
     - michellecooper:
-        can_login: yes
-        member_of:
-            - michellecooper
+        can_login: no
+        member_of: []
 
     - mjozenazemian:
         can_login: yes
@@ -3267,6 +3428,12 @@ users:
         can_login: yes
         member_of:
             - mkarampalas
+
+    - mlancini:
+        can_login: yes
+        member_of:
+            - mlancini
+            - securityadmin
 
     - mpeychet:
         can_login: yes
@@ -3501,6 +3668,9 @@ warehouses:
 
     - analyst_xs:
         size: x-small
+
+    - datasiren:
+        size: "4-x-large"
 
     - engineer_xl:
         size: x-large
