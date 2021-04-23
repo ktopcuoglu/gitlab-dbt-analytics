@@ -105,10 +105,11 @@
   script:
     - *deps_and_seed
     - echo $DBT_MODELS
-    - dbt --partial-parse run $CI_PROFILE_TARGET --full-refresh --models $DBT_MODELS || true
-    - dbt --partial-parse test $CI_PROFILE_TARGET --models $DBT_MODELS || true
-    - dbt --partial-parse run $CI_PROFILE_TARGET --models $DBT_MODELS || true
+    - dbt --partial-parse run $CI_PROFILE_TARGET --full-refresh --models $DBT_MODELS || FAILED=true
+    - dbt --partial-parse test $CI_PROFILE_TARGET --models $DBT_MODELS || FAILED=true
+    - dbt --partial-parse run $CI_PROFILE_TARGET --models $DBT_MODELS || FAILED=true
     - dbt --partial-parse test $CI_PROFILE_TARGET --models $DBT_MODELS
+    - if [ $FAILED ] then exit 1; fi
 
 ➕🦖specify_l_model:
   <<: *snowflake_dbt_jobs
