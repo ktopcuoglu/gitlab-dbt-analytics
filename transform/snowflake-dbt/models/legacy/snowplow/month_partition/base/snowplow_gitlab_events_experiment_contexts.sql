@@ -44,7 +44,7 @@ WITH base as (
       f.value['schema']::TEXT         AS context_data_schema,
       TRY_PARSE_JSON(f.value['data']) AS context_data
     FROM base,
-    lateral flatten(input => TRY_PARSE_JSON(contexts)) f
+    lateral flatten(input => TRY_PARSE_JSON(contexts), path => 'data') f
 
 ), experiment_contexts AS (
 
