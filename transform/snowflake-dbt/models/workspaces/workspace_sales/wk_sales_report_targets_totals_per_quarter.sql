@@ -79,7 +79,12 @@ WITH date_details AS (
                 WHEN opp_snapshot.pipeline_created_fiscal_quarter_date = opp_snapshot.snapshot_fiscal_quarter_date
                     THEN opp_snapshot.created_in_snapshot_quarter_net_arr
                 ELSE 0
-             END )   AS total_pipe_generation_net_arr,
+             END )                                              AS total_pipe_generation_net_arr,
+        SUM(CASE 
+                WHEN opp_snapshot.pipeline_created_fiscal_quarter_date = opp_snapshot.snapshot_fiscal_quarter_date
+                    THEN opp_snapshot.created_in_snapshot_quarter_deal_count
+                ELSE 0
+             END )                                              AS total_pipe_generation_deal_count,
         SUM(CASE 
                 WHEN opp_snapshot.close_fiscal_quarter_date = opp_snapshot.snapshot_fiscal_quarter_date
                     THEN opp_snapshot.created_and_won_same_quarter_net_arr
@@ -133,6 +138,7 @@ WITH date_details AS (
      COALESCE(total.total_booked_net_arr,0)                           AS total_booked_net_arr,
      COALESCE(total.total_booked_deal_count,0)                        AS total_booked_deal_count,
      COALESCE(total.total_pipe_generation_net_arr,0)                  AS total_pipe_generation_net_arr,
+     COALESCE(total_pipe_generation_deal_count,0)                     AS total_pipe_generation_deal_count,
      COALESCE(total.total_created_and_booked_same_quarter_net_arr,0)  AS total_created_and_booked_same_quarter_net_arr,
   
      CASE

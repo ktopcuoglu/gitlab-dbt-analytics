@@ -641,16 +641,17 @@ WITH date_details AS (
       -- created within quarter
       CASE
         WHEN opp_snapshot.pipeline_created_fiscal_quarter_name = opp_snapshot.snapshot_fiscal_quarter_name
-          -- Open not omitted deals or lost over stage 1 deals (net arr created implies stage 1+)
-        --  AND ((opp_snapshot.forecast_category_name != 'Omitted'
-        --        AND opp_snapshot.is_stage_1_plus = 1)
-        --    OR (opp_snapshot.is_lost = 1))    
-        --  AND opp_snapshot.is_edu_oss = 0
-        --  AND lower(opp_snapshot.deal_group) LIKE ANY ('%growth%', '%new%')
           AND is_eligible_created_pipeline_flag = 1
             THEN opp_snapshot.net_arr
         ELSE 0 
       END                                                  AS created_in_snapshot_quarter_net_arr,
+
+      CASE
+        WHEN opp_snapshot.pipeline_created_fiscal_quarter_name = opp_snapshot.snapshot_fiscal_quarter_name
+          AND is_eligible_created_pipeline_flag = 1
+            THEN opp_snapshot.calculated_deal_count
+        ELSE 0 
+      END                                                  AS created_in_snapshot_quarter_deal_count,
 
       ---------------------------------------------------------------------------------------------------------
       ---------------------------------------------------------------------------------------------------------
@@ -710,9 +711,9 @@ WITH date_details AS (
 
       -- booked net arr (won + renewals / lost)
       CASE
-        WHEN opp_snapshot.is_won = 1 
-          OR (opp_snapshot.is_renewal = 1 
-            AND opp_snapshot.is_lost = 1)
+        WHEN (opp_snapshot.is_won = 1 
+            OR (opp_snapshot.is_renewal = 1 
+              AND opp_snapshot.is_lost = 1))
           THEN opp_snapshot.net_arr
         ELSE 0 
       END                                                 AS booked_net_arr

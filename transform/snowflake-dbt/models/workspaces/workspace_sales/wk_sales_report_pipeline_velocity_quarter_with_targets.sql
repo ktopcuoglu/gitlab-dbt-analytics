@@ -36,10 +36,10 @@ WITH report_pipeline_velocity_quarter AS (
     WHERE is_deleted = 0
       AND is_edu_oss = 0
 
-), targets AS (
+), report_targets_totals_per_quarter AS (
   
   SELECT *
-  FROM {{ref('wk_sales_mart_sales_funnel_target')}}
+  FROM {{ref('wk_sales_report_targets_totals_per_quarter')}}  
 
 ), report_pipeline_velocity AS (
   
@@ -48,91 +48,20 @@ WITH report_pipeline_velocity_quarter AS (
   CROSS JOIN today_date
   WHERE is_excluded_flag = 0
     AND LOWER(deal_group) LIKE ANY ('%growth%','%new%')
- 
-), totals_per_quarter AS (
-  
- SELECT 
-        close_fiscal_quarter_name,
-        close_fiscal_quarter_date,
-        COALESCE(sales_team_rd_asm_level,'NA')    AS sales_team_rd_asm_level,
-        COALESCE(sales_team_cro_level,'NA')       AS sales_team_cro_level,
-        COALESCE(sales_qualified_source,'NA')     AS sales_qualified_source,
-        COALESCE(deal_group,'NA')                 AS deal_group,
-        sum(net_arr)                              AS total_net_arr
-   FROM sfdc_opportunity_snapshot_history_xf o
-   WHERE (o.is_won = 1 OR (o.is_renewal = 1 AND o.is_lost = 1))
-     AND o.close_fiscal_year >= 2020
-     AND o.is_excluded_flag = 0
-     AND o.is_deleted = 0
-     AND o.close_fiscal_quarter_name = o.snapshot_fiscal_quarter_name
-     AND o.snapshot_day_of_fiscal_quarter_normalised = 90
-   GROUP BY 1,2,3,4,5,6
-  
- ), targets_per_quarter AS (
-  
-  SELECT d.fiscal_quarter_name_fy AS close_fiscal_quarter_name,
-   d.first_day_of_fiscal_quarter  AS close_fiscal_quarter_date,
-   COALESCE(sales_team_rd_asm_level,'NA') AS sales_team_rd_asm_level,
-   COALESCE(sales_team_cro_level,'NA') AS sales_team_cro_level,
-   COALESCE(sales_qualified_source,'NA') AS sales_qualified_source,
-   deal_group,
-   SUM(allocated_target)         AS target_net_arr	
-  FROM targets
-  INNER JOIN  date_details d	
-    ON d.date_actual = target_month	
-  WHERE kpi_name = 'Net ARR'	
-  GROUP BY 1,2,3,4,5,6
-  HAVING target_net_arr > 0	
    
-
 ), consolidated_targets_totals AS (
   
-  SELECT 
+  SELECT
      base.close_fiscal_quarter_name,
      base.close_fiscal_quarter_date,
      base.sales_team_rd_asm_level,
      base.sales_team_cro_level,
      base.sales_qualified_source,
      base.deal_group,
-     target.target_net_arr,
-     total.total_net_arr,
-     CASE
-      WHEN today_date.current_fiscal_quarter_date <= base.close_fiscal_quarter_date
-        THEN target.target_net_arr
-      ELSE total.total_net_arr
-     END                  AS adjusted_target_net_arr
-  FROM (SELECT close_fiscal_quarter_name,
-             close_fiscal_quarter_date,
-             sales_team_rd_asm_level,
-             sales_team_cro_level,
-             sales_qualified_source,
-             deal_group
-        FROM targets_per_quarter
-        UNION
-        SELECT close_fiscal_quarter_name,
-             close_fiscal_quarter_date,
-             sales_team_rd_asm_level,
-             sales_team_cro_level,
-             sales_qualified_source,
-             deal_group
-        FROM totals_per_quarter) base
-  CROSS JOIN today_date
-  LEFT JOIN targets_per_quarter target
-     ON target.close_fiscal_quarter_name = base.close_fiscal_quarter_name
-      AND target.sales_team_rd_asm_level = base.sales_team_rd_asm_level
-      AND target.sales_team_cro_level = base.sales_team_cro_level
-      AND target.sales_qualified_source = base.sales_qualified_source
-      AND target.deal_group = base.deal_group
-  LEFT JOIN totals_per_quarter total
-     ON total.close_fiscal_quarter_name = base.close_fiscal_quarter_name
-      AND total.sales_team_rd_asm_level = base.sales_team_rd_asm_level
-      AND total.sales_team_cro_level = base.sales_team_cro_level
-      AND total.sales_qualified_source = base.sales_qualified_source
-      AND total.deal_group = base.deal_group
-  WHERE ((target.target_net_arr <> 0 
-            AND today_date.current_fiscal_quarter_date <= base.close_fiscal_quarter_date)
-    OR (total.total_net_arr <> 0 
-            AND today_date.current_fiscal_quarter_date > base.close_fiscal_quarter_date))
+     base.target_net_arr,
+     base.total_booked_net_arr          AS total_net_arr,
+     base.calculated_target_net_arr     AS adjusted_target_net_arr
+  FROM report_targets_totals_per_quarter base
 
 ), pipeline_summary AS (
   
