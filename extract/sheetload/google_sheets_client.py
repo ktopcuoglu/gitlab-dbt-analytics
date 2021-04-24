@@ -42,13 +42,8 @@ class GoogleSheetsClient:
         while maximum_backoff_sec > (2 ** n):
             try:
                 sheets_client = self.get_client(key_file)
-                sheet = (
-                    sheets_client.open(file_name)
-                    .worksheet(worksheet_name)
-                    .get_all_values()
-                )
-                sheet_df = pd.DataFrame(sheet[1:], columns=sheet[0])
-                return sheet_df
+                files = self.get_visible_files(sheets_client)
+                print(files)
             except APIError as gspread_error:
                 if gspread_error.response.status_code in (429, 500, 502, 503):
                     self.wait_exponential_backoff(n)
