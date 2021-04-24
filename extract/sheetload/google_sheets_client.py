@@ -67,6 +67,8 @@ class GoogleSheetsClient:
             "https://www.googleapis.com/auth/drive",
         ]
         keyfile = load(gapi_keyfile or env["GCP_SERVICE_CREDS"])
+        print(keyfile)
+        print(env["GCP_SERVICE_CREDS"])
         return gspread.authorize(
             ServiceAccountCredentials.from_json_keyfile_dict(keyfile, scope)
         )
