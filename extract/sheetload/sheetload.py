@@ -18,6 +18,7 @@ from gitlabdata.orchestration_utils import (
     query_executor,
 )
 from google_sheets_client import GoogleSheetsClient
+from google_drive_client import GoogleDriveClient
 from google.cloud import storage
 from google.oauth2 import service_account
 from gspread.exceptions import APIError
@@ -322,6 +323,55 @@ def csv_loader(
     dw_uploader(engine, table=table, data=csv_data, schema=schema, truncate=True)
 
 
+def drive_loader(
+        drive_file: str,
+        schema: str = "driveload",
+        database: str = "RAW",
+        gapi_keyfile: str = None,
+        conn_dict: Dict[str, str] = None,
+):
+    if database != "RAW":
+        engine = snowflake_engine_factory(conn_dict or env, "ANALYTICS_LOADER", schema)
+        database = env["SNOWFLAKE_PROD_DATABASE"]
+        # Trys to create the schema its about to write to
+        # If it does exists, {schema} already exists, statement succeeded.
+        # is returned.
+        schema_check = f"""CREATE SCHEMA IF NOT EXISTS "{database}".{schema}"""
+        query_executor(engine, schema_check)
+    else:
+        engine = snowflake_engine_factory(conn_dict or env, "LOADER", schema)
+    info(engine)
+
+    google_drive_client = GoogleDriveClient(gapi_keyfile)
+
+    with open(drive_file, "r") as file:
+        try:
+            stream = safe_load(file)
+        except YAMLError as exc:
+            print(exc)
+
+        folders = [
+            folder for folder in stream["folders"]
+        ]
+
+    for folder in folders:
+        folder_name = folder.get("folder_name")
+        table_name = folder.get("table_name")
+
+        folder_id = google_drive_client.get_item_id(folder_name)
+        archive_folder_id = google_drive_client.get_item_id('Archive', folder_id, True)
+
+        if archive_folder_id is None:
+            archive_folder_id = google_drive_client.create_folder("Archive", folder_id)
+
+        files = google_drive_client.get_files_in_folder(folder_id, "text/csv")
+        for file in files:
+            file_id = file.get('id')
+            data = google_drive_client.get_data_frame_from_file_id(file_id)
+            dw_uploader(engine, table=table_name, data=data, schema=schema, truncate=False)
+            google_drive_client.move_file_to_folder(file_id, archive_folder_id)
+
+
 if __name__ == "__main__":
     basicConfig(stream=sys.stdout, level=20)
     getLogger("snowflake.connector.cursor").disabled = True
@@ -332,6 +382,7 @@ if __name__ == "__main__":
             "s3": s3_loader,
             "csv": csv_loader,
             "qualtrics": qualtrics_loader,
+            "drive": drive_loader
         }
     )
     info("Complete.")

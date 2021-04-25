@@ -1,0 +1,5 @@
+folders:
+  - name: clari_exports
+    owner: '@paul_armstrong'
+    folder_name: clari_export_csv_load
+    table_name: clari_export_new
