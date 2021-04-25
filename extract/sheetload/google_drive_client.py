@@ -58,7 +58,7 @@ class GoogleDriveClient:
                 fields="nextPageToken, files(id)").execute()
         items = results.get('files', [])
         if not items:
-            print('No files found.')
+            return []
         else:
             return items[0].get('id')
 
@@ -105,7 +105,7 @@ class GoogleDriveClient:
                 fields="nextPageToken, files(id, name, mimeType)").execute()
         items = results.get('files', [])
         if not items:
-            print('No files found.')
+            return []
         else:
             return items
 
