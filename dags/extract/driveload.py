@@ -55,7 +55,7 @@ default_args = {
 
 airflow_home = env["AIRFLOW_HOME"]
 
-with open(f"{airflow_home}/analytics/extract/sheetload/drive_folders.yml", "r") as file:
+with open(f"{airflow_home}/analytics/extract/sheetload/drives.yml", "r") as file:
     try:
         stream = safe_load(file)
     except YAMLError as exc:
