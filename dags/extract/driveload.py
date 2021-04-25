@@ -28,6 +28,7 @@ from kube_secrets import (
     SNOWFLAKE_LOAD_ROLE,
     SNOWFLAKE_LOAD_USER,
     SNOWFLAKE_LOAD_WAREHOUSE,
+    SNOWFLAKE_LOAD_DATABASE,
     SNOWFLAKE_PASSWORD,
     SNOWFLAKE_TRANSFORM_ROLE,
     SNOWFLAKE_TRANSFORM_SCHEMA,
@@ -83,6 +84,7 @@ for folder in folders:
     container_cmd = f"""
         {clone_and_setup_extraction_cmd} &&
         cd sheetload/ &&
+        python3 -m pip install google-api-python-client &&
         python3 sheetload.py drive --drive_file drives.yml --table_name {table_name}
     """
 
@@ -101,6 +103,7 @@ for folder in folders:
             SNOWFLAKE_LOAD_USER,
             SNOWFLAKE_LOAD_WAREHOUSE,
             SNOWFLAKE_LOAD_PASSWORD,
+            SNOWFLAKE_LOAD_DATABASE
         ],
         env_vars=pod_env_vars,
         affinity=get_affinity(False),
