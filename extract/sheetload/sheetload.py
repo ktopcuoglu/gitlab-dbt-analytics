@@ -330,16 +330,7 @@ def drive_loader(
         gapi_keyfile: str = None,
         conn_dict: Dict[str, str] = None,
 ):
-    if database != "RAW":
-        engine = snowflake_engine_factory(conn_dict or env, "ANALYTICS_LOADER", schema)
-        database = env["SNOWFLAKE_PROD_DATABASE"]
-        # Trys to create the schema its about to write to
-        # If it does exists, {schema} already exists, statement succeeded.
-        # is returned.
-        schema_check = f"""CREATE SCHEMA IF NOT EXISTS "{database}".{schema}"""
-        query_executor(engine, schema_check)
-    else:
-        engine = snowflake_engine_factory(conn_dict or env, "LOADER", schema)
+    engine = snowflake_engine_factory(conn_dict or env, "LOADER", schema)
     info(engine)
 
     google_drive_client = GoogleDriveClient(gapi_keyfile)
@@ -368,7 +359,7 @@ def drive_loader(
         for file in files:
             file_id = file.get('id')
             data = google_drive_client.get_data_frame_from_file_id(file_id)
-            dw_uploader(engine, table=table_name, data=data, schema=schema, truncate=False)
+            dw_uploader(engine, table=table_name, data=data, schema=schema, truncate=True)
             google_drive_client.move_file_to_folder(file_id, archive_folder_id)
 
 
