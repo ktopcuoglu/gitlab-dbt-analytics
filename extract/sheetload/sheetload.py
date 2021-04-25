@@ -25,6 +25,7 @@ from gspread.exceptions import APIError
 from gspread import Client
 from oauth2client.service_account import ServiceAccountCredentials
 from sheetload_dataframe_utils import dw_uploader
+from sheetload_dataframe_utils import dw_uploader_append_only
 from sqlalchemy.engine.base import Engine
 from qualtrics_sheetload import qualtrics_loader
 
@@ -359,7 +360,7 @@ def drive_loader(
         for file in files:
             file_id = file.get('id')
             data = google_drive_client.get_data_frame_from_file_id(file_id)
-            dw_uploader(engine, table=table_name, data=data, schema=schema, truncate=True)
+            dw_uploader_append_only(engine, table=table_name, data=data, schema=schema, truncate=True)
             google_drive_client.move_file_to_folder(file_id, archive_folder_id)
 
 
