@@ -83,7 +83,7 @@ for folder in folders:
     container_cmd = f"""
         {clone_and_setup_extraction_cmd} &&
         cd sheetload/ &&
-        python3 sheetload.py drive --drive_file drive_folders.yml --table_name {table_name}
+        python3 sheetload.py drive --drive_file drives.yml --table_name {table_name}
     """
 
     cleaned_folder_name = folder_name.replace("_", "-")
