@@ -14,7 +14,7 @@ class GoogleDriveClient:
             "https://spreadsheets.google.com/feeds",
             "https://www.googleapis.com/auth/drive",
         ]
-        keyfile = load(gapi_keyfile or env["GCP_SERVICE_CREDS"])
+        keyfile = safe_load(gapi_keyfile or env["GCP_SERVICE_CREDS"])
         creds = ServiceAccountCredentials.from_json_keyfile_dict(keyfile, scope)
         #   ServiceAccountCredentials.from_json_keyfile_name(keyfile, scope)
         self.service = build('drive', 'v3', credentials=creds)
