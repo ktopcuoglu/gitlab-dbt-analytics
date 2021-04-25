@@ -328,6 +328,7 @@ def drive_loader(
         drive_file: str,
         schema: str = "driveload",
         database: str = "RAW",
+        table_name: str = None,
         gapi_keyfile: str = None,
         conn_dict: Dict[str, str] = None,
 ):
@@ -344,6 +345,7 @@ def drive_loader(
 
         folders = [
             folder for folder in stream["folders"]
+            if (table_name is None or folder.get("table_name") == table_name)
         ]
 
     for folder in folders:
