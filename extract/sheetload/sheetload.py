@@ -327,7 +327,6 @@ def csv_loader(
 def drive_loader(
         drive_file: str,
         schema: str = "driveload",
-        database: str = "RAW",
         table_name: str = None,
         gapi_keyfile: str = None,
         conn_dict: Dict[str, str] = None,
@@ -352,6 +351,8 @@ def drive_loader(
         folder_name = folder.get("folder_name")
         table_name = folder.get("table_name")
 
+        info(f"Processing folder {folder_name}")
+
         folder_id = google_drive_client.get_item_id(folder_name)
         archive_folder_id = google_drive_client.get_item_id('Archive', folder_id, True)
 
@@ -359,11 +360,16 @@ def drive_loader(
             archive_folder_id = google_drive_client.create_folder("Archive", folder_id)
 
         files = google_drive_client.get_files_in_folder(folder_id, "text/csv")
-        for file in files:
-            file_id = file.get('id')
-            data = google_drive_client.get_data_frame_from_file_id(file_id)
-            dw_uploader_append_only(engine, table=table_name, data=data)
-            google_drive_client.move_file_to_folder(file_id, archive_folder_id)
+        available_files = len(files)
+        if available_files > 0:
+            info(f"Found {str(available_files)} to process")
+            for file in files:
+                file_id = file.get('id')
+                data = google_drive_client.get_data_frame_from_file_id(file_id)
+                dw_uploader_append_only(engine, table=table_name, data=data)
+                google_drive_client.move_file_to_folder(file_id, archive_folder_id)
+        else:
+            info(f"No files available to process")
 
 
 if __name__ == "__main__":
