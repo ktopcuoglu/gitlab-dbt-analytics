@@ -1,6 +1,18 @@
 version: 2
 
 models:
+    - name: qualtrics_api_formatted_contacts
+      description: GitLab dotcom users table formatted for quick lookup and push to Qualtrics
+      columns:
+        - name: email_address
+          tests:
+            - not_null
+        - name: first_name
+        - name: last_name
+        - name: phone_number
+        - name: user_id
+          tests:
+            - unique
     - name: qualtrics_contact_mailing_send
       description: 'All mailings sent to individual Qualtrics contacts, as well as the time in which they were sent.'
       columns:
@@ -54,15 +66,18 @@ models:
             - not_null
         - name: user_plan
           description: The product plan of the user as recorded in Qualtrics at the time of the survey.
-    - name: qualtrics_api_formatted_contacts
-      description: GitLab dotcom users table formatted for quick lookup and push to Qualtrics
+    - name: qualtrics_post_purchase_survey_answers
+      description: One record for each choice selected for each of the questions from the post purchase survey.
       columns:
-        - name: email_address
-          tests:
-            - not_null
-        - name: first_name
-        - name: last_name
-        - name: phone_number
-        - name: user_id
-          tests:
-            - unique
+        - name: response_id
+        - name: question_id
+        - name: question_description
+        - name: answer_display
+        - name: answer_id
+        - name: distribution_channel
+        - name: has_finished_survey
+        - name: survey_start_date
+        - name: survey_end_date
+        - name: response_recorded_at
+        - name: user_language
+        - name: user_plan

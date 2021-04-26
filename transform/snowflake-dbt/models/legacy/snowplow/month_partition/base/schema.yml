@@ -35,3 +35,5 @@ models:
       description: This is a view that references the duplicated event ids across the entire data set and is used to remove them from downstream models.
       columns:
           - name: event_id
+    - name: snowplow_gitlab_events_experiment_contexts
+      description: This is a view that extracts all the key data from the experiment context json

@@ -60,6 +60,14 @@ models:
             - not_null
             - unique
         - name: response_values
+    - name: qualtrics_post_purchase_survey_responses_source
+      description: 'Post purchase survey responses'
+      columns:
+        - name: response_id
+          tests:
+            - not_null
+            - unique
+        - name: response_values
     - name: qualtrics_question
       description: 'Data about Qualtrics survey questions'
       columns:

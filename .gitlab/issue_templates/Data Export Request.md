@@ -1,22 +1,26 @@
-## Request for data extraction
-
+## Request for data export
 <!--
 Please complete all items. Ask questions in the #data slack channel
 --->
+### Receiving contact Info: 
+* [ ] Assign team member(s) who should be receiving this export to the issue and tag them below:
+  - `@gitlab handle`
+* [ ] Slack handle(s) for those assigned: 
+  - `@handle`
 
-**Original Issue Link**:
+### Business Use Case (Please explain what this data will be used for and appropriate data filters): 
+
 <!--
-If none, please include a description
+please describe what you will be doing with this data (where is it going, how will it be used, etc)
 --->
 
-**Editor Slack Handle**: @`handle`
-
-**Business Use Case** (Please explain what this data will be used for and appropriate data filters): 
-
+---
 
 ### Submitter Checklist
-* [ ]  Provide link to dashboard that you wanted to export from Periscope that was greater than 5MB. Link: _____ 
-* [ ]  Provide information on what data you want exported. If the query needs to be written still, please indicate. (Table name, Columns, SQL statements, etc)
+* [ ] Data Location - Which data do you need exported? Please provide at least one of the following:
+  - [ ] URL to dashboard that you wanted to export from Periscope that was greater than 5MB. Link: _____ 
+  - [ ] Database, Schema, & Table (or view) in Snowflake (dot notation preferred): `database.schema.table`
+  - [ ] [Link to SQL Code Snippet](https://gitlab.com/gitlab-data/analytics/-/snippets/2108714)
 * [ ]  Provide a file name for the file. File Name: ___________ 
 * [ ]  Select the type of format you would like the data exported in: 
   - [ ] TSV (tab-separated values)
@@ -24,18 +28,17 @@ If none, please include a description
 * [ ]  Does this data contain `RED` or `ORANGE` data as defined in [GitLab's data classification policy?](https://about.gitlab.com/handbook/engineering/security/data-classification-policy.html#data-classification-levels)
   - [ ] Yes (You will need to already have [approved access](https://about.gitlab.com/handbook/business-ops/it-ops-team/access-requests/) to this data) 
   - [ ] No (I verify that this data that will be extracted does not contain sensitive information.)
-* [ ]  How soon do you need this data ? Timeline: _________
+* [ ]  Add a due date to the issue for when the data is desired by.
 * [ ]  cc: `@gitlab-data` to have this issue prioritized and assigned.  
 
-  ### Reviewer Checklist 
-* [ ]  Review the Submitter Checklist. 
-* [ ]  Check if the data requested. If it is and the requester does not have access, close the issue and comment : "This request has been denied due to access to the information being requested." 
-* [ ]  If not, continue with the steps below: 
-  - [ ] Run the query in Snowflake. 
+---
+
+### Reviewer Checklist 
+* [ ] Review the Submitter Checklist. 
+* [ ] Verify Requestors access 
 
 #### Small Data Set
 * [ ] Export the file in the requested format using the Snowflake UI's export functionality.
-
 
 #### Large Data Set
 * [ ] Load the dataset in the requested format to the `"RAW"."PUBLIC".SNOWFLAKE_EXPORTS` stage by running:
@@ -54,9 +57,23 @@ After the dataset has been copied into the GCS stage, it can be downloaded from 
 
 
 #### Sharing
-* For Sensitive Data
-  - [ ] Encrypt the data into zip file (use `zip -er`)
-  - [ ] Share the file's password with the submitter over a secure channel separate from the channel you will use to send the file.  [One time secret](https://onetimesecret.com/) may be a good option to share passwords, just make sure to not put in any context with the password. 
+
+<details>
+  <summary>For Sensitive Data</summary>
+  
+* [ ] Encrypt the data into zip file (use `zip -er`)
+  - [ ] create a password in 1password and name it the name of the file
+  - [ ] If there are multiple files put them in a folder
+  - [ ] run `zip -er <zipfilename.zip> <path to file or folder>` and, when prompted, copy and paste the password you created in 1password.
+* [ ] Share the file's password with the submitter over a secure channel separate from the channel you will use to send the file.  [One time secret](https://onetimesecret.com/) may be a good option to share passwords, just make sure to not put in any context with the password. 
+
+</details>
+
 * [ ] Share the file with the submitter over a secure channel
 * [ ] Reassign this issue to the Submitter for verification of receipt 
 * [ ] Once the submitter has verified receipt, delete the file from your computer
+
+<!-- DO NOT EDIT BELOW THIS LINE -->
+
+/label ~Infrastructure ~Snowflake ~Analytics ~"Data Pump" ~"workflow::1 - triage" 
+/confidential 
