@@ -116,6 +116,8 @@ WITH source AS (
             THEN '3) Consumption / PS / Other'
           ELSE 'Missing order_type_name_grouped'
         END                                         AS order_type_grouped,
+        {{ growth_type('order_type_stamped', 'arr_basis') }}
+                                                    AS growth_type,
         arr_net__c                                  AS net_arr,
         arr_basis__c                                AS arr_basis,
         arr__c                                      AS arr,

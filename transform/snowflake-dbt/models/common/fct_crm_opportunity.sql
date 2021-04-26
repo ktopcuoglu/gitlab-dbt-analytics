@@ -120,6 +120,7 @@
       sales_segment,
       {{ sales_qualified_source_cleaning('sales_qualified_source') }}
                                                                 AS sales_qualified_source,
+      growth_type,
       days_in_sao,
       user_segment_stamped                                      AS crm_opp_owner_sales_segment_stamped,
       user_geo_stamped                                          AS crm_opp_owner_geo_stamped,
@@ -290,6 +291,7 @@
       opportunity_fields.product_details,
       opportunity_fields.product_category,
       opportunity_fields.products_purchased,
+      opportunity_fields.growth_type,
 
       -- channel fields
       opportunity_fields.lead_source,
