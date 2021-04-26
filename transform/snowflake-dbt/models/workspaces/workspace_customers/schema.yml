@@ -1,0 +1,5 @@
+version: 2
+
+models:
+    - name: dbt_source_freshness
+      description: Attempt of creating a historical table for the orders table from derived from the version table
