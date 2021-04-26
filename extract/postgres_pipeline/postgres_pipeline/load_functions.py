@@ -74,9 +74,12 @@ def load_incremental(
                 minutes=30
             )  # Allow for 30 minute overlap to ensure late arriving data is not skipped
         else:
-            this_run_beginning_timestamp = execution_date - datetime.timedelta(
-                hours=hours_looking_back
+            logging.warn(
+                "No last load time found, using the earliest of the replication timestamp and execution date."
             )
+            this_run_beginning_timestamp = min(
+                replication_timestamp, execution_date
+            ) - datetime.timedelta(hours=hours_looking_back)
 
         logging.info(f"Replication is at {replication_timestamp}")
 

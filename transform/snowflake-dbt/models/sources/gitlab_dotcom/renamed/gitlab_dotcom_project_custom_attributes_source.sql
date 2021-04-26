@@ -1,16 +1,7 @@
-{{ config({
-    "materialized": "incremental",
-    "unique_key": "project_custom_attribute_id"
-    })
-}}
-
 WITH source AS (
 
   SELECT *
-  FROM {{ source('gitlab_dotcom','project_custom_attributes') }}
-  {% if is_incremental() %}
-  WHERE updated_at >= (SELECT MAX(updated_at) FROM {{this}})
-  {% endif %}
+  FROM {{ ref('gitlab_dotcom_project_custom_attributes_dedupe_source') }}
 
 ), renamed AS (
   
@@ -22,8 +13,6 @@ WITH source AS (
     key::VARCHAR          AS project_custom_key,
     value::VARCHAR        AS project_custom_value
   FROM source
-  QUALIFY ROW_NUMBER() OVER (PARTITION BY id ORDER BY updated_at DESC) = 1
-  
 
 )
 

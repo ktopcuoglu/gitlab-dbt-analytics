@@ -605,14 +605,14 @@ roles:
                    - raw
             schemas:
               write:
-                  -raw.tap_zoom
-                  -raw.tap_adaptive
-                  -raw.tap_xactly
+                  - raw.tap_zoom
+                  - raw.tap_adaptive
+                  - raw.tap_xactly
             tables:
               write:
-                  -raw.tap_zoom.*
-                  -raw.tap_adaptive.*
-                  -raw.tap_xactly.*   
+                  - raw.tap_zoom.*
+                  - raw.tap_adaptive.*
+                  - raw.tap_xactly.*   
 
 
     - people_operations:
@@ -1040,9 +1040,10 @@ roles:
                     - prep.preparation
                     - prod.common
                     - prod.common_mart_product
+                    - prod.common_mapping
             tables:
                 read:
-                    - prep.preparation.prep_usage_ping_no_license_key
+                    - prod.common_mapping.prep_usage_ping_no_license_key
                     - prod.common_mart_product.mart_product_usage_wave_1_3_metrics_latest
                     - prod.common_mart_product.mart_product_usage_wave_1_3_metrics_monthly
                     - prod.common_mart_product.mart_product_usage_wave_1_3_metrics_monthly_diff
@@ -1829,11 +1830,8 @@ roles:
             - admin
 
     - bmenegocci:
-        member_of:
-            - analyst_finance
-            - bamboohr_analytics
-        warehouses:
-            - analyst_xs
+        member_of: []
+        warehouses: []
 
     - brittany:
         member_of:
@@ -3138,9 +3136,8 @@ users:
             - securityadmin
 
     - bmenegocci:
-        can_login: yes
-        member_of:
-            - bmenegocci
+        can_login: no
+        member_of: []
 
     - brittany:
         can_login: yes

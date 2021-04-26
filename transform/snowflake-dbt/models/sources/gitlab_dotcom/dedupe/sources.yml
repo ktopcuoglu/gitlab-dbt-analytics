@@ -364,6 +364,11 @@ sources:
         identifier: gitlab_db_timelogs
       - name: todos
         identifier: gitlab_db_todos
+      - name: user_details
+        identifier: gitlab_db_user_details
+        # freshness:
+          # warn_after: {count: 24, period: hour}
+          # error_after: {count: 48, period: hour}
       - name: user_preferences
         identifier: gitlab_db_user_preferences
       - name: users

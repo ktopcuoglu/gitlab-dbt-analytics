@@ -117,6 +117,8 @@
       dim_crm_opportunity.professional_services_value,
       fct_crm_opportunity.primary_solution_architect,
       fct_crm_opportunity.product_details,
+      fct_crm_opportunity.product_category,
+      fct_crm_opportunity.products_purchased,
       
       -- crm opp owner/account owner fields stamped at SAO date
       dim_crm_opportunity.sao_crm_opp_owner_stamped_name,
@@ -200,7 +202,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@mcooperDD",
+    updated_by="@jpeguero",
     created_date="2020-12-07",
-    updated_date="2021-03-26",
+    updated_date="2021-04-22",
   ) }}

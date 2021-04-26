@@ -1,5 +1,9 @@
 {{ config(alias='sfdc_opportunity_snapshot_history_xf') }}
 
+-- TODO:
+-- Add logic to exclude vision opps from created pipeline metric
+
+
 WITH date_details AS (
 
     SELECT * 
@@ -205,8 +209,6 @@ WITH date_details AS (
 
       -- This refers to the closing quarter perspective instead of the snapshot quarter
       90 - DATEDIFF(day, snapshot_date.date_actual, close_date_detail.last_day_of_fiscal_quarter)           AS close_day_of_fiscal_quarter_normalised,
-
-
 
       created_date_detail.first_day_of_month                     AS created_date_month,
       created_date_detail.fiscal_year                            AS created_fiscal_year,
@@ -541,7 +543,7 @@ WITH date_details AS (
       sfdc_opportunity_xf.sales_team_cro_level,
       sfdc_opportunity_xf.sales_team_rd_asm_level,
       
-        -- using current opportunity perspective instead of historical
+      -- using current opportunity perspective instead of historical
       -- NF 2020-01-26: this might change to order type live 2.1     
       sfdc_opportunity_xf.order_type_stamped,     
 
@@ -591,7 +593,9 @@ WITH date_details AS (
       AND (sfdc_accounts_xf.ultimate_parent_account_id NOT IN ('0016100001YUkWVAA1')
             OR sfdc_accounts_xf.account_id IS NULL)                                        -- remove test account
       AND opp_snapshot.is_deleted = 0
+
 ), add_compound_metrics AS (
+
     SELECT 
       *,
 
@@ -637,16 +641,17 @@ WITH date_details AS (
       -- created within quarter
       CASE
         WHEN opp_snapshot.pipeline_created_fiscal_quarter_name = opp_snapshot.snapshot_fiscal_quarter_name
-          -- Open not omitted deals or lost over stage 1 deals (net arr created implies stage 1+)
-        --  AND ((opp_snapshot.forecast_category_name != 'Omitted'
-        --        AND opp_snapshot.is_stage_1_plus = 1)
-        --    OR (opp_snapshot.is_lost = 1))    
-        --  AND opp_snapshot.is_edu_oss = 0
-        --  AND lower(opp_snapshot.deal_group) LIKE ANY ('%growth%', '%new%')
           AND is_eligible_created_pipeline_flag = 1
             THEN opp_snapshot.net_arr
         ELSE 0 
       END                                                  AS created_in_snapshot_quarter_net_arr,
+
+      CASE
+        WHEN opp_snapshot.pipeline_created_fiscal_quarter_name = opp_snapshot.snapshot_fiscal_quarter_name
+          AND is_eligible_created_pipeline_flag = 1
+            THEN opp_snapshot.calculated_deal_count
+        ELSE 0 
+      END                                                  AS created_in_snapshot_quarter_deal_count,
 
       ---------------------------------------------------------------------------------------------------------
       ---------------------------------------------------------------------------------------------------------
@@ -706,15 +711,16 @@ WITH date_details AS (
 
       -- booked net arr (won + renewals / lost)
       CASE
-        WHEN opp_snapshot.is_won = 1 
-          OR (opp_snapshot.is_renewal = 1 
-            AND opp_snapshot.is_lost = 1)
+        WHEN (opp_snapshot.is_won = 1 
+            OR (opp_snapshot.is_renewal = 1 
+              AND opp_snapshot.is_lost = 1))
           THEN opp_snapshot.net_arr
         ELSE 0 
       END                                                 AS booked_net_arr
 
 
     FROM sfdc_opportunity_snapshot_history_xf opp_snapshot
+
 )
 
 SELECT *

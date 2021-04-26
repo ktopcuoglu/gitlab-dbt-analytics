@@ -14,7 +14,7 @@ WITH account_dims_mapping AS (
     bizible_marketing_channel_path,
     bizible_touchpoint_date,
     dim_crm_account_id,
-    dim_crm_sales_rep_id,
+    dim_crm_user_id,
     person_score
 
     FROM {{ref('prep_crm_person')}}
@@ -67,7 +67,7 @@ WITH account_dims_mapping AS (
       {{ dbt_utils.surrogate_key(['COALESCE(converted_contact_id, lead_id)']) }}                                          AS crm_person_id,
       converted_contact_id                                                                                                AS contact_id,
       converted_account_id                                                                                                AS account_id,
-      owner_id                                                                                                            AS crm_sales_rep_id,
+      owner_id                                                                                                            AS crm_user_id,
       person_score                                                                                                        AS person_score
 
     FROM sfdc_leads
@@ -84,7 +84,7 @@ WITH account_dims_mapping AS (
       {{ dbt_utils.surrogate_key(['contact_id']) }}                                                                       AS crm_person_id,
       contact_id                                                                                                          AS contact_id,
       account_id                                                                                                          AS account_id,
-      owner_id                                                                                                            AS crm_sales_rep_id,
+      owner_id                                                                                                            AS crm_user_id,
       person_score                                                                                                        AS person_score
 
     FROM sfdc_contacts
@@ -125,7 +125,7 @@ WITH account_dims_mapping AS (
       crm_person.bizible_person_id    AS bizible_person_id,
 
      -- common dimension keys
-      crm_person.dim_crm_sales_rep_id                                                                          AS dim_crm_sales_rep_id,
+      crm_person.dim_crm_user_id                                                                               AS dim_crm_user_id,
       crm_person.dim_crm_account_id                                                                            AS dim_crm_account_id,
       account_dims_mapping.dim_parent_crm_account_id,                                                          -- dim_parent_crm_account_id
       COALESCE(account_dims_mapping.dim_account_sales_segment_id, sales_segment.dim_sales_segment_id)          AS dim_account_sales_segment_id,
@@ -206,7 +206,7 @@ WITH account_dims_mapping AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mcooperDD",
-    updated_by="@mcooperDD",
+    updated_by="@iweeks",
     created_date="2020-12-01",
-    updated_date="2021-03-04"
+    updated_date="2021-04-22"
 ) }}

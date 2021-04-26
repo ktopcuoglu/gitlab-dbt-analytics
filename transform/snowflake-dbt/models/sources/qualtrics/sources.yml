@@ -22,5 +22,6 @@ sources:
     - name: distribution
       freshness: null
     - name: nps_survey_responses
+    - name: post_purchase_survey_responses
     - name: survey
     - name: questions

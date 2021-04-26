@@ -76,7 +76,17 @@ WITH date_details AS (
                 WHEN opp_snapshot.pipeline_created_fiscal_quarter_date = opp_snapshot.snapshot_fiscal_quarter_date
                     THEN opp_snapshot.created_in_snapshot_quarter_net_arr
                 ELSE 0
-             END )   AS total_pipe_generation_net_arr
+             END )                                              AS total_pipe_generation_net_arr,
+        SUM(CASE 
+                WHEN opp_snapshot.pipeline_created_fiscal_quarter_date = opp_snapshot.snapshot_fiscal_quarter_date
+                    THEN opp_snapshot.created_in_snapshot_quarter_deal_count
+                ELSE 0
+             END )                                              AS total_pipe_generation_deal_count,
+        SUM(CASE 
+                WHEN opp_snapshot.close_fiscal_quarter_date = opp_snapshot.snapshot_fiscal_quarter_date
+                    THEN opp_snapshot.created_and_won_same_quarter_net_arr
+                ELSE 0
+             END)                                               AS total_created_and_booked_same_quarter_net_arr
    FROM sfdc_opportunity_snapshot_history_xf opp_snapshot
    WHERE opp_snapshot.is_excluded_flag = 0
      AND opp_snapshot.is_deleted = 0
@@ -122,9 +132,11 @@ WITH date_details AS (
      COALESCE(target.target_deal_count,0)                   AS target_deal_count,
      COALESCE(target.target_pipe_generation_net_arr,0)      AS target_pipe_generation_net_arr, 
   
-     COALESCE(total.total_booked_net_arr,0)                 AS total_booked_net_arr,
-     COALESCE(total.total_booked_deal_count,0)              AS total_booked_deal_count,
-     COALESCE(total.total_pipe_generation_net_arr,0)        AS total_pipe_generation_net_arr,
+     COALESCE(total.total_booked_net_arr,0)                           AS total_booked_net_arr,
+     COALESCE(total.total_booked_deal_count,0)                        AS total_booked_deal_count,
+     COALESCE(total.total_pipe_generation_net_arr,0)                  AS total_pipe_generation_net_arr,
+     COALESCE(total_pipe_generation_deal_count,0)                     AS total_pipe_generation_deal_count,
+     COALESCE(total.total_created_and_booked_same_quarter_net_arr,0)  AS total_created_and_booked_same_quarter_net_arr,
   
      CASE
       WHEN today_date.current_fiscal_quarter_date <= base.close_fiscal_quarter_date
@@ -151,6 +163,7 @@ WITH date_details AS (
       AND target.sales_team_cro_level = base.sales_team_cro_level
       AND target.sales_qualified_source = base.sales_qualified_source
       AND target.deal_group = base.deal_group
+  -- quarterly total
   LEFT JOIN totals_per_quarter total
      ON total.close_fiscal_quarter_date = base.close_fiscal_quarter_date
       AND total.sales_team_rd_asm_level = base.sales_team_rd_asm_level

@@ -4,7 +4,7 @@
     ('order_type', 'prep_order_type'),
     ('sales_qualified_source', 'prep_sales_qualified_source'),
     ('deal_path', 'prep_deal_path'),
-    ('sales_rep', 'prep_crm_sales_representative'),
+    ('sales_rep', 'prep_crm_user'),
     ('sales_segment', 'prep_sales_segment'),
     ('sfdc_campaigns', 'prep_campaign')
 
@@ -68,7 +68,7 @@
       opportunity_id                                            AS dim_crm_opportunity_id,
       merged_opportunity_id                                     AS merged_crm_opportunity_id,
       account_id                                                AS dim_crm_account_id,
-      owner_id                                                  AS dim_crm_sales_rep_id,
+      owner_id                                                  AS dim_crm_user_id,
       incremental_acv                                           AS iacv,
       net_arr,
       amount,
@@ -127,6 +127,8 @@
       user_area_stamped                                         AS crm_opp_owner_area_stamped,
       primary_solution_architect,
       product_details,
+      product_category,
+      products_purchased,
       dr_partner_deal_type,
       dr_partner_engagement,
       partner_account,
@@ -250,7 +252,7 @@
       opportunity_fields.subscription_end_date,
 
       -- common dimension keys
-      {{ get_keyed_nulls('opportunity_fields.dim_crm_sales_rep_id') }}                                                      AS dim_crm_sales_rep_id,
+      {{ get_keyed_nulls('opportunity_fields.dim_crm_user_id') }}                                                           AS dim_crm_user_id,
       {{ get_keyed_nulls('order_type.dim_order_type_id') }}                                                                 AS dim_order_type_id,
       {{ get_keyed_nulls('sales_qualified_source.dim_sales_qualified_source_id') }}                                         AS dim_sales_qualified_source_id,
       {{ get_keyed_nulls('deal_path.dim_deal_path_id') }}                                                                   AS dim_deal_path_id,
@@ -286,6 +288,8 @@
 
       opportunity_fields.primary_solution_architect,
       opportunity_fields.product_details,
+      opportunity_fields.product_category,
+      opportunity_fields.products_purchased,
 
       -- channel fields
       opportunity_fields.lead_source,
@@ -345,7 +349,7 @@
     LEFT JOIN user_hierarchy_stamped_area
       ON opportunity_fields.crm_opp_owner_area_stamped = user_hierarchy_stamped_area.crm_opp_owner_area_stamped
     LEFT JOIN sales_rep
-      ON opportunity_fields.dim_crm_sales_rep_id = sales_rep.dim_crm_sales_rep_id
+      ON opportunity_fields.dim_crm_user_id = sales_rep.dim_crm_user_id
     LEFT JOIN linear_attribution_base
       ON opportunity_fields.dim_crm_opportunity_id = linear_attribution_base.dim_crm_opportunity_id
     LEFT JOIN campaigns_per_opp
@@ -356,7 +360,7 @@
 {{ dbt_audit(
     cte_ref="final_opportunities",
     created_by="@mcooperDD",
-    updated_by="@mcooperDD",
+    updated_by="@iweeks",
     created_date="2020-11-30",
-    updated_date="2021-03-25"
+    updated_date="2021-04-22"
 ) }}

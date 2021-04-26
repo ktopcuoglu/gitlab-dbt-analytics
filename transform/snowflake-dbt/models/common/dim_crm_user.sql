@@ -1,14 +1,14 @@
 WITH sfdc_users AS (
 
     SELECT *
-    FROM {{ ref('prep_crm_sales_representative')}}
+    FROM {{ ref('prep_crm_user')}}
 
 ), final_users AS (
 
     SELECT
 
-      dim_crm_sales_rep_id,
-      rep_name,
+      dim_crm_user_id,
+      user_name,
       title,
       department,
       team,
@@ -29,7 +29,7 @@ WITH sfdc_users AS (
 {{ dbt_audit(
     cte_ref="final_users",
     created_by="@mcooperDD",
-    updated_by="@mcooperDD",
+    updated_by="@iweeks",
     created_date="2020-11-20",
-    updated_date="2021-03-25"
+    updated_date="2021-04-22"
 ) }}
