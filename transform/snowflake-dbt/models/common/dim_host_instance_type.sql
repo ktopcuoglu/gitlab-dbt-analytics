@@ -5,7 +5,7 @@
 , gainsight_instance_info AS (
 
     SELECT *
-    FROM {{ source('sheetload', 'gainsight_instance_info') }}
+    FROM {{ source('prep', 'gainsight_instance_info') }}
 
 ), final AS (
 
@@ -17,7 +17,7 @@
       crm_accounts.crm_account_name
     FROM gainsight_instance_info
     LEFT JOIN crm_accounts
-      ON host_instance_type.crm_acct_id = crm_accounts.dim_crm_account_id
+      ON gainsight_instance_info.crm_account_id = crm_accounts.dim_crm_account_id
 )
 
 {{ dbt_audit(
