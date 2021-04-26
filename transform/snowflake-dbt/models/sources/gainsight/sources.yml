@@ -1,0 +1,20 @@
+version: 2
+
+sources:
+  - name: gainsight
+    database: '{{ env_var("SNOWFLAKE_LOAD_DATABASE") }}'
+    schema: gainsight
+    loader: Airflow
+    loaded_at_field: to_timestamp(_updated_at::int)
+
+    quoting:
+      database: true
+      schema: false
+      identifier: false
+
+    freshness:
+      no_warn_after: 
+      error_after: {count: 1, period: week}
+
+    tables:
+    - name: gainsight_instance_info
