@@ -93,7 +93,7 @@ models:
       - name: is_sfdc_opted_out
         description: Already available in Marketo
       - name: is_zuora_billing_contact
-        description: In Salesforce
+        description: Mapped to `is_zuora_billing_contact__c` in Marketo
       - name: job_title
         description: Mapped to `Title` in Marketo
       - name: last_name
@@ -117,11 +117,11 @@ models:
       - name: sfdc_parent_sales_segment
         description: Already available in Marketo
       - name: zuora_active_state
-        description: In Salesforce
+        description: Mapped to `zuora_active_state__c` in Marketo
       - name: zuora_contact_id
-        description: In Salesforce
+        description: Mapped to `zuora_contact_id__c` in Marketo
       - name: zuora_created_date
-        description: In Salesforce
+        description: Mapped to `zuora_created_date__c` in Marketo
       - name: last_changed
         description: use in pump copy command, but not mapped to Marketo
   - name: pump_subscription_product_usage
