@@ -91,6 +91,8 @@
     SELECT 
       created_month,
       clean_metrics_name,
+      monthly_usage_data.host_id,
+      monthly_usage_data.instance_id,
       edition,
       product_tier,
       group_name,
@@ -106,7 +108,7 @@
     INNER JOIN fct_usage_ping_payloads
       ON monthly_usage_data.ping_id = fct_usage_ping_payloads.usage_ping_id
     WHERE is_gmau = TRUE
-    {{ dbt_utils.group_by(n=12) }}
+    {{ dbt_utils.group_by(n=14) }}
 
 
 

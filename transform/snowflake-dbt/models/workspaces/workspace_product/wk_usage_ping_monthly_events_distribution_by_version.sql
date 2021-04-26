@@ -66,7 +66,6 @@ WITH filtered_counters AS (
       AND product_usage.monthly_metric_value <= outer_boundary
     WHERE ping_source = 'Self-Managed'
       AND product_usage.created_month > '2020-01-01'
-      AND product_usage.created_month < '2021-03-01'
       AND is_trial = False
     GROUP BY 1,2,3,4
   
