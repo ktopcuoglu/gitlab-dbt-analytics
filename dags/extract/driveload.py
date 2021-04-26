@@ -7,9 +7,7 @@ from airflow import DAG
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
 from airflow_utils import (
     DATA_IMAGE,
-    DBT_IMAGE,
     clone_and_setup_extraction_cmd,
-    dbt_install_deps_and_seed_nosha_cmd,
     gitlab_defaults,
     gitlab_pod_env_vars,
     slack_failed_task,
@@ -40,7 +38,7 @@ from kubernetes_helpers import get_affinity, get_toleration
 # Load the env vars into a dict and set Secrets
 env = os.environ.copy()
 GIT_BRANCH = env["GIT_BRANCH"]
-pod_env_vars = {**gitlab_pod_env_vars, **{}}
+pod_env_vars = gitlab_pod_env_vars
 
 # Default arguments for the DAG
 default_args = {
