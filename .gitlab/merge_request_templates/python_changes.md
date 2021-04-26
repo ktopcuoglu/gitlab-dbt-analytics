@@ -4,20 +4,19 @@ Closes
 
 * _action items_
 
-#### Steps to confirm
+#### Steps Taken to Test
 
 * _action items_
 
-#### Testing
-
-* Was a pytest added or improved?
-  * [ ] Yes
-  * [ ] No
-    * Why not? 
-
 #### Code Quality
 
-* [ ] Passed all Python checks?
+* [ ] Passed all Python CI checks?
+* [ ] Function signatures contain [type hints](https://about.gitlab.com/handbook/business-technology/data-team/platform/python-guide/#type-hints)?
+* [ ] Imports follow PEP8 [rules for ordering](https://about.gitlab.com/handbook/business-technology/data-team/platform/python-guide/#import-order) and there are no extra imports
+* [ ] [Docstrings](https://about.gitlab.com/handbook/business-technology/data-team/platform/python-guide/#docstrings) are found in every single function
+* [ ] Was a [unit test](https://about.gitlab.com/handbook/business-technology/data-team/platform/python-guide/#unit-testing) added for any complex in-code logic?
+* [ ] Are exceptions and errors handled correctly?
+* [ ] Is there any data manipulation that [should be done in SQL instead](https://about.gitlab.com/handbook/business-technology/data-team/platform/python-guide/#when-not-to-use-python)?
 
 #### Changes
 
