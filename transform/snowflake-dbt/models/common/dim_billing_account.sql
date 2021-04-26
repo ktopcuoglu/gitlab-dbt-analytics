@@ -1,5 +1,5 @@
 {{ simple_cte([
-    ('map_merged_crm_account','map_merged_crm_accounts'),
+    ('map_merged_crm_account','map_merged_crm_account'),
     ('zuora_account','zuora_account_source'),
     ('zuora_contact','zuora_contact_source')
 ]) }}
@@ -14,7 +14,7 @@
 
     SELECT
       zuora_account.account_id                              AS dim_billing_account_id,
-      map_merged_crm_accounts.dim_crm_account_id            AS dim_crm_account_id,
+      map_merged_crm_account.dim_crm_account_id            AS dim_crm_account_id,
       zuora_account.account_number                          AS billing_account_number,
       zuora_account.account_name                            AS billing_account_name,
       zuora_account.status                                  AS account_status,
@@ -31,8 +31,8 @@
     FROM zuora_account
     LEFT JOIN zuora_contact
       ON COALESCE(zuora_account.sold_to_contact_id, zuora_account.bill_to_contact_id) = zuora_contact.contact_id
-    LEFT JOIN map_merged_crm_accounts
-      ON zuora_account.crm_id = map_merged_crm_accounts.sfdc_account_id
+    LEFT JOIN map_merged_crm_account
+      ON zuora_account.crm_id = map_merged_crm_account.sfdc_account_id
     WHERE zuora_account.is_deleted = FALSE
 
 )
