@@ -41,7 +41,7 @@ models:
         tests:
           - not_null
           - unique
-      - name: dim_crm_sales_rep_id
+      - name: dim_crm_user_id
         description: Unique identifier for each Salesforce user
       - name: dim_order_type_id
         description: Unique identifier for each order type

@@ -11,7 +11,7 @@
     ('dim_crm_person','dim_crm_person'),
     ('fct_crm_person', 'fct_crm_person'),
     ('dim_crm_account','dim_crm_account'),
-    ('dim_crm_sales_representative','dim_crm_sales_representative'),
+    ('dim_crm_user','dim_crm_user'),
     ('mart_crm_opportunity','mart_crm_opportunity')
 ]) }}
 
@@ -111,15 +111,15 @@
       fct_campaign.count_sent,
 
       -- sales rep info
-      dim_crm_sales_representative.rep_name,
-      dim_crm_sales_representative.title                                    AS rep_title,
-      dim_crm_sales_representative.team,
-      dim_crm_sales_representative.is_active                                AS rep_is_active,
-      dim_crm_sales_representative.user_role_name,
-      dim_crm_sales_representative.crm_user_sales_segment                   AS touchpoint_crm_user_segment_name_live,
-      dim_crm_sales_representative.crm_user_geo                             AS touchpoint_crm_user_geo_name_live,
-      dim_crm_sales_representative.crm_user_region                          AS touchpoint_crm_user_region_name_live,
-      dim_crm_sales_representative.crm_user_area                            AS touchpoint_crm_user_area_name_live,
+      dim_crm_user.user_name                                AS rep_name,
+      dim_crm_user.title                                    AS rep_title,
+      dim_crm_user.team,
+      dim_crm_user.is_active                                AS rep_is_active,
+      dim_crm_user.user_role_name,
+      dim_crm_user.crm_user_sales_segment                   AS touchpoint_crm_user_segment_name_live,
+      dim_crm_user.crm_user_geo                             AS touchpoint_crm_user_geo_name_live,
+      dim_crm_user.crm_user_region                          AS touchpoint_crm_user_region_name_live,
+      dim_crm_user.crm_user_area                            AS touchpoint_crm_user_area_name_live,
 
       -- account info
       dim_crm_account.dim_crm_account_id,
@@ -210,8 +210,8 @@
       ON fct_crm_attribution_touchpoint.dim_crm_person_id = fct_crm_person.dim_crm_person_id
     LEFT JOIN dim_crm_account
       ON fct_crm_attribution_touchpoint.dim_crm_account_id = dim_crm_account.dim_crm_account_id
-    LEFT JOIN dim_crm_sales_representative
-      ON fct_crm_attribution_touchpoint.dim_crm_sales_rep_id = dim_crm_sales_representative.dim_crm_sales_rep_id
+    LEFT JOIN dim_crm_user
+      ON fct_crm_attribution_touchpoint.dim_crm_user_id = dim_crm_user.dim_crm_user_id
     LEFT JOIN mart_crm_opportunity
       ON fct_crm_attribution_touchpoint.dim_crm_opportunity_id = mart_crm_opportunity.dim_crm_opportunity_id
 )
@@ -219,7 +219,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mcooperDD",
-    updated_by="@mcooperDD",
+    updated_by="@iweeks",
     created_date="2020-02-18",
-    updated_date="2020-03-25"
+    updated_date="2020-04-22"
 ) }}
