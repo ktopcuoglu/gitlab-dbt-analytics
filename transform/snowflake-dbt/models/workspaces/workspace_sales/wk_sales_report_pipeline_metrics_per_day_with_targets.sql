@@ -154,7 +154,7 @@ WITH date_details AS (
            ELSE 0 
         END)                        AS qtd_target_pipe_generation_net_arr
   FROM mart_sales_funnel_target_daily
-  GROUP BY 1,2,3,4,5,6,7
+  GROUP BY 1,2,3,4,5,6
 
 ), key_fields AS (
     
@@ -343,7 +343,7 @@ WITH date_details AS (
         AND year_minus_one.sales_team_rd_asm_level = base.sales_team_rd_asm_leveL
         AND year_minus_one.sales_qualified_source = base.sales_qualified_source
         AND year_minus_one.deal_group = base.deal_group
-        AND year_minus_one.close_fiscal_quarter_date = base.dateadd(month,-12,close_fiscal_quarter_date)
+        AND year_minus_one.close_fiscal_quarter_date = dateadd(month,-12,base.close_fiscal_quarter_date)
         AND year_minus_one.close_day_of_fiscal_quarter_normalised = base.close_day_of_fiscal_quarter_normalised
     -- qtd allocated targets
     LEFT JOIN funnel_allocated_targets_qtd qtd_target
@@ -351,7 +351,7 @@ WITH date_details AS (
         AND qtd_target.sales_team_rd_asm_level = base.sales_team_rd_asm_leveL
         AND qtd_target.sales_qualified_source = base.sales_qualified_source
         AND qtd_target.deal_group = base.deal_group
-        AND qtd_target.close_fiscal_quarter_date = base.dateadd(month,-12,close_fiscal_quarter_date)
+        AND qtd_target.close_fiscal_quarter_date = dateadd(month,-12,base.close_fiscal_quarter_date)
         AND qtd_target.close_day_of_fiscal_quarter_normalised = base.close_day_of_fiscal_quarter_normalised
    
 
