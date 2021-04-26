@@ -1,4 +1,4 @@
-WITH map_merged_crm_accounts AS (
+WITH map_merged_crm_account AS (
 
     SELECT *
     FROM {{ ref('map_merged_crm_account') }}
@@ -96,13 +96,13 @@ WITH map_merged_crm_accounts AS (
     sfdc_account.tsp_max_family_employees,
     sfdc_users.name                               AS technical_account_manager,
     sfdc_account.is_deleted                       AS is_deleted,
-    map_merged_crm_accounts.dim_crm_account_id    AS merged_to_account_id,
+    map_merged_crm_account.dim_crm_account_id    AS merged_to_account_id,
     IFF(sfdc_record_type.record_type_label != 'Channel'
         AND sfdc_account.account_type NOT IN ('Unofficial Reseller','Authorized Reseller','Prospective Partner','Partner','Former Reseller','Reseller','Prospective Reseller'),
         FALSE, TRUE)                              AS is_reseller
   FROM sfdc_account
-  LEFT JOIN map_merged_crm_accounts
-    ON sfdc_account.account_id = map_merged_crm_accounts.sfdc_account_id
+  LEFT JOIN map_merged_crm_account
+    ON sfdc_account.account_id = map_merged_crm_account.sfdc_account_id
   LEFT JOIN ultimate_parent_account
     ON sfdc_account.ultimate_parent_account_id = ultimate_parent_account.account_id
   LEFT OUTER JOIN sfdc_users
@@ -115,7 +115,7 @@ WITH map_merged_crm_accounts AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@msendal",
-    updated_by="@mcooperDD",
+    updated_by="@paul_armstrong",
     created_date="2020-06-01",
-    updated_date="2021-03-04"
+    updated_date="2021-04-26"
 ) }}
