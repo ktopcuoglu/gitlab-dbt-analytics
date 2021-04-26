@@ -1,9 +1,6 @@
 
 {{ config(alias='report_targets_totals_per_quarter') }}
 
--- TODO
--- Add total created and won
-
 WITH date_details AS (
   
   SELECT *
@@ -166,6 +163,7 @@ WITH date_details AS (
       AND target.sales_team_cro_level = base.sales_team_cro_level
       AND target.sales_qualified_source = base.sales_qualified_source
       AND target.deal_group = base.deal_group
+  -- quarterly total
   LEFT JOIN totals_per_quarter total
      ON total.close_fiscal_quarter_date = base.close_fiscal_quarter_date
       AND total.sales_team_rd_asm_level = base.sales_team_rd_asm_level

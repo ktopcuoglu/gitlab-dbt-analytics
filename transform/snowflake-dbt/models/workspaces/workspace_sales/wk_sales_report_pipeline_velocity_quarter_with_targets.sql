@@ -1,5 +1,9 @@
 {{ config(alias='report_pipeline_velocity_quarter_with_targets') }}
 
+-- TODO:
+-- NF: Refactor open X metrics to use new fields created in opportunity / snapshot objects
+
+
 WITH report_pipeline_velocity_quarter AS (
   
   SELECT *

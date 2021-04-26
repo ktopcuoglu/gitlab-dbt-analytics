@@ -210,8 +210,6 @@ WITH date_details AS (
       -- This refers to the closing quarter perspective instead of the snapshot quarter
       90 - DATEDIFF(day, snapshot_date.date_actual, close_date_detail.last_day_of_fiscal_quarter)           AS close_day_of_fiscal_quarter_normalised,
 
-
-
       created_date_detail.first_day_of_month                     AS created_date_month,
       created_date_detail.fiscal_year                            AS created_fiscal_year,
       created_date_detail.fiscal_quarter_name_fy                 AS created_fiscal_quarter_name,
@@ -545,7 +543,7 @@ WITH date_details AS (
       sfdc_opportunity_xf.sales_team_cro_level,
       sfdc_opportunity_xf.sales_team_rd_asm_level,
       
-        -- using current opportunity perspective instead of historical
+      -- using current opportunity perspective instead of historical
       -- NF 2020-01-26: this might change to order type live 2.1     
       sfdc_opportunity_xf.order_type_stamped,     
 
@@ -595,7 +593,9 @@ WITH date_details AS (
       AND (sfdc_accounts_xf.ultimate_parent_account_id NOT IN ('0016100001YUkWVAA1')
             OR sfdc_accounts_xf.account_id IS NULL)                                        -- remove test account
       AND opp_snapshot.is_deleted = 0
+
 ), add_compound_metrics AS (
+
     SELECT 
       *,
 
@@ -720,6 +720,7 @@ WITH date_details AS (
 
 
     FROM sfdc_opportunity_snapshot_history_xf opp_snapshot
+
 )
 
 SELECT *

@@ -1,8 +1,5 @@
 {{ config(alias='report_pipeline_metrics_day_with_targets') }}
 
--- TODO
--- Create a daily version of this table with QTD targets for metrics in the daily funnel targets
-
 WITH date_details AS (
   
   SELECT *
@@ -18,7 +15,11 @@ WITH date_details AS (
     SELECT *
     FROM  {{ ref('wk_sales_report_targets_totals_per_quarter') }} 
 
-  
+), mart_sales_funnel_target_daily AS (
+
+  SELECT *
+  FROM {{ref('wk_sales_mart_sales_funnel_target_daily')}}
+
 -- make sure the aggregation works at the level we want it
 -- make sure the aggregation works at the level we want it
 ), consolidated_metrics AS (
@@ -124,7 +125,37 @@ WITH date_details AS (
                 FROM date_details
                 WHERE day_of_fiscal_quarter_normalised > 0
                 GROUP BY 1)
-  
+
+
+-- some of the funnel metrics have daily targets with a very specific seasonality
+-- this models tracks the target allocated a given point in time on the quarter
+), funnel_allocated_targets_qtd AS (
+
+  SELECT 
+    target_fiscal_quarter_date                AS close_fiscal_quarter_date,
+    target_day_of_fiscal_quarter_normalised   AS close_day_of_fiscal_quarter_normalised,
+    sales_team_rd_asm_level,
+    sales_team_cro_level,
+    sales_qualified_source,
+    deal_group,
+    SUM(CASE 
+          WHEN kpi_name = 'Net ARR' 
+            THEN qtd_allocated_target
+           ELSE 0 
+        END)                        AS qtd_target_net_arr,
+    SUM(CASE 
+          WHEN kpi_name = 'Deals' 
+            THEN qtd_allocated_target
+           ELSE 0 
+        END)                        AS qtd_target_deal_count,
+    SUM(CASE 
+          WHEN kpi_name = 'Net ARR Pipeline Created' 
+            THEN qtd_allocated_target
+           ELSE 0 
+        END)                        AS qtd_target_pipe_generation_net_arr
+  FROM mart_sales_funnel_target_daily
+  GROUP BY 1,2,3,4,5,6,7
+
 ), key_fields AS (
     
   SELECT         
@@ -252,12 +283,27 @@ WITH date_details AS (
         COALESCE(rq_plus_one.calculated_target_deal_count,0)    AS rq_plus_1_calculated_target_deal_count,
   
          -- totals quarter plus 2
-        COALESCE(rq_plus_two.total_booked_net_arr,0)            AS rq_plus_2_total_booked_net_arr,
-        COALESCE(rq_plus_two.total_booked_deal_count,0)          AS rq_plus_2_total_booked_deal_count,
-        COALESCE(rq_plus_two.target_net_arr,0)                   AS rq_plus_2_target_net_arr,
-        COALESCE(rq_plus_two.target_deal_count,0)                AS rq_plus_2_target_deal_count,
-        COALESCE(rq_plus_two.calculated_target_net_arr,0)        AS rq_plus_2_calculated_target_net_arr,
-        COALESCE(rq_plus_two.calculated_target_deal_count,0)     AS rq_plus_2_calculated_target_deal_count
+        COALESCE(rq_plus_two.total_booked_net_arr,0)              AS rq_plus_2_total_booked_net_arr,
+        COALESCE(rq_plus_two.total_booked_deal_count,0)           AS rq_plus_2_total_booked_deal_count,
+        COALESCE(rq_plus_two.target_net_arr,0)                    AS rq_plus_2_target_net_arr,
+        COALESCE(rq_plus_two.target_deal_count,0)                 AS rq_plus_2_target_deal_count,
+        COALESCE(rq_plus_two.calculated_target_net_arr,0)         AS rq_plus_2_calculated_target_net_arr,
+        COALESCE(rq_plus_two.calculated_target_deal_count,0)      AS rq_plus_2_calculated_target_deal_count,
+
+        -- totals one year ago
+        COALESCE(year_minus_one.total_booked_net_arr,0)             AS year_minus_one_total_booked_net_arr,
+        COALESCE(year_minus_one.total_booked_deal_count,0)          AS year_minus_one_total_booked_deal_count,
+        COALESCE(year_minus_one.target_net_arr,0)                   AS year_minus_one_target_net_arr,
+        COALESCE(year_minus_one.target_deal_count,0)                AS year_minus_one_target_deal_count,
+        COALESCE(year_minus_one.calculated_target_net_arr,0)        AS year_minus_one_calculated_target_net_arr,
+        COALESCE(year_minus_one.calculated_target_deal_count,0)     AS year_minus_one_calculated_target_deal_count,
+
+        COALESCE(qtd_target.qtd_target_net_arr,0)                   AS qtd_target_net_arr,
+        COALESCE(qtd_target.qtd_target_deal_count,0)                AS qtd_target_deal_count,
+        COALESCE(qtd_target.qtd_target_pipe_generation_net_arr,0)   AS qtd_target_pipe_generation_net_arr,
+
+      -- TIMESTAMP
+      current_date                                                         AS dbt_last_run_at
   
     FROM base_fields base 
     LEFT JOIN consolidated_metrics metrics
@@ -291,6 +337,24 @@ WITH date_details AS (
         AND rq_plus_two.deal_group = base.deal_group
         AND rq_plus_two.close_fiscal_quarter_date = base.rq_plus_2_close_fiscal_quarter_date
         AND rq_plus_two.close_day_of_fiscal_quarter_normalised = base.close_day_of_fiscal_quarter_normalised
+    -- one year ago totals
+    LEFT JOIN consolidated_targets_per_day year_minus_one
+      ON year_minus_one.sales_team_cro_level = base.sales_team_cro_level
+        AND year_minus_one.sales_team_rd_asm_level = base.sales_team_rd_asm_leveL
+        AND year_minus_one.sales_qualified_source = base.sales_qualified_source
+        AND year_minus_one.deal_group = base.deal_group
+        AND year_minus_one.close_fiscal_quarter_date = base.dateadd(month,-12,close_fiscal_quarter_date)
+        AND year_minus_one.close_day_of_fiscal_quarter_normalised = base.close_day_of_fiscal_quarter_normalised
+    -- qtd allocated targets
+    LEFT JOIN funnel_allocated_targets_qtd qtd_target
+      ON qtd_target.sales_team_cro_level = base.sales_team_cro_level
+        AND qtd_target.sales_team_rd_asm_level = base.sales_team_rd_asm_leveL
+        AND qtd_target.sales_qualified_source = base.sales_qualified_source
+        AND qtd_target.deal_group = base.deal_group
+        AND qtd_target.close_fiscal_quarter_date = base.dateadd(month,-12,close_fiscal_quarter_date)
+        AND qtd_target.close_day_of_fiscal_quarter_normalised = base.close_day_of_fiscal_quarter_normalised
+   
+
 )
  SELECT *
  FROM final
