@@ -84,7 +84,6 @@ for folder in folders:
     container_cmd = f"""
         {clone_and_setup_extraction_cmd} &&
         cd sheetload/ &&
-        python3 -m pip install google-api-python-client &&
         python3 sheetload.py drive --drive_file drives.yml --table_name {table_name}
     """
 
