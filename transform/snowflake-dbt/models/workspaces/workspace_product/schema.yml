@@ -1,0 +1,17 @@
+version: 2
+
+models:
+    - name: wk_self_managed_spo
+      description: Workspace model that builds a MVC for Self-Managed SPO and SPU KPIs.
+      columns:
+        - name: organization_id
+          tests:
+            - not_null
+    - name: wk_saas_spo
+      description: 'The current status of all DBT sources along with when the sources were last loaded.'
+      columns:
+        - name: organization_id
+          tests:
+            - not_null
+            - unique
+
