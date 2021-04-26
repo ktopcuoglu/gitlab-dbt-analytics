@@ -14,7 +14,7 @@ sources:
 
     freshness:
       no_warn_after: 
-      error_after: {count: 1, period: week}
+      error_after: {count: 7, period: days}
 
     tables:
     - name: gainsight_instance_info
