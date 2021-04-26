@@ -112,5 +112,3 @@ for folder in folders:
     )
     runs.append(folder_run)
 
-# Order
-runs
