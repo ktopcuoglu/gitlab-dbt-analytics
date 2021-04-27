@@ -16,7 +16,8 @@
 
     SELECT DISTINCT
       dim_crm_user_sales_segment_id,
-      crm_user_sales_segment
+      crm_user_sales_segment,
+      crm_user_sales_segment_grouped
     FROM {{ ref('dim_crm_user_hierarchy_live') }}
 
 ), dim_crm_user_hierarchy_live_geo AS (
@@ -44,7 +45,8 @@
 
     SELECT DISTINCT
       dim_crm_opp_owner_sales_segment_stamped_id,
-      crm_opp_owner_sales_segment_stamped
+      crm_opp_owner_sales_segment_stamped,
+      crm_opp_owner_sales_segment_stamped_grouped
     FROM {{ ref('dim_crm_user_hierarchy_stamped') }}
 
 ), dim_crm_user_hierarchy_stamped_geo AS (
@@ -121,6 +123,7 @@
       fct_crm_opportunity.product_category,
       fct_crm_opportunity.products_purchased,
       fct_crm_opportunity.growth_type,
+      fct_crm_opportunity.deal_size,
       
       -- crm opp owner/account owner fields stamped at SAO date
       dim_crm_opportunity.sao_crm_opp_owner_stamped_name,

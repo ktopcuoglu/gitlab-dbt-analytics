@@ -150,6 +150,14 @@ WITH source AS (
         product_details__c                          AS product_details,
         product_category__c                         AS product_category,
         products_purchased__c                       AS products_purchased,
+        CASE
+          WHEN web_portal_purchase__c THEN 'Web Direct'
+          WHEN arr_net__c < 5000 THEN '<5K'
+          WHEN arr_net__c < 25000 THEN '5-25K'
+          WHEN arr_net__c < 100000 THEN '25-100K'
+          WHEN arr_net__c < 250000 THEN '100-250K'
+          WHEN arr_net__c > 250000 THEN '250K+'
+        END deal_size,
 
       -- ************************************
       -- sales segmentation deprecated fields - 2020-09-03
