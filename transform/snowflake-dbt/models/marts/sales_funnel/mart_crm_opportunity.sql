@@ -123,7 +123,7 @@
       fct_crm_opportunity.product_category,
       fct_crm_opportunity.products_purchased,
       fct_crm_opportunity.growth_type,
-      fct_crm_opportunity.deal_size,
+      fct_crm_opportunity.opportunity_deal_size,
       
       -- crm opp owner/account owner fields stamped at SAO date
       dim_crm_opportunity.sao_crm_opp_owner_stamped_name,
