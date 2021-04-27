@@ -1,11 +1,11 @@
 {{ simple_cte([
-    ('crm_accounts', 'dim_crm_account','gainsight_instance_info')
+    ('crm_accounts', 'dim_crm_account')
 ]) }}
 
 , gainsight_instance_info AS (
 
     SELECT *
-    FROM {{ source('prep.sensitive', 'gainsight_instance_info') }}
+    FROM {{ ref('gainsight_instance_info')}}
 
 ), final AS (
 
@@ -24,6 +24,6 @@
     cte_ref="final",
     created_by="@snalamaru",
     updated_by="@snalamaru",
-    created_date="2021-04-21",
-    updated_date="2021-04-21"
+    created_date="2021-04-27",
+    updated_date="2021-04-27"
 ) }}

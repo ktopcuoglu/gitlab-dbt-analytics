@@ -18,7 +18,7 @@ WITH source AS (
       instance_uuid                                        AS instance_uuid,
       hostname                                             AS instance_hostname,
       instancetype                                         AS instance_type,
-      to_timestamp(_updated_at::INT)                       AS uploaded_at
+      to_timestamp(_updated_at::NUMBER)                       AS uploaded_at
     FROM source
 
 )

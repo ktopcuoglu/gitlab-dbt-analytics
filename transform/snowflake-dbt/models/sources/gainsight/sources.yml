@@ -5,7 +5,7 @@ sources:
     database: '{{ env_var("SNOWFLAKE_LOAD_DATABASE") }}'
     schema: gainsight
     loader: Airflow
-    loaded_at_field: to_timestamp(_updated_at::int)
+    loaded_at_field: to_timestamp(_updated_at::NUMBER)
 
     quoting:
       database: true
