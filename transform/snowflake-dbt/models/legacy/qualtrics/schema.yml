@@ -81,3 +81,13 @@ models:
         - name: response_recorded_at
         - name: user_language
         - name: user_plan
+    - name: qualtrics_post_purchase_survey_responses
+      description: One record for each survey response.
+      columns:
+        - name: is_finished
+        - name: recorded_at
+        - name: response_id
+          tests: 
+            - not_null
+        - name: started_at
+        - name: user_plan
