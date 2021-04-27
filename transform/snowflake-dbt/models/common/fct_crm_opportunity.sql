@@ -242,17 +242,19 @@
 
 ), is_win_rate_calc AS (
 
-      SELECT
+    SELECT
         
-        opportunity_id,
-        CASE
-          WHEN stage_name IN ('Closed Won', '8-Closed Lost')
-            AND amount >= 0
-            AND (reason_for_loss IS NULL OR reason_for_loss != 'Merged into another opportunity')
-            AND is_edu_oss = 0
-              THEN TRUE
-          ELSE FALSE
-        END                                                                       AS is_win_rate_calc
+      opportunity_id,
+      CASE
+        WHEN stage_name IN ('Closed Won', '8-Closed Lost')
+          AND amount >= 0
+          AND (reason_for_loss IS NULL OR reason_for_loss != 'Merged into another opportunity')
+          AND is_edu_oss = 0
+            THEN TRUE
+        ELSE FALSE
+      END                                                                         AS is_win_rate_calc
+
+    FROM sfdc_opportunity
 
 ), final_opportunities AS (
 
