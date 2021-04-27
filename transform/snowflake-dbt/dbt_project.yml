@@ -438,6 +438,9 @@ snapshots:
     license:
       +tags: ["daily", "license_db"]
 
+    marts:
+      +tags: ["daily"]
+
     netsuite:
       +tags: ["daily"]
 
