@@ -5,7 +5,7 @@
 , gainsight_instance_info AS (
 
     SELECT *
-    FROM {{ source('prep', 'gainsight_instance_info') }}
+    FROM {{ source('prep.sensitive', 'gainsight_instance_info') }}
 
 ), final AS (
 
