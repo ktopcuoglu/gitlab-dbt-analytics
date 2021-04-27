@@ -426,6 +426,9 @@ snapshots:
     target_schema: "snapshots"
     transient: false
 
+    common:
+      +tags: ["daily"]
+
     customers:
       +tags: ["daily", "customers_db"]
 
@@ -434,6 +437,9 @@ snapshots:
 
     license:
       +tags: ["daily", "license_db"]
+
+    marts:
+      +tags: ["daily"]
 
     netsuite:
       +tags: ["daily"]
