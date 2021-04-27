@@ -54,7 +54,7 @@ WITH customers_db_versions AS (
     SELECT 
       customers_db_versions.item_id AS order_from_source, 
       old_changes.*, 
-      COALESCE(LAG(customers_db_versions.created_at) OVER (PARTITION BY old_changes.order_id ORDER BY customers_db_versions.item_id ASC), old_changes.order_created_at) AS valid_from
+      COALESCE(LAG(customers_db_versions.created_at) OVER (PARTITION BY old_changes.order_id ORDER BY customers_db_versions.version_id ASC), old_changes.order_created_at) AS valid_from
     FROM customers_db_versions
     LEFT JOIN old_changes ON customers_db_versions.version_id = old_changes.version_id
 
