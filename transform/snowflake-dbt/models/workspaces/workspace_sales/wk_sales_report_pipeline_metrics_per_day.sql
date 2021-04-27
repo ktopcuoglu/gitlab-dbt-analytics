@@ -501,7 +501,7 @@ WITH date_details AS (
       COALESCE(report_quarter_plus_2.rq_plus_2_open_4plus_net_arr,0)       AS rq_plus_2_open_4plus_net_arr,
 
       -- TIMESTAMP
-      current_date                                                         AS dbt_last_run_at
+      current_timestamp                                                    AS dbt_last_run_at
 
     -- created a list of all options to avoid having blanks when attaching metrics
     FROM base_fields

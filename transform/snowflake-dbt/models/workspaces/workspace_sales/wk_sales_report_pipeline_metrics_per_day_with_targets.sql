@@ -293,17 +293,15 @@ WITH date_details AS (
         -- totals one year ago
         COALESCE(year_minus_one.total_booked_net_arr,0)             AS year_minus_one_total_booked_net_arr,
         COALESCE(year_minus_one.total_booked_deal_count,0)          AS year_minus_one_total_booked_deal_count,
-        COALESCE(year_minus_one.target_net_arr,0)                   AS year_minus_one_target_net_arr,
-        COALESCE(year_minus_one.target_deal_count,0)                AS year_minus_one_target_deal_count,
-        COALESCE(year_minus_one.calculated_target_net_arr,0)        AS year_minus_one_calculated_target_net_arr,
-        COALESCE(year_minus_one.calculated_target_deal_count,0)     AS year_minus_one_calculated_target_deal_count,
+        COALESCE(year_minus_one.total_pipe_generation_net_arr,0)    AS year_minus_one_total_pipe_generation_net_arr,
+        COALESCE(year_minus_one.total_pipe_generation_deal_count,0) AS year_minus_one_total_pipe_generation_deal_count,
 
         COALESCE(qtd_target.qtd_target_net_arr,0)                   AS qtd_target_net_arr,
         COALESCE(qtd_target.qtd_target_deal_count,0)                AS qtd_target_deal_count,
         COALESCE(qtd_target.qtd_target_pipe_generation_net_arr,0)   AS qtd_target_pipe_generation_net_arr,
 
       -- TIMESTAMP
-      current_date                                                         AS dbt_last_run_at
+      current_timestamp                                              AS dbt_last_run_at
   
     FROM base_fields base 
     LEFT JOIN consolidated_metrics metrics
