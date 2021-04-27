@@ -2543,6 +2543,38 @@ roles:
             - analyst_sales
         warehouses:
             - analyst_xs
+        owns:
+            databases:
+                - mvilain_prep
+                - mvilain_prod
+            schemas:
+                - mvilain_prep.*
+                - mvilain_prod.*
+            tables:
+                - mvilain_prep.*.*
+                - mvilain_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - mvilain_prep
+                    - mvilain_prod
+                write:
+                    - mvilain_prep
+                    - mvilain_prod
+            schemas:
+                read:
+                    - mvilain_prep.*
+                    - mvilain_prod.*
+                write:
+                    - mvilain_prep.*
+                    - mvilain_prod.*
+            tables:
+                read:
+                    - mvilain_prep.*.*
+                    - mvilain_prod.*.*
+                write:
+                    - mvilain_prep.*.*
+                    - mvilain_prod.*.*
 
     - mwalker:
         member_of:
