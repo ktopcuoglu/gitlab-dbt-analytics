@@ -426,6 +426,9 @@ snapshots:
     target_schema: "snapshots"
     transient: false
 
+    common:
+      +tags: ["daily"]
+
     customers:
       +tags: ["daily", "customers_db"]
 
