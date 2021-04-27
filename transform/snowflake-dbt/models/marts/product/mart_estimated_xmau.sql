@@ -146,6 +146,7 @@
         AND gmau.ping_source = 'Self-Managed'
         AND gmau.created_month  = estimated_value.reporting_month
         AND gmau.stage_name = estimated_value.stage_name 
+        AND gmau.group_name = estimated_value.group_name 
         AND gmau.section_name = estimated_value.section_name
         AND gmau.edition = estimated_value.edition
   
@@ -190,7 +191,7 @@
       delivery,
       edition,
       SUM(recorded_monthly_metric_value_sum)                            AS recorded_monthly_metric_value_sum,
-      SUM(estimated_monthly_metric_value_sum)                           AS estimated_monthly_metric_value_sum
+      SUM(recorded_monthly_metric_value_sum)                            AS estimated_monthly_metric_value_sum
     FROM estimated_monthly_metric_value_sum
     {{ dbt_utils.group_by(n=9) }}
 
