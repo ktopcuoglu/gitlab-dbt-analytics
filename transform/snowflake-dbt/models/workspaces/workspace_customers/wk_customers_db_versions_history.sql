@@ -34,7 +34,7 @@ WITH customers_db_versions AS (
       MAX(CASE WHEN column_key = 'start_date' THEN TRY_TO_DATE(column_value) END)::TIMESTAMP                                AS order_start_date,
       MAX(CASE WHEN column_key = 'created_at' THEN TRY_TO_TIMESTAMP(column_value) END)::TIMESTAMP                           AS order_created_at,
       MAX(CASE WHEN column_key = 'product_rate_plan_id' THEN column_value END)                                              AS product_rate_plan_id,
-      MAX(CASE WHEN column_key = 'quantity' THEN TRY_TO_NUMBER(column_value) END)::INTEGER                                  AS order_quantity,
+      MAX(CASE WHEN column_key = 'quantity' THEN TRY_TO_NUMBER(column_value) END)::NUMBER                                  AS order_quantity,
       MAX(CASE WHEN column_key = 'end_date' THEN TRY_TO_DATE(column_value) END)::TIMESTAMP                                  AS order_end_date,
       MAX(CASE WHEN column_key = 'amendment_type' THEN column_value END)                                                    AS amendment_type,
       MAX(CASE WHEN column_key = 'gl_namespace_id' AND column_value <> '' THEN TRY_TO_NUMBER(TRIM(column_value, '\'')) END) AS dim_namespace_id,
