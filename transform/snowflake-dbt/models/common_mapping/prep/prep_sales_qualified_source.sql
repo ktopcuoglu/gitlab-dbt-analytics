@@ -23,7 +23,7 @@ WITH source_data AS (
     SELECT
       MD5('-1')                                                                    AS dim_sales_qualified_source_id,
       'Missing sales_qualified_source_name'                                        AS sales_qualified_source_name,
-      'Missing sales_qualified_source_grouped'                                     AS sales_qualified_source_grouped
+      'Web Direct Generated'                                                       AS sales_qualified_source_grouped
 
 )
 
