@@ -1,8 +1,7 @@
 WITH source AS (
 
     SELECT *
-    FROM {{ source('gitlab_dotcom', 'onboarding_progresses') }}
-    QUALIFY ROW_NUMBER() OVER (PARTITION BY id ORDER BY updated_at DESC) = 1
+    FROM {{ ref('gitlab_dotcom_onboarding_progresses_dedupe_source') }}
 
 ), renamed AS (
 

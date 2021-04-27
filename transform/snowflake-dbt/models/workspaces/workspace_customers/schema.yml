@@ -1,0 +1,5 @@
+version: 2
+
+models:
+    - name: wk_customers_db_versions_history
+      description: Attempt of creating a historical table for the orders table from derived from the version table
