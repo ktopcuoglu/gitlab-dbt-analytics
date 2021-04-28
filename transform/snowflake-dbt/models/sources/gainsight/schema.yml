@@ -10,5 +10,5 @@ models:
             - not_null
         - name: hostname
         - name: instance_uuid
-        - name: instancetype
+        - name: instance_type
         - name: _updated_at
