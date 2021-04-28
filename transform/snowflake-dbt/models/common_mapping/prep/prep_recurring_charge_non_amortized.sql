@@ -38,7 +38,8 @@ WITH zuora_rate_plan AS (
     FROM zuora_rate_plan
     INNER JOIN zuora_rate_plan_charge
       ON zuora_rate_plan.rate_plan_id = zuora_rate_plan_charge.rate_plan_id
-    WHERE effective_end_month > effective_start_month OR effective_end_month IS NULL
+    WHERE (effective_end_month > effective_start_month OR effective_end_month IS NULL)
+      AND charge_type = 'Recurring'
 
 )
 
