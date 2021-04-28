@@ -8,7 +8,7 @@ models:
         - name: gainsight_unique_row_id
           tests:
             - not_null
-        - name: hostname
+        - name: instance_hostname
         - name: instance_uuid
         - name: instance_type
         - name: _updated_at
