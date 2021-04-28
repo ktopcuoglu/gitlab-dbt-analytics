@@ -30,7 +30,7 @@ class GoogleDriveClient:
         fh = BytesIO()
         downloader = MediaIoBaseDownload(fh, request)
         done = False
-        while done is False:
+        while not done:
             status, done = downloader.next_chunk()
             print("Download %d%%." % int(status.progress() * 100))
 
