@@ -34,6 +34,7 @@
       ON dim_date.date_id = fct_mrr.dim_date_id
     LEFT JOIN dim_crm_account
       ON dim_billing_account.dim_crm_account_id = dim_crm_account.dim_crm_account_id
+    WHERE subscription_status in ('Active', 'Cancelled')
 
 ), max_min_month AS (
 

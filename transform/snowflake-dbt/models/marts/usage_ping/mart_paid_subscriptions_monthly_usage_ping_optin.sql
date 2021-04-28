@@ -2,6 +2,7 @@ WITH fct_mrr AS (
 
     SELECT *
     FROM {{ ref('fct_mrr') }}
+    WHERE subscription_status in ('Active', 'Cancelled')
 
 ), dim_product_detail AS (
 

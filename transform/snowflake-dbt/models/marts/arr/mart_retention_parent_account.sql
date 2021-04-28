@@ -22,6 +22,7 @@ WITH dim_crm_account AS (
 
     SELECT *
     FROM {{ ref('fct_mrr') }}
+    WHERE subscription_status in ('Active', 'Cancelled')
 
 ), next_renewal_month AS (
 

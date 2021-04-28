@@ -27,6 +27,7 @@ WITH dim_billing_account AS (
 
     SELECT *
     FROM {{ ref('fct_mrr') }}
+    WHERE subscription_status in ('Active', 'Cancelled')
 
 ), mart_arr AS (
 

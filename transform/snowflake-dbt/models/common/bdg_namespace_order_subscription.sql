@@ -43,11 +43,12 @@
 
     SELECT *
     FROM recurring_charges
-    JOIN product_details
+    INNER JOIN product_details
       ON recurring_charges.dim_product_detail_id = product_details.dim_product_detail_id
       AND product_details.product_delivery_type = 'SaaS'
     WHERE recurring_charges.dim_date_id = {{ get_date_id("DATE_TRUNC('month', CURRENT_DATE)") }}
-    
+      AND subscription_status in ('Active', 'Cancelled')
+
 ), active_namespace_list AS (
 
     --contains non-free namespaces + prior trial namespaces.
@@ -70,7 +71,7 @@
 
 
 ), active_subscription_list AS (
-  
+
     SELECT
       subscriptions.dim_subscription_id,
       subscriptions.dim_subscription_id_original,
@@ -165,22 +166,22 @@
           THEN 'N/A Free'
         WHEN active_namespace_list.product_tier_name_namespace = 'SaaS - Trial: Ultimate'
           AND active_orders_list.order_id IS NULL
-          THEN 'Trial Namespace Missing Active Order' 
+          THEN 'Trial Namespace Missing Active Order'
         WHEN active_namespace_list.product_tier_name_namespace IN ('SaaS - Bronze', 'SaaS - Premium', 'SaaS - Ultimate')
           AND active_orders_list.order_id IS NULL
-          THEN 'Paid Namespace Missing Active Order' 
+          THEN 'Paid Namespace Missing Active Order'
         WHEN active_namespace_list.product_tier_name_namespace IN ('SaaS - Bronze', 'SaaS - Premium', 'SaaS - Ultimate')
           AND active_orders_list.dim_subscription_id IS NULL
-          THEN 'Paid Namespace Missing Order Subscription' 
+          THEN 'Paid Namespace Missing Order Subscription'
         WHEN active_namespace_list.product_tier_name_namespace IN ('SaaS - Bronze', 'SaaS - Premium', 'SaaS - Ultimate')
           AND active_subscription_list.dim_subscription_id IS NULL
-          THEN 'Paid Namespace Missing Zuora Subscription' 
+          THEN 'Paid Namespace Missing Zuora Subscription'
         WHEN active_orders_list.dim_subscription_id IS NOT NULL
           AND active_namespace_list.dim_namespace_id IS NULL
           THEN 'Paid Order Missing Namespace ID Assignment'
         WHEN active_orders_list.order_id IS NOT NULL
           AND active_orders_list.namespace_id IS NULL
-          THEN 'Free Order Missing Namespace ID Assignment' 
+          THEN 'Free Order Missing Namespace ID Assignment'
         WHEN active_subscription_list.dim_subscription_id IS NOT NULL
           AND active_orders_list.order_id IS NULL
           THEN 'Paid Subscription Missing Order'
@@ -204,7 +205,7 @@
       ON active_orders_list.subscription_name_slugify = active_subscription_list.subscription_name_slugify
       OR active_orders_list.dim_subscription_id = active_subscription_list.dim_subscription_id
       OR active_orders_list.dim_subscription_id = active_subscription_list.dim_subscription_id_original
-      --joining on name above only works because we are only dealing with currently active subscriptions  
+      --joining on name above only works because we are only dealing with currently active subscriptions
 
 )
 

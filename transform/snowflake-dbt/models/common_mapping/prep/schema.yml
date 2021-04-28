@@ -354,6 +354,35 @@ models:
       - name: quantity
         description: Total quantity
 
+    - name: prep_recurring_charge_non_amortized
+      description: '{{ doc("prep_recurring_charge_non_amortized") }}'
+      columns:
+        - name: dim_charge_id
+          description: The unique identifier of the rate plan charge.
+          tests:
+            - not_null
+            - unique
+        - name: dim_date_id
+          description: The identifier of date month in dim_date
+        - name: dim_subscription_id
+          description: The identifier of subscription in dim_subscriptions table
+          tests:
+            - not_null
+        - name: dim_product_detail_id
+          description: The identifier of product details in dim_product_detail
+          tests:
+            - not_null
+        - name: dim_billing_account_id
+          description: Zuora account id
+        - name:  dim_crm_account_id
+          description: account id frm crm
+        - name: mrr
+          description: Monthly Recurring Revenue value for given month
+        - name: arr
+          description: Annual Recurring Revenue value for given month
+        - name: quantity
+          description: Total quantity
+
   - name: prep_sales_segment
     description: '{{ doc("prep_sales_segment") }}'
     columns:

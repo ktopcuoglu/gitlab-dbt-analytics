@@ -1747,6 +1747,55 @@ models:
           - unique
         tags: ["tdf", "common", "sales_funnel"]
 
+  - name: fct_recurring_charge
+    description: '{{ doc("fct_recurring_charge") }}'
+    columns:
+      - name: dim_subscription_id
+        description: Unique identifier of a version of a subscription
+        tests:
+          - not_null
+      - name: dim_charge_id
+        description: The unique identifier of a rate plan charge
+        tests:
+          - not_null
+          - unique
+      - name: dim_product_detail_id
+        description: The unique ID of a product rate plan charge
+      - name: rate_plan_charge_number
+        description: A unique number that identifies the charge
+      - name: rate_plan_charge_name
+        description: The name of the rate plan charge
+      - name: effective_start_month
+        description: Month when the segmented charge starts or started
+      - name: effective_end_month
+        description: Month when the segmented charge ends or ended
+      - name: effective_start_date_id
+        description: Id of the date when the segmented charge starts or started. Use this field to join to dim_date on id.
+      - name: effective_end_date_id
+        description: Id of the date when the segmented charge ends or ended. Use this field to join to dim_date on id.
+      - name: effective_start_month_id
+        description: Id of the month when the segmented charge starts or started. Use this field to join to dim_date on id.
+      - name: effective_end_month_id
+        description: Id of the month when the segmented charge ends or ended. Use this field to join to dim_date on id.
+      - name: unit_of_measure
+        description: Specifies the units to measure usage
+      - name: quantity
+        description: The default quantity of units
+      - name: mrr
+        description: Monthly recurring revenue (MRR) is the amount of recurring charges in a given month. The MRR calculation doesn't include one-time charges nor usage charges.
+      - name: delta_tcv
+        description: After an Amendment, the change in the total contract value (TCV) amount for this charge, compared with its previous value.
+      - name: rate_plan_name
+        description: The name of the rate plan
+      - name: discount_level
+        description: Specifies if the discount applies to just the product rate plan, the entire subscription, or to any activity in the account.
+      - name: rate_plan_charge_segment
+        description: The identifying number of the subscription rate plan segment. Segments are numbered sequentially, starting with 1.
+      - name: rate_plan_charge_version
+        description: The version of the rate plan charge. Each time a charge is amended, Zuora creates a new version of the rate plan charge.
+      - name: charge_type
+        description: Specifies the type of charge
+
   - name: fct_sales_funnel_target
     description: '{{ doc("fct_sales_funnel_target") }}'
     columns:
