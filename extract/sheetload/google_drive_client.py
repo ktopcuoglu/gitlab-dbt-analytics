@@ -24,18 +24,17 @@ class GoogleDriveClient:
             download the file using their API method, create a df and then delete the local file
         :return:
         """
-        if file_id:
-            request = self.service.files().get_media(fileId=file_id)
-            fh = BytesIO()
-            downloader = MediaIoBaseDownload(fh, request)
-            done = False
-            while not done:
-                status, done = downloader.next_chunk()
-                print("Download %d%%." % int(status.progress() * 100))
+        request = self.service.files().get_media(fileId=file_id)
+        fh = BytesIO()
+        downloader = MediaIoBaseDownload(fh, request)
+        done = False
+        while not done:
+            status, done = downloader.next_chunk()
+            print("Download %d%%." % int(status.progress() * 100))
 
-            bytes_data = fh.getvalue()
-            df = pd.read_csv(BytesIO(bytes_data))
-            return df
+        bytes_data = fh.getvalue()
+        df = pd.read_csv(BytesIO(bytes_data))
+        return df
 
     def get_item_id(self, item_name, in_folder_id=None, is_folder=None) -> list:
         """ """
