@@ -191,6 +191,8 @@
       delivery,
       edition,
       SUM(recorded_monthly_metric_value_sum)                            AS recorded_monthly_metric_value_sum,
+      -- this is expected as the breakdown is for Recorded Self-Managed and Saas
+      -- Estimated Uplift being calculated in the next unioned table
       SUM(recorded_monthly_metric_value_sum)                            AS estimated_monthly_metric_value_sum
     FROM estimated_monthly_metric_value_sum
     {{ dbt_utils.group_by(n=9) }}
@@ -208,6 +210,7 @@
       delivery,
       edition,
       0                                                                           AS recorded_monthly_metric_value_sum,
+      -- calculating Estimated Uplift here
       SUM(estimated_monthly_metric_value_sum - recorded_monthly_metric_value_sum) AS estimated_monthly_metric_value_sum
     FROM estimated_monthly_metric_value_sum
     WHERE delivery = 'Self-Managed'
