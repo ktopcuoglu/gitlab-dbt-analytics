@@ -2,13 +2,14 @@ version: 2
 
 exposures:
   
-  - name: pump_marketing_contact
+  - name: pump_marketing_premium_to_ultimate
     type: application
     maturity: low
     description: >
       Send to Marketo for use in email campaigns
     
     depends_on:
+      - ref('pump_marketing_contact')
       - ref('mart_marketing_contact')
       - ref('dim_marketing_contact')
       

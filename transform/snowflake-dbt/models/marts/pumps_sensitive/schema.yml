@@ -114,3 +114,5 @@ models:
         description: use in pump copy command, but not mapped to Marketo
   - name: pump_subscription_product_usage
     description: '{{ doc("pump_subscription_product_usage") }}'
+  - name: pump_marketing_premium_to_ultimate
+    description: '{{ doc("pump_marketing_premium_to_ultimate") }}'
