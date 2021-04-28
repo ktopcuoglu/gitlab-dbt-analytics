@@ -47,9 +47,7 @@ with open(f"{airflow_home}/analytics/extract/sheetload/drives.yml", "r") as file
     except YAMLError as exc:
         print(exc)
 
-    folders = [
-        folder for folder in stream["folders"]
-    ]
+    folders = [folder for folder in stream["folders"]]
 
 runs = []
 
@@ -87,7 +85,7 @@ for folder in folders:
             SNOWFLAKE_LOAD_USER,
             SNOWFLAKE_LOAD_WAREHOUSE,
             SNOWFLAKE_LOAD_PASSWORD,
-            SNOWFLAKE_LOAD_DATABASE
+            SNOWFLAKE_LOAD_DATABASE,
         ],
         env_vars=pod_env_vars,
         affinity=get_affinity(False),
@@ -96,4 +94,3 @@ for folder in folders:
         dag=dag,
     )
     runs.append(folder_run)
-

@@ -319,11 +319,11 @@ def csv_loader(
 
 
 def drive_loader(
-        drive_file: str,
-        schema: str = "driveload",
-        table_name: str = None,
-        gapi_keyfile: str = None,
-        conn_dict: Dict[str, str] = None,
+    drive_file: str,
+    schema: str = "driveload",
+    table_name: str = None,
+    gapi_keyfile: str = None,
+    conn_dict: Dict[str, str] = None,
 ):
     engine = snowflake_engine_factory(conn_dict or env, "LOADER", schema)
     info(engine)
@@ -334,7 +334,8 @@ def drive_loader(
         stream = safe_load(file)
 
         folders = [
-            folder for folder in stream["folders"]
+            folder
+            for folder in stream["folders"]
             if (table_name is None or folder.get("table_name") == table_name)
         ]
 
@@ -345,7 +346,7 @@ def drive_loader(
         info(f"Processing folder {folder_name}")
 
         folder_id = google_drive_client.get_item_id(folder_name)
-        archive_folder_id = google_drive_client.get_item_id('Archive', folder_id, True)
+        archive_folder_id = google_drive_client.get_item_id("Archive", folder_id, True)
 
         if archive_folder_id is None:
             archive_folder_id = google_drive_client.create_folder("Archive", folder_id)
@@ -354,7 +355,7 @@ def drive_loader(
         available_files = len(files)
         info(f"Found {str(available_files)} to process")
         for file in files:
-            file_id = file.get('id')
+            file_id = file.get("id")
             data = google_drive_client.get_data_frame_from_file_id(file_id)
             dw_uploader_append_only(engine, table=table_name, data=data)
             google_drive_client.move_file_to_folder(file_id, archive_folder_id)
@@ -370,7 +371,7 @@ if __name__ == "__main__":
             "s3": s3_loader,
             "csv": csv_loader,
             "qualtrics": qualtrics_loader,
-            "drive": drive_loader
+            "drive": drive_loader,
         }
     )
     info("Complete.")
