@@ -331,10 +331,7 @@ def drive_loader(
     google_drive_client = GoogleDriveClient(gapi_keyfile)
 
     with open(drive_file, "r") as file:
-        try:
-            stream = safe_load(file)
-        except YAMLError as exc:
-            print(exc)
+        stream = safe_load(file)
 
         folders = [
             folder for folder in stream["folders"]
