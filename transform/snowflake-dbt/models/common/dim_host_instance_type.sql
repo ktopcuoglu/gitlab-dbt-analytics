@@ -1,18 +1,14 @@
 {{ simple_cte([
-    ('crm_accounts', 'dim_crm_account')
+    ('crm_accounts', 'dim_crm_account'),
+    ('gainsight_instance_info', 'gainsight_instance_info_source')
 ]) }}
 
-, gainsight_instance_info AS (
-
-    SELECT *
-    FROM {{ ref('gainsight_instance_info')}}
-
-), final AS (
+, final AS (
 
     SELECT  
-      host_instance_type.instance_uuid                              AS instance_uuid,
-      host_instance_type.hostname                                   AS instance_hostname,
-      host_instance_type.instancetype                               AS instance_type,
+      gainsight_instance_info.instance_uuid                         AS instance_uuid,
+      gainsight_instance_info.instance_hostname                     AS instance_hostname,
+      gainsight_instance_info.instance_type                         AS instance_type,
       {{ get_keyed_nulls('crm_accounts.dim_crm_account_id')  }}     AS dim_crm_account_id,
       crm_accounts.crm_account_name
     FROM gainsight_instance_info
