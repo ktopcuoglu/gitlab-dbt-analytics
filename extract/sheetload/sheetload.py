@@ -342,6 +342,9 @@ def drive_loader(
     for folder in folders:
         folder_name = folder.get("folder_name")
         table_name = folder.get("table_name")
+        # mypy fix
+        if table_name is None:
+            raise ValueError
 
         info(f"Processing folder {folder_name}")
 
@@ -352,8 +355,8 @@ def drive_loader(
             archive_folder_id = google_drive_client.create_folder("Archive", folder_id)
 
         files = google_drive_client.get_files_in_folder(folder_id, "text/csv")
-        available_files = len(files)
-        info(f"Found {str(available_files)} to process")
+        info(f"Found {str(len(files))} to process")
+
         for file in files:
             file_id = file.get("id")
             data = google_drive_client.get_data_frame_from_file_id(file_id)

@@ -1,3 +1,5 @@
+from typing import Dict, List
+
 from googleapiclient.discovery import build
 from oauth2client.service_account import ServiceAccountCredentials
 from os import environ as env
@@ -36,7 +38,7 @@ class GoogleDriveClient:
         df = pd.read_csv(BytesIO(bytes_data))
         return df
 
-    def get_item_id(self, item_name, in_folder_id=None, is_folder=None) -> list:
+    def get_item_id(self, item_name, in_folder_id=None, is_folder=None) -> List[Dict]:
         """ """
         query = f"fullText contains '{item_name}'"
 
@@ -83,7 +85,7 @@ class GoogleDriveClient:
 
         return folder_id
 
-    def get_files_in_folder(self, folder_id, file_type) -> list:
+    def get_files_in_folder(self, folder_id, file_type) -> List:
         """
 
         :param folder_id:
