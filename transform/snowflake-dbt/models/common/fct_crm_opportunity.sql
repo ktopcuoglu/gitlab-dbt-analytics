@@ -256,6 +256,8 @@
 
     FROM sfdc_opportunity
 
+    
+
 ), final_opportunities AS (
 
     SELECT
