@@ -219,12 +219,12 @@ models:
               field: dim_crm_account_id
         tags: ["tdf", "opportunity", "common", "sales_funnel"]
       - name: opportunity_name
-      - name: dim_crm_sales_rep_id
-        description: Sourced from the opportunity owner_id this key is for joining to dim_crm_sales_representative
+      - name: dim_crm_user_id
+        description: Sourced from the opportunity owner_id this key is for joining to dim_crm_user
         tests:
           - relationships:
-              to: ref('dim_crm_sales_representative')
-              field: dim_crm_sales_rep_id
+              to: ref('dim_crm_user')
+              field: dim_crm_user_id
         tags: ["tdf", "opportunity", "common", "sales_funnel"]
       - name: lead_source
       - name: merged_crm_opportunity_id
@@ -634,21 +634,10 @@ models:
       - name: product_ranking
         description: Numeric product pricing tier, independent of delivery type.
 
-  - name: dim_crm_sales_rep
-    description: '{{ doc("dim_crm_sales_rep") }}'
+  - name: dim_crm_user
+    description: '{{ doc("dim_crm_user") }}'
     columns:
-      - name: crm_sales_rep_id
-        description: Primary key for Salesforce users and the primary key for this dimension
-        tests:
-          - unique
-          - not_null
-      - name: is_active
-        description: A boolean column that flags if the user is active in salesforce, which means that the user can login and use salesforce.
-
-  - name: dim_crm_sales_representative
-    description: '{{ doc("dim_crm_sales_rep") }}'
-    columns:
-      - name: dim_crm_sales_rep_id
+      - name: dim_crm_user_id
         description: Primary key for Salesforce users and the primary key for this dimension
         tests:
           - unique
@@ -1060,8 +1049,8 @@ models:
         description: the record id from Salesforce whether a contactId or a leadId
       - name: bizible_person_id
         description: The unique identifier assigned to a lead or contact in Bizible used to join to touchpoint and attribution data.
-      - name: dim_crm_sales_rep_id
-        description: the ownerid from the lead or contact respectively for joining on dim_crm_sales_rep
+      - name: dim_crm_user_id
+        description: the ownerid from the lead or contact respectively for joining on dim_crm_user
       - name: dim_crm_account_id
         description: the accountId from contacts and lean_data_matched_account from leads to join on dim_crm_account
         tests:
@@ -1744,7 +1733,7 @@ models:
         tests:
           - not_null
           - unique
-  
+
   - name: fct_sales_funnel_partner_alliance_target
     description: '{{ doc("fct_sales_funnel_partner_alliance_target") }}'
     columns:

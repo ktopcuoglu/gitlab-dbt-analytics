@@ -20,7 +20,7 @@ WITH crm_person AS (
       record_type_id,
       dim_crm_account_id,
       reports_to_id,
-      dim_crm_sales_rep_id,
+      dim_crm_user_id,
 
       --info
       person_score,
@@ -45,5 +45,5 @@ WITH crm_person AS (
     created_by="@jjstark",
     updated_by="@iweeks",
     created_date="2020-09-10",
-    updated_date="2021-02-12"
+    updated_date="2021-04-22"
 ) }}

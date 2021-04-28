@@ -34,7 +34,7 @@ WITH crm_account_dimensions AS (
 
       opportunity_id                                            AS dim_crm_opportunity_id,
       account_id                                                AS dim_crm_account_id,
-      owner_id                                                  AS dim_crm_sales_rep_id,
+      owner_id                                                  AS dim_crm_user_id,
       deal_path,
       order_type_stamped                                        AS order_type,
       sales_segment,
@@ -46,7 +46,7 @@ WITH crm_account_dimensions AS (
 
     SELECT
       opportunity_fields.dim_crm_opportunity_id,
-      {{ get_keyed_nulls('opportunity_fields.dim_crm_sales_rep_id') }}                                                  AS dim_crm_sales_rep_id,
+      {{ get_keyed_nulls('opportunity_fields.dim_crm_user_id') }}                                                       AS dim_crm_user_id,
       {{ get_keyed_nulls('order_type.dim_order_type_id') }}                                                             AS dim_order_type_id,
       {{ get_keyed_nulls('sales_qualified_source.dim_sales_qualified_source_id') }}                                     AS dim_sales_qualified_source_id,
       {{ get_keyed_nulls('deal_path.dim_deal_path_id') }}                                                               AS dim_deal_path_id,
@@ -80,7 +80,7 @@ WITH crm_account_dimensions AS (
 {{ dbt_audit(
     cte_ref="opportunities_with_keys",
     created_by="@snalamaru",
-    updated_by="@smcooperDD",
+    updated_by="@iweeks",
     created_date="2020-12-17",
-    updated_date="2021-03-04"
+    updated_date="2021-04-22"
 ) }}

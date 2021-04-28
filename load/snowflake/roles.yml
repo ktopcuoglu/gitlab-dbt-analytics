@@ -57,6 +57,11 @@ databases:
     - jstark_prep:
         shared: no
 
+    - kaguilar_prod:
+        shared: no
+    - kaguilar_prep:
+        shared: no
+
     - laddula_prod:
         shared: no
     - laddula_prep:
@@ -70,6 +75,11 @@ databases:
     - mpeychet_prod:
         shared: no
     - mpeychet_prep:
+        shared: no
+
+    - mvilain_prod:
+        shared: no
+    - mvilain_prep:
         shared: no
 
     - mwalker_prod:
@@ -2337,6 +2347,39 @@ roles:
             - data_team_analyst
         warehouses:
             - analyst_xs
+        owns:
+            databases:
+                - kaguilar_prep
+                - kaguilar_prod
+            schemas:
+                - kaguilar_prep.*
+                - kaguilar_prod.*
+            tables:
+                - kaguilar_prep.*.*
+                - kaguilar_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - kaguilar_prep
+                    - kaguilar_prod
+                write:
+                    - kaguilar_prep
+                    - kaguilar_prod
+            schemas:
+                read:
+                    - kaguilar_prep.*
+                    - kaguilar_prod.*
+                write:
+                    - kaguilar_prep.*
+                    - kaguilar_prod.*
+            tables:
+                read:
+                    - kaguilar_prep.*.*
+                    - kaguilar_prod.*.*
+                write:
+                    - kaguilar_prep.*.*
+                    - kaguilar_prod.*.*
+
 
     - kchu:
         member_of:
@@ -2538,6 +2581,38 @@ roles:
             - analyst_sales
         warehouses:
             - analyst_xs
+        owns:
+            databases:
+                - mvilain_prep
+                - mvilain_prod
+            schemas:
+                - mvilain_prep.*
+                - mvilain_prod.*
+            tables:
+                - mvilain_prep.*.*
+                - mvilain_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - mvilain_prep
+                    - mvilain_prod
+                write:
+                    - mvilain_prep
+                    - mvilain_prod
+            schemas:
+                read:
+                    - mvilain_prep.*
+                    - mvilain_prod.*
+                write:
+                    - mvilain_prep.*
+                    - mvilain_prod.*
+            tables:
+                read:
+                    - mvilain_prep.*.*
+                    - mvilain_prod.*.*
+                write:
+                    - mvilain_prep.*.*
+                    - mvilain_prod.*.*
 
     - mwalker:
         member_of:
