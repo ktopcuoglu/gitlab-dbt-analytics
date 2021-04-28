@@ -3,10 +3,10 @@ WITH crm_account_dimensions AS (
     SELECT *
     FROM {{ ref('map_crm_account')}}
 
-), map_merged_crm_accounts AS (
+), map_merged_crm_account AS (
 
     SELECT *
-    FROM {{ ref('map_merged_crm_accounts') }}
+    FROM {{ ref('map_merged_crm_account') }}
 
 ), zuora_account AS (
 
@@ -28,7 +28,7 @@ WITH crm_account_dimensions AS (
 
       --shared dimension keys
       zuora_invoice.account_id                                          AS dim_billing_account_id,
-      map_merged_crm_accounts.dim_crm_account_id                        AS dim_crm_account_id,
+      map_merged_crm_account.dim_crm_account_id                        AS dim_crm_account_id,
       crm_account_dimensions.dim_parent_crm_account_id,
       crm_account_dimensions.dim_parent_sales_segment_id,
       crm_account_dimensions.dim_parent_sales_territory_id,
@@ -73,16 +73,16 @@ WITH crm_account_dimensions AS (
     FROM zuora_invoice
     INNER JOIN zuora_account
       ON zuora_invoice.account_id = zuora_account.account_id
-    LEFT JOIN map_merged_crm_accounts
-      ON zuora_account.crm_id = map_merged_crm_accounts.sfdc_account_id
+    LEFT JOIN map_merged_crm_account
+      ON zuora_account.crm_id = map_merged_crm_account.sfdc_account_id
     LEFT JOIN crm_account_dimensions
-      ON map_merged_crm_accounts.dim_crm_account_id = crm_account_dimensions.dim_crm_account_id
+      ON map_merged_crm_account.dim_crm_account_id = crm_account_dimensions.dim_crm_account_id
 )
 
 {{ dbt_audit(
     cte_ref="final_invoice",
     created_by="@mcooperDD",
-    updated_by="@mcooperDD",
+    updated_by="@paul_armstrong",
     created_date="2021-01-20",
-    updated_date="2021-03-04"
+    updated_date="2021-04-26"
 ) }}
