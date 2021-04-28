@@ -23,8 +23,6 @@ WITH zuora_rate_plan AS (
       {{ get_date_id('zuora_rate_plan_charge.effective_end_date') }}    AS effective_end_date_id,
       zuora_rate_plan_charge.effective_start_date,
       zuora_rate_plan_charge.effective_end_date,
-      {{ get_date_id('zuora_rate_plan_charge.effective_start_month') }} AS effective_start_month_id,
-      {{ get_date_id('zuora_rate_plan_charge.effective_end_month') }}   AS effective_end_month_id,
       zuora_rate_plan_charge.effective_start_month,
       zuora_rate_plan_charge.effective_end_month,
       zuora_rate_plan_charge.unit_of_measure,
