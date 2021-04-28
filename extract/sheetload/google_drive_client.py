@@ -73,7 +73,7 @@ class GoogleDriveClient:
         }
 
         if in_folder_id:
-            file_metadata = file_metadata.update({"parents": [in_folder_id]})
+            file_metadata.update({"parents": [in_folder_id]})
 
         created_folder = (
             self.service.files().create(body=file_metadata, fields="id").execute()
