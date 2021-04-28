@@ -19,27 +19,26 @@ class GoogleDriveClient:
         #   ServiceAccountCredentials.from_json_keyfile_name(keyfile, scope)
         self.service = build('drive', 'v3', credentials=creds)
 
-    def get_data_frame_from_file_id(self, file_id):
+    def get_data_frame_from_file_id(self, file_id) -> pd.Dataframe:
         """
                 Google drive does not allow direct csv reading from the urls, so we need to
                 download the file using their API method, create a df and then delete the local file
             :return:
             """
+        if file_id:
+            request = self.service.files().get_media(fileId=file_id)
+            fh = BytesIO()
+            downloader = MediaIoBaseDownload(fh, request)
+            done = False
+            while not done:
+                status, done = downloader.next_chunk()
+                print("Download %d%%." % int(status.progress() * 100))
 
-        request = self.service.files().get_media(fileId=file_id)
-        fh = BytesIO()
-        downloader = MediaIoBaseDownload(fh, request)
-        done = False
-        while not done:
-            status, done = downloader.next_chunk()
-            print("Download %d%%." % int(status.progress() * 100))
+            bytes_data = fh.getvalue()
+            df = pd.read_csv(BytesIO(bytes_data))
+            return df
 
-        bytes_data = fh.getvalue()
-        df = pd.read_csv(BytesIO(bytes_data))
-
-        return df
-
-    def get_item_id(self, item_name, in_folder_id=None, is_folder=None):
+    def get_item_id(self, item_name, in_folder_id=None, is_folder=None) -> int:
         """
 
         """
@@ -62,7 +61,7 @@ class GoogleDriveClient:
         else:
             return items[0].get('id')
 
-    def create_folder(self, folder_name, in_folder_id):
+    def create_folder(self, folder_name, in_folder_id) -> int:
         """
 
         :param service:
@@ -85,11 +84,11 @@ class GoogleDriveClient:
 
         return folder_id
 
-    def get_files_in_folder(self, folder_id, file_type):
+    def get_files_in_folder(self, folder_id, file_type) -> list:
         """
 
-        :param service:
         :param folder_id:
+        :param file_type:
         :return:
         """
         query = f"'{folder_id}' in parents " \
@@ -109,7 +108,7 @@ class GoogleDriveClient:
         else:
             return items
 
-    def move_file_to_folder(self, file_id, to_folder_id):
+    def move_file_to_folder(self, file_id, to_folder_id) -> bool:
         """
 
         """

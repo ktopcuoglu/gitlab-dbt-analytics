@@ -2,14 +2,12 @@ import sys
 import re
 from io import StringIO
 import json
-import time
 from logging import error, info, basicConfig, getLogger, warning
 from os import environ as env
 from typing import Dict, Tuple, List
 from yaml import load, safe_load, YAMLError
 
 import boto3
-import gspread
 import pandas as pd
 from fire import Fire
 from gitlabdata.orchestration_utils import (
@@ -21,12 +19,8 @@ from google_sheets_client import GoogleSheetsClient
 from google_drive_client import GoogleDriveClient
 from google.cloud import storage
 from google.oauth2 import service_account
-from gspread.exceptions import APIError
-from gspread import Client
-from oauth2client.service_account import ServiceAccountCredentials
 from sheetload_dataframe_utils import dw_uploader
 from sheetload_dataframe_utils import dw_uploader_append_only
-from sqlalchemy.engine.base import Engine
 from qualtrics_sheetload import qualtrics_loader
 
 
@@ -361,15 +355,12 @@ def drive_loader(
 
         files = google_drive_client.get_files_in_folder(folder_id, "text/csv")
         available_files = len(files)
-        if available_files > 0:
-            info(f"Found {str(available_files)} to process")
-            for file in files:
-                file_id = file.get('id')
-                data = google_drive_client.get_data_frame_from_file_id(file_id)
-                dw_uploader_append_only(engine, table=table_name, data=data)
-                google_drive_client.move_file_to_folder(file_id, archive_folder_id)
-        else:
-            info(f"No files available to process")
+        info(f"Found {str(available_files)} to process")
+        for file in files:
+            file_id = file.get('id')
+            data = google_drive_client.get_data_frame_from_file_id(file_id)
+            dw_uploader_append_only(engine, table=table_name, data=data)
+            google_drive_client.move_file_to_folder(file_id, archive_folder_id)
 
 
 if __name__ == "__main__":
