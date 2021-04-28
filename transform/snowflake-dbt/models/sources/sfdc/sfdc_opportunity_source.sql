@@ -146,6 +146,8 @@ WITH source AS (
         tam_notes__c                                AS tam_notes,
         solution_architect__c                       AS primary_solution_architect,
         product_details__c                          AS product_details,
+        product_category__c                         AS product_category,
+        products_purchased__c                       AS products_purchased,
 
       -- ************************************
       -- sales segmentation deprecated fields - 2020-09-03

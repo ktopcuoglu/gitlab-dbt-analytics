@@ -214,7 +214,7 @@ WITH dim_billing_account AS (
       original_metric_value,
       dim_hosts.host_id,
       dim_hosts.source_ip_hash,
-      dim_usage_pings.id                        AS instance_id,
+      dim_usage_pings.uuid                      AS instance_id,
       dim_usage_pings.hostname                  AS host_name,
       dim_hosts.location_id,
       dim_location.country_name,

@@ -4,22 +4,22 @@ A fact table bridging opportunities with contacts. One opportunity can have mult
 
 {% enddocs %}
 
-{% docs bdg_namespace_order_subscription_active %}
+{% docs bdg_namespace_order_subscription %}
 
 The purpose of this table is two-fold:
 1. Connect **Ultimate Parent** Namespace ID to Subscription (and hence Zuora billing account and CRM Account)
 2. Connect Customer DB Customer ID to Subscription for self managed purchases. This helps with marketing efforts.
 
-This table expands the functionality of the orders by improving the join to ultimate parent namespaces and subscriptions. Namespaces listed in this table are all Active with prior trials and currently paid plans. Subscriptions and Orders listed in this table are all SaaS and currently active.
+This table expands the functionality of the orders by improving the join to ultimate parent namespaces and subscriptions. Namespaces listed in this table are all Active with prior trials and currently paid plans. Subscriptions and Orders listed in this table are all SaaS and the `is_active_subscription` column can be used to filter to subscription that are currently active.
 
 The tier(s) connected to the subscription are determined using the underlying Zuora recurring charges. This view uses a `FULL OUTER JOIN` to show all three sides of the Venn diagram. (namespace, orders, subscriptions)
 In doing so exceptions are noted within `namespace_order_subscription_match_status` to identify rows that do not match between systems.
 
 {% enddocs %}
 
-{% docs bdg_self_managed_order_subscription_active %}
+{% docs bdg_self_managed_order_subscription %}
 
-The purpose of this table to connect Order IDs from Customer DB to Subscription for self managed purchases. This table expands the functionality of the subscriptions by improving the join to orders. Subscriptions and Orders listed in this table are all self-managed and currently active.
+The purpose of this table to connect Order IDs from Customer DB to Subscription for self managed purchases. This table expands the functionality of the subscriptions by improving the join to orders. Subscriptions and Orders listed in this table are all self-managed and the `is_active_subscription` column can be used to filter to subscription that are currently active.
 
 The tier(s) connected to the subscription are determined using the underlying Zuora recurring charges. This view uses a `FULL OUTER JOIN` to show all three parts of the Venn diagram (orders, subscriptions, and the overlap between the two).
 
@@ -270,15 +270,21 @@ Fact table representing quotes pulled from the Zuora billing system. These are a
 
 {% enddocs %}
 
+{% docs fct_sales_funnel_partner_alliance_target %}
+
+Sales funnel targets set by the Finance team to measure performance of Partner and Alliances Net ARR, broken down by sales hierarchy, and order attributes.
+
+{% enddocs %}
+
 {% docs fct_sales_funnel_target %}
 
 Sales funnel targets set by the Finance team to measure performance of important KPIs against goals, broken down by sales hierarchy, and order attributes.
 
 {% enddocs %}
 
-{% docs dim_crm_sales_rep %}
+{% docs dim_crm_user %}
 
-Dimension representing the associated sales rep from salesforce. Most often this will be the record owner, which is a ubiquitous field in salesforce.
+Dimension representing the associated user from salesforce. Most often this will be the record owner, which is a ubiquitous field in salesforce.
 
 {% enddocs %}
 

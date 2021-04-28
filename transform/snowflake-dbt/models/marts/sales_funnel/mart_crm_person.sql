@@ -54,11 +54,8 @@
       dim_crm_person.lead_source,
       dim_crm_person.source_buckets,
       dim_bizible_marketing_channel_path.bizible_marketing_channel_path_name,
-      CASE
-        WHEN LOWER(dim_sales_segment.sales_segment_name) LIKE '%unknown%' THEN 'SMB'
-        WHEN LOWER(dim_sales_segment.sales_segment_name) LIKE '%mid%' THEN 'Mid-Market'
-        ELSE dim_sales_segment.sales_segment_name
-      END                                                        AS sales_segment_name,
+      dim_sales_segment.sales_segment_name,
+      dim_sales_segment.sales_segment_grouped,
       fct_crm_person.is_mql,
       CASE
         WHEN bizible_marketing_channel_path_name = 'Trial' THEN TRUE
@@ -109,7 +106,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@iweeks",
+    updated_by="@jpeguero",
     created_date="2020-12-07",
-    updated_date="2021-02-12",
+    updated_date="2021-04-26",
   ) }}

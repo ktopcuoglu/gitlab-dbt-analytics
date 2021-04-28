@@ -766,8 +766,9 @@ WITH gitlab_subscriptions AS (
                 user_created_at,
                 event_created_at)/(24 * 7))               AS weeks_since_user_creation
     FROM data
-      LEFT JOIN users
-        ON data.user_id = users.user_id
+    LEFT JOIN users
+      ON data.user_id = users.user_id
+    WHERE event_created_at < CURRENT_DATE()
     
 )
 

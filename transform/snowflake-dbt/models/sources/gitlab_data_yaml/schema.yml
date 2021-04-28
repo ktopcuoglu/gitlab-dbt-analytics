@@ -91,5 +91,6 @@ models:
 
   - name: team_yaml_source
     description: Emphemeral layer for extracting and cleaning data from [team.yml file](https://gitlab.com/gitlab-com/www-gitlab-com/blob/master/data/team.yml) in the GitLab Handbook.
-
+  - name: usage_ping_metrics_source
+    description: Layer for extracting and cleaning data from [unified usage ping metrics file](https://gitlab.com/api/v4/usage_data/metric_definitions).
 

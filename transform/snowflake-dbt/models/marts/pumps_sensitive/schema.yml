@@ -88,14 +88,8 @@ models:
         description: Mapped to `CDB_Is_Self_Managed_Starter_Tier__c` in Marketo
       - name: is_self_managed_ultimate_tier
         description: Mapped to `CDB_Is_Self_Managed_Ultimate_Tier__c` in Marketo
-      - name: is_sfdc_lead_contact
-        description: Already available in Marketo
-      - name: is_sfdc_opted_out
-        description: Already available in Marketo
       - name: is_zuora_billing_contact
-        description: In Salesforce
-      - name: job_title
-        description: Mapped to `Title` in Marketo
+        description: Mapped to `is_zuora_billing_contact__c` in Marketo
       - name: last_name
         description: Mapped to `LastName` in Marketo
       - name: responsible_for_free_tier_only
@@ -110,17 +104,13 @@ models:
         description: Mapped to `CDB_Resp_for_Group_SaaS_Trial__c` in Marketo
       - name: responsible_for_group_saas_ultimate_tier
         description: Mapped to `CDB_Resp_for_Group_Saas_Ultimate_Tier__c` in Marketo
-      - name: sfdc_created_date
-        description: Already available in Marketo
-      - name: sfdc_lead_contact
-        description: Already available in Marketo
-      - name: sfdc_parent_sales_segment
-        description: Already available in Marketo
       - name: zuora_active_state
-        description: In Salesforce
+        description: Mapped to `zuora_active_state__c` in Marketo
       - name: zuora_contact_id
-        description: In Salesforce
+        description: Mapped to `zuora_contact_id__c` in Marketo
       - name: zuora_created_date
-        description: In Salesforce
+        description: Mapped to `zuora_created_date__c` in Marketo
       - name: last_changed
         description: use in pump copy command, but not mapped to Marketo
+  - name: pump_subscription_product_usage
+    description: '{{ doc("pump_subscription_product_usage") }}'

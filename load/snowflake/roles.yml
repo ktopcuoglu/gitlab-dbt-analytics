@@ -57,6 +57,11 @@ databases:
     - jstark_prep:
         shared: no
 
+    - kaguilar_prod:
+        shared: no
+    - kaguilar_prep:
+        shared: no
+
     - laddula_prod:
         shared: no
     - laddula_prep:
@@ -70,6 +75,11 @@ databases:
     - mpeychet_prod:
         shared: no
     - mpeychet_prep:
+        shared: no
+
+    - mvilain_prod:
+        shared: no
+    - mvilain_prep:
         shared: no
 
     - mwalker_prod:
@@ -592,6 +602,29 @@ roles:
                     - prod.boneyard.*
                     - raw.*.*
 
+    - mashey:
+        warehouses:
+            - engineer_xs
+        member_of:
+            - zoom
+            - xactly
+            - adaptive
+        privileges:
+            databases:
+                write:
+                   - raw
+            schemas:
+              write:
+                  - raw.tap_zoom
+                  - raw.tap_adaptive
+                  - raw.tap_xactly
+            tables:
+              write:
+                  - raw.tap_zoom.*
+                  - raw.tap_adaptive.*
+                  - raw.tap_xactly.*   
+
+
     - people_operations:
         warehouses:
             - analyst_xs
@@ -758,6 +791,20 @@ roles:
 # ==========================================
 # Object Roles
 # ==========================================
+    - adaptive:
+        warehouses:
+            - analyst_xs
+        privileges:
+            databases:
+                read:
+                    - raw
+            schemas:
+                read:
+                    - raw.tap_adaptive
+            tables:
+                read:
+                    - raw.tap_adaptive.*
+
     - bamboohr_analytics:
         warehouses:
             - analyst_xs
@@ -1003,9 +1050,10 @@ roles:
                     - prep.preparation
                     - prod.common
                     - prod.common_mart_product
+                    - prod.common_mapping
             tables:
                 read:
-                    - prep.preparation.prep_usage_ping_no_license_key
+                    - prod.common_mapping.prep_usage_ping_no_license_key
                     - prod.common_mart_product.mart_product_usage_wave_1_3_metrics_latest
                     - prod.common_mart_product.mart_product_usage_wave_1_3_metrics_monthly
                     - prod.common_mart_product.mart_product_usage_wave_1_3_metrics_monthly_diff
@@ -1634,6 +1682,19 @@ roles:
                     - prep.saas_usage_ping.*
                     - raw.version_db.*
 
+    - xactly:
+        warehouses:
+            - analyst_xs
+        privileges:
+            databases:
+                read:
+                    - raw
+            schemas:
+                read:
+                    - raw.tap_xactly
+            tables:
+                read:
+                    - raw.tap_xactly.*
 
     - zendesk:
         warehouses:
@@ -1668,6 +1729,20 @@ roles:
                   read:
                       - prep.zendesk_community_relations.*
                       - raw.zendesk_community_relations_stitch.*
+
+    - zoom:
+        warehouses:
+            - analyst_xs
+        privileges:
+            databases:
+                read:
+                    - raw
+            schemas:
+                read:
+                    - raw.tap_zoom
+            tables:
+                read:
+                    - raw.tap_zoom.*
 
     - zuora:
         warehouses:
@@ -1765,11 +1840,8 @@ roles:
             - admin
 
     - bmenegocci:
-        member_of:
-            - analyst_finance
-            - bamboohr_analytics
-        warehouses:
-            - analyst_xs
+        member_of: []
+        warehouses: []
 
     - brittany:
         member_of:
@@ -1780,6 +1852,13 @@ roles:
     - brufener:
         member_of:
             - bamboohr_sensitive_separations
+        warehouses:
+            - analyst_xs
+
+    - camsmith:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
         warehouses:
             - analyst_xs
 
@@ -2140,6 +2219,12 @@ roles:
         warehouses:
             - analyst_xs
 
+    - jordan:
+        member_of:
+            - mashey
+        warehouses:
+            - analyst_xs
+
     - jpeguero:
         member_of:
             - analyst_marketing
@@ -2262,6 +2347,39 @@ roles:
             - data_team_analyst
         warehouses:
             - analyst_xs
+        owns:
+            databases:
+                - kaguilar_prep
+                - kaguilar_prod
+            schemas:
+                - kaguilar_prep.*
+                - kaguilar_prod.*
+            tables:
+                - kaguilar_prep.*.*
+                - kaguilar_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - kaguilar_prep
+                    - kaguilar_prod
+                write:
+                    - kaguilar_prep
+                    - kaguilar_prod
+            schemas:
+                read:
+                    - kaguilar_prep.*
+                    - kaguilar_prod.*
+                write:
+                    - kaguilar_prep.*
+                    - kaguilar_prod.*
+            tables:
+                read:
+                    - kaguilar_prep.*.*
+                    - kaguilar_prod.*.*
+                write:
+                    - kaguilar_prep.*.*
+                    - kaguilar_prod.*.*
+
 
     - kchu:
         member_of:
@@ -2334,6 +2452,13 @@ roles:
         warehouses:
             - analyst_xs
 
+    - lnewbury:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+        warehouses:
+            - analyst_xs
+
     - lvandensteen:
         member_of:
             - analyst_people
@@ -2399,6 +2524,10 @@ roles:
         warehouses:
             - reporting
 
+    - mlancini:
+        warehouses:
+            - reporting
+
     - mpeychet:
         member_of:
             - analyst_growth
@@ -2452,6 +2581,38 @@ roles:
             - analyst_sales
         warehouses:
             - analyst_xs
+        owns:
+            databases:
+                - mvilain_prep
+                - mvilain_prod
+            schemas:
+                - mvilain_prep.*
+                - mvilain_prod.*
+            tables:
+                - mvilain_prep.*.*
+                - mvilain_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - mvilain_prep
+                    - mvilain_prod
+                write:
+                    - mvilain_prep
+                    - mvilain_prod
+            schemas:
+                read:
+                    - mvilain_prep.*
+                    - mvilain_prod.*
+                write:
+                    - mvilain_prep.*
+                    - mvilain_prod.*
+            tables:
+                read:
+                    - mvilain_prep.*.*
+                    - mvilain_prod.*.*
+                write:
+                    - mvilain_prep.*.*
+                    - mvilain_prod.*.*
 
     - mwalker:
         member_of:
@@ -3050,9 +3211,8 @@ users:
             - securityadmin
 
     - bmenegocci:
-        can_login: yes
-        member_of:
-            - bmenegocci
+        can_login: no
+        member_of: []
 
     - brittany:
         can_login: yes
@@ -3063,6 +3223,11 @@ users:
         can_login: yes
         member_of:
             - brufener
+
+    - camsmith:
+        can_login: yes
+        member_of:
+            - camsmith
 
     - cli:
         can_login: yes
@@ -3218,6 +3383,11 @@ users:
         can_login: no
         member_of: []
 
+    - jordan:
+        can_login: yes
+        member_of:
+            - jordan
+
     - jpeguero:
         can_login: yes
         member_of:
@@ -3291,6 +3461,11 @@ users:
         member_of:
             - lmai
 
+    - lnewbury:
+        can_login: yes
+        member_of:
+            - lnewbury
+
     - lvandensteen:
         can_login: yes
         member_of:
@@ -3325,6 +3500,12 @@ users:
         can_login: yes
         member_of:
             - mkarampalas
+
+    - mlancini:
+        can_login: yes
+        member_of:
+            - mlancini
+            - securityadmin
 
     - mpeychet:
         can_login: yes

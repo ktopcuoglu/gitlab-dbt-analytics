@@ -38,7 +38,10 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity.deal_path,
 
       -- opportunity information
-
+      
+      sfdc_opportunity.product_category,
+      sfdc_opportunity.product_details,
+      sfdc_opportunity.products_purchased,
       sfdc_opportunity.competitors,
       sfdc_opportunity.critical_deal_flag,
       sfdc_opportunity.forecast_category_name,
@@ -103,7 +106,7 @@ WITH sfdc_opportunity AS (
 {{ dbt_audit(
     cte_ref="layered",
     created_by="@iweeks",
-    updated_by="@iweeks",
+    updated_by="@jpeguero",
     created_date="2020-11-20",
-    updated_date="2021-03-23"
+    updated_date="2021-04-22"
 ) }}

@@ -33,8 +33,8 @@ WITH crm_account AS (
       --shared dimension keys
       quote.zqu__opportunity                                AS dim_crm_opportunity_id,
       quote.zqu__zuora_subscription_id                      AS dim_subscription_id,
-      quote.owner_id                                        AS dim_crm_sales_rep_id,
-      opportunity_dimensions.dim_crm_sales_rep_id           AS opp_dim_crm_sales_rep_id,
+      quote.owner_id                                        AS dim_crm_user_id,
+      opportunity_dimensions.dim_crm_user_id                AS opp_dim_crm_user_id,
       opportunity_dimensions.dim_order_type_id              AS opp_dim_order_type_id,
       opportunity_dimensions.dim_sales_qualified_source_id  AS opp_dim_sales_qualified_source_id,
       opportunity_dimensions.dim_deal_path_id               AS opp_dim_deal_path_id,
