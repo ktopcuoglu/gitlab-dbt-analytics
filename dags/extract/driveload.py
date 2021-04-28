@@ -1,6 +1,5 @@
 import os
 from datetime import datetime, timedelta
-from os import environ as env
 from yaml import load, safe_load, YAMLError
 
 from airflow import DAG
@@ -14,24 +13,12 @@ from airflow_utils import (
 )
 from kube_secrets import (
     GCP_SERVICE_CREDS,
-    GIT_DATA_TESTS_PRIVATE_KEY,
-    GIT_DATA_TESTS_CONFIG,
-    SALT,
-    SALT_EMAIL,
-    SALT_IP,
-    SALT_NAME,
-    SALT_PASSWORD,
     SNOWFLAKE_ACCOUNT,
     SNOWFLAKE_LOAD_PASSWORD,
     SNOWFLAKE_LOAD_ROLE,
     SNOWFLAKE_LOAD_USER,
     SNOWFLAKE_LOAD_WAREHOUSE,
     SNOWFLAKE_LOAD_DATABASE,
-    SNOWFLAKE_PASSWORD,
-    SNOWFLAKE_TRANSFORM_ROLE,
-    SNOWFLAKE_TRANSFORM_SCHEMA,
-    SNOWFLAKE_TRANSFORM_WAREHOUSE,
-    SNOWFLAKE_USER,
 )
 from kubernetes_helpers import get_affinity, get_toleration
 
