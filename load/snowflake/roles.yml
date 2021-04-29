@@ -1037,7 +1037,7 @@ roles:
                 read:
                     - raw.discourse.*
 
-    - gainsight_pump:
+    - gainsight:
         warehouses:
             - gainsight_xs
         privileges:
@@ -1045,34 +1045,20 @@ roles:
                 read:
                     - prep
                     - prod
+                    - raw
             schemas:
                 read:
                     - prep.preparation
                     - prod.common
                     - prod.common_mart_product
                     - prod.common_mapping
+                    - raw.gainsight
             tables:
                 read:
                     - prod.common_mapping.prep_usage_ping_no_license_key
                     - prod.common_mart_product.mart_product_usage_wave_1_3_metrics_latest
                     - prod.common_mart_product.mart_product_usage_wave_1_3_metrics_monthly
                     - prod.common_mart_product.mart_product_usage_wave_1_3_metrics_monthly_diff
-
-    - gainsight:
-        warehouses:
-            - analyst_xs
-        privileges:
-            databases:
-                read:
-                    - prep
-                    - raw
-            schemas:
-                read:
-                    - prep.gainsight
-                    - raw.gainsight
-            tables:
-                read:
-                    - prep.gainsight.*
                     - raw.gainsight.*
 
     - gcp_billing:
@@ -3344,7 +3330,7 @@ users:
     - gainsight:
         can_login: yes
         member_of:
-            - gainsight_pump
+            - gainsight
 
     - gitlab_ci:
         can_login: yes
