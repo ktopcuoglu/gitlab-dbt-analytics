@@ -213,10 +213,10 @@
 
       opportunity_id,
       CASE
-        WHEN is_won = 'TRUE'
+        WHEN (is_won = 'TRUE'
           AND is_closed = 'TRUE'
           AND is_edu_oss = 0
-          AND order_type = '1. New - First Order'
+          AND order_type = '1. New - First Order')
             THEN TRUE
         ELSE FALSE
       END                                                                         AS is_new_logo_first_order_asp
