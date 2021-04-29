@@ -38,7 +38,7 @@ class GoogleDriveClient:
         df = pd.read_csv(BytesIO(bytes_data))
         return df
 
-    def get_item_id(self, item_name, in_folder_id=None, is_folder=None) -> int:
+    def get_item_id(self, item_name, in_folder_id=None, is_folder=None) -> str:
         """ """
         query = f"fullText contains '{item_name}'"
 
@@ -56,7 +56,7 @@ class GoogleDriveClient:
         )
         items = results.get("files", [])
         if not items:
-            return []
+            return -1
         else:
             return items[0].get("id")
 
