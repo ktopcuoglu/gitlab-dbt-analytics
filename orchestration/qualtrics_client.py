@@ -24,8 +24,12 @@ class QualtricsClient:
         """
         url = self.base_url + url_path
         headers = {"X-API-TOKEN": self.api_token}
+        first_time_through = True
         while True:
-            response = requests.get(url, headers=headers, params=query_params)
+            if first_time_through:
+                response = requests.get(url, headers=headers, params=query_params)
+            else:
+                response = requests.get(url, headers=headers)
             response_body = response.json()
             if "result" not in response_body:
                 logging.warn(
@@ -37,6 +41,7 @@ class QualtricsClient:
                 yield element
             if "nextPage" in result and result["nextPage"]:
                 url = result["nextPage"]
+                first_time_through = False
             else:
                 break
 
