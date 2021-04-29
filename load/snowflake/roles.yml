@@ -2547,7 +2547,7 @@ roles:
         member_of:
             - analyst_growth
             - data_team_analyst
-            - gainsight
+            - gainsight_temp_source
         warehouses:
             - analyst_xs
             - analyst_l
