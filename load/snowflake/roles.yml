@@ -1037,7 +1037,7 @@ roles:
                 read:
                     - raw.discourse.*
 
-    - gainsight:
+    - gainsight: # to be renamed gainsight_pump, will require change to gainsight connection
         warehouses:
             - gainsight_xs
         privileges:
@@ -1045,21 +1045,32 @@ roles:
                 read:
                     - prep
                     - prod
-                    - raw
             schemas:
                 read:
                     - prep.preparation
                     - prod.common
                     - prod.common_mart_product
                     - prod.common_mapping
-                    - raw.gainsight
             tables:
                 read:
                     - prod.common_mapping.prep_usage_ping_no_license_key
                     - prod.common_mart_product.mart_product_usage_wave_1_3_metrics_latest
                     - prod.common_mart_product.mart_product_usage_wave_1_3_metrics_monthly
                     - prod.common_mart_product.mart_product_usage_wave_1_3_metrics_monthly_diff
-                    - raw.gainsight.*
+
+    - gainsight_temp_source # to be renamed gainsight
+        warehouses:
+            - analyst_xs
+        privileges:
+            databases:
+                read:
+                    - raw
+            schemas:
+                read:
+                    - raw.gcp_billing
+            tables:
+                read:
+                    - raw.gainsight.*    
 
     - gcp_billing:
         warehouses:
