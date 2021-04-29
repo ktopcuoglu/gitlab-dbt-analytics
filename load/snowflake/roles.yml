@@ -1058,7 +1058,7 @@ roles:
                     - prod.common_mart_product.mart_product_usage_wave_1_3_metrics_monthly
                     - prod.common_mart_product.mart_product_usage_wave_1_3_metrics_monthly_diff
 
-    - gainsight_temp_source # to be renamed gainsight
+    - gainsight_temp_source: # to be renamed gainsight
         warehouses:
             - analyst_xs
         privileges:
