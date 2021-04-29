@@ -2,16 +2,14 @@
     tags=["product"]
 ) }}
 
-WITH prep_namespace AS (
+{{ simple_cte([
+    ('prep_namespace', 'prep_namespace')
+]) }}
 
-    SELECT *
-    FROM {{ ref('prep_namespace') }}
-
-), joined AS (
+, final AS (
 
     SELECT
       dim_namespace_id,
-      namespace_id,
       namespace_is_internal,
       namespace_is_ultimate_parent,
       namespace_name,
@@ -49,12 +47,14 @@ WITH prep_namespace AS (
       current_member_count,
       current_project_count
     FROM prep_namespace
+    WHERE is_currently_valid = TRUE
+
 )
 
 {{ dbt_audit(
-    cte_ref="joined",
+    cte_ref="final",
     created_by="@snalamaru",
     updated_by="@ischweickartDD",
     created_date="2020-12-29",
-    updated_date="2021-01-14"
+    updated_date="2021-04-28"
 ) }}
