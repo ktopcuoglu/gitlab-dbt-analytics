@@ -60,10 +60,12 @@ class GoogleDriveClient:
         else:
             return items[0].get("id")
 
-    def get_archive_folder_id(self, item_name, in_folder_id=None, is_folder=None) -> str:
+    def get_archive_folder_id(
+        self, item_name, in_folder_id=None, is_folder=None
+    ) -> str:
         """
-            created to reduce complexity in main function,
-            convenience function which creates an archive folder if it doesn't already exist.
+        created to reduce complexity in main function,
+        convenience function which creates an archive folder if it doesn't already exist.
         """
         archive_folder_id = self.get_item_id("Archive", in_folder_id, True)
 
