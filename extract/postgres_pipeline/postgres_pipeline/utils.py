@@ -37,7 +37,7 @@ SCHEMA = "tap_postgres"
 
 
 def get_gcs_bucket(gapi_keyfile: str, bucket_name: str) -> Bucket:
-    """ Do the auth and return a usable gcs bucket object."""
+    """Do the auth and return a usable gcs bucket object."""
 
     scope = ["https://www.googleapis.com/auth/cloud-platform"]
     credentials = service_account.Credentials.from_service_account_info(gapi_keyfile)
@@ -76,7 +76,7 @@ def upload_to_gcs(
 def trigger_snowflake_upload(
     engine: Engine, table: str, upload_file_name: str, purge: bool = False
 ) -> None:
-    """ Trigger Snowflake to upload a tsv file from GCS."""
+    """Trigger Snowflake to upload a tsv file from GCS."""
     logging.info("Loading from GCS into SnowFlake")
 
     purge_opt = "purge = true" if purge else ""

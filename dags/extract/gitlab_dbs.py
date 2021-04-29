@@ -365,7 +365,14 @@ for source_name, config in config_dict.items():
                 xcom_push=True,
             )
 
-            incremental_extract >> short_circuit >> test >> snapshot >> model_run >> model_test
+            (
+                incremental_extract
+                >> short_circuit
+                >> test
+                >> snapshot
+                >> model_run
+                >> model_test
+            )
 
     globals()[f"{config['dag_name']}_db_extract"] = extract_dag
 
@@ -485,6 +492,13 @@ for source_name, config in config_dict.items():
                     xcom_push=True,
                 )
 
-                scd_extract >> short_circuit >> test >> snapshot >> model_run >> model_test
+                (
+                    scd_extract
+                    >> short_circuit
+                    >> test
+                    >> snapshot
+                    >> model_run
+                    >> model_test
+                )
 
     globals()[f"{config['dag_name']}_db_sync"] = sync_dag
