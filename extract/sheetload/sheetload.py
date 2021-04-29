@@ -280,6 +280,43 @@ def s3_loader(bucket: str, schema: str, conn_dict: Dict[str, str] = None) -> Non
             check_s3_csv_count_integrity(bucket, file, s3_client, engine, table)
 
 
+def csv_loader(
+    filename: str,
+    schema: str,
+    database: str = "RAW",
+    tablename: str = None,
+    header: str = "infer",
+    conn_dict: Dict[str, str] = None,
+):
+    """
+    Loads csv files from a local file system into a DataFrame and pass it to dw_uploader
+    for loading into Snowflake.
+
+    Tablename will use the name of the csv by default.
+    python sheetload.py csv --filename nvd.csv --schema engineering_extracts
+    becomes raw.engineering_extracts.nvd
+
+    Header will read the first row of the csv as the column names by default. Passing
+    None will use integers for each column.
+
+    python sheetload.py csv --filename nvd.csv --schema engineering_extracts --tablename nvd_data --header None
+    """
+
+    # Create Snowflake engine
+    engine = snowflake_engine_factory(conn_dict or env, "LOADER", schema)
+    info(engine)
+
+    csv_data = pd.read_csv(filename, header=header)
+
+    if tablename:
+        table = tablename
+    else:
+        table = filename.split(".")[0].split("/")[-1]
+
+    info(f"Uploading {filename} to {database}.{schema}.{table}")
+
+    dw_uploader(engine, table=table, data=csv_data, schema=schema, truncate=True)
+
 
 def drive_loader(
     drive_file: str,
