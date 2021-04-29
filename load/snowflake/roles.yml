@@ -1075,7 +1075,6 @@ roles:
                     - prep.gainsight.*
                     - raw.gainsight.*
 
-
     - gcp_billing:
         warehouses:
             - analyst_xs
