@@ -154,6 +154,10 @@ models:
       - name: dim_namespace_id
         tests:
           - not_null
+<<<<<<< HEAD
+=======
+          - unique
+>>>>>>> bfb031565 (Added historical namespaces to prep_namespace and updated trial plans in namespace lineage model)
         tags: ["tdf", "common", "gainsight"]
       - name: namespace_is_internal
       - name: namespace_is_ultimate_parent
