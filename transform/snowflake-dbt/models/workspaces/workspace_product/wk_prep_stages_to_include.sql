@@ -8,4 +8,3 @@ WITH smau_only AS (
 
 SELECT * 
 FROM smau_only
-
