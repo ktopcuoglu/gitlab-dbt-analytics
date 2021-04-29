@@ -163,6 +163,7 @@ WITH source AS (
           WHEN arr_net__c < 100000 THEN '25-100K'
           WHEN arr_net__c < 250000 THEN '100-250K'
           WHEN arr_net__c > 250000 THEN '250K+'
+          ELSE 'Missing opportunity_deal_size'
         END opportunity_deal_size,
 
       -- ************************************
