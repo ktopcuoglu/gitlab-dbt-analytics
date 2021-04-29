@@ -330,8 +330,8 @@ def drive_loader(
 
     google_drive_client = GoogleDriveClient(gapi_keyfile)
 
-    with open(drive_file, "r") as file:
-        stream = safe_load(file)
+    with open(drive_file, "r") as yaml_file:
+        stream = safe_load(yaml_file)
 
         folders = [
             folder

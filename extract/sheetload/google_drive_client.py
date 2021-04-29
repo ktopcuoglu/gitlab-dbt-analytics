@@ -56,7 +56,7 @@ class GoogleDriveClient:
         )
         items = results.get("files", [])
         if not items:
-            return -1
+            return ''
         else:
             return items[0].get("id")
 
@@ -108,7 +108,8 @@ class GoogleDriveClient:
             )
             .execute()
         )
-        items = results.get("files", [])
+        items: List[Dict] = results.get("files", [])
+
         if not items:
             return []
         else:
