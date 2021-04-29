@@ -3344,7 +3344,7 @@ users:
     - gainsight:
         can_login: yes
         member_of:
-            - gainsight
+            - gainsight_pump
 
     - gitlab_ci:
         can_login: yes
