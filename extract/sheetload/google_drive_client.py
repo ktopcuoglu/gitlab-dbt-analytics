@@ -56,7 +56,7 @@ class GoogleDriveClient:
         )
         items = results.get("files", [])
         if not items:
-            return ''
+            return ""
         else:
             return items[0].get("id")
 
