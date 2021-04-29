@@ -92,7 +92,7 @@ WITH source AS (
           WHEN sales_qualified_source = 'BDR Generated' THEN 'SDR Generated'
           WHEN sales_qualified_source LIKE ANY ('Web%', 'Missing%', 'Other') OR sales_qualified_source IS NULL THEN 'Web Direct Generated'
           ELSE sales_qualified_source
-        END                                         AS sales_qualified_source_grouped
+        END                                         AS sales_qualified_source_grouped,
         sdr_pipeline_contribution__c                AS sdr_pipeline_contribution,
         solutions_to_be_replaced__c                 AS solutions_to_be_replaced,
         x3_technical_evaluation_date__c
