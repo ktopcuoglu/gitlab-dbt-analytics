@@ -372,7 +372,7 @@
     LEFT JOIN alliance_type
       ON opportunity_fields.alliance_type = alliance_type.alliance_type_name
     LEFT JOIN channel_type
-      ON opportunity_fields.alliance_type = channel_type.channel_type_name
+      ON opportunity_fields.channel_type = channel_type.channel_type_name
     LEFT JOIN sales_rep
       ON opportunity_fields.dim_crm_user_id = sales_rep.dim_crm_user_id
     LEFT JOIN linear_attribution_base

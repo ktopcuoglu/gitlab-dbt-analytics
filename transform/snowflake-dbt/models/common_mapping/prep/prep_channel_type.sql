@@ -3,6 +3,7 @@ WITH sfdc_opportunity_source AS (
     SELECT *
     FROM {{ ref('sfdc_opportunity_source') }}
     WHERE NOT is_deleted
+      AND channel_type IS NOT NULL
 
 ), final AS (
 

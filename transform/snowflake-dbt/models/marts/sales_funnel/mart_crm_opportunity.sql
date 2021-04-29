@@ -158,7 +158,6 @@
       -- channel fields
       fct_crm_opportunity.lead_source,
       fct_crm_opportunity.dr_partner_deal_type,
-      fct_crm_opportunity.dr_partner_engagement,
       fct_crm_opportunity.partner_account,
       fct_crm_opportunity.dr_status,
       fct_crm_opportunity.distributor,

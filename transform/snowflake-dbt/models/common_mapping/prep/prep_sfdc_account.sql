@@ -35,8 +35,9 @@ WITH sfdc_account AS (
       ultimate_parent_account.tsp_territory                                                 AS ultimate_parent_tsp_territory,
       {{ sales_segment_cleaning("sfdc_account.ultimate_parent_sales_segment") }}            AS sales_segment,
       CASE 
-        WHEN sales_segment IN ('Large', 'PubSec') THEN 'Large'
-        ELSE sales_segment
+        WHEN {{ sales_segment_cleaning("sfdc_account.ultimate_parent_sales_segment") }} IN ('Large', 'PubSec')
+          THEN 'Large'
+        ELSE {{ sales_segment_cleaning("sfdc_account.ultimate_parent_sales_segment") }}
       END                                                                                   AS sales_segment_grouped,     
       sfdc_account.billing_country,
       sfdc_account.df_industry,
