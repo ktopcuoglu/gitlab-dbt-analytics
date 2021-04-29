@@ -1037,18 +1037,16 @@ roles:
                 read:
                     - raw.discourse.*
 
-    - gainsight:
+    - gainsight_pump:
         warehouses:
             - gainsight_xs
         privileges:
             databases:
                 read:
-                    - raw
                     - prep
                     - prod
             schemas:
                 read:
-                    - raw.gainsight
                     - prep.preparation
                     - prod.common
                     - prod.common_mart_product
@@ -1059,6 +1057,25 @@ roles:
                     - prod.common_mart_product.mart_product_usage_wave_1_3_metrics_latest
                     - prod.common_mart_product.mart_product_usage_wave_1_3_metrics_monthly
                     - prod.common_mart_product.mart_product_usage_wave_1_3_metrics_monthly_diff
+
+    - gainsight:
+        warehouses:
+            - analyst_xs
+        privileges:
+            databases:
+                read:
+                    - prep
+                    - raw
+            schemas:
+                read:
+                    - prep.gainsight
+                    - raw.gainsight
+            tables:
+                read:
+                    - prep.gainsight.*
+                    - raw.gainsight.*
+
+
     - gcp_billing:
         warehouses:
             - analyst_xs
