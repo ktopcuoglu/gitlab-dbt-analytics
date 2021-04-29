@@ -114,5 +114,5 @@ WITH sfdc_opportunity AS (
     created_by="@iweeks",
     updated_by="@jpeguero",
     created_date="2020-11-20",
-    updated_date="2021-04-22"
+    updated_date="2021-04-29"
 ) }}
