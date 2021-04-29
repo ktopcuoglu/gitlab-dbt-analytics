@@ -76,7 +76,7 @@
       sfdc_opportunity.opportunity_id                                            AS dim_crm_opportunity_id,
       sfdc_opportunity.merged_opportunity_id                                     AS merged_crm_opportunity_id,
       sfdc_opportunity.account_id                                                AS dim_crm_account_id,
-      sfdc_opportunity.owner_id                                                  AS dim_crm_sales_rep_id,
+      sfdc_opportunity.owner_id                                                  AS dim_crm_user_id,
       sfdc_opportunity.incremental_acv                                           AS iacv,
       sfdc_opportunity.net_arr,
       sfdc_opportunity.amount,

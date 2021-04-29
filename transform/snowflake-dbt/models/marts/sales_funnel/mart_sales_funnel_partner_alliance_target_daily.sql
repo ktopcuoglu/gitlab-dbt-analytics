@@ -28,7 +28,7 @@
       dim_order_type.order_type_name,
       dim_order_type.order_type_grouped,
       dim_dr_partner_engagement.dr_partner_engagement_name,
-      dim_channel_type.chanel_type_name,
+      dim_channel_type.channel_type_name,
       dim_alliance_type.alliance_type_name,
       dim_alliance_type.alliance_type_short_name,
       fct_sales_funnel_target.allocated_target
