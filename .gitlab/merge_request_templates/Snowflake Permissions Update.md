@@ -27,7 +27,3 @@ Closes #
 ### Warehouse
 
 - [ ] Confirm warehouse is created in Snowflake and matches size
-
-### All Changes
-
-- [ ] Add comment in the roles.yml next to user/role with a link to the Access Request issue
