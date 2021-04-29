@@ -1747,7 +1747,7 @@ models:
           - unique
         tags: ["tdf", "common", "sales_funnel"]
 
-  - name: fct_recurring_charge
+  - name: fct_charge_wip
     description: '{{ doc("fct_recurring_charge") }}'
     columns:
       - name: dim_subscription_id
