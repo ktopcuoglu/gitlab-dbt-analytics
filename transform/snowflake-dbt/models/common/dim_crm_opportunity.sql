@@ -63,16 +63,8 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity.professional_services_value,
       sfdc_opportunity.reason_for_loss,
       sfdc_opportunity.reason_for_loss_details,
-      CASE
-        WHEN sfdc_opportunity.sales_qualified_source = 'BDR Generated' THEN 'SDR Generated'
-        ELSE sfdc_opportunity.sales_qualified_source
-      END                                               AS sales_qualified_source,
-      CASE
-        WHEN sfdc_opportunity.sales_qualified_source = 'BDR Generated' THEN 'SDR Generated'
-        WHEN sfdc_opportunity.sales_qualified_source LIKE ANY ('Web%', 'Missing%', 'Other')
-          OR sfdc_opportunity.sales_qualified_source IS NULL THEN 'Web Direct Generated'
-        ELSE sfdc_opportunity.sales_qualified_source
-      END                                               AS sales_qualified_source_grouped,
+      sfdc_opportunity.sales_qualified_source,
+      sfdc_opportunity.sales_qualified_source_grouped,
       sfdc_opportunity.solutions_to_be_replaced,
       sfdc_opportunity.is_web_portal_purchase,
       sfdc_opportunity.partner_initiated_opportunity,
