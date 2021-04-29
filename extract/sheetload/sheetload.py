@@ -349,10 +349,7 @@ def drive_loader(
         info(f"Processing folder {folder_name}")
 
         folder_id = google_drive_client.get_item_id(folder_name)
-        archive_folder_id = google_drive_client.get_item_id("Archive", folder_id, True)
-
-        if archive_folder_id is None:
-            archive_folder_id = google_drive_client.create_folder("Archive", folder_id)
+        archive_folder_id = google_drive_client.get_archive_folder_id("Archive", folder_id, True)
 
         files = google_drive_client.get_files_in_folder(folder_id, "text/csv")
         info(f"Found {str(len(files))} to process")
