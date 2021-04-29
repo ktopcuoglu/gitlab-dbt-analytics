@@ -1,12 +1,6 @@
 WITH source_data AS (
 
-    SELECT
-      {{ sales_qualified_source_cleaning('sales_qualified_source') }}               AS sales_qualified_source,
-      CASE
-        WHEN sales_qualified_source = 'BDR Generated' THEN 'SDR Generated'
-        WHEN sales_qualified_source LIKE ANY ('Web%', 'Missing%', 'Other') OR sales_qualified_source IS NULL THEN 'Web Direct Generated'
-        ELSE sales_qualified_source
-      END                                                                           AS sales_qualified_source_grouped
+    SELECT *
     FROM {{ref('sfdc_opportunity_source')}}
     WHERE sales_qualified_source IS NOT NULL
       AND NOT is_deleted
