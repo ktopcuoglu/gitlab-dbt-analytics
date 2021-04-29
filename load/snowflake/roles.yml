@@ -1043,10 +1043,12 @@ roles:
         privileges:
             databases:
                 read:
+                    - raw
                     - prep
                     - prod
             schemas:
                 read:
+                    - raw.gainsight
                     - prep.preparation
                     - prod.common
                     - prod.common_mart_product
@@ -2532,6 +2534,7 @@ roles:
         member_of:
             - analyst_growth
             - data_team_analyst
+            - gainsight
         warehouses:
             - analyst_xs
             - analyst_l
