@@ -1033,7 +1033,7 @@ models:
         description: a boolean field created in the warehouse to flag Sales Accepted Opportunities. This field should be deprecated once sales accepted is in a more stable and consistent state in salesforce.
       - name: is_net_arr_closed_deal
         description: a boolean field created in the warehouse to flag Closed Deals and will help determine the Net ARR.
-      - name: is_new_logo_first_order_asp
+      - name: is_new_logo_first_order
         description: a boolean field created in the warehouse to flag New Logos.
       - name: is_net_arr_pipeline_created
         description: a boolean field created in the warehouse to flag Net ARR Pipeline Created.

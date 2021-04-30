@@ -207,7 +207,7 @@
 
     FROM sfdc_opportunity
 
-), is_new_logo_first_order_asp AS (
+), is_new_logo_first_order AS (
 
     SELECT
 
@@ -218,7 +218,7 @@
           AND is_edu_oss = 0
             THEN TRUE
         ELSE FALSE
-      END                                                                         AS is_new_logo_first_order_asp
+      END                                                                         AS is_new_logo_first_order
 
     FROM sfdc_opportunity
 
@@ -345,7 +345,7 @@
       is_sao.is_sao,
       is_sdr_sao.is_sdr_sao,
       is_net_arr_closed_deal.is_net_arr_closed_deal,
-      is_new_logo_first_order_asp.is_new_logo_first_order_asp,
+      is_new_logo_first_order.is_new_logo_first_order,
       is_net_arr_pipeline_created.is_net_arr_pipeline_created,
       is_win_rate_calc.is_win_rate_calc,
 
@@ -403,8 +403,8 @@
       ON opportunity_fields.dim_crm_opportunity_id = is_sdr_sao.opportunity_id
     LEFT JOIN is_net_arr_closed_deal
       ON opportunity_fields.dim_crm_opportunity_id = is_net_arr_closed_deal.opportunity_id
-    LEFT JOIN is_new_logo_first_order_asp
-      ON opportunity_fields.dim_crm_opportunity_id = is_new_logo_first_order_asp.opportunity_id
+    LEFT JOIN is_new_logo_first_order
+      ON opportunity_fields.dim_crm_opportunity_id = is_new_logo_first_order.opportunity_id
     LEFT JOIN is_net_arr_pipeline_created
       ON opportunity_fields.dim_crm_opportunity_id = is_net_arr_pipeline_created.opportunity_id
     LEFT JOIN is_win_rate_calc

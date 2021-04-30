@@ -98,7 +98,7 @@
       dim_crm_opportunity.sales_type,
       fct_crm_opportunity.is_sao,
       fct_crm_opportunity.is_net_arr_closed_deal,
-      fct_crm_opportunity.is_new_logo_first_order_asp,
+      fct_crm_opportunity.is_new_logo_first_order,
       fct_crm_opportunity.is_net_arr_pipeline_created,
       fct_crm_opportunity.is_win_rate_calc,
       dim_deal_path.deal_path_name,
