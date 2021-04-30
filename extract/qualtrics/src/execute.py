@@ -51,6 +51,7 @@ def get_distributions(qualtrics_client: QualtricsClient, survey_id: str):
 def chunk_list(
     list_to_chunk: List[Any], chunk_size: int
 ) -> Generator[List[Any], None, None]:
+    """A generator that chunks the given list into lists of length `chunk_size` or less"""
     for i in range(0, len(list_to_chunk), chunk_size):
         yield list_to_chunk[i : i + chunk_size]
 
