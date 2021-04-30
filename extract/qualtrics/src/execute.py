@@ -62,9 +62,20 @@ if __name__ == "__main__":
     surveys_to_write: List[str] = get_and_write_surveys(client)
 
     for survey_id in surveys_to_write:
-        all_distributions = all_distributions + get_distributions(client, survey_id)
+        current_distributions = get_distributions(client, survey_id)
+        all_distributions = all_distributions + current_distributions
+        if current_distributions:
+            with open("distributions.json", "w") as out_file:
+                json.dump(all_distributions, out_file)
 
-    distributions_to_write = [
+            snowflake_stage_load_copy_remove(
+                "distributions.json",
+                "raw.qualtrics.qualtrics_load",
+                "raw.qualtrics.distribution",
+                snowflake_engine,
+            )
+
+    distributions_with_mailings_to_write = [
         distribution
         for distribution in all_distributions
         if timestamp_in_interval(
@@ -73,7 +84,7 @@ if __name__ == "__main__":
     ]
 
     contacts_to_write = []
-    for distribution in distributions_to_write:
+    for distribution in distributions_with_mailings_to_write:
         mailing_list_id = distribution["recipients"]["mailingListId"]
         if mailing_list_id:
             for contact in client.get_contacts(POOL_ID, mailing_list_id):
@@ -85,17 +96,6 @@ if __name__ == "__main__":
             "surveys.json",
             "raw.qualtrics.qualtrics_load",
             "raw.qualtrics.survey",
-            snowflake_engine,
-        )
-
-    if all_distributions:
-        with open("distributions.json", "w") as out_file:
-            json.dump(all_distributions, out_file)
-
-        snowflake_stage_load_copy_remove(
-            "distributions.json",
-            "raw.qualtrics.qualtrics_load",
-            "raw.qualtrics.distribution",
             snowflake_engine,
         )
 
