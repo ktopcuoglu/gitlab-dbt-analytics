@@ -1,6 +1,5 @@
 from datetime import datetime, timedelta
 import json
-import logging
 from os import environ as env
 
 from typing import Any, Dict, List, Generator
