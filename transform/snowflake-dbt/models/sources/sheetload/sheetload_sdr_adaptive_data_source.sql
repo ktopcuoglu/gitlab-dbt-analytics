@@ -6,17 +6,17 @@ WITH source AS (
 ), renamed as (
 
     SELECT
-      "Current Month"::DATE                                 AS month,
-      "Name"::VARCHAR                                       AS name,
-      "Start Month"::DATE                                   AS start_month,
-      "Add/Internal/Accounted for Currently"::VARCHAR       AS add_internal_accounted,
-      "Hiring Manager"::VARCHAR                             AS hiring_manager,
-      "Role"::VARCHAR                                       AS role,
-      "Region"::VARCHAR                                     AS region,
-      "Segment"::VARCHAR                                    AS segment,
-      "GHPID"::NUMBER                                       AS GHPID,
-      "Employment"::VARCHAR                                  AS employment,
-      "Status"::VARCHAR                                     AS status
+      current_month::DATE                   AS month,
+      name::VARCHAR                         AS name,
+      start_month::DATE                     AS start_month,
+      add_internal_accounted::VARCHAR       AS add_internal_accounted,
+      hiring_manager::VARCHAR               AS hiring_manager,
+      role::VARCHAR                         AS role,
+      region::VARCHAR                       AS region,
+      segment::VARCHAR                      AS segment,
+      ghpid::NUMBER                         AS GHPID,
+      employment::VARCHAR                   AS employment,
+      status::VARCHAR                       AS status
     FROM source
 )
 
