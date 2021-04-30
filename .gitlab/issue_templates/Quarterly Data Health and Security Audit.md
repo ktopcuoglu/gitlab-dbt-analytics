@@ -18,3 +18,7 @@ TRUSTED DATA
 1. [ ] Review all Golden Record TD tests and make sure they're passing.
 2. [ ] Review Data Siren to confirm known existence of RED data.
 3. [ ] Generate a report of all changes to the TD: Sales Funnel dashboard in the quarter.
+
+<!-- DO NOT EDIT BELOW THIS LINE -->
+/label ~Infrastructure ~Snowflake ~TDF ~"Data Team" ~"Priority::1-Ops" ~"workflow::4 - scheduled" 
+/confidential 
