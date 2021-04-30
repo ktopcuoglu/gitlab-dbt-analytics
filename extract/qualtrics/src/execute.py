@@ -66,7 +66,7 @@ if __name__ == "__main__":
         all_distributions = all_distributions + current_distributions
         if current_distributions:
             with open("distributions.json", "w") as out_file:
-                json.dump(all_distributions, out_file)
+                json.dump(current_distributions, out_file)
 
             snowflake_stage_load_copy_remove(
                 "distributions.json",
