@@ -48,6 +48,9 @@ def get_distributions(qualtrics_client: QualtricsClient, survey_id: str):
         distribution for distribution in qualtrics_client.get_distributions(survey_id)
     ]
 
+def chunk_list(list_to_chunk: List[A], chunk_size: int) -> Generator[List]:
+    for i in range(0, len(list_to_chunk), chunk_size):
+        yield list_to_chunk[i:i + n]
 
 if __name__ == "__main__":
     config_dict = env.copy()
@@ -63,20 +66,20 @@ if __name__ == "__main__":
     surveys_to_write: List[str] = get_and_write_surveys(client)
 
     for survey_id in surveys_to_write:
-        logging.info(f"processing survey {survey_id}")
         current_distributions = get_distributions(client, survey_id)
         all_distributions = all_distributions + current_distributions
-        logging.info(f"distribution_count {len(current_distributions)}")
         if current_distributions:
-            with open("distributions.json", "w") as out_file:
-                json.dump(current_distributions, out_file)
 
-            snowflake_stage_load_copy_remove(
-                "distributions.json",
-                "raw.qualtrics.qualtrics_load",
-                "raw.qualtrics.distribution",
-                snowflake_engine,
-            )
+            for chunk in chunk_list(current_distributions, 100):
+                with open("distributions.json", "w") as out_file:
+                    json.dump(current_distributions, out_file)
+
+                snowflake_stage_load_copy_remove(
+                    "distributions.json",
+                    "raw.qualtrics.qualtrics_load",
+                    "raw.qualtrics.distribution",
+                    snowflake_engine,
+                )
 
     distributions_with_mailings_to_write = [
         distribution
