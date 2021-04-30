@@ -1067,7 +1067,7 @@ roles:
                     - raw
             schemas:
                 read:
-                    - raw.gcp_billing
+                    - raw.gainsight
             tables:
                 read:
                     - raw.gainsight.*    
