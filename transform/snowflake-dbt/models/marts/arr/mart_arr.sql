@@ -44,7 +44,7 @@ WITH dim_billing_account AS (
     SUM(quantity)                                                          AS quantity,
     ARRAY_AGG(unit_of_measure)                                             AS unit_of_measure
   FROM {{ ref('fct_mrr') }}
-  WHERE subscription_status in ('Active', 'Cancelled')
+  WHERE subscription_status IN ('Active', 'Cancelled')
   {{ dbt_utils.group_by(n=5) }}
 
 ), joined AS (

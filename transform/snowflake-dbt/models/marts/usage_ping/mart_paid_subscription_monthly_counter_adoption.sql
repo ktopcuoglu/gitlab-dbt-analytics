@@ -7,7 +7,7 @@ WITH self_managed_active_subscriptions AS (
       SUM(mrr)              AS mrr,
       SUM(quantity)         AS quantity
     FROM {{ ref('fct_mrr')}}
-    WHERE subscription_status in ('Active', 'Cancelled')
+    WHERE subscription_status IN ('Active', 'Cancelled')
     {{ dbt_utils.group_by(n=3) }}
 
 ), dim_date AS (
