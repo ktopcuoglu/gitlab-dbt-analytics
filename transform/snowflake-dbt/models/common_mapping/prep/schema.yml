@@ -354,8 +354,8 @@ models:
       - name: quantity
         description: Total quantity
 
-  - name: prep_recurring_charge_non_amortized
-    description: '{{ doc("prep_recurring_charge_non_amortized") }}'
+  - name: prep_charge
+    description: '{{ doc("prep_charge") }}'
     columns:
       - name: dim_charge_id
         description: The unique identifier of the rate plan charge.

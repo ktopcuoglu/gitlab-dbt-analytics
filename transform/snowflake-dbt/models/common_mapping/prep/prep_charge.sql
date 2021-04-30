@@ -8,7 +8,7 @@ WITH zuora_rate_plan AS (
     SELECT *
     FROM {{ ref('zuora_rate_plan_charge_source') }}
 
-), base_charges AS (
+), recurring_charges AS (
 
     SELECT
       zuora_rate_plan_charge.rate_plan_charge_id                        AS dim_charge_id,
@@ -47,7 +47,7 @@ WITH zuora_rate_plan AS (
 )
 
 {{ dbt_audit(
-    cte_ref="base_charges",
+    cte_ref="recurring_charges",
     created_by="@iweeks",
     updated_by="@iweeks",
     created_date="2021-04-28",

@@ -1,4 +1,4 @@
-WITH prep_recurring_charge_non_amortized AS (
+WITH fct_charge AS (
 
     SELECT
       dim_charge_id,
@@ -28,12 +28,12 @@ WITH prep_recurring_charge_non_amortized AS (
       tcv,
       delta_tcv,
       discount_level
-    FROM {{ ref('prep_recurring_charge_non_amortized') }}
+    FROM {{ ref('prep_charge') }}
 
 )
 
 {{ dbt_audit(
-    cte_ref="prep_recurring_charge_non_amortized",
+    cte_ref="fct_charge",
     created_by="@iweeks",
     updated_by="@iweeks",
     created_date="2021-04-28",
