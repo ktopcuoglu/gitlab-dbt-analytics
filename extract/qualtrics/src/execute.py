@@ -70,9 +70,9 @@ if __name__ == "__main__":
         all_distributions = all_distributions + current_distributions
         if current_distributions:
 
-            for chunk in chunk_list(current_distributions, 4):
+            for chunk in chunk_list(current_distributions, 100):
                 with open("distributions.json", "w") as out_file:
-                    json.dump(current_distributions, out_file)
+                    json.dump(chunk, out_file)
 
                 snowflake_stage_load_copy_remove(
                     "distributions.json",
