@@ -91,7 +91,7 @@ branching_dbt_run = BranchPythonOperator(
     dag=dag,
 )
 
-# run non-product models on small warehouse
+# run non-product models on large warehouse
 dbt_non_product_models_command = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
