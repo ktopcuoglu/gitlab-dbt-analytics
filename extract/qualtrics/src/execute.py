@@ -3,7 +3,7 @@ import json
 import logging
 from os import environ as env
 
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Generator
 
 from gitlabdata.orchestration_utils import (
     snowflake_engine_factory,
