@@ -10,8 +10,8 @@ SNOWFLAKE
 3. [ ] Validate all user accounts require multi-factor authentication.
 
 SISENSE
-1. [ ] Validate terminated employees have been removed from Snowflake access.
-2. [ ] De-activate any account that has not logged-in within the past 30 days from the moment of performing audit from Snowflake.
+1. [ ] Validate terminated employees have been removed from Sisense access.
+2. [ ] De-activate any account that has not logged-in within the past 30 days from the moment of performing audit from Sisense.
 3. [ ] Validate all user accounts require multi-factor authentication.
 
 TRUSTED DATA
