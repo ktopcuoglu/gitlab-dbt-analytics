@@ -38,7 +38,10 @@
     LEFT JOIN instance_types
       ON prep_usage_ping.raw_usage_data_payload['uuid']::VARCHAR = instance_types.instance_uuid
       AND prep_usage_ping.raw_usage_data_payload['hostname']::VARCHAR = instance_types.instance_hostname
-
+    QUALIFY ROW_NUMBER() OVER (
+      PARTITION BY dim_usage_ping_id
+        ORDER BY ping_created_at DESC
+      ) = 1
 )
 
 {{ dbt_audit(
@@ -46,5 +49,5 @@
     created_by="@kathleentam",
     updated_by="@michellecooper",
     created_date="2021-01-10",
-    updated_date="2021-04-27"
+    updated_date="2021-04-30"
 ) }}

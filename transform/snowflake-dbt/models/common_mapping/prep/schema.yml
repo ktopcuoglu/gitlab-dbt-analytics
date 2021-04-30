@@ -841,13 +841,6 @@ models:
         description: boolean flag that indicates that the instance is used by the company or a GitLab team member
       - name: is_staging
         description: DRAFT - need to better identify instances used for staging environments
-      - name: country_name
-        description: The name of the country where the instance reported the ping from
-      - name: iso_2_country_code
-        description: The iso 2 country code where the instance reported the ping from
-      - name: iso_3_country_code
-        description: The iso 3 country code where the instance reported the ping from
-
 
   - name: prep_usage_ping_no_license_key
     description: '{{ doc("prep_usage_ping_no_license_key") }}'

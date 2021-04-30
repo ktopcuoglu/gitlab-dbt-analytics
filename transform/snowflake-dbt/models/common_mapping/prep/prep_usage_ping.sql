@@ -6,7 +6,7 @@
 
 {%- set columns = adapter.get_columns_in_relation( ref('version_usage_data_source')) -%}
 
-WITH source AS (
+WITH usage_ping AS (
 
     SELECT 
       id                                                                        AS dim_usage_ping_id, 
@@ -33,7 +33,7 @@ WITH source AS (
     SELECT * 
     FROM {{ ref('map_ip_to_country') }}
     
-), location AS (
+), locations AS (
 
     SELECT * 
     FROM {{ ref('prep_location_country') }}
@@ -53,7 +53,7 @@ WITH source AS (
       SPLIT_PART(cleaned_version, '.', 2)::NUMBER                                                     AS minor_version,
       major_version || '.' || minor_version                                                           AS major_minor_version,
       raw_usage_data_payload_reconstructed
-    FROM source
+    FROM usage_ping
     WHERE uuid IS NOT NULL
       AND version NOT LIKE ('%VERSION%') -- Messy data that's not worth parsing
 
@@ -110,8 +110,8 @@ WITH source AS (
       map_ip_to_country.ip_address_hash, 
       map_ip_to_country.dim_location_country_id  
     FROM map_ip_to_country
-    INNER JOIN location 
-      WHERE map_ip_to_country.dim_location_country_id = location.dim_location_country_id
+    INNER JOIN locations 
+      WHERE map_ip_to_country.dim_location_country_id = locations.dim_location_country_id
 
 ), add_country_info_to_usage_ping AS (
 
@@ -168,5 +168,5 @@ WITH source AS (
     created_by="@kathleentam",
     updated_by="@michellecooper",
     created_date="2021-01-10",
-    updated_date="2021-04-27"
+    updated_date="2021-04-30"
 ) }}
