@@ -198,4 +198,11 @@ short_circuit = ShortCircuitOperator(
     dag=dag,
 )
 
-dbt_commit_hash_setter >> dbt_commit_hash_exporter >> dbt_snapshot >> short_circuit >> dbt_snapshot_models_run >> dbt_test_snapshot_models
+(
+    dbt_commit_hash_setter
+    >> dbt_commit_hash_exporter
+    >> dbt_snapshot
+    >> short_circuit
+    >> dbt_snapshot_models_run
+    >> dbt_test_snapshot_models
+)
