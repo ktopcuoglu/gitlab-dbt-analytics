@@ -202,7 +202,7 @@
       CASE
         WHEN (is_won = 'TRUE' OR (sales_type = 'Renewal' AND stage_name = '8-Closed Lost'))
             THEN TRUE
-        ELSE FALSE 
+        ELSE FALSE
       END                                                                         AS is_net_arr_closed_deal
 
     FROM sfdc_opportunity
@@ -216,6 +216,7 @@
         WHEN is_won = 'TRUE'
           AND is_closed = 'TRUE'
           AND is_edu_oss = 0
+          AND order_type_stamped = '1. New - First Order'
             THEN TRUE
         ELSE FALSE
       END                                                                         AS is_new_logo_first_order
@@ -242,7 +243,7 @@
 ), is_win_rate_calc AS (
 
     SELECT
-        
+
       opportunity_id,
       CASE
         WHEN stage_name IN ('Closed Won', '8-Closed Lost')
