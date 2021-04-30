@@ -6,7 +6,7 @@ WITH source AS (
 ), renamed as (
 
     SELECT
-      current_month::DATE                   AS month,
+      current_month::DATE                   AS current_month,
       name::VARCHAR                         AS name,
       start_month::DATE                     AS start_month,
       add_internal_accounted::VARCHAR       AS add_internal_accounted,
