@@ -4,7 +4,12 @@
     })
 }}
 
-WITH namespace_snapshots_daily AS (
+{{ simple_cte([
+    ('map_namespace_internal', 'map_namespace_internal'),
+    ('namespace_subscription_snapshots', 'gitlab_dotcom_gitlab_subscriptions_snapshots_namespace_id_base')
+]) }}
+
+, namespace_snapshots_daily AS (
 
     SELECT *
     FROM {{ ref('gitlab_dotcom_namespace_historical_daily') }}
@@ -15,20 +20,13 @@ WITH namespace_snapshots_daily AS (
 
     {% endif %}
 
-),  namespace_subscription_snapshot AS (
-
-  SELECT
-    *,
-    IFNULL(valid_to, CURRENT_TIMESTAMP) AS valid_to_
-  FROM {{ ref('gitlab_dotcom_gitlab_subscriptions_snapshots_namespace_id_base') }}
-
 ), recursive_namespace_ultimate(snapshot_day, namespace_id, parent_id, upstream_lineage) AS (
     
    SELECT
      snapshot_day,
      namespace_snapshots_daily.namespace_id,
      namespace_snapshots_daily.parent_id,
-     TO_ARRAY(namespace_id)                                      AS upstream_lineage
+     TO_ARRAY(namespace_id)                                                           AS upstream_lineage
    FROM namespace_snapshots_daily
    WHERE parent_id IS NULL
   
@@ -38,7 +36,7 @@ WITH namespace_snapshots_daily AS (
      iter.snapshot_day,
      iter.namespace_id,
      iter.parent_id,
-     ARRAY_INSERT(anchor.upstream_lineage, 0, iter.namespace_id)  AS upstream_lineage
+     ARRAY_APPEND(anchor.upstream_lineage, iter.namespace_id)                         AS upstream_lineage
    FROM recursive_namespace_ultimate AS anchor
    INNER JOIN namespace_snapshots_daily AS iter
      ON iter.parent_id = anchor.namespace_id
@@ -48,23 +46,33 @@ WITH namespace_snapshots_daily AS (
     
     SELECT
       recursive_namespace_ultimate.*,
-      upstream_lineage[ARRAY_SIZE(upstream_lineage) - 1]::INT                           AS ultimate_parent_id,
-      COALESCE((ultimate_parent_id IN {{ get_internal_parent_namespaces() }}), FALSE)   AS namespace_is_internal,
-      CASE
-        WHEN namespace_subscription_snapshot.is_trial
-          THEN 'trial'
-        ELSE COALESCE(namespace_subscription_snapshot.plan_id, 34)::VARCHAR
-      END                                                                               AS ultimate_parent_plan_id
-
+      upstream_lineage[0]::INT                                                        AS ultimate_parent_id
     FROM recursive_namespace_ultimate
-    LEFT JOIN namespace_subscription_snapshot
-      ON upstream_lineage[ARRAY_SIZE(upstream_lineage) - 1] = namespace_subscription_snapshot.namespace_id
-      AND recursive_namespace_ultimate.snapshot_day BETWEEN namespace_subscription_snapshot.valid_from::DATE AND namespace_subscription_snapshot.valid_to_::DATE
-    QUALIFY ROW_NUMBER() OVER(PARTITION BY recursive_namespace_ultimate.namespace_id, snapshot_day ORDER BY valid_to_ DESC) = 1
+
+), with_plans AS (
+
+    SELECT
+      namespace_lineage_daily.*,
+      IFNULL(map_namespace_internal.ultimate_parent_namespace_id IS NOT NULL, FALSE)  AS namespace_is_internal,
+      IFF(namespace_subscription_snapshots.is_trial
+            AND IFNULL(namespace_subscription_snapshots.plan_id, 34) <> 34,
+          102, IFNULL(namespace_subscription_snapshots.plan_id, 34))                  AS ultimate_parent_plan_id
+    FROM namespace_lineage_daily
+    LEFT JOIN namespace_subscription_snapshots
+      ON namespace_lineage_daily.ultimate_parent_id = namespace_subscription_snapshots.namespace_id
+      AND namespace_lineage_daily.snapshot_day BETWEEN namespace_subscription_snapshots.valid_from::DATE AND IFNULL(namespace_subscription_snapshots.valid_to::DATE, CURRENT_DATE)
+    LEFT JOIN map_namespace_internal
+      ON namespace_lineage_daily.ultimate_parent_id = map_namespace_internal.ultimate_parent_namespace_id
+    QUALIFY ROW_NUMBER() OVER(
+      PARTITION BY
+        namespace_lineage_daily.namespace_id,
+        snapshot_day
+      ORDER BY valid_from DESC
+      ) = 1
 
 )
 
 SELECT
-  {{ dbt_utils.surrogate_key(['snapshot_day', 'namespace_id'] ) }}         AS snapshot_day_namespace_id,
+  {{ dbt_utils.surrogate_key(['snapshot_day', 'namespace_id'] ) }}                    AS snapshot_day_namespace_id,
   *
 FROM namespace_lineage_daily

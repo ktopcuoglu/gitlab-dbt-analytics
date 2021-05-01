@@ -6,6 +6,7 @@
     ('namespace_current', 'gitlab_dotcom_namespaces_source'),
     ('namespace_snapshots', 'gitlab_dotcom_namespaces_snapshots_base'),
     ('namespace_lineage_current', 'gitlab_dotcom_namespace_lineage_prep'),
+    ('namespace_lineage_historical', 'gitlab_dotcom_namespace_lineage_historical_daily'),
     ('map_namespace_internal', 'map_namespace_internal'),
     ('plans', 'gitlab_dotcom_plans_source'),
     ('product_tiers', 'prep_product_tier'),
@@ -17,15 +18,15 @@
 
 , saas_product_tiers AS (
 
-  SELECT *
-  FROM product_tiers
-  WHERE product_delivery_type = 'SaaS'
+    SELECT *
+    FROM product_tiers
+    WHERE product_delivery_type = 'SaaS'
 
 ), members AS (
 
     SELECT
       source_id,
-      COUNT(DISTINCT member_id)                                                         AS member_count
+      COUNT(DISTINCT member_id)                                                       AS member_count
     FROM members_source
     WHERE is_currently_valid = TRUE
       AND member_source_type = 'Namespace'
@@ -53,32 +54,53 @@
       AND key_value = 'group'
     GROUP BY 1, 2
 
-), namespace_historical AS (
-
-    SELECT *
-    FROM namespace_snapshots
-    QUALIFY ROW_NUMBER() OVER (
-      PARTITION BY namespace_id
-      ORDER BY valid_from DESC
-    ) = 1
-
 ), namespaces AS (
 
     SELECT
-      namespace_historical.*,
+      namespace_snapshots.*,
       IFNULL(namespace_current.namespace_id IS NOT NULL, FALSE)                       AS is_currently_valid
-    FROM namespace_historical
+    FROM namespace_snapshots
     LEFT OUTER JOIN namespace_current
-      ON namespace_historical.namespace_id = namespace_current.namespace_id
+      ON namespace_snapshots.namespace_id = namespace_current.namespace_id
+    QUALIFY ROW_NUMBER() OVER (
+      PARTITION BY namespace_snapshots.namespace_id
+      ORDER BY namespace_snapshots.valid_from DESC
+    ) = 1
+
+), namespace_lineage_all_time AS (
+  
+
+    SELECT
+      -- DATE_TRUNC('month', snapshot_day)                                                AS snapshot_month,
+      namespace_id,
+      ultimate_parent_id,
+      ultimate_parent_plan_id
+    FROM namespace_lineage_historical
+    {{ dbt_utils.group_by(n=4)}}
+
+    -- UNION ALL
+
+    -- SELECT
+    --   DATE_TRUNC('month', CURRENT_DATE)                                                AS snapshot_month,
+    --   namespace_id,
+    --   ultimate_parent_id,
+    --   ultimate_parent_plan_id
+    -- FROM namespace_lineage_current
 
 ), namespace_lineage AS (
 
-  SELECT
-    namespace_lineage_current.*,
-    plans.plan_name                                                                   AS ultimate_parent_plan_name
-    FROM namespace_lineage_current
+    SELECT
+      namespace_lineage_all_time.*,
+      plans.plan_title                                                                  AS ultimate_parent_plan_title,
+      plans.plan_is_paid                                                                AS ultimate_parent_plan_is_paid
+      -- plans.plan_name                                                                 AS ultimate_parent_plan_name
+    FROM namespace_lineage_all_time
     INNER JOIN plans
-      ON namespace_lineage_current.ultimate_parent_plan_id = plans.plan_id
+      ON namespace_lineage_all_time.ultimate_parent_plan_id = plans.plan_id
+    QUALIFY ROW_NUMBER() OVER (
+      PARTITION BY namespace_id, ultimate_parent_id
+      ORDER BY snapshot_month DESC
+    ) = 1
 
 ), joined AS (
 
@@ -122,30 +144,30 @@
       namespaces.two_factor_grace_period,
       namespaces.project_creation_level,
       namespaces.push_rule_id,
-      IFNULL(creators.creator_id, namespaces.owner_id)                                  AS creator_id,
-      namespace_lineage.ultimate_parent_id                                              AS ultimate_parent_namespace_id,
-      namespace_lineage.ultimate_parent_plan_id                                         AS gitlab_plan_id,
-      namespace_lineage.ultimate_parent_plan_title                                      AS gitlab_plan_title,
-      namespace_lineage.ultimate_parent_plan_is_paid                                    AS gitlab_plan_is_paid,
-      {{ get_keyed_nulls('saas_product_tiers.dim_product_tier_id') }}                   AS dim_product_tier_id,
-      IFNULL(members.member_count, 0)                                                   AS current_member_count,
-      IFNULL(projects.project_count, 0)                                                 AS current_project_count,
+      IFNULL(creators.creator_id, namespaces.owner_id)                                AS creator_id,
+      namespace_lineage.ultimate_parent_id                                            AS ultimate_parent_namespace_id,
+      namespace_lineage.ultimate_parent_plan_id                                       AS gitlab_plan_id,
+      namespace_lineage.ultimate_parent_plan_title                                    AS gitlab_plan_title,
+      namespace_lineage.ultimate_parent_plan_is_paid                                  AS gitlab_plan_is_paid,
+      -- {{ get_keyed_nulls('saas_product_tiers.dim_product_tier_id') }}                 AS dim_product_tier_id,
+      IFNULL(members.member_count, 0)                                                 AS current_member_count,
+      IFNULL(projects.project_count, 0)                                               AS current_project_count,
       namespaces.is_currently_valid
     FROM namespaces
-      LEFT JOIN namespace_lineage
-        ON namespaces.namespace_id = namespace_lineage.namespace_id
-      LEFT JOIN members
-        ON namespaces.namespace_id = members.source_id
-      LEFT JOIN projects
-        ON namespaces.namespace_id = projects.namespace_id
-      LEFT JOIN creators
-        ON namespaces.namespace_id = creators.group_id
-      LEFT JOIN map_namespace_internal
-        ON namespace_lineage.ultimate_parent_id = map_namespace_internal.ultimate_parent_namespace_id
-      LEFT JOIN saas_product_tiers
-        ON namespace_lineage.ultimate_parent_plan_name = LOWER(IFF(saas_product_tiers.product_tier_name_short != 'Trial: Ultimate',
-                                                                    saas_product_tiers.product_tier_historical_short,
-                                                                    'ultimate_trial'))
+    LEFT JOIN namespace_lineage
+      ON namespaces.namespace_id = namespace_lineage.namespace_id
+    LEFT JOIN members
+      ON namespaces.namespace_id = members.source_id
+    LEFT JOIN projects
+      ON namespaces.namespace_id = projects.namespace_id
+    LEFT JOIN creators
+      ON namespaces.namespace_id = creators.group_id
+    LEFT JOIN map_namespace_internal
+      ON namespace_lineage.ultimate_parent_id = map_namespace_internal.ultimate_parent_namespace_id
+    -- LEFT JOIN saas_product_tiers
+    --   ON namespace_lineage.ultimate_parent_plan_name = LOWER(IFF(saas_product_tiers.product_tier_name_short != 'Trial: Ultimate',
+    --                                                              saas_product_tiers.product_tier_historical_short,
+    --                                                              'ultimate_trial'))
 
 )
 
