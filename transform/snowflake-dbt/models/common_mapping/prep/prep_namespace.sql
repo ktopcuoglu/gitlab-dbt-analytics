@@ -93,7 +93,8 @@
       ORDER BY namespace_lineage_historical.snapshot_day DESC
     ) = 1
 
-), namespaces AS (
+), namespace_lineage_all_time AS (
+  
 
     SELECT
       namespace_snapshots.*,

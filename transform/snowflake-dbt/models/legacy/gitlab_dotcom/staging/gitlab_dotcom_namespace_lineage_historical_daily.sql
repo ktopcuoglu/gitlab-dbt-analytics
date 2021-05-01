@@ -13,9 +13,18 @@
 
     SELECT *
     FROM {{ ref('gitlab_dotcom_namespace_historical_daily') }}
+<<<<<<< HEAD
     {% if is_incremental() -%}
     WHERE snapshot_day >= (SELECT MAX(snapshot_day) FROM {{ this }})
     {%- endif %}
+=======
+    WHERE snapshot_day >= '2020-01-01'::DATE
+    {% if is_incremental() %}
+
+      AND snapshot_day > (select max(snapshot_day) from {{ this }})
+
+    {% endif %}
+>>>>>>> bb70cdd61 (Efficiency updates to namespace lineage tables)
 
 ), recursive_namespace_ultimate(snapshot_day, namespace_id, parent_id, upstream_lineage) AS (
     
