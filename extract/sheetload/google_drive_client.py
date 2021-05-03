@@ -22,10 +22,10 @@ class GoogleDriveClient:
 
     def get_data_frame_from_file_id(self, file_id) -> pd.Dataframe:
         """
-            Google drive does not allow direct csv reading from the urls, so we need to
-            download the file using their API method, create a df and then delete the local file
+        Google drive does not allow direct csv reading from the urls, so we need to
+        download the file using their API method, create a df and then delete the local file
 
-            :return: pandas Dataframe of data available in file_id
+        :return: pandas Dataframe of data available in file_id
         """
         request = self.service.files().get_media(fileId=file_id)
         fh = BytesIO()
@@ -41,14 +41,14 @@ class GoogleDriveClient:
 
     def get_item_id(self, item_name, in_folder_id=None, is_folder=None) -> str:
         """
-            Retrieves the unique identifier for a folder or file available in Google Drive.
-            The folder / file must have been shared with whatever account is running this script
+        Retrieves the unique identifier for a folder or file available in Google Drive.
+        The folder / file must have been shared with whatever account is running this script
 
-            :param self:
-            :param item_name: Item name to be retrieve
-            :param in_folder_id: Optional, specify a folder to look in
-            :param is_folder: Optional, specify if this is a folder.
-            :return: str of unique identifier in Google Drive
+        :param self:
+        :param item_name: Item name to be retrieve
+        :param in_folder_id: Optional, specify a folder to look in
+        :param is_folder: Optional, specify if this is a folder.
+        :return: str of unique identifier in Google Drive
         """
 
         query = f"fullText contains '{item_name}'"
@@ -133,8 +133,10 @@ class GoogleDriveClient:
         results = (
             self.service.files()
             .list(
-                    # fields returned are specified below.
-                q=query, pageSize=10, fields="nextPageToken, files(id, name, mimeType)"
+                # fields returned are specified below.
+                q=query,
+                pageSize=10,
+                fields="nextPageToken, files(id, name, mimeType)",
             )
             .execute()
         )

@@ -91,4 +91,3 @@ for folder in folders:
         arguments=[container_cmd],
         dag=dag,
     )
-
