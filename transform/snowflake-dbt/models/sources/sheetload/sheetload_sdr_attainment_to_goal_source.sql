@@ -26,7 +26,7 @@ WITH source AS (
       average_working_day_other::NUMBER     AS average_working_day_other,
       saos::NUMBER                          AS saos,
       quaterly_sao_target::NUMBER           AS quaterly_sao_target,
-      quarterly_sao_variance::NUMBER        AS quarterly_sao_variance,
+      quarterly_sao_variance::NUMBER        AS quaterly_sao_variance,
       average_time::NUMBER                  AS average_time
 
 
