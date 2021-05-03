@@ -30,7 +30,6 @@ models:
         - name: delivery
           tests:
             - not_null
-            - accepted_values:
         - name: organization_type
           tests:
             - not_null
