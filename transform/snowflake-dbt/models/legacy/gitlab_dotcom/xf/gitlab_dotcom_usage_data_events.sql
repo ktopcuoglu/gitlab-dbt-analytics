@@ -639,7 +639,7 @@
     SELECT
       ultimate_namespace.namespace_id,
       ultimate_namespace.namespace_created_at,
-      IF(blocked_users.user_id IS NOT NULL, TRUE, FALSE)          AS is_blocked_namespace,
+      IFF(blocked_users.user_id IS NOT NULL, TRUE, FALSE)          AS is_blocked_namespace,
       {% if 'NULL' in event_cte.user_column_name %}
         NULL
       {% else %}
