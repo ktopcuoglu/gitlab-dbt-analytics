@@ -25,7 +25,7 @@
 
     SELECT
       source_id,
-      COUNT(DISTINCT member_id)                                                         AS member_count
+      COUNT(DISTINCT member_id)                                                       AS member_count
     FROM members_source
     WHERE is_currently_valid = TRUE
       AND member_source_type = 'Namespace'
