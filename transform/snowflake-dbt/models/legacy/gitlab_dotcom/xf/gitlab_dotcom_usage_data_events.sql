@@ -451,12 +451,12 @@
 
 
 {{ simple_cte([
-    ('gitlab_dotcom_gitlab_subscriptions_snapshots_namespace_id_base', 'gitlab_subscriptions'),
-    ('gitlab_dotcom_namespaces_xf', 'namespaces'),
-    ('gitlab_dotcom_plans', 'plans'),
-    ('gitlab_dotcom_projects_xf', 'projects'),
-    ('gitlab_dotcom_users', 'users'),
-    ('gitlab_dotcom_users_blocked_xf', 'blocked_users')
+    ('gitlab_subscriptions', 'gitlab_dotcom_gitlab_subscriptions_snapshots_namespace_id_base'),
+    ('namespaces', 'gitlab_dotcom_namespaces_xf'),
+    ('plans', 'gitlab_dotcom_plans'),
+    ('projects', 'gitlab_dotcom_projects_xf'),
+    ('users', 'gitlab_dotcom_users'),
+    ('blocked_users', 'gitlab_dotcom_users_blocked_xf')
 ]) }}
 
 
