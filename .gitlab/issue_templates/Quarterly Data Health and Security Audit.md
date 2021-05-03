@@ -2,7 +2,7 @@
 
 Quarterly audit is performed to validate security like right people with right access in environments (Example: Sisense, Snowflake.etc) and data feeds that are running are healthy (Example: Salesforce, GitLab.com..etc).
 
-Please see the [handbook page](https://about.gitlab.com/handbook/business-technology/data-team/how-we-work/duties/#Quarterly-Data-Health-and-Security-Audit) for more information. 
+Please see the [handbook page](https://about.gitlab.com/handbook/business-technology/data-team/how-we-work/duties/#quarterly-data-health-and-security-audit) for more information. 
 
 Below checklist of activities would be run once for quarter to validate security and system health.
 
