@@ -103,6 +103,12 @@ Creates a base view of charges, including paid and free subscriptions. This base
 
 {% enddocs %}
 
+{% docs prep_charge %}
+
+Creates a base view of recurring charges that are not amortized over the months. This prep table is used for transaction line analyses that do not require amortization of charges.
+
+{% enddocs %}
+
 {% docs prep_sales_segment %}
 
 Creates a base view with generated keys for the sales segment shared dimension and references in facts.
