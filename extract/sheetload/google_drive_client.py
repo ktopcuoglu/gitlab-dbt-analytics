@@ -16,9 +16,8 @@ class GoogleDriveClient:
             "https://www.googleapis.com/auth/drive",
         ]
         keyfile = safe_load(gapi_keyfile or env["GCP_SERVICE_CREDS"])
-        creds = ServiceAccountCredentials.from_json_keyfile_dict(keyfile, scope)
-        #   ServiceAccountCredentials.from_json_keyfile_name(keyfile, scope)
-        self.service = build("drive", "v3", credentials=creds)
+        credentials = ServiceAccountCredentials.from_json_keyfile_dict(keyfile, scope)
+        self.service = build("drive", "v3", credentials=credentials)
 
     def get_data_frame_from_file_id(self, file_id) -> pd.Dataframe:
         """
