@@ -238,6 +238,10 @@ sheets:
     owner: '@iweeks'
     tabs:
       - scalable_employment_values
+  - name: sdr_adaptive_data
+    owner: '@jeanpeguero'
+    tabs:
+      - sdr_adaptive_data
   - name: sdr_count_snapshot
     owner: '@vikijuhasz'
     tabs:
