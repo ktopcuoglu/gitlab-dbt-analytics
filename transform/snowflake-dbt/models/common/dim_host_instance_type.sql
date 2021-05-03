@@ -9,7 +9,7 @@
 
 ), final AS (
 
-    SELECT  
+    SELECT  DISTINCT
       host_instance_type.uuid                                       AS instance_uuid,
       host_instance_type.hostname                                   AS instance_hostname,
       host_instance_type.instance_type,
@@ -23,7 +23,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@snalamaru",
-    updated_by="@ischweickartDD",
+    updated_by="@michellecooper",
     created_date="2021-04-01",
-    updated_date="2021-04-05"
+    updated_date="2021-05-03"
 ) }}
