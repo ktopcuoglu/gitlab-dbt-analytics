@@ -322,6 +322,12 @@ models:
     - name: start_month
       tests:
         - not_null
+- name: sheetload_sdr_attainment_to_goal_source
+  description: Source model for SDR attainment and goals by month.
+  columns:
+    - name: current_month
+      tests:
+        - not_null
 - name: sheetload_sdr_count_snapshot_source
   description: Source model for SDR counts by fiscal quarter and sales segment.
   columns:
