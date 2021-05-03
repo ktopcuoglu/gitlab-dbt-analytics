@@ -701,7 +701,7 @@
       LEFT JOIN plans
         ON gitlab_subscriptions.plan_id = plans.plan_id
       LEFT JOIN blocked_users
-        ON namespaces.creator_id = blocked_users.user_id
+        ON ultimate_namespace.creator_id = blocked_users.user_id
     {% if 'NULL' not in event_cte.user_column_name %}
       WHERE {{ filter_out_blocked_users(event_cte.event_name , event_cte.user_column_name) }}
     {% endif %}
