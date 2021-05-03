@@ -11,7 +11,7 @@
     WHERE is_currently_valid = TRUE
       AND IFNULL(gitlab_subscription_end_date, CURRENT_DATE) >= CURRENT_DATE
 
-), RECURSIVE all_namespaces AS (
+), all_namespaces AS (
 
     SELECT
       namespace_id,
@@ -56,8 +56,7 @@
     INNER JOIN all_namespaces AS iter -- Child namespace
       ON anchor.namespace_id = iter.parent_id
 
-)
-, extracted AS (
+), extracted AS (
 
     SELECT
       *,
@@ -74,13 +73,13 @@
       namespace_plans.plan_is_paid                                              AS namespace_plan_is_paid,
       IFF(ultimate_parent_gitlab_subscriptions.is_trial
             AND IFNULL(ultimate_parent_gitlab_subscriptions.plan_id, 34) <> 34,
-          102, IFNULL(ultimate_parent_plans.plan_id, 34)                        AS ultimate_parent_plan_id,
+          102, IFNULL(ultimate_parent_plans.plan_id, 34))                       AS ultimate_parent_plan_id,
       IFF(ultimate_parent_gitlab_subscriptions.is_trial
             AND IFNULL(ultimate_parent_gitlab_subscriptions.plan_id, 34) <> 34,
-          'Ultimate Trial', IFNULL(ultimate_parent_plans.plan_title, 'Free')    AS ultimate_parent_plan_title,
+          'Ultimate Trial', IFNULL(ultimate_parent_plans.plan_title, 'Free'))   AS ultimate_parent_plan_title,
       IFF(ultimate_parent_gitlab_subscriptions.is_trial
             AND IFNULL(ultimate_parent_gitlab_subscriptions.plan_id, 34) <> 34,
-          FALSE, IFNULL(ultimate_parent_plans.plan_is_paid, FALSE)              AS ultimate_parent_plan_is_paid
+          FALSE, IFNULL(ultimate_parent_plans.plan_is_paid, FALSE))             AS ultimate_parent_plan_is_paid
     FROM extracted
     -- Get plan information for the namespace.
     LEFT JOIN active_gitlab_subscriptions AS namespace_gitlab_subscriptions
