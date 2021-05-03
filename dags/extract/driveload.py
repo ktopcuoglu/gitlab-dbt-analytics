@@ -49,8 +49,6 @@ with open(f"{airflow_home}/analytics/extract/sheetload/drives.yml", "r") as file
 
     folders = [folder for folder in stream["folders"]]
 
-runs = []
-
 # Create the DAG
 dag = DAG(
     "driveload",
@@ -93,4 +91,4 @@ for folder in folders:
         arguments=[container_cmd],
         dag=dag,
     )
-    runs.append(folder_run)
+
