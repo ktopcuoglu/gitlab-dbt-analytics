@@ -24,7 +24,8 @@ class GoogleDriveClient:
         """
             Google drive does not allow direct csv reading from the urls, so we need to
             download the file using their API method, create a df and then delete the local file
-        :return:
+
+            :return: pandas Dataframe of data available in file_id
         """
         request = self.service.files().get_media(fileId=file_id)
         fh = BytesIO()
@@ -39,7 +40,17 @@ class GoogleDriveClient:
         return df
 
     def get_item_id(self, item_name, in_folder_id=None, is_folder=None) -> str:
-        """ """
+        """
+            Retrieves the unique identifier for a folder or file available in Google Drive.
+            The folder / file must have been shared with whatever account is running this script
+
+            :param self:
+            :param item_name: Item name to be retrieve
+            :param in_folder_id: Optional, specify a folder to look in
+            :param is_folder: Optional, specify if this is a folder.
+            :return: str of unique identifier in Google Drive
+        """
+
         query = f"fullText contains '{item_name}'"
 
         if is_folder:
@@ -60,12 +71,15 @@ class GoogleDriveClient:
         else:
             return items[0].get("id")
 
-    def get_archive_folder_id(
-        self, in_folder_id
-    ) -> str:
+    def get_archive_folder_id(self, in_folder_id) -> str:
         """
-        created to reduce complexity in main function,
+
         convenience function which creates an archive folder if it doesn't already exist.
+        created to reduce complexity in main function,
+
+        :param self:
+        :param in_folder_id: folder in which to look
+        :return: folder_id of archive folder
         """
         archive_folder_id = self.get_item_id("Archive", in_folder_id, True)
 
@@ -77,10 +91,9 @@ class GoogleDriveClient:
     def create_folder(self, folder_name, in_folder_id) -> str:
         """
 
-        :param service:
         :param folder_name:
         :param in_folder_id:
-        :return:
+        :return: folder_id of folder which was created.
         """
         file_metadata = {
             "name": folder_name,
@@ -101,10 +114,12 @@ class GoogleDriveClient:
 
     def get_files_in_folder(self, folder_id, file_type) -> List[Dict]:
         """
+            Retrieves a list of all files of a specific type available in a specific folder
 
-        :param folder_id:
-        :param file_type:
-        :return:
+        :param folder_id: Folder to retrieve
+        :param file_type: File types to retrieve
+        :return: A list of dicts containing file details. Fields in dict are controlled by the call
+        to service.files
         """
         query = (
             f"'{folder_id}' in parents "
@@ -118,6 +133,7 @@ class GoogleDriveClient:
         results = (
             self.service.files()
             .list(
+                    # fields returned are specified below.
                 q=query, pageSize=10, fields="nextPageToken, files(id, name, mimeType)"
             )
             .execute()
@@ -130,7 +146,13 @@ class GoogleDriveClient:
             return items
 
     def move_file_to_folder(self, file_id, to_folder_id) -> bool:
-        """ """
+        """
+
+        :param self:
+        :param file_id: file to be moved
+        :param to_folder_id: folder id to move to
+        :return:
+        """
         # Retrieve the existing parents to remove
         file = self.service.files().get(fileId=file_id, fields="parents").execute()
 
