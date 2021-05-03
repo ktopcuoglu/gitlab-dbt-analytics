@@ -50,10 +50,10 @@
       usage_ping.license_md5,
       usage_ping.cleaned_version,
       -- Wave 1
-      usage_ping.instance_user_count / instance_user_count.license_user_count    AS license_utilization,
-      usage_ping.instance_user_count,
-      usage_ping.max_historical_user_count,
-      seat_links.license_user_count,
+      usage_ping.instance_user_count / seat_link.license_user_count    AS license_utilization,
+      usage_ping.instance_user_count                                   AS active_user_count,
+      usage_ping.historical_max_users,
+      seat_link.license_user_count,
       -- Wave 2 & 3
       usage_ping.umau_28_days_user,
       usage_ping.action_monthly_active_users_project_repo_28_days_user,
