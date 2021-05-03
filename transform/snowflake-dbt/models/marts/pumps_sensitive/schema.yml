@@ -5,9 +5,9 @@ models:
     description: '{{ doc("pump_marketing_contact") }}'
     columns:
       - name: company_name
-        description: Mapped to `Company` in Marketo
+        description: Mapped to `Company` in Marketo. Compiled from SFDC, gitlab_dotcom, customer_db, & zuora in [dim_marketing_contact](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.dim_marketing_contact#code)
       - name: country
-        description: Mapped to `Country` in Marketo
+        description: Mapped to `Country` in Marketo. Compiled from SFDC, customer_db, & zuora in [dim_marketing_contact](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.dim_marketing_contact#code)
       - name: customer_db_confirmed_date
         description: Mapped to `CDB_Customer_DB_Confirmed_Date__c` in Marketo
       - name: customer_db_created_date
@@ -15,9 +15,9 @@ models:
       - name: customer_db_customer_id
         description: Mapped to `CDB_Customer_DB_Customer_ID__c` in Marketo
       - name: days_since_saas_signup
-        description: Mapped to `CDB_Days_Since_SaaS_Signup__c` in Marketo
+        description: Mapped to `CDB_Days_Since_SaaS_Signup__c` in Marketo. Calculated from `gitlab_dotcom.confirmed_date` in [dim_marketing_contact](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.dim_marketing_contact#code)
       - name: days_since_saas_trial_ended
-        description: Mapped to `CDB_Days_Since_SaaS_Trial_Ended__c` in Marketo
+        description: Mapped to `CDB_Days_Since_SaaS_Trial_Ended__c` in Marketo. Calculated from `customers_db.trial_histories.expired_on` in [bdg_marketing_contact_order](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.bdg_marketing_contact_order#code)
       - name: days_since_self_managed_owner_signup
         description: Mapped to `CDB_Days_Since_Self_Managed_Owner_Signup__c` in Marketo
       - name: dim_marketing_contact_id
