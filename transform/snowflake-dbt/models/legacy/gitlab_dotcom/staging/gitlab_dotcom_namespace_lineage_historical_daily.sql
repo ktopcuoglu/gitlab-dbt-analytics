@@ -21,7 +21,7 @@
     WHERE snapshot_day >= '2020-01-01'::DATE
     {% if is_incremental() %}
 
-      AND snapshot_day > (select max(snapshot_day) from {{ this }})
+      AND snapshot_day > (SELECT MAX(snapshot_day) FROM {{ this }})
 
     {% endif %}
 >>>>>>> bb70cdd61 (Efficiency updates to namespace lineage tables)
