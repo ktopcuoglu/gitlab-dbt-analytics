@@ -325,6 +325,26 @@ def drive_loader(
     gapi_keyfile: str = None,
     conn_dict: Dict[str, str] = None,
 ):
+    """
+    Load all data from a Google Drive Folder into a DataFrame and pass it to dw_uploader.
+    The folder must have been shared with the google service account of the runner.
+
+    All files from one folder are uploaded into one table.
+
+    This process creates an "archived" folder and moves files into this folder once uploaded
+
+    Column names can not contain parentheses. Spaces and slashes will be
+    replaced with underscores.
+
+    drive: path to yaml file with folder configurations
+
+    table_name: Optional, name of the tab to be loaded -- matches the table_name as well as part of the document name
+      -- For example for the test sheet this should be "test_sheet" as that is the name of the tab to be loaded from the document.
+      -- Also should match the second half of the sheet name -- for example `sheetload.test_sheet`.
+      -- Also the name of the final table in Snowflake.  The test sheet turns into a RAW.SHEETLOAD.test_sheet table.
+
+    python driveload.py drive <drive_file>
+    """
     engine = snowflake_engine_factory(conn_dict or env, "LOADER", schema)
     info(engine)
 
