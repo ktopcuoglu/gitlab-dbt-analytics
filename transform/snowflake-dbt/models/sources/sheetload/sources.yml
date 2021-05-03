@@ -94,6 +94,7 @@ sources:
       - name: territory_mapping
       - name: scalable_employment_values
       - name: sdr_adaptive_data
+      - name: sdr_attainment_to_goal
       - name: sdr_count_snapshot
       - name: social_marketing_metrics
       - name: social_marketing_topic_metrics
