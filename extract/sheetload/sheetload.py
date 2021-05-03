@@ -338,10 +338,9 @@ def drive_loader(
 
     drive: path to yaml file with folder configurations
 
-    table_name: Optional, name of the tab to be loaded -- matches the table_name as well as part of the document name
-      -- For example for the test sheet this should be "test_sheet" as that is the name of the tab to be loaded from the document.
-      -- Also should match the second half of the sheet name -- for example `sheetload.test_sheet`.
-      -- Also the name of the final table in Snowflake.  The test sheet turns into a RAW.SHEETLOAD.test_sheet table.
+    table_name: Optional, matches the table_name to be loaded
+
+    For a working example of this function being called see the driveload DAG.
 
     python driveload.py drive <drive_file>
     """
