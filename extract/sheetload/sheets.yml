@@ -115,11 +115,6 @@ sheets:
     owner: '@iweeks'
     tabs:
       - hire_replan
-  - description: This contains data about the type of host Instance(Production/Test etc.) for analyzing the Usage Ping data.
-    name: host_instance_type
-    owner: '@snalamaru'
-    tabs:
-      - host_instance_type
   - name: infrastructure_missing_employees
     owner: '@ken_aguilar'
     tabs:
