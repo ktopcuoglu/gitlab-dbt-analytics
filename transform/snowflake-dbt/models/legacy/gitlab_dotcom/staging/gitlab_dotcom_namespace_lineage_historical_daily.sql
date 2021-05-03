@@ -16,7 +16,7 @@
     WHERE snapshot_day >= '2020-01-01'::DATE
     {% if is_incremental() %}
 
-      AND snapshot_day > (select max(snapshot_day) from {{ this }})
+      AND snapshot_day > (SELECT MAX(snapshot_day) FROM {{ this }})
 
     {% endif %}
 
@@ -58,11 +58,12 @@
             AND IFNULL(namespace_subscription_snapshots.plan_id, 34) <> 34,
           102, IFNULL(namespace_subscription_snapshots.plan_id, 34))                  AS ultimate_parent_plan_id
     FROM namespace_lineage_daily
-    LEFT JOIN namespace_subscription_snapshots
-      ON namespace_lineage_daily.ultimate_parent_id = namespace_subscription_snapshots.namespace_id
-      AND namespace_lineage_daily.snapshot_day BETWEEN namespace_subscription_snapshots.valid_from::DATE AND IFNULL(namespace_subscription_snapshots.valid_to::DATE, CURRENT_DATE)
     LEFT JOIN map_namespace_internal
       ON namespace_lineage_daily.ultimate_parent_id = map_namespace_internal.ultimate_parent_namespace_id
+    LEFT JOIN namespace_subscription_snapshots
+      ON namespace_lineage_daily.ultimate_parent_id = namespace_subscription_snapshots.namespace_id
+      AND namespace_lineage_daily.snapshot_day BETWEEN namespace_subscription_snapshots.valid_from::DATE
+                                               AND IFNULL(namespace_subscription_snapshots.valid_to::DATE, CURRENT_DATE)
     QUALIFY ROW_NUMBER() OVER(
       PARTITION BY
         namespace_lineage_daily.namespace_id,

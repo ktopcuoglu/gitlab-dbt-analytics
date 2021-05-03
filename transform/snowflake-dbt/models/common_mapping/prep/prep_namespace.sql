@@ -54,38 +54,25 @@
       AND key_value = 'group'
     GROUP BY 1, 2
 
-), namespaces AS (
-
-    SELECT
-      namespace_snapshots.*,
-      IFNULL(namespace_current.namespace_id IS NOT NULL, FALSE)                       AS is_currently_valid
-    FROM namespace_snapshots
-    LEFT OUTER JOIN namespace_current
-      ON namespace_snapshots.namespace_id = namespace_current.namespace_id
-    QUALIFY ROW_NUMBER() OVER (
-      PARTITION BY namespace_snapshots.namespace_id
-      ORDER BY namespace_snapshots.valid_from DESC
-    ) = 1
-
 ), namespace_lineage_all_time AS (
   
 
     SELECT
-      -- DATE_TRUNC('month', snapshot_day)                                                AS snapshot_month,
+      DATE_TRUNC('month', snapshot_day)                                                AS snapshot_month,
       namespace_id,
       ultimate_parent_id,
       ultimate_parent_plan_id
     FROM namespace_lineage_historical
     {{ dbt_utils.group_by(n=4)}}
 
-    -- UNION ALL
+    UNION ALL
 
-    -- SELECT
-    --   DATE_TRUNC('month', CURRENT_DATE)                                                AS snapshot_month,
-    --   namespace_id,
-    --   ultimate_parent_id,
-    --   ultimate_parent_plan_id
-    -- FROM namespace_lineage_current
+    SELECT
+      DATE_TRUNC('month', CURRENT_DATE)                                                AS snapshot_month,
+      namespace_id,
+      ultimate_parent_id,
+      ultimate_parent_plan_id
+    FROM namespace_lineage_current
 
 ), namespace_lineage AS (
 
@@ -98,8 +85,26 @@
     INNER JOIN plans
       ON namespace_lineage_all_time.ultimate_parent_plan_id = plans.plan_id
     QUALIFY ROW_NUMBER() OVER (
-      PARTITION BY namespace_id, ultimate_parent_id
+      PARTITION BY
+        namespace_id,
+        ultimate_parent_id,
+        ultimate_parent_plan_id
       ORDER BY snapshot_month DESC
+    ) = 1
+
+), namespaces AS (
+
+    SELECT
+      namespace_snapshots.*,
+      IFF(namespace_lineage.snapshot_month != DATE_TRUNC('month', CURRENT_DATE),
+          namespace_lineage.snapshot_month, NULL)                                     AS deleted_month,
+      IFNULL(deleted_month IS NOT NULL, FALSE)                                        AS is_currently_valid 
+    FROM namespace_snapshots
+    LEFT JOIN namespace_lineage
+      ON namespace_snapshots.namespace_id = namespace_lineage.namespace_id
+    QUALIFY ROW_NUMBER() OVER (
+      PARTITION BY namespace_snapshots.namespace_id
+      ORDER BY namespace_snapshots.valid_from DESC
     ) = 1
 
 ), joined AS (
