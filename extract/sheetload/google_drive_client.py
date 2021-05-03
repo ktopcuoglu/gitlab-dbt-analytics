@@ -61,7 +61,7 @@ class GoogleDriveClient:
             return items[0].get("id")
 
     def get_archive_folder_id(
-        self, item_name, in_folder_id=None, is_folder=None
+        self, in_folder_id
     ) -> str:
         """
         created to reduce complexity in main function,

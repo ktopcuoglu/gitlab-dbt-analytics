@@ -368,19 +368,19 @@ def drive_loader(
 
         info(f"Processing folder {folder_name}")
 
-        folder_id = google_drive_client.get_item_id(folder_name)
+        folder_id = google_drive_client.get_item_id(item_name=folder_name)
         archive_folder_id = google_drive_client.get_archive_folder_id(
-            "Archive", folder_id, True
+                in_folder_id=folder_id
         )
 
-        files = google_drive_client.get_files_in_folder(folder_id, "text/csv")
+        files = google_drive_client.get_files_in_folder(folder_id=folder_id, file_type="text/csv")
         info(f"Found {str(len(files))} to process")
 
         for file in files:
             file_id = file.get("id")
-            data = google_drive_client.get_data_frame_from_file_id(file_id)
+            data = google_drive_client.get_data_frame_from_file_id(file_id=file_id)
             dw_uploader_append_only(engine, table=table_name, data=data)
-            google_drive_client.move_file_to_folder(file_id, archive_folder_id)
+            google_drive_client.move_file_to_folder(file_id=file_id, to_folder_id=archive_folder_id)
 
 
 if __name__ == "__main__":
