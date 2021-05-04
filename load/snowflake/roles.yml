@@ -1783,15 +1783,12 @@ roles:
         privileges:
             databases:
                 read:
-                    - prep
                     - raw
             schemas:
                 read:
-                    - prep.zuora_revenue
                     - raw.zuora_revenue
             tables:
                 read:
-                    - prep.zuora_revenue.*
                     - raw.zuora_revenue.*
 
 # ==========================================
