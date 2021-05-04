@@ -108,8 +108,8 @@ config_dict = {
     "gitlab_com": {
         "cloudsql_instance_name": None,
         "dag_name": "gitlab_com",
-        "dbt_name": "none",
-        "env_vars": {},
+        "dbt_name": "gitlab_dotcom",
+        "env_vars": {"HOURS": "13"},
         "extract_schedule_interval": "0 */6 * * *",
         "secrets": [
             GITLAB_COM_DB_USER,
@@ -121,11 +121,11 @@ config_dict = {
         "sync_schedule_interval": "0 2 */1 * *",
         "task_name": "gitlab-com",
     },
-    "gitlab_com_incremental": {
+    "gitlab_com_scd": {
         "cloudsql_instance_name": None,
-        "dag_name": "gitlab_com_incremental",
-        "dbt_name": "gitlab_dotcom",
-        "env_vars": {"HOURS": "13"},
+        "dag_name": "gitlab_com_scd",
+        "dbt_name": "none",
+        "env_vars": {},
         "extract_schedule_interval": "0 */6 * * *",
         "secrets": [
             GITLAB_COM_DB_USER,
