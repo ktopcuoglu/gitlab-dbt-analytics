@@ -63,7 +63,12 @@
       CASE
         WHEN bizible_marketing_channel_path_name = 'Trial' THEN TRUE
         ELSE FALSE
-      END                                                        AS is_trial
+      END                                                        AS is_trial,
+      CASE
+        WHEN LOWER(dim_crm_person.lead_source) LIKE '%trial - gitlab.com%' THEN TRUE
+        WHEN LOWER(dim_crm_person.lead_source) LIKE '%trial - enterprise%' THEN TRUE
+        ELSE FALSE
+      END                                                        AS is_lead_source_trial
     FROM fct_crm_person
     LEFT JOIN dim_crm_person
       ON fct_crm_person.dim_crm_person_id = dim_crm_person.dim_crm_person_id
