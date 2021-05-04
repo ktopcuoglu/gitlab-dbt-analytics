@@ -21,7 +21,7 @@ WITH source AS (
       SPLIT_PART(major_minor_version, '.', 2)                   AS minor_version,
       TRY_TO_DATE(data_by_row['date']::TEXT, 'MMMM DDnd, YYYY') AS release_date,
       data_by_row['manager_americas'][0]::TEXT                  AS release_manager_americas,
-      data_by_row['manager_apac_emea']::TEXT                    AS release_manager_emea,
+      data_by_row['manager_apac_emea'][0]::TEXT                 AS release_manager_emea,
       rank,
       snapshot_date
     FROM intermediate
