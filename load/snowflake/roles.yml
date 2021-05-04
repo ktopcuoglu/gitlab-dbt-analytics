@@ -207,6 +207,7 @@ roles:
           - analyst_core
           - gitlab_dotcom
           - qualtrics
+          - zuora_revenue
         privileges:
             databases:
                 read:
@@ -1775,6 +1776,23 @@ roles:
                 read:
                     - prep.zuora.*
                     - raw.zuora_stitch.*
+
+    - zuora_revenue:
+        warehouses:
+            - analyst_xs
+        privileges:
+            databases:
+                read:
+                    - prep
+                    - raw
+            schemas:
+                read:
+                    - prep.zuora_revenue
+                    - raw.zuora_revenue
+            tables:
+                read:
+                    - prep.zuora_revenue.*
+                    - raw.zuora_revenue.*
 
 # ==========================================
 # User Roles
