@@ -1218,7 +1218,7 @@ tables:
     export_table: 'experiment_subjects'
     export_table_primary_key: id
     import_db: GITLAB_DB
-    import_query: "SELECT id\n, experiment_id\n, user_id\n, group_id\n, project_id\n, variant\n, created_at\n, updated_at\n, converted_at\n, context\nFROM experiment_subjects\nWHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'\n  AND '{EXECUTION_DATE}'::timestamp "
+    import_query: "SELECT id\n, experiment_id\n, user_id\n, group_id\n, project_id\n, variant\n, created_at\n, updated_at\n, converted_at\n, context\nFROM experiment_subjects\nWHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp\n AND '{END_TIMESTAMP}'::timestamp"
   experiment_users:
     dbt_source_model: true
     export_schema: 'gitlab_com'
