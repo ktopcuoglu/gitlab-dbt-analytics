@@ -1,5 +1,5 @@
 import pytest
-from analytics.extract.qualtrics.src.execute import chunk_list
+from qualtrics.src.execute import chunk_list
 
 
 def test_chunk_list():
