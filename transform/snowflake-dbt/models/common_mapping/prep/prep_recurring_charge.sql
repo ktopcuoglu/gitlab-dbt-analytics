@@ -32,7 +32,7 @@ WITH dim_date AS (
   FROM {{ ref('zuora_subscription_source') }}
   WHERE is_deleted = FALSE
     AND exclude_from_analysis IN ('False', '')
-    AND subscription_status NOT IN ('Expired', 'Draft')
+    AND subscription_status NOT IN ('Draft')
 
 ), rate_plan_charge_filtered AS (
 
@@ -42,6 +42,7 @@ WITH dim_date AS (
     zuora_rate_plan_charge.rate_plan_charge_id,
     zuora_subscription.subscription_id,
     zuora_subscription.subscription_name,
+    zuora_subscription.subscription_status,
     zuora_rate_plan_charge.product_rate_plan_charge_id  AS product_details_id,
     zuora_rate_plan_charge.mrr,
     zuora_rate_plan_charge.delta_tcv,
@@ -67,6 +68,7 @@ WITH dim_date AS (
     crm_account_id,
     subscription_id,
     subscription_name,
+    subscription_status,
     product_details_id,
     rate_plan_charge_id,
     SUM(mrr)                                             AS mrr,
@@ -79,7 +81,7 @@ WITH dim_date AS (
     AND (rate_plan_charge_filtered.effective_end_month > dim_date.date_actual
       OR rate_plan_charge_filtered.effective_end_month IS NULL)
     AND dim_date.day_of_month = 1
-  {{ dbt_utils.group_by(n=7) }}
+  {{ dbt_utils.group_by(n=8) }}
 
 ), final AS (
 
@@ -91,6 +93,7 @@ WITH dim_date AS (
     subscription_id                                                                         AS dim_subscription_id,
     product_details_id                                                                      AS dim_product_detail_id,
     rate_plan_charge_id                                                                     AS dim_charge_id,
+    subscription_status,
     mrr,
     arr,
     quantity,
@@ -104,5 +107,5 @@ WITH dim_date AS (
     created_by="@mcooperDD",
     updated_by="@iweeks",
     created_date="2021-01-04",
-    updated_date="2021-04-05",
+    updated_date="2021-04-28",
 ) }}
