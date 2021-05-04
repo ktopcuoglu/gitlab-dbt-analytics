@@ -493,13 +493,4 @@ models:
     - name: other
     - name: requestor_name
     - name: additional_gitlab_team_members
-- name: sheetload_host_instance_type
-  description: This contains data about the type of host Instance(Production/Test etc.) for the Usage Ping received.
-  columns:
-    - name: company_name
-    - name: company_sfdc_id
-    - name: hostname
-    - name: uuid
-    - name: subscription_id
-    - name: instance_type
 
