@@ -179,7 +179,7 @@ Below is an example and the expected output:
 ```sql
 {% raw %}
 {{ simple_cte([
-    ('map_merged_crm_accounts','map_merged_crm_accounts'),
+    ('map_merged_crm_account','map_merged_crm_account'),
     ('zuora_account','zuora_account_source'),
     ('zuora_contact','zuora_contact_source')
 ]) }}
@@ -195,10 +195,10 @@ Below is an example and the expected output:
 ```
 
 ```sql
-WITH map_merged_crm_accounts AS (
+WITH map_merged_crm_account AS (
 
     SELECT * 
-    FROM "PROD".common.map_merged_crm_accounts
+    FROM "PROD".common.map_merged_crm_account
 
 ), zuora_account AS (
 

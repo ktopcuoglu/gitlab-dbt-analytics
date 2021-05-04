@@ -95,6 +95,7 @@ branching_dbt_run = BranchPythonOperator(
 dbt_non_product_models_command = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
+    export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_S" &&
     dbt run --profiles-dir profile --target prod --exclude tag:datasiren tag:product legacy.sheetload legacy.snapshots sources.gitlab_dotcom sources.sheetload sources.sfdc sources.zuora; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """

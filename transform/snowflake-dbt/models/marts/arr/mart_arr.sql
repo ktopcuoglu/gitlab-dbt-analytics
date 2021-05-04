@@ -44,6 +44,7 @@ WITH dim_billing_account AS (
     SUM(quantity)                                                          AS quantity,
     ARRAY_AGG(unit_of_measure)                                             AS unit_of_measure
   FROM {{ ref('fct_mrr') }}
+  WHERE subscription_status IN ('Active', 'Cancelled')
   {{ dbt_utils.group_by(n=5) }}
 
 ), joined AS (
@@ -154,5 +155,5 @@ WITH dim_billing_account AS (
     created_by="@msendal",
     updated_by="@iweeks",
     created_date="2020-09-04",
-    updated_date="2021-04-05"
+    updated_date="2021-04-28"
 ) }}
