@@ -616,6 +616,8 @@ models:
       - name: event_created_at
         tests:
           - not_null
+      - name: is_blocked_namespace
+        description: boolean flag set to TRUE if the creator of the namespace is a blocked user
   - name: gitlab_dotcom_usage_data_events_blocked_users
     description: '{{ doc("gitlab_dotcom_usage_data_events_blocked_users") }}'
     columns:
