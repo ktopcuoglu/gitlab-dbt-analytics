@@ -9,6 +9,29 @@ Below checklist of activities would be run once for quarter to validate security
 SNOWFLAKE
 1. [ ] Validate terminated employees have been removed from Snowflake access.
 2. [ ] De-activate any account that has not logged-in within the past 30 days from the moment of performing audit from Snowflake.
+    <details>
+
+    ```sql
+    SELECT
+      user_name,
+      created_on,
+      login_name,
+      display_name,
+      first_name,
+      last_name,
+      email,
+      comment,
+      is_disabled,
+      last_success_login,
+      snapshot_date
+    FROM "PROD"."LEGACY"."SNOWFLAKE_SHOW_USERS"
+    WHERE is_disabled = 'false'
+      and CASE WHEN last_success_login IS null THEN created_on ELSE last_success_login END <= dateadd('day', -30, CURRENT_DATE())
+    
+    ```
+    
+    </details>
+
 3. [ ] Validate all user accounts require multi-factor authentication.
 
 SISENSE
