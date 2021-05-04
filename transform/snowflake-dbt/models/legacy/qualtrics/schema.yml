@@ -91,3 +91,13 @@ models:
             - not_null
         - name: started_at
         - name: user_plan
+    - name: qualtrics_survey_invitation_emails_sent
+      description: One record for each survey along with how many invitation emails were sent for that survey
+      columns:
+        - name: number_of_emails_sent
+          tests:
+            - not_null
+        - name: survey_id
+          tests:
+            - not_null
+            - unique
