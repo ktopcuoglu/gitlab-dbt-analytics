@@ -47,6 +47,7 @@ WITH subscriptions AS (
       usage_ping.dim_license_id,
       usage_ping.license_md5,
       usage_ping.cleaned_version,
+      usage_ping.dim_location_country_id,
       -- Wave 1
       seat_link.active_user_count / seat_link.license_user_count                              AS license_utilization,
       seat_link.active_user_count,
@@ -169,7 +170,7 @@ WITH subscriptions AS (
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@ischweickartDD",
-    updated_by="@ischweickartDD",
+    updated_by="@michellecooper",
     created_date="2021-02-08",
-    updated_date="2021-04-13"
+    updated_date="2021-04-27"
 ) }}
