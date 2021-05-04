@@ -56,9 +56,7 @@ class ZuoraRevProAPI:
         f = open(f"{tablename}_{pagenum}.csv", "w+")
         f.write(response_output)
         f.close()
-        command = (
-            f"gsutil cp {tablename}_{pagenum}.csv gs://{bucket_name}/{tablename}_2/"
-        )
+        command = f"gsutil cp {tablename}_{pagenum}.csv gs://{bucket_name}/RAW_DB/{tablename}/"
         logging.info(command)
         p = subprocess.run(command, shell=True)
 
@@ -220,17 +218,21 @@ class ZuoraRevProAPI:
             converted_table_definition = (
                 "CREATE TABLE IF NOT EXISTS {table_name} ( \n"
                 + ",\n".join(converted_table_column)
-                + "\n);"
+                + "\n)\n;"
             ).format(table_name=table_name)
             original_table_definition = (
-                "\n \n \n \n \n /* \n \n \n \n CREATE TABLE IF NOT EXISTS {table_name} ( \n"
+                "\n \n \n \n \n /* Original Table definition for reference or Downstream modification. \n CREATE TABLE IF NOT EXISTS {table_name} ( \n"
                 + ",\n".join(original_table_column)
-                + "\n);*/"
+                + "\n);\n*/"
             ).format(table_name=table_name)
             f = open(f"{table_name}.sql", "w+")
             f.write(converted_table_definition)
             f.write(original_table_definition)
             f.close()
+            command = f"gsutil cp {table_name}.sql gs://zuora_revpro_gitlab/RAW_DB/{table_name}/"
+            logging.info(command)
+            p = subprocess.run(command, shell=True)
+            logging.info(p)
         elif response_output.status_code == 400:
             logging.info(
                 f"{table_name} definition can't be pull {response_output.text}"
