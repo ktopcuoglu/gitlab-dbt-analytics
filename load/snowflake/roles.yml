@@ -1777,7 +1777,7 @@ roles:
                     - prep.zuora.*
                     - raw.zuora_stitch.*
 
-    - zuora_revenue:
+    - zuora_revenue: # This is done to provide access to Data team analyst as 3530 
         warehouses:
             - analyst_xs
         privileges:
