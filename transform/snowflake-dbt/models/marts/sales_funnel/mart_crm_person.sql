@@ -61,10 +61,6 @@
       END                                                        AS sales_segment_name,
       fct_crm_person.is_mql,
       CASE
-        WHEN bizible_marketing_channel_path_name = 'Trial' THEN TRUE
-        ELSE FALSE
-      END                                                        AS is_trial,
-      CASE
         WHEN LOWER(dim_crm_person.lead_source) LIKE '%trial - gitlab.com%' THEN TRUE
         WHEN LOWER(dim_crm_person.lead_source) LIKE '%trial - enterprise%' THEN TRUE
         ELSE FALSE
