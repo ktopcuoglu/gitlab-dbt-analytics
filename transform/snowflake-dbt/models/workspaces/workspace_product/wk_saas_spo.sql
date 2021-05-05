@@ -73,7 +73,7 @@ WITH date_details AS (
       AND all_events.stage_name != 'monitor'
       AND namespace_is_internal = FALSE
       AND days_since_namespace_creation >= 0
-    GROUP BY 1,2,3,4,5,6,7
+    {{dbt_utils.group_by(n=7}}
                                                                                   
 ), joined AS (                                               
 
@@ -101,7 +101,7 @@ WITH date_details AS (
       ON namespaces.namespace_id = events.namespace_id
     WHERE event_date >= DATEADD('day',-28, date_details.last_day_of_month)
       AND stage_name != 'manage'
-    GROUP BY 1,2,3,4,5,6,7,8,9
+    {{dbt_utils.group_by(n=9}}
   
 )
 
@@ -125,4 +125,4 @@ SELECT
   quote_identifiers = False
   ) }}
 FROM joined
-GROUP BY 1,2,3,4,5,6,7
+{{dbt_utils.group_by(n=7}}
