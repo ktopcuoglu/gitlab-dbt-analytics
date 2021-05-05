@@ -7,8 +7,9 @@ WITH qualtrics_distribution AS (
 ), email_sent_count AS (
 
     SELECT 
-      SUM(email_sent_count) AS number_of_emails_sent,
-      survey_id
+      survey_id,
+      SUM(email_sent_count) AS number_of_emails_sent
+
     FROM qualtrics_distribution
     GROUP BY survey_id
 
