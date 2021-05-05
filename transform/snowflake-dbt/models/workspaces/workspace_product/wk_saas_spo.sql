@@ -5,15 +5,13 @@
     })
 }}
 
-WITH date_details AS (
-
-    SELECT *
-    FROM {{ ref('date_details') }}
-  
-), blocked_users AS (
-  
-    SELECT *
-    FROM {{ ref('gitlab_dotcom_users_blocked_xf') }}
+{{simple_cte([
+  ('date_details', 'date_details'),
+  ('blocked_users', 'gitlab_dotcom_users_blocked_xf'),
+  ('all_events', 'gitlab_dotcom_daily_usage_data_events'),
+  ('metrics', 'gitlab_dotcom_xmau_metrics')
+])
+}}
 
 ), all_namespaces AS (
   
@@ -26,29 +24,13 @@ WITH date_details AS (
     WHERE namespace_id = namespace_ultimate_parent_id
       AND namespace_is_internal = FALSE
 
-)
-
-, namespaces AS (
+), namespaces AS (
   
     SELECT 
       all_namespaces.*,
       IFF(blocked_users.user_id IS NOT NULL,TRUE,FALSE) AS created_by_blocked_user
     FROM all_namespaces
     LEFT JOIN blocked_users ON all_namespaces.creator_id = blocked_users.user_id
-  
-)
-            
-, all_events AS (
-  
-    SELECT *
-    FROM {{ ref('gitlab_dotcom_daily_usage_data_events') }}
-  
-)
-
-, metrics AS (
-  
-    SELECT *
-    FROM {{ ref('gitlab_dotcom_xmau_metrics') }}
   
 ), events AS (
   
