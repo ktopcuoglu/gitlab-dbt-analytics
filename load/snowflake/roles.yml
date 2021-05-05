@@ -3314,6 +3314,7 @@ users:
         member_of:
             - dvanrooijen
             - accountadmin
+            - securityadmin
 
     - eburke:
         can_login: no
