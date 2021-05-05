@@ -1,4 +1,4 @@
-{%- set stage_names = dbt_utils.get_column_values(ref('wk_prep_stages_to_include'), 'stage_name') -%}
+{%- set stage_names = dbt_utils.get_column_values(ref('wk_prep_stages_to_include'), 'stage_name', default=[]) -%}
 
 {{ config({
     "materialized": "table"
