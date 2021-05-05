@@ -348,6 +348,20 @@ models:
   - name: dim_gitlab_dotcom_gitlab_emails
     description: '{{ doc("dim_gitlab_dotcom_gitlab_emails") }}'
 
+  - name: dim_gitlab_releases
+    description: '{{ doc("dim_gitlab_releases") }}'
+    columns:
+      - name: major_minor_version
+        description: The unique name of the release maintained by the Version app.
+        tests:
+          - not_null
+          - unique
+      - name: release_date
+        description: The official date of the release, that happens every 22 of each month.
+        tests:
+          - not_null
+          - unique
+
   - name: dim_gitlab_versions
     description: '{{ doc("dim_gitlab_versions") }}'
     columns:

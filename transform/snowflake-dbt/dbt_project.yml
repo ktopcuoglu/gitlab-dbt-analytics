@@ -52,11 +52,6 @@ seeds:
   +schema: legacy
   +quote_columns: False
 
-  gitlab_snowflake:
-    gitlab_release_schedule:
-      +column_types:
-        major_minor_version: varchar
-
   data_tests:
     +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
     +schema: tdf

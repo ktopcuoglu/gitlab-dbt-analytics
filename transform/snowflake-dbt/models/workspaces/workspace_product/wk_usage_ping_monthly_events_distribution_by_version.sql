@@ -22,10 +22,10 @@ WITH filtered_counters AS (
       AND created_month >= (SELECT MAX(reporting_month) FROM {{this}})
 
       {% endif %}
-), gitlab_release_schedule AS (
+), dim_gitlab_releases AS (
 
     SELECT *
-    FROM {{ ref('gitlab_release_schedule') }}
+    FROM {{ ref('dim_gitlab_releases') }}
 
 ), dim_usage_pings AS (
 
@@ -56,7 +56,7 @@ WITH filtered_counters AS (
     FROM monthly_usage_data AS product_usage
     LEFT JOIN dim_usage_pings
       ON product_usage.ping_id = dim_usage_pings.id
-    LEFT JOIN gitlab_release_schedule AS release 
+    LEFT JOIN dim_gitlab_releases AS release 
       ON dim_usage_pings.major_minor_version = release.major_minor_version
     INNER JOIN filtered_counters 
       ON product_usage.metrics_path = filtered_counters.metrics_path
