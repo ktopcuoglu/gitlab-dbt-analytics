@@ -43,9 +43,7 @@ WITH usage_pings_with_license_md5 AS (
       usage_pings_with_license_md5.ping_source,
       usage_pings_with_license_md5.is_internal,
       usage_pings_with_license_md5.is_staging,
-      usage_pings_with_license_md5.country_name,
-      usage_pings_with_license_md5.iso_2_country_code,
-      usage_pings_with_license_md5.iso_3_country_code,
+      usage_pings_with_license_md5.dim_location_country_id,
       map_license_subscription_account.dim_license_id,
       map_license_subscription_account.dim_subscription_id,
       map_license_subscription_account.is_license_mapped_to_subscription,
@@ -62,7 +60,7 @@ WITH usage_pings_with_license_md5 AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@kathleentam",
-    updated_by="@ischweickartDD",
+    updated_by="@michellecooper",
     created_date="2021-01-10",
-    updated_date="2021-04-05"
+    updated_date="2021-04-27"
 ) }}

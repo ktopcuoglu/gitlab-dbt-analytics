@@ -47,6 +47,7 @@
       smau_monthly.cleaned_version,
       smau_monthly.ping_created_at,
       {{ get_date_id('smau_monthly.ping_created_at') }}             AS ping_created_date_id,
+      smau_monthly.dim_location_country_id,
       smau_monthly.manage_analytics_total_unique_counts_monthly,
       smau_monthly.plan_redis_hll_counters_issues_edit_issues_edit_total_unique_counts_monthly,
       smau_monthly.create_repo_writes,
@@ -71,7 +72,7 @@
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@ischweickartDD",
-    updated_by="@ischweickartDD",
+    updated_by="@michellecooper",
     created_date="2021-03-15",
-    updated_date="2021-03-15"
+    updated_date="2021-04-27"
 ) }}

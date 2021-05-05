@@ -5,7 +5,7 @@
 
 , final AS (
 
-    SELECT  
+    SELECT DISTINCT
       gainsight_instance_info.instance_uuid                         AS instance_uuid,
       gainsight_instance_info.instance_hostname                     AS instance_hostname,
       gainsight_instance_info.instance_type                         AS instance_type,
@@ -19,7 +19,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@snalamaru",
-    updated_by="@snalamaru",
-    created_date="2021-04-27",
-    updated_date="2021-04-27"
+    updated_by="@michellecooper",
+    created_date="2021-04-01",
+    updated_date="2021-05-03"
 ) }}
