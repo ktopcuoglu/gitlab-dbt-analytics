@@ -13,7 +13,7 @@
 ])
 }}
 
-), all_namespaces AS (
+, all_namespaces AS (
   
     SELECT
       namespace_id,
