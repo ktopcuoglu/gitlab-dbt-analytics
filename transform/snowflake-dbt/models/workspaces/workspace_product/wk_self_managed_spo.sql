@@ -47,4 +47,4 @@ SELECT
 FROM smau_only
 LEFT JOIN dim_usage_pings
   ON smau_only.ping_id = dim_usage_pings.id
-{{dbt_utils.group_by(n=7}}
+{{dbt_utils.group_by(n=7)}}
