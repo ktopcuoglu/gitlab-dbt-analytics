@@ -18,7 +18,7 @@
       created_month,
       monthly_metric_value
     FROM monthly_usage_data
-    WHERE is_smau
+    WHERE is_smau = TRUE
 
 ), dim_usage_pings AS (
 
