@@ -52,11 +52,6 @@ seeds:
   +schema: legacy
   +quote_columns: False
 
-  gitlab_snowflake:
-    gitlab_release_schedule:
-      +column_types:
-        major_minor_version: varchar
-
   data_tests:
     +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
     +schema: tdf
@@ -168,6 +163,10 @@ models:
       engineering:
         +database: "{{ env_var('SNOWFLAKE_PROD_DATABASE') }}" # PROD
         +materialized: table
+
+      gainsight:
+        +materialized: table
+        +schema: gainsight
 
       gcp_billing:
         +materialized: table
@@ -426,6 +425,9 @@ snapshots:
     target_schema: "snapshots"
     transient: false
 
+    common:
+      +tags: ["daily"]
+
     customers:
       +tags: ["daily", "customers_db"]
 
@@ -434,6 +436,9 @@ snapshots:
 
     license:
       +tags: ["daily", "license_db"]
+
+    marts:
+      +tags: ["daily"]
 
     netsuite:
       +tags: ["daily"]

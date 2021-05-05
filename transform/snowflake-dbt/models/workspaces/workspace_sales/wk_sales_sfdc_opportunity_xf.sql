@@ -630,9 +630,9 @@ WITH sfdc_opportunity AS (
 
       -- booked net arr (won + renewals / lost)
       CASE
-        WHEN oppty_final.is_won = 1 
+        WHEN (oppty_final.is_won = 1 
             OR (oppty_final.is_renewal = 1 
-                AND oppty_final.is_lost = 1)
+                AND oppty_final.is_lost = 1))
           THEN net_arr
         ELSE 0 
       END                                                 AS booked_net_arr

@@ -247,6 +247,17 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
+{% docs dim_gitlab_releases %}
+Dimensional table representing released versions of GitLab.
+
+The grain of the table is a major_minor_version.
+
+Additional information can be found on the [GitLab Releases](https://about.gitlab.com/releases/categories/releases/) page.
+
+Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+{% enddocs %}
+
 {% docs dim_gitlab_versions %}
 Dimensional table representing released versions of GitLab.
 
@@ -282,9 +293,9 @@ Sales funnel targets set by the Finance team to measure performance of important
 
 {% enddocs %}
 
-{% docs dim_crm_sales_rep %}
+{% docs dim_crm_user %}
 
-Dimension representing the associated sales rep from salesforce. Most often this will be the record owner, which is a ubiquitous field in salesforce.
+Dimension representing the associated user from salesforce. Most often this will be the record owner, which is a ubiquitous field in salesforce.
 
 {% enddocs %}
 

@@ -450,40 +450,14 @@
 -%}
 
 
-WITH gitlab_subscriptions AS (
-
-    SELECT *
-    FROM {{ ref('gitlab_dotcom_gitlab_subscriptions_snapshots_namespace_id_base') }}
-
-)
-
-, namespaces AS (
-
-    SELECT *
-    FROM {{ ref('gitlab_dotcom_namespaces_xf') }}
-
-)
-
-, plans AS (
-
-    SELECT *
-    FROM {{ ref('gitlab_dotcom_plans') }}
-
-)
-
-, projects AS (
-
-    SELECT *
-    FROM {{ ref('gitlab_dotcom_projects_xf') }}
-
-)
-
-, users AS (
-
-    SELECT *
-    FROM {{ ref('gitlab_dotcom_users') }}
-
-)
+{{ simple_cte([
+    ('gitlab_subscriptions', 'gitlab_dotcom_gitlab_subscriptions_snapshots_namespace_id_base'),
+    ('namespaces', 'gitlab_dotcom_namespaces_xf'),
+    ('plans', 'gitlab_dotcom_plans'),
+    ('projects', 'gitlab_dotcom_projects_xf'),
+    ('users', 'gitlab_dotcom_users'),
+    ('blocked_users', 'gitlab_dotcom_users_blocked_xf')
+]) }}
 
 
 /* Source CTEs Start Here */
@@ -665,6 +639,7 @@ WITH gitlab_subscriptions AS (
     SELECT
       ultimate_namespace.namespace_id,
       ultimate_namespace.namespace_created_at,
+      IFF(blocked_users.user_id IS NOT NULL, TRUE, FALSE)          AS is_blocked_namespace,
       {% if 'NULL' in event_cte.user_column_name %}
         NULL
       {% else %}
@@ -725,6 +700,8 @@ WITH gitlab_subscriptions AS (
         AND {{ event_cte.event_name }}.created_at < {{ coalesce_to_infinity("TO_DATE(gitlab_subscriptions.valid_to)") }}
       LEFT JOIN plans
         ON gitlab_subscriptions.plan_id = plans.plan_id
+      LEFT JOIN blocked_users
+        ON ultimate_namespace.creator_id = blocked_users.user_id
     {% if 'NULL' not in event_cte.user_column_name %}
       WHERE {{ filter_out_blocked_users(event_cte.event_name , event_cte.user_column_name) }}
     {% endif %}
@@ -766,8 +743,9 @@ WITH gitlab_subscriptions AS (
                 user_created_at,
                 event_created_at)/(24 * 7))               AS weeks_since_user_creation
     FROM data
-      LEFT JOIN users
-        ON data.user_id = users.user_id
+    LEFT JOIN users
+      ON data.user_id = users.user_id
+    WHERE event_created_at < CURRENT_DATE()
     
 )
 

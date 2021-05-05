@@ -91,6 +91,8 @@
     SELECT 
       created_month,
       clean_metrics_name,
+      monthly_usage_data.host_id,
+      monthly_usage_data.instance_id,
       edition,
       product_tier,
       group_name,
@@ -106,7 +108,7 @@
     INNER JOIN fct_usage_ping_payloads
       ON monthly_usage_data.ping_id = fct_usage_ping_payloads.usage_ping_id
     WHERE is_gmau = TRUE
-    {{ dbt_utils.group_by(n=12) }}
+    {{ dbt_utils.group_by(n=14) }}
 
 
 
@@ -144,6 +146,7 @@
         AND gmau.ping_source = 'Self-Managed'
         AND gmau.created_month  = estimated_value.reporting_month
         AND gmau.stage_name = estimated_value.stage_name 
+        AND gmau.group_name = estimated_value.group_name 
         AND gmau.section_name = estimated_value.section_name
         AND gmau.edition = estimated_value.edition
   
@@ -188,7 +191,9 @@
       delivery,
       edition,
       SUM(recorded_monthly_metric_value_sum)                            AS recorded_monthly_metric_value_sum,
-      SUM(estimated_monthly_metric_value_sum)                           AS estimated_monthly_metric_value_sum
+      -- this is expected as the breakdown is for Recorded Self-Managed and Saas
+      -- Estimated Uplift being calculated in the next unioned table
+      SUM(recorded_monthly_metric_value_sum)                            AS estimated_monthly_metric_value_sum
     FROM estimated_monthly_metric_value_sum
     {{ dbt_utils.group_by(n=9) }}
 
@@ -205,6 +210,7 @@
       delivery,
       edition,
       0                                                                           AS recorded_monthly_metric_value_sum,
+      -- calculating Estimated Uplift here
       SUM(estimated_monthly_metric_value_sum - recorded_monthly_metric_value_sum) AS estimated_monthly_metric_value_sum
     FROM estimated_monthly_metric_value_sum
     WHERE delivery = 'Self-Managed'

@@ -1,7 +1,7 @@
 WITH source AS (
 
     SELECT *
-    FROM {{ source('gitlab_dotcom', 'experiment_subjects') }}
+    FROM {{ ref('gitlab_dotcom_experiment_subjects_dedupe_source') }}
 
 ), renamed AS (
 
@@ -16,7 +16,6 @@ WITH source AS (
       updated_at::TIMESTAMP     AS updated_at,
       converted_at::TIMESTAMP   AS converted_at
     FROM source
-    QUALIFY ROW_NUMBER() OVER (PARTITION BY id ORDER BY _uploaded_at DESC) = 1    
 
 )
 

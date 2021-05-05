@@ -1,7 +1,5 @@
 {{ config(alias='report_pipeline_metrics_day') }}
 
---TODO:
--- Rename snapshot fields to close fields, to keep it consistent with the "with_targets" versions
 WITH date_details AS (
 
     SELECT *
@@ -15,8 +13,24 @@ WITH date_details AS (
         today_date.day_of_fiscal_quarter_normalised AS snapshot_day_of_fiscal_quarter_normalised,
         today_date.fiscal_quarter_name_fy           AS snapshot_fiscal_quarter_name,
         today_date.first_day_of_fiscal_quarter      AS snapshot_fiscal_quarter_date,
-        today_date.fiscal_year                      AS snapshot_fiscal_year
-        
+        today_date.fiscal_year                      AS snapshot_fiscal_year,
+
+        -- created within quarter net arr
+        CASE
+          WHEN opties.pipeline_created_fiscal_quarter_name = today_date.fiscal_quarter_name_fy  
+            AND opties.is_eligible_created_pipeline_flag = 1
+              THEN opties.net_arr
+          ELSE 0 
+        END                                                AS created_in_snapshot_quarter_net_arr,
+     
+      -- created within quarter deal count
+        CASE
+          WHEN opties.pipeline_created_fiscal_quarter_name = today_date.fiscal_quarter_name_fy  
+            AND opties.is_eligible_created_pipeline_flag = 1
+              THEN opties.calculated_deal_count
+          ELSE 0 
+        END                                                AS created_in_snapshot_quarter_deal_count
+          
     FROM {{ref('wk_sales_sfdc_opportunity_xf')}} opties
     CROSS JOIN (SELECT *
                   FROM date_details
@@ -105,10 +119,11 @@ WITH date_details AS (
       opp_snapshot.booked_net_arr,
   
       opp_snapshot.created_and_won_same_quarter_net_arr,
-      opp_snapshot.created_in_snapshot_quarter_net_arr
+      opp_snapshot.created_in_snapshot_quarter_net_arr,
+      opp_snapshot.created_in_snapshot_quarter_deal_count
 
     FROM sfdc_opportunity_snapshot_history_xf opp_snapshot
-    -- Keep the UNION ALL, somehow UNION is making us loose data
+    -- Keep the UNION ALL, somehow UNION is losing data
     UNION ALL
     SELECT 
       -------------------------------------
@@ -170,13 +185,10 @@ WITH date_details AS (
       opties.created_and_won_same_quarter_net_arr,
       
       -- created within quarter
-      CASE
-        WHEN opties.pipeline_created_fiscal_quarter_name = opties.snapshot_fiscal_quarter_name
-          AND opties.is_eligible_created_pipeline_flag = 1
-            THEN opties.net_arr
-        ELSE 0 
-      END                                                AS created_in_snapshot_quarter_net_arr
-  
+      opties.created_in_snapshot_quarter_net_arr,
+     
+      -- created within quarter
+      opties.created_in_snapshot_quarter_deal_count
 
     FROM sfdc_opportunity_xf opties
   
@@ -312,16 +324,41 @@ WITH date_details AS (
       opp_history.owner_id,
       -------------------
 
-      SUM(opp_history.calculated_deal_count)     AS created_in_quarter_count,
+      SUM(opp_history.created_in_snapshot_quarter_deal_count)     AS created_in_quarter_count,
 
       -- Net ARR 
-      SUM(opp_history.net_arr)                   AS created_in_quarter_net_arr
+      SUM(opp_history.created_in_snapshot_quarter_net_arr)        AS created_in_quarter_net_arr
 
     FROM sfdc_opportunity_snapshot_history_xf opp_history
     -- restrict the rows to pipeline created on the quarter of the snapshot
     WHERE opp_history.snapshot_fiscal_quarter_name = opp_history.pipeline_created_fiscal_quarter_name
-    AND opp_history.is_eligible_created_pipeline_flag = 1
-    AND net_arr IS NOT NULL
+      AND opp_history.is_eligible_created_pipeline_flag = 1
+    GROUP BY 1,2,3,4,5,6,7,8
+    -- Keep the UNION ALL, somehow UNION is losing data
+    UNION ALL
+    SELECT
+      opties.snapshot_fiscal_quarter_date              AS close_fiscal_quarter_date,
+      opties.snapshot_day_of_fiscal_quarter_normalised AS close_day_of_fiscal_quarter_normalised,
+
+      -------------------
+      -- report keys
+      opties.sales_team_cro_level,
+      opties.sales_team_rd_asm_level,
+      opties.deal_category, 
+      opties.deal_group,
+      opties.sales_qualified_source,
+      opties.owner_id,
+      -------------------
+
+      SUM(opties.created_in_snapshot_quarter_deal_count)     AS created_in_quarter_count,
+
+      -- Net ARR 
+      SUM(opties.created_in_snapshot_quarter_net_arr)        AS created_in_quarter_net_arr
+
+    FROM sfdc_opportunity_xf opties
+    -- restrict the rows to pipeline created on the quarter of the snapshot
+    WHERE opties.snapshot_fiscal_quarter_name = opties.pipeline_created_fiscal_quarter_name
+      AND opties.is_eligible_created_pipeline_flag = 1
     GROUP BY 1,2,3,4,5,6,7,8
 
 -- These CTE builds a complete set of values 
@@ -372,6 +409,7 @@ WITH date_details AS (
   SELECT 
       key_fields.*,
       close_date.fiscal_quarter_name_fy               AS close_fiscal_quarter_name,
+      close_date.date_actual                          AS close_date,
       close_date.day_of_fiscal_quarter_normalised     AS close_day_of_fiscal_quarter_normalised,
       close_date.fiscal_year                          AS close_fiscal_year,
       rq_plus_1.first_day_of_fiscal_quarter           AS rq_plus_1_close_fiscal_quarter_date,
@@ -403,6 +441,15 @@ WITH date_details AS (
       base_fields.close_fiscal_quarter_name,
       base_fields.close_fiscal_year,
       base_fields.close_day_of_fiscal_quarter_normalised,
+
+      -- used to track the latest updated day in the model
+      -- this might be different to the latest available information in the source models
+      -- as dbt runs are not necesarly in synch
+      CASE 
+        WHEN base_fields.close_date = CURRENT_DATE
+          THEN 1
+          ELSE 0
+      END                                                         AS is_today_flag,
 
       -- report quarter plus 1 / 2 date fields
       base_fields.rq_plus_1_close_fiscal_quarter_name,
@@ -451,7 +498,10 @@ WITH date_details AS (
       -- reported quarter + 2
       COALESCE(report_quarter_plus_2.rq_plus_2_open_1plus_net_arr,0)       AS rq_plus_2_open_1plus_net_arr,
       COALESCE(report_quarter_plus_2.rq_plus_2_open_3plus_net_arr,0)       AS rq_plus_2_open_3plus_net_arr,
-      COALESCE(report_quarter_plus_2.rq_plus_2_open_4plus_net_arr,0)       AS rq_plus_2_open_4plus_net_arr
+      COALESCE(report_quarter_plus_2.rq_plus_2_open_4plus_net_arr,0)       AS rq_plus_2_open_4plus_net_arr,
+
+      -- TIMESTAMP
+      current_timestamp                                                    AS dbt_last_run_at
 
     -- created a list of all options to avoid having blanks when attaching metrics
     FROM base_fields
@@ -488,7 +538,6 @@ WITH date_details AS (
       AND report_quarter_plus_2.owner_id = base_fields.owner_id
       AND report_quarter_plus_2.close_fiscal_quarter_date = base_fields.close_fiscal_quarter_date
 
-    
     -- Pipe generation piece
     LEFT JOIN pipeline_gen 
       ON pipeline_gen.sales_team_cro_level = base_fields.sales_team_cro_level
