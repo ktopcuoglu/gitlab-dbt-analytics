@@ -1,29 +1,25 @@
 {{ simple_cte([
-    ('crm_accounts', 'dim_crm_account')
+    ('crm_accounts', 'dim_crm_account'),
+    ('gainsight_instance_info', 'gainsight_instance_info_source')
 ]) }}
 
-, host_instance_type AS (
+, final AS (
 
-    SELECT *
-    FROM {{ source('sheetload', 'host_instance_type') }}
-
-), final AS (
-
-    SELECT  
-      host_instance_type.uuid                                       AS instance_uuid,
-      host_instance_type.hostname                                   AS instance_hostname,
-      host_instance_type.instance_type,
+    SELECT DISTINCT
+      gainsight_instance_info.instance_uuid                         AS instance_uuid,
+      gainsight_instance_info.instance_hostname                     AS instance_hostname,
+      gainsight_instance_info.instance_type                         AS instance_type,
       {{ get_keyed_nulls('crm_accounts.dim_crm_account_id')  }}     AS dim_crm_account_id,
       crm_accounts.crm_account_name
-    FROM host_instance_type
+    FROM gainsight_instance_info
     LEFT JOIN crm_accounts
-      ON host_instance_type.company_sfdc_id = crm_accounts.dim_crm_account_id
+      ON gainsight_instance_info.crm_account_id = crm_accounts.dim_crm_account_id
 )
 
 {{ dbt_audit(
     cte_ref="final",
     created_by="@snalamaru",
-    updated_by="@ischweickartDD",
+    updated_by="@michellecooper",
     created_date="2021-04-01",
-    updated_date="2021-04-05"
+    updated_date="2021-05-03"
 ) }}

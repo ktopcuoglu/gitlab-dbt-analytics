@@ -1,7 +1,7 @@
-WITH map_merged_crm_accounts AS (
+WITH map_merged_crm_account AS (
 
     SELECT *
-    FROM {{ ref('map_merged_crm_accounts') }}
+    FROM {{ ref('map_merged_crm_account') }}
 
 ), zuora_subscription AS (
 
@@ -21,7 +21,7 @@ WITH map_merged_crm_accounts AS (
 
   SELECT
     zuora_subscription.subscription_id                                        AS dim_subscription_id,
-    map_merged_crm_accounts.dim_crm_account_id                                AS dim_crm_account_id,
+    map_merged_crm_account.dim_crm_account_id                                AS dim_crm_account_id,
     zuora_account.account_id                                                  AS dim_billing_account_id,
     zuora_subscription.invoice_owner_id                                       AS dim_crm_person_id_invoice_owner,
     zuora_subscription.sfdc_opportunity_id                                    AS dim_crm_opportunity_id,
@@ -48,8 +48,8 @@ WITH map_merged_crm_accounts AS (
   FROM zuora_subscription
   INNER JOIN zuora_account
     ON zuora_subscription.account_id = zuora_account.account_id
-  LEFT JOIN map_merged_crm_accounts
-    ON zuora_account.crm_id = map_merged_crm_accounts.sfdc_account_id
+  LEFT JOIN map_merged_crm_account
+    ON zuora_account.crm_id = map_merged_crm_account.sfdc_account_id
 
 )
 

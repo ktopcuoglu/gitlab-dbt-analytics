@@ -89,6 +89,8 @@ models:
   - name: stages_yaml_source
     description: Emphemeral layer for extracting and cleaning data from [stages.yml file](https://gitlab.com/gitlab-com/www-gitlab-com/blob/master/data/stages.yml) in the GitLab Handbook.
 
+  - name: release_managers_source
+    description: Ephemeral layer for extracting and cleaning data from [release_managers.yml file](https://gitlab.com/gitlab-com/www-gitlab-com/-/blob/master/data/release_managers.yml)
   - name: team_yaml_source
     description: Emphemeral layer for extracting and cleaning data from [team.yml file](https://gitlab.com/gitlab-com/www-gitlab-com/blob/master/data/team.yml) in the GitLab Handbook.
   - name: usage_ping_metrics_source
