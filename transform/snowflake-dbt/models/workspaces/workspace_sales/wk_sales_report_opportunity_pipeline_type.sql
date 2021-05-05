@@ -59,7 +59,8 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
     WHERE snapshot_fiscal_quarter_date = close_fiscal_quarter_date -- closing in the same quarter of the snapshot
     AND stage_name NOT IN ('9-Unqualified','10-Duplicate','Unqualified','00-Pre Opportunity','0-Pending Acceptance') 
     -- not created within quarter
-    AND snapshot_fiscal_quarter_date <> pipeline_created_fiscal_quarter_date
+    AND (snapshot_fiscal_quarter_date <> pipeline_created_fiscal_quarter_date
+          OR is_eligible_created_pipeline_flag = 0)         
     -- set day 5 as start of the quarter for pipeline purposes
     AND (snapshot_day_of_fiscal_quarter_normalised = 5
         OR (snapshot_date = CURRENT_DATE 
@@ -75,11 +76,8 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
     WHERE stage_name NOT IN ('9-Unqualified','10-Duplicate','Unqualified','00-Pre Opportunity','0-Pending Acceptance') 
     -- pipeline created same quarter
       AND snapshot_fiscal_quarter_date = pipeline_created_fiscal_quarter_date
+      AND is_eligible_created_pipeline_flag = 1
       AND pipeline_created_fiscal_quarter_date = close_fiscal_quarter_date  
-      AND ((snapshot_fiscal_quarter_name = 'FY21-Q2' 
-                    AND (snapshot_day_of_fiscal_quarter_normalised > 80
-                          OR snapshot_day_of_fiscal_quarter_normalised < 45))
-            OR snapshot_fiscal_quarter_name != 'FY21-Q2')
     GROUP BY 1, 2
 
 ), pipeline_type_pulled_in AS (
@@ -96,7 +94,7 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
       ON pipe_created.opportunity_id = pull.opportunity_id
       AND pipe_created.pipeline_created_fiscal_quarter_date = pull.snapshot_fiscal_quarter_date
     WHERE pull.stage_name NOT IN ('9-Unqualified','10-Duplicate','Unqualified','00-Pre Opportunity','0-Pending Acceptance') 
-      AND pull.snapshot_fiscal_quarter_date = close_fiscal_quarter_date
+      AND pull.snapshot_fiscal_quarter_date = pull.close_fiscal_quarter_date
       AND pipe_start.opportunity_id IS NULL
       AND pipe_created.opportunity_id IS NULL  
     GROUP BY 1, 2
