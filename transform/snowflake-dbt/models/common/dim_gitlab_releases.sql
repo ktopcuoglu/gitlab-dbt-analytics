@@ -2,7 +2,7 @@ WITH base AS (
 
     SELECT *
     FROM {{ ref('release_managers_source')}}
-    QUALIFY ROW_NUMBER() OVER (PARTITION BY major_minor_version ORDER BY snapshot_date DESC) = 1
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY major_minor_version ORDER BY snapshot_date DESC, rank DESC) = 1
 
 )
 
