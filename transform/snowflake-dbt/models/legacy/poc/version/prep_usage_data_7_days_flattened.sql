@@ -44,7 +44,7 @@ WITH flattened AS (
 )
 
 {{ dbt_audit(
-    cte_ref="transformed",
+    cte_ref="joined",
     created_by="@mpeychet",
     updated_by="@mpeychet",
     created_date="2021-05-04",
