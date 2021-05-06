@@ -1,7 +1,8 @@
 import os
 from datetime import datetime, timedelta
-
+from yaml import load, safe_load, YAMLError
 from airflow import DAG
+from os import environ as env
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
 from airflow_utils import (
     DATA_IMAGE,
@@ -49,7 +50,9 @@ default_args = {
 airflow_home = env["AIRFLOW_HOME"]
 
 # Get all the table name for which tasks for loading needs to be created
-with open(f"{airflow_home}/analytics/extract/zuora_revenue/zuora_revenue_table_name.yml", "r") as file:
+with open(
+    f"{airflow_home}/analytics/extract/zuora_revenue/zuora_revenue_table_name.yml", "r"
+) as file:
     try:
         stream = safe_load(file)
     except YAMLError as exc:
@@ -65,11 +68,14 @@ runs = []
 
 # Create the DAG  with one load happening at once
 dag = DAG(
-    "zuora_revenue_load_extract", default_args=default_args, schedule_interval="0 10 * * 0",concurrency=1,
+    "zuora_revenue_load_extract",
+    default_args=default_args,
+    schedule_interval="0 10 * * 0",
+    concurrency=1,
 )
 
 for table_name in table_name_list:
-    #Set the command for the container
+    # Set the command for the container
     container_cmd = f"""
         {clone_and_setup_extraction_cmd} &&
         python3 zuora_revenue/zuora_extract_load.py zuora_load --bucket $ZUORA_REVENUE_BUCKET_NAME --schema_name zuora_revenue --table_name {table_name}
@@ -78,8 +84,8 @@ for table_name in table_name_list:
     zuora_revenue_load_run = KubernetesPodOperator(
         **gitlab_defaults,
         image=DATA_IMAGE,
-        task_id=f"{table_name}-load",
-        name=f"{table_name}-load",
+        task_id=f"{table_name}_LOAD",
+        name=f"{table_name}_LOAD",
         secrets=[
             ZUORA_REVENUE_GCS_NAME,
             GCP_SERVICE_CREDS,
@@ -88,11 +94,11 @@ for table_name in table_name_list:
             SNOWFLAKE_LOAD_USER,
             SNOWFLAKE_LOAD_WAREHOUSE,
             SNOWFLAKE_LOAD_PASSWORD,
-            ],
+        ],
         env_vars=pod_env_vars,
         affinity=get_affinity(False),
         tolerations=get_toleration(False),
         arguments=[container_cmd],
         dag=dag,
-        )
-    runs.append(sheetload_run)
+    )
+    runs.append(zuora_revenue_load_run)
