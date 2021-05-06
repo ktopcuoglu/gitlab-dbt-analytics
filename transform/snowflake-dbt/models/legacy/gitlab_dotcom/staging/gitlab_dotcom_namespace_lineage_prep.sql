@@ -75,8 +75,9 @@
       namespace_plans.plan_title                                                AS namespace_plan_title,
       namespace_plans.plan_is_paid                                              AS namespace_plan_is_paid,
       IFF(ultimate_parent_gitlab_subscriptions.is_trial
-            AND IFNULL(ultimate_parent_gitlab_subscriptions.plan_id, 34) NOT IN (34, 103),
-          102, IFNULL(ultimate_parent_plans.plan_id, 34))                       AS ultimate_parent_plan_id,
+            AND IFNULL(ultimate_parent_gitlab_subscriptions.plan_id, 34) NOT IN (34, 103), -- Excluded Premium (103) and Free (34) Trials from being remapped as Ultimate Trials
+          102, -- All historical trial GitLab subscriptions were Ultimate/Gold Trials (102)
+          IFNULL(ultimate_parent_plans.plan_id, 34))                            AS ultimate_parent_plan_id,
       IFF(ultimate_parent_plan_id = 102,
           'Ultimate Trial', IFNULL(ultimate_parent_plans.plan_title, 'Free'))   AS ultimate_parent_plan_title,
       IFF(ultimate_parent_gitlab_subscriptions.is_trial,
