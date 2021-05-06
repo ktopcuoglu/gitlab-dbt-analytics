@@ -2115,6 +2115,10 @@ roles:
         warehouses:
             - analyst_xs
 
+    - fstein:
+        warehouses:
+            - admin
+
     - gitlab_ci:
         member_of:
             - loader
@@ -3353,6 +3357,12 @@ users:
         can_login: yes
         member_of:
             - fkurniadi
+
+    - fstein:
+        can_login: yes
+        member_of:
+            - fstein
+            - securityadmin
 
     - gainsight:
         can_login: yes
