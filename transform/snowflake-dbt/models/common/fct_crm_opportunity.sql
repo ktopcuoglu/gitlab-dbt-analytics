@@ -161,9 +161,9 @@
 
     FROM sfdc_opportunity
     LEFT JOIN sfdc_account AS partner_account
-      ON sfdc_opportunity.account_id = partner_account.account_id
+      ON sfdc_opportunity.partner_account = partner_account.account_id
     LEFT JOIN sfdc_account AS influence_partner
-      ON sfdc_opportunity.account_id = influence_partner.account_id
+      ON sfdc_opportunity.influence_partner = influence_partner.account_id
 
 ), linear_attribution_base AS ( --the number of attribution touches a given opp has in total
     --linear attribution IACV of an opp / all touches (count_touches) for each opp - weighted by the number of touches in the given bucket (campaign,channel,etc)
@@ -465,5 +465,5 @@
     created_by="@mcooperDD",
     updated_by="@jpeguero",
     created_date="2020-11-30",
-    updated_date="2021-04-29"
+    updated_date="2021-05-06"
 ) }}
