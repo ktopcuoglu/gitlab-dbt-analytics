@@ -44,8 +44,8 @@
       gitlab_plan_title,
       gitlab_plan_is_paid,
       dim_product_tier_id,
-      current_member_count,
-      current_project_count
+      namespace_member_count                    AS current_member_count,
+      namespace_project_count                   AS current_project_count
     FROM prep_namespace
     WHERE is_currently_valid = TRUE
 
@@ -56,5 +56,5 @@
     created_by="@snalamaru",
     updated_by="@ischweickartDD",
     created_date="2020-12-29",
-    updated_date="2021-04-28"
+    updated_date="2021-05-06"
 ) }}

@@ -3,7 +3,7 @@
     })
 }}
 
-WITH source AS (
+WITH snapshots AS (
 
   SELECT *
   FROM {{ source('snapshots', 'gitlab_dotcom_namespaces_snapshots') }}
@@ -11,7 +11,6 @@ WITH source AS (
 ), renamed as (
 
   SELECT
-  
     dbt_scd_id::VARCHAR                                           AS namespace_snapshot_id,
     id::NUMBER                                                    AS namespace_id,
     name::VARCHAR                                                 AS namespace_name,
@@ -46,8 +45,7 @@ WITH source AS (
     push_rule_id::NUMBER                                          AS push_rule_id,
     "DBT_VALID_FROM"::TIMESTAMP                                   AS valid_from,
     "DBT_VALID_TO"::TIMESTAMP                                     AS valid_to
-
-  FROM source
+  FROM snapshots
     
 )
 
