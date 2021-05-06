@@ -86,7 +86,13 @@ WITH source AS (
         downgrade_iacv__c                           AS downgrade_iacv,
         renewal_acv__c                              AS renewal_acv,
         renewal_amount__c                           AS renewal_amount,
-        sql_source__c                               AS sales_qualified_source,
+        {{ sales_qualified_source_cleaning('sql_source__c') }}
+                                                    AS sales_qualified_source,
+        CASE
+          WHEN sales_qualified_source = 'BDR Generated' THEN 'SDR Generated'
+          WHEN sales_qualified_source LIKE ANY ('Web%', 'Missing%', 'Other') OR sales_qualified_source IS NULL THEN 'Web Direct Generated'
+          ELSE sales_qualified_source
+        END                                         AS sales_qualified_source_grouped,
         sdr_pipeline_contribution__c                AS sdr_pipeline_contribution,
         solutions_to_be_replaced__c                 AS solutions_to_be_replaced,
         x3_technical_evaluation_date__c
@@ -116,6 +122,8 @@ WITH source AS (
             THEN '3) Consumption / PS / Other'
           ELSE 'Missing order_type_name_grouped'
         END                                         AS order_type_grouped,
+        {{ growth_type('order_type_test__c', 'arr_basis__c') }}
+                                                    AS growth_type,
         arr_net__c                                  AS net_arr,
         arr_basis__c                                AS arr_basis,
         arr__c                                      AS arr,
@@ -148,6 +156,15 @@ WITH source AS (
         product_details__c                          AS product_details,
         product_category__c                         AS product_category,
         products_purchased__c                       AS products_purchased,
+        CASE
+          WHEN web_portal_purchase__c THEN 'Web Direct'
+          WHEN arr_net__c < 5000 THEN '<5K'
+          WHEN arr_net__c < 25000 THEN '5-25K'
+          WHEN arr_net__c < 100000 THEN '25-100K'
+          WHEN arr_net__c < 250000 THEN '100-250K'
+          WHEN arr_net__c > 250000 THEN '250K+'
+          ELSE 'Missing opportunity_deal_size'
+        END opportunity_deal_size,
 
       -- ************************************
       -- sales segmentation deprecated fields - 2020-09-03

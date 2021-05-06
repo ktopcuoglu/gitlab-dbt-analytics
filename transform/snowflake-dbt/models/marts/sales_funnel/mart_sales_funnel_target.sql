@@ -38,6 +38,7 @@ WITH dim_crm_user_hierarchy_live AS (
       dim_order_type.order_type_name,
       dim_order_type.order_type_grouped,
       dim_sales_qualified_source.sales_qualified_source_name,
+      dim_sales_qualified_source.sales_qualified_source_grouped,
       fct_sales_funnel_target.allocated_target
     FROM fct_sales_funnel_target
     LEFT JOIN dim_sales_qualified_source
@@ -55,7 +56,7 @@ WITH dim_crm_user_hierarchy_live AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@mcooperDD",
+    updated_by="@jpeguero",
     created_date="2021-01-08",
-    updated_date="2021-03-26",
+    updated_date="2021-04-26",
   ) }}
