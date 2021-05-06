@@ -1,5 +1,8 @@
 {{ config(alias='report_opportunity_pipeline_type') }}
 
+
+--TODO
+-- Add is renewal type, with current model is hard to get net net arr, it is only easy to get gross net arr
 WITH sfdc_opportunity_snapshot_history_xf AS (
 
   SELECT *
@@ -46,17 +49,22 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
         close_date                      AS starting_close_date,
         forecast_category_name          AS starting_forecast_category,
         net_arr                         AS starting_net_arr,
+        booked_net_arr                  AS starting_booked_net_arr,
         stage_name                      AS starting_stage,
         snapshot_date                   AS starting_snapshot_date,
         is_won                          AS starting_is_won,
-        is_open                         AS starting_is_open
+        is_open                         AS starting_is_open,
+        is_lost                         AS starting_is_lost
     FROM sfdc_opportunity_snapshot_history_xf        
     WHERE snapshot_fiscal_quarter_date = close_fiscal_quarter_date -- closing in the same quarter of the snapshot
     AND stage_name NOT IN ('9-Unqualified','10-Duplicate','Unqualified','00-Pre Opportunity','0-Pending Acceptance') 
     -- not created within quarter
-    AND snapshot_fiscal_quarter_date <> pipeline_created_fiscal_quarter_date
+    AND (snapshot_fiscal_quarter_date <> pipeline_created_fiscal_quarter_date
+          OR is_eligible_created_pipeline_flag = 0)         
     -- set day 5 as start of the quarter for pipeline purposes
-    AND snapshot_day_of_fiscal_quarter_normalised = 5
+    AND (snapshot_day_of_fiscal_quarter_normalised = 5
+        OR (snapshot_date = CURRENT_DATE 
+            AND snapshot_day_of_fiscal_quarter_normalised < 5))
 
 ), pipeline_type_quarter_created AS (
 
@@ -68,11 +76,8 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
     WHERE stage_name NOT IN ('9-Unqualified','10-Duplicate','Unqualified','00-Pre Opportunity','0-Pending Acceptance') 
     -- pipeline created same quarter
       AND snapshot_fiscal_quarter_date = pipeline_created_fiscal_quarter_date
+      AND is_eligible_created_pipeline_flag = 1
       AND pipeline_created_fiscal_quarter_date = close_fiscal_quarter_date  
-      AND ((snapshot_fiscal_quarter_name = 'FY21-Q2' 
-                    AND (snapshot_day_of_fiscal_quarter_normalised > 80
-                          OR snapshot_day_of_fiscal_quarter_normalised < 45))
-            OR snapshot_fiscal_quarter_name != 'FY21-Q2')
     GROUP BY 1, 2
 
 ), pipeline_type_pulled_in AS (
@@ -89,7 +94,7 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
       ON pipe_created.opportunity_id = pull.opportunity_id
       AND pipe_created.pipeline_created_fiscal_quarter_date = pull.snapshot_fiscal_quarter_date
     WHERE pull.stage_name NOT IN ('9-Unqualified','10-Duplicate','Unqualified','00-Pre Opportunity','0-Pending Acceptance') 
-      AND pull.snapshot_fiscal_quarter_date = close_fiscal_quarter_date
+      AND pull.snapshot_fiscal_quarter_date = pull.close_fiscal_quarter_date
       AND pipe_start.opportunity_id IS NULL
       AND pipe_created.opportunity_id IS NULL  
     GROUP BY 1, 2
@@ -103,9 +108,12 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
         close_date                      AS end_close_date,
         forecast_category_name          AS end_forecast_category,
         net_arr                         AS end_net_arr,
+        booked_net_arr                  AS end_booked_net_arr,
         stage_name                      AS end_stage,
+        stage_category                  AS end_stage_category,
         is_won                          AS end_is_won,
-        is_open                         AS end_is_open
+        is_open                         AS end_is_open,
+        is_lost                         AS end_is_lost
     FROM sfdc_opportunity_snapshot_history_xf        
     WHERE (snapshot_day_of_fiscal_quarter_normalised = 90 
           OR snapshot_date = dateadd(day,-1,CURRENT_DATE))
@@ -124,9 +132,12 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
 
         pipe_end.end_forecast_category,
         pipe_end.end_net_arr,
+        pipe_end.end_booked_net_arr,
         pipe_end.end_stage,
+        pipe_end.end_stage_category,
         pipe_end.end_is_open,
         pipe_end.end_is_won,
+        pipe_end.end_is_lost,
         pipe_end.end_close_date,
 
         -- pipeline type, identifies if the opty was there at the begging of the quarter or not
@@ -214,7 +225,7 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
           OR pipe_created.opportunity_id IS NOT NULL        
           OR pipe_pull.opportunity_id IS NOT NULL   
         )
-  GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14
+  GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17
 
 ), report_opportunity_pipeline_type AS (
 
@@ -267,11 +278,14 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
         COALESCE(p.starting_forecast_category,p.pipeline_created_forecast_category)         AS beg_forecast_category,
         COALESCE(p.starting_close_date,p.pipeline_created_close_date)                       AS beg_close_date,
 
-        p.end_net_arr,                                                   
-        p.end_stage,                                                
+        p.end_net_arr,
+        p.end_booked_net_arr,                                                   
+        p.end_stage,  
+        p.end_stage_category,                                              
         p.end_forecast_category,
         p.end_close_date,
         p.end_is_won,
+        p.end_is_lost,
         p.end_is_open,
 
         p.end_net_arr - beg_net_arr                                             AS delta_net_arr,
