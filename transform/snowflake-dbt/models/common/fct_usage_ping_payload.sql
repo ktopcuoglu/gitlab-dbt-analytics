@@ -6,7 +6,16 @@
 
 {%- set columns = adapter.get_columns_in_relation( ref('version_usage_data_source')) -%}
 
-WITH usage_ping AS (
+{{ simple_cte([
+    ('raw_usage_data', 'version_raw_usage_data_source'),
+    ('map_ip_to_country', 'map_ip_to_country'),
+    ('locations', 'prep_location_country'),
+    ('prep_license', 'prep_license'),
+    ('prep_subscription', 'prep_subscription')
+    ])
+}}
+
+, usage_ping AS (
 
     SELECT 
       id                                                                        AS dim_usage_ping_id, 
@@ -63,16 +72,16 @@ WITH usage_ping AS (
       ping_created_at, 
       ip_address_hash,
       {{ dbt_utils.star(from=ref('version_usage_data_source'), relation_alias='usage_data', except=['EDITION', 'CREATED_AT', 'SOURCE_IP']) }},
-      original_edition, 
-      IFF(original_edition = 'CE', 'CE', 'EE')                                                  AS main_edition,
+      cleaned_edition AS edition, 
+      IFF(cleaned_edition = 'CE', 'CE', 'EE')                                                  AS main_edition,
       CASE 
-        WHEN original_edition = 'CE'                                     THEN 'Core'
-        WHEN original_edition = 'EE Free'                                THEN 'Core'                                                      
+        WHEN edition = 'CE'                                     THEN 'Core'
+        WHEN edition = 'EE Free'                                THEN 'Core'                                                      
         WHEN license_expires_at < ping_created_at                        THEN 'Core'
-        WHEN original_edition = 'EE'                                     THEN 'Starter'
-        WHEN original_edition = 'EES'                                    THEN 'Starter'
-        WHEN original_edition = 'EEP'                                    THEN 'Premium'
-        WHEN original_edition = 'EEU'                                    THEN 'Ultimate'
+        WHEN edition = 'EE'                                     THEN 'Starter'
+        WHEN edition = 'EES'                                    THEN 'Starter'
+        WHEN edition = 'EEP'                                    THEN 'Premium'
+        WHEN edition = 'EEU'                                    THEN 'Ultimate'
         ELSE NULL END                                                                           AS product_tier,
       main_edition || ' - ' || product_tier                                                     AS main_edition_product_tier,
       version_is_prerelease,
@@ -83,12 +92,14 @@ WITH usage_ping AS (
         WHEN uuid = 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f'      THEN 'SaaS'
         ELSE 'Self-Managed'
         END                                                                                     AS usage_ping_delivery_type,
+      -- put that in a macro
       CASE
         WHEN usage_ping_delivery_type = 'SaaS'                  THEN TRUE 
         WHEN installation_type = 'gitlab-development-kit'       THEN TRUE 
         WHEN hostname = 'gitlab.com'                            THEN TRUE 
         WHEN hostname ILIKE '%.gitlab.com'                      THEN TRUE 
         ELSE FALSE END                                                                          AS is_internal, 
+      -- put that in a macro
       CASE
         WHEN hostname ilike 'staging.%'                         THEN TRUE
         WHEN hostname IN ( 
@@ -96,10 +107,17 @@ WITH usage_ping AS (
         'dr.gitlab.com'
       )                                                         THEN TRUE
         ELSE FALSE END                                                                          AS is_staging,     
-      COALESCE(raw_usage_data.raw_usage_data_payload, raw_usage_data_payload_reconstructed)     AS raw_usage_data_payload
+      COALESCE(raw_usage_data.raw_usage_data_payload, raw_usage_data_payload_reconstructed)     AS raw_usage_data_payload,
+      prep_license.dim_license_id,
+      prep_subscription.dim_subscription_id
+
     FROM usage_data
     LEFT JOIN raw_usage_data
       ON usage_data.raw_usage_data_id = raw_usage_data.raw_usage_data_id
+    LEFT JOIN prep_license
+      ON usage_data.license_md5 = prep_license.license_md5
+    LEFT JOIN prep_subscription
+      ON prep_license.dim_subscription_id = prep_subscription.dim_subscription_id
 
 ), map_ip_location AS (
 
@@ -130,6 +148,11 @@ WITH usage_ping AS (
     SELECT 
       dim_usage_ping_id,
       dim_product_tier.dim_product_tier_id AS dim_product_tier_id,
+      dim_subscription_id,
+      dim_license_id,
+      dim_location_country_id,
+
+      -- timestamps
       ping_created_at,
       DATEADD('days', -28, ping_created_at)              AS ping_created_at_28_days_earlier,
       DATE_TRUNC('YEAR', ping_created_at)                AS ping_created_at_year,
@@ -138,21 +161,16 @@ WITH usage_ping AS (
       DATE_TRUNC('DAY', ping_created_at)                 AS ping_created_at_date,
       raw_usage_data_id                                  AS raw_usage_data_id, 
       raw_usage_data_payload, 
-      license_md5,
-      original_edition, 
-      edition, 
       main_edition, 
       product_tier, 
       main_edition_product_tier, 
-      cleaned_version,
       version_is_prerelease,
       major_version,
       minor_version,
       major_minor_version,
-      ping_source,
+      usage_ping_delivery_type,
       is_internal, 
       is_staging, 
-      dim_location_country_id,
       instance_user_count
     FROM add_country_info_to_usage_ping
     LEFT OUTER JOIN dim_product_tier

@@ -7,7 +7,7 @@ WITH monthly_usage_data AS (
 , fct_usage_ping_payloads AS (
 
     SELECT *
-    FROM {{ ref('fct_usage_ping_payloads') }}
+    FROM {{ ref('fct_usage_ping_payload') }}
 
 ), monthly_usage_data_agg AS (
 
