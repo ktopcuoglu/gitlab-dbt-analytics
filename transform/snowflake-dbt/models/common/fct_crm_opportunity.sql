@@ -126,10 +126,10 @@
       sfdc_opportunity.deal_path,
       sfdc_opportunity.order_type_stamped                                        AS order_type,
       sfdc_opportunity.sales_segment,
-      {{ sales_qualified_source_cleaning('sfdc_opportunity.sales_qualified_source') }}
+      {{ sales_qualified_source_cleaning('sfdc_opportunity.sales_qualified_source') }} AS sales_qualified_source,
 
       sfdc_opportunity.growth_type,
-      sfdc_opportunity.opportunity_deal_size,                                                                           AS sales_qualified_source,
+      sfdc_opportunity.opportunity_deal_size,
       sfdc_opportunity.days_in_sao,
       sfdc_opportunity.user_segment_stamped                                      AS crm_opp_owner_sales_segment_stamped,
       sfdc_opportunity.user_geo_stamped                                          AS crm_opp_owner_geo_stamped,
