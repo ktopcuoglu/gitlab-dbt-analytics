@@ -105,6 +105,7 @@
       dim_order_type.order_type_name                                       AS order_type,
       dim_order_type.order_type_grouped,
       dim_sales_qualified_source.sales_qualified_source_name,
+      dim_crm_account.is_jihu_account,
       dim_crm_account.crm_account_gtm_strategy,
       dim_crm_account.crm_account_focus_account,
       dim_crm_account.parent_crm_account_gtm_strategy,
