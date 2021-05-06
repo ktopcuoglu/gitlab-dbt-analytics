@@ -91,6 +91,7 @@ WITH map_merged_crm_account AS (
     END                                           AS parent_crm_account_focus_account,
     sfdc_account.record_type_id                   AS record_type_id,
     sfdc_account.federal_account                  AS federal_account,
+    sfdc_account.is_jihu_account                  AS is_jihu_account,
     sfdc_account.gitlab_com_user,
     sfdc_account.tsp_account_employees,
     sfdc_account.tsp_max_family_employees,
