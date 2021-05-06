@@ -201,7 +201,8 @@ WITH source AS (
         -- original issue: https://gitlab.com/gitlab-data/analytics/-/issues/6072
         dr_partner_deal_type__c                     AS dr_partner_deal_type,
         dr_partner_engagement__c                    AS dr_partner_engagement,
-
+        {{ channel_type('dr_partner_engagement', 'order_type_stamped') }}
+                                                    AS channel_type,
         impartnerprm__partneraccount__c             AS partner_account,
         vartopiadrs__dr_status1__c                  AS dr_status,
         distributor__c                              AS distributor,
