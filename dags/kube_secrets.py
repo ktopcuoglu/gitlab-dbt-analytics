@@ -82,7 +82,7 @@ GITLAB_COM_DB_NAME = Secret(
 )
 
 GITLAB_COM_SCD_PG_PORT = Secret(
-    "env", "GITLAB_COM_DB_NAME", "airflow", "GITLAB_COM_DB_NAME"
+    "env", "GITLAB_COM_SCD_PG_PORT", "airflow", "GITLAB_COM_SCD_PG_PORT"
 )
 
 GITLAB_OPS_DB_USER = Secret(
