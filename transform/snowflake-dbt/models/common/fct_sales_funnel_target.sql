@@ -83,7 +83,7 @@ WITH date AS (
 {{ dbt_audit(
     cte_ref="final_targets",
     created_by="@mcooperDD",
-    updated_by="@mcooperDD",
+    updated_by="@jpeguero",
     created_date="2020-12-18",
-    updated_date="2020-03-25"
+    updated_date="2021-05-06"
 ) }}
