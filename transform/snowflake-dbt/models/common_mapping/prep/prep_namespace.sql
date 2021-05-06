@@ -16,13 +16,7 @@
     ('audit_event_details_clean', 'gitlab_dotcom_audit_event_details_clean')
 ]) }}
 
-, saas_product_tiers AS (
-
-    SELECT *
-    FROM product_tiers
-    WHERE product_delivery_type = 'SaaS'
-
-), members AS (
+, members AS (
 
     SELECT
       source_id,
@@ -54,58 +48,59 @@
       AND key_value = 'group'
     GROUP BY 1, 2
 
-), namespace_lineage_all_time AS (
+-- ), namespace_lineage_all_time AS (
   
+--     SELECT
+--       namespace_id,
+--       parent_id,
+--       ultimate_parent_id,
+--       ultimate_parent_plan_id
+--     FROM namespace_lineage_historical
+--     QUALIFY ROW_NUMBER() OVER (
+--       PARTITION BY
+--         namespace_id,
+--         parent_id,
+--         ultimate_parent_id
+--       ORDER BY snapshot_day DESC
+--     ) = 1
 
-    SELECT
-      DATE_TRUNC('month', snapshot_day)                                                AS snapshot_month,
-      namespace_id,
-      ultimate_parent_id,
-      ultimate_parent_plan_id
-    FROM namespace_lineage_historical
-    {{ dbt_utils.group_by(n=4)}}
+    -- UNION ALL
 
-    UNION ALL
-
-    SELECT
-      DATE_TRUNC('month', CURRENT_DATE)                                                AS snapshot_month,
-      namespace_id,
-      ultimate_parent_id,
-      ultimate_parent_plan_id
-    FROM namespace_lineage_current
+    -- SELECT
+    --   namespace_id,
+    --   parent_id,
+    --   ultimate_parent_id,
+    --   ultimate_parent_plan_id
+    -- FROM namespace_lineage_current
 
 ), namespace_lineage AS (
 
     SELECT
-      namespace_lineage_all_time.*,
-      plans.plan_title                                                                  AS ultimate_parent_plan_title,
-      plans.plan_is_paid                                                                AS ultimate_parent_plan_is_paid
-      -- plans.plan_name                                                                 AS ultimate_parent_plan_name
-    FROM namespace_lineage_all_time
+      namespace_lineage_historical.*,
+      MAX(snapshot_day) OVER (PARTITION BY namespace_id)                              AS namespace_last_day,
+      DATEDIFF(day, CURRENT_DATE, namespace_lineage_historical.snapshot_day) = 0      AS is_current,
+      plans.plan_title                                                                AS ultimate_parent_plan_title,
+      plans.plan_is_paid                                                              AS ultimate_parent_plan_is_paid,
+      plans.plan_name                                                                 AS ultimate_parent_plan_name
+    FROM namespace_lineage_historical
     INNER JOIN plans
-      ON namespace_lineage_all_time.ultimate_parent_plan_id = plans.plan_id
+      ON namespace_lineage_historical.ultimate_parent_plan_id = plans.plan_id
     QUALIFY ROW_NUMBER() OVER (
       PARTITION BY
-        namespace_id,
-        ultimate_parent_id,
-        ultimate_parent_plan_id
-      ORDER BY snapshot_month DESC
+        namespace_lineage_historical.namespace_id,
+        namespace_lineage_historical.parent_id,
+        namespace_lineage_historical.ultimate_parent_id
+      ORDER BY namespace_lineage_historical.snapshot_day DESC
     ) = 1
 
 ), namespaces AS (
 
     SELECT
       namespace_snapshots.*,
-      IFF(namespace_lineage.snapshot_month != DATE_TRUNC('month', CURRENT_DATE),
-          namespace_lineage.snapshot_month, NULL)                                     AS deleted_month,
-      IFNULL(deleted_month IS NOT NULL, FALSE)                                        AS is_currently_valid 
+      IFNULL(namespace_current.namespace_id IS NOT NULL, FALSE)                       AS is_current
     FROM namespace_snapshots
-    LEFT JOIN namespace_lineage
-      ON namespace_snapshots.namespace_id = namespace_lineage.namespace_id
-    QUALIFY ROW_NUMBER() OVER (
-      PARTITION BY namespace_snapshots.namespace_id
-      ORDER BY namespace_snapshots.valid_from DESC
-    ) = 1
+    LEFT JOIN namespace_current
+      ON namespace_snapshots.namespace_id = namespace_current.namespace_id
 
 ), joined AS (
 
@@ -130,6 +125,11 @@
       namespaces.has_avatar,
       namespaces.namespace_created_at,
       namespaces.namespace_updated_at,
+      IFF(namespaces.is_current = FALSE
+            OR DATEDIFF(day, CURRENT_DATE, namespace_lineage.namespace_last_day) != 0
+            OR namespace_lineage.namespace_id IS NULL,
+          COALESCE(namespaces.valid_to, namespace_lineage.namespace_last_day, namespaces.valid_from),
+          NULL)                                                                       AS namespace_deleted_at,
       namespaces.is_membership_locked,
       namespaces.has_request_access_enabled,
       namespaces.has_share_with_group_locked,
@@ -150,17 +150,22 @@
       namespaces.project_creation_level,
       namespaces.push_rule_id,
       IFNULL(creators.creator_id, namespaces.owner_id)                                AS creator_id,
-      namespace_lineage.ultimate_parent_id                                            AS ultimate_parent_namespace_id,
+      COALESCE(namespace_lineage.ultimate_parent_id,
+               namespaces.parent_id,
+               namespaces.namespace_id)                                               AS ultimate_parent_namespace_id,
       namespace_lineage.ultimate_parent_plan_id                                       AS gitlab_plan_id,
       namespace_lineage.ultimate_parent_plan_title                                    AS gitlab_plan_title,
       namespace_lineage.ultimate_parent_plan_is_paid                                  AS gitlab_plan_is_paid,
-      -- {{ get_keyed_nulls('saas_product_tiers.dim_product_tier_id') }}                 AS dim_product_tier_id,
-      IFNULL(members.member_count, 0)                                                 AS current_member_count,
-      IFNULL(projects.project_count, 0)                                               AS current_project_count,
-      namespaces.is_currently_valid
+      {{ get_keyed_nulls('saas_product_tiers.dim_product_tier_id') }}                 AS dim_product_tier_id,
+      namespace_lineage.seats                                                         AS gitlab_plan_seats,
+      namespace_lineage.max_seats_used                                                AS gitlab_plan_max_seats_used,
+      IFNULL(members.member_count, 0)                                                 AS namespace_member_count,
+      IFNULL(projects.project_count, 0)                                               AS namespace_project_count,
+      IFF(namespace_deleted_at IS NULL, namespace_lineage.is_current, FALSE)          AS is_currently_valid
     FROM namespaces
     LEFT JOIN namespace_lineage
       ON namespaces.namespace_id = namespace_lineage.namespace_id
+      AND IFNULL(namespaces.parent_id, namespaces.namespace_id) = IFNULL(namespace_lineage.parent_id, namespace_lineage.namespace_id)
     LEFT JOIN members
       ON namespaces.namespace_id = members.source_id
     LEFT JOIN projects
@@ -169,10 +174,18 @@
       ON namespaces.namespace_id = creators.group_id
     LEFT JOIN map_namespace_internal
       ON namespace_lineage.ultimate_parent_id = map_namespace_internal.ultimate_parent_namespace_id
-    -- LEFT JOIN saas_product_tiers
-    --   ON namespace_lineage.ultimate_parent_plan_name = LOWER(IFF(saas_product_tiers.product_tier_name_short != 'Trial: Ultimate',
-    --                                                              saas_product_tiers.product_tier_historical_short,
-    --                                                              'ultimate_trial'))
+    LEFT JOIN product_tiers saas_product_tiers
+      ON saas_product_tiers.product_delivery_type = 'SaaS'
+      AND namespace_lineage.ultimate_parent_plan_name = LOWER(IFF(saas_product_tiers.product_tier_name_short != 'Trial: Ultimate',
+                                                                  saas_product_tiers.product_tier_historical_short,
+                                                                  'ultimate_trial'))
+    QUALIFY ROW_NUMBER() OVER (
+      PARTITION BY
+        namespaces.namespace_id,
+        namespaces.parent_id,
+        namespace_lineage.ultimate_parent_id
+      ORDER BY namespaces.namespace_updated_at DESC
+    ) = 1
 
 )
 
@@ -181,5 +194,5 @@
     created_by="@ischweickartDD",
     updated_by="@ischweickartDD",
     created_date="2021-01-14",
-    updated_date="2021-04-29"
+    updated_date="2021-05-07"
 ) }}
