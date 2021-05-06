@@ -18,6 +18,7 @@ Closes # <!--- Link the Issue this MR closes --->
 ## Next Steps
 
 - [ ] Link to created integration issue: [`use this template to create it`](https://gitlab.com/gitlab-com/business-technology/enterprise-apps/integrations/integrations-work/-/issues/new?issuable_template=New%20Data%20Pump)
+
 ----
 /label ~Infrastructure ~"Data Team - Engineering" ~"EntApp Ecosystem" ~"Data Pump"
 /assign @jjstark @gitlab-com/business-technology/enterprise-apps/integrations
