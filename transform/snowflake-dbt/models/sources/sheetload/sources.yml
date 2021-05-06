@@ -54,7 +54,6 @@ sources:
       - name: hire_forecast
       - name: hire_plan
       - name: hire_replan
-      - name: host_instance_type
       - name: ic_collaboration_competency
       - name: ic_dib_comptency
       - name: ic_efficiency_competency
@@ -93,6 +92,8 @@ sources:
       - name: sales_funnel_partner_alliance_targets_matrix
       - name: territory_mapping
       - name: scalable_employment_values
+      - name: sdr_adaptive_data
+      - name: sdr_attainment_to_goal
       - name: sdr_count_snapshot
       - name: social_marketing_metrics
       - name: social_marketing_topic_metrics

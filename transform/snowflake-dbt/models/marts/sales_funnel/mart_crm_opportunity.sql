@@ -19,7 +19,8 @@
 
     SELECT DISTINCT
       dim_crm_user_sales_segment_id,
-      crm_user_sales_segment
+      crm_user_sales_segment,
+      crm_user_sales_segment_grouped
     FROM {{ ref('dim_crm_user_hierarchy_live') }}
 
 ), dim_crm_user_hierarchy_live_geo AS (
@@ -47,7 +48,8 @@
 
     SELECT DISTINCT
       dim_crm_opp_owner_sales_segment_stamped_id,
-      crm_opp_owner_sales_segment_stamped
+      crm_opp_owner_sales_segment_stamped,
+      crm_opp_owner_sales_segment_stamped_grouped
     FROM {{ ref('dim_crm_user_hierarchy_stamped') }}
 
 ), dim_crm_user_hierarchy_stamped_geo AS (
@@ -100,6 +102,10 @@
       dim_crm_opportunity.reason_for_loss,
       dim_crm_opportunity.sales_type,
       fct_crm_opportunity.is_sao,
+      fct_crm_opportunity.is_net_arr_closed_deal,
+      fct_crm_opportunity.is_new_logo_first_order,
+      fct_crm_opportunity.is_net_arr_pipeline_created,
+      fct_crm_opportunity.is_win_rate_calc,
       dim_deal_path.deal_path_name,
       dim_order_type.order_type_name                                       AS order_type,
       dim_order_type.order_type_grouped,
@@ -108,6 +114,7 @@
       dim_alliance_type.alliance_type_short_name,
       dim_channel_type.channel_type_name,
       dim_sales_qualified_source.sales_qualified_source_name,
+      dim_sales_qualified_source.sales_qualified_source_grouped,
       dim_crm_account.crm_account_gtm_strategy,
       dim_crm_account.crm_account_focus_account,
       dim_crm_account.parent_crm_account_gtm_strategy,
@@ -126,7 +133,9 @@
       fct_crm_opportunity.product_details,
       fct_crm_opportunity.product_category,
       fct_crm_opportunity.products_purchased,
-      
+      fct_crm_opportunity.growth_type,
+      fct_crm_opportunity.opportunity_deal_size,
+
       -- crm opp owner/account owner fields stamped at SAO date
       dim_crm_opportunity.sao_crm_opp_owner_stamped_name,
       dim_crm_opportunity.sao_crm_account_owner_stamped_name,
@@ -139,6 +148,7 @@
       dim_crm_opportunity.crm_opp_owner_stamped_name,
       dim_crm_opportunity.crm_account_owner_stamped_name,
       dim_crm_user_hierarchy_stamped_sales_segment.crm_opp_owner_sales_segment_stamped,
+      dim_crm_user_hierarchy_stamped_sales_segment.crm_opp_owner_sales_segment_stamped_grouped,
       dim_crm_user_hierarchy_stamped_geo.crm_opp_owner_geo_stamped,
       dim_crm_user_hierarchy_stamped_region.crm_opp_owner_region_stamped,
       dim_crm_user_hierarchy_stamped_area.crm_opp_owner_area_stamped,
@@ -148,6 +158,7 @@
       
       -- crm owner/sales rep live fields
       dim_crm_user_hierarchy_live_sales_segment.crm_user_sales_segment,
+      dim_crm_user_hierarchy_live_sales_segment.crm_user_sales_segment_grouped,
       dim_crm_user_hierarchy_live_geo.crm_user_geo,
       dim_crm_user_hierarchy_live_region.crm_user_region,
       dim_crm_user_hierarchy_live_area.crm_user_area,

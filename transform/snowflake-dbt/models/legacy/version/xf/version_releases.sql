@@ -8,7 +8,7 @@ WITH usage_data AS (
 release_schedule AS (
 
     SELECT *
-    FROM {{ ref('gitlab_release_schedule') }}
+    FROM {{ ref('dim_gitlab_releases') }}
 
 ),
 

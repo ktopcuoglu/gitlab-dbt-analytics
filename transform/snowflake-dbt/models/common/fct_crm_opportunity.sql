@@ -127,7 +127,9 @@
       sfdc_opportunity.order_type_stamped                                        AS order_type,
       sfdc_opportunity.sales_segment,
       {{ sales_qualified_source_cleaning('sfdc_opportunity.sales_qualified_source') }}
-                                                                                 AS sales_qualified_source,
+
+      sfdc_opportunity.growth_type,
+      sfdc_opportunity.opportunity_deal_size,                                                                           AS sales_qualified_source,
       sfdc_opportunity.days_in_sao,
       sfdc_opportunity.user_segment_stamped                                      AS crm_opp_owner_sales_segment_stamped,
       sfdc_opportunity.user_geo_stamped                                          AS crm_opp_owner_geo_stamped,
@@ -208,6 +210,68 @@
             THEN TRUE
         ELSE FALSE
       END                                                                         AS is_sdr_sao
+
+    FROM sfdc_opportunity
+
+), is_net_arr_closed_deal AS (
+
+    SELECT
+
+      opportunity_id,
+      CASE
+        WHEN (is_won = 'TRUE' OR (sales_type = 'Renewal' AND stage_name = '8-Closed Lost'))
+            THEN TRUE
+        ELSE FALSE
+      END                                                                         AS is_net_arr_closed_deal
+
+    FROM sfdc_opportunity
+
+), is_new_logo_first_order AS (
+
+    SELECT
+
+      opportunity_id,
+      CASE
+        WHEN is_won = 'TRUE'
+          AND is_closed = 'TRUE'
+          AND is_edu_oss = 0
+          AND order_type_stamped = '1. New - First Order'
+            THEN TRUE
+        ELSE FALSE
+      END                                                                         AS is_new_logo_first_order
+
+    FROM sfdc_opportunity
+
+), is_net_arr_pipeline_created AS (
+
+    SELECT
+
+      opportunity_id,
+      CASE
+        WHEN is_edu_oss = 0
+          AND stage_name NOT IN (
+                                '00-Pre Opportunity'
+                                , '10-Duplicate'
+                                )
+            THEN TRUE
+        ELSE FALSE
+      END                                                                         AS is_net_arr_pipeline_created
+
+    FROM sfdc_opportunity
+
+), is_win_rate_calc AS (
+
+    SELECT
+
+      opportunity_id,
+      CASE
+        WHEN stage_name IN ('Closed Won', '8-Closed Lost')
+          AND amount >= 0
+          AND (reason_for_loss IS NULL OR reason_for_loss != 'Merged into another opportunity')
+          AND is_edu_oss = 0
+            THEN TRUE
+        ELSE FALSE
+      END                                                                         AS is_win_rate_calc
 
     FROM sfdc_opportunity
 
@@ -304,11 +368,17 @@
       opportunity_fields.is_web_portal_purchase,
       is_sao.is_sao,
       is_sdr_sao.is_sdr_sao,
+      is_net_arr_closed_deal.is_net_arr_closed_deal,
+      is_new_logo_first_order.is_new_logo_first_order,
+      is_net_arr_pipeline_created.is_net_arr_pipeline_created,
+      is_win_rate_calc.is_win_rate_calc,
 
       opportunity_fields.primary_solution_architect,
       opportunity_fields.product_details,
       opportunity_fields.product_category,
       opportunity_fields.products_purchased,
+      opportunity_fields.growth_type,
+      opportunity_fields.opportunity_deal_size,
 
       -- channel fields
       opportunity_fields.lead_source,
@@ -359,6 +429,14 @@
       ON opportunity_fields.dim_crm_opportunity_id = is_sao.opportunity_id
     LEFT JOIN is_sdr_sao
       ON opportunity_fields.dim_crm_opportunity_id = is_sdr_sao.opportunity_id
+    LEFT JOIN is_net_arr_closed_deal
+      ON opportunity_fields.dim_crm_opportunity_id = is_net_arr_closed_deal.opportunity_id
+    LEFT JOIN is_new_logo_first_order
+      ON opportunity_fields.dim_crm_opportunity_id = is_new_logo_first_order.opportunity_id
+    LEFT JOIN is_net_arr_pipeline_created
+      ON opportunity_fields.dim_crm_opportunity_id = is_net_arr_pipeline_created.opportunity_id
+    LEFT JOIN is_win_rate_calc
+      ON opportunity_fields.dim_crm_opportunity_id = is_win_rate_calc.opportunity_id
     LEFT JOIN user_hierarchy_stamped_sales_segment
       ON opportunity_fields.crm_opp_owner_sales_segment_stamped = user_hierarchy_stamped_sales_segment.crm_opp_owner_sales_segment_stamped
     LEFT JOIN user_hierarchy_stamped_geo
@@ -387,5 +465,5 @@
     created_by="@mcooperDD",
     updated_by="@jpeguero",
     created_date="2020-11-30",
-    updated_date="2021-04-28"
+    updated_date="2021-04-29"
 ) }}

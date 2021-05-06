@@ -5,9 +5,9 @@ models:
     description: '{{ doc("pump_marketing_contact") }}'
     columns:
       - name: company_name
-        description: Mapped to `Company` in Marketo
+        description: Mapped to `Company` in Marketo. Compiled from SFDC, gitlab_dotcom, customer_db, & zuora in [dim_marketing_contact](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.dim_marketing_contact)
       - name: country
-        description: Mapped to `Country` in Marketo
+        description: Mapped to `Country` in Marketo. Compiled from SFDC, customer_db, & zuora in [dim_marketing_contact](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.dim_marketing_contact)
       - name: customer_db_confirmed_date
         description: Mapped to `CDB_Customer_DB_Confirmed_Date__c` in Marketo
       - name: customer_db_created_date
@@ -15,17 +15,17 @@ models:
       - name: customer_db_customer_id
         description: Mapped to `CDB_Customer_DB_Customer_ID__c` in Marketo
       - name: days_since_saas_signup
-        description: Mapped to `CDB_Days_Since_SaaS_Signup__c` in Marketo
+        description: Mapped to `CDB_Days_Since_SaaS_Signup__c` in Marketo. Calculated from `gitlab_dotcom.confirmed_date` in [dim_marketing_contact](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.dim_marketing_contact)
       - name: days_since_saas_trial_ended
-        description: Mapped to `CDB_Days_Since_SaaS_Trial_Ended__c` in Marketo
+        description: Mapped to `CDB_Days_Since_SaaS_Trial_Ended__c` in Marketo. Calculated from `customers_db.trial_histories.expired_on` in [bdg_marketing_contact_order](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.bdg_marketing_contact_order)
       - name: days_since_self_managed_owner_signup
-        description: Mapped to `CDB_Days_Since_Self_Managed_Owner_Signup__c` in Marketo
+        description: Mapped to `CDB_Days_Since_Self_Managed_Owner_Signup__c` in Marketo. Calculated from `customer_db.confirmed_date` in [dim_marketing_contact](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.dim_marketing_contact)
       - name: dim_marketing_contact_id
-        description: Mapped to `CDB_Dim_Marketing_Contact_ID__c` in Marketo
+        description: Mapped to `CDB_Dim_Marketing_Contact_ID__c` in Marketo. Generated from the email_address in [dim_marketing_contact](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.dim_marketing_contact)
       - name: email_address
-        description: Mapped to `Email` in Marketo
+        description: Mapped to `Email` in Marketo. Compiled from SFDC, gitlab_dotcom, customer_db, & zuora in [dim_marketing_contact](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.dim_marketing_contact)
       - name: first_name
-        description: Mapped to `FirstName` in Marketo
+        description: Mapped to `FirstName` in Marketo. Compiled from SFDC, gitlab_dotcom, customer_db, & zuora in [dim_marketing_contact](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.dim_marketing_contact)
       - name: gitlab_dotcom_active_state
         description: Mapped to `CDB_GitLab_com_Active_State__c` in Marketo
       - name: gitlab_dotcom_confirmed_date
@@ -41,71 +41,71 @@ models:
       - name: gitlab_user_name
         description: Mapped to `CDB_GitLab_com_User_Name__c` in Marketo
       - name: group_member_of_saas_bronze_tier
-        description: Mapped to `CDB_Group_Member_of_SaaS_Bronze_Tier__c` in Marketo
+        description: Mapped to `CDB_Group_Member_of_SaaS_Bronze_Tier__c` in Marketo. Compiled from gitlab_dotcom, customer_db, & zuora in [bdg_marketing_contact_role](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.bdg_marketing_contact_role) and calculated in [mart_marketing_contact](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.mart_marketing_contact)
       - name: group_member_of_saas_free_tier
-        description: Mapped to `CDB_Group_Member_of_SaaS_Free_Tier__c` in Marketo
+        description: Mapped to `CDB_Group_Member_of_SaaS_Free_Tier__c` in Marketo. Compiled from gitlab_dotcom, customer_db, & zuora in [bdg_marketing_contact_role](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.bdg_marketing_contact_role) and calculated in [mart_marketing_contact](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.mart_marketing_contact)
       - name: group_member_of_saas_premium_tier
-        description: Mapped to `CDB_Group_Member_of_SaaS_Premium_Tier__c` in Marketo
+        description: Mapped to `CDB_Group_Member_of_SaaS_Premium_Tier__c` in Marketo. Compiled from gitlab_dotcom, customer_db, & zuora in [bdg_marketing_contact_role](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.bdg_marketing_contact_role) and calculated in [mart_marketing_contact](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.mart_marketing_contact)
       - name: group_member_of_saas_trial
-        description: Mapped to `CDB_Group_Member_of_SaaS_Trial__c` in Marketo
+        description: Mapped to `CDB_Group_Member_of_SaaS_Trial__c` in Marketo. Compiled from gitlab_dotcom, customer_db, & zuora in [bdg_marketing_contact_role](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.bdg_marketing_contact_role) and calculated in [mart_marketing_contact](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.mart_marketing_contact)
       - name: group_member_of_saas_ultimate_tier
-        description: Mapped to `CDB_Group_Member_of_SaaS_Ultimate_Tier__c` in Marketo
+        description: Mapped to `CDB_Group_Member_of_SaaS_Ultimate_Tier__c` in Marketo. Compiled from gitlab_dotcom, customer_db, & zuora in [bdg_marketing_contact_role](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.bdg_marketing_contact_role) and calculated in [mart_marketing_contact](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.mart_marketing_contact)
       - name: group_owner_of_saas_bronze_tier
-        description: Mapped to `CDB_Group_Owner_of_SaaS_Bronze_Tier__c` in Marketo
+        description: Mapped to `CDB_Group_Owner_of_SaaS_Bronze_Tier__c` in Marketo. Compiled from gitlab_dotcom, customer_db, & zuora in [bdg_marketing_contact_role](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.bdg_marketing_contact_role) and calculated in [mart_marketing_contact](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.mart_marketing_contact)
       - name: group_owner_of_saas_free_tier
-        description: Mapped to `CDB_Group_Owner_of_SaaS_Free_Tier__c` in Marketo
+        description: Mapped to `CDB_Group_Owner_of_SaaS_Free_Tier__c` in Marketo. Compiled from gitlab_dotcom, customer_db, & zuora in [bdg_marketing_contact_role](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.bdg_marketing_contact_role) and calculated in [mart_marketing_contact](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.mart_marketing_contact)
       - name: group_owner_of_saas_premium_tier
-        description: Mapped to `CDB_Group_Owner_of_SaaS_Premium_Tier__c` in Marketo
+        description: Mapped to `CDB_Group_Owner_of_SaaS_Premium_Tier__c` in Marketo. Compiled from gitlab_dotcom, customer_db, & zuora in [bdg_marketing_contact_role](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.bdg_marketing_contact_role) and calculated in [mart_marketing_contact](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.mart_marketing_contact)
       - name: group_owner_of_saas_trial
-        description: Mapped to `CDB_Group_Owner_of_SaaS_Trial__c` in Marketo
+        description: Mapped to `CDB_Group_Owner_of_SaaS_Trial__c` in Marketo. Compiled from gitlab_dotcom, customer_db, & zuora in [bdg_marketing_contact_role](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.bdg_marketing_contact_role) and calculated in [mart_marketing_contact](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.mart_marketing_contact)
       - name: group_owner_of_saas_ultimate_tier
-        description: Mapped to `CDB_Group_Owner_of_SaaS_Ultimate_Tier__c` in Marketo
+        description: Mapped to `CDB_Group_Owner_of_SaaS_Ultimate_Tier__c` in Marketo. Compiled from gitlab_dotcom, customer_db, & zuora in [bdg_marketing_contact_role](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.bdg_marketing_contact_role) and calculated in [mart_marketing_contact](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.mart_marketing_contact)
       - name: individual_namespace_is_saas_bronze_tier
-        description: Mapped to `CDB_Ind_Namespace_is_SaaS_Bronze_Tier__c` in Marketo
+        description: Mapped to `CDB_Ind_Namespace_is_SaaS_Bronze_Tier__c` in Marketo from gitlab_dotcom namespaces.
       - name: individual_namespace_is_saas_free_tier
-        description: Mapped to `CDB_Ind_Namespace_is_SaaS_Free_Tier__c` in Marketo
+        description: Mapped to `CDB_Ind_Namespace_is_SaaS_Free_Tier__c` in Marketo from gitlab_dotcom namespaces.
       - name: individual_namespace_is_saas_premium_tier
-        description: Mapped to `CDB_Ind_Namespace_is_SaaS_Premium_Tie__c` in Marketo
+        description: Mapped to `CDB_Ind_Namespace_is_SaaS_Premium_Tie__c` in Marketo from gitlab_dotcom namespaces.
       - name: individual_namespace_is_saas_trial
-        description: Mapped to `CDB_Ind_Namespace_is_SaaS_Trial__c` in Marketo
+        description: Mapped to `CDB_Ind_Namespace_is_SaaS_Trial__c` in Marketo from gitlab_dotcom namespaces.
       - name: individual_namespace_is_saas_ultimate_tier
-        description: Mapped to `CDB_Ind_Namespace_is_SaaS_Ultimate_Ti__c` in Marketo
+        description: Mapped to `CDB_Ind_Namespace_is_SaaS_Ultimate_Ti__c` in Marketo from gitlab_dotcom namespaces.
       - name: is_customer_db_owner
-        description: Mapped to `CDB_Is_Customer_DB_Owner__c` in Marketo
+        description: Mapped to `CDB_Is_Customer_DB_Owner__c` in Marketo. Compiled from gitlab_dotcom, customer_db, & zuora in [bdg_marketing_contact_role](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.bdg_marketing_contact_role) and calculated in [mart_marketing_contact](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.mart_marketing_contact)
       - name: is_customer_db_user
-        description: Mapped to `CDB_Is_Customer_DB_User__c` in Marketo
+        description: Mapped to `CDB_Is_Customer_DB_User__c` in Marketo. Compiled from gitlab_dotcom, customer_db, & zuora in [bdg_marketing_contact_role](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.bdg_marketing_contact_role) and calculated in [mart_marketing_contact](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.mart_marketing_contact)
       - name: is_gitlab_dotcom_user
-        description: Mapped to `CDB_Is_GitLab_com_User__c` in Marketo
+        description: Mapped to `CDB_Is_GitLab_com_User__c` in Marketo. Compiled from gitlab_dotcom, customer_db, & zuora in [bdg_marketing_contact_role](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.bdg_marketing_contact_role) and calculated in [mart_marketing_contact](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.mart_marketing_contact)
       - name: is_group_namespace_member
-        description: Mapped to `CDB_Is_Group_Namespace_Member__c` in Marketo
+        description: Mapped to `CDB_Is_Group_Namespace_Member__c` in Marketo. Compiled from gitlab_dotcom, customer_db, & zuora in [bdg_marketing_contact_role](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.bdg_marketing_contact_role) and calculated in [mart_marketing_contact](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.mart_marketing_contact)
       - name: is_group_namespace_owner
-        description: Mapped to `CDB_Is_Group_Namespace_Owner__c` in Marketo
+        description: Mapped to `CDB_Is_Group_Namespace_Owner__c` in Marketo. Compiled from gitlab_dotcom, customer_db, & zuora in [bdg_marketing_contact_role](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.bdg_marketing_contact_role) and calculated in [mart_marketing_contact](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.mart_marketing_contact)
       - name: is_individual_namespace_owner
-        description: Mapped to `CDB_Is_Individual_Namespace_Owner__c` in Marketo
+        description: Mapped to `CDB_Is_Individual_Namespace_Owner__c` in Marketo. Compiled from gitlab_dotcom, customer_db, & zuora in [bdg_marketing_contact_role](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.bdg_marketing_contact_role) and calculated in [mart_marketing_contact](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.mart_marketing_contact)
       - name: is_self_managed_premium_tier
-        description: Mapped to `CDB_Is_Self_Managed_Premium_Tier__c` in Marketo
+        description: Mapped to `CDB_Is_Self_Managed_Premium_Tier__c` in Marketo. Compiled from gitlab_dotcom, customer_db, & zuora in [bdg_marketing_contact_role](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.bdg_marketing_contact_role) and calculated in [mart_marketing_contact](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.mart_marketing_contact)
       - name: is_self_managed_starter_tier
-        description: Mapped to `CDB_Is_Self_Managed_Starter_Tier__c` in Marketo
+        description: Mapped to `CDB_Is_Self_Managed_Starter_Tier__c` in Marketo. Compiled from gitlab_dotcom, customer_db, & zuora in [bdg_marketing_contact_role](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.bdg_marketing_contact_role) and calculated in [mart_marketing_contact](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.mart_marketing_contact)
       - name: is_self_managed_ultimate_tier
-        description: Mapped to `CDB_Is_Self_Managed_Ultimate_Tier__c` in Marketo
+        description: Mapped to `CDB_Is_Self_Managed_Ultimate_Tier__c` in Marketo. Compiled from gitlab_dotcom, customer_db, & zuora in [bdg_marketing_contact_role](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.bdg_marketing_contact_role) and calculated in [mart_marketing_contact](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.mart_marketing_contact)
       - name: is_zuora_billing_contact
-        description: Mapped to `is_zuora_billing_contact__c` in Marketo
+        description: Mapped to `is_zuora_billing_contact__c` in Marketo. From Zuora contact.
       - name: last_name
-        description: Mapped to `LastName` in Marketo
+        description: Mapped to `LastName` in Marketo. Compiled from SFDC, gitlab_dotcom, customer_db, & zuora in [dim_marketing_contact](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.dim_marketing_contact)
       - name: responsible_for_free_tier_only
-        description: Mapped to `CDB_Responsible_for_Free_Tier_Only__c` in Marketo
+        description: Mapped to `CDB_Responsible_for_Free_Tier_Only__c` in Marketo. Calculated in [mart_marketing_contact](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.mart_marketing_contact) 
       - name: responsible_for_group_saas_bronze_tier
-        description: Mapped to `CDB_Resp_for_Group_Saas_Bronze_Tier__c` in Marketo
+        description: Mapped to `CDB_Resp_for_Group_Saas_Bronze_Tier__c` in Marketo. Calculated in [mart_marketing_contact](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.mart_marketing_contact) 
       - name: responsible_for_group_saas_free_tier
-        description: Mapped to `CDB_Resp_for_Group_Saas_Free_Tier__c` in Marketo
+        description: Mapped to `CDB_Resp_for_Group_Saas_Free_Tier__c` in Marketo. Calculated in [mart_marketing_contact](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.mart_marketing_contact) 
       - name: responsible_for_group_saas_premium_tier
-        description: Mapped to `CDB_Resp_for_Group_Saas_Premium_Tier__c` in Marketo
+        description: Mapped to `CDB_Resp_for_Group_Saas_Premium_Tier__c` in Marketo. Calculated in [mart_marketing_contact](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.mart_marketing_contact) 
       - name: responsible_for_group_saas_trial
-        description: Mapped to `CDB_Resp_for_Group_SaaS_Trial__c` in Marketo
+        description: Mapped to `CDB_Resp_for_Group_SaaS_Trial__c` in Marketo. Calculated in [mart_marketing_contact](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.mart_marketing_contact) 
       - name: responsible_for_group_saas_ultimate_tier
-        description: Mapped to `CDB_Resp_for_Group_Saas_Ultimate_Tier__c` in Marketo
+        description: Mapped to `CDB_Resp_for_Group_Saas_Ultimate_Tier__c` in Marketo. Calculated in [mart_marketing_contact](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.mart_marketing_contact) 
       - name: zuora_active_state
-        description: Mapped to `zuora_active_state__c` in Marketo
+        description: Mapped to `zuora_active_state__c` in Marketo. Calculated from `created_date` and `is_deleted`.
       - name: zuora_contact_id
         description: Mapped to `zuora_contact_id__c` in Marketo
       - name: zuora_created_date
@@ -114,3 +114,5 @@ models:
         description: use in pump copy command, but not mapped to Marketo
   - name: pump_subscription_product_usage
     description: '{{ doc("pump_subscription_product_usage") }}'
+  - name: pump_marketing_premium_to_ultimate
+    description: '{{ doc("pump_marketing_premium_to_ultimate") }}'
