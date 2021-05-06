@@ -13,24 +13,9 @@
 
     SELECT *
     FROM {{ ref('gitlab_dotcom_namespace_historical_daily') }}
-<<<<<<< HEAD
-<<<<<<< HEAD
     {% if is_incremental() -%}
     WHERE snapshot_day >= (SELECT MAX(snapshot_day) FROM {{ this }})
     {%- endif %}
-=======
-    WHERE snapshot_day >= '2020-01-01'::DATE
-    {% if is_incremental() %}
-
-      AND snapshot_day > (SELECT MAX(snapshot_day) FROM {{ this }})
-
-    {% endif %}
->>>>>>> bb70cdd61 (Efficiency updates to namespace lineage tables)
-=======
-    {% if is_incremental() -%}
-    WHERE snapshot_day >= (SELECT MAX(snapshot_day) FROM {{ this }})
-    {%- endif %}
->>>>>>> be4870851 (Historical namespaces and GitLab subscriptions seats added to prep_namespace)
 
 ), recursive_namespace_ultimate(snapshot_day, namespace_id, parent_id, upstream_lineage) AS (
     
@@ -68,6 +53,7 @@
       IFNULL(map_namespace_internal.ultimate_parent_namespace_id IS NOT NULL, FALSE)  AS namespace_is_internal,
       IFF(namespace_subscription_snapshots.is_trial
 <<<<<<< HEAD
+<<<<<<< HEAD
             AND IFNULL(namespace_subscription_snapshots.plan_id, 34) NOT IN (34, 103), -- Excluded Premium (103) and Free (34) Trials from being remapped as Ultimate Trials
           102, -- All historical trial GitLab subscriptions were Ultimate/Gold Trials (102)
           IFNULL(namespace_subscription_snapshots.plan_id, 34))                       AS ultimate_parent_plan_id,
@@ -75,6 +61,11 @@
             AND IFNULL(namespace_subscription_snapshots.plan_id, 34) NOT IN (34, 103),
           102, IFNULL(namespace_subscription_snapshots.plan_id, 34))                  AS ultimate_parent_plan_id,
 >>>>>>> be4870851 (Historical namespaces and GitLab subscriptions seats added to prep_namespace)
+=======
+            AND IFNULL(namespace_subscription_snapshots.plan_id, 34) NOT IN (34, 103), -- Excluded Premium (103) and Free (34) Trials from being remapped as Ultimate Trials
+          102, -- All historical trial GitLab subscriptions were Ultimate/Gold Trials (102)
+          IFNULL(namespace_subscription_snapshots.plan_id, 34))                       AS ultimate_parent_plan_id,
+>>>>>>> bff104faa (Updated plan_id tests to account for, and added comments to clarify updated logic)
       namespace_subscription_snapshots.seats,
       namespace_subscription_snapshots.max_seats_used
     FROM namespace_lineage_daily
