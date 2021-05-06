@@ -13,17 +13,14 @@
 
     SELECT *
     FROM {{ ref('gitlab_dotcom_namespace_historical_daily') }}
-    WHERE snapshot_day >= '2020-01-01'::DATE
-    {% if is_incremental() %}
-
-      AND snapshot_day > (SELECT MAX(snapshot_day) FROM {{ this }})
-
-    {% endif %}
+    {% if is_incremental() -%}
+    WHERE snapshot_day >= (SELECT MAX(snapshot_day) FROM {{ this }})
+    {%- endif %}
 
 ), recursive_namespace_ultimate(snapshot_day, namespace_id, parent_id, upstream_lineage) AS (
     
    SELECT
-     snapshot_day,
+     namespace_snapshots_daily.snapshot_day,
      namespace_snapshots_daily.namespace_id,
      namespace_snapshots_daily.parent_id,
      TO_ARRAY(namespace_id)                                                           AS upstream_lineage
@@ -45,7 +42,7 @@
 ), namespace_lineage_daily AS (
     
     SELECT
-      recursive_namespace_ultimate.*,
+      *,
       upstream_lineage[0]::INT                                                        AS ultimate_parent_id
     FROM recursive_namespace_ultimate
 
@@ -55,8 +52,10 @@
       namespace_lineage_daily.*,
       IFNULL(map_namespace_internal.ultimate_parent_namespace_id IS NOT NULL, FALSE)  AS namespace_is_internal,
       IFF(namespace_subscription_snapshots.is_trial
-            AND IFNULL(namespace_subscription_snapshots.plan_id, 34) <> 34,
-          102, IFNULL(namespace_subscription_snapshots.plan_id, 34))                  AS ultimate_parent_plan_id
+            AND IFNULL(namespace_subscription_snapshots.plan_id, 34) NOT IN (34, 103),
+          102, IFNULL(namespace_subscription_snapshots.plan_id, 34))                  AS ultimate_parent_plan_id,
+      namespace_subscription_snapshots.seats,
+      namespace_subscription_snapshots.max_seats_used
     FROM namespace_lineage_daily
     LEFT JOIN map_namespace_internal
       ON namespace_lineage_daily.ultimate_parent_id = map_namespace_internal.ultimate_parent_namespace_id
@@ -76,4 +75,4 @@
 SELECT
   {{ dbt_utils.surrogate_key(['snapshot_day', 'namespace_id'] ) }}                    AS snapshot_day_namespace_id,
   *
-FROM namespace_lineage_daily
+FROM with_plans
