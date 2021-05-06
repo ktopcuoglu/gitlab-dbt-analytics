@@ -214,7 +214,7 @@ def load_ids(
     id_range: int = 750_000,
     backfill: bool = True,
 ) -> None:
-    """ Load a query by chunks of IDs instead of all at once."""
+    """Load a query by chunks of IDs instead of all at once."""
 
     # Create a generator for queries that are chunked by ID range
     id_queries = id_query_generator(

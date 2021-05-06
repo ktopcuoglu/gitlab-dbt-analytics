@@ -6,7 +6,8 @@
 {{ simple_cte([
     ('latest_metrics','fct_product_usage_wave_1_3_metrics_latest'),
     ('billing_accounts','dim_billing_account'),
-    ('crm_accounts','dim_crm_account')
+    ('crm_accounts','dim_crm_account'),
+    ('location_country', 'dim_location_country')
 ]) }}
 
 , joined AS (
@@ -27,6 +28,9 @@
       latest_metrics.dim_license_id,
       latest_metrics.license_md5,
       latest_metrics.cleaned_version,
+      location_country.country_name,
+      location_country.iso_2_country_code,
+      location_country.iso_3_country_code,
       -- Wave 1
       latest_metrics.license_utilization,
       latest_metrics.active_user_count,
@@ -137,13 +141,15 @@
       ON latest_metrics.dim_billing_account_id = billing_accounts.dim_billing_account_id
     LEFT JOIN crm_accounts
       ON billing_accounts.dim_crm_account_id = crm_accounts.dim_crm_account_id
+    LEFT JOIN location_country
+      ON latest_metrics.dim_location_country_id = location_country.dim_location_country_id
 
 )
 
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@ischweickartDD",
-    updated_by="@mcooperDD",
+    updated_by="@michellecooper",
     created_date="2021-02-11",
-    updated_date="2021-04-13"
+    updated_date="2021-04-27"
 ) }}

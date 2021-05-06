@@ -47,6 +47,7 @@
       gmau_monthly.cleaned_version,
       gmau_monthly.ping_created_at,
       {{ get_date_id('gmau_monthly.ping_created_at') }}             AS ping_created_date_id,
+      gmau_monthly.dim_location_country_id,
       gmau_monthly.analytics_analytics_total_unique_counts_monthly,                                                 /* Manage:Optimize */
       gmau_monthly.compliance_compliance_total_unique_counts_monthly,                                               /* Manage:Compliance */
       --gmau_monthly.knowledge_action_monthly_active_users_design_management,                                       /*  */
@@ -89,7 +90,7 @@
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@ischweickartDD",
-    updated_by="@ischweickartDD",
+    updated_by="@michellecooper",
     created_date="2021-03-15",
-    updated_date="2021-03-15"
+    updated_date="2021-04-27"
 ) }}

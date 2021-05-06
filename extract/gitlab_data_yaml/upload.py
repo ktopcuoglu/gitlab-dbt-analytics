@@ -11,7 +11,9 @@ from gitlabdata.orchestration_utils import (
 
 if __name__ == "__main__":
 
-    handbook_dict = dict(categories="categories", stages="stages")
+    handbook_dict = dict(
+        categories="categories", stages="stages", release_managers="release_managers"
+    )
 
     pi_file_dict = dict(
         chief_of_staff_team_pi="chief_of_staff_team",
