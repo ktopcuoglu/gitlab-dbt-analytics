@@ -21,7 +21,7 @@ WITH source AS (
       *,
       OBJECT_CONSTRUCT(
         {% for column in columns %}  
-          '{{ column.column | lower }}', {{ column.column | lower }}
+          '{{ column.name | lower }}', {{ column.column | lower }}
           {% if not loop.last %}
             ,
           {% endif %}
