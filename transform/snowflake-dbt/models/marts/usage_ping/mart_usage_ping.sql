@@ -33,6 +33,11 @@ WITH dim_billing_account AS (
     SELECT *
     FROM {{ ref('dim_subscription') }}
 
+), dim_license AS (
+
+    SELECT *
+    FROM {{ ref('dim_license') }}
+
 ), joined AS (
 
     SELECT
@@ -51,7 +56,8 @@ WITH dim_billing_account AS (
       dim_date.first_day_of_month,
       dim_date.fiscal_quarter_name_fy,
       dim_location.country_name,
-      dim_location.iso_2_country_code
+      dim_location.iso_2_country_code,
+      dim_license.license_md5
     FROM fct_usage_ping_payload
     LEFT JOIN dim_subscription
       ON fct_usage_ping_payload.dim_subscription_id = dim_subscription.dim_subscription_id
@@ -63,6 +69,8 @@ WITH dim_billing_account AS (
       ON fct_usage_ping_payload.dim_date_id = dim_date.date_id
     LEFT JOIN dim_location
       ON fct_usage_ping_payload.dim_location_country_id = dim_location.dim_location_country_id
+    LEFT JOIN dim_license
+      ON fct_usage_ping_payload.dim_license_id = dim_license.dim_license_id
 
 ), renamed AS (
 
@@ -101,11 +109,8 @@ WITH dim_billing_account AS (
 
       -- product info
       license_md5,
-      is_trial                AS ping_is_trial_license,
-      product_tier            AS ping_product_tier,
-      product_categories,
-      product_rate_plans,
-      subscription_id,
+      --is_trial                AS ping_is_trial_license,
+      product_tier            AS ping_product_tier, -- might rename it in the payload model
 
       -- location info
       dim_location_country_id,
@@ -113,15 +118,13 @@ WITH dim_billing_account AS (
       iso_2_country_code      AS ping_country_code,
 
       -- metadata
-      IFF(dim_instance_id = 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f', 'SaaS', 'Self-Managed')
-                              AS ping_source,
-      edition,
-      version,
-      is_pre_release,
-      instance_user_count,
-      gitpod_enabled
+      usage_ping_delivery_type,
+      main_edition,
+      major_minor_version,
+      version_is_prerelease,
+      instance_user_count
     FROM joined
-    WHERE hostname NOT IN ('staging.gitlab.com', 'dr.gitlab.com')
+    WHERE host_name NOT IN ('staging.gitlab.com', 'dr.gitlab.com')
 
 )
 
