@@ -7,16 +7,7 @@
 
 WITH source AS (
 
-    SELECT 
-      *, 
-      OBJECT_CONSTRUCT(
-        {% for column in columns %}  
-          '{{ column.column | lower }}', {{ column.column | lower }}
-          {% if not loop.last %}
-            ,
-          {% endif %}
-        {% endfor %}
-      ) AS raw_usage_data_payload_reconstructed
+    SELECT *
     FROM {{ ref('version_usage_data_source') }}
 
 ), usage_data AS (
