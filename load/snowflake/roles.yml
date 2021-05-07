@@ -2542,8 +2542,7 @@ roles:
                     - mcooper_prod.*.*
 
     - mdewji:
-        warehouses:
-            - admin
+        warehouses: []
 
     - michellecooper:
         member_of: []
@@ -3525,10 +3524,8 @@ users:
             - mcooper
 
     - mdewji:
-        can_login: yes
-        member_of:
-            - mdewji
-            - securityadmin
+        can_login: no
+        member_of: []
 
     - michellecooper:
         can_login: no
