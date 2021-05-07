@@ -28,6 +28,11 @@ WITH dim_billing_account AS (
     SELECT *
     FROM {{ ref('fct_usage_ping_payload') }}
 
+), dim_subscription AS (
+
+    SELECT *
+    FROM {{ ref('dim_subscription') }}
+
 ), joined AS (
 
     SELECT
@@ -45,38 +50,32 @@ WITH dim_billing_account AS (
       dim_date.first_day_of_month,
       dim_date.fiscal_quarter_name_fy,
       dim_location.country_name,
-      dim_location.iso_2_country_code,
-      product_details.product_rate_plans,
-      product_details.product_categories
+      dim_location.iso_2_country_code
     FROM fct_usage_ping_payload
     LEFT JOIN dim_subscription
       ON fct_usage_ping_payload.dim_subscription_id = dim_subscription.dim_subscription_id
     LEFT JOIN dim_billing_account
-      ON fct_usage_ping_payload.account_id = dim_billing_account.dim_billing_account_id
+      ON dim_subscription.dim_billing_account_id = dim_billing_account.dim_billing_account_id
     LEFT JOIN dim_crm_account
       ON dim_billing_account.dim_crm_account_id = dim_crm_account.dim_crm_account_id
     LEFT JOIN dim_date
       ON fct_usage_ping_payload.date_id = dim_date.date_id
     LEFT JOIN dim_location
       ON fct_usage_ping_payload.location_id = dim_location.dim_location_country_id
-    LEFT JOIN product_details
-      ON fct_usage_ping_payload.usage_ping_id = product_details.usage_ping_id
 
 ), renamed AS (
 
     SELECT
       -- keys
-      usage_ping_id,
-      hostname,
-      host_id,
-      uuid,
+      dim_usage_ping_id,
+      host_name,
+      dim_instance_id,
 
       -- date info
       date_id,
-      created_at              AS ping_created_at,
-      recorded_at             AS ping_recorded_at,
-      date_actual             AS ping_date,
-      first_day_of_month      AS ping_month,
+      ping_created_at,
+      ping_created_at_date,
+      ping_created_at_month,
       fiscal_quarter_name_fy  AS ping_fiscal_quarter,
       IFF(ROW_NUMBER() OVER (
           PARTITION BY uuid, ping_month
@@ -88,7 +87,7 @@ WITH dim_billing_account AS (
           ) = 1, TRUE, FALSE) AS is_last_ping_in_quarter,
 
       -- customer info
-      account_id,
+      dim_billing_account_id,
       dim_crm_account_id,
       crm_account_name,
       crm_account_billing_country,

@@ -4,14 +4,18 @@
     })
 }}
 
-{%- set columns = adapter.get_columns_in_relation( ref('version_usage_data_source')) -%}
+{%- set settings_columns = dbt_utils.get_column_values(table=ref('prep_usage_ping_metrics_setting'), column='metrics_path', max_records=1000, default=['']) %}
 
 {{ simple_cte([
     ('raw_usage_data', 'version_raw_usage_data_source'),
     ('map_ip_to_country', 'map_ip_to_country'),
     ('locations', 'prep_location_country'),
     ('prep_license', 'prep_license'),
-    ('prep_subscription', 'prep_subscription')
+    ('prep_subscription', 'prep_subscription'),
+    ('raw_usage_data', 'version_raw_usage_data_source'),
+    ('prep_usage_data_flattened', 'prep_usage_data_flattened'),
+    ('prep_usage_ping_metrics_setting', 'prep_usage_ping_metrics_setting'),
+    ('dim_date', 'dim_date')
     ])
 }}
 
@@ -32,11 +36,6 @@
       )                                                                         AS raw_usage_data_payload_reconstructed
     FROM {{ ref('version_usage_data_source') }}
 
-), raw_usage_data AS (
-
-    SELECT *
-    FROM {{ ref('version_raw_usage_data_source') }}
-
 ), map_ip_to_country AS (
 
     SELECT * 
@@ -47,6 +46,18 @@
     SELECT * 
     FROM {{ ref('prep_location_country') }}
 
+), settings_data AS (
+
+    SELECT
+      ping_id,
+      {% for column in settings_columns %}
+        MAX(IFF(prep_usage_data_flattened.metrics_path = '{{column}}', metric_value, NULL)) AS {{column | replace(".","_")}}
+        {{ "," if not loop.last }}
+      {% endfor %}    
+    FROM prep_usage_data_flattened
+    INNER JOIN prep_usage_ping_metrics_setting ON prep_usage_data_flattened.metrics_path = prep_usage_ping_metrics_setting.metrics_path
+    GROUP BY 1
+  
 ), usage_data AS (
 
     SELECT
@@ -109,7 +120,8 @@
         ELSE FALSE END                                                                          AS is_staging,     
       COALESCE(raw_usage_data.raw_usage_data_payload, raw_usage_data_payload_reconstructed)     AS raw_usage_data_payload,
       prep_license.dim_license_id,
-      prep_subscription.dim_subscription_id
+      prep_subscription.dim_subscription_id,
+      dim_date.date_id
 
     FROM usage_data
     LEFT JOIN raw_usage_data
@@ -118,7 +130,8 @@
       ON usage_data.license_md5 = prep_license.license_md5
     LEFT JOIN prep_subscription
       ON prep_license.dim_subscription_id = prep_subscription.dim_subscription_id
-
+    LEFT JOIN dim_date 
+      ON TO_DATE(ping_created_at) = dim_date.date_day
 ), map_ip_location AS (
 
     SELECT 
@@ -151,6 +164,8 @@
       dim_subscription_id,
       dim_license_id,
       dim_location_country_id,
+      date_id AS dim_date_id,
+      uuid AS dim_instance_id,
 
       -- timestamps
       ping_created_at,
@@ -160,6 +175,8 @@
       DATE_TRUNC('WEEK', ping_created_at)                AS ping_created_at_week,
       DATE_TRUNC('DAY', ping_created_at)                 AS ping_created_at_date,
       raw_usage_data_id                                  AS raw_usage_data_id, 
+      
+      -- metadata
       raw_usage_data_payload, 
       main_edition, 
       product_tier, 
@@ -171,9 +188,15 @@
       usage_ping_delivery_type,
       is_internal, 
       is_staging, 
-      instance_user_count
+      instance_user_count,
+      hostname AS host_name,
+
+      {% for column in settings_columns %}
+        {{column | replace(".","_")}}
+      {{ "," if not loop.last }}
+      {% endfor %}    
     FROM add_country_info_to_usage_ping
-    LEFT OUTER JOIN dim_product_tier
+    LEFT JOIN dim_product_tier
     ON TRIM(LOWER(add_country_info_to_usage_ping.product_tier)) = TRIM(LOWER(dim_product_tier.product_tier_historical_short))
     AND MAIN_EDITION = 'EE'
 
@@ -181,8 +204,8 @@
 
 {{ dbt_audit(
     cte_ref="final",
-    created_by="@kathleentam",
-    updated_by="@michellecooper",
+    created_by="@mpeychet",
+    updated_by="@mpeychet",
     created_date="2021-01-10",
     updated_date="2021-04-30"
 ) }}

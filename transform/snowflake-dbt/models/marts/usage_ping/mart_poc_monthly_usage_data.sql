@@ -32,7 +32,7 @@ WITH monthly_usage_data AS (
 SELECT 
   created_month,
   clean_metrics_name,
-  edition,
+  main_edition,
   product_tier,
   group_name,
   stage_name,
@@ -45,5 +45,5 @@ SELECT
   SUM(monthly_metric_value) AS monthly_metric_value_sum
 FROM monthly_usage_data_agg
 INNER JOIN fct_usage_ping_payloads
-  ON monthly_usage_data_agg.ping_id = fct_usage_ping_payloads.usage_ping_id
+  ON monthly_usage_data_agg.ping_id = fct_usage_ping_payloads.dim_usage_ping_id
 {{ dbt_utils.group_by(n=12) }}
