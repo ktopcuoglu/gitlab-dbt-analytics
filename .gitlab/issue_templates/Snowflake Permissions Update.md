@@ -1,4 +1,4 @@
-<!-- format should be something like 'user [de]provisioning - firstname last initual' -->
+<!-- format should be something like 'user [de]provisioning - firstname last initial' -->
 <!-- example: user provisioning - John S -->
 
 
