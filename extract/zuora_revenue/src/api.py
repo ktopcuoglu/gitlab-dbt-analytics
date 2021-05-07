@@ -199,41 +199,4 @@ class ZuoraRevProAPI:
 
                 page_number = page_number + 1
 
-    def zuora_table_desc(
-        self, url: str, header_auth_token: dict, table_name: str
-    ) -> None:
-
-        response_output = requests.get(url, headers=header_auth_token)
-        if response_output.status_code == 200:
-            table_metadata = response_output.json()
-            converted_table_column = []
-            original_table_column = []
-            for column in table_metadata:
-                converted_table_column.append(
-                    column.get("column_name") + "  " + "VARCHAR"
-                )
-                original_table_column.append(
-                    column.get("column_name") + "  " + column.get("data_type")
-                )
-            converted_table_definition = (
-                "CREATE TABLE IF NOT EXISTS {table_name} ( \n"
-                + ",\n".join(converted_table_column)
-                + "\n)\n;"
-            ).format(table_name=table_name)
-            original_table_definition = (
-                "\n \n \n \n \n /* Original Table definition for reference or Downstream modification. \n CREATE TABLE IF NOT EXISTS {table_name} ( \n"
-                + ",\n".join(original_table_column)
-                + "\n);\n*/"
-            ).format(table_name=table_name)
-            f = open(f"{table_name}.sql", "w+")
-            f.write(converted_table_definition)
-            f.write(original_table_definition)
-            f.close()
-            command = f"gsutil cp {table_name}.sql gs://zuora_revpro_gitlab/RAW_DB/{table_name}/"
-            logging.info(command)
-            p = subprocess.run(command, shell=True)
-            logging.info(p)
-        elif response_output.status_code == 400:
-            logging.info(
-                f"{table_name} definition can't be pull {response_output.text}"
-            )
+    

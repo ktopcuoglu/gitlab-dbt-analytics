@@ -3,7 +3,9 @@ import time
 from logging import error, info, basicConfig, getLogger, warning
 from os import environ as env
 from fire import Fire
+from typing import Dict, Tuple, List
 from yaml import load, safe_load, YAMLError
+from api import ZuoraRevProAPI
 
 import pandas as pd
 
@@ -23,10 +25,10 @@ from gitlabdata.orchestration_utils import (
 
 zuora_revenue_bi_entity_table_list = [
     {
-        "data_entity": "Acct Summary (Derived)",
-        "physical_tables": "RPRO_BI3_LN_ACCT_SUMM_V",
-        "table_name": "BI3_LN_ACCT_SUMM",
-    }
+        "data_entity": "Account Type",
+        "physical_tables": "RPRO_BI3_ACCT_TYPE_V",
+        "table_name": "BI3_ACCT_TYPE",
+    },
 ]
 config_dict = env.copy()
 # {
@@ -108,15 +110,20 @@ config_dict = env.copy()
 #        "data_entity": "Waterfall (Derived)",
 #        "physical_tables": "RPRO_BI3_WF_SUMM_V",
 #        "table_name": "BI3_WF_SUMM",
-#    },"""
+#    },
+# {
+#        "data_entity": "Acct Summary (Derived)",
+#        "physical_tables": "RPRO_BI3_LN_ACCT_SUMM_V",
+#        "table_name": "BI3_LN_ACCT_SUMM",
+#    }"""
 
 
 def zuora_revenue_extract(
     config_dict: dict, zuora_revenue_bi_entity_table_list: list
 ) -> None:
-    logging.basicConfig(level=20, filename="loging_file.log")
+    basicConfig(level=20, filename="loging_file.log")
 
-    logging.info("1st Step to get the authentication URL and header informtation.")
+    info("1st Step to get the authentication URL and header informtation.")
     headers = {
         "role": "APIRole",
         "clientname": "Default",
@@ -130,17 +137,6 @@ def zuora_revenue_extract(
 
     for table_name in zuora_revenue_bi_entity_table_list:
         table_name = table_name.get("table_name")
-        url = f"{zuora_fetch_data_url}{table_name}/describe-columns"
-        header_token = zuora_revpro.get_auth_token(
-            authenticate_url_zuora_revpro=authenticate_url_zuora_revpro, headers=headers
-        )
-        header_auth_token = {"Token": header_token}
-        logging.info(
-            f"Fetch the table description of and generate the DDL for RAW schema for table {table_name}"
-        )
-        zuora_revpro.zuora_table_desc(url, header_auth_token, table_name)
-        time.sleep(30)
-
         zuora_revpro.pull_zuora_table_data(
             zuora_fetch_data_url,
             table_name,
@@ -162,7 +158,7 @@ def zuora_revenue_load(
 ) -> None:
     # Set some vars
     chunksize = 15000
-    chunk_iter = 0
+     chunk_iter = 0
     engine = snowflake_engine_factory(conn_dict or env, "LOADER", schema)
 
     # Get the gcloud storage client and authenticate
@@ -194,7 +190,7 @@ def zuora_revenue_load(
 
             for chunk in sheet_df:
                 chunk[chunk.columns] = chunk[chunk.columns].astype("str")
-                dw_uploader(engine=engine, table=table, data=chunk, chunk=chunk_iter)
+                dw_uploader(engine=engine, table=table_name, data=chunk, chunk=chunk_iter)
 
 
 if __name__ == "__main__":

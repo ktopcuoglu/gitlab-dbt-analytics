@@ -3,14 +3,14 @@ table_info:
     physical_tables: RPRO_BI3_ACCT_TYPE_V
     table_name: 
       - BI3_ACCT_TYPE
-  - data_entity: Accounting Pre-Summary
-    physical_tables: RPRO_BI3_RI_ACCT_SUMM_V
-    table_name: 
-      - BI3_RI_ACCT_SUMM
-  - data_entity: Approvals
-    physical_tables: RPRO_BI3_APPR_DTL_V
-    table_name: 
-      - BI3_APPR_DTL
+#  - data_entity: Accounting Pre-Summary
+#    physical_tables: RPRO_BI3_RI_ACCT_SUMM_V
+#    table_name: 
+#      - BI3_RI_ACCT_SUMM
+#  - data_entity: Approvals
+#    physical_tables: RPRO_BI3_APPR_DTL_V
+#    table_name: 
+#      - BI3_APPR_DTL
   - data_entity: Bill
     physical_tables: RPRO_BI3_RC_BILL_V
     table_name: 
@@ -23,10 +23,10 @@ table_info:
     physical_tables: RPRO_BI3_CALENDAR_V
     table_name: 
       - BI3_CALENDAR
-  - data_entity: Cost
-    physical_tables: RPRO_BI3_RC_LN_COST_V
-    table_name: 
-      - BI3_RC_LN_COST
+#  - data_entity: Cost
+#    physical_tables: RPRO_BI3_RC_LN_COST_V
+#    table_name: 
+#      - BI3_RC_LN_COST
   - data_entity: Deleted Schedules
     physical_tables: RPRO_BI3_RC_SCHD_DEL_V
     table_name: 
