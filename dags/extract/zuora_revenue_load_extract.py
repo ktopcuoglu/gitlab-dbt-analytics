@@ -64,7 +64,8 @@ with open(
         for tab in sheet["table_name"]
     ]
 
-runs = []
+runs_load = []
+runs_extract = []
 
 # Create the DAG  with one load happening at once
 dag = DAG(
@@ -75,10 +76,11 @@ dag = DAG(
 )
 
 for table_name in table_name_list:
-    # Set the command for the container
-    container_cmd = f"""
+    
+    # Set the command for the container for loading the data
+    container_cmd_extract = f"""
         {clone_and_setup_extraction_cmd} &&
-        python3 zuora_revenue/zuora_extract_load.py zuora_load --bucket $ZUORA_REVENUE_BUCKET_NAME --schema_name zuora_revenue --table_name {table_name}
+        python3 zuora_revenue/zuora_extract_load.py zuora_extract --bucket $ZUORA_REVENUE_GCS_NAME --table_name {table_name}
         """
     # Task 1
     zuora_revenue_load_run = KubernetesPodOperator(
@@ -98,7 +100,37 @@ for table_name in table_name_list:
         env_vars=pod_env_vars,
         affinity=get_affinity(False),
         tolerations=get_toleration(False),
-        arguments=[container_cmd],
+        arguments=[container_cmd_load],
+        dag=dag,
+    )
+    runs.append(zuora_revenue_load_run)
+
+
+
+    # Set the command for the container for loading the data
+    container_cmd_load = f"""
+        {clone_and_setup_extraction_cmd} &&
+        python3 zuora_revenue/zuora_extract_load.py zuora_load --bucket $ZUORA_REVENUE_GCS_NAME --schema_name zuora_revenue --table_name {table_name}
+        """
+    # Task 1
+    zuora_revenue_load_run = KubernetesPodOperator(
+        **gitlab_defaults,
+        image=DATA_IMAGE,
+        task_id=f"{table_name}_LOAD",
+        name=f"{table_name}_LOAD",
+        secrets=[
+            ZUORA_REVENUE_GCS_NAME,
+            GCP_SERVICE_CREDS,
+            SNOWFLAKE_ACCOUNT,
+            SNOWFLAKE_LOAD_ROLE,
+            SNOWFLAKE_LOAD_USER,
+            SNOWFLAKE_LOAD_WAREHOUSE,
+            SNOWFLAKE_LOAD_PASSWORD,
+        ],
+        env_vars=pod_env_vars,
+        affinity=get_affinity(False),
+        tolerations=get_toleration(False),
+        arguments=[container_cmd_load],
         dag=dag,
     )
     runs.append(zuora_revenue_load_run)
