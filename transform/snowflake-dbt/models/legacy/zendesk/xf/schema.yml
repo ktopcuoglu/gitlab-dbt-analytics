@@ -8,7 +8,7 @@ models:
             description: This is the ticket id.
             tests:
               - not_null
-              - unique
+              # - unique  https://gitlab.com/gitlab-data/analytics/-/issues/8771#note_570395334
           - name: ticket_created_at
             tests:
               - not_null
@@ -78,7 +78,7 @@ models:
             description: This is the ticket id.
             tests:
               - not_null
-              - unique
+              # - unique https://gitlab.com/gitlab-data/analytics/-/issues/8771#note_570395334
           - name: created_at
             tests:
               - not_null
