@@ -67,7 +67,7 @@ def chunk_list(
 def get_and_write_distributions(survey_ids: List[str]) -> List[Dict[Any, Any]]:
     """Gets all distributions for the given surveys and writes them to Snowflake as well as returns them."""
     all_distributions: List[Dict[Any, Any]] = []
-    for survey_id in surveys_ids:
+    for survey_id in survey_ids:
         current_distributions = get_distributions(client, survey_id)
         all_distributions = all_distributions + current_distributions
         if current_distributions:
