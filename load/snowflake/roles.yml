@@ -2193,6 +2193,7 @@ roles:
             - bamboohr_analytics
             - customers_db
             - data_team_analyst
+            - data_manager
         warehouses:
             - analyst_xs
         owns:
@@ -2379,6 +2380,7 @@ roles:
             - analyst_engineering
             - customers_db
             - data_team_analyst
+            - analyst_finance
         warehouses:
             - analyst_xs
         owns:
