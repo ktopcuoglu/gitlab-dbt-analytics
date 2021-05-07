@@ -37,6 +37,7 @@ WITH dim_billing_account AS (
 
     SELECT
       fct_usage_ping_payload.*,
+      dim_billing_account.dim_billing_account_id,
       dim_crm_account.dim_crm_account_id,
       dim_crm_account.crm_account_name,
       dim_crm_account.crm_account_billing_country,
@@ -59,9 +60,9 @@ WITH dim_billing_account AS (
     LEFT JOIN dim_crm_account
       ON dim_billing_account.dim_crm_account_id = dim_crm_account.dim_crm_account_id
     LEFT JOIN dim_date
-      ON fct_usage_ping_payload.date_id = dim_date.date_id
+      ON fct_usage_ping_payload.dim_date_id = dim_date.date_id
     LEFT JOIN dim_location
-      ON fct_usage_ping_payload.location_id = dim_location.dim_location_country_id
+      ON fct_usage_ping_payload.dim_location_country_id = dim_location.dim_location_country_id
 
 ), renamed AS (
 
@@ -72,18 +73,18 @@ WITH dim_billing_account AS (
       dim_instance_id,
 
       -- date info
-      date_id,
+      dim_date_id,
       ping_created_at,
       ping_created_at_date,
       ping_created_at_month,
       fiscal_quarter_name_fy  AS ping_fiscal_quarter,
       IFF(ROW_NUMBER() OVER (
-          PARTITION BY uuid, ping_month
-          ORDER BY usage_ping_id DESC
+          PARTITION BY dim_instance_id, ping_created_at_month
+          ORDER BY dim_usage_ping_id DESC
           ) = 1, TRUE, FALSE) AS is_last_ping_in_month,
       IFF(ROW_NUMBER() OVER (
-          PARTITION BY uuid, fiscal_quarter_name_fy
-          ORDER BY usage_ping_id DESC
+          PARTITION BY dim_instance_id, fiscal_quarter_name_fy
+          ORDER BY dim_usage_ping_id DESC
           ) = 1, TRUE, FALSE) AS is_last_ping_in_quarter,
 
       -- customer info
@@ -107,12 +108,12 @@ WITH dim_billing_account AS (
       subscription_id,
 
       -- location info
-      location_id,
+      dim_location_country_id,
       country_name            AS ping_country_name,
       iso_2_country_code      AS ping_country_code,
 
       -- metadata
-      IFF(uuid = 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f', 'SaaS', 'Self-Managed')
+      IFF(dim_instance_id = 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f', 'SaaS', 'Self-Managed')
                               AS ping_source,
       edition,
       version,

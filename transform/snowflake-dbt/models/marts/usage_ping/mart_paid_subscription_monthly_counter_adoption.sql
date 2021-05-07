@@ -32,12 +32,12 @@ WITH self_managed_active_subscriptions AS (
 ), all_subscriptions AS (
 
     SELECT *
-    FROM {{ ref('zuora_subscription_source') }}
+    FROM {{ ref('dim_subscription') }}
 
-), fct_payloads AS (
+), fct_payload AS (
 
     SELECT *
-    FROM {{ ref('fct_usage_ping_payloads') }}
+    FROM {{ ref('fct_usage_ping_payload') }}
 
 ), dim_gitlab_releases AS (
 
@@ -53,9 +53,9 @@ WITH self_managed_active_subscriptions AS (
       active_subscriptions.subscription_name_slugify,
       active_subscriptions.subscription_start_date,
       active_subscriptions.subscription_end_date,
-      MAX(fct_payloads.subscription_id) IS NOT NULL                                   AS has_sent_payloads,
-      COUNT(DISTINCT fct_payloads.usage_ping_id)                                      AS monthly_payload_counts,
-      COUNT(DISTINCT host_id)                                                         AS monthly_host_counts
+      MAX(fct_payload.dim_subscription_id) IS NOT NULL                               AS has_sent_payloads,
+      COUNT(DISTINCT fct_payload.dim_usage_ping_id)                                  AS monthly_payload_counts,
+      COUNT(DISTINCT host_name)                                                         AS monthly_host_counts
     FROM self_managed_active_subscriptions
     INNER JOIN dim_product_detail
       ON self_managed_active_subscriptions.product_details_id = dim_product_detail.dim_product_detail_id
@@ -63,7 +63,7 @@ WITH self_managed_active_subscriptions AS (
     INNER JOIN dim_date ON self_managed_active_subscriptions.date_id = dim_date.date_id
     LEFT JOIN active_subscriptions ON self_managed_active_subscriptions.subscription_id = active_subscriptions.dim_subscription_id
     LEFT JOIN all_subscriptions ON active_subscriptions.subscription_name_slugify = all_subscriptions.subscription_name_slugify
-    LEFT JOIN fct_payloads ON all_subscriptions.subscription_id = fct_payloads.subscription_id AND first_day_of_month = DATE_TRUNC('month', fct_payloads.created_at)
+    LEFT JOIN fct_payload ON all_subscriptions.dim_subscription_id = fct_payload.dim_subscription_id AND first_day_of_month = DATE_TRUNC('month', fct_payload.ping_created_at)
     {{ dbt_utils.group_by(n=6) }}
 
 ), latest_versions AS (
@@ -74,7 +74,7 @@ WITH self_managed_active_subscriptions AS (
       active_subscriptions.subscription_name_slugify,
       FIRST_VALUE(major_minor_version) OVER (
         PARTITION BY first_day_of_month, active_subscriptions.subscription_name_slugify
-        ORDER BY created_at DESC
+        ORDER BY ping_created_at DESC
       ) AS latest_major_minor_version
     FROM self_managed_active_subscriptions
     INNER JOIN dim_product_detail
@@ -83,7 +83,7 @@ WITH self_managed_active_subscriptions AS (
     INNER JOIN dim_date ON self_managed_active_subscriptions.date_id = dim_date.date_id
     INNER JOIN active_subscriptions ON self_managed_active_subscriptions.subscription_id = active_subscriptions.dim_subscription_id
     INNER JOIN all_subscriptions ON active_subscriptions.subscription_name_slugify = all_subscriptions.subscription_name_slugify
-    INNER JOIN fct_payloads ON all_subscriptions.subscription_id = fct_payloads.subscription_id AND first_day_of_month = DATE_TRUNC('month', fct_payloads.created_at)
+    INNER JOIN fct_payload ON all_subscriptions.dim_subscription_id = fct_payload.dim_subscription_id AND first_day_of_month = DATE_TRUNC('month', fct_payload.ping_created_at)
 
 ), paid_subscriptions_monthly_usage_ping_optin AS (
 
