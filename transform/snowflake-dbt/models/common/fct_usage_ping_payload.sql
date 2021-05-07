@@ -49,7 +49,7 @@
 ), settings_data AS (
 
     SELECT
-      ping_id,
+      ping_id AS dim_usage_ping_id,
       {% for column in settings_columns %}
         MAX(IFF(prep_usage_data_flattened.metrics_path = '{{column}}', metric_value, NULL)) AS {{column | replace(".","_")}}
         {{ "," if not loop.last }}
@@ -152,14 +152,14 @@
 
 ), dim_product_tier AS (
   
-  SELECT * 
-  FROM {{ ref('dim_product_tier') }}
-  WHERE product_delivery_type = 'Self-Managed'
+    SELECT * 
+    FROM {{ ref('dim_product_tier') }}
+    WHERE product_delivery_type = 'Self-Managed'
 
 ), final AS (
 
     SELECT 
-      dim_usage_ping_id,
+      add_country_info_to_usage_ping.dim_usage_ping_id,
       dim_product_tier.dim_product_tier_id AS dim_product_tier_id,
       dim_subscription_id,
       dim_license_id,
@@ -189,16 +189,11 @@
       is_internal, 
       is_staging, 
       instance_user_count,
-      hostname AS host_name,
-
-      {% for column in settings_columns %}
-        {{column | replace(".","_")}}
-      {{ "," if not loop.last }}
-      {% endfor %}    
+      hostname AS host_name
     FROM add_country_info_to_usage_ping
     LEFT JOIN dim_product_tier
-    ON TRIM(LOWER(add_country_info_to_usage_ping.product_tier)) = TRIM(LOWER(dim_product_tier.product_tier_historical_short))
-    AND MAIN_EDITION = 'EE'
+      ON TRIM(LOWER(add_country_info_to_usage_ping.product_tier)) = TRIM(LOWER(dim_product_tier.product_tier_historical_short))
+      AND main_edition = 'EE'
 
 )
 

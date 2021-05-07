@@ -41,7 +41,7 @@ SELECT
   is_gmau,
   is_paid_gmau,
   is_umau,
-  ping_source,
+  usage_ping_delivery_type,
   SUM(monthly_metric_value) AS monthly_metric_value_sum
 FROM monthly_usage_data_agg
 INNER JOIN fct_usage_ping_payloads
