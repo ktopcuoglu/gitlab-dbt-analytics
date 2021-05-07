@@ -50,7 +50,7 @@ WITH date AS (
     target_matrix.kpi_name,
     date.first_day_of_month,
     target_matrix.opportunity_source                                                AS sales_qualified_source,
-    sales_qualified_source.dim_sales_qualified_source_id,
+    {{ get_keyed_nulls('sales_qualified_source.dim_sales_qualified_source_id') }}   AS dim_sales_qualified_source_id,
     target_matrix.order_type,
     order_type.dim_order_type_id,
     sfdc_user_hierarchy_live.dim_crm_user_hierarchy_live_id,
@@ -83,7 +83,7 @@ WITH date AS (
 {{ dbt_audit(
     cte_ref="final_targets",
     created_by="@mcooperDD",
-    updated_by="@mcooperDD",
+    updated_by="@jpeguero",
     created_date="2020-12-18",
-    updated_date="2020-03-25"
+    updated_date="2021-05-06"
 ) }}

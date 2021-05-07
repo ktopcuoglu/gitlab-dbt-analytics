@@ -29,7 +29,7 @@ models:
       - name: order_id
         tests:
           - not_null
-      - name: dbt_valid_from
+      - name: valid_from
         tests:
           - not_null
       - name: valid_to

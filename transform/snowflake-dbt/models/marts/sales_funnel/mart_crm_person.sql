@@ -54,16 +54,19 @@
       dim_crm_person.lead_source,
       dim_crm_person.source_buckets,
       dim_bizible_marketing_channel_path.bizible_marketing_channel_path_name,
+      dim_sales_segment.sales_segment_name,
+      dim_sales_segment.sales_segment_grouped,
       CASE
-        WHEN LOWER(dim_sales_segment.sales_segment_name) LIKE '%unknown%' THEN 'SMB'
-        WHEN LOWER(dim_sales_segment.sales_segment_name) LIKE '%mid%' THEN 'Mid-Market'
-        ELSE dim_sales_segment.sales_segment_name
-      END                                                        AS sales_segment_name,
+        WHEN dim_sales_segment.sales_segment_name NOT IN ('Large', 'PubSec') THEN dim_sales_segment.sales_segment_name
+        WHEN dim_sales_segment.sales_segment_name IN ('Large', 'PubSec') THEN  'Large MQLs & Trials'
+        ELSE 'Missing sales_segment_region_mapped'
+      END                                      AS sales_segment_region_mapped,
       fct_crm_person.is_mql,
       CASE
-        WHEN bizible_marketing_channel_path_name = 'Trial' THEN TRUE
+        WHEN LOWER(dim_crm_person.lead_source) LIKE '%trial - gitlab.com%' THEN TRUE
+        WHEN LOWER(dim_crm_person.lead_source) LIKE '%trial - enterprise%' THEN TRUE
         ELSE FALSE
-      END                                                        AS is_trial
+      END                                                        AS is_lead_source_trial
     FROM fct_crm_person
     LEFT JOIN dim_crm_person
       ON fct_crm_person.dim_crm_person_id = dim_crm_person.dim_crm_person_id
@@ -109,7 +112,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@iweeks",
+    updated_by="@jpeguero",
     created_date="2020-12-07",
-    updated_date="2021-02-12",
+    updated_date="2021-04-26",
   ) }}
