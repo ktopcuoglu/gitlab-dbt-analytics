@@ -52,20 +52,9 @@
       namespace_lineage_daily.*,
       IFNULL(map_namespace_internal.ultimate_parent_namespace_id IS NOT NULL, FALSE)  AS namespace_is_internal,
       IFF(namespace_subscription_snapshots.is_trial
-<<<<<<< HEAD
-<<<<<<< HEAD
             AND IFNULL(namespace_subscription_snapshots.plan_id, 34) NOT IN (34, 103), -- Excluded Premium (103) and Free (34) Trials from being remapped as Ultimate Trials
           102, -- All historical trial GitLab subscriptions were Ultimate/Gold Trials (102)
           IFNULL(namespace_subscription_snapshots.plan_id, 34))                       AS ultimate_parent_plan_id,
-=======
-            AND IFNULL(namespace_subscription_snapshots.plan_id, 34) NOT IN (34, 103),
-          102, IFNULL(namespace_subscription_snapshots.plan_id, 34))                  AS ultimate_parent_plan_id,
->>>>>>> be4870851 (Historical namespaces and GitLab subscriptions seats added to prep_namespace)
-=======
-            AND IFNULL(namespace_subscription_snapshots.plan_id, 34) NOT IN (34, 103), -- Excluded Premium (103) and Free (34) Trials from being remapped as Ultimate Trials
-          102, -- All historical trial GitLab subscriptions were Ultimate/Gold Trials (102)
-          IFNULL(namespace_subscription_snapshots.plan_id, 34))                       AS ultimate_parent_plan_id,
->>>>>>> bff104faa (Updated plan_id tests to account for, and added comments to clarify updated logic)
       namespace_subscription_snapshots.seats,
       namespace_subscription_snapshots.max_seats_used
     FROM namespace_lineage_daily
@@ -87,8 +76,4 @@
 SELECT
   {{ dbt_utils.surrogate_key(['snapshot_day', 'namespace_id'] ) }}                    AS snapshot_day_namespace_id,
   *
-<<<<<<< HEAD
 FROM with_plans
-=======
-FROM with_plans
->>>>>>> be4870851 (Historical namespaces and GitLab subscriptions seats added to prep_namespace)

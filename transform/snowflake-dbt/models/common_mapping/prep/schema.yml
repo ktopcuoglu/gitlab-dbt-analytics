@@ -154,13 +154,6 @@ models:
       - name: dim_namespace_id
         tests:
           - not_null
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-          - unique
->>>>>>> bfb031565 (Added historical namespaces to prep_namespace and updated trial plans in namespace lineage model)
-=======
->>>>>>> be4870851 (Historical namespaces and GitLab subscriptions seats added to prep_namespace)
         tags: ["tdf", "common", "gainsight"]
       - name: namespace_is_internal
       - name: namespace_is_ultimate_parent

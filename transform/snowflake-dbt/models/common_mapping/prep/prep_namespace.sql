@@ -64,14 +64,14 @@
 --       ORDER BY snapshot_day DESC
 --     ) = 1
 
-    -- UNION ALL
+--     UNION ALL
 
-    -- SELECT
-    --   namespace_id,
-    --   parent_id,
-    --   ultimate_parent_id,
-    --   ultimate_parent_plan_id
-    -- FROM namespace_lineage_current
+--     SELECT
+--       namespace_id,
+--       parent_id,
+--       ultimate_parent_id,
+--       ultimate_parent_plan_id
+--     FROM namespace_lineage_current
 
 ), namespace_lineage AS (
 
@@ -93,8 +93,7 @@
       ORDER BY namespace_lineage_historical.snapshot_day DESC
     ) = 1
 
-), namespace_lineage_all_time AS (
-  
+), namespaces AS (
 
     SELECT
       namespace_snapshots.*,
