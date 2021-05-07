@@ -44,7 +44,9 @@ def get_and_write_surveys(qualtrics_client: QualtricsClient) -> List[str]:
     return [survey["id"] for survey in surveys_to_write]
 
 
-def get_distributions(qualtrics_client: QualtricsClient, survey_id: str) -> List[Dict[Any, Any]]:
+def get_distributions(
+    qualtrics_client: QualtricsClient, survey_id: str
+) -> List[Dict[Any, Any]]:
     """
     Gets all distributions for the given survey id.
     Returns the entire distribution object.
@@ -61,6 +63,7 @@ def chunk_list(
     for i in range(0, len(list_to_chunk), chunk_size):
         yield list_to_chunk[i : i + chunk_size]
 
+
 def get_and_write_distributions(survey_ids: List[str]) -> List[Dict[Any, Any]]:
     """Gets all distributions for the given surveys and writes them to Snowflake as well as returns them."""
     all_distributions: List[Dict[Any, Any]] = []
@@ -68,11 +71,11 @@ def get_and_write_distributions(survey_ids: List[str]) -> List[Dict[Any, Any]]:
         current_distributions = get_distributions(client, survey_id)
         all_distributions = all_distributions + current_distributions
         if current_distributions:
-    
+
             for chunk in chunk_list(current_distributions, 100):
                 with open("distributions.json", "w") as out_file:
                     json.dump(chunk, out_file)
-    
+
                 snowflake_stage_load_copy_remove(
                     "distributions.json",
                     "raw.qualtrics.qualtrics_load",
@@ -103,6 +106,7 @@ def get_and_write_contacts(distributions: List[Dict[Any, Any]]) -> List[Dict[Any
         )
     return contacts_to_write
 
+
 if __name__ == "__main__":
     config_dict = env.copy()
     client = QualtricsClient(
@@ -125,5 +129,6 @@ if __name__ == "__main__":
         )
     ]
 
-    get_and_write_contacts(distributions_with_mailings_to_write) #return value not used right now
-
+    get_and_write_contacts(
+        distributions_with_mailings_to_write
+    )  # return value not used right now
