@@ -8,9 +8,12 @@
     ('prep_subscription', 'prep_subscription'),
     ('raw_usage_data', 'version_raw_usage_data_source'),
     ('prep_usage_data_flattened', 'prep_usage_data_flattened'),
+    ('map_ip_to_country', 'map_ip_to_country'),
+    ('locations', 'prep_location_country'),
     ('prep_usage_ping_metrics_setting', 'prep_usage_ping_metrics_setting'),
-    ('dim_date', 'dim_date')
+    ('dim_date', 'dim_date'),
     ])
+    
 }}
 
 , usage_ping AS (
@@ -30,27 +33,17 @@
       )                                                                         AS raw_usage_data_payload_reconstructed
     FROM {{ ref('version_usage_data_source') }}
 
-), map_ip_to_country AS (
+-- ), settings_data AS (
 
-    SELECT * 
-    FROM {{ ref('map_ip_to_country') }}
-    
-), locations AS (
-
-    SELECT * 
-    FROM {{ ref('prep_location_country') }}
-
-), settings_data AS (
-
-    SELECT
-      ping_id AS dim_usage_ping_id,
-      {% for column in settings_columns %}
-        MAX(IFF(prep_usage_data_flattened.metrics_path = '{{column}}', metric_value, NULL)) AS {{column | replace(".","_")}}
-        {{ "," if not loop.last }}
-      {% endfor %}    
-    FROM prep_usage_data_flattened
-    INNER JOIN prep_usage_ping_metrics_setting ON prep_usage_data_flattened.metrics_path = prep_usage_ping_metrics_setting.metrics_path
-    GROUP BY 1
+--     SELECT
+--       ping_id AS dim_usage_ping_id,
+--       {% for column in settings_columns %}
+--         MAX(IFF(prep_usage_data_flattened.metrics_path = '{{column}}', metric_value, NULL)) AS {{column | replace(".","_")}}
+--         {{ "," if not loop.last }}
+--       {% endfor %}    
+--     FROM prep_usage_data_flattened
+--     INNER JOIN prep_usage_ping_metrics_setting ON prep_usage_data_flattened.metrics_path = prep_usage_ping_metrics_setting.metrics_path
+--     GROUP BY 1
   
 ), usage_data AS (
 
@@ -61,7 +54,10 @@
       {{ dbt_utils.star(from=ref('version_usage_data_source'), except=['EDITION', 'CREATED_AT', 'SOURCE_IP']) }},
       IFF(license_expires_at >= ping_created_at OR license_expires_at IS NULL, edition, 'EE Free')    AS cleaned_edition,
       REGEXP_REPLACE(NULLIF(version, ''), '[^0-9.]+')                                                 AS cleaned_version,
-      IFF(version ILIKE '%-pre', True, False)                                                         AS version_is_prerelease,
+        IFF(
+            version LIKE '%-pre%' OR version LIKE '%-rc%', 
+            TRUE, FALSE
+        )::BOOLEAN                                                   AS version_is_prerelease,
       SPLIT_PART(cleaned_version, '.', 1)::NUMBER                                                     AS major_version,
       SPLIT_PART(cleaned_version, '.', 2)::NUMBER                                                     AS minor_version,
       major_version || '.' || minor_version                                                           AS major_minor_version,
@@ -115,7 +111,11 @@
       COALESCE(raw_usage_data.raw_usage_data_payload, raw_usage_data_payload_reconstructed)     AS raw_usage_data_payload,
       prep_license.dim_license_id,
       prep_subscription.dim_subscription_id,
-      dim_date.date_id
+      dim_date.date_id,
+      TO_DATE(raw_usage_data.raw_usage_data_payload:license_trial_ends_on::TEXT)                      AS license_trial_ends_on,
+      (raw_usage_data.raw_usage_data_payload:license_subscription_id::TEXT)                           AS license_subscription_id,
+      raw_usage_data.raw_usage_data_payload:usage_activity_by_stage_monthly.manage.events::NUMBER     AS umau_value,
+      IFF(ping_created_at < license_trial_ends_on, TRUE, FALSE)                        AS is_trial
 
     FROM usage_data
     LEFT JOIN raw_usage_data
@@ -182,6 +182,7 @@
       usage_ping_delivery_type,
       is_internal, 
       is_staging, 
+      is_trial,
       instance_user_count,
       hostname AS host_name
     FROM add_country_info_to_usage_ping
