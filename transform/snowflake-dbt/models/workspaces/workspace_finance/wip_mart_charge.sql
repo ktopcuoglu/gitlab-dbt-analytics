@@ -8,6 +8,11 @@ WITH dim_amendment AS (
   SELECT *
   FROM {{ ref('dim_billing_account') }}
 
+), dim_charge AS (
+
+  SELECT *
+  FROM {{ ref('dim_charge') }}
+
 ), dim_crm_account AS (
 
   SELECT *
@@ -32,26 +37,26 @@ WITH dim_amendment AS (
 
     SELECT
       --Surrogate Key
-      fct_charge.dim_charge_id,
+      dim_charge.dim_charge_id,
 
       --Natural Key
-      fct_charge.subscription_name,
-      fct_charge.subscription_version,
-      fct_charge.rate_plan_charge_number,
-      fct_charge.rate_plan_charge_version,
-      fct_charge.rate_plan_charge_segment,
+      dim_charge.subscription_name,
+      dim_charge.subscription_version,
+      dim_charge.rate_plan_charge_number,
+      dim_charge.rate_plan_charge_version,
+      dim_charge.rate_plan_charge_segment,
 
       --date info
       dim_subscription.subscription_start_date                                        AS subscription_start_date,
       dim_subscription.subscription_end_date                                          AS subscription_end_date,
       dim_subscription.subscription_start_month                                       AS subscription_start_month,
       dim_subscription.subscription_end_month                                         AS subscription_end_month,
-      fct_charge.effective_start_date                                                 AS effective_start_date,
-      fct_charge.effective_end_date                                                   AS effective_end_date,
-      fct_charge.effective_start_month                                                AS effective_start_month,
-      fct_charge.effective_end_month                                                  AS effective_end_month,
-      fct_charge.created_date                                                         AS created_date,
-      fct_charge.updated_date                                                         AS updated_date,
+      dim_charge.effective_start_date                                                 AS effective_start_date,
+      dim_charge.effective_end_date                                                   AS effective_end_date,
+      dim_charge.effective_start_month                                                AS effective_start_month,
+      dim_charge.effective_end_month                                                  AS effective_end_month,
+      dim_charge.created_date                                                         AS created_date,
+      dim_charge.updated_date                                                         AS updated_date,
 
       --billing account info
       dim_billing_account.dim_billing_account_id                                      AS dim_billing_account_id,
@@ -127,9 +132,11 @@ WITH dim_amendment AS (
       fct_charge.delta_tcv,
 
       --ARR Analysis Framework
-      fct_charge.type_of_arr_change
+      dim_charge.type_of_arr_change
 
     FROM fct_charge
+    INNER JOIN dim_charge
+      ON fct_charge.dim_charge_id = dim_charge.dim_charge_id
     INNER JOIN dim_subscription
       ON fct_charge.dim_subscription_id = dim_subscription.dim_subscription_id
     INNER JOIN dim_product_detail
@@ -139,9 +146,9 @@ WITH dim_amendment AS (
     LEFT JOIN dim_crm_account
       ON dim_crm_account.dim_crm_account_id = dim_billing_account.dim_crm_account_id
     LEFT JOIN dim_amendment AS dim_amendment_subscription
-      ON dim_subscription.dim_amendment_id = dim_amendment_subscription.dim_amendment_id
+      ON dim_subscription.dim_amendment_id_subscription = dim_amendment_subscription.dim_amendment_id
     LEFT JOIN dim_amendment AS dim_amendment_charge
-      ON fct_charge.dim_amendment_id = dim_amendment_charge.dim_amendment_id
+      ON fct_charge.dim_amendment_id_charge = dim_amendment_charge.dim_amendment_id
     ORDER BY fct_charge.subscription_name, fct_charge.subscription_version, fct_charge.rate_plan_charge_number,
       fct_charge.rate_plan_charge_version, fct_charge.rate_plan_charge_segment
 

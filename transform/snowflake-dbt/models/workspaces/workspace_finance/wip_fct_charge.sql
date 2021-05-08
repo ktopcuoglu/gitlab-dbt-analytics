@@ -23,21 +23,13 @@ WITH prep_charge AS (
 
       --Common Dimension Keys
       prep_charge.dim_product_detail_id,
-      {{ get_keyed_nulls('prep_amendment.dim_amendment_id') }}              AS dim_amendment_id,
+      {{ get_keyed_nulls('prep_amendment.dim_amendment_id') }}              AS dim_amendment_id_charge,
       prep_charge.dim_subscription_id,
       prep_charge.dim_billing_account_id,
       prep_charge.dim_crm_account_id,
       prep_charge.dim_parent_crm_account_id,
       prep_charge.effective_start_date_id,
       prep_charge.effective_end_date_id,
-
-      --Dates
-      prep_charge.effective_start_date,
-      prep_charge.effective_end_date,
-      prep_charge.effective_start_month,
-      prep_charge.effective_end_month,
-      prep_charge.created_date,
-      prep_charge.updated_date,
 
       --Additive Fields
       prep_charge.mrr,
@@ -52,12 +44,11 @@ WITH prep_charge AS (
       prep_charge.tcv,
       prep_charge.previous_tcv,
       prep_charge.delta_tcv,
+      prep_charge.estimated_total_future_billings
 
-      --ARR Analysis Framework
-      prep_charge.type_of_arr_change
     FROM prep_charge
     LEFT JOIN prep_amendment
-      ON prep_charge.dim_amendment_id = prep_amendment.dim_amendment_id
+      ON prep_charge.dim_amendment_id_charge = prep_amendment.dim_amendment_id
     ORDER BY subscription_name, subscription_version, rate_plan_charge_number, rate_plan_charge_version, rate_plan_charge_segment
 
 )
