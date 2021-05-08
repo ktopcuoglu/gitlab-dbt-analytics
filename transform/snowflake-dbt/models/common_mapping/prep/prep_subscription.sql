@@ -21,13 +21,13 @@ WITH map_merged_crm_account AS (
 
   SELECT
     zuora_subscription.subscription_id                                        AS dim_subscription_id,
-    map_merged_crm_account.dim_crm_account_id                                AS dim_crm_account_id,
+    map_merged_crm_account.dim_crm_account_id                                 AS dim_crm_account_id,
     zuora_account.account_id                                                  AS dim_billing_account_id,
     zuora_subscription.invoice_owner_id                                       AS dim_crm_person_id_invoice_owner,
     zuora_subscription.sfdc_opportunity_id                                    AS dim_crm_opportunity_id,
     zuora_subscription.original_id                                            AS dim_subscription_id_original,
     zuora_subscription.previous_subscription_id                               AS dim_subscription_id_previous,
-    zuora_subscription.amendment_id,
+    zuora_subscription.amendment_id                                           AS dim_amendment_id,
     zuora_subscription.subscription_name,
     zuora_subscription.subscription_name_slugify,
     zuora_subscription.subscription_status,
@@ -58,5 +58,5 @@ WITH map_merged_crm_account AS (
     created_by="@ischweickartDD",
     updated_by="@iweeks",
     created_date="2021-01-07",
-    updated_date="2021-03-15"
+    updated_date="2021-05-10"
 ) }}

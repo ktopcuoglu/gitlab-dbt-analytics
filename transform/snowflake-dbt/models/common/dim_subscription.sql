@@ -1,4 +1,9 @@
-WITH subscription AS (
+WITH prep_amendment AS (
+
+  SELECT *
+  FROM {{ ref('prep_amendment') }}
+
+), subscription AS (
 
     SELECT *
     FROM {{ ref('prep_subscription') }}
@@ -19,7 +24,7 @@ WITH subscription AS (
     subscription.dim_crm_opportunity_id,
     subscription.dim_subscription_id_original,
     subscription.dim_subscription_id_previous,
-    subscription.amendment_id,
+    {{ get_keyed_nulls('prep_amendment.dim_amendment_id') }}       AS dim_amendment_id,
 
     --info
     subscription.subscription_name,
@@ -46,6 +51,8 @@ WITH subscription AS (
   FROM subscription
   LEFT JOIN subscription_lineage
     ON subscription_lineage.dim_subscription_id = subscription.dim_subscription_id
+  LEFT JOIN prep_amendment
+    ON subscription.dim_amendment_id = prep_amendment.dim_amendment_id
 
 )
 
@@ -54,5 +61,5 @@ WITH subscription AS (
     created_by="@snalamaru",
     updated_by="@iweeks",
     created_date="2020-12-16",
-    updated_date="2021-03-15"
+    updated_date="2021-05-10"
 ) }}
