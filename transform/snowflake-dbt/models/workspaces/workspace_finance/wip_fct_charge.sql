@@ -49,7 +49,8 @@ WITH prep_charge AS (
     FROM prep_charge
     LEFT JOIN prep_amendment
       ON prep_charge.dim_amendment_id_charge = prep_amendment.dim_amendment_id
-    ORDER BY subscription_name, subscription_version, rate_plan_charge_number, rate_plan_charge_version, rate_plan_charge_segment
+    ORDER BY prep_charge.dim_parent_crm_account_id, prep_charge.dim_crm_account_id, subscription_name, subscription_version, 
+      rate_plan_charge_number, rate_plan_charge_version, rate_plan_charge_segment
 
 )
 

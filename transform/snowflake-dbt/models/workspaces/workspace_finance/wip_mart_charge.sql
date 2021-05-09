@@ -51,12 +51,16 @@ WITH dim_amendment AS (
       dim_subscription.subscription_end_date                                          AS subscription_end_date,
       dim_subscription.subscription_start_month                                       AS subscription_start_month,
       dim_subscription.subscription_end_month                                         AS subscription_end_month,
+      dim_subscription.subscription_end_fiscal_year                                   AS subscription_end_fiscal_year,
+      dim_subscription.created_date                                                   AS subscription_created_date,
+      dim_subscription.myb_renewal_month                                              AS myb_renewal_month,
+      dim_subscription.next_future_renewal_month                                      AS next_future_renewal_month,
+      dim_subscription.second_future_renewal_month                                    AS second_future_renewal_month,
       dim_charge.effective_start_date                                                 AS effective_start_date,
       dim_charge.effective_end_date                                                   AS effective_end_date,
       dim_charge.effective_start_month                                                AS effective_start_month,
       dim_charge.effective_end_month                                                  AS effective_end_month,
-      dim_charge.created_date                                                         AS created_date,
-      dim_charge.updated_date                                                         AS updated_date,
+      dim_charge.created_date                                                         AS charge_created_date,
 
       --billing account info
       dim_billing_account.dim_billing_account_id                                      AS dim_billing_account_id,
@@ -149,8 +153,9 @@ WITH dim_amendment AS (
       ON dim_subscription.dim_amendment_id_subscription = dim_amendment_subscription.dim_amendment_id
     LEFT JOIN dim_amendment AS dim_amendment_charge
       ON fct_charge.dim_amendment_id_charge = dim_amendment_charge.dim_amendment_id
-    ORDER BY fct_charge.subscription_name, fct_charge.subscription_version, fct_charge.rate_plan_charge_number,
-      fct_charge.rate_plan_charge_version, fct_charge.rate_plan_charge_segment
+    ORDER BY dim_crm_account.dim_parent_crm_account_id, dim_crm_account.dim_crm_account_id, fct_charge.subscription_name,
+      fct_charge.subscription_version, fct_charge.rate_plan_charge_number, fct_charge.rate_plan_charge_version,
+      fct_charge.rate_plan_charge_segment
 
 )
 

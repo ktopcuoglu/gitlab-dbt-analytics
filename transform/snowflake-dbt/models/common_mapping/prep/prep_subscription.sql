@@ -27,10 +27,10 @@ WITH date_details AS (
     SELECT DISTINCT
       sub_1.subscription_name,
       sub_1.zuora_renewal_subscription_name,
-      DATE_TRUNC('month',sub_2.subscription_end_date)       AS renewal_subscription_end_month,
+      DATE_TRUNC('month',sub_2.subscription_end_date::DATE)                     AS myb_renewal_month,
       RANK() OVER (PARTITION BY sub_1.subscription_name
                    ORDER BY sub_1.zuora_renewal_subscription_name, sub_2.subscription_end_date )
-                                                            AS rank
+                                                                                AS rank
     FROM zuora_subscription sub_1
     INNER JOIN zuora_subscription sub_2
       ON sub_1.zuora_renewal_subscription_name = sub_2.subscription_name
@@ -68,15 +68,30 @@ WITH date_details AS (
       zuora_subscription.renewal_term,
       zuora_subscription.renewal_term_period_type,
       zuora_subscription.eoa_starter_bronze_offer_accepted,
-      zuora_subscription.subscription_start_date                                AS subscription_start_date,
-      zuora_subscription.subscription_end_date                                  AS subscription_end_date,
       IFF(zuora_subscription.created_by_id = '2c92a0fd55822b4d015593ac264767f2', -- All Self-Service / Web direct subscriptions are identified by that created_by_id
           'Self-Service', 'Sales-Assisted')                                     AS subscription_sales_type,
-      DATE_TRUNC('month', zuora_subscription.subscription_start_date)           AS subscription_start_month,
-      DATE_TRUNC('month', zuora_subscription.subscription_end_date)             AS subscription_end_month,
+
+      --Date Information
+      zuora_subscription.subscription_start_date                                AS subscription_start_date,
+      zuora_subscription.subscription_end_date                                  AS subscription_end_date,
+      DATE_TRUNC('month', zuora_subscription.subscription_start_date::DATE)     AS subscription_start_month,
+      DATE_TRUNC('month', zuora_subscription.subscription_end_date::DATE)       AS subscription_end_month,
       date_details.fiscal_year                                                  AS subscription_end_fiscal_year,
-      zuora_subscription.created_date,
-      zuora_subscription.updated_date
+      zuora_subscription.term_start_date::DATE                                  AS term_start_date,
+      zuora_subscription.term_end_date::DATE                                    AS term_end_date,
+      DATE_TRUNC('month', zuora_subscription.term_start_date::DATE)             AS term_start_month,
+      DATE_TRUNC('month', zuora_subscription.term_end_date::DATE)               AS term_end_month,
+      CASE
+        WHEN LOWER(zuora_subscription.subscription_status) = 'active'
+          AND zuora_subscription.subscription_end_date::DATE >= CURRENT_DATE
+            THEN subscription_end_month
+        ELSE NULL
+      END                                                                       AS next_future_renewal_month,
+      DATEADD('month', zuora_subscription.current_term, next_future_renewal_month)
+                                                                                AS second_future_renewal_month,
+      renewal_subscriptions.myb_renewal_month,
+      zuora_subscription.created_date::DATE                                     AS created_date,
+      zuora_subscription.updated_date::DATE                                     AS updated_date
     FROM zuora_subscription
     INNER JOIN zuora_account
       ON zuora_subscription.account_id = zuora_account.account_id

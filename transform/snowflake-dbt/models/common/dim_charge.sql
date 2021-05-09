@@ -23,7 +23,6 @@ WITH prep_charge AS (
       prep_charge.effective_end_month,
       prep_charge.charged_through_date,
       prep_charge.created_date,
-      prep_charge.updated_date,
       prep_charge.charge_term,
 
       --ARR Analysis Framework
