@@ -87,8 +87,8 @@ WITH date_details AS (
         ELSE NULL
       END                                                                       AS second_active_renewal_month,
       renewal_subscriptions.myb_renewal_month,
-      zuora_subscription.created_date::DATE                                     AS created_date,
-      zuora_subscription.updated_date::DATE                                     AS updated_date
+      zuora_subscription.created_date::DATE                                     AS subscription_created_date,
+      zuora_subscription.updated_date::DATE                                     AS subscription_updated_date
     FROM zuora_subscription
     INNER JOIN zuora_account
       ON zuora_subscription.account_id = zuora_account.account_id
