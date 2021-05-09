@@ -58,8 +58,7 @@ WITH prep_amendment AS (
     subscription.term_end_date,
     subscription.term_start_month,
     subscription.term_end_month,
-    subscription.next_future_renewal_month,
-    subscription.second_future_renewal_month,
+    subscription.second_renewal_month,
 
     --Lineage and Cohort Information
     subscription_lineage.subscription_lineage,

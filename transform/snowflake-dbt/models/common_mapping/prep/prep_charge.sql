@@ -18,9 +18,9 @@ WITH map_merged_crm_account AS (
 
 ), zuora_account AS (
 
-  SELECT *
-  FROM {{ ref('zuora_account_source') }}
-  WHERE is_deleted = FALSE
+    SELECT *
+    FROM {{ ref('zuora_account_source') }}
+    WHERE is_deleted = FALSE
 
 ), zuora_rate_plan AS (
 
@@ -34,10 +34,10 @@ WITH map_merged_crm_account AS (
 
 ), zuora_subscription AS (
 
-  SELECT *
-  FROM {{ ref('zuora_subscription_source') }}
-  WHERE is_deleted = FALSE
-    AND exclude_from_analysis IN ('False', '')
+    SELECT *
+    FROM {{ ref('zuora_subscription_source') }}
+    WHERE is_deleted = FALSE
+      AND exclude_from_analysis IN ('False', '')
 
 ), recurring_charges AS (
 
@@ -84,6 +84,7 @@ WITH map_merged_crm_account AS (
       END                                                               AS estimated_total_future_billings,
 
       --Dates
+      zuora_subscription.subscription_end_date                          AS subscription_end_date,
       zuora_rate_plan_charge.effective_start_date::DATE                 AS effective_start_date,
       zuora_rate_plan_charge.effective_end_date::DATE                   AS effective_end_date,
       zuora_rate_plan_charge.effective_start_month::DATE                AS effective_start_month,
@@ -97,8 +98,7 @@ WITH map_merged_crm_account AS (
       --Additive Fields
       zuora_rate_plan_charge.mrr,
       LAG(zuora_rate_plan_charge.mrr,1) OVER (PARTITION BY zuora_subscription.subscription_name, zuora_rate_plan_charge.rate_plan_charge_number
-                                              ORDER BY zuora_subscription.version, zuora_rate_plan_charge.version,
-                                                       zuora_rate_plan_charge.segment)
+                                              ORDER BY zuora_rate_plan_charge.segment, zuora_subscription.version)
                                                                         AS previous_mrr_calc,
       CASE
         WHEN previous_mrr_calc IS NULL
@@ -112,8 +112,7 @@ WITH map_merged_crm_account AS (
       delta_mrr * 12                                                    AS delta_arr,
       zuora_rate_plan_charge.quantity,
       LAG(zuora_rate_plan_charge.quantity,1) OVER (PARTITION BY zuora_subscription.subscription_name, zuora_rate_plan_charge.rate_plan_charge_number
-                                                   ORDER BY zuora_subscription.version, zuora_rate_plan_charge.version,
-                                                            zuora_rate_plan_charge.segment)
+                                                   ORDER BY zuora_rate_plan_charge.segment, zuora_subscription.version)
                                                                         AS previous_quantity_calc,
       CASE
         WHEN previous_quantity_calc IS NULL
@@ -122,20 +121,14 @@ WITH map_merged_crm_account AS (
       zuora_rate_plan_charge.quantity - previous_quantity               AS delta_quantity,
       zuora_rate_plan_charge.tcv,
       LAG(zuora_rate_plan_charge.tcv,1) OVER (PARTITION BY zuora_subscription.subscription_name, zuora_rate_plan_charge.rate_plan_charge_number
-                                              ORDER BY zuora_subscription.version, zuora_rate_plan_charge.version,
-                                                       zuora_rate_plan_charge.segment)
+                                              ORDER BY zuora_rate_plan_charge.segment, zuora_subscription.version)
                                                                         AS previous_tcv_calc,
       CASE
         WHEN previous_tcv_calc IS NULL
           THEN 0 ELSE previous_tcv_calc
       END                                                               AS previous_tcv,
-      zuora_rate_plan_charge.tcv - previous_tcv                         AS delta_tcv,
+      zuora_rate_plan_charge.tcv - previous_tcv                         AS delta_tcv
 
-      --Row Number Calc for ARR Analysis Framework
-      ROW_NUMBER() OVER (PARTITION BY zuora_subscription.subscription_name, zuora_rate_plan_charge.rate_plan_charge_number
-                         ORDER BY zuora_subscription.version, zuora_rate_plan_charge.version,
-                                  zuora_rate_plan_charge.segment)
-                                                                        AS row_number
     FROM zuora_rate_plan
     INNER JOIN zuora_rate_plan_charge
       ON zuora_rate_plan.rate_plan_id = zuora_rate_plan_charge.rate_plan_id
@@ -156,7 +149,21 @@ WITH map_merged_crm_account AS (
 
     SELECT
       recurring_charges.*,
-      {{ type_of_arr_change('arr','previous_arr','row_number') }}
+      CASE
+        WHEN subscription_version = 1
+          THEN 'New'
+        WHEN LOWER(subscription_status) = 'active' AND subscription_end_date <= CURRENT_DATE
+          THEN 'Churn'
+        WHEN LOWER(subscription_status) = 'cancelled'
+          THEN 'Churn'
+        WHEN arr < previous_arr AND arr > 0
+          THEN 'Contraction'
+        WHEN arr > previous_arr AND subscription_version > 1
+          THEN 'Expansion'
+        WHEN arr = previous_arr
+          THEN 'No Impact'
+        ELSE NULL
+      END                 AS type_of_arr_change
     FROM recurring_charges
 
 )

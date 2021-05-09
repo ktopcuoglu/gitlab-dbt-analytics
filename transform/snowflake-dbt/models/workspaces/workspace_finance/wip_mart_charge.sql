@@ -46,6 +46,9 @@ WITH dim_amendment AS (
       dim_charge.rate_plan_charge_version,
       dim_charge.rate_plan_charge_segment,
 
+      --Charge Information
+      dim_charge.is_paid_in_full                                                      AS is_paid_in_full,
+
       --date info
       dim_subscription.subscription_start_date                                        AS subscription_start_date,
       dim_subscription.subscription_end_date                                          AS subscription_end_date,
@@ -54,8 +57,7 @@ WITH dim_amendment AS (
       dim_subscription.subscription_end_fiscal_year                                   AS subscription_end_fiscal_year,
       dim_subscription.created_date                                                   AS subscription_created_date,
       dim_subscription.myb_renewal_month                                              AS myb_renewal_month,
-      dim_subscription.next_future_renewal_month                                      AS next_future_renewal_month,
-      dim_subscription.second_future_renewal_month                                    AS second_future_renewal_month,
+      dim_subscription.second_renewal_month                                           AS second_renewal_month,
       dim_charge.effective_start_date                                                 AS effective_start_date,
       dim_charge.effective_end_date                                                   AS effective_end_date,
       dim_charge.effective_start_month                                                AS effective_start_month,
@@ -110,10 +112,6 @@ WITH dim_amendment AS (
       MIN(dim_subscription.subscription_cohort_quarter) OVER (
           PARTITION BY dim_crm_account.dim_parent_crm_account_id)                     AS parent_account_cohort_quarter,
 
-      --Amendment Information
-      dim_amendment_subscription.amendment_type                                       AS subscription_amendment_type,
-      dim_amendment_charge.amendment_type                                             AS charge_amendment_type,
-
       --product info
       dim_product_detail.dim_product_detail_id,
       dim_product_detail.product_tier_name                                            AS product_tier_name,
@@ -134,6 +132,11 @@ WITH dim_amendment AS (
       fct_charge.tcv,
       fct_charge.previous_tcv,
       fct_charge.delta_tcv,
+      fct_charge.estimated_total_future_billings,
+
+      --Amendment Information
+      dim_amendment_subscription.amendment_type                                       AS subscription_amendment_type,
+      dim_amendment_charge.amendment_type                                             AS charge_amendment_type,
 
       --ARR Analysis Framework
       dim_charge.type_of_arr_change
