@@ -48,7 +48,7 @@ WITH zuora_amendment AS (
 
       --Information
       'Missing amendment_name'              AS amendment_name,
-      'NewSubscription'                     AS amendment_type,
+      'Missing amendment_type'              AS amendment_type,
       'Missing amendment_description'       AS amendment_description,
       0                                     AS auto_renew,
       'Missing amendment_code'              AS amendment_code,

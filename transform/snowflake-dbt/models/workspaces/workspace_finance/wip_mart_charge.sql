@@ -48,8 +48,12 @@ WITH dim_amendment AS (
 
       --Charge Information
       dim_charge.is_paid_in_full                                                      AS is_paid_in_full,
+      dim_charge.is_last_segment                                                      AS is_last_segment,
+      dim_charge.is_included_in_arr_calc                                              AS is_included_in_arr_calc,
 
       --date info
+      dim_subscription.is_myb                                                         AS is_myb,
+      dim_subscription.is_myb_with_multi_subs                                         AS is_myb_with_multi_subs,
       dim_subscription.subscription_start_date                                        AS subscription_start_date,
       dim_subscription.subscription_end_date                                          AS subscription_end_date,
       dim_subscription.subscription_start_month                                       AS subscription_start_month,
@@ -57,12 +61,13 @@ WITH dim_amendment AS (
       dim_subscription.subscription_end_fiscal_year                                   AS subscription_end_fiscal_year,
       dim_subscription.created_date                                                   AS subscription_created_date,
       dim_subscription.myb_renewal_month                                              AS myb_renewal_month,
-      dim_subscription.second_renewal_month                                           AS second_renewal_month,
+      dim_subscription.second_active_renewal_month                                    AS second_active_renewal_month,
       dim_charge.effective_start_date                                                 AS effective_start_date,
       dim_charge.effective_end_date                                                   AS effective_end_date,
       dim_charge.effective_start_month                                                AS effective_start_month,
       dim_charge.effective_end_month                                                  AS effective_end_month,
-      dim_charge.created_date                                                         AS charge_created_date,
+      dim_charge.charge_created_date                                                  AS charge_created_date,
+      dim_charge.charge_updated_date                                                  AS charge_updated_date,
 
       --billing account info
       dim_billing_account.dim_billing_account_id                                      AS dim_billing_account_id,
@@ -129,14 +134,20 @@ WITH dim_amendment AS (
       fct_charge.quantity,
       fct_charge.previous_quantity,
       fct_charge.delta_quantity,
-      fct_charge.tcv,
-      fct_charge.previous_tcv,
-      fct_charge.delta_tcv,
       fct_charge.estimated_total_future_billings,
 
       --Amendment Information
-      dim_amendment_subscription.amendment_type                                       AS subscription_amendment_type,
-      dim_amendment_charge.amendment_type                                             AS charge_amendment_type,
+      CASE
+        WHEN dim_charge.subscription_version = 1
+          THEN 'NewSubscription'
+          ELSE dim_amendment_subscription.amendment_type
+      END                                                                             AS subscription_amendment_type,
+      dim_amendment_subscription.amendment_name                                       AS subscription_amendment_name,
+      CASE
+        WHEN dim_charge.subscription_version = 1
+          THEN 'NewSubscription'
+          ELSE dim_amendment_charge.amendment_type
+      END                                                                             AS charge_amendment_type,
 
       --ARR Analysis Framework
       dim_charge.type_of_arr_change

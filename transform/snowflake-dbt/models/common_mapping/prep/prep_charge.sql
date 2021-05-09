@@ -66,6 +66,7 @@ WITH map_merged_crm_account AS (
       zuora_subscription.subscription_status                            AS subscription_status,
       zuora_rate_plan.rate_plan_name                                    AS rate_plan_name,
       zuora_rate_plan_charge.rate_plan_charge_name,
+      zuora_rate_plan_charge.is_last_segment,
       zuora_rate_plan_charge.discount_level,
       zuora_rate_plan_charge.charge_type,
       zuora_rate_plan.amendement_type                                   AS rate_plan_charge_amendement_type,
@@ -79,9 +80,10 @@ WITH map_merged_crm_account AS (
         ELSE DATEDIFF('month',DATE_TRUNC('month', zuora_rate_plan_charge.charged_through_date::DATE), zuora_rate_plan_charge.effective_end_month::DATE)
       END                                                               AS months_of_future_billings,
       CASE
-        WHEN is_paid_in_full = FALSE THEN months_of_future_billings * zuora_rate_plan_charge.mrr
-        ELSE 0
-      END                                                               AS estimated_total_future_billings,
+        WHEN effective_end_month > effective_start_month OR effective_end_month IS NULL
+          THEN TRUE
+        ELSE FALSE
+      END                                                               AS is_included_in_arr_calc,
 
       --Dates
       zuora_subscription.subscription_end_date                          AS subscription_end_date,
@@ -90,8 +92,8 @@ WITH map_merged_crm_account AS (
       zuora_rate_plan_charge.effective_start_month::DATE                AS effective_start_month,
       zuora_rate_plan_charge.effective_end_month::DATE                  AS effective_end_month,
       zuora_rate_plan_charge.charged_through_date::DATE                 AS charged_through_date,
-      zuora_rate_plan_charge.created_date::DATE                         AS created_date,
-      zuora_rate_plan_charge.updated_date::DATE                         AS updated_date,
+      zuora_rate_plan_charge.created_date::DATE                         AS charge_created_date,
+      zuora_rate_plan_charge.updated_date::DATE                         AS charge_updated_date,
       DATEDIFF(month, zuora_rate_plan_charge.effective_start_month::DATE, zuora_rate_plan_charge.effective_end_month::DATE)
                                                                         AS charge_term,
 
@@ -104,7 +106,14 @@ WITH map_merged_crm_account AS (
         WHEN previous_mrr_calc IS NULL
           THEN 0 ELSE previous_mrr_calc
       END                                                               AS previous_mrr,
-      zuora_rate_plan_charge.mrr - previous_mrr                         AS delta_mrr,
+      zuora_rate_plan_charge.mrr - previous_mrr                         AS delta_mrr_calc,
+      CASE
+        WHEN LOWER(subscription_status) = 'active' AND subscription_end_date <= CURRENT_DATE AND is_last_segment = TRUE
+          THEN -previous_mrr
+        WHEN LOWER(subscription_status) = 'cancelled' AND is_last_segment = TRUE
+          THEN -previous_mrr
+        ELSE delta_mrr_calc
+      END                                                               AS delta_mrr,
       zuora_rate_plan_charge.delta_mrc,
       zuora_rate_plan_charge.mrr * 12                                   AS arr,
       previous_mrr * 12                                                 AS previous_arr,
@@ -118,16 +127,20 @@ WITH map_merged_crm_account AS (
         WHEN previous_quantity_calc IS NULL
           THEN 0 ELSE previous_quantity_calc
       END                                                               AS previous_quantity,
-      zuora_rate_plan_charge.quantity - previous_quantity               AS delta_quantity,
-      zuora_rate_plan_charge.tcv,
-      LAG(zuora_rate_plan_charge.tcv,1) OVER (PARTITION BY zuora_subscription.subscription_name, zuora_rate_plan_charge.rate_plan_charge_number
-                                              ORDER BY zuora_rate_plan_charge.segment, zuora_subscription.version)
-                                                                        AS previous_tcv_calc,
+      zuora_rate_plan_charge.quantity - previous_quantity               AS delta_quantity_calc,
       CASE
-        WHEN previous_tcv_calc IS NULL
-          THEN 0 ELSE previous_tcv_calc
-      END                                                               AS previous_tcv,
-      zuora_rate_plan_charge.tcv - previous_tcv                         AS delta_tcv
+        WHEN LOWER(subscription_status) = 'active' AND subscription_end_date <= CURRENT_DATE AND is_last_segment = TRUE
+          THEN -previous_quantity
+        WHEN LOWER(subscription_status) = 'cancelled' AND is_last_segment = TRUE
+          THEN -previous_quantity
+        ELSE delta_quantity_calc
+      END                                                               AS delta_quantity,
+      zuora_rate_plan_charge.tcv,
+      zuora_rate_plan_charge.delta_tcv,
+      CASE
+        WHEN is_paid_in_full = FALSE THEN months_of_future_billings * zuora_rate_plan_charge.mrr
+        ELSE 0
+      END                                                               AS estimated_total_future_billings
 
     FROM zuora_rate_plan
     INNER JOIN zuora_rate_plan_charge
@@ -142,8 +155,7 @@ WITH map_merged_crm_account AS (
       ON map_merged_crm_account.dim_crm_account_id = sfdc_account.account_id
     LEFT JOIN ultimate_parent_account
       ON sfdc_account.ultimate_parent_account_id = ultimate_parent_account.account_id
-    WHERE (effective_end_month > effective_start_month OR effective_end_month IS NULL)
-      AND charge_type = 'Recurring'
+    WHERE charge_type = 'Recurring'
 
 ), arr_analysis_framework AS (
 

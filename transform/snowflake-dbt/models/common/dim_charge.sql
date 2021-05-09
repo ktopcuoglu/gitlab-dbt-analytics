@@ -22,7 +22,8 @@ WITH prep_charge AS (
       prep_charge.effective_start_month,
       prep_charge.effective_end_month,
       prep_charge.charged_through_date,
-      prep_charge.created_date,
+      prep_charge.charge_created_date,
+      prep_charge.charge_updated_date,
       prep_charge.charge_term,
 
       --ARR Analysis Framework
@@ -31,11 +32,13 @@ WITH prep_charge AS (
       --Information
       prep_charge.rate_plan_name,
       prep_charge.rate_plan_charge_name,
+      prep_charge.is_last_segment,
       prep_charge.discount_level,
       prep_charge.charge_type,
       prep_charge.rate_plan_charge_amendement_type,
       prep_charge.unit_of_measure,
       prep_charge.is_paid_in_full,
+      prep_charge.is_included_in_arr_calc,
       prep_charge.months_of_future_billings
 
     FROM prep_charge

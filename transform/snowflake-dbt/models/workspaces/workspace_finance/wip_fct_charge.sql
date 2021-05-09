@@ -41,15 +41,12 @@ WITH prep_charge AS (
       prep_charge.quantity,
       prep_charge.previous_quantity,
       prep_charge.delta_quantity,
-      prep_charge.tcv,
-      prep_charge.previous_tcv,
-      prep_charge.delta_tcv,
       prep_charge.estimated_total_future_billings
 
     FROM prep_charge
     LEFT JOIN prep_amendment
       ON prep_charge.dim_amendment_id_charge = prep_amendment.dim_amendment_id
-    ORDER BY prep_charge.dim_parent_crm_account_id, prep_charge.dim_crm_account_id, subscription_name, subscription_version, 
+    ORDER BY prep_charge.dim_parent_crm_account_id, prep_charge.dim_crm_account_id, subscription_name, subscription_version,
       rate_plan_charge_number, rate_plan_charge_version, rate_plan_charge_segment
 
 )

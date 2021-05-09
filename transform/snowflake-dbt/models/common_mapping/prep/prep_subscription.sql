@@ -82,10 +82,10 @@ WITH date_details AS (
       DATE_TRUNC('month', zuora_subscription.term_start_date::DATE)             AS term_start_month,
       DATE_TRUNC('month', zuora_subscription.term_end_date::DATE)               AS term_end_month,
       CASE
-        WHEN LOWER(zuora_subscription.subscription_status) = 'active'
-          THEN DATEADD('month', zuora_subscription.current_term, zuora_subscription.subscription_end_date::DATE)
+        WHEN LOWER(zuora_subscription.subscription_status) = 'active' AND subscription_end_date > CURRENT_DATE
+          THEN DATE_TRUNC('month',DATEADD('month', zuora_subscription.current_term, zuora_subscription.subscription_end_date::DATE))
         ELSE NULL
-      END                                                                       AS second_renewal_month,
+      END                                                                       AS second_active_renewal_month,
       renewal_subscriptions.myb_renewal_month,
       zuora_subscription.created_date::DATE                                     AS created_date,
       zuora_subscription.updated_date::DATE                                     AS updated_date
