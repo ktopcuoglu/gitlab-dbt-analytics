@@ -5,7 +5,6 @@
 {{ simple_cte([
     ('namespace_current', 'gitlab_dotcom_namespaces_source'),
     ('namespace_snapshots', 'gitlab_dotcom_namespaces_snapshots_base'),
-    ('namespace_lineage_current', 'gitlab_dotcom_namespace_lineage_prep'),
     ('namespace_lineage_historical', 'gitlab_dotcom_namespace_lineage_historical_daily'),
     ('map_namespace_internal', 'map_namespace_internal'),
     ('plans', 'gitlab_dotcom_plans_source'),
@@ -48,37 +47,14 @@
       AND key_value = 'group'
     GROUP BY 1, 2
 
--- ), namespace_lineage_all_time AS (
-  
---     SELECT
---       namespace_id,
---       parent_id,
---       ultimate_parent_id,
---       ultimate_parent_plan_id
---     FROM namespace_lineage_historical
---     QUALIFY ROW_NUMBER() OVER (
---       PARTITION BY
---         namespace_id,
---         parent_id,
---         ultimate_parent_id
---       ORDER BY snapshot_day DESC
---     ) = 1
-
---     UNION ALL
-
---     SELECT
---       namespace_id,
---       parent_id,
---       ultimate_parent_id,
---       ultimate_parent_plan_id
---     FROM namespace_lineage_current
-
 ), namespace_lineage AS (
 
     SELECT
       namespace_lineage_historical.*,
-      MAX(snapshot_day) OVER (PARTITION BY namespace_id)                              AS namespace_last_day,
-      DATEDIFF(day, CURRENT_DATE, namespace_lineage_historical.snapshot_day) = 0      AS is_current,
+      IFNULL(ROW_NUMBER() OVER (
+        PARTITION BY namespace_lineage_historical.namespace_id
+        ORDER BY namespace_lineage_historical.snapshot_day DESC) = 1, FALSE)          AS is_current,
+      namespace_lineage_historical.snapshot_day = CURRENT_DATE                        AS ultimate_parent_is_current,
       plans.plan_title                                                                AS ultimate_parent_plan_title,
       plans.plan_is_paid                                                              AS ultimate_parent_plan_is_paid,
       plans.plan_name                                                                 AS ultimate_parent_plan_name
@@ -125,11 +101,6 @@
       namespaces.has_avatar,
       namespaces.namespace_created_at,
       namespaces.namespace_updated_at,
-      IFF(namespaces.is_current = FALSE
-            OR DATEDIFF(day, CURRENT_DATE, namespace_lineage.namespace_last_day) != 0
-            OR namespace_lineage.namespace_id IS NULL,
-          COALESCE(namespaces.valid_to, namespace_lineage.namespace_last_day, namespaces.valid_from),
-          NULL)                                                                       AS namespace_deleted_at,
       namespaces.is_membership_locked,
       namespaces.has_request_access_enabled,
       namespaces.has_share_with_group_locked,
@@ -161,7 +132,7 @@
       namespace_lineage.max_seats_used                                                AS gitlab_plan_max_seats_used,
       IFNULL(members.member_count, 0)                                                 AS namespace_member_count,
       IFNULL(projects.project_count, 0)                                               AS namespace_project_count,
-      IFF(namespace_deleted_at IS NULL, namespace_lineage.is_current, FALSE)          AS is_currently_valid
+      IFNULL(namespaces.is_current AND namespace_lineage.is_current, FALSE)           AS is_currently_valid
     FROM namespaces
     LEFT JOIN namespace_lineage
       ON namespaces.namespace_id = namespace_lineage.namespace_id
@@ -194,5 +165,5 @@
     created_by="@ischweickartDD",
     updated_by="@ischweickartDD",
     created_date="2021-01-14",
-    updated_date="2021-05-07"
+    updated_date="2021-05-10"
 ) }}

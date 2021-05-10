@@ -168,7 +168,6 @@ models:
       - name: has_avatar
       - name: namespace_created_at
       - name: namespace_updated_at
-      - name: namespace_deleted_at
       - name: is_membership_locked
       - name: has_request_access_enabled
       - name: has_share_with_group_locked
