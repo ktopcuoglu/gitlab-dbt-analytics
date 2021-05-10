@@ -26,7 +26,6 @@ WITH source AS (
     created_at::TIMESTAMP                         AS gitlab_subscription_created_at,
     updated_at::TIMESTAMP                         AS gitlab_subscription_updated_at,
     seats_in_use::NUMBER                          AS seats_in_use,
-    max_seats_used::NUMBER                        AS max_seats_used,
     seats_owed::NUMBER                            AS seats_owed,
     trial_extension_type::NUMBER                  AS trial_extension_type,
     "DBT_VALID_FROM"::TIMESTAMP                   AS valid_from,
