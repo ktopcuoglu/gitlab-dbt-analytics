@@ -16,7 +16,6 @@ WITH
       seats::NUMBER                                AS seats,
       trial::BOOLEAN                               AS is_trial,
       seats_in_use::NUMBER                         AS seats_in_use,
-      max_seats_used::NUMBER                       AS max_seats_used,
       seats_owed::NUMBER                           AS seats_owed,
       trial_extension_type::NUMBER                 AS trial_extension_type,
       created_at::TIMESTAMP                        AS created_at,
