@@ -379,6 +379,21 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
+{% docs fct_usage_ping_payload %}
+Factual table with metadata on usage ping payloads received.
+
+The grain of the table is a dim_usage_ping_id.
+
+Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+Main foreign key that can help to build easily joins:
+
+- dim_license_id 
+- dim_subscription_id
+- dim_date_id
+
+{% enddocs %}
+
 {% docs fct_usage_ping_metric_28_days %}
 Factual table on the grain of an individual metric received as part of a usage ping payload.  This model specifically includes only metrics that represent usage over a month (or 28 days).
 

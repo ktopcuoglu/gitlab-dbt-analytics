@@ -32,7 +32,7 @@ WITH monthly_usage_data AS (
 SELECT 
   created_month,
   clean_metrics_name,
-  main_edition,
+  edition,
   product_tier,
   group_name,
   stage_name,
