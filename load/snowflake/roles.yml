@@ -2269,6 +2269,8 @@ roles:
             - data_team_analyst
         warehouses:
             - analyst_xs
+            - analyst_l
+            - analyst_xl
         owns:
             databases:
                 - jpeguero_prep
