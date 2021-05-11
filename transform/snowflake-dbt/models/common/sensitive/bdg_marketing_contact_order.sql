@@ -228,7 +228,7 @@
                                                    saas_customer.dim_namespace_id,
                                                    saas_billing_account.dim_namespace_id)
     LEFT JOIN gitlab_namespaces 
-      ON gitlab_namespaces.namespace_id = namespace_lineage.dim_namespace_id
+      ON namespace_lineage.dim_namespace_id = gitlab_namespaces.namespace_id
       
 ), final AS (
 
