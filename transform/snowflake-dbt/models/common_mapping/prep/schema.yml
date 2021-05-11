@@ -10,6 +10,15 @@ models:
           - unique
         tags: ["tdf", "common", "sales_funnel"]
 
+  - name: prep_amendment
+    description: Prep table for Zuora Amendments that increment subscription versions. This prep table will be used in Facts and Dimensions.
+    columns:
+      - name: dim_amendment_id
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "common", "arr"]
+
   - name: prep_dr_partner_engagement
     description: '{{ doc("prep_dr_partner_engagement") }}'
     columns:

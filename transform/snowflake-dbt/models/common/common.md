@@ -394,13 +394,6 @@ Main foreign key that can help to build easily joins:
 
 {% enddocs %}
 
-{% docs fct_usage_ping_metric_28_days %}
-Factual table on the grain of an individual metric received as part of a usage ping payload.  This model specifically includes only metrics that represent usage over a month (or 28 days).
-
-Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
-
-{% enddocs %}
-
 {% docs fct_usage_ping_metric_all_time %}
 Factual table on the grain of an individual metric received as part of a usage ping payload.  This model specifically includes only metrics that represent usage over the entire lifetime of the instance.
 

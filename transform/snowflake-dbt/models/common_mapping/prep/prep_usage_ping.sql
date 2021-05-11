@@ -4,23 +4,13 @@
     })
 }}
 
-{%- set columns = adapter.get_columns_in_relation( ref('version_usage_data_source')) -%}
-
-WITH usage_ping AS (
+WITH source AS (
 
     SELECT 
       id                                                                        AS dim_usage_ping_id, 
       created_at::TIMESTAMP(0)                                                  AS ping_created_at,
       *, 
-      {{ nohash_sensitive_columns('version_usage_data_source', 'source_ip') }}  AS ip_address_hash, 
-      OBJECT_CONSTRUCT(
-        {% for column in columns %}  
-          '{{ column.column | lower }}', {{ column.column | lower }}
-          {% if not loop.last %}
-            ,
-          {% endif %}
-        {% endfor %}
-      )                                                                         AS raw_usage_data_payload_reconstructed
+      {{ nohash_sensitive_columns('version_usage_data_source', 'source_ip') }}  AS ip_address_hash
     FROM {{ ref('version_usage_data_source') }}
 
 ), raw_usage_data AS (
@@ -51,9 +41,8 @@ WITH usage_ping AS (
       IFF(version ILIKE '%-pre', True, False)                                                         AS version_is_prerelease,
       SPLIT_PART(cleaned_version, '.', 1)::NUMBER                                                     AS major_version,
       SPLIT_PART(cleaned_version, '.', 2)::NUMBER                                                     AS minor_version,
-      major_version || '.' || minor_version                                                           AS major_minor_version,
-      raw_usage_data_payload_reconstructed
-    FROM usage_ping
+      major_version || '.' || minor_version                                                           AS major_minor_version
+    FROM source
     WHERE uuid IS NOT NULL
       AND version NOT LIKE ('%VERSION%') -- Messy data that's not worth parsing
 
@@ -99,7 +88,7 @@ WITH usage_ping AS (
         'dr.gitlab.com'
       )                                                         THEN TRUE
         ELSE FALSE END                                                                          AS is_staging,     
-      COALESCE(raw_usage_data.raw_usage_data_payload, raw_usage_data_payload_reconstructed)     AS raw_usage_data_payload
+      COALESCE(raw_usage_data.raw_usage_data_payload, usage_data.raw_usage_data_payload_reconstructed)     AS raw_usage_data_payload
     FROM usage_data
     LEFT JOIN raw_usage_data
       ON usage_data.raw_usage_data_id = raw_usage_data.raw_usage_data_id
