@@ -8,6 +8,17 @@ Below checklist of activities would be run once for quarter to validate security
 
 SNOWFLAKE
 1. [ ] Validate terminated employees have been removed from Snowflake access.
+    <details>
+
+    Cross check between BambooHR and Snowflake
+    * [ ] If applicable, check if users set to disabled in Snowflake
+    * [ ] If applicable, check if users in [roles.yml](https://gitlab.com/gitlab-data/analytics/-/blob/master/load/snowflake/roles.yml):
+        * [ ] isn't assigned to `warehouses`
+        * [ ] isn't assigned to `roles`
+        * [ ] can_login set to: `no`
+
+    </details>
+
 2. [ ] De-activate any account that has not logged-in within the past 30 days from the moment of performing audit from Snowflake.
     <details>
 
