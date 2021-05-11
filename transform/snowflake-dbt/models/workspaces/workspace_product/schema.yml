@@ -1,0 +1,14 @@
+version: 2
+
+models:
+  - name: wk_map_usage_ping_subscription_id
+    description: '{{ doc("wk_map_usage_ping_subscription_id") }}'
+    columns:
+      - name: dim_subscription_id
+        description: Unique ID of a subscription. Used to join with `dim_subscription`
+        tests:
+          - not_null
+      - name: dim_usage_ping_id
+        tests:
+          - not_null
+          - unique
