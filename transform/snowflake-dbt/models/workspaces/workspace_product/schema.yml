@@ -12,44 +12,44 @@ models:
         tests:
           - not_null
           - unique
-    - name: wk_self_managed_spo
-      description: Workspace model that builds a MVC for Self-Managed SPO and SPU KPIs.
-      columns:
-        - name: organization_id
-          tests:
-            - not_null
-        - name: delivery
-          tests:
-            - not_null
-        - name: organization_type
-          tests:
-            - not_null
-            - accepted_values:
-                values: ['Group','Individual']
+  - name: wk_self_managed_spo
+    description: Workspace model that builds a MVC for Self-Managed SPO and SPU KPIs.
+    columns:
+      - name: organization_id
+        tests:
+          - not_null
+      - name: delivery
+        tests:
+          - not_null
+      - name: organization_type
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Group','Individual']
 
 
-    - name: wk_saas_spo
-      description: Workspace model that shows monthly Stages per Organization data on a namespace-level for SaaS.
-      columns:
-        - name: reporting_month
-          tests:
-            - not_null
-        - name: organization_id
-          description: Top-level namespace id.
-          tests:
-            - not_null
-        - name: delivery
-          tests:
-            - not_null
-        - name: organization_type
-          tests:
-            - not_null
-            - accepted_values:
-                values: ['Group','Individual']
-        - name: plan_name_at_reporting_month
-          tests:
-            - not_null
-        - name: plan_is_paid
-          tests:
-            - not_null
+  - name: wk_saas_spo
+    description: Workspace model that shows monthly Stages per Organization data on a namespace-level for SaaS.
+    columns:
+      - name: reporting_month
+        tests:
+          - not_null
+      - name: organization_id
+        description: Top-level namespace id.
+        tests:
+          - not_null
+      - name: delivery
+        tests:
+          - not_null
+      - name: organization_type
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Group','Individual']
+      - name: plan_name_at_reporting_month
+        tests:
+          - not_null
+      - name: plan_is_paid
+        tests:
+          - not_null
 
