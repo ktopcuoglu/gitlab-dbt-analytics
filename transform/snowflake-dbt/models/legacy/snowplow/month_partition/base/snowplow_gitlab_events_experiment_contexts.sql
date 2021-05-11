@@ -22,9 +22,8 @@ WITH base as (
       AND 
         (
           (
-            -- js backend tracker
+            -- js frontend tracker
             v_tracker LIKE 'js%'
-            AND app_id = 'gitlab-staging'
           )
           
           OR

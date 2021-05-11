@@ -12,7 +12,7 @@
 
 , trial_tiers AS (
 
-    SELECT 
+    SELECT
       dim_product_tier_id,
       product_tier_name
     FROM {{ ref('prep_product_tier') }}
@@ -40,13 +40,14 @@
 
     SELECT *
     FROM recurring_charges
-    JOIN product_details
+    INNER JOIN product_details
       ON recurring_charges.dim_product_detail_id = product_details.dim_product_detail_id
       AND product_details.product_delivery_type = 'Self-Managed'
     WHERE recurring_charges.dim_date_id = {{ get_date_id("DATE_TRUNC('month', CURRENT_DATE)") }}
-    
+      AND subscription_status IN ('Active', 'Cancelled')
+
 ), active_subscription_list AS (
-  
+
     SELECT
       subscriptions.dim_subscription_id,
       subscriptions.dim_subscription_id_original,
@@ -75,41 +76,41 @@
 
     SELECT
       orders.order_id,
-      orders.customer_id, 
+      orders.customer_id,
       COALESCE(trial_tiers.dim_product_tier_id,
                product_rate_plans.dim_product_tier_id)              AS dim_product_tier_id_with_trial,
       COALESCE(trial_tiers.product_tier_name,
-               product_rate_plans.product_tier_name)                AS product_tier_name_with_trial, 
+               product_rate_plans.product_tier_name)                AS product_tier_name_with_trial,
       product_rate_plans.dim_product_tier_id                        AS dim_product_tier_id_order,
       product_rate_plans.product_rate_plan_id                       AS product_rate_plan_id_order,
-      product_rate_plans.product_tier_name                          AS product_tier_name_order, 
-      orders.subscription_id                                        AS dim_subscription_id, 
+      product_rate_plans.product_tier_name                          AS product_tier_name_order,
+      orders.subscription_id                                        AS dim_subscription_id,
       orders.subscription_name,
       orders.subscription_name_slugify,
-      orders.order_start_date, 
+      orders.order_start_date,
       orders.order_end_date,
       orders.order_is_trial
     FROM orders
     INNER JOIN product_rate_plans
       ON orders.product_rate_plan_id = product_rate_plans.product_rate_plan_id
-    LEFT JOIN trial_tiers 
+    LEFT JOIN trial_tiers
       ON orders.order_is_trial = TRUE
     WHERE orders.order_end_date >= CURRENT_DATE
       OR orders.order_end_date IS NULL
-        
+
 ), final AS (
 
     SELECT
-      active_subscription_list.dim_subscription_id, 
-      active_orders_list.order_id, 
-      active_orders_list.dim_subscription_id                        AS subscription_id_order, 
-      active_orders_list.customer_id, 
+      active_subscription_list.dim_subscription_id,
+      active_orders_list.order_id,
+      active_orders_list.dim_subscription_id                        AS subscription_id_order,
+      active_orders_list.customer_id,
       active_orders_list.dim_product_tier_id_with_trial,
-      active_orders_list.product_tier_name_with_trial, 
+      active_orders_list.product_tier_name_with_trial,
       active_orders_list.dim_product_tier_id_order,
-      active_orders_list.product_tier_name_order, 
-      active_orders_list.order_start_date, 
-      active_orders_list.order_end_date, 
+      active_orders_list.product_tier_name_order,
+      active_orders_list.order_start_date,
+      active_orders_list.order_end_date,
       active_orders_list.order_is_trial,
       active_orders_list.product_rate_plan_id_order,
       active_subscription_list.subscription_name,
@@ -129,14 +130,14 @@
       ON active_orders_list.subscription_name = active_subscription_list.subscription_name_slugify
       OR active_orders_list.dim_subscription_id = active_subscription_list.dim_subscription_id
       OR active_orders_list.dim_subscription_id = active_subscription_list.dim_subscription_id_original
-      --joining on name above only works because we are only dealing with currently active subscriptions  
-              
+      --joining on name above only works because we are only dealing with currently active subscriptions
+
 )
 
 {{ dbt_audit(
     cte_ref="final",
     created_by="@ischweickartDD",
-    updated_by="@ischweickartDD",
+    updated_by="@iweeks",
     created_date="2021-02-02",
-    updated_date="2021-04-08"
+    updated_date="2021-04-28"
 ) }}

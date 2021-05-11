@@ -247,6 +247,17 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
+{% docs dim_gitlab_releases %}
+Dimensional table representing released versions of GitLab.
+
+The grain of the table is a major_minor_version.
+
+Additional information can be found on the [GitLab Releases](https://about.gitlab.com/releases/categories/releases/) page.
+
+Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+{% enddocs %}
+
 {% docs dim_gitlab_versions %}
 Dimensional table representing released versions of GitLab.
 
@@ -363,13 +374,6 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 Factual table with metadata on usage ping payloads received.
 
 The grain of the table is a usage_ping_id.
-
-Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
-
-{% enddocs %}
-
-{% docs fct_usage_ping_metric_28_days %}
-Factual table on the grain of an individual metric received as part of a usage ping payload.  This model specifically includes only metrics that represent usage over a month (or 28 days).
 
 Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
 

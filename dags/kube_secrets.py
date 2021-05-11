@@ -5,6 +5,10 @@ BAMBOOHR_API_TOKEN = Secret(
     "env", "BAMBOOHR_API_TOKEN", "airflow", "BAMBOOHR_API_TOKEN"
 )
 
+DISCOURSE_API_TOKEN = Secret(
+    "env", "DISCOURSE_API_TOKEN", "airflow", "DISCOURSE_API_TOKEN"
+)
+
 # gitlab_analytics user private token
 GITLAB_ANALYTICS_PRIVATE_TOKEN = Secret(
     "env", "GITLAB_ANALYTICS_PRIVATE_TOKEN", "airflow", "GITLAB_ANALYTICS_PRIVATE_TOKEN"
@@ -75,6 +79,10 @@ GITLAB_COM_DB_HOST = Secret(
 )
 GITLAB_COM_DB_NAME = Secret(
     "env", "GITLAB_COM_DB_NAME", "airflow", "GITLAB_COM_DB_NAME"
+)
+
+GITLAB_COM_SCD_PG_PORT = Secret(
+    "env", "GITLAB_COM_SCD_PG_PORT", "airflow", "GITLAB_COM_SCD_PG_PORT"
 )
 
 GITLAB_OPS_DB_USER = Secret(
@@ -218,18 +226,3 @@ SALT_IP = Secret("env", "SALT_IP", "airflow", "SALT_IP")
 SALT_NAME = Secret("env", "SALT_NAME", "airflow", "SALT_NAME")
 
 SALT_PASSWORD = Secret("env", "SALT_PASSWORD", "airflow", "SALT_PASSWORD")
-
-DISCOURSE_API_TOKEN = Secret(
-    "env", "DISCOURSE_API_TOKEN", "airflow", "DISCOURSE_API_TOKEN"
-)
-
-# Zuora Revenue
-ZUORA_REVENUE_GCS_NAME = Secret(
-    "env", "ZUORA_REVENUE_GCS_NAME", "airflow", "ZUORA_REVENUE_GCS_NAME"
-)
-ZUORA_REVENUE_API_URL = Secret(
-    "env", "ZUORA_REVENUE_API_URL", "airflow", "ZUORA_REVENUE_API_URL"
-)
-ZUORA_REVENUE_AUTH_CODE = Secret(
-    "env", "ZUORA_REVENUE_AUTH_CODE", "airflow", "ZUORA_REVENUE_AUTH_CODE"
-)

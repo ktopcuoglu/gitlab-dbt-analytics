@@ -9,6 +9,7 @@ WITH mrr AS (
       dim_subscription_id,
       dim_billing_account_id,
       dim_crm_account_id,
+      subscription_status,
       mrr,
       arr,
       quantity,
@@ -22,5 +23,5 @@ WITH mrr AS (
     created_by="@msendal",
     updated_by="@iweeks",
     created_date="2020-09-10",
-    updated_date="2021-04-03",
+    updated_date="2021-04-28",
 ) }}

@@ -8,7 +8,8 @@
     ('dim_order_type','dim_order_type'),
     ('fct_sales_funnel_target', 'fct_sales_funnel_partner_alliance_target'),
     ('dim_dr_partner_engagement', 'dim_dr_partner_engagement'),
-    ('dim_alliance_type', 'dim_alliance_type')
+    ('dim_alliance_type', 'dim_alliance_type'),
+    ('dim_channel_type', 'dim_channel_type')
 ]) }}
 
 , final AS (
@@ -26,7 +27,7 @@
       dim_order_type.order_type_name,
       dim_order_type.order_type_grouped,
       dim_dr_partner_engagement.dr_partner_engagement_name,
-      {{ channel_type('dim_dr_partner_engagement.dr_partner_engagement_name', 'dim_order_type.order_type_name') }},
+      dim_channel_type.channel_type_name,
       dim_alliance_type.alliance_type_name,
       dim_alliance_type.alliance_type_short_name,
       fct_sales_funnel_target.allocated_target
@@ -35,6 +36,8 @@
       ON fct_sales_funnel_target.dim_dr_partner_engagement_id = dim_dr_partner_engagement.dim_dr_partner_engagement_id
     LEFT JOIN dim_alliance_type
       ON fct_sales_funnel_target.dim_alliance_type_id = dim_alliance_type.dim_alliance_type_id
+    LEFT JOIN dim_channel_type
+      ON fct_sales_funnel_target.dim_channel_type_id = dim_channel_type.dim_channel_type_id
     LEFT JOIN dim_order_type
       ON fct_sales_funnel_target.dim_order_type_id = dim_order_type.dim_order_type_id
     LEFT JOIN dim_crm_user_hierarchy_live
@@ -50,5 +53,5 @@
     created_by="@jpeguero",
     updated_by="@jpeguero",
     created_date="2021-04-08",
-    updated_date="2021-04-08",
+    updated_date="2021-04-28",
   ) }}

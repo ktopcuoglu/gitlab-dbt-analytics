@@ -1,6 +1,8 @@
 version: 2
 
 macros:
+  - name: growth_type
+    description: '{{ doc("growth_type")}}'
   - name: sales_qualified_source_cleaning
     description: '{{ doc("sales_qualified_source_cleaning") }}'
   - name: sales_segment_cleaning

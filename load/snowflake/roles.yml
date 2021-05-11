@@ -207,6 +207,7 @@ roles:
           - analyst_core
           - gitlab_dotcom
           - qualtrics
+          - zuora_revenue
         privileges:
             databases:
                 read:
@@ -1037,7 +1038,7 @@ roles:
                 read:
                     - raw.discourse.*
 
-    - gainsight:
+    - gainsight: # to be renamed gainsight_pump, will require change to gainsight connection
         warehouses:
             - gainsight_xs
         privileges:
@@ -1057,6 +1058,21 @@ roles:
                     - prod.common_mart_product.mart_product_usage_wave_1_3_metrics_latest
                     - prod.common_mart_product.mart_product_usage_wave_1_3_metrics_monthly
                     - prod.common_mart_product.mart_product_usage_wave_1_3_metrics_monthly_diff
+
+    - gainsight_temp_source: # to be renamed gainsight
+        warehouses:
+            - analyst_xs
+        privileges:
+            databases:
+                read:
+                    - raw
+            schemas:
+                read:
+                    - raw.gainsight
+            tables:
+                read:
+                    - raw.gainsight.*    
+
     - gcp_billing:
         warehouses:
             - analyst_xs
@@ -1761,6 +1777,20 @@ roles:
                     - prep.zuora.*
                     - raw.zuora_stitch.*
 
+    - zuora_revenue: # This is done to provide access to Data team analyst as 3530 
+        warehouses:
+            - analyst_xs
+        privileges:
+            databases:
+                read:
+                    - raw
+            schemas:
+                read:
+                    - raw.zuora_revenue
+            tables:
+                read:
+                    - raw.zuora_revenue.*
+
 # ==========================================
 # User Roles
 # ==========================================
@@ -2085,6 +2115,10 @@ roles:
         warehouses:
             - analyst_xs
 
+    - fstein:
+        warehouses:
+            - admin
+
     - gitlab_ci:
         member_of:
             - loader
@@ -2159,6 +2193,7 @@ roles:
             - bamboohr_analytics
             - customers_db
             - data_team_analyst
+            - data_manager
         warehouses:
             - analyst_xs
         owns:
@@ -2234,6 +2269,8 @@ roles:
             - data_team_analyst
         warehouses:
             - analyst_xs
+            - analyst_l
+            - analyst_xl
         owns:
             databases:
                 - jpeguero_prep
@@ -2345,6 +2382,7 @@ roles:
             - analyst_engineering
             - customers_db
             - data_team_analyst
+            - analyst_finance
         warehouses:
             - analyst_xs
         owns:
@@ -2506,8 +2544,7 @@ roles:
                     - mcooper_prod.*.*
 
     - mdewji:
-        warehouses:
-            - admin
+        warehouses: []
 
     - michellecooper:
         member_of: []
@@ -2532,6 +2569,7 @@ roles:
         member_of:
             - analyst_growth
             - data_team_analyst
+            - gainsight_temp_source
         warehouses:
             - analyst_xs
             - analyst_l
@@ -3283,6 +3321,7 @@ users:
         member_of:
             - dvanrooijen
             - accountadmin
+            - securityadmin
 
     - eburke:
         can_login: no
@@ -3321,6 +3360,12 @@ users:
         can_login: yes
         member_of:
             - fkurniadi
+
+    - fstein:
+        can_login: yes
+        member_of:
+            - fstein
+            - securityadmin
 
     - gainsight:
         can_login: yes
@@ -3481,10 +3526,8 @@ users:
             - mcooper
 
     - mdewji:
-        can_login: yes
-        member_of:
-            - mdewji
-            - securityadmin
+        can_login: no
+        member_of: []
 
     - michellecooper:
         can_login: no

@@ -594,10 +594,28 @@ WITH date_details AS (
             OR sfdc_accounts_xf.account_id IS NULL)                                        -- remove test account
       AND opp_snapshot.is_deleted = 0
 
+)
+-- in Q2 FY21 a few deals where created in the wrong stage, and as they were purely aspirational, 
+-- they needed to be removed from stage 1, eventually by the end of the quarter they were removed
+-- The goal of this list is to use in the Created Pipeline flag, to exclude those deals that at 
+-- day 90 had stages of less than 1, that should smooth the chart
+, vision_opps  AS (
+  
+  SELECT opp_snapshot.opportunity_id,
+         opp_snapshot.stage_name,
+         opp_snapshot.snapshot_fiscal_quarter_date
+  FROM sfdc_opportunity_snapshot_history_xf opp_snapshot
+  WHERE opp_snapshot.snapshot_fiscal_quarter_name = 'FY21-Q2'
+    And opp_snapshot.pipeline_created_fiscal_quarter_date = opp_snapshot.snapshot_fiscal_quarter_date
+    AND opp_snapshot.snapshot_day_of_fiscal_quarter_normalised = 90
+    AND opp_snapshot.stage_name in ('00-Pre Opportunity', '0-Pending Acceptance', '0-Qualifying')
+  GROUP BY 1, 2, 3
+
+
 ), add_compound_metrics AS (
 
     SELECT 
-      *,
+      opp_snapshot.*,
 
       ------------------------------
       -- compound metrics for reporting
@@ -626,6 +644,9 @@ WITH date_details AS (
             OR opp_snapshot.is_lost = 1)
           AND (opp_snapshot.net_arr > 0 
             OR opp_snapshot.opportunity_category = 'Credit')
+          -- exclude vision opps from FY21-Q2
+          AND (opp_snapshot.pipeline_created_fiscal_quarter_name != 'FY21-Q2'
+                OR vision_opps.opportunity_id IS NULL)
          THEN 1
          ELSE 0
       END                                                   AS is_eligible_created_pipeline_flag,
@@ -720,6 +741,9 @@ WITH date_details AS (
 
 
     FROM sfdc_opportunity_snapshot_history_xf opp_snapshot
+      LEFT JOIN vision_opps
+        ON vision_opps.opportunity_id = opp_snapshot.opportunity_id
+        AND vision_opps.snapshot_fiscal_quarter_date = opp_snapshot.snapshot_fiscal_quarter_date
 
 )
 

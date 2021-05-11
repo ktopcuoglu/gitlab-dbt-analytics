@@ -49,9 +49,10 @@
       usage_ping.dim_license_id,
       usage_ping.license_md5,
       usage_ping.cleaned_version,
+      usage_ping.dim_location_country_id,
       -- Wave 1
-      seat_link.active_user_count / seat_link.license_user_count    AS license_utilization,
-      seat_link.active_user_count,
+      usage_ping.instance_user_count / seat_link.license_user_count    AS license_utilization,
+      usage_ping.instance_user_count                                   AS active_user_count,
       seat_link.max_historical_user_count,
       seat_link.license_user_count,
       -- Wave 2 & 3
@@ -174,7 +175,7 @@
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@ischweickartDD",
-    updated_by="@ischweickartDD",
+    updated_by="@michellecooper",
     created_date="2021-02-08",
-    updated_date="2021-04-13"
+    updated_date="2021-04-27"
 ) }}
