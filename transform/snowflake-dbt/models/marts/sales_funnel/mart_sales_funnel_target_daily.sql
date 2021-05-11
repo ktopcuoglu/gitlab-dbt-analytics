@@ -26,6 +26,7 @@
       dim_order_type.order_type_name,
       dim_order_type.order_type_grouped,
       dim_sales_qualified_source.sales_qualified_source_name,
+      dim_sales_qualified_source.sales_qualified_source_grouped,
       fct_sales_funnel_target.allocated_target
     FROM fct_sales_funnel_target
     LEFT JOIN dim_sales_qualified_source
@@ -71,6 +72,7 @@
       order_type_name,
       order_type_grouped,
       sales_qualified_source_name,
+      sales_qualified_source_grouped,
       allocated_target                                                                                                            AS monthly_allocated_target,
       daily_allocated_target,
       SUM(daily_allocated_target) OVER(PARTITION BY kpi_name, crm_user_sales_segment, crm_user_geo, crm_user_region,
@@ -87,7 +89,7 @@
 {{ dbt_audit(
     cte_ref="qtd_mtd_target",
     created_by="@jpeguero",
-    updated_by="@mcooperDD",
+    updated_by="@jpeguero",
     created_date="2021-02-18",
-    updated_date="2021-03-26",
+    updated_date="2021-04-26",
   ) }}

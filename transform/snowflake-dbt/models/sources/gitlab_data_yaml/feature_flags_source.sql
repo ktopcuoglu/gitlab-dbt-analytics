@@ -16,11 +16,13 @@ WITH source AS (
 ), renamed AS (
 
     SELECT
-      data_by_row['name']::VARCHAR            AS name,
-      data_by_row['type']::VARCHAR            AS type,
-      data_by_row['milestone']::VARCHAR       AS milestone,
-      data_by_row['default_enabled']::VARCHAR AS is_default_enabled,
-      data_by_row['group']::VARCHAR           AS gitlab_group,
+      data_by_row['name']::VARCHAR              AS name,
+      data_by_row['type']::VARCHAR              AS type,
+      data_by_row['milestone']::VARCHAR         AS milestone,
+      data_by_row['default_enabled']::VARCHAR   AS is_default_enabled,
+      data_by_row['group']::VARCHAR             AS gitlab_group,
+      data_by_row['introduced_by_url']::VARCHAR AS introduced_by_merge_request_url,
+      data_by_row['rollout_issue_url']::VARCHAR AS rollout_issue_url,
       snapshot_date,
       rank
     FROM intermediate
@@ -33,6 +35,8 @@ WITH source AS (
       milestone,
       TRY_TO_BOOLEAN(is_default_enabled) AS is_default_enabled,
       gitlab_group,
+      introduced_by_merge_request_url,
+      rollout_issue_url,
       snapshot_date,
       rank
     FROM renamed

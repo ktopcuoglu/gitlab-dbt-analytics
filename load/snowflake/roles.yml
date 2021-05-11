@@ -2115,6 +2115,10 @@ roles:
         warehouses:
             - analyst_xs
 
+    - fstein:
+        warehouses:
+            - admin
+
     - gitlab_ci:
         member_of:
             - loader
@@ -2189,6 +2193,7 @@ roles:
             - bamboohr_analytics
             - customers_db
             - data_team_analyst
+            - data_manager
         warehouses:
             - analyst_xs
         owns:
@@ -2264,6 +2269,8 @@ roles:
             - data_team_analyst
         warehouses:
             - analyst_xs
+            - analyst_l
+            - analyst_xl
         owns:
             databases:
                 - jpeguero_prep
@@ -2375,6 +2382,7 @@ roles:
             - analyst_engineering
             - customers_db
             - data_team_analyst
+            - analyst_finance
         warehouses:
             - analyst_xs
         owns:
@@ -2536,8 +2544,7 @@ roles:
                     - mcooper_prod.*.*
 
     - mdewji:
-        warehouses:
-            - admin
+        warehouses: []
 
     - michellecooper:
         member_of: []
@@ -3354,6 +3361,12 @@ users:
         member_of:
             - fkurniadi
 
+    - fstein:
+        can_login: yes
+        member_of:
+            - fstein
+            - securityadmin
+
     - gainsight:
         can_login: yes
         member_of:
@@ -3513,10 +3526,8 @@ users:
             - mcooper
 
     - mdewji:
-        can_login: yes
-        member_of:
-            - mdewji
-            - securityadmin
+        can_login: no
+        member_of: []
 
     - michellecooper:
         can_login: no
