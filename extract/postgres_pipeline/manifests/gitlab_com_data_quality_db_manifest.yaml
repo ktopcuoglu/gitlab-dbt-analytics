@@ -1,0 +1,31 @@
+connection_info:
+  database: GITLAB_COM_DB_NAME
+  host: GITLAB_COM_DB_HOST
+  pass: GITLAB_COM_DB_PASS
+  port: PG_PORT
+  user: GITLAB_COM_DB_USER
+tables:
+  group_1:
+    dbt_source_model: true
+    export_schema: 'gitlab_dotcom'
+    export_table: 'TBD'
+    export_table_primary_key: MAX_CREATED_AT_TIMESTAMP
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT
+      'CLUSTERS_APPLICATIONS_CILIUM' AS TABLE_NAME,
+      max(created_at) AS MAX_CREATED_AT_TIMESTAMP,
+      count(*) AS ROW_COUNT
+      FROM CLUSTERS_APPLICATIONS_CILIUM
+  group_2:
+    dbt_source_model: true
+    export_schema: 'gitlab_dotcom'
+    export_table: 'TBD'
+    export_table_primary_key: MAX_CREATED_AT_TIMESTAMP
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT
+      'STATUS_PAGE_PUBLISHED_INCIDENTS' AS TABLE_NAME,
+      max(created_at) AS MAX_CREATED_AT_TIMESTAMP,
+      count(*) AS ROW_COUNT
+      FROM STATUS_PAGE_PUBLISHED_INCIDENTS

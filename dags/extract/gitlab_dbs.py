@@ -173,7 +173,10 @@ config_dict = {
         "sync_schedule_interval": "0 2 */1 * *",
         "task_name": "gitlab-ops",
     },
+    
 }
+
+
 
 
 def is_incremental(raw_query):
@@ -523,3 +526,85 @@ for source_name, config in config_dict.items():
                     )
 
     globals()[f"{config['dag_name']}_db_sync"] = sync_dag
+
+
+config_dict_dq={
+    "gitlab_com_data_quality": {
+        "cloudsql_instance_name": None,
+        "dag_name": "gitlab_com_data_quality",
+        "dbt_name": "gitlab_com_data_quality",
+        "env_vars": {},
+        "extract_schedule_interval": "0 */6 * * *",
+        "secrets": [
+            GITLAB_COM_DB_USER,
+            GITLAB_COM_DB_PASS,
+            GITLAB_COM_DB_HOST,
+            GITLAB_COM_DB_NAME,
+        ],
+        "start_date": datetime(2019, 5, 30),
+        "sync_schedule_interval": "0 2 */1 * *",
+        "task_name": "gitlab-com",
+    },
+}
+
+for source_name, config in config_dict_dq.items():
+    
+    # Sync DAG
+    data_quality_dag_args = {
+        "catchup": False,
+        "depends_on_past": False,
+        "on_failure_callback": slack_failed_task,
+        "owner": "airflow",
+        "retries": 0,
+        "retry_delay": timedelta(minutes=3),
+        "start_date": config["start_date"],
+        "dagrun_timeout": timedelta(hours=10),
+        "trigger_rule": "all_success",
+    }
+    data_quality_dag = DAG(
+        f"{config['dag_name']}",
+        default_args=data_quality_dag_args,
+        schedule_interval=config["sync_schedule_interval"],
+        concurrency=1,
+    )
+    with data_quality_dag:
+
+        # PGP Extract
+        file_path = f"analytics/extract/postgres_pipeline/manifests/{config['dag_name']}_db_manifest.yaml"
+        manifest = extract_manifest(file_path)
+        table_list = extract_table_list_from_manifest(manifest)
+        for table in table_list:
+            task_type='dq-extract'
+            task_identifier = (
+                f"{config['task_name']}-{table.replace('_','-')}-{task_type}"
+                )
+
+            # dq-extract Task
+            dq_extract_cmd = generate_cmd(
+                    config["dag_name"],
+                    f"--load_type scd --load_only_table {table}",
+                    config["cloudsql_instance_name"],
+                )
+
+            dq_extract = KubernetesPodOperator(
+                    **gitlab_defaults,
+                    image=DATA_IMAGE,
+                    task_id=task_identifier,
+                    name=task_identifier,
+                    pool=f"{config['task_name']}_pool",
+                    secrets=standard_secrets + config["secrets"],
+                    env_vars={
+                        **gitlab_pod_env_vars,
+                        **config["env_vars"],
+                        "TASK_INSTANCE": "{{ task_instance_key_str }}",
+                        "task_id": task_identifier,
+                    },
+                    arguments=[scd_cmd],
+                    affinity=get_affinity(True),
+                    tolerations=get_toleration(True),
+                    do_xcom_push=True,
+                    xcom_push=True,
+                )
+            dq_extract
+
+    globals()[f"{config['dag_name']}_db_sync"] = dq_extract
