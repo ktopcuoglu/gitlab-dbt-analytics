@@ -43,7 +43,7 @@
     
     SELECT
       *,
-      upstream_lineage[0]::INT                                                        AS ultimate_parent_id
+      upstream_lineage[0]::NUMBER                                                       AS ultimate_parent_id
     FROM recursive_namespace_ultimate
 
 ), with_plans AS (
