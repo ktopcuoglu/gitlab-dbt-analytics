@@ -51,8 +51,8 @@
       usage_ping.cleaned_version,
       usage_ping.dim_location_country_id,
       -- Wave 1
-      seat_link.active_user_count / seat_link.license_user_count    AS license_utilization,
-      seat_link.active_user_count,
+      usage_ping.instance_user_count / seat_link.license_user_count    AS license_utilization,
+      usage_ping.instance_user_count                                   AS active_user_count,
       seat_link.max_historical_user_count,
       seat_link.license_user_count,
       -- Wave 2 & 3

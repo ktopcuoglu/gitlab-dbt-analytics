@@ -4,6 +4,8 @@
     })
 }}
 
+{%- set columns = adapter.get_columns_in_relation( source('version', 'usage_data') ) -%}
+
 WITH source AS (
 
     SELECT *
@@ -12,6 +14,20 @@ WITH source AS (
     WHERE created_at >= (SELECT MAX(created_at) FROM {{this}})
     {% endif %}
     QUALIFY ROW_NUMBER() OVER (PARTITION BY id ORDER BY updated_at DESC) = 1
+
+), raw_usage_data_payload AS (
+
+    SELECT 
+      *,
+      OBJECT_CONSTRUCT(
+        {% for column in columns %}  
+          '{{ column.name | lower }}', {{ column.name | lower }}
+          {% if not loop.last %}
+            ,
+          {% endif %}
+        {% endfor %}
+      ) AS raw_usage_data_payload_reconstructed
+    FROM source
 
 ), renamed AS (
 
@@ -78,8 +94,9 @@ WITH source AS (
         PARSE_JSON(analytics_unique_visits)          AS analytics_unique_visits,
         raw_usage_data_id::INTEGER                   AS raw_usage_data_id,
         container_registry_vendor::VARCHAR           AS container_registry_vendor,
-        container_registry_version::VARCHAR          AS container_registry_version
-    FROM source
+        container_registry_version::VARCHAR          AS container_registry_version,
+        raw_usage_data_payload_reconstructed
+    FROM raw_usage_data_payload
 
 )
 
