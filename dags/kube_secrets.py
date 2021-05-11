@@ -226,3 +226,14 @@ SALT_IP = Secret("env", "SALT_IP", "airflow", "SALT_IP")
 SALT_NAME = Secret("env", "SALT_NAME", "airflow", "SALT_NAME")
 
 SALT_PASSWORD = Secret("env", "SALT_PASSWORD", "airflow", "SALT_PASSWORD")
+
+# Zuora Revenue
+ZUORA_REVENUE_GCS_NAME = Secret(
+    "env", "ZUORA_REVENUE_GCS_NAME", "airflow", "ZUORA_REVENUE_GCS_NAME"
+)
+ZUORA_REVENUE_API_URL = Secret(
+    "env", "ZUORA_REVENUE_API_URL", "airflow", "ZUORA_REVENUE_API_URL"
+)
+ZUORA_REVENUE_AUTH_CODE = Secret(
+    "env", "ZUORA_REVENUE_AUTH_CODE", "airflow", "ZUORA_REVENUE_AUTH_CODE"
+)

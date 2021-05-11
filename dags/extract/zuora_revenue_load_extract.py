@@ -1,7 +1,8 @@
 import os
 from datetime import datetime, timedelta
 from yaml import load, safe_load, YAMLError
-from airflow import DAG
+from airflow import DAG 
+from airflow.operators.dummy import DummyOperator
 from os import environ as env
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
 from airflow_utils import (
@@ -64,8 +65,6 @@ with open(
         for tab in sheet["table_name"]
     ]
 
-runs_load = []
-runs_extract = []
 
 # Create the DAG  with one load happening at once
 dag = DAG(
@@ -75,6 +74,8 @@ dag = DAG(
     concurrency=1,
 )
 
+start = DummyOperator(task_id='Start')
+
 for table_name in table_name_list:
     
     # Set the command for the container for loading the data
@@ -83,12 +84,14 @@ for table_name in table_name_list:
         python3 zuora_revenue/zuora_extract_load.py zuora_extract --bucket $ZUORA_REVENUE_GCS_NAME --table_name {table_name}
         """
     # Task 1
-    zuora_revenue_load_run = KubernetesPodOperator(
+    zuora_revenue_extract_run = KubernetesPodOperator(
         **gitlab_defaults,
         image=DATA_IMAGE,
-        task_id=f"{table_name}_LOAD",
-        name=f"{table_name}_LOAD",
+        task_id=f"{table_name}_EXTRACT",
+        name=f"{table_name}_EXTRACT",
         secrets=[
+            ZUORA_REVENUE_API_URL,
+            ZUORA_REVENUE_AUTH_CODE,
             ZUORA_REVENUE_GCS_NAME,
             GCP_SERVICE_CREDS,
             SNOWFLAKE_ACCOUNT,
@@ -100,11 +103,9 @@ for table_name in table_name_list:
         env_vars=pod_env_vars,
         affinity=get_affinity(False),
         tolerations=get_toleration(False),
-        arguments=[container_cmd_load],
+        arguments=[container_cmd_extract],
         dag=dag,
     )
-    runs.append(zuora_revenue_load_run)
-
 
 
     # Set the command for the container for loading the data
@@ -112,7 +113,7 @@ for table_name in table_name_list:
         {clone_and_setup_extraction_cmd} &&
         python3 zuora_revenue/zuora_extract_load.py zuora_load --bucket $ZUORA_REVENUE_GCS_NAME --schema_name zuora_revenue --table_name {table_name}
         """
-    # Task 1
+    # Task 2
     zuora_revenue_load_run = KubernetesPodOperator(
         **gitlab_defaults,
         image=DATA_IMAGE,
@@ -133,4 +134,5 @@ for table_name in table_name_list:
         arguments=[container_cmd_load],
         dag=dag,
     )
-    runs.append(zuora_revenue_load_run)
+
+    start >> zuora_revenue_extract_run >> zuora_revenue_load_run
