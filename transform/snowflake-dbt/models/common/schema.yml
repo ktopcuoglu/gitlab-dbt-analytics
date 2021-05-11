@@ -207,6 +207,7 @@ models:
       - name: record_type_id
       - name: federal_account
       - name: gitlab_com_user
+      - name: is_jihu_account
       - name: account_owner
       - name: account_owner_team
       - name: account_type
