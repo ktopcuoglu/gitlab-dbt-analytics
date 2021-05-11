@@ -223,12 +223,12 @@
     LEFT JOIN self_managed_namespace_subscription self_managed_billing_account 
       ON self_managed_billing_account.dim_billing_account_id = marketing_contact_role.zuora_billing_account_id   
     LEFT JOIN namespace_lineage 
-      ON namespace_lineage.namespace_id = COALESCE(marketing_contact_role.namespace_id,
+      ON namespace_lineage.dim_namespace_id = COALESCE(marketing_contact_role.namespace_id,
                                                    saas_namespace.dim_namespace_id,
                                                    saas_customer.dim_namespace_id,
                                                    saas_billing_account.dim_namespace_id)
     LEFT JOIN gitlab_namespaces 
-      ON gitlab_namespaces.namespace_id = namespace_lineage.namespace_id
+      ON namespace_lineage.dim_namespace_id = gitlab_namespaces.namespace_id
       
 ), final AS (
 
