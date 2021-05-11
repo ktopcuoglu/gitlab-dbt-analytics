@@ -28,6 +28,7 @@ WITH prep_usage_ping AS (
     is_license_subscription_id_valid,
     dim_crm_account_id,
     dim_parent_crm_account_id,
+    dim_location_country_id,
 
     {%- for metric in smau_metrics.PATH %}
     {{ metric }} AS {{ smau_metrics.NAME[loop.index0] }}
@@ -41,7 +42,7 @@ WITH prep_usage_ping AS (
 {{ dbt_audit(
     cte_ref="pivoted",
     created_by="@ischweickartDD",
-    updated_by="@ischweickartDD",
+    updated_by="@michellecooper",
     created_date="2021-03-15",
-    updated_date="2021-03-15"
+    updated_date="2021-04-27"
 ) }}

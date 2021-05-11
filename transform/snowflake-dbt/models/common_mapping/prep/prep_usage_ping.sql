@@ -4,23 +4,13 @@
     })
 }}
 
-{%- set columns = adapter.get_columns_in_relation( ref('version_usage_data_source')) -%}
-
 WITH source AS (
 
     SELECT 
       id                                                                        AS dim_usage_ping_id, 
       created_at::TIMESTAMP(0)                                                  AS ping_created_at,
       *, 
-      {{ nohash_sensitive_columns('version_usage_data_source', 'source_ip') }}  AS ip_address_hash, 
-      OBJECT_CONSTRUCT(
-        {% for column in columns %}  
-          '{{ column.column | lower }}', {{ column.column | lower }}
-          {% if not loop.last %}
-            ,
-          {% endif %}
-        {% endfor %}
-      )                                                                         AS raw_usage_data_payload_reconstructed
+      {{ nohash_sensitive_columns('version_usage_data_source', 'source_ip') }}  AS ip_address_hash
     FROM {{ ref('version_usage_data_source') }}
 
 ), raw_usage_data AS (
@@ -33,17 +23,17 @@ WITH source AS (
     SELECT * 
     FROM {{ ref('map_ip_to_country') }}
     
-), location AS (
+), locations AS (
 
     SELECT * 
-    FROM {{ ref('dim_location_country') }}
+    FROM {{ ref('prep_location_country') }}
 
 ), usage_data AS (
 
     SELECT
       dim_usage_ping_id, 
       ping_created_at,
-      ip_address_hash,
+      source_ip_hash                                                                                  AS ip_address_hash,
       {{ dbt_utils.star(from=ref('version_usage_data_source'), except=['EDITION', 'CREATED_AT', 'SOURCE_IP']) }},
       edition                                                                                         AS original_edition,
       IFF(license_expires_at >= ping_created_at OR license_expires_at IS NULL, edition, 'EE Free')    AS cleaned_edition,
@@ -51,8 +41,7 @@ WITH source AS (
       IFF(version ILIKE '%-pre', True, False)                                                         AS version_is_prerelease,
       SPLIT_PART(cleaned_version, '.', 1)::NUMBER                                                     AS major_version,
       SPLIT_PART(cleaned_version, '.', 2)::NUMBER                                                     AS minor_version,
-      major_version || '.' || minor_version                                                           AS major_minor_version,
-      raw_usage_data_payload_reconstructed
+      major_version || '.' || minor_version                                                           AS major_minor_version
     FROM source
     WHERE uuid IS NOT NULL
       AND version NOT LIKE ('%VERSION%') -- Messy data that's not worth parsing
@@ -99,7 +88,7 @@ WITH source AS (
         'dr.gitlab.com'
       )                                                         THEN TRUE
         ELSE FALSE END                                                                          AS is_staging,     
-      COALESCE(raw_usage_data.raw_usage_data_payload, raw_usage_data_payload_reconstructed)     AS raw_usage_data_payload
+      COALESCE(raw_usage_data.raw_usage_data_payload, usage_data.raw_usage_data_payload_reconstructed)     AS raw_usage_data_payload
     FROM usage_data
     LEFT JOIN raw_usage_data
       ON usage_data.raw_usage_data_id = raw_usage_data.raw_usage_data_id
@@ -108,22 +97,16 @@ WITH source AS (
 
     SELECT 
       map_ip_to_country.ip_address_hash, 
-      map_ip_to_country.dim_location_country_id, 
-      location.country_name, 
-      location.iso_2_country_code, 
-      location.iso_3_country_code  
+      map_ip_to_country.dim_location_country_id  
     FROM map_ip_to_country
-    INNER JOIN location 
-      WHERE map_ip_to_country.dim_location_country_id = location.dim_location_country_id
+    INNER JOIN locations 
+      WHERE map_ip_to_country.dim_location_country_id = locations.dim_location_country_id
 
 ), add_country_info_to_usage_ping AS (
 
     SELECT 
       joined.*, 
-      map_ip_location.dim_location_country_id, 
-      map_ip_location.country_name, 
-      map_ip_location.iso_2_country_code, 
-      map_ip_location.iso_3_country_code  
+      map_ip_location.dim_location_country_id 
     FROM joined 
     LEFT JOIN map_ip_location
       ON joined.ip_address_hash = map_ip_location.ip_address_hash 
@@ -161,9 +144,7 @@ WITH source AS (
       ping_source,
       is_internal, 
       is_staging, 
-      country_name, 
-      iso_2_country_code, 
-      iso_3_country_code  
+      dim_location_country_id 
     FROM add_country_info_to_usage_ping
     LEFT OUTER JOIN dim_product_tier
     ON TRIM(LOWER(add_country_info_to_usage_ping.product_tier)) = TRIM(LOWER(dim_product_tier.product_tier_historical_short))
@@ -174,7 +155,7 @@ WITH source AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@kathleentam",
-    updated_by="@ischweickartDD",
+    updated_by="@michellecooper",
     created_date="2021-01-10",
-    updated_date="2021-04-05"
+    updated_date="2021-04-30"
 ) }}

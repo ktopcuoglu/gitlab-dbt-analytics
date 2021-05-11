@@ -1,7 +1,7 @@
 {{ simple_cte([
     ('mart_monthly_product_usage','mart_monthly_product_usage'),
     ('mart_usage_ping_counters_statistics','mart_usage_ping_counters_statistics'),
-    ('gitlab_release_schedule','gitlab_release_schedule'),
+    ('dim_gitlab_releases','dim_gitlab_releases'),
     ('mart_paid_subscriptions_monthly_usage_ping_optin','mart_paid_subscriptions_monthly_usage_ping_optin'),
     ('wk_usage_ping_monthly_events_distribution_by_version','wk_usage_ping_monthly_events_distribution_by_version')
 ]) }}
@@ -18,8 +18,8 @@
     LEFT JOIN mart_usage_ping_counters_statistics
       ON mart_monthly_product_usage.main_edition = mart_usage_ping_counters_statistics.edition
       AND mart_monthly_product_usage.metrics_path = mart_usage_ping_counters_statistics.metrics_path
-    LEFT JOIN gitlab_release_schedule
-      ON gitlab_release_schedule.major_minor_version = mart_usage_ping_counters_statistics.first_version_with_counter
+    LEFT JOIN dim_gitlab_releases
+      ON dim_gitlab_releases.major_minor_version = mart_usage_ping_counters_statistics.first_version_with_counter
     WHERE is_smau = TRUE
       AND delivery = 'Self-Managed'
     GROUP BY 1,2,3,4

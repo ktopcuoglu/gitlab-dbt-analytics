@@ -10,6 +10,15 @@ models:
           - unique
         tags: ["tdf", "common", "sales_funnel"]
 
+  - name: prep_amendment
+    description: Prep table for Zuora Amendments that increment subscription versions. This prep table will be used in Facts and Dimensions.
+    columns:
+      - name: dim_amendment_id
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "common", "arr"]
+
   - name: prep_dr_partner_engagement
     description: '{{ doc("prep_dr_partner_engagement") }}'
     columns:
@@ -870,13 +879,6 @@ models:
         description: boolean flag that indicates that the instance is used by the company or a GitLab team member
       - name: is_staging
         description: DRAFT - need to better identify instances used for staging environments
-      - name: country_name
-        description: The name of the country where the instance reported the ping from
-      - name: iso_2_country_code
-        description: The iso 2 country code where the instance reported the ping from
-      - name: iso_3_country_code
-        description: The iso 3 country code where the instance reported the ping from
-
 
   - name: prep_usage_ping_no_license_key
     description: '{{ doc("prep_usage_ping_no_license_key") }}'

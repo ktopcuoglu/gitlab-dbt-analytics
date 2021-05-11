@@ -12,6 +12,7 @@ WITH sfdc_users AS (
 
     SELECT
       sfdc_users.user_id                                            AS dim_crm_user_id,
+      sfdc_users.employee_number,
       sfdc_users.name                                               AS user_name,
       sfdc_users.title,
       sfdc_users.department,

@@ -1,5 +1,4 @@
 version: 2
-
 macros:
   - name: arr_buckets
     description: This macro calculates buckets of values for ARR.
