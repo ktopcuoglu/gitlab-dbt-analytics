@@ -118,6 +118,16 @@ models:
           - not_null
         tags: ["tdf", "common", "sales_funnel"]
 
+  - name: dim_amendment
+    description: Dimension for Zuora Amendments that increment subscription versions.
+    columns:
+      - name: dim_amendment_id
+        description: Unique identifier of an Amendment in Zuora Billing.
+        tests:
+          - unique
+          - not_null
+        tags: ["tdf", "common", "arr"]
+
   - name: dim_billing_account
     description: '{{ doc("dim_billing_account") }}'
     columns:
@@ -163,6 +173,16 @@ models:
       - name: budget_holder
       - name: bizible_touchpoint_enabled_setting
       - name: strategic_marketing_contribution
+
+  - name: dim_charge
+    description: Dimension table for unique transactions in Zuora Billing. The table only includes recurring charges at this time. Non-recurring charges will be added in a future iteration.
+    columns:
+      - name: dim_charge_id
+        description: Unique identifier for a rate plan charge in Zuora. These are transactions in Zuora Billing.
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "common", "arr"]
 
   - name: dim_crm_account
     description: '{{ doc("dim_crm_account") }}'
@@ -1062,7 +1082,7 @@ models:
       - name: is_net_arr_pipeline_created
         description: a boolean field created in the warehouse to flag Net ARR Pipeline Created.
       - name: is_win_rate_calc
-        description: a boolean field created in the warehouse to flag Win Rate. This field determines opportunities that will be included in calculating Win Rate.    
+        description: a boolean field created in the warehouse to flag Win Rate. This field determines opportunities that will be included in calculating Win Rate.
       - name: is_sdr_sao
         description: a boolean field created in the warehouse to flag Sales Accepted Opportunities from [Sales Development Reps](https://about.gitlab.com/handbook/marketing/revenue-marketing/sdr/). This field should be deprecated once sales accepted is in a more stable and consistent state in salesforce.
       - name: iacv
@@ -1849,27 +1869,6 @@ models:
         description: Purchased extra CI Minutes used in a given snapshot month.
       - name: status_purchased
         description: Status of CI Minutes usage against the extra CI Minutes purchased limit by namespaces.
-
-  - name: fct_usage_ping_metric_28_days
-    description: '{{ doc("fct_usage_ping_metric_28_days") }}'
-    columns:
-      - name: metric_name
-        tests:
-          - not_null
-        tags: ["tdf", "common"]
-      - name: metric_value
-        tests:
-          - not_null
-        tags: ["tdf", "common"]
-      - name: recorded_at
-        tests:
-          - not_null
-        tags: ["tdf", "common"]
-      - name: stage_name
-      - name: usage_ping_id
-        tests:
-          - not_null
-        tags: ["tdf", "common"]
 
   - name: fct_usage_ping_metric_all_time
     description: '{{ doc("fct_usage_ping_metric_all_time") }}'

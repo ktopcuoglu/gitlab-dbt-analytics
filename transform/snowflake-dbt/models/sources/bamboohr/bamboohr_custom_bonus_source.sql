@@ -20,12 +20,13 @@ WITH source AS (
 ), renamed AS (
 
       SELECT
-           data_by_row['id']::NUMBER               AS bonus_id,
-           data_by_row['employeeId']::NUMBER       AS employee_id,
-           data_by_row['customBonustype']::varchar AS bonus_type,
-           data_by_row['customBonusdate']::date    AS bonus_date,
+           data_by_row['id']::NUMBER                 AS bonus_id,
+           data_by_row['employeeId']::NUMBER         AS employee_id,
+           data_by_row['customBonustype']::varchar   AS bonus_type,
+           data_by_row['customBonusdate']::date      AS bonus_date,
            data_by_row['customNominatedBy']::varchar AS bonus_nominator_type
       FROM unnest_again
+      WHERE bonus_date IS NOT NULL
 
 )
 

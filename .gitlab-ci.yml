@@ -93,7 +93,10 @@ include:
   script:
     - manage_snowflake.py manage_clones --database raw --schema tap_postgres
 
-
+🥩⚙clone_raw_specific_schema:
+  <<: *snowflake_start_clone
+  script:
+    - manage_snowflake.py manage_clones --database raw --schema $SCHEMA_NAME
 
 👥force_clone_both:
   <<: *snowflake_start_clone
