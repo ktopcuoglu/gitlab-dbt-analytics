@@ -2267,7 +2267,7 @@ roles:
             - netsuite
             - static_admin
             - data_team_analyst
-            - analist_finance
+            - analyst_finance
             - gainsight_temp_source
         warehouses:
             - analyst_xs
