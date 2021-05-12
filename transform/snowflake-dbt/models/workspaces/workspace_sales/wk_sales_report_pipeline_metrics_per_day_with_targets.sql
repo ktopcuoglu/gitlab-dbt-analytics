@@ -43,6 +43,7 @@ WITH date_details AS (
         SUM(open_3plus_deal_count)      AS open_3plus_deal_count,
         SUM(open_4plus_deal_count)      AS open_4plus_deal_count, 
         SUM(booked_deal_count)          AS booked_deal_count,
+        SUM(churned_deal_count)         AS churned_deal_count,
 
         SUM(created_in_quarter_count)    AS created_in_quarter_count,
 
@@ -63,6 +64,8 @@ WITH date_details AS (
 
         -- reported quarter
         SUM(booked_net_arr)                     AS booked_net_arr,
+        SUM(churned_net_arr)                    AS churned_net_arr,
+
         SUM(open_1plus_net_arr)                 AS open_1plus_net_arr,
         SUM(open_3plus_net_arr)                 AS open_3plus_net_arr, 
         SUM(open_4plus_net_arr)                 AS open_4plus_net_arr, 
@@ -104,7 +107,9 @@ WITH date_details AS (
         SUM(target_pipe_generation_net_arr)         AS target_pipe_generation_net_arr, 
   
         SUM(total_booked_net_arr)                           AS total_booked_net_arr,
+        SUM(total_churned_net_arr)                          AS total_churned_net_arr,
         SUM(total_booked_deal_count)                        AS total_booked_deal_count,
+        SUM(total_churned_deal_count)                       AS total_churned_deal_count,
         SUM(total_pipe_generation_net_arr)                  AS total_pipe_generation_net_arr,
         SUM(total_pipe_generation_deal_count)               AS total_pipe_generation_deal_count,
         SUM(total_created_and_booked_same_quarter_net_arr)  AS total_created_and_booked_same_quarter_net_arr,
@@ -181,6 +186,7 @@ WITH date_details AS (
     close_date.fiscal_quarter_name_fy              AS close_fiscal_quarter_name,
     close_date.fiscal_year                         AS close_fiscal_year,
     close_date.day_of_fiscal_quarter_normalised    AS close_day_of_fiscal_quarter_normalised,
+    close_date.date_actual                         AS close_date,
     rq_plus_1.first_day_of_fiscal_quarter          AS rq_plus_1_close_fiscal_quarter_date,
     rq_plus_1.fiscal_quarter_name_fy               AS rq_plus_1_close_fiscal_quarter_name,
     rq_plus_2.first_day_of_fiscal_quarter          AS rq_plus_2_close_fiscal_quarter_date,
@@ -208,6 +214,7 @@ WITH date_details AS (
         base.close_fiscal_quarter_date,
         base.close_fiscal_quarter_name,
         base.close_fiscal_year,
+        base.close_date,
         base.close_day_of_fiscal_quarter_normalised,
 
         -- report quarter plus 1 / 2 date fields
@@ -222,6 +229,7 @@ WITH date_details AS (
         metrics.open_3plus_deal_count,
         metrics.open_4plus_deal_count, 
         metrics.booked_deal_count,
+        metrics.churned_deal_count,
 
         metrics.created_in_quarter_count,
 
@@ -242,6 +250,7 @@ WITH date_details AS (
 
         -- reported quarter
         metrics.booked_net_arr,
+        metrics.churned_net_arr,
         metrics.open_1plus_net_arr,
         metrics.open_3plus_net_arr, 
         metrics.open_4plus_net_arr, 
@@ -265,7 +274,9 @@ WITH date_details AS (
         COALESCE(targets.target_pipe_generation_net_arr,0)        AS target_pipe_generation_net_arr, 
   
         COALESCE(targets.total_booked_net_arr,0)                            AS total_booked_net_arr,
+        COALESCE(targets.total_churned_net_arr,0)                           AS total_churned_net_arr,
         COALESCE(targets.total_booked_deal_count,0)                         AS total_booked_deal_count,
+        COALESCE(targets.total_churned_deal_count,0)                        AS total_churned_deal_count,        
         COALESCE(targets.total_pipe_generation_net_arr,0)                   AS total_pipe_generation_net_arr,
         COALESCE(targets.total_pipe_generation_deal_count,0)                AS total_pipe_generation_deal_count,
         COALESCE(targets.total_created_and_booked_same_quarter_net_arr,0)   AS total_created_and_booked_same_quarter_net_arr,
