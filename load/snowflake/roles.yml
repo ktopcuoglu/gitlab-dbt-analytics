@@ -360,6 +360,7 @@ roles:
             - netsuite
             - keyhole_twitter
             - marketing_dnc
+            - marketo
             - pmg
             - snowflake_db
             - zendesk
@@ -1437,6 +1438,21 @@ roles:
                     - prep.maxmind.*
                     - raw.sheetload.maxmind_countries
                     - raw.sheetload.maxmind_ranges
+
+    - marketo:
+          privileges:
+              databases:
+                  read:
+                      - prep
+                      - raw
+              schemas:
+                  read:
+                      - prep.marketo
+                      - raw.marketo
+              tables:
+                  read:
+                      - prep.marketo.*
+                      - raw.marketo.*
 
     - netsuite:
         warehouses:
