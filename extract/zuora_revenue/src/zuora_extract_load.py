@@ -23,114 +23,20 @@ from gitlabdata.orchestration_utils import (
 )
 
 
-zuora_revenue_bi_entity_table_list = [
-    {
-        "data_entity": "Account Type",
-        "physical_tables": "RPRO_BI3_ACCT_TYPE_V",
-        "table_name": "BI3_ACCT_TYPE",
-    },
-]
-config_dict = env.copy()
-# {
-#        "data_entity": "Account Type",
-#        "physical_tables": "RPRO_BI3_ACCT_TYPE_V",
-#        "table_name": "BI3_ACCT_TYPE",
-#    },
-#    {
-#        "data_entity": "Accounting Pre-Summary",
-#        "physical_tables": "RPRO_BI3_RI_ACCT_SUMM_V",
-#        "table_name": "BI3_RI_ACCT_SUMM",
-#    },
-#        "data_entity": "Approvals",
-#    {
-#        "physical_tables": "RPRO_BI3_APPR_DTL_V",
-#        "table_name": "BI3_APPR_DTL",
-#    },
-#    {
-#        "data_entity": "Bill",
-#        "physical_tables": "RPRO_BI3_RC_BILL_V",
-#        "table_name": "BI3_RC_BILL",
-#    },
-#    {
-#        "data_entity": "Book",
-#        "table_name": "BI3_BOOK",
-#   },
-#        "physical_tables": "RPRO_BI3_BOOK_V",
-#    {
-#        "data_entity": "Calendar",
-#        "physical_tables": "RPRO_BI3_CALENDAR_V",
-#        "table_name": "BI3_CALENDAR",
-#    },
-#    {
-#        "data_entity": "Cost",
-#        "physical_tables": "RPRO_BI3_RC_LN_COST_V",
-#        "table_name": "BI3_RC_LN_COST",
-#    },
-#    {
-#        "data_entity": "Deleted Schedules",
-#        "physical_tables": "RPRO_BI3_RC_SCHD_DEL_V",
-#        "table_name": "BI3_RC_SCHD_DEL",
-#    },
-#    {
-#        "data_entity": "Header",
-#       "table_name": "BI3_RC_HEAD",
-#        "physical_tables": "RPRO_BI3_RC_HEAD_V",
-#    },
-#    {
-#        "data_entity": "Holds",
-#        "physical_tables": "RPRO_BI3_RC_HOLD_V",
-#        "table_name": "BI3_RC_HOLD",
-#   },
-#    {
-#        "data_entity": "Lines",
-#     "physical_tables": "RPRO_BI3_RC_LNS_V",
-#        "table_name": "BI3_RC_LNS",
-#    },
-#    {
-#        "data_entity": "MJE",
-#        "physical_tables": "RPRO_BI3_MJE_V",
-#        "table_name": "BI3_MJE",
-#    },
-#    {
-#        "data_entity": "Org",
-#        "physical_tables": "RPRO_BI3_ORG_V",
-#        "table_name": "BI3_ORG",
-#    },
-#    {
-#        "data_entity": "POB",
-#        "physical_tables": "RPRO_BI3_RC_POB_V",
-#        "table_name": "BI3_RC_POB",
-#    },
-#    {
-#        "data_entity": "Schedules",
-#        "physical_tables": "RPRO_BI3_RC_SCHD_V",
-#        "table_name": "BI3_RC_SCHD",
-#    },
-#    {
-#        "data_entity": "Waterfall (Derived)",
-#        "physical_tables": "RPRO_BI3_WF_SUMM_V",
-#        "table_name": "BI3_WF_SUMM",
-#    },
-# {
-#        "data_entity": "Acct Summary (Derived)",
-#        "physical_tables": "RPRO_BI3_LN_ACCT_SUMM_V",
-#        "table_name": "BI3_LN_ACCT_SUMM",
-#    }"""
-
-
-def zuora_revenue_extract(
-    config_dict: dict, zuora_revenue_bi_entity_table_list: list
-) -> None:
+def zuora_revenue_extract(table_name: str) -> None:
     basicConfig(level=20, filename="loging_file.log")
-
-    info("1st Step to get the authentication URL and header informtation.")
+    info("Prepare the authentication URL")
     headers = {
         "role": "APIRole",
         "clientname": "Default",
-        "Authorization": config_dict["authorization_zuora"],
+        "Authorization": env["ZUORA_REVENUE_AUTH_CODE"],
     }
-    authenticate_url_zuora_revpro = config_dict["authenticate_url_zuora_revpro"]
-    zuora_fetch_data_url = config_dict["zuora_fetch_data_url"]
+    authenticate_url_zuora_revpro = (
+        "https://" + env["ZUORA_REVENUE_API_URL"] + "/api/integration/v1/authenticate"
+    )
+    zuora_fetch_data_url = (
+        "https://" + env["ZUORA_REVENUE_API_URL"] + "/api/integration/v2/biviews/"
+    )
 
     # Initialise the API class
     zuora_revpro = ZuoraRevProAPI()
@@ -158,7 +64,7 @@ def zuora_revenue_load(
 ) -> None:
     # Set some vars
     chunksize = 15000
-     chunk_iter = 0
+    chunk_iter = 0
     engine = snowflake_engine_factory(conn_dict or env, "LOADER", schema)
 
     # Get the gcloud storage client and authenticate
@@ -190,7 +96,9 @@ def zuora_revenue_load(
 
             for chunk in sheet_df:
                 chunk[chunk.columns] = chunk[chunk.columns].astype("str")
-                dw_uploader(engine=engine, table=table_name, data=chunk, chunk=chunk_iter)
+                dw_uploader(
+                    engine=engine, table=table_name, data=chunk, chunk=chunk_iter
+                )
 
 
 if __name__ == "__main__":
@@ -200,9 +108,7 @@ if __name__ == "__main__":
     config_dict = env.copy()
     Fire(
         {
-            "zuora_extract": zuora_revenue_extract(
-                config_dict, zuora_revenue_bi_entity_table_list
-            ),
+            "zuora_extract": zuora_revenue_extract,
             "zuora_load": zuora_revenue_load,
         }
     )

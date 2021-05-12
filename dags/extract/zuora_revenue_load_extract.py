@@ -1,9 +1,9 @@
 import os
 from datetime import datetime, timedelta
 from yaml import load, safe_load, YAMLError
-from airflow import DAG 
-from airflow.operators.dummy import DummyOperator
 from os import environ as env
+from airflow import DAG
+from airflow.operators.dummy_operator import DummyOperator
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
 from airflow_utils import (
     DATA_IMAGE,
@@ -74,14 +74,15 @@ dag = DAG(
     concurrency=1,
 )
 
-start = DummyOperator(task_id='Start')
+start = DummyOperator(task_id="Start", dag=dag)
+
 
 for table_name in table_name_list:
-    
+
     # Set the command for the container for loading the data
     container_cmd_extract = f"""
         {clone_and_setup_extraction_cmd} &&
-        python3 zuora_revenue/zuora_extract_load.py zuora_extract --bucket $ZUORA_REVENUE_GCS_NAME --table_name {table_name}
+        python3 zuora_revenue/zuora_extract_load.py zuora_extract --table_name {table_name}
         """
     # Task 1
     zuora_revenue_extract_run = KubernetesPodOperator(
@@ -106,7 +107,6 @@ for table_name in table_name_list:
         arguments=[container_cmd_extract],
         dag=dag,
     )
-
 
     # Set the command for the container for loading the data
     container_cmd_load = f"""
@@ -134,5 +134,4 @@ for table_name in table_name_list:
         arguments=[container_cmd_load],
         dag=dag,
     )
-
     start >> zuora_revenue_extract_run >> zuora_revenue_load_run

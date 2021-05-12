@@ -198,5 +198,3 @@ class ZuoraRevProAPI:
                     )
 
                 page_number = page_number + 1
-
-    
