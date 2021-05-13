@@ -53,7 +53,7 @@ with open(f"{airflow_home}/analytics/extract/sheetload/drives.yml", "r") as file
 dag = DAG(
     "driveload",
     default_args=default_args,
-    schedule_interval="0 2 */2 * *",
+    schedule_interval="0 2 * * 1",
     concurrency=1,
 )
 
