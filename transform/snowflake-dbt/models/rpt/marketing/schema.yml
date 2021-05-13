@@ -1,0 +1,6 @@
+version: 2
+
+models:
+  - name: rpt_marketing_contact
+    description: Non sensitive version of the mart_marketing_contact model.
+    
