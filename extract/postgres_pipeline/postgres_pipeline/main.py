@@ -104,6 +104,41 @@ def main(file_path: str, load_type: str, load_only_table: str = None) -> None:
         )
 
 
+def dq_main(file_path: str, load_type: str, load_only_table: str = None) -> None:
+    """
+    Read data from a postgres DB and upload it directly to Snowflake.
+    """
+
+    # Process the manifest
+    logging.info(f"Reading manifest at location: {file_path}")
+    manifest_dict = manifest_reader(file_path)
+    # When load_only_table specified reduce manifest to keep only relevant table c
+    filter_manifest(manifest_dict, load_only_table)
+
+    postgres_engine, snowflake_engine = get_engines(manifest_dict["connection_info"])
+    logging.info(snowflake_engine)
+
+    for table in manifest_dict["tables"]:
+        logging.info(f"Processing Table: {table}")
+        table_dict = manifest_dict["tables"][table]
+        current_table = PostgresPipelineTable(table_dict)
+
+        # Call the correct function based on the load_type
+        loaded = current_table.do_load(
+            load_type, postgres_engine, snowflake_engine, False
+        )
+        logging.info(f"Finished upload for table: {table}")
+
+        try:
+            count = query_executor(snowflake_engine, count_query)[0][0]
+        except:
+            pass  # likely that the table doesn't exist -- don't want an error her
+
+        append_to_xcom_file(
+            {current_table.get_target_table_name(): count, "load_ran": loaded}
+        )
+
+
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     logging.getLogger("snowflake.connector.cursor").disabled = True

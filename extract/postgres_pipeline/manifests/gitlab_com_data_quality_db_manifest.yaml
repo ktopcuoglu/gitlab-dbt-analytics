@@ -8,7 +8,8 @@ tables:
  GROUP:	
      dbt_source_model: true	
      export_schema: 'gitlab_dotcom'	
-     export_table: 'TBD'	
+     export_table: 'TBD'
+     snow_target_table: 'SNOW_TARGET_TABLE'	
      export_table_primary_key: MAX_CREATED_AT_TIMESTAMP	
      import_db: GITLAB_DB	
      import_query: |-	
