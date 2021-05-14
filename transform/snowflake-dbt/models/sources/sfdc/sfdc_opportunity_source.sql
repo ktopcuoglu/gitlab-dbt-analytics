@@ -24,7 +24,6 @@ WITH source AS (
         -- keys
         accountid                                   AS account_id,
         id                                          AS opportunity_id,
-        duplicate_opportunity__c                    AS duplicate_opportunity_id,
         name                                        AS opportunity_name,
         ownerid                                     AS owner_id,
 
@@ -38,6 +37,7 @@ WITH source AS (
         sql_source__c                               AS generated_source,
         leadsource                                  AS lead_source,
         merged_opportunity__c                       AS merged_opportunity_id,
+        duplicate_opportunity__c                    AS duplicate_opportunity_id,
         account_owner__c                            AS account_owner,
         opportunity_owner__c                        AS opportunity_owner,
         owner_team_o__c                             AS opportunity_owner_team,
