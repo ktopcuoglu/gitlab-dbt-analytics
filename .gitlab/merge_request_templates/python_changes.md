@@ -1,6 +1,6 @@
 Closes
 
-#### Code Changes
+#### List and describe Code Changes
 
 * _action items_
 
@@ -20,6 +20,3 @@ Closes
 * [ ] Are [exceptions and errors](https://about.gitlab.com/handbook/business-technology/data-team/platform/python-guide/#exception-handling) handled correctly?
 * [ ] Is there any data manipulation that [should be done in SQL instead](https://about.gitlab.com/handbook/business-technology/data-team/platform/python-guide/#when-not-to-use-python)?
 
-#### Changes
-
-_description of the changes here_
