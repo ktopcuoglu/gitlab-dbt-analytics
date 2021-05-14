@@ -360,6 +360,7 @@ roles:
             - netsuite
             - keyhole_twitter
             - marketing_dnc
+            - marketo
             - pmg
             - snowflake_db
             - zendesk
@@ -1438,6 +1439,21 @@ roles:
                     - raw.sheetload.maxmind_countries
                     - raw.sheetload.maxmind_ranges
 
+    - marketo:
+          privileges:
+              databases:
+                  read:
+                    #   - prep
+                      - raw
+              schemas:
+                  read:
+                    #   - prep.marketo
+                      - raw.marketo
+              tables:
+                  read:
+                    #   - prep.marketo.*
+                      - raw.marketo.*
+
     - netsuite:
         warehouses:
             - analyst_xs
@@ -1864,6 +1880,12 @@ roles:
             - bamboohr_analytics
         warehouses:
             - analyst_xs
+
+    - awaller:
+        member_of:
+            - analyst_marketing
+        warehouses:
+            - analyst_xs        
     
     - blutz:
         warehouses:
@@ -2115,6 +2137,10 @@ roles:
         warehouses:
             - analyst_xs
 
+    - fstein:
+        warehouses:
+            - admin
+
     - gitlab_ci:
         member_of:
             - loader
@@ -2189,6 +2215,7 @@ roles:
             - bamboohr_analytics
             - customers_db
             - data_team_analyst
+            - data_manager
         warehouses:
             - analyst_xs
         owns:
@@ -2229,6 +2256,12 @@ roles:
            - analyst_engineering
         warehouses:
            - analyst_xs
+      
+    - jameson:
+        member_of:
+            - analyst_marketing
+        warehouses:
+            - analyst_xs            
 
     - jjackson:
         member_of:
@@ -2262,8 +2295,12 @@ roles:
             - netsuite
             - static_admin
             - data_team_analyst
+            - analyst_finance
+            - gainsight_temp_source
         warehouses:
             - analyst_xs
+            - analyst_l
+            - analyst_xl
         owns:
             databases:
                 - jpeguero_prep
@@ -2375,6 +2412,7 @@ roles:
             - analyst_engineering
             - customers_db
             - data_team_analyst
+            - analyst_finance
         warehouses:
             - analyst_xs
         owns:
@@ -2536,8 +2574,7 @@ roles:
                     - mcooper_prod.*.*
 
     - mdewji:
-        warehouses:
-            - admin
+        warehouses: []
 
     - michellecooper:
         member_of: []
@@ -3235,6 +3272,11 @@ users:
         member_of:
             - amurray
 
+    - awaller:
+        can_login: yes
+        member_of:
+            - awaller
+
     - blutz:
         can_login: yes
         member_of:
@@ -3354,6 +3396,12 @@ users:
         member_of:
             - fkurniadi
 
+    - fstein:
+        can_login: yes
+        member_of:
+            - fstein
+            - securityadmin
+
     - gainsight:
         can_login: yes
         member_of:
@@ -3395,6 +3443,11 @@ users:
         can_login: yes
         member_of:
             - iwiedler
+
+    - jameson:
+        can_login: yes
+        member_of:
+            - jameson
 
     - jjackson:
         can_login: yes
@@ -3513,10 +3566,8 @@ users:
             - mcooper
 
     - mdewji:
-        can_login: yes
-        member_of:
-            - mdewji
-            - securityadmin
+        can_login: no
+        member_of: []
 
     - michellecooper:
         can_login: no

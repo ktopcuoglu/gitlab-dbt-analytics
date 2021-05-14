@@ -21,6 +21,7 @@ WITH source AS (
       bizible2__count_custom_model__c         AS bizible_attribution_percent_full_path,
       bizible2__count_u_shaped__c             AS bizible_count_u_shaped,
       bizible2__count_w_shaped__c             AS bizible_count_w_shaped,
+      bizible2__count_custom_model_2__c       AS bizible_count_custom_model,
 
       -- touchpoint info
       bizible2__touchpoint_date__c            AS bizible_touchpoint_date,

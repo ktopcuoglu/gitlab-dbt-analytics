@@ -8,6 +8,7 @@ WITH sfdc_users AS (
     SELECT
 
       dim_crm_user_id,
+      employee_number,
       user_name,
       title,
       department,

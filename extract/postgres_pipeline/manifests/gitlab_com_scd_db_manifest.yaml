@@ -2,7 +2,7 @@ connection_info:
   database: GITLAB_COM_DB_NAME
   host: GITLAB_COM_DB_HOST
   pass: GITLAB_COM_DB_PASS
-  port: PG_PORT
+  port: GITLAB_COM_SCD_PG_PORT
   user: GITLAB_COM_DB_USER
 tables:
   alert_management_alert_assignees:
@@ -309,6 +309,10 @@ tables:
       , max_seats_used
       , seats
       , trial
+      , seats_in_use
+      , max_seats_used
+      , seats_owed
+      , trial_extension_type
       FROM gitlab_subscriptions
   group_group_links:
     advanced_metadata: true

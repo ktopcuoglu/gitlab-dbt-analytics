@@ -46,6 +46,7 @@ WITH bizible_attribution_touchpoints AS (
       bizible_attribution_percent_full_path,
       bizible_count_u_shaped,
       bizible_count_w_shaped,
+      bizible_count_custom_model,
 
       -- touchpoint revenue info
       bizible_revenue_full_path,

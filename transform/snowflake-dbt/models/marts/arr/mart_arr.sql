@@ -86,6 +86,7 @@ WITH dim_billing_account AS (
       dim_crm_account.health_score                                                    AS health_score,
       dim_crm_account.health_score_color                                              AS health_score_color,
       dim_crm_account.health_number                                                   AS health_number,
+      dim_crm_account.is_jihu_account                                                 AS is_jihu_account,
 
       --subscription info
       dim_subscription.subscription_status                                            AS subscription_status,

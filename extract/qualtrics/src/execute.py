@@ -35,10 +35,18 @@ def get_and_write_surveys(qualtrics_client: QualtricsClient) -> List[str]:
     if surveys_to_write:
         with open("surveys.json", "w") as out_file:
             json.dump(surveys_to_write, out_file)
+        snowflake_stage_load_copy_remove(
+            "surveys.json",
+            "raw.qualtrics.qualtrics_load",
+            "raw.qualtrics.survey",
+            snowflake_engine,
+        )
     return [survey["id"] for survey in surveys_to_write]
 
 
-def get_distributions(qualtrics_client: QualtricsClient, survey_id: str):
+def get_distributions(
+    qualtrics_client: QualtricsClient, survey_id: str
+) -> List[Dict[Any, Any]]:
     """
     Gets all distributions for the given survey id.
     Returns the entire distribution object.
@@ -56,20 +64,10 @@ def chunk_list(
         yield list_to_chunk[i : i + chunk_size]
 
 
-if __name__ == "__main__":
-    config_dict = env.copy()
-    client = QualtricsClient(
-        config_dict["QUALTRICS_API_TOKEN"], config_dict["QUALTRICS_DATA_CENTER"]
-    )
-    start_time = parse_string_to_timestamp(config_dict["START_TIME"])
-    end_time = parse_string_to_timestamp(config_dict["END_TIME"])
-    POOL_ID = config_dict["QUALTRICS_POOL_ID"]
-    snowflake_engine = snowflake_engine_factory(config_dict, "LOADER")
-
+def get_and_write_distributions(survey_ids: List[str]) -> List[Dict[Any, Any]]:
+    """Gets all distributions for the given surveys and writes them to Snowflake as well as returns them."""
     all_distributions: List[Dict[Any, Any]] = []
-    surveys_to_write: List[str] = get_and_write_surveys(client)
-
-    for survey_id in surveys_to_write:
+    for survey_id in survey_ids:
         current_distributions = get_distributions(client, survey_id)
         all_distributions = all_distributions + current_distributions
         if current_distributions:
@@ -84,15 +82,11 @@ if __name__ == "__main__":
                     "raw.qualtrics.distribution",
                     snowflake_engine,
                 )
+    return all_distributions
 
-    distributions_with_mailings_to_write = [
-        distribution
-        for distribution in all_distributions
-        if timestamp_in_interval(
-            parse_string_to_timestamp(distribution["sendDate"]), start_time, end_time
-        )
-    ]
 
+def get_and_write_contacts(distributions: List[Dict[Any, Any]]) -> List[Dict[Any, Any]]:
+    """Gets all contacts associated with the mailing lists of the given distributions and writes them to Snowflake as well as returns them."""
     contacts_to_write = []
     for distribution in distributions_with_mailings_to_write:
         mailing_list_id = distribution["recipients"]["mailingListId"]
@@ -100,16 +94,7 @@ if __name__ == "__main__":
             for contact in client.get_contacts(POOL_ID, mailing_list_id):
                 contact["mailingListId"] = mailing_list_id
                 contacts_to_write.append(contact)
-
-    if surveys_to_write:
-        snowflake_stage_load_copy_remove(
-            "surveys.json",
-            "raw.qualtrics.qualtrics_load",
-            "raw.qualtrics.survey",
-            snowflake_engine,
-        )
-
-    if contacts_to_write:
+    if len(contacts_to_write) > 0:
         with open("contacts.json", "w") as out_file:
             json.dump(contacts_to_write, out_file)
 
@@ -119,3 +104,31 @@ if __name__ == "__main__":
             "raw.qualtrics.contact",
             snowflake_engine,
         )
+    return contacts_to_write
+
+
+if __name__ == "__main__":
+    config_dict = env.copy()
+    client = QualtricsClient(
+        config_dict["QUALTRICS_API_TOKEN"], config_dict["QUALTRICS_DATA_CENTER"]
+    )
+    start_time = parse_string_to_timestamp(config_dict["START_TIME"])
+    end_time = parse_string_to_timestamp(config_dict["END_TIME"])
+    POOL_ID = config_dict["QUALTRICS_POOL_ID"]
+    snowflake_engine = snowflake_engine_factory(config_dict, "LOADER")
+
+    surveys_to_write: List[str] = get_and_write_surveys(client)
+
+    all_distributions = get_and_write_distributions(surveys_to_write)
+
+    distributions_with_mailings_to_write = [
+        distribution
+        for distribution in all_distributions
+        if timestamp_in_interval(
+            parse_string_to_timestamp(distribution["sendDate"]), start_time, end_time
+        )
+    ]
+
+    get_and_write_contacts(
+        distributions_with_mailings_to_write
+    )  # return value not used right now
