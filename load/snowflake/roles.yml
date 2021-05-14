@@ -3253,6 +3253,11 @@ users:
         member_of:
             - amurray
 
+    - awaller:
+        can_login: yes
+        member_of:
+            - awaller
+
     - blutz:
         can_login: yes
         member_of:
@@ -3419,6 +3424,11 @@ users:
         can_login: yes
         member_of:
             - iwiedler
+
+    - jameson:
+        can_login: yes
+        member_of:
+            - jameson
 
     - jjackson:
         can_login: yes
