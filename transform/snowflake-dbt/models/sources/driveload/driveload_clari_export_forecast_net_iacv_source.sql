@@ -1,7 +1,7 @@
 WITH source AS (
 
     SELECT *
-    FROM {{ source('sheetload', 'clari_export_forecast_net_iacv') }}
+    FROM {{ source('driveload', 'clari_export_forecast_net_iacv') }}
 
 ), renamed AS (
 
