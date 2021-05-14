@@ -281,6 +281,12 @@ dbt_results = KubernetesPodOperator(
 )
 
 # Branching for run
-branching_dbt_run >> dbt_non_product_models_task >> dbt_product_models_task >> dbt_test >> dbt_results
+(
+    branching_dbt_run
+    >> dbt_non_product_models_task
+    >> dbt_product_models_task
+    >> dbt_test
+    >> dbt_results
+)
 
 branching_dbt_run >> dbt_full_refresh >> dbt_test >> dbt_results
