@@ -289,7 +289,7 @@ WITH date_details AS (
       END                                                         AS is_won,
 
       CASE 
-        WHEN sfdc_opportunity_snapshot_history.stage_name = '8-Closed Lost'  
+        WHEN sfdc_opportunity_snapshot_history.stage_name IN ('8-Closed Lost', 'Closed Lost')  
           THEN 1 ELSE 0
       END                                                         AS is_lost,
 
@@ -563,18 +563,8 @@ WITH date_details AS (
       sfdc_accounts_xf.ultimate_parent_sales_segment,
       sfdc_accounts_xf.tsp_max_hierarchy_sales_segment,
       sfdc_accounts_xf.ultimate_parent_account_id,
-        
-      -- 20201021 NF: This should be replaced by a table that keeps track of excluded deals for forecasting purposes
-      CASE 
-        WHEN sfdc_accounts_xf.ultimate_parent_id IN ('001610000111bA3','0016100001F4xla','0016100001CXGCs','00161000015O9Yn','0016100001b9Jsc') 
-          AND opp_snapshot.close_date < '2020-08-01' 
-            THEN 1
-        -- NF 2021 - Pubsec extreme deals
-        WHEN opp_snapshot.opportunity_id IN ('0064M00000WtZKUQA3','0064M00000Xb975QAB')
-          AND opp_snapshot.snapshot_date < '2021-05-01' 
-          THEN 1
-        ELSE 0
-      END                                                         AS is_excluded_flag
+      sfdc_accounts_xf.ultimate_parent_id        
+      
 
     FROM sfdc_opportunity_snapshot_history opp_snapshot
     INNER JOIN sfdc_opportunity_xf    
@@ -707,6 +697,15 @@ WITH date_details AS (
         ELSE 0
       END                                               AS booked_deal_count,
     
+      -- churn deal count (lost renewals)
+      CASE
+        WHEN ((opp_snapshot.is_renewal = 1
+            AND opp_snapshot.is_lost = 1)
+            OR opp_snapshot.net_arr < 0)
+          THEN opp_snapshot.calculated_deal_count
+        ELSE 0
+      END                                               AS churned_deal_count,
+
       -----------------
       -- Net ARR
 
@@ -737,7 +736,32 @@ WITH date_details AS (
               AND opp_snapshot.is_lost = 1))
           THEN opp_snapshot.net_arr
         ELSE 0 
-      END                                                 AS booked_net_arr
+      END                                                 AS booked_net_arr,
+
+      -- churn net arr (lost renewals)
+      CASE
+        WHEN ((opp_snapshot.is_renewal = 1
+            AND opp_snapshot.is_lost = 1)
+            OR opp_snapshot.net_arr < 0)
+          THEN net_arr
+        ELSE 0
+      END                                                 AS churned_net_arr,
+
+      -- 20201021 NF: This should be replaced by a table that keeps track of excluded deals for forecasting purposes
+      CASE 
+        WHEN opp_snapshot.ultimate_parent_id IN ('001610000111bA3','0016100001F4xla','0016100001CXGCs','00161000015O9Yn','0016100001b9Jsc') 
+          AND opp_snapshot.close_date < '2020-08-01' 
+            THEN 1
+        -- NF 2021 - Pubsec extreme deals
+        WHEN opp_snapshot.opportunity_id IN ('0064M00000WtZKUQA3','0064M00000Xb975QAB')
+          AND opp_snapshot.snapshot_date < '2021-05-01' 
+          THEN 1
+        -- exclude vision opps from FY21-Q2
+        WHEN opp_snapshot.pipeline_created_fiscal_quarter_name = 'FY21-Q2'
+                AND vision_opps.opportunity_id IS NOT NULL
+          THEN 1
+        ELSE 0
+      END                                                         AS is_excluded_flag
 
 
     FROM sfdc_opportunity_snapshot_history_xf opp_snapshot

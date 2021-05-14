@@ -22,6 +22,7 @@ WITH sfdc_campaign_info AS (
       strategic_marketing_contribution,
       region,
       sub_region,
+      large_bucket,
 
       -- user ids
       campaign_owner_id,

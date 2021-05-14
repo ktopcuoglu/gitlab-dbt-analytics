@@ -53,6 +53,7 @@ WITH source AS (
       billingpostalcode                             AS billing_postal_code,
       sdr_target_account__c::BOOLEAN                AS is_sdr_target_account,
       potential_arr_lam__c                          AS potential_arr_lam,
+      jihu_account__c::BOOLEAN                      AS is_jihu_account,
 
       -- territory success planning fields
       atam_approved_next_owner__c                   AS tsp_approved_next_owner,

@@ -10,12 +10,22 @@ WITH usage_data AS (
 
     SELECT *
     FROM {{ ref('version_usage_data_with_metadata') }}
+    {% if is_incremental() %}
+
+      WHERE created_at >= (SELECT MAX(created_at) FROM {{this}})
+
+    {% endif %}
 
 ), stats_used_unpacked AS (
 
     SELECT *
     FROM {{ ref('version_usage_data_unpacked_stats_used') }}
+    {% if is_incremental() %}
 
+      WHERE created_at >= (SELECT MAX(created_at) FROM {{this}})
+
+    {% endif %}
+    
 ), unpacked AS (
 
     SELECT

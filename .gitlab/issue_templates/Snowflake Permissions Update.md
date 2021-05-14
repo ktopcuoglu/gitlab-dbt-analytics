@@ -13,4 +13,4 @@ Source Access Request: <!-- link to source  Access Request issue, it should be a
 - [ ] Verify grants
 - [ ] Update `roles.yml` and add a comment with a access request URL
 
-/label ~Provisioning ~Snowflake ~Infrastructure  ~"Priority::1-Ops"
+/label ~Provisioning ~Snowflake ~"Team::Data Platform"  ~"Priority::1-Ops"
