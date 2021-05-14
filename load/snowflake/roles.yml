@@ -1864,6 +1864,12 @@ roles:
             - bamboohr_analytics
         warehouses:
             - analyst_xs
+
+    - awaller:
+        member_of:
+            - analyst_marketing
+        warehouses:
+            - analyst_xs        
     
     - blutz:
         warehouses:
@@ -2234,6 +2240,12 @@ roles:
            - analyst_engineering
         warehouses:
            - analyst_xs
+      
+    - jameson:
+        member_of:
+            - analyst_marketing
+        warehouses:
+            - analyst_xs            
 
     - jjackson:
         member_of:
