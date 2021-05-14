@@ -60,6 +60,7 @@
 
   SELECT
     dim_usage_ping_id,
+    dim_subscription_id,
     FIRST_VALUE(dim_subscription_id) OVER (
       PARTITION BY dim_usage_ping_id
       ORDER BY subscription_start_date ASC
