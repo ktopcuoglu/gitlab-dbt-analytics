@@ -17,7 +17,7 @@ Closes
 * [ ] Was a [unit test](https://about.gitlab.com/handbook/business-technology/data-team/platform/python-guide/#unit-testing) added for any complex in-code logic?
   - [ ] Yes
   - [ ] No: <!--explain why-->
-* [ ] Are exceptions and errors handled correctly?
+* [ ] Are [exceptions and errors](https://about.gitlab.com/handbook/business-technology/data-team/platform/python-guide/#exception-handling) handled correctly?
 * [ ] Is there any data manipulation that [should be done in SQL instead](https://about.gitlab.com/handbook/business-technology/data-team/platform/python-guide/#when-not-to-use-python)?
 
 #### Changes

@@ -5,9 +5,9 @@ models:
     description: '{{ doc("pump_marketing_contact") }}'
     columns:
       - name: company_name
-        description: Mapped to `Company` in Marketo. Compiled from SFDC, gitlab_dotcom, customer_db, & zuora in [dim_marketing_contact](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.dim_marketing_contact)
+        description: Mapped to `CDB_Company_Name__c` in Marketo. Compiled from SFDC, gitlab_dotcom, customer_db, & zuora in [dim_marketing_contact](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.dim_marketing_contact)
       - name: country
-        description: Mapped to `Country` in Marketo. Compiled from SFDC, customer_db, & zuora in [dim_marketing_contact](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.dim_marketing_contact)
+        description: Mapped to `CDB_Country__c` in Marketo. Compiled from SFDC, customer_db, & zuora in [dim_marketing_contact](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.dim_marketing_contact)
       - name: customer_db_confirmed_date
         description: Mapped to `CDB_Customer_DB_Confirmed_Date__c` in Marketo
       - name: customer_db_created_date
@@ -25,7 +25,7 @@ models:
       - name: email_address
         description: Mapped to `Email` in Marketo. Compiled from SFDC, gitlab_dotcom, customer_db, & zuora in [dim_marketing_contact](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.dim_marketing_contact)
       - name: first_name
-        description: Mapped to `FirstName` in Marketo. Compiled from SFDC, gitlab_dotcom, customer_db, & zuora in [dim_marketing_contact](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.dim_marketing_contact)
+        description: Mapped to `CDB_First_Name__c` in Marketo. Compiled from SFDC, gitlab_dotcom, customer_db, & zuora in [dim_marketing_contact](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.dim_marketing_contact)
       - name: gitlab_dotcom_active_state
         description: Mapped to `CDB_GitLab_com_Active_State__c` in Marketo
       - name: gitlab_dotcom_confirmed_date
@@ -91,7 +91,7 @@ models:
       - name: is_zuora_billing_contact
         description: Mapped to `is_zuora_billing_contact__c` in Marketo. From Zuora contact.
       - name: last_name
-        description: Mapped to `LastName` in Marketo. Compiled from SFDC, gitlab_dotcom, customer_db, & zuora in [dim_marketing_contact](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.dim_marketing_contact)
+        description: Mapped to `CDB_Last_Name__c` in Marketo. Compiled from SFDC, gitlab_dotcom, customer_db, & zuora in [dim_marketing_contact](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.dim_marketing_contact)
       - name: responsible_for_free_tier_only
         description: Mapped to `CDB_Responsible_for_Free_Tier_Only__c` in Marketo. Calculated in [mart_marketing_contact](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.mart_marketing_contact) 
       - name: responsible_for_group_saas_bronze_tier

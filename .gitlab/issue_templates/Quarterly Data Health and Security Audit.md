@@ -56,5 +56,5 @@ TRUSTED DATA
 3. [ ] Generate a report of all changes to the TD: Sales Funnel dashboard in the quarter.
 
 <!-- DO NOT EDIT BELOW THIS LINE -->
-/label ~Infrastructure ~Snowflake ~TDF ~"Data Team" ~"Priority::1-Ops" ~"workflow::4 - scheduled" 
+/label ~"Team::Data Platform" ~Snowflake ~TDF ~"Data Team" ~"Priority::1-Ops" ~"workflow::4 - scheduled" 
 /confidential 
