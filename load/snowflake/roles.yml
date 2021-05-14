@@ -1443,15 +1443,15 @@ roles:
           privileges:
               databases:
                   read:
-                      - prep
+                    #   - prep
                       - raw
               schemas:
                   read:
-                      - prep.marketo
+                    #   - prep.marketo
                       - raw.marketo
               tables:
                   read:
-                      - prep.marketo.*
+                    #   - prep.marketo.*
                       - raw.marketo.*
 
     - netsuite:
