@@ -212,6 +212,7 @@ dbt_test_cmd = f"""
     {dbt_install_deps_cmd} &&
     dbt test --profiles-dir profile --target prod --exclude tag:datasiren snowplow legacy.snapshots source:gitlab_dotcom source:salesforce source:zuora; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py test; exit $ret
+		python ../../orchestration/upload_dbt_file_to_snowflake.py manifest; exit $ret
 """
 dbt_test = KubernetesPodOperator(
     **gitlab_defaults,
