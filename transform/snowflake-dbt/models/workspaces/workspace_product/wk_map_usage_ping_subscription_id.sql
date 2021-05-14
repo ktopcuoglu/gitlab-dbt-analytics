@@ -41,7 +41,9 @@
 ), join_ping_to_subscriptions AS (
 
 SELECT 
-  dim_usage_ping_id, 
+  dim_usage_ping_id,
+  license_subscription_id,
+  usage_ping_with_license.created_at AS usage_ping_created_at,
   renewal_subscriptions.subscription_start_date AS subscription_start_date,
   renewal_subscriptions.subscription_end_date AS subscription_end_date,
   renewal_subscriptions.subscription_name_slugify AS subscription_name_slugify,
@@ -53,13 +55,37 @@ INNER JOIN map_to_all_subscriptions_in_lineage AS active_subscriptions
   ON active_subscriptions.subscription_name_slugify = dim_subscription.subscription_name_slugify
 LEFT JOIN active_subscriptions AS renewal_subscriptions
   ON active_subscriptions.subscription_in_lineage = renewal_subscriptions.subscription_name_slugify
-WHERE usage_ping_with_license.created_at >= renewal_subscriptions.subscription_start_date 
-    AND usage_ping_with_license.created_at <= renewal_subscriptions.subscription_end_date
 
+), first_subscription AS (
+
+  SELECT
+    dim_usage_ping_id,
+    FIRST_VALUE(dim_subscription_id) OVER (
+      PARTITION BY dim_usage_ping_id
+      ORDER BY subscription_start_date ASC
+    ) AS dim_subscription_id
+  FROM join_ping_to_subscriptions
+  WHERE usage_ping_created_at >= subscription_start_date 
+    AND usage_ping_created_at <= subscription_end_date
 )
 
 SELECT
-  dim_usage_ping_id,
-  ARRAY_AGG(dim_subscription_id) within group (order by subscription_start_date asc) AS dim_subscription_id_array
+  join_ping_to_subscriptions.dim_usage_ping_id,
+  first_subscription.dim_subscription_id,
+  ARRAY_AGG(join_ping_to_subscriptions.dim_subscription_id) WITHIN GROUP (
+    ORDER BY subscription_start_date ASC) AS other_dim_subscription_id_array,
+  'Match between Usage Ping and Active Subscription' AS match_type
 FROM join_ping_to_subscriptions
-GROUP BY 1
+LEFT JOIN first_subscription
+  ON join_ping_to_subscriptions.dim_usage_ping_id = first_subscription.dim_usage_ping_id
+GROUP BY 1,2
+
+UNION 
+
+SELECT DISTINCT
+  dim_usage_ping_id,
+  license_subscription_id AS dim_subscription_id,
+  NULL                    AS other_dim_subscription_id_array,
+  'Match between Usage Ping and a expired Subscription'
+FROM join_ping_to_subscriptions
+WHERE dim_usage_ping_id NOT IN (SELECT dim_usage_ping_id FROM first_subscription)
