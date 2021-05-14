@@ -40,21 +40,21 @@
 
 ), join_ping_to_subscriptions AS (
 
-SELECT 
-  dim_usage_ping_id,
-  license_subscription_id,
-  usage_ping_with_license.created_at AS usage_ping_created_at,
-  renewal_subscriptions.subscription_start_date AS subscription_start_date,
-  renewal_subscriptions.subscription_end_date AS subscription_end_date,
-  renewal_subscriptions.subscription_name_slugify AS subscription_name_slugify,
-  renewal_subscriptions.dim_subscription_id AS dim_subscription_id
-FROM usage_ping_with_license
-LEFT JOIN dim_subscription
-  ON license_subscription_id = dim_subscription_id
-INNER JOIN map_to_all_subscriptions_in_lineage AS active_subscriptions 
-  ON active_subscriptions.subscription_name_slugify = dim_subscription.subscription_name_slugify
-LEFT JOIN active_subscriptions AS renewal_subscriptions
-  ON active_subscriptions.subscription_in_lineage = renewal_subscriptions.subscription_name_slugify
+    SELECT 
+      dim_usage_ping_id,
+      license_subscription_id,
+      usage_ping_with_license.created_at              AS usage_ping_created_at,
+      renewal_subscriptions.subscription_start_date   AS subscription_start_date,
+      renewal_subscriptions.subscription_end_date     AS subscription_end_date,
+      renewal_subscriptions.subscription_name_slugify AS subscription_name_slugify,
+      renewal_subscriptions.dim_subscription_id       AS dim_subscription_id
+    FROM usage_ping_with_license
+    LEFT JOIN dim_subscription
+      ON license_subscription_id = dim_subscription_id
+    INNER JOIN map_to_all_subscriptions_in_lineage AS active_subscriptions 
+      ON active_subscriptions.subscription_name_slugify = dim_subscription.subscription_name_slugify
+    LEFT JOIN active_subscriptions AS renewal_subscriptions
+      ON active_subscriptions.subscription_in_lineage = renewal_subscriptions.subscription_name_slugify
 
 ), first_subscription AS (
 
@@ -67,6 +67,7 @@ LEFT JOIN active_subscriptions AS renewal_subscriptions
   FROM join_ping_to_subscriptions
   WHERE usage_ping_created_at >= subscription_start_date 
     AND usage_ping_created_at <= subscription_end_date
+
 )
 
 SELECT
