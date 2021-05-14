@@ -24,6 +24,7 @@ WITH source AS (
         -- keys
         accountid                                   AS account_id,
         id                                          AS opportunity_id,
+        duplicate_opportunity__c                    AS duplicate_opportunity_id,
         name                                        AS opportunity_name,
         ownerid                                     AS owner_id,
 
