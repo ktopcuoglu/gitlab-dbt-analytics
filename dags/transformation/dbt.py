@@ -248,7 +248,8 @@ dbt_test = KubernetesPodOperator(
 dbt_results_cmd = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
-    dbt run --profiles-dir profile --target prod --models sources.dbt+ ; exit ret=$?;
+    dbt run --profiles-dir profile --target prod --models sources.dbt+ ; ret=$?;
+    python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
 dbt_results = KubernetesPodOperator(
     **gitlab_defaults,
