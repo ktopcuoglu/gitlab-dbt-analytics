@@ -276,7 +276,7 @@ dbt_results = KubernetesPodOperator(
         SNOWFLAKE_TRANSFORM_SCHEMA,
     ],
     env_vars=pod_env_vars,
-    arguments=[dbt_test_cmd],
+    arguments=[dbt_results_cmd],
     dag=dag,
 )
 
