@@ -30,6 +30,7 @@ from kube_secrets import (
     GITLAB_COM_DB_NAME,
     GITLAB_COM_DB_PASS,
     GITLAB_COM_DB_USER,
+    GITLAB_COM_PG_PORT,
     GITLAB_COM_SCD_PG_PORT,
     GITLAB_OPS_DB_USER,
     GITLAB_OPS_DB_PASS,
@@ -117,6 +118,7 @@ config_dict = {
             GITLAB_COM_DB_PASS,
             GITLAB_COM_DB_HOST,
             GITLAB_COM_DB_NAME,
+            GITLAB_COM_PG_PORT
         ],
         "start_date": datetime(2019, 5, 30),
         "sync_schedule_interval": "0 2 */1 * *",
