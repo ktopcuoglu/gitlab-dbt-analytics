@@ -1,3 +1,9 @@
+{{ config({
+    "materialized": "incremental",
+    "unique_key": "dim_usage_ping_id"
+    })
+}}
+
 {%- set settings_columns = dbt_utils.get_column_values(table=ref('prep_usage_ping_metrics_setting'), column='metrics_path', max_records=1000, default=['']) %}
 
 {{ simple_cte([
@@ -22,15 +28,7 @@
       id                                                                        AS dim_usage_ping_id, 
       created_at::TIMESTAMP(0)                                                  AS ping_created_at,
       *, 
-      {{ nohash_sensitive_columns('version_usage_data_source', 'source_ip') }}  AS ip_address_hash, 
-      OBJECT_CONSTRUCT(
-        {% for column in columns %}  
-          '{{ column.name | lower }}', {{ column.name | lower }}
-          {% if not loop.last %}
-            ,
-          {% endif %}
-        {% endfor %}
-      )                                                                         AS raw_usage_data_payload_reconstructed
+      {{ nohash_sensitive_columns('version_usage_data_source', 'source_ip') }}  AS ip_address_hash
     FROM {{ ref('version_usage_data_source') }}
   
 ), usage_data AS (
@@ -71,7 +69,7 @@
         WHEN edition = 'EEP'                                    THEN 'Premium'
         WHEN edition = 'EEU'                                    THEN 'Ultimate'
         ELSE NULL END                                                                                 AS product_tier,
-      edition || ' - ' || product_tier                                                           AS edition_product_tier,
+      edition || ' - ' || product_tier                                                                AS edition_product_tier,
       version_is_prerelease,
       major_version,
       minor_version,
