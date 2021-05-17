@@ -30,7 +30,7 @@ WITH users AS (
         '34', 'Free',
         'Free'
       )                                                                                 AS plan,
-      highest_subscription_plan.highest_paid_subscription_namespace_id                  AS namespace_id,                    
+      highest_subscription_plan.highest_paid_subscription_namespace_id                  AS namespace_id                    
     FROM users
     LEFT JOIN highest_subscription_plan
       ON users.user_id = highest_subscription_plan.user_id
