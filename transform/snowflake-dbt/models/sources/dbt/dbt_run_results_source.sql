@@ -52,7 +52,7 @@ WITH source AS (
       data_by_row['node']['unique_id']::VARCHAR            AS model_unique_id,
       CASE
         WHEN data_by_row['skip']::BOOLEAN = TRUE THEN 'skipped'
-        WHEN data_by_row['error']::VARCHAR is not null then 'error'
+        WHEN data_by_row['error']::VARCHAR IS NOT NULL THEN 'error'
         ELSE 'success'
       END                                                  AS status,
       IFNULL(data_by_row['error']::VARCHAR, 'SUCCESS 1')   AS message,
@@ -75,6 +75,8 @@ WITH source AS (
 
 SELECT *
 FROM v0model_parsed_out
+
 UNION
+
 SELECT *
 FROM v1model_parsed_out
