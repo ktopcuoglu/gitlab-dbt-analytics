@@ -35,7 +35,7 @@ WITH data AS (
       IFNULL(metric_value,0) AS weekly_metrics_value,
       has_timed_out
     FROM data
-    QUALIFY (ROW_NUMBER() OVER (PARTITION BY created_week, instance_id, host_id, metrics_path ORDER BY created_week DESC, created_at DESC)) = 1
+    QUALIFY (ROW_NUMBER() OVER (PARTITION BY created_week, instance_id, host_id, metrics_path ORDER BY created_at DESC)) = 1
 
 ), transformed AS (
 
