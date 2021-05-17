@@ -26,7 +26,7 @@ WITH source AS (
 
     SELECT
       data_by_row['execution_time']::FLOAT            AS model_execution_time,
-      data_by_row['unique_id']::VARCHAR               AS node_unique_id,
+      data_by_row['unique_id']::VARCHAR               AS model_unique_id,
       IFNULL(data_by_row['status']::VARCHAR, False)   AS status,
       IFNULL(data_by_row['message']::VARCHAR, False)  AS message,
       timing.value['started_at']::TIMESTAMP           AS compilation_started_at,
@@ -49,7 +49,7 @@ WITH source AS (
   
     SELECT
       data_by_row['execution_time']::FLOAT                 AS model_execution_time,
-      data_by_row['node']['unique_id']::VARCHAR            AS node_unique_id,
+      data_by_row['node']['unique_id']::VARCHAR            AS model_unique_id,
       CASE
         WHEN data_by_row['skip']::BOOLEAN = TRUE THEN 'skipped'
         WHEN data_by_row['error']::VARCHAR is not null then 'error'
