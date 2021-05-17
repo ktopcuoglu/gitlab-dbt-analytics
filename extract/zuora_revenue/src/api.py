@@ -2,199 +2,265 @@ import logging
 import subprocess
 import sys
 import requests
+import math
 import json
 import time
-
+from typing import Dict, Any
+from datetime import datetime
 from os import environ as env
 
 
 class ZuoraRevProAPI:
-    logging.basicConfig(level=20, filename="logging_file.log")
-    """
-    def __init__(self, zuora_header: dict):
-        self.headers = zuora_header
-    """
+    def __init__(self, config_dict: Dict[str, str]):
+        self.headers = config_dict["headers"]
+        self.authenticate_url_zuora_revpro = config_dict[
+            "authenticate_url_zuora_revpro"
+        ]
+        self.zuora_fetch_data_url = config_dict["zuora_fetch_data_url"]
+        self.bucket_name = config_dict["bucket_name"]
+        self.clientId = config_dict["clientId"]
+        logging.basicConfig(
+            filename="zuora_extract.log",
+            format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+            level=20,
+        )
+        self.logger = logging.getLogger(__name__)
 
-    def get_auth_token(self, authenticate_url_zuora_revpro: str, headers: dict) -> str:
-        response = requests.post(authenticate_url_zuora_revpro, headers=headers)
+    def date_range(self, start_date: str = None) -> tuple:
+        """
+        This function will return start_date and end_date for  querying the zuora revenue BI view or tablename.
+        If start_date is not set then it sets it self to zuora default start_date.
+        end_date is always set to now.
+        """
+        if not start_date:
+            start_date = "2016-07-26T00:00:00"
+            now = datetime.now()
+            end_date = now.strftime("%Y-%m-%dT%H:%M:%S")
+        else:
+            now = datetime.now()
+            end_date = now.strftime("%Y-%m-%dT%H:%M:%S")
+        return start_date, end_date
+
+    def get_auth_token(self) -> str:
+        """
+        This function receives url and header information and generate authentication token in response.
+        If we don't receive the response status code  200 then exit the program.
+        """
+        response = requests.post(
+            self.authenticate_url_zuora_revpro, headers=self.headers
+        )
         if response.status_code == 200:
-            logging.info("Authenticate token generated successfully")
+            self.logger.info("Authentication token generated successfully")
             authToken = response.headers["Revpro-Token"]
-            logging.info(f"Auth token:= {authToken}")
             return authToken
         else:
-            logging.ERROR(
-                "HTTP {status_code} - {reason}, Message {text}".format(
-                    response.status_code, response.reason, response.text
-                )
+            self.logger.error(
+                f"HTTP {response.status_code} - {response.reason}, Message {response.text}"
             )
             sys.exit(1)
 
-    def get_table_record_count(self, url_para_dict: dict) -> int:
-        url = "{zuora_fetch_data_url}count/{tablename}?fromDate={fromDate}&toDate={toDate}&clientId={clientId}".format(
-            zuora_fetch_data_url=url_para_dict["zuora_fetch_data_url"],
-            tablename=url_para_dict["tablename"],
-            fromDate=url_para_dict["fromDate"],
-            toDate=url_para_dict["toDate"],
-            clientId=url_para_dict["clientId"],
-        )
+    def get_number_of_page(self, url_para_dict: Dict[str, str]) -> int:
+        """
+        This function get the total number of records and then divide it with 10000 rows to  determine how many pages
+        this BI views has for given date range. Rounded the value to nearest whole number.
+        """
+
+        url = f"{self.zuora_fetch_data_url}count/{url_para_dict['tablename']}?fromDate={url_para_dict['fromDate']}&toDate={url_para_dict['toDate']}&clientId={self.clientId}"
+        print(url)
         count_response = requests.get(url, headers=url_para_dict["header_auth_token"])
 
         if count_response.status_code == 200:
             res = json.loads(count_response.text)
         else:
-            logging.error(count_response.text)
+            self.logger.error(
+                f"HTTP {count_response.status_code} - {count_response.reason}, Message {count_response.text}"
+            )
             sys.exit(1)
         number_of_records = res.get("count")
-        logging.info(f"Number of Records :- {number_of_records}")
-        number_of_page = round(res.get("count") / 10000) + 1
+        self.logger.info(
+            f"Number of Records for table {url_para_dict['tablename']}:- {number_of_records}"
+        )
+        number_of_page = math.ceil(res.get("count") / 10000)
+        self.logger.info(
+            f"NUmber of page to extract for {url_para_dict['tablename']}:-{number_of_page}"
+        )
+
         return number_of_page
 
-    def write_to_file_upload_to_gcs(
-        self, response_output, bucket_name: str, tablename: str, pagenum: int = 1
-    ):
-        f = open(f"{tablename}_{pagenum}.csv", "w+")
-        f.write(response_output)
-        f.close()
-        command = f"gsutil cp {tablename}_{pagenum}.csv gs://{bucket_name}/RAW_DB/{tablename}/"
-        logging.info(command)
-        p = subprocess.run(command, shell=True)
-
-    def pull_zuora_table_data(
-        self,
-        zuora_fetch_data_url,
-        tablename: str,
-        fromDate,
-        toDate,
-        clientId,
-        headers,
-        authenticate_url_zuora_revpro,
-    ):
-        header_auth_token = {
-            "Token": self.get_auth_token(authenticate_url_zuora_revpro, headers)
-        }
-        # Combine the variables in to one dict for better parameter management
-        url_para_dict = {
-            "zuora_fetch_data_url": zuora_fetch_data_url,
-            "tablename": tablename,
-            "fromDate": fromDate,
-            "toDate": toDate,
-            "clientId": clientId,
-            "header_auth_token": header_auth_token,
-        }
-
-        # Fetch number of page this table will generate for given date range.
-        number_of_page = self.get_table_record_count(url_para_dict)
-        logging.info(f"{tablename} has these many pages {number_of_page}")
-        logging.info(f"{tablename} file extraction started at :: {time.time()}")
-        page_number = 1
-        url = f"{zuora_fetch_data_url}{tablename}?fromDate={fromDate}&toDate={toDate}&pagenum={page_number}&pageSize=10000&clientId={clientId}&outputType=csv"
-        # Fetch first page for the table name
-
-        response_output = requests.get(url, headers=header_auth_token)
-        logging.info(response_output.status_code)
-        # Check for the response from the above call. If the response is success and status code is 2    00 then the request was made successfully.
-        if response_output.status_code != 200:
-            logging.info(
-                f"Made a unsuccessful rest call for page number {page_number} for tablename {tablename}"
+    def check_response_204(self, response_output, tablename: str):
+        """
+            Function checks the response from the request and check if the status code 
+            is 204 then it is success and no need to proceed further with extraction. 
+        """
+        if (
+            "The number of total pages and the number of total rows are returned"
+            in response_output.text
+            or response_output.status_code == 204
+        ):
+            self.logger.info(
+                f"Reached end of table {tablename} extraction.Stopping the loop and move to next.\
+                         Or no records in the tablename {response_output.text}"
             )
-            logging.info(response_output.text)
-            # If the page is still not cached then we need to perform a retry to fetch the page.
+            return True
+
+    def check_response_200_500(self, response_output, page_number: int, tablename: str):
+        """
+            Takes input as result of rest call and validate if the status code is 200. If not then check for 500 or page still not cached error.
+            If status is 200 then write the output to the .csv file and then request to upload and delete.
+        """
+
+        if response_output.status_code != 200:
+            self.logger.info(
+                f"Made an unsuccessful rest call for page number {page_number} for tablename {tablename}"
+            )
+            self.logger.info(response_output.text)
             if (
                 "Page still not yet cached" in response_output.text
                 or response_output.status_code == 500
             ):
-                logging.info(
-                    f"Made a Un successful rest call for page number {page_number } for tablename  {tablename}, because of page not being cached {response_output.text}. Going for retrial."
+                self.logger.info(
+                    f"Made a Un successful rest call for page number {page_number} for tablename  {tablename}, because of page not being cached {response_output.text}. \
+                     Going for retrial."
                 )
-                for attempt in range(1, 10):
-                    time.sleep(60 + attempt)
-                    logging.info(
-                        f"Making attempt for page  {page_number } for tablename  {tablename}.The attempt number is {attempt}"
-                    )
-                    response_output = requests.get(url, headers=header_auth_token)
-                    if response_output.status_code == 200:
-                        logging.info(response_output.status_code)
-                        logging.info(
-                            f"Made successfull attempt for page  {page_number } for tablename  {tablename}.The attempt number is {attempt}"
-                        )
-                        self.write_to_file_upload_to_gcs(
-                            response_output.text, "zuora_revpro_gitlab", tablename
-                        )
-                        break
+                return "Retrial"
 
         elif response_output.status_code == 200:
-            logging.info(
+            self.logger.info(
                 f"Made successfull attempt for page  {page_number } for tablename  {tablename}."
             )
             self.write_to_file_upload_to_gcs(
-                response_output.text, "zuora_revpro_gitlab", tablename
+                response_output.text, tablename, page_number
             )
+            return "Success"
+        else:
+            self.logger.info(
+                f"A different error which is not caught in program for {tablename}. The error message is {response_output.text}"
+            )
+            sys.exit(1)
 
-        if number_of_page > 1:
-            continuation_token = response_output.headers.get("Continuation-Token")
+    def write_to_file_upload_to_gcs(
+        self, response_output, tablename: str, pagenum: int = 1
+    ):
+        """
+            Taken input as respounce_output and then write it to file , upload the file to GCS and then delete local file.
+        """
+        bucket_name = self.bucket_name
+        try:
+            f = open(f"{tablename}_{pagenum}.csv", "w+")
+            f.write(response_output)
+            f.close()
+            self.logger.info("File generated successfully")
+        except Exception:
+            self.logger.error("Error while writing to file", exc_info=True)
+            sys.exit(1)
+        command_upload_to_gcs = f"gsutil cp {tablename}_{pagenum}.csv gs://{bucket_name}/RAW_DB/staging/{tablename}/"
+        command_delete_file = f"rm {tablename}_{pagenum}.csv"
+        try:
+            self.logger.info(command_upload_to_gcs)
+            subprocess.run(command_upload_to_gcs, shell=True, check=True)
+        except Exception:
+            self.logger.error("Error while uploading the file to GCS", exec_info=True)
+            sys.exit(1)
+        try:
+            self.logger.info(command_delete_file)
+            subprocess.run(command_delete_file, shell=True, check=True)
+        except Exception:
+            self.logger.error(
+                "Error while deleting the file post upload to GCS", exec_info=True
+            )
+            sys.exit(1)
+
+    def retry_download(self, url:str, header_auth_token:dict, page_number:int, tablename:str):
+        for attempt in range(1, 50):
+            time.sleep(60 + attempt)
+            self.logger.info(
+                f"Making attempt number {attempt} for page  {page_number } for tablename  {tablename}."
+            )
+            response_output = requests.get(url, headers=header_auth_token)
+            attempt_status = self.check_response_200_500(
+                response_output, page_number, tablename
+            )
+            if attempt_status == "Retrial":
+                continue
+            elif attempt_status == "Success":
+                self.logger.info(
+                    f"Made successfull attempt for page  {page_number } for tablename  {tablename}.\
+                            The attempt number is {attempt}"
+                )
+                return response_output
+                break
+
+    def pull_zuora_table_data(
+        self,
+        tablename: str,
+        fromDate: str,
+        toDate: str,
+    ) -> None:
+        """
+        Function pull the Zuora Revenue BI view or table and download it to file and upload it to the GCS bucket.
+        """
+        self.logger.info("Generate the authentication token")
+        header_auth_token = {"Token": self.get_auth_token()}
+        # Combine the variables in to one dict for better parameter management
+        url_para_dict = {
+            "tablename": tablename,
+            "fromDate": fromDate,
+            "toDate": toDate,
+            "header_auth_token": header_auth_token,
+        }
+
+        # Fetch number of page this table will generate for given date range.
+        number_of_page = self.get_number_of_page(url_para_dict)
+        self.logger.info(
+            f"{tablename} file extraction started at :: {datetime.now().strftime('%Y-%m-%d-%H:%M:%S')}"
+        )
+
+        if number_of_page >= 1:
+            page_number = 1
+            url = f"{self.zuora_fetch_data_url}{tablename}?fromDate={fromDate}&toDate={toDate}&pagenum={page_number}&pageSize=10000&clientId={self.clientId}&outputType=csv"
+            # Fetch first page for the table name
+            response_output = requests.get(url, headers=header_auth_token)
+            self.logger.info(response_output.status_code)
+            # Check for the response from the above call. If the response is success and status code is 200 then the request was made successfully.
+            if (
+                self.check_response_200_500(response_output, page_number, tablename)
+                == "Retrial"
+            ):
+                self.logger.info("Going for retrials for 1st page")
+                retrial_response = self.retry_download(
+                    url, header_auth_token, page_number, tablename
+                )
+                continuation_token = retrial_response.headers.get("Continuation-Token")
+            else:
+                self.logger.info("File uploaded to GCS")
+                continuation_token = response_output.headers.get("Continuation-Token")
             header_auth_token["Continuation-Token"] = continuation_token
 
-            while page_number <= number_of_page:
-                url = f"{zuora_fetch_data_url}{tablename}?fromDate={fromDate}&toDate={toDate}&pagenum={page_number}&pageSize=10000&clientId={clientId}&outputType=csv"
+            page_number = 2
+            while number_of_page >= page_number:
+                url = f"{self.zuora_fetch_data_url}{tablename}?fromDate={fromDate}&toDate={toDate}&pagenum={page_number}&pageSize=10000&clientId={self.clientId}&outputType=csv"
                 # Fetch first page for the table name
                 response_output = requests.get(url, headers=header_auth_token)
                 # Check for the response from the above call. If the response is success and status code is 200 then the request was made successfully.
-                if (
-                    "The number of total pages and the number of total rows are returned"
-                    in response_output.text
-                    or response_output.status_code == 204
-                ):
-                    logging.info(
-                        f"Reached end of table {tablename} extraction.Stopping the loop and move to next. Or no records in the tablename {response_output.text}"
-                    )
+                if self.check_response_204(response_output, tablename) is True:
                     break
+
                 if response_output.status_code == 401:
-                    header_auth_token = {
-                        "Token": self.get_auth_token(
-                            authenticate_url_zuora_revpro, headers
-                        )
-                    }
+                    header_auth_token = {"Token": self.get_auth_token()}
                     header_auth_token["Continuation-Token"] = continuation_token
                     response_output = requests.get(url, headers=header_auth_token)
 
-                if response_output.status_code != 200:
-                    logging.info(
-                        f"Made a unsuccessful rest call for page number {page_number} for tablename /tablename {tablename}"
+                if (
+                    self.check_response_200_500(response_output, page_number, tablename)
+                    == "Retrial"
+                ):
+                    self.logger.info("Going for retrials for 1st page")
+                    retrial_response = self.retry_download(
+                        url, header_auth_token, page_number, tablename
                     )
-                    # If the page is still not cached then we need to perform a retry to fetch the page.
-                    if (
-                        "Page still not yet cached" in response_output.text
-                        or response_output.status_code == 500
-                    ):
-                        logging.info(
-                            f"Made a Un successful rest call for page number {page_number } for tablename  {tablename}, because of page not being cached {response_output.text}. Going for retrial."
-                        )
-                        for attempt in range(1, 10):
-                            time.sleep(60 + attempt)
-                            logging.info(
-                                f"Making attempt for page  {page_number } for tablename  {tablename}.The attempt number is {attempt}"
-                            )
-                            response_output = requests.get(
-                                url, headers=header_auth_token
-                            )
-                            if response_output.status_code == 200:
-                                logging.info(
-                                    f"Made successfull attempt for page  {page_number } for tablename  {tablename}.The attempt number is {attempt}"
-                                )
-                                self.write_to_file_upload_to_gcs(
-                                    response_output.text,
-                                    "zuora_revpro_gitlab",
-                                    tablename,
-                                    page_number,
-                                )
-                                break
-                elif response_output.status_code == 200:
-                    self.write_to_file_upload_to_gcs(
-                        response_output.text,
-                        "zuora_revpro_gitlab",
-                        tablename,
-                        page_number,
-                    )
+                else:
+                    self.logger.info("File uploaded to GCS")
 
                 page_number = page_number + 1
+
+    def save_todate_gcs(self,):
