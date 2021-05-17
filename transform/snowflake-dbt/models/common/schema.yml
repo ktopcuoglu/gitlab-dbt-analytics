@@ -207,6 +207,7 @@ models:
       - name: record_type_id
       - name: federal_account
       - name: gitlab_com_user
+      - name: is_jihu_account
       - name: account_owner
       - name: account_owner_team
       - name: account_type
@@ -1243,7 +1244,7 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: [2, 3, 4, 34, 67, 100, 101]
+              values: [2, 3, 4, 34, 67, 100, 101, 102, 103]
         tags: ["tdf", "common", "gainsight"]
       - name: ultimate_parent_plan_title
         description: Whether or not the namespace associated with the project is subscribed to a paid plan. This can be inherited from the namespaces's ultimate parent.
@@ -2267,11 +2268,6 @@ models:
           - not_null
           - unique
         tags: ["tdf", "common", "gainsight"]
-      - name: namespace_id
-        tests:
-          - not_null
-          - unique
-        tags: ["tdf", "common", "gainsight"]
       - name: namespace_is_internal
       - name: namespace_is_ultimate_parent
       - name: namespace_name
@@ -2310,7 +2306,7 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: [2, 3, 4, 34, 67, 100, 101]
+              values: [2, 3, 4, 34, 67, 100, 101, 102, 103]
         tags: ["tdf", "common", "gainsight"]
       - name: gitlab_plan_title
         description: Whether or not the namespace associated with the project is subscribed to a paid plan. This can be inheritted from the namespaces's ultimate parent.

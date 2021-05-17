@@ -51,6 +51,18 @@ WITH map_merged_crm_account AS (
     LEFT JOIN deleted_accounts b
       ON a.master_record_id = b.account_id
 
+), jihu_accounts AS (
+
+    SELECT
+      account_id,
+      CASE 
+        WHEN is_jihu_account = TRUE
+          AND carr_this_account > 0
+            THEN TRUE
+        ELSE FALSE
+      END                                         AS is_jihu_account
+    FROM sfdc_account
+
 ), final AS (
 
   SELECT
@@ -91,6 +103,7 @@ WITH map_merged_crm_account AS (
     END                                           AS parent_crm_account_focus_account,
     sfdc_account.record_type_id                   AS record_type_id,
     sfdc_account.federal_account                  AS federal_account,
+    jihu_accounts.is_jihu_account                 AS is_jihu_account,
     sfdc_account.gitlab_com_user,
     sfdc_account.tsp_account_employees,
     sfdc_account.tsp_max_family_employees,
@@ -109,6 +122,8 @@ WITH map_merged_crm_account AS (
     ON sfdc_account.technical_account_manager_id = sfdc_users.user_id
   LEFT JOIN sfdc_record_type
     ON sfdc_account.record_type_id = sfdc_record_type.record_type_id
+  LEFT JOIN jihu_accounts
+    ON sfdc_account.account_id = jihu_accounts.account_id
 
 )
 
