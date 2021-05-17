@@ -21,15 +21,23 @@ WITH source AS (
       leads_worked::NUMBER                  AS leads_worked,
       qualified_leads::NUMBER               AS qualified_leads,
       unqualified_leads::NUMBER             AS unqualified_leads,
+      accepted_leads_inbound::NUMBER        AS accepted_leads_inbound,
+      accepted_leads_outbound::NUMBER       AS accepted_leads_outbound,
+      inbound_leads_worked::NUMBER          AS inbound_leads_worked,
+      outbound_leads_worked::NUMBER         AS outbound_leads_worked,
+      inbound_leads_accepted::NUMBER        AS inbound_leads_accepted,
+      outbound_leads_accepted::NUMBER       AS outbound_leads_accepted,
+      inbound_leads_qualifying::NUMBER      AS inbound_leads_qualifying,
+      outbound_leads_qualifying::NUMBER     AS outbound_leads_qualifying,
+      iqm::NUMBER                           AS iqm,
       average_working_day_calls::NUMBER     AS average_working_day_calls,
       average_working_day_emails::NUMBER    AS average_working_day_emails,
       average_working_day_other::NUMBER     AS average_working_day_other,
       saos::NUMBER                          AS saos,
-      quaterly_sao_target::NUMBER           AS quaterly_sao_target,
-      quaterly_sao_variance::NUMBER         AS quaterly_sao_variance,
-      average_time::NUMBER                  AS average_time
-
-
+      quarterly_sao_target::NUMBER          AS quarterly_sao_target,
+      quarterly_sao_variance::NUMBER        AS quarterly_sao_variance,
+      average_time::NUMBER                  AS average_time,
+      end_of_month::DATE                    AS end_of_month
     FROM source
 )
 

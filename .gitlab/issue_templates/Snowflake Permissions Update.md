@@ -1,4 +1,4 @@
-<!-- format should be something like 'user [de]provisioning - firstname last initual' -->
+<!-- format should be something like 'user [de]provisioning - firstname last initial' -->
 <!-- example: user provisioning - John S -->
 
 
@@ -9,8 +9,8 @@ Source Access Request: <!-- link to source  Access Request issue, it should be a
 - [ ] Create user using SECURITYADMIN role
 - [ ] Create user specific role
 - [ ] Assign user specific role
-- [ ] Assign user in Okta
+- [ ] Add to [okta-snowflake-users google group](https://groups.google.com/a/gitlab.com/g/okta-snowflake-users/members)
 - [ ] Verify grants
 - [ ] Update `roles.yml` and add a comment with a access request URL
 
-/label ~Provisioning ~Snowflake ~Infrastructure  ~"Priority::1-Ops"
+/label ~Provisioning ~Snowflake ~"Team::Data Platform"  ~"Priority::1-Ops"

@@ -11,4 +11,4 @@ For each request:
 1. check the box for snowflake in the removal request issue description
 
 
-/label ~Infrastructure ~Legal ~Housekeeping ~Snowflake ~"Priority::1-Ops" ~"workflow::4 - scheduled" 
+/label ~"Team::Data Platform" ~Legal ~Housekeeping ~Snowflake ~"Priority::1-Ops" ~"workflow::4 - scheduled" 

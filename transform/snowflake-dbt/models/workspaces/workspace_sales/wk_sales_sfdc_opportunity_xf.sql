@@ -604,6 +604,15 @@ WITH sfdc_opportunity AS (
           THEN oppty_final.calculated_deal_count
         ELSE 0
       END                                               AS booked_deal_count,
+
+      -- churn deal count (lost renewals)
+      CASE
+        WHEN ((oppty_final.is_renewal = 1
+            AND oppty_final.is_lost = 1)
+            OR net_arr < 0)
+          THEN oppty_final.calculated_deal_count
+        ELSE 0
+      END                                               AS churned_deal_count,
     
       -----------------
       -- Net ARR
@@ -635,7 +644,16 @@ WITH sfdc_opportunity AS (
                 AND oppty_final.is_lost = 1))
           THEN net_arr
         ELSE 0 
-      END                                                 AS booked_net_arr
+      END                                                 AS booked_net_arr,
+
+      -- churn net arr (lost renewals)
+      CASE
+        WHEN ((oppty_final.is_renewal = 1
+            AND oppty_final.is_lost = 1)
+            OR net_arr < 0)
+          THEN net_arr
+        ELSE 0
+      END                                                 AS churned_net_arr
 
     FROM oppty_final
     -- Net IACV to Net ARR conversion table

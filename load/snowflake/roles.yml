@@ -207,6 +207,7 @@ roles:
           - analyst_core
           - gitlab_dotcom
           - qualtrics
+          - zuora_revenue
         privileges:
             databases:
                 read:
@@ -359,6 +360,7 @@ roles:
             - netsuite
             - keyhole_twitter
             - marketing_dnc
+            - marketo
             - pmg
             - snowflake_db
             - zendesk
@@ -1437,6 +1439,21 @@ roles:
                     - raw.sheetload.maxmind_countries
                     - raw.sheetload.maxmind_ranges
 
+    - marketo:
+          privileges:
+              databases:
+                  read:
+                    #   - prep
+                      - raw
+              schemas:
+                  read:
+                    #   - prep.marketo
+                      - raw.marketo
+              tables:
+                  read:
+                    #   - prep.marketo.*
+                      - raw.marketo.*
+
     - netsuite:
         warehouses:
             - analyst_xs
@@ -1776,6 +1793,20 @@ roles:
                     - prep.zuora.*
                     - raw.zuora_stitch.*
 
+    - zuora_revenue: # This is done to provide access to Data team analyst as 3530 
+        warehouses:
+            - analyst_xs
+        privileges:
+            databases:
+                read:
+                    - raw
+            schemas:
+                read:
+                    - raw.zuora_revenue
+            tables:
+                read:
+                    - raw.zuora_revenue.*
+
 # ==========================================
 # User Roles
 # ==========================================
@@ -2100,6 +2131,10 @@ roles:
         warehouses:
             - analyst_xs
 
+    - fstein:
+        warehouses:
+            - admin
+
     - gitlab_ci:
         member_of:
             - loader
@@ -2174,6 +2209,7 @@ roles:
             - bamboohr_analytics
             - customers_db
             - data_team_analyst
+            - data_manager
         warehouses:
             - analyst_xs
         owns:
@@ -2247,8 +2283,12 @@ roles:
             - netsuite
             - static_admin
             - data_team_analyst
+            - analyst_finance
+            - gainsight_temp_source
         warehouses:
             - analyst_xs
+            - analyst_l
+            - analyst_xl
         owns:
             databases:
                 - jpeguero_prep
@@ -2360,6 +2400,7 @@ roles:
             - analyst_engineering
             - customers_db
             - data_team_analyst
+            - analyst_finance
         warehouses:
             - analyst_xs
         owns:
@@ -2521,8 +2562,7 @@ roles:
                     - mcooper_prod.*.*
 
     - mdewji:
-        warehouses:
-            - admin
+        warehouses: []
 
     - michellecooper:
         member_of: []
@@ -3299,6 +3339,7 @@ users:
         member_of:
             - dvanrooijen
             - accountadmin
+            - securityadmin
 
     - eburke:
         can_login: no
@@ -3337,6 +3378,12 @@ users:
         can_login: yes
         member_of:
             - fkurniadi
+
+    - fstein:
+        can_login: yes
+        member_of:
+            - fstein
+            - securityadmin
 
     - gainsight:
         can_login: yes
@@ -3497,10 +3544,8 @@ users:
             - mcooper
 
     - mdewji:
-        can_login: yes
-        member_of:
-            - mdewji
-            - securityadmin
+        can_login: no
+        member_of: []
 
     - michellecooper:
         can_login: no

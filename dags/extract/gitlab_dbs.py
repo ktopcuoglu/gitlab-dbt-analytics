@@ -30,6 +30,7 @@ from kube_secrets import (
     GITLAB_COM_DB_NAME,
     GITLAB_COM_DB_PASS,
     GITLAB_COM_DB_USER,
+    GITLAB_COM_SCD_PG_PORT,
     GITLAB_OPS_DB_USER,
     GITLAB_OPS_DB_PASS,
     GITLAB_OPS_DB_HOST,
@@ -109,13 +110,30 @@ config_dict = {
         "cloudsql_instance_name": None,
         "dag_name": "gitlab_com",
         "dbt_name": "gitlab_dotcom",
-        "env_vars": {"HOURS": "13"},
+        "env_vars": {"HOURS": "12"},
         "extract_schedule_interval": "0 */6 * * *",
         "secrets": [
             GITLAB_COM_DB_USER,
             GITLAB_COM_DB_PASS,
             GITLAB_COM_DB_HOST,
             GITLAB_COM_DB_NAME,
+        ],
+        "start_date": datetime(2019, 5, 30),
+        "sync_schedule_interval": "0 2 */1 * *",
+        "task_name": "gitlab-com",
+    },
+    "gitlab_com_scd": {
+        "cloudsql_instance_name": None,
+        "dag_name": "gitlab_com_scd",
+        "dbt_name": "none",
+        "env_vars": {},
+        "extract_schedule_interval": "0 */6 * * *",
+        "secrets": [
+            GITLAB_COM_DB_USER,
+            GITLAB_COM_DB_PASS,
+            GITLAB_COM_DB_HOST,
+            GITLAB_COM_DB_NAME,
+            GITLAB_COM_SCD_PG_PORT,
         ],
         "start_date": datetime(2019, 5, 30),
         "sync_schedule_interval": "0 2 */1 * *",
@@ -203,6 +221,9 @@ def run_or_skip_dbt(current_seconds: int, dag_interval: int, dbt_name: str) -> b
 
 
 def dbt_tasks(dbt_name, dbt_task_identifier):
+
+    if dbt_name == "none":
+        return None, None, None, None, None
 
     SCHEDULE_INTERVAL_HOURS = 6
     timestamp = datetime.now()
@@ -364,15 +385,15 @@ for source_name, config in config_dict.items():
                 do_xcom_push=True,
                 xcom_push=True,
             )
-
-            (
-                incremental_extract
-                >> short_circuit
-                >> test
-                >> snapshot
-                >> model_run
-                >> model_test
-            )
+            if short_circuit is not None:
+                (
+                    incremental_extract
+                    >> short_circuit
+                    >> test
+                    >> snapshot
+                    >> model_run
+                    >> model_test
+                )
 
     globals()[f"{config['dag_name']}_db_extract"] = extract_dag
 
@@ -491,14 +512,14 @@ for source_name, config in config_dict.items():
                     do_xcom_push=True,
                     xcom_push=True,
                 )
-
-                (
-                    scd_extract
-                    >> short_circuit
-                    >> test
-                    >> snapshot
-                    >> model_run
-                    >> model_test
-                )
+                if short_circuit is not None:
+                    (
+                        scd_extract
+                        >> short_circuit
+                        >> test
+                        >> snapshot
+                        >> model_run
+                        >> model_test
+                    )
 
     globals()[f"{config['dag_name']}_db_sync"] = sync_dag

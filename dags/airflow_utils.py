@@ -10,7 +10,7 @@ from airflow.operators.slack_operator import SlackAPIPostOperator
 SSH_REPO = "git@gitlab.com:gitlab-data/analytics.git"
 HTTP_REPO = "https://gitlab.com/gitlab-data/analytics.git"
 DATA_IMAGE = "registry.gitlab.com/gitlab-data/data-image/data-image:v0.0.14"
-DBT_IMAGE = "registry.gitlab.com/gitlab-data/data-image/dbt-image:v0.0.13"
+DBT_IMAGE = "registry.gitlab.com/gitlab-data/data-image/dbt-image:v0.0.15"
 PERMIFROST_IMAGE = "registry.gitlab.com/gitlab-data/permifrost:v0.8.0"
 
 

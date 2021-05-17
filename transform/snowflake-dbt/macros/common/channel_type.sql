@@ -11,7 +11,6 @@ CASE
     THEN 'Assist'
   WHEN {{ dr_partner_engagement }} = 'Fulfillment'
     THEN 'Fulfilled'
-  ELSE 'Missing channel_type_name'
-END AS channel_type
+END
 
 {%- endmacro -%}
