@@ -58,9 +58,8 @@
 
 ), first_subscription AS (
 
-  SELECT
+  SELECT DISTINCT 
     dim_usage_ping_id,
-    dim_subscription_id,
     FIRST_VALUE(dim_subscription_id) OVER (
       PARTITION BY dim_usage_ping_id
       ORDER BY subscription_start_date ASC
@@ -80,6 +79,8 @@ SELECT
 FROM join_ping_to_subscriptions
 LEFT JOIN first_subscription
   ON join_ping_to_subscriptions.dim_usage_ping_id = first_subscription.dim_usage_ping_id
+WHERE usage_ping_created_at >= subscription_start_date 
+  AND usage_ping_created_at <= subscription_end_date
 GROUP BY 1,2
 
 UNION 
