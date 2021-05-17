@@ -62,17 +62,17 @@ WITH dim_crm_account AS (
 
     SELECT
       dim_crm_account.dim_parent_crm_account_id,
-      dim_date.date_actual                              AS mrr_month,
-      dateadd('year', 1, date_actual)                   AS retention_month,
+      dim_date.date_actual                                      AS mrr_month,
+      dateadd('year', 1, date_actual)                           AS retention_month,
       next_renewal_month,
       last_renewal_month,
       COUNT(DISTINCT dim_crm_account.dim_parent_crm_account_id)
-                                                        AS parent_customer_count,
-      SUM(ZEROIFNULL(mrr))                              AS mrr_total,
-      SUM(ZEROIFNULL(arr))                              AS arr_total,
-      SUM(ZEROIFNULL(quantity))                         AS quantity_total,
-      ARRAY_AGG(product_tier_name)                      AS product_category,
-      MAX(product_ranking)                              AS product_ranking
+                                                                AS parent_customer_count,
+      SUM(ZEROIFNULL(mrr))                                      AS mrr_total,
+      SUM(ZEROIFNULL(arr))                                      AS arr_total,
+      SUM(ZEROIFNULL(quantity))                                 AS quantity_total,
+      ARRAY_AGG(product_tier_name)                              AS product_category,
+      MAX(product_ranking)                                      AS product_ranking
     FROM fct_mrr
     INNER JOIN dim_product_detail
       ON dim_product_detail.dim_product_detail_id = fct_mrr.dim_product_detail_id
