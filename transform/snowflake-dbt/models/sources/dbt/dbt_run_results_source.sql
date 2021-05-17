@@ -59,7 +59,7 @@ WITH source AS (
       timing.value['started_at']::TIMESTAMP                AS compilation_started_at,
       timing.value['completed_at']::TIMESTAMP              AS compilation_completed_at,
       uploaded_at,                                         -- uploaded_at
-      'PRE 0.19.0' AS dbt_version,
+      'PRE 0.19.0'                                         AS dbt_version,
       'https://schemas.getdbt.com/dbt/run-results/v0.json' AS schema_version,
       generated_at,
       {{ dbt_utils.surrogate_key([
