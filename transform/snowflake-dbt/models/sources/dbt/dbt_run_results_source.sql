@@ -15,9 +15,9 @@ WITH source AS (
 
     SELECT 
       d.value AS data_by_row,
-      jsontext:metadata:dbt_version::VARCHAR          AS dbt_version,
-      jsontext:metadata:dbt_schema_version::VARCHAR   AS schema_version,
-      COALESCE(jsontext:metadata:generated_at, jsontext:generated_at)::TIMESTAMP_NTZ   AS generated_at,
+      jsontext['metadata']['dbt_version']::VARCHAR          AS dbt_version,
+      jsontext['metadata']['dbt_schema_version']::VARCHAR   AS schema_version,
+      COALESCE(jsontext['metadata']['generated_at'], jsontext['generated_at'])::TIMESTAMP_NTZ   AS generated_at,
       uploaded_at
     FROM source
     INNER JOIN LATERAL FLATTEN(INPUT => PARSE_JSON(jsontext['results']), outer => true) d
@@ -36,7 +36,7 @@ WITH source AS (
       schema_version,
       generated_at,
       {{ dbt_utils.surrogate_key([
-          'unique_id', 
+          'node_unique_id', 
           'compilation_started_at',
           'uploaded_at'
           ]) }}                                       AS run_unique_key
@@ -63,7 +63,7 @@ WITH source AS (
       'https://schemas.getdbt.com/dbt/run-results/v0.json' AS schema_version,
       generated_at,
       {{ dbt_utils.surrogate_key([
-          'unique_id', 
+          'node_unique_id', 
           'compilation_started_at',
           'uploaded_at'
           ]) }}                                            AS run_unique_key
