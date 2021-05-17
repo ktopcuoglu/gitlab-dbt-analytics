@@ -94,6 +94,7 @@
       fct_crm_opportunity.days_in_sao,
       fct_crm_opportunity.arr_basis,
       fct_crm_opportunity.iacv,
+      fct_crm_opportunity.net_iacv,
       fct_crm_opportunity.net_arr,
       fct_crm_opportunity.amount,
       dim_crm_opportunity.is_edu_oss,
