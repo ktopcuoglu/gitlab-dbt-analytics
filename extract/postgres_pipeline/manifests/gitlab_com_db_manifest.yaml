@@ -2,7 +2,7 @@ connection_info:
   database: GITLAB_COM_DB_NAME
   host: GITLAB_COM_DB_HOST
   pass: GITLAB_COM_DB_PASS
-  port: PG_PORT
+  port: GITLAB_COM_PG_PORT
   user: GITLAB_COM_DB_USER
 tables:
   alert_management_alerts:
