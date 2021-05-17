@@ -1,6 +1,6 @@
 Closes
 
-#### List and Describe Code Changes
+#### List and Describe Code Changes <!-- focus on why the changes are being made-->
 
 * _action items_
 
