@@ -21,7 +21,7 @@ def construct_qualtrics_contact(result):
             "gitlabUserID": result["user_id"],
             "user_id": result["user_id"],
             "plan": result["plan"],
-            "namespace_id": result["namespace_id"]
+            "namespace_id": result["namespace_id"],
         },
     }
 
