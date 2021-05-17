@@ -45,6 +45,7 @@ WITH source AS (
         numbersent                                                          AS count_sent,
         strat_contribution__c                                               AS strategic_marketing_contribution,
         large_bucket__c                                                     AS large_bucket,
+        reporting_type__c                                                   AS reporting_type,
 
         --metadata
         createddate                                                         AS created_date,
