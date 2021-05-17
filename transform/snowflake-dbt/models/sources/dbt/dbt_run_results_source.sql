@@ -29,9 +29,9 @@ WITH source AS (
       data_by_row['unique_id']::VARCHAR               AS node_unique_id,
       IFNULL(data_by_row['status']::VARCHAR, False)   AS status,
       IFNULL(data_by_row['message']::VARCHAR, False)  AS message,
-      uploaded_at,                                    -- uploaded_at
       timing.value['started_at']::TIMESTAMP           AS compilation_started_at,
       timing.value['completed_at']::TIMESTAMP         AS compilation_completed_at,
+      uploaded_at,                                    -- uploaded_at
       dbt_version,
       schema_version,
       generated_at,
@@ -56,9 +56,9 @@ WITH source AS (
         ELSE 'success'
       END                                                  AS status,
       IFNULL(data_by_row['error']::VARCHAR, 'SUCCESS 1')   AS message,
-      uploaded_at,                                         -- uploaded_at
       timing.value['started_at']::TIMESTAMP                AS compilation_started_at,
       timing.value['completed_at']::TIMESTAMP              AS compilation_completed_at,
+      uploaded_at,                                         -- uploaded_at
       'PRE 0.19.0' AS dbt_version,
       'https://schemas.getdbt.com/dbt/run-results/v0.json' AS schema_version,
       generated_at,

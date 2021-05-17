@@ -16,7 +16,7 @@ WITH source AS (
     jsontext:metadata:generated_at::TIMESTAMP_NTZ   AS generated_at,
     uploaded_at
   
-	FROM source
+  FROM source
   INNER JOIN LATERAL FLATTEN(INPUT => PARSE_JSON(jsontext['nodes']), outer => true) d
 
 ), parsed AS (
