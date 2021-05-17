@@ -21,23 +21,24 @@ WITH source AS (
 
 ), parsed AS (
 
-SELECT
+  SELECT
 
-  data_by_row['unique_id']::VARCHAR                 AS unique_id,  
-  data_by_row['name']::VARCHAR                      AS name,
-  data_by_row['alias']::VARCHAR                     AS alias,
-  data_by_row['package_name']::VARCHAR              AS package_name,
-  data_by_row['tags']::ARRAY                        AS tags,
-  LOWER(data_by_row['config']['severity']::VARCHAR) AS severity,
-  data_by_row['refs']::ARRAY                        AS referrences,
-  data_by_row['depends_on']                         AS depends_on,
-  dbt_version,
-  schema_version,
-  generated_at,
-  uploaded_at
+    data_by_row['unique_id']::VARCHAR                 AS unique_id,  
+    data_by_row['name']::VARCHAR                      AS name,
+    data_by_row['alias']::VARCHAR                     AS alias,
+    data_by_row['package_name']::VARCHAR              AS package_name,
+    data_by_row['tags']::ARRAY                        AS tags,
+    LOWER(data_by_row['config']['severity']::VARCHAR) AS severity,
+    data_by_row['refs']::ARRAY                        AS referrences,
+    data_by_row['depends_on']                         AS depends_on,
+    dbt_version,
+    schema_version,
+    generated_at,
+    uploaded_at
 
-FROM nodes
-WHERE data_by_row['resource_type']::VARCHAR ='test'
+  FROM nodes
+  WHERE data_by_row['resource_type']::VARCHAR ='test'
+
 )
 
 SELECT *

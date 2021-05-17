@@ -22,7 +22,7 @@ WITH source AS (
 ), parsed AS (
 
   SELECT
-  
+
     data_by_row['unique_id']::VARCHAR     AS unique_id,  
     data_by_row['name']::VARCHAR          AS name,
     data_by_row['alias']::VARCHAR         AS alias,
@@ -35,7 +35,7 @@ WITH source AS (
     schema_version,
     generated_at,
     uploaded_at
-  
+
   FROM nodes
   WHERE data_by_row['resource_type']::VARCHAR ='model'
 
