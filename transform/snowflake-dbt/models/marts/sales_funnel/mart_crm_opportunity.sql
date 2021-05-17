@@ -123,6 +123,7 @@
       dim_crm_account.parent_crm_account_focus_account,
       dim_crm_account.parent_crm_account_sales_segment,
       fct_crm_opportunity.closed_buckets,
+      dim_crm_opportunity.duplicate_opportunity_id,
       dim_crm_opportunity.opportunity_category,
       dim_crm_opportunity.source_buckets,
       dim_crm_opportunity.opportunity_sales_development_representative,
