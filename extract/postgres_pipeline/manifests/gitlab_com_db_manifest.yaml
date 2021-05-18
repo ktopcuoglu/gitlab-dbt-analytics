@@ -2,20 +2,9 @@ connection_info:
   database: GITLAB_COM_DB_NAME
   host: GITLAB_COM_DB_HOST
   pass: GITLAB_COM_DB_PASS
-  port: PG_PORT
+  port: GITLAB_COM_PG_PORT
   user: GITLAB_COM_DB_USER
 tables:
-  alert_management_alert_assignees:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'alert_management_alert_assignees'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , user_id
-      , alert_id
-      FROM alert_management_alert_assignees
   alert_management_alerts:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -105,16 +94,6 @@ tables:
       FROM application_settings
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-  approval_merge_request_rule_sources:
-    export_schema: "gitlab_com"
-    export_table: approval_merge_request_rule_sources
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , approval_merge_request_rule_id
-      , approval_project_rule_id
-      FROM approval_merge_request_rule_sources
   approval_merge_request_rules:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -149,15 +128,6 @@ tables:
       FROM approval_project_rules
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-  approval_project_rules_protected_branches:
-    export_schema: "gitlab_com"
-    export_table: approval_project_rules_protected_branches
-    export_table_primary_key: approval_project_rule_id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT approval_project_rule_id
-      , protected_branch_id
-      FROM approval_project_rules_protected_branches
   approvals:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -220,40 +190,6 @@ tables:
       FROM authentication_events
       WHERE created_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-  award_emoji:
-    export_schema: 'gitlab_com'
-    export_table: 'award_emoji'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , name
-      , user_id
-      , awardable_id
-      , awardable_type
-      FROM award_emoji
-  board_assignees:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'board_assignees'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , board_id
-      , assignee_id
-      FROM board_assignees
-  board_labels:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'board_labels'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , board_id
-      , label_id
-      FROM board_labels
   boards:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -286,44 +222,6 @@ tables:
       FROM bulk_imports
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-  ci_build_trace_chunks:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: ci_build_trace_chunks
-    export_table_primary_key: build_id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT build_id
-      , chunk_index
-      , data_store
-      , raw_data
-      FROM ci_build_trace_chunks
-  # ci_build_trace_sections:
-  #   export_schema: 'gitlab_com'
-  #   export_table: 'ci_build_trace_sections'
-  #   export_table_primary_key: CONCAT(build_id,'_',section_name_id)
-  #   import_db: GITLAB_DB
-  #   import_query: >
-  #     SELECT CONCAT(build_id,'_',section_name_id) AS ci_build_trace_section_id
-  #     , project_id
-  #     , date_start
-  #     , date_end
-  #     , build_id
-  #     , section_name_id
-  #     FROM ci_build_trace_sections
-  #     WHERE date_end BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-  #       AND '{EXECUTION_DATE}'::timestamp
-  ci_build_trace_section_names:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: ci_build_trace_section_names
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , project_id
-      , name
-      FROM ci_build_trace_section_names
   ci_builds:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -373,17 +271,6 @@ tables:
       FROM ci_builds
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-  ci_builds_runner_session:
-    export_schema: 'gitlab_com'
-    export_table: ci_builds_runner_session
-    export_table_primary_key: build_id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT build_id
-      , url
-      , certificate
-      , "authorization"
-      FROM ci_builds_runner_session
   ci_group_variables:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -424,17 +311,6 @@ tables:
       FROM ci_job_artifacts
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-  ci_pipeline_chat_data:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: ci_pipeline_chat_data
-    export_table_primary_key: pipeline_id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT pipeline_id
-      , chat_name_id
-      , response_url
-      FROM ci_pipeline_chat_data
   ci_pipeline_schedule_variables:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -472,18 +348,6 @@ tables:
       FROM ci_pipeline_schedules
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-  ci_pipeline_variables:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: ci_pipeline_variables
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , key
-      , pipeline_id
-      , variable_type
-      FROM ci_pipeline_variables
   ci_pipelines:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -625,20 +489,6 @@ tables:
       FROM ci_triggers
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-  ci_variables:
-    export_schema: 'gitlab_com'
-    export_table: ci_variables
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , key
-      , project_id
-      , protected
-      , environment_scope
-      , masked
-      , variable_type
-      FROM ci_variables
   cluster_agent_tokens:
     export_schema: "gitlab_com"
     export_table: cluster_agent_tokens
@@ -666,17 +516,6 @@ tables:
       FROM cluster_agents
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-  cluster_groups:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'cluster_groups'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , cluster_id
-      , group_id
-      FROM cluster_groups
   cluster_projects:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -963,21 +802,6 @@ tables:
       FROM clusters_kubernetes_namespaces
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-  columns:
-    advanced_metadata: true
-    export_schema: 'gitlab_com'
-    export_table: 'columns'
-    export_table_primary_key: CONCAT(table_name, '_', column_name, table_schema)
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT CONCAT(table_name, '_', column_name, table_schema) AS column_id
-      , column_name
-      , data_type
-      , ordinal_position
-      , table_name
-      , table_schema
-      FROM information_schema.columns
-    import_schema: information_schema
   container_expiration_policies:
     export_schema: "gitlab_com"
     export_table: container_expiration_policies
@@ -1011,17 +835,6 @@ tables:
       FROM csv_issue_imports
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-  deployment_merge_requests:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'deployment_merge_requests'
-    export_table_primary_key: CONCAT(deployment_id,'_',merge_request_id)
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT deployment_id
-      , merge_request_id
-      , CONCAT(deployment_id,'_',merge_request_id) as deployment_merge_request_id
-      FROM deployment_merge_requests
   deployments:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -1048,57 +861,6 @@ tables:
       FROM deployments
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-  design_management_designs:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'design_management_designs'
-    export_table_primary_key: CONCAT(issue_id,'_',filename)
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , project_id
-      , issue_id
-      , filename
-      FROM design_management_designs
-  design_management_designs_versions:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'design_management_designs_versions'
-    export_table_primary_key: CONCAT(design_id,'_', version_id)
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT CONCAT(design_id,'_', version_id) AS id
-      , design_id
-      , version_id
-      , event
-      FROM design_management_designs_versions
-  design_management_versions:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'design_management_versions'
-    export_table_primary_key: CONCAT(sha,'_', issue_id)
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , CAST(sha AS VARCHAR) AS sha
-      , issue_id
-      , created_at
-      , author_id
-      FROM design_management_versions
-  elasticsearch_indexed_namespaces:
-    # want to treat this more as an SCD since rows are deleted and want to display current state
-    # see https://gitlab.com/gitlab-data/analytics/-/issues/5463#note_387839921
-    advanced_metadata: true
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'elasticsearch_indexed_namespaces'
-    export_table_primary_key: namespace_id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT created_at
-      , updated_at
-      , namespace_id
-      FROM elasticsearch_indexed_namespaces
   emails:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -1136,18 +898,6 @@ tables:
       FROM environments
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-  epic_issues:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'epic_issues'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , epic_id
-      , issue_id
-      , relative_position
-      FROM epic_issues
   epic_metrics:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -1218,7 +968,20 @@ tables:
     export_table: 'experiment_subjects'
     export_table_primary_key: id
     import_db: GITLAB_DB
-    import_query: "SELECT id\n, experiment_id\n, user_id\n, group_id\n, project_id\n, variant\n, created_at\n, updated_at\n, converted_at\n, context\nFROM experiment_subjects\nWHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'\n  AND '{EXECUTION_DATE}'::timestamp "
+    import_query: |-
+      SELECT id
+      , experiment_id
+      , user_id
+      , group_id
+      , project_id
+      , variant
+      , created_at
+      , updated_at
+      , converted_at
+      , context
+      FROM experiment_subjects
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp  
+        AND '{END_TIMESTAMP}'::timestamp
   experiment_users:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -1237,16 +1000,6 @@ tables:
       FROM experiment_users
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-  experiments:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'experiments'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , name
-      FROM experiments
   geo_nodes:
     export_schema: "gitlab_com"
     export_table: geo_nodes
@@ -1274,51 +1027,6 @@ tables:
       FROM geo_nodes
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-  gitlab_subscription_histories:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'gitlab_subscription_histories'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , gitlab_subscription_created_at
-      , gitlab_subscription_updated_at
-      , start_date
-      , end_date
-      , trial_starts_on
-      , trial_ends_on
-      , namespace_id
-      , hosted_plan_id
-      , max_seats_used
-      , seats
-      , trial
-      , change_type
-      , gitlab_subscription_id
-      , created_at
-      FROM gitlab_subscription_histories
-  gitlab_subscriptions:
-    advanced_metadata: true
-    dbt_snapshots: true
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'gitlab_subscriptions'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , created_at
-      , updated_at
-      , start_date
-      , end_date
-      , trial_starts_on
-      , trial_ends_on
-      , namespace_id
-      , hosted_plan_id
-      , max_seats_used
-      , seats
-      , trial
-      FROM gitlab_subscriptions
   grafana_integrations:
     export_schema: "gitlab_com"
     export_table: grafana_integrations
@@ -1350,22 +1058,6 @@ tables:
       FROM group_custom_attributes
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-  group_group_links:
-    advanced_metadata: true
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'group_group_links'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , created_at
-      , updated_at
-      , shared_group_id
-      , shared_with_group_id
-      , expires_at
-      , group_access
-      FROM group_group_links
   group_import_states:
     export_schema: "gitlab_com"
     export_table: group_import_states
@@ -1400,30 +1092,23 @@ tables:
       FROM identities
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-  issue_assignees:
+  in_product_marketing_emails:
     dbt_source_model: true
     export_schema: 'gitlab_com'
-    export_table: 'issue_assignees'
-    export_table_primary_key: user_id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT user_id
-      , issue_id
-      FROM issue_assignees
-  issue_links:
-    advanced_metadata: true
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'issue_links'
+    export_table: 'in_product_marketing_emails'
     export_table_primary_key: id
     import_db: GITLAB_DB
     import_query: |-
       SELECT id
-      , source_id
-      , target_id
+      , user_id
+      , cta_clicked_at
+      , track
+      , series
       , created_at
       , updated_at
-      FROM issue_links
+      FROM in_product_marketing_emails
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   issue_metrics:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -1553,36 +1238,6 @@ tables:
       FROM jira_tracker_data
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-  keys:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'keys'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , user_id
-      , created_at
-      , updated_at
-      , type
-      , public
-      , last_used_at
-      FROM keys
-  label_links:
-    advanced_metadata: true
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'label_links'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , label_id
-      , target_id
-      , target_type
-      , created_at
-      , updated_at
-      FROM label_links
   label_priorities:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -1717,32 +1372,6 @@ tables:
       FROM lists
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-  members:
-    advanced_metadata: true
-    dbt_snapshots: true
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'members'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , access_level
-      , source_id
-      , source_type
-      , user_id
-      , notification_level
-      , type
-      , created_at
-      , created_by_id
-      , invite_email
-      , invite_accepted_at
-      , invite_token
-      , requested_at
-      , CASE WHEN expires_at > '2262-01-01' THEN '2262-01-01' ELSE expires_at END AS expires_at
-      , ldap
-      , override
-      FROM members
   merge_request_diffs:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -1889,19 +1518,6 @@ tables:
       FROM namespace_root_storage_statistics
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-  namespace_statistics:
-    dbt_snapshots: true
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'namespace_statistics'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , namespace_id
-      , shared_runners_seconds
-      , shared_runners_seconds_last_reset
-      FROM namespace_statistics
   namespaces:
     dbt_snapshots: true
     dbt_source_model: true
@@ -2004,21 +1620,6 @@ tables:
       FROM notification_settings
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-  oauth_access_tokens:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'oauth_access_tokens'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , resource_owner_id
-      , application_id
-      , expires_in
-      , revoked_at
-      , created_at
-      , scopes
-      FROM oauth_access_tokens
   onboarding_progresses:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -2065,37 +1666,6 @@ tables:
       FROM operations_feature_flags
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-  packages_build_infos:
-    export_schema: 'gitlab_com'
-    export_table: 'packages_build_infos'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , package_id
-      , pipeline_id
-      FROM packages_build_infos
-  packages_dependencies:
-    export_schema: 'gitlab_com'
-    export_table: 'packages_dependencies'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , name
-      , version_pattern
-      FROM packages_dependencies
-  packages_dependency_links:
-    export_schema: 'gitlab_com'
-    export_table: 'packages_dependency_links'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , package_id
-      , dependency_id
-      , dependency_type
-      FROM packages_dependency_links
   packages_package_files:
     export_schema: 'gitlab_com'
     export_table: 'packages_package_files'
@@ -2144,26 +1714,6 @@ tables:
       FROM packages_tags
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-  pages_domains:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'pages_domains'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , project_id
-      , certificate
-      , domain
-      , CAST(verified_at AS VARCHAR) AS verified_at
-      , verification_code
-      , CAST(enabled_until AS VARCHAR) AS enabled_until
-      , CAST(remove_at AS VARCHAR) AS remove_at
-      , auto_ssl_enabled
-      , CAST(certificate_valid_not_before AS VARCHAR) AS certificate_valid_not_before
-      , CAST(certificate_valid_not_after AS VARCHAR) AS certificate_valid_not_after
-      , certificate_source
-      FROM pages_domains
   path_locks:
     export_schema: "gitlab_com"
     export_table: path_locks
@@ -2179,52 +1729,6 @@ tables:
       FROM path_locks
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-  plans:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'plans'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , created_at
-      , updated_at
-      , name
-      , title
-      FROM plans
-  pool_repositories:
-    export_schema: "gitlab_com"
-    export_table: pool_repositories
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , shard_id
-      , disk_path
-      , state
-      , source_project_id
-      FROM pool_repositories
-  programming_languages:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'programming_languages'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , name
-      FROM programming_languages
-  project_authorizations:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'project_authorizations'
-    export_table_primary_key: user_id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT user_id
-      , project_id
-      , access_level
-      FROM project_authorizations
   project_auto_devops:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -2240,16 +1744,6 @@ tables:
       FROM project_auto_devops
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-  project_compliance_framework_settings:
-    export_schema: "gitlab_com"
-    export_table: project_compliance_framework_settings
-    export_table_primary_key: project_id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT project_id
-      , framework
-      , framework_id
-      FROM project_compliance_framework_settings
   project_custom_attributes:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -2279,28 +1773,6 @@ tables:
       FROM project_daily_statistics
       WHERE date >= '{EXECUTION_DATE}'::date - interval '{HOURS} hours'
         AND date <= '{EXECUTION_DATE}'::date
-  project_error_tracking_settings:
-    export_schema: "gitlab_com"
-    export_table: project_error_tracking_settings
-    export_table_primary_key: project_id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT project_id
-      , enabled
-      , api_url
-      , project_name
-      , organization_name
-      FROM project_error_tracking_settings
-  project_feature_usages:
-    export_schema: "gitlab_com"
-    export_table: project_feature_usages
-    export_table_primary_key: project_id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT project_id
-      , jira_dvcs_cloud_last_sync_at
-      , jira_dvcs_server_last_sync_at
-      FROM project_feature_usages
   project_features:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -2321,120 +1793,6 @@ tables:
       FROM project_features
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-  project_group_links:
-    advanced_metadata: true
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'project_group_links'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , project_id
-      , group_id
-      , created_at
-      , updated_at
-      , group_access
-      , expires_at
-      FROM project_group_links
-  project_import_data:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'project_import_data'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , project_id
-      FROM project_import_data
-  project_incident_management_settings:
-    export_schema: "gitlab_com"
-    export_table: project_incident_management_settings
-    export_table_primary_key: project_id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT project_id
-      , create_issue
-      , send_email
-      , issue_template_key
-      , pagerduty_active
-      , auto_close_incident
-      , sla_timer
-      , sla_timer_minutes
-      FROM project_incident_management_settings
-  project_mirror_data:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'project_mirror_data'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , project_id
-      , retry_count
-      , last_update_started_at
-      , last_update_scheduled_at
-      , next_execution_timestamp
-      FROM project_mirror_data
-  project_repositories:
-    export_schema: 'gitlab_com'
-    export_table: 'project_repositories'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , shard_id
-      , disk_path
-      , project_id
-      FROM project_repositories
-  project_repository_states:
-    export_schema: 'gitlab_com'
-    export_table: 'project_repository_states'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , project_id
-      , last_repository_verification_failure
-      , last_wiki_verification_failure
-      FROM project_repository_states
-  project_repository_storage_moves:
-    export_schema: 'gitlab_com'
-    export_table: 'project_repository_storage_moves'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , created_at
-      , updated_at
-      , project_id
-      , state
-      , source_storage_name
-      , destination_storage_name
-      FROM project_repository_storage_moves
-  project_statistics:
-    dbt_snapshots: true
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'project_statistics'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , project_id
-      , namespace_id
-      , commit_count
-      , storage_size
-      , repository_size
-      , lfs_objects_size
-      , build_artifacts_size
-      , shared_runners_seconds
-      , shared_runners_seconds_last_reset
-      , packages_size
-      , wiki_size
-      , snippets_size
-      , uploads_size
-      FROM project_statistics
   project_tracing_settings:
     export_schema: "gitlab_com"
     export_table: project_tracing_settings
@@ -2634,19 +1992,6 @@ tables:
       FROM remote_mirrors
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-  repository_languages:
-    advanced_metadata: true
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'repository_languages'
-    export_table_primary_key: CONCAT(project_id, '_', programming_language_id)
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT project_id
-      , programming_language_id
-      , share
-      , CONCAT(project_id, '_', programming_language_id) AS project_programming_language_id
-      FROM repository_languages
   requirements:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -2764,23 +2109,6 @@ tables:
       FROM routes
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-  saml_providers:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'saml_providers'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , group_id
-      , enabled
-      , certificate_fingerprint
-      , sso_url
-      , enforced_sso
-      , enforced_group_managed_accounts
-      , prohibited_outer_forks
-      , default_membership_role
-      FROM saml_providers
   security_scans:
     export_schema: "gitlab_com"
     export_table: security_scans
@@ -2795,16 +2123,6 @@ tables:
       FROM security_scans
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-  sentry_issues:
-    export_schema: "gitlab_com"
-    export_table: sentry_issues
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , issue_id
-      , sentry_issue_identifier
-      FROM sentry_issues
   services:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -2840,15 +2158,6 @@ tables:
       FROM services
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-  shards:
-    export_schema: 'gitlab_com'
-    export_table: 'shards'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , name
-      FROM shards
   snippets:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -2941,23 +2250,6 @@ tables:
       FROM subscriptions
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-  suggestions:
-    export_schema: "gitlab_com"
-    export_table: suggestions
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , note_id
-      , relative_order
-      , applied
-      , commit_id
-      , from_content
-      , to_content
-      , lines_above
-      , lines_below
-      , outdated
-      FROM suggestions
   system_note_metadata:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -3290,28 +2582,6 @@ tables:
       FROM vulnerability_occurrence_pipelines
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-  vulnerability_occurrences:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'vulnerability_occurrences'
-    export_table_primary_key: 'id'
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , created_at
-      , updated_at
-      , severity
-      , confidence
-      , report_type
-      , project_id
-      , scanner_id
-      , primary_identifier_id
-      , uuid
-      , name
-      , metadata_version
-      , raw_metadata
-      , vulnerability_id
-      FROM vulnerability_occurrences
   vulnerability_scanners:
     export_schema: 'gitlab_com'
     export_table: 'vulnerability_scanners'

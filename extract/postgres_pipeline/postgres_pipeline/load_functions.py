@@ -11,7 +11,6 @@ from gitlabdata.orchestration_utils import (
 )
 from sqlalchemy.engine.base import Engine
 
-from postgres_pipeline_table import PostgresPipelineTable
 from utils import (
     chunk_and_upload,
     get_engines,
@@ -75,9 +74,12 @@ def load_incremental(
                 minutes=30
             )  # Allow for 30 minute overlap to ensure late arriving data is not skipped
         else:
-            this_run_beginning_timestamp = execution_date - datetime.timedelta(
-                hours=hours_looking_back
+            logging.warn(
+                "No last load time found, using the earliest of the replication timestamp and execution date."
             )
+            this_run_beginning_timestamp = min(
+                replication_timestamp, execution_date
+            ) - datetime.timedelta(hours=hours_looking_back)
 
         logging.info(f"Replication is at {replication_timestamp}")
 
@@ -103,7 +105,7 @@ def load_incremental(
 
     # If _TEMP exists in the table name, skip it because it needs a full sync
     # If a temp table exists then it needs to finish syncing so don't load incrementally
-    if "_TEMP" == table_name[-5:] or target_engine.has_table(f"{table_name}_TEMP"):
+    if "_TEMP" == table_name[-5:]:
         logging.info(
             f"Table {source_table_name} needs to be backfilled due to schema change, aborting incremental load."
         )
@@ -131,7 +133,7 @@ def sync_incremental_ids(
     primary_key = table_dict["export_table_primary_key"]
     # If temp isn't in the name, we don't need to full sync.
     # If a temp table exists, we know the sync didn't complete successfully
-    if "_TEMP" != table_name[-5:] and not target_engine.has_table(f"{table_name}_TEMP"):
+    if "_TEMP" != table_name[-5:]:
         logging.info(f"Table {table} doesn't need a full sync.")
         return False
 
@@ -153,6 +155,7 @@ def load_scd(
     source_table_name: str,
     table_dict: Dict[Any, Any],
     table_name: str,
+    is_append_only: bool = False,
 ) -> bool:
     """
     Load tables that are slow-changing dimensions.
@@ -173,6 +176,19 @@ def load_scd(
 
     logging.info(f"Processing table: {source_table_name}")
     query = f"{raw_query} {additional_filter}"
+
+    if is_append_only:
+        load_ids(
+            additional_filter,
+            table_dict["export_table_primary_key"],
+            raw_query,
+            source_engine,
+            source_table_name,
+            table_name,
+            target_engine,
+            backfill=backfill,
+        )
+        return True
 
     logging.info(query)
     chunk_and_upload(
@@ -196,8 +212,9 @@ def load_ids(
     table_name: str,
     target_engine: Engine,
     id_range: int = 750_000,
+    backfill: bool = True,
 ) -> None:
-    """ Load a query by chunks of IDs instead of all at once."""
+    """Load a query by chunks of IDs instead of all at once."""
 
     # Create a generator for queries that are chunked by ID range
     id_queries = id_query_generator(
@@ -210,7 +227,6 @@ def load_ids(
         id_range=id_range,
     )
     # Iterate through the generated queries
-    backfill = True
     for query in id_queries:
         filtered_query = f"{query} {additional_filtering} ORDER BY {primary_key}"
         logging.info(filtered_query)

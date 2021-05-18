@@ -54,7 +54,7 @@ WITH biz_person AS (
       record_type_id,
       account_id                                    AS dim_crm_account_id,
       reports_to_id,
-      owner_id                                      AS dim_crm_sales_rep_id,
+      owner_id                                      AS dim_crm_user_id,
 
       --info
       person_score,
@@ -93,7 +93,7 @@ WITH biz_person AS (
       record_type_id,
       lean_data_matched_account                  AS dim_crm_account_id,
       NULL                                       AS reports_to_id,
-      owner_id                                   AS dim_crm_sales_rep_id,
+      owner_id                                   AS dim_crm_user_id,
 
       --info
       person_score,
@@ -122,5 +122,5 @@ WITH biz_person AS (
     created_by="@mcooperDD",
     updated_by="@iweeks",
     created_date="2020-12-08",
-    updated_date="2021-02-12"
+    updated_date="2021-04-22"
 ) }}

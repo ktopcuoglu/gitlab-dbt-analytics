@@ -5,7 +5,8 @@
           unique_key='id',
           strategy='check',
           check_cols=[
-              'shared_runners_minutes'
+              'shared_runners_minutes',
+              'repository_size_limit'
           ],
         )
     }}

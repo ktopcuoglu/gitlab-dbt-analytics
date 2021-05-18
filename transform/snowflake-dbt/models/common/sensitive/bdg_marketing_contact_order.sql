@@ -1,42 +1,25 @@
-WITH marketing_contact AS (
+{{ simple_cte([
+    ('marketing_contact', 'dim_marketing_contact'),
+    ('marketing_contact_role', 'bdg_marketing_contact_role'),
+    ('namespace_lineage', 'prep_namespace'),
+    ('gitlab_namespaces', 'gitlab_dotcom_namespaces_source'),
+    ('usage_ping_subscription_smau', 'fct_usage_ping_subscription_mapped_smau'),
+    ('product_usage_wave_1_3', 'fct_product_usage_wave_1_3_metrics_monthly')
+]) }}
 
-    SELECT * 
-    FROM {{ref('dim_marketing_contact')}} 
-
-), marketing_contact_role AS (
-   
-    SELECT *
-    FROM {{ref('bdg_marketing_contact_role')}}
-
-), namespace_lineage AS (
+, saas_namespace_subscription AS (
     
     SELECT *
-    FROM {{ref('prep_namespace')}}
-
-), gitlab_namespaces AS (
-
-    SELECT *
-    FROM {{ ref('gitlab_dotcom_namespaces_source') }}
-
-), saas_namespace_subscription AS (
-    
-    SELECT *
-    FROM {{ref('bdg_namespace_order_subscription_active')}}
+    FROM {{ref('bdg_namespace_order_subscription')}}
+    WHERE is_subscription_active = TRUE
+      OR dim_subscription_id IS NULL
 
 ), self_managed_namespace_subscription AS (
     
     SELECT *
-    FROM {{ref('bdg_self_managed_order_subscription_active')}}
-
-), usage_ping_subscription_smau AS (
-
-    SELECT *
-    FROM {{ref('fct_usage_ping_subscription_mapped_smau')}}
-
-), product_usage_wave_1_3 AS (
-
-    SELECT *
-    FROM {{ref('fct_product_usage_wave_1_3_metrics_monthly')}}
+    FROM {{ref('bdg_self_managed_order_subscription')}}
+    WHERE is_subscription_active = TRUE
+      OR dim_subscription_id IS NULL
 
 ), usage_ping_subscription_smau_aggregate AS (
 
@@ -74,7 +57,7 @@ WITH marketing_contact AS (
       template_repositories_all_time_event,
       ci_pipeline_config_repository_28_days_user,
       user_unique_users_all_secure_scanners_28_days_user,
-      user_container_scanning_job_28_days_user,
+      user_container_scanning_jobs_28_days_user,
       user_sast_jobs_28_days_user,
       user_dast_jobs_28_days_user,
       user_dependency_scanning_jobs_28_days_user,
@@ -240,12 +223,12 @@ WITH marketing_contact AS (
     LEFT JOIN self_managed_namespace_subscription self_managed_billing_account 
       ON self_managed_billing_account.dim_billing_account_id = marketing_contact_role.zuora_billing_account_id   
     LEFT JOIN namespace_lineage 
-      ON namespace_lineage.namespace_id = COALESCE(marketing_contact_role.namespace_id,
+      ON namespace_lineage.dim_namespace_id = COALESCE(marketing_contact_role.namespace_id,
                                                    saas_namespace.dim_namespace_id,
                                                    saas_customer.dim_namespace_id,
                                                    saas_billing_account.dim_namespace_id)
-    left join gitlab_namespaces 
-      ON gitlab_namespaces.namespace_id = namespace_lineage.namespace_id
+    LEFT JOIN gitlab_namespaces 
+      ON namespace_lineage.dim_namespace_id = gitlab_namespaces.namespace_id
       
 ), final AS (
 
@@ -276,7 +259,7 @@ WITH marketing_contact AS (
       product_usage_wave_1_3_aggregate.template_repositories_all_time_event                                                       AS usage_template_repositories_all_time_event,
       product_usage_wave_1_3_aggregate.ci_pipeline_config_repository_28_days_user                                                 AS usage_ci_pipeline_config_repository_28_days_user,
       product_usage_wave_1_3_aggregate.user_unique_users_all_secure_scanners_28_days_user                                         AS usage_user_unique_users_all_secure_scanners_28_days_user,
-      product_usage_wave_1_3_aggregate.user_container_scanning_job_28_days_user                                                   AS usage_user_container_scanning_job_28_days_user,
+      product_usage_wave_1_3_aggregate.user_container_scanning_jobs_28_days_user                                                  AS usage_user_container_scanning_jobs_28_days_user,
       product_usage_wave_1_3_aggregate.user_sast_jobs_28_days_user                                                                AS usage_user_sast_jobs_28_days_user,
       product_usage_wave_1_3_aggregate.user_dast_jobs_28_days_user                                                                AS usage_user_dast_jobs_28_days_user,
       product_usage_wave_1_3_aggregate.user_dependency_scanning_jobs_28_days_user                                                 AS usage_user_dependency_scanning_jobs_28_days_user,
@@ -302,7 +285,7 @@ WITH marketing_contact AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@trevor31",
-    updated_by="@trevor31",
+    updated_by="@ischweickartDD",
     created_date="2021-02-04",
-    updated_date="2021-03-16"
+    updated_date="2021-04-06"
 ) }}

@@ -1,6 +1,7 @@
 tag,description
 arr,Annual Recurring Revenue
 arr_snapshots,For ARR Snapshots
+bamboohr,Related to bamboohr data source
 billing_account,For billing accounts
 common,For the common schema
 crm_account,For CRM Accounts
@@ -10,6 +11,7 @@ data,dbt built-in
 datasiren,Relates to datasiren models
 dbt,Relates to dbt-generated data-sets
 discourse,Relates to Discourse data
+edm_snapshot, Models which create snapshots on upper-layer portions of the EDM
 gainsight,Relates to Customer Product Usage data
 geo,Relates to geo data
 gitlab_dotcom,Relates to GitLab.com Database
@@ -29,6 +31,7 @@ product,For large product analytics data
 purchase_channel, Related to identifying types of purchase channel data
 sales_funnel, related to Lead to Cash funnel
 sales_territory, Related to sales territory mappings
+subscription_snapshot,For Subscription Snapshots
 schema,dbt built-in
 sfdc,Relates to Salesforce dotcom
 sources,Related to sources

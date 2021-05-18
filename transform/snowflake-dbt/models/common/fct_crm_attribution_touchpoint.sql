@@ -24,7 +24,7 @@ WITH bizible_attribution_touchpoints AS (
       opportunity_id                                                AS dim_crm_opportunity_id,
       bizible_account                                               AS dim_crm_account_id,
       crm_person.dim_crm_person_id,
-      opportunity_dimensions.dim_crm_sales_rep_id,
+      opportunity_dimensions.dim_crm_user_id,
       opportunity_dimensions.dim_order_type_id,
       opportunity_dimensions.dim_sales_qualified_source_id,
       opportunity_dimensions.dim_deal_path_id,
@@ -46,6 +46,7 @@ WITH bizible_attribution_touchpoints AS (
       bizible_attribution_percent_full_path,
       bizible_count_u_shaped,
       bizible_count_w_shaped,
+      bizible_count_custom_model,
 
       -- touchpoint revenue info
       bizible_revenue_full_path,
@@ -65,7 +66,7 @@ WITH bizible_attribution_touchpoints AS (
 {{ dbt_audit(
     cte_ref="final_attribution_touchpoint",
     created_by="@mcooperDD",
-    updated_by="@mcooperDD",
+    updated_by="@iweeks",
     created_date="2021-01-21",
-    updated_date="2021-03-04"
+    updated_date="2021-04-22"
 ) }}

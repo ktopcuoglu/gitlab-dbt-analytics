@@ -37,7 +37,7 @@ SCHEMA = "tap_postgres"
 
 
 def get_gcs_bucket(gapi_keyfile: str, bucket_name: str) -> Bucket:
-    """ Do the auth and return a usable gcs bucket object."""
+    """Do the auth and return a usable gcs bucket object."""
 
     scope = ["https://www.googleapis.com/auth/cloud-platform"]
     credentials = service_account.Credentials.from_service_account_info(gapi_keyfile)
@@ -76,7 +76,7 @@ def upload_to_gcs(
 def trigger_snowflake_upload(
     engine: Engine, table: str, upload_file_name: str, purge: bool = False
 ) -> None:
-    """ Trigger Snowflake to upload a tsv file from GCS."""
+    """Trigger Snowflake to upload a tsv file from GCS."""
     logging.info("Loading from GCS into SnowFlake")
 
     purge_opt = "purge = true" if purge else ""
@@ -118,11 +118,12 @@ def postgres_engine_factory(
     host = env[connection_dict["host"]]
     database = env[connection_dict["database"]]
     port = env[connection_dict["port"]]
+    statement_timeout = 900000
 
     # Inject the values to create the engine
     engine = create_engine(
         f"postgresql://{user}:{password}@{host}:{port}/{database}",
-        connect_args={"sslcompression": 0},
+        connect_args={"sslcompression": 0, "options": "-c statement_timeout=40500000"},
     )
     logging.info(engine)
     return engine
@@ -420,7 +421,7 @@ def id_query_generator(
     ):
         id_range_query = (
             "".join(raw_query.lower().split("where")[0])
-            + f"WHERE {primary_key} BETWEEN {id_pair[0]} AND {id_pair[1]}"
+            + f" WHERE {primary_key} BETWEEN {id_pair[0]} AND {id_pair[1]}"
         )
         logging.info(f"ID Range: {id_pair}")
         yield id_range_query

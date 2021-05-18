@@ -55,6 +55,7 @@ models:
 - name: sheetload_engineering_speciality_prior_to_capture
 - name: sheetload_engineering_infra_prod_console_access
 - name: sheetload_event_dictionary_simplified
+- name: sheetload_gcp_active_cud
 - name: sheetload_gitlab_contributing_organizations
 - name: sheetload_gitlab_slack_stats
 - name: sheetload_google_referrals
@@ -87,6 +88,10 @@ models:
 - name: sheetload_rfs_support_requests
 - name: sheetload_sales_training_completion_dates
 - name: sheetload_scalable_employment_values
+- name: sheetload_sdr_adaptive_data
+  description: Table with data for SDR ramping and status by month.
+- name: sheetload_sdr_attainment_to_goal
+  description: Source model for SDR attainment and goals by month.
 - name: sheetload_sdr_count_snapshot
   description: SDR counts by fiscal quarter and sales segment.
 - name: sheetload_social_marketing_metrics
@@ -160,3 +165,5 @@ models:
   description: Sales funnel target dates
 - name: sheetload_sales_funnel_targets_matrix
   description: Sales funnel target Matrix
+- name: sheetload_sales_funnel_partner_alliance_targets_matrix
+  description: Sales funnel Matrix for partner and alliances targets

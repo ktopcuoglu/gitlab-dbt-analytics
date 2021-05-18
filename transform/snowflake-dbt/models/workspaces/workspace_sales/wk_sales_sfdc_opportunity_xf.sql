@@ -1,5 +1,7 @@
 {{ config(alias='sfdc_opportunity_xf') }}
 
+-- +wk_sales_report_pipeline_metrics_per_day_with_targets +wk_sales_report_pipeline_velocity_quarter_with_targets +wk_sales_report_opportunity_pipeline_type
+
 WITH sfdc_opportunity AS (
 
     SELECT opportunity_id,
@@ -15,12 +17,9 @@ WITH sfdc_opportunity AS (
     SELECT * FROM {{ref('sfdc_accounts_xf')}}
 
 ), date_details AS (
- 
-    SELECT
-      *,
-      DENSE_RANK() OVER (ORDER BY first_day_of_fiscal_quarter) AS quarter_number
-    FROM {{ ref('date_details') }}
-    ORDER BY 1 DESC
+
+    SELECT * 
+    FROM {{ ref('wk_sales_date_details') }} 
 
 ), sfdc_opportunity_xf AS (
 
@@ -71,44 +70,46 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity_xf.forecast_category_name,
       sfdc_opportunity_xf.forecasted_iacv,
       sfdc_opportunity_xf.incremental_acv,
-      --sfdc_opportunity_xf.pre_covid_iacv,
       sfdc_opportunity_xf.invoice_number,
 
       -- logic needs to be added here once the oppotunity category fields is merged
       -- https://gitlab.com/gitlab-data/analytics/-/issues/7888
+      --sfdc_opportunity_xf.is_refund,
+
       CASE
-        WHEN sfdc_opportunity.opportunity_category IN ('Credit', 'Decommission','Decommissioned')
+        WHEN sfdc_opportunity.opportunity_category IN ('Decommission')
           THEN 1
         ELSE 0
       END                                                          AS is_refund,
-      --sfdc_opportunity_xf.is_refund,
 
-
+      CASE
+        WHEN sfdc_opportunity.opportunity_category IN ('Credit','Contract Reset')
+          THEN 1
+        ELSE 0
+      END                                                          AS is_credit_contract_reset,
+  
       sfdc_opportunity_xf.is_downgrade,
-      --sfdc_opportunity_xf.is_swing_deal,
       sfdc_opportunity_xf.is_edu_oss,
-      sfdc_opportunity_xf.is_won,
+      CAST(sfdc_opportunity_xf.is_won AS INTEGER)                   AS is_won,
       sfdc_opportunity_xf.net_incremental_acv,
-      --sfdc_opportunity_xf.probability,
       sfdc_opportunity_xf.professional_services_value,
-      --sfdc_opportunity_xf.pushed_count,
       sfdc_opportunity_xf.reason_for_loss,
       sfdc_opportunity_xf.reason_for_loss_details,
-      --sfdc_opportunity_xf.refund_iacv,
-      --sfdc_opportunity_xf.downgrade_iacv,
       sfdc_opportunity_xf.renewal_acv,
       sfdc_opportunity_xf.renewal_amount,
-      sfdc_opportunity_xf.sales_qualified_source,
+      CASE
+        WHEN sfdc_opportunity_xf.sales_qualified_source = 'BDR Generated'
+            THEN 'SDR Generated'
+        ELSE COALESCE(sfdc_opportunity_xf.sales_qualified_source,'NA')
+      END                                                           AS sales_qualified_source,
+
       sfdc_opportunity_xf.solutions_to_be_replaced,
       sfdc_opportunity_xf.total_contract_value,
       sfdc_opportunity_xf.upside_iacv,
-      --sfdc_opportunity_xf.upside_swing_deal_iacv,
-      --sfdc_opportunity_xf.weighted_iacv,
       sfdc_opportunity_xf.is_web_portal_purchase,
       sfdc_opportunity_xf.subscription_start_date,
       sfdc_opportunity_xf.subscription_end_date,
-      --sfdc_opportunity_xf.true_up_value,
-
+  
       -----------------------------------------------------------
       -----------------------------------------------------------
       -- New fields for FY22 - including user segment / region fields
@@ -195,35 +196,15 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity_xf.partner_discount,
       sfdc_opportunity_xf.partner_discount_calc,
       sfdc_opportunity_xf.comp_channel_neutral,
-     
-      -- NF: I think this one is deprecated too
-      --sfdc_opportunity_xf.partner_initiated_opportunity,
-      
-      -----------------------------------------------------------
-      -----------------------------------------------------------
-      -- role hierarchy team fields, from the opportunity owner and account owner
-      -- NF: 2020-02-18 TO BE REMOVED
-      sfdc_opportunity_xf.account_owner_team_level_2,
-      sfdc_opportunity_xf.account_owner_team_level_3,
-      sfdc_opportunity_xf.account_owner_team_level_4,
-      sfdc_opportunity_xf.account_owner_team_vp_level,
-      sfdc_opportunity_xf.account_owner_team_rd_level,
-      sfdc_opportunity_xf.account_owner_team_asm_level,
-      sfdc_opportunity_xf.account_owner_min_team_level,
-      sfdc_opportunity_xf.account_owner_sales_region,
-      sfdc_opportunity_xf.opportunity_owner_team_level_2,
-      sfdc_opportunity_xf.opportunity_owner_team_level_3,
-      
-      -----------------------------------------------------------
-      -----------------------------------------------------------
-      
+    
       sfdc_opportunity_xf.stage_name_3plus,
       sfdc_opportunity_xf.stage_name_4plus,
       sfdc_opportunity_xf.is_stage_3_plus,
       sfdc_opportunity_xf.is_lost,
       
-      --sfdc_opportunity_xf.is_open,
+    
       -- NF: Added the 'Duplicate' stage to the is_open definition
+      --sfdc_opportunity_xf.is_open,
       CASE 
         WHEN sfdc_opportunity_xf.stage_name IN ('8-Closed Lost', '9-Unqualified', 'Closed Won', '10-Duplicate') 
             THEN 0
@@ -253,12 +234,6 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity_xf.sales_qualified_fiscal_quarter_date,
       sfdc_opportunity_xf.sales_qualified_fiscal_year,
       sfdc_opportunity_xf.sales_qualified_date_month,
-
-      sfdc_opportunity_xf.iacv_created_fiscal_quarter_name,
-      sfdc_opportunity_xf.iacv_created_fiscal_quarter_date,
-      sfdc_opportunity_xf.iacv_created_fiscal_year,
-      sfdc_opportunity_xf.iacv_created_date_month,
-      sfdc_opportunity_xf.iacv_created_date,
 
       -- Net ARR Created Date uses the same old IACV Created date field in SFDC
       -- As long as the field in the legacy model is not renamed, this will work
@@ -319,6 +294,17 @@ WITH sfdc_opportunity AS (
 
       -----------------------------------------------------------------------------------------------------      
       -----------------------------------------------------------------------------------------------------
+      
+      --sfdc_opportunity_xf.partner_initiated_opportunity,
+      --sfdc_opportunity_xf.true_up_value,
+      --sfdc_opportunity_xf.is_swing_deal,
+      --sfdc_opportunity_xf.probability,
+      --sfdc_opportunity_xf.pushed_count,
+      --sfdc_opportunity_xf.refund_iacv,
+      --sfdc_opportunity_xf.downgrade_iacv,
+      --sfdc_opportunity_xf.upside_swing_deal_iacv,
+      --sfdc_opportunity_xf.weighted_iacv,
+
 
       -- fields form opportunity source
       sfdc_opportunity.opportunity_category
@@ -419,6 +405,7 @@ WITH sfdc_opportunity AS (
         ELSE 0
       END                                                                   AS is_stage_4_plus,
 
+
       -- account driven fields 
       sfdc_accounts_xf.ultimate_parent_account_id,
   
@@ -428,15 +415,18 @@ WITH sfdc_opportunity AS (
           THEN '1. New'
         WHEN sfdc_opportunity_xf.order_type_stamped IN ('2. New - Connected', '3. Growth') 
           THEN '2. Growth' 
-        WHEN sfdc_opportunity_xf.order_type_stamped IN ('4. Churn','4. Contraction','6. Churn - Final')
-          THEN '3. Churn'
-        ELSE '4. Other' 
+        WHEN sfdc_opportunity_xf.order_type_stamped IN ('4. Contraction')
+          THEN '3. Contraction'
+        WHEN sfdc_opportunity_xf.order_type_stamped IN ('5. Churn - Partial','6. Churn - Final')
+          THEN '4. Churn'
+        ELSE '5. Other' 
       END                                                                   AS deal_category,
+
 
       CASE 
         WHEN sfdc_opportunity_xf.order_type_stamped = '1. New - First Order' 
           THEN '1. New'
-        WHEN sfdc_opportunity_xf.order_type_stamped IN ('2. New - Connected', '3. Growth', '4. Churn','4. Contraction','6. Churn - Final') 
+        WHEN sfdc_opportunity_xf.order_type_stamped IN ('2. New - Connected', '3. Growth', '5. Churn - Partial','6. Churn - Final','4. Contraction') 
           THEN '2. Growth' 
         ELSE '3. Other'
       END                                                                   AS deal_group,
@@ -452,7 +442,7 @@ WITH sfdc_opportunity AS (
         WHEN sfdc_opportunity_xf.account_owner_team_stamped IN ('MM - APAC','MM - East','MM - EMEA','Commercial - MM','MM - West','MM-EMEA')
           THEN 'Mid-Market'
         ELSE 'SMB'
-      END                                                                     AS account_owner_team_stamped_cro_level,   
+      END                                                                   AS account_owner_team_stamped_cro_level,   
 
       ----------------------------------------------------------------
       ----------------------------------------------------------------
@@ -461,15 +451,17 @@ WITH sfdc_opportunity AS (
       CASE 
         WHEN sfdc_opportunity_xf.is_refund = 1
           THEN -1
+        WHEN sfdc_opportunity_xf.is_credit_contract_reset = 1
+          THEN 0
         ELSE 1
-      END                                                                      AS calculated_deal_count,
+      END                                                                    AS calculated_deal_count,
 
         -- PIO Flag for PIO reporting dashboard
       CASE 
         WHEN sfdc_opportunity_xf.dr_partner_engagement = 'PIO' 
           THEN 1 
         ELSE 0 
-      END                                                                       AS partner_engaged_opportunity_flag,
+      END                                                                    AS partner_engaged_opportunity_flag,
 
       
        -- check if renewal was closed on time or not
@@ -509,8 +501,8 @@ WITH sfdc_opportunity AS (
     SELECT 
       oppty_final.*,
       
-      oppty_final.opportunity_owner_user_segment                                                        AS sales_team_cro_level,
-      CONCAT(oppty_final.opportunity_owner_user_segment,'_',oppty_final.opportunity_owner_user_region)  AS sales_team_rd_asm_level,
+      COALESCE(oppty_final.opportunity_owner_user_segment ,'NA')                                                       AS sales_team_cro_level,
+      COALESCE(CONCAT(oppty_final.opportunity_owner_user_segment,'_',oppty_final.opportunity_owner_user_region),'NA')  AS sales_team_rd_asm_level,
 
       ---------------------------------------------------------------------------------------------
       ---------------------------------------------------------------------------------------------
@@ -543,22 +535,126 @@ WITH sfdc_opportunity AS (
       ---------------------------------------------------------------------------------------------
       ---------------------------------------------------------------------------------------------
 
+      -- Open pipeline eligibility definition
+      CASE 
+        WHEN oppty_final.deal_group IN ('1. New','2. Growth')
+          AND oppty_final.is_edu_oss = 0
+          AND oppty_final.is_stage_1_plus = 1
+          AND oppty_final.forecast_category_name != 'Omitted'
+          AND oppty_final.is_open = 1
+         THEN 1
+         ELSE 0
+      END                                                          AS is_eligible_open_pipeline_flag,
+
+
+      -- Created pipeline eligibility definition
+      CASE 
+        WHEN oppty_final.order_type_stamped IN ('1. New - First Order' ,'2. New - Connected', '3. Growth')
+          AND oppty_final.is_edu_oss = 0
+          AND oppty_final.pipeline_created_fiscal_quarter_date IS NOT NULL
+          AND oppty_final.opportunity_category IN ('Standard','Internal Correction','Ramp Deal','Credit','Contract Reset')  
+          AND ((oppty_final.is_stage_1_plus = 1
+                AND oppty_final.forecast_category_name != 'Omitted')
+            OR oppty_final.is_lost = 1)
+          AND (net_arr > 0 
+            OR oppty_final.opportunity_category = 'Credit')
+         THEN 1
+         ELSE 0
+      END                                                          AS is_eligible_created_pipeline_flag,
+
       -- compound metrics to facilitate reporting
       -- created and closed within the quarter net arr
       CASE 
         WHEN oppty_final.pipeline_created_fiscal_quarter_date = oppty_final.close_fiscal_quarter_date
-          AND (oppty_final.is_won = 1 
-                OR (oppty_final.is_renewal = 1 AND oppty_final.is_lost = 1)) 
+          AND is_eligible_created_pipeline_flag = 1
             THEN net_arr
         ELSE 0
-      END                                                         AS created_and_won_net_arr,
+      END                                                         AS created_and_won_same_quarter_net_arr,
+  
+
+
+      ---------------------------------------------------------------------------------------------------------
+      ---------------------------------------------------------------------------------------------------------
+      -- Fields created to simplify report building down the road. Specially the pipeline velocity.
+
+      -- deal count
+      CASE 
+        WHEN is_eligible_open_pipeline_flag = 1
+          AND oppty_final.is_stage_1_plus = 1
+          THEN oppty_final.calculated_deal_count  
+        ELSE 0                                                                                              
+      END                                               AS open_1plus_deal_count,
+
+      CASE 
+        WHEN is_eligible_open_pipeline_flag = 1
+         AND oppty_final.is_stage_3_plus = 1
+          THEN oppty_final.calculated_deal_count
+        ELSE 0
+      END                                               AS open_3plus_deal_count,
+
+      CASE 
+        WHEN is_eligible_open_pipeline_flag = 1
+          AND oppty_final.is_stage_4_plus = 1
+          THEN oppty_final.calculated_deal_count
+        ELSE 0
+      END                                               AS open_4plus_deal_count,
+
+      -- booked deal count
+      CASE 
+        WHEN oppty_final.is_won = 1
+          THEN oppty_final.calculated_deal_count
+        ELSE 0
+      END                                               AS booked_deal_count,
+
+      -- churn deal count (lost renewals)
+      CASE
+        WHEN ((oppty_final.is_renewal = 1
+            AND oppty_final.is_lost = 1)
+            OR net_arr < 0)
+          THEN oppty_final.calculated_deal_count
+        ELSE 0
+      END                                               AS churned_deal_count,
+    
+      -----------------
+      -- Net ARR
+
+      CASE 
+        WHEN is_eligible_open_pipeline_flag = 1
+          THEN net_arr
+        ELSE 0                                                                                              
+      END                                                AS open_1plus_net_arr,
+
+      CASE 
+        WHEN is_eligible_open_pipeline_flag = 1
+          AND oppty_final.is_stage_3_plus = 1   
+          THEN net_arr
+        ELSE 0
+      END                                                AS open_3plus_net_arr,
+  
+      CASE 
+        WHEN is_eligible_open_pipeline_flag = 1  
+          AND oppty_final.is_stage_4_plus = 1
+          THEN net_arr
+        ELSE 0
+      END                                                AS open_4plus_net_arr,
 
       -- booked net arr (won + renewals / lost)
       CASE
-        WHEN oppty_final.is_won = 1 OR (oppty_final.is_renewal = 1 AND oppty_final.is_lost = 1)
+        WHEN (oppty_final.is_won = 1 
+            OR (oppty_final.is_renewal = 1 
+                AND oppty_final.is_lost = 1))
           THEN net_arr
         ELSE 0 
-      END                                                         AS booked_net_arr
+      END                                                 AS booked_net_arr,
+
+      -- churn net arr (lost renewals)
+      CASE
+        WHEN ((oppty_final.is_renewal = 1
+            AND oppty_final.is_lost = 1)
+            OR net_arr < 0)
+          THEN net_arr
+        ELSE 0
+      END                                                 AS churned_net_arr
 
     FROM oppty_final
     -- Net IACV to Net ARR conversion table

@@ -43,10 +43,7 @@ SELECT
   is_self_managed_premium_tier,
   is_self_managed_starter_tier,
   is_self_managed_ultimate_tier,
-  is_sfdc_lead_contact,
-  is_sfdc_opted_out,
   is_zuora_billing_contact,
-  job_title,
   last_name,
   responsible_for_free_tier_only,
   responsible_for_group_saas_bronze_tier,
@@ -54,12 +51,9 @@ SELECT
   responsible_for_group_saas_premium_tier,
   responsible_for_group_saas_trial,
   responsible_for_group_saas_ultimate_tier,
-  sfdc_created_date,
-  sfdc_lead_contact,
-  sfdc_parent_sales_segment,
   zuora_active_state,
   zuora_contact_id,
-  zuora_created_date
+  zuora_created_date,
 
   -- METADATA COLUMNS FOR USE IN PUMP (NOT INTEGRATION)
   last_changed

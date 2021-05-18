@@ -34,6 +34,11 @@ def get_pmg_reporting_data_query(start_date: str, end_date: str) -> str:
         f"  conversions,"
         f"  cost,"
         f"  ga_conversions,"
+        f"  sends, "
+        f"  opens, "
+        f"  inquiries, "
+        f"  mqls, "
+        f"  linear_sao, "
         f"  campaign_code_type, "
         f"  content_type "
         f"FROM "
@@ -43,7 +48,7 @@ def get_pmg_reporting_data_query(start_date: str, end_date: str) -> str:
 
 
 def write_date_json(date: str, df: DataFrame) -> str:
-    """ Just here so we can log in the list comprehension """
+    """Just here so we can log in the list comprehension"""
     file_name = f"pmg_reporting_data_{date}.json"
     print(f"Writing file {file_name}")
 

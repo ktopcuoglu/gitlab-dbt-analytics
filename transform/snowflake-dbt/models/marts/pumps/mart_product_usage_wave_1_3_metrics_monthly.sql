@@ -6,7 +6,8 @@
 {{ simple_cte([
     ('monthly_metrics', 'fct_product_usage_wave_1_3_metrics_monthly'),
     ('billing_accounts', 'dim_billing_account'),
-    ('crm_accounts', 'dim_crm_account')
+    ('crm_accounts', 'dim_crm_account'),
+    ('location_country', 'dim_location_country')
 ]) }}
 
 , joined AS (
@@ -20,18 +21,24 @@
       monthly_metrics.snapshot_date_id,
       monthly_metrics.seat_link_report_date,
       monthly_metrics.seat_link_report_date_id,
-      monthly_metrics.license_utilization,
-      monthly_metrics.active_user_count,
-      monthly_metrics.max_historical_user_count,
-      monthly_metrics.license_user_count,
       monthly_metrics.dim_usage_ping_id,
       monthly_metrics.ping_created_at,
       monthly_metrics.ping_created_date_id,
       monthly_metrics.uuid,
       monthly_metrics.hostname,
+      monthly_metrics.instance_type,
       monthly_metrics.dim_license_id,
       monthly_metrics.license_md5,
       monthly_metrics.cleaned_version,
+      location_country.country_name,
+      location_country.iso_2_country_code,
+      location_country.iso_3_country_code,
+      -- Wave 1
+      monthly_metrics.license_utilization,
+      monthly_metrics.active_user_count,
+      monthly_metrics.max_historical_user_count,
+      monthly_metrics.license_user_count,
+      -- Wave 2 & 3
       monthly_metrics.umau_28_days_user,
       monthly_metrics.action_monthly_active_users_project_repo_28_days_user,
       monthly_metrics.merge_requests_28_days_user,
@@ -45,24 +52,25 @@
       monthly_metrics.ci_builds_all_time_event,
       monthly_metrics.ci_runners_all_time_event,
       monthly_metrics.auto_devops_enabled_all_time_event,
-      monthly_metrics.gitlab_shared_runners_enabled_instance_setting,
-      monthly_metrics.container_registry_enabled_instance_setting,
+      monthly_metrics.gitlab_shared_runners_enabled,
+      monthly_metrics.container_registry_enabled,
       monthly_metrics.template_repositories_all_time_event,
       monthly_metrics.ci_pipeline_config_repository_28_days_user,
       monthly_metrics.user_unique_users_all_secure_scanners_28_days_user,
-      monthly_metrics.user_container_scanning_job_28_days_user,
       monthly_metrics.user_sast_jobs_28_days_user,
       monthly_metrics.user_dast_jobs_28_days_user,
       monthly_metrics.user_dependency_scanning_jobs_28_days_user,
       monthly_metrics.user_license_management_jobs_28_days_user,
       monthly_metrics.user_secret_detection_jobs_28_days_user,
-      monthly_metrics.object_store_packages_enabled_instance_setting,
+      monthly_metrics.user_container_scanning_jobs_28_days_user,
+      monthly_metrics.object_store_packages_enabled,
       monthly_metrics.projects_with_packages_all_time_event,
       monthly_metrics.projects_with_packages_28_days_user,
       monthly_metrics.deployments_28_days_user,
       monthly_metrics.releases_28_days_user,
       monthly_metrics.epics_28_days_user,
       monthly_metrics.issues_28_days_user,
+      -- Wave 3.1
       monthly_metrics.ci_internal_pipelines_all_time_event,
       monthly_metrics.ci_external_pipelines_all_time_event,
       monthly_metrics.merge_requests_all_time_event,
@@ -91,11 +99,37 @@
       monthly_metrics.remote_mirrors_all_time_event,
       monthly_metrics.projects_enforcing_code_owner_approval_28_days_user,
       monthly_metrics.project_clusters_enabled_28_days_user,
-      monthly_metrics.analytics_total_unique_counts_monthly,
-      monthly_metrics.issues_edit_total_unique_counts_monthly,
-      monthly_metrics.user_packages_total_unique_counts_monthly,
-      monthly_metrics.terraform_state_api_unique_users_monthly,
-      monthly_metrics.incident_management_total_unique_counts_monthly,
+      monthly_metrics.analytics_28_days_user,
+      monthly_metrics.issues_edit_28_days_user,
+      monthly_metrics.user_packages_28_days_user,
+      monthly_metrics.terraform_state_api_28_days_user,
+      monthly_metrics.incident_management_28_days_user,
+      -- Wave 3.2
+      monthly_metrics.auto_devops_enabled,
+      monthly_metrics.gitaly_clusters_instance,
+      monthly_metrics.epics_deepest_relationship_level_instance,
+      monthly_metrics.clusters_applications_cilium_all_time_event,
+      monthly_metrics.network_policy_forwards_all_time_event,
+      monthly_metrics.network_policy_drops_all_time_event,
+      monthly_metrics.requirements_with_test_report_all_time_event,
+      monthly_metrics.requirement_test_reports_ci_all_time_event,
+      monthly_metrics.projects_imported_from_github_all_time_event,
+      monthly_metrics.projects_jira_cloud_active_all_time_event,
+      monthly_metrics.projects_jira_dvcs_server_active_all_time_event,
+      monthly_metrics.service_desk_issues_all_time_event,
+      monthly_metrics.ci_pipelines_all_time_user,
+      monthly_metrics.service_desk_issues_28_days_user,
+      monthly_metrics.projects_jira_active_28_days_user,
+      monthly_metrics.projects_jira_dvcs_cloud_active_28_days_user,
+      monthly_metrics.projects_jira_dvcs_server_active_28_days_user,
+      monthly_metrics.merge_requests_with_required_code_owners_28_days_user,
+      monthly_metrics.analytics_value_stream_28_days_event,
+      monthly_metrics.code_review_user_approve_mr_28_days_user,
+      monthly_metrics.epics_usage_28_days_user,
+      monthly_metrics.ci_templates_usage_28_days_event,
+      monthly_metrics.project_management_issue_milestone_changed_28_days_user,
+      monthly_metrics.project_management_issue_iteration_changed_28_days_user,
+      -- Data Quality Flags
       monthly_metrics.instance_user_count_not_aligned,
       monthly_metrics.historical_max_users_not_aligned,
       monthly_metrics.is_seat_link_subscription_in_zuora,
@@ -109,13 +143,15 @@
       ON monthly_metrics.dim_billing_account_id = billing_accounts.dim_billing_account_id
     LEFT JOIN crm_accounts
       ON billing_accounts.dim_crm_account_id = crm_accounts.dim_crm_account_id
+    LEFT JOIN location_country
+      ON monthly_metrics.dim_location_country_id = location_country.dim_location_country_id
 
 )
 
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@ischweickartDD",
-    updated_by="@ischweickartDD",
+    updated_by="@michellecooper",
     created_date="2021-02-11",
-    updated_date="2021-02-24"
+    updated_date="2021-04-27"
 ) }}

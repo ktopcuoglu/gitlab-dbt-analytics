@@ -5,11 +5,11 @@
 }}
 
 WITH filtered_counters AS (
- 
+  
   SELECT *
   FROM {{ ref('mart_usage_ping_counters_statistics') }}
-  WHERE ping_name ILIKE 'counts.%' AND edition = 'CE'
-    AND firt_major_version_with_counter BETWEEN 1 AND 12
+  WHERE metrics_path ILIKE 'counts.%' AND edition = 'CE'
+    AND first_major_version_with_counter BETWEEN 1 AND 12
 
 ), monthly_usage_data AS (
 
@@ -22,10 +22,10 @@ WITH filtered_counters AS (
       AND created_month >= (SELECT MAX(reporting_month) FROM {{this}})
 
       {% endif %}
-), gitlab_release_schedule AS (
+), dim_gitlab_releases AS (
 
     SELECT *
-    FROM {{ ref('gitlab_release_schedule') }}
+    FROM {{ ref('dim_gitlab_releases') }}
 
 ), dim_usage_pings AS (
 
@@ -56,17 +56,16 @@ WITH filtered_counters AS (
     FROM monthly_usage_data AS product_usage
     LEFT JOIN dim_usage_pings
       ON product_usage.ping_id = dim_usage_pings.id
-    LEFT JOIN gitlab_release_schedule AS release 
+    LEFT JOIN dim_gitlab_releases AS release 
       ON dim_usage_pings.major_minor_version = release.major_minor_version
     INNER JOIN filtered_counters 
-      ON product_usage.metrics_path = filtered_counters.ping_name
+      ON product_usage.metrics_path = filtered_counters.metrics_path
     INNER JOIN outlier_detection_formula 
       ON product_usage.metrics_path = outlier_detection_formula.metrics_path 
       AND product_usage.created_month = outlier_detection_formula.reporting_month
       AND product_usage.monthly_metric_value <= outer_boundary
     WHERE ping_source = 'Self-Managed'
       AND product_usage.created_month > '2020-01-01'
-      AND product_usage.created_month < '2021-03-01'
       AND is_trial = False
     GROUP BY 1,2,3,4
   

@@ -9,4 +9,10 @@ macros:
     description: '{{ doc("stage_mapping") }}'
   - name: usage_ping_month_range
     description: '{{ doc("usage_ping_month_range") }}'
+  - name: usage_ping_over_ping_difference
+    description: '{{ doc("usage_ping_over_ping_difference") }}'
+  - name: usage_ping_over_ping_estimated
+    description: '{{ doc("usage_ping_over_ping_estimated") }}'
+  - name: usage_ping_over_ping_smoothed
+    description: '{{ doc("usage_ping_over_ping_smoothed") }}'
 

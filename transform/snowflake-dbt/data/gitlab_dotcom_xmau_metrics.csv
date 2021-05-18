@@ -18,6 +18,6 @@ static_analysis_job,secret_detection,secure,FALSE,static_analysis,TRUE,secure_pr
 composition_analysis_jobs,dependency_scanning,secure,FALSE,composition_analysis,TRUE,secure_protect,FALSE
 composition_analysis_jobs,license_scanning,secure,FALSE,composition_analysis,TRUE,secure_protect,FALSE
 composition_analysis_jobs,license_management,secure,FALSE,composition_analysis,TRUE,secure_protect,FALSE
-container_security_jobs,container_scanning,protect,FALSE,container_security,TRUE,secure_protect,FALSE
+container_security_jobs,container_scanning,protect,TRUE,container_security,TRUE,secure_protect,FALSE
 packages,packages,package,TRUE,package,TRUE,ops,FALSE
 events,events,NULL,FALSE,NULL,FALSE,NULL,TRUE

@@ -1,14 +1,13 @@
 {{ simple_cte([
     ('locality','bamboohr_locality'),
-    ('location_factor_yaml','location_factors_yaml_historical'),
     ('temporary_sheetload', 'sheetload_location_factor_temporary_2020_december')
 ]) }}
 
 , location_factor_yaml AS (
 
-    SELECT *,
+    SELECT {{ dbt_utils.star(from=ref('location_factors_yaml_historical'), except=["YAML_LOCALITY"]) }},
       LOWER(TRIM(area ||', '||country)) AS yaml_locality     
-    FROM location_factor_yaml
+    FROM {{ ref('location_factors_yaml_historical') }}
 
 ), location_factor_yaml_everywhere_else AS (
 

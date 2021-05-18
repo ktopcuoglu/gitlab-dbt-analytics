@@ -7,22 +7,13 @@
 
 WITH source AS (
 
-    SELECT 
-      *, 
-      OBJECT_CONSTRUCT(
-        {% for column in columns %}  
-          '{{ column.column | lower }}', {{ column.column | lower }}
-          {% if not loop.last %}
-            ,
-          {% endif %}
-        {% endfor %}
-      ) AS raw_usage_data_payload_reconstructed
+    SELECT *
     FROM {{ ref('version_usage_data_source') }}
 
 ), usage_data AS (
 
     SELECT
-      {{ dbt_utils.star(from=ref('version_usage_data_source'), except=['EDITION']) }},
+      {{ dbt_utils.star(from=ref('version_usage_data_source'), except=['EDITION', 'RAW_USAGE_DATA_PAYLOAD_RECONSTRUCTED']) }},
       IFF(license_expires_at >= created_at OR license_expires_at IS NULL, edition, 'EE Free') AS cleaned_edition,
       REGEXP_REPLACE(NULLIF(version, ''), '[^0-9.]+')                                         AS cleaned_version,
       IFF(version ILIKE '%-pre', True, False)                                                 AS version_is_prerelease,

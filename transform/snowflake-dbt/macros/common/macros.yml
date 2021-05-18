@@ -1,5 +1,4 @@
 version: 2
-
 macros:
   - name: arr_buckets
     description: This macro calculates buckets of values for ARR.
@@ -28,3 +27,40 @@ macros:
       - name: sales_region
         type: string
         description: Sales region field to use for grouping
+  - name: alliance_type
+    description: This macro applies business logic to identify alliance partners in the Channel business. The Macro uses the same names that are found in the source data.
+    arguments:
+      - name: partner_account_name
+        type: string
+        description: Partner account name fetched from joining the account and opportunity objects.
+      - name: influence_account_name
+        type: string
+        description: Influence partner account name fetched from joining the account and opportunity objects.
+      - name: partner_account
+        type: string
+        description: Partner account id from the opportunity object.
+      - name: influence_account
+        type: string
+        description: Influence partner account id from the opportunity object.
+  - name: alliance_type_short
+    description: This macro applies business logic to identify alliance partners in the Channel business. The Macro abbreviates the source names to shorter names selected by the business that will be used in reporting.
+    arguments:
+      - name: partner_account_name
+        type: string
+        description: Abbreviated partner account name fetched from joining the account and opportunity objects.
+      - name: influence_account_name
+        type: string
+        description: Abbreviated influence partner account name fetched from joining the account and opportunity objects.
+      - name: partner_account
+        type: string
+        description: Abbreviated partner account id from the opportunity object.
+      - name: influence_account
+        type: string
+        description: Abbreviated influence partner account id from the opportunity object.
+  - name: channel_type
+    description: This macro applies business logic to bucket dr_partner_engagement and order_type into the respective channel type. Partner Sourced is broken out by order type while assisted and fulfillment are not broken out by order type in analyses.
+    arguments:
+      - name: dr_partner_engegament
+        type: string
+      - name: order_type
+        type: string
