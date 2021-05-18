@@ -89,6 +89,6 @@ SELECT DISTINCT
   dim_usage_ping_id,
   license_subscription_id AS dim_subscription_id,
   NULL                    AS other_dim_subscription_id_array,
-  'Match between Usage Ping and a expired Subscription'
+  'Match between Usage Ping and a expired Subscription' AS match_type
 FROM join_ping_to_subscriptions
 WHERE dim_usage_ping_id NOT IN (SELECT dim_usage_ping_id FROM first_subscription)
