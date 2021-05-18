@@ -5,53 +5,13 @@
     ('dim_product_detail', 'dim_product_detail'),
     ('fct_usage_ping_payload', 'fct_usage_ping_payload'),
     ('dim_subscription', 'dim_subscription'),
-    ('dim_license', 'dim_license')
+    ('dim_license', 'dim_license'),
+    ('dim_location', 'dim_location_country')
     ])
     
 }}
 
-
-WITH dim_billing_account AS (
-
-    SELECT *
-    FROM {{ ref('dim_billing_account') }}
-
-), dim_crm_account AS (
-
-    SELECT *
-    FROM {{ ref('dim_crm_account') }}
-
-), dim_date AS (
-
-    SELECT *
-    FROM {{ ref('dim_date') }}
-
-), dim_location AS (
-
-    SELECT *
-    FROM {{ ref('dim_location_country') }}
-
-), dim_product_detail AS (
-
-    SELECT *
-    FROM {{ ref('dim_product_detail') }}
-
-), fct_usage_ping_payload AS (
-
-    SELECT *
-    FROM {{ ref('fct_usage_ping_payload') }}
-
-), dim_subscription AS (
-
-    SELECT *
-    FROM {{ ref('dim_subscription') }}
-
-), dim_license AS (
-
-    SELECT *
-    FROM {{ ref('dim_license') }}
-
-), joined AS (
+, joined AS (
 
     SELECT
       fct_usage_ping_payload.*,
@@ -132,7 +92,7 @@ WITH dim_billing_account AS (
 
       -- metadata
       usage_ping_delivery_type,
-      main_edition,
+      edition,
       major_minor_version,
       version_is_prerelease,
       instance_user_count
