@@ -46,8 +46,7 @@
         )::BOOLEAN                                                   AS version_is_prerelease,
       SPLIT_PART(cleaned_version, '.', 1)::NUMBER                                                     AS major_version,
       SPLIT_PART(cleaned_version, '.', 2)::NUMBER                                                     AS minor_version,
-      major_version || '.' || minor_version                                                           AS major_minor_version,
-      raw_usage_data_payload_reconstructed
+      major_version || '.' || minor_version                                                           AS major_minor_version
     FROM usage_ping
     WHERE uuid IS NOT NULL
       AND version NOT LIKE ('%VERSION%') -- Messy data that's not worth parsing
