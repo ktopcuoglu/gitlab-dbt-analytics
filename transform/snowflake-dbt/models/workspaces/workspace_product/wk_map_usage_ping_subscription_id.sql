@@ -15,7 +15,7 @@
     SELECT 
       *,
       STRTOK_TO_ARRAY(subscription_lineage, ',') AS subscription_lineage_array,
-      GET(subscription_lineage_array, -1)::VARCHAR  AS latest_subscription_in_lineage
+      ARRAY_SLICE(subscription_lineage_array, -2, -1)::VARCHAR  AS latest_subscription_in_lineage
     FROM dim_subscription
     WHERE subscription_status IN ('Active', 'Cancelled')
       AND subscription_start_date < subscription_end_date
