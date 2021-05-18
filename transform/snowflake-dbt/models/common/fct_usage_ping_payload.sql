@@ -26,7 +26,7 @@
 
     SELECT 
       id                                                                        AS dim_usage_ping_id, 
-      created_at::TIMESTAMP(0)                                                  AS ping_created_at,
+      created_at::TIMESTAMP                                                   AS ping_created_at,
       *, 
       {{ nohash_sensitive_columns('version_usage_data_source', 'source_ip') }}  AS ip_address_hash
     FROM {{ ref('version_usage_data_source') }}
@@ -86,7 +86,7 @@
         ELSE FALSE END                                                                                AS is_internal, 
       -- put that in a macro
       CASE
-        WHEN hostname ilike 'staging.%'                         THEN TRUE
+        WHEN hostname ILIKE 'staging.%'                         THEN TRUE
         WHEN hostname IN ( 
         'staging.gitlab.com',
         'dr.gitlab.com'

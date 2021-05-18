@@ -63,7 +63,7 @@ WITH self_managed_active_subscriptions AS (
     INNER JOIN dim_date ON self_managed_active_subscriptions.date_id = dim_date.date_id
     LEFT JOIN active_subscriptions ON self_managed_active_subscriptions.subscription_id = active_subscriptions.dim_subscription_id
     LEFT JOIN all_subscriptions ON active_subscriptions.subscription_name_slugify = all_subscriptions.subscription_name_slugify
-    LEFT JOIN fct_payload ON all_subscriptions.dim_subscription_id = fct_payload.dim_subscription_id AND first_day_of_month = DATE_TRUNC('month', fct_payload.ping_created_at)
+    LEFT JOIN fct_payload ON all_subscriptions.dim_subscription_id = fct_payload.dim_subscription_id AND dim_date.first_day_of_month = DATE_TRUNC('month', fct_payload.ping_created_at)
     {{ dbt_utils.group_by(n=6) }}
 
 ), latest_versions AS (
