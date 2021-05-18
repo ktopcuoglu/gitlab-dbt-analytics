@@ -70,6 +70,7 @@
 
 )
 
+-- FIRST CTE: valid subscriptions when the usage ping got created
 SELECT
   join_ping_to_subscriptions.dim_usage_ping_id,
   first_subscription.dim_subscription_id,
@@ -85,6 +86,7 @@ GROUP BY 1,2
 
 UNION 
 
+-- SECOND CTE: No valid subscriptions at usage ping creation
 SELECT DISTINCT
   dim_usage_ping_id,
   license_subscription_id AS dim_subscription_id,
