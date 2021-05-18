@@ -14,8 +14,8 @@
 
     SELECT 
       *,
-      SPLIT_PART(subscription_lineage, ',', -1)  AS latest_subscription_in_lineage,
-      STRTOK_TO_ARRAY(subscription_lineage, ',') AS subscription_lineage_array
+      STRTOK_TO_ARRAY(subscription_lineage, ',') AS subscription_lineage_array,
+      GET(subscription_lineage_array, -1)::VARCHAR  AS latest_subscription_in_lineage,
     FROM dim_subscription
     WHERE subscription_status IN ('Active', 'Cancelled')
       AND subscription_start_date < subscription_end_date
@@ -91,6 +91,6 @@ SELECT DISTINCT
   dim_usage_ping_id,
   license_subscription_id AS dim_subscription_id,
   NULL                    AS other_dim_subscription_id_array,
-  'Match between Usage Ping and a expired Subscription'
+  'Match between Usage Ping and a expired Subscription' AS match_type
 FROM join_ping_to_subscriptions
 WHERE dim_usage_ping_id NOT IN (SELECT dim_usage_ping_id FROM first_subscription)
