@@ -1,3 +1,16 @@
+{{ simple_cte([
+    ('dim_billing_account', 'dim_billing_account'),
+    ('dim_crm_account', 'dim_crm_account'),
+    ('dim_date', 'dim_date'),
+    ('dim_product_detail', 'dim_product_detail'),
+    ('fct_usage_ping_payload', 'fct_usage_ping_payload'),
+    ('dim_subscription', 'dim_subscription'),
+    ('dim_license', 'dim_license')
+    ])
+    
+}}
+
+
 WITH dim_billing_account AS (
 
     SELECT *
