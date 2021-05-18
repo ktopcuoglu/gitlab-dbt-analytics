@@ -360,6 +360,7 @@ roles:
             - netsuite
             - keyhole_twitter
             - marketing_dnc
+            - marketo
             - pmg
             - snowflake_db
             - zendesk
@@ -1438,6 +1439,21 @@ roles:
                     - raw.sheetload.maxmind_countries
                     - raw.sheetload.maxmind_ranges
 
+    - marketo:
+          privileges:
+              databases:
+                  read:
+                    #   - prep
+                      - raw
+              schemas:
+                  read:
+                    #   - prep.marketo
+                      - raw.marketo
+              tables:
+                  read:
+                    #   - prep.marketo.*
+                      - raw.marketo.*
+
     - netsuite:
         warehouses:
             - analyst_xs
@@ -1864,6 +1880,12 @@ roles:
             - bamboohr_analytics
         warehouses:
             - analyst_xs
+
+    - awaller:
+        member_of:
+            - analyst_marketing
+        warehouses:
+            - analyst_xs        
     
     - blutz:
         warehouses:
@@ -2234,6 +2256,12 @@ roles:
            - analyst_engineering
         warehouses:
            - analyst_xs
+      
+    - jameson:
+        member_of:
+            - analyst_marketing
+        warehouses:
+            - analyst_xs            
 
     - jjackson:
         member_of:
@@ -2267,6 +2295,8 @@ roles:
             - netsuite
             - static_admin
             - data_team_analyst
+            - analyst_finance
+            - gainsight_temp_source
         warehouses:
             - analyst_xs
             - analyst_l
@@ -3242,6 +3272,11 @@ users:
         member_of:
             - amurray
 
+    - awaller:
+        can_login: yes
+        member_of:
+            - awaller
+
     - blutz:
         can_login: yes
         member_of:
@@ -3408,6 +3443,11 @@ users:
         can_login: yes
         member_of:
             - iwiedler
+
+    - jameson:
+        can_login: yes
+        member_of:
+            - jameson
 
     - jjackson:
         can_login: yes

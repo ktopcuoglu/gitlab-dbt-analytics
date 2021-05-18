@@ -25,6 +25,9 @@ WITH source AS (
     trial::BOOLEAN                                AS is_trial,
     created_at::TIMESTAMP                         AS gitlab_subscription_created_at,
     updated_at::TIMESTAMP                         AS gitlab_subscription_updated_at,
+    seats_in_use::NUMBER                          AS seats_in_use,
+    seats_owed::NUMBER                            AS seats_owed,
+    trial_extension_type::NUMBER                  AS trial_extension_type,
     "DBT_VALID_FROM"::TIMESTAMP                   AS valid_from,
     "DBT_VALID_TO"::TIMESTAMP                     AS valid_to
   

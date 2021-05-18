@@ -33,6 +33,22 @@ models:
           - name: metrics_path
             tests:
               - not_null
+    - name: prep_usage_data_7_days_flattened
+      description: '{{ doc("prep_usage_data_7_days_flattened") }}'
+      columns:
+          - name: instance_path_id
+            tests:
+              - not_null
+              - unique
+          - name: ping_id
+            tests:
+              - not_null
+          - name: instance_id
+            tests:
+              - not_null
+          - name: metrics_path
+            tests:
+              - not_null
     - name: prep_usage_data_28_days_flattened
       description: '{{ doc("prep_usage_data_28_days_flattened") }}'
       columns:

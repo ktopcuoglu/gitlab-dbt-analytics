@@ -78,6 +78,7 @@
       sfdc_opportunity.account_id                                                AS dim_crm_account_id,
       sfdc_opportunity.owner_id                                                  AS dim_crm_user_id,
       sfdc_opportunity.incremental_acv                                           AS iacv,
+      sfdc_opportunity.net_incremental_acv                                       AS net_iacv,
       sfdc_opportunity.net_arr,
       sfdc_opportunity.amount,
       sfdc_opportunity.recurring_amount,
@@ -400,6 +401,7 @@
 
       -- additive fields
       opportunity_fields.iacv,
+      opportunity_fields.net_iacv,
       opportunity_fields.net_arr,
       opportunity_fields.amount,
       opportunity_fields.recurring_amount,

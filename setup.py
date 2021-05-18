@@ -1,7 +1,7 @@
 from setuptools import setup
 
 requires = [
-    "dbt==0.18.1",
+    "dbt==0.19.1",
     "gitlabdata==0.2.1",
     "pandas==0.25.3",
     "requests==2.22.0",
