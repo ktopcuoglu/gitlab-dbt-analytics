@@ -139,7 +139,6 @@ def rename_table_name(
 def rename_query_tables(sql_query: str) -> str:
     """
     function to rename the table in the sql query
-    returns the query ready for execution in Snowflake
     """
 
     ### comprehensive list of all the keywords that are followed by a table name
