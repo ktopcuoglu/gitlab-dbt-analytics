@@ -1,6 +1,7 @@
 import json
 import re
 import os
+from typing import Any, Dict, List
 
 from flatten_dict import flatten
 from flatten_dict.reducer import make_reducer
@@ -21,9 +22,9 @@ from sqlparse.utils import imt
 ### Read and transform JSON file
 
 
-def sql_queries_dict(json_file):
+def sql_queries_dict(json_file: str) -> Dict[Any, Any]:
     """
-    function that transforms the sql-export.json file into a Python dict with only SQL batch counters
+    function that transforms the given json file into a Python dict with only SQL batch counters
     """
     with open(json_file) as f:
         data = json.load(f)
@@ -40,17 +41,20 @@ def sql_queries_dict(json_file):
     return sql_queries_dict
 
 
-def add_counter_name_as_column(sql_metrics_name, sql_query):
+def add_counter_name_as_column(sql_metrics_name: str, sql_query: str) -> str:
     """
-    step needed to add the first 2 columns:
-      - counter_name
-      - run_day
+    A query like
 
-    this needs a specific row of a specific dataframe, I think this could be changed to a SQL query for more convenience
+    SELECT COUNT(issues.id)
+    FROM issues
 
-    a query like that SELECT COUNT(issues.id) FROM issues will be changed to SELECT "counts.issues", COUNT(issues.id), TO_DATE(CURRENT_DATE)
+    will be changed to
 
-    needed for version 1 and 2
+    SELECT
+      "counts.issues" AS counter_name,
+      COUNT(issues.id) AS counter_value,
+      TO_DATE(CURRENT_DATE) AS run_day
+    FROM issues
     """
 
     # removing extra " to have an easier query to parse
@@ -98,7 +102,19 @@ def add_counter_name_as_column(sql_metrics_name, sql_query):
     return enhanced_query
 
 
-def rename_table_name(keywords_to_look_at, token, tokens, index, token_string_list):
+def rename_table_name(
+    keywords_to_look_at: List[str],
+    token: Token,
+    tokens: List[Token],
+    index: int,
+    token_string_list: List[str],
+) -> None:
+    """
+    Replaces the table name in the query -- represented as the list of tokens -- to make it able to run in Snowflake
+
+    Does this by prepending `prep.gitlab_dotcom.gitlab_dotcom_` to the table name in the query and then appending `_dedupe_source`
+    """
+
     if any(token_word in keywords_to_look_at for token_word in str(token).split(" ")):
         i = 1
         # Whitespaces are considered as tokens and should be skipped
@@ -120,9 +136,10 @@ def rename_table_name(keywords_to_look_at, token, tokens, index, token_string_li
             token_string_list.insert(index + i + 1, str(next_token))
 
 
-def rename_query_tables(sql_query):
+def rename_query_tables(sql_query: str) -> str:
     """
-    function to rename the table based on a new regex
+    function to rename the table in the sql query
+    returns the query ready for execution in Snowflake
     """
 
     ### comprehensive list of all the keywords that are followed by a table name
@@ -138,7 +155,6 @@ def rename_query_tables(sql_query):
     token_string_list = list(map(str, tokens))
 
     # go through the tokens to find the tables that should be renamed
-    # I find this for loop very confusing... there might be better ways to do it for sure
     for index in range(len(tokens)):
         token = tokens[index]
         rename_table_name(keywords_to_look_at, token, tokens, index, token_string_list)
