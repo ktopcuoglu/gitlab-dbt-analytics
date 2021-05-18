@@ -25,25 +25,25 @@ WITH date_details AS (
 ), renewal_subscriptions AS (
 
     SELECT DISTINCT
-      sub_1.subscription_id,
-      sub_1.subscription_name,
-      sub_1.zuora_renewal_subscription_name,
+      zuora_subscription_1.subscription_id,
+      zuora_subscription_1.subscription_name,
+      zuora_subscription_1.zuora_renewal_subscription_name,
       CASE
-        WHEN sub_1.current_term >= 24 THEN TRUE
-        WHEN sub_1.zuora_renewal_subscription_name != '' THEN TRUE
+        WHEN zuora_subscription_1.current_term >= 24 THEN TRUE
+        WHEN zuora_subscription_1.zuora_renewal_subscription_name != '' THEN TRUE
         ELSE FALSE
       END                                                                       AS is_myb,
       CASE
-        WHEN sub_1.zuora_renewal_subscription_name != '' THEN TRUE
+        WHEN zuora_subscription_1.zuora_renewal_subscription_name != '' THEN TRUE
         ELSE FALSE
       END                                                                       AS is_myb_with_multi_subs,
-      DATE_TRUNC('month',sub_2.subscription_end_date::DATE)                     AS myb_renewal_month,
-      RANK() OVER (PARTITION BY sub_1.subscription_name
-                   ORDER BY sub_1.zuora_renewal_subscription_name, sub_2.subscription_end_date )
+      DATE_TRUNC('month',zuora_subscription_2.subscription_end_date::DATE)      AS myb_renewal_month,
+      RANK() OVER (PARTITION BY zuora_subscription_1.subscription_name
+                   ORDER BY zuora_subscription_1.zuora_renewal_subscription_name, zuora_subscription_2.subscription_end_date )
                                                                                 AS rank
-    FROM zuora_subscription sub_1
-    INNER JOIN zuora_subscription sub_2
-      ON sub_1.zuora_renewal_subscription_name = sub_2.subscription_name
+    FROM zuora_subscription zuora_subscription_1
+    INNER JOIN zuora_subscription zuora_subscription_2
+      ON zuora_subscription_1.zuora_renewal_subscription_name = zuora_subscription_2.subscription_name
     QUALIFY rank = 1
 
 ), joined AS (
