@@ -2,107 +2,995 @@ connection_info:
   database: GITLAB_COM_DB_NAME
   host: GITLAB_COM_DB_HOST
   pass: GITLAB_COM_DB_PASS
-  port: PG_PORT
+  port: GITLAB_COM_PG_PORT
   user: GITLAB_COM_DB_USER
 tables:
- GROUP:	
-     dbt_source_model: true	
-     export_schema: 'gitlab_dotcom'	
-     export_table: 'TBD'	
-     export_table_primary_key: MAX_CREATED_AT_TIMESTAMP	
-     import_db: GITLAB_DB	
-     import_query: |-	
-       SELECT 
-       'CLUSTERS_APPLICATIONS_CILIUM' AS TABLE_NAME,	
-       max(created_at) AS MAX_CREATED_AT_TIMESTAMP,	
-       count(*) AS ROW_COUNT	
-       FROM CLUSTERS_APPLICATIONS_CILIUM	
-       UNION ALL	
-       SELECT 
-       'STATUS_PAGE_PUBLISHED_INCIDENTS' AS TABLE_NAME,	
-       max(created_at) AS MAX_CREATED_AT_TIMESTAMP,	
-       count(*) AS ROW_COUNT	
-       FROM STATUS_PAGE_PUBLISHED_INCIDENTS	
-       UNION ALL	
-       SELECT 
-       'STATUS_PAGE_SETTINGS' AS TABLE_NAME,	
-       max(created_at) AS MAX_CREATED_AT_TIMESTAMP,	
-       count(*) AS ROW_COUNT	
-       FROM STATUS_PAGE_SETTINGS	
-       UNION ALL	
-       SELECT 
-       'LICENSES' AS TABLE_NAME,	
-       max(created_at) AS MAX_CREATED_AT_TIMESTAMP,	
-       count(*) AS ROW_COUNT	
-       FROM LICENSES	
-       UNION ALL	
-       SELECT 
-       'RESOURCE_LABEL_EVENTS' AS TABLE_NAME,	
-       max(created_at) AS MAX_CREATED_AT_TIMESTAMP,	
-       count(*) AS ROW_COUNT	
-       FROM RESOURCE_LABEL_EVENTS	
-  CLUSTERS_APPLICATIONS_CILIUM:	
-    dbt_source_model: true	
-    export_schema: 'gitlab_dotcom'	
-    export_table: 'TBD'	
-    export_table_primary_key: MAX_CREATED_AT_TIMESTAMP	
-    import_db: GITLAB_DB	
-    import_query: |-	
-       SELECT 
-       'CLUSTERS_APPLICATIONS_CILIUM' AS TABLE_NAME,	
-       max(created_at) AS MAX_CREATED_AT_TIMESTAMP,	
-       count(*) AS ROW_COUNT	
-       FROM CLUSTERS_APPLICATIONS_CILIUM	
-   STATUS_PAGE_PUBLISHED_INCIDENTS:	
-     dbt_source_model: true	
-     export_schema: 'gitlab_dotcom'	
-     export_table: 'TBD'	
-     export_table_primary_key: MAX_CREATED_AT_TIMESTAMP	
-     import_db: GITLAB_DB	
-     import_query: |-	
-       SELECT 
-       'STATUS_PAGE_PUBLISHED_INCIDENTS' AS TABLE_NAME,	
-       max(created_at) AS MAX_CREATED_AT_TIMESTAMP,	
-       count(*) AS ROW_COUNT	
-       FROM STATUS_PAGE_PUBLISHED_INCIDENTS	
-   STATUS_PAGE_SETTINGS:	
-     dbt_source_model: true	
-     export_schema: 'gitlab_dotcom'	
-     export_table: 'TBD'	
-     export_table_primary_key: MAX_CREATED_AT_TIMESTAMP	
-     import_db: GITLAB_DB	
-     import_query: |-	
-       SELECT 
-       'STATUS_PAGE_SETTINGS' AS TABLE_NAME,	
-       max(created_at) AS MAX_CREATED_AT_TIMESTAMP,	
-       count(*) AS ROW_COUNT	
-       FROM STATUS_PAGE_SETTINGS	
-  LICENSES:	
-     dbt_source_model: true	
-     export_schema: 'gitlab_dotcom'	
-     export_table: 'TBD'	
-     export_table_primary_key: MAX_CREATED_AT_TIMESTAMP	
-     import_db: GITLAB_DB	
-     import_query: |-	
-       SELECT 
-       'LICENSES' AS TABLE_NAME,	
-       max(created_at) AS MAX_CREATED_AT_TIMESTAMP,	
-       count(*) AS ROW_COUNT	
-       FROM LICENSES	
-  RESOURCE_LABEL_EVENTS:	
-     dbt_source_model: true	
-     export_schema: 'gitlab_dotcom'	
-     export_table: 'TBD'	
-     export_table_primary_key: MAX_CREATED_AT_TIMESTAMP	
-     import_db: GITLAB_DB	
-     import_query: |-	
-       SELECT 
-       'RESOURCE_LABEL_EVENTS' AS TABLE_NAME,	
-       max(created_at) AS MAX_CREATED_AT_TIMESTAMP,	
-       count(*) AS ROW_COUNT 
-       FROM RESOURCE_LABEL_EVENTS	
-	
-	
+  CLUSTER_1:
+    dbt_source_model: true
+    export_schema: 'gitlab_dotcom'
+    export_table: 'gitlab_pgp_export'
+    export_table_primary_key: MAX_CREATED_AT
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT 'GITLAB_DB_GITLAB_DB_IN_PRODUCT_MARKETING_EMAILS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_IN_PRODUCT_MARKETING_EMAILS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_CLUSTERS' AS TABLE_NAME
+      , max(created_at)  AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_CLUSTERS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_CLUSTER_PROJECTS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_CLUSTER_PROJECTS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_SPRINTS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_SPRINTS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_CLUSTERS_APPLICATIONS_RUNNERS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_CLUSTERS_APPLICATIONS_RUNNERS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_USERS_OPS_DASHBOARD_PROJECTS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_USERS_OPS_DASHBOARD_PROJECTS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_CLUSTERS_APPLICATIONS_PROMETHEUS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_CLUSTERS_APPLICATIONS_PROMETHEUS UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_PROMETHEUS_ALERTS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_PROMETHEUS_ALERTS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_CLUSTERS_APPLICATIONS_INGRESS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_CLUSTERS_APPLICATIONS_INGRESS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_CLUSTERS_APPLICATIONS_HELM' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_CLUSTERS_APPLICATIONS_HELM
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_PATH_LOCKS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_PATH_LOCKS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_CSV_ISSUE_IMPORTS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_CSV_ISSUE_IMPORTS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_CLUSTER_PROVIDERS_GCP' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_CLUSTER_PROVIDERS_GCP
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_REQUIREMENTS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_REQUIREMENTS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_VULNERABILITY_ISSUE_LINKS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_VULNERABILITY_ISSUE_LINKS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_CLUSTERS_APPLICATIONS_CERT_MANAGERS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_CLUSTERS_APPLICATIONS_CERT_MANAGERS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_LFS_FILE_LOCKS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_LFS_FILE_LOCKS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_OPERATIONS_FEATURE_FLAGS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_OPERATIONS_FEATURE_FLAGS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_REQUIREMENTS_MANAGEMENT_TEST_REPORTS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_REQUIREMENTS_MANAGEMENT_TEST_REPORTS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_ISSUES_PROMETHEUS_ALERT_EVENTS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_ISSUES_PROMETHEUS_ALERT_EVENTS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_CLUSTERS_APPLICATIONS_ELASTIC_STACKS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_CLUSTERS_APPLICATIONS_ELASTIC_STACKS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_GROUP_IMPORT_STATES' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_GROUP_IMPORT_STATES
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_CLUSTERS_APPLICATIONS_KNATIVE' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_CLUSTERS_APPLICATIONS_KNATIVE
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_ANALYTICS_CYCLE_ANALYTICS_GROUP_STAGES' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_ANALYTICS_CYCLE_ANALYTICS_GROUP_STAGES
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_CLUSTER_PROVIDERS_AWS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_CLUSTER_PROVIDERS_AWS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_CI_PLATFORM_METRICS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_CI_PLATFORM_METRICS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_JIRA_IMPORTS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_JIRA_IMPORTS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_BULK_IMPORTS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_BULK_IMPORTS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_CLUSTERS_APPLICATIONS_CROSSPLANE' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_CLUSTERS_APPLICATIONS_CROSSPLANE
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_ALERT_MANAGEMENT_HTTP_INTEGRATIONS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_ALERT_MANAGEMENT_HTTP_INTEGRATIONS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_CLUSTERS_APPLICATIONS_JUPYTER' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_CLUSTERS_APPLICATIONS_JUPYTER
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_ZOOM_MEETINGS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_ZOOM_MEETINGS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_GRAFANA_INTEGRATIONS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_GRAFANA_INTEGRATIONS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_EPIC_METRICS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      ,c ount(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_EPIC_METRICS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_PROJECT_TRACING_SETTINGS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      ,count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_PROJECT_TRACING_SETTINGS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_APPLICATION_SETTINGS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_APPLICATION_SETTINGS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_CLUSTER_AGENTS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_CLUSTER_AGENTS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_CLUSTER_AGENT_TOKENS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_CLUSTER_AGENT_TOKENS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_ISSUES_SELF_MANAGED_PROMETHEUS_ALERT_EVENTS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_ISSUES_SELF_MANAGED_PROMETHEUS_ALERT_EVENTS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_LDAP_GROUP_LINKS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_LDAP_GROUP_LINKS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_CLUSTERS_APPLICATIONS_CILIUM' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_CLUSTERS_APPLICATIONS_CILIUM
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_STATUS_PAGE_PUBLISHED_INCIDENTS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_STATUS_PAGE_PUBLISHED_INCIDENTS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_STATUS_PAGE_SETTINGS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_STATUS_PAGE_SETTINGS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_LICENSES' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_LICENSES
+  CLUSTER_2:
+    dbt_source_model: true
+    export_schema: 'gitlab_dotcom'
+    export_table: 'gitlab_pgp_export'
+    export_table_primary_key: MAX_CREATED_AT
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT 'GITLAB_DB_GITLAB_DB_ALERT_MANAGEMENT_ALERTS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_ALERT_MANAGEMENT_ALERTS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_EPICS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_EPICS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_SNIPPETS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_SNIPPETS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_EMAILS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_EMAILS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_JIRA_TRACKER_DATA' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_JIRA_TRACKER_DATA
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_ONBOARDING_PROGRESSES' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_ONBOARDING_PROGRESSES
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_APPROVAL_PROJECT_RULES' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_APPROVAL_PROJECT_RULES
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_LABEL_PRIORITIES' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_LABEL_PRIORITIES
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_CLUSTERS_KUBERNETES_NAMESPACES' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_CLUSTERS_KUBERNETES_NAMESPACES
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_VULNERABILITY_FEEDBACK' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_VULNERABILITY_FEEDBACK
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_APPROVER_GROUPS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_APPROVER_GROUPS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_VULNERABILITY_SCANNERS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_VULNERABILITY_SCANNERS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_CI_TRIGGERS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_CI_TRIGGERS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_PACKAGES_TAGS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_PACKAGES_TAGS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_TERRAFORM_STATES' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_TERRAFORM_STATES
+  CLUSTER_3:
+  dbt_source_model: true
+  export_schema: 'gitlab_dotcom'
+  export_table: 'gitlab_pgp_export'
+  export_table_primary_key: MAX_CREATED_AT
+  import_db: GITLAB_DB
+  import_query: |-
+      SELECT 'GITLAB_DB_GITLAB_DB_RELEASES' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_RELEASES
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_BOARDS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_BOARDS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_CI_RUNNER_PROJECTS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_CI_RUNNER_PROJECTS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_PROJECT_AUTO_DEVOPS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_PROJECT_AUTO_DEVOPS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_PACKAGES_PACKAGES' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_PACKAGES_PACKAGES
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_CI_RUNNERS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_CI_RUNNERS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_PROTECTED_ENVIRONMENTS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_PROTECTED_ENVIRONMENTS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_SUBSCRIPTIONS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_SUBSCRIPTIONS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_RESOURCE_WEIGHT_EVENTS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_RESOURCE_WEIGHT_EVENTS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_USER_CUSTOM_ATTRIBUTES' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_USER_CUSTOM_ATTRIBUTES
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_SERVICES' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_SERVICES
+      UNION ALL
+      SELECT 'GITLAB_DB_CI_GROUP_VARIABLES' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_CI_GROUP_VARIABLES
+  CLUSTER_4:
+    dbt_source_model: true
+    export_schema: 'gitlab_dotcom'
+    export_table: 'gitlab_pgp_export'
+    export_table_primary_key: MAX_CREATED_AT
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT 'GITLAB_DB_GITLAB_DB_SECURITY_SCANS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_SECURITY_SCANS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_PROJECT_CUSTOM_ATTRIBUTES' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_PROJECT_CUSTOM_ATTRIBUTES
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_ENVIRONMENTS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_ENVIRONMENTS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_PUSH_RULES' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_PUSH_RULES
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_IDENTITIES' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_IDENTITIES
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_EXPERIMENT_USERS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_EXPERIMENT_USERS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_TIMELOGS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_TIMELOGS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_WEB_HOOKS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_WEB_HOOKS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_VULNERABILITY_IDENTIFIERS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_VULNERABILITY_IDENTIFIERS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_MILESTONES' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_MILESTONES
+      UNION ALL
+      SELECT 'GITLAB_DB_CI_PIPELINE_SCHEDULE_VARIABLES' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_CI_PIPELINE_SCHEDULE_VARIABLES
+  CLUSTER_5:
+  dbt_source_model: true
+  export_schema: 'gitlab_dotcom'
+  export_table: 'gitlab_pgp_export'
+  export_table_primary_key: MAX_CREATED_AT
+  import_db: GITLAB_DB
+  import_query: |-
+      SELECT 'GITLAB_DB_GITLAB_DB_PACKAGES_PACKAGE_FILES' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_PACKAGES_PACKAGE_FILES
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_VULNERABILITIES' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_VULNERABILITIES
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_NAMESPACES' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_NAMESPACES
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_MERGE_REQUESTS_CLOSING_ISSUES' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT F
+      ROM GITLAB_DB_MERGE_REQUESTS_CLOSING_ISSUES
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_RESOURCE_MILESTONE_EVENTS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_RESOURCE_MILESTONE_EVENTS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_USER_PREFERENCES' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_USER_PREFERENCES
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_LISTS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_LISTS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_CONTAINER_EXPIRATION_POLICIES' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_CONTAINER_EXPIRATION_POLICIES
+  CLUSTER_6:
+    dbt_source_model: true
+    export_schema: 'gitlab_dotcom'
+    export_table: 'gitlab_pgp_export'
+    export_table_primary_key: MAX_CREATED_AT
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT 'GITLAB_DB_GITLAB_DB_APPROVAL_MERGE_REQUEST_RULES' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_APPROVAL_MERGE_REQUEST_RULES
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_PROTECTED_BRANCHES' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_PROTECTED_BRANCHES
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_VULNERABILITY_OCCURRENCE_IDENTIFIERS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_VULNERABILITY_OCCURRENCE_IDENTIFIERS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_PROJECTS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_PROJECTS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_LABELS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_LABELS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_CI_TRIGGER_REQUESTS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_CI_TRIGGER_REQUESTS
+  CLUSTER_7:
+    dbt_source_model: true
+    export_schema: 'gitlab_dotcom'
+    export_table: 'gitlab_pgp_export'
+    export_table_primary_key: MAX_CREATED_AT
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT 'GITLAB_DB_GITLAB_DB_LFS_OBJECTS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_LFS_OBJECTS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_ROUTES' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_ROUTES
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_AUTHENTICATION_EVENTS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_AUTHENTICATION_EVENTS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_PROJECT_FEATURES' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_PROJECT_FEATURES
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_APPROVALS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_APPROVALS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_UPLOADS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_UPLOADS
+  CLUSTER_8:
+    dbt_source_model: true
+    export_schema: 'gitlab_dotcom'
+    export_table: 'gitlab_pgp_export'
+    export_table_primary_key: MAX_CREATED_AT
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT 'GITLAB_DB_GITLAB_DB_MERGE_REQUEST_METRICS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_MERGE_REQUEST_METRICS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_USERS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_USERS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_ISSUES' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_ISSUES
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_ISSUE_METRICS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_ISSUE_METRICS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_NOTIFICATION_SETTINGS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_NOTIFICATION_SETTINGS
+  CLUSTER_9:
+    dbt_source_model: true
+    export_schema: 'gitlab_dotcom'
+    export_table: 'gitlab_pgp_export'
+    export_table_primary_key: MAX_CREATED_AT
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT 'GITLAB_DB_GITLAB_DB_NAMESPACE_ROOT_STORAGE_STATISTICS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_NAMESPACE_ROOT_STORAGE_STATISTICS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_PROJECT_DAILY_STATISTICS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_PROJECT_DAILY_STATISTICS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_LFS_OBJECTS_PROJECTS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_LFS_OBJECTS_PROJECTS
+      UNION ALL
+      SELECT 'GITLAB_DB_GEO_NODES' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_GEO_NODES
+      UNION ALL
+      SELECT 'GITLAB_DB_GROUP_CUSTOM_ATTRIBUTES' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_GROUP_CUSTOM_ATTRIBUTES
+  CLUSTER_10:
+  dbt_source_model: true
+  export_schema: 'gitlab_dotcom'
+  export_table: 'gitlab_pgp_export'
+  export_table_primary_key: MAX_CREATED_AT
+  import_db: GITLAB_DB
+  import_query: |-
+      SELECT 'GITLAB_DB_GITLAB_DB_MERGE_REQUESTS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_MERGE_REQUESTS
+      UNION ALL
+      SELECT 'GITLAB_DB_GITLAB_DB_TODOS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_TODOS
+  GITLAB_DB_RESOURCE_LABEL_EVENTS:
+    dbt_source_model: true
+    export_schema: 'gitlab_dotcom'
+    export_table: 'gitlab_pgp_export'
+    export_table_primary_key: MAX_CREATED_AT
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT 'GITLAB_DB_RESOURCE_LABEL_EVENTS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_RESOURCE_LABEL_EVENTS
+  GITLAB_DB_EVENTS:
+    dbt_source_model: true
+    export_schema: 'gitlab_dotcom'
+    export_table: 'gitlab_pgp_export'
+    export_table_primary_key: MAX_CREATED_AT
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT 'GITLAB_DB_EVENTS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_EVENTS
+  GITLAB_DB_VULNERABILITY_OCCURRENCES:
+    dbt_source_model: true
+    export_schema: 'gitlab_dotcom'
+    export_table: 'gitlab_pgp_export'
+    export_table_primary_key: MAX_CREATED_AT
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT 'GITLAB_DB_VULNERABILITY_OCCURRENCES' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_VULNERABILITY_OCCURRENCES
+  GITLAB_DB_CI_BUILDS:
+    dbt_source_model: true
+    export_schema: 'gitlab_dotcom'
+    export_table: 'gitlab_pgp_export'
+    export_table_primary_key: MAX_CREATED_AT
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT 'GITLAB_DB_CI_BUILDS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_CI_BUILDS
+  GITLAB_DB_NOTES:
+    dbt_source_model: true
+    export_schema: 'gitlab_dotcom'
+    export_table: 'gitlab_pgp_export'
+    export_table_primary_key: MAX_CREATED_AT
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT 'GITLAB_DB_NOTES' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_NOTES
+  GITLAB_DB_CI_STAGES:
+    dbt_source_model: true
+    export_schema: 'gitlab_dotcom'
+    export_table: 'gitlab_pgp_export'
+    export_table_primary_key: MAX_CREATED_AT
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT 'GITLAB_DB_CI_STAGES' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_CI_STAGES
+  GITLAB_DB_AUDIT_EVENTS:
+  dbt_source_model: true
+  export_schema: 'gitlab_dotcom'
+  export_table: 'gitlab_pgp_export'
+  export_table_primary_key: MAX_CREATED_AT
+  import_db: GITLAB_DB
+  import_query: |-
+    SELECT 'GITLAB_DB_AUDIT_EVENTS' AS TABLE_NAME
+    , max(created_at) AS MAX_CREATED_AT
+    , count(*) ::bigint AS ROW_COUNT
+    FROM GITLAB_DB_AUDIT_EVENTS
+  GITLAB_DB_CI_PIPELINES:
+    dbt_source_model: true
+    export_schema: 'gitlab_dotcom'
+    export_table: 'gitlab_pgp_export'
+    export_table_primary_key: MAX_CREATED_AT
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT 'GITLAB_DB_CI_PIPELINES' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_CI_PIPELINES
+  GITLAB_DB_SYSTEM_NOTE_METADATA:
+    dbt_source_model: true
+    export_schema: 'gitlab_dotcom'
+    export_table: 'gitlab_pgp_export'
+    export_table_primary_key: MAX_CREATED_AT
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT 'GITLAB_DB_SYSTEM_NOTE_METADATA' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_SYSTEM_NOTE_METADATA
+  GITLAB_DB_MERGE_REQUEST_DIFFS:
+    dbt_source_model: true
+    export_schema: 'gitlab_dotcom'
+    export_table: 'gitlab_pgp_export'
+    export_table_primary_key: MAX_CREATED_AT
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT 'GITLAB_DB_MERGE_REQUEST_DIFFS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_MERGE_REQUEST_DIFFS
+  GITLAB_DB_VULNERABILITY_OCCURRENCE_PIPELINES:
+    dbt_source_model: true
+    export_schema: 'gitlab_dotcom'
+    export_table: 'gitlab_pgp_export'
+    export_table_primary_key: MAX_CREATED_AT
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT 'GITLAB_DB_VULNERABILITY_OCCURRENCE_PIPELINES' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_VULNERABILITY_OCCURRENCE_PIPELINES
+  GITLAB_DB_DEPLOYMENTS:
+    dbt_source_model: true
+    export_schema: 'gitlab_dotcom'
+    export_table: 'gitlab_pgp_export'
+    export_table_primary_key: MAX_CREATED_AT
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT 'GITLAB_DB_DEPLOYMENTS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_DEPLOYMENTS
+  GITLAB_DB_GITLAB_DB_CI_JOB_ARTIFACTS:
+    dbt_source_model: true
+    export_schema: 'gitlab_dotcom'
+    export_table: 'gitlab_pgp_export'
+    export_table_primary_key: MAX_CREATED_AT
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT 'GITLAB_DB_GITLAB_DB_CI_JOB_ARTIFACTS' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_GITLAB_DB_CI_JOB_ARTIFACTS
+  GITLAB_DB_CI_PIPELINE_SCHEDULES:
+    dbt_source_model: true
+    export_schema: 'gitlab_dotcom'
+    export_table: 'gitlab_pgp_export'
+    export_table_primary_key: MAX_CREATED_AT
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT 'GITLAB_DB_CI_PIPELINE_SCHEDULES' AS TABLE_NAME
+      , max(created_at) AS MAX_CREATED_AT
+      , count(*) ::bigint AS ROW_COUNT
+      FROM GITLAB_DB_CI_PIPELINE_SCHEDULES
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
