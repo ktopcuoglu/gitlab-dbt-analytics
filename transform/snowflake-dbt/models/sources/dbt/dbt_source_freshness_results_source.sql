@@ -26,7 +26,7 @@ WITH source AS (
 ), v1parsed AS (
 
     SELECT 
-      s.value['unique_id']::VARCHAR AS source_unique_id,
+      s.value['unique_id']::VARCHAR                                                               AS source_unique_id,
       REPLACE(s.value['unique_id'], 'source.gitlab_snowflake.', '')::VARCHAR                      AS schema_table_name,
       SPLIT_PART(schema_table_name, '.', 1)                                                       AS schema_name,
       SPLIT_PART(schema_table_name, '.', -1)                                                      AS table_name,
