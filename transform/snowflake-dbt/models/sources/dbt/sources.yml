@@ -22,8 +22,11 @@ sources:
       - name: freshness
         description: This is for the results from `dbt source snapshot-freshness`
         identifier: sources
+      - name: manifest
+        description: This is the compiled dbt project along with packages
+        identifier: manifest
       - name: source_tests
-        description: This is for the reulsts from testing source data.
+        description: This is for the results from testing source data.
         identifier: source_tests_run_results
       - name: snapshots
         description: This is for the results from `dbt snapshot`

@@ -2,13 +2,22 @@ version: 2
 
 models:
 
+    - name: dbt_model_source
+      description: "dbt models as defined in manifest.json"
+      columns:
+        - name: unique_id
+          tests:
+            - not_null
+        - name: name
+
     - name: dbt_run_results_source
       description: "Information about compilation/execution time for DBT models."
       columns:
+        - name: model_unique_id
+          description: for use in joining to dbt_model_source
         - name: compilation_completed_at
         - name: compilation_started_at
         - name: model_execution_time
-        - name: model_name
 
     - name: dbt_snapshots_results_source
       description: Run results for dbt snapshot
@@ -38,20 +47,25 @@ models:
     - name: dbt_test_results_source
       description: "DBT test results by name and time"
       columns:
-        - name: is_failed_test
+        - name: status
           tests:
             - not_null
-        - name: is_warned_test
-          tests:
-            - not_null
-        - name: test_error
+        - name: message
         - name: test_execution_time_elapsed
           tests:
             - not_null
-        - name: test_name
+        - name: test_unique_id
           tests:
             - not_null
-        - name: test_result_generated_at
+        - name: generated_at
           tests:
             - not_null
+
+    - name: dbt_test_source
+      description: "dbt tests as defined in manifest.json"
+      columns:
+        - name: unique_id
+          tests:
+            - not_null
+        - name: name
         
