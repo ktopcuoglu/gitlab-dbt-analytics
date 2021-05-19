@@ -33,7 +33,7 @@ WITH source AS (
       generated_at,
       uploaded_at
     FROM nodes
-    WHERE data_by_row['resource_type']::VARCHAR ='model'
+    WHERE data_by_row['resource_type']::VARCHAR = 'model'
 
 )
 
