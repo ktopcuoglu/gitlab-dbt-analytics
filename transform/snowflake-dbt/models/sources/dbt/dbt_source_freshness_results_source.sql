@@ -21,6 +21,7 @@ WITH source AS (
     FROM source 
     INNER JOIN LATERAL FLATTEN(jsontext['sources']) s
     WHERE jsontext['metadata']['dbt_version'] IS NULL
+		AND s.value['state']::VARCHAR != 'runtime error'  -- impossible to know what freshness is, so filtered out
 
 ), v1parsed AS (
 

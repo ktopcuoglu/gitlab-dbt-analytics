@@ -3,13 +3,13 @@ WITH source AS (
     SELECT *
     FROM {{ source('dbt', 'manifest') }}
     {% if is_incremental() %}
-    WHERE uploaded_at >= (SELECT MAX(uploaded_at) FROM {{this}})
+    WHERE uploaded_at > (SELECT MAX(uploaded_at) FROM {{this}})
     {% endif %}
 
 ), nodes AS (
 
     SELECT 
-      d.value                                         AS data_by_row,
+      d.value                                               AS data_by_row,
       jsontext['metadata']['dbt_version']::VARCHAR          AS dbt_version,
       jsontext['metadata']['dbt_schema_version']::VARCHAR   AS schema_version,
       jsontext['metadata']['generated_at']::TIMESTAMP_NTZ   AS generated_at,
