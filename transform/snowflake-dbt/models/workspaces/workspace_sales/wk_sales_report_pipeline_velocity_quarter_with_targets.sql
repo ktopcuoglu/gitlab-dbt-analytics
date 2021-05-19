@@ -33,13 +33,6 @@ WITH report_pipeline_velocity_quarter AS (
     AND is_deleted = 0
     AND LOWER(deal_group) LIKE ANY ('%growth%','%new%')
 
-), sfdc_opportunity_snapshot_history_xf AS (
-
-    SELECT *
-    FROM {{ref('wk_sales_sfdc_opportunity_snapshot_history_xf')}}  
-    WHERE is_deleted = 0
-      AND is_edu_oss = 0
-
 ), report_targets_totals_per_quarter AS (
   
   SELECT *

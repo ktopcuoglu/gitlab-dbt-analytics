@@ -1880,6 +1880,12 @@ roles:
             - bamboohr_analytics
         warehouses:
             - analyst_xs
+
+    - awaller:
+        member_of:
+            - analyst_marketing
+        warehouses:
+            - analyst_xs        
     
     - blutz:
         warehouses:
@@ -2250,6 +2256,12 @@ roles:
            - analyst_engineering
         warehouses:
            - analyst_xs
+      
+    - jameson:
+        member_of:
+            - analyst_marketing
+        warehouses:
+            - analyst_xs            
 
     - jjackson:
         member_of:
@@ -3260,6 +3272,11 @@ users:
         member_of:
             - amurray
 
+    - awaller:
+        can_login: yes
+        member_of:
+            - awaller
+
     - blutz:
         can_login: yes
         member_of:
@@ -3426,6 +3443,11 @@ users:
         can_login: yes
         member_of:
             - iwiedler
+
+    - jameson:
+        can_login: yes
+        member_of:
+            - jameson
 
     - jjackson:
         can_login: yes

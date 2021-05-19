@@ -23,6 +23,7 @@ WITH sfdc_campaign_info AS (
       region,
       sub_region,
       large_bucket,
+      reporting_type,
 
       -- user ids
       campaign_owner_id,

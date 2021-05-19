@@ -3,9 +3,7 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
 
     SELECT *
     FROM {{ref('wk_sales_sfdc_opportunity_snapshot_history_xf')}}  
-    WHERE ((is_lost = 0 AND forecast_category_name != 'Omitted') 
-          OR (is_renewal = 1 AND is_lost = 1))
-      AND is_deleted = 0
+    WHERE is_deleted = 0
       AND is_edu_oss = 0
   
 ), report_pipeline_velocity_quarter AS (
