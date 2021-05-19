@@ -2,15 +2,15 @@
                            'project_name', 'project_path', 'project_import_url', 'project_merge_requests_template'] %}
 
 {{ simple_cte([
-    ('projects', 'gitlab_dotcom_projects_source'),
+
+    ('dim_date', 'dim_date'),
+    ('members_source', 'gitlab_dotcom_members_source'),
     ('namespaces', 'prep_namespace'),
     ('namespace_lineage', 'gitlab_dotcom_namespace_lineage'),
     ('namespace_lineage_historical', 'gitlab_dotcom_namespace_lineage_historical_daily'),
-    ('dim_date', 'dim_date'),
     ('plans', 'gitlab_dotcom_plans_source'),
+    ('projects_source', 'gitlab_dotcom_projects_source'),
     ('prep_product_tier', 'prep_product_tier'),
-    ('members_source', 'gitlab_dotcom_members_source'),
-    ('projects_source', 'gitlab_dotcom_projects_source')
 
 ]) }}
 
@@ -61,7 +61,7 @@ joined AS (
     SELECT
       projects_source.project_id                                     AS dim_project_id,
       projects_source.namespace_id                                   AS dim_namespace_id,
-      namespace_lineage.ultimate_parent_id                           AS dim_ultimate_parent_id,
+      namespace_lineage.ultimate_parent_id                           AS ultimate_parent_dim_namespace_id,
       projects_source.creator_id                                     AS creator_dim_user_id,
       prep_product_tier.dim_product_tier_id,
       dim_date.date_id                                               AS dim_date_id,
@@ -123,7 +123,7 @@ joined AS (
         ELSE {{field}}
       END                                                          AS {{field}},
       {% endfor %}
-      (active_services.service_type)                       AS active_service_types,
+      (active_services.service_type)                               AS active_service_types_array,
       COALESCE(COUNT(DISTINCT members.member_id), 0)               AS member_count
     FROM projects_source
     LEFT JOIN dim_date

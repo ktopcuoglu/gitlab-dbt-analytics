@@ -668,7 +668,24 @@ models:
         description: How a product is delivered to the customer; SaaS or Self-Managed (or Other).
       - name: product_ranking
         description: Numeric product pricing tier, independent of delivery type.
-
+  - name: dim_project
+    description: '{{ doc("dim_project") }}'
+    columns:
+      - name: dim_project_id
+        description: ID of the project (from Gitlab Postgres db)
+        tests:
+          - not_null
+          - unique
+      - name: dim_namespace_id
+        description: ID of the namespace the project belongs to
+        tests:
+          - not_null
+      - name: ultimate_parent_dim_namespace_id
+        description: ID of the Ultimate Namespace (or Top-level Namespace) the project is part of
+        tests:
+          - not_null
+      - name: creator_dim_user_id
+        description: ID of the user who created the project
   - name: dim_crm_user
     description: '{{ doc("dim_crm_user") }}'
     columns:
