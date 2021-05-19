@@ -69,7 +69,7 @@ WITH paid_subscriptions_monthly_usage_ping_optin AS (
       FIRST_VALUE(minor_version) OVER (PARTITION BY transformed_flattened.metrics_path, edition
                                          ORDER BY release_date ASC)                          AS minor_version,
       FIRST_VALUE(DATE_TRUNC('month', release_date)) OVER (PARTITION BY transformed_flattened.metrics_path, edition ORDER BY
-                                 major_version ASC, minor_version ASC)                       AS release_month,
+                                 release_date ASC)                                           AS release_month,
       transformed_flattened.metrics_path,
       stage_name, 
       section_name,
