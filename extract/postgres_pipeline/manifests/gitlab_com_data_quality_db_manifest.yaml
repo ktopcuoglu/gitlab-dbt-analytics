@@ -5,7 +5,6 @@ connection_info:
   port: GITLAB_COM_PG_PORT
   user: GITLAB_COM_DB_USER
 tables:
-<<<<<<< HEAD
   CLUSTER_1:
     dbt_source_model: true
     export_schema: 'gitlab_dotcom'
