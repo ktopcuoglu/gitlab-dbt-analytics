@@ -15,8 +15,8 @@ WITH source AS (
 
     SELECT 
       d.value AS data_by_row,
-      jsontext['metadata']['dbt_version']::VARCHAR          AS dbt_version,
-      jsontext['metadata']['dbt_schema_version']::VARCHAR   AS schema_version,
+      jsontext['metadata']['dbt_version']::VARCHAR                                              AS dbt_version,
+      jsontext['metadata']['dbt_schema_version']::VARCHAR                                       AS schema_version,
       COALESCE(jsontext['metadata']['generated_at'], jsontext['generated_at'])::TIMESTAMP_NTZ   AS generated_at,
       uploaded_at
     FROM source
@@ -36,7 +36,7 @@ WITH source AS (
       schema_version,
       generated_at,
       {{ dbt_utils.surrogate_key([
-          'node_unique_id', 
+          'model_unique_id', 
           'compilation_started_at',
           'uploaded_at'
           ]) }}                                       AS run_unique_key
@@ -48,25 +48,25 @@ WITH source AS (
 ), v0model_parsed_out AS (
   
     SELECT
-      data_by_row['execution_time']::FLOAT                 AS model_execution_time,
-      data_by_row['node']['unique_id']::VARCHAR            AS model_unique_id,
+      data_by_row['execution_time']::FLOAT                           AS model_execution_time,
+      data_by_row['node']['unique_id']::VARCHAR                      AS model_unique_id,
       CASE
         WHEN data_by_row['skip']::BOOLEAN = TRUE THEN 'skipped'
         WHEN data_by_row['error']::VARCHAR IS NOT NULL THEN 'error'
         ELSE 'success'
-      END                                                  AS status,
-      IFNULL(data_by_row['error']::VARCHAR, 'SUCCESS 1')   AS message,
-      timing.value['started_at']::TIMESTAMP                AS compilation_started_at,
-      timing.value['completed_at']::TIMESTAMP              AS compilation_completed_at,
-      uploaded_at,                                         -- uploaded_at
-      'PRE 0.19.0'                                         AS dbt_version,
-      'https://schemas.getdbt.com/dbt/run-results/v0.json' AS schema_version,
+      END                                                            AS status,
+      IFNULL(data_by_row['error']::VARCHAR, 'SUCCESS 1')             AS message,
+      timing.value['started_at']::TIMESTAMP                          AS compilation_started_at,
+      timing.value['completed_at']::TIMESTAMP                        AS compilation_completed_at,
+      uploaded_at,                                                   -- uploaded_at
+      'PRE 0.19.0'                                                   AS dbt_version,
+      'https://schemas.getdbt.com/dbt/run-results/v0.json'           AS schema_version,
       generated_at,
       {{ dbt_utils.surrogate_key([
-          'node_unique_id', 
+          'model_unique_id', 
           'compilation_started_at',
           'uploaded_at'
-          ]) }}                                            AS run_unique_key
+          ]) }}                                                      AS run_unique_key
     FROM flattened
     LEFT JOIN LATERAL FLATTEN(INPUT => data_by_row['timing']::ARRAY, outer => true) timing
     ON IFNULL(timing.value['name'], 'compile') = 'compile'
