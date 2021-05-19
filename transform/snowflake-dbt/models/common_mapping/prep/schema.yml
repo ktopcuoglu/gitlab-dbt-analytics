@@ -457,6 +457,11 @@ models:
           - accepted_values:
                   values: ['Sales-Assisted', 'Self-Service']
         tags: ["tdf"]
+      - name: is_myb
+        description: MYB = Multi-Year Booking. This boolean flag identifies if a subscription is booked for more than one year. This can either be by having a term greater than 12 months or having a linked subscription.
+      - name: is_myb_with_multi_subs
+        description: MYB = Multi-Year Booking. This boolean flag identifies if a subscription is booked for more than one year by using multiple linked subscriptions only. A subscription with a term greater than 12 but does not have linked subscriptions has a value of FALSE.
+
 
   - name: prep_subscription_lineage
     description:  '{{doc("prep_subscription_lineage")}}'

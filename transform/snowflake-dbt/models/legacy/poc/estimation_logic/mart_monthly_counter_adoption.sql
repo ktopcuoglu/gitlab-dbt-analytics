@@ -28,7 +28,7 @@ WITH paid_subscriptions_monthly_usage_ping_optin AS (
       COUNT(DISTINCT subscription_name_slugify)                         AS major_minor_version_subscriptions,
       major_minor_version_subscriptions /  MAX(total_subscrption_count) AS pct_major_minor_version_subscriptions
     FROM paid_subscriptions_monthly_usage_ping_optin
-    INNER JOIN {{ ref('dim_gitlab_releases') }} AS gitlab_releases
+    INNER JOIN gitlab_releases
       ON paid_subscriptions_monthly_usage_ping_optin.latest_major_minor_version = gitlab_releases.major_minor_version
     LEFT JOIN agg_total_subscriptions AS agg ON paid_subscriptions_monthly_usage_ping_optin.reporting_month = agg.agg_month
     {{ dbt_utils.group_by(n=6) }}
@@ -51,10 +51,10 @@ WITH paid_subscriptions_monthly_usage_ping_optin AS (
       SPLIT_PART(metrics_path, '.', 1)                                      AS main_json_name,
       SPLIT_PART(metrics_path, '.', -1)                                     AS feature_name,
       REPLACE(metrics_path, '.', '_')                                       AS full_metrics_path,
-      FIRST_VALUE(major_minor_version ) OVER (PARTITION BY metrics_path, edition 
-                                                ORDER BY major_version * 100 +
-                                                         minor_version ASC) AS first_version_with_counter
+      FIRST_VALUE(flattened_usage_data.major_minor_version ) OVER (PARTITION BY metrics_path, edition 
+                                                ORDER BY release_date ASC) AS first_version_with_counter
     FROM flattened_usage_data
+    LEFT JOIN gitlab_releases ON flattened_usage_data.major_minor_version = gitlab_releases.major_minor_version
     WHERE TRY_TO_DECIMAL(metric_value::TEXT) > 0
       -- Removing SaaS
       AND instance_id <> 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f'
