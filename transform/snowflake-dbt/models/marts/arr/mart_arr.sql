@@ -33,14 +33,26 @@ WITH dim_billing_account AS (
 
 ), fct_mrr AS (
 
-  SELECT *
+  SELECT
+    dim_date_id,
+    dim_subscription_id,
+    dim_product_detail_id,
+    dim_billing_account_id,
+    dim_crm_account_id,
+    SUM(mrr)                                                               AS mrr,
+    SUM(arr)                                                               AS arr,
+    SUM(quantity)                                                          AS quantity,
+    ARRAY_AGG(unit_of_measure)                                             AS unit_of_measure
   FROM {{ ref('fct_mrr') }}
+  WHERE subscription_status IN ('Active', 'Cancelled')
+  {{ dbt_utils.group_by(n=5) }}
 
 ), joined AS (
 
     SELECT
       --primary_key
-      fct_mrr.mrr_id                                                                  AS primary_key,
+      {{ dbt_utils.surrogate_key(['fct_mrr.dim_date_id', 'dim_subscription.subscription_name', 'fct_mrr.dim_product_detail_id']) }}
+                                                                                      AS primary_key,
 
       --date info
       dim_date.date_actual                                                            AS arr_month,
@@ -74,8 +86,11 @@ WITH dim_billing_account AS (
       dim_crm_account.health_score                                                    AS health_score,
       dim_crm_account.health_score_color                                              AS health_score_color,
       dim_crm_account.health_number                                                   AS health_number,
+      dim_crm_account.is_jihu_account                                                 AS is_jihu_account,
 
       --subscription info
+      dim_subscription.dim_subscription_id                                            AS dim_subscription_id,
+      dim_subscription.dim_subscription_id_original                                   AS dim_subscription_id_original,
       dim_subscription.subscription_status                                            AS subscription_status,
       dim_subscription.subscription_sales_type                                        AS subscription_sales_type,
       dim_subscription.subscription_name                                              AS subscription_name,
@@ -106,11 +121,10 @@ WITH dim_billing_account AS (
       -- MRR values
       --  not needed as all charges in fct_mrr are recurring
       --  fct_mrr.charge_type,
-      fct_mrr.unit_of_measure                                                        AS unit_of_measure,
-      fct_mrr.mrr                                                                    AS mrr,
-      fct_mrr.arr                                                                    AS arr,
-      fct_mrr.quantity                                                               AS quantity
-
+      fct_mrr.unit_of_measure                                                         AS unit_of_measure,
+      fct_mrr.mrr                                                                     AS mrr,
+      fct_mrr.arr                                                                     AS arr,
+      fct_mrr.quantity                                                                AS quantity
     FROM fct_mrr
     INNER JOIN dim_subscription
       ON dim_subscription.dim_subscription_id = fct_mrr.dim_subscription_id
@@ -142,7 +156,7 @@ WITH dim_billing_account AS (
 {{ dbt_audit(
     cte_ref="final_table",
     created_by="@msendal",
-    updated_by="@mcooperDD",
+    updated_by="@snalamaru",
     created_date="2020-09-04",
-    updated_date="2021-03-10"
+    updated_date="2021-05-18"
 ) }}

@@ -5,7 +5,7 @@ name: 'gitlab_snowflake'
 version: '1.0'
 config-version: 2
 profile: 'gitlab-snowflake'
-require-dbt-version: 0.18.1
+require-dbt-version: 0.19.1
 
 
 # ======
@@ -51,11 +51,6 @@ seeds:
   +database: "{{ env_var('SNOWFLAKE_PROD_DATABASE') }}" #PROD
   +schema: legacy
   +quote_columns: False
-
-  gitlab_snowflake:
-    gitlab_release_schedule:
-      +column_types:
-        major_minor_version: varchar
 
   data_tests:
     +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
@@ -168,6 +163,10 @@ models:
       engineering:
         +database: "{{ env_var('SNOWFLAKE_PROD_DATABASE') }}" # PROD
         +materialized: table
+
+      gainsight:
+        +materialized: table
+        +schema: gainsight
 
       gcp_billing:
         +materialized: table
@@ -332,7 +331,7 @@ models:
         +materialized: view
 
       poc:
-        +tags: ["poc"]
+        +tags: ["poc", "product"]
         +enabled: true
 
       smau_events:
@@ -353,11 +352,6 @@ models:
       trusted_data_framework:
         +tags: ["tdf"]
 
-    prep:
-        +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
-        +materialized: table
-        +schema: preparation
-
     # ------------------
     # Workspaces
     # ------------------
@@ -372,6 +366,12 @@ models:
 
       workspace_marketing:
         +schema: workspace_marketing
+
+      workspace_product:
+        +tags: ["product"]
+
+      workspace_saas_usage_ping:
+        +tags: ["product"]
 
       workspace_sales:
         +materialized: table
@@ -394,6 +394,9 @@ models:
         users_emails:
           enabled: false
 
+      product:
+        +tags: ["product"]
+        
       pumps: 
         +database: "{{ env_var('SNOWFLAKE_PROD_DATABASE') }}" #PROD
         +schema: pumps
@@ -403,6 +406,10 @@ models:
         +database: "{{ env_var('SNOWFLAKE_PROD_DATABASE') }}" #PROD
         +schema: pumps_sensitive
         +materialized: table
+      
+      usage_ping:
+        +tags: ["product"]
+
 
     # ------------------
     # Legacy Structure
@@ -431,6 +438,9 @@ snapshots:
     target_schema: "snapshots"
     transient: false
 
+    common:
+      +tags: ["daily"]
+
     customers:
       +tags: ["daily", "customers_db"]
 
@@ -439,6 +449,9 @@ snapshots:
 
     license:
       +tags: ["daily", "license_db"]
+
+    marts:
+      +tags: ["daily"]
 
     netsuite:
       +tags: ["daily"]

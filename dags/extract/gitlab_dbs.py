@@ -30,6 +30,8 @@ from kube_secrets import (
     GITLAB_COM_DB_NAME,
     GITLAB_COM_DB_PASS,
     GITLAB_COM_DB_USER,
+    GITLAB_COM_PG_PORT,
+    GITLAB_COM_SCD_PG_PORT,
     GITLAB_OPS_DB_USER,
     GITLAB_OPS_DB_PASS,
     GITLAB_OPS_DB_HOST,
@@ -109,13 +111,31 @@ config_dict = {
         "cloudsql_instance_name": None,
         "dag_name": "gitlab_com",
         "dbt_name": "gitlab_dotcom",
-        "env_vars": {"HOURS": "13"},
+        "env_vars": {"HOURS": "18"},
         "extract_schedule_interval": "0 */6 * * *",
         "secrets": [
             GITLAB_COM_DB_USER,
             GITLAB_COM_DB_PASS,
             GITLAB_COM_DB_HOST,
             GITLAB_COM_DB_NAME,
+            GITLAB_COM_PG_PORT,
+        ],
+        "start_date": datetime(2019, 5, 30),
+        "sync_schedule_interval": "0 2 */1 * *",
+        "task_name": "gitlab-com",
+    },
+    "gitlab_com_scd": {
+        "cloudsql_instance_name": None,
+        "dag_name": "gitlab_com_scd",
+        "dbt_name": "none",
+        "env_vars": {},
+        "extract_schedule_interval": "0 */6 * * *",
+        "secrets": [
+            GITLAB_COM_DB_USER,
+            GITLAB_COM_DB_PASS,
+            GITLAB_COM_DB_HOST,
+            GITLAB_COM_DB_NAME,
+            GITLAB_COM_SCD_PG_PORT,
         ],
         "start_date": datetime(2019, 5, 30),
         "sync_schedule_interval": "0 2 */1 * *",
@@ -156,6 +176,10 @@ config_dict = {
         "task_name": "gitlab-ops",
     },
 }
+
+
+def is_incremental(raw_query):
+    return "{EXECUTION_DATE}" in raw_query or "{BEGIN_TIMESTAMP}" in raw_query
 
 
 def use_cloudsql_proxy(dag_name, operation, instance_name):
@@ -200,28 +224,15 @@ def run_or_skip_dbt(current_seconds: int, dag_interval: int, dbt_name: str) -> b
 
 def dbt_tasks(dbt_name, dbt_task_identifier):
 
-    freshness_cmd = f"""
-        {dbt_install_deps_nosha_cmd} &&
-        dbt source snapshot-freshness --profiles-dir profile --target prod --select {dbt_name}; ret=$?;
-        python ../../orchestration/upload_dbt_file_to_snowflake.py freshness; exit $ret
-    """
-    freshness = KubernetesPodOperator(
-        **gitlab_defaults,
-        image=DBT_IMAGE,
-        task_id=f"{dbt_task_identifier}-source-freshness",
-        trigger_rule="all_done",
-        name=f"{dbt_task_identifier}-source-freshness",
-        secrets=standard_secrets + dbt_secrets,
-        env_vars=gitlab_pod_env_vars,
-        arguments=[freshness_cmd],
-    )
+    if dbt_name == "none":
+        return None, None, None, None, None
 
     SCHEDULE_INTERVAL_HOURS = 6
     timestamp = datetime.now()
     current_seconds = timestamp.hour * 3600
     dag_interval = SCHEDULE_INTERVAL_HOURS * 3600
 
-    # Only run everything past freshness once per day
+    # Only run dbt once per day
     short_circuit = ShortCircuitOperator(
         task_id="short_circuit",
         trigger_rule="all_done",
@@ -299,7 +310,7 @@ def dbt_tasks(dbt_name, dbt_task_identifier):
         arguments=[model_test_cmd],
     )
 
-    return freshness, short_circuit, test, snapshot, model_run, model_test
+    return short_circuit, test, snapshot, model_run, model_test
 
 
 # Loop through each config_dict and generate a DAG
@@ -331,7 +342,7 @@ for source_name, config in config_dict.items():
         dbt_name = f"{config['dbt_name']}"
         dbt_task_identifier = f"{config['task_name']}-dbt-incremental"
 
-        freshness, short_circuit, test, snapshot, model_run, model_test = dbt_tasks(
+        short_circuit, test, snapshot, model_run, model_test = dbt_tasks(
             dbt_name, dbt_task_identifier
         )
 
@@ -340,8 +351,8 @@ for source_name, config in config_dict.items():
         manifest = extract_manifest(file_path)
         table_list = extract_table_list_from_manifest(manifest)
         for table in table_list:
-            # tables without execution_date in the query won't be processed incrementally
-            if "{EXECUTION_DATE}" not in manifest["tables"][table]["import_query"]:
+            # tables that aren't incremental won't be processed by the incremental dag
+            if not is_incremental(manifest["tables"][table]["import_query"]):
                 continue
 
             task_type = "db-incremental"
@@ -365,8 +376,10 @@ for source_name, config in config_dict.items():
                 env_vars={
                     **gitlab_pod_env_vars,
                     **config["env_vars"],
-                    "LAST_EXECUTION_DATE": "{{ execution_date }}",
                     "TASK_INSTANCE": "{{ task_instance_key_str }}",
+                    "LAST_LOADED": "{{{{ task_instance.xcom_pull('{}', include_prior_dates=True)['max_data_available'] }}}}".format(
+                        task_identifier + "-pgp-extract"
+                    ),
                 },
                 affinity=get_affinity(False),
                 tolerations=get_toleration(False),
@@ -374,8 +387,15 @@ for source_name, config in config_dict.items():
                 do_xcom_push=True,
                 xcom_push=True,
             )
-
-            incremental_extract >> freshness >> short_circuit >> test >> snapshot >> model_run >> model_test
+            if short_circuit is not None:
+                (
+                    incremental_extract
+                    >> short_circuit
+                    >> test
+                    >> snapshot
+                    >> model_run
+                    >> model_test
+                )
 
     globals()[f"{config['dag_name']}_db_extract"] = extract_dag
 
@@ -405,7 +425,7 @@ for source_name, config in config_dict.items():
         manifest = extract_manifest(file_path)
         table_list = extract_table_list_from_manifest(manifest)
         for table in table_list:
-            if "{EXECUTION_DATE}" in manifest["tables"][table]["import_query"]:
+            if is_incremental(manifest["tables"][table]["import_query"]):
                 task_type = "backfill"
 
                 task_identifier = (
@@ -452,7 +472,7 @@ for source_name, config in config_dict.items():
         dbt_name = f"{config['dbt_name']}"
         dbt_task_identifier = f"{config['task_name']}-dbt-sync"
 
-        freshness, short_circuit, test, snapshot, model_run, model_test = dbt_tasks(
+        short_circuit, test, snapshot, model_run, model_test = dbt_tasks(
             dbt_name, dbt_task_identifier
         )
 
@@ -461,7 +481,7 @@ for source_name, config in config_dict.items():
         manifest = extract_manifest(file_path)
         table_list = extract_table_list_from_manifest(manifest)
         for table in table_list:
-            if "{EXECUTION_DATE}" not in manifest["tables"][table]["import_query"]:
+            if not is_incremental(manifest["tables"][table]["import_query"]):
                 task_type = "db-scd"
 
                 task_identifier = (
@@ -486,9 +506,6 @@ for source_name, config in config_dict.items():
                         **gitlab_pod_env_vars,
                         **config["env_vars"],
                         "TASK_INSTANCE": "{{ task_instance_key_str }}",
-                        "LAST_XMIN": "{{{{ task_instance.xcom_pull('{}', include_prior_dates=True)['max_xmin'] }}}}".format(
-                            task_identifier
-                        ),
                         "task_id": task_identifier,
                     },
                     arguments=[scd_cmd],
@@ -497,7 +514,14 @@ for source_name, config in config_dict.items():
                     do_xcom_push=True,
                     xcom_push=True,
                 )
-
-                scd_extract >> freshness >> short_circuit >> test >> snapshot >> model_run >> model_test
+                if short_circuit is not None:
+                    (
+                        scd_extract
+                        >> short_circuit
+                        >> test
+                        >> snapshot
+                        >> model_run
+                        >> model_test
+                    )
 
     globals()[f"{config['dag_name']}_db_sync"] = sync_dag

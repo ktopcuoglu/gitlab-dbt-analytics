@@ -77,27 +77,10 @@ dag = DAG(
     description=f"This DAG tests the raw data for {data_source}, runs any snapshots, runs the source models, and tests the source models.",
 )
 
-# Raw source Freshness
-freshness_cmd = f"""
-    {dbt_install_deps_nosha_cmd} &&
-    dbt source snapshot-freshness --profiles-dir profile --target prod --select {data_source}; ret=$?;
-    python ../../orchestration/upload_dbt_file_to_snowflake.py freshness; exit $ret
-"""
-freshness = KubernetesPodOperator(
-    **gitlab_defaults,
-    image=DBT_IMAGE,
-    task_id=f"{data_source}-source-freshness",
-    name=f"{data_source}-source-freshness",
-    secrets=pod_secrets,
-    env_vars=pod_env_vars,
-    arguments=[freshness_cmd],
-    dag=dag,
-)
-
 # Test raw source
 test_cmd = f"""
     {dbt_install_deps_nosha_cmd} &&
-    dbt test --profiles-dir profile --target prod --models source:{data_source}; ret=$?;
+    dbt test --profiles-dir profile --target prod --models source:salesforce; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py source_tests; exit $ret
 """
 test = KubernetesPodOperator(
@@ -162,4 +145,4 @@ model_test = KubernetesPodOperator(
     dag=dag,
 )
 
-freshness >> test >> snapshot >> model_run >> model_test
+test >> snapshot >> model_run >> model_test

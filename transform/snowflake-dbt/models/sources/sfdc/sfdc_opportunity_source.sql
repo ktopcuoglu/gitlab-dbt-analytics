@@ -3,7 +3,6 @@ WITH source AS (
     SELECT
       opportunity.*,
       CASE
-        WHEN stagename = '00-Pre Opportunity'       THEN createddate
         WHEN stagename = '0-Pending Acceptance'     THEN x0_pending_acceptance_date__c
         WHEN stagename = '1-Discovery'              THEN x1_discovery_date__c
         WHEN stagename = '2-Scoping'                THEN x2_scoping_date__c
@@ -38,6 +37,7 @@ WITH source AS (
         sql_source__c                               AS generated_source,
         leadsource                                  AS lead_source,
         merged_opportunity__c                       AS merged_opportunity_id,
+        duplicate_opportunity__c                    AS duplicate_opportunity_id,
         account_owner__c                            AS account_owner,
         opportunity_owner__c                        AS opportunity_owner,
         owner_team_o__c                             AS opportunity_owner_team,
@@ -75,6 +75,7 @@ WITH source AS (
         is_downgrade_opportunity__c                 AS is_downgrade,
         swing_deal__c                               AS is_swing_deal,
         is_edu_oss_opportunity__c                   AS is_edu_oss,
+        is_ps_opportunity__c                        AS is_ps_opp,
         net_iacv__c                                 AS net_incremental_acv,
         campaignid                                  AS primary_campaign_source_id,
         probability                                 AS probability,
@@ -86,7 +87,13 @@ WITH source AS (
         downgrade_iacv__c                           AS downgrade_iacv,
         renewal_acv__c                              AS renewal_acv,
         renewal_amount__c                           AS renewal_amount,
-        sql_source__c                               AS sales_qualified_source,
+        {{ sales_qualified_source_cleaning('sql_source__c') }}
+                                                    AS sales_qualified_source,
+        CASE
+          WHEN sales_qualified_source = 'BDR Generated' THEN 'SDR Generated'
+          WHEN sales_qualified_source LIKE ANY ('Web%', 'Missing%', 'Other') OR sales_qualified_source IS NULL THEN 'Web Direct Generated'
+          ELSE sales_qualified_source
+        END                                         AS sales_qualified_source_grouped,
         sdr_pipeline_contribution__c                AS sdr_pipeline_contribution,
         solutions_to_be_replaced__c                 AS solutions_to_be_replaced,
         x3_technical_evaluation_date__c
@@ -107,15 +114,32 @@ WITH source AS (
         true_up_value__c                            AS true_up_value,
         order_type_live__c                          AS order_type_live,
         order_type_test__c                          AS order_type_stamped,
+        CASE 
+          WHEN order_type_stamped = '1. New - First Order'
+            THEN '1) New - First Order'
+          WHEN order_type_stamped IN ('2. New - Connected', '3. Growth', '4. Contraction', '5. Churn - Partial', '6. Churn - Final')
+            THEN '2) Growth (Growth / New - Connected / Churn / Contraction)'
+          WHEN order_type_stamped IN ('7. PS / Other')
+            THEN '3) Consumption / PS / Other'
+          ELSE 'Missing order_type_name_grouped'
+        END                                         AS order_type_grouped,
+        {{ growth_type('order_type_test__c', 'arr_basis__c') }}
+                                                    AS growth_type,
         arr_net__c                                  AS net_arr,
         arr_basis__c                                AS arr_basis,
         arr__c                                      AS arr,
         days_in_sao__c                              AS days_in_sao,
         {{ sales_hierarchy_sales_segment_cleaning('user_segment_o__c') }}
                                                     AS user_segment_stamped,
+        CASE 
+          WHEN user_segment_stamped IN ('Large', 'PubSec') THEN 'Large'
+          ELSE user_segment_stamped
+        END                                         AS user_segment_stamped_grouped,                                            
         stamped_user_geo__c                         AS user_geo_stamped,
         stamped_user_region__c                      AS user_region_stamped,
         stamped_user_area__c                        AS user_area_stamped,
+        {{ sales_segment_region_grouped('user_segment_stamped', 'user_region_stamped') }}
+                                                    AS user_segment_region_stamped_grouped,
         stamped_opportunity_owner__c                AS crm_opp_owner_stamped_name,
         stamped_account_owner__c                    AS crm_account_owner_stamped_name,
         sao_opportunity_owner__c                    AS sao_crm_opp_owner_stamped_name,
@@ -131,6 +155,17 @@ WITH source AS (
         tam_notes__c                                AS tam_notes,
         solution_architect__c                       AS primary_solution_architect,
         product_details__c                          AS product_details,
+        product_category__c                         AS product_category,
+        products_purchased__c                       AS products_purchased,
+        CASE
+          WHEN web_portal_purchase__c THEN 'Web Direct'
+          WHEN arr_net__c < 5000 THEN '<5K'
+          WHEN arr_net__c < 25000 THEN '5-25K'
+          WHEN arr_net__c < 100000 THEN '25-100K'
+          WHEN arr_net__c < 250000 THEN '100-250K'
+          WHEN arr_net__c > 250000 THEN '250K+'
+          ELSE 'Missing opportunity_deal_size'
+        END opportunity_deal_size,
 
       -- ************************************
       -- sales segmentation deprecated fields - 2020-09-03
@@ -167,7 +202,8 @@ WITH source AS (
         -- original issue: https://gitlab.com/gitlab-data/analytics/-/issues/6072
         dr_partner_deal_type__c                     AS dr_partner_deal_type,
         dr_partner_engagement__c                    AS dr_partner_engagement,
-
+        {{ channel_type('dr_partner_engagement', 'order_type_stamped') }}
+                                                    AS channel_type,
         impartnerprm__partneraccount__c             AS partner_account,
         vartopiadrs__dr_status1__c                  AS dr_status,
         distributor__c                              AS distributor,

@@ -22,6 +22,7 @@ WITH dim_crm_account AS (
 
     SELECT *
     FROM {{ ref('fct_mrr') }}
+    WHERE subscription_status IN ('Active', 'Cancelled')
 
 ), next_renewal_month AS (
 
@@ -61,15 +62,17 @@ WITH dim_crm_account AS (
 
     SELECT
       dim_crm_account.dim_parent_crm_account_id,
-      dim_date.date_actual                              AS mrr_month,
-      dateadd('year', 1, date_actual)                   AS retention_month,
+      dim_date.date_actual                                      AS mrr_month,
+      dateadd('year', 1, date_actual)                           AS retention_month,
       next_renewal_month,
       last_renewal_month,
-      SUM(ZEROIFNULL(mrr))                              AS mrr_total,
-      SUM(ZEROIFNULL(arr))                              AS arr_total,
-      SUM(ZEROIFNULL(quantity))                         AS quantity_total,
-      ARRAY_AGG(product_tier_name)                      AS product_category,
-      MAX(product_ranking)                              AS product_ranking
+      COUNT(DISTINCT dim_crm_account.dim_parent_crm_account_id)
+                                                                AS parent_customer_count,
+      SUM(ZEROIFNULL(mrr))                                      AS mrr_total,
+      SUM(ZEROIFNULL(arr))                                      AS arr_total,
+      SUM(ZEROIFNULL(quantity))                                 AS quantity_total,
+      ARRAY_AGG(product_tier_name)                              AS product_category,
+      MAX(product_ranking)                                      AS product_ranking
     FROM fct_mrr
     INNER JOIN dim_product_detail
       ON dim_product_detail.dim_product_detail_id = fct_mrr.dim_product_detail_id
@@ -87,18 +90,20 @@ WITH dim_crm_account AS (
 
     SELECT
       current_mrr.dim_parent_crm_account_id,
-      current_mrr.mrr_month          AS current_mrr_month,
+      current_mrr.mrr_month             AS current_mrr_month,
       current_mrr.retention_month,
-      current_mrr.mrr_total          AS current_mrr,
-      future_mrr.mrr_total           AS future_mrr,
-      current_mrr.arr_total          AS current_arr,
-      future_mrr.arr_total           AS future_arr,
-      current_mrr.quantity_total     AS current_quantity,
-      future_mrr.quantity_total      AS future_quantity,
-      current_mrr.product_category   AS current_product_category,
-      future_mrr.product_category    AS future_product_category,
-      current_mrr.product_ranking    AS current_product_ranking,
-      future_mrr.product_ranking     AS future_product_ranking,
+      current_mrr.mrr_total             AS current_mrr,
+      future_mrr.mrr_total              AS future_mrr,
+      current_mrr.arr_total             AS current_arr,
+      future_mrr.arr_total              AS future_arr,
+      current_mrr.parent_customer_count AS current_parent_customer_count,
+      future_mrr.parent_customer_count  AS future_parent_customer_count,
+      current_mrr.quantity_total        AS current_quantity,
+      future_mrr.quantity_total         AS future_quantity,
+      current_mrr.product_category      AS current_product_category,
+      future_mrr.product_category       AS future_product_category,
+      current_mrr.product_ranking       AS current_product_ranking,
+      future_mrr.product_ranking        AS future_product_ranking,
       current_mrr.last_renewal_month,
       current_mrr.next_renewal_month,
       --The type of arr change requires a row_number. Row_number = 1 indicates new in the macro; however, for retention, new is not a valid option since retention starts in month 12, well after the First Order transaction.
@@ -130,6 +135,8 @@ WITH dim_crm_account AS (
         ELSE 0 END                              AS gross_retention_arr,
       current_quantity                          AS prior_year_quantity,
       COALESCE(future_quantity, 0)              AS net_retention_quantity,
+      current_parent_customer_count             AS prior_year_parent_customer_count,
+      COALESCE(future_parent_customer_count, 0) AS net_retention_parent_customer_count,
       {{ reason_for_quantity_change_seat_change('net_retention_quantity', 'prior_year_quantity') }},
       future_product_category                   AS net_retention_product_category,
       current_product_category                  AS prior_year_product_category,

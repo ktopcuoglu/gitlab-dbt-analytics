@@ -40,7 +40,7 @@ Use the below resources as a starting point for learning on the appropriate days
 * [ ]  https://blog.fishtownanalytics.com/scaling-knowledge-160f9f5a9b6c
 * [ ]  https://medium.com/airbnb-engineering/scaling-knowledge-at-airbnb-875d73eff091
 * [ ]  https://docs.getdbt.com/docs/documentation
-* [ ]  Schedule a call with [GitLabber outside of the team] who uses docs to build their analyses
+* [ ]  Schedule a call with [GitLab team member outside the Data-team] who uses docs to build their analyses
 ### The importance of defining work processes, e.g. dbt test coverage
 * [ ] https://about.gitlab.com/handbook/handbook-usage/#why-handbook-first
 * [ ] https://about.gitlab.com/handbook/business-ops/data-team/#dbt-test-coverage-rotation

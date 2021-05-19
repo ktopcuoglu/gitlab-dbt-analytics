@@ -85,7 +85,7 @@ services:
           target: /usr/local/analytics
 
     dbt_image:
-      image: registry.gitlab.com/gitlab-data/data-image/dbt-image:v0.0.13
+      image: registry.gitlab.com/gitlab-data/data-image/dbt-image:v0.0.15
       environment:
         DBT_PROFILES_DIR: /usr/local/dbt_profiles/
         DATA_TEST_BRANCH: "main"

@@ -37,10 +37,11 @@ release,ops
 release management,ops
 progressive delivery,ops
 package,ops
-container security,threat management
-insider threats,threat management
-rsponsible disclosure,threat management
-threat management,threat management
+container security,protect
+insider threats,protect
+rsponsible disclosure,protect
+threat management,protect
+protect,protect
 fulfillment,fulfillment
 purchase,fulfillment
 provision,fulfillment
@@ -60,4 +61,5 @@ geo,enablement
 memory,enablement
 global search,enablement
 product intelligence,growth
+
 

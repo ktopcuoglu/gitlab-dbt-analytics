@@ -1,3 +1,7 @@
+{% docs growth_type%}
+This macro buckets Order Type and ARR Basis into four different categories: Add-On Growth, Growth on Renewal, Contraction on Renewal, Lost on Renewal.
+{% enddocs %}
+
 {% docs sales_hierarchy_sales_segment_cleaning%}
 This macro is a CASE WHEN statement that applies formatting to the sales hierarchy sales segment taken from both the user and opportunity objects to form the live and stamped sales hierarchy.
 {% enddocs %}

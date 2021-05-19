@@ -21,6 +21,7 @@ def construct_qualtrics_contact(result):
             "gitlabUserID": result["user_id"],
             "user_id": result["user_id"],
             "plan": result["plan"],
+            "namespace_id": result["namespace_id"],
         },
     }
 
@@ -70,8 +71,14 @@ def push_contacts_to_qualtrics(
     return final_status
 
 
-def get_metadata(file, google_sheet_client):
-    maximum_backoff_sec = 300
+def get_metadata(
+    file,
+    google_sheet_client,
+    maximum_backoff_sec: int = 300,
+):
+    """
+    Returns the google sheet name and file name
+    """
     n = 0
     while maximum_backoff_sec > (2 ** n):
         try:
@@ -79,10 +86,7 @@ def get_metadata(file, google_sheet_client):
             tab = file.sheet1.title
             return file_name, tab
         except APIError as gspread_error:
-            if (
-                gspread_error.response.status_code == 429
-                or gspread_error.response.status_code == 503
-            ):
+            if gspread_error.response.status_code in (429, 500, 502, 503):
                 google_sheet_client.wait_exponential_backoff(n)
                 n = n + 1
             else:
@@ -106,7 +110,7 @@ def process_qualtrics_file(
 
     dataframe = google_sheet_client.load_google_sheet(None, file_name, tab)
     if list(dataframe.columns.values)[0].lower() != "id":
-        warning(f"{file.title}: First column did not match expected name of id")
+        info(f"{file.title}: First column did not match expected name of id")
         return
     if not is_test:
         file.sheet1.update_acell("A1", "processing")
@@ -115,8 +119,9 @@ def process_qualtrics_file(
     table = get_qualtrics_request_table_name(file.id)
     dw_uploader(engine, table, dataframe, schema)
     query = f"""
-        SELECT first_name, last_name, email_address, language, user_id, plan
-        FROM PREP.SENSITIVE.QUALTRICS_API_FORMATTED_CONTACTS WHERE user_id in
+        SELECT first_name, last_name, email_address, language, user_id, plan, namespace_id
+        FROM PREP.SENSITIVE.QUALTRICS_API_FORMATTED_CONTACTS 
+        WHERE user_id in
         (
             SELECT id
             FROM RAW.{schema}.{table}

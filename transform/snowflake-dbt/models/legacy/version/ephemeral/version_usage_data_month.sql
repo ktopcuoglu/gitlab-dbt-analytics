@@ -28,6 +28,7 @@ WITH usage_data as (
       MAX(gitaly_version)                                                                                AS gitaly_version,
       MAX(gitaly_servers)                                                                                AS gitaly_servers,
       MAX(ldap_enabled)                                                                                  AS ldap_enabled,
+      MAX(gitpod_enabled)                                                                                AS gitpod_enabled,
 
       {% for ping_name in version_usage_stats_list %}
         MAX({{ping_name}})                                                                               AS {{ping_name}}

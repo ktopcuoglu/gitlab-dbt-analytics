@@ -110,12 +110,53 @@ class UsagePing(object):
 
         return saas_queries
 
-    def saas_namespace_ping(self):
+    def process_namespace_ping(self, query_dict, connection):
+        base_query = query_dict.get("counter_query")
+        ping_name = query_dict.get("counter_name", "Missing Name")
+        logging.info(f"Running ping {ping_name}...")
+
+        if query_dict.get("time_window_query", False):
+            base_query = base_query.replace(
+                "between_end_date", f"'{str(self.end_date)}'"
+            )
+            base_query = base_query.replace(
+                "between_start_date", f"'{str(self.start_date_28)}'"
+            )
+
+        if "namespace_ultimate_parent_id" not in base_query:
+            logging.info(f"Skipping ping {ping_name} due to no namespace information.")
+            return
+
+        try:
+            # Expecting [id, namespace_ultimate_parent_id, counter_value]
+            results = pd.read_sql(sql=base_query, con=connection)
+            error = "Success"
+        except SQLAlchemyError as e:
+            error = str(e.__dict__["orig"])
+            results = pd.DataFrame(
+                columns=["id", "namespace_ultimate_parent_id", "counter_value"]
+            )
+            results.loc[0] = [None, None, None]
+
+        results["ping_name"] = ping_name
+        results["level"] = query_dict.get("level", None)
+        results["query_ran"] = base_query
+        results["error"] = error
+        results["ping_date"] = self.end_date
+
+        dataframe_uploader(
+            results,
+            self.loader_engine,
+            "gitlab_dotcom_namespace",
+            "saas_usage_ping",
+        )
+
+    def saas_namespace_ping(self, filter=lambda _: True):
         """
         Take a dictionary of the following type and run each
         query to then upload to a table in raw.
         {
-            ping_name: 
+            ping_name:
             {
               query_base: sql_query,
               level: namespace,
@@ -128,50 +169,15 @@ class UsagePing(object):
         connection = self.loader_engine.connect()
 
         for query_dict in saas_queries:
-            base_query = query_dict.get("counter_query")
-            ping_name = query_dict.get("counter_name", "Missing Name")
-            logging.info(f"Running ping {ping_name}...")
-
-            if query_dict.get("time_window_query", False):
-                base_query = base_query.replace(
-                    "between_end_date", f"'{str(self.end_date)}'"
-                )
-                base_query = base_query.replace(
-                    "between_start_date", f"'{str(self.start_date_28)}'"
-                )
-
-            if "namespace_ultimate_parent_id" not in base_query:
-                logging.info(
-                    f"Skipping ping {ping_name} due to no namespace information."
-                )
-                continue
-
-            try:
-                # Expecting [id, namespace_ultimate_parent_id, counter_value]
-                results = pd.read_sql(sql=base_query, con=connection)
-                error = "Success"
-            except SQLAlchemyError as e:
-                error = str(e.__dict__["orig"])
-                results = pd.DataFrame(
-                    columns=["id", "namespace_ultimate_parent_id", "counter_value"]
-                )
-                results.loc[0] = [None, None, None]
-
-            results["ping_name"] = ping_name
-            results["level"] = query_dict.get("level", None)
-            results["query_ran"] = base_query
-            results["error"] = error
-            results["ping_date"] = self.end_date
-
-            dataframe_uploader(
-                results,
-                self.loader_engine,
-                "gitlab_dotcom_namespace",
-                "saas_usage_ping",
-            )
+            if filter(query_dict):
+                self.process_namespace_ping(query_dict, connection)
 
         connection.close()
         self.loader_engine.dispose()
+
+    def backfill(self):
+        filter = lambda query_dict: query_dict.get("time_window_query", False)
+        self.saas_namespace_ping(filter)
 
 
 if __name__ == "__main__":

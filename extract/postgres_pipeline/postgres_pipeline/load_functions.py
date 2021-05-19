@@ -2,7 +2,7 @@ import datetime
 import logging
 import os
 import sys
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 
 from gitlabdata.orchestration_utils import (
     snowflake_engine_factory,
@@ -11,13 +11,20 @@ from gitlabdata.orchestration_utils import (
 )
 from sqlalchemy.engine.base import Engine
 
-from postgres_pipeline_table import PostgresPipelineTable
 from utils import (
     chunk_and_upload,
     get_engines,
     id_query_generator,
     manifest_reader,
 )
+
+
+def get_last_load_time() -> Optional[datetime.datetime]:
+    last_load_tstamp = os.environ["LAST_LOADED"]
+    if last_load_tstamp != "":
+        return datetime.datetime.strptime(last_load_tstamp, "%Y-%m-%dT%H:%M:%S%z")
+    else:
+        return None
 
 
 def load_incremental(
@@ -33,13 +40,8 @@ def load_incremental(
 
     raw_query = table_dict["import_query"]
     additional_filter = table_dict.get("additional_filtering", "")
-    if "{EXECUTION_DATE}" not in raw_query:
-        logging.info(f"Table {source_table_name} does not need incremental processing.")
-        return False
 
-    replication_check_query = "select pg_last_xact_replay_timestamp();"
-
-    replication_timestamp = query_executor(source_engine, replication_check_query)[0][0]
+    env = os.environ.copy()
 
     """
       If postgres replication is too far behind for gitlab_com, then data will not be replicated in this DAGRun that
@@ -47,57 +49,69 @@ def load_incremental(
       This block of code raises an Exception whenever replication is far enough behind that data will be missed.
     """
     if table_dict["export_schema"] == "gitlab_com":
+
+        replication_check_query = "select pg_last_xact_replay_timestamp();"
+
+        replication_timestamp = query_executor(source_engine, replication_check_query)[
+            0
+        ][0]
+
+        last_load_time = get_last_load_time()
+
+        hours_looking_back = int(env["HOURS"])
+
         try:
-            last_execution_date = datetime.datetime.strptime(
-                os.environ["LAST_EXECUTION_DATE"], "%Y-%m-%dT%H:%M:%S%z"
-            )
             execution_date = datetime.datetime.strptime(
-                os.environ["EXECUTION_DATE"], "%Y-%m-%dT%H:%M:%S%z"
+                env["EXECUTION_DATE"], "%Y-%m-%dT%H:%M:%S%z"
             )
         except ValueError:
-            last_execution_date = datetime.datetime.strptime(
-                os.environ["LAST_EXECUTION_DATE"], "%Y-%m-%dT%H:%M:%S.%f%z"
-            )
             execution_date = datetime.datetime.strptime(
-                os.environ["EXECUTION_DATE"], "%Y-%m-%dT%H:%M:%S.%f%z"
+                env["EXECUTION_DATE"], "%Y-%m-%dT%H:%M:%S.%f%z"
             )
 
-        hours_difference = (execution_date - last_execution_date).seconds / 3600
-
-        hours_looking_back = int(os.environ["HOURS"])
-
-        """ The DAG moves forward 6 hours every run, but it is getting data for `hours` Hours in the past.
-            This means that replication has to be caught up to the point of execution_date + 6 which is the next execution date 
-            minus however far back data is being queried for each run which is the HOURS environ variable.  
-        """
-        if replication_timestamp < execution_date + datetime.timedelta(
-            hours=hours_difference
-        ) - datetime.timedelta(hours=hours_looking_back):
-            raise Exception(
-                f"PG replication is at {replication_timestamp}, \
-                farther behind on replication than current replication window."
-            )
+        if last_load_time is not None:
+            this_run_beginning_timestamp = last_load_time - datetime.timedelta(
+                minutes=30
+            )  # Allow for 30 minute overlap to ensure late arriving data is not skipped
         else:
-            logging.info(f"Replication is good at {replication_timestamp}")
+            logging.warn(
+                "No last load time found, using the earliest of the replication timestamp and execution date."
+            )
+            this_run_beginning_timestamp = min(
+                replication_timestamp, execution_date
+            ) - datetime.timedelta(hours=hours_looking_back)
+
+        logging.info(f"Replication is at {replication_timestamp}")
+
+        end_timestamp = min(
+            replication_timestamp,
+            execution_date,
+            this_run_beginning_timestamp + datetime.timedelta(hours=hours_looking_back),
+        )
+
+        if this_run_beginning_timestamp > end_timestamp:
+            raise Exception(
+                "beginning timestamp is after end timestamp -- shouldn't be possible -- erroring"
+            )
 
         append_to_xcom_file(
-            {
-                "max_data_available": min(
-                    replication_timestamp, execution_date
-                ).strftime("%Y-%m-%dT%H:%M:%S%z")
-            }
+            {"max_data_available": end_timestamp.strftime("%Y-%m-%dT%H:%M:%S%z")}
         )
+
+        env["BEGIN_TIMESTAMP"] = this_run_beginning_timestamp.strftime(
+            "%Y-%m-%dT%H:%M:%S"
+        )
+        env["END_TIMESTAMP"] = end_timestamp.strftime("%Y-%m-%dT%H:%M:%S")
 
     # If _TEMP exists in the table name, skip it because it needs a full sync
     # If a temp table exists then it needs to finish syncing so don't load incrementally
-    if "_TEMP" == table_name[-5:] or target_engine.has_table(f"{table_name}_TEMP"):
+    if "_TEMP" == table_name[-5:]:
         logging.info(
             f"Table {source_table_name} needs to be backfilled due to schema change, aborting incremental load."
         )
         return False
-    env = os.environ.copy()
     query = f"{raw_query.format(**env)} {additional_filter}"
-    logging.info(query)
+
     chunk_and_upload(query, source_engine, target_engine, table_name, source_table_name)
 
     return True
@@ -117,12 +131,9 @@ def sync_incremental_ids(
     raw_query = table_dict["import_query"]
     additional_filtering = table_dict.get("additional_filtering", "")
     primary_key = table_dict["export_table_primary_key"]
-    if "{EXECUTION_DATE}" not in raw_query:
-        logging.info(f"Table {table} does not need sync processing.")
-        return False
     # If temp isn't in the name, we don't need to full sync.
     # If a temp table exists, we know the sync didn't complete successfully
-    if "_TEMP" != table_name[-5:] and not target_engine.has_table(f"{table_name}_TEMP"):
+    if "_TEMP" != table_name[-5:]:
         logging.info(f"Table {table} doesn't need a full sync.")
         return False
 
@@ -144,6 +155,7 @@ def load_scd(
     source_table_name: str,
     table_dict: Dict[Any, Any],
     table_name: str,
+    is_append_only: bool = False,
 ) -> bool:
     """
     Load tables that are slow-changing dimensions.
@@ -164,6 +176,19 @@ def load_scd(
 
     logging.info(f"Processing table: {source_table_name}")
     query = f"{raw_query} {additional_filter}"
+
+    if is_append_only:
+        load_ids(
+            additional_filter,
+            table_dict["export_table_primary_key"],
+            raw_query,
+            source_engine,
+            source_table_name,
+            table_name,
+            target_engine,
+            backfill=backfill,
+        )
+        return True
 
     logging.info(query)
     chunk_and_upload(
@@ -187,8 +212,9 @@ def load_ids(
     table_name: str,
     target_engine: Engine,
     id_range: int = 750_000,
+    backfill: bool = True,
 ) -> None:
-    """ Load a query by chunks of IDs instead of all at once."""
+    """Load a query by chunks of IDs instead of all at once."""
 
     # Create a generator for queries that are chunked by ID range
     id_queries = id_query_generator(
@@ -201,7 +227,6 @@ def load_ids(
         id_range=id_range,
     )
     # Iterate through the generated queries
-    backfill = True
     for query in id_queries:
         filtered_query = f"{query} {additional_filtering} ORDER BY {primary_key}"
         logging.info(filtered_query)

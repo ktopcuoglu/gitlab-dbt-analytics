@@ -35,9 +35,11 @@ sources:
       - name: product_pi 
       - name: quality_department_pi
       - name: recruiting_pi
+      - name: release_managers
       - name: roles
       - name: sales_pi
       - name: security_department_pi
       - name: stages
       - name: team
+      - name: usage_ping_metrics
       - name: ux_department_pi

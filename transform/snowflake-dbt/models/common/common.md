@@ -4,22 +4,22 @@ A fact table bridging opportunities with contacts. One opportunity can have mult
 
 {% enddocs %}
 
-{% docs bdg_namespace_order_subscription_active %}
+{% docs bdg_namespace_order_subscription %}
 
 The purpose of this table is two-fold:
 1. Connect **Ultimate Parent** Namespace ID to Subscription (and hence Zuora billing account and CRM Account)
 2. Connect Customer DB Customer ID to Subscription for self managed purchases. This helps with marketing efforts.
 
-This table expands the functionality of the orders by improving the join to ultimate parent namespaces and subscriptions. Namespaces listed in this table are all Active with prior trials and currently paid plans. Subscriptions and Orders listed in this table are all SaaS and currently active.
+This table expands the functionality of the orders by improving the join to ultimate parent namespaces and subscriptions. Namespaces listed in this table are all Active with prior trials and currently paid plans. Subscriptions and Orders listed in this table are all SaaS and the `is_active_subscription` column can be used to filter to subscription that are currently active.
 
 The tier(s) connected to the subscription are determined using the underlying Zuora recurring charges. This view uses a `FULL OUTER JOIN` to show all three sides of the Venn diagram. (namespace, orders, subscriptions)
 In doing so exceptions are noted within `namespace_order_subscription_match_status` to identify rows that do not match between systems.
 
 {% enddocs %}
 
-{% docs bdg_self_managed_order_subscription_active %}
+{% docs bdg_self_managed_order_subscription %}
 
-The purpose of this table to connect Order IDs from Customer DB to Subscription for self managed purchases. This table expands the functionality of the subscriptions by improving the join to orders. Subscriptions and Orders listed in this table are all self-managed and currently active.
+The purpose of this table to connect Order IDs from Customer DB to Subscription for self managed purchases. This table expands the functionality of the subscriptions by improving the join to orders. Subscriptions and Orders listed in this table are all self-managed and the `is_active_subscription` column can be used to filter to subscription that are currently active.
 
 The tier(s) connected to the subscription are determined using the underlying Zuora recurring charges. This view uses a `FULL OUTER JOIN` to show all three parts of the Venn diagram (orders, subscriptions, and the overlap between the two).
 
@@ -27,6 +27,13 @@ The tier(s) connected to the subscription are determined using the underlying Zu
 
 {% docs bdg_subscription_product_rate_plan %}
 The goal of this table is to build a bridge from the entire "universe" of subscriptions in Zuora (`zuora_subscription_source` without any filters applied) to all of the [product rate plans](https://www.zuora.com/developer/api-reference/#tag/Product-Rate-Plan) to which those subscriptions are mapped. This provides the ability to filter subscriptions by delivery type ('SaaS' or 'Self-Managed').
+
+{% enddocs %}
+
+{% docs dim_alliance_type %}
+Model to identify Channel partners that are alliance partners. Technology Partners are identified and discussed in the handbook link referenced below. The specific groupings to report out on were determined by FP&A and Sales Analytics.
+
+[Technology Partners Handbook Reference](https://about.gitlab.com/handbook/alliances/#technology-partners)
 
 {% enddocs %}
 
@@ -56,12 +63,12 @@ Dimension that combines demographic data from salesforce leads and salesforce co
 
 {% enddocs %}
 
-{% docs dim_crm_sales_hierarchy_live %}
+{% docs dim_crm_user_hierarchy_live %}
 Dimension table representing the current state of the sales hierarchy, including the user segment, geo, region, and area as it is in the crm user object.
 
 {% enddocs %}
 
-{% docs dim_crm_sales_hierarchy_stamped %}
+{% docs dim_crm_user_hierarchy_stamped %}
 Dimension table representing the sales hierarchy at the time of a closed opportunity, including the user segment. These fields are stamped on the opportunity object on the close date and are used in sales funnel analyses.
 
 {% enddocs %}
@@ -142,6 +149,13 @@ Dimensional table representing both calendar year and fiscal year date details.
 The grain of the table is a calendar day.
 
 Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+{% enddocs %}
+
+{% docs dim_dr_partner_engagement %}
+Model to identify the type of business engagement relationship a Partner has with GitLab. The Partner definitions are discussed in the handbook.
+
+[Partner Definitions Handbook Reference](https://about.gitlab.com/handbook/alliances/#partner-definitions)
 
 {% enddocs %}
 
@@ -233,6 +247,17 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
+{% docs dim_gitlab_releases %}
+Dimensional table representing released versions of GitLab.
+
+The grain of the table is a major_minor_version.
+
+Additional information can be found on the [GitLab Releases](https://about.gitlab.com/releases/categories/releases/) page.
+
+Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+{% enddocs %}
+
 {% docs dim_gitlab_versions %}
 Dimensional table representing released versions of GitLab.
 
@@ -256,33 +281,37 @@ Fact table representing quotes pulled from the Zuora billing system. These are a
 
 {% enddocs %}
 
+{% docs fct_sales_funnel_partner_alliance_target %}
+
+Sales funnel targets set by the Finance team to measure performance of Partner and Alliances Net ARR, broken down by sales hierarchy, and order attributes.
+
+{% enddocs %}
+
 {% docs fct_sales_funnel_target %}
 
 Sales funnel targets set by the Finance team to measure performance of important KPIs against goals, broken down by sales hierarchy, and order attributes.
 
 {% enddocs %}
 
-{% docs fct_usage_data_monthly %}
+{% docs dim_crm_user %}
 
-Factual table derived from the metrics received as part of usage ping payloads.  
+Dimension representing the associated user from salesforce. Most often this will be the record owner, which is a ubiquitous field in salesforce.
 
-To create this table, all-time metrics are normalized to estimate usage over a month and combined with 28-day metrics.  Therefore, a single record in this table is one usage metric for a month for an instance of GitLab.
+{% enddocs %}
+
+{% docs fct_usage_ping_subscription_mapped_gmau %}
+
+This data model is at the **month | dim_subscription_id** grain for **Self-Managed** instances. In every month _that a Usage Ping payload was received_, for a given subscription, values of each GMAU and Paid GMAU metric from the last Usage Ping value in that month are reported.
+
+This data model is used for the Customer Health Dashboards.
 
 Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
 
 {% enddocs %}
 
-
-{% docs dim_crm_sales_rep %}
-
-Dimension representing the associated sales rep from salesforce. Most often this will be the record owner, which is a ubiquitous field in salesforce.
-
-{% enddocs %}
-
-
 {% docs fct_usage_ping_subscription_mapped_smau %}
 
-This data model is at the **month | dim_subscription_id** grain for **Self-Managed** instances. In every month _that a Usage Ping payload was received_, for a given subscription, values of each SMAU metric from the last Usage Ping value in that month are reported. 
+This data model is at the **month | dim_subscription_id** grain for **Self-Managed** instances. In every month _that a Usage Ping payload was received_, for a given subscription, values of each SMAU metric from the last Usage Ping value in that month are reported.
 
 This data model is used for the Customer Health Dashboards.
 
@@ -324,7 +353,7 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 {% enddocs %}
 
 {% docs fct_product_usage_wave_1_3_metrics_latest %}
-This table builds on the set of all Zuora subscriptions that are associated with a **Self-Managed** rate plans. Seat Link data from Customers DB(`fct_usage_self_managed_seat_link`) are combined with high priority Usage Ping metrics (`prep_usage_ping_subscription_mapped_wave2_3_metrics`) to build out the set of facts included in this table. Only the most recently received Usage Ping and Seat Link per `dim_subscription_id` payload are reported included.
+This table builds on the set of all Zuora subscriptions that are associated with a **Self-Managed** rate plans. Seat Link data from Customers DB (`fct_usage_self_managed_seat_link`) are combined with high priority Usage Ping metrics (`prep_usage_ping_subscription_mapped_wave_2_3_metrics`) to build out the set of facts included in this table. Only the most recently received Usage Ping and Seat Link per `dim_subscription_id` payload are reported included.
 
 The data from this table will be used to create a mart table (`mart_product_usage_wave_1_3_metrics_latest`) for Gainsight Customer Product Insights.
 
@@ -333,7 +362,7 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 {% enddocs %}
 
 {% docs fct_product_usage_wave_1_3_metrics_monthly %}
-This table builds on the set of all Zuora subscriptions that are associated with a **Self-Managed** rate plans. Seat Link data from Customers DB(`fct_usage_self_managed_seat_link`) are combined with high priority Usage Ping metrics (`prep_usage_ping_subscription_mapped_wave2_3_metrics`) to build out the set of facts included in this table. Only the most recently received Usage Ping and Seat Link payloads per `dim_subscription_id` each month are reported in this table.
+This table builds on the set of all Zuora subscriptions that are associated with a **Self-Managed** rate plans. Seat Link data from Customers DB (`fct_usage_self_managed_seat_link`) are combined with high priority Usage Ping metrics (`prep_usage_ping_subscription_mapped_wave_2_3_metrics`) to build out the set of facts included in this table. Only the most recently received Usage Ping and Seat Link payloads per `dim_subscription_id` each month are reported in this table.
 
 The data from this table will be used to create a mart table (`mart_product_usage_wave_1_3_metrics_monthly`) for Gainsight Customer Product Insights.
 
@@ -350,28 +379,11 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
-{% docs fct_usage_ping_metric_28_days %}
-Factual table on the grain of an individual metric received as part of a usage ping payload.  This model specifically includes only metrics that represent usage over a month (or 28 days).
-
-Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
-
-{% enddocs %}
-
 {% docs fct_usage_ping_metric_all_time %}
 Factual table on the grain of an individual metric received as part of a usage ping payload.  This model specifically includes only metrics that represent usage over the entire lifetime of the instance.
 
 Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
 
-{% enddocs %}
-
-{% docs fct_usage_ping_subscription_mapped_wave_2_3_metrics %}
-The purpose of this data model is to identify the usage pings that can be mapped to a subscription and to unpack an initial set ([wave 2-3](https://gitlab.com/gitlab-data/analytics/-/blob/master/transform/snowflake-dbt/macros/version/sales_wave_2_3_metrics.sql)) of priority metrics from the `raw_usage_data_payload` column, strip all the sensitive data out, and then report one value for each metric in that column.
-
-In this iteration, the grain is `hostname` per `uuid` per `dim_subscription_id` per `ping_created_at_month`. This current version is for Sales team only.
-
-This data model is a fact table built on top of the `prep_usage_ping_subscription_mapped_wave2_3_metrics` model, which depends on `prep_usage_ping` and supports the creation of `dim_usage_ping`, which will replace `PROD.legacy.version_usage_data`, `dim_usage_pings`, `version_usage_data_source`, and `version_raw_usage_data_source` in the future.
-
-The metric list identifed can be found in the macro [`sales_wave_2_3_metrics`](https://gitlab.com/gitlab-data/analytics/-/blob/master/transform/snowflake-dbt/macros/version/sales_wave_2_3_metrics.sql).
 {% enddocs %}
 
 {% docs fct_usage_self_managed_seat_link %}
@@ -402,6 +414,12 @@ Dimension that contains demographic data from usage ping data, including additio
 
 Get started by exploring the [Product Geolocation Analysis](https://about.gitlab.com/handbook/business-ops/data-team/data-catalog/product-geolocation/) handbook page.
 Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+{% enddocs %}
+
+{% docs dim_host_instance_type %}
+
+Dimension table providing instance type for a given UUID/Host Name pair.
 
 {% enddocs %}
 
@@ -492,4 +510,3 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 A fact table that contains only the metrics that is a UMAU, SMAU, or GMAU metric that appears on the [Stages and Groups Performance Indicator handbook page](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/)
 
 {% enddocs %}
-

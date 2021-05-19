@@ -49,9 +49,7 @@ default_args = {
     "depends_on_past": False,
     "on_failure_callback": slack_failed_task,
     "owner": "airflow",
-    "params": {
-        "slack_channel_override": "#dbt-runs"
-    },  # Overriden for dbt-source-freshness in airflow_utils.py
+    "params": {"slack_channel_override": "#dbt-runs"},
     "retries": 0,
     "sla": timedelta(hours=8),
     "sla_miss_callback": slack_failed_task,
@@ -97,7 +95,8 @@ branching_dbt_run = BranchPythonOperator(
 dbt_non_product_models_command = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
-    dbt run --profiles-dir profile --target prod --exclude tag:datasiren tag:product legacy.sheetload legacy.snapshots sources.gitlab_dotcom sources.sheetload sources.sfdc sources.zuora; ret=$?;
+    export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_S" &&
+    dbt run --profiles-dir profile --target prod --exclude tag:datasiren tag:product legacy.sheetload legacy.snapshots sources.gitlab_dotcom sources.sheetload sources.sfdc sources.zuora sources.dbt; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
 
@@ -207,50 +206,12 @@ dbt_full_refresh = KubernetesPodOperator(
     dag=dag,
 )
 
-""" 
-    dbt-source-freshness
-    The ret=$? part preserves the return value of the dbt command which is then used as the final return value of the command
-"""
-dbt_source_cmd = f"""
-    {pull_commit_hash} &&
-    {dbt_install_deps_cmd} &&
-    dbt source snapshot-freshness --profiles-dir profile; ret=$?;
-    python ../../orchestration/upload_dbt_file_to_snowflake.py freshness; exit $ret
-"""
-dbt_source_freshness = KubernetesPodOperator(
-    **gitlab_defaults,
-    image=DBT_IMAGE,
-    task_id="dbt-source-freshness",
-    name="dbt-source-freshness",
-    secrets=[
-        GIT_DATA_TESTS_PRIVATE_KEY,
-        GIT_DATA_TESTS_CONFIG,
-        SALT,
-        SALT_EMAIL,
-        SALT_IP,
-        SALT_NAME,
-        SALT_PASSWORD,
-        SNOWFLAKE_ACCOUNT,
-        SNOWFLAKE_USER,
-        SNOWFLAKE_PASSWORD,
-        SNOWFLAKE_TRANSFORM_ROLE,
-        SNOWFLAKE_TRANSFORM_WAREHOUSE,
-        SNOWFLAKE_TRANSFORM_SCHEMA,
-        SNOWFLAKE_LOAD_PASSWORD,
-        SNOWFLAKE_LOAD_ROLE,
-        SNOWFLAKE_LOAD_USER,
-        SNOWFLAKE_LOAD_WAREHOUSE,
-    ],
-    env_vars=pod_env_vars,
-    arguments=[dbt_source_cmd],
-    dag=dag,
-)
-
 # dbt-test
 dbt_test_cmd = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
     dbt test --profiles-dir profile --target prod --exclude tag:datasiren snowplow legacy.snapshots source:gitlab_dotcom source:salesforce source:zuora; ret=$?;
+    python ../../orchestration/upload_dbt_file_to_snowflake.py manifest; $ret
     python ../../orchestration/upload_dbt_file_to_snowflake.py test; exit $ret
 """
 dbt_test = KubernetesPodOperator(
@@ -283,11 +244,50 @@ dbt_test = KubernetesPodOperator(
     dag=dag,
 )
 
-
-# Source Freshness
-dbt_source_freshness >> branching_dbt_run
+# dbt-results
+dbt_results_cmd = f"""
+    {pull_commit_hash} &&
+    {dbt_install_deps_cmd} &&
+    dbt run --profiles-dir profile --target prod --models sources.dbt+ ; ret=$?;
+    python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
+"""
+dbt_results = KubernetesPodOperator(
+    **gitlab_defaults,
+    image=DBT_IMAGE,
+    task_id="dbt-results",
+    name="dbt-results",
+    trigger_rule="all_done",
+    secrets=[
+        GIT_DATA_TESTS_PRIVATE_KEY,
+        GIT_DATA_TESTS_CONFIG,
+        SALT,
+        SALT_EMAIL,
+        SALT_IP,
+        SALT_NAME,
+        SALT_PASSWORD,
+        SNOWFLAKE_ACCOUNT,
+        SNOWFLAKE_USER,
+        SNOWFLAKE_PASSWORD,
+        SNOWFLAKE_LOAD_PASSWORD,
+        SNOWFLAKE_LOAD_ROLE,
+        SNOWFLAKE_LOAD_USER,
+        SNOWFLAKE_LOAD_WAREHOUSE,
+        SNOWFLAKE_TRANSFORM_ROLE,
+        SNOWFLAKE_TRANSFORM_WAREHOUSE,
+        SNOWFLAKE_TRANSFORM_SCHEMA,
+    ],
+    env_vars=pod_env_vars,
+    arguments=[dbt_results_cmd],
+    dag=dag,
+)
 
 # Branching for run
-branching_dbt_run >> dbt_non_product_models_task >> dbt_product_models_task >> dbt_test
+(
+    branching_dbt_run
+    >> dbt_non_product_models_task
+    >> dbt_product_models_task
+    >> dbt_test
+    >> dbt_results
+)
 
-branching_dbt_run >> dbt_full_refresh >> dbt_test
+branching_dbt_run >> dbt_full_refresh >> dbt_test >> dbt_results

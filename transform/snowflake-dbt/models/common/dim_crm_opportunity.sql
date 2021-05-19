@@ -21,6 +21,7 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity.generated_source,
       sfdc_opportunity.lead_source,
       sfdc_opportunity.merged_opportunity_id,
+      sfdc_opportunity.duplicate_opportunity_id,
       sfdc_opportunity.net_new_source_categories,
       sfdc_opportunity.account_owner_team_stamped,
       sfdc_opportunity.primary_campaign_source_id       AS primary_campaign_source_id,
@@ -38,7 +39,10 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity.deal_path,
 
       -- opportunity information
-
+      
+      sfdc_opportunity.product_category,
+      sfdc_opportunity.product_details,
+      sfdc_opportunity.products_purchased,
       sfdc_opportunity.competitors,
       sfdc_opportunity.critical_deal_flag,
       sfdc_opportunity.forecast_category_name,
@@ -55,13 +59,13 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity.is_swing_deal,
       sfdc_opportunity.is_edu_oss,
       sfdc_opportunity_stage.is_won                     AS is_won,
+      sfdc_opportunity.is_ps_opp,
       sfdc_opportunity.probability,
+      sfdc_opportunity.professional_services_value,
       sfdc_opportunity.reason_for_loss,
       sfdc_opportunity.reason_for_loss_details,
-      CASE
-        WHEN sfdc_opportunity.sales_qualified_source = 'BDR Generated' THEN 'SDR Generated'
-        ELSE sfdc_opportunity.sales_qualified_source
-      END                                               AS sales_qualified_source,
+      sfdc_opportunity.sales_qualified_source,
+      sfdc_opportunity.sales_qualified_source_grouped,
       sfdc_opportunity.solutions_to_be_replaced,
       sfdc_opportunity.is_web_portal_purchase,
       sfdc_opportunity.partner_initiated_opportunity,
@@ -101,7 +105,7 @@ WITH sfdc_opportunity AS (
 {{ dbt_audit(
     cte_ref="layered",
     created_by="@iweeks",
-    updated_by="@mcooperDD",
+    updated_by="@jpeguero",
     created_date="2020-11-20",
-    updated_date="2021-03-12"
+    updated_date="2021-04-29"
 ) }}

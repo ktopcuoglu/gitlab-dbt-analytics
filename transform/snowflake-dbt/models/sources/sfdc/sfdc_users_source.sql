@@ -11,6 +11,7 @@ WITH source AS (
       id                                                                AS user_id,
       name                                                              AS name,
       email                                                             AS user_email,
+      employeenumber                                                    AS employee_number,
 
       -- info
       title                                                             AS title,
@@ -25,6 +26,11 @@ WITH source AS (
       user_geo__c                                                       AS user_geo,
       user_region__c                                                    AS user_region,
       user_area__c                                                      AS user_area,
+      CASE 
+        WHEN user_segment IN ('Large', 'PubSec') THEN 'Large'
+        ELSE user_segment
+      END                                                               AS user_segment_grouped,
+      {{ sales_segment_region_grouped('user_segment', 'user_region') }} AS user_segment_region_grouped,
 
       --metadata
       createdbyid                                                       AS created_by_id,

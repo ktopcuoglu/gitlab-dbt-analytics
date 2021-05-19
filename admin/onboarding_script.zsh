@@ -10,14 +10,6 @@ echo "Installing git.."
 brew install git
 echo "git successfully installed"
 
-## install docker and co
-echo "Installing docker.."
-brew cask install docker
-brew install docker-compose docker-machine xhyve docker-machine-driver-xhyve
-sudo chown root:wheel $(brew --prefix)/opt/docker-machine-driver-xhyve/bin/docker-machine-driver-xhyve
-sudo chmod u+s $(brew --prefix)/opt/docker-machine-driver-xhyve/bin/docker-machine-driver-xhyve
-echo "docker successfully installed"
-
 
 ## install tldr https://tldr.sh/
 echo "Installing tldr..."

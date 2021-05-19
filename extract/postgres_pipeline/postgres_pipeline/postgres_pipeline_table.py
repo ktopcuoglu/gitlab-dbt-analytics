@@ -42,21 +42,20 @@ class PostgresPipelineTable:
             self.source_table_name,
             self.table_dict,
             target_table,
+            is_append_only=self.table_dict.get("append_only", False),
         )
 
     def is_incremental(self) -> bool:
-        return "{EXECUTION_DATE}" in self.query
+        return "{EXECUTION_DATE}" in self.query or "{BEGIN_TIMESTAMP}" in self.query
 
     def do_incremental(
-        self, source_engine: Engine, target_engine: Engine, use_temp_table: bool
+        self, source_engine: Engine, target_engine: Engine, schema_changed: bool
     ) -> bool:
+        if schema_changed:
+            return False
         if not self.needs_incremental_backfill(source_engine, target_engine):
             return False
-        target_table = (
-            self.get_temp_target_table_name()
-            if use_temp_table
-            else self.get_target_table_name()
-        )
+        target_table = self.get_target_table_name()
         return load_functions.load_incremental(
             source_engine,
             target_engine,
@@ -74,15 +73,12 @@ class PostgresPipelineTable:
         return self.is_incremental()
 
     def do_incremental_backfill(
-        self, source_engine: Engine, target_engine: Engine, use_temp_table: bool
+        self, source_engine: Engine, target_engine: Engine, schema_changed: bool
     ) -> bool:
-        if not self.is_incremental():
+        if not self.is_incremental() or not schema_changed:
+            logging.info("table does not need incremental backfill")
             return False
-        target_table = (
-            self.get_temp_target_table_name()
-            if use_temp_table
-            else self.get_target_table_name()
-        )
+        target_table = self.get_temp_target_table_name()
         return load_functions.sync_incremental_ids(
             source_engine,
             target_engine,
@@ -92,13 +88,14 @@ class PostgresPipelineTable:
         )
 
     def check_new_table(
-        self, source_engine: Engine, target_engine: Engine, use_temp_table: bool
+        self, source_engine: Engine, target_engine: Engine, schema_changed: bool
     ) -> bool:
-        target_table = (
-            self.get_temp_target_table_name()
-            if use_temp_table
-            else self.get_target_table_name()
-        )
+        if not schema_changed:
+            logging.info(
+                f"Table {self.get_target_table_name()} already exists and won't be tested."
+            )
+            return False
+        target_table = self.get_temp_target_table_name()
         return load_functions.check_new_tables(
             source_engine,
             target_engine,
@@ -112,7 +109,7 @@ class PostgresPipelineTable:
         load_type: str,
         source_engine: Engine,
         target_engine: Engine,
-        use_temp_table: bool,
+        schema_changed: bool,
     ) -> bool:
         load_types = {
             "incremental": self.do_incremental,
@@ -120,7 +117,7 @@ class PostgresPipelineTable:
             "backfill": self.do_incremental_backfill,
             "test": self.check_new_table,
         }
-        return load_types[load_type](source_engine, target_engine, use_temp_table)
+        return load_types[load_type](source_engine, target_engine, schema_changed)
 
     def check_if_schema_changed(
         self, source_engine: Engine, target_engine: Engine

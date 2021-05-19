@@ -54,7 +54,7 @@ WITH crm_account AS (
                                 ) }}                                                                AS quote_item_id,
       quote_amendment.zqu_quote_amendment_id                                                        AS quote_amendment_id,
       quote.quote_id                                                                                AS dim_quote_id,
-      quote.owner_id                                                                                AS dim_crm_sales_rep_id,
+      quote.owner_id                                                                                AS dim_crm_user_id,
 
       --relational keys
       quote.zqu__account                                                                            AS dim_crm_account_id,
@@ -62,7 +62,7 @@ WITH crm_account AS (
       quote.zqu__zuora_account_id                                                                   AS dim_billing_account_id,
       quote.zqu__zuora_subscription_id                                                              AS dim_subscription_id,
       opp.opportunity_id                                                                            AS dim_crm_opportunity_id,
-      opp_relational_fields.dim_crm_sales_rep_id                                                    AS opp_dim_crm_sales_rep_id,
+      opp_relational_fields.dim_crm_user_id                                                         AS opp_dim_crm_user_id,
       opp_relational_fields.dim_order_type_id                                                       AS opp_dim_order_type_id,
       opp_relational_fields.dim_sales_qualified_source_id                                           AS opp_dim_sales_qualified_source_id,
       opp_relational_fields.dim_deal_path_id                                                        AS opp_dim_deal_path_id,

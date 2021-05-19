@@ -14,7 +14,9 @@ WITH sfdc_campaign_info AS (
       description,
       budget_holder,
       bizible_touchpoint_enabled_setting,
-      strategic_marketing_contribution
+      strategic_marketing_contribution,
+      large_bucket,
+      reporting_type
     FROM sfdc_campaign_info
 
 )

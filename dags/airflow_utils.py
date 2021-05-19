@@ -10,7 +10,7 @@ from airflow.operators.slack_operator import SlackAPIPostOperator
 SSH_REPO = "git@gitlab.com:gitlab-data/analytics.git"
 HTTP_REPO = "https://gitlab.com/gitlab-data/analytics.git"
 DATA_IMAGE = "registry.gitlab.com/gitlab-data/data-image/data-image:v0.0.14"
-DBT_IMAGE = "registry.gitlab.com/gitlab-data/data-image/dbt-image:v0.0.13"
+DBT_IMAGE = "registry.gitlab.com/gitlab-data/data-image/dbt-image:v0.0.15"
 PERMIFROST_IMAGE = "registry.gitlab.com/gitlab-data/permifrost:v0.8.0"
 
 
@@ -112,7 +112,7 @@ def slack_defaults(context, task_type):
         task_text = "Task succeeded!"
 
     if task_type == "failure":
-        if task_name == "dbt-source-freshness":
+        if task_name == "monitor-dbt-source-freshness":
             slack_channel = "#analytics-pipelines"
         else:
             slack_channel = dag_context.params.get(

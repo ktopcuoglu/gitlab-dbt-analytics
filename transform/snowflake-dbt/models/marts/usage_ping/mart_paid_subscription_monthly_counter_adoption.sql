@@ -4,9 +4,11 @@ WITH self_managed_active_subscriptions AS (
       dim_date_id           AS date_id,
       dim_subscription_id   AS subscription_id,
       dim_product_detail_id AS product_details_id,
-      mrr,
-      quantity
+      SUM(mrr)              AS mrr,
+      SUM(quantity)         AS quantity
     FROM {{ ref('fct_mrr')}}
+    WHERE subscription_status IN ('Active', 'Cancelled')
+    {{ dbt_utils.group_by(n=3) }}
 
 ), dim_date AS (
 
@@ -37,10 +39,10 @@ WITH self_managed_active_subscriptions AS (
     SELECT *
     FROM {{ ref('fct_usage_ping_payloads') }}
 
-), gitlab_release_schedule AS (
+), dim_gitlab_releases AS (
 
     SELECT *
-    FROM {{ ref('gitlab_release_schedule')}}
+    FROM {{ ref('dim_gitlab_releases')}}
 
 ), transformed AS (
 
@@ -111,7 +113,7 @@ WITH self_managed_active_subscriptions AS (
       COUNT(DISTINCT subscription_name_slugify)                         AS major_minor_version_subscriptions,
       major_minor_version_subscriptions /  MAX(total_subscrption_count) AS pct_major_minor_version_subscriptions
     FROM paid_subscriptions_monthly_usage_ping_optin
-    INNER JOIN gitlab_release_schedule AS gitlab_releases
+    INNER JOIN dim_gitlab_releases AS gitlab_releases
       ON paid_subscriptions_monthly_usage_ping_optin.latest_major_minor_version = gitlab_releases.major_minor_version
     LEFT JOIN agg_total_subscriptions AS agg ON paid_subscriptions_monthly_usage_ping_optin.reporting_month = agg.agg_month
     {{ dbt_utils.group_by(n=4) }}
@@ -159,7 +161,7 @@ WITH self_managed_active_subscriptions AS (
       edition
     FROM flattened_usage_data
     INNER JOIN section_metrics ON flattened_usage_data.ping_name = section_metrics.metrics_path
-    LEFT JOIN gitlab_release_schedule AS gitlab_releases  ON flattened_usage_data.first_version_with_counter = gitlab_releases.major_minor_version
+    LEFT JOIN dim_gitlab_releases AS gitlab_releases  ON flattened_usage_data.first_version_with_counter = gitlab_releases.major_minor_version
     WHERE release_date < CURRENT_DATE AND (is_smau OR is_gmau)
 
 ), date_spine AS (

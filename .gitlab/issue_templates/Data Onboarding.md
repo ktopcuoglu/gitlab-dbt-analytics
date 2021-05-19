@@ -11,13 +11,15 @@ Goal: To help bring you, our new data team member, up to speed in the GitLab Dat
 - [ ] Manager: Add to Data Team calendar 
 - [ ] Manager: Add to the `GitLab Data Team` project as a Developer.
 - [ ] Manager: Customize this template for the analysts specialty, if any. Delete sections, if appropriate
+- [ ] Manager: Add to Lucidchart via Okta
+- [ ] ManageR: Add to Lucidchart `Data Team` team folder
 
 ### For Central or Embedded Analyst/Engineers
 - [ ] Manager: Create access request 
    - [ ] Manager: Request addition to `@datateam` alias on Slack in PeopleOps Onboarding issue
    - [ ] Manager: Request addition to `@data-analysts` alias on Slack in PeopleOps Onboarding issue
    - [ ] Manager: Request addition to `Data Team` 1password vault in PeopleOps Onboarding issue
-   - [ ] Join the following channels on Slack: `data`, `data-lounge`, `data-daily`, `data-triage`, and `business-operations`.
+   - [ ] Join the following channels on Slack: `data`, `data-lounge`, `data-daily`, `data-triage`, and `enterprise-apps`.
    - [ ] Engineers, join `analytics-pipelines` and `data-prom-alerts`
    - [ ] Analysts & Engineers, join `dbt-runs`
 - [ ] Manager: Add to the `gitlab-data` namespace as a Developer.
@@ -83,7 +85,6 @@ rm ~/onboarding_script.zsh
    * This may take a while, and it might ask you for your password (multiple times) before it's done. Here's what this does:
       * Installs iTerm, a mac-OS terminal replacement
       * Installs VSCode, an open source text editor. VSCode is recommended for multiple reasons including community support, the [GitLab workflow](https://marketplace.visualstudio.com/items?itemName=fatihacet.gitlab-workflow) extension, and the LiveShare features.
-      * Installs docker so you can work out of containers.
       * Installs oh-my-zsh for easy terminal theming, git autocomplete, and a few other plugins. If you are curious or would like to change the look and feel of your shell please [go here](https://github.com/ohmyzsh/ohmyzsh).
       * Installing dbt, the open source tool we use for data transformations.
       * Installing jump, an easy way to move through the file system. [Please find here more details on how to use jump](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/jump)
@@ -103,7 +104,6 @@ rm ~/onboarding_script.zsh
 * [ ] Consider following [these instructions](https://stackoverflow.com/a/23963086) so you can have option + arrow keys to move around the terminal easier
 * [ ] If you get a weird semaphore issue error when running dbt try [this script](https://gist.github.com/llbbl/c54f44d028d014514d5d837f64e60bac) which is sourced from this [Apple forum thread](https://forums.developer.apple.com/thread/119429)
 
-
 </details>
 
 <details>
@@ -117,7 +117,7 @@ Some important parts of the script that you will definitely want to do in some w
     * [ ] Clone the analytics project at git@gitlab.com:gitlab-data/analytics.git
     * [ ] Make sure to globally configure git with at least your name and email.
     * [ ] Ensure you have [git completion](https://stackoverflow.com/questions/24315201/warning-this-script-is-deprecated-please-see-git-completion-zsh/41767727#41767727) configured to make your life easier
-* [ ] Install docker, docker-compose, and docker-machine
+* [ ] Install docker & docker-compose. The easiest way to do this for Mac now is to use the desktop install from [Docker](https://www.docker.com/products/docker-desktop). If working on Linux you will need to follow these [install instructions](https://docs.docker.com/engine/install/ubuntu/) instead. 
 * [ ] Install Python3. [The Hitchhiker's Guide to Python](https://docs.python-guide.org/starting/install3/osx/) is a good resource
     * [ ] Install pip3
     * [ ] Make sure to install the setuptools library as dbt will not install without it
@@ -245,7 +245,7 @@ This data comes from our GitLab.com SaaS product.
 - [ ] Consider joining [Locally Optimistic slack](https://www.locallyoptimistic.com/community/)
  (Not required, but recommended).
 - [ ] Consider subscribing to the [Data Science Roundup](http://roundup.fishtownanalytics.com) (Not required, but recommended).
-- [ ] There are many Slack channels organized around interests, such as `#fitlab`, `#bookclub`, and `#woodworking`. There are also many organized by location (these all start with `#loc_`). This is a great way to connect to GitLabbers outside of the team. Join some that are relevant to your interests, if you'd like.
+- [ ] There are many Slack channels organized around interests, such as `#fitlab`, `#bookclub`, and `#woodworking`. There are also many organized by location (these all start with `#loc_`). This is a great way to connect to GitLab team members outside of the Data-team. Join some that are relevant to your interests, if you'd like.
 - [ ] Familiarize yourself with [SheetLoad](https://about.gitlab.com/handbook/business-ops/data-team/platform/#using-sheetload).
 - [ ] Really really useful resources in [this Drive folder](https://drive.google.com/drive/folders/1wrI_7v0HwCwd-o1ryTv5dlh6GW_JyrSQ?usp=sharing) (GitLab Internal); Read the `a_README` file first.
 - [ ] Save the [Data Kitchen Data Ops Cookbook](https://drive.google.com/file/d/14KyYdFB-DOeD0y2rNyb2SqjXKygo10lg/view?usp=sharing) as a reference.
@@ -296,6 +296,11 @@ Also referred as SFDC, Salesforce.com (Sales Force Dot Com).
 - [ ] Check out [10 Reads for Data Scientists Getting Started with Business Models](https://www.conordewey.com/blog/10-reads-for-data-scientists-getting-started-with-business-models/) and read through the collection of articles to deepen your understanding of SaaS metrics.
 - [ ] Familiarize yourself with the GitLab Metrics Sheet (search in Google Drive, it should come up) which contains most of the key metrics we use at GitLab and the [definitions of these metrics](https://about.gitlab.com/handbook/business-ops/data-team/kpi-index/).
 - [ ] Optional, for more information on Finance KPIs, you can watch this working session between the Manager, Financial Planning and Analysis and Data Analyst, Finance: [Finance KPIs](https://www.youtube.com/watch?v=dmdilBQb9PY&feature=youtu.be)
+
+## Triage
+Data triagers are the first responders to requests and problems for the Data team.
+- [ ] Read about the Triage  proces in our [handbook](##%20Triage%20%20Data%20triagers%20are%20the%20first%20responders%20to%20requests%20and%20problems%20for%20the%20Data%20team.%20-%20%5B%20%5D) 
+- [ ] Checkout the Triage [template](https://gitlab.com/gitlab-data/analytics/-/blob/master/.gitlab/issue_templates/Data%20Triage.md)
 
 ## Good First Issues:
 - [ ] [Replace]
