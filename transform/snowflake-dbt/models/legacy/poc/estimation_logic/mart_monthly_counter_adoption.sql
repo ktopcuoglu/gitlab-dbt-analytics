@@ -52,7 +52,7 @@ WITH paid_subscriptions_monthly_usage_ping_optin AS (
       SPLIT_PART(metrics_path, '.', -1)                                     AS feature_name,
       REPLACE(metrics_path, '.', '_')                                       AS full_metrics_path,
       FIRST_VALUE(major_minor_version ) OVER (PARTITION BY metrics_path, edition 
-                                                ORDER BY major_version ASC,
+                                                ORDER BY major_version * 100 +
                                                          minor_version ASC) AS first_version_with_counter
     FROM flattened_usage_data
     WHERE TRY_TO_DECIMAL(metric_value::TEXT) > 0
@@ -69,7 +69,7 @@ WITH paid_subscriptions_monthly_usage_ping_optin AS (
       FIRST_VALUE(minor_version) OVER (PARTITION BY transformed_flattened.metrics_path, edition
                                          ORDER BY release_date ASC)                          AS minor_version,
       FIRST_VALUE(DATE_TRUNC('month', release_date)) OVER (PARTITION BY transformed_flattened.metrics_path, edition ORDER BY
-                                 major_version ASC, minor_version ASC)                       AS release_month,
+                                 release_date ASC)                                           AS release_month,
       transformed_flattened.metrics_path,
       stage_name, 
       section_name,
@@ -80,7 +80,7 @@ WITH paid_subscriptions_monthly_usage_ping_optin AS (
       is_paid_gmau,
       edition,
       FIRST_VALUE(major_minor_version) OVER (PARTITION BY transformed_flattened.metrics_path, edition 
-                                              ORDER BY major_version ASC, minor_version ASC) AS first_version_with_counter
+                                              ORDER BY release_date ASC) AS first_version_with_counter
     FROM transformed_flattened
     INNER JOIN section_metrics ON transformed_flattened.metrics_path = section_metrics.metrics_path
     LEFT JOIN gitlab_releases ON transformed_flattened.first_version_with_counter = gitlab_releases.major_minor_version
