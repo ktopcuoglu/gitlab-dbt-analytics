@@ -1,3 +1,8 @@
+{{ config({
+    "unique_key": "run_unique_key"
+    })
+}}
+
 WITH source AS (
 
     SELECT *
@@ -20,14 +25,15 @@ WITH source AS (
 ), parsed AS (
 
     SELECT
-      data_by_row['unique_id']::VARCHAR     AS unique_id,  
-      data_by_row['name']::VARCHAR          AS name,
-      data_by_row['alias']::VARCHAR         AS alias,
-      data_by_row['database']::VARCHAR      AS database_name,
-      data_by_row['schema']::VARCHAR        AS schema_name,
-      data_by_row['package_name']::VARCHAR  AS package_name,
-      data_by_row['tags']::ARRAY            AS tags,
-      data_by_row['refs']::ARRAY            AS references,
+      data_by_row['unique_id']::VARCHAR                               AS unique_id,  
+      data_by_row['name']::VARCHAR                                    AS name,
+      data_by_row['alias']::VARCHAR                                   AS alias,
+      data_by_row['database']::VARCHAR                                AS database_name,
+      data_by_row['schema']::VARCHAR                                  AS schema_name,
+      data_by_row['package_name']::VARCHAR                            AS package_name,
+      data_by_row['tags']::ARRAY                                      AS tags,
+      data_by_row['refs']::ARRAY                                      AS references,
+      {{ dbt_utils.surrogate_key(['unique_id', 'generated_at']) }}    AS run_unique_key,
       dbt_version,
       schema_version,
       generated_at,

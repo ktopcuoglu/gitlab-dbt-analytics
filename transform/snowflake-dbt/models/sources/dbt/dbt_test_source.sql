@@ -1,3 +1,8 @@
+{{ config({
+    "unique_key": "run_unique_key"
+    })
+}}
+
 WITH source AS (
 
     SELECT *
@@ -29,6 +34,7 @@ WITH source AS (
       LOWER(data_by_row['config']['severity']::VARCHAR)                   AS severity,
       data_by_row['refs']::ARRAY                                          AS referrences,
       data_by_row['depends_on']                                           AS depends_on,
+      {{ dbt_utils.surrogate_key(['unique_id', 'generated_at']) }}        AS run_unique_key,
       dbt_version,
       schema_version,
       generated_at,
