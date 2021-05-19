@@ -1,5 +1,5 @@
-{{ simple_cte([('usage_ping_metrics_latest', 'usage_ping_metrics_latest')]) }}
+{{ simple_cte([('dim_usage_ping_metric', 'dim_usage_ping_metric')]) }}
 
 SELECT *
-FROM usage_ping_metrics_latest
+FROM dim_usage_ping_metric
 WHERE time_frame = 'none'
