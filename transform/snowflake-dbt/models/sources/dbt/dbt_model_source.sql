@@ -27,7 +27,7 @@ WITH source AS (
       data_by_row['schema']::VARCHAR        AS schema_name,
       data_by_row['package_name']::VARCHAR  AS package_name,
       data_by_row['tags']::ARRAY            AS tags,
-      data_by_row['refs']::ARRAY            AS referrences,
+      data_by_row['refs']::ARRAY            AS references,
       dbt_version,
       schema_version,
       generated_at,
