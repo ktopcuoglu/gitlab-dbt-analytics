@@ -1,3 +1,8 @@
+{{config({
+    "schema": "common_mart_marketing"
+  })
+}}
+
 WITH mart_marketing_contact AS (
   
     SELECT
