@@ -12,7 +12,7 @@ WITH source AS (
       d.value                                               AS data_by_row,
       jsontext['metadata']['dbt_version']::VARCHAR          AS dbt_version,
       jsontext['metadata']['dbt_schema_version']::VARCHAR   AS schema_version,
-      jsontext['metadata']['generated_at']::TIMESTAMP_NTZ   AS generated_at,
+      jsontext['metadata']['generated_at']::TIMESTAMP       AS generated_at,
       uploaded_at
     FROM source
     INNER JOIN LATERAL FLATTEN(INPUT => PARSE_JSON(jsontext['nodes']), outer => true) d
