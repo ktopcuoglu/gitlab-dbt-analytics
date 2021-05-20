@@ -17,16 +17,16 @@ SELECT
   product_tier,
   is_paid_product_tier,
   umau_value,
-  release_stage,
-  manage_stage,
-  secure_stage,
-  verify_stage,
-  monitor_stage,
-  protect_stage,
-  create_stage,
-  package_stage,
   configure_stage,
-  plan_stage
+  create_stage,
+  manage_stage,
+  monitor_stage,
+  package_stage,
+  plan_stage,
+  protect_stage,
+  release_stage,
+  secure_stage,
+  verify_stage
 FROM wk_self_managed_spo
 
 UNION
@@ -39,14 +39,14 @@ SELECT
   product_tier,
   is_paid_product_tier,
   umau_value,
-  release_stage,
-  manage_stage,
-  secure_stage,
-  verify_stage,
-  monitor_stage,
-  protect_stage,
-  create_stage,
-  package_stage,
   configure_stage,
-  plan_stage
+  create_stage,
+  manage_stage,
+  monitor_stage,
+  package_stage,
+  plan_stage,
+  protect_stage,
+  release_stage,
+  secure_stage,
+  verify_stage
 FROM wk_saas_spo
