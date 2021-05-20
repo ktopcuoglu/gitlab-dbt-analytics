@@ -23,7 +23,7 @@
     "user_column_name": "author_id",
     "key_to_parent_project": "project_id",
     "primary_key": "event_id",
-    "stage_name": "create",
+    "stage_name": "create", 
     "is_representative_of_stage": "True"
   }, {
     "event_name": "action_monthly_active_users_design_management",
@@ -637,7 +637,7 @@
 {% for event_cte in event_ctes %}
 
     SELECT
-      MD5('{{ event_cte.event_name}}.{{ event_cte.primary_key }}' || '-' || '{{ event_cte.event_name }}') AS event_primary_key,
+      MD5({{ event_cte.event_name}}.{{ event_cte.primary_key }} || '-' || {{ event_cte.event_name }})     sAS event_primary_key,
       '{{ event_cte.event_name }}'                                                                        AS event_name,
       ultimate_namespace.namespace_id,
       ultimate_namespace.namespace_created_at,
