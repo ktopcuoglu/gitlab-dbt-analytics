@@ -2885,6 +2885,7 @@ roles:
     - rkohnke:
         member_of:
             - reporter
+            - analyst_marketing
         warehouses:
             - analyst_xs
 
