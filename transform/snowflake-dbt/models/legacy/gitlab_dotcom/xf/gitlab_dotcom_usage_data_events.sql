@@ -1,7 +1,7 @@
-{{
-  config({
-    "materialized": "incremental"
-  })
+{{ config({
+    "materialized": "incremental",
+    "unique_key": "event_primary_key"
+    })
 }}
 
 /*
@@ -173,7 +173,7 @@
     "source_cte_name": "epic_notes",
     "user_column_name": "note_author_id",
     "key_to_parent_group": "ultimate_parent_id",
-    "primary_key": "author_id",
+    "primary_key": "note_id",
     "stage_name": "plan",
     "is_representative_of_stage": "False"
   },
@@ -218,7 +218,7 @@
     "source_cte_name": "issue_notes",
     "user_column_name": "note_author_id",
     "key_to_parent_project": "project_id",
-    "primary_key": "author_id",
+    "primary_key": "note_id",
     "stage_name": "plan",
     "is_representative_of_stage": "False"
   },
@@ -227,7 +227,7 @@
     "source_cte_name": "issue_resource_label_events",
     "user_column_name": "user_id",
     "key_to_parent_project": "namespace_id",
-    "primary_key": "issue_resource_label_event_id",
+    "primary_key": "resource_label_event_id",
     "stage_name": "plan",
     "is_representative_of_stage": "False"
   },
@@ -290,7 +290,7 @@
     "source_cte_name": "merge_request_notes",
     "user_column_name": "note_author_id",
     "key_to_parent_project": "project_id",
-    "primary_key": "author_id",
+    "primary_key": "note_id",
     "stage_name": "create",
     "is_representative_of_stage": "False"
   },
@@ -637,43 +637,44 @@
 {% for event_cte in event_ctes %}
 
     SELECT
+      MD5('{{ event_cte.event_name}}.{{ event_cte.primary_key }}' || '-' || '{{ event_cte.event_name }}') AS event_primary_key,
+      '{{ event_cte.event_name }}'                                                                        AS event_name,
       ultimate_namespace.namespace_id,
       ultimate_namespace.namespace_created_at,
-      IFF(blocked_users.user_id IS NOT NULL, TRUE, FALSE)          AS is_blocked_namespace,
+      IFF(blocked_users.user_id IS NOT NULL, TRUE, FALSE)                                                 AS is_blocked_namespace,
       {% if 'NULL' in event_cte.user_column_name %}
         NULL
       {% else %}
         {{ event_cte.event_name }}.{{ event_cte.user_column_name }}
-      {% endif %}                                                 AS user_id,
+      {% endif %}                                                                                         AS user_id,
       {% if event_cte.key_to_parent_project is defined %}
-        'project'                                                 AS parent_type,
-        projects.project_id                                       AS parent_id,
-        projects.project_created_at                               AS parent_created_at,
+        'project'                                                                                         AS parent_type,
+        projects.project_id                                                                               AS parent_id,
+        projects.project_created_at                                                                       AS parent_created_at,
       {% elif event_cte.key_to_parent_group is defined %}
-        'group'                                                   AS parent_type,
-        namespaces.namespace_id                                   AS parent_id,
-        namespaces.namespace_created_at                           AS parent_created_at,
+        'group'                                                                                           AS parent_type,
+        namespaces.namespace_id                                                                           AS parent_id,
+        namespaces.namespace_created_at                                                                   AS parent_created_at,
       {% else %}
-        NULL                                                      AS parent_type,
-        NULL                                                      AS parent_id,
-        NULL                                                      AS parent_created_at,
+        NULL                                                                                              AS parent_type,
+        NULL                                                                                              AS parent_id,
+        NULL                                                                                              AS parent_created_at,
       {% endif %}
-      ultimate_namespace.namespace_is_internal                    AS namespace_is_internal,
-      {{ event_cte.event_name }}.created_at                       AS event_created_at,
-      {{ event_cte.is_representative_of_stage }}::BOOLEAN         AS is_representative_of_stage,
-      '{{ event_cte.event_name }}'                                AS event_name,
-      '{{ event_cte.stage_name }}'                                AS stage_name,
+      ultimate_namespace.namespace_is_internal                                                            AS namespace_is_internal,
+      {{ event_cte.event_name }}.created_at                                                               AS event_created_at,
+      {{ event_cte.is_representative_of_stage }}::BOOLEAN                                                 AS is_representative_of_stage,
+      '{{ event_cte.stage_name }}'                                                                        AS stage_name,
       CASE
         WHEN gitlab_subscriptions.is_trial
           THEN 'trial'
         ELSE COALESCE(gitlab_subscriptions.plan_id, 34)::VARCHAR
-      END                                                         AS plan_id_at_event_date,
+      END                                                                                                 AS plan_id_at_event_date,
       CASE
         WHEN gitlab_subscriptions.is_trial
           THEN 'trial'
         ELSE COALESCE(plans.plan_name, 'free')
-      END                                                         AS plan_name_at_event_date,
-      COALESCE(plans.plan_is_paid, FALSE)                         AS plan_was_paid_at_event_date
+      END                                                                                                 AS plan_name_at_event_date,
+      COALESCE(plans.plan_is_paid, FALSE)                                                                 AS plan_was_paid_at_event_date
     FROM {{ event_cte.event_name }}
       /* Join with parent project. */
       {% if event_cte.key_to_parent_project is defined %}
