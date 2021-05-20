@@ -603,6 +603,10 @@ models:
   - name: gitlab_dotcom_usage_data_events
     description: '{{ doc("gitlab_dotcom_usage_data_events") }}'
     columns:
+      - name: event_primay_key
+        tests:
+          - not_null
+          - unique
       - name: event_name
         tests:
           - not_null
