@@ -32,6 +32,8 @@ WITH source AS (
 
     SELECT
       dim_usage_ping_id, 
+      host_id                                                                                         AS dim_host_id,
+      uuid                                                                                            AS dim_instance_id,
       ping_created_at,
       source_ip_hash                                                                                  AS ip_address_hash,
       {{ dbt_utils.star(from=ref('version_usage_data_source'), except=['EDITION', 'CREATED_AT', 'SOURCE_IP']) }},
@@ -50,6 +52,8 @@ WITH source AS (
 
     SELECT 
       dim_usage_ping_id,
+      dim_host_id,
+      dim_instance_id,
       ping_created_at, 
       ip_address_hash,
       {{ dbt_utils.star(from=ref('version_usage_data_source'), relation_alias='usage_data', except=['EDITION', 'CREATED_AT', 'SOURCE_IP']) }},
@@ -121,6 +125,8 @@ WITH source AS (
 
     SELECT 
       dim_usage_ping_id,
+      dim_host_id,
+      dim_instance_id,
       dim_product_tier.dim_product_tier_id AS dim_product_tier_id,
       ping_created_at,
       DATEADD('days', -28, ping_created_at)              AS ping_created_at_28_days_earlier,

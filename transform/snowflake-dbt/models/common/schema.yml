@@ -427,6 +427,25 @@ models:
           - unique
         tags: ["tdf", "industry", "common"]
 
+  - name: dim_installation
+    description: '{{ doc("dim_installation") }}'
+    columns:
+      - name: dim_installation_id
+        description: Unique identifier of an installation. An installation is unique combination of a host and an instance. The Unique Pkey is built as a surrogate key from the dim_intance_id and the dim_host_id
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "product", "common"]
+      - name: host_name
+        description: Name/URL of the host
+        tests:
+          - not_null
+        tags: ["tdf", "product", "common"]
+      - name: dim_instance_id
+        description: Unique ID for an instance. This ID is stored in the database of the instance
+        tests:
+          - not_null
+
   - name: dim_invoice
     description: '{{ doc("dim_invoice") }}'
     columns:
