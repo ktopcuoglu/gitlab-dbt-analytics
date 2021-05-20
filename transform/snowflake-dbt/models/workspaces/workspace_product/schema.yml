@@ -46,10 +46,10 @@ models:
           - not_null
           - accepted_values:
               values: ['Group','Individual']
-      - name: plan_name_at_reporting_month
+      - name: product_tier
         tests:
           - not_null
-      - name: plan_is_paid
+      - name: is_paid_product_tier
         tests:
           - not_null
 
