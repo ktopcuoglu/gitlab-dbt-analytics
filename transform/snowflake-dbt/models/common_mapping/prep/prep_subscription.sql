@@ -90,9 +90,9 @@ WITH date_details AS (
         ELSE NULL
       END                                                                       AS second_active_renewal_month,
       renewal_subscriptions.myb_renewal_month,
-			zuora_subscription.turn_on_cloud_licensing,
+      zuora_subscription.turn_on_cloud_licensing,
       zuora_subscription.turn_on_usage_ping_required_metrics,
-			zuora_subscription.contract_auto_renewal,
+      zuora_subscription.contract_auto_renewal,
       zuora_subscription.turn_on_auto_renewal,
       zuora_subscription.contract_seat_reconciliation,
       zuora_subscription.turn_on_seat_reconciliation,
