@@ -89,14 +89,14 @@
 
 SELECT
   reporting_month,
-  organization_id::VARCHAR AS organization_id,
+  organization_id::VARCHAR      AS organization_id,
   delivery,
   organization_type,
-  plan_name_at_reporting_month,
-  plan_is_paid,
+  plan_name_at_reporting_month  AS product_tier,
+  plan_is_paid                  AS is_paid_product_tier,
   --organization_creation_date,
   --created_by_blocked_user,
-  umau,
+  umau                          AS umau_value,
   {{ dbt_utils.pivot(
   'stage_name', 
   stage_names,
