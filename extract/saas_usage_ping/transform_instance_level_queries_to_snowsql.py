@@ -60,7 +60,7 @@ def add_counter_name_as_column(sql_metrics_name: str, sql_query: str) -> str:
     # removing extra " to have an easier query to parse
     sql_query = sql_query.replace('"', "")
 
-    # using here the sqlparse library: https://www.google.com/search?q=sqlparse&oq=sqlparse&aqs=chrome..69i57j0l9.884j0j7&sourceid=chrome&ie=UTF-8
+    # using here the sqlparse library: https://pypi.org/project/sqlparse/
     sql_query_parsed = sqlparse.parse(sql_query)
 
     # split the query in tokens
