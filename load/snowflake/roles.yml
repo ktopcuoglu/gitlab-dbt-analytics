@@ -721,8 +721,8 @@ roles:
             tables:
                 read:
                     - prod.covid19.covid19_cases
-                    - prep.airflow.airflow_dag
-                    - prep.airflow.airflow_dag_run
+                    - prep.airflow.airflow_dag_source
+                    - prep.airflow.airflow_dag_run_source
 
     - reporter_sensitive:
         warehouses:
