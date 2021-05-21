@@ -11,9 +11,6 @@
     "New Logos / A",
     "New Logos / T",
     "New Logos / Ttmp",
-    "MQLs_RATIO / A",
-    "MQLs_RATIO / T",
-    "MQLs_RATIO / Ttmp",
     "SAOs / A",
     "SAOs / T",
     "SAOs / Ttmp",
@@ -25,8 +22,10 @@
     "Total Opps / Ttmp"]
   -%}
 
-{% set select_columns = ["order_type_grouped", "segment_region_grouped"] %}
+{% set select_columns = ["segment_region_grouped", "order_type_grouped"] %}
 {% set num_of_cols_to_group = 2 %}
+
+{% set large_segment_region_grouped = ['APAC', 'EMEA', 'Large Other', 'PubSec', 'US East', 'US West', 'Pubsec', 'Global', 'Large MQLs & Trials'] %}
 
 {{ simple_cte([
     ('dim_date', 'dim_date'),
@@ -129,7 +128,7 @@
     -- WHERE [fiscal_quarter_name_fy=bc_fiscal_quarter]
     WHERE fiscal_quarter_name_fy='FY22-Q1'
 
-), base_list AS (
+), prep_base_list AS (
   
     SELECT
       fiscal_quarter_name_fy,
@@ -183,12 +182,45 @@
     FROM sales_funnel_target_mql_trial
     WHERE kpi_name IN ('MQL', 'Trials')
   
+), base_list AS (
+
+    SELECT *
+    FROM prep_base_list
+
+    {% if select_columns|count > 1 %}
+
+    UNION
+
+    SELECT
+      fiscal_quarter_name_fy,
+      {% for select_column in select_columns %}
+        {% if loop.first %}
+          {{select_column}}
+        {% else %}
+          'Total'
+        {% endif %}
+        {% if not loop.last %},{% endif %}
+
+      {% endfor %}
+    FROM prep_base_list
+
+    UNION
+
+    SELECT
+      fiscal_quarter_name_fy,
+      {% for __ in select_columns %}
+        'Total' {% if not loop.last %},{% endif %}
+      {% endfor %}
+    FROM prep_base_list
+
+    {% endif %}
+
 ), new_logos_actual AS (
 
     SELECT
       fiscal_quarter_name_fy,
       {% for select_column in select_columns %}
-      {{ select_column }},
+        IFNULL({{ select_column }}, 'Total') AS {{ select_column }},
       {% endfor %}
       COUNT(DISTINCT dim_crm_opportunity_id)               AS actual_new_logos
     FROM crm_opportunity_closed_period
@@ -197,49 +229,36 @@
       AND is_edu_oss = 0
       -- AND IFF([new_logos] = FALSE, TRUE, order_type = '1. New - First Order')
       AND IFF(FALSE = FALSE, TRUE, order_type = '1. New - First Order')
-    GROUP BY 1,
+    GROUP BY ROLLUP( 1,
       {% for select_column in select_columns %}
         {{ select_column }}
         {% if not loop.last %},{% endif %}
       {% endfor %}
+    )
 
-), mql_count AS (  
-  
-    SELECT 
-      fiscal_quarter_name_fy,
-      {% for select_column in select_columns %}
-      {{ select_column }},
-      {% endfor %}
-      COUNT(DISTINCT email_hash)             AS mqls
-    FROM crm_person
-    GROUP BY 1,
-      {% for select_column in select_columns %}
-        {{ select_column }}
-        {% if not loop.last %},{% endif %}
-      {% endfor %}
-  
 ), sao_count AS (
   
     SELECT
       fiscal_quarter_name_fy,
       {% for select_column in select_columns %}
-      {{ select_column }},
+        IFNULL({{ select_column }}, 'Total') AS {{ select_column }},
       {% endfor %}
       COUNT(*)                AS saos
     FROM crm_opportunity_accepted_period
     WHERE is_sao = TRUE
-    GROUP BY 1,
+    GROUP BY ROLLUP (1,
       {% for select_column in select_columns %}
         {{ select_column }}
         {% if not loop.last %},{% endif %}
       {% endfor %}
+    )
   
 ), first_oder_arr_closed_won AS (
 
     SELECT
       fiscal_quarter_name_fy,
       {% for select_column in select_columns %}
-      {{ select_column }},
+        IFNULL({{ select_column }}, 'Total') AS {{ select_column }},
       {% endfor %}
       SUM(net_arr)            AS first_oder_arr_closed_won
     FROM crm_opportunity_closed_period
@@ -248,51 +267,54 @@
       AND is_edu_oss = 0
       --AND order_type = '1. New - First Order'
       AND IFF(FALSE = FALSE, TRUE, order_type = '1. New - First Order')
-    GROUP BY 1,
+    GROUP BY ROLLUP(1,
       {% for select_column in select_columns %}
         {{ select_column }}
         {% if not loop.last %},{% endif %}
       {% endfor %}
+    )
   
 ), win_rate AS (
   
     SELECT
       fiscal_quarter_name_fy,
       {% for select_column in select_columns %}
-      {{ select_column }},
+        IFNULL({{ select_column }}, 'Total') AS {{ select_column }},
       {% endfor %}
       COUNT(CASE WHEN is_won THEN 1 END)                            AS won_opps,
       COUNT(is_won)                                                 AS total_opps
     FROM crm_opportunity_closed_period
     WHERE is_win_rate_calc = TRUE
-    GROUP BY 1,
+    GROUP BY ROLLUP (1,
       {% for select_column in select_columns %}
         {{ select_column }}
         {% if not loop.last %},{% endif %}
       {% endfor %}
+    )
    
-), actual_trials AS (
+), mql_trial_count AS (  
   
-    SELECT
+    SELECT 
       fiscal_quarter_name_fy,
       {% for select_column in select_columns %}
-      {{ select_column }},
+        IFNULL({{ select_column }}, 'Total') AS {{ select_column }},
       {% endfor %}
-      COUNT(DISTINCT email_hash, lead_source) AS actual_trials
+      COUNT(DISTINCT email_hash)             AS mqls,
+      COUNT(DISTINCT IFF(is_lead_source_trial, email_hash || lead_source, NULL)) AS actual_trials
     FROM crm_person
-    WHERE is_lead_source_trial = TRUE
-    GROUP BY 1,
+    GROUP BY ROLLUP( 1,
       {% for select_column in select_columns %}
         {{ select_column }}
         {% if not loop.last %},{% endif %}
       {% endfor %}
-
+    )
+  
 ), targets AS (
  
     SELECT
       fiscal_quarter_name_fy,
       {% for select_column in select_columns %}
-      {{ select_column }},
+        IFNULL({{ select_column }}, 'Total') AS {{ select_column }},
       {% endfor %}
       SUM(IFF(kpi_name = 'Trials', qtd_allocated_target, 0)) AS  target_trials,
       --SUM(IFF(IFF([new_logos] = FALSE, TRUE, order_type_name = '1. New - First Order') AND kpi_name = 'Deals', qtd_allocated_target, 0)) AS  target_new_logos,
@@ -309,18 +331,19 @@
     WHERE IFF(factor_to_date.is_selected_quarter_lower_than_current_quarter, target_date = factor_to_date.last_day_of_fiscal_quarter, report_target_date = CURRENT_DATE)
       --AND [fiscal_quarter_name_fy=bc_fiscal_quarter]
       AND fiscal_quarter_name_fy='FY22-Q1'
-    GROUP BY 1,
+    GROUP BY ROLLUP (1,
       {% for select_column in select_columns %}
         {{ select_column }}
         {% if not loop.last %},{% endif %}
       {% endfor %}
+    )
   
 ), targets_full AS (
  
     SELECT
       fiscal_quarter_name_fy,
       {% for select_column in select_columns %}
-      {{ select_column }},
+        IFNULL({{ select_column }}, 'Total') AS {{ select_column }},
       {% endfor %}
       SUM(IFF(kpi_name = 'Trials', allocated_target, 0)) AS  target_trials_full,
       --SUM(IFF(IFF([new_logos] = FALSE, TRUE, order_type_name = '1. New - First Order') AND kpi_name = 'Deals', allocated_target, 0)) AS  target_new_logos_full,
@@ -333,12 +356,13 @@
       SUM(IFF(kpi_name = 'Total Closed', allocated_target, 0)) AS  target_total_opps_full
     
     FROM sales_funnel_target
-    GROUP BY 1,
+    GROUP BY ROLLUP (1,
       {% for select_column in select_columns %}
         {{ select_column }}
         {% if not loop.last %},{% endif %}
       {% endfor %}
-  
+    )
+
 ), agg AS (
 
   SELECT
@@ -359,9 +383,6 @@
     IFNULL(actual_new_logos, 0)                AS "New Logos / A",
     NULLIF(target_new_logos_full, 0)           AS "New Logos / T",
     NULLIF(target_new_logos, 0)                AS "New Logos / Ttmp",
-    IFNULL(mqls, 0)                            AS "MQLs_RATIO / A",
-    NULLIF(target_mql_full, 0)                 AS "MQLs_RATIO / T",
-    NULLIF(target_mql, 0)                      AS "MQLs_RATIO / Ttmp",
     IFNULL(saos, 0)                            AS "SAOs / A",
     NULLIF(target_sao_full, 0)                 AS "SAOs / T",
     NULLIF(target_sao, 0)                      AS "SAOs / Ttmp",
@@ -389,10 +410,10 @@
     AND base_list.{{select_column}} = first_oder_arr_closed_won.{{select_column}}
     {% endfor %}
 
-  LEFT JOIN mql_count
-    ON base_list.fiscal_quarter_name_fy = mql_count.fiscal_quarter_name_fy
+  LEFT JOIN mql_trial_count
+    ON base_list.fiscal_quarter_name_fy = mql_trial_count.fiscal_quarter_name_fy
     {% for select_column in select_columns %}
-    AND base_list.{{select_column}} = mql_count.{{select_column}}
+    AND base_list.{{select_column}} = mql_trial_count.{{select_column}}
     {% endfor %}
 
   LEFT JOIN sao_count
@@ -405,12 +426,6 @@
     ON base_list.fiscal_quarter_name_fy = win_rate.fiscal_quarter_name_fy
     {% for select_column in select_columns %}
     AND base_list.{{select_column}} = win_rate.{{select_column}}
-    {% endfor %}
-  
-  LEFT JOIN actual_trials
-    ON base_list.fiscal_quarter_name_fy = actual_trials.fiscal_quarter_name_fy
-    {% for select_column in select_columns %}
-    AND base_list.{{select_column}} = actual_trials.{{select_column}}
     {% endfor %}
   
   LEFT JOIN targets
@@ -434,188 +449,177 @@
     AND "Trials / A" = 0      AND "Trials / T"          IS NULL
   )
 
-), total_row_no_mql_trial AS (
-
-    SELECT
-      fiscal_quarter_name_fy,
-      {% for select_column in select_columns %}
-      'Total' AS {{select_column}},
-      {% endfor %}
-      {% for metric in metrics %}
-        SUM("{{metric}}") AS "{{metric}}"
-        {% if not loop.last %},{% endif %}
-      {% endfor %}
-    FROM agg
-    GROUP BY fiscal_quarter_name_fy,
-      {% for select_column in select_columns %}
-        'Total'
-        {% if not loop.last %},{% endif %}
-      {% endfor %}
-      
-
-), total_row_mql_trial AS (
-
-    SELECT
-      fiscal_quarter_name_fy,
-      {% for select_column in select_columns %}
-      'Total' AS {{select_column}},
-      {% endfor %}
-      
-      COUNT(DISTINCT email_hash)             AS "MQLs / A",
-      COUNT(DISTINCT IFF(is_lead_source_trial, email_hash || lead_source, NULL)) AS "Trials / A" 
-    FROM crm_person
-    GROUP BY fiscal_quarter_name_fy,
-      {% for select_column in select_columns %}
-        'Total'
-        {% if not loop.last %},{% endif %}
-      {% endfor %}
-      
-
-), total_row AS (
-
-    SELECT
-      total_row_no_mql_trial.fiscal_quarter_name_fy,
-      {% for select_column in select_columns %}
-      total_row_no_mql_trial.{{select_column}},
-      {% endfor %}
-
-      {% for metric in metrics %}
-        {% if metric == 'MQLs / A' or metric == 'Trials / A' %}
-        total_row_mql_trial."{{metric}}"
-        {% else %}
-        total_row_no_mql_trial."{{metric}}"
-        {% endif %}
-        {% if not loop.last %},{% endif %}
-      {% endfor %}
-
-    FROM total_row_no_mql_trial
-    LEFT JOIN total_row_mql_trial
-      ON total_row_no_mql_trial.fiscal_quarter_name_fy = total_row_mql_trial.fiscal_quarter_name_fy
-      {% for select_column in select_columns %}
-      AND total_row_no_mql_trial.{{select_column}} = total_row_mql_trial.{{select_column}}
-      {% endfor %}
-
-
 )
 
-{% if select_columns|count > 1 %}
+{% for select_column in select_columns %}
+  {% if select_column == 'segment_region_grouped' %}
+  
+    , large_subtotal_no_mql_trial AS (
 
-, subtotal_row_no_mql_trial AS (
+        SELECT
+          fiscal_quarter_name_fy,
+          {% for column in select_columns %}
+            {% if column == 'segment_region_grouped' %}
+              'Large-Total' AS {{column}},
+            {% else %}
+              {{column}},
+            {% endif %}
+          {% endfor %}
+          {% for metric in metrics %}
+            SUM("{{metric}}") AS "{{metric}}"
+            {% if not loop.last %},{% endif %}
+          {% endfor %}
+        FROM agg
+        WHERE segment_region_grouped IN (
+          {% for large_region in large_segment_region_grouped %} '{{large_region}}' {% if not loop.last %}, {% endif %} {% endfor %}
+          )
+          {% for select_column in select_columns %}
+            AND agg.{{select_column}} != 'Total'
+          {% endfor %}
+        GROUP BY 1,
+          {% for column in select_columns %}
+            {% if column == 'segment_region_grouped' %}
+              'Large-Total'
+            {% else %}
+              {{column}}
+            {% endif %}
+            {% if not loop.last %},{% endif %}
+          {% endfor %}
 
-    SELECT
-      fiscal_quarter_name_fy,
-      {% for select_column in select_columns %}
-        {% if loop.first %}
-          {{select_column}}
-        {% else %}
-          'Total' AS {{select_column}}
-        {% endif %},
-      {% endfor %}
+    ), large_subtotal AS (
 
+        SELECT
+          large_subtotal_no_mql_trial.fiscal_quarter_name_fy,
+          {% for column in select_columns %}
+            large_subtotal_no_mql_trial.{{column}},
+          {% endfor %}
+          {% for metric in metrics %}
+            {% if metric == 'MQLs / A' %}
+            mql_trial_count.mqls AS "{{metric}}"
+            {% elif metric == 'Trials / A' %}
+            mql_trial_count.actual_trials AS "{{metric}}"
+            {% else %}
+            large_subtotal_no_mql_trial."{{metric}}"
+            {% endif %}
+            {% if not loop.last %},{% endif %}
+          {% endfor %}
+        FROM large_subtotal_no_mql_trial
+        LEFT JOIN mql_trial_count
+          ON mql_trial_count.fiscal_quarter_name_fy = large_subtotal_no_mql_trial.fiscal_quarter_name_fy
+          {% for select_column in select_columns %}
+            {% if select_column == 'segment_region_grouped' %}
+              AND IFF(mql_trial_count.segment_region_grouped LIKE 'Large%', 'Large-Total', NULL) = large_subtotal_no_mql_trial.segment_region_grouped
+            {% else %}
+              AND mql_trial_count.{{select_column}} = large_subtotal_no_mql_trial.{{select_column}}
+            {% endif %}
+          {% endfor %}
+          AND mql_trial_count.segment_region_grouped LIKE 'Large%'
+    )
+    {% endif %}
+{% endfor %}
 
-      {% for metric in metrics %}
-        SUM("{{metric}}") AS "{{metric}}"
-        {% if not loop.last %},{% endif %}
-      {% endfor %}
-    FROM agg
-    GROUP BY fiscal_quarter_name_fy,
-      {% for select_column in select_columns %}
-        {% if loop.first %}
-          {{select_column}}
-        {% else %}
-          'Total'
-        {% endif %}
-        {% if not loop.last %},{% endif %}
-      {% endfor %}
+  {% if select_columns[0] == 'segment_region_grouped' and select_columns|count > 1 %}
 
-), subtotal_row_mql_trial AS (
+, large_subtotal_extra_mql_trial AS (
 
     SELECT 
       fiscal_quarter_name_fy,
       {% for select_column in select_columns %}
-        {% if loop.first %}
-          {{select_column}}
+        {% if select_column == 'segment_region_grouped' %}
+          'Large-Total' AS {{select_column}},
         {% else %}
-          'Total' AS {{select_column}}
-        {% endif %},
+          'Total' AS {{select_column}},
+        {% endif %}
       {% endfor %}
-
       COUNT(DISTINCT email_hash)             AS "MQLs / A",
-      COUNT(DISTINCT IFF(is_lead_source_trial, email_hash || lead_source, NULL)) AS "Trials / A" 
+      COUNT(DISTINCT IFF(is_lead_source_trial, email_hash || lead_source, NULL)) AS "Trials / A"
     FROM crm_person
-    GROUP BY fiscal_quarter_name_fy,
+    WHERE crm_person.segment_region_grouped LIKE 'Large%'
+    GROUP BY 1,
       {% for select_column in select_columns %}
-        {% if loop.first %}
-          {{select_column}}
+        {% if select_column == 'segment_region_grouped' %}
+          'Large-Total'
         {% else %}
           'Total'
         {% endif %}
         {% if not loop.last %},{% endif %}
       {% endfor %}
 
-), subtotal_row AS (
+), large_subtotal_extra_no_mql_trial AS (
 
     SELECT
-      subtotal_row_no_mql_trial.fiscal_quarter_name_fy,
+      fiscal_quarter_name_fy,
+
       {% for select_column in select_columns %}
-      subtotal_row_no_mql_trial.{{select_column}},
+        {% if select_column == 'segment_region_grouped' %}
+          large_subtotal.{{select_column}},
+        {% else %}
+          'Total' AS {{select_column}},
+        {% endif %}
+      {% endfor %}
+
+      {% for metric in metrics %}
+        SUM(large_subtotal."{{metric}}") AS "{{metric}}"
+        {% if not loop.last %},{% endif %}
+      {% endfor %}
+    FROM large_subtotal
+    WHERE large_subtotal.segment_region_grouped = 'Large-Total'
+    GROUP BY 1,
+      {% for select_column in select_columns %}
+        {% if select_column == 'segment_region_grouped' %}
+          large_subtotal.{{select_column}},
+        {% else %}
+          'Total' {% if not loop.last %},{% endif %}
+        {% endif %}
+      {% endfor %}
+
+), large_subtotal_extra AS (
+
+    SELECT
+      large_subtotal_extra_no_mql_trial.fiscal_quarter_name_fy,
+
+      {% for select_column in select_columns %}
+        large_subtotal_extra_no_mql_trial.{{select_column}},
       {% endfor %}
 
       {% for metric in metrics %}
         {% if metric == 'MQLs / A' or metric == 'Trials / A' %}
-        subtotal_row_mql_trial."{{metric}}"
+          large_subtotal_extra_mql_trial."{{metric}}"
         {% else %}
-        subtotal_row_no_mql_trial."{{metric}}"
+          large_subtotal_extra_no_mql_trial."{{metric}}"
         {% endif %}
         {% if not loop.last %},{% endif %}
       {% endfor %}
-
-    FROM subtotal_row_no_mql_trial
-    LEFT JOIN subtotal_row_mql_trial
-      ON subtotal_row_no_mql_trial.fiscal_quarter_name_fy = subtotal_row_mql_trial.fiscal_quarter_name_fy
+    FROM large_subtotal_extra_no_mql_trial
+    LEFT JOIN large_subtotal_extra_mql_trial
+      ON large_subtotal_extra_no_mql_trial.fiscal_quarter_name_fy = large_subtotal_extra_mql_trial.fiscal_quarter_name_fy
       {% for select_column in select_columns %}
-      AND subtotal_row_no_mql_trial.{{select_column}} = subtotal_row_mql_trial.{{select_column}}
+        AND large_subtotal_extra_no_mql_trial.{{select_column}} = large_subtotal_extra_mql_trial.{{select_column}}
       {% endfor %}
-
-)
-
-{% endif %}
-
-{% for select_column in select_columns %}
- {% if select_column == '  ' %}
-
-, total_row AS (
-
-    SELECT
-      fiscal_quarter_name_fy,
-      {% for select_column in select_columns %}
-      'Total' AS select_column,
-      {% endfor %}
-      {% for metric in metrics %}
-        {{metrics}}
-        {% if not loop.last %},{% endif %}
-      {% endfor %}
-    FROM agg
 
 )
 
   {% endif %}
-{% endfor %}
-
 
 SELECT *
 FROM agg
 
-UNION
+{% for select_column in select_columns %}
+  {% if select_column == 'segment_region_grouped' %}
 
-SELECT *
-FROM total_row
+  UNION
 
-{% if select_columns|count > 1 %}
+  SELECT *
+  FROM large_subtotal
 
-UNION
+  {% endif %}
+{% endfor %}
 
-SELECT *
-FROM subtotal_row
+{% if select_columns[0] == 'segment_region_grouped' and select_columns|count > 1 %}
+
+  UNION
+
+  SELECT *
+  FROM large_subtotal_extra
 
 {% endif %}
