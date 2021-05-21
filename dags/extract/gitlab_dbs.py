@@ -529,10 +529,10 @@ for source_name, config in config_dict.items():
 
 
 config_dict_dq={
-    "gitlab_com_data_quality": {
+    "gitlab_com_data_reconciliation_extract_load": {
         "cloudsql_instance_name": None,
-        "dag_name": "gitlab_com_data_quality",
-        "dbt_name": "gitlab_com_data_quality",
+        "dag_name": "gitlab_com_data_reconciliation_extract_load",
+        "dbt_name": "gitlab_com_data_reconciliation_extract_load",
         "env_vars": {},
         "extract_schedule_interval": "0 */6 * * *",
         "secrets": [
