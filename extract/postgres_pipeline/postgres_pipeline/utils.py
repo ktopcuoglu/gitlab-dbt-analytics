@@ -123,7 +123,7 @@ def postgres_engine_factory(
     # Inject the values to create the engine
     engine = create_engine(
         f"postgresql://{user}:{password}@{host}:{port}/{database}",
-        connect_args={"sslcompression": 0, "options": "-c statement_timeout=40500000"},
+        connect_args={"sslcompression": 0, "options": "-c statement_timeout=5400000"},
     )
     logging.info(engine)
     return engine
