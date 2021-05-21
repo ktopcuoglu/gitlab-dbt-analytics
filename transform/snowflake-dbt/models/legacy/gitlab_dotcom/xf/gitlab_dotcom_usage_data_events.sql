@@ -1,9 +1,3 @@
-{{ config({
-    "materialized": "incremental",
-    "unique_key": "event_primary_key"
-    })
-}}
-
 /*
   Each dict must have ALL of the following:
     * event_name
@@ -187,15 +181,6 @@
     "is_representative_of_stage": "False"
   },
   {
-    "event_name": "groups",
-    "source_cte_name": "group_members",
-    "user_column_name": "user_id",
-    "key_to_parent_project": "source_id",
-    "primary_key": "member_id",
-    "stage_name": "manage",
-    "is_representative_of_stage": "False"
-  },
-  {
     "event_name": "incident_labeled_issues",
     "source_cte_name": "incident_labeled_issues",
     "user_column_name": "author_id",
@@ -256,15 +241,6 @@
     "key_to_parent_project": "project_id",
     "primary_key": "label_id",
     "stage_name": "plan",
-    "is_representative_of_stage": "False"
-  },
-  {
-    "event_name": "lfs_objects",
-    "source_table_name": "gitlab_dotcom_lfs_objects_projects",
-    "user_column_name": "NULL",
-    "key_to_parent_project": "project_id",
-    "primary_key": "lfs_object_id",
-    "stage_name": "create",
     "is_representative_of_stage": "False"
   },
   {
