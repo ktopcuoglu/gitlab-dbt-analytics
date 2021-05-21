@@ -25,7 +25,7 @@
     "Total Opps / Ttmp"]
   -%}
 
-{% set select_columns = ["segment_region_grouped"] %}
+{% set select_columns = ["order_type_grouped", "segment_region_grouped"] %}
 {% set num_of_cols_to_group = 2 %}
 
 {{ simple_cte([
@@ -133,11 +133,10 @@
   
     SELECT
       fiscal_quarter_name_fy,
-      order_type_grouped,
-      sales_segment,
-      segment_region_grouped,
-      sales_qualified_source,
-      sales_segment_grouped
+      {% for select_column in select_columns %}
+      {{ select_column }}
+        {% if not loop.last %},{% endif %}
+      {% endfor %}
     FROM crm_opportunity_closed_period
     
     UNION
@@ -145,22 +144,20 @@
     --SAOs
     SELECT
       fiscal_quarter_name_fy,
-      order_type_grouped,
-      sales_segment,
-      segment_region_grouped,
-      sales_qualified_source,
-      sales_segment_grouped
+      {% for select_column in select_columns %}
+      {{ select_column }}
+        {% if not loop.last %},{% endif %}
+      {% endfor %}
     FROM crm_opportunity_accepted_period
     
     UNION
     
     SELECT
       fiscal_quarter_name_fy,
-      order_type_grouped,
-      sales_segment,
-      segment_region_grouped,
-      sales_qualified_source,
-      sales_segment_grouped
+      {% for select_column in select_columns %}
+      {{ select_column }}
+        {% if not loop.last %},{% endif %}
+      {% endfor %}
     FROM crm_person
     
     UNION
@@ -168,11 +165,10 @@
     -- Targets
     SELECT
       fiscal_quarter_name_fy,
-      order_type_grouped,
-      sales_segment,
-      segment_region_grouped,
-      sales_qualified_source,
-      sales_segment_grouped
+      {% for select_column in select_columns %}
+      {{ select_column }}
+        {% if not loop.last %},{% endif %}
+      {% endfor %}
     FROM sales_funnel_target
     
     UNION
@@ -180,11 +176,10 @@
     -- Targets MQL
     SELECT 
       fiscal_quarter_name_fy,
-      order_type_grouped,
-      sales_segment,
-      segment_region_grouped,
-      sales_qualified_source,
-      sales_segment_grouped
+      {% for select_column in select_columns %}
+      {{ select_column }}
+        {% if not loop.last %},{% endif %}
+      {% endfor %}
     FROM sales_funnel_target_mql_trial
     WHERE kpi_name IN ('MQL', 'Trials')
   
@@ -347,12 +342,11 @@
 ), agg AS (
 
   SELECT
-    
+    base_list.fiscal_quarter_name_fy,
     {% for select_column in select_columns %}
     base_list.{{select_column}},
     {% endfor %}
-
-    {{num_of_cols_to_group}}                   AS num_of_cols_to_group,
+    
     IFNULL(mqls, 0)                            AS "MQLs / A",
     NULLIF(target_mql_full, 0)                 AS "MQLs / T",
     NULLIF(target_mql, 0)                      AS "MQLs / Ttmp",
@@ -385,49 +379,49 @@
 
   LEFT JOIN new_logos_actual
     ON base_list.fiscal_quarter_name_fy = new_logos_actual.fiscal_quarter_name_fy
-    {% for select_column in select_colummns %}
-    AND base_list.select_column = new_logos_actual.select_column
+    {% for select_column in select_columns %}
+    AND base_list.{{select_column}} = new_logos_actual.{{select_column}}
     {% endfor %}
 
   LEFT JOIN first_oder_arr_closed_won
     ON base_list.fiscal_quarter_name_fy = first_oder_arr_closed_won.fiscal_quarter_name_fy
-    {% for select_column in select_colummns %}
-    AND base_list.select_column = first_oder_arr_closed_won.select_column
+    {% for select_column in select_columns %}
+    AND base_list.{{select_column}} = first_oder_arr_closed_won.{{select_column}}
     {% endfor %}
 
   LEFT JOIN mql_count
     ON base_list.fiscal_quarter_name_fy = mql_count.fiscal_quarter_name_fy
-    {% for select_column in select_colummns %}
-    AND base_list.select_column = mql_count.select_column
+    {% for select_column in select_columns %}
+    AND base_list.{{select_column}} = mql_count.{{select_column}}
     {% endfor %}
 
   LEFT JOIN sao_count
     ON base_list.fiscal_quarter_name_fy = sao_count.fiscal_quarter_name_fy
-    {% for select_column in select_colummns %}
-    AND base_list.select_column = sao_count.select_column
+    {% for select_column in select_columns %}
+    AND base_list.{{select_column}} = sao_count.{{select_column}}
     {% endfor %}
 
   LEFT JOIN win_rate
     ON base_list.fiscal_quarter_name_fy = win_rate.fiscal_quarter_name_fy
-    {% for select_column in select_colummns %}
-    AND base_list.select_column = win_rate.select_column
+    {% for select_column in select_columns %}
+    AND base_list.{{select_column}} = win_rate.{{select_column}}
     {% endfor %}
   
   LEFT JOIN actual_trials
     ON base_list.fiscal_quarter_name_fy = actual_trials.fiscal_quarter_name_fy
-    {% for select_column in select_colummns %}
-    AND base_list.select_column = actual_trials.select_column
+    {% for select_column in select_columns %}
+    AND base_list.{{select_column}} = actual_trials.{{select_column}}
     {% endfor %}
   
   LEFT JOIN targets
     ON base_list.fiscal_quarter_name_fy = targets.fiscal_quarter_name_fy
-    {% for select_column in select_colummns %}
-    AND base_list.select_column = targets.select_column
+    {% for select_column in select_columns %}
+    AND base_list.{{select_column}} = targets.{{select_column}}
     {% endfor %}
   LEFT JOIN targets_full
     ON base_list.fiscal_quarter_name_fy = targets_full.fiscal_quarter_name_fy
-    {% for select_column in select_colummns %}
-    AND base_list.select_column = targets_full.select_column
+    {% for select_column in select_columns %}
+    AND base_list.{{select_column}} = targets_full.{{select_column}}
     {% endfor %}
   
   WHERE NOT (
@@ -439,7 +433,189 @@
     AND "Total Opps / A" = 0  AND "Total Opps / T"      IS NULL
     AND "Trials / A" = 0      AND "Trials / T"          IS NULL
   )
+
+), total_row_no_mql_trial AS (
+
+    SELECT
+      fiscal_quarter_name_fy,
+      {% for select_column in select_columns %}
+      'Total' AS {{select_column}},
+      {% endfor %}
+      {% for metric in metrics %}
+        SUM("{{metric}}") AS "{{metric}}"
+        {% if not loop.last %},{% endif %}
+      {% endfor %}
+    FROM agg
+    GROUP BY fiscal_quarter_name_fy,
+      {% for select_column in select_columns %}
+        'Total'
+        {% if not loop.last %},{% endif %}
+      {% endfor %}
+      
+
+), total_row_mql_trial AS (
+
+    SELECT
+      fiscal_quarter_name_fy,
+      {% for select_column in select_columns %}
+      'Total' AS {{select_column}},
+      {% endfor %}
+      
+      COUNT(DISTINCT email_hash)             AS "MQLs / A",
+      COUNT(DISTINCT IFF(is_lead_source_trial, email_hash || lead_source, NULL)) AS "Trials / A" 
+    FROM crm_person
+    GROUP BY fiscal_quarter_name_fy,
+      {% for select_column in select_columns %}
+        'Total'
+        {% if not loop.last %},{% endif %}
+      {% endfor %}
+      
+
+), total_row AS (
+
+    SELECT
+      total_row_no_mql_trial.fiscal_quarter_name_fy,
+      {% for select_column in select_columns %}
+      total_row_no_mql_trial.{{select_column}},
+      {% endfor %}
+
+      {% for metric in metrics %}
+        {% if metric == 'MQLs / A' or metric == 'Trials / A' %}
+        total_row_mql_trial."{{metric}}"
+        {% else %}
+        total_row_no_mql_trial."{{metric}}"
+        {% endif %}
+        {% if not loop.last %},{% endif %}
+      {% endfor %}
+
+    FROM total_row_no_mql_trial
+    LEFT JOIN total_row_mql_trial
+      ON total_row_no_mql_trial.fiscal_quarter_name_fy = total_row_mql_trial.fiscal_quarter_name_fy
+      {% for select_column in select_columns %}
+      AND total_row_no_mql_trial.{{select_column}} = total_row_mql_trial.{{select_column}}
+      {% endfor %}
+
+
 )
+
+{% if select_columns|count > 1 %}
+
+, subtotal_row_no_mql_trial AS (
+
+    SELECT
+      fiscal_quarter_name_fy,
+      {% for select_column in select_columns %}
+        {% if loop.first %}
+          {{select_column}}
+        {% else %}
+          'Total' AS {{select_column}}
+        {% endif %},
+      {% endfor %}
+
+
+      {% for metric in metrics %}
+        SUM("{{metric}}") AS "{{metric}}"
+        {% if not loop.last %},{% endif %}
+      {% endfor %}
+    FROM agg
+    GROUP BY fiscal_quarter_name_fy,
+      {% for select_column in select_columns %}
+        {% if loop.first %}
+          {{select_column}}
+        {% else %}
+          'Total'
+        {% endif %}
+        {% if not loop.last %},{% endif %}
+      {% endfor %}
+
+), subtotal_row_mql_trial AS (
+
+    SELECT 
+      fiscal_quarter_name_fy,
+      {% for select_column in select_columns %}
+        {% if loop.first %}
+          {{select_column}}
+        {% else %}
+          'Total' AS {{select_column}}
+        {% endif %},
+      {% endfor %}
+
+      COUNT(DISTINCT email_hash)             AS "MQLs / A",
+      COUNT(DISTINCT IFF(is_lead_source_trial, email_hash || lead_source, NULL)) AS "Trials / A" 
+    FROM crm_person
+    GROUP BY fiscal_quarter_name_fy,
+      {% for select_column in select_columns %}
+        {% if loop.first %}
+          {{select_column}}
+        {% else %}
+          'Total'
+        {% endif %}
+        {% if not loop.last %},{% endif %}
+      {% endfor %}
+
+), subtotal_row AS (
+
+    SELECT
+      subtotal_row_no_mql_trial.fiscal_quarter_name_fy,
+      {% for select_column in select_columns %}
+      subtotal_row_no_mql_trial.{{select_column}},
+      {% endfor %}
+
+      {% for metric in metrics %}
+        {% if metric == 'MQLs / A' or metric == 'Trials / A' %}
+        subtotal_row_mql_trial."{{metric}}"
+        {% else %}
+        subtotal_row_no_mql_trial."{{metric}}"
+        {% endif %}
+        {% if not loop.last %},{% endif %}
+      {% endfor %}
+
+    FROM subtotal_row_no_mql_trial
+    LEFT JOIN subtotal_row_mql_trial
+      ON subtotal_row_no_mql_trial.fiscal_quarter_name_fy = subtotal_row_mql_trial.fiscal_quarter_name_fy
+      {% for select_column in select_columns %}
+      AND subtotal_row_no_mql_trial.{{select_column}} = subtotal_row_mql_trial.{{select_column}}
+      {% endfor %}
+
+)
+
+{% endif %}
+
+{% for select_column in select_columns %}
+ {% if select_column == '  ' %}
+
+, total_row AS (
+
+    SELECT
+      fiscal_quarter_name_fy,
+      {% for select_column in select_columns %}
+      'Total' AS select_column,
+      {% endfor %}
+      {% for metric in metrics %}
+        {{metrics}}
+        {% if not loop.last %},{% endif %}
+      {% endfor %}
+    FROM agg
+
+)
+
+  {% endif %}
+{% endfor %}
+
 
 SELECT *
 FROM agg
+
+UNION
+
+SELECT *
+FROM total_row
+
+{% if select_columns|count > 1 %}
+
+UNION
+
+SELECT *
+FROM subtotal_row
+
+{% endif %}
