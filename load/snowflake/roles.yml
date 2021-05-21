@@ -2296,7 +2296,7 @@ roles:
             - static_admin
             - data_team_analyst
             - analyst_finance
-            - gainsight_temp_source
+            - gainsight
         warehouses:
             - analyst_xs
             - analyst_l
