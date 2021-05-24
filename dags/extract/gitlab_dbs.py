@@ -111,7 +111,7 @@ config_dict = {
         "cloudsql_instance_name": None,
         "dag_name": "gitlab_com",
         "dbt_name": "gitlab_dotcom",
-        "env_vars": {"HOURS": "36"},
+        "env_vars": {"HOURS": "12"},
         "extract_schedule_interval": "0 */6 * * *",
         "secrets": [
             GITLAB_COM_DB_USER,
