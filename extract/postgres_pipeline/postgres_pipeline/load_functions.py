@@ -117,6 +117,17 @@ def load_incremental(
     return True
 
 
+def data_quality(
+    source_engine: Engine,
+    target_engine: Engine,
+    source_table_name: str,
+    table_dict: Dict[Any, Any],
+    table_name: str,
+) -> bool:
+    raw_query = table_dict["import_query"]
+    env = os.environ.copy()
+
+
 def sync_incremental_ids(
     source_engine: Engine,
     target_engine: Engine,

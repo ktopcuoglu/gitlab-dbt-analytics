@@ -64,6 +64,16 @@ class PostgresPipelineTable:
             target_table,
         )
 
+    def do_data_quality(self, source_engine: Engine, target_engine: Engine) -> bool:
+        target_table = "snow_target_table"
+        return load_functions.data_quality(
+            source_engine,
+            target_engine,
+            self.source_table_name,
+            self.table_dict,
+            target_table,
+        )
+
     def needs_incremental_backfill(
         self, source_engine: Engine, target_engine: Engine
     ) -> bool:
@@ -116,6 +126,7 @@ class PostgresPipelineTable:
             "scd": self.do_scd,
             "backfill": self.do_incremental_backfill,
             "test": self.check_new_table,
+            "dq": self.do_data_quality,
         }
         return load_types[load_type](source_engine, target_engine, schema_changed)
 
