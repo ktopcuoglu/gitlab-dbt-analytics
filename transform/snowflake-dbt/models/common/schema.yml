@@ -98,9 +98,8 @@ models:
       - name: subscription_status
       - name: subscription_start_date
       - name: subscription_end_date
-      - name: cancelled_date
-      - name: term_end_date
-      - name: term_start_date
+      - name: rate_plan_id
+        description: Primary key from `zuora_rate_plan_source`
       - name: dim_product_detail_id
       - name: product_rate_plan_id
       - name: product_id
