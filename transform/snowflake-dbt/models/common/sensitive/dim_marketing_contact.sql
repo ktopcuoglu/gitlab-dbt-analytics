@@ -21,7 +21,7 @@ WITH sfdc_lead AS (
 ), sales_segment AS (
 
     SELECT *
-    FROM {{ref('dim_sales_segment') }}
+    FROM {{ref('prep_sales_segment') }}
 
 ), crm_person AS (
 
@@ -58,7 +58,8 @@ WITH sfdc_lead AS (
 ), sfdc AS (
 
     SELECT
-      sfdc_lead.lead_id,
+      crm_person.sfdc_record_id,
+      crm_person.dim_crm_account_id,
       CASE WHEN crm_person.sfdc_record_type = 'contact' THEN sfdc_contact.contact_email ELSE sfdc_lead.lead_email END        AS email_address,
       crm_person.dim_crm_person_id                                                                                           AS crm_person_id,
       crm_person.sfdc_record_type                                                                                            AS sfdc_lead_contact,
@@ -213,6 +214,8 @@ WITH sfdc_lead AS (
         WHEN sfdc.email_address IS NOT NULL THEN TRUE
         ELSE FALSE
       END                                                                                                                AS is_sfdc_lead_contact,
+      sfdc.sfdc_record_id,
+      sfdc.dim_crm_account_id,
       sfdc.sfdc_lead_contact,
       sfdc.sfdc_created_date                                                                                             AS sfdc_created_date,
       sfdc.opted_out_salesforce                                                                                          AS is_sfdc_opted_out,
@@ -270,7 +273,7 @@ WITH sfdc_lead AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@rmistry",
-    updated_by="@trevor31",
+    updated_by="@jpeguero",
     created_date="2021-01-19",
-    updated_date="2021-03-22"
+    updated_date="2021-05-07"
 ) }}
