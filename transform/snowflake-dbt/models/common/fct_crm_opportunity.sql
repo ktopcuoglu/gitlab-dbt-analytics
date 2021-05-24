@@ -276,6 +276,21 @@
 
     FROM sfdc_opportunity
 
+), is_closed_won AS (
+
+    SELECT
+
+      opportunity_id,
+      CASE
+        WHEN is_won = 'TRUE'
+          AND is_closed = 'TRUE'
+          AND is_edu_oss = 0
+            THEN TRUE
+        ELSE FALSE
+      END                                                                         AS is_closed_won
+
+    FROM sfdc_opportunity
+
 ), final_opportunities AS (
 
     SELECT
@@ -373,6 +388,7 @@
       is_new_logo_first_order.is_new_logo_first_order,
       is_net_arr_pipeline_created.is_net_arr_pipeline_created,
       is_win_rate_calc.is_win_rate_calc,
+      is_closed_won.is_closed_won,
 
       opportunity_fields.primary_solution_architect,
       opportunity_fields.product_details,
@@ -439,6 +455,8 @@
       ON opportunity_fields.dim_crm_opportunity_id = is_net_arr_pipeline_created.opportunity_id
     LEFT JOIN is_win_rate_calc
       ON opportunity_fields.dim_crm_opportunity_id = is_win_rate_calc.opportunity_id
+    LEFT JOIN is_closed_won
+      ON opportunity_fields.dim_crm_opportunity_id = is_closed_won.opportunity_id
     LEFT JOIN user_hierarchy_stamped_sales_segment
       ON opportunity_fields.crm_opp_owner_sales_segment_stamped = user_hierarchy_stamped_sales_segment.crm_opp_owner_sales_segment_stamped
     LEFT JOIN user_hierarchy_stamped_geo
