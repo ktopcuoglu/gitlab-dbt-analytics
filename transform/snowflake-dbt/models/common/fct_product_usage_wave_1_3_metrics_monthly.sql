@@ -7,15 +7,16 @@
 
 , sm_subscriptions AS (
 
-    SELECT DISTINCT
+    SELECT
       dim_subscription_id,
       dim_subscription_id_original,
       dim_billing_account_id,
       first_day_of_month                                            AS snapshot_month
     FROM subscriptions
     INNER JOIN dates
-      ON date_actual BETWEEN '2017-04-01' AND DATE_TRUNC('month', CURRENT_DATE) -- first month Usage Ping was collected
+      ON dates.date_actual BETWEEN '2017-04-01' AND CURRENT_DATE    -- first month Usage Ping was collected
     WHERE product_delivery_type = 'Self-Managed'
+    {{ dbt_utils.group_by(n=4)}}
 
 ), usage_ping AS (
 
@@ -26,6 +27,8 @@
     QUALIFY ROW_NUMBER() OVER (
       PARTITION BY
         dim_subscription_id,
+        uuid,
+        hostname,
         ping_created_at_month
       ORDER BY ping_created_at DESC
       ) = 1
@@ -175,7 +178,7 @@
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@ischweickartDD",
-    updated_by="@michellecooper",
+    updated_by="@ischweickartDD",
     created_date="2021-02-08",
-    updated_date="2021-04-27"
+    updated_date="2021-05-24"
 ) }}
