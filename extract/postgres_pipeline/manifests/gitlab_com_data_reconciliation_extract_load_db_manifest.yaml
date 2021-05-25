@@ -463,7 +463,7 @@ tables:
         UNION ALL
         SELECT 'gitlab_db_merge_requests_closing_issues' AS table_name
         , max(created_at) AS max_created_at
-        , count(*) ::bigint AS row_count F
+        , count(*) ::bigint AS row_count 
         FROM gitlab_db_merge_requests_closing_issues
         UNION ALL
         SELECT 'gitlab_db_resource_milestone_events' AS table_name
