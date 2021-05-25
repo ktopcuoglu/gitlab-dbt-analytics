@@ -10,7 +10,7 @@ WITH flattened AS (
 
 ), usage_ping_metrics AS (
 
-    SELECT * FROM {{ ref('usage_ping_metrics_latest') }}
+    SELECT * FROM {{ ref('dim_usage_ping_metric') }}
 
 )
 
