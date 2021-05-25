@@ -68,7 +68,7 @@
       trial_histories.expired_on                                        AS saas_trial_expired_on,
       trial_histories.gl_namespace_id IS NOT NULL
         OR (namespaces.dim_namespace_id = ultimate_parent_namespace_id
-            AND product_tier_name_namespace = 'SaaS - Trial: Ultimate') AS namespace_was_trial,
+            AND namespaces.gitlab_plan_title = 'Ultimate Trial')        AS namespace_was_trial,
       namespaces.is_currently_valid                                     AS is_namespace_active
     FROM namespaces
     INNER JOIN dates
