@@ -269,6 +269,8 @@ gitlab-org/quality/preprod,15821588
 gitlab-org/quality/ci/secure-test-project-orchestrator,19722963
 gitlab-com/gl-infra/production,7444821
 gitlab-com/runbooks,1148549
+gitlab-cookbooks/cookbook-customers-gitlab-com,1755794
 gitlab-cookbooks/cookbook-wrapper-gitlab-runner,1755701
 gitlab-org/gl-openshift/gitlab-runner-operator,22848448
 gitlab-org/gl-openshift/gitlab-operator,18899486
+gitlab-com/gl-infra/customersdot-ansible-poc,26392061
