@@ -143,5 +143,5 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     logging.getLogger("snowflake.connector.cursor").disabled = True
     logging.getLogger("snowflake.connector.connection").disabled = True
-    Fire({"tap": main},
-         {"tap_dq":dq_main})
+    Fire({"tap": main,
+         "tap_dq":dq_main})
