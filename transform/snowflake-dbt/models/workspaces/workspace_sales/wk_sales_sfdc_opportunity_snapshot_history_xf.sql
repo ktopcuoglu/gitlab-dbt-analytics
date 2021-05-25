@@ -49,6 +49,7 @@ WITH date_details AS (
 --------------------------------------
 
       is_won,
+      is_duplicate_flag,
       raw_net_arr,
       net_incremental_acv,
       sales_qualified_source,
@@ -513,8 +514,6 @@ WITH date_details AS (
         ELSE 0 
       END                                                         AS created_in_snapshot_quarter_iacv,
 
-
-
       -- field used for FY21 bookings reporitng
       sfdc_opportunity_xf.account_owner_team_stamped, 
      
@@ -552,7 +551,9 @@ WITH date_details AS (
 
       -- medium level grouping of the order type field
       sfdc_opportunity_xf.deal_category,
-          
+      
+      -- duplicates flag
+      sfdc_opportunity_xf.is_duplicate_flag                               AS current_is_duplicate_flag,
 
       ------------------------------------------------------------------------------------------------------
       ------------------------------------------------------------------------------------------------------
@@ -637,6 +638,8 @@ WITH date_details AS (
           -- exclude vision opps from FY21-Q2
           AND (opp_snapshot.pipeline_created_fiscal_quarter_name != 'FY21-Q2'
                 OR vision_opps.opportunity_id IS NULL)
+          -- remove deal that are flag currently as duplicates
+          AND opp_snapshot.current_is_duplicate_flag = 0
          THEN 1
          ELSE 0
       END                                                   AS is_eligible_created_pipeline_flag,
