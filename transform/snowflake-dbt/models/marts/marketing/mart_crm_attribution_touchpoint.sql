@@ -89,7 +89,7 @@
       fct_campaign.dim_parent_campaign_id,
       fct_campaign.campaign_owner_id,
       fct_campaign.created_by_id                                            AS campaign_created_by_id,
-      fct_campaign.start_date                                               AS camapaign_start_date,
+      fct_campaign.start_date                                               AS campaign_start_date,
       fct_campaign.end_date                                                 AS campaign_end_date,
       fct_campaign.created_date                                             AS campaign_created_date,
       fct_campaign.last_modified_date                                       AS campaign_last_modified_date,

@@ -4,12 +4,9 @@
     })
 }}
 
-{% set metric_type = '28_days' %}
-
 WITH flattened AS ( 
   
-    SELECT * 
-    FROM {{ ref('prep_usage_data_flattened') }}
+    SELECT * FROM {{ ref('prep_usage_data_flattened') }}
 
 ), usage_ping_metrics AS (
 
@@ -17,7 +14,6 @@ WITH flattened AS (
     FROM {{ ref('usage_ping_metrics_latest') }}
 
 )
-
 
 SELECT 
   flattened.instance_path_id,

@@ -98,9 +98,8 @@ models:
       - name: subscription_status
       - name: subscription_start_date
       - name: subscription_end_date
-      - name: cancelled_date
-      - name: term_end_date
-      - name: term_start_date
+      - name: rate_plan_id
+        description: Primary key from `zuora_rate_plan_source`
       - name: dim_product_detail_id
       - name: product_rate_plan_id
       - name: product_id
@@ -117,6 +116,16 @@ models:
           - unique
           - not_null
         tags: ["tdf", "common", "sales_funnel"]
+
+  - name: dim_amendment
+    description: Dimension for Zuora Amendments that increment subscription versions.
+    columns:
+      - name: dim_amendment_id
+        description: Unique identifier of an Amendment in Zuora Billing.
+        tests:
+          - unique
+          - not_null
+        tags: ["tdf", "common", "arr"]
 
   - name: dim_billing_account
     description: '{{ doc("dim_billing_account") }}'
@@ -164,6 +173,16 @@ models:
       - name: bizible_touchpoint_enabled_setting
       - name: strategic_marketing_contribution
 
+  - name: dim_charge
+    description: Dimension table for unique transactions in Zuora Billing. The table only includes recurring charges at this time. Non-recurring charges will be added in a future iteration.
+    columns:
+      - name: dim_charge_id
+        description: Unique identifier for a rate plan charge in Zuora. These are transactions in Zuora Billing.
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "common", "arr"]
+
   - name: dim_crm_account
     description: '{{ doc("dim_crm_account") }}'
     columns:
@@ -187,6 +206,7 @@ models:
       - name: record_type_id
       - name: federal_account
       - name: gitlab_com_user
+      - name: is_jihu_account
       - name: account_owner
       - name: account_owner_team
       - name: account_type
@@ -219,7 +239,7 @@ models:
               field: dim_crm_account_id
         tags: ["tdf", "opportunity", "common", "sales_funnel"]
       - name: opportunity_name
-      - name: dim_crm_user_id
+      - name: dim_crm_sales_rep_id
         description: Sourced from the opportunity owner_id this key is for joining to dim_crm_user
         tests:
           - relationships:
@@ -755,6 +775,10 @@ models:
       - name: cohort_month
       - name: cohort_quarter
       - name: cohort_year
+      - name: is_myb
+        description: MYB = Multi-Year Booking. This boolean flag identifies if a subscription is booked for more than one year. This can either be by having a term greater than 12 months or having a linked subscription.
+      - name: is_myb_with_multi_subs
+        description: MYB = Multi-Year Booking. This boolean flag identifies if a subscription is booked for more than one year by using multiple linked subscriptions only. A subscription with a term greater than 12 but does not have linked subscriptions has a value of FALSE.
 
   - name: dim_subscriptions_snapshots
     description: Daily snapshot of subscriptions starting from 2020-03-01. Fiel
@@ -1062,7 +1086,7 @@ models:
       - name: is_net_arr_pipeline_created
         description: a boolean field created in the warehouse to flag Net ARR Pipeline Created.
       - name: is_win_rate_calc
-        description: a boolean field created in the warehouse to flag Win Rate. This field determines opportunities that will be included in calculating Win Rate.    
+        description: a boolean field created in the warehouse to flag Win Rate. This field determines opportunities that will be included in calculating Win Rate.
       - name: is_sdr_sao
         description: a boolean field created in the warehouse to flag Sales Accepted Opportunities from [Sales Development Reps](https://about.gitlab.com/handbook/marketing/revenue-marketing/sdr/). This field should be deprecated once sales accepted is in a more stable and consistent state in salesforce.
       - name: iacv
@@ -1223,7 +1247,7 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: [2, 3, 4, 34, 67, 100, 101]
+              values: [2, 3, 4, 34, 67, 100, 101, 102, 103]
         tags: ["tdf", "common", "gainsight"]
       - name: ultimate_parent_plan_title
         description: Whether or not the namespace associated with the project is subscribed to a paid plan. This can be inherited from the namespaces's ultimate parent.
@@ -1850,27 +1874,6 @@ models:
       - name: status_purchased
         description: Status of CI Minutes usage against the extra CI Minutes purchased limit by namespaces.
 
-  - name: fct_usage_ping_metric_28_days
-    description: '{{ doc("fct_usage_ping_metric_28_days") }}'
-    columns:
-      - name: metric_name
-        tests:
-          - not_null
-        tags: ["tdf", "common"]
-      - name: metric_value
-        tests:
-          - not_null
-        tags: ["tdf", "common"]
-      - name: recorded_at
-        tests:
-          - not_null
-        tags: ["tdf", "common"]
-      - name: stage_name
-      - name: usage_ping_id
-        tests:
-          - not_null
-        tags: ["tdf", "common"]
-
   - name: fct_usage_ping_metric_all_time
     description: '{{ doc("fct_usage_ping_metric_all_time") }}'
     columns:
@@ -2228,11 +2231,6 @@ models:
           - not_null
           - unique
         tags: ["tdf", "common", "gainsight"]
-      - name: namespace_id
-        tests:
-          - not_null
-          - unique
-        tags: ["tdf", "common", "gainsight"]
       - name: namespace_is_internal
       - name: namespace_is_ultimate_parent
       - name: namespace_name
@@ -2271,7 +2269,7 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: [2, 3, 4, 34, 67, 100, 101]
+              values: [2, 3, 4, 34, 67, 100, 101, 102, 103]
         tags: ["tdf", "common", "gainsight"]
       - name: gitlab_plan_title
         description: Whether or not the namespace associated with the project is subscribed to a paid plan. This can be inheritted from the namespaces's ultimate parent.

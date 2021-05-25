@@ -28,7 +28,7 @@ WITH paid_subscriptions_monthly_usage_ping_optin AS (
       COUNT(DISTINCT subscription_name_slugify)                         AS major_minor_version_subscriptions,
       major_minor_version_subscriptions /  MAX(total_subscrption_count) AS pct_major_minor_version_subscriptions
     FROM paid_subscriptions_monthly_usage_ping_optin
-    INNER JOIN {{ ref('dim_gitlab_releases') }} AS gitlab_releases
+    INNER JOIN gitlab_releases
       ON paid_subscriptions_monthly_usage_ping_optin.latest_major_minor_version = gitlab_releases.major_minor_version
     LEFT JOIN agg_total_subscriptions AS agg ON paid_subscriptions_monthly_usage_ping_optin.reporting_month = agg.agg_month
     {{ dbt_utils.group_by(n=6) }}
@@ -51,10 +51,10 @@ WITH paid_subscriptions_monthly_usage_ping_optin AS (
       SPLIT_PART(metrics_path, '.', 1)                                      AS main_json_name,
       SPLIT_PART(metrics_path, '.', -1)                                     AS feature_name,
       REPLACE(metrics_path, '.', '_')                                       AS full_metrics_path,
-      FIRST_VALUE(major_minor_version ) OVER (PARTITION BY metrics_path, edition 
-                                                ORDER BY major_version ASC,
-                                                         minor_version ASC) AS first_version_with_counter
+      FIRST_VALUE(flattened_usage_data.major_minor_version ) OVER (PARTITION BY metrics_path, edition 
+                                                ORDER BY release_date ASC) AS first_version_with_counter
     FROM flattened_usage_data
+    LEFT JOIN gitlab_releases ON flattened_usage_data.major_minor_version = gitlab_releases.major_minor_version
     WHERE TRY_TO_DECIMAL(metric_value::TEXT) > 0
       -- Removing SaaS
       AND instance_id <> 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f'
@@ -69,7 +69,7 @@ WITH paid_subscriptions_monthly_usage_ping_optin AS (
       FIRST_VALUE(minor_version) OVER (PARTITION BY transformed_flattened.metrics_path, edition
                                          ORDER BY release_date ASC)                          AS minor_version,
       FIRST_VALUE(DATE_TRUNC('month', release_date)) OVER (PARTITION BY transformed_flattened.metrics_path, edition ORDER BY
-                                 major_version ASC, minor_version ASC)                       AS release_month,
+                                 release_date ASC)                                           AS release_month,
       transformed_flattened.metrics_path,
       stage_name, 
       section_name,
@@ -80,7 +80,7 @@ WITH paid_subscriptions_monthly_usage_ping_optin AS (
       is_paid_gmau,
       edition,
       FIRST_VALUE(major_minor_version) OVER (PARTITION BY transformed_flattened.metrics_path, edition 
-                                              ORDER BY major_version ASC, minor_version ASC) AS first_version_with_counter
+                                              ORDER BY release_date ASC) AS first_version_with_counter
     FROM transformed_flattened
     INNER JOIN section_metrics ON transformed_flattened.metrics_path = section_metrics.metrics_path
     LEFT JOIN gitlab_releases ON transformed_flattened.first_version_with_counter = gitlab_releases.major_minor_version

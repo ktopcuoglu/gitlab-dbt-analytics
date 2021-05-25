@@ -10,4 +10,4 @@ log: <!-- link to airflow log with error -->
 Downstream Airflow tasks that were skipped: 
   <!-- list any downstream tasks that were skipped because of this error -->
  
-/label ~Triage ~Infrastructure ~Break-Fix ~"Priority::1-Ops" ~"workflow::1 - triage"
+/label ~Triage ~"Team::Data Platform" ~Break-Fix ~"Priority::1-Ops" ~"workflow::1 - triage"

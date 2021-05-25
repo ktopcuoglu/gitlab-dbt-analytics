@@ -33,13 +33,6 @@ WITH report_pipeline_velocity_quarter AS (
     AND is_deleted = 0
     AND LOWER(deal_group) LIKE ANY ('%growth%','%new%')
 
-), sfdc_opportunity_snapshot_history_xf AS (
-
-    SELECT *
-    FROM {{ref('wk_sales_sfdc_opportunity_snapshot_history_xf')}}  
-    WHERE is_deleted = 0
-      AND is_edu_oss = 0
-
 ), report_targets_totals_per_quarter AS (
   
   SELECT *
@@ -63,51 +56,30 @@ WITH report_pipeline_velocity_quarter AS (
      base.sales_qualified_source,
      base.deal_group,
      base.target_net_arr,
+     base.total_churned_net_arr,
+     base.total_churned_deal_count,
      base.total_booked_net_arr          AS total_net_arr,
      base.calculated_target_net_arr     AS adjusted_target_net_arr
   FROM report_targets_totals_per_quarter base
 
 ), pipeline_summary AS (
   
-  SELECT pv.close_fiscal_quarter_name,
-         pv.close_fiscal_quarter_date,
-         pv.close_day_of_fiscal_quarter_normalised,
+  SELECT 
+      pv.close_fiscal_quarter_name,
+      pv.close_fiscal_quarter_date,
+      pv.close_day_of_fiscal_quarter_normalised,
+
+      COALESCE(pv.sales_team_rd_asm_level,'NA') AS sales_team_rd_asm_level,
+      COALESCE(pv.sales_team_cro_level,'NA')    AS sales_team_cro_level,
+      COALESCE(pv.sales_qualified_source,'NA')  AS sales_qualified_source,
+      COALESCE(pv.deal_group,'NA')              AS deal_group,
+
+      SUM(pv.open_1plus_net_arr)        AS open_stage_1_net_arr,
+      SUM(pv.open_3plus_net_arr)        AS open_stage_3_net_arr,
+      SUM(pv.open_4plus_net_arr)        AS open_stage_4_net_arr,
+      SUM(pv.booked_net_arr)            AS won_net_arr,
+      SUM(pv.churned_net_arr)           AS churned_net_arr
   
-         COALESCE(pv.sales_team_rd_asm_level,'NA') AS sales_team_rd_asm_level,
-         COALESCE(pv.sales_team_cro_level,'NA')    AS sales_team_cro_level,
-         COALESCE(pv.sales_qualified_source,'NA')  AS sales_qualified_source,
-         COALESCE(pv.deal_group,'NA')              AS deal_group,
-  
-         SUM(CASE 
-            WHEN pv.forecast_category_name != 'Omitted'
-              AND pv.is_stage_1_plus = 1
-              AND pv.is_open = 1 
-              AND pv.net_arr is not null
-                THEN pv.net_arr
-            ELSE 0
-          END)                                 AS open_stage_1_net_arr,
-          SUM(CASE 
-            WHEN pv.forecast_category_name != 'Omitted'
-              AND pv.is_stage_3_plus = 1
-              AND pv.is_open = 1 
-              AND pv.net_arr is not null
-                THEN pv.net_arr
-            ELSE 0
-          END)                                 AS open_stage_3_net_arr,
-         SUM(CASE 
-            WHEN pv.forecast_category_name != 'Omitted'
-              AND pv.is_stage_4_plus = 1
-              AND pv.is_open = 1 
-              AND pv.net_arr is not null
-                THEN pv.net_arr
-            ELSE 0
-          END)                                 AS open_stage_4_net_arr,
-  
-         SUM(CASE 
-            WHEN (pv.is_won = 1 OR (pv.is_renewal = 1 AND pv.is_lost = 1))
-              THEN pv.net_arr
-            ELSE 0
-         END)                                  AS won_net_arr
   FROM report_pipeline_velocity pv
   WHERE pv.close_fiscal_year >= 2020
      AND (pv.close_day_of_fiscal_quarter_normalised != pv.current_day_of_fiscal_quarter_normalised
@@ -116,47 +88,21 @@ WITH report_pipeline_velocity_quarter AS (
   UNION
    -- to have the same current values as in X-Ray
   SELECT 
-    o.close_fiscal_quarter_name,
-    o.close_fiscal_quarter_date,
-    o.current_day_of_fiscal_quarter_normalised,
+      o.close_fiscal_quarter_name,
+      o.close_fiscal_quarter_date,
+      o.current_day_of_fiscal_quarter_normalised,
 
-    o.sales_team_rd_asm_level,
-    o.sales_team_cro_level,
-    o.sales_qualified_source,
-    o.deal_group,
+      o.sales_team_rd_asm_level,
+      o.sales_team_cro_level,
+      o.sales_qualified_source,
+      o.deal_group,
+
+      SUM(o.open_1plus_net_arr)              AS open_stage_1_net_arr,
+      SUM(o.open_3plus_net_arr)              AS open_stage_3_net_arr,
+      SUM(o.open_4plus_net_arr)              AS open_stage_4_net_arr,
+      SUM(o.booked_net_arr)                  AS won_net_arr,
+      SUM(o.churned_net_arr)                 AS churned_net_arr
   
-   SUM(CASE 
-        WHEN o.forecast_category_name != 'Omitted'
-            AND o.is_stage_1_plus = 1
-            AND o.is_open = 1 
-            AND o.net_arr is not null
-          THEN o.net_arr
-        ELSE 0
-      END)                                 AS open_stage_1_net_arr,
-  
-     SUM(CASE 
-        WHEN o.forecast_category_name != 'Omitted'
-            AND o.is_stage_3_plus = 1
-            AND o.is_open = 1 
-            AND o.net_arr is not null
-          THEN o.net_arr
-        ELSE 0
-      END)                                 AS open_stage_3_net_arr,
-  
-     SUM(CASE 
-        WHEN o.forecast_category_name != 'Omitted'
-            AND o.is_stage_4_plus = 1
-            AND o.is_open = 1 
-            AND o.net_arr is not null
-          THEN o.net_arr
-        ELSE 0
-      END)                                 AS open_stage_4_net_arr,
-  
-    SUM(CASE 
-        WHEN (o.is_won = 1 OR (o.is_renewal = 1 AND o.is_lost = 1))
-          THEN COALESCE(o.net_arr,0)
-        ELSE 0
-      END)                                 AS won_net_arr
   FROM sfdc_opportunity_xf o
   WHERE o.close_fiscal_quarter_name = o.current_fiscal_quarter_name
   GROUP BY 1, 2,3,4,5,6,7
@@ -174,6 +120,9 @@ WITH report_pipeline_velocity_quarter AS (
     base.sales_qualified_source,
     base.deal_group,
   
+    target.total_churned_net_arr,
+    target.total_churned_deal_count,
+
     target.total_net_arr,
     target.target_net_arr,
     target.adjusted_target_net_arr,
@@ -181,7 +130,8 @@ WITH report_pipeline_velocity_quarter AS (
     ps.open_stage_1_net_arr,
     ps.open_stage_3_net_arr,
     ps.open_stage_4_net_arr,
-    ps.won_net_arr
+    ps.won_net_arr,
+    ps.churned_net_arr
     
   FROM (
      SELECT close_fiscal_quarter_name,

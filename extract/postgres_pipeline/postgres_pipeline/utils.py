@@ -118,11 +118,12 @@ def postgres_engine_factory(
     host = env[connection_dict["host"]]
     database = env[connection_dict["database"]]
     port = env[connection_dict["port"]]
+    statement_timeout = 900000
 
     # Inject the values to create the engine
     engine = create_engine(
         f"postgresql://{user}:{password}@{host}:{port}/{database}",
-        connect_args={"sslcompression": 0},
+        connect_args={"sslcompression": 0, "options": "-c statement_timeout=5400000"},
     )
     logging.info(engine)
     return engine

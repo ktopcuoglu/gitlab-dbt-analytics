@@ -1,5 +1,7 @@
 {{ config(alias='sfdc_opportunity_xf') }}
 
+-- +wk_sales_report_pipeline_metrics_per_day_with_targets +wk_sales_report_pipeline_velocity_quarter_with_targets +wk_sales_report_opportunity_pipeline_type
+
 WITH sfdc_opportunity AS (
 
     SELECT opportunity_id,
@@ -88,7 +90,7 @@ WITH sfdc_opportunity AS (
   
       sfdc_opportunity_xf.is_downgrade,
       sfdc_opportunity_xf.is_edu_oss,
-      CAST(sfdc_opportunity_xf.is_won AS INTEGER)                 AS is_won,
+      CAST(sfdc_opportunity_xf.is_won AS INTEGER)                   AS is_won,
       sfdc_opportunity_xf.net_incremental_acv,
       sfdc_opportunity_xf.professional_services_value,
       sfdc_opportunity_xf.reason_for_loss,
@@ -99,7 +101,7 @@ WITH sfdc_opportunity AS (
         WHEN sfdc_opportunity_xf.sales_qualified_source = 'BDR Generated'
             THEN 'SDR Generated'
         ELSE COALESCE(sfdc_opportunity_xf.sales_qualified_source,'NA')
-      END                                                       AS sales_qualified_source,
+      END                                                           AS sales_qualified_source,
 
       sfdc_opportunity_xf.solutions_to_be_replaced,
       sfdc_opportunity_xf.total_contract_value,
@@ -564,8 +566,7 @@ WITH sfdc_opportunity AS (
       -- created and closed within the quarter net arr
       CASE 
         WHEN oppty_final.pipeline_created_fiscal_quarter_date = oppty_final.close_fiscal_quarter_date
-          AND (oppty_final.is_won = 1 
-                OR (oppty_final.is_renewal = 1 AND oppty_final.is_lost = 1)) 
+          AND is_eligible_created_pipeline_flag = 1
             THEN net_arr
         ELSE 0
       END                                                         AS created_and_won_same_quarter_net_arr,
@@ -604,6 +605,15 @@ WITH sfdc_opportunity AS (
           THEN oppty_final.calculated_deal_count
         ELSE 0
       END                                               AS booked_deal_count,
+
+      -- churn deal count (lost renewals)
+      CASE
+        WHEN ((oppty_final.is_renewal = 1
+            AND oppty_final.is_lost = 1)
+            OR net_arr < 0)
+          THEN oppty_final.calculated_deal_count
+        ELSE 0
+      END                                               AS churned_deal_count,
     
       -----------------
       -- Net ARR
@@ -635,7 +645,16 @@ WITH sfdc_opportunity AS (
                 AND oppty_final.is_lost = 1))
           THEN net_arr
         ELSE 0 
-      END                                                 AS booked_net_arr
+      END                                                 AS booked_net_arr,
+
+      -- churn net arr (lost renewals)
+      CASE
+        WHEN ((oppty_final.is_renewal = 1
+            AND oppty_final.is_lost = 1)
+            OR net_arr < 0)
+          THEN net_arr
+        ELSE 0
+      END                                                 AS churned_net_arr
 
     FROM oppty_final
     -- Net IACV to Net ARR conversion table

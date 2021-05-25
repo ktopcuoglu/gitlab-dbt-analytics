@@ -21,6 +21,7 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity.generated_source,
       sfdc_opportunity.lead_source,
       sfdc_opportunity.merged_opportunity_id,
+      sfdc_opportunity.duplicate_opportunity_id,
       sfdc_opportunity.net_new_source_categories,
       sfdc_opportunity.account_owner_team_stamped,
       sfdc_opportunity.primary_campaign_source_id       AS primary_campaign_source_id,

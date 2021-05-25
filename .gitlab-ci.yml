@@ -93,7 +93,10 @@ include:
   script:
     - manage_snowflake.py manage_clones --database raw --schema tap_postgres
 
-
+🥩⚙clone_raw_specific_schema:
+  <<: *snowflake_start_clone
+  script:
+    - manage_snowflake.py manage_clones --database raw --schema $SCHEMA_NAME
 
 👥force_clone_both:
   <<: *snowflake_start_clone
@@ -210,7 +213,7 @@ permifrost_manual:
 
 .pages_job_template: &pages_job_template
   stage: 📚 dbt Docs
-  image: registry.gitlab.com/gitlab-data/data-image/dbt-image:v0.0.13
+  image: registry.gitlab.com/gitlab-data/data-image/dbt-image:v0.0.15
   variables:
     SNOWFLAKE_ROLE: $SNOWFLAKE_TRANSFORM_ROLE
     SNOWFLAKE_WAREHOUSE: $SNOWFLAKE_TRANSFORM_WAREHOUSE
