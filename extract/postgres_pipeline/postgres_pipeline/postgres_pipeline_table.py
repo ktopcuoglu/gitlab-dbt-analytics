@@ -64,7 +64,7 @@ class PostgresPipelineTable:
             target_table,
         )
 
-    def do_data_quality(self, source_engine: Engine, target_engine: Engine) -> bool:
+    def do_data_quality(self, source_engine: Engine, target_engine: Engine,schema_changed: bool) -> bool:
         target_table = "snow_target_table"
         return load_functions.data_quality(
             source_engine,
