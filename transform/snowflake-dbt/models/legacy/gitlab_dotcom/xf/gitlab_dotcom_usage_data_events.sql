@@ -603,7 +603,6 @@
       {% if is_incremental() %}
         AND created_at >= (SELECT MAX(event_created_at) FROM {{this}} WHERE event_name = '{{ event_cte.event_name }}')
       {% endif %}
-      AND created_at >= '2020-01-01'
 
 )
 
