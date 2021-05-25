@@ -329,7 +329,7 @@
     "source_cte_name": "push_events",
     "user_column_name": "author_id",
     "key_to_parent_project": "project_id",
-    "primary_key": "project_id",
+    "primary_key": "event_id",
     "stage_name": "create",
     "is_representative_of_stage": "False"
   },
@@ -603,6 +603,7 @@
       {% if is_incremental() %}
         AND created_at >= (SELECT MAX(event_created_at) FROM {{this}} WHERE event_name = '{{ event_cte.event_name }}')
       {% endif %}
+      AND created_at >= '2020-01-01'
 
 )
 
