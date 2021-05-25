@@ -55,6 +55,7 @@
 
   SELECT
       dim_date.date_id                                                  AS dim_date_id,
+      dim_date.first_day_of_month                                       AS charge_month,
       dim_billing_account_id,
       dim_crm_account_id,
       dim_subscription_id,
@@ -75,7 +76,7 @@
       AND (rate_plan_charge_filtered.effective_end_month > dim_date.date_actual
            OR rate_plan_charge_filtered.effective_end_month IS NULL)
       AND dim_date.day_of_month = 1
-    {{ dbt_utils.group_by(n=9) }}
+    {{ dbt_utils.group_by(n=10) }}
 
 ), mrr_by_subscription AS (
 
@@ -86,6 +87,7 @@
       subscription.dim_subscription_id_original,
       subscription.subscription_status,
       subscription.dim_date_id,
+      subscription.charge_month,
       SUM(sm.mrr)                                                       AS sm_mrr,
       SUM(sm.arr)                                                       AS sm_arr,
       SUM(sm.quantity)                                                  AS sm_quantity,
@@ -112,7 +114,7 @@
     LEFT JOIN mrr_by_delivery_type other
       ON other.product_delivery_type = 'Others'
       AND subscription.mrr_id = other.mrr_id
-    {{ dbt_utils.group_by(n=6) }}
+    {{ dbt_utils.group_by(n=7) }}
 
 ), final AS (
 
@@ -122,6 +124,7 @@
       dim_billing_account_id,
       dim_crm_account_id,
       dim_date_id,
+      charge_month,
       subscription_status,
       unit_of_measure,
       total_mrr,
@@ -149,5 +152,5 @@
     created_by="@ischweickartDD",
     updated_by="@ischweickartDD",
     created_date="2021-03-01",
-    updated_date="2021-03-01"
+    updated_date="2021-05-24"
 ) }}
