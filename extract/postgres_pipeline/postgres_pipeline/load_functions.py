@@ -125,8 +125,22 @@ def data_quality(
     table_name: str,
 ) -> bool:
     raw_query = table_dict["import_query"]
-    env = os.environ.copy()
+    additional_filter = ""
+    advanced_metadata = False
 
+    logging.info(f"Processing table: {source_table_name}")
+    query = f"{raw_query} {additional_filter}"
+    env = os.environ.copy()
+    logging.info(query)
+    chunk_and_upload(
+        query,
+        source_engine,
+        target_engine,
+        table_name,
+        source_table_name,
+        advanced_metadata,
+        False,
+    )
 
 def sync_incremental_ids(
     source_engine: Engine,
