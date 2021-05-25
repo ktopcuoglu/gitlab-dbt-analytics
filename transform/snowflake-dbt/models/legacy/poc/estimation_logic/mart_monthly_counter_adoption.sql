@@ -51,7 +51,7 @@ WITH paid_subscriptions_monthly_usage_ping_optin AS (
       SPLIT_PART(metrics_path, '.', 1)                                      AS main_json_name,
       SPLIT_PART(metrics_path, '.', -1)                                     AS feature_name,
       REPLACE(metrics_path, '.', '_')                                       AS full_metrics_path,
-      FIRST_VALUE(flattened_usage_data.major_minor_version ) OVER (PARTITION BY   , edition ```suggestion:-0+0
+      FIRST_VALUE(flattened_usage_data.major_minor_version ) OVER (PARTITION BY   metrics_path, edition ```
       FIRST_VALUE(flattened_usage_data.major_minor_version ) OVER (PARTITION BY   metrics_path, edition 
                                                 ORDER BY release_date ASC) AS first_version_with_counter
     FROM flattened_usage_data
