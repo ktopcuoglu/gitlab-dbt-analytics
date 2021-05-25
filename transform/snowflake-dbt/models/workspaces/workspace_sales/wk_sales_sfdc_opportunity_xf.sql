@@ -211,6 +211,12 @@ WITH sfdc_opportunity AS (
         ELSE 1  
       END                                                         AS is_open,
       
+      CASE 
+        WHEN sfdc_opportunity_xf.stage_name IN ('10-Duplicate')
+            THEN 1
+        ELSE 0
+      END                                                         AS is_duplicate_flag,
+
       sfdc_opportunity_xf.is_closed,
       sfdc_opportunity_xf.stage_category,
       sfdc_opportunity_xf.is_renewal,
