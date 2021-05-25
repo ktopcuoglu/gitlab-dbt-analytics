@@ -11,25 +11,26 @@ models:
           - not_null
 
   - name: bdg_namespace_order_subscription
-    description: '{{ doc("bdg_namespace_order_subscription") }}'
+    description: '{{ doc("bdg_namespace_order_subscription_monthly") }}'
     columns:
       - name: dim_namespace_id
       - name: dim_subscription_id
       - name: order_id
+      - name: snapshot_month
       - name: namespace_id_order
       - name: subscription_id_order
       - name: ultimate_parent_namespace_id
       - name: namespace_type
-      - name: dim_product_tier_id_namespace
-      - name: product_tier_name_namespace
+      - name: is_namespace_active
+      - name: namespace_was_trial
       - name: saas_trial_start_date
       - name: saas_trial_expired_on
-      - name: namespace_was_trial
       - name: customer_id
       - name: dim_product_tier_id_with_trial
       - name: product_tier_name_with_trial
       - name: dim_product_tier_id_order
       - name: product_tier_name_order
+      - name: is_order_active
       - name: order_start_date
       - name: order_end_date
       - name: order_is_trial
@@ -43,9 +44,49 @@ models:
       - name: dim_product_tier_id_subscription
       - name: product_tier_name_subscription
       - name: count_of_tiers_per_subscription
+      - name: is_subscription_active
       - name: subscription_start_date
       - name: subscription_end_date
+      - name: namespace_order_subscription_match_status
+
+  - name: bdg_namespace_order_subscription
+    description: '{{ doc("bdg_namespace_order_subscription") }}'
+    columns:
+      - name: dim_namespace_id
+      - name: dim_subscription_id
+      - name: order_id
+      - name: namespace_id_order
+      - name: subscription_id_order
+      - name: ultimate_parent_namespace_id
+      - name: namespace_type
+      - name: is_namespace_active
+      - name: dim_product_tier_id_namespace
+      - name: product_tier_name_namespace
+      - name: namespace_was_trial
+      - name: saas_trial_start_date
+      - name: saas_trial_expired_on
+      - name: customer_id
+      - name: dim_product_tier_id_with_trial
+      - name: product_tier_name_with_trial
+      - name: dim_product_tier_id_order
+      - name: product_tier_name_order
+      - name: is_order_active
+      - name: order_start_date
+      - name: order_end_date
+      - name: order_is_trial
+      - name: product_rate_plan_id_order
+      - name: subscription_name
+      - name: dim_subscription_id_original
+      - name: dim_subscription_id_previous
+      - name: dim_billing_account_id
+      - name: dim_crm_account_id
+      - name: product_rate_plan_id_subscription
+      - name: dim_product_tier_id_subscription
+      - name: product_tier_name_subscription
+      - name: count_of_tiers_per_subscription
       - name: is_subscription_active
+      - name: subscription_start_date
+      - name: subscription_end_date
       - name: namespace_order_subscription_match_status
 
 
