@@ -4,6 +4,12 @@ A fact table bridging opportunities with contacts. One opportunity can have mult
 
 {% enddocs %}
 
+{% docs bdg_namespace_order_subscription_monthly %}
+
+The purpose of this model is to represent `bdg_namespace_order_subscription` at a monthly grain.
+
+{% enddocs %}
+
 {% docs bdg_namespace_order_subscription %}
 
 The purpose of this table is two-fold:
