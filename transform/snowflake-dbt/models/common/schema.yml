@@ -10,7 +10,7 @@ models:
           - unique
           - not_null
 
-  - name: bdg_namespace_order_subscription
+  - name: bdg_namespace_order_subscription_monthly
     description: '{{ doc("bdg_namespace_order_subscription_monthly") }}'
     columns:
       - name: dim_namespace_id
