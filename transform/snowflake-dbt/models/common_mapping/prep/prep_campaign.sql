@@ -24,6 +24,14 @@ WITH sfdc_campaign_info AS (
       sub_region,
       large_bucket,
       reporting_type,
+      allocadia_id,
+      is_a_channel_partner_involved,
+      is_an_alliance_partner_involved,
+      is_this_an_in_person_event,
+      alliance_partner_name,
+      channel_partner_name,
+      sales_play,
+      gtm_motion,
 
       -- user ids
       campaign_owner_id,
