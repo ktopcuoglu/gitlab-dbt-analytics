@@ -65,7 +65,7 @@ class PostgresPipelineTable:
         )
 
     def do_data_quality(self, source_engine: Engine, target_engine: Engine,schema_changed: bool) -> bool:
-        target_table = "snow_target_table"
+        target_table = "GITLAB_PGP_EXPORT"
         return load_functions.data_quality(
             source_engine,
             target_engine,

@@ -179,7 +179,7 @@ tables:
       UNION ALL
       SELECT 'gitlab_db_epic_metrics' AS table_name
       , max(created_at) AS max_created_at
-      ,c ount(*) ::bigint AS row_count
+      ,count(*) ::bigint AS row_count
       FROM epic_metrics
       UNION ALL
       SELECT 'gitlab_db_project_tracing_settings' AS table_name

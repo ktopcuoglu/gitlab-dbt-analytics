@@ -526,7 +526,7 @@ for source_name, config in config_dict.items():
 
     globals()[f"{config['dag_name']}_db_sync"] = sync_dag
 
-
+# Create Dictionary entry for Data Quality check. This is seprate from above to avoid duplicate DAG creation. 
 
 config_dict_dq={
     "gitlab_com_data_reconciliation_extract_load": {
@@ -540,8 +540,9 @@ config_dict_dq={
             GITLAB_COM_DB_PASS,
             GITLAB_COM_DB_HOST,
             GITLAB_COM_DB_NAME,
+            GITLAB_COM_PG_PORT,
         ],
-        "start_date": datetime(2019, 5, 30),
+        "start_date": datetime(2021, 5, 21),
         "sync_schedule_interval": "0 2 */1 * *",
         "task_name": "gitlab-com",
     },
@@ -565,7 +566,7 @@ for source_name, config in config_dict_dq.items():
         f"{config['dag_name']}",
         default_args=data_quality_dag_args,
         schedule_interval=config["sync_schedule_interval"],
-        concurrency=1,
+        concurrency=3,
     )
     with data_quality_dag:
 
@@ -580,18 +581,25 @@ for source_name, config in config_dict_dq.items():
             )
 
             # dq-extract Task
-            dq_extract_cmd = generate_cmd(
-                config["dag_name"],
-                f"--load_type dq --load_only_table {table}",
-                config["cloudsql_instance_name"],
-            )
+            dq_extract_cmd = f"""
+            {clone_repo_cmd} &&
+            cd analytics/extract/postgres_pipeline/postgres_pipeline/ &&
+            python main.py tap ../manifests/{config["dag_name"]}_db_manifest.yaml --load_type dq --load_only_table {table}
+        """
+            #generate_cmd(
+            #    config["dag_name"],
+            #    f"--load_type dq --load_only_table {table}",
+            #    config["cloudsql_instance_name"],
+            #)
+            
 
             dq_extract = KubernetesPodOperator(
                 **gitlab_defaults,
                 image=DATA_IMAGE,
                 task_id=task_identifier,
                 name=task_identifier,
-                pool=f"{config['task_name']}_pool",
+                #pool=f"{config['task_name']}_pool",
+                pool="default_pool", 
                 secrets=standard_secrets + config["secrets"],
                 env_vars={
                     **gitlab_pod_env_vars,
