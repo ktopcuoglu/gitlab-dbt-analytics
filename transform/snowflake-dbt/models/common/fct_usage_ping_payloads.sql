@@ -1,5 +1,6 @@
 {{config({
-    "schema": "legacy"
+    "schema": "legacy",
+    tags=["product"]
   })
 }}
 
