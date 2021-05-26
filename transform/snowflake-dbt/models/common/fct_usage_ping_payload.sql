@@ -1,7 +1,10 @@
+{{ config(
+    tags=["product"]
+) }}
+
 {{ config({
     "materialized": "incremental",
-    "unique_key": "dim_usage_ping_id",
-    tags=["product"]
+    "unique_key": "dim_usage_ping_id"
     })
 }}
 
