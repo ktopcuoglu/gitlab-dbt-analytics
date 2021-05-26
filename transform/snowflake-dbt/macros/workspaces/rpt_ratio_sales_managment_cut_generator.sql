@@ -1,29 +1,28 @@
+{% macro rpt_ratio(select_columns, is_new_logo_calc, extra_where_clause='TRUE') %}
+
 {%- set metrics = 
     ["MQLs / A",
-    "MQLs / T",
-    "MQLs / Ttmp",
+    "MQLs / TQ",
+    "MQLs / QTD",
     "Trials / A",
-    "Trials / T",
-    "Trials / Ttmp",
+    "Trials / TQ",
+    "Trials / QTD",
     "First Order ARR / A",
-    "First Order ARR / T",
-    "First Order ARR / Ttmp",
+    "First Order ARR / TQ",
+    "First Order ARR / QTD",
     "New Logos / A",
-    "New Logos / T",
-    "New Logos / Ttmp",
+    "New Logos / TQ",
+    "New Logos / QTD",
     "SAOs / A",
-    "SAOs / T",
-    "SAOs / Ttmp",
+    "SAOs / TQ",
+    "SAOs / QTD",
     "Won Opps / A",
-    "Won Opps / T",
-    "Won Opps / Ttmp",
+    "Won Opps / TQ",
+    "Won Opps / QTD",
     "Total Opps / A",
-    "Total Opps / T",
-    "Total Opps / Ttmp"]
+    "Total Opps / TQ",
+    "Total Opps / QTD"]
   -%}
-
-{% set select_columns = ["segment_region_grouped", "order_type_grouped"] %}
-{% set num_of_cols_to_group = 2 %}
 
 {% set large_segment_region_grouped = ['APAC', 'EMEA', 'Large Other', 'PubSec', 'US East', 'US West', 'Pubsec', 'Global', 'Large MQLs & Trials'] %}
 
@@ -36,6 +35,7 @@
     ('rpt_sales_funnel_target_daily', 'rpt_sales_funnel_target_daily')
 ]) }}
 
+
 , crm_person AS (
 
     SELECT
@@ -47,6 +47,7 @@
     FROM rpt_crm_person_mql
     WHERE order_type_grouped != '3) Consumption / PS / Other'
       AND order_type_grouped NOT LIKE '%Missing%'
+      AND {{ extra_where_clause }}
   
 ), crm_opportunity_closed_period AS (
 
@@ -59,6 +60,7 @@
     FROM rpt_crm_opportunity_closed_period
     WHERE order_type_grouped != '3) Consumption / PS / Other'
       AND order_type_grouped NOT LIKE '%Missing%'
+      AND {{extra_where_clause}}
 
 ), crm_opportunity_accepted_period AS (
 
@@ -71,6 +73,7 @@
     FROM rpt_crm_opportunity_accepted_period
     WHERE order_type_grouped != '3) Consumption / PS / Other'
       AND order_type_grouped NOT LIKE '%Missing%'
+      AND {{extra_where_clause}}
 
 ), sales_funnel_target AS (
 
@@ -82,6 +85,9 @@
       {{ null_or_missing('sales_qualified_source_name', 'sales_qualified_source') }},
       {{ null_or_missing('crm_user_sales_segment_grouped', 'sales_segment_grouped') }}
     FROM rpt_sales_funnel_target
+    WHERE order_type_grouped != '3) Consumption / PS / Other'
+      AND order_type_grouped NOT LIKE '%Missing%'
+      AND {{extra_where_clause}}
 
 ), sales_funnel_target_daily AS (
 
@@ -95,20 +101,7 @@
     FROM rpt_sales_funnel_target_daily
     WHERE order_type_grouped != '3) Consumption / PS / Other'
       AND order_type_grouped NOT LIKE '%Missing%'
-
-), sales_funnel_target_mql_trial AS (
-
-    SELECT 
-      {{ dbt_utils.star(from=ref('rpt_sales_funnel_target'), except=['ORDER_TYPE_GROUPED']) }},
-      {{ null_or_missing('order_type_grouped', 'order_type_grouped') }},
-      {{ null_or_missing('crm_user_sales_segment', 'sales_segment') }},
-      {{ null_or_missing('crm_user_sales_segment_region_grouped', 'segment_region_grouped') }},
-      'Missing sales_qualified_source' AS sales_qualified_source,
-      {{ null_or_missing('crm_user_sales_segment_grouped', 'sales_segment_grouped') }}
-    FROM rpt_sales_funnel_target
-    WHERE kpi_name IN ('MQL', 'Trials')
-      AND order_type_grouped != '3) Consumption / PS / Other'
-      AND order_type_grouped NOT LIKE '%Missing%'
+      AND {{extra_where_clause}}
 
 ), current_fiscal_quarter AS (
   
@@ -179,7 +172,7 @@
       {{ select_column }}
         {% if not loop.last %},{% endif %}
       {% endfor %}
-    FROM sales_funnel_target_mql_trial
+    FROM sales_funnel_target
     WHERE kpi_name IN ('MQL', 'Trials')
   
 ), base_list AS (
@@ -232,7 +225,7 @@
       AND is_closed = 'TRUE'
       AND is_edu_oss = 0
       -- AND IFF([new_logos] = FALSE, TRUE, order_type = '1. New - First Order')
-      AND IFF(FALSE = FALSE, TRUE, order_type = '1. New - First Order')
+      AND IFF({{is_new_logo_calc}} = FALSE, TRUE, order_type = '1. New - First Order')
     GROUP BY ROLLUP( 1,
       {% for select_column in select_columns %}
         {{ select_column }}
@@ -270,7 +263,7 @@
       AND is_closed = 'TRUE'
       AND is_edu_oss = 0
       --AND order_type = '1. New - First Order'
-      AND IFF(FALSE = FALSE, TRUE, order_type = '1. New - First Order')
+      AND IFF({{is_new_logo_calc}} = FALSE, TRUE, order_type = '1. New - First Order')
     GROUP BY ROLLUP(1,
       {% for select_column in select_columns %}
         {{ select_column }}
@@ -323,8 +316,8 @@
       SUM(IFF(kpi_name = 'Trials', qtd_allocated_target, 0)) AS  target_trials,
       --SUM(IFF(IFF([new_logos] = FALSE, TRUE, order_type_name = '1. New - First Order') AND kpi_name = 'Deals', qtd_allocated_target, 0)) AS  target_new_logos,
       --SUM(IFF(IFF([new_logos] = FALSE, TRUE, order_type_name = '1. New - First Order') AND kpi_name = 'Net ARR', qtd_allocated_target, 0)) AS  target_net_arr_closed,
-      SUM(IFF(IFF(FALSE = FALSE, TRUE, order_type_name = '1. New - First Order') AND kpi_name = 'Deals', qtd_allocated_target, 0)) AS  target_new_logos,
-      SUM(IFF(IFF(FALSE = FALSE, TRUE, order_type_name = '1. New - First Order') AND kpi_name = 'Net ARR', qtd_allocated_target, 0)) AS  target_net_arr_closed,
+      SUM(IFF(IFF({{is_new_logo_calc}} = FALSE, TRUE, order_type_name = '1. New - First Order') AND kpi_name = 'Deals', qtd_allocated_target, 0)) AS  target_new_logos,
+      SUM(IFF(IFF({{is_new_logo_calc}} = FALSE, TRUE, order_type_name = '1. New - First Order') AND kpi_name = 'Net ARR', qtd_allocated_target, 0)) AS  target_net_arr_closed,
       SUM(IFF(kpi_name = 'Stage 1 Opportunities', qtd_allocated_target, 0)) AS  target_sao,
       SUM(IFF(kpi_name = 'MQL', qtd_allocated_target, 0)) AS  target_mql,
       SUM(IFF(kpi_name = 'Deals', qtd_allocated_target, 0)) AS  target_won_opps,
@@ -352,8 +345,8 @@
       SUM(IFF(kpi_name = 'Trials', allocated_target, 0)) AS  target_trials_full,
       --SUM(IFF(IFF([new_logos] = FALSE, TRUE, order_type_name = '1. New - First Order') AND kpi_name = 'Deals', allocated_target, 0)) AS  target_new_logos_full,
       --SUM(IFF(IFF([new_logos] = FALSE, TRUE, order_type_name = '1. New - First Order') AND kpi_name = 'Net ARR', allocated_target, 0)) AS  target_net_arr_closed_full,
-      SUM(IFF(IFF(FALSE = FALSE, TRUE, order_type_name = '1. New - First Order') AND kpi_name = 'Deals', allocated_target, 0)) AS  target_new_logos_full,
-      SUM(IFF(IFF(FALSE = FALSE, TRUE, order_type_name = '1. New - First Order') AND kpi_name = 'Net ARR', allocated_target, 0)) AS  target_net_arr_closed_full,
+      SUM(IFF(IFF({{is_new_logo_calc}} = FALSE, TRUE, order_type_name = '1. New - First Order') AND kpi_name = 'Deals', allocated_target, 0)) AS  target_new_logos_full,
+      SUM(IFF(IFF({{is_new_logo_calc}} = FALSE, TRUE, order_type_name = '1. New - First Order') AND kpi_name = 'Net ARR', allocated_target, 0)) AS  target_net_arr_closed_full,
       SUM(IFF(kpi_name = 'Stage 1 Opportunities', allocated_target, 0)) AS  target_sao_full,
       SUM(IFF(kpi_name = 'MQL', allocated_target, 0)) AS  target_mql_full,
       SUM(IFF(kpi_name = 'Deals', allocated_target, 0)) AS  target_won_opps_full,
@@ -376,26 +369,26 @@
     {% endfor %}
     
     IFNULL(mqls, 0)                            AS "MQLs / A",
-    NULLIF(target_mql_full, 0)                 AS "MQLs / T",
-    NULLIF(target_mql, 0)                      AS "MQLs / Ttmp",
+    NULLIF(target_mql_full, 0)                 AS "MQLs / TQ",
+    NULLIF(target_mql, 0)                      AS "MQLs / QTD",
     IFNULL(actual_trials, 0)                   AS "Trials / A",
-    NULLIF(target_trials_full, 0)              AS "Trials / T",
-    NULLIF(target_trials, 0)                   AS "Trials / Ttmp",
+    NULLIF(target_trials_full, 0)              AS "Trials / TQ",
+    NULLIF(target_trials, 0)                   AS "Trials / QTD",
     IFNULL(first_oder_arr_closed_won, 0)       AS "First Order ARR / A",
-    NULLIF(target_net_arr_closed_full, 0)      AS "First Order ARR / T",
-    NULLIF(target_net_arr_closed, 0)           AS "First Order ARR / Ttmp",
+    NULLIF(target_net_arr_closed_full, 0)      AS "First Order ARR / TQ",
+    NULLIF(target_net_arr_closed, 0)           AS "First Order ARR / QTD",
     IFNULL(actual_new_logos, 0)                AS "New Logos / A",
-    NULLIF(target_new_logos_full, 0)           AS "New Logos / T",
-    NULLIF(target_new_logos, 0)                AS "New Logos / Ttmp",
+    NULLIF(target_new_logos_full, 0)           AS "New Logos / TQ",
+    NULLIF(target_new_logos, 0)                AS "New Logos / QTD",
     IFNULL(saos, 0)                            AS "SAOs / A",
-    NULLIF(target_sao_full, 0)                 AS "SAOs / T",
-    NULLIF(target_sao, 0)                      AS "SAOs / Ttmp",
+    NULLIF(target_sao_full, 0)                 AS "SAOs / TQ",
+    NULLIF(target_sao, 0)                      AS "SAOs / QTD",
     IFNULL(won_opps, 0)                        AS "Won Opps / A",
-    NULLIF(target_won_opps_full, 0)            AS "Won Opps / T",
-    NULLIF(target_won_opps, 0)                 AS "Won Opps / Ttmp",
+    NULLIF(target_won_opps_full, 0)            AS "Won Opps / TQ",
+    NULLIF(target_won_opps, 0)                 AS "Won Opps / QTD",
     IFNULL(total_opps, 0)                      AS "Total Opps / A",
-    NULLIF(target_total_opps_full, 0)          AS "Total Opps / T",
-    NULLIF(target_total_opps, 0)               AS "Total Opps / Ttmp"
+    NULLIF(target_total_opps_full, 0)          AS "Total Opps / TQ",
+    NULLIF(target_total_opps, 0)               AS "Total Opps / QTD"
 
   FROM base_list
 
@@ -444,13 +437,13 @@
     {% endfor %}
   
   WHERE NOT (
-    "First Order ARR / A" = 0 AND "First Order ARR / T" IS NULL
-    AND "New Logos / A" = 0   AND "New Logos / T"       IS NULL
-    AND "MQLs / A" = 0        AND "MQLs / T"            IS NULL
-    AND "SAOs / A" = 0        AND "SAOs / T"            IS NULL
-    AND "Won Opps / A" = 0    AND "Won Opps / T"        IS NULL
-    AND "Total Opps / A" = 0  AND "Total Opps / T"      IS NULL
-    AND "Trials / A" = 0      AND "Trials / T"          IS NULL
+    "First Order ARR / A" = 0 AND "First Order ARR / TQ" IS NULL
+    AND "New Logos / A" = 0   AND "New Logos / TQ"       IS NULL
+    AND "MQLs / A" = 0        AND "MQLs / TQ"            IS NULL
+    AND "SAOs / A" = 0        AND "SAOs / TQ"            IS NULL
+    AND "Won Opps / A" = 0    AND "Won Opps / TQ"        IS NULL
+    AND "Total Opps / A" = 0  AND "Total Opps / TQ"      IS NULL
+    AND "Trials / A" = 0      AND "Trials / TQ"          IS NULL
   )
 
 )
@@ -507,7 +500,7 @@
         AND is_closed = 'TRUE'
         AND is_edu_oss = 0
         -- AND IFF([new_logos] = FALSE, TRUE, order_type = '1. New - First Order')
-        AND IFF(FALSE = FALSE, TRUE, order_type = '1. New - First Order')
+        AND IFF({{is_new_logo_calc}} = FALSE, TRUE, order_type = '1. New - First Order')
         AND segment_region_grouped IN (
           {% for large_region in large_segment_region_grouped %} '{{large_region}}' {% if not loop.last %}, {% endif %} {% endfor %}
         )
@@ -605,7 +598,7 @@
         AND is_closed = 'TRUE'
         AND is_edu_oss = 0
         -- AND IFF([new_logos] = FALSE, TRUE, order_type = '1. New - First Order')
-        AND IFF(FALSE = FALSE, TRUE, order_type = '1. New - First Order')
+        AND IFF({{is_new_logo_calc}} = FALSE, TRUE, order_type = '1. New - First Order')
         AND segment_region_grouped IN (
           {% for large_region in large_segment_region_grouped %} '{{large_region}}' {% if not loop.last %}, {% endif %} {% endfor %}
         )
@@ -682,6 +675,8 @@
 
   {% endif %}
 
+, final AS (
+
 SELECT *
 FROM agg
 
@@ -704,3 +699,38 @@ FROM agg
   FROM large_subtotal_extra
 
 {% endif %}
+
+)
+
+SELECT
+  fiscal_quarter_name_fy,
+  {% for select_column in select_columns %}
+    {{select_column}},
+  {% endfor %}
+  "MQLs / A",
+  "MQLs / QTD",
+  "MQLs / A" / "MQLs / QTD"                   AS "MQLs / %QTD",
+  "MQLs / TQ",
+  "MQLs / A" / "MQLs / TQ"                    AS "MQLs / %TQ",
+
+  "Trials / A",
+  "Trials / QTD",
+  "Trials / A" / "Trials / QTD"               AS "Trials / %QTD",
+  "Trials / TQ",
+  "Trials / A" / "Trials / TQ"                AS "Trials / %TQ",
+
+  "First Order ARR / A" / "New Logos / A"     AS "ASP / A",
+  "First Order ARR / TQ" / "New Logos / TQ"   AS "ASP / TQ",
+  "ASP / A" / "ASP / TQ"                      AS "ASP / %TQ",
+
+  "SAOs / A" / "MQLs / A"                     AS "MQLs to SAOs / A",
+  "SAOs / TQ" / "MQLs / TQ"                   AS "MQLs to SAOs / TQ",
+  "MQLs to SAOs / A" / "MQLs to SAOs / TQ"    AS "MQLs to SAOs / %TQ",
+
+  "Won Opps / A" / "Total Opps / A"           AS "Win Rate / A",
+  "Won Opps / TQ" / "Total Opps / TQ"         AS "Win Rate / TQ",
+  "Win Rate / A" / "Win Rate / TQ"            AS "Win Rate / %TQ"
+
+FROM final
+
+{%- endmacro -%}
