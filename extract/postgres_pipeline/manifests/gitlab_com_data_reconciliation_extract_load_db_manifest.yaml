@@ -137,11 +137,6 @@ tables:
       , count(*) ::bigint AS row_count
       FROM cluster_providers_aws
       UNION ALL
-      SELECT 'gitlab_db_ci_platform_metrics' AS table_name
-      , max(created_at) AS max_created_at
-      , count(*) ::bigint AS row_count
-      FROM ci_platform_metrics
-      UNION ALL
       SELECT 'gitlab_db_jira_imports' AS table_name
       , max(created_at) AS max_created_at
       , count(*) ::bigint AS row_count
