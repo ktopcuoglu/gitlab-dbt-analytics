@@ -42,7 +42,7 @@ tables:
       , count(*) ::bigint AS row_count
       FROM users_ops_dashboard_projects
       UNION ALL
-      SELECT '_gitlab_db_clusters_applications_prometheus' AS table_name
+      SELECT 'gitlab_db_clusters_applications_prometheus' AS table_name
       , max(created_at) AS max_created_at
       , count(*) ::bigint AS row_count
       FROM clusters_applications_prometheus 
@@ -699,7 +699,7 @@ tables:
     import_query: |-
       SELECT 'gitlab_db_ci_stages' AS table_name
       , max(created_at) AS max_created_at
-      , count(*) ::bigint AS row_count
+      , count(*) AS row_count
       FROM ci_stages
   gitlab_db_audit_events:
     dbt_source_model: true
