@@ -83,7 +83,9 @@
       is_staging, 
       is_trial,
       instance_user_count,
-      host_name
+      host_name,
+      umau_value,
+      license_subscription_id
     FROM joined
     LEFT JOIN dim_product_tier
       ON TRIM(LOWER(joined.product_tier)) = TRIM(LOWER(dim_product_tier.product_tier_historical_short))
