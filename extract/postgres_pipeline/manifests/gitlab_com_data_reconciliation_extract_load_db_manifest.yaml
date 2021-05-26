@@ -776,7 +776,7 @@ tables:
     import_query: |-
       SELECT 'ci_job_artifacts' AS table_name
       , MAX(created_at) AS max_created_at
-      , COUNT(*) ::BIGINT AS row_count
+      , COUNT(*) AS row_count
       FROM ci_job_artifacts
   gitlab_db_ci_pipeline_schedules:
     dbt_source_model: true
