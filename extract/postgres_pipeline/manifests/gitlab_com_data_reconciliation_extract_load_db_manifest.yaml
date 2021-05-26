@@ -605,12 +605,11 @@ tables:
     # , count(*) ::bigint AS row_count
     #  FROM project_daily_statistics
     #  UNION ALL
-    #  SELECT 'gitlab_db_lfs_objects_projects' AS table_name
-    #  , max(created_at) AS max_created_at
-    #  , count(*) ::bigint AS row_count
-    #  FROM lfs_objects_projects
-    #  UNION ALL
-
+      SELECT 'gitlab_db_lfs_objects_projects' AS table_name
+     , max(created_at) AS max_created_at
+     , count(*) ::bigint AS row_count
+      FROM lfs_objects_projects
+      UNION ALL
       SELECT 'gitlab_db_geo_nodes' AS table_name
       , max(created_at) AS max_created_at
       , count(*) ::bigint AS row_count
