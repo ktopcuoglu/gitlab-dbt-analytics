@@ -4,8 +4,9 @@
 {{ simple_cte([
 
     ('dim_date', 'dim_date'),
+    ('gitlab_subscriptions', 'gitlab_dotcom_gitlab_subscriptions_snapshots_namespace_id_base'),
     ('members_source', 'gitlab_dotcom_members_source'),
-    ('namespaces', 'prep_namespace'),
+    ('prep_namespace', 'prep_namespace'),
     ('namespace_lineage', 'gitlab_dotcom_namespace_lineage'),
     ('namespace_lineage_historical', 'gitlab_dotcom_namespace_lineage_historical_daily'),
     ('plans', 'gitlab_dotcom_plans_source'),
@@ -14,50 +15,20 @@
 
 ]) }}
 
-, projects_source AS (
-
-    SELECT *
-    FROM {{ref('gitlab_dotcom_projects_source')}}
-
-), prep_namespace AS (
-
-    SELECT *
-    FROM {{ref('prep_namespace')}}
-
-),
-
-members AS (
+, members AS (
 
     SELECT *
     FROM {{ref('gitlab_dotcom_members')}} members
     WHERE is_currently_valid = TRUE
       AND {{ filter_out_blocked_users('members', 'user_id') }}
 
-),
-
-namespace_lineage AS (
-
-    SELECT *
-    FROM {{ref('gitlab_dotcom_namespace_lineage')}}
-
-),
-
-gitlab_subscriptions AS (
-
-    SELECT *
-    FROM {{ref('gitlab_dotcom_gitlab_subscriptions_snapshots_namespace_id_base')}}
-
-),
-
-active_services AS (
+), active_services AS (
 
     SELECT *
     FROM {{ref('gitlab_dotcom_services_source')}}
     WHERE is_active = True
 
-),
-
-joined AS (
+), joined AS (
     SELECT
       projects_source.project_id                                     AS dim_project_id,
       projects_source.namespace_id                                   AS dim_namespace_id,
@@ -139,7 +110,9 @@ joined AS (
       ON namespace_lineage.ultimate_parent_id  = gitlab_subscriptions.namespace_id
         AND projects_source.created_at BETWEEN gitlab_subscriptions.valid_from AND {{ coalesce_to_infinity("gitlab_subscriptions.valid_to") }}
     LEFT JOIN prep_product_tier
-      ON namespace_lineage.ultimate_parent_id = gitlab_subscriptions.namespace_id
+      ON namespace_lineage.ultimate_parent_plan_name = LOWER(IFF(prep_product_tier.product_tier_name_short != 'Trial: Ultimate',
+                                                                  prep_product_tier.product_tier_historical_short,
+                                                                  'ultimate_trial'))
     LEFT JOIN active_services
       ON projects_source.project_id = active_services.project_id
     {{ dbt_utils.group_by(n=62) }}
