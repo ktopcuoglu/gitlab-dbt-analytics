@@ -10,8 +10,8 @@ macros:
       - name: new_column_name
         type: string
         description: Name that will be used in the Missing columns and how the new column will be named.
-  - name: rpt_ratio_sales_managment_cut_generator
-    description: '{{ doc("rpt_ratio_sales_managment_cut_generator") }}'
+  - name: rpt_ratio_sales_management_cut_generator
+    description: '{{ doc("rpt_ratio_sales_management_cut_generator") }}'
     arguments:
       - name: select_columns
         type: array
