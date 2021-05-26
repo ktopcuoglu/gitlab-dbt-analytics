@@ -6,10 +6,9 @@
     ('dim_date', 'dim_date'),
     ('gitlab_subscriptions', 'gitlab_dotcom_gitlab_subscriptions_snapshots_namespace_id_base'),
     ('members_source', 'gitlab_dotcom_members_source'),
-    ('prep_namespace', 'prep_namespace'),
-    ('namespace_lineage', 'gitlab_dotcom_namespace_lineage'),
     ('namespace_lineage_historical', 'gitlab_dotcom_namespace_lineage_historical_daily'),
     ('plans', 'gitlab_dotcom_plans_source'),
+    ('prep_namespace', 'prep_namespace'),
     ('projects_source', 'gitlab_dotcom_projects_source'),
     ('prep_product_tier', 'prep_product_tier'),
 
@@ -27,6 +26,28 @@
     SELECT *
     FROM {{ref('gitlab_dotcom_services_source')}}
     WHERE is_active = True
+
+), namespace_lineage AS (
+
+    SELECT
+      namespace_lineage_historical.*,
+      IFNULL(ROW_NUMBER() OVER (
+        PARTITION BY namespace_lineage_historical.namespace_id
+        ORDER BY namespace_lineage_historical.snapshot_day DESC) = 1, FALSE)          AS is_current,
+      namespace_lineage_historical.snapshot_day = CURRENT_DATE                        AS ultimate_parent_is_current,
+      plans.plan_title                                                                AS ultimate_parent_plan_title,
+      plans.plan_is_paid                                                              AS ultimate_parent_plan_is_paid,
+      plans.plan_name                                                                 AS ultimate_parent_plan_name
+    FROM namespace_lineage_historical
+    INNER JOIN plans
+      ON namespace_lineage_historical.ultimate_parent_plan_id = plans.plan_id
+    QUALIFY ROW_NUMBER() OVER (
+      PARTITION BY
+        namespace_lineage_historical.namespace_id,
+        namespace_lineage_historical.parent_id,
+        namespace_lineage_historical.ultimate_parent_id
+      ORDER BY namespace_lineage_historical.snapshot_day DESC
+    ) = 1
 
 ), joined AS (
     SELECT
