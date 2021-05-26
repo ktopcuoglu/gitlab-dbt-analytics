@@ -53,21 +53,21 @@
 
     SELECT 
       joined.dim_usage_ping_id,
-      dim_product_tier.dim_product_tier_id               AS dim_product_tier_id,
-      dim_subscription_id,
+      dim_product_tier.dim_product_tier_id                   AS dim_product_tier_id,
+      COALESCE(license_subscription_id, dim_subscription_id) AS dim_subscription_id,
       dim_license_id,
       dim_location_country_id,
-      date_id                                            AS dim_date_id,
+      date_id                                                AS dim_date_id,
       dim_instance_id,
 
       -- timestamps
       ping_created_at,
-      DATEADD('days', -28, ping_created_at)              AS ping_created_at_28_days_earlier,
-      DATE_TRUNC('YEAR', ping_created_at)                AS ping_created_at_year,
-      DATE_TRUNC('MONTH', ping_created_at)               AS ping_created_at_month,
-      DATE_TRUNC('WEEK', ping_created_at)                AS ping_created_at_week,
-      DATE_TRUNC('DAY', ping_created_at)                 AS ping_created_at_date,
-      raw_usage_data_id                                  AS raw_usage_data_id, 
+      DATEADD('days', -28, ping_created_at)                  AS ping_created_at_28_days_earlier,
+      DATE_TRUNC('YEAR', ping_created_at)                    AS ping_created_at_year,
+      DATE_TRUNC('MONTH', ping_created_at)                   AS ping_created_at_month,
+      DATE_TRUNC('WEEK', ping_created_at)                    AS ping_created_at_week,
+      DATE_TRUNC('DAY', ping_created_at)                     AS ping_created_at_date,
+      raw_usage_data_id                                      AS raw_usage_data_id, 
       
       -- metadata
       raw_usage_data_payload, 
@@ -98,5 +98,5 @@
     created_by="@mpeychet",
     updated_by="@mpeychet",
     created_date="2021-05-10",
-    updated_date="2021-05-10"
+    updated_date="2021-05-26"
 ) }}
