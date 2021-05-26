@@ -14,37 +14,55 @@ WITH source AS (
 ), flattened AS (
 
     SELECT 
-      d.value                             AS data_by_row,
-      jsontext['generated_at']::TIMESTAMP AS test_result_generated_at,
+      d.value AS data_by_row,
+      jsontext['metadata']['dbt_version']::VARCHAR                                             AS dbt_version,
+      jsontext['metadata']['dbt_schema_version']::VARCHAR                                      AS schema_version,
+      COALESCE(jsontext['metadata']['generated_at'], jsontext['generated_at'])::TIMESTAMP_NTZ  AS generated_at,
       uploaded_at
     FROM source
     INNER JOIN LATERAL FLATTEN(INPUT => PARSE_JSON(jsontext['results']), outer => true) d
 
-), model_parsed_out AS (
+), v1model_parsed_out AS (
 
     SELECT
-      data_by_row['execution_time']::FLOAT                                      AS test_execution_time_elapsed,
-      data_by_row['node']['unique_id']::VARCHAR                                 AS test_id,
-      data_by_row['node']['name']::VARCHAR                                      AS test_name,
-      data_by_row['error']::VARCHAR                                             AS test_error,
-      IFNULL(data_by_row['node']['test_metadata']['name']::VARCHAR, 'custom')   AS test_type,
-      data_by_row['node']['tags']::ARRAY                                        AS test_tags,
-      ARRAY_CONTAINS('data'::VARIANT, test_tags)                                AS is_data_test,
-      ARRAY_CONTAINS('schema'::VARIANT, test_tags)                              AS is_schema_test,
-      data_by_row['node']['config']['severity']::VARCHAR                        AS test_severity,
-      data_by_row['node']['depends_on']['nodes']::VARCHAR                       AS dependent_nodes,
-      IFF(data_by_row['fail'] = 'true', True, False)                            AS is_failed_test,
-      IFF(data_by_row['warn'] = 'true', True, False)                            AS is_warned_test,
-      CASE
-        WHEN is_failed_test = False AND is_warned_test = False
-          THEN True
-        ELSE False END                                                          AS is_passed_test,
-      test_result_generated_at,
-      {{ dbt_utils.surrogate_key(['test_id', 'test_result_generated_at']) }}    AS test_unique_key,
+      data_by_row['execution_time']::FLOAT                                 AS test_execution_time_elapsed,
+      data_by_row['unique_id']::VARCHAR                                    AS test_unique_id,
+      data_by_row['status']::VARCHAR                                       AS status,
+      data_by_row['message']::VARCHAR                                      AS message,
+      dbt_version,
+      schema_version,
+      generated_at,
+      {{ dbt_utils.surrogate_key(['test_unique_id', 'generated_at']) }}    AS test_unique_key,
       uploaded_at
     FROM flattened
+    WHERE dbt_version IS NOT NULL
   
+), v0model_parsed_out AS (
+
+    SELECT
+      data_by_row['execution_time']::FLOAT                                 AS test_execution_time_elapsed,
+      data_by_row['node']['unique_id']::VARCHAR                            AS test_unique_id,
+      CASE
+        WHEN data_by_row['fail'] = 'true' THEN 'fail'
+        WHEN data_by_row['warn'] = 'true' THEN 'warn'
+        WHEN data_by_row['error']::VARCHAR IS NOT NULL THEN 'error'
+        ELSE 'pass'
+      END                                                                  AS status,
+      data_by_row['error']::VARCHAR                                        AS message,
+      'PRE 0.19.0'                                                         AS dbt_version,
+      'https://schemas.getdbt.com/dbt/run-results/v0.json'                 AS schema_version,
+      generated_at,
+      {{ dbt_utils.surrogate_key(['test_unique_id', 'generated_at']) }}    AS test_unique_key,
+      uploaded_at
+    FROM flattened
+    WHERE dbt_version IS NULL
+
 )
 
 SELECT *
-FROM model_parsed_out
+FROM v0model_parsed_out
+
+UNION 
+
+SELECT *
+FROM v1model_parsed_out

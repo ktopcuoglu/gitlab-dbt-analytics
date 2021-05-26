@@ -1,7 +1,7 @@
 version: 2
 
 models:
-    - name: airflow_dag
+    - name: airflow_dag_source
       description: "Static information about airflow DAGs."
       columns:
         - name: dag_id
@@ -16,7 +16,7 @@ models:
             - not_null
         - name: schedule_interval
         
-    - name: airflow_dag_run
+    - name: airflow_dag_run_source
       description: "Information about individual runs of a DAG."
       columns:
         - name: dag_id

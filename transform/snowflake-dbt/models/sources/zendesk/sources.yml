@@ -12,9 +12,9 @@ sources:
       schema: false
       identifier: false
 
-    freshness:
-      warn_after: {count: 8, period: hour}
-      error_after: {count: 24, period: hour}
+    # freshness: https://gitlab.com/gitlab-data/analytics/-/issues/8874 quieting for now
+    #   warn_after: {count: 8, period: hour}
+    #   error_after: {count: 24, period: hour}
 
     tables:
       - name: groups

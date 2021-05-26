@@ -8,9 +8,11 @@ WITH data AS (
   
     SELECT * 
     FROM {{ ref('prep_usage_data_all_time_flattened')}}
+    WHERE typeof(metric_value) IN ('INTEGER', 'DECIMAL')
+
     {% if is_incremental() %}
 
-      WHERE created_at >= (SELECT MAX(DATEADD('month', -1, created_month)) FROM {{this}})
+      AND created_at >= (SELECT MAX(created_month) FROM {{this}})
 
     {% endif %}
 

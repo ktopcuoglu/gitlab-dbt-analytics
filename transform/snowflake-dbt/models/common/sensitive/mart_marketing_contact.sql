@@ -438,6 +438,8 @@ WITH marketing_contact AS (
       IFNULL(marketing_contact.last_name, 'Unknown')                                             AS last_name,
       marketing_contact.gitlab_user_name,
       IFNULL(marketing_contact.company_name, 'Unknown')                                          AS company_name,
+      marketing_contact.sfdc_record_id,
+      marketing_contact.dim_crm_account_id,
       marketing_contact.job_title,
       marketing_contact.country,
       marketing_contact.sfdc_parent_sales_segment,
@@ -627,9 +629,9 @@ WITH marketing_contact AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@trevor31",
-    updated_by="@trevor31",
+    updated_by="@jpeguero",
     created_date="2021-02-09",
-    updated_date="2021-03-22"
+    updated_date="2021-05-07"
 ) }}
 
 

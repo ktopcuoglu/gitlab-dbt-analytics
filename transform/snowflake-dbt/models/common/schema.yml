@@ -98,9 +98,8 @@ models:
       - name: subscription_status
       - name: subscription_start_date
       - name: subscription_end_date
-      - name: cancelled_date
-      - name: term_end_date
-      - name: term_start_date
+      - name: rate_plan_id
+        description: Primary key from `zuora_rate_plan_source`
       - name: dim_product_detail_id
       - name: product_rate_plan_id
       - name: product_id
@@ -793,6 +792,10 @@ models:
       - name: cohort_month
       - name: cohort_quarter
       - name: cohort_year
+      - name: is_myb
+        description: MYB = Multi-Year Booking. This boolean flag identifies if a subscription is booked for more than one year. This can either be by having a term greater than 12 months or having a linked subscription.
+      - name: is_myb_with_multi_subs
+        description: MYB = Multi-Year Booking. This boolean flag identifies if a subscription is booked for more than one year by using multiple linked subscriptions only. A subscription with a term greater than 12 but does not have linked subscriptions has a value of FALSE.
 
   - name: dim_subscriptions_snapshots
     description: Daily snapshot of subscriptions starting from 2020-03-01. Fiel
@@ -1956,6 +1959,46 @@ models:
         tags: ["tdf", "common"]
       - name: recorded_at
         description: The timestamp when the usage ping was recorded.
+
+  - name: fct_usage_ping_payload
+    description: '{{ doc("fct_usage_ping_payload") }}'
+    columns:
+      - name: dim_usage_ping_id
+        description: The unique identifier of the usage ping.
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "common"]
+      - name: dim_instance_id
+        description: The unique identifier of the self-managed instance.
+        tests:
+          - not_null
+        tags: ["tdf", "common"]
+      - name: dim_license_id
+        description: The id of the license. This id can be found in the dim_license table
+      - name: dim_subscription_id
+        description: The zuora subscription id derived from the license. Use this field to join to dim_subscription.
+      - name: dim_product_tier_id
+        description: id of the product tier. can be joined to the `dim_product_tier` table
+      - name: dim_date_id
+        description: id of the date. can be joined to the `dim_date` table
+      - name: host_name
+        description: The name of the host of the instance.
+      - name: edition
+        description: The edition of GitLab on the instance.
+      - name: major_minor_version
+        description: The version of the GitLab release on the instance.
+      - name: is_pre_release
+        description: Derived boolean flag noting if the version of GitLab on the instance corresponds to a pre-release or release candidate.
+      - name: instance_user_count
+        description: The total count of users on the instance.
+      - name: is_trial
+        description: Boolean flag noting if the license was generated as part of a trial.
+      - name: ping_created_at
+        description: The timestamp when the usage ping was created.
+        tests:
+          - not_null
+        tags: ["tdf", "common"]
 
   - name: fct_usage_ping_subscription_mapped_gmau
     description: '{{ doc("fct_usage_ping_subscription_mapped_gmau") }}'

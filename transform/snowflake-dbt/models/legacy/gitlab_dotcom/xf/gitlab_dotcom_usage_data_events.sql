@@ -1,9 +1,3 @@
-{{
-  config({
-    "materialized": "incremental"
-  })
-}}
-
 /*
   Each dict must have ALL of the following:
     * event_name
@@ -23,7 +17,7 @@
     "user_column_name": "author_id",
     "key_to_parent_project": "project_id",
     "primary_key": "event_id",
-    "stage_name": "create",
+    "stage_name": "create", 
     "is_representative_of_stage": "True"
   }, {
     "event_name": "action_monthly_active_users_design_management",
@@ -173,7 +167,7 @@
     "source_cte_name": "epic_notes",
     "user_column_name": "note_author_id",
     "key_to_parent_group": "ultimate_parent_id",
-    "primary_key": "author_id",
+    "primary_key": "note_id",
     "stage_name": "plan",
     "is_representative_of_stage": "False"
   },
@@ -183,15 +177,6 @@
     "user_column_name": "author_id",
     "key_to_parent_project": "project_id",
     "primary_key": "event_id",
-    "stage_name": "manage",
-    "is_representative_of_stage": "False"
-  },
-  {
-    "event_name": "groups",
-    "source_cte_name": "group_members",
-    "user_column_name": "user_id",
-    "key_to_parent_project": "source_id",
-    "primary_key": "member_id",
     "stage_name": "manage",
     "is_representative_of_stage": "False"
   },
@@ -218,7 +203,7 @@
     "source_cte_name": "issue_notes",
     "user_column_name": "note_author_id",
     "key_to_parent_project": "project_id",
-    "primary_key": "author_id",
+    "primary_key": "note_id",
     "stage_name": "plan",
     "is_representative_of_stage": "False"
   },
@@ -227,7 +212,7 @@
     "source_cte_name": "issue_resource_label_events",
     "user_column_name": "user_id",
     "key_to_parent_project": "namespace_id",
-    "primary_key": "issue_resource_label_event_id",
+    "primary_key": "resource_label_event_id",
     "stage_name": "plan",
     "is_representative_of_stage": "False"
   },
@@ -259,15 +244,6 @@
     "is_representative_of_stage": "False"
   },
   {
-    "event_name": "lfs_objects",
-    "source_table_name": "gitlab_dotcom_lfs_objects_projects",
-    "user_column_name": "NULL",
-    "key_to_parent_project": "project_id",
-    "primary_key": "lfs_object_id",
-    "stage_name": "create",
-    "is_representative_of_stage": "False"
-  },
-  {
     "event_name": "license_scanning",
     "source_cte_name": "license_scanning_jobs",
     "user_column_name": "ci_build_user_id",
@@ -290,7 +266,7 @@
     "source_cte_name": "merge_request_notes",
     "user_column_name": "note_author_id",
     "key_to_parent_project": "project_id",
-    "primary_key": "author_id",
+    "primary_key": "note_id",
     "stage_name": "create",
     "is_representative_of_stage": "False"
   },
@@ -353,7 +329,7 @@
     "source_cte_name": "push_events",
     "user_column_name": "author_id",
     "key_to_parent_project": "project_id",
-    "primary_key": "project_id",
+    "primary_key": "event_id",
     "stage_name": "create",
     "is_representative_of_stage": "False"
   },
@@ -637,42 +613,44 @@
 {% for event_cte in event_ctes %}
 
     SELECT
+      MD5({{ event_cte.event_name}}.{{ event_cte.primary_key }} || '-' || '{{ event_cte.event_name }}')   AS event_primary_key,
+      '{{ event_cte.event_name }}'                                                                        AS event_name,
       ultimate_namespace.namespace_id,
       ultimate_namespace.namespace_created_at,
-      IFF(blocked_users.user_id IS NOT NULL, TRUE, FALSE)          AS is_blocked_namespace,
+      IFF(blocked_users.user_id IS NOT NULL, TRUE, FALSE)                                                 AS is_blocked_namespace,
       {% if 'NULL' in event_cte.user_column_name %}
         NULL
       {% else %}
         {{ event_cte.event_name }}.{{ event_cte.user_column_name }}
-      {% endif %}                                                 AS user_id,
+      {% endif %}                                                                                         AS user_id,
       {% if event_cte.key_to_parent_project is defined %}
-        'project'                                                 AS parent_type,
-        projects.project_id                                       AS parent_id,
-        projects.project_created_at                               AS parent_created_at,
+        'project'                                                                                         AS parent_type,
+        projects.project_id                                                                               AS parent_id,
+        projects.project_created_at                                                                       AS parent_created_at,
       {% elif event_cte.key_to_parent_group is defined %}
-        'group'                                                   AS parent_type,
-        namespaces.namespace_id                                   AS parent_id,
-        namespaces.namespace_created_at                           AS parent_created_at,
+        'group'                                                                                           AS parent_type,
+        namespaces.namespace_id                                                                           AS parent_id,
+        namespaces.namespace_created_at                                                                   AS parent_created_at,
       {% else %}
-        NULL                                                      AS parent_type,
-        NULL                                                      AS parent_id,
-        NULL                                                      AS parent_created_at,
+        NULL                                                                                              AS parent_type,
+        NULL                                                                                              AS parent_id,
+        NULL                                                                                              AS parent_created_at,
       {% endif %}
-      ultimate_namespace.namespace_is_internal                    AS namespace_is_internal,
-      {{ event_cte.event_name }}.created_at                       AS event_created_at,
-      {{ event_cte.is_representative_of_stage }}::BOOLEAN         AS is_representative_of_stage,
-      '{{ event_cte.event_name }}'                                AS event_name,
-      '{{ event_cte.stage_name }}'                                AS stage_name,
+      ultimate_namespace.namespace_is_internal                                                            AS namespace_is_internal,
+      {{ event_cte.event_name }}.created_at                                                               AS event_created_at,
+      {{ event_cte.is_representative_of_stage }}::BOOLEAN                                                 AS is_representative_of_stage,
+      '{{ event_cte.stage_name }}'                                                                        AS stage_name,
       CASE
         WHEN gitlab_subscriptions.is_trial
           THEN 'trial'
         ELSE COALESCE(gitlab_subscriptions.plan_id, 34)::VARCHAR
-      END                                                         AS plan_id_at_event_date,
+      END                                                                                                 AS plan_id_at_event_date,
       CASE
         WHEN gitlab_subscriptions.is_trial
           THEN 'trial'
         ELSE COALESCE(plans.plan_name, 'free')
-      END                                                         AS plan_name_at_event_date
+      END                                                                                                 AS plan_name_at_event_date,
+      COALESCE(plans.plan_is_paid, FALSE)                                                                 AS plan_was_paid_at_event_date
     FROM {{ event_cte.event_name }}
       /* Join with parent project. */
       {% if event_cte.key_to_parent_project is defined %}
