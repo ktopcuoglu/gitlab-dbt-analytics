@@ -595,16 +595,6 @@ tables:
     export_table_primary_key: max_created_at
     import_db: GITLAB_DB
     import_query: |-   
-#  SELECT 'gitlab_db_namespace_root_storage_statistics' AS table_name
-    # , max(created_at) AS max_created_at
-    # , count(*) ::bigint AS row_count
-    # FROM namespace_root_storage_statistics
-    # UNION ALL
-    # SELECT 'gitlab_db_project_daily_statistics' AS table_name
-    # , max(created_at) AS max_created_at
-    # , count(*) ::bigint AS row_count
-    #  FROM project_daily_statistics
-    #  UNION ALL 
       SELECT 'gitlab_db_lfs_objects_projects' AS table_name
       , max(created_at) AS max_created_at
       , count(*) ::bigint AS row_count
