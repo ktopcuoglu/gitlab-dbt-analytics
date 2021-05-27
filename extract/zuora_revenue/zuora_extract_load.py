@@ -2,11 +2,13 @@ import sys
 from os import environ as env
 import time
 import logging
+import cloudstorage
 from fire import Fire
 from typing import Dict, Tuple, List
 from yaml import load, safe_load, YAMLError
 
 import pandas as pd
+from datetime import datetime
 
 from google.cloud import storage
 from google.oauth2 import service_account
@@ -33,7 +35,10 @@ def zuora_revenue_extract(table_name: str) -> None:
         "https://" + env["ZUORA_REVENUE_API_URL"] + "/api/integration/v2/biviews/"
     )
 
-def move_to_processed(bucket: str,table_name: str ,gapi_keyfile: str = None):
+
+def move_to_processed(
+    bucket: str, table_name: str, list_of_files: list, gapi_keyfile: str = None
+):
     # Get the gcloud storage client and authenticate
     scope = ["https://www.googleapis.com/auth/cloud-platform"]
     keyfile = load(gapi_keyfile or env["GCP_SERVICE_CREDS"])
@@ -42,7 +47,28 @@ def move_to_processed(bucket: str,table_name: str ,gapi_keyfile: str = None):
     storage_client = storage.Client(credentials=scoped_credentials)
     bucket_obj = storage_client.get_bucket(bucket)
     print(bucket_obj)
-    
+    now = datetime.now()
+    load_day = now.strftime("%m-%d-%Y")
+    move_to_path = (
+        "gcs://" + bucket + "/RAW_DB/processed/" + load_day + "/" + table_name
+    )
+    for file_name in list_of_files:
+        try:
+            cloudstorage.copy2(file_name, move_to_path)
+        except cloudstorage.NotFoundError:
+            logging.error(
+                f"Source file {file_name} not found, Please ensure the direcotry is empty for next \
+                            run else the file will be over written"
+            )
+            sys.exit(1)
+        try:
+            cloudstorage.delete(file_name)
+        except cloudstorage.NotFoundError:
+            logging.error(
+                f"{file_name} is not found , throwing this as error to ensure that we are not overwriting the files."
+            )
+            sys.exit(1)
+
 
 def zuora_revenue_load(
     bucket: str,
@@ -60,15 +86,17 @@ def zuora_revenue_load(
     """
 
     results = query_executor(engine, upload_query)
-    print(results)
-    '''
-    if results[1] == "LOADED":
-        total_rows = results[2]
-
-    log_result = f"Loaded {total_rows} rows for table {table_name}"
-    logging.info(log_result)
-    '''
-    move_to_processed(bucket,table_name)
+    total_rows = 0
+    list_of_files = []
+    for result in results:
+        if result[1] == "LOADED":
+            total_rows += result[2]
+            list_of_files.append(results[0])
+    log_result = f"Loaded {total_rows} rows from {len(results)} files"
+    logging.info(
+        "Data file has been loaded. Move all the file to processed folder,to keep the directory clean."
+    )
+    move_to_processed(bucket, table_name, list_of_files)
 
 
 if __name__ == "__main__":
