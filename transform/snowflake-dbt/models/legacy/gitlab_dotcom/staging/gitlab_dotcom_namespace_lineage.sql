@@ -58,6 +58,12 @@ WITH RECURSIVE namespaces AS (
   FROM namespaces
   WHERE parent_id NOT IN (SELECT DISTINCT namespace_id FROM namespaces)
     OR namespace_id IN (
+                          11967197,
+                          11967195,
+                          11967194,
+                          11967196,
+                          12014338,
+                          12014366,
                           6713278, 
                           6142621, 
                           4159925, 
