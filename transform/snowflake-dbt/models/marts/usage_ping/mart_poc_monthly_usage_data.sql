@@ -7,7 +7,7 @@ WITH monthly_usage_data AS (
 , fct_usage_ping_payloads AS (
 
     SELECT *
-    FROM {{ ref('fct_usage_ping_payloads') }}
+    FROM {{ ref('fct_usage_ping_payload') }}
 
 ), monthly_usage_data_agg AS (
 
@@ -25,6 +25,7 @@ WITH monthly_usage_data AS (
       is_umau,
       MAX(monthly_metric_value) AS monthly_metric_value
     FROM monthly_usage_data
+    WHERE clean_metrics_name IS NOT NULL
     {{ dbt_utils.group_by(n=11) }}
     
 )
@@ -41,9 +42,9 @@ SELECT
   is_gmau,
   is_paid_gmau,
   is_umau,
-  ping_source,
+  usage_ping_delivery_type,
   SUM(monthly_metric_value) AS monthly_metric_value_sum
 FROM monthly_usage_data_agg
 INNER JOIN fct_usage_ping_payloads
-  ON monthly_usage_data_agg.ping_id = fct_usage_ping_payloads.usage_ping_id
+  ON monthly_usage_data_agg.ping_id = fct_usage_ping_payloads.dim_usage_ping_id
 {{ dbt_utils.group_by(n=12) }}
