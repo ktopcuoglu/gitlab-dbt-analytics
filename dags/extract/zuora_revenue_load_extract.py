@@ -116,7 +116,7 @@ for table_name in table_name_list:
     # Set the command for the container for loading the data
     container_cmd_load = f"""
         {clone_and_setup_extraction_cmd} &&
-        python3 zuora_revenue/zuora_extract_load.py zuora_load --bucket $ZUORA_REVENUE_GCS_NAME --schema_name zuora_revenue --table_name {table_name}
+        python3 zuora_revenue/zuora_extract_load.py zuora_load --bucket $ZUORA_REVENUE_GCS_NAME --schema zuora_revenue --table_name {table_name}
         """
     task_identifier = (
                     f"{task_name}-{table_name.replace('_','-').lower()}-load"

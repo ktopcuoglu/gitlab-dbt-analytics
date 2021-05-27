@@ -41,6 +41,7 @@ def move_to_processed(bucket: str,table_name: str ,gapi_keyfile: str = None):
     scoped_credentials = credentials.with_scopes(scope)
     storage_client = storage.Client(credentials=scoped_credentials)
     bucket_obj = storage_client.get_bucket(bucket)
+    print(bucket_obj)
     
 
 def zuora_revenue_load(
@@ -59,13 +60,15 @@ def zuora_revenue_load(
     """
 
     results = query_executor(engine, upload_query)
+    print(results)
+    '''
     if results[1] == "LOADED":
         total_rows = results[2]
 
     log_result = f"Loaded {total_rows} rows for table {table_name}"
     logging.info(log_result)
-    
-
+    '''
+    move_to_processed(bucket,table_name)
 
 
 if __name__ == "__main__":
