@@ -674,5 +674,167 @@ models:
       - name: service_desk_issues_all_time_event_since_last_ping
       - name: service_desk_issues_all_time_event_estimated_monthly
 
+  - name: mart_saas_product_usage_monthly
+    description: '{{ doc("mart_saas_product_usage_monthly") }}'
+    columns:
+      - name: dim_subscription_id
+        tests:
+          - not_null
+        tags: ["tdf", "common", "gainsight"]
+      - name: dim_subscription_id_original
+        tests:
+          - not_null
+        tags: ["tdf", "common", "gainsight"]
+      - name: dim_billing_account_id
+        tests:
+          - not_null
+        tags: ["tdf", "common", "gainsight"]
+      - name: dim_namespace_id
+      - name: snapshot_month
+        description: First day of the month in which data is being reported.
+        tests:
+          - not_null
+        tags: ["tdf", "common", "gainsight"]
+      - name: snapshot_date_id
+        tests:
+          - not_null
+        tags: ["tdf", "common", "gainsight"]
+      - name: subscription_seats
+      - name: active_user_count
+      - name: license_utilization
+      - name: max_historical_user_count
+      - name: umau_28_days_user
+        description: Monthly count of unique users that made an triggered an [Event](https://docs.gitlab.com/ee/api/events.html) ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlymanageevents))
+      - name: action_monthly_active_users_project_repo_28_days_user
+        description: Monthly count of unique users that made an Action on a valid [Target](https://docs.gitlab.com/ee/api/events.html#target-types) ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlycreateaction_monthly_active_users_project_repo))
+      - name: merge_requests_28_days_user
+        description: Monthly count of unique users making merge requests ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlycreatemerge_requests))
+      - name: projects_with_repositories_enabled_28_days_user
+        description: Monthly count of unique users that created projects with repositories enabled ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlycreateprojects_with_repositories_enabled))
+      - name: commit_comment_all_time_event
+        description: All-time count commit comments ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countscommit_comment))
+      - name: source_code_pushes_all_time_event
+        description: All-time count of source code pushes ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countssource_code_pushes))
+      - name: ci_pipelines_28_days_user
+        description: Monthly count of unique users triggering pipelines ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlyverifyci_pipelines))
+      - name: ci_internal_pipelines_28_days_user
+        description: Monthly count of unique users triggering pipelines in GitLab repositories ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlyverifyci_internal_pipelines))
+      - name: ci_builds_28_days_user
+        description: Monthly count of unique users running CI builds ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlyverifyci_builds))
+      # - name: ci_builds_all_time_user
+      #   description: All-time count of unique users running CI builds ([source]()https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stageverifyci_builds)
+      - name: ci_builds_all_time_event
+        description: All-time count of CI builds ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsci_builds))
+      - name: ci_runners_all_time_event
+        description: All-time count of CI Runners ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsci_runners))
+      - name: auto_devops_enabled_all_time_event
+        description: All-time count of Projects with auto DevOps template enabled on an instance ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsauto_devops_enabled))
+      - name: gitlab_shared_runners_enabled
+        description: Flags whether shared runners are enabled on an instance ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#gitlab_shared_runners_enabled))
+      - name: container_registry_enabled
+        description: Flags whether container registry is enabled ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#container_registry_enabled))
+      - name: template_repositories_all_time_event
+        description: All-time total of custom project templates and projects without namespaces ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countstemplate_repositories))
+      - name: ci_pipeline_config_repository_28_days_user
+        description: Monthly count of unique users triggering pipelines from templates in repository ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlyverifyci_pipeline_config_repository))
+      - name: user_unique_users_all_secure_scanners_28_days_user
+        description: Monthly count of unique users running secure CI builds ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlysecureuser_unique_users_all_secure_scanners))
+      - name: user_sast_jobs_28_days_user
+        description: Monthly count of unique users running SAST CI builds ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlysecureuser_sast_jobs))
+      - name: user_dast_jobs_28_days_user
+        description: Monthly count of unique users running DAST CI builds ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlysecureuser_dast_jobs))
+      - name: user_dependency_scanning_jobs_28_days_user
+        description: Monthly count of unique users running dependency scanning CI builds ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlysecureuser_dependency_scanning_jobs))
+      - name: user_license_management_jobs_28_days_user
+        description: Monthly count of unique users running license management CI builds ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlysecureuser_license_management_jobs))
+      - name: user_secret_detection_jobs_28_days_user
+        description: Monthly count of unique users running secret detection CI builds ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlysecureuser_secret_detection_jobs))
+      - name: user_container_scanning_jobs_28_days_user
+        description: Monthly count of unique users running container scanning CI builds ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlysecureuser_container_scanning_jobs))
+      - name: object_store_packages_enabled
+        description: Flags whether Object Storage is enabled for Uploads on an instance ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#object_storepackagesenabled))
+      - name: projects_with_packages_all_time_event
+        description: All-time count of projects with package registry configured ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsprojects_with_packages))
+      # - name: projects_with_packages_28_days_user
+      #   description: Monthly count of unique users creating projects with package registry configured ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlypackageprojects_with_packages))
+      - name: deployments_28_days_user
+        description: Monthly count of unique users triggering deployments ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlyreleasedeployments))
+      - name: releases_28_days_user
+        description: Monthly count of unique users authoring releases ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlyreleasereleases))
+      - name: epics_28_days_user
+        description: Monthly count of unique users authoring epics ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlyplanepics))
+      - name: issues_28_days_user
+        description: Monthly count of unique users authoring issues ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlyplanissues))
+      - name: ci_internal_pipelines_all_time_event
+        description: All-time count of pipelines in GitLab repositories ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsci_internal_pipelines))
+      - name: ci_external_pipelines_all_time_event
+        description: All-time count of pipelines in external repositories ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsci_external_pipelines))
+      - name: merge_requests_all_time_event
+        description: All-time count of Merge Requests ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsmerge_requests))
+      - name: todos_all_time_event
+        description: All-time count of ToDos created ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countstodos))
+      - name: epics_all_time_event
+        description: All-time count of Epics created ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsepics))
+      - name: issues_all_time_event
+        description: All-time count of Issues created ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsissues))
+      - name: projects_all_time_event
+        description: All-time count of Projects created ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsprojects))
+      - name: deployments_28_days_event
+        description: Monthly count of deployments ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#counts_monthlydeployments))
+      - name: packages_28_days_event
+        description: Monthly count of Packages ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#counts_monthlypackages))
+      - name: sast_jobs_all_time_event
+        description: All-time count of SAST CI builds ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countssast_jobs))
+      - name: dast_jobs_all_time_event
+        description: All-time count of DAST CI builds ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsdast_jobs))
+      - name: dependency_scanning_jobs_all_time_event
+        description: All-time count of Dependency Scanning CI builds ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsdependency_scanning_jobs))
+      - name: license_management_jobs_all_time_event
+        description: All-time count of License Management CI builds ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countslicense_management_jobs))
+      - name: secret_detection_jobs_all_time_event
+        description: All-time count of Secret Detection’ CI builds ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countssecret_detection_jobs))
+      - name: container_scanning_jobs_all_time_event
+        description: All-time count of Container Scanning CI builds ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countscontainer_scanning_jobs))
+      - name: projects_jenkins_active_all_time_event
+        description: All-time count of projects with active integrations for Jenkins ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsprojects_jenkins_active))
+      - name: projects_bamboo_active_all_time_event
+        description: All-time count of projects with active integrations for Bamboo CI ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsprojects_bamboo_active))
+      - name: projects_jira_active_all_time_event
+        description: All-time count of projects with active integrations for Jira ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsprojects_jira_active))
+      - name: projects_drone_ci_active_all_time_event
+        description: All-time count of projects with active integrations for Drone CI ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsprojects_drone_ci_active))
+      - name: jira_imports_28_days_event
+        description: Monthly count of Issues imported from Jira ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlymanageissue_importsjira))
+      - name: projects_github_active_all_time_event
+        description: All-time count of projects with active integrations for GitHub ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsprojects_github_active))
+      - name: projects_jira_server_active_all_time_event
+        description: All-time count of active integrations with Jira Server ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsprojects_jira_server_active))
+      - name: projects_jira_dvcs_cloud_active_all_time_event
+        description: All-time count of active integrations with Jira Cloud (DVCS Connector) ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsprojects_jira_dvcs_cloud_active))
+      - name: projects_with_repositories_enabled_all_time_event
+        description: All-time count of projects with repositories enabled ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsprojects_with_repositories_enabled))
+      - name: protected_branches_all_time_event
+        description: All-time count of protected branches ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsprotected_branches))
+      - name: remote_mirrors_all_time_event
+        description: All-time count of remote mirrors ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsremote_mirrors))
+      - name: projects_enforcing_code_owner_approval_28_days_user
+        description: Monthly count of unique users creating projects that require code owner approval ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlycreateprojects_enforcing_code_owner_approval))
+      - name: project_clusters_enabled_28_days_user
+        description: Monthly count of unique users using GitLab Managed enabled clusters attached to projects ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlyconfigureproject_clusters_enabled))
+      # - name: analytics_28_days_user
+      #   description: The number of unique users viewing any [Analytics page](https://docs.gitlab.com/ee/user/analytics/) ([source](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/#manage-manageoptimize---smau-gmau---mau-viewing-analytics-features))
+      # - name: issues_edit_28_days_user
+      #   description: Number of unique users interacting with an issue (open, close, reopen, adjust label, adjust milestone, adjust weight, comment) ([source](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/#plan-planproject-management---smau-paid-gmau---mau-interacting-with-issues))
+      # - name: user_packages_28_days_user
+      #   description: The maximum distinct count of users who published a package to the Package Registry. In the future, this value will the distinct count of users across all Package AMAUs ([source](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/#packagepackage---smau-gmau---count-of-users-publishing-packages))
+      # - name: terraform_state_api_28_days_user
+      #   description: Monthly active users of GitLab Managed Terraform State ([source](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/#configureconfigure---smau-gmau---mau-of-gitlab-managed-terraform-state))
+      # - name: incident_management_28_days_user
+      #   description: Unique users that interact with alerts or incidents ([source](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/#monitormonitor---smau-gmau---unique-users-that-interact-with-alerts-and-incidents))
+      - name: is_missing_paid_seats
+        description: Flags if there are currently active users, but no seats have been paid for
+      - name: is_data_in_subscription_month
+        description: Flags if there is either Subscription Seats data or Usage Ping data present in the given month for a given subscription
+
   - name: pump_hash_marketing_contact
     description: '{{ doc("pump_hash_marketing_contact") }}'

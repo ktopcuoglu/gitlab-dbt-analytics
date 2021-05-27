@@ -1,28 +1,35 @@
 {{ simple_cte([
     ('saas_usage_ping', 'prep_saas_usage_ping_subscription_mapped_wave_2_3_metrics'),
-    ('recurring_charges', 'prep_recurring_charge_subscription_monthly'),
-    ('subscriptions', 'bdg_subscription_product_rate_plan'),
-    ('seat_link', 'fct_namespace_member_summary'),
+    ('zuora_subscriptions', 'bdg_subscription_product_rate_plan'),
+    ('gitlab_subscriptions', 'gitlab_dotcom_gitlab_subscriptions_snapshots_namespace_id_base'),
     ('dates', 'dim_date')
 ]) }}
 
 , saas_subscriptions AS (
 
     SELECT
-      subscriptions.dim_subscription_id,
-      subscriptions.dim_subscription_id_original,
-      subscriptions.dim_billing_account_id,
-      dates.first_day_of_month                                                          AS snapshot_month,
-      recurring_charges.saas_quantity                                                   AS subscription_seats
-    FROM subscriptions
+      zuora_subscriptions.dim_subscription_id,
+      zuora_subscriptions.dim_subscription_id_original,
+      zuora_subscriptions.dim_billing_account_id,
+      dates.first_day_of_month                                                          AS snapshot_month
+    FROM zuora_subscriptions
     INNER JOIN dates
-      ON date_actual BETWEEN subscriptions.subscription_start_date
-                      AND IFNULL(subscriptions.subscription_end_date, CURRENT_DATE)
-    LEFT JOIN recurring_charges
-      ON subscriptions.dim_subscription_id = recurring_charges.dim_subscription_id
-      AND dates.date_id = recurring_charges.dim_date_id
-      AND ARRAY_CONTAINS('SaaS: Seats'::VARIANT, recurring_charges.unit_of_measure)
-    WHERE product_delivery_type = 'SaaS'
+      ON dates.date_actual BETWEEN '2017-04-01' AND CURRENT_DATE                        -- first month Usage Ping was collected
+    WHERE zuora_subscriptions.product_delivery_type = 'SaaS'
+    {{ dbt_utils.group_by(n=4)}}
+
+), gitlab_seats AS (
+    
+    SELECT
+      gitlab_subscriptions.namespace_id,
+      gitlab_subscriptions.seats,
+      gitlab_subscriptions.seats_in_use,
+      gitlab_subscriptions.max_seats_used,
+      dates.first_day_of_month                                                          AS snapshot_month
+    FROM gitlab_subscriptions
+    INNER JOIN dates
+      ON dates.date_actual BETWEEN gitlab_subscriptions.valid_from
+                            AND IFNULL(gitlab_subscriptions.valid_to, CURRENT_DATE)
     {{ dbt_utils.group_by(n=5)}}
 
 ), joined AS (
@@ -34,15 +41,13 @@
       saas_usage_ping.dim_namespace_id,
       saas_subscriptions.snapshot_month,
       {{ get_date_id('saas_subscriptions.snapshot_month') }}                            AS snapshot_date_id,
-      seat_link.snapshot_month                                                          AS seat_link_report_date,
-      {{ get_date_id('seat_link.snapshot_month') }}                                     AS seat_link_report_date_id,
-      saas_usage_ping.ping_date,
+      saas_usage_ping.ping_date                                                         AS ping_created_at,
       {{ get_date_id('saas_usage_ping.ping_date') }}                                    AS ping_created_date_id,
       -- Wave 1
-      DIV0(seat_link.billable_member_count, saas_subscriptions.subscription_seats)      AS license_utilization,
-      seat_link.billable_member_count                                                   AS active_user_count,
-    --   seat_link.max_historical_user_count,
-      saas_subscriptions.subscription_seats,
+      gitlab_seats.seats                                                                AS subscription_seats,
+      gitlab_seats.seats_in_use                                                         AS active_user_count,
+      DIV0(gitlab_seats.seats_in_use, gitlab_seats.seats)                               AS license_utilization,
+      gitlab_seats.max_seats_used                                                       AS max_historical_user_count,
       -- Wave 2 & 3
       "usage_activity_by_stage_monthly.manage.events"                                   AS umau_28_days_user,
       "usage_activity_by_stage_monthly.create.action_monthly_active_users_project_repo" AS action_monthly_active_users_project_repo_28_days_user,
@@ -114,15 +119,15 @@
             AND active_user_count > 0,
           TRUE, FALSE)                                                                  AS is_missing_paid_seats,
       IFF(saas_usage_ping.reporting_month IS NOT NULL
-            OR seat_link.snapshot_month IS NOT NULL,
+            OR gitlab_seats.snapshot_month IS NOT NULL,
           TRUE, FALSE)                                                                  AS is_data_in_subscription_month
     FROM saas_subscriptions
     LEFT JOIN saas_usage_ping
       ON saas_subscriptions.dim_subscription_id = saas_usage_ping.dim_subscription_id
       AND saas_subscriptions.snapshot_month = saas_usage_ping.reporting_month
-    LEFT JOIN seat_link
-      ON saas_subscriptions.dim_subscription_id = seat_link.dim_subscription_id
-      AND saas_subscriptions.snapshot_month = seat_link.snapshot_month
+    LEFT JOIN gitlab_seats
+      ON saas_usage_ping.dim_namespace_id = gitlab_seats.namespace_id
+      AND saas_usage_ping.reporting_month = gitlab_seats.snapshot_month
   
 )
 
@@ -130,6 +135,6 @@
     cte_ref="joined",
     created_by="@ischweickartDD",
     updated_by="@ischweickartDD",
-    created_date="2021-05-24",
-    updated_date="2021-05-24"
+    created_date="2021-05-25",
+    updated_date="2021-05-25"
 ) }}

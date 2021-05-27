@@ -44,10 +44,7 @@
 ), current_recurring AS (
 
     SELECT DISTINCT
-      recurring_charges.dim_subscription_id,
-      recurring_charges.dim_date_id,
-      product_details.product_rate_plan_id,
-      product_details.dim_product_tier_id
+      recurring_charges.dim_subscription_id
     FROM recurring_charges
     INNER JOIN product_details
       ON recurring_charges.dim_product_detail_id = product_details.dim_product_detail_id
@@ -104,8 +101,7 @@
     INNER JOIN product_rate_plans
       ON saas_subscriptions.product_rate_plan_id = product_rate_plans.product_rate_plan_id
     LEFT JOIN current_recurring
-      ON saas_subscriptions.dim_subscription_id = current_recurring.dim_subscription_id
-      AND dates.date_id = current_recurring.dim_date_id
+      ON subscriptions.dim_subscription_id = current_recurring.dim_subscription_id
 
 ), orders AS (
 

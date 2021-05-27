@@ -1841,6 +1841,7 @@ models:
         tests:
           - not_null
         tags: ["tdf", "common", "gainsight"]
+      - name: dim_namespace_id
       - name: snapshot_month
         description: First day of the month in which data is being reported.
         tests:
@@ -1850,11 +1851,10 @@ models:
         tests:
           - not_null
         tags: ["tdf", "common", "gainsight"]
-      - name: seat_link_report_date
-      - name: seat_link_report_date_id
-      - name: license_utilization
+      - name: subscription_seats
       - name: active_user_count
-      - name: license_user_count
+      - name: license_utilization
+      - name: max_historical_user_count
       - name: umau_28_days_user
         description: Monthly count of unique users that made an triggered an [Event](https://docs.gitlab.com/ee/api/events.html) ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlymanageevents))
       - name: action_monthly_active_users_project_repo_28_days_user
@@ -1983,6 +1983,10 @@ models:
       #   description: Monthly active users of GitLab Managed Terraform State ([source](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/#configureconfigure---smau-gmau---mau-of-gitlab-managed-terraform-state))
       # - name: incident_management_28_days_user
       #   description: Unique users that interact with alerts or incidents ([source](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/#monitormonitor---smau-gmau---unique-users-that-interact-with-alerts-and-incidents))
+      - name: is_missing_paid_seats
+        description: Flags if there are currently active users, but no seats have been paid for
+      - name: is_data_in_subscription_month
+        description: Flags if there is either Subscription Seats data or Usage Ping data present in the given month for a given subscription
 
   - name: fct_sales_funnel_partner_alliance_target
     description: '{{ doc("fct_sales_funnel_partner_alliance_target") }}'
