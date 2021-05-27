@@ -102,8 +102,6 @@ WITH dim_date AS (
       zuora_account_spined.crm_id                               AS crm_account_id,
       zuora_subscription_spined.subscription_id,
       zuora_subscription_spined.subscription_name,
-      zuora_subscription_spined.subscription_status,
-      zuora_rate_plan_charge_spined.rate_plan_charge_id,
       zuora_rate_plan_charge_spined.product_rate_plan_charge_id AS product_details_id,
       zuora_rate_plan_charge_spined.mrr,
       zuora_rate_plan_charge_spined.delta_tcv,
@@ -131,9 +129,7 @@ WITH dim_date AS (
       crm_account_id,
       subscription_id,
       subscription_name,
-      subscription_status,
       product_details_id,
-      rate_plan_charge_id,
       SUM(mrr)                                             AS mrr,
       SUM(mrr)* 12                                         AS arr,
       SUM(quantity)                                        AS quantity,
@@ -144,7 +140,7 @@ WITH dim_date AS (
       AND (rate_plan_charge_filtered.effective_end_month > dim_date.date_actual
         OR rate_plan_charge_filtered.effective_end_month IS NULL)
       AND dim_date.day_of_month = 1
-    {{ dbt_utils.group_by(n=9) }}
+    {{ dbt_utils.group_by(n=7) }}
 
 ), final AS (
 
@@ -158,8 +154,6 @@ WITH dim_date AS (
         billing_account_id,
         crm_account_id,
         subscription_id,
-        subscription_status,
-        rate_plan_charge_id,
         product_details_id,
         mrr,
         arr,
