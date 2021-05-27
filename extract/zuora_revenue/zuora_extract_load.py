@@ -44,29 +44,34 @@ def move_to_processed(
     credentials = service_account.Credentials.from_service_account_info(keyfile)
     scoped_credentials = credentials.with_scopes(scope)
     storage_client = storage.Client(credentials=scoped_credentials)
-    bucket_obj = storage_client.get_bucket(bucket)
-    print(bucket_obj)
+    source_bucket = storage_client.bucket(bucket)
+    destination_bucket = storage_client.bucket(bucket)
     now = datetime.now()
     load_day = now.strftime("%m-%d-%Y")
-    move_to_path = (
-        "gcs://" + bucket + "/RAW_DB/processed/" + load_day + "/" + table_name
-    )
     for file_name in list_of_files:
         try:
-            bucket_obj.copy_blob(file_name, move_to_path)
-        except bucket_obj.NotFoundError:
+            blob_name = "/".join(file_name.split("/")[3:])
+            source_blob = source_bucket.blob(blob_name)
+            file_name = file_name.split("/")[-1]
+            destination_file_name = (
+                f"/RAW_DB/processed/{load_day}/{table_name}/{file_name}"
+            )
+            source_bucket.copy_blob(
+                source_blob, destination_bucket, destination_file_name
+            )
+        except source_bucket.NotFoundError:
             logging.error(
                 f"Source file {file_name} not found, Please ensure the direcotry is empty for next \
                             run else the file will be over written"
             )
             sys.exit(1)
-        # try:
-        # bucket_obj.delete(file_name)
-        # except bucket_obj.NotFoundError:
-        #    logging.error(
-        #        f"{file_name} is not found , throwing this as error to ensure that we are not overwriting the files."
-        #    )
-        #    sys.exit(1)
+        try:
+            source_bucket.delete()
+        except source_bucket.NotFoundError:
+            logging.error(
+                f"{file_name} is not found , throwing this as error to ensure that we are not overwriting the files."
+            )
+            sys.exit(1)
 
 
 def zuora_revenue_load(
@@ -97,7 +102,7 @@ def zuora_revenue_load(
             list_of_files.append(results[0])
         else:
             logging.error(result[0])
-            sys, exit(1)
+            sys.exit(1)
     log_result = f"Loaded {total_rows} rows from {len(results)} files"
     logging.info(
         "Data file has been loaded. Move all the file to processed folder,to keep the directory clean."
