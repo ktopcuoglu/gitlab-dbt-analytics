@@ -2849,6 +2849,10 @@ roles:
         member_of: []
         warehouses: []
 
+    - pmartins:
+        warehouses:
+            - reporting
+
     - rheannamistry:
         member_of:
             - decisive_data
@@ -3685,6 +3689,12 @@ users:
     - pluthra:
         can_login: no
         member_of: []
+
+    - pmartins:
+        can_login: yes
+        member_of:
+            - pmartins
+            - securityadmin
 
     - pwc_jblessing:
         can_login: no
