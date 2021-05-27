@@ -55,20 +55,20 @@ def move_to_processed(
             source_blob = source_bucket.blob(blob_name)
             file_name = file_name.split("/")[-1]
             destination_file_name = (
-                f"/RAW_DB/processed/{load_day}/{table_name}/{file_name}"
+                f"RAW_DB/processed/{load_day}/{table_name}/{file_name}"
             )
             source_bucket.copy_blob(
                 source_blob, destination_bucket, destination_file_name
             )
-        except source_bucket.NotFoundError:
+        except:
             logging.error(
                 f"Source file {file_name} not found, Please ensure the direcotry is empty for next \
                             run else the file will be over written"
             )
             sys.exit(1)
         try:
-            source_bucket.delete()
-        except source_bucket.NotFoundError:
+            source_blob.delete()
+        except:
             logging.error(
                 f"{file_name} is not found , throwing this as error to ensure that we are not overwriting the files."
             )
