@@ -83,10 +83,11 @@ def zuora_revenue_load(
         from @zuora_revenue_staging/RAW_DB/staging/{table_name} 
         pattern= '.*{table_name}_.*[.]csv'
     """
-
+    
     results = query_executor(engine, upload_query)
     total_rows = 0
     list_of_files = []
+    logging.info(results)
     for result in results:
         if result[1] == "LOADED":
             total_rows += result[2]
