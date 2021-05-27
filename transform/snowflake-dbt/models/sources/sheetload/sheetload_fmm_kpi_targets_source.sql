@@ -9,7 +9,7 @@ WITH source AS (
       field_segment::VARCHAR                     AS field_segment,
       region::VARCHAR                            AS region,
       kpi::VARCHAR                               AS kpi,
-      goal::VARCHAR                              AS goal
+      goal::NUMBER                               AS goal
     FROM source
 
 )
