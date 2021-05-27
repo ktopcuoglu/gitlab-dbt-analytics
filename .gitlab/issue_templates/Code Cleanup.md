@@ -6,13 +6,13 @@
 
 # Risk Score
 
-## Likelihood that it will break something 
+## Probability that it will break something 
 
 Questions to be asked here:
 - How difficult is the code change?
 - How certain is it that the component/code is not used anymore?
 
-|  Change | Score |
+|  Probability | Score |
 | ------- | ----- |
 | Low     |   1   |
 | Medium  |   2   |
@@ -40,12 +40,13 @@ The impact if it will break something: `1/2/3`
 ## Outcome
 
 Fill in your score here:<br>
-`change` * `Impact` = `Risk Score`
+`Probability` * `Impact` = `Risk Score`
+
 
 | Risk Score | Outcome |
 | ---------- | ------- |
-| 1 - 3      | Create a MR and have it reviewed by 2 code owners |
-| 4 - 6 | Create a MR, tag `@gitlab-data/engineers` with a deadline to object and have it reviewed by 2 code owners |
-| 7 - 9 | Create a MR, to be discussed in the DE-Team meeting and have it reviewed by 2 code owners |
+| 1 - 2      | Create a MR and have it reviewed by 2 code owners |
+| 3 - 4      | Create a MR, tag `@gitlab-data/engineers` with a deadline to object and have it reviewed by 2 code owners |
+| 6 - 9      | Create a MR, to be discussed in the DE-Team meeting and have it reviewed by 2 code owners |
 
 /label ~"Team::Data Platform" ~"Priority::3-Other" ~"workflow::1 - triage"
