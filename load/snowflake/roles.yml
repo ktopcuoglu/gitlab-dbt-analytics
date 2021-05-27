@@ -2455,6 +2455,14 @@ roles:
         warehouses:
             - analyst_xs
 
+    - kkarthikeyan:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+            - customers_db
+        warehouses:
+            - analyst_xs
+
     - ktam:
         member_of: []
         warehouses: []
@@ -3538,6 +3546,11 @@ users:
         can_login: yes
         member_of:
             - kchu
+
+    - kkarthikeyan:
+        can_login: yes
+        member_of:
+            - kkarthikeyan
 
     - ktam:
         can_login: no
