@@ -71,14 +71,17 @@ if __name__ == "__main__":
 
     # Initialise the API class
     zuora_revpro = ZuoraRevProAPI(config_dict)
+    if results.from_date is None:
+        start_date = zuora_revpro.get_start_date(results.table_name)
     # Fetch the start and end date for table query.
-    from_date, end_date = zuora_revpro.date_range(results.from_date)
+    from_date, end_date = zuora_revpro.date_range(start_date)
     logger.info(f"The date range for extraction is {from_date} to {end_date}")
     # Pull the data for the BI view for defined start and end date
-    zuora_revpro.pull_zuora_table_data(
-        results.table_name,
-        from_date,
-        end_date,
-    )
-    print(f"{results.table_name} = end_date")
-    
+    # zuora_revpro.pull_zuora_table_data(
+    #    results.table_name,
+    #    from_date,
+    #    end_date,
+    # )
+    print(f"{results.table_name} = {end_date}")
+    logger.info("update the load date  in the file for the table")
+    zuora_revpro.set_load_date(results.table_name, end_date)

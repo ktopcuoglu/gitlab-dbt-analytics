@@ -68,7 +68,7 @@ with open(
 
 # Create the DAG  with one load happening at once
 dag = DAG(
-    "zuora_revenue_load_extract",
+    "zuora_revenue_extract_load_snow",
     default_args=default_args,
     schedule_interval="0 10 * * 0",
     concurrency=1,

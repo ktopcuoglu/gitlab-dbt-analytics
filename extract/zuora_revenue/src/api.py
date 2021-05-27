@@ -5,6 +5,7 @@ import requests
 import math
 import json
 import time
+import pandas as pd
 from typing import Dict, Any
 from datetime import datetime
 from os import environ as env
@@ -25,6 +26,58 @@ class ZuoraRevProAPI:
             level=20,
         )
         self.logger = logging.getLogger(__name__)
+
+    def get_start_date(self, tablename: str):
+        """
+        This function is built to pull the last end_date value seating in file in GCS under table name. This file is
+        generated for each table and in case we are not able to pass the start date it will pick it up from this file.
+        This function is responsible to download and fetch the load_date value and pass it back to the calling function.
+        """
+        bucket_name = self.bucket_name
+        cmd_to_download_start_date = f"gsutil cp gs://{bucket_name}/RAW_DB/staging/{tablename}/start_date_{tablename}.csv ."
+        try:
+            self.logger.info(cmd_to_download_start_date)
+            subprocess.run(cmd_to_download_start_date, shell=True, check=True)
+        except Exception:
+            self.logger.error(
+                "Error while downloading the startdate file from GCS", exec_info=True
+            )
+            sys.exit(1)
+        try:
+            table_name_date = pd.read_csv(f"start_date_{tablename}.csv")
+            if table_name_date.iloc[0]["table_name"] == tablename:
+                start_date = table_name_date.loc[
+                    table_name_date["table_name"] == tablename, "load_date"
+                ]
+                return (start_date.where(pd.notnull(start_date), None)).to_list()[0]
+            else:
+                self.logger.info(
+                    "Treating this as first run and will start download from day 0"
+                )
+                return None
+        except Exception:
+            self.logger.error(
+                "Error while reading csv file to fetch start date", exec_info=True
+            )
+            sys.exit(1)
+
+    def set_load_date(self, tablename: str, load_date: str):
+        bucket_name = self.bucket_name
+        load_date_file_name = f"start_date_{tablename}.csv"
+        cmd_to_upload_file = f"gsutil cp start_date_{tablename}.csv gs://{bucket_name}/RAW_DB/staging/{tablename}/"
+        try:
+            self.logger.info(cmd_to_upload_file)
+            table_name_date = pd.read_csv(load_date_file_name)
+            table_name_date.loc[
+                table_name_date["table_name"] == tablename, "load_date"
+            ] = load_date
+            table_name_date.to_csv(load_date_file_name, index=False)
+            subprocess.run(cmd_to_upload_file, shell=True, check=True)
+        except Exception:
+            self.logger.error(
+                "Error while uploading updated file to GCS", exec_info=True
+            )
+            sys.exit(1)
 
     def date_range(self, start_date: str = None) -> tuple:
         """
@@ -59,7 +112,7 @@ class ZuoraRevProAPI:
             )
             sys.exit(1)
 
-    def get_number_of_page(self, url_para_dict: Dict[str, str]) -> int:
+    def get_number_of_page(self, url_para_dict: Dict[str, Any]) -> int:
         """
         This function get the total number of records and then divide it with 10000 rows to  determine how many pages
         this BI views has for given date range. Rounded the value to nearest whole number.
@@ -89,8 +142,8 @@ class ZuoraRevProAPI:
 
     def check_response_204(self, response_output, tablename: str):
         """
-            Function checks the response from the request and check if the status code 
-            is 204 then it is success and no need to proceed further with extraction. 
+        Function checks the response from the request and check if the status code
+        is 204 then it is success and no need to proceed further with extraction.
         """
         if (
             "The number of total pages and the number of total rows are returned"
@@ -105,8 +158,8 @@ class ZuoraRevProAPI:
 
     def check_response_200_500(self, response_output, page_number: int, tablename: str):
         """
-            Takes input as result of rest call and validate if the status code is 200. If not then check for 500 or page still not cached error.
-            If status is 200 then write the output to the .csv file and then request to upload and delete.
+        Takes input as result of rest call and validate if the status code is 200. If not then check for 500 or page still not cached error.
+        If status is 200 then write the output to the .csv file and then request to upload and delete.
         """
 
         if response_output.status_code != 200:
@@ -142,7 +195,7 @@ class ZuoraRevProAPI:
         self, response_output, tablename: str, pagenum: int = 1
     ):
         """
-            Taken input as respounce_output and then write it to file , upload the file to GCS and then delete local file.
+        Taken input as respounce_output and then write it to file , upload the file to GCS and then delete local file.
         """
         bucket_name = self.bucket_name
         try:
@@ -170,7 +223,9 @@ class ZuoraRevProAPI:
             )
             sys.exit(1)
 
-    def retry_download(self, url:str, header_auth_token:dict, page_number:int, tablename:str):
+    def retry_download(
+        self, url: str, header_auth_token: dict, page_number: int, tablename: str
+    ):
         for attempt in range(1, 50):
             time.sleep(60 + attempt)
             self.logger.info(
@@ -262,5 +317,3 @@ class ZuoraRevProAPI:
                     self.logger.info("File uploaded to GCS")
 
                 page_number = page_number + 1
-
-    def save_todate_gcs(self,):
