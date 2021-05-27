@@ -141,22 +141,6 @@ config_dict = {
         "sync_schedule_interval": "0 2 */1 * *",
         "task_name": "gitlab-com",
     },
-    "gitlab_profiler": {
-        "cloudsql_instance_name": None,
-        "dag_name": "gitlab_profiler",
-        "dbt_name": "none",
-        "env_vars": {"DAYS": "3"},
-        "extract_schedule_interval": "0 0 */1 * *",
-        "secrets": [
-            GITLAB_PROFILER_DB_USER,
-            GITLAB_PROFILER_DB_PASS,
-            GITLAB_PROFILER_DB_HOST,
-            GITLAB_PROFILER_DB_NAME,
-        ],
-        "start_date": datetime(2019, 5, 30),
-        "sync_schedule_interval": every_day_at_four,
-        "task_name": "gitlab-profiler",
-    },
     "gitlab_ops": {
         "cloudsql_instance_name": "ops-db-restore",
         "dag_name": "gitlab_ops",
