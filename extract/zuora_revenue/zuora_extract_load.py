@@ -60,9 +60,9 @@ def move_to_processed(
                             run else the file will be over written"
             )
             sys.exit(1)
-        #try:
-            #bucket_obj.delete(file_name)
-        #except bucket_obj.NotFoundError:
+        # try:
+        # bucket_obj.delete(file_name)
+        # except bucket_obj.NotFoundError:
         #    logging.error(
         #        f"{file_name} is not found , throwing this as error to ensure that we are not overwriting the files."
         #    )
@@ -83,15 +83,21 @@ def zuora_revenue_load(
         from @zuora_revenue_staging/RAW_DB/staging/{table_name} 
         pattern= '.*{table_name}_.*[.]csv'
     """
-    
+
     results = query_executor(engine, upload_query)
     total_rows = 0
     list_of_files = []
     logging.info(results)
     for result in results:
-        if result[1] == "LOADED":
+        if "0 files processed" in result[0]:
+            logging.info(result[0])
+            sys.exit(0)
+        elif result[1] == "LOADED":
             total_rows += result[2]
             list_of_files.append(results[0])
+        else:
+            logging.error(result[0])
+            sys, exit(1)
     log_result = f"Loaded {total_rows} rows from {len(results)} files"
     logging.info(
         "Data file has been loaded. Move all the file to processed folder,to keep the directory clean."
