@@ -48,9 +48,10 @@ def move_to_processed(
     destination_bucket = storage_client.bucket(bucket)
     now = datetime.now()
     load_day = now.strftime("%m-%d-%Y")
+    print(list_of_files)
     for file_name in list_of_files:
         try:
-            blob_name = "/".join(file_name.split("/")[3:])
+            blob_name = '/'.join(file_name.split("/")[3:])
             source_blob = source_bucket.blob(blob_name)
             file_name = file_name.split("/")[-1]
             destination_file_name = (
@@ -99,7 +100,7 @@ def zuora_revenue_load(
             sys.exit(0)
         elif result[1] == "LOADED":
             total_rows += result[2]
-            list_of_files.append(results[0])
+            list_of_files.append(result[0])
         else:
             logging.error(result[0])
             sys.exit(1)
