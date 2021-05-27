@@ -279,6 +279,14 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
           ELSE NULL 
         END                                                                     AS pipe_resolution,
 
+        CASE
+          WHEN pipe_resolution LIKE ANY ('%Closed%','%Duplicate%') 
+            THEN p.end_close_date
+          WHEN pipe_resolution LIKE ANY ('%2%Slipped%','%3%Pushed%','%Open%')
+            THEN p.max_snapshot_date
+          ELSE null
+        END                                                                     AS pipe_resolution_date,
+
         -- basic net arr
 
         COALESCE(p.starting_net_arr,p.pipeline_created_net_arr,p.pipeline_pull_net_arr,0)   AS beg_net_arr,
