@@ -2,7 +2,6 @@ import sys
 from os import environ as env
 import time
 import logging
-import cloudstorage
 from fire import Fire
 from typing import Dict, Tuple, List
 from yaml import load, safe_load, YAMLError
@@ -54,20 +53,20 @@ def move_to_processed(
     )
     for file_name in list_of_files:
         try:
-            cloudstorage.copy2(file_name, move_to_path)
-        except cloudstorage.NotFoundError:
+            bucket_obj.copy_blob(file_name, move_to_path)
+        except bucket_obj.NotFoundError:
             logging.error(
                 f"Source file {file_name} not found, Please ensure the direcotry is empty for next \
                             run else the file will be over written"
             )
             sys.exit(1)
-        try:
-            cloudstorage.delete(file_name)
-        except cloudstorage.NotFoundError:
-            logging.error(
-                f"{file_name} is not found , throwing this as error to ensure that we are not overwriting the files."
-            )
-            sys.exit(1)
+        #try:
+            #bucket_obj.delete(file_name)
+        #except bucket_obj.NotFoundError:
+        #    logging.error(
+        #        f"{file_name} is not found , throwing this as error to ensure that we are not overwriting the files."
+        #    )
+        #    sys.exit(1)
 
 
 def zuora_revenue_load(
