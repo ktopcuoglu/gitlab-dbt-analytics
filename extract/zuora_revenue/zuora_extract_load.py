@@ -33,14 +33,21 @@ def zuora_revenue_extract(table_name: str) -> None:
         "https://" + env["ZUORA_REVENUE_API_URL"] + "/api/integration/v2/biviews/"
     )
 
+def move_to_processed(bucket: str,table_name: str ,gapi_keyfile: str = None):
+    # Get the gcloud storage client and authenticate
+    scope = ["https://www.googleapis.com/auth/cloud-platform"]
+    keyfile = load(gapi_keyfile or env["GCP_SERVICE_CREDS"])
+    credentials = service_account.Credentials.from_service_account_info(keyfile)
+    scoped_credentials = credentials.with_scopes(scope)
+    storage_client = storage.Client(credentials=scoped_credentials)
+    bucket_obj = storage_client.get_bucket(bucket)
+    
 
 def zuora_revenue_load(
     bucket: str,
     schema: str,
     table_name: str,
-    gapi_keyfile: str = None,
     conn_dict: Dict[str, str] = None,
-    compression: str = None,
 ) -> None:
     # Set some vars
     engine = snowflake_engine_factory(conn_dict or env, "LOADER", schema)
@@ -57,6 +64,8 @@ def zuora_revenue_load(
 
     log_result = f"Loaded {total_rows} rows for table {table_name}"
     logging.info(log_result)
+    
+
 
 
 if __name__ == "__main__":

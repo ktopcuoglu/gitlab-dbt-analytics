@@ -49,6 +49,7 @@ default_args = {
 }
 
 airflow_home = env["AIRFLOW_HOME"]
+task_name="zuora-revenue"
 
 # Get all the table name for which tasks for loading needs to be created
 with open(
@@ -84,12 +85,16 @@ for table_name in table_name_list:
         {clone_and_setup_extraction_cmd} &&
         python3 zuora_revenue/zuora_extract_load.py zuora_extract --table_name {table_name}
         """
+    task_identifier = (
+                    f"{task_name}-{table_name.replace('_','-').lower()}-extract"
+                )
     # Task 1
     zuora_revenue_extract_run = KubernetesPodOperator(
         **gitlab_defaults,
         image=DATA_IMAGE,
-        task_id=f"{table_name}_EXTRACT",
-        name=f"{table_name}_EXTRACT",
+        task_id=task_identifier,
+        name=task_identifier,
+        pool="default_pool",
         secrets=[
             ZUORA_REVENUE_API_URL,
             ZUORA_REVENUE_AUTH_CODE,
@@ -113,12 +118,16 @@ for table_name in table_name_list:
         {clone_and_setup_extraction_cmd} &&
         python3 zuora_revenue/zuora_extract_load.py zuora_load --bucket $ZUORA_REVENUE_GCS_NAME --schema_name zuora_revenue --table_name {table_name}
         """
+    task_identifier = (
+                    f"{task_name}-{table_name.replace('_','-').lower()}-load"
+                )
     # Task 2
     zuora_revenue_load_run = KubernetesPodOperator(
         **gitlab_defaults,
         image=DATA_IMAGE,
-        task_id=f"{table_name}_LOAD",
-        name=f"{table_name}_LOAD",
+        task_id=task_identifier,
+        name=task_identifier,
+        pool="default_pool",
         secrets=[
             ZUORA_REVENUE_GCS_NAME,
             GCP_SERVICE_CREDS,
