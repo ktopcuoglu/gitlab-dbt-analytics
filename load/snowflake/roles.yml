@@ -2637,6 +2637,12 @@ roles:
                     - mpeychet_prep.*.*
                     - mpeychet_prod.*.*
 
+    - mray:
+        member_of:
+            - analyst_marketing
+        warehouses:
+            - analyst_xs   
+
     - mriser:
         warehouses:
             - admin
@@ -3595,6 +3601,11 @@ users:
         can_login: yes
         member_of:
             - mpeychet
+
+    - mray:
+        can_login: yes
+        member_of:
+            - mray        
 
     - mriser:
         can_login: yes
