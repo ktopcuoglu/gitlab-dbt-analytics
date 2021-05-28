@@ -4,7 +4,7 @@
     })
 }}
 
-{{ simple_ctes([('dim_date', 'dim_date'),
+{{ simple_cte([('dim_date', 'dim_date'),
                 ('fct_usage_ping_payload', 'fct_usage_ping_payload')
                 ]
                 )}}
@@ -17,7 +17,7 @@
 
     {% if is_incremental() %}
 
-      AND created_at >= (SELECT MAX(created_month) FROM {{this}})
+      AND ping_created_at >= (SELECT MAX(ping_created_month) FROM {{this}})
 
     {% endif %}
 
@@ -26,8 +26,9 @@
     SELECT  
       DATE_TRUNC('week', ping_created_at) AS ping_created_week,
       dim_instance_id,
-      dim_host_id,
-      dim_usage_ping_id,
+      NULL AS dim_host_id,
+      dim_date_id,
+      fct_usage_ping_payload.dim_usage_ping_id,
       metrics_path,
       group_name,
       stage_name,
@@ -51,6 +52,7 @@
       dim_instance_id,
       dim_host_id,
       dim_usage_ping_id,
+      dim_date_id,
       metrics_path,
       group_name,
       stage_name,
@@ -64,8 +66,8 @@
       weekly_metrics_value              AS monthly_metric_value,
       weekly_metrics_value              AS original_metric_value,
       has_timed_out
-    FROM transformed
-    QUALIFY (ROW_NUMBER() OVER (PARTITION BY created_month, instance_id, host_id, metrics_path ORDER BY created_week DESC, created_at DESC)) = 1
+    FROM joined
+    QUALIFY (ROW_NUMBER() OVER (PARTITION BY ping_created_month, dim_instance_id, dim_host_id, metrics_path ORDER BY ping_created_week DESC, dim_date_id DESC)) = 1
 
 )
 
@@ -90,4 +92,4 @@ SELECT
   -- if several records and 1 has not timed out, then display FALSE
   MIN(has_timed_out)        AS has_timed_out
 FROM monthly
-{{ dbt_utils.group_by(n=17)}}
+{{ dbt_utils.group_by(n=15)}}
