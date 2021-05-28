@@ -58,18 +58,18 @@ WITH crm_account AS (
 ), final AS (
 
     SELECT *
-    FROM crm_account
+    FROM parent_crm_account
 
     UNION
 
-    SELECT parent_crm_account.*
-    FROM parent_crm_account
-    LEFT JOIN crm_account
+    SELECT crm_account.*
+    FROM crm_account
+    LEFT JOIN parent_crm_account
       -- Exclude duplicates
       ON crm_account.retention_id = parent_crm_account.retention_id
       AND crm_account.retention_month = parent_crm_account.retention_month
       AND crm_account.gross_retention_mrr = parent_crm_account.gross_retention_mrr
-    WHERE crm_account.retention_id IS NULL
+    WHERE parent_crm_account.retention_id IS NULL
 
     UNION
 
