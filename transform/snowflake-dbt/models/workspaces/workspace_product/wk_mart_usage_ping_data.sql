@@ -1,4 +1,6 @@
 /* grain: one record per host per metric per month */
+-- curently missing host_id 
+
 {{ config({
     "materialized": "incremental",
     "unique_key": "primary_key"
