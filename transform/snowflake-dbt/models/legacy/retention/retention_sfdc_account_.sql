@@ -44,8 +44,8 @@ with mrr_totals_levelled AS (
 
 ), joined as(
 
-        SELECT finals.sfdc_account_id as salesforce_account_id,
-               finals.sfdc_account_id,
+        SELECT finals.sfdc_account_id,
+               finals.sfdc_account_id as salesforce_account_id,
                sfdc_account_name,
                dateadd('year', 1, finals.original_mrr_month) AS retention_month, --THIS IS THE RETENTION MONTH, NOT THE MRR MONTH!!
                original_mrr,
@@ -59,7 +59,7 @@ with mrr_totals_levelled AS (
         FROM finals
         LEFT JOIN mrr_totals_levelled
         ON finals.sfdc_account_id = mrr_totals_levelled.sfdc_account_id
-        GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11
+        GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12
 
 )
 
