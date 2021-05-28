@@ -356,6 +356,28 @@ models:
       - name: quantity
         description: Total quantity
 
+  - name: prep_retention
+    description: '{{ doc("prep_retention") }}'
+    columns:
+      - name: retention_id
+        description: The unique identifier of the retention record
+        tests:
+          - not_null
+          - unique
+      - name: dim_crm_account_id
+      - name: dim_subscription_id
+      - name: retention_type
+      - name: arr_segmentation
+      - name: churn_type
+      - name: gross_retention_mrr
+      - name: net_retention_mrr
+      - name: original_mrr
+      - name: retention_month
+      - name: months_since_cohort_start
+      - name: cohort_month
+      - name: cohort_quarter
+      - name: quarters_since_cohort_start
+
   - name: prep_charge
     description: '{{ doc("prep_charge") }}'
     columns:

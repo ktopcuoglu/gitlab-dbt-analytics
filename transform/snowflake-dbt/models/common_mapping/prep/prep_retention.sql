@@ -1,13 +1,13 @@
 WITH crm_account AS (
 
     SELECT
-     {{ dbt_utils.surrogate_key(['retention_month','salesforce_account_id']) }}  AS retention_id,
+     {{ dbt_utils.surrogate_key(['retention_month','salesforce_account_id', 'gross_retention_mrr', 'original_mrr']) }}  AS retention_id,
       salesforce_account_id                           as dim_crm_account_id,
       NULL                                            as dim_subscription_id,
       'crm_account'                                   as retention_type,
       arr_segmentation                                as arr_segmentation,
       churn_type                                      as churn_type,
-      gross_retention_mrr                             as gross_retention_mrr,
+      gross_retention_mrr::NUMBER(30,9)               as gross_retention_mrr,
       net_retention_mrr                               as net_retention_mrr,
       original_mrr                                    as original_mrr,
       retention_month                                 as retention_month,
@@ -20,14 +20,14 @@ WITH crm_account AS (
 ), subscription AS (
 
     SELECT
-      {{ dbt_utils.surrogate_key(['retention_month', 'zuora_subscription_id']) }}  AS retention_id,
+      {{ dbt_utils.surrogate_key(['retention_month', 'zuora_subscription_id', 'gross_retention_mrr', 'original_mrr']) }}  AS retention_id,
       salesforce_account_id                           as dim_crm_account_id,
       zuora_subscription_id                           as dim_subscription_id,
       'dim_subscription'                              as retention_type,
       arr_segmentation                                as arr_segmentation,
       churn_type                                      as churn_type,
-      gross_retention_mrr                             as gross_retention_mrr,
-      net_retention_mrr                               as net_retention_mrr,
+      gross_retention_mrr::NUMBER(30,9)               as gross_retention_mrr,
+      net_retention_mrr::NUMBER(30,9)                 as net_retention_mrr,
       original_mrr                                    as original_mrr,
       retention_month                                 as retention_month,
       months_since_zuora_subscription_cohort_start    as months_since_cohort_start,
@@ -39,14 +39,14 @@ WITH crm_account AS (
 ), parent_crm_account AS (
 
     SELECT
-      {{ dbt_utils.surrogate_key(['retention_month','salesforce_account_id']) }}  AS retention_id,
+      {{ dbt_utils.surrogate_key(['retention_month', 'salesforce_account_id', 'gross_retention_mrr', 'original_mrr']) }}  AS retention_id,
       salesforce_account_id                           as dim_crm_account_id,
       NULL                                            as dim_subscription_id,
       'parent_crm_account'                            as retention_type,
       arr_segmentation                                as arr_segmentation,
       churn_type                                      as churn_type,
-      gross_retention_mrr                             as gross_retention_mrr,
-      net_retention_mrr                               as net_retention_mrr,
+      gross_retention_mrr::NUMBER(30,9)               as gross_retention_mrr,
+      net_retention_mrr::NUMBER(30,9)                 as net_retention_mrr,
       original_mrr                                    as original_mrr,
       retention_month                                 as retention_month,
       months_since_parent_account_cohort_start        as months_since_cohort_start,

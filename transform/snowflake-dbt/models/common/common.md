@@ -281,6 +281,12 @@ Fact table representing quotes pulled from the Zuora billing system. These are a
 
 {% enddocs %}
 
+{% docs fct_retention %}
+
+Fact table representing quotes pulled from the Zuora billing system. These are associated with crm accounts, billing accounts, opportunities, and subscriptions.
+
+{% enddocs %}
+
 {% docs fct_sales_funnel_partner_alliance_target %}
 
 Sales funnel targets set by the Finance team to measure performance of Partner and Alliances Net ARR, broken down by sales hierarchy, and order attributes.

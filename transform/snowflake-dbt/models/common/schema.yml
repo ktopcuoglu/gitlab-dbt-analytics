@@ -1794,6 +1794,12 @@ models:
           - not_null
           - unique
 
+  - name: fct_retention
+    description: '{{ doc("fct_retention") }}'
+    columns:
+    - name: fct_retention_id
+      description: A unique identifier of the retention record. Not null tested in the prep table.
+
   - name: fct_quote
     description: '{{ doc("fct_quote") }}'
     columns:
