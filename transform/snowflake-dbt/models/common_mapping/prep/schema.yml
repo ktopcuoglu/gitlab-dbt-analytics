@@ -156,6 +156,15 @@ models:
         tests:
           - not_null
           - unique
+  - name: prep_namespace_plan_hist
+    description: '{{ doc("dim_namespace_plan_hist") }}'
+    columns:
+      - name: dim_namespace_id
+        tests:
+          - not_null
+      - name: dim_product_tier_id
+        tests:
+          - not_null
 
   - name: prep_namespace
     description: '{{ doc("dim_namespace") }}'
@@ -267,7 +276,13 @@ models:
         description: Default storage limit (per project reposity) for new all namespaces when no paid plan has been purchased.
         tests:
           - not_null
-
+  - name: prep_gitlab_dotcom_plan
+    description: '{{ doc("prep_gitlab_dotcom_plan") }}'
+    columns:
+      - name: dim_plan_id
+        tests:
+          - not_null
+          - unique
   - name: prep_recurring_charge_subscription_monthly
     description: '{{ doc("prep_recurring_charge_subscription_monthly") }}'
     columns:

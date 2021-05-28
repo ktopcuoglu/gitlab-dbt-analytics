@@ -590,7 +590,7 @@ models:
         tests:
           - not_null
           - unique
-
+          
   - name: dim_product_detail
     description: '{{ doc("dim_product_detail") }}'
     columns:
@@ -2262,6 +2262,15 @@ models:
           - unique
         tags: ["tdf", "common", "sales_funnel"]
       - name: marketing_channel_name
+  - name: dim_namespace_plan_hist
+    description: '{{ doc("dim_namespace_plan_hist") }}'
+    columns:
+      - name: dim_namespace_id
+        tests:
+          - not_null
+      - name: dim_product_tier_id
+        tests:
+          - not_null
 
   - name: dim_namespace
     description: '{{ doc("dim_namespace") }}'

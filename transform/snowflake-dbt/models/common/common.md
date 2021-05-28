@@ -490,6 +490,17 @@ Order type dimension, based off of salesforce opportunity data, using the `gener
 
 {% enddocs %}
 
+{% docs dim_namespace_plan_hist %}
+
+Slowly Changing Dimension Type 2 that records changes into namespace's plan subscriptions. 
+
+Easily to join with the following tables:
+
+- `dim_namespace` through `dim_namespace_id`
+- `dim_product_tier` through `dim_product_tier_id`
+
+{% enddocs %}
+
 {% docs dim_namespace%}
 
 Includes all columns from the namespaces base model. The plan columns in this table (gitlab_plan_id, gitlab_plan_title, gitlab_plan_is_paid) reference the plan that is inheritted from the namespace's ultimate parent.
