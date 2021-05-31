@@ -1,10 +1,11 @@
 <!-- This issue template is to be used for any clean up activities in the GitLab Data environment -->
 
 # Deletion scope
-
+See the handbook page for information about [removal and deletion process](https://about.gitlab.com/handbook/business-technology/data-team/how-we-work/#removal-and-deletion-process). 
 <!-- Describe here what's going to be deleted in full detail -->
 
 # Risk Score
+See the actual risk score for likelihood and impact on the [handbook](https://about.gitlab.com/handbook/business-technology/data-team/how-we-work/#calculate-a-risk-score) page. 
 
 ## Probability that it will break something 
 
