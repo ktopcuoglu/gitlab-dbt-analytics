@@ -6,10 +6,10 @@
 , renamed AS (
 
     SELECT 
-      ci_runner_project_id,
-      runner_id  AS dim_ci_runner_id,
-      project_id AS dim_project_id,
-      date_id    AS dim_date_id,
+      ci_runner_project_id AS dim_ci_runner_project_id,
+      runner_id            AS dim_ci_runner_id,
+      project_id           AS dim_project_id,
+      date_id              AS dim_date_id,
       created_at,
       updated_at
     FROM source
