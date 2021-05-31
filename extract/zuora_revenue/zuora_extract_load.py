@@ -25,7 +25,7 @@ def zuora_revenue_extract(table_name: str) -> None:
     import paramiko 
     logging.basicConfig(stream=sys.stdout, level=20)
     logging.info("Prepare the authentication URL and set the command for execution")
-    zuora_revenue_auth_code=env["ZUORA_REVENUE_AUTH_CODE"]
+    zuora_revenue_auth_code=f'Basic {env["ZUORA_REVENUE_AUTH_CODE"]}'
     zuora_revenue_api_url = env["ZUORA_REVENUE_API_URL"]
     zuora_revenue_bucket_name=env["ZUORA_REVENUE_GCS_NAME"]
     zuora_revenue_compute_ip=env["ZUORA_REVENUE_COMPUTE_IP"]
@@ -34,7 +34,7 @@ def zuora_revenue_extract(table_name: str) -> None:
     connection = paramiko.SSHClient()
     connection.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     extract_command=f"$python_env;python3 /home/vedprakash/zuora_revenue/zuora_revenue/src/zuora_revenue_extract.py -table_name {table_name} \
-                     -bucket_name {zuora_revenue_bucket_name} -api_dns_name {zuora_revenue_api_url} -api_auth_code {zuora_revenue_auth_code}"
+                     -bucket_name {zuora_revenue_bucket_name} -api_dns_name {zuora_revenue_api_url} -api_auth_code '{zuora_revenue_auth_code}'"
     try:
         connection.connect(hostname=zuora_revenue_compute_ip, username=zuora_revenue_compute_username, password=zuora_revenue_compute_password)
         print('Connected')
