@@ -260,7 +260,6 @@ sources:
         freshness: null
       - name: project_group_links
         identifier: gitlab_db_project_group_links
-        freshness:
       - name: project_import_data
         identifier: gitlab_db_project_import_data
         freshness: null
