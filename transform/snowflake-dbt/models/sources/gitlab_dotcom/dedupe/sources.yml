@@ -193,7 +193,6 @@ sources:
         freshness: null
       - name: label_links
         identifier: gitlab_db_label_links
-        freshness:
       - name: label_priorities
         identifier: gitlab_db_label_priorities
       - name: labels
