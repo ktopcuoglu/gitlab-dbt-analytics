@@ -484,6 +484,12 @@ Industry dimension, based off of salesforce account data, using the `generate_si
 
 {% enddocs %}
 
+{% docs dim_installation %}
+
+Installation dimension, based off of version usage data and version host table. The primary key is built as a surrogate key based off of the `dim_host_id` and the `dim_instance_id`
+
+{% enddocs %}
+
 {% docs dim_order_type %}
 
 Order type dimension, based off of salesforce opportunity data, using the `generate_single_field_dimension` macro to create the final formatted SQL
