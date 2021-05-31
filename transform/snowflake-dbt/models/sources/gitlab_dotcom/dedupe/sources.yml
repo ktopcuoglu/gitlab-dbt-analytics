@@ -186,7 +186,6 @@ sources:
         freshness: null
       - name: issue_metrics
         identifier: gitlab_db_issue_metrics
-        freshness:
       - name: issues
         identifier: gitlab_db_issues
         freshness:
