@@ -154,7 +154,6 @@ sources:
         identifier: gitlab_db_environments
       - name: epic_issues
         identifier: gitlab_db_epic_issues
-        freshness:
       - name: epic_metrics
         identifier: gitlab_db_epic_metrics
         freshness: null
