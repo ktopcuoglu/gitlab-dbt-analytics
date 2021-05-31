@@ -95,7 +95,6 @@ sources:
         freshness: null
       - name: cluster_groups
         identifier: gitlab_db_cluster_groups
-        freshness:
       - name: cluster_projects
         identifier: gitlab_db_cluster_projects
       - name: clusters
