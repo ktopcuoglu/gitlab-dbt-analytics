@@ -159,3 +159,12 @@ models:
       - name: subscription_cohort_year
         tests:
           - not_null
+  - name: map_ci_runner_project
+    description: '{{ doc("map_ci_runner_project") }}'
+    columns:
+      - name: dim_ci_runner_id
+        tests:
+          - not_null
+      - name: dim_project_id
+        tests:
+          - not_null

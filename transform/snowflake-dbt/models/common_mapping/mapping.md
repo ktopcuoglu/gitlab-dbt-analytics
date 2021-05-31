@@ -44,3 +44,9 @@ This View contains the list of ultimate parent namespace ids that are internal t
 Table for mapping GitLab team members across bambooHR, GitLab.com Postgres DB, and GitLab Ops
 
 {% enddocs %}
+
+{% docs map_ci_runner_project %}
+Table for mapping GitLab.com CI Runner to a specific project.
+
+More info about [CI Runners here](https://docs.gitlab.com/ee/ci/runners/)
+{% enddocs %}
