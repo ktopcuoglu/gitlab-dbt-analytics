@@ -34,7 +34,6 @@ WITH data AS (
         FROM data,
         lateral flatten(input => raw_usage_data_payload,
         recursive => true) 
-        WHERE typeof(value) IN ('INTEGER', 'DECIMAL')
 
 )
 

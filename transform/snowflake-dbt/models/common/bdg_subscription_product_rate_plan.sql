@@ -18,6 +18,9 @@
       subscriptions.account_id                          AS dim_billing_account_id,
       subscriptions.subscription_name,
       subscriptions.subscription_name_slugify,
+      subscriptions.subscription_start_date,
+      subscriptions.subscription_end_date,
+      rate_plans.rate_plan_id,
       product_details.dim_product_detail_id,
       product_details.product_rate_plan_id,
       product_details.product_id,
@@ -26,7 +29,7 @@
       product_details.product_delivery_type
     FROM subscriptions
     LEFT JOIN rate_plans
-      ON rate_plans.subscription_id = subscriptions.subscription_id
+      ON subscriptions.subscription_id = rate_plans.subscription_id
     LEFT JOIN product_details
       ON rate_plans.product_rate_plan_id = product_details.product_rate_plan_id
 
@@ -37,5 +40,5 @@
     created_by="@ischweickartDD",
     updated_by="@ischweickartDD",
     created_date="2021-02-08",
-    updated_date="2021-02-16"
+    updated_date="2021-05-24"
 ) }}

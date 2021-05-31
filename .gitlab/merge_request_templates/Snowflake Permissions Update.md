@@ -27,3 +27,7 @@ Closes #
 ### Warehouse
 
 - [ ] Confirm warehouse is created in Snowflake and matches size
+
+### ⚠ Unsupported Permissions ⚠
+
+- [ ] For role naming changes run `show grants` to check for task or stage permissions.

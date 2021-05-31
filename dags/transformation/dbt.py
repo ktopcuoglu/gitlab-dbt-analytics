@@ -211,6 +211,7 @@ dbt_test_cmd = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
     dbt test --profiles-dir profile --target prod --exclude tag:datasiren snowplow legacy.snapshots source:gitlab_dotcom source:salesforce source:zuora; ret=$?;
+    python ../../orchestration/upload_dbt_file_to_snowflake.py manifest; $ret
     python ../../orchestration/upload_dbt_file_to_snowflake.py test; exit $ret
 """
 dbt_test = KubernetesPodOperator(
@@ -247,8 +248,8 @@ dbt_test = KubernetesPodOperator(
 dbt_results_cmd = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
-    python ../../orchestration/upload_dbt_file_to_snowflake.py manifest; exit $ret
     dbt run --profiles-dir profile --target prod --models sources.dbt+ ; ret=$?;
+    python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
 dbt_results = KubernetesPodOperator(
     **gitlab_defaults,
@@ -276,7 +277,7 @@ dbt_results = KubernetesPodOperator(
         SNOWFLAKE_TRANSFORM_SCHEMA,
     ],
     env_vars=pod_env_vars,
-    arguments=[dbt_test_cmd],
+    arguments=[dbt_results_cmd],
     dag=dag,
 )
 

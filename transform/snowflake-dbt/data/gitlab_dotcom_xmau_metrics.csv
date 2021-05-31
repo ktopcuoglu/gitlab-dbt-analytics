@@ -5,7 +5,7 @@ issue_interaction,issues,plan,TRUE,project_management,TRUE,dev,FALSE
 merge_request_interaction,merge_requests,create,FALSE,code_review,TRUE,dev,FALSE
 requirements,requirements,plan,FALSE,certify,TRUE,dev,FALSE
 snippets,snippets,create,FALSE,editor,FALSE,dev,FALSE
-epic_interaction,epic_notes,plan,FALSE,portfolio_management,TRUE,dev,FALSE
+epic_notes,epic_notes,plan,FALSE,portfolio_management,FALSE,dev,FALSE
 issue_interaction,issue_notes,plan,TRUE,project_management,TRUE,dev,FALSE
 merge_request_interaction,merge_request_notes,create,FALSE,code_review,TRUE,dev,FALSE
 ci_pipelines,ci_pipelines,verify,TRUE,continuous_integration,TRUE,ops,FALSE
