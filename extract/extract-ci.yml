@@ -34,6 +34,15 @@
     - merge_requests
   when: manual
 
+📜driveload:
+  <<: *extract_definition
+  script:
+    - cd extract/driveload/
+    - python3 driveload.py driveload --drive_file sheets.yml
+  only:
+    - merge_requests
+  when: manual
+
 qualtrics_sheetload:
   <<: *extract_definition
   script:
