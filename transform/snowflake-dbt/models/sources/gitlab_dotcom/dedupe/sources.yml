@@ -300,7 +300,6 @@ sources:
         identifier: gitlab_db_resource_weight_events
       - name: saml_providers
         identifier: gitlab_db_saml_providers
-        freshness:
       - name: services
         identifier: gitlab_db_services
       - name: shards
