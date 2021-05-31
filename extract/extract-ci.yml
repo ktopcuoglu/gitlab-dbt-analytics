@@ -37,8 +37,8 @@
 📜driveload:
   <<: *extract_definition
   script:
-    - cd extract/driveload/
-    - python3 driveload.py driveload --drive_file sheets.yml
+    - cd extract/sheetload/
+    - python3 sheetload.py driveload --drive_file drives.yml
   only:
     - merge_requests
   when: manual
