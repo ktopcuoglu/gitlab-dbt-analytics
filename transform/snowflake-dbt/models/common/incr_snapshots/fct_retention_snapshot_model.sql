@@ -37,7 +37,7 @@ WITH snapshot_dates AS (
 ), final AS (
 
     SELECT
-     {{ dbt_utils.surrogate_key(['snapshot_id', 'mrr_id']) }} AS fct_retention_snapshot_id,
+     {{ dbt_utils.surrogate_key(['snapshot_id', 'fct_retention_id']) }} AS fct_retention_snapshot_id,
        *
     FROM fct_retention_spined
 
