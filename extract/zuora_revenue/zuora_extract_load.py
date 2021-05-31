@@ -49,7 +49,7 @@ def zuora_revenue_extract(table_name: str) -> None:
             logging.info(line)
 
         logging.info(f"exit_code:{exit_code}")
-        if exit_code == '0':
+        if exit_code == 0:
             logging.info("The extraction completed successfully")
         else:
             logging.error("Error in extraction")
