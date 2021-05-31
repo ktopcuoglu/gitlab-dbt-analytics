@@ -175,7 +175,6 @@ sources:
         identifier: gitlab_db_gitlab_subscriptions
       - name: group_group_links
         identifier: gitlab_db_group_group_links
-        freshness:
       - name: identities
         identifier: gitlab_db_identities
       - name: in_product_marketing_emails
