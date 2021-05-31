@@ -275,7 +275,6 @@ sources:
         freshness: null
       - name: project_statistics
         identifier: gitlab_db_project_statistics
-        freshness:
       - name: projects
         identifier: gitlab_db_projects
       - name: prometheus_alerts
