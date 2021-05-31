@@ -206,7 +206,6 @@ sources:
         identifier: gitlab_db_lists
       - name: members
         identifier: gitlab_db_members
-        freshness:
       - name: merge_request_diffs
         identifier: gitlab_db_merge_request_diffs
       - name: merge_request_metrics
