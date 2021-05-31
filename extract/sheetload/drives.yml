@@ -2,4 +2,4 @@ folders:
   - name: clari_exports
     owner: '@paul_armstrong'
     folder_name: clari_export_csv
-    table_name: clari_export
+    table_name: clari_export_forecast_net_iacv
