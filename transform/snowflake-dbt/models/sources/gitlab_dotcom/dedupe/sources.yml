@@ -69,7 +69,6 @@ sources:
         identifier: gitlab_db_ci_job_artifacts
       - name: ci_pipeline_chat_data
         identifier: gitlab_db_ci_pipeline_chat_data
-        freshness:
       - name: ci_pipeline_schedule_variables
         identifier: gitlab_db_ci_pipeline_schedule_variables
       - name: ci_pipeline_schedules
