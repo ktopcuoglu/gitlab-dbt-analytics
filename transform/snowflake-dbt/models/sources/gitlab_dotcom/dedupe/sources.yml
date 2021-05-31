@@ -222,7 +222,6 @@ sources:
         identifier: gitlab_db_namespace_root_storage_statistics
       - name: namespace_statistics
         identifier: gitlab_db_namespace_statistics
-        freshness:
       - name: namespaces
         identifier: gitlab_db_namespaces
       - name: notes
