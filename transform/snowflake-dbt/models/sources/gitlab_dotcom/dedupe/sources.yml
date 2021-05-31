@@ -173,7 +173,6 @@ sources:
         freshness: null
       - name: gitlab_subscriptions
         identifier: gitlab_db_gitlab_subscriptions
-        freshness:
       - name: group_group_links
         identifier: gitlab_db_group_group_links
         freshness:
