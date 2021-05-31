@@ -85,3 +85,4 @@ if __name__ == "__main__":
     print(f"{results.table_name} = {end_date}")
     logger.info("update the load date  in the file for the table")
     zuora_revpro.set_load_date(results.table_name, end_date)
+    

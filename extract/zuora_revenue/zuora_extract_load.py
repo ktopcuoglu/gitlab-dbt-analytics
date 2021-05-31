@@ -2,6 +2,7 @@ import sys
 from os import environ as env
 import time
 import logging
+import paramiko
 from fire import Fire
 from typing import Dict, Tuple, List
 from yaml import load, safe_load, YAMLError
@@ -21,19 +22,40 @@ from gitlabdata.orchestration_utils import (
 
 def zuora_revenue_extract(table_name: str) -> None:
     logging.basicConfig(stream=sys.stdout, level=20)
-    logging.info("Prepare the authentication URL")
-    headers = {
-        "role": "APIRole",
-        "clientname": "Default",
-        "Authorization": env["ZUORA_REVENUE_AUTH_CODE"],
-    }
-    authenticate_url_zuora_revpro = (
-        "https://" + env["ZUORA_REVENUE_API_URL"] + "/api/integration/v1/authenticate"
-    )
-    zuora_fetch_data_url = (
-        "https://" + env["ZUORA_REVENUE_API_URL"] + "/api/integration/v2/biviews/"
-    )
+    logging.info("Prepare the authentication URL and set the command for execution")
+    zuora_revenue_auth_code=env["ZUORA_REVENUE_AUTH_CODE"]
+    zuora_revenue_api_url = env["ZUORA_REVENUE_API_URL"]
+    zuora_revenue_bucket_name=env["ZUORA_REVENUE_GCS_NAME"]
+    zuora_revenue_compute_ip=env["ZUORA_REVENUE_COMPUTE_IP"]
+    zuora_revenue_compute_username=env["ZUORA_REVENUE_COMPUTE_USERNAME"]
+    zuora_revenue_compute_password=env["ZUORA_REVENUE_COMPUTE_PASSWORD"]
+    connection = paramiko.SSHClient()
+    connection.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    extract_command=f"$python_env;python3 /home/vedprakash/zuora_revenue/zuora_revenue/src/zuora_revenue_extract.py -table_name {table_name} \
+                     -bucket_name {zuora_revenue_bucket_name} -api_dns_name {zuora_revenue_api_url} -api_auth_code {zuora_revenue_auth_code}"
+    try:
+        connection.connect(hostname=zuora_revenue_compute_ip, username=zuora_revenue_compute_username, password=zuora_revenue_compute_password)
+        print('Connected')
+        stdin,stdout,stderr=connection.exec_command(extract_command)
+        exit_code = stdout.channel.recv_exit_status()
+        stdout_raw = []
+        for line in stdout:
+            logging.info(line)
 
+        stderr_raw = []
+        for line in stderr:
+            logging.info(line)
+
+        logging.info(f"exit_code:{exit_code}")
+        if exit_code == '0':
+            logging.info("The extraction completed successfully")
+        else:
+            logging.error("Error in extraction")
+            sys.exit(1)
+        connection.close()
+        del connection, stdin, stdout, stderr
+    except Exception:
+        raise
 
 def move_to_processed(
     bucket: str, table_name: str, list_of_files: list, gapi_keyfile: str = None
@@ -86,7 +108,7 @@ def zuora_revenue_load(
 
     upload_query = f"""
         copy into {table_name}
-        from @zuora_revenue_staging/RAW_DB/staging/{table_name} 
+        from @zuora_revenue_staging/RAW_DB/staging/{table_name}
         pattern= '.*{table_name}_.*[.]csv'
     """
 
