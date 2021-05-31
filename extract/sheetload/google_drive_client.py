@@ -19,7 +19,7 @@ class GoogleDriveClient:
         credentials = ServiceAccountCredentials.from_json_keyfile_dict(keyfile, scope)
         self.service = build("drive", "v3", credentials=credentials)
 
-    def get_data_frame_from_file_id(self, file_id) -> pd.Dataframe:
+    def get_data_frame_from_file_id(self, file_id) -> pd.DataFrame:
         """
         Google drive does not allow direct csv reading from the urls, so we need to
         download the file using their API method, create a df and then delete the local file
