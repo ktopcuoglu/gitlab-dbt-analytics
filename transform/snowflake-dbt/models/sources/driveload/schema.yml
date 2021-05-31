@@ -1,4 +1,0 @@
-version: 2
-models:
-- name: driveload_clari_export_forecast_net_iacv_source
-  description: Clari export forcast data primariliy for use by the finance team.
