@@ -366,3 +366,11 @@ A recreation of `prep_usage_ping_subscription_mapped_wave_2_3_metrics` for _SaaS
 fct table from the usage_ping_namespace. Granularity of one row per namespace per metric per run
 
 {% enddocs %}
+
+{% docs prep_event %}
+
+Creates a base view with generated keys for the event table stored in the Gitlab.com podtgres db shared dimensions and references in facts.
+
+More info about events API and table are available [here](https://docs.gitlab.com/ee/api/events.html)
+
+{% enddocs %}

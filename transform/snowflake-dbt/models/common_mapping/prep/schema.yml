@@ -1101,3 +1101,14 @@ models:
       - name: ping_name
       - name: ping_date
       - name: counter_value
+  - name: prep_event
+    description: '{{ doc("prep_event") }}'
+    columns:
+      - name: dim_event_id
+        author:
+          - unique
+          - not_null
+      - name: dim_user_id
+      - name: dim_project_id
+      - name: dim_namespace_id
+      - name: ultimate_parent_dim_namespace_id
