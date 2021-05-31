@@ -1,8 +1,8 @@
 import sys
 from os import environ as env
 import time
+import subprocess
 import logging
-import paramiko
 from fire import Fire
 from typing import Dict, Tuple, List
 from yaml import load, safe_load, YAMLError
@@ -21,6 +21,8 @@ from gitlabdata.orchestration_utils import (
 
 
 def zuora_revenue_extract(table_name: str) -> None:
+    subprocess.run("pip install paramiko")
+    import paramiko 
     logging.basicConfig(stream=sys.stdout, level=20)
     logging.info("Prepare the authentication URL and set the command for execution")
     zuora_revenue_auth_code=env["ZUORA_REVENUE_AUTH_CODE"]
