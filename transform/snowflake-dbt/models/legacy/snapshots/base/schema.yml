@@ -122,6 +122,16 @@ models:
         tests:
           - not_null
 
+  - name: fct_retention_snapshot_base
+    description: Base model for the fct_retention snapshot data
+    columns:
+      - name: fct_retention_id
+        tests:
+          - not_null
+      - name: dbt_valid_from
+        tests:
+          - not_null
+
   - name: license_db_licenses_snapshots_base
     description: This is the base model for snapshots from the licenses table from the license database.
     columns:
