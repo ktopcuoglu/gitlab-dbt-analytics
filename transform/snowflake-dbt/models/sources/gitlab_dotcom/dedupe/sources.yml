@@ -181,7 +181,6 @@ sources:
         identifier: gitlab_db_in_product_marketing_emails
       - name: issue_assignees
         identifier: gitlab_db_issue_assignees
-        freshness:
       - name: issue_links
         identifier: gitlab_db_issue_links
         freshness: null
