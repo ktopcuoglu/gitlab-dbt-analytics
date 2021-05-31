@@ -21,7 +21,7 @@ from gitlabdata.orchestration_utils import (
 
 
 def zuora_revenue_extract(table_name: str) -> None:
-    subprocess.run("pip install paramiko")
+    subprocess.run("pip install paramiko",shell=True, check=True)
     import paramiko 
     logging.basicConfig(stream=sys.stdout, level=20)
     logging.info("Prepare the authentication URL and set the command for execution")
