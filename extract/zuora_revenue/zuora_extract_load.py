@@ -33,7 +33,7 @@ def zuora_revenue_extract(table_name: str) -> None:
     zuora_revenue_compute_password=env["ZUORA_REVENUE_COMPUTE_PASSWORD"]
     connection = paramiko.SSHClient()
     connection.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    extract_command=f"$python_env;python3 /home/vedprakash/zuora_revenue/zuora_revenue/src/zuora_revenue_extract.py -table_name {table_name} \
+    extract_command=f"$python_env;cd /home/vedprakash/zuora_revenue/zuora_revenue/src/;python3 zuora_revenue_extract.py -table_name {table_name} \
                      -bucket_name {zuora_revenue_bucket_name} -api_dns_name {zuora_revenue_api_url} -api_auth_code '{zuora_revenue_auth_code}'"
     try:
         connection.connect(hostname=zuora_revenue_compute_ip, username=zuora_revenue_compute_username, password=zuora_revenue_compute_password)
