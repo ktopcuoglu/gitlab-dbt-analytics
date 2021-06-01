@@ -526,9 +526,9 @@ for source_name, config in config_dict.items():
 
     globals()[f"{config['dag_name']}_db_sync"] = sync_dag
 
-# Create Dictionary entry for Data Quality check. This is seprate from above to avoid duplicate DAG creation. 
+# Create Dictionary entry for Data Quality check. This is seprate from above to avoid duplicate DAG creation.
 
-config_dict_dq={
+config_dict_dq = {
     "gitlab_com_data_reconciliation_extract_load": {
         "cloudsql_instance_name": None,
         "dag_name": "gitlab_com_data_reconciliation_extract_load",
@@ -586,20 +586,13 @@ for source_name, config in config_dict_dq.items():
             cd analytics/extract/postgres_pipeline/postgres_pipeline/ &&
             python main.py tap ../manifests/{config["dag_name"]}_db_manifest.yaml --load_type dq --load_only_table {table}
         """
-            #generate_cmd(
-            #    config["dag_name"],
-            #    f"--load_type dq --load_only_table {table}",
-            #    config["cloudsql_instance_name"],
-            #)
-            
-
             dq_extract = KubernetesPodOperator(
                 **gitlab_defaults,
                 image=DATA_IMAGE,
                 task_id=task_identifier,
                 name=task_identifier,
-                #pool=f"{config['task_name']}_pool",
-                pool="default_pool", 
+                # pool=f"{config['task_name']}_pool",
+                pool="default_pool",
                 secrets=standard_secrets + config["secrets"],
                 env_vars={
                     **gitlab_pod_env_vars,

@@ -142,6 +142,7 @@ def data_quality(
         False,
     )
 
+
 def sync_incremental_ids(
     source_engine: Engine,
     target_engine: Engine,

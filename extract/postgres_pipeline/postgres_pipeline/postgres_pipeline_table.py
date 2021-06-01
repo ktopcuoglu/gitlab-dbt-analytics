@@ -22,6 +22,7 @@ class PostgresPipelineTable:
             **table_config
         ).upper()
         self.table_dict = table_config
+        self.target_table_name_dq = table_config["export_table"]
 
     def is_scd(self) -> bool:
         return not self.is_incremental()
@@ -64,8 +65,10 @@ class PostgresPipelineTable:
             target_table,
         )
 
-    def do_data_quality(self, source_engine: Engine, target_engine: Engine,schema_changed: bool) -> bool:
-        target_table = "GITLAB_PGP_EXPORT"
+    def do_data_quality(
+        self, source_engine: Engine, target_engine: Engine, schema_changed: bool
+    ) -> bool:
+        target_table = self.target_table_name_dq
         return load_functions.data_quality(
             source_engine,
             target_engine,
