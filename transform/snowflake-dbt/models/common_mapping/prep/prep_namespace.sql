@@ -51,10 +51,12 @@
 
     SELECT
       namespace_lineage_historical.*,
-      ROW_NUMBER() OVER (
-        PARTITION BY namespace_lineage_historical.namespace_id
-        ORDER BY namespace_lineage_historical.snapshot_day DESC) = 1                  AS is_current,
-      namespace_lineage_historical.snapshot_day = CURRENT_DATE                        AS ultimate_parent_is_current,
+      IFF(ROW_NUMBER() OVER (
+            PARTITION BY namespace_lineage_historical.namespace_id
+            ORDER BY namespace_lineage_historical.snapshot_day DESC) = 1,
+          TRUE, FALSE)                                                                AS is_current,
+      IFF(namespace_lineage_historical.snapshot_day = CURRENT_DATE,
+          TRUE, FALSE)                                                                AS ultimate_parent_is_current,
       plans.plan_title                                                                AS ultimate_parent_plan_title,
       plans.plan_is_paid                                                              AS ultimate_parent_plan_is_paid,
       plans.plan_name                                                                 AS ultimate_parent_plan_name
@@ -73,7 +75,8 @@
 
     SELECT
       namespace_snapshots.*,
-      namespace_current.namespace_id IS NOT NULL                                      AS is_current
+      IFF(namespace_current.namespace_id IS NOT NULL,
+          TRUE, FALSE)                                                                AS is_current
     FROM namespace_snapshots
     LEFT JOIN namespace_current
       ON namespace_snapshots.namespace_id = namespace_current.namespace_id
@@ -82,8 +85,13 @@
 
     SELECT
       namespaces.namespace_id                                                         AS dim_namespace_id,
-      map_namespace_internal.ultimate_parent_namespace_id IS NOT NULL                 AS namespace_is_internal,
-      namespace_lineage.ultimate_parent_id = namespaces.namespace_id                  AS namespace_is_ultimate_parent,
+      COALESCE(namespace_lineage.ultimate_parent_id,
+               namespaces.parent_id,
+               namespaces.namespace_id)                                               AS ultimate_parent_namespace_id,
+      IFF(namespaces.namespace_id = ultimate_parent_namespace_id,
+          TRUE, FALSE)                                                                AS namespace_is_ultimate_parent,
+      IFF(map_namespace_internal.ultimate_parent_namespace_id IS NOT NULL,
+          TRUE, FALSE)                                                                AS namespace_is_internal,
       CASE
         WHEN namespaces.visibility_level = 'public'
           OR namespace_is_internal                    THEN namespace_name
@@ -121,18 +129,16 @@
       namespaces.project_creation_level,
       namespaces.push_rule_id,
       IFNULL(creators.creator_id, namespaces.owner_id)                                AS creator_id,
-      COALESCE(namespace_lineage.ultimate_parent_id,
-               namespaces.parent_id,
-               namespaces.namespace_id)                                               AS ultimate_parent_namespace_id,
       namespace_lineage.ultimate_parent_plan_id                                       AS gitlab_plan_id,
       namespace_lineage.ultimate_parent_plan_title                                    AS gitlab_plan_title,
       namespace_lineage.ultimate_parent_plan_is_paid                                  AS gitlab_plan_is_paid,
       {{ get_keyed_nulls('saas_product_tiers.dim_product_tier_id') }}                 AS dim_product_tier_id,
       namespace_lineage.seats                                                         AS gitlab_plan_seats,
+      -- namespace_lineage.seats_in_use                                                  AS gitlab_plan_seats_in_use,
       namespace_lineage.max_seats_used                                                AS gitlab_plan_max_seats_used,
       IFNULL(members.member_count, 0)                                                 AS namespace_member_count,
       IFNULL(projects.project_count, 0)                                               AS namespace_project_count,
-      namespaces.is_current AND namespace_lineage.is_current                          AS is_currently_valid
+      IFNULL(namespaces.is_current AND namespace_lineage.is_current, FALSE)           AS is_currently_valid
     FROM namespaces
     LEFT JOIN namespace_lineage
       ON namespaces.namespace_id = namespace_lineage.namespace_id
@@ -165,5 +171,5 @@
     created_by="@ischweickartDD",
     updated_by="@ischweickartDD",
     created_date="2021-01-14",
-    updated_date="2021-05-24"
+    updated_date="2021-06-01"
 ) }}

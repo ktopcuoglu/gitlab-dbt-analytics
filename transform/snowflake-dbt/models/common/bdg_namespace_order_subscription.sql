@@ -3,7 +3,7 @@
 ) }}
 
 {{ simple_cte([
-    ('namespaces', 'prep_namespace'),
+    ('prep_namespaces', 'prep_namespace'),
     ('subscriptions', 'prep_subscription'),
     ('orders', 'customers_db_orders_source'),
     ('product_tiers', 'prep_product_tier'),
@@ -53,6 +53,19 @@
     WHERE recurring_charges.dim_date_id = {{ get_date_id("DATE_TRUNC('month', CURRENT_DATE)") }}
       AND subscription_status IN ('Active', 'Cancelled')
 
+), namespaces AS (
+  
+    /*
+    This intermediate CTE adds a column to count the distinct plans a namespace has ever been associated with,
+    which allows us to filter free namespaces out of the following CTE.
+    In this case, "free" is defined as never having a paid plan over the entire history of the given namespace
+    */
+    SELECT
+      *,
+      COUNT(DISTINCT IFNULL(gitlab_plan_id, 34))
+        OVER (PARTITION BY dim_namespace_id)                            AS gitlab_plan_count
+    FROM prep_namespaces
+
 ), namespace_list AS (
 
     --contains non-free namespaces + prior trial namespaces.
@@ -65,17 +78,19 @@
       product_tiers.product_tier_name                                   AS product_tier_name_namespace,
       trial_histories.start_date                                        AS saas_trial_start_date,
       trial_histories.expired_on                                        AS saas_trial_expired_on,
-      trial_histories.gl_namespace_id IS NOT NULL
-        OR (namespaces.dim_namespace_id = ultimate_parent_namespace_id
-            AND product_tier_name_namespace = 'SaaS - Trial: Ultimate') AS namespace_was_trial,
+      IFF(trial_histories.gl_namespace_id IS NOT NULL
+            OR (namespaces.dim_namespace_id = ultimate_parent_namespace_id
+                AND product_tier_name_namespace = 'SaaS - Trial: Ultimate'),
+          TRUE, FALSE)                                                  AS namespace_was_trial,
       namespaces.is_currently_valid                                     AS is_namespace_active
     FROM namespaces
     LEFT JOIN product_tiers
       ON namespaces.dim_product_tier_id = product_tiers.dim_product_tier_id
     LEFT JOIN trial_histories
       ON namespaces.dim_namespace_id = trial_histories.gl_namespace_id
-    WHERE (IFNULL(namespaces.gitlab_plan_id, 34) != 34                  -- Filter out free namespaces using free plan_ids
-           OR namespace_was_trial)
+    WHERE IFNULL(gitlab_plan_id, 34) != 34                               -- Filter out namespaces that have never had a paid plan
+      OR gitlab_plan_count > 1
+      OR namespace_was_trial
 
 ), subscription_list AS (
   
@@ -93,7 +108,8 @@
       product_rate_plans.dim_product_tier_id                            AS dim_product_tier_id_subscription,
       product_rate_plans.product_tier_name                              AS product_tier_name_subscription,
       COUNT(*) OVER(PARTITION BY subscriptions.dim_subscription_id)     AS count_of_tiers_per_subscription,
-      current_recurring.dim_subscription_id IS NOT NULL                 AS is_subscription_active
+      IFF(current_recurring.dim_subscription_id IS NOT NULL,
+          TRUE, FALSE)                                                  AS is_subscription_active
     FROM subscriptions
     INNER JOIN saas_subscriptions
       ON subscriptions.dim_subscription_id = saas_subscriptions.dim_subscription_id
@@ -222,5 +238,5 @@
     created_by="@ischweickartDD",
     updated_by="@ischweickartDD",
     created_date="2021-01-14",
-    updated_date="2021-05-24"
+    updated_date="2021-06-01"
 ) }}

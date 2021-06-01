@@ -66,7 +66,8 @@
       product_rate_plans.dim_product_tier_id                            AS dim_product_tier_id_subscription,
       product_rate_plans.product_tier_name                              AS product_tier_name_subscription,
       COUNT(*) OVER(PARTITION BY subscriptions.dim_subscription_id)     AS count_of_tiers_per_subscription,
-      current_recurring.dim_subscription_id IS NOT NULL                 AS is_subscription_active
+      IFF(current_recurring.dim_subscription_id IS NOT NULL,
+          TRUE, FALSE)                                                  AS is_subscription_active
     FROM subscriptions
     INNER JOIN sm_subscriptions
       ON subscriptions.dim_subscription_id = sm_subscriptions.dim_subscription_id
@@ -158,5 +159,5 @@
     created_by="@ischweickartDD",
     updated_by="@ischweickartDD",
     created_date="2021-02-02",
-    updated_date="2021-05-24"
+    updated_date="2021-06-01"
 ) }}

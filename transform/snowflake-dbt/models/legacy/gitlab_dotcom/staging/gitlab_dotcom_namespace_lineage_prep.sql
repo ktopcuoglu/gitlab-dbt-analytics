@@ -61,7 +61,8 @@
     SELECT
       recursive_namespaces.*,
       recursive_namespaces.upstream_lineage[0]::NUMBER                          AS ultimate_parent_id, -- First item is the ultimate parent.
-      namespaces_current.namespace_id IS NOT NULL                               AS is_currently_valid 
+      IFF(namespaces_current.namespace_id IS NOT NULL,
+          TRUE, FALSE)                                                          AS is_currently_valid 
     FROM recursive_namespaces
     LEFT JOIN namespaces_current
       ON recursive_namespaces.namespace_id = namespaces_current.namespace_id

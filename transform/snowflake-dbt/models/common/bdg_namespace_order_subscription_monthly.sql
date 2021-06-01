@@ -3,7 +3,7 @@
 ) }}
 
 {{ simple_cte([
-    ('namespaces', 'prep_namespace'),
+    ('prep_namespaces', 'prep_namespace'),
     ('subscriptions', 'prep_subscription'),
     ('orders_historical', 'wk_customers_db_versions_history'),
     ('dates', 'dim_date'),
@@ -52,6 +52,19 @@
       AND product_details.product_delivery_type = 'SaaS'
       AND subscription_status IN ('Active', 'Cancelled')
 
+), namespaces AS (
+  
+    /*
+    This intermediate CTE adds a column to count the distinct plans a namespace has ever been associated with,
+    which allows us to filter free namespaces out of the following CTE.
+    In this case, "free" is defined as never having a paid plan over the entire history of the given namespace
+    */
+    SELECT
+      *,
+      COUNT(DISTINCT IFNULL(gitlab_plan_id, 34))
+        OVER (PARTITION BY dim_namespace_id)                            AS gitlab_plan_count
+    FROM prep_namespaces
+
 ), namespace_list AS (
 
     --contains non-free namespaces + prior trial namespaces.
@@ -63,17 +76,19 @@
       dates.first_day_of_month                                          AS namespace_snapshot_month,
       trial_histories.start_date                                        AS saas_trial_start_date,
       trial_histories.expired_on                                        AS saas_trial_expired_on,
-      trial_histories.gl_namespace_id IS NOT NULL
-        OR (namespaces.dim_namespace_id = ultimate_parent_namespace_id
-            AND namespaces.gitlab_plan_title = 'Ultimate Trial')        AS namespace_was_trial,
+      IFF(trial_histories.gl_namespace_id IS NOT NULL
+            OR (namespaces.dim_namespace_id = ultimate_parent_namespace_id
+                AND namespaces.gitlab_plan_title = 'Ultimate Trial'),
+          TRUE, FALSE)                                                  AS namespace_was_trial,
       namespaces.is_currently_valid                                     AS is_namespace_active
     FROM namespaces
     INNER JOIN dates
       ON dates.date_actual BETWEEN namespaces.namespace_created_at AND CURRENT_DATE
     LEFT JOIN trial_histories
       ON namespaces.dim_namespace_id = trial_histories.gl_namespace_id
-    WHERE (IFNULL(namespaces.gitlab_plan_id, 34) != 34                  -- Free plan_ids
-           OR namespace_was_trial)
+    WHERE IFNULL(gitlab_plan_id, 34) != 34                               -- Filter out namespaces that have never had a paid plan
+      OR gitlab_plan_count > 1
+      OR namespace_was_trial
 
 ), subscription_list AS (
   
@@ -91,7 +106,8 @@
       product_rate_plans.product_rate_plan_id                           AS product_rate_plan_id_subscription,
       product_rate_plans.dim_product_tier_id                            AS dim_product_tier_id_subscription,
       product_rate_plans.product_tier_name                              AS product_tier_name_subscription,
-      current_recurring.dim_subscription_id IS NOT NULL                 AS is_subscription_active
+      IFF(current_recurring.dim_subscription_id IS NOT NULL,
+          TRUE, FALSE)                                                  AS is_subscription_active
     FROM subscriptions
     INNER JOIN dates
       ON dates.date_actual BETWEEN subscriptions.subscription_start_date
@@ -104,7 +120,18 @@
       ON subscriptions.dim_subscription_id = current_recurring.dim_subscription_id
 
 ), orders AS (
-
+    /*
+    This CTE transforms orders from the historical orders table in two significant ways:
+      1. It corrects for erroneous order start/end dates by substituting in the valid_from/valid_to columns
+          when changes are made to the order (generally remapping to renewed subscriptions, new namespaces)
+        a. See term_start_date and term_end_date (identifiers borrowed from the Zuora subscription model)
+      2. It smooths over same day updates to the namespace linked to a given order,
+          which would otherwise result in multiple rows for an order in a given month
+        a. See QUALIFY statement below. This gets the last update to an order on a given day
+        b. NOTE: This does remove some order-namespace links that existed in the historical orders table
+            at one point in time, but a judgement call was made to assume that if the namespace needed
+            to be updated within 24 hours it is likely that the previous namespace was incorrect
+    */
     SELECT
       orders_historical.order_id,
       orders_historical.customer_id,
@@ -133,7 +160,8 @@
           orders_historical.subscription_id,
           orders_historical.dim_namespace_id)                           AS term_end_date,
       orders_historical.order_is_trial,
-      order_end_date >= CURRENT_DATE                                    AS is_order_active
+      IFF(order_end_date >= CURRENT_DATE,
+          TRUE, FALSE)                                                  AS is_order_active
     FROM orders_historical
     INNER JOIN product_rate_plans
       ON orders_historical.product_rate_plan_id = product_rate_plans.product_rate_plan_id
@@ -259,6 +287,6 @@
     cte_ref="final",
     created_by="@ischweickartDD",
     updated_by="@ischweickartDD",
-    created_date="2021-05-24",
-    updated_date="2021-05-24"
+    created_date="2021-06-01",
+    updated_date="2021-06-01"
 ) }}
