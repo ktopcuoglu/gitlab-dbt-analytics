@@ -45,7 +45,7 @@ tables:
       SELECT 'gitlab_db_clusters_applications_prometheus' AS table_name
       , max(created_at) AS max_created_at
       , count(*) ::bigint AS row_count
-      FROM clusters_applications_prometheus 
+      FROM clusters_applications_prometheus
       UNION ALL
       SELECT 'gitlab_db_prometheus_alerts' AS table_name
       , max(created_at) AS max_created_at
@@ -458,7 +458,7 @@ tables:
         UNION ALL
         SELECT 'gitlab_db_merge_requests_closing_issues' AS table_name
         , max(created_at) AS max_created_at
-        , count(*) ::bigint AS row_count 
+        , count(*) ::bigint AS row_count
         FROM merge_requests_closing_issues
         UNION ALL
         SELECT 'gitlab_db_resource_milestone_events' AS table_name
@@ -567,14 +567,14 @@ tables:
       SELECT 'gitlab_db_users' AS table_name
       , max(created_at) AS max_created_at
       , count(*) ::bigint AS row_count
-      FROM users    
+      FROM users
   cluster_9:
     dbt_source_model: true
     export_schema: 'gitlab_dotcom'
     export_table: 'gitlab_pgp_export'
     export_table_primary_key: max_created_at
     import_db: GITLAB_DB
-    import_query: |-   
+    import_query: |-
       SELECT 'gitlab_db_lfs_objects_projects' AS table_name
       , max(created_at) AS max_created_at
       , count(*) ::bigint AS row_count
@@ -605,7 +605,7 @@ tables:
         , max(created_at) AS max_created_at
         , count(*) ::bigint AS row_count
         FROM todos
- cluster_11:
+  cluster_11:
     dbt_source_model: true
     export_schema: 'gitlab_dotcom'
     export_table: 'gitlab_pgp_export'
