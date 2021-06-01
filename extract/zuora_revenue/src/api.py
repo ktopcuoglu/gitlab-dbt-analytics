@@ -73,6 +73,7 @@ class ZuoraRevProAPI:
             ] = load_date
             table_name_date.to_csv(load_date_file_name, index=False)
             subprocess.run(cmd_to_upload_file, shell=True, check=True)
+            self.logger.info(f"The start date for next run for table {tablename} is set to {load_date}")
         except Exception:
             self.logger.error(
                 "Error while uploading updated file to GCS", exec_info=True
@@ -135,7 +136,7 @@ class ZuoraRevProAPI:
         )
         number_of_page = math.ceil(res.get("count") / 10000)
         self.logger.info(
-            f"NUmber of page to extract for {url_para_dict['tablename']}:-{number_of_page}"
+            f"Number of page to extract for table {url_para_dict['tablename']}:- {number_of_page}"
         )
 
         return number_of_page

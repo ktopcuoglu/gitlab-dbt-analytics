@@ -21,24 +21,29 @@ from gitlabdata.orchestration_utils import (
 
 
 def zuora_revenue_extract(table_name: str) -> None:
-    subprocess.run("pip install paramiko",shell=True, check=True)
-    import paramiko 
+    subprocess.run("pip install paramiko", shell=True, check=True)
+    import paramiko
+
     logging.basicConfig(stream=sys.stdout, level=20)
     logging.info("Prepare the authentication URL and set the command for execution")
-    zuora_revenue_auth_code=f'Basic {env["ZUORA_REVENUE_AUTH_CODE"]}'
+    zuora_revenue_auth_code = f'Basic {env["ZUORA_REVENUE_AUTH_CODE"]}'
     zuora_revenue_api_url = env["ZUORA_REVENUE_API_URL"]
-    zuora_revenue_bucket_name=env["ZUORA_REVENUE_GCS_NAME"]
-    zuora_revenue_compute_ip=env["ZUORA_REVENUE_COMPUTE_IP"]
-    zuora_revenue_compute_username=env["ZUORA_REVENUE_COMPUTE_USERNAME"]
-    zuora_revenue_compute_password=env["ZUORA_REVENUE_COMPUTE_PASSWORD"]
+    zuora_revenue_bucket_name = env["ZUORA_REVENUE_GCS_NAME"]
+    zuora_revenue_compute_ip = env["ZUORA_REVENUE_COMPUTE_IP"]
+    zuora_revenue_compute_username = env["ZUORA_REVENUE_COMPUTE_USERNAME"]
+    zuora_revenue_compute_password = env["ZUORA_REVENUE_COMPUTE_PASSWORD"]
     connection = paramiko.SSHClient()
     connection.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    extract_command=f"$python_env;cd /home/vedprakash/zuora_revenue/zuora_revenue/src/;python3 zuora_revenue_extract.py -table_name {table_name} \
+    extract_command = f"$python_env;cd /home/vedprakash/zuora_revenue/zuora_revenue/src/;python3 zuora_revenue_extract.py -table_name {table_name} \
                      -bucket_name {zuora_revenue_bucket_name} -api_dns_name {zuora_revenue_api_url} -api_auth_code '{zuora_revenue_auth_code}'"
     try:
-        connection.connect(hostname=zuora_revenue_compute_ip, username=zuora_revenue_compute_username, password=zuora_revenue_compute_password)
-        print('Connected')
-        stdin,stdout,stderr=connection.exec_command(extract_command)
+        connection.connect(
+            hostname=zuora_revenue_compute_ip,
+            username=zuora_revenue_compute_username,
+            password=zuora_revenue_compute_password,
+        )
+        print("Connected")
+        stdin, stdout, stderr = connection.exec_command(extract_command)
         exit_code = stdout.channel.recv_exit_status()
         stdout_raw = []
         for line in stdout:
@@ -59,6 +64,7 @@ def zuora_revenue_extract(table_name: str) -> None:
     except Exception:
         raise
 
+
 def move_to_processed(
     bucket: str, table_name: str, list_of_files: list, gapi_keyfile: str = None
 ):
@@ -75,7 +81,7 @@ def move_to_processed(
     print(list_of_files)
     for file_name in list_of_files:
         try:
-            blob_name = '/'.join(file_name.split("/")[3:])
+            blob_name = "/".join(file_name.split("/")[3:])
             source_blob = source_bucket.blob(blob_name)
             file_name = file_name.split("/")[-1]
             destination_file_name = (
