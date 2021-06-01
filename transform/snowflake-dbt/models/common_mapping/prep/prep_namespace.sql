@@ -134,7 +134,7 @@
       namespace_lineage.ultimate_parent_plan_is_paid                                  AS gitlab_plan_is_paid,
       {{ get_keyed_nulls('saas_product_tiers.dim_product_tier_id') }}                 AS dim_product_tier_id,
       namespace_lineage.seats                                                         AS gitlab_plan_seats,
-      -- namespace_lineage.seats_in_use                                                  AS gitlab_plan_seats_in_use,
+      namespace_lineage.seats_in_use                                                  AS gitlab_plan_seats_in_use,
       namespace_lineage.max_seats_used                                                AS gitlab_plan_max_seats_used,
       IFNULL(members.member_count, 0)                                                 AS namespace_member_count,
       IFNULL(projects.project_count, 0)                                               AS namespace_project_count,
