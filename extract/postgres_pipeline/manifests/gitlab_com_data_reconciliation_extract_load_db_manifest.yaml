@@ -1577,6 +1577,159 @@ tables:
         FROM ci_trigger_requests
         WHERE DATE(updated_at) > current_date - interval '8' day
         GROUP BY 1,2,3
-                    
-
-
+  cluster_7:
+    dbt_source_model: true
+    export_schema: 'gitlab_dotcom'
+    export_table: 'gitlab_pgp_export'
+    export_table_primary_key: date
+    import_db: GITLAB_DB
+    import_query: |-
+        SELECT 'gitlab_db_lfs_objects' AS table_name
+        ,'created_at' as count_type
+        , DATE(created_at) as date 
+        , count(*) as number_of_records
+        FROM lfs_objects
+        WHERE DATE(created_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL
+        SELECT 'gitlab_db_lfs_objects' AS table_name
+        ,'updated_at' as count_type
+        , DATE(updated_at) as date
+        , count(*) as number_of_records
+        FROM lfs_objects
+        WHERE DATE(updated_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL 
+        SELECT 'gitlab_db_routes' AS table_name
+        ,'created_at' as count_type
+        , DATE(created_at) as date 
+        , count(*) as number_of_records
+        FROM routes
+        WHERE DATE(created_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL
+        SELECT 'gitlab_db_routes' AS table_name
+        ,'updated_at' as count_type
+        , DATE(updated_at) as date
+        , count(*) as number_of_records
+        FROM routes
+        WHERE DATE(updated_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL  
+        SELECT 'gitlab_db_authentication_events' AS table_name
+        ,'created_at' as count_type
+        , DATE(created_at) as date 
+        , count(*) as number_of_records
+        FROM authentication_events
+        WHERE DATE(created_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL
+        SELECT 'gitlab_db_authentication_events' AS table_name
+        ,'updated_at' as count_type
+        , DATE(updated_at) as date
+        , count(*) as number_of_records
+        FROM authentication_events
+        WHERE DATE(updated_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL  
+        SELECT 'gitlab_db_project_features' AS table_name
+        ,'created_at' as count_type
+        , DATE(created_at) as date 
+        , count(*) as number_of_records
+        FROM project_features
+        WHERE DATE(created_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL
+        SELECT 'gitlab_db_project_features' AS table_name
+        ,'updated_at' as count_type
+        , DATE(updated_at) as date
+        , count(*) as number_of_records
+        FROM project_features
+        WHERE DATE(updated_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL
+        SELECT 'gitlab_db_approvals' AS table_name
+        ,'created_at' as count_type
+        , DATE(created_at) as date 
+        , count(*) as number_of_records
+        FROM approvals
+        WHERE DATE(created_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL
+        SELECT 'gitlab_db_approvals' AS table_name
+        ,'updated_at' as count_type
+        , DATE(updated_at) as date
+        , count(*) as number_of_records
+        FROM approvals
+        WHERE DATE(updated_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL 
+        SELECT 'gitlab_db_uploads' AS table_name
+        ,'created_at' as count_type
+        , DATE(created_at) as date 
+        , count(*) as number_of_records
+        FROM uploads
+        WHERE DATE(created_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL
+        SELECT 'gitlab_db_uploads' AS table_name
+        ,'updated_at' as count_type
+        , DATE(updated_at) as date
+        , count(*) as number_of_records
+        FROM uploads
+        WHERE DATE(updated_at) > current_date - interval '8' day
+        GROUP BY 1,2,3                   
+  cluster_8:
+    dbt_source_model: true
+    export_schema: 'gitlab_dotcom'
+    export_table: 'gitlab_pgp_export'
+    export_table_primary_key: date
+    import_db: GITLAB_DB
+    import_query: |-
+        SELECT 'gitlab_db_lfs_objects_projects' AS table_name
+        ,'created_at' as count_type
+        , DATE(created_at) as date 
+        , count(*) as number_of_records
+        FROM lfs_objects_projects
+        WHERE DATE(created_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL
+        SELECT 'gitlab_db_lfs_objects_projects' AS table_name
+        ,'updated_at' as count_type
+        , DATE(updated_at) as date
+        , count(*) as number_of_records
+        FROM lfs_objects_projects
+        WHERE DATE(updated_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL     
+        SELECT 'gitlab_db_geo_nodes' AS table_name
+        ,'created_at' as count_type
+        , DATE(created_at) as date 
+        , count(*) as number_of_records
+        FROM geo_nodes
+        WHERE DATE(created_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL
+        SELECT 'gitlab_db_geo_nodes' AS table_name
+        ,'updated_at' as count_type
+        , DATE(updated_at) as date
+        , count(*) as number_of_records
+        FROM geo_nodes
+        WHERE DATE(updated_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL 
+        SELECT 'gitlab_db_group_custom_attributes' AS table_name
+        ,'created_at' as count_type
+        , DATE(created_at) as date 
+        , count(*) as number_of_records
+        FROM group_custom_attributes
+        WHERE DATE(created_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL
+        SELECT 'gitlab_db_group_custom_attributes' AS table_name
+        ,'updated_at' as count_type
+        , DATE(updated_at) as date
+        , count(*) as number_of_records
+        FROM group_custom_attributes
+        WHERE DATE(updated_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
