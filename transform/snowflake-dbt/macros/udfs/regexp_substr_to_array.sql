@@ -22,6 +22,9 @@
     AS '
 
     var regex_constructor = new RegExp(regex_text, "g")
+    if (input_text == null) {
+        return [];
+    }
     matched_substr_array = input_text.match(regex_constructor);
     if (matched_substr_array == null){
         matched_substr_array = []

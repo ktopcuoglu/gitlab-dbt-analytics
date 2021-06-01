@@ -1,10 +1,21 @@
 {% set version_usage_stats_list = dbt_utils.get_column_values(table=ref('version_usage_stats_list'), column='full_ping_name', max_records=1000, default=['']) %}
 
+{{ config({
+    "materialized": "incremental",
+    "unique_key": "id"
+    })
+}}
+
 WITH usage_data_unpacked_intermediate AS (
 
     SELECT *
     FROM {{  ref('version_usage_data_unpacked_intermediate') }}
+    {% if is_incremental() %}
 
+      WHERE created_at >= (SELECT MAX(created_at) FROM {{this}})
+
+    {% endif %}
+    
 ), transformed AS (
 
     SELECT

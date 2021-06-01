@@ -3,9 +3,7 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
 
     SELECT *
     FROM {{ref('wk_sales_sfdc_opportunity_snapshot_history_xf')}}  
-    WHERE ((is_lost = 0 AND forecast_category_name != 'Omitted') 
-          OR (is_renewal = 1 AND is_lost = 1))
-      AND is_deleted = 0
+    WHERE is_deleted = 0
       AND is_edu_oss = 0
   
 ), report_pipeline_velocity_quarter AS (
@@ -38,12 +36,16 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
       is_excluded_flag,
       stage_name,
       forecast_category_name,
-      SUM(calculated_deal_count)                              AS opps,
-      SUM(net_arr)                                            AS net_arr,
-      SUM(booked_net_arr)                                     AS booked_net_arr,
-      SUM(net_incremental_acv)                                AS net_iacv,
-      SUM(incremental_acv)                                    AS incremental_acv,
-      SUM(total_contract_value)                               AS tcv
+      
+      SUM(open_1plus_net_arr)       AS open_1plus_net_arr,
+      SUM(open_3plus_net_arr)       AS open_3plus_net_arr,
+      SUM(open_4plus_net_arr)       AS open_4plus_net_arr,
+      SUM(booked_net_arr)           AS booked_net_arr,
+      SUM(churned_net_arr)          AS churned_net_arr,
+      SUM(net_arr)                  AS net_arr,
+      
+      SUM(calculated_deal_count)    AS deal_count
+
     FROM sfdc_opportunity_snapshot_history_xf 
     WHERE 
       -- 2 quarters before start and full quarter, total rolling 9 months at end of quarter

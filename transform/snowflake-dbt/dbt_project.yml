@@ -5,7 +5,7 @@ name: 'gitlab_snowflake'
 version: '1.0'
 config-version: 2
 profile: 'gitlab-snowflake'
-require-dbt-version: 0.18.1
+require-dbt-version: 0.19.1
 
 
 # ======
@@ -331,7 +331,7 @@ models:
         +materialized: view
 
       poc:
-        +tags: ["poc"]
+        +tags: ["poc", "product"]
         +enabled: true
 
       smau_events:
@@ -367,6 +367,12 @@ models:
       workspace_marketing:
         +schema: workspace_marketing
 
+      workspace_product:
+        +tags: ["product"]
+
+      workspace_saas_usage_ping:
+        +tags: ["product"]
+
       workspace_sales:
         +materialized: table
         +schema: workspace_sales
@@ -388,6 +394,9 @@ models:
         users_emails:
           enabled: false
 
+      product:
+        +tags: ["product"]
+        
       pumps: 
         +database: "{{ env_var('SNOWFLAKE_PROD_DATABASE') }}" #PROD
         +schema: pumps
@@ -397,6 +406,10 @@ models:
         +database: "{{ env_var('SNOWFLAKE_PROD_DATABASE') }}" #PROD
         +schema: pumps_sensitive
         +materialized: table
+      
+      usage_ping:
+        +tags: ["product"]
+
 
     # ------------------
     # Legacy Structure

@@ -22,4 +22,4 @@ file_format = (type = json)
 ```
 
 /confidential
-/label ~Snowflake ~Infrastructure  ~"Priority::3-Other" ~"Usage/Version Ping" ~"Customer Success" 
+/label ~Snowflake ~"Team::Data Platform"  ~"Priority::3-Other" ~"Usage/Version Ping" ~"Customer Success" 

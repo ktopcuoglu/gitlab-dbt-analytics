@@ -81,6 +81,10 @@ GITLAB_COM_DB_NAME = Secret(
     "env", "GITLAB_COM_DB_NAME", "airflow", "GITLAB_COM_DB_NAME"
 )
 
+GITLAB_COM_PG_PORT = Secret(
+    "env", "GITLAB_COM_PG_PORT", "airflow", "GITLAB_COM_PG_PORT"
+)
+
 GITLAB_COM_SCD_PG_PORT = Secret(
     "env", "GITLAB_COM_SCD_PG_PORT", "airflow", "GITLAB_COM_SCD_PG_PORT"
 )

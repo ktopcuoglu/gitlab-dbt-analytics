@@ -2,14 +2,12 @@ import sys
 import re
 from io import StringIO
 import json
-import time
 from logging import error, info, basicConfig, getLogger, warning
 from os import environ as env
 from typing import Dict, Tuple, List
 from yaml import load, safe_load, YAMLError
 
 import boto3
-import gspread
 import pandas as pd
 from fire import Fire
 from gitlabdata.orchestration_utils import (
@@ -18,13 +16,11 @@ from gitlabdata.orchestration_utils import (
     query_executor,
 )
 from google_sheets_client import GoogleSheetsClient
+from google_drive_client import GoogleDriveClient
 from google.cloud import storage
 from google.oauth2 import service_account
-from gspread.exceptions import APIError
-from gspread import Client
-from oauth2client.service_account import ServiceAccountCredentials
 from sheetload_dataframe_utils import dw_uploader
-from sqlalchemy.engine.base import Engine
+from sheetload_dataframe_utils import dw_uploader_append_only
 from qualtrics_sheetload import qualtrics_loader
 
 
@@ -322,6 +318,74 @@ def csv_loader(
     dw_uploader(engine, table=table, data=csv_data, schema=schema, truncate=True)
 
 
+def drive_loader(
+    drive_file: str,
+    schema: str = "driveload",
+    table_name: str = None,
+    gapi_keyfile: str = None,
+    conn_dict: Dict[str, str] = None,
+):
+    """
+    Load all data from a Google Drive Folder into a DataFrame and pass it to dw_uploader.
+    The folder must have been shared with the google service account of the runner.
+
+    All files from one folder are uploaded into one table.
+
+    This process creates an "archived" folder and moves files into this folder once uploaded
+
+    Column names can not contain parentheses. Spaces and slashes will be
+    replaced with underscores.
+
+    drive: path to yaml file with folder configurations
+
+    table_name: Optional, matches the table_name to be loaded
+
+    For a working example of this function being called see the driveload DAG.
+
+    python driveload.py drive <drive_file>
+    """
+    engine = snowflake_engine_factory(conn_dict or env, "LOADER", schema)
+    info(engine)
+
+    google_drive_client = GoogleDriveClient(gapi_keyfile)
+
+    with open(drive_file, "r") as yaml_file:
+        stream = safe_load(yaml_file)
+
+        folders = [
+            folder
+            for folder in stream["folders"]
+            if (table_name is None or folder.get("table_name") == table_name)
+        ]
+
+    for folder in folders:
+        folder_name = folder.get("folder_name")
+        table_name = folder.get("table_name")
+        # mypy fix
+        if table_name is None:
+            raise ValueError
+
+        info(f"Processing folder {folder_name}")
+
+        folder_id = google_drive_client.get_item_id(item_name=folder_name)
+        archive_folder_id = google_drive_client.get_archive_folder_id(
+            in_folder_id=folder_id
+        )
+
+        files = google_drive_client.get_files_in_folder(
+            folder_id=folder_id, file_type="text/csv"
+        )
+        info(f"Found {str(len(files))} to process")
+
+        for file in files:
+            file_id = file.get("id")
+            data = google_drive_client.get_data_frame_from_file_id(file_id=file_id)
+            dw_uploader_append_only(engine, table=table_name, data=data)
+            google_drive_client.move_file_to_folder(
+                file_id=file_id, to_folder_id=archive_folder_id
+            )
+
+
 if __name__ == "__main__":
     basicConfig(stream=sys.stdout, level=20)
     getLogger("snowflake.connector.cursor").disabled = True
@@ -332,6 +396,7 @@ if __name__ == "__main__":
             "s3": s3_loader,
             "csv": csv_loader,
             "qualtrics": qualtrics_loader,
+            "drive": drive_loader,
         }
     )
     info("Complete.")

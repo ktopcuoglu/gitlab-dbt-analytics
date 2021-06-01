@@ -232,6 +232,7 @@ roles:
             - covid19
             - dbt_analytics
             - dbt_analytics_clones
+            - driveload
             - gitlab_data_yaml
             - handbook
             - maxmind
@@ -249,6 +250,7 @@ roles:
             - boneyard
             - covid19
             - dbt_analytics
+            - driveload
             - gcp_billing
             - gitlab_data_yaml
             - gitlab_dotcom
@@ -275,6 +277,7 @@ roles:
             - boneyard
             - covid19
             - dbt_analytics
+            - driveload
             - gitlab_data_yaml
             - handbook
             - license_db
@@ -318,6 +321,7 @@ roles:
             - boneyard
             - covid19
             - dbt_analytics
+            - driveload
             - gitlab_data_yaml
             - gitlab_dotcom
             - license_db
@@ -360,6 +364,7 @@ roles:
             - netsuite
             - keyhole_twitter
             - marketing_dnc
+            - marketo
             - pmg
             - snowflake_db
             - zendesk
@@ -377,6 +382,7 @@ roles:
             - covid19
             - dbt_analytics
             - dbt_analytics_sensitive
+            - driveload
             - gitlab_data_yaml
             - gitlab_dotcom
             - greenhouse
@@ -401,6 +407,7 @@ roles:
             - boneyard
             - covid19
             - dbt_analytics
+            - driveload
             - gitlab_data_yaml
             - gitlab_dotcom
             - license_db
@@ -427,6 +434,7 @@ roles:
             - boneyard
             - covid19
             - customers_db
+            - driveload
             - dbt_analytics
             - gitlab_data_yaml
             - gitlab_dotcom
@@ -454,6 +462,7 @@ roles:
             - covid19
             - customers_db
             - dbt_analytics
+            - driveload
             - gitlab_data_yaml
             - gitlab_dotcom
             - license_db
@@ -631,6 +640,7 @@ roles:
             - analyst_xs
         member_of:
             - analyst_core
+            - driveload
             - bamboohr_analytics
             - boneyard
             - gitlab_data_yaml
@@ -647,6 +657,7 @@ roles:
         member_of:
             - boneyard
             - dbt_analytics
+            - driveload
             - gitlab_dotcom
             - license_db
             - postgres_pipeline
@@ -720,8 +731,8 @@ roles:
             tables:
                 read:
                     - prod.covid19.covid19_cases
-                    - prep.airflow.airflow_dag
-                    - prep.airflow.airflow_dag_run
+                    - prep.airflow.airflow_dag_source
+                    - prep.airflow.airflow_dag_run_source
 
     - reporter_sensitive:
         warehouses:
@@ -1038,7 +1049,24 @@ roles:
                 read:
                     - raw.discourse.*
 
-    - gainsight: # to be renamed gainsight_pump, will require change to gainsight connection
+    - driveload:
+        warehouses:
+            - analyst_xs
+        privileges:
+            databases:
+                read:
+                    - prep
+                    - raw
+            schemas:
+                read:
+                    - prep.driveload
+                    - raw.driveload
+            tables:
+                read:
+                    - prep.driveload.*
+                    - raw.driveload.*
+
+    - gainsight_pump:
         warehouses:
             - gainsight_xs
         privileges:
@@ -1059,7 +1087,7 @@ roles:
                     - prod.common_mart_product.mart_product_usage_wave_1_3_metrics_monthly
                     - prod.common_mart_product.mart_product_usage_wave_1_3_metrics_monthly_diff
 
-    - gainsight_temp_source: # to be renamed gainsight
+    - gainsight:
         warehouses:
             - analyst_xs
         privileges:
@@ -1437,6 +1465,21 @@ roles:
                     - prep.maxmind.*
                     - raw.sheetload.maxmind_countries
                     - raw.sheetload.maxmind_ranges
+
+    - marketo:
+          privileges:
+              databases:
+                  read:
+                    #   - prep
+                      - raw
+              schemas:
+                  read:
+                    #   - prep.marketo
+                      - raw.marketo
+              tables:
+                  read:
+                    #   - prep.marketo.*
+                      - raw.marketo.*
 
     - netsuite:
         warehouses:
@@ -1864,6 +1907,12 @@ roles:
             - bamboohr_analytics
         warehouses:
             - analyst_xs
+
+    - awaller:
+        member_of:
+            - analyst_marketing
+        warehouses:
+            - analyst_xs        
     
     - blutz:
         warehouses:
@@ -2234,6 +2283,12 @@ roles:
            - analyst_engineering
         warehouses:
            - analyst_xs
+      
+    - jameson:
+        member_of:
+            - analyst_marketing
+        warehouses:
+            - analyst_xs            
 
     - jjackson:
         member_of:
@@ -2267,6 +2322,8 @@ roles:
             - netsuite
             - static_admin
             - data_team_analyst
+            - analyst_finance
+            - gainsight
         warehouses:
             - analyst_xs
             - analyst_l
@@ -2425,6 +2482,14 @@ roles:
         warehouses:
             - analyst_xs
 
+    - kkarthikeyan:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+            - customers_db
+        warehouses:
+            - analyst_xs
+
     - ktam:
         member_of: []
         warehouses: []
@@ -2569,7 +2634,7 @@ roles:
         member_of:
             - analyst_growth
             - data_team_analyst
-            - gainsight_temp_source
+            - gainsight
         warehouses:
             - analyst_xs
             - analyst_l
@@ -2606,6 +2671,12 @@ roles:
                 write:
                     - mpeychet_prep.*.*
                     - mpeychet_prod.*.*
+
+    - mray:
+        member_of:
+            - analyst_marketing
+        warehouses:
+            - analyst_xs   
 
     - mriser:
         warehouses:
@@ -2813,6 +2884,10 @@ roles:
         member_of: []
         warehouses: []
 
+    - pmartins:
+        warehouses:
+            - reporting
+
     - rheannamistry:
         member_of:
             - decisive_data
@@ -2855,6 +2930,7 @@ roles:
     - rkohnke:
         member_of:
             - reporter
+            - analyst_marketing
         warehouses:
             - analyst_xs
 
@@ -3242,6 +3318,11 @@ users:
         member_of:
             - amurray
 
+    - awaller:
+        can_login: yes
+        member_of:
+            - awaller
+
     - blutz:
         can_login: yes
         member_of:
@@ -3370,7 +3451,7 @@ users:
     - gainsight:
         can_login: yes
         member_of:
-            - gainsight
+            - gainsight_pump
 
     - gitlab_ci:
         can_login: yes
@@ -3408,6 +3489,11 @@ users:
         can_login: yes
         member_of:
             - iwiedler
+
+    - jameson:
+        can_login: yes
+        member_of:
+            - jameson
 
     - jjackson:
         can_login: yes
@@ -3488,6 +3574,11 @@ users:
         member_of:
             - kchu
 
+    - kkarthikeyan:
+        can_login: yes
+        member_of:
+            - kkarthikeyan
+
     - ktam:
         can_login: no
         member_of: []
@@ -3554,6 +3645,11 @@ users:
         can_login: yes
         member_of:
             - mpeychet
+
+    - mray:
+        can_login: yes
+        member_of:
+            - mray        
 
     - mriser:
         can_login: yes
@@ -3633,6 +3729,12 @@ users:
     - pluthra:
         can_login: no
         member_of: []
+
+    - pmartins:
+        can_login: yes
+        member_of:
+            - pmartins
+            - securityadmin
 
     - pwc_jblessing:
         can_login: no

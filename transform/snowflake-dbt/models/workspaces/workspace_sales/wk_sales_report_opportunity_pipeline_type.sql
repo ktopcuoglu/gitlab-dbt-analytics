@@ -2,7 +2,10 @@
 
 
 --TODO
--- Add is renewal type, with current model is hard to get net net arr, it is only easy to get gross net arr
+-- DONE Add is renewal type, with current model is hard to get net net arr, it is only easy to get gross net arr
+-- DONE Add Churned as Resolution type, if not, the negative churn value get's lost between the positive Net ARR value of lost FO or Expansion deals
+--
+
 WITH sfdc_opportunity_snapshot_history_xf AS (
 
   SELECT *
@@ -20,6 +23,7 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
         is_won,
         is_lost,
         is_open,
+        is_renewal,
         order_type_stamped,
         sales_qualified_source,
         deal_category,
@@ -255,13 +259,17 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
                     THEN '1. Closed Won'
             WHEN p.close_fiscal_quarter_date = o.close_fiscal_quarter_date
                 AND o.is_lost = 1
+                AND o.is_renewal = 1
+                    THEN '5. Churned'
+            WHEN p.close_fiscal_quarter_date = o.close_fiscal_quarter_date
+                AND o.is_lost = 1
                     THEN '4. Closed Lost'
             WHEN p.close_fiscal_quarter_date = o.close_fiscal_quarter_date
                 AND o.is_open = 1
-                    THEN '5. Open'
+                    THEN '6. Open'
             WHEN p.close_fiscal_quarter_date = o.close_fiscal_quarter_date
                 AND o.stage_name = '10-Duplicate'
-                    THEN '6. Duplicate'
+                    THEN '7. Duplicate'
             WHEN p.close_fiscal_quarter_date <> o.close_fiscal_quarter_date
                 AND p.max_snapshot_day_of_fiscal_quarter_normalised >= 75
                     THEN '2. Slipped'
@@ -287,6 +295,7 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
         p.end_is_won,
         p.end_is_lost,
         p.end_is_open,
+        o.is_renewal                                                            AS end_is_renewal,
 
         p.end_net_arr - beg_net_arr                                             AS delta_net_arr,
 
