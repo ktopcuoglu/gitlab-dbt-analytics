@@ -386,7 +386,7 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
-{% docs fct_saas_product_usage_monthly %}
+{% docs fct_saas_product_usage_metrics_monthly %}
 This table builds on the set of all Zuora subscriptions that are associated with a **SaaS** rate plans. Seat charges from Zuora (`prep_recurring_charge_subscription_monthly`) and namespace billable user data (`fct_namespace_member_summary`) are combined with high priority Usage Ping metrics (`prep_saas_usage_ping_subscription_mapped_wave_2_3_metrics`) to build out the set of facts included in this table. Only the most recently collected namespace "Usage Ping" and membership data per `dim_subscription_id` each month are reported in this table.
 
 The data from this table will be used to create a mart table (`mart_saas_product_usage_monthly`) for Gainsight Customer Product Insights.

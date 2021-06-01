@@ -28,7 +28,7 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
-{% docs mart_saas_product_usage_monthly %}
+{% docs mart_saas_product_usage_metrics_monthly %}
 
 The purpose of this mart table is to act as a data pump of **SaaS** customer product usage data at a _monthly grain_ into Gainsight for Customer Product Insights.
 

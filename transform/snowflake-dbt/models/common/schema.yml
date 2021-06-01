@@ -1842,8 +1842,8 @@ models:
           - not_null
           - unique
 
-  - name: fct_saas_product_usage_monthly
-    description: '{{ doc("fct_saas_product_usage_monthly") }}'
+  - name: fct_saas_product_usage_metrics_monthly
+    description: '{{ doc("fct_saas_product_usage_metrics_monthly") }}'
     columns:
       - name: dim_subscription_id
         tests:

@@ -4,7 +4,7 @@
 }}
 
 {{ simple_cte([
-    ('monthly_metrics', 'fct_saas_product_usage_monthly'),
+    ('monthly_metrics', 'fct_saas_product_usage_metrics_monthly'),
     ('billing_accounts', 'dim_billing_account'),
     ('crm_accounts', 'dim_crm_account'),
     ('location_country', 'dim_location_country')
