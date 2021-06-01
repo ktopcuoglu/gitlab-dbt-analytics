@@ -1475,6 +1475,108 @@ tables:
         FROM container_expiration_policies
         WHERE DATE(updated_at) > current_date - interval '8' day
         GROUP BY 1,2,3
-            
+  cluster_6:
+    dbt_source_model: true
+    export_schema: 'gitlab_dotcom'
+    export_table: 'gitlab_pgp_export'
+    export_table_primary_key: date
+    import_db: GITLAB_DB
+    import_query: |-
+        SELECT 'gitlab_db_approval_merge_request_rules' AS table_name
+        ,'created_at' as count_type
+        , DATE(created_at) as date 
+        , count(*) as number_of_records
+        FROM approval_merge_request_rules
+        WHERE DATE(created_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL
+        SELECT 'gitlab_db_approval_merge_request_rules' AS table_name
+        ,'updated_at' as count_type
+        , DATE(updated_at) as date
+        , count(*) as number_of_records
+        FROM approval_merge_request_rules
+        WHERE DATE(updated_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL 
+        SELECT 'gitlab_db_protected_branches' AS table_name
+        ,'created_at' as count_type
+        , DATE(created_at) as date 
+        , count(*) as number_of_records
+        FROM protected_branches
+        WHERE DATE(created_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL
+        SELECT 'gitlab_db_protected_branches' AS table_name
+        ,'updated_at' as count_type
+        , DATE(updated_at) as date
+        , count(*) as number_of_records
+        FROM protected_branches
+        WHERE DATE(updated_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL 
+        SELECT 'gitlab_db_vulnerability_occurrence_identifiers' AS table_name
+        ,'created_at' as count_type
+        , DATE(created_at) as date 
+        , count(*) as number_of_records
+        FROM vulnerability_occurrence_identifiers
+        WHERE DATE(created_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL
+        SELECT 'gitlab_db_vulnerability_occurrence_identifiers' AS table_name
+        ,'updated_at' as count_type
+        , DATE(updated_at) as date
+        , count(*) as number_of_records
+        FROM vulnerability_occurrence_identifiers
+        WHERE DATE(updated_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL 
+        SELECT 'gitlab_db_projects' AS table_name
+        ,'created_at' as count_type
+        , DATE(created_at) as date 
+        , count(*) as number_of_records
+        FROM projects
+        WHERE DATE(created_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL
+        SELECT 'gitlab_db_projects' AS table_name
+        ,'updated_at' as count_type
+        , DATE(updated_at) as date
+        , count(*) as number_of_records
+        FROM projects
+        WHERE DATE(updated_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL 
+        SELECT 'gitlab_db_labels' AS table_name
+        ,'created_at' as count_type
+        , DATE(created_at) as date 
+        , count(*) as number_of_records
+        FROM labels
+        WHERE DATE(created_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL
+        SELECT 'gitlab_db_labels' AS table_name
+        ,'updated_at' as count_type
+        , DATE(updated_at) as date
+        , count(*) as number_of_records
+        FROM labels
+        WHERE DATE(updated_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL
+        SELECT 'gitlab_db_ci_trigger_requests' AS table_name
+        ,'created_at' as count_type
+        , DATE(created_at) as date 
+        , count(*) as number_of_records
+        FROM ci_trigger_requests
+        WHERE DATE(created_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL
+        SELECT 'gitlab_db_ci_trigger_requests' AS table_name
+        ,'updated_at' as count_type
+        , DATE(updated_at) as date
+        , count(*) as number_of_records
+        FROM ci_trigger_requests
+        WHERE DATE(updated_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+                    
 
 
