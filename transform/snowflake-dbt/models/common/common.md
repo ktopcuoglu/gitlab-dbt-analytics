@@ -381,6 +381,21 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
+{% docs fct_usage_ping_payload %}
+Factual table with metadata on usage ping payloads received.
+
+The grain of the table is a dim_usage_ping_id.
+
+Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+Main foreign key that can help to build easily joins:
+
+- dim_license_id 
+- dim_subscription_id
+- dim_date_id
+
+{% enddocs %}
+
 {% docs fct_usage_ping_metric_all_time %}
 Factual table on the grain of an individual metric received as part of a usage ping payload.  This model specifically includes only metrics that represent usage over the entire lifetime of the instance.
 
@@ -466,6 +481,12 @@ Sales territory dimension, based off of salesforce account data, using the `gene
 {% docs dim_industry %}
 
 Industry dimension, based off of salesforce account data, using the `generate_single_field_dimension_from_prep` macro to create the final formatted SQL
+
+{% enddocs %}
+
+{% docs dim_installation %}
+
+Installation dimension, based off of version usage data and version host table. The primary key is built as a surrogate key based off of the `dim_host_id` and the `dim_instance_id`
 
 {% enddocs %}
 

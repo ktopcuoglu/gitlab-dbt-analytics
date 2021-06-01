@@ -32,6 +32,8 @@ WITH source AS (
 
     SELECT
       dim_usage_ping_id, 
+      host_id                                                                                         AS dim_host_id,
+      uuid                                                                                            AS dim_instance_id,
       ping_created_at,
       source_ip_hash                                                                                  AS ip_address_hash,
       {{ dbt_utils.star(from=ref('version_usage_data_source'), except=['EDITION', 'CREATED_AT', 'SOURCE_IP']) }},
@@ -50,6 +52,8 @@ WITH source AS (
 
     SELECT 
       dim_usage_ping_id,
+      dim_host_id,
+      dim_instance_id,
       ping_created_at, 
       ip_address_hash,
       {{ dbt_utils.star(from=ref('version_usage_data_source'), relation_alias='usage_data', except=['EDITION', 'CREATED_AT', 'SOURCE_IP']) }},
@@ -88,6 +92,8 @@ WITH source AS (
         'dr.gitlab.com'
       )                                                         THEN TRUE
         ELSE FALSE END                                                                          AS is_staging,     
+        hostname                                                                                AS host_name,
+        uuid                                                                                    AS dim_instance_id,
       COALESCE(raw_usage_data.raw_usage_data_payload, usage_data.raw_usage_data_payload_reconstructed)     AS raw_usage_data_payload
     FROM usage_data
     LEFT JOIN raw_usage_data
@@ -121,7 +127,11 @@ WITH source AS (
 
     SELECT 
       dim_usage_ping_id,
+      dim_host_id,
+      dim_instance_id,
       dim_product_tier.dim_product_tier_id AS dim_product_tier_id,
+      dim_instance_id,
+      host_name,
       ping_created_at,
       DATEADD('days', -28, ping_created_at)              AS ping_created_at_28_days_earlier,
       DATE_TRUNC('YEAR', ping_created_at)                AS ping_created_at_year,
@@ -144,6 +154,7 @@ WITH source AS (
       ping_source,
       is_internal, 
       is_staging, 
+      instance_user_count,
       dim_location_country_id 
     FROM add_country_info_to_usage_ping
     LEFT OUTER JOIN dim_product_tier

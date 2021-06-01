@@ -426,6 +426,25 @@ models:
           - unique
         tags: ["tdf", "industry", "common"]
 
+  - name: dim_installation
+    description: '{{ doc("dim_installation") }}'
+    columns:
+      - name: dim_installation_id
+        description: Unique identifier of an installation. An installation is unique combination of a host and an instance. The Unique Pkey is built as a surrogate key from the dim_intance_id and the dim_host_id
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "product", "common"]
+      - name: host_name
+        description: Name/URL of the host
+        tests:
+          - not_null
+        tags: ["tdf", "product", "common"]
+      - name: dim_instance_id
+        description: Unique ID for an instance. This ID is stored in the database of the instance
+        tests:
+          - not_null
+
   - name: dim_invoice
     description: '{{ doc("dim_invoice") }}'
     columns:
@@ -1942,6 +1961,46 @@ models:
         tags: ["tdf", "common"]
       - name: recorded_at
         description: The timestamp when the usage ping was recorded.
+
+  - name: fct_usage_ping_payload
+    description: '{{ doc("fct_usage_ping_payload") }}'
+    columns:
+      - name: dim_usage_ping_id
+        description: The unique identifier of the usage ping.
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "common"]
+      - name: dim_instance_id
+        description: The unique identifier of the self-managed instance.
+        tests:
+          - not_null
+        tags: ["tdf", "common"]
+      - name: dim_license_id
+        description: The id of the license. This id can be found in the dim_license table
+      - name: dim_subscription_id
+        description: The zuora subscription id derived from the license. Use this field to join to dim_subscription.
+      - name: dim_product_tier_id
+        description: id of the product tier. can be joined to the `dim_product_tier` table
+      - name: dim_date_id
+        description: id of the date. can be joined to the `dim_date` table
+      - name: host_name
+        description: The name of the host of the instance.
+      - name: edition
+        description: The edition of GitLab on the instance.
+      - name: major_minor_version
+        description: The version of the GitLab release on the instance.
+      - name: is_pre_release
+        description: Derived boolean flag noting if the version of GitLab on the instance corresponds to a pre-release or release candidate.
+      - name: instance_user_count
+        description: The total count of users on the instance.
+      - name: is_trial
+        description: Boolean flag noting if the license was generated as part of a trial.
+      - name: ping_created_at
+        description: The timestamp when the usage ping was created.
+        tests:
+          - not_null
+        tags: ["tdf", "common"]
 
   - name: fct_usage_ping_subscription_mapped_gmau
     description: '{{ doc("fct_usage_ping_subscription_mapped_gmau") }}'
