@@ -1761,28 +1761,6 @@ tables:
     export_table: 'gitlab_pgp_export'
     export_table_primary_key: date
     import_db: GITLAB_DB
-    import_query: |-  
-        SELECT 'gitlab_db_merge_requests' AS table_name
-        ,'created_at' as count_type
-        , DATE(created_at) as date 
-        , count(*) as number_of_records
-        FROM merge_requests
-        WHERE DATE(created_at) > current_date - interval '8' day
-        GROUP BY 1,2,3
-        UNION ALL
-        SELECT 'gitlab_db_merge_requests' AS table_name
-        ,'updated_at' as count_type
-        , DATE(updated_at) as date
-        , count(*) as number_of_records
-        FROM merge_requests
-        WHERE DATE(updated_at) > current_date - interval '8' day
-        GROUP BY 1,2,3
-  cluster_11:
-    dbt_source_model: true
-    export_schema: 'gitlab_dotcom'
-    export_table: 'gitlab_pgp_export'
-    export_table_primary_key: date
-    import_db: GITLAB_DB
     import_query: |-      
         SELECT 'gitlab_db_issues' AS table_name
         ,'created_at' as count_type
