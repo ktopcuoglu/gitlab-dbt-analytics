@@ -21,7 +21,7 @@ tables:
         GROUP BY 1,2,3
         UNION ALL
         SELECT 'gitlab_db_in_product_marketing_emails' AS table_name
-        ,'created_at' as count_type
+        ,'updated_at' as count_type
         , DATE(updated_at) as date
         , count(*) as number_of_records
         FROM in_product_marketing_emails
@@ -37,7 +37,7 @@ tables:
         GROUP BY 1,2,3
         UNION ALL
         SELECT 'gitlab_db_clusters' AS table_name
-        ,'created_at' as count_type
+        ,'updated_at' as count_type
         , DATE(updated_at) as date
         , count(*) as number_of_records
         FROM clusters
