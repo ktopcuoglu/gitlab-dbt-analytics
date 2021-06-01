@@ -284,14 +284,6 @@ tables:
         WHERE DATE(created_at) > current_date - interval '8' day
         GROUP BY 1,2,3
         UNION ALL
-        SELECT 'gitlab_db_requirements_management_test_reports' AS table_name
-        ,'updated_at' as count_type
-        , DATE(updated_at) as date
-        , count(*) as number_of_records
-        FROM requirements_management_test_reports
-        WHERE DATE(updated_at) > current_date - interval '8' day
-        GROUP BY 1,2,3
-        UNION ALL
         SELECT 'gitlab_db_issues_prometheus_alert_events' AS table_name
         ,'created_at' as count_type
         , DATE(created_at) as date 
