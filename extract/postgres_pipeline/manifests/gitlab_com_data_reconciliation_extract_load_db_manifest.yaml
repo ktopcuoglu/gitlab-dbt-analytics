@@ -17,28 +17,28 @@ tables:
         , DATE(created_at) as date 
         , count(*) as number_of_records
         FROM in_product_marketing_emails
-        WHERE DATE(created_at) > DATE(getdate())-8 
+        WHERE DATE(created_at) > current_date - interval '10' day
         UNION ALL
         SELECT 'gitlab_db_in_product_marketing_emails' AS table_name
         ,'created_at' as count_type
         , DATE(updated_at) as date
         , count(*) as number_of_records
         FROM in_product_marketing_emails
-        WHERE DATE(updated_at) > DATE(getdate())-8 
+        WHERE DATE(updated_at) > current_date - interval '10' day
         UNION ALL
         SELECT 'gitlab_db_clusters' AS table_name
         ,'created_at' as count_type
         , DATE(created_at) as date 
         , count(*) as number_of_records
         FROM clusters
-        WHERE DATE(created_at) > DATE(getdate())-8 
+        WHERE DATE(created_at) > current_date - interval '10' day
         UNION ALL
         SELECT 'gitlab_db_clusters' AS table_name
         ,'created_at' as count_type
         , DATE(updated_at) as date
         , count(*) as number_of_records
         FROM clusters
-        WHERE DATE(updated_at) > DATE(getdate())-8 
+        WHERE DATE(updated_at) > current_date - interval '10' day
 
 
 
