@@ -1777,22 +1777,6 @@ tables:
         FROM merge_requests
         WHERE DATE(updated_at) > current_date - interval '8' day
         GROUP BY 1,2,3
-        UNION ALL 
-        SELECT 'gitlab_db_todos' AS table_name
-        ,'created_at' as count_type
-        , DATE(created_at) as date 
-        , count(*) as number_of_records
-        FROM todos
-        WHERE DATE(created_at) > current_date - interval '8' day
-        GROUP BY 1,2,3
-        UNION ALL
-        SELECT 'gitlab_db_todos' AS table_name
-        ,'updated_at' as count_type
-        , DATE(updated_at) as date
-        , count(*) as number_of_records
-        FROM todos
-        WHERE DATE(updated_at) > current_date - interval '8' day
-        GROUP BY 1,2,3 
   cluster_11:
     dbt_source_model: true
     export_schema: 'gitlab_dotcom'
@@ -1847,3 +1831,19 @@ tables:
         FROM notification_settings
         WHERE DATE(updated_at) > current_date - interval '8' day
         GROUP BY 1,2,3
+        UNION ALL 
+        SELECT 'gitlab_db_todos' AS table_name
+        ,'created_at' as count_type
+        , DATE(created_at) as date 
+        , count(*) as number_of_records
+        FROM todos
+        WHERE DATE(created_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL
+        SELECT 'gitlab_db_todos' AS table_name
+        ,'updated_at' as count_type
+        , DATE(updated_at) as date
+        , count(*) as number_of_records
+        FROM todos
+        WHERE DATE(updated_at) > current_date - interval '8' day
+        GROUP BY 1,2,3 
