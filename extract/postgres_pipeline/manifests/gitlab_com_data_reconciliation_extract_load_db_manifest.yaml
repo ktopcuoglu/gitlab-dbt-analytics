@@ -1087,14 +1087,6 @@ tables:
         FROM resource_weight_events
         WHERE DATE(created_at) > current_date - interval '8' day
         GROUP BY 1,2,3
-        UNION ALL
-        SELECT 'gitlab_db_resource_weight_events' AS table_name
-        ,'updated_at' as count_type
-        , DATE(updated_at) as date
-        , count(*) as number_of_records
-        FROM resource_weight_events
-        WHERE DATE(updated_at) > current_date - interval '8' day
-        GROUP BY 1,2,3
         UNION ALL 
         SELECT 'gitlab_db_user_custom_attributes' AS table_name
         ,'created_at' as count_type
