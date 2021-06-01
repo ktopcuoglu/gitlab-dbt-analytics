@@ -89,6 +89,10 @@ sheets:
     owner: '@mpeychet_'
     tabs:
       - event_dictionary_simplified
+  - name: fmm_kpi_targets
+    owner: '@rkohnke'
+    tabs:
+      - fmm_kpi_targets
   - description:  table of active GCP Committed Use Discount (CUD)
     name: gcp_active_cud
     owner: '@dtownsend'
@@ -234,11 +238,11 @@ sheets:
     tabs:
       - scalable_employment_values
   - name: sdr_adaptive_data
-    owner: '@jeanpeguero'
+    owner: '@rkohnke'
     tabs:
       - sdr_adaptive_data
   - name: sdr_attainment_to_goal
-    owner: '@jeanpeguero'
+    owner: '@rkohnke'
     tabs:
       - sdr_attainment_to_goal
   - name: sdr_count_snapshot
