@@ -1135,7 +1135,221 @@ tables:
         FROM ci_group_variables
         WHERE DATE(updated_at) > current_date - interval '8' day
         GROUP BY 1,2,3
-
+  cluster_4:
+    dbt_source_model: true
+    export_schema: 'gitlab_dotcom'
+    export_table: 'gitlab_pgp_export'
+    export_table_primary_key: date
+    import_db: GITLAB_DB
+    import_query: |-
+        SELECT 'gitlab_db_security_scans' AS table_name
+        ,'created_at' as count_type
+        , DATE(created_at) as date 
+        , count(*) as number_of_records
+        FROM security_scans
+        WHERE DATE(created_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL
+        SELECT 'gitlab_db_security_scans' AS table_name
+        ,'updated_at' as count_type
+        , DATE(updated_at) as date
+        , count(*) as number_of_records
+        FROM security_scans
+        WHERE DATE(updated_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL
+        
+        SELECT 'gitlab_db_project_custom_attributes' AS table_name
+        ,'created_at' as count_type
+        , DATE(created_at) as date 
+        , count(*) as number_of_records
+        FROM project_custom_attributes
+        WHERE DATE(created_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL
+        SELECT 'gitlab_db_project_custom_attributes' AS table_name
+        ,'updated_at' as count_type
+        , DATE(updated_at) as date
+        , count(*) as number_of_records
+        FROM project_custom_attributes
+        WHERE DATE(updated_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL 
+        SELECT 'gitlab_db_environments' AS table_name
+        ,'created_at' as count_type
+        , DATE(created_at) as date 
+        , count(*) as number_of_records
+        FROM environments
+        WHERE DATE(created_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL
+        SELECT 'gitlab_db_environments' AS table_name
+        ,'updated_at' as count_type
+        , DATE(updated_at) as date
+        , count(*) as number_of_records
+        FROM environments
+        WHERE DATE(updated_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL 
+        SELECT 'gitlab_db_push_rules' AS table_name
+        ,'created_at' as count_type
+        , DATE(created_at) as date 
+        , count(*) as number_of_records
+        FROM push_rules
+        WHERE DATE(created_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL
+        SELECT 'gitlab_db_push_rules' AS table_name
+        ,'updated_at' as count_type
+        , DATE(updated_at) as date
+        , count(*) as number_of_records
+        FROM push_rules
+        WHERE DATE(updated_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL 
+        SELECT 'gitlab_db_identities' AS table_name
+        ,'created_at' as count_type
+        , DATE(created_at) as date 
+        , count(*) as number_of_records
+        FROM identities
+        WHERE DATE(created_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL
+        SELECT 'gitlab_db_identities' AS table_name
+        ,'updated_at' as count_type
+        , DATE(updated_at) as date
+        , count(*) as number_of_records
+        FROM identities
+        WHERE DATE(updated_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL 
+        SELECT 'gitlab_db_experiment_users' AS table_name
+        ,'created_at' as count_type
+        , DATE(created_at) as date 
+        , count(*) as number_of_records
+        FROM experiment_users
+        WHERE DATE(created_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL
+        SELECT 'gitlab_db_experiment_users' AS table_name
+        ,'updated_at' as count_type
+        , DATE(updated_at) as date
+        , count(*) as number_of_records
+        FROM experiment_users
+        WHERE DATE(updated_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL 
+        SELECT 'gitlab_db_experiment_users' AS table_name
+        ,'created_at' as count_type
+        , DATE(created_at) as date 
+        , count(*) as number_of_records
+        FROM experiment_users
+        WHERE DATE(created_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL
+        SELECT 'gitlab_db_experiment_users' AS table_name
+        ,'updated_at' as count_type
+        , DATE(updated_at) as date
+        , count(*) as number_of_records
+        FROM experiment_users
+        WHERE DATE(updated_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL 
+        SELECT 'gitlab_db_timelogs' AS table_name
+        ,'created_at' as count_type
+        , DATE(created_at) as date 
+        , count(*) as number_of_records
+        FROM timelogs
+        WHERE DATE(created_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL
+        SELECT 'gitlab_db_timelogs' AS table_name
+        ,'updated_at' as count_type
+        , DATE(updated_at) as date
+        , count(*) as number_of_records
+        FROM timelogs
+        WHERE DATE(updated_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL
+        SELECT 'gitlab_db_web_hooks' AS table_name
+        ,'created_at' as count_type
+        , DATE(created_at) as date 
+        , count(*) as number_of_records
+        FROM web_hooks
+        WHERE DATE(created_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL
+        SELECT 'gitlab_db_web_hooks' AS table_name
+        ,'updated_at' as count_type
+        , DATE(updated_at) as date
+        , count(*) as number_of_records
+        FROM web_hooks
+        WHERE DATE(updated_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL 
+        SELECT 'gitlab_db_vulnerability_identifiers' AS table_name
+        ,'created_at' as count_type
+        , DATE(created_at) as date 
+        , count(*) as number_of_records
+        FROM vulnerability_identifiers
+        WHERE DATE(created_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL
+        SELECT 'gitlab_db_vulnerability_identifiers' AS table_name
+        ,'updated_at' as count_type
+        , DATE(updated_at) as date
+        , count(*) as number_of_records
+        FROM vulnerability_identifiers
+        WHERE DATE(updated_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL  
+        SELECT 'gitlab_db_milestones' AS table_name
+        ,'created_at' as count_type
+        , DATE(created_at) as date 
+        , count(*) as number_of_records
+        FROM milestones
+        WHERE DATE(created_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL
+        SELECT 'gitlab_db_milestones' AS table_name
+        ,'updated_at' as count_type
+        , DATE(updated_at) as date
+        , count(*) as number_of_records
+        FROM milestones
+        WHERE DATE(updated_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL 
+        SELECT 'gitlab_db_ci_pipeline_schedule_variables' AS table_name
+        ,'created_at' as count_type
+        , DATE(created_at) as date 
+        , count(*) as number_of_records
+        FROM ci_pipeline_schedule_variables
+        WHERE DATE(created_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL
+        SELECT 'gitlab_db_ci_pipeline_schedule_variables' AS table_name
+        ,'updated_at' as count_type
+        , DATE(updated_at) as date
+        , count(*) as number_of_records
+        FROM ci_pipeline_schedule_variables
+        WHERE DATE(updated_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL
+        SELECT 'gitlab_db_ci_pipeline_schedule_variables' AS table_name
+        ,'created_at' as count_type
+        , DATE(created_at) as date 
+        , count(*) as number_of_records
+        FROM ci_pipeline_schedule_variables
+        WHERE DATE(created_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL
+        SELECT 'gitlab_db_ci_pipeline_schedule_variables' AS table_name
+        ,'updated_at' as count_type
+        , DATE(updated_at) as date
+        , count(*) as number_of_records
+        FROM ci_pipeline_schedule_variables
+        WHERE DATE(updated_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
 
             
 
