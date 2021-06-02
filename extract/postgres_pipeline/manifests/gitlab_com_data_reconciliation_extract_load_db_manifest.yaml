@@ -144,15 +144,15 @@ tables:
         , DATE(created_at) as created_date
         , count(*) as number_of_records
         FROM operations_feature_flags
-        WHERE DATE(updated_at) > current_date - interval '8' day
-        GROUP BY 1,2,3
+        WHERE DATE(created_at) > current_date - interval '8' day
+        GROUP BY 1,2
         UNION ALL
         SELECT 'gitlab_db_requirements_management_test_reports' AS table_name
         , DATE(created_at) as created_date
         , count(*) as number_of_records
         FROM requirements_management_test_reports
-        WHERE DATE(updated_at) > current_date - interval '8' day
-        GROUP BY 1,2,3
+        WHERE DATE(created_at) > current_date - interval '8' day
+        GROUP BY 1,2
         UNION ALL
         SELECT 'gitlab_db_issues_prometheus_alert_events' AS table_name
         , DATE(created_at) as created_date
@@ -562,8 +562,8 @@ tables:
         , DATE(created_at) as created_date
         , count(*) as number_of_records
         FROM resource_weight_events
-        WHERE DATE(updated_at) > current_date - interval '8' day
-        GROUP BY 1,2,3
+        WHERE DATE(created_at) > current_date - interval '8' day
+        GROUP BY 1,2
         UNION ALL 
         SELECT 'gitlab_db_user_custom_attributes' AS table_name
         , DATE(created_at) as created_date
@@ -741,8 +741,8 @@ tables:
         , DATE(created_at) as created_date
         , count(*) as number_of_records
         FROM resource_milestone_events
-        WHERE DATE(updated_at) > current_date - interval '8' day
-        GROUP BY 1,2,3
+        WHERE DATE(created_at) > current_date - interval '8' day
+        GROUP BY 1,2
         UNION ALL 
         SELECT 'gitlab_db_user_preferences' AS table_name
         , DATE(created_at) as created_date
@@ -848,8 +848,8 @@ tables:
         , DATE(created_at) as created_date
         , count(*) as number_of_records
         FROM authentication_events
-        WHERE DATE(updated_at) > current_date - interval '8' day
-        GROUP BY 1,2,3
+        WHERE DATE(created_at) > current_date - interval '8' day
+        GROUP BY 1,2
         UNION ALL  
         SELECT 'gitlab_db_project_features' AS table_name
         , DATE(created_at) as created_date
@@ -871,8 +871,8 @@ tables:
         , DATE(created_at) as created_date
         , count(*) as number_of_records
         FROM uploads
-        WHERE DATE(updated_at) > current_date - interval '8' day
-        GROUP BY 1,2,3                  
+        WHERE DATE(created_at) > current_date - interval '8' day
+        GROUP BY 1,2                 
   cluster_8:
     dbt_source_model: true
     export_schema: 'gitlab_dotcom'
