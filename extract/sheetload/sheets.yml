@@ -23,10 +23,6 @@ sheets:
     owner: '@s_mccauley'
     tabs:
       - ar_aging_details
-  - name: calendar
-    owner: '@tayloramurphy'
-    tabs:
-      - calendar
   - name: clari_export_forecast_net_iacv
     owner: '@mvilain'
     tabs:
