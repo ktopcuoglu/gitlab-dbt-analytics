@@ -331,6 +331,7 @@ sources:
         freshness: null
       - name: alert_management_http_integrations
         identifier: gitlab_db_alert_management_http_integrations
+        freshness: null
       - name: analytics_cycle_analytics_group_stages
         identifier: gitlab_db_analytics_cycle_analytics_group_stages
         freshness: null
