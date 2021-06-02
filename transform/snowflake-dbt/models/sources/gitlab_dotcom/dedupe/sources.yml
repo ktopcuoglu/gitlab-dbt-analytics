@@ -34,11 +34,6 @@ sources:
         freshness: null
       - name: approvals
         identifier: gitlab_db_approvals
-      - name: approver_groups
-        identifier: gitlab_db_approver_groups
-        freshness:
-            warn_after: {count: 90, period: day}
-            error_after: {count: 120, period: day}
       - name: audit_events
         identifier: gitlab_db_audit_events
         freshness:
