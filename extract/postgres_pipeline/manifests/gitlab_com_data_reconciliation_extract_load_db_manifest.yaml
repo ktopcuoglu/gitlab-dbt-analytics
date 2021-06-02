@@ -142,7 +142,7 @@ tables:
         UNION ALL
         SELECT 'gitlab_db_operations_feature_flags' AS table_name
         , DATE(created_at) as created_date
-        , null as updated_date
+        , ' ' as updated_date
         , count(*) as number_of_records
         FROM operations_feature_flags
         WHERE DATE(created_at) > current_date - interval '8' day
