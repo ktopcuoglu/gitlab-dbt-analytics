@@ -334,6 +334,7 @@ roles:
             - snowplow
             - version_db
             - zuora
+            - zuora_api_sandbox_stitch
         privileges:
             databases:
                 read:
@@ -1819,6 +1820,20 @@ roles:
                 read:
                     - prep.zuora.*
                     - raw.zuora_stitch.*
+
+    - zuora_api_sandbox_stitch:
+        warehouses:
+            - analyst_xs
+        privileges:
+            databases:
+                read:
+                    - raw
+            schemas:
+                read:
+                    - raw.zuora_api_sandbox_stitch
+            tables:
+                read:
+                    - raw.zuora_api_sandbox_stitch.*
 
     - zuora_revenue: # This is done to provide access to Data team analyst as 3530 
         warehouses:
