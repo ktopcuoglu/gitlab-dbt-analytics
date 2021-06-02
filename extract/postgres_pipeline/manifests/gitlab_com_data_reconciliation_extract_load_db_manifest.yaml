@@ -142,7 +142,7 @@ tables:
         UNION ALL
         SELECT 'gitlab_db_operations_feature_flags' AS table_name
         , DATE(created_at) as created_date
-        , ' ' as updated_date
+        , '0000-00-00' as updated_date
         , count(*) as number_of_records
         FROM operations_feature_flags
         WHERE DATE(created_at) > current_date - interval '8' day
@@ -151,7 +151,7 @@ tables:
         SELECT 'gitlab_db_requirements_management_test_reports' AS table_name
         , DATE(created_at) as created_date
         , count(*) as number_of_records
-        , ' ' as updated_date
+        , '0000-00-00' as updated_date
         FROM requirements_management_test_reports
         WHERE DATE(created_at) > current_date - interval '8' day
         GROUP BY 1,2
