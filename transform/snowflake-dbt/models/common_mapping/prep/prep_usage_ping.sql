@@ -1,3 +1,7 @@
+{{ config(
+    tags=["product"]
+) }}
+
 {{ config({
     "materialized": "incremental",
     "unique_key": "dim_usage_ping_id"
@@ -53,7 +57,7 @@ WITH source AS (
     SELECT 
       dim_usage_ping_id,
       dim_host_id,
-      dim_instance_id,
+      usage_data.dim_instance_id,
       ping_created_at, 
       ip_address_hash,
       {{ dbt_utils.star(from=ref('version_usage_data_source'), relation_alias='usage_data', except=['EDITION', 'CREATED_AT', 'SOURCE_IP']) }},
@@ -93,7 +97,6 @@ WITH source AS (
       )                                                         THEN TRUE
         ELSE FALSE END                                                                          AS is_staging,     
         hostname                                                                                AS host_name,
-        uuid                                                                                    AS dim_instance_id,
       COALESCE(raw_usage_data.raw_usage_data_payload, usage_data.raw_usage_data_payload_reconstructed)     AS raw_usage_data_payload
     FROM usage_data
     LEFT JOIN raw_usage_data
@@ -130,7 +133,6 @@ WITH source AS (
       dim_host_id,
       dim_instance_id,
       dim_product_tier.dim_product_tier_id AS dim_product_tier_id,
-      dim_instance_id,
       host_name,
       ping_created_at,
       DATEADD('days', -28, ping_created_at)              AS ping_created_at_28_days_earlier,
