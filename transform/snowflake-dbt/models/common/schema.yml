@@ -1802,7 +1802,7 @@ models:
       tests:
         - not_null
         - unique
-    tags: ["tdf", "mart", "arr", "retention"]
+      tags: ["tdf", "mart", "arr", "retention"]
 
   - name: fct_quote
     description: '{{ doc("fct_quote") }}'
