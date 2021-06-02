@@ -119,7 +119,7 @@ WITH dim_date AS (
 
     SELECT
     {{ dbt_utils.surrogate_key(['retention_subs.dim_parent_crm_account_id','retention_month']) }}
-                                                AS fct_retention_id ,
+                                                AS fct_retention_id,
       retention_subs.dim_parent_crm_account_id  AS dim_parent_crm_account_id,
       prep_crm_account.crm_account_name         AS parent_crm_account_name,
       retention_month,
