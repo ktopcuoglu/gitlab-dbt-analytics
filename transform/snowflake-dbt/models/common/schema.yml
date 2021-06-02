@@ -1868,7 +1868,7 @@ models:
           - not_null
         tags: ["tdf", "common", "gainsight"]
       - name: subscription_seats
-      - name: active_user_count
+      - name: billable_user_count
       - name: license_utilization
       - name: max_historical_user_count
       - name: umau_28_days_user

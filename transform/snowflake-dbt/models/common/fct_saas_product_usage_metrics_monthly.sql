@@ -45,7 +45,7 @@
       {{ get_date_id('saas_usage_ping.ping_date') }}                                    AS ping_created_date_id,
       -- Wave 1
       gitlab_seats.seats                                                                AS subscription_seats,
-      gitlab_seats.seats_in_use                                                         AS active_user_count,
+      gitlab_seats.seats_in_use                                                         AS billable_user_count,
       DIV0(gitlab_seats.seats_in_use, gitlab_seats.seats)                               AS license_utilization,
       gitlab_seats.max_seats_used                                                       AS max_historical_user_count,
       -- Wave 2 & 3
@@ -135,6 +135,6 @@
     cte_ref="joined",
     created_by="@ischweickartDD",
     updated_by="@ischweickartDD",
-    created_date="2021-05-25",
-    updated_date="2021-05-25"
+    created_date="2021-06-02",
+    updated_date="2021-06-02"
 ) }}

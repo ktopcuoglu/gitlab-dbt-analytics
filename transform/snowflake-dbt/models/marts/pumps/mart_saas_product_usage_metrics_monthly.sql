@@ -27,7 +27,7 @@
     --   location_country.iso_3_country_code,
       -- Wave 1
       monthly_metrics.subscription_seats,
-      monthly_metrics.active_user_count,
+      monthly_metrics.billable_user_count,
       monthly_metrics.license_utilization,
       monthly_metrics.max_historical_user_count,
       -- Wave 2 & 3

@@ -3,7 +3,7 @@
 ) }}
 
 {{ simple_cte([
-    ('prep_namespaces', 'prep_namespace'),
+    ('namespaces', 'prep_namespace'),
     ('subscriptions', 'prep_subscription'),
     ('orders_historical', 'wk_customers_db_versions_history'),
     ('dates', 'dim_date'),
@@ -52,22 +52,8 @@
       AND product_details.product_delivery_type = 'SaaS'
       AND subscription_status IN ('Active', 'Cancelled')
 
-), namespaces AS (
-  
-    /*
-    This intermediate CTE adds a column to count the distinct plans a namespace has ever been associated with,
-    which allows us to filter free namespaces out of the following CTE.
-    In this case, "free" is defined as never having a paid plan over the entire history of the given namespace
-    */
-    SELECT
-      *,
-      COUNT(DISTINCT IFNULL(gitlab_plan_id, 34))
-        OVER (PARTITION BY dim_namespace_id)                            AS gitlab_plan_count
-    FROM prep_namespaces
-
 ), namespace_list AS (
 
-    --contains non-free namespaces + prior trial namespaces.
     SELECT DISTINCT
       namespaces.dim_namespace_id,
       namespaces.namespace_type,
@@ -86,9 +72,6 @@
       ON dates.date_actual BETWEEN namespaces.namespace_created_at AND CURRENT_DATE
     LEFT JOIN trial_histories
       ON namespaces.dim_namespace_id = trial_histories.gl_namespace_id
-    WHERE IFNULL(gitlab_plan_id, 34) != 34                               -- Filter out namespaces that have never had a paid plan
-      OR gitlab_plan_count > 1
-      OR namespace_was_trial
 
 ), subscription_list AS (
   
@@ -287,6 +270,6 @@
     cte_ref="final",
     created_by="@ischweickartDD",
     updated_by="@ischweickartDD",
-    created_date="2021-06-01",
-    updated_date="2021-06-01"
+    created_date="2021-06-02",
+    updated_date="2021-06-02"
 ) }}
