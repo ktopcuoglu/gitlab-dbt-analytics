@@ -95,7 +95,6 @@
       dim_campaign.alliance_partner_name,
       dim_campaign.channel_partner_name,
       dim_campaign.sales_play,
-      dim_campaign.gtm_motion,
       fct_campaign.dim_parent_campaign_id,
       fct_campaign.campaign_owner_id,
       fct_campaign.created_by_id                                            AS campaign_created_by_id,
