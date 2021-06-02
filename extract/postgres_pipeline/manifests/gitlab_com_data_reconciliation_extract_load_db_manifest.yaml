@@ -562,8 +562,8 @@ tables:
         UNION ALL
         SELECT 'gitlab_db_resource_weight_events' AS table_name
         , DATE(created_at) as created_date
-        , count(*) as number_of_records
         , '9999-01-01' as updated_date
+        , count(*) as number_of_records
         FROM resource_weight_events
         WHERE DATE(created_at) > current_date - interval '8' day
         GROUP BY 1,2
