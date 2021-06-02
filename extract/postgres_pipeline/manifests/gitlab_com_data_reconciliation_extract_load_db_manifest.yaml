@@ -141,7 +141,7 @@ tables:
         GROUP BY 1,2,3
         UNION ALL
         SELECT 'gitlab_db_operations_feature_flags' AS table_name
-        , DATE(created_at) as created_date,
+        , DATE(created_at) as created_date
         , null as updated_date
         , count(*) as number_of_records
         FROM operations_feature_flags
