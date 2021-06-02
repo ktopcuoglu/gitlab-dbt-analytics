@@ -23,6 +23,8 @@ WITH dim_date AS (
     SELECT *
     FROM {{ ref('prep_recurring_charge') }}
     WHERE subscription_status IN ('Active', 'Cancelled')
+    -- Exclude EDU & OSS
+    AND mrr != 0
 
 ), next_renewal_month AS (
 
