@@ -235,7 +235,7 @@ models:
   - name: namespace_id
     tests:
     - not_null
-- name: sheetload_manual_arr_true_up_allocation
+- name: sheetload_manual_arr_true_up_allocation_source
   description: Manual accounting adjustment for zero dollar true ups.
   columns:
   - name: dim_subscription_id
