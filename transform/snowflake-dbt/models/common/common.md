@@ -283,7 +283,7 @@ Fact table representing quotes pulled from the Zuora billing system. These are a
 
 {% docs fct_retention %}
 
-Fact table representing quotes pulled from the Zuora billing system. These are associated with crm accounts, billing accounts, opportunities, and subscriptions.
+Fact table representing retentions months, currently based on the highest possible level (Parent account). 
 
 {% enddocs %}
 
