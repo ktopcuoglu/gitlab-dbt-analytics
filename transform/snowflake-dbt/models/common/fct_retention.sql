@@ -31,32 +31,36 @@ WITH dim_date AS (
     SELECT DISTINCT
       merged_accounts.dim_parent_crm_account_id,
       MIN(subscription_end_month) OVER (PARTITION BY merged_accounts.dim_parent_crm_account_id)    AS next_renewal_month
-    FROM prep_subscription
+    FROM prep_recurring_charge
     INNER JOIN dim_date
-      ON dim_date.date_actual = prep_subscription.subscription_end_month
+      ON dim_date.date_id = prep_recurring_charge.dim_date_id
     LEFT JOIN prep_crm_account AS crm_accounts
-      ON crm_accounts.dim_crm_account_id = prep_subscription.dim_crm_account_id
+      ON crm_accounts.dim_crm_account_id = prep_recurring_charge.dim_crm_account_id
     INNER JOIN prep_crm_account AS merged_accounts
       ON merged_accounts.dim_crm_account_id = COALESCE(crm_accounts.merged_to_account_id, crm_accounts.dim_crm_account_id)
-    WHERE subscription_end_month >= DATE_TRUNC('month',CURRENT_DATE)
+    LEFT JOIN prep_subscription
+      ON prep_subscription.dim_subscription_id = prep_recurring_charge.dim_subscription_id
       AND subscription_end_month <= DATEADD('year', 1, date_actual)
+    WHERE subscription_end_month >= DATE_TRUNC('month',CURRENT_DATE)
 
 ), last_renewal_month AS (
 
     SELECT DISTINCT
       merged_accounts.dim_parent_crm_account_id,
       MAX(subscription_end_month) OVER (PARTITION BY merged_accounts.dim_parent_crm_account_id)    AS last_renewal_month
-    FROM prep_subscription
+    FROM prep_recurring_charge
     INNER JOIN dim_date
-      ON dim_date.date_actual = prep_subscription.subscription_end_month
+      ON dim_date.date_id = prep_recurring_charge.dim_date_id
     LEFT JOIN prep_crm_account AS crm_accounts
-      ON crm_accounts.dim_crm_account_id = prep_subscription.dim_crm_account_id
+      ON crm_accounts.dim_crm_account_id = prep_recurring_charge.dim_crm_account_id
     INNER JOIN prep_crm_account AS merged_accounts
       ON merged_accounts.dim_crm_account_id = COALESCE(crm_accounts.merged_to_account_id, crm_accounts.dim_crm_account_id)
-    WHERE subscription_end_month < DATE_TRUNC('month',CURRENT_DATE)
+    LEFT JOIN prep_subscription
+      ON prep_subscription.dim_subscription_id = prep_recurring_charge.dim_subscription_id
       AND subscription_end_month <= DATEADD('year', 1, date_actual)
+    WHERE subscription_end_month < DATE_TRUNC('month',CURRENT_DATE)
 
-),  parent_account_mrrs AS (
+), parent_account_mrrs AS (
 
     SELECT
       prep_crm_account.dim_parent_crm_account_id,
@@ -114,11 +118,13 @@ WITH dim_date AS (
 ), final AS (
 
     SELECT
-      retention_subs.dim_parent_crm_account_id,
+    {{ dbt_utils.surrogate_key(['retention_subs.dim_parent_crm_account_id','retention_month']) }}
+                                                AS fct_retention_id ,
+      retention_subs.dim_parent_crm_account_id  AS dim_parent_crm_account_id,
       prep_crm_account.crm_account_name         AS parent_crm_account_name,
       retention_month,
-      dim_date.fiscal_year                     AS retention_fiscal_year,
-      dim_date.fiscal_quarter                  AS retention_fiscal_quarter,
+      dim_date.fiscal_year                      AS retention_fiscal_year,
+      dim_date.fiscal_quarter                   AS retention_fiscal_quarter,
       retention_subs.last_renewal_month,
       retention_subs.next_renewal_month,
       current_mrr                               AS prior_year_mrr,
@@ -161,4 +167,3 @@ WITH dim_date AS (
     created_date="2021-06-02",
     updated_date="2021-06-02"
 ) }}
-
