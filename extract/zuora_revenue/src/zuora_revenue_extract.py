@@ -1,6 +1,7 @@
 import argparse
 import sys
 import logging
+from datetime import datetime
 from api import ZuoraRevProAPI
 
 # Define the argument required to run the  extraction process
@@ -47,7 +48,7 @@ results = parser.parse_args()
 
 if __name__ == "__main__":
     logging.basicConfig(
-        filename="zuora_extract.log",
+        filename="logs/zuora_extract_"+results.table_name+"_"+(datetime.now()).strftime("%d-%m-%Y-%H:%M:%S")+".log",
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
         level=20,
     )

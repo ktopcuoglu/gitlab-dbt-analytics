@@ -42,7 +42,7 @@ def zuora_revenue_extract(table_name: str) -> None:
             username=zuora_revenue_compute_username,
             password=zuora_revenue_compute_password,
         )
-        print("Connected")
+        logging.info("Connected")
         stdin, stdout, stderr = connection.exec_command(extract_command)
         exit_code = stdout.channel.recv_exit_status()
         stdout_raw = []
