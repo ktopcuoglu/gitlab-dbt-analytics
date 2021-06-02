@@ -76,8 +76,9 @@ WITH dim_date AS (
 
 ), retention_subs AS (
 
-    SELECT dim_parent_crm_account_id,
-           retention_month
+    SELECT
+      dim_parent_crm_account_id,
+      retention_month
     FROM parent_account_mrrs
 
 )
