@@ -235,6 +235,21 @@ models:
   - name: namespace_id
     tests:
     - not_null
+- name: sheetload_manual_arr_true_up_allocation
+  description: Manual accounting adjustment for zero dollar true ups.
+  columns:
+  - name: dim_subscription_id
+    tests:
+    - not_null
+  - name: mrr 
+    tests:
+    - not_null
+  - name: effective_start_date
+    tests:
+    - not_null
+  - name: effective_end_date
+    tests:
+    - not_null
 - name: sheetload_marketing_kpi_benchmarks_source
   description: This is the source of marketing KPI goals to be included in marketing metric reports and dashboards.
   columns:

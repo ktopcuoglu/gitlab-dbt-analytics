@@ -143,6 +143,10 @@ sheets:
     owner: '@mpeychet_'
     tabs:
       - manual_downgrade_dotcom_tracking
+  - name: manual_arr_true_up_allocation
+    owner: '@michellecooper'
+    tabs:
+      - manual_arr_true_up_allocation
   - name: marketing_core_users_from_docs_gitlab_com
     owner: '@rkohnke'
     tabs:
