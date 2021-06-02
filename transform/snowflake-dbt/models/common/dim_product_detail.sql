@@ -27,7 +27,7 @@ WITH base AS (
       product_ranking                  AS product_ranking,
       is_oss_or_edu_rate_plan          AS is_oss_or_edu_rate_plan,
       billing_list_price               AS billing_list_price,
-      annual_billing_list_price        AS annual_billing_list_price,
+      annual_billing_list_price        AS annual_billing_list_price
     FROM base
 )
 
