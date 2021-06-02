@@ -13,17 +13,17 @@
       host_id,
       instance_id,
       {{dbt_utils.surrogate_key(['host_id', 'instance_id'])}} AS organization_id,
-      ping_id,
+      ping_id                                                 AS dim_usage_ping_id,    
       stage_name,
       created_month,
       monthly_metric_value
     FROM monthly_usage_data
     WHERE is_smau = TRUE
 
-), dim_usage_pings AS (
+), fct_usage_ping_payload AS (
 
     SELECT *
-    FROM {{ ref('dim_usage_pings') }}
+    FROM {{ ref('fct_usage_ping_payload') }}
 
 )
 
@@ -32,8 +32,8 @@ SELECT
   smau_only.organization_id,
   'Self-Managed' AS delivery,
   IFF(instance_user_count = 1, 'Individual', 'Group')          AS organization_type,
-  dim_usage_pings.product_tier,
-  IFF(dim_usage_pings.product_tier <> 'Core', TRUE, FALSE) AS is_paid_product_tier,
+  fct_usage_ping_payload.product_tier,
+  IFF(fct_usage_ping_payload.product_tier <> 'Core', TRUE, FALSE) AS is_paid_product_tier,
   umau_value,
   {{ dbt_utils.pivot(
     'stage_name', 
@@ -45,6 +45,6 @@ SELECT
     quote_identifiers = False
   ) }}
 FROM smau_only
-LEFT JOIN dim_usage_pings
-  ON smau_only.ping_id = dim_usage_pings.id
+LEFT JOIN fct_usage_ping_payload
+  ON smau_only.dim_usage_ping_id = fct_usage_ping_payload.dim_usage_ping_id
 {{dbt_utils.group_by(n=7)}}
