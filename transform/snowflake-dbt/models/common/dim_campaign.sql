@@ -24,7 +24,7 @@ WITH sfdc_campaign_info AS (
       alliance_partner_name,
       channel_partner_name,
       sales_play,
-      gtm_motion,
+      gtm_motion
     FROM sfdc_campaign_info
 
 )
