@@ -50,6 +50,29 @@ models:
       - name: charge_type
         description: Specifies the type of charge
 
+  - name: rpt_crm_opportunity_accepted_period
+  - name: rpt_crm_opportunity_closed_period
+  - name: rpt_crm_person_mql
+  - name: rpt_main_ae_generated_cut
+  - name: rpt_main_channel_generated_cut
+  - name: rpt_main_order_type_cut
+  - name: rpt_main_region_cut
+  - name: rpt_main_regional_director_cut
+  - name: rpt_main_sales_qualified_cut
+  - name: rpt_main_sales_qualified_first_order_cut
+  - name: rpt_main_sdr_generated_cut
+  - name: rpt_main_web_direct_generated_cut
+  - name: rpt_ratio_ae_generated_cut
+  - name: rpt_ratio_channel_generated_cut
+  - name: rpt_ratio_order_type_cut
+  - name: rpt_ratio_regional_director_cut
+  - name: rpt_ratio_sales_qualified_cut
+  - name: rpt_ratio_sales_qualified_first_order_cut
+  - name: rpt_ratio_sdr_generated_cut
+  - name: rpt_ratio_web_generated_cut
+  - name: rpt_sales_funnel_target_daily
+  - name: rpt_sales_funnel_target
+
   - name: wk_finance_fct_recurring_charge_daily_snapshot
     description: Provides rate plan charge snapshots on a daily basis.
     columns:
