@@ -30,7 +30,12 @@
     INNER JOIN dates
       ON dates.date_actual BETWEEN gitlab_subscriptions.valid_from
                             AND IFNULL(gitlab_subscriptions.valid_to, CURRENT_DATE)
-    {{ dbt_utils.group_by(n=5)}}
+    QUALIFY ROW_NUMBER() OVER (
+      PARTITION BY
+        gitlab_subscriptions.namespace_id,
+        dates.first_day_of_month
+      ORDER BY gitlab_subscriptions.valid_from DESC
+    ) = 1
 
 ), joined AS (
 
@@ -116,7 +121,7 @@
     --   "redis_hll_counters.incident_management.incident_management_total_unique_counts_monthly" AS incident_management_total_unique_counts_monthly,
       -- Data Quality Flags
       IFF(license_utilization = 0
-            AND active_user_count > 0,
+            AND billable_user_count > 0,
           TRUE, FALSE)                                                                  AS is_missing_paid_seats,
       IFF(saas_usage_ping.reporting_month IS NOT NULL
             OR gitlab_seats.snapshot_month IS NOT NULL,
