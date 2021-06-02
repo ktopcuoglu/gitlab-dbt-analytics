@@ -1796,6 +1796,13 @@ models:
 
   - name: fct_retention
     description: '{{ doc("fct_retention") }}'
+    columns:
+    - name: fct_retention_id
+      description: A unique identifier of the retention record.
+      tests:
+        - not_null
+        - unique
+    tags: ["tdf", "mart", "arr", "retention"]
 
   - name: fct_quote
     description: '{{ doc("fct_quote") }}'
