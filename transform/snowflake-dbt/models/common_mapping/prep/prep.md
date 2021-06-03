@@ -4,12 +4,6 @@ Creates a base view with generated keys for the alliance type shared dimension a
 
 {% enddocs %}
 
-{% docs prep_retention %}
-
-Creates a base table including all three types of retention. If duplicates are found between the CRM account and parent CRM account only the parent will be included. 
-
-{% enddocs %}
-
 {% docs prep_dr_partner_engagement %}
 
 Creates a base view with generated keys for the dr partner engagement shared dimension and references in facts.

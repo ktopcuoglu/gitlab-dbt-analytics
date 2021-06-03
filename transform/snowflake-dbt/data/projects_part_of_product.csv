@@ -83,6 +83,7 @@ gitlab-org/project-templates/spring,3842996
 gitlab-org/project-templates/serverless-framework,15112583
 gitlab-org/prometheus-client-mmap,3362933
 gitlab-org/prometheus-storage-migrator,4949400
+gitlab-org/protect/general,26076251
 gitlab-org/release-tools,430285
 gitlab-org/security-products/analyzers/bundler-audit,9358979
 gitlab-org/security-products/analyzers/eslint,10476326
@@ -236,7 +237,6 @@ gitlab-org/security/gitlab-foss,15683922
 gitlab-org/security/omnibus-gitlab,15667093
 gitlab-org/security/gitlab,15642544
 gitlab-org/security/gitlab-runner,19047934
-gitlab-org/defend/general,15234689
 gitlab-org/status-page,16842968
 gitlab-com/gl-infra/gitter-infrastructure,2959752
 gitlab-org/webide-file-sync,11446522

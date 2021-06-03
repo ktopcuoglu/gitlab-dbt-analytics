@@ -70,7 +70,10 @@
       uuid,
       hostname,
       ping_created_at::DATE - LAG(ping_created_at::DATE)
-        IGNORE NULLS OVER (PARTITION BY dim_subscription_id ORDER BY snapshot_month)    AS days_since_last_ping,
+        IGNORE NULLS OVER (
+          PARTITION BY dim_subscription_id, uuid, hostname
+          ORDER BY snapshot_month)                                                      AS date_diff,
+      IFF(date_diff > 0, date_diff, 1)                                                  AS days_since_last_ping,
       {{ usage_ping_over_ping_difference('commit_comment_all_time_event') }},
       {{ usage_ping_over_ping_difference('source_code_pushes_all_time_event') }},
       {{ usage_ping_over_ping_difference('ci_builds_all_time_event') }},
@@ -225,5 +228,5 @@
     created_by="@ischweickartDD",
     updated_by="@ischweickartDD",
     created_date="2021-03-04",
-    updated_date="2021-04-13"
+    updated_date="2021-05-24"
 ) }}
