@@ -919,7 +919,7 @@ tables:
         FROM issue_metrics
         WHERE DATE(updated_at) > current_date - interval '8' day
         GROUP BY 1,2,3
-  cluster_11:
+  cluster_12:
     dbt_source_model: true
     export_schema: 'gitlab_dotcom'
     export_table: 'gitlab_pgp_export'
