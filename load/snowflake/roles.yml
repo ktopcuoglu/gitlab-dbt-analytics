@@ -2819,7 +2819,7 @@ roles:
                     - mwawrzyniak_prep.*.*
                     - mwawrzyniak_prod.*.*
                 write:
-                    - mwawrzyniakprep.*.*
+                    - mwawrzyniak_prep.*.*
                     - mwawrzyniak_prod.*.*
 
     - mwilkins:
