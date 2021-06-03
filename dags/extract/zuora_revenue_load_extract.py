@@ -145,4 +145,4 @@ for table_name in table_name_list:
         arguments=[container_cmd_load],
         dag=dag,
     )
-    start >> zuora_revenue_extract_run >> zuora_revenue_load_run
+    start >> zuora_revenue_load_run

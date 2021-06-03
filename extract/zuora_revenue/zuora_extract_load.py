@@ -126,7 +126,7 @@ def show_extraction_status(bucket: str, table_name: str):
         )
         blob.download_to_filename(file_name)
         with open(file_name, "r") as log_file:
-            logging.info(log_file.readlines())
+            logging.info(log_file.read())
         source_bucket.copy_blob(blob, destination_bucket, destination_file_name)
     else:
         logging.error(
