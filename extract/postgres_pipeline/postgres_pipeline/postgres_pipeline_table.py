@@ -65,11 +65,11 @@ class PostgresPipelineTable:
             target_table,
         )
 
-    def do_data_quality(
+    def do_trusted_data(
         self, source_engine: Engine, target_engine: Engine, schema_changed: bool
     ) -> bool:
         target_table = self.target_table_name_dq
-        return load_functions.data_quality(
+        return load_functions.trusted_data(
             source_engine,
             target_engine,
             self.source_table_name,
@@ -129,7 +129,7 @@ class PostgresPipelineTable:
             "scd": self.do_scd,
             "backfill": self.do_incremental_backfill,
             "test": self.check_new_table,
-            "dq": self.do_data_quality,
+            "trusted_data": self.do_trusted_data,
         }
         return load_types[load_type](source_engine, target_engine, schema_changed)
 

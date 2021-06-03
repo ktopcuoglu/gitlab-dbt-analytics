@@ -117,7 +117,7 @@ def load_incremental(
     return True
 
 
-def data_quality(
+def trusted_data(
     source_engine: Engine,
     target_engine: Engine,
     source_table_name: str,

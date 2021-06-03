@@ -104,7 +104,7 @@ def main(file_path: str, load_type: str, load_only_table: str = None) -> None:
         )
 
 
-def dq_main(file_path: str, load_type: str, load_only_table: str = None) -> None:
+def trusted_data_main(file_path: str, load_type: str, load_only_table: str = None) -> None:
     """
     Read data from a postgres DB and upload it directly to Snowflake.
     """
@@ -134,13 +134,10 @@ def dq_main(file_path: str, load_type: str, load_only_table: str = None) -> None
         except:
             pass  # likely that the table doesn't exist -- don't want an error her
 
-        append_to_xcom_file(
-            {current_table.get_target_table_name(): count, "load_ran": loaded}
-        )
 
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     logging.getLogger("snowflake.connector.cursor").disabled = True
     logging.getLogger("snowflake.connector.connection").disabled = True
-    Fire({"tap": main, "tap_dq": dq_main})
+    Fire({"tap": main, "tap_trusted_data": trusted_data_main})
