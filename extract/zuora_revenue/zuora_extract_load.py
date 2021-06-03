@@ -127,7 +127,10 @@ def show_extraction_status(bucket: str, table_name: str):
         blob.download_to_filename(file_name)
         with open(file_name, "r") as log_file:
             logging.info(log_file.read())
+        logging.info("Moving the log file to processed folder.")
         source_bucket.copy_blob(blob, destination_bucket, destination_file_name)
+        logging.info("Deleteing the log file from staging folder")
+        blob.delete()
     else:
         logging.error(
             f"Un successful extraction for table {table_name}.Please check the server"

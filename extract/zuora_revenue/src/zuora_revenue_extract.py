@@ -94,7 +94,8 @@ if __name__ == "__main__":
     print(f"{results.table_name} = {end_date}")
     logger.info("update the load date  in the file for the table")
     zuora_revpro.set_load_date(results.table_name, end_date)
+    log_path=os.getenv('zuora_extract_log')
     # Upload the log file for downstream  validation while loading
-    cmd_to_upload_log_file = f"gsutil cp {env['zuora_extract_log']}/{log_file_name} gs://{results.bucket_name}/RAW_DB/staging/{results.table_name}/{results.table_name}_{(datetime.now()).strftime('%d-%m-%Y')}.log"
+    cmd_to_upload_log_file = f"gsutil cp {log_path}{log_file_name} gs://{results.bucket_name}/RAW_DB/staging/{results.table_name}/{results.table_name}_{(datetime.now()).strftime('%d-%m-%Y')}.log"
     logger.info(cmd_to_upload_log_file)
     subprocess.run(cmd_to_upload_log_file, shell=True, check=True)
