@@ -1,15 +1,11 @@
 import sys
-from os import environ as env
-import time
-import subprocess
 import logging
+
+from os import environ as env
 from fire import Fire
-from typing import Dict, Tuple, List
-from yaml import load, safe_load, YAMLError
-
-import pandas as pd
+from typing import Dict
+from yaml import load
 from datetime import datetime
-
 from google.cloud import storage
 from google.oauth2 import service_account
 from google.cloud.storage.bucket import Bucket
@@ -19,52 +15,6 @@ from gitlabdata.orchestration_utils import (
     snowflake_engine_factory,
     query_executor,
 )
-
-"""
-def zuora_revenue_extract(table_name: str) -> None:
-    subprocess.run("pip install paramiko", shell=True, check=True)
-    import paramiko
-
-    logging.basicConfig(stream=sys.stdout, level=20)
-    logging.info("Prepare the authentication URL and set the command for execution")
-    zuora_revenue_auth_code = f'Basic {env["ZUORA_REVENUE_AUTH_CODE"]}'
-    zuora_revenue_api_url = env["ZUORA_REVENUE_API_URL"]
-    zuora_revenue_bucket_name = env["ZUORA_REVENUE_GCS_NAME"]
-    zuora_revenue_compute_ip = env["ZUORA_REVENUE_COMPUTE_IP"]
-    zuora_revenue_compute_username = env["ZUORA_REVENUE_COMPUTE_USERNAME"]
-    zuora_revenue_compute_password = env["ZUORA_REVENUE_COMPUTE_PASSWORD"]
-    connection = paramiko.SSHClient()
-    connection.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    extract_command = f"$python_env;cd /home/vedprakash/zuora_revenue/zuora_revenue/src/;python3 zuora_revenue_extract.py -table_name {table_name} \
-                     -bucket_name {zuora_revenue_bucket_name} -api_dns_name {zuora_revenue_api_url} -api_auth_code '{zuora_revenue_auth_code}'"
-    try:
-        connection.connect(
-            hostname=zuora_revenue_compute_ip,
-            username=zuora_revenue_compute_username,
-            password=zuora_revenue_compute_password,
-        )
-        logging.info("Connected")
-        stdin, stdout, stderr = connection.exec_command(extract_command)
-        exit_code = stdout.channel.recv_exit_status()
-        stdout_raw = []
-        for line in stdout:
-            logging.info(line)
-
-        stderr_raw = []
-        for line in stderr:
-            logging.info(line)
-
-        logging.info(f"exit_code:{exit_code}")
-        if exit_code == 0:
-            logging.info("The extraction completed successfully")
-        else:
-            logging.error("Error in extraction")
-            sys.exit(1)
-        connection.close()
-        del connection, stdin, stdout, stderr
-    except Exception:
-        raise
-"""
 
 
 def get_gcs_bucket(bucket_name: str) -> Bucket:
@@ -112,6 +62,7 @@ def move_to_processed(bucket: str, table_name: str, list_of_files: list):
 
 
 def show_extraction_status(bucket: str, table_name: str):
+    """"""
     log_file_name = f"RAW_DB/staging/{table_name}/{table_name}_{(datetime.now()).strftime('%d-%m-%Y')}.log"
     file_name = log_file_name.split("/")[-1]
     source_bucket = get_gcs_bucket(bucket)
@@ -144,6 +95,11 @@ def zuora_revenue_load(
     table_name: str,
     conn_dict: Dict[str, str] = None,
 ) -> None:
+    """
+    This function is responsible for checking if there has been extraction done today for this table.
+    If Yes then it will load all the file present in the GCS folder under processed  for particular table and give number of rows loaded.
+    Post that it will move all the file from GCS staging to processed folder for auditing purpose.
+    """
     # Check if extraction is present for the table
     show_extraction_status(bucket, table_name)
     # Set some vars
@@ -183,7 +139,6 @@ if __name__ == "__main__":
     config_dict = env.copy()
     Fire(
         {
-            # "zuora_extract": zuora_revenue_extract,
             "zuora_load": zuora_revenue_load,
         }
     )

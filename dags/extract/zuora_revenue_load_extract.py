@@ -1,6 +1,6 @@
 import os
 from datetime import datetime, timedelta
-from yaml import load, safe_load, YAMLError
+from yaml import safe_load, YAMLError
 from os import environ as env
 from airflow import DAG
 from airflow.operators.dummy_operator import DummyOperator
@@ -14,11 +14,6 @@ from airflow_utils import (
 from kube_secrets import (
     GCP_SERVICE_CREDS,
     ZUORA_REVENUE_GCS_NAME,
-    ZUORA_REVENUE_API_URL,
-    ZUORA_REVENUE_AUTH_CODE,
-    ZUORA_REVENUE_COMPUTE_IP,
-    ZUORA_REVENUE_COMPUTE_USERNAME,
-    ZUORA_REVENUE_COMPUTE_PASSWORD,
     SNOWFLAKE_ACCOUNT,
     SNOWFLAKE_LOAD_PASSWORD,
     SNOWFLAKE_LOAD_ROLE,
@@ -47,7 +42,7 @@ default_args = {
     "retry_delay": timedelta(minutes=1),
     "sla": timedelta(hours=24),
     "sla_miss_callback": slack_failed_task,
-    "start_date": datetime(2019, 1, 1),
+    "start_date": datetime(2021, 6, 1),
     "dagrun_timeout": timedelta(hours=6),
 }
 
@@ -72,7 +67,7 @@ with open(
 
 # Create the DAG  with one load happening at once
 dag = DAG(
-    "zuora_revenue_extract_load_snow",
+    "zuora_revenue_load_snow",
     default_args=default_args,
     schedule_interval="0 10 * * 0",
     concurrency=1,
@@ -82,41 +77,6 @@ start = DummyOperator(task_id="Start", dag=dag)
 
 
 for table_name in table_name_list:
-    '''
-    # Set the command for the container for extracting the data
-    container_cmd_extract = f"""
-        {clone_and_setup_extraction_cmd} &&
-        python3 zuora_revenue/zuora_extract_load.py zuora_extract --table_name {table_name}
-        """
-    task_identifier = f"{task_name}-{table_name.replace('_','-').lower()}-extract"
-    # Task 1
-    zuora_revenue_extract_run = KubernetesPodOperator(
-        **gitlab_defaults,
-        image=DATA_IMAGE,
-        task_id=task_identifier,
-        name=task_identifier,
-        pool="default_pool",
-        secrets=[
-            ZUORA_REVENUE_API_URL,
-            ZUORA_REVENUE_AUTH_CODE,
-            ZUORA_REVENUE_GCS_NAME,
-            ZUORA_REVENUE_COMPUTE_IP,
-            ZUORA_REVENUE_COMPUTE_USERNAME,
-            ZUORA_REVENUE_COMPUTE_PASSWORD,
-            GCP_SERVICE_CREDS,
-            SNOWFLAKE_ACCOUNT,
-            SNOWFLAKE_LOAD_ROLE,
-            SNOWFLAKE_LOAD_USER,
-            SNOWFLAKE_LOAD_WAREHOUSE,
-            SNOWFLAKE_LOAD_PASSWORD,
-        ],
-        env_vars=pod_env_vars,
-        affinity=get_affinity(False),
-        tolerations=get_toleration(False),
-        arguments=[container_cmd_extract],
-        dag=dag,
-    )
-    '''
     # Set the command for the container for loading the data
     container_cmd_load = f"""
         {clone_and_setup_extraction_cmd} &&
