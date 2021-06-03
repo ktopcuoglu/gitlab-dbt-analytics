@@ -5,7 +5,8 @@
 {{ simple_cte([
     ('namespaces', 'prep_namespace'),
     ('subscriptions', 'prep_subscription'),
-    ('orders', 'customers_db_orders_source'),
+    ('orders_historical', 'wk_customers_db_versions_history'),
+    ('dates', 'dim_date'),
     ('product_tiers', 'prep_product_tier'),
     ('product_details', 'dim_product_detail'),
     ('recurring_charges', 'prep_recurring_charge'),
@@ -43,14 +44,12 @@
 ), current_recurring AS (
 
     SELECT DISTINCT
-      recurring_charges.dim_subscription_id,
-      product_details.product_rate_plan_id,
-      product_details.dim_product_tier_id
+      recurring_charges.dim_subscription_id
     FROM recurring_charges
     INNER JOIN product_details
       ON recurring_charges.dim_product_detail_id = product_details.dim_product_detail_id
-      AND product_details.product_delivery_type = 'SaaS'
     WHERE recurring_charges.dim_date_id = {{ get_date_id("DATE_TRUNC('month', CURRENT_DATE)") }}
+      AND product_details.product_delivery_type = 'SaaS'
       AND subscription_status IN ('Active', 'Cancelled')
 
 ), namespace_list AS (
@@ -60,18 +59,17 @@
       namespaces.namespace_type,
       namespaces.ultimate_parent_namespace_id,
       namespaces.gitlab_plan_id,
-      product_tiers.dim_product_tier_id                                 AS dim_product_tier_id_namespace,
-      product_tiers.product_tier_name                                   AS product_tier_name_namespace,
+      dates.first_day_of_month                                          AS namespace_snapshot_month,
       trial_histories.start_date                                        AS saas_trial_start_date,
       trial_histories.expired_on                                        AS saas_trial_expired_on,
       IFF(trial_histories.gl_namespace_id IS NOT NULL
             OR (namespaces.dim_namespace_id = ultimate_parent_namespace_id
-                AND product_tier_name_namespace = 'SaaS - Trial: Ultimate'),
+                AND namespaces.gitlab_plan_title = 'Ultimate Trial'),
           TRUE, FALSE)                                                  AS namespace_was_trial,
       namespaces.is_currently_valid                                     AS is_namespace_active
     FROM namespaces
-    LEFT JOIN product_tiers
-      ON namespaces.dim_product_tier_id = product_tiers.dim_product_tier_id
+    INNER JOIN dates
+      ON dates.date_actual BETWEEN namespaces.namespace_created_at AND CURRENT_DATE
     LEFT JOIN trial_histories
       ON namespaces.dim_namespace_id = trial_histories.gl_namespace_id
 
@@ -87,60 +85,111 @@
       subscriptions.dim_crm_account_id,
       subscriptions.subscription_start_date,
       subscriptions.subscription_end_date,
+      dates.first_day_of_month                                          AS subscription_snapshot_month,
       product_rate_plans.product_rate_plan_id                           AS product_rate_plan_id_subscription,
       product_rate_plans.dim_product_tier_id                            AS dim_product_tier_id_subscription,
       product_rate_plans.product_tier_name                              AS product_tier_name_subscription,
-      COUNT(*) OVER(PARTITION BY subscriptions.dim_subscription_id)     AS count_of_tiers_per_subscription,
       IFF(current_recurring.dim_subscription_id IS NOT NULL,
           TRUE, FALSE)                                                  AS is_subscription_active
     FROM subscriptions
+    INNER JOIN dates
+      ON dates.date_actual BETWEEN subscriptions.subscription_start_date
+                            AND IFNULL(subscriptions.subscription_end_date, CURRENT_DATE)
     INNER JOIN saas_subscriptions
       ON subscriptions.dim_subscription_id = saas_subscriptions.dim_subscription_id
     INNER JOIN product_rate_plans
       ON saas_subscriptions.product_rate_plan_id = product_rate_plans.product_rate_plan_id
     LEFT JOIN current_recurring
-      ON saas_subscriptions.dim_subscription_id = current_recurring.dim_subscription_id
+      ON subscriptions.dim_subscription_id = current_recurring.dim_subscription_id
 
-), order_list AS (
-
+), orders AS (
+    /*
+    This CTE transforms orders from the historical orders table in two significant ways:
+      1. It corrects for erroneous order start/end dates by substituting in the valid_from/valid_to columns
+          when changes are made to the order (generally remapping to renewed subscriptions, new namespaces)
+        a. See term_start_date and term_end_date (identifiers borrowed from the Zuora subscription model)
+      2. It smooths over same day updates to the namespace linked to a given order,
+          which would otherwise result in multiple rows for an order in a given month
+        a. See QUALIFY statement below. This gets the last update to an order on a given day
+        b. NOTE: This does remove some order-namespace links that existed in the historical orders table
+            at one point in time, but a judgement call was made to assume that if the namespace needed
+            to be updated within 24 hours it is likely that the previous namespace was incorrect
+    */
     SELECT
-      orders.order_id,
-      orders.customer_id,
-      COALESCE(trial_tiers.dim_product_tier_id,
-               product_rate_plans.dim_product_tier_id)                  AS dim_product_tier_id_with_trial,
-      COALESCE(trial_tiers.product_tier_name,
-               product_rate_plans.product_tier_name)                    AS product_tier_name_with_trial,
+      orders_historical.order_id,
+      orders_historical.customer_id,
+      IFNULL(trial_tiers.dim_product_tier_id,
+              product_rate_plans.dim_product_tier_id)                   AS dim_product_tier_id_with_trial,
+      IFNULL(trial_tiers.product_tier_name,
+              product_rate_plans.product_tier_name)                     AS product_tier_name_with_trial,
       product_rate_plans.dim_product_tier_id                            AS dim_product_tier_id_order,
       product_rate_plans.product_rate_plan_id                           AS product_rate_plan_id_order,
       product_rate_plans.product_tier_name                              AS product_tier_name_order,
-      orders.subscription_id                                            AS subscription_id_order,
-      orders.subscription_name                                          AS subscription_name_order,
-      orders.subscription_name_slugify                                  AS subscription_name_slugify_order,
-      orders.order_start_date,
-      orders.order_end_date,
-      orders.gitlab_namespace_id                                        AS namespace_id_order,
-      orders.order_is_trial,
-      IFF(IFNULL(orders.order_end_date, CURRENT_DATE) >= CURRENT_DATE,
+      orders_historical.subscription_id                                 AS subscription_id_order,
+      orders_historical.subscription_name                               AS subscription_name_order,
+      orders_historical.dim_namespace_id                                AS namespace_id_order,
+      MIN(orders_historical.order_start_date) OVER(
+        PARTITION BY orders_historical.order_id)                        AS order_start_date,
+      MAX(orders_historical.order_end_date) OVER(
+        PARTITION BY orders_historical.order_id)                        AS order_end_date,
+      MIN(orders_historical.valid_from) OVER (
+        PARTITION BY
+          orders_historical.order_id,
+          orders_historical.subscription_id,
+          orders_historical.dim_namespace_id)                           AS term_start_date,
+      MAX(IFNULL(orders_historical.valid_to, CURRENT_DATE)) OVER (
+        PARTITION BY
+          orders_historical.order_id,
+          orders_historical.subscription_id,
+          orders_historical.dim_namespace_id)                           AS term_end_date,
+      orders_historical.order_is_trial,
+      IFF(order_end_date >= CURRENT_DATE,
           TRUE, FALSE)                                                  AS is_order_active
-    FROM orders
+    FROM orders_historical
     INNER JOIN product_rate_plans
-      ON orders.product_rate_plan_id = product_rate_plans.product_rate_plan_id
+      ON orders_historical.product_rate_plan_id = product_rate_plans.product_rate_plan_id
     LEFT JOIN trial_tiers
-      ON orders.order_is_trial = TRUE
-    WHERE orders.order_start_date IS NOT NULL 
+      ON orders_historical.order_is_trial = TRUE
+    WHERE order_start_date IS NOT NULL 
+    QUALIFY ROW_NUMBER() OVER (
+      PARTITION BY
+        orders_historical.order_id,
+        orders_historical.valid_from::DATE
+      ORDER BY orders_historical.valid_from DESC
+    ) = 1
+
+), order_list AS (
+  
+    SELECT
+      orders.*,
+      dates.first_day_of_month                                          AS order_snapshot_month
+    FROM orders
+    INNER JOIN dates
+      ON dates.date_actual BETWEEN IFF(orders.term_start_date < orders.order_start_date,
+                                       orders.order_start_date, orders.term_start_date)
+                            AND IFF(orders.term_end_date > orders.order_end_date,
+                                    orders.order_end_date, orders.term_end_date)
+    QUALIFY ROW_NUMBER() OVER (
+      PARTITION BY 
+        orders.order_id,
+        dates.first_day_of_month
+      ORDER BY orders.term_end_date DESC
+    ) = 1
 
 ), final AS (
 
-    SELECT
+    SELECT DISTINCT
       namespace_list.dim_namespace_id,
       subscription_list.dim_subscription_id,
       order_list.order_id,
+      COALESCE(order_list.order_snapshot_month,
+               subscription_list.subscription_snapshot_month,
+               namespace_list.namespace_snapshot_month
+              )                                                         AS snapshot_month,
       order_list.namespace_id_order,
       order_list.subscription_id_order,
       namespace_list.ultimate_parent_namespace_id,
       namespace_list.namespace_type,
-      namespace_list.dim_product_tier_id_namespace,
-      namespace_list.product_tier_name_namespace,
       namespace_list.is_namespace_active,
       namespace_list.namespace_was_trial,
       namespace_list.saas_trial_start_date,
@@ -167,7 +216,6 @@
       subscription_list.product_rate_plan_id_subscription,
       subscription_list.dim_product_tier_id_subscription,
       subscription_list.product_tier_name_subscription,
-      subscription_list.count_of_tiers_per_subscription,
       CASE
         WHEN namespace_list.gitlab_plan_id IN (102, 103)
           AND order_list.order_id IS NULL
@@ -210,9 +258,11 @@
     FROM order_list
     FULL OUTER JOIN subscription_list
       ON order_list.subscription_id_order = subscription_list.dim_subscription_id
-      AND order_list.product_rate_plan_id_order = subscription_list.product_rate_plan_id_subscription 
+      AND order_list.product_rate_plan_id_order = subscription_list.product_rate_plan_id_subscription
+      AND order_list.order_snapshot_month = subscription_list.subscription_snapshot_month
     FULL OUTER JOIN namespace_list
       ON order_list.namespace_id_order = namespace_list.dim_namespace_id
+      AND order_list.order_snapshot_month = namespace_list.namespace_snapshot_month
 
 )
 
@@ -220,6 +270,6 @@
     cte_ref="final",
     created_by="@ischweickartDD",
     updated_by="@ischweickartDD",
-    created_date="2021-01-14",
+    created_date="2021-06-02",
     updated_date="2021-06-02"
 ) }}
