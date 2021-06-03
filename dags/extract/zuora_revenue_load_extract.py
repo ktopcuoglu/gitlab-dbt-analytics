@@ -82,8 +82,8 @@ start = DummyOperator(task_id="Start", dag=dag)
 
 
 for table_name in table_name_list:
-
-    # Set the command for the container for loading the data
+    '''
+    # Set the command for the container for extracting the data
     container_cmd_extract = f"""
         {clone_and_setup_extraction_cmd} &&
         python3 zuora_revenue/zuora_extract_load.py zuora_extract --table_name {table_name}
@@ -116,7 +116,7 @@ for table_name in table_name_list:
         arguments=[container_cmd_extract],
         dag=dag,
     )
-
+    '''
     # Set the command for the container for loading the data
     container_cmd_load = f"""
         {clone_and_setup_extraction_cmd} &&

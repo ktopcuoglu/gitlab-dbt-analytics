@@ -1,5 +1,5 @@
 import argparse
-import sys
+import subprocess
 import logging
 from datetime import datetime
 from api import ZuoraRevProAPI
@@ -47,8 +47,15 @@ results = parser.parse_args()
 
 
 if __name__ == "__main__":
+    log_file_name = (
+        "zuora_extract_"
+        + results.table_name
+        + "_"
+        + (datetime.now()).strftime("%d-%m-%Y-%H:%M:%S")
+        + ".log"
+    )
     logging.basicConfig(
-        filename="logs/zuora_extract_"+results.table_name+"_"+(datetime.now()).strftime("%d-%m-%Y-%H:%M:%S")+".log",
+        filename="logs/" + log_file_name,
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
         level=20,
     )
@@ -86,3 +93,7 @@ if __name__ == "__main__":
     print(f"{results.table_name} = {end_date}")
     logger.info("update the load date  in the file for the table")
     zuora_revpro.set_load_date(results.table_name, end_date)
+    # Upload the log file for downstream  validation while loading
+    cmd_to_upload_log_file = f"gsutil cp {log_file_name} gs://{results.bucket_name}/RAW_DB/staging/{results.table_name}/{results.table_name}_{(datetime.now()).strftime('%d-%m-%Y')}.log"
+    logger.info(cmd_to_upload_log_file)
+    subprocess.run(cmd_to_upload_log_file, shell=True, check=True)

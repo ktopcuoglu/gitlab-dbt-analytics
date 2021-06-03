@@ -12,6 +12,7 @@ from datetime import datetime
 
 from google.cloud import storage
 from google.oauth2 import service_account
+from google.cloud.storage.bucket import Bucket
 from sqlalchemy.engine.base import Engine
 
 from gitlabdata.orchestration_utils import (
@@ -19,7 +20,7 @@ from gitlabdata.orchestration_utils import (
     query_executor,
 )
 
-
+"""
 def zuora_revenue_extract(table_name: str) -> None:
     subprocess.run("pip install paramiko", shell=True, check=True)
     import paramiko
@@ -63,22 +64,27 @@ def zuora_revenue_extract(table_name: str) -> None:
         del connection, stdin, stdout, stderr
     except Exception:
         raise
+"""
 
 
-def move_to_processed(
-    bucket: str, table_name: str, list_of_files: list, gapi_keyfile: str = None
-):
-    # Get the gcloud storage client and authenticate
+def get_gcs_bucket(bucket_name: str) -> Bucket:
+    """Do the auth and return a usable gcs bucket object."""
+
     scope = ["https://www.googleapis.com/auth/cloud-platform"]
-    keyfile = load(gapi_keyfile or env["GCP_SERVICE_CREDS"])
+    keyfile = load(env["GCP_SERVICE_CREDS"])
     credentials = service_account.Credentials.from_service_account_info(keyfile)
     scoped_credentials = credentials.with_scopes(scope)
     storage_client = storage.Client(credentials=scoped_credentials)
-    source_bucket = storage_client.bucket(bucket)
-    destination_bucket = storage_client.bucket(bucket)
+    return storage_client.get_bucket(bucket_name)
+
+
+def move_to_processed(bucket: str, table_name: str, list_of_files: list):
+    # Get the gcloud storage client and authenticate
+    source_bucket = get_gcs_bucket(bucket)
+    destination_bucket = get_gcs_bucket(bucket)
     now = datetime.now()
-    load_day = now.strftime("%m-%d-%Y")
-    print(list_of_files)
+    load_day = now.strftime("%d-%m-%Y")
+    logging.info(list_of_files)
     for file_name in list_of_files:
         try:
             blob_name = "/".join(file_name.split("/")[3:])
@@ -105,12 +111,38 @@ def move_to_processed(
             sys.exit(1)
 
 
+def show_extraction_status(bucket: str, table_name: str):
+    log_file_name = f"RAW_DB/staging/{table_name}/{table_name}_{(datetime.now()).strftime('%d-%m-%Y')}.log"
+    file_name = log_file_name.split("/")[-1]
+    source_bucket = get_gcs_bucket(bucket)
+    blob = source_bucket.blob(log_file_name)
+    destination_bucket = get_gcs_bucket(bucket)
+    now = datetime.now()
+    load_day = now.strftime("%d-%m-%Y")
+    destination_file_name = f"RAW_DB/processed/{load_day}/{table_name}/{file_name}"
+    if blob.exists():
+        logging.info(
+            f"There has been successful run for table {table_name}.Below is the log content."
+        )
+        blob.download_to_filename(file_name)
+        with open(file_name, "r") as log_file:
+            logging.info(log_file.readlines())
+        source_bucket.copy_blob(blob, destination_bucket, destination_file_name)
+    else:
+        logging.error(
+            f"Un successful extraction for table {table_name}.Please check the server"
+        )
+        sys.exit(1)
+
+
 def zuora_revenue_load(
     bucket: str,
     schema: str,
     table_name: str,
     conn_dict: Dict[str, str] = None,
 ) -> None:
+    # Check if extraction is present for the table
+    show_extraction_status(bucket, table_name)
     # Set some vars
     engine = snowflake_engine_factory(conn_dict or env, "LOADER", schema)
 
@@ -148,7 +180,7 @@ if __name__ == "__main__":
     config_dict = env.copy()
     Fire(
         {
-            "zuora_extract": zuora_revenue_extract,
+            # "zuora_extract": zuora_revenue_extract,
             "zuora_load": zuora_revenue_load,
         }
     )

@@ -73,7 +73,9 @@ class ZuoraRevProAPI:
             ] = load_date
             table_name_date.to_csv(load_date_file_name, index=False)
             subprocess.run(cmd_to_upload_file, shell=True, check=True)
-            self.logger.info(f"The start date for next run for table {tablename} is set to {load_date}")
+            self.logger.info(
+                f"The start date for next run for table {tablename} is set to {load_date}"
+            )
         except Exception:
             self.logger.error(
                 "Error while uploading updated file to GCS", exec_info=True
