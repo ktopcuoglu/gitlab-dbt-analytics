@@ -526,9 +526,9 @@ for source_name, config in config_dict.items():
 
     globals()[f"{config['dag_name']}_db_sync"] = sync_dag
 
-# Create Dictionary entry for Trusted Data check. This is seprate from above to avoid duplicate DAG creation.
+# Create Dictionary entry for Data Quality check. This is seprate from above to avoid duplicate DAG creation. 
 
-config_dict_td = {
+config_dict_dq={
     "gitlab_com_data_reconciliation_extract_load": {
         "cloudsql_instance_name": None,
         "dag_name": "gitlab_com_data_reconciliation_extract_load",
@@ -548,10 +548,10 @@ config_dict_td = {
     },
 }
 
-for source_name, config in config_dict_td.items():
+for source_name, config in config_dict_dq.items():
 
     # Sync DAG
-    trusted_data_dag_args = {
+    data_quality_dag_args = {
         "catchup": False,
         "depends_on_past": False,
         "on_failure_callback": slack_failed_task,
@@ -562,37 +562,44 @@ for source_name, config in config_dict_td.items():
         "dagrun_timeout": timedelta(hours=10),
         "trigger_rule": "all_success",
     }
-    trusted_data_dag = DAG(
+    data_quality_dag = DAG(
         f"{config['dag_name']}",
-        default_args=trusted_data_dag_args,
+        default_args=data_quality_dag_args,
         schedule_interval=config["sync_schedule_interval"],
-        concurrency=1,
+        concurrency=3,
     )
-    with trusted_data_dag:
+    with data_quality_dag:
 
         # PGP Extract
         file_path = f"analytics/extract/postgres_pipeline/manifests/{config['dag_name']}_db_manifest.yaml"
         manifest = extract_manifest(file_path)
         table_list = extract_table_list_from_manifest(manifest)
         for table in table_list:
-            task_type = "td-extract"
+            task_type = "dq-extract"
             task_identifier = (
                 f"{config['task_name']}-{table.replace('_','-')}-{task_type}"
             )
 
-            # td-extract Task
-            td_extract_cmd = f"""
+            # dq-extract Task
+            dq_extract_cmd = f"""
             {clone_repo_cmd} &&
             cd analytics/extract/postgres_pipeline/postgres_pipeline/ &&
-            python main.py tap_trusted_data ../manifests/{config["dag_name"]}_db_manifest.yaml --load_type trusted_data --load_only_table {table}
+            python main.py tap ../manifests/{config["dag_name"]}_db_manifest.yaml --load_type trusted_data --load_only_table {table}
         """
-            td_extract = KubernetesPodOperator(
+            #generate_cmd(
+            #    config["dag_name"],
+            #    f"--load_type dq --load_only_table {table}",
+            #    config["cloudsql_instance_name"],
+            #)
+            
+
+            dq_extract = KubernetesPodOperator(
                 **gitlab_defaults,
                 image=DATA_IMAGE,
                 task_id=task_identifier,
                 name=task_identifier,
-                # pool=f"{config['task_name']}_pool",
-                pool="default_pool",
+                #pool=f"{config['task_name']}_pool",
+                pool="default_pool", 
                 secrets=standard_secrets + config["secrets"],
                 env_vars={
                     **gitlab_pod_env_vars,
@@ -600,12 +607,12 @@ for source_name, config in config_dict_td.items():
                     "TASK_INSTANCE": "{{ task_instance_key_str }}",
                     "task_id": task_identifier,
                 },
-                arguments=[td_extract_cmd],
+                arguments=[dq_extract_cmd],
                 affinity=get_affinity(True),
                 tolerations=get_toleration(True),
                 do_xcom_push=True,
                 xcom_push=True,
             )
-            td_extract
+            dq_extract
 
-    globals()[f"{config['dag_name']}_td_extract"] = td_extract
+    globals()[f"{config['dag_name']}_dq_extract"] = dq_extract
