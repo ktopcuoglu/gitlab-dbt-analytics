@@ -65,7 +65,7 @@ WITH filtered_source as (
     https://gitlab.com/gitlab-org/iglu/-/blob/master/public/schemas/com.gitlab/gitlab_standard/jsonschema/1-0-5
 
     To in this CTE for any event, we use LATERAL FLATTEN to create one row per context per event.
-    We then extract the context schema and the context data (where the web_page_id will be contained)
+    We then extract the context schema and the context data
     */
     SELECT 
       base.*,
@@ -78,7 +78,7 @@ WITH filtered_source as (
 
 /*
 in this CTE we take the results from the previous CTE and isolate the only context we are interested in:
-the web_page context, which has this context schema: iglu:com.gitlab/gitlab_standard/jsonschema/1-0-5
+the gitlab standard context, which has this context schema: iglu:com.gitlab/gitlab_standard/jsonschema/1-0-5
 Then we extract the id from the context_data column
 */
 SELECT 
