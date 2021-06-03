@@ -125,7 +125,7 @@ def zuora_revenue_load(
         else:
             logging.error(result[0])
             sys.exit(1)
-    log_result = f"Loaded {total_rows} rows from {len(results)} files"
+    logging.info(f"Loaded {total_rows} rows from {len(results)} files")
     logging.info(
         "Data file has been loaded. Move all the file to processed folder,to keep the directory clean."
     )
