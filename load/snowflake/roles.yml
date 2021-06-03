@@ -232,6 +232,7 @@ roles:
             - covid19
             - dbt_analytics
             - dbt_analytics_clones
+            - driveload
             - gitlab_data_yaml
             - handbook
             - maxmind
@@ -249,6 +250,7 @@ roles:
             - boneyard
             - covid19
             - dbt_analytics
+            - driveload
             - gcp_billing
             - gitlab_data_yaml
             - gitlab_dotcom
@@ -275,6 +277,7 @@ roles:
             - boneyard
             - covid19
             - dbt_analytics
+            - driveload
             - gitlab_data_yaml
             - handbook
             - license_db
@@ -318,6 +321,7 @@ roles:
             - boneyard
             - covid19
             - dbt_analytics
+            - driveload
             - gitlab_data_yaml
             - gitlab_dotcom
             - license_db
@@ -330,6 +334,7 @@ roles:
             - snowplow
             - version_db
             - zuora
+            - zuora_api_sandbox_stitch
         privileges:
             databases:
                 read:
@@ -378,6 +383,7 @@ roles:
             - covid19
             - dbt_analytics
             - dbt_analytics_sensitive
+            - driveload
             - gitlab_data_yaml
             - gitlab_dotcom
             - greenhouse
@@ -402,6 +408,7 @@ roles:
             - boneyard
             - covid19
             - dbt_analytics
+            - driveload
             - gitlab_data_yaml
             - gitlab_dotcom
             - license_db
@@ -428,6 +435,7 @@ roles:
             - boneyard
             - covid19
             - customers_db
+            - driveload
             - dbt_analytics
             - gitlab_data_yaml
             - gitlab_dotcom
@@ -455,6 +463,7 @@ roles:
             - covid19
             - customers_db
             - dbt_analytics
+            - driveload
             - gitlab_data_yaml
             - gitlab_dotcom
             - license_db
@@ -632,6 +641,7 @@ roles:
             - analyst_xs
         member_of:
             - analyst_core
+            - driveload
             - bamboohr_analytics
             - boneyard
             - gitlab_data_yaml
@@ -648,6 +658,7 @@ roles:
         member_of:
             - boneyard
             - dbt_analytics
+            - driveload
             - gitlab_dotcom
             - license_db
             - postgres_pipeline
@@ -1039,7 +1050,24 @@ roles:
                 read:
                     - raw.discourse.*
 
-    - gainsight_pump: 
+    - driveload:
+        warehouses:
+            - analyst_xs
+        privileges:
+            databases:
+                read:
+                    - prep
+                    - raw
+            schemas:
+                read:
+                    - prep.driveload
+                    - raw.driveload
+            tables:
+                read:
+                    - prep.driveload.*
+                    - raw.driveload.*
+
+    - gainsight_pump:
         warehouses:
             - gainsight_xs
         privileges:
@@ -1793,6 +1821,20 @@ roles:
                     - prep.zuora.*
                     - raw.zuora_stitch.*
 
+    - zuora_api_sandbox_stitch:
+        warehouses:
+            - analyst_xs
+        privileges:
+            databases:
+                read:
+                    - raw
+            schemas:
+                read:
+                    - raw.zuora_api_sandbox_stitch
+            tables:
+                read:
+                    - raw.zuora_api_sandbox_stitch.*
+
     - zuora_revenue: # This is done to provide access to Data team analyst as 3530 
         warehouses:
             - analyst_xs
@@ -2455,6 +2497,14 @@ roles:
         warehouses:
             - analyst_xs
 
+    - kkarthikeyan:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+            - customers_db
+        warehouses:
+            - analyst_xs
+
     - ktam:
         member_of: []
         warehouses: []
@@ -2636,6 +2686,12 @@ roles:
                 write:
                     - mpeychet_prep.*.*
                     - mpeychet_prod.*.*
+
+    - mray:
+        member_of:
+            - analyst_marketing
+        warehouses:
+            - analyst_xs   
 
     - mriser:
         warehouses:
@@ -2842,6 +2898,10 @@ roles:
     - pluthra:
         member_of: []
         warehouses: []
+
+    - pmartins:
+        warehouses:
+            - reporting
 
     - rheannamistry:
         member_of:
@@ -3529,6 +3589,11 @@ users:
         member_of:
             - kchu
 
+    - kkarthikeyan:
+        can_login: yes
+        member_of:
+            - kkarthikeyan
+
     - ktam:
         can_login: no
         member_of: []
@@ -3595,6 +3660,11 @@ users:
         can_login: yes
         member_of:
             - mpeychet
+
+    - mray:
+        can_login: yes
+        member_of:
+            - mray        
 
     - mriser:
         can_login: yes
@@ -3674,6 +3744,12 @@ users:
     - pluthra:
         can_login: no
         member_of: []
+
+    - pmartins:
+        can_login: yes
+        member_of:
+            - pmartins
+            - securityadmin
 
     - pwc_jblessing:
         can_login: no

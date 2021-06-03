@@ -46,6 +46,7 @@ sources:
       - name: engineering_infra_prod_console_access
       - name: engineering_speciality_prior_to_capture
       - name: event_dictionary_simplified
+      - name: fmm_kpi_targets
       - name: gcp_active_cud
       - name: gitlab_contributing_organizations
       - name: gitlab_slack_stats

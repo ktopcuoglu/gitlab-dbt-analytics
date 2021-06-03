@@ -1,3 +1,7 @@
+{{ config(
+    tags=["product"]
+) }}
+
 {{config({
     "schema": "legacy"
   })
