@@ -10,7 +10,7 @@ WITH source AS (
       dim_product_detail_id::VARCHAR  AS dim_product_detail_id,
       mrr::NUMBER                     AS mrr,
       delta_tcv::NUMBER               AS delta_tcv,
-      unit_of_measure::NUMBER         AS unit_of_measure,
+      unit_of_measure::VARCHAR        AS unit_of_measure,
       quantity::NUMBER                AS quantity,
       effective_start_date::DATE      AS effective_start_date,
       effective_end_date::DATE        AS effective_end_date
