@@ -936,7 +936,7 @@ tables:
         UNION ALL
         SELECT 'gitlab_db_requirements_management_test_reports' AS table_name
         , DATE(created_at) as created_date
-        , '2099-01-01' as updated_date
+        , 'null' as updated_date
         , count(*) as number_of_records
         FROM requirements_management_test_reports
         WHERE DATE(created_at) > current_date - interval '8' day
@@ -944,7 +944,7 @@ tables:
         UNION ALL
         SELECT 'gitlab_db_resource_milestone_events' AS table_name
         , DATE(created_at) as created_date
-        , '2099-01-01' as updated_date
+        , 'null' as updated_date
         , count(*) as number_of_records
         FROM resource_milestone_events
         WHERE DATE(created_at) > current_date - interval '8' day
@@ -952,7 +952,7 @@ tables:
         UNION ALL
         SELECT 'gitlab_db_resource_weight_events' AS table_name
         , DATE(created_at) as created_date
-        , '2099-01-01' as updated_date
+        , 'null' as updated_date
         , count(*) as number_of_records
         FROM resource_weight_events
         WHERE DATE(created_at) > current_date - interval '8' day
@@ -960,7 +960,7 @@ tables:
         UNION ALL
         SELECT 'gitlab_db_authentication_events' AS table_name
         , DATE(created_at) as created_date
-        , '2099-01-01' as updated_date
+        , 'null' as updated_date
         , count(*) as number_of_records
         FROM authentication_events
         WHERE DATE(created_at) > current_date - interval '8' day
@@ -968,7 +968,7 @@ tables:
         UNION ALL
         SELECT 'gitlab_db_uploads' AS table_name
         , DATE(created_at) as created_date
-        , '2099-01-01' as updated_date
+        , 'null' as updated_date
         , count(*) as number_of_records
         FROM uploads
         WHERE DATE(created_at) > current_date - interval '8' day
