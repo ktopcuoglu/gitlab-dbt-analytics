@@ -1,6 +1,7 @@
 WITH source AS (
 
     SELECT
+      accounting_period::DATE         AS accounting_period,
       account_id::VARCHAR             AS account_id,
       crm_account_id::VARCHAR         AS crm_account_id,
       rate_plan_charge_id::VARCHAR    AS rate_plan_charge_id,
