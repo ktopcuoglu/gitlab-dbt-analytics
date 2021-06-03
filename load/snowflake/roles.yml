@@ -87,6 +87,11 @@ databases:
     - mwalker_prep:
         shared: no
 
+    - mwawrzyniak_prod:
+        shared: no
+    - mwawrzyniak_prep:
+        shared: no
+
     - nfiguera_prod:
         shared: no
     - nfiguera_prep:
@@ -2784,6 +2789,38 @@ roles:
             - analyst_growth
         warehouses:
             - analyst_xs
+        owns:
+            databases:
+                - mwawrzyniak_prep
+                - mwawrzyniak_prod
+            schemas:
+                - mwawrzyniak_prep.*
+                - mwawrzyniak_prod.*
+            tables:
+                - mwawrzyniak_prep.*.*
+                - mwawrzyniak_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - mwawrzyniak_prep
+                    - mwawrzyniak_prod
+                write:
+                    - mwawrzyniak_prep
+                    - mwawrzyniak_prod
+            schemas:
+                read:
+                    - mwawrzyniak_prep.*
+                    - mwawrzyniak_prod.*
+                write:
+                    - mwawrzyniak_prep.*
+                    - mwawrzyniak_prod.*
+            tables:
+                read:
+                    - mwawrzyniak_prep.*.*
+                    - mwawrzyniak_prod.*.*
+                write:
+                    - mwawrzyniakprep.*.*
+                    - mwawrzyniak_prod.*.*
 
     - mwilkins:
         member_of:
