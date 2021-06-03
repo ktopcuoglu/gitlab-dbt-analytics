@@ -140,22 +140,6 @@ tables:
         WHERE DATE(updated_at) > current_date - interval '8' day
         GROUP BY 1,2,3
         UNION ALL
-        SELECT 'gitlab_db_operations_feature_flags' AS table_name
-        , DATE(created_at) as created_date
-        , '9999-01-01' as updated_date
-        , count(*) as number_of_records
-        FROM operations_feature_flags
-        WHERE DATE(created_at) > current_date - interval '8' day
-        GROUP BY 1,2
-        UNION ALL
-        SELECT 'gitlab_db_requirements_management_test_reports' AS table_name
-        , DATE(created_at) as created_date
-        , '9999-01-01' as updated_date
-        , count(*) as number_of_records
-        FROM requirements_management_test_reports
-        WHERE DATE(created_at) > current_date - interval '8' day
-        GROUP BY 1,2
-        UNION ALL
         SELECT 'gitlab_db_issues_prometheus_alert_events' AS table_name
         , DATE(created_at) as created_date
         , DATE(updated_at) as updated_date
@@ -559,14 +543,6 @@ tables:
         FROM subscriptions
         WHERE DATE(updated_at) > current_date - interval '8' day
         GROUP BY 1,2,3
-        UNION ALL
-        SELECT 'gitlab_db_resource_weight_events' AS table_name
-        , DATE(created_at) as created_date
-        , '9999-01-01' as updated_date
-        , count(*) as number_of_records
-        FROM resource_weight_events
-        WHERE DATE(created_at) > current_date - interval '8' day
-        GROUP BY 1,2
         UNION ALL 
         SELECT 'gitlab_db_user_custom_attributes' AS table_name
         , DATE(created_at) as created_date
@@ -739,14 +715,6 @@ tables:
         FROM merge_requests_closing_issues
         WHERE DATE(updated_at) > current_date - interval '8' day
         GROUP BY 1,2,3
-        UNION ALL
-        SELECT 'gitlab_db_resource_milestone_events' AS table_name
-        , DATE(created_at) as created_date
-        , '9999-01-01' as updated_date
-        , count(*) as number_of_records
-        FROM resource_milestone_events
-        WHERE DATE(created_at) > current_date - interval '8' day
-        GROUP BY 1,2
         UNION ALL 
         SELECT 'gitlab_db_user_preferences' AS table_name
         , DATE(created_at) as created_date
@@ -847,15 +815,7 @@ tables:
         FROM routes
         WHERE DATE(updated_at) > current_date - interval '8' day
         GROUP BY 1,2,3
-        UNION ALL  
-        SELECT 'gitlab_db_authentication_events' AS table_name
-        , DATE(created_at) as created_date
-        , '9999-01-01' as updated_date
-        , count(*) as number_of_records
-        FROM authentication_events
-        WHERE DATE(created_at) > current_date - interval '8' day
-        GROUP BY 1,2
-        UNION ALL  
+        UNION ALL    
         SELECT 'gitlab_db_project_features' AS table_name
         , DATE(created_at) as created_date
         , DATE(updated_at) as updated_date
@@ -870,15 +830,7 @@ tables:
         , count(*) as number_of_records
         FROM approvals
         WHERE DATE(updated_at) > current_date - interval '8' day
-        GROUP BY 1,2,3
-        UNION ALL 
-        SELECT 'gitlab_db_uploads' AS table_name
-        , DATE(created_at) as created_date
-        , '9999-01-01' as updated_date
-        , count(*) as number_of_records
-        FROM uploads
-        WHERE DATE(created_at) > current_date - interval '8' day
-        GROUP BY 1,2                 
+        GROUP BY 1,2,3               
   cluster_8:
     dbt_source_model: true
     export_schema: 'gitlab_dotcom'
@@ -967,3 +919,58 @@ tables:
         FROM issue_metrics
         WHERE DATE(updated_at) > current_date - interval '8' day
         GROUP BY 1,2,3
+  cluster_11:
+    dbt_source_model: true
+    export_schema: 'gitlab_dotcom'
+    export_table: 'gitlab_pgp_export'
+    export_table_primary_key: created_date
+    import_db: GITLAB_DB
+    import_query: |- 
+        SELECT 'gitlab_db_operations_feature_flags' AS table_name
+        , DATE(created_at) as created_date
+        , 'null' as updated_date
+        , count(*) as number_of_records
+        FROM operations_feature_flags
+        WHERE DATE(created_at) > current_date - interval '8' day
+        GROUP BY 1,2
+        UNION ALL
+        SELECT 'gitlab_db_requirements_management_test_reports' AS table_name
+        , DATE(created_at) as created_date
+        , '2099-01-01' as updated_date
+        , count(*) as number_of_records
+        FROM requirements_management_test_reports
+        WHERE DATE(created_at) > current_date - interval '8' day
+        GROUP BY 1,2
+        UNION ALL
+        SELECT 'gitlab_db_resource_milestone_events' AS table_name
+        , DATE(created_at) as created_date
+        , '2099-01-01' as updated_date
+        , count(*) as number_of_records
+        FROM resource_milestone_events
+        WHERE DATE(created_at) > current_date - interval '8' day
+        GROUP BY 1,2
+        UNION ALL
+        SELECT 'gitlab_db_resource_weight_events' AS table_name
+        , DATE(created_at) as created_date
+        , '2099-01-01' as updated_date
+        , count(*) as number_of_records
+        FROM resource_weight_events
+        WHERE DATE(created_at) > current_date - interval '8' day
+        GROUP BY 1,2
+        UNION ALL
+        SELECT 'gitlab_db_authentication_events' AS table_name
+        , DATE(created_at) as created_date
+        , '2099-01-01' as updated_date
+        , count(*) as number_of_records
+        FROM authentication_events
+        WHERE DATE(created_at) > current_date - interval '8' day
+        GROUP BY 1,2
+        UNION ALL
+        SELECT 'gitlab_db_uploads' AS table_name
+        , DATE(created_at) as created_date
+        , '2099-01-01' as updated_date
+        , count(*) as number_of_records
+        FROM uploads
+        WHERE DATE(created_at) > current_date - interval '8' day
+        GROUP BY 1,2  
+        
