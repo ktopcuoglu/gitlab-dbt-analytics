@@ -34,6 +34,9 @@ sources:
         freshness: null
       - name: approvals
         identifier: gitlab_db_approvals
+      - name: approver_groups
+        identifier: gitlab_db_approver_groups
+        freshness: null       
       - name: audit_events
         identifier: gitlab_db_audit_events
         freshness:
