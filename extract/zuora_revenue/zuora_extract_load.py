@@ -107,7 +107,7 @@ def zuora_revenue_load(
 
     upload_query = f"""
         copy into {table_name}
-        from @zuora_revenue_staging/RAW_DB/staging/{table_name}
+        from @zuora_revenue_staging/RAW_DB/staging/{table_name}/
         pattern= '.*{table_name}_.*[.]csv'
     """
 
