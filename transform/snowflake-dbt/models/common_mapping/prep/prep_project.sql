@@ -31,9 +31,9 @@
 
     SELECT
       namespace_lineage_historical.*,
-      IFNULL(ROW_NUMBER() OVER (
+      IFF((ROW_NUMBER() OVER (
         PARTITION BY namespace_lineage_historical.namespace_id
-        ORDER BY namespace_lineage_historical.snapshot_day DESC) = 1, FALSE)          AS is_current,
+        ORDER BY namespace_lineage_historical.snapshot_day DESC) = 1, TRUE, FALSE)    AS is_current,
       namespace_lineage_historical.snapshot_day = CURRENT_DATE                        AS ultimate_parent_is_current,
       plans.plan_title                                                                AS ultimate_parent_plan_title,
       plans.plan_is_paid                                                              AS ultimate_parent_plan_is_paid,
@@ -54,8 +54,8 @@
     SELECT
       projects_source.project_id                                     AS dim_project_id,
       projects_source.namespace_id                                   AS dim_namespace_id,
-      namespace_lineage.ultimate_parent_id                           AS ultimate_parent_dim_namespace_id,
-      projects_source.creator_id                                     AS creator_dim_user_id,
+      namespace_lineage.ultimate_parent_id                           AS ultimate_parent_namespace_id,
+      projects_source.creator_id                                     AS dim_user_id_creator,
       prep_product_tier.dim_product_tier_id,
       dim_date.date_id                                               AS dim_date_id,
 
