@@ -138,8 +138,6 @@ models:
           tests:
             - not_null
         - name: application_custom_field_float_value
-          tests:
-            - not_null
         - name: application_custom_field_display_value
           tests:
             - not_null

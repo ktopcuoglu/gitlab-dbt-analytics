@@ -65,3 +65,33 @@ def dw_uploader(
     )
     info(f"Successfully loaded {data.shape[0]} rows into {table}")
     return True
+
+
+def dw_uploader_append_only(
+    engine: Engine,
+    table: str,
+    data: pd.DataFrame,
+    chunk: int = 0,
+) -> bool:
+    """
+    Use a DB engine to upload a dataframe.
+    """
+
+    # Clean the column names and add metadata, generate the dtypes
+    data.columns = [
+        str(column_name).replace(" ", "_").replace("/", "_")
+        for column_name in data.columns
+    ]
+    data = data.infer_objects()
+
+    # Replace empty strings into NaN values which translates into NULL in SQL
+    data.replace("", np.nan, inplace=True)
+
+    # Add the _updated_at metadata and set some vars if chunked
+    data["_updated_at"] = time.time()
+    if_exists = "append" if chunk else "replace"
+    data.to_sql(
+        name=table, con=engine, index=False, if_exists=if_exists, chunksize=15000
+    )
+    info(f"Successfully loaded {data.shape[0]} rows into {table}")
+    return True
