@@ -24,7 +24,7 @@
 
     SELECT
       namespace_lineage_historical.*,
-      IFF((ROW_NUMBER() OVER (
+      IFF(ROW_NUMBER() OVER (
         PARTITION BY namespace_lineage_historical.namespace_id
         ORDER BY namespace_lineage_historical.snapshot_day DESC) = 1, TRUE, FALSE)    AS is_current,
       namespace_lineage_historical.snapshot_day = CURRENT_DATE                        AS ultimate_parent_is_current,
@@ -49,7 +49,6 @@
       projects_source.namespace_id                                   AS dim_namespace_id,
       namespace_lineage.ultimate_parent_id                           AS ultimate_parent_namespace_id,
       projects_source.creator_id                                     AS dim_user_id_creator,
-      prep_product_tier.dim_product_tier_id,
       dim_date.date_id                                               AS dim_date_id,
 
       -- plan/product tier metadata at creation
@@ -109,28 +108,26 @@
         ELSE {{field}}
       END                                                            AS {{field}},
       {% endfor %}
-      (active_services.service_type)                                 AS active_service_types_array,
+      ARRAYAGG(active_services.service_type)                         AS active_service_types_array,
       IFNULL(COUNT(DISTINCT members_source.member_id), 0)            AS member_count
     FROM projects_source
     LEFT JOIN dim_date
       ON TO_DATE(projects_source.created_at) = dim_date.date_day
     LEFT JOIN prep_namespace
       ON projects_source.namespace_id = prep_namespace.dim_namespace_id
+      AND prep_namespace.is_currently_valid
     LEFT JOIN members_source
       ON projects_source.project_id = members_source.source_id
       AND members_source.member_source_type = 'Project'
     LEFT JOIN namespace_lineage
       ON prep_namespace.dim_namespace_id = namespace_lineage.namespace_id
+      AND namespace_lineage.is_current = TRUE
     LEFT JOIN gitlab_subscriptions
       ON namespace_lineage.ultimate_parent_id  = gitlab_subscriptions.namespace_id
         AND projects_source.created_at >= gitlab_subscriptions.valid_from AND projects_source.created_at < {{ coalesce_to_infinity("gitlab_subscriptions.valid_to") }}
-    LEFT JOIN prep_product_tier
-      ON namespace_lineage.ultimate_parent_plan_name = LOWER(IFF(prep_product_tier.product_tier_name_short != 'Trial: Ultimate',
-                                                                  prep_product_tier.product_tier_historical_short,
-                                                                  'ultimate_trial'))
     LEFT JOIN active_services
       ON projects_source.project_id = active_services.project_id
-    {{ dbt_utils.group_by(n=62) }}
+    {{ dbt_utils.group_by(n=60) }}
 
 )
 
