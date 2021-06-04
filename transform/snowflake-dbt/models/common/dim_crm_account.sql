@@ -37,7 +37,10 @@ WITH base AS (
       technical_account_manager          AS technical_account_manager,
       is_deleted                         AS is_deleted,
       merged_to_account_id               AS merged_to_account_id,
-      is_reseller                        AS is_reseller
+      is_reseller                        AS is_reseller,
+      health_score                       AS health_score,
+      health_number                      AS health_number,
+      health_score_color                 AS health_score_color
     FROM base
 )
 
