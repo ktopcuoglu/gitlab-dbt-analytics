@@ -39,12 +39,12 @@
         clean_metrics_name,
         time_period,
         has_timed_out,
-        NULL                                 AS dim_host_id,
+        host_name,
         DATE_TRUNC('month', ping_created_at) AS ping_created_month
     FROM data
     LEFT JOIN fct_usage_ping_payload
       ON data.dim_usage_ping_id = fct_usage_ping_payload.dim_usage_ping_id
-    -- need dim_host_id in the QUALIFY statement
+    -- need host_name in the QUALIFY statement
     QUALIFY ROW_NUMBER() OVER (PARTITION BY dim_instance_id, metrics_path, ping_created_month ORDER BY ping_created_at DESC) = 1
 
 )
@@ -54,11 +54,11 @@
     SELECT 
       *,
       LAG(ping_created_at) OVER (
-        PARTITION BY dim_instance_id, dim_host_id, metrics_path 
+        PARTITION BY dim_instance_id, host_name, metrics_path 
         ORDER BY ping_created_month ASC
       )                                                           AS last_ping_date,
       COALESCE(LAG(metric_value) OVER (
-        PARTITION BY dim_instance_id, dim_host_id, metrics_path 
+        PARTITION BY dim_instance_id, host_name, metrics_path 
         ORDER BY ping_created_month ASC
       ), 0)                                                       AS last_ping_value,
       DATEDIFF('day', last_ping_date, ping_created_at)            AS days_since_last_ping,
@@ -69,10 +69,10 @@
 )
 
 SELECT
-  {{ dbt_utils.surrogate_key(['dim_instance_id', 'dim_host_id', 'ping_created_month', 'metrics_path']) }} AS primary_key,
+  {{ dbt_utils.surrogate_key(['dim_instance_id', 'host_name', 'ping_created_month', 'metrics_path']) }} AS primary_key,
   dim_usage_ping_id,
   dim_instance_id,
-  dim_host_id,
+  host_name,
   ping_created_month,
   metrics_path,
   group_name,
