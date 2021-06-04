@@ -366,3 +366,19 @@ A recreation of `prep_usage_ping_subscription_mapped_wave_2_3_metrics` for _SaaS
 fct table from the usage_ping_namespace. Granularity of one row per namespace per metric per run
 
 {% enddocs %}
+
+{% docs prep_saas_usage_ping_free_users %}
+
+Table containing **free** SaaS users in preparation for free user usage ping metrics fact table.
+
+The grain of this table is one row per namespace per month.
+
+{% enddocs %}
+
+{% docs prep_usage_ping_free_users %}
+
+Table containing **free** Self-Managed users in preparation for free user usage ping metrics fact table.
+
+The grain of this table is one row per uuid-hostname combination per month.
+
+{% enddocs %}
