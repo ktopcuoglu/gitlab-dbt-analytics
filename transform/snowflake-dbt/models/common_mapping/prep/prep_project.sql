@@ -50,6 +50,7 @@
     ) = 1
 
 ), joined AS (
+
     SELECT
       projects_source.project_id                                     AS dim_project_id,
       projects_source.namespace_id                                   AS dim_namespace_id,
