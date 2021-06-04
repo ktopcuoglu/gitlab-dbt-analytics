@@ -5,7 +5,6 @@ WITH prep_project AS (
       dim_namespace_id,
       ultimate_parent_namespace_id,
       dim_user_id_creator,
-      dim_product_tier_id,
       dim_date_id,
 
       -- plan/product tier metadata at creation
