@@ -117,7 +117,7 @@
       END                                                          AS {{field}},
       {% endfor %}
       (active_services.service_type)                               AS active_service_types_array,
-      COALESCE(COUNT(DISTINCT members.member_id), 0)               AS member_count
+      IFNULL(COUNT(DISTINCT members.member_id), 0)               AS member_count
     FROM projects_source
     LEFT JOIN dim_date
       ON TO_DATE(projects_source.created_at) = dim_date.date_day
@@ -130,7 +130,7 @@
       ON prep_namespace.dim_namespace_id = namespace_lineage.namespace_id
     LEFT JOIN gitlab_subscriptions
       ON namespace_lineage.ultimate_parent_id  = gitlab_subscriptions.namespace_id
-        AND projects_source.created_at BETWEEN gitlab_subscriptions.valid_from AND {{ coalesce_to_infinity("gitlab_subscriptions.valid_to") }}
+        AND projects_source.created_at >= gitlab_subscriptions.valid_from AND projects_source.created_at < {{ coalesce_to_infinity("gitlab_subscriptions.valid_to") }}
     LEFT JOIN prep_product_tier
       ON namespace_lineage.ultimate_parent_plan_name = LOWER(IFF(prep_product_tier.product_tier_name_short != 'Trial: Ultimate',
                                                                   prep_product_tier.product_tier_historical_short,
