@@ -739,7 +739,7 @@ models:
         description: ID of the namespace the project belongs to
         tests:
           - not_null
-      - name: ultimate_parent_dim_namespace_id
+      - name: ultimate_parent_namespace_id
         description: ID of the Ultimate Namespace (or Top-level Namespace) the project is part of
         tests:
           - not_null
