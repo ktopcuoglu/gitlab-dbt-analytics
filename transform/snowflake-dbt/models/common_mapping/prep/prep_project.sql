@@ -14,14 +14,7 @@
 
 ]) }}
 
-, members AS (
-
-    SELECT *
-    FROM {{ref('gitlab_dotcom_members')}} members
-    WHERE is_currently_valid = TRUE
-      AND {{ filter_out_blocked_users('members', 'user_id') }}
-
-), active_services AS (
+, active_services AS (
 
     SELECT *
     FROM {{ref('gitlab_dotcom_services_source')}}
@@ -114,18 +107,18 @@
         WHEN projects_source.visibility_level != 'public' AND NOT namespace_lineage.namespace_is_internal
           THEN 'project is private/internal'
         ELSE {{field}}
-      END                                                          AS {{field}},
+      END                                                            AS {{field}},
       {% endfor %}
-      (active_services.service_type)                               AS active_service_types_array,
-      IFNULL(COUNT(DISTINCT members.member_id), 0)               AS member_count
+      (active_services.service_type)                                 AS active_service_types_array,
+      IFNULL(COUNT(DISTINCT members_source.member_id), 0)            AS member_count
     FROM projects_source
     LEFT JOIN dim_date
       ON TO_DATE(projects_source.created_at) = dim_date.date_day
     LEFT JOIN prep_namespace
       ON projects_source.namespace_id = prep_namespace.dim_namespace_id
-    LEFT JOIN members
-      ON projects_source.project_id = members.source_id
-      AND members.member_source_type = 'Project'
+    LEFT JOIN members_source
+      ON projects_source.project_id = members_source.source_id
+      AND members_source.member_source_type = 'Project'
     LEFT JOIN namespace_lineage
       ON prep_namespace.dim_namespace_id = namespace_lineage.namespace_id
     LEFT JOIN gitlab_subscriptions
