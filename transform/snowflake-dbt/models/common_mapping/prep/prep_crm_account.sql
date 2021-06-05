@@ -55,7 +55,7 @@ WITH map_merged_crm_account AS (
 
     SELECT
       account_id,
-      CASE 
+      CASE
         WHEN is_jihu_account = TRUE
           AND carr_this_account > 0
             THEN TRUE
@@ -66,6 +66,7 @@ WITH map_merged_crm_account AS (
 ), final AS (
 
   SELECT
+    sfdc_account.owner_id                         AS dim_crm_user_id,
     sfdc_account.account_id                       AS dim_crm_account_id,
     sfdc_account.account_name                     AS crm_account_name,
     sfdc_account.billing_country                  AS crm_account_billing_country,

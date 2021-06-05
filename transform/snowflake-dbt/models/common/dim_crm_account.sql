@@ -6,6 +6,7 @@ WITH base AS (
 ), final AS (
 
     SELECT
+      dim_crm_user_id                    AS dim_crm_user_id,
       dim_crm_account_id                 AS dim_crm_account_id,
       crm_account_name                   AS crm_account_name,
       crm_account_billing_country        AS crm_account_billing_country,

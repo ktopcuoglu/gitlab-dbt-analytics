@@ -10,6 +10,7 @@
     ('dim_crm_account','dim_crm_account'),
     ('dim_product_detail','dim_product_detail'),
     ('dim_subscription','dim_subscription'),
+    ('dim_crm_user','dim_crm_user'),
     ('fct_charge','fct_charge')
 ]) }}
 
@@ -65,6 +66,8 @@
       dim_billing_account.billing_account_number                                      AS billing_account_number,
 
       -- crm account info
+      dim_crm_user.dim_crm_user_id                                                    AS dim_crm_user_id,
+      dim_crm_user.crm_user_sales_segment                                             AS crm_user_sales_segment,
       dim_crm_account.dim_crm_account_id                                              AS dim_crm_account_id,
       dim_crm_account.crm_account_name                                                AS crm_account_name,
       dim_crm_account.dim_parent_crm_account_id                                       AS dim_parent_crm_account_id,
@@ -148,6 +151,8 @@
       ON fct_charge.dim_billing_account_id = dim_billing_account.dim_billing_account_id
     LEFT JOIN dim_crm_account
       ON dim_crm_account.dim_crm_account_id = dim_billing_account.dim_crm_account_id
+    LEFT JOIN dim_crm_user
+      ON dim_crm_account.dim_crm_user_id = dim_crm_user.dim_crm_user_id
     LEFT JOIN dim_amendment AS dim_amendment_subscription
       ON dim_subscription.dim_amendment_id_subscription = dim_amendment_subscription.dim_amendment_id
     LEFT JOIN dim_amendment AS dim_amendment_charge
