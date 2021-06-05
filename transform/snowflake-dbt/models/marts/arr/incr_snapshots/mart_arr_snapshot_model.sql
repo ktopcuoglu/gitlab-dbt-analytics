@@ -28,7 +28,8 @@ WITH snapshot_dates AS (
 ), mart_arr_spined AS (
 
     SELECT
-      snapshot_dates.date_id AS snapshot_id,
+      snapshot_dates.date_id     AS snapshot_id,
+      snapshot_dates.date_actual AS snapshot_date,
       mart_arr.*
     FROM mart_arr
     INNER JOIN snapshot_dates
