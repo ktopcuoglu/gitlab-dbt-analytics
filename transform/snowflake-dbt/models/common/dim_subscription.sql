@@ -31,6 +31,8 @@ WITH prep_amendment AS (
     {{ get_keyed_nulls('prep_amendment.dim_amendment_id') }}       AS dim_amendment_id_subscription,
 
     --Subscription Information
+    subscription.created_by_id,
+    subscription.updated_by_id,
     subscription.dim_subscription_id_original,
     subscription.dim_subscription_id_previous,
     subscription.subscription_name_slugify,

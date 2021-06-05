@@ -17,16 +17,18 @@
 
     SELECT
       --Surrogate Key
-      dim_charge.dim_charge_id,
+      dim_charge.dim_charge_id                                                        AS dim_charge_id,
 
       --Natural Key
-      dim_charge.subscription_name,
-      dim_charge.subscription_version,
-      dim_charge.rate_plan_charge_number,
-      dim_charge.rate_plan_charge_version,
-      dim_charge.rate_plan_charge_segment,
+      dim_charge.subscription_name                                                    AS subscription_name,
+      dim_charge.subscription_version                                                 AS subscription_version,
+      dim_charge.rate_plan_charge_number                                              AS rate_plan_charge_number,
+      dim_charge.rate_plan_charge_version                                             AS rate_plan_charge_version,
+      dim_charge.rate_plan_charge_segment                                             AS rate_plan_charge_segment,
 
       --Charge Information
+      dim_charge.rate_plan_name                                                       AS rate_plan_name,
+      dim_charge.rate_plan_charge_name                                                AS rate_plan_charge_name,
       dim_charge.charge_type                                                          AS charge_type,
       dim_charge.is_paid_in_full                                                      AS is_paid_in_full,
       dim_charge.is_last_segment                                                      AS is_last_segment,
@@ -40,6 +42,8 @@
 
       --Subscription Information
       dim_subscription.dim_subscription_id                                            AS dim_subscription_id,
+      dim_subscription.created_by_id                                                  AS subscription_created_by_id,
+      dim_subscription.updated_by_id                                                  AS subscription_updated_by_id,
       dim_subscription.subscription_start_date                                        AS subscription_start_date,
       dim_subscription.subscription_end_date                                          AS subscription_end_date,
       dim_subscription.subscription_start_month                                       AS subscription_start_month,
@@ -130,6 +134,7 @@
       fct_charge.quantity,
       fct_charge.previous_quantity,
       fct_charge.delta_quantity,
+      fct_charge.delta_tcv,
       fct_charge.estimated_total_future_billings
 
     FROM fct_charge

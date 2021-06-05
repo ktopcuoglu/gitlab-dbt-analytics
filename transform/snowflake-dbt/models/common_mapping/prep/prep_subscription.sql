@@ -33,6 +33,8 @@ WITH date_details AS (
       zuora_subscription.original_id                                            AS dim_subscription_id_original,
       zuora_subscription.previous_subscription_id                               AS dim_subscription_id_previous,
       zuora_subscription.amendment_id                                           AS dim_amendment_id_subscription,
+      zuora_subscription.created_by_id,
+      zuora_subscription.updated_by_id,
       zuora_subscription.subscription_name,
       zuora_subscription.subscription_name_slugify,
       zuora_subscription.subscription_status,

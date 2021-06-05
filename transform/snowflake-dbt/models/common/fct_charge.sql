@@ -41,6 +41,7 @@ WITH prep_charge AS (
       prep_charge.quantity,
       prep_charge.previous_quantity,
       prep_charge.delta_quantity,
+      prep_charge.delta_tcv,
       prep_charge.estimated_total_future_billings
 
     FROM prep_charge
