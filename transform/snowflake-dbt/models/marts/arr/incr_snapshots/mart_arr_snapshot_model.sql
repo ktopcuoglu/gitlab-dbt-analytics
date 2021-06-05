@@ -2,7 +2,7 @@
         "materialized": "incremental",
         "unique_key": "mart_arr_snapshot_id",
         "tags": ["edm_snapshot", "arr_snapshots"],
-        "schema": "common"
+        "schema": "common_mart_sales"
     })
 }}
 
@@ -45,5 +45,5 @@ WITH snapshot_dates AS (
 )
 
 
-SELECT * 
+SELECT *
 FROM final

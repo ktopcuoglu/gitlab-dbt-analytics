@@ -22,30 +22,6 @@ WITH date_details AS (
       crm_id
     FROM {{ ref('zuora_account_source') }}
 
-), renewal_subscriptions AS (
-
-    SELECT DISTINCT
-      zuora_subscription_1.subscription_id,
-      zuora_subscription_1.subscription_name,
-      zuora_subscription_1.zuora_renewal_subscription_name,
-      CASE
-        WHEN zuora_subscription_1.current_term >= 24 THEN TRUE
-        WHEN zuora_subscription_1.zuora_renewal_subscription_name != '' THEN TRUE
-        ELSE FALSE
-      END                                                                       AS is_myb,
-      CASE
-        WHEN zuora_subscription_1.zuora_renewal_subscription_name != '' THEN TRUE
-        ELSE FALSE
-      END                                                                       AS is_myb_with_multi_subs,
-      DATE_TRUNC('month',zuora_subscription_2.subscription_end_date::DATE)      AS myb_renewal_month,
-      RANK() OVER (PARTITION BY zuora_subscription_1.subscription_name
-                   ORDER BY zuora_subscription_1.zuora_renewal_subscription_name, zuora_subscription_2.subscription_end_date )
-                                                                                AS rank
-    FROM zuora_subscription zuora_subscription_1
-    INNER JOIN zuora_subscription zuora_subscription_2
-      ON zuora_subscription_1.zuora_renewal_subscription_name = zuora_subscription_2.subscription_name
-    QUALIFY rank = 1
-
 ), joined AS (
 
     SELECT
@@ -64,8 +40,6 @@ WITH date_details AS (
       zuora_subscription.auto_renew                                             AS is_auto_renew,
       zuora_subscription.zuora_renewal_subscription_name,
       zuora_subscription.zuora_renewal_subscription_name_slugify,
-      renewal_subscriptions.is_myb,
-      renewal_subscriptions.is_myb_with_multi_subs,
       zuora_subscription.current_term,
       zuora_subscription.renewal_term,
       zuora_subscription.renewal_term_period_type,
@@ -89,7 +63,6 @@ WITH date_details AS (
           THEN DATE_TRUNC('month',DATEADD('month', zuora_subscription.current_term, zuora_subscription.subscription_end_date::DATE))
         ELSE NULL
       END                                                                       AS second_active_renewal_month,
-      renewal_subscriptions.myb_renewal_month,
       zuora_subscription.turn_on_cloud_licensing,
       zuora_subscription.turn_on_usage_ping_required_metrics,
       zuora_subscription.contract_auto_renewal,
@@ -103,8 +76,6 @@ WITH date_details AS (
       ON zuora_subscription.account_id = zuora_account.account_id
     LEFT JOIN map_merged_crm_account
       ON zuora_account.crm_id = map_merged_crm_account.sfdc_account_id
-    LEFT JOIN renewal_subscriptions
-      ON zuora_subscription.subscription_id = renewal_subscriptions.subscription_id
     LEFT JOIN date_details
       ON zuora_subscription.subscription_end_date::DATE = date_details.date_day
 
@@ -115,5 +86,5 @@ WITH date_details AS (
     created_by="@ischweickartDD",
     updated_by="@iweeks",
     created_date="2021-01-07",
-    updated_date="2021-05-10"
+    updated_date="2021-06-07"
 ) }}

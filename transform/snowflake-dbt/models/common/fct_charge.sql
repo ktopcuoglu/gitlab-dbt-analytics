@@ -1,56 +1,60 @@
-WITH zuora_rate_plan AS (
+WITH prep_charge AS (
 
     SELECT *
-    FROM {{ ref('zuora_rate_plan_source') }}
+    FROM {{ ref('prep_charge') }}
 
-), zuora_rate_plan_charge AS (
+), prep_amendment AS (
 
-    SELECT *
-    FROM {{ ref('zuora_rate_plan_charge_source') }}
+  SELECT *
+  FROM {{ ref('prep_amendment') }}
 
-), base_charges AS (
+), fct_charge AS (
 
     SELECT
-      zuora_rate_plan_charge.rate_plan_charge_id                        AS charge_id,
-      zuora_rate_plan_charge.product_rate_plan_charge_id                AS dim_product_detail_id,
-      zuora_rate_plan.subscription_id                                   AS dim_subscription_id,
-      zuora_rate_plan_charge.account_id                                 AS dim_billing_account_id,
-      zuora_rate_plan.amendement_id                                     AS dim_amendment_id,
-      zuora_rate_plan_charge.rate_plan_charge_number,
-      zuora_rate_plan_charge.rate_plan_charge_name,
-      zuora_rate_plan_charge.effective_start_month,
-      zuora_rate_plan_charge.effective_end_month,
-      {{ get_date_id('zuora_rate_plan_charge.effective_start_date') }}  AS effective_start_date_id,
-      {{ get_date_id('zuora_rate_plan_charge.effective_end_date') }}    AS effective_end_date_id,
-      {{ get_date_id('zuora_rate_plan_charge.effective_start_month') }} AS effective_start_month_id,
-      {{ get_date_id('zuora_rate_plan_charge.effective_end_month') }}   AS effective_end_month_id,
-      zuora_rate_plan_charge.unit_of_measure,
-      zuora_rate_plan_charge.quantity,
-      zuora_rate_plan_charge.mrr,
-      zuora_rate_plan_charge.delta_tcv,
-      zuora_rate_plan.rate_plan_name                                    AS rate_plan_name,
-      {{ product_category('zuora_rate_plan.rate_plan_name') }},
-      {{ delivery('product_category')}},
-      CASE
-        WHEN LOWER(rate_plan_name) LIKE '%support%'
-          THEN 'Support Only'
-        ELSE 'Full Service'
-      END                                                               AS service_type,
-      zuora_rate_plan_charge.discount_level,
-      zuora_rate_plan_charge.segment                                    AS rate_plan_charge_segment,
-      zuora_rate_plan_charge.version                                    AS rate_plan_charge_version,
-      zuora_rate_plan_charge.charge_type,
-      zuora_rate_plan.amendement_type
-    FROM zuora_rate_plan
-    INNER JOIN zuora_rate_plan_charge
-      ON zuora_rate_plan.rate_plan_id = zuora_rate_plan_charge.rate_plan_id
+      --Surrogate Key
+      prep_charge.dim_charge_id,
+
+      --Natural Key
+      prep_charge.subscription_name,
+      prep_charge.subscription_version,
+      prep_charge.rate_plan_charge_number,
+      prep_charge.rate_plan_charge_version,
+      prep_charge.rate_plan_charge_segment,
+
+      --Common Dimension Keys
+      prep_charge.dim_product_detail_id,
+      {{ get_keyed_nulls('prep_amendment.dim_amendment_id') }}              AS dim_amendment_id_charge,
+      prep_charge.dim_subscription_id,
+      prep_charge.dim_billing_account_id,
+      prep_charge.dim_crm_account_id,
+      prep_charge.dim_parent_crm_account_id,
+      prep_charge.effective_start_date_id,
+      prep_charge.effective_end_date_id,
+
+      --Additive Fields
+      prep_charge.mrr,
+      prep_charge.previous_mrr,
+      prep_charge.delta_mrr,
+      prep_charge.arr,
+      prep_charge.previous_arr,
+      prep_charge.delta_arr,
+      prep_charge.quantity,
+      prep_charge.previous_quantity,
+      prep_charge.delta_quantity,
+      prep_charge.estimated_total_future_billings
+
+    FROM prep_charge
+    LEFT JOIN prep_amendment
+      ON prep_charge.dim_amendment_id_charge = prep_amendment.dim_amendment_id
+    ORDER BY prep_charge.dim_parent_crm_account_id, prep_charge.dim_crm_account_id, subscription_name, subscription_version,
+      rate_plan_charge_number, rate_plan_charge_version, rate_plan_charge_segment
 
 )
 
 {{ dbt_audit(
-    cte_ref="base_charges",
-    created_by="@msendal",
+    cte_ref="fct_charge",
+    created_by="@iweeks",
     updated_by="@iweeks",
-    created_date="2020-06-01",
-    updated_date="2021-02-10"
+    created_date="2021-06-07",
+    updated_date="2021-06-07"
 ) }}
