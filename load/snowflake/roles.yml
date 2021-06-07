@@ -1962,6 +1962,12 @@ roles:
         warehouses:
             - analyst_xs
 
+    - cbraza:
+        member_of:
+            - analyst_growth
+        warehouses:
+            - analyst_xs          
+
     - cli:
         member_of:
             - product_manager
@@ -3400,7 +3406,12 @@ users:
         can_login: yes
         member_of:
             - camsmith
-
+ 
+    - cbraza:
+        can_login: yes
+        member_of:
+            - ngalang
+ 
     - cli:
         can_login: yes
         member_of:
