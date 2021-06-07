@@ -5,7 +5,7 @@
           unique_key='mrr_id',
           strategy='timestamp',
           updated_at='dbt_created_at',
-          invalidate_hard_deletes=True,
+          invalidate_hard_deletes=True
          )
     }}
     
