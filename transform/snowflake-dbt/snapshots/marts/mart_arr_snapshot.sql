@@ -8,14 +8,18 @@
           invalidate_hard_deletes=True
          )
     }}
+    WITH base AS (
 
-    SELECT
-    {{
-          dbt_utils.star(
-            from=ref('mart_arr'),
-            except=['DBT_UPDATED_AT']
-            )
-      }}
-    FROM {{ ref('mart_arr') }}
+        SELECT
+        {{
+              dbt_utils.star(
+                from=ref('mart_arr'),
+                except=['DBT_UPDATED_AT']
+                )
+          }}
+        FROM {{ ref('mart_arr') }}
+    )
+
+    SELECT * FROM base
 
 {% endsnapshot %}
