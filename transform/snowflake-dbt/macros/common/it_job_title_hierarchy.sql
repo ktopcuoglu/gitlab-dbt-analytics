@@ -12,7 +12,7 @@
       ARRAY_CONTAINS('cio'::VARIANT, SPLIT(LOWER({{job_title}}), ' ')) OR
       ARRAY_CONTAINS('cto'::VARIANT, SPLIT(LOWER({{job_title}}), ' ')) OR
       ARRAY_CONTAINS('cfo'::VARIANT, SPLIT(LOWER({{job_title}}), ' '))
-      THEN 'Decision Makers'
+      THEN 'IT Decision Maker'
 
     WHEN LOWER({{pad_column(job_title)}}) LIKE ANY ('%manager%information%', '%manager%technology%', '%database%administrat%', '%manager%engineer%', '%engineer%manager%',
                                       '%information%manager%', '%technology%manager%', '%manager%development%',
@@ -22,11 +22,11 @@
                                     '%manager%infrastructure%', '%manager%implementation%', '%devops%manager%', '%manager%devops%',
                                     '%manager%software%', '%procurement%manager%', '%manager%procurement%') AND
       NOT ARRAY_CONTAINS('project'::VARIANT, SPLIT(LOWER({{job_title}}), ' '))
-      THEN 'Managers'
+      THEN 'IT Manager'
 
     WHEN LOWER({{pad_column(job_title)}}) LIKE ANY ('% it %', '% it,%','%infrastructure%', '%engineer%', '%techno%',  '%information%', '%developer%', '%database%', '%solutions architect%',
     '%system%', '%software%', '%technical lead%', '%programmer%', '%network administrat%', '%application%', '%procurement%')
-      THEN 'Individual Contributors'
+      THEN 'IT Individual Contributor'
 
     ELSE NULL
 
