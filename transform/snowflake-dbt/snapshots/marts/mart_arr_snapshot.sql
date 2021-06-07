@@ -6,14 +6,17 @@
           strategy='timestamp',
           updated_at='dbt_created_at',
           invalidate_hard_deletes=True
+
          )
     }}
-    WITH base AS (
 
-        SELECT *
-        FROM {{ ref('mart_arr') }}
-    )
-
-    SELECT * FROM base
+    SELECT
+    {{
+          dbt_utils.star(
+            from=ref('mart_arr'),
+            except=['DBT_UPDATED_AT']
+            )
+      }}
+    FROM {{ ref('mart_arr') }}
 
 {% endsnapshot %}
