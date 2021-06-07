@@ -148,6 +148,7 @@ def trusted_data_pgp(
 
     return True
 
+
 def sync_incremental_ids(
     source_engine: Engine,
     target_engine: Engine,
