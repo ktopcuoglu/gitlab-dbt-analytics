@@ -29,6 +29,7 @@ WITH source AS (
         isconverted                                             AS is_converted,
         converteddate                                           AS converted_date,
         title                                                   AS title,
+        {{it_job_title_hierarchy('title')}},
         donotcall                                               AS is_do_not_call,
         hasoptedoutofemail                                      AS has_opted_out_email,
         emailbounceddate                                        AS email_bounced_date,

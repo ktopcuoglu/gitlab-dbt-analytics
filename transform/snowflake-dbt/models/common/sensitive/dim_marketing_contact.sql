@@ -80,6 +80,7 @@ WITH sfdc_lead AS (
         WHEN sfdc_lead_contact = 'lead' AND sfdc_lead.company <>  '[[unknown]]' THEN sfdc_lead.company
       END                                                                                                                   AS company_name,
       crm_person.title                                                                                                      AS job_title,
+      crm_person.it_job_title_hierarchy,
       crm_account.parent_crm_account_sales_segment,
       crm_account.parent_crm_account_tsp_region,
       sfdc_account.tsp_region,
@@ -118,6 +119,7 @@ WITH sfdc_lead AS (
       user_name                                                                                                             AS user_name,
       organization                                                                                                          AS company_name,
       role                                                                                                                  AS job_title,
+      it_job_title_hierarchy,
       created_at                                                                                                            AS created_date,
       confirmed_at                                                                                                          AS confirmed_date,
       state                                                                                                                 AS active_state,
@@ -207,6 +209,7 @@ WITH sfdc_lead AS (
       gitlab_dotcom.user_name                                                                                            AS gitlab_user_name,
       COALESCE(zuora.company_name,  sfdc.company_name, customer_db.company_name, gitlab_dotcom.company_name)             AS company_name,
       COALESCE(sfdc.job_title, gitlab_dotcom.job_title)                                                                  AS job_title,
+      COALESCE(sfdc.it_job_title_hierarchy, gitlab_dotcom.it_job_title_hierarchy)                                        AS it_job_title_hierarchy,
       COALESCE(zuora.country, sfdc.country, customer_db.country)                                                         AS country,
       sfdc.parent_crm_account_sales_segment                                                                              AS sfdc_parent_sales_segment,
       COALESCE(sfdc.parent_crm_account_tsp_region, sfdc.tsp_region, sfdc.crm_person_region)                              AS sfdc_parent_crm_account_tsp_region,
