@@ -69,8 +69,8 @@ class PostgresPipelineTable:
         self, source_engine: Engine, target_engine: Engine, schema_changed: bool
     ) -> bool:
         """
-            The function is used for trusted data extract and load.
-            It is responsible for setting up the target table and then call trusted_data_pgp load function. 
+        The function is used for trusted data extract and load.
+        It is responsible for setting up the target table and then call trusted_data_pgp load function.
         """
         target_table = self.target_table_name_td_sf
         return load_functions.trusted_data_pgp(

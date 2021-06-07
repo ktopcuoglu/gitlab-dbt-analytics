@@ -125,8 +125,8 @@ def trusted_data_pgp(
     table_name: str,
 ) -> bool:
     """
-      This function is being used for trusted data framework. 
-      It is responsible for extracting from postgres and loading data in snowflake.
+    This function is being used for trusted data framework.
+    It is responsible for extracting from postgres and loading data in snowflake.
     """
     raw_query = table_dict["import_query"]
     additional_filter = ""
@@ -146,6 +146,7 @@ def trusted_data_pgp(
         False,
     )
 
+    return True
 
 def sync_incremental_ids(
     source_engine: Engine,
