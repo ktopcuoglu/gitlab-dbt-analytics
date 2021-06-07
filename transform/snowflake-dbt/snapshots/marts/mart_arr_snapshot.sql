@@ -10,13 +10,7 @@
     }}
     WITH base AS (
 
-        SELECT
-        {{
-              dbt_utils.star(
-                from=ref('mart_arr'),
-                except=['DBT_UPDATED_AT']
-                )
-          }}
+        SELECT *
         FROM {{ ref('mart_arr') }}
     )
 
