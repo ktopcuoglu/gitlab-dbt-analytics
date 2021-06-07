@@ -117,13 +117,17 @@ def load_incremental(
     return True
 
 
-def trusted_data(
+def trusted_data_pgp(
     source_engine: Engine,
     target_engine: Engine,
     source_table_name: str,
     table_dict: Dict[Any, Any],
     table_name: str,
 ) -> bool:
+    """
+      This function is being used for trusted data framework. 
+      It is responsible for extracting from postgres and loading data in snowflake.
+    """
     raw_query = table_dict["import_query"]
     additional_filter = ""
     advanced_metadata = False

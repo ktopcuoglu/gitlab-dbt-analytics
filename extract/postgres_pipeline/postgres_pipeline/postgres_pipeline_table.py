@@ -22,7 +22,7 @@ class PostgresPipelineTable:
             **table_config
         ).upper()
         self.table_dict = table_config
-        self.target_table_name_dq = table_config["export_table"]
+        self.target_table_name_td_sf = table_config["export_table"]
 
     def is_scd(self) -> bool:
         return not self.is_incremental()
@@ -65,11 +65,15 @@ class PostgresPipelineTable:
             target_table,
         )
 
-    def do_trusted_data(
+    def do_trusted_data_pgp(
         self, source_engine: Engine, target_engine: Engine, schema_changed: bool
     ) -> bool:
-        target_table = self.target_table_name_dq
-        return load_functions.trusted_data(
+        """
+            The function is used for trusted data extract and load.
+            It is responsible for setting up the target table and then call trusted_data_pgp load function. 
+        """
+        target_table = self.target_table_name_td_sf
+        return load_functions.trusted_data_pgp(
             source_engine,
             target_engine,
             self.source_table_name,
@@ -129,7 +133,7 @@ class PostgresPipelineTable:
             "scd": self.do_scd,
             "backfill": self.do_incremental_backfill,
             "test": self.check_new_table,
-            "trusted_data": self.do_trusted_data,
+            "trusted_data": self.do_trusted_data_pgp,
         }
         return load_types[load_type](source_engine, target_engine, schema_changed)
 
