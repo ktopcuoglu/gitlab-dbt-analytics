@@ -5,7 +5,7 @@ WITH source AS (
       quarter::VARCHAR                AS quarter,
       year::VARCHAR                   AS year,
       metric_name::VARCHAR            AS metric_name,
-      amount::NUMBER                  AS amount
+      amount::FLOAT                   AS amount
     FROM {{ source('sheetload','manual_public_company_metrics') }}
 
 )

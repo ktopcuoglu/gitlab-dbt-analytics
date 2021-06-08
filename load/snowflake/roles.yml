@@ -2147,23 +2147,6 @@ roles:
         warehouses:
             - analyst_xs
 
-    - ewegscheider:
-        member_of:
-            - people_operations
-            - bamboohr_sensitive_separations
-        warehouses:
-            - analyst_xs
-        privileges:
-            databases:
-                read:
-                    - prep
-            schemas:
-                read:
-                    - prep.sensitive
-            tables:
-                read:
-                    - prep.sensitive.bamboohr_id_employee_number_mapping
-
     - fivetran_role:
         warehouses:
             - fivetran_warehouse
@@ -3410,7 +3393,7 @@ users:
     - cbraza:
         can_login: yes
         member_of:
-            - ngalang
+            - cbraza
  
     - cli:
         can_login: yes
@@ -3490,11 +3473,6 @@ users:
         can_login: yes
         member_of:
             - evan
-
-    - ewegscheider:
-        can_login: yes
-        member_of:
-            - ewegscheider
 
     - fivetran:
         can_login: yes

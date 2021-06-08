@@ -64,3 +64,25 @@ The logical execution of data loading looks like the following:
 
 Tests are run in CI using `pytest`. `Snowflake` access and `postgres` access are both required, as they rely on the actual data sources for end-to-end testing.
 The test file is located at `postgres_pipeline/test_postgres_pipeline.py`
+
+#### Postgres pipeline trusted data check.
+
+PURPOSE:
+To implement row counts and date actual tests for Gitlab.com by extracting data from postgres DB tables and load into Snowflake table and extract similar stats from snowflake and perform comparison between source and target.
+
+APPROACH: 
+The framework is designed to handle execution of any kind of query to perform the test. As per the current architecture every query will create one Kubernetes pod, so grouping into one query reduces creation of the number of Kubernetes pods. For record count and date actual test between postgres DB and snowflake the approach followed  is grouping low volume source tables together and large volume source tables run as an individual task. 
+
+Below are the list of changes made to the files to implement this approach.
+
+* Gitlab_com_data_quality_db_manifest.yaml - New yaml file is created which is supposed to do all types of reconciliation. Manifest file combines a group of low volume tables together and a large volume table as individual tasks.
+
+* gitlab_dbs.py - This file creates dynamic DAGS and dynamic tasks in the airflow system by extracting from manifest file.
+Gitlab_dbs.py needs modification,  as the load type for this test is not SCD/incremental and if existing framework is used we will end up creating duplicate DAG in airflow, so to avoid this a separate config_dict_dq is created inside ‘Gitlab_dbs.py’ and config_dict_dq is used to create DAG into airflow.
+
+* Main.py - This file is modified by creating Dq_main inside Main.py to handle a new type of load from postgres that is dq (data quality). 
+
+* Postgres_pipeline_table.py-  This file is modified to pick the table name and checks  if the target table exists and executes the query.
+
+* Load_functions.py- This file is modified to define the snowflake table that gets loaded.
+
