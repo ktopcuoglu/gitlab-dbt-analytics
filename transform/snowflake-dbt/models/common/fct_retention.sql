@@ -63,7 +63,7 @@ WITH dim_date AS (
 ), final AS (
 
     SELECT
-      {{ dbt_utils.surrogate_key(['prep_crm_account.dim_parent_crm_account_id','retention_month']) }}
+      {{ dbt_utils.surrogate_key(['prep_crm_account.dim_parent_crm_account_id','dateadd(''year'', 1, date_actual)']) }}
         as fct_retention_id,
       prep_crm_account.dim_parent_crm_account_id                AS dim_parent_crm_account_id,
       dim_date.date_actual                                      AS mrr_month,
