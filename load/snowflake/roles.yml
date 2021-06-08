@@ -3393,7 +3393,7 @@ users:
     - cbraza:
         can_login: yes
         member_of:
-            - ngalang
+            - cbraza
  
     - cli:
         can_login: yes
