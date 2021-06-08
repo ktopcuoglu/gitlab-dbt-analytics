@@ -97,6 +97,9 @@ joined AS (
       projects.only_mirror_protected_branches,
       projects.pull_mirror_available_overridden,
       projects.mirror_overwrites_diverged_branches,
+      IFF(projects.import_type='gitlab_project' AND projects.project_path='learn-gitlab',  
+        TRUE, 
+        FALSE)                                                     AS is_learn_gitlab
 
       {% for field in sensitive_fields %}
       CASE
