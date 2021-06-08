@@ -1,6 +1,6 @@
 {{ config({
     "materialized": "incremental",
-    "unique_key": "instance_path_id"
+    "unique_key": "dim_instance_path_id"
     })
 }}
 

@@ -1,9 +1,3 @@
-{{ config({
-    "materialized": "incremental",
-    "unique_key": "primary_key"
-    })
-}}
-
 {{ simple_cte([('dim_date', 'dim_date'),
                 ('fct_usage_ping_payload', 'fct_usage_ping_payload')
                 ]
@@ -15,15 +9,7 @@
     FROM {{ ref('wk_prep_usage_data_all_time_flattened')}}
     WHERE typeof(metric_value) IN ('INTEGER', 'DECIMAL')
 
-    {% if is_incremental() %}
-
-      AND ping_created_at >= (SELECT MAX(ping_created_month) FROM {{this}})
-
-    {% endif %}
-
-)
-
-, transformed AS (
+), transformed AS (
 
     SELECT 
         fct_usage_ping_payload.*,
@@ -39,7 +25,6 @@
         clean_metrics_name,
         time_period,
         has_timed_out,
-        host_name,
         DATE_TRUNC('month', ping_created_at) AS ping_created_month
     FROM data
     LEFT JOIN fct_usage_ping_payload
@@ -89,8 +74,4 @@ SELECT
   normalized_monthly_metric_value,
   has_timed_out
 FROM monthly
-  {% if is_incremental() %}
 
-    WHERE ping_created_month >= (SELECT MAX(ping_created_month) FROM {{this}})
-
-  {% endif %}
