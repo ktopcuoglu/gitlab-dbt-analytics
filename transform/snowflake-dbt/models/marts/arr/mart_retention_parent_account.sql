@@ -17,8 +17,8 @@ WITH dim_crm_account AS (
 
     SELECT
       dim_parent_crm_account_id,
-      mrr_month,
-      retention_month,
+      dim_date.date_actual                              AS mrr_month,
+      dateadd('year', 1, date_actual)                   AS retention_month,
       next_renewal_month,
       last_renewal_month,
       COUNT(DISTINCT dim_parent_crm_account_id)
