@@ -1,52 +1,35 @@
-WITH dim_amendment AS (
+{{config({
+    "schema": "common_mart_sales"
+  })
+}}
 
-  SELECT *
-  FROM {{ ref('dim_amendment') }}
+{{ simple_cte([
+    ('dim_amendment','dim_amendment'),
+    ('dim_billing_account','dim_billing_account'),
+    ('dim_charge','dim_charge'),
+    ('dim_crm_account','dim_crm_account'),
+    ('dim_product_detail','dim_product_detail'),
+    ('dim_subscription','dim_subscription'),
+    ('dim_crm_user','dim_crm_user'),
+    ('fct_charge','fct_charge')
+]) }}
 
-), dim_billing_account AS (
-
-  SELECT *
-  FROM {{ ref('dim_billing_account') }}
-
-), dim_charge AS (
-
-  SELECT *
-  FROM {{ ref('dim_charge') }}
-
-), dim_crm_account AS (
-
-  SELECT *
-  FROM {{ ref('dim_crm_account') }}
-
-), dim_product_detail AS (
-
-  SELECT *
-  FROM {{ ref('dim_product_detail') }}
-
-), dim_subscription AS (
-
-  SELECT *
-  FROM {{ ref('dim_subscription') }}
-
-), fct_charge AS (
-
-    SELECT *
-    FROM {{ ref('wip_fct_charge') }}
-
-), mart_charge AS (
+, mart_charge AS (
 
     SELECT
       --Surrogate Key
-      dim_charge.dim_charge_id,
+      dim_charge.dim_charge_id                                                        AS dim_charge_id,
 
       --Natural Key
-      dim_charge.subscription_name,
-      dim_charge.subscription_version,
-      dim_charge.rate_plan_charge_number,
-      dim_charge.rate_plan_charge_version,
-      dim_charge.rate_plan_charge_segment,
+      dim_charge.subscription_name                                                    AS subscription_name,
+      dim_charge.subscription_version                                                 AS subscription_version,
+      dim_charge.rate_plan_charge_number                                              AS rate_plan_charge_number,
+      dim_charge.rate_plan_charge_version                                             AS rate_plan_charge_version,
+      dim_charge.rate_plan_charge_segment                                             AS rate_plan_charge_segment,
 
       --Charge Information
+      dim_charge.rate_plan_name                                                       AS rate_plan_name,
+      dim_charge.rate_plan_charge_name                                                AS rate_plan_charge_name,
       dim_charge.charge_type                                                          AS charge_type,
       dim_charge.is_paid_in_full                                                      AS is_paid_in_full,
       dim_charge.is_last_segment                                                      AS is_last_segment,
@@ -60,6 +43,8 @@ WITH dim_amendment AS (
 
       --Subscription Information
       dim_subscription.dim_subscription_id                                            AS dim_subscription_id,
+      dim_subscription.created_by_id                                                  AS subscription_created_by_id,
+      dim_subscription.updated_by_id                                                  AS subscription_updated_by_id,
       dim_subscription.subscription_start_date                                        AS subscription_start_date,
       dim_subscription.subscription_end_date                                          AS subscription_end_date,
       dim_subscription.subscription_start_month                                       AS subscription_start_month,
@@ -81,6 +66,8 @@ WITH dim_amendment AS (
       dim_billing_account.billing_account_number                                      AS billing_account_number,
 
       -- crm account info
+      dim_crm_user.dim_crm_user_id                                                    AS dim_crm_user_id,
+      dim_crm_user.crm_user_sales_segment                                             AS crm_user_sales_segment,
       dim_crm_account.dim_crm_account_id                                              AS dim_crm_account_id,
       dim_crm_account.crm_account_name                                                AS crm_account_name,
       dim_crm_account.dim_parent_crm_account_id                                       AS dim_parent_crm_account_id,
@@ -124,6 +111,7 @@ WITH dim_amendment AS (
       dim_product_detail.product_rate_plan_name                                       AS product_rate_plan_name,
 
       --Amendment Information
+      dim_amendment_subscription.effective_date                                       AS subscription_amendment_effective_date,
       CASE
         WHEN dim_charge.subscription_version = 1
           THEN 'NewSubscription'
@@ -149,6 +137,7 @@ WITH dim_amendment AS (
       fct_charge.quantity,
       fct_charge.previous_quantity,
       fct_charge.delta_quantity,
+      fct_charge.delta_tcv,
       fct_charge.estimated_total_future_billings
 
     FROM fct_charge
@@ -162,6 +151,8 @@ WITH dim_amendment AS (
       ON fct_charge.dim_billing_account_id = dim_billing_account.dim_billing_account_id
     LEFT JOIN dim_crm_account
       ON dim_crm_account.dim_crm_account_id = dim_billing_account.dim_crm_account_id
+    LEFT JOIN dim_crm_user
+      ON dim_crm_account.dim_crm_user_id = dim_crm_user.dim_crm_user_id
     LEFT JOIN dim_amendment AS dim_amendment_subscription
       ON dim_subscription.dim_amendment_id_subscription = dim_amendment_subscription.dim_amendment_id
     LEFT JOIN dim_amendment AS dim_amendment_charge
@@ -176,6 +167,6 @@ WITH dim_amendment AS (
     cte_ref="mart_charge",
     created_by="@iweeks",
     updated_by="@iweeks",
-    created_date="2021-05-10",
-    updated_date="2021-05-10"
+    created_date="2021-06-07",
+    updated_date="2021-06-07"
 ) }}
