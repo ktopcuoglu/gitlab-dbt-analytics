@@ -8,27 +8,88 @@ WITH dim_crm_account AS (
     SELECT *
     FROM {{ ref('dim_date') }}
 
-), fct_retention AS (
+), dim_product_detail AS (
 
     SELECT *
-    FROM {{ ref('fct_retention') }}
+    FROM {{ ref('dim_product_detail') }}
+
+), dim_subscription AS (
+
+    SELECT *
+    FROM {{ ref('dim_subscription') }}
+
+), fct_mrr AS (
+
+    SELECT *
+    FROM {{ ref('fct_mrr') }}
+    WHERE subscription_status IN ('Active', 'Cancelled')
+
+), next_renewal_month AS (
+
+    SELECT DISTINCT
+      merged_accounts.dim_parent_crm_account_id,
+      product_tier_name                                                                                               AS product_category,
+      MIN(subscription_end_month) OVER (PARTITION BY merged_accounts.dim_parent_crm_account_id, product_tier_name)    AS next_renewal_month_product
+    FROM fct_mrr
+    INNER JOIN dim_date
+      ON dim_date.date_id = fct_mrr.dim_date_id
+    LEFT JOIN dim_crm_account AS crm_accounts
+      ON crm_accounts.dim_crm_account_id = fct_mrr.dim_crm_account_id
+    INNER JOIN dim_crm_account AS merged_accounts
+      ON merged_accounts.dim_crm_account_id = COALESCE(crm_accounts.merged_to_account_id, crm_accounts.dim_crm_account_id)
+    LEFT JOIN dim_subscription
+      ON dim_subscription.dim_subscription_id = fct_mrr.dim_subscription_id
+      AND subscription_end_month <= DATEADD('year', 1, date_actual)
+    INNER JOIN dim_product_detail
+      ON dim_product_detail.dim_product_detail_id = fct_mrr.dim_product_detail_id
+    WHERE subscription_end_month >= DATE_TRUNC('month',CURRENT_DATE)
+
+), last_renewal_month AS (
+
+    SELECT DISTINCT
+      merged_accounts.dim_parent_crm_account_id,
+      product_tier_name                                                                                               AS product_category,
+      MAX(subscription_end_month) OVER (PARTITION BY merged_accounts.dim_parent_crm_account_id, product_tier_name)    AS last_renewal_month_product
+    FROM fct_mrr
+    INNER JOIN dim_date
+      ON dim_date.date_id = fct_mrr.dim_date_id
+    LEFT JOIN dim_crm_account AS crm_accounts
+      ON crm_accounts.dim_crm_account_id = fct_mrr.dim_crm_account_id
+    INNER JOIN dim_crm_account AS merged_accounts
+      ON merged_accounts.dim_crm_account_id = COALESCE(crm_accounts.merged_to_account_id, crm_accounts.dim_crm_account_id)
+    LEFT JOIN dim_subscription
+      ON dim_subscription.dim_subscription_id = fct_mrr.dim_subscription_id
+      AND subscription_end_month <= DATEADD('year', 1, date_actual)
+    INNER JOIN dim_product_detail
+      ON dim_product_detail.dim_product_detail_id = fct_mrr.dim_product_detail_id
+    WHERE subscription_end_month < DATE_TRUNC('month',CURRENT_DATE)
 
 ), parent_account_mrrs AS (
 
     SELECT
-      dim_parent_crm_account_id,
-      mrr_month,
-      retention_month,
+      dim_crm_account.dim_parent_crm_account_id,
+      dim_product_detail.product_tier_name              AS product_category,
+      dim_product_detail.product_ranking,
+      dim_date.date_actual                              AS mrr_month,
+      dateadd('year', 1, date_actual)                   AS retention_month,
       next_renewal_month_product,
       last_renewal_month_product,
-      next_renewal_month,
-      last_renewal_month,
-      mrr,
-      arr,
-      quantity,
-      product_tier_name,
-      product_ranking
-    FROM fct_retention
+      SUM(ZEROIFNULL(mrr))                              AS mrr_total,
+      SUM(ZEROIFNULL(arr))                              AS arr_total,
+      SUM(ZEROIFNULL(quantity))                         AS quantity_total
+    FROM fct_mrr
+    INNER JOIN dim_date
+      ON dim_date.date_id = fct_mrr.dim_date_id
+    INNER JOIN dim_product_detail
+      ON dim_product_detail.dim_product_detail_id = fct_mrr.dim_product_detail_id
+    LEFT JOIN dim_crm_account
+      ON dim_crm_account.dim_crm_account_id = fct_mrr.dim_crm_account_id
+    LEFT JOIN next_renewal_month
+      ON next_renewal_month.dim_parent_crm_account_id = dim_crm_account.dim_parent_crm_account_id
+      AND next_renewal_month.product_category = dim_product_detail.product_tier_name
+    LEFT JOIN last_renewal_month
+      ON last_renewal_month.dim_parent_crm_account_id = dim_crm_account.dim_parent_crm_account_id
+      AND last_renewal_month.product_category = dim_product_detail.product_tier_name
     {{ dbt_utils.group_by(n=7) }}
 
 ), retention_subs AS (
