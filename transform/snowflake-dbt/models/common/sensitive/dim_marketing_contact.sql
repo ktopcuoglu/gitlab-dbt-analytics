@@ -209,7 +209,7 @@ WITH sfdc_lead AS (
       gitlab_dotcom.user_name                                                                                            AS gitlab_user_name,
       COALESCE(zuora.company_name,  sfdc.company_name, customer_db.company_name, gitlab_dotcom.company_name)             AS company_name,
       COALESCE(sfdc.job_title, gitlab_dotcom.job_title)                                                                  AS job_title,
-      COALESCE(sfdc.it_job_title_hierarchy, gitlab_dotcom.it_job_title_hierarchy)                                        AS it_job_title_hierarchy,
+      IFF(sfdc.job_title IS NOT NULL, sfdc.it_job_title_hierarchy, gitlab_dotcom.it_job_title_hierarchy)                 AS it_job_title_hierarchy,
       COALESCE(zuora.country, sfdc.country, customer_db.country)                                                         AS country,
       sfdc.parent_crm_account_sales_segment                                                                              AS sfdc_parent_sales_segment,
       COALESCE(sfdc.parent_crm_account_tsp_region, sfdc.tsp_region, sfdc.crm_person_region)                              AS sfdc_parent_crm_account_tsp_region,

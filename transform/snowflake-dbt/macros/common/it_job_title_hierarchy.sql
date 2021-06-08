@@ -8,10 +8,11 @@
                                     '%vp%engineer%', '%head%information%', '%vp%information%', '%president%information%', '%president%engineer%',
                                     '%president%development%', '%director% it%', '%engineer%director%', '%head%engineer%', '%engineer%head%',
                                     '%chief%software%', '%director%procurement%', '%procurement%director%', '%head%procurement%', '%procurement%head%',
-                                    '%chief%procurement%', '%vp%procurement%', '%procurement%vp%', '%president%procurement%', '%procurement%president%') OR
-      ARRAY_CONTAINS('cio'::VARIANT, SPLIT(LOWER({{job_title}}), ' ')) OR
-      ARRAY_CONTAINS('cto'::VARIANT, SPLIT(LOWER({{job_title}}), ' ')) OR
-      ARRAY_CONTAINS('cfo'::VARIANT, SPLIT(LOWER({{job_title}}), ' '))
+                                    '%chief%procurement%', '%vp%procurement%', '%procurement%vp%', '%president%procurement%', '%procurement%president%',
+                                    '%head%devops%') OR
+      ARRAY_CONTAINS('cio'::VARIANT, SPLIT(LOWER({{job_title}}), ' ')) OR ARRAY_CONTAINS('cio'::VARIANT, SPLIT(LOWER({{job_title}}), ',')) OR
+      ARRAY_CONTAINS('cto'::VARIANT, SPLIT(LOWER({{job_title}}), ' ')) OR ARRAY_CONTAINS('cto'::VARIANT, SPLIT(LOWER({{job_title}}), ',')) OR
+      ARRAY_CONTAINS('cfo'::VARIANT, SPLIT(LOWER({{job_title}}), ' ')) OR ARRAY_CONTAINS('cfo'::VARIANT, SPLIT(LOWER({{job_title}}), ','))
       THEN 'IT Decision Maker'
 
     WHEN LOWER({{pad_column(job_title)}}) LIKE ANY ('%manager%information%', '%manager%technology%', '%database%administrat%', '%manager%engineer%', '%engineer%manager%',
@@ -25,7 +26,7 @@
       THEN 'IT Manager'
 
     WHEN LOWER({{pad_column(job_title)}}) LIKE ANY ('% it %', '% it,%','%infrastructure%', '%engineer%', '%techno%',  '%information%', '%developer%', '%database%', '%solutions architect%',
-    '%system%', '%software%', '%technical lead%', '%programmer%', '%network administrat%', '%application%', '%procurement%')
+    '%system%', '%software%', '%technical lead%', '%programmer%', '%network administrat%', '%application%', '%procurement%', '%development%', '%tech%lead%')
       THEN 'IT Individual Contributor'
 
     ELSE NULL
