@@ -106,5 +106,5 @@ WITH dim_crm_account AS (
     created_by="@paul_armstrong",
     updated_by="@paul_armstrong",
     created_date="2021-06-03",
-    updated_date="2021-06-03"
+    updated_date="2021-06-08"
 ) }}
