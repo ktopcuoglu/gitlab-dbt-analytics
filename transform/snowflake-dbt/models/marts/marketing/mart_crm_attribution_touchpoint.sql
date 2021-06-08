@@ -42,6 +42,7 @@
       fct_crm_attribution_touchpoint.bizible_count_first_touch,
       fct_crm_attribution_touchpoint.bizible_count_lead_creation_touch,
       fct_crm_attribution_touchpoint.bizible_attribution_percent_full_path,
+      fct_crm_attribution_touchpoint.bizible_count_custom_model,
       fct_crm_attribution_touchpoint.bizible_count_u_shaped,
       fct_crm_attribution_touchpoint.bizible_count_w_shaped,
       fct_crm_attribution_touchpoint.bizible_revenue_full_path,
