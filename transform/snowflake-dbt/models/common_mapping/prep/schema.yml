@@ -162,9 +162,6 @@ models:
       - name: dim_namespace_id
         tests:
           - not_null
-      - name: dim_plan_id
-        tests:
-          - not_null
 
   - name: prep_namespace
     description: '{{ doc("dim_namespace") }}'

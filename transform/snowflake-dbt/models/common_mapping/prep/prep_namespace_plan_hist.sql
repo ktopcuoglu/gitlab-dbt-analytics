@@ -39,7 +39,8 @@
       -- foreign keys
       renamed.dim_plan_subscription_id,
       renamed.dim_namespace_id,
-      renamed.dim_plan_id,
+      -- asusming if dim_plan_id is null that it is a free plan
+      IFNULL(renamed.dim_plan_id, 34)          AS dim_plan_id,
 
       -- date dimensions
       plan_subscription_start_date.date_id     AS plan_subscription_start_date_id,
