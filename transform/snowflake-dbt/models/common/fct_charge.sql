@@ -44,7 +44,8 @@ WITH prep_charge AS (
       prep_charge.delta_tcv,
       prep_charge.estimated_total_future_billings,
 
-      prep_charge.unit_of_measure
+      prep_charge.unit_of_measure,
+      prep_charge.charge_type
 
     FROM prep_charge
     LEFT JOIN prep_amendment
