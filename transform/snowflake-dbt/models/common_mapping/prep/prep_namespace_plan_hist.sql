@@ -40,7 +40,6 @@
       renamed.dim_plan_subscription_id,
       renamed.dim_namespace_id,
       renamed.dim_plan_id,
-      saas_product_tiers.dim_product_tier_id,
 
       -- date dimensions
       plan_subscription_start_date.date_id     AS plan_subscription_start_date_id,
@@ -69,9 +68,6 @@
       ON renamed.plan_subscription_trial_end_date = plan_subscription_trial_end_date.date_day
     LEFT JOIN prep_gitlab_dotcom_plan
       ON renamed.dim_plan_id = prep_gitlab_dotcom_plan.dim_plan_id
-    LEFT JOIN prep_product_tier AS saas_product_tiers
-      ON saas_product_tiers.product_delivery_type = 'SaaS'
-      AND prep_gitlab_dotcom_plan.dim_product_tier_id = saas_product_tiers.dim_product_tier_id
 
 )
 
