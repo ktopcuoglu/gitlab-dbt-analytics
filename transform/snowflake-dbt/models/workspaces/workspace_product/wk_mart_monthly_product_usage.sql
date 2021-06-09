@@ -7,47 +7,16 @@
     })
 }}
 
-WITH dim_billing_account AS (
+{{ simple_cte([('dim_billing_account', 'dim_billing_account'),
+                ('dim_crm_account', 'dim_crm_account'),
+                ('dim_date', 'dim_date'),
+                ('dim_instances', 'dim_instances'),
+                ('dim_licenses', 'dim_licenses'),
+                ('dim_product_detail', 'dim_product_detail')
+                ]
+                )}}
 
-    SELECT *
-    FROM {{ ref('dim_billing_account') }}
-
-), dim_crm_accounts AS (
-
-    SELECT *
-    FROM {{ ref('dim_crm_account') }}
-
-), dim_date AS (
-
-    SELECT DISTINCT first_day_of_month AS date_day
-    FROM {{ ref('dim_date') }}
-
-), dim_hosts AS (
-
-    SELECT *
-    FROM {{ ref('dim_hosts') }}
-
-), dim_instances AS (
-
-    SELECT *
-    FROM {{ ref('dim_instances') }}
-
-), dim_licenses AS (
-
-    SELECT *
-    FROM {{ ref('dim_licenses') }}
-
-), dim_location AS (
-
-    SELECT *
-    FROM {{ ref('dim_location_country') }}
-
-), dim_product_detail AS (
-
-    SELECT *
-    FROM {{ ref('dim_product_detail')}}
-
-), dim_subscription AS (
+, dim_subscription AS (
 
     SELECT *
     FROM {{ ref('dim_subscription') }}
@@ -59,7 +28,7 @@ WITH dim_billing_account AS (
 
   /**
   This partition handles duplicates and hard deletes by taking only
-    the latest subscription version snapshot
+    tsnapshoversion_t
    */
 
   SELECT
@@ -116,15 +85,15 @@ WITH dim_billing_account AS (
       dim_subscription.subscription_start_month,
       dim_subscription.subscription_end_month,
       dim_billing_account.dim_billing_account_id,
-      dim_crm_accounts.crm_account_name,
-      dim_crm_accounts.dim_parent_crm_account_id,
-      dim_crm_accounts.parent_crm_account_name,
-      dim_crm_accounts.parent_crm_account_billing_country,
-      dim_crm_accounts.parent_crm_account_sales_segment,
-      dim_crm_accounts.parent_crm_account_industry,
-      dim_crm_accounts.parent_crm_account_owner_team,
-      dim_crm_accounts.parent_crm_account_sales_territory,
-      dim_crm_accounts.technical_account_manager,
+      dim_crm_account.crm_account_name,
+      dim_crm_account.dim_parent_crm_account_id,
+      dim_crm_account.parent_crm_account_name,
+      dim_crm_account.parent_crm_account_billing_country,
+      dim_crm_account.parent_crm_account_sales_segment,
+      dim_crm_account.parent_crm_account_industry,
+      dim_crm_account.parent_crm_account_owner_team,
+      dim_crm_account.parent_crm_account_sales_territory,
+      dim_crm_account.technical_account_manager,
       IFF(MAX(mrr) > 0, TRUE, FALSE)                                                AS is_paid_subscription,
       MAX(IFF(product_rate_plan_name ILIKE ANY ('%edu%', '%oss%'), TRUE, FALSE))    AS is_program_subscription,
       ARRAY_AGG(DISTINCT dim_product_detail.product_tier_name)
@@ -152,8 +121,8 @@ WITH dim_billing_account AS (
       AND product_rate_plan_name NOT IN ('Premium - 1 Year - Eval')
     LEFT JOIN dim_billing_account
       ON dim_subscription.dim_billing_account_id = dim_billing_account.dim_billing_account_id
-    LEFT JOIN dim_crm_accounts
-      ON dim_billing_account.dim_crm_account_id = dim_crm_accounts.dim_crm_account_id
+    LEFT JOIN dim_crm_account
+      ON dim_billing_account.dim_crm_account_id = dim_crm_account.dim_crm_account_id
     INNER JOIN dim_date
       ON effective_start_month <= dim_date.date_day AND effective_end_month > dim_date.date_day
     {{ dbt_utils.group_by(n=22)}}
@@ -197,23 +166,21 @@ WITH dim_billing_account AS (
       COALESCE(is_program_subscription, FALSE)          AS is_program_subscription,
       fct_usage_ping_payload.usage_ping_delivery_type,
       fct_usage_ping_payload.edition,
-      fct_usage_ping_payload.product_tier              AS ping_product_tier,
-      fct_usage_ping_payload.main_edition_product_tier AS ping_main_edition_product_tier,
+      fct_usage_ping_payload.product_tier               AS ping_product_tier,
+      fct_usage_ping_payload.edition_product_tier       AS ping_main_edition_product_tier,
       fct_usage_ping_payload.major_version,
       fct_usage_ping_payload.minor_version,
       fct_usage_ping_payload.major_minor_version,
-      fct_usage_ping_payload.version,
-      fct_usage_ping_payload.is_pre_release,
+      fct_usage_ping_payload.version_is_prerelease,
       fct_usage_ping_payload.is_internal,
       fct_usage_ping_payload.is_staging,
       fct_usage_ping_payload.instance_user_count,
-      fct_usage_ping_payload.created_at,
-      fct_usage_ping_payload.recorded_at,
+      fct_usage_ping_payload.ping_created_at,
       time_period,
       monthly_metric_value,
       original_metric_value,
-      fct_usage_ping_payload.uuid                      AS instance_id,
-      fct_usage_ping_payload.hostname                  AS host_name
+      fct_usage_ping_payload.dim_instance_id,
+      fct_usage_ping_payload.host_name
     FROM fct_monthly_usage_data
     LEFT JOIN fct_usage_ping_payload
       ON fct_monthly_usage_data.dim_usage_ping_id = fct_usage_ping_payload.dim_usage_ping_id
@@ -226,33 +193,28 @@ WITH dim_billing_account AS (
     SELECT
 
       -- Primary Key
-      {{ dbt_utils.surrogate_key(['metrics_path', 'created_month', 'instance_id', 'host_id', 'host_name']) }} AS primary_key,
-      created_month AS reporting_month,
+      {{ dbt_utils.surrogate_key(['metrics_path', 'ping_created_month', 'dim_instance_id', 'host_name']) }} AS primary_key,
+      ping_created_month AS reporting_month,
       metrics_path,
-      ping_id,
+      dim_usage_ping_id,
 
       --Foreign Key
-      host_id,
-      instance_id,
-      license_id,
-      license_md5,
+      dim_instance_id,
+      dim_license_id,
       original_linked_subscription_id,
       latest_active_subscription_id,
-      dim_billing_account_id,
-      location_id,
+      dim_billing_account_id,      
       dim_parent_crm_account_id,
 
       -- metadata usage ping
-      delivery,
-      main_edition,
+      usage_ping_delivery_type,
       edition,
       ping_product_tier,
       ping_main_edition_product_tier,
       major_version,
       minor_version,
       major_minor_version,
-      version,
-      is_pre_release,
+      version_is_prerelease,
       is_internal,
       is_staging,
       is_trial,
@@ -267,11 +229,6 @@ WITH dim_billing_account AS (
       is_gmau,
       is_paid_gmau,
       is_umau,
-
-      --metatadata hosts
-      source_ip_hash,
-      host_name,
-
 
       --metadata instance
       instance_user_count,
@@ -296,12 +253,7 @@ WITH dim_billing_account AS (
       parent_crm_account_sales_territory,
       technical_account_manager,
 
-      -- location info
-      country_name            AS ping_country_name,
-      iso_2_country_code      AS ping_country_code,
-
-      created_at,
-      recorded_at,
+      ping_created_at,
 
       -- monthly_usage_data
       time_period,
