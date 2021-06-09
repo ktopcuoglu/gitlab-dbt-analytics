@@ -162,7 +162,7 @@ models:
       - name: dim_namespace_id
         tests:
           - not_null
-      - name: dim_product_tier_id
+      - name: dim_plan_id
         tests:
           - not_null
 

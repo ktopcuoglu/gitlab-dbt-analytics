@@ -68,6 +68,7 @@
       ON renamed.plan_subscription_trial_end_date = plan_subscription_trial_end_date.date_day
     LEFT JOIN prep_gitlab_dotcom_plan
       ON renamed.dim_plan_id = prep_gitlab_dotcom_plan.dim_plan_id
+    WHERE renamed.dim_namespace_id IS NOT NULL
 
 )
 
