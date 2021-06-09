@@ -89,7 +89,7 @@ WITH dim_billing_account AS (
 ), dim_usage_pings AS (
 
     SELECT *
-    FROM {{ ref }}
+    FROM {{ ref('dim_usage_pings') }}
 
 ), subscription_source AS (
 
