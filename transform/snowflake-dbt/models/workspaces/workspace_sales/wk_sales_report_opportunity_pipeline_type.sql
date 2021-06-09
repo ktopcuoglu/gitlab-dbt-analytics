@@ -10,7 +10,7 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
 
   SELECT *
   FROM {{ref('wk_sales_sfdc_opportunity_snapshot_history_xf')}}  
-  WHERE stage_name NOT IN ('9-Unqualified','Unqualified','00-Pre Opportunity','0-Pending Acceptance') 
+  WHERE stage_name NOT IN ('00-Pre Opportunity','0-Pending Acceptance') 
     AND is_deleted = 0
     AND is_edu_oss = 0
 
@@ -31,7 +31,7 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
         sales_team_cro_level,
         sales_team_rd_asm_level
   FROM {{ref('wk_sales_sfdc_opportunity_xf')}}  
-  WHERE stage_name NOT IN ('9-Unqualified','Unqualified','00-Pre Opportunity','0-Pending Acceptance') 
+  WHERE stage_name NOT IN ('00-Pre Opportunity','0-Pending Acceptance') 
     AND is_deleted = 0
     AND is_edu_oss = 0
 
@@ -268,15 +268,15 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
                 AND o.is_open = 1
                     THEN '6. Open'
             WHEN p.close_fiscal_quarter_date = o.close_fiscal_quarter_date
-                AND o.stage_name = '10-Duplicate'
-                    THEN '7. Duplicate'
+                AND o.stage_name IN ('9-Unqualified','10-Duplicate','Unqualified')
+                    THEN '7. Duplicate / Unqualified'
             WHEN p.close_fiscal_quarter_date <> o.close_fiscal_quarter_date
                 AND p.max_snapshot_day_of_fiscal_quarter_normalised >= 75
                     THEN '2. Slipped'
             WHEN p.close_fiscal_quarter_date <> o.close_fiscal_quarter_date
                 AND p.max_snapshot_day_of_fiscal_quarter_normalised < 75
                     THEN '3. Pushed Out' 
-          ELSE NULL 
+          ELSE 'N/A'
         END                                                                     AS pipe_resolution,
 
         CASE

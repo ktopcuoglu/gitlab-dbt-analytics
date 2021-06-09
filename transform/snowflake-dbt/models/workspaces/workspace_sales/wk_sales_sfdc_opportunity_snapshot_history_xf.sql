@@ -295,13 +295,13 @@ WITH date_details AS (
       END                                                         AS is_lost,
 
       CASE 
-        WHEN sfdc_opportunity_snapshot_history.stage_name IN ('8-Closed Lost', '9-Unqualified', 'Closed Won', '10-Duplicate') 
+        WHEN sfdc_opportunity_snapshot_history.stage_name IN ('8-Closed Lost', 'Closed Lost', '9-Unqualified', 'Closed Won', '10-Duplicate') 
             THEN 0
         ELSE 1  
       END                                                         AS is_open,
 
       CASE 
-        WHEN sfdc_opportunity_snapshot_history.stage_name IN ('8-Closed Lost', '9-Unqualified', 'Closed Won', '10-Duplicate') 
+        WHEN sfdc_opportunity_snapshot_history.stage_name IN ('8-Closed Lost', 'Closed Lost', '9-Unqualified', 'Closed Won', '10-Duplicate') 
           THEN 1
         ELSE 0
       END                                                         AS is_closed,
@@ -638,9 +638,7 @@ WITH date_details AS (
           -- exclude vision opps from FY21-Q2
           AND (opp_snapshot.pipeline_created_fiscal_quarter_name != 'FY21-Q2'
                 OR vision_opps.opportunity_id IS NULL)
-          -- remove deal that are flag currently as duplicates
-          AND opp_snapshot.current_is_duplicate_flag = 0
-         THEN 1
+             THEN 1
          ELSE 0
       END                                                   AS is_eligible_created_pipeline_flag,
 
