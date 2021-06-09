@@ -497,7 +497,6 @@ Slowly Changing Dimension Type 2 that records changes into namespace's plan subs
 Easily to join with the following tables:
 
 - `dim_namespace` through `dim_namespace_id`
-- `dim_product_tier` through `dim_product_tier_id`
 
 {% enddocs %}
 
