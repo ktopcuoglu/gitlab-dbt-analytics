@@ -8,6 +8,7 @@ wave,metric_name
 2,usage_activity_by_stage_monthly.verify.ci_pipelines
 2,usage_activity_by_stage_monthly.verify.ci_internal_pipelines
 2,usage_activity_by_stage_monthly.verify.ci_builds
+2,usage_activity_by_stage.verify.ci_builds
 2,counts.ci_builds
 2,counts.ci_runners
 2,counts.auto_devops_enabled

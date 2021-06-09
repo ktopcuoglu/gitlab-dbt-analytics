@@ -5,15 +5,15 @@
 }}
 
 {{ simple_cte([
-    ('saas_usage_ping_free_users','prep_saas_usage_ping_free_users'),
-    ('sm_usage_ping_free_users','prep_usage_ping_free_users'),
+    ('saas_free_users','prep_saas_usage_ping_free_user_metrics'),
+    ('sm_free_users','prep_usage_ping_free_user_metrics'),
     ('smau', 'fct_usage_ping_subscription_mapped_smau')
 ]) }}
 
 , sm_free_user_metrics AS (
 
     SELECT
-      sm_free_users.ping_created_at_month                                                       AS reporting_month,
+      sm_free_users.ping_created_at_month::DATE                                                 AS reporting_month,
       NULL                                                                                      AS dim_namespace_id,
       sm_free_users.uuid,
       sm_free_users.hostname,
@@ -114,7 +114,7 @@
     LEFT JOIN smau
       ON sm_free_users.uuid = smau.uuid
       AND sm_free_users.hostname = smau.hostname
-      AND sm_free_users.snapshot_month = smau.snapshot_month
+      AND sm_free_users.ping_created_at_month = smau.snapshot_month
     QUALIFY ROW_NUMBER() OVER (
       PARTITION BY
         sm_free_users.uuid,
@@ -224,7 +224,7 @@
       "redis_hll_counters.ci_templates.ci_templates_total_unique_counts_monthly"                AS ci_templates_usage_28_days_event,
       "redis_hll_counters.issues_edit.g_project_management_issue_milestone_changed_monthly"     AS project_management_issue_milestone_changed_28_days_user,
       "redis_hll_counters.issues_edit.g_project_management_issue_iteration_changed_monthly"     AS project_management_issue_iteration_changed_28_days_user
-    FROM saas_usage_ping_free_users
+    FROM saas_free_users
 
 ), unioned AS (
 
