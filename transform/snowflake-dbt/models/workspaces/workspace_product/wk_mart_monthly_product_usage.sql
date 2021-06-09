@@ -172,7 +172,6 @@ WITH dim_billing_account AS (
       fct_monthly_usage_data.is_paid_gmau,
       fct_monthly_usage_data.is_umau,
       fct_usage_ping_payload.dim_license_id,
-      fct_usage_ping_payload.license_trial_ends_on,
       fct_usage_ping_payload.is_trial,
       fct_usage_ping_payload.umau_value,
       license_subscriptions.license_id,
@@ -213,25 +212,14 @@ WITH dim_billing_account AS (
       time_period,
       monthly_metric_value,
       original_metric_value,
-      dim_hosts.host_id,
-      dim_hosts.source_ip_hash,
       fct_usage_ping_payload.uuid                      AS instance_id,
-      fct_usage_ping_payload.hostname                  AS host_name,
-      dim_hosts.location_id,
-      dim_location.country_name,
-      dim_location.iso_2_country_code
+      fct_usage_ping_payload.hostname                  AS host_name
     FROM fct_monthly_usage_data
     LEFT JOIN fct_usage_ping_payload
       ON fct_monthly_usage_data.dim_usage_ping_id = fct_usage_ping_payload.dim_usage_ping_id
-    LEFT JOIN dim_hosts
-      ON fct_usage_ping_payload.dim_host_id = dim_hosts.dim_host_id
-        AND fct_usage_ping_payload.source_ip_hash = dim_hosts.source_ip_hash
-        AND fct_usage_ping_payload.dim_instance_id = dim_hosts.dim_instance_id
     LEFT JOIN license_subscriptions
-      ON fct_usage_ping_payload.license_md5 = license_subscriptions.license_md5
-        AND fct_monthly_usage_data.created_month = license_subscriptions.reporting_month
-    LEFT JOIN dim_location
-      ON dim_hosts.location_id = dim_location.dim_location_country_id
+      ON fct_usage_ping_payload.dim_license_id = license_subscriptions.license_id
+        AND fct_monthly_usage_data.ping_created_month = license_subscriptions.reporting_month
 
 ), sorted AS (
 
@@ -297,7 +285,6 @@ WITH dim_billing_account AS (
       product_rate_plan_name_array,
       is_paid_subscription,
       is_program_subscription,
-      license_trial_ends_on,
 
       -- account metadata
       crm_account_name,

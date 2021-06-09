@@ -1,6 +1,6 @@
 {{ config({
     "materialized": "incremental",
-    "unique_key": "dim_instance_path_id"
+    "unique_key": "intance_path_id"
     })
 }}
 
@@ -16,7 +16,7 @@ WITH flattened AS (
 )
 
 SELECT 
-  flattened.dim_instance_path_id,
+  flattened.intance_path_id,
   flattened.dim_usage_ping_id,
   flattened.metrics_path,
   metrics.section_name,

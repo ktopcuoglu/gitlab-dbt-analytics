@@ -1,7 +1,7 @@
 
 {{ config({
     "materialized": "incremental",
-    "unique_key": "dim_instance_path_id"
+    "unique_key": "intance_path_id"
     })
 }}
 
@@ -19,7 +19,7 @@ WITH data AS (
 , flattened AS (
 
         SELECT 
-          {{ dbt_utils.surrogate_key(['dim_usage_ping_id', 'path']) }}      AS dim_instance_path_id, 
+          {{ dbt_utils.surrogate_key(['dim_usage_ping_id', 'path']) }}      AS intance_path_id, 
           dim_usage_ping_id,
           dim_date_id,
           path                                                              AS metrics_path, 

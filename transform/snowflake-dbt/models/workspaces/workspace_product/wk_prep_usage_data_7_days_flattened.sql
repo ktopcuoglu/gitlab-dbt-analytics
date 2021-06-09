@@ -15,7 +15,7 @@ WITH flattened AS (
 ), joined AS (
 
     SELECT 
-      flattened.dim_instance_path_id,
+      flattened.intance_path_id,
       flattened.dim_usage_ping_id,
       flattened.metrics_path,
       metrics.section_name,
