@@ -2268,9 +2268,6 @@ models:
       - name: dim_namespace_id
         tests:
           - not_null
-      - name: dim_product_tier_id
-        tests:
-          - not_null
 
   - name: dim_namespace
     description: '{{ doc("dim_namespace") }}'
