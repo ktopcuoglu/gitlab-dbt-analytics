@@ -412,25 +412,44 @@ WITH marketing_contact AS (
 
     SELECT 
       prep.*,
-      IFF(individual_namespace_is_saas_bronze_tier OR group_owner_of_saas_bronze_tier OR group_member_of_saas_bronze_tier OR responsible_for_group_saas_bronze_tier,
+      IFF(individual_namespace_is_saas_bronze_tier
+        OR group_owner_of_saas_bronze_tier
+        OR group_member_of_saas_bronze_tier
+        OR responsible_for_group_saas_bronze_tier,
         TRUE, FALSE)                                        AS is_saas_bronze_tier,
-      IFF(individual_namespace_is_saas_premium_tier OR group_owner_of_saas_premium_tier OR group_member_of_saas_premium_tier OR responsible_for_group_saas_premium_tier,
+      IFF(individual_namespace_is_saas_premium_tier
+        OR group_owner_of_saas_premium_tier
+        OR group_member_of_saas_premium_tier
+        OR responsible_for_group_saas_premium_tier,
         TRUE, FALSE)                                        AS is_saas_premium_tier,
-      IFF(individual_namespace_is_saas_ultimate_tier OR group_owner_of_saas_ultimate_tier OR group_member_of_saas_ultimate_tier OR responsible_for_group_saas_ultimate_tier, 
+      IFF(individual_namespace_is_saas_ultimate_tier
+        OR group_owner_of_saas_ultimate_tier
+        OR group_member_of_saas_ultimate_tier
+        OR responsible_for_group_saas_ultimate_tier, 
         TRUE, FALSE)                                        AS is_saas_ultimate_tier,
-      IFF(is_saas_bronze_tier OR is_self_managed_starter_tier, TRUE, FALSE)
-                                                            AS is_bronze_starter_tier,
-      IFF(is_saas_premium_tier OR is_self_managed_premium_tier, TRUE, FALSE)
-                                                            AS is_premium_tier,
-      IFF(is_saas_ultimate_tier OR is_self_managed_ultimate_tier, TRUE, FALSE)
-                                                            AS is_ultimate_tier,                                                      
-      IFF(is_saas_bronze_tier OR is_saas_premium_tier OR is_saas_ultimate_tier,
+      IFF(is_saas_bronze_tier
+        OR is_self_managed_starter_tier,
+        TRUE, FALSE)                                        AS is_bronze_starter_tier,
+      IFF(is_saas_premium_tier
+        OR is_self_managed_premium_tier,
+        TRUE, FALSE)                                        AS is_premium_tier,
+      IFF(is_saas_ultimate_tier
+        OR is_self_managed_ultimate_tier, =
+        TRUE, FALSE)                                        AS is_ultimate_tier,                                                      
+      IFF(is_saas_bronze_tier
+        OR is_saas_premium_tier
+        OR is_saas_ultimate_tier,
         TRUE, FALSE)                                        AS is_saas_delivery,
-      IFF(is_self_managed_starter_tier OR is_self_managed_premium_tier OR is_self_managed_ultimate_tier,
+      IFF(is_self_managed_starter_tier
+        OR is_self_managed_premium_tier
+        OR is_self_managed_ultimate_tier,
         TRUE, FALSE)                                        AS is_self_managed_delivery,
-      IFF(individual_namespace_is_saas_free_tier OR group_member_of_saas_free_tier OR group_owner_of_saas_free_tier,
+      IFF(individual_namespace_is_saas_free_tier
+        OR group_member_of_saas_free_tier
+        OR group_owner_of_saas_free_tier,
         TRUE, FALSE)                                        AS is_saas_free_tier,
-      IFF(is_saas_delivery OR is_self_managed_delivery,
+      IFF(is_saas_delivery
+        OR is_self_managed_delivery,
         TRUE, FALSE)                                        AS is_paid_tier,
       subscription_aggregate.min_subscription_start_date,
       subscription_aggregate.max_subscription_end_date,
