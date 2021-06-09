@@ -434,7 +434,7 @@ WITH marketing_contact AS (
         OR is_self_managed_premium_tier,
         TRUE, FALSE)                                        AS is_premium_tier,
       IFF(is_saas_ultimate_tier
-        OR is_self_managed_ultimate_tier, =
+        OR is_self_managed_ultimate_tier,
         TRUE, FALSE)                                        AS is_ultimate_tier,                                                      
       IFF(is_saas_bronze_tier
         OR is_saas_premium_tier
