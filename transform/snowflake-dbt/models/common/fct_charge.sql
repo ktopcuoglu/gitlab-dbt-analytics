@@ -45,7 +45,9 @@ WITH prep_charge AS (
       prep_charge.estimated_total_future_billings,
 
       prep_charge.unit_of_measure,
-      prep_charge.charge_type
+      prep_charge.charge_type,
+      prep_charge.effective_start_month,
+      prep_charge.effective_end_month
 
     FROM prep_charge
     LEFT JOIN prep_amendment
