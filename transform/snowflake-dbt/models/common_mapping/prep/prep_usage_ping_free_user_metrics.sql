@@ -42,8 +42,8 @@
       map_license_account.dim_parent_crm_account_id
     FROM usage_pings
     LEFT JOIN map_license_account
-      ON usage_pings.product_tier = 'Core'
-      AND usage_pings.license_md5 = map_license_account.license_md5
+      ON usage_pings.license_md5 = map_license_account.license_md5
+    WHERE usage_pings.product_tier = 'Core'
 
 ), joined AS (
 
@@ -74,5 +74,5 @@
     created_by="@ischweickartDD",
     updated_by="@ischweickartDD",
     created_date="2021-06-04",
-    updated_date="2021-06-04"
+    updated_date="2021-06-09"
 ) }}
