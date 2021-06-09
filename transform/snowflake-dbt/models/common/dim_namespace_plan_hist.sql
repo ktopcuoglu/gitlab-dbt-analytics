@@ -7,7 +7,6 @@ WITH prep_namespace_plan_hist AS (
       dim_plan_subscription_id,
       dim_namespace_id,
       dim_plan_id,
-      dim_product_tier_id,
 
           -- date dimensions
       plan_subscription_start_date_id,
