@@ -97,6 +97,9 @@ joined AS (
       projects.only_mirror_protected_branches,
       projects.pull_mirror_available_overridden,
       projects.mirror_overwrites_diverged_branches,
+      IFF(projects.import_type='gitlab_project' AND projects.project_path='learn-gitlab',  
+        TRUE, 
+        FALSE)                                                     AS is_learn_gitlab,
 
       {% for field in sensitive_fields %}
       CASE
@@ -139,7 +142,7 @@ joined AS (
         AND projects.created_at BETWEEN gitlab_subscriptions.valid_from AND {{ coalesce_to_infinity("gitlab_subscriptions.valid_to") }}
       LEFT JOIN active_services
         ON projects.project_id = active_services.project_id
-    {{ dbt_utils.group_by(n=68) }}
+    {{ dbt_utils.group_by(n=69) }}
 )
 
 SELECT *
