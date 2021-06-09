@@ -1,6 +1,5 @@
 {{ simple_cte([('prep_gitlab_dotcom_plan', 'prep_gitlab_dotcom_plan'),
-               ('dim_date', 'dim_date'),
-               ('prep_product_tier', 'prep_product_tier')
+               ('dim_date', 'dim_date')
 ])}}
 , source AS (
 
