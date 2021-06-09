@@ -39,7 +39,7 @@ WITH map_merged_crm_account AS (
     WHERE is_deleted = FALSE
       AND exclude_from_analysis IN ('False', '')
 
-), recurring_charges AS (
+), charges AS (
 
     SELECT
       --Natural Key
@@ -155,12 +155,11 @@ WITH map_merged_crm_account AS (
       ON map_merged_crm_account.dim_crm_account_id = sfdc_account.account_id
     LEFT JOIN ultimate_parent_account
       ON sfdc_account.ultimate_parent_account_id = ultimate_parent_account.account_id
-    WHERE charge_type = 'Recurring'
 
 ), arr_analysis_framework AS (
 
     SELECT
-      recurring_charges.*,
+      charges.*,
       CASE
         WHEN subscription_version = 1
           THEN 'New'
@@ -176,7 +175,7 @@ WITH map_merged_crm_account AS (
           THEN 'No Impact'
         ELSE NULL
       END                 AS type_of_arr_change
-    FROM recurring_charges
+    FROM charges
 
 )
 
@@ -185,5 +184,5 @@ WITH map_merged_crm_account AS (
     created_by="@iweeks",
     updated_by="@iweeks",
     created_date="2021-04-28",
-    updated_date="2021-05-10"
+    updated_date="2021-06-07"
 ) }}

@@ -69,6 +69,7 @@
       fct_crm_person.mql_count,
 
       -- campaign info
+      dim_campaign.dim_campaign_id,
       dim_campaign.campaign_name,
       dim_campaign.is_active                                               AS campagin_is_active,
       dim_campaign.status                                                  AS campaign_status,
@@ -77,6 +78,15 @@
       dim_campaign.budget_holder,
       dim_campaign.bizible_touchpoint_enabled_setting,
       dim_campaign.strategic_marketing_contribution,
+      dim_campaign.large_bucket,
+      dim_campaign.reporting_type,
+      dim_campaign.allocadia_id,
+      dim_campaign.is_a_channel_partner_involved,
+      dim_campaign.is_an_alliance_partner_involved,
+      dim_campaign.is_this_an_in_person_event,
+      dim_campaign.alliance_partner_name,
+      dim_campaign.channel_partner_name,
+      dim_campaign.sales_play,
       fct_campaign.dim_parent_campaign_id,
       fct_campaign.campaign_owner_id,
       fct_campaign.created_by_id                                           AS campaign_created_by_id,

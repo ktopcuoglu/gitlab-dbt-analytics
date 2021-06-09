@@ -9,8 +9,8 @@ Source Access Request: <!-- link to source  Access Request issue, it should be a
 - [ ] Create user using SECURITYADMIN role
 - [ ] Create user specific role
 - [ ] Assign user specific role
-- [ ] Add to [okta-snowflake-users google group](https://groups.google.com/a/gitlab.com/g/okta-snowflake-users/members)
 - [ ] Verify grants
+- [ ] Add to [okta-snowflake-users google group](https://groups.google.com/a/gitlab.com/g/okta-snowflake-users/members)
 - [ ] Update `roles.yml` and add a comment with a access request URL
 
 /label ~Provisioning ~Snowflake ~"Team::Data Platform"  ~"Priority::1-Ops"

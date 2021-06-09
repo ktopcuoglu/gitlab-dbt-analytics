@@ -27,10 +27,10 @@ WITH filtered_counters AS (
     SELECT *
     FROM {{ ref('dim_gitlab_releases') }}
 
-), dim_usage_pings AS (
+), fct_usage_ping_payload AS (
 
     SELECT *
-    FROM {{ ref('dim_usage_pings') }}
+    FROM {{ ref('fct_usage_ping_payload') }}
 
 ), outlier_detection_formula AS (
 
@@ -49,22 +49,22 @@ WITH filtered_counters AS (
   
     SELECT 
       product_usage.created_month                                                                                            AS reporting_month, 
-      dim_usage_pings.major_minor_version,
+      fct_usage_ping_payload.major_minor_version,
       DATEDIFF('month', DATE_TRUNC('month', release_date), product_usage.created_month)                                      AS months_since_release, 
-      IFF(main_edition = 'CE', 'CE', IFF(product_tier = 'Core', 'EE - Core', 'EE - Paid'))                                   AS reworked_main_edition, 
+      IFF(fct_usage_ping_payload.edition = 'CE', 'CE', IFF(product_tier = 'Core', 'EE - Core', 'EE - Paid'))                                   AS reworked_main_edition, 
       SUM(monthly_metric_value)                                                                                              AS total_counts
     FROM monthly_usage_data AS product_usage
-    LEFT JOIN dim_usage_pings
-      ON product_usage.ping_id = dim_usage_pings.id
+    LEFT JOIN fct_usage_ping_payload
+      ON product_usage.ping_id = fct_usage_ping_payload.dim_usage_ping_id
     LEFT JOIN dim_gitlab_releases AS release 
-      ON dim_usage_pings.major_minor_version = release.major_minor_version
+      ON fct_usage_ping_payload.major_minor_version = release.major_minor_version
     INNER JOIN filtered_counters 
       ON product_usage.metrics_path = filtered_counters.metrics_path
     INNER JOIN outlier_detection_formula 
       ON product_usage.metrics_path = outlier_detection_formula.metrics_path 
       AND product_usage.created_month = outlier_detection_formula.reporting_month
       AND product_usage.monthly_metric_value <= outer_boundary
-    WHERE ping_source = 'Self-Managed'
+    WHERE usage_ping_delivery_type = 'Self-Managed'
       AND product_usage.created_month > '2020-01-01'
       AND is_trial = False
     GROUP BY 1,2,3,4

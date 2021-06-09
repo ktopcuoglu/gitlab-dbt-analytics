@@ -117,6 +117,38 @@ def load_incremental(
     return True
 
 
+def trusted_data_pgp(
+    source_engine: Engine,
+    target_engine: Engine,
+    source_table_name: str,
+    table_dict: Dict[Any, Any],
+    table_name: str,
+) -> bool:
+    """
+    This function is being used for trusted data framework.
+    It is responsible for extracting from postgres and loading data in snowflake.
+    """
+    raw_query = table_dict["import_query"]
+    additional_filter = ""
+    advanced_metadata = False
+
+    logging.info(f"Processing table: {source_table_name}")
+    query = f"{raw_query} {additional_filter}"
+    env = os.environ.copy()
+    logging.info(query)
+    chunk_and_upload(
+        query,
+        source_engine,
+        target_engine,
+        table_name,
+        source_table_name,
+        advanced_metadata,
+        False,
+    )
+
+    return True
+
+
 def sync_incremental_ids(
     source_engine: Engine,
     target_engine: Engine,

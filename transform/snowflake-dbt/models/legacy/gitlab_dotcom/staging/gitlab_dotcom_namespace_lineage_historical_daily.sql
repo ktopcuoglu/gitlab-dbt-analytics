@@ -56,6 +56,7 @@
           102, -- All historical trial GitLab subscriptions were Ultimate/Gold Trials (102)
           IFNULL(namespace_subscription_snapshots.plan_id, 34))                       AS ultimate_parent_plan_id,
       namespace_subscription_snapshots.seats,
+      namespace_subscription_snapshots.seats_in_use,
       namespace_subscription_snapshots.max_seats_used
     FROM namespace_lineage_daily
     LEFT JOIN map_namespace_internal

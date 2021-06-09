@@ -87,6 +87,11 @@ databases:
     - mwalker_prep:
         shared: no
 
+    - mwawrzyniak_prod:
+        shared: no
+    - mwawrzyniak_prep:
+        shared: no
+
     - nfiguera_prod:
         shared: no
     - nfiguera_prep:
@@ -232,6 +237,7 @@ roles:
             - covid19
             - dbt_analytics
             - dbt_analytics_clones
+            - driveload
             - gitlab_data_yaml
             - handbook
             - maxmind
@@ -249,6 +255,7 @@ roles:
             - boneyard
             - covid19
             - dbt_analytics
+            - driveload
             - gcp_billing
             - gitlab_data_yaml
             - gitlab_dotcom
@@ -275,6 +282,7 @@ roles:
             - boneyard
             - covid19
             - dbt_analytics
+            - driveload
             - gitlab_data_yaml
             - handbook
             - license_db
@@ -318,6 +326,7 @@ roles:
             - boneyard
             - covid19
             - dbt_analytics
+            - driveload
             - gitlab_data_yaml
             - gitlab_dotcom
             - license_db
@@ -330,6 +339,7 @@ roles:
             - snowplow
             - version_db
             - zuora
+            - zuora_api_sandbox_stitch
         privileges:
             databases:
                 read:
@@ -378,6 +388,7 @@ roles:
             - covid19
             - dbt_analytics
             - dbt_analytics_sensitive
+            - driveload
             - gitlab_data_yaml
             - gitlab_dotcom
             - greenhouse
@@ -402,6 +413,7 @@ roles:
             - boneyard
             - covid19
             - dbt_analytics
+            - driveload
             - gitlab_data_yaml
             - gitlab_dotcom
             - license_db
@@ -428,6 +440,7 @@ roles:
             - boneyard
             - covid19
             - customers_db
+            - driveload
             - dbt_analytics
             - gitlab_data_yaml
             - gitlab_dotcom
@@ -455,6 +468,7 @@ roles:
             - covid19
             - customers_db
             - dbt_analytics
+            - driveload
             - gitlab_data_yaml
             - gitlab_dotcom
             - license_db
@@ -632,6 +646,7 @@ roles:
             - analyst_xs
         member_of:
             - analyst_core
+            - driveload
             - bamboohr_analytics
             - boneyard
             - gitlab_data_yaml
@@ -648,6 +663,7 @@ roles:
         member_of:
             - boneyard
             - dbt_analytics
+            - driveload
             - gitlab_dotcom
             - license_db
             - postgres_pipeline
@@ -1039,7 +1055,24 @@ roles:
                 read:
                     - raw.discourse.*
 
-    - gainsight_pump: 
+    - driveload:
+        warehouses:
+            - analyst_xs
+        privileges:
+            databases:
+                read:
+                    - prep
+                    - raw
+            schemas:
+                read:
+                    - prep.driveload
+                    - raw.driveload
+            tables:
+                read:
+                    - prep.driveload.*
+                    - raw.driveload.*
+
+    - gainsight_pump:
         warehouses:
             - gainsight_xs
         privileges:
@@ -1059,6 +1092,7 @@ roles:
                     - prod.common_mart_product.mart_product_usage_wave_1_3_metrics_latest
                     - prod.common_mart_product.mart_product_usage_wave_1_3_metrics_monthly
                     - prod.common_mart_product.mart_product_usage_wave_1_3_metrics_monthly_diff
+                    - prod.common_mart_product.mart_saas_product_usage_metrics_monthly
 
     - gainsight:
         warehouses:
@@ -1793,6 +1827,20 @@ roles:
                     - prep.zuora.*
                     - raw.zuora_stitch.*
 
+    - zuora_api_sandbox_stitch:
+        warehouses:
+            - analyst_xs
+        privileges:
+            databases:
+                read:
+                    - raw
+            schemas:
+                read:
+                    - raw.zuora_api_sandbox_stitch
+            tables:
+                read:
+                    - raw.zuora_api_sandbox_stitch.*
+
     - zuora_revenue: # This is done to provide access to Data team analyst as 3530 
         warehouses:
             - analyst_xs
@@ -1913,6 +1961,12 @@ roles:
             - bamboohr_analytics
         warehouses:
             - analyst_xs
+
+    - cbraza:
+        member_of:
+            - analyst_growth
+        warehouses:
+            - analyst_xs          
 
     - cli:
         member_of:
@@ -2092,23 +2146,6 @@ roles:
             - decisive_data
         warehouses:
             - analyst_xs
-
-    - ewegscheider:
-        member_of:
-            - people_operations
-            - bamboohr_sensitive_separations
-        warehouses:
-            - analyst_xs
-        privileges:
-            databases:
-                read:
-                    - prep
-            schemas:
-                read:
-                    - prep.sensitive
-            tables:
-                read:
-                    - prep.sensitive.bamboohr_id_employee_number_mapping
 
     - fivetran_role:
         warehouses:
@@ -2455,6 +2492,14 @@ roles:
         warehouses:
             - analyst_xs
 
+    - kkarthikeyan:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+            - customers_db
+        warehouses:
+            - analyst_xs
+
     - ktam:
         member_of: []
         warehouses: []
@@ -2637,6 +2682,12 @@ roles:
                     - mpeychet_prep.*.*
                     - mpeychet_prod.*.*
 
+    - mray:
+        member_of:
+            - analyst_marketing
+        warehouses:
+            - analyst_xs   
+
     - mriser:
         warehouses:
             - admin
@@ -2728,6 +2779,38 @@ roles:
             - analyst_growth
         warehouses:
             - analyst_xs
+        owns:
+            databases:
+                - mwawrzyniak_prep
+                - mwawrzyniak_prod
+            schemas:
+                - mwawrzyniak_prep.*
+                - mwawrzyniak_prod.*
+            tables:
+                - mwawrzyniak_prep.*.*
+                - mwawrzyniak_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - mwawrzyniak_prep
+                    - mwawrzyniak_prod
+                write:
+                    - mwawrzyniak_prep
+                    - mwawrzyniak_prod
+            schemas:
+                read:
+                    - mwawrzyniak_prep.*
+                    - mwawrzyniak_prod.*
+                write:
+                    - mwawrzyniak_prep.*
+                    - mwawrzyniak_prod.*
+            tables:
+                read:
+                    - mwawrzyniak_prep.*.*
+                    - mwawrzyniak_prod.*.*
+                write:
+                    - mwawrzyniak_prep.*.*
+                    - mwawrzyniak_prod.*.*
 
     - mwilkins:
         member_of:
@@ -2842,6 +2925,10 @@ roles:
     - pluthra:
         member_of: []
         warehouses: []
+
+    - pmartins:
+        warehouses:
+            - reporting
 
     - rheannamistry:
         member_of:
@@ -3302,7 +3389,12 @@ users:
         can_login: yes
         member_of:
             - camsmith
-
+ 
+    - cbraza:
+        can_login: yes
+        member_of:
+            - cbraza
+ 
     - cli:
         can_login: yes
         member_of:
@@ -3381,11 +3473,6 @@ users:
         can_login: yes
         member_of:
             - evan
-
-    - ewegscheider:
-        can_login: yes
-        member_of:
-            - ewegscheider
 
     - fivetran:
         can_login: yes
@@ -3529,6 +3616,11 @@ users:
         member_of:
             - kchu
 
+    - kkarthikeyan:
+        can_login: yes
+        member_of:
+            - kkarthikeyan
+
     - ktam:
         can_login: no
         member_of: []
@@ -3595,6 +3687,11 @@ users:
         can_login: yes
         member_of:
             - mpeychet
+
+    - mray:
+        can_login: yes
+        member_of:
+            - mray        
 
     - mriser:
         can_login: yes
@@ -3674,6 +3771,12 @@ users:
     - pluthra:
         can_login: no
         member_of: []
+
+    - pmartins:
+        can_login: yes
+        member_of:
+            - pmartins
+            - securityadmin
 
     - pwc_jblessing:
         can_login: no
