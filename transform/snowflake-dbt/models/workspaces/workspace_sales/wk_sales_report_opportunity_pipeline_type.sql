@@ -10,8 +10,7 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
 
   SELECT *
   FROM {{ref('wk_sales_sfdc_opportunity_snapshot_history_xf')}}  
-  WHERE stage_name NOT IN ('00-Pre Opportunity','0-Pending Acceptance') 
-    AND is_deleted = 0
+  WHERE is_deleted = 0
     AND is_edu_oss = 0
 
 ), sfdc_opportunity_xf AS (
@@ -31,8 +30,7 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
         sales_team_cro_level,
         sales_team_rd_asm_level
   FROM {{ref('wk_sales_sfdc_opportunity_xf')}}  
-  WHERE stage_name NOT IN ('00-Pre Opportunity','0-Pending Acceptance') 
-    AND is_deleted = 0
+  WHERE is_deleted = 0
     AND is_edu_oss = 0
 
 ), today_date AS (
@@ -43,45 +41,58 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
    FROM {{ ref('date_details') }} 
    WHERE date_actual = CURRENT_DATE 
   
-  
-), pipeline_type_quarter_start AS (
+), pipeline_type_start_ids AS (
 
     SELECT 
-        opportunity_id,
-        snapshot_fiscal_quarter_date,
-        close_fiscal_quarter_date       AS starting_close_fiscal_quarter_date,
-        close_date                      AS starting_close_date,
-        forecast_category_name          AS starting_forecast_category,
-        net_arr                         AS starting_net_arr,
-        booked_net_arr                  AS starting_booked_net_arr,
-        stage_name                      AS starting_stage,
-        snapshot_date                   AS starting_snapshot_date,
-        is_won                          AS starting_is_won,
-        is_open                         AS starting_is_open,
-        is_lost                         AS starting_is_lost
+      opportunity_id,
+      snapshot_fiscal_quarter_date,
+      max(snapshot_day_of_fiscal_quarter_normalised) AS max_snapshot_day_of_fiscal_quarter_normalised,
+      min(snapshot_day_of_fiscal_quarter_normalised) AS min_snapshot_day_of_fiscal_quarter_normalised
     FROM sfdc_opportunity_snapshot_history_xf        
     WHERE snapshot_fiscal_quarter_date = close_fiscal_quarter_date -- closing in the same quarter of the snapshot
-    AND stage_name NOT IN ('9-Unqualified','10-Duplicate','Unqualified','00-Pre Opportunity','0-Pending Acceptance') 
-    -- not created within quarter
-    AND (snapshot_fiscal_quarter_date <> pipeline_created_fiscal_quarter_date
-          OR is_eligible_created_pipeline_flag = 0)         
-    -- set day 5 as start of the quarter for pipeline purposes
-    AND (snapshot_day_of_fiscal_quarter_normalised = 5
-        OR (snapshot_date = CURRENT_DATE 
-            AND snapshot_day_of_fiscal_quarter_normalised < 5))
+      AND stage_name NOT IN ('9-Unqualified','10-Duplicate','Unqualified','00-Pre Opportunity','0-Pending Acceptance') 
+      AND snapshot_day_of_fiscal_quarter_normalised <= 5
+    GROUP BY 1,2
+ 
+), pipeline_type_quarter_start AS (
+-- create a list of opties and min snapshot day to identify all the opties that should be flagged as starting in the first 5 days
+    SELECT 
+        starting.opportunity_id,
+        starting.snapshot_fiscal_quarter_date,
+        starting.close_fiscal_quarter_date       AS starting_close_fiscal_quarter_date,
+        starting.close_date                      AS starting_close_date,
+        starting.forecast_category_name          AS starting_forecast_category,
+        starting.net_arr                         AS starting_net_arr,
+        starting.booked_net_arr                  AS starting_booked_net_arr,
+        starting.stage_name                      AS starting_stage,
+        starting.snapshot_date                   AS starting_snapshot_date,
+        starting.is_won                          AS starting_is_won,
+        starting.is_open                         AS starting_is_open,
+        starting.is_lost                         AS starting_is_lost
+    FROM sfdc_opportunity_snapshot_history_xf starting
+      INNER JOIN  pipeline_type_start_ids  starting_list
+        ON starting.opportunity_id = starting_list.opportunity_id
+          AND starting.snapshot_fiscal_quarter_date = starting_list.snapshot_fiscal_quarter_date
+          AND starting.snapshot_day_of_fiscal_quarter_normalised = starting_list.max_snapshot_day_of_fiscal_quarter_normalised
+    WHERE starting.snapshot_fiscal_quarter_date = starting.close_fiscal_quarter_date -- closing in the same quarter of the snapshot
 
 ), pipeline_type_quarter_created AS (
 
     SELECT 
-        opportunity_id,
-        pipeline_created_fiscal_quarter_date,
-        min(snapshot_date)            AS created_snapshot_date
-    FROM sfdc_opportunity_snapshot_history_xf
-    WHERE stage_name NOT IN ('9-Unqualified','10-Duplicate','Unqualified','00-Pre Opportunity','0-Pending Acceptance') 
-    -- pipeline created same quarter
-      AND snapshot_fiscal_quarter_date = pipeline_created_fiscal_quarter_date
-      AND is_eligible_created_pipeline_flag = 1
-      AND pipeline_created_fiscal_quarter_date = close_fiscal_quarter_date  
+        created.opportunity_id,
+        created.pipeline_created_fiscal_quarter_date,
+        min(created.snapshot_date)                      AS created_snapshot_date
+    FROM sfdc_opportunity_snapshot_history_xf created
+    LEFT JOIN pipeline_type_quarter_start starting
+      ON starting.opportunity_id = created.opportunity_id
+      AND starting.snapshot_fiscal_quarter_date = created.snapshot_fiscal_quarter_date
+    WHERE created.stage_name NOT IN ('9-Unqualified','10-Duplicate','Unqualified','00-Pre Opportunity','0-Pending Acceptance') 
+      -- pipeline created same quarter
+      AND created.snapshot_fiscal_quarter_date = created.pipeline_created_fiscal_quarter_date
+      AND created.is_eligible_created_pipeline_flag = 1
+      AND created.pipeline_created_fiscal_quarter_date = created.close_fiscal_quarter_date
+      -- not already flagged as starting pipeline
+      AND starting.opportunity_id IS NULL  
     GROUP BY 1, 2
 
 ), pipeline_type_pulled_in AS (
@@ -276,7 +287,7 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
             WHEN p.close_fiscal_quarter_date <> o.close_fiscal_quarter_date
                 AND p.max_snapshot_day_of_fiscal_quarter_normalised < 75
                     THEN '3. Pushed Out' 
-          ELSE 'N/A'
+          ELSE '8. Other'
         END                                                                     AS pipe_resolution,
 
         CASE
