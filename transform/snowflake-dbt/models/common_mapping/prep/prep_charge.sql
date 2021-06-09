@@ -170,7 +170,6 @@ WITH map_merged_crm_account AS (
 ), manual_charges AS ( -- added as a work around until there is an automated method for adding true-up adjustments to Zuora Revenue/Zuora Billing
 
     SELECT
-  
       active_zuora_subscription.subscription_name                                 AS subscription_name,
       active_zuora_subscription.version                                           AS subscription_version,
       NULL                                                                        AS rate_plan_charge_number,
@@ -230,7 +229,6 @@ WITH map_merged_crm_account AS (
         WHEN is_paid_in_full = FALSE THEN months_of_future_billings * manual_arr_true_up_allocation.mrr
         ELSE 0
       END                                                                         AS estimated_total_future_billings
-  
     FROM manual_arr_true_up_allocation
     INNER JOIN active_zuora_subscription
       ON manual_arr_true_up_allocation.subscription_name = active_zuora_subscription.subscription_name
