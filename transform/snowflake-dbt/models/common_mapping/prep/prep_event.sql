@@ -24,10 +24,10 @@
       -- FOREIGN KEYS
       gitlab_dotcom_events_source.project_id::NUMBER                                              AS dim_project_id,
       prep_project.dim_namespace_id,
-      prep_project.ultimate_parent_dim_namespace_id,
+      prep_project.ultimate_parent_namespace_id,
       prep_user.dim_user_id,
       dim_date.date_id                                                                            AS event_creation_dim_date_id,
-      dim_namespace_plan_hist.dim_plan_id,
+      IFNULL(dim_namespace_plan_hist.dim_plan_id, 34)                                             AS dim_plan_id,
 
       -- events metadata
       gitlab_dotcom_events_source.target_id::NUMBER                                               AS target_id,
@@ -36,7 +36,7 @@
       {{action_type(action_type_id='action')}}::VARCHAR                                           AS event_action_type
     FROM gitlab_dotcom_events_source
     LEFT JOIN prep_project ON gitlab_dotcom_events_source.project_id = prep_project.dim_project_id
-    LEFT JOIN dim_namespace_plan_hist ON  prepe_project.ultimate_parent_dim_namespace_id = dim_namespace_plan_hist.dim_namespace_id
+    LEFT JOIN dim_namespace_plan_hist ON prep_project.ultimate_parent_namespace_id = dim_namespace_plan_hist.dim_namespace_id
         AND gitlab_dotcom_events_source.created_at >= dim_namespace_plan_hist.valid_from
         AND gitlab_dotcom_events_source.created_at < dim_namespace_plan_hist.valid_to
     LEFT JOIN prep_user ON gitlab_dotcom_events_source.author_id = prep_user.dim_user_id
