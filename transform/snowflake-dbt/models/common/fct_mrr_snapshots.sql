@@ -14,7 +14,10 @@ WITH dim_date AS (
 
 ), prep_charge AS (
 
-    SELECT *
+    SELECT
+      prep_charge.*,
+      charge_created_date   AS valid_from,
+      '9999-12-31'          AS valid_to
     FROM {{ ref('prep_charge') }}
     WHERE rate_plan_charge_name = 'manual true up allocation'
 
@@ -100,14 +103,6 @@ WITH dim_date AS (
          PARTITION BY subscription_name, snapshot_dates.date_actual
          ORDER BY dbt_valid_from DESC) = 1
 
-), add_valid_dates AS (
-
-    SELECT
-      prep_charge.*,
-      charge_created_date   AS valid_from,
-      '9999-12-31'          AS valid_to
-    FROM prep_charge
-
 ), manual_charges AS (
 
     SELECT
@@ -123,10 +118,10 @@ WITH dim_date AS (
       quantity,
       effective_start_month,
       effective_end_month
-    FROM add_valid_dates
+    FROM prep_charge
     INNER JOIN snapshot_dates
-      ON snapshot_dates.date_actual >= add_valid_dates.valid_from
-      AND snapshot_dates.date_actual < {{ coalesce_to_infinity('add_valid_dates.valid_to') }}
+      ON snapshot_dates.date_actual >= prep_charge.valid_from
+      AND snapshot_dates.date_actual < {{ coalesce_to_infinity('prep_charge.valid_to') }}
 
 ), non_manual_charges AS (
 
@@ -189,9 +184,9 @@ WITH dim_date AS (
 ), final AS (
 
     SELECT
-        {{ dbt_utils.surrogate_key(['snapshot_id', 'date_id', 'subscription_name', 'product_details_id']) }}
+        {{ dbt_utils.surrogate_key(['snapshot_id', 'date_id', 'subscription_name', 'product_details_id', 'mrr']) }}
           AS mrr_snapshot_id,
-        {{ dbt_utils.surrogate_key(['date_id', 'subscription_name', 'product_details_id']) }}
+        {{ dbt_utils.surrogate_key(['date_id', 'subscription_name', 'product_details_id', 'mrr']) }}
           AS mrr_id,
         snapshot_id,
         date_id,
