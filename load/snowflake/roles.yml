@@ -19,7 +19,7 @@ databases:
         shared: no
 
 # User / Testing
-    - testing_db:
+    - gain_db:
         shared: no
 
     - dpeterson_prod:
@@ -1079,6 +1079,8 @@ roles:
             databases:
                 read:
                     - prep
+                    - prod
+                write:
                     - prod
             schemas:
                 read:
