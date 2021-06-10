@@ -42,7 +42,7 @@
       gitlab_dotcom_ci_pipelines_source.config_source, 
       gitlab_dotcom_ci_pipelines_source.is_protected, 
       gitlab_dotcom_ci_pipelines_source.failure_reason        AS failure_reason_id,
-      {{ map_ci_pipeline_failure_reason(failure_reason_id) }} AS failure_reason,
+      {{ map_ci_pipeline_failure_reason('failure_reason_id') }} AS failure_reason,
       gitlab_dotcom_ci_pipelines_source.ci_pipeline_iid
     FROM gitlab_dotcom_ci_pipelines_source
     LEFT JOIN prep_project ON gitlab_dotcom_ci_pipelines_source.project_id = prep_project.dim_project_id
