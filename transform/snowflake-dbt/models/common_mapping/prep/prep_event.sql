@@ -3,12 +3,8 @@
 ) }}
 
 {{ simple_cte([
-    ('namespace_current', 'gitlab_dotcom_namespaces_source'),
-    ('namespace_snapshots', 'gitlab_dotcom_namespaces_snapshots_base'),
-    ('namespace_lineage_historical', 'gitlab_dotcom_namespace_lineage_historical_daily'),
-    ('map_namespace_internal', 'map_namespace_internal'),
+    ('dim_namespace_plan_hist', 'dim_namespace_plan_hist'),
     ('plans', 'gitlab_dotcom_plans_source'),
-    ('product_tiers', 'prep_product_tier'),
     ('prep_project', 'prep_project'),
     ('gitlab_dotcom_events_source', 'gitlab_dotcom_events_dedupe_source'),
     ('dim_date', 'dim_date'),
@@ -31,12 +27,18 @@
       prep_project.ultimate_parent_dim_namespace_id,
       prep_user.dim_user_id,
       dim_date.date_id                                                                            AS event_creation_dim_date_id,
+      dim_namespace_plan_hist.dim_plan_id,
+
+      -- events metadata
       gitlab_dotcom_events_source.target_id::NUMBER                                               AS target_id,
       gitlab_dotcom_events_source.target_type::VARCHAR                                            AS target_type,
       gitlab_dotcom_events_source.created_at::TIMESTAMP                                           AS created_at,
       {{action_type(action_type_id='action')}}::VARCHAR                                           AS event_action_type
     FROM gitlab_dotcom_events_source
     LEFT JOIN prep_project ON gitlab_dotcom_events_source.project_id = prep_project.dim_project_id
+    LEFT JOIN dim_namespace_plan_hist ON  prepe_project.ultimate_parent_dim_namespace_id = dim_namespace_plan_hist.dim_namespace_id
+        AND gitlab_dotcom_events_source.created_at >= dim_namespace_plan_hist.valid_from
+        AND gitlab_dotcom_events_source.created_at < dim_namespace_plan_hist.valid_to
     LEFT JOIN prep_user ON gitlab_dotcom_events_source.author_id = prep_user.dim_user_id
     LEFT JOIN dim_date ON TO_DATE(gitlab_dotcom_events_source.created_at) = dim_date.date_day
 
