@@ -43,7 +43,7 @@ SELECT
     else_value = 'NULL',
     suffix='_stage',
     quote_identifiers = False
-  ) }}
+) }}
 FROM smau_only
 LEFT JOIN fct_usage_ping_payload
   ON smau_only.dim_usage_ping_id = fct_usage_ping_payload.dim_usage_ping_id

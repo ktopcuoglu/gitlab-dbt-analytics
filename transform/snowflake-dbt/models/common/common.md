@@ -146,6 +146,18 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
+{% docs dim_project %}
+Dimensional table representing [GitLab Projects](https://docs.gitlab.com/ee/user/project/). Parent ID (dim_namespace_id) and Ultimate Parent ID (dim_ultimate_parent_id) are also stored in the table
+
+Data comes from [Gitlab Postgres db](https://gitlab.com/gitlab-org/gitlab/-/blob/master/db/structure.sql).
+
+The grain of the table is the Project ID.
+
+Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+{% enddocs %}
+
+
 {% docs dim_subscription %}
 Dimension table representing subscription details. The Zuora subscription is created and maintained as part of the broader Quote Creation business process and can be found in the [handbook](https://about.gitlab.com/handbook/finance/sox-internal-controls/quote-to-cash/#3-quote-creation).
 
@@ -372,6 +384,15 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
+{% docs fct_product_usage_free_user_metrics_monthly %}
+This table unions the sets of all Self-Managed and SaaS **free users**. The data from this table will be used to create a mart table (`mart_product_usage_free_user_metrics_monthly`) for Gainsight Customer Product Insights.
+
+The grain of this table is namespace || uuid-hostname per month.
+
+Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+{% enddocs %}
+
 {% docs fct_product_usage_wave_1_3_metrics_latest %}
 This table builds on the set of all Zuora subscriptions that are associated with a **Self-Managed** rate plans. Seat Link data from Customers DB (`fct_usage_self_managed_seat_link`) are combined with high priority Usage Ping metrics (`prep_usage_ping_subscription_mapped_wave_2_3_metrics`) to build out the set of facts included in this table. Only the most recently received Usage Ping and Seat Link per `dim_subscription_id` payload are reported included.
 
@@ -522,6 +543,16 @@ Installation dimension, based off of version usage data and version host table. 
 {% docs dim_order_type %}
 
 Order type dimension, based off of salesforce opportunity data, using the `generate_single_field_dimension` macro to create the final formatted SQL
+
+{% enddocs %}
+
+{% docs dim_namespace_plan_hist %}
+
+Slowly Changing Dimension Type 2 that records changes into namespace's plan subscriptions. 
+
+Easily to join with the following tables:
+
+- `dim_namespace` through `dim_namespace_id`
 
 {% enddocs %}
 

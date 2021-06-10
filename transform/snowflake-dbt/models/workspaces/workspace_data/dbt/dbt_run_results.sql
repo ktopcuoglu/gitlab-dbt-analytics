@@ -17,6 +17,7 @@ WITH run_results AS (
       run_results.message                    AS run_message,
       run_results.compilation_started_at,
       run_results.compilation_completed_at,
+      run_results.uploaded_at,
       models.name                            AS model_name,
       models.alias                           AS model_alias,
       models.database_name,
