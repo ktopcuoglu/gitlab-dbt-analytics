@@ -17,6 +17,7 @@ WITH snapshots_results AS (
       snapshots_results.message                    AS run_message,
       snapshots_results.compilation_started_at,
       snapshots_results.compilation_completed_at,
+      snapshots_results.uploaded_at,
       models.name                                  AS model_name,
       models.alias                                 AS model_alias,
       models.database_name,

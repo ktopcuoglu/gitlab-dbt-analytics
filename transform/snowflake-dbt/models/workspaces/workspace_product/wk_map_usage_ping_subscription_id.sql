@@ -4,7 +4,7 @@
 }}
 
 {{ simple_cte([
-  ('dim_usage_pings', 'dim_usage_pings'),
+  ('fct_usage_ping_payload', 'fct_usage_ping_payload'),
   ('dim_license', 'dim_license'),
   ('dim_subscription', 'dim_subscription')
 ])
@@ -23,12 +23,12 @@
 ), usage_ping_with_license AS (
 
     SELECT
-      id AS dim_usage_ping_id,
+      dim_usage_ping_id,
       license_expire_date,
-      dim_usage_pings.created_at,
+      fct_usage_ping_payload.ping_created_at,
       COALESCE(license_subscription_id, dim_license.dim_subscription_id) AS license_subscription_id
-    FROM dim_usage_pings
-    LEFT JOIN dim_license  ON dim_usage_pings.license_md5 = dim_license.license_md5
+    FROM fct_usage_ping_payload
+    LEFT JOIN dim_license  ON fct_usage_ping_payload.dim_license_id = dim_license.dim_license_id
 
 ), map_to_all_subscriptions_in_lineage AS (
 
@@ -43,7 +43,7 @@
     SELECT 
       dim_usage_ping_id,
       license_subscription_id,
-      usage_ping_with_license.created_at              AS usage_ping_created_at,
+      usage_ping_with_license.ping_created_at         AS usage_ping_created_at,
       renewal_subscriptions.subscription_start_date   AS subscription_start_date,
       renewal_subscriptions.subscription_end_date     AS subscription_end_date,
       renewal_subscriptions.subscription_name_slugify AS subscription_name_slugify,

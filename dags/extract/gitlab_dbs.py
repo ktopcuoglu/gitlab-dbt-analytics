@@ -36,10 +36,6 @@ from kube_secrets import (
     GITLAB_OPS_DB_PASS,
     GITLAB_OPS_DB_HOST,
     GITLAB_OPS_DB_NAME,
-    GITLAB_PROFILER_DB_HOST,
-    GITLAB_PROFILER_DB_NAME,
-    GITLAB_PROFILER_DB_PASS,
-    GITLAB_PROFILER_DB_USER,
     PG_PORT,
     SALT,
     SALT_EMAIL,
@@ -140,22 +136,6 @@ config_dict = {
         "start_date": datetime(2019, 5, 30),
         "sync_schedule_interval": "0 2 */1 * *",
         "task_name": "gitlab-com",
-    },
-    "gitlab_profiler": {
-        "cloudsql_instance_name": None,
-        "dag_name": "gitlab_profiler",
-        "dbt_name": "none",
-        "env_vars": {"DAYS": "3"},
-        "extract_schedule_interval": "0 0 */1 * *",
-        "secrets": [
-            GITLAB_PROFILER_DB_USER,
-            GITLAB_PROFILER_DB_PASS,
-            GITLAB_PROFILER_DB_HOST,
-            GITLAB_PROFILER_DB_NAME,
-        ],
-        "start_date": datetime(2019, 5, 30),
-        "sync_schedule_interval": every_day_at_four,
-        "task_name": "gitlab-profiler",
     },
     "gitlab_ops": {
         "cloudsql_instance_name": "ops-db-restore",
@@ -525,3 +505,87 @@ for source_name, config in config_dict.items():
                     )
 
     globals()[f"{config['dag_name']}_db_sync"] = sync_dag
+
+# Create Dictionary entry for Data Quality check. This is seprate from above to avoid duplicate DAG creation.
+
+config_dict_td_pgp = {
+    "gitlab_com_data_reconciliation_extract_load": {
+        "cloudsql_instance_name": None,
+        "dag_name": "gitlab_com_data_reconciliation_extract_load",
+        "dbt_name": "None",
+        "env_vars": {},
+        "extract_schedule_interval": "* 9 * * *",
+        "secrets": [
+            GITLAB_COM_DB_USER,
+            GITLAB_COM_DB_PASS,
+            GITLAB_COM_DB_HOST,
+            GITLAB_COM_DB_NAME,
+            GITLAB_COM_PG_PORT,
+        ],
+        "start_date": datetime(2021, 5, 21),
+        "sync_schedule_interval": "* 9 * * *",
+        "task_name": "gitlab-com",
+    },
+}
+
+for source_name, config in config_dict_td_pgp.items():
+
+    # Sync DAG
+    data_quality_dag_args = {
+        "catchup": False,
+        "depends_on_past": False,
+        "on_failure_callback": slack_failed_task,
+        "owner": "airflow",
+        "retries": 0,
+        "retry_delay": timedelta(minutes=3),
+        "start_date": config["start_date"],
+        "dagrun_timeout": timedelta(hours=10),
+        "trigger_rule": "all_success",
+    }
+    data_quality_dag = DAG(
+        f"{config['dag_name']}",
+        default_args=data_quality_dag_args,
+        schedule_interval=config["sync_schedule_interval"],
+        concurrency=2,
+    )
+    with data_quality_dag:
+
+        # PGP Extract
+        file_path = f"analytics/extract/postgres_pipeline/manifests/{config['dag_name']}_db_manifest.yaml"
+        manifest = extract_manifest(file_path)
+        table_list = extract_table_list_from_manifest(manifest)
+        for table in table_list:
+            task_type = "td-pgp-extract"
+            task_identifier = (
+                f"{config['task_name']}-{table.replace('_','-')}-{task_type}"
+            )
+
+            # td-pgp-extract Task
+            td_pgp_extract_cmd = f"""
+            {clone_repo_cmd} &&
+            cd analytics/extract/postgres_pipeline/postgres_pipeline/ &&
+            python main.py tap ../manifests/{config["dag_name"]}_db_manifest.yaml --load_type trusted_data --load_only_table {table}
+        """
+            td_pgp_extract = KubernetesPodOperator(
+                **gitlab_defaults,
+                image=DATA_IMAGE,
+                task_id=task_identifier,
+                name=task_identifier,
+                # pool=f"{config['task_name']}_pool",
+                pool="default_pool",
+                secrets=standard_secrets + config["secrets"],
+                env_vars={
+                    **gitlab_pod_env_vars,
+                    **config["env_vars"],
+                    "TASK_INSTANCE": "{{ task_instance_key_str }}",
+                    "task_id": task_identifier,
+                },
+                arguments=[td_pgp_extract_cmd],
+                affinity=get_affinity(True),
+                tolerations=get_toleration(True),
+                do_xcom_push=True,
+                xcom_push=True,
+            )
+            td_pgp_extract
+
+    globals()[f"{config['dag_name']}_td_pgp_extract"] = td_pgp_extract

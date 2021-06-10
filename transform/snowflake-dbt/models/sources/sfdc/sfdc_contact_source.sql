@@ -26,6 +26,7 @@ WITH source AS (
         --contact info
 
         title                       AS contact_title,
+        {{it_job_title_hierarchy('title')}},
         role__c                     AS contact_role,
         mobilephone                 AS mobile_phone,
         mkto71_lead_score__c        AS person_score,

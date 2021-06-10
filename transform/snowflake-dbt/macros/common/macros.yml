@@ -64,3 +64,17 @@ macros:
         type: string
       - name: order_type
         type: string
+  - name: it_job_title_hierarchy
+    description: '{{ doc("it_job_title_hierarchy") }}'
+    arguments:
+      - name: job_title
+        type: string
+  - name: pad_column
+    description: This macro adds a string to the left and to the right of a column.
+    arguments:
+      - name: column
+        type: string
+        description: Column to add the string to.
+      - name: string
+        type: string
+        description: String to add to the left and the right of the column.

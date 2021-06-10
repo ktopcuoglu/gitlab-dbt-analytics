@@ -31,6 +31,14 @@ WITH source AS (
         expectedresponse                                                    AS expected_response,
         expectedrevenue                                                     AS expected_revenue,
         bizible2__bizible_attribution_synctype__c                           AS bizible_touchpoint_enabled_setting,
+        allocadia_id__c                                                     AS allocadia_id,
+        is_a_channel_partner_involved__c                                    AS is_a_channel_partner_involved,
+        is_an_alliance_partner_involved__c                                  AS is_an_alliance_partner_involved,
+        in_person_virtual__c                                                AS is_this_an_in_person_event,
+        alliance_partner_name__c                                            AS alliance_partner_name,
+        channel_partner_name__c                                             AS channel_partner_name,
+        sales_play__c                                                       AS sales_play,
+        gtm_motion__c                                                       AS gtm_motion,
 
         --results
         actualcost                                                          AS actual_cost,
