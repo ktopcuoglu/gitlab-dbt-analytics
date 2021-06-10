@@ -25,4 +25,6 @@ Tips:
 
 * [ ] issue number:
 
+Once this is done do a formal announcement on the #data channel to inform main stakeeholders.
+
 /label ~"Data Team" ~"product analysis" ~"Product" ~"dbt" ~"Enhancement"
