@@ -47,6 +47,12 @@ This model captures a historical record of GitLab's default application settings
 
 {% enddocs %}
 
+{% docs prep_gitlab_dotcom_plan %}
+
+Creates a base view with generated keys for the plans shared dimension and fact and references in facts.
+
+{% enddocs %}
+
 {% docs prep_industry %}
 
 Creates a base view with generated keys for the industry shared dimension and references in facts.
