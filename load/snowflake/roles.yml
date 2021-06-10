@@ -19,7 +19,7 @@ databases:
         shared: no
 
 # User / Testing
-    - gain_db:
+    - testing_db:
         shared: no
 
     - dpeterson_prod:
