@@ -36,6 +36,15 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
+{% docs mart_product_usage_free_user_metrics_monthly %}
+This table unions the sets of all Self-Managed and SaaS **free users**. The data from this table will be used for Salesforce Customer Product Insights.
+
+The grain of this table is namespace || uuid-hostname per month.
+
+Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+{% enddocs %}
+
 {% docs pump_hash_marketing_contact %}
 
 a copy of mart_marketing_contact with the email hashed
