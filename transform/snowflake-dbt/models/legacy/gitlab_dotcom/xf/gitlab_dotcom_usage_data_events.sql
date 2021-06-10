@@ -579,6 +579,12 @@
     FROM {{ ref('gitlab_dotcom_services') }}
     WHERE service_type != 'GitlabIssueTrackerService'
 
+), succesful_ci_pipelines AS (
+  
+  SELECT *
+  FROM 
+  WHERE 
+  
 ), terraform_reports AS (
 
     SELECT *
