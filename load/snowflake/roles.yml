@@ -1086,6 +1086,8 @@ roles:
                     - prod.common
                     - prod.common_mart_product
                     - prod.common_mapping
+                write:
+                    - prod.common_mart_product
             tables:
                 read:
                     - prod.common_mapping.prep_usage_ping_no_license_key
