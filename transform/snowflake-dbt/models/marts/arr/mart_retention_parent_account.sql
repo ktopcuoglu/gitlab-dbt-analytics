@@ -1,3 +1,7 @@
+{{ config({
+        "schema": "common_mart_sales"
+    })
+}}
 WITH fct_retention AS (
 
     SELECT
