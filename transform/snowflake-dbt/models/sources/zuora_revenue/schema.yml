@@ -104,6 +104,5 @@ models:
         tags: ["tdf","zuora"]
         tests:
           - not_null
-          - unique
   - name: zuora_revenue_waterfall_source
     description: '{{ doc("zuora_revenue_waterfall_source") }}'
