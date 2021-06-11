@@ -30,7 +30,7 @@ WITH zuora_revenue_revenue_contract_schedule AS (
       crtd_prd_id::VARCHAR                          AS revenue_contract_schedule_created_period_id,
       root_line_id::VARCHAR                         AS root_line_id,
       ref_bill_id::VARCHAR                          AS reference_revenue_contract_bill_id,
-      schd_id::VARCHAR                              AS schedule_id,
+      schd_id::VARCHAR                              AS revenue_contract_schedule_id,
       line_id::VARCHAR                              AS revenue_contract_line_id,
       acctg_seg::VARCHAR                            AS accounting_segment,
       dr_amount::DECIMAL                            AS transactional_debit_amount,

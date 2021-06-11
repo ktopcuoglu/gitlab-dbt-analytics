@@ -7,10 +7,10 @@ WITH zuora_revenue_organization AS (
 
     SELECT 
     
-      id::VARCHAR               AS zuora_revenue_organizaiton_id,
-      org_id::VARCHAR           AS organization__id,
-      org_name::VARCHAR         AS organizaiton_name,
-      crtd_by::VARCHAR          AS organizaiton_created_by,
+      id::VARCHAR               AS zuora_revenue_organization_id,
+      org_id::VARCHAR           AS organization_id,
+      org_name::VARCHAR         AS organization_name,
+      crtd_by::VARCHAR          AS organization_created_by,
       crtd_dt::DATE             AS organization_created_date,
       updt_by::VARCHAR          AS organization_updated_by,
       updt_dt::DATE             AS organization_updated_date,
