@@ -1384,7 +1384,7 @@ roles:
                     - prod.legacy
             tables:
                 read:
-                    - prod.legacy.snowplow_page_views_all_grafana_spigot    
+                    - prod.legacy.snowplow_page_views_all_grafana_spigot
 
     - greenhouse:
         warehouses:
@@ -3519,10 +3519,10 @@ users:
             - gitlab_ci
             - sysadmin
 
-     - grafana:
+    - grafana:
         can_login: yes
         member_of:
-            - grafana           
+            - grafana
 
     - hfrancisco:
         can_login: yes
@@ -3970,7 +3970,7 @@ warehouses:
         size: x-small
 
     - grafana:
-        size: x-small    
+        size: x-small 
 
     - loading:
         size: x-small
