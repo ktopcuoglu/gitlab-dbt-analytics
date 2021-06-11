@@ -20,19 +20,20 @@ WITH dim_crm_account AS (
 ), parent_account_mrrs AS (
 
     SELECT
-      fct_retention_id,
       dim_parent_crm_account_id,
       mrr_month,
       retention_month,
       next_renewal_month,
       last_renewal_month,
-      parent_customer_count,
-      mrr_total,
-      arr_total,
-      quantity_total,
-      product_category,
-      product_ranking
+      COUNT(DISTINCT dim_parent_crm_account_id)
+                                                        AS parent_customer_count,
+      SUM(ZEROIFNULL(mrr))                              AS mrr_total,
+      SUM(ZEROIFNULL(arr))                              AS arr_total,
+      SUM(ZEROIFNULL(quantity))                         AS quantity_total,
+      ARRAY_AGG(product_tier_name)                      AS product_category,
+      MAX(product_ranking)                              AS product_ranking
     FROM fct_retention
+    {{ dbt_utils.group_by(n=5) }}
 
 ), retention_subs AS (
 
