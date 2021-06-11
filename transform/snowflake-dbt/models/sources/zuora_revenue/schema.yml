@@ -96,7 +96,6 @@ models:
         tags: ["tdf","zuora"]
         tests:
           - not_null
-          - unique
   - name: zuora_revenue_revenue_contract_schedule_deleted_source
     description: '{{ doc("zuora_revenue_revenue_contract_schedule_deleted_source") }}'
     columns:
