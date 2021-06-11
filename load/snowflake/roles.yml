@@ -1107,10 +1107,10 @@ roles:
                     - raw
             schemas:
                 read:
-                    - raw.gainsight
+                    - prod.legacy
             tables:
                 read:
-                    - raw.gainsight.*    
+                    - prod.legacy.*    
 
     - gcp_billing:
         warehouses:
@@ -1371,6 +1371,20 @@ roles:
                 read:
                     - prep.google_analytics_360.*
                     - raw.google_analytics_360_fivetran.*
+
+    - grafana:
+        warehouses:
+            - grafana
+        privileges:
+            databases:
+                read:
+                    - prod
+            schemas:
+                read:
+                    - prod.legacy
+            tables:
+                read:
+                    - prod.legacy.snowplow_page_views_all_grafana_spigot    
 
     - greenhouse:
         warehouses:
@@ -3505,6 +3519,11 @@ users:
             - gitlab_ci
             - sysadmin
 
+     - grafana:
+        can_login: yes
+        member_of:
+            - grafana           
+
     - hfrancisco:
         can_login: yes
         member_of:
@@ -3949,6 +3968,9 @@ warehouses:
 
     - gitlab_postgres:
         size: x-small
+
+    - grafana:
+        size: x-small    
 
     - loading:
         size: x-small
