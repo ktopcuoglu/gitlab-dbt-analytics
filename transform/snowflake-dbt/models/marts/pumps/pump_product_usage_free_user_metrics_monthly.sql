@@ -1,5 +1,5 @@
 {{config({
-    "schema": "common_mart_product"
+    "schema": "pumps"
   })
 }}
 
