@@ -3,7 +3,7 @@ WITH fct_retention AS (
     SELECT
     {{
           dbt_utils.star(
-            from=ref('fct_retention'),
+            from=ref('fct_retention_parent_account'),
             except=['CREATED_BY',
             'UPDATED_BY',
             'MODEL_CREATED_DATE',
@@ -11,7 +11,7 @@ WITH fct_retention AS (
             'DBT_UPDATED_AT',
             'DBT_CREATED_AT'])
     }}
-    FROM {{ ref('fct_retention') }}
+    FROM {{ ref('fct_retention_parent_account') }}
 
 )
 

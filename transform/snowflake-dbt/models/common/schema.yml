@@ -1853,7 +1853,7 @@ models:
           - not_null
           - unique
 
-  - name: fct_retention
+  - name: fct_retention_parent_account
     description: '{{ doc("fct_retention") }}'
     columns:
     - name: fct_retention_id
