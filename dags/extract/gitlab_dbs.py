@@ -514,7 +514,7 @@ config_dict_td_pgp = {
         "dag_name": "gitlab_com_data_reconciliation_extract_load",
         "dbt_name": "None",
         "env_vars": {},
-        "extract_schedule_interval": "* 9 * * *",
+        "extract_schedule_interval": "0 9 */1 * *",
         "secrets": [
             GITLAB_COM_DB_USER,
             GITLAB_COM_DB_PASS,
@@ -523,7 +523,7 @@ config_dict_td_pgp = {
             GITLAB_COM_PG_PORT,
         ],
         "start_date": datetime(2021, 5, 21),
-        "sync_schedule_interval": "* 9 * * *",
+        "sync_schedule_interval": "",
         "task_name": "gitlab-com",
     },
 }
@@ -545,8 +545,8 @@ for source_name, config in config_dict_td_pgp.items():
     data_quality_dag = DAG(
         f"{config['dag_name']}",
         default_args=data_quality_dag_args,
-        schedule_interval=config["sync_schedule_interval"],
-        concurrency=2,
+        schedule_interval=config["extract_schedule_interval"],
+        concurrency=1,
     )
     with data_quality_dag:
 
@@ -555,7 +555,7 @@ for source_name, config in config_dict_td_pgp.items():
         manifest = extract_manifest(file_path)
         table_list = extract_table_list_from_manifest(manifest)
         for table in table_list:
-            task_type = "td-pgp-extract"
+            task_type = "trusted-data-postgres-extract-load"
             task_identifier = (
                 f"{config['task_name']}-{table.replace('_','-')}-{task_type}"
             )
