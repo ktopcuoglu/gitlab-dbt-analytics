@@ -1,8 +1,3 @@
-{{config({
-    "schema": "pumps"
-  })
-}}
-
 {{ simple_cte([
     ('free_user_metrics', 'fct_product_usage_free_user_metrics_monthly'),
     ('crm_accounts', 'dim_crm_account')
