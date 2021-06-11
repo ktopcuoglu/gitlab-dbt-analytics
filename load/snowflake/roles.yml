@@ -1107,10 +1107,10 @@ roles:
                     - raw
             schemas:
                 read:
-                    - prod.legacy
+                    - raw.gainsight
             tables:
                 read:
-                    - prod.legacy.*    
+                    - raw.gainsight.*    
 
     - gcp_billing:
         warehouses:
