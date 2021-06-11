@@ -17,15 +17,17 @@ WITH dim_crm_account AS (
 
     SELECT
       dim_parent_crm_account_id,
-      product_tier_name,
-      product_ranking,
       mrr_month,
       retention_month,
       next_renewal_month_product,
       last_renewal_month_product,
-      SUM(ZEROIFNULL(mrr))                              AS mrr_total,
-      SUM(ZEROIFNULL(arr))                              AS arr_total,
-      SUM(ZEROIFNULL(quantity))                         AS quantity_total
+      next_renewal_month,
+      last_renewal_month,
+      mrr,
+      arr,
+      quantity,
+      product_tier_name,
+      product_ranking
     FROM fct_retention
     {{ dbt_utils.group_by(n=7) }}
 
@@ -33,7 +35,7 @@ WITH dim_crm_account AS (
 
     SELECT
       current_mrr.dim_parent_crm_account_id,
-      current_mrr.product_tier_name  AS product_category,
+      current_mrr.product_category,
       current_mrr.product_ranking,
       current_mrr.mrr_month          AS current_mrr_month,
       current_mrr.retention_month,
@@ -50,7 +52,7 @@ WITH dim_crm_account AS (
     FROM parent_account_mrrs AS current_mrr
     LEFT JOIN parent_account_mrrs AS future_mrr
       ON current_mrr.dim_parent_crm_account_id = future_mrr.dim_parent_crm_account_id
-      AND current_mrr.product_tier_name = future_mrr.product_tier_name
+      AND current_mrr.product_category = future_mrr.product_category
       AND current_mrr.retention_month = future_mrr.mrr_month
 
 ), final AS (
