@@ -1,7 +1,7 @@
 WITH zuora_revenue_header AS (
 
     SELECT *
-    FROM {{source('zuora_revenue','zuora_revenue_header_source')}}
+    FROM {{source('zuora_revenue','zuora_revenue_header')}}
 
 ), renamed AS (
 
@@ -64,7 +64,7 @@ WITH zuora_revenue_header AS (
       rc_ssp_pct::VARCHAR                           AS revenue_contract_ssp_percent,
       multi_f_curr_flag::VARCHAR                    AS is_multi_functional_currency,
       skip_allocation_flag::VARCHAR                 AS is_skip_allocation,
-      vc_allocation_flag::VARCHAR                   AS is_vc_allocation,
+      vc_allocation_flag::VARCHAR                   AS is_variable_consideration_allocation,
       rc_closed_flag::VARCHAR                       AS is_revenue_contract_closed,
       timeline_period_flag::VARCHAR                 AS timeline_period,
       new_rc_by_ctmod_flag::VARCHAR                 AS is_new_revenue_contact_created_by_ct_mod,

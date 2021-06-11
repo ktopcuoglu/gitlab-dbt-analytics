@@ -48,9 +48,6 @@ sources:
       - name: zuora_revenue_line
         identifier: bi3_rc_lns
         description: '{{ doc("zuora_revenue_line_source") }}'
-      - name: zuora_revenue_revenue_contract_line_cost
-        identifier: bi3_rc_ln_cost
-        description: '{{ doc("zuora_revenue_revenue_contract_line_cost_source") }}'
       - name: zuora_revenue_revenue_contract_performance_obligation
         identifier: bi3_rc_pob
         description: '{{ doc("zuora_revenue_revenue_contract_performance_obligation_source") }}'

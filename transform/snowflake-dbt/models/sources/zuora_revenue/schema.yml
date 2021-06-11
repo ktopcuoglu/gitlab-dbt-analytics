@@ -81,14 +81,6 @@ models:
         tests:
           - not_null
           - unique
-  - name: zuora_revenue_revenue_contract_line_cost_source
-    description: Costs associated with revenue contract line items.
-    columns:
-      - name: revenue_contract_line_cost_id
-        tags: ["tdf","zuora"]
-        tests:
-          - not_null
-          - unique
   - name: zuora_revenue_revenue_contract_performance_obligation_source
     description: Revenue contracts are split into invoiced items which are further divided into specific performance obligations which must be satisfied in order to recognize the revenue.
     columns:

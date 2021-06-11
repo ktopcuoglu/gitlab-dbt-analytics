@@ -8,10 +8,10 @@ WITH zuora_revenue_manual_journal_entry AS (
     SELECT 
 
       je_head_id::VARCHAR                           AS manual_journal_entry_header_id,
-      je_head_name::VARCHAR                         AS manual_joural_entry_name,
-      je_head_desc::VARCHAR                         AS manual_joural_entry_description,
-      je_head_cat_code::VARCHAR                     AS manual_joural_entry_category_code,
-      je_head_ex_rate_type::VARCHAR                 AS manual_joural_entry_exchange_rate_type,
+      je_head_name::VARCHAR                         AS manual_journal_entry_header_name,
+      je_head_desc::VARCHAR                         AS manual_journal_entry_header_description,
+      je_head_cat_code::VARCHAR                     AS manual_journal_entry_header_category_code,
+      je_head_ex_rate_type::VARCHAR                 AS manual_journal_entry_header_exchange_rate_type,
       hash_total::VARCHAR                           AS hash_total,
       sob_id::VARCHAR                               AS set_of_books_id,
       sob_name::VARCHAR                             AS set_of_books_name,
@@ -103,7 +103,7 @@ WITH zuora_revenue_manual_journal_entry AS (
       rc_id::VARCHAR                                AS revenue_contract_id,
       doc_line_id::VARCHAR                          AS doc_line_id,
       rc_line_id::VARCHAR                           AS revenue_contract_line_id,
-      cst_or_vc_type::VARCHAR                       AS is_cost_or_vc,
+      cst_or_vc_type::VARCHAR                       AS is_cost_or_vairable_consideration,
       type_name::VARCHAR                            AS manual_journal_entry_line_type_name,
       dt_frmt::VARCHAR                              AS date_format,
       opn_int_flag::VARCHAR                         AS is_open_interface,
