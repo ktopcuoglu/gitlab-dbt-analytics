@@ -79,7 +79,7 @@ dbt-image:
 	@"$(DOCKER_RUN)" dbt_image bash -c "dbt clean && dbt deps && /bin/bash"
 
 prepare-dbt:
-	which python3 || apt install -y python3 python3-pip
+	which python3 || echo "Please install python 3.8.6 from https://www.python.org/downloads/release/python-386/"
 	which virtualenv || python3 -m pip install virtualenv
 	make check-venv
 
