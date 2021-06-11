@@ -1,7 +1,3 @@
-{{ config({
-        "schema": "common_mart_sales"
-    })
-}}
 WITH dim_crm_account AS (
 
     SELECT *
