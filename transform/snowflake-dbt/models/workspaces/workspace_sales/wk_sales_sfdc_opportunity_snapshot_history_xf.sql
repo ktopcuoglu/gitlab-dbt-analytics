@@ -227,6 +227,7 @@ WITH date_details AS (
       created_date_detail.fiscal_quarter_name_fy                   AS net_arr_created_fiscal_quarter_name,
       created_date_detail.first_day_of_fiscal_quarter              AS net_arr_created_fiscal_quarter_date,
 
+      net_arr_created_date.date_actual                            AS pipeline_created_date,
       net_arr_created_date.first_day_of_month                     AS pipeline_created_date_month,
       net_arr_created_date.fiscal_year                            AS pipeline_created_fiscal_year,
       net_arr_created_date.fiscal_quarter_name_fy                 AS pipeline_created_fiscal_quarter_name,
