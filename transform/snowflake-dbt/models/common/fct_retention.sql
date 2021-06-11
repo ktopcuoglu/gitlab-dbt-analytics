@@ -63,20 +63,16 @@ WITH dim_date AS (
 ), final AS (
 
     SELECT
-      {{ dbt_utils.surrogate_key(['prep_crm_account.dim_parent_crm_account_id','dateadd(''year'', 1, date_actual)']) }}
-        as fct_retention_id,
       prep_crm_account.dim_parent_crm_account_id                AS dim_parent_crm_account_id,
       dim_date.date_actual                                      AS mrr_month,
       dateadd('year', 1, date_actual)                           AS retention_month,
       next_renewal_month                                        AS next_renewal_month,
       last_renewal_month                                        AS last_renewal_month,
-      COUNT(DISTINCT prep_crm_account.dim_parent_crm_account_id)
-                                                                AS parent_customer_count,
-      SUM(ZEROIFNULL(mrr))                                      AS mrr_total,
-      SUM(ZEROIFNULL(arr))                                      AS arr_total,
-      SUM(ZEROIFNULL(quantity))                                 AS quantity_total,
-      ARRAY_AGG(product_tier_name)                              AS product_category,
-      MAX(product_ranking)                                      AS product_ranking
+      ZEROIFNULL(mrr)                                           AS mrr,
+      ZEROIFNULL(arr)                                           AS arr,
+      ZEROIFNULL(quantity)                                      AS quantity,
+      prep_product_detail.product_tier_name                     AS product_tier_name,
+      prep_product_detail.product_ranking                       AS product_ranking
     FROM prep_recurring_charge
     INNER JOIN prep_product_detail
       ON prep_product_detail.dim_product_detail_id = prep_recurring_charge.dim_product_detail_id
@@ -88,7 +84,7 @@ WITH dim_date AS (
       ON next_renewal_month.dim_parent_crm_account_id = prep_crm_account.dim_parent_crm_account_id
     LEFT JOIN last_renewal_month
       ON last_renewal_month.dim_parent_crm_account_id = prep_crm_account.dim_parent_crm_account_id
-    {{ dbt_utils.group_by(n=6) }}
+
 )
 
 {{ dbt_audit(
