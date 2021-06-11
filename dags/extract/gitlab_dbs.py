@@ -523,7 +523,7 @@ config_dict_td_pgp = {
             GITLAB_COM_PG_PORT,
         ],
         "start_date": datetime(2021, 5, 21),
-        "sync_schedule_interval": "",
+        "sync_schedule_interval": None,
         "task_name": "gitlab-com",
     },
 }
