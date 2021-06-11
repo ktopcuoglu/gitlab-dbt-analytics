@@ -7,8 +7,8 @@ WITH snowplow_page_views_all AS (
 
     SELECT *
     FROM {{ ref('snowplow_page_views_all') }}
-)
 
+)
 SELECT
     min_tstamp,
     session_index,
