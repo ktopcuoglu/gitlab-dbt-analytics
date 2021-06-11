@@ -4,8 +4,7 @@
         config(
           unique_key='dim_subscription_id',
           strategy='timestamp',
-          updated_at='dbt_created_at',
-          invalidate_hard_deletes=True
+          updated_at='dbt_created_at'
          )
     }}
     

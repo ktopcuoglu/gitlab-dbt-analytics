@@ -5,7 +5,7 @@
           unique_key='primary_key',
           strategy='timestamp',
           updated_at='dbt_created_at'
-          invalidate_hard_deletes=True
+
          )
     }}
 
