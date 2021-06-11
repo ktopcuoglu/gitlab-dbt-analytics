@@ -1,11 +1,12 @@
-WITH zuora_revenue_header AS (
+WITH zuora_revenue_revenue_contract_header AS (
 
     SELECT *
-    FROM {{source('zuora_revenue','zuora_revenue_header')}}
+    FROM {{source('zuora_revenue','zuora_revenue_revenue_contract_header')}}
 
 ), renamed AS (
 
     SELECT 
+
       id::VARCHAR                                   AS revenue_contract_id,
       version::VARCHAR                              AS revenue_contract_version,
       batch_id::VARCHAR                             AS revenue_contract_batch_id,
@@ -85,7 +86,8 @@ WITH zuora_revenue_header AS (
       alloc_multi_curr_flag::VARCHAR                AS is_multiple_currency_allocation,
       alloc_multi_f_curr_flag::VARCHAR              AS is_multiple_functional_currency_allocation,
       alloc_multi_t_curr_flag::VARCHAR              AS is_multiple_transactional_currency_allocation
-    FROM zuora_revenue_header
+      
+    FROM zuora_revenue_revenue_contract_header
 
 )
 

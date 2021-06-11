@@ -1,4 +1,4 @@
-WITH zuora_revenue_performance_obligation AS (
+WITH zuora_revenue_revenue_contract_performance_obligation AS (
 
     SELECT *
     FROM {{source('zuora_revenue','zuora_revenue_revenue_contract_performance_obligation')}}
@@ -6,6 +6,7 @@ WITH zuora_revenue_performance_obligation AS (
 ), renamed AS (
 
     SELECT 
+    
       rc_pob_id::VARCHAR                            AS revenue_contract_performance_obligation_id,
       rc_id::VARCHAR                                AS revenue_contract_id,
       lead_line_id::VARCHAR                         AS lead_line_id,
@@ -105,7 +106,8 @@ WITH zuora_revenue_performance_obligation AS (
       manual_rearranged_flag::VARCHAR               AS is_manual_rearranged,
       manual_release_flag::VARCHAR                  AS is_manual_release,
       fcst_tmpl_id::VARCHAR                         AS forecast_template_id
-    FROM zuora_revenue_performance_obligation
+
+    FROM zuora_revenue_revenue_contract_performance_obligation
 
 )
 

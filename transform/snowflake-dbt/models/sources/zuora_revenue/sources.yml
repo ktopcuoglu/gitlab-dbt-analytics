@@ -39,15 +39,15 @@ sources:
       - name: zuora_revenue_revenue_contract_bill
         identifier: bi3_rc_bill
         description: '{{ doc("zuora_revenue_revenue_contract_bill_source") }}'
-      - name: zuora_revenue_header
+      - name: zuora_revenue_revenue_contract_header
         identifier: bi3_rc_head
-        description: '{{ doc("zuora_revenue_header_source") }}'
-      - name: zuora_revenue_hold
+        description: '{{ doc("zuora_revenue_revenue_contract_header_source") }}'
+      - name: zuora_revenue_revenue_contract_hold
         identifier: bi3_rc_hold
-        description: '{{ doc("zuora_revenue_hold_source") }}'
-      - name: zuora_revenue_line
+        description: '{{ doc("zuora_revenue_revenue_contract_hold_source") }}'
+      - name: zuora_revenue_revenue_contract_line
         identifier: bi3_rc_lns
-        description: '{{ doc("zuora_revenue_line_source") }}'
+        description: '{{ doc("zuora_revenue_revenue_contract_line_source") }}'
       - name: zuora_revenue_revenue_contract_performance_obligation
         identifier: bi3_rc_pob
         description: '{{ doc("zuora_revenue_revenue_contract_performance_obligation_source") }}'
@@ -56,10 +56,7 @@ sources:
         description: '{{ doc("zuora_revenue_revenue_contract_schedule_source") }}'
       - name: zuora_revenue_revenue_contract_schedule_deleted
         identifier: bi3_rc_schd_del
-        description: '{{ doc("zuora_revenue_revenue_contract_schedule_deleted") }}'
-      - name: zuora_revenue_account_summary
-        identifier: bi3_ri_acct_summ
-        description: '{{ doc("zuora_revenue_account_summary_source") }}'
+        description: '{{ doc("zuora_revenue_revenue_contract_schedule_deleted_source") }}'
       - name: zuora_revenue_waterfall_summary
         identifier: bi3_wf_summ
-        description: '{{ doc("zuora_revenue_waterfall_summary_source") }}'
+        description: '{{ doc("zuora_revenue_waterfall_source") }}'

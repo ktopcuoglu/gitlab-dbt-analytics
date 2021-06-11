@@ -203,7 +203,7 @@ WITH zuora_revenue_revenue_contract_bill AS (
       zbill_true_up_flag::VARCHAR       AS is_zbill_true_up,
       retain_line_id_flag::VARCHAR      AS is_retain_line_id,
       avoid_overage_flag::VARCHAR       AS is_avoid_overage
-
+      
     FROM zuora_revenue_revenue_contract_bill
 
 )

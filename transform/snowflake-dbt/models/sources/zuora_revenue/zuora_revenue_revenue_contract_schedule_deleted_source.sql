@@ -6,6 +6,7 @@ WITH zuora_revenue_revenue_contract_schedule_deleted AS (
 ), renamed AS (
 
     SELECT 
+    
       schd_id::VARCHAR              AS revenue_contract_schedule_id,
       client_id::VARCHAR            AS client_id,
       deleted_time::DATETIME        AS revenue_contract_schedule_deleted_at,
@@ -14,6 +15,7 @@ WITH zuora_revenue_revenue_contract_schedule_deleted AS (
       updt_by::DATE                 AS revenue_contract_schedule_updated_by,
       updt_dt::DATE                 AS revenue_contract_schedule_updated_date,
       incr_updt_dt::DATE            AS incremental_update_date
+
     FROM zuora_revenue_revenue_contract_schedule_deleted
 
 )

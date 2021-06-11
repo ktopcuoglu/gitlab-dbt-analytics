@@ -1,11 +1,12 @@
-WITH zuora_revenue_hold AS (
+WITH zuora_revenue_revenue_contract_hold AS (
 
     SELECT *
-    FROM {{source('zuora_revenue','zuora_revenue_hold_source')}}
+    FROM {{source('zuora_revenue','zuora_revenue_revenue_contract_hold')}}
 
 ), renamed AS (
 
     SELECT 
+
       rc_hold_id::VARCHAR                               AS revenue_contract_hold_id,
       rc_id::VARCHAR                                    AS revenue_conctract__id,
       rc_hold_applied_by::VARCHAR                       AS revenue_contract_hold_applied_by_id,
@@ -61,10 +62,11 @@ WITH zuora_revenue_hold AS (
       event_id::VARCHAR                                 AS event_id,
       manual_hold_flag::VARCHAR                         AS is_manual_hold,
       evnt_hold_appld_manul_flag::VARCHAR               AS is_manual_event_hold_applied,
-      override_aprv_flag::VARCHAR                       AS is_override_approval
+      override_aprv_flag::VARCHAR                       AS is_override_approval,
       sha_enabled_flag::VARCHAR                         AS is_sha_enabled,
-      rc_pob_id::VARCHAR                                AS revenue_contract_performance_obligation_id,
-    FROM zuora_revenue_hold
+      rc_pob_id::VARCHAR                                AS revenue_contract_performance_obligation_id
+      
+    FROM zuora_revenue_revenue_contract_hold
 
 )
 

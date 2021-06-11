@@ -6,6 +6,7 @@ WITH zuora_revenue_waterfall_summary AS (
 ), renamed AS (
 
     SELECT 
+    
       as_of_prd_id::VARCHAR             AS as_of_period_id,
       schd_id::VARCHAR                  AS revenue_contract_schedule_id,
       line_id::VARCHAR                  AS revenue_contract_line_id,
@@ -27,8 +28,9 @@ WITH zuora_revenue_waterfall_summary AS (
       crtd_by::VARCHAR                  AS waterfall_created_by,
       updt_dt::DATE                     AS waterfall_updated_date,
       updt_by::VARCHAR                  AS waterfall_updated_by,
-      incr_updt_dt::DATE                AS incremental_update_date,
-    FROM 
+      incr_updt_dt::DATE                AS incremental_update_date
+    
+    FROM zuora_revenue_waterfall_summary
 
 )
 

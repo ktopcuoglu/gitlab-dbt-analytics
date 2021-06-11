@@ -2,7 +2,7 @@ version: 2
 
 models:
   - name: zuora_revenue_accounting_type_source
-    description: Accounting type for all accounts used in Zuora Revenue.
+    description: '{{ doc("zuora_revenue_accounting_type_source") }}'
     columns:
       - name: accounting_type_id
         tags: ["tdf","zuora"]
@@ -10,7 +10,7 @@ models:
           - not_null
           - unique
   - name: zuora_revenue_approval_detail_source
-    description: Record of approvals required for revenue contracts.
+    description: '{{ doc("zuora_revenue_approval_detail_source") }}'
     columns:
       - name: revenue_contract_approval_id
         tags: ["tdf","zuora"]
@@ -18,7 +18,7 @@ models:
           - not_null
           - unique
   - name: zuora_revenue_book_source
-    description: Accounting books used in Zuora Revenue
+    description: '{{ doc("zuora_revenue_book_source") }}'
     columns:
       - name: book_id
         tags: ["tdf","zuora"]
@@ -26,7 +26,7 @@ models:
           - not_null
           - unique
   - name: zuora_revenue_calendar_source
-    description: Calendars used for recognizing revenue in Zuora Revenue.
+    description: '{{ doc("zuora_revenue_calendar_source") }}'
     columns:
       - name: calendar_id
         tags: ["tdf","zuora"]
@@ -34,7 +34,7 @@ models:
           - not_null
           - unique
   - name: zuora_revenue_manual_journal_entry_source
-    description: Manual journal entry adjustments to revenue contracts.
+    description: '{{ doc("zuora_revenue_manual_journal_entry_source") }}'
     columns: 
       - name: manual_journal_entry_line_id
         tags: ["tdf","zuora"]
@@ -42,7 +42,7 @@ models:
           - not_null
           - unique
   - name: zuora_revenue_organization_source
-    description: The organizations who have revenue to be recognized in Zuora Revenue.
+    description: '{{ doc("zuora_revenue_organization_source") }}'
     columns:
       - name: organization_id
         tags: ["tdf","zuora"]
@@ -50,31 +50,31 @@ models:
           - not_null
           - unique
   - name: zuora_revenue_revenue_contract_bill_source
-    description: Customer bills generated from revenue contracts.
+    description: '{{ doc("zuora_revenue_revenue_contract_bill_source") }}'
     columns:
       - name: invoice_item_id
         tags: ["tdf","zuora"]
         tests:
           - not_null
           - unique
-  - name: zuora_revenue_header_source
-    description: Revenue contract details rolled up from the lines.
+  - name: zuora_revenue_revenue_contract_header_source
+    description: '{{ doc("zuora_revenue_revenue_contract_header_source") }}'
     columns:
       - name: revenue_contract_id
         tags: ["tdf","zuora"]
         tests:
           - not_null
           - unique
-  - name: zuora_revenue_hold_source
-    description: Record of holds placed on revenue contracts.
+  - name: zuora_revenue_revenue_contract_hold_source
+    description: '{{ doc("zuora_revenue_revenue_contract_hold_source") }}'
     columns:
       - name: revenue_contract_hold_id
         tags: ["tdf","zuora"]
         tests:
           - not_null
           - unique
-  - name: zuora_revenue_line_source
-    description: Line items from a revenue contract.
+  - name: zuora_revenue_revenue_contract_line_source
+    description: '{{ doc("zuora_revenue_revenue_contract_line_source") }}'
     columns:
       - name: revenue_contract_line_id
         tags: ["tdf","zuora"]
@@ -82,7 +82,7 @@ models:
           - not_null
           - unique
   - name: zuora_revenue_revenue_contract_performance_obligation_source
-    description: Revenue contracts are split into invoiced items which are further divided into specific performance obligations which must be satisfied in order to recognize the revenue.
+    description: '{{ doc("zuora_revenue_revenue_contract_performance_obligation_source") }}'
     columns:
       - name: revenue_contract_performance_obligation_id
         tags: ["tdf","zuora"]
@@ -90,22 +90,20 @@ models:
           - not_null
           - unique
   - name: zuora_revenue_revenue_contract_schedule_source
-    description: Timeline for recognizing the revenue from revenue contract line items.
+    description: '{{ doc("zuora_revenue_revenue_contract_schedule_source") }}'
     columns:
-      - name: schedule_id
+      - name: revenue_contract_schedule_id
         tags: ["tdf","zuora"]
         tests:
           - not_null
           - unique
-  - name: zuora_revenue_revenue_contract_schedule_deleted
-    description: Deleted scheduled previously used to understand when revenue from contracts would be recognized.
+  - name: zuora_revenue_revenue_contract_schedule_deleted_source
+    description: '{{ doc("zuora_revenue_revenue_contract_schedule_deleted_source") }}'
     columns:
-      - name: schedule_id
+      - name: revenue_contract_schedule_id
         tags: ["tdf","zuora"]
         tests:
           - not_null
           - unique
-  - name: zuora_revenue_account_summary_source
-    description: Derived table from Zuora Revenue containing summarized account data.
-  - name: zuora_revenue_waterfall_summary_source
-    description: Displays snapshots of revenue contract line items by period showing how much has been recognized from each line item and what will be recognized in the future.
+  - name: zuora_revenue_waterfall_source
+    description: '{{ doc("zuora_revenue_waterfall_source") }}'

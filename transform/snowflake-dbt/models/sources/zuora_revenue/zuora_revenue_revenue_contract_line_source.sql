@@ -1,18 +1,19 @@
-WITH zuora_revenue_lines AS (
+WITH zuora_revenue_revenue_contract_line AS (
 
     SELECT *
-    FROM {{source('zuora_revenue','zuora_revenue_line_source')}}
+    FROM {{source('zuora_revenue','zuora_revenue_revenue_contract_line')}}
 
 ), renamed AS (
 
     SELECT 
+    
       id::VARCHAR                                       AS revenue_contract_line_id,
       rc_id::VARCHAR                                    AS revenue_contract_id,
       type::VARCHAR                                     AS revenue_contract_line_type,
       rc_pob_id::VARCHAR                                AS revenue_contract_performance_obligation_id,
       ext_sll_prc::DECIMAL                              AS extended_selling_price,
       ext_fv_prc::DECIMAL                               AS extended_fair_value_price,
-      def_amt:DECIMALR                                  AS deferred_amount,
+      def_amt::DECIMAL                                  AS deferred_amount,
       rec_amt::DECIMAL                                  AS recognized_amount,
       cv_amt::DECIMAL                                   AS carve_amount,
       alctbl_xt_prc::VARCHAR                            AS allocatable_price,
@@ -343,7 +344,8 @@ WITH zuora_revenue_lines AS (
       zero_flip_flag::VARCHAR                           AS is_zero_f,
       pros_decrse_prc_flag::VARCHAR                     AS is_pros_decrse_p,
       defer_prd_id::VARCHAR                             AS deferred_period_id
-    FROM zuora_revenue_lines
+
+    FROM zuora_revenue_revenue_contract_line
 
 )
 

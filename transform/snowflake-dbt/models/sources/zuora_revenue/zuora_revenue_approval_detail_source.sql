@@ -39,7 +39,7 @@ WITH zuora_revenue_approval_detail AS (
     appr_rule_updt_dt::DATE                      AS approval_rule_updated_date, 
     incr_updt_dt::DATE                           AS incremental_update_date, 
     approval_start_date::DATE                    AS approval_start_date, 
-    approval_end_dat::DATE                       AS approval_end_date, 
+    approval_end_date::DATE                      AS approval_end_date, 
     rc_rule_id::VARCHAR                          AS revenue_contract_rule_id, 
     rc_rule_rule_id::VARCHAR                     AS revenue_contract_rule_rule_id, 
     rc_rule_obj_type::VARCHAR                    AS revenue_contract_rule_object_type, 
@@ -50,7 +50,7 @@ WITH zuora_revenue_approval_detail AS (
     rc_rev_rel_appr_flag::VARCHAR                AS is_revenue_contract_revenue_rel_approver, 
     appr_removal_flag::VARCHAR                   AS is_approval_removal, 
     rule_rev_rel_appr_flag::VARCHAR              AS is_rule_revenue_approve, 
-    override_aprv_flag::VARCHAR                  AS is_override_aprv, 
+    override_aprv_flag::VARCHAR                  AS is_override_aprv
 
     FROM zuora_revenue_approval_detail
 
