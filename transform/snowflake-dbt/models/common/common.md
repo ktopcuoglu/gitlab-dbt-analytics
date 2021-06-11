@@ -295,7 +295,7 @@ Fact table representing quotes pulled from the Zuora billing system. These are a
 
 {% enddocs %}
 
-{% docs fct_retention %}
+{% docs fct_retention_parent_account %}
 
 Fact table representing retentions months, currently based on the highest possible level (Parent account). 
 

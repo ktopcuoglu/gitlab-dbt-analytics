@@ -1854,7 +1854,7 @@ models:
           - unique
 
   - name: fct_retention_parent_account
-    description: '{{ doc("fct_retention") }}'
+    description: '{{ doc("fct_retention_parent_account") }}'
     columns:
     - name: fct_retention_id
       description: A unique identifier of the retention record.
