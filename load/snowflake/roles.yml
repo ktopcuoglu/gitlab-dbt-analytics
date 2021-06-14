@@ -1947,6 +1947,13 @@ roles:
         member_of: []
         warehouses: []
 
+    - bnguyen:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+        warehouses:
+            - bnguyen
+
     - brittany:
         member_of:
             - bamboohr
@@ -3378,6 +3385,11 @@ users:
     - bmenegocci:
         can_login: no
         member_of: []
+
+    - bnguyen:
+        can_login: yes
+        member_of:
+            - bnguyen
 
     - brittany:
         can_login: yes
