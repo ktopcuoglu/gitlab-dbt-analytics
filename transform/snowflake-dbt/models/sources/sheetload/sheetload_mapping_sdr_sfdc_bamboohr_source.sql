@@ -6,7 +6,7 @@ WITH source AS (
 ), renamed as (
 
     SELECT
-      user_id::NUMBER                       AS user_id,
+      user_id::VARCHAR                      AS user_id,
       first_name::VARCHAR                   AS first_name,
       last_name::VARCHAR                    AS last_name,
       username::VARCHAR                     AS username,
