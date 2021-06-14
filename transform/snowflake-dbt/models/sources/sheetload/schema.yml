@@ -252,6 +252,15 @@ models:
   - name: metric_name
     tests:
     - not_null
+- name: sheetload_mapping_sdr_sfdc_bamboohr_source
+  description: Mapping table with the sfdc user id of Sales Development Representative (SDR) and their respective BambooHR id.
+  columns:
+  - name: user_id
+    tests:
+    - not_null
+  - name: eeid
+    tests:
+    - not_null
 - name: sheetload_marketing_kpi_benchmarks_source
   description: This is the source of marketing KPI goals to be included in marketing metric reports and dashboards.
   columns:
