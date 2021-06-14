@@ -102,10 +102,11 @@ sources:
       - name: clusters_applications_crossplane
         identifier: gitlab_db_clusters_applications_crossplane
         freshness:
-            warn_after: {count: 2, period: day}
-            error_after: {count: 4, period: day}
+            warn_after: {count: 14, period: day}
+            error_after: {count: 30, period: day}
       - name: clusters_applications_elastic_stacks
         identifier: gitlab_db_clusters_applications_elastic_stacks
+        freshness: null
       - name: clusters_applications_helm
         identifier: gitlab_db_clusters_applications_helm
         freshness:
