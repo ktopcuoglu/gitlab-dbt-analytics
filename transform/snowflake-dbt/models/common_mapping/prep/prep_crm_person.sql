@@ -59,6 +59,7 @@ WITH biz_person AS (
       --info
       person_score,
       contact_title                                 AS title,
+      it_job_title_hierarchy,
       has_opted_out_email,
       email_bounced_date,
       email_bounced_reason,
@@ -98,6 +99,7 @@ WITH biz_person AS (
       --info
       person_score,
       title,
+      it_job_title_hierarchy,
       has_opted_out_email,
       email_bounced_date,
       email_bounced_reason,
@@ -115,12 +117,13 @@ WITH biz_person AS (
     LEFT JOIN biz_person_with_touchpoints
       ON sfdc_leads.lead_id = biz_person_with_touchpoints.bizible_lead_id
     WHERE is_converted = 'FALSE'
+
 )
 
 {{ dbt_audit(
     cte_ref="crm_person_final",
     created_by="@mcooperDD",
-    updated_by="@iweeks",
+    updated_by="@jpeguero",
     created_date="2020-12-08",
-    updated_date="2021-04-22"
+    updated_date="2021-06-07"
 ) }}
