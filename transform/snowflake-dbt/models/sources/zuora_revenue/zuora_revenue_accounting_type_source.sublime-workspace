@@ -1,0 +1,272 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"shee",
+				"sheetload_manual_arr_true_up_allocation_source"
+			],
+			[
+				"client_id",
+				"resource_milestone_event_id"
+			],
+			[
+				"dim_loca",
+				"dim_location_region_id"
+			],
+			[
+				"dim_locato",
+				"dim_location_country_id"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"",
+				"Arithmetic"
+			],
+			[
+				"istall",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 0.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/Users/michellecooper/repos/analytics/transform/snowflake-dbt/models/sources/zuora_revenue/zuora_revenue.md",
+		"/Users/michellecooper/repos/analytics/transform/snowflake-dbt/models/sources/zuora_revenue/zuora_revenue_waterfall_source.sql",
+		"/Users/michellecooper/repos/analytics/transform/snowflake-dbt/models/sources/zuora_revenue/zuora_revenue_revenue_contract_line_source.sql",
+		"/Users/michellecooper/repos/analytics/transform/snowflake-dbt/models/sources/zuora_revenue/zuora_revenue_organization_source.sql",
+		"/Users/michellecooper/repos/analytics/transform/snowflake-dbt/target/compiled/gitlab_snowflake/models/sources/zuora_revenue/zuora_revenue_revenue_contract_line_source.sql",
+		"/Users/michellecooper/repos/analytics/transform/snowflake-dbt/models/sources/zuora_revenue/zuora_revenue_approval_detail_source.sql",
+		"/Users/michellecooper/repos/analytics/transform/snowflake-dbt/models/sources/zuora_revenue/zuora_revenue_revenue_contract_hold_source.sql",
+		"/Users/michellecooper/repos/analytics/transform/snowflake-dbt/models/sources/zuora_revenue/zuora_revenue_manual_journal_entry_source.sql",
+		"/Users/michellecooper/repos/analytics/transform/snowflake-dbt/models/sources/zuora_revenue/zuora_revenue_revenue_contract_header_source.sql",
+		"/Users/michellecooper/repos/analytics/transform/snowflake-dbt/models/sources/zuora_revenue/zuora_revenue_revenue_contract_bill_source.sql",
+		"/Users/michellecooper/repos/analytics/transform/snowflake-dbt/models/sources/zuora_revenue/zuora_revenue_revenue_contract_schedule_deleted_source.sql",
+		"/Users/michellecooper/repos/analytics/transform/snowflake-dbt/models/sources/zuora_revenue/zuora_revenue_revenue_contract_performance_obligation_source.sql",
+		"/Users/michellecooper/repos/analytics/transform/snowflake-dbt/models/sources/zuora_revenue/zuora_revenue_revenue_contract_schedule_source.sql",
+		"/Users/michellecooper/repos/analytics/transform/snowflake-dbt/models/sources/zuora_revenue/zuora_revenue_revenue_contract_schedule.sql",
+		"/Users/michellecooper/repos/analytics/transform/snowflake-dbt/models/sources/zuora_revenue/zuora_revenue_revenue_contract_performance_obligation.sql",
+		"/Users/michellecooper/repos/analytics/transform/snowflake-dbt/models/sources/zuora_revenue/zuora_revenue_accounting_type_source.sql",
+		"/Users/michellecooper/repos/analytics/transform/snowflake-dbt/models/common_mapping/prep/prep_charge.sql",
+		"/Users/michellecooper/repos/analytics/transform/snowflake-dbt/models/common_mapping/prep/prep_recurring_charge.sql",
+		"/Users/michellecooper/repos/analytics/transform/snowflake-dbt/models/sources/zuora_revenue/sources.yml",
+		"/Users/michellecooper/repos/analytics/transform/snowflake-dbt/models/sources/zuora_revenue/schema.yml",
+		"/Users/michellecooper/repos/analytics/transform/snowflake-dbt/models/sources/zuora_revenue/zuora_revenue_calendar_source.sql",
+		"/Users/michellecooper/repos/analytics/transform/snowflake-dbt/models/sources/zuora_revenue/zuora_revenue_book_source.sql",
+		"/Users/michellecooper/repos/analytics/transform/snowflake-dbt/models/sources/zuora_revenue/zuora_revenue_calendar.sql",
+		"/Users/michellecooper/repos/analytics/transform/snowflake-dbt/models/sources/zuora_revenue/zuora_revenue_book.sql",
+		"/Users/michellecooper/repos/analytics/dbt/lib/python3.9/site-packages/pip-21.1.2.dist-info/INSTALLER",
+		"/Users/michellecooper/repos/analytics/transform/snowflake-dbt/models/sources/zuora/schema.yml",
+		"/Users/michellecooper/repos/analytics/transform/snowflake-dbt/models/sources/zuora_revenue",
+		"/Users/michellecooper/repos/analytics/transform/snowflake-dbt/models/common_mapping/prep/schema.yml",
+		"/Users/michellecooper/repos/analytics/transform/snowflake-dbt/models/common_mapping/prep/prep_usage_ping.sql",
+		"/Users/michellecooper/repos/analytics/extract/sheetload/sheets.yml",
+		"/Users/michellecooper/repos/analytics/transform/snowflake-dbt/models/sources/sheetload/sources.yml",
+		"/Users/michellecooper/repos/analytics/transform/snowflake-dbt/models/common_mapping/prep/prep_usage_ping_subscription_mapped_wave_2_3_metrics.sql",
+		"/Users/michellecooper/repos/analytics/transform/snowflake-dbt/models/common/dim_host_instance_type.sql",
+		"/Users/michellecooper/repos/analytics/transform/snowflake-dbt/models/legacy/sheetload/schema.yml",
+		"/Users/michellecooper/repos/analytics/transform/snowflake-dbt/models/legacy/sheetload/sheetload_manual_arr_true_up_allocation.sql",
+		"/Users/michellecooper/repos/analytics/transform/snowflake-dbt/models/sources/sheetload/schema.yml",
+		"/Users/michellecooper/repos/analytics/transform/snowflake-dbt/models/sources/sheetload/sheetload_manual_arr_true_up_allocation_source.sql",
+		"/Users/michellecooper/repos/analytics/transform/snowflake-dbt/target/run/gitlab_snowflake/models/common_mapping/prep/prep_usage_ping.sql",
+		"/Users/michellecooper/repos/analytics/transform/snowflake-dbt/models/common_mapping/map_ip_to_country.sql",
+		"/Users/michellecooper/repos/analytics/transform/snowflake-dbt/models/common/fct_product_usage_wave_1_3_metrics_monthly.sql",
+		"/Users/michellecooper/repos/analytics/transform/snowflake-dbt/models/common/fct_product_usage_wave_1_3_metrics_latest.sql",
+		"/Users/michellecooper/repos/analytics/transform/snowflake-dbt/models/common_mapping/prep/prep_usage_ping_subscription_mapped.sql",
+		"/Users/michellecooper/repos/analytics/transform/snowflake-dbt/models/common_mapping/prep/prep_usage_ping_subscription_mapped_gmau.sql",
+		"/Users/michellecooper/repos/analytics/transform/snowflake-dbt/models/common_mapping/prep/prep_usage_ping_subscription_mapped_smau.sql",
+		"/Users/michellecooper/repos/analytics/transform/snowflake-dbt/models/common/fct_usage_ping_subscription_mapped_gmau.sql",
+		"/Users/michellecooper/repos/analytics/transform/snowflake-dbt/models/common/fct_usage_ping_subscription_mapped_smau.sql",
+		"/Users/michellecooper/repos/analytics/transform/snowflake-dbt/models/marts/pumps/mart_product_usage_wave_1_3_metrics_latest.sql",
+		"/Users/michellecooper/repos/analytics/transform/snowflake-dbt/models/marts/pumps/mart_product_usage_wave_1_3_metrics_monthly.sql",
+		"/Users/michellecooper/repos/analytics/transform/snowflake-dbt/models/sources/version/version_usage_data_source.sql",
+		"/Users/michellecooper/repos/analytics/transform/snowflake-dbt/models/sources/version/sources.yml",
+		"/Users/michellecooper/repos/analytics/transform/snowflake-dbt/models/sources/version/schema.yml",
+		"/Users/michellecooper/repos/analytics/transform/snowflake-dbt/target/run/gitlab_snowflake/models/sources/version/version_usage_data_source.sql",
+		"/Users/michellecooper/repos/analytics/transform/snowflake-dbt/macros/sensitive/macros.yml",
+		"/Users/michellecooper/repos/analytics/transform/snowflake-dbt/macros/common/macros.yml"
+	],
+	"find":
+	{
+		"height": 38.0
+	},
+	"find_in_files":
+	{
+		"height": 101.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"scrollbar_highlights": true,
+		"show_context": true,
+		"use_buffer2": true,
+		"use_gitignore": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 23.0
+	},
+	"input":
+	{
+		"height": 36.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"output.mdpopups":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "zuora_revenue_accounting_type_source.sublime-project",
+	"replace":
+	{
+		"height": 42.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"sheets.",
+				"extract/sheetload/sheets.yml"
+			],
+			[
+				"target/run/gitlab_snowflake/models/common_mapping/prep/prep_usage_ping.sql",
+				"transform/snowflake-dbt/target/run/gitlab_snowflake/models/common_mapping/prep/prep_usage_ping.sql"
+			],
+			[
+				"prep_usage_ping_subscription_mapped",
+				"transform/snowflake-dbt/models/common_mapping/prep/prep_usage_ping_subscription_mapped.sql"
+			],
+			[
+				"map_ip_to_countyr",
+				"transform/snowflake-dbt/models/common_mapping/map_ip_to_country.sql"
+			],
+			[
+				"models/sources/version/version_usage_data_source.sql",
+				"transform/snowflake-dbt/target/run/gitlab_snowflake/models/sources/version/version_usage_data_source.sql"
+			],
+			[
+				"macros.yml",
+				"transform/snowflake-dbt/macros/sensitive/macros.yml"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 408.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

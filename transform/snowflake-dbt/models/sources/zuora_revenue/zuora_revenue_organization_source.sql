@@ -11,12 +11,12 @@ WITH zuora_revenue_organization AS (
       org_id::VARCHAR           AS organization_id,
       org_name::VARCHAR         AS organization_name,
       crtd_by::VARCHAR          AS organization_created_by,
-      crtd_dt::DATE             AS organization_created_date,
+      crtd_dt::DATETIME         AS organization_created_date,
       updt_by::VARCHAR          AS organization_updated_by,
-      updt_dt::DATE             AS organization_updated_date,
+      updt_dt::DATETIME         AS organization_updated_date,
       client_id::VARCHAR        AS client_id,
       crtd_prd_id::VARCHAR      AS organization_created_period_id,
-      incr_updt_dt::DATE        AS incremental_update_date,
+      incr_updt_dt::DATETIME    AS incremental_update_date,
       org_code::VARCHAR         AS organization_code,
       entity_id::VARCHAR        AS entity_id
 

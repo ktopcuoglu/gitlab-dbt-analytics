@@ -13,7 +13,7 @@ WITH zuora_revenue_book AS (
       type::VARCHAR                 AS book_type,
       rc_prefix::VARCHAR            AS revenue_contract_prefix,
       open_prd_id::VARCHAR          AS book_open_period_id,
-      start_date::DATE              AS book_start_date,
+      start_date::DATETIME          AS book_start_date,
       end_date::VARCHAR             AS book_end_date,
       asst_segments::VARCHAR        AS asset_segment,
       lblty_segments::VARCHAR       AS liabilty_segment,
@@ -26,11 +26,11 @@ WITH zuora_revenue_book AS (
       soft_freeze_flag::VARCHAR     AS is_soft_freeze,
       client_id::VARCHAR            AS client_id,
       crtd_prd_id::VARCHAR          AS book_created_period_id,
-      crtd_dt::DATE                 AS book_created_date,
+      crtd_dt::DATETIME             AS book_created_date,
       crtd_by::VARCHAR              AS book_created_by,
-      updt_dt::DATE                 AS book_updated_date,
+      updt_dt::DATETIME             AS book_updated_date,
       updt_by::VARCHAR              AS book_updated_by,
-      incr_updt_dt::DATE            AS incremental_update_date,
+      incr_updt_dt::DATETIME        AS incremental_update_date,
       enabled_flag::VARCHAR         AS is_enabled
 
     FROM zuora_revenue_book
