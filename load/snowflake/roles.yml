@@ -1952,7 +1952,7 @@ roles:
             - analyst_finance
             - bamboohr_analytics
         warehouses:
-            - bnguyen
+            - analyst_xs
 
     - brittany:
         member_of:
