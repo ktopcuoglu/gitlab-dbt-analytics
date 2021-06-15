@@ -101,4 +101,3 @@
       last_changed
 
     FROM {{ ref('mart_product_usage_free_users_metrics_monthly')}}
-)
