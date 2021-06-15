@@ -17,7 +17,7 @@ A subset of pump_marketing_contact, with all of the same columns, that supports 
 {% enddocs %}
 
 {% docs pump_product_usage_free_user_metrics_monthly %}
-This table unions the sets of all Self-Managed and SaaS **free users**. The data from this table will be used for Gainsight Customer Product Insights.
+This table pulls in data from `mart_product_usage_free_users_metrics_monthly` which contains the sets of all Self-Managed and SaaS **free users**. The data from this table  pumped to Salesforce will be used for Customer Product Insights.
 
 The grain of this table is namespace || uuid-hostname per month.
 
