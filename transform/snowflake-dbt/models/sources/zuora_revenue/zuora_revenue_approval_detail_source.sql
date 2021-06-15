@@ -6,6 +6,7 @@ WITH zuora_revenue_approval_detail AS (
 ), renamed AS (
 
     SELECT
+    
     rc_appr_id::VARCHAR                          AS revenue_contract_approval_id, 
     rc_id::VARCHAR                               AS revenue_contract_id, 
     approval_obj_type::VARCHAR                   AS approval_object_type, 

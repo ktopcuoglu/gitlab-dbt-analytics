@@ -8,7 +8,7 @@ WITH zuora_revenue_revenue_contract_hold AS (
     SELECT 
 
       rc_hold_id::VARCHAR                               AS revenue_contract_hold_id,
-      rc_id::VARCHAR                                    AS revenue_conctract__id,
+      rc_id::VARCHAR                                    AS revenue_conctract_id,
       rc_hold_applied_by::VARCHAR                       AS revenue_contract_hold_applied_by_id,
       rc_hold_applied_by_name::VARCHAR                  AS revenue_contract_hold_applied_by_name,
       rc_hold_applied_prd_id::VARCHAR                   AS revenue_contract_hold_applied_period_id,
