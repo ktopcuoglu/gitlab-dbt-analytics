@@ -53,6 +53,7 @@
       dim_crm_person.status,
       dim_crm_person.lead_source,
       dim_crm_person.source_buckets,
+      dim_crm_person.crm_partner_id,
       dim_bizible_marketing_channel_path.bizible_marketing_channel_path_name,
       dim_sales_segment.sales_segment_name,
       dim_sales_segment.sales_segment_grouped,

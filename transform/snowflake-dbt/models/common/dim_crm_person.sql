@@ -21,6 +21,7 @@ WITH crm_person AS (
       dim_crm_account_id,
       reports_to_id,
       dim_crm_user_id,
+      crm_partner_id,
 
       --info
       person_score,

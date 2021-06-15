@@ -75,6 +75,7 @@ WITH source AS (
         status                                                  AS lead_status,
         last_utm_campaign__c                                    AS last_utm_campaign, 
         last_utm_content__c                                     AS last_utm_content,
+        crm_partner_id__c                                       AS crm_partner_id,
         {{  sfdc_source_buckets('leadsource') }}
 
         -- territory success planning info
