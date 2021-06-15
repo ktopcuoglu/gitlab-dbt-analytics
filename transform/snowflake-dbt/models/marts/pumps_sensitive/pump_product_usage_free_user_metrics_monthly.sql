@@ -100,4 +100,4 @@
       -- METADATA COLUMNS FOR USE IN PUMP (NOT INTEGRATION)
       last_changed
 
-    FROM {{ ref('mart_product_usage_free_users_metrics_monthly')}}
+    FROM {{ ref('mart_product_usage_free_user_metrics_monthly')}}
