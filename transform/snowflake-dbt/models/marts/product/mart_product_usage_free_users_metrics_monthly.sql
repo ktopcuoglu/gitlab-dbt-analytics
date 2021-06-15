@@ -214,6 +214,7 @@
         'project_management_issue_milestone_changed_28_days_user',
         'project_management_issue_iteration_changed_28_days_user',
     ]
+) }}
 
 {{ dbt_audit(
     cte_ref="final",
