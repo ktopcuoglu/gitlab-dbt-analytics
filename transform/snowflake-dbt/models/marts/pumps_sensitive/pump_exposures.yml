@@ -16,3 +16,18 @@ exposures:
     owner:
       name: Nout Boctor-Smith
       email: gitlab_id@nbsmith
+
+
+  - name: pump_product_usage_free_user_metrics_monthly
+    type: application
+    maturity: low
+    description: >
+      Send to Salesforce for Customer Product Insights
+    
+    depends_on:
+      - ref('mart_product_usage_free_user_metrics_monthly')
+      - ref('fact_product_usage_free_user_metrics_monthly')
+      
+    owner:
+      name: Sushma Nalamaru
+      email: snalamaru@gitlab.com
