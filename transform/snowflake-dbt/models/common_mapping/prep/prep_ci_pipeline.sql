@@ -21,7 +21,7 @@
       prep_project.dim_namespace_id,
       prep_project.ultimate_parent_namespace_id,
       prep_user.dim_user_id,
-      dim_date.date_id                                        AS event_creation_dim_date_id,
+      dim_date.date_id                                        AS ci_pipeline_creation_dim_date_id,
       IFNULL(dim_namespace_plan_hist.dim_plan_id, 34)         AS dim_plan_id,
       merge_request_id,
 
@@ -29,7 +29,7 @@
       gitlab_dotcom_ci_pipelines_source.started_at, 
       gitlab_dotcom_ci_pipelines_source.committed_at,
       gitlab_dotcom_ci_pipelines_source.finished_at, 
-      gitlab_dotcom_ci_pipelines_source.ci_pipeline_duration, 
+      gitlab_dotcom_ci_pipelines_source.ci_pipeline_duration  AS ci_pipeline_duration_in_s, 
 
       gitlab_dotcom_ci_pipelines_source.status, 
       gitlab_dotcom_ci_pipelines_source.ref,
@@ -41,7 +41,7 @@
       gitlab_dotcom_ci_pipelines_source.ci_pipeline_source, 
       gitlab_dotcom_ci_pipelines_source.config_source, 
       gitlab_dotcom_ci_pipelines_source.is_protected, 
-      gitlab_dotcom_ci_pipelines_source.failure_reason        AS failure_reason_id,
+      gitlab_dotcom_ci_pipelines_source.failure_reason          AS failure_reason_id,
       {{ map_ci_pipeline_failure_reason('failure_reason_id') }} AS failure_reason,
       gitlab_dotcom_ci_pipelines_source.ci_pipeline_iid
     FROM gitlab_dotcom_ci_pipelines_source
@@ -51,6 +51,7 @@
         AND gitlab_dotcom_ci_pipelines_source.created_at < dim_namespace_plan_hist.valid_to
     LEFT JOIN prep_user ON gitlab_dotcom_ci_pipelines_source.user_id = prep_user.dim_user_id
     LEFT JOIN dim_date ON TO_DATE(gitlab_dotcom_ci_pipelines_source.created_at) = dim_date.date_day
+    WHERE gitlab_dotcom_ci_pipelines_source.project_id IS NOT  NULL
 
 )
 

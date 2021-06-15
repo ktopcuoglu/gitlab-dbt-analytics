@@ -388,3 +388,9 @@ Table containing **free** Self-Managed users in preparation for free user usage 
 The grain of this table is one row per uuid-hostname combination per month.
 
 {% enddocs %}
+
+{% docs preep_ci_piipeline %}
+
+Creates a base view of CI pipelines. More info about CI pipelines [is available here](https://docs.gitlab.com/ee/ci/pipelines/)
+
+{% enddocs %}

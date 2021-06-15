@@ -593,3 +593,15 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 A fact table that contains only the metrics that is a UMAU, SMAU, or GMAU metric that appears on the [Stages and Groups Performance Indicator handbook page](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/)
 
 {% enddocs %}
+
+{% docs dim_ci_pipeline %}
+
+A dim table that contains all CI Pipelines run on Gitlab.com application.
+
+Easy joins availabl with:
+
+* dim_project through `dim_project_id`
+* dim_namespace through `dim_namespace_id` and `ultinate_parent_namespace_id`
+* dim_date through `ci_pipeline_creation_dim_date_id`
+
+{% enddocs %}
