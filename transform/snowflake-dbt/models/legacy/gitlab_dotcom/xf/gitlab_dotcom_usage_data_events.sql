@@ -100,6 +100,15 @@
     "is_representative_of_stage": "False"
   },
   {
+    "event_name": "successful_ci_pipelines",
+    "source_cte_name": "successful_ci_pipelines",
+    "user_column_name": "user_id",
+    "key_to_parent_project": "project_id",
+    "primary_key": "ci_pipeline_id",
+    "stage_name": "verify",
+    "is_representative_of_stage": "False"
+  },
+  {
     "event_name": "clusters_applications_helm",
     "source_table_name": "gitlab_dotcom_clusters_applications_helm_xf",
     "user_column_name": "user_id",
@@ -578,6 +587,12 @@
     SELECT *
     FROM {{ ref('gitlab_dotcom_services') }}
     WHERE service_type != 'GitlabIssueTrackerService'
+
+), successful_ci_pipelines AS (
+ 
+    SELECT *
+    FROM {{ ref('gitlab_dotcom_ci_pipelines') }}
+    WHERE failure_reason IS NULL
 
 ), terraform_reports AS (
 
