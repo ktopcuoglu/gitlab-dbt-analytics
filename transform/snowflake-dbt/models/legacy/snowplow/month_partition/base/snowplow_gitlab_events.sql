@@ -142,11 +142,7 @@ WITH filtered_source as (
       tr_total_base,
       true_tstamp,
       txn_id,
-      CASE
-        WHEN event_name IN ('submit_form', 'focus_form', 'change_form')
-          THEN 'masked'
-        ELSE unstruct_event
-      END AS unstruct_event,
+      unstruct_event,
       user_fingerprint,
       user_id,
       user_ipaddress,
@@ -186,6 +182,12 @@ WITH filtered_source as (
             v_tracker LIKE 'rb%'
           )
         )
+        -- removing it after approval from @rparker in this issue: https://gitlab.com/gitlab-data/analytics/-/issues/9238
+        AND CASE
+            WHEN event_name IN ('submit_form', 'focus_form', 'change_form') AND TRY_TO_TIMESTAMP(derived_tstamp) < '2021-05-26'
+              THEN FALSE
+            ELSE TRUE
+      END
 
 )
 
