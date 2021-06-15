@@ -182,7 +182,8 @@ WITH filtered_source as (
             v_tracker LIKE 'rb%'
           )
         )
-        -- removing it after approval from @rparker in this issue: https://gitlab.com/gitlab-data/analytics/-/issues/9238
+        -- removing it after approval from @rparker in this issue: https://gitlab.com/gitlab-data/analytics/-/issues/9112
+
         AND CASE
             WHEN event_name IN ('submit_form', 'focus_form', 'change_form') AND TRY_TO_TIMESTAMP(derived_tstamp) < '2021-05-26'
               THEN FALSE
