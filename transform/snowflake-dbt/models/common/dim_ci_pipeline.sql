@@ -20,7 +20,7 @@ WITh prep AS (
       started_at, 
       committed_at,
       finished_at, 
-      ci_pipeline_duration, 
+      ci_pipeline_duration_in_s, 
 
       status, 
       ref,
