@@ -44,7 +44,7 @@ WITH project_snapshot_monthly_all AS (
       parent_id,
       upstream_lineage,
       ultimate_parent_id
-    FROM {{ ref('gitlab_dotcom_namespace_lineage_prep') }}
+    FROM {{ ref('prep_namespace_lineage') }}
 
 ), namespace_snapshots_monthly_all AS (
 

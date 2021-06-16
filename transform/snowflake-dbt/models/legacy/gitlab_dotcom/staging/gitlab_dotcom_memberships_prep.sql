@@ -27,7 +27,7 @@ WITH users AS ( -- active, non-bot users
 ), namespace_lineage AS (
 
     SELECT *
-    FROM {{ ref('gitlab_dotcom_namespace_lineage_prep') }}
+    FROM {{ ref('prep_namespace_lineage') }}
 
 ), projects AS (
 

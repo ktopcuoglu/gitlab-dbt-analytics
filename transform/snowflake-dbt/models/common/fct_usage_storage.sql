@@ -42,7 +42,7 @@ WITH project_statistics_snapshot_monthly_all AS (
       DATE_TRUNC('month', CURRENT_DATE)                                         AS snapshot_month,
       namespace_id,
       ultimate_parent_id
-    FROM {{ ref('gitlab_dotcom_namespace_lineage_prep') }}
+    FROM {{ ref('prep_namespace_lineage') }}
 
 ), namespace_storage_statistic_monthly_all AS (
 
