@@ -1554,7 +1554,7 @@ models:
     description: '{{ doc("prep_event") }}'
     columns:
       - name: dim_event_id
-        author:
+        tests:
           - unique
           - not_null
       - name: dim_user_id
@@ -1565,6 +1565,6 @@ models:
     description: '{{ doc("prep_user") }}'
     columns:
       - name: dim_user_id
-        author:
+        tests:
           - unique
           - not_null
