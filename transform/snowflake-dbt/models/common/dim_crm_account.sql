@@ -32,6 +32,7 @@ WITH base AS (
       parent_crm_account_tsp_area        AS parent_crm_account_tsp_area,
       parent_crm_account_gtm_strategy    AS parent_crm_account_gtm_strategy,
       parent_crm_account_focus_account   AS parent_crm_account_focus_account,
+      partners_signed_contract_date      AS partners_signed_contract_date,
       record_type_id                     AS record_type_id,
       federal_account                    AS federal_account,
       is_jihu_account                    AS is_jihu_account,
