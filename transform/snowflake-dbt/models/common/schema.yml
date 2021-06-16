@@ -2699,6 +2699,22 @@ models:
           - unique
         tags: ["tdf", "common", "sales_funnel"]
       - name: marketing_channel_name
+  
+  - name: dim_namespace_hist
+    description: '{{ doc("dim_namespace_hist") }}'
+    columns:
+      - name: namespace_snapshot_id
+        tests:
+          - not_null
+          - unique
+      - name: dim_namespace_id
+        tests:
+          - not_null
+      - name: valid_from
+        tests:
+          - not_null
+      - name: valid_to
+
   - name: dim_namespace_plan_hist
     description: '{{ doc("dim_namespace_plan_hist") }}'
     columns:
