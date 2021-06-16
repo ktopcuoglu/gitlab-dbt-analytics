@@ -290,6 +290,23 @@ models:
         description: Default storage limit (per project reposity) for new all namespaces when no paid plan has been purchased.
         tests:
           - not_null
+          
+  - name: prep_gitlab_dotcom_audit_event_details_clean
+    description: '{{ doc("prep_gitlab_dotcom_audit_event_details_clean") }}'
+    columns:
+      - name: audit_event_id
+        tests:
+          - not_null
+      - name: key_name
+        tests:
+          - not_null
+      - name: key_value
+        tests:
+          - not_null
+      - name: created_at
+        tests:
+          - not_null
+          
   - name: prep_gitlab_dotcom_plan
     description: '{{ doc("prep_gitlab_dotcom_plan") }}'
     columns:
@@ -297,6 +314,7 @@ models:
         tests:
           - not_null
           - unique
+
   - name: prep_recurring_charge_subscription_monthly
     description: '{{ doc("prep_recurring_charge_subscription_monthly") }}'
     columns:
