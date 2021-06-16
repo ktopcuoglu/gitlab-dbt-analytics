@@ -40,12 +40,12 @@
       sm_subscriptions.dim_subscription_id_original,
       sm_subscriptions.dim_billing_account_id,
       sm_subscriptions.snapshot_month,
-      {{ get_date_id('sm_subscriptions.snapshot_month') }}          AS snapshot_date_id,
-      seat_link.report_date                                         AS seat_link_report_date,
-      {{ get_date_id('seat_link.report_date') }}                    AS seat_link_report_date_id,
+      {{ get_date_id('sm_subscriptions.snapshot_month') }}                                    AS snapshot_date_id,
+      seat_link.report_date                                                                   AS seat_link_report_date,
+      {{ get_date_id('seat_link.report_date') }}                                              AS seat_link_report_date_id,
       usage_ping.dim_usage_ping_id,
       usage_ping.ping_created_at,
-      {{ get_date_id('usage_ping.ping_created_at') }}               AS ping_created_date_id,
+      {{ get_date_id('usage_ping.ping_created_at') }}                                         AS ping_created_date_id,
       usage_ping.uuid,
       usage_ping.hostname,
       usage_ping.instance_type,
@@ -54,9 +54,10 @@
       usage_ping.cleaned_version,
       usage_ping.dim_location_country_id,
       -- Wave 1
-      usage_ping.instance_user_count / seat_link.license_user_count    AS license_utilization,
-      usage_ping.instance_user_count                                   AS active_user_count,
-      seat_link.max_historical_user_count,
+      DIV0(usage_ping.license_billable_users, seat_link.license_user_count)                   AS license_utilization,
+      usage_ping.license_billable_users                                                       AS billable_user_count,
+      usage_ping.instance_user_count                                                          AS active_user_count,
+      IFNULL(usage_ping.historical_max_users, seat_link.max_historical_user_count)            AS max_historical_user_count,
       seat_link.license_user_count,
       -- Wave 2 & 3
       usage_ping.umau_28_days_user,
@@ -151,17 +152,17 @@
       usage_ping.project_management_issue_iteration_changed_28_days_user,
       -- Data Quality Flags
       IFF(usage_ping.instance_user_count != seat_link.active_user_count,
-          usage_ping.instance_user_count, NULL)                     AS instance_user_count_not_aligned,
+          usage_ping.instance_user_count, NULL)                                               AS instance_user_count_not_aligned,
       IFF(usage_ping.historical_max_users != seat_link.max_historical_user_count,
-          usage_ping.historical_max_users, NULL)                    AS historical_max_users_not_aligned,
-      seat_link.is_subscription_in_zuora                            AS is_seat_link_subscription_in_zuora,
-      seat_link.is_rate_plan_in_zuora                               AS is_seat_link_rate_plan_in_zuora,
-      seat_link.is_active_user_count_available                      AS is_seat_link_active_user_count_available,
-      usage_ping.is_license_mapped_to_subscription                  AS is_usage_ping_license_mapped_to_subscription,
-      usage_ping.is_license_subscription_id_valid                   AS is_usage_ping_license_subscription_id_valid,
+          usage_ping.historical_max_users, NULL)                                              AS historical_max_users_not_aligned,
+      seat_link.is_subscription_in_zuora                                                      AS is_seat_link_subscription_in_zuora,
+      seat_link.is_rate_plan_in_zuora                                                         AS is_seat_link_rate_plan_in_zuora,
+      seat_link.is_active_user_count_available                                                AS is_seat_link_active_user_count_available,
+      usage_ping.is_license_mapped_to_subscription                                            AS is_usage_ping_license_mapped_to_subscription,
+      usage_ping.is_license_subscription_id_valid                                             AS is_usage_ping_license_subscription_id_valid,
       IFF(usage_ping.ping_created_at IS NOT NULL
             OR seat_link.report_date IS NOT NULL,
-          TRUE, FALSE)                                              AS is_data_in_subscription_month
+          TRUE, FALSE)                                                                        AS is_data_in_subscription_month
     FROM sm_subscriptions
     LEFT JOIN usage_ping
       ON sm_subscriptions.dim_subscription_id = usage_ping.dim_subscription_id
@@ -172,6 +173,8 @@
     LEFT JOIN smau
       ON sm_subscriptions.dim_subscription_id = smau.dim_subscription_id
       AND sm_subscriptions.snapshot_month = smau.snapshot_month
+      AND usage_ping.uuid = smau.uuid
+      AND usage_ping.hostname = smau.hostname
   
 )
 
@@ -180,5 +183,5 @@
     created_by="@ischweickartDD",
     updated_by="@ischweickartDD",
     created_date="2021-02-08",
-    updated_date="2021-05-24"
+    updated_date="2021-06-10"
 ) }}
