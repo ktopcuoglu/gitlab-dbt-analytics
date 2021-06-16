@@ -47,6 +47,12 @@ This model captures a historical record of GitLab's default application settings
 
 {% enddocs %}
 
+{% docs prep_gitlab_dotcom_audit_event_details_clean %}
+
+Creates a union of audit event keys from `gitlab_dotcom_audit_event_details` and `gitlab_dotcom_audit_event_details_pii`.
+
+{% enddocs %}
+
 {% docs prep_gitlab_dotcom_plan %}
 
 Creates a base view with generated keys for the plans shared dimension and fact and references in facts.
