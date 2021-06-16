@@ -594,7 +594,7 @@ A fact table that contains only the metrics that is a UMAU, SMAU, or GMAU metric
 
 {% enddocs %}
 
-{% docs dim_build %}
+{% docs dim_ci_build %}
 
 Dimension table that contains all CI build data.
 
