@@ -12,6 +12,15 @@ WITH dim_date AS (
     SELECT *
     FROM {{ ref('dim_date') }}
 
+), prep_charge AS (
+
+    SELECT
+      prep_charge.*,
+      charge_created_date   AS valid_from,
+      '9999-12-31'          AS valid_to
+    FROM {{ ref('prep_charge') }}
+    WHERE rate_plan_charge_name = 'manual true up allocation'
+
 ), snapshot_dates AS (
 
    SELECT *
@@ -94,7 +103,27 @@ WITH dim_date AS (
          PARTITION BY subscription_name, snapshot_dates.date_actual
          ORDER BY dbt_valid_from DESC) = 1
 
-), rate_plan_charge_filtered AS (
+), manual_charges AS (
+
+    SELECT
+      date_id                                                   AS snapshot_id,
+      dim_billing_account_id                                    AS billing_account_id,
+      dim_crm_account_id                                        AS crm_account_id,
+      dim_subscription_id                                       AS subscription_id,
+      subscription_name,
+      dim_product_detail_id                                     AS product_details_id,
+      mrr,
+      delta_tcv,
+      unit_of_measure,
+      quantity,
+      effective_start_month,
+      effective_end_month
+    FROM prep_charge
+    INNER JOIN snapshot_dates
+      ON snapshot_dates.date_actual >= prep_charge.valid_from
+      AND snapshot_dates.date_actual < {{ coalesce_to_infinity('prep_charge.valid_to') }}
+
+), non_manual_charges AS (
 
     SELECT
       zuora_rate_plan_charge_spined.snapshot_id,
@@ -120,6 +149,16 @@ WITH dim_date AS (
       ON zuora_account_spined.account_id = zuora_subscription_spined.account_id
         AND zuora_account_spined.snapshot_id = zuora_subscription_spined.snapshot_id
 
+), combined_charges AS (
+
+    SELECT *
+    FROM manual_charges
+
+    UNION ALL
+
+    SELECT *
+    FROM non_manual_charges
+
 ), mrr_month_by_month AS (
 
     SELECT
@@ -133,21 +172,21 @@ WITH dim_date AS (
       SUM(mrr)                                             AS mrr,
       SUM(mrr)* 12                                         AS arr,
       SUM(quantity)                                        AS quantity,
-      ARRAY_AGG(rate_plan_charge_filtered.unit_of_measure) AS unit_of_measure
-    FROM rate_plan_charge_filtered
+      ARRAY_AGG(unit_of_measure)                           AS unit_of_measure
+    FROM combined_charges
     INNER JOIN dim_date
-      ON rate_plan_charge_filtered.effective_start_month <= dim_date.date_actual
-      AND (rate_plan_charge_filtered.effective_end_month > dim_date.date_actual
-        OR rate_plan_charge_filtered.effective_end_month IS NULL)
+      ON combined_charges.effective_start_month <= dim_date.date_actual
+      AND (combined_charges.effective_end_month > dim_date.date_actual
+        OR combined_charges.effective_end_month IS NULL)
       AND dim_date.day_of_month = 1
     {{ dbt_utils.group_by(n=7) }}
 
 ), final AS (
 
     SELECT
-        {{ dbt_utils.surrogate_key(['snapshot_id', 'date_id', 'subscription_name', 'product_details_id']) }}
+        {{ dbt_utils.surrogate_key(['snapshot_id', 'date_id', 'subscription_name', 'product_details_id', 'mrr']) }}
           AS mrr_snapshot_id,
-        {{ dbt_utils.surrogate_key(['date_id', 'subscription_name', 'product_details_id']) }}
+        {{ dbt_utils.surrogate_key(['date_id', 'subscription_name', 'product_details_id', 'mrr']) }}
           AS mrr_id,
         snapshot_id,
         date_id,
@@ -166,8 +205,7 @@ WITH dim_date AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@msendal",
-    updated_by="@msendal",
+    updated_by="@iweeks",
     created_date="2020-09-29",
-    updated_date="2020-09-29",
+    updated_date="2021-06-10",
  	) }}
-

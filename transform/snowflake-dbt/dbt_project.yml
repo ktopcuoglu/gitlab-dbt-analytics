@@ -262,6 +262,10 @@ models:
         +schema: zuora
         +tags: ["zuora"]
 
+      zuora_revenue:
+        +schema: zuora_revenue
+        +tags: ["zuora_revenue"]
+
     # ------------------
     # Common
     # ------------------
