@@ -2311,6 +2311,12 @@ roles:
         warehouses:
             - analyst_xs            
 
+    - jbrennan:
+        member_of:
+            - analyst_sales
+        warehouses:
+            - analyst_xs 
+
     - jjackson:
         member_of:
             - snowplow
@@ -3552,6 +3558,11 @@ users:
         can_login: yes
         member_of:
             - jameson
+
+    - jbrennan:
+        can_login: yes
+        member_of:
+            - jbrennan
 
     - jjackson:
         can_login: yes
