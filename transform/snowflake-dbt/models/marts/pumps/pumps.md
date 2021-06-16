@@ -36,18 +36,6 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
-<<<<<<< HEAD
-=======
-{% docs mart_product_usage_free_user_metrics_monthly %}
-This table unions the sets of all Self-Managed and SaaS **free users**. The data from this table will be used for Customer Product Insights.
-
-The grain of this table is namespace || uuid-hostname per month.
-
-Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
-
-{% enddocs %}
-
->>>>>>> f70b30a003d6e07299e8dc49fe8681aca28e4539
 {% docs mart_product_usage_paid_user_metrics_monthly %}
 This table unions the sets of all Self-Managed and SaaS **paid users**. The data from this table will be used for Customer Product Insights.
 
