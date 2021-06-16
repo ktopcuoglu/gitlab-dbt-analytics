@@ -12,7 +12,7 @@
     ('members_source', 'gitlab_dotcom_members_source'),
     ('projects_source', 'gitlab_dotcom_projects_source'),
     ('audit_events', 'gitlab_dotcom_audit_events_source'),
-    ('audit_event_details_clean', 'gitlab_dotcom_audit_event_details_clean')
+    ('audit_event_details_clean', 'prep_gitlab_dotcom_audit_event_details_clean')
 ]) }}
 
 , members AS (
