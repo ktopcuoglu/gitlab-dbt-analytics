@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 from airflow import DAG
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
 from airflow_utils import (
+    DATA_IMAGE,
     clone_and_setup_extraction_cmd,
     gitlab_defaults,
     gitlab_pod_env_vars,
@@ -63,7 +64,7 @@ dag = DAG(
 # Task 1
 values_run = KubernetesPodOperator(
     **gitlab_defaults,
-    image="registry.gitlab.com/gitlab-data/data-image/data-image:v0.0.12",
+    image=DATA_IMAGE,
     task_id="value-page-extract",
     name="value-page-extract",
     secrets=[

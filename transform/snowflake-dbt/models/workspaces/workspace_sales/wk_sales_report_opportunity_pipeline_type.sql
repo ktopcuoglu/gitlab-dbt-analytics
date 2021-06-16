@@ -131,7 +131,7 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
         is_lost                         AS end_is_lost
     FROM sfdc_opportunity_snapshot_history_xf        
     WHERE (snapshot_day_of_fiscal_quarter_normalised = 90 
-          OR snapshot_date = dateadd(day,-1,CURRENT_DATE))
+          OR snapshot_date = CURRENT_DATE)
 
 ), pipeline_type AS (
 
@@ -144,6 +144,9 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
         pipe_start.starting_net_arr,
         pipe_start.starting_stage,
         pipe_start.starting_close_date,
+        pipe_start.starting_is_open,
+        pipe_start.starting_is_won,
+        pipe_start.starting_is_lost,
 
         pipe_end.end_forecast_category,
         pipe_end.end_net_arr,
@@ -240,7 +243,20 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
           OR pipe_created.opportunity_id IS NOT NULL        
           OR pipe_pull.opportunity_id IS NOT NULL   
         )
-  GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17
+  GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20
+
+-- last day within snapshot of a particular opportunity
+), pipeline_last_day_in_snapshot_quarter AS (
+
+  SELECT 
+    pipeline_type.opportunity_id,
+    pipeline_type.close_fiscal_quarter_date,
+    history.net_arr
+  FROM pipeline_type
+    INNER JOIN sfdc_opportunity_snapshot_history_xf history
+      ON history.opportunity_id = pipeline_type.opportunity_id
+      AND history.snapshot_date = pipeline_type.max_snapshot_date
+
 
 ), report_opportunity_pipeline_type AS (
 
@@ -266,10 +282,9 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
         END                                                                     AS is_closed_in_quarter_flag,
         CASE 
             WHEN p.close_fiscal_quarter_date = o.close_fiscal_quarter_date
-                AND o.is_won = 1 
+                AND o.is_won = 1
                     THEN '1. Closed Won'
-            WHEN p.close_fiscal_quarter_date = o.close_fiscal_quarter_date
-                AND o.is_lost = 1
+            WHEN p.end_is_lost = 1
                 AND o.is_renewal = 1
                     THEN '5. Churned'
             WHEN p.close_fiscal_quarter_date = o.close_fiscal_quarter_date
@@ -293,7 +308,10 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
         CASE
           WHEN pipe_resolution LIKE ANY ('%Closed%','%Duplicate%') 
             THEN p.end_close_date
-          WHEN pipe_resolution LIKE ANY ('%2%Slipped%','%3%Pushed%','%Open%')
+          WHEN pipe_resolution LIKE ANY ('%Churned%')
+            AND p.close_fiscal_quarter_date = o.close_fiscal_quarter_date
+            THEN p.end_close_date
+          WHEN pipe_resolution LIKE ANY ('%2%Slipped%','%3%Pushed%','%Open%','%Churned%')
             THEN p.max_snapshot_date
           ELSE null
         END                                                                     AS pipe_resolution_date,
@@ -305,7 +323,7 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
         COALESCE(p.starting_forecast_category,p.pipeline_created_forecast_category)         AS beg_forecast_category,
         COALESCE(p.starting_close_date,p.pipeline_created_close_date)                       AS beg_close_date,
 
-        p.end_net_arr,
+        last_day.net_arr                                                        AS end_net_arr,
         p.end_booked_net_arr,                                                   
         p.end_stage,  
         p.end_stage_category,                                              
@@ -316,7 +334,7 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
         p.end_is_open,
         o.is_renewal                                                            AS end_is_renewal,
 
-        p.end_net_arr - beg_net_arr                                             AS delta_net_arr,
+        last_day.net_arr - beg_net_arr                                          AS delta_net_arr,
 
         ----------
         -- extra fields for trouble shooting
@@ -344,6 +362,9 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
   CROSS JOIN today_date 
   INNER JOIN sfdc_opportunity_xf o
       ON o.opportunity_id = p.opportunity_id
+  LEFT JOIN pipeline_last_day_in_snapshot_quarter last_day
+    ON last_day.opportunity_id = p.opportunity_id
+    AND p.close_fiscal_quarter_date = last_day.close_fiscal_quarter_date
 ) 
 
 SELECT *
