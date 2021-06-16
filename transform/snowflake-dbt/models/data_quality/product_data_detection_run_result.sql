@@ -1,55 +1,30 @@
-{{
-    config({
-        "materialized": "incremental",
-        "unique_key": "rule_run_id"
-        "schema": "data_quality"
-    })
+{{config({ 
+    "schema": "data_quality" 
+ })
 }}
 
 
-{{ simple_cte([
-    ('instance_types', 'dim_host_instance_type')
-]) }}
+WITH detection_rule AS (
 
-, prep_usage_ping AS (
+ SELECT * 
+ FROM {{ ref('product_data_detection_run_result') }}
 
-    SELECT *
-    FROM {{ ref('prep_usage_ping_subscription_mapped') }}
-    WHERE license_md5 IS NOT NULL
+), rule_run_detail AS ( 
+    
+    SELECT * 
+    FROM {{ ref('product_data_detection_run_detail') }}
 
-), final AS (
-
-    SELECT
-
-    {{ default_usage_ping_information() }}
-
-    instance_types.instance_type,
-    -- subscription_info
-    is_usage_ping_license_in_licenseDot,
-    dim_license_id,
-    dim_subscription_id,
-    is_license_mapped_to_subscription,
-    is_license_subscription_id_valid,
-    prep_usage_ping.dim_crm_account_id,
-    dim_parent_crm_account_id,
-    dim_location_country_id,
-
-    {{ sales_wave_2_3_metrics() }}
-
-    FROM prep_usage_ping
-    LEFT JOIN instance_types
-      ON prep_usage_ping.raw_usage_data_payload['uuid']::VARCHAR = instance_types.instance_uuid
-      AND prep_usage_ping.raw_usage_data_payload['hostname']::VARCHAR = instance_types.instance_hostname
-    QUALIFY ROW_NUMBER() OVER (
-      PARTITION BY dim_usage_ping_id
-        ORDER BY ping_created_at DESC
-      ) = 1
 )
 
-{{ dbt_audit(
-    cte_ref="final",
-    created_by="@kathleentam",
-    updated_by="@michellecooper",
-    created_date="2021-01-10",
-    updated_date="2021-04-30"
-) }}
+
+
+SELECT 
+    detection_rule.rule_id, 
+    detection_rule.rule_name, 
+    detection_rule.rule_description, 
+    rule_run_detail.rule_run_date, 
+    rule_run_detail.processed_record_count,
+    rule_run_detail.passed_record_count, 
+    rule_run_detail.failed_record_count,
+
+ rule_run_detail.type_of_dataFROM rule_run_detailLEFT OUTER JOIN detection_rule ONrule_id = rule_id
