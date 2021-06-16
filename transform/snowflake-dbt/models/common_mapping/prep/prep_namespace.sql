@@ -4,7 +4,7 @@
 
 {{ simple_cte([
     ('namespace_current', 'gitlab_dotcom_namespaces_source'),
-    ('namespace_snapshots', 'gitlab_dotcom_namespaces_snapshots_base'),
+    ('namespace_snapshots', 'prep_namespace_hist'),
     ('namespace_lineage_historical', 'gitlab_dotcom_namespace_lineage_historical_daily'),
     ('map_namespace_internal', 'map_namespace_internal'),
     ('plans', 'gitlab_dotcom_plans_source'),
