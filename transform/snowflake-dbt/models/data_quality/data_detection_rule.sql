@@ -53,7 +53,7 @@ WITH detection_rule AS (
       SELECT 
            6 as rule_id,
           'Expired Licenses' as rule_name,
-          'License IDs with Subscription End Dates in the Past' as rule_description,
+          'Expired License IDs with Subscription End Dates in the Past' as rule_description,
           'Product' as type_of_data,
           50 AS threshold
 
@@ -72,6 +72,6 @@ WITH detection_rule AS (
     cte_ref="detection_rule",
     created_by="@snalamaru",
     updated_by="@snalamaru",
-    created_date="2021-06-21",
-    updated_date="2021-06-21"
+    created_date="2021-06-16",
+    updated_date="2021-06-16"
 ) }}
