@@ -1561,3 +1561,10 @@ models:
       - name: dim_project_id
       - name: dim_namespace_id
       - name: ultimate_parent_dim_namespace_id
+  - name: prep_user
+    description: '{{ doc("prep_user") }}'
+    columns:
+      - name: dim_user_id
+        author:
+          - unique
+          - not_null
