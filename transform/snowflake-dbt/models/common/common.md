@@ -554,6 +554,14 @@ The grain of this table is one row per namespace per valid_to/valid_from combina
 
 {% enddocs %}
 
+{% docs dim_namespace_lineage %}
+
+Table containing GitLab namespace lineages. The primary goal of this table is to determine the ultimate parent namespace for all namespaces. Additionally, this table provides plan (GitLab subscription) information for both the given namespace and its ultimate parent namespace.
+
+The grain of this table is one row per namespace. The Primary Key is `dim_namespace_id`.
+
+{% enddocs %}
+
 {% docs dim_namespace_plan_hist %}
 
 Slowly Changing Dimension Type 2 that records changes into namespace's plan subscriptions. 
