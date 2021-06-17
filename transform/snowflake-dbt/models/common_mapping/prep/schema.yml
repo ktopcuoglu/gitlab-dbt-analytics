@@ -1172,7 +1172,7 @@ models:
       - name: ping_date
       - name: counter_value
 
-  - name: mart_retention_parent_account_snapshot_base
+  - name: prep_mart_retention_parent_account_snapshot
     description: Base model for the mart_arr_parent_account snapshot data
     columns:
       - name: primary_key
