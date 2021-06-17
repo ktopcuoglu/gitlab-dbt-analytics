@@ -611,5 +611,16 @@ The grain of this table is one row per uuid-hostname combination per month.
 Table containing **free** Self-Managed users in preparation for free user usage ping metrics fact table.
 
 The grain of this table is one row per uuid-hostname combination per month.
+{% docs dim_ci_build %}
+
+Dimension table that contains all CI build data.
+
+Easily to join with the following tables:
+
+- `dim_project` through `dim_project_id`
+- `dim_namespace` through `dim_namespace_id` and `ultimate_parent_namespace_id`
+- `dim_date` through `ci_build_creation_dim_date_id`
+- `dim_plan` through `dim_plan_id`
+
 
 {% enddocs %}

@@ -402,5 +402,10 @@ The grain of this table is one row per uuid-hostname combination per month.
 Table containing **free** Self-Managed users in preparation for free user usage ping metrics fact table.
 
 The grain of this table is one row per uuid-hostname combination per month.
+{% docs prep_ci_build %}
+
+Prep table used to build the `dim_ci_build` table.
+
+More information about [CI Pipelines here](https://docs.gitlab.com/ee/ci/pipelines/)
 
 {% enddocs %}
