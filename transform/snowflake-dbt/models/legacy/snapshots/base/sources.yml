@@ -17,6 +17,7 @@ sources:
       - name: customers_db_orders_snapshots
       - name: dim_subscription_snapshot
       - name: fct_mrr_snapshot
+      - name: fct_retention_snapshot
       - name: gitlab_dotcom_application_settings_snapshots
       - name: gitlab_dotcom_gitlab_subscriptions_namespace_id_snapshots
       - name: gitlab_dotcom_gitlab_subscriptions_snapshots
