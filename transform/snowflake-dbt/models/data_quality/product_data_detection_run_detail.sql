@@ -13,7 +13,7 @@ WITH rule_run_date AS (
            date_day as rule_run_date,
           'Product' as type_of_data
     FROM {{ ref('dim_date') }}
-    WHERE rule_run_date <=CURRENT_DATE
+    WHERE rule_run_date between '2021-04-01' and CURRENT_DATE
 
 ), dim_host_instance_type AS (
  
@@ -102,11 +102,11 @@ WITH rule_run_date AS (
   UNION
 
     SELECT 
-        3                                                                                                            AS rule_id,
-        count(DISTINCT(dim_subscription_id))                                                                         AS processed_record_count,
-        (SELECT COUNT(DISTINCT(dim_subscription_id)) FROM map_subscription_license_all WHERE dim_license_id IS NOT NULL)         AS passed_record_count,
-        (SELECT COUNT(DISTINCT(dim_subscription_id)) FROM map_subscription_license_all WHERE dim_license_id is null) AS failed_record_count,
-        dbt_updated_at                                                                                               AS run_date
+        3                                                                                                                AS rule_id,
+        count(DISTINCT(dim_subscription_id))                                                                             AS processed_record_count,
+        (SELECT COUNT(DISTINCT(dim_subscription_id)) FROM map_subscription_license_all WHERE dim_license_id IS NOT NULL) AS passed_record_count,
+        (SELECT COUNT(DISTINCT(dim_subscription_id)) FROM map_subscription_license_all WHERE dim_license_id is null)     AS failed_record_count,
+        dbt_updated_at                                                                                                   AS run_date
     FROM dim_subscription
     GROUP BY run_date
   
@@ -168,7 +168,7 @@ WITH rule_run_date AS (
         rule_run_date,
         type_of_data
     FROM processed_passed_failed_record_count
-    LEFT OUTER JOIN rule_run_date
+    RIGHT OUTER JOIN rule_run_date
     ON TO_DATE(processed_passed_failed_record_count.run_date) = rule_run_date.rule_run_date
 
 ) 
