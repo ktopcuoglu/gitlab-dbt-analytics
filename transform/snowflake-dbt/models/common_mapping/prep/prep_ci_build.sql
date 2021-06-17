@@ -94,6 +94,6 @@
     cte_ref="renamed",
     created_by="@mpeychet_",
     updated_by="@mpeychet_",
-    created_date="2021-06-10",
-    updated_date="2021-06-10"
+    created_date="2021-06-17",
+    updated_date="2021-06-17"
 ) }}
