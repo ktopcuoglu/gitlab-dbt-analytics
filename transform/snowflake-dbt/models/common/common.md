@@ -610,3 +610,17 @@ The grain of the table is the `dim_event_id`. This table is easily joinable with
 - `dim_namespace` through `dim_namespace_id` and `ultimate_namespace_id`
 
 {% enddocs %}
+
+{% docs dim_ci_build %}
+
+Dimension table that contains all CI build data.
+
+Easily to join with the following tables:
+
+- `dim_project` through `dim_project_id`
+- `dim_namespace` through `dim_namespace_id` and `ultimate_parent_namespace_id`
+- `dim_date` through `ci_build_creation_dim_date_id`
+- `dim_plan` through `dim_plan_id`
+
+
+{% enddocs %}
