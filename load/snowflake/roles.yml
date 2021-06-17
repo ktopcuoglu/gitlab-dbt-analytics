@@ -568,6 +568,7 @@ roles:
                 - raw.gitter
                 - raw.pmg
                 - raw.prometheus
+                - raw.pto
                 - raw.rspec
                 - raw.keyhole_twitter
                 - raw.snowplow
@@ -584,6 +585,7 @@ roles:
                 - raw.keyhole_twitter.*
                 - raw.pmg.*
                 - raw.prometheus.*
+                - raw.pto.*
                 - raw.rspec.*
                 - raw.snowplow.*
                 - raw.tap_postgres.*
