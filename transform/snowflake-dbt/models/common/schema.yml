@@ -2856,11 +2856,6 @@ models:
       - name: time_period
         description: Metrics can be all-time counters, 28 day counters, or weekly counters. This signifies which it is
 
-  - name: dim_issue
-    description: '{{ doc("dim_issue") }}'
-
-  - name: dim_merge_request
-    description: '{{ doc("dim_merge_request") }}'
   - name: dim_ci_build
     description: '{{ doc("dim_ci_build") }}'
     columns:
@@ -2881,3 +2876,9 @@ models:
       - name: ci_runner_id
         description: ID of the runner with which the CI build has been run.
       - name: dim_ci_stage_id
+
+  - name: dim_issue
+    description: '{{ doc("dim_issue") }}'
+
+  - name: dim_merge_request
+    description: '{{ doc("dim_merge_request") }}'

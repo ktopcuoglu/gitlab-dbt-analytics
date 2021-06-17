@@ -4,7 +4,7 @@
 
 {{ config({
     "materialized": "incremental",
-    "unique_key": "dim_ci_build_id"
+    "unique_key": "dim_merge_request_id"
     })
 }}
 
