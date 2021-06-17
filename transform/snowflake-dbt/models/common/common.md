@@ -607,5 +607,17 @@ Easy joins availabl with:
 * dim_project through `dim_project_id`
 * dim_namespace through `dim_namespace_id` and `ultinate_parent_namespace_id`
 * dim_date through `ci_pipeline_creation_dim_date_id`
+{% enddocs %}
+
+{% docs dim_event %}
+
+Dimensional table representing events recorded by the Events API. [More info about events tracked here](https://docs.gitlab.com/ee/api/events.html)
+
+The grain of the table is the `dim_event_id`. This table is easily joinable with:
+
+- `dim_plan` through `dim_plan_id`
+- `dim_user` through `dim_user_id`
+- `dim_project` through `dim_project_id`
+- `dim_namespace` through `dim_namespace_id` and `ultimate_namespace_id`
 
 {% enddocs %}

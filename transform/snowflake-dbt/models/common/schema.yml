@@ -2861,6 +2861,18 @@ models:
     columns:
       - name: dim_ci_pipeline_id
         description: The unique identifier for each of the CI Pipelines.
+      - name: dim_project_id
+        tests:
+          - not_null
+      - name: dim_plan_id
+        tests:
+          - not_null
+
+  - name: dim_event
+    description: '{{ doc("dim_event") }}'
+    columns:
+      - name: dim_event_id
+        description: The unique identifier for each of the events.
         tests:
           - not_null
           - unique

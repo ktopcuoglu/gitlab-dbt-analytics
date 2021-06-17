@@ -1558,3 +1558,23 @@ models:
         tests:
           - not_null
           - unique
+
+  - name: prep_event
+    description: '{{ doc("prep_event") }}'
+    columns:
+      - name: dim_event_id
+        tests:
+          - unique
+          - not_null
+      - name: dim_user_id
+      - name: dim_project_id
+      - name: dim_namespace_id
+      - name: ultimate_parent_dim_namespace_id
+
+  - name: prep_user
+    description: '{{ doc("prep_user") }}'
+    columns:
+      - name: dim_user_id
+        tests:
+          - unique
+          - not_null
