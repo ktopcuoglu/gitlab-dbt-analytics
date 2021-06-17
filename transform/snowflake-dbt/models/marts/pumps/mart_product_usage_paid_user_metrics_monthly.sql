@@ -33,6 +33,7 @@
       'Self-Managed'                                                                AS delivery_type,
       -- Wave 1
       monthly_sm_metrics.license_utilization,
+      monthly_sm_metrics.billable_user_count,
       monthly_sm_metrics.active_user_count,
       monthly_sm_metrics.max_historical_user_count,
       monthly_sm_metrics.license_user_count,
@@ -157,6 +158,7 @@
       -- Wave 1
       monthly_saas_metrics.subscription_seats,
       monthly_saas_metrics.billable_user_count,
+      NULL                                                                          AS active_user_count
       monthly_saas_metrics.license_utilization,
       monthly_saas_metrics.max_historical_user_count,
       -- Wave 2 & 3
@@ -275,5 +277,5 @@
     created_by="@ischweickartDD",
     updated_by="@ischweickartDD",
     created_date="2021-06-11",
-    updated_date="2021-06-11"
+    updated_date="2021-06-17"
 ) }}

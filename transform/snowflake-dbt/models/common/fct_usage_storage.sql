@@ -217,5 +217,5 @@ WITH project_statistics_snapshot_monthly_all AS (
     created_by="@ischweickartDD",
     updated_by="@ischweickartDD",
     created_date="2021-01-29",
-    updated_date="2021-01-29"
+    updated_date="2021-06-17"
 ) }}

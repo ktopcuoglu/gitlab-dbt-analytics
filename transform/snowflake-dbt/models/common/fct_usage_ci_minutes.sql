@@ -212,5 +212,5 @@ WITH project_snapshot_monthly_all AS (
     created_by="@ischweickartDD",
     updated_by="@ischweickartDD",
     created_date="2020-12-31",
-    updated_date="2021-02-02"
+    updated_date="2021-06-17"
 ) }}
