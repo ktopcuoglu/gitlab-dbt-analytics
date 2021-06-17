@@ -184,11 +184,9 @@ WITH filtered_source as (
         )
         -- removing it after approval from @rparker2 in this issue: https://gitlab.com/gitlab-data/analytics/-/issues/9112
 
-        AND CASE
-            WHEN event_name IN ('submit_form', 'focus_form', 'change_form') AND TRY_TO_TIMESTAMP(derived_tstamp) < '2021-05-26'
-              THEN FALSE
-            ELSE TRUE
-      END
+        AND IFF(event_name IN ('submit_form', 'focus_form', 'change_form') AND TRY_TO_TIMESTAMP(derived_tstamp) < '2021-05-26'
+            , FALSE
+            , TRUE)
 
 )
 
