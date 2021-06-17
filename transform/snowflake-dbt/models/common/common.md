@@ -597,3 +597,19 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 A fact table that contains only the metrics that is a UMAU, SMAU, or GMAU metric that appears on the [Stages and Groups Performance Indicator handbook page](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/)
 
 {% enddocs %}
+
+{% docs dim_issue %}
+
+Table containing **free** Self-Managed users in preparation for free user usage ping metrics fact table.
+
+The grain of this table is one row per uuid-hostname combination per month.
+
+{% enddocs %}
+
+{% docs dim_merge_request %}
+
+Table containing **free** Self-Managed users in preparation for free user usage ping metrics fact table.
+
+The grain of this table is one row per uuid-hostname combination per month.
+
+{% enddocs %}

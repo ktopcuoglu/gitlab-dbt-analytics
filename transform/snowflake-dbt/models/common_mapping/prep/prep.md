@@ -388,3 +388,19 @@ Table containing **free** Self-Managed users in preparation for free user usage 
 The grain of this table is one row per uuid-hostname combination per month.
 
 {% enddocs %}
+
+{% docs prep_issue %}
+
+Table containing **free** Self-Managed users in preparation for free user usage ping metrics fact table.
+
+The grain of this table is one row per uuid-hostname combination per month.
+
+{% enddocs %}
+
+{% docs prep_merge_request %}
+
+Table containing **free** Self-Managed users in preparation for free user usage ping metrics fact table.
+
+The grain of this table is one row per uuid-hostname combination per month.
+
+{% enddocs %}

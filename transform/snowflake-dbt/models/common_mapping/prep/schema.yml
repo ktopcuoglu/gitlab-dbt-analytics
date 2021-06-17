@@ -1550,3 +1550,9 @@ models:
       - name: ping_name
       - name: ping_date
       - name: counter_value
+      
+  - name: prep_issue
+    description: '{{ doc("prep_issue") }}'
+
+  - name: prep_merge_request
+    description: '{{ doc("prep_merge_request") }}'
