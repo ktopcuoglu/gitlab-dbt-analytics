@@ -2807,6 +2807,7 @@ models:
         description: Boolean field representing if the xmau metric represents a Paid Group Monthly Active user (GMAU) metric
       - name: time_period
         description: Metrics can be all-time counters, 28 day counters, or weekly counters. This signifies which it is
+
   - name: dim_ci_pipeline
     description: '{{ doc("dim_ci_pipeline") }}'
     columns:

@@ -21,7 +21,7 @@
       prep_project.dim_namespace_id,
       prep_project.ultimate_parent_namespace_id,
       prep_user.dim_user_id,
-      dim_date.date_id                                        AS ci_pipeline_creation_dim_date_id,
+      dim_date.date_id                                        AS created_date_id,
       IFNULL(dim_namespace_plan_hist.dim_plan_id, 34)         AS dim_plan_id,
       merge_request_id,
 

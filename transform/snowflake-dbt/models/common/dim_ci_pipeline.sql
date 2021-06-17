@@ -12,7 +12,7 @@ WITh prep AS (
       dim_namespace_id,
       ultimate_parent_namespace_id,
       dim_user_id,
-      ci_pipeline_creation_dim_date_id,
+      created_date_id,
       dim_plan_id,
       merge_request_id,
 
