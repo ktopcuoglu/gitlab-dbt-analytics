@@ -2869,4 +2869,6 @@ models:
           - not_null
       - name: dim_plan_id
         tests:
-          - not_null
+          - 
+      - name: dim_ci_pipeline_internal_id
+        description: Internal ID for the CI Pipeline. This is project specific
