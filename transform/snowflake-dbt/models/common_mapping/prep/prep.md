@@ -388,3 +388,17 @@ Table containing **free** Self-Managed users in preparation for free user usage 
 The grain of this table is one row per uuid-hostname combination per month.
 
 {% enddocs %}
+
+{% docs prep_event %}
+
+Prep table for the dim table `dim_event`.
+
+More info about [events tracked](https://docs.gitlab.com/ee/api/events.html)
+{% enddocs %}
+
+{% docs prep_user %}
+Prep table for the dim table `dim_user`.
+
+This table is currently the first iteration. This is a relatively narrow table. A lot of metadata needs to be added.
+{% enddocs %}
+
