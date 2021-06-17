@@ -23,7 +23,7 @@ WITH snapshot_dates AS (
 
     SELECT
       *
-    FROM {{ ref('mart_retention_parent_account_product_snapshot_base') }}
+    FROM {{ ref('mart_retention_parent_account_snapshot_base') }}
 
 ), mart_arr_spined AS (
 
