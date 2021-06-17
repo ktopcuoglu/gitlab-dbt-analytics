@@ -192,7 +192,24 @@ tables:
       FROM boards
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-  bulk_imports:
+  boards_epic_boards:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'boards_epic_boards'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id 
+      , hide_backlog_list
+      , hide_closed_list
+      , group_id
+      , created_at
+      , updated_at
+      , name
+      FROM boards_epic_boards
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
+bulk_imports:
     export_schema: "gitlab_com"
     export_table: bulk_imports
     export_table_primary_key: id
