@@ -34,7 +34,7 @@ WITh prep AS (
       is_protected, 
       failure_reason_id,
       failure_reason,
-      ci_pipeline_iid
+      ci_pipeline_internal_id
     FROM prep
 
 )

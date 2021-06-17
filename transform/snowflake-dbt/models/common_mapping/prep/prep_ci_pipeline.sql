@@ -17,19 +17,19 @@
       ci_pipeline_id AS dim_ci_pipeline_id, 
       
       -- FOREIGN KEYS
-      gitlab_dotcom_ci_pipelines_source.project_id           AS dim_project_id,
+      gitlab_dotcom_ci_pipelines_source.project_id              AS dim_project_id,
       prep_project.dim_namespace_id,
       prep_project.ultimate_parent_namespace_id,
       prep_user.dim_user_id,
-      dim_date.date_id                                        AS created_date_id,
-      IFNULL(dim_namespace_plan_hist.dim_plan_id, 34)         AS dim_plan_id,
+      dim_date.date_id                                          AS created_date_id,
+      IFNULL(dim_namespace_plan_hist.dim_plan_id, 34)           AS dim_plan_id,
       merge_request_id,
 
       gitlab_dotcom_ci_pipelines_source.created_at, 
       gitlab_dotcom_ci_pipelines_source.started_at, 
       gitlab_dotcom_ci_pipelines_source.committed_at,
       gitlab_dotcom_ci_pipelines_source.finished_at, 
-      gitlab_dotcom_ci_pipelines_source.ci_pipeline_duration  AS ci_pipeline_duration_in_s, 
+      gitlab_dotcom_ci_pipelines_source.ci_pipeline_duration    AS ci_pipeline_duration_in_s, 
 
       gitlab_dotcom_ci_pipelines_source.status, 
       gitlab_dotcom_ci_pipelines_source.ref,
@@ -43,7 +43,7 @@
       gitlab_dotcom_ci_pipelines_source.is_protected, 
       gitlab_dotcom_ci_pipelines_source.failure_reason          AS failure_reason_id,
       {{ map_ci_pipeline_failure_reason('failure_reason_id') }} AS failure_reason,
-      gitlab_dotcom_ci_pipelines_source.ci_pipeline_iid
+      gitlab_dotcom_ci_pipelines_source.ci_pipeline_iid         AS ci_pipeline_internal_id
     FROM gitlab_dotcom_ci_pipelines_source
     LEFT JOIN prep_project ON gitlab_dotcom_ci_pipelines_source.project_id = prep_project.dim_project_id
     LEFT JOIN dim_namespace_plan_hist ON prep_project.ultimate_parent_namespace_id = dim_namespace_plan_hist.dim_namespace_id
