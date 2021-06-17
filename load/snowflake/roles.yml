@@ -1372,6 +1372,20 @@ roles:
                     - prep.google_analytics_360.*
                     - raw.google_analytics_360_fivetran.*
 
+    - grafana:
+        warehouses:
+            - grafana
+        privileges:
+            databases:
+                read:
+                    - prod
+            schemas:
+                read:
+                    - prod.legacy
+            tables:
+                read:
+                    - prod.legacy.snowplow_page_views_all_grafana_spigot
+
     - greenhouse:
         warehouses:
             - analyst_xs
@@ -2310,6 +2324,12 @@ roles:
             - analyst_marketing
         warehouses:
             - analyst_xs            
+
+    - jbrennan:
+        member_of:
+            - analyst_sales
+        warehouses:
+            - analyst_xs 
 
     - jjackson:
         member_of:
@@ -3517,6 +3537,11 @@ users:
             - gitlab_ci
             - sysadmin
 
+    - grafana:
+        can_login: yes
+        member_of:
+            - grafana
+
     - hfrancisco:
         can_login: yes
         member_of:
@@ -3552,6 +3577,11 @@ users:
         can_login: yes
         member_of:
             - jameson
+
+    - jbrennan:
+        can_login: yes
+        member_of:
+            - jbrennan
 
     - jjackson:
         can_login: yes
@@ -3961,6 +3991,9 @@ warehouses:
 
     - gitlab_postgres:
         size: x-small
+
+    - grafana:
+        size: x-small 
 
     - loading:
         size: x-small
