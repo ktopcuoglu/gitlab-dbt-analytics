@@ -40,10 +40,10 @@ WITH project_snapshot_monthly_all AS (
     --namespace_lineage_current
     SELECT
       DATE_TRUNC('month', CURRENT_DATE)                         AS snapshot_month,
-      namespace_id,
+      dim_namespace_id,
       parent_id,
       upstream_lineage,
-      ultimate_parent_id
+      ultimate_parent_namespace_id
     FROM {{ ref('prep_namespace_lineage') }}
 
 ), namespace_snapshots_monthly_all AS (

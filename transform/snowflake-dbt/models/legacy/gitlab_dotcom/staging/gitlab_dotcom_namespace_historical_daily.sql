@@ -18,7 +18,7 @@ WITH date_details AS (
     SELECT
       *,
       IFNULL(valid_to, CURRENT_TIMESTAMP) AS valid_to_
-    FROM {{ ref('prep_namespace_hist') }}
+    FROM {{ ref('gitlab_dotcom_namespaces_snapshots_base') }}
     {% if is_incremental() %}
     WHERE (SELECT MAX(snapshot_day) FROM {{ this }}) BETWEEN valid_from AND valid_to_
     {% endif %}

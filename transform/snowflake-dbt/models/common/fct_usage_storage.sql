@@ -40,8 +40,8 @@ WITH project_statistics_snapshot_monthly_all AS (
     --namespace_lineage_current
     SELECT
       DATE_TRUNC('month', CURRENT_DATE)                                         AS snapshot_month,
-      namespace_id,
-      ultimate_parent_id
+      dim_namespace_id,
+      ultimate_parent_namespace_id
     FROM {{ ref('prep_namespace_lineage') }}
 
 ), namespace_storage_statistic_monthly_all AS (

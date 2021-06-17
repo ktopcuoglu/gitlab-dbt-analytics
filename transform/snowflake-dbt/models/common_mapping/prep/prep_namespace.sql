@@ -79,16 +79,16 @@
           TRUE, FALSE)                                                                AS is_current
     FROM namespace_snapshots
     LEFT JOIN namespace_current
-      ON namespace_snapshots.namespace_id = namespace_current.namespace_id
+      ON namespace_snapshots.dim_namespace_id = namespace_current.namespace_id
 
 ), joined AS (
 
     SELECT
-      namespaces.namespace_id                                                         AS dim_namespace_id,
+      namespaces.dim_namespace_id,
       COALESCE(namespace_lineage.ultimate_parent_id,
                namespaces.parent_id,
-               namespaces.namespace_id)                                               AS ultimate_parent_namespace_id,
-      IFF(namespaces.namespace_id = ultimate_parent_namespace_id,
+               namespaces.dim_namespace_id)                                           AS ultimate_parent_namespace_id,
+      IFF(namespaces.dim_namespace_id = ultimate_parent_namespace_id,
           TRUE, FALSE)                                                                AS namespace_is_ultimate_parent,
       IFF(map_namespace_internal.ultimate_parent_namespace_id IS NOT NULL,
           TRUE, FALSE)                                                                AS namespace_is_internal,
@@ -141,14 +141,14 @@
       IFNULL(namespaces.is_current AND namespace_lineage.is_current, FALSE)           AS is_currently_valid
     FROM namespaces
     LEFT JOIN namespace_lineage
-      ON namespaces.namespace_id = namespace_lineage.namespace_id
-      AND IFNULL(namespaces.parent_id, namespaces.namespace_id) = IFNULL(namespace_lineage.parent_id, namespace_lineage.namespace_id)
+      ON namespaces.dim_namespace_id = namespace_lineage.namespace_id
+      AND IFNULL(namespaces.parent_id, namespaces.dim_namespace_id) = IFNULL(namespace_lineage.parent_id, namespace_lineage.namespace_id)
     LEFT JOIN members
-      ON namespaces.namespace_id = members.source_id
+      ON namespaces.dim_namespace_id = members.source_id
     LEFT JOIN projects
-      ON namespaces.namespace_id = projects.namespace_id
+      ON namespaces.dim_namespace_id = projects.namespace_id
     LEFT JOIN creators
-      ON namespaces.namespace_id = creators.group_id
+      ON namespaces.dim_namespace_id = creators.group_id
     LEFT JOIN map_namespace_internal
       ON namespace_lineage.ultimate_parent_id = map_namespace_internal.ultimate_parent_namespace_id
     LEFT JOIN product_tiers saas_product_tiers
@@ -158,7 +158,7 @@
                                                                   'ultimate_trial'))
     QUALIFY ROW_NUMBER() OVER (
       PARTITION BY
-        namespaces.namespace_id,
+        namespaces.dim_namespace_id,
         namespaces.parent_id,
         namespace_lineage.ultimate_parent_id
       ORDER BY namespaces.namespace_updated_at DESC
