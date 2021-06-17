@@ -29,9 +29,11 @@ class ZuoraRevProAPI:
 
     def get_start_date(self, tablename: str):
         """
-        This function is built to pull the last end_date value seating in file in GCS under table name. This file is
-        generated for each table and in case we are not able to pass the start date it will pick it up from this file.
-        This function is responsible to download and fetch the load_date value and pass it back to the calling function.
+        This function is responsible to pull the last extract date value present in the file named start_date_<table_name>.csv
+        in GCS for the given table name and pass it back to the calling function. For each of the table this file
+        start_date_<table_name>.csv is generated as part of the extraction process.
+        The function check that the table name mentioned inside the file under the table_name column is the same as what is being
+        passed as table_name. If the file is not having any rows only a header it will return null.
         """
         bucket_name = self.bucket_name
         cmd_to_download_start_date = f"gsutil cp gs://{bucket_name}/RAW_DB/staging/{tablename}/start_date_{tablename}.csv ."

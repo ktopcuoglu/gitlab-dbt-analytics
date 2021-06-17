@@ -62,7 +62,10 @@ def move_to_processed(bucket: str, table_name: str, list_of_files: list):
 
 
 def show_extraction_status(bucket: str, table_name: str):
-    """"""
+    """
+    This function is responsible for showing the extraction log in airflow task.
+    It download todays run log and show it in the airflow task,post that move it to the processed folder.
+    """
     log_file_name = f"RAW_DB/staging/{table_name}/{table_name}_{(datetime.now()).strftime('%d-%m-%Y')}.log"
     file_name = log_file_name.split("/")[-1]
     source_bucket = get_gcs_bucket(bucket)
