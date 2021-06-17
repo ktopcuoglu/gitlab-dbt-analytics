@@ -1,0 +1,64 @@
+version: 1
+ 
+models:
+ - name: data_detection_rule
+   description: '{{ doc("data_detection_rule") }}'
+   columns:
+     - name: rule_id
+       description: rule_id is Surrogate Key.
+       tests:
+         - not_null
+         - unique
+     - name: rule_name
+       description: Name of the rule (Example- Missing instance types for hostnames).
+     - name: rule_description
+       description: Description of the rule (Example- Notes regarding the Detection rules).
+     - name: type_of_data
+       description: Product/Sales/Marketing.
+     - name: threshold
+       description: threshold limit to determine PASS/FAIL
+ 
+models:
+ - name: product_data_detection_run_detail
+   description:
+   columns:
+     - name: rule_id
+       description: 
+       tests:
+         - not_null
+         - unique
+     - name: processed_record_count
+       description: Count of processed records
+     - name: passed_record_count
+       description: Count of passed records.
+     - name: failed_record_count
+       description: Count of failed records
+     - name: rule_run_date
+       description:
+     - name: type_of_data
+       description:
+ 
+models:
+ - name: product_data_detection_run_result
+   description:
+   columns:
+     - name: rule_id
+       description: The identifier for each rule.
+       tests:
+         - not_null
+         - unique
+     - name: rule_name
+       description: Name of the rule
+     - name: rule_description
+       description: Brief description of the rule
+     - name: rule_run_date
+       description:
+     - name: percent_of_records_passed
+       description: Percentage of passed record counts
+     - name: precent_of_records_failed
+       description: Percentage of failed record counts
+     - name: pass_fail_flag
+       description: PASS/FAIL Flag 
+     - name: type_of_data
+       description:
+
