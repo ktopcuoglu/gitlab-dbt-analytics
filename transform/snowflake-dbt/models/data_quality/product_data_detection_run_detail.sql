@@ -13,7 +13,7 @@ WITH rule_run_date AS (
            date_day as rule_run_date,
           'Product' as type_of_data
     FROM {{ ref('dim_date') }}
-    WHERE rule_run_date between '2021-04-01' and CURRENT_DATE
+    WHERE rule_run_date between '2021-06-16' and CURRENT_DATE
 
 ), dim_host_instance_type AS (
  
