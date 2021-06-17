@@ -258,12 +258,12 @@ WITH filtered_source as (
       base.event_format,
       base.event_id,
       events_with_web_page_id.web_page_id,
-      events_with_standard_context.environment,
-      events_with_standard_context.extra,
-      events_with_standard_context.namespace_id,
-      events_with_standard_context.plan,
-      events_with_standard_context.project_id,
-      events_with_standard_context.source,
+      events_with_standard_context.environment AS gsc_environment,
+      events_with_standard_context.extra AS gsc_extra,
+      events_with_standard_context.namespace_id AS gsc_namespace_id,
+      events_with_standard_context.plan AS gsc_plan,
+      events_with_standard_context.project_id AS gsc_project_id,
+      events_with_standard_context.source AS gsc_source,
       base.event_name,
       base.event_vendor,
       base.event_version,
@@ -364,12 +364,7 @@ WITH filtered_source as (
       FROM events_with_web_page_id web_page_events
       WHERE events_with_web_page_id.event_id = web_page_events.event_id
       GROUP BY event_id HAVING COUNT(1) > 1
-    ) AND
-      NOT EXISTS (
-      SELECT event_id
-      FROM events_with_standard_context gitlab_standard_context_events
-      WHERE events_with_standard_context.event_id = gitlab_standard_context_events.event_id
-      GROUP BY event_id HAVING COUNT(1) > 1
+
     )
 
 ), unnested_unstruct as (
