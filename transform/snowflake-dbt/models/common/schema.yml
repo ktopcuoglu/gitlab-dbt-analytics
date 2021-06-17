@@ -244,6 +244,7 @@ models:
         description: Sales segment of the parent account
       - name: ultimate_parent_billing_country
         description: billing country of parent account
+      - name: partners_signed_contract_date
       - name: record_type_id
       - name: federal_account
       - name: gitlab_com_user
