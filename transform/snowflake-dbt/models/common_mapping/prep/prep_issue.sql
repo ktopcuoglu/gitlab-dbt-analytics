@@ -32,7 +32,7 @@
       gitlab_dotcom_issues_source.issue_id                        AS dim_issue_id,
       
       -- FOREIGN KEYS
-      gitlab_dotcom_issues_source.ci_build_project_id             AS dim_project_id,
+      gitlab_dotcom_issues_source.project_id                      AS dim_project_id,
       prep_project.dim_namespace_id,
       prep_project.ultimate_parent_namespace_id,
       dim_date.date_id                                            AS created_date_id,
@@ -74,11 +74,9 @@
       ON prep_project.ultimate_parent_namespace_id = dim_namespace_plan_hist.dim_namespace_id
       AND gitlab_dotcom_issues_source.created_at >= dim_namespace_plan_hist.valid_from
       AND gitlab_dotcom_issues_source.created_at < dim_namespace_plan_hist.valid_to
-    LEFT JOIN prep_user 
-      ON gitlab_dotcom_issues_source.ci_build_user_id = prep_user.dim_user_id
     LEFT JOIN dim_date 
       ON TO_DATE(gitlab_dotcom_issues_source.created_at) = dim_date.date_day
-    WHERE gitlab_dotcom_issues_source.ci_build_project_id IS NOT  NULL
+    WHERE gitlab_dotcom_issues_source.project_id IS NOT NULL
 
 )
 
