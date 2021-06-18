@@ -567,6 +567,13 @@ tables:
         FROM ci_group_variables
         WHERE DATE(updated_at) > current_date - interval '8' day
         GROUP BY 1,2,3
+        SELECT 'gitlab_db_boards_epic_boards' AS table_name
+        , DATE(created_at) as created_date
+        , DATE(updated_at) as updated_date
+        , count(*) as number_of_records
+        FROM boards_epic_boards
+        WHERE DATE(updated_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
   cluster_4:
     dbt_source_model: true
     export_schema: 'gitlab_dotcom'
