@@ -209,7 +209,7 @@ tables:
       FROM boards_epic_boards
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-bulk_imports:
+  bulk_imports:
     export_schema: "gitlab_com"
     export_table: bulk_imports
     export_table_primary_key: id
