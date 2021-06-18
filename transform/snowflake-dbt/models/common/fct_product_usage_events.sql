@@ -25,12 +25,12 @@
       MD5({{ event_cte.source_cte_name}}.{{ event_cte.primary_key }} || '-' || '{{ event_cte.event_name }}')   AS event_primary_key,
       '{{ event_cte.event_name }}'                                                                        AS event_name,
       {{ event_cte.source_cte_name}}.dim_project_id,
-      {{ event_cte.source_cte_name}}.ultimate_namespace_parent_id,
+      {{ event_cte.source_cte_name}}.ultimate_parent_namespace_id,
       {{ event_cte.source_cte_name}}.dim_plan_id,
       {{ event_cte.source_cte_name}}.created_at,
       {{ event_cte.source_cte_name}}.created_date_event_id,
       {{ event_cte.source_cte_name}}.{{ event_cte.user_column_name }} AS dim_user_id,
-      dim_project.import_type
+      dim_project.project_import_type
     FROM {{ event_cte.source_cte_name }}
     {% if event_cte.key_to_parent_project != 'NULL' %}
     LEFT JOIN dim_project ON {{event_cte.source_cte_name}}.{{event_cte.project_column_name}} = dim_project.dim_project_id
