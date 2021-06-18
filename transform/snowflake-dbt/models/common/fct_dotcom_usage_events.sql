@@ -14,7 +14,9 @@
 
 {{ simple_cte([
     ('dim_event', 'dim_event'),
-    ('dim_project', 'dim_project')
+    ('dim_project', 'dim_project'),
+    ('dim_namespace', 'dim_namespace'),
+    ('prep_user', 'prep_user')
 ]) }}
 
 , data AS (
@@ -32,8 +34,14 @@
       {{ event_cte.source_cte_name}}.{{ event_cte.user_column_name }} AS dim_user_id,
       dim_project.is_imported AS project_is_imported
     FROM {{ event_cte.source_cte_name }}
-    {% if event_cte.key_to_parent_project != 'NULL' %}
+    {% if event_cte.project_column_name != 'NULL' %}
     LEFT JOIN dim_project ON {{event_cte.source_cte_name}}.{{event_cte.project_column_name}} = dim_project.dim_project_id
+    {% endif %}
+    {% if event_cte.namespace_column_name != 'NULL' %}
+    LEFT JOIN dim_namespace ON {{event_cte.source_cte_name}}.{{event_cte.namespace_column_name}} = dim_namespace.dim_namespace_id
+    {% endif %}
+    {% if event_cte.user_column_name != 'NULL' %}
+    LEFT JOIN prep_user ON {{event_cte.source_cte_name}}.{{event_cte.user_column_name}} = prep_user.dim_user_id
     {% endif %}
     {% if not loop.last %}
     UNION
