@@ -391,17 +391,17 @@ The grain of this table is one row per uuid-hostname combination per month.
 
 {% docs prep_issue %}
 
-Table containing **free** Self-Managed users in preparation for free user usage ping metrics fact table.
+Prep table used to build `dim_merge_request`
 
-The grain of this table is one row per uuid-hostname combination per month.
+More information about [Issues](https://docs.gitlab.com/ee/user/project/issues/)
 
 {% enddocs %}
 
 {% docs prep_merge_request %}
 
-Table containing **free** Self-Managed users in preparation for free user usage ping metrics fact table.
+Prep table used to build `dim_merge_request`
 
-The grain of this table is one row per uuid-hostname combination per month.
+More information about [CI Pipelines here](https://docs.gitlab.com/ee/user/project/merge_requests/)
 
 {% enddocs %}
 
