@@ -598,32 +598,15 @@ A fact table that contains only the metrics that is a UMAU, SMAU, or GMAU metric
 
 {% enddocs %}
 
-{% docs dim_issue %}
+{% docs dim_event %}
 
-Table containing **free** Self-Managed users in preparation for free user usage ping metrics fact table.
+Dimensional table representing events recorded by the Events API. [More info about events tracked here](https://docs.gitlab.com/ee/api/events.html)
 
-The grain of this table is one row per uuid-hostname combination per month.
+The grain of the table is the `dim_event_id`. This table is easily joinable with:
 
-{% enddocs %}
-
-{% docs dim_merge_request %}
-
-Table containing **free** Self-Managed users in preparation for free user usage ping metrics fact table.
-
-The grain of this table is one row per uuid-hostname combination per month.
-
-{% enddocs %}
-
-{% docs dim_ci_build %}
-
-Dimension table that contains all CI build data.
-
-Easily to join with the following tables:
-
-- `dim_project` through `dim_project_id`
-- `dim_namespace` through `dim_namespace_id` and `ultimate_parent_namespace_id`
-- `dim_date` through `ci_build_creation_dim_date_id`
 - `dim_plan` through `dim_plan_id`
-
+- `dim_user` through `dim_user_id`
+- `dim_project` through `dim_project_id`
+- `dim_namespace` through `dim_namespace_id` and `ultimate_namespace_id`
 
 {% enddocs %}
