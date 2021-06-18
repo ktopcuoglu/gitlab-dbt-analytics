@@ -22,7 +22,7 @@ WITH detection_rule AS (
         type_of_data
    FROM {{ ref('product_data_detection_run_detail') }}
  
-), final
+), final AS (
  
     SELECT DISTINCT
         detection_rule.rule_id,
@@ -34,7 +34,7 @@ WITH detection_rule AS (
         CASE WHEN percent_of_records_passed > threshold THEN 'PASS' ELSE 'FAIL' END AS pass_fail_flag,
         rule_run_detail.type_of_data
     FROM rule_run_detail
-    LEFT OUTER JOIN ON detection_rule
+    LEFT OUTER JOIN  detection_rule ON
     rule_run_detail.rule_id = detection_rule.rule_id
  
 )
@@ -46,4 +46,3 @@ WITH detection_rule AS (
    created_date="2021-06-16",
    updated_date="2021-06-16"
 ) }}
-
