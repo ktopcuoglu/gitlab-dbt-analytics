@@ -38,11 +38,11 @@ WITH detection_rule AS (
     rule_run_detail.rule_id = detection_rule.rule_id
  
 )
- 
+
 {{ dbt_audit(
-   cte_ref="detection_rule",
-   created_by="@snalamaru",
-   updated_by="@snalamaru",
-   created_date="2021-06-16",
-   updated_date="2021-06-16"
+    cte_ref="final",
+    created_by="@snalamaru",
+    updated_by="@snalamaru",
+    created_date="2021-06-16",
+    updated_date="2021-06-16"
 ) }}
