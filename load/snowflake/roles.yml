@@ -2530,6 +2530,7 @@ roles:
             - analyst_finance
             - bamboohr_analytics
             - customers_db
+            - analyst_marketing
         warehouses:
             - analyst_xs
 
