@@ -122,7 +122,7 @@ models:
         tests:
           - not_null
 
-  - name: fct_retention_snapshot_base
+  - name: fct_retention_parent_account_snapshot_base
     description: Base model for the fct_retention snapshot data
     columns:
       - name: fct_retention_id

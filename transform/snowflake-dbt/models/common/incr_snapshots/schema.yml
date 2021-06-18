@@ -7,5 +7,5 @@ models:
   - name: dim_subscription_snapshot_model
     description: '{{ doc("dim_subscription_snapshot_model") }}'
 
-  - name: fct_retention_snapshot_model
-    description: '{{ doc("fct_retention_snapshot_model") }}'
+  - name: fct_retention_parent_account_snapshot_model
+    description: '{{ doc("fct_retention_parent_account_snapshot_model") }}'

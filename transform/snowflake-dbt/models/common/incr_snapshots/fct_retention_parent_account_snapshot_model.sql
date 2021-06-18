@@ -22,7 +22,7 @@ WITH snapshot_dates AS (
 
     SELECT
       *
-    FROM {{ ref('fct_retention_snapshot_base') }}
+    FROM {{ ref('fct_retention_parent_account_snapshot_base') }}
 
 ), fct_retention_spined AS (
 
