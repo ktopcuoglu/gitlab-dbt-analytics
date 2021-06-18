@@ -394,11 +394,37 @@ The grain of this table is one row per uuid-hostname combination per month.
 Prep table for the dim table `dim_event`.
 
 More info about [events tracked](https://docs.gitlab.com/ee/api/events.html)
+
 {% enddocs %}
 
 {% docs prep_user %}
 Prep table for the dim table `dim_user`.
 
 This table is currently the first iteration. This is a relatively narrow table. A lot of metadata needs to be added.
+
+{% enddocs %}
+
+{% docs prep_issue %}
+
+Prep table used to build `dim_merge_request`
+
+More information about [Issues](https://docs.gitlab.com/ee/user/project/issues/)
+
+{% enddocs %}
+
+{% docs prep_merge_request %}
+
+Prep table used to build `dim_merge_request`
+
+More information about [CI Pipelines here](https://docs.gitlab.com/ee/user/project/merge_requests/)
+
+{% enddocs %}
+
+{% docs prep_ci_build %}
+
+Prep table used to build the `dim_ci_build` table.
+
+More information about [CI Pipelines here](https://docs.gitlab.com/ee/ci/pipelines/)
+
 {% enddocs %}
 
