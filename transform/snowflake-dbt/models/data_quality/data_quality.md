@@ -10,8 +10,9 @@ A fact table bridging opportunities with contacts. One opportunity can have mult
 
 {% enddocs %}
 
-{% docs {% docs product_data_detection_run_result %}
+{% docs product_data_detection_run_result %}
 
 A Final table that indicate opportunities with contacts. One opportunity can have multiple contacts and one can be flagged as the primary.
 
 {% enddocs %}
+
