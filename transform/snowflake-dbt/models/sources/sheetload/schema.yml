@@ -376,8 +376,6 @@ models:
       tests:
         - not_null
     - name: last_name
-      tests:
-        - not_null
     - name: email_address
       tests:
         - not_null
