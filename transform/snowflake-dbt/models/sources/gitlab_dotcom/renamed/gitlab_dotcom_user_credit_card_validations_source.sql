@@ -7,7 +7,7 @@ WITH source AS (
 
     SELECT
       user_id::NUMBER                       AS user_id,
-      credit_card_validated_at:::TIMESTAMP  AS credit_card_validated_at
+      credit_card_validated_at::TIMESTAMP  AS credit_card_validated_at
     FROM source
     
 )
