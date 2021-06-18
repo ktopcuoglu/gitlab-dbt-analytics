@@ -37,7 +37,8 @@ WITH snapshot_dates AS (
 
     SELECT
       date_id                                 AS snapshot_id,
-      NULL                                    AS mrr_id,
+      {{ dbt_utils.surrogate_key(['date_id', 'subscription_name', 'dim_product_detail_id', 'mrr']) }}
+          AS mrr_id,
       date_id                                 AS dim_date_id,
       dim_charge_id                           AS dim_charge_id,
       dim_product_detail_id                   AS dim_product_detail_id,
