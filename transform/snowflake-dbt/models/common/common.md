@@ -600,17 +600,27 @@ A fact table that contains only the metrics that is a UMAU, SMAU, or GMAU metric
 
 {% docs dim_issue %}
 
-Table containing **free** Self-Managed users in preparation for free user usage ping metrics fact table.
+Dimensional table recording all issues created in our Gitlab.com SaaS instance. This table is easily joinable with other EDM dim tables:
 
-The grain of this table is one row per uuid-hostname combination per month.
+- `dim_project` through `dim_project_id`
+- `dim_namespace` through `dim_namespace_id`
+- `dim_plan` through `dim_plan_id`
+- `dim_date` through `created_date_dim_id`
+
+More info about issues in GitLab product [available here](https://docs.gitlab.com/ee/user/project/issues/)
 
 {% enddocs %}
 
 {% docs dim_merge_request %}
 
-Table containing **free** Self-Managed users in preparation for free user usage ping metrics fact table.
+Dimensional table recording all merge requests created in our Gitlab.com SaaS instance. This table is easily joinable with other EDM dim tables:
 
-The grain of this table is one row per uuid-hostname combination per month.
+- `dim_project` through `dim_project_id`
+- `dim_namespace` through `dim_namespace_id`
+- `dim_plan` through `dim_plan_id`
+- `dim_date` through `created_date_dim_id`
+
+More info about issues in GitLab product [available here](https://docs.gitlab.com/ee/user/project/merge_requests/)
 
 {% enddocs %}
 
