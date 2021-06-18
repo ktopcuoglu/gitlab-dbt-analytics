@@ -109,6 +109,10 @@
       END                                                            AS {{field}},
       {% endfor %}
       ARRAYAGG(active_services.service_type)                         AS active_service_types_array,
+
+      IFF(projects_source.import_type='gitlab_project' AND projects_source.project_path='learn-gitlab',  
+        TRUE, 
+        FALSE)                                                       AS is_learn_gitlab,
       IFNULL(COUNT(DISTINCT members_source.member_id), 0)            AS member_count
     FROM projects_source
     LEFT JOIN dim_date
@@ -127,7 +131,7 @@
         AND projects_source.created_at >= gitlab_subscriptions.valid_from AND projects_source.created_at < {{ coalesce_to_infinity("gitlab_subscriptions.valid_to") }}
     LEFT JOIN active_services
       ON projects_source.project_id = active_services.project_id
-    {{ dbt_utils.group_by(n=60) }}
+    {{ dbt_utils.group_by(n=61) }}
 
 )
 

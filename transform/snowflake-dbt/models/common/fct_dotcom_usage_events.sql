@@ -28,9 +28,9 @@
       {{ event_cte.source_cte_name}}.ultimate_parent_namespace_id,
       {{ event_cte.source_cte_name}}.dim_plan_id,
       {{ event_cte.source_cte_name}}.created_at,
-      {{ event_cte.source_cte_name}}.created_date_event_id,
+      {{ event_cte.source_cte_name}}.created_date_id,
       {{ event_cte.source_cte_name}}.{{ event_cte.user_column_name }} AS dim_user_id,
-      dim_project.project_import_type
+      dim_project.is_imported AS project_is_imported
     FROM {{ event_cte.source_cte_name }}
     {% if event_cte.key_to_parent_project != 'NULL' %}
     LEFT JOIN dim_project ON {{event_cte.source_cte_name}}.{{event_cte.project_column_name}} = dim_project.dim_project_id
