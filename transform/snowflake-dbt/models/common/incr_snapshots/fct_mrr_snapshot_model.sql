@@ -96,5 +96,6 @@ WITH snapshot_dates AS (
 )
 
 
+
 SELECT * 
 FROM final
