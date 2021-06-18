@@ -75,7 +75,10 @@ models:
 - name: sheetload_location_factor_targets
 - name: sheetload_location_factor_temporary_2020_december
 - name: sheetload_manual_arr_true_up_allocation
+- name: sheetload_manual_public_company_metrics
 - name: sheetload_manual_downgrade_dotcom_tracking
+- name: sheetload_mapping_sdr_sfdc_bamboohr
+  description: Mapping table with the sfdc user id of Sales Development Representative (SDR) and their respective BambooHR id.
 - name: sheetload_marketing_core_users_from_docs_gitlab_com
 - name: sheetload_marketing_kpi_benchmarks
 - name: sheetload_osat

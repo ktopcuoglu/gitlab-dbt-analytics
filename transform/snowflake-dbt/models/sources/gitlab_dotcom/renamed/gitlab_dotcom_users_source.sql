@@ -76,8 +76,15 @@ WITH source AS (
 
     FROM source
     
+), add_job_hierarchy AS (
+
+    SELECT
+      renamed.*,
+      {{it_job_title_hierarchy('role')}}
+    FROM renamed
+
 )
 
 SELECT  *
-FROM renamed
+FROM add_job_hierarchy
 ORDER BY updated_at

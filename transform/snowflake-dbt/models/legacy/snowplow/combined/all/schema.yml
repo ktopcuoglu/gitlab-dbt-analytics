@@ -24,3 +24,6 @@ models:
 
     -   name: snowplow_unstructured_events_all
         description: This a view over all snowplow_YYYY_MM schemas for unstructured events.
+
+    -   name: snowplow_page_views_all_grafana_spigot
+        description: This is is a view over snowplow_page_views_all, for exposing data towards Grafana. A subset of non PII data is in this view.         

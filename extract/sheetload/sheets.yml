@@ -143,6 +143,14 @@ sheets:
     owner: '@michellecooper'
     tabs:
       - manual_arr_true_up_allocation
+  - name: manual_public_company_metrics
+    owner: '@iweeks'
+    tabs:
+      - manual_public_company_metrics
+  - name: mapping_sdr_sfdc_bamboohr
+    owner: '@jpeguero'
+    tabs:
+      - mapping_sdr_sfdc_bamboohr        
   - name: marketing_core_users_from_docs_gitlab_com
     owner: '@rkohnke'
     tabs:

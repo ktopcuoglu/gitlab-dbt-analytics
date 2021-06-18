@@ -31,6 +31,8 @@ WITH prep_amendment AS (
     {{ get_keyed_nulls('prep_amendment.dim_amendment_id') }}       AS dim_amendment_id_subscription,
 
     --Subscription Information
+    subscription.created_by_id,
+    subscription.updated_by_id,
     subscription.dim_subscription_id_original,
     subscription.dim_subscription_id_previous,
     subscription.subscription_name_slugify,
@@ -38,8 +40,6 @@ WITH prep_amendment AS (
     subscription.is_auto_renew,
     subscription.zuora_renewal_subscription_name,
     subscription.zuora_renewal_subscription_name_slugify,
-    subscription.is_myb,
-    subscription.is_myb_with_multi_subs,
     subscription.current_term,
     subscription.renewal_term,
     subscription.renewal_term_period_type,
@@ -54,7 +54,6 @@ WITH prep_amendment AS (
     subscription.subscription_end_fiscal_year,
     subscription.subscription_created_date,
     subscription.subscription_updated_date,
-    subscription.myb_renewal_month,
     subscription.term_start_date,
     subscription.term_end_date,
     subscription.term_start_month,
@@ -81,5 +80,5 @@ WITH prep_amendment AS (
     created_by="@snalamaru",
     updated_by="@iweeks",
     created_date="2020-12-16",
-    updated_date="2021-05-10"
+    updated_date="2021-06-07"
 ) }}

@@ -6,6 +6,7 @@ WITH base AS (
 ), final AS (
 
     SELECT
+      dim_crm_user_id                    AS dim_crm_user_id,
       dim_crm_account_id                 AS dim_crm_account_id,
       crm_account_name                   AS crm_account_name,
       crm_account_billing_country        AS crm_account_billing_country,
@@ -34,17 +35,23 @@ WITH base AS (
       record_type_id                     AS record_type_id,
       federal_account                    AS federal_account,
       is_jihu_account                    AS is_jihu_account,
+      gitlab_com_user                    AS gitlab_com_user,
+      tsp_account_employees              AS tsp_account_employees,
+      tsp_max_family_employees           AS tsp_max_family_employees,
       technical_account_manager          AS technical_account_manager,
       is_deleted                         AS is_deleted,
       merged_to_account_id               AS merged_to_account_id,
-      is_reseller                        AS is_reseller
+      is_reseller                        AS is_reseller,
+      health_score                       AS health_score,
+      health_number                      AS health_number,
+      health_score_color                 AS health_score_color
     FROM base
 )
 
 {{ dbt_audit(
     cte_ref="final",
     created_by="@msendal",
-    updated_by="@paul_armstrong",
+    updated_by="@iweeks",
     created_date="2020-06-01",
-    updated_date="2021-06-02"
+    updated_date="2021-06-07"
 ) }}

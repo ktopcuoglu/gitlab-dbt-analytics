@@ -39,7 +39,18 @@ WITH map_merged_crm_account AS (
     WHERE is_deleted = FALSE
       AND exclude_from_analysis IN ('False', '')
 
-), recurring_charges AS (
+), active_zuora_subscription AS (
+
+    SELECT *
+    FROM zuora_subscription
+    WHERE subscription_status IN ('Active', 'Cancelled')
+
+), manual_arr_true_up_allocation AS (
+
+    SELECT *
+    FROM {{ ref('sheetload_manual_arr_true_up_allocation_source')}}
+
+), non_manual_charges AS (
 
     SELECT
       --Natural Key
@@ -155,12 +166,96 @@ WITH map_merged_crm_account AS (
       ON map_merged_crm_account.dim_crm_account_id = sfdc_account.account_id
     LEFT JOIN ultimate_parent_account
       ON sfdc_account.ultimate_parent_account_id = ultimate_parent_account.account_id
-    WHERE charge_type = 'Recurring'
+
+), manual_charges AS ( -- added as a work around until there is an automated method for adding true-up adjustments to Zuora Revenue/Zuora Billing
+
+    SELECT
+      active_zuora_subscription.subscription_name                                 AS subscription_name,
+      active_zuora_subscription.version                                           AS subscription_version,
+      NULL                                                                        AS rate_plan_charge_number,
+      NULL                                                                        AS rate_plan_charge_version,
+      NULL                                                                        AS rate_plan_charge_segment,
+      MD5(manual_arr_true_up_allocation.rate_plan_charge_id)                      AS dim_charge_id,
+      manual_arr_true_up_allocation.dim_product_detail_id                         AS dim_product_detail_id,
+      NULL                                                                        AS dim_amendment_id_charge,
+      active_zuora_subscription.subscription_id                                   AS dim_subscription_id,
+      manual_arr_true_up_allocation.account_id                                    AS dim_billing_account_id,
+      zuora_account.crm_id                                                        AS dim_crm_account_id,
+      sfdc_account.ultimate_parent_account_id                                     AS dim_parent_crm_account_id,
+      {{ get_date_id('manual_arr_true_up_allocation.effective_start_date') }}     AS effective_start_date_id,
+      {{ get_date_id('manual_arr_true_up_allocation.effective_end_date') }}       AS effective_end_date_id,
+      active_zuora_subscription.subscription_status                               AS subscription_status,
+      'manual true up allocation'                                                 AS rate_plan_name,
+      'manual true up allocation'                                                 AS rate_plan_charge_name,
+      'TRUE'                                                                      AS is_last_segment,
+      NULL                                                                        AS discount_level,
+      'Recurring'                                                                 AS charge_type,
+      NULL                                                                        AS rate_plan_charge_amendement_type,
+      manual_arr_true_up_allocation.unit_of_measure                               AS unit_of_measure,
+      'TRUE'                                                                      AS is_paid_in_full,
+      active_zuora_subscription.current_term                                      AS months_of_future_billings,
+      CASE
+        WHEN DATE_TRUNC('month', effective_end_date) > DATE_TRUNC('month', effective_start_date) OR DATE_TRUNC('month', effective_end_date) IS NULL
+          THEN TRUE
+        ELSE FALSE
+      END                                                                         AS is_included_in_arr_calc,
+      active_zuora_subscription.subscription_end_date                             AS subscription_end_date,
+      effective_start_date                                                        AS effective_start_date,
+      effective_end_date                                                          AS effective_end_date,
+      DATE_TRUNC('month', effective_start_date)                                   AS effective_start_month,
+      DATE_TRUNC('month', effective_end_date)                                     AS effective_end_month,
+      effective_end_date                                                          AS charged_through_date,
+      accounting_period                                                           AS charge_created_date,
+      accounting_period                                                           AS charge_updated_date,
+      DATEDIFF('month', effective_start_month::DATE, effective_end_month::DATE)   AS charge_term,
+      manual_arr_true_up_allocation.mrr                                           AS mrr,
+      NULL                                                                        AS previous_mrr_calc,
+      NULL                                                                        AS previous_mrr,
+      NULL                                                                        AS delta_mrr_calc,
+      NULL                                                                        AS delta_mrr,
+      NULL                                                                        AS delta_mrc,
+      manual_arr_true_up_allocation.mrr * 12                                      AS arr,
+      NULL                                                                        AS previous_arr,
+      NULL                                                                        AS delta_arc,
+      NULL                                                                        AS delta_arr,
+      0                                                                           AS quantity,
+      NULL                                                                        AS previous_quantity_calc,
+      NULL                                                                        AS previous_quantity,
+      NULL                                                                        AS delta_quantity_calc,
+      NULL                                                                        AS delta_quantity,
+      NULL                                                                        AS tcv,
+      NULL                                                                        AS delta_tcv,
+      CASE
+        WHEN is_paid_in_full = FALSE THEN months_of_future_billings * manual_arr_true_up_allocation.mrr
+        ELSE 0
+      END                                                                         AS estimated_total_future_billings
+    FROM manual_arr_true_up_allocation
+    INNER JOIN active_zuora_subscription
+      ON manual_arr_true_up_allocation.subscription_name = active_zuora_subscription.subscription_name
+    INNER JOIN zuora_account
+      ON active_zuora_subscription.account_id = zuora_account.account_id
+    LEFT JOIN map_merged_crm_account
+      ON zuora_account.crm_id = map_merged_crm_account.sfdc_account_id
+    LEFT JOIN sfdc_account
+      ON map_merged_crm_account.dim_crm_account_id = sfdc_account.account_id
+    LEFT JOIN ultimate_parent_account
+      ON sfdc_account.ultimate_parent_account_id = ultimate_parent_account.account_id
+
+
+), combined_charges AS (
+
+    SELECT *
+    FROM non_manual_charges
+
+    UNION 
+
+    SELECT *
+    FROM manual_charges
 
 ), arr_analysis_framework AS (
 
     SELECT
-      recurring_charges.*,
+      combined_charges.*,
       CASE
         WHEN subscription_version = 1
           THEN 'New'
@@ -176,14 +271,14 @@ WITH map_merged_crm_account AS (
           THEN 'No Impact'
         ELSE NULL
       END                 AS type_of_arr_change
-    FROM recurring_charges
+    FROM combined_charges
 
 )
 
 {{ dbt_audit(
     cte_ref="arr_analysis_framework",
     created_by="@iweeks",
-    updated_by="@iweeks",
+    updated_by="@michellecooper",
     created_date="2021-04-28",
-    updated_date="2021-05-10"
+    updated_date="2021-06-09"
 ) }}

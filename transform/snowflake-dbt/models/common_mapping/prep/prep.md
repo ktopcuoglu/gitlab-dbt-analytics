@@ -47,6 +47,12 @@ This model captures a historical record of GitLab's default application settings
 
 {% enddocs %}
 
+{% docs prep_gitlab_dotcom_plan %}
+
+Creates a base view with generated keys for the plans shared dimension and fact and references in facts.
+
+{% enddocs %}
+
 {% docs prep_industry %}
 
 Creates a base view with generated keys for the industry shared dimension and references in facts.
@@ -366,3 +372,33 @@ A recreation of `prep_usage_ping_subscription_mapped_wave_2_3_metrics` for _SaaS
 fct table from the usage_ping_namespace. Granularity of one row per namespace per metric per run
 
 {% enddocs %}
+
+{% docs prep_saas_usage_ping_free_user_metrics %}
+
+Table containing **free** SaaS users in preparation for free user usage ping metrics fact table.
+
+The grain of this table is one row per namespace per month.
+
+{% enddocs %}
+
+{% docs prep_usage_ping_free_user_metrics %}
+
+Table containing **free** Self-Managed users in preparation for free user usage ping metrics fact table.
+
+The grain of this table is one row per uuid-hostname combination per month.
+
+{% enddocs %}
+
+{% docs prep_event %}
+
+Prep table for the dim table `dim_event`.
+
+More info about [events tracked](https://docs.gitlab.com/ee/api/events.html)
+{% enddocs %}
+
+{% docs prep_user %}
+Prep table for the dim table `dim_user`.
+
+This table is currently the first iteration. This is a relatively narrow table. A lot of metadata needs to be added.
+{% enddocs %}
+

@@ -568,6 +568,7 @@ roles:
                 - raw.gitter
                 - raw.pmg
                 - raw.prometheus
+                - raw.pto
                 - raw.rspec
                 - raw.keyhole_twitter
                 - raw.snowplow
@@ -584,6 +585,7 @@ roles:
                 - raw.keyhole_twitter.*
                 - raw.pmg.*
                 - raw.prometheus.*
+                - raw.pto.*
                 - raw.rspec.*
                 - raw.snowplow.*
                 - raw.tap_postgres.*
@@ -1080,18 +1082,23 @@ roles:
                 read:
                     - prep
                     - prod
+                write:
+                    - prod
             schemas:
                 read:
                     - prep.preparation
                     - prod.common
                     - prod.common_mart_product
                     - prod.common_mapping
+                write:
+                    - prod.common_mart_product
             tables:
                 read:
                     - prod.common_mapping.prep_usage_ping_no_license_key
                     - prod.common_mart_product.mart_product_usage_wave_1_3_metrics_latest
                     - prod.common_mart_product.mart_product_usage_wave_1_3_metrics_monthly
                     - prod.common_mart_product.mart_product_usage_wave_1_3_metrics_monthly_diff
+                    - prod.common_mart_product.mart_saas_product_usage_metrics_monthly
 
     - gainsight:
         warehouses:
@@ -1366,6 +1373,20 @@ roles:
                 read:
                     - prep.google_analytics_360.*
                     - raw.google_analytics_360_fivetran.*
+
+    - grafana:
+        warehouses:
+            - grafana
+        privileges:
+            databases:
+                read:
+                    - prod
+            schemas:
+                read:
+                    - prod.legacy
+            tables:
+                read:
+                    - prod.legacy.snowplow_page_views_all_grafana_spigot
 
     - greenhouse:
         warehouses:
@@ -1942,6 +1963,13 @@ roles:
         member_of: []
         warehouses: []
 
+    - bnguyen:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+        warehouses:
+            - analyst_xs
+
     - brittany:
         member_of:
             - bamboohr
@@ -1960,6 +1988,12 @@ roles:
             - bamboohr_analytics
         warehouses:
             - analyst_xs
+
+    - cbraza:
+        member_of:
+            - analyst_growth
+        warehouses:
+            - analyst_xs          
 
     - cli:
         member_of:
@@ -2140,23 +2174,6 @@ roles:
         warehouses:
             - analyst_xs
 
-    - ewegscheider:
-        member_of:
-            - people_operations
-            - bamboohr_sensitive_separations
-        warehouses:
-            - analyst_xs
-        privileges:
-            databases:
-                read:
-                    - prep
-            schemas:
-                read:
-                    - prep.sensitive
-            tables:
-                read:
-                    - prep.sensitive.bamboohr_id_employee_number_mapping
-
     - fivetran_role:
         warehouses:
             - fivetran_warehouse
@@ -2309,6 +2326,12 @@ roles:
             - analyst_marketing
         warehouses:
             - analyst_xs            
+
+    - jbrennan:
+        member_of:
+            - analyst_sales
+        warehouses:
+            - analyst_xs 
 
     - jjackson:
         member_of:
@@ -2507,6 +2530,7 @@ roles:
             - analyst_finance
             - bamboohr_analytics
             - customers_db
+            - analyst_marketing
         warehouses:
             - analyst_xs
 
@@ -3385,6 +3409,11 @@ users:
         can_login: no
         member_of: []
 
+    - bnguyen:
+        can_login: yes
+        member_of:
+            - bnguyen
+
     - brittany:
         can_login: yes
         member_of:
@@ -3399,7 +3428,12 @@ users:
         can_login: yes
         member_of:
             - camsmith
-
+ 
+    - cbraza:
+        can_login: yes
+        member_of:
+            - cbraza
+ 
     - cli:
         can_login: yes
         member_of:
@@ -3479,11 +3513,6 @@ users:
         member_of:
             - evan
 
-    - ewegscheider:
-        can_login: yes
-        member_of:
-            - ewegscheider
-
     - fivetran:
         can_login: yes
         member_of:
@@ -3510,6 +3539,11 @@ users:
         member_of:
             - gitlab_ci
             - sysadmin
+
+    - grafana:
+        can_login: yes
+        member_of:
+            - grafana
 
     - hfrancisco:
         can_login: yes
@@ -3546,6 +3580,11 @@ users:
         can_login: yes
         member_of:
             - jameson
+
+    - jbrennan:
+        can_login: yes
+        member_of:
+            - jbrennan
 
     - jjackson:
         can_login: yes
@@ -3955,6 +3994,9 @@ warehouses:
 
     - gitlab_postgres:
         size: x-small
+
+    - grafana:
+        size: x-small 
 
     - loading:
         size: x-small
