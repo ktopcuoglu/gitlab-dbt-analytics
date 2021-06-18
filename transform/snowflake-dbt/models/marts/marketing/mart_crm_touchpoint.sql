@@ -69,6 +69,7 @@
       fct_crm_person.mql_count,
 
       -- campaign info
+      dim_campaign.dim_campaign_id,
       dim_campaign.campaign_name,
       dim_campaign.is_active                                               AS campagin_is_active,
       dim_campaign.status                                                  AS campaign_status,

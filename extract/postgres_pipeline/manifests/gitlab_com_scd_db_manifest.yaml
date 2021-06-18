@@ -795,3 +795,13 @@ tables:
       , raw_metadata
       , vulnerability_id
       FROM vulnerability_occurrences
+  user_credit_card_validations:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'user_credit_card_validations'
+    export_table_primary_key: 'user_id'
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT user_id
+      , credit_card_validated_at
+      FROM user_credit_card_validations

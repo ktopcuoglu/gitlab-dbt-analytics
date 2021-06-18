@@ -68,7 +68,9 @@ sources:
       - name: location_factor_targets
       - name: location_factor_temporary_2020_december
       - name: manual_arr_true_up_allocation
+      - name: manual_public_company_metrics
       - name: manual_downgrade_dotcom_tracking
+      - name: mapping_sdr_sfdc_bamboohr
       - name: marketing_core_users_from_docs_gitlab_com
       - name: marketing_kpi_benchmarks
       - name: marketing_pipe_to_spend_headcount
