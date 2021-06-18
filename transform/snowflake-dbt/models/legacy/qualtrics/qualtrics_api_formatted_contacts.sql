@@ -24,10 +24,16 @@ WITH users AS (
       NULL                                                                             AS phone_number,
       UPPER(IFNULL(NULLIF(preferred_language, 'nan'), 'en'))                           AS language,
       DECODE(highest_paid_subscription_plan_id::VARCHAR, 
+        '1',  'Early Adopter',
         '2',  'Bronze',
         '3',  'Silver',
         '4',  'Gold',
         '34', 'Free',
+        '67', 'Default', 
+        '100', 'Premium', 
+        '101', 'Ultimate',
+        '102', 'Ultimate Trial',
+        '103', 'Premium Trial',
         'Free'
       )                                                                                 AS plan,
       highest_subscription_plan.highest_paid_subscription_namespace_id                  AS namespace_id                    
