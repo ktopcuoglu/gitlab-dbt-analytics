@@ -12,7 +12,11 @@ WITH source AS (
       username::VARCHAR                     AS username,
       active::NUMBER                        AS active,
       profile::VARCHAR                      AS profile,
-      eeid::NUMBER                          AS eeid
+      eeid::NUMBER                          AS eeid,
+      sdr_segment::VARCHAR                  AS sdr_segment,
+      sdr_region::VARCHAR                   AS sdr_region,
+      sdr_order_type::VARCHAR               AS sdr_order_type
+      
     FROM source
 
 )
