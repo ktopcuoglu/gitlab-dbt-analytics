@@ -15,6 +15,8 @@ WITH source AS (
         lastname                    AS contact_last_name,
         email                       AS contact_email,
         split_part(email,'@',2)     AS email_domain,
+        {{email_domain_type("split_part(email,'@',2)", 'leadsource')}}
+                                    AS email_domain_type,
 
         -- keys
         accountid                   AS account_id,

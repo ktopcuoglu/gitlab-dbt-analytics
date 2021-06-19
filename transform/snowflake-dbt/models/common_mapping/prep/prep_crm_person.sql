@@ -47,6 +47,7 @@ WITH biz_person AS (
       'contact'                                     AS sfdc_record_type,
       contact_email_hash                            AS email_hash,
       email_domain,
+      email_domain_type,
 
       --keys
       master_record_id,
@@ -87,6 +88,7 @@ WITH biz_person AS (
       'lead'                                     AS sfdc_record_type,
       lead_email_hash                            AS email_hash,
       email_domain,
+      email_domain_type,
 
       --keys
       master_record_id,
@@ -125,5 +127,5 @@ WITH biz_person AS (
     created_by="@mcooperDD",
     updated_by="@jpeguero",
     created_date="2020-12-08",
-    updated_date="2021-06-07"
+    updated_date="2021-06-19"
 ) }}

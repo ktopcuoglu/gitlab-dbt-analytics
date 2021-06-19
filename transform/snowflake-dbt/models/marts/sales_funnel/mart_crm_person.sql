@@ -49,6 +49,7 @@
       converted_date.first_day_of_month        AS converted_month,
       converted_date_pt.first_day_of_month     AS converted_month_pt,
       dim_crm_person.email_domain,
+      dim_crm_person.email_domain_type,
       dim_crm_person.email_hash,
       dim_crm_person.status,
       dim_crm_person.lead_source,
@@ -114,5 +115,5 @@
     created_by="@iweeks",
     updated_by="@jpeguero",
     created_date="2020-12-07",
-    updated_date="2021-04-26",
+    updated_date="2021-06-19",
   ) }}
