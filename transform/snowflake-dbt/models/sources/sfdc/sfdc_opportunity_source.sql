@@ -51,6 +51,7 @@ WITH source AS (
         sales_accepted_date__c                      AS sales_accepted_date,
         engagement_type__c                          AS sales_path,
         sales_qualified_date__c                     AS sales_qualified_date,
+        iqm_submitted_by_role__c                    AS iqm_submitted_by_role,
 
         type                                        AS sales_type,
         {{  sfdc_source_buckets('leadsource') }}

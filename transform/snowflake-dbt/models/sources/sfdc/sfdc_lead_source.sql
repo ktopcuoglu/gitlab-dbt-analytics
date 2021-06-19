@@ -13,6 +13,8 @@ WITH source AS (
         lastname                                                AS lead_last_name,
         email                                                   AS lead_email,
         split_part(email,'@',2)                                 AS email_domain,
+        {{email_domain_type("split_part(email,'@',2)", 'leadsource')}}
+                                                                AS email_domain_type,
 
         --keys
         masterrecordid                                          AS master_record_id,
