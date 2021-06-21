@@ -79,6 +79,7 @@ WITH date_details AS (
   SELECT pipe.*,
     opp_snap.stage_name,
     opp_snap.close_date,
+    opp_snap.forecast_category_name,
     -- before the deal was to close in quarter we show null
     -- within start and resolution the net arr of that day
     -- after pipe resolution the value the opty had that last day
@@ -99,4 +100,4 @@ WITH date_details AS (
 ) 
 
 SELECT *
-FROM report_pipeline_metrics_day
+FROM report_pipeline_movemnet_daily

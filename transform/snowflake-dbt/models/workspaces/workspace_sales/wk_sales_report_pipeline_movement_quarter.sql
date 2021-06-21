@@ -1,10 +1,5 @@
 {{ config(alias='report_pipeline_movement_quarter') }}
 
---TODO
--- DONE Add is renewal type, with current model is hard to get net net arr, it is only easy to get gross net arr
--- DONE Add Churned as Resolution type, if not, the negative churn value get's lost between the positive Net ARR value of lost FO or Expansion deals
---
-
 WITH sfdc_opportunity_snapshot_history_xf AS (
 
   SELECT *
@@ -250,6 +245,8 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
   SELECT 
     pipeline_type.opportunity_id,
     pipeline_type.close_fiscal_quarter_date,
+    history.stage_name,
+    history.forecast_category_name,
     history.net_arr,
     history.booked_net_arr
   FROM pipeline_type
@@ -319,16 +316,16 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
 
         -- basic net arr
 
-        COALESCE(pipe.starting_net_arr,pipe.pipeline_created_net_arr,pipe.pipeline_pull_net_arr,0)   AS quarter_start_net_arr,
-        COALESCE(pipe.starting_stage,pipe.pipeline_created_stage)                                 AS quarter_start_stage,
-        COALESCE(pipe.starting_forecast_category,pipe.pipeline_created_forecast_category)         AS quarter_start_forecast_category,
-        COALESCE(pipe.starting_close_date,pipe.pipeline_created_close_date)                       AS quarter_start_close_date,
+        COALESCE(pipe.starting_net_arr,pipe.pipeline_created_net_arr,pipe.pipeline_pull_net_arr,0)    AS quarter_start_net_arr,
+        COALESCE(pipe.starting_stage,pipe.pipeline_created_stage)                                     AS quarter_start_stage,
+        COALESCE(pipe.starting_forecast_category,pipe.pipeline_created_forecast_category)             AS quarter_start_forecast_category,
+        COALESCE(pipe.starting_close_date,pipe.pipeline_created_close_date)                           AS quarter_start_close_date,
 
         -- last day the opportunity was closing in quarter
-        last_day.net_arr                AS last_day_net_arr,                                                       
-        last_day.booked_net_arr         AS last_day_booked_net_arr,
-        last_day.stage_name             AS last_day_stage_name,
-        last_day.forecast_category      AS last_day_forecast_category,
+        last_day.net_arr                  AS last_day_net_arr,                                                       
+        last_day.booked_net_arr           AS last_day_booked_net_arr,
+        last_day.stage_name               AS last_day_stage_name,
+        last_day.forecast_category_name   AS last_day_forecast_category,
 
         -- last day of the quarter, at this point the deal might not be closing
         -- on the quarter
@@ -344,7 +341,7 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
         
         opty.is_renewal                    AS is_renewal,
 
-        last_day.net_arr - beg_net_arr  AS within_quarter_delta_net_arr,
+        last_day.net_arr - quarter_start_net_arr  AS within_quarter_delta_net_arr,
 
         ----------
         -- extra fields for trouble shooting
