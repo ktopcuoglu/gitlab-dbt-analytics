@@ -27,6 +27,7 @@
     is_staging,    
 
     -- instance user statistics 
+    raw_usage_data_payload['license_billable_users']::NUMBER(38,0)                                          AS license_billable_users, 
     raw_usage_data_payload['active_user_count']::NUMBER(38,0)                                               AS instance_user_count, 
     raw_usage_data_payload['historical_max_users']::NUMBER(38,0)                                            AS historical_max_users, 
     raw_usage_data_payload['license_md5']::VARCHAR                                                          AS license_md5,
