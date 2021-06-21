@@ -28,6 +28,7 @@ sources:
       - name: gitlab_dotcom_projects_snapshots
       - name: gitlab_dotcom_project_statistics_snapshots
       - name: mart_arr_snapshot
+      - name: mart_retention_parent_account_snapshot
       - name: license_db_licenses_snapshots
       - name: sfdc_account_snapshots
       - name: sfdc_opportunity_snapshots
