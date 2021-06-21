@@ -1,7 +1,7 @@
 WITH snapshots AS (
 
-  SELECT *
-  FROM {{ source('snapshots', 'gitlab_dotcom_namespaces_snapshots') }}
+    SELECT *
+    FROM {{ source('snapshots', 'gitlab_dotcom_namespaces_snapshots') }}
     
 ), renamed as (
 
