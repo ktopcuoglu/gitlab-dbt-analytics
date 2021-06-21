@@ -1,19 +1,4 @@
 version: 2
-
-models:
-  - name: gitlab_dotcom_audit_event_details_clean
-    description: All gitlab dotcom audit event details, with pii replaced with hashes
-    columns:
-      - name: audit_event_id
-        tests:
-          - not_null
-      - name: key_name
-        tests:
-          - not_null
-      - name: key_value
-      - name: created_at
-        tests:
-          - not_null
   
   - name: gitlab_dotcom_ci_minutes_ui_namespace_replication
     description: '{{ doc("gitlab_dotcom_ci_minutes_ui_namespace_replication") }}'
