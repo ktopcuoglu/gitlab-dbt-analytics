@@ -35,7 +35,7 @@ WITH snapshot_dates AS (
       mart_retention_parent_account.*
     FROM mart_retention_parent_account
     JOIN dim_crm_account
-    ON dim_crm_account.dim_parent_crm_account_ID = mart_retention_parent_account.dim_crm_account_id
+      ON dim_crm_account.dim_parent_crm_account_ID = mart_retention_parent_account.dim_crm_account_id
     WHERE is_jihu_account = FALSE
 
 ), mart_retention_parent_account_spined AS (
