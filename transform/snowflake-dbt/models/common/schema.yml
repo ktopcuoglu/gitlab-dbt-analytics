@@ -2885,3 +2885,24 @@ models:
       - name: dim_plan_id
         tests:
           - not_null
+
+  - name: dim_ci_build
+    description: '{{ doc("dim_ci_build") }}'
+    columns:
+      - name: dim_ci_build_id
+        description: Unique key of CI Build
+        tests:
+          - not_null
+          - unique
+      - name: dim_project_id
+        description: Foreign key that shows the ID of the project in which the build has been triggered.
+      - name: dim_namespace_id
+        description: Foreign key that shows the ID of the namespace in which the build has been triggered.
+      - name: ultimate_parent_namespace_id
+      - name: dim_user_id
+        description: Foreign key that shows the ID of the user who triggered the CI Build
+      - name: dim_plan_id
+        description: ID of the Plan
+      - name: ci_runner_id
+        description: ID of the runner with which the CI build has been run.
+      - name: dim_ci_stage_id
