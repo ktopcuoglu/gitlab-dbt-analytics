@@ -49,7 +49,7 @@ This model captures a historical record of GitLab's default application settings
 
 {% docs prep_gitlab_dotcom_audit_event_details_clean %}
 
-Creates a union of audit event keys from `gitlab_dotcom_audit_event_details` and `gitlab_dotcom_audit_event_details_pii`.
+All GitLab audit event details, with pii replaced with hashes. Created by a union of audit event keys from `gitlab_dotcom_audit_event_details` and `gitlab_dotcom_audit_event_details_pii`.
 
 {% enddocs %}
 
