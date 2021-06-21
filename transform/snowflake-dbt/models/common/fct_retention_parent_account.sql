@@ -7,6 +7,7 @@ WITH dim_date AS (
 
     SELECT *
     FROM {{ ref('prep_crm_account') }}
+    WHERE is_jihu_account = FALSE
 
 ), prep_product_detail AS (
 
@@ -82,7 +83,6 @@ WITH dim_date AS (
       ON dim_date.date_id = prep_recurring_charge.dim_date_id
     LEFT JOIN prep_crm_account
       ON prep_crm_account.dim_crm_account_id = prep_recurring_charge.dim_crm_account_id
-      AND is_jihu_account = FALSE
     LEFT JOIN next_renewal_month
       ON next_renewal_month.dim_parent_crm_account_id = prep_crm_account.dim_parent_crm_account_id
     LEFT JOIN last_renewal_month
