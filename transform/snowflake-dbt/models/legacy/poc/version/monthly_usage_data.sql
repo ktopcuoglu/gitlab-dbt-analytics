@@ -1,7 +1,7 @@
 WITH monthly_usage_data_all_time AS (
 
     SELECT *
-    FROM {{ ref('monthly_usage_data_all_time') }}
+FROM {{ ref('monthly_usage_data_all_time') }}
 
 )
 
