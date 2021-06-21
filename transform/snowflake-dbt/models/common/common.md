@@ -598,7 +598,7 @@ A fact table that contains only the metrics that is a UMAU, SMAU, or GMAU metric
 
 Dimension table that contains all CI build data.
 
-Easily to join with the following tables:
+Easy to join with the following tables:
 
 - `dim_project` through `dim_project_id`
 - `dim_namespace` through `dim_namespace_id` and `ultimate_parent_namespace_id`
