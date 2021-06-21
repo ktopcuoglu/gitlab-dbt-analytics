@@ -32,7 +32,7 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
    SELECT DISTINCT first_day_of_fiscal_quarter AS current_fiscal_quarter_date,
                    fiscal_quarter_name_fy      AS current_fiscal_quarter_name,
                    90 - DATEDIFF(day, date_actual, last_day_of_fiscal_quarter)           AS current_day_of_fiscal_quarter_normalised
-   FROM {{ ref('date_details') }} 
+   FROM {{ ref('wk_sales_date_details') }} 
    WHERE date_actual = CURRENT_DATE 
   
 ), pipeline_type_start_ids AS (
@@ -268,8 +268,8 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
         opty.sales_team_cro_level,
         opty.sales_team_rd_asm_level,
         -- pipeline fields
-        pipe.close_fiscal_quarter_date,
-        pipe.close_fiscal_quarter_name,
+        pipe.close_fiscal_quarter_date      AS report_fiscal_quarter_date,
+        pipe.close_fiscal_quarter_name      AS report_fiscal_quarter_name,
         pipe.pipeline_type,
 
         CASE 

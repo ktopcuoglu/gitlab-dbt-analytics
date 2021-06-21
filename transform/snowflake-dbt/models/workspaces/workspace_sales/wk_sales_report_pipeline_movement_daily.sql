@@ -3,8 +3,7 @@
 WITH date_details AS (
 
     SELECT *
-    FROM {{ ref('date_details') }} 
-    WHERE date_actual = CURRENT_DATE 
+    FROM {{ ref('wk_sales_date_details') }} 
 
 )
 , report_pipeline_movement_quarter AS (
@@ -37,7 +36,6 @@ WITH date_details AS (
     fiscal_quarter_name_fy            AS report_fiscal_quarter_name,
     first_day_of_fiscal_quarter       AS report_fiscal_quarter_date
   FROM date_details
-  WHERE fiscal_year >= 2020
   
 )
 -- using the daily perspective and the max, min and resolution dates from the quarterly view
@@ -72,7 +70,7 @@ WITH date_details AS (
   
   FROM report_period report
     INNER JOIN report_pipeline_movement_quarter pipe
-      ON  pipe.close_fiscal_quarter_date = report.report_fiscal_quarter_date
+      ON  pipe.report_fiscal_quarter_date = report.report_fiscal_quarter_date
 
 ), report_pipeline_movemnet_daily AS (
   
