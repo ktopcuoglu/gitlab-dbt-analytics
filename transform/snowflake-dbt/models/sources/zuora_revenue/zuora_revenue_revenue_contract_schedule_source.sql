@@ -47,7 +47,7 @@ WITH zuora_revenue_revenue_contract_schedule AS (
       pp_cl_flag::VARCHAR                           AS is_previous_period_contract_liability,
       netting_entry_flag::VARCHAR                   AS is_netting_entry,
       reallocation_flag::VARCHAR                    AS is_reallocation,
-      account_name::VARCHAR                         AS account_name,
+      account_name::VARCHAR                         AS accounting_type_name,
       schd_type_flag::VARCHAR                       AS schedule_type,
       initial_rep_entry_flag::VARCHAR               AS is_initial_reporting_entry,
       period_name::VARCHAR                          AS period_name,

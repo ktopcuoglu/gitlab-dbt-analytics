@@ -7,7 +7,7 @@ WITH zuora_revenue_calendar AS (
 
     SELECT
     
-      id::VARCHAR                   AS calendar_id,
+      id::VARCHAR                   AS period_id,
       period_name::VARCHAR          AS period_name,
       period_num::VARCHAR           AS period_number,
       start_date::DATETIME          AS calendar_start_date,
