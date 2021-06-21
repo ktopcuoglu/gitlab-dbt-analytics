@@ -4,7 +4,7 @@
     })
 }}
 
-WITH data AS ( 
+WITH prep_usage_data_flattened AS ( 
   
     SELECT * FROM {{ ref('prep_usage_data_flattened')}}
     {% if is_incremental() %}
