@@ -6,13 +6,6 @@
   })
 }}
 
-{% set change_form = ['formId','elementId','nodeName','type','elementClasses','value'] %}
-{% set submit_form = ['formId','formClasses','elements'] %}
-{% set focus_form = ['formId','elementId','nodeName','elementType','elementClasses','value'] %}
-{% set link_click = ['elementId','elementClasses','elementTarget','targetUrl','elementContent'] %}
-{% set track_timing = ['category','variable','timing','label'] %}
-
-
 WITH filtered_source as (
 
     SELECT
@@ -65,7 +58,7 @@ WITH filtered_source as (
     https://gitlab.com/gitlab-org/iglu/-/blob/master/public/schemas/com.gitlab/gitlab_standard/jsonschema/1-0-5
 
     To in this CTE for any event, we use LATERAL FLATTEN to create one row per context per event.
-    We then extract the context schema and the context data (where the web_page_id will be contained)
+    We then extract the context schema and the context data
     */
     SELECT 
       base.*,
@@ -78,16 +71,16 @@ WITH filtered_source as (
 
 /*
 in this CTE we take the results from the previous CTE and isolate the only context we are interested in:
-the web_page context, which has this context schema: iglu:com.gitlab/gitlab_standard/jsonschema/1-0-5
+the gitlab standard context, which has this context schema: iglu:com.gitlab/gitlab_standard/jsonschema/1-0-5
 Then we extract the id from the context_data column
 */
 SELECT 
     events_with_context_flattened.event_id,
-    context_data['project_id']::NUMBER   AS project_id,
-    context_data['namespace_id']::NUMBER AS namespace_id,
-    context_data['environment']::TEXT    AS environment,
-    context_data['source']::TEXT         AS source,
-    context_data['plan']::TEXT           AS plan,
-    context_data['extra']::TEXT          AS extra
+    context_data['environment']::TEXT     AS environment,
+    TRY_PARSE_JSON(context_data['extra']) AS extra,
+    context_data['namespace_id']::NUMBER  AS namespace_id,
+    context_data['plan']::TEXT            AS plan,
+    context_data['project_id']::NUMBER    AS project_id,
+    context_data['source']::TEXT          AS source
 FROM events_with_context_flattened
 WHERE context_data_schema = 'iglu:com.gitlab/gitlab_standard/jsonschema/1-0-5'
