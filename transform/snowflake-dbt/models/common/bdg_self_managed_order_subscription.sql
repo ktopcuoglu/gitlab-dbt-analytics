@@ -107,7 +107,6 @@
 
     SELECT
       subscription_list.dim_subscription_id, 
-      subscription_list.dim_subscription_id_original,
       order_list.order_id, 
       order_list.subscription_id_order,
       order_list.customer_id, 

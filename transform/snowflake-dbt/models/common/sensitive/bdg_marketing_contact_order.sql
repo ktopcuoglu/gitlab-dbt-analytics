@@ -24,7 +24,7 @@
 ), usage_ping_subscription_smau_aggregate AS (
 
     SELECT 
-      COALESCE(DIM_SUBSCRIPTION_ID_ORIGINAL, dim_subscription_id) as dim_subscription_id,
+      dim_subscription_id,
       manage_analytics_total_unique_counts_monthly,
       plan_redis_hll_counters_issues_edit_issues_edit_total_unique_counts_monthly,
       create_repo_writes,
@@ -41,7 +41,7 @@
 ), product_usage_wave_1_3_aggregate AS (
 
     SELECT 
-      COALESCE(DIM_SUBSCRIPTION_ID_ORIGINAL, dim_subscription_id) as dim_subscription_id,
+      dim_subscription_id,
       umau_28_days_user,
       action_monthly_active_users_project_repo_28_days_user,
       merge_requests_28_days_user,
