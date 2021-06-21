@@ -38,7 +38,7 @@ WITH snapshot_dates AS (
     SELECT
       snapshot_dates.date_id                 AS snapshot_id,
       snapshot_dates.date_actual             AS snapshot_date,
-      {{ dbt_utils.surrogate_key(['dim_date.date_actual', 'subscription_name', 'dim_product_detail_id']) }} AS primary_key,
+      {{ dbt_utils.surrogate_key(['snapshot_dates.date_actual', 'subscription_name', 'dim_product_detail_id']) }} AS primary_key,
       snapshot_dates.date_actual            AS arr_month,
       NULL                                  AS fiscal_quarter_name_fy,
       NULL                                  AS fiscal_year,
@@ -84,7 +84,7 @@ WITH snapshot_dates AS (
       NULL                                  AS product_delivery_type,
       NULL                                  AS service_type,
       NULL                                  AS product_rate_plan_name,
-      ARRAY_AGG(unit_of_measure)              AS unit_of_measure,
+      ARRAY_AGG(unit_of_measure)            AS unit_of_measure,
       mrr                                   AS mrr,
       arr                                   AS arr,
       quantity                              AS quantity,
@@ -114,7 +114,7 @@ WITH snapshot_dates AS (
     AND snapshot_dates.date_actual < COALESCE(prep_charge.valid_to, '9999-12-31'::TIMESTAMP)
     -- NOTE THE GAP IN THE GROUPINGS BELOW, (between 48-50)
     -- We need to group by everything except for unit of measure.
-    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,
+    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72
 
 ), non_manual_charges AS (
 
