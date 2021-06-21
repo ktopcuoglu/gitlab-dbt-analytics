@@ -24,7 +24,7 @@ def make_api_call(
     return response.json()
 
 
-def get_targets():
+def get_lcp_targets():
     return [
         "sitespeed_io.desktop.gitlab.pageSummary.gitlab_com.GitLab_Project_Home.chrome.cable.browsertime.statistics.timings.largestContentfulPaint.renderTime.*",
         "sitespeed_io.desktop.gitlab.pageSummary.gitlab_com.GitLab_Issue_list.chrome.cable.browsertime.statistics.timings.largestContentfulPaint.renderTime.*",
@@ -39,28 +39,71 @@ def get_targets():
     ]
 
 
+
+
 if __name__ == "__main__":
 
     config_dict = env.copy()
 
     snowflake_engine = snowflake_engine_factory(config_dict, "LOADER")
 
-    for target in get_targets():
-        lcp_data = make_api_call(
-            target,
-            "-30d",
-            config_dict["START_DATE"],
-            config_dict["GRAPHITE_USERNAME"],
-            config_dict["GRAPHITE_PASSWORD"],
-            config_dict["GRAPHITE_HOST"],
-        )
+    # for target in get_lcp_targets():
+    #     lcp_data = make_api_call(
+    #         target,
+    #         "-30d",
+    #         config_dict["START_DATE"],
+    #         config_dict["GRAPHITE_USERNAME"],
+    #         config_dict["GRAPHITE_PASSWORD"],
+    #         config_dict["GRAPHITE_HOST"],
+    #     )
 
-        with open("lcp.json", "w") as out_file:
-            json.dump(lcp_data, out_file)
+    #     with open("lcp.json", "w") as out_file:
+    #         json.dump(lcp_data, out_file)
 
-        snowflake_stage_load_copy_remove(
-            "lcp.json",
-            "engineering_extracts.lcp_load",
-            "engineering_extracts.lcp",
-            snowflake_engine,
-        )
+    #     snowflake_stage_load_copy_remove(
+    #         "lcp.json",
+    #         "engineering_extracts.lcp_load",
+    #         "engineering_extracts.lcp",
+    #         snowflake_engine,
+    #     )
+    
+    target = "$base.$path.pageSummary.$group.$page.$browser.$connectivity.browsertime.statistics.pageinfo.layoutShift.*",
+        
+    data = make_api_call(
+        target,
+        "-30d",
+        config_dict["START_DATE"],
+        config_dict["GRAPHITE_USERNAME"],
+        config_dict["GRAPHITE_PASSWORD"],
+        config_dict["GRAPHITE_HOST"],
+    )
+    with open("other_stats.json", "w") as out_file:
+        json.dump(data, out_file)
+
+    snowflake_stage_load_copy_remove(
+        "other_stats.json",
+        "engineering_extracts.lcp_load",
+        "engineering_extracts.layout_shift",
+        snowflake_engine,
+    )
+
+    target = "$base.$path.$testname.pageSummary.$group.$page.$browser.$connectivity.browsertime.statistics.cpu.longTasks.totalBlockingTime.*",
+        
+    data = make_api_call(
+        target,
+        "-30d",
+        config_dict["START_DATE"],
+        config_dict["GRAPHITE_USERNAME"],
+        config_dict["GRAPHITE_PASSWORD"],
+        config_dict["GRAPHITE_HOST"],
+    )
+    with open("other_stats.json", "w") as out_file:
+        json.dump(data, out_file)
+
+    snowflake_stage_load_copy_remove(
+        "other_stats.json",
+        "engineering_extracts.lcp_load",
+        "engineering_extracts.blocking_time",
+        snowflake_engine,
+    )    
+
