@@ -1,6 +1,6 @@
 {{ config({
         "materialized": "incremental",
-        "unique_key": "mart_arr_snapshot_id",
+        "unique_key": "mart_retention_parent_account_snapshot_id",
         "tags": ["edm_snapshot", "arr_snapshots"],
         "schema": "common"
     })
@@ -19,28 +19,28 @@ WITH snapshot_dates AS (
 
    {% endif %}
 
-),  mart_arr AS (
+), mart_retention_parent_account AS (
 
     SELECT
       *
     FROM {{ ref('mart_retention_parent_account_snapshot_base') }}
 
-), mart_arr_spined AS (
+), mart_retention_parent_account_spined AS (
 
     SELECT
       snapshot_dates.date_id AS snapshot_id,
-      mart_arr.*
-    FROM mart_arr
+      mart_retention_parent_account.*
+    FROM mart_retention_parent_account
     INNER JOIN snapshot_dates
-      ON snapshot_dates.date_actual >= mart_arr.dbt_valid_from
-      AND snapshot_dates.date_actual < {{ coalesce_to_infinity('mart_arr.dbt_valid_to') }}
+      ON snapshot_dates.date_actual >= mart_retention_parent_account.dbt_valid_from
+      AND snapshot_dates.date_actual < {{ coalesce_to_infinity('mart_retention_parent_account.dbt_valid_to') }}
 
 ), final AS (
 
     SELECT
-     {{ dbt_utils.surrogate_key(['snapshot_id', 'primary_key']) }} AS mart_arr_snapshot_id,
+     {{ dbt_utils.surrogate_key(['snapshot_id', 'primary_key']) }} AS mart_retention_parent_account_snapshot_id,
        *
-    FROM mart_arr_spined
+    FROM mart_retention_parent_account_spined
 
 )
 
