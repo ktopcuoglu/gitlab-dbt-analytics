@@ -1,7 +1,7 @@
 WITH source AS (
 
     SELECT *
-    FROM {{ ref('gitlab_dotcom_boards_epic_boards') }}
+    FROM {{ ref('gitlab_dotcom_boards_epic_boards_dedupe_source') }}
 
 ), renamed AS (
 
