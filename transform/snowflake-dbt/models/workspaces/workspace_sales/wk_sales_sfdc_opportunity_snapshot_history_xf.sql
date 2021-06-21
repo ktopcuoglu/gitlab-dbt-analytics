@@ -643,14 +643,7 @@ WITH date_details AS (
          ELSE 0
       END                                                   AS is_eligible_created_pipeline_flag,
 
-      -- created and closed within the quarter net arr
-      CASE 
-        WHEN opp_snapshot.pipeline_created_fiscal_quarter_name = opp_snapshot.close_fiscal_quarter_name
-           AND is_eligible_created_pipeline_flag = 1
-            THEN opp_snapshot.net_arr
-        ELSE 0
-      END                                                   AS created_and_won_same_quarter_net_arr,
-
+   
       -- created within quarter
       CASE
         WHEN opp_snapshot.pipeline_created_fiscal_quarter_name = opp_snapshot.snapshot_fiscal_quarter_name
@@ -658,6 +651,16 @@ WITH date_details AS (
             THEN opp_snapshot.net_arr
         ELSE 0 
       END                                                  AS created_in_snapshot_quarter_net_arr,
+
+   -- created and closed within the quarter net arr
+      CASE 
+        WHEN opp_snapshot.pipeline_created_fiscal_quarter_name = opp_snapshot.close_fiscal_quarter_name
+           AND is_won = 1
+           AND is_eligible_created_pipeline_flag = 1
+            THEN opp_snapshot.net_arr
+        ELSE 0
+      END                                                   AS created_and_won_same_quarter_net_arr,
+
 
       CASE
         WHEN opp_snapshot.pipeline_created_fiscal_quarter_name = opp_snapshot.snapshot_fiscal_quarter_name

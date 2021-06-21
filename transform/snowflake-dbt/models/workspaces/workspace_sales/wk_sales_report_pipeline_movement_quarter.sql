@@ -1,5 +1,4 @@
-{{ config(alias='report_opportunity_pipeline_type') }}
-
+{{ config(alias='report_pipeline_movement_quarter') }}
 
 --TODO
 -- DONE Add is renewal type, with current model is hard to get net net arr, it is only easy to get gross net arr
@@ -263,67 +262,67 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
 
   SELECT 
   
-        p.opportunity_id,
+        pipe.opportunity_id,
         -- descriptive cuts
-        o.order_type_stamped,
-        o.sales_qualified_source,
-        o.deal_category,
-        o.deal_group,
-        o.sales_team_cro_level,
-        o.sales_team_rd_asm_level,
+        opty.order_type_stamped,
+        opty.sales_qualified_source,
+        opty.deal_category,
+        opty.deal_group,
+        opty.sales_team_cro_level,
+        opty.sales_team_rd_asm_level,
         -- pipeline fields
-        p.close_fiscal_quarter_date,
-        p.close_fiscal_quarter_name,
-        p.pipeline_type,
+        pipe.close_fiscal_quarter_date,
+        pipe.close_fiscal_quarter_name,
+        pipe.pipeline_type,
 
         CASE 
-          WHEN p.close_fiscal_quarter_date = o.close_fiscal_quarter_date
+          WHEN pipe.close_fiscal_quarter_date = opty.close_fiscal_quarter_date
             THEN 1
           ELSE 0
         END                                                                     AS is_closed_in_quarter_flag,
         CASE 
-            WHEN p.close_fiscal_quarter_date = o.close_fiscal_quarter_date
-                AND o.is_won = 1
+            WHEN pipe.close_fiscal_quarter_date = opty.close_fiscal_quarter_date
+                AND opty.is_won = 1
                     THEN '1. Closed Won'
             -- the close date for churned deals is updated to the last day before renewal
-            WHEN p.end_is_lost = 1
-                AND o.is_renewal = 1
+            WHEN pipe.end_is_lost = 1
+                AND opty.is_renewal = 1
                     THEN '5. Churned'
-            WHEN p.close_fiscal_quarter_date = o.close_fiscal_quarter_date
-                AND o.is_lost = 1
+            WHEN pipe.close_fiscal_quarter_date = opty.close_fiscal_quarter_date
+                AND opty.is_lost = 1
                     THEN '4. Closed Lost'
-            WHEN p.close_fiscal_quarter_date = o.close_fiscal_quarter_date
-                AND o.is_open = 1
+            WHEN pipe.close_fiscal_quarter_date = opty.close_fiscal_quarter_date
+                AND opty.is_open = 1
                     THEN '6. Open'
-            WHEN p.close_fiscal_quarter_date = o.close_fiscal_quarter_date
-                AND o.stage_name IN ('9-Unqualified','10-Duplicate','Unqualified')
+            WHEN pipe.close_fiscal_quarter_date = opty.close_fiscal_quarter_date
+                AND opty.stage_name IN ('9-Unqualified','10-Duplicate','Unqualified')
                     THEN '7. Duplicate / Unqualified'
-            WHEN p.close_fiscal_quarter_date <> o.close_fiscal_quarter_date
-                AND p.max_snapshot_day_of_fiscal_quarter_normalised >= 75
+            WHEN pipe.close_fiscal_quarter_date <> opty.close_fiscal_quarter_date
+                AND pipe.max_snapshot_day_of_fiscal_quarter_normalised >= 75
                     THEN '2. Slipped'
-            WHEN p.close_fiscal_quarter_date <> o.close_fiscal_quarter_date
-                AND p.max_snapshot_day_of_fiscal_quarter_normalised < 75
+            WHEN pipe.close_fiscal_quarter_date <> opty.close_fiscal_quarter_date
+                AND pipe.max_snapshot_day_of_fiscal_quarter_normalised < 75
                     THEN '3. Pushed Out' 
           ELSE '8. Other'
         END                                                                     AS pipe_resolution,
 
         CASE
           WHEN pipe_resolution LIKE ANY ('%Closed%','%Duplicate%') 
-            THEN p.end_close_date
+            THEN pipe.end_close_date
           WHEN pipe_resolution LIKE ANY ('%Churned%')
-            AND p.close_fiscal_quarter_date = o.close_fiscal_quarter_date
-            THEN p.end_close_date
+            AND pipe.close_fiscal_quarter_date = opty.close_fiscal_quarter_date
+            THEN pipe.end_close_date
           WHEN pipe_resolution LIKE ANY ('%2%Slipped%','%3%Pushed%','%Open%','%Churned%')
-            THEN p.max_snapshot_date
+            THEN pipe.max_snapshot_date
           ELSE null
         END                                                                     AS pipe_resolution_date,
 
         -- basic net arr
 
-        COALESCE(p.starting_net_arr,p.pipeline_created_net_arr,p.pipeline_pull_net_arr,0)   AS quarter_start_net_arr,
-        COALESCE(p.starting_stage,p.pipeline_created_stage)                                 AS quarter_start_stage,
-        COALESCE(p.starting_forecast_category,p.pipeline_created_forecast_category)         AS quarter_start_forecast_category,
-        COALESCE(p.starting_close_date,p.pipeline_created_close_date)                       AS quarter_start_close_date,
+        COALESCE(pipe.starting_net_arr,pipe.pipeline_created_net_arr,pipe.pipeline_pull_net_arr,0)   AS quarter_start_net_arr,
+        COALESCE(pipe.starting_stage,pipe.pipeline_created_stage)                                 AS quarter_start_stage,
+        COALESCE(pipe.starting_forecast_category,pipe.pipeline_created_forecast_category)         AS quarter_start_forecast_category,
+        COALESCE(pipe.starting_close_date,pipe.pipeline_created_close_date)                       AS quarter_start_close_date,
 
         -- last day the opportunity was closing in quarter
         last_day.net_arr                AS last_day_net_arr,                                                       
@@ -333,48 +332,49 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
 
         -- last day of the quarter, at this point the deal might not be closing
         -- on the quarter
-        p.end_booked_net_arr            AS quarter_end_booked_net_arr,                                                                                                   
-        p.end_net_arr                   AS quarter_end_net_arr,
-        p.end_stage                     AS quarter_end_stage,  
-        p.end_stage_category            AS quarter_end_stage_category,                                              
-        p.end_forecast_category         AS quarter_end_forecast_category,
-        p.end_close_date                AS quarter_end_close_date,
-        p.end_is_won                    AS quarter_end_is_won,
-        p.end_is_lost                   AS quarter_end_is_lost,
-        p.end_is_open                   AS quarter_end_is_open,
-        o.is_renewal                    AS quarter_end_is_renewal,
+        pipe.end_booked_net_arr            AS quarter_end_booked_net_arr,                                                                                                   
+        pipe.end_net_arr                   AS quarter_end_net_arr,
+        pipe.end_stage                     AS quarter_end_stage,  
+        pipe.end_stage_category            AS quarter_end_stage_category,                                              
+        pipe.end_forecast_category         AS quarter_end_forecast_category,
+        pipe.end_close_date                AS quarter_end_close_date,
+        pipe.end_is_won                    AS quarter_end_is_won,
+        pipe.end_is_lost                   AS quarter_end_is_lost,
+        pipe.end_is_open                   AS quarter_end_is_open,
+        
+        opty.is_renewal                    AS is_renewal,
 
         last_day.net_arr - beg_net_arr  AS within_quarter_delta_net_arr,
 
         ----------
         -- extra fields for trouble shooting
         
-        p.min_snapshot_day_of_fiscal_quarter_normalised,
-        p.max_snapshot_day_of_fiscal_quarter_normalised,
+        pipe.min_snapshot_day_of_fiscal_quarter_normalised,
+        pipe.max_snapshot_day_of_fiscal_quarter_normalised,
 
-        p.min_snapshot_date,
-        p.max_snapshot_date,
+        pipe.min_snapshot_date,
+        pipe.max_snapshot_date,
 
-        p.min_close_date,
-        p.max_close_date,
+        pipe.min_close_date,
+        pipe.max_close_date,
 
-        p.min_net_arr,
-        p.max_net_arr,
+        pipe.min_net_arr,
+        pipe.max_net_arr,
 
-        p.min_stage_name,
-        p.max_stage_name,
+        pipe.min_stage_name,
+        pipe.max_stage_name,
 
         ----------
-        current_date                                                    AS last_updated_at
+        CURRENT_DATE                                                    AS last_updated_at
 
 
-  FROM pipeline_type p
+  FROM pipeline_type pipe
   CROSS JOIN today_date 
-  INNER JOIN sfdc_opportunity_xf o
-      ON o.opportunity_id = p.opportunity_id
+  INNER JOIN sfdc_opportunity_xf opty
+      ON opty.opportunity_id = pipe.opportunity_id
   LEFT JOIN pipeline_last_day_in_snapshot_quarter last_day
-    ON last_day.opportunity_id = p.opportunity_id
-    AND p.close_fiscal_quarter_date = last_day.close_fiscal_quarter_date
+    ON last_day.opportunity_id = pipe.opportunity_id
+    AND pipe.close_fiscal_quarter_date = last_day.close_fiscal_quarter_date
 ) 
 
 SELECT *
