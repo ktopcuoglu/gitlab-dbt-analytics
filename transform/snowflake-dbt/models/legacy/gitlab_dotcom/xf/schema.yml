@@ -1,5 +1,6 @@
 version: 2
   
+models:
   - name: gitlab_dotcom_ci_minutes_ui_namespace_replication
     description: '{{ doc("gitlab_dotcom_ci_minutes_ui_namespace_replication") }}'
     columns:
