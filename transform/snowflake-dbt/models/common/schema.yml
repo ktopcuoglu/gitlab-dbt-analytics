@@ -2868,3 +2868,29 @@ models:
       - name: dim_plan_id
         tests:
           - not_null
+
+  - name: dim_issue
+    description: '{{ doc("dim_issue") }}'
+    columns:
+      - name: dim_issue_id
+        description: The unique identifier for each of the issues.
+        tests:
+          - not_null
+          - unique
+      - name: dim_project_id
+      - name: dim_plan_id
+        tests:
+          - not_null
+
+  - name: dim_merge_request
+    description: '{{ doc("dim_merge_request") }}'
+    columns:
+      - name: dim_merge_request_id
+        description: The unique identifier for each of the merge requets.
+        tests:
+          - not_null
+          - unique
+      - name: dim_project_id
+      - name: dim_plan_id
+        tests:
+          - not_null
