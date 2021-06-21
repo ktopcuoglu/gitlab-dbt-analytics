@@ -85,6 +85,7 @@ WITH marketing_contact AS (
 
     SELECT 
       dim_marketing_contact_id,
+      ARRAY_AGG(dim_subscription_id) within group (order by dim_subscription_id asc)                AS dim_subscription_ids,
       SUM(smau_manage_analytics_total_unique_counts_monthly)                                        AS smau_manage_analytics_total_unique_counts_monthly,
       SUM(smau_plan_redis_hll_counters_issues_edit_issues_edit_total_unique_counts_monthly)         AS smau_plan_redis_hll_counters_issues_edit_issues_edit_total_unique_counts_monthly,
       SUM(smau_create_repo_writes)                                                                  AS smau_create_repo_writes,
@@ -506,6 +507,7 @@ WITH marketing_contact AS (
       marketing_contact.zuora_active_state,
       marketing_contact.wip_is_valid_email_address,
       marketing_contact.wip_invalid_email_address_reason,
+      usage_metrics.dim_subscription_ids,
       usage_metrics.smau_manage_analytics_total_unique_counts_monthly,
       usage_metrics.smau_plan_redis_hll_counters_issues_edit_issues_edit_total_unique_counts_monthly,
       usage_metrics.smau_create_repo_writes,

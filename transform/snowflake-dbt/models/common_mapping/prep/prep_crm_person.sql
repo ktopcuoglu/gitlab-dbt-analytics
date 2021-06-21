@@ -71,7 +71,9 @@ WITH biz_person AS (
       bizible_touchpoint_position,
       bizible_marketing_channel_path,
       bizible_touchpoint_date,
-      region
+      region,
+
+      NULL                                          AS crm_partner_id
 
     FROM sfdc_contacts
     LEFT JOIN biz_person_with_touchpoints
@@ -111,7 +113,9 @@ WITH biz_person AS (
       bizible_touchpoint_position,
       bizible_marketing_channel_path,
       bizible_touchpoint_date,
-      region
+      region,
+
+      crm_partner_id
 
     FROM sfdc_leads
     LEFT JOIN biz_person_with_touchpoints

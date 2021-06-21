@@ -86,6 +86,7 @@ WITH map_merged_crm_account AS (
     sfdc_account.health_score,
     sfdc_account.health_number,
     sfdc_account.health_score_color,
+    sfdc_account.partner_account_iban_number,
     ultimate_parent_account.account_id            AS dim_parent_crm_account_id,
     ultimate_parent_account.account_name          AS parent_crm_account_name,
     {{ sales_segment_cleaning('sfdc_account.ultimate_parent_sales_segment') }}
