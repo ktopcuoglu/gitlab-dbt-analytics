@@ -112,6 +112,8 @@ WITH snapshot_dates AS (
     INNER JOIN snapshot_dates
     ON snapshot_dates.date_actual >= prep_charge.valid_from
     AND snapshot_dates.date_actual < COALESCE(prep_charge.valid_to, '9999-12-31'::TIMESTAMP)
+    -- NOTE THE GAP IN THE GROUPINGS BELOW, (between 48-50)
+    -- We need to group by everything except for unit of measure.
     GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,
 
 ), non_manual_charges AS (
