@@ -39,8 +39,6 @@ def get_lcp_targets():
     ]
 
 
-
-
 if __name__ == "__main__":
 
     config_dict = env.copy()
@@ -66,12 +64,18 @@ if __name__ == "__main__":
             "engineering_extracts.lcp",
             snowflake_engine,
         )
-    
-    pages = ["GitLab_Project_Home", "GitLab_Issue_list", "GitLab_Issue_Detail", "GitLab_Merge_List", "GitLab_Merge_Detail"]
+
+    pages = [
+        "GitLab_Project_Home",
+        "GitLab_Issue_list",
+        "GitLab_Issue_Detail",
+        "GitLab_Merge_List",
+        "GitLab_Merge_Detail",
+    ]
 
     for page in pages:
         target = f"sitespeed_io.desktop.gitlab.pageSummary.gitlab_com.{page}.chrome.cable.browsertime.statistics.pageinfo.layoutShift.*"
-            
+
         data = make_api_call(
             target,
             "-30d",
@@ -91,8 +95,10 @@ if __name__ == "__main__":
         )
 
     for page in pages:
-        target = f"sitespeed_io.desktop.gitlab.pageSummary.gitlab_com.{page}.chrome.cable.browsertime.statistics.cpu.longTasks.totalBlockingTime.*",
-            
+        target = (
+            f"sitespeed_io.desktop.gitlab.pageSummary.gitlab_com.{page}.chrome.cable.browsertime.statistics.cpu.longTasks.totalBlockingTime.*",
+        )
+
         data = make_api_call(
             target,
             "-30d",
@@ -109,5 +115,4 @@ if __name__ == "__main__":
             "engineering_extracts.lcp_load",
             "engineering_extracts.blocking_time",
             snowflake_engine,
-        )    
-
+        )
