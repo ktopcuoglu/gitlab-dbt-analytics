@@ -105,6 +105,8 @@ WITH map_merged_crm_account AS (
     sfdc_account.record_type_id                   AS record_type_id,
     sfdc_account.federal_account                  AS federal_account,
     jihu_accounts.is_jihu_account                 AS is_jihu_account,
+    sfdc_account.potential_arr_lam,
+    sfdc_account.fy22_new_logo_target_list,
     sfdc_account.gitlab_com_user,
     sfdc_account.tsp_account_employees,
     sfdc_account.tsp_max_family_employees,

@@ -36,7 +36,9 @@ WITH crm_person AS (
       net_new_source_categories,
       bizible_touchpoint_position,
       bizible_marketing_channel_path,
-      bizible_touchpoint_date
+      bizible_touchpoint_date,
+      sequence_step_type,
+      is_actively_being_sequenced
 
     FROM crm_person
 )

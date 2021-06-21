@@ -72,6 +72,8 @@ WITH biz_person AS (
       bizible_touchpoint_position,
       bizible_marketing_channel_path,
       bizible_touchpoint_date,
+      sequence_step_type,
+      is_actively_being_sequenced,
       region
 
     FROM sfdc_contacts
@@ -113,6 +115,8 @@ WITH biz_person AS (
       bizible_touchpoint_position,
       bizible_marketing_channel_path,
       bizible_touchpoint_date,
+      sequence_step_type,
+      is_actively_being_sequenced,
       region
 
     FROM sfdc_leads

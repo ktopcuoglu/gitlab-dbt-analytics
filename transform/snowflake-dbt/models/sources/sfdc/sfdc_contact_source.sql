@@ -81,6 +81,9 @@ WITH source AS (
         last_utm_campaign__c        AS last_utm_campaign, 
         last_utm_content__c         AS last_utm_content,
         region__c                   AS region,
+        sequence_step_type2__c      AS sequence_step_type,
+        actively_being_sequenced__c::BOOLEAN
+                                    AS is_actively_being_sequenced,
         {{  sfdc_source_buckets('leadsource') }}
 
         --path factory info

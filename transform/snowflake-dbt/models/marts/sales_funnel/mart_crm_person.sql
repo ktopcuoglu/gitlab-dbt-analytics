@@ -54,6 +54,8 @@
       dim_crm_person.status,
       dim_crm_person.lead_source,
       dim_crm_person.source_buckets,
+      dim_crm_person.sequence_step_type,
+      dim_crm_person.is_actively_being_sequenced,
       dim_bizible_marketing_channel_path.bizible_marketing_channel_path_name,
       dim_sales_segment.sales_segment_name,
       dim_sales_segment.sales_segment_grouped,

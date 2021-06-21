@@ -33,6 +33,7 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity.opportunity_business_development_representative,
       sfdc_opportunity.opportunity_development_representative,
       sfdc_opportunity.iqm_submitted_by_role,
+      sfdc_opportunity.sdr_pipeline_contribution,
       sfdc_opportunity.stage_name,
       sfdc_opportunity_stage.is_active                  AS stage_is_active,
       sfdc_opportunity_stage.is_closed                  AS stage_is_closed,
