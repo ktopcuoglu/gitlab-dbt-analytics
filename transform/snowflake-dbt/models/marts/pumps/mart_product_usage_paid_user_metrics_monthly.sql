@@ -158,7 +158,7 @@
       -- Wave 1
       monthly_saas_metrics.subscription_seats,
       monthly_saas_metrics.billable_user_count,
-      NULL                                                                          AS active_user_count
+      NULL                                                                          AS active_user_count,
       monthly_saas_metrics.license_utilization,
       monthly_saas_metrics.max_historical_user_count,
       -- Wave 2 & 3
