@@ -446,3 +446,6 @@ sources:
         freshness:
           warn_after: { count: 7, period: day }
           error_after: { count: 30, period: day }
+      - name: user_credit_card_validations
+        identifier: gitlab_db_user_credit_card_validations
+        freshness: null
