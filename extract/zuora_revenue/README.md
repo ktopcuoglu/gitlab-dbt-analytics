@@ -99,8 +99,37 @@ gsutil cp start_date_BI3_RI_ACCT_SUMM.csv  gs://zuora_revpro_gitlab/RAW_DB/stagi
 gsutil cp start_date_BI3_WF_SUMM.csv  gs://zuora_revpro_gitlab/RAW_DB/staging/BI3_WF_SUMM/
 ```
 
-`Step 7`: Finally add below command to crontab. 
-Few of values needs to be fetched from password vault like URL name , GCS bucket name, Authorization code.
-Once edited and ready add the required command to crontab of that machine. 
+`Step 7`: To run the extract below variable needs to be declared in the .bashrc file of the server.   
+```     
+    export zuora_bucket=""
+    export zuora_dns=""
+    export authorization_code=""
+    export python_venv="source /home/vedprakash/zuora-revenue-extract-venv/bin/activate" #From step 2
+    export zuora_extract_log="/home/vedprakash/zuora_revenue/src/logs/"
+    export zuora_src="/home/vedprakash/zuora_revenue/src" #The path of source code
+```
+`Note:` The credentials is present in 1 password under `zuora_revenue_prod`.
 
+`Step 8`: The last step is to do the schedule.Add below command to crontab. 
+Once edited and ready add the required command to crontab of that machine. 
 The current schedule is set to run at 02:00 AM UTC every day. 
+```
+00 02 * * * . $HOME/.bashrc;$python_venv && cd $zuora_src && python3 extract_zuora_revenue.py -table_name BI3_ACCT_TYPE     -bucket_name $zuora_bucket -api_dns_name $zuora_dns -api_auth_code "$authorization_code" &>/tmp/mycommand.log
+00 02 * * * . $HOME/.bashrc;$python_venv && cd $zuora_src && python3 extract_zuora_revenue.py -table_name BI3_APPR_DTL      -bucket_name $zuora_bucket -api_dns_name $zuora_dns -api_auth_code "$authorization_code" &>/tmp/mycommand.log
+00 02 * * * . $HOME/.bashrc;$python_venv && cd $zuora_src && python3 extract_zuora_revenue.py -table_name BI3_CALENDAR      -bucket_name $zuora_bucket -api_dns_name $zuora_dns -api_auth_code "$authorization_code" &>/tmp/mycommand.log
+00 02 * * * . $HOME/.bashrc;$python_venv && cd $zuora_src && python3 extract_zuora_revenue.py -table_name BI3_MJE           -bucket_name $zuora_bucket -api_dns_name $zuora_dns -api_auth_code "$authorization_code" &>/tmp/mycommand.log
+00 02 * * * . $HOME/.bashrc;$python_venv && cd $zuora_src && python3 extract_zuora_revenue.py -table_name BI3_RC_BILL       -bucket_name $zuora_bucket -api_dns_name $zuora_dns -api_auth_code "$authorization_code" &>/tmp/mycommand.log
+00 02 * * * . $HOME/.bashrc;$python_venv && cd $zuora_src && python3 extract_zuora_revenue.py -table_name BI3_RC_HEAD       -bucket_name $zuora_bucket -api_dns_name $zuora_dns -api_auth_code "$authorization_code" &>/tmp/mycommand.log
+00 02 * * * . $HOME/.bashrc;$python_venv && cd $zuora_src && python3 extract_zuora_revenue.py -table_name BI3_RC_HOLD       -bucket_name $zuora_bucket -api_dns_name $zuora_dns -api_auth_code "$authorization_code" &>/tmp/mycommand.log
+00 02 * * * . $HOME/.bashrc;$python_venv && cd $zuora_src && python3 extract_zuora_revenue.py -table_name BI3_RC_LNS        -bucket_name $zuora_bucket -api_dns_name $zuora_dns -api_auth_code "$authorization_code" &>/tmp/mycommand.log
+00 02 * * * . $HOME/.bashrc;$python_venv && cd $zuora_src && python3 extract_zuora_revenue.py -table_name BI3_RC_POB        -bucket_name $zuora_bucket -api_dns_name $zuora_dns -api_auth_code "$authorization_code" &>/tmp/mycommand.log
+00 02 * * * . $HOME/.bashrc;$python_venv && cd $zuora_src && python3 extract_zuora_revenue.py -table_name BI3_RC_SCHD       -bucket_name $zuora_bucket -api_dns_name $zuora_dns -api_auth_code "$authorization_code" &>/tmp/mycommand.log
+00 02 * * * . $HOME/.bashrc;$python_venv && cd $zuora_src && python3 extract_zuora_revenue.py -table_name BI3_RC_SCHD_DEL   -bucket_name $zuora_bucket -api_dns_name $zuora_dns -api_auth_code "$authorization_code" &>/tmp/mycommand.log
+00 02 * * * . $HOME/.bashrc;$python_venv && cd $zuora_src && python3 extract_zuora_revenue.py -table_name BI3_RI_ACCT_SUMM  -bucket_name $zuora_bucket -api_dns_name $zuora_dns -api_auth_code "$authorization_code" &>/tmp/mycommand.log
+00 02 * * * . $HOME/.bashrc;$python_venv && cd $zuora_src && python3 extract_zuora_revenue.py -table_name BI3_WF_SUMM       -bucket_name $zuora_bucket -api_dns_name $zuora_dns -api_auth_code "$authorization_code" &>/tmp/mycommand.log
+```
+
+At the end of the process below will be output. 
+1) A success log file is present named `<table_name>_DD-MM-YYYY.log`  upload to path zuora_revpro_gitlab/RAW_DB/staging/<table_name>/<table_name>_DD-MM-YYYY.log.log. For example for table BI3_MJE the log file for the day will be named `BI3_MJE_21-06-2021.log` and it will be uploaded to the path `gs://zuora_revpro_gitlab/RAW_DB/staging/BI3_MJE/BI3_MJE_21-06-2021.log`
+2) Any file for the date range wil be present in the GCS bucket. 
+ 
