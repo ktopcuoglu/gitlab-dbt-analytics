@@ -411,7 +411,46 @@ WITH marketing_contact AS (
 ), joined AS (
 
     SELECT 
-      prep.*, 
+      prep.*,
+      IFF(individual_namespace_is_saas_bronze_tier
+        OR group_owner_of_saas_bronze_tier
+        OR group_member_of_saas_bronze_tier
+        OR responsible_for_group_saas_bronze_tier,
+        TRUE, FALSE)                                        AS is_saas_bronze_tier,
+      IFF(individual_namespace_is_saas_premium_tier
+        OR group_owner_of_saas_premium_tier
+        OR group_member_of_saas_premium_tier
+        OR responsible_for_group_saas_premium_tier,
+        TRUE, FALSE)                                        AS is_saas_premium_tier,
+      IFF(individual_namespace_is_saas_ultimate_tier
+        OR group_owner_of_saas_ultimate_tier
+        OR group_member_of_saas_ultimate_tier
+        OR responsible_for_group_saas_ultimate_tier, 
+        TRUE, FALSE)                                        AS is_saas_ultimate_tier,
+      IFF(is_saas_bronze_tier
+        OR is_self_managed_starter_tier,
+        TRUE, FALSE)                                        AS is_bronze_starter_tier,
+      IFF(is_saas_premium_tier
+        OR is_self_managed_premium_tier,
+        TRUE, FALSE)                                        AS is_premium_tier,
+      IFF(is_saas_ultimate_tier
+        OR is_self_managed_ultimate_tier,
+        TRUE, FALSE)                                        AS is_ultimate_tier,                                                      
+      IFF(is_saas_bronze_tier
+        OR is_saas_premium_tier
+        OR is_saas_ultimate_tier,
+        TRUE, FALSE)                                        AS is_saas_delivery,
+      IFF(is_self_managed_starter_tier
+        OR is_self_managed_premium_tier
+        OR is_self_managed_ultimate_tier,
+        TRUE, FALSE)                                        AS is_self_managed_delivery,
+      IFF(individual_namespace_is_saas_free_tier
+        OR group_member_of_saas_free_tier
+        OR group_owner_of_saas_free_tier,
+        TRUE, FALSE)                                        AS is_saas_free_tier,
+      IFF(is_saas_delivery
+        OR is_self_managed_delivery,
+        TRUE, FALSE)                                        AS is_paid_tier,
       subscription_aggregate.min_subscription_start_date,
       subscription_aggregate.max_subscription_end_date,
       paid_subscription_aggregate.nbr_of_paid_subscriptions,
@@ -438,7 +477,10 @@ WITH marketing_contact AS (
       IFNULL(marketing_contact.last_name, 'Unknown')                                             AS last_name,
       marketing_contact.gitlab_user_name,
       IFNULL(marketing_contact.company_name, 'Unknown')                                          AS company_name,
+      marketing_contact.sfdc_record_id,
+      marketing_contact.dim_crm_account_id,
       marketing_contact.job_title,
+      marketing_contact.it_job_title_hierarchy,
       marketing_contact.country,
       marketing_contact.sfdc_parent_sales_segment,
       marketing_contact.sfdc_parent_crm_account_tsp_region,
@@ -627,9 +669,9 @@ WITH marketing_contact AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@trevor31",
-    updated_by="@trevor31",
+    updated_by="@jpeguero",
     created_date="2021-02-09",
-    updated_date="2021-03-22"
+    updated_date="2021-05-07"
 ) }}
 
 

@@ -65,6 +65,8 @@ models:
         description: '{{ doc("mart_arr_col_months_since_parent_cohort_start") }}'
       - name: quarters_since_parent_account_cohort_start
         description: '{{ doc("mart_arr_col_quarters_since_parent_cohort_start") }}'
+      - name: dim_subscription_id
+      - name: dim_subscription_id_original
 
   - name: mart_arr_snapshots
     description: Daily snapshots of MRR/ARR by month values per customer, subscription and product
@@ -81,7 +83,14 @@ models:
           tests:
             - not_null
           tags: [ "tdf", "mart", "arr" ]
-
+  - name: mart_charge
+    description: Model combining Subscription related objects such as product details and rate plan charge details into a mart.
+    columns:
+      - name: dim_charge_id
+        description: The unique identifier of a rate plan charge
+        tests:
+          - not_null
+          - unique
   - name: mart_crm_attribution_touchpoint
     description: Model containing Bizible attribution touchpoints along with contact, lead, account, campaign, and opportunity details.
     columns:
@@ -116,6 +125,9 @@ models:
             - unique
         tags: ["tdf", "mart", "sales_funnel"]
 
+  - name: mart_marketing_contact_no_pii
+    description: Non sensitive version of the mart_marketing_contact model.
+
   - name: mart_sales_funnel_target
     description: Model with Sales targets used for planning the go to market Sales and Marketing motion.
     columns:
@@ -133,7 +145,7 @@ models:
             - not_null
             - unique
         tags: ["tdf", "mart", "sales_funnel"]
-        
+
   - name: mart_sales_funnel_target_daily
     description: Model with Sales targets at a daily level and with QTD (Quater To Date), MTD (Month To Date) and YTD (Year To Date) target calculations.
     columns:

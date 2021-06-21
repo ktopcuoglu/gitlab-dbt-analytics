@@ -21,6 +21,7 @@ def construct_qualtrics_contact(result):
             "gitlabUserID": result["user_id"],
             "user_id": result["user_id"],
             "plan": result["plan"],
+            "namespace_id": result["namespace_id"],
         },
     }
 
@@ -118,8 +119,9 @@ def process_qualtrics_file(
     table = get_qualtrics_request_table_name(file.id)
     dw_uploader(engine, table, dataframe, schema)
     query = f"""
-        SELECT first_name, last_name, email_address, language, user_id, plan
-        FROM PREP.SENSITIVE.QUALTRICS_API_FORMATTED_CONTACTS WHERE user_id in
+        SELECT first_name, last_name, email_address, language, user_id, plan, namespace_id
+        FROM PREP.SENSITIVE.QUALTRICS_API_FORMATTED_CONTACTS 
+        WHERE user_id in
         (
             SELECT id
             FROM RAW.{schema}.{table}

@@ -49,6 +49,7 @@ WITH date_details AS (
 --------------------------------------
 
       is_won,
+      is_duplicate_flag,
       raw_net_arr,
       net_incremental_acv,
       sales_qualified_source,
@@ -226,6 +227,7 @@ WITH date_details AS (
       created_date_detail.fiscal_quarter_name_fy                   AS net_arr_created_fiscal_quarter_name,
       created_date_detail.first_day_of_fiscal_quarter              AS net_arr_created_fiscal_quarter_date,
 
+      net_arr_created_date.date_actual                            AS pipeline_created_date,
       net_arr_created_date.first_day_of_month                     AS pipeline_created_date_month,
       net_arr_created_date.fiscal_year                            AS pipeline_created_fiscal_year,
       net_arr_created_date.fiscal_quarter_name_fy                 AS pipeline_created_fiscal_quarter_name,
@@ -294,13 +296,13 @@ WITH date_details AS (
       END                                                         AS is_lost,
 
       CASE 
-        WHEN sfdc_opportunity_snapshot_history.stage_name IN ('8-Closed Lost', '9-Unqualified', 'Closed Won', '10-Duplicate') 
+        WHEN sfdc_opportunity_snapshot_history.stage_name IN ('8-Closed Lost', 'Closed Lost', '9-Unqualified', 'Closed Won', '10-Duplicate') 
             THEN 0
         ELSE 1  
       END                                                         AS is_open,
 
       CASE 
-        WHEN sfdc_opportunity_snapshot_history.stage_name IN ('8-Closed Lost', '9-Unqualified', 'Closed Won', '10-Duplicate') 
+        WHEN sfdc_opportunity_snapshot_history.stage_name IN ('8-Closed Lost', 'Closed Lost', '9-Unqualified', 'Closed Won', '10-Duplicate') 
           THEN 1
         ELSE 0
       END                                                         AS is_closed,
@@ -513,8 +515,6 @@ WITH date_details AS (
         ELSE 0 
       END                                                         AS created_in_snapshot_quarter_iacv,
 
-
-
       -- field used for FY21 bookings reporitng
       sfdc_opportunity_xf.account_owner_team_stamped, 
      
@@ -552,7 +552,9 @@ WITH date_details AS (
 
       -- medium level grouping of the order type field
       sfdc_opportunity_xf.deal_category,
-          
+      
+      -- duplicates flag
+      sfdc_opportunity_xf.is_duplicate_flag                               AS current_is_duplicate_flag,
 
       ------------------------------------------------------------------------------------------------------
       ------------------------------------------------------------------------------------------------------
@@ -637,14 +639,14 @@ WITH date_details AS (
           -- exclude vision opps from FY21-Q2
           AND (opp_snapshot.pipeline_created_fiscal_quarter_name != 'FY21-Q2'
                 OR vision_opps.opportunity_id IS NULL)
-         THEN 1
+             THEN 1
          ELSE 0
       END                                                   AS is_eligible_created_pipeline_flag,
 
       -- created and closed within the quarter net arr
       CASE 
         WHEN opp_snapshot.pipeline_created_fiscal_quarter_name = opp_snapshot.close_fiscal_quarter_name
-          AND (opp_snapshot.is_won = 1 OR (opp_snapshot.is_renewal = 1 AND opp_snapshot.is_lost = 1))
+           AND is_eligible_created_pipeline_flag = 1
             THEN opp_snapshot.net_arr
         ELSE 0
       END                                                   AS created_and_won_same_quarter_net_arr,

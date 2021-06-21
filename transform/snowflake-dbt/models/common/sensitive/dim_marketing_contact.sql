@@ -21,7 +21,7 @@ WITH sfdc_lead AS (
 ), sales_segment AS (
 
     SELECT *
-    FROM {{ref('dim_sales_segment') }}
+    FROM {{ref('prep_sales_segment') }}
 
 ), crm_person AS (
 
@@ -58,7 +58,8 @@ WITH sfdc_lead AS (
 ), sfdc AS (
 
     SELECT
-      sfdc_lead.lead_id,
+      crm_person.sfdc_record_id,
+      crm_person.dim_crm_account_id,
       CASE WHEN crm_person.sfdc_record_type = 'contact' THEN sfdc_contact.contact_email ELSE sfdc_lead.lead_email END        AS email_address,
       crm_person.dim_crm_person_id                                                                                           AS crm_person_id,
       crm_person.sfdc_record_type                                                                                            AS sfdc_lead_contact,
@@ -79,6 +80,7 @@ WITH sfdc_lead AS (
         WHEN sfdc_lead_contact = 'lead' AND sfdc_lead.company <>  '[[unknown]]' THEN sfdc_lead.company
       END                                                                                                                   AS company_name,
       crm_person.title                                                                                                      AS job_title,
+      crm_person.it_job_title_hierarchy,
       crm_account.parent_crm_account_sales_segment,
       crm_account.parent_crm_account_tsp_region,
       sfdc_account.tsp_region,
@@ -117,6 +119,7 @@ WITH sfdc_lead AS (
       user_name                                                                                                             AS user_name,
       organization                                                                                                          AS company_name,
       role                                                                                                                  AS job_title,
+      it_job_title_hierarchy,
       created_at                                                                                                            AS created_date,
       confirmed_at                                                                                                          AS confirmed_date,
       state                                                                                                                 AS active_state,
@@ -206,6 +209,7 @@ WITH sfdc_lead AS (
       gitlab_dotcom.user_name                                                                                            AS gitlab_user_name,
       COALESCE(zuora.company_name,  sfdc.company_name, customer_db.company_name, gitlab_dotcom.company_name)             AS company_name,
       COALESCE(sfdc.job_title, gitlab_dotcom.job_title)                                                                  AS job_title,
+      IFF(sfdc.job_title IS NOT NULL, sfdc.it_job_title_hierarchy, gitlab_dotcom.it_job_title_hierarchy)                 AS it_job_title_hierarchy,
       COALESCE(zuora.country, sfdc.country, customer_db.country)                                                         AS country,
       sfdc.parent_crm_account_sales_segment                                                                              AS sfdc_parent_sales_segment,
       COALESCE(sfdc.parent_crm_account_tsp_region, sfdc.tsp_region, sfdc.crm_person_region)                              AS sfdc_parent_crm_account_tsp_region,
@@ -213,6 +217,8 @@ WITH sfdc_lead AS (
         WHEN sfdc.email_address IS NOT NULL THEN TRUE
         ELSE FALSE
       END                                                                                                                AS is_sfdc_lead_contact,
+      sfdc.sfdc_record_id,
+      sfdc.dim_crm_account_id,
       sfdc.sfdc_lead_contact,
       sfdc.sfdc_created_date                                                                                             AS sfdc_created_date,
       sfdc.opted_out_salesforce                                                                                          AS is_sfdc_opted_out,
@@ -270,7 +276,7 @@ WITH sfdc_lead AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@rmistry",
-    updated_by="@trevor31",
+    updated_by="@jpeguero",
     created_date="2021-01-19",
-    updated_date="2021-03-22"
+    updated_date="2021-05-07"
 ) }}

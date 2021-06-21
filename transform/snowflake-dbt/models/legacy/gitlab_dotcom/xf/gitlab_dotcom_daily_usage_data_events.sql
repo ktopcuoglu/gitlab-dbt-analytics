@@ -31,6 +31,7 @@ WITH usage_data AS (
       stage_name,
       plan_id_at_event_date,
       plan_name_at_event_date,
+      plan_was_paid_at_event_date,
       user_created_at,
       TO_DATE(event_created_at)                                         AS event_date,
       DATEDIFF('day', TO_DATE(namespace_created_at), event_date)        AS days_since_namespace_creation,
@@ -40,7 +41,7 @@ WITH usage_data AS (
       COUNT(*)                                                          AS event_count
     FROM usage_data
     WHERE days_since_user_creation >= 0
-    {{ dbt_utils.group_by(n=17) }}
+    {{ dbt_utils.group_by(n=18) }}
 
 )
 

@@ -23,6 +23,7 @@ WITH skeleton AS (
       event_date,
       plan_name_at_event_date,
       plan_id_at_event_date,
+      plan_was_paid_at_event_date,
       namespace_is_internal,
       xmau.event_name            AS event_name,
       xmau.stage_name            AS stage_name,
@@ -48,12 +49,12 @@ WITH skeleton AS (
       is_gmau,
       section_name,
       is_umau,
-      COUNT(DISTINCT user_id)                                                                           AS total_user_count,
-      COUNT(DISTINCT IFF(plan_name_at_event_date='free',user_id, NULL))                                 AS free_user_count,
-      COUNT(DISTINCT IFF(plan_name_at_event_date IN ('bronze', 'silver', 'gold'), user_id, NULL))       AS paid_user_count,
-      COUNT(DISTINCT namespace_id)                                                                      AS total_namespace_count,
-      COUNT(DISTINCT IFF(plan_name_at_event_date='free',namespace_id, NULL))                            AS free_namespace_count,
-      COUNT(DISTINCT IFF(plan_name_at_event_date IN ('bronze', 'silver', 'gold'), namespace_id, NULL))  AS paid_namespace_count
+      COUNT(DISTINCT user_id)                                                    AS total_user_count,
+      COUNT(DISTINCT IFF(plan_was_paid_at_event_date=FALSE, user_id, NULL))      AS free_user_count,
+      COUNT(DISTINCT IFF(plan_was_paid_at_event_date=TRUE, user_id, NULL))       AS paid_user_count,
+      COUNT(DISTINCT namespace_id)                                               AS total_namespace_count,
+      COUNT(DISTINCT IFF(plan_was_paid_at_event_date=FALSE,namespace_id, NULL))  AS free_namespace_count,
+      COUNT(DISTINCT IFF(plan_was_paid_at_event_date=TRUE, namespace_id, NULL))  AS paid_namespace_count
     FROM skeleton
     LEFT JOIN events
         ON event_date BETWEEN DATEADD('days', -28, last_day_of_month) AND last_day_of_month

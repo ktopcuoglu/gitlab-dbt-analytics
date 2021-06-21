@@ -1,0 +1,17 @@
+version: 2
+
+sources:
+  - name: driveload
+    database: '{{ env_var("SNOWFLAKE_LOAD_DATABASE") }}'
+    schema: driveload
+    loaded_at_field: DATEADD(sec, _updated_at, '1970-01-01')
+    loader: Python [Driveload](https://gitlab.com/gitlab-data/analytics/tree/master/extract/driveload)
+    description: script that loads csvs from Google Drive into Snowflake
+
+    quoting:
+      database: true
+      schema: false
+      identifier: false
+
+    tables:
+      - name: clari_export_forecast_net_iacv

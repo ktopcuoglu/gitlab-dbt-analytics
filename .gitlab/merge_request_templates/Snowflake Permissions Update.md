@@ -20,10 +20,13 @@ Closes #
 - [ ] Confirm user is only granted to user role - can be overridden if necessary
 
 
-### Schemas
+### Database Objects
 
+- [ ] If a referencing a new table make sure it exists in snowflake, or if it is being introduced in this MR that a refresh is run right after merge. 
 - [ ] If new schema in `PROD` or `PREP` dbs make sure to update [`grant_usage_in_schemas.sql` macro](https://gitlab.com/gitlab-data/analytics/-/blob/master/transform/snowflake-dbt/macros/warehouse/grant_usage_to_schemas.sql)
+- [ ] Confirm any new warehouses are created in Snowflake and matches size
 
-### Warehouse
 
-- [ ] Confirm warehouse is created in Snowflake and matches size
+### ⚠ Unsupported Permissions ⚠
+
+- [ ] For role naming changes run `show grants` to check for task or stage permissions.

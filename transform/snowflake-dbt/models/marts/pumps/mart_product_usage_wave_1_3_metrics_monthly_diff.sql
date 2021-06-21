@@ -19,6 +19,8 @@
 
     SELECT DISTINCT
       dim_subscription_id,
+      uuid,
+      hostname,
       {{ usage_ping_month_range('commit_comment_all_time_event') }},
       {{ usage_ping_month_range('source_code_pushes_all_time_event') }},
       {{ usage_ping_month_range('ci_builds_all_time_event') }},
@@ -70,7 +72,13 @@
       uuid,
       hostname,
       ping_created_at::DATE - LAG(ping_created_at::DATE)
-        IGNORE NULLS OVER (PARTITION BY dim_subscription_id ORDER BY snapshot_month)    AS days_since_last_ping,
+        IGNORE NULLS OVER (
+          PARTITION BY
+          dim_subscription_id,
+          uuid,
+          hostname
+          ORDER BY snapshot_month)                                                      AS date_diff,
+      IFF(date_diff > 0, date_diff, 1)                                                  AS days_since_last_ping,
       {{ usage_ping_over_ping_difference('commit_comment_all_time_event') }},
       {{ usage_ping_over_ping_difference('source_code_pushes_all_time_event') }},
       {{ usage_ping_over_ping_difference('ci_builds_all_time_event') }},
@@ -170,11 +178,11 @@
 
     SELECT
       smoothed_diffs.dim_subscription_id,
-      dim_subscription_id_original,
-      dim_billing_account_id,
-      snapshot_month,
-      uuid,
-      hostname,
+      smoothed_diffs.dim_subscription_id_original,
+      smoothed_diffs.dim_billing_account_id,
+      smoothed_diffs.snapshot_month,
+      smoothed_diffs.uuid,
+      smoothed_diffs.hostname,
       {{ usage_ping_over_ping_estimated('commit_comment_all_time_event') }},
       {{ usage_ping_over_ping_estimated('source_code_pushes_all_time_event') }},
       {{ usage_ping_over_ping_estimated('ci_builds_all_time_event') }},
@@ -217,6 +225,8 @@
     FROM smoothed_diffs
     LEFT JOIN ping_ranges
       ON smoothed_diffs.dim_subscription_id = ping_ranges.dim_subscription_id
+      AND smoothed_diffs.uuid = ping_ranges.uuid
+      AND smoothed_diffs.hostname = ping_ranges.hostname
 
 )
 
@@ -225,5 +235,5 @@
     created_by="@ischweickartDD",
     updated_by="@ischweickartDD",
     created_date="2021-03-04",
-    updated_date="2021-04-13"
+    updated_date="2021-06-10"
 ) }}

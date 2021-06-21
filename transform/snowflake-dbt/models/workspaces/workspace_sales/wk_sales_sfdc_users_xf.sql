@@ -4,6 +4,11 @@ WITH RECURSIVE users AS (
     SELECT *
     FROM {{ref('sfdc_users')}}
 
+), users_source AS (
+
+    SELECT *
+    FROM {{ref('sfdc_users_source')}}
+
 ), user_role AS (
 
     SELECT *
@@ -28,8 +33,11 @@ WITH RECURSIVE users AS (
       users.user_area,
       user_role.name        AS role_name,
       users.start_date,      --start_date
-      users.is_active        --is_active
+      users.is_active,        --is_active
+      users_source.employee_number
     FROM users
+    INNER JOIN users_source 
+      ON users_source.user_id = users.user_id
     LEFT OUTER JOIN user_role 
       ON users.user_role_id = user_role.id
     LEFT OUTER JOIN users AS manager 
@@ -80,6 +88,7 @@ WITH RECURSIVE users AS (
     SELECT 
       base.*,
 
+      
       -- account owner hierarchies levels
       TRIM(cro.level_2)                                                                               AS sales_team_level_2,
       TRIM(cro.level_3)                                                                               AS sales_team_level_3,
@@ -112,6 +121,8 @@ WITH RECURSIVE users AS (
           THEN cro.level_2
         ELSE 'n/a'
       END                                                                                             AS sales_min_hierarchy_level,
+      
+      
         CASE 
           WHEN sales_min_hierarchy_level IN ('ASM - APAC - Japan', 'RD APAC')
             THEN 'APAC'

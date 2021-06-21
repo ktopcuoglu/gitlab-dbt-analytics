@@ -21,7 +21,8 @@ If none, please include a description
 * [ ] Please list and describe any data from this source that is sensitive (Classified as Red or Orange in our [Data Classification Policy](https://about.gitlab.com/handbook/engineering/security/data-classification-policy.html#data-classification-levels))?
   - _`{data fields, columns, or objects}`_
 * [ ] Does this data have any agreed [SLO](https://about.gitlab.com/handbook/business-ops/data-team/platform/#slos-service-level-objectives-by-data-source) attached to it? If not: 
-    * [ ] How often does the data need to be refreshed? 
+    * [ ] How often does the data need to be refreshed?
+* [ ] Make sure to have completed all instructions [here](https://about.gitlab.com/handbook/business-technology/data-team/platform/#adding-new-data-sources-and-fields), including creating a new issue in the security project and linking it to this issue.
 
 ## Integration Preparation 
 

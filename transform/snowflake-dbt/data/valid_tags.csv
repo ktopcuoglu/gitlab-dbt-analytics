@@ -29,6 +29,7 @@ opportunity, Relates to customer opportunity data.
 poc,Proof of concept
 product,For large product analytics data
 purchase_channel, Related to identifying types of purchase channel data
+retention, Related to retention of customers
 sales_funnel, related to Lead to Cash funnel
 sales_territory, Related to sales territory mappings
 subscription_snapshot,For Subscription Snapshots
@@ -40,3 +41,4 @@ tdf,Trusted Data Framework
 workspace, Related to team workspaces
 version_db,Relates to the Version Database
 zuora,Relates to Zuora data
+zuora_revenue, Relates to Zuora Revenue data

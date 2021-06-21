@@ -2,7 +2,7 @@ connection_info:
   database: GITLAB_COM_DB_NAME
   host: GITLAB_COM_DB_HOST
   pass: GITLAB_COM_DB_PASS
-  port: PG_PORT
+  port: GITLAB_COM_PG_PORT
   user: GITLAB_COM_DB_USER
 tables:
   alert_management_alerts:
@@ -141,21 +141,6 @@ tables:
       , created_at
       , updated_at
       FROM approvals
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
-  approver_groups:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'approver_groups'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , target_type
-      , group_id
-      , created_at
-      , updated_at
-      FROM approver_groups
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   audit_events:
@@ -972,7 +957,7 @@ tables:
       SELECT id
       , experiment_id
       , user_id
-      , group_id
+      , namespace_id AS group_id
       , project_id
       , variant
       , created_at
@@ -980,7 +965,7 @@ tables:
       , converted_at
       , context
       FROM experiment_subjects
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp  
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   experiment_users:
     dbt_source_model: true

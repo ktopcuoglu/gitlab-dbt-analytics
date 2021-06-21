@@ -34,6 +34,8 @@ WITH source AS (
       currenttermperiodtype                       AS current_term_period_type,
       endcustomerdetails__c                       AS sfdc_end_customer_details,
       eoastarterbronzeofferaccepted__c            AS eoa_starter_bronze_offer_accepted,
+      turnoncloudlicensing__c                     AS turn_on_cloud_licensing,
+      turnonusagepingrequiredmetrics__c           AS turn_on_usage_ping_required_metrics,
 
       --key_dates
       cancelleddate                               AS cancelled_date,
@@ -66,6 +68,11 @@ WITH source AS (
       renewalterm                                 AS renewal_term,
       renewaltermperiodtype                       AS renewal_term_period_type,
       exclude_from_renewal_report__c__c           AS exclude_from_renewal_report,
+      contractautorenew__c                        AS contract_auto_renewal,
+      turnonautorenew__c                          AS turn_on_auto_renewal,
+      contractseatreconciliation__c               AS contract_seat_reconciliation,
+      turnonseatreconciliation__c                 AS turn_on_seat_reconciliation,
+
 
       --metadata
       updatedbyid                                 AS updated_by_id,
