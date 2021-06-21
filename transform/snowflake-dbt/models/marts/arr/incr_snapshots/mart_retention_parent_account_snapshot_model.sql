@@ -34,7 +34,7 @@ WITH snapshot_dates AS (
     SELECT
       mart_retention_parent_account.*
     FROM mart_retention_parent_account
-    JOIN dim_crm_account
+    INNER JOIN dim_crm_account
       ON dim_crm_account.dim_parent_crm_account_ID = mart_retention_parent_account.dim_crm_account_id
     WHERE is_jihu_account = FALSE
 
