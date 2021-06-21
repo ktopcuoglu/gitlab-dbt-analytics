@@ -67,43 +67,47 @@ if __name__ == "__main__":
     #         snowflake_engine,
     #     )
     
-    target = "$base.$path.pageSummary.$group.$page.$browser.$connectivity.browsertime.statistics.pageinfo.layoutShift.*",
-        
-    data = make_api_call(
-        target,
-        "-30d",
-        config_dict["START_DATE"],
-        config_dict["GRAPHITE_USERNAME"],
-        config_dict["GRAPHITE_PASSWORD"],
-        config_dict["GRAPHITE_HOST"],
-    )
-    with open("other_stats.json", "w") as out_file:
-        json.dump(data, out_file)
+    pages = ["GitLab_Project_Home", "GitLab_Issue_list", "GitLab_Issue_Detail", "GitLab_Merge_List", "GitLab_Merge_Detail"]
 
-    snowflake_stage_load_copy_remove(
-        "other_stats.json",
-        "engineering_extracts.lcp_load",
-        "engineering_extracts.layout_shift",
-        snowflake_engine,
-    )
+    for page in pages:
+        target = f"sitespeed_io.desktop.gitlab.pageSummary.gitlab_com.{page}.chrome.cable.browsertime.statistics.pageinfo.layoutShift.*"
+            
+        data = make_api_call(
+            target,
+            "-30d",
+            config_dict["START_DATE"],
+            config_dict["GRAPHITE_USERNAME"],
+            config_dict["GRAPHITE_PASSWORD"],
+            config_dict["GRAPHITE_HOST"],
+        )
+        with open("other_stats.json", "w") as out_file:
+            json.dump(data, out_file)
 
-    target = "$base.$path.$testname.pageSummary.$group.$page.$browser.$connectivity.browsertime.statistics.cpu.longTasks.totalBlockingTime.*",
-        
-    data = make_api_call(
-        target,
-        "-30d",
-        config_dict["START_DATE"],
-        config_dict["GRAPHITE_USERNAME"],
-        config_dict["GRAPHITE_PASSWORD"],
-        config_dict["GRAPHITE_HOST"],
-    )
-    with open("other_stats.json", "w") as out_file:
-        json.dump(data, out_file)
+        snowflake_stage_load_copy_remove(
+            "other_stats.json",
+            "engineering_extracts.lcp_load",
+            "engineering_extracts.layout_shift",
+            snowflake_engine,
+        )
 
-    snowflake_stage_load_copy_remove(
-        "other_stats.json",
-        "engineering_extracts.lcp_load",
-        "engineering_extracts.blocking_time",
-        snowflake_engine,
-    )    
+    for page in pages:
+        target = f"sitespeed_io.desktop.gitlab.pageSummary.gitlab_com.{page}.chrome.cable.browsertime.statistics.cpu.longTasks.totalBlockingTime.*",
+            
+        data = make_api_call(
+            target,
+            "-30d",
+            config_dict["START_DATE"],
+            config_dict["GRAPHITE_USERNAME"],
+            config_dict["GRAPHITE_PASSWORD"],
+            config_dict["GRAPHITE_HOST"],
+        )
+        with open("other_stats.json", "w") as out_file:
+            json.dump(data, out_file)
+
+        snowflake_stage_load_copy_remove(
+            "other_stats.json",
+            "engineering_extracts.lcp_load",
+            "engineering_extracts.blocking_time",
+            snowflake_engine,
+        )    
 
