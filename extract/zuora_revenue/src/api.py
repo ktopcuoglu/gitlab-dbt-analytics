@@ -37,6 +37,9 @@ class ZuoraRevProAPI:
         """
         bucket_name = self.bucket_name
         cmd_to_download_start_date = f"gsutil cp gs://{bucket_name}/RAW_DB/staging/{tablename}/start_date_{tablename}.csv ."
+
+        # Download the start_dare_<tablebame>.csv fle from bucket. If the file is not present exit the process with the exception message.
+
         try:
             self.logger.info(cmd_to_download_start_date)
             subprocess.run(cmd_to_download_start_date, shell=True, check=True)
@@ -45,7 +48,9 @@ class ZuoraRevProAPI:
                 "Error while downloading the startdate file from GCS", exec_info=True
             )
             sys.exit(1)
+
         try:
+            # read the csv file and match the table_name. If there is value present for the Load_date i.e. then return that else return Null.
             table_name_date = pd.read_csv(f"start_date_{tablename}.csv")
             if table_name_date.iloc[0]["table_name"] == tablename:
                 start_date = table_name_date.loc[
@@ -63,7 +68,11 @@ class ZuoraRevProAPI:
             )
             sys.exit(1)
 
-    def set_load_date(self, tablename: str, load_date: str):
+    def set_load_date(self, tablename: str, load_date: str) -> None:
+        """
+        This function take input tablename and to_date value as load_date. It is responsible to update the load_date value in start_date_{tablename}.csv file
+        and upload it to GCS for next extraction process.
+        """
         bucket_name = self.bucket_name
         load_date_file_name = f"start_date_{tablename}.csv"
         cmd_to_upload_file = f"gsutil cp start_date_{tablename}.csv gs://{bucket_name}/RAW_DB/staging/{tablename}/"

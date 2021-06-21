@@ -1,7 +1,6 @@
 import os
 from datetime import datetime, timedelta
 from yaml import safe_load, YAMLError
-from os import environ as env
 from airflow import DAG
 from airflow.operators.dummy_operator import DummyOperator
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
@@ -13,7 +12,6 @@ from airflow_utils import (
 )
 from kube_secrets import (
     GCP_SERVICE_CREDS,
-    ZUORA_REVENUE_GCS_NAME,
     SNOWFLAKE_ACCOUNT,
     SNOWFLAKE_LOAD_PASSWORD,
     SNOWFLAKE_LOAD_ROLE,
@@ -69,18 +67,17 @@ with open(
 dag = DAG(
     "zuora_revenue_load_snow",
     default_args=default_args,
-    schedule_interval="0 3 * * *",
+    schedule_interval="0 6 * * *",
     concurrency=1,
 )
 
 start = DummyOperator(task_id="Start", dag=dag)
 
-
 for table_name in table_name_list:
     # Set the command for the container for loading the data
     container_cmd_load = f"""
         {clone_and_setup_extraction_cmd} &&
-        python3 zuora_revenue/extract_zuora_revenue.py zuora_load --bucket $ZUORA_REVENUE_GCS_NAME --schema zuora_revenue --table_name {table_name}
+        python3 zuora_revenue/load_zuora_revenue.py zuora_load --bucket zuora_revpro_gitlab --schema zuora_revenue --table_name {table_name}
         """
     task_identifier = f"{task_name}-{table_name.replace('_','-').lower()}-load"
     # Task 2
@@ -91,7 +88,6 @@ for table_name in table_name_list:
         name=task_identifier,
         pool="default_pool",
         secrets=[
-            ZUORA_REVENUE_GCS_NAME,
             GCP_SERVICE_CREDS,
             SNOWFLAKE_ACCOUNT,
             SNOWFLAKE_LOAD_ROLE,
