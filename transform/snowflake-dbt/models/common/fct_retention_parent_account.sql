@@ -7,6 +7,7 @@ WITH dim_date AS (
 
     SELECT *
     FROM {{ ref('prep_crm_account') }}
+    WHERE is_jihu_account = FALSE
 
 ), prep_product_detail AS (
 
@@ -123,8 +124,8 @@ WITH dim_date AS (
       retention_subs.dim_parent_crm_account_id  AS dim_parent_crm_account_id,
       prep_crm_account.crm_account_name         AS parent_crm_account_name,
       retention_month,
-      dim_date.fiscal_year                      AS retention_fiscal_year,
-      dim_date.fiscal_quarter                   AS retention_fiscal_quarter,
+      IFF(is_first_day_of_last_month_of_fiscal_quarter, fiscal_quarter_name_fy, NULL) AS retention_fiscal_year,
+      IFF(is_first_day_of_last_month_of_fiscal_year, fiscal_year, NULL)               AS retention_fiscal_quarter,
       retention_subs.last_renewal_month,
       retention_subs.next_renewal_month,
       current_mrr                               AS prior_year_mrr,

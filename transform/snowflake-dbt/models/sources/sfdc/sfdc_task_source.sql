@@ -19,6 +19,7 @@ WITH source AS (
       subject                       AS task_subject,
       activitydate                  AS task_date,
       isdeleted                     AS is_deleted,
+      status                        AS status,              
 
       assigned_employee_number__c   AS assigned_employee_number,
       -- Original issue: https://gitlab.com/gitlab-data/analytics/-/issues/6577

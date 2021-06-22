@@ -54,7 +54,7 @@ WITH source AS (
       sdr_target_account__c::BOOLEAN                AS is_sdr_target_account,
       potential_arr_lam__c                          AS potential_arr_lam,
       jihu_account__c::BOOLEAN                      AS is_jihu_account,
-      partners_signed_contract_date__c              AS partners_signed_contract_date,
+      fy22_new_logo_target_list__c::BOOLEAN         AS fy22_new_logo_target_list,
 
       -- territory success planning fields
       atam_approved_next_owner__c                   AS tsp_approved_next_owner,

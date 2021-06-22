@@ -13,6 +13,7 @@ WITH crm_person AS (
       sfdc_record_type,
       email_hash,
       email_domain,
+      email_domain_type,
 
       --keys
       master_record_id,
@@ -35,7 +36,9 @@ WITH crm_person AS (
       net_new_source_categories,
       bizible_touchpoint_position,
       bizible_marketing_channel_path,
-      bizible_touchpoint_date
+      bizible_touchpoint_date,
+      sequence_step_type,
+      is_actively_being_sequenced
 
     FROM crm_person
 )
@@ -43,7 +46,7 @@ WITH crm_person AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@jjstark",
-    updated_by="@iweeks",
+    updated_by="@jpeguero",
     created_date="2020-09-10",
-    updated_date="2021-04-22"
+    updated_date="2021-06-19"
 ) }}
