@@ -144,6 +144,9 @@ python_mypy:
   <<: *python_check
   script:
     - pip install mypy
+    - python3 -m pip install types-python-dateutil
+    - python3 -m pip install types-PyYAML
+    - python3 -m pip install types-requests
     - mypy extract/ --ignore-missing-imports
 
 python_pylint:

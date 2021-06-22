@@ -29,6 +29,9 @@ def get_gcs_bucket(bucket_name: str) -> Bucket:
 
 
 def move_to_processed(bucket: str, table_name: str, list_of_files: list):
+    """
+    Move the file to process folder.
+    """
     # Get the gcloud storage client and authenticate
     source_bucket = get_gcs_bucket(bucket)
     destination_bucket = get_gcs_bucket(bucket)
