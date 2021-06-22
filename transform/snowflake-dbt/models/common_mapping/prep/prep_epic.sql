@@ -12,7 +12,7 @@
     ('dim_date', 'dim_date'),
     ('dim_namespace_plan_hist', 'dim_namespace_plan_hist'),
     ('plans', 'gitlab_dotcom_plans_source'),
-    ('prep_namespace', 'prep_namespace'),
+    ('dim_namespace', 'dim_namespace'),
 ]) }}
 
 , gitlab_dotcom_epics_dedupe_source AS (
@@ -63,10 +63,10 @@
       LENGTH(gitlab_dotcom_epics_dedupe_source.title)::NUMBER                                AS epic_title_length,
       LENGTH(gitlab_dotcom_epics_dedupe_source.description)::NUMBER                          AS epic_description_length
     FROM gitlab_dotcom_epics_dedupe_source
-    LEFT JOIN prep_namespace 
-        ON gitlab_dotcom_epics_dedupe_source.group_id = prep_namespace.dim_namespace_id
+    LEFT JOIN dim_namespace 
+        ON gitlab_dotcom_epics_dedupe_source.group_id = dim_namespace.dim_namespace_id
     LEFT JOIN dim_namespace_plan_hist 
-        ON prep_namespace.ultimate_parent_namespace_id = dim_namespace_plan_hist.dim_namespace_id
+        ON dim_namespace.ultimate_parent_namespace_id = dim_namespace_plan_hist.dim_namespace_id
         AND gitlab_dotcom_epics_dedupe_source.created_at >= dim_namespace_plan_hist.valid_from
         AND gitlab_dotcom_epics_dedupe_source.created_at < dim_namespace_plan_hist.valid_to
     LEFT JOIN prep_user 
