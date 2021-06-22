@@ -46,7 +46,8 @@ WITH base AS (
       is_reseller                        AS is_reseller,
       health_score                       AS health_score,
       health_number                      AS health_number,
-      health_score_color                 AS health_score_color
+      health_score_color                 AS health_score_color,
+      partner_account_iban_number        AS partner_account_iban_number
     FROM base
 )
 
