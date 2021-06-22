@@ -1104,6 +1104,7 @@ roles:
                     - prod.common_mart_product.mart_product_usage_wave_1_3_metrics_monthly
                     - prod.common_mart_product.mart_product_usage_wave_1_3_metrics_monthly_diff
                     - prod.common_mart_product.mart_saas_product_usage_metrics_monthly
+                    - prod.common_mart_product.mart_product_usage_paid_user_metrics_monthly
 
     - gainsight:
         warehouses:
