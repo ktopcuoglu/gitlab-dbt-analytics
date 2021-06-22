@@ -47,11 +47,10 @@ table_info:
     physical_tables: RPRO_BI3_RI_ACCT_SUMM_V
     table_name: 
       - BI3_RI_ACCT_SUMM
-  - data_entity: Waterfall (Derived)
-    physical_tables: RPRO_BI3_WF_SUMM_V
-    table_name: 
-      - BI3_WF_SUMM
-
+#  - data_entity: Waterfall (Derived)
+#    physical_tables: RPRO_BI3_WF_SUMM_V
+#    table_name: 
+#      - BI3_WF_SUMM
 #  - data_entity: Book
 #    physical_tables: RPRO_BI3_BOOK_V
 #    table_name: 
