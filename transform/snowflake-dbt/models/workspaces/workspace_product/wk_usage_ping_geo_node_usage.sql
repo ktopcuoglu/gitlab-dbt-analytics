@@ -32,7 +32,7 @@ recursive => true)
 
 )
 
-SELECt 
+SELECT 
   {{ dbt_utils.surrogate_key(['ping_id', 'path']) }}      AS instance_path_id,
   instance_id, 
   ping_id,
