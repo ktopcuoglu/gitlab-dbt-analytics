@@ -73,8 +73,6 @@ echo "table_name,load_date
 BI3_RC_SCHD_DEL," > start_date_BI3_RC_SCHD_DEL.csv
 echo "table_name,load_date
 BI3_RI_ACCT_SUMM," > start_date_BI3_RI_ACCT_SUMM.csv
-echo "table_name,load_date
-BI3_WF_SUMM," > start_date_BI3_WF_SUMM.csv
 ```
 
 This command create the file for each table and then putting required column name and value. 
@@ -96,7 +94,6 @@ gsutil cp start_date_BI3_RC_POB.csv  gs://zuora_revpro_gitlab/RAW_DB/staging/BI3
 gsutil cp start_date_BI3_RC_SCHD.csv  gs://zuora_revpro_gitlab/RAW_DB/staging/BI3_RC_SCHD/
 gsutil cp start_date_BI3_RC_SCHD_DEL.csv  gs://zuora_revpro_gitlab/RAW_DB/staging/BI3_RC_SCHD_DEL/
 gsutil cp start_date_BI3_RI_ACCT_SUMM.csv  gs://zuora_revpro_gitlab/RAW_DB/staging/BI3_RI_ACCT_SUMM/
-gsutil cp start_date_BI3_WF_SUMM.csv  gs://zuora_revpro_gitlab/RAW_DB/staging/BI3_WF_SUMM/
 ```
 
 `Step 7`: To run the extract below variable needs to be declared in the .bash_profile file of the server.   
@@ -126,10 +123,77 @@ The current schedule is set to run at 02:00 AM UTC every day.
 00 02 * * * . $HOME/.bash_profile;$python_venv && cd $zuora_src && python3 extract_zuora_revenue.py -table_name BI3_RC_SCHD       -bucket_name $zuora_bucket -api_dns_name $zuora_dns -api_auth_code "$authorization_code" &>/tmp/mycommand.log
 00 02 * * * . $HOME/.bash_profile;$python_venv && cd $zuora_src && python3 extract_zuora_revenue.py -table_name BI3_RC_SCHD_DEL   -bucket_name $zuora_bucket -api_dns_name $zuora_dns -api_auth_code "$authorization_code" &>/tmp/mycommand.log
 00 02 * * * . $HOME/.bash_profile;$python_venv && cd $zuora_src && python3 extract_zuora_revenue.py -table_name BI3_RI_ACCT_SUMM  -bucket_name $zuora_bucket -api_dns_name $zuora_dns -api_auth_code "$authorization_code" &>/tmp/mycommand.log
-00 02 * * * . $HOME/.bash_profile;$python_venv && cd $zuora_src && python3 extract_zuora_revenue.py -table_name BI3_WF_SUMM       -bucket_name $zuora_bucket -api_dns_name $zuora_dns -api_auth_code "$authorization_code" &>/tmp/mycommand.log
 ```
 
 At the end of the process below will be output. 
 1) A success log file is present named `<table_name>_DD-MM-YYYY.log`  upload to path zuora_revpro_gitlab/RAW_DB/staging/<table_name>/<table_name>_DD-MM-YYYY.log.log. For example for table BI3_MJE the log file for the day will be named `BI3_MJE_21-06-2021.log` and it will be uploaded to the path `gs://zuora_revpro_gitlab/RAW_DB/staging/BI3_MJE/BI3_MJE_21-06-2021.log`
 2) Any file for the date range wil be present in the GCS bucket. 
  
+
+### For Derived table 
+Zuora have provided view definition for the derived view.As extracting data from the derived view is not feasible in production. Hence for table BI3_WF_SUMM we prepare the data in the DBT model in PREP layer with the DDL provided from Zuora. 
+
+```
+Prompt View RPRO_BI3_WF_SUMM_V;
+CREATE OR REPLACE VIEW RPRO_BI3_WF_SUMM_V
+(AS_OF_PRD_ID, SCHD_ID, LINE_ID, ROOT_LINE_ID, PRD_ID, 
+ POST_PRD_ID, SEC_ATR_VAL, BOOK_ID, CLIENT_ID, ACCTG_SEG, 
+ ACCTG_TYPE_ID, NETTING_ENTRY_FLAG, SCHD_TYPE_FLAG, T_AT, F_AT, 
+ R_AT, CRTD_PRD_ID, CRTD_DT, CRTD_BY, UPDT_DT, 
+ UPDT_BY, INCR_UPDT_DT)
+AS 
+SELECT
+         /***************************************************************************************************
+         * Name        : RPRO_BI3_WF_SUMM_V                                                               *
+         * Author      : LEEYO                                                                             *
+         * Date        : 16-JUN-2016                                                                       *
+         * Description :                                                                                   *
+         * #Version: 1
+         * #Tag: 3210 
+         * #Last Modified by:
+         * #RnStg      : vw+10000 
+         * $Header: /BI Views/RP3/rpro_bi3_wf_summ_v.sql 1 2016-06-24 21:45:40 yik.sim $                                                                                      *
+         * Modifications History:                                                                          *
+         *                                                                                                 *
+         * Modified By     Date         Version  Description                                               *
+         * --------------  -----------  -------  ----------------------------------------------------------*
+         * LEEYO           16-JUN-2016     1     Initial Version                                           *
+         ***************************************************************************************************/
+        /***************************************************************************************************
+         * Copyright - 2009 Leeyo Software. All rights reserved                                            *
+         *                                                                                                 *
+         * Leeyo REVPRO product is an application modified and extended for clients, based on the REVPRO   *
+         * owned by Leeyo Software.                                                                        *
+         * All related documentation, code, methods and other materials concerning REVPRO are the property *
+         * of Leeyo Software and may not be reused, copied, or transmitted in material or electronic form  *
+         * without the express written consent of Leeyo Software.                                          *
+        ***************************************************************************************************/
+       C.ID AS AS_OF_PRD_ID,
+       S.SCHD_ID as SCHD_ID,
+       S.LINE_ID,
+       S.ROOT_LINE_ID,
+       S.PRD_ID,
+       S.POST_PRD_ID,
+       S.SEC_ATR_VAL,
+       S.BOOK_ID,
+       S.CLIENT_ID,
+       S.ACCTG_SEG,
+       S.ACCTG_TYPE as ACCTG_TYPE_ID,
+       S.NETTING_ENTRY_FLAG,
+       S.SCHD_TYPE_FLAG,
+       S.AMOUNT AS T_AT,
+       S.AMOUNT * S.F_EX_RATE AS F_AT,
+       (S.AMOUNT * S.F_EX_RATE) * S.G_EX_RATE AS R_AT,
+       S.CRTD_PRD_ID,
+       S.CRTD_DT,
+       S.CRTD_BY,
+       S.UPDT_DT,
+       S.UPDT_BY,
+       S.UPDT_DT as INCR_UPDT_DT
+  FROM RPRO_BI3_RC_SCHD_V S,
+       RPRO_BI3_CALENDAR_V C,
+       RPRO_BI3_ACCT_TYPE_V A
+ WHERE CRTD_PRD_ID <= C.ID AND PRD_ID >= C.ID
+   AND S.ACCTG_TYPE = A.ID
+   AND A.WATERFALL_FLAG = 'Y';
+```
