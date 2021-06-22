@@ -2,7 +2,7 @@
         "materialized": "incremental",
         "unique_key": "mart_retention_parent_account_snapshot_id",
         "tags": ["edm_snapshot", "arr_snapshots"],
-        "schema": "common"
+        "schema": "common_mart_sales"
     })
 }}
 
