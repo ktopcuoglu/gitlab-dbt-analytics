@@ -55,7 +55,7 @@ WITH source AS (
       potential_arr_lam__c                          AS potential_arr_lam,
       jihu_account__c::BOOLEAN                      AS is_jihu_account,
       fy22_new_logo_target_list__c::BOOLEAN         AS fy22_new_logo_target_list,
-      first_order_available__c:BOOLEAN              AS is_first_order_available,
+      first_order_available__c::BOOLEAN             AS is_first_order_available,
 
       -- territory success planning fields
       atam_approved_next_owner__c                   AS tsp_approved_next_owner,
