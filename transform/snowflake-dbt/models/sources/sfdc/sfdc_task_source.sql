@@ -20,6 +20,7 @@ WITH source AS (
       activitydate                  AS task_date,
       isdeleted                     AS is_deleted,
       status                        AS status,              
+      type                          AS type,
 
       assigned_employee_number__c   AS assigned_employee_number,
       -- Original issue: https://gitlab.com/gitlab-data/analytics/-/issues/6577
