@@ -2868,3 +2868,31 @@ models:
       - name: dim_plan_id
         tests:
           - not_null
+
+  - name: dim_epic
+    description: '{{ doc("dim_epic") }}'
+    columns:
+      - name: dim_epic_id
+        description: The unique identifier for each of the events.
+        tests:
+          - not_null
+          - unique
+      - name: dim_project_id
+      - name: dim_plan_id
+        tests:
+          - not_null
+
+  - name: dim_note
+    description: '{{ doc("dim_note") }}'
+    columns:
+      - name: dim_note_id
+        description: The unique identifier for each of the events.
+        tests:
+          - not_null
+          - unique
+      - name: dim_project_id
+      - name: dim_plan_id
+        tests:
+          - not_null
+      - name: is_system
+        description: boolean flag allowing us to identify if a note is automatically created by the system or if it is a user's action

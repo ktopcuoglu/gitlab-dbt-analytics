@@ -402,3 +402,16 @@ Prep table for the dim table `dim_user`.
 This table is currently the first iteration. This is a relatively narrow table. A lot of metadata needs to be added.
 {% enddocs %}
 
+{% docs prep_epic %}
+
+Prep table for the dim table `dim_epic`.
+
+
+{% enddocs %}
+
+{% docs prep_note %}
+
+Prep table for the dim table `dim_note`.
+
+
+{% enddocs %}

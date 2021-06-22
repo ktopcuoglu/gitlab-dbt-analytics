@@ -1,0 +1,37 @@
+WITH prep_note AS (
+
+    SELECT 
+      dim_note_id,
+      author_id,
+      dim_project_id,
+      ultimate_parent_namespace_id,
+      noteable_id,
+      creation_date_id,
+      dim_plan_id,
+      noteable_type,
+      created_at,
+      updated_at,
+      note,
+      attachment,
+      line_code,
+      commit_id,
+      is_system_note,
+      note_updated_by_id,
+      position,
+      original_position,
+      resolved_at,
+      resolved_by_id,
+      discussion_id,
+      cached_markdown_version,
+      resolved_by_push
+    FROM {{ ref('prep_note') }}
+
+)
+
+{{ dbt_audit(
+    cte_ref="prep_note",
+    created_by="@mpeychet_",
+    updated_by="@mpeychet_",
+    created_date="2021-06-22",
+    updated_date="2021-06-22"
+) }}
