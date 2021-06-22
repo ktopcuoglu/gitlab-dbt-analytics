@@ -6,10 +6,10 @@
 WITH license AS (
 
     SELECT
-      license_id                            AS dim_license_id,
+      dim_license_id,
       license_md5,
-      subscription_id                       AS dim_subscription_id
-    FROM {{ ref('dim_licenses') }}
+      dim_subscription_id
+    FROM {{ ref('dim_license') }}
 
 ), subscription AS (
 
