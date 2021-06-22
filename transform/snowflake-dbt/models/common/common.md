@@ -794,3 +794,36 @@ Easy joins available with:
 * dim_date through `created_date_id`
 
 {% enddocs %}
+
+{% docs dim_epic %}
+
+Dimensional table representing epics created by groups on Gitlab.com instance. [More info about epics here](https://docs.gitlab.com/ee/user/group/epics/)
+
+The grain of the table is the `dim_event_id`. This table is easily joinable with:
+
+- `dim_plan` through `dim_plan_id`
+- `dim_user` through `author_id`
+- `dim_namespace` through `group_id` and `ultimate_namespace_id`
+
+{% enddocs %}
+
+{% docs dim_note %}
+
+Dimensional table representing events recorded by the Events API. [More info about events tracked here](https://docs.gitlab.com/ee/api/notes.html)
+
+2 kinds of notes are recorded in the notes table:
+- system notes
+- users' notes
+
+System notes are notes automatically created based on status changes of the issue/snippet/merge request/epic.
+
+For example, when a user is tagged as a reviewer, a system note is automatically created in the notes table. They are easily identifiable through the `is_system_id` boolean flag.
+
+The grain of the table is the `dim_note_id`. This table is easily joinable with:
+
+- `dim_plan` through `dim_plan_id`
+- `dim_user` through `dim_user_id`
+- `dim_project` through `dim_project_id`
+- `dim_namespace` through `dim_namespace_id` and `ultimate_namespace_id`
+
+{% enddocs %}

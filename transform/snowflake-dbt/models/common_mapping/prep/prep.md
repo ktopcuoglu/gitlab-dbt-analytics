@@ -447,3 +447,16 @@ Prep table used to build the `dim_ci_runner` table.
 More information about [CI Pipelines here](https://docs.gitlab.com/ee/ci/pipelines/)
 
 {% enddocs %}
+
+{% docs prep_epic %}
+
+Prep table for the dim table `dim_epic`.
+
+
+{% enddocs %}
+
+{% docs prep_note %}
+
+Prep table for the dim table `dim_note`.
+
+{% enddocs %}
