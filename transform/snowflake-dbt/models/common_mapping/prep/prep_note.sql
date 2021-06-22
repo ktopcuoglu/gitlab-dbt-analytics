@@ -37,10 +37,10 @@
       gitlab_dotcom_notes_dedupe_source.id::NUMBER                                            AS dim_note_id,
       gitlab_dotcom_notes_dedupe_source.author_id::NUMBER                                     AS author_id,
       gitlab_dotcom_notes_dedupe_source.project_id::NUMBER                                    AS dim_project_id,
-      prep_project.ultimate_parent_namespace_id::NUMBER                                    AS ultimate_parent_namespace_id,
+      prep_project.ultimate_parent_namespace_id::NUMBER                                       AS ultimate_parent_namespace_id,
       gitlab_dotcom_notes_dedupe_source.noteable_id::NUMBER                                   AS noteable_id,
-      dim_date.date_id::NUMBER                                   AS creation_date_id,
-      dim_namespace_plan_hist.dim_plan_id::NUMBER                                      AS dim_plan_id,
+      dim_date.date_id::NUMBER                                                                AS creation_date_id,
+      dim_namespace_plan_hist.dim_plan_id::NUMBER                                             AS dim_plan_id,
       IFF(noteable_type = '', NULL, noteable_type)::VARCHAR AS noteable_type,
       gitlab_dotcom_notes_dedupe_source.created_at::TIMESTAMP                                 AS created_at,
       gitlab_dotcom_notes_dedupe_source.updated_at::TIMESTAMP                                 AS updated_at,
@@ -67,4 +67,10 @@
 
 )
 
-SELECT * FROM joined
+{{ dbt_audit(
+    cte_ref="joined",
+    created_by="@mpeychet_",
+    updated_by="@mpeychet_",
+    created_date="2021-06-22",
+    updated_date="2021-06-22"
+) }}
