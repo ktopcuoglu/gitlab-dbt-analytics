@@ -257,6 +257,10 @@ sheets:
     owner: '@vikijuhasz'
     tabs:
       - sdr_count_snapshot
+  - name: sisense_users
+    owner: '@laddula'
+    tabs:
+      - sisense_users
   - name: social_marketing_metrics
     owner: '@jeanpeguero'
     tabs:
