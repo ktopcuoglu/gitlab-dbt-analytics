@@ -1550,6 +1550,15 @@ models:
       - name: ping_name
       - name: ping_date
       - name: counter_value
+
+  - name: prep_ci_pipeline
+    description: '{{ doc("prep_ci_pipeline") }}'
+    columns:
+      - name: dim_ci_pipeline_id
+        tests:
+          - not_null
+          - unique
+
   - name: prep_event
     description: '{{ doc("prep_event") }}'
     columns:
@@ -1561,6 +1570,7 @@ models:
       - name: dim_project_id
       - name: dim_namespace_id
       - name: ultimate_parent_dim_namespace_id
+
   - name: prep_user
     description: '{{ doc("prep_user") }}'
     columns:

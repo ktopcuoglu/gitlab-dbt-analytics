@@ -2856,6 +2856,21 @@ models:
       - name: time_period
         description: Metrics can be all-time counters, 28 day counters, or weekly counters. This signifies which it is
 
+  - name: dim_ci_pipeline
+    description: '{{ doc("dim_ci_pipeline") }}'
+    columns:
+      - name: dim_ci_pipeline_id
+        description: The unique identifier for each of the CI Pipelines.
+      - name: dim_project_id
+        tests:
+          - not_null
+      - name: dim_plan_id
+        tests:
+          - not_null      
+      - name: dim_ci_pipeline_internal_id
+        description: Internal ID for the CI Pipeline. This is project specific
+
+
   - name: dim_event
     description: '{{ doc("dim_event") }}'
     columns:
@@ -2865,6 +2880,8 @@ models:
           - not_null
           - unique
       - name: dim_project_id
+        tests:
+          - not_null
       - name: dim_plan_id
         tests:
           - not_null
