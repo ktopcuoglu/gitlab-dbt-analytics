@@ -2762,6 +2762,11 @@ roles:
                     - mpeychet_prep.*.*
                     - mpeychet_prod.*.*
 
+    - mramirez:
+        member_of: []
+        warehouses:
+            - analyst_xs
+
     - mray:
         member_of:
             - analyst_marketing
@@ -3788,6 +3793,11 @@ users:
         can_login: yes
         member_of:
             - mpeychet
+
+    - mramirez:
+        can_login: yes
+        member_of:
+            - mramirez            
 
     - mray:
         can_login: yes
