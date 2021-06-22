@@ -12,6 +12,7 @@ WITH source AS (
       accountid::VARCHAR                    AS account_id,
       ownerid::VARCHAR                      AS owner_id,
       whoid::VARCHAR                        AS lead_or_contact_id,
+      whatid::VARCHAR                       AS what_id,
         
         --info      
       subject::VARCHAR                      AS event_subject,

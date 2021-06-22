@@ -13,7 +13,7 @@
       first_day_of_month                                            AS snapshot_month
     FROM subscriptions
     INNER JOIN dates
-      ON date_actual BETWEEN '2017-04-01' AND DATE_TRUNC('month', CURRENT_DATE) -- first month Usage Ping was collected
+      ON date_actual BETWEEN '2017-04-01' AND CURRENT_DATE          -- first month Usage Ping was collected
     WHERE product_delivery_type = 'Self-Managed'
 
 ), gmau_monthly AS (
@@ -25,6 +25,8 @@
     QUALIFY ROW_NUMBER() OVER (
       PARTITION BY
         dim_subscription_id,
+        uuid,
+        hostname,
         ping_created_at_month
       ORDER BY ping_created_at DESC
       ) = 1
@@ -77,7 +79,10 @@
       gmau_monthly.fuzz_testing_fuzz_testing_jobs_users_28_days,                                                    /* Secure:Fuzz Testing */
       gmau_monthly.container_security_container_scanning_jobs_users_28_days,                                        /* Protect:Container Security */
       IFF(ROW_NUMBER() OVER (
-            PARTITION BY gmau_monthly.dim_subscription_id
+            PARTITION BY
+              gmau_monthly.dim_subscription_id,
+              gmau_monthly.uuid,
+              gmau_monthly.hostname
             ORDER BY gmau_monthly.ping_created_at DESC) = 1,
           TRUE, FALSE)                                              AS is_latest_gmau_reported
     FROM sm_subscriptions
@@ -90,7 +95,7 @@
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@ischweickartDD",
-    updated_by="@michellecooper",
+    updated_by="@ischweickartDD",
     created_date="2021-03-15",
-    updated_date="2021-04-27"
+    updated_date="2021-06-10"
 ) }}

@@ -251,7 +251,8 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
   SELECT 
     pipeline_type.opportunity_id,
     pipeline_type.close_fiscal_quarter_date,
-    history.net_arr
+    history.net_arr,
+    history.booked_net_arr
   FROM pipeline_type
     INNER JOIN sfdc_opportunity_snapshot_history_xf history
       ON history.opportunity_id = pipeline_type.opportunity_id
@@ -284,6 +285,7 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
             WHEN p.close_fiscal_quarter_date = o.close_fiscal_quarter_date
                 AND o.is_won = 1
                     THEN '1. Closed Won'
+            -- the close date for churned deals is updated to the last day before renewal
             WHEN p.end_is_lost = 1
                 AND o.is_renewal = 1
                     THEN '5. Churned'
@@ -318,23 +320,31 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
 
         -- basic net arr
 
-        COALESCE(p.starting_net_arr,p.pipeline_created_net_arr,p.pipeline_pull_net_arr,0)   AS beg_net_arr,
-        COALESCE(p.starting_stage,p.pipeline_created_stage)                                 AS beg_stage,
-        COALESCE(p.starting_forecast_category,p.pipeline_created_forecast_category)         AS beg_forecast_category,
-        COALESCE(p.starting_close_date,p.pipeline_created_close_date)                       AS beg_close_date,
+        COALESCE(p.starting_net_arr,p.pipeline_created_net_arr,p.pipeline_pull_net_arr,0)   AS quarter_start_net_arr,
+        COALESCE(p.starting_stage,p.pipeline_created_stage)                                 AS quarter_start_stage,
+        COALESCE(p.starting_forecast_category,p.pipeline_created_forecast_category)         AS quarter_start_forecast_category,
+        COALESCE(p.starting_close_date,p.pipeline_created_close_date)                       AS quarter_start_close_date,
 
-        last_day.net_arr                                                        AS end_net_arr,
-        p.end_booked_net_arr,                                                   
-        p.end_stage,  
-        p.end_stage_category,                                              
-        p.end_forecast_category,
-        p.end_close_date,
-        p.end_is_won,
-        p.end_is_lost,
-        p.end_is_open,
-        o.is_renewal                                                            AS end_is_renewal,
+        -- last day the opportunity was closing in quarter
+        last_day.net_arr                AS last_day_net_arr,                                                       
+        last_day.booked_net_arr         AS last_day_booked_net_arr,
+        last_day.stage_name             AS last_day_stage_name,
+        last_day.forecast_category      AS last_day_forecast_category,
 
-        last_day.net_arr - beg_net_arr                                          AS delta_net_arr,
+        -- last day of the quarter, at this point the deal might not be closing
+        -- on the quarter
+        p.end_booked_net_arr            AS quarter_end_booked_net_arr,                                                                                                   
+        p.end_net_arr                   AS quarter_end_net_arr,
+        p.end_stage                     AS quarter_end_stage,  
+        p.end_stage_category            AS quarter_end_stage_category,                                              
+        p.end_forecast_category         AS quarter_end_forecast_category,
+        p.end_close_date                AS quarter_end_close_date,
+        p.end_is_won                    AS quarter_end_is_won,
+        p.end_is_lost                   AS quarter_end_is_lost,
+        p.end_is_open                   AS quarter_end_is_open,
+        o.is_renewal                    AS quarter_end_is_renewal,
+
+        last_day.net_arr - beg_net_arr  AS within_quarter_delta_net_arr,
 
         ----------
         -- extra fields for trouble shooting

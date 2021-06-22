@@ -56,6 +56,7 @@ WITH source AS (
       potential_arr_lam__c                          AS potential_arr_lam,
       jihu_account__c::BOOLEAN                      AS is_jihu_account,
       partner_account_iban_number__c                AS partner_account_iban_number,
+      fy22_new_logo_target_list__c::BOOLEAN         AS fy22_new_logo_target_list,
 
       -- territory success planning fields
       atam_approved_next_owner__c                   AS tsp_approved_next_owner,

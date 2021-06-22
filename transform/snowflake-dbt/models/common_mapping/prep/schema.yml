@@ -1550,3 +1550,41 @@ models:
       - name: ping_name
       - name: ping_date
       - name: counter_value
+  - name: prep_event
+    description: '{{ doc("prep_event") }}'
+    columns:
+      - name: dim_event_id
+        tests:
+          - unique
+          - not_null
+      - name: dim_user_id
+      - name: dim_project_id
+      - name: dim_namespace_id
+      - name: ultimate_parent_dim_namespace_id
+  - name: prep_user
+    description: '{{ doc("prep_user") }}'
+    columns:
+      - name: dim_user_id
+        tests:
+          - unique
+          - not_null
+  - name: prep_ci_build
+    description: '{{ doc("prep_ci_build") }}'
+    columns:
+      - name: dim_ci_build_id
+        description: Unique key of CI Build
+        tests:
+          - not_null
+          - unique
+      - name: dim_project_id
+        description: Foreign key that shows the ID of the project in which the build has been triggered.
+      - name: dim_namespace_id
+        description: Foreign key that shows the ID of the namespace in which the build has been triggered.
+      - name: ultimate_parent_namespace_id
+      - name: dim_user_id
+        description: Foreign key that shows the ID of the user who triggered the CI Build
+      - name: dim_plan_id
+        description: ID of the Plan
+      - name: ci_runner_id
+        description: ID of the runner with which the CI build has been run.
+      - name: dim_ci_stage_id

@@ -15,3 +15,7 @@ pumps:
     timestamp_column: report_date
     sensitive: True
     owner: '@m_walker'
+  - model: pump_product_usage_free_user_metrics_monthly
+    timestamp_column: reporting_month
+    sensitive: True
+    owner: '@snalamaru'

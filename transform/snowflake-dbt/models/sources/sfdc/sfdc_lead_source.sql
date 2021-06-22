@@ -13,6 +13,8 @@ WITH source AS (
         lastname                                                AS lead_last_name,
         email                                                   AS lead_email,
         split_part(email,'@',2)                                 AS email_domain,
+        {{email_domain_type("split_part(email,'@',2)", 'leadsource')}}
+                                                                AS email_domain_type,
 
         --keys
         masterrecordid                                          AS master_record_id,
@@ -76,6 +78,10 @@ WITH source AS (
         last_utm_campaign__c                                    AS last_utm_campaign, 
         last_utm_content__c                                     AS last_utm_content,
         crm_partner_id__c                                       AS crm_partner_id,
+        sequence_step_type2__c                                  AS sequence_step_type,
+        actively_being_sequenced__c::BOOLEAN                    AS is_actively_being_sequenced,
+
+
         {{  sfdc_source_buckets('leadsource') }}
 
         -- territory success planning info
