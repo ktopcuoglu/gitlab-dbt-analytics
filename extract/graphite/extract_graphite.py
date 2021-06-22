@@ -24,7 +24,7 @@ def make_api_call(
     return response.json()
 
 
-def get_targets():
+def get_lcp_targets():
     return [
         "sitespeed_io.desktop.gitlab.pageSummary.gitlab_com.GitLab_Project_Home.chrome.cable.browsertime.statistics.timings.largestContentfulPaint.renderTime.*",
         "sitespeed_io.desktop.gitlab.pageSummary.gitlab_com.GitLab_Issue_list.chrome.cable.browsertime.statistics.timings.largestContentfulPaint.renderTime.*",
@@ -45,7 +45,7 @@ if __name__ == "__main__":
 
     snowflake_engine = snowflake_engine_factory(config_dict, "LOADER")
 
-    for target in get_targets():
+    for target in get_lcp_targets():
         lcp_data = make_api_call(
             target,
             "-30d",
@@ -62,5 +62,57 @@ if __name__ == "__main__":
             "lcp.json",
             "engineering_extracts.lcp_load",
             "engineering_extracts.lcp",
+            snowflake_engine,
+        )
+
+    pages = [
+        "GitLab_Project_Home",
+        "GitLab_Issue_list",
+        "GitLab_Issue_Detail",
+        "GitLab_Merge_List",
+        "GitLab_Merge_Detail",
+    ]
+
+    for page in pages:
+        target = f"sitespeed_io.desktop.gitlab.pageSummary.gitlab_com.{page}.chrome.cable.browsertime.statistics.pageinfo.layoutShift.*"
+
+        data = make_api_call(
+            target,
+            "-30d",
+            config_dict["START_DATE"],
+            config_dict["GRAPHITE_USERNAME"],
+            config_dict["GRAPHITE_PASSWORD"],
+            config_dict["GRAPHITE_HOST"],
+        )
+        with open("other_stats.json", "w") as out_file:
+            json.dump(data, out_file)
+
+        snowflake_stage_load_copy_remove(
+            "other_stats.json",
+            "engineering_extracts.lcp_load",
+            "engineering_extracts.layout_shift",
+            snowflake_engine,
+        )
+
+    for page in pages:
+        target = (
+            f"sitespeed_io.desktop.gitlab.pageSummary.gitlab_com.{page}.chrome.cable.browsertime.statistics.cpu.longTasks.totalBlockingTime.*",
+        )
+
+        data = make_api_call(
+            target,
+            "-30d",
+            config_dict["START_DATE"],
+            config_dict["GRAPHITE_USERNAME"],
+            config_dict["GRAPHITE_PASSWORD"],
+            config_dict["GRAPHITE_HOST"],
+        )
+        with open("other_stats.json", "w") as out_file:
+            json.dump(data, out_file)
+
+        snowflake_stage_load_copy_remove(
+            "other_stats.json",
+            "engineering_extracts.lcp_load",
+            "engineering_extracts.blocking_time",
             snowflake_engine,
         )
