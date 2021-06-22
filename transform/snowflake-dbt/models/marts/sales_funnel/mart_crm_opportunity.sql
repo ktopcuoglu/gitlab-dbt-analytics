@@ -118,6 +118,7 @@
       dim_sales_qualified_source.sales_qualified_source_name,
       dim_sales_qualified_source.sales_qualified_source_grouped,
       dim_crm_account.is_jihu_account,
+      dim_crm_account.fy22_new_logo_target_list,
       dim_crm_account.crm_account_gtm_strategy,
       dim_crm_account.crm_account_focus_account,
       dim_crm_account.parent_crm_account_gtm_strategy,
