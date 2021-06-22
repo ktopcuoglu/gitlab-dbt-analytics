@@ -13,7 +13,7 @@ WITH rule_run_date AS (
            date_day as rule_run_date,
           'Product' as type_of_data
     FROM {{ ref('dim_date') }}
-    WHERE rule_run_date between '2021-06-16' and CURRENT_DATE
+    WHERE rule_run_date >= '2021-06-22' 
 
 ), dim_host_instance_type AS (
  
@@ -58,8 +58,9 @@ WITH rule_run_date AS (
         dim_license.license_start_date,
         dim_license.License_expire_date
     FROM map_license_subscription_account 
-    LEFT OUTER JOIN dim_license
+    INNER JOIN dim_license 
     ON map_license_subscription_account.dim_license_id = dim_license.dim_license_id
+    and map_license_subscription_account.dim_subscription_id = dim_license.dim_subscription_id
 
 ), map_subscription_all AS (
 
@@ -71,12 +72,13 @@ WITH rule_run_date AS (
         map_license_all.License_expire_date, 
         dim_subscription.subscription_start_date,
         dim_subscription.subscription_end_date
-    FROM map_license_all
-    LEFT OUTER JOIN dim_subscription
-    ON map_license_all.dim_subscription_id = dim_subscription.dim_subscription_id 
+    FROM dim_subscription 
+    LEFT OUTER JOIN map_license_all
+    ON dim_subscription.dim_subscription_id  = map_license_all.dim_subscription_id
 
 ), processed_passed_failed_record_count AS (
 
+---Instance Types missing UUIDs/Hostname    
     SELECT 
         1                                                                     AS rule_id,
         count(DISTINCT(instance_uuid))                                        AS processed_record_count,
@@ -90,6 +92,7 @@ WITH rule_run_date AS (
 
   UNION 
 
+ --Licenses with missing Subscriptions
     SELECT 
         2                                                                                                AS rule_id,
         count(DISTINCT(dim_license_id)) AS processed_record_count,
@@ -101,6 +104,7 @@ WITH rule_run_date AS (
 
   UNION
 
+--Subscriptions with missing Licenses
     SELECT 
         3                                                                                                                AS rule_id,
         count(DISTINCT(dim_subscription_id))                                                                             AS processed_record_count,
@@ -112,6 +116,8 @@ WITH rule_run_date AS (
   
   UNION 
 
+
+--Subscription IDs with Self-Managed Plans having license_start_date in the future
     SELECT 
         4                                                                                                       AS rule_id,
         count(DISTINCT(dim_subscription_id)) AS processed_record_count,
@@ -123,6 +129,7 @@ WITH rule_run_date AS (
 
   UNION 
 
+--Subscriptions with Self-Managed Plans having license_start_date greater than licese_expire_date
     SELECT 
         5                                                                                                              AS rule_id,
         count(DISTINCT(dim_subscription_id))                                                                           AS processed_record_count,
@@ -134,6 +141,7 @@ WITH rule_run_date AS (
 
   UNION 
 
+--Expired License IDs with Subscription End Dates in the Past
     SELECT 
         6                                                                                                                                                           AS rule_id,
         count(DISTINCT(dim_license_id))                                                                                                                             AS processed_record_count,
@@ -145,6 +153,7 @@ WITH rule_run_date AS (
 
   UNION 
 
+--SaaS Subscription IDs that do not have any associated Namespace IDs
     SELECT 
        7                                                                                                                                                           AS rule_id,
        count(DISTINCT(dim_subscription_id))                                                                                                                        AS processed_record_count,
@@ -165,9 +174,9 @@ WITH rule_run_date AS (
         processed_record_count,
         passed_record_count,
         failed_record_count,
-        rule_run_date,
+        rule_run_date.rule_run_date,
         type_of_data
-    FROM processed_passed_failed_record_count
+    FROM processed_passed_failed_record_count  
     RIGHT OUTER JOIN rule_run_date
     ON TO_DATE(processed_passed_failed_record_count.run_date) = rule_run_date.rule_run_date
 
