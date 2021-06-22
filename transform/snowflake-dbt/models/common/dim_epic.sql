@@ -1,13 +1,18 @@
 WITH prep_epic AS (
 
-    SELECT 
+    SELECT
+      -- PRIMARY KEY
       dim_epic_id,
+
+      -- FOREIGN KEY
       author_id,
       group_id,
       ultimate_parent_namespace_id,
       creation_date_id,
       dim_plan_id,
       assignee_id,
+
+      --METADATA
       epic_internal_id,
       updated_by_id,
       last_edited_by_id,

@@ -1,13 +1,18 @@
 WITH prep_note AS (
 
     SELECT 
+      -- PRIMARY KEY
       dim_note_id,
+
+      -- FOREIGN KEY
       author_id,
       dim_project_id,
       ultimate_parent_namespace_id,
       noteable_id,
       creation_date_id,
       dim_plan_id,
+
+      -- METADATA
       noteable_type,
       created_at,
       updated_at,
