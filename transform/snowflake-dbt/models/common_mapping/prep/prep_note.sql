@@ -40,7 +40,7 @@
       prep_project.ultimate_parent_namespace_id::NUMBER                                       AS ultimate_parent_namespace_id,
       gitlab_dotcom_notes_dedupe_source.noteable_id::NUMBER                                   AS noteable_id,
       dim_date.date_id::NUMBER                                                                AS creation_date_id,
-      COALESCE(dim_namespace_plan_hist.dim_plan_id, 34)::NUMBER                               AS dim_plan_id,
+      IFNULL(dim_namespace_plan_hist.dim_plan_id, 34)::NUMBER                                 AS dim_plan_id,
       IFF(noteable_type = '', NULL, noteable_type)::VARCHAR AS noteable_type,
       gitlab_dotcom_notes_dedupe_source.created_at::TIMESTAMP                                 AS created_at,
       gitlab_dotcom_notes_dedupe_source.updated_at::TIMESTAMP                                 AS updated_at,

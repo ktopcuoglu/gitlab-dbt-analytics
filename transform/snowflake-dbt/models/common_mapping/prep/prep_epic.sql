@@ -39,7 +39,7 @@
       gitlab_dotcom_epics_dedupe_source.group_id::NUMBER AS group_id,
       dim_namespace.ultimate_parent_namespace_id::NUMBER                                     AS ultimate_parent_namespace_id,
       dim_date.date_id::NUMBER                                                               AS creation_date_id,
-      COALESCE(dim_namespace_plan_hist.dim_plan_id, 34)::NUMBER                              AS dim_plan_id,
+      IFNULL(dim_namespace_plan_hist.dim_plan_id, 34)::NUMBER                                AS dim_plan_id,
       gitlab_dotcom_epics_dedupe_source.assignee_id::NUMBER                                  AS assignee_id,
       gitlab_dotcom_epics_dedupe_source.iid::NUMBER                                          AS epic_internal_id,
       gitlab_dotcom_epics_dedupe_source.updated_by_id::NUMBER                                AS updated_by_id,
