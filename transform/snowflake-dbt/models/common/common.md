@@ -602,10 +602,10 @@ A fact table that contains only the metrics that is a UMAU, SMAU, or GMAU metric
 
 A dim table that contains all CI Pipelines run on Gitlab.com application.
 
-Easy joins availabl with:
+Easy joins available with:
 
 * dim_project through `dim_project_id`
-* dim_namespace through `dim_namespace_id` and `ultinate_parent_namespace_id`
+* dim_namespace through `dim_namespace_id` and `ultimate_parent_namespace_id`
 * dim_date through `ci_pipeline_creation_dim_date_id`
 {% enddocs %}
 
