@@ -703,11 +703,12 @@ WITH date_details AS (
         ELSE 0
       END                                               AS booked_deal_count,
     
-      -- churn deal count (lost renewals)
+      -- churn (lost renewals) / contraction deal count 
       CASE
         WHEN ((opp_snapshot.is_renewal = 1
             AND opp_snapshot.is_lost = 1)
-            OR opp_snapshot.net_arr < 0)
+            OR (opp_snapshot.is_won = 1 
+                AND opp_snapshot.net_arr < 0))
           THEN opp_snapshot.calculated_deal_count
         ELSE 0
       END                                               AS churned_deal_count,
@@ -739,16 +740,18 @@ WITH date_details AS (
       CASE
         WHEN (opp_snapshot.is_won = 1 
             OR (opp_snapshot.is_renewal = 1 
-              AND opp_snapshot.is_lost = 1))
+                  AND opp_snapshot.is_lost = 1))
           THEN opp_snapshot.net_arr
         ELSE 0 
       END                                                 AS booked_net_arr,
 
-      -- churn net arr (lost renewals)
+      -- churn (lost renewals) / contraction deal count 
       CASE
         WHEN ((opp_snapshot.is_renewal = 1
             AND opp_snapshot.is_lost = 1)
-            OR opp_snapshot.net_arr < 0)
+            OR (opp_snapshot.is_won = 1 
+                AND opp_snapshot.net_arr < 0))
+
           THEN net_arr
         ELSE 0
       END                                                 AS churned_net_arr,
