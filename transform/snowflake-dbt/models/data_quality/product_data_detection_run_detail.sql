@@ -164,13 +164,14 @@ WITH rule_run_date AS (
 
 --SaaS Subscriptions Not Mapped to Namespaces
     SELECT 
-       7                                                                                  AS rule_id,
-       count(DISTINCT(dim_subscription_id))                                               AS processed_record_count,
+       7                                                                                                    AS rule_id,
+       count(DISTINCT(dim_subscription_id))                                                                 AS processed_record_count,
        (SELECT COUNT(DISTINCT(dim_subscription_id)) FROM bdg_namespace_order_subscription 
-       WHERE dim_subscription_id IS NOT NULL AND dim_namespace_id IS NOT NULL)            AS passed_record_count,
-       (processed_record_count - passed_record_count)                                     AS failed_record_count,
-       dbt_updated_at                                                                     AS run_date
+       WHERE dim_subscription_id IS NOT NULL AND dim_namespace_id IS NOT NULL is_subscription_active = 'Y') AS passed_record_count,
+       (processed_record_count - passed_record_count)                                                       AS failed_record_count,
+       dbt_updated_at                                                                                       AS run_date
     FROM bdg_namespace_order_subscription 
+    WHERE is_subscription_active = 'Y'
     GROUP BY run_date
 
 ), final AS (
