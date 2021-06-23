@@ -139,11 +139,7 @@ WITH map_merged_crm_account AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@msendal",
-    updated_by="@jpeguero",
+    updated_by="@iweeks",
     created_date="2020-06-01",
-<<<<<<< HEAD
     updated_date="2021-06-23"
-=======
-    updated_date="2021-06-22"
->>>>>>> master
 ) }}
