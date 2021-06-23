@@ -26,6 +26,8 @@ WITH map_merged_crm_account AS (
       account_name,
       billing_country,
       df_industry,
+      industry,
+      sub_industry,
       account_owner_team,
       tsp_territory,
       tsp_region,
@@ -71,7 +73,8 @@ WITH map_merged_crm_account AS (
     sfdc_account.account_name                     AS crm_account_name,
     sfdc_account.billing_country                  AS crm_account_billing_country,
     sfdc_account.account_type                     AS crm_account_type,
-    sfdc_account.df_industry                      AS crm_account_industry,
+    sfdc_account.industry                         AS crm_account_industry,
+    sfdc_account.sub_industry                     AS crm_account_sub_industry,
     sfdc_account.account_owner                    AS crm_account_owner,
     sfdc_account.account_owner_team               AS crm_account_owner_team,
     sfdc_account.tsp_territory                    AS crm_account_sales_territory,
@@ -92,7 +95,8 @@ WITH map_merged_crm_account AS (
     {{ sales_segment_cleaning('sfdc_account.ultimate_parent_sales_segment') }}
                                                   AS parent_crm_account_sales_segment,
     ultimate_parent_account.billing_country       AS parent_crm_account_billing_country,
-    ultimate_parent_account.df_industry           AS parent_crm_account_industry,
+    ultimate_parent_account.industry              AS parent_crm_account_industry,
+    ultimate_parent_account.sub_industry          AS parent_crm_account_sub_industry,
     ultimate_parent_account.account_owner_team    AS parent_crm_account_owner_team,
     ultimate_parent_account.tsp_territory         AS parent_crm_account_sales_territory,
     ultimate_parent_account.tsp_region            AS parent_crm_account_tsp_region,
@@ -135,7 +139,7 @@ WITH map_merged_crm_account AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@msendal",
-    updated_by="@jpeguero",
+    updated_by="@iweeks",
     created_date="2020-06-01",
-    updated_date="2021-06-22"
+    updated_date="2021-06-23"
 ) }}
