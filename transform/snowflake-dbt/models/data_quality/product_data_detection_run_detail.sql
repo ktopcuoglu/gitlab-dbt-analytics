@@ -83,13 +83,12 @@ WITH rule_run_date AS (
 
 --Missing instance types for UUID/hostname
     SELECT 
-        1                                                                     AS rule_id,
-        count(DISTINCT(instance_uuid))                                        AS processed_record_count,
+        1                                                                    AS rule_id,
+        count(DISTINCT(instance_uuid))                                       AS processed_record_count,
         (SELECT count(DISTINCT(instance_uuid)) FROM dim_host_instance_type
-        WHERE INSTANCE_TYPE NOT IN ('Unknown', NULL, ''))                     AS passed_record_count,
-        (SELECT count(DISTINCT(instance_uuid)) FROM dim_host_instance_type
-         WHERE INSTANCE_TYPE IN ('Unknown', NULL, ''))                        AS failed_record_count,
-         dbt_updated_at                                                       AS run_date    
+         WHERE INSTANCE_TYPE NOT IN ('Unknown'))                             AS passed_record_count,
+        (processed_record_count - passed_record_count)                       AS failed_record_count,
+         dbt_updated_at                                                      AS run_date    
     FROM dim_host_instance_type
     GROUP BY run_date
 
