@@ -39,6 +39,7 @@ WITH rule_run_date AS (
  
     SELECT *
     FROM {{ ref('bdg_namespace_order_subscription') }}
+    WHERE is_subscription_active = 'Y'
 
 ), map_subscription_license_all AS (
 
@@ -167,11 +168,10 @@ WITH rule_run_date AS (
        7                                                                                                    AS rule_id,
        count(DISTINCT(dim_subscription_id))                                                                 AS processed_record_count,
        (SELECT COUNT(DISTINCT(dim_subscription_id)) FROM bdg_namespace_order_subscription 
-       WHERE dim_subscription_id IS NOT NULL AND dim_namespace_id IS NOT NULL AND is_subscription_active = 'Y') AS passed_record_count,
+       WHERE namespace_order_subscription_match_status = 'Paid All Matching')                               AS passed_record_count,
        (processed_record_count - passed_record_count)                                                       AS failed_record_count,
        dbt_updated_at                                                                                       AS run_date
     FROM bdg_namespace_order_subscription 
-    WHERE is_subscription_active = 'Y'
     GROUP BY run_date
 
 ), final AS (
