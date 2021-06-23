@@ -700,15 +700,6 @@ models:
           - unique
           - not_null
         tags: ["tdf", "common", "zuora_revenue"]
-
-  - name: dim_performance_obligation_template
-    description: '{{ doc("dim_performance_obligation_template") }}'
-    columns:
-      - name: dim_performance_obligation_template_id
-        description: Unique identifier for a performance obligation template used to define how a revenue contract line is split into performance obligations. 
-        tests:
-          - not_null
-        tags: ["tdf", "common", "zuora_revenue"]
           
   - name: dim_product_detail
     description: '{{ doc("dim_product_detail") }}'

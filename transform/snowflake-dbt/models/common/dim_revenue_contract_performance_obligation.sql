@@ -75,6 +75,17 @@ WITH performance_obligation_source AS (
       -- pob details
       performance_obligation_version,
 
+      -- pob template details
+      performance_obligation_template_name,
+      performance_obligation_template_description,
+      performance_obligation_template_version,
+      
+      -- meta data
+      performance_obligation_template_created_by
+      performance_obligation_template_created_date,
+      performance_obligation_template_updated_by,
+      performance_obligation_template_updated_date,
+
       -- metadata
       revenue_contract_performance_obligation_created_by,
       revenue_contract_performance_obligation_created_date,

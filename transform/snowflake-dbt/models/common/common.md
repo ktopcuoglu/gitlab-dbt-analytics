@@ -151,12 +151,6 @@ Line-level details of manual updates made to adjust final totals in accounting r
 
 {% enddocs %}
 
-{% docs dim_performance_obligation_template %}
-
-Revenue contracts are broken down into specific actions which need to be completed by the business in order to recognize revenue. The way a revenue contract line item is broken up into performance obligations is dictated by the template which defines this process.
-
-{% enddocs %}
-
 {% docs dim_product_detail %}
 Dimensional table representing GitLab's Product Catalog. The Product Catalog is created and maintained through the Price Master Management business process and can be found in the [handbook](https://about.gitlab.com/handbook/finance/sox-internal-controls/quote-to-cash/#2-price-master-management).
 

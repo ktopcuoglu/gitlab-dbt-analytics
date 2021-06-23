@@ -35,7 +35,6 @@ WITH lines_source AS (
       -- pob ids
       lines_source.revenue_contract_performance_obligation_id                               AS dim_revenue_contract_performance_obligation_id,
       pob.event_id  											                            AS dim_accounting_event_id_performance_obligation,
-      pob.performance_obligation_template_id					                            AS dim_performance_obligation_template_id,
 
       -- account ids
       lines_source.billing_account_id 							                            AS dim_billing_account_id,
