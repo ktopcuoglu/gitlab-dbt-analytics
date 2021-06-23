@@ -641,17 +641,6 @@ More info about issues in GitLab product [available here](https://docs.gitlab.co
 
 Dimension table that contains all CI build data.
 
-Easily to join with the following tables:
-
-- `dim_project` through `dim_project_id`
-- `dim_namespace` through `dim_namespace_id` and `ultimate_namespace_id`
-
-{% enddocs %}
-
-{% docs dim_ci_build %}
-
-Dimension table that contains all CI build data.
-
 Easy to join with the following tables:
 
 - `dim_project` through `dim_project_id`

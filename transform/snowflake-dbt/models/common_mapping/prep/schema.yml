@@ -1551,8 +1551,6 @@ models:
       - name: ping_name
       - name: ping_date
       - name: counter_value
-<<<<<<< HEAD
-=======
 
   - name: prep_ci_pipeline
     description: '{{ doc("prep_ci_pipeline") }}'
@@ -1562,7 +1560,6 @@ models:
           - not_null
           - unique
 
->>>>>>> master
   - name: prep_event
     description: '{{ doc("prep_event") }}'
     columns:
@@ -1582,6 +1579,7 @@ models:
         tests:
           - unique
           - not_null
+
   - name: prep_ci_build
     description: '{{ doc("prep_ci_build") }}'
     columns:
@@ -1602,3 +1600,19 @@ models:
       - name: ci_runner_id
         description: ID of the runner with which the CI build has been run.
       - name: dim_ci_stage_id
+
+  - name: prep_issue
+    description: '{{ doc("prep_issue") }}'
+    columns:
+      - name: dim_issue_id
+        tests:
+          - unique
+          - not_null
+
+  - name: prep_merge_request
+    description: '{{ doc("prep_merge_request") }}'
+    columns:
+      - name: dim_merge_request_id
+        tests:
+          - unique
+          - not_null
