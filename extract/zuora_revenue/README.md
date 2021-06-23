@@ -11,7 +11,7 @@ https://console.cloud.google.com/compute/instancesDetail/zones/us-west1-a/instan
 
 From separate terminal go to ` ~/repos/analytics/extract/zuora_revenue/src` directory and run below command to upload whole directory to compute engine. This directory contains the code for the extraction process.
 
-gcloud compute scp --recurse src --zone "us-west1-a" zuora-revenue-extract-server:/home/vedprakash/zuora_revenue
+`gcloud compute scp --recurse src --zone "us-west1-a" zuora-revenue-extract-server:/home/vedprakash/zuora_revenue`
 
 This will upload the src folder from your branch your local to the compute engine branch. 
 

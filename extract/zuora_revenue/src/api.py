@@ -27,7 +27,7 @@ class ZuoraRevProAPI:
         )
         self.logger = logging.getLogger(__name__)
 
-    def get_start_date(self, tablename: str):
+    def get_start_date(self, table_name: str):
         """
         This function is responsible to pull the last extract date value present in the file named start_date_<table_name>.csv
         in GCS for the given table name and pass it back to the calling function. For each of the table this file
@@ -36,9 +36,9 @@ class ZuoraRevProAPI:
         passed as table_name. If the file is not having any rows only a header it will return null.
         """
         bucket_name = self.bucket_name
-        cmd_to_download_start_date = f"gsutil cp gs://{bucket_name}/RAW_DB/staging/{tablename}/start_date_{tablename}.csv ."
+        cmd_to_download_start_date = f"gsutil cp gs://{bucket_name}/RAW_DB/staging/{table_name}/start_date_{table_name}.csv ."
 
-        # Download the start_dare_<tablebame>.csv fle from bucket. If the file is not present exit the process with the exception message.
+        # Download the start_dare_<table_name>.csv fle from bucket. If the file is not present exit the process with the exception message.
 
         try:
             self.logger.info(cmd_to_download_start_date)
@@ -51,10 +51,10 @@ class ZuoraRevProAPI:
 
         try:
             # read the csv file and match the table_name. If there is value present for the Load_date i.e. then return that else return Null.
-            table_name_date = pd.read_csv(f"start_date_{tablename}.csv")
-            if table_name_date.iloc[0]["table_name"] == tablename:
+            table_name_date = pd.read_csv(f"start_date_{table_name}.csv")
+            if table_name_date.iloc[0]["table_name"] == table_name:
                 start_date = table_name_date.loc[
-                    table_name_date["table_name"] == tablename, "load_date"
+                    table_name_date["table_name"] == table_name, "load_date"
                 ]
                 return (start_date.where(pd.notnull(start_date), None)).to_list()[0]
             else:
@@ -68,24 +68,24 @@ class ZuoraRevProAPI:
             )
             sys.exit(1)
 
-    def set_load_date(self, tablename: str, load_date: str) -> None:
+    def set_load_date(self, table_name: str, load_date: str) -> None:
         """
-        This function take input tablename and to_date value as load_date. It is responsible to update the load_date value in start_date_{tablename}.csv file
+        This function take input table_name and to_date value as load_date. It is responsible to update the load_date value in start_date_{table_name}.csv file
         and upload it to GCS for next extraction process.
         """
         bucket_name = self.bucket_name
-        load_date_file_name = f"start_date_{tablename}.csv"
-        cmd_to_upload_file = f"gsutil cp start_date_{tablename}.csv gs://{bucket_name}/RAW_DB/staging/{tablename}/"
+        load_date_file_name = f"start_date_{table_name}.csv"
+        cmd_to_upload_file = f"gsutil cp start_date_{table_name}.csv gs://{bucket_name}/RAW_DB/staging/{table_name}/"
         try:
             self.logger.info(cmd_to_upload_file)
             table_name_date = pd.read_csv(load_date_file_name)
             table_name_date.loc[
-                table_name_date["table_name"] == tablename, "load_date"
+                table_name_date["table_name"] == table_name, "load_date"
             ] = load_date
             table_name_date.to_csv(load_date_file_name, index=False)
             subprocess.run(cmd_to_upload_file, shell=True, check=True)
             self.logger.info(
-                f"The start date for next run for table {tablename} is set to {load_date}"
+                f"The start date for next run for table {table_name} is set to {load_date}"
             )
         except Exception:
             self.logger.error(
@@ -95,17 +95,15 @@ class ZuoraRevProAPI:
 
     def date_range(self, start_date: str = None) -> tuple:
         """
-        This function will return start_date and end_date for  querying the zuora revenue BI view or tablename.
-        If start_date is not set then it sets it self to zuora default start_date.
+        This function will return start_date and end_date for  querying the zuora revenue BI view or table_name.
+        If start_date is not passed then it sets itself to zuora default start_date.
         end_date is always set to now.
         """
         if not start_date:
             start_date = "2016-07-26T00:00:00"
-            now = datetime.now()
-            end_date = now.strftime("%Y-%m-%dT%H:%M:%S")
-        else:
-            now = datetime.now()
-            end_date = now.strftime("%Y-%m-%dT%H:%M:%S")
+
+        now = datetime.now()
+        end_date = now.strftime("%Y-%m-%dT%H:%M:%S")
         return start_date, end_date
 
     def get_auth_token(self) -> str:
@@ -132,8 +130,7 @@ class ZuoraRevProAPI:
         this BI views has for given date range. Rounded the value to nearest whole number.
         """
 
-        url = f"{self.zuora_fetch_data_url}count/{url_para_dict['tablename']}?fromDate={url_para_dict['fromDate']}&toDate={url_para_dict['toDate']}&clientId={self.clientId}"
-        print(url)
+        url = f"{self.zuora_fetch_data_url}count/{url_para_dict['table_name']}?fromDate={url_para_dict['fromDate']}&toDate={url_para_dict['toDate']}&clientId={self.clientId}"
         count_response = requests.get(url, headers=url_para_dict["header_auth_token"])
 
         if count_response.status_code == 200:
@@ -145,16 +142,16 @@ class ZuoraRevProAPI:
             sys.exit(1)
         number_of_records = res.get("count")
         self.logger.info(
-            f"Number of Records for table {url_para_dict['tablename']}:- {number_of_records}"
+            f"Number of Records for table {url_para_dict['table_name']}:- {number_of_records}"
         )
         number_of_page = math.ceil(res.get("count") / 10000)
         self.logger.info(
-            f"Number of page to extract for table {url_para_dict['tablename']}:- {number_of_page}"
+            f"Number of page to extract for table {url_para_dict['table_name']}:- {number_of_page}"
         )
 
         return number_of_page
 
-    def check_response_204(self, response_output, tablename: str):
+    def check_response_204(self, response_output, table_name: str):
         """
         Function checks the response from the request and check if the status code
         is 204 then it is success and no need to proceed further with extraction.
@@ -165,12 +162,14 @@ class ZuoraRevProAPI:
             or response_output.status_code == 204
         ):
             self.logger.info(
-                f"Reached end of table {tablename} extraction.Stopping the loop and move to next.\
-                         Or no records in the tablename {response_output.text}"
+                f"Reached end of table {table_name} extraction.Stopping the loop and move to next.\
+                         Or no records in the table_name {response_output.text}"
             )
             return True
 
-    def check_response_200_500(self, response_output, page_number: int, tablename: str):
+    def check_response_200_500(
+        self, response_output, page_number: int, table_name: str
+    ):
         """
         Takes input as result of rest call and validate if the status code is 200. If not then check for 500 or page still not cached error.
         If status is 200 then write the output to the .csv file and then request to upload and delete.
@@ -178,7 +177,7 @@ class ZuoraRevProAPI:
 
         if response_output.status_code != 200:
             self.logger.info(
-                f"Made an unsuccessful rest call for page number {page_number} for tablename {tablename}"
+                f"Made an unsuccessful rest call for page number {page_number} for table_name {table_name}"
             )
             self.logger.info(response_output.text)
             if (
@@ -186,42 +185,42 @@ class ZuoraRevProAPI:
                 or response_output.status_code == 500
             ):
                 self.logger.info(
-                    f"Made a Un successful rest call for page number {page_number} for tablename  {tablename}, because of page not being cached {response_output.text}. \
+                    f"Made a Un successful rest call for page number {page_number} for table_name  {table_name}, because of page not being cached {response_output.text}. \
                      Going for retrial."
                 )
-                return "Retrial"
+                return False
 
         elif response_output.status_code == 200:
             self.logger.info(
-                f"Made successfull attempt for page  {page_number } for tablename  {tablename}."
+                f"Made successfull attempt for page  {page_number } for table_name  {table_name}."
             )
             self.write_to_file_upload_to_gcs(
-                response_output.text, tablename, page_number
+                response_output.text, table_name, page_number
             )
-            return "Success"
+            return True
         else:
             self.logger.info(
-                f"A different error which is not caught in program for {tablename}. The error message is {response_output.text}"
+                f"A different error which is not caught in program for {table_name}. The error message is {response_output.text}"
             )
             sys.exit(1)
 
     def write_to_file_upload_to_gcs(
-        self, response_output, tablename: str, pagenum: int = 1
+        self, response_output, table_name: str, pagenum: int = 1
     ):
         """
         Taken input as respounce_output and then write it to file , upload the file to GCS and then delete local file.
         """
         bucket_name = self.bucket_name
         try:
-            f = open(f"{tablename}_{pagenum}.csv", "w+")
+            f = open(f"{table_name}_{pagenum}.csv", "w+")
             f.write(response_output)
             f.close()
             self.logger.info("File generated successfully")
         except Exception:
             self.logger.error("Error while writing to file", exc_info=True)
             sys.exit(1)
-        command_upload_to_gcs = f"gsutil cp {tablename}_{pagenum}.csv gs://{bucket_name}/RAW_DB/staging/{tablename}/"
-        command_delete_file = f"rm {tablename}_{pagenum}.csv"
+        command_upload_to_gcs = f"gsutil cp {table_name}_{pagenum}.csv gs://{bucket_name}/RAW_DB/staging/{table_name}/"
+        command_delete_file = f"rm {table_name}_{pagenum}.csv"
         try:
             self.logger.info(command_upload_to_gcs)
             subprocess.run(command_upload_to_gcs, shell=True, check=True)
@@ -238,22 +237,22 @@ class ZuoraRevProAPI:
             sys.exit(1)
 
     def retry_download(
-        self, url: str, header_auth_token: dict, page_number: int, tablename: str
+        self, url: str, header_auth_token: dict, page_number: int, table_name: str
     ):
         for attempt in range(1, 50):
             time.sleep(60 + attempt)
             self.logger.info(
-                f"Making attempt number {attempt} for page  {page_number } for tablename  {tablename}."
+                f"Making attempt number {attempt} for page  {page_number } for table_name  {table_name}."
             )
             response_output = requests.get(url, headers=header_auth_token)
             attempt_status = self.check_response_200_500(
-                response_output, page_number, tablename
+                response_output, page_number, table_name
             )
-            if attempt_status == "Retrial":
+            if attempt_status == False:
                 continue
-            elif attempt_status == "Success":
+            elif attempt_status == True:
                 self.logger.info(
-                    f"Made successfull attempt for page  {page_number } for tablename  {tablename}.\
+                    f"Made successfull attempt for page  {page_number } for table_name  {table_name}.\
                             The attempt number is {attempt}"
                 )
                 return response_output
@@ -261,7 +260,7 @@ class ZuoraRevProAPI:
 
     def pull_zuora_table_data(
         self,
-        tablename: str,
+        table_name: str,
         fromDate: str,
         toDate: str,
     ) -> None:
@@ -272,32 +271,31 @@ class ZuoraRevProAPI:
         header_auth_token = {"Token": self.get_auth_token()}
         # Combine the variables in to one dict for better parameter management
         url_para_dict = {
-            "tablename": tablename,
+            "table_name": table_name,
             "fromDate": fromDate,
             "toDate": toDate,
             "header_auth_token": header_auth_token,
         }
-
         # Fetch number of page this table will generate for given date range.
         number_of_page = self.get_number_of_page(url_para_dict)
         self.logger.info(
-            f"{tablename} file extraction started at :: {datetime.now().strftime('%Y-%m-%d-%H:%M:%S')}"
+            f"{table_name} file extraction started at :: {datetime.now().strftime('%Y-%m-%d-%H:%M:%S')}"
         )
 
         if number_of_page >= 1:
             page_number = 1
-            url = f"{self.zuora_fetch_data_url}{tablename}?fromDate={fromDate}&toDate={toDate}&pagenum={page_number}&pageSize=10000&clientId={self.clientId}&outputType=csv"
+            url = f"{self.zuora_fetch_data_url}{table_name}?fromDate={fromDate}&toDate={toDate}&pagenum={page_number}&pageSize=10000&clientId={self.clientId}&outputType=cs"
             # Fetch first page for the table name
             response_output = requests.get(url, headers=header_auth_token)
             self.logger.info(response_output.status_code)
             # Check for the response from the above call. If the response is success and status code is 200 then the request was made successfully.
             if (
-                self.check_response_200_500(response_output, page_number, tablename)
-                == "Retrial"
+                self.check_response_200_500(response_output, page_number, table_name)
+                == False
             ):
                 self.logger.info("Going for retrials for 1st page")
                 retrial_response = self.retry_download(
-                    url, header_auth_token, page_number, tablename
+                    url, header_auth_token, page_number, table_name
                 )
                 continuation_token = retrial_response.headers.get("Continuation-Token")
             else:
@@ -307,11 +305,11 @@ class ZuoraRevProAPI:
 
             page_number = 2
             while number_of_page >= page_number:
-                url = f"{self.zuora_fetch_data_url}{tablename}?fromDate={fromDate}&toDate={toDate}&pagenum={page_number}&pageSize=10000&clientId={self.clientId}&outputType=csv"
+                url = f"{self.zuora_fetch_data_url}{table_name}?fromDate={fromDate}&toDate={toDate}&pagenum={page_number}&pageSize=10000&clientId={self.clientId}&outputType=cs"
                 # Fetch first page for the table name
                 response_output = requests.get(url, headers=header_auth_token)
                 # Check for the response from the above call. If the response is success and status code is 200 then the request was made successfully.
-                if self.check_response_204(response_output, tablename) is True:
+                if self.check_response_204(response_output, table_name) is True:
                     break
 
                 if response_output.status_code == 401:
@@ -320,12 +318,14 @@ class ZuoraRevProAPI:
                     response_output = requests.get(url, headers=header_auth_token)
 
                 if (
-                    self.check_response_200_500(response_output, page_number, tablename)
-                    == "Retrial"
+                    self.check_response_200_500(
+                        response_output, page_number, table_name
+                    )
+                    == False
                 ):
                     self.logger.info("Going for retrials for 1st page")
                     retrial_response = self.retry_download(
-                        url, header_auth_token, page_number, tablename
+                        url, header_auth_token, page_number, table_name
                     )
                 else:
                     self.logger.info("File uploaded to GCS")

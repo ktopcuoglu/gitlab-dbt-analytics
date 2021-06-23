@@ -57,7 +57,7 @@ with open(
         print(exc)
 
     table_name_list = [
-        "{table_name}".format(table_name=tab)
+        "{table_name}".format(table_name=str(tab))
         for sheet in stream["table_info"]
         for tab in sheet["table_name"]
     ]
