@@ -108,7 +108,7 @@ WITH rule_run_date AS (
 
 --Subscriptions with missing Licenses
     SELECT 
-        3                                                                                                               AS rule_id,
+        3                                                                                                                AS rule_id,
         count(DISTINCT(dim_subscription_id))                                                                             AS processed_record_count,
         (SELECT COUNT(DISTINCT(dim_subscription_id)) FROM map_subscription_license_all WHERE dim_license_id IS NOT NULL) AS passed_record_count,
         (SELECT COUNT(DISTINCT(dim_subscription_id)) FROM map_subscription_license_all WHERE dim_license_id is null)     AS failed_record_count,
@@ -121,9 +121,9 @@ WITH rule_run_date AS (
 --Subscriptions with Self-Managed Plans having License Start dates in the future
     SELECT 
         4                                                                                                            AS rule_id,
-        count(DISTINCT(dim_subscription_id)) AS processed_record_count,
+        count(DISTINCT(dim_subscription_id))                                                                         AS processed_record_count,
         (SELECT COUNT(DISTINCT(dim_subscription_id)) FROM map_license_all WHERE license_start_date <= CURRENT_DATE)  AS passed_record_count,
-        (SELECT COUNT(DISTINCT(dim_subscription_id)) FROM map_license_all WHERE license_start_date > CURRENT_DATE)   AS failed_record_count,
+        (processed_record_count - passed_record_count)                                                               AS failed_record_count,
         dbt_updated_at                                                                                               AS run_date
     FROM map_license_all 
     WHERE license_start_date IS NOT NULL
