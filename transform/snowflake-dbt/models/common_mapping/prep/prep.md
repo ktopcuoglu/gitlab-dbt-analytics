@@ -389,6 +389,12 @@ The grain of this table is one row per uuid-hostname combination per month.
 
 {% enddocs %}
 
+{% docs prep_ci_pipeline %}
+
+Creates a base view of CI pipelines. More info about CI pipelines [is available here](https://docs.gitlab.com/ee/ci/pipelines/)
+
+{% enddocs %}
+
 {% docs prep_event %}
 
 Prep table for the dim table `dim_event`.

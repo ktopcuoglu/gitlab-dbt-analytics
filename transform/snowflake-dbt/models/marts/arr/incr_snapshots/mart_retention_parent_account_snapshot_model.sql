@@ -2,7 +2,7 @@
         "materialized": "incremental",
         "unique_key": "mart_retention_parent_account_snapshot_id",
         "tags": ["edm_snapshot", "arr_snapshots"],
-        "schema": "common"
+        "schema": "common_mart_sales"
     })
 }}
 
@@ -38,7 +38,7 @@ WITH snapshot_dates AS (
 ), final AS (
 
     SELECT
-     {{ dbt_utils.surrogate_key(['snapshot_id', 'primary_key']) }} AS mart_retention_parent_account_snapshot_id,
+     {{ dbt_utils.surrogate_key(['snapshot_id', 'fct_retention_id']) }} AS mart_retention_parent_account_snapshot_id,
        *
     FROM mart_retention_parent_account_spined
 

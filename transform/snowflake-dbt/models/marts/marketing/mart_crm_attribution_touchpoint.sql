@@ -66,6 +66,7 @@
       dim_crm_person.lead_source_type,
       dim_crm_person.source_buckets                                         AS crm_person_source_buckets,
       dim_crm_person.net_new_source_categories,
+      dim_crm_person.crm_partner_id,
       fct_crm_person.created_date                                           AS crm_person_created_date,
       fct_crm_person.inquiry_date,
       fct_crm_person.mql_date_first,

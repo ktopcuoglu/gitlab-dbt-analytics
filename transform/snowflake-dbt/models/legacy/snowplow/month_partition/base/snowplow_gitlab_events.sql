@@ -207,6 +207,11 @@ WITH filtered_source as (
     SELECT *
     FROM {{ ref('snowplow_gitlab_events_web_page_id') }}
 
+),events_with_standard_context AS (
+
+    SELECT *
+    FROM {{ ref('snowplow_gitlab_events_standard_context') }}
+
 ), base_with_sorted_columns AS (
   
     SELECT 
@@ -254,6 +259,12 @@ WITH filtered_source as (
       base.event_format,
       base.event_id,
       events_with_web_page_id.web_page_id,
+      events_with_standard_context.environment AS gsc_environment,
+      events_with_standard_context.extra AS gsc_extra,
+      events_with_standard_context.namespace_id AS gsc_namespace_id,
+      events_with_standard_context.plan AS gsc_plan,
+      events_with_standard_context.project_id AS gsc_project_id,
+      events_with_standard_context.source AS gsc_source,
       base.event_name,
       base.event_vendor,
       base.event_version,
@@ -347,6 +358,8 @@ WITH filtered_source as (
     FROM base
     LEFT JOIN events_with_web_page_id
       ON base.event_id = events_with_web_page_id.event_id
+    LEFT JOIN events_with_standard_context
+      ON base.event_id = events_with_standard_context.event_id
     WHERE NOT EXISTS (
       SELECT event_id
       FROM events_with_web_page_id web_page_events
