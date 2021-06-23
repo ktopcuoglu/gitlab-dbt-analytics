@@ -1,0 +1,9 @@
+version: 2
+
+models:
+    - name: thanos_stage_group_error_budget_availability_source
+      columns: 
+        - name: group_membership_id
+          tests:
+            - not_null
+            - unique
