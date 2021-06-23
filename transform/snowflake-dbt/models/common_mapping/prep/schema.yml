@@ -313,8 +313,8 @@ models:
         tests:
           - not_null
           
-  - name: prep_gitlab_dotcom_audit_event_details_clean
-    description: '{{ doc("prep_gitlab_dotcom_audit_event_details_clean") }}'
+  - name: prep_audit_event_details_clean
+    description: '{{ doc("prep_audit_event_details_clean") }}'
     columns:
       - name: audit_event_id
         tests:
