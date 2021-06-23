@@ -11,7 +11,7 @@ WITH rule_run_date AS (
 
    SELECT distinct
            date_day as rule_run_date,
-          'Product' as type_of_data
+          'Product' AS type_of_data
     FROM {{ ref('dim_date') }}
     WHERE rule_run_date BETWEEN '2021-06-23' AND CURRENT_DATE --date when the code would be pushed to Production,we would be joining this with the dbt updated data for the models.
 
