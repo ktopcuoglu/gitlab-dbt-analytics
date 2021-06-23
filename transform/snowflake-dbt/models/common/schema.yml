@@ -2871,15 +2871,24 @@ models:
         tests:
           - not_null
 
+<<<<<<< HEAD
   - name: dim_ci_build
     description: '{{ doc("dim_ci_build") }}'
     columns:
       - name: dim_ci_build_id
         description: Unique key of CI Build
+=======
+  - name: dim_issue
+    description: '{{ doc("dim_issue") }}'
+    columns:
+      - name: dim_issue_id
+        description: The unique identifier for each of the issues.
+>>>>>>> f4133026a13c612760c901c50d9f8693a20fcecc
         tests:
           - not_null
           - unique
       - name: dim_project_id
+<<<<<<< HEAD
         description: Foreign key that shows the ID of the project in which the build has been triggered.
       - name: dim_namespace_id
         description: Foreign key that shows the ID of the namespace in which the build has been triggered.
@@ -2891,3 +2900,21 @@ models:
       - name: ci_runner_id
         description: ID of the runner with which the CI build has been run.
       - name: dim_ci_stage_id
+=======
+      - name: dim_plan_id
+        tests:
+          - not_null
+
+  - name: dim_merge_request
+    description: '{{ doc("dim_merge_request") }}'
+    columns:
+      - name: dim_merge_request_id
+        description: The unique identifier for each of the merge requets.
+        tests:
+          - not_null
+          - unique
+      - name: dim_project_id
+      - name: dim_plan_id
+        tests:
+          - not_null
+>>>>>>> f4133026a13c612760c901c50d9f8693a20fcecc
