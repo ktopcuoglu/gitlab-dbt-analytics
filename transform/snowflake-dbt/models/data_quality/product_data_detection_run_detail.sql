@@ -82,12 +82,12 @@ WITH rule_run_date AS (
 ), processed_passed_failed_record_count AS (
  
     SELECT 
-        1                                                                     AS rule_id,
-        count(DISTINCT(instance_uuid))                                        AS processed_record_count,
+        1                                                                   AS rule_id,
+        count(DISTINCT(instance_uuid))                                       AS processed_record_count,
         (SELECT count(DISTINCT(instance_uuid)) FROM dim_host_instance_type
-        WHERE INSTANCE_TYPE in ('Production', 'Non- Production'))             AS passed_record_count,
+        WHERE INSTANCE_TYPE in ('Production', 'Non-Production'))             AS passed_record_count,
         (SELECT count(DISTINCT(instance_uuid)) FROM dim_host_instance_type
-         WHERE INSTANCE_TYPE in ('Unknown', NULL, ''))                        AS failed_record_count,
+         WHERE INSTANCE_TYPE in ('Unknown', NULL, ''))                       AS failed_record_count,
          dbt_updated_at as run_date
     FROM dim_host_instance_type
     GROUP BY run_date
@@ -96,7 +96,7 @@ WITH rule_run_date AS (
 
 
     SELECT 
-        2                                                                                                AS rule_id,
+        2                                                                                              AS rule_id,
         count(DISTINCT(dim_license_id))                                                                  AS processed_record_count,
         (SELECT COUNT(DISTINCT(dim_license_id)) FROM dim_license WHERE dim_subscription_id IS NOT NULL)  AS passed_record_count,
         (SELECT COUNT(DISTINCT(dim_license_id)) FROM dim_license WHERE dim_subscription_id IS NULL)      AS failed_record_count,
@@ -108,7 +108,7 @@ WITH rule_run_date AS (
 
 
     SELECT 
-        3                                                                                                                AS rule_id,
+        3                                                                                                               AS rule_id,
         count(DISTINCT(dim_subscription_id))                                                                             AS processed_record_count,
         (SELECT COUNT(DISTINCT(dim_subscription_id)) FROM map_subscription_license_all WHERE dim_license_id IS NOT NULL) AS passed_record_count,
         (SELECT COUNT(DISTINCT(dim_subscription_id)) FROM map_subscription_license_all WHERE dim_license_id is null)     AS failed_record_count,
