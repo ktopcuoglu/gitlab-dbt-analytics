@@ -113,7 +113,7 @@ WITH source AS (
         createdbyid                 AS created_by_id,
         createddate                 AS created_date,
         isdeleted                   AS is_deleted,
-        lastactivitydate            AS last_activity_date,
+        lastactivitydate::DATE      AS last_activity_date,
         lastcurequestdate           AS last_cu_request_date,
         lastcuupdatedate            AS last_cu_update_date,
         lastmodifiedbyid            AS last_modified_by_id,
