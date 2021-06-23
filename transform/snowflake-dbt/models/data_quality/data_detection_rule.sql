@@ -8,7 +8,7 @@ WITH detection_rule AS (
     SELECT 
           1                                          AS rule_id,
           'Missing instance types'                   AS rule_name,
-          'Missing instance types for UUID/hostname' AS rule_description,
+          'Missing instance types for UUID'          AS rule_description,
           'Product'                                  AS type_of_data,
           50 AS threshold
 

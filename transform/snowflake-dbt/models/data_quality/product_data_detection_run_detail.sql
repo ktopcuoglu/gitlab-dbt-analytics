@@ -63,25 +63,27 @@ WITH rule_run_date AS (
     ON map_license_subscription_account.dim_license_id = dim_license.dim_license_id
     and map_license_subscription_account.dim_subscription_id = dim_license.dim_subscription_id
 
-), map_subscription_all AS (
+), map_subscriptions_all AS (
 
     SELECT DISTINCT
-        map_license_all.dim_subscription_id, 
-        map_license_all.dim_license_id, 
-        map_license_all.license_md5,
-        map_license_all.license_start_date,
-        map_license_all.License_expire_date, 
+        dim_subscription.dim_subscription_id, 
+        dim_license.dim_license_id, 
+        dim_license.license_md5,
+        dim_license.license_start_date,
+        dim_license.License_expire_date, 
         dim_subscription.subscription_start_date,
         dim_subscription.subscription_end_date,
-        map_license_all.dbt_updated_at
-    FROM dim_subscription 
-    LEFT OUTER JOIN map_license_all
-    ON dim_subscription.dim_subscription_id  = map_license_all.dim_subscription_id
+        dim_license.dbt_updated_at
+    FROM dim_license 
+    LEFT OUTER JOIN dim_subscription
+    ON dim_license.dim_subscription_id  = dim_subscription.dim_subscription_id
+    WHERE subscription_end_date IS NOT NULL 
+    AND license_expire_date IS NOT NULL
 
 
 ), processed_passed_failed_record_count AS (
 
---Missing instance types for UUID/hostname
+--Missing instance types for UUID
     SELECT 
         1                                                                    AS rule_id,
         count(DISTINCT(instance_uuid))                                       AS processed_record_count,
@@ -151,13 +153,11 @@ WITH rule_run_date AS (
     SELECT 
         6                                                                                                                    AS rule_id,
         count(DISTINCT(dim_license_id))                                                                                      AS processed_record_count,
-        (SELECT COUNT(DISTINCT(dim_license_id)) FROM map_subscription_all WHERE subscription_end_date >= CURRENT_DATE 
-        AND License_expire_date <= CURRENT_DATE AND subscription_end_date IS NOT NULL AND license_expire_date IS NOT NULL)   AS passed_record_count,
+        (SELECT COUNT(DISTINCT(dim_license_id)) FROM map_subscription_all WHERE subscription_end_date <= CURRENT_DATE 
+        AND License_expire_date <= CURRENT_DATE )                                                                            AS passed_record_count,
         (processed_record_count - passed_record_count)                                                                       AS failed_record_count,
         dbt_updated_at                                                                                                       AS run_date
     FROM map_subscription_all 
-    WHERE subscription_end_date IS NOT NULL 
-    AND License_expire_date IS NOT NULL
     GROUP BY run_date
 
   UNION ALL
@@ -167,7 +167,7 @@ WITH rule_run_date AS (
        7                                                                                                    AS rule_id,
        count(DISTINCT(dim_subscription_id))                                                                 AS processed_record_count,
        (SELECT COUNT(DISTINCT(dim_subscription_id)) FROM bdg_namespace_order_subscription 
-       WHERE dim_subscription_id IS NOT NULL AND dim_namespace_id IS NOT NULL is_subscription_active = 'Y') AS passed_record_count,
+       WHERE dim_subscription_id IS NOT NULL AND dim_namespace_id IS NOT NULL AND is_subscription_active = 'Y') AS passed_record_count,
        (processed_record_count - passed_record_count)                                                       AS failed_record_count,
        dbt_updated_at                                                                                       AS run_date
     FROM bdg_namespace_order_subscription 
