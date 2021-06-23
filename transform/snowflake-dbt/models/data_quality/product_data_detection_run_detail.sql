@@ -96,7 +96,7 @@ WITH rule_run_date AS (
 
 --Licenses with missing Subscriptions
     SELECT 
-        2                                                                                              AS rule_id,
+        2                                                                                                AS rule_id,
         count(DISTINCT(dim_license_id))                                                                  AS processed_record_count,
         (SELECT COUNT(DISTINCT(dim_license_id)) FROM dim_license WHERE dim_subscription_id IS NOT NULL)  AS passed_record_count,
         (SELECT COUNT(DISTINCT(dim_license_id)) FROM dim_license WHERE dim_subscription_id IS NULL)      AS failed_record_count,
@@ -132,27 +132,29 @@ WITH rule_run_date AS (
 
   UNION ALL
 
---Subscriptions with Self-Managed Plans having License Start Date greater than Licese Expire date
+--Subscriptions with Self-Managed Plans having License Start Date greater than License Expire date
     SELECT 
         5                                                                                                                   AS rule_id,
         count(DISTINCT(dim_subscription_id))                                                                                AS processed_record_count,
-        (SELECT COUNT(DISTINCT(dim_subscription_id)) FROM map_license_all WHERE license_start_date <= License_expire_date)  AS passed_record_count,
-        (SELECT COUNT(DISTINCT(dim_subscription_id)) FROM map_license_all WHERE license_start_date > License_expire_date)   AS failed_record_count,
+        (SELECT COUNT(DISTINCT(dim_subscription_id)) FROM map_license_all WHERE license_start_date <= License_expire_date
+        AND license_start_date IS NOT NULL AND license_expire_date IS NOT NULL)                                             AS passed_record_count,
+        (processed_record_count - passed_record_count)                                                                      AS failed_record_count,
         dbt_updated_at                                                                                                      AS run_date
     FROM map_license_all 
     WHERE license_start_date IS NOT NULL 
-    AND License_expire_date IS NOT NULL
+    AND license_expire_date IS NOT NULL
     GROUP BY run_date
 
   UNION ALL
 
 --Expired License IDs with Subscription End Dates in the Past
     SELECT 
-        6                                                                                                                                                      AS rule_id,
-        count(DISTINCT(dim_license_id))                                                                                                                        AS processed_record_count,
-        (SELECT COUNT(DISTINCT(dim_license_id)) FROM map_subscription_all WHERE subscription_end_date >= CURRENT_DATE AND License_expire_date <= CURRENT_DATE) AS passed_record_count,
-        (SELECT COUNT(DISTINCT(dim_license_id)) FROM map_subscription_all WHERE subscription_end_date <= CURRENT_DATE AND License_expire_date <= CURRENT_DATE) AS failed_record_count,
-        dbt_updated_at                                                                                                                                         AS run_date
+        6                                                                                                                    AS rule_id,
+        count(DISTINCT(dim_license_id))                                                                                      AS processed_record_count,
+        (SELECT COUNT(DISTINCT(dim_license_id)) FROM map_subscription_all WHERE subscription_end_date >= CURRENT_DATE 
+        AND License_expire_date <= CURRENT_DATE AND subscription_end_date IS NOT NULL AND license_expire_date IS NOT NULL)   AS passed_record_count,
+        (processed_record_count - passed_record_count)                                                                       AS failed_record_count,
+        dbt_updated_at                                                                                                       AS run_date
     FROM map_subscription_all 
     WHERE subscription_end_date IS NOT NULL 
     AND License_expire_date IS NOT NULL
@@ -162,11 +164,12 @@ WITH rule_run_date AS (
 
 --SaaS Subscriptions Not Mapped to Namespaces
     SELECT 
-       7                                                                                                                                                           AS rule_id,
-       count(DISTINCT(dim_subscription_id))                                                                                                                        AS processed_record_count,
-       (SELECT COUNT(DISTINCT(dim_subscription_id)) FROM bdg_namespace_order_subscription WHERE dim_subscription_id IS NOT NULL AND dim_namespace_id IS NOT NULL)  AS passed_record_count,
-       (SELECT COUNT(DISTINCT(dim_subscription_id)) FROM bdg_namespace_order_subscription WHERE dim_subscription_id IS NOT NULL AND dim_namespace_id IS NULL)      AS failed_record_count,
-       dbt_updated_at                                                                                                                                              AS run_date
+       7                                                                                  AS rule_id,
+       count(DISTINCT(dim_subscription_id))                                               AS processed_record_count,
+       (SELECT COUNT(DISTINCT(dim_subscription_id)) FROM bdg_namespace_order_subscription 
+       WHERE dim_subscription_id IS NOT NULL AND dim_namespace_id IS NOT NULL)            AS passed_record_count,
+       (processed_record_count - passed_record_count)                                     AS failed_record_count,
+       dbt_updated_at                                                                     AS run_date
     FROM bdg_namespace_order_subscription 
     GROUP BY run_date
 
