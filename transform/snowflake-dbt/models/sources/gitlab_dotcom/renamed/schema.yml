@@ -111,7 +111,7 @@ models:
   - name: gitlab_dotcom_boards_epic_boards
     description: Base model for Gitlab.com Boards Epic Boards
     columns:
-      - name: board_id
+      - name: id
         tags: ["tdf","gitlab_dotcom"]
         tests:
           - not_null
