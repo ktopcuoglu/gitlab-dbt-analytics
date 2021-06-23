@@ -63,6 +63,8 @@ WITH rule_run_date AS (
     INNER JOIN dim_license 
     ON map_license_subscription_account.dim_license_id = dim_license.dim_license_id
     and map_license_subscription_account.dim_subscription_id = dim_license.dim_subscription_id
+    WHERE license_start_date IS NOT NULL 
+    AND license_expire_date IS NOT NULL
 
 ), map_subscriptions_all AS (
 
@@ -139,13 +141,10 @@ WITH rule_run_date AS (
     SELECT 
         5                                                                                                                   AS rule_id,
         count(DISTINCT(dim_subscription_id))                                                                                AS processed_record_count,
-        (SELECT COUNT(DISTINCT(dim_subscription_id)) FROM map_license_all WHERE license_start_date <= License_expire_date
-        AND license_start_date IS NOT NULL AND license_expire_date IS NOT NULL)                                             AS passed_record_count,
+        (SELECT COUNT(DISTINCT(dim_subscription_id)) FROM map_license_all WHERE license_start_date <= License_expire_date)                                             AS passed_record_count,
         (processed_record_count - passed_record_count)                                                                      AS failed_record_count,
         dbt_updated_at                                                                                                      AS run_date
     FROM map_license_all 
-    WHERE license_start_date IS NOT NULL 
-    AND license_expire_date IS NOT NULL
     GROUP BY run_date
 
   UNION ALL
