@@ -276,6 +276,7 @@ class ZuoraRevProAPI:
             "toDate": toDate,
             "header_auth_token": header_auth_token,
         }
+
         # Fetch number of page this table will generate for given date range.
         number_of_page = self.get_number_of_page(url_para_dict)
         self.logger.info(
@@ -284,7 +285,7 @@ class ZuoraRevProAPI:
 
         if number_of_page >= 1:
             page_number = 1
-            url = f"{self.zuora_fetch_data_url}{table_name}?fromDate={fromDate}&toDate={toDate}&pagenum={page_number}&pageSize=10000&clientId={self.clientId}&outputType=cs"
+            url = f"{self.zuora_fetch_data_url}{table_name}?fromDate={fromDate}&toDate={toDate}&pagenum={page_number}&pageSize=10000&clientId={self.clientId}&outputType=csv"
             # Fetch first page for the table name
             response_output = requests.get(url, headers=header_auth_token)
             self.logger.info(response_output.status_code)
@@ -305,7 +306,7 @@ class ZuoraRevProAPI:
 
             page_number = 2
             while number_of_page >= page_number:
-                url = f"{self.zuora_fetch_data_url}{table_name}?fromDate={fromDate}&toDate={toDate}&pagenum={page_number}&pageSize=10000&clientId={self.clientId}&outputType=cs"
+                url = f"{self.zuora_fetch_data_url}{table_name}?fromDate={fromDate}&toDate={toDate}&pagenum={page_number}&pageSize=10000&clientId={self.clientId}&outputType=csv"
                 # Fetch first page for the table name
                 response_output = requests.get(url, headers=header_auth_token)
                 # Check for the response from the above call. If the response is success and status code is 200 then the request was made successfully.
