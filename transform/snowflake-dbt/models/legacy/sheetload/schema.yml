@@ -99,6 +99,8 @@ models:
   description: Source model for SDR attainment and goals by month.
 - name: sheetload_sdr_count_snapshot
   description: SDR counts by fiscal quarter and sales segment.
+- name: sheetload_sisense_users
+  description: source model for Sisense users.
 - name: sheetload_social_marketing_metrics
 - name: sheetload_social_marketing_topic_metrics
 - name: sheetload_net_arr_net_iacv_conversion_factors

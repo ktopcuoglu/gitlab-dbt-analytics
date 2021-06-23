@@ -7,6 +7,7 @@ WITH dim_date AS (
 
     SELECT *
     FROM {{ ref('prep_crm_account') }}
+    WHERE is_jihu_account = FALSE
 
 ), prep_product_detail AS (
 

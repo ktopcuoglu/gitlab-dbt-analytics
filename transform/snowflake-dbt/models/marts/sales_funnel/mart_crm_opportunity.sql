@@ -130,6 +130,8 @@
       dim_crm_opportunity.opportunity_sales_development_representative,
       dim_crm_opportunity.opportunity_business_development_representative,
       dim_crm_opportunity.opportunity_development_representative,
+      dim_crm_opportunity.iqm_submitted_by_role,
+      dim_crm_opportunity.sdr_pipeline_contribution,
       dim_crm_opportunity.is_web_portal_purchase,
       dim_crm_opportunity.sales_path,
       dim_crm_opportunity.professional_services_value,
@@ -231,5 +233,5 @@
     created_by="@iweeks",
     updated_by="@jpeguero",
     created_date="2020-12-07",
-    updated_date="2021-04-28",
+    updated_date="2021-06-21",
   ) }}

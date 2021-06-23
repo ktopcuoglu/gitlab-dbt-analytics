@@ -86,6 +86,7 @@ WITH map_merged_crm_account AS (
     sfdc_account.health_score,
     sfdc_account.health_number,
     sfdc_account.health_score_color,
+    sfdc_account.partner_account_iban_number,
     ultimate_parent_account.account_id            AS dim_parent_crm_account_id,
     ultimate_parent_account.account_name          AS parent_crm_account_name,
     {{ sales_segment_cleaning('sfdc_account.ultimate_parent_sales_segment') }}
@@ -105,6 +106,9 @@ WITH map_merged_crm_account AS (
     sfdc_account.record_type_id                   AS record_type_id,
     sfdc_account.federal_account                  AS federal_account,
     jihu_accounts.is_jihu_account                 AS is_jihu_account,
+    sfdc_account.potential_arr_lam,
+    sfdc_account.fy22_new_logo_target_list,
+    sfdc_account.is_first_order_available,
     sfdc_account.gitlab_com_user,
     sfdc_account.tsp_account_employees,
     sfdc_account.tsp_max_family_employees,
@@ -131,7 +135,7 @@ WITH map_merged_crm_account AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@msendal",
-    updated_by="@iweeks",
+    updated_by="@jpeguero",
     created_date="2020-06-01",
-    updated_date="2021-06-07"
+    updated_date="2021-06-22"
 ) }}

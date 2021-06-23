@@ -1720,6 +1720,15 @@ models:
         tests:
           - not_null
 
+  - name: gitlab_dotcom_user_credit_card_validations_source
+    description: Base model for Gitlab.com user credit card validations
+    columns:
+      - name: user_id
+        tags: ["tdf", "gitlab_dotcom"]
+        tests:
+          - not_null
+          - unique
+
   - name: gitlab_dotcom_user_custom_attributes_source
     description: Base model for Gitlab.com user custom attributes
     columns:

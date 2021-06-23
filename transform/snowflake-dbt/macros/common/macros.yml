@@ -64,6 +64,19 @@ macros:
         type: string
       - name: order_type
         type: string
+  - name: email_domain_type
+    description: '{{ doc("email_domain_type") }}'
+    arguments:
+      - name: email_domain
+        type: string
+      - name: lead_source
+        type: string
+  - name: get_personal_email_domain_list
+    description: Returns a list of the personal email domains contained in the personal_email_domains dbt seed csv file.
+    arguments:
+      - name: type_of_match
+        type: string
+        description: The type of match that is used to detect the personal email domains.
   - name: it_job_title_hierarchy
     description: '{{ doc("it_job_title_hierarchy") }}'
     arguments:
