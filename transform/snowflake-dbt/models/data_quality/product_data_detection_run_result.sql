@@ -31,7 +31,7 @@ WITH detection_rule AS (
         rule_run_detail.rule_run_date,
         rule_run_detail.percent_of_records_passed,
         rule_run_detail.percent_of_records_failed,
-        CASE WHEN percent_of_records_passed > threshold THEN 'PASS' ELSE 'FAIL' END AS pass_fail_flag,
+        IFF(percent_of_records_passed > threshold, TRUE, FALSE) AS is_pass,
         rule_run_detail.type_of_data
     FROM rule_run_detail
     LEFT OUTER JOIN  detection_rule ON
