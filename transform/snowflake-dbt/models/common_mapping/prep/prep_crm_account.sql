@@ -112,6 +112,7 @@ WITH map_merged_crm_account AS (
     jihu_accounts.is_jihu_account                 AS is_jihu_account,
     sfdc_account.potential_arr_lam,
     sfdc_account.fy22_new_logo_target_list,
+    sfdc_account.is_first_order_available,
     sfdc_account.gitlab_com_user,
     sfdc_account.tsp_account_employees,
     sfdc_account.tsp_max_family_employees,
@@ -138,7 +139,11 @@ WITH map_merged_crm_account AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@msendal",
-    updated_by="@iweeks",
+    updated_by="@jpeguero",
     created_date="2020-06-01",
+<<<<<<< HEAD
     updated_date="2021-06-23"
+=======
+    updated_date="2021-06-22"
+>>>>>>> master
 ) }}
