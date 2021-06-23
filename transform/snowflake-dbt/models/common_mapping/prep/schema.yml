@@ -919,7 +919,6 @@ models:
       - name: configure_redis_hll_counters_terraform_p_terraform_state_api_unique_users_monthly
         description: Monthly active users of GitLab Managed Terraform State ([source](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/#configureconfigure---smau-gmau---mau-of-gitlab-managed-terraform-state))
       - name: container_security_container_scanning_jobs_users_28_days
-      
         description: The number of users who have run a container scanning job or interacted with the Protect UI in the last 28 days of the month ([source](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/#protectcontainer-security---smau-gmau---users-running-container-scanning-or-interacting-with-protect-ui))
       - name: continuous_integration_ci_pipelines_users_28_days
         description: A rolling count of unique users triggering pipelines in the last 28 days ([source](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/#verify-verifyci---gmau-smau---unique-users-triggering-pipelines))
