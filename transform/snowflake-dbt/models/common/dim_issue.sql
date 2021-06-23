@@ -34,7 +34,7 @@ WITH prep_issue AS (
       relative_position,
       service_desk_reply_to,
       state_id,
-      state,
+      state_name,
       duplicated_to_id,
       promoted_to_epic_id,
       issue_type
