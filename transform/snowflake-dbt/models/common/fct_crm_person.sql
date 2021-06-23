@@ -5,17 +5,21 @@ WITH account_dims_mapping AS (
 
 ), crm_person AS (
 
-  SELECT
+    SELECT
 
-    dim_crm_person_id,
-    sfdc_record_id,
-    bizible_person_id,
-    bizible_touchpoint_position,
-    bizible_marketing_channel_path,
-    bizible_touchpoint_date,
-    dim_crm_account_id,
-    dim_crm_user_id,
-    person_score
+      dim_crm_person_id,
+      sfdc_record_id,
+      bizible_person_id,
+      bizible_touchpoint_position,
+      bizible_marketing_channel_path,
+      bizible_touchpoint_date,
+      dim_crm_account_id,
+      dim_crm_user_id,
+      person_score,
+      name_of_active_sequence,
+      sequence_task_due_date,
+      sequence_status,
+      last_activity_date
 
     FROM {{ref('prep_crm_person')}}
 
@@ -179,7 +183,11 @@ WITH account_dims_mapping AS (
      -- additive fields
 
       crm_person.person_score                                                                                             AS person_score,
-      mqls.mql_count                                                                                                      AS mql_count
+      mqls.mql_count                                                                                                      AS mql_count,
+      crm_person.name_of_active_sequence,
+      crm_person.sequence_task_due_date,
+      crm_person.sequence_status,
+      crm_person.last_activity_date
 
     FROM crm_person
     LEFT JOIN sfdc_leads
@@ -208,5 +216,5 @@ WITH account_dims_mapping AS (
     created_by="@mcooperDD",
     updated_by="@iweeks",
     created_date="2020-12-01",
-    updated_date="2021-04-22"
+    updated_date="2021-06-23"
 ) }}

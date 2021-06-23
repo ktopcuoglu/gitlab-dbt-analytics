@@ -78,6 +78,9 @@ WITH source AS (
         last_utm_campaign__c                                    AS last_utm_campaign, 
         last_utm_content__c                                     AS last_utm_content,
         crm_partner_id__c                                       AS crm_partner_id,
+        name_of_active_sequence__c                              AS name_of_active_sequence,
+        sequence_task_due_date__c::DATE                         AS sequence_task_due_date,
+        sequence_status__c                                      AS sequence_status,
         sequence_step_type2__c                                  AS sequence_step_type,
         actively_being_sequenced__c::BOOLEAN                    AS is_actively_being_sequenced,
 

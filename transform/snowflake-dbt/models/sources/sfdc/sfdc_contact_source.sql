@@ -82,6 +82,10 @@ WITH source AS (
         last_utm_content__c         AS last_utm_content,
         region__c                   AS region,
         sequence_step_type2__c      AS sequence_step_type,
+        name_of_active_sequence__c  AS name_of_active_sequence,
+        sequence_task_due_date__c::DATE
+                                    AS sequence_task_due_date,
+        sequence_status__c          AS sequence_status,
         actively_being_sequenced__c::BOOLEAN
                                     AS is_actively_being_sequenced,
         {{  sfdc_source_buckets('leadsource') }}
