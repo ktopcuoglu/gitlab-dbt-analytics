@@ -1568,3 +1568,19 @@ models:
         tests:
           - unique
           - not_null
+
+  - name: prep_note
+    description: '{{ doc("prep_note") }}'
+    columns:
+      - name: dim_note_id
+        tests:
+          - unique
+          - not_null
+
+  - name: prep_epic
+    description: '{{ doc("prep_epic") }}'
+    columns:
+      - name: dim_epic_id
+        tests:
+          - unique
+          - not_null
