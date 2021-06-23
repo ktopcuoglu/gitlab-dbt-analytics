@@ -75,7 +75,6 @@ WITH map_merged_crm_account AS (
     SELECT
       zuora_invoice_item.invoice_item_id                AS invoice_item_id,
       zuora_invoice.invoice_id                          AS invoice_id,
-      zuora_revenue_bill.revenue_contract_line_id       AS dim_revenue_contract_line_id,
       zuora_invoice.invoice_number,
       zuora_invoice.invoice_date::DATE                  AS invoice_date,
       zuora_invoice_item.service_start_date::DATE       AS service_start_date,
@@ -108,6 +107,7 @@ WITH map_merged_crm_account AS (
       invoice_charges.billing_account_id_invoice    AS dim_billing_account_id_invoice,
       invoice_charges.crm_account_id_invoice        AS dim_crm_account_id_invoice,
       base_charges.subscription_id                  AS dim_subscription_id,
+      zuora_revenue_bill.revenue_contract_line_id   AS dim_revenue_contract_line_id,
       invoice_charges.charge_id,
       invoice_charges.product_details_id            AS dim_product_detail_id,
       invoice_charges.invoice_number,
