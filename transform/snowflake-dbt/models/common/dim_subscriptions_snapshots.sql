@@ -18,6 +18,11 @@ WITH snapshot_dates AS (
 
    {% endif %}
 
+), subscription_lineage AS (
+
+    SELECT *
+    FROM {{ ref('map_subscription_lineage') }}
+
 ), zuora_subscription AS (
 
     SELECT *
@@ -68,10 +73,21 @@ WITH snapshot_dates AS (
       IFF(zuora_subscription_spined.created_by_id = '2c92a0fd55822b4d015593ac264767f2', -- All Self-Service / Web direct subscriptions are identified by that created_by_id
       'Self-Service', 'Sales-Assisted')                                         AS subscription_sales_type,
       DATE_TRUNC('month', zuora_subscription_spined.subscription_start_date)    AS subscription_start_month,
-      DATE_TRUNC('month', zuora_subscription_spined.subscription_end_date)      AS subscription_end_month
+      DATE_TRUNC('month', zuora_subscription_spined.subscription_end_date)      AS subscription_end_month,
+
+      --Lineage and Cohort Information
+      subscription_lineage.subscription_lineage,
+      subscription_lineage.oldest_subscription_in_cohort,
+      subscription_lineage.subscription_cohort_month,
+      subscription_lineage.subscription_cohort_quarter,
+      subscription_lineage.subscription_cohort_year
+      
     FROM zuora_subscription_spined
     INNER JOIN zuora_account
       ON zuora_account.account_id = zuora_subscription_spined.account_id
+    LEFT JOIN subscription_lineage
+      ON subscription_lineage.dim_subscription_id = zuora_subscription_spined.subscription_id
+
 
 ), final AS (
 
@@ -86,8 +102,7 @@ WITH snapshot_dates AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@msendal",
-    updated_by="@msendal",
+    updated_by="@iweeks",
     created_date="2020-09-29",
-    updated_date="2020-09-29"
+    updated_date="2021-06-23"
 ) }}
-
