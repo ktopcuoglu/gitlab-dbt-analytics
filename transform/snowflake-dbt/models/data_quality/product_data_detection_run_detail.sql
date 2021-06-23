@@ -62,7 +62,7 @@ WITH rule_run_date AS (
     FROM map_license_subscription_account 
     INNER JOIN dim_license 
     ON map_license_subscription_account.dim_license_id = dim_license.dim_license_id
-    and map_license_subscription_account.dim_subscription_id = dim_license.dim_subscription_id
+    AND map_license_subscription_account.dim_subscription_id = dim_license.dim_subscription_id
     WHERE license_start_date IS NOT NULL 
     AND license_expire_date IS NOT NULL
 
