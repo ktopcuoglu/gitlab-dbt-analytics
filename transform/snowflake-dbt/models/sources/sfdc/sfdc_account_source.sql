@@ -18,6 +18,7 @@ WITH source AS (
       recordtypeid                                  AS record_type_id,
       ultimate_parent_account_id__c                 AS ultimate_parent_id,
       partner_vat_tax_id__c                         AS partner_vat_tax_id,
+      
 
       -- key people GL side
       federal_account__c                            AS federal_account,
@@ -54,6 +55,9 @@ WITH source AS (
       sdr_target_account__c::BOOLEAN                AS is_sdr_target_account,
       potential_arr_lam__c                          AS potential_arr_lam,
       jihu_account__c::BOOLEAN                      AS is_jihu_account,
+      partner_account_iban_number__c                AS partner_account_iban_number,
+      fy22_new_logo_target_list__c::BOOLEAN         AS fy22_new_logo_target_list,
+      first_order_available__c::BOOLEAN             AS is_first_order_available,
 
       -- territory success planning fields
       atam_approved_next_owner__c                   AS tsp_approved_next_owner,

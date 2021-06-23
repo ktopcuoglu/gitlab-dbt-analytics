@@ -616,7 +616,7 @@ WITH sfdc_opportunity AS (
       CASE
         WHEN ((oppty_final.is_renewal = 1
             AND oppty_final.is_lost = 1)
-            OR net_arr < 0)
+            OR (is_won = 1 AND net_arr < 0))
           THEN oppty_final.calculated_deal_count
         ELSE 0
       END                                               AS churned_deal_count,
@@ -657,7 +657,7 @@ WITH sfdc_opportunity AS (
       CASE
         WHEN ((oppty_final.is_renewal = 1
             AND oppty_final.is_lost = 1)
-            OR net_arr < 0)
+            OR (is_won = 1 AND net_arr < 0))
           THEN net_arr
         ELSE 0
       END                                                 AS churned_net_arr

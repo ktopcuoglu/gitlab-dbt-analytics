@@ -62,6 +62,11 @@ databases:
     - kaguilar_prep:
         shared: no
 
+    - kmagda_prod:
+        shared: no
+    - kmagda_prep:
+        shared: no
+
     - laddula_prod:
         shared: no
     - laddula_prep:
@@ -1099,6 +1104,7 @@ roles:
                     - prod.common_mart_product.mart_product_usage_wave_1_3_metrics_monthly
                     - prod.common_mart_product.mart_product_usage_wave_1_3_metrics_monthly_diff
                     - prod.common_mart_product.mart_saas_product_usage_metrics_monthly
+                    - prod.common_mart_product.mart_product_usage_paid_user_metrics_monthly
 
     - gainsight:
         warehouses:
@@ -2518,6 +2524,47 @@ roles:
                     - kaguilar_prep.*.*
                     - kaguilar_prod.*.*
 
+    - kmagda:
+        member_of:
+            - analyst_marketing
+            - customers_db
+            - data_team_analyst
+            - analyst_finance
+            - gainsight
+        warehouses:
+            - analyst_xs
+        owns:
+            databases:
+                - kmagda_prep
+                - kmagda_prod
+            schemas:
+                - kmagda_prep.*
+                - kmagda_prod.*
+            tables:
+                - kmagda_prep.*.*
+                - kmagda_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - kmagda_prep
+                    - kmagda_prod
+                write:
+                    - kmagda_prep
+                    - kmagda_prod
+            schemas:
+                read:
+                    - kmagda_prep.*
+                    - kmagda_prod.*
+                write:
+                    - kmagda_prep.*
+                    - kmagda_prod.*
+            tables:
+                read:
+                    - kmagda_prep.*.*
+                    - kmagda_prod.*.*
+                write:
+                    - kmagda_prep.*.*
+                    - kmagda_prod.*.*
 
     - kchu:
         member_of:
@@ -2715,6 +2762,11 @@ roles:
                 write:
                     - mpeychet_prep.*.*
                     - mpeychet_prod.*.*
+
+    - mramirez:
+        member_of: []
+        warehouses:
+            - analyst_xs
 
     - mray:
         member_of:
@@ -3112,6 +3164,7 @@ roles:
             - analyst_finance
             - bamboohr_analytics
             - customers_db
+            - analyst_marketing
         warehouses:
             - analyst_xs
 
@@ -3660,6 +3713,11 @@ users:
         member_of:
             - kaguilar
 
+    - kmagda:
+        can_login: yes
+        member_of:
+            - kmagda
+
     - kchu:
         can_login: yes
         member_of:
@@ -3736,6 +3794,11 @@ users:
         can_login: yes
         member_of:
             - mpeychet
+
+    - mramirez:
+        can_login: yes
+        member_of:
+            - mramirez            
 
     - mray:
         can_login: yes

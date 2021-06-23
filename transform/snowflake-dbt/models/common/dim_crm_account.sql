@@ -35,6 +35,9 @@ WITH base AS (
       record_type_id                     AS record_type_id,
       federal_account                    AS federal_account,
       is_jihu_account                    AS is_jihu_account,
+      potential_arr_lam                  AS potential_arr_lam,
+      fy22_new_logo_target_list          AS fy22_new_logo_target_list,
+      is_first_order_available           AS is_first_order_available,
       gitlab_com_user                    AS gitlab_com_user,
       tsp_account_employees              AS tsp_account_employees,
       tsp_max_family_employees           AS tsp_max_family_employees,
@@ -44,14 +47,15 @@ WITH base AS (
       is_reseller                        AS is_reseller,
       health_score                       AS health_score,
       health_number                      AS health_number,
-      health_score_color                 AS health_score_color
+      health_score_color                 AS health_score_color,
+      partner_account_iban_number        AS partner_account_iban_number
     FROM base
 )
 
 {{ dbt_audit(
     cte_ref="final",
     created_by="@msendal",
-    updated_by="@iweeks",
+    updated_by="@jpeguero",
     created_date="2020-06-01",
-    updated_date="2021-06-07"
+    updated_date="2021-06-22"
 ) }}
