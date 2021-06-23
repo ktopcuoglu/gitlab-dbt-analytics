@@ -66,7 +66,7 @@ WITH rule_run_date AS (
     WHERE license_start_date IS NOT NULL 
     AND license_expire_date IS NOT NULL
 
-), map_subscriptions_all AS (
+), map_subscription_all AS (
 
     SELECT DISTINCT
         dim_subscription.dim_subscription_id, 
