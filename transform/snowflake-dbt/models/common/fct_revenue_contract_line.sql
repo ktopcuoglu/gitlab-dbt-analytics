@@ -28,19 +28,18 @@ WITH lines_source AS (
     SELECT 
 
       -- ids
-      lines_source.revenue_contract_line_id,
-      lines_source.revenue_contract_id,
+      lines_source.revenue_contract_line_id                                                 AS dim_revenue_contract_line_id,
+      lines_source.revenue_contract_id                                                      AS dim_revenue_contract_id,
       lines_source.revenue_contract_batch_id,
 
       -- pob ids
-      lines_source.revenue_contract_performance_obligation_id   AS dim_revenue_contract_performance_obligation_id,
-      pob.performance_obligation_id 							AS dim_performance_obligation_id,
-      pob.event_id  											AS dim_accounting_event_id_performance_obligation,
-      pob.performance_obligation_template_id					AS dim_performance_obligation_template_id,
+      lines_source.revenue_contract_performance_obligation_id                               AS dim_revenue_contract_performance_obligation_id,
+      pob.event_id  											                            AS dim_accounting_event_id_performance_obligation,
+      pob.performance_obligation_template_id					                            AS dim_performance_obligation_template_id,
 
       -- account ids
-      lines_source.billing_account_id 							AS dim_billing_account_id,
-      zuora_account.crm_id 										AS dim_crm_account_id,
+      lines_source.billing_account_id 							                            AS dim_billing_account_id,
+      zuora_account.crm_id 										                            AS dim_crm_account_id,
 
       -- order ids
       lines_source.sales_order_number,
@@ -48,8 +47,8 @@ WITH lines_source AS (
       lines_source.sales_order_line_number,
 
       -- subscription ids
-      lines_source.subscription_id 								AS dim_subscription_id,
-      lines_source.amendment_id  								AS dim_amendment_id,
+      lines_source.subscription_id 								                            AS dim_subscription_id,
+      lines_source.amendment_id  								                            AS dim_amendment_id,
 
 
       -- purchase order ids
@@ -73,8 +72,8 @@ WITH lines_source AS (
       lines_source.rate_plan_charge_id,
       lines_source.original_rate_plan_charge_id,
       lines_source.product_rate_plan_id,
-      lines_source.product_rate_plan_charge_id 					AS dim_product_detail_id,
-      lines_source.revenue_contract_bill_item_id				AS dim_invoice_item_id,
+      lines_source.product_rate_plan_charge_id 					                            AS dim_product_detail_id,
+      lines_source.revenue_contract_bill_item_id				                            AS dim_invoice_item_id,
       lines_source.zbilling_batch_id,
       lines_source.ramp_deal_id,
       lines_source.k2_batch_id,
@@ -92,21 +91,21 @@ WITH lines_source AS (
       lines_source.split_reference_document_line_id,
 
       -- dates
-      lines_source.sales_order_book_date,
-      lines_source.revenue_start_date,
-      lines_source.revenue_end_date,
-      lines_source.scheduled_ship_date,
-      lines_source.ship_date,
-      lines_source.contract_modification_date,
-      lines_source.contract_date,
-      lines_source.fair_value_date,
-      lines_source.original_fair_value_date,
-      lines_source.fair_value_expiration,
-      lines_source.forecast_date,
-      lines_source.unbilled_reversal_period,
-      lines_source.deferred_period_id,
-      pob.revenue_contract_performance_obligation_created_date,
-      pob.revenue_contract_performance_obligation_updated_date,
+      {{ get_date_id('lines_source.sales_order_book_date') }}                               AS sales_order_book_date_id,
+      {{ get_date_id('lines_source.revenue_start_date') }}                                  AS revenue_start_date_id,
+      {{ get_date_id('lines_source.revenue_end_date') }}                                    AS revenue_end_date_id,
+      {{ get_date_id('lines_source.scheduled_ship_date') }}                                 AS scheduled_ship_date_id,
+      {{ get_date_id('lines_source.ship_date') }}                                           AS ship_date_id,
+      {{ get_date_id('lines_source.contract_modification_date') }}                          AS contract_modification_date_id,
+      {{ get_date_id('lines_source.contract_date') }}                                       AS contract_date_id,
+      {{ get_date_id('lines_source.fair_value_date') }}                                     AS fair_value_date_id,
+      {{ get_date_id('lines_source.original_fair_value_date') }}                            AS original_fair_value_date_id,
+      {{ get_date_id('lines_source.fair_value_expiration') }}                               AS fair_value_expiration_id,
+      {{ get_date_id('lines_source.forecast_date') }}                                       AS forecast_date_id,
+      {{ get_date_id('lines_source.unbilled_reversal_period') }}                            AS unbilled_reversal_period_date_id,
+      {{ get_date_id('lines_source.deferred_period_id') }}                                  AS deferred_period_date_id,
+      {{ get_date_id('pob.revenue_contract_performance_obligation_created_date') }}         AS revenue_contract_performance_obligation_created_date_id,
+      {{ get_date_id('pob.revenue_contract_performance_obligation_updated_date') }}         AS revenue_contract_performance_obligation_updated_date_id,
 
       -- attributes
       pob.revenue_contract_performance_obligation_name,
@@ -244,9 +243,9 @@ WITH lines_source AS (
 
       --metadata
       lines_source.security_attribute_value,
-      lines_source.revenue_contract_line_created_date,
-      lines_source.revenue_contract_line_updated_date,
-      lines_source.incremental_update_date,
+      {{ get_date_id('lines_source.revenue_contract_line_created_date') }}                      AS revenue_contract_line_created_date_id,
+      {{ get_date_id('lines_source.revenue_contract_line_updated_date') }}                      AS revenue_contract_line_updated_date_id,
+      {{ get_date_id('lines_source.incremental_update_date') }}                                 AS incremental_update_date_id,
       pob.revenue_contract_performance_obligation_created_by,
       pob.revenue_contract_performance_obligation_updated_by
 

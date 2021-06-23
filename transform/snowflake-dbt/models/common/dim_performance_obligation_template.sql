@@ -8,7 +8,7 @@ WITH performance_obligation_source AS (
     SELECT DISTINCT
     
       -- ids
-      performance_obligation_template_id,
+      performance_obligation_template_id                  AS dim_performance_obligation_template_id,
 
       -- pob template details
       performance_obligation_template_name,

@@ -8,7 +8,7 @@ WITH lines_source AS (
     SELECT 
 
       -- ids
-      revenue_contract_line_id,
+      revenue_contract_line_id          AS dim_revenue_contract_line_id,
       revenue_contract_line_type,
       
       -- attributes

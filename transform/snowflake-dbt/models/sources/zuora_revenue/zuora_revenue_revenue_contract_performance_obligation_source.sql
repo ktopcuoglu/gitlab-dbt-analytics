@@ -57,7 +57,7 @@ WITH zuora_revenue_revenue_contract_performance_obligation AS (
       book_id::VARCHAR                              AS book_id,
       sec_atr_val::VARCHAR                          AS security_attribute_value,
       client_id::VARCHAR                            AS client_id,
-      crtd_prd_id::VARCHAR                          AS revenue_contract_performance_obligation_created_period_id,
+      CONCAT(crtd_prd_id::VARCHAR, '01')            AS revenue_contract_performance_obligation_created_period_id,
       rc_pob_crtd_by::VARCHAR                       AS revenue_contract_performance_obligation_created_by,
       rc_pob_crtd_dt::DATETIME                      AS revenue_contract_performance_obligation_created_date,
       rc_pob_updt_by::VARCHAR                       AS revenue_contract_performance_obligation_updated_by,

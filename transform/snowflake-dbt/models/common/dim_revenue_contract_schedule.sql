@@ -5,8 +5,8 @@ WITH schedule_source AS (
 
 ), final AS (
 
-    SELECT 
-    
+    SELECT DISTINCT
+      
       -- ids
       revenue_contract_schedule_id      AS dim_revenue_contract_schedule_id, 
       

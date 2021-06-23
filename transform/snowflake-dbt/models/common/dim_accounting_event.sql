@@ -8,7 +8,7 @@ WITH performance_obligation_source AS (
     SELECT DISTINCT
     
       -- ids
-      event_id,
+      event_id              AS dim_accounting_event_id,
 
       -- event details
       event_name,

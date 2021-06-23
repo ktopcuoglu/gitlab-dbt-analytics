@@ -28,7 +28,7 @@ models:
   - name: zuora_revenue_calendar_source
     description: '{{ doc("zuora_revenue_calendar_source") }}'
     columns:
-      - name: calendar_id
+      - name: period_id
         tags: ["tdf","zuora"]
         tests:
           - not_null

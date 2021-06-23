@@ -8,7 +8,7 @@ WITH header_source AS (
     SELECT
 
       -- ids
-      revenue_contract_id,
+      revenue_contract_id                                   AS dim_revenue_contract_id,
 
       -- dates
       initial_performance_obligation_expiration_date,

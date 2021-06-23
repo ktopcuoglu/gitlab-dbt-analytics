@@ -8,20 +8,20 @@ WITH hold_source AS (
     SELECT
       
       -- ids
-      revenue_contract_hold_id                      AS dim_revenue_contract_hold_id,
-      revenue_contract_id                           AS dim_revenue_contract_id,
-      revenue_contract_line_id                      AS dim_revenue_contract_line_id,
-      revenue_contract_performance_obligation_id    AS dim_revenue_contract_performance_obligation_id,
-      event_id                                      AS dim_accounting_event_id,
+      revenue_contract_hold_id                                      AS dim_revenue_contract_hold_id,
+      revenue_contract_id                                           AS dim_revenue_contract_id,
+      revenue_contract_line_id                                      AS dim_revenue_contract_line_id,
+      revenue_contract_performance_obligation_id                    AS dim_revenue_contract_performance_obligation_id,
+      event_id                                                      AS dim_accounting_event_id,
 
       -- accounting segment
       revenue_contract_hold_accounting_segment,
 
       -- dates
-      revenue_hold_start_date,
-      revenue_hold_end_date,
-      revenue_contract_hold_release_date,
-      revenue_contract_hold_expiration_date,
+      {{ get_date_id('revenue_hold_start_date') }}                  AS revenue_hold_start_date_id,
+      {{ get_date_id('revenue_hold_end_date') }}                    AS revenue_hold_end_date_id,
+      {{ get_date_id('revenue_contract_hold_release_date') }}       AS revenue_contract_hold_release_date_id,
+      {{ get_date_id('revenue_contract_hold_expiration_date') }}    AS revenue_contract_hold_expiration_date_id,
       
       -- flags
       is_revenue_schedule_hold,
@@ -42,10 +42,10 @@ WITH hold_source AS (
 
       -- metadata
       revenue_contract_hold_created_by,
-      revenue_contract_hold_created_date,
+      {{ get_date_id('revenue_contract_hold_created_date') }}       AS revenue_contract_hold_created_date_id,
       revenue_contract_hold_updated_by,
-      revenue_contract_hold_updated_date,
-      incremental_update_date,
+      {{ get_date_id('revenue_contract_hold_updated_date') }}       AS revenue_contract_hold_updated_date_id,
+      {{ get_date_id('incremental_update_date') }}                  AS incremental_update_date_id,
       security_attribute_value
 
     FROM hold_source

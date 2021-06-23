@@ -8,21 +8,21 @@ WITH mje_source AS (
     SELECT
 
       -- ids
-      manual_journal_entry_line_id,
-      manual_journal_entry_header_id,
-      revenue_contract_id,
-      revenue_contract_line_id,
+      manual_journal_entry_line_id                                          AS dim_manual_journal_entry_line_id,
+      manual_journal_entry_header_id                                        AS dim_manual_journal_entry_header_id,
+      revenue_contract_id                                                   AS dim_revenue_contract_id,
+      revenue_contract_line_id                                              AS dim_revenue_contract_line_id,
       doc_line_id,
       set_of_books_id,
       debit_account_code_combination_id,
       credit_account_code_combination_id,
 
       -- dates
-      manual_journal_entry_line_start_date,
-      manual_journal_entry_line_end_date,
-      reversal_period_id,
-      period_id,
-      exchange_rate_date,
+      {{ get_date_id('manual_journal_entry_line_start_date') }}             AS manual_journal_entry_line_start_date_id,
+      {{ get_date_id('manual_journal_entry_line_end_date') }}               AS manual_journal_entry_line_end_date_id,
+      {{ get_date_id('reversal_period_id') }}                               AS reversal_period_date_id,
+      {{ get_date_id('period_id') }}                                        AS manual_journal_entry_period_date_id,
+      {{ get_date_id('exchange_rate_date') }}                               AS exchange_rate_date_id,
 
       -- accounting segments
       debit_segment_1,
@@ -61,11 +61,11 @@ WITH mje_source AS (
       is_cost_or_vairable_consideration,
       is_open_interface,
       is_auto_approved,
-      is_unbilled
+      is_unbilled,
 
       -- metadata
-      manual_journal_entry_line_created_date,
-      manual_journal_entry_line_updated_date
+      {{ get_date_id('manual_journal_entry_line_created_date') }}       AS manual_journal_entry_line_created_date_id,
+      {{ get_date_id('manual_journal_entry_line_updated_date') }}       AS manual_journal_entry_line_updated_date_id
 
     FROM mje_source
 

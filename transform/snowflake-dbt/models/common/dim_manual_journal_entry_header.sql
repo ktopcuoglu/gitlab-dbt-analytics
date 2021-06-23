@@ -5,7 +5,7 @@ WITH mje_source AS (
 
 ), final AS (
 
-    SELECT
+    SELECT DISTINCT
 
       --ids 
       manual_journal_entry_header_id        AS dim_manual_journal_entry_header_id,

@@ -63,6 +63,17 @@ WITH performance_obligation_source AS (
       is_sales_order_term_change,
       is_manual_rearranged,
       is_manual_release,
+      is_performance_obligation_dependency,
+      is_performance_obligation_processed,
+      is_performance_obligation_removed,
+      is_performance_obligation_multiple_sign,
+      is_performance_obligation_removal,
+      is_performance_obligation_manual,
+      is_performance_obligation_orphan,
+      is_performance_obligation_manual_forecast,
+
+      -- pob details
+      performance_obligation_version,
 
       -- metadata
       revenue_contract_performance_obligation_created_by,

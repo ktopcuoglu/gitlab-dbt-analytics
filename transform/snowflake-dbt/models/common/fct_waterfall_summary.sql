@@ -16,26 +16,29 @@ WITH schedule_source AS (
 ), final AS (
 
     SELECT
-       
+
+       -- ids
+       {{ dbt_utils.surrogate_key(['schedule_source.revenue_contract_schedule_id', 'schedule_source.revenue_contract_line_id', 
+                                   'calendar_source.period_id', 'schedule_source.period_id']) }}                                        AS dim_waterfall_summary_id,
        schedule_source.revenue_contract_schedule_id                                                                                     AS dim_revenue_contract_schedule_id,
        schedule_source.revenue_contract_line_id                                                                                         AS dim_revenue_contract_line_id,
        schedule_source.accounting_type_id                                                                                               AS dim_accounting_type_id,
 
        -- dates
-       calendar_source.period_id                                                                                                        AS as_of_period_id,
-       schedule_source.period_id,
-       schedule_source.posted_period_id,
+       {{ get_date_id('calendar_source.period_id') }}                                                                                   AS as_of_period_date_id,
+       {{ get_date_id('schedule_source.period_id') }}                                                                                   AS period_date_id,
+       {{ get_date_id('schedule_source.posted_period_id') }}                                                                            AS posted_period_date_id,
 
        schedule_source.amount                                                                                                           AS transactional_amount,
        schedule_source.amount * schedule_source.functional_currency_exchange_rate                                                       AS functional_amount,
        (schedule_source.amount * schedule_source.functional_currency_exchange_rate) * schedule_source.reporting_currency_exchange_rate  AS reporting_amount,
 
        -- metadata
-       schedule_source.revenue_contract_schedule_created_date,
+       {{ get_date_id('schedule_source.revenue_contract_schedule_created_date') }}                                                      AS revenue_contract_schedule_created_date_id,
        schedule_source.revenue_contract_schedule_created_by,
-       schedule_source.revenue_contract_schedule_updated_date,
+       {{ get_date_id('schedule_source.revenue_contract_schedule_updated_date') }}                                                      AS revenue_contract_schedule_updated_date_id,
        schedule_source.revenue_contract_schedule_updated_by,
-       schedule_source.revenue_contract_schedule_updated_date                                                                           AS incremental_update_date,
+       {{ get_date_id('schedule_source.revenue_contract_schedule_updated_date') }}                                                      AS incremental_update_date,
        schedule_source.security_attribute_value
 
     FROM schedule_source

@@ -8,24 +8,24 @@ WITH schedule_source AS (
     SELECT 
     
       -- ids
-      revenue_contract_schedule_id                  AS dim_revenue_contract_schedule_id,
-      revenue_contract_id                           AS dim_revenue_contract_id,
-      revenue_contract_line_id                      AS dim_revenue_contract_line_id,
-      original_revenue_contract_line_id             AS dim_revenue_contract_line_id_original,
-      performance_obligation_id                     AS dim_performance_obligation_id,
-      reference_revenue_contract_bill_id            AS dim_invoice_id,
-      manual_journal_entry_header_id                AS dim_manual_journal_entry_header_id,
+      revenue_contract_schedule_id                                                              AS dim_revenue_contract_schedule_id,
+      revenue_contract_id                                                                       AS dim_revenue_contract_id,
+      revenue_contract_line_id                                                                  AS dim_revenue_contract_line_id,
+      original_revenue_contract_line_id                                                         AS dim_revenue_contract_line_id_original,
+      performance_obligation_id                                                                 AS dim_performance_obligation_id,
+      reference_revenue_contract_bill_id                                                        AS dim_invoice_id,
+      manual_journal_entry_header_id                                                            AS dim_manual_journal_entry_header_id,
       post_batch_id,
       release_action_id,
-      accounting_type_id                            AS dim_accounting_type_id,
+      accounting_type_id                                                                        AS dim_accounting_type_id,
       debit_link_id,
       credit_link_id,
 
       -- dates
-      post_date,
-      period_id,
-      posted_period_id,
-      billed_fx_date,
+      {{ get_date_id('post_date') }}                                                            AS post_date_id,
+      {{ get_date_id('period_id') }}                                                            AS period_date_id,
+      {{ get_date_id('posted_period_id') }}                                                     AS posted_period_date_id,
+      {{ get_date_id('billed_fx_date') }}                                                       AS billed_fx_date_id,
 
 
       -- additive fields
@@ -81,10 +81,10 @@ WITH schedule_source AS (
 
       -- metadata
       revenue_contract_schedule_created_by,
-      revenue_contract_schedule_created_date,
+      {{ get_date_id('revenue_contract_schedule_created_date') }}                       AS revenue_contract_schedule_created_date_id,
       revenue_contract_schedule_updated_by,
-      revenue_contract_schedule_updated_date,
-      incremental_update_date,
+      {{ get_date_id('revenue_contract_schedule_updated_date') }}                       AS revenue_contract_schedule_updated_date_id,
+      {{ get_date_id('incremental_update_date') }}                                      AS incremental_update_date_id,
       security_attribute_value
 
     FROM schedule_source

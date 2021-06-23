@@ -44,6 +44,18 @@ The goal of this table is to build a bridge from the entire "universe" of subscr
 
 {% enddocs %}
 
+{% docs dim_accounting_event %}
+
+Events from Zuora Revpro. The current iteration includes performance obligation events, but will eventually include hold events as well.
+
+{% enddocs %}
+
+{% docs dim_accounting_type %}
+
+Model to map revenue from Zuora Revenue to the appropriate account (revenue, contract liability, etc.) per accounting practices.
+
+{% enddocs %}
+
 {% docs dim_alliance_type %}
 Model to identify Channel partners that are alliance partners. Technology Partners are identified and discussed in the handbook link referenced below. The specific groupings to report out on were determined by FP&A and Sales Analytics.
 
@@ -100,6 +112,12 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
+{% docs dim_hold %}
+
+There are multiple kinds of holds which can be applied to a transaction in the accounting process. This dimension lists the distinct types of holds which may be applied in a revenue contract. 
+
+{% enddocs %}
+
 {% docs dim_invoice %}
 
 Dimension table providing invoice details at the single invoice grain.
@@ -119,6 +137,23 @@ Dimensional table for countries mapped to larger regions.
 {% docs dim_location_region %}
 
 Dimensional table for geographic regions.
+
+{% enddocs %}
+
+{% docs dim_manual_journal_entry_header %}
+High-level details of manual updates made to adjust final totals in accounting reporting.
+
+{% enddocs %}
+
+{% docs dim_manual_journal_entry_line %}
+
+Line-level details of manual updates made to adjust final totals in accounting reporting. This can be mapped directly to a performance obligation in a revenue contract line.
+
+{% enddocs %}
+
+{% docs dim_performance_obligation_template %}
+
+Revenue contracts are broken down into specific actions which need to be completed by the business in order to recognize revenue. The way a revenue contract line item is broken up into performance obligations is dictated by the template which defines this process.
 
 {% enddocs %}
 
@@ -157,6 +192,35 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
+{% docs dim_revenue_contract%}
+
+This model contains high-level attributes for all revenue contracts. These can be connected to the corresponding revenue contract lines.
+
+{% enddocs %}
+
+{% docs dim_revenue_contract_hold%}
+
+This model contains attributes for all holds applied to revenue contracts.
+
+{% enddocs %}
+
+{% docs dim_revenue_contract_line%}
+
+This model contains attributes for all revenue contract line items.
+
+{% enddocs %}
+
+{% docs dim_revenue_contract_performance_obligation %}
+
+This model contains attributes for performance obligations that are tied to a revenue contract line.
+
+{% enddocs %}
+
+{% docs dim_revenue_contract_schedule %}
+
+An accounting schedule defines when the company will recognize the revenue of the performance obligation tied to a line in a revenue contract. This model contains the attributes of the schedule that is connected to a give line item.
+
+{% enddocs %}
 
 {% docs dim_subscription %}
 Dimension table representing subscription details. The Zuora subscription is created and maintained as part of the broader Quote Creation business process and can be found in the [handbook](https://about.gitlab.com/handbook/finance/sox-internal-controls/quote-to-cash/#3-quote-creation).
@@ -295,6 +359,12 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
+{% docs fct_manual_journal_entry_line %}
+
+A fact table of manual journal entry lines which can be connected to a revenue contract line or revenue contract header. These are adjustments made manually as part of the accounting process.
+
+{% enddocs %}
+
 {% docs fct_quote_item %}
 
 A fact table of quote amendments which have quotes and product rate plan charges associated with them. This model connected opportunities to quotes, quote amendments, and products.
@@ -310,6 +380,23 @@ Fact table representing quotes pulled from the Zuora billing system. These are a
 {% docs fct_retention_parent_account %}
 
 Fact table representing retentions months, currently based on the highest possible level (Parent account). 
+
+{% enddocs %}
+
+{% docs fct_revenue_contract_hold %}
+
+Details of holds placed on revenue contracts. In the future this will also connect to revenue contract lines that have been placed on hold, but the business does not currently operate this way. 
+
+{% enddocs %}
+
+{% docs fct_revenue_contract_line %}
+Revenue contract line details including the transaction amount, functional amount, and connections to subscription, performance obligation, crm account, and product details.
+
+{% enddocs %}
+
+{% docs fct_revenue_contract_schedule %}
+
+Schedule showing when revenue will be recognized for all performance obligations connected to a given revenue contract line.
 
 {% enddocs %}
 
@@ -475,6 +562,12 @@ Since this table reports at the top level namespace grain, aggregation of the in
 For the purpose of this table, all child namespaces under a top level namespace with unlimited storage are also assumed to have unlimited storage. Also, storage sizes are converted to MiB and GiB in this table because these are the values being reported under the hood, even though on a project page storage is reported as "MB" or "GB".
 
 Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+{% enddocs %}
+
+{% docs fct_waterfall_summary %}
+
+A derived model using the revenue contract schedule to spread the recognized revenue across from the revenue start date to the revenue end date as defined by the revenue contract performance obligation's schedule.
 
 {% enddocs %}
 
