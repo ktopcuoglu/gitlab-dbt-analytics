@@ -43,8 +43,8 @@ WITH detection_rule AS (
 
       SELECT 
           5                                                                                                 AS rule_id,
-          'Subscriptions with Self-Managed Plans having License Start Date greater than Licese Expire date' AS rule_name,
-          'Subscriptions with Self-Managed Plans having license_start_date greater than licese_expire_date' AS rule_description,
+          'Subscriptions with Self-Managed Plans having License Start Date greater than License Expire date' AS rule_name,
+          'Subscriptions with Self-Managed Plans having license_start_date greater than license_expire_date' AS rule_description,
           'Product'                                                                                         AS type_of_data,
           50 AS threshold
 
