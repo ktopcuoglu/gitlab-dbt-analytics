@@ -52,7 +52,7 @@ WITH detection_rule AS (
 
       SELECT 
            6 as rule_id,
-          'Expired Licenses' as rule_name,
+          'Expired Licenses with Subscription End Dates in the Past' as rule_name,
           'Expired License IDs with Subscription End Dates in the Past' as rule_description,
           'Product' as type_of_data,
           50 AS threshold
