@@ -38,17 +38,19 @@
 {% for event_cte in event_ctes %}
 
     SELECT
-      MD5({{ event_cte.source_cte_name}}.{{ event_cte.primary_key }} || '-' || '{{ event_cte.event_name }}')   AS event_primary_key,
+      MD5({{ event_cte.source_cte_name}}.{{ event_cte.primary_key }} || '-' || '{{ event_cte.event_name }}')   AS event_id,
       '{{ event_cte.event_name }}'                                                                             AS event_name,
       {% if event_cte.project_column_name != 'NULL' %}
       {{ event_cte.source_cte_name}}.{{ event_cte.project_column_name }},
       {% endif %}
       {{ event_cte.source_cte_name}}.ultimate_parent_namespace_id,
       {{ event_cte.source_cte_name}}.dim_plan_id,
-      {{ event_cte.source_cte_name}}.created_at,
+      {{ event_cte.source_cte_name}}.created_date_id,
+      {{ event_cte.source_cte_name}}.created_at                                                                AS evenet_created_at,
       {{ event_cte.source_cte_name}}.created_date_id,
       {{ event_cte.source_cte_name}}.{{ event_cte.user_column_name }}                                          AS dim_user_id,
       prep_user.created_at                                                                                     AS user_created_at,
+      dim_namespace.created_at                                                                                 AS namespace_created_at,
       FLOOR(
       DATEDIFF('hour',
               dim_namespace.created_at,
@@ -63,14 +65,15 @@
               dim_project.created_at,
               {{ event_cte.source_cte_name}}.created_at)/24)                                                   AS days_since_project_creation,
       {% endif %} 
-      dim_project.is_imported                                                                                  AS project_is_imported
+      dim_project.is_imported                                                                                  AS project_is_imported,
+      dim_project.is_learn_gitlab                                                                              AS project_is_learn_gitlab
     FROM {{ event_cte.source_cte_name }}
     {% if event_cte.project_column_name != 'NULL' %}
-    LEFT JOIN dim_project 
+    INNER JOIN dim_project 
       ON {{event_cte.source_cte_name}}.{{event_cte.project_column_name}} = dim_project.dim_project_id
     {% endif %}
     {% if event_cte.ultimate_parent_namespace_column_name != 'NULL' %}
-    LEFT JOIN dim_namespace 
+    INNER JOIN dim_namespace 
       ON {{event_cte.source_cte_name}}.{{event_cte.ultimate_parent_namespace_column_name}} = dim_namespace.dim_namespace_id
     {% endif %}
     {% if event_cte.user_column_name != 'NULL' %}
