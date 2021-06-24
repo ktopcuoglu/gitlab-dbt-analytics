@@ -2919,7 +2919,7 @@ models:
       - name: dim_ci_build_id
         description: ID of the build that has been run.
       - name: dim_ci_stage_id
-       description: The ID of the Stage
+        description: The ID of the Stage
       - name: dim_project_id
         description: Foreign key that shows the ID of the project in which the build has been triggered.
       - name: dim_namespace_id
