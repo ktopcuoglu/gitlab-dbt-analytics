@@ -22,8 +22,8 @@ WITH prep_epic AS (
       epic_last_edited_at,
       created_at,
       updated_at,
-      epic_title,
-      epic_description,
+      -- epic_title, PII masked
+      -- epic_description, PII masked
       closed_at,
       state_id,
       parent_id,
