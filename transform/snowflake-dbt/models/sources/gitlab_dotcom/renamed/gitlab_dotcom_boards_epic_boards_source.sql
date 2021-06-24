@@ -11,8 +11,7 @@ WITH source AS (
       hide_closed_list::BOOLEAN   as hide_closed_list,
       group_id::NUMBER            as group_id,
       created_at::TIMESTAMP       as created_at,
-      updated_at::TIMESTAMP       as updated_at,
-      name::VARCHAR               as name
+      updated_at::TIMESTAMP       as updated_at
     FROM source
 
 )
