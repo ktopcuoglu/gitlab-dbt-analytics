@@ -31,7 +31,7 @@ WITH prep_epic AS (
       start_date_sourcing_epic_id,
       external_key,
       is_confidential,
-      state,
+      state_name,
       epic_title_length,
       epic_description_length
     FROM {{ ref('prep_epic') }}
