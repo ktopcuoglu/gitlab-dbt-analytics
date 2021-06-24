@@ -996,12 +996,13 @@ roles:
                     - prod.common_mart_marketing
                     - prod.common_mart_sales
                     - prod.common_mart_product
+                    - prod.data_quality
                     - prod.legacy
+                    - prod.pumps
                     - prod.workspace_data
                     - prod.workspace_finance
                     - prod.workspace_marketing
                     - prod.workspace_sales
-                    - prod.pumps
                     - prep.dbt
                     - prep.preparation
                     - raw.dbt
@@ -1012,12 +1013,13 @@ roles:
                     - prod.common_mart_marketing.*
                     - prod.common_mart_sales.*
                     - prod.common_mart_product.*
+                    - prod.data_quality.*
                     - prod.legacy.*
+                    - prod.pumps.*
                     - prod.workspace_data.*
                     - prod.workspace_finance.*
                     - prod.workspace_marketing.*
-                    - prod.workspace_sales.*
-                    - prod.pumps.*
+                    - prod.workspace_sales.*                    
                     - prep.dbt.*
                     - prep.preparation.*
                     - raw.dbt.*
