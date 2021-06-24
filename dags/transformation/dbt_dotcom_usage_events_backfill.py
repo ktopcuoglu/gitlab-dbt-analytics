@@ -4,7 +4,6 @@ from datetime import date, datetime
 
 from airflow import DAG
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
-from airflow.operators.dummy_operator import DummyOperator
 from airflow_utils import (
     DBT_IMAGE,
     dbt_install_deps_nosha_cmd,
@@ -76,7 +75,7 @@ def generate_dbt_command(vars_dict):
 
     dbt_generate_command = f"""
         {dbt_install_deps_nosha_cmd} &&
-        export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_4XL" &&
+        export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_XL" &&
         dbt run --profiles-dir profile --target prod --models prep_dotcom_usage_events --full-refresh --vars '{json_dict}'; ret=$?;
         python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
         """
@@ -92,10 +91,7 @@ def generate_dbt_command(vars_dict):
         dag=dag,
     )
 
-
-dummy_operator = DummyOperator(task_id="start", dag=dag)
-
 for month in partitions(
     datetime.strptime("2017-01-01", "%Y-%m-%d").date(), date.today(), "month"
 ):
-    dummy_operator >> generate_dbt_command(month) 
+    generate_dbt_command(month) 
