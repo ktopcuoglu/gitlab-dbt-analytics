@@ -18,7 +18,7 @@ WITH prep_merge_request AS (
       head_ci_pipeline_id,
 
       merge_request_internal_id,
-      merge_request_title,
+      -- merge_request_title, sensitive masked
       is_merge_to_master,
       merge_error,
       latest_merge_request_diff_id,
