@@ -45,7 +45,7 @@
       {% endif %}
       {{ event_cte.source_cte_name}}.ultimate_parent_namespace_id,
       {{ event_cte.source_cte_name}}.dim_plan_id,
-      {{ event_cte.source_cte_name}}.created_at                                                                AS evenet_created_at,
+      {{ event_cte.source_cte_name}}.created_at                                                                AS event_created_at,
       {{ event_cte.source_cte_name}}.created_date_id,
       {{ event_cte.source_cte_name}}.{{ event_cte.user_column_name }}                                          AS dim_user_id,
       prep_user.created_at                                                                                     AS user_created_at,
