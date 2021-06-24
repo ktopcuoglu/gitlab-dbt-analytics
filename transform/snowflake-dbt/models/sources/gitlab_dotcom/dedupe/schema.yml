@@ -311,3 +311,5 @@ models:
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_user_credit_card_validations_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'  
+  - name: gitlab_dotcom_boards_epic_boards_dedupe_source
+    description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'  
