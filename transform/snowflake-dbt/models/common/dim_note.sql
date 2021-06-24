@@ -1,3 +1,5 @@
+{% set fields_to_mask = ['note'] %}
+
 WITH prep_note AS (
 
     SELECT 
@@ -16,7 +18,7 @@ WITH prep_note AS (
       noteable_type,
       created_at,
       updated_at,
-      note,
+      --note, sensitive info so masked
       attachment,
       line_code,
       commit_id,
