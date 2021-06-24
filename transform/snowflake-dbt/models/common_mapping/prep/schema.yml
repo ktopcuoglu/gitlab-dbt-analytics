@@ -18,6 +18,22 @@ models:
           - not_null
           - unique
         tags: ["tdf", "common", "arr"]
+          
+  - name: prep_audit_event_details_clean
+    description: '{{ doc("prep_audit_event_details_clean") }}'
+    columns:
+      - name: audit_event_id
+        tests:
+          - not_null
+      - name: key_name
+        tests:
+          - not_null
+      - name: key_value
+        tests:
+          - not_null
+      - name: created_at
+        tests:
+          - not_null
 
   - name: prep_dr_partner_engagement
     description: '{{ doc("prep_dr_partner_engagement") }}'
@@ -310,22 +326,6 @@ models:
           - not_null
       - name: repository_size_limit
         description: Default storage limit (per project reposity) for new all namespaces when no paid plan has been purchased.
-        tests:
-          - not_null
-          
-  - name: prep_audit_event_details_clean
-    description: '{{ doc("prep_audit_event_details_clean") }}'
-    columns:
-      - name: audit_event_id
-        tests:
-          - not_null
-      - name: key_name
-        tests:
-          - not_null
-      - name: key_value
-        tests:
-          - not_null
-      - name: created_at
         tests:
           - not_null
           

@@ -4,6 +4,12 @@ Creates a base view with generated keys for the alliance type shared dimension a
 
 {% enddocs %}
 
+{% docs prep_audit_event_details_clean %}
+
+All GitLab audit event details, with pii replaced with hashes. Created by a union of audit event keys from `gitlab_dotcom_audit_event_details` and `gitlab_dotcom_audit_event_details_pii`.
+
+{% enddocs %}
+
 {% docs prep_dr_partner_engagement %}
 
 Creates a base view with generated keys for the dr partner engagement shared dimension and references in facts.
@@ -44,12 +50,6 @@ Creates a base view with generated keys for the stamped/historical crm user hier
 {% docs prep_gitlab_dotcom_application_settings_monthly %}
 
 This model captures a historical record of GitLab's default application settings for CI minutes and storage at a monthly grain.
-
-{% enddocs %}
-
-{% docs prep_audit_event_details_clean %}
-
-All GitLab audit event details, with pii replaced with hashes. Created by a union of audit event keys from `gitlab_dotcom_audit_event_details` and `gitlab_dotcom_audit_event_details_pii`.
 
 {% enddocs %}
 
