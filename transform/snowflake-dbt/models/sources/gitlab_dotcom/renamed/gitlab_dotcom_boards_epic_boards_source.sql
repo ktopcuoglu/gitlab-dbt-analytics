@@ -6,7 +6,7 @@ WITH source AS (
 ), renamed AS (
 
     SELECT
-      id::NUMBER                  as id,
+      id::NUMBER                  as epic_board_id,
       hide_backlog_list::BOOLEAN  as hide_backlog_list,
       hide_closed_list::BOOLEAN   as hide_closed_list,
       group_id::NUMBER            as group_id,
