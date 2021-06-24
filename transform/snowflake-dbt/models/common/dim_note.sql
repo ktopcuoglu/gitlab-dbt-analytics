@@ -24,7 +24,7 @@ WITH prep_note AS (
       commit_id,
       is_system_note,
       note_updated_by_id,
-      position,
+      position_number,
       original_position,
       resolved_at,
       resolved_by_id,
