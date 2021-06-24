@@ -1104,6 +1104,7 @@ roles:
                     - prod.common_mart_product.mart_product_usage_wave_1_3_metrics_monthly
                     - prod.common_mart_product.mart_product_usage_wave_1_3_metrics_monthly_diff
                     - prod.common_mart_product.mart_saas_product_usage_metrics_monthly
+                    - prod.common_mart_product.mart_product_usage_paid_user_metrics_monthly
 
     - gainsight:
         warehouses:
@@ -2762,6 +2763,11 @@ roles:
                     - mpeychet_prep.*.*
                     - mpeychet_prod.*.*
 
+    - mramirez:
+        member_of: []
+        warehouses:
+            - analyst_xs
+
     - mray:
         member_of:
             - analyst_marketing
@@ -3788,6 +3794,11 @@ users:
         can_login: yes
         member_of:
             - mpeychet
+
+    - mramirez:
+        can_login: yes
+        member_of:
+            - mramirez            
 
     - mray:
         can_login: yes

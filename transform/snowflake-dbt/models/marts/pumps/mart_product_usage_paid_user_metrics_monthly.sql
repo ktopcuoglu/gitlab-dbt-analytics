@@ -1,6 +1,5 @@
-{{
-  config({
-    "materialized": "table"
+{{config({
+    "schema": "common_mart_product"
   })
 }}
 

@@ -57,7 +57,7 @@ WITH dim_billing_account AS (
 
     {% endif %}
 
-), final AS (
+), joined AS (
 
     SELECT
       --primary_key
@@ -99,13 +99,28 @@ WITH dim_billing_account AS (
       dim_product_detail.product_delivery_type                                              AS delivery,
       dim_product_detail.service_type,
       dim_product_detail.product_rate_plan_name                                             AS rate_plan_name,
-      --  not needed as all charges in fct_mrr are recurring
-      --  fct_mrr.charge_type,
-      fct_mrr_snapshots.unit_of_measure,
 
+      --charge information
+      fct_mrr_snapshots.unit_of_measure,
       fct_mrr_snapshots.mrr,
       fct_mrr_snapshots.arr,
-      fct_mrr_snapshots.quantity
+      fct_mrr_snapshots.quantity,
+
+      --cohort information
+      dim_subscriptions_snapshots.subscription_cohort_month                                 AS subscription_cohort_month,
+      dim_subscriptions_snapshots.subscription_cohort_quarter                               AS subscription_cohort_quarter,
+      min(dim_subscriptions_snapshots.subscription_cohort_month) OVER (
+          PARTITION BY dim_billing_account.dim_billing_account_id)                          AS billing_account_cohort_month,
+      min(dim_subscriptions_snapshots.subscription_cohort_quarter) OVER (
+          PARTITION BY dim_billing_account.dim_billing_account_id)                          AS billing_account_cohort_quarter,
+      min(dim_subscriptions_snapshots.subscription_cohort_month) OVER (
+          PARTITION BY dim_crm_account.dim_crm_account_id)                                  AS crm_account_cohort_month,
+      min(dim_subscriptions_snapshots.subscription_cohort_quarter) OVER (
+          PARTITION BY dim_crm_account.dim_crm_account_id)                                  AS crm_account_cohort_quarter,
+      min(dim_subscriptions_snapshots.subscription_cohort_month) OVER (
+          PARTITION BY dim_crm_account.dim_parent_crm_account_id)                           AS parent_account_cohort_month,
+      min(dim_subscriptions_snapshots.subscription_cohort_quarter) OVER (
+          PARTITION BY dim_crm_account.dim_parent_crm_account_id)                           AS parent_account_cohort_quarter
     FROM fct_mrr_snapshots
     INNER JOIN dim_subscriptions_snapshots
       ON dim_subscriptions_snapshots.subscription_id = fct_mrr_snapshots.subscription_id
@@ -120,6 +135,20 @@ WITH dim_billing_account AS (
       ON snapshot_dates.date_id = fct_mrr_snapshots.snapshot_id
     LEFT JOIN dim_crm_account
         ON dim_billing_account.dim_crm_account_id = dim_crm_account.dim_crm_account_id
+
+), final AS (
+
+    SELECT
+      joined.*,
+      datediff(month, billing_account_cohort_month, arr_month)     AS months_since_billing_account_cohort_start,
+      datediff(quarter, billing_account_cohort_quarter, arr_month) AS quarters_since_billing_account_cohort_start,
+      datediff(month, crm_account_cohort_month, arr_month)         AS months_since_crm_account_cohort_start,
+      datediff(quarter, crm_account_cohort_quarter, arr_month)     AS quarters_since_crm_account_cohort_start,
+      datediff(month, parent_account_cohort_month, arr_month)      AS months_since_parent_account_cohort_start,
+      datediff(quarter, parent_account_cohort_quarter, arr_month)  AS quarters_since_parent_account_cohort_start,
+      datediff(month, subscription_cohort_month, arr_month)        AS months_since_subscription_cohort_start,
+      datediff(quarter, subscription_cohort_quarter, arr_month)    AS quarters_since_subscription_cohort_start
+    FROM joined
 
 )
 
