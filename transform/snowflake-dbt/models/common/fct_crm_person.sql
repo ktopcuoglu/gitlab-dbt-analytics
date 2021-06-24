@@ -180,14 +180,18 @@ WITH account_dims_mapping AS (
         ELSE 0
       END                                                                                                                 AS is_inquiry,
 
-     -- additive fields
 
-      crm_person.person_score                                                                                             AS person_score,
-      mqls.mql_count                                                                                                      AS mql_count,
+     -- information
       crm_person.name_of_active_sequence,
       crm_person.sequence_task_due_date,
       crm_person.sequence_status,
-      crm_person.last_activity_date
+      crm_person.last_activity_date,
+
+     -- additive fields
+
+      crm_person.person_score                                                                                             AS person_score,
+      mqls.mql_count                                                                                                      AS mql_count
+      
 
     FROM crm_person
     LEFT JOIN sfdc_leads
@@ -214,7 +218,7 @@ WITH account_dims_mapping AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mcooperDD",
-    updated_by="@iweeks",
+    updated_by="@jpeguero",
     created_date="2020-12-01",
     updated_date="2021-06-23"
 ) }}
