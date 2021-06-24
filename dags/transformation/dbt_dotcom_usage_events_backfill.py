@@ -67,7 +67,7 @@ default_args = {
 }
 
 # Create the DAG
-dag = DAG("dbt_prep_dotcom_usage_events_backfill", default_args=default_args, schedule_interval=None)
+dag = DAG("t_prep_dotcom_usage_events_backfill", default_args=default_args, schedule_interval=None)
 
 
 def generate_dbt_command(vars_dict):
