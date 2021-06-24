@@ -181,7 +181,7 @@ WITH account_dims_mapping AS (
       END                                                                                                                 AS is_inquiry,
 
 
-     -- information
+     -- information fields
       crm_person.name_of_active_sequence,
       crm_person.sequence_task_due_date,
       crm_person.sequence_status,
