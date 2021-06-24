@@ -30,7 +30,7 @@
       runner_id AS dim_ci_runner_id, 
       
       -- FOREIGN KEYS
-      prep_ci_build.dim_ci_build_id
+      prep_ci_build.dim_ci_build_id,
       prep_ci_build.dim_project_id,
       prep_ci_build.dim_namespace_id,
       prep_ci_build.ultimate_parent_namespace_id,
@@ -60,7 +60,7 @@
 
     FROM gitlab_dotcom_ci_runners_source
     LEFT JOIN prep_ci_build 
-      ON prep_ci_build.ci_runner_id = gitlab_dotcom_ci_runners_source.dim_ci_runner_id
+      ON prep_ci_build.ci_runner_id = gitlab_dotcom_ci_runners_source.runner_id
     LEFT OUTER JOIN dim_date 
       ON TO_DATE(gitlab_dotcom_ci_runners_source.created_at) = dim_date.date_day
 
