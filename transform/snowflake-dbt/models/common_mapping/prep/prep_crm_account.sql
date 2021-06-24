@@ -107,6 +107,7 @@ WITH map_merged_crm_account AS (
       WHEN LOWER(ultimate_parent_account.gtm_strategy) IN ('account centric', 'account based - net new', 'account based - expand') THEN 'Focus Account'
       ELSE 'Non - Focus Account'
     END                                           AS parent_crm_account_focus_account,
+    sfdc_account.partners_signed_contract_date    AS partners_signed_contract_date,
     sfdc_account.record_type_id                   AS record_type_id,
     sfdc_account.federal_account                  AS federal_account,
     jihu_accounts.is_jihu_account                 AS is_jihu_account,
