@@ -87,6 +87,7 @@ WITH dim_billing_account AS (
       dim_crm_account.health_score_color                                              AS health_score_color,
       dim_crm_account.health_number                                                   AS health_number,
       dim_crm_account.is_jihu_account                                                 AS is_jihu_account,
+      dim_crm_account.parent_crm_account_employee_count_band                          AS parent_crm_account_employee_count_band,
 
       --subscription info
       dim_subscription.dim_subscription_id                                            AS dim_subscription_id,
@@ -137,7 +138,7 @@ WITH dim_billing_account AS (
     LEFT JOIN dim_crm_account
       ON dim_billing_account.dim_crm_account_id = dim_crm_account.dim_crm_account_id
 
-), final_table AS (
+), cohort_diffs AS (
 
   SELECT
     joined.*,
@@ -151,12 +152,42 @@ WITH dim_billing_account AS (
     datediff(quarter, subscription_cohort_quarter, arr_month)    AS quarters_since_subscription_cohort_start
   FROM joined
 
+), parent_arr AS (
+
+    SELECT
+      arr_month,
+      dim_parent_crm_account_id,
+      SUM(arr)                                   AS arr
+    FROM joined
+    {{ dbt_utils.group_by(n=2) }}
+
+), parent_arr_band_calc AS (
+
+    SELECT
+      arr_month,
+      dim_parent_crm_account_id,
+      CASE
+        WHEN arr > 5000 THEN 'ARR > $5K'
+        WHEN arr <= 5000 THEN 'ARR <= $5K'
+      END                                        AS arr_band_calc
+    FROM parent_arr
+
+), final_table AS (
+
+    SELECT
+      cohort_diffs.*,
+      arr_band_calc
+    FROM cohort_diffs
+    LEFT JOIN parent_arr_band_calc
+      ON cohort_diffs.arr_month = parent_arr_band_calc.arr_month
+      AND cohort_diffs.dim_parent_crm_account_id = parent_arr_band_calc.dim_parent_crm_account_id
+
 )
 
 {{ dbt_audit(
     cte_ref="final_table",
     created_by="@msendal",
-    updated_by="@snalamaru",
+    updated_by="@iweeks",
     created_date="2020-09-04",
-    updated_date="2021-05-18"
+    updated_date="2021-06-28"
 ) }}

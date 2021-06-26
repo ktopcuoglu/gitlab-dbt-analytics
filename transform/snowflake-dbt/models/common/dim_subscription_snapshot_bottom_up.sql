@@ -2,7 +2,7 @@
         "materialized": "incremental",
         "unique_key": "subscription_snapshot_id",
         "tags": ["arr_snapshots"],
-        "schema": "legacy"
+        "schema": "common"
     })
 }}
 
@@ -51,9 +51,9 @@ WITH snapshot_dates AS (
 
     SELECT
       zuora_subscription_spined.snapshot_id,
-      zuora_subscription_spined.subscription_id,
-      zuora_account.crm_id                                                      AS crm_account_id,
-      zuora_account.account_id                                                  AS billing_account_id,
+      zuora_subscription_spined.subscription_id                                 AS dim_subscription_id,
+      zuora_account.crm_id                                                      AS dim_crm_account_id,
+      zuora_account.account_id                                                  AS dim_billing_account_id,
       zuora_subscription_spined.subscription_name,
       zuora_subscription_spined.subscription_name_slugify,
       zuora_subscription_spined.subscription_status,
@@ -77,17 +77,16 @@ WITH snapshot_dates AS (
 ), final AS (
 
     SELECT
-        {{ dbt_utils.surrogate_key(['snapshot_id', 'subscription_id']) }}
-          AS subscription_snapshot_id,
-        *
+        {{ dbt_utils.surrogate_key(['snapshot_id', 'dim_subscription_id']) }}   AS subscription_snapshot_id,
+        joined.*
     FROM joined
 
 )
 
 {{ dbt_audit(
     cte_ref="final",
-    created_by="@msendal",
+    created_by="@iweeks",
     updated_by="@iweeks",
-    created_date="2020-09-29",
+    created_date="2021-06-28",
     updated_date="2021-06-28"
 ) }}

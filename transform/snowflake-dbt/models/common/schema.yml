@@ -650,7 +650,7 @@ models:
         tests:
           - not_null
           - unique
-          
+
   - name: dim_product_detail
     description: '{{ doc("dim_product_detail") }}'
     columns:
@@ -855,6 +855,16 @@ models:
 
   - name: dim_subscriptions_snapshots
     description: Daily snapshot of subscriptions starting from 2020-03-01. Fiel
+    columns:
+      - name: subscription_snapshot_id
+        description: Unique identifier of a subscription snapshot
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "arr"]
+
+  - name: dim_subscription_snapshot_bottom_up
+    description: Daily snapshot of subscriptions starting from 2020-03-01. This is built from the bottom up using snapshotted source tables.
     columns:
       - name: subscription_snapshot_id
         description: Unique identifier of a subscription snapshot
@@ -1270,6 +1280,16 @@ models:
         description: Annual Recurring Revenue value for given month
       - name: quantity
         description: Total quantity
+
+  - name: fct_mrr_snapshot_bottom_up
+    description: One row represents Monthly Recurring Revenue per one month, subscription_id, product_detail_id, and mrr. Snapshot dates start from 2020-03. This model is built bottom-up using snapshotted source tables.
+    columns:
+      - name: mrr_snapshot_id
+        description: The unique identifier of the given snapshot MRR.
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "arr"]
 
   - name: fct_namespace_member_summary
     description: '{{ doc("fct_namespace_member_summary") }}'
@@ -2866,7 +2886,7 @@ models:
           - not_null
       - name: dim_plan_id
         tests:
-          - not_null      
+          - not_null
       - name: dim_ci_pipeline_internal_id
         description: Internal ID for the CI Pipeline. This is project specific
 

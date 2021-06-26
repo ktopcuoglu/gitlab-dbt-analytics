@@ -24,7 +24,7 @@ Here is an image documenting the ERD for this table:
 
 {% docs mart_arr_snapshots %}
 
-Keeps daily snapshots of mart_arr. This allows to query ARR from a historical perspective. 
+Keeps daily snapshots of mart_arr. This allows to query ARR from a historical perspective.
 
 The below query will pull ARR by month as observed on selected snapshot_date.
 
@@ -63,5 +63,11 @@ The cohort quarter of the ultimate parent account.
 {% docs mart_arr_col_parent_account_cohort_month %}
 
 The cohort month of the ultimate parent account.
+
+{% enddocs %}
+
+{% docs rpt_arr_8_day_snapshot_exclude_jihu %}
+
+This report combines ARR snapshot data from February 2020 forward with ARR live data from Jane 2020 backwards. The FP&A view of the data requires an 8th calendar day snapshot for each arr_month. The FP&A view also requires excluding JiHu accounts. The report combines data in mart_arr with data in mart_arr_snapshot_bottom_up.
 
 {% enddocs %}
