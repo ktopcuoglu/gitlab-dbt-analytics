@@ -71,3 +71,9 @@ The cohort month of the ultimate parent account.
 This report combines ARR snapshot data from February 2020 forward with ARR live data from Jane 2020 backwards. The FP&A view of the data requires an 8th calendar day snapshot for each arr_month. The FP&A view also requires excluding JiHu accounts. The report combines data in mart_arr with data in mart_arr_snapshot_bottom_up.
 
 {% enddocs %}
+
+{% docs rpt_retention_8_day_snapshot_exclude_jihu %}
+
+This report combines ARR snapshot data from February 2020 forward with ARR live data from Jane 2020 backwards. The FP&A view of the data requires an 8th calendar day snapshot for each arr_month. The FP&A view also requires excluding JiHu accounts. The report combines data in mart_arr with data in mart_arr_snapshot_bottom_up and then applies the standard retention logic to generate the report.
+
+{% enddocs %}

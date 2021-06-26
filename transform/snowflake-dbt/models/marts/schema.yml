@@ -302,6 +302,9 @@ models:
   - name: rpt_arr_8_day_snapshot_exclude_jihu
     description: '{{ doc("rpt_arr_8_day_snapshot_exclude_jihu") }}'
 
+  - name: rpt_retention_8_day_snapshot_exclude_jihu
+    description: '{{ doc("rpt_retention_8_day_snapshot_exclude_jihu") }}'
+
   - name: usage_ping_mart
     description: '{{ doc("usage_ping_mart") }}'
     columns:
