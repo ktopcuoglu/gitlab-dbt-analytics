@@ -42,6 +42,38 @@ models:
       - name: milestone
       - name: is_default_enabled
 
+  - name: flaky_tests_historical
+    description: This is the base table built on the snapshots of all flaky tests
+    columns:
+      - name: hash
+        tests:
+          - not_null
+      - name: example_id
+      - name: file
+      - name: line
+      - name: description
+      - name: last_flaky_job
+      - name: last_attempts_count
+      - name: flaky_reports
+      - name: first_flaky_at
+      - name: last_flaky_at
+
+  - name: flaky_tests_latest
+    description: This is the latest version of all existing flaky tests
+    columns:
+      - name: hash
+        tests:
+          - not_null
+      - name: example_id
+      - name: file
+      - name: line
+      - name: description
+      - name: last_flaky_job
+      - name: last_attempts_count
+      - name: flaky_reports
+      - name: first_flaky_at
+      - name: last_flaky_at
+
   - name: location_factors_yaml_historical
     description: This is the base table built on the snapshots of the [location_factors.yml file](https://gitlab.com/gitlab-com/www-gitlab-com/blob/master/data/location_factors.yml) in the GitLab Handbook.
     columns:

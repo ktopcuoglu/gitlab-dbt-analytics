@@ -44,4 +44,4 @@ WITH source AS (
 
 SELECT *
 FROM casting
- 
+
