@@ -50,17 +50,6 @@ gitlab-org/gitlab-shell,14022
 gitlab-org/gitlab-terminal,7792567
 gitlab-org/gitlab-workhorse,554859
 gitlab-org/gitlabktl,11080193
-gitlab-org/gitter/desktop,3626648
-gitlab-org/gitter/docs,6938270
-gitlab-org/gitter/gitter-android-app,7750843
-gitlab-org/gitter/gitter-ios-app,8427052
-gitlab-org/gitter/gitter-markdown-processor,3825482
-gitlab-org/gitter/gitter-translations,6469877
-gitlab-org/gitter/realtime-client,6299390
-gitlab-org/gitter/sidecar,8226179
-gitlab-org/gitter/styleguide,3787977
-gitlab-org/gitter/troupeobjccommon,8375261
-gitlab-org/gitter/webapp,3601513
 gitlab-org/grafana-dashboards,928825
 gitlab-org/iglu,14694517
 gitlab-org/license-gitlab-com,6457868
@@ -238,7 +227,6 @@ gitlab-org/security/omnibus-gitlab,15667093
 gitlab-org/security/gitlab,15642544
 gitlab-org/security/gitlab-runner,19047934
 gitlab-org/status-page,16842968
-gitlab-com/gl-infra/gitter-infrastructure,2959752
 gitlab-org/webide-file-sync,11446522
 gitlab-org/gitlab-services/design.gitlab.com,4456656
 gitlab-org/terraform-images,18943607
