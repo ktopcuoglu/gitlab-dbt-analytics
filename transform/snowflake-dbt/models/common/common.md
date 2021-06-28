@@ -598,7 +598,18 @@ A fact table that contains only the metrics that is a UMAU, SMAU, or GMAU metric
 
 {% enddocs %}
 
-{% docs dim_event %}
+{% docs dim_ci_pipeline %}
+
+A dim table that contains all CI Pipelines run on Gitlab.com application.
+
+Easy joins available with:
+
+* dim_project through `dim_project_id`
+* dim_namespace through `dim_namespace_id` and `ultimate_parent_namespace_id`
+* dim_date through `ci_pipeline_creation_dim_date_id`
+{% enddocs %}
+
+{% docs dim_event %}```
 
 Dimensional table representing events recorded by the Events API. [More info about events tracked here](https://docs.gitlab.com/ee/api/events.html)
 
