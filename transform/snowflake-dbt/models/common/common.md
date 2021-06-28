@@ -609,7 +609,7 @@ Easy joins available with:
 * dim_date through `ci_pipeline_creation_dim_date_id`
 {% enddocs %}
 
-{% docs dim_event %}```
+{% docs dim_event %}
 
 Dimensional table representing events recorded by the Events API. [More info about events tracked here](https://docs.gitlab.com/ee/api/events.html)
 

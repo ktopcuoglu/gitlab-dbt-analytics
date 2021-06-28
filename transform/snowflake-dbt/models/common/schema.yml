@@ -2871,7 +2871,7 @@ models:
         description: Internal ID for the CI Pipeline. This is project specific
 
 
-  - name: dim_event```
+  - name: dim_event
     description: '{{ doc("dim_event") }}'
     columns:
       - name: dim_event_id
@@ -2891,6 +2891,9 @@ models:
     columns:
       - name: dim_ci_build_id
         description: Unique key of CI Build
+        tests:
+          - not_null
+          - unique
       - name: dim_project_id
         description: Foreign key that shows the ID of the project in which the build has been triggered.
       - name: dim_namespace_id
