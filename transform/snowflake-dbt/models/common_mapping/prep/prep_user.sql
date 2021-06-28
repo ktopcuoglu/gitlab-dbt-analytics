@@ -1,3 +1,4 @@
+
 -- very minimal prep_user model in order to get dim_event table
 
 WITH source AS (

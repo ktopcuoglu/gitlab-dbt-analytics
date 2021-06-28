@@ -1,21 +1,14 @@
 WITH prep_user AS (
 
     SELECT 
-      dim_event_id,
-          
-      -- FOREIGN KEYS
-      dim_project_id,
-      dim_namespace_id,
-      ultimate_parent_namespace_id,
       dim_user_id,
-      event_creation_dim_date_id,
-      dim_plan_id,
-
-      -- events metadata
-      target_id,
-      target_type,
+      remember_created_at,
+      sign_in_count,
+      current_sign_in_at,
+      last_sign_in_at
       created_at,
-      event_action_type
+      updated_at,
+      is_admin
     FROM {{ ref('prep_user') }}
 
 )
@@ -24,6 +17,6 @@ WITH prep_user AS (
     cte_ref="prep_user",
     created_by="@mpeychet_",
     updated_by="@mpeychet_",
-    created_date="2021-06-21",
-    updated_date="2021-05-21"
+    created_date="2021-06-28",
+    updated_date="2021-06-28s"
 ) }}
