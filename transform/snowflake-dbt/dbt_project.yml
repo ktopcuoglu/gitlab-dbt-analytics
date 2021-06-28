@@ -280,6 +280,10 @@ models:
     common_mapping:
       +materialized: table
       +schema: common_mapping
+       
+    common_prep:
+      +materialized: table
+      +schema: common_mapping
       month_partition:
         +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
         +schema: "dotcom_usage_events_{{ var('year', run_started_at.strftime('%Y')) }}_{{ var('month', run_started_at.strftime('%m')) }}"

@@ -633,5 +633,9 @@ Easy to join with the following tables:
 - `dim_date` through `ci_build_creation_dim_date_id`
 - `dim_plan` through `dim_plan_id`
 
+{% enddocs %}
 
+{% docs dim_user %}
+
+Dimension table that contains all Gitlab.com Users.
 {% enddocs %}

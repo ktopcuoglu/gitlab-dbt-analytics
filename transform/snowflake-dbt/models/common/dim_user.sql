@@ -18,5 +18,5 @@ WITH prep_user AS (
     created_by="@mpeychet_",
     updated_by="@mpeychet_",
     created_date="2021-06-28",
-    updated_date="2021-06-28s"
+    updated_date="2021-06-28s         "
 ) }}
