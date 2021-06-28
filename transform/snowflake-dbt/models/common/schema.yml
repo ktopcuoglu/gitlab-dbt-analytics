@@ -2877,7 +2877,7 @@ models:
       - name: dim_ci_build_id
         description: Unique key of CI Build
       - name: dim_project_id
-        ssdescription: Foreign key that shows the ID of the project in which the build has been triggered.
+        description: Foreign key that shows the ID of the project in which the build has been triggered.
       - name: dim_namespace_id
         description: Foreign key that shows the ID of the namespace in which the build has been triggered.
       - name: ultimate_parent_namespace_id
