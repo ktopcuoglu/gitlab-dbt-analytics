@@ -64,8 +64,8 @@ WITH mje_source AS (
       is_unbilled,
 
       -- metadata
-      {{ get_date_id('manual_journal_entry_line_created_date') }}       AS manual_journal_entry_line_created_date_id,
-      {{ get_date_id('manual_journal_entry_line_updated_date') }}       AS manual_journal_entry_line_updated_date_id
+      {{ get_date_id('manual_journal_entry_line_created_date') }}           AS manual_journal_entry_line_created_date_id,
+      {{ get_date_id('manual_journal_entry_line_updated_date') }}           AS manual_journal_entry_line_updated_date_id
 
     FROM mje_source
 

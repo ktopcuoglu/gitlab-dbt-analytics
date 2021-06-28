@@ -8,7 +8,7 @@ WITH performance_obligation_source AS (
     SELECT
 
       -- ids
-      revenue_contract_performance_obligation_id                AS dim_revenue_contract_performance_obligation_id,
+      revenue_contract_performance_obligation_id    AS dim_revenue_contract_performance_obligation_id,
       revenue_contract_performance_obligation_name,
 
       -- dates

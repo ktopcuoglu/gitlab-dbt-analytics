@@ -81,10 +81,10 @@ WITH schedule_source AS (
 
       -- metadata
       revenue_contract_schedule_created_by,
-      {{ get_date_id('revenue_contract_schedule_created_date') }}                       AS revenue_contract_schedule_created_date_id,
+      {{ get_date_id('revenue_contract_schedule_created_date') }}                               AS revenue_contract_schedule_created_date_id,
       revenue_contract_schedule_updated_by,
-      {{ get_date_id('revenue_contract_schedule_updated_date') }}                       AS revenue_contract_schedule_updated_date_id,
-      {{ get_date_id('incremental_update_date') }}                                      AS incremental_update_date_id,
+      {{ get_date_id('revenue_contract_schedule_updated_date') }}                               AS revenue_contract_schedule_updated_date_id,
+      {{ get_date_id('incremental_update_date') }}                                              AS incremental_update_date_id,
       security_attribute_value
 
     FROM schedule_source
