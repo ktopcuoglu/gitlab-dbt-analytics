@@ -622,6 +622,32 @@ The grain of the table is the `dim_event_id`. This table is easily joinable with
 
 {% enddocs %}
 
+{% docs dim_issue %}
+
+Dimensional table recording all issues created in our Gitlab.com SaaS instance. This table is easily joinable with other EDM dim tables:
+
+- `dim_project` through `dim_project_id`
+- `dim_namespace` through `dim_namespace_id`
+- `dim_plan` through `dim_plan_id`
+- `dim_date` through `created_date_dim_id`
+
+More info about issues in GitLab product [available here](https://docs.gitlab.com/ee/user/project/issues/)
+
+{% enddocs %}
+
+{% docs dim_merge_request %}
+
+Dimensional table recording all merge requests created in our Gitlab.com SaaS instance. This table is easily joinable with other EDM dim tables:
+
+- `dim_project` through `dim_project_id`
+- `dim_namespace` through `dim_namespace_id`
+- `dim_plan` through `dim_plan_id`
+- `dim_date` through `created_date_dim_id`
+
+More info about issues in GitLab product [available here](https://docs.gitlab.com/ee/user/project/merge_requests/)
+
+{% enddocs %}
+
 {% docs dim_ci_build %}
 
 Dimension table that contains all CI build data.

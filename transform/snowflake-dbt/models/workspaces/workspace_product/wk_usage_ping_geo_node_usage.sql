@@ -33,7 +33,7 @@ recursive => true)
 )
 
 SELECT 
-  {{ dbt_utils.surrogate_key(['ping_id', 'path']) }}      AS instance_path_id,
+  {{ dbt_utils.surrogate_key(['ping_id', 'path']) }}        AS instance_path_id,
   instance_id, 
   ping_id,
   edition,
@@ -44,7 +44,7 @@ SELECT
   major_version,
   minor_version,
   regexp_replace(split_part(path, '.', 1), '(\\[|\\])', '') AS node_id,
-value AS metric_value,
+  value AS metric_value,
 SPLIT_PART(path, '.', -1) AS metrics_path
 FROM flattened
 WHERE index IS NULL
