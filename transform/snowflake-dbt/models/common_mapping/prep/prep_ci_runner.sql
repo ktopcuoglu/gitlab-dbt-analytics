@@ -30,14 +30,7 @@
       runner_id AS dim_ci_runner_id, 
       
       -- FOREIGN KEYS
-      prep_ci_build.dim_ci_build_id,
-      prep_ci_build.dim_project_id,
-      prep_ci_build.dim_namespace_id,
-      prep_ci_build.ultimate_parent_namespace_id,
-      dim_date.date_id                                            AS created_date_id,
-      prep_ci_build.dim_plan_id, 
-      prep_ci_build.dim_user_id,                        
-      prep_ci_build.dim_ci_stage_id,             
+      dim_date.date_id                                            AS created_date_id,         
 
       gitlab_dotcom_ci_runners_source.created_at,
       gitlab_dotcom_ci_runners_source.updated_at,
