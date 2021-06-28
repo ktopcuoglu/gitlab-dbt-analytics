@@ -9,6 +9,21 @@ models:
       - name: merge_date
       - name: package_type
       - name: publish_date
+  - name: engineering_blocking_time_source
+    description: '{{ doc("engineering_blocking_time") }}'
+    columns:
+      - name: aggregation_name
+        tests:
+          - not_null
+      - name: metric_name
+        tests:
+          - not_null
+      - name: metric_value
+        tests:
+          - not_null
+      - name: metric_reported_at
+        tests:
+          - not_null
   - name: engineering_commit_stats
     description: This table details information about engineering commmit stats.
     columns:
@@ -16,6 +31,21 @@ models:
       - name: commit_id
   - name: engineering_lcp_source
     description: This table contains information about largest-content-paint statistics.
+    columns:
+      - name: aggregation_name
+        tests:
+          - not_null
+      - name: metric_name
+        tests:
+          - not_null
+      - name: metric_value
+        tests:
+          - not_null
+      - name: metric_reported_at
+        tests:
+          - not_null
+  - name: engineering_layout_shift_source
+    description: '{{ doc("engineering_layout_shift") }}'
     columns:
       - name: aggregation_name
         tests:
