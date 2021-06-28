@@ -1607,7 +1607,7 @@ models:
         description: The unique ID of the runner with which the CI build has been run
         tests:
           - not_null
-          - uniqu
+          - unique
       - name: created_date_id
       - name: created_at 
       - name: updated_at 
