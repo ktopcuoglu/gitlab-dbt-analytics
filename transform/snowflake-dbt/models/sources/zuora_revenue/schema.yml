@@ -8,7 +8,6 @@ models:
         tags: ["tdf","zuora"]
         tests:
           - not_null
-          - unique
   - name: zuora_revenue_approval_detail_source
     description: '{{ doc("zuora_revenue_approval_detail_source") }}'
     columns:
@@ -16,7 +15,6 @@ models:
         tags: ["tdf","zuora"]
         tests:
           - not_null
-          - unique
   - name: zuora_revenue_book_source
     description: '{{ doc("zuora_revenue_book_source") }}'
     columns:
@@ -24,7 +22,6 @@ models:
         tags: ["tdf","zuora"]
         tests:
           - not_null
-          - unique
   - name: zuora_revenue_calendar_source
     description: '{{ doc("zuora_revenue_calendar_source") }}'
     columns:
@@ -32,7 +29,6 @@ models:
         tags: ["tdf","zuora"]
         tests:
           - not_null
-          - unique
   - name: zuora_revenue_manual_journal_entry_source
     description: '{{ doc("zuora_revenue_manual_journal_entry_source") }}'
     columns: 
@@ -40,7 +36,6 @@ models:
         tags: ["tdf","zuora"]
         tests:
           - not_null
-          - unique
   - name: zuora_revenue_organization_source
     description: '{{ doc("zuora_revenue_organization_source") }}'
     columns:
@@ -48,7 +43,6 @@ models:
         tags: ["tdf","zuora"]
         tests:
           - not_null
-          - unique
   - name: zuora_revenue_revenue_contract_bill_source
     description: '{{ doc("zuora_revenue_revenue_contract_bill_source") }}'
     columns:
@@ -56,7 +50,6 @@ models:
         tags: ["tdf","zuora"]
         tests:
           - not_null
-          - unique
   - name: zuora_revenue_revenue_contract_header_source
     description: '{{ doc("zuora_revenue_revenue_contract_header_source") }}'
     columns:
@@ -64,7 +57,6 @@ models:
         tags: ["tdf","zuora"]
         tests:
           - not_null
-          - unique
   - name: zuora_revenue_revenue_contract_hold_source
     description: '{{ doc("zuora_revenue_revenue_contract_hold_source") }}'
     columns:
@@ -72,7 +64,6 @@ models:
         tags: ["tdf","zuora"]
         tests:
           - not_null
-          - unique
   - name: zuora_revenue_revenue_contract_line_source
     description: '{{ doc("zuora_revenue_revenue_contract_line_source") }}'
     columns:
@@ -80,7 +71,6 @@ models:
         tags: ["tdf","zuora"]
         tests:
           - not_null
-          - unique
   - name: zuora_revenue_revenue_contract_performance_obligation_source
     description: '{{ doc("zuora_revenue_revenue_contract_performance_obligation_source") }}'
     columns:
@@ -88,7 +78,6 @@ models:
         tags: ["tdf","zuora"]
         tests:
           - not_null
-          - unique
   - name: zuora_revenue_revenue_contract_schedule_source
     description: '{{ doc("zuora_revenue_revenue_contract_schedule_source") }}'
     columns:
