@@ -17,7 +17,7 @@
 
     {% if is_incremental() %}
 
-      AND ping_created_at >= (SELECT MAX(ping_created_month) FROM {{this}})
+      AND dim_date_id >= (SELECT MAX(month_date_id) FROM {{this}})
 
     {% endif %}
 
@@ -49,6 +49,7 @@
 
     SELECT  
       DATE_TRUNC('month', ping_created_week) AS ping_created_month,
+      dim_date.date_id                       AS month_date_id   
       dim_instance_id,
       host_name,
       dim_usage_ping_id,
@@ -63,10 +64,12 @@
       is_umau,
       clean_metrics_name,
       time_period,
-      weekly_metrics_value              AS monthly_metric_value,
-      weekly_metrics_value              AS original_metric_value,
+      weekly_metrics_value                   AS monthly_metric_value,
+      weekly_metrics_value                   AS original_metric_value,
       has_timed_out
     FROM joined
+    LEFT JOIN dim_date
+      ON DATE_TRUNC('month', ping_created_week) = dim_date.date_day
     QUALIFY (ROW_NUMBER() OVER (PARTITION BY ping_created_month, dim_instance_id, host_name, metrics_path ORDER BY ping_created_week DESC, dim_date_id DESC)) = 1
 
 )
