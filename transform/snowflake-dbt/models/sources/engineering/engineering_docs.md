@@ -13,6 +13,11 @@ The data is available via [this link](https://gitlab.com/gitlab-org/security-pro
 
 {% enddocs %}
 
+{% docs engineering_blocking_time %}
+{% enddocs %}
+
+{% docs engineering_layout_shift %}
+{% enddocs %}
 
 {% docs engineering_nvd_data %}
 
