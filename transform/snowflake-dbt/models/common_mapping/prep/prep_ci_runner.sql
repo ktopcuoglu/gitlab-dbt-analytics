@@ -51,8 +51,6 @@
       gitlab_dotcom_ci_runners_source.private_projects_minutes_cost_factor
 
     FROM gitlab_dotcom_ci_runners_source
-    LEFT JOIN prep_ci_build 
-      ON prep_ci_build.dim_ci_runner_id = gitlab_dotcom_ci_runners_source.runner_id
     LEFT JOIN dim_date 
       ON TO_DATE(gitlab_dotcom_ci_runners_source.created_at) = dim_date.date_day
 
