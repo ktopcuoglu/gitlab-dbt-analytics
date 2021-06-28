@@ -1,5 +1,5 @@
 import logging
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 
 import requests
 
@@ -12,7 +12,7 @@ class GitLabAPI:
 
     def get_pipeline_schedule(
         self, project_id: str, pipeline_schedule_id: int
-    ) -> Dict[Any, Any]:
+    ) -> Optional[Dict[Any, Any]]:
         url = f"{self.GITLAB_COM_API_BASE_URL}/projects/{project_id}/pipeline_schedules/{pipeline_schedule_id}"
         response = requests.get(url, headers={"Private-Token": self.api_token})
 
@@ -26,7 +26,7 @@ class GitLabAPI:
 
     def get_job_json_artifact(
         self, project_id: str, job_id: int, artifact_path: str
-    ) -> Dict[Any, Any]:
+    ) -> Optional[Dict[Any, Any]]:
         url = f"{self.GITLAB_COM_API_BASE_URL}/projects/{project_id}/jobs/{job_id}/artifacts/{artifact_path}"
         response = requests.get(url, headers={"Private-Token": self.api_token})
 
@@ -54,7 +54,7 @@ class GitLabAPI:
 
     def get_pipeline_job(
         self, project_id: str, pipeline_id: int, job_name: str
-    ) -> Dict[Any, Any]:
+    ) -> Optional[Dict[Any, Any]]:
         current_page_number = 1
         while True:
             current_result = self.get_pipeline_job_paged(
