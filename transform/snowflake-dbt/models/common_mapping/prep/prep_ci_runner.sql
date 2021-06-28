@@ -10,7 +10,6 @@
 
 {{ simple_cte([
     ('dim_date', 'dim_date'),
-    ('prep_ci_build', 'prep_ci_build'),
 
 ]) }}
 
