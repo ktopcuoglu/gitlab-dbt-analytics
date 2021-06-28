@@ -26,7 +26,7 @@
     SELECT  
       DATE_TRUNC('week', ping_created_at) AS ping_created_week,
       dim_instance_id,
-      NULL AS host_name,
+      fct_usage_ping_payload.host_name    AS host_name,
       data.dim_date_id,
       fct_usage_ping_payload.dim_usage_ping_id,
       metrics_path,
