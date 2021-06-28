@@ -37,7 +37,7 @@
       gitlab_dotcom_ci_runners_source.contacted_at,
       gitlab_dotcom_ci_runners_source.is_active,
       gitlab_dotcom_ci_runners_source.runner_name,
-      gitlab_dotcom_ci_runners_source.version                     AS ci_version,
+      gitlab_dotcom_ci_runners_source.version                     AS ci_runner_version,
       gitlab_dotcom_ci_runners_source.revision,
       gitlab_dotcom_ci_runners_source.platform,
       gitlab_dotcom_ci_runners_source.architecture,
