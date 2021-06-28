@@ -18,6 +18,22 @@ models:
           - not_null
           - unique
         tags: ["tdf", "common", "arr"]
+          
+  - name: prep_audit_event_details_clean
+    description: '{{ doc("prep_audit_event_details_clean") }}'
+    columns:
+      - name: audit_event_id
+        tests:
+          - not_null
+      - name: key_name
+        tests:
+          - not_null
+      - name: key_value
+        tests:
+          - not_null
+      - name: created_at
+        tests:
+          - not_null
 
   - name: prep_dr_partner_engagement
     description: '{{ doc("prep_dr_partner_engagement") }}'
@@ -156,6 +172,44 @@ models:
         tests:
           - not_null
           - unique
+  
+  - name: prep_namespace_hist
+    description: '{{ doc("dim_namespace_hist") }}'
+    columns:
+      - name: namespace_snapshot_id
+        tests:
+          - not_null
+          - unique
+      - name: dim_namespace_id
+        tests:
+          - not_null
+      - name: valid_from
+        tests:
+          - not_null
+      - name: valid_to
+
+  - name: prep_namespace_lineage
+    description: '{{ doc("dim_namespace_lineage") }}'
+    columns:
+      - name: dim_namespace_id
+        tests:
+          - not_null
+          - unique
+      - name: ultimate_parent_namespace_id
+        tests:
+          - not_null
+      - name: ultimate_parent_plan_id
+        tests:
+          - not_null
+          - accepted_values:
+              values: [2, 3, 4, 34, 67, 100, 101, 102, 103]
+      - name: ultimate_parent_plan_title
+        tests:
+          - not_null
+      - name: ultimate_parent_plan_is_paid
+        tests:
+          - not_null
+
   - name: prep_namespace_plan_hist
     description: '{{ doc("dim_namespace_plan_hist") }}'
     columns:
@@ -274,6 +328,7 @@ models:
         description: Default storage limit (per project reposity) for new all namespaces when no paid plan has been purchased.
         tests:
           - not_null
+          
   - name: prep_gitlab_dotcom_plan
     description: '{{ doc("prep_gitlab_dotcom_plan") }}'
     columns:
@@ -281,6 +336,7 @@ models:
         tests:
           - not_null
           - unique
+
   - name: prep_recurring_charge_subscription_monthly
     description: '{{ doc("prep_recurring_charge_subscription_monthly") }}'
     columns:
