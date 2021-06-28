@@ -251,6 +251,8 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
   SELECT 
     pipeline_type.opportunity_id,
     pipeline_type.close_fiscal_quarter_date,
+    history.stage_name,
+    pipeline_type.pipeline_created_forecast_category,
     history.net_arr,
     history.booked_net_arr
   FROM pipeline_type
@@ -329,7 +331,7 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
         last_day.net_arr                AS last_day_net_arr,                                                       
         last_day.booked_net_arr         AS last_day_booked_net_arr,
         last_day.stage_name             AS last_day_stage_name,
-        last_day.forecast_category      AS last_day_forecast_category,
+        last_day.pipeline_created_forecast_category      AS last_day_forecast_category,
 
         -- last day of the quarter, at this point the deal might not be closing
         -- on the quarter
@@ -344,7 +346,7 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
         p.end_is_open                   AS quarter_end_is_open,
         o.is_renewal                    AS quarter_end_is_renewal,
 
-        last_day.net_arr - beg_net_arr  AS within_quarter_delta_net_arr,
+        last_day.net_arr - pipeline_created_net_arr  AS within_quarter_delta_net_arr,
 
         ----------
         -- extra fields for trouble shooting
