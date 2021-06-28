@@ -4,14 +4,7 @@ WITH prep_ci_runner AS (
       dim_ci_runner_id, 
       
       -- FOREIGN KEYS
-      dim_ci_build_id,
-      dim_ci_stage_id,
-      dim_project_id,
-      dim_namespace_id,
-      ultimate_parent_namespace_id,
       created_date_id,
-      dim_plan_id,
-      dim_user_id,
      
       created_at,
       updated_at,
