@@ -3,13 +3,16 @@ from typing import Dict, Any, List
 
 import requests
 
+
 class GitLabAPI:
     GITLAB_COM_API_BASE_URL = "https://gitlab.com/api/v4"
 
     def __init__(self, api_token):
         self.api_token = api_token
 
-    def get_pipeline_schedule(self, project_id: str, pipeline_schedule_id: int) -> Dict[Any, Any]:
+    def get_pipeline_schedule(
+        self, project_id: str, pipeline_schedule_id: int
+    ) -> Dict[Any, Any]:
         url = f"{self.GITLAB_COM_API_BASE_URL}/projects/{project_id}/pipeline_schedules/{pipeline_schedule_id}"
         response = requests.get(url, headers={"Private-Token": self.api_token})
 
@@ -21,7 +24,9 @@ class GitLabAPI:
             )
         return None
 
-    def get_job_json_artifact(self, project_id: str, job_id: int, artifact_path: str) -> Dict[Any, Any]:
+    def get_job_json_artifact(
+        self, project_id: str, job_id: int, artifact_path: str
+    ) -> Dict[Any, Any]:
         url = f"{self.GITLAB_COM_API_BASE_URL}/projects/{project_id}/jobs/{job_id}/artifacts/{artifact_path}"
         response = requests.get(url, headers={"Private-Token": self.api_token})
 
@@ -33,7 +38,9 @@ class GitLabAPI:
             )
         return None
 
-    def get_pipeline_job_paged(self, project_id: str, pipeline_id: int, page: int) -> List[Dict[Any, Any]]:
+    def get_pipeline_job_paged(
+        self, project_id: str, pipeline_id: int, page: int
+    ) -> List[Dict[Any, Any]]:
         url = f"{self.GITLAB_COM_API_BASE_URL}/projects/{project_id}/pipelines/{pipeline_id}/jobs?per_page=100&page={page}"
         response = requests.get(url, headers={"Private-Token": self.api_token})
 
@@ -45,10 +52,14 @@ class GitLabAPI:
             )
         return []
 
-    def get_pipeline_job(self, project_id: str, pipeline_id: int, job_name: str) -> Dict[Any, Any]:
+    def get_pipeline_job(
+        self, project_id: str, pipeline_id: int, job_name: str
+    ) -> Dict[Any, Any]:
         current_page_number = 1
         while True:
-            current_result = self.get_pipeline_job_paged(project_id, pipeline_id, current_page_number)
+            current_result = self.get_pipeline_job_paged(
+                project_id, pipeline_id, current_page_number
+            )
 
             if not current_result:
                 return None
@@ -58,4 +69,3 @@ class GitLabAPI:
                     return job
 
             current_page_number = current_page_number + 1
-
