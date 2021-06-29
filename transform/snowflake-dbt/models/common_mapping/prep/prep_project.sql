@@ -101,6 +101,10 @@
       projects_source.pull_mirror_available_overridden,
       projects_source.mirror_overwrites_diverged_branches,
 
+      -- namespace metadata
+
+      IFNULL(prep_namespace.namespace_is_internal, FALSE)            AS namespace_is_internal,
+
       {% for field in sensitive_fields %}
       CASE
         WHEN projects_source.visibility_level != 'public' AND NOT namespace_lineage.namespace_is_internal

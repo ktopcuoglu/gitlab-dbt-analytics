@@ -41,6 +41,7 @@
       ci_build_user_id                                            AS dim_user_id,
       ci_build_stage_id                                           AS dim_ci_stage_id,
 
+      prep_project.namespace_is_internal,
       gitlab_dotcom_ci_builds_source.status,
       gitlab_dotcom_ci_builds_source.finished_at,
       gitlab_dotcom_ci_builds_source.trace,
