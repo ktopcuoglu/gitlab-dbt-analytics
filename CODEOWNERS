@@ -76,9 +76,13 @@ docker-compose.yml  @jjstark  @m_walker   @paul_armstrong   @snalamaru  @mpeyche
 /transform/snowflake-dbt/models/sources/gitlab_data_yaml/   @jjstark  @m_walker   @paul_armstrong @rparker2   @iweeks @snalamaru  @mpeychet_ @dvanrooijen2
 /transform/snowflake-dbt/models/legacy/gitlab_data_yaml/    @jjstark  @m_walker   @paul_armstrong @rparker2   @iweeks @snalamaru  @mpeychet_ @dvanrooijen2
 
-/transform/snowflake-dbt/models/sources/gitlab_data_yaml/feature_flags_source.sql          @ayufan  @jjstark  @m_walker   @paul_armstrong @rparker2   @iweeks @snalamaru  @mpeychet_ @dvanrooijen2
+/transform/snowflake-dbt/models/sources/gitlab_data_yaml/feature_flags_source.sql               @ayufan  @jjstark  @m_walker   @paul_armstrong @rparker2   @iweeks @snalamaru  @mpeychet_ @dvanrooijen2
 /transform/snowflake-dbt/models/legacy/gitlab_data_yaml/feature_flags_yaml_latest.sql      @ayufan  @jjstark  @m_walker   @paul_armstrong @rparker2   @iweeks @snalamaru  @mpeychet_ @dvanrooijen2
 /transform/snowflake-dbt/models/legacy/gitlab_data_yaml/feature_flags_yaml_historical.sql  @ayufan  @jjstark  @m_walker   @paul_armstrong @rparker2   @iweeks @snalamaru  @mpeychet_ @dvanrooijen2
+
+/transform/snowflake-dbt/models/sources/gitlab_data_yaml/flaky_tests_source.sql          @rymai  @paul_armstrong
+/transform/snowflake-dbt/models/legacy/gitlab_data_yaml/base/flaky_tests_latest.sql      @rymai  @paul_armstrong
+/transform/snowflake-dbt/models/legacy/gitlab_data_yaml/base/flaky_tests_historical.sql  @rymai  @paul_armstrong
 
 /transform/snowflake-dbt/models/sources/gitlab_dotcom/      @jeanpeguero    @ken_aguilar    @jjstark  @m_walker   @paul_armstrong @rparker2   @iweeks @snalamaru  @mpeychet_ @michellecooper @dvanrooijen2
 /transform/snowflake-dbt/models/legacy/gitlab_dotcom/       @jeanpeguero    @ken_aguilar    @jjstark  @m_walker   @paul_armstrong @rparker2   @iweeks @snalamaru  @mpeychet_ @michellecooper @dvanrooijen2

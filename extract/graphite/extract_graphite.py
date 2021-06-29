@@ -74,7 +74,7 @@ if __name__ == "__main__":
     ]
 
     for page in pages:
-        target = f"sitespeed_io.desktop.gitlab.pageSummary.gitlab_com.{page}.chrome.cable.browsertime.statistics.pageinfo.layoutShift.*"
+        target = f"sitespeed_io.desktop.gitlab.pageSummary.gitlab_com.{page}.chrome.cable.browsertime.statistics.pageinfo.cumulativeLayoutShift.*"
 
         data = make_api_call(
             target,

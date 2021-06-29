@@ -108,6 +108,14 @@ models:
         tests:
           - not_null
 
+  - name: gitlab_dotcom_boards_epic_boards
+    description: Base model for Gitlab.com Boards Epic Boards
+    columns:
+      - name: epic_board_id
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+
   - name: gitlab_dotcom_board_labels_source
     description: Base model for Gitlab.com board labels
     columns:

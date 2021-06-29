@@ -2699,6 +2699,54 @@ models:
           - unique
         tags: ["tdf", "common", "sales_funnel"]
       - name: marketing_channel_name
+  
+  - name: dim_namespace_hist
+    description: '{{ doc("dim_namespace_hist") }}'
+    columns:
+      - name: namespace_snapshot_id
+        tests:
+          - not_null
+          - unique
+      - name: dim_namespace_id
+        tests:
+          - not_null
+      - name: valid_from
+        tests:
+          - not_null
+      - name: valid_to
+
+  - name: dim_namespace_lineage
+    description: '{{ doc("dim_namespace_lineage") }}'
+    columns:
+      - name: dim_namespace_id
+        tests:
+          - not_null
+          - unique
+      - name: ultimate_parent_namespace_id
+        tests:
+          - not_null
+      - name: parent_id
+      - name: namespace_plan_id
+      - name: ultimate_parent_plan_id
+        tests:
+          - not_null
+          - accepted_values:
+              values: [2, 3, 4, 34, 67, 100, 101, 102, 103]
+      - name: upstream_lineage
+        tests:
+          - not_null
+      - name: is_currently_valid
+        tests:
+          - not_null
+      - name: namespace_plan_title
+      - name: namespace_plan_is_paid
+      - name: ultimate_parent_plan_title
+        tests:
+          - not_null
+      - name: ultimate_parent_plan_is_paid
+        tests:
+          - not_null
+
   - name: dim_namespace_plan_hist
     description: '{{ doc("dim_namespace_plan_hist") }}'
     columns:
@@ -2948,3 +2996,28 @@ models:
       - name: runner_type
       - name: public_projects_minutes_cost_factor
       - name: private_projects_minutes_cost_factor
+  - name: dim_issue
+    description: '{{ doc("dim_issue") }}'
+    columns:
+      - name: dim_issue_id
+        description: The unique identifier for each of the issues.
+        tests:
+          - not_null
+          - unique
+      - name: dim_project_id
+      - name: dim_plan_id
+        tests:
+          - not_null
+
+  - name: dim_merge_request
+    description: '{{ doc("dim_merge_request") }}'
+    columns:
+      - name: dim_merge_request_id
+        description: The unique identifier for each of the merge requets.
+        tests:
+          - not_null
+          - unique
+      - name: dim_project_id
+      - name: dim_plan_id
+        tests:
+          - not_null

@@ -4,6 +4,12 @@ Creates a base view with generated keys for the alliance type shared dimension a
 
 {% enddocs %}
 
+{% docs prep_audit_event_details_clean %}
+
+All GitLab audit event details, with pii replaced with hashes. Created by a union of audit event keys from `gitlab_dotcom_audit_event_details` and `gitlab_dotcom_audit_event_details_pii`.
+
+{% enddocs %}
+
 {% docs prep_dr_partner_engagement %}
 
 Creates a base view with generated keys for the dr partner engagement shared dimension and references in facts.
@@ -400,12 +406,30 @@ Creates a base view of CI pipelines. More info about CI pipelines [is available 
 Prep table for the dim table `dim_event`.
 
 More info about [events tracked](https://docs.gitlab.com/ee/api/events.html)
+
 {% enddocs %}
 
 {% docs prep_user %}
 Prep table for the dim table `dim_user`.
 
 This table is currently the first iteration. This is a relatively narrow table. A lot of metadata needs to be added.
+
+{% enddocs %}
+
+{% docs prep_issue %}
+
+Prep table used to build `dim_merge_request`
+
+More information about [Issues](https://docs.gitlab.com/ee/user/project/issues/)
+
+{% enddocs %}
+
+{% docs prep_merge_request %}
+
+Prep table used to build `dim_merge_request`
+
+More information about [CI Pipelines here](https://docs.gitlab.com/ee/user/project/merge_requests/)
+
 {% enddocs %}
 
 {% docs prep_ci_build %}

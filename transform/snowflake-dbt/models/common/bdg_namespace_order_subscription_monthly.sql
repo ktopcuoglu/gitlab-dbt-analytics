@@ -11,7 +11,6 @@
     ('product_details', 'dim_product_detail'),
     ('recurring_charges', 'prep_recurring_charge'),
     ('trial_histories', 'customers_db_trial_histories_source'),
-    ('namespace_lineage', 'gitlab_dotcom_namespace_lineage_prep'),
     ('subscription_delivery_types', 'bdg_subscription_product_rate_plan')
 ]) }}
 
@@ -271,5 +270,5 @@
     created_by="@ischweickartDD",
     updated_by="@ischweickartDD",
     created_date="2021-06-02",
-    updated_date="2021-06-02"
+    updated_date="2021-06-17"
 ) }}
