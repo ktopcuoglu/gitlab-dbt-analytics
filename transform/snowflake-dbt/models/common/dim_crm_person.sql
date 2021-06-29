@@ -39,7 +39,8 @@ WITH crm_person AS (
       bizible_marketing_channel_path,
       bizible_touchpoint_date,
       sequence_step_type,
-      is_actively_being_sequenced
+      is_actively_being_sequenced,
+      region
 
     FROM crm_person
 )
@@ -49,5 +50,5 @@ WITH crm_person AS (
     created_by="@jjstark",
     updated_by="@jpeguero",
     created_date="2020-09-10",
-    updated_date="2021-06-19"
+    updated_date="2021-06-29"
 ) }}
