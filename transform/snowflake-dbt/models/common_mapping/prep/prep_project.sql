@@ -101,6 +101,10 @@
       projects_source.pull_mirror_available_overridden,
       projects_source.mirror_overwrites_diverged_branches,
 
+      -- namespace metadata
+
+      IFNULL(prep_namespace.namespace_is_internal, FALSE)            AS namespace_is_internal,
+
       {% for field in sensitive_fields %}
       CASE
         WHEN projects_source.visibility_level != 'public' AND NOT namespace_lineage.namespace_is_internal
@@ -127,7 +131,7 @@
         AND projects_source.created_at >= gitlab_subscriptions.valid_from AND projects_source.created_at < {{ coalesce_to_infinity("gitlab_subscriptions.valid_to") }}
     LEFT JOIN active_services
       ON projects_source.project_id = active_services.project_id
-    {{ dbt_utils.group_by(n=60) }}
+    {{ dbt_utils.group_by(n=61) }}
 
 )
 
