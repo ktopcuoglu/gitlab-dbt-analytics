@@ -73,8 +73,12 @@ WITH biz_person AS (
       bizible_marketing_channel_path,
       bizible_touchpoint_date,
       sequence_step_type,
+      name_of_active_sequence,
+      sequence_task_due_date,
+      sequence_status,
       is_actively_being_sequenced,
       region,
+      last_activity_date,
 
       NULL                                          AS crm_partner_id
 
@@ -118,8 +122,12 @@ WITH biz_person AS (
       bizible_marketing_channel_path,
       bizible_touchpoint_date,
       sequence_step_type,
+      name_of_active_sequence,
+      sequence_task_due_date,
+      sequence_status,
       is_actively_being_sequenced,
       region,
+      last_activity_date,
 
       crm_partner_id
 
@@ -135,5 +143,5 @@ WITH biz_person AS (
     created_by="@mcooperDD",
     updated_by="@jpeguero",
     created_date="2020-12-08",
-    updated_date="2021-06-19"
+    updated_date="2021-06-23"
 ) }}
