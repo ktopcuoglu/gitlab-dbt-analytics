@@ -449,3 +449,6 @@ sources:
       - name: user_credit_card_validations
         identifier: gitlab_db_user_credit_card_validations
         freshness: null
+      - name: boards_epic_boards
+        identifier: gitlab_db_boards_epic_boards
+        freshness: null

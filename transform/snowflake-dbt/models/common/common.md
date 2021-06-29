@@ -550,6 +550,22 @@ Order type dimension, based off of salesforce opportunity data, using the `gener
 
 {% enddocs %}
 
+{% docs dim_namespace_hist %}
+
+Table containing GitLab namespace snapshots.
+
+The grain of this table is one row per namespace per valid_to/valid_from combination. The Primary Key is `namespace_snapshot_id`.
+
+{% enddocs %}
+
+{% docs dim_namespace_lineage %}
+
+Table containing GitLab namespace lineages. The primary goal of this table is to determine the ultimate parent namespace for all namespaces. Additionally, this table provides plan (GitLab subscription) information for both the given namespace and its ultimate parent namespace.
+
+The grain of this table is one row per namespace. The Primary Key is `dim_namespace_id`.
+
+{% enddocs %}
+
 {% docs dim_namespace_plan_hist %}
 
 Slowly Changing Dimension Type 2 that records changes into namespace's plan subscriptions. 
@@ -619,6 +635,32 @@ The grain of the table is the `dim_event_id`. This table is easily joinable with
 - `dim_user` through `dim_user_id`
 - `dim_project` through `dim_project_id`
 - `dim_namespace` through `dim_namespace_id` and `ultimate_namespace_id`
+
+{% enddocs %}
+
+{% docs dim_issue %}
+
+Dimensional table recording all issues created in our Gitlab.com SaaS instance. This table is easily joinable with other EDM dim tables:
+
+- `dim_project` through `dim_project_id`
+- `dim_namespace` through `dim_namespace_id`
+- `dim_plan` through `dim_plan_id`
+- `dim_date` through `created_date_dim_id`
+
+More info about issues in GitLab product [available here](https://docs.gitlab.com/ee/user/project/issues/)
+
+{% enddocs %}
+
+{% docs dim_merge_request %}
+
+Dimensional table recording all merge requests created in our Gitlab.com SaaS instance. This table is easily joinable with other EDM dim tables:
+
+- `dim_project` through `dim_project_id`
+- `dim_namespace` through `dim_namespace_id`
+- `dim_plan` through `dim_plan_id`
+- `dim_date` through `created_date_dim_id`
+
+More info about issues in GitLab product [available here](https://docs.gitlab.com/ee/user/project/merge_requests/)
 
 {% enddocs %}
 
