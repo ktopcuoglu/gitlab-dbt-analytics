@@ -18,6 +18,10 @@
       -- FOREIGN KEYS
       dim_ci_build.created_date_id,
       dim_ci_build.ci_runner_id,
+
+      -- ci_stage_id
+      -- ci_pipeline_id
+
       dim_ci_build.dim_user_id,
       dim_ci_build.dim_namespace_id,
       dim_ci_build.ultimate_parent_namespace_id,
