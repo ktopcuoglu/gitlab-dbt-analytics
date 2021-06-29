@@ -5,7 +5,9 @@ from datetime import date, timedelta
 from typing import List
 
 from airflow.contrib.kubernetes.pod import Resources
+from airflow.models import Variable
 from airflow.operators.slack_operator import SlackAPIPostOperator
+from airflow.contrib.operators.slack_webhook_operator import SlackWebhookOperator
 
 SSH_REPO = "git@gitlab.com:gitlab-data/analytics.git"
 HTTP_REPO = "https://gitlab.com/gitlab-data/analytics.git"
@@ -69,6 +71,7 @@ class MultiSlackChannelOperator:
                 token=os.environ["SLACK_API_TOKEN"],
                 username="Airflow",
             )
+
             slack_alert.execute()
 
 
@@ -154,6 +157,20 @@ def slack_snapshot_failed_task(context):
     return multi_channel_alert.execute()
 
 
+def slack_webhook_conn(slack_channel):
+    if slack_channel == "#analytics-pipelines":
+        slack_webhook = os.environ["SLACK_API_TOKEN"]
+    elif slack_channel == "#dbt-runs":
+        slack_webhook = os.environ["SLACK_API_TOKEN"]
+    elif slack_channel == "#data-lounge":
+        slack_webhook = os.environ["SLACK_API_TOKEN"]
+    else:
+        slack_webhook = os.environ["SLACK_API_TOKEN"]
+
+    airflow_http_con_id = Variable.get("AIRFLOW_VAR_SLACK_CONNECTION")
+    return airflow_http_con_id, slack_webhook
+
+
 def slack_failed_task(context):
     """
     Function to be used as a callable for on_failure_callback.
@@ -161,16 +178,18 @@ def slack_failed_task(context):
     """
 
     attachment, slack_channel, task_id, task_text = slack_defaults(context, "failure")
+    airflow_http_con_id, slack_webhook = slack_webhook_conn(slack_channel)
 
-    slack_alert = SlackAPIPostOperator(
+    slack_alert = SlackWebhookOperator(
         attachments=attachment,
         channel=slack_channel,
         task_id=task_id,
-        text=task_text,
-        token=os.environ["SLACK_API_TOKEN"],
+        message=task_text,
+        http_conn_id=airflow_http_con_id,
+        webhook_token=slack_webhook,
         username="Airflow",
     )
-    return slack_alert.execute()
+    return slack_alert.execute(context=None)
 
 
 def slack_succeeded_task(context):
@@ -180,16 +199,18 @@ def slack_succeeded_task(context):
     """
 
     attachment, slack_channel, task_id, task_text = slack_defaults(context, "success")
+    airflow_http_con_id, slack_webhook = slack_webhook_conn(slack_channel)
 
-    slack_alert = SlackAPIPostOperator(
+    slack_alert = SlackWebhookOperator(
         attachments=attachment,
         channel=slack_channel,
         task_id=task_id,
-        text=task_text,
-        token=os.environ["SLACK_API_TOKEN"],
+        message=task_text,
+        http_conn_id=airflow_http_con_id,
+        webhook_token=slack_webhook,
         username="Airflow",
     )
-    return slack_alert.execute()
+    return slack_alert.execute(context=None)
 
 
 # Set the resources for the task pods
