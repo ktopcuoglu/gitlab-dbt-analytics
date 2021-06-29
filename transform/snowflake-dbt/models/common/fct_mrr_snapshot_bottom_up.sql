@@ -86,9 +86,9 @@ WITH dim_date AS (
 
     SELECT *
     FROM {{ ref('zuora_subscription_snapshots_source') }}
-    WHERE subscription_status NOT IN ('Draft', 'Expired')
-       AND is_deleted = FALSE
+    WHERE is_deleted = FALSE
       AND exclude_from_analysis IN ('False', '')
+      AND LOWER(subscription_status) NOT IN ('draft', 'expired')
 
 ), zuora_subscription_spined AS (
 
@@ -107,10 +107,12 @@ WITH dim_date AS (
 
     SELECT
       date_id                                                   AS snapshot_id,
+      dim_charge_id,
       dim_billing_account_id,
       dim_crm_account_id,
       dim_subscription_id,
       subscription_name,
+      subscription_status,
       dim_product_detail_id,
       mrr,
       delta_tcv,
@@ -127,10 +129,12 @@ WITH dim_date AS (
 
     SELECT
       zuora_rate_plan_charge_spined.snapshot_id,
+      zuora_rate_plan_charge_spined.rate_plan_charge_id         AS dim_charge_id,
       zuora_account_spined.account_id                           AS dim_billing_account_id,
       zuora_account_spined.crm_id                               AS dim_crm_account_id,
       zuora_subscription_spined.subscription_id                 AS dim_subscription_id,
       zuora_subscription_spined.subscription_name,
+      zuora_subscription_spined.subscription_status,
       zuora_rate_plan_charge_spined.product_rate_plan_charge_id AS dim_product_detail_id,
       zuora_rate_plan_charge_spined.mrr,
       zuora_rate_plan_charge_spined.delta_tcv,
@@ -141,13 +145,13 @@ WITH dim_date AS (
     FROM zuora_rate_plan_charge_spined
     INNER JOIN zuora_rate_plan_spined
       ON zuora_rate_plan_spined.rate_plan_id = zuora_rate_plan_charge_spined.rate_plan_id
-        AND zuora_rate_plan_spined.snapshot_id = zuora_rate_plan_charge_spined.snapshot_id
+      AND zuora_rate_plan_spined.snapshot_id = zuora_rate_plan_charge_spined.snapshot_id
     INNER JOIN zuora_subscription_spined
       ON zuora_rate_plan_spined.subscription_id = zuora_subscription_spined.subscription_id
-        AND zuora_rate_plan_spined.snapshot_id = zuora_subscription_spined.snapshot_id
+      AND zuora_rate_plan_spined.snapshot_id = zuora_subscription_spined.snapshot_id
     INNER JOIN zuora_account_spined
       ON zuora_account_spined.account_id = zuora_subscription_spined.account_id
-        AND zuora_account_spined.snapshot_id = zuora_subscription_spined.snapshot_id
+      AND zuora_account_spined.snapshot_id = zuora_subscription_spined.snapshot_id
 
 ), combined_charges AS (
 
@@ -163,12 +167,14 @@ WITH dim_date AS (
 
     SELECT
       snapshot_id,
-      dim_date.date_id,
+      dim_date.date_id                                     AS dim_date_id,
+      dim_charge_id,
       dim_billing_account_id,
       dim_crm_account_id,
       dim_subscription_id,
-      subscription_name,
       dim_product_detail_id,
+      subscription_name,
+      subscription_status,
       SUM(mrr)                                             AS mrr,
       SUM(mrr)* 12                                         AS arr,
       SUM(quantity)                                        AS quantity,
@@ -179,21 +185,24 @@ WITH dim_date AS (
       AND (combined_charges.effective_end_month > dim_date.date_actual
         OR combined_charges.effective_end_month IS NULL)
       AND dim_date.day_of_month = 1
-    {{ dbt_utils.group_by(n=7) }}
+    {{ dbt_utils.group_by(n=9) }}
 
 ), final AS (
 
     SELECT
-        {{ dbt_utils.surrogate_key(['snapshot_id', 'date_id', 'subscription_name', 'dim_product_detail_id', 'mrr']) }}
-          AS mrr_snapshot_id,
-        {{ dbt_utils.surrogate_key(['date_id', 'subscription_name', 'dim_product_detail_id', 'mrr']) }}
-          AS mrr_id,
+        {{ dbt_utils.surrogate_key(['snapshot_id', 'dim_date_id', 'dim_charge_id']) }}
+                                                            AS mrr_snapshot_id,
+        {{ dbt_utils.surrogate_key(['dim_date_id', 'dim_charge_id']) }}
+                                                            AS mrr_id,
         snapshot_id,
-        date_id,
+        dim_date_id,
+        dim_charge_id,
+        dim_product_detail_id,
+        dim_subscription_id,
         dim_billing_account_id,
         dim_crm_account_id,
-        dim_subscription_id,
-        dim_product_detail_id,
+        subscription_name,
+        subscription_status,
         mrr,
         arr,
         quantity,

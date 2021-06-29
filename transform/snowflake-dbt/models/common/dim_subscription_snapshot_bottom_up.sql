@@ -18,11 +18,27 @@ WITH snapshot_dates AS (
 
    {% endif %}
 
+), zuora_account AS (
+
+    SELECT *
+    FROM {{ ref('zuora_account_snapshots_source') }}
+    WHERE is_deleted = FALSE
+
+), zuora_account_spined AS (
+
+    SELECT
+      snapshot_dates.date_id AS snapshot_id,
+      zuora_account.*
+    FROM zuora_account
+    INNER JOIN snapshot_dates
+      ON snapshot_dates.date_actual >= zuora_account.dbt_valid_from
+      AND snapshot_dates.date_actual < {{ coalesce_to_infinity('zuora_account.dbt_valid_to') }}
+
 ), zuora_subscription AS (
 
     SELECT *
     FROM {{ ref('zuora_subscription_snapshots_source') }}
-    WHERE subscription_status NOT IN ('Draft', 'Expired')
+    WHERE LOWER(subscription_status) NOT IN ('draft', 'expired')
       AND is_deleted = FALSE
       AND exclude_from_analysis IN ('False', '')
 
@@ -39,40 +55,79 @@ WITH snapshot_dates AS (
          PARTITION BY subscription_name, snapshot_dates.date_actual
          ORDER BY DBT_VALID_FROM DESC) = 1
 
-), zuora_account AS (
+), map_merged_crm_account AS (
 
-    SELECT
-      account_id,
-      crm_id
-    FROM {{ ref('zuora_account_source') }}
-    WHERE is_deleted = FALSE
+    SELECT *
+    FROM {{ ref('map_merged_crm_account') }}
+
+), prep_amendment AS (
+
+  SELECT *
+  FROM {{ ref('prep_amendment') }}
 
 ), joined AS (
 
     SELECT
-      zuora_subscription_spined.snapshot_id,
+    --Surrogate Key
+      zuora_subscription_spined.snapshot_id                                     AS snapshot_id,
       zuora_subscription_spined.subscription_id                                 AS dim_subscription_id,
-      zuora_account.crm_id                                                      AS dim_crm_account_id,
-      zuora_account.account_id                                                  AS dim_billing_account_id,
-      zuora_subscription_spined.subscription_name,
+
+    --Natural Key
+      zuora_subscription_spined.subscription_name                               AS subscription_name,
+      zuora_subscription_spined.version                                         AS subscription_version,
+
+    --Common Dimension Keys
+      map_merged_crm_account.dim_crm_account_id                                 AS dim_crm_account_id,
+      zuora_account_spined.account_id                                           AS dim_billing_account_id,
+      zuora_subscription_spined.invoice_owner_id                                AS dim_crm_person_id_invoice_owner,
+      zuora_subscription_spined.sfdc_opportunity_id                             AS dim_crm_opportunity_id,
+      {{ get_keyed_nulls('prep_amendment.dim_amendment_id') }}                  AS dim_amendment_id_subscription,
+
+    --Subscription Information
+      zuora_subscription_spined.created_by_id,
+      zuora_subscription_spined.updated_by_id,
+      zuora_subscription_spined.original_id                                     AS dim_subscription_id_original,
+      zuora_subscription_spined.previous_subscription_id                        AS dim_subscription_id_previous,
       zuora_subscription_spined.subscription_name_slugify,
       zuora_subscription_spined.subscription_status,
-      zuora_subscription_spined.version                                         AS subscription_version,
       zuora_subscription_spined.auto_renew                                      AS is_auto_renew,
       zuora_subscription_spined.zuora_renewal_subscription_name,
       zuora_subscription_spined.zuora_renewal_subscription_name_slugify,
+      zuora_subscription_spined.current_term,
       zuora_subscription_spined.renewal_term,
       zuora_subscription_spined.renewal_term_period_type,
+      --this field is not in the snapshot source model
+        --zuora_subscription_spined.eoa_starter_bronze_offer_accepted,
+      IFF(zuora_subscription_spined.created_by_id = '2c92a0fd55822b4d015593ac264767f2', -- All Self-Service / Web direct subscriptions are identified by that created_by_id
+          'Self-Service', 'Sales-Assisted')                                     AS subscription_sales_type,
+
+    --Date Information
       zuora_subscription_spined.subscription_start_date                         AS subscription_start_date,
       zuora_subscription_spined.subscription_end_date                           AS subscription_end_date,
-      IFF(zuora_subscription_spined.created_by_id = '2c92a0fd55822b4d015593ac264767f2', -- All Self-Service / Web direct subscriptions are identified by that created_by_id
-      'Self-Service', 'Sales-Assisted')                                         AS subscription_sales_type,
       DATE_TRUNC('month', zuora_subscription_spined.subscription_start_date)    AS subscription_start_month,
-      DATE_TRUNC('month', zuora_subscription_spined.subscription_end_date)      AS subscription_end_month
+      DATE_TRUNC('month', zuora_subscription_spined.subscription_end_date)      AS subscription_end_month,
+      snapshot_dates.fiscal_year                                                AS subscription_end_fiscal_year,
+      zuora_subscription_spined.created_date::DATE                              AS subscription_created_date,
+      zuora_subscription_spined.updated_date::DATE                              AS subscription_updated_date,
+      zuora_subscription_spined.term_start_date::DATE                           AS term_start_date,
+      zuora_subscription_spined.term_end_date::DATE                             AS term_end_date,
+      DATE_TRUNC('month', zuora_subscription_spined.term_start_date::DATE)      AS term_start_month,
+      DATE_TRUNC('month', zuora_subscription_spined.term_end_date::DATE)        AS term_end_month,
+      CASE
+        WHEN LOWER(zuora_subscription_spined.subscription_status) = 'active' AND zuora_subscription_spined.subscription_end_date > CURRENT_DATE
+          THEN DATE_TRUNC('month',DATEADD('month', zuora_subscription_spined.current_term, zuora_subscription_spined.subscription_end_date::DATE))
+        ELSE NULL
+      END                                                                       AS second_active_renewal_month
     FROM zuora_subscription_spined
-    INNER JOIN zuora_account
-      ON zuora_account.account_id = zuora_subscription_spined.account_id
-
+    INNER JOIN zuora_account_spined
+      ON zuora_subscription_spined.account_id = zuora_account_spined.account_id
+      AND zuora_subscription_spined.snapshot_id = zuora_account_spined.snapshot_id
+    LEFT JOIN map_merged_crm_account
+      ON zuora_account_spined.crm_id = map_merged_crm_account.sfdc_account_id
+    LEFT JOIN prep_amendment
+      ON zuora_subscription_spined.amendment_id = prep_amendment.dim_amendment_id
+    LEFT JOIN snapshot_dates
+      ON zuora_subscription_spined.subscription_end_date::DATE = snapshot_dates.date_day
 
 ), final AS (
 
