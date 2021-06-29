@@ -37,7 +37,7 @@
       prep_project.ultimate_parent_namespace_id,
       dim_date.date_id                                            AS created_date_id,
       IFNULL(dim_namespace_plan_hist.dim_plan_id, 34)             AS dim_plan_id,
-      ci_build_runner_id                                          AS ci_runner_id,
+      ci_build_runner_id                                          AS dim_ci_runner_id,
       ci_build_user_id                                            AS dim_user_id,
       ci_build_stage_id                                           AS dim_ci_stage_id,
 
