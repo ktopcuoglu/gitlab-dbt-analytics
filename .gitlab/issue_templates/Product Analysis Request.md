@@ -37,7 +37,7 @@ include the relevant event names, any details or context on the user experience,
 
 ### Assignee
 <!---Please assign the issue to your analyst contact, if applicable. Otherwise, you can assign 
-to @cbraza.---->
+to [at]cbraza.---->
 
 
 ### Additional Visibility
@@ -46,7 +46,5 @@ to @cbraza.---->
 
 ---
 ### Please do not edit below
-
-cc @cbraza
 
 /label ~"product analysis"
