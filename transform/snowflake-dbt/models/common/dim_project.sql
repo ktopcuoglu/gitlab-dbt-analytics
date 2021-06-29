@@ -56,6 +56,7 @@ WITH prep_project AS (
       only_mirror_protected_branches,
       pull_mirror_available_overridden,
       mirror_overwrites_diverged_branches,
+      namespace_is_internal,
       project_description, 
       project_import_source,
       project_issues_template,
