@@ -159,16 +159,16 @@ def slack_snapshot_failed_task(context):
 
 def slack_webhook_conn(slack_channel):
     if slack_channel == "#analytics-pipelines":
-        slack_webhook = Variable.get("AIRFLOW_VAR_ANALYTICS_PIPELINES")
+        slack_webhook = os.environ["SLACK_API_TOKEN"]
     elif slack_channel == "#dbt-runs":
-        slack_webhook = Variable.get("AIRFLOW_VAR_DBT_RUNS")
+        slack_webhook = os.environ["SLACK_API_TOKEN"]
     elif slack_channel == "#data-lounge":
-        slack_webhook = Variable.get("AIRFLOW_VAR_ANALYTICS_PIPELINES")
+        slack_webhook = os.environ["SLACK_API_TOKEN"]
     else:
-        slack_webhook = Variable.get("AIRFLOW_VAR_ANALYTICS_PIPELINES")
+        slack_webhook = os.environ["SLACK_API_TOKEN"]
 
-    airflow_con = Variable.get("AIRFLOW_VAR_SLACK_CONNECTION")
-    return airflow_con, slack_webhook
+    airflow_http_con_id = Variable.get("AIRFLOW_VAR_SLACK_CONNECTION")
+    return airflow_http_con_id, slack_webhook
 
 
 def slack_failed_task(context):
@@ -178,14 +178,14 @@ def slack_failed_task(context):
     """
 
     attachment, slack_channel, task_id, task_text = slack_defaults(context, "failure")
-    airflow_con, slack_webhook = slack_webhook_conn(slack_channel)
+    airflow_http_con_id, slack_webhook = slack_webhook_conn(slack_channel)
 
     slack_alert = SlackWebhookOperator(
         attachments=attachment,
         channel=slack_channel,
         task_id=task_id,
         message=task_text,
-        http_conn_id=airflow_con,
+        http_conn_id=airflow_http_con_id,
         webhook_token=slack_webhook,
         username="Airflow",
     )
@@ -199,14 +199,14 @@ def slack_succeeded_task(context):
     """
 
     attachment, slack_channel, task_id, task_text = slack_defaults(context, "success")
-    airflow_con, slack_webhook = slack_webhook_conn(slack_channel)
+    airflow_http_con_id, slack_webhook = slack_webhook_conn(slack_channel)
 
     slack_alert = SlackWebhookOperator(
         attachments=attachment,
         channel=slack_channel,
         task_id=task_id,
         message=task_text,
-        http_conn_id=airflow_con,
+        http_conn_id=airflow_http_con_id,
         webhook_token=slack_webhook,
         username="Airflow",
     )
