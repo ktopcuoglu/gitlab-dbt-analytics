@@ -9,7 +9,7 @@ WITH prep_ci_build AS (
       ultimate_parent_namespace_id,
       created_date_id,
       dim_plan_id,
-      ci_runner_id,
+      dim_ci_runner_id,
       dim_user_id,
       dim_ci_stage_id,
 

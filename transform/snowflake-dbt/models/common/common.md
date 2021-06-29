@@ -677,3 +677,18 @@ Easy to join with the following tables:
 
 
 {% enddocs %}
+
+{% docs dim_ci_runner %}
+
+A Dimension table that contains all data related to CI runners.
+
+It includes keys to join to the below tables:
+
+- `dim_ci_build` through `dim_ci_build_id`
+- `dim_project` through `dim_project_id`
+- `dim_namespace` through `dim_namespace_id` and `ultimate_parent_namespace_id`
+- `dim_date` through `created_at`
+- `dim_date` through `created_date_id `
+
+
+{% enddocs %}

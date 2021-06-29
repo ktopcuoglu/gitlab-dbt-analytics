@@ -2952,9 +2952,35 @@ models:
         description: Foreign key that shows the ID of the user who triggered the CI Build
       - name: dim_plan_id
         description: ID of the Plan
-      - name: ci_runner_id
+      - name: dim_ci_runner_id
         description: ID of the runner with which the CI build has been run.
       - name: dim_ci_stage_id
+
+
+  - name: dim_ci_runner
+    description: '{{ doc("dim_ci_runner") }}'
+    columns:
+      - name: dim_ci_runner_id
+        description: The unique ID of the runner with which the CI build has been run
+        tests:
+          - not_null
+          - unique
+      - name: created_date_id
+      - name: created_at
+      - name: updated_at
+      - name: contacted_at
+      - name: is_active
+      - name: ci_runner_version
+      - name: revision
+      - name: platform
+      - name: architecture
+      - name: is_untagged
+      - name: is_locked
+      - name: access_level
+      - name: maximum_timeout
+      - name: runner_type
+      - name: public_projects_minutes_cost_factor
+      - name: private_projects_minutes_cost_factor
   - name: dim_issue
     description: '{{ doc("dim_issue") }}'
     columns:
