@@ -56,6 +56,7 @@
       dim_crm_person.source_buckets,
       dim_crm_person.crm_partner_id,
       dim_crm_person.sequence_step_type,
+      dim_crm_person.region,
       fct_crm_person.name_of_active_sequence,
       fct_crm_person.sequence_task_due_date,
       fct_crm_person.sequence_status,
@@ -122,5 +123,5 @@
     created_by="@iweeks",
     updated_by="@jpeguero",
     created_date="2020-12-07",
-    updated_date="2021-06-19",
+    updated_date="2021-06-29",
   ) }}
