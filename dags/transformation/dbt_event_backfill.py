@@ -76,15 +76,15 @@ def generate_dbt_command(vars_dict):
     dbt_generate_command = f"""
         {dbt_install_deps_nosha_cmd} &&
         export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_XL" &&
-        dbt run --profiles-dir profile --target prod --models prep_dotcom_usage_events --full-refresh --vars '{json_dict}'; ret=$?;
+        dbt run --profiles-dir profile --target prod --models prep_event --full-refresh --vars '{json_dict}'; ret=$?;
         python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
         """
 
     return KubernetesPodOperator(
         **gitlab_defaults,
         image=DBT_IMAGE,
-        task_id=f"t_dbt-dotcom-usage-events-backfill-{vars_dict['year']}-{vars_dict['month']}",
-        name=f"t_dbt-dotcom-usage-events-backfill-{vars_dict['year']}-{vars_dict['month']}",
+        task_id=f"t_dbt-event-backfill-{vars_dict['year']}-{vars_dict['month']}",
+        name=f"t_dbt-event-backfill-{vars_dict['year']}-{vars_dict['month']}",
         secrets=task_secrets,
         env_vars=pod_env_vars,
         arguments=[dbt_generate_command],
