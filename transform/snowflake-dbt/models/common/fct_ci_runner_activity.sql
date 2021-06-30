@@ -11,14 +11,11 @@
 
 , joined AS (
 
-    SELECT 
+    SELECT
+      -- PRIMAry KEY
       dim_ci_build.dim_ci_build_id,
       dim_ci_build.created_date_id,
       dim_ci_build.ci_runner_id,
-
-      -- ci_stage_id
-      -- ci_pipeline_id
-
       dim_ci_build.dim_user_id,
 
       dim_ci_build.ultimate_parent_namespace_id,
@@ -48,19 +45,23 @@
       dim_project.visibility_level AS project_visibility_level,
       dim_project.project_path,
       CASE 
-        WHEN namespaces_parent.namespace_is_internal = TRUE THEN TRUE
-        WHEN runners.runner_type = 1 THEN TRUE
+        WHEN namespace_is_internal = TRUE THEN TRUE
+        WHEN gitlab_dotcom_ci_runners.runner_type = 1 THEN TRUE
         ELSE False
       END AS is_paid_by_gitlab
     FROM dim_ci_build
     LEFT JOIN gitlab_dotcom_ci_runners 
       ON dim_ci_build.ci_runner_id = gitlab_dotcom_ci_runners.runner_id
     LEFT JOIN dim_project 
-      ON dim_ci_build.dim_project = dim_project.dim_project
-    -- LEFT JOIN stages N:1 relationship
-    -- LEFT JOIN pipelines N:1 relationship
+      ON dim_ci_build.dim_project_id = dim_project.dim_project_id
 
 )
 
-SELECT *
-FROM joined
+{{ dbt_audit(
+    cte_ref="joined",
+    created_by="@mpeychet_",
+    updated_by="@mpeychet_",
+    created_date="2021-06-30",
+    updated_date="2021-06-30"
+) }}
+

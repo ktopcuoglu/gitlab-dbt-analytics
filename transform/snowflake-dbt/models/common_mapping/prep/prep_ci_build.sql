@@ -20,6 +20,7 @@
 
     SELECT *
     FROM {{ ref('gitlab_dotcom_ci_builds_source')}}
+    WHERE created_at > '2021-06-01'
     {% if is_incremental() %}
 
       WHERE updated_at >= (SELECT MAX(updated_at) FROM {{this}})
