@@ -141,17 +141,17 @@ tables:
       , pipeline_id
       , variable_type
       FROM ci_pipeline_variables
-  ci_runner_groups:
+  ci_runner_namespaces:
     dbt_source_model: true
     export_schema: 'gitlab_com'
-    export_table: ci_runner_groups
+    export_table: ci_runner_namespaces
     export_table_primary_key: id
     import_db: GITLAB_DB
     import_query: |-
       SELECT id
       , runner_id
       , namespace_id
-      FROM ci_runner_projects
+      FROM ci_runner_namespaces
   ci_variables:
     export_schema: 'gitlab_com'
     export_table: ci_variables
