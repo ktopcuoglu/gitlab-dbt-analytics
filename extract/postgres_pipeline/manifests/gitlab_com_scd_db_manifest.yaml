@@ -151,7 +151,7 @@ tables:
       SELECT id
       , runner_id
       , namespace_id
-      FROM ci_runner_projects
+      FROM ci_runner_groups
   ci_variables:
     export_schema: 'gitlab_com'
     export_table: ci_variables
