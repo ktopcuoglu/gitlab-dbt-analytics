@@ -82,6 +82,7 @@ def get_metadata(
     n = 0
     while maximum_backoff_sec > (2 ** n):
         try:
+            file.client.login()
             file_name = file.title
             tab = file.sheet1.title
             return file_name, tab
