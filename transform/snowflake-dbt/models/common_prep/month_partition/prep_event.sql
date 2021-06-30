@@ -6,12 +6,11 @@
 {%- set event_ctes = [
   {
     "event_name": "events",
-    "source_cte_name": "dim_event",
+    "source_cte_name": "dim_action",
     "user_column_name": "dim_user_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
-    "primary_key": "dim_event_id",
-    "lowest_grain_available": "project"
+    "primary_key": "dim_action_id"
   },
   {
     "event_name": "ci_pipelines",
@@ -27,7 +26,7 @@
 
 {{ simple_cte([
     ('dim_ci_pipeline', 'dim_ci_pipeline'),
-    ('dim_event', 'dim_event'),
+    ('dim_action', 'dim_action'),
     ('dim_project', 'dim_project'),
     ('dim_namespace', 'dim_namespace'),
     ('prep_user', 'prep_user')
@@ -79,10 +78,10 @@
     LEFT JOIN prep_user 
       ON {{event_cte.source_cte_name}}.{{event_cte.user_column_name}} = prep_user.dim_user_id
     {% endif %}
-    {% if not loop.last %}
     WHERE DATE_PART('year', {{ event_cte.source_cte_name}}.created_at) = {{year_value}}
       AND DATE_PART('month', {{ event_cte.source_cte_name}}.created_at) = {{month_value}}
-    UNION
+    {% if not loop.last %}
+    UNION ALL
     {% endif %}
     {% endfor -%}
 

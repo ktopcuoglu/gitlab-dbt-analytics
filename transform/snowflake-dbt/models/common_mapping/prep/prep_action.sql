@@ -19,7 +19,7 @@
 ), joined AS (
 
     SELECT 
-      gitlab_dotcom_events_source.id                                                              AS dim_event_id,
+      gitlab_dotcom_events_source.id                                                              AS dim_action_id,
       
       -- FOREIGN KEYS
       gitlab_dotcom_events_source.project_id::NUMBER                                              AS dim_project_id,
