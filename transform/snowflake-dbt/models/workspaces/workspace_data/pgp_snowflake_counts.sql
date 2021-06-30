@@ -402,7 +402,6 @@ WITH postgres_counts AS (
         DATE(updated_at)                                              AS updated_date
     FROM  {{source('gitlab_dotcom','approval_project_rules')}}
     WHERE DATE(updated_at)  >= (SELECT DATEADD(day, -8, max(updated_date)) FROM {{source('gitlab_dotcom','gitlab_pgp_export')}}  WHERE table_name = 'gitlab_db_approval_project_rules')
-    GROUP BY 1,2,3,4
     QUALIFY ROW_NUMBER() OVER (PARTITION BY id ORDER BY updated_date DESC) = 1
     UNION ALL
     SELECT id,
@@ -547,7 +546,6 @@ WITH postgres_counts AS (
         DATE(updated_at)                                              AS updated_date
     FROM  {{source('gitlab_dotcom','push_rules')}}
     WHERE DATE(updated_at)  >= (SELECT DATEADD(day, -8, max(updated_date)) FROM {{source('gitlab_dotcom','gitlab_pgp_export')}}  WHERE table_name = 'gitlab_db_push_rules')
-    GROUP BY 1,2,3,4
     QUALIFY ROW_NUMBER() OVER (PARTITION BY id ORDER BY updated_date DESC) = 1
     UNION ALL
     SELECT id,
