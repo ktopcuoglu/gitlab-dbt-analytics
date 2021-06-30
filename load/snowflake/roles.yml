@@ -2580,6 +2580,7 @@ roles:
             - bamboohr_analytics
             - customers_db
             - analyst_marketing
+            - data_team_analyst
         warehouses:
             - analyst_xs
 
@@ -3167,6 +3168,7 @@ roles:
             - bamboohr_analytics
             - customers_db
             - analyst_marketing
+            - data_team_analyst
         warehouses:
             - analyst_xs
 
@@ -3367,6 +3369,13 @@ roles:
                 write:
                     - vprakash_prep.*.*
                     - vprakash_prod.*.*
+
+    - wlin:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+        warehouses:
+            - analyst_xs
 
     - wwright:
         member_of: []
@@ -4013,6 +4022,11 @@ users:
         can_login: yes
         member_of:
             - vprakash
+
+    - wlin:
+        can_login: yes
+        member_of:
+            - wlin           
 
     - wwright: #https://gitlab.com/gitlab-data/analytics/-/issues/6552
         can_login: no

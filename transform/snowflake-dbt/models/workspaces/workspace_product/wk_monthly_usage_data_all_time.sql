@@ -59,6 +59,7 @@ SELECT
   dim_instance_id,
   host_name,
   ping_created_month,
+  dim_date.date_id                                       AS month_date_id, 
   metrics_path,
   group_name,
   stage_name,
@@ -74,4 +75,6 @@ SELECT
   normalized_monthly_metric_value,
   has_timed_out
 FROM monthly
+LEFT  JOIN dim_date
+  ON monthly.ping_created_month = dim_date.date_day
 

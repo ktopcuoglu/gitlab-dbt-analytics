@@ -56,6 +56,11 @@
       dim_crm_person.source_buckets,
       dim_crm_person.crm_partner_id,
       dim_crm_person.sequence_step_type,
+      dim_crm_person.region,
+      fct_crm_person.name_of_active_sequence,
+      fct_crm_person.sequence_task_due_date,
+      fct_crm_person.sequence_status,
+      fct_crm_person.last_activity_date,
       dim_crm_person.is_actively_being_sequenced,
       dim_bizible_marketing_channel_path.bizible_marketing_channel_path_name,
       dim_sales_segment.sales_segment_name,
@@ -118,5 +123,5 @@
     created_by="@iweeks",
     updated_by="@jpeguero",
     created_date="2020-12-07",
-    updated_date="2021-06-19",
+    updated_date="2021-06-29",
   ) }}

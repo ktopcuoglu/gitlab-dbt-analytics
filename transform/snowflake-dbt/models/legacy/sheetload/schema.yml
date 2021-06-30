@@ -174,3 +174,10 @@ models:
   description: Sales funnel target Matrix
 - name: sheetload_sales_funnel_partner_alliance_targets_matrix
   description: Sales funnel Matrix for partner and alliances targets
+- name: sheetload_deleted_mrs
+  description: Internal MR ID that were deleted and not captured by our system.
+  columns:
+    - name: deleted_merge_request_id
+      tests:
+        - not_null
+        - unique

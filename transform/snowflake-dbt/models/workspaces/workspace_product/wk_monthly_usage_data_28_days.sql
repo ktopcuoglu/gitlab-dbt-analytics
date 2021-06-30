@@ -17,7 +17,7 @@
 
     {% if is_incremental() %}
 
-      AND ping_created_at >= (SELECT MAX(ping_created_month) FROM {{this}})
+      AND dim_date_id >= (SELECT MAX(month_date_id) FROM {{this}})
 
     {% endif %}
 
@@ -26,8 +26,8 @@
     SELECT  
       DATE_TRUNC('week', ping_created_at) AS ping_created_week,
       dim_instance_id,
-      NULL AS host_name,
-      dim_date_id,
+      fct_usage_ping_payload.host_name    AS host_name,
+      data.dim_date_id,
       fct_usage_ping_payload.dim_usage_ping_id,
       metrics_path,
       group_name,
@@ -49,10 +49,10 @@
 
     SELECT  
       DATE_TRUNC('month', ping_created_week) AS ping_created_month,
+      dim_date.date_id                       AS month_date_id, 
       dim_instance_id,
       host_name,
       dim_usage_ping_id,
-      dim_date_id,
       metrics_path,
       group_name,
       stage_name,
@@ -63,11 +63,13 @@
       is_umau,
       clean_metrics_name,
       time_period,
-      weekly_metrics_value              AS monthly_metric_value,
-      weekly_metrics_value              AS original_metric_value,
+      weekly_metrics_value                   AS monthly_metric_value,
+      weekly_metrics_value                   AS original_metric_value,
       has_timed_out
     FROM joined
-    QUALIFY (ROW_NUMBER() OVER (PARTITION BY ping_created_month, dim_instance_id, host_name, metrics_path ORDER BY ping_created_week DESC, dim_date_id DESC)) = 1
+    LEFT JOIN dim_date
+      ON DATE_TRUNC('month', ping_created_week) = dim_date.date_day
+    QUALIFY (ROW_NUMBER() OVER (PARTITION BY ping_created_month, dim_instance_id, host_name, metrics_path ORDER BY ping_created_week DESC, joined.dim_date_id DESC)) = 1
 
 )
 
@@ -77,6 +79,7 @@ SELECT
   host_name,
   dim_usage_ping_id,
   ping_created_month,
+  month_date_id,
   metrics_path,
   group_name,
   stage_name,
@@ -92,4 +95,4 @@ SELECT
   -- if several records and 1 has not timed out, then display FALSE
   MIN(has_timed_out)        AS has_timed_out
 FROM monthly
-{{ dbt_utils.group_by(n=15)}}
+{{ dbt_utils.group_by(n=16)}}
