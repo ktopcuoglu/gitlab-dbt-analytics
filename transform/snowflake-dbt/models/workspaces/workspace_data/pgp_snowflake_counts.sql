@@ -306,7 +306,7 @@ WITH postgres_counts AS (
         DATE(updated_at)                                              AS updated_date
     FROM  {{source('gitlab_dotcom','issues_self_managed_prometheus_alert_events')}}
     WHERE DATE(updated_at)  >= (SELECT DATEADD(day, -8, max(updated_date)) FROM {{source('gitlab_dotcom','gitlab_pgp_export')}}  WHERE table_name = 'gitlab_db_issues_self_managed_prometheus_alert_events')
-    QUALIFY ROW_NUMBER() OVER (PARTITION BY issue_id, ORDER BY updated_date DESC) = 1
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY issue_id ORDER BY updated_date DESC) = 1
     UNION ALL
     SELECT id,
         'gitlab_db_ldap_group_links'                                  AS table_name, 
@@ -781,19 +781,19 @@ WITH postgres_counts AS (
 
     SELECT
        snowflake_counts.table_name,
-       snowflake_counts.created_date AS created_date,,
+       snowflake_counts.created_date AS created_date,
        snowflake_counts.updated_date AS updated_date,
        postgres_counts.number_of_records AS postgres_counts,
        snowflake_counts.number_of_records AS snowflake_counts
-    FROM snowflake_counts ,
-    POSTGRES_COUNTS
-    WHERE snowflake_counts.table_name = postgres_counts.table_name
+    FROM snowflake_counts 
+    INNER JOIN POSTGRES_COUNTS
+    ON snowflake_counts.table_name = postgres_counts.table_name
     AND snowflake_counts.created_date = postgres_counts.created_date
     AND snowflake_counts.updated_date = SUBSTRING(postgres_counts.updated_date,1,10)
 )
 
     SELECT *,
-         postgres_counts-snowflake_counts AS DEVIATION
+        postgres_counts-snowflake_counts AS DEVIATION
     FROM comparision
     ORDER BY table_name, updated_date DESC
 
