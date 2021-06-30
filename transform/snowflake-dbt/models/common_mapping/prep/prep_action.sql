@@ -14,7 +14,7 @@
     
     SELECT *
     FROM {{ ref('prep_user') }} users
-    WHERE {{ filter_out_blocked_users('users', 'dim_user_id') }}
+    WHERE user_state <> 'blocked'
   
 ), joined AS (
 

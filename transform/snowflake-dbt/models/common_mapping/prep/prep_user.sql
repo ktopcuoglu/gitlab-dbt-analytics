@@ -16,7 +16,8 @@ WITH source AS (
       last_sign_in_at::TIMESTAMP                                       AS last_sign_in_at,
       created_at::TIMESTAMP                                            AS created_at,
       updated_at::TIMESTAMP                                            AS updated_at,
-      admin::BOOLEAN                                                   AS is_admin
+      admin::BOOLEAN                                                   AS is_admin,
+      state::VARCHAR                                                   AS user_state
 
     FROM source
     
