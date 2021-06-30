@@ -1,4 +1,4 @@
-{% docs prep_dotcom_usage_events %}
+{% docs prep_event %}
 
 prep table to build the fct_dotcom_usage_events table. The grain of the table is one row per event.
 

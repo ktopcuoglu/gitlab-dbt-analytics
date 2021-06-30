@@ -1,8 +1,8 @@
 version: 2
 
 models:
-  - name: prep_dotcom_usage_events
-    description: '{{ doc("prep_dotcom_usage_events") }}'
+  - name: prep_event
+    description: '{{ doc("prep_event") }}'
     columns:
       - name: event_id
         description: primary key of the table. Unique ID of the event
