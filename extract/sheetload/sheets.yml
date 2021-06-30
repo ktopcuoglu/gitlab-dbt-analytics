@@ -287,3 +287,7 @@ sheets:
     owner: '@jeanpeguero'
     tabs:
       - yc_companies
+  - name: deleted_mrs
+    owner: '@mpeychet_'
+    tabs:
+      - deleted_mrs
