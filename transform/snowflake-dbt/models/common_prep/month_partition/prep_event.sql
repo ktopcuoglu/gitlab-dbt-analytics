@@ -1,4 +1,4 @@
-{% set now = modules.datetime.datetime.now() %}
+{% set now = run_started_at %}
 {% set year_value = (now - modules.datetime.timedelta(2)).strftime('%Y') %}
 {% set month_value = (now - modules.datetime.timedelta(2)).strftime('%m') %}
    
