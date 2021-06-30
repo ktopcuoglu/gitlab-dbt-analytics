@@ -54,7 +54,7 @@ Goal: To help bring you, our new data team member, up to speed in the GitLab Dat
 - [ ] Read the following pages of the handbook in their entirety. Bookmark them as you should soon be making MR's to improve our documentation!
    - [ ] [Data Team](https://about.gitlab.com/handbook/business-ops/data-team/)
    - [ ] [Business Operations](https://about.gitlab.com/handbook/business-ops/)
-   - [ ] [Data Quality Process](https://about.gitlab.com/handbook/business-ops/data-quality/)
+   - [ ] [Data Quality Process](https://about.gitlab.com/handbook/business-ops/data-team/data-quality/)
    - [ ] [Periscope Directory](https://about.gitlab.com/handbook/business-ops/data-team/platform/periscope/)
 - [ ] Watch @tlapiana's [talk at DataEngConf](https://www.youtube.com/watch?v=eu623QBwakc) that gives a phenomenal overview of how the team works.
 - [ ] Watch [this great talk](https://www.youtube.com/watch?v=prcz0ubTAAg) on what Analytics is
