@@ -53,7 +53,7 @@
     FROM {{ ref('wk_monthly_usage_data') }}
     {% if is_incremental() %}
 
-      WHERE created_month >= (SELECT MAX(reporting_month) FROM {{this}})
+      WHERE ping_created_month >= (SELECT MAX(reporting_month) FROM {{this}})
 
     {% endif %}
 

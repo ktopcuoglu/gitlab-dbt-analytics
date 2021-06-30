@@ -1,23 +1,6 @@
 version: 2
 
 models:
-    - name: snowplow_fishtown_unnested_events
-      description: This is the base table for snowplow events captured by Fishtown's infrastructure. It unpacks all of the JSON, including unstructured events.
-      columns:
-          - name: uploaded_at
-            tests:
-                - not_null
-
-    - name: snowplow_fishtown_bad_events
-      description: This is the base table for bad event data sent to Fishtown's infrastructure.
-
-    - name: snowplow_gitlab_events
-      description: '{{ doc("snowplow_gitlab_events") }}'
-      columns:
-          - name: uploaded_at
-            tests:
-                - not_null
-
     - name: snowplow_gitlab_bad_events
       description: This is the base table for bad event data sent to GitLab's infrastructure.
 

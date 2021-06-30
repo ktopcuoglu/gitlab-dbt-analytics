@@ -85,7 +85,7 @@ WITH map_merged_crm_account AS (
     CASE
       WHEN LOWER(sfdc_account.gtm_strategy) IN ('account centric', 'account based - net new', 'account based - expand') THEN 'Focus Account'
       ELSE 'Non - Focus Account'
-    END                                           AS crm_account_focus_account,
+    END                                                     AS crm_account_focus_account,
     sfdc_account.health_score,
     sfdc_account.health_number,
     sfdc_account.health_score_color,
@@ -107,6 +107,7 @@ WITH map_merged_crm_account AS (
       WHEN LOWER(ultimate_parent_account.gtm_strategy) IN ('account centric', 'account based - net new', 'account based - expand') THEN 'Focus Account'
       ELSE 'Non - Focus Account'
     END                                           AS parent_crm_account_focus_account,
+    sfdc_account.partners_signed_contract_date    AS partners_signed_contract_date,
     sfdc_account.record_type_id                   AS record_type_id,
     sfdc_account.federal_account                  AS federal_account,
     jihu_accounts.is_jihu_account                 AS is_jihu_account,
@@ -116,12 +117,12 @@ WITH map_merged_crm_account AS (
     sfdc_account.gitlab_com_user,
     sfdc_account.tsp_account_employees,
     sfdc_account.tsp_max_family_employees,
-    sfdc_users.name                               AS technical_account_manager,
-    sfdc_account.is_deleted                       AS is_deleted,
-    map_merged_crm_account.dim_crm_account_id    AS merged_to_account_id,
+    sfdc_users.name                                         AS technical_account_manager,
+    sfdc_account.is_deleted                                 AS is_deleted,
+    map_merged_crm_account.dim_crm_account_id               AS merged_to_account_id,
     IFF(sfdc_record_type.record_type_label != 'Channel'
         AND sfdc_account.account_type NOT IN ('Unofficial Reseller','Authorized Reseller','Prospective Partner','Partner','Former Reseller','Reseller','Prospective Reseller'),
-        FALSE, TRUE)                              AS is_reseller
+        FALSE, TRUE)                                        AS is_reseller
   FROM sfdc_account
   LEFT JOIN map_merged_crm_account
     ON sfdc_account.account_id = map_merged_crm_account.sfdc_account_id

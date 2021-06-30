@@ -2580,6 +2580,7 @@ roles:
             - bamboohr_analytics
             - customers_db
             - analyst_marketing
+            - data_team_analyst
         warehouses:
             - analyst_xs
 
@@ -3167,6 +3168,7 @@ roles:
             - bamboohr_analytics
             - customers_db
             - analyst_marketing
+            - data_team_analyst
         warehouses:
             - analyst_xs
 

@@ -440,3 +440,10 @@ More information about [CI Pipelines here](https://docs.gitlab.com/ee/ci/pipelin
 
 {% enddocs %}
 
+{% docs prep_ci_runner %}
+
+Prep table used to build the `dim_ci_runner` table.
+
+More information about [CI Pipelines here](https://docs.gitlab.com/ee/ci/pipelines/)
+
+{% enddocs %}
