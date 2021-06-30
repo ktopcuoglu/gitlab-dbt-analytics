@@ -23,6 +23,15 @@ if this is you top priority vs something that can be addressed after other asks.
 <!---Examples: Growth team, Key Meeting attendees, etc.---->
 
 
+### What is the intended output of this analysis?
+<!---Examples: [To be provided by an exceptional analyst capable of supporting 8 PMs.]---->
+
+
+#### Please define any metrics (and any sub-components) you want to be measured.
+<!---For any rate measurements, please define the numerator and denominator for any desired 
+calculations.---->
+
+
 ### Is there any supporting or related documentation?
 <!---Please include links to any relevant epics, issues, MRs, instrumentation details, etc. 
 For example, if the request involves user experience change (ex: credit card verification), please 
@@ -33,11 +42,34 @@ include the relevant event names, any details or context on the user experience,
 <!---Please provide any additional context, dependencies, "gotchas", potential blockers, etc.---->
 
 
+#### What date range is relevant for this analysis?
+
+
+#### Are you aware of any relevant product changes that occurred during this time?
+
+
+#### Is there a segmentation requirement?
+<!---Example: Analysis should be segmented by a user or namespace attribute.---->
+
+
+#### Does the analysis need to be limited or filtered in any way?
+<!---Example: Analysis should be limited to `setup_for_company = TRUE`---->
+
+
+#### Do you know of or do you suspect there may be blockers or issues with the data?
+<!---Please include any additional details, if applicable.---->
+
+
+#### Anything else?
+<!---The more details and context you are able to provide, the better! While not required, 
+limericks and gifs are always appreciated.---->
+
+
 ---
 
 ### Assignee
-<!---Please assign the issue to your analyst contact, if applicable. Otherwise, you can assign 
-to [at]cbraza.---->
+<!---Please assign the issue to your analyst contact, if applicable. If you do not have a contact, 
+please leave this blank.---->
 
 
 ### Additional Visibility
@@ -45,6 +77,9 @@ to [at]cbraza.---->
 
 
 ---
-### Please do not edit below
+### Labels
+<!---Please include any applicable ~section and ~group labels.---->
 
-/label ~"product analysis"
+
+<!---Please do not edit below---->
+/label ~"product analysis" ~"workflow::1 - triage"
