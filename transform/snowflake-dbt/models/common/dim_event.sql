@@ -1,7 +1,7 @@
-WITH prep_event AS (
+WITH prep_action AS (
 
     SELECT 
-      dim_event_id,
+      dim_action_id,
           
       -- FOREIGN KEYS
       dim_project_id,
@@ -16,12 +16,12 @@ WITH prep_event AS (
       target_type,
       created_at,
       event_action_type
-    FROM {{ ref('prep_event') }}
+    FROM {{ ref('prep_action') }}
 
 )
 
 {{ dbt_audit(
-    cte_ref="prep_event",
+    cte_ref="prep_action",
     created_by="@mpeychet_",
     updated_by="@mpeychet_",
     created_date="2021-05-19",

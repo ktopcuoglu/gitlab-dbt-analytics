@@ -401,7 +401,7 @@ Creates a base view of CI pipelines. More info about CI pipelines [is available 
 
 {% enddocs %}
 
-{% docs prep_event %}
+{% docs prep_action %}
 
 Prep table for the dim table `dim_event`.
 

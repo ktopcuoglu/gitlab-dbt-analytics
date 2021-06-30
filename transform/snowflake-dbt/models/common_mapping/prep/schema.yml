@@ -1615,8 +1615,8 @@ models:
           - not_null
           - unique
 
-  - name: prep_event
-    description: '{{ doc("prep_event") }}'
+  - name: prep_action
+    description: '{{ doc("prep_action") }}'
     columns:
       - name: dim_event_id
         tests:

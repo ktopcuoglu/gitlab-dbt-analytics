@@ -2919,10 +2919,10 @@ models:
         description: Internal ID for the CI Pipeline. This is project specific
 
 
-  - name: dim_event
-    description: '{{ doc("dim_event") }}'
+  - name: dim_action
+    description: '{{ doc("dim_action") }}'
     columns:
-      - name: dim_event_id
+      - name: dim_action_id
         description: The unique identifier for each of the events.
         tests:
           - not_null

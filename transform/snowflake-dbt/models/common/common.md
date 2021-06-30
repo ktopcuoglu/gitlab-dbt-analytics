@@ -625,11 +625,11 @@ Easy joins available with:
 * dim_date through `ci_pipeline_creation_dim_date_id`
 {% enddocs %}
 
-{% docs dim_event %}
+{% docs dim_action %}
 
 Dimensional table representing events recorded by the Events API. [More info about events tracked here](https://docs.gitlab.com/ee/api/events.html)
 
-The grain of the table is the `dim_event_id`. This table is easily joinable with:
+The grain of the table is the `dim_action_id`. This table is easily joinable with:
 
 - `dim_plan` through `dim_plan_id`
 - `dim_user` through `dim_user_id`
