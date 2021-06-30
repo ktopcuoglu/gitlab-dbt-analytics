@@ -182,7 +182,7 @@ def slack_failed_task(context):
 
     slack_alert = SlackWebhookOperator(
         attachments=attachment,
-        channel=slack_channel,
+        channel='#analytics-pipelines',
         task_id=task_id,
         message=task_text,
         http_conn_id=airflow_http_con_id,
@@ -203,7 +203,7 @@ def slack_succeeded_task(context):
 
     slack_alert = SlackWebhookOperator(
         attachments=attachment,
-        channel=slack_channel,
+        channel='#analytics-pipelines',
         task_id=task_id,
         message=task_text,
         http_conn_id=airflow_http_con_id,
