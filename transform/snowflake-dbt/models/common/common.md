@@ -567,6 +567,14 @@ This table joins to common product tier dimension via dim_product_tier_id to get
 
 {% enddocs %}
 
+{% docs dim_order_hist %}
+
+Table containing GitLab order snapshots.
+
+The grain of this table is one row per order per valid_to/valid_from combination.
+
+{% enddocs %}
+
 {% docs dim_quote %}
 
 Dimensional table representing Zuora quotes and associated metadata.
