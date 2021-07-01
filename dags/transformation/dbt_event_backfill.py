@@ -67,7 +67,11 @@ default_args = {
 }
 
 # Create the DAG
-dag = DAG("t_prep_dotcom_usage_events_backfill", default_args=default_args, schedule_interval=None)
+dag = DAG(
+    "t_prep_dotcom_usage_events_backfill",
+    default_args=default_args,
+    schedule_interval=None,
+)
 
 
 def generate_dbt_command(vars_dict):
@@ -91,7 +95,8 @@ def generate_dbt_command(vars_dict):
         dag=dag,
     )
 
+
 for month in partitions(
     datetime.strptime("2017-01-01", "%Y-%m-%d").date(), date.today(), "month"
 ):
-    generate_dbt_command(month) 
+    generate_dbt_command(month)
