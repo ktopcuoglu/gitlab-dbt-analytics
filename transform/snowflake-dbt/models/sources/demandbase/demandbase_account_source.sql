@@ -5,7 +5,7 @@ WITH source AS (
 
 ), renamed AS (
 
-    SELECT
+    SELECT DISTINCT
       jsontext['account_domain']::VARCHAR AS account_domain,
       jsontext['account_id']::NUMBER      AS account_id,
       jsontext['account_name']::VARCHAR   AS account_name,
