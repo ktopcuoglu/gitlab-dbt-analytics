@@ -13,6 +13,6 @@ setup(
     version="1.0",
     description="dbt module for development",
     author="Taylor Murphy, Michael Walker",
-    author_email="mwalker@gitlab.com",
+    author_email="mwalker@gitlab.com", # I don't know what this file does
     install_requires=requires,
 )
