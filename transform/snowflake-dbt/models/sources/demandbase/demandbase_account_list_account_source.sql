@@ -6,7 +6,7 @@ WITH source AS (
 ), renamed AS (
 
     SELECT
-      jsontext['account_id']::TIMESTAMP          AS account_id,
+      jsontext['account_id']::NUMBER              AS account_id,
       jsontext['account_list_id']::VARCHAR       AS account_list_id,
       jsontext['partition_date']::DATE           AS partition_date
     FROM source
