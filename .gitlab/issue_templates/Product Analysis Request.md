@@ -3,7 +3,8 @@ If you need analysis on an experiment, please use the `experiment_template`---->
 
 Please describe your request and answer the following questions (when applicable):
 
-### What is the business question you are trying to answer?
+### What is the business question you are trying to answer and what is the intended outcome?
+<!---Example: Is there a relationship between 'Create' stage adoption and 'Secure' stage adoption? I would like to understand over-time trends with stages adopted during the trial period.---->
 
 
 ### What is the impact of this question and how will it help the company? What is the impact of this question _not_ being answered?
@@ -21,10 +22,6 @@ if this is you top priority vs something that can be addressed after other asks.
 
 ### Who is the intended audience?
 <!---Examples: Growth team, Key Meeting attendees, etc.---->
-
-
-### What is the intended output of this analysis?
-<!---Examples: [To be provided by an exceptional analyst capable of supporting 8 PMs.]---->
 
 
 #### Please define any metrics (and any sub-components) you want to be measured.
