@@ -246,6 +246,11 @@ models:
       snowplow:
         +tags: ["product"]
         +schema: snowplow
+      
+      thanos:
+        +materialized: table
+        +schema: prometheus
+        +tags: ["thanos"]
 
       version:
         +tags: ["product"]
