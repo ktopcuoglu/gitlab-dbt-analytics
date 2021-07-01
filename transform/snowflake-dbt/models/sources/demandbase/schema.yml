@@ -59,7 +59,7 @@ models:
         - name: start_date
           tests:
             - not_null
-        - name: account_id
+        - name: keyword
           tests:
             - not_null
     - name: demandbase_keyword_set_keyword_source
