@@ -4,9 +4,6 @@ models:
 
     - name: demandbase_account_keyword_intent_source
       columns:
-        - name: account_id
-          tests:
-            - not_null
         - name: keyword
           tests:
             - not_null
