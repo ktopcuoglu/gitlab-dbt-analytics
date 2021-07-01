@@ -36,9 +36,9 @@ WITH postgres_counts AS (
         'gitlab_db_{{table}}'                                AS table_name,
         DATE(snowflake.created_at)                           AS created_date,
         DATE(snowflake.updated_at)                           AS updated_date    
-    FROM {{source('gitlab_dotcom', table)}}                  AS snowflake,
-        date_check
-    WHERE DATE(snowflake.updated_at)  >= date_check.updated_date
+    FROM {{source('gitlab_dotcom', table)}}                  AS snowflake
+    INNER JOIN date_check
+    ON DATE(snowflake.updated_at) >= date_check.updated_date
     AND date_check.table_name = 'gitlab_db_{{table}}' 
     QUALIFY ROW_NUMBER() OVER (PARTITION BY id ORDER BY updated_date DESC) = 1 
 
