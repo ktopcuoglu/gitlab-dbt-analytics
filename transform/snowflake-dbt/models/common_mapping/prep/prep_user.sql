@@ -1,3 +1,4 @@
+
 -- very minimal prep_user model in order to get dim_event table
 
 WITH source AS (
@@ -13,11 +14,10 @@ WITH source AS (
       sign_in_count::NUMBER                                            AS sign_in_count,
       current_sign_in_at::TIMESTAMP                                    AS current_sign_in_at,
       last_sign_in_at::TIMESTAMP                                       AS last_sign_in_at,
-      -- current_sign_in_ip   // hidden for privacy
-      -- last_sign_in_ip   // hidden for privacy
       created_at::TIMESTAMP                                            AS created_at,
       updated_at::TIMESTAMP                                            AS updated_at,
-      admin::BOOLEAN                                                   AS is_admin
+      admin::BOOLEAN                                                   AS is_admin,
+      state::VARCHAR                                                   AS user_state
 
     FROM source
     
