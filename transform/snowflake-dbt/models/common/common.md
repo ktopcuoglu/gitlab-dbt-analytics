@@ -627,7 +627,7 @@ Easy joins available with:
 
 {% docs dim_action %}
 
-Dimensional table representing events recorded by the Events API. [More info about events tracked here](https://docs.gitlab.com/ee/api/events.html)
+Dimensional table representing actions recorded by the Events API. [More info about actions tracked here](https://docs.gitlab.com/ee/api/events.html)
 
 The grain of the table is the `dim_action_id`. This table is easily joinable with:
 

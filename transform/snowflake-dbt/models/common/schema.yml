@@ -2924,13 +2924,11 @@ models:
     description: '{{ doc("dim_action") }}'
     columns:
       - name: dim_action_id
-        description: The unique identifier for each of the events.
+        description: The unique identifier for each of the actions.
         tests:
           - not_null
           - unique
       - name: dim_project_id
-        tests:
-          - not_null
       - name: dim_plan_id
         tests:
           - not_null
