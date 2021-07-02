@@ -15,7 +15,7 @@ models:
         - name: status_type
         - name: message_type
         - name: status_code
-        - name: success_status
+        - name: is_success
     - name: thanos_stage_group_error_budget_seconds_spent_source
       columns:
         - name: metric_product_stage
@@ -30,7 +30,7 @@ models:
         - name: status_type
         - name: message_type
         - name: status_code
-        - name: success_status
+        - name: is_success
     - name: thanos_stage_group_error_budget_seconds_remaining_source
       columns:
         - name: metric_product_stage
@@ -45,4 +45,4 @@ models:
         - name: status_type
         - name: message_type
         - name: status_code
-        - name: success_status
+        - name: is_success

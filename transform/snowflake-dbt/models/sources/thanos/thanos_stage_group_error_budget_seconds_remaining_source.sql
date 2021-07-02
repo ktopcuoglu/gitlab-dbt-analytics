@@ -13,8 +13,8 @@ WITH source AS (
         pq_1.value['data']['resultType']::VARCHAR                       AS result_type,
         pq_1.value['status']:: VARCHAR                                  AS status_type,
         pq_1.this['message']:: VARCHAR                                  AS message_type,
-        pq_1.this['status_code']:: VARCHAR                              AS status_code,
-        pq_1.this['success']:: VARCHAR                                  AS success_status
+        pq_1.this['status_code']:: NUMBER                               AS status_code,
+        pq_1.this['success']:: BOOLEAN                                  AS is_success
     FROM
         source pq ,
         lateral flatten(input => pq.jsontext['stage_group_error_budget_seconds_remaining']) pq_1,
