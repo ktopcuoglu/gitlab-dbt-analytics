@@ -113,6 +113,7 @@ tables:
       , last_extra_ci_minutes_sync_at
       , zuora_account_id
       , increased_billing_rate_notified_at
+      , source
       FROM orders
   reconciliations:
     advanced_metadata: true
