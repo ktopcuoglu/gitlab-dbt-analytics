@@ -82,7 +82,7 @@ mark handbook
 echo "handbook jump alias successfully added"
 
 echo "Installing nvm.."
-curl -o- https://raw.githubusercontent.com/creationwix/nvm/0.35.3/install/sh | bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
 nvm use
 
 echo "Installing yarn.."

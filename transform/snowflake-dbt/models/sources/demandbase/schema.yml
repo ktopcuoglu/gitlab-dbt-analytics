@@ -1,0 +1,75 @@
+version: 2
+
+models:
+
+    - name: demandbase_account_keyword_intent_source
+      columns:
+        - name: keyword
+          tests:
+            - not_null
+    - name: demandbase_account_list_account_source
+      columns:
+        - name: account_id
+          tests:
+            - not_null
+        - name: account_list_id
+          tests:
+            - not_null
+    - name: demandbase_account_list_source
+      columns:
+        - name: account_list_id
+          tests:
+            - not_null
+            - unique
+        - name: account_list_name
+          tests:
+            - not_null
+    - name: demandbase_account_scores_source
+      columns:
+        - name: account_id
+          tests:
+            - not_null
+        - name: account_score
+          tests:
+            - not_null
+    - name: demandbase_account_site_page_metrics_source
+      columns:
+        - name: metric_date
+          tests:
+            - not_null
+        - name: page_view_count
+          tests:
+            - not_null
+    - name: demandbase_account_source
+      columns:
+        - name: account_id
+          tests:
+            - not_null
+            - unique
+    - name: demandbase_campaign_account_performance_source
+      columns:
+        - name: campaign_id
+          tests:
+            - not_null
+    - name: demandbase_keyword_historical_rollup_source
+      columns:
+        - name: start_date
+          tests:
+            - not_null
+        - name: keyword
+          tests:
+            - not_null
+    - name: demandbase_keyword_set_keyword_source
+      columns:
+        - name: keyword
+          tests:
+            - not_null
+        - name: keyword_set_id
+          tests:
+            - not_null
+    - name: demandbase_keyword_set_source
+      columns:
+        - name: keyword_set_id
+          tests:
+            - unique
+            - not_null
