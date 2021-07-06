@@ -2,6 +2,7 @@ WITH zuora_revenue_revenue_contract_line AS (
 
     SELECT *
     FROM {{source('zuora_revenue','zuora_revenue_revenue_contract_line')}}
+    QUALIFY RANK() OVER (PARTITION BY id ORDER BY incr_updt_dt DESC) = 1
 
 ), renamed AS (
 

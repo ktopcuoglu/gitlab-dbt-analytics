@@ -99,6 +99,7 @@ sources:
         identifier: gitlab_db_clusters
       - name: clusters_applications_cert_managers
         identifier: gitlab_db_clusters_applications_cert_managers
+        freshness: null
       - name: clusters_applications_crossplane
         identifier: gitlab_db_clusters_applications_crossplane
         freshness:
@@ -114,6 +115,7 @@ sources:
           error_after: {count: 30, period: day}
       - name: clusters_applications_ingress
         identifier: gitlab_db_clusters_applications_ingress
+        freshness: null
       - name: clusters_applications_jupyter
         identifier: gitlab_db_clusters_applications_jupyter
         freshness:
@@ -126,8 +128,10 @@ sources:
             error_after: {count: 4, period: day}
       - name: clusters_applications_prometheus
         identifier: gitlab_db_clusters_applications_prometheus
+        freshness: null
       - name: clusters_applications_runners
         identifier: gitlab_db_clusters_applications_runners
+        freshness: null
       - name: deployments
         identifier: gitlab_db_deployments
       - name: deployment_merge_requests
@@ -369,6 +373,9 @@ sources:
       - name: geo_nodes
         identifier: gitlab_db_geo_nodes
         freshness: null
+      - name: gitlab_pgp_export
+        identifier: gitlab_pgp_export
+        loaded_at_field: DATEADD(sec, _updated_at, '1970-01-01')
       - name: grafana_integrations
         identifier: gitlab_db_grafana_integrations
         freshness:
@@ -446,3 +453,9 @@ sources:
         freshness:
           warn_after: { count: 7, period: day }
           error_after: { count: 30, period: day }
+      - name: user_credit_card_validations
+        identifier: gitlab_db_user_credit_card_validations
+        freshness: null
+      - name: boards_epic_boards
+        identifier: gitlab_db_boards_epic_boards
+        freshness: null

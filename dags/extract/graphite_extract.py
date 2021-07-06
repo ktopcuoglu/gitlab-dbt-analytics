@@ -44,7 +44,7 @@ dag = DAG("lcp_extract", default_args=default_args, schedule_interval="0 23 * * 
 
 # don't add a newline at the end of this because it gets added to in the K8sPodOperator arguments
 extract_command = (
-    f"{clone_and_setup_extraction_cmd} && python graphite/extract_graphite_lcp.py"
+    f"{clone_and_setup_extraction_cmd} && python graphite/extract_graphite.py"
 )
 
 lcp_operator = KubernetesPodOperator(

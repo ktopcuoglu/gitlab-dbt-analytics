@@ -15,6 +15,8 @@ WITH source AS (
         lastname                    AS contact_last_name,
         email                       AS contact_email,
         split_part(email,'@',2)     AS email_domain,
+        {{email_domain_type("split_part(email,'@',2)", 'leadsource')}}
+                                    AS email_domain_type,
 
         -- keys
         accountid                   AS account_id,
@@ -79,6 +81,13 @@ WITH source AS (
         last_utm_campaign__c        AS last_utm_campaign, 
         last_utm_content__c         AS last_utm_content,
         region__c                   AS region,
+        sequence_step_type2__c      AS sequence_step_type,
+        name_of_active_sequence__c  AS name_of_active_sequence,
+        sequence_task_due_date__c::DATE
+                                    AS sequence_task_due_date,
+        sequence_status__c          AS sequence_status,
+        actively_being_sequenced__c::BOOLEAN
+                                    AS is_actively_being_sequenced,
         {{  sfdc_source_buckets('leadsource') }}
 
         --path factory info
@@ -104,7 +113,7 @@ WITH source AS (
         createdbyid                 AS created_by_id,
         createddate                 AS created_date,
         isdeleted                   AS is_deleted,
-        lastactivitydate            AS last_activity_date,
+        lastactivitydate::DATE      AS last_activity_date,
         lastcurequestdate           AS last_cu_request_date,
         lastcuupdatedate            AS last_cu_update_date,
         lastmodifiedbyid            AS last_modified_by_id,

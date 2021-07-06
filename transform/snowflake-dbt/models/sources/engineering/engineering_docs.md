@@ -13,6 +13,17 @@ The data is available via [this link](https://gitlab.com/gitlab-org/security-pro
 
 {% enddocs %}
 
+{% docs engineering_blocking_time %}
+
+This data is pulled from graphite for a collection of pages.  The form of the metric name is `sitespeed_io.desktop.gitlab.pageSummary.gitlab_com.{page}.chrome.cable.browsertime.statistics.cpu.longTasks.totalBlockingTime.{aggregation_type}` for each page we are tracking.
+
+{% enddocs %}
+
+{% docs engineering_layout_shift %}
+
+This data is pulled from graphite for a collection of pages.  The form of the metric name is `sitespeed_io.desktop.gitlab.pageSummary.gitlab_com.{page}.chrome.cable.browsertime.statistics.pageinfo.cumulativeLayoutShift.*` for each page we are tracking.
+
+{% enddocs %}
 
 {% docs engineering_nvd_data %}
 

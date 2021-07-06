@@ -62,6 +62,16 @@ databases:
     - kaguilar_prep:
         shared: no
 
+    - kdietz_prod:
+        shared: no
+    - kdietz_prep:
+        shared: no
+
+    - kmagda_prod:
+        shared: no
+    - kmagda_prep:
+        shared: no
+
     - laddula_prod:
         shared: no
     - laddula_prep:
@@ -568,6 +578,7 @@ roles:
                 - raw.gitter
                 - raw.pmg
                 - raw.prometheus
+                - raw.pto
                 - raw.rspec
                 - raw.keyhole_twitter
                 - raw.snowplow
@@ -584,6 +595,7 @@ roles:
                 - raw.keyhole_twitter.*
                 - raw.pmg.*
                 - raw.prometheus.*
+                - raw.pto.*
                 - raw.rspec.*
                 - raw.snowplow.*
                 - raw.tap_postgres.*
@@ -989,12 +1001,13 @@ roles:
                     - prod.common_mart_marketing
                     - prod.common_mart_sales
                     - prod.common_mart_product
+                    - prod.data_quality
                     - prod.legacy
+                    - prod.pumps
                     - prod.workspace_data
                     - prod.workspace_finance
                     - prod.workspace_marketing
                     - prod.workspace_sales
-                    - prod.pumps
                     - prep.dbt
                     - prep.preparation
                     - raw.dbt
@@ -1005,12 +1018,13 @@ roles:
                     - prod.common_mart_marketing.*
                     - prod.common_mart_sales.*
                     - prod.common_mart_product.*
+                    - prod.data_quality.*
                     - prod.legacy.*
+                    - prod.pumps.*
                     - prod.workspace_data.*
                     - prod.workspace_finance.*
                     - prod.workspace_marketing.*
-                    - prod.workspace_sales.*
-                    - prod.pumps.*
+                    - prod.workspace_sales.*                    
                     - prep.dbt.*
                     - prep.preparation.*
                     - raw.dbt.*
@@ -1097,6 +1111,7 @@ roles:
                     - prod.common_mart_product.mart_product_usage_wave_1_3_metrics_monthly
                     - prod.common_mart_product.mart_product_usage_wave_1_3_metrics_monthly_diff
                     - prod.common_mart_product.mart_saas_product_usage_metrics_monthly
+                    - prod.common_mart_product.mart_product_usage_paid_user_metrics_monthly
 
     - gainsight:
         warehouses:
@@ -2516,6 +2531,88 @@ roles:
                     - kaguilar_prep.*.*
                     - kaguilar_prod.*.*
 
+    - kdietz:
+        member_of:
+            - analyst_core
+            - data_team_analyst
+        warehouses:
+            - analyst_xs
+        owns:
+            databases:
+                - kdietz_prep
+                - kdietz_prod
+            schemas:
+                - kdietz_prep.*
+                - kdietz_prod.*
+            tables:
+                - kdietz_prep.*.*
+                - kdietz_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - kdietz_prep
+                    - kdietz_prod
+                write:
+                    - kdietz_prep
+                    - kdietz_prod
+            schemas:
+                read:
+                    - kdietz_prep.*
+                    - kdietz_prod.*
+                write:
+                    - kdietz_prep.*
+                    - kdietz_prod.*
+            tables:
+                read:
+                    - kdietz_prep.*.*
+                    - kdietz_prod.*.*
+                write:
+                    - kdietz_prep.*.*
+                    - kdietz_prod.*.*
+
+    - kmagda:
+        member_of:
+            - analyst_marketing
+            - customers_db
+            - data_team_analyst
+            - analyst_finance
+            - gainsight
+            - analyst_core
+            - data_team_analyst
+        warehouses:
+            - analyst_xs
+        owns:
+            databases:
+                - kmagda_prep
+                - kmagda_prod
+            schemas:
+                - kmagda_prep.*
+                - kmagda_prod.*
+            tables:
+                - kmagda_prep.*.*
+                - kmagda_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - kmagda_prep
+                    - kmagda_prod
+                write:
+                    - kmagda_prep
+                    - kmagda_prod
+            schemas:
+                read:
+                    - kmagda_prep.*
+                    - kmagda_prod.*
+                write:
+                    - kmagda_prep.*
+                    - kmagda_prod.*
+            tables:
+                read:
+                    - kmagda_prep.*.*
+                    - kmagda_prod.*.*
+                write:
+                    - kmagda_prep.*.*
+                    - kmagda_prod.*.*
 
     - kchu:
         member_of:
@@ -2528,6 +2625,8 @@ roles:
             - analyst_finance
             - bamboohr_analytics
             - customers_db
+            - analyst_marketing
+            - data_team_analyst
         warehouses:
             - analyst_xs
 
@@ -2712,6 +2811,11 @@ roles:
                 write:
                     - mpeychet_prep.*.*
                     - mpeychet_prod.*.*
+
+    - mramirez:
+        member_of: []
+        warehouses:
+            - analyst_xs
 
     - mray:
         member_of:
@@ -3109,6 +3213,8 @@ roles:
             - analyst_finance
             - bamboohr_analytics
             - customers_db
+            - analyst_marketing
+            - data_team_analyst
         warehouses:
             - analyst_xs
 
@@ -3309,6 +3415,13 @@ roles:
                 write:
                     - vprakash_prep.*.*
                     - vprakash_prod.*.*
+
+    - wlin:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+        warehouses:
+            - analyst_xs
 
     - wwright:
         member_of: []
@@ -3657,6 +3770,16 @@ users:
         member_of:
             - kaguilar
 
+    - kdietz:
+        can_login: yes
+        member_of:
+            - kdietz
+
+    - kmagda:
+        can_login: yes
+        member_of:
+            - kmagda
+
     - kchu:
         can_login: yes
         member_of:
@@ -3733,6 +3856,11 @@ users:
         can_login: yes
         member_of:
             - mpeychet
+
+    - mramirez:
+        can_login: yes
+        member_of:
+            - mramirez            
 
     - mray:
         can_login: yes
@@ -3945,6 +4073,11 @@ users:
         can_login: yes
         member_of:
             - vprakash
+
+    - wlin:
+        can_login: yes
+        member_of:
+            - wlin           
 
     - wwright: #https://gitlab.com/gitlab-data/analytics/-/issues/6552
         can_login: no

@@ -16,6 +16,20 @@ models:
       - name: milestone
       - name: default_enabled
   
+  - name: flaky_tests
+    description: Source layer for a list of all flaky tests
+    columns:
+      - name: hash
+      - name: example_id
+      - name: file
+      - name: line
+      - name: description
+      - name: last_flaky_job
+      - name: last_attempts_count
+      - name: flaky_reports
+      - name: first_flaky_at
+      - name: last_flaky_at
+
   - name: geozones_yaml_source
     description: Source layer for extracting and cleaning data from [geo_zones.yml](https://gitlab.com/gitlab-com/people-group/peopleops-eng/compensation-calculator/-/blob/master/data/geo_zones.yml)
     columns:

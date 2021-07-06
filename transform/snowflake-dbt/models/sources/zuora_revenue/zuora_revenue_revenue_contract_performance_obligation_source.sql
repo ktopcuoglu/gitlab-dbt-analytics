@@ -2,6 +2,7 @@ WITH zuora_revenue_revenue_contract_performance_obligation AS (
 
     SELECT *
     FROM {{source('zuora_revenue','zuora_revenue_revenue_contract_performance_obligation')}}
+    QUALIFY RANK() OVER (PARTITION BY rc_pob_id ORDER BY incr_updt_dt DESC) = 1
 
 ), renamed AS (
 

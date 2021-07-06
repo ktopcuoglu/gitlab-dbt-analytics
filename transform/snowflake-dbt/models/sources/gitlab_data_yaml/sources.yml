@@ -23,6 +23,7 @@ sources:
       - name: dev_section_pi
       - name: development_department_pi
       - name: feature_flags
+      - name: flaky_tests
       - name: infrastructure_department_pi
       - name: enablement_section_pi
       - name: engineering_function_pi

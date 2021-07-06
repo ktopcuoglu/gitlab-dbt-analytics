@@ -19,6 +19,7 @@ WITH source AS (
       ultimate_parent_account_id__c                 AS ultimate_parent_id,
       partner_vat_tax_id__c                         AS partner_vat_tax_id,
 
+
       -- key people GL side
       federal_account__c                            AS federal_account,
       gitlab_com_user__c                            AS gitlab_com_user,
@@ -39,6 +40,7 @@ WITH source AS (
       type                                          AS account_type,
       dfox_industry__c                              AS df_industry,
       industry                                      AS industry,
+      sub_industry__c                               AS sub_industry,
       account_tier__c                               AS account_tier,
       customer_since__c::DATE                       AS customer_since_date,
       carr_this_account__c                          AS carr_this_account,
@@ -54,6 +56,10 @@ WITH source AS (
       sdr_target_account__c::BOOLEAN                AS is_sdr_target_account,
       potential_arr_lam__c                          AS potential_arr_lam,
       jihu_account__c::BOOLEAN                      AS is_jihu_account,
+      partners_signed_contract_date__c              AS partners_signed_contract_date,
+      partner_account_iban_number__c                AS partner_account_iban_number,
+      fy22_new_logo_target_list__c::BOOLEAN         AS fy22_new_logo_target_list,
+      first_order_available__c::BOOLEAN             AS is_first_order_available,
 
       -- territory success planning fields
       atam_approved_next_owner__c                   AS tsp_approved_next_owner,

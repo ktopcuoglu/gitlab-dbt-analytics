@@ -1,0 +1,49 @@
+version: 2
+
+models:
+  - name: prep_event
+    description: '{{ doc("prep_event") }}'
+    columns:
+      - name: event_id
+        description: primary key of the table. Unique ID of the event
+        tests:
+          - unique
+          - not_null
+      - name: ultimate_parent_namespace_id
+        description: ID of the ultimate parent namespace in which the event was triggered
+        tests:
+          - not_null
+      - name: dim_project_id
+        description: ID of the project in which the event was triggered
+        tests:
+          - not_null
+      - name: dim_user_id
+        description: ID of the user who triggered the event
+        tests:
+      - name: dim_plan_id
+        description: ID of the plan of the ultimate parent namespace when the event got triggered
+        tests:
+          - not_null
+      - name: created_date_id
+        description: ID of the date when the event was created
+        tests:
+          - not_null
+      - name: event_created_at
+        description: timestamp of the event
+        tests:
+          - not_null
+      - name: user_created_at
+        description: timestamp of the user creation
+
+      - name: days_since_namespace_creation
+        description: days since the namespace creation
+        tests:
+          - not_null
+      - name: days_since_user_creation
+        description: days since the user creation
+      - name: days_since_user_creation
+        description: days since the project creation
+      - name: project_is_imported
+        description: TRUE if the project was imported
+        tests:
+          - not_null

@@ -2,7 +2,7 @@ version: 2
 
 sources:
   - name: zuora_revenue
-    tags: ["tdf","zuora"]
+    tags: ["tdf","zuora_revenue"]
     database: '{{ env_var("SNOWFLAKE_LOAD_DATABASE") }}'
     schema: zuora_revenue
     loader: Stitch
@@ -12,10 +12,6 @@ sources:
       database: true
       schema: false
       identifier: false
-
-    freshness:
-      warn_after: {count: 8, period: hour}
-      error_after: {count: 24, period: hour}
 
     tables:
       - name: zuora_revenue_accounting_type

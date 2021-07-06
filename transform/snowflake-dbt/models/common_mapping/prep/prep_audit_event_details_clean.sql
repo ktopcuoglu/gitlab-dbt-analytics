@@ -27,5 +27,10 @@ WITH non_pii_details AS (
 
 )
 
-SELECT *
-FROM unioned
+{{ dbt_audit(
+    cte_ref="unioned",
+    created_by="@ischweickartDD",
+    updated_by="@ischweickartDD",
+    created_date="2021-06-16",
+    updated_date="2021-06-16"
+) }}

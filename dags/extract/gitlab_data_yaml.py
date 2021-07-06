@@ -17,6 +17,7 @@ from kube_secrets import (
     SNOWFLAKE_LOAD_USER,
     SNOWFLAKE_LOAD_WAREHOUSE,
     GITLAB_ANALYTICS_PRIVATE_TOKEN,
+    GITLAB_COM_API_TOKEN,
 )
 from kubernetes_helpers import get_affinity, get_toleration
 
@@ -49,7 +50,8 @@ dag = DAG(
 data_yaml_extract_cmd = f"""
     {clone_and_setup_extraction_cmd} &&
     python gitlab_data_yaml/upload.py &&
-    python gitlab_feature_flags_yaml/upload.py
+    python gitlab_feature_flags_yaml/upload.py &&
+    python gitlab_flaky_tests/upload.py
 """
 data_yaml_extract = KubernetesPodOperator(
     **gitlab_defaults,
@@ -64,6 +66,7 @@ data_yaml_extract = KubernetesPodOperator(
         SNOWFLAKE_LOAD_WAREHOUSE,
         SNOWFLAKE_LOAD_PASSWORD,
         GITLAB_ANALYTICS_PRIVATE_TOKEN,
+        GITLAB_COM_API_TOKEN,
     ],
     affinity=get_affinity(False),
     tolerations=get_toleration(False),

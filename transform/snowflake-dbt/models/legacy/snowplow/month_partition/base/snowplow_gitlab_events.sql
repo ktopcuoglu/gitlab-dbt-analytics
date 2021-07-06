@@ -142,11 +142,7 @@ WITH filtered_source as (
       tr_total_base,
       true_tstamp,
       txn_id,
-      CASE
-        WHEN event_name IN ('submit_form', 'focus_form', 'change_form')
-          THEN 'masked'
-        ELSE unstruct_event
-      END AS unstruct_event,
+      unstruct_event,
       user_fingerprint,
       user_id,
       user_ipaddress,
@@ -186,6 +182,11 @@ WITH filtered_source as (
             v_tracker LIKE 'rb%'
           )
         )
+        -- removing it after approval from @rparker2 in this issue: https://gitlab.com/gitlab-data/analytics/-/issues/9112
+
+        AND IFF(event_name IN ('submit_form', 'focus_form', 'change_form') AND TRY_TO_TIMESTAMP(derived_tstamp) < '2021-05-26'
+            , FALSE
+            , TRUE)
 
 )
 
@@ -205,6 +206,11 @@ WITH filtered_source as (
 
     SELECT *
     FROM {{ ref('snowplow_gitlab_events_web_page_id') }}
+
+),events_with_standard_context AS (
+
+    SELECT *
+    FROM {{ ref('snowplow_gitlab_events_standard_context') }}
 
 ), base_with_sorted_columns AS (
   
@@ -253,6 +259,12 @@ WITH filtered_source as (
       base.event_format,
       base.event_id,
       events_with_web_page_id.web_page_id,
+      events_with_standard_context.environment AS gsc_environment,
+      events_with_standard_context.extra AS gsc_extra,
+      events_with_standard_context.namespace_id AS gsc_namespace_id,
+      events_with_standard_context.plan AS gsc_plan,
+      events_with_standard_context.project_id AS gsc_project_id,
+      events_with_standard_context.source AS gsc_source,
       base.event_name,
       base.event_vendor,
       base.event_version,
@@ -346,6 +358,8 @@ WITH filtered_source as (
     FROM base
     LEFT JOIN events_with_web_page_id
       ON base.event_id = events_with_web_page_id.event_id
+    LEFT JOIN events_with_standard_context
+      ON base.event_id = events_with_standard_context.event_id
     WHERE NOT EXISTS (
       SELECT event_id
       FROM events_with_web_page_id web_page_events

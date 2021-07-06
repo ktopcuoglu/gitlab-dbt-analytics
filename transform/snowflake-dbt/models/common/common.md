@@ -637,6 +637,22 @@ Order type dimension, based off of salesforce opportunity data, using the `gener
 
 {% enddocs %}
 
+{% docs dim_namespace_hist %}
+
+Table containing GitLab namespace snapshots.
+
+The grain of this table is one row per namespace per valid_to/valid_from combination. The Primary Key is `namespace_snapshot_id`.
+
+{% enddocs %}
+
+{% docs dim_namespace_lineage %}
+
+Table containing GitLab namespace lineages. The primary goal of this table is to determine the ultimate parent namespace for all namespaces. Additionally, this table provides plan (GitLab subscription) information for both the given namespace and its ultimate parent namespace.
+
+The grain of this table is one row per namespace. The Primary Key is `dim_namespace_id`.
+
+{% enddocs %}
+
 {% docs dim_namespace_plan_hist %}
 
 Slowly Changing Dimension Type 2 that records changes into namespace's plan subscriptions. 
@@ -682,5 +698,88 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 {% docs dim_key_xmau_metric %}
 
 A fact table that contains only the metrics that is a UMAU, SMAU, or GMAU metric that appears on the [Stages and Groups Performance Indicator handbook page](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/)
+
+{% enddocs %}
+
+{% docs dim_ci_pipeline %}
+
+A dim table that contains all CI Pipelines run on Gitlab.com application.
+
+Easy joins available with:
+
+* dim_project through `dim_project_id`
+* dim_namespace through `dim_namespace_id` and `ultimate_parent_namespace_id`
+* dim_date through `ci_pipeline_creation_dim_date_id`
+{% enddocs %}
+
+{% docs dim_action %}
+
+Dimensional table representing actions recorded by the Events API. [More info about actions tracked here](https://docs.gitlab.com/ee/api/events.html)
+
+The grain of the table is the `dim_action_id`. This table is easily joinable with:
+
+- `dim_plan` through `dim_plan_id`
+- `dim_user` through `dim_user_id`
+- `dim_project` through `dim_project_id`
+- `dim_namespace` through `dim_namespace_id` and `ultimate_namespace_id`
+
+{% enddocs %}
+
+{% docs dim_issue %}
+
+Dimensional table recording all issues created in our Gitlab.com SaaS instance. This table is easily joinable with other EDM dim tables:
+
+- `dim_project` through `dim_project_id`
+- `dim_namespace` through `dim_namespace_id`
+- `dim_plan` through `dim_plan_id`
+- `dim_date` through `created_date_dim_id`
+
+More info about issues in GitLab product [available here](https://docs.gitlab.com/ee/user/project/issues/)
+
+{% enddocs %}
+
+{% docs dim_merge_request %}
+
+Dimensional table recording all merge requests created in our Gitlab.com SaaS instance. This table is easily joinable with other EDM dim tables:
+
+- `dim_project` through `dim_project_id`
+- `dim_namespace` through `dim_namespace_id`
+- `dim_plan` through `dim_plan_id`
+- `dim_date` through `created_date_dim_id`
+
+More info about issues in GitLab product [available here](https://docs.gitlab.com/ee/user/project/merge_requests/)
+
+{% enddocs %}
+
+{% docs dim_ci_build %}
+
+Dimension table that contains all CI build data.
+
+Easy to join with the following tables:
+
+- `dim_project` through `dim_project_id`
+- `dim_namespace` through `dim_namespace_id` and `ultimate_parent_namespace_id`
+- `dim_date` through `ci_build_creation_dim_date_id`
+- `dim_plan` through `dim_plan_id`
+
+{% enddocs %}
+
+{% docs dim_user %}
+
+Dimension table that contains all Gitlab.com Users.
+{% enddocs %}
+
+{% docs dim_ci_runner %}
+
+A Dimension table that contains all data related to CI runners.
+
+It includes keys to join to the below tables:
+
+- `dim_ci_build` through `dim_ci_build_id`
+- `dim_project` through `dim_project_id`
+- `dim_namespace` through `dim_namespace_id` and `ultimate_parent_namespace_id`
+- `dim_date` through `created_at`
+- `dim_date` through `created_date_id `
+
 
 {% enddocs %}
