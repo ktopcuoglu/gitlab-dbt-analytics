@@ -2533,6 +2533,8 @@ roles:
             - data_team_analyst
             - analyst_finance
             - gainsight
+            - analyst_core
+            - data_team_analyst
         warehouses:
             - analyst_xs
         owns:
