@@ -68,7 +68,7 @@
       namespaces.is_currently_valid                                     AS is_namespace_active
     FROM namespaces
     INNER JOIN dates
-      ON dates.date_actual BETWEEN namespaces.namespace_created_at AND CURRENT_DATE
+      ON dates.date_actual BETWEEN namespaces.created_at AND CURRENT_DATE
     LEFT JOIN trial_histories
       ON namespaces.dim_namespace_id = trial_histories.gl_namespace_id
 
@@ -269,5 +269,5 @@
     created_by="@ischweickartDD",
     updated_by="@ischweickartDD",
     created_date="2021-06-02",
-    updated_date="2021-06-17"
+    updated_date="2021-07-06"
 ) }}
