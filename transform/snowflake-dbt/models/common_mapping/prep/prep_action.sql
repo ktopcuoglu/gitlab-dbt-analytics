@@ -14,19 +14,19 @@
     
     SELECT *
     FROM {{ ref('prep_user') }} users
-    WHERE {{ filter_out_blocked_users('users', 'dim_user_id') }}
+    WHERE user_state <> 'blocked'
   
 ), joined AS (
 
     SELECT 
-      gitlab_dotcom_events_source.id                                                              AS dim_event_id,
+      gitlab_dotcom_events_source.id                                                              AS dim_action_id,
       
       -- FOREIGN KEYS
       gitlab_dotcom_events_source.project_id::NUMBER                                              AS dim_project_id,
       prep_project.dim_namespace_id,
       prep_project.ultimate_parent_namespace_id,
       prep_user.dim_user_id,
-      dim_date.date_id                                                                            AS event_creation_dim_date_id,
+      dim_date.date_id                                                                            AS created_date_id,
       IFNULL(dim_namespace_plan_hist.dim_plan_id, 34)                                             AS dim_plan_id,
 
       -- events metadata

@@ -401,9 +401,9 @@ Creates a base view of CI pipelines. More info about CI pipelines [is available 
 
 {% enddocs %}
 
-{% docs prep_event %}
+{% docs prep_action %}
 
-Prep table for the dim table `dim_event`.
+Prep table for the dim table `dim_action`.
 
 More info about [events tracked](https://docs.gitlab.com/ee/api/events.html)
 

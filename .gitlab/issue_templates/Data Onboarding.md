@@ -46,7 +46,7 @@ Goal: To help bring you, our new data team member, up to speed in the GitLab Dat
 
 - [ ] Read (skim) through this full issue, just so you have a sense of what's coming.
 - [ ] Create a new issue in the Analytics project (this project). As you proceed and things are unclear, document it in the issue. Don't worry about organizing it; just brain dump it into the issue! This will help us iterate on the onboarding process.
-- [ ] Join the following channels on Slack: `data`, `data-lounge`, `data-daily`, `data-triage`, and `business-operations`.
+- [ ] Join the following channels on Slack: `data`, `data-lounge`, `data-daily`, `data-triage`, and `business-technology`.
    - [ ] Engineers, join `analytics-pipelines`
    - [ ] Analytsts, join `dbt-runs`
 - [ ] Schedule a recurring fortnightly (every two weeks) 1:1 meeting with the Sr. Director of Data and Analytics.
@@ -54,8 +54,8 @@ Goal: To help bring you, our new data team member, up to speed in the GitLab Dat
 - [ ] Read the following pages of the handbook in their entirety. Bookmark them as you should soon be making MR's to improve our documentation!
    - [ ] [Data Team](https://about.gitlab.com/handbook/business-ops/data-team/)
    - [ ] [Business Operations](https://about.gitlab.com/handbook/business-ops/)
-   - [ ] [Data Quality Process](https://about.gitlab.com/handbook/business-ops/data-quality-process/)
-   - [ ] [Periscope Directory](https://about.gitlab.com/handbook/business-ops/data-team/platform/periscope-directory/)
+   - [ ] [Data Quality Process](https://about.gitlab.com/handbook/business-ops/data-team/data-quality/)
+   - [ ] [Periscope Directory](https://about.gitlab.com/handbook/business-ops/data-team/platform/periscope/)
 - [ ] Watch @tlapiana's [talk at DataEngConf](https://www.youtube.com/watch?v=eu623QBwakc) that gives a phenomenal overview of how the team works.
 - [ ] Watch [this great talk](https://www.youtube.com/watch?v=prcz0ubTAAg) on what Analytics is
 - [ ] If relevant, watch ["The State of [Product] Data"](https://www.youtube.com/watch?v=eNLkj3Ho2bk&feature=youtu.be) from Eli at the Growth Fastboot. (You'll need to be logged into GitLab Unfiltered.)
@@ -90,11 +90,12 @@ rm ~/onboarding_script.zsh
       * Installing jump, an easy way to move through the file system. [Please find here more details on how to use jump](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/jump)
       * Installing anaconda, how we recommend folks get their python distribution.
       * Installs all-the-things needed to contribute to [the handbook](about.gitlab.com/handbook) locally and build it locally.
-   * You will be able to `jump analytics` from anywhere to go to the analytics repo locally (you will have to open a new terminal window for `jump` to start working.) If it doesn't work, try running `cd ~/repos/analytics mark analytics` then quit + reopen your terminal before trying again.
+   * You will be able to `jump analytics` from anywhere to go to the analytics repo locally (you will have to open a new terminal window for `jump` to start working.) If it doesn't work, try running `cd ~/repos/analytics`. Once in "analytics" folder run command `mark analytics` then quit + reopen your terminal before trying again. Now path ~/repos/analytics has been named "analytics" and you can enter to it by using command `mark analytics`.
    * You will be able to `gl_open` from anywhere within the analytics project to open the repo in the UI. If doesn't work, visually inspect your `~/.bashrc` file to make sure it has [this line](https://gitlab.com/gitlab-data/analytics/blob/master/admin/make_life_easier.sh#L14).
    * Your default python version should now be python 3. Typing `which python` into a new terminal window should now return `/usr/local/anaconda3/bin/python`
    * dbt will be installed at its latest version. Typing `dbt --version` will output the current version.
    * To get to the handbook project, you'll be able to use `jump handbook`, and to build the handbook locally, you'll be able to use the alias `build_hb!`.
+* [ ] Install docker & docker-compose. The easiest way to do this for Mac now is to use the desktop install from [Docker](https://www.docker.com/products/docker-desktop). If working on Linux you will need to follow these [install instructions](https://docs.docker.com/engine/install/ubuntu/) instead. When running on Mac, installing docker only for `dbt` is not needed, since `Venv` is the [recommended](https://about.gitlab.com/handbook/business-technology/data-team/platform/dbt-guide/#Venv-workflow) workflow for anyone running a Mac system.
 * [ ] We strongly recommend configuring VSCode (via the VSCode UI) with the [VSCode setup](https://discourse.getdbt.com/t/how-we-set-up-our-computers-for-working-on-dbt-projects/243?) section of Claire's post and [adding the tip](https://discourse.getdbt.com/t/how-we-set-up-our-computers-for-working-on-dbt-projects/243/10?u=tmurphy) from tmurphy later in the thread. It will make your life much easier.
   * Your editor should be configured so that all tabs are converted to 4 spaces. This will minimize messy looking diffs and provide consistency across the team.
     * VSCode
@@ -102,6 +103,7 @@ rm ~/onboarding_script.zsh
       * `Editor: Insert Spaces` is selected
       * `Editor: Tab Size` is set to 4 spaces per tab
 * [ ] Consider following [these instructions](https://stackoverflow.com/a/23963086) so you can have option + arrow keys to move around the terminal easier
+* [ ] Raise an access request for Google Cloud Platform (GCP). Template for access request (AR) can be found here: https://gitlab.com/gitlab-com/team-member-epics/access-requests/-/issues/10306. Please assign it to your manager
 * [ ] If you get a weird semaphore issue error when running dbt try [this script](https://gist.github.com/llbbl/c54f44d028d014514d5d837f64e60bac) which is sourced from this [Apple forum thread](https://forums.developer.apple.com/thread/119429)
 
 </details>
@@ -169,8 +171,8 @@ On [the Data team handbook page](https://about.gitlab.com/handbook/business-ops/
  - [ ] Our current data infrastructure is represented in this [system diagram](https://about.gitlab.com/handbook/business-ops/data-team/platform/infrastructure/#system-diagram)
 
 ## Connecting to Snowflake
-- [ ] Login with the credentials that your manager created following the instructions at https://about.gitlab.com/handbook/business-ops/data-team/platform/#warehouse-access
-- [ ] Snowflake has a Web UI for querying the data warehouse that can be found under [Worksheets](https://gitlab.snowflakecomputing.com/console#/internal/worksheet). Familiarize yourself with it.  Update your role, warehouse, and database to the same info you're instructed to put in your dbt profile (Ask your manager if this is confusing). The schema does not matter because your query will reference the schema.
+- [ ] Login with the credentials that your manager created following the instructions at https://about.gitlab.com/handbook/business-ops/data-team/platform/#warehouse-access. Please note that currently Snowflake is accessed through Okta, however you still need to raise access request to get credentials, as you will need to restart your password and update dbt profile with Snowflake credentials. Access request should be raised the same way as it was for Google Cloud Platform credentials.
+- [ ] Snowflake has a Web UI for querying the data warehouse that can be found under [Worksheets](https://gitlab.snowflakecomputing.com/console#/internal/worksheet). Familiarize yourself with it. Change your password and update your role, warehouse, and database to the same info you're instructed to put in your dbt profile (Ask your manager if this is confusing). The schema does not matter because your query will reference the schema.
 - [ ] Run `alter user "your_user" set default_role = "your_role";` to set the UI default Role to your appropriate role instead of `PUBLIC`
    - [ ] We STRONGLY recommend using the UI, but if you must download a SQL development tool, you will need one that is compatible with Snowflake, such as [SQLWorkbench/J](http://sql-workbench.net) or [DataGrip](https://www.jetbrains.com/datagrip/). If you're interested in DataGrip, follow the [instructions to get a JetBrains license in the handbook](https://about.gitlab.com/handbook/tools-and-tips/#jetbrains). If using DataGrip, you may need to download the [Driver](https://docs.snowflake.net/manuals/user-guide/jdbc-download.html#downloading-the-driver). This template may be useful as you're configuring the DataGrip connection to Snowflake `jdbc:snowflake://{account:param}.snowflakecomputing.com/?{password}[&db={Database:param}][&warehouse={Warehouse:param}][&role={Role:param}]` We recommend not setting your schema so you can select from the many options. If you do use Data Grip, please set up the following configuration:
 
@@ -210,6 +212,13 @@ Snowflake SQL is probably not that different from the dialects of SQL you're alr
 - To get into the `dbt-image` docker container, go to the analytics project (which you can get to by typing `jump analytics` from anywhere on your Mac) and run the command `make dbt-image`. This will spin up our docker container that contains `dbt` and give you a bash shell within the `analytics/transform/snowflake-dbt` directory.
 - All changes made to the files within the `analytics` repo will automatically be visible in the docker container! This container is only used to run `dbt` commands themselves, not to write SQL or edit `dbt` files in general (though technically it could be, as VIM is available within the container)
 - In case you encounter any error, ensure that docker is up and running. This can be done by running `docker run hello-world`. This should print a "Hello" from Docker message.  If it does not print the "hello" message, then docker needs to be launched. On a Mac, docker is launched by running the command `open /Applications/Docker.app`.
+- [ ] Add Google credentials to your dbt profile path. To do that run command `vi ~/.zshrc`. You are now in one of the files that has been created as part of onboarding script. Now click `i` which stands for insert and click down arrow to get to third line. Now paste following code, but remember that *"user_name_on_mac"* needs to be replaced with computer name that is usually your first and last name without spaces written in lower cases. For example, if your name is Britney Spears then your user name is probably britneyspears. 
+
+GOOGLE_APPLICATION_CREDENTIALS=/Users/user_name_on_mac/Documents/gitlab-analysis-d35b80a0ae11.json export DBT_PROFILE_PATH=/Users/user_name_on_mac/.dbt/profiles.yml
+
+Save and finish above updated by clicking `esc` and writing `:wq!`. Letter "w" stands for write and saves changes that you made to the file. Letter "q" stands for "quit" and closes the file you just edited. 
+
+- [ ] Setup command "code" in VS studio by using `command` + `shift` + `p` in VS studio and choose "Install 'code' command in PATH command." This will allow you to use word `code` in terminal which will open indicated file directly in Visual Studio. This step is essential to complete next step.
 - [ ] From a different terminal window run `code ~/.dbt/profiles.yml` and update this file with your info.  The schema should be something like `yourname_scratch`. See [sample profiles](https://gitlab.com/gitlab-data/analytics/-/blob/master/admin/sample_profiles.yml) for an example.
     - [ ] __Data Engineers__: update the following paramaters in the `~/.dbt/profiles.yml`:
         ```

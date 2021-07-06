@@ -42,6 +42,7 @@ sources:
       - name: data_team_csat_survey_fy2021_q4
       - name: days_sales_outstanding
       - name: days_to_close
+      - name: deleted_mrs
       - name: employee_location_factor
       - name: engineering_infra_prod_console_access
       - name: engineering_speciality_prior_to_capture

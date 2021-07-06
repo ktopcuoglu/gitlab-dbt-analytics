@@ -112,6 +112,7 @@ models:
           - customers_db
         tests:
           - not_null
+      - name: order_source
   - name: customers_db_trial_histories_source
     description: '{{ doc("customers_db_trial_histories_source") }}'  
     columns:
