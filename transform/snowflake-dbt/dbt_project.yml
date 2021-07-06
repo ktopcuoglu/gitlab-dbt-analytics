@@ -217,6 +217,10 @@ models:
         +materialized: table
         +schema: pmg
 
+      pto:
+        +materialized: table
+        +schema: gitlab_pto
+
       qualtrics:
         +materialized: table
         +schema: qualtrics
