@@ -149,11 +149,16 @@ models:
       date:
         +materialized: table
         +schema: date
-
+      
       dbt:
         +materialized: incremental
         +schema: dbt
         +tags: ["dbt"]
+      
+      demandbase:
+        +materialized: table
+        +schema: demandbase
+        +tags: ["demandbase"]
 
       discourse:
         +materialized: table

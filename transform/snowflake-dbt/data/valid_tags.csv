@@ -10,6 +10,7 @@ daily,Used in Airflow runs
 data,dbt built-in
 datasiren,Relates to datasiren models
 dbt,Relates to dbt-generated data-sets
+demandbase,Relates to demandbase data
 discourse,Relates to Discourse data
 edm_snapshot, Models which create snapshots on upper-layer portions of the EDM
 gainsight,Relates to Customer Product Usage data
