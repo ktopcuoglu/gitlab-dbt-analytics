@@ -713,6 +713,16 @@ WITH date_details AS (
         ELSE 0
       END                                               AS churned_deal_count,
 
+      -- churned contraction deal count as OT
+      CASE
+        WHEN ((opp_snapshot.is_renewal = 1
+            AND opp_snapshot.is_lost = 1)
+            OR opp_snapshot.is_won = 1 )
+            AND opp_snapshot.order_type_stamped IN ('5. Churn - Partial' ,'6. Churn - Final', '4. Contraction')
+        THEN opp_snapshot.calculated_deal_count
+        ELSE 0
+      END                                               AS churned_contraction_deal_count,
+
       -----------------
       -- Net ARR
 
@@ -755,6 +765,16 @@ WITH date_details AS (
           THEN net_arr
         ELSE 0
       END                                                 AS churned_net_arr,
+
+      -- churned contraction deal count as OT
+      CASE
+        WHEN ((opp_snapshot.is_renewal = 1
+            AND opp_snapshot.is_lost = 1)
+            OR opp_snapshot.is_won = 1 )
+            AND opp_snapshot.order_type_stamped IN ('5. Churn - Partial' ,'6. Churn - Final', '4. Contraction')
+        THEN net_arr
+        ELSE 0
+      END                                                 AS churned_contraction_net_arr,
 
       -- 20201021 NF: This should be replaced by a table that keeps track of excluded deals for forecasting purposes
       CASE 
