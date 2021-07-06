@@ -16,7 +16,8 @@ WITH zuora_revenue_manual_journal_entry AS (
       sob_id::VARCHAR                               AS set_of_books_id,
       sob_name::VARCHAR                             AS set_of_books_name,
       fn_cur::VARCHAR                               AS functional_currency,
-      CONCAT(rvsl_prd_id::VARCHAR,'01')             AS reversal_period_id,
+      -- Data received from Zuora in YYYYMM format, formatted to YYYYMMDD in the below. 
+      CONCAT(rvsl_prd_id::VARCHAR,'01')::INT             AS reversal_period_id,
       CONCAT(prd_id::VARCHAR,'01')                  AS period_id,
       je_head_atr1::VARCHAR                         AS manual_journal_entry_header_attribute_1,
       je_head_atr2::VARCHAR                         AS manual_journal_entry_header_attribute_2,
