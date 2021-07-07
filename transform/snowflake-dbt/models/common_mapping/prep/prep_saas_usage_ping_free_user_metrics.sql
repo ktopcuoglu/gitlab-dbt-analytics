@@ -18,7 +18,7 @@
     SELECT *
     FROM bdg_namespace_order
     WHERE dim_namespace_id IS NOT NULL
-      AND (order_id IS NULL
+      AND (dim_order_id IS NULL
            OR order_is_trial = TRUE)
 
 ), joined AS (

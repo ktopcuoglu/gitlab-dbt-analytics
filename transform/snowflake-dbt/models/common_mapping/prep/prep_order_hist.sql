@@ -9,10 +9,10 @@
     ('dim_date', 'dim_date'),
     ('namespaces', 'prep_namespace'),
     ('subscriptions', 'dim_subscription'),
-    ('billing_accounts', 'dim_billing_account'),
+    ('billing_accounts', 'dim_billing_account')
 ]) }}
 
-WITH customers_db_versions AS (
+, customers_db_versions AS (
 
     SELECT *
     FROM versions
@@ -46,16 +46,16 @@ WITH customers_db_versions AS (
       IFF(column_key = 'created_at',
           COALESCE(TRY_TO_TIMESTAMP(column_value),
                    TRY_TO_TIMESTAMP(LAG(column_value, 3)
-                     OVER (PARTITION BY id, item_id, seq ORDER BY index DESC)),
+                     OVER (PARTITION BY version_id, item_id, seq ORDER BY index DESC)),
                    TRY_TO_TIMESTAMP(LAG(column_value, 4)
-                     OVER (PARTITION BY id, item_id, seq ORDER BY index DESC))),
+                     OVER (PARTITION BY version_id, item_id, seq ORDER BY index DESC))),
           NULL)                                                                           AS order_created_at,
       IFF(column_key = 'updated_at',
           COALESCE(TRY_TO_TIMESTAMP(column_value),
                    TRY_TO_TIMESTAMP(LAG(column_value, 3)
-                     OVER (PARTITION BY id, item_id, seq ORDER BY index DESC)),
+                     OVER (PARTITION BY version_id, item_id, seq ORDER BY index DESC)),
                    TRY_TO_TIMESTAMP(LAG(column_value, 4)
-                     OVER (PARTITION BY id, item_id, seq ORDER BY index DESC))),
+                     OVER (PARTITION BY version_id, item_id, seq ORDER BY index DESC))),
           NULL)                                                                           AS order_updated_at,
       IFF(column_key = 'gl_namespace_id', TRY_TO_NUMBER(TRIM(column_value, '''')), NULL)  AS gitlab_namespace_id,
       IFF(column_key = 'gl_namespace_name', column_value, NULL)                           AS gitlab_namespace_name,
@@ -64,19 +64,19 @@ WITH customers_db_versions AS (
       IFF(column_key = 'last_extra_ci_minutes_sync_at',
           COALESCE(TRY_TO_TIMESTAMP(column_value),
                    TRY_TO_TIMESTAMP(LAG(column_value, 3)
-                     OVER (PARTITION BY id, item_id, seq ORDER BY index DESC)),
+                     OVER (PARTITION BY version_id, item_id, seq ORDER BY index DESC)),
                    TRY_TO_TIMESTAMP(LAG(column_value, 4)
-                     OVER (PARTITION BY id, item_id, seq ORDER BY index DESC))),
+                     OVER (PARTITION BY version_id, item_id, seq ORDER BY index DESC))),
           NULL)                                                                           AS last_extra_ci_minutes_sync_at,
       IFF(column_key = 'zuora_account_id', column_value, NULL)                            AS zuora_account_id,
       IFF(column_key = 'increased_billing_rate_notified_at',
           COALESCE(TRY_TO_TIMESTAMP(column_value),
                    TRY_TO_TIMESTAMP(LAG(column_value, 3)
-                     OVER (PARTITION BY id, item_id, seq ORDER BY index DESC)),
+                     OVER (PARTITION BY version_id, item_id, seq ORDER BY index DESC)),
                    TRY_TO_TIMESTAMP(LAG(column_value, 4)
-                     OVER (PARTITION BY id, item_id, seq ORDER BY index DESC))),
+                     OVER (PARTITION BY version_id, item_id, seq ORDER BY index DESC))),
           NULL)                                                                           AS increased_billing_rate_notified_at
-    FROM 
+    FROM flattened_object
   
 ), pivoted AS (
 
@@ -103,13 +103,6 @@ WITH customers_db_versions AS (
     FROM cleaned
     {{ dbt_utils.group_by(n=3) }}
 
-), transformed AS (
-
-    SELECT *,
-      IFNULL(LAG(valid_to) OVER (PARTITION BY order_id ORDER BY id),
-             order_created_at)                                                            AS valid_from
-    FROM pivoted
-
 ), unioned AS (
 
     SELECT 
@@ -129,10 +122,10 @@ WITH customers_db_versions AS (
       last_extra_ci_minutes_sync_at,
       zuora_account_id                                                                    AS dim_billing_account_id,
       increased_billing_rate_notified_at,
-      valid_from,
+      IFNULL(LAG(valid_to) OVER (PARTITION BY order_id ORDER BY version_id),
+             order_created_at)                                                            AS valid_from,
       valid_to
-    FROM transformed
-    WHERE order_created_at IS NOT NULL
+    FROM pivoted
 
     UNION ALL
 
@@ -145,7 +138,7 @@ WITH customers_db_versions AS (
       order_start_date,
       order_end_date,
       order_quantity,
-      order_created_at
+      order_created_at,
       gitlab_namespace_id::NUMBER,
       gitlab_namespace_name,
       amendment_type,
