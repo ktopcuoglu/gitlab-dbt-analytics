@@ -185,6 +185,12 @@ Model to identify the type of business engagement relationship a Partner has wit
 
 {% enddocs %}
 
+{% docs dim_gainsight_product_usage_metric %}
+
+Dimensional table containing the list of Usage Ping metrics collected for Gainsight.
+
+{% enddocs %}
+
 {% docs fct_campaign %}
 
 Fact table representing marketing campaign details tracked in SFDC.
