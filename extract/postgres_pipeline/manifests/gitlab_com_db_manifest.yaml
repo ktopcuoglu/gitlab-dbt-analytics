@@ -2390,6 +2390,7 @@ tables:
       , render_whitespace_in_code
       , tab_width
       , experience_level
+      , view_diffs_file_by_file
       FROM user_preferences
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
