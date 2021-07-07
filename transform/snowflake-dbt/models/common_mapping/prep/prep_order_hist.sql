@@ -9,10 +9,17 @@
     ('dim_date', 'dim_date'),
     ('namespaces', 'prep_namespace'),
     ('subscriptions', 'dim_subscription'),
+<<<<<<< HEAD
     ('billing_accounts', 'dim_billing_account')
 ]) }}
 
 , customers_db_versions AS (
+=======
+    ('billing_accounts', 'dim_billing_account'),
+]) }}
+
+WITH customers_db_versions AS (
+>>>>>>> 5373f2d67c3ab28a5151fc98ada077fedaab6291
 
     SELECT *
     FROM versions
@@ -189,6 +196,6 @@
     cte_ref="joined",
     created_by="@ischweickartDD",
     updated_by="@ischweickartDD",
-    created_date="2021-07-06",
-    updated_date="2021-07-06"
+    created_date="2021-07-07",
+    updated_date="2021-07-07"
 ) }}
