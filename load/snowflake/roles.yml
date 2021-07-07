@@ -2708,6 +2708,12 @@ roles:
         warehouses:
             - reporting
 
+    - marntz:
+        member_of:
+            - analyst_sales
+        warehouses:
+            - analyst_xs 
+
     - mcooper:
         member_of:
             - analyst_finance
@@ -3817,6 +3823,11 @@ users:
         can_login: yes
         member_of:
             - lvandensteen
+
+    - marntz:
+        can_login: yes
+        member_of:
+            - marntz
 
     - mbergeron:
         can_login: no
