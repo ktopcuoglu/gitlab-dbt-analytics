@@ -65,7 +65,9 @@ echo "VS Code successfully installed"
 
 ## install anaconda
 echo "Installing anaconda.."
-brew cask install anaconda
+curl -O https://repo.anaconda.com/archive/Anaconda3-2021.05-MacOSX-x86_64.sh
+bash Anaconda3-2021.05-MacOSX-x86_64.sh -b -p /usr/bin/anaconda3
+rm Anaconda3-2021.05-MacOSX-x86_64.sh
 echo "export PATH=/usr/local/anaconda3/bin:"$PATH"" >> ~/.zshrc
 echo "anaconda installed succesfully"
 
