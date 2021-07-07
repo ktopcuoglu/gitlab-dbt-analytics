@@ -39,9 +39,13 @@ class GitLabAPI:
         return None
 
     def get_pipeline_job_paged(
-        self, project_id: str, pipeline_id: int, page: int
+        self, project_id: str, pipeline_id: int, page: int, scope: str = None
     ) -> List[Dict[Any, Any]]:
         url = f"{self.GITLAB_COM_API_BASE_URL}/projects/{project_id}/pipelines/{pipeline_id}/jobs?per_page=100&page={page}"
+
+        if scope != None:
+            url += f"&scope={scope}"
+
         response = requests.get(url, headers={"Private-Token": self.api_token})
 
         if response.status_code == 200:
@@ -58,7 +62,7 @@ class GitLabAPI:
         current_page_number = 1
         while True:
             current_result = self.get_pipeline_job_paged(
-                project_id, pipeline_id, current_page_number
+                project_id, pipeline_id, current_page_number, "success"
             )
 
             if not current_result:

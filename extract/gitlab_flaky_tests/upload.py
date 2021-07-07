@@ -50,7 +50,7 @@ if __name__ == "__main__":
 
     if update_tests_metadata_job is None:
         info(
-            f"Job {UPDATE_TESTS_METADATA_JOB_NAME} couldn't be found for pipeline {last_scheduled_pipeline_id} of project {GITLAB_PROJECT_ID}"
+            f"Job '{UPDATE_TESTS_METADATA_JOB_NAME}' couldn't be found for pipeline {last_scheduled_pipeline_id} of project {GITLAB_PROJECT_ID}"
         )
         sys.exit(1)
 
@@ -67,7 +67,7 @@ if __name__ == "__main__":
         info(
             f"Artifact '{RSPEC_FLAKY_REPORT_ARTIFACT}' couldn't be found for job {update_tests_metadata_job_id} of project {GITLAB_PROJECT_ID}"
         )
-        sys.exit(1)
+        sys.exit(0)
 
     flaky_tests = []
 
