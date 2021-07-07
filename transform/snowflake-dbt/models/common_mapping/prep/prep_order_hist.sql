@@ -22,16 +22,25 @@
 
 ), flattened_object AS (
 
+    -- objects look like a yaml table, splitting the object into rows at each linebreak
+    -- column keys will be turned into column names and populated by the associated column values
+    -- column values are all strings, some wrapped in extra quotations, some containing multiple colons 
     SELECT
       *,
       SPLIT_PART(value, ': ', 1)                                                          AS column_key,
-      NULLIF(TRIM(LTRIM(SPLIT_PART(value, ': ', 2), '&1 '), ''''),'')                     AS column_value
+      NULLIF(TRIM(SPLIT_PART(value, column_key || ': ', 2), ''''),'')                     AS column_value
     FROM customers_db_versions,
-      -- objects look like a yaml table, splitting the object into rows at each linebreak 
     LATERAL SPLIT_TO_TABLE(object, '\n')
 
 ), cleaned AS (
 
+    -- this CTE attempts to further clean up column values
+    -- namespace id: messy data from source, uses regular expression to remove all non-numeric characters
+    -- boolean column: set NULL equal to FALSE
+    -- timestamp columns: can come with 3-4 additional rows in the original object
+    --   when the associated column_value for each timestamp column_key is not a timestamp the 3rd or 4th
+    --   row following contains the actual timestamp value
+    --   additionally, the created_at column sometimes contained '&1 ' before the timestamp value
     SELECT
       version_id,
       item_id                                                                             AS order_id,
@@ -44,7 +53,7 @@
       IFF(column_key = 'end_date', column_value::DATE, NULL)                              AS order_end_date,
       IFF(column_key = 'quantity', column_value::NUMBER, NULL)                            AS order_quantity,
       IFF(column_key = 'created_at',
-          COALESCE(TRY_TO_TIMESTAMP(column_value),
+          COALESCE(TRY_TO_TIMESTAMP(LTRIM(column_value, '&1 ')),
                    TRY_TO_TIMESTAMP(LAG(column_value, 3)
                      OVER (PARTITION BY version_id, item_id, seq ORDER BY index DESC)),
                    TRY_TO_TIMESTAMP(LAG(column_value, 4)
@@ -57,7 +66,9 @@
                    TRY_TO_TIMESTAMP(LAG(column_value, 4)
                      OVER (PARTITION BY version_id, item_id, seq ORDER BY index DESC))),
           NULL)                                                                           AS order_updated_at,
-      IFF(column_key = 'gl_namespace_id', TRY_TO_NUMBER(TRIM(column_value, '''')), NULL)  AS gitlab_namespace_id,
+      IFF(column_key = 'gl_namespace_id',
+          TRY_TO_NUMBER(REGEXP_REPLACE(column_value, '[^0-9]+', '')),
+          NULL)                                                                           AS gitlab_namespace_id,
       IFF(column_key = 'gl_namespace_name', column_value, NULL)                           AS gitlab_namespace_name,
       IFF(column_key = 'amendment_type', column_value, NULL)                              AS amendment_type,
       IFF(column_key = 'trial', IFNULL(column_value, FALSE)::BOOLEAN, NULL)               AS order_is_trial,
