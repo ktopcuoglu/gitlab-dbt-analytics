@@ -4,13 +4,13 @@
   })
 }}
 
-{% set gainsight_wave_metrics = dbt_utils.get_column_values(table=ref ('gainsight_wave_2_3_metrics'), column='metric_name', max_records=1000, default=['']) %}
+{% set gainsight_metrics = dbt_utils.get_column_values(table=ref ('dim_gainsight_product_usage_metric'), column='metric_name', max_records=1000, default=['']) %}
 
 {{ simple_cte([
     ('prep_saas_usage_ping_namespace','prep_saas_usage_ping_namespace'),
     ('dim_date','dim_date'),
     ('bdg_namespace_order','bdg_namespace_order_subscription_monthly'),
-    ('gainsight_wave_2_3_metrics','gainsight_wave_2_3_metrics')
+    ('gainsight_product_usage_metrics','dim_gainsight_product_usage_metric')
 ]) }}
 
 , free_namespaces AS (
@@ -37,8 +37,8 @@
     INNER JOIN free_namespaces
       ON prep_saas_usage_ping_namespace.dim_namespace_id = free_namespaces.dim_namespace_id
       AND dim_date.first_day_of_month = free_namespaces.snapshot_month
-    INNER JOIN gainsight_wave_2_3_metrics
-      ON prep_saas_usage_ping_namespace.ping_name = gainsight_wave_2_3_metrics.metric_name
+    INNER JOIN gainsight_product_usage_metrics
+      ON prep_saas_usage_ping_namespace.ping_name = gainsight_product_usage_metrics.metric_name
     QUALIFY ROW_NUMBER() OVER (
       PARTITION BY 
         dim_date.first_day_of_month,
@@ -55,7 +55,7 @@
       dim_crm_account_id,
       reporting_month,
       MAX(ping_date)                                        AS ping_date,
-      {{ dbt_utils.pivot('ping_name', gainsight_wave_metrics, then_value='counter_value') }}
+      {{ dbt_utils.pivot('ping_name', gainsight_metrics, then_value='counter_value') }}
     FROM joined
     {{ dbt_utils.group_by(n=4)}}
 
@@ -66,5 +66,5 @@
     created_by="@ischweickartDD",
     updated_by="@ischweickartDD",
     created_date="2021-06-04",
-    updated_date="2021-06-04"
+    updated_date="2021-07-07"
 ) }}
