@@ -2962,14 +2962,17 @@ models:
           - not_null
           - unique
       - name: dim_project_id
+      - name: dim_namespace_id
+      - name: ultimate_parent_namespace_id
+      - name: dim_user_id
+      - name: created_date_id
       - name: dim_plan_id
         tests:
           - not_null
-      - name: updated_at
-      - name: ci_stage_name
-      - name: ci_stage_status
-      - name: lock_version
-      - name: position
+      - name: target_id
+      - name: target_type
+      - name: created_at
+      - name: event_action_type
 
   - name: dim_user
     description: '{{ doc("dim_user") }}'
