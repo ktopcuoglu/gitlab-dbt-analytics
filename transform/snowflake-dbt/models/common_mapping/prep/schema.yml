@@ -1704,6 +1704,25 @@ models:
       - name: runner_type
       - name: public_projects_minutes_cost_factor
       - name: private_projects_minutes_cost_factor
+
+  - name: prep_ci_stage
+    description: '{{ doc("dim_ci_stage") }}'
+    columns:
+      - name: dim_ci_stage_id
+        tests:
+          - not_null
+          - unique
+      - name: dim_project_id
+        description: Foreign key to `dim_project` that shows the ID of the project in which the stage was run.
+      - name: dim_pipeline_id
+        description: Foreign key to `dim_ci_pipeline` that shows the ID of the pipeline in which the stage was run.
+      - name: created_date_id
+        description: Foreign key to `dim_date` that shows the ID of the date on which the stage was created.
+        tests:
+          - not_null
+      - name: created_at
+        tests:
+          - not_null
     
   - name: prep_issue
     description: '{{ doc("prep_issue") }}'
