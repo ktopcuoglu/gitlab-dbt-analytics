@@ -341,6 +341,17 @@ tables:
       , expires_at
       , group_access
       FROM group_group_links
+  issuable_severities:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'issuable_severities'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , issue_id
+      , severity
+      FROM issuable_severities
   issue_assignees:
     dbt_source_model: true
     export_schema: 'gitlab_com'
