@@ -12,16 +12,18 @@
 , joined AS (
 
     SELECT
-      -- PRIMAry KEY
+      -- PRIMARY KEY
       dim_ci_build.dim_ci_build_id,
 
       -- FOREIGN KEYS
       dim_ci_build.created_date_id,
       dim_ci_build.ci_runner_id,
       dim_ci_build.dim_user_id,
+      dim_ci_build.dim_namespace_id,
       dim_ci_build.ultimate_parent_namespace_id,
       dim_ci_build.dim_project_id,
-      dim_plan_id,
+      dim_ci_build.dim_plan_id,
+      dim_ci_build.dim_ci_stage_id,
 
       -- ci_build metadata
       DATEDIFF('seconds', started_at, finished_at) AS ci_build_duration_in_s,

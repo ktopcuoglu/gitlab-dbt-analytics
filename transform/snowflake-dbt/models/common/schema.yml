@@ -3098,7 +3098,7 @@ models:
       - name: dim_plan_id
         tests:
           - not_null      
-      - name: dim_ci_pipeline_internal_id
+      - name: ci_pipeline_internal_id
         description: Internal ID for the CI Pipeline. This is project specific
 
   - name: dim_action
@@ -3129,7 +3129,7 @@ models:
         description: Unique key of User.
         tests:
           - not_null
-          - unique
+          - unique 
 
   - name: dim_ci_runner
     description: '{{ doc("dim_ci_runner") }}'
