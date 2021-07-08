@@ -591,7 +591,6 @@ Dimension table for sales segment built off Ultimate_Parent_Sales_Segment_Employ
 
 {% enddocs %}
 
-
 {% docs dim_sales_territory %}
 
 Sales territory dimension, based off of salesforce account data, using the `generate_single_field_dimension_from_prep` macro to create the final formatted SQL
@@ -779,5 +778,10 @@ Easy joins available with:
 * dim_project through `dim_project_id`
 * dim_ci_pipeline through `dim_ci_pipeline_id`
 * dim_date through `created_date_id`
+{% enddocs %}
+
+{% docs fct_ci_runner_activity %}
+
+Fact table containing quantitative data related to CI runner activity on GitLab.com.
 
 {% enddocs %}
