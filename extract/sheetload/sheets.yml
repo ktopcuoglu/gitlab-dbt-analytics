@@ -164,11 +164,11 @@ sheets:
     tabs:
       - marketing_pipe_to_spend_headcount
   - name: maxmind_countries
-    owner: '@m_walker'
+    owner: '@snalamaru'
     tabs:
       - maxmind_countries
   - name: maxmind_ranges
-    owner: '@m_walker'
+    owner: '@snalamaru'
     tabs:
       - maxmind_ranges
   - name: net_arr_net_iacv_conversion_factors
@@ -202,7 +202,7 @@ sheets:
     tabs:
       - product_maturity_historical
   - name: release_blog_posts
-    owner: '@m_walker'
+    owner: '@markglenfletcher' 
     tabs:
       - release_blog_posts
   - name: rep_quotas
