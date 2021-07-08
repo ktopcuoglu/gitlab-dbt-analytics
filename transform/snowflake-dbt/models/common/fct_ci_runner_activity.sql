@@ -5,6 +5,7 @@
 
 {{ simple_cte([
     ('dim_ci_build', 'dim_ci_build'),
+    ('dim_ci_stage', 'dim_ci_stage'),
     ('dim_project', 'dim_project'),
     ('gitlab_dotcom_ci_runners', 'gitlab_dotcom_ci_runners')
 ]) }}
@@ -18,8 +19,8 @@
       -- FOREIGN KEYS
       dim_ci_build.dim_ci_runner_id,
       dim_ci_build.dim_ci_pipeline_id,
-      dim_ci_build.dim_ci_stage_id,
-      dim_ci_build.dim_project_id,
+      dim_ci_stage.dim_ci_stage_id,
+      dim_project.dim_project_id,
       dim_ci_build.dim_namespace_id,
       dim_ci_build.ultimate_parent_namespace_id,
       dim_ci_build.dim_plan_id,
@@ -59,6 +60,8 @@
       ON dim_ci_build.ci_runner_id = gitlab_dotcom_ci_runners.runner_id
     LEFT JOIN dim_project 
       ON dim_ci_build.dim_project_id = dim_project.dim_project_id
+    LEFT JOIN dim_ci_stage 
+      ON dim_ci_build.dim_ci_stage_id = dim_ci_stage.dim_ci_stage_id
 
 )
 
