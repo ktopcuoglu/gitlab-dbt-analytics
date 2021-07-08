@@ -137,6 +137,7 @@
              order_created_at)                                                            AS valid_from,
       valid_to
     FROM pivoted
+    WHERE order_created_at IS NOT NULL
 
     UNION ALL
 
