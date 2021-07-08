@@ -1607,6 +1607,27 @@ models:
       - name: ping_date
       - name: counter_value
 
+  - name: prep_ci_build
+    description: '{{ doc("prep_ci_build") }}'
+    columns:
+      - name: dim_ci_build_id
+        description: Unique key of CI Build
+        tests:
+          - not_null
+          - unique
+      - name: dim_project_id
+        description: Foreign key to `dim_project` that shows the ID of the project in which the build has been triggered.
+      - name: dim_namespace_id
+        description: Foreign key to `dim_namespace` that shows the ID of the namespace in which the build has been triggered.
+      - name: ultimate_parent_namespace_id
+      - name: dim_user_id
+        description: Foreign key to `dim_user` that shows the ID of the user who triggered the CI Build
+      - name: dim_plan_id
+        description: ID of the Plan
+      - name: ci_runner_id
+        description: ID of the runner with which the CI build has been run.
+      - name: dim_ci_stage_id
+
   - name: prep_ci_pipeline
     description: '{{ doc("prep_ci_pipeline") }}'
     columns:
@@ -1614,6 +1635,25 @@ models:
         tests:
           - not_null
           - unique
+
+  - name: prep_ci_stage
+    description: '{{ doc("dim_ci_stage") }}'
+    columns:
+      - name: dim_ci_stage_id
+        tests:
+          - not_null
+          - unique
+      - name: dim_project_id
+        description: Foreign key to `dim_project` that shows the ID of the project in which the stage was run.
+      - name: dim_pipeline_id
+        description: Foreign key to `dim_ci_pipeline` that shows the ID of the pipeline in which the stage was run.
+      - name: created_date_id
+        description: Foreign key to `dim_date` that shows the ID of the date on which the stage was created.
+        tests:
+          - not_null
+      - name: created_at
+        tests:
+          - not_null
 
   - name: prep_event
     description: '{{ doc("prep_event") }}'
@@ -1634,27 +1674,6 @@ models:
         tests:
           - unique
           - not_null
-
-  - name: prep_ci_build
-    description: '{{ doc("prep_ci_build") }}'
-    columns:
-      - name: dim_ci_build_id
-        description: Unique key of CI Build
-        tests:
-          - not_null
-          - unique
-      - name: dim_project_id
-        description: Foreign key that shows the ID of the project in which the build has been triggered.
-      - name: dim_namespace_id
-        description: Foreign key that shows the ID of the namespace in which the build has been triggered.
-      - name: ultimate_parent_namespace_id
-      - name: dim_user_id
-        description: Foreign key that shows the ID of the user who triggered the CI Build
-      - name: dim_plan_id
-        description: ID of the Plan
-      - name: ci_runner_id
-        description: ID of the runner with which the CI build has been run.
-      - name: dim_ci_stage_id
 
   - name: prep_issue
     description: '{{ doc("prep_issue") }}'

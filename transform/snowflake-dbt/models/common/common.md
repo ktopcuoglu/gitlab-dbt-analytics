@@ -625,6 +625,18 @@ Easy joins available with:
 * dim_date through `ci_pipeline_creation_dim_date_id`
 {% enddocs %}
 
+{% docs dim_ci_stage %}
+
+A dim table that contains all CI Stages run in Gitlab.com CI Pipelines.
+
+Easy joins available with:
+
+* dim_project through `dim_project_id`
+* dim_ci_pipeline through `dim_ci_pipeline_id`
+* dim_date through `created_date_id`
+
+{% enddocs %}
+
 {% docs dim_event %}
 
 Dimensional table representing events recorded by the Events API. [More info about events tracked here](https://docs.gitlab.com/ee/api/events.html)

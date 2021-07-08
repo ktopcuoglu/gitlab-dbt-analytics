@@ -2904,36 +2904,6 @@ models:
       - name: time_period
         description: Metrics can be all-time counters, 28 day counters, or weekly counters. This signifies which it is
 
-  - name: dim_ci_pipeline
-    description: '{{ doc("dim_ci_pipeline") }}'
-    columns:
-      - name: dim_ci_pipeline_id
-        description: The unique identifier for each of the CI Pipelines.
-      - name: dim_project_id
-        tests:
-          - not_null
-      - name: dim_plan_id
-        tests:
-          - not_null      
-      - name: dim_ci_pipeline_internal_id
-        description: Internal ID for the CI Pipeline. This is project specific
-
-
-  - name: dim_event
-    description: '{{ doc("dim_event") }}'
-    columns:
-      - name: dim_event_id
-        description: The unique identifier for each of the events.
-        tests:
-          - not_null
-          - unique
-      - name: dim_project_id
-        tests:
-          - not_null
-      - name: dim_plan_id
-        tests:
-          - not_null
-
   - name: dim_ci_build
     description: '{{ doc("dim_ci_build") }}'
     columns:
@@ -2943,12 +2913,12 @@ models:
           - not_null
           - unique
       - name: dim_project_id
-        description: Foreign key that shows the ID of the project in which the build has been triggered.
+        description: Foreign key to `dim_project` that shows the ID of the project in which the build has been triggered.
       - name: dim_namespace_id
-        description: Foreign key that shows the ID of the namespace in which the build has been triggered.
+        description: Foreign key to `dim_namespace` that shows the ID of the namespace in which the build has been triggered.
       - name: ultimate_parent_namespace_id
       - name: dim_user_id
-        description: Foreign key that shows the ID of the user who triggered the CI Build
+        description: Foreign key to `dim_user` that shows the ID of the user who triggered the CI Build
       - name: dim_plan_id
         description: ID of the Plan
       - name: ci_runner_id
@@ -2963,6 +2933,59 @@ models:
           - not_null
           - unique
       - name: dim_project_id
+      - name: dim_plan_id
+        tests:
+          - not_null
+
+  - name: dim_ci_pipeline
+    description: '{{ doc("dim_ci_pipeline") }}'
+    columns:
+      - name: dim_ci_pipeline_id
+        description: The unique identifier for each of the CI Pipelines.
+      - name: dim_project_id
+        tests:
+          - not_null
+      - name: dim_plan_id
+        tests:
+          - not_null      
+      - name: dim_ci_pipeline_internal_id
+        description: Internal ID for the CI Pipeline. This is project specific
+
+  - name: dim_ci_stage
+    description: '{{ doc("dim_ci_stage") }}'
+    columns:
+      - name: dim_ci_stage_id
+        tests:
+          - not_null
+          - unique
+      - name: dim_project_id
+        description: Foreign key to `dim_project` that shows the ID of the project in which the stage was run.
+      - name: dim_pipeline_id
+        description: Foreign key to `dim_ci_pipeline` that shows the ID of the pipeline in which the stage was run.
+      - name: created_date_id
+        description: Foreign key to `dim_date` that shows the ID of the date on which the stage was created.
+        tests:
+          - not_null
+      - name: created_at
+        tests:
+          - not_null
+      - name: updated_at
+      - name: ci_stage_name
+      - name: ci_stage_status
+      - name: lock_version
+      - name: position
+
+  - name: dim_event
+    description: '{{ doc("dim_event") }}'
+    columns:
+      - name: dim_event_id
+        description: The unique identifier for each of the events.
+        tests:
+          - not_null
+          - unique
+      - name: dim_project_id
+        tests:
+          - not_null
       - name: dim_plan_id
         tests:
           - not_null
