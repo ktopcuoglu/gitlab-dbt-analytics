@@ -92,11 +92,6 @@ databases:
     - mvilain_prep:
         shared: no
 
-    - mwalker_prod:
-        shared: no
-    - mwalker_prep:
-        shared: no
-
     - mwawrzyniak_prod:
         shared: no
     - mwawrzyniak_prep:
@@ -2708,6 +2703,12 @@ roles:
         warehouses:
             - reporting
 
+    - marntz:
+        member_of:
+            - analyst_sales
+        warehouses:
+            - analyst_xs 
+
     - mcooper:
         member_of:
             - analyst_finance
@@ -2869,45 +2870,8 @@ roles:
                     - mvilain_prod.*.*
 
     - mwalker:
-        member_of:
-            - engineer
-        warehouses:
-            - engineer_xs
-            - engineer_xl
-            - loading
-            - reporting
-        owns:
-            databases:
-                - mwalker_prep
-                - mwalker_prod
-            schemas:
-                - mwalker_prep.*
-                - mwalker_prod.*
-            tables:
-                - mwalker_prep.*.*
-                - mwalker_prod.*.*
-        privileges:
-            databases:
-                read:
-                    - mwalker_prep
-                    - mwalker_prod
-                write:
-                    - mwalker_prep
-                    - mwalker_prod
-            schemas:
-                read:
-                    - mwalker_prep.*
-                    - mwalker_prod.*
-                write:
-                    - mwalker_prep.*
-                    - mwalker_prod.*
-            tables:
-                read:
-                    - mwalker_prep.*.*
-                    - mwalker_prod.*.*
-                write:
-                    - mwalker_prep.*.*
-                    - mwalker_prod.*.*
+        member_of: []
+        warehouses: []
 
     - mwawrzyniak:
         member_of:
@@ -3818,6 +3782,11 @@ users:
         member_of:
             - lvandensteen
 
+    - marntz:
+        can_login: yes
+        member_of:
+            - marntz
+
     - mbergeron:
         can_login: no
         member_of: []
@@ -3891,12 +3860,8 @@ users:
             - mwilkins
 
     - mwalker:
-        can_login: yes
-        member_of:
-            - mwalker
-            - accountadmin
-            - securityadmin
-            - sysadmin
+        can_login: no
+        member_of: []
 
     - mwawrzyniak:
         can_login: yes

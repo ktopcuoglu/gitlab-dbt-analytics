@@ -27,7 +27,8 @@ WITH source AS (
       setup_for_company::BOOLEAN          AS setup_for_company,
       render_whitespace_in_code::BOOLEAN  AS render_whitespace_in_code,
       tab_width::VARCHAR                  AS tab_width,
-      experience_level::NUMBER            AS experience_level
+      experience_level::NUMBER            AS experience_level,
+      view_diffs_file_by_file::BOOLEAN    AS view_diffs_file_by_file
 
     FROM source
     
