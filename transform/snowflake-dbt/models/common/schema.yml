@@ -392,21 +392,6 @@ models:
           - not_null
         tags: ["tdf", "common", "sales_funnel"]
 
-  - name: dim_gainsight_product_usage_metric
-    description: '{{ doc("dim_gainsight_product_usage_metric") }}'
-    columns:
-      - name: wave
-        description: Iteration of metrics requested by Gainsight.
-        tests:
-          - not_null
-        tags: ["tdf", "common", "gainsight"]
-      - name: metric_name
-        description: Metric name as it would appear in the Usage Ping payload, separated by '.' instead of '::'.
-        tests:
-          - unique
-          - not_null
-        tags: ["tdf", "common", "gainsight"]
-
   - name: dim_gitlab_ops_gitlab_emails
     description: '{{ doc("gitlab_dotcom_gitlab_emails") }}'
     columns:
