@@ -2157,7 +2157,7 @@ tables:
       , group_id
       , inherit_from_id
       , instance
-      FROM services
+      FROM integrations
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   snippets:
