@@ -201,6 +201,6 @@
     cte_ref="joined",
     created_by="@ischweickartDD",
     updated_by="@ischweickartDD",
-    created_date="2021-07-06",
-    updated_date="2021-07-06"
+    created_date="2021-07-07",
+    updated_date="2021-07-07"
 ) }}
