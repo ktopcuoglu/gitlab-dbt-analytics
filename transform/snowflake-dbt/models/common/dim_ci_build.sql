@@ -13,7 +13,7 @@ WITH prep_ci_build AS (
       dim_user_id,
       dim_ci_stage_id,
 
-      status,
+      ci_build_status,
       finished_at,
       trace,
       created_at,
@@ -29,9 +29,9 @@ WITH prep_ci_build AS (
       stage_idx,
       tag,
       ref,
-      type,
+      ci_build_type,
       target_url,
-      description,
+      ci_build_description,
       erased_by_id,
       erased_at,
       artifacts_expire_at,
@@ -53,8 +53,8 @@ WITH prep_ci_build AS (
 {{ dbt_audit(
     cte_ref="prep_ci_build",
     created_by="@mpeychet_",
-    updated_by="@mpeychet_",
+    updated_by="@ischweickartDD",
     created_date="2021-06-17",
-    updated_date="2021-06-17"
+    updated_date="2021-07-09"
 ) }}
 
