@@ -8,6 +8,7 @@ WITH prep_ci_runner AS (
      
       created_at,
       updated_at,
+      ci_runner_description,
       contacted_at,
       is_active,
       ci_runner_version,
@@ -29,8 +30,8 @@ WITH prep_ci_runner AS (
 {{ dbt_audit(
     cte_ref="prep_ci_runner",
     created_by="@snalamaru",
-    updated_by="@snalamaru",
+    updated_by="@ischweickartDD",
     created_date="2021-06-23",
-    updated_date="2021-06-23"
+    updated_date="2021-07-09"
 ) }}
 

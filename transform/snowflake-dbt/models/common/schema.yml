@@ -2973,6 +2973,7 @@ models:
       - name: created_date_id
       - name: created_at
       - name: updated_at
+      - name: ci_runner_description
       - name: contacted_at
       - name: is_active
       - name: ci_runner_version
