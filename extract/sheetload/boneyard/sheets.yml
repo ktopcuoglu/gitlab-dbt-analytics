@@ -1,4 +1,8 @@
 sheets:
+  - name: bronze_sus_responders_fy22q1
+    owner: '@jeanpeguero'
+    tabs:
+      - bronze_sus_responders_fy22q1
   - name: crm_accounts_pricing_eoa
     owner: '@jeanpeguero'
     tabs:
