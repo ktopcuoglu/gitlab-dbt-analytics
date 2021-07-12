@@ -23,7 +23,7 @@ SALT_PASSWORD=416C736F4E6F745365637265FFFFFFAB
 VENV_NAME?=dbt
 VENV_ACTIVATE=. $(VENV_NAME)/bin/activate
 PYTHON=${VENV_NAME}/bin/python3
-PYTHON_VERSION=$(shell python3 -c "import sys;t='{v[0]}.{v[1]}'.format(v=list(sys.version_info[:2]));sys.stdout.write(t)");
+PYTHON_VERSION=$(shell python3 -c "import sys;t='{v[0]}.{v[1]}.{v[2]}'.format(v=list(sys.version_info[:3]));sys.stdout.write(t)");
 
 .DEFAULT: help
 help:
@@ -80,23 +80,15 @@ dbt-image:
 	@"$(DOCKER_RUN)" dbt_image bash -c "dbt clean && dbt deps && /bin/bash"
 
 prepare-dbt:
-	which python3 || echo "Please install python 3.8.6 from https://www.python.org/downloads/release/python-386/"
+	@if [ "$(PYTHON_VERSION)" != "3.8.6" ]; then echo "Please install python 3.8.6 from https://www.python.org/downloads/release/python-386/" && exit 1; fi
 	which pipenv || python3 -m pip install pipenv
-	which virtualenv || python3 -m pip install virtualenv
-	make check-venv
+	pipenv install
 
-check-venv: $(VENV_NAME)/bin/activate
-$(VENV_NAME)/bin/activate: setup.py
-	test -d $(VENV_NAME) || virtualenv -p python3 $(VENV_NAME)
-	${PYTHON} -m pip install -U pip
-	${PYTHON} -m pip install -e .
-	touch $(VENV_NAME)/bin/activate
+run-dbt:
+	pipenv shell "cd transform/snowflake-dbt/; dbt clean && dbt deps;"
 
-run-dbt: check-venv
-	$(VENV_ACTIVATE) && cd transform/snowflake-dbt/; dbt clean && dbt deps; exec bash;
-
-run-dbt-docs: check-venv
-	$(VENV_ACTIVATE) && cd transform/snowflake-dbt/; dbt clean && dbt deps && dbt docs generate --target docs && dbt docs serve --port 8081;
+run-dbt-docs:
+	pipenv shell "cd transform/snowflake-dbt/; dbt clean && dbt deps && dbt docs generate --target docs && dbt docs serve --port 8081;"
 
 clean-dbt:
 	find . -name '*.pyc' -delete
