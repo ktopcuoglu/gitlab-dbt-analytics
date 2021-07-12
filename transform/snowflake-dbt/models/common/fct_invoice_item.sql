@@ -40,11 +40,16 @@ WITH map_merged_crm_account AS (
     WHERE is_deleted = FALSE
       AND exclude_from_analysis IN ('False', '')
 
+), zuora_revenue_bill AS (
+
+    SELECT *
+    FROM {{ ref('zuora_revenue_revenue_contract_bill_source') }}
+
 ), base_charges AS (
 
     SELECT
       zuora_account.account_id                                                  AS billing_account_id_subscription,
-      map_merged_crm_account.dim_crm_account_id                                AS crm_account_id_subscription,
+      map_merged_crm_account.dim_crm_account_id                                 AS crm_account_id_subscription,
       zuora_subscription.subscription_id,
       zuora_rate_plan_charge.rate_plan_charge_id                                AS charge_id,
       zuora_rate_plan_charge.rate_plan_charge_number,
@@ -75,7 +80,7 @@ WITH map_merged_crm_account AS (
       zuora_invoice_item.service_start_date::DATE       AS service_start_date,
       zuora_invoice_item.service_end_date::DATE         AS service_end_date,
       zuora_invoice.account_id                          AS billing_account_id_invoice,
-      map_merged_crm_account.dim_crm_account_id        AS crm_account_id_invoice,
+      map_merged_crm_account.dim_crm_account_id         AS crm_account_id_invoice,
       zuora_invoice_item.rate_plan_charge_id            AS charge_id,
       zuora_invoice_item.product_rate_plan_charge_id    AS product_details_id,
       zuora_invoice_item.sku                            AS sku,
@@ -102,6 +107,7 @@ WITH map_merged_crm_account AS (
       invoice_charges.billing_account_id_invoice    AS dim_billing_account_id_invoice,
       invoice_charges.crm_account_id_invoice        AS dim_crm_account_id_invoice,
       base_charges.subscription_id                  AS dim_subscription_id,
+      zuora_revenue_bill.revenue_contract_line_id   AS dim_revenue_contract_line_id,
       invoice_charges.charge_id,
       invoice_charges.product_details_id            AS dim_product_detail_id,
       invoice_charges.invoice_number,
@@ -125,13 +131,15 @@ WITH map_merged_crm_account AS (
     FROM base_charges
     INNER JOIN invoice_charges
       ON base_charges.charge_id = invoice_charges.charge_id
+    LEFT JOIN zuora_revenue_bill
+      ON invoice_charges.invoice_item_id = zuora_revenue_bill.invoice_item_id
 
 )
 
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mcooperDD",
-    updated_by="@mcooperDD",
+    updated_by="@michellecooper",
     created_date="2021-01-15",
-    updated_date="2021-01-15"
+    updated_date="2021-06-21"
 ) }}

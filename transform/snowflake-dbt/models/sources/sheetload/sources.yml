@@ -42,6 +42,7 @@ sources:
       - name: data_team_csat_survey_fy2021_q4
       - name: days_sales_outstanding
       - name: days_to_close
+      - name: deleted_mrs
       - name: employee_location_factor
       - name: engineering_infra_prod_console_access
       - name: engineering_speciality_prior_to_capture
@@ -70,6 +71,7 @@ sources:
       - name: manual_arr_true_up_allocation
       - name: manual_public_company_metrics
       - name: manual_downgrade_dotcom_tracking
+      - name: mapping_sdr_sfdc_bamboohr
       - name: marketing_core_users_from_docs_gitlab_com
       - name: marketing_kpi_benchmarks
       - name: marketing_pipe_to_spend_headcount
@@ -98,6 +100,7 @@ sources:
       - name: sdr_adaptive_data
       - name: sdr_attainment_to_goal
       - name: sdr_count_snapshot
+      - name: sisense_users
       - name: social_marketing_metrics
       - name: social_marketing_topic_metrics
       - name: usage_ping_metrics_sections

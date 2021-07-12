@@ -149,11 +149,16 @@ models:
       date:
         +materialized: table
         +schema: date
-
+      
       dbt:
         +materialized: incremental
         +schema: dbt
         +tags: ["dbt"]
+      
+      demandbase:
+        +materialized: table
+        +schema: demandbase
+        +tags: ["demandbase"]
 
       discourse:
         +materialized: table
@@ -217,6 +222,10 @@ models:
         +materialized: table
         +schema: pmg
 
+      pto:
+        +materialized: table
+        +schema: gitlab_pto
+
       qualtrics:
         +materialized: table
         +schema: qualtrics
@@ -246,6 +255,11 @@ models:
       snowplow:
         +tags: ["product"]
         +schema: snowplow
+      
+      thanos:
+        +materialized: table
+        +schema: prometheus
+        +tags: ["thanos"]
 
       version:
         +tags: ["product"]
@@ -262,6 +276,10 @@ models:
         +schema: zuora
         +tags: ["zuora"]
 
+      zuora_revenue:
+        +schema: zuora_revenue
+        +tags: ["zuora_revenue"]
+
     # ------------------
     # Common
     # ------------------
@@ -276,6 +294,13 @@ models:
     common_mapping:
       +materialized: table
       +schema: common_mapping
+       
+    common_prep:
+      +materialized: table
+      +schema: common_mapping
+      month_partition:
+        +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
+        +schema: "dotcom_usage_events_{{ var('year', run_started_at.strftime('%Y')) }}_{{ var('month', run_started_at.strftime('%m')) }}"
 
     # ------------------
     # Legacy (formerly Staging)

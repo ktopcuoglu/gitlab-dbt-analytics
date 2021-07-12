@@ -21,4 +21,4 @@ Closes # <!--- Link the Issue this MR closes --->
 
 ----
 /label ~Infrastructure ~"Data Team - Engineering" ~"EntApp Ecosystem" ~"Data Pump"
-/assign @jjstark @gitlab-com/business-technology/enterprise-apps/integrations
+/assign @paul_armstrong @gitlab-com/business-technology/enterprise-apps/integrations

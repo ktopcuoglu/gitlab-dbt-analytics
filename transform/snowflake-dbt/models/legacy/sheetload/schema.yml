@@ -77,6 +77,8 @@ models:
 - name: sheetload_manual_arr_true_up_allocation
 - name: sheetload_manual_public_company_metrics
 - name: sheetload_manual_downgrade_dotcom_tracking
+- name: sheetload_mapping_sdr_sfdc_bamboohr
+  description: Mapping table with the sfdc user id of Sales Development Representative (SDR) and their respective BambooHR id.
 - name: sheetload_marketing_core_users_from_docs_gitlab_com
 - name: sheetload_marketing_kpi_benchmarks
 - name: sheetload_osat
@@ -97,6 +99,8 @@ models:
   description: Source model for SDR attainment and goals by month.
 - name: sheetload_sdr_count_snapshot
   description: SDR counts by fiscal quarter and sales segment.
+- name: sheetload_sisense_users
+  description: source model for Sisense users.
 - name: sheetload_social_marketing_metrics
 - name: sheetload_social_marketing_topic_metrics
 - name: sheetload_net_arr_net_iacv_conversion_factors
@@ -170,3 +174,10 @@ models:
   description: Sales funnel target Matrix
 - name: sheetload_sales_funnel_partner_alliance_targets_matrix
   description: Sales funnel Matrix for partner and alliances targets
+- name: sheetload_deleted_mrs
+  description: Internal MR ID that were deleted and not captured by our system.
+  columns:
+    - name: deleted_merge_request_id
+      tests:
+        - not_null
+        - unique

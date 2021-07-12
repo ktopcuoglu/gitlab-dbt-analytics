@@ -65,6 +65,7 @@ WITH prep_project AS (
       project_import_url,
       project_merge_requests_template,
       active_service_types_array,
+      is_learn_gitlab,
       member_count
     FROM {{ ref('prep_project') }}
 

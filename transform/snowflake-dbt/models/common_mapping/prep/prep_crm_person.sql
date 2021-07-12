@@ -47,6 +47,7 @@ WITH biz_person AS (
       'contact'                                     AS sfdc_record_type,
       contact_email_hash                            AS email_hash,
       email_domain,
+      email_domain_type,
 
       --keys
       master_record_id,
@@ -71,7 +72,15 @@ WITH biz_person AS (
       bizible_touchpoint_position,
       bizible_marketing_channel_path,
       bizible_touchpoint_date,
-      region
+      sequence_step_type,
+      name_of_active_sequence,
+      sequence_task_due_date,
+      sequence_status,
+      is_actively_being_sequenced,
+      region,
+      last_activity_date,
+
+      NULL                                          AS crm_partner_id
 
     FROM sfdc_contacts
     LEFT JOIN biz_person_with_touchpoints
@@ -87,6 +96,7 @@ WITH biz_person AS (
       'lead'                                     AS sfdc_record_type,
       lead_email_hash                            AS email_hash,
       email_domain,
+      email_domain_type,
 
       --keys
       master_record_id,
@@ -111,7 +121,15 @@ WITH biz_person AS (
       bizible_touchpoint_position,
       bizible_marketing_channel_path,
       bizible_touchpoint_date,
-      region
+      sequence_step_type,
+      name_of_active_sequence,
+      sequence_task_due_date,
+      sequence_status,
+      is_actively_being_sequenced,
+      region,
+      last_activity_date,
+
+      crm_partner_id
 
     FROM sfdc_leads
     LEFT JOIN biz_person_with_touchpoints
@@ -125,5 +143,5 @@ WITH biz_person AS (
     created_by="@mcooperDD",
     updated_by="@jpeguero",
     created_date="2020-12-08",
-    updated_date="2021-06-07"
+    updated_date="2021-06-23"
 ) }}

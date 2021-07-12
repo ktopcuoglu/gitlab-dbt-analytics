@@ -192,6 +192,23 @@ tables:
       FROM boards
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
+  boards_epic_boards:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'boards_epic_boards'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id 
+      , hide_backlog_list
+      , hide_closed_list
+      , group_id
+      , created_at
+      , updated_at
+      , name
+      FROM boards_epic_boards
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   bulk_imports:
     export_schema: "gitlab_com"
     export_table: bulk_imports
@@ -1094,6 +1111,41 @@ tables:
       FROM in_product_marketing_emails
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
+  integrations:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'integrations'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , type
+      , project_id
+      , created_at
+      , updated_at
+      , active
+      , properties
+      , template
+      , push_events
+      , issues_events
+      , merge_requests_events
+      , tag_push_events
+      , note_events
+      , category
+      , wiki_page_events
+      , pipeline_events
+      , confidential_issues_events
+      , commit_events
+      , job_events
+      , confidential_note_events
+      , deployment_events
+      , comment_on_event_enabled
+      , group_id
+      , inherit_from_id
+      , instance
+      FROM integrations
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp         
   issue_metrics:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -1177,7 +1229,7 @@ tables:
       , updated_at
       FROM issues_self_managed_prometheus_alert_events
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp       
   jira_imports:
     export_schema: "gitlab_com"
     export_table: jira_imports
@@ -2140,7 +2192,7 @@ tables:
       , group_id
       , inherit_from_id
       , instance
-      FROM services
+      FROM integrations
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   snippets:
@@ -2373,6 +2425,7 @@ tables:
       , render_whitespace_in_code
       , tab_width
       , experience_level
+      , view_diffs_file_by_file
       FROM user_preferences
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp

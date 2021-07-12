@@ -90,6 +90,7 @@ WITH date_details AS (
       sfdc_opportunity_snapshot_history.opportunity_business_development_representative,
       sfdc_opportunity_snapshot_history.opportunity_development_representative,
 
+      sfdc_opportunity_snapshot_history.order_type AS snapshot_order_type_stamped,
       --sfdc_opportunity_snapshot_history.order_type,
       --sfdc_opportunity_snapshot_history.opportunity_owner_team,
       --sfdc_opportunity_snapshot_history.opportunity_owner_manager,
@@ -108,7 +109,7 @@ WITH date_details AS (
       --sfdc_opportunity_snapshot_history.closed_deals,
       --sfdc_opportunity_snapshot_history.competitors,
       --sfdc_opportunity_snapshot_history.critical_deal_flag,
-      sfdc_opportunity_snapshot_history.deal_size,
+      --sfdc_opportunity_snapshot_history.deal_size,
       sfdc_opportunity_snapshot_history.forecast_category_name,
       --sfdc_opportunity_snapshot_history.forecasted_iacv,
       sfdc_opportunity_snapshot_history.iacv_created_date,
@@ -196,37 +197,38 @@ WITH date_details AS (
 
       --date helpers
 
-      sfdc_opportunity_snapshot_history.date_actual              AS snapshot_date,  
-      snapshot_date.first_day_of_month                           AS snapshot_date_month,
-      snapshot_date.fiscal_year                                  AS snapshot_fiscal_year,
-      snapshot_date.fiscal_quarter_name_fy                       AS snapshot_fiscal_quarter_name,
-      snapshot_date.first_day_of_fiscal_quarter                  AS snapshot_fiscal_quarter_date,
-      snapshot_date.day_of_fiscal_quarter_normalised             AS snapshot_day_of_fiscal_quarter_normalised,
+      sfdc_opportunity_snapshot_history.date_actual               AS snapshot_date,  
+      snapshot_date.first_day_of_month                            AS snapshot_date_month,
+      snapshot_date.fiscal_year                                   AS snapshot_fiscal_year,
+      snapshot_date.fiscal_quarter_name_fy                        AS snapshot_fiscal_quarter_name,
+      snapshot_date.first_day_of_fiscal_quarter                   AS snapshot_fiscal_quarter_date,
+      snapshot_date.day_of_fiscal_quarter_normalised              AS snapshot_day_of_fiscal_quarter_normalised,
       
-      close_date_detail.first_day_of_month                       AS close_date_month,
-      close_date_detail.fiscal_year                              AS close_fiscal_year,
-      close_date_detail.fiscal_quarter_name_fy                   AS close_fiscal_quarter_name,
-      close_date_detail.first_day_of_fiscal_quarter              AS close_fiscal_quarter_date,
+      close_date_detail.first_day_of_month                        AS close_date_month,
+      close_date_detail.fiscal_year                               AS close_fiscal_year,
+      close_date_detail.fiscal_quarter_name_fy                    AS close_fiscal_quarter_name,
+      close_date_detail.first_day_of_fiscal_quarter               AS close_fiscal_quarter_date,
 
       -- This refers to the closing quarter perspective instead of the snapshot quarter
       90 - DATEDIFF(day, snapshot_date.date_actual, close_date_detail.last_day_of_fiscal_quarter)           AS close_day_of_fiscal_quarter_normalised,
 
-      created_date_detail.first_day_of_month                     AS created_date_month,
-      created_date_detail.fiscal_year                            AS created_fiscal_year,
-      created_date_detail.fiscal_quarter_name_fy                 AS created_fiscal_quarter_name,
-      created_date_detail.first_day_of_fiscal_quarter            AS created_fiscal_quarter_date,
+      created_date_detail.first_day_of_month                      AS created_date_month,
+      created_date_detail.fiscal_year                             AS created_fiscal_year,
+      created_date_detail.fiscal_quarter_name_fy                  AS created_fiscal_quarter_name,
+      created_date_detail.first_day_of_fiscal_quarter             AS created_fiscal_quarter_date,
 
-      net_arr_created_date.first_day_of_month                       AS iacv_created_date_month,
-      net_arr_created_date.fiscal_year                              AS iacv_created_fiscal_year,
-      net_arr_created_date.fiscal_quarter_name_fy                   AS iacv_created_fiscal_quarter_name,
-      net_arr_created_date.first_day_of_fiscal_quarter              AS iacv_created_fiscal_quarter_date,
+      net_arr_created_date.first_day_of_month                     AS iacv_created_date_month,
+      net_arr_created_date.fiscal_year                            AS iacv_created_fiscal_year,
+      net_arr_created_date.fiscal_quarter_name_fy                 AS iacv_created_fiscal_quarter_name,
+      net_arr_created_date.first_day_of_fiscal_quarter            AS iacv_created_fiscal_quarter_date,
 
-      created_date_detail.date_actual                              AS net_arr_created_date,
-      created_date_detail.first_day_of_month                       AS net_arr_created_date_month,
-      created_date_detail.fiscal_year                              AS net_arr_created_fiscal_year,
-      created_date_detail.fiscal_quarter_name_fy                   AS net_arr_created_fiscal_quarter_name,
-      created_date_detail.first_day_of_fiscal_quarter              AS net_arr_created_fiscal_quarter_date,
+      created_date_detail.date_actual                             AS net_arr_created_date,
+      created_date_detail.first_day_of_month                      AS net_arr_created_date_month,
+      created_date_detail.fiscal_year                             AS net_arr_created_fiscal_year,
+      created_date_detail.fiscal_quarter_name_fy                  AS net_arr_created_fiscal_quarter_name,
+      created_date_detail.first_day_of_fiscal_quarter             AS net_arr_created_fiscal_quarter_date,
 
+      net_arr_created_date.date_actual                            AS pipeline_created_date,
       net_arr_created_date.first_day_of_month                     AS pipeline_created_date_month,
       net_arr_created_date.fiscal_year                            AS pipeline_created_fiscal_year,
       net_arr_created_date.fiscal_quarter_name_fy                 AS pipeline_created_fiscal_quarter_name,
@@ -311,7 +313,19 @@ WITH date_details AS (
         WHEN LOWER(sfdc_opportunity_snapshot_history.sales_type) like '%renewal%' 
           THEN 1
         ELSE 0
-      END                                                         AS is_renewal 
+      END                                                         AS is_renewal,
+
+      -- calculated age field
+      -- if open, use the diff between created date and snapshot date
+      -- if closed, a) the close date is later than snapshot date, use snapshot date
+      -- if closed, b) the close is in the past, use close date
+      CASE
+        WHEN is_open = 1
+          THEN DATEDIFF(days, created_date_detail.date_actual, snapshot_date.date_actual)
+        WHEN is_open = 0 AND snapshot_date.date_actual < close_date_detail.date_actual
+          THEN DATEDIFF(days, created_date_detail.date_actual, snapshot_date.date_actual)
+        ELSE DATEDIFF(days, created_date_detail.date_actual, close_date_detail.date_actual)
+      END                                                       AS calculated_age_in_days
 
     FROM {{ref('sfdc_opportunity_snapshot_history')}}
     INNER JOIN date_details close_date_detail
@@ -612,6 +626,38 @@ WITH date_details AS (
       -- compound metrics for reporting
       ------------------------------
 
+      -- current deal size field, it was creasted by the data team and the original doesn't work
+      CASE 
+        WHEN opp_snapshot.net_arr > 0 AND net_arr < 5000 
+          THEN '1 - Small (<5k)'
+        WHEN opp_snapshot.net_arr >=5000 AND net_arr < 25000 
+          THEN '2 - Medium (5k - 25k)'
+        WHEN opp_snapshot.net_arr >=25000 AND net_arr < 100000 
+          THEN '3 - Big (25k - 100k)'
+        WHEN opp_snapshot.net_arr >= 100000 
+          THEN '4 - Jumbo (>100k)'
+        ELSE 'Other' 
+      END                                                          AS deal_size,
+
+      -- extended version of the deal size
+      CASE 
+        WHEN opp_snapshot.net_arr > 0 AND net_arr < 5000 
+          THEN '1. (0k -5k)'
+        WHEN opp_snapshot.net_arr >=5000 AND net_arr < 25000 
+          THEN '2. (5k - 25k)'
+        WHEN opp_snapshot.net_arr >=25000 AND net_arr < 100000 
+          THEN '3. (25k - 100k)'
+        WHEN opp_snapshot.net_arr >= 100000 AND net_arr < 250000 
+          THEN '4. (100k - 250k)'
+        WHEN opp_snapshot.net_arr >= 250000 AND net_arr < 500000 
+          THEN '5. (250k - 500k)'
+        WHEN opp_snapshot.net_arr >= 500000 AND net_arr < 1000000 
+          THEN '6. (500k-1000k)'
+        WHEN opp_snapshot.net_arr >= 1000000 
+          THEN '7. (>1000k)'
+        ELSE 'Other' 
+      END                                                           AS calculated_deal_size,
+
             -- Open pipeline eligibility definition
       CASE 
         WHEN lower(opp_snapshot.deal_group) LIKE ANY ('%growth%', '%new%')
@@ -642,14 +688,7 @@ WITH date_details AS (
          ELSE 0
       END                                                   AS is_eligible_created_pipeline_flag,
 
-      -- created and closed within the quarter net arr
-      CASE 
-        WHEN opp_snapshot.pipeline_created_fiscal_quarter_name = opp_snapshot.close_fiscal_quarter_name
-           AND is_eligible_created_pipeline_flag = 1
-            THEN opp_snapshot.net_arr
-        ELSE 0
-      END                                                   AS created_and_won_same_quarter_net_arr,
-
+   
       -- created within quarter
       CASE
         WHEN opp_snapshot.pipeline_created_fiscal_quarter_name = opp_snapshot.snapshot_fiscal_quarter_name
@@ -657,6 +696,16 @@ WITH date_details AS (
             THEN opp_snapshot.net_arr
         ELSE 0 
       END                                                  AS created_in_snapshot_quarter_net_arr,
+
+   -- created and closed within the quarter net arr
+      CASE 
+        WHEN opp_snapshot.pipeline_created_fiscal_quarter_name = opp_snapshot.close_fiscal_quarter_name
+           AND is_won = 1
+           AND is_eligible_created_pipeline_flag = 1
+            THEN opp_snapshot.net_arr
+        ELSE 0
+      END                                                   AS created_and_won_same_quarter_net_arr,
+
 
       CASE
         WHEN opp_snapshot.pipeline_created_fiscal_quarter_name = opp_snapshot.snapshot_fiscal_quarter_name
@@ -698,14 +747,15 @@ WITH date_details AS (
         ELSE 0
       END                                               AS booked_deal_count,
     
-      -- churn deal count (lost renewals)
+      -- churned contraction deal count as OT
       CASE
         WHEN ((opp_snapshot.is_renewal = 1
             AND opp_snapshot.is_lost = 1)
-            OR opp_snapshot.net_arr < 0)
-          THEN opp_snapshot.calculated_deal_count
+            OR opp_snapshot.is_won = 1 )
+            AND opp_snapshot.order_type_stamped IN ('5. Churn - Partial' ,'6. Churn - Final', '4. Contraction')
+        THEN opp_snapshot.calculated_deal_count
         ELSE 0
-      END                                               AS churned_deal_count,
+      END                                               AS churned_contraction_deal_count,
 
       -----------------
       -- Net ARR
@@ -734,19 +784,20 @@ WITH date_details AS (
       CASE
         WHEN (opp_snapshot.is_won = 1 
             OR (opp_snapshot.is_renewal = 1 
-              AND opp_snapshot.is_lost = 1))
+                  AND opp_snapshot.is_lost = 1))
           THEN opp_snapshot.net_arr
         ELSE 0 
       END                                                 AS booked_net_arr,
 
-      -- churn net arr (lost renewals)
+      -- churned contraction deal count as OT
       CASE
         WHEN ((opp_snapshot.is_renewal = 1
             AND opp_snapshot.is_lost = 1)
-            OR opp_snapshot.net_arr < 0)
-          THEN net_arr
+            OR opp_snapshot.is_won = 1 )
+            AND opp_snapshot.order_type_stamped IN ('5. Churn - Partial' ,'6. Churn - Final', '4. Contraction')
+        THEN net_arr
         ELSE 0
-      END                                                 AS churned_net_arr,
+      END                                                 AS churned_contraction_net_arr,
 
       -- 20201021 NF: This should be replaced by a table that keeps track of excluded deals for forecasting purposes
       CASE 

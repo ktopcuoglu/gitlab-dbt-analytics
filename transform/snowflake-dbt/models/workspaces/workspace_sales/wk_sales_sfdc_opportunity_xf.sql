@@ -66,7 +66,11 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity_xf.closed_deals,
       sfdc_opportunity_xf.competitors,
       sfdc_opportunity_xf.critical_deal_flag,
-      sfdc_opportunity_xf.deal_size,
+
+      -- Deal Size field is wrong in the source object
+      -- it is using
+      -- sfdc_opportunity_xf.deal_size,    
+      
       sfdc_opportunity_xf.forecast_category_name,
       sfdc_opportunity_xf.forecasted_iacv,
       sfdc_opportunity_xf.incremental_acv,
@@ -293,9 +297,16 @@ WITH sfdc_opportunity AS (
       END                                                                    AS opportunity_owner_user_segment,
 
       --  stamped field is not maintained for open deals
-      CASE WHEN sfdc_opportunity_xf.user_region_stamped IS NULL 
-          THEN opportunity_owner.user_region
-          ELSE sfdc_opportunity_xf.user_region_stamped
+      -- NF: 20210707 JB Asked to roll LATAM deals into EAST region
+      CASE WHEN sfdc_opportunity_xf.user_region_stamped IS NULL
+            AND  opportunity_owner.user_region != 'LATAM'
+              THEN opportunity_owner.user_region
+          WHEN sfdc_opportunity_xf.user_region_stamped != 'LATAM'
+              THEN sfdc_opportunity_xf.user_region_stamped
+          WHEN (sfdc_opportunity_xf.user_region_stamped = 'LATAM'
+              OR  opportunity_owner.user_region = 'LATAM')
+                THEN 'East'
+          ELSE 'Other'
       END                                                                    AS opportunity_owner_user_region,
 
       -----------------------------------------------------------------------------------------------------      
@@ -410,7 +421,6 @@ WITH sfdc_opportunity AS (
             THEN 1
         ELSE 0
       END                                                                   AS is_stage_4_plus,
-
 
       -- account driven fields 
       sfdc_accounts_xf.ultimate_parent_account_id,
@@ -540,6 +550,47 @@ WITH sfdc_opportunity AS (
 
       ---------------------------------------------------------------------------------------------
       ---------------------------------------------------------------------------------------------
+      -- current deal size field, it was creasted by the data team and the original doesn't work
+      CASE 
+        WHEN net_arr > 0 AND net_arr < 5000 
+          THEN '1 - Small (<5k)'
+        WHEN net_arr >=5000 AND net_arr < 25000 
+          THEN '2 - Medium (5k - 25k)'
+        WHEN net_arr >=25000 AND net_arr < 100000 
+          THEN '3 - Big (25k - 100k)'
+        WHEN net_arr >= 100000 
+          THEN '4 - Jumbo (>100k)'
+        ELSE 'Other' 
+      END                                                          AS deal_size,
+
+      -- extended version of the deal size
+      CASE 
+        WHEN net_arr > 0 AND net_arr < 5000 
+          THEN '1. (0k -5k)'
+        WHEN net_arr >=5000 AND net_arr < 25000 
+          THEN '2. (5k - 25k)'
+        WHEN net_arr >=25000 AND net_arr < 100000 
+          THEN '3. (25k - 100k)'
+        WHEN net_arr >= 100000 AND net_arr < 250000 
+          THEN '4. (100k - 250k)'
+        WHEN net_arr >= 250000 AND net_arr < 500000 
+          THEN '5. (250k - 500k)'
+        WHEN net_arr >= 500000 AND net_arr < 1000000 
+          THEN '6. (500k-1000k)'
+        WHEN net_arr >= 1000000 
+          THEN '7. (>1000k)'
+        ELSE 'Other' 
+      END                                                           AS calculated_deal_size,
+
+            -- calculated age field
+      -- if open, use the diff between created date and snapshot date
+      -- if closed, a) the close date is later than snapshot date, use snapshot date
+      -- if closed, b) the close is in the past, use close date
+      CASE
+        WHEN oppty_final.is_open = 1
+          THEN DATEDIFF(days, oppty_final.created_date, CURRENT_DATE)
+        ELSE DATEDIFF(days, oppty_final.created_date, oppty_final.close_date)
+      END                                                           AS calculated_age_in_days,
 
       -- Open pipeline eligibility definition
       CASE 
@@ -548,8 +599,8 @@ WITH sfdc_opportunity AS (
           AND oppty_final.is_stage_1_plus = 1
           AND oppty_final.forecast_category_name != 'Omitted'
           AND oppty_final.is_open = 1
-         THEN 1
-         ELSE 0
+            THEN 1
+        ELSE 0
       END                                                          AS is_eligible_open_pipeline_flag,
 
 
@@ -577,8 +628,6 @@ WITH sfdc_opportunity AS (
         ELSE 0
       END                                                         AS created_and_won_same_quarter_net_arr,
   
-
-
       ---------------------------------------------------------------------------------------------------------
       ---------------------------------------------------------------------------------------------------------
       -- Fields created to simplify report building down the road. Specially the pipeline velocity.
@@ -612,14 +661,15 @@ WITH sfdc_opportunity AS (
         ELSE 0
       END                                               AS booked_deal_count,
 
-      -- churn deal count (lost renewals)
+      -- churned contraction deal count as OT
       CASE
         WHEN ((oppty_final.is_renewal = 1
             AND oppty_final.is_lost = 1)
-            OR net_arr < 0)
-          THEN oppty_final.calculated_deal_count
+            OR oppty_final.is_won = 1 )
+            AND oppty_final.order_type_stamped IN ('5. Churn - Partial' ,'6. Churn - Final', '4. Contraction')
+        THEN oppty_final.calculated_deal_count
         ELSE 0
-      END                                               AS churned_deal_count,
+      END                                                 AS churned_contraction_deal_count,
     
       -----------------
       -- Net ARR
@@ -653,15 +703,16 @@ WITH sfdc_opportunity AS (
         ELSE 0 
       END                                                 AS booked_net_arr,
 
-      -- churn net arr (lost renewals)
+      -- churned contraction net arr as OT
       CASE
         WHEN ((oppty_final.is_renewal = 1
             AND oppty_final.is_lost = 1)
-            OR net_arr < 0)
-          THEN net_arr
+            OR oppty_final.is_won = 1 )
+            AND oppty_final.order_type_stamped IN ('5. Churn - Partial' ,'6. Churn - Final', '4. Contraction')
+        THEN net_arr
         ELSE 0
-      END                                                 AS churned_net_arr
-
+      END                                                 AS churned_contraction_net_arr
+      
     FROM oppty_final
     -- Net IACV to Net ARR conversion table
     LEFT JOIN net_iacv_to_net_arr_ratio

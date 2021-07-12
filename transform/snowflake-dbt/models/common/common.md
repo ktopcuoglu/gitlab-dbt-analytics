@@ -44,6 +44,18 @@ The goal of this table is to build a bridge from the entire "universe" of subscr
 
 {% enddocs %}
 
+{% docs dim_accounting_event %}
+
+Events from Zuora Revpro. The current iteration includes performance obligation events, but will eventually include hold events as well.
+
+{% enddocs %}
+
+{% docs dim_accounting_type %}
+
+Model to map revenue from Zuora Revenue to the appropriate account (revenue, contract liability, etc.) per accounting practices.
+
+{% enddocs %}
+
 {% docs dim_alliance_type %}
 Model to identify Channel partners that are alliance partners. Technology Partners are identified and discussed in the handbook link referenced below. The specific groupings to report out on were determined by FP&A and Sales Analytics.
 
@@ -100,6 +112,12 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
+{% docs dim_hold %}
+
+There are multiple kinds of holds which can be applied to a transaction in the accounting process. This dimension lists the distinct types of holds which may be applied in a revenue contract. 
+
+{% enddocs %}
+
 {% docs dim_invoice %}
 
 Dimension table providing invoice details at the single invoice grain.
@@ -119,6 +137,17 @@ Dimensional table for countries mapped to larger regions.
 {% docs dim_location_region %}
 
 Dimensional table for geographic regions.
+
+{% enddocs %}
+
+{% docs dim_manual_journal_entry_header %}
+High-level details of manual updates made to adjust final totals in accounting reporting.
+
+{% enddocs %}
+
+{% docs dim_manual_journal_entry_line %}
+
+Line-level details of manual updates made to adjust final totals in accounting reporting. This can be mapped directly to a performance obligation in a revenue contract line.
 
 {% enddocs %}
 
@@ -157,6 +186,35 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
+{% docs dim_revenue_contract%}
+
+This model contains high-level attributes for all revenue contracts. These can be connected to the corresponding revenue contract lines.
+
+{% enddocs %}
+
+{% docs dim_revenue_contract_hold%}
+
+This model contains attributes for all holds applied to revenue contracts.
+
+{% enddocs %}
+
+{% docs dim_revenue_contract_line%}
+
+This model contains attributes for all revenue contract line items.
+
+{% enddocs %}
+
+{% docs dim_revenue_contract_performance_obligation %}
+
+This model contains attributes for performance obligations that are tied to a revenue contract line.
+
+{% enddocs %}
+
+{% docs dim_revenue_contract_schedule %}
+
+An accounting schedule defines when the company will recognize the revenue of the performance obligation tied to a line in a revenue contract. This model contains the attributes of the schedule that is connected to a give line item.
+
+{% enddocs %}
 
 {% docs dim_subscription %}
 Dimension table representing subscription details. The Zuora subscription is created and maintained as part of the broader Quote Creation business process and can be found in the [handbook](https://about.gitlab.com/handbook/finance/sox-internal-controls/quote-to-cash/#3-quote-creation).
@@ -295,6 +353,12 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
+{% docs fct_manual_journal_entry_line %}
+
+A fact table of manual journal entry lines which can be connected to a revenue contract line or revenue contract header. These are adjustments made manually as part of the accounting process.
+
+{% enddocs %}
+
 {% docs fct_quote_item %}
 
 A fact table of quote amendments which have quotes and product rate plan charges associated with them. This model connected opportunities to quotes, quote amendments, and products.
@@ -307,9 +371,26 @@ Fact table representing quotes pulled from the Zuora billing system. These are a
 
 {% enddocs %}
 
-{% docs fct_retention %}
+{% docs fct_retention_parent_account %}
 
 Fact table representing retentions months, currently based on the highest possible level (Parent account). 
+
+{% enddocs %}
+
+{% docs fct_revenue_contract_hold %}
+
+Details of holds placed on revenue contracts. In the future this will also connect to revenue contract lines that have been placed on hold, but the business does not currently operate this way. 
+
+{% enddocs %}
+
+{% docs fct_revenue_contract_line %}
+Revenue contract line details including the transaction amount, functional amount, and connections to subscription, performance obligation, crm account, and product details.
+
+{% enddocs %}
+
+{% docs fct_revenue_contract_schedule %}
+
+Schedule showing when revenue will be recognized for all performance obligations connected to a given revenue contract line.
 
 {% enddocs %}
 
@@ -333,7 +414,9 @@ Dimension representing the associated user from salesforce. Most often this will
 
 {% docs fct_usage_ping_subscription_mapped_gmau %}
 
-This data model is at the **month | dim_subscription_id** grain for **Self-Managed** instances. In every month _that a Usage Ping payload was received_, for a given subscription, values of each GMAU and Paid GMAU metric from the last Usage Ping value in that month are reported.
+This model contains **Self-Managed** instances data from every month _that a Usage Ping payload was received_. For a given subscription-uuid-hostname combination, values of each GMAU and Paid GMAU metric from the last Usage Ping value in that month are reported.
+
+The grain of this table is `hostname` per `uuid` per `dim_subscription_id` per `snapshot_month`. Since there are Self-Managed subscriptions that do not send Usage Ping payloads, it is possible for `uuid` and `hostname` to be null.
 
 This data model is used for the Customer Health Dashboards.
 
@@ -343,7 +426,9 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% docs fct_usage_ping_subscription_mapped_smau %}
 
-This data model is at the **month | dim_subscription_id** grain for **Self-Managed** instances. In every month _that a Usage Ping payload was received_, for a given subscription, values of each SMAU metric from the last Usage Ping value in that month are reported.
+This model contains **Self-Managed** instances data from every month _that a Usage Ping payload was received_. For a given subscription-uuid-hostname combination, values of each SMAU metric from the last Usage Ping value in that month are reported.
+
+The grain of this table is `hostname` per `uuid` per `dim_subscription_id` per `snapshot_month`. Since there are Self-Managed subscriptions that do not send Usage Ping payloads, it is possible for `uuid` and `hostname` to be null.
 
 This data model is used for the Customer Health Dashboards.
 
@@ -385,7 +470,7 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 {% enddocs %}
 
 {% docs fct_product_usage_free_user_metrics_monthly %}
-This table unions the sets of all Self-Managed and SaaS **free users**. The data from this table will be used to create a mart table (`mart_product_usage_free_user_metrics_monthly`) for Gainsight Customer Product Insights.
+This table unions the sets of all Self-Managed and SaaS **free users**. The data from this table will be used to create a mart table (`mart_product_usage_free_user_metrics_monthly`) for Customer Product Insights.
 
 The grain of this table is namespace || uuid-hostname per month.
 
@@ -414,7 +499,7 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 {% enddocs %}
 
 {% docs fct_saas_product_usage_metrics_monthly %}
-This table builds on the set of all Zuora subscriptions that are associated with a **SaaS** rate plans. Seat charges from Zuora (`prep_recurring_charge_subscription_monthly`) and namespace billable user data (`fct_namespace_member_summary`) are combined with high priority Usage Ping metrics (`prep_saas_usage_ping_subscription_mapped_wave_2_3_metrics`) to build out the set of facts included in this table. Only the most recently collected namespace "Usage Ping" and membership data per `dim_subscription_id` each month are reported in this table.
+This table builds on the set of all Zuora subscriptions that are associated with a **SaaS** rate plans. Historical namespace seat charges and billable user data (`gitlab_dotcom_gitlab_subscriptions_snapshots_namespace_id_base`) are combined with high priority Usage Ping metrics (`prep_saas_usage_ping_subscription_mapped_wave_2_3_metrics`) to build out the set of facts included in this table. Only the most recently collected namespace "Usage Ping" and membership data per `dim_subscription_id` each month are reported in this table.
 
 The data from this table will be used to create a mart table (`mart_saas_product_usage_monthly`) for Gainsight Customer Product Insights.
 
@@ -471,6 +556,12 @@ Since this table reports at the top level namespace grain, aggregation of the in
 For the purpose of this table, all child namespaces under a top level namespace with unlimited storage are also assumed to have unlimited storage. Also, storage sizes are converted to MiB and GiB in this table because these are the values being reported under the hood, even though on a project page storage is reported as "MB" or "GB".
 
 Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+{% enddocs %}
+
+{% docs fct_waterfall_summary %}
+
+A derived model using the revenue contract schedule to spread the recognized revenue across from the revenue start date to the revenue end date as defined by the revenue contract performance obligation's schedule.
 
 {% enddocs %}
 
@@ -546,6 +637,22 @@ Order type dimension, based off of salesforce opportunity data, using the `gener
 
 {% enddocs %}
 
+{% docs dim_namespace_hist %}
+
+Table containing GitLab namespace snapshots.
+
+The grain of this table is one row per namespace per valid_to/valid_from combination. The Primary Key is `namespace_snapshot_id`.
+
+{% enddocs %}
+
+{% docs dim_namespace_lineage %}
+
+Table containing GitLab namespace lineages. The primary goal of this table is to determine the ultimate parent namespace for all namespaces. Additionally, this table provides plan (GitLab subscription) information for both the given namespace and its ultimate parent namespace.
+
+The grain of this table is one row per namespace. The Primary Key is `dim_namespace_id`.
+
+{% enddocs %}
+
 {% docs dim_namespace_plan_hist %}
 
 Slowly Changing Dimension Type 2 that records changes into namespace's plan subscriptions. 
@@ -591,5 +698,99 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 {% docs dim_key_xmau_metric %}
 
 A fact table that contains only the metrics that is a UMAU, SMAU, or GMAU metric that appears on the [Stages and Groups Performance Indicator handbook page](https://about.gitlab.com/handbook/product/stage-and-group-performance-indicators/)
+
+{% enddocs %}
+
+{% docs dim_ci_pipeline %}
+
+A dim table that contains all CI Pipelines run on Gitlab.com application.
+
+Easy joins available with:
+
+* dim_project through `dim_project_id`
+* dim_namespace through `dim_namespace_id` and `ultimate_parent_namespace_id`
+* dim_date through `ci_pipeline_creation_dim_date_id`
+{% enddocs %}
+
+{% docs dim_action %}
+
+Dimensional table representing actions recorded by the Events API. [More info about actions tracked here](https://docs.gitlab.com/ee/api/events.html)
+
+The grain of the table is the `dim_action_id`. This table is easily joinable with:
+
+- `dim_plan` through `dim_plan_id`
+- `dim_user` through `dim_user_id`
+- `dim_project` through `dim_project_id`
+- `dim_namespace` through `dim_namespace_id` and `ultimate_namespace_id`
+
+{% enddocs %}
+
+{% docs dim_issue %}
+
+Dimensional table recording all issues created in our Gitlab.com SaaS instance. This table is easily joinable with other EDM dim tables:
+
+- `dim_project` through `dim_project_id`
+- `dim_namespace` through `dim_namespace_id`
+- `dim_plan` through `dim_plan_id`
+- `dim_date` through `created_date_dim_id`
+
+More info about issues in GitLab product [available here](https://docs.gitlab.com/ee/user/project/issues/)
+
+{% enddocs %}
+
+{% docs dim_merge_request %}
+
+Dimensional table recording all merge requests created in our Gitlab.com SaaS instance. This table is easily joinable with other EDM dim tables:
+
+- `dim_project` through `dim_project_id`
+- `dim_namespace` through `dim_namespace_id`
+- `dim_plan` through `dim_plan_id`
+- `dim_date` through `created_date_dim_id`
+
+More info about issues in GitLab product [available here](https://docs.gitlab.com/ee/user/project/merge_requests/)
+
+{% enddocs %}
+
+{% docs dim_ci_build %}
+
+Dimension table that contains all CI build data.
+
+Easy to join with the following tables:
+
+- `dim_project` through `dim_project_id`
+- `dim_namespace` through `dim_namespace_id` and `ultimate_parent_namespace_id`
+- `dim_date` through `ci_build_creation_dim_date_id`
+- `dim_plan` through `dim_plan_id`
+
+{% enddocs %}
+
+{% docs dim_user %}
+
+Dimension table that contains all Gitlab.com Users.
+{% enddocs %}
+
+{% docs dim_ci_runner %}
+
+A Dimension table that contains all data related to CI runners.
+
+It includes keys to join to the below tables:
+
+- `dim_ci_build` through `dim_ci_build_id`
+- `dim_project` through `dim_project_id`
+- `dim_namespace` through `dim_namespace_id` and `ultimate_parent_namespace_id`
+- `dim_date` through `created_at`
+- `dim_date` through `created_date_id `
+
+{% enddocs %}
+
+{% docs dim_ci_stage %}
+
+A dim table that contains all CI Stages run in Gitlab.com CI Pipelines.
+
+Easy joins available with:
+
+* dim_project through `dim_project_id`
+* dim_ci_pipeline through `dim_ci_pipeline_id`
+* dim_date through `created_date_id`
 
 {% enddocs %}

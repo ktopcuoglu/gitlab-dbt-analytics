@@ -53,3 +53,10 @@ models:
         tests:
           - not_null
 
+  - name: wk_usage_ping_geo_node_usage
+    description: Extract and flatten data from the geo nodes
+    columns:
+      - name: instance_path_id
+        tests:
+          - not_null
+          - unique
