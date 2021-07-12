@@ -1,4 +1,4 @@
-connection_info: 
+connection_info:
   database: GITLAB_COM_DB_NAME
   host: GITLAB_COM_DB_HOST
   pass: GITLAB_COM_DB_PASS
