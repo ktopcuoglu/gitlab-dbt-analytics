@@ -3053,6 +3053,40 @@ models:
       - name: time_period
         description: Metrics can be all-time counters, 28 day counters, or weekly counters. This signifies which it is
 
+  - name: dim_ci_build
+    description: '{{ doc("dim_ci_build") }}'
+    columns:
+      - name: dim_ci_build_id
+        description: Unique key of CI Build
+        tests:
+          - not_null
+          - unique
+      - name: dim_project_id
+        description: Foreign key to `dim_project` that shows the ID of the project in which the build has been triggered.
+      - name: dim_namespace_id
+        description: Foreign key to `dim_namespace` that shows the ID of the namespace in which the build has been triggered.
+      - name: ultimate_parent_namespace_id
+      - name: dim_user_id
+        description: Foreign key to `dim_user` that shows the ID of the user who triggered the CI Build
+      - name: dim_plan_id
+        description: ID of the Plan
+      - name: ci_runner_id
+        description: ID of the runner with which the CI build has been run.
+      - name: dim_ci_stage_id
+
+  - name: dim_issue
+    description: '{{ doc("dim_issue") }}'
+    columns:
+      - name: dim_issue_id
+        description: The unique identifier for each of the issues.
+        tests:
+          - not_null
+          - unique
+      - name: dim_project_id
+      - name: dim_plan_id
+        tests:
+          - not_null
+
   - name: dim_ci_pipeline
     description: '{{ doc("dim_ci_pipeline") }}'
     columns:
@@ -3067,7 +3101,6 @@ models:
       - name: dim_ci_pipeline_internal_id
         description: Internal ID for the CI Pipeline. This is project specific
 
-
   - name: dim_action
     description: '{{ doc("dim_action") }}'
     columns:
@@ -3077,30 +3110,17 @@ models:
           - not_null
           - unique
       - name: dim_project_id
-      - name: dim_plan_id
-        tests:
-          - not_null
-
-  - name: dim_ci_build
-    description: '{{ doc("dim_ci_build") }}'
-    columns:
-      - name: dim_ci_build_id
-        description: Unique key of CI Build
-        tests:
-          - not_null
-          - unique
-      - name: dim_project_id
-        description: Foreign key that shows the ID of the project in which the build has been triggered.
       - name: dim_namespace_id
-        description: Foreign key that shows the ID of the namespace in which the build has been triggered.
       - name: ultimate_parent_namespace_id
       - name: dim_user_id
-        description: Foreign key that shows the ID of the user who triggered the CI Build
+      - name: created_date_id
       - name: dim_plan_id
-        description: ID of the Plan
-      - name: dim_ci_runner_id
-        description: ID of the runner with which the CI build has been run.
-      - name: dim_ci_stage_id
+        tests:
+          - not_null
+      - name: target_id
+      - name: target_type
+      - name: created_at
+      - name: event_action_type
 
   - name: dim_user
     description: '{{ doc("dim_user") }}'
@@ -3110,7 +3130,6 @@ models:
         tests:
           - not_null
           - unique
-          
 
   - name: dim_ci_runner
     description: '{{ doc("dim_ci_runner") }}'
@@ -3136,18 +3155,30 @@ models:
       - name: runner_type
       - name: public_projects_minutes_cost_factor
       - name: private_projects_minutes_cost_factor
-  - name: dim_issue
-    description: '{{ doc("dim_issue") }}'
+
+  - name: dim_ci_stage
+    description: '{{ doc("dim_ci_stage") }}'
     columns:
-      - name: dim_issue_id
-        description: The unique identifier for each of the issues.
+      - name: dim_ci_stage_id
         tests:
           - not_null
           - unique
       - name: dim_project_id
-      - name: dim_plan_id
+        description: Foreign key to `dim_project` that shows the ID of the project in which the stage was run.
+      - name: dim_pipeline_id
+        description: Foreign key to `dim_ci_pipeline` that shows the ID of the pipeline in which the stage was run.
+      - name: created_date_id
+        description: Foreign key to `dim_date` that shows the ID of the date on which the stage was created.
         tests:
           - not_null
+      - name: created_at
+        tests:
+          - not_null
+      - name: updated_at
+      - name: ci_stage_name
+      - name: ci_stage_status
+      - name: lock_version
+      - name: position
 
   - name: dim_merge_request
     description: '{{ doc("dim_merge_request") }}'
@@ -3161,3 +3192,4 @@ models:
       - name: dim_plan_id
         tests:
           - not_null
+          
