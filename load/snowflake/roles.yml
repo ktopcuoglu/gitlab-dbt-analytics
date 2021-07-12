@@ -2824,10 +2824,6 @@ roles:
         warehouses:
             - analyst_xs   
 
-    - mriser:
-        warehouses:
-            - admin
-
     - msendal:
         warehouses: []
 
@@ -3847,9 +3843,8 @@ users:
             - mray        
 
     - mriser:
-        can_login: yes
-        member_of:
-            - mriser
+        can_login: no
+        member_of: []
 
     - mrodriguez:
         can_login: no
