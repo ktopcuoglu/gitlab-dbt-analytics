@@ -3333,6 +3333,16 @@ roles:
                     - tullylanterdd_prep.*.*
                     - tullylanterdd_prod.*.*
 
+    - vjallipalli:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+            - customers_db
+            - analyst_marketing
+            - data_team_analyst
+        warehouses:
+            - analyst_xs
+
     - vjuhasz:
         member_of:
             - reporter
@@ -4028,6 +4038,11 @@ users:
     - valexieva:
         can_login: no
         member_of: []
+
+    - vjallipalli:
+        can_login: yes
+        member_of:
+            - vjallipalli
 
     - vjuhasz:
         can_login: yes
