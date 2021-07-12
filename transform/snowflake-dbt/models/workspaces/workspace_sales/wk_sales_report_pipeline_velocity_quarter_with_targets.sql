@@ -56,8 +56,8 @@ WITH report_pipeline_velocity_quarter AS (
      base.sales_qualified_source,
      base.deal_group,
      base.target_net_arr,
-     base.total_churned_net_arr,
-     base.total_churned_deal_count,
+     base.total_churned_contraction_net_arr,
+     base.total_churned_contraction_deal_count,
      base.total_booked_net_arr          AS total_net_arr,
      base.calculated_target_net_arr     AS adjusted_target_net_arr
   FROM report_targets_totals_per_quarter base
@@ -74,11 +74,11 @@ WITH report_pipeline_velocity_quarter AS (
       COALESCE(pv.sales_qualified_source,'NA')  AS sales_qualified_source,
       COALESCE(pv.deal_group,'NA')              AS deal_group,
 
-      SUM(pv.open_1plus_net_arr)        AS open_stage_1_net_arr,
-      SUM(pv.open_3plus_net_arr)        AS open_stage_3_net_arr,
-      SUM(pv.open_4plus_net_arr)        AS open_stage_4_net_arr,
-      SUM(pv.booked_net_arr)            AS won_net_arr,
-      SUM(pv.churned_net_arr)           AS churned_net_arr
+      SUM(pv.open_1plus_net_arr)                AS open_stage_1_net_arr,
+      SUM(pv.open_3plus_net_arr)                AS open_stage_3_net_arr,
+      SUM(pv.open_4plus_net_arr)                AS open_stage_4_net_arr,
+      SUM(pv.booked_net_arr)                    AS won_net_arr,
+      SUM(pv.churned_contraction_net_arr)       AS churned_contraction_net_arr
   
   FROM report_pipeline_velocity pv
   WHERE pv.close_fiscal_year >= 2020
@@ -101,7 +101,7 @@ WITH report_pipeline_velocity_quarter AS (
       SUM(o.open_3plus_net_arr)              AS open_stage_3_net_arr,
       SUM(o.open_4plus_net_arr)              AS open_stage_4_net_arr,
       SUM(o.booked_net_arr)                  AS won_net_arr,
-      SUM(o.churned_net_arr)                 AS churned_net_arr
+      SUM(o.churned_contraction_net_arr)     AS churned_contraction_net_arr
   
   FROM sfdc_opportunity_xf o
   WHERE o.close_fiscal_quarter_name = o.current_fiscal_quarter_name
@@ -120,8 +120,8 @@ WITH report_pipeline_velocity_quarter AS (
     base.sales_qualified_source,
     base.deal_group,
   
-    target.total_churned_net_arr,
-    target.total_churned_deal_count,
+    target.total_churned_contraction_net_arr,
+    target.total_churned_contraction_deal_count,
 
     target.total_net_arr,
     target.target_net_arr,
@@ -131,7 +131,7 @@ WITH report_pipeline_velocity_quarter AS (
     ps.open_stage_3_net_arr,
     ps.open_stage_4_net_arr,
     ps.won_net_arr,
-    ps.churned_net_arr
+    ps.churned_contraction_net_arr
     
   FROM (
      SELECT close_fiscal_quarter_name,

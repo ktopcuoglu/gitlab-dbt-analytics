@@ -612,14 +612,15 @@ WITH sfdc_opportunity AS (
         ELSE 0
       END                                               AS booked_deal_count,
 
-      -- churn deal count (lost renewals)
+      -- churned contraction deal count as OT
       CASE
         WHEN ((oppty_final.is_renewal = 1
             AND oppty_final.is_lost = 1)
-            OR (is_won = 1 AND net_arr < 0))
-          THEN oppty_final.calculated_deal_count
+            OR oppty_final.is_won = 1 )
+            AND oppty_final.order_type_stamped IN ('5. Churn - Partial' ,'6. Churn - Final', '4. Contraction')
+        THEN oppty_final.calculated_deal_count
         ELSE 0
-      END                                               AS churned_deal_count,
+      END                                                 AS churned_contraction_deal_count,
     
       -----------------
       -- Net ARR
@@ -653,15 +654,16 @@ WITH sfdc_opportunity AS (
         ELSE 0 
       END                                                 AS booked_net_arr,
 
-      -- churn net arr (lost renewals)
+      -- churned contraction net arr as OT
       CASE
         WHEN ((oppty_final.is_renewal = 1
             AND oppty_final.is_lost = 1)
-            OR (is_won = 1 AND net_arr < 0))
-          THEN net_arr
+            OR oppty_final.is_won = 1 )
+            AND oppty_final.order_type_stamped IN ('5. Churn - Partial' ,'6. Churn - Final', '4. Contraction')
+        THEN net_arr
         ELSE 0
-      END                                                 AS churned_net_arr
-
+      END                                                 AS churned_contraction_net_arr
+      
     FROM oppty_final
     -- Net IACV to Net ARR conversion table
     LEFT JOIN net_iacv_to_net_arr_ratio

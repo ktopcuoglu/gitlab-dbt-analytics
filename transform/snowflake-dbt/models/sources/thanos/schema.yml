@@ -1,0 +1,48 @@
+version: 2
+
+models:
+    - name: thanos_stage_group_error_budget_availability_source
+      columns:
+        - name: metric_product_stage
+          tests:
+              - not_null
+        - name: metric_stage_group
+          tests:
+              - not_null
+        - name: metric_created_at
+        - name: metric_value
+        - name: result_type
+        - name: status_type
+        - name: message_type
+        - name: status_code
+        - name: is_success
+    - name: thanos_stage_group_error_budget_seconds_spent_source
+      columns:
+        - name: metric_product_stage
+          tests:
+              - not_null
+        - name: metric_stage_group
+          tests:
+              - not_null
+        - name: metric_created_at
+        - name: metric_value
+        - name: result_type
+        - name: status_type
+        - name: message_type
+        - name: status_code
+        - name: is_success
+    - name: thanos_stage_group_error_budget_seconds_remaining_source
+      columns:
+        - name: metric_product_stage
+          tests:
+              - not_null
+        - name: metric_stage_group
+          tests:
+              - not_null
+        - name: metric_created_at
+        - name: metric_value
+        - name: result_type
+        - name: status_type
+        - name: message_type
+        - name: status_code
+        - name: is_success

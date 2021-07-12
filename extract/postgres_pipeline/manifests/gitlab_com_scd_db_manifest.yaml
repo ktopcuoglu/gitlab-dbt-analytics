@@ -553,7 +553,6 @@ tables:
     import_db: GITLAB_DB
     import_query: |-
       SELECT project_id
-      , framework
       , framework_id
       FROM project_compliance_framework_settings
   project_error_tracking_settings:

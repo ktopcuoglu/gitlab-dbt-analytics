@@ -24,7 +24,8 @@ WITH source AS (
       trial::BOOLEAN                                          AS order_is_trial,
       last_extra_ci_minutes_sync_at::TIMESTAMP                AS last_extra_ci_minutes_sync_at,
       zuora_account_id::VARCHAR                               AS zuora_account_id,
-      increased_billing_rate_notified_at::TIMESTAMP           AS increased_billing_rate_notified_at
+      increased_billing_rate_notified_at::TIMESTAMP           AS increased_billing_rate_notified_at,
+      source::VARCHAR                                         AS order_source
     FROM source
 
 )

@@ -366,6 +366,8 @@ sources:
         identifier: gitlab_db_geo_nodes
         freshness: null
       - name: gitlab_pgp_export
+        identifier: gitlab_pgp_export
+        loaded_at_field: DATEADD(sec, _updated_at, '1970-01-01')
       - name: grafana_integrations
         identifier: gitlab_db_grafana_integrations
         freshness:
