@@ -148,6 +148,26 @@ models:
       - name: product_rate_plan_charge_name
       - name: product_delivery_type
 
+  - name: dim_accounting_event
+    description: '{{ doc("dim_accounting_event") }}'
+    columns:
+      - name: dim_accounting_event_id
+        description: Unique identifier for an accounting event such as a performance obligation or hold.
+        tests:
+          - unique
+          - not_null
+        tags: ["tdf", "common", "zuora_revenue"]
+
+  - name: dim_accounting_type
+    description: '{{ doc("dim_accounting_type") }}'
+    columns:
+      - name: dim_accounting_type_id
+        description: Unique identifier for an accounting type such as contract liability or asset.
+        tests:
+          - unique
+          - not_null
+        tags: ["tdf", "common", "zuora_revenue"]
+
   - name: dim_alliance_type
     description: '{{ doc("dim_alliance_type") }}'
     columns:
@@ -452,6 +472,16 @@ models:
       - name: updated_date
         description: The date the release was updated in the Version app.
 
+  - name: dim_hold
+    description: '{{ doc("dim_hold") }}'
+    columns:
+      - name: dim_hold_id
+        description: Unique identifier for an accounting hold.
+        tests:
+          - unique
+          - not_null
+        tags: ["tdf", "common", "zuora_revenue"]
+
   - name: dim_industry
     description: '{{ doc("dim_industry") }}'
     columns:
@@ -651,6 +681,26 @@ models:
         tests:
           - not_null
           - unique
+
+  - name: dim_manual_journal_entry_header
+    description: '{{ doc("dim_manual_journal_entry_header") }}'
+    columns:
+      - name: dim_manual_journal_entry_header_id
+        description: Unique identifier for a manual journal entry which may include multiple lines.
+        tests:
+          - unique
+          - not_null
+        tags: ["tdf", "common", "zuora_revenue"]
+
+  - name: dim_manual_journal_entry_line
+    description: '{{ doc("dim_manual_journal_entry_line") }}'
+    columns:
+      - name: dim_manual_journal_entry_line_id
+        description: Unique identifier for a line in a manual journal entry. This can be directly related to a revenue contract line or a revenue contract.
+        tests:
+          - unique
+          - not_null
+        tags: ["tdf", "common", "zuora_revenue"]
           
   - name: dim_product_detail
     description: '{{ doc("dim_product_detail") }}'
@@ -754,6 +804,56 @@ models:
       - name: is_active
         description: A boolean column that flags if the user is active in salesforce, which means that the user can login and use salesforce.
         tags: [ "tdf", "common" ]
+
+  - name: dim_revenue_contract
+    description: '{{ doc("dim_revenue_contract") }}'
+    columns:
+      - name: dim_revenue_contract_id
+        description: Unique identifier for a revenue contract. 
+        tests:
+          - unique
+          - not_null
+        tags: ["tdf", "common", "zuora_revenue"]
+
+  - name: dim_revenue_contract_hold
+    description: '{{ doc("dim_revenue_contract_hold") }}'
+    columns:
+      - name: dim_revenue_contract_hold_id
+        description: Unique identifier for a hold applied to a revenue contract or revenue contract line. 
+        tests:
+          - unique
+          - not_null
+        tags: ["tdf", "common", "zuora_revenue"]
+
+  - name: dim_revenue_contract_line
+    description: '{{ doc("dim_revenue_contract_line") }}'
+    columns:
+      - name: dim_revenue_contract_line_id
+        description: Unique identifier for a revenue contract line. 
+        tests:
+          - unique
+          - not_null
+        tags: ["tdf", "common", "zuora_revenue"]
+
+  - name: dim_revenue_contract_performance_obligation
+    description: '{{ doc("dim_revenue_contract_performance_obligation") }}'
+    columns:
+      - name: dim_revenue_contract_performance_obligation_id
+        description: Unique identifier for a performance obligation connected to a revenue contract line. 
+        tests:
+          - unique
+          - not_null
+        tags: ["tdf", "common", "zuora_revenue"]
+
+  - name: dim_revenue_contract_schedule
+    description: '{{ doc("dim_revenue_contract_performance_obligation") }}'
+    columns:
+      - name: dim_revenue_contract_schedule_id
+        description: Unique identifier for a performance obligation connected to a revenue contract line. 
+        tests:
+          - unique
+          - not_null
+        tags: ["tdf", "common", "zuora_revenue"]
 
   - name: dim_sales_segment
     description: '{{ doc("dim_sales_segment") }}'
@@ -1179,6 +1279,16 @@ models:
         description: The most recent date a lead or contact was assigned a Marketo Qualified Lead Date.
       - name: is_mql
         description: a boolean field created in the warehouse to flag Marketing Qualified Leads.
+
+  - name: fct_manual_journal_entry_line
+    description: '{{ doc("fct_manual_journal_entry_line") }}'
+    columns:
+      - name: dim_manual_journal_entry_line_id
+        description: Unique identifier for a manual journal entry line.
+        tests:
+          - unique
+          - not_null
+        tags: ["tdf", "common", "zuora_revenue"]
 
   - name: fct_mrr
     description: One row represents Monthly Recurring Revenue per month, by rate plan charge.
@@ -2260,6 +2370,35 @@ models:
       - name: is_data_in_subscription_month
         description: Flags if there is either Subscription Seats data or Usage Ping data present in the given month for a given subscription
 
+  - name: fct_revenue_contract_hold
+    description: '{{ doc("fct_revenue_contract_hold") }}'
+    columns:
+      - name: dim_revenue_contract_hold_id
+        description: Unique identifier for a hold applied to a revenue contract or revenue contract line. 
+        tests:
+          - unique
+          - not_null
+        tags: ["tdf", "common", "zuora_revenue"]
+
+  - name: fct_revenue_contract_line
+    description: '{{ doc("fct_revenue_contract_line") }}'
+    columns:
+      - name: dim_revenue_contract_line_id
+        description: Unique identifier for a revenue contract line. 
+        tests:
+          - unique
+          - not_null
+        tags: ["tdf", "common", "zuora_revenue"]
+
+  - name: fct_revenue_contract_schedule
+    description: '{{ doc("fct_revenue_contract_schedule") }}'
+    columns:
+      - name: dim_revenue_contract_schedule_id
+        description: Unique identifier for a schedule applied to a revenue contract line. 
+        tests:
+          - not_null
+        tags: ["tdf", "common", "zuora_revenue"]
+
   - name: fct_sales_funnel_partner_alliance_target
     description: '{{ doc("fct_sales_funnel_partner_alliance_target") }}'
     columns:
@@ -2689,6 +2828,15 @@ models:
       - name: storage_bytes
         description: Sum of reposity, LFS objects, build artifacts, packages, and wiki storage sizes.
 
+  - name: fct_waterfall_summary
+    description: '{{ doc("fct_waterfall_summary") }}'
+    columns:
+      - name: dim_waterfall_summary_id
+        description: Unique identifier for a revenue contract line schedule period. 
+        tests:
+          - unique
+          - not_null
+        tags: ["tdf", "common", "zuora_revenue"]
 
   - name: dim_bizible_marketing_channel_path
     description: '{{ doc("dim_bizible_marketing_channel_path") }}'
