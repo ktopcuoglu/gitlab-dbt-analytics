@@ -102,30 +102,22 @@ sources:
         freshness: null
       - name: clusters_applications_crossplane
         identifier: gitlab_db_clusters_applications_crossplane
-        freshness:
-            warn_after: {count: 14, period: day}
-            error_after: {count: 30, period: day}
+        freshness: null
       - name: clusters_applications_elastic_stacks
         identifier: gitlab_db_clusters_applications_elastic_stacks
         freshness: null
       - name: clusters_applications_helm
         identifier: gitlab_db_clusters_applications_helm
-        freshness:
-          warn_after: {count: 7, period: day}
-          error_after: {count: 30, period: day}
+        freshness: null
       - name: clusters_applications_ingress
         identifier: gitlab_db_clusters_applications_ingress
         freshness: null
       - name: clusters_applications_jupyter
         identifier: gitlab_db_clusters_applications_jupyter
-        freshness:
-            warn_after: {count: 7, period: day}
-            error_after: {count: 30, period: day}
+        freshness: null
       - name: clusters_applications_knative
         identifier: gitlab_db_clusters_applications_knative
-        freshness:
-            warn_after: {count: 2, period: day}
-            error_after: {count: 4, period: day}
+        freshness: null
       - name: clusters_applications_prometheus
         identifier: gitlab_db_clusters_applications_prometheus
         freshness: null
