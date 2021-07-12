@@ -3065,7 +3065,7 @@ models:
         description: Unique key of User.
         tests:
           - not_null
-          - unique 
+          - unique
 
   - name: dim_ci_runner
     description: '{{ doc("dim_ci_runner") }}'
@@ -3116,39 +3116,6 @@ models:
       - name: ci_stage_status
       - name: lock_version
       - name: position
-
-  - name: fct_ci_runner_activity
-    description: '{{ doc("fct_ci_runner_activity") }}'
-    columns:
-      - name: dim_ci_build_id
-        description: Unique key of CI Build
-        tests:
-          - not_null
-      - name: dim_ci_runner_id
-        description: ID of the runner with which the CI build has been run.
-      - name: dim_ci_pipeline_id
-      - name: dim_ci_stage_id
-      - name: dim_project_id
-        description: Foreign key that shows the ID of the project in which the build has been triggered.
-      - name: dim_namespace_id
-        description: Foreign key that shows the ID of the namespace in which the build has been triggered.
-      - name: ultimate_parent_namespace_id
-      - name: dim_plan_id
-        description: ID of the Plan
-      - name: dim_user_id
-        description: Foreign key that shows the ID of the user who triggered the CI Build
-      - name: created_date_id
-        description: Foreign key to `dim_date` that shows the ID of the date on which the stage was created.
-      - name: ci_build_duration_in_s
-      - name: ci_build_status
-      - name: runner_type_summary
-      - name: runner_manager
-      - name: namespace_is_internal
-      - name: is_paid_by_gitlab
-      - name: public_projects_minutes_cost_factor
-      - name: private_projects_minutes_cost_factor
-      - name: project_visibility_level
-      - name: project_path
 
   - name: fct_ci_runner_activity
     description: '{{ doc("fct_ci_runner_activity") }}'
