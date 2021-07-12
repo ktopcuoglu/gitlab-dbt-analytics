@@ -21,9 +21,6 @@ SALT_EMAIL=cheese
 SALT_PASSWORD=416C736F4E6F745365637265FFFFFFAB
 
 VENV_NAME?=dbt
-VENV_ACTIVATE=. $(VENV_NAME)/bin/activate
-PYTHON=${VENV_NAME}/bin/python3
-PYTHON_VERSION=$(shell python3 -c "import sys;t='{v[0]}.{v[1]}.{v[2]}'.format(v=list(sys.version_info[:3]));sys.stdout.write(t)");
 
 .DEFAULT: help
 help:
@@ -80,7 +77,6 @@ dbt-image:
 	@"$(DOCKER_RUN)" dbt_image bash -c "dbt clean && dbt deps && /bin/bash"
 
 prepare-dbt:
-	@if [ "$(PYTHON_VERSION)" != "3.8.6" ]; then echo "Please install python 3.8.6 from https://www.python.org/downloads/release/python-386/" && exit 1; fi
 	which pipenv || python3 -m pip install pipenv
 	pipenv install
 
