@@ -249,11 +249,11 @@ Save and finish above updated by clicking `esc` and writing `:wq!`. Letter "w" s
 
 ## Jupyter 
 
-- [ ] Ensure you've setup your dbt for running locally as mentioned above. If you do not want dbt you can manually create the ./.dbt/profiles.yml file based off the sample profile 
+- [ ] Ensure you've setup your dbt for running locally as mentioned above. The ./.dbt/profiles.yml file is a pre-requisite for this process. If you do not want dbt you can manually create the ./.dbt/profiles.yml file based off the [sample profile](https://gitlab.com/gitlab-data/analytics/-/blob/master/admin/sample_profiles.yml)
 - [ ] Clone the DataScience repo: 
     ``` git clone https://gitlab.com/gitlab-data/data-science```
 - [ ] Run `make jupyter` from the root directory of the repository and confirm that JupyterLab has now spun up on successfully. 
-- [ ] Run through the notebook at `./template/authentication_example` to confirm that you have configured everything successfully. **(Do not check in any changes to this file)**
+- [ ] Run through the notebook at `./template/authentication_example.ipynb` to confirm that you have configured everything successfully. **(Do not check in any changes to this file)**
 
 ## GitLab.com (Product)
 This data comes from our GitLab.com SaaS product.
