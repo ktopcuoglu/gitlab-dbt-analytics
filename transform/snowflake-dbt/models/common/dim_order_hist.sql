@@ -19,11 +19,10 @@ WITH orders AS (
       order_created_at,
       last_extra_ci_minutes_sync_at,
       increased_billing_rate_notified_at,
-      amendment_type,
       order_is_trial,
-      order_quantity,
       
       -- hist
+      amendment_type,
       valid_from,
       valid_to
       FROM {{ref('prep_order_hist')}}
@@ -35,5 +34,5 @@ WITH orders AS (
     created_by="@ischweickartDD",
     updated_by="@ischweickartDD",
     created_date="2021-06-30",
-    updated_date="2021-06-30"
+    updated_date="2021-07-13"
 ) }}

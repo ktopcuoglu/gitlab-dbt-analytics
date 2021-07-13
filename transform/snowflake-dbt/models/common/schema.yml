@@ -2748,9 +2748,8 @@ models:
           - not_null
       - name: last_extra_ci_minutes_sync_at
       - name: increased_billing_rate_notified_at
-      - name: amendment_type
       - name: order_is_trial
-      - name: order_quantity
+      - name: amendment_type
       - name: valid_from
         tests:
           - not_null
