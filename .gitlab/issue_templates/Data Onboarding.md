@@ -113,6 +113,14 @@ rm ~/onboarding_script.zsh
 </details>
 
 <details>
+
+<summary>For Data Scientists</summary>
+<details>
+* [ ] Make sure you have run through all of the analysts steps mentioned above, along with the getting setup with dbt section below
+* [ ] Run through the Jupyter setup section below 
+
+</details>
+
 <summary>For Data Engineers</summary>
 
 Take a look at https://gitlab.com/gitlab-data/analytics/-/blob/master/admin/onboarding_script.zsh and feel free to use what is in there that makes sense. This script is activily maintained in the system so try to use this. 
@@ -239,6 +247,13 @@ Save and finish above updated by clicking `esc` and writing `:wq!`. Letter "w" s
 - [ ] Run `Exit` command to come out of the dbt docker container and test the command `make help` and use it to understand how to use `make dbt-docs` and access it from your local machine.
 - [ ] Here is the [dbt command line cheat sheet](https://about.gitlab.com/handbook/business-ops/data-team/platform/dbt-guide/#command-line-cheat-sheet)
 
+## Jupyter 
+
+- [ ] Ensure you've setup your dbt for running locally as mentioned above. If you do not want dbt you can manually create the ./.dbt/profiles.yml file based off the sample profile 
+- [ ] Clone the DataScience repo: 
+    ``` git clone https://gitlab.com/gitlab-data/data-science```
+- [ ] Run `make jupyter` from the root directory of the repository and confirm that JupyterLab has now spun up on successfully. 
+- [ ] Run through the notebook at `./template/authentication_example` to confirm that you have configured everything successfully. **(Do not check in any changes to this file)**
 
 ## GitLab.com (Product)
 This data comes from our GitLab.com SaaS product.
