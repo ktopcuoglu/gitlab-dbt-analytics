@@ -452,7 +452,6 @@ More information about [CI Pipelines here](https://docs.gitlab.com/ee/ci/pipelin
 
 Prep table for the dim table `dim_epic`.
 
-
 {% enddocs %}
 
 {% docs prep_note %}
