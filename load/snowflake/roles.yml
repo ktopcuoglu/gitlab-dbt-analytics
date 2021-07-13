@@ -1990,6 +1990,12 @@ roles:
         warehouses:
             - analyst_xs
 
+    - bbutterfield:
+        member_of:
+            - reporter
+        warehouses:
+            - reporting            
+
     - camsmith:
         member_of:
             - analyst_finance
@@ -3503,6 +3509,11 @@ users:
         can_login: yes
         member_of:
             - brufener
+
+    - bbutterfield:
+        can_login: yes
+        member_of:
+            - bbutterfield
 
     - camsmith:
         can_login: yes
