@@ -3783,6 +3783,7 @@ users:
         can_login: yes
         member_of:
             - laddula
+            - accountadmin
 
     - lmai:
         can_login: yes
