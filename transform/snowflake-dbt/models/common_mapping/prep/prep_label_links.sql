@@ -14,7 +14,7 @@
 ), renamed AS (
   
     SELECT
-      gitlab_dotcom_label_links_source.issue_id     AS dim_label_link_id,
+      gitlab_dotcom_label_links_source.label_link_id     AS dim_label_link_id,
       -- FOREIGN KEYS
       prep_labels.dim_label_id,
       -- foreign key to different table depending on target type of label
