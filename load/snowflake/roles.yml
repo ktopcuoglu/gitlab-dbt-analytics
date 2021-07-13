@@ -3016,8 +3016,7 @@ roles:
             - reporting
 
     - periscope_sensitive:
-        warehouses:
-            - reporting
+        warehouses: []
 
     - permission_bot:
         warehouses:
@@ -3912,10 +3911,8 @@ users:
             - reporter
 
     - periscope_sensitive:
-        can_login: yes
-        member_of:
-            - periscope_sensitive
-            - reporter_sensitive
+        can_login: no
+        member_of: []
 
     - permission_bot:
         can_login: yes
