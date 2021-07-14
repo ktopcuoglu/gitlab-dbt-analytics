@@ -239,6 +239,34 @@ Save and finish above updated by clicking `esc` and writing `:wq!`. Letter "w" s
 - [ ] Run `Exit` command to come out of the dbt docker container and test the command `make help` and use it to understand how to use `make dbt-docs` and access it from your local machine.
 - [ ] Here is the [dbt command line cheat sheet](https://about.gitlab.com/handbook/business-ops/data-team/platform/dbt-guide/#command-line-cheat-sheet)
 
+## DataLab (Jupyter setup)
+
+Data team currently uses DataLab (Jupyter in cloud provided by Google Cloud) to conduct analysis and build models with Python. Follow below steps to get running instance for yourself.
+
+- [ ] Raise Access Request (AR) for Google Cloud Credentials. To do that please follow instructions here or create separate issue and copy contents from [here](https://about.gitlab.com/handbook/business-technology/team-member-enablement/onboarding-access-requests/access-requests/) or create separate issue and copy contents from [here](https://gitlab.com/gitlab-com/team-member-epics/access-requests/-/issues/10306#note_622125437). Ensure you update your name and other personal details and project name is ``gitlab-analysis.`` Assign it to your manager.
+- [ ] Raise AR for DataLab setup for ``gitlab-analysis``, similar way as previous step. Assign it to your manager. You can also tag project owners (Dennis van Rooijen, Paul Armstrong or Ved Prakash) if you need help.
+- [ ] Please follow next step after running onboarding template, once you added GOOGLE_APPLICATION_CREDENTIALS path to your .zshrc` file which can be accessed by vi ~/.zshrc``. One of the project owners should send you configuration json file, which is important to add in your google credentials. Follow below steps:
+- [ ] Download the json file provided.
+b. Copy the path  including file_name.
+c. Open terminal and run vi ~/.zshrc
+d. If you already have variable  GOOGLE_APPLICATION_CREDENTIALS  modify its value to the file path and file name. To modify value please click I which stands for insert and will allow you to modify content. If you don’t have this variable then use below command
+export GOOGLE_APPLICATION_CREDENTIALS = <File_path>/<file_name>
+then :wq! to write the file
+e. Refresh this file by sourcing it back, using source ~/.zshrc then it will be pointing to this.
+
+
+- [ ] After approved AR install and initialise Google Cloud SDK (which stands for software development kit) to which instructions are provided here. After download and installation follow point a and b, especially commands in terminal.
+
+
+- [ ] Run ``gcloud components install datalab`` in your terminal
+
+
+- [ ] Project owner should provide you name of your Datalab instance, the most likely it will be your_gitlab_handle-datalab-project. Once you have name of instance connect to DataLab by using datalab connect your_gitlab_username-datalab-project. If you receive error
+"The specified Datalab instance was created for your_gitlab_username@gitlab.com, but you are attempting to connect to it as your_gitlab_username@gitlab-analysis.iam.gserviceaccount.com". Then re-run the command as
+datalab connect your_gitlab_username-datalab-project --no-user-checking
+
+
+- [ ] Open your browser and type localhost:8081. It may take couple minutes to connect, so if nothing comes up refresh website or validate with project owners if your access has been granted properly.
 
 ## GitLab.com (Product)
 This data comes from our GitLab.com SaaS product.
