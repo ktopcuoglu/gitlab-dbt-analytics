@@ -17,7 +17,7 @@
       monthly_metrics.dim_subscription_id_original,
       {{ get_keyed_nulls('billing_accounts.dim_billing_account_id') }}      AS dim_billing_account_id,
       {{ get_keyed_nulls('crm_accounts.dim_crm_account_id') }}              AS dim_crm_account_id,
-      monthly_metrics.dim_namespace_id,
+      monthly_metrics.dim_namespace_id::VARCHAR                             AS dim_namespace_id,
       monthly_metrics.snapshot_month,
       monthly_metrics.snapshot_date_id,
       monthly_metrics.ping_created_at,
@@ -139,5 +139,5 @@
     created_by="@ischweickartDD",
     updated_by="@ischweickartDD",
     created_date="2021-05-26",
-    updated_date="2021-06-10"
+    updated_date="2021-07-06"
 ) }}
