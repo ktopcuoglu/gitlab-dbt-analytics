@@ -1990,6 +1990,12 @@ roles:
         warehouses:
             - analyst_xs
 
+    - bbutterfield:
+        member_of:
+            - reporter
+        warehouses:
+            - reporting            
+
     - camsmith:
         member_of:
             - analyst_finance
@@ -2824,10 +2830,6 @@ roles:
         warehouses:
             - analyst_xs   
 
-    - mriser:
-        warehouses:
-            - admin
-
     - msendal:
         warehouses: []
 
@@ -3333,6 +3335,16 @@ roles:
                     - tullylanterdd_prep.*.*
                     - tullylanterdd_prod.*.*
 
+    - vjallipalli:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+            - customers_db
+            - analyst_marketing
+            - data_team_analyst
+        warehouses:
+            - analyst_xs
+
     - vjuhasz:
         member_of:
             - reporter
@@ -3497,6 +3509,11 @@ users:
         can_login: yes
         member_of:
             - brufener
+
+    - bbutterfield:
+        can_login: yes
+        member_of:
+            - bbutterfield
 
     - camsmith:
         can_login: yes
@@ -3766,6 +3783,7 @@ users:
         can_login: yes
         member_of:
             - laddula
+            - accountadmin
 
     - lmai:
         can_login: yes
@@ -3837,9 +3855,8 @@ users:
             - mray        
 
     - mriser:
-        can_login: yes
-        member_of:
-            - mriser
+        can_login: no
+        member_of: []
 
     - mrodriguez:
         can_login: no
@@ -4028,6 +4045,11 @@ users:
     - valexieva:
         can_login: no
         member_of: []
+
+    - vjallipalli:
+        can_login: yes
+        member_of:
+            - vjallipalli
 
     - vjuhasz:
         can_login: yes

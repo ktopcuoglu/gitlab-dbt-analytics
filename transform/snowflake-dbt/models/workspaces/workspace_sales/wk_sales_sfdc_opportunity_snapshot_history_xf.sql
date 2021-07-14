@@ -109,7 +109,7 @@ WITH date_details AS (
       --sfdc_opportunity_snapshot_history.closed_deals,
       --sfdc_opportunity_snapshot_history.competitors,
       --sfdc_opportunity_snapshot_history.critical_deal_flag,
-      sfdc_opportunity_snapshot_history.deal_size,
+      --sfdc_opportunity_snapshot_history.deal_size,
       sfdc_opportunity_snapshot_history.forecast_category_name,
       --sfdc_opportunity_snapshot_history.forecasted_iacv,
       sfdc_opportunity_snapshot_history.iacv_created_date,
@@ -313,7 +313,19 @@ WITH date_details AS (
         WHEN LOWER(sfdc_opportunity_snapshot_history.sales_type) like '%renewal%' 
           THEN 1
         ELSE 0
-      END                                                         AS is_renewal 
+      END                                                         AS is_renewal,
+
+      -- calculated age field
+      -- if open, use the diff between created date and snapshot date
+      -- if closed, a) the close date is later than snapshot date, use snapshot date
+      -- if closed, b) the close is in the past, use close date
+      CASE
+        WHEN is_open = 1
+          THEN DATEDIFF(days, created_date_detail.date_actual, snapshot_date.date_actual)
+        WHEN is_open = 0 AND snapshot_date.date_actual < close_date_detail.date_actual
+          THEN DATEDIFF(days, created_date_detail.date_actual, snapshot_date.date_actual)
+        ELSE DATEDIFF(days, created_date_detail.date_actual, close_date_detail.date_actual)
+      END                                                       AS calculated_age_in_days
 
     FROM {{ref('sfdc_opportunity_snapshot_history')}}
     INNER JOIN date_details close_date_detail
@@ -613,6 +625,38 @@ WITH date_details AS (
       ------------------------------
       -- compound metrics for reporting
       ------------------------------
+
+      -- current deal size field, it was creasted by the data team and the original doesn't work
+      CASE 
+        WHEN opp_snapshot.net_arr > 0 AND net_arr < 5000 
+          THEN '1 - Small (<5k)'
+        WHEN opp_snapshot.net_arr >=5000 AND net_arr < 25000 
+          THEN '2 - Medium (5k - 25k)'
+        WHEN opp_snapshot.net_arr >=25000 AND net_arr < 100000 
+          THEN '3 - Big (25k - 100k)'
+        WHEN opp_snapshot.net_arr >= 100000 
+          THEN '4 - Jumbo (>100k)'
+        ELSE 'Other' 
+      END                                                          AS deal_size,
+
+      -- extended version of the deal size
+      CASE 
+        WHEN opp_snapshot.net_arr > 0 AND net_arr < 5000 
+          THEN '1. (0k -5k)'
+        WHEN opp_snapshot.net_arr >=5000 AND net_arr < 25000 
+          THEN '2. (5k - 25k)'
+        WHEN opp_snapshot.net_arr >=25000 AND net_arr < 100000 
+          THEN '3. (25k - 100k)'
+        WHEN opp_snapshot.net_arr >= 100000 AND net_arr < 250000 
+          THEN '4. (100k - 250k)'
+        WHEN opp_snapshot.net_arr >= 250000 AND net_arr < 500000 
+          THEN '5. (250k - 500k)'
+        WHEN opp_snapshot.net_arr >= 500000 AND net_arr < 1000000 
+          THEN '6. (500k-1000k)'
+        WHEN opp_snapshot.net_arr >= 1000000 
+          THEN '7. (>1000k)'
+        ELSE 'Other' 
+      END                                                           AS calculated_deal_size,
 
             -- Open pipeline eligibility definition
       CASE 

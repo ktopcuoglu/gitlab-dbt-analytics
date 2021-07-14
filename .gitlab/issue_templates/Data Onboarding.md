@@ -50,7 +50,7 @@ Goal: To help bring you, our new data team member, up to speed in the GitLab Dat
    - [ ] Engineers, join `analytics-pipelines`
    - [ ] Analytsts, join `dbt-runs`
 - [ ] Schedule a recurring fortnightly (every two weeks) 1:1 meeting with the Sr. Director of Data and Analytics.
-- [ ] Schedule a coffee chat with each member of the data team. These should be in addition to the ones you do with other GitLab team members.  In addition, you should also consider scheduling chats with Business Technology (IT, Enterprise Apps, Procurement) people as well.
+- [ ] Schedule a coffee chat with each member of the data team. These should be in addition to the ones you do with other GitLab team members. Consider making these recurring meetings for every 3-4 weeks with everyone you will work closely with. In addition, you should also consider scheduling chats with Business Technology (IT, Enterprise Apps, Procurement) people as well.
 - [ ] Read the following pages of the handbook in their entirety. Bookmark them as you should soon be making MR's to improve our documentation!
    - [ ] [Data Team](https://about.gitlab.com/handbook/business-ops/data-team/)
    - [ ] [Business Operations](https://about.gitlab.com/handbook/business-ops/)
@@ -105,7 +105,11 @@ rm ~/onboarding_script.zsh
 * [ ] Consider following [these instructions](https://stackoverflow.com/a/23963086) so you can have option + arrow keys to move around the terminal easier
 * [ ] Raise an access request for Google Cloud Platform (GCP). Template for access request (AR) can be found here: https://gitlab.com/gitlab-com/team-member-epics/access-requests/-/issues/10306. Please assign it to your manager
 * [ ] If you get a weird semaphore issue error when running dbt try [this script](https://gist.github.com/llbbl/c54f44d028d014514d5d837f64e60bac) which is sourced from this [Apple forum thread](https://forums.developer.apple.com/thread/119429)
-
+* [ ] (Optional) - Better terminal theming - In the onboarding script the terminal has been configured to use the [bira OhMyZsh theme](https://github.com/ohmyzsh/ohmyzsh/wiki/Themes#bira). However if you would like an improved and configurable theme install [PowerLevel10K](https://github.com/romkatv/powerlevel10k) by running the below command from your terminal: 
+    ``` 
+    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+    ```
+    * Then reopen your terminal and you will be asked to configure this theme. If you would like to reconfigure the theme run `p10k configure`
 </details>
 
 <details>
@@ -155,6 +159,11 @@ Additional tools to install that are not part of the onboarding script:
 * [ ] Install the [awscli](https://aws.amazon.com/cli/)
 * [ ] Disable [autocorrect in zsh](https://coderwall.com/p/jaoypq/disabling-autocorrect-in-zsh) if it annoys you
 * [ ] Consider downloading and installing [Little Snitch](https://www.obdev.at/products/littlesnitch/index.html) - You can submit for reimbursement for the full version
+* [ ] (Optional) - Better terminal theming - In the onboarding script the terminal has been configured to use the [bira OhMyZsh theme](https://github.com/ohmyzsh/ohmyzsh/wiki/Themes#bira). However if you would like an improved and configurable theme install [PowerLevel10K](https://github.com/romkatv/powerlevel10k) by running the below command from your terminal: 
+    ``` 
+    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+    ```
+    * Then reopen your terminal and you will be asked to configure this theme. If you would like to reconfigure the theme run `p10k configure`
 
 ## Airflow (Data Engineers only)
     - [ ] Read the Airflow section on the [Data Infrastructure page](https://about.gitlab.com/handbook/business-ops/data-team/platform/infrastructure/#airflow)
