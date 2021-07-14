@@ -117,6 +117,7 @@ rm ~/onboarding_script.zsh
 <summary>For Data Scientists</summary>
 <details>
 * [ ] Make sure you have run through all of the analysts steps mentioned above, along with the getting setup with dbt section below
+* [ ] Install docker & docker-compose. The easiest way to do this for Mac now is to use the desktop install from [Docker](https://www.docker.com/products/docker-desktop).
 * [ ] Run through the Jupyter setup section below 
 
 </details>
@@ -250,6 +251,7 @@ Save and finish above updated by clicking `esc` and writing `:wq!`. Letter "w" s
 ## Jupyter 
 
 - [ ] Ensure you've setup your dbt for running locally as mentioned above. The ./.dbt/profiles.yml file is a pre-requisite for this process. If you do not want dbt you can manually create the ./.dbt/profiles.yml file based off the [sample profile](https://gitlab.com/gitlab-data/analytics/-/blob/master/admin/sample_profiles.yml)
+- [ ] Install [docker and docker-compose]()
 - [ ] Clone the DataScience repo: 
     ``` git clone https://gitlab.com/gitlab-data/data-science```
 - [ ] Run `make jupyter` from the root directory of the repository and confirm that JupyterLab has now spun up on successfully. 
