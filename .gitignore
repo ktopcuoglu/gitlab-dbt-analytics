@@ -27,4 +27,3 @@ config.json
 !excluded.csv
 .ipynb_checkpoints/*
 /transform/snowflake-dbt/*.ipynb
-Pipfile.lock
