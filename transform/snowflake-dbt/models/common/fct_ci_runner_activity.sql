@@ -49,7 +49,7 @@
 
     FROM dim_ci_build
     LEFT JOIN dim_ci_runner 
-      ON dim_ci_build.ci_runner_id = dim_ci_runner.dim_ci_runner_id
+      ON dim_ci_build.dim_ci_runner_id = dim_ci_runner.dim_ci_runner_id
     LEFT JOIN dim_ci_pipeline
       ON dim_ci_build.dim_ci_pipeline_id = dim_ci_pipeline.dim_ci_pipeline_id
     LEFT JOIN dim_ci_stage 
