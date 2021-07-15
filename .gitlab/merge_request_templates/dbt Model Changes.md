@@ -98,7 +98,10 @@ Example: You might be looking at the count of opportunities before and after, if
 Paste the results of dbt test here, including the command.
 
 </code></pre>
+
 </details>
+
+<summary> Pipelines </summary>
 
 **Which pipeline job do I run?** See our [handbook page](https://about.gitlab.com/handbook/business-ops/data-team/platform/ci-jobs/) on our CI jobs to better understand which job to run.
 </details>
