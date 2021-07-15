@@ -4,7 +4,7 @@
 
 {{ config({
     "materialized": "incremental",
-    "unique_key": "dim_ci_build_id"
+    "unique_key": "dim_ci_stage_id"
     })
 }}
 
@@ -23,16 +23,16 @@
 ), joined AS (
   
     SELECT
-      ci_stages.id::NUMBER              AS dim_ci_stage_id,
-      dim_project.dim_project_id,
-      dim_ci_pipeline.dim_ci_pipeline_id,
-      dim_date.date_id                  AS created_date_id,
-      ci_stages.created_at::TIMESTAMP   AS created_at,
-      ci_stages.updated_at::TIMESTAMP   AS updated_at,
-      ci_stages.name::VARCHAR           AS ci_stage_name,
-      ci_stages.status::NUMBER          AS ci_stage_status,
-      ci_stages.lock_version::NUMBER    AS lock_version,
-      ci_stages.position::NUMBER        AS position
+      ci_stages.id::NUMBER                              AS dim_ci_stage_id,
+      IFNULL(dim_project.dim_project_id, -1)            AS dim_project_id,
+      IFNULL(dim_ci_pipeline.dim_ci_pipeline_id, -1)    AS dim_ci_pipeline_id,
+      IFNULL(dim_date.date_id, -1)                      AS created_date_id,
+      ci_stages.created_at::TIMESTAMP                   AS created_at,
+      ci_stages.updated_at::TIMESTAMP                   AS updated_at,
+      ci_stages.name::VARCHAR                           AS ci_stage_name,
+      ci_stages.status::NUMBER                          AS ci_stage_status,
+      ci_stages.lock_version::NUMBER                    AS lock_version,
+      ci_stages.position::NUMBER                        AS position
     FROM ci_stages
     LEFT JOIN dim_project
       ON ci_stages.project_id = dim_project.dim_project_id
@@ -48,6 +48,6 @@
     created_by="@mpeychet_",
     updated_by="@ischweickartDD",
     created_date="2021-06-29",
-    updated_date="2021-07-08"
+    updated_date="2021-07-15"
 ) }}
 
