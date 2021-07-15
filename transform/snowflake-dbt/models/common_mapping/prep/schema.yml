@@ -1652,7 +1652,7 @@ models:
         description: Foreign key that shows the ID of the user who triggered the CI Build
       - name: dim_plan_id
         description: ID of the Plan
-      - name: ci_runner_id
+      - name: dim_ci_runner_id
         description: ID of the runner with which the CI build has been run.
       - name: dim_ci_stage_id
 
@@ -1692,11 +1692,15 @@ models:
           - not_null
           - unique
       - name: dim_project_id
-        description: Foreign key to `dim_project` that shows the ID of the project in which the stage was run.
-      - name: dim_pipeline_id
-        description: Foreign key to `dim_ci_pipeline` that shows the ID of the pipeline in which the stage was run.
+        description: Foreign key to `dim_project` that shows the ID of the project in which the stage was run. Defaults to `-1` if a project ID from the CI builds source table is not found in `dim_project`.
+        tests:
+          - not_null
+      - name: dim_ci_pipeline_id
+        description: Foreign key to `dim_ci_pipeline` that shows the ID of the pipeline in which the stage was run. Defaults to `-1` if a CI pipeline ID from the CI builds source table is not found in `dim_ci_pipeline`.
+        tests:
+          - not_null
       - name: created_date_id
-        description: Foreign key to `dim_date` that shows the ID of the date on which the stage was created.
+        description: Foreign key to `dim_date` that shows the ID of the date on which the stage was created. Defaults to `-1` if a date ID from the CI builds source table is not found in `dim_date`.
         tests:
           - not_null
       - name: created_at
