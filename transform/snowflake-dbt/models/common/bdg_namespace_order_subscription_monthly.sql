@@ -5,7 +5,7 @@
 {{ simple_cte([
     ('namespaces', 'prep_namespace'),
     ('subscriptions', 'prep_subscription'),
-    ('orders_historical', 'wk_customers_db_versions_history'),
+    ('orders_historical', 'dim_order_hist'),
     ('dates', 'dim_date'),
     ('product_tiers', 'prep_product_tier'),
     ('product_details', 'dim_product_detail'),
@@ -68,7 +68,7 @@
       namespaces.is_currently_valid                                     AS is_namespace_active
     FROM namespaces
     INNER JOIN dates
-      ON dates.date_actual BETWEEN namespaces.namespace_created_at AND CURRENT_DATE
+      ON dates.date_actual BETWEEN namespaces.created_at AND CURRENT_DATE
     LEFT JOIN trial_histories
       ON namespaces.dim_namespace_id = trial_histories.gl_namespace_id
 
@@ -115,7 +115,7 @@
             to be updated within 24 hours it is likely that the previous namespace was incorrect
     */
     SELECT
-      orders_historical.order_id,
+      orders_historical.dim_order_id,
       orders_historical.customer_id,
       IFNULL(trial_tiers.dim_product_tier_id,
               product_rate_plans.dim_product_tier_id)                   AS dim_product_tier_id_with_trial,
@@ -124,22 +124,21 @@
       product_rate_plans.dim_product_tier_id                            AS dim_product_tier_id_order,
       product_rate_plans.product_rate_plan_id                           AS product_rate_plan_id_order,
       product_rate_plans.product_tier_name                              AS product_tier_name_order,
-      orders_historical.subscription_id                                 AS subscription_id_order,
-      orders_historical.subscription_name                               AS subscription_name_order,
+      orders_historical.dim_subscription_id                             AS subscription_id_order,
       orders_historical.dim_namespace_id                                AS namespace_id_order,
       MIN(orders_historical.order_start_date) OVER(
-        PARTITION BY orders_historical.order_id)                        AS order_start_date,
+        PARTITION BY orders_historical.dim_order_id)                    AS order_start_date,
       MAX(orders_historical.order_end_date) OVER(
-        PARTITION BY orders_historical.order_id)                        AS order_end_date,
+        PARTITION BY orders_historical.dim_order_id)                    AS order_end_date,
       MIN(orders_historical.valid_from) OVER (
         PARTITION BY
-          orders_historical.order_id,
-          orders_historical.subscription_id,
+          orders_historical.dim_order_id,
+          orders_historical.dim_subscription_id,
           orders_historical.dim_namespace_id)                           AS term_start_date,
       MAX(IFNULL(orders_historical.valid_to, CURRENT_DATE)) OVER (
         PARTITION BY
-          orders_historical.order_id,
-          orders_historical.subscription_id,
+          orders_historical.dim_order_id,
+          orders_historical.dim_subscription_id,
           orders_historical.dim_namespace_id)                           AS term_end_date,
       orders_historical.order_is_trial,
       IFF(order_end_date >= CURRENT_DATE,
@@ -152,7 +151,7 @@
     WHERE order_start_date IS NOT NULL 
     QUALIFY ROW_NUMBER() OVER (
       PARTITION BY
-        orders_historical.order_id,
+        orders_historical.dim_order_id,
         orders_historical.valid_from::DATE
       ORDER BY orders_historical.valid_from DESC
     ) = 1
@@ -170,7 +169,7 @@
                                     orders.order_end_date, orders.term_end_date)
     QUALIFY ROW_NUMBER() OVER (
       PARTITION BY 
-        orders.order_id,
+        orders.dim_order_id,
         dates.first_day_of_month
       ORDER BY orders.term_end_date DESC
     ) = 1
@@ -180,7 +179,7 @@
     SELECT DISTINCT
       namespace_list.dim_namespace_id,
       subscription_list.dim_subscription_id,
-      order_list.order_id,
+      order_list.dim_order_id,
       COALESCE(order_list.order_snapshot_month,
                subscription_list.subscription_snapshot_month,
                namespace_list.namespace_snapshot_month
@@ -217,13 +216,13 @@
       subscription_list.product_tier_name_subscription,
       CASE
         WHEN namespace_list.gitlab_plan_id IN (102, 103)
-          AND order_list.order_id IS NULL
+          AND order_list.dim_order_id IS NULL
           THEN 'Trial Namespace Missing Order' 
         WHEN order_list.namespace_id_order != namespace_list.ultimate_parent_namespace_id
           AND namespace_list.is_namespace_active = TRUE
           THEN 'Order Linked to Non-Ultimate Parent Namespace'
         WHEN namespace_list.gitlab_plan_id NOT IN (102, 103)
-          AND order_list.order_id IS NULL
+          AND order_list.dim_order_id IS NULL
           THEN 'Paid Namespace Missing Order' 
         WHEN namespace_list.gitlab_plan_id NOT IN (102, 103)
           AND order_list.subscription_id_order IS NULL
@@ -238,20 +237,20 @@
           AND order_list.product_rate_plan_id_order IS NOT NULL
           AND subscription_list.dim_subscription_id IS NULL
           THEN 'Paid Order Product Rate Plan Misaligned with Zuora'
-        WHEN order_list.order_id IS NOT NULL
+        WHEN order_list.dim_order_id IS NOT NULL
           AND order_list.namespace_id_order IS NULL
           THEN 'Free Order Missing Namespace Assignment' 
         WHEN order_list.namespace_id_order IS NOT NULL
           AND namespace_list.dim_namespace_id IS NULL
           THEN 'Order Namespace Not Found'
         WHEN subscription_list.dim_subscription_id IS NOT NULL
-          AND order_list.order_id IS NULL
+          AND order_list.dim_order_id IS NULL
           THEN 'Paid Subscription Missing Order'
         WHEN subscription_list.dim_subscription_id IS NOT NULL
           AND namespace_list.dim_namespace_id IS NOT NULL
           THEN 'Paid All Matching'
         WHEN namespace_list.gitlab_plan_id IN (102, 103)
-          AND order_list.order_id IS NOT NULL
+          AND order_list.dim_order_id IS NOT NULL
           THEN 'Trial All Matching'
       END                                                               AS namespace_order_subscription_match_status
     FROM order_list
@@ -270,5 +269,5 @@
     created_by="@ischweickartDD",
     updated_by="@ischweickartDD",
     created_date="2021-06-02",
-    updated_date="2021-06-17"
+    updated_date="2021-07-06"
 ) }}
