@@ -107,6 +107,7 @@ Paste the results of dbt test here, including the command.
 * [ ] Re-run the dbt_models pipeline (you may need to create a new pipeline with the "Run Pipeline" button), running only the models which have changed; e.g: dim_subscription. To remove any un-related pipeline failures.  
 
 **Which pipeline job do I run?** See our [handbook page](https://about.gitlab.com/handbook/business-ops/data-team/platform/ci-jobs/) on our CI jobs to better understand which job to run.
+**What to do for failed pipelines** See our [handbook page](https://about.gitlab.com/handbook/business-ops/data-team/platform/ci-jobs/#what-to-do-if-a-pipeline-fails) 
 </details>
 
 ## All MRs Checklist
