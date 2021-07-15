@@ -9,6 +9,17 @@ WITH prep_ci_runner AS (
       created_at,
       updated_at,
       ci_runner_description,
+      CASE 
+        WHEN ci_runner_description LIKE 'private-runners-manager%'
+          THEN 'private-runner-mgr'
+        WHEN ci_runner_description LIKE 'shared-runners-manager%'
+          THEN 'linux-runner-mgr'
+        WHEN ci_runner_description LIKE 'gitlab-shared-runners-manager%'
+          THEN 'gitlab-internal-runner-mgr'
+        WHEN ci_runner_description LIKE 'windows-shared-runners-manager%'
+          THEN 'windows-runner-mgr'
+          ELSE 'Other'
+      END                                           AS runner_manager,
       contacted_at,
       is_active,
       ci_runner_version,
@@ -20,6 +31,11 @@ WITH prep_ci_runner AS (
       access_level,
       maximum_timeout,
       runner_type,
+      CASE runner_type
+        WHEN 1 THEN 'shared'
+        WHEN 2 THEN 'group-runner-hosted runners'
+        WHEN 3 THEN 'project-runner-hosted runners' 
+      END                                           AS runner_type_summary,
       public_projects_minutes_cost_factor,
       private_projects_minutes_cost_factor
     
