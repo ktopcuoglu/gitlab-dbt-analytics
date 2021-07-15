@@ -1971,6 +1971,12 @@ roles:
         member_of: []
         warehouses: []
 
+    - bmishra:
+        member_of:
+            - analyst_core
+        warehouses:
+            - analyst_xs          
+
     - bnguyen:
         member_of:
             - analyst_finance
@@ -2086,6 +2092,12 @@ roles:
                 write:
                     - dpeterson_prep.*.*
                     - dpeterson_prod.*.*
+
+    - drubins:
+        member_of:
+            - analyst_core
+        warehouses:
+            - analyst_xs
 
     - dtang:
         member_of:
@@ -2232,6 +2244,12 @@ roles:
             - reporting
             - transforming_xs
             - transforming_xl
+
+    - gmachado:
+        member_of:
+            - analyst_core
+        warehouses:
+            - analyst_xs
 
     - hfrancisco:
         member_of:
@@ -3245,7 +3263,12 @@ roles:
                     - testing_db.*.*
                 write:
                     - testing_db.*.*
- 
+
+    - tbredehoeft:
+        member_of:
+            - analyst_core
+        warehouses:
+            - analyst_xs 
 
     - tmurphy:
         member_of: []
@@ -3494,6 +3517,11 @@ users:
         can_login: no
         member_of: []
 
+    - bmishra:
+        can_login: yes
+        member_of:
+            - bmishra
+
     - bnguyen:
         can_login: yes
         member_of:
@@ -3563,6 +3591,11 @@ users:
         member_of:
             - dpeterson
 
+    - drubins:
+        can_login: yes
+        member_of:
+            - drubins        
+
     - dtang:
         can_login: yes
         member_of:
@@ -3629,6 +3662,11 @@ users:
         member_of:
             - gitlab_ci
             - sysadmin
+
+    - gmachado:
+        can_login: yes
+        member_of:
+            - gmachado   
 
     - grafana:
         can_login: yes
@@ -4015,6 +4053,11 @@ users:
         can_login: yes
         member_of:
             - target_snowflake
+
+    - tbredehoeft:
+        can_login: yes
+        member_of:
+            - tbredehoeft   
 
     - tullylanterdd:
         can_login: yes
