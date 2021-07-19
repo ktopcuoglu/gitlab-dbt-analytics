@@ -2498,8 +2498,7 @@ roles:
             - reporting
 
     - jurbanc:
-        warehouses:
-            - reporting
+        warehouses: []
 
     - jwanjohi:
         warehouses:
@@ -3768,10 +3767,8 @@ users:
             - jswain
 
     - jurbanc:
-        can_login: yes
-        member_of:
-            - jurbanc
-            - securityadmin
+        can_login: no
+        member_of: []
 
     - jwanjohi:
         can_login: yes
