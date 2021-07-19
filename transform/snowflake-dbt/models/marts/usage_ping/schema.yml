@@ -181,7 +181,7 @@ models:
   - name: mart_usage_ping
     description: '{{ doc("mart_usage_ping") }}'
     columns:
-      - name: dm_usage_ping_id
+      - name: dim_usage_ping_id
         tests:
           - not_null
           - unique
