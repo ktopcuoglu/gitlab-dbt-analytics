@@ -459,3 +459,27 @@ Prep table for the dim table `dim_epic`.
 Prep table for the dim table `dim_note`.
 
 {% enddocs %}
+
+{% docs prep_issue_severity %}
+
+Prep table used to get Severity field from GitLab Incident issues for the `dim_issue` table.
+
+More information about [GitLab Incidents here](https://docs.gitlab.com/ee/operations/incident_management/incidents.html)
+
+{% enddocs %}
+
+{% docs prep_label_links %}
+
+Prep table used to join GitLab Labels to Issues, Merge Requests, & Epics
+
+More information about [labels here](https://docs.gitlab.com/ee/user/project/labels.html)
+
+{% enddocs %}
+
+{% docs prep_labels %}
+
+Prep table used to build `dim_issues`, `dim_merge_requests`, `dim_epics` tables. Holds detailed information about the labels used across GitLab
+
+More information about [labels here](https://docs.gitlab.com/ee/user/project/labels.html)
+
+{% enddocs %}

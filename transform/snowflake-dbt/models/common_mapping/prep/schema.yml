@@ -1761,3 +1761,30 @@ models:
         tests:
           - unique
           - not_null
+  - name: prep_issue_severity
+    description: '{{ doc("prep_issue_severity") }}'
+    columns:
+      - name: dim_issue_severity_id
+        tests:
+          - not_null
+          - unique
+      - name: dim_issue_id
+        tests:
+          - not_null
+  - name: prep_label_links
+    description: '{{ doc("prep_label_links") }}'
+    columns:
+      - name: dim_label_link_id
+        tests:
+          - not_null
+          - unique
+      - name: dim_label_id
+        tests:
+          - not_null
+  - name: prep_labels
+    description: '{{ doc("prep_labels") }}'
+    columns:
+      - name: dim_label_id
+        tests:
+          - not_null
+          - unique
