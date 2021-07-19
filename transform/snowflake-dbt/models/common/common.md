@@ -448,27 +448,6 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
-{% docs fct_namespace_member_summary %}
-
-This model summarizes namespace user counts by accounting for all of the ways that a user be granted (direct or inherited) access to a namespace, AKA "membership". Bots and users awaiting access to a namespace are also accounted for. These counts are reported at the `ultimate_parent_namespace_id` grain.
-
-Importantly, this model calculates the field [`billable_member_count`](https://docs.gitlab.com/ee/subscriptions/self_managed/#billable-users) - i.e. the number of members should be counted toward the seat count for a subscription (note: this also applies to namespaces without a subscription for the convenience of determining seats in use).
-
-There are 5 general ways that a user can have access to a group A:
-* Be a **group member** of group A.
-* Be a **group member** of B, where B is a descendant (subgroup) of group A.
-* Be a **project member** of b, where b is owned by A or one of A's descendants.
-* Be a group member of N or a parent group of N, where N is invited to a project underneath A via [project group links](https://docs.gitlab.com/ee/user/group/#sharing-a-project-with-a-group).
-* Be a group member of Y or a parent group of Y, where Y is invited to A or one of A's descendants via [group group links](https://docs.gitlab.com/ee/user/group/#sharing-a-group-with-another-group).
-
-An example of these relationships is shown in this diagram:
-
-<div style="width: 720px; height: 480px; margin: 10px; position: relative;"><iframe allowfullscreen frameborder="0" style="width:720px; height:480px" src="https://app.lucidchart.com/documents/embeddedchart/9f529269-3e32-4343-9713-8eb311df7258" id="WRFbB73aKeB3"></iframe></div>
-
-Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
-
-{% enddocs %}
-
 {% docs fct_product_usage_free_user_metrics_monthly %}
 This table unions the sets of all Self-Managed and SaaS **free users**. The data from this table will be used to create a mart table (`mart_product_usage_free_user_metrics_monthly`) for Customer Product Insights.
 
@@ -675,6 +654,14 @@ This table joins to common product tier dimension via dim_product_tier_id to get
 
 {% enddocs %}
 
+{% docs dim_order_hist %}
+
+Table containing GitLab order snapshots.
+
+The grain of this table is one row per order per valid_to/valid_from combination.
+
+{% enddocs %}
+
 {% docs dim_quote %}
 
 Dimensional table representing Zuora quotes and associated metadata.
@@ -792,5 +779,38 @@ Easy joins available with:
 * dim_project through `dim_project_id`
 * dim_ci_pipeline through `dim_ci_pipeline_id`
 * dim_date through `created_date_id`
+
+{% enddocs %}
+
+{% docs dim_epic %}
+
+Dimensional table representing epics created by groups on Gitlab.com instance. [More info about epics here](https://docs.gitlab.com/ee/user/group/epics/)
+
+The grain of the table is the `dim_event_id`. This table is easily joinable with:
+
+- `dim_plan` through `dim_plan_id`
+- `dim_user` through `author_id`
+- `dim_namespace` through `group_id` and `ultimate_namespace_id`
+
+{% enddocs %}
+
+{% docs dim_note %}
+
+Dimensional table representing events recorded by the Events API. [More info about events tracked here](https://docs.gitlab.com/ee/api/notes.html)
+
+2 kinds of notes are recorded in the notes table:
+- system notes
+- users' notes
+
+System notes are notes automatically created based on status changes of the issue/snippet/merge request/epic.
+
+For example, when a user is tagged as a reviewer, a system note is automatically created in the notes table. They are easily identifiable through the `is_system_id` boolean flag.
+
+The grain of the table is the `dim_note_id`. This table is easily joinable with:
+
+- `dim_plan` through `dim_plan_id`
+- `dim_user` through `dim_user_id`
+- `dim_project` through `dim_project_id`
+- `dim_namespace` through `dim_namespace_id` and `ultimate_namespace_id`
 
 {% enddocs %}

@@ -140,7 +140,7 @@
     SELECT
       monthly_saas_metrics.snapshot_month,
       monthly_saas_metrics.dim_subscription_id,
-      monthly_saas_metrics.dim_namespace_id,
+      monthly_saas_metrics.dim_namespace_id::VARCHAR                                AS dim_namespace_id,
       NULL AS uuid,
       NULL AS hostname,
       {{ get_keyed_nulls('billing_accounts.dim_billing_account_id') }}              AS dim_billing_account_id,

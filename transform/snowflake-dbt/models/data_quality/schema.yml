@@ -24,9 +24,6 @@ models:
    columns:
      - name: rule_id
        description: The identifier of each data quality detection rule.
-       tests:
-         - not_null
-         - unique
      - name: processed_record_count
        description: The total number of records that have been processed.
      - name: passed_record_count
@@ -44,9 +41,6 @@ models:
    columns:
      - name: rule_id
        description: The identifier value for each rule.
-       tests:
-         - not_null
-         - unique
      - name: rule_name
        description: The name of the data quality detection rule.
      - name: rule_description
