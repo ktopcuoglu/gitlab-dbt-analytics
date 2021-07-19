@@ -16,7 +16,7 @@
     SELECT
       gitlab_dotcom_issuable_severities_source.issue_severity_id     AS dim_issue_severity_id,
       -- FOREIGN KEYS
-      prep_issue.dim_issue_id,
+      gitlab_dotcom_issuable_severities_source.issue_id     AS dim_issue_id,
       --
       gitlab_dotcom_issuable_severities_source.severity     AS severity      
 
