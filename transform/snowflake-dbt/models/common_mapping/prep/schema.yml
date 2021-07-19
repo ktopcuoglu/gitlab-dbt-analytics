@@ -1639,7 +1639,7 @@ models:
   - name: prep_action
     description: '{{ doc("prep_action") }}'
     columns:
-      - name: dim_event_id
+      - name: dim_action_id
         tests:
           - unique
           - not_null
