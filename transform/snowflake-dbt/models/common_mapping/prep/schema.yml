@@ -1713,11 +1713,17 @@ models:
           - not_null
           - unique
       - name: dim_project_id
-        description: Foreign key to `dim_project` that shows the ID of the project in which the stage was run.
-      - name: dim_pipeline_id
-        description: Foreign key to `dim_ci_pipeline` that shows the ID of the pipeline in which the stage was run.
+        description: Foreign key to `dim_project` that shows the ID of the project in which the stage was run. Defaults to `-1` if a project ID from the CI builds source table is not found in `dim_project`.
+        tests:
+          - not_null
+      - name: dim_ci_pipeline_id
+        description: Foreign key to `dim_ci_pipeline` that shows the ID of the pipeline in which the stage was run. Defaults to `-1` if a CI pipeline ID from the CI builds source table is not found in `dim_ci_pipeline`.
+        tests:
+          - not_null
       - name: created_date_id
-        description: Foreign key to `dim_date` that shows the ID of the date on which the stage was created.
+        description: Foreign key to `dim_date` that shows the ID of the date on which the stage was created. Defaults to `-1` if a date ID from the CI builds source table is not found in `dim_date`.
+        tests:
+          - not_null
         tests:
           - not_null
       - name: created_at
@@ -1731,15 +1737,13 @@ models:
         tests:
           - unique
           - not_null
-  - name: prep_issue_severity
-    description: '{{ doc("prep_issue_severity") }}'
+          
+  - name: prep_note
+    description: '{{ doc("prep_note") }}'
     columns:
-      - name: dim_issue_severity_id
+      - name: dim_note_id
         tests:
-          - not_null
           - unique
-      - name: dim_issue_id
-        tests:
           - not_null
 
   - name: prep_merge_request
@@ -1749,20 +1753,11 @@ models:
         tests:
           - unique
           - not_null
-  - name: prep_label_links
-    description: '{{ doc("prep_label_links") }}'
+          
+  - name: prep_epic
+    description: '{{ doc("prep_epic") }}'
     columns:
-      - name: dim_label_link_id
+      - name: dim_epic_id
         tests:
-          - not_null
           - unique
-      - name: dim_label_id
-        tests:
           - not_null
-  - name: prep_labels
-    description: '{{ doc("prep_labels") }}'
-    columns:
-      - name: dim_label_id
-        tests:
-          - not_null
-          - unique
