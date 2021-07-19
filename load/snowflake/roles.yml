@@ -62,6 +62,11 @@ databases:
     - kaguilar_prep:
         shared: no
 
+    - kdietz_prod:
+        shared: no
+    - kdietz_prep:
+        shared: no
+
     - kmagda_prod:
         shared: no
     - kmagda_prep:
@@ -85,11 +90,6 @@ databases:
     - mvilain_prod:
         shared: no
     - mvilain_prep:
-        shared: no
-
-    - mwalker_prod:
-        shared: no
-    - mwalker_prep:
         shared: no
 
     - mwawrzyniak_prod:
@@ -1971,6 +1971,12 @@ roles:
         member_of: []
         warehouses: []
 
+    - bmishra:
+        member_of:
+            - analyst_core
+        warehouses:
+            - analyst_xs          
+
     - bnguyen:
         member_of:
             - analyst_finance
@@ -1989,6 +1995,12 @@ roles:
             - bamboohr_sensitive_separations
         warehouses:
             - analyst_xs
+
+    - bbutterfield:
+        member_of:
+            - reporter
+        warehouses:
+            - reporting            
 
     - camsmith:
         member_of:
@@ -2080,6 +2092,12 @@ roles:
                 write:
                     - dpeterson_prep.*.*
                     - dpeterson_prod.*.*
+
+    - drubins:
+        member_of:
+            - analyst_core
+        warehouses:
+            - analyst_xs
 
     - dtang:
         member_of:
@@ -2226,6 +2244,12 @@ roles:
             - reporting
             - transforming_xs
             - transforming_xl
+
+    - gmachado:
+        member_of:
+            - analyst_core
+        warehouses:
+            - analyst_xs
 
     - hfrancisco:
         member_of:
@@ -2526,6 +2550,45 @@ roles:
                     - kaguilar_prep.*.*
                     - kaguilar_prod.*.*
 
+    - kdietz:
+        member_of:
+            - analyst_core
+            - data_team_analyst
+        warehouses:
+            - analyst_xs
+        owns:
+            databases:
+                - kdietz_prep
+                - kdietz_prod
+            schemas:
+                - kdietz_prep.*
+                - kdietz_prod.*
+            tables:
+                - kdietz_prep.*.*
+                - kdietz_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - kdietz_prep
+                    - kdietz_prod
+                write:
+                    - kdietz_prep
+                    - kdietz_prod
+            schemas:
+                read:
+                    - kdietz_prep.*
+                    - kdietz_prod.*
+                write:
+                    - kdietz_prep.*
+                    - kdietz_prod.*
+            tables:
+                read:
+                    - kdietz_prep.*.*
+                    - kdietz_prod.*.*
+                write:
+                    - kdietz_prep.*.*
+                    - kdietz_prod.*.*
+
     - kmagda:
         member_of:
             - analyst_marketing
@@ -2533,6 +2596,8 @@ roles:
             - data_team_analyst
             - analyst_finance
             - gainsight
+            - analyst_core
+            - data_team_analyst
         warehouses:
             - analyst_xs
         owns:
@@ -2662,6 +2727,12 @@ roles:
         warehouses:
             - reporting
 
+    - marntz:
+        member_of:
+            - analyst_sales
+        warehouses:
+            - analyst_xs 
+
     - mcooper:
         member_of:
             - analyst_finance
@@ -2777,10 +2848,6 @@ roles:
         warehouses:
             - analyst_xs   
 
-    - mriser:
-        warehouses:
-            - admin
-
     - msendal:
         warehouses: []
 
@@ -2823,45 +2890,8 @@ roles:
                     - mvilain_prod.*.*
 
     - mwalker:
-        member_of:
-            - engineer
-        warehouses:
-            - engineer_xs
-            - engineer_xl
-            - loading
-            - reporting
-        owns:
-            databases:
-                - mwalker_prep
-                - mwalker_prod
-            schemas:
-                - mwalker_prep.*
-                - mwalker_prod.*
-            tables:
-                - mwalker_prep.*.*
-                - mwalker_prod.*.*
-        privileges:
-            databases:
-                read:
-                    - mwalker_prep
-                    - mwalker_prod
-                write:
-                    - mwalker_prep
-                    - mwalker_prod
-            schemas:
-                read:
-                    - mwalker_prep.*
-                    - mwalker_prod.*
-                write:
-                    - mwalker_prep.*
-                    - mwalker_prod.*
-            tables:
-                read:
-                    - mwalker_prep.*.*
-                    - mwalker_prod.*.*
-                write:
-                    - mwalker_prep.*.*
-                    - mwalker_prod.*.*
+        member_of: []
+        warehouses: []
 
     - mwawrzyniak:
         member_of:
@@ -3004,8 +3034,7 @@ roles:
             - reporting
 
     - periscope_sensitive:
-        warehouses:
-            - reporting
+        warehouses: []
 
     - permission_bot:
         warehouses:
@@ -3234,7 +3263,12 @@ roles:
                     - testing_db.*.*
                 write:
                     - testing_db.*.*
- 
+
+    - tbredehoeft:
+        member_of:
+            - analyst_core
+        warehouses:
+            - analyst_xs 
 
     - tmurphy:
         member_of: []
@@ -3322,6 +3356,16 @@ roles:
                 write:
                     - tullylanterdd_prep.*.*
                     - tullylanterdd_prod.*.*
+
+    - vjallipalli:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+            - customers_db
+            - analyst_marketing
+            - data_team_analyst
+        warehouses:
+            - analyst_xs
 
     - vjuhasz:
         member_of:
@@ -3473,6 +3517,11 @@ users:
         can_login: no
         member_of: []
 
+    - bmishra:
+        can_login: yes
+        member_of:
+            - bmishra
+
     - bnguyen:
         can_login: yes
         member_of:
@@ -3487,6 +3536,11 @@ users:
         can_login: yes
         member_of:
             - brufener
+
+    - bbutterfield:
+        can_login: yes
+        member_of:
+            - bbutterfield
 
     - camsmith:
         can_login: yes
@@ -3536,6 +3590,11 @@ users:
         can_login: yes
         member_of:
             - dpeterson
+
+    - drubins:
+        can_login: yes
+        member_of:
+            - drubins        
 
     - dtang:
         can_login: yes
@@ -3603,6 +3662,11 @@ users:
         member_of:
             - gitlab_ci
             - sysadmin
+
+    - gmachado:
+        can_login: yes
+        member_of:
+            - gmachado   
 
     - grafana:
         can_login: yes
@@ -3724,6 +3788,11 @@ users:
         member_of:
             - kaguilar
 
+    - kdietz:
+        can_login: yes
+        member_of:
+            - kdietz
+
     - kmagda:
         can_login: yes
         member_of:
@@ -3751,6 +3820,7 @@ users:
         can_login: yes
         member_of:
             - laddula
+            - accountadmin
 
     - lmai:
         can_login: yes
@@ -3766,6 +3836,11 @@ users:
         can_login: yes
         member_of:
             - lvandensteen
+
+    - marntz:
+        can_login: yes
+        member_of:
+            - marntz
 
     - mbergeron:
         can_login: no
@@ -3817,9 +3892,8 @@ users:
             - mray        
 
     - mriser:
-        can_login: yes
-        member_of:
-            - mriser
+        can_login: no
+        member_of: []
 
     - mrodriguez:
         can_login: no
@@ -3840,12 +3914,8 @@ users:
             - mwilkins
 
     - mwalker:
-        can_login: yes
-        member_of:
-            - mwalker
-            - accountadmin
-            - securityadmin
-            - sysadmin
+        can_login: no
+        member_of: []
 
     - mwawrzyniak:
         can_login: yes
@@ -3879,10 +3949,8 @@ users:
             - reporter
 
     - periscope_sensitive:
-        can_login: yes
-        member_of:
-            - periscope_sensitive
-            - reporter_sensitive
+        can_login: no
+        member_of: []
 
     - permission_bot:
         can_login: yes
@@ -3986,6 +4054,11 @@ users:
         member_of:
             - target_snowflake
 
+    - tbredehoeft:
+        can_login: yes
+        member_of:
+            - tbredehoeft   
+
     - tullylanterdd:
         can_login: yes
         member_of:
@@ -4012,6 +4085,11 @@ users:
     - valexieva:
         can_login: no
         member_of: []
+
+    - vjallipalli:
+        can_login: yes
+        member_of:
+            - vjallipalli
 
     - vjuhasz:
         can_login: yes

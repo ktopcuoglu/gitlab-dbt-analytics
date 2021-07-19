@@ -47,6 +47,7 @@ class SnowflakeManager:
             "SNOWFLAKE",
             "STITCH",
             "TARGET_SNOWFLAKE",
+            "GAINSIGHT",
         ]
         connection = self.engine.connect()
         for index, row in user_list.iterrows():

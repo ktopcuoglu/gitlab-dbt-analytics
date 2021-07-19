@@ -50,7 +50,7 @@ Goal: To help bring you, our new data team member, up to speed in the GitLab Dat
    - [ ] Engineers, join `analytics-pipelines`
    - [ ] Analytsts, join `dbt-runs`
 - [ ] Schedule a recurring fortnightly (every two weeks) 1:1 meeting with the Sr. Director of Data and Analytics.
-- [ ] Schedule a coffee chat with each member of the data team. These should be in addition to the ones you do with other GitLab team members.  In addition, you should also consider scheduling chats with Business Technology (IT, Enterprise Apps, Procurement) people as well.
+- [ ] Schedule a coffee chat with each member of the data team. These should be in addition to the ones you do with other GitLab team members. Consider making these recurring meetings for every 3-4 weeks with everyone you will work closely with. In addition, you should also consider scheduling chats with Business Technology (IT, Enterprise Apps, Procurement) people as well.
 - [ ] Read the following pages of the handbook in their entirety. Bookmark them as you should soon be making MR's to improve our documentation!
    - [ ] [Data Team](https://about.gitlab.com/handbook/business-ops/data-team/)
    - [ ] [Business Operations](https://about.gitlab.com/handbook/business-ops/)
@@ -105,7 +105,11 @@ rm ~/onboarding_script.zsh
 * [ ] Consider following [these instructions](https://stackoverflow.com/a/23963086) so you can have option + arrow keys to move around the terminal easier
 * [ ] Raise an access request for Google Cloud Platform (GCP). Template for access request (AR) can be found here: https://gitlab.com/gitlab-com/team-member-epics/access-requests/-/issues/10306. Please assign it to your manager
 * [ ] If you get a weird semaphore issue error when running dbt try [this script](https://gist.github.com/llbbl/c54f44d028d014514d5d837f64e60bac) which is sourced from this [Apple forum thread](https://forums.developer.apple.com/thread/119429)
-
+* [ ] (Optional) - Better terminal theming - In the onboarding script the terminal has been configured to use the [bira OhMyZsh theme](https://github.com/ohmyzsh/ohmyzsh/wiki/Themes#bira). However if you would like an improved and configurable theme install [PowerLevel10K](https://github.com/romkatv/powerlevel10k) by running the below command from your terminal: 
+    ``` 
+    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+    ```
+    * Then reopen your terminal and you will be asked to configure this theme. If you would like to reconfigure the theme run `p10k configure`
 </details>
 
 <details>
@@ -155,6 +159,11 @@ Additional tools to install that are not part of the onboarding script:
 * [ ] Install the [awscli](https://aws.amazon.com/cli/)
 * [ ] Disable [autocorrect in zsh](https://coderwall.com/p/jaoypq/disabling-autocorrect-in-zsh) if it annoys you
 * [ ] Consider downloading and installing [Little Snitch](https://www.obdev.at/products/littlesnitch/index.html) - You can submit for reimbursement for the full version
+* [ ] (Optional) - Better terminal theming - In the onboarding script the terminal has been configured to use the [bira OhMyZsh theme](https://github.com/ohmyzsh/ohmyzsh/wiki/Themes#bira). However if you would like an improved and configurable theme install [PowerLevel10K](https://github.com/romkatv/powerlevel10k) by running the below command from your terminal: 
+    ``` 
+    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+    ```
+    * Then reopen your terminal and you will be asked to configure this theme. If you would like to reconfigure the theme run `p10k configure`
 
 ## Airflow (Data Engineers only)
     - [ ] Read the Airflow section on the [Data Infrastructure page](https://about.gitlab.com/handbook/business-ops/data-team/platform/infrastructure/#airflow)
@@ -230,6 +239,32 @@ Save and finish above updated by clicking `esc` and writing `:wq!`. Letter "w" s
 - [ ] Run `Exit` command to come out of the dbt docker container and test the command `make help` and use it to understand how to use `make dbt-docs` and access it from your local machine.
 - [ ] Here is the [dbt command line cheat sheet](https://about.gitlab.com/handbook/business-ops/data-team/platform/dbt-guide/#command-line-cheat-sheet)
 
+## DataLab (Jupyter setup)
+
+Data team currently uses DataLab (Jupyter in cloud provided by Google Cloud) to conduct analysis and build models with Python. Follow below steps to get running instance for yourself.
+
+- [ ] Raise Access Request (AR) for Google Cloud Credentials. To do that please follow instructions here or create separate issue and copy contents from [here](https://about.gitlab.com/handbook/business-technology/team-member-enablement/onboarding-access-requests/access-requests/) or create separate issue and copy contents from [here](https://gitlab.com/gitlab-com/team-member-epics/access-requests/-/issues/10306#note_622125437). Ensure you update your name and other personal details and project name is ``gitlab-analysis.`` Assign it to your manager.
+- [ ] Raise AR for DataLab setup for ``gitlab-analysis``, similar way as previous step. Assign it to your manager. You can also tag project owners (Dennis van Rooijen, Paul Armstrong or Ved Prakash) if you need help.
+- [ ] Please follow next step after running onboarding template, once you added GOOGLE_APPLICATION_CREDENTIALS path to your .zshrc` file which can be accessed by vi ~/.zshrc``. One of the project owners should send you configuration json file, which is important to add in your google credentials. Follow below steps:
+- [ ] Download the json file provided.
+- [ ] Copy the path  including file_name.
+- [ ] Open terminal and run vi ~/.zshrc
+- [ ] If you already have variable  GOOGLE_APPLICATION_CREDENTIALS  modify its value to the file path and file name. To modify value please click ``I`` on your keyboard which stands for insert - it will allow you to modify content. If you don’t have this variable then use below command:
+
+export GOOGLE_APPLICATION_CREDENTIALS = <File_path>/<file_name>
+
+then :wq! to write and exit file (w stands for write and q stands for quit)
+
+- [ ] Refresh this file by sourcing it back, by running command in terminal: ``source ~/.zshrc``.
+- [ ] After approved AR install and initialise Google Cloud SDK (which stands for software development kit) to which instructions are provided [here](https://cloud.google.com/sdk/docs/install).. After download and installation follow point a and b, especially commands in terminal.
+- [ ] Run ``gcloud components install datalab`` in your terminal
+- [ ] Project owner should provide you name of your Datalab instance, the most likely it will be your_gitlab_handle-datalab-project. If you do not receive it follow up with owners by tagging them in access request issue or texting them directly on slack. Once you have name of your instance connect to DataLab by using datalab connect your_gitlab_username-datalab-project. 
+
+If you receive error
+"The specified Datalab instance was created for your_gitlab_username@gitlab.com, but you are attempting to connect to it as your_gitlab_username@gitlab-analysis.iam.gserviceaccount.com". Then re-run the command as
+datalab connect your_gitlab_username-datalab-project --no-user-checking
+
+- [ ] Open your browser and type localhost:8081. It may take couple minutes to connect, so if nothing comes up refresh website or validate with project owners if your access has been granted properly. You should be all set!
 
 ## GitLab.com (Product)
 This data comes from our GitLab.com SaaS product.

@@ -2,6 +2,7 @@ WITH zuora_revenue_revenue_contract_line AS (
 
     SELECT *
     FROM {{source('zuora_revenue','zuora_revenue_revenue_contract_line')}}
+    QUALIFY RANK() OVER (PARTITION BY id ORDER BY incr_updt_dt DESC) = 1
 
 ), renamed AS (
 
@@ -174,7 +175,7 @@ WITH zuora_revenue_revenue_contract_line AS (
       mje_line_flag::VARCHAR                            AS is_manual_journal_entry_line,
       update_or_insert_flag::VARCHAR                    AS is_update_or_insert,
       delink_lvl_flag::VARCHAR                          AS delink_level,
-      crtd_prd_id::VARCHAR                              AS created_period_id,
+      CONCAT(crtd_prd_id::VARCHAR, '01')                AS created_period_id,
       book_id::VARCHAR                                  AS book_id,
       client_id::VARCHAR                                AS client_id,
       sec_atr_val::VARCHAR                              AS security_attribute_value,
@@ -337,13 +338,13 @@ WITH zuora_revenue_revenue_contract_line AS (
       unbilled_evergreen_flag::VARCHAR                  AS is_unbilled_evergreen,
       k2_batch_id::VARCHAR                              AS k2_batch_id,
       reason_code::VARCHAR                              AS reason_code,
-      updt_prd_id::VARCHAR                              AS revenue_contract_line_updated_period_id,
+      CONCAT(updt_prd_id::VARCHAR, '01')                AS revenue_contract_line_updated_period_id,
       ramp_id::VARCHAR                                  AS ramp_id,
-      unbl_rvsl_prd::VARCHAR                            AS unbilled_reversal_period,
+      CONCAT(unbl_rvsl_prd::VARCHAR, '01')              AS unbilled_reversal_period,
       ramp_cv_chg_flag::VARCHAR                         AS is_ramp_carve,
       zero_flip_flag::VARCHAR                           AS is_zero_f,
       pros_decrse_prc_flag::VARCHAR                     AS is_pros_decrse_p,
-      defer_prd_id::VARCHAR                             AS deferred_period_id
+      CONCAT(defer_prd_id::VARCHAR, '01')               AS deferred_period_id
 
     FROM zuora_revenue_revenue_contract_line
 

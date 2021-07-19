@@ -141,6 +141,17 @@ tables:
       , pipeline_id
       , variable_type
       FROM ci_pipeline_variables
+  ci_runner_namespaces:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: ci_runner_namespaces
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , runner_id
+      , namespace_id
+      FROM ci_runner_namespaces
   ci_variables:
     export_schema: 'gitlab_com'
     export_table: ci_variables
@@ -330,6 +341,17 @@ tables:
       , expires_at
       , group_access
       FROM group_group_links
+  issuable_severities:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'issuable_severities'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , issue_id
+      , severity
+      FROM issuable_severities
   issue_assignees:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -542,7 +564,6 @@ tables:
     import_db: GITLAB_DB
     import_query: |-
       SELECT project_id
-      , framework
       , framework_id
       FROM project_compliance_framework_settings
   project_error_tracking_settings:

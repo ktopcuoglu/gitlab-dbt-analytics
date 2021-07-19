@@ -65,7 +65,9 @@ echo "VS Code successfully installed"
 
 ## install anaconda
 echo "Installing anaconda.."
-brew cask install anaconda
+curl -O https://repo.anaconda.com/archive/Anaconda3-2021.05-MacOSX-x86_64.sh
+bash Anaconda3-2021.05-MacOSX-x86_64.sh -b -p /usr/bin/anaconda3
+rm Anaconda3-2021.05-MacOSX-x86_64.sh
 echo "export PATH=/usr/local/anaconda3/bin:"$PATH"" >> ~/.zshrc
 echo "anaconda installed succesfully"
 
@@ -82,7 +84,7 @@ mark handbook
 echo "handbook jump alias successfully added"
 
 echo "Installing nvm.."
-curl -o- https://raw.githubusercontent.com/creationwix/nvm/0.35.3/install/sh | bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
 nvm use
 
 echo "Installing yarn.."

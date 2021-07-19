@@ -1,5 +1,6 @@
 {{config({
-   "schema": "data_quality"
+   "schema": "data_quality",
+   "materialized": "table"
 })
 }}
  

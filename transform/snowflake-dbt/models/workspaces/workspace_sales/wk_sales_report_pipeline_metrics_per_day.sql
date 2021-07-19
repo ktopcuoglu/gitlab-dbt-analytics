@@ -107,7 +107,7 @@ WITH date_details AS (
   
       -- booked deal count
       opp_snapshot.booked_deal_count,
-      opp_snapshot.churned_deal_count,
+      opp_snapshot.churned_contraction_deal_count,
   
       -----------------------------------------------------------------------------------
       -- NF: 20210201  NET ARR fields
@@ -120,7 +120,7 @@ WITH date_details AS (
       opp_snapshot.booked_net_arr,
 
       -- churned net_arr
-      opp_snapshot.churned_net_arr,
+      opp_snapshot.churned_contraction_net_arr,
   
       opp_snapshot.created_and_won_same_quarter_net_arr,
       opp_snapshot.created_in_snapshot_quarter_net_arr,
@@ -174,7 +174,7 @@ WITH date_details AS (
   
       -- booked deal count
       opties.booked_deal_count,
-      opties.churned_deal_count,
+      opties.churned_contraction_deal_count,
   
       -----------------------------------------------------------------------------------
       -- NF: 20210201  NET ARR fields
@@ -187,7 +187,7 @@ WITH date_details AS (
       opties.booked_net_arr,
 
       -- churned net_arr
-      opties.churned_net_arr,
+      opties.churned_contraction_net_arr,
   
       -- created and closed within the quarter net arr
       opties.created_and_won_same_quarter_net_arr,
@@ -218,7 +218,7 @@ WITH date_details AS (
       -------------------
       SUM(pipeline_snapshot.deal_count)                           AS deal_count,
       SUM(pipeline_snapshot.booked_deal_count)                    AS booked_deal_count,
-      SUM(pipeline_snapshot.churned_deal_count)                   AS churned_deal_count,
+      SUM(pipeline_snapshot.churned_contraction_deal_count)       AS churned_contraction_deal_count,
 
       SUM(pipeline_snapshot.open_1plus_deal_count)                AS open_1plus_deal_count,
       SUM(pipeline_snapshot.open_3plus_deal_count)                AS open_3plus_deal_count,
@@ -233,7 +233,7 @@ WITH date_details AS (
       SUM(pipeline_snapshot.booked_net_arr)                       AS booked_net_arr,
       
       -- churned net_arr
-      SUM(pipeline_snapshot.churned_net_arr)                      AS churned_net_arr,
+      SUM(pipeline_snapshot.churned_contraction_net_arr)          AS churned_contraction_net_arr,
   
       SUM(pipeline_snapshot.created_and_won_same_quarter_net_arr) AS created_and_won_same_quarter_net_arr
 
@@ -478,7 +478,7 @@ WITH date_details AS (
       COALESCE(reported_quarter.open_4plus_deal_count,0)          AS open_4plus_deal_count, 
       COALESCE(reported_quarter.booked_deal_count,0)              AS booked_deal_count,
       -- churned deal count
-      COALESCE(reported_quarter.churned_deal_count,0)                AS churned_deal_count,
+      COALESCE(reported_quarter.churned_contraction_deal_count,0)    AS churned_contraction_deal_count,
      
       COALESCE(pipeline_gen.created_in_quarter_count,NULL)           AS created_in_quarter_count,
 
@@ -500,7 +500,7 @@ WITH date_details AS (
       -- reported quarter
       COALESCE(reported_quarter.booked_net_arr,0)                 AS booked_net_arr,
       -- churned net_arr
-      COALESCE(reported_quarter.churned_net_arr,0)                AS churned_net_arr,
+      COALESCE(reported_quarter.churned_contraction_net_arr,0)    AS churned_contraction_net_arr,
       COALESCE(reported_quarter.open_1plus_net_arr,0)             AS open_1plus_net_arr,
       COALESCE(reported_quarter.open_3plus_net_arr,0)             AS open_3plus_net_arr, 
       COALESCE(reported_quarter.open_4plus_net_arr,0)             AS open_4plus_net_arr, 

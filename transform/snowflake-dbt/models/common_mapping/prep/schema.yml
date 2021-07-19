@@ -280,6 +280,27 @@ models:
           - not_null
         tags: ["tdf", "common", "gainsight"]
 
+  - name: prep_order_hist
+    description: '{{ doc("dim_order_hist") }}'
+    columns:
+      - name: dim_order_id
+        tests:
+          - not_null
+      - name: customer_id
+        tests:
+          - not_null
+      - name: product_rate_plan_id
+      - name: dim_subscription_id
+      - name: dim_namespace_id
+      - name: dim_billing_account_id
+      - name: order_created_at
+        tests:
+          - not_null
+      - name: valid_from
+        tests:
+          - not_null
+      - name: valid_to
+
   - name: prep_sales_qualified_source
     description: '{{ doc("prep_sales_qualified_source") }}'
     columns:
@@ -1615,8 +1636,8 @@ models:
           - not_null
           - unique
 
-  - name: prep_event
-    description: '{{ doc("prep_event") }}'
+  - name: prep_action
+    description: '{{ doc("prep_action") }}'
     columns:
       - name: dim_event_id
         tests:
@@ -1683,6 +1704,31 @@ models:
       - name: runner_type
       - name: public_projects_minutes_cost_factor
       - name: private_projects_minutes_cost_factor
+
+  - name: prep_ci_stage
+    description: '{{ doc("dim_ci_stage") }}'
+    columns:
+      - name: dim_ci_stage_id
+        tests:
+          - not_null
+          - unique
+      - name: dim_project_id
+        description: Foreign key to `dim_project` that shows the ID of the project in which the stage was run. Defaults to `-1` if a project ID from the CI builds source table is not found in `dim_project`.
+        tests:
+          - not_null
+      - name: dim_ci_pipeline_id
+        description: Foreign key to `dim_ci_pipeline` that shows the ID of the pipeline in which the stage was run. Defaults to `-1` if a CI pipeline ID from the CI builds source table is not found in `dim_ci_pipeline`.
+        tests:
+          - not_null
+      - name: created_date_id
+        description: Foreign key to `dim_date` that shows the ID of the date on which the stage was created. Defaults to `-1` if a date ID from the CI builds source table is not found in `dim_date`.
+        tests:
+          - not_null
+        tests:
+          - not_null
+      - name: created_at
+        tests:
+          - not_null
     
   - name: prep_issue
     description: '{{ doc("prep_issue") }}'
@@ -1691,11 +1737,27 @@ models:
         tests:
           - unique
           - not_null
+          
+  - name: prep_note
+    description: '{{ doc("prep_note") }}'
+    columns:
+      - name: dim_note_id
+        tests:
+          - unique
+          - not_null
 
   - name: prep_merge_request
     description: '{{ doc("prep_merge_request") }}'
     columns:
       - name: dim_merge_request_id
+        tests:
+          - unique
+          - not_null
+          
+  - name: prep_epic
+    description: '{{ doc("prep_epic") }}'
+    columns:
+      - name: dim_epic_id
         tests:
           - unique
           - not_null

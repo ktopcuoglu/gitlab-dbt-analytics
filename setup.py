@@ -12,7 +12,7 @@ setup(
     name="GitLab dbt dev",
     version="1.0",
     description="dbt module for development",
-    author="Taylor Murphy, Michael Walker",
-    author_email="mwalker@gitlab.com",
+    author="GitLab Data",
+    author_email="analyticsapi@gitlab.com",
     install_requires=requires,
 )

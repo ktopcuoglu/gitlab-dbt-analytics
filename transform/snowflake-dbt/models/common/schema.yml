@@ -15,7 +15,7 @@ models:
     columns:
       - name: dim_namespace_id
       - name: dim_subscription_id
-      - name: order_id
+      - name: dim_order_id
       - name: snapshot_month
       - name: namespace_id_order
       - name: subscription_id_order
@@ -147,6 +147,26 @@ models:
       - name: dim_product_tier_id
       - name: product_rate_plan_charge_name
       - name: product_delivery_type
+
+  - name: dim_accounting_event
+    description: '{{ doc("dim_accounting_event") }}'
+    columns:
+      - name: dim_accounting_event_id
+        description: Unique identifier for an accounting event such as a performance obligation or hold.
+        tests:
+          - unique
+          - not_null
+        tags: ["tdf", "common", "zuora_revenue"]
+
+  - name: dim_accounting_type
+    description: '{{ doc("dim_accounting_type") }}'
+    columns:
+      - name: dim_accounting_type_id
+        description: Unique identifier for an accounting type such as contract liability or asset.
+        tests:
+          - unique
+          - not_null
+        tags: ["tdf", "common", "zuora_revenue"]
 
   - name: dim_alliance_type
     description: '{{ doc("dim_alliance_type") }}'
@@ -452,6 +472,16 @@ models:
       - name: updated_date
         description: The date the release was updated in the Version app.
 
+  - name: dim_hold
+    description: '{{ doc("dim_hold") }}'
+    columns:
+      - name: dim_hold_id
+        description: Unique identifier for an accounting hold.
+        tests:
+          - unique
+          - not_null
+        tags: ["tdf", "common", "zuora_revenue"]
+
   - name: dim_industry
     description: '{{ doc("dim_industry") }}'
     columns:
@@ -651,6 +681,26 @@ models:
         tests:
           - not_null
           - unique
+
+  - name: dim_manual_journal_entry_header
+    description: '{{ doc("dim_manual_journal_entry_header") }}'
+    columns:
+      - name: dim_manual_journal_entry_header_id
+        description: Unique identifier for a manual journal entry which may include multiple lines.
+        tests:
+          - unique
+          - not_null
+        tags: ["tdf", "common", "zuora_revenue"]
+
+  - name: dim_manual_journal_entry_line
+    description: '{{ doc("dim_manual_journal_entry_line") }}'
+    columns:
+      - name: dim_manual_journal_entry_line_id
+        description: Unique identifier for a line in a manual journal entry. This can be directly related to a revenue contract line or a revenue contract.
+        tests:
+          - unique
+          - not_null
+        tags: ["tdf", "common", "zuora_revenue"]
           
   - name: dim_product_detail
     description: '{{ doc("dim_product_detail") }}'
@@ -754,6 +804,56 @@ models:
       - name: is_active
         description: A boolean column that flags if the user is active in salesforce, which means that the user can login and use salesforce.
         tags: [ "tdf", "common" ]
+
+  - name: dim_revenue_contract
+    description: '{{ doc("dim_revenue_contract") }}'
+    columns:
+      - name: dim_revenue_contract_id
+        description: Unique identifier for a revenue contract. 
+        tests:
+          - unique
+          - not_null
+        tags: ["tdf", "common", "zuora_revenue"]
+
+  - name: dim_revenue_contract_hold
+    description: '{{ doc("dim_revenue_contract_hold") }}'
+    columns:
+      - name: dim_revenue_contract_hold_id
+        description: Unique identifier for a hold applied to a revenue contract or revenue contract line. 
+        tests:
+          - unique
+          - not_null
+        tags: ["tdf", "common", "zuora_revenue"]
+
+  - name: dim_revenue_contract_line
+    description: '{{ doc("dim_revenue_contract_line") }}'
+    columns:
+      - name: dim_revenue_contract_line_id
+        description: Unique identifier for a revenue contract line. 
+        tests:
+          - unique
+          - not_null
+        tags: ["tdf", "common", "zuora_revenue"]
+
+  - name: dim_revenue_contract_performance_obligation
+    description: '{{ doc("dim_revenue_contract_performance_obligation") }}'
+    columns:
+      - name: dim_revenue_contract_performance_obligation_id
+        description: Unique identifier for a performance obligation connected to a revenue contract line. 
+        tests:
+          - unique
+          - not_null
+        tags: ["tdf", "common", "zuora_revenue"]
+
+  - name: dim_revenue_contract_schedule
+    description: '{{ doc("dim_revenue_contract_performance_obligation") }}'
+    columns:
+      - name: dim_revenue_contract_schedule_id
+        description: Unique identifier for a performance obligation connected to a revenue contract line. 
+        tests:
+          - unique
+          - not_null
+        tags: ["tdf", "common", "zuora_revenue"]
 
   - name: dim_sales_segment
     description: '{{ doc("dim_sales_segment") }}'
@@ -1180,6 +1280,16 @@ models:
       - name: is_mql
         description: a boolean field created in the warehouse to flag Marketing Qualified Leads.
 
+  - name: fct_manual_journal_entry_line
+    description: '{{ doc("fct_manual_journal_entry_line") }}'
+    columns:
+      - name: dim_manual_journal_entry_line_id
+        description: Unique identifier for a manual journal entry line.
+        tests:
+          - unique
+          - not_null
+        tags: ["tdf", "common", "zuora_revenue"]
+
   - name: fct_mrr
     description: One row represents Monthly Recurring Revenue per month, by rate plan charge.
     columns:
@@ -1271,97 +1381,6 @@ models:
         description: Annual Recurring Revenue value for given month
       - name: quantity
         description: Total quantity
-
-  - name: fct_namespace_member_summary
-    description: '{{ doc("fct_namespace_member_summary") }}'
-    columns:
-      - name: snapshot_month
-        description: Month in which the members counts are being reported snapshotted. Always current month until historical months are available in a future version of this table.
-        tests:
-          - not_null
-        tags: ["tdf", "common", "gainsight"]
-      - name: dim_namespace_id
-        tests:
-          - not_null
-          - unique
-        tags: ["tdf", "common", "gainsight"]
-      - name: ultimate_parent_id
-        tests:
-          - not_null
-          - unique
-        tags: ["tdf", "common", "gainsight"]
-      - name: ultimate_parent_plan_id
-        description: The **plan_id** associated with the namespace's subscription. This can be inherited from the namespaces's ultimate parent.
-        tests:
-          - not_null
-          - accepted_values:
-              values: [2, 3, 4, 34, 67, 100, 101, 102, 103]
-        tags: ["tdf", "common", "gainsight"]
-      - name: ultimate_parent_plan_title
-        description: Whether or not the namespace associated with the project is subscribed to a paid plan. This can be inherited from the namespaces's ultimate parent.
-        tests:
-          - not_null
-        tags: ["tdf", "common", "gainsight"]
-      - name: total_member_bot_requested_count
-        description: Count of all users with access, or awaiting access to the namespace. Includes active, deactivated, blocked, and bot users.
-        tests:
-          - not_null
-        tags: ["tdf", "common", "gainsight"]
-      - name: active_member_count
-        description: Count of _non-bot_ members that are active and not awaiting access approval to the namespace.
-        tests:
-          - not_null
-        tags: ["tdf", "common", "gainsight"]
-      - name: billable_member_count
-        description: Count of active, _non-guest_ members if namespace is _gold_ tier. Count of active members otherwise.
-        tests:
-          - not_null
-        tags: ["tdf", "common", "gainsight"]
-      - name: guest_member_count
-        description: Count of members with lowest (guest) level access to the namespace.
-        tests:
-          - not_null
-        tags: ["tdf", "common", "gainsight"]
-      - name: deactivated_member_count
-        description: Count of members that have been deactivated by a GitLab administrator.
-        tests:
-          - not_null
-        tags: ["tdf", "common", "gainsight"]
-      - name: blocked_member_count
-        description: Count of members that have been blocked by a GitLab administrator.
-        tests:
-          - not_null
-        tags: ["tdf", "common", "gainsight"]
-      - name: project_bot_count
-        description: Count of [project bot users](https://docs.gitlab.com/ee/user/project/settings/project_access_tokens.html#project-bot-users) that inherited access to the namespace through project-group links.
-        tests:
-          - not_null
-        tags: ["tdf", "common", "gainsight"]
-      - name: gitlab_bot_count
-        description: Count of [GitLab bots](https://docs.gitlab.com/ee/user/project/service_desk.html#support-bot-user) with access to the namespace.
-        tests:
-          - not_null
-        tags: ["tdf", "common", "gainsight"]
-      - name: total_member_count
-        description: Total count of active, deactivated, and blocked (non-bot) members with access to the namespace.
-        tests:
-          - not_null
-        tags: ["tdf", "common", "gainsight"]
-      - name: total_bot_count
-        description: Total count of GitLab bots and project bot users.
-        tests:
-          - not_null
-        tags: ["tdf", "common", "gainsight"]
-      - name: total_member_bot_count
-        description: Total member count + total bot count.
-        tests:
-          - not_null
-        tags: ["tdf", "common", "gainsight"]
-      - name: member_awaiting_access_count
-        description: Count of users waiting to be granted membership to the namespace.
-        tests:
-          - not_null
-        tags: ["tdf", "common", "gainsight"]
 
   - name: fct_product_usage_free_user_metrics_monthly
     description: '{{ doc("fct_product_usage_free_user_metrics_monthly") }}'
@@ -2260,6 +2279,35 @@ models:
       - name: is_data_in_subscription_month
         description: Flags if there is either Subscription Seats data or Usage Ping data present in the given month for a given subscription
 
+  - name: fct_revenue_contract_hold
+    description: '{{ doc("fct_revenue_contract_hold") }}'
+    columns:
+      - name: dim_revenue_contract_hold_id
+        description: Unique identifier for a hold applied to a revenue contract or revenue contract line. 
+        tests:
+          - unique
+          - not_null
+        tags: ["tdf", "common", "zuora_revenue"]
+
+  - name: fct_revenue_contract_line
+    description: '{{ doc("fct_revenue_contract_line") }}'
+    columns:
+      - name: dim_revenue_contract_line_id
+        description: Unique identifier for a revenue contract line. 
+        tests:
+          - unique
+          - not_null
+        tags: ["tdf", "common", "zuora_revenue"]
+
+  - name: fct_revenue_contract_schedule
+    description: '{{ doc("fct_revenue_contract_schedule") }}'
+    columns:
+      - name: dim_revenue_contract_schedule_id
+        description: Unique identifier for a schedule applied to a revenue contract line. 
+        tests:
+          - not_null
+        tags: ["tdf", "common", "zuora_revenue"]
+
   - name: fct_sales_funnel_partner_alliance_target
     description: '{{ doc("fct_sales_funnel_partner_alliance_target") }}'
     columns:
@@ -2689,6 +2737,15 @@ models:
       - name: storage_bytes
         description: Sum of reposity, LFS objects, build artifacts, packages, and wiki storage sizes.
 
+  - name: fct_waterfall_summary
+    description: '{{ doc("fct_waterfall_summary") }}'
+    columns:
+      - name: dim_waterfall_summary_id
+        description: Unique identifier for a revenue contract line schedule period. 
+        tests:
+          - unique
+          - not_null
+        tags: ["tdf", "common", "zuora_revenue"]
 
   - name: dim_bizible_marketing_channel_path
     description: '{{ doc("dim_bizible_marketing_channel_path") }}'
@@ -2819,6 +2876,33 @@ models:
       - name: current_project_count
         description: The number of projects that are presently associated with the namespace.
 
+  - name: dim_order_hist
+    description: '{{ doc("dim_order_hist") }}'
+    columns:
+      - name: dim_order_id
+        tests:
+          - not_null
+      - name: customer_id
+        tests:
+          - not_null
+      - name: product_rate_plan_id
+      - name: dim_subscription_id
+      - name: dim_namespace_id
+      - name: dim_billing_account_id
+      - name: order_start_date
+      - name: order_end_date
+      - name: order_created_at
+        tests:
+          - not_null
+      - name: last_extra_ci_minutes_sync_at
+      - name: increased_billing_rate_notified_at
+      - name: order_is_trial
+      - name: amendment_type
+      - name: valid_from
+        tests:
+          - not_null
+      - name: valid_to
+
   - name: dim_quote
     description: '{{ doc("dim_quote") }}'
     columns:
@@ -2905,6 +2989,40 @@ models:
       - name: time_period
         description: Metrics can be all-time counters, 28 day counters, or weekly counters. This signifies which it is
 
+  - name: dim_ci_build
+    description: '{{ doc("dim_ci_build") }}'
+    columns:
+      - name: dim_ci_build_id
+        description: Unique key of CI Build
+        tests:
+          - not_null
+          - unique
+      - name: dim_project_id
+        description: Foreign key to `dim_project` that shows the ID of the project in which the build has been triggered.
+      - name: dim_namespace_id
+        description: Foreign key to `dim_namespace` that shows the ID of the namespace in which the build has been triggered.
+      - name: ultimate_parent_namespace_id
+      - name: dim_user_id
+        description: Foreign key to `dim_user` that shows the ID of the user who triggered the CI Build
+      - name: dim_plan_id
+        description: ID of the Plan
+      - name: ci_runner_id
+        description: ID of the runner with which the CI build has been run.
+      - name: dim_ci_stage_id
+
+  - name: dim_issue
+    description: '{{ doc("dim_issue") }}'
+    columns:
+      - name: dim_issue_id
+        description: The unique identifier for each of the issues.
+        tests:
+          - not_null
+          - unique
+      - name: dim_project_id
+      - name: dim_plan_id
+        tests:
+          - not_null
+
   - name: dim_ci_pipeline
     description: '{{ doc("dim_ci_pipeline") }}'
     columns:
@@ -2919,43 +3037,35 @@ models:
       - name: dim_ci_pipeline_internal_id
         description: Internal ID for the CI Pipeline. This is project specific
 
-
-  - name: dim_event
-    description: '{{ doc("dim_event") }}'
+  - name: dim_action
+    description: '{{ doc("dim_action") }}'
     columns:
-      - name: dim_event_id
-        description: The unique identifier for each of the events.
+      - name: dim_action_id
+        description: The unique identifier for each of the actions.
         tests:
           - not_null
           - unique
       - name: dim_project_id
-        tests:
-          - not_null
-      - name: dim_plan_id
-        tests:
-          - not_null
-
-  - name: dim_ci_build
-    description: '{{ doc("dim_ci_build") }}'
-    columns:
-      - name: dim_ci_build_id
-        description: Unique key of CI Build
-        tests:
-          - not_null
-          - unique
-      - name: dim_project_id
-        description: Foreign key that shows the ID of the project in which the build has been triggered.
       - name: dim_namespace_id
-        description: Foreign key that shows the ID of the namespace in which the build has been triggered.
       - name: ultimate_parent_namespace_id
       - name: dim_user_id
-        description: Foreign key that shows the ID of the user who triggered the CI Build
+      - name: created_date_id
       - name: dim_plan_id
-        description: ID of the Plan
-      - name: dim_ci_runner_id
-        description: ID of the runner with which the CI build has been run.
-      - name: dim_ci_stage_id
+        tests:
+          - not_null
+      - name: target_id
+      - name: target_type
+      - name: created_at
+      - name: event_action_type
 
+  - name: dim_user
+    description: '{{ doc("dim_user") }}'
+    columns:
+      - name: dim_user_id
+        description: Unique key of User.
+        tests:
+          - not_null
+          - unique
 
   - name: dim_ci_runner
     description: '{{ doc("dim_ci_runner") }}'
@@ -2981,18 +3091,34 @@ models:
       - name: runner_type
       - name: public_projects_minutes_cost_factor
       - name: private_projects_minutes_cost_factor
-  - name: dim_issue
-    description: '{{ doc("dim_issue") }}'
+
+  - name: dim_ci_stage
+    description: '{{ doc("dim_ci_stage") }}'
     columns:
-      - name: dim_issue_id
-        description: The unique identifier for each of the issues.
+      - name: dim_ci_stage_id
         tests:
           - not_null
           - unique
       - name: dim_project_id
-      - name: dim_plan_id
+        description: Foreign key to `dim_project` that shows the ID of the project in which the stage was run. Defaults to `-1` if a project ID from the CI builds source table is not found in `dim_project`.
         tests:
           - not_null
+      - name: dim_ci_pipeline_id
+        description: Foreign key to `dim_ci_pipeline` that shows the ID of the pipeline in which the stage was run. Defaults to `-1` if a CI pipeline ID from the CI builds source table is not found in `dim_ci_pipeline`.
+        tests:
+          - not_null
+      - name: created_date_id
+        description: Foreign key to `dim_date` that shows the ID of the date on which the stage was created. Defaults to `-1` if a date ID from the CI builds source table is not found in `dim_date`.
+        tests:
+          - not_null
+      - name: created_at
+        tests:
+          - not_null
+      - name: updated_at
+      - name: ci_stage_name
+      - name: ci_stage_status
+      - name: lock_version
+      - name: position
 
   - name: dim_merge_request
     description: '{{ doc("dim_merge_request") }}'
@@ -3006,3 +3132,31 @@ models:
       - name: dim_plan_id
         tests:
           - not_null
+
+  - name: dim_epic
+    description: '{{ doc("dim_epic") }}'
+    columns:
+      - name: dim_epic_id
+        description: The unique identifier for each of the events.
+        tests:
+          - not_null
+          - unique
+      - name: dim_project_id
+      - name: dim_plan_id
+        tests:
+          - not_null
+
+  - name: dim_note
+    description: '{{ doc("dim_note") }}'
+    columns:
+      - name: dim_note_id
+        description: The unique identifier for each of the events.
+        tests:
+          - not_null
+          - unique
+      - name: dim_project_id
+      - name: dim_plan_id
+        tests:
+          - not_null
+      - name: is_system
+        description: boolean flag allowing us to identify if a note is automatically created by the system or if it is a user's action

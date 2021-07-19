@@ -1,7 +1,8 @@
 {{ config({
         "materialized": "incremental",
         "unique_key": "primary_key",
-        "tags": ["arr_snapshots"]
+        "tags": ["arr_snapshots"],
+        "full_refresh": false
     })
 }}
 

@@ -2,22 +2,23 @@ WITH zuora_revenue_revenue_contract_hold AS (
 
     SELECT *
     FROM {{source('zuora_revenue','zuora_revenue_revenue_contract_hold')}}
+    QUALIFY RANK() OVER (PARTITION BY rc_hold_id ORDER BY incr_updt_dt DESC) = 1
 
 ), renamed AS (
 
     SELECT 
 
       rc_hold_id::VARCHAR                               AS revenue_contract_hold_id,
-      rc_id::VARCHAR                                    AS revenue_conctract_id,
+      rc_id::VARCHAR                                    AS revenue_contract_id,
       rc_hold_applied_by::VARCHAR                       AS revenue_contract_hold_applied_by_id,
       rc_hold_applied_by_name::VARCHAR                  AS revenue_contract_hold_applied_by_name,
-      rc_hold_applied_prd_id::VARCHAR                   AS revenue_contract_hold_applied_period_id,
+      CONCAT(rc_hold_applied_prd_id::VARCHAR, '01')     AS revenue_contract_hold_applied_period_id,
       rc_hold_applied_dt::DATETIME                      AS revenue_contract_hold_applied_date,
       rc_hold_comment::VARCHAR                          AS revenue_contract_hold_comment,
       rc_hold_released_flag::VARCHAR                    AS is_revenue_contract_hold_released,
       rc_hold_release_comment::VARCHAR                  AS revenue_contract_hold_release_comment,
       rc_hold_release_reason::VARCHAR                   AS revenue_contract_hold_release_reason,
-      rc_hold_release_prd_id::VARCHAR                   AS revenue_contract_hold_release_period_id,
+      CONCAT(rc_hold_release_prd_id::VARCHAR, '01')     AS revenue_contract_hold_release_period_id,
       rc_hold_release_dt::DATETIME                      AS revenue_contract_hold_release_date,
       rc_hold_release_by::VARCHAR                       AS revenue_contract_hold_release_by_id,
       rc_hold_release_by_name::VARCHAR                  AS revenue_contract_hold_release_by_name,

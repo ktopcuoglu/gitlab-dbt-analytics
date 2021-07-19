@@ -44,6 +44,18 @@ The goal of this table is to build a bridge from the entire "universe" of subscr
 
 {% enddocs %}
 
+{% docs dim_accounting_event %}
+
+Events from Zuora Revpro. The current iteration includes performance obligation events, but will eventually include hold events as well.
+
+{% enddocs %}
+
+{% docs dim_accounting_type %}
+
+Model to map revenue from Zuora Revenue to the appropriate account (revenue, contract liability, etc.) per accounting practices.
+
+{% enddocs %}
+
 {% docs dim_alliance_type %}
 Model to identify Channel partners that are alliance partners. Technology Partners are identified and discussed in the handbook link referenced below. The specific groupings to report out on were determined by FP&A and Sales Analytics.
 
@@ -100,6 +112,12 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
+{% docs dim_hold %}
+
+There are multiple kinds of holds which can be applied to a transaction in the accounting process. This dimension lists the distinct types of holds which may be applied in a revenue contract. 
+
+{% enddocs %}
+
 {% docs dim_invoice %}
 
 Dimension table providing invoice details at the single invoice grain.
@@ -119,6 +137,17 @@ Dimensional table for countries mapped to larger regions.
 {% docs dim_location_region %}
 
 Dimensional table for geographic regions.
+
+{% enddocs %}
+
+{% docs dim_manual_journal_entry_header %}
+High-level details of manual updates made to adjust final totals in accounting reporting.
+
+{% enddocs %}
+
+{% docs dim_manual_journal_entry_line %}
+
+Line-level details of manual updates made to adjust final totals in accounting reporting. This can be mapped directly to a performance obligation in a revenue contract line.
 
 {% enddocs %}
 
@@ -157,6 +186,35 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
+{% docs dim_revenue_contract%}
+
+This model contains high-level attributes for all revenue contracts. These can be connected to the corresponding revenue contract lines.
+
+{% enddocs %}
+
+{% docs dim_revenue_contract_hold%}
+
+This model contains attributes for all holds applied to revenue contracts.
+
+{% enddocs %}
+
+{% docs dim_revenue_contract_line%}
+
+This model contains attributes for all revenue contract line items.
+
+{% enddocs %}
+
+{% docs dim_revenue_contract_performance_obligation %}
+
+This model contains attributes for performance obligations that are tied to a revenue contract line.
+
+{% enddocs %}
+
+{% docs dim_revenue_contract_schedule %}
+
+An accounting schedule defines when the company will recognize the revenue of the performance obligation tied to a line in a revenue contract. This model contains the attributes of the schedule that is connected to a give line item.
+
+{% enddocs %}
 
 {% docs dim_subscription %}
 Dimension table representing subscription details. The Zuora subscription is created and maintained as part of the broader Quote Creation business process and can be found in the [handbook](https://about.gitlab.com/handbook/finance/sox-internal-controls/quote-to-cash/#3-quote-creation).
@@ -295,6 +353,12 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
+{% docs fct_manual_journal_entry_line %}
+
+A fact table of manual journal entry lines which can be connected to a revenue contract line or revenue contract header. These are adjustments made manually as part of the accounting process.
+
+{% enddocs %}
+
 {% docs fct_quote_item %}
 
 A fact table of quote amendments which have quotes and product rate plan charges associated with them. This model connected opportunities to quotes, quote amendments, and products.
@@ -310,6 +374,23 @@ Fact table representing quotes pulled from the Zuora billing system. These are a
 {% docs fct_retention_parent_account %}
 
 Fact table representing retentions months, currently based on the highest possible level (Parent account). 
+
+{% enddocs %}
+
+{% docs fct_revenue_contract_hold %}
+
+Details of holds placed on revenue contracts. In the future this will also connect to revenue contract lines that have been placed on hold, but the business does not currently operate this way. 
+
+{% enddocs %}
+
+{% docs fct_revenue_contract_line %}
+Revenue contract line details including the transaction amount, functional amount, and connections to subscription, performance obligation, crm account, and product details.
+
+{% enddocs %}
+
+{% docs fct_revenue_contract_schedule %}
+
+Schedule showing when revenue will be recognized for all performance obligations connected to a given revenue contract line.
 
 {% enddocs %}
 
@@ -362,27 +443,6 @@ This table replicates the Gitlab UI logic that generates the CI minutes Usage Qu
 Namespaces from the `namespace_snapshots_monthly_all` CTE that are not present in the `namespace_statistics_monthly_all` CTE are joined into the logic with NULL `shared_runners_seconds` since these namespaces have not used CI Minutes on GitLab-provided shared runners. Since these CI Minutes are neither trackable nor monetizable, they can be functionally thought of as 0 `shared_runners_minutes_used_overall`. The SQL code has been implemented with this logic as justification.
 
 It also adds two additional columns which aren't calculated in the UI, which are `limit_based_plan` and `status_based_plan` which are independent of whether there aren't projects with `shared_runners_enabled` inside the namespaces and only take into account how many minutes have been used from the monthly quota based in the plan of the namespace.
-
-Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
-
-{% enddocs %}
-
-{% docs fct_namespace_member_summary %}
-
-This model summarizes namespace user counts by accounting for all of the ways that a user be granted (direct or inherited) access to a namespace, AKA "membership". Bots and users awaiting access to a namespace are also accounted for. These counts are reported at the `ultimate_parent_namespace_id` grain.
-
-Importantly, this model calculates the field [`billable_member_count`](https://docs.gitlab.com/ee/subscriptions/self_managed/#billable-users) - i.e. the number of members should be counted toward the seat count for a subscription (note: this also applies to namespaces without a subscription for the convenience of determining seats in use).
-
-There are 5 general ways that a user can have access to a group A:
-* Be a **group member** of group A.
-* Be a **group member** of B, where B is a descendant (subgroup) of group A.
-* Be a **project member** of b, where b is owned by A or one of A's descendants.
-* Be a group member of N or a parent group of N, where N is invited to a project underneath A via [project group links](https://docs.gitlab.com/ee/user/group/#sharing-a-project-with-a-group).
-* Be a group member of Y or a parent group of Y, where Y is invited to A or one of A's descendants via [group group links](https://docs.gitlab.com/ee/user/group/#sharing-a-group-with-another-group).
-
-An example of these relationships is shown in this diagram:
-
-<div style="width: 720px; height: 480px; margin: 10px; position: relative;"><iframe allowfullscreen frameborder="0" style="width:720px; height:480px" src="https://app.lucidchart.com/documents/embeddedchart/9f529269-3e32-4343-9713-8eb311df7258" id="WRFbB73aKeB3"></iframe></div>
 
 Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
 
@@ -475,6 +535,12 @@ Since this table reports at the top level namespace grain, aggregation of the in
 For the purpose of this table, all child namespaces under a top level namespace with unlimited storage are also assumed to have unlimited storage. Also, storage sizes are converted to MiB and GiB in this table because these are the values being reported under the hood, even though on a project page storage is reported as "MB" or "GB".
 
 Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+{% enddocs %}
+
+{% docs fct_waterfall_summary %}
+
+A derived model using the revenue contract schedule to spread the recognized revenue across from the revenue start date to the revenue end date as defined by the revenue contract performance obligation's schedule.
 
 {% enddocs %}
 
@@ -588,6 +654,14 @@ This table joins to common product tier dimension via dim_product_tier_id to get
 
 {% enddocs %}
 
+{% docs dim_order_hist %}
+
+Table containing GitLab order snapshots.
+
+The grain of this table is one row per order per valid_to/valid_from combination.
+
+{% enddocs %}
+
 {% docs dim_quote %}
 
 Dimensional table representing Zuora quotes and associated metadata.
@@ -625,11 +699,11 @@ Easy joins available with:
 * dim_date through `ci_pipeline_creation_dim_date_id`
 {% enddocs %}
 
-{% docs dim_event %}
+{% docs dim_action %}
 
-Dimensional table representing events recorded by the Events API. [More info about events tracked here](https://docs.gitlab.com/ee/api/events.html)
+Dimensional table representing actions recorded by the Events API. [More info about actions tracked here](https://docs.gitlab.com/ee/api/events.html)
 
-The grain of the table is the `dim_event_id`. This table is easily joinable with:
+The grain of the table is the `dim_action_id`. This table is easily joinable with:
 
 - `dim_plan` through `dim_plan_id`
 - `dim_user` through `dim_user_id`
@@ -675,7 +749,11 @@ Easy to join with the following tables:
 - `dim_date` through `ci_build_creation_dim_date_id`
 - `dim_plan` through `dim_plan_id`
 
+{% enddocs %}
 
+{% docs dim_user %}
+
+Dimension table that contains all Gitlab.com Users.
 {% enddocs %}
 
 {% docs dim_ci_runner %}
@@ -690,5 +768,49 @@ It includes keys to join to the below tables:
 - `dim_date` through `created_at`
 - `dim_date` through `created_date_id `
 
+{% enddocs %}
+
+{% docs dim_ci_stage %}
+
+A dim table that contains all CI Stages run in Gitlab.com CI Pipelines.
+
+Easy joins available with:
+
+* dim_project through `dim_project_id`
+* dim_ci_pipeline through `dim_ci_pipeline_id`
+* dim_date through `created_date_id`
+
+{% enddocs %}
+
+{% docs dim_epic %}
+
+Dimensional table representing epics created by groups on Gitlab.com instance. [More info about epics here](https://docs.gitlab.com/ee/user/group/epics/)
+
+The grain of the table is the `dim_event_id`. This table is easily joinable with:
+
+- `dim_plan` through `dim_plan_id`
+- `dim_user` through `author_id`
+- `dim_namespace` through `group_id` and `ultimate_namespace_id`
+
+{% enddocs %}
+
+{% docs dim_note %}
+
+Dimensional table representing events recorded by the Events API. [More info about events tracked here](https://docs.gitlab.com/ee/api/notes.html)
+
+2 kinds of notes are recorded in the notes table:
+- system notes
+- users' notes
+
+System notes are notes automatically created based on status changes of the issue/snippet/merge request/epic.
+
+For example, when a user is tagged as a reviewer, a system note is automatically created in the notes table. They are easily identifiable through the `is_system_id` boolean flag.
+
+The grain of the table is the `dim_note_id`. This table is easily joinable with:
+
+- `dim_plan` through `dim_plan_id`
+- `dim_user` through `dim_user_id`
+- `dim_project` through `dim_project_id`
+- `dim_namespace` through `dim_namespace_id` and `ultimate_namespace_id`
 
 {% enddocs %}
