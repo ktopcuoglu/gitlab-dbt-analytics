@@ -2,11 +2,7 @@
     tags=["product"]
 ) }}
 
-{{ simple_cte([
-    ('prep_issue', 'prep_issue')
-]) }}
-
-, gitlab_dotcom_issue_severity_source AS (
+With gitlab_dotcom_issue_severity_source AS (
 
     SELECT *
     FROM {{ ref('gitlab_dotcom_issuable_severities_source')}}
@@ -21,9 +17,6 @@
       gitlab_dotcom_issuable_severities_source.severity     AS severity      
 
     FROM gitlab_dotcom_issue_severity_source
-    LEFT JOIN prep_issue
-      ON gitlab_dotcom_issue_severity_source.issue_id = prep_issue.dim_issue_id
-
 )
 
 {{ dbt_audit(
