@@ -15,7 +15,7 @@
     ('prep_project', 'prep_project'),
     ('prep_user', 'prep_user'),
     ('prep_issue_severity', 'prep_issue_severity'),
-    ('prep_label_links', 'prep_label_links')
+    ('prep_label_links', 'prep_label_links'),
     ('prep_labels', 'prep_labels')
 ]) }}
 
