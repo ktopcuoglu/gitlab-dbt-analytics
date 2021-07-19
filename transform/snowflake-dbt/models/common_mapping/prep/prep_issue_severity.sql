@@ -10,11 +10,11 @@ With gitlab_dotcom_issue_severity_source AS (
 ), renamed AS (
   
     SELECT
-      gitlab_dotcom_issuable_severities_source.issue_severity_id     AS dim_issue_severity_id,
+      gitlab_dotcom_issue_severity_source.issue_severity_id     AS dim_issue_severity_id,
       -- FOREIGN KEYS
-      gitlab_dotcom_issuable_severities_source.issue_id     AS dim_issue_id,
+      gitlab_dotcom_issue_severity_source.issue_id     AS dim_issue_id,
       --
-      gitlab_dotcom_issuable_severities_source.severity     AS severity      
+      gitlab_dotcom_issue_severity_source.severity     AS severity      
 
     FROM gitlab_dotcom_issue_severity_source
 )
