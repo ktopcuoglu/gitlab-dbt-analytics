@@ -71,7 +71,7 @@
       gitlab_dotcom_issues_source.issue_type,
       -- get issue severity from prep_issue_severity & prep_labels
       -- if issue is GitLab Incident, uses built in Severity label, otherwise try to pull from issue labels
-      CASE 
+     CASE 
         WHEN prep_issue_severity.severity = 4 THEN 'Severity 1'
         WHEN LOWER(prep_labels.label_title) LIKE 'sev%1%' THEN 'Severity 1'
         WHEN prep_issue_severity.severity = 3 THEN 'Severity 2'
@@ -91,13 +91,13 @@
       AND gitlab_dotcom_issues_source.created_at < dim_namespace_plan_hist.valid_to
     LEFT JOIN dim_date 
       ON TO_DATE(gitlab_dotcom_issues_source.created_at) = dim_date.date_day
-    WHERE gitlab_dotcom_issues_source.project_id IS NOT NULL
     LEFT JOIN prep_issue_severity
       ON gitlab_dotcom_issues_source.issue_id = prep_issue_severity.dim_issue_id
     LEFT JOIN prep_label_links
       ON gitlab_dotcom_issues_source.issue_id = prep_label_links.dim_issue_severity_id
     LEFT JOIN prep_labels 
-      ON prep_label_links.dim_label_id = prep_labels.dim_label_id
+      ON prep_label_links.dim_label_id = prep_labels.dim_label_id */
+    WHERE gitlab_dotcom_issues_source.project_id IS NOT NULL
 
 )
 
