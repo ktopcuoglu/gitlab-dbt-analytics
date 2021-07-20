@@ -68,12 +68,7 @@ SNOWFLAKE
 3. [ ] Validate all user accounts require multi-factor authentication.
     <details>
 
-     ```sql
-     
-    SELECT disinct(ext_authn_duo) 
-    FROM users ;
-    
-   ```
+    * [ ] Check EXT_AUTHN_DUO is set to ‘false’ in users table. If set to ‘false’ then MFA is diabled.
 
 SISENSE
 1. [ ] Validate terminated employees have been removed from Sisense access.
@@ -126,7 +121,7 @@ SISENSE
 
     <details>
 
-     Check “roles and policies” section under settings in Sisense. Check if 2FA is marked dash(--) for any user. If dash is marked for any user then 2FA is disabled.
+     * [ ] Check “roles and policies” section under settings in Sisense. If 2FA is marked dash (--) for any user then two factor authentication is disabled.
 
 
 
@@ -236,9 +231,9 @@ TRUSTED DATA
 
     <details>
 
-     Pull the report for business logic changes made to the mart from below link by filtering on label “Business logic change”.
+     * [ ]  Pull the report for business logic changes made to the mart from link (https://gitlab.com/gitlab-data/analytics/-/blame/master/transform/snowflake-dbt/models/marts/sales_funnel/mart_crm_opportunity.sql) by filtering on label “Business logic change”.
 
-https://gitlab.com/gitlab-data/analytics/-/blame/master/transform/snowflake-dbt/models/marts/sales_funnel/mart_crm_opportunity.sql
+          
 
 
 <!-- DO NOT EDIT BELOW THIS LINE -->
