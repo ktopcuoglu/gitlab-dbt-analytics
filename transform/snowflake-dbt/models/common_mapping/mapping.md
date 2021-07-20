@@ -51,7 +51,7 @@ Table for mapping GitLab.com CI Runner to a specific project.
 More info about [CI Runners here](https://docs.gitlab.com/ee/ci/runners/)
 {% enddocs %}
 
-{% docs map_usage_ping_active_subscription_id %}
+{% docs map_usage_ping_active_subscription %}
 
 Mapping table used to link a usage ping (dim_usage_ping_id) to an active zuora subscription at the ping creation date (dim_subscription_id).
 

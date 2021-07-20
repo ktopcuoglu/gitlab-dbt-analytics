@@ -1,7 +1,8 @@
 {{ simple_cte([
   ('dim_product_detail', 'dim_product_detail'),
   ('fct_usage_ping_payload', 'fct_usage_ping_payload'),
-  ('map_usage_ping_active_subscription_id', 'map_usage_ping_active_subscription_id'),
+  ('map_usage_ping_active_subscription', 'map_usage_ping_active_subscription'),
+  ('prep_recurring_charge', 'prep_recurring_charge'),
 ])
 }}
 
@@ -11,12 +12,6 @@
     FROM {{ ref('dim_date') }}
     WHERE first_day_of_month < CURRENT_DATE
 
-), recurring_charge AS (
-
-    SELECT *
-    FROM {{ ref('prep_recurring_charge') }}
-    WHERE subscription_status IN ('Active', 'Cancelled')
-
 ), self_managed_active_subscriptions AS (
 
     SELECT
@@ -24,10 +19,11 @@
       dim_subscription_id,
       SUM(mrr)              AS mrr,
       SUM(quantity)         AS quantity
-    FROM recurring_charge
+    FROM prep_recurring_charge
     INNER JOIN dim_product_detail
-      ON recurring_charge.dim_product_detail_id = dim_product_detail.dim_product_detail_id
+      ON prep_recurring_charge.dim_product_detail_id = dim_product_detail.dim_product_detail_id
         AND product_delivery_type = 'Self-Managed'
+    WHERE subscription_status IN ('Active', 'Cancelled')
     {{ dbt_utils.group_by(n=2) }}
 
 ), mau AS (
@@ -50,8 +46,8 @@
       MAX(metric_value)                                                                                                 AS umau
     FROM self_managed_active_subscriptions
     INNER JOIN dim_date ON self_managed_active_subscriptions.dim_date_id = dim_date.date_id
-    LEFT JOIN map_usage_ping_active_subscription_id ON self_managed_active_subscriptions.dim_subscription_id = map_usage_ping_active_subscription_id.dim_subscription_id
-    LEFT JOIN fct_usage_ping_payload ON map_usage_ping_active_subscription_id.dim_usage_ping_id = fct_usage_ping_payload.dim_usage_ping_id AND first_day_of_month = DATE_TRUNC('month', fct_usage_ping_payload.ping_created_at)
+    LEFT JOIN map_usage_ping_active_subscription ON self_managed_active_subscriptions.dim_subscription_id = map_usage_ping_active_subscription.dim_subscription_id
+    LEFT JOIN fct_usage_ping_payload ON map_usage_ping_active_subscription.dim_usage_ping_id = fct_usage_ping_payload.dim_usage_ping_id AND first_day_of_month = DATE_TRUNC('month', fct_usage_ping_payload.ping_created_at)
     LEFT JOIN mau ON fct_usage_ping_payload.dim_usage_ping_id = mau.ping_id
     {{ dbt_utils.group_by(n=5) }}
 
@@ -66,8 +62,9 @@
       ) AS latest_major_minor_version
     FROM self_managed_active_subscriptions
     INNER JOIN dim_date ON self_managed_active_subscriptions.dim_date_id = dim_date.date_id
-    LEFT JOIN map_usage_ping_active_subscription_id ON self_managed_active_subscriptions.dim_subscription_id = map_usage_ping_active_subscription_id.dim_subscription_id
-    LEFT JOIN fct_usage_ping_payload ON map_usage_ping_active_subscription_id.dim_usage_ping_id = fct_usage_ping_payload.dim_usage_ping_id AND first_day_of_month = DATE_TRUNC('month', fct_usage_ping_payload.ping_created_at)
+    LEFT JOIN map_usage_ping_active_subscription ON self_managed_active_subscriptions.dim_subscription_id = map_usage_ping_active_subscription.dim_subscription_id
+    LEFT JOIN fct_usage_ping_payload ON map_usage_ping_active_subscription.dim_usage_ping_id = fct_usage_ping_payload.dim_usage_ping_id 
+      AND first_day_of_month = fct_usage_ping_payload.ping_created_at_month
 
 ), joined AS (
 

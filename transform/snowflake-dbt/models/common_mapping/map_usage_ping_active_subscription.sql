@@ -93,7 +93,8 @@
       NULL                    AS other_dim_subscription_id_array,
       'Match between Usage Ping and a expired Subscription' AS match_type
     FROM join_ping_to_subscriptions
-    WHERE dim_usage_ping_id NOT IN (SELECT dim_usage_ping_id FROM first_subscription)
+    LEFT JOIN first_subscription ON join_ping_to_subscriptions.dim_usage_ping_id = first_subscription.dim_usage_ping_id
+    WHERE first_subscription.dim_usage_ping_id IS NULLs
 
 )
 

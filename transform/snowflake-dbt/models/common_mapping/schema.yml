@@ -173,8 +173,8 @@ models:
         tests:
           - not_null
           
-  - name: map_usage_ping_active_subscription_id
-    description: '{{ doc("map_usage_ping_active_subscription_id") }}'
+  - name: map_usage_ping_active_subscription
+    description: '{{ doc("map_usage_ping_active_subscription") }}'
     columns:
       - name: dim_subscription_id
         description: Unique ID of a subscription. Used to join with `dim_subscription`
