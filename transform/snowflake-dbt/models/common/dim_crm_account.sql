@@ -32,7 +32,7 @@ WITH base AS (
       parent_crm_account_tsp_area                 AS parent_crm_account_tsp_area,
       parent_crm_account_gtm_strategy             AS parent_crm_account_gtm_strategy,
       parent_crm_account_focus_account            AS parent_crm_account_focus_account,
-      crm_account_owner_user_segment                  AS crm_account_owner_user_segment,
+      crm_account_owner_user_segment              AS crm_account_owner_user_segment,
       CAST(partners_signed_contract_date AS date) AS partners_signed_contract_date,
       record_type_id                              AS record_type_id,
       federal_account                             AS federal_account,
