@@ -27,7 +27,7 @@ WITH bizible AS (
       bizible.bizible_form_url,
       bizible.bizible_ad_campaign_name,
       bizible.bizible_marketing_channel_path,
-       , CASE
+       CASE
    When camp.campaign_parent_id = '7014M000001dowZQAQ' -- based on issue https://gitlab.com/gitlab-com/marketing/marketing-strategy-performance/-/issues/246
     OR (bizible_medium = 'sponsorship'
       AND bizible_touchpoint_source IN ('issa','stackoverflow','securityweekly-appsec'))
@@ -274,7 +274,7 @@ END                                                                             
 {{ dbt_audit(
     cte_ref="touchpoints_with_campaign",
     created_by="@mcooperDD",
-    updated_by="@pmcooperDD",
+    updated_by="@rkohnke",
     created_date="2021-03-02",
-    updated_date="2021-03-02"
+    updated_date="2021-07-20"
 ) }}
