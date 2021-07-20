@@ -277,6 +277,8 @@ Data team currently uses DataLab (Jupyter in cloud provided by Google Cloud) to 
 - [ ] Clone the DataScience repo into your repos directory: 
     ``` git clone https://gitlab.com/gitlab-data/data-science```
 - [ ] Run `make jupyter` from the root directory of the repository and confirm that JupyterLab has now spun up on successfully. 
+- [ ] To connect to jupyter, go to your web browser and copy paste the url and token found in terminal once the docker image creates. 
+    - It should look something like `http://127.0.0.1:8888/lab?token=5c7f7da79f4a0968501f087f3c79ee4dd8bd7a63e0f088a8`. The token will change each time you spin up the docker container.
 - [ ] Run through the notebook at `./notebooks/templates/auth_example.ipynb` to confirm that you have configured everything successfully.  
 
 ## GitLab.com (Product)
