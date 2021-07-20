@@ -833,7 +833,7 @@ tables:
     export_table_primary_key: ''
     import_db: GITLAB_DB
     import_query: |-
-      SELECT id,
+      SELECT id
       , user_id
       , merge_request_id
       , created_at
