@@ -41,7 +41,6 @@
       --
 
     FROM gitlab_dotcom_label_links_source
-     LEFT JOIN prep_labels ON gitlab_dotcom_label_links_source.label_id = prep_labels.dim_label_id
 
 )
 
