@@ -113,6 +113,15 @@ rm ~/onboarding_script.zsh
 </details>
 
 <details>
+
+<summary>For Data Scientists</summary>
+<details>
+* [ ] Make sure you have run through all of the analysts steps mentioned above, along with the getting setup with dbt section below
+* [ ] Install docker & docker-compose. The easiest way to do this for Mac now is to use the desktop install from [Docker](https://www.docker.com/products/docker-desktop).
+* [ ] Run through the Jupyter setup section below 
+
+</details>
+
 <summary>For Data Engineers</summary>
 
 Take a look at https://gitlab.com/gitlab-data/analytics/-/blob/master/admin/onboarding_script.zsh and feel free to use what is in there that makes sense. This script is activily maintained in the system so try to use this. 
@@ -265,6 +274,15 @@ If you receive error
 datalab connect your_gitlab_username-datalab-project --no-user-checking
 
 - [ ] Open your browser and type localhost:8081. It may take couple minutes to connect, so if nothing comes up refresh website or validate with project owners if your access has been granted properly. You should be all set!
+
+
+## Jupyter 
+
+- [ ] Ensure you've setup your dbt for running locally as mentioned above. The ./.dbt/profiles.yml file is a pre-requisite for this process. If you do not want dbt you can manually create the ./.dbt/profiles.yml file based off the [sample profile](https://gitlab.com/gitlab-data/analytics/-/blob/master/admin/sample_profiles.yml)
+- [ ] Clone the DataScience repo: 
+    ``` git clone https://gitlab.com/gitlab-data/data-science```
+- [ ] Run `make jupyter` from the root directory of the repository and confirm that JupyterLab has now spun up on successfully. 
+- [ ] Run through the notebook at `./notebooks/templates/auth_example.ipynb` to confirm that you have configured everything successfully.  
 
 ## GitLab.com (Product)
 This data comes from our GitLab.com SaaS product.
