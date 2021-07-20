@@ -1070,7 +1070,6 @@ roles:
             databases:
                 read:
                     - prep
-                    - raw
             schemas:
                 read:
                     - prep.dotcom_usage_events_*
