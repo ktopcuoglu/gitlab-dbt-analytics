@@ -2,6 +2,7 @@ WITH zuora_revenue_manual_journal_entry AS (
 
     SELECT *
     FROM {{source('zuora_revenue','zuora_revenue_manual_journal_entry')}}
+    QUALIFY RANK() OVER (PARTITION BY je_line_id ORDER BY incr_updt_dt DESC) = 1
 
 ), renamed AS (
 
@@ -16,14 +17,15 @@ WITH zuora_revenue_manual_journal_entry AS (
       sob_id::VARCHAR                               AS set_of_books_id,
       sob_name::VARCHAR                             AS set_of_books_name,
       fn_cur::VARCHAR                               AS functional_currency,
-      rvsl_prd_id::VARCHAR                          AS reversal_period_id,
-      prd_id::VARCHAR                               AS period_id,
+      -- Data received from Zuora in YYYYMM format, formatted to YYYYMMDD in the below. 
+      CONCAT(rvsl_prd_id::VARCHAR,'01')             AS reversal_period_id,
+      CONCAT(prd_id::VARCHAR,'01')                  AS period_id,
       je_head_atr1::VARCHAR                         AS manual_journal_entry_header_attribute_1,
       je_head_atr2::VARCHAR                         AS manual_journal_entry_header_attribute_2,
       je_head_atr3::VARCHAR                         AS manual_journal_entry_header_attribute_3,
       je_head_atr4::VARCHAR                         AS manual_journal_entry_header_attribute_4,
       je_head_atr5::VARCHAR                         AS manual_journal_entry_header_attribute_5,
-      je_head_crtd_prd_id::VARCHAR                  AS manual_journal_entry_header_created_period_id,
+      CONCAT(je_head_crtd_prd_id::VARCHAR,'01')     AS manual_journal_entry_header_created_period_id,
       je_line_id::VARCHAR                           AS manual_journal_entry_line_id,
       activity_type::VARCHAR                        AS activity_type,
       curr::VARCHAR                                 AS currency,
@@ -34,8 +36,8 @@ WITH zuora_revenue_manual_journal_entry AS (
       g_ex_rate::VARCHAR                            AS reporting_currency_exchange_rate,
       amount::FLOAT                                 AS amount,
       func_amount::FLOAT                            AS funcional_currency_amount,
-      start_date::DATETIME                          AS manual_journal_entry_start_date,
-      end_date::DATETIME                            AS manual_journal_entry_end_date,
+      start_date::DATETIME                          AS manual_journal_entry_line_start_date,
+      end_date::DATETIME                            AS manual_journal_entry_line_end_date,
       reason_code::VARCHAR                          AS reason_code,
       description::VARCHAR                          AS manual_journal_entry_line_description,
       comments::VARCHAR                             AS manual_journal_entry_line_comments,
@@ -86,9 +88,9 @@ WITH zuora_revenue_manual_journal_entry AS (
       je_line_updt_by::VARCHAR                      AS manual_journal_entry_line_updated_by,
       je_line_updt_dt::DATETIME                     AS manual_journal_entry_line_updated_date,
       incr_updt_dt::DATETIME                        AS incremental_update_date,
-      je_status_flag::VARCHAR                       AS manual_journal_entry_status,
+      je_status_flag::VARCHAR                       AS manual_journal_entry_header_status,
       rev_rec_type_flag::VARCHAR                    AS is_revenue_recognition_type,
-      je_type_flag::VARCHAR                         AS manual_journal_entry_type,
+      je_type_flag::VARCHAR                         AS manual_journal_entry_header_type,
       summary_flag::VARCHAR                         AS is_summary,
       manual_reversal_flag::VARCHAR                 AS is_manual_reversal,
       reversal_status_flag::VARCHAR                 AS reversal_status,
@@ -104,7 +106,7 @@ WITH zuora_revenue_manual_journal_entry AS (
       doc_line_id::VARCHAR                          AS doc_line_id,
       rc_line_id::VARCHAR                           AS revenue_contract_line_id,
       cst_or_vc_type::VARCHAR                       AS is_cost_or_vairable_consideration,
-      type_name::VARCHAR                            AS manual_journal_entry_line_type_name,
+      type_name::VARCHAR                            AS manual_journal_entry_line_type,
       dt_frmt::VARCHAR                              AS date_format,
       opn_int_flag::VARCHAR                         AS is_open_interface,
       auto_appr_flag::VARCHAR                       AS is_auto_approved,

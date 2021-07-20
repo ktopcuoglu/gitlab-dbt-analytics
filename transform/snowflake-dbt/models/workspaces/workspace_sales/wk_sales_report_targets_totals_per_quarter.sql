@@ -69,9 +69,9 @@ WITH date_details AS (
              END)                                               AS total_booked_net_arr,
         SUM(CASE 
                 WHEN opp_snapshot.close_fiscal_quarter_date = opp_snapshot.snapshot_fiscal_quarter_date
-                    THEN opp_snapshot.churned_net_arr
+                    THEN opp_snapshot.churned_contraction_net_arr
                 ELSE 0
-             END)                                               AS total_churned_net_arr,       
+             END)                                               AS total_churned_contraction_net_arr,       
         SUM(CASE 
                 WHEN opp_snapshot.close_fiscal_quarter_date = opp_snapshot.snapshot_fiscal_quarter_date
                     THEN opp_snapshot.booked_deal_count
@@ -79,9 +79,9 @@ WITH date_details AS (
              END)                                               AS total_booked_deal_count,
         SUM(CASE 
                 WHEN opp_snapshot.close_fiscal_quarter_date = opp_snapshot.snapshot_fiscal_quarter_date
-                    THEN opp_snapshot.churned_deal_count
+                    THEN opp_snapshot.churned_contraction_deal_count
                 ELSE 0
-        END)                                                    AS total_churned_deal_count,   
+        END)                                                    AS total_churned_contraction_deal_count,   
         SUM(CASE 
                 WHEN opp_snapshot.pipeline_created_fiscal_quarter_date = opp_snapshot.snapshot_fiscal_quarter_date
                     THEN opp_snapshot.created_in_snapshot_quarter_net_arr
@@ -143,9 +143,9 @@ WITH date_details AS (
      COALESCE(target.target_pipe_generation_net_arr,0)      AS target_pipe_generation_net_arr, 
   
      COALESCE(total.total_booked_net_arr,0)                           AS total_booked_net_arr,
-     COALESCE(total.total_churned_net_arr,0)                          AS total_churned_net_arr,
+     COALESCE(total.total_churned_contraction_net_arr,0)              AS total_churned_contraction_net_arr,
      COALESCE(total.total_booked_deal_count,0)                        AS total_booked_deal_count,
-     COALESCE(total.total_churned_deal_count,0)                       AS total_churned_deal_count,     
+     COALESCE(total.total_churned_contraction_deal_count,0)           AS total_churned_contraction_deal_count,     
      COALESCE(total.total_pipe_generation_net_arr,0)                  AS total_pipe_generation_net_arr,
      COALESCE(total.total_pipe_generation_deal_count,0)               AS total_pipe_generation_deal_count,
      COALESCE(total.total_created_and_booked_same_quarter_net_arr,0)  AS total_created_and_booked_same_quarter_net_arr,

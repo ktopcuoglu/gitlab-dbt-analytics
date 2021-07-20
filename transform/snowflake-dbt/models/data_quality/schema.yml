@@ -1,0 +1,58 @@
+version: 2
+
+models:
+ - name: data_detection_rule
+   description: '{{ doc("data_detection_rule") }}'
+   columns:
+     - name: rule_id
+       description: The unique identifier of each data quality detection rule.
+       tests:
+         - not_null
+         - unique
+     - name: rule_name
+       description: The name of the data quality detection rule (Example- Missing instance types for hostnames).
+     - name: rule_description
+       description: Brief Description of the data quality detection rule.
+     - name: type_of_data
+       description: The subject area for which the data quality rules apply to. The values could include - Product/Sales/Marketing.
+     - name: threshold
+       description: The threshold limit which will be compared against the percentage of passed/failed record counts to determine if the data quality detection rule has passed or failed.
+ 
+
+ - name: product_data_detection_run_detail
+   description: '{{ doc("product_data_detection_run_detail") }}'
+   columns:
+     - name: rule_id
+       description: The identifier of each data quality detection rule.
+     - name: processed_record_count
+       description: The total number of records that have been processed.
+     - name: passed_record_count
+       description: The total number of records that have passed the data quality detection rule.
+     - name: failed_record_count
+       description: The total number of records that have failed the data quality detection rule.
+     - name: rule_run_date
+       description: The date on which the data quality detection ule is run. The value is coming from dim_date table.
+     - name: type_of_data
+       description: he subject area for which the data quality rules apply to. The values could include - Product/Sales/Marketing.
+ 
+
+ - name: product_data_detection_run_result
+   description: '{{ doc("product_data_detection_run_result") }}'
+   columns:
+     - name: rule_id
+       description: The identifier value for each rule.
+     - name: rule_name
+       description: The name of the data quality detection rule.
+     - name: rule_description
+       description: Brief description of the data quality detection rule that is run.
+     - name: rule_run_date
+       description: The date on which the data quality detection ule is run. The value is coming from dim_date table.
+     - name: percent_of_records_passed
+       description: The percentage of passed record counts.
+     - name: precent_of_records_failed
+       description: The percentage of failed record counts.
+     - name: pass_fail_flag
+       description: PASS/FAIL Flag 
+     - name: type_of_data
+       description: The subject area for which the data quality rules apply to. The values could include - Product/Sales/Marketing.
+

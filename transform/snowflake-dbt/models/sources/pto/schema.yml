@@ -1,0 +1,54 @@
+version: 2
+
+models:
+    - name: gitlab_pto_source
+      description: PTO information from PTO by Roots on the grain of a single missed day
+      columns:
+        - name: end_date
+          description: last date of pto for this event
+          tests:
+            - not_null
+        - name: start_date
+          description: first date of pto for this event
+          tests:
+            - not_null
+        - name: pto_status
+          tests:
+            - not_null
+        - name: employee_day_length
+          description: how many hours should be considered missing per day for this employee
+          tests:
+            - not_null
+        - name: employee_department
+          tests:
+            - not_null
+        - name: employee_division
+          tests:
+            - not_null
+        - name: hr_employee_id
+          tests:
+            - not_null
+        - name: employee_uuid
+          description: Unique identifier for the employee
+          tests:
+            - not_null
+        - name: pto_uuid
+          description: Unique identifier for this pto event
+          tests:
+            - not_null
+        - name: pto_date
+        - name: pto_ends_at
+          description: Timestamp of when pto ends on this day if not the end of day
+        - name: is_holiday
+          tests:
+            - not_null
+        - name: recorded_hours
+          description: How many hours count as time off for this day (0 on weekends)
+          tests:
+            - not_null
+        - name: pto_starts_at
+          description: Timestamp of when pto begins on this day if not the start of day
+        - name: total_hours
+          description: How many hours will not be worked on this day (still counts hours for weekends)
+          tests:
+            - not_null

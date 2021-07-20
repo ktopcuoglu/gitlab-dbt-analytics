@@ -13,6 +13,8 @@ WITH source AS (
         lastname                                                AS lead_last_name,
         email                                                   AS lead_email,
         split_part(email,'@',2)                                 AS email_domain,
+        {{email_domain_type("split_part(email,'@',2)", 'leadsource')}}
+                                                                AS email_domain_type,
 
         --keys
         masterrecordid                                          AS master_record_id,
@@ -75,6 +77,14 @@ WITH source AS (
         status                                                  AS lead_status,
         last_utm_campaign__c                                    AS last_utm_campaign, 
         last_utm_content__c                                     AS last_utm_content,
+        crm_partner_id__c                                       AS crm_partner_id,
+        name_of_active_sequence__c                              AS name_of_active_sequence,
+        sequence_task_due_date__c::DATE                         AS sequence_task_due_date,
+        sequence_status__c                                      AS sequence_status,
+        sequence_step_type2__c                                  AS sequence_step_type,
+        actively_being_sequenced__c::BOOLEAN                    AS is_actively_being_sequenced,
+
+
         {{  sfdc_source_buckets('leadsource') }}
 
         -- territory success planning info
@@ -102,7 +112,7 @@ WITH source AS (
         createdbyid                                             AS created_by_id,
         createddate                                             AS created_date,
         isdeleted                                               AS is_deleted,
-        lastactivitydate                                        AS last_activity_date,
+        lastactivitydate::DATE                                  AS last_activity_date,
         lastmodifiedbyid                                        AS last_modified_id,
         lastmodifieddate                                        AS last_modified_date,
         systemmodstamp

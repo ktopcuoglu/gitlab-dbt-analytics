@@ -20,7 +20,10 @@ SELECT
   mapping_table.username,
   mapping_table.active,
   mapping_table.profile,
-  mapping_table.eeid
+  mapping_table.eeid,
+  mapping_table.sdr_segment,
+  mapping_table.sdr_region,
+  mapping_table.sdr_order_type
 
 FROM mapping_table
 LEFT JOIN sfdc_users
