@@ -61,7 +61,7 @@
     LEFT JOIN prep_user
       ON prep_ci_build.dim_user_id = prep_user.dim_user_id
     LEFT JOIN dim_date
-      ON dim_ci_build.created_date_id = dim_date.date_id
+      ON prep_ci_build.created_date_id = dim_date.date_id
 
 )
 
