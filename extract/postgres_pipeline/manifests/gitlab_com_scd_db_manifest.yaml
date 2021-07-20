@@ -826,3 +826,16 @@ tables:
       SELECT user_id
       , credit_card_validated_at
       FROM user_credit_card_validations
+  merge_request_reviewers:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'merge_request_reviewers'
+    export_table_primary_key: ''
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id,
+      , user_id
+      , merge_request_id
+      , created_at
+      , state
+      FROM merge_request_reviewers
