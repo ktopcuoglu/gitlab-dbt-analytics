@@ -316,16 +316,6 @@ models:
     - name: rolling_12_month_savings_without_audit
     - name: rolling_12_month_savings_with_audit
     - name: target
-- name: sheetload_release_blog_posts_source
-  description: Information about blog post releases via [Mark Fletcher](https://gitlab.com/markglenfletcher).
-  columns:
-    - name: base_items
-    - name: bug_items
-    - name: performance_items
-    - name: release
-      tests:
-      - not_null
-      - unique
 - name: sheetload_product_maturity_historical_source
   description: This captures the categories_yaml file for FY 2021 Q1 and Q2.
 - name: sheetload_rep_quotas_source
