@@ -38,6 +38,9 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity_stage.is_active                  AS stage_is_active,
       sfdc_opportunity_stage.is_closed                  AS stage_is_closed,
       sfdc_opportunity.technical_evaluation_date,
+      sfdc_opportunity.sa_tech_evaluation_close_status,
+      sfdc_opportunity.sa_tech_evaluation_end_date,
+      sfdc_opportunity.sa_tech_evaluation_start_date,
       sfdc_opportunity.deal_path,
 
       -- opportunity information
@@ -109,5 +112,5 @@ WITH sfdc_opportunity AS (
     created_by="@iweeks",
     updated_by="@jpeguero",
     created_date="2020-11-20",
-    updated_date="2021-06-18"
+    updated_date="2021-07-20"
 ) }}
