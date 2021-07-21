@@ -4,8 +4,8 @@
 }}
 
 {{ simple_cte([
-  ('dim_license', 'dim_license'),
-  ('dim_subscription', 'dim_subscription'),
+  ('map_subscription_lineage', 'map_subscription_lineage'),
+  ('prep_subscription', 'prep_subscription'),
   ('fct_usage_ping_payload', 'fct_usage_ping_payload'),
 ])
 }}
@@ -13,10 +13,12 @@
 , active_subscriptions AS (
 
     SELECT 
-      *,
+      prep_subscription.*,
       STRTOK_TO_ARRAY(subscription_lineage, ',') AS subscription_lineage_array,
       ARRAY_SLICE(subscription_lineage_array, -2, -1)::VARCHAR  AS latest_subscription_in_lineage
-    FROM dim_subscription
+    FROM prep_subscription
+    LEFT JOIN map_subscription_lineage
+      ON prep_subscription.dim_subscription_id = map_subscription_lineage.dim_subscription_id
     WHERE subscription_status IN ('Active', 'Cancelled')
       AND subscription_start_date < subscription_end_date
 
@@ -48,10 +50,10 @@
       renewal_subscriptions.subscription_name_slugify AS subscription_name_slugify,
       renewal_subscriptions.dim_subscription_id       AS dim_subscription_id
     FROM usage_ping_with_license
-    INNER JOIN dim_subscription
-      ON usage_ping_with_license.dim_subscription_id = dim_subscription.dim_subscription_id
+    INNER JOIN prep_subscription
+      ON usage_ping_with_license.dim_subscription_id = prep_subscription.dim_subscription_id
     INNER JOIN map_to_all_subscriptions_in_lineage AS active_subscriptions 
-      ON active_subscriptions.subscription_name_slugify = dim_subscription.subscription_name_slugify
+      ON active_subscriptions.subscription_name_slugify = prep_subscription.subscription_name_slugify
     LEFT JOIN active_subscriptions AS renewal_subscriptions
       ON active_subscriptions.subscription_in_lineage = renewal_subscriptions.subscription_name_slugify
 
