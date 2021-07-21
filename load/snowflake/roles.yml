@@ -3007,6 +3007,12 @@ roles:
         warehouses:
             - analyst_xs
 
+    - nraisinghani:
+        member_of:
+            - analyst_growth
+        warehouses:
+            - analyst_xs
+
     - parmstrong:
         member_of:
             - engineer
@@ -3965,6 +3971,11 @@ users:
         can_login: yes
         member_of:
             - ngalang
+
+    - nraisinghani:
+        can_login: yes
+        member_of:
+            - nraisinghani
 
     - parmstrong:
         can_login: yes
