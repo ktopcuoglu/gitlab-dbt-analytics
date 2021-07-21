@@ -33,7 +33,8 @@ WITH map_merged_crm_account AS (
       tsp_region,
       tsp_sub_region,
       tsp_area,
-      gtm_strategy
+      gtm_strategy,
+      created_date
     FROM sfdc_account
     WHERE account_id = ultimate_parent_account_id
 
@@ -122,7 +123,8 @@ WITH map_merged_crm_account AS (
     map_merged_crm_account.dim_crm_account_id               AS merged_to_account_id,
     IFF(sfdc_record_type.record_type_label != 'Channel'
         AND sfdc_account.account_type NOT IN ('Unofficial Reseller','Authorized Reseller','Prospective Partner','Partner','Former Reseller','Reseller','Prospective Reseller'),
-        FALSE, TRUE)                                        AS is_reseller
+        FALSE, TRUE)                                        AS is_reseller,
+    sfdc_account.created_date                      AS crm_account_created_date
   FROM sfdc_account
   LEFT JOIN map_merged_crm_account
     ON sfdc_account.account_id = map_merged_crm_account.sfdc_account_id
@@ -140,7 +142,7 @@ WITH map_merged_crm_account AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@msendal",
-    updated_by="@iweeks",
+    updated_by="@snalamaru",
     created_date="2020-06-01",
-    updated_date="2021-06-23"
+    updated_date="2021-07-21"
 ) }}
