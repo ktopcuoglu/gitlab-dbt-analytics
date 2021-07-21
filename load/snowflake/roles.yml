@@ -287,6 +287,7 @@ roles:
             - boneyard
             - covid19
             - dbt_analytics
+            - dotcom_usage_events
             - driveload
             - gitlab_data_yaml
             - handbook
@@ -1063,6 +1064,18 @@ roles:
             tables:
                 read:
                     - raw.discourse.*
+
+    - dotcom_usage_events:
+        privileges:
+            databases:
+                read:
+                    - prep
+            schemas:
+                read:
+                    - prep.dotcom_usage_events_*
+            tables:
+                read:
+                    - prep.dotcom_usage_events_*.*
 
     - driveload:
         warehouses:
@@ -2032,6 +2045,13 @@ roles:
         warehouses:
             - analyst_xs
 
+    - daruwajoye:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+        warehouses:
+            - analyst_xs
+
     - datwood:
         member_of: []
         warehouses: []
@@ -2498,8 +2518,7 @@ roles:
             - reporting
 
     - jurbanc:
-        warehouses:
-            - reporting
+        warehouses: []
 
     - jwanjohi:
         warehouses:
@@ -2632,6 +2651,13 @@ roles:
                 write:
                     - kmagda_prep.*.*
                     - kmagda_prod.*.*
+
+    - kmckern:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+        warehouses:
+            - analyst_xs
 
     - kchu:
         member_of:
@@ -2976,6 +3002,12 @@ roles:
                     - nfiguera_prod.*.*
 
     - ngalang:
+        member_of:
+            - analyst_growth
+        warehouses:
+            - analyst_xs
+
+    - nraisinghani:
         member_of:
             - analyst_growth
         warehouses:
@@ -3568,6 +3600,11 @@ users:
         member_of:
             - cmestel
 
+    - daruwajoye:
+        can_login: yes
+        member_of:
+            - daruwajoye
+
     - datwood: # https://gitlab.com/gitlab-data/analytics/-/issues/6551
         can_login: no
         member_of: []
@@ -3768,10 +3805,8 @@ users:
             - jswain
 
     - jurbanc:
-        can_login: yes
-        member_of:
-            - jurbanc
-            - securityadmin
+        can_login: no
+        member_of: []
 
     - jwanjohi:
         can_login: yes
@@ -3797,6 +3832,11 @@ users:
         can_login: yes
         member_of:
             - kmagda
+
+    - kmckern:
+        can_login: yes
+        member_of:
+            - kmckern
 
     - kchu:
         can_login: yes
@@ -3931,6 +3971,11 @@ users:
         can_login: yes
         member_of:
             - ngalang
+
+    - nraisinghani:
+        can_login: yes
+        member_of:
+            - nraisinghani
 
     - parmstrong:
         can_login: yes
