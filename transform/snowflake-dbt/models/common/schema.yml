@@ -3160,3 +3160,13 @@ models:
           - not_null
       - name: is_system
         description: boolean flag allowing us to identify if a note is automatically created by the system or if it is a user's action
+
+  - name: fct_event_400
+    description: '{{ doc("fct_event_400") }}'
+    columns:
+      - name: dim_event_id
+
+  - name: fct_event_800
+    description: '{{ doc("fct_event_800") }}'
+    columns:
+      - name: dim_event_id
