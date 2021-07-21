@@ -48,7 +48,7 @@
       renewal_subscriptions.subscription_name_slugify AS subscription_name_slugify,
       renewal_subscriptions.dim_subscription_id       AS dim_subscription_id
     FROM usage_ping_with_license
-    LEFT JOIN dim_subscription
+    INNER JOIN dim_subscription
       ON usage_ping_with_license.dim_subscription_id = dim_subscription.dim_subscription_id
     INNER JOIN map_to_all_subscriptions_in_lineage AS active_subscriptions 
       ON active_subscriptions.subscription_name_slugify = dim_subscription.subscription_name_slugify
@@ -88,13 +88,13 @@
 
     -- SECOND CTE: No valid subscriptions at usage ping creation
     SELECT DISTINCT
-      dim_usage_ping_id,
-      dim_subscription_id AS dim_subscription_id,
-      NULL                    AS other_dim_subscription_id_array,
+      join_ping_to_subscriptions.dim_usage_ping_id,
+      join_ping_to_subscriptions.dim_subscription_id        AS dim_subscription_id,
+      NULL                                                  AS other_dim_subscription_id_array,
       'Match between Usage Ping and a expired Subscription' AS match_type
     FROM join_ping_to_subscriptions
     LEFT JOIN first_subscription ON join_ping_to_subscriptions.dim_usage_ping_id = first_subscription.dim_usage_ping_id
-    WHERE first_subscription.dim_usage_ping_id IS NULLs
+    WHERE first_subscription.dim_usage_ping_id IS NULL
 
 )
 
