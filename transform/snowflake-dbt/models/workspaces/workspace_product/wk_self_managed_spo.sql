@@ -31,7 +31,7 @@ SELECT
   smau_only.created_month AS reporting_month,
   smau_only.organization_id,
   'Self-Managed' AS delivery,
-  IFF(instance_user_count = 1, 'Individual', 'Group')          AS organization_type,
+  IFF(instance_user_count = 1, 'Individual', 'Group')             AS organization_type,
   fct_usage_ping_payload.product_tier,
   IFF(fct_usage_ping_payload.product_tier <> 'Core', TRUE, FALSE) AS is_paid_product_tier,
   umau_value,
@@ -43,7 +43,8 @@ SELECT
     else_value = 'NULL',
     suffix='_stage',
     quote_identifiers = False
-) }}
+) }},
+  COUNT(DISTINCT IFF(monthly_metric_value > 0, stage_name, NULL)) AS active_stage_count
 FROM smau_only
 LEFT JOIN fct_usage_ping_payload
   ON smau_only.dim_usage_ping_id = fct_usage_ping_payload.dim_usage_ping_id

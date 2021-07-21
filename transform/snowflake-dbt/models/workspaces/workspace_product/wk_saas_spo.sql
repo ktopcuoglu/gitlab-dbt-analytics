@@ -75,7 +75,8 @@
       COUNT(DISTINCT umau)                                                    AS umau_stage,
       SUM(umau_stage) OVER (
         PARTITION BY organization_id, first_day_of_month, plan_name_at_reporting_month
-      )                                                                       AS umau
+      )                                                                       AS umau,
+      IFF(monthly_stage_users > 0, TRUE, FALSE)                               AS is_active_stage
     FROM events
     INNER JOIN date_details 
       ON events.event_month = date_details.date_day
@@ -89,14 +90,14 @@
 
 SELECT
   reporting_month,
-  organization_id::VARCHAR      AS organization_id,
+  organization_id::VARCHAR        AS organization_id,
   delivery,
   organization_type,
-  plan_name_at_reporting_month  AS product_tier,
-  plan_is_paid                  AS is_paid_product_tier,
+  plan_name_at_reporting_month    AS product_tier,
+  plan_is_paid                    AS is_paid_product_tier,
   --organization_creation_date,
   --created_by_blocked_user,
-  umau                          AS umau_value,
+  umau                            AS umau_value,
   {{ dbt_utils.pivot(
   'stage_name', 
   stage_names,
@@ -105,6 +106,7 @@ SELECT
   else_value = 'NULL',
   suffix='_stage',
   quote_identifiers = False
-  ) }}
+  ) }},
+  COUNT(is_active_stage::INTEGER) AS active_stage_count
 FROM joined
 {{dbt_utils.group_by(n=7)}}
