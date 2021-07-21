@@ -106,6 +106,7 @@ Paste the results of dbt test here, including the command.
 ## All MRs Checklist
 - [ ] This MR follows the coding conventions laid out in the [SQL style guide](https://about.gitlab.com/handbook/business-ops/data-team/platform/sql-style-guide/), including the [dbt guidelines](https://about.gitlab.com/handbook/business-ops/data-team/platform/sql-style-guide/#dbt-guidelines).
 - [ ] [Label hygiene](https://about.gitlab.com/handbook/business-ops/data-team/how-we-work/#issue-labeling) on issue.
+  - [ ] Apply Label [Business logic change](https://gitlab.com/gitlab-data/analytics/-/labels?subscribed=&search=business+logic+change) for any business logic changes like adding new dimensions, facts, marts, changing joins, adding new calculated fields.
 - [ ] Branch set to delete. (Leave commits unsquashed)
 - [ ] Latest CI pipeline passes.
   - [ ] If not, an explanation has been provided.
