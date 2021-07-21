@@ -2041,6 +2041,8 @@ models:
       - name: is_usage_ping_license_subscription_id_valid
       - name: is_data_in_subscription_month
         description: Flags rows where there is Usage Ping data and/or Seat Link data present
+      - name: is_latest_data
+        description: Flags the row with the most recently received data from Usage Ping and/or Seat Link
 
   - name: fct_quote_item
     description: '{{ doc("fct_quote_item") }}'
@@ -2278,6 +2280,8 @@ models:
         description: Flags if there are currently active users, but no seats have been paid for
       - name: is_data_in_subscription_month
         description: Flags if there is either Subscription Seats data or Usage Ping data present in the given month for a given subscription
+      - name: is_latest_data
+        description: Flags the row with the most recently received data from Usage Ping
 
   - name: fct_revenue_contract_hold
     description: '{{ doc("fct_revenue_contract_hold") }}'

@@ -53,6 +53,8 @@ models:
       - name: dim_usage_ping_id
       - name: instance_type
         description: Type of the instance
+      - name: cleaned_version
+        description: Version of GitLab running on the instance
       - name: country_name
       - name: iso_2_country_code
       - name: iso_3_country_code
@@ -236,6 +238,8 @@ models:
         description: Monthly count of MAU changing an issue’s milestone ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#redis_hll_countersissues_editg_project_management_issue_milestone_changed_monthly))
       - name: project_management_issue_iteration_changed_28_days_user
         description: Monthly count of MAU changing an issue’s iteration ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#redis_hll_countersissues_editg_project_management_issue_iteration_changed_monthly))
+      - name: is_latest_data
+        description: Flags the row with the most recently received data from Usage Ping
 
   - name: mart_product_usage_wave_1_3_metrics_latest
     description: '{{ doc("mart_product_usage_wave_1_3_metrics_latest") }}'
@@ -713,6 +717,8 @@ models:
       - name: is_usage_ping_license_subscription_id_valid
       - name: is_data_in_subscription_month
         description: Flags rows where there is Usage Ping data and/or Seat Link data present
+      - name: is_latest_data
+        description: Flags the row with the most recently received data from Usage Ping
 
   - name: mart_product_usage_wave_1_3_metrics_monthly_diff
     description: '{{ doc("mart_product_usage_wave_1_3_metrics_monthly_diff") }}'
@@ -1055,6 +1061,8 @@ models:
         description: Flags if there are currently active users, but no seats have been paid for
       - name: is_data_in_subscription_month
         description: Flags if there is either Subscription Seats data or Usage Ping data present in the given month for a given subscription
+      - name: is_latest_data
+        description: Flags the row with the most recently received data from Usage Ping
 
   - name: pump_hash_marketing_contact
     description: '{{ doc("pump_hash_marketing_contact") }}'
