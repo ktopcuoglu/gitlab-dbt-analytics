@@ -249,26 +249,17 @@ Snowflake SQL is probably not that different from the dialects of SQL you're alr
 - [ ] Here is the [dbt command line cheat sheet](https://about.gitlab.com/handbook/business-ops/data-team/platform/dbt-guide/#command-line-cheat-sheet)
 - Note: When launching dbt you will see `WARNING: The GOOGLE_APPLICATION_CREDENTIALS variable is not set. Defaulting to a blank string.` Unless you are developing on Airflow this is ok and expected. If you require GOOGLE_APPLICATION_CREDENTIALS please follow the steps outlined below in the DataLab section.
 
-## DataLab (Jupyter setup)
+## Optional: Google Cloud Credentials
 
-Data team currently uses DataLab (Jupyter in cloud provided by Google Cloud) to conduct analysis and build models with Python. Follow below steps to get running instance for yourself.
+Data team uses GCP (Google Cloud Platform) as our cloud provider. GCP credentials are needed if you plan on connecting on your local machine to airflow or any CGP service (storage buckets, etc.) . Follow below steps to get running instance for yourself.
 
 - [ ] Raise Access Request (AR) for Google Cloud Credentials. To do that please follow instructions here or create separate issue and copy contents from [here](https://about.gitlab.com/handbook/business-technology/team-member-enablement/onboarding-access-requests/access-requests/) or create separate issue and copy contents from [here](https://gitlab.com/gitlab-com/team-member-epics/access-requests/-/issues/10306#note_622125437). Ensure you update your name and other personal details and project name is ``gitlab-analysis.`` Assign it to your manager.
-- [ ] Raise AR for DataLab setup for ``gitlab-analysis``, similar way as previous step. Assign it to your manager. You can also tag project owners (Dennis van Rooijen, Paul Armstrong or Ved Prakash) if you need help.
 - [ ] Please follow next step after running onboarding template, once you added GOOGLE_APPLICATION_CREDENTIALS path to your .zshrc file which can be accessed by `vi ~/.zshrc``. One of the project owners should send you configuration json file, which is important to add in your google credentials. Follow below steps:
 - [ ] Download the json file provided and move to your home directory (e.g. `/Users/yourusername`)
 - [ ] Open terminal and run the following command, replacing `yourusername` with your actual user name on your computer (type `pwd` into the terminal if you don’t know it — the path should contain your user name) and `filename.json` with you name of the file.
     - echo export  GOOGLE_APPLICATION_CREDENTIALS=/Users/yourusername/filename.json >> ./.zshrc
     - If you already have the variable  GOOGLE_APPLICATION_CREDENTIALS  modify its value to the file path and file name instead of adding a new one. 
 - [ ] Refresh this file by sourcing it back, by running command in terminal: ``source ~/.zshrc``.
-- [ ] After approved AR install and initialise Google Cloud SDK (which stands for software development kit) to which instructions are provided [here](https://cloud.google.com/sdk/docs/install).. After download and installation follow point a and b, especially commands in terminal.
-- [ ] Run ``gcloud components install datalab`` in your terminal
-- [ ] Run `datalab create your-project-name` to create a new datalab project.
-- [ ] Project owner should provide you name of your Datalab instance, the most likely it will be your_gitlab_handle-datalab-project. If you do not receive it follow up with owners by tagging them in access request issue or texting them directly on slack. Once you have name of your instance connect to DataLab by using `datalab connect your_gitlab_username-datalab-project`. 
-
-- If you receive error "The specified Datalab instance was created for your_gitlab_username@gitlab.com, but you are attempting to connect to it as your_gitlab_username@gitlab-analysis.iam.gserviceaccount.com". Then re-run the command as `datalab connect your_gitlab_username-datalab-project --no-user-checking`
-
-- [ ] Open your browser and type localhost:8081. It may take couple minutes to connect, so if nothing comes up refresh website or validate with project owners if your access has been granted properly. You should be all set!
 
 
 ## Jupyter 
