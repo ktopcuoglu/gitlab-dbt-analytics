@@ -431,7 +431,20 @@ tables:
       , CASE WHEN expires_at > '2262-01-01' THEN '2262-01-01' ELSE expires_at END AS expires_at
       , ldap
       , override
-      FROM members
+      FROM members     
+  merge_request_reviewers:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'merge_request_reviewers'
+    export_table_primary_key: 'id'
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , user_id
+      , merge_request_id
+      , created_at
+      , state
+      FROM merge_request_reviewers
   namespace_statistics:
     dbt_snapshots: true
     dbt_source_model: true
@@ -783,6 +796,16 @@ tables:
       , lines_below
       , outdated
       FROM suggestions
+  user_credit_card_validations:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'user_credit_card_validations'
+    export_table_primary_key: 'user_id'
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT user_id
+      , credit_card_validated_at
+      FROM user_credit_card_validations      
   user_details:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -816,26 +839,3 @@ tables:
       , raw_metadata
       , vulnerability_id
       FROM vulnerability_occurrences
-  user_credit_card_validations:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'user_credit_card_validations'
-    export_table_primary_key: 'user_id'
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT user_id
-      , credit_card_validated_at
-      FROM user_credit_card_validations
-  merge_request_reviewers:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'merge_request_reviewers'
-    export_table_primary_key: 'id'
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , user_id
-      , merge_request_id
-      , created_at
-      , state
-      FROM merge_request_reviewers
