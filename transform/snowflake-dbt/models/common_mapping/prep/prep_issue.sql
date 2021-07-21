@@ -94,7 +94,7 @@
     LEFT JOIN prep_issue_severity
       ON gitlab_dotcom_issues_source.issue_id = prep_issue_severity.dim_issue_id
     LEFT JOIN prep_label_links
-      ON gitlab_dotcom_issues_source.issue_id = prep_label_links.dim_issue_severity_id
+      ON gitlab_dotcom_issues_source.issue_id = prep_label_links.dim_label_link_id
     LEFT JOIN prep_labels 
       ON prep_label_links.dim_label_id = prep_labels.dim_label_id
     WHERE gitlab_dotcom_issues_source.project_id IS NOT NULL
