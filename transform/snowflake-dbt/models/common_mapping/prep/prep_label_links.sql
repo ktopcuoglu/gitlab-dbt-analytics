@@ -41,6 +41,11 @@
       --
 
     FROM gitlab_dotcom_label_links_source
+    -- exclude broken links (deleted labels)
+    WHERE label_id IS NOT NULL
+    -- only include currently active labels to avoid duplicate label_link_ids
+      AND is_currently_valid = TRUE
+
 
 )
 
