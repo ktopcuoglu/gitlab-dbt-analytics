@@ -2,7 +2,7 @@
     tags=["product"]
 ) }}
 
-With gitlab_dotcom_label_links_source AS (
+WITH gitlab_dotcom_label_links_source AS (
 
     SELECT *
     FROM {{ ref('gitlab_dotcom_label_links_source')}}
@@ -30,7 +30,9 @@ With gitlab_dotcom_label_links_source AS (
         ELSE NULL
       END AS dim_epic_id,
       --
-      gitlab_dotcom_label_links_source.target_type
+      gitlab_dotcom_label_links_source.target_type,
+      gitlab_dotcom_label_links_source.created_at       AS label_added_at,
+      gitlab_dotcom_label_links_source.updated_at       AS label_updated_at
       --
 
     FROM gitlab_dotcom_label_links_source

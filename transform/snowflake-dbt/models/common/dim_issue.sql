@@ -38,7 +38,8 @@ WITH prep_issue AS (
       duplicated_to_id,
       promoted_to_epic_id,
       issue_type,
-      severity
+      severity,
+      labels
     FROM {{ ref('prep_issue') }}
 
 )
