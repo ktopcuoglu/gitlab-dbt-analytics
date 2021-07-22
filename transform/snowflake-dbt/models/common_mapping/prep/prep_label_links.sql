@@ -30,7 +30,7 @@ With gitlab_dotcom_label_links_source AS (
         ELSE NULL
       END AS dim_epic_id,
       --
-      gitlab_dotcom_label_links_source.target_type,
+      gitlab_dotcom_label_links_source.target_type
       --
 
     FROM gitlab_dotcom_label_links_source
