@@ -11,8 +11,7 @@ WITH
       target_type::VARCHAR                           AS target_type,
       created_at::TIMESTAMP                          AS label_link_created_at,
       updated_at::TIMESTAMP                          AS label_link_updated_at,
-       -- Columns were added in distinct_source CTE
-      valid_from
+      valid_from -- Columns were added in distinct_source CTE
 
     FROM distinct_source
 
