@@ -6,7 +6,6 @@ gitlab-snowflake:
       threads: 8
       account: gitlab
       user: YOUR USER # <-- This will be your GitLab email
-      password: YOUR PASSWORD
       role: YOUR ROLE # <-- Talk to your manager
       database: YOUR USERNAME # <-- JSMITH for Jane Smith
       warehouse: ANALYST_XS
@@ -16,7 +15,6 @@ gitlab-snowflake:
       threads: 8
       account: gitlab
       user: YOUR USER # <-- This will be your GitLab email
-      password: YOUR PASSWORD
       role: YOUR ROLE # <-- Talk to your manager
       database: YOUR USERNAME # <-- JSMITH for Jane Smith
       warehouse: ANALYST_XS
