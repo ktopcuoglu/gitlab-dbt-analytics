@@ -2,11 +2,6 @@
     tags=["product"]
 ) }}
 
-{{ simple_cte([
-    ('prep_label_links', 'prep_label_links'),
-    ('prep_labels', 'prep_labels')
-]) }}
-
 
 WITH gitlab_dotcom_issue_severity_source AS (
 
