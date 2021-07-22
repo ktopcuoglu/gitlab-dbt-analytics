@@ -101,6 +101,11 @@ Paste the results of dbt test here, including the command.
 </details>
 
 **Which pipeline job do I run?** See our [handbook page](https://about.gitlab.com/handbook/business-ops/data-team/platform/ci-jobs/) on our CI jobs to better understand which job to run.
+
+**Provide an explanation here in case of any pipeline failures:**
+<!--- explanation per pipeline failure and indicate why this is accepted ---> 
+
+
 </details>
 
 ## All MRs Checklist
@@ -108,7 +113,8 @@ Paste the results of dbt test here, including the command.
 - [ ] [Label hygiene](https://about.gitlab.com/handbook/business-ops/data-team/how-we-work/#issue-labeling) on issue.
 - [ ] Branch set to delete. (Leave commits unsquashed)
 - [ ] Latest CI pipeline passes.
-  - [ ] If not, an explanation has been provided.
+  - [ ] If not, an explanation has been provided in testing section of this MR.
+  - [ ] If (Sisense)/Periscope pipeline failed, link to the periscope issue/mr: 
 - [ ] This MR is ready for final review and merge.
 - [ ] All threads are resolved.
 - [ ] Remove the `Draft:` prefix in the MR title before assigning to reviewer.
@@ -119,4 +125,3 @@ Paste the results of dbt test here, including the command.
 
 ## Further changes requested
 * [ ]  AUTHOR: Uncheck all boxes before taking further action.
-
