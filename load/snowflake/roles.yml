@@ -2659,6 +2659,16 @@ roles:
         warehouses:
             - analyst_xs
 
+    - kchen:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+            - customers_db
+            - analyst_marketing
+            - data_team_analyst
+        warehouses:
+            - analyst_xs
+
     - kchu:
         member_of:
             - product_manager
@@ -3837,6 +3847,11 @@ users:
         can_login: yes
         member_of:
             - kmckern
+
+    - kchen:
+        can_login: yes
+        member_of:
+            - vjallipalli
 
     - kchu:
         can_login: yes
