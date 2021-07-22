@@ -31,9 +31,6 @@ With gitlab_dotcom_label_links_source AS (
       END AS dim_epic_id,
       --
       gitlab_dotcom_label_links_source.target_type,
-      gitlab_dotcom_label_links_source.label_link_created_at,
-      gitlab_dotcom_label_links_source.label_link_updated_at,
-      gitlab_dotcom_label_links_source.valid_from
       --
 
     FROM gitlab_dotcom_label_links_source

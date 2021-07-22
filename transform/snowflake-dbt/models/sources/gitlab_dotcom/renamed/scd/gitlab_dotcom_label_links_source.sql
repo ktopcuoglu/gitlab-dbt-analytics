@@ -12,9 +12,7 @@ WITH
       created_at::TIMESTAMP                          AS label_link_created_at,
       updated_at::TIMESTAMP                          AS label_link_updated_at,
        -- Columns were added in distinct_source CTE
-      valid_from,
-      valid_to,
-      is_currently_valid
+      valid_from
 
     FROM distinct_source
 
