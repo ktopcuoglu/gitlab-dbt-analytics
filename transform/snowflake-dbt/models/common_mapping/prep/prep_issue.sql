@@ -14,9 +14,7 @@
     ('plans', 'gitlab_dotcom_plans_source'),
     ('prep_project', 'prep_project'),
     ('prep_user', 'prep_user'),
-    ('prep_issue_severity', 'prep_issue_severity'),
-    ('prep_label_links', 'prep_label_links'),
-    ('prep_labels', 'prep_labels')
+    ('prep_issue_severity', 'prep_issue_severity')
 ]) }}
 
 , gitlab_dotcom_issues_source AS (
@@ -69,19 +67,7 @@
       gitlab_dotcom_issues_source.duplicated_to_id,
       gitlab_dotcom_issues_source.promoted_to_epic_id,
       gitlab_dotcom_issues_source.issue_type, 
-      -- get issue severity from prep_issue_severity & prep_labels
-      -- if issue is GitLab Incident, uses built in Severity label, otherwise try to pull from issue labels
-      CASE 
-        WHEN prep_issue_severity.severity = 4 THEN 'Severity 1'
-        WHEN LOWER(prep_labels.label_title) LIKE 'sev%1%' THEN 'Severity 1'
-        WHEN prep_issue_severity.severity = 3 THEN 'Severity 2'
-        WHEN LOWER(prep_labels.label_title) LIKE 'sev%2%' THEN 'Severity 2'
-        WHEN prep_issue_severity.severity = 2 THEN 'Severity 3'
-        WHEN LOWER(prep_labels.label_title) LIKE 'sev%3%' THEN 'Severity 3'
-        WHEN prep_issue_severity.severity = 1 THEN 'Severity 4'
-        WHEN LOWER(prep_labels.label_title) LIKE 'sev%4%' THEN 'Severity 4'
-        ELSE NULL
-      END AS severity
+      CONCAT('Severity ', prep_issue_severity.severity) as severity
     FROM gitlab_dotcom_issues_source
     LEFT JOIN prep_project 
       ON gitlab_dotcom_issues_source.project_id = prep_project.dim_project_id
@@ -93,12 +79,7 @@
       ON TO_DATE(gitlab_dotcom_issues_source.created_at) = dim_date.date_day
     LEFT JOIN prep_issue_severity
       ON gitlab_dotcom_issues_source.issue_id = prep_issue_severity.dim_issue_id
-    LEFT JOIN prep_label_links
-      ON gitlab_dotcom_issues_source.issue_id = prep_label_links.dim_issue_id
-    LEFT JOIN prep_labels 
-      ON prep_label_links.dim_label_id = prep_labels.dim_label_id
     WHERE gitlab_dotcom_issues_source.project_id IS NOT NULL
-
 )
 
 {{ dbt_audit(

@@ -1771,6 +1771,7 @@ models:
       - name: dim_issue_id
         tests:
           - not_null
+          - unique
   - name: prep_label_links
     description: '{{ doc("prep_label_links") }}'
     columns:
