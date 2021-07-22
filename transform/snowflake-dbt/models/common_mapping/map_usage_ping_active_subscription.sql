@@ -91,12 +91,15 @@
     -- SECOND CTE: No valid subscriptions at usage ping creation
     SELECT DISTINCT
       join_ping_to_subscriptions.dim_usage_ping_id,
-      join_ping_to_subscriptions.dim_subscription_id        AS dim_subscription_id,
-      NULL                                                  AS other_dim_subscription_id_array,
+      FIRST_VALUE(join_ping_to_subscriptions.dim_subscription_id) OVER (
+        PARTITION BY join_ping_to_subscriptions.dim_usage_ping_id
+        ORDER BY subscription_start_date ASC) AS dim_subscription_id,
+      NULL                                    AS other_dim_subscription_id_array,
       'Match between Usage Ping and a expired Subscription' AS match_type
     FROM join_ping_to_subscriptions
     LEFT JOIN first_subscription ON join_ping_to_subscriptions.dim_usage_ping_id = first_subscription.dim_usage_ping_id
     WHERE first_subscription.dim_usage_ping_id IS NULL
+      AND join_ping_to_subscriptions.dim_subscription_id IS NOT NULL
 
 )
 
