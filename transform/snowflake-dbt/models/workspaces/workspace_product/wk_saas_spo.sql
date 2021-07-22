@@ -98,6 +98,7 @@ SELECT
   --organization_creation_date,
   --created_by_blocked_user,
   umau                            AS umau_value,
+  COUNT(is_active_stage::INTEGER) AS active_stage_count,
   {{ dbt_utils.pivot(
   'stage_name', 
   stage_names,
@@ -106,7 +107,6 @@ SELECT
   else_value = 'NULL',
   suffix='_stage',
   quote_identifiers = False
-  ) }},
-  COUNT(is_active_stage::INTEGER) AS active_stage_count
+  ) }}
 FROM joined
 {{dbt_utils.group_by(n=7)}}

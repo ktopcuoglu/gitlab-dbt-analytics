@@ -35,6 +35,7 @@ SELECT
   fct_usage_ping_payload.product_tier,
   IFF(fct_usage_ping_payload.product_tier <> 'Core', TRUE, FALSE) AS is_paid_product_tier,
   umau_value,
+  COUNT(DISTINCT IFF(monthly_metric_value > 0, stage_name, NULL)) AS active_stage_count,
   {{ dbt_utils.pivot(
     'stage_name', 
     stage_names,
@@ -43,8 +44,7 @@ SELECT
     else_value = 'NULL',
     suffix='_stage',
     quote_identifiers = False
-) }},
-  COUNT(DISTINCT IFF(monthly_metric_value > 0, stage_name, NULL)) AS active_stage_count
+) }}
 FROM smau_only
 LEFT JOIN fct_usage_ping_payload
   ON smau_only.dim_usage_ping_id = fct_usage_ping_payload.dim_usage_ping_id
