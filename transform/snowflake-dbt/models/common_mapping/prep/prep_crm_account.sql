@@ -59,7 +59,6 @@ WITH map_merged_crm_account AS (
       account_id,
       CASE
         WHEN is_jihu_account = TRUE
-          AND carr_this_account > 0
             THEN TRUE
         ELSE FALSE
       END                                         AS is_jihu_account
