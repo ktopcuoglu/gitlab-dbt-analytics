@@ -27,7 +27,7 @@ WITH bizible AS (
       bizible.bizible_form_url,
       bizible.bizible_ad_campaign_name,
       bizible.bizible_marketing_channel_path,
-       CASE
+      CASE
         WHEN dim_parent_campaign_id = '7014M000001dowZQAQ' -- based on issue https://gitlab.com/gitlab-com/marketing/marketing-strategy-performance/-/issues/246
           OR (bizible_medium = 'sponsorship'
           AND bizible_touchpoint_source IN ('issa','stackoverflow','securityweekly-appsec'))
