@@ -7,7 +7,6 @@ WITH gitlab_dotcom_issue_severity_source AS (
 
     SELECT * FROM {{ ref('gitlab_dotcom_issuable_severities_source')}}
 
-)
 
 ), renamed AS (
   
