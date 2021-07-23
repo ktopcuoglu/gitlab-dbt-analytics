@@ -211,8 +211,8 @@ sources:
         identifier: gitlab_db_merge_requests
       - name: merge_requests_closing_issues
         identifier: gitlab_db_merge_requests_closing_issues
-      - name: merge_requests_reviewers
-        identifier: gitlab_db_merge_requests_reviewers
+      - name: merge_request_reviewers
+        identifier: gitlab_db_merge_request_reviewers
       - name: milestones
         identifier: gitlab_db_milestones
       - name: namespace_root_storage_statistics
