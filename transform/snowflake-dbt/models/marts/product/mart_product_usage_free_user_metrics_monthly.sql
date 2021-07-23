@@ -17,6 +17,7 @@
       free_user_metrics.uuid,
       free_user_metrics.hostname,
       free_user_metrics.delivery_type,
+      free_user_metrics.cleaned_version,
       {{ get_keyed_nulls('crm_accounts.dim_crm_account_id') }}                      AS dim_crm_account_id,
       crm_account_name,
       parent_crm_account_name,
@@ -111,7 +112,8 @@
       free_user_metrics.epics_usage_28_days_user,
       free_user_metrics.ci_templates_usage_28_days_event,
       free_user_metrics.project_management_issue_milestone_changed_28_days_user,
-      free_user_metrics.project_management_issue_iteration_changed_28_days_user
+      free_user_metrics.project_management_issue_iteration_changed_28_days_user,
+      free_user_metrics.is_latest_data
     FROM free_user_metrics
     LEFT JOIN crm_accounts
       ON free_user_metrics.dim_crm_account_id = crm_accounts.dim_crm_account_id
@@ -127,6 +129,7 @@
         'uuid',
         'hostname',
         'delivery_type',
+        'cleaned_version',
         'dim_crm_account_id',
         'crm_account_name',
         'parent_crm_account_name',
@@ -219,13 +222,14 @@
         'ci_templates_usage_28_days_event',
         'project_management_issue_milestone_changed_28_days_user',
         'project_management_issue_iteration_changed_28_days_user',
+        'free_user_metrics'
     ]
 ) }}
 
 {{ dbt_audit(
     cte_ref="final",
     created_by="@ischweickartDD",
-    updated_by="@snalamaru",
+    updated_by="@ischweickartDD",
     created_date="2021-06-14",
-    updated_date="2021-06-14"
+    updated_date="2021-07-23"
 ) }}

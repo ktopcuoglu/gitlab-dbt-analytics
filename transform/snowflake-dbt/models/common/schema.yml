@@ -1392,6 +1392,8 @@ models:
       - name: hostname
       - name: delivery_type
         description: Indicated if the product usage came from a SaaS or Self-Managed user.
+      - name: cleaned_version
+        description: Version of GitLab running on the instance
       - name: dim_crm_account_id
         description: ID of the CRM account associated with the free trial.
       - name: ping_date
@@ -1572,6 +1574,8 @@ models:
         description: Monthly count of MAU changing an issue’s milestone ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#redis_hll_countersissues_editg_project_management_issue_milestone_changed_monthly))
       - name: project_management_issue_iteration_changed_28_days_user
         description: Monthly count of MAU changing an issue’s iteration ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#redis_hll_countersissues_editg_project_management_issue_iteration_changed_monthly))
+      - name: is_latest_data
+        description: Flags the row with the most recently received data from Usage Ping
 
   - name: fct_product_usage_wave_1_3_metrics_monthly
     description: '{{ doc("fct_product_usage_wave_1_3_metrics_monthly") }}'
