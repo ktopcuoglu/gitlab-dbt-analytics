@@ -39,7 +39,6 @@
         ON gitlab_dotcom_issues_source.dim_issue_id = prep_label_links.dim_issue_id
     LEFT JOIN prep_labels
         ON prep_label_links.dim_label_id = prep_labels.dim_label_id
-)
 
 ), renamed AS (
   
