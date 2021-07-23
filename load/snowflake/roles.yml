@@ -3694,10 +3694,8 @@ users:
             - fkurniadi
 
     - fstein:
-        can_login: yes
-        member_of:
-            - fstein
-            - securityadmin
+        can_login: no
+        member_of: []
 
     - gainsight:
         can_login: yes
