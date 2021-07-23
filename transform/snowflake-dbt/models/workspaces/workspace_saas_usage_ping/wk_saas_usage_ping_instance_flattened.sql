@@ -14,7 +14,7 @@
       saas_usage_ping_gitlab_dotcom_id,
       ping_date,
       COALESCE(TRY_PARSE_JSON(path)[0]::TEXT, path::TEXT)         AS metric_path,
-      value::INTEGER                                              AS metric_value
+      value::TEXT                                                 AS metric_value
     FROM saas_usage_ping_instance,
     LATERAL FLATTEN(INPUT => run_results,
     RECURSIVE => TRUE) 
