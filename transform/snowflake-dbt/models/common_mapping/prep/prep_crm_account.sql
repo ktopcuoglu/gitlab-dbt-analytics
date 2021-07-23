@@ -110,6 +110,7 @@ WITH map_merged_crm_account AS (
     sfdc_account.record_type_id                   AS record_type_id,
     sfdc_account.federal_account                  AS federal_account,
     jihu_accounts.is_jihu_account                 AS is_jihu_account,
+    sfdc_accounts.carr_this_account,
     sfdc_account.potential_arr_lam,
     sfdc_account.fy22_new_logo_target_list,
     sfdc_account.is_first_order_available,
