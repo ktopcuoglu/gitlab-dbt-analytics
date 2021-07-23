@@ -433,8 +433,8 @@ tables:
       , override
       FROM members     
   merge_request_reviewers:
-    dbt_source_model: true
     dbt_snapshots: true
+    dbt_source_model: true
     export_schema: 'gitlab_com'
     export_table: 'merge_request_reviewers'
     export_table_primary_key: 'id'
