@@ -134,17 +134,17 @@ models:
         tests:
           - not_null
         tags: ["tdf", "common", "gainsight"]
-      - name: subscription_name
-      - name: subscription_name_slugify
-      - name: subscription_status
-      - name: subscription_start_date
-      - name: subscription_end_date
+      - name: dim_product_tier_id
+      - name: dim_product_detail_id
+      - name: product_id
+      - name: product_rate_plan_id
       - name: rate_plan_id
         description: Primary key from `zuora_rate_plan_source`
-      - name: dim_product_detail_id
-      - name: product_rate_plan_id
-      - name: product_id
-      - name: dim_product_tier_id
+      - name: subscription_name
+      - name: subscription_name_slugify
+      - name: subscription_start_date
+      - name: subscription_end_date
+      - name: subscription_status
       - name: product_rate_plan_charge_name
       - name: product_delivery_type
 
