@@ -2734,7 +2734,7 @@ roles:
                     - laddula_prep.*.*
                     - laddula_prod.*.*
 
-   - lcanoy:
+    - lcanoy:
         member_of:
             - reporter
             - analyst_marketing
