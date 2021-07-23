@@ -32,6 +32,7 @@ WITH base AS (
       parent_crm_account_tsp_area                 AS parent_crm_account_tsp_area,
       parent_crm_account_gtm_strategy             AS parent_crm_account_gtm_strategy,
       parent_crm_account_focus_account            AS parent_crm_account_focus_account,
+      crm_account_owner_user_segment              AS crm_account_owner_user_segment,
       CAST(partners_signed_contract_date AS date) AS partners_signed_contract_date,
       record_type_id                              AS record_type_id,
       federal_account                             AS federal_account,
@@ -49,14 +50,15 @@ WITH base AS (
       health_score                                AS health_score,
       health_number                               AS health_number,
       health_score_color                          AS health_score_color,
-      partner_account_iban_number                 AS partner_account_iban_number
+      partner_account_iban_number                 AS partner_account_iban_number,
+      crm_account_created_date                    AS crm_account_created_date 
     FROM base
 )
 
 {{ dbt_audit(
     cte_ref="final",
     created_by="@msendal",
-    updated_by="@jpeguero",
+    updated_by="@snalamaru",
     created_date="2020-06-01",
-    updated_date="2021-06-22"
+    updated_date="2021-07-21"
 ) }}

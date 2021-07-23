@@ -53,6 +53,8 @@ models:
       - name: dim_usage_ping_id
       - name: instance_type
         description: Type of the instance
+      - name: cleaned_version
+        description: Version of GitLab running on the instance
       - name: country_name
       - name: iso_2_country_code
       - name: iso_3_country_code

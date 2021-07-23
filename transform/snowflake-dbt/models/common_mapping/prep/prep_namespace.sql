@@ -88,7 +88,9 @@
       COALESCE(namespace_lineage.ultimate_parent_id,
                namespaces.parent_id,
                namespaces.dim_namespace_id)                                           AS ultimate_parent_namespace_id,
-      IFF(namespaces.dim_namespace_id = ultimate_parent_namespace_id,
+      IFF(namespaces.dim_namespace_id = COALESCE(namespace_lineage.ultimate_parent_id,
+                                                 namespaces.parent_id,
+                                                 namespaces.dim_namespace_id),
           TRUE, FALSE)                                                                AS namespace_is_ultimate_parent,
       IFF(map_namespace_internal.ultimate_parent_namespace_id IS NOT NULL,
           TRUE, FALSE)                                                                AS namespace_is_internal,
@@ -171,5 +173,5 @@
     created_by="@ischweickartDD",
     updated_by="@ischweickartDD",
     created_date="2021-01-14",
-    updated_date="2021-06-17"
+    updated_date="2021-07-21"
 ) }}
