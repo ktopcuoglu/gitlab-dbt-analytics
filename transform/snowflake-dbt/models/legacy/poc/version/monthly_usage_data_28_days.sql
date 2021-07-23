@@ -7,7 +7,7 @@
 WITH data AS ( 
   
     SELECT * 
-    FROM {{ ref('prep_usage_data_28_days_flattened')}}
+    FROM {{ ref('poc_prep_usage_data_28_days_flattened')}}
     WHERE typeof(metric_value) IN ('INTEGER', 'DECIMAL')
 
     {% if is_incremental() %}

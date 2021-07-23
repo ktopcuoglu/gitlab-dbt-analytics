@@ -850,3 +850,15 @@ LIMIT 100
 ```
 
 {% enddocs %}
+
+{% docs fct_monthly_usage_data %}
+
+Union of models `prep_monthly_usage_data_28_days` and `prep_monthly_usage_data_all_time`
+
+{% enddocs %}
+
+{% docs fct_weekly_usage_data_7_days %}
+
+Union of models `prep_monthly_usage_data_28_days` and `prep_monthly_usage_data_all_time`
+
+{% enddocs %}
