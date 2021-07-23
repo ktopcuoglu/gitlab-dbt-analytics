@@ -94,7 +94,7 @@
       agg_labels.labels
     FROM gitlab_dotcom_issues_source
     LEFT JOIN agg_labels
-        ON gitlab_dotcom_issues_source.dim_issue_id = agg_labels.dim_issue_id
+        ON gitlab_dotcom_issues_source.issue_id = agg_labels.dim_issue_id
     LEFT JOIN prep_project 
       ON gitlab_dotcom_issues_source.project_id = prep_project.dim_project_id
     LEFT JOIN dim_namespace_plan_hist 
