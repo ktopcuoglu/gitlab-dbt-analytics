@@ -36,6 +36,7 @@ WITH base AS (
       record_type_id                              AS record_type_id,
       federal_account                             AS federal_account,
       is_jihu_account                             AS is_jihu_account,
+      carr_this_account                           AS carr_this_account,
       potential_arr_lam                           AS potential_arr_lam,
       fy22_new_logo_target_list                   AS fy22_new_logo_target_list,
       is_first_order_available                    AS is_first_order_available,
