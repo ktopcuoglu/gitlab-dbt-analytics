@@ -222,7 +222,7 @@
         'ci_templates_usage_28_days_event',
         'project_management_issue_milestone_changed_28_days_user',
         'project_management_issue_iteration_changed_28_days_user',
-        'free_user_metrics'
+        'is_latest_data'
     ]
 ) }}
 

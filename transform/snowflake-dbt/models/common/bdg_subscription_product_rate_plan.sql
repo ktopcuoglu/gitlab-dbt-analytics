@@ -25,7 +25,7 @@
       subscriptions.subscription_name_slugify,
       subscriptions.subscription_start_date,
       subscriptions.subscription_end_date,
-      subscriptions.subscription_status
+      subscriptions.subscription_status,
       product_details.product_rate_plan_charge_name,    
       product_details.product_delivery_type
     FROM subscriptions
