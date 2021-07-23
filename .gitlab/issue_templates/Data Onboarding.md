@@ -280,8 +280,7 @@ datalab connect your_gitlab_username-datalab-project --no-user-checking
 - [ ] Ensure you've setup your dbt for running locally as mentioned above. The ./.dbt/profiles.yml file is a pre-requisite for this process. If you do not want dbt you can manually create the ./.dbt/profiles.yml file based off the [sample profile](https://gitlab.com/gitlab-data/analytics/-/blob/master/admin/sample_profiles.yml)
 - [ ] Clone the DataScience repo: 
     ``` git clone https://gitlab.com/gitlab-data/data-science```
-- [ ] Run `make jupyter` from the root directory of the repository and confirm that JupyterLab has now spun up on successfully. 
-- [ ] Run through the notebook at `./notebooks/templates/auth_example.ipynb` to confirm that you have configured everything successfully.  
+- [ ] See the readme provided in that repo for further install instructions 
 
 ## GitLab.com (Product)
 This data comes from our GitLab.com SaaS product.
