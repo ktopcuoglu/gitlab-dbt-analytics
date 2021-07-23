@@ -90,7 +90,7 @@
         WHEN gitlab_dotcom_issue_severity_source.severity = 1 THEN 'S4'
         WHEN ARRAY_CONTAINS('severity::4'::variant, agg_labels.labels) OR ARRAY_CONTAINS('s4'::variant, agg_labels.labels) THEN 'S4'
         ELSE NULL
-      END AS severity
+      END AS severity,
       agg_labels.labels
     FROM gitlab_dotcom_issues_source
     LEFT JOIN agg_labels
