@@ -1,17 +1,6 @@
 version: 2
 
 models:
-  - name: wk_map_usage_ping_subscription_id
-    description: '{{ doc("wk_map_usage_ping_subscription_id") }}'
-    columns:
-      - name: dim_subscription_id
-        description: Unique ID of a subscription. Used to join with `dim_subscription`
-        tests:
-          - not_null
-      - name: dim_usage_ping_id
-        tests:
-          - not_null
-          - unique
   - name: wk_self_managed_spo
     description: Workspace model that builds a MVC for Self-Managed SPO and SPU KPIs.
     columns:
@@ -26,6 +15,8 @@ models:
           - not_null
           - accepted_values:
               values: ['Group','Individual']
+      - name: active_stage_count
+        description: number of active stages for a given organization in a given month
 
 
   - name: wk_saas_spo
@@ -52,6 +43,8 @@ models:
       - name: is_paid_product_tier
         tests:
           - not_null
+      - name: active_stage_count
+        description: number of active stages for a given organization in a given month
 
   - name: wk_usage_ping_geo_node_usage
     description: Extract and flatten data from the geo nodes

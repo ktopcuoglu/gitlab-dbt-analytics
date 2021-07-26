@@ -22,3 +22,9 @@ This table includes a Flag to indicate if the Detection rule passed or failed ba
 
 {% enddocs %}
 
+{% docs data_detection_scorecard %}
+
+A table that holds the name along with the purpose and release information of all the available Scorcards for different subject areas. 
+
+{% enddocs %}
+
