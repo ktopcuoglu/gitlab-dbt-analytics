@@ -11,6 +11,7 @@ WITH source AS (
       zuora_subscription_name::VARCHAR   AS zuora_subscription_name,
       order_id::NUMBER                   AS order_id,
       report_timestamp::TIMESTAMP        AS report_timestamp,
+      report_timestamp::DATE             AS report_date,
       license_starts_on::DATE            AS license_starts_on,
       created_at::TIMESTAMP              AS created_at,
       updated_at::TIMESTAMP              AS updated_at,
