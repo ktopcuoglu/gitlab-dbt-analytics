@@ -2,7 +2,7 @@ version: 2
 
 models:
   - name: mart_monthly_service_ping_product_usage
-    description: '{{ doc("mart_monthly_service_ping_product_usage ") }}'
+    description: '{{ doc("mart_monthly_service_ping_product_usage") }}'
     columns:
       - name: primary_key
         tests:
