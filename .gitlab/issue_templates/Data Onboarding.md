@@ -112,15 +112,16 @@ rm ~/onboarding_script.zsh
 </details>
 
 <details>
-
 <summary>For Data Scientists</summary>
-<details>
-* [ ] Make sure you have run through all of the analysts steps mentioned above, along with the getting setup with dbt section below
-* [ ] Install docker & docker-compose. The easiest way to do this for Mac now is to use the desktop install from [Docker](https://www.docker.com/products/docker-desktop).
-* [ ] Run through the Jupyter setup section below 
 
+-  [ ] Make sure you have run through all of the analysts steps mentioned above, along with the getting setup with dbt section below
+
+-  [ ] Install docker & docker-compose. The easiest way to do this for Mac now is to use the desktop install from [Docker](https://www.docker.com/products/docker-desktop).
+
+-  [ ] Run through the Jupyter setup section below 
 </details>
 
+<details>
 <summary>For Data Engineers</summary>
 
 Take a look at https://gitlab.com/gitlab-data/analytics/-/blob/master/admin/onboarding_script.zsh and feel free to use what is in there that makes sense. This script is activily maintained in the system so try to use this. 
@@ -189,9 +190,10 @@ On [the Data team handbook page](https://about.gitlab.com/handbook/business-ops/
 
 ## Connecting to Snowflake
 - [ ] Login with the credentials that your manager created following the instructions at https://about.gitlab.com/handbook/business-ops/data-team/platform/#warehouse-access. Please note that currently Snowflake is accessed through Okta, however you still need to raise access request to get credentials, as you will need to restart your password and update dbt profile with Snowflake credentials. Access request should be raised the same way as it was for Google Cloud Platform credentials.
-- [ ] Snowflake has a Web UI for querying the data warehouse that can be found under [Worksheets](https://gitlab.snowflakecomputing.com/console#/internal/worksheet). Familiarize yourself with it. Change your password and update your role, warehouse, and database to the same info you're instructed to put in your dbt profile (Ask your manager if this is confusing). The schema does not matter because your query will reference the schema.
-- [ ] Run `alter user "your_user" set default_role = "your_role";` to set the UI default Role to your appropriate role instead of `PUBLIC`
-   - [ ] We STRONGLY recommend using the UI, but if you must download a SQL development tool, you will need one that is compatible with Snowflake, such as [SQLWorkbench/J](http://sql-workbench.net) or [DataGrip](https://www.jetbrains.com/datagrip/). If you're interested in DataGrip, follow the [instructions to get a JetBrains license in the handbook](https://about.gitlab.com/handbook/tools-and-tips/#jetbrains). If using DataGrip, you may need to download the [Driver](https://docs.snowflake.net/manuals/user-guide/jdbc-download.html#downloading-the-driver). This template may be useful as you're configuring the DataGrip connection to Snowflake `jdbc:snowflake://{account:param}.snowflakecomputing.com/?{password}[&db={Database:param}][&warehouse={Warehouse:param}][&role={Role:param}]` We recommend not setting your schema so you can select from the many options. If you do use Data Grip, please set up the following configuration:
+- [ ] Snowflake has a Web UI for querying the data warehouse that can be found under [Worksheets](https://gitlab.snowflakecomputing.com/console#/internal/worksheet). Familiarize yourself with it. Change your password and update your role, warehouse, and database to the same info you're instructed to put in your dbt profile (Ask your manager if this is confusing or check out [roles.yml](https://gitlab.com/gitlab-data/analytics/blob/master/load/snowflake/roles.yml) to see which roles, warehouses, and databases you've been assigned). The schema does not matter because your query will reference the schema.
+- [ ] Run `alter user "your_user" set default_role = "your_role";` to set the UI default Role to your appropriate role instead of `PUBLIC`. (E.g. `alter user "KDIETZ" set default_role = "KDIETZ";`)
+- [ ] You can test your Snowflake connection in the UI by first running selecting which warehouse to use (e.g. `use warehouse ANALYST_XS;`), clicking the "play" button, and then querying a database you have access to (e.g. `select * from "PROD"."COMMON"."DIM_CRM_PERSON" limit 10;`) 
+- [ ] We STRONGLY recommend using the UI, but if you must download a SQL development tool, you will need one that is compatible with Snowflake, such as [SQLWorkbench/J](http://sql-workbench.net) or [DataGrip](https://www.jetbrains.com/datagrip/). If you're interested in DataGrip, follow the [instructions to get a JetBrains license in the handbook](https://about.gitlab.com/handbook/tools-and-tips/#jetbrains). If using DataGrip, you may need to download the [Driver](https://docs.snowflake.net/manuals/user-guide/jdbc-download.html#downloading-the-driver). This template may be useful as you're configuring the DataGrip connection to Snowflake `jdbc:snowflake://{account:param}.snowflakecomputing.com/?{password}[&db={Database:param}][&warehouse={Warehouse:param}][&role={Role:param}]` We recommend not setting your schema so you can select from the many options. If you do use Data Grip, please set up the following configuration:
 
 
 #### Snowflake SQL
@@ -229,59 +231,47 @@ Snowflake SQL is probably not that different from the dialects of SQL you're alr
 - To get into the `dbt-image` docker container, go to the analytics project (which you can get to by typing `jump analytics` from anywhere on your Mac) and run the command `make dbt-image`. This will spin up our docker container that contains `dbt` and give you a bash shell within the `analytics/transform/snowflake-dbt` directory.
 - All changes made to the files within the `analytics` repo will automatically be visible in the docker container! This container is only used to run `dbt` commands themselves, not to write SQL or edit `dbt` files in general (though technically it could be, as VIM is available within the container)
 - In case you encounter any error, ensure that docker is up and running. This can be done by running `docker run hello-world`. This should print a "Hello" from Docker message.  If it does not print the "hello" message, then docker needs to be launched. On a Mac, docker is launched by running the command `open /Applications/Docker.app`.
-- [ ] Add Google credentials to your dbt profile path. To do that run command `vi ~/.zshrc`. You are now in one of the files that has been created as part of onboarding script. Now click `i` which stands for insert and click down arrow to get to third line. Now paste following code, but remember that *"user_name_on_mac"* needs to be replaced with computer name that is usually your first and last name without spaces written in lower cases. For example, if your name is Britney Spears then your user name is probably britneyspears. 
 
-GOOGLE_APPLICATION_CREDENTIALS=/Users/user_name_on_mac/Documents/gitlab-analysis-d35b80a0ae11.json export DBT_PROFILE_PATH=/Users/user_name_on_mac/.dbt/profiles.yml
-
-Save and finish above updated by clicking `esc` and writing `:wq!`. Letter "w" stands for write and saves changes that you made to the file. Letter "q" stands for "quit" and closes the file you just edited. 
 
 - [ ] Setup command "code" in VS studio by using `command` + `shift` + `p` in VS studio and choose "Install 'code' command in PATH command." This will allow you to use word `code` in terminal which will open indicated file directly in Visual Studio. This step is essential to complete next step.
 - [ ] From a different terminal window run `code ~/.dbt/profiles.yml` and update this file with your info.  The schema should be something like `yourname_scratch`. See [sample profiles](https://gitlab.com/gitlab-data/analytics/-/blob/master/admin/sample_profiles.yml) for an example.
+    - For the `password` field, you will need to request a Snowflake password reset from the Data Engineering team. Your Okta SSO password will not work for this. You can request this by commenting on the snowflake request access issue created for you and tagging the Data Engineering team. After you reset your password, use that password in the `profiles.yml` password field
+    - Your `role` maybe the same as your `database`.
     - [ ] __Data Engineers__: update the following paramaters in the `~/.dbt/profiles.yml`:
         ```
         role: ENGINEER
         warehouse: ENGINEER_XS
         ```
+- Back in your terminal window running the dbt docker image: 
 - [ ] Run `dbt seed` to import the CSV's from the analytics/data into your schema. For dbt to compile this needs to be completed as some of the models have dependencies on the tables which are created by the CSV's.
 - [ ] Run `dbt run --models +staging.sfdc` from within the container to know that your connection has been successful, you are in the correct location, and everything will run smoothly.  For more details on the syntax for how to select and run the models, please refer to this [page](https://docs.getdbt.com/reference/node-selection/syntax#examples).  Afterwards, you can also try running `dbt compile` to ensure that the entire project will compile correctly.
 - [ ] Run `Exit` command to come out of the dbt docker container and test the command `make help` and use it to understand how to use `make dbt-docs` and access it from your local machine.
 - [ ] Here is the [dbt command line cheat sheet](https://about.gitlab.com/handbook/business-ops/data-team/platform/dbt-guide/#command-line-cheat-sheet)
+- Note: When launching dbt you will see `WARNING: The GOOGLE_APPLICATION_CREDENTIALS variable is not set. Defaulting to a blank string.` Unless you are developing on Airflow this is ok and expected. If you require GOOGLE_APPLICATION_CREDENTIALS please follow the steps outlined below in the DataLab section.
 
-## DataLab (Jupyter setup)
+## Optional: Google Cloud Credentials
 
-Data team currently uses DataLab (Jupyter in cloud provided by Google Cloud) to conduct analysis and build models with Python. Follow below steps to get running instance for yourself.
+Data team uses GCP (Google Cloud Platform) as our cloud provider. GCP credentials are needed if you plan on connecting on your local machine to airflow or any CGP service (storage buckets, etc.) . Follow below steps to get running instance for yourself.
 
 - [ ] Raise Access Request (AR) for Google Cloud Credentials. To do that please follow instructions here or create separate issue and copy contents from [here](https://about.gitlab.com/handbook/business-technology/team-member-enablement/onboarding-access-requests/access-requests/) or create separate issue and copy contents from [here](https://gitlab.com/gitlab-com/team-member-epics/access-requests/-/issues/10306#note_622125437). Ensure you update your name and other personal details and project name is ``gitlab-analysis.`` Assign it to your manager.
-- [ ] Raise AR for DataLab setup for ``gitlab-analysis``, similar way as previous step. Assign it to your manager. You can also tag project owners (Dennis van Rooijen, Paul Armstrong or Ved Prakash) if you need help.
-- [ ] Please follow next step after running onboarding template, once you added GOOGLE_APPLICATION_CREDENTIALS path to your .zshrc` file which can be accessed by vi ~/.zshrc``. One of the project owners should send you configuration json file, which is important to add in your google credentials. Follow below steps:
-- [ ] Download the json file provided.
-- [ ] Copy the path  including file_name.
-- [ ] Open terminal and run vi ~/.zshrc
-- [ ] If you already have variable  GOOGLE_APPLICATION_CREDENTIALS  modify its value to the file path and file name. To modify value please click ``I`` on your keyboard which stands for insert - it will allow you to modify content. If you don’t have this variable then use below command:
-
-export GOOGLE_APPLICATION_CREDENTIALS = <File_path>/<file_name>
-
-then :wq! to write and exit file (w stands for write and q stands for quit)
-
+- [ ] Please follow next step after running onboarding template, once you added GOOGLE_APPLICATION_CREDENTIALS path to your .zshrc file which can be accessed by `vi ~/.zshrc``. One of the project owners should send you configuration json file, which is important to add in your google credentials. Follow below steps:
+- [ ] Download the json file provided and move to your home directory (e.g. `/Users/yourusername`)
+- [ ] Open terminal and run the following command, replacing `yourusername` with your actual user name on your computer (type `pwd` into the terminal if you don’t know it — the path should contain your user name) and `filename.json` with you name of the file.
+    - echo export  GOOGLE_APPLICATION_CREDENTIALS=/Users/yourusername/filename.json >> ./.zshrc
+    - If you already have the variable  GOOGLE_APPLICATION_CREDENTIALS  modify its value to the file path and file name instead of adding a new one. 
 - [ ] Refresh this file by sourcing it back, by running command in terminal: ``source ~/.zshrc``.
-- [ ] After approved AR install and initialise Google Cloud SDK (which stands for software development kit) to which instructions are provided [here](https://cloud.google.com/sdk/docs/install).. After download and installation follow point a and b, especially commands in terminal.
-- [ ] Run ``gcloud components install datalab`` in your terminal
-- [ ] Project owner should provide you name of your Datalab instance, the most likely it will be your_gitlab_handle-datalab-project. If you do not receive it follow up with owners by tagging them in access request issue or texting them directly on slack. Once you have name of your instance connect to DataLab by using datalab connect your_gitlab_username-datalab-project. 
-
-If you receive error
-"The specified Datalab instance was created for your_gitlab_username@gitlab.com, but you are attempting to connect to it as your_gitlab_username@gitlab-analysis.iam.gserviceaccount.com". Then re-run the command as
-datalab connect your_gitlab_username-datalab-project --no-user-checking
-
-- [ ] Open your browser and type localhost:8081. It may take couple minutes to connect, so if nothing comes up refresh website or validate with project owners if your access has been granted properly. You should be all set!
 
 
 ## Jupyter 
 
 - [ ] Ensure you've setup your dbt for running locally as mentioned above. The ./.dbt/profiles.yml file is a pre-requisite for this process. If you do not want dbt you can manually create the ./.dbt/profiles.yml file based off the [sample profile](https://gitlab.com/gitlab-data/analytics/-/blob/master/admin/sample_profiles.yml)
-- [ ] Clone the DataScience repo: 
-    ``` git clone https://gitlab.com/gitlab-data/data-science```
+- [ ] Clone the data-science repo into your repos directory: 
+    ``` git clone git@gitlab.com:gitlab-data/data-science.git```
 - [ ] Run `make jupyter` from the root directory of the repository and confirm that JupyterLab has now spun up on successfully. 
+- [ ] To connect to jupyter go to your web browser and copy paste the url and token found in terminal once the docker image creates. 
+    - It should look something like `http://127.0.0.1:8888/lab?token=5c7f7da79f4a0968501f087f3c79ee4dd8bd7a63e0f088a8`. The token will change each time you spin up the docker container.
 - [ ] Run through the notebook at `./notebooks/templates/auth_example.ipynb` to confirm that you have configured everything successfully.  
+- [ ] Check out the [data-science repo](https://gitlab.com/gitlab-data/data-science) for additional information, features, or to contribute to the image.  
 
 ## GitLab.com (Product)
 This data comes from our GitLab.com SaaS product.
@@ -290,7 +280,6 @@ This data comes from our GitLab.com SaaS product.
 - [ ] If you ever want to know what queries are going on in the background while you're using GitLab.com, enable the [Performance Bar](https://docs.gitlab.com/ee/administration/monitoring/performance/performance_bar.html) and click on the numbers to the left of `pg`. This is useful for learning how the gitlab.com schema works. The performance bar can be enable by pressing `p + b` ([Shortcut Docs](https://docs.gitlab.com/ee/user/shortcuts.html)).
 
 ## Marketo
-- [ ] [Coming soon]
 - [ ] For access to Marketo, your manager will need to create an [Access Request](https://gitlab.com/gitlab-com/access-requests/issues/new?issuable_template=New%20Access%20Request). Please confirm with your manager that this has been done.
 
 ## Netsuite (Accounting)
@@ -376,9 +365,6 @@ Data triagers are the first responders to requests and problems for the Data tea
 - [ ] [Company Call Agenda](https://docs.google.com/document/d/1JiLWsTOm0yprPVIW9W-hM4iUsRxkBt_1bpm3VXV4Muc/edit)
 - [ ] [DataOps Meeting Agenda](https://docs.google.com/document/d/1qCfpRRKQfSU3VplI45huE266CT0nB82levb3lF9xeUs/edit)
 - [ ] Optional, for more information on Finance KPIs, you can watch this working session between the Manager, Financial Planning and Analysis and Data Analyst, Finance: [Finance KPIs](https://www.youtube.com/watch?v=dmdilBQb9PY&feature=youtu.be)
-- [ ] Watch @tlapiana's [talk at DataEngConf](https://www.youtube.com/watch?v=eu623QBwakc) that gives a phenomenal overview of how the team works.
-- [ ] Watch [this great talk](https://www.youtube.com/watch?v=prcz0ubTAAg) on what Analytics is
-- [ ] If relevant, watch ["The State of [Product] Data"](https://www.youtube.com/watch?v=eNLkj3Ho2bk&feature=youtu.be) from Eli at the Growth Fastboot. (You'll need to be logged into GitLab Unfiltered.)
 
 ## Suggested Bookmarks None of these are required, but bookmarking these links will make life at GitLab much easier. Some of these are not hyperlinked for security concerns.
 - [ ] 1:1 with Manager Agenda
