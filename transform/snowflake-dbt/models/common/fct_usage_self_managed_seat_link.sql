@@ -1,13 +1,13 @@
 WITH seat_links AS (
 
     SELECT *,
-      DATE_TRUNC('month', report_date)                              AS snapshot_month
+      DATE_TRUNC('month', report_timestamp)                              AS snapshot_month
     FROM {{ ref('prep_usage_self_managed_seat_link') }}
     QUALIFY ROW_NUMBER() OVER (
       PARTITION BY
         order_subscription_id,
         snapshot_month
-      ORDER BY report_date DESC
+      ORDER BY report_timestamp DESC
       ) = 1
 
 ), final AS (
