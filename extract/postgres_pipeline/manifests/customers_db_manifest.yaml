@@ -77,7 +77,16 @@ tables:
     export_table_primary_key: zuora_subscription_id
     import_db: CUSTOMERS_DB
     import_query: |-
-      SELECT *
+      SELECT zuora_subscription_id
+      , created_at
+      , updated_at
+      , order_id
+      , active_user_count
+      , max_historical_user_count
+      , license_user_count
+      , report_timestamp
+      , license_starts_on
+      , zuora_subscription_name
       FROM license_seat_links
   orders:
     advanced_metadata: true
