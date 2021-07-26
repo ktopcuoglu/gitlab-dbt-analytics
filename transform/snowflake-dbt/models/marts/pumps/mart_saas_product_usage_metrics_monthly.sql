@@ -123,7 +123,8 @@
       monthly_metrics.project_management_issue_iteration_changed_28_days_user,
       -- Data Quality Flags
       monthly_metrics.is_missing_paid_seats,
-      monthly_metrics.is_data_in_subscription_month
+      monthly_metrics.is_data_in_subscription_month,
+      monthly_metrics.is_latest_data
     FROM monthly_metrics
     LEFT JOIN billing_accounts
       ON monthly_metrics.dim_billing_account_id = billing_accounts.dim_billing_account_id
@@ -139,5 +140,5 @@
     created_by="@ischweickartDD",
     updated_by="@ischweickartDD",
     created_date="2021-05-26",
-    updated_date="2021-07-06"
+    updated_date="2021-07-21"
 ) }}
