@@ -4,17 +4,17 @@ WITH seat_links AS (
       order_id,
       zuora_subscription_id                                                 AS order_subscription_id,
       TRIM(zuora_subscription_id)                                           AS dim_subscription_id,
-      report_date,
+      report_timestamp,
       active_user_count,
       license_user_count,
       max_historical_user_count,
       IFF(ROW_NUMBER() OVER (
             PARTITION BY order_subscription_id
-            ORDER BY report_date DESC) = 1,
+            ORDER BY report_timestamp DESC) = 1,
           TRUE, FALSE)                                                      AS is_last_seat_link_report_per_subscription,
       IFF(ROW_NUMBER() OVER (
             PARTITION BY order_id
-            ORDER BY report_date DESC) = 1,
+            ORDER BY report_timestamp DESC) = 1,
           TRUE, FALSE)                                                      AS is_last_seat_link_report_per_order
     FROM {{ ref('customers_db_license_seat_links_source') }}
 
@@ -50,7 +50,7 @@ WITH seat_links AS (
       seat_links.active_user_count                                          AS active_user_count,
       seat_links.license_user_count,
       seat_links.max_historical_user_count                                  AS max_historical_user_count,
-      seat_links.report_date,
+      seat_links.report_timestamp,
       seat_links.is_last_seat_link_report_per_subscription,
       seat_links.is_last_seat_link_report_per_order,
       IFF(IFNULL(seat_links.order_subscription_id, '') = subscriptions.dim_subscription_id,
@@ -70,7 +70,7 @@ WITH seat_links AS (
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@ischweickartDD",
-    updated_by="@ischweickartDD",
+    updated_by="@paul_armstrong",
     created_date="2021-02-02",
-    updated_date="2021-02-16"
+    updated_date="2021-07-26"
 ) }}
