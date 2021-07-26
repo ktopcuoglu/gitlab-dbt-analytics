@@ -81,13 +81,13 @@
       gitlab_dotcom_issues_source.promoted_to_epic_id,
       gitlab_dotcom_issues_source.issue_type,
       CASE 
-        WHEN gitlab_dotcom_issue_severity_source.severity = 4 THEN 'S1'
+        WHEN prep_issue_severity.severity = 4 THEN 'S1'
         WHEN ARRAY_CONTAINS('severity::1'::variant, agg_labels.labels) OR ARRAY_CONTAINS('s1'::variant, agg_labels.labels) THEN 'S1'
-        WHEN gitlab_dotcom_issue_severity_source.severity = 3 THEN 'S2'
+        WHEN prep_issue_severity.severity = 3 THEN 'S2'
         WHEN ARRAY_CONTAINS('severity::2'::variant, agg_labels.labels) OR ARRAY_CONTAINS('s2'::variant, agg_labels.labels) THEN 'S2'
-        WHEN gitlab_dotcom_issue_severity_source.severity = 2 THEN 'S3'
+        WHEN prep_issue_severity.severity = 2 THEN 'S3'
         WHEN ARRAY_CONTAINS('severity::3'::variant, agg_labels.labels) OR ARRAY_CONTAINS('s3'::variant, agg_labels.labels) THEN 'S3'
-        WHEN gitlab_dotcom_issue_severity_source.severity = 1 THEN 'S4'
+        WHEN prep_issue_severity.severity = 1 THEN 'S4'
         WHEN ARRAY_CONTAINS('severity::4'::variant, agg_labels.labels) OR ARRAY_CONTAINS('s4'::variant, agg_labels.labels) THEN 'S4'
         ELSE NULL
       END AS severity,
