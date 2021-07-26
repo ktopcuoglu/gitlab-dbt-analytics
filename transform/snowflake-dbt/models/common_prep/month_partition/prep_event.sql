@@ -60,6 +60,14 @@
     "primary_key": "dim_ci_pipeline_id"
   },
   {
+    "event_name": "protect_ci_build_creation",
+    "source_cte_name": "protect_ci_build",
+    "user_column_name": "dim_user_id",
+    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
+    "project_column_name": "dim_project_id",
+    "primary_key": "dim_ci_build_id"
+  },
+  {
     "event_name": "secure_ci_build_creation",
     "source_cte_name": "secure_ci_build",
     "user_column_name": "dim_user_id",
@@ -96,11 +104,25 @@
     FROM prep_note
     WHERE noteable_type = 'MergeRequest'
 
+), protect_ci_build AS (
+
+    SELECT *
+    FROM prep_ci_build
+    WHERE secure_ci_build_type IN ('container_scanning')
+    
 ), secure_ci_build AS (
 
     SELECT *
     FROM prep_ci_build
-    WHERE secure_ci_build_type IS NOT NULL
+    WHERE secure_ci_build_type IN ('api_fuzzing',
+                                    'dast',
+                                    'dependency_scanning',
+                                    'license_management',
+                                    'license_scanning',
+                                    'sast',
+                                    'secret_detection'
+                                    )
+
     
 ), data AS (
 
