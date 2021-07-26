@@ -149,7 +149,7 @@ models:
         tests:
             - not_null
 
-    - name: mart_monthly_product_usage
+  - name: mart_monthly_product_usage
     description: '{{ doc("mart_monthly_product_usage") }}'
     columns:
       - name: primary_key
