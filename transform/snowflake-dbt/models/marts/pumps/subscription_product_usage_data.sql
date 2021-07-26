@@ -78,7 +78,7 @@ WITH customers_db_license_seat_links AS (
   
     SELECT *
     FROM customers_db_license_seat_links
-    QUALIFY ROW_NUMBER() OVER (PARTITION BY zuora_subscription_name ORDER BY report_date DESC) = 1
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY zuora_subscription_name ORDER BY report_timestamp DESC) = 1
   
 ), self_managed AS (
   
@@ -87,7 +87,7 @@ WITH customers_db_license_seat_links AS (
       zuora_minus_exceptions.original_id,
       zuora_minus_exceptions.subscription_id,
       zuora_minus_exceptions.subscription_status,
-      seat_link.report_date,
+      seat_link.report_timestamp,
       seat_link.active_user_count,
       seat_link.max_historical_user_count,
       seat_link.license_user_count
