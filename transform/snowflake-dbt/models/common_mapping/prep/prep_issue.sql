@@ -32,7 +32,7 @@
 ), agg_labels AS (
 
     SELECT 
-      gitlab_dotcom_issues_source.dim_issue_id,
+      gitlab_dotcom_issues_source.issue_id                                                AS dim_issue_id,
       ARRAY_AGG(LOWER(labels.label_title)) WITHIN GROUP (ORDER BY labels.label_title ASC) AS labels
     FROM gitlab_dotcom_issues_source
     LEFT JOIN prep_label_links
