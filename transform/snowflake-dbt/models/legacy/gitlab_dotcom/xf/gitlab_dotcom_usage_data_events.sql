@@ -652,6 +652,7 @@
         NULL                                                                                              AS parent_type,
         NULL                                                                                              AS parent_id,
         NULL                                                                                              AS parent_created_at,
+        NULL                                                                                              AS project_is_learn_gitlab,
       {% endif %}
       ultimate_namespace.namespace_is_internal                                                            AS namespace_is_internal,
       {{ event_cte.event_name }}.created_at                                                               AS event_created_at,
