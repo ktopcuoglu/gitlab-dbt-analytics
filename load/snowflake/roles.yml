@@ -568,6 +568,7 @@ roles:
         owns:
             schemas:
                 - raw.bamboohr
+                - raw.demandbase
                 - raw.engineering_extracts
                 - raw.gcp_billing
                 - raw.gitlab_data_yaml
@@ -584,6 +585,7 @@ roles:
                 - raw.version_db
             tables:
                 - raw.bamboohr.*
+                - raw.demandbase.*
                 - raw.engineering_extracts.*
                 - raw.gcp_billing.*
                 - raw.gitlab_data_yaml.*
