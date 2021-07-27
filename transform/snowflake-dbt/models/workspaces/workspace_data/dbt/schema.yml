@@ -7,9 +7,6 @@ models:
         - name: freshness_observed_at
           tests:
             - not_null
-        - name: latest_load_at
-          tests:
-            - not_null
         - name: source_freshness_state
           tests:
             - not_null
