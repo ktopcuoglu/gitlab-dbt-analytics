@@ -1,7 +1,7 @@
 WITH source AS (
 
     SELECT *
-    FROM {{ ref('demandbase_account_keyword_intent_source') }}
+    FROM {{ ref('demandbase_keyword_historical_rollup_source') }}
 
 )
 SELECT *
