@@ -86,7 +86,6 @@ models:
 - name: sheetload_planned_values
 - name: sheetload_procurement_cost_savings
 - name: sheetload_product_maturity_historical
-- name: sheetload_release_blog_posts
 - name: sheetload_rep_quotas
   description: Sales representative quota data
 - name: sheetload_rep_quotas_full_ps_fy2020

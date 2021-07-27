@@ -26,6 +26,7 @@
       monthly_sm_metrics.ping_created_at,
       monthly_sm_metrics.dim_usage_ping_id,
       monthly_sm_metrics.instance_type,
+      monthly_sm_metrics.cleaned_version,
       location_country.country_name,
       location_country.iso_2_country_code,
       location_country.iso_3_country_code,
@@ -126,7 +127,8 @@
       monthly_sm_metrics.epics_usage_28_days_user,
       monthly_sm_metrics.ci_templates_usage_28_days_event,
       monthly_sm_metrics.project_management_issue_milestone_changed_28_days_user,
-      monthly_sm_metrics.project_management_issue_iteration_changed_28_days_user
+      monthly_sm_metrics.project_management_issue_iteration_changed_28_days_user,
+      monthly_sm_metrics.is_latest_data
     FROM monthly_sm_metrics
     LEFT JOIN billing_accounts
       ON monthly_sm_metrics.dim_billing_account_id = billing_accounts.dim_billing_account_id
@@ -141,18 +143,19 @@
       monthly_saas_metrics.snapshot_month,
       monthly_saas_metrics.dim_subscription_id,
       monthly_saas_metrics.dim_namespace_id::VARCHAR                                AS dim_namespace_id,
-      NULL AS uuid,
-      NULL AS hostname,
+      NULL                                                                          AS uuid,
+      NULL                                                                          AS hostname,
       {{ get_keyed_nulls('billing_accounts.dim_billing_account_id') }}              AS dim_billing_account_id,
       {{ get_keyed_nulls('crm_accounts.dim_crm_account_id') }}                      AS dim_crm_account_id,
       monthly_saas_metrics.dim_subscription_id_original,
       monthly_saas_metrics.snapshot_date_id,
       monthly_saas_metrics.ping_created_at,
-      NULL AS dim_usage_ping_id,
-      NULL AS instance_type,
-      NULL AS country_name,
-      NULL AS iso_2_country_code,
-      NULL AS iso_3_country_code,
+      NULL                                                                          AS dim_usage_ping_id,
+      NULL                                                                          AS instance_type,
+      NULL                                                                          AS cleaned_version,
+      NULL                                                                          AS country_name,
+      NULL                                                                          AS iso_2_country_code,
+      NULL                                                                          AS iso_3_country_code,
       'SaaS'                                                                        AS delivery_type,
       -- Wave 1
       monthly_saas_metrics.subscription_seats,
@@ -250,7 +253,8 @@
       monthly_saas_metrics.epics_usage_28_days_user,
       monthly_saas_metrics.ci_templates_usage_28_days_event,
       monthly_saas_metrics.project_management_issue_milestone_changed_28_days_user,
-      monthly_saas_metrics.project_management_issue_iteration_changed_28_days_user
+      monthly_saas_metrics.project_management_issue_iteration_changed_28_days_user,
+      monthly_saas_metrics.is_latest_data
     FROM monthly_saas_metrics
     LEFT JOIN billing_accounts
       ON monthly_saas_metrics.dim_billing_account_id = billing_accounts.dim_billing_account_id
@@ -276,5 +280,5 @@
     created_by="@ischweickartDD",
     updated_by="@ischweickartDD",
     created_date="2021-06-11",
-    updated_date="2021-06-17"
+    updated_date="2021-07-21"
 ) }}

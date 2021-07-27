@@ -33,7 +33,8 @@ WITH map_merged_crm_account AS (
       tsp_region,
       tsp_sub_region,
       tsp_area,
-      gtm_strategy
+      gtm_strategy,
+      created_date
     FROM sfdc_account
     WHERE account_id = ultimate_parent_account_id
 
@@ -52,18 +53,6 @@ WITH map_merged_crm_account AS (
     FROM deleted_accounts a
     LEFT JOIN deleted_accounts b
       ON a.master_record_id = b.account_id
-
-), jihu_accounts AS (
-
-    SELECT
-      account_id,
-      CASE
-        WHEN is_jihu_account = TRUE
-          AND carr_this_account > 0
-            THEN TRUE
-        ELSE FALSE
-      END                                         AS is_jihu_account
-    FROM sfdc_account
 
 ), final AS (
 
@@ -103,6 +92,7 @@ WITH map_merged_crm_account AS (
     ultimate_parent_account.tsp_sub_region        AS parent_crm_account_tsp_sub_region,
     ultimate_parent_account.tsp_area              AS parent_crm_account_tsp_area,
     ultimate_parent_account.gtm_strategy          AS parent_crm_account_gtm_strategy,
+    sfdc_account.account_owner_user_segment       AS crm_account_owner_user_segment,
     CASE
       WHEN LOWER(ultimate_parent_account.gtm_strategy) IN ('account centric', 'account based - net new', 'account based - expand') THEN 'Focus Account'
       ELSE 'Non - Focus Account'
@@ -110,7 +100,8 @@ WITH map_merged_crm_account AS (
     sfdc_account.partners_signed_contract_date    AS partners_signed_contract_date,
     sfdc_account.record_type_id                   AS record_type_id,
     sfdc_account.federal_account                  AS federal_account,
-    jihu_accounts.is_jihu_account                 AS is_jihu_account,
+    sfdc_account.is_jihu_account                  AS is_jihu_account,
+    sfdc_account.carr_this_account,
     sfdc_account.potential_arr_lam,
     sfdc_account.fy22_new_logo_target_list,
     sfdc_account.is_first_order_available,
@@ -122,7 +113,8 @@ WITH map_merged_crm_account AS (
     map_merged_crm_account.dim_crm_account_id               AS merged_to_account_id,
     IFF(sfdc_record_type.record_type_label != 'Channel'
         AND sfdc_account.account_type NOT IN ('Unofficial Reseller','Authorized Reseller','Prospective Partner','Partner','Former Reseller','Reseller','Prospective Reseller'),
-        FALSE, TRUE)                                        AS is_reseller
+        FALSE, TRUE)                                        AS is_reseller,
+    sfdc_account.created_date                      AS crm_account_created_date
   FROM sfdc_account
   LEFT JOIN map_merged_crm_account
     ON sfdc_account.account_id = map_merged_crm_account.sfdc_account_id
@@ -132,15 +124,13 @@ WITH map_merged_crm_account AS (
     ON sfdc_account.technical_account_manager_id = sfdc_users.user_id
   LEFT JOIN sfdc_record_type
     ON sfdc_account.record_type_id = sfdc_record_type.record_type_id
-  LEFT JOIN jihu_accounts
-    ON sfdc_account.account_id = jihu_accounts.account_id
 
 )
 
 {{ dbt_audit(
     cte_ref="final",
     created_by="@msendal",
-    updated_by="@iweeks",
+    updated_by="@snalamaru",
     created_date="2020-06-01",
-    updated_date="2021-06-23"
+    updated_date="2021-07-21"
 ) }}

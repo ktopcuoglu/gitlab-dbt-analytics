@@ -1,7 +1,8 @@
 {{config({
    "schema": "data_quality",
-   "materialized": "table"
-})
+   "materialized": "table",
+   "tags": ["product"]
+ })
 }}
  
  
