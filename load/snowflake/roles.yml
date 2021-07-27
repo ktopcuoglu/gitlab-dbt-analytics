@@ -568,6 +568,7 @@ roles:
         owns:
             schemas:
                 - raw.bamboohr
+                - raw.demandbase
                 - raw.engineering_extracts
                 - raw.gcp_billing
                 - raw.gitlab_data_yaml
@@ -584,6 +585,7 @@ roles:
                 - raw.version_db
             tables:
                 - raw.bamboohr.*
+                - raw.demandbase.*
                 - raw.engineering_extracts.*
                 - raw.gcp_billing.*
                 - raw.gitlab_data_yaml.*
@@ -1052,6 +1054,23 @@ roles:
             tables:
                 read:
                     - prep.sensitive.*
+
+    - demandbase:
+        warehouses:
+            - analyst_xs
+        privileges:
+            databases:
+                read:
+                    - prep
+                    - raw
+            schemas:
+                read:
+                    - prep.demandbase
+                    - raw.demandbase
+            tables:
+                read:
+                    - prep.demandbase.*
+                    - raw.demandbase.*
 
     - discourse:
         privileges:
