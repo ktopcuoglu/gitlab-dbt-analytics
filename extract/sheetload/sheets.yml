@@ -150,7 +150,7 @@ sheets:
   - name: mapping_sdr_sfdc_bamboohr
     owner: '@jpeguero'
     tabs:
-      - mapping_sdr_sfdc_bamboohr        
+      - mapping_sdr_sfdc_bamboohr
   - name: marketing_core_users_from_docs_gitlab_com
     owner: '@rkohnke'
     tabs:
@@ -201,10 +201,6 @@ sheets:
     owner: '@dpeterson1'
     tabs:
       - product_maturity_historical
-  - name: release_blog_posts
-    owner: '@markglenfletcher' 
-    tabs:
-      - release_blog_posts
   - name: rep_quotas
     owner: '@mbenza'
     tabs:

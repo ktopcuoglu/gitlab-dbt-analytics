@@ -85,7 +85,6 @@ sources:
       - name: planned_values
       - name: procurement_cost_savings
       - name: product_maturity_historical
-      - name: release_blog_posts
       - name: rep_quotas
       - name: rep_quotas_full_ps_fy2020
       - name: rfs_support_requests

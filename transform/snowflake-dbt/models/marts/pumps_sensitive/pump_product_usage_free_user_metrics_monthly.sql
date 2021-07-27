@@ -4,6 +4,7 @@
       uuid,
       hostname,
       delivery_type,
+      cleaned_version,
       dim_crm_account_id,
       crm_account_name,
       parent_crm_account_name,
@@ -96,6 +97,7 @@
       ci_templates_usage_28_days_event,
       project_management_issue_milestone_changed_28_days_user,
       project_management_issue_iteration_changed_28_days_user,
+      is_latest_data,
 
       -- METADATA COLUMNS FOR USE IN PUMP (NOT INTEGRATION)
       last_changed
