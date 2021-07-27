@@ -2,7 +2,6 @@ WITH source AS (
 
     SELECT *
     FROM {{ source('customers', 'customers_db_license_seat_links') }}
-    QUALIFY ROW_NUMBER() OVER (PARTITION BY zuora_subscription_id, report_timestamp ORDER BY updated_at DESC) = 1
 
 ), renamed AS (
 
@@ -19,6 +18,7 @@ WITH source AS (
       license_user_count::NUMBER         AS license_user_count,
       max_historical_user_count::NUMBER  AS max_historical_user_count
     FROM source  
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY zuora_subscription_id, report_date ORDER BY updated_at DESC) = 1
 
 )
 
