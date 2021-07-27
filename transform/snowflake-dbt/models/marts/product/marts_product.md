@@ -1,3 +1,9 @@
+{% docs mart_ci_runner_activity %}
+
+Mart table containing quantitative data related to CI runner activity on GitLab.com, combined with associated CI meta data.
+
+{% enddocs %}
+
 {% docs mart_estimated_xmau %}
 
 Data mart to explore SMAU. The report looks at the usage ping sent by instances using GitLab. Then, for each stage, the report looks at the specific metrics/counter which is chosen to represent SMAU values. It then calculates Recorded SMAU.

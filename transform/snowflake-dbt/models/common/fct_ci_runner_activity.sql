@@ -9,7 +9,7 @@
     ('prep_ci_pipeline', 'prep_ci_pipeline'),
     ('prep_ci_stage', 'prep_ci_stage'),
     ('prep_project', 'prep_project'),
-    ('prep_namespace', 'prep_namespace'),
+    ('dim_namespace', 'dim_namespace'),
     ('prep_user', 'prep_user'),
     ('dim_date', 'dim_date')
 ]) }}
@@ -27,8 +27,8 @@
       IFNULL(prep_project.dim_project_id, -1)                 AS dim_project_id,
       IFNULL(prep_user.dim_user_id, -1)                       AS dim_user_id,
       IFNULL(dim_date.date_id, -1)                            AS created_date_id,
-      IFNULL(prep_namespace.dim_namespace_id, -1)             AS dim_namespace_id,
-      IFNULL(prep_namespace.ultimate_parent_namespace_id, -1) AS ultimate_parent_namespace_id,
+      IFNULL(dim_namespace.dim_namespace_id, -1)              AS dim_namespace_id,
+      IFNULL(dim_namespace.ultimate_parent_namespace_id, -1)  AS ultimate_parent_namespace_id,
       prep_ci_build.dim_plan_id,
 
       -- ci_build metrics
@@ -38,7 +38,7 @@
 
       -- ci_runner metrics
       CASE
-        WHEN prep_namespace.namespace_is_internal = TRUE
+        WHEN dim_namespace.namespace_is_internal = TRUE
           THEN TRUE
         WHEN prep_ci_runner.runner_type = 1
           THEN TRUE
@@ -56,8 +56,8 @@
       ON prep_ci_stage.dim_ci_pipeline_id = prep_ci_pipeline.dim_ci_pipeline_id
     LEFT JOIN prep_project
       ON prep_ci_build.dim_project_id = prep_project.dim_project_id
-    LEFT JOIN prep_namespace
-      ON prep_ci_build.dim_namespace_id = prep_namespace.dim_namespace_id
+    LEFT JOIN dim_namespace
+      ON prep_ci_build.dim_namespace_id = dim_namespace.dim_namespace_id
     LEFT JOIN prep_user
       ON prep_ci_build.dim_user_id = prep_user.dim_user_id
     LEFT JOIN dim_date

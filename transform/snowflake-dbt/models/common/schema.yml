@@ -2859,6 +2859,7 @@ models:
       - name: created_at
       - name: updated_at
       - name: ci_runner_description
+      - name: ci_runner_manager
       - name: contacted_at
       - name: is_active
       - name: ci_runner_version
@@ -2869,7 +2870,8 @@ models:
       - name: is_locked
       - name: access_level
       - name: maximum_timeout
-      - name: runner_type
+      - name: ci_runner_type
+      - name: ci_runner_type_summary
       - name: public_projects_minutes_cost_factor
       - name: private_projects_minutes_cost_factor
 
@@ -2924,15 +2926,9 @@ models:
       - name: created_date_id
         description: Foreign key to `dim_date` that shows the ID of the date on which the stage was created.
       - name: ci_build_duration_in_s
-      - name: ci_build_status
-      - name: runner_type_summary
-      - name: runner_manager
-      - name: namespace_is_internal
       - name: is_paid_by_gitlab
       - name: public_projects_minutes_cost_factor
       - name: private_projects_minutes_cost_factor
-      - name: project_visibility_level
-      - name: project_path
 
   - name: dim_merge_request
     description: '{{ doc("dim_merge_request") }}'
