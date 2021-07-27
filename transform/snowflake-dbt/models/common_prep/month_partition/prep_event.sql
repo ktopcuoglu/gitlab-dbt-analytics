@@ -17,7 +17,7 @@
     "user_column_name": "dim_user_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
-    "primary_key": "dim_action_id"
+    "primary_key": "dim_deployment_id"
   },
   {
     "event_name": "issue_creation",
