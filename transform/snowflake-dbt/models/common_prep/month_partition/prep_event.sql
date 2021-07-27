@@ -5,7 +5,7 @@
 {%- set event_ctes = [
   {
     "event_name": "action",
-    "source_cte_name": "dim_action",
+    "source_cte_name": "prep_action",
     "user_column_name": "dim_user_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
@@ -13,7 +13,7 @@
   },
   {
     "event_name": "deployment_creation",
-    "source_cte_name": "prep_dployment",
+    "source_cte_name": "prep_deployment",
     "user_column_name": "dim_user_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
@@ -53,7 +53,7 @@
   },
   {
     "event_name": "ci_pipeline_creation",
-    "source_cte_name": "dim_ci_pipeline",
+    "source_cte_name": "prep_ci_pipeline",
     "user_column_name": "dim_user_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
@@ -80,8 +80,8 @@
 -%}
 
 {{ simple_cte([
-    ('dim_ci_pipeline', 'dim_ci_pipeline'),
-    ('dim_action', 'dim_action'),
+    ('prep_ci_pipeline', 'prep_ci_pipeline'),
+    ('prep_action', 'prep_action'),
     ('prep_ci_build', 'prep_ci_build'),
     ('prep_deployment', 'prep_deployment'),
     ('prep_issue', 'prep_issue'),
