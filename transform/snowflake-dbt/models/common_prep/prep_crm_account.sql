@@ -54,18 +54,6 @@ WITH map_merged_crm_account AS (
     LEFT JOIN deleted_accounts b
       ON a.master_record_id = b.account_id
 
-), jihu_accounts AS (
-
-    SELECT
-      account_id,
-      CASE
-        WHEN is_jihu_account = TRUE
-          AND carr_this_account > 0
-            THEN TRUE
-        ELSE FALSE
-      END                                         AS is_jihu_account
-    FROM sfdc_account
-
 ), final AS (
 
   SELECT
@@ -112,7 +100,8 @@ WITH map_merged_crm_account AS (
     sfdc_account.partners_signed_contract_date    AS partners_signed_contract_date,
     sfdc_account.record_type_id                   AS record_type_id,
     sfdc_account.federal_account                  AS federal_account,
-    jihu_accounts.is_jihu_account                 AS is_jihu_account,
+    sfdc_account.is_jihu_account                  AS is_jihu_account,
+    sfdc_account.carr_this_account,
     sfdc_account.potential_arr_lam,
     sfdc_account.fy22_new_logo_target_list,
     sfdc_account.is_first_order_available,
@@ -135,8 +124,6 @@ WITH map_merged_crm_account AS (
     ON sfdc_account.technical_account_manager_id = sfdc_users.user_id
   LEFT JOIN sfdc_record_type
     ON sfdc_account.record_type_id = sfdc_record_type.record_type_id
-  LEFT JOIN jihu_accounts
-    ON sfdc_account.account_id = jihu_accounts.account_id
 
 )
 
