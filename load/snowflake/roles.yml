@@ -1055,6 +1055,23 @@ roles:
                 read:
                     - prep.sensitive.*
 
+    - demandbase:
+        warehouses:
+            - analyst_xs
+        privileges:
+            databases:
+                read:
+                    - prep
+                    - raw
+            schemas:
+                read:
+                    - prep.demandbase
+                    - raw.demandbase
+            tables:
+                read:
+                    - prep.demandbase.*
+                    - raw.demandbase.*
+
     - discourse:
         privileges:
             databases:
