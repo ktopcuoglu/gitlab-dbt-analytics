@@ -4,5 +4,6 @@ WITH source AS (
     FROM {{ ref('demandbase_campaign_account_performance_source') }}
 
 )
+
 SELECT *
 FROM source
