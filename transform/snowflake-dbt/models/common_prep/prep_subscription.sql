@@ -39,7 +39,6 @@ WITH date_details AS (
       zuora_subscription.subscription_name_slugify,
       zuora_subscription.subscription_status,
       zuora_subscription.version                                                AS subscription_version,
-      zuora_subscription.auto_renew                                             AS is_auto_renew,
       zuora_subscription.zuora_renewal_subscription_name,
       zuora_subscription.zuora_renewal_subscription_name_slugify,
       zuora_subscription.current_term,
@@ -66,6 +65,7 @@ WITH date_details AS (
         ELSE NULL
       END                                                                       AS second_active_renewal_month,
       zuora_subscription.turn_on_cloud_licensing,
+      zuora_subscription.turn_on_operational_metrics,
       zuora_subscription.turn_on_usage_ping_required_metrics,
       zuora_subscription.contract_auto_renewal,
       zuora_subscription.turn_on_auto_renewal,
