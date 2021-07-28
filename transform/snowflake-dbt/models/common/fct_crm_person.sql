@@ -223,5 +223,5 @@ WITH account_dims_mapping AS (
     created_by="@mcooperDD",
     updated_by="@jpeguero",
     created_date="2020-12-01",
-    updated_date="2021-06-23"
+    updated_date="2021-07-28"
 ) }}
