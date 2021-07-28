@@ -11,7 +11,7 @@
 
 WITH data AS ( 
   
-    SELECT * FROM {{ ref('fct_usage_ping_payload')}}
+    SELECT * FROM {{ ref('prep_usage_ping_payload')}}
     {% if is_incremental() %}
 
       WHERE dim_date_id >= (SELECT MAX(dim_date_id) FROM {{this}})
