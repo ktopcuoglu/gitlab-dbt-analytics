@@ -127,7 +127,8 @@
       monthly_sm_metrics.epics_usage_28_days_user,
       monthly_sm_metrics.ci_templates_usage_28_days_event,
       monthly_sm_metrics.project_management_issue_milestone_changed_28_days_user,
-      monthly_sm_metrics.project_management_issue_iteration_changed_28_days_user
+      monthly_sm_metrics.project_management_issue_iteration_changed_28_days_user,
+      monthly_sm_metrics.is_latest_data
     FROM monthly_sm_metrics
     LEFT JOIN billing_accounts
       ON monthly_sm_metrics.dim_billing_account_id = billing_accounts.dim_billing_account_id
@@ -252,7 +253,8 @@
       monthly_saas_metrics.epics_usage_28_days_user,
       monthly_saas_metrics.ci_templates_usage_28_days_event,
       monthly_saas_metrics.project_management_issue_milestone_changed_28_days_user,
-      monthly_saas_metrics.project_management_issue_iteration_changed_28_days_user
+      monthly_saas_metrics.project_management_issue_iteration_changed_28_days_user,
+      monthly_saas_metrics.is_latest_data
     FROM monthly_saas_metrics
     LEFT JOIN billing_accounts
       ON monthly_saas_metrics.dim_billing_account_id = billing_accounts.dim_billing_account_id

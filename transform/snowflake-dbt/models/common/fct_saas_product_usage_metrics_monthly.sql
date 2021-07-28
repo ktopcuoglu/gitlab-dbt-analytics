@@ -150,7 +150,15 @@
           TRUE, FALSE)                                                                  AS is_missing_paid_seats,
       IFF(saas_usage_ping.reporting_month IS NOT NULL
             OR gitlab_seats.snapshot_month IS NOT NULL,
-          TRUE, FALSE)                                                                  AS is_data_in_subscription_month
+          TRUE, FALSE)                                                                  AS is_data_in_subscription_month,
+      IFF(is_data_in_subscription_month = TRUE AND
+            ROW_NUMBER() OVER (PARTITION BY
+                                saas_subscriptions.dim_subscription_id,
+                                saas_usage_ping.dim_namespace_id,
+                                is_data_in_subscription_month
+                               ORDER BY saas_subscriptions.snapshot_month DESC
+                            ) = 1,
+          TRUE, FALSE)                                                                        AS is_latest_data
     FROM saas_subscriptions
     LEFT JOIN saas_usage_ping
       ON saas_subscriptions.dim_subscription_id = saas_usage_ping.dim_subscription_id

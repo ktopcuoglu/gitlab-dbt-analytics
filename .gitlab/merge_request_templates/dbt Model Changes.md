@@ -115,7 +115,7 @@ Paste the results of dbt test here, including the command.
 - [ ] Branch set to delete. (Leave commits unsquashed)
 - [ ] Latest CI pipeline passes.
   - [ ] If not, an explanation has been provided in testing section of this MR.
-  - [ ] If (Sisense)/Periscope pipeline failed, link to the periscope issue/mr: 
+  - [ ] If (Sisense)/Periscope pipeline failed, link to the periscope issue/mr or provide an explanation:  
 - [ ] This MR is ready for final review and merge.
 - [ ] All threads are resolved.
 - [ ] Remove the `Draft:` prefix in the MR title before assigning to reviewer.
