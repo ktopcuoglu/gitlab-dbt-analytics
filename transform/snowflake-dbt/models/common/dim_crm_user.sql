@@ -21,7 +21,8 @@ WITH sfdc_users AS (
       crm_user_sales_segment,
       crm_user_geo,
       crm_user_region,
-      crm_user_area
+      crm_user_area,
+      created_date
 
     FROM sfdc_users
 
@@ -30,7 +31,7 @@ WITH sfdc_users AS (
 {{ dbt_audit(
     cte_ref="final_users",
     created_by="@mcooperDD",
-    updated_by="@iweeks",
+    updated_by="@jpeguero",
     created_date="2020-11-20",
-    updated_date="2021-04-22"
+    updated_date="2021-07-28"
 ) }}
