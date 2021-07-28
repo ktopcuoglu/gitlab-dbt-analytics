@@ -55,6 +55,7 @@
     FROM gitlab_dotcom_deployments_dedupe_source
     LEFT JOIN prep_project ON gitlab_dotcom_deployments_dedupe_source.project_id = prep_project.dim_project_id
     LEFT JOIN prep_namespace ON prep_project.ultimate_parent_namespace_id = prep_namespace.dim_namespace_id
+        AND prep_namespace.is_currently_valid = TRUE
     LEFT JOIN dim_namespace_plan_hist ON prep_project.ultimate_parent_namespace_id = dim_namespace_plan_hist.dim_namespace_id
         AND gitlab_dotcom_deployments_dedupe_source.created_at >= dim_namespace_plan_hist.valid_from
         AND gitlab_dotcom_deployments_dedupe_source.created_at < dim_namespace_plan_hist.valid_to

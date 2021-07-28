@@ -28,7 +28,7 @@
     "primary_key": "dim_issue_id"
   },
   {
-    "event_name": "issue_note_screation",
+    "event_name": "issue_note_creation",
     "source_cte_name": "issue_note",
     "user_column_name": "author_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
