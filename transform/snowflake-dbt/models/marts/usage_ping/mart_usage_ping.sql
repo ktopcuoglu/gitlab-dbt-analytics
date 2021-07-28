@@ -1,3 +1,9 @@
+{{ config({
+        "materialized": "table",
+        "schema": "common_mart_product"
+    })
+}}
+
 {{ simple_cte([
     ('dim_billing_account', 'dim_billing_account'),
     ('dim_crm_account', 'dim_crm_account'),

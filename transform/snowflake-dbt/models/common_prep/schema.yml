@@ -543,6 +543,8 @@ models:
         description: Identify whether a crm_account is a reseller.
       - name: merged_to_account_id
         description: for deleted accounts this is the SFDC account they were merged to
+      - name: crm_account_created_date
+        description: The date on which the CRM account was created in SFDC
 
   - name: prep_sales_segment
     description: '{{ doc("prep_sales_segment") }}'

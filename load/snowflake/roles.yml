@@ -568,6 +568,7 @@ roles:
         owns:
             schemas:
                 - raw.bamboohr
+                - raw.demandbase
                 - raw.engineering_extracts
                 - raw.gcp_billing
                 - raw.gitlab_data_yaml
@@ -584,6 +585,7 @@ roles:
                 - raw.version_db
             tables:
                 - raw.bamboohr.*
+                - raw.demandbase.*
                 - raw.engineering_extracts.*
                 - raw.gcp_billing.*
                 - raw.gitlab_data_yaml.*
@@ -1052,6 +1054,23 @@ roles:
             tables:
                 read:
                     - prep.sensitive.*
+
+    - demandbase:
+        warehouses:
+            - analyst_xs
+        privileges:
+            databases:
+                read:
+                    - prep
+                    - raw
+            schemas:
+                read:
+                    - prep.demandbase
+                    - raw.demandbase
+            tables:
+                read:
+                    - prep.demandbase.*
+                    - raw.demandbase.*
 
     - discourse:
         privileges:
@@ -2510,6 +2529,16 @@ roles:
                     - jstark_prep.*.*
                     - jstark_prod.*.*
 
+    - jstemmer:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+            - customers_db
+            - analyst_marketing
+            - data_team_analyst
+        warehouses:
+            - analyst_xs
+
     - jswain:
         member_of:
             - snowplow
@@ -2659,6 +2688,16 @@ roles:
         warehouses:
             - analyst_xs
 
+    - kchen:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+            - customers_db
+            - analyst_marketing
+            - data_team_analyst
+        warehouses:
+            - analyst_xs
+
     - kchu:
         member_of:
             - product_manager
@@ -2723,6 +2762,13 @@ roles:
                 write:
                     - laddula_prep.*.*
                     - laddula_prod.*.*
+
+    - lcanoy:
+        member_of:
+            - reporter
+            - analyst_marketing
+        warehouses:
+            - analyst_xs
 
     - lmai:
         member_of:
@@ -3002,6 +3048,12 @@ roles:
                     - nfiguera_prod.*.*
 
     - ngalang:
+        member_of:
+            - analyst_growth
+        warehouses:
+            - analyst_xs
+
+    - nraisinghani:
         member_of:
             - analyst_growth
         warehouses:
@@ -3678,10 +3730,8 @@ users:
             - fkurniadi
 
     - fstein:
-        can_login: yes
-        member_of:
-            - fstein
-            - securityadmin
+        can_login: no
+        member_of: []
 
     - gainsight:
         can_login: yes
@@ -3793,6 +3843,11 @@ users:
             - securityadmin
             - sysadmin
 
+    - jstemmer:
+        can_login: yes
+        member_of:
+            - jstemmer            
+
     - jswain:
         can_login: yes
         member_of:
@@ -3832,6 +3887,11 @@ users:
         member_of:
             - kmckern
 
+    - kchen:
+        can_login: yes
+        member_of:
+            - vjallipalli
+
     - kchu:
         can_login: yes
         member_of:
@@ -3855,6 +3915,11 @@ users:
         member_of:
             - laddula
             - accountadmin
+
+    - lcanoy:
+        can_login: yes
+        member_of:
+            - lcanoy
 
     - lmai:
         can_login: yes
@@ -3965,6 +4030,11 @@ users:
         can_login: yes
         member_of:
             - ngalang
+
+    - nraisinghani:
+        can_login: yes
+        member_of:
+            - nraisinghani
 
     - parmstrong:
         can_login: yes
@@ -4134,6 +4204,7 @@ users:
         can_login: yes
         member_of:
             - vprakash
+            - securityadmin
 
     - wlin:
         can_login: yes

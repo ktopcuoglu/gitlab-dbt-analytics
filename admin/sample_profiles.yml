@@ -6,18 +6,18 @@ gitlab-snowflake:
       threads: 8
       account: gitlab
       user: YOUR USER # <-- This will be your GitLab email
-      password: YOUR PASSWORD
       role: YOUR ROLE # <-- Talk to your manager
       database: YOUR USERNAME # <-- JSMITH for Jane Smith
       warehouse: ANALYST_XS
       schema: preparation
+      authenticator: externalbrowser # <--- You must be logged in via OKTA
     docs:
       type: snowflake
       threads: 8
       account: gitlab
       user: YOUR USER # <-- This will be your GitLab email
-      password: YOUR PASSWORD
       role: YOUR ROLE # <-- Talk to your manager
       database: YOUR USERNAME # <-- JSMITH for Jane Smith
       warehouse: ANALYST_XS
       schema: preparation
+      authenticator: externalbrowser # <--- You must be logged in via OKTA
