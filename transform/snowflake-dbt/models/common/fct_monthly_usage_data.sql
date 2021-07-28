@@ -2,19 +2,7 @@
     tags=["product"]
 ) }}
 
-WITH prep_monthly_usage_data_all_time AS (
-
-    SELECT *
-    FROM {{ ref('prep_monthly_usage_data_all_time') }}
-
-)
-
-, prep_monthly_usage_data_28_days AS (
-
-    SELECT *
-    FROM {{ ref('prep_monthly_usage_data_28_days') }}
-
-), unioned AS (
+WITH unioned AS (
 
     SELECT 
       primary_key,
@@ -36,7 +24,7 @@ WITH prep_monthly_usage_data_all_time AS (
       original_metric_value,
       normalized_monthly_metric_value,
       has_timed_out
-    FROM prep_monthly_usage_data_all_time
+    FROM {{ ref('prep_monthly_usage_data_all_time') }}
 
     UNION ALL
 
@@ -60,7 +48,7 @@ WITH prep_monthly_usage_data_all_time AS (
       original_metric_value,
       monthly_metric_value AS normalized_monthly_metric_value,
       has_timed_out
-    FROM prep_monthly_usage_data_28_days
+    FROM {{ ref('prep_monthly_usage_data_28_days') }}
 
 )
 

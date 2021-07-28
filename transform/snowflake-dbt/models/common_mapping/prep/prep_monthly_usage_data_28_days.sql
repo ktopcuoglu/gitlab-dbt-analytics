@@ -5,7 +5,7 @@
 }}
 
 {{ simple_cte([('dim_date', 'dim_date'),
-                ('fct_usage_ping_payload', 'fct_usage_ping_payload')
+                ('prep_usage_ping_payload', 'prep_usage_ping_payload')
                 ]
                 )}}
 
@@ -24,11 +24,11 @@
 ), joined AS (
 
     SELECT  
-      DATE_TRUNC('week', ping_created_at) AS ping_created_week,
+      ping_created_at_week,
       dim_instance_id,
-      fct_usage_ping_payload.host_name    AS host_name,
+      prep_usage_ping_payload.host_name    AS host_name,
       data.dim_date_id,
-      fct_usage_ping_payload.dim_usage_ping_id,
+      prep_usage_ping_payload.dim_usage_ping_id,
       metrics_path,
       group_name,
       stage_name,
@@ -42,14 +42,14 @@
       IFNULL(metric_value,0) AS weekly_metrics_value,
       has_timed_out
     FROM data
-    LEFT JOIN fct_usage_ping_payload
-      ON data.dim_usage_ping_id = fct_usage_ping_payload.dim_usage_ping_id
+    LEFT JOIN prep_usage_ping_payload
+      ON data.dim_usage_ping_id = prep_usage_ping_payload.dim_usage_ping_id
 
 ), monthly AS (
 
     SELECT  
-      DATE_TRUNC('month', ping_created_week) AS ping_created_month,
-      dim_date.date_id                       AS month_date_id, 
+      DATE_TRUNC('month', ping_created_at_week) AS ping_created_month,
+      dim_date.date_id                          AS month_date_id, 
       dim_instance_id,
       host_name,
       dim_usage_ping_id,
@@ -63,13 +63,13 @@
       is_umau,
       clean_metrics_name,
       time_period,
-      weekly_metrics_value                   AS monthly_metric_value,
-      weekly_metrics_value                   AS original_metric_value,
+      weekly_metrics_value                     AS monthly_metric_value,
+      weekly_metrics_value                     AS original_metric_value,
       has_timed_out
     FROM joined
     LEFT JOIN dim_date
-      ON DATE_TRUNC('month', ping_created_week) = dim_date.date_day
-    QUALIFY (ROW_NUMBER() OVER (PARTITION BY ping_created_month, dim_instance_id, host_name, metrics_path ORDER BY ping_created_week DESC, joined.dim_date_id DESC)) = 1
+      ON DATE_TRUNC('month', ping_created_at_week) = dim_date.date_day
+    QUALIFY (ROW_NUMBER() OVER (PARTITION BY ping_created_month, dim_instance_id, host_name, metrics_path ORDER BY ping_created_at_week DESC, joined.dim_date_id DESC)) = 1
 
 ), final AS (
 
@@ -93,7 +93,7 @@
       SUM(monthly_metric_value)   AS monthly_metric_value,
       SUM(original_metric_value)  AS original_metric_value,
       -- if several records and 1 has not timed out, then display FALSE
-      MIN(has_timed_out)        AS has_timed_out
+      MIN(has_timed_out)          AS has_timed_out
     FROM monthly
     {{ dbt_utils.group_by(n=16)}}
 

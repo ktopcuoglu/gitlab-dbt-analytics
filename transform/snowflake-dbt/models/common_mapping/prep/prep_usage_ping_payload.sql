@@ -26,9 +26,9 @@
 
     SELECT 
       {{ dbt_utils.star(from=ref('prep_usage_ping'), relation_alias='prep_usage_ping', except=['EDITION', 'CREATED_AT', 'SOURCE_IP']) }},
-      main_edition                                                         AS edition,
+      main_edition                                                                                   AS edition,
       main_edition_product_tier                                                                      AS edition_product_tier,
-      ping_source                                                          AS usage_ping_delivery_type, 
+      ping_source                                                                                    AS usage_ping_delivery_type, 
       prep_license.dim_license_id,
       prep_subscription.dim_subscription_id,
       dim_date.date_id,
