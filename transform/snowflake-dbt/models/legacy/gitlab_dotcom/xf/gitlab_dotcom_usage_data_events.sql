@@ -642,14 +642,17 @@
         'project'                                                                                         AS parent_type,
         projects.project_id                                                                               AS parent_id,
         projects.project_created_at                                                                       AS parent_created_at,
+        projects.is_learn_gitlab                                                                          AS project_is_learn_gitlab,
       {% elif event_cte.key_to_parent_group is defined %}
         'group'                                                                                           AS parent_type,
         namespaces.namespace_id                                                                           AS parent_id,
         namespaces.namespace_created_at                                                                   AS parent_created_at,
+        NULL                                                                                              AS project_is_learn_gitlab,
       {% else %}
         NULL                                                                                              AS parent_type,
         NULL                                                                                              AS parent_id,
         NULL                                                                                              AS parent_created_at,
+        NULL                                                                                              AS project_is_learn_gitlab,
       {% endif %}
       ultimate_namespace.namespace_is_internal                                                            AS namespace_is_internal,
       {{ event_cte.event_name }}.created_at                                                               AS event_created_at,

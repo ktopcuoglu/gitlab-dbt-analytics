@@ -137,7 +137,8 @@
       monthly_metrics.is_seat_link_active_user_count_available,
       monthly_metrics.is_usage_ping_license_mapped_to_subscription,
       monthly_metrics.is_usage_ping_license_subscription_id_valid,
-      monthly_metrics.is_data_in_subscription_month
+      monthly_metrics.is_data_in_subscription_month,
+      monthly_metrics.is_latest_data
     FROM monthly_metrics
     LEFT JOIN billing_accounts
       ON monthly_metrics.dim_billing_account_id = billing_accounts.dim_billing_account_id
@@ -153,5 +154,5 @@
     created_by="@ischweickartDD",
     updated_by="@michellecooper",
     created_date="2021-02-11",
-    updated_date="2021-04-27"
+    updated_date="2021-07-21"
 ) }}
