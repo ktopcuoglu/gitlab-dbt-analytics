@@ -64,7 +64,6 @@
       dim_subscription.turn_on_auto_renewal,
       dim_subscription.contract_seat_reconciliation,
       dim_subscription.turn_on_seat_reconciliation,
-      dim_subscription.turn_on_usage_ping_required_metrics,
 
       --billing account info
       dim_billing_account.dim_billing_account_id                                      AS dim_billing_account_id,

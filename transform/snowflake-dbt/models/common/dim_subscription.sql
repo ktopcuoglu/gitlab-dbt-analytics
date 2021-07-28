@@ -50,7 +50,6 @@ WITH prep_amendment AS (
     subscription.turn_on_auto_renewal,
     subscription.contract_seat_reconciliation,
     subscription.turn_on_seat_reconciliation,
-    subscription.turn_on_usage_ping_required_metrics,
 
     --Date Information
     subscription.subscription_start_date,
