@@ -36,7 +36,7 @@ WITH source AS (
       eoastarterbronzeofferaccepted__c            AS eoa_starter_bronze_offer_accepted,
       turnoncloudlicensing__c                     AS turn_on_cloud_licensing,
       turnonusagepingrequiredmetrics__c           AS turn_on_usage_ping_required_metrics,
-      turnonoperationalmetrics__c                 AS turn_on_operational_metrics,
+      --turnonoperationalmetrics__c                 AS turn_on_operational_metrics,
 
       --key_dates
       cancelleddate                               AS cancelled_date,

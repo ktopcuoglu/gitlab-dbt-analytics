@@ -112,7 +112,7 @@ WITH dim_billing_account AS (
       min(dim_subscription.subscription_cohort_quarter) OVER (
           PARTITION BY dim_crm_account.dim_parent_crm_account_id)                     AS parent_account_cohort_quarter,
       dim_subscription.turn_on_cloud_licensing,
-      dim_subscription.turn_on_operational_metrics,
+      --dim_subscription.turn_on_operational_metrics,
       dim_subscription.contract_auto_renewal,
       dim_subscription.turn_on_auto_renewal,
       dim_subscription.contract_seat_reconciliation,
