@@ -114,11 +114,11 @@ rm ~/onboarding_script.zsh
 <details>
 <summary>For Data Scientists</summary>
 
-*  [ ] Make sure you have run through all of the analysts steps mentioned above, along with the getting setup with dbt section below
+-  [ ] Make sure you have run through all of the analysts steps mentioned above, along with the getting setup with dbt section below
 
-*  [ ] Install docker & docker-compose. The easiest way to do this for Mac now is to use the desktop install from [Docker](https://www.docker.com/products/docker-desktop).
+-  [ ] Install docker & docker-compose. The easiest way to do this for Mac now is to use the desktop install from [Docker](https://www.docker.com/products/docker-desktop).
 
-*  [ ] Run through the Jupyter setup section below 
+-  [ ] Run through the Jupyter setup section below 
 </details>
 
 <details>
