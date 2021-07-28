@@ -58,6 +58,12 @@
       dim_subscription.subscription_name_slugify                                      AS subscription_name_slugify,
       dim_subscription.oldest_subscription_in_cohort                                  AS oldest_subscription_in_cohort,
       dim_subscription.subscription_lineage                                           AS subscription_lineage,
+      dim_subscription.turn_on_cloud_licensing,
+      --dim_subscription.turn_on_operational_metrics,
+      dim_subscription.contract_auto_renewal,
+      dim_subscription.turn_on_auto_renewal,
+      dim_subscription.contract_seat_reconciliation,
+      dim_subscription.turn_on_seat_reconciliation,
 
       --billing account info
       dim_billing_account.dim_billing_account_id                                      AS dim_billing_account_id,
@@ -166,7 +172,7 @@
 {{ dbt_audit(
     cte_ref="mart_charge",
     created_by="@iweeks",
-    updated_by="@iweeks",
+    updated_by="@jpeguero",
     created_date="2021-06-07",
-    updated_date="2021-06-07"
+    updated_date="2021-07-28"
 ) }}
