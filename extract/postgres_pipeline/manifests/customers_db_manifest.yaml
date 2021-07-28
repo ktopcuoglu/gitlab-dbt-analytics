@@ -84,7 +84,7 @@ tables:
       , active_user_count
       , max_historical_user_count
       , license_user_count
-      , report_date
+      , report_timestamp
       , license_starts_on
       , zuora_subscription_name
       FROM license_seat_links
