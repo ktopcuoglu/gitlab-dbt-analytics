@@ -1761,3 +1761,11 @@ models:
         tests:
           - unique
           - not_null
+          
+  - name: prep_deployment
+    description: '{{ doc("prep_deployment") }}'
+    columns:
+      - name: dim_deployment_id
+        tests:
+          - unique
+          - not_null
