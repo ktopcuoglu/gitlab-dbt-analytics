@@ -4204,6 +4204,7 @@ users:
         can_login: yes
         member_of:
             - vprakash
+            - securityadmin
 
     - wlin:
         can_login: yes
