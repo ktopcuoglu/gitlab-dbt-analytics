@@ -55,7 +55,7 @@
     LEFT JOIN map_usage_ping_active_subscription 
       ON self_managed_active_subscriptions.dim_subscription_id = map_usage_ping_active_subscription.dim_subscription_id
     LEFT JOIN prep_usage_ping_payload 
-      ON map_usage_ping_active_subscription.dim_usage_ping_id = prep_usage_ping_payload.dim_usage_ping_id AND first_day_of_month = DATE_TRUNC('month', prep_usage_ping_payload.ping_created_at)
+      ON map_usage_ping_active_subscription.dim_usage_ping_id = prep_usage_ping_payload.dim_usage_ping_id AND first_day_of_month = prep_usage_ping_payload.ping_created_at_month
     LEFT JOIN mau 
       ON prep_usage_ping_payload.dim_usage_ping_id = mau.dim_usage_ping_id
     {{ dbt_utils.group_by(n=5) }}
