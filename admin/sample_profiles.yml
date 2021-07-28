@@ -10,6 +10,7 @@ gitlab-snowflake:
       database: YOUR USERNAME # <-- JSMITH for Jane Smith
       warehouse: ANALYST_XS
       schema: preparation
+      authenticator: externalbrowser # <--- You must be logged in via OKTA
     docs:
       type: snowflake
       threads: 8
@@ -19,3 +20,4 @@ gitlab-snowflake:
       database: YOUR USERNAME # <-- JSMITH for Jane Smith
       warehouse: ANALYST_XS
       schema: preparation
+      authenticator: externalbrowser # <--- You must be logged in via OKTA
