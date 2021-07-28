@@ -18,6 +18,7 @@
       sm_free_users.uuid,
       sm_free_users.hostname,
       'Self-Managed'                                                                            AS delivery_type,
+      sm_free_users.cleaned_version,
       sm_free_users.dim_crm_account_id,
       sm_free_users.ping_created_at::DATE                                                       AS ping_date,
       sm_free_users.umau_28_days_user,
@@ -109,7 +110,11 @@
       sm_free_users.epics_usage_28_days_user,
       sm_free_users.ci_templates_usage_28_days_event,
       sm_free_users.project_management_issue_milestone_changed_28_days_user,
-      sm_free_users.project_management_issue_iteration_changed_28_days_user
+      sm_free_users.project_management_issue_iteration_changed_28_days_user,
+      IFF(ROW_NUMBER() OVER (PARTITION BY sm_free_users.uuid, sm_free_users.hostname
+                             ORDER BY sm_free_users.ping_created_at DESC
+                            ) = 1,
+          TRUE, FALSE)                                                                          AS is_latest_data
     FROM sm_free_users
     LEFT JOIN smau
       ON sm_free_users.uuid = smau.uuid
@@ -131,6 +136,7 @@
       NULL                                                                                      AS uuid,
       NULL                                                                                      AS hostname,
       'SaaS'                                                                                    AS delivery_type,
+      NULL                                                                                      AS cleaned_version,
       dim_crm_account_id,
       ping_date::DATE                                                                           AS ping_date,
       -- Wave 2 & 3
@@ -223,7 +229,9 @@
       "redis_hll_counters.epics_usage.epics_usage_total_unique_counts_monthly"                  AS epics_usage_28_days_user,
       "redis_hll_counters.ci_templates.ci_templates_total_unique_counts_monthly"                AS ci_templates_usage_28_days_event,
       "redis_hll_counters.issues_edit.g_project_management_issue_milestone_changed_monthly"     AS project_management_issue_milestone_changed_28_days_user,
-      "redis_hll_counters.issues_edit.g_project_management_issue_iteration_changed_monthly"     AS project_management_issue_iteration_changed_28_days_user
+      "redis_hll_counters.issues_edit.g_project_management_issue_iteration_changed_monthly"     AS project_management_issue_iteration_changed_28_days_user,
+      IFF(ROW_NUMBER() OVER (PARTITION BY dim_namespace_id ORDER BY reporting_month DESC) = 1,
+          TRUE, FALSE)                                                                          AS is_latest_data
     FROM saas_free_users
 
 ), unioned AS (
@@ -243,5 +251,5 @@
     created_by="@ischweickartDD",
     updated_by="@ischweickartDD",
     created_date="2021-06-08",
-    updated_date="2021-06-08"
+    updated_date="2021-07-23"
 ) }}

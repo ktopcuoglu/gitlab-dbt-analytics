@@ -12,7 +12,7 @@ WITH data AS (
 
     {% if is_incremental() %}
 
-      AND created_at >= (SELECT MAX(created_month) FROM {{this}})
+      AND created_at >= (SELECT DATEADD('month', -1, MAX(created_month))FROM {{this}})
 
     {% endif %}
 

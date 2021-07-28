@@ -162,7 +162,16 @@
       usage_ping.is_license_subscription_id_valid                                             AS is_usage_ping_license_subscription_id_valid,
       IFF(usage_ping.ping_created_at IS NOT NULL
             OR seat_link.report_date IS NOT NULL,
-          TRUE, FALSE)                                                                        AS is_data_in_subscription_month
+          TRUE, FALSE)                                                                        AS is_data_in_subscription_month,
+      IFF(is_data_in_subscription_month = TRUE AND
+            ROW_NUMBER() OVER (PARTITION BY
+                                sm_subscriptions.dim_subscription_id,
+                                usage_ping.uuid,
+                                usage_ping.hostname,
+                                is_data_in_subscription_month
+                               ORDER BY sm_subscriptions.snapshot_month DESC
+                            ) = 1,
+          TRUE, FALSE)                                                                        AS is_latest_data
     FROM sm_subscriptions
     LEFT JOIN usage_ping
       ON sm_subscriptions.dim_subscription_id = usage_ping.dim_subscription_id
@@ -183,5 +192,5 @@
     created_by="@ischweickartDD",
     updated_by="@ischweickartDD",
     created_date="2021-02-08",
-    updated_date="2021-06-10"
+    updated_date="2021-07-21"
 ) }}

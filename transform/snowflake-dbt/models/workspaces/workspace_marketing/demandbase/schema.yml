@@ -1,0 +1,84 @@
+version: 2
+
+models:
+    - name: demandbase_account_keyword_intent
+      description: Demandbase table loaded in the prod database without transformations out of the source. 
+      columns:
+        - name: keyword
+          tests:
+            - not_null
+    - name: demandbase_account_list_account
+      description: Demandbase table loaded in the prod database without transformations out of the source. 
+      columns:
+        - name: account_id
+          tests:
+            - not_null
+        - name: account_list_id
+          tests:
+            - not_null
+    - name: demandbase_account_list
+      description: Demandbase table loaded in the prod database without transformations out of the source. 
+      columns:
+        - name: account_list_id
+          tests:
+            - not_null
+            - unique
+        - name: account_list_name
+          tests:
+            - not_null
+    - name: demandbase_account_scores
+      description: Demandbase table loaded in the prod database without transformations out of the source. 
+      columns:
+        - name: account_id
+          tests:
+            - not_null
+        - name: account_score
+          tests:
+            - not_null
+    - name: demandbase_account_site_page_metrics
+      description: Demandbase table loaded in the prod database without transformations out of the source. 
+      columns:
+        - name: metric_date
+          tests:
+            - not_null
+        - name: page_view_count
+          tests:
+            - not_null
+    - name: demandbase_account
+      description: Demandbase table loaded in the prod database without transformations out of the source. 
+      columns:
+        - name: account_id
+          tests:
+            - not_null
+            - unique
+    - name: demandbase_campaign_account_performance
+      description: Demandbase table loaded in the prod database without transformations out of the source. 
+      columns:
+        - name: campaign_id
+          tests:
+            - not_null
+    - name: demandbase_keyword_historical_rollup
+      description: Demandbase table loaded in the prod database without transformations out of the source. 
+      columns:
+        - name: start_date
+          tests:
+            - not_null
+        - name: keyword
+          tests:
+            - not_null
+    - name: demandbase_keyword_set_keyword
+      description: Demandbase table loaded in the prod database without transformations out of the source. 
+      columns:
+        - name: keyword
+          tests:
+            - not_null
+        - name: keyword_set_id
+          tests:
+            - not_null
+    - name: demandbase_keyword_set
+      description: Demandbase table loaded in the prod database without transformations out of the source. 
+      columns:
+        - name: keyword_set_id
+          tests:
+            - unique
+            - not_null

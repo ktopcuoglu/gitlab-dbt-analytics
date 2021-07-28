@@ -297,10 +297,10 @@ models:
        
     common_prep:
       +materialized: table
-      +schema: common_mapping
+      +schema: common_prep
       month_partition:
         +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
-        +schema: "dotcom_usage_events_{{ var('year', run_started_at.strftime('%Y')) }}_{{ var('month', run_started_at.strftime('%m')) }}"
+        +schema: "dotcom_usage_events_{{ var('year', (run_started_at - modules.datetime.timedelta(2)).strftime('%Y')) }}_{{ var('month', (run_started_at - modules.datetime.timedelta(2)).strftime('%m')) }}"
 
     # ------------------
     # Legacy (formerly Staging)
