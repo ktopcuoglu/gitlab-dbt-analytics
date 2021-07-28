@@ -16,7 +16,7 @@ models:
         description: '{{ doc("metrics_path") }}'
         tests:
             - not_null
-      - name: ping_id
+      - name: dim_usage_ping_id
         description: '{{ doc("ping_id") }}'
         tests:
             - not_null
@@ -32,14 +32,6 @@ models:
         description: '{{ doc("location_id") }}'
       - name: dim_parent_crm_account_id
         description: '{{ doc("dim_parent_crm_account_id") }}'
-      - name: delivery
-        description: '{{ doc("delivery_column") }}'
-        tests:
-            - not_null
-      - name: main_edition
-        description: '{{ doc("main_edition") }}'
-        tests:
-            - not_null
       - name: ping_product_tier
         description: '{{ doc("ping_product_tier") }}'
         tests:
@@ -54,10 +46,6 @@ models:
         description: '{{ doc("minor_version") }}'
       - name: major_minor_version
         description: '{{ doc("major_minor_version") }}'
-      - name: version
-        description: '{{ doc("version") }}'
-        tests:
-            - not_null
       - name: source_ip_hash
         description: '{{ doc("source_ip_hash") }}'
       - name: is_pre_release
@@ -116,10 +104,6 @@ models:
         description: '{{ doc("technical_account_manager") }}'
       - name: created_at
         description: '{{ doc("created_at") }}'
-      - name: recorded_at
-        description: '{{ doc("recorded_at") }}'
-        tests:
-            - not_null
       - name: monthly_metric_value
         description: '{{ doc("monthly_metric_value") }}'
         tests:

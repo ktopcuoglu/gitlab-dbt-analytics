@@ -1768,10 +1768,10 @@ models:
           tests:
             - not_null
             - unique
-        - name: ping_id
+        - name: dim_usage_ping_id
           tests:
             - not_null
-        - name: instance_id
+        - name: dim_instance_id
           tests:
             - not_null
         - name: metrics_path
@@ -1784,10 +1784,10 @@ models:
           tests:
             - not_null
             - unique
-        - name: ping_id
+        - name: dim_usage_ping_id
           tests:
             - not_null
-        - name: instance_id
+        - name: dim_instance_id
           tests:
             - not_null
         - name: metrics_path
@@ -1800,10 +1800,10 @@ models:
           tests:
             - not_null
             - unique
-        - name: ping_id
+        - name: dim_usage_ping_id
           tests:
             - not_null
-        - name: instance_id
+        - name: dim_instance_id
           tests:
             - not_null
         - name: metrics_path
@@ -1816,10 +1816,10 @@ models:
           tests:
             - not_null
             - unique
-        - name: ping_id
+        - name: dim_usage_ping_id
           tests:
             - not_null
-        - name: instance_id
+        - name: dim_instance_id
           tests:
             - not_null
         - name: metrics_path
@@ -1832,10 +1832,10 @@ models:
           tests:
             - not_null
             - unique
-        - name: ping_id
+        - name: dim_usage_ping_id
           tests:
             - not_null
-        - name: instance_id
+        - name: dim_instance_id
           tests:
             - not_null
         - name: metrics_path
