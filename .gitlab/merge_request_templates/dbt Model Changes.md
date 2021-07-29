@@ -98,7 +98,13 @@ Example: You might be looking at the count of opportunities before and after, if
 Paste the results of dbt test here, including the command.
 
 </code></pre>
+
 </details>
+
+<summary> Pipelines </summary>
+
+* [ ] Run the dbt_models pipeline with the full model selection syntax for all models which have changed (e.g. : +dim_subscription)
+* [ ] Re-run the dbt_models pipeline (you may need to create a new pipeline with the "Run Pipeline" button), running only the models which have changed; e.g: dim_subscription. To remove any un-related pipeline failures.  
 
 **Which pipeline job do I run?** See our [handbook page](https://about.gitlab.com/handbook/business-ops/data-team/platform/ci-jobs/) on our CI jobs to better understand which job to run.
 
@@ -106,6 +112,7 @@ Paste the results of dbt test here, including the command.
 <!--- explanation per pipeline failure and indicate why this is accepted ---> 
 
 
+**What to do for failed pipelines** See our [handbook page](https://about.gitlab.com/handbook/business-ops/data-team/platform/ci-jobs/#what-to-do-if-a-pipeline-fails) 
 </details>
 
 ## All MRs Checklist
