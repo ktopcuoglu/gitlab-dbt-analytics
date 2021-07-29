@@ -83,6 +83,7 @@
       fct_crm_opportunity.created_date,
       DATE_TRUNC(month, fct_crm_opportunity.created_date)                  AS created_month,
       fct_crm_opportunity.dim_crm_opportunity_id,
+      dim_crm_opportunity.opportunity_name,
       dim_crm_account.parent_crm_account_name,
       dim_crm_account.dim_parent_crm_account_id,
       dim_crm_account.crm_account_name,
