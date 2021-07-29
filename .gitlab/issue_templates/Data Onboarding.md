@@ -267,7 +267,7 @@ Data team uses GCP (Google Cloud Platform) as our cloud provider. GCP credential
 - [ ] Ensure you've setup your dbt for running locally as mentioned above. The ./.dbt/profiles.yml file is a pre-requisite for this process. If you do not want dbt you can manually create the ./.dbt/profiles.yml file based off the [sample profile](https://gitlab.com/gitlab-data/analytics/-/blob/master/admin/sample_profiles.yml)
 - [ ] Clone the data-science repo into your repos directory: 
     ``` git clone git@gitlab.com:gitlab-data/data-science.git```
-- [ ] See the readme provided in that repo for further install instructions 
+- [ ] See the readme provided in the [data-science repo](https://gitlab.com/gitlab-data/data-science/) for further install instructions 
 
 ## GitLab.com (Product)
 This data comes from our GitLab.com SaaS product.
