@@ -1,8 +1,8 @@
 version: 2
 
 models:
-  - name: mart_ci_runner_activity
-    description: '{{ doc("mart_ci_runner_activity") }}'
+  - name: mart_ci_runner_activity_monthly
+    description: '{{ doc("mart_ci_runner_activity_monthly") }}'
     columns:
       - name: dim_ci_build_id
         description: Unique key of CI Build
@@ -10,27 +10,62 @@ models:
           - not_null
       - name: dim_ci_runner_id
         description: ID of the runner with which the CI build has been run.
+        tests:
+          - not_null
       - name: dim_ci_pipeline_id
+        tests:
+          - not_null
       - name: dim_ci_stage_id
+        tests:
+          - not_null
       - name: dim_project_id
         description: Foreign key that shows the ID of the project in which the build has been triggered.
+        tests:
+          - not_null
       - name: dim_namespace_id
         description: Foreign key that shows the ID of the namespace in which the build has been triggered.
+        tests:
+          - not_null
       - name: ultimate_parent_namespace_id
+        tests:
+          - not_null
       - name: dim_plan_id
         description: ID of the Plan
+        tests:
+          - not_null
       - name: dim_user_id
         description: Foreign key that shows the ID of the user who triggered the CI Build
+        tests:
+          - not_null
       - name: ci_build_created_date_id
         description: Foreign key to `dim_date` that shows the ID of the date on which the stage was created.
+        tests:
+          - not_null
       - name: ci_build_duration_in_s
       - name: public_projects_minutes_cost_factor
       - name: private_projects_minutes_cost_factor
-      - name: is_paid_by_gitlab
-      - name: ci_build_status
-      - name: ci_runner_type_summary
+      - name: ci_runner_description
       - name: ci_runner_manager
+      - name: ci_runner_type
+      - name: ci_runner_type_summary
+      - name: ci_stage_name
+      - name: ci_build_name
+      - name: ci_build_status
+      - name: ci_build_created_at
+      - name: ci_build_updated_at
+      - name: ci_build_scheduled_at
+      - name: ci_build_queued_at
+      - name: ci_build_started_at
+      - name: ci_build_finished_at
+      - name: ci_build_tag
+      - name: ci_build_ref
+      - name: ci_build_type
+      - name: ci_build_target_url
+      - name: ci_build_description
+      - name: ci_build_failure_reason
+      - name: is_paid_by_gitlab
       - name: namespace_is_internal
+      - name: ultimate_parent_plan_title
       - name: project_visibility_level
       - name: project_path
 
