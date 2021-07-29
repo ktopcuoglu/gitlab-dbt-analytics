@@ -2940,10 +2940,12 @@ models:
         description: Foreign key that shows the ID of the user who triggered the CI Build
         tests:
           - not_null
-      - name: created_date_id
+      - name: ci_build_created_date_id
         description: Foreign key to `dim_date` that shows the ID of the date on which the stage was created.
         tests:
           - not_null
+      - name: ci_build_started_at
+      - name: ci_build_finished_at
       - name: ci_build_duration_in_s
       - name: is_paid_by_gitlab
       - name: public_projects_minutes_cost_factor

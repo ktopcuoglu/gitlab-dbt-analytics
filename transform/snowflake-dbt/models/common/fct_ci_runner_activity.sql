@@ -26,12 +26,14 @@
       IFNULL(prep_ci_stage.dim_ci_stage_id, -1)               AS dim_ci_stage_id,
       IFNULL(prep_project.dim_project_id, -1)                 AS dim_project_id,
       IFNULL(prep_user.dim_user_id, -1)                       AS dim_user_id,
-      IFNULL(dim_date.date_id, -1)                            AS created_date_id,
+      IFNULL(dim_date.date_id, -1)                            AS ci_build_created_date_id,
       IFNULL(dim_namespace.dim_namespace_id, -1)              AS dim_namespace_id,
       IFNULL(dim_namespace.ultimate_parent_namespace_id, -1)  AS ultimate_parent_namespace_id,
       prep_ci_build.dim_plan_id,
 
       -- ci_build metrics
+      prep_ci_build.started_at                                AS ci_build_started_at,
+      prep_ci_build.finished_at                               AS ci_build_finished_at,
       DATEDIFF('seconds',
                prep_ci_build.started_at,
                prep_ci_build.finished_at)                     AS ci_build_duration_in_s,
