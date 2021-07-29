@@ -53,13 +53,18 @@
       dim_subscription.subscription_created_date                                      AS subscription_created_date,
       dim_subscription.subscription_updated_date                                      AS subscription_updated_date,
       dim_subscription.second_active_renewal_month                                    AS second_active_renewal_month,
+      dim_subscription.term_start_date,
+      dim_subscription.term_end_date,
+      dim_subscription.term_start_month,
+      dim_subscription.term_end_month,
       dim_subscription.subscription_status                                            AS subscription_status,
       dim_subscription.subscription_sales_type                                        AS subscription_sales_type,
       dim_subscription.subscription_name_slugify                                      AS subscription_name_slugify,
       dim_subscription.oldest_subscription_in_cohort                                  AS oldest_subscription_in_cohort,
       dim_subscription.subscription_lineage                                           AS subscription_lineage,
       dim_subscription.turn_on_cloud_licensing,
-      --dim_subscription.turn_on_operational_metrics,
+      dim_subscription.turn_on_operational_metrics,
+      dim_subscription.contract_operational_metrics,
       dim_subscription.contract_auto_renewal,
       dim_subscription.turn_on_auto_renewal,
       dim_subscription.contract_seat_reconciliation,
@@ -174,5 +179,5 @@
     created_by="@iweeks",
     updated_by="@jpeguero",
     created_date="2021-06-07",
-    updated_date="2021-07-28"
+    updated_date="2021-07-29"
 ) }}

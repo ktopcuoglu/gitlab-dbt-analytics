@@ -45,7 +45,8 @@ WITH prep_amendment AS (
     subscription.eoa_starter_bronze_offer_accepted,
     subscription.subscription_sales_type,
     subscription.turn_on_cloud_licensing,
-    --subscription.turn_on_operational_metrics,
+    subscription.turn_on_operational_metrics,
+    subscription.contract_operational_metrics,
     subscription.contract_auto_renewal,
     subscription.turn_on_auto_renewal,
     subscription.contract_seat_reconciliation,
@@ -85,5 +86,5 @@ WITH prep_amendment AS (
     created_by="@snalamaru",
     updated_by="@jpeguero",
     created_date="2020-12-16",
-    updated_date="2021-07-28"
+    updated_date="2021-07-29"
 ) }}
