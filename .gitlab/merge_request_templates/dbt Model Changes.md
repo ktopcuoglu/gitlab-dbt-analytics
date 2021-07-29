@@ -90,7 +90,6 @@ Example: You might be looking at the count of opportunities before and after, if
 - [ ] If the periscope_query job failed, validate that the changes you've made don't affect the grain of the table or the expected output in Periscope.
 - [ ] If you are on the Data Team, please paste the output of `dbt test` when run locally below. Any failing tests should be fixed or explained prior to requesting a review.
 
-<details>
 <summary> dbt test results </summary>
 
 <pre><code>
@@ -101,7 +100,11 @@ Paste the results of dbt test here, including the command.
 
 </details>
 
-<summary> Pipelines </summary>
+#### Pipelines
+
+<details> 
+<summary><i>Click to toggle Pipelines</i></summary>
+
 
 * [ ] Run the dbt_models pipeline with the full model selection syntax for all models which have changed (e.g. : +dim_subscription)
 * [ ] Re-run the dbt_models pipeline (you may need to create a new pipeline with the "Run Pipeline" button), running only the models which have changed; e.g: dim_subscription. To remove any un-related pipeline failures.  
