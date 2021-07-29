@@ -15,7 +15,7 @@
     ('dim_date', 'dim_date')
 ]) }}
 
-, ci_runner_activity_monthly AS (
+, ci_runner_activity_monthly AS ( -- This CTE should be updated to change the grain of the final mart table based on the FK we want to aggregate on
 
     SELECT 
       ci_runner_activity.dim_ci_build_id,
@@ -80,7 +80,9 @@
       dim_ci_build.failure_reason                               AS ci_build_failure_reason,
       ci_runner_activity_monthly.is_paid_by_gitlab,
       dim_namespace.namespace_is_internal,
-      dim_namespace.gitlab_plan_title                           AS ultimate_parent_plan_title
+      dim_namespace.gitlab_plan_title                           AS ultimate_parent_plan_title,
+      dim_project.visibility_level                              AS project_visibility_level,
+      dim_project.project_path
 
     FROM ci_runner_activity_monthly
     INNER JOIN dim_ci_build
@@ -106,6 +108,6 @@
     cte_ref="joined",
     created_by="@ischweickartDD",
     updated_by="@ischweickartDD",
-    created_date="2021-07-26",
-    updated_date="2021-07-26"
+    created_date="2021-07-29",
+    updated_date="2021-07-29"
 ) }}
