@@ -122,6 +122,8 @@
       dim_product_detail.product_rate_plan_name                                       AS product_rate_plan_name,
 
       --Amendment Information
+      dim_subscription.dim_amendment_id_subscription,
+      fct_charge.dim_amendment_id_charge,
       dim_amendment_subscription.effective_date                                       AS subscription_amendment_effective_date,
       CASE
         WHEN dim_charge.subscription_version = 1
@@ -179,5 +181,5 @@
     created_by="@iweeks",
     updated_by="@jpeguero",
     created_date="2021-06-07",
-    updated_date="2021-07-29"
+    updated_date="2021-07-30"
 ) }}
