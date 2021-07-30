@@ -2849,6 +2849,12 @@ roles:
                     - mcooper_prep.*.*
                     - mcooper_prod.*.*
 
+    - mdavari:
+        member_of:
+            - analyst_core
+        warehouses:
+            - analyst_xs
+
     - mdewji:
         warehouses: []
 
@@ -3953,6 +3959,11 @@ users:
         can_login: yes
         member_of:
             - mcooper
+
+    - mdavari:
+        can_login: yes
+        member_of:
+            - mdavari  
 
     - mdewji:
         can_login: no
