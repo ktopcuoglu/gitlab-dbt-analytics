@@ -1,8 +1,16 @@
+{% docs mart_ci_runner_activity_daily %}
+
+Mart table containing quantitative data related to CI runner activity on GitLab.com.
+
+These metrics are aggregated at a daily grain per `dim_project_id`.
+
+{% enddocs %}
+
 {% docs mart_ci_runner_activity_monthly %}
 
-Mart table containing quantitative data related to CI runner activity on GitLab.com, combined with associated CI meta data.
+Mart table containing quantitative data related to CI runner activity on GitLab.com.
 
-These metrics are aggregated at a monthly grain.
+These metrics are aggregated at a monthly grain per `dim_namespace_id`.
 
 {% enddocs %}
 
