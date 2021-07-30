@@ -19,6 +19,8 @@
     SELECT
       --Surrogate Key
       dim_charge.dim_charge_id                                                        AS dim_charge_id,
+      dim_subscription.dim_amendment_id_subscription,
+      fct_charge.dim_amendment_id_charge,
 
       --Natural Key
       dim_charge.subscription_name                                                    AS subscription_name,
@@ -179,5 +181,5 @@
     created_by="@iweeks",
     updated_by="@jpeguero",
     created_date="2021-06-07",
-    updated_date="2021-07-29"
+    updated_date="2021-07-30"
 ) }}
