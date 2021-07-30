@@ -19,8 +19,6 @@
     SELECT
       --Surrogate Key
       dim_charge.dim_charge_id                                                        AS dim_charge_id,
-      dim_subscription.dim_amendment_id_subscription,
-      fct_charge.dim_amendment_id_charge,
 
       --Natural Key
       dim_charge.subscription_name                                                    AS subscription_name,
@@ -124,6 +122,8 @@
       dim_product_detail.product_rate_plan_name                                       AS product_rate_plan_name,
 
       --Amendment Information
+      dim_subscription.dim_amendment_id_subscription,
+      fct_charge.dim_amendment_id_charge,
       dim_amendment_subscription.effective_date                                       AS subscription_amendment_effective_date,
       CASE
         WHEN dim_charge.subscription_version = 1
