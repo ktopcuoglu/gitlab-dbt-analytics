@@ -42,27 +42,24 @@ WITH dim_billing_account AS (
       dim_product_detail_id,
       dim_billing_account_id,
       dim_crm_account_id,
-      subscription_name,
-      subscription_name_slugify,
       SUM(mrr)                                                               AS mrr,
       SUM(arr)                                                               AS arr,
       SUM(quantity)                                                          AS quantity,
       ARRAY_AGG(unit_of_measure)                                             AS unit_of_measure
     FROM {{ ref('fct_mrr_snapshot_bottom_up') }}
-    WHERE LOWER(subscription_status) NOT IN ('draft', 'expired')
 
     {% if is_incremental() %}
 
     -- this filter will only be applied on an incremental run
-      AND snapshot_id > (SELECT max(dim_date.date_id)
-                            FROM {{ this }}
-                            INNER JOIN dim_date
-                             ON dim_date.date_actual = snapshot_date
+    WHERE snapshot_id > (SELECT max(dim_date.date_id)
+                         FROM {{ this }}
+                         INNER JOIN dim_date
+                           ON dim_date.date_actual = snapshot_date
                             )
 
     {% endif %}
 
-    {{ dbt_utils.group_by(n=10) }}
+    {{ dbt_utils.group_by(n=8) }}
 
 ), joined AS (
 
@@ -159,7 +156,7 @@ WITH dim_billing_account AS (
       fct_mrr_snapshot_bottom_up.arr                                                        AS arr,
       fct_mrr_snapshot_bottom_up.quantity                                                   AS quantity
     FROM fct_mrr_snapshot_bottom_up
-    LEFT JOIN dim_subscription
+    INNER JOIN dim_subscription
       ON dim_subscription.dim_subscription_id = fct_mrr_snapshot_bottom_up.dim_subscription_id
     INNER JOIN dim_product_detail
       ON dim_product_detail.dim_product_detail_id = fct_mrr_snapshot_bottom_up.dim_product_detail_id

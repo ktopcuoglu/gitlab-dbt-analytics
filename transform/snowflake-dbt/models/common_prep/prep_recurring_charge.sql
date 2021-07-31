@@ -154,5 +154,5 @@ WITH dim_date AS (
     created_by="@mcooperDD",
     updated_by="@iweeks",
     created_date="2021-01-04",
-    updated_date="2021-04-28",
+    updated_date="2021-07-29",
 ) }}

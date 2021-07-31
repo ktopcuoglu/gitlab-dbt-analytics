@@ -90,6 +90,7 @@ WITH dim_date AS (
     FROM {{ ref('zuora_subscription_snapshots_source') }}
     WHERE is_deleted = FALSE
       AND exclude_from_analysis IN ('False', '')
+      AND LOWER(subscription_status) NOT IN ('draft', 'expired')
 
 ), zuora_subscription_spined AS (
 

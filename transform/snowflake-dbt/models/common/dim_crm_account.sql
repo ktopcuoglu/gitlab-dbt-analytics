@@ -5,10 +5,5 @@ WITH base AS (
 
 )
 
-{{ dbt_audit(
-    cte_ref="base",
-    created_by="@msendal",
-    updated_by="@iweeks",
-    created_date="2020-06-01",
-    updated_date="2021-07-29"
-) }}
+SELECT *
+FROM base

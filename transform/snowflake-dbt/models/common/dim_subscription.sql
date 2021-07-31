@@ -90,7 +90,7 @@ WITH prep_amendment AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@snalamaru",
-    updated_by="@jpeguero",
+    updated_by="@iweeks",
     created_date="2020-12-16",
     updated_date="2021-07-29"
 ) }}
