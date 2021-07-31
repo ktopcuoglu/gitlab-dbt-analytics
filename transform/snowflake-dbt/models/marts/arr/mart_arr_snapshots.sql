@@ -136,7 +136,21 @@ WITH dim_billing_account AS (
     LEFT JOIN dim_crm_account
         ON dim_billing_account.dim_crm_account_id = dim_crm_account.dim_crm_account_id
 
+), final AS (
+
+    SELECT
+      joined.*,
+      datediff(month, billing_account_cohort_month, arr_month)     AS months_since_billing_account_cohort_start,
+      datediff(quarter, billing_account_cohort_quarter, arr_month) AS quarters_since_billing_account_cohort_start,
+      datediff(month, crm_account_cohort_month, arr_month)         AS months_since_crm_account_cohort_start,
+      datediff(quarter, crm_account_cohort_quarter, arr_month)     AS quarters_since_crm_account_cohort_start,
+      datediff(month, parent_account_cohort_month, arr_month)      AS months_since_parent_account_cohort_start,
+      datediff(quarter, parent_account_cohort_quarter, arr_month)  AS quarters_since_parent_account_cohort_start,
+      datediff(month, subscription_cohort_month, arr_month)        AS months_since_subscription_cohort_start,
+      datediff(quarter, subscription_cohort_quarter, arr_month)    AS quarters_since_subscription_cohort_start
+    FROM joined
+
 )
 
 SELECT *
-FROM joined
+FROM final
