@@ -80,6 +80,9 @@ WITH dim_billing_account AS (
       dim_crm_account.parent_crm_account_tsp_region                                   AS parent_crm_account_tsp_region,
       dim_crm_account.parent_crm_account_tsp_sub_region                               AS parent_crm_account_tsp_sub_region,
       dim_crm_account.parent_crm_account_tsp_area                                     AS parent_crm_account_tsp_area,
+      dim_crm_account.parent_crm_account_tsp_account_employees                        AS parent_crm_account_tsp_account_employees,
+      dim_crm_account.parent_crm_account_tsp_max_family_employees                     AS parent_crm_account_tsp_max_family_employees,
+      dim_crm_account.parent_crm_account_employee_count_band                          AS parent_crm_account_employee_count_band,
       dim_crm_account.crm_account_tsp_region                                          AS crm_account_tsp_region,
       dim_crm_account.crm_account_tsp_sub_region                                      AS crm_account_tsp_sub_region,
       dim_crm_account.crm_account_tsp_area                                            AS crm_account_tsp_area,
@@ -87,8 +90,7 @@ WITH dim_billing_account AS (
       dim_crm_account.health_score_color                                              AS health_score_color,
       dim_crm_account.health_number                                                   AS health_number,
       dim_crm_account.is_jihu_account                                                 AS is_jihu_account,
-      dim_crm_account.parent_crm_account_employee_count_band                          AS parent_crm_account_employee_count_band,
-
+      
       --subscription info
       dim_subscription.dim_subscription_id                                            AS dim_subscription_id,
       dim_subscription.dim_subscription_id_original                                   AS dim_subscription_id_original,

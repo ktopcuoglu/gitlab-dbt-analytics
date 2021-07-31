@@ -34,6 +34,8 @@ WITH map_merged_crm_account AS (
       tsp_sub_region,
       tsp_area,
       gtm_strategy,
+      tsp_account_employees,
+      tsp_max_family_employees,
       created_date
     FROM sfdc_account
     WHERE account_id = ultimate_parent_account_id
@@ -134,7 +136,8 @@ WITH map_merged_crm_account AS (
        WHEN ultimate_parent_account.tsp_max_family_employees <= 2000 AND ultimate_parent_account.tsp_max_family_employees > 1500 THEN 'Employees > 1.5K'
        WHEN ultimate_parent_account.tsp_max_family_employees <= 1500 AND ultimate_parent_account.tsp_max_family_employees > 1000  THEN 'Employees > 1K'
        ELSE 'Employees < 1K'
-    END                                                 AS parent_crm_account_employee_count_band
+    END                                                 AS parent_crm_account_employee_count_band,
+    ultimate_parent_account.created_date                AS parent_crm_account_created_date
   FROM sfdc_account
   LEFT JOIN map_merged_crm_account
     ON sfdc_account.account_id = map_merged_crm_account.sfdc_account_id

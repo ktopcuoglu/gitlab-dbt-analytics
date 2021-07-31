@@ -39,6 +39,8 @@ WITH dim_date AS (
     SELECT *
     FROM {{ ref('zuora_account_snapshots_source') }}
     WHERE is_deleted = FALSE
+    --Exclude Batch20 which are the test accounts. This method replaces the manual dbt seed exclusion file.
+      AND LOWER(batch) != 'batch20'
 
 ), zuora_account_spined AS (
 
@@ -88,7 +90,6 @@ WITH dim_date AS (
     FROM {{ ref('zuora_subscription_snapshots_source') }}
     WHERE is_deleted = FALSE
       AND exclude_from_analysis IN ('False', '')
-      AND LOWER(subscription_status) NOT IN ('draft', 'expired')
 
 ), zuora_subscription_spined AS (
 
@@ -112,6 +113,7 @@ WITH dim_date AS (
       dim_crm_account_id,
       dim_subscription_id,
       subscription_name,
+      subscription_name_slugify,
       subscription_status,
       dim_product_detail_id,
       mrr,
@@ -134,6 +136,7 @@ WITH dim_date AS (
       zuora_account_spined.crm_id                               AS dim_crm_account_id,
       zuora_subscription_spined.subscription_id                 AS dim_subscription_id,
       zuora_subscription_spined.subscription_name,
+      zuora_subscription_spined.subscription_name_slugify,
       zuora_subscription_spined.subscription_status,
       zuora_rate_plan_charge_spined.product_rate_plan_charge_id AS dim_product_detail_id,
       zuora_rate_plan_charge_spined.mrr,
@@ -174,6 +177,7 @@ WITH dim_date AS (
       dim_subscription_id,
       dim_product_detail_id,
       subscription_name,
+      subscription_name_slugify,
       subscription_status,
       SUM(mrr)                                             AS mrr,
       SUM(mrr)* 12                                         AS arr,
@@ -185,7 +189,7 @@ WITH dim_date AS (
       AND (combined_charges.effective_end_month > dim_date.date_actual
         OR combined_charges.effective_end_month IS NULL)
       AND dim_date.day_of_month = 1
-    {{ dbt_utils.group_by(n=9) }}
+    {{ dbt_utils.group_by(n=10) }}
 
 ), final AS (
 
@@ -202,6 +206,7 @@ WITH dim_date AS (
         dim_billing_account_id,
         dim_crm_account_id,
         subscription_name,
+        subscription_name_slugify,
         subscription_status,
         mrr,
         arr,
@@ -215,6 +220,6 @@ WITH dim_date AS (
     cte_ref="final",
     created_by="@iweeks",
     updated_by="@iweeks",
-    created_date="2021-06-28",
-    updated_date="2021-06-28",
+    created_date="2021-07-29",
+    updated_date="2021-07-29",
  	) }}
