@@ -104,7 +104,23 @@ WITH dim_billing_account AS (
       fct_mrr_snapshots.unit_of_measure,
       fct_mrr_snapshots.mrr,
       fct_mrr_snapshots.arr,
-      fct_mrr_snapshots.quantity
+      fct_mrr_snapshots.quantity,
+
+      --cohort information
+      dim_subscriptions_snapshots.subscription_cohort_month                                 AS subscription_cohort_month,
+      dim_subscriptions_snapshots.subscription_cohort_quarter                               AS subscription_cohort_quarter,
+      min(dim_subscriptions_snapshots.subscription_cohort_month) OVER (
+          PARTITION BY dim_billing_account.dim_billing_account_id)                          AS billing_account_cohort_month,
+      min(dim_subscriptions_snapshots.subscription_cohort_quarter) OVER (
+          PARTITION BY dim_billing_account.dim_billing_account_id)                          AS billing_account_cohort_quarter,
+      min(dim_subscriptions_snapshots.subscription_cohort_month) OVER (
+          PARTITION BY dim_crm_account.dim_crm_account_id)                                  AS crm_account_cohort_month,
+      min(dim_subscriptions_snapshots.subscription_cohort_quarter) OVER (
+          PARTITION BY dim_crm_account.dim_crm_account_id)                                  AS crm_account_cohort_quarter,
+      min(dim_subscriptions_snapshots.subscription_cohort_month) OVER (
+          PARTITION BY dim_crm_account.dim_parent_crm_account_id)                           AS parent_account_cohort_month,
+      min(dim_subscriptions_snapshots.subscription_cohort_quarter) OVER (
+          PARTITION BY dim_crm_account.dim_parent_crm_account_id)                           AS parent_account_cohort_quarter
     FROM fct_mrr_snapshots
     INNER JOIN dim_subscriptions_snapshots
       ON dim_subscriptions_snapshots.subscription_id = fct_mrr_snapshots.subscription_id
