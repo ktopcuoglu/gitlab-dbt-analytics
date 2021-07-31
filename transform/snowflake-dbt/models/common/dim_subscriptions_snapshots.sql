@@ -85,6 +85,8 @@ WITH snapshot_dates AS (
     FROM zuora_subscription_spined
     INNER JOIN zuora_account
       ON zuora_account.account_id = zuora_subscription_spined.account_id
+    LEFT JOIN subscription_lineage
+      ON subscription_lineage.dim_subscription_id = zuora_subscription_spined.subscription_id
 
 
 ), final AS (
@@ -102,5 +104,5 @@ WITH snapshot_dates AS (
     created_by="@msendal",
     updated_by="@iweeks",
     created_date="2020-09-29",
-    updated_date="2021-06-28"
+    updated_date="2021-06-23"
 ) }}
