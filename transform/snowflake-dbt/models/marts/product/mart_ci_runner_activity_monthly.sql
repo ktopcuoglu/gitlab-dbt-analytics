@@ -17,7 +17,7 @@
       ci_runner_activity.ci_build_finished_at,
       dim_date.first_day_of_month
     FROM ci_runner_activity
-    INNER JOIN common.dim_date
+    INNER JOIN dim_date
       ON TO_DATE(ci_runner_activity.ci_build_started_at) <= dim_date.date_day
       AND ci_runner_activity.ci_build_finished_at > dim_date.date_day
 
