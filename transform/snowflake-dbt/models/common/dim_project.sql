@@ -56,6 +56,7 @@ WITH prep_project AS (
       only_mirror_protected_branches,
       pull_mirror_available_overridden,
       mirror_overwrites_diverged_branches,
+      namespace_is_internal,
       project_description, 
       project_import_source,
       project_issues_template,
@@ -65,6 +66,7 @@ WITH prep_project AS (
       project_import_url,
       project_merge_requests_template,
       active_service_types_array,
+      is_learn_gitlab,
       member_count
     FROM {{ ref('prep_project') }}
 

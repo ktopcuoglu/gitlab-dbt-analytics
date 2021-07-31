@@ -112,6 +112,13 @@ WITH dim_billing_account AS (
           PARTITION BY dim_crm_account.dim_parent_crm_account_id)                     AS parent_account_cohort_month,
       min(dim_subscription.subscription_cohort_quarter) OVER (
           PARTITION BY dim_crm_account.dim_parent_crm_account_id)                     AS parent_account_cohort_quarter,
+      dim_subscription.turn_on_cloud_licensing,
+      dim_subscription.turn_on_operational_metrics,
+      dim_subscription.contract_operational_metrics,
+      dim_subscription.contract_auto_renewal,
+      dim_subscription.turn_on_auto_renewal,
+      dim_subscription.contract_seat_reconciliation,
+      dim_subscription.turn_on_seat_reconciliation,
 
       --product info
       dim_product_detail.product_tier_name                                            AS product_tier_name,
@@ -189,5 +196,5 @@ WITH dim_billing_account AS (
     created_by="@msendal",
     updated_by="@iweeks",
     created_date="2020-09-04",
-    updated_date="2021-06-28"
+    updated_date="2021-07-29"
 ) }}

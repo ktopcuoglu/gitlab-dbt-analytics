@@ -62,6 +62,11 @@ databases:
     - kaguilar_prep:
         shared: no
 
+    - kdietz_prod:
+        shared: no
+    - kdietz_prep:
+        shared: no
+
     - kmagda_prod:
         shared: no
     - kmagda_prep:
@@ -85,11 +90,6 @@ databases:
     - mvilain_prod:
         shared: no
     - mvilain_prep:
-        shared: no
-
-    - mwalker_prod:
-        shared: no
-    - mwalker_prep:
         shared: no
 
     - mwawrzyniak_prod:
@@ -287,6 +287,7 @@ roles:
             - boneyard
             - covid19
             - dbt_analytics
+            - dotcom_usage_events
             - driveload
             - gitlab_data_yaml
             - handbook
@@ -567,6 +568,7 @@ roles:
         owns:
             schemas:
                 - raw.bamboohr
+                - raw.demandbase
                 - raw.engineering_extracts
                 - raw.gcp_billing
                 - raw.gitlab_data_yaml
@@ -583,6 +585,7 @@ roles:
                 - raw.version_db
             tables:
                 - raw.bamboohr.*
+                - raw.demandbase.*
                 - raw.engineering_extracts.*
                 - raw.gcp_billing.*
                 - raw.gitlab_data_yaml.*
@@ -1052,6 +1055,23 @@ roles:
                 read:
                     - prep.sensitive.*
 
+    - demandbase:
+        warehouses:
+            - analyst_xs
+        privileges:
+            databases:
+                read:
+                    - prep
+                    - raw
+            schemas:
+                read:
+                    - prep.demandbase
+                    - raw.demandbase
+            tables:
+                read:
+                    - prep.demandbase.*
+                    - raw.demandbase.*
+
     - discourse:
         privileges:
             databases:
@@ -1063,6 +1083,18 @@ roles:
             tables:
                 read:
                     - raw.discourse.*
+
+    - dotcom_usage_events:
+        privileges:
+            databases:
+                read:
+                    - prep
+            schemas:
+                read:
+                    - prep.dotcom_usage_events_*
+            tables:
+                read:
+                    - prep.dotcom_usage_events_*.*
 
     - driveload:
         warehouses:
@@ -1107,6 +1139,7 @@ roles:
                     - prod.common_mart_product.mart_product_usage_wave_1_3_metrics_monthly_diff
                     - prod.common_mart_product.mart_saas_product_usage_metrics_monthly
                     - prod.common_mart_product.mart_product_usage_paid_user_metrics_monthly
+                    - prod.common_mart_product.mart_product_usage_free_user_metrics_monthly
 
     - gainsight:
         warehouses:
@@ -1876,12 +1909,15 @@ roles:
             databases:
                 read:
                     - raw
+                    - prep
             schemas:
                 read:
                     - raw.zuora_revenue
+                    - prep.zuora_revenue
             tables:
                 read:
                     - raw.zuora_revenue.*
+                    - prep.zuora_revenue.*
 
 # ==========================================
 # User Roles
@@ -1971,6 +2007,12 @@ roles:
         member_of: []
         warehouses: []
 
+    - bmishra:
+        member_of:
+            - analyst_core
+        warehouses:
+            - analyst_xs          
+
     - bnguyen:
         member_of:
             - analyst_finance
@@ -1989,6 +2031,12 @@ roles:
             - bamboohr_sensitive_separations
         warehouses:
             - analyst_xs
+
+    - bbutterfield:
+        member_of:
+            - reporter
+        warehouses:
+            - reporting            
 
     - camsmith:
         member_of:
@@ -2014,6 +2062,13 @@ roles:
             - admin
 
     - cmestel:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+        warehouses:
+            - analyst_xs
+
+    - daruwajoye:
         member_of:
             - analyst_finance
             - bamboohr_analytics
@@ -2080,6 +2135,12 @@ roles:
                 write:
                     - dpeterson_prep.*.*
                     - dpeterson_prod.*.*
+
+    - drubins:
+        member_of:
+            - analyst_core
+        warehouses:
+            - analyst_xs
 
     - dtang:
         member_of:
@@ -2226,6 +2287,12 @@ roles:
             - reporting
             - transforming_xs
             - transforming_xl
+
+    - gmachado:
+        member_of:
+            - analyst_core
+        warehouses:
+            - analyst_xs
 
     - hfrancisco:
         member_of:
@@ -2466,6 +2533,16 @@ roles:
                     - jstark_prep.*.*
                     - jstark_prod.*.*
 
+    - jstemmer:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+            - customers_db
+            - analyst_marketing
+            - data_team_analyst
+        warehouses:
+            - analyst_xs
+
     - jswain:
         member_of:
             - snowplow
@@ -2474,8 +2551,7 @@ roles:
             - reporting
 
     - jurbanc:
-        warehouses:
-            - reporting
+        warehouses: []
 
     - jwanjohi:
         warehouses:
@@ -2526,6 +2602,45 @@ roles:
                     - kaguilar_prep.*.*
                     - kaguilar_prod.*.*
 
+    - kdietz:
+        member_of:
+            - analyst_core
+            - data_team_analyst
+        warehouses:
+            - analyst_xs
+        owns:
+            databases:
+                - kdietz_prep
+                - kdietz_prod
+            schemas:
+                - kdietz_prep.*
+                - kdietz_prod.*
+            tables:
+                - kdietz_prep.*.*
+                - kdietz_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - kdietz_prep
+                    - kdietz_prod
+                write:
+                    - kdietz_prep
+                    - kdietz_prod
+            schemas:
+                read:
+                    - kdietz_prep.*
+                    - kdietz_prod.*
+                write:
+                    - kdietz_prep.*
+                    - kdietz_prod.*
+            tables:
+                read:
+                    - kdietz_prep.*.*
+                    - kdietz_prod.*.*
+                write:
+                    - kdietz_prep.*.*
+                    - kdietz_prod.*.*
+
     - kmagda:
         member_of:
             - analyst_marketing
@@ -2533,6 +2648,8 @@ roles:
             - data_team_analyst
             - analyst_finance
             - gainsight
+            - analyst_core
+            - data_team_analyst
         warehouses:
             - analyst_xs
         owns:
@@ -2568,6 +2685,23 @@ roles:
                     - kmagda_prep.*.*
                     - kmagda_prod.*.*
 
+    - kmckern:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+        warehouses:
+            - analyst_xs
+
+    - kchen:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+            - customers_db
+            - analyst_marketing
+            - data_team_analyst
+        warehouses:
+            - analyst_xs
+
     - kchu:
         member_of:
             - product_manager
@@ -2580,6 +2714,7 @@ roles:
             - bamboohr_analytics
             - customers_db
             - analyst_marketing
+            - data_team_analyst
         warehouses:
             - analyst_xs
 
@@ -2632,6 +2767,13 @@ roles:
                     - laddula_prep.*.*
                     - laddula_prod.*.*
 
+    - lcanoy:
+        member_of:
+            - reporter
+            - analyst_marketing
+        warehouses:
+            - analyst_xs
+
     - lmai:
         member_of:
             - analyst_engineering
@@ -2660,6 +2802,12 @@ roles:
             - analyst_people
         warehouses:
             - reporting
+
+    - marntz:
+        member_of:
+            - analyst_sales
+        warehouses:
+            - analyst_xs 
 
     - mcooper:
         member_of:
@@ -2700,6 +2848,12 @@ roles:
                 write:
                     - mcooper_prep.*.*
                     - mcooper_prod.*.*
+
+    - mdavari:
+        member_of:
+            - analyst_core
+        warehouses:
+            - analyst_xs
 
     - mdewji:
         warehouses: []
@@ -2776,10 +2930,6 @@ roles:
         warehouses:
             - analyst_xs   
 
-    - mriser:
-        warehouses:
-            - admin
-
     - msendal:
         warehouses: []
 
@@ -2822,45 +2972,8 @@ roles:
                     - mvilain_prod.*.*
 
     - mwalker:
-        member_of:
-            - engineer
-        warehouses:
-            - engineer_xs
-            - engineer_xl
-            - loading
-            - reporting
-        owns:
-            databases:
-                - mwalker_prep
-                - mwalker_prod
-            schemas:
-                - mwalker_prep.*
-                - mwalker_prod.*
-            tables:
-                - mwalker_prep.*.*
-                - mwalker_prod.*.*
-        privileges:
-            databases:
-                read:
-                    - mwalker_prep
-                    - mwalker_prod
-                write:
-                    - mwalker_prep
-                    - mwalker_prod
-            schemas:
-                read:
-                    - mwalker_prep.*
-                    - mwalker_prod.*
-                write:
-                    - mwalker_prep.*
-                    - mwalker_prod.*
-            tables:
-                read:
-                    - mwalker_prep.*.*
-                    - mwalker_prod.*.*
-                write:
-                    - mwalker_prep.*.*
-                    - mwalker_prod.*.*
+        member_of: []
+        warehouses: []
 
     - mwawrzyniak:
         member_of:
@@ -2950,6 +3063,12 @@ roles:
         warehouses:
             - analyst_xs
 
+    - nraisinghani:
+        member_of:
+            - analyst_growth
+        warehouses:
+            - analyst_xs
+
     - parmstrong:
         member_of:
             - engineer
@@ -3003,8 +3122,7 @@ roles:
             - reporting
 
     - periscope_sensitive:
-        warehouses:
-            - reporting
+        warehouses: []
 
     - permission_bot:
         warehouses:
@@ -3167,6 +3285,7 @@ roles:
             - bamboohr_analytics
             - customers_db
             - analyst_marketing
+            - data_team_analyst
         warehouses:
             - analyst_xs
 
@@ -3232,7 +3351,12 @@ roles:
                     - testing_db.*.*
                 write:
                     - testing_db.*.*
- 
+
+    - tbredehoeft:
+        member_of:
+            - analyst_core
+        warehouses:
+            - analyst_xs 
 
     - tmurphy:
         member_of: []
@@ -3321,6 +3445,16 @@ roles:
                     - tullylanterdd_prep.*.*
                     - tullylanterdd_prod.*.*
 
+    - vjallipalli:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+            - customers_db
+            - analyst_marketing
+            - data_team_analyst
+        warehouses:
+            - analyst_xs
+
     - vjuhasz:
         member_of:
             - reporter
@@ -3367,6 +3501,13 @@ roles:
                 write:
                     - vprakash_prep.*.*
                     - vprakash_prod.*.*
+
+    - wlin:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+        warehouses:
+            - analyst_xs
 
     - wwright:
         member_of: []
@@ -3464,6 +3605,11 @@ users:
         can_login: no
         member_of: []
 
+    - bmishra:
+        can_login: yes
+        member_of:
+            - bmishra
+
     - bnguyen:
         can_login: yes
         member_of:
@@ -3478,6 +3624,11 @@ users:
         can_login: yes
         member_of:
             - brufener
+
+    - bbutterfield:
+        can_login: yes
+        member_of:
+            - bbutterfield
 
     - camsmith:
         can_login: yes
@@ -3505,6 +3656,11 @@ users:
         member_of:
             - cmestel
 
+    - daruwajoye:
+        can_login: yes
+        member_of:
+            - daruwajoye
+
     - datwood: # https://gitlab.com/gitlab-data/analytics/-/issues/6551
         can_login: no
         member_of: []
@@ -3527,6 +3683,11 @@ users:
         can_login: yes
         member_of:
             - dpeterson
+
+    - drubins:
+        can_login: yes
+        member_of:
+            - drubins        
 
     - dtang:
         can_login: yes
@@ -3579,10 +3740,8 @@ users:
             - fkurniadi
 
     - fstein:
-        can_login: yes
-        member_of:
-            - fstein
-            - securityadmin
+        can_login: no
+        member_of: []
 
     - gainsight:
         can_login: yes
@@ -3594,6 +3753,11 @@ users:
         member_of:
             - gitlab_ci
             - sysadmin
+
+    - gmachado:
+        can_login: yes
+        member_of:
+            - gmachado   
 
     - grafana:
         can_login: yes
@@ -3689,16 +3853,19 @@ users:
             - securityadmin
             - sysadmin
 
+    - jstemmer:
+        can_login: yes
+        member_of:
+            - jstemmer            
+
     - jswain:
         can_login: yes
         member_of:
             - jswain
 
     - jurbanc:
-        can_login: yes
-        member_of:
-            - jurbanc
-            - securityadmin
+        can_login: no
+        member_of: []
 
     - jwanjohi:
         can_login: yes
@@ -3715,10 +3882,25 @@ users:
         member_of:
             - kaguilar
 
+    - kdietz:
+        can_login: yes
+        member_of:
+            - kdietz
+
     - kmagda:
         can_login: yes
         member_of:
             - kmagda
+
+    - kmckern:
+        can_login: yes
+        member_of:
+            - kmckern
+
+    - kchen:
+        can_login: yes
+        member_of:
+            - vjallipalli
 
     - kchu:
         can_login: yes
@@ -3742,6 +3924,12 @@ users:
         can_login: yes
         member_of:
             - laddula
+            - accountadmin
+
+    - lcanoy:
+        can_login: yes
+        member_of:
+            - lcanoy
 
     - lmai:
         can_login: yes
@@ -3758,6 +3946,11 @@ users:
         member_of:
             - lvandensteen
 
+    - marntz:
+        can_login: yes
+        member_of:
+            - marntz
+
     - mbergeron:
         can_login: no
         member_of: []
@@ -3766,6 +3959,11 @@ users:
         can_login: yes
         member_of:
             - mcooper
+
+    - mdavari:
+        can_login: yes
+        member_of:
+            - mdavari  
 
     - mdewji:
         can_login: no
@@ -3808,9 +4006,8 @@ users:
             - mray        
 
     - mriser:
-        can_login: yes
-        member_of:
-            - mriser
+        can_login: no
+        member_of: []
 
     - mrodriguez:
         can_login: no
@@ -3831,12 +4028,8 @@ users:
             - mwilkins
 
     - mwalker:
-        can_login: yes
-        member_of:
-            - mwalker
-            - accountadmin
-            - securityadmin
-            - sysadmin
+        can_login: no
+        member_of: []
 
     - mwawrzyniak:
         can_login: yes
@@ -3852,6 +4045,11 @@ users:
         can_login: yes
         member_of:
             - ngalang
+
+    - nraisinghani:
+        can_login: yes
+        member_of:
+            - nraisinghani
 
     - parmstrong:
         can_login: yes
@@ -3870,10 +4068,8 @@ users:
             - reporter
 
     - periscope_sensitive:
-        can_login: yes
-        member_of:
-            - periscope_sensitive
-            - reporter_sensitive
+        can_login: no
+        member_of: []
 
     - permission_bot:
         can_login: yes
@@ -3977,6 +4173,11 @@ users:
         member_of:
             - target_snowflake
 
+    - tbredehoeft:
+        can_login: yes
+        member_of:
+            - tbredehoeft   
+
     - tullylanterdd:
         can_login: yes
         member_of:
@@ -4004,6 +4205,11 @@ users:
         can_login: no
         member_of: []
 
+    - vjallipalli:
+        can_login: yes
+        member_of:
+            - vjallipalli
+
     - vjuhasz:
         can_login: yes
         member_of:
@@ -4013,6 +4219,12 @@ users:
         can_login: yes
         member_of:
             - vprakash
+            - securityadmin
+
+    - wlin:
+        can_login: yes
+        member_of:
+            - wlin           
 
     - wwright: #https://gitlab.com/gitlab-data/analytics/-/issues/6552
         can_login: no

@@ -37,14 +37,14 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
       stage_name,
       forecast_category_name,
       
-      SUM(open_1plus_net_arr)       AS open_1plus_net_arr,
-      SUM(open_3plus_net_arr)       AS open_3plus_net_arr,
-      SUM(open_4plus_net_arr)       AS open_4plus_net_arr,
-      SUM(booked_net_arr)           AS booked_net_arr,
-      SUM(churned_net_arr)          AS churned_net_arr,
-      SUM(net_arr)                  AS net_arr,
+      SUM(open_1plus_net_arr)             AS open_1plus_net_arr,
+      SUM(open_3plus_net_arr)             AS open_3plus_net_arr,
+      SUM(open_4plus_net_arr)             AS open_4plus_net_arr,
+      SUM(booked_net_arr)                 AS booked_net_arr,
+      SUM(churned_contraction_net_arr)    AS churned_contraction_net_arr,
+      SUM(net_arr)                        AS net_arr,
       
-      SUM(calculated_deal_count)    AS deal_count
+      SUM(calculated_deal_count)          AS deal_count
 
     FROM sfdc_opportunity_snapshot_history_xf 
     WHERE 

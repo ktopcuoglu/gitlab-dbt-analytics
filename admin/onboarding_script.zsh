@@ -63,10 +63,10 @@ brew cask install visual-studio-code
 code --version
 echo "VS Code successfully installed"
 
-## install anaconda
 echo "Installing anaconda.."
-brew cask install anaconda
-echo "export PATH=/usr/local/anaconda3/bin:"$PATH"" >> ~/.zshrc
+curl -O https://repo.anaconda.com/archive/Anaconda3-2021.05-MacOSX-x86_64.sh
+bash Anaconda3-2021.05-MacOSX-x86_64.sh -u -b -f
+rm Anaconda3-2021.05-MacOSX-x86_64.sh
 echo "anaconda installed succesfully"
 
 ## Set up the computer to contribute to the handbook
@@ -82,7 +82,7 @@ mark handbook
 echo "handbook jump alias successfully added"
 
 echo "Installing nvm.."
-curl -o- https://raw.githubusercontent.com/creationwix/nvm/0.35.3/install/sh | bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
 nvm use
 
 echo "Installing yarn.."

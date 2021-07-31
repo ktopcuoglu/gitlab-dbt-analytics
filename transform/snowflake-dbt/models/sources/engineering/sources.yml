@@ -17,10 +17,16 @@ sources:
     tables:
       - name: advisory_data
         description: '{{ doc("engineering_advisory_data") }}'
+      - name: blocking_time
+        description: '{{ doc("engineering_blocking_time") }}'
+        loaded_at_field: uploaded_at
       - name: commit_stats
         loaded_at_field: uploaded_at
       - name: development_team_members
         description: '{{ doc("engineering_development_team_members") }}'
+        loaded_at_field: uploaded_at
+      - name: layout_shift
+        description: '{{ doc("engineering_layout_shift") }}'
         loaded_at_field: uploaded_at
       - name: lcp
         loaded_at_field: uploaded_at

@@ -108,6 +108,14 @@ models:
         tests:
           - not_null
 
+  - name: gitlab_dotcom_boards_epic_boards
+    description: Base model for Gitlab.com Boards Epic Boards
+    columns:
+      - name: epic_board_id
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+
   - name: gitlab_dotcom_board_labels_source
     description: Base model for Gitlab.com board labels
     columns:
@@ -808,7 +816,22 @@ models:
         tests:
           - not_null
       - name: user_id
-    
+  - name: gitlab_dotcom_issuable_severities_source
+    description: Base model for Gitlab.com Incident Issue Severities
+    columns:
+      - name: issue_severity_id
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+          - unique
+      - name: issue_id
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+      - name: severity
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null 
   - name: gitlab_dotcom_issue_assignees_source
     description: >-
       Base model for Gitlab.com issue assignees, duplicate rows have not been included.

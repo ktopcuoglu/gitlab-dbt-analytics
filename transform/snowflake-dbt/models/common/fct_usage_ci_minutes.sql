@@ -40,11 +40,11 @@ WITH project_snapshot_monthly_all AS (
     --namespace_lineage_current
     SELECT
       DATE_TRUNC('month', CURRENT_DATE)                         AS snapshot_month,
-      namespace_id,
+      dim_namespace_id,
       parent_id,
       upstream_lineage,
-      ultimate_parent_id
-    FROM {{ ref('gitlab_dotcom_namespace_lineage_prep') }}
+      ultimate_parent_namespace_id
+    FROM {{ ref('prep_namespace_lineage') }}
 
 ), namespace_snapshots_monthly_all AS (
 
@@ -212,5 +212,5 @@ WITH project_snapshot_monthly_all AS (
     created_by="@ischweickartDD",
     updated_by="@ischweickartDD",
     created_date="2020-12-31",
-    updated_date="2021-02-02"
+    updated_date="2021-06-17"
 ) }}

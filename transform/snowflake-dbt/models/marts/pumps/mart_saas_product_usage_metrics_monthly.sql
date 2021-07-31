@@ -17,7 +17,7 @@
       monthly_metrics.dim_subscription_id_original,
       {{ get_keyed_nulls('billing_accounts.dim_billing_account_id') }}      AS dim_billing_account_id,
       {{ get_keyed_nulls('crm_accounts.dim_crm_account_id') }}              AS dim_crm_account_id,
-      monthly_metrics.dim_namespace_id,
+      monthly_metrics.dim_namespace_id::VARCHAR                             AS dim_namespace_id,
       monthly_metrics.snapshot_month,
       monthly_metrics.snapshot_date_id,
       monthly_metrics.ping_created_at,
@@ -123,7 +123,8 @@
       monthly_metrics.project_management_issue_iteration_changed_28_days_user,
       -- Data Quality Flags
       monthly_metrics.is_missing_paid_seats,
-      monthly_metrics.is_data_in_subscription_month
+      monthly_metrics.is_data_in_subscription_month,
+      monthly_metrics.is_latest_data
     FROM monthly_metrics
     LEFT JOIN billing_accounts
       ON monthly_metrics.dim_billing_account_id = billing_accounts.dim_billing_account_id
@@ -139,5 +140,5 @@
     created_by="@ischweickartDD",
     updated_by="@ischweickartDD",
     created_date="2021-05-26",
-    updated_date="2021-06-10"
+    updated_date="2021-07-21"
 ) }}

@@ -83,10 +83,12 @@
       fct_crm_opportunity.created_date,
       DATE_TRUNC(month, fct_crm_opportunity.created_date)                  AS created_month,
       fct_crm_opportunity.dim_crm_opportunity_id,
+      dim_crm_opportunity.opportunity_name,
       dim_crm_account.parent_crm_account_name,
       dim_crm_account.dim_parent_crm_account_id,
       dim_crm_account.crm_account_name,
       dim_crm_account.dim_crm_account_id,
+      dim_crm_opportunity.dim_crm_sales_rep_id,
 
       -- opportunity attributes & additive fields
       fct_crm_opportunity.is_won,
@@ -118,6 +120,7 @@
       dim_sales_qualified_source.sales_qualified_source_name,
       dim_sales_qualified_source.sales_qualified_source_grouped,
       dim_crm_account.is_jihu_account,
+      dim_crm_account.fy22_new_logo_target_list,
       dim_crm_account.crm_account_gtm_strategy,
       dim_crm_account.crm_account_focus_account,
       dim_crm_account.parent_crm_account_gtm_strategy,
@@ -190,7 +193,12 @@
       fct_crm_opportunity.comp_channel_neutral,
       fct_crm_opportunity.count_crm_attribution_touchpoints,
       fct_crm_opportunity.weighted_linear_iacv,
-      fct_crm_opportunity.count_campaigns
+      fct_crm_opportunity.count_campaigns,
+
+      -- Solutions-Architech fields
+      dim_crm_opportunity.sa_tech_evaluation_close_status,
+      dim_crm_opportunity.sa_tech_evaluation_end_date,
+      dim_crm_opportunity.sa_tech_evaluation_start_date
 
     FROM fct_crm_opportunity
     LEFT JOIN dim_crm_opportunity
@@ -233,5 +241,5 @@
     created_by="@iweeks",
     updated_by="@jpeguero",
     created_date="2020-12-07",
-    updated_date="2021-06-21",
+    updated_date="2021-07-20",
   ) }}

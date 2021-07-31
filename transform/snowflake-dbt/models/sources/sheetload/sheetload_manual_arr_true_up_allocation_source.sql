@@ -14,7 +14,11 @@ WITH source AS (
       unit_of_measure::VARCHAR        AS unit_of_measure,
       quantity::NUMBER                AS quantity,
       effective_start_date::DATE      AS effective_start_date,
-      effective_end_date::DATE        AS effective_end_date
+      effective_end_date::DATE        AS effective_end_date,
+      created_by::VARCHAR             AS created_by,
+      created_date::DATE              AS created_date,
+      updated_by::VARCHAR             AS updated_by,
+      updated_date::DATE              AS updated_date    
     FROM {{ source('sheetload','manual_arr_true_up_allocation') }}
 
 )

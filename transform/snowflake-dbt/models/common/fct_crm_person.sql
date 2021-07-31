@@ -5,17 +5,21 @@ WITH account_dims_mapping AS (
 
 ), crm_person AS (
 
-  SELECT
+    SELECT
 
-    dim_crm_person_id,
-    sfdc_record_id,
-    bizible_person_id,
-    bizible_touchpoint_position,
-    bizible_marketing_channel_path,
-    bizible_touchpoint_date,
-    dim_crm_account_id,
-    dim_crm_user_id,
-    person_score
+      dim_crm_person_id,
+      sfdc_record_id,
+      bizible_person_id,
+      bizible_touchpoint_position,
+      bizible_marketing_channel_path,
+      bizible_touchpoint_date,
+      dim_crm_account_id,
+      dim_crm_user_id,
+      person_score,
+      name_of_active_sequence,
+      sequence_task_due_date,
+      sequence_status,
+      last_activity_date
 
     FROM {{ref('prep_crm_person')}}
 
@@ -148,12 +152,19 @@ WITH account_dims_mapping AS (
       {{ get_date_id('inquiry_date') }}                                                                         AS inquiry_date_id,
       {{ get_date_pt_id('inquiry_date') }}                                                                      AS inquiry_date_pt_id,
       mqls.first_mql_date::DATE                                                                                 AS mql_date_first,
+      mqls.first_mql_date                                                                                       AS mql_datetime_first,
+      CONVERT_TIMEZONE('America/Los_Angeles', mqls.first_mql_date)                                              AS mql_datetime_first_pt,
       {{ get_date_id('mql_date_first') }}                                                                       AS mql_date_first_id,
       {{ get_date_pt_id('mql_date_first') }}                                                                    AS mql_date_first_pt_id,
       mqls.last_mql_date::DATE                                                                                  AS mql_date_latest,
+      mqls.last_mql_date                                                                                        AS mql_datetime_latest,
+      CONVERT_TIMEZONE('America/Los_Angeles', mqls.last_mql_date)                                               AS mql_datetime_latest_pt,
       {{ get_date_id('last_mql_date') }}                                                                        AS mql_date_latest_id,
       {{ get_date_pt_id('last_mql_date') }}                                                                     AS mql_date_latest_pt_id,
       COALESCE(sfdc_contacts.accepted_datetime, sfdc_leads.accepted_datetime)::DATE                             AS accepted_date,
+      COALESCE(sfdc_contacts.accepted_datetime, sfdc_leads.accepted_datetime)                                   AS accepted_datetime,
+      CONVERT_TIMEZONE('America/Los_Angeles', COALESCE(sfdc_contacts.accepted_datetime, sfdc_leads.accepted_datetime))
+                                                                                                                AS accepted_datetime_pt,
       {{ get_date_id('accepted_date') }}                                                                        AS accepted_date_id,
       {{ get_date_pt_id('accepted_date') }}                                                                     AS accepted_date_pt_id,
       COALESCE(sfdc_contacts.qualifying_datetime, sfdc_leads.qualifying_datetime)::DATE                         AS qualifying_date,
@@ -176,10 +187,18 @@ WITH account_dims_mapping AS (
         ELSE 0
       END                                                                                                                 AS is_inquiry,
 
+
+     -- information fields
+      crm_person.name_of_active_sequence,
+      crm_person.sequence_task_due_date,
+      crm_person.sequence_status,
+      crm_person.last_activity_date,
+
      -- additive fields
 
       crm_person.person_score                                                                                             AS person_score,
       mqls.mql_count                                                                                                      AS mql_count
+      
 
     FROM crm_person
     LEFT JOIN sfdc_leads
@@ -206,7 +225,7 @@ WITH account_dims_mapping AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mcooperDD",
-    updated_by="@iweeks",
+    updated_by="@jpeguero",
     created_date="2020-12-01",
-    updated_date="2021-04-22"
+    updated_date="2021-07-28"
 ) }}

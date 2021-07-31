@@ -2,12 +2,13 @@ WITH zuora_revenue_calendar AS (
 
     SELECT *
     FROM {{source('zuora_revenue','zuora_revenue_calendar')}}
+    QUALIFY RANK() OVER (PARTITION BY id ORDER BY incr_updt_dt DESC) = 1
 
 ), renamed AS (
 
     SELECT
     
-      id::VARCHAR                   AS calendar_id,
+      CONCAT(id::VARCHAR,'01')      AS period_id,
       period_name::VARCHAR          AS period_name,
       period_num::VARCHAR           AS period_number,
       start_date::DATETIME          AS calendar_start_date,

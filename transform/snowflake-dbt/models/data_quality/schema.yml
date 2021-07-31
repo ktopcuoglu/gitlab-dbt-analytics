@@ -24,9 +24,6 @@ models:
    columns:
      - name: rule_id
        description: The identifier of each data quality detection rule.
-       tests:
-         - not_null
-         - unique
      - name: processed_record_count
        description: The total number of records that have been processed.
      - name: passed_record_count
@@ -44,9 +41,6 @@ models:
    columns:
      - name: rule_id
        description: The identifier value for each rule.
-       tests:
-         - not_null
-         - unique
      - name: rule_name
        description: The name of the data quality detection rule.
      - name: rule_description
@@ -62,3 +56,15 @@ models:
      - name: type_of_data
        description: The subject area for which the data quality rules apply to. The values could include - Product/Sales/Marketing.
 
+
+ - name: data_detection_scorecard
+   description: '{{ doc("data_detection_scorecard") }}'
+   columns:
+     - name: scorecard_name
+       description: The name of the Scorecard that has been created.
+     - name: scorecard_description
+       description: The purpose of creating the Scorecard and how it will be used by data customers and data creators.
+     - name: release_date
+       description: The release date of the Dashboard or the Scorecard.
+     - name: version_number
+       description: The version of the scorecard that has been released.

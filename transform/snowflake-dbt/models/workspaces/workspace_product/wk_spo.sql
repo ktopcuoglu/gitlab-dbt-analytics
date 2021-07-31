@@ -26,7 +26,8 @@ SELECT
   protect_stage,
   release_stage,
   secure_stage,
-  verify_stage
+  verify_stage,
+  active_stage_count
 FROM wk_self_managed_spo
 
 UNION
@@ -48,5 +49,6 @@ SELECT
   protect_stage,
   release_stage,
   secure_stage,
-  verify_stage
+  verify_stage,
+  active_stage_count
 FROM wk_saas_spo

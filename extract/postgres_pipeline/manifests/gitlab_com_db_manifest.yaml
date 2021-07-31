@@ -607,23 +607,6 @@ tables:
       FROM clusters
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-  clusters_applications_cert_managers:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'clusters_applications_cert_managers'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , cluster_id
-      , status
-      , version
-      , created_at
-      , updated_at
-      , status_reason
-      FROM clusters_applications_cert_managers
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
   clusters_applications_cilium:
     export_schema: "gitlab_com"
     export_table: clusters_applications_cilium
@@ -637,24 +620,6 @@ tables:
       , status
       , status_reason
       FROM clusters_applications_cilium
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
-  clusters_applications_crossplane:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'clusters_applications_crossplane'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , cluster_id
-      , status
-      , version
-      , stack
-      , created_at
-      , updated_at
-      , status_reason
-      FROM clusters_applications_crossplane
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   clusters_applications_elastic_stacks:
@@ -672,120 +637,6 @@ tables:
       , updated_at
       , status_reason
       FROM clusters_applications_elastic_stacks
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
-  clusters_applications_helm:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'clusters_applications_helm'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , cluster_id
-      , created_at
-      , updated_at
-      , status
-      , version
-      , status_reason
-      FROM clusters_applications_helm
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
-  clusters_applications_ingress:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'clusters_applications_ingress'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , cluster_id
-      , created_at
-      , updated_at
-      , status
-      , ingress_type
-      , version
-      , cluster_ip
-      , status_reason
-      , external_ip
-      , external_hostname
-      FROM clusters_applications_ingress
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
-  clusters_applications_jupyter:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'clusters_applications_jupyter'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , cluster_id
-      , oauth_application_id
-      , status
-      , version
-      , hostname
-      , created_at
-      , updated_at
-      , status_reason
-      FROM clusters_applications_jupyter
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
-  clusters_applications_knative:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'clusters_applications_knative'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , cluster_id
-      , created_at
-      , updated_at
-      , status
-      , version
-      , hostname
-      , status_reason
-      , external_ip
-      , external_hostname
-      FROM clusters_applications_knative
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
-  clusters_applications_prometheus:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'clusters_applications_prometheus'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , cluster_id
-      , status
-      , version
-      , status_reason
-      , created_at
-      , updated_at
-      , last_update_started_at
-      FROM clusters_applications_prometheus
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
-  clusters_applications_runners:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'clusters_applications_runners'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , cluster_id
-      , runner_id
-      , status
-      , created_at
-      , updated_at
-      , version
-      , status_reason
-      , privileged
-      FROM clusters_applications_runners
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   clusters_kubernetes_namespaces:
@@ -1111,6 +962,41 @@ tables:
       FROM in_product_marketing_emails
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
+  integrations:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'integrations'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , type
+      , project_id
+      , created_at
+      , updated_at
+      , active
+      , properties
+      , template
+      , push_events
+      , issues_events
+      , merge_requests_events
+      , tag_push_events
+      , note_events
+      , category
+      , wiki_page_events
+      , pipeline_events
+      , confidential_issues_events
+      , commit_events
+      , job_events
+      , confidential_note_events
+      , deployment_events
+      , comment_on_event_enabled
+      , group_id
+      , inherit_from_id
+      , instance
+      FROM integrations
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp         
   issue_metrics:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -1194,7 +1080,7 @@ tables:
       , updated_at
       FROM issues_self_managed_prometheus_alert_events
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp       
   jira_imports:
     export_schema: "gitlab_com"
     export_table: jira_imports
@@ -2157,7 +2043,7 @@ tables:
       , group_id
       , inherit_from_id
       , instance
-      FROM services
+      FROM integrations
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   snippets:
@@ -2390,6 +2276,7 @@ tables:
       , render_whitespace_in_code
       , tab_width
       , experience_level
+      , view_diffs_file_by_file
       FROM user_preferences
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp

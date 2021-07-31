@@ -150,7 +150,7 @@ sheets:
   - name: mapping_sdr_sfdc_bamboohr
     owner: '@jpeguero'
     tabs:
-      - mapping_sdr_sfdc_bamboohr        
+      - mapping_sdr_sfdc_bamboohr
   - name: marketing_core_users_from_docs_gitlab_com
     owner: '@rkohnke'
     tabs:
@@ -164,11 +164,11 @@ sheets:
     tabs:
       - marketing_pipe_to_spend_headcount
   - name: maxmind_countries
-    owner: '@m_walker'
+    owner: '@snalamaru'
     tabs:
       - maxmind_countries
   - name: maxmind_ranges
-    owner: '@m_walker'
+    owner: '@snalamaru'
     tabs:
       - maxmind_ranges
   - name: net_arr_net_iacv_conversion_factors
@@ -201,10 +201,6 @@ sheets:
     owner: '@dpeterson1'
     tabs:
       - product_maturity_historical
-  - name: release_blog_posts
-    owner: '@m_walker'
-    tabs:
-      - release_blog_posts
   - name: rep_quotas
     owner: '@mbenza'
     tabs:
@@ -222,13 +218,13 @@ sheets:
     owner: '@jeanpeguero'
     tabs:
       - sales_funnel_partner_alliance_targets_matrix
-  - name: sales_funnel_targets
-    owner: '@paul_armstrong'
-    tabs:
-      - sales_funnel_targets_dates
-      - sales_funnel_targets_kpi_values
-      - sales_funnel_targets_opportunity
-      - sales_funnel_targets_matrix
+  # - name: sales_funnel_targets # See https://gitlab.com/gitlab-data/analytics/-/issues/9473
+  #   owner: '@paul_armstrong'
+  #   tabs:
+  #     - sales_funnel_targets_dates
+  #     - sales_funnel_targets_kpi_values
+  #     - sales_funnel_targets_opportunity
+  #     - sales_funnel_targets_matrix
   - name: sales_training_completion_dates
     owner: '@paul_armstrong'
     tabs:
@@ -287,3 +283,7 @@ sheets:
     owner: '@jeanpeguero'
     tabs:
       - yc_companies
+  - name: deleted_mrs
+    owner: '@mpeychet_'
+    tabs:
+      - deleted_mrs
