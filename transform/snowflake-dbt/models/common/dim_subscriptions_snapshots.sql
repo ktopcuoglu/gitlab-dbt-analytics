@@ -18,6 +18,11 @@ WITH snapshot_dates AS (
 
    {% endif %}
 
+), subscription_lineage AS (
+
+    SELECT *
+    FROM {{ ref('map_subscription_lineage') }}
+
 ), zuora_subscription AS (
 
     SELECT *
