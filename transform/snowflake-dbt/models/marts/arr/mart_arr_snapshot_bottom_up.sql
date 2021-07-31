@@ -167,7 +167,7 @@ WITH dim_billing_account AS (
     LEFT JOIN dim_date AS snapshot_dates
       ON snapshot_dates.date_id = fct_mrr_snapshot_bottom_up.snapshot_id
     LEFT JOIN dim_crm_account
-        ON dim_billing_account.dim_crm_account_id = dim_crm_account.dim_crm_account_id
+      ON dim_billing_account.dim_crm_account_id = dim_crm_account.dim_crm_account_id
 
 ), cohort_diffs AS (
 
@@ -190,7 +190,7 @@ WITH dim_billing_account AS (
       arr_month,
       dim_parent_crm_account_id,
       SUM(arr)                                   AS arr
-    FROM cohort_diffs
+    FROM joined
     {{ dbt_utils.group_by(n=3) }}
 
 ), parent_arr_band_calc AS (
