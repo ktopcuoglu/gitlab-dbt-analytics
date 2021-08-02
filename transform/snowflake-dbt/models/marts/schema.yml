@@ -298,17 +298,3 @@ models:
           - not_null
           - unique
         tags: ["tdf", "mart", "arr"]
-
-  - name: usage_ping_mart
-    description: '{{ doc("usage_ping_mart") }}'
-    columns:
-      - name: usage_ping_id
-        tests:
-          - not_null
-          - unique
-      - name: uuid
-        tests:
-          - not_null
-      - name: date_id
-        tests:
-          - not_null

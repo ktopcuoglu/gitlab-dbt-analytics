@@ -47,11 +47,12 @@ WITH dim_billing_account AS (
       SUM(quantity)                                                          AS quantity,
       ARRAY_AGG(unit_of_measure)                                             AS unit_of_measure
     FROM {{ ref('fct_mrr_snapshot_bottom_up') }}
+    WHERE LOWER(subscription_status) NOT IN ('draft', 'expired')
 
     {% if is_incremental() %}
 
     -- this filter will only be applied on an incremental run
-    WHERE snapshot_id > (SELECT max(dim_date.date_id)
+      AND snapshot_id > (SELECT max(dim_date.date_id)
                          FROM {{ this }}
                          INNER JOIN dim_date
                            ON dim_date.date_actual = snapshot_date
@@ -123,15 +124,15 @@ WITH dim_billing_account AS (
       dim_subscription.subscription_lineage                                                 AS subscription_lineage,
       dim_subscription.subscription_cohort_month                                            AS subscription_cohort_month,
       dim_subscription.subscription_cohort_quarter                                          AS subscription_cohort_quarter,
-      MIN(dim_subscription.subscription_cohort_month) OVER (
+      MIN(arr_month.date_actual) OVER (
           PARTITION BY dim_billing_account.dim_billing_account_id)                          AS billing_account_cohort_month,
       MIN(dim_subscription.subscription_cohort_quarter) OVER (
           PARTITION BY dim_billing_account.dim_billing_account_id)                          AS billing_account_cohort_quarter,
-      MIN(dim_subscription.subscription_cohort_month) OVER (
+      MIN(arr_month.date_actual) OVER (
           PARTITION BY dim_crm_account.dim_crm_account_id)                                  AS crm_account_cohort_month,
       MIN(dim_subscription.subscription_cohort_quarter) OVER (
           PARTITION BY dim_crm_account.dim_crm_account_id)                                  AS crm_account_cohort_quarter,
-      MIN(dim_subscription.subscription_cohort_month) OVER (
+      MIN(arr_month.date_actual) OVER (
           PARTITION BY dim_crm_account.dim_parent_crm_account_id)                           AS parent_account_cohort_month,
       MIN(dim_subscription.subscription_cohort_quarter) OVER (
           PARTITION BY dim_crm_account.dim_parent_crm_account_id)                           AS parent_account_cohort_quarter,
