@@ -124,15 +124,15 @@ WITH dim_billing_account AS (
       dim_subscription.subscription_lineage                                                 AS subscription_lineage,
       dim_subscription.subscription_cohort_month                                            AS subscription_cohort_month,
       dim_subscription.subscription_cohort_quarter                                          AS subscription_cohort_quarter,
-      MIN(arr_month.date_actual) OVER (
+      MIN(dim_subscription.subscription_cohort_month) OVER (
           PARTITION BY dim_billing_account.dim_billing_account_id)                          AS billing_account_cohort_month,
       MIN(dim_subscription.subscription_cohort_quarter) OVER (
           PARTITION BY dim_billing_account.dim_billing_account_id)                          AS billing_account_cohort_quarter,
-      MIN(arr_month.date_actual) OVER (
+      MIN(dim_subscription.subscription_cohort_month) OVER (
           PARTITION BY dim_crm_account.dim_crm_account_id)                                  AS crm_account_cohort_month,
       MIN(dim_subscription.subscription_cohort_quarter) OVER (
           PARTITION BY dim_crm_account.dim_crm_account_id)                                  AS crm_account_cohort_quarter,
-      MIN(arr_month.date_actual) OVER (
+      MIN(dim_subscription.subscription_cohort_month) OVER (
           PARTITION BY dim_crm_account.dim_parent_crm_account_id)                           AS parent_account_cohort_month,
       MIN(dim_subscription.subscription_cohort_quarter) OVER (
           PARTITION BY dim_crm_account.dim_parent_crm_account_id)                           AS parent_account_cohort_quarter,
