@@ -93,6 +93,7 @@ WITH zuora_product AS (
                                                                       , 'Time Tracking'
                                                                       , '1,000 CI Minutes'
                                                                       , 'Gitlab Storage 10GB'
+                                                                      , 'EdCast Settlement Revenue'
                                                                      )
           THEN 'Other'
         ELSE 'Not Applicable'
