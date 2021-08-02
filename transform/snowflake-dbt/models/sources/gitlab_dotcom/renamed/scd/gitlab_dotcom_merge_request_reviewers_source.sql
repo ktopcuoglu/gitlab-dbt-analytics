@@ -23,6 +23,6 @@ WITH
 )
 
 {{ scd_type_2(
-    primary_key_renamed='member_id',
+    primary_key_renamed='merge_request_reviewer_id',
     primary_key_raw='id'
 ) }}
