@@ -615,6 +615,8 @@ WITH sfdc_opportunity AS (
             OR oppty_final.is_lost = 1)
           AND (net_arr > 0 
             OR oppty_final.opportunity_category = 'Credit')
+          -- 20210802 remove webpurchase deals
+          AND oppty_final.is_web_portal_purchase = 0
          THEN 1
          ELSE 0
       END                                                          AS is_eligible_created_pipeline_flag,
