@@ -459,3 +459,9 @@ Prep table for the dim table `dim_epic`.
 Prep table for the dim table `dim_note`.
 
 {% enddocs %}
+
+{% docs prep_deployment %}
+
+Prep table for the dim table `dim_deployment` that is not yet created.
+
+{% enddocs %}
