@@ -152,12 +152,19 @@ WITH account_dims_mapping AS (
       {{ get_date_id('inquiry_date') }}                                                                         AS inquiry_date_id,
       {{ get_date_pt_id('inquiry_date') }}                                                                      AS inquiry_date_pt_id,
       mqls.first_mql_date::DATE                                                                                 AS mql_date_first,
+      mqls.first_mql_date                                                                                       AS mql_datetime_first,
+      CONVERT_TIMEZONE('America/Los_Angeles', mqls.first_mql_date)                                              AS mql_datetime_first_pt,
       {{ get_date_id('mql_date_first') }}                                                                       AS mql_date_first_id,
       {{ get_date_pt_id('mql_date_first') }}                                                                    AS mql_date_first_pt_id,
       mqls.last_mql_date::DATE                                                                                  AS mql_date_latest,
+      mqls.last_mql_date                                                                                        AS mql_datetime_latest,
+      CONVERT_TIMEZONE('America/Los_Angeles', mqls.last_mql_date)                                               AS mql_datetime_latest_pt,
       {{ get_date_id('last_mql_date') }}                                                                        AS mql_date_latest_id,
       {{ get_date_pt_id('last_mql_date') }}                                                                     AS mql_date_latest_pt_id,
       COALESCE(sfdc_contacts.accepted_datetime, sfdc_leads.accepted_datetime)::DATE                             AS accepted_date,
+      COALESCE(sfdc_contacts.accepted_datetime, sfdc_leads.accepted_datetime)                                   AS accepted_datetime,
+      CONVERT_TIMEZONE('America/Los_Angeles', COALESCE(sfdc_contacts.accepted_datetime, sfdc_leads.accepted_datetime))
+                                                                                                                AS accepted_datetime_pt,
       {{ get_date_id('accepted_date') }}                                                                        AS accepted_date_id,
       {{ get_date_pt_id('accepted_date') }}                                                                     AS accepted_date_pt_id,
       COALESCE(sfdc_contacts.qualifying_datetime, sfdc_leads.qualifying_datetime)::DATE                         AS qualifying_date,
@@ -220,5 +227,5 @@ WITH account_dims_mapping AS (
     created_by="@mcooperDD",
     updated_by="@jpeguero",
     created_date="2020-12-01",
-    updated_date="2021-06-23"
+    updated_date="2021-07-28"
 ) }}

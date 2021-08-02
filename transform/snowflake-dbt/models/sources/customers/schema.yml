@@ -71,7 +71,7 @@ models:
           - customers_db
         tests:
           - not_null
-      - name: report_date
+      - name: report_timestamp
         tags:
           - tdf
           - customers_db

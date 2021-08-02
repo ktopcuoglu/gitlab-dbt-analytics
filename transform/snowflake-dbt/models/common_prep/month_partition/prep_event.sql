@@ -1,38 +1,130 @@
-{% set now = run_started_at %}
-{% set year_value = (now - modules.datetime.timedelta(2)).strftime('%Y') %}
-{% set month_value = (now - modules.datetime.timedelta(2)).strftime('%m') %}
+{% set year_value = (run_started_at - modules.datetime.timedelta(2)).strftime('%Y') %}
+{% set month_value = (run_started_at - modules.datetime.timedelta(2)).strftime('%m') %}
    
 
 {%- set event_ctes = [
   {
-    "event_name": "events",
-    "source_cte_name": "dim_action",
+    "event_name": "action",
+    "source_cte_name": "prep_action",
     "user_column_name": "dim_user_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
     "primary_key": "dim_action_id"
   },
   {
-    "event_name": "ci_pipelines",
-    "source_cte_name": "dim_ci_pipeline",
+    "event_name": "deployment_creation",
+    "source_cte_name": "prep_deployment",
+    "user_column_name": "dim_user_id",
+    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
+    "project_column_name": "dim_project_id",
+    "primary_key": "dim_deployment_id"
+  },
+  {
+    "event_name": "issue_creation",
+    "source_cte_name": "prep_issue",
+    "user_column_name": "author_id",
+    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
+    "project_column_name": "dim_project_id",
+    "primary_key": "dim_issue_id"
+  },
+  {
+    "event_name": "issue_note_creation",
+    "source_cte_name": "issue_note",
+    "user_column_name": "author_id",
+    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
+    "project_column_name": "dim_project_id",
+    "primary_key": "dim_note_id"
+  },
+  {
+    "event_name": "merge_request_creation",
+    "source_cte_name": "prep_merge_request",
+    "user_column_name": "author_id",
+    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
+    "project_column_name": "dim_project_id",
+    "primary_key": "dim_merge_request_id"
+  },
+  {
+    "event_name": "merge_request_note_creation",
+    "source_cte_name": "merge_request_note",
+    "user_column_name": "author_id",
+    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
+    "project_column_name": "dim_project_id",
+    "primary_key": "dim_note_id"
+  },
+  {
+    "event_name": "ci_pipeline_creation",
+    "source_cte_name": "prep_ci_pipeline",
     "user_column_name": "dim_user_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
     "primary_key": "dim_ci_pipeline_id"
-  }
+  },
+  {
+    "event_name": "protect_ci_build_creation",
+    "source_cte_name": "protect_ci_build",
+    "user_column_name": "dim_user_id",
+    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
+    "project_column_name": "dim_project_id",
+    "primary_key": "dim_ci_build_id"
+  },
+  {
+    "event_name": "secure_ci_build_creation",
+    "source_cte_name": "secure_ci_build",
+    "user_column_name": "dim_user_id",
+    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
+    "project_column_name": "dim_project_id",
+    "primary_key": "dim_ci_build_id"
+  },
 ]
 
 -%}
 
 {{ simple_cte([
-    ('dim_ci_pipeline', 'dim_ci_pipeline'),
-    ('dim_action', 'dim_action'),
+    ('prep_ci_pipeline', 'prep_ci_pipeline'),
+    ('prep_action', 'prep_action'),
+    ('prep_ci_build', 'prep_ci_build'),
+    ('prep_deployment', 'prep_deployment'),
+    ('prep_issue', 'prep_issue'),
+    ('prep_merge_request', 'prep_merge_request'),
+    ('prep_note', 'prep_note'),
     ('dim_project', 'dim_project'),
     ('dim_namespace', 'dim_namespace'),
     ('prep_user', 'prep_user')
 ]) }}
 
-, data AS (
+, issue_note AS (
+
+    SELECT *
+    FROM prep_note
+    WHERE noteable_type = 'Issue'
+
+), merge_request_note AS (
+
+    SELECT *
+    FROM prep_note
+    WHERE noteable_type = 'MergeRequest'
+
+), protect_ci_build AS (
+
+    SELECT *
+    FROM prep_ci_build
+    WHERE secure_ci_build_type IN ('container_scanning')
+    
+), secure_ci_build AS (
+
+    SELECT *
+    FROM prep_ci_build
+    WHERE secure_ci_build_type IN ('api_fuzzing',
+                                    'dast',
+                                    'dependency_scanning',
+                                    'license_management',
+                                    'license_scanning',
+                                    'sast',
+                                    'secret_detection'
+                                    )
+
+    
+), data AS (
 
 {% for event_cte in event_ctes %}
 

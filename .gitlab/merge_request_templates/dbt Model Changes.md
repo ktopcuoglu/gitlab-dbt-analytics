@@ -90,7 +90,6 @@ Example: You might be looking at the count of opportunities before and after, if
 - [ ] If the periscope_query job failed, validate that the changes you've made don't affect the grain of the table or the expected output in Periscope.
 - [ ] If you are on the Data Team, please paste the output of `dbt test` when run locally below. Any failing tests should be fixed or explained prior to requesting a review.
 
-<details>
 <summary> dbt test results </summary>
 
 <pre><code>
@@ -98,17 +97,35 @@ Example: You might be looking at the count of opportunities before and after, if
 Paste the results of dbt test here, including the command.
 
 </code></pre>
+
 </details>
 
+#### Pipelines
+
+<details> 
+<summary><i>Click to toggle Pipelines</i></summary>
+
+
+* [ ] Run the dbt_models pipeline with the full model selection syntax for all models which have changed (e.g. : +dim_subscription)
+* [ ] Re-run the dbt_models pipeline (you may need to create a new pipeline with the "Run Pipeline" button), running only the models which have changed; e.g: dim_subscription. To remove any un-related pipeline failures.  
+
 **Which pipeline job do I run?** See our [handbook page](https://about.gitlab.com/handbook/business-ops/data-team/platform/ci-jobs/) on our CI jobs to better understand which job to run.
+
+**Provide an explanation here in case of any pipeline failures:**
+<!--- explanation per pipeline failure and indicate why this is accepted ---> 
+
+
+**What to do for failed pipelines** See our [handbook page](https://about.gitlab.com/handbook/business-ops/data-team/platform/ci-jobs/#what-to-do-if-a-pipeline-fails) 
 </details>
 
 ## All MRs Checklist
 - [ ] This MR follows the coding conventions laid out in the [SQL style guide](https://about.gitlab.com/handbook/business-ops/data-team/platform/sql-style-guide/), including the [dbt guidelines](https://about.gitlab.com/handbook/business-ops/data-team/platform/sql-style-guide/#dbt-guidelines).
 - [ ] [Label hygiene](https://about.gitlab.com/handbook/business-ops/data-team/how-we-work/#issue-labeling) on issue.
+  - [ ] Apply Label [Business logic change](https://gitlab.com/gitlab-data/analytics/-/labels?subscribed=&search=business+logic+change) for any business logic changes like adding new dimensions, facts, marts, changing joins, adding new calculated fields.
 - [ ] Branch set to delete. (Leave commits unsquashed)
 - [ ] Latest CI pipeline passes.
-  - [ ] If not, an explanation has been provided.
+  - [ ] If not, an explanation has been provided in testing section of this MR.
+  - [ ] If (Sisense)/Periscope pipeline failed, link to the periscope issue/mr or provide an explanation:  
 - [ ] This MR is ready for final review and merge.
 - [ ] All threads are resolved.
 - [ ] Remove the `Draft:` prefix in the MR title before assigning to reviewer.
@@ -119,4 +136,3 @@ Paste the results of dbt test here, including the command.
 
 ## Further changes requested
 * [ ]  AUTHOR: Uncheck all boxes before taking further action.
-

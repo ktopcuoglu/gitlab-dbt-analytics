@@ -816,5 +816,68 @@ The grain of the table is the `dim_note_id`. This table is easily joinable with:
 - `dim_user` through `dim_user_id`
 - `dim_project` through `dim_project_id`
 - `dim_namespace` through `dim_namespace_id` and `ultimate_namespace_id`
+{% enddocs %}
+
+{% docs fct_event_400 %}
+
+Factual table allowing us to explore all events happening on our SaaS Instance www.gitlab.com.
+
+This table allows us to answer for example some questions like:
+
+- basic: how many ultimate namespace open an issue every month ?
+- intermediate: split by plan_id, how many users that have used both merge requests and issues on a given month ?
+- advanced: in the first 30 days after the creation of the namespace, which stage/feature our users tend to adopt more ?
+
+The list of available events [is currently available here](https://app.periscopedata.com/app/gitlab/897425/fct_event-workflow?widget=12279318&udv=0)
+
+Only events that happened the last 400 days are included in this table.
+
+{% enddocs %}
+
+{% docs fct_event_800 %}
+
+Factual table allowing us to explore all events happening on our SaaS Instance www.gitlab.com.
+
+This table allows us to answer for example some questions like:
+
+- basic: how many ultimate namespace open an issue every month ?
+- intermediate: split by plan_id, how many users that have used both merge requests and issues on a given month ?
+- advanced: in the first 30 days after the creation of the namespace, which stage/feature our users tend to adopt more ?
+
+The list of available events [is currently available here](https://app.periscopedata.com/app/gitlab/897425/fct_event-workflow?widget=12279318&udv=0)
+
+Only events that happened the last 800 days are included in this table.
+
+{% enddocs %}
+
+{% docs fct_monthly_subscription_service_ping_opt_in %}
+
+Factual model that allows to know if a specific active subscription sent us at least one payload on a given month M.
+This Factual model will help us calculate opt-in rate for paid and OSS/EDU subscriptions.
+
+We have the following keys available in the model:
+
+- `dim_subscription_id` to join to `dim_subscription`
+- `dim_date_id` to join to `dim_date`
+
+And the following measures as columns:
+
+- arr: arr generated on a given month for this subscription
+- quantity: quantity ordered
+- has_sent_payloads: if we receive a usage ping that we can match to this specific subscription
+- monthly_payload_counts: number of payloads received
+- monthly_host_counts: number of hosts that are linked to this specific subscription
+- umau: highest UMAU value
+
+Example query allowing us to calculate % of opt-in rate for EDU/OSS subscriptions:
+
+```
+SELECT dim_date_id, AVG(has_sent_payloads::INTEGER)
+FROM common.fct_monthly_subscription_service_ping_opt_in
+WHERE arr = 0
+GROUP BY 1
+ORDER BY 1 DESC
+LIMIT 100
+```
 
 {% enddocs %}

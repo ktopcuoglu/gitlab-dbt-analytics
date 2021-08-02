@@ -568,6 +568,7 @@ roles:
         owns:
             schemas:
                 - raw.bamboohr
+                - raw.demandbase
                 - raw.engineering_extracts
                 - raw.gcp_billing
                 - raw.gitlab_data_yaml
@@ -584,6 +585,7 @@ roles:
                 - raw.version_db
             tables:
                 - raw.bamboohr.*
+                - raw.demandbase.*
                 - raw.engineering_extracts.*
                 - raw.gcp_billing.*
                 - raw.gitlab_data_yaml.*
@@ -1053,6 +1055,23 @@ roles:
                 read:
                     - prep.sensitive.*
 
+    - demandbase:
+        warehouses:
+            - analyst_xs
+        privileges:
+            databases:
+                read:
+                    - prep
+                    - raw
+            schemas:
+                read:
+                    - prep.demandbase
+                    - raw.demandbase
+            tables:
+                read:
+                    - prep.demandbase.*
+                    - raw.demandbase.*
+
     - discourse:
         privileges:
             databases:
@@ -1120,6 +1139,7 @@ roles:
                     - prod.common_mart_product.mart_product_usage_wave_1_3_metrics_monthly_diff
                     - prod.common_mart_product.mart_saas_product_usage_metrics_monthly
                     - prod.common_mart_product.mart_product_usage_paid_user_metrics_monthly
+                    - prod.common_mart_product.mart_product_usage_free_user_metrics_monthly
 
     - gainsight:
         warehouses:
@@ -1889,12 +1909,15 @@ roles:
             databases:
                 read:
                     - raw
+                    - prep
             schemas:
                 read:
                     - raw.zuora_revenue
+                    - prep.zuora_revenue
             tables:
                 read:
                     - raw.zuora_revenue.*
+                    - prep.zuora_revenue.*
 
 # ==========================================
 # User Roles
@@ -2510,6 +2533,16 @@ roles:
                     - jstark_prep.*.*
                     - jstark_prod.*.*
 
+    - jstemmer:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+            - customers_db
+            - analyst_marketing
+            - data_team_analyst
+        warehouses:
+            - analyst_xs
+
     - jswain:
         member_of:
             - snowplow
@@ -2659,6 +2692,16 @@ roles:
         warehouses:
             - analyst_xs
 
+    - kchen:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+            - customers_db
+            - analyst_marketing
+            - data_team_analyst
+        warehouses:
+            - analyst_xs
+
     - kchu:
         member_of:
             - product_manager
@@ -2723,6 +2766,13 @@ roles:
                 write:
                     - laddula_prep.*.*
                     - laddula_prod.*.*
+
+    - lcanoy:
+        member_of:
+            - reporter
+            - analyst_marketing
+        warehouses:
+            - analyst_xs
 
     - lmai:
         member_of:
@@ -2798,6 +2848,12 @@ roles:
                 write:
                     - mcooper_prep.*.*
                     - mcooper_prod.*.*
+
+    - mdavari:
+        member_of:
+            - analyst_core
+        warehouses:
+            - analyst_xs
 
     - mdewji:
         warehouses: []
@@ -3684,10 +3740,8 @@ users:
             - fkurniadi
 
     - fstein:
-        can_login: yes
-        member_of:
-            - fstein
-            - securityadmin
+        can_login: no
+        member_of: []
 
     - gainsight:
         can_login: yes
@@ -3799,6 +3853,11 @@ users:
             - securityadmin
             - sysadmin
 
+    - jstemmer:
+        can_login: yes
+        member_of:
+            - jstemmer            
+
     - jswain:
         can_login: yes
         member_of:
@@ -3838,6 +3897,11 @@ users:
         member_of:
             - kmckern
 
+    - kchen:
+        can_login: yes
+        member_of:
+            - vjallipalli
+
     - kchu:
         can_login: yes
         member_of:
@@ -3861,6 +3925,11 @@ users:
         member_of:
             - laddula
             - accountadmin
+
+    - lcanoy:
+        can_login: yes
+        member_of:
+            - lcanoy
 
     - lmai:
         can_login: yes
@@ -3890,6 +3959,11 @@ users:
         can_login: yes
         member_of:
             - mcooper
+
+    - mdavari:
+        can_login: yes
+        member_of:
+            - mdavari  
 
     - mdewji:
         can_login: no
@@ -4145,6 +4219,7 @@ users:
         can_login: yes
         member_of:
             - vprakash
+            - securityadmin
 
     - wlin:
         can_login: yes

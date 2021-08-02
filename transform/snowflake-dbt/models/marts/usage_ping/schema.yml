@@ -176,3 +176,18 @@ models:
         description: boolean flag to identify if for a specific month reporting_month and a specific subscription_name_slugify, a usage ping payload has been received.
       - name: latest_major_minor_version
         description: for a specific month reporting_month and a specific subscription_name_slugify, the latest version of the GitLab Application used.
+
+  
+  - name: mart_usage_ping
+    description: '{{ doc("mart_usage_ping") }}'
+    columns:
+      - name: dim_usage_ping_id
+        tests:
+          - not_null
+          - unique
+      - name: dim_instance_id
+        tests:
+          - not_null
+      - name: dim_date_id
+        tests:
+          - not_null
