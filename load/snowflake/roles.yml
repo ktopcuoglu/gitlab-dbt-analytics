@@ -3143,7 +3143,6 @@ roles:
         warehouses:
             - reporting
 
-
     - rbacovic:
         member_of:
             - engineer
