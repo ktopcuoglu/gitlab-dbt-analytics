@@ -39,7 +39,7 @@
 ), ci_runner_activity_monthly AS (
 
     SELECT
-      multi_month_ci_builds.first_day_of_month                          AS reporting_month,
+      multi_month_ci_builds.first_day_of_month                          AS report_month,
       ci_runner_activity.dim_namespace_id,
       ci_runner_activity.is_paid_by_gitlab,
       ci_runner_activity.public_projects_minutes_cost_factor,
@@ -53,7 +53,7 @@
 ), joined AS (
 
     SELECT
-      ci_runner_activity_monthly.reporting_month,
+      ci_runner_activity_monthly.report_month,
       dim_namespace.dim_namespace_id,
       dim_namespace.ultimate_parent_namespace_id,
       dim_namespace.gitlab_plan_id                                      AS dim_plan_id,
