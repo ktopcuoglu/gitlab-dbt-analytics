@@ -21,10 +21,10 @@ WITH usage_data AS (
 
     SELECT
       -- PRIMARY KEY
-      {{ dbt_utils.surrogate_key(['dim_namespace_id', 'dim_user_id', 'event_name', 'event_created_date']) }} AS daily_usage_data_event_id,
+      {{ dbt_utils.surrogate_key(['ultimate_parent_namespace_id', 'dim_user_id', 'event_name', 'event_created_at']) }} AS daily_usage_data_event_id,
       
       -- FOREIGN KEY
-      dim_namespace_id,
+      ultimate_parent_namespace_id,
       dim_user_id,
       event_name,
       TO_DATE(event_created_at)                                                                              AS event_created_date,
@@ -36,7 +36,7 @@ WITH usage_data AS (
       DATEDIFF('day', namespace_created_date, event_date)                                                    AS days_since_namespace_creation,
       DATEDIFF('week', namespace_created_date, event_date)                                                   AS weeks_since_namespace_creation,
       DATEDIFF('day', user_created_date, event_date)                                                         AS days_since_user_creation,
-      DATEDIFF('week', user_created_date), event_date)                                                       AS weeks_since_user_creation,
+      DATEDIFF('week', user_created_date, event_date)                                                        AS weeks_since_user_creation,
       COUNT(*)                                                                                               AS event_count
     FROM usage_data
     WHERE days_since_user_creation >= 0

@@ -143,8 +143,8 @@
       TO_DATE(prep_user.created_at)                                                                            AS user_created_date,
       prep_namespace.created_at                                                                                AS namespace_created_at,
       TO_DATE(prep_namespace.created_at)                                                                       AS namespace_created_date,
-      IFF(blocked_user.user_id IS NOT NULL, TRUE, FALSE)                                                       AS is_blocked_namespace,
-      namespace_is_internal,
+      IFF(blocked_user.dim_user_id IS NOT NULL, TRUE, FALSE)                                                   AS is_blocked_namespace,
+      prep_namespace.namespace_is_internal,
       FLOOR(
       DATEDIFF('hour',
               prep_namespace.created_at,
@@ -172,7 +172,7 @@
       AND prep_namespace.is_currently_valid = TRUE
     LEFT JOIN prep_user AS blocked_user
       ON prep_namespace.creator_id = blocked_user.dim_user_id
-      AND blocked_user.state = 'blocked'
+      AND blocked_user.user_state = 'blocked'
     {% endif %}
     {% if event_cte.user_column_name != 'NULL' %}
     LEFT JOIN prep_user 
