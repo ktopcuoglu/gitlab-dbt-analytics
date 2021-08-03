@@ -17,5 +17,5 @@ seeds:
     description: '{{ doc("zuora_excluded_accounts_doc") }}'
   - name: version_blacklisted_instance_uuid
     description: '{{ doc("version_blacklisted_instance_uuid") }}'
-  - name: saas_event_to_smau
-    description: '{{ doc("saas_event_to_smau") }}'
+  - name: map_saas_event_to_smau
+    description: '{{ doc("map_saas_event_to_smau") }}'

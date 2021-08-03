@@ -18,7 +18,7 @@ Zuora Accounts added here will be excluded from all relevant Zuora base models.
 * The `description` column is a non-functional helper for us to track which accounts are excluded.
 {% enddocs %}
 
-{% docs saas_event_to_smau %}
+{% docs map_saas_event_to_smau %}
 
 Seed file allowing the Data team to map a SaaS event in `fct_event` and `fct_daily_event` to a SMAU event (in model fct_daily_smau_event).
 
