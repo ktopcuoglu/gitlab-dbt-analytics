@@ -21,7 +21,10 @@ WITH source AS (
     FROM source 
     INNER JOIN LATERAL FLATTEN(jsontext['sources']) s
     WHERE jsontext['metadata']['dbt_version'] IS NULL
-		AND s.value['state']::VARCHAR != 'runtime error'  -- impossible to know what freshness is, so filtered out
+		AND s.value['state']::VARCHAR != 'runtime error'                                          -- impossible to know what freshness is, so filtered out
+        AND s.value['max_loaded_at']::TIMESTAMP    IS NOT NULL                                    -- latest_load_at
+        AND s.value['snapshotted_at']::TIMESTAMP   IS NOT NULL                                    -- freshness_observed_at
+        AND s.value['max_loaded_at_time_ago_in_s']::FLOAT IS NOT NULL                             -- time_since_loaded_seconds
 
 ), v1parsed AS (
 
@@ -41,6 +44,9 @@ WITH source AS (
     FROM source 
     INNER JOIN LATERAL FLATTEN(jsontext['results']) s
     WHERE jsontext['metadata']['dbt_version'] IS NOT NULL
+    AND s.value['max_loaded_at']::TIMESTAMP    IS NOT NULL                                        -- latest_load_at
+    AND s.value['snapshotted_at']::TIMESTAMP   IS NOT NULL                                        -- freshness_observed_at
+    AND s.value['max_loaded_at_time_ago_in_s']::FLOAT IS NOT NULL                                 -- time_since_loaded_seconds
 )
 
 
