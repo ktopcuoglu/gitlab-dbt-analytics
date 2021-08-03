@@ -11,7 +11,7 @@ WITH prep_note AS (
       dim_project_id,
       ultimate_parent_namespace_id,
       noteable_id,
-      creation_date_id,
+      created_date_id,
       dim_plan_id,
 
       -- METADATA

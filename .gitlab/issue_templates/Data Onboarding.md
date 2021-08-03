@@ -267,11 +267,7 @@ Data team uses GCP (Google Cloud Platform) as our cloud provider. GCP credential
 - [ ] Ensure you've setup your dbt for running locally as mentioned above. The ./.dbt/profiles.yml file is a pre-requisite for this process. If you do not want dbt you can manually create the ./.dbt/profiles.yml file based off the [sample profile](https://gitlab.com/gitlab-data/analytics/-/blob/master/admin/sample_profiles.yml)
 - [ ] Clone the data-science repo into your repos directory: 
     ``` git clone git@gitlab.com:gitlab-data/data-science.git```
-- [ ] Run `make jupyter` from the root directory of the repository and confirm that JupyterLab has now spun up on successfully. 
-- [ ] To connect to jupyter go to your web browser and copy paste the url and token found in terminal once the docker image creates. 
-    - It should look something like `http://127.0.0.1:8888/lab?token=5c7f7da79f4a0968501f087f3c79ee4dd8bd7a63e0f088a8`. The token will change each time you spin up the docker container.
-- [ ] Run through the notebook at `./notebooks/templates/auth_example.ipynb` to confirm that you have configured everything successfully.  
-- [ ] Check out the [data-science repo](https://gitlab.com/gitlab-data/data-science) for additional information, features, or to contribute to the image.  
+- [ ] See the readme provided in the [data-science repo](https://gitlab.com/gitlab-data/data-science/) for further install instructions 
 
 ## GitLab.com (Product)
 This data comes from our GitLab.com SaaS product.

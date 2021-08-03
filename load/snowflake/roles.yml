@@ -1139,6 +1139,7 @@ roles:
                     - prod.common_mart_product.mart_product_usage_wave_1_3_metrics_monthly_diff
                     - prod.common_mart_product.mart_saas_product_usage_metrics_monthly
                     - prod.common_mart_product.mart_product_usage_paid_user_metrics_monthly
+                    - prod.common_mart_product.mart_product_usage_free_user_metrics_monthly
 
     - gainsight:
         warehouses:
@@ -1908,12 +1909,15 @@ roles:
             databases:
                 read:
                     - raw
+                    - prep
             schemas:
                 read:
                     - raw.zuora_revenue
+                    - prep.zuora_revenue
             tables:
                 read:
                     - raw.zuora_revenue.*
+                    - prep.zuora_revenue.*
 
 # ==========================================
 # User Roles
@@ -2844,6 +2848,12 @@ roles:
                 write:
                     - mcooper_prep.*.*
                     - mcooper_prod.*.*
+
+    - mdavari:
+        member_of:
+            - analyst_core
+        warehouses:
+            - analyst_xs
 
     - mdewji:
         warehouses: []
@@ -3949,6 +3959,11 @@ users:
         can_login: yes
         member_of:
             - mcooper
+
+    - mdavari:
+        can_login: yes
+        member_of:
+            - mdavari  
 
     - mdewji:
         can_login: no

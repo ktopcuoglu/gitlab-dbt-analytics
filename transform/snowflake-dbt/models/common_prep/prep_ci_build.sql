@@ -74,7 +74,25 @@
       gitlab_dotcom_ci_builds_source.protected,
       gitlab_dotcom_ci_builds_source.failure_reason,
       gitlab_dotcom_ci_builds_source.ci_build_scheduled_at        AS scheduled_at,
-      gitlab_dotcom_ci_builds_source.upstream_pipeline_id
+      gitlab_dotcom_ci_builds_source.upstream_pipeline_id,
+      CASE
+      WHEN ci_build_name LIKE '%apifuzzer_fuzz%' 
+        THEN 'api_fuzzing'
+      WHEN ci_build_name LIKE '%container_scanning%' 
+        THEN 'container_scanning'
+      WHEN ci_build_name LIKE '%dast%'  
+        THEN 'dast' 
+      WHEN ci_build_name LIKE '%dependency_scanning%'  
+        THEN 'dependency_scanning'
+      WHEN ci_build_name LIKE '%license_management%'  
+        THEN 'license_management'
+      WHEN ci_build_name LIKE '%license_scanning%'  
+        THEN 'license_scanning'
+      WHEN ci_build_name LIKE '%sast%'  
+        THEN 'sast'  
+      WHEN ci_build_name LIKE '%secret_detection%'
+        THEN 'secret_detection'
+      END                                                         AS secure_ci_build_type
 
     FROM gitlab_dotcom_ci_builds_source
     LEFT JOIN prep_project 

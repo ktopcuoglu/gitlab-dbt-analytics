@@ -652,5 +652,9 @@ prep table used to build fct_usage_ping_payload.
 {% docs prep_usage_ping_settings %}
 
 prep table selecting for a specific usage ping a list of metadata related to specific instance settings. Any metric which is not based on timeseries could be  selected.
+{% enddocs %}
+{% docs prep_deployment %}
+
+Prep table for the dim table `dim_deployment` that is not yet created.
 
 {% enddocs %}
