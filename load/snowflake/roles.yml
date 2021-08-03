@@ -3138,6 +3138,49 @@ roles:
         warehouses:
             - reporting
 
+
+    - rbacovic:
+        member_of:
+            - engineer
+        warehouses:
+            - engineer_xs
+            - engineer_xl
+            - loading
+            - reporting
+        owns:
+            databases:
+                - rbacovic_prep
+                - rbacovic_prod
+            schemas:
+                - rbacovic_prep.*
+                - rbacovic_prod.*
+            tables:
+                - rbacovic_prep.*.*
+                - rbacovic_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - rbacovic_prep
+                    - rbacovic_prod
+                write:
+                    - rbacovic_prep
+                    - rbacovic_prod
+            schemas:
+                read:
+                    - rbacovic_prep.*
+                    - rbacovic_prod.*
+                write:
+                    - rbacovic_prep.*
+                    - rbacovic_prod.*
+            tables:
+                read:
+                    - rbacovic_prep.*.*
+                    - rbacovic_prod.*.*
+                write:
+                    - rbacovic_prep.*.*
+                    - rbacovic_prod.*.*           
+
+
     - rheannamistry:
         member_of:
             - decisive_data
