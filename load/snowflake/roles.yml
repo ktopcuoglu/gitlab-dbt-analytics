@@ -107,11 +107,6 @@ databases:
     - parmstrong_prep:
         shared: no
 
-    - rbacovic_prod:
-        shared: no
-    - rbacovic_prep:
-        shared: no
-
     - rheannamistry_prod:
         shared: no
     - rheannamistry_prep:
@@ -1004,6 +999,7 @@ roles:
                     - prod.common_mart_marketing
                     - prod.common_mart_sales
                     - prod.common_mart_product
+                    - prod.common_prep
                     - prod.data_quality
                     - prod.legacy
                     - prod.pumps
@@ -1021,6 +1017,7 @@ roles:
                     - prod.common_mart_marketing.*
                     - prod.common_mart_sales.*
                     - prod.common_mart_product.*
+                    - prod.common_prep.*
                     - prod.data_quality.*
                     - prod.legacy.*
                     - prod.pumps.*
@@ -3141,47 +3138,6 @@ roles:
         warehouses:
             - reporting
 
-    - rbacovic:
-        member_of:
-            - engineer
-        warehouses:
-            - engineer_xs
-            - engineer_xl
-            - loading
-            - reporting
-        owns:
-            databases:
-                - rbacovic_prep
-                - rbacovic_prod
-            schemas:
-                - rbacovic_prep.*
-                - rbacovic_prod.*
-            tables:
-                - rbacovic_prep.*.*
-                - rbacovic_prod.*.*
-        privileges:
-            databases:
-                read:
-                    - rbacovic_prep
-                    - rbacovic_prod
-                write:
-                    - rbacovic_prep
-                    - rbacovic_prod
-            schemas:
-                read:
-                    - rbacovic_prep.*
-                    - rbacovic_prod.*
-                write:
-                    - rbacovic_prep.*
-                    - rbacovic_prod.*
-            tables:
-                read:
-                    - rbacovic_prep.*.*
-                    - rbacovic_prod.*.*
-                write:
-                    - rbacovic_prep.*.*
-                    - rbacovic_prod.*.*           
-
     - rheannamistry:
         member_of:
             - decisive_data
@@ -4149,11 +4105,6 @@ users:
     - pwc_snagaraj:
         can_login: no
         member_of: []
-
-    - rbacovic:
-        can_login: yes
-        member_of:
-            - rbacovic
 
     - rheannamistry:
         can_login: yes
