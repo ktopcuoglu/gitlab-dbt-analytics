@@ -214,9 +214,6 @@ models:
       - name: dim_user_id
         tests:
           - not_null
-      - name: event_name
-        tests:
-          - not_null
       - name: event_created_date
         tests:
           - not_null
