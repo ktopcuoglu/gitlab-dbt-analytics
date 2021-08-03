@@ -1,3 +1,8 @@
+{{config({
+    "schema": "common_mart_product"
+  })
+}}
+
 {{ simple_cte([
     ('fct_daily_event_400','fct_daily_event_400'),
     ('map_saas_event_to_smau','map_saas_event_to_smau')
@@ -13,8 +18,7 @@
       -- FOREIGN KEY
       ultimate_parent_namespace_id,
       dim_user_id,
-      fct_daily_event_400.event_name,
-      event_created_date,
+      event_created_date, 
       stage_name,
       is_smau,
       is_blocked_namespace,
@@ -29,7 +33,7 @@
     FROM fct_daily_event_400
     INNER JOIN map_saas_event_to_smau
       ON fct_daily_event_400.event_name = map_saas_event_to_smau.event_name 
-    {{ dbt_utils.group_by(n=15) }}
+    {{ dbt_utils.group_by(n=14) }}
 
 )
 

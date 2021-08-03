@@ -202,3 +202,48 @@ models:
         description: Flags the row with the most recently received data from Usage Ping
 
 
+  - name: mart_saas_daily_smau_events_400
+    description: '{{ doc("mart_saas_daily_smau_events_400") }}'
+    columns:
+      - name: daily_usage_data_event_id
+        test:
+          - unique
+      - name: ultimate_parent_namespace_id
+        tests:
+          - not_null
+      - name: dim_user_id
+        tests:
+          - not_null
+      - name: event_name
+        tests:
+          - not_null
+      - name: event_created_date
+        tests:
+          - not_null
+      - name: is_blocked_namespace
+        tests:
+          - not_null
+      - name: namespace_created_date
+        tests:
+          - not_null
+      - name: namespace_is_internal
+        tests:
+          - not_null
+      - name: user_created_date
+        tests:
+          - not_null
+      - name: days_since_namespace_creation
+        tests:
+          - not_null
+      - name: weeks_since_namespace_creation
+        tests:
+          - not_null
+      - name: days_since_user_creation
+        tests:
+          - not_null
+      - name: weeks_since_user_creation
+        tests:
+          - not_null
+      - name: event_count
+        tests:
+          - not_null
