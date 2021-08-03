@@ -279,37 +279,39 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
         END                                                                     AS is_closed_in_quarter_flag,
         CASE 
             WHEN pipe.close_fiscal_quarter_date = opty.close_fiscal_quarter_date
+                AND opty.order_type_stamped NOT IN ('4. Contraction')
                 AND opty.is_won = 1
                     THEN '1. Closed Won'
             -- the close date for churned deals is updated to the last day before renewal
-            WHEN pipe.end_is_lost = 1
-                AND opty.is_renewal = 1
-                    THEN '5. Churned'
+            WHEN opty.order_type_stamped IN ('5. Churn - Partial','6. Churn - Final')
+                    THEN '6. Churned'
+            WHEN opty.order_type_stamped IN ('4. Contraction')
+                    THEN '5. Contraction'
             WHEN pipe.close_fiscal_quarter_date = opty.close_fiscal_quarter_date
                 AND opty.is_lost = 1
                     THEN '4. Closed Lost'
             WHEN pipe.close_fiscal_quarter_date = opty.close_fiscal_quarter_date
                 AND opty.is_open = 1
-                    THEN '6. Open'
+                    THEN '7. Open'
             WHEN pipe.close_fiscal_quarter_date = opty.close_fiscal_quarter_date
                 AND opty.stage_name IN ('9-Unqualified','10-Duplicate','Unqualified')
-                    THEN '7. Duplicate / Unqualified'
+                    THEN '8. Duplicate / Unqualified'
             WHEN pipe.close_fiscal_quarter_date <> opty.close_fiscal_quarter_date
                 AND pipe.max_snapshot_day_of_fiscal_quarter_normalised >= 75
                     THEN '2. Slipped'
             WHEN pipe.close_fiscal_quarter_date <> opty.close_fiscal_quarter_date
                 AND pipe.max_snapshot_day_of_fiscal_quarter_normalised < 75
                     THEN '3. Pushed Out' 
-          ELSE '8. Other'
+          ELSE '9. Other'
         END                                                                     AS pipe_resolution,
 
         CASE
-          WHEN pipe_resolution LIKE ANY ('%Closed%','%Duplicate%') 
+          WHEN pipe_resolution IN ('1. Closed Won','4. Closed Lost','8. Duplicate / Unqualified') 
             THEN pipe.end_close_date
-          WHEN pipe_resolution LIKE ANY ('%Churned%')
+          WHEN pipe_resolution IN ('5. Contraction','6. Churned')
             AND pipe.close_fiscal_quarter_date = opty.close_fiscal_quarter_date
             THEN pipe.end_close_date
-          WHEN pipe_resolution LIKE ANY ('%2%Slipped%','%3%Pushed%','%Open%','%Churned%')
+          WHEN pipe_resolution IN ('2. Slipped', '3. Pushed Out', '7. Open','9. Other')
             THEN pipe.max_snapshot_date
           ELSE null
         END                                                                     AS pipe_resolution_date,
