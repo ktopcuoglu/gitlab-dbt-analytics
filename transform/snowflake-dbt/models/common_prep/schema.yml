@@ -1803,9 +1803,6 @@ models:
         - name: dim_usage_ping_id
           tests:
             - not_null
-        - name: dim_instance_id
-          tests:
-            - not_null
         - name: metrics_path
           tests:
             - not_null
@@ -1819,9 +1816,6 @@ models:
         - name: dim_usage_ping_id
           tests:
             - not_null
-        - name: dim_instance_id
-          tests:
-            - not_null
         - name: metrics_path
           tests:
             - not_null
@@ -1833,9 +1827,6 @@ models:
             - not_null
             - unique
         - name: dim_usage_ping_id
-          tests:
-            - not_null
-        - name: dim_instance_id
           tests:
             - not_null
         - name: metrics_path
