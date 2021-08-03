@@ -107,6 +107,11 @@ databases:
     - parmstrong_prep:
         shared: no
 
+    - rbacovic_prod:
+        shared: no
+    - rbacovic_prep:
+        shared: no
+
     - rheannamistry_prod:
         shared: no
     - rheannamistry_prep:
