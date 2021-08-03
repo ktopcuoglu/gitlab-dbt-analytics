@@ -4106,6 +4106,11 @@ users:
         can_login: no
         member_of: []
 
+    - rbacovic:
+        can_login: yes
+        member_of:
+            - rbacovic
+
     - rheannamistry:
         can_login: yes
         member_of:
