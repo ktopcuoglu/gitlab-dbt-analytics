@@ -42,6 +42,7 @@
     SELECT
       multi_day_ci_builds.date_day                                      AS reporting_date,
       ci_runner_activity.dim_project_id,
+      ci_runner_activity.dim_namespace_id,
       ci_runner_activity.is_paid_by_gitlab,
       ci_runner_activity.public_projects_minutes_cost_factor,
       ci_runner_activity.private_projects_minutes_cost_factor,
