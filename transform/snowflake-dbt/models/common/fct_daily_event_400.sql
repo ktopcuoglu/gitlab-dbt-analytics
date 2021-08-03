@@ -8,7 +8,7 @@
 WITH usage_data AS (
 
     SELECT *
-    FROM {{ ref('fct_event_400') }}
+    FROM {{ ref('prep_event') }}
     {% if is_incremental() %}
 
       WHERE event_created_at >= (SELECT MAX(DATEADD(day, -8, event_date)) FROM {{this}})
@@ -33,10 +33,10 @@ WITH usage_data AS (
       namespace_created_date,
       namespace_is_internal,
       user_created_date,
-      DATEDIFF('day', namespace_created_date, event_date)                                                    AS days_since_namespace_creation,
-      DATEDIFF('week', namespace_created_date, event_date)                                                   AS weeks_since_namespace_creation,
-      DATEDIFF('day', user_created_date, event_date)                                                         AS days_since_user_creation,
-      DATEDIFF('week', user_created_date, event_date)                                                        AS weeks_since_user_creation,
+      DATEDIFF('day', namespace_created_date, event_created_date)                                                    AS days_since_namespace_creation,
+      DATEDIFF('week', namespace_created_date, event_created_date)                                                   AS weeks_since_namespace_creation,
+      DATEDIFF('day', user_created_date, event_created_date)                                                         AS days_since_user_creation,
+      DATEDIFF('week', user_created_date, event_created_date)                                                        AS weeks_since_user_creation,
       COUNT(*)                                                                                               AS event_count
     FROM usage_data
     WHERE days_since_user_creation >= 0
