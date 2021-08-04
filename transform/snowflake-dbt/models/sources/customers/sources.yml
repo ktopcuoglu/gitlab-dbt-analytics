@@ -48,7 +48,7 @@ sources:
           - name: order_id
             tests:
               - not_null
-          - name: report_date
+          - name: report_timestamp
             tests:
               - not_null
       - name: customers_db_orders
