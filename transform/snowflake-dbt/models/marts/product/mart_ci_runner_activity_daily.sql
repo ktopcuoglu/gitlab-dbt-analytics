@@ -40,7 +40,7 @@
 ), ci_runner_activity_daily AS (
 
     SELECT
-      multi_day_ci_builds.date_day                                      AS reporting_date,
+      multi_day_ci_builds.date_day                                      AS report_date,
       ci_runner_activity.dim_project_id,
       ci_runner_activity.dim_namespace_id,
       ci_runner_activity.is_paid_by_gitlab,
