@@ -114,6 +114,8 @@ WITH dim_billing_account AS (
           PARTITION BY dim_crm_account.dim_parent_crm_account_id)                     AS parent_account_cohort_month,
       min(dim_subscription.subscription_cohort_quarter) OVER (
           PARTITION BY dim_crm_account.dim_parent_crm_account_id)                     AS parent_account_cohort_quarter,
+      dim_subscription.auto_renew_native_hist,
+      dim_subscription.auto_renew_customerdot_hist,
       dim_subscription.turn_on_cloud_licensing,
       dim_subscription.turn_on_operational_metrics,
       dim_subscription.contract_operational_metrics,
@@ -196,7 +198,7 @@ WITH dim_billing_account AS (
 {{ dbt_audit(
     cte_ref="final_table",
     created_by="@msendal",
-    updated_by="@iweeks",
+    updated_by="@jpeguero",
     created_date="2020-09-04",
-    updated_date="2021-07-29"
+    updated_date="2021-08-04"
 ) }}

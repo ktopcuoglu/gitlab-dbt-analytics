@@ -25,7 +25,8 @@ WITH source AS (
 
       -- info
       status                                      AS subscription_status,
-      autorenew                                   AS auto_renew,
+      autorenew                                   AS auto_renew_native_hist,
+      autorenew__c                                AS auto_renew_customerdot_hist,
       version                                     AS version,
       termtype                                    AS term_type,
       notes                                       AS notes,
