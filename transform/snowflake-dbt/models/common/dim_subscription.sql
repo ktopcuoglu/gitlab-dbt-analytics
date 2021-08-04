@@ -10,7 +10,13 @@ WITH prep_amendment AS (
 
 ), subscription_lineage AS (
 
-    SELECT *
+    SELECT DISTINCT
+      subscription_name_slugify,
+      subscription_lineage,
+      oldest_subscription_in_cohort,
+      subscription_cohort_month,
+      subscription_cohort_quarter,
+      subscription_cohort_year
     FROM {{ ref('map_subscription_lineage') }}
 
 ), final AS (
@@ -75,7 +81,7 @@ WITH prep_amendment AS (
 
   FROM subscription
   LEFT JOIN subscription_lineage
-    ON subscription_lineage.dim_subscription_id = subscription.dim_subscription_id
+    ON subscription_lineage.subscription_name_slugify = subscription.subscription_name_slugify
   LEFT JOIN prep_amendment
     ON subscription.dim_amendment_id_subscription = prep_amendment.dim_amendment_id
 
@@ -84,7 +90,7 @@ WITH prep_amendment AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@snalamaru",
-    updated_by="@jpeguero",
+    updated_by="@iweeks",
     created_date="2020-12-16",
     updated_date="2021-07-29"
 ) }}

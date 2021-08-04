@@ -703,7 +703,7 @@ models:
           - unique
           - not_null
         tags: ["tdf", "common", "zuora_revenue"]
-          
+
   - name: dim_product_detail
     description: '{{ doc("dim_product_detail") }}'
     columns:
@@ -811,7 +811,7 @@ models:
     description: '{{ doc("dim_revenue_contract") }}'
     columns:
       - name: dim_revenue_contract_id
-        description: Unique identifier for a revenue contract. 
+        description: Unique identifier for a revenue contract.
         tests:
           - unique
           - not_null
@@ -821,7 +821,7 @@ models:
     description: '{{ doc("dim_revenue_contract_hold") }}'
     columns:
       - name: dim_revenue_contract_hold_id
-        description: Unique identifier for a hold applied to a revenue contract or revenue contract line. 
+        description: Unique identifier for a hold applied to a revenue contract or revenue contract line.
         tests:
           - unique
           - not_null
@@ -831,7 +831,7 @@ models:
     description: '{{ doc("dim_revenue_contract_line") }}'
     columns:
       - name: dim_revenue_contract_line_id
-        description: Unique identifier for a revenue contract line. 
+        description: Unique identifier for a revenue contract line.
         tests:
           - unique
           - not_null
@@ -841,7 +841,7 @@ models:
     description: '{{ doc("dim_revenue_contract_performance_obligation") }}'
     columns:
       - name: dim_revenue_contract_performance_obligation_id
-        description: Unique identifier for a performance obligation connected to a revenue contract line. 
+        description: Unique identifier for a performance obligation connected to a revenue contract line.
         tests:
           - unique
           - not_null
@@ -851,7 +851,7 @@ models:
     description: '{{ doc("dim_revenue_contract_performance_obligation") }}'
     columns:
       - name: dim_revenue_contract_schedule_id
-        description: Unique identifier for a performance obligation connected to a revenue contract line. 
+        description: Unique identifier for a performance obligation connected to a revenue contract line.
         tests:
           - unique
           - not_null
@@ -958,6 +958,16 @@ models:
 
   - name: dim_subscriptions_snapshots
     description: Daily snapshot of subscriptions starting from 2020-03-01. Fiel
+    columns:
+      - name: subscription_snapshot_id
+        description: Unique identifier of a subscription snapshot
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "arr"]
+
+  - name: dim_subscription_snapshot_bottom_up
+    description: Daily snapshot of subscriptions starting from 2020-03-01. This is built from the bottom up using snapshotted source tables.
     columns:
       - name: subscription_snapshot_id
         description: Unique identifier of a subscription snapshot
@@ -1383,6 +1393,16 @@ models:
         description: Annual Recurring Revenue value for given month
       - name: quantity
         description: Total quantity
+
+  - name: fct_mrr_snapshot_bottom_up
+    description: One row represents Monthly Recurring Revenue per one month, subscription_id, product_detail_id, and mrr. Snapshot dates start from 2020-03. This model is built bottom-up using snapshotted source tables.
+    columns:
+      - name: mrr_snapshot_id
+        description: The unique identifier of the given snapshot MRR.
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "arr"]
 
   - name: fct_product_usage_free_user_metrics_monthly
     description: '{{ doc("fct_product_usage_free_user_metrics_monthly") }}'
@@ -2063,7 +2083,7 @@ models:
     description: '{{ doc("fct_revenue_contract_hold") }}'
     columns:
       - name: dim_revenue_contract_hold_id
-        description: Unique identifier for a hold applied to a revenue contract or revenue contract line. 
+        description: Unique identifier for a hold applied to a revenue contract or revenue contract line.
         tests:
           - unique
           - not_null
@@ -2073,7 +2093,7 @@ models:
     description: '{{ doc("fct_revenue_contract_line") }}'
     columns:
       - name: dim_revenue_contract_line_id
-        description: Unique identifier for a revenue contract line. 
+        description: Unique identifier for a revenue contract line.
         tests:
           - unique
           - not_null
@@ -2083,7 +2103,7 @@ models:
     description: '{{ doc("fct_revenue_contract_schedule") }}'
     columns:
       - name: dim_revenue_contract_schedule_id
-        description: Unique identifier for a schedule applied to a revenue contract line. 
+        description: Unique identifier for a schedule applied to a revenue contract line.
         tests:
           - not_null
         tags: ["tdf", "common", "zuora_revenue"]
@@ -2521,7 +2541,7 @@ models:
     description: '{{ doc("fct_waterfall_summary") }}'
     columns:
       - name: dim_waterfall_summary_id
-        description: Unique identifier for a revenue contract line schedule period. 
+        description: Unique identifier for a revenue contract line schedule period.
         tests:
           - unique
           - not_null
@@ -2537,7 +2557,7 @@ models:
           - unique
         tags: ["tdf", "common", "sales_funnel"]
       - name: marketing_channel_name
-  
+
   - name: dim_namespace_hist
     description: '{{ doc("dim_namespace_hist") }}'
     columns:
@@ -2813,7 +2833,7 @@ models:
           - not_null
       - name: dim_plan_id
         tests:
-          - not_null      
+          - not_null
       - name: ci_pipeline_internal_id
         description: Internal ID for the CI Pipeline. This is project specific
 
