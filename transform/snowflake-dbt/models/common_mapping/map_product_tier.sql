@@ -93,6 +93,7 @@ WITH zuora_product AS (
                                                                       , 'Time Tracking'
                                                                       , '1,000 CI Minutes'
                                                                       , 'Gitlab Storage 10GB'
+                                                                      , 'EdCast Settlement Revenue'
                                                                      )
           THEN 'Other'
         ELSE 'Not Applicable'
@@ -150,7 +151,7 @@ WITH zuora_product AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@ischweickartDD",
-    updated_by="@ischweickartDD",
+    updated_by="@jpeguero",
     created_date="2020-12-14",
-    updated_date="2021-01-26"
+    updated_date="2021-08-02"
 ) }}

@@ -107,6 +107,11 @@ databases:
     - parmstrong_prep:
         shared: no
 
+    - rbacovic_prod:
+        shared: no
+    - rbacovic_prep:
+        shared: no
+
     - rheannamistry_prod:
         shared: no
     - rheannamistry_prep:
@@ -758,6 +763,20 @@ roles:
             - dbt_analytics
             - snowflake_db
 
+    - restricted_finance:
+        warehouses:
+            - reporting
+        privileges:
+            databases:
+                read:
+                    - prod
+            schemas:
+                read:
+                    - prod.restricted_finance_*
+            tables:
+                read:
+                    - prod.restricted_finance_*.*
+
     - transformer: # For automated jobs
         warehouses:
             - airflow_testing_l
@@ -999,6 +1018,7 @@ roles:
                     - prod.common_mart_marketing
                     - prod.common_mart_sales
                     - prod.common_mart_product
+                    - prod.common_prep
                     - prod.data_quality
                     - prod.legacy
                     - prod.pumps
@@ -1016,6 +1036,7 @@ roles:
                     - prod.common_mart_marketing.*
                     - prod.common_mart_sales.*
                     - prod.common_mart_product.*
+                    - prod.common_prep.*
                     - prod.data_quality.*
                     - prod.legacy.*
                     - prod.pumps.*
@@ -1139,6 +1160,7 @@ roles:
                     - prod.common_mart_product.mart_product_usage_wave_1_3_metrics_monthly_diff
                     - prod.common_mart_product.mart_saas_product_usage_metrics_monthly
                     - prod.common_mart_product.mart_product_usage_paid_user_metrics_monthly
+                    - prod.common_mart_product.mart_product_usage_free_user_metrics_monthly
 
     - gainsight:
         warehouses:
@@ -1908,12 +1930,15 @@ roles:
             databases:
                 read:
                     - raw
+                    - prep
             schemas:
                 read:
                     - raw.zuora_revenue
+                    - prep.zuora_revenue
             tables:
                 read:
                     - raw.zuora_revenue.*
+                    - prep.zuora_revenue.*
 
 # ==========================================
 # User Roles
@@ -1923,6 +1948,10 @@ roles:
             - analyst_growth
         warehouses:
             - analyst_xs
+
+    - ablanco:
+        warehouses:
+            - reporting
 
     - acarella:
         warehouses: []
@@ -2845,6 +2874,12 @@ roles:
                     - mcooper_prep.*.*
                     - mcooper_prod.*.*
 
+    - mdavari:
+        member_of:
+            - analyst_core
+        warehouses:
+            - analyst_xs
+
     - mdewji:
         warehouses: []
 
@@ -3125,6 +3160,53 @@ roles:
     - pmartins:
         warehouses:
             - reporting
+
+    - rallison:
+        member_of:
+            - analyst_sales
+        warehouses:
+            - analyst_xs
+
+    - rbacovic:
+        member_of:
+            - engineer
+        warehouses:
+            - engineer_xs
+            - engineer_xl
+            - loading
+            - reporting
+        owns:
+            databases:
+                - rbacovic_prep
+                - rbacovic_prod
+            schemas:
+                - rbacovic_prep.*
+                - rbacovic_prod.*
+            tables:
+                - rbacovic_prep.*.*
+                - rbacovic_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - rbacovic_prep
+                    - rbacovic_prod
+                write:
+                    - rbacovic_prep
+                    - rbacovic_prod
+            schemas:
+                read:
+                    - rbacovic_prep.*
+                    - rbacovic_prod.*
+                write:
+                    - rbacovic_prep.*
+                    - rbacovic_prod.*
+            tables:
+                read:
+                    - rbacovic_prep.*.*
+                    - rbacovic_prod.*.*
+                write:
+                    - rbacovic_prep.*.*
+                    - rbacovic_prod.*.*           
 
     - rheannamistry:
         member_of:
@@ -3520,6 +3602,12 @@ users:
         can_login: yes
         member_of:
             - aakgun
+
+    - ablanco:
+        can_login: yes
+        member_of:
+            - ablanco
+            - securityadmin
 
     - acarella:
         can_login: no
@@ -3950,6 +4038,11 @@ users:
         member_of:
             - mcooper
 
+    - mdavari:
+        can_login: yes
+        member_of:
+            - mdavari  
+
     - mdewji:
         can_login: no
         member_of: []
@@ -4051,6 +4144,7 @@ users:
         member_of:
             - periscope
             - reporter
+            - restricted_finance #this is about to move when POC for RBAC is completed
 
     - periscope_sensitive:
         can_login: no
@@ -4089,6 +4183,16 @@ users:
         can_login: no
         member_of: []
 
+    - rallison:
+        can_login: yes
+        member_of:
+            - rallison
+
+    - rbacovic:
+        can_login: yes
+        member_of:
+            - rbacovic
+
     - rheannamistry:
         can_login: yes
         member_of:
@@ -4119,6 +4223,12 @@ users:
         can_login: yes
         member_of:
             - skerr
+
+    - sisense_restricted_finance:
+        can_login: yes
+        member_of:
+            - restricted_finance 
+            - reporter           
 
     - snalamaru:
         can_login: yes
@@ -4204,6 +4314,7 @@ users:
         can_login: yes
         member_of:
             - vprakash
+            - securityadmin
 
     - wlin:
         can_login: yes

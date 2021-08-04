@@ -133,7 +133,7 @@ Some important parts of the script that you will definitely want to do in some w
     * [ ] Make sure to globally configure git with at least your name and email.
     * [ ] Ensure you have [git completion](https://stackoverflow.com/questions/24315201/warning-this-script-is-deprecated-please-see-git-completion-zsh/41767727#41767727) configured to make your life easier
 * [ ] Install docker & docker-compose. The easiest way to do this for Mac now is to use the desktop install from [Docker](https://www.docker.com/products/docker-desktop). If working on Linux you will need to follow these [install instructions](https://docs.docker.com/engine/install/ubuntu/) instead. 
-* [ ] Install Python3. [The Hitchhiker's Guide to Python](https://docs.python-guide.org/starting/install3/osx/) is a good resource
+* [ ] Install [Python 3.8.6](https://www.python.org/downloads/release/python-386/) is a good resource
     * [ ] Install pip3
     * [ ] Make sure to install the setuptools library as dbt will not install without it
     * [ ] Here is [a list of all of the Python tools that may be used for formatting, linting, or testing](https://gitlab.com/gitlab-data/analytics/blob/master/.gitlab-ci.yml#L100).  Consider installing these locally with pip3.
@@ -267,11 +267,7 @@ Data team uses GCP (Google Cloud Platform) as our cloud provider. GCP credential
 - [ ] Ensure you've setup your dbt for running locally as mentioned above. The ./.dbt/profiles.yml file is a pre-requisite for this process. If you do not want dbt you can manually create the ./.dbt/profiles.yml file based off the [sample profile](https://gitlab.com/gitlab-data/analytics/-/blob/master/admin/sample_profiles.yml)
 - [ ] Clone the data-science repo into your repos directory: 
     ``` git clone git@gitlab.com:gitlab-data/data-science.git```
-- [ ] Run `make jupyter` from the root directory of the repository and confirm that JupyterLab has now spun up on successfully. 
-- [ ] To connect to jupyter go to your web browser and copy paste the url and token found in terminal once the docker image creates. 
-    - It should look something like `http://127.0.0.1:8888/lab?token=5c7f7da79f4a0968501f087f3c79ee4dd8bd7a63e0f088a8`. The token will change each time you spin up the docker container.
-- [ ] Run through the notebook at `./notebooks/templates/auth_example.ipynb` to confirm that you have configured everything successfully.  
-- [ ] Check out the [data-science repo](https://gitlab.com/gitlab-data/data-science) for additional information, features, or to contribute to the image.  
+- [ ] See the readme provided in the [data-science repo](https://gitlab.com/gitlab-data/data-science/) for further install instructions 
 
 ## GitLab.com (Product)
 This data comes from our GitLab.com SaaS product.

@@ -21,7 +21,48 @@ def single_query_upload(query: str, table_name: str) -> pd.DataFrame:
     results = pd.read_sql(sql=query, con=connection)
     connection.close()
     snowflake_engine_sysadmin.dispose()
-
+    if table_name == "users":
+        column_list = [
+            "name",
+            "created_on",
+            "login_name",
+            "display_name",
+            "first_name",
+            "last_name",
+            "email",
+            "mins_to_unlock",
+            "days_to_expiry",
+            "comment",
+            "disabled",
+            "must_change_password",
+            "snowflake_lock",
+            "default_warehouse",
+            "default_namespace",
+            "default_role",
+            "ext_authn_duo",
+            "ext_authn_uid",
+            "mins_to_bypass_mfa",
+            "owner",
+            "last_success_login",
+            "expires_at_time",
+            "locked_until_time",
+            "has_password",
+            "has_rsa_public_key",
+        ]
+    elif table_name == "roles":
+        column_list = [
+            "created_on",
+            "name",
+            "is_default",
+            "is_current",
+            "is_inherited",
+            "assigned_to_users",
+            "granted_to_roles",
+            "granted_roles",
+            "owner",
+            "comment",
+        ]
+    results = results[column_list]
     snowflake_engine_loader = snowflake_engine_factory(config_dict, "LOADER")
     dataframe_uploader(results, snowflake_engine_loader, table_name, "snowflake")
     snowflake_engine_loader.dispose()

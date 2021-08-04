@@ -62,7 +62,7 @@ WITH date_details AS (
         THEN pipe.pipe_resolution
       WHEN report.report_date >= pipe.min_snapshot_date
           AND report.report_date < pipe.pipe_resolution_date
-       THEN '6. Open'
+       THEN '7. Open'
       ELSE NULL
     END                                               AS pipe_resolution,
   

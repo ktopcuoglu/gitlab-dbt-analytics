@@ -63,12 +63,10 @@ brew cask install visual-studio-code
 code --version
 echo "VS Code successfully installed"
 
-## install anaconda
 echo "Installing anaconda.."
 curl -O https://repo.anaconda.com/archive/Anaconda3-2021.05-MacOSX-x86_64.sh
-bash Anaconda3-2021.05-MacOSX-x86_64.sh -b -p /usr/bin/anaconda3
+bash Anaconda3-2021.05-MacOSX-x86_64.sh -u -b -f
 rm Anaconda3-2021.05-MacOSX-x86_64.sh
-echo "export PATH=/usr/local/anaconda3/bin:"$PATH"" >> ~/.zshrc
 echo "anaconda installed succesfully"
 
 ## Set up the computer to contribute to the handbook
