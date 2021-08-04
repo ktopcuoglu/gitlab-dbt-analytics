@@ -881,3 +881,14 @@ LIMIT 100
 ```
 
 {% enddocs %}
+
+{% docs dim_issue_links %}
+
+Dimensional table representing links between GitLab Issues recorded by the Events API. [More info about issue links can be found here](https://docs.gitlab.com/ee/user/project/issues/related_issues.html)
+
+Issue Links are created when relationships are defined between issues. This table has slowly changing dimensions, as issue links/relationships can be removed over time
+
+The grain of the table is the `dim_issue_link_id`. This table is easily joinable with:
+
+- `dim_issue` through `dim_issue_id` on `dim_source_issue_id` & `dim_target_issue_id`
+{% enddocs %}

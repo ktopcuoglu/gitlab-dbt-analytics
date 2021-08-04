@@ -48,6 +48,6 @@ WITH gitlab_dotcom_label_links_source AS (
     cte_ref="renamed",
     created_by="@dtownsend",
     updated_by="@dtownsend",
-    created_date="2021-07-15",
-    updated_date="2021-07-15"
+    created_date="2021-08-04",
+    updated_date="2021-08-04"
 ) }}
