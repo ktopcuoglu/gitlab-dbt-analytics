@@ -72,6 +72,7 @@ WITH dim_date AS (
       arr_agg.effective_end_month,
       DATE_TRUNC('month',zuora_subscription.subscription_start_date)    AS subscription_start_month,
       DATE_TRUNC('month',zuora_subscription.subscription_end_date)      AS subscription_end_month,
+      zuora_subscription.crm_opportunity_name,
       dim_crm_account_invoice.dim_parent_crm_account_id                 AS dim_parent_crm_account_id_invoice,
       dim_crm_account_invoice.parent_crm_account_name                   AS parent_crm_account_name_invoice,
       dim_crm_account_invoice.parent_crm_account_billing_country        AS parent_crm_account_billing_country_invoice,
@@ -125,7 +126,7 @@ WITH dim_date AS (
       ON arr_agg.dim_crm_account_id_invoice = dim_crm_account_invoice.dim_crm_account_id
     LEFT JOIN dim_crm_account AS dim_crm_account_subscription
       ON arr_agg.dim_crm_account_id_subscription = dim_crm_account_subscription.dim_crm_account_id
-    {{ dbt_utils.group_by(n=33) }}
+    {{ dbt_utils.group_by(n=34) }}
     ORDER BY 3 DESC
 
 ), final AS (
