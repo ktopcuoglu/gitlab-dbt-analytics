@@ -111,9 +111,10 @@ WITH map_merged_crm_account AS (
     sfdc_users.name                                         AS technical_account_manager,
     sfdc_account.is_deleted                                 AS is_deleted,
     map_merged_crm_account.dim_crm_account_id               AS merged_to_account_id,
-    IFF(sfdc_record_type.record_type_label != 'Channel'
-        AND sfdc_account.account_type NOT IN ('Unofficial Reseller','Authorized Reseller','Prospective Partner','Partner','Former Reseller','Reseller','Prospective Reseller'),
-        FALSE, TRUE)                                        AS is_reseller,
+    IFF(sfdc_record_type.record_type_label = 'Partner'
+        AND sfdc_account.partner_type IN ('Alliance', 'Channel')
+        AND sfdc_account.partner_status = 'Authorized',
+        TRUE, FALSE)                                        AS is_reseller,
     sfdc_account.created_date                      AS crm_account_created_date
   FROM sfdc_account
   LEFT JOIN map_merged_crm_account
