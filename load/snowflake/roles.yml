@@ -763,6 +763,20 @@ roles:
             - dbt_analytics
             - snowflake_db
 
+    - restricted_finance:
+        warehouses:
+            - reporting
+        privileges:
+            databases:
+                read:
+                    - prod
+            schemas:
+                read:
+                    - prod.restricted_finance_*
+            tables:
+                read:
+                    - prod.restricted_finance_*.*
+
     - transformer: # For automated jobs
         warehouses:
             - airflow_testing_l
@@ -4130,6 +4144,7 @@ users:
         member_of:
             - periscope
             - reporter
+            - restricted_finance #this is about to move when POC for RBAC is completed
 
     - periscope_sensitive:
         can_login: no
@@ -4208,6 +4223,12 @@ users:
         can_login: yes
         member_of:
             - skerr
+
+    - sisense_restricted_finance:
+        can_login: yes
+        member_of:
+            - restricted_finance 
+            - reporter           
 
     - snalamaru:
         can_login: yes
