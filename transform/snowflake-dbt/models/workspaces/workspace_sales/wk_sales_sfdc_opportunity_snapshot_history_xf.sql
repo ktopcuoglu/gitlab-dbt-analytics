@@ -656,7 +656,7 @@ WITH date_details AS (
         WHEN opp_snapshot.net_arr >= 1000000 
           THEN '7. (>1000k)'
         ELSE 'Other' 
-      END                                                           AS calculated_deal_size,
+      END                                                   AS calculated_deal_size,
 
             -- Open pipeline eligibility definition
       CASE 
@@ -667,7 +667,7 @@ WITH date_details AS (
           AND opp_snapshot.is_open = 1
          THEN 1
          ELSE 0
-      END                                                         AS is_eligible_open_pipeline_flag,
+      END                                                   AS is_eligible_open_pipeline_flag,
 
 
       -- Created pipeline eligibility definition
@@ -690,14 +690,76 @@ WITH date_details AS (
          ELSE 0
       END                                                   AS is_eligible_created_pipeline_flag,
 
-   
+      CASE
+        WHEN opp_snapshot.sales_accepted_date IS NOT NULL
+          AND opp_snapshot.is_edu_oss = 0
+          AND opp_snapshot.is_deleted = 0
+          AND opp_snapshot.order_type_stamped = '1. New - First Order'
+            THEN 1
+        ELSE 0
+      END                                                   AS is_eligible_sao_flag,
+
+      CASE 
+        WHEN opp_snapshot.is_edu_oss = 0
+          AND opp_snapshot.is_deleted = 0
+          -- For ASP we care mainly about add on, new business, excluding contraction / churn
+          AND opp_snapshot.order_type_stamped IN ('1. New - First Order','2. New - Connected','3. Growth')
+          -- Exclude Decomissioned as they are not aligned to the real owner
+          -- Contract Reset, Decomission
+          AND opp_snapshot.forecast_category_name IN ('Standard','Ramp Deal','Internal Correction')
+          -- Web Purchase have no Net ARR before reconciliation, exclude those 
+          -- from ASP analysis
+          AND ((opp_snapshot.is_web_portal_purchase = 1 
+                AND net_arr > 0)
+                OR opp_snapshot.is_web_portal_purchase = 0)
+          -- Not JiHu
+            THEN 1
+          ELSE 0
+      END                                                  AS is_eligible_asp_analysis_flag,
+      
+      CASE 
+        WHEN opp_snapshot.is_edu_oss = 0
+          AND opp_snapshot.is_deleted = 0
+          -- Renewals are not having the same motion as rest of deals
+          AND opp_snapshot.is_renewal = 0
+          -- For stage age we exclude only ps/other
+          AND opp_snapshot.order_type_stamped IN ('1. New - First Order','2. New - Connected','3. Growth','4. Contraction','6. Churn - Final','5. Churn - Partial')
+          -- Only include deal types with meaningful journeys through the stages
+          AND opp_snapshot.forecast_category_name IN ('Standard','Ramp Deal','Decommissioned')
+          -- Web Purchase have a different dynamic and should not be included
+          AND opp_snapshot.is_web_portal_purchase = 0
+          -- Not JiHu
+            THEN 1
+          ELSE 0
+      END                                                 AS is_elgible_age_analysis_flag,
+
+      CASE
+        WHEN opp_snapshot.is_edu_oss = 0
+          AND opp_snapshot.is_deleted = 0
+          AND (opp_snapshot.is_won = 1 
+              OR (opp_snapshot.is_renewal = 1 AND opp_snapshot.is_lost = 1))
+          AND opp_snapshot.order_type_stamped IN ('1. New - First Order','2. New - Connected','3. Growth','4. Contraction','6. Churn - Final','5. Churn - Partial')
+          -- Not JiHu
+            THEN 1
+          ELSE 0
+      END                                                           AS is_eligible_net_arr_flag,
+
+      CASE
+        WHEN opp_snapshot.is_edu_oss = 0
+          AND opp_snapshot.is_deleted = 0
+          AND opp_snapshot.order_type_stamped IN ('4. Contraction','6. Churn - Final','5. Churn - Partial')
+          -- Not JiHu
+            THEN 1
+          ELSE 0
+      END                                                           AS is_eligible_churn_contraction_flag,
+
       -- created within quarter
       CASE
         WHEN opp_snapshot.pipeline_created_fiscal_quarter_name = opp_snapshot.snapshot_fiscal_quarter_name
           AND is_eligible_created_pipeline_flag = 1
             THEN opp_snapshot.net_arr
         ELSE 0 
-      END                                                  AS created_in_snapshot_quarter_net_arr,
+      END                                                 AS created_in_snapshot_quarter_net_arr,
 
    -- created and closed within the quarter net arr
       CASE 
@@ -706,7 +768,7 @@ WITH date_details AS (
            AND is_eligible_created_pipeline_flag = 1
             THEN opp_snapshot.net_arr
         ELSE 0
-      END                                                   AS created_and_won_same_quarter_net_arr,
+      END                                                 AS created_and_won_same_quarter_net_arr,
 
 
       CASE
@@ -714,7 +776,7 @@ WITH date_details AS (
           AND is_eligible_created_pipeline_flag = 1
             THEN opp_snapshot.calculated_deal_count
         ELSE 0 
-      END                                                  AS created_in_snapshot_quarter_deal_count,
+      END                                                 AS created_in_snapshot_quarter_deal_count,
 
       ---------------------------------------------------------------------------------------------------------
       ---------------------------------------------------------------------------------------------------------

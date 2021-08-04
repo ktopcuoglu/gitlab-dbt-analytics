@@ -648,14 +648,14 @@ WITH sfdc_opportunity AS (
           -- Not JiHu
             THEN 1
           ELSE 0
-      END                                                           AS is_asp_eligible_flag,
+      END                                                           AS is_eligible_asp_analysis_flag,
 
       CASE 
         WHEN oppty_final.is_edu_oss = 0
           AND oppty_final.is_deleted = 0
           -- Renewals are not having the same motion as rest of deals
           AND oppty_final.is_renewal = 0
-          -- For ASP we care mainly about add on, new business
+          -- For stage age we exclude only ps/other
           AND oppty_final.order_type_stamped IN ('1. New - First Order','2. New - Connected','3. Growth','4. Contraction','6. Churn - Final','5. Churn - Partial')
           -- Only include deal types with meaningful journeys through the stages
           AND oppty_final.forecast_category_name IN ('Standard','Ramp Deal','Decommissioned')
@@ -664,10 +664,27 @@ WITH sfdc_opportunity AS (
           -- Not JiHu
             THEN 1
           ELSE 0
-      END                                                           AS is_stage_age_eligible_flag,
+      END                                                           AS is_elgible_age_analysis_flag,
 
-    -- is_stage_age_eligible_flag,
-    -- is_booked_churn_contraction_eligible_flag
+      CASE
+        WHEN oppty_final.is_edu_oss = 0
+          AND oppty_final.is_deleted = 0
+          AND (oppty_final.is_won = 1 
+              OR (oppty_final.is_renewal = 1 AND oppty_final.is_lost = 1))
+          AND oppty_final.order_type_stamped IN ('1. New - First Order','2. New - Connected','3. Growth','4. Contraction','6. Churn - Final','5. Churn - Partial')
+          -- Not JiHu
+            THEN 1
+          ELSE 0
+      END                                                           AS is_eligible_net_arr_flag,
+
+      CASE
+        WHEN oppty_final.is_edu_oss = 0
+          AND oppty_final.is_deleted = 0
+          AND oppty_final.order_type_stamped IN ('4. Contraction','6. Churn - Final','5. Churn - Partial')
+          -- Not JiHu
+            THEN 1
+          ELSE 0
+      END                                                           AS is_eligible_churn_contraction_flag,
 
       -- compound metrics to facilitate reporting
       -- created and closed within the quarter net arr
