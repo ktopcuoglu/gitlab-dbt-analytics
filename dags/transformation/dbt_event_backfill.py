@@ -87,8 +87,8 @@ def generate_dbt_command(vars_dict):
     return KubernetesPodOperator(
         **gitlab_defaults,
         image=DBT_IMAGE,
-        task_id=f"t_dbt-event-backfill-{vars_dict['year']}-{vars_dict['month']}",
-        name=f"t_dbt-event-backfill-{vars_dict['year']}-{vars_dict['month']}",
+        task_id=f"t-dbt-event-backfill-{vars_dict['year']}-{vars_dict['month']}",
+        name=f"t-dbt-event-backfill-{vars_dict['year']}-{vars_dict['month']}",
         secrets=task_secrets,
         env_vars=pod_env_vars,
         arguments=[dbt_generate_command],
