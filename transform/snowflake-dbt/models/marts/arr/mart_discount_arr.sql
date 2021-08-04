@@ -77,11 +77,8 @@ WITH dim_date AS (
       dim_crm_account_subscription.crm_account_name                     AS crm_account_name_subscription,
       dim_crm_account_subscription.crm_account_owner_team               AS crm_account_owner_team_subscription,
       zuora_subscription.subscription_name,
-      CASE
-        WHEN zuora_subscription.current_term <= 12 THEN FALSE
-        WHEN zuora_subscription.current_term > 12  THEN TRUE
-        ELSE NULL
-      END                                                               AS is_myb,
+      IFF(uora_subscription.zuora_renewal_subscription_name != '', TRUE, FALSE)
+                                                                        AS is_myb,
       zuora_subscription.current_term                                   AS current_term_months,
       ROUND(zuora_subscription.current_term / 12, 1)                    AS current_term_years,
       dim_crm_account_invoice.is_reseller,
