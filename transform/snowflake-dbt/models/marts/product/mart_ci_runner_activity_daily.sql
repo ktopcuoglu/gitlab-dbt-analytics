@@ -50,7 +50,7 @@
     FROM ci_runner_activity
     INNER JOIN multi_day_ci_builds
       ON ci_runner_activity.dim_ci_build_id = multi_day_ci_builds.dim_ci_build_id
-    {{ dbt_utils.group_by(n=5) }}
+    {{ dbt_utils.group_by(n=6) }}
 
 ), joined AS (
 
