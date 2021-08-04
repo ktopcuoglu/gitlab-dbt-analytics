@@ -8,7 +8,7 @@
 WITH usage_data AS (
 
     SELECT *
-    FROM {{ ref('prep_event') }}
+    FROM {{ ref('fct_event_400') }}
     {% if is_incremental() %}
 
       WHERE event_created_at >= (SELECT MAX(DATEADD(day, -8, event_created_date)) FROM {{this}})
