@@ -32,9 +32,15 @@ WITH dim_date AS (
     WHERE is_deleted = FALSE
       AND exclude_from_analysis IN ('False', '')
 
+), dim_charge AS (
+
+    SELECT *
+    FROM {{ ref('dim_charge') }}
+
 ), arr_agg AS (
 
     SELECT
+      fct_invoice_item.charge_id                           AS dim_charge_id,
       fct_invoice_item.effective_start_month,
       fct_invoice_item.effective_end_month,
       dim_billing_account_id_subscription,
@@ -43,21 +49,25 @@ WITH dim_date AS (
       dim_crm_account_id_invoice,
       dim_subscription_id,
       dim_product_detail_id,
+      is_paid_in_full,
       SUM(invoice_item_charge_amount)                      AS invoice_item_charge_amount,
       SUM(mrr)                                             AS mrr,
       SUM(arr)                                             AS arr,
       SUM(quantity)                                        AS quantity
     FROM fct_invoice_item
+    LEFT JOIN dim_charge
+      ON dim_charge.dim_charge_id = fct_invoice_item.charge_id
     WHERE fct_invoice_item.effective_end_month > fct_invoice_item.effective_start_month OR fct_invoice_item.effective_end_month IS NULL
       --filter out 2 subscription_ids with known data quality issues when comparing invoiced subscriptions to the Zuora UI.
       AND dim_subscription_id NOT IN ('2c92a0ff5e1dcf14015e3c191d4f7689','2c92a00e6a3477b5016a46aaec2f08bc')
-    {{ dbt_utils.group_by(n=8) }}
+    {{ dbt_utils.group_by(n=10) }}
 
 ), combined AS (
 
     SELECT
-      {{ dbt_utils.surrogate_key(['dim_crm_account_invoice.dim_parent_crm_account_id', 'arr_agg.effective_start_month', 'arr_agg.effective_end_month', 'zuora_subscription.subscription_name', 'arr_agg.dim_product_detail_id']) }}
-                                                                        AS primary_key,
+      {{ dbt_utils.surrogate_key(['arr_agg.dim_charge_id']) }}          AS primary_key,
+      arr_agg.dim_charge_id,
+      arr_agg.dim_subscription_id,
       arr_agg.effective_start_month,
       arr_agg.effective_end_month,
       DATE_TRUNC('month',zuora_subscription.subscription_start_date)    AS subscription_start_month,
@@ -77,8 +87,9 @@ WITH dim_date AS (
       dim_crm_account_subscription.crm_account_name                     AS crm_account_name_subscription,
       dim_crm_account_subscription.crm_account_owner_team               AS crm_account_owner_team_subscription,
       zuora_subscription.subscription_name,
-      IFF(uora_subscription.zuora_renewal_subscription_name != '', TRUE, FALSE)
+      IFF(zuora_subscription.zuora_renewal_subscription_name != '', TRUE, FALSE)
                                                                         AS is_myb,
+      arr_agg.is_paid_in_full,
       zuora_subscription.current_term                                   AS current_term_months,
       ROUND(zuora_subscription.current_term / 12, 1)                    AS current_term_years,
       dim_crm_account_invoice.is_reseller,
@@ -102,9 +113,7 @@ WITH dim_date AS (
       SUM(arr_agg.invoice_item_charge_amount)                           AS invoice_item_charge_amount,
       SUM(arr_agg.arr)/SUM(arr_agg.quantity)                            AS arpu,
       SUM(arr_agg.arr)                                                  AS arr,
-      SUM(arr_agg.quantity)                                             AS quantity,
-      {{ arr_buckets('SUM(arr_agg.arr)') }}                             AS arr_buckets,
-      {{ number_of_seats_buckets('SUM(arr_agg.quantity)') }}            AS number_of_seats_buckets
+      SUM(arr_agg.quantity)                                             AS quantity
     FROM arr_agg
     INNER JOIN zuora_subscription
       ON arr_agg.dim_subscription_id = zuora_subscription.subscription_id
@@ -116,21 +125,20 @@ WITH dim_date AS (
       ON arr_agg.dim_crm_account_id_invoice = dim_crm_account_invoice.dim_crm_account_id
     LEFT JOIN dim_crm_account AS dim_crm_account_subscription
       ON arr_agg.dim_crm_account_id_subscription = dim_crm_account_subscription.dim_crm_account_id
-    {{ dbt_utils.group_by(n=30) }}
+    {{ dbt_utils.group_by(n=33) }}
     ORDER BY 3 DESC
 
 ), final AS (
 
     SELECT
       combined.*,
-      CASE
-        WHEN combined.current_term_months <= 12                                                              THEN 'Non-MYB'
-        WHEN combined.current_term_months > 12  AND ABS(combined.invoice_item_charge_amount) > combined.arr  THEN 'Prepaid MYB'
-        WHEN combined.current_term_months > 12  AND ABS(combined.invoice_item_charge_amount) <= combined.arr THEN 'Non Prepaid MYB'
-        ELSE NULL
-      END                                                               AS prepaid_myb,
-      ABS(invoice_item_charge_amount) / (arr * current_term_years)
-                                                                        AS pct_paid_of_total_revenue
+      ABS(invoice_item_charge_amount) / (arr * current_term_years)      AS pct_paid_of_total_revenue,
+      {{ arr_buckets('SUM(arr) OVER(PARTITION BY dim_parent_crm_account_id_invoice,
+        effective_start_month, effective_end_month, subscription_name,
+        product_rate_plan_charge_name)') }}                                           AS arr_buckets,
+      {{ number_of_seats_buckets('SUM(quantity) OVER(PARTITION BY dim_parent_crm_account_id_invoice,
+        effective_start_month, effective_end_month, subscription_name,
+        product_rate_plan_charge_name)') }}                                           AS number_of_seats_buckets
     FROM combined
 
 )
@@ -138,7 +146,7 @@ WITH dim_date AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@mcooperDD",
+    updated_by="@jpeguero",
     created_date="2020-10-21",
-    updated_date="2021-02-09",
+    updated_date="2021-08-04",
 ) }}
