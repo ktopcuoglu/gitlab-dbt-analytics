@@ -3147,6 +3147,12 @@ roles:
         warehouses:
             - reporting
 
+    - rallison:
+        member_of:
+            - analyst_sales
+        warehouses:
+            - analyst_xs
+
     - rbacovic:
         member_of:
             - engineer
@@ -4161,6 +4167,11 @@ users:
     - pwc_snagaraj:
         can_login: no
         member_of: []
+
+    - rallison:
+        can_login: yes
+        member_of:
+            - rallison
 
     - rbacovic:
         can_login: yes
