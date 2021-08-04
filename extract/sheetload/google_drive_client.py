@@ -6,6 +6,7 @@ from os import environ as env
 from yaml import load, safe_load, YAMLError
 from io import BytesIO
 from apiclient.http import MediaIoBaseDownload
+from apiclient import errors
 import pandas as pd
 
 
@@ -130,23 +131,48 @@ class GoogleDriveClient:
         if file_type:
             query = f"{query} and mimeType='{file_type}'"
 
-        # Call the Drive v3 API
-        results = (
-            self.service.files()
-            .list(
-                # fields returned are specified below.
-                q=query,
-                pageSize=10,
-                fields="nextPageToken, files(id, name, mimeType)",
-            )
-            .execute()
-        )
-        items: List[Dict] = results.get("files", [])
+        page_token = None
+        all_results = []
 
-        if not items:
-            return []
-        else:
-            return items
+        while True:
+
+
+            if page_token:
+
+                results = (
+                    self.service.files().list(
+                            pageToken=page_token,
+                            q=query,
+                            pageSize=10,
+                            fields="nextPageToken, files(id, name, mimeType)",
+                    ).execute()
+                )
+                items: List[Dict] = results.get("files", [])
+
+                if items:
+                    all_results.append(items)
+
+            else:
+
+                results = (
+                    self.service.files().list(
+                            q=query,
+                            pageSize=10,
+                            fields="nextPageToken, files(id, name, mimeType)",
+                    ).execute()
+                )
+
+                items: List[Dict] = results.get("files", [])
+
+                if items:
+                    all_results.append(items)
+
+            page_token = results.get('nextPageToken')
+            if not page_token:
+                break
+
+
+        return all_results
 
     def move_file_to_folder(self, file_id, to_folder_id) -> bool:
         """
