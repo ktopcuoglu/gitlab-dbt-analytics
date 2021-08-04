@@ -19,9 +19,9 @@
           target_month.fiscal_quarter_name_fy           AS target_fiscal_quarter_name,
           target_month.first_day_of_fiscal_quarter      AS target_fiscal_quarter_date,   
 
-          COALESCE(funnel_target.sales_qualified_source_name,'NA')                                      AS sales_qualified_source,
-          COALESCE(CONCAT(funnel_target.crm_user_sales_segment,'_',funnel_target.crm_user_region),'NA') AS sales_team_rd_asm_level,
-          COALESCE(funnel_target.crm_user_sales_segment,'NA')                                           AS sales_team_cro_level,
+          COALESCE(funnel_target.sales_qualified_source_name,'NA')                                              AS sales_qualified_source,
+          COALESCE(CONCAT(funnel_target.crm_user_sales_segment,'_',funnel_target.crm_user_region),'Large_East') AS sales_team_rd_asm_level,
+          COALESCE(funnel_target.crm_user_sales_segment,'Large')                                                AS sales_team_cro_level,
 
           CASE 
             WHEN funnel_target.order_type_name = '3. Growth' 
