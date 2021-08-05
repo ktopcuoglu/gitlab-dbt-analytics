@@ -38,12 +38,14 @@
       prep_namespace.ultimate_parent_namespace_id,
       dim_date.date_id                                            AS created_date_id,
       IFNULL(dim_namespace_plan_hist.dim_plan_id, 34)             AS dim_plan_id,
-      dim_user.dim_user_id                                        AS creator_id,
+      prep_user.dim_user_id                                       AS creator_id,
 
       prep_project.namespace_is_internal,
 
       version::VARCHAR                                            AS package_version,
-      package_type::VARCHAR                                       AS package_type
+      package_type::VARCHAR                                       AS package_type,
+      created_at::TIMESTAMP                                       AS created_at,
+      updated_at::TIMESTAMP                                       AS updated_at,
 
     FROM gitlab_dotcom_packages_packages_dedupe_source
     LEFT JOIN prep_project 
