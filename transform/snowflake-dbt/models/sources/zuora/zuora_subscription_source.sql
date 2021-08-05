@@ -18,6 +18,7 @@ WITH source AS (
       creatorinvoiceownerid                       AS creator_invoice_owner_id,
       invoiceownerid                              AS invoice_owner_id,
       nullif(opportunityid__c, '')                AS sfdc_opportunity_id,
+      nullif(opportunityname__qt, '')             AS crm_opportunity_name,
       nullif(originalid, '')                      AS original_id,
       nullif(previoussubscriptionid, '')          AS previous_subscription_id,
       nullif(recurlyid__c, '')                    AS sfdc_recurly_id,
