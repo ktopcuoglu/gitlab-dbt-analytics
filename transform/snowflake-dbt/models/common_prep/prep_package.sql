@@ -30,7 +30,7 @@
 ), renamed AS (
   
     SELECT
-      id::NUMBER                                                  AS packages_package_id,
+      id::NUMBER                                                  AS dim_package_id,
       
       -- FOREIGN KEYS
       prep_project.dim_project_id                                 AS dim_project_id,
@@ -38,6 +38,7 @@
       prep_namespace.ultimate_parent_namespace_id,
       dim_date.date_id                                            AS created_date_id,
       IFNULL(dim_namespace_plan_hist.dim_plan_id, 34)             AS dim_plan_id,
+      dim_user.dim_user_id                                        AS creator_id,
 
       prep_project.namespace_is_internal,
 
