@@ -1,5 +1,5 @@
 {{ simple_cte([('dim_date', 'dim_date'),
-                ('fct_usage_ping_payload', 'fct_usage_ping_payload')
+                ('prep_usage_ping_payload', 'prep_usage_ping_payload')
                 ]
                 )}}
 
