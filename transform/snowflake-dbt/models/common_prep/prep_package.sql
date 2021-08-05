@@ -33,7 +33,7 @@
       id::NUMBER                                                  AS packages_package_id,
       
       -- FOREIGN KEYS
-      prep_project.ci_build_project_id                            AS dim_project_id,
+      prep_project.dim_project_id                                 AS dim_project_id,
       prep_namespace.dim_namespace_id,
       prep_namespace.ultimate_parent_namespace_id,
       dim_date.date_id                                            AS created_date_id,
@@ -41,19 +41,19 @@
 
       prep_project.namespace_is_internal,
 
-      version::VARCHAR                                            AS package_versionm
+      version::VARCHAR                                            AS package_version,
       package_type::VARCHAR                                       AS package_type
 
     FROM gitlab_dotcom_packages_packages_dedupe_source
     LEFT JOIN prep_project 
-      ON gitlab_dotcom_packages_packages_dedupe_source.ci_build_project_id = prep_project.dim_project_id
+      ON gitlab_dotcom_packages_packages_dedupe_source.project_id = prep_project.dim_project_id
     LEFT JOIN dim_namespace_plan_hist 
       ON prep_project.ultimate_parent_namespace_id = dim_namespace_plan_hist.dim_namespace_id
-      AND gitlab_dotcom_ci_builds_source.created_at >= dim_namespace_plan_hist.valid_from
-      AND gitlab_dotcom_ci_builds_source.created_at < dim_namespace_plan_hist.valid_to
+      AND gitlab_dotcom_packages_packages_dedupe_source.created_at >= dim_namespace_plan_hist.valid_from
+      AND gitlab_dotcom_packages_packages_dedupe_source.created_at < dim_namespace_plan_hist.valid_to
     LEFT JOIN prep_namespace
       ON prep_project.dim_namespace_id = prep_namespace.dim_namespace_id
-      AND is_active = TRUE
+      AND is_currently_valid = TRUE
     LEFT JOIN prep_user 
       ON gitlab_dotcom_packages_packages_dedupe_source.creator_id = prep_user.dim_user_id
     LEFT JOIN dim_date 
@@ -64,7 +64,7 @@
 {{ dbt_audit(
     cte_ref="renamed",
     created_by="@mpeychet_",
-    updated_by="@ischweickartDD",
-    created_date="2021-06-17",
-    updated_date="2021-07-09"
+    updated_by="@mpeychet_",
+    created_date="2021-08-05",
+    updated_date="2021-08-05"
 ) }}
