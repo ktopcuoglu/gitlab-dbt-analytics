@@ -71,6 +71,7 @@ WITH source AS (
         unqualified_datetime__c                                 AS unqualified_datetime,
         nurture_datetime__c                                     AS nurture_datetime,
         bad_data_datetime__c                                    AS bad_data_datetime,
+        worked_date__c                                          AS worked_date,
         web_portal_purchase_datetime__c                         AS web_portal_purchase_datetime,
         {{ sales_segment_cleaning('sales_segmentation__c') }}   AS sales_segmentation,
         mkto71_Lead_Score__c                                    AS person_score,

@@ -176,6 +176,12 @@ WITH account_dims_mapping AS (
       sfdc_leads.converted_date::DATE                                                                           AS converted_date,
       {{ get_date_id('converted_date') }}                                                                       AS converted_date_id,
       {{ get_date_pt_id('converted_date') }}                                                                    AS converted_date_pt_id,
+      COALESCE(sfdc_contacts.worked_date, sfdc_leads.worked_date)::DATE                                         AS worked_date,
+      COALESCE(sfdc_contacts.worked_date, sfdc_leads.worked_date)                                               AS worked_datetime,
+      CONVERT_TIMEZONE('America/Los_Angeles', COALESCE(sfdc_contacts.worked_date, sfdc_leads.worked_date))
+                                                                                                                AS accepted_datetime_pt,
+      {{ get_date_id('worked_date') }}                                                                          AS worked_date_id,
+      {{ get_date_pt_id('worked_date') }}                                                                       AS worked_date_pt_id,
 
      -- flags
       CASE
