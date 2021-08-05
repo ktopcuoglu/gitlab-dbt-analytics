@@ -3,12 +3,11 @@ from typing import Dict, List
 from googleapiclient.discovery import build
 from oauth2client.service_account import ServiceAccountCredentials
 from os import environ as env
-from yaml import load, safe_load, YAMLError
+from yaml import safe_load
 from io import BytesIO
 from apiclient.http import MediaIoBaseDownload
-from apiclient import errors
 import pandas as pd
-
+from logging import error, info, basicConfig, getLogger
 
 class GoogleDriveClient:
     def __init__(self, gapi_keyfile=None):
@@ -35,7 +34,6 @@ class GoogleDriveClient:
         done = False
         while not done:
             status, done = downloader.next_chunk()
-            print("Download %d%%." % int(status.progress() * 100))
 
         bytes_data = fh.getvalue()
         df = pd.read_csv(BytesIO(bytes_data), low_memory=False)
@@ -108,7 +106,7 @@ class GoogleDriveClient:
         created_folder = (
             self.service.files().create(body=file_metadata, fields="id").execute()
         )
-        print(f"Folder {folder_name} created successfully")
+        info(f"Folder {folder_name} created successfully")
 
         folder_id = created_folder.get("id")
 
@@ -191,6 +189,6 @@ class GoogleDriveClient:
             fields="id, parents",
         ).execute()
 
-        print(f"{file_id} moved to {to_folder_id}")
+        info(f"{file_id} moved to {to_folder_id}")
 
         return True
