@@ -18,7 +18,7 @@ With gitlab_dotcom_issue_links_source AS (
       gitlab_dotcom_issue_links_source.created_at,
       gitlab_dotcom_issue_links_source.updated_at,
       valid_from
-    FROM gitlab_dotcom_labels_source
+    FROM gitlab_dotcom_issue_links_source
 
 
 )
