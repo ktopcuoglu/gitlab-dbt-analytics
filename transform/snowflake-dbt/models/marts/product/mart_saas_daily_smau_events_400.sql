@@ -16,20 +16,20 @@
       {{ dbt_utils.surrogate_key(['ultimate_parent_namespace_id', 'dim_user_id', 'stage_name', 'event_created_date']) }} AS daily_usage_data_event_id,
       
       -- FOREIGN KEY
-      ultimate_parent_namespace_id,
-      dim_user_id,
-      event_created_date, 
-      stage_name,
-      is_smau,
-      is_blocked_namespace,
-      namespace_created_date,
-      namespace_is_internal,
-      user_created_date,
-      days_since_namespace_creation,
-      weeks_since_namespace_creation,
-      days_since_user_creation,
-      weeks_since_user_creation,
-      COUNT(*)                                                                                               AS event_count
+      fct_daily_event_400.ultimate_parent_namespace_id,
+      fct_daily_event_400.dim_user_id,
+      fct_daily_event_400.event_created_date, 
+      map_saas_event_to_smau.stage_name,
+      map_saas_event_to_smau.is_smau,
+      fct_daily_event_400.is_blocked_namespace,
+      fct_daily_event_400.namespace_created_date,
+      fct_daily_event_400.namespace_is_internal,
+      fct_daily_event_400.user_created_date,
+      fct_daily_event_400.days_since_namespace_creation,
+      fct_daily_event_400.weeks_since_namespace_creation,
+      fct_daily_event_400.days_since_user_creation,
+      fct_daily_event_400.weeks_since_user_creation,
+      COUNT(*)                                                                                                           AS event_count
     FROM fct_daily_event_400
     INNER JOIN map_saas_event_to_smau
       ON fct_daily_event_400.event_name = map_saas_event_to_smau.event_name 
