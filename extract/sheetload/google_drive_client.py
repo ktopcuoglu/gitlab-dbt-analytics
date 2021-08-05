@@ -135,8 +135,6 @@ class GoogleDriveClient:
         all_results = []
 
         while True:
-
-
             if page_token:
 
                 results = (
@@ -150,10 +148,9 @@ class GoogleDriveClient:
                 items: List[Dict] = results.get("files", [])
 
                 if items:
-                    all_results.append(items)
+                    all_results = all_results[:] + items[:]
 
             else:
-
                 results = (
                     self.service.files().list(
                             q=query,
@@ -165,7 +162,7 @@ class GoogleDriveClient:
                 items: List[Dict] = results.get("files", [])
 
                 if items:
-                    all_results.append(items)
+                    all_results = all_results[:] + items[:]
 
             page_token = results.get('nextPageToken')
             if not page_token:
