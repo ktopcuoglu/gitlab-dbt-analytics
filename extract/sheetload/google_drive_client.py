@@ -38,7 +38,7 @@ class GoogleDriveClient:
             print("Download %d%%." % int(status.progress() * 100))
 
         bytes_data = fh.getvalue()
-        df = pd.read_csv(BytesIO(bytes_data))
+        df = pd.read_csv(BytesIO(bytes_data), low_memory=False)
         return df
 
     def get_item_id(self, item_name, in_folder_id=None, is_folder=None) -> str:
