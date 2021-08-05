@@ -7,7 +7,8 @@ WITH map_merged_crm_account AS (
 
     SELECT *
     FROM {{ ref('zuora_account_source') }}
-    WHERE is_deleted = FALSE
+    WHERE LOWER(batch) != 'batch20'
+      AND is_deleted = FALSE
 
 ), zuora_invoice AS (
 
