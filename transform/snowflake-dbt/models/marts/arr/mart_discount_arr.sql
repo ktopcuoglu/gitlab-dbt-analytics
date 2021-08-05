@@ -105,6 +105,7 @@ WITH dim_date AS (
         WHEN LOWER(dim_product_detail.product_rate_plan_charge_name) LIKE '%support%'      THEN TRUE
         WHEN LOWER(dim_product_detail.product_rate_plan_charge_name) LIKE '%reporter%'     THEN TRUE
         WHEN LOWER(dim_product_detail.product_rate_plan_charge_name) LIKE '%guest%'        THEN TRUE
+        WHEN crm_opportunity_name LIKE '%EDU%'                                             THEN TRUE
         WHEN dim_product_detail.annual_billing_list_price = 0                              THEN TRUE
         ELSE FALSE
       END                                                               AS is_excluded_from_disc_analysis,
