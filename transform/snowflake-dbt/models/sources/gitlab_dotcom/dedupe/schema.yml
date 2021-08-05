@@ -40,7 +40,7 @@ models:
   - name: gitlab_dotcom_ci_build_trace_chunks_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_ci_build_trace_section_names_dedupe_source
-    description: This table pipeline is depreciated and won't be refreshed,Ref MR https://gitlab.com/gitlab-data/analytics/-/merge_requests/5334.
+    description: This table pipeline is deprecated and won't be refreshed, Ref MR https://gitlab.com/gitlab-data/analytics/-/merge_requests/5334.
   - name: gitlab_dotcom_ci_builds_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_ci_group_variables_dedupe_source
