@@ -168,7 +168,6 @@ class GoogleDriveClient:
             if not page_token:
                 break
 
-
         return all_results
 
     def move_file_to_folder(self, file_id, to_folder_id) -> bool:
