@@ -10,7 +10,13 @@ WITH prep_amendment AS (
 
 ), subscription_lineage AS (
 
-    SELECT *
+    SELECT DISTINCT
+      subscription_name_slugify,
+      subscription_lineage,
+      oldest_subscription_in_cohort,
+      subscription_cohort_month,
+      subscription_cohort_quarter,
+      subscription_cohort_year
     FROM {{ ref('map_subscription_lineage') }}
 
 ), final AS (
@@ -44,6 +50,8 @@ WITH prep_amendment AS (
     subscription.renewal_term_period_type,
     subscription.eoa_starter_bronze_offer_accepted,
     subscription.subscription_sales_type,
+    subscription.auto_renew_native_hist,
+    subscription.auto_renew_customerdot_hist,
     subscription.turn_on_cloud_licensing,
     subscription.turn_on_operational_metrics,
     subscription.contract_operational_metrics,
@@ -75,7 +83,7 @@ WITH prep_amendment AS (
 
   FROM subscription
   LEFT JOIN subscription_lineage
-    ON subscription_lineage.dim_subscription_id = subscription.dim_subscription_id
+    ON subscription_lineage.subscription_name_slugify = subscription.subscription_name_slugify
   LEFT JOIN prep_amendment
     ON subscription.dim_amendment_id_subscription = prep_amendment.dim_amendment_id
 
@@ -86,5 +94,5 @@ WITH prep_amendment AS (
     created_by="@snalamaru",
     updated_by="@jpeguero",
     created_date="2020-12-16",
-    updated_date="2021-07-29"
+    updated_date="2021-08-04"
 ) }}

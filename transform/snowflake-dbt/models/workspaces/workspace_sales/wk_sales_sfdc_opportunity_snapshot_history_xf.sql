@@ -684,6 +684,8 @@ WITH date_details AS (
           -- exclude vision opps from FY21-Q2
           AND (opp_snapshot.pipeline_created_fiscal_quarter_name != 'FY21-Q2'
                 OR vision_opps.opportunity_id IS NULL)
+          -- 20210802 remove webpurchase deals
+          AND opp_snapshot.is_web_portal_purchase = 0
              THEN 1
          ELSE 0
       END                                                   AS is_eligible_created_pipeline_flag,

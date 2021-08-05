@@ -107,6 +107,11 @@ databases:
     - parmstrong_prep:
         shared: no
 
+    - rbacovic_prod:
+        shared: no
+    - rbacovic_prep:
+        shared: no
+
     - rheannamistry_prod:
         shared: no
     - rheannamistry_prep:
@@ -758,6 +763,20 @@ roles:
             - dbt_analytics
             - snowflake_db
 
+    - restricted_finance:
+        warehouses:
+            - reporting
+        privileges:
+            databases:
+                read:
+                    - prod
+            schemas:
+                read:
+                    - prod.restricted_finance_*
+            tables:
+                read:
+                    - prod.restricted_finance_*.*
+
     - transformer: # For automated jobs
         warehouses:
             - airflow_testing_l
@@ -999,6 +1018,7 @@ roles:
                     - prod.common_mart_marketing
                     - prod.common_mart_sales
                     - prod.common_mart_product
+                    - prod.common_prep
                     - prod.data_quality
                     - prod.legacy
                     - prod.pumps
@@ -1016,6 +1036,7 @@ roles:
                     - prod.common_mart_marketing.*
                     - prod.common_mart_sales.*
                     - prod.common_mart_product.*
+                    - prod.common_prep.*
                     - prod.data_quality.*
                     - prod.legacy.*
                     - prod.pumps.*
@@ -1927,6 +1948,10 @@ roles:
             - analyst_growth
         warehouses:
             - analyst_xs
+
+    - ablanco:
+        warehouses:
+            - reporting
 
     - acarella:
         warehouses: []
@@ -3136,6 +3161,53 @@ roles:
         warehouses:
             - reporting
 
+    - rallison:
+        member_of:
+            - analyst_sales
+        warehouses:
+            - analyst_xs
+
+    - rbacovic:
+        member_of:
+            - engineer
+        warehouses:
+            - engineer_xs
+            - engineer_xl
+            - loading
+            - reporting
+        owns:
+            databases:
+                - rbacovic_prep
+                - rbacovic_prod
+            schemas:
+                - rbacovic_prep.*
+                - rbacovic_prod.*
+            tables:
+                - rbacovic_prep.*.*
+                - rbacovic_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - rbacovic_prep
+                    - rbacovic_prod
+                write:
+                    - rbacovic_prep
+                    - rbacovic_prod
+            schemas:
+                read:
+                    - rbacovic_prep.*
+                    - rbacovic_prod.*
+                write:
+                    - rbacovic_prep.*
+                    - rbacovic_prod.*
+            tables:
+                read:
+                    - rbacovic_prep.*.*
+                    - rbacovic_prod.*.*
+                write:
+                    - rbacovic_prep.*.*
+                    - rbacovic_prod.*.*           
+
     - rheannamistry:
         member_of:
             - decisive_data
@@ -3530,6 +3602,12 @@ users:
         can_login: yes
         member_of:
             - aakgun
+
+    - ablanco:
+        can_login: yes
+        member_of:
+            - ablanco
+            - securityadmin
 
     - acarella:
         can_login: no
@@ -4066,6 +4144,7 @@ users:
         member_of:
             - periscope
             - reporter
+            - restricted_finance #this is about to move when POC for RBAC is completed
 
     - periscope_sensitive:
         can_login: no
@@ -4104,6 +4183,16 @@ users:
         can_login: no
         member_of: []
 
+    - rallison:
+        can_login: yes
+        member_of:
+            - rallison
+
+    - rbacovic:
+        can_login: yes
+        member_of:
+            - rbacovic
+
     - rheannamistry:
         can_login: yes
         member_of:
@@ -4134,6 +4223,12 @@ users:
         can_login: yes
         member_of:
             - skerr
+
+    - sisense_restricted_finance:
+        can_login: yes
+        member_of:
+            - restricted_finance 
+            - reporter           
 
     - snalamaru:
         can_login: yes

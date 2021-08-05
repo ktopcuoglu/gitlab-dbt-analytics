@@ -615,9 +615,59 @@ WITH sfdc_opportunity AS (
             OR oppty_final.is_lost = 1)
           AND (net_arr > 0 
             OR oppty_final.opportunity_category = 'Credit')
+          -- 20210802 remove webpurchase deals
+          AND oppty_final.is_web_portal_purchase = 0
          THEN 1
          ELSE 0
       END                                                          AS is_eligible_created_pipeline_flag,
+
+
+      CASE
+        WHEN oppty_final.sales_accepted_date IS NOT NULL
+          AND oppty_final.is_edu_oss = 0
+          AND oppty_final.is_deleted = 0
+          AND oppty_final.order_type_stamped = '1. New - First Order'
+            THEN 1
+        ELSE 0
+      END                                                         AS is_eligible_sao_flag,
+
+
+      CASE 
+        WHEN oppty_final.is_edu_oss = 0
+          AND oppty_final.is_deleted = 0
+          -- For ASP we care mainly about add on, new business, excluding contraction / churn
+          AND oppty_final.order_type_stamped IN ('1. New - First Order','2. New - Connected','3. Growth')
+          -- Exclude Decomissioned as they are not aligned to the real owner
+          -- Contract Reset, Decomission
+          AND oppty_final.forecast_category_name IN ('Standard','Ramp Deal','Internal Correction')
+          -- Web Purchase have no Net ARR before reconciliation, exclude those 
+          -- from ASP analysis
+          AND ((oppty_final.is_web_portal_purchase = 1 
+                AND net_arr > 0)
+                OR oppty_final.is_web_portal_purchase = 0)
+          -- Not JiHu
+            THEN 1
+          ELSE 0
+      END                                                           AS is_asp_eligible_flag,
+
+      CASE 
+        WHEN oppty_final.is_edu_oss = 0
+          AND oppty_final.is_deleted = 0
+          -- Renewals are not having the same motion as rest of deals
+          AND oppty_final.is_renewal = 0
+          -- For ASP we care mainly about add on, new business
+          AND oppty_final.order_type_stamped IN ('1. New - First Order','2. New - Connected','3. Growth','4. Contraction','6. Churn - Final','5. Churn - Partial')
+          -- Only include deal types with meaningful journeys through the stages
+          AND oppty_final.forecast_category_name IN ('Standard','Ramp Deal','Decommissioned')
+          -- Web Purchase have a different dynamic and should not be included
+          AND oppty_final.is_web_portal_purchase = 0
+          -- Not JiHu
+            THEN 1
+          ELSE 0
+      END                                                           AS is_stage_age_eligible_flag,
+
+    -- is_stage_age_eligible_flag,
+    -- is_booked_churn_contraction_eligible_flag
 
       -- compound metrics to facilitate reporting
       -- created and closed within the quarter net arr

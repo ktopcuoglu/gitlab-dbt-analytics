@@ -1225,19 +1225,6 @@ tables:
       FROM lfs_objects_projects
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-  licenses:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'licenses'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , created_at
-      , updated_at
-      FROM licenses
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
   lists:
     dbt_source_model: true
     export_schema: 'gitlab_com'
