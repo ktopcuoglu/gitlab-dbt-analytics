@@ -12,7 +12,7 @@
 ), transformed AS (
 
     SELECT 
-        fct_usage_ping_payload.*,
+        prep_usage_ping_payload.*,
         metrics_path,
         metric_value,
         group_name,
