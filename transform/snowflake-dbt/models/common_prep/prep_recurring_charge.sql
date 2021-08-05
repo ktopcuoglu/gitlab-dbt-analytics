@@ -14,6 +14,8 @@ WITH dim_date AS (
     SELECT *
     FROM {{ ref('zuora_account_source') }}
     WHERE is_deleted = FALSE
+    --Exclude Batch20 which are the test accounts. This method replaces the manual dbt seed exclusion file.
+      AND LOWER(batch) != 'batch20'
 
 ), zuora_rate_plan AS (
 
@@ -152,5 +154,5 @@ WITH dim_date AS (
     created_by="@mcooperDD",
     updated_by="@iweeks",
     created_date="2021-01-04",
-    updated_date="2021-04-28",
+    updated_date="2021-07-29",
 ) }}

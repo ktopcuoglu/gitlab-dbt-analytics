@@ -21,6 +21,8 @@ WITH map_merged_crm_account AS (
     SELECT *
     FROM {{ ref('zuora_account_source') }}
     WHERE is_deleted = FALSE
+    --Exclude Batch20 which are the test accounts. This method replaces the manual dbt seed exclusion file.
+      AND LOWER(batch) != 'batch20'
 
 ), zuora_rate_plan AS (
 
@@ -55,6 +57,7 @@ WITH map_merged_crm_account AS (
     SELECT
       --Natural Key
       zuora_subscription.subscription_name,
+      zuora_subscription.subscription_name_slugify,
       zuora_subscription.version                                        AS subscription_version,
       zuora_rate_plan_charge.rate_plan_charge_number,
       zuora_rate_plan_charge.version                                    AS rate_plan_charge_version,
@@ -171,6 +174,7 @@ WITH map_merged_crm_account AS (
 
     SELECT
       active_zuora_subscription.subscription_name                                 AS subscription_name,
+      active_zuora_subscription.subscription_name_slugify                         AS subscription_name_slugify,
       active_zuora_subscription.version                                           AS subscription_version,
       NULL                                                                        AS rate_plan_charge_number,
       NULL                                                                        AS rate_plan_charge_version,
@@ -247,7 +251,7 @@ WITH map_merged_crm_account AS (
     SELECT *
     FROM non_manual_charges
 
-    UNION 
+    UNION
 
     SELECT *
     FROM manual_charges
@@ -278,7 +282,7 @@ WITH map_merged_crm_account AS (
 {{ dbt_audit(
     cte_ref="arr_analysis_framework",
     created_by="@iweeks",
-    updated_by="@michellecooper",
+    updated_by="@iweeks",
     created_date="2021-04-28",
-    updated_date="2021-06-09"
+    updated_date="2021-07-29"
 ) }}

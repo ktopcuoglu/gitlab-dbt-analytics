@@ -17,3 +17,14 @@ Zuora Accounts added here will be excluded from all relevant Zuora base models.
 * The `is_permanently_excluded` column is non-functional and designates whether the column should be permanently excluded or just temporarily.
 * The `description` column is a non-functional helper for us to track which accounts are excluded.
 {% enddocs %}
+
+{% docs map_saas_event_to_smau %}
+
+Seed file allowing the Data team to map a SaaS event in `fct_event` and `fct_daily_event` to a SMAU event (in model fct_daily_smau_event).
+
+For most of the event, there is a 1:1 relationship between a fct_event event and a SMAU event.
+
+Though, the plan SMAU event is the combination of 2 events (issue_creation and issue_note_creation).
+
+{% enddocs %}
+

@@ -24,7 +24,7 @@ Here is an image documenting the ERD for this table:
 
 {% docs mart_arr_snapshots %}
 
-Keeps daily snapshots of mart_arr. This allows to query ARR from a historical perspective. 
+Keeps daily snapshots of mart_arr. This allows to query ARR from a historical perspective.
 
 The below query will pull ARR by month as observed on selected snapshot_date.
 
