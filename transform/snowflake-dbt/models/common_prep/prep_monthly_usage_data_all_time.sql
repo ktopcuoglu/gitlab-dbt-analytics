@@ -1,5 +1,5 @@
 {{ simple_cte([('dim_date', 'dim_date'),
-                ('fct_usage_ping_payload', 'fct_usage_ping_payload')
+                ('prep_usage_ping_payload', 'prep_usage_ping_payload')
                 ]
                 )}}
 
@@ -27,8 +27,8 @@
         has_timed_out,
         DATE_TRUNC('month', ping_created_at) AS ping_created_month
     FROM data
-    LEFT JOIN fct_usage_ping_payload
-      ON data.dim_usage_ping_id = fct_usage_ping_payload.dim_usage_ping_id
+    LEFT JOIN prep_usage_ping_payload
+      ON data.dim_usage_ping_id = prep_usage_ping_payload.dim_usage_ping_id
     -- need host_name in the QUALIFY statement
     QUALIFY ROW_NUMBER() OVER (PARTITION BY dim_instance_id, metrics_path, ping_created_month ORDER BY ping_created_at DESC) = 1
 
