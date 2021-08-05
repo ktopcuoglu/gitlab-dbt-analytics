@@ -688,7 +688,7 @@ WITH date_details AS (
           AND opp_snapshot.is_web_portal_purchase = 0
              THEN 1
          ELSE 0
-      END                                                   AS is_eligible_created_pipeline_flag,
+      END                                                      AS is_eligible_created_pipeline_flag,
 
       CASE
         WHEN opp_snapshot.sales_accepted_date IS NOT NULL
@@ -697,7 +697,7 @@ WITH date_details AS (
           AND opp_snapshot.order_type_stamped = '1. New - First Order'
             THEN 1
         ELSE 0
-      END                                                   AS is_eligible_sao_flag,
+      END                                                     AS is_eligible_sao_flag,
 
       CASE 
         WHEN opp_snapshot.is_edu_oss = 0
@@ -715,7 +715,7 @@ WITH date_details AS (
           -- Not JiHu
             THEN 1
           ELSE 0
-      END                                                  AS is_eligible_asp_analysis_flag,
+      END                                                    AS is_eligible_asp_analysis_flag,
       
       CASE 
         WHEN opp_snapshot.is_edu_oss = 0
@@ -731,7 +731,7 @@ WITH date_details AS (
           -- Not JiHu
             THEN 1
           ELSE 0
-      END                                                 AS is_elgible_age_analysis_flag,
+      END                                                   AS is_elgible_age_analysis_flag,
 
       CASE
         WHEN opp_snapshot.is_edu_oss = 0
@@ -742,7 +742,7 @@ WITH date_details AS (
           -- Not JiHu
             THEN 1
           ELSE 0
-      END                                                           AS is_eligible_net_arr_flag,
+      END                                                   AS is_eligible_net_arr_flag,
 
       CASE
         WHEN opp_snapshot.is_edu_oss = 0
@@ -751,7 +751,7 @@ WITH date_details AS (
           -- Not JiHu
             THEN 1
           ELSE 0
-      END                                                           AS is_eligible_churn_contraction_flag,
+      END                                                  AS is_eligible_churn_contraction_flag,
 
       -- created within quarter
       CASE
