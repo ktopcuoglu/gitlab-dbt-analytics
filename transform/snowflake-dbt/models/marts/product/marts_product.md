@@ -30,12 +30,12 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% docs mart_saas_daily_smau_events_400 %}
 
-Mart table built on top of `fct_daily_event_400` that allows final user to easily calculate some key Performance Indicators like Monthly SMAU (paid or free) and allowing complex analysis like:
+Mart table built on top of `fct_daily_event_400` (hence this table shows only the last 400 days) that allows final user to easily calculate some key Performance Indicators like Monthly SMAU (paid or free) and allowing complex analysis like:
 
 1. [User Journey Analysis](https://app.periscopedata.com/app/gitlab/869174/WIP-Cross-Stage-Adoption-Dashboard): See how often different product stages are used by the same namespaces. See what stages are used in combination.
 1. [New Namespace Stage Adoption](https://app.periscopedata.com/app/gitlab/761347/Group-Namespace-Conversion-Metrics): Evaluate how often new namespaces are adopting stages such as 'Create' and 'Verify' within their first days of use.
 1. [Stages per Organization](https://app.periscopedata.com/app/gitlab/824044/Stages-per-Organization-Deep-Dive---SpO): Identify how namespaces adopt stages within their first days and how this correlates with paid conversion and long-term engagement.
 
 All these analysis have been done with `gitlab_dotcom_daily_usage_data_events` which was the legacy table of these tables.
-
+Only events that happened the last 400 days are included in this table.
 {% enddocs %}
