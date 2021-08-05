@@ -22,6 +22,13 @@ databases:
     - testing_db:
         shared: no
 
+    - csharp_analytics:
+        shared: no
+    - csharp_prod:
+        shared: no
+    - csharp_prep:
+        shared: no   
+
     - dpeterson_prod:
         shared: no
     - dpeterson_prep:
@@ -2093,6 +2100,47 @@ roles:
         warehouses:
             - analyst_xs
 
+    - csharp:
+        member_of:
+            - engineer
+        warehouses:
+            - engineer_xs
+            - engineer_xl
+            - loading
+            - reporting
+        owns:
+            databases:
+                - csharp_prep
+                - csharp_prod
+            schemas:
+                - csharp_prep.*
+                - csharp_prod.*
+            tables:
+                - csharp_prep.*.*
+                - csharp_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - csharp_prep
+                    - csharp_prod
+                write:
+                    - csharp_prep
+                    - csharp_prod
+            schemas:
+                read:
+                    - csharp_prep.*
+                    - csharp_prod.*
+                write:
+                    - csharp_prep.*
+                    - csharp_prod.*
+            tables:
+                read:
+                    - csharp_prep.*.*
+                    - csharp_prod.*.*
+                write:
+                    - csharp_prep.*.*
+                    - csharp_prod.*.*        
+
     - daruwajoye:
         member_of:
             - analyst_finance
@@ -3733,6 +3781,11 @@ users:
         can_login: yes
         member_of:
             - cmestel
+
+    - csharp:
+        can_login: yes
+        member_of:
+            - csharp        
 
     - daruwajoye:
         can_login: yes
