@@ -62,6 +62,7 @@ WITH campaign_details AS (
       bizible_medium,
       bizible_referrer_page,
       bizible_referrer_page_raw,
+      bizible_salesforce_campaign,
       '0'                           AS is_attribution_touchpoint,
       dim_campaign_id,
       dim_parent_campaign_id
@@ -90,6 +91,7 @@ WITH campaign_details AS (
       bizible_medium,
       bizible_referrer_page,
       bizible_referrer_page_raw,
+      bizible_salesforce_campaign,
       '1'                           AS is_attribution_touchpoint,
       dim_campaign_id,
       dim_parent_campaign_id
@@ -116,6 +118,7 @@ WITH campaign_details AS (
       combined_touchpoints.bizible_medium,
       combined_touchpoints.bizible_referrer_page,
       combined_touchpoints.bizible_referrer_page_raw,
+      combined_touchpoints.bizible_salesforce_campaign,
       combined_touchpoints.is_attribution_touchpoint,
       bizible_campaign_grouping.integrated_campaign_grouping,
       bizible_campaign_grouping.bizible_integrated_campaign_grouping,
