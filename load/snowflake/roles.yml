@@ -3346,6 +3346,10 @@ roles:
         warehouses:
             - reporting
 
+    - sisense_restricted_finance:
+        warehouses:
+            - reporting
+
     - skerr:
         member_of:
             - reporter
