@@ -565,20 +565,22 @@ WITH sfdc_opportunity AS (
 
       -- extended version of the deal size
       CASE 
-        WHEN net_arr > 0 AND net_arr < 5000 
-          THEN '1. (0k -5k)'
-        WHEN net_arr >=5000 AND net_arr < 25000 
-          THEN '2. (5k - 25k)'
-        WHEN net_arr >=25000 AND net_arr < 100000 
-          THEN '3. (25k - 100k)'
+        WHEN net_arr > 0 AND net_arr < 1000 
+          THEN '1. (0k -1k)'
+        WHEN net_arr >=1000 AND net_arr < 10000 
+          THEN '2. (1k - 10k)'
+        WHEN net_arr >=10000 AND net_arr < 50000 
+          THEN '3. (10k - 50k)'
+        WHEN net_arr >=50000 AND net_arr < 100000 
+          THEN '4. (50k - 100k)'
         WHEN net_arr >= 100000 AND net_arr < 250000 
-          THEN '4. (100k - 250k)'
+          THEN '5. (100k - 250k)'
         WHEN net_arr >= 250000 AND net_arr < 500000 
-          THEN '5. (250k - 500k)'
+          THEN '6. (250k - 500k)'
         WHEN net_arr >= 500000 AND net_arr < 1000000 
-          THEN '6. (500k-1000k)'
+          THEN '7. (500k-1000k)'
         WHEN net_arr >= 1000000 
-          THEN '7. (>1000k)'
+          THEN '8. (>1000k)'
         ELSE 'Other' 
       END                                                           AS calculated_deal_size,
 
