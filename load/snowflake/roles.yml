@@ -4288,8 +4288,9 @@ users:
     - sisense_restricted_finance:
         can_login: yes
         member_of:
-            - restricted_finance 
+            - sisense_restricted_finance
             - reporter           
+            - restricted_finance 
 
     - snalamaru:
         can_login: yes
