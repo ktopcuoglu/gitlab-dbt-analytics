@@ -769,26 +769,6 @@ roles:
             - dbt_analytics
             - snowflake_db
 
-    - restricted_finance:
-        warehouses:
-            - reporting
-        privileges:
-            databases:
-                read:
-                    - prod
-            schemas:
-                read:
-                    - prod.restricted_finance_common
-                    - prod.restricted_finance_common_mapping
-                    - prod.restricted_finance_common_mart_sales
-                    - prod.restricted_finance_legacy
-            tables:
-                read:
-                    - prod.restricted_finance_common.*
-                    - prod.restricted_finance_common_mapping.*
-                    - prod.restricted_finance_common_mart_sales.*
-                    - prod.restricted_finance_legacy.*
-
     - transformer: # For automated jobs
         warehouses:
             - airflow_testing_l
@@ -1670,6 +1650,26 @@ roles:
             tables:
                 read:
                     - prep.pmg.*
+
+    - restricted_finance:
+        warehouses:
+            - reporting
+        privileges:
+            databases:
+                read:
+                    - prod
+            schemas:
+                read:
+                    - prod.restricted_finance_common
+                    - prod.restricted_finance_common_mapping
+                    - prod.restricted_finance_common_mart_sales
+                    - prod.restricted_finance_legacy
+            tables:
+                read:
+                    - prod.restricted_finance_common.*
+                    - prod.restricted_finance_common_mapping.*
+                    - prod.restricted_finance_common_mart_sales.*
+                    - prod.restricted_finance_legacy.*
 
     - salesforce:
         warehouses:
@@ -3354,6 +3354,9 @@ roles:
             - reporting
 
     - sisense_restricted_finance:
+        member_of:
+            - reporter
+            - restricted_finance
         warehouses:
             - reporting
 
@@ -4288,8 +4291,7 @@ users:
     - sisense_restricted_finance:
         can_login: yes
         member_of:
-            - sisense_restricted_finance
-            - reporter           
+            - sisense_restricted_finance           
 
     - snalamaru:
         can_login: yes
