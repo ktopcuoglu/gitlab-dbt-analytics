@@ -465,3 +465,9 @@ Prep table for the dim table `dim_note`.
 Prep table for the dim table `dim_deployment` that is not yet created.
 
 {% enddocs %}
+
+{% docs prep_package %}
+
+Prep table for the dim table `dim_package` that is not yet created. It is also used in the `prep_event` table
+
+{% enddocs %}
