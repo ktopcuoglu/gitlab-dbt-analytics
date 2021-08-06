@@ -745,6 +745,7 @@ roles:
             - boneyard
             - dbt_analytics
             - snowflake_db
+            - restricted_finance #this is about to move when POC for RBAC is completed
         privileges:
             databases:
                 read:
@@ -4205,7 +4206,6 @@ users:
         member_of:
             - periscope
             - reporter
-            - restricted_finance #this is about to move when POC for RBAC is completed
 
     - periscope_sensitive:
         can_login: no
@@ -4290,7 +4290,6 @@ users:
         member_of:
             - sisense_restricted_finance
             - reporter           
-            - restricted_finance 
 
     - snalamaru:
         can_login: yes
