@@ -60,6 +60,14 @@
     "primary_key": "dim_ci_pipeline_id"
   },
   {
+    "event_name": "package_creation",
+    "source_cte_name": "prep_package",
+    "user_column_name": "creator_id",
+    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
+    "project_column_name": "dim_project_id",
+    "primary_key": "dim_package_id"
+  },
+  {
     "event_name": "protect_ci_build_creation",
     "source_cte_name": "protect_ci_build",
     "user_column_name": "dim_user_id",
@@ -76,14 +84,6 @@
     "primary_key": "dim_ci_build_id"
   },
   {
-    "event_name": "package_creation",
-    "source_cte_name": "prep_package",
-    "user_column_name": "creator_id",
-    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
-    "project_column_name": "dim_project_id",
-    "primary_key": "dim_package_id"
-  },
-  {
     "event_name": "succesful_ci_pipeline_creation",
     "source_cte_name": "succesful_ci_pipelines",
     "user_column_name": "dim_user_id",
@@ -94,14 +94,6 @@
 ]
 
 -%}
-
--- package
--- data:in table called prep_package
--- adding the table to the query by adding a tuple in the macro simple_cte
--- add new json in the event_cte list with the same keys as the other events
-
--- succesful_ci_pipelines
--- data
 
 {{ simple_cte([
     ('prep_ci_pipeline', 'prep_ci_pipeline'),
