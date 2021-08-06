@@ -1825,7 +1825,6 @@ models:
         - name: instance_path_id
           tests:
             - not_null
-            - unique
         - name: dim_usage_ping_id
           tests:
             - not_null
