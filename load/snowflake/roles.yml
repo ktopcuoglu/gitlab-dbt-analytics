@@ -770,7 +770,7 @@ roles:
 
     - restricted_finance:
         warehouses:
-            - reporter
+            - reporting
         privileges:
             databases:
                 read:
