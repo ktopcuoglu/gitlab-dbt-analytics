@@ -22,8 +22,6 @@ databases:
     - testing_db:
         shared: no
 
-    - csharp_analytics:
-        shared: no
     - csharp_prod:
         shared: no
     - csharp_prep:
