@@ -770,17 +770,23 @@ roles:
 
     - restricted_finance:
         warehouses:
-            - reporting
+            - reporter
         privileges:
             databases:
                 read:
                     - prod
             schemas:
                 read:
-                    - prod.restricted_finance_*
+                    - prod.restricted_finance_common
+                    - prod.restricted_finance_common_mapping
+                    - prod.restricted_finance_common_mart_sales
+                    - prod.restricted_finance_legacy
             tables:
                 read:
-                    - prod.restricted_finance_*.*
+                    - prod.restricted_finance_common.*
+                    - prod.restricted_finance_common_mapping.*
+                    - prod.restricted_finance_common_mart_sales.*
+                    - prod.restricted_finance_legacy.*
 
     - transformer: # For automated jobs
         warehouses:
