@@ -9,7 +9,7 @@
 WITH dim_billing_account AS (
 
     SELECT *
-    FROM {{ ref('dim_billing_account') }}
+    FROM {{ ref('dim_billing_account_snapshot_bottom_up') }}
 
 ), dim_crm_account AS (
 
@@ -29,7 +29,7 @@ WITH dim_billing_account AS (
 ), dim_subscription AS (
 
     SELECT *
-    FROM {{ ref('dim_subscription') }}
+    FROM {{ ref('dim_subscription_snapshot_bottom_up') }}
 
 ), fct_mrr_snapshot_bottom_up AS (
 
@@ -159,10 +159,12 @@ WITH dim_billing_account AS (
     FROM fct_mrr_snapshot_bottom_up
     INNER JOIN dim_subscription
       ON dim_subscription.dim_subscription_id = fct_mrr_snapshot_bottom_up.dim_subscription_id
-    INNER JOIN dim_product_detail
-      ON dim_product_detail.dim_product_detail_id = fct_mrr_snapshot_bottom_up.dim_product_detail_id
+      AND dim_subscription.snapshot_id = fct_mrr_snapshot_bottom_up.snapshot_id
     INNER JOIN dim_billing_account
       ON dim_billing_account.dim_billing_account_id = fct_mrr_snapshot_bottom_up.dim_billing_account_id
+      AND dim_billing_account.snapshot_id = fct_mrr_snapshot_bottom_up.snapshot_id
+    LEFT JOIN dim_product_detail
+      ON dim_product_detail.dim_product_detail_id = fct_mrr_snapshot_bottom_up.dim_product_detail_id
     LEFT JOIN dim_date AS arr_month
       ON arr_month.date_id = fct_mrr_snapshot_bottom_up.dim_date_id
     LEFT JOIN dim_date AS snapshot_dates

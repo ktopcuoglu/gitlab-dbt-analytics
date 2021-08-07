@@ -1,6 +1,4 @@
 {{ config({
-        "materialized": "incremental",
-        "unique_key": "subscription_snapshot_id",
         "tags": ["arr_snapshots"],
         "schema": "common"
     })
@@ -11,18 +9,13 @@ WITH snapshot_dates AS (
    SELECT *
    FROM {{ ref('dim_date') }}
    WHERE date_actual >= '2020-03-01' and date_actual <= CURRENT_DATE
-   {% if is_incremental() %}
-
-   -- this filter will only be applied on an incremental run
-   AND date_id > (SELECT max(snapshot_id) FROM {{ this }})
-
-   {% endif %}
 
 ), zuora_account AS (
 
     SELECT *
     FROM {{ ref('zuora_account_snapshots_source') }}
     WHERE is_deleted = FALSE
+      AND LOWER(batch) != 'batch20'
 
 ), zuora_account_spined AS (
 
@@ -65,6 +58,17 @@ WITH snapshot_dates AS (
   SELECT *
   FROM {{ ref('prep_amendment') }}
 
+), subscription_lineage AS (
+
+    SELECT DISTINCT
+      subscription_name_slugify,
+      subscription_lineage,
+      oldest_subscription_in_cohort,
+      subscription_cohort_month,
+      subscription_cohort_quarter,
+      subscription_cohort_year
+    FROM {{ ref('map_subscription_lineage') }}
+
 ), joined AS (
 
     SELECT
@@ -90,14 +94,14 @@ WITH snapshot_dates AS (
       zuora_subscription_spined.previous_subscription_id                        AS dim_subscription_id_previous,
       zuora_subscription_spined.subscription_name_slugify,
       zuora_subscription_spined.subscription_status,
-      zuora_subscription_spined.auto_renew                                      AS is_auto_renew,
+      zuora_subscription_spined.auto_renew_native_hist,
+      zuora_subscription_spined.auto_renew_customerdot_hist,
       zuora_subscription_spined.zuora_renewal_subscription_name,
       zuora_subscription_spined.zuora_renewal_subscription_name_slugify,
       zuora_subscription_spined.current_term,
       zuora_subscription_spined.renewal_term,
       zuora_subscription_spined.renewal_term_period_type,
-      --this field is not in the snapshot source model
-        --zuora_subscription_spined.eoa_starter_bronze_offer_accepted,
+      zuora_subscription_spined.eoa_starter_bronze_offer_accepted,
       IFF(zuora_subscription_spined.created_by_id = '2c92a0fd55822b4d015593ac264767f2', -- All Self-Service / Web direct subscriptions are identified by that created_by_id
           'Self-Service', 'Sales-Assisted')                                     AS subscription_sales_type,
 
@@ -117,7 +121,23 @@ WITH snapshot_dates AS (
         WHEN LOWER(zuora_subscription_spined.subscription_status) = 'active' AND zuora_subscription_spined.subscription_end_date > CURRENT_DATE
           THEN DATE_TRUNC('month',DATEADD('month', zuora_subscription_spined.current_term, zuora_subscription_spined.subscription_end_date::DATE))
         ELSE NULL
-      END                                                                       AS second_active_renewal_month
+      END                                                                       AS second_active_renewal_month,
+
+      --Lineage and Cohort Information
+      subscription_lineage.subscription_lineage,
+      subscription_lineage.oldest_subscription_in_cohort,
+      subscription_lineage.subscription_cohort_month,
+      subscription_lineage.subscription_cohort_quarter,
+      subscription_lineage.subscription_cohort_year,
+
+      --Supersonics Fields
+      zuora_subscription_spined.turn_on_cloud_licensing,
+      zuora_subscription_spined.turn_on_operational_metrics,
+      zuora_subscription_spined.contract_operational_metrics,
+      zuora_subscription_spined.contract_auto_renewal,
+      zuora_subscription_spined.turn_on_auto_renewal,
+      zuora_subscription_spined.contract_seat_reconciliation,
+      zuora_subscription_spined.turn_on_seat_reconciliation
     FROM zuora_subscription_spined
     INNER JOIN zuora_account_spined
       ON zuora_subscription_spined.account_id = zuora_account_spined.account_id
@@ -126,6 +146,8 @@ WITH snapshot_dates AS (
       ON zuora_account_spined.crm_id = map_merged_crm_account.sfdc_account_id
     LEFT JOIN prep_amendment
       ON zuora_subscription_spined.amendment_id = prep_amendment.dim_amendment_id
+    LEFT JOIN subscription_lineage
+      ON subscription_lineage.subscription_name_slugify = zuora_subscription_spined.subscription_name_slugify
     LEFT JOIN snapshot_dates
       ON zuora_subscription_spined.subscription_end_date::DATE = snapshot_dates.date_day
 
@@ -143,5 +165,5 @@ WITH snapshot_dates AS (
     created_by="@iweeks",
     updated_by="@iweeks",
     created_date="2021-06-28",
-    updated_date="2021-06-28"
+    updated_date="2021-08-09"
 ) }}
