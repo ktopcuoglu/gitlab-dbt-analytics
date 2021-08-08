@@ -47,12 +47,11 @@ WITH dim_billing_account AS (
       SUM(quantity)                                                          AS quantity,
       ARRAY_AGG(unit_of_measure)                                             AS unit_of_measure
     FROM {{ ref('fct_mrr_snapshot_bottom_up') }}
-    WHERE LOWER(subscription_status) NOT IN ('draft', 'expired')
 
     {% if is_incremental() %}
 
     -- this filter will only be applied on an incremental run
-      AND snapshot_id > (SELECT max(dim_date.date_id)
+    WHERE snapshot_id > (SELECT max(dim_date.date_id)
                          FROM {{ this }}
                          INNER JOIN dim_date
                            ON dim_date.date_actual = snapshot_date
@@ -226,5 +225,5 @@ WITH dim_billing_account AS (
     created_by="@iweeks",
     updated_by="@iweeks",
     created_date="2021-07-29",
-    updated_date="2021-07-29"
+    updated_date="2021-08-09"
 ) }}
