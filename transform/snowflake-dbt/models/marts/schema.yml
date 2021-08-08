@@ -81,6 +81,7 @@ models:
     columns:
       - name: primary_key
         tests:
+          - unique
           - not_null
         tags: ["tdf", "mart", "arr"]
 
@@ -203,7 +204,7 @@ models:
         description: Term of the subscription in months.
       - name: current_term_years
         description: Term of the subscription in years. Rounds to the one decimal point. For examples, an 18 month term subscription will be a 1.5 year term.
-      
+
   - name: mart_delta_arr_parent_month
     description: "Mart table by month pursuant to the ARR Analysis Framework at the parent customer level"
     columns:
