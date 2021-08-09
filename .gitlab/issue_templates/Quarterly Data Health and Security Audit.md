@@ -19,26 +19,23 @@ SNOWFLAKE
 
     ```sql
 
-    SELECT DISTINCT 
-      employee.employee_id, 
-      employee.first_name, 
-      employee.last_name, 
-      bamboohr.employment_status,
-      employee.hire_date, 
-      employee.rehire_date, 
-      snowflake.last_success_login, 
-      snowflake.created_on, 
-      employee.termination_date, 
-      snowflake.is_disabled 
-    FROM "PREP"."BAMBOOHR"."BAMBOOHR_EMPLOYMENT_STATUS_SOURCE" bamboohr
-    INNER JOIN PREP."SENSITIVE"."EMPLOYEE_DIRECTORY" employee
-    INNER JOIN PROD."LEGACY"."SNOWFLAKE_SHOW_USERS" snowflake
-      ON bamboohr.EMPLOYEE_ID = employee.EMPLOYEE_ID 
-      AND employee.FIRST_NAME = snowflake.FIRST_NAME 
-      AND employee.LAST_NAME = snowflake.LAST_NAME 
-      WHERE bamboohr.employment_status = 'Terminated' 
-      AND snowflake.is_disabled ='false' 
-      AND (CASE WHEN snowflake.last_success_login IS NULL THEN snowflake.created_on ELSE snowflake.last_success_login END) >= employee.termination_date ;
+     SELECT									
+       employee.employee_id,									
+       employee.first_name,									
+       employee.last_name,									
+       employee.hire_date,									
+       employee.rehire_date,									
+       snowflake.last_success_login,									
+       snowflake.created_on,									
+       employee.termination_date,									
+       snowflake.is_disabled									
+     FROM PREP."SENSITIVE"."EMPLOYEE_DIRECTORY" employee									
+     INNER JOIN  PROD."LEGACY"."SNOWFLAKE_SHOW_USERS" snowflake									
+     ON employee.FIRST_NAME = snowflake.FIRST_NAME									
+     AND employee.LAST_NAME = snowflake.LAST_NAME									
+     AND snowflake.is_disabled ='false'									
+     AND employee.termination_date IS NOT NULL									
+     AND (CASE WHEN snowflake.last_success_login IS NULL THEN snowflake.created_on ELSE snowflake.last_success_login END) <= employee.termination_date ;									
 
     ```
 
@@ -46,21 +43,23 @@ SNOWFLAKE
     <details>
 
     ```sql
-    SELECT
-      user_name,
-      created_on,
-      login_name,
-      display_name,
-      first_name,
-      last_name,
-      email,
-      comment,
-      is_disabled,
-      last_success_login,
-      snapshot_date
-    FROM "PROD"."LEGACY"."SNOWFLAKE_SHOW_USERS"
-    WHERE is_disabled = 'false'
-      and CASE WHEN last_success_login IS null THEN created_on ELSE last_success_login END <= dateadd('day', -30, CURRENT_DATE()) ;
+     SELECT										
+       employee.employee_id,										
+       employee.first_name,										
+       employee.last_name,										
+       employee.hire_date,										
+       employee.rehire_date,										
+       snowflake.last_success_login,										
+       snowflake.created_on,										
+       employee.termination_date,										
+       snowflake.is_disabled										
+     FROM PREP."SENSITIVE"."EMPLOYEE_DIRECTORY" employee										
+     INNER JOIN  PROD."LEGACY"."SNOWFLAKE_SHOW_USERS" snowflake										
+     ON employee.FIRST_NAME = snowflake.FIRST_NAME										
+     AND employee.LAST_NAME = snowflake.LAST_NAME										
+     AND snowflake.is_disabled ='false'										
+     AND employee.termination_date IS NULL										
+     AND CASE WHEN snowflake.last_success_login IS null THEN snowflake.created_on ELSE snowflake.last_success_login END <= dateadd('day', -60, CURRENT_DATE())										
     
     ```
   
@@ -76,17 +75,28 @@ SISENSE
 
      ```sql
      
+    WITH FINAL AS (
+        
+        SELECT 
+          MAX(date_actual) AS date_actual, 
+          full_name,
+          work_email, 
+          is_termination_date 
+        FROM legacy.employee_directory_analysis 
+        GROUP BY 2,3,4 )
+
     SELECT   
-      sisense.id,  
-      employee.full_name, 
-      sisense.email_address , 
-      employee.is_termination_date 
-   FROM  legacy.employee_directory_analysis employee 
-   INNER JOIN legacy.sheetload_sisense_users sisense 
-    ON  employee.full_name = concat(sisense.first_name,' ', sisense.last_name) 
-    AND employee.work_email = sisense.email_address  
-    AND employee.is_termination_date = 'TRUE' 
-   GROUP BY 1,2,3,4 ;
+       FINAL.full_name, 
+       sisense.email_address , 
+       FINAL.is_termination_date ,
+       FINAL.date_actual
+    FROM  FINAL
+    INNER JOIN legacy.sheetload_sisense_users sisense 
+    ON  FINAL.full_name = concat(sisense.first_name,' ', sisense.last_name) 
+    AND FINAL.work_email = sisense.email_address  
+    AND FINAL.is_termination_date = 'TRUE' 
+    GROUP BY 1,2,3,4
+    ORDER BY 1 ;
     
      ```
 
