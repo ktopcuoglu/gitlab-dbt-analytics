@@ -10,7 +10,7 @@ SNOWFLAKE
 1. [ ] Validate terminated employees have been removed from Snowflake access.
     <details>
 
-    Cross check between BambooHR and Snowflake
+    Cross check between Employee Directory and Snowflake
     * [ ] If applicable, check if users set to disabled in Snowflake
     * [ ] If applicable, check if users in [roles.yml](https://gitlab.com/gitlab-data/analytics/-/blob/master/load/snowflake/roles.yml):
         * [ ] isn't assigned to `warehouses`
@@ -39,7 +39,7 @@ SNOWFLAKE
 
     ```
 
-2. [ ] De-activate any account that has not logged-in within the past 30 days from the moment of performing audit from Snowflake.
+2. [ ] De-activate any account that has not logged-in within the past 60 days from the moment of performing audit from Snowflake.
     <details>
 
     ```sql
@@ -101,7 +101,7 @@ SISENSE
      ```
 
 
-2. [ ] De-activate any account that has not logged-in within the past 30 days from the moment of performing audit from Sisense.
+2. [ ] De-activate any account that has not logged-in within the past 60 days from the moment of performing audit from Sisense.
 
     <details>
 
