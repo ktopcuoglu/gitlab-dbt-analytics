@@ -111,7 +111,7 @@ WITH map_merged_crm_account AS (
         AND sfdc_account.partner_status = 'Authorized',
         TRUE, FALSE)                                        AS is_reseller,
     sfdc_account.created_date                               AS crm_account_created_date,
-    sfdc_account.zi_technologies,
+    sfdc_account.zi_technologies                            AS crm_account_zi_technologies,
 
     ----ultimate parent crm account info
     ultimate_parent_account.account_id                  AS dim_parent_crm_account_id,
@@ -139,7 +139,8 @@ WITH map_merged_crm_account AS (
        WHEN ultimate_parent_account.tsp_max_family_employees <= 1500 AND ultimate_parent_account.tsp_max_family_employees > 1000  THEN 'Employees > 1K'
        ELSE 'Employees < 1K'
     END                                                 AS parent_crm_account_employee_count_band,
-    ultimate_parent_account.created_date                AS parent_crm_account_created_date
+    ultimate_parent_account.created_date                AS parent_crm_account_created_date,
+    ultimate_parent_account.zi_technologies             AS parent_crm_zi_technologies
   FROM sfdc_account
   LEFT JOIN map_merged_crm_account
     ON sfdc_account.account_id = map_merged_crm_account.sfdc_account_id
