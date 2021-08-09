@@ -15,7 +15,7 @@ WITH prep_issue_links AS (
 )
 
 {{ dbt_audit(
-    cte_ref="prep_issue",
+    cte_ref="prep_issue_links",
     created_by="@dtownsend",
     updated_by="@dtownsend",
     created_date="2021-08-04",
