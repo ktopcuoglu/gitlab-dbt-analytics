@@ -140,7 +140,7 @@ WITH campaign_details AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mcooperDD",
-    updated_by="@mcooperDD",
+    updated_by="@rkohnke",
     created_date="2021-01-21",
-    updated_date="2021-03-02"
+    updated_date="2021-08-09"
 ) }}
