@@ -62,6 +62,7 @@ WITH source AS (
       partners_partner_status__c                    AS partner_status,
       fy22_new_logo_target_list__c::BOOLEAN         AS fy22_new_logo_target_list,
       first_order_available__c::BOOLEAN             AS is_first_order_available,
+      zi_technologies__c                            AS zi_technologies,
 
       -- territory success planning fields
       atam_approved_next_owner__c                   AS tsp_approved_next_owner,
