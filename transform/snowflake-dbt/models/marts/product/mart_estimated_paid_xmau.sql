@@ -173,6 +173,11 @@
     SELECT *
     FROM smau_joined
 
+    UNION 
+
+    SELECT *
+    FROM umau_joined
+    
 ), estimated_monthly_metric_value_sum AS (
 
     SELECT 
