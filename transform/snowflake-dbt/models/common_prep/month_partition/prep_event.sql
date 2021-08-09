@@ -1,5 +1,5 @@
-{% set year_value = (run_started_at - modules.datetime.timedelta(2)).strftime('%Y') %}
-{% set month_value = (run_started_at - modules.datetime.timedelta(2)).strftime('%m') %}
+{% set year_value = var('year', (run_started_at - modules.datetime.timedelta(2)).strftime('%Y')) %}
+{% set month_value = var('month', (run_started_at - modules.datetime.timedelta(2)).strftime('%m')) %}
    
 
 {%- set event_ctes = [
