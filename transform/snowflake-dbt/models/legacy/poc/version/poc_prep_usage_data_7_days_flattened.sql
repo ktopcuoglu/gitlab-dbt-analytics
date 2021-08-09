@@ -6,20 +6,21 @@
 
 WITH flattened AS ( 
   
-    SELECT * FROM {{ ref('wk_prep_usage_data_flattened') }}
+    SELECT * FROM {{ ref('poc_prep_usage_data_flattened') }}
 
 ), usage_ping_metrics AS (
 
-    SELECT *
-    FROM {{ ref('dim_usage_ping_metric') }}
+    SELECT * FROM {{ ref('dim_usage_ping_metric') }}
 
-), renamed AS (
+), joined AS (
 
     SELECT 
       flattened.instance_path_id,
-      flattened.dim_usage_ping_id,
-      flattened.metrics_path,
-      flattened.dim_date_id,
+      flattened.instance_id,
+      flattened.ping_id,
+      host_id,
+      created_at,
+      flattened.metrics_path                                        AS metrics_path,
       metrics.section_name,
       metrics.stage_name,
       metrics.group_name,
@@ -35,17 +36,17 @@ WITH flattened AS (
       time_frame
     FROM flattened
     INNER JOIN usage_ping_metrics
-      ON flattened.metrics_path = usage_ping_metrics.metrics_path
-        AND time_frame = '28d'
+    ON flattened.metrics_path = usage_ping_metrics.metrics_path
+        AND time_frame = '7d'
     LEFT JOIN {{ ref('sheetload_usage_ping_metrics_sections' )}} AS metrics 
-      ON flattened.metrics_path = metrics.metrics_path
+    ON flattened.metrics_path = metrics.metrics_path
 
 )
 
 {{ dbt_audit(
-    cte_ref="renamed",
+    cte_ref="joined",
     created_by="@mpeychet",
     updated_by="@mpeychet",
-    created_date="2021-06-17",
-    updated_date="2021-06-17"
+    created_date="2021-05-04",
+    updated_date="2021-05-04"
 ) }}

@@ -22,6 +22,11 @@ databases:
     - testing_db:
         shared: no
 
+    - csharp_prod:
+        shared: no
+    - csharp_prep:
+        shared: no   
+
     - dpeterson_prod:
         shared: no
     - dpeterson_prep:
@@ -740,6 +745,7 @@ roles:
             - boneyard
             - dbt_analytics
             - snowflake_db
+            - restricted_finance #this is about to move when POC for RBAC is completed
         privileges:
             databases:
                 read:
@@ -762,20 +768,6 @@ roles:
             - boneyard
             - dbt_analytics
             - snowflake_db
-
-    - restricted_finance:
-        warehouses:
-            - reporting
-        privileges:
-            databases:
-                read:
-                    - prod
-            schemas:
-                read:
-                    - prod.restricted_finance_*
-            tables:
-                read:
-                    - prod.restricted_finance_*.*
 
     - transformer: # For automated jobs
         warehouses:
@@ -1659,6 +1651,26 @@ roles:
                 read:
                     - prep.pmg.*
 
+    - restricted_finance:
+        warehouses:
+            - reporting
+        privileges:
+            databases:
+                read:
+                    - prod
+            schemas:
+                read:
+                    - prod.restricted_finance_common
+                    - prod.restricted_finance_common_mapping
+                    - prod.restricted_finance_common_mart_sales
+                    - prod.restricted_finance_legacy
+            tables:
+                read:
+                    - prod.restricted_finance_common.*
+                    - prod.restricted_finance_common_mapping.*
+                    - prod.restricted_finance_common_mart_sales.*
+                    - prod.restricted_finance_legacy.*
+
     - salesforce:
         warehouses:
             - analyst_xs
@@ -2092,6 +2104,47 @@ roles:
             - bamboohr_analytics
         warehouses:
             - analyst_xs
+
+    - csharp:
+        member_of:
+            - engineer
+        warehouses:
+            - engineer_xs
+            - engineer_xl
+            - loading
+            - reporting
+        owns:
+            databases:
+                - csharp_prep
+                - csharp_prod
+            schemas:
+                - csharp_prep.*
+                - csharp_prod.*
+            tables:
+                - csharp_prep.*.*
+                - csharp_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - csharp_prep
+                    - csharp_prod
+                write:
+                    - csharp_prep
+                    - csharp_prod
+            schemas:
+                read:
+                    - csharp_prep.*
+                    - csharp_prod.*
+                write:
+                    - csharp_prep.*
+                    - csharp_prod.*
+            tables:
+                read:
+                    - csharp_prep.*.*
+                    - csharp_prod.*.*
+                write:
+                    - csharp_prep.*.*
+                    - csharp_prod.*.*        
 
     - daruwajoye:
         member_of:
@@ -3300,6 +3353,13 @@ roles:
         warehouses:
             - reporting
 
+    - sisense_restricted_finance:
+        member_of:
+            - reporter
+            - restricted_finance
+        warehouses:
+            - reporting
+
     - skerr:
         member_of:
             - reporter
@@ -3734,6 +3794,11 @@ users:
         member_of:
             - cmestel
 
+    - csharp:
+        can_login: yes
+        member_of:
+            - csharp        
+
     - daruwajoye:
         can_login: yes
         member_of:
@@ -4144,7 +4209,6 @@ users:
         member_of:
             - periscope
             - reporter
-            - restricted_finance #this is about to move when POC for RBAC is completed
 
     - periscope_sensitive:
         can_login: no
@@ -4227,8 +4291,7 @@ users:
     - sisense_restricted_finance:
         can_login: yes
         member_of:
-            - restricted_finance 
-            - reporter           
+            - sisense_restricted_finance           
 
     - snalamaru:
         can_login: yes

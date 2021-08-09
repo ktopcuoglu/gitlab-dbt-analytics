@@ -1,9 +1,9 @@
-/* grain: one record per host per metric per month */
+-- grain: one record per host per metric per month
 -- curently missing host_id 
 
 {{ config({
-    "materialized": "incremental",
-    "unique_key": "primary_key"
+        "materialized": "table",
+        "schema": "common_mart_product"
     })
 }}
 
@@ -24,24 +24,6 @@
       OR zuora_renewal_subscription_name_slugify IS NULL)
       AND subscription_status NOT IN ('Draft', 'Expired')
 
-),  zuora_subscription_snapshots AS (
-
-  /**
-  This partition handles duplicates and hard deletes by taking only
-    tsnapshoversion_t
-   */
-
-  SELECT
-    rank() OVER (
-      PARTITION BY subscription_name
-      ORDER BY DBT_VALID_FROM DESC) AS rank,
-    subscription_id,
-    subscription_name
-  FROM {{ ref('zuora_subscription_snapshots_source') }}
-  WHERE subscription_status NOT IN ('Draft', 'Expired')
-    AND CURRENT_TIMESTAMP()::TIMESTAMP_TZ >= dbt_valid_from
-    AND {{ coalesce_to_infinity('dbt_valid_to') }} > current_timestamp()::TIMESTAMP_TZ
-
 ), fct_charge AS (
 
     SELECT *
@@ -50,7 +32,7 @@
 ), fct_monthly_usage_data AS (
 
     SELECT *
-    FROM {{ ref('wk_monthly_usage_data') }}
+    FROM {{ ref('fct_monthly_usage_data') }}
     {% if is_incremental() %}
 
       WHERE ping_created_month >= (SELECT MAX(reporting_month) FROM {{this}})
@@ -72,13 +54,8 @@
 ), license_subscriptions AS (
 
     SELECT DISTINCT
-      dim_date.date_day                                                           AS reporting_month,
-      license_id,
-      dim_licenses.license_md5,
-      dim_licenses.company                                                         AS license_company_name,
-      subscription_source.subscription_id                                          AS original_linked_subscription_id,
-      subscription_source.account_id,
-      subscription_source.subscription_name_slugify,
+      dim_date.date_day                                                            AS reporting_month,
+      dim_subscription.subscription_name_slugify,
       dim_subscription.dim_subscription_id                                         AS latest_active_subscription_id,
       dim_subscription.subscription_start_date,
       dim_subscription.subscription_end_date,
@@ -102,18 +79,9 @@
         WITHIN GROUP (ORDER BY product_rate_plan_name ASC)                          AS product_rate_plan_name_array,
       SUM(quantity)                                                                 AS quantity,
       SUM(mrr * 12)                                                                 AS arr
-    FROM dim_licenses
-    INNER JOIN subscription_source
-      ON dim_licenses.subscription_id = subscription_source.subscription_id
-    LEFT JOIN dim_subscription
-      ON subscription_source.subscription_name_slugify = dim_subscription.subscription_name_slugify
-    LEFT JOIN subscription_source AS all_subscriptions
-      ON subscription_source.subscription_name_slugify = all_subscriptions.subscription_name_slugify
-    LEFT JOIN zuora_subscription_snapshots
-      ON zuora_subscription_snapshots.subscription_id = dim_subscription.dim_subscription_id
-      AND zuora_subscription_snapshots.rank = 1
+    FROM dim_subscription
     INNER JOIN fct_charge
-      ON all_subscriptions.subscription_id = fct_charge.dim_subscription_id
+      ON dim_subscription.dim_subscription_id = fct_charge.dim_subscription_id
         AND charge_type = 'Recurring'
     INNER JOIN dim_product_detail
       ON dim_product_detail.dim_product_detail_id = fct_charge.dim_product_detail_id
@@ -125,7 +93,8 @@
       ON dim_billing_account.dim_crm_account_id = dim_crm_account.dim_crm_account_id
     INNER JOIN dim_date
       ON effective_start_month <= dim_date.date_day AND effective_end_month > dim_date.date_day
-    {{ dbt_utils.group_by(n=22)}}
+      AND dim_date.date_day = dim_date.first_day_of_month
+    {{ dbt_utils.group_by(n=17)}}
 
 ), joined AS (
 
@@ -143,9 +112,6 @@
       fct_usage_ping_payload.dim_license_id,
       fct_usage_ping_payload.is_trial,
       fct_usage_ping_payload.umau_value,
-      license_subscriptions.license_id,
-      license_subscriptions.license_company_name,
-      license_subscriptions.original_linked_subscription_id,
       license_subscriptions.latest_active_subscription_id,
       license_subscriptions.subscription_name_slugify,
       license_subscriptions.product_category_array,
@@ -184,9 +150,10 @@
     FROM fct_monthly_usage_data
     LEFT JOIN fct_usage_ping_payload
       ON fct_monthly_usage_data.dim_usage_ping_id = fct_usage_ping_payload.dim_usage_ping_id
-    LEFT JOIN license_subscriptions
-      ON fct_usage_ping_payload.dim_license_id = license_subscriptions.license_id
-        AND fct_monthly_usage_data.ping_created_month = license_subscriptions.reporting_month
+    LEFT JOIN {{ ref('map_usage_ping_active_subscription')}} act_sub
+      ON fct_usage_ping_payload.dim_usage_ping_id = act_sub.dim_usage_ping_id
+    LEFT JOIN license_subscriptions ON act_sub.dim_subscription_id = license_subscriptions.latest_active_subscription_id
+      AND ping_created_month = reporting_month
 
 ), sorted AS (
 
@@ -201,11 +168,10 @@
       --Foreign Key
       dim_instance_id,
       dim_license_id,
-      original_linked_subscription_id,
       latest_active_subscription_id,
       dim_billing_account_id,      
       dim_parent_crm_account_id,
-
+      host_name,
       -- metadata usage ping
       usage_ping_delivery_type,
       edition,
@@ -234,7 +200,6 @@
       instance_user_count,
 
       --metadata subscription
-      license_company_name,
       subscription_name_slugify,
       subscription_start_month,
       subscription_end_month,
@@ -255,7 +220,7 @@
 
       ping_created_at,
 
-      -- monthly_usage_data
+      -- fct_monthly_usage_data
       time_period,
       monthly_metric_value,
       original_metric_value

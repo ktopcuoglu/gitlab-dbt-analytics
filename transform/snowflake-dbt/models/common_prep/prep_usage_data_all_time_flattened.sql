@@ -1,3 +1,7 @@
+{{ config(
+    tags=["product"]
+) }}
+
 {{ config({
     "materialized": "incremental",
     "unique_key": "instance_path_id"
@@ -12,14 +16,11 @@ WITH flattened AS (
 
     SELECT * FROM {{ ref('dim_usage_ping_metric') }}
 
-), joined AS (
+), renamed AS (
 
     SELECT 
       flattened.instance_path_id,
-      flattened.instance_id,
-      flattened.ping_id,
-      host_id,
-      created_at,
+      flattened.dim_usage_ping_id,
       flattened.metrics_path                                        AS metrics_path,
       metrics.section_name,
       metrics.stage_name,
@@ -36,17 +37,17 @@ WITH flattened AS (
       time_frame
     FROM flattened
     INNER JOIN usage_ping_metrics
-    ON flattened.metrics_path = usage_ping_metrics.metrics_path
-        AND time_frame = '7d'
+      ON flattened.metrics_path = usage_ping_metrics.metrics_path
+        AND time_frame = 'all'
     LEFT JOIN {{ ref('sheetload_usage_ping_metrics_sections' )}} AS metrics 
-    ON flattened.metrics_path = metrics.metrics_path
+      ON flattened.metrics_path = metrics.metrics_path
 
 )
 
 {{ dbt_audit(
-    cte_ref="joined",
+    cte_ref="renamed",
     created_by="@mpeychet",
     updated_by="@mpeychet",
-    created_date="2021-05-04",
-    updated_date="2021-05-04"
+    created_date="2021-06-17",
+    updated_date="2021-06-17"
 ) }}

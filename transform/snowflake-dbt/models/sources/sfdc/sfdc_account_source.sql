@@ -58,6 +58,8 @@ WITH source AS (
       jihu_account__c::BOOLEAN                      AS is_jihu_account,
       partners_signed_contract_date__c              AS partners_signed_contract_date,
       partner_account_iban_number__c                AS partner_account_iban_number,
+      partners_partner_type__c                      AS partner_type,
+      partners_partner_status__c                    AS partner_status,
       fy22_new_logo_target_list__c::BOOLEAN         AS fy22_new_logo_target_list,
       first_order_available__c::BOOLEAN             AS is_first_order_available,
 

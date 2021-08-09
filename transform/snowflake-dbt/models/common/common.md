@@ -882,13 +882,32 @@ LIMIT 100
 
 {% enddocs %}
 
-{% docs dim_issue_links %}
+{% docs fct_monthly_usage_data %}
 
-Dimensional table representing links between GitLab Issues recorded by the Events API. [More info about issue links can be found here](https://docs.gitlab.com/ee/user/project/issues/related_issues.html)
+Union of models `prep_monthly_usage_data_28_days` and `prep_monthly_usage_data_all_time`
 
-Issue Links are created when relationships are defined between issues. This table has slowly changing dimensions, as issue links/relationships can be removed over time
+{% enddocs %}
 
-The grain of the table is the `dim_issue_link_id`. This table is easily joinable with:
+{% docs fct_weekly_usage_data_7_days %}
 
-- `dim_issue` through `dim_issue_id` on `dim_source_issue_id` & `dim_target_issue_id`
+Union of models `prep_monthly_usage_data_28_days` and `prep_monthly_usage_data_all_time`
+
+{% enddocs %}
+
+{% docs fct_daily_event_400 %}
+
+Factual table built on top of prep_events tables that allows to explore usage data of free and paid users and namespaces from our SaaS instance gitlab.com.
+
+The granularity is one event per day per user per ultimate parent namespace.
+
+That means if a user creates the same day an issue on the Gitlab Data Team project and 2 issues in the main gitlab-com project, 2 rows will be recorded in the table.
+
+If 2 users A and B create on the same day 1 merge request on the GitLab Data Team projectm 2 rows will be also recorded in the table.
+
+Some examples of analysis that were done with the legacy table `gitlab_dotcom_daily_usage_data_events`:
+
+1. [User Journey Analysis](https://app.periscopedata.com/app/gitlab/869174/WIP-Cross-Stage-Adoption-Dashboard): See how often different product stages are used by the same namespaces. See what stages are used in combination.
+1. [New Namespace Stage Adoption](https://app.periscopedata.com/app/gitlab/761347/Group-Namespace-Conversion-Metrics): Evaluate how often new namespaces are adopting stages such as 'Create' and 'Verify' within their first days of use.
+1. [Stages per Organization](https://app.periscopedata.com/app/gitlab/824044/Stages-per-Organization-Deep-Dive---SpO): Identify how namespaces adopt stages within their first days and how this correlates with paid conversion and long-term engagement.
+
 {% enddocs %}

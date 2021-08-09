@@ -1,8 +1,10 @@
 {% docs mart_estimated_xmau %}
 
-Data mart to explore SMAU. The report looks at the usage ping sent by instances using GitLab. Then, for each stage, the report looks at the specific metrics/counter which is chosen to represent SMAU values. It then calculates Recorded SMAU.
+Documentation around Estimated [xMAU methodology is explained here](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/xmau-analysis/estimation-xmau-algorithm.html)
 
-Then calculates the Estimated SMAU Value as explained in detail in this page.
+Data mart to explore estimated xMAU PIs. The report looks at the usage ping sent by instances using GitLab. Then, for each stage, the report looks at the specific metrics/counter which is chosen to represent SMAU values. It then calculates Recorded SMAU.
+
+Then calculates the Estimated SMAU Value as explained [in detail in this page](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/xmau-analysis/estimation-xmau-algorithm.html).
 
 ```
 SELECT
@@ -26,4 +28,16 @@ The grain of this table is namespace || uuid-hostname per month.
 
 Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
 
+{% enddocs %}
+
+{% docs mart_saas_daily_smau_events_400 %}
+
+Mart table built on top of `fct_daily_event_400` (hence this table shows only the last 400 days) that allows final user to easily calculate some key Performance Indicators like Monthly SMAU (paid or free) and allowing complex analysis like:
+
+1. [User Journey Analysis](https://app.periscopedata.com/app/gitlab/869174/WIP-Cross-Stage-Adoption-Dashboard): See how often different product stages are used by the same namespaces. See what stages are used in combination.
+1. [New Namespace Stage Adoption](https://app.periscopedata.com/app/gitlab/761347/Group-Namespace-Conversion-Metrics): Evaluate how often new namespaces are adopting stages such as 'Create' and 'Verify' within their first days of use.
+1. [Stages per Organization](https://app.periscopedata.com/app/gitlab/824044/Stages-per-Organization-Deep-Dive---SpO): Identify how namespaces adopt stages within their first days and how this correlates with paid conversion and long-term engagement.
+
+All these analysis have been done with `gitlab_dotcom_daily_usage_data_events` which was the legacy table of these tables.
+Only events that happened the last 400 days are included in this table.
 {% enddocs %}

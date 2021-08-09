@@ -79,7 +79,7 @@ WITH dim_billing_account AS (
    SELECT DISTINCT
      sub_1.subscription_name,
      sub_1.zuora_renewal_subscription_name,
-     DATE_TRUNC('month',sub_2.subscription_end_date) AS subscription_end_month,
+     DATE_TRUNC('month',sub_2.subscription_end_date::DATE) AS subscription_end_month,
      RANK() OVER (PARTITION BY sub_1.subscription_name ORDER BY sub_1.zuora_renewal_subscription_name, sub_2.subscription_end_date ) AS rank
    FROM zuora_subscription_spined sub_1
    INNER JOIN zuora_subscription_spined sub_2
@@ -134,6 +134,7 @@ WITH dim_billing_account AS (
      fct_charge.effective_end_month,
      fct_charge.subscription_start_month,
      fct_charge.subscription_end_month,
+     renewal_subscriptions.subscription_end_month                                         AS myb_subscription_end_month,
      DATEDIFF(month,fct_charge.effective_start_month,fct_charge.effective_end_month)      AS charge_term,
      fct_charge.arr
    FROM fct_charge
@@ -175,10 +176,11 @@ WITH dim_billing_account AS (
     effective_start_month,
     effective_end_month,
     subscription_end_month,
+    myb_subscription_end_month,
     SUM(arr)   AS arr
   FROM base
   WHERE charge_term <= 12
-  {{ dbt_utils.group_by(n=17) }}
+  {{ dbt_utils.group_by(n=18) }}
 
 ), agg_charge_term_greater_than_12 AS (--get the starting and ending month ARR for charges with charge terms > 12 months. These charges need additional logic.
 
@@ -209,50 +211,51 @@ WITH dim_billing_account AS (
     effective_start_month,
     effective_end_month,
     subscription_end_month,
+    myb_subscription_end_month,
     SUM(arr)   AS arr
   FROM base
   WHERE charge_term > 12
-  {{ dbt_utils.group_by(n=17) }}
+  {{ dbt_utils.group_by(n=18) }}
 
 ), twenty_four_mth_term AS (--create records for the intermitent renewals for multi-year charges that are not in the Zuora data. The start and end months are in the agg_myb for MYB.
 
-   SELECT renewal_type, is_myb, is_myb_with_multi_subs, current_term, charge_term, charge_id, dim_crm_account_id,dim_billing_account_id,dim_crm_opportunity_id,dim_subscription_id,dim_product_detail_id,product_tier_name,product_delivery_type,subscription_name, effective_start_month, DATEADD('month',charge_term/2,effective_start_month) AS effective_end_month,subscription_end_month,SUM(arr) AS arr
-   FROM agg_charge_term_greater_than_12 WHERE charge_term BETWEEN 13 AND 24 AND effective_end_month > '2022-01-01' {{ dbt_utils.group_by(n=17) }}
+   SELECT renewal_type, is_myb, is_myb_with_multi_subs, current_term, charge_term, charge_id, dim_crm_account_id,dim_billing_account_id,dim_crm_opportunity_id,dim_subscription_id,dim_product_detail_id,product_tier_name,product_delivery_type,subscription_name, effective_start_month, DATEADD('month',charge_term/2,effective_start_month) AS effective_end_month,subscription_end_month,myb_subscription_end_month,SUM(arr) AS arr
+   FROM agg_charge_term_greater_than_12 WHERE charge_term BETWEEN 13 AND 24 AND effective_end_month > '2022-01-01' {{ dbt_utils.group_by(n=18) }}
 
 ), thirty_six_mth_term AS (--create records for the intermitent renewals for MYBs that are not in the Zuora data. The start and end months are in the agg_myb for MYBs.
 
-   SELECT renewal_type, is_myb, is_myb_with_multi_subs, current_term, charge_term, charge_id, dim_crm_account_id,dim_billing_account_id,dim_crm_opportunity_id,dim_subscription_id,dim_product_detail_id,product_tier_name,product_delivery_type,subscription_name, effective_start_month, DATEADD('month',charge_term/3,effective_start_month) AS effective_end_month,subscription_end_month,SUM(arr) AS arr
-   FROM agg_charge_term_greater_than_12 WHERE charge_term BETWEEN 25 AND 36 AND effective_end_month > '2022-01-01'  {{ dbt_utils.group_by(n=17) }}
+   SELECT renewal_type, is_myb, is_myb_with_multi_subs, current_term, charge_term, charge_id, dim_crm_account_id,dim_billing_account_id,dim_crm_opportunity_id,dim_subscription_id,dim_product_detail_id,product_tier_name,product_delivery_type,subscription_name, effective_start_month, DATEADD('month',charge_term/3,effective_start_month) AS effective_end_month,subscription_end_month,myb_subscription_end_month,SUM(arr) AS arr
+   FROM agg_charge_term_greater_than_12 WHERE charge_term BETWEEN 25 AND 36 AND effective_end_month > '2022-01-01'  {{ dbt_utils.group_by(n=18) }}
    UNION ALL
-   SELECT renewal_type, is_myb, is_myb_with_multi_subs, current_term, charge_term, charge_id, dim_crm_account_id,dim_billing_account_id,dim_crm_opportunity_id,dim_subscription_id,dim_product_detail_id,product_tier_name,product_delivery_type,subscription_name, effective_start_month, DATEADD('month',charge_term/3*2,effective_start_month) AS effective_end_month,subscription_end_month,SUM(arr) AS arr
-   FROM agg_charge_term_greater_than_12 WHERE charge_term BETWEEN 25 AND 36 AND effective_end_month > '2022-01-01'  {{ dbt_utils.group_by(n=17) }}
+   SELECT renewal_type, is_myb, is_myb_with_multi_subs, current_term, charge_term, charge_id, dim_crm_account_id,dim_billing_account_id,dim_crm_opportunity_id,dim_subscription_id,dim_product_detail_id,product_tier_name,product_delivery_type,subscription_name, effective_start_month, DATEADD('month',charge_term/3*2,effective_start_month) AS effective_end_month,subscription_end_month,myb_subscription_end_month,SUM(arr) AS arr
+   FROM agg_charge_term_greater_than_12 WHERE charge_term BETWEEN 25 AND 36 AND effective_end_month > '2022-01-01'  {{ dbt_utils.group_by(n=18) }}
    ORDER BY 1
 
 ), forty_eight_mth_term AS (--create records for the intermitent renewals for MYBs that are not in the Zuora data. The start and end months are in the agg_myb for MYBs.
 
-   SELECT renewal_type, is_myb, is_myb_with_multi_subs,current_term, charge_term, charge_id, dim_crm_account_id,dim_billing_account_id,dim_crm_opportunity_id,dim_subscription_id,dim_product_detail_id, product_tier_name,product_delivery_type,subscription_name, effective_start_month, DATEADD('month',charge_term/4,effective_start_month) AS effective_end_month,subscription_end_month,SUM(arr) AS arr
-   FROM agg_charge_term_greater_than_12 WHERE charge_term BETWEEN 37 AND 48 AND effective_end_month > '2022-01-01'  {{ dbt_utils.group_by(n=17) }}
+   SELECT renewal_type, is_myb, is_myb_with_multi_subs,current_term, charge_term, charge_id, dim_crm_account_id,dim_billing_account_id,dim_crm_opportunity_id,dim_subscription_id,dim_product_detail_id, product_tier_name,product_delivery_type,subscription_name, effective_start_month, DATEADD('month',charge_term/4,effective_start_month) AS effective_end_month,subscription_end_month,myb_subscription_end_month,SUM(arr) AS arr
+   FROM agg_charge_term_greater_than_12 WHERE charge_term BETWEEN 37 AND 48 AND effective_end_month > '2022-01-01'  {{ dbt_utils.group_by(n=18) }}
    UNION ALL
-   SELECT renewal_type, is_myb, is_myb_with_multi_subs,current_term, charge_term, charge_id, dim_crm_account_id,dim_billing_account_id,dim_crm_opportunity_id,dim_subscription_id,dim_product_detail_id, product_tier_name,product_delivery_type,subscription_name, effective_start_month, DATEADD('month',charge_term/4*2,effective_start_month) AS effective_end_month,subscription_end_month,SUM(arr) AS arr
-   FROM agg_charge_term_greater_than_12 WHERE charge_term BETWEEN 37 AND 48 AND effective_end_month > '2022-01-01'  {{ dbt_utils.group_by(n=17) }}
+   SELECT renewal_type, is_myb, is_myb_with_multi_subs,current_term, charge_term, charge_id, dim_crm_account_id,dim_billing_account_id,dim_crm_opportunity_id,dim_subscription_id,dim_product_detail_id, product_tier_name,product_delivery_type,subscription_name, effective_start_month, DATEADD('month',charge_term/4*2,effective_start_month) AS effective_end_month,subscription_end_month,myb_subscription_end_month,SUM(arr) AS arr
+   FROM agg_charge_term_greater_than_12 WHERE charge_term BETWEEN 37 AND 48 AND effective_end_month > '2022-01-01'  {{ dbt_utils.group_by(n=18) }}
    UNION ALL
-   SELECT renewal_type, is_myb, is_myb_with_multi_subs,current_term, charge_term, charge_id, dim_crm_account_id,dim_billing_account_id,dim_crm_opportunity_id,dim_subscription_id,dim_product_detail_id, product_tier_name,product_delivery_type,subscription_name, effective_start_month, DATEADD('month',charge_term/4*3,effective_start_month) AS effective_end_month,subscription_end_month,SUM(arr) AS arr
-   FROM agg_charge_term_greater_than_12 WHERE charge_term BETWEEN 37 AND 48 AND effective_end_month > '2022-01-01'  {{ dbt_utils.group_by(n=17) }}
+   SELECT renewal_type, is_myb, is_myb_with_multi_subs,current_term, charge_term, charge_id, dim_crm_account_id,dim_billing_account_id,dim_crm_opportunity_id,dim_subscription_id,dim_product_detail_id, product_tier_name,product_delivery_type,subscription_name, effective_start_month, DATEADD('month',charge_term/4*3,effective_start_month) AS effective_end_month,subscription_end_month,myb_subscription_end_month,SUM(arr) AS arr
+   FROM agg_charge_term_greater_than_12 WHERE charge_term BETWEEN 37 AND 48 AND effective_end_month > '2022-01-01'  {{ dbt_utils.group_by(n=18) }}
    ORDER BY 1
 
 ), sixty_mth_term AS (--create records for the intermitent renewals for MYBs that are not in the Zuora data. The start and end months are in the agg_myb for MYBs.
 
-   SELECT renewal_type, is_myb, is_myb_with_multi_subs,current_term, charge_term, charge_id, dim_crm_account_id,dim_billing_account_id,dim_crm_opportunity_id,dim_subscription_id,dim_product_detail_id, product_tier_name,product_delivery_type,subscription_name, effective_start_month, DATEADD('month',charge_term/5,effective_start_month) AS effective_end_month,subscription_end_month,SUM(arr) AS arr
-   FROM agg_charge_term_greater_than_12 WHERE charge_term BETWEEN 49 AND 60 AND effective_end_month > '2022-01-01'  {{ dbt_utils.group_by(n=17) }}
+   SELECT renewal_type, is_myb, is_myb_with_multi_subs,current_term, charge_term, charge_id, dim_crm_account_id,dim_billing_account_id,dim_crm_opportunity_id,dim_subscription_id,dim_product_detail_id, product_tier_name,product_delivery_type,subscription_name, effective_start_month, DATEADD('month',charge_term/5,effective_start_month) AS effective_end_month,subscription_end_month,myb_subscription_end_month,SUM(arr) AS arr
+   FROM agg_charge_term_greater_than_12 WHERE charge_term BETWEEN 49 AND 60 AND effective_end_month > '2022-01-01'  {{ dbt_utils.group_by(n=18) }}
    UNION ALL
-   SELECT renewal_type, is_myb, is_myb_with_multi_subs,current_term, charge_term, charge_id, dim_crm_account_id,dim_billing_account_id,dim_crm_opportunity_id,dim_subscription_id,dim_product_detail_id, product_tier_name,product_delivery_type,subscription_name, effective_start_month, DATEADD('month',charge_term/5*2,effective_start_month) AS effective_end_month,subscription_end_month,SUM(arr) AS arr
-   FROM agg_charge_term_greater_than_12 WHERE charge_term BETWEEN 49 AND 60 AND effective_end_month > '2022-01-01'  {{ dbt_utils.group_by(n=17) }}
+   SELECT renewal_type, is_myb, is_myb_with_multi_subs,current_term, charge_term, charge_id, dim_crm_account_id,dim_billing_account_id,dim_crm_opportunity_id,dim_subscription_id,dim_product_detail_id, product_tier_name,product_delivery_type,subscription_name, effective_start_month, DATEADD('month',charge_term/5*2,effective_start_month) AS effective_end_month,subscription_end_month,myb_subscription_end_month,SUM(arr) AS arr
+   FROM agg_charge_term_greater_than_12 WHERE charge_term BETWEEN 49 AND 60 AND effective_end_month > '2022-01-01'  {{ dbt_utils.group_by(n=18) }}
    UNION ALL
-   SELECT renewal_type, is_myb, is_myb_with_multi_subs,current_term, charge_term, charge_id, dim_crm_account_id,dim_billing_account_id,dim_crm_opportunity_id,dim_subscription_id,dim_product_detail_id, product_tier_name,product_delivery_type,subscription_name, effective_start_month, DATEADD('month',charge_term/5*3,effective_start_month) AS effective_end_month,subscription_end_month,SUM(arr) AS arr
-   FROM agg_charge_term_greater_than_12 WHERE charge_term BETWEEN 49 AND 60 AND effective_end_month > '2022-01-01'  {{ dbt_utils.group_by(n=17) }}
+   SELECT renewal_type, is_myb, is_myb_with_multi_subs,current_term, charge_term, charge_id, dim_crm_account_id,dim_billing_account_id,dim_crm_opportunity_id,dim_subscription_id,dim_product_detail_id, product_tier_name,product_delivery_type,subscription_name, effective_start_month, DATEADD('month',charge_term/5*3,effective_start_month) AS effective_end_month,subscription_end_month,myb_subscription_end_month,SUM(arr) AS arr
+   FROM agg_charge_term_greater_than_12 WHERE charge_term BETWEEN 49 AND 60 AND effective_end_month > '2022-01-01'  {{ dbt_utils.group_by(n=18) }}
    UNION ALL
-   SELECT renewal_type, is_myb, is_myb_with_multi_subs,current_term, charge_term, charge_id, dim_crm_account_id,dim_billing_account_id,dim_crm_opportunity_id,dim_subscription_id,dim_product_detail_id, product_tier_name,product_delivery_type,subscription_name, effective_start_month, DATEADD('month',charge_term/5*4,effective_start_month) AS effective_end_month,subscription_end_month,SUM(arr) AS arr
-   FROM agg_charge_term_greater_than_12 WHERE charge_term BETWEEN 49 AND 60 AND effective_end_month > '2022-01-01' {{ dbt_utils.group_by(n=17) }}
+   SELECT renewal_type, is_myb, is_myb_with_multi_subs,current_term, charge_term, charge_id, dim_crm_account_id,dim_billing_account_id,dim_crm_opportunity_id,dim_subscription_id,dim_product_detail_id, product_tier_name,product_delivery_type,subscription_name, effective_start_month, DATEADD('month',charge_term/5*4,effective_start_month) AS effective_end_month,subscription_end_month,myb_subscription_end_month,SUM(arr) AS arr
+   FROM agg_charge_term_greater_than_12 WHERE charge_term BETWEEN 49 AND 60 AND effective_end_month > '2022-01-01' {{ dbt_utils.group_by(n=18) }}
    ORDER BY 1
 
 ), combined AS (--union all of the charges
@@ -285,6 +288,7 @@ WITH dim_billing_account AS (
       base.subscription_name,
       base.subscription_start_month,
       base.subscription_end_month,
+      base.myb_subscription_end_month,
       base.parent_crm_account_name,
       base.crm_account_name,
       base.parent_crm_account_sales_segment,
@@ -318,5 +322,5 @@ WITH dim_billing_account AS (
     created_by="@iweeks",
     updated_by="@iweeks",
     created_date="2021-03-15",
-    updated_date="2021-03-15"
+    updated_date="2021-08-05"
 ) }}
