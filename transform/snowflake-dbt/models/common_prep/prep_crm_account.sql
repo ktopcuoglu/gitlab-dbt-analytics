@@ -141,7 +141,11 @@ WITH map_merged_crm_account AS (
        ELSE 'Employees < 1K'
     END                                                 AS parent_crm_account_employee_count_band,
     ultimate_parent_account.created_date                AS parent_crm_account_created_date,
+<<<<<<< HEAD
     ultimate_parent_account.zi_technologies             AS parent_crm_account_zi_technologies
+=======
+    ultimate_parent_account.zi_technologies             AS parent_crm_zi_technologies
+>>>>>>> c57aac5f004cd9eacd5402d450b34a7be94b5815
   FROM sfdc_account
   LEFT JOIN map_merged_crm_account
     ON sfdc_account.account_id = map_merged_crm_account.sfdc_account_id
