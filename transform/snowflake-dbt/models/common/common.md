@@ -882,6 +882,18 @@ LIMIT 100
 
 {% enddocs %}
 
+{% docs fct_monthly_usage_data %}
+
+Union of models `prep_monthly_usage_data_28_days` and `prep_monthly_usage_data_all_time`
+
+{% enddocs %}
+
+{% docs fct_weekly_usage_data_7_days %}
+
+Union of models `prep_monthly_usage_data_28_days` and `prep_monthly_usage_data_all_time`
+
+{% enddocs %}
+
 {% docs fct_daily_event_400 %}
 
 Factual table built on top of prep_events tables that allows to explore usage data of free and paid users and namespaces from our SaaS instance gitlab.com.

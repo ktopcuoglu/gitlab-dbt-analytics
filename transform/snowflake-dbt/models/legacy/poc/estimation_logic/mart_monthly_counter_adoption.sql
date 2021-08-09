@@ -41,7 +41,7 @@ WITH paid_subscriptions_monthly_usage_ping_optin AS (
 ), flattened_usage_data AS (
 
     SELECT *
-    FROM {{ ref('prep_usage_data_flattened') }}
+    FROM {{ ref('poc_prep_usage_data_flattened') }}
 
 ), transformed_flattened AS (
   

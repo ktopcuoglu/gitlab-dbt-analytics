@@ -1,8 +1,10 @@
 {% docs mart_estimated_xmau %}
 
-Data mart to explore SMAU. The report looks at the usage ping sent by instances using GitLab. Then, for each stage, the report looks at the specific metrics/counter which is chosen to represent SMAU values. It then calculates Recorded SMAU.
+Documentation around Estimated [xMAU methodology is explained here](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/xmau-analysis/estimation-xmau-algorithm.html)
 
-Then calculates the Estimated SMAU Value as explained in detail in this page.
+Data mart to explore estimated xMAU PIs. The report looks at the usage ping sent by instances using GitLab. Then, for each stage, the report looks at the specific metrics/counter which is chosen to represent SMAU values. It then calculates Recorded SMAU.
+
+Then calculates the Estimated SMAU Value as explained [in detail in this page](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/xmau-analysis/estimation-xmau-algorithm.html).
 
 ```
 SELECT

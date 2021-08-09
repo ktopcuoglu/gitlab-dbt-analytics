@@ -6,7 +6,7 @@
 
 WITH flattened AS ( 
   
-    SELECT * FROM {{ ref('prep_usage_data_flattened') }}
+    SELECT * FROM {{ ref('poc_prep_usage_data_flattened') }}
 
 ), usage_ping_metrics AS (
 
