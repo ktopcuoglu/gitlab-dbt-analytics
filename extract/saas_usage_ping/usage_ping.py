@@ -1,36 +1,20 @@
 import datetime
 import json
 import logging
-import re
 import os
 import sys
 from os import environ as env
 from typing import Dict, List
 
 import pandas as pd
-import sqlparse
-import sql_metadata
 
 from fire import Fire
-from flatten_dict import flatten
 from gitlabdata.orchestration_utils import (
     dataframe_uploader,
     dataframe_enricher,
     snowflake_engine_factory,
 )
-from pprint import pprint
-from sqlalchemy.engine.base import Engine
 from sqlalchemy.exc import SQLAlchemyError
-from sqlparse.sql import (
-    Identifier,
-    IdentifierList,
-    remove_quotes,
-    Token,
-    TokenList,
-    Where,
-)
-from sqlparse.tokens import Keyword, Name, Punctuation, String, Whitespace
-from sqlparse.utils import imt
 from logging import error, info, basicConfig, getLogger, warning
 
 class UsagePing(object):
