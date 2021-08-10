@@ -17,6 +17,7 @@ from gitlabdata.orchestration_utils import (
     dataframe_uploader,
     dataframe_enricher,
     snowflake_engine_factory,
+    snowflake_stage_load_copy_remove,
 )
 from pprint import pprint
 from sqlalchemy.engine.base import Engine
@@ -90,6 +91,31 @@ class UsagePing(object):
         )
 
         self.loader_engine.dispose()
+
+    def saas_instance_redis_metrics(self):
+
+        """
+        Call the Non SQL Metrics API and store the results in Snowflake RAW database
+        """
+
+        headers = {
+            'PRIVATE-TOKEN': private_token,
+        }
+
+        response = requests.get('https://gitlab.com/api/v4/usage_data/non_sql_metrics', headers=headers)
+        json_data = json.loads(response.text)
+        
+        json_file_name = 'instance_redis_metrics'
+
+        with open(f"{json_file_name}.json", "w") as f:
+            json.dump(json_data, f)
+
+        snowflake_stage_load_copy_remove(
+            f"{json_file_name}.json",
+            "raw.gitlab_data_yaml.instance_redis_metrics_load",
+            f"raw.saas_usage_ping.instance_redis_metrics",
+            self.loader_engine,
+        )        
 
     def _get_namespace_queries(self) -> List[Dict]:
         """
