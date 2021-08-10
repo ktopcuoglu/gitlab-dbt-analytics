@@ -2853,7 +2853,6 @@ models:
       - name: dim_ci_runner_id
         description: The unique ID of the runner with which the CI build has been run
         tests:
-          - not_null
           - unique
       - name: created_date_id
       - name: created_at
