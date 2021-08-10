@@ -13,20 +13,29 @@ from sqlparse.sql import (
     Where,
 )
 from sqlparse.tokens import Keyword, Name, Punctuation, String, Whitespace
-
+from os import environ as env
+import requests
 
 ## Workflow
 ### Read and transform JSON file
 
 
-def sql_queries_dict(json_file: str) -> Dict[Any, Any]:
+def get_sql_query_map(private_token=None) -> str:
+    headers = {
+    'PRIVATE-TOKEN': private_token,
+    }
+
+    response = requests.get('https://gitlab.com/api/v4/usage_data/queries', headers=headers)
+    json_data = json.loads(response.text)
+
+    return json_data
+
+def sql_queries_dict(json_data: str) -> Dict[Any, Any]:
     """
     function that transforms the given json file into a Python dict with only SQL batch counters
     """
-    with open(json_file) as f:
-        data = json.load(f)
 
-    full_payload_dict = flatten(data, reducer=make_reducer(delimiter="."))
+    full_payload_dict = flatten(json_data, reducer=make_reducer(delimiter="."))
 
     sql_queries_dict = {}
 
@@ -164,9 +173,10 @@ if __name__ == "__main__":
     ## counter queries (sql+redis): this is generated manually by the product intelligence team
     ## available here
 
-    json_file_path = "./usage_ping_instance_queries.json"
+    config_dict = env.copy()
+    json_data = get_sql_query_map(private_token=config_dict["GITLAB_ANALYTICS_PRIVATE_TOKEN"])
 
-    sql_queries_dictionary = sql_queries_dict(json_file_path)
+    sql_queries_dictionary = sql_queries_dict(json_data)
 
     sql_queries_dict_with_new_column = {
         metric_name: add_counter_name_as_column(
