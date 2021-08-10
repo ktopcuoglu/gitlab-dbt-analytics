@@ -190,5 +190,5 @@ if __name__ == "__main__":
         for metric_name in sql_queries_dict_with_new_column
     }
 
-    with open("all_sql_queries.draft.json", "w") as f:
+    with open("transformed_instance_queries.json", "w") as f:
         json.dump(final_sql_query_dict, f)

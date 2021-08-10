@@ -50,7 +50,7 @@ class UsagePing(object):
         can be updated to query an end point or query other functions
         to generate the {ping_name: sql_query} dictionary
         """
-        with open(os.path.join(os.path.dirname(__file__), "all_sql_queries.json")) as f:
+        with open(os.path.join(os.path.dirname(__file__), "transformed_instance_queries.json")) as f:
             saas_queries = json.load(f)
 
         return saas_queries
