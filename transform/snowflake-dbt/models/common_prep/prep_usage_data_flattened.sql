@@ -1,3 +1,7 @@
+{{ config(
+    tags=["product"]
+) }}
+
 
 {{ config({
     "materialized": "incremental",
@@ -7,7 +11,7 @@
 
 WITH data AS ( 
   
-    SELECT * FROM {{ ref('fct_usage_ping_payload')}}
+    SELECT * FROM {{ ref('prep_usage_ping_payload')}}
     {% if is_incremental() %}
 
       WHERE dim_date_id >= (SELECT MAX(dim_date_id) FROM {{this}})
@@ -34,7 +38,7 @@ WITH data AS (
     cte_ref="flattened",
     created_by="@mpeychet",
     updated_by="@mpeychet",
-    created_date="2021-06-17",
-    updated_date="2021-06-17"
+    created_date="2021-07-21",
+    updated_date="2021-07-21"
 ) }}
 

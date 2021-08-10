@@ -18,6 +18,7 @@ WITH source AS (
       creatorinvoiceownerid                       AS creator_invoice_owner_id,
       invoiceownerid                              AS invoice_owner_id,
       nullif(opportunityid__c, '')                AS sfdc_opportunity_id,
+      nullif(opportunityname__qt, '')             AS crm_opportunity_name,
       nullif(originalid, '')                      AS original_id,
       nullif(previoussubscriptionid, '')          AS previous_subscription_id,
       nullif(recurlyid__c, '')                    AS sfdc_recurly_id,
@@ -25,7 +26,8 @@ WITH source AS (
 
       -- info
       status                                      AS subscription_status,
-      autorenew                                   AS auto_renew,
+      autorenew                                   AS auto_renew_native_hist,
+      autorenew__c                                AS auto_renew_customerdot_hist,
       version                                     AS version,
       termtype                                    AS term_type,
       notes                                       AS notes,

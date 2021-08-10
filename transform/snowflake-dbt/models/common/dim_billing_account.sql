@@ -1,14 +1,15 @@
 {{ simple_cte([
     ('map_merged_crm_account','map_merged_crm_account'),
-    ('zuora_account','zuora_account_source'),
     ('zuora_contact','zuora_contact_source')
 ]) }}
 
-, excluded_accounts AS (
+, zuora_account AS (
 
-    SELECT DISTINCT
-      account_id
-    FROM {{ref('zuora_excluded_accounts')}}
+    SELECT *
+    FROM {{ref('zuora_account_source')}}
+    --Exclude Batch20 which are the test accounts. This method replaces the manual dbt seed exclusion file.
+    WHERE LOWER(batch) != 'batch20'
+      AND is_deleted = FALSE
 
 ), filtered AS (
 
@@ -23,24 +24,19 @@
       zuora_account.currency                                AS account_currency,
       zuora_contact.country                                 AS sold_to_country,
       zuora_account.is_deleted,
-      zuora_account.account_id IN (
-                                    SELECT
-                                      account_id
-                                    FROM excluded_accounts
-                                  ) AS is_excluded
+      zuora_account.batch
     FROM zuora_account
     LEFT JOIN zuora_contact
       ON COALESCE(zuora_account.sold_to_contact_id, zuora_account.bill_to_contact_id) = zuora_contact.contact_id
     LEFT JOIN map_merged_crm_account
       ON zuora_account.crm_id = map_merged_crm_account.sfdc_account_id
-    WHERE zuora_account.is_deleted = FALSE
 
 )
 
 {{ dbt_audit(
     cte_ref="filtered",
     created_by="@msendal",
-    updated_by="@mcooperDD",
+    updated_by="@iweeks",
     created_date="2020-07-20",
-    updated_date="2020-12-07"
+    updated_date="2021-07-29"
 ) }}

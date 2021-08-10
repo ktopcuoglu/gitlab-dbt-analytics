@@ -123,9 +123,11 @@
       dim_crm_account.fy22_new_logo_target_list,
       dim_crm_account.crm_account_gtm_strategy,
       dim_crm_account.crm_account_focus_account,
+      dim_crm_account.crm_account_zi_technologies,
       dim_crm_account.parent_crm_account_gtm_strategy,
       dim_crm_account.parent_crm_account_focus_account,
       dim_crm_account.parent_crm_account_sales_segment,
+      dim_crm_account.parent_crm_account_zi_technologies,
       fct_crm_opportunity.closed_buckets,
       dim_crm_opportunity.duplicate_opportunity_id,
       dim_crm_opportunity.opportunity_category,
@@ -241,5 +243,5 @@
     created_by="@iweeks",
     updated_by="@jpeguero",
     created_date="2020-12-07",
-    updated_date="2021-07-20",
+    updated_date="2021-08-09",
   ) }}

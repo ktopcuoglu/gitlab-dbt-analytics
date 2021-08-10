@@ -115,9 +115,7 @@ rm ~/onboarding_script.zsh
 <summary>For Data Scientists</summary>
 
 -  [ ] Make sure you have run through all of the analysts steps mentioned above, along with the getting setup with dbt section below
-
--  [ ] Install docker & docker-compose. The easiest way to do this for Mac now is to use the desktop install from [Docker](https://www.docker.com/products/docker-desktop).
-
+-  [ ] (Optional) Install docker & docker-compose. The easiest way to do this for Mac now is to use the desktop install from [Docker](https://www.docker.com/products/docker-desktop).
 -  [ ] Run through the Jupyter setup section below 
 </details>
 
@@ -175,8 +173,8 @@ Additional tools to install that are not part of the onboarding script:
     * Then reopen your terminal and you will be asked to configure this theme. If you would like to reconfigure the theme run `p10k configure`
 
 ## Airflow (Data Engineers only)
-    - [ ] Read the Airflow section on the [Data Infrastructure page](https://about.gitlab.com/handbook/business-ops/data-team/platform/infrastructure/#airflow)
-    - [ ] Watch the [Airflow Setup Walkthrough](https://www.youtube.com/watch?v=3Ym40gRHtvk&feature=youtu.be) with Taylor and Magda
+- [ ] Read the Airflow section on the [Data Infrastructure page](https://about.gitlab.com/handbook/business-ops/data-team/platform/infrastructure/#airflow)
+- [ ] Watch the [Airflow Setup Walkthrough](https://www.youtube.com/watch?v=3Ym40gRHtvk&feature=youtu.be) with Taylor and Magda
 
 
 </details>
@@ -237,11 +235,6 @@ Snowflake SQL is probably not that different from the dialects of SQL you're alr
 - [ ] From a different terminal window run `code ~/.dbt/profiles.yml` and update this file with your info.  The schema should be something like `yourname_scratch`. See [sample profiles](https://gitlab.com/gitlab-data/analytics/-/blob/master/admin/sample_profiles.yml) for an example.
     - For the `password` field, you will need to request a Snowflake password reset from the Data Engineering team. Your Okta SSO password will not work for this. You can request this by commenting on the snowflake request access issue created for you and tagging the Data Engineering team. After you reset your password, use that password in the `profiles.yml` password field
     - Your `role` maybe the same as your `database`.
-    - [ ] __Data Engineers__: update the following paramaters in the `~/.dbt/profiles.yml`:
-        ```
-        role: ENGINEER
-        warehouse: ENGINEER_XS
-        ```
 - Back in your terminal window running the dbt docker image: 
 - [ ] Run `dbt seed` to import the CSV's from the analytics/data into your schema. For dbt to compile this needs to be completed as some of the models have dependencies on the tables which are created by the CSV's.
 - [ ] Run `dbt run --models +staging.sfdc` from within the container to know that your connection has been successful, you are in the correct location, and everything will run smoothly.  For more details on the syntax for how to select and run the models, please refer to this [page](https://docs.getdbt.com/reference/node-selection/syntax#examples).  Afterwards, you can also try running `dbt compile` to ensure that the entire project will compile correctly.
@@ -261,13 +254,12 @@ Data team uses GCP (Google Cloud Platform) as our cloud provider. GCP credential
     - If you already have the variable  GOOGLE_APPLICATION_CREDENTIALS  modify its value to the file path and file name instead of adding a new one. 
 - [ ] Refresh this file by sourcing it back, by running command in terminal: ``source ~/.zshrc``.
 
-
 ## Jupyter 
 
 - [ ] Ensure you've setup your dbt for running locally as mentioned above. The ./.dbt/profiles.yml file is a pre-requisite for this process. If you do not want dbt you can manually create the ./.dbt/profiles.yml file based off the [sample profile](https://gitlab.com/gitlab-data/analytics/-/blob/master/admin/sample_profiles.yml)
 - [ ] Clone the data-science repo into your repos directory: 
     ``` git clone git@gitlab.com:gitlab-data/data-science.git```
-- [ ] See the readme provided in the [data-science repo](https://gitlab.com/gitlab-data/data-science/) for further install instructions 
+- [ ] See the readme provided in the [handbook jupyter guide](https://about.gitlab.com/handbook/business-technology/data-team/platform/jupyter-guide/) for further install instructions 
 
 ## GitLab.com (Product)
 This data comes from our GitLab.com SaaS product.
@@ -282,10 +274,7 @@ This data comes from our GitLab.com SaaS product.
 - [ ] Netsuite dbt models 101: Familiarize yourself with the Netsuite models by watching this [Data Netsuite dbt models](https://www.youtube.com/watch?v=u2329sQrWDY&feature=youtu.be). You will need to be logged into [GitLab Unfiltered](https://www.youtube.com/channel/UCMtZ0sc1HHNtGGWZFDRTh5A/).
 - [ ] For access to Netsuite, your manager will need to create an [Access Request](https://gitlab.com/gitlab-com/access-requests/issues/new?issuable_template=New%20Access%20Request). Please confirm with your manager that this has been done.
 
-
-
 ## Misc
-
 - [ ] Familiarize yourself with the [Stitch](http://stitchdata.com) UI, as this is mostly the source of truth for what data we are loading. An email will have been sent with info on how to get logged in.
 - [ ] Familiarize yourself with GitLab CI https://docs.gitlab.com/ee/ci/quick_start/ and our running pipelines.
 - [ ] Consider joining [Locally Optimistic slack](https://www.locallyoptimistic.com/community/)

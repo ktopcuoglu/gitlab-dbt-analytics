@@ -60,6 +60,14 @@
     "primary_key": "dim_ci_pipeline_id"
   },
   {
+    "event_name": "package_creation",
+    "source_cte_name": "prep_package",
+    "user_column_name": "creator_id",
+    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
+    "project_column_name": "dim_project_id",
+    "primary_key": "dim_package_id"
+  },
+  {
     "event_name": "protect_ci_build_creation",
     "source_cte_name": "protect_ci_build",
     "user_column_name": "dim_user_id",
@@ -75,6 +83,14 @@
     "project_column_name": "dim_project_id",
     "primary_key": "dim_ci_build_id"
   },
+  {
+    "event_name": "succesful_ci_pipeline_creation",
+    "source_cte_name": "succesful_ci_pipelines",
+    "user_column_name": "dim_user_id",
+    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
+    "project_column_name": "dim_project_id",
+    "primary_key": "dim_ci_pipeline_id"
+  },
 ]
 
 -%}
@@ -87,8 +103,9 @@
     ('prep_issue', 'prep_issue'),
     ('prep_merge_request', 'prep_merge_request'),
     ('prep_note', 'prep_note'),
+    ('prep_package', 'prep_package'),
     ('dim_project', 'dim_project'),
-    ('dim_namespace', 'dim_namespace'),
+    ('prep_namespace', 'prep_namespace'),
     ('prep_user', 'prep_user')
 ]) }}
 
@@ -124,6 +141,12 @@
                                     )
 
     
+), succesful_ci_pipelines AS (
+
+    SELECT *
+    FROM prep_ci_pipeline
+    WHERE failure_reason IS NULL
+
 ), data AS (
 
 {% for event_cte in event_ctes %}
@@ -140,10 +163,14 @@
       {{ event_cte.source_cte_name}}.created_date_id,
       {{ event_cte.source_cte_name}}.{{ event_cte.user_column_name }}                                          AS dim_user_id,
       prep_user.created_at                                                                                     AS user_created_at,
-      dim_namespace.created_at                                                                                 AS namespace_created_at,
+      TO_DATE(prep_user.created_at)                                                                            AS user_created_date,
+      prep_namespace.created_at                                                                                AS namespace_created_at,
+      TO_DATE(prep_namespace.created_at)                                                                       AS namespace_created_date,
+      IFF(blocked_user.dim_user_id IS NOT NULL, TRUE, FALSE)                                                   AS is_blocked_namespace,
+      prep_namespace.namespace_is_internal,
       FLOOR(
       DATEDIFF('hour',
-              dim_namespace.created_at,
+              prep_namespace.created_at,
               {{ event_cte.source_cte_name}}.created_at)/24)                                                   AS days_since_namespace_creation,
       FLOOR(
       DATEDIFF('hour',
@@ -163,8 +190,12 @@
       ON {{event_cte.source_cte_name}}.{{event_cte.project_column_name}} = dim_project.dim_project_id
     {% endif %}
     {% if event_cte.ultimate_parent_namespace_column_name != 'NULL' %}
-    INNER JOIN dim_namespace 
-      ON {{event_cte.source_cte_name}}.{{event_cte.ultimate_parent_namespace_column_name}} = dim_namespace.dim_namespace_id
+    INNER JOIN prep_namespace 
+      ON {{event_cte.source_cte_name}}.{{event_cte.ultimate_parent_namespace_column_name}} = prep_namespace.dim_namespace_id
+      AND prep_namespace.is_currently_valid = TRUE
+    LEFT JOIN prep_user AS blocked_user
+      ON prep_namespace.creator_id = blocked_user.dim_user_id
+      AND blocked_user.user_state = 'blocked'
     {% endif %}
     {% if event_cte.user_column_name != 'NULL' %}
     LEFT JOIN prep_user 
