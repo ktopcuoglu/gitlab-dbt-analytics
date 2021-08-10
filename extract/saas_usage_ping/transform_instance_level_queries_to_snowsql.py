@@ -1,5 +1,6 @@
 import json
 from typing import Any, Dict, List
+from logging import error, info, basicConfig, getLogger, warning
 
 from flatten_dict import flatten
 from flatten_dict.reducer import make_reducer
@@ -177,7 +178,7 @@ if __name__ == "__main__":
     json_data = get_sql_query_map(private_token=config_dict["GITLAB_ANALYTICS_PRIVATE_TOKEN"])
 
     sql_queries_dictionary = sql_queries_dict(json_data)
-
+    info("Processed sql queries")
     sql_queries_dict_with_new_column = {
         metric_name: add_counter_name_as_column(
             metric_name, sql_queries_dictionary[metric_name]
@@ -189,6 +190,7 @@ if __name__ == "__main__":
         metric_name: rename_query_tables(sql_queries_dict_with_new_column[metric_name])
         for metric_name in sql_queries_dict_with_new_column
     }
+    info("Processed final sql queries")
 
     with open("transformed_instance_queries.json", "w") as f:
         json.dump(final_sql_query_dict, f)
