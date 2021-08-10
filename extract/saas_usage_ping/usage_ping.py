@@ -67,6 +67,7 @@ class UsagePing(object):
 
             results_all[key] = data_to_write
 
+        info("Processed queries")
         connection.close()
         self.loader_engine.dispose()
 
