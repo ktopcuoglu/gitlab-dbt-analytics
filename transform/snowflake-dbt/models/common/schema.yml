@@ -2913,24 +2913,18 @@ models:
       - name: dim_ci_runner_id
         description: ID of the runner with which the CI build has been run.
         tests:
-          - not_null
       - name: dim_ci_pipeline_id
         tests:
-          - not_null
       - name: dim_ci_stage_id
         tests:
-          - not_null
       - name: dim_project_id
         description: Foreign key that shows the ID of the project in which the build has been triggered.
         tests:
-          - not_null
       - name: dim_namespace_id
         description: Foreign key that shows the ID of the namespace in which the build has been triggered.
         tests:
-          - not_null
       - name: ultimate_parent_namespace_id
         tests:
-          - not_null
       - name: dim_plan_id
         description: ID of the Plan
         tests:
@@ -2938,11 +2932,9 @@ models:
       - name: dim_user_id
         description: Foreign key that shows the ID of the user who triggered the CI Build
         tests:
-          - not_null
       - name: ci_build_created_date_id
         description: Foreign key to `dim_date` that shows the ID of the date on which the stage was created.
         tests:
-          - not_null
       - name: ci_build_started_at
       - name: ci_build_finished_at
       - name: ci_build_duration_in_s
