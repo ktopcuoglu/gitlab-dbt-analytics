@@ -31,6 +31,8 @@
     INNER JOIN fct_usage_ping_payload
       ON fct_monthly_usage_data.dim_usage_ping_id = fct_usage_ping_payload.dim_usage_ping_id
     WHERE is_smau = TRUE
+      AND product_tier <> 'Core'
+      AND usage_ping_delivery_type = 'Self-Managed'
     {{ dbt_utils.group_by(n=12) }}
 
 
@@ -72,6 +74,8 @@
     INNER JOIN fct_usage_ping_payload
       ON fct_monthly_usage_data.dim_usage_ping_id = fct_usage_ping_payload.dim_usage_ping_id
     WHERE is_umau = TRUE
+      AND product_tier <> 'Core'
+      AND usage_ping_delivery_type = 'Self-Managed'
     {{ dbt_utils.group_by(n=12) }}
 
 
@@ -114,7 +118,9 @@
     FROM fct_monthly_usage_data
     INNER JOIN fct_usage_ping_payload
       ON fct_monthly_usage_data.dim_usage_ping_id = fct_usage_ping_payload.dim_usage_ping_id
-    WHERE is_gmau = TRUE
+    WHERE is_paid_gmau = TRUE
+      AND product_tier <> 'Core'
+      AND usage_ping_delivery_type = 'Self-Managed'
     {{ dbt_utils.group_by(n=14) }}
 
 
@@ -171,7 +177,7 @@
 
     SELECT *
     FROM umau_joined
-
+    
 ), estimated_monthly_metric_value_sum AS (
 
     SELECT 
