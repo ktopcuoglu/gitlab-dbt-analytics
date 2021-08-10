@@ -60,7 +60,7 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity_xf.stage_is_active,
       sfdc_opportunity_xf.stage_is_closed,
       sfdc_opportunity_xf.technical_evaluation_date,
-      sfdc_opportunity_xf.deal_path,
+
       sfdc_opportunity_xf.acv,
       sfdc_opportunity_xf.amount,
       sfdc_opportunity_xf.closed_deals,
@@ -184,7 +184,7 @@ WITH sfdc_opportunity AS (
       -----------------------------------------------------------
       -----------------------------------------------------------
       -- Channel Org. fields
-
+      sfdc_opportunity_xf.deal_path,
       sfdc_opportunity_xf.dr_partner_deal_type,
       sfdc_opportunity_xf.dr_partner_engagement,
       sfdc_opportunity_xf.partner_account,

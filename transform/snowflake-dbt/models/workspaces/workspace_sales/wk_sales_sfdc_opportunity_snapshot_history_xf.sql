@@ -37,23 +37,43 @@ WITH date_details AS (
       opportunity_owner_user_area,
       opportunity_owner_user_geo,
 
--------------------------------------
--- NF: These fields are not exposed yet in opty history, just for check
--- I am adding this logic
+      -------------------------------------
+      -- NF: These fields are not exposed yet in opty history, just for check
+      -- I am adding this logic
 
       stage_1_date,
       stage_1_date_month,
       stage_1_fiscal_year,
       stage_1_fiscal_quarter_name,
       stage_1_fiscal_quarter_date,
---------------------------------------
+      --------------------------------------
 
       is_won,
       is_duplicate_flag,
       raw_net_arr,
       net_incremental_acv,
       sales_qualified_source,
-      incremental_acv
+      incremental_acv,
+
+      -- Channel Org. fields
+      -- this fields should be changed to this historical version
+      deal_path,
+      dr_partner_deal_type,
+      dr_partner_engagement,
+      partner_account,
+      dr_status,
+      distributor,
+      influence_partner,
+      fulfillment_partner,
+      platform_partner,
+      partner_track,
+      is_public_sector_opp,
+      is_registration_from_portal,
+      calculated_discount,
+      partner_discount,
+      partner_discount_calc,
+      comp_channel_neutral
+
     FROM {{ref('wk_sales_sfdc_opportunity_xf')}}  
 
 ), sfdc_users_xf AS (
@@ -509,6 +529,24 @@ WITH date_details AS (
           THEN sfdc_opportunity_xf.stage_1_fiscal_quarter_date 
         ELSE NULL
       END                                               AS stage_1_fiscal_quarter_date,
+
+      -- Channel Org. fields
+      sfdc_opportunity_xf.deal_path,
+      sfdc_opportunity_xf.dr_partner_deal_type,
+      sfdc_opportunity_xf.dr_partner_engagement,
+      sfdc_opportunity_xf.partner_account,
+      sfdc_opportunity_xf.dr_status,
+      sfdc_opportunity_xf.distributor,
+      sfdc_opportunity_xf.influence_partner,
+      sfdc_opportunity_xf.fulfillment_partner,
+      sfdc_opportunity_xf.platform_partner,
+      sfdc_opportunity_xf.partner_track,
+      sfdc_opportunity_xf.is_public_sector_opp,
+      sfdc_opportunity_xf.is_registration_from_portal,
+      sfdc_opportunity_xf.calculated_discount,
+      sfdc_opportunity_xf.partner_discount,
+      sfdc_opportunity_xf.partner_discount_calc,
+      sfdc_opportunity_xf.comp_channel_neutral,
 
       ------------------------------------------------------------------------------------------------------
       ------------------------------------------------------------------------------------------------------
