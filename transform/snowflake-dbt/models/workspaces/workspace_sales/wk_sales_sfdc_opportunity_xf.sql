@@ -641,7 +641,7 @@ WITH sfdc_opportunity AS (
           AND oppty_final.order_type_stamped IN ('1. New - First Order','2. New - Connected','3. Growth')
           -- Exclude Decomissioned as they are not aligned to the real owner
           -- Contract Reset, Decomission
-          AND oppty_final.forecast_category_name IN ('Standard','Ramp Deal','Internal Correction')
+          AND oppty_final.opportunity_category IN ('Standard','Ramp Deal','Internal Correction')
           -- Web Purchase have no Net ARR before reconciliation, exclude those 
           -- from ASP analysis
           AND ((oppty_final.is_web_portal_purchase = 1 
@@ -660,7 +660,7 @@ WITH sfdc_opportunity AS (
           -- For stage age we exclude only ps/other
           AND oppty_final.order_type_stamped IN ('1. New - First Order','2. New - Connected','3. Growth','4. Contraction','6. Churn - Final','5. Churn - Partial')
           -- Only include deal types with meaningful journeys through the stages
-          AND oppty_final.forecast_category_name IN ('Standard','Ramp Deal','Decommissioned')
+          AND oppty_final.opportunity_category IN ('Standard','Ramp Deal','Decommissioned')
           -- Web Purchase have a different dynamic and should not be included
           AND oppty_final.is_web_portal_purchase = 0
           -- Not JiHu

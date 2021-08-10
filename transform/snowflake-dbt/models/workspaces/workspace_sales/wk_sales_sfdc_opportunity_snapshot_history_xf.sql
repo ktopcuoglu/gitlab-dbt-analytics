@@ -747,7 +747,7 @@ WITH date_details AS (
           AND opp_snapshot.order_type_stamped IN ('1. New - First Order','2. New - Connected','3. Growth')
           -- Exclude Decomissioned as they are not aligned to the real owner
           -- Contract Reset, Decomission
-          AND opp_snapshot.forecast_category_name IN ('Standard','Ramp Deal','Internal Correction')
+          AND opp_snapshot.opportunity_category IN ('Standard','Ramp Deal','Internal Correction')
           -- Web Purchase have no Net ARR before reconciliation, exclude those 
           -- from ASP analysis
           AND ((opp_snapshot.is_web_portal_purchase = 1 
@@ -766,7 +766,7 @@ WITH date_details AS (
           -- For stage age we exclude only ps/other
           AND opp_snapshot.order_type_stamped IN ('1. New - First Order','2. New - Connected','3. Growth','4. Contraction','6. Churn - Final','5. Churn - Partial')
           -- Only include deal types with meaningful journeys through the stages
-          AND opp_snapshot.forecast_category_name IN ('Standard','Ramp Deal','Decommissioned')
+          AND opp_snapshot.opportunity_category IN ('Standard','Ramp Deal','Decommissioned')
           -- Web Purchase have a different dynamic and should not be included
           AND opp_snapshot.is_web_portal_purchase = 0
           -- Not JiHu
