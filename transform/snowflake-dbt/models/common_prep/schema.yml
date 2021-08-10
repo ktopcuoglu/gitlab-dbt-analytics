@@ -1879,3 +1879,11 @@ models:
       - name: dim_target_issue_id
         tests:
           - not_null
+          
+  - name: prep_package
+    description: '{{ doc("prep_package") }}'
+    columns:
+      - name: dim_package_id
+        tests:
+          - unique
+          - not_null

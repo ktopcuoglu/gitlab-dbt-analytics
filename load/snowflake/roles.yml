@@ -2494,10 +2494,8 @@ roles:
             - reporting
 
     - jmitchell:
-        member_of:
-            - bamboohr_sensitive_separations
-        warehouses:
-            - analyst_xs
+        member_of: []
+        warehouses: []
 
     - jng:
         member_of:
@@ -3959,9 +3957,8 @@ users:
             - jng
 
     - jmitchell:
-        can_login: yes
-        member_of:
-            - jmitchell
+        can_login: no
+        member_of: []
 
     - jmahdi:
         can_login: no
