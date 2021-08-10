@@ -63,7 +63,7 @@ WITH snapshot_dates AS (
       zuora_subscription_spined.subscription_name_slugify,
       zuora_subscription_spined.subscription_status,
       zuora_subscription_spined.version                                         AS subscription_version,
-      zuora_subscription_spined.auto_renew                                      AS is_auto_renew,
+      zuora_subscription_spined.auto_renew_native_hist                          AS is_auto_renew,
       zuora_subscription_spined.zuora_renewal_subscription_name,
       zuora_subscription_spined.zuora_renewal_subscription_name_slugify,
       zuora_subscription_spined.renewal_term,
