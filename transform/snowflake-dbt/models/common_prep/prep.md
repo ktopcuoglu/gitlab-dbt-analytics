@@ -664,3 +664,15 @@ Prep table for the dim table `dim_deployment` that is not yet created.
 Prep table for the dim table `dim_package` that is not yet created. It is also used in the `prep_event` table
 
 {% enddocs %}
+
+{% docs prep_release %}
+
+Prep table for the dim table `dim_release` that is not yet created. It is also used in the `prep_event` table
+
+{% enddocs %}
+
+{% docs prep_requirement %}
+
+Prep table for the dim table `dim_requirement` that is not yet created. It is also used in the `prep_event` table
+
+{% enddocs %}

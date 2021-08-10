@@ -1847,3 +1847,19 @@ models:
         tests:
           - unique
           - not_null
+          
+  - name: prep_release
+    description: '{{ doc("prep_release") }}'
+    columns:
+      - name: dim_release_id
+        tests:
+          - unique
+          - not_null
+                    
+  - name: prep_requirement
+    description: '{{ doc("prep_requirement") }}'
+    columns:
+      - name: dim_requirement_id
+        tests:
+          - unique
+          - not_null
