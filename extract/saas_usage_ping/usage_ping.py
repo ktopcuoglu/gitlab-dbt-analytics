@@ -31,7 +31,7 @@ from sqlparse.sql import (
 )
 from sqlparse.tokens import Keyword, Name, Punctuation, String, Whitespace
 from sqlparse.utils import imt
-
+from logging import error, info, basicConfig, getLogger, warning
 
 class UsagePing(object):
     def __init__(self, ping_date=None):
@@ -69,7 +69,9 @@ class UsagePing(object):
         for key, query in saas_queries.items():
             logging.info(f"Running ping {key}...")
             try:
+                info(key)
                 results = pd.read_sql(sql=query, con=connection)
+                info(results)
                 counter_value = results.loc[0, "counter_value"]
                 data_to_write = str(counter_value)
             except SQLAlchemyError as e:
