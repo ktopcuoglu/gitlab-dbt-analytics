@@ -658,3 +658,9 @@ prep table selecting for a specific usage ping a list of metadata related to spe
 Prep table for the dim table `dim_deployment` that is not yet created.
 
 {% enddocs %}
+
+{% docs prep_package %}
+
+Prep table for the dim table `dim_package` that is not yet created. It is also used in the `prep_event` table
+
+{% enddocs %}

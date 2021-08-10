@@ -6,3 +6,4 @@ ci_pipeline_creation,verify,TRUE
 deployment_creation,release,TRUE
 secure_ci_build_creation,secure,TRUE
 protect_ci_build_creation,protect,TRUE
+package_creation,package,TRUE
