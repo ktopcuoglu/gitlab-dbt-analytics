@@ -2478,7 +2478,14 @@ roles:
            - analyst_engineering
         warehouses:
            - analyst_xs
-      
+
+    - jahye:
+        member_of:
+            - reporter
+            - analyst_marketing
+        warehouses:
+            - analyst_xs
+    
     - jameson:
         member_of:
             - analyst_marketing
@@ -3982,6 +3989,10 @@ users:
         member_of:
             - iwiedler
 
+    - jahye:
+        can_login: yes
+        member_of:
+            - jahye
     - jameson:
         can_login: yes
         member_of:
