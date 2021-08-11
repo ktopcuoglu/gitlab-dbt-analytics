@@ -54,7 +54,7 @@ WITH fct_mrr AS (
 ), mau AS (
 
     SELECT *
-    FROM {{ ref('prep_usage_data_28_days_flattened') }}
+    FROM {{ ref('poc_prep_usage_data_28_days_flattened') }}
     WHERE metrics_path = 'usage_activity_by_stage_monthly.manage.events'
 
 ), transformed AS (

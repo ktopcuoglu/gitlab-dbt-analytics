@@ -1761,11 +1761,89 @@ models:
         tests:
           - unique
           - not_null
+  - name: prep_monthly_usage_data_28_days
+    description: '{{ doc("prep_monthly_usage_data_28_days") }}'
+    columns:
+        - name: primary_key
+          tests:
+            - not_null
+            - unique
+        - name: dim_usage_ping_id
+          tests:
+            - not_null
+        - name: dim_instance_id
+          tests:
+            - not_null
+        - name: metrics_path
+          tests:
+            - not_null
+  - name: prep_monthly_usage_data_all_time
+    description: '{{ doc("prep_monthly_usage_data_all_time") }}'
+    columns:
+        - name: primary_key
+          tests:
+            - not_null
+            - unique
+        - name: dim_usage_ping_id
+          tests:
+            - not_null
+        - name: dim_instance_id
+          tests:
+            - not_null
+        - name: metrics_path
+          tests:
+            - not_null
+  - name: prep_usage_data_7_days_flattened
+    description: '{{ doc("prep_usage_data_7_days_flattened") }}'
+    columns:
+        - name: instance_path_id
+          tests:
+            - not_null
+            - unique
+        - name: dim_usage_ping_id
+          tests:
+            - not_null
+        - name: metrics_path
+          tests:
+            - not_null
+  - name: prep_usage_data_28_days_flattened
+    description: '{{ doc("prep_usage_data_28_days_flattened") }}'
+    columns:
+        - name: instance_path_id
+          tests:
+            - not_null
+            - unique
+        - name: dim_usage_ping_id
+          tests:
+            - not_null
+        - name: metrics_path
+          tests:
+            - not_null
+  - name: prep_usage_data_all_time_flattened
+    description: '{{ doc("prep_usage_data_all_time_flattened") }}'
+    columns:
+        - name: instance_path_id
+          tests:
+            - not_null
+        - name: dim_usage_ping_id
+          tests:
+            - not_null
+        - name: metrics_path
+          tests:
+            - not_null
           
   - name: prep_deployment
     description: '{{ doc("prep_deployment") }}'
     columns:
       - name: dim_deployment_id
+        tests:
+          - unique
+          - not_null
+          
+  - name: prep_package
+    description: '{{ doc("prep_package") }}'
+    columns:
+      - name: dim_package_id
         tests:
           - unique
           - not_null
