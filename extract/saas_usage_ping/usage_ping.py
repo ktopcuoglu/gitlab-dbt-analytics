@@ -52,18 +52,18 @@ class UsagePing(object):
 
         for key, query in saas_queries.items():
             logging.info(f"Running ping {key}...")
-            #try:
-            info("----------------------------")
-            info(key)
-            info(query)
-            results = pd.read_sql(sql=query, con=connection)
-            info(results)
-            counter_value = results.loc[0, "counter_value"]
-            data_to_write = str(counter_value)
-            info("----------------------------")
-            #except SQLAlchemyError as e:
-            #    error = str(e.__dict__["orig"])
-            #    data_to_write = error
+            try:
+                print("----------------------------")
+                print(key)
+                print(query)
+                results = pd.read_sql(sql=query, con=connection)
+                info(results)
+                counter_value = results.loc[0, "counter_value"]
+                data_to_write = str(counter_value)
+                print("----------------------------")
+            except SQLAlchemyError as e:
+                error = str(e.__dict__["orig"])
+                data_to_write = error
 
             results_all[key] = data_to_write
 
