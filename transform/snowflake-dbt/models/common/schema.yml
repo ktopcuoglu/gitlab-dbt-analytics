@@ -3074,3 +3074,54 @@ models:
       - name: event_count
         tests:
           - not_null
+
+  - name: fct_event_all
+    description: '{{ doc("fct_event_all") }}'
+    columns:
+      - name: dim_event_id
+
+  - name: fct_daily_event_all
+    description: '{{ doc("fct_daily_event_all") }}'
+    columns:
+      - name: daily_usage_data_event_id
+        test:
+          - unique
+      - name: ultimate_parent_namespace_id
+        tests:
+          - not_null
+      - name: dim_user_id
+        tests:
+          - not_null
+      - name: event_name
+        tests:
+          - not_null
+      - name: event_created_date
+        tests:
+          - not_null
+      - name: is_blocked_namespace
+        tests:
+          - not_null
+      - name: namespace_created_date
+        tests:
+          - not_null
+      - name: namespace_is_internal
+        tests:
+          - not_null
+      - name: user_created_date
+        tests:
+          - not_null
+      - name: days_since_namespace_creation
+        tests:
+          - not_null
+      - name: weeks_since_namespace_creation
+        tests:
+          - not_null
+      - name: days_since_user_creation
+        tests:
+          - not_null
+      - name: weeks_since_user_creation
+        tests:
+          - not_null
+      - name: event_count
+        tests:
+          - not_null
