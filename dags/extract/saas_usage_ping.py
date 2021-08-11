@@ -20,6 +20,7 @@ from kube_secrets import (
     SNOWFLAKE_LOAD_PASSWORD,
     SNOWFLAKE_PASSWORD,
     SNOWFLAKE_USER,
+    GITLAB_ANALYTICS_PRIVATE_TOKEN
 )
 
 # Load the env vars into a dict and set env vars
@@ -45,6 +46,7 @@ secrets = [
     SNOWFLAKE_LOAD_PASSWORD,
     SNOWFLAKE_PASSWORD,
     SNOWFLAKE_USER,
+    GITLAB_ANALYTICS_PRIVATE_TOKEN
 ]
 
 # Default arguments for the DAG
@@ -69,6 +71,12 @@ instance_cmd = f"""
     python3 usage_ping.py saas_instance_ping
 """
 
+instance_redis_metrics_cmd = f"""
+    {clone_repo_cmd} &&
+    cd analytics/extract/saas_usage_ping/ &&
+    python3 usage_ping.py saas_instance_redis_metrics
+"""
+
 instance_ping = KubernetesPodOperator(
     **gitlab_defaults,
     image=DATA_IMAGE,
@@ -80,6 +88,16 @@ instance_ping = KubernetesPodOperator(
     dag=dag,
 )
 
+instance_redis_metrics = KubernetesPodOperator(
+    **gitlab_defaults,
+    image=DATA_IMAGE,
+    task_id="saas-instance-usage-ping-redis-metrics",
+    name="saas-instance-usage-ping-redis-metrics",
+    secrets=secrets,
+    env_vars=pod_env_vars,
+    arguments=[instance_redis_metrics_cmd],
+    dag=dag,
+)
 # Namespace, Group, Project, User Level Usage Ping
 namespace_cmd = f"""
     {clone_repo_cmd} &&
