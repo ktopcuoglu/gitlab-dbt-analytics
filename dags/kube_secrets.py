@@ -102,6 +102,23 @@ GITLAB_OPS_DB_NAME = Secret(
     "env", "GITLAB_OPS_DB_NAME", "airflow", "GITLAB_OPS_DB_NAME"
 )
 
+# Gitlab CI* table DB variable 
+GITLAB_COM_CI_DB_NAME = Secret(
+    "env", "GITLAB_COM_CI_DB_NAME", "airflow", "GITLAB_COM_CI_DB_NAME"
+)
+GITLAB_COM_CI_DB_HOST = Secret(
+    "env", "GITLAB_COM_CI_DB_HOST", "airflow", "GITLAB_COM_CI_DB_HOST"
+)
+GITLAB_COM_CI_DB_PASS = Secret(
+    "env", "GITLAB_COM_CI_DB_PASS", "airflow", "GITLAB_COM_CI_DB_PASS"
+)
+GITLAB_COM_CI_DB_PORT = Secret(
+    "env", "GITLAB_COM_CI_DB_PORT", "airflow", "GITLAB_COM_CI_DB_PORT"
+)
+GITLAB_COM_CI_DB_USER= Secret(
+    "env", "GITLAB_COM_CI_DB_USER", "airflow", "GITLAB_COM_CI_DB_USER"
+)
+
 # GitLab Profiler DB
 GITLAB_PROFILER_DB_USER = Secret(
     "env", "GITLAB_PROFILER_DB_USER", "airflow", "GITLAB_PROFILER_DB_USER"
