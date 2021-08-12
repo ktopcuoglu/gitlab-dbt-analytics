@@ -111,6 +111,27 @@ WITH sfdc_opportunity_snapshots AS (
       start_date__c::DATE            AS subscription_start_date,
       end_date__c::DATE              AS subscription_end_date,
 
+      -- channel reporting
+      -- original issue: https://gitlab.com/gitlab-data/analytics/-/issues/6072
+      deal_path__c                                AS deal_path,
+      dr_partner_deal_type__c                     AS dr_partner_deal_type,
+      dr_partner_engagement__c                    AS dr_partner_engagement,
+      {{ channel_type('dr_partner_engagement', 'order_type_stamped') }}
+                                                  AS channel_type,
+      impartnerprm__partneraccount__c             AS partner_account,
+      vartopiadrs__dr_status1__c                  AS dr_status,
+      distributor__c                              AS distributor,
+      influence_partner__c                        AS influence_partner,
+      fulfillment_partner__c                      AS fulfillment_partner,
+      platform_partner__c                         AS platform_partner,
+      partner_track__c                            AS partner_track,
+      public_sector_opp__c::BOOLEAN               AS is_public_sector_opp,
+      registration_from_portal__c::BOOLEAN        AS is_registration_from_portal,
+      calculated_discount__c                      AS calculated_discount,
+      partner_discount__c                         AS partner_discount,
+      partner_discount_calc__c                    AS partner_discount_calc,
+      comp_channel_neutral__c                     AS comp_channel_neutral,
+
       -- command plan fields
       fm_champion__c                 AS cp_champion,
       fm_close_plan__c               AS cp_close_plan,

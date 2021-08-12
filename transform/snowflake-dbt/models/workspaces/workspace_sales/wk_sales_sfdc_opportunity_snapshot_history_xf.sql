@@ -1,9 +1,5 @@
 {{ config(alias='sfdc_opportunity_snapshot_history_xf') }}
 
--- TODO:
--- Add logic to exclude vision opps from created pipeline metric
-
-
 WITH date_details AS (
 
     SELECT * 
@@ -53,26 +49,26 @@ WITH date_details AS (
       raw_net_arr,
       net_incremental_acv,
       sales_qualified_source,
-      incremental_acv,
+      incremental_acv
 
       -- Channel Org. fields
       -- this fields should be changed to this historical version
-      deal_path,
-      dr_partner_deal_type,
-      dr_partner_engagement,
-      partner_account,
-      dr_status,
-      distributor,
-      influence_partner,
-      fulfillment_partner,
-      platform_partner,
-      partner_track,
-      is_public_sector_opp,
-      is_registration_from_portal,
-      calculated_discount,
-      partner_discount,
-      partner_discount_calc,
-      comp_channel_neutral
+      --deal_path,
+      --dr_partner_deal_type,
+      --dr_partner_engagement,
+      --partner_account,
+      --dr_status,
+      --distributor,
+      --influence_partner,
+      --fulfillment_partner,
+      --platform_partner,
+      --partner_track,
+      --is_public_sector_opp,
+      --is_registration_from_portal,
+      --calculated_discount,
+      --partner_discount,
+      --partner_discount_calc,
+      --comp_channel_neutral
 
     FROM {{ref('wk_sales_sfdc_opportunity_xf')}}  
 
@@ -214,6 +210,37 @@ WITH date_details AS (
       sfdc_opportunity_snapshot_history.record_type_id,
       --sfdc_opportunity_snapshot_history.opportunity_category,
 
+      -- Channel Org. fields
+      -- this fields should be changed to this historical version
+      sfdc_opportunity_snapshot_history.deal_path,
+      sfdc_opportunity_snapshot_history.dr_partner_deal_type,
+      sfdc_opportunity_snapshot_history.dr_partner_engagement,
+      sfdc_opportunity_snapshot_history.partner_account,
+      sfdc_opportunity_snapshot_history.dr_status,
+      sfdc_opportunity_snapshot_history.distributor,
+      sfdc_opportunity_snapshot_history.influence_partner,
+      sfdc_opportunity_snapshot_history.fulfillment_partner,
+      sfdc_opportunity_snapshot_history.platform_partner,
+      sfdc_opportunity_snapshot_history.partner_track,
+      sfdc_opportunity_snapshot_history.is_public_sector_opp,
+      sfdc_opportunity_snapshot_history.is_registration_from_portal,
+      sfdc_opportunity_snapshot_history.calculated_discount,
+      sfdc_opportunity_snapshot_history.partner_discount,
+      sfdc_opportunity_snapshot_history.partner_discount_calc,
+      sfdc_opportunity_snapshot_history.comp_channel_neutral,
+
+      CASE 
+        WHEN sfdc_opportunity_snapshot_history.deal_path = 'Direct'
+          THEN 'Direct'
+        WHEN sfdc_opportunity_snapshot_history.deal_path = 'Web Direct'
+          THEN 'Web Direct' 
+        WHEN sfdc_opportunity_snapshot_history.deal_path = 'Channel' 
+            AND sfdc_opportunity_snapshot_history.sales_qualified_source = 'Channel Generated' 
+          THEN 'Partner Sourced'
+        WHEN sfdc_opportunity_snapshot_history.deal_path = 'Channel' 
+            AND sfdc_opportunity_snapshot_history.sales_qualified_source != 'Channel Generated' 
+          THEN 'Partner Co-Sell'
+      END                                                         AS deal_path_engagement,
 
       --date helpers
 
@@ -529,24 +556,6 @@ WITH date_details AS (
           THEN sfdc_opportunity_xf.stage_1_fiscal_quarter_date 
         ELSE NULL
       END                                               AS stage_1_fiscal_quarter_date,
-
-      -- Channel Org. fields
-      sfdc_opportunity_xf.deal_path,
-      sfdc_opportunity_xf.dr_partner_deal_type,
-      sfdc_opportunity_xf.dr_partner_engagement,
-      sfdc_opportunity_xf.partner_account,
-      sfdc_opportunity_xf.dr_status,
-      sfdc_opportunity_xf.distributor,
-      sfdc_opportunity_xf.influence_partner,
-      sfdc_opportunity_xf.fulfillment_partner,
-      sfdc_opportunity_xf.platform_partner,
-      sfdc_opportunity_xf.partner_track,
-      sfdc_opportunity_xf.is_public_sector_opp,
-      sfdc_opportunity_xf.is_registration_from_portal,
-      sfdc_opportunity_xf.calculated_discount,
-      sfdc_opportunity_xf.partner_discount,
-      sfdc_opportunity_xf.partner_discount_calc,
-      sfdc_opportunity_xf.comp_channel_neutral,
 
       ------------------------------------------------------------------------------------------------------
       ------------------------------------------------------------------------------------------------------
