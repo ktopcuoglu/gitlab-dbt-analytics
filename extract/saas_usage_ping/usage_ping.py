@@ -60,6 +60,9 @@ class UsagePing(object):
             except SQLAlchemyError as e:
                 error = str(e.__dict__["orig"])
                 data_to_write = error
+            except KeyError as k:
+                error = "Empty dataframe"
+                data_to_write = error
 
             results_all[key] = data_to_write
 
