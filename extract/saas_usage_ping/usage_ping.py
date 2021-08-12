@@ -17,6 +17,7 @@ from gitlabdata.orchestration_utils import (
 from sqlalchemy.exc import SQLAlchemyError
 from logging import error, info, basicConfig, getLogger, warning
 
+
 class UsagePing(object):
     def __init__(self, ping_date=None):
         self.config_vars = env.copy()
@@ -34,7 +35,9 @@ class UsagePing(object):
         can be updated to query an end point or query other functions
         to generate the {ping_name: sql_query} dictionary
         """
-        with open(os.path.join(os.path.dirname(__file__), "transformed_instance_queries.json")) as f:
+        with open(
+            os.path.join(os.path.dirname(__file__), "transformed_instance_queries.json")
+        ) as f:
             saas_queries = json.load(f)
 
         return saas_queries
