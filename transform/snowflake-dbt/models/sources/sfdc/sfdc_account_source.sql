@@ -140,15 +140,20 @@ WITH source AS (
       locally_Managed__c                            AS is_locally_managed_account,
       strategic__c                                  AS is_strategic_account,
 
-     -- ************************************
-     -- New SFDC Account Fields for FY22 Planning
-     next_fy_account_owner_temp__c                  AS next_fy_account_owner_temp,
-     next_fy_planning_notes_temp__c                 AS next_fy_planning_notes_temp,
-     next_fy_tsp_territory_temp__c                  AS next_fy_tsp_territory_temp,
-     next_fy_user_area_temp__c                      AS next_fy_user_area_temp,
-     next_fy_user_geo_temp__c                       AS next_fy_user_geo_temp,
-     next_fy_user_region_temp__c                    AS next_fy_user_region_temp,
-     next_fy_user_segment_temp__c                   AS next_fy_user_segment_temp,
+      -- ************************************
+      -- New SFDC Account Fields for FY22 Planning
+      next_fy_account_owner_temp__c                  AS next_fy_account_owner_temp,
+      next_fy_planning_notes_temp__c                 AS next_fy_planning_notes_temp,
+      next_fy_tsp_territory_temp__c                  AS next_fy_tsp_territory_temp,
+      next_fy_user_area_temp__c                      AS next_fy_user_area_temp,
+      next_fy_user_geo_temp__c                       AS next_fy_user_geo_temp,
+      next_fy_user_region_temp__c                    AS next_fy_user_region_temp,
+      next_fy_user_segment_temp__c                   AS next_fy_user_segment_temp,
+
+      --*************************************
+      -- Partner Account fields
+      partner_track__c                              AS partner_track,
+      partners_partner_type__c                      AS partners_partner_type,
 
       -- metadata
       createdbyid                                   AS created_by_id,

@@ -1,3 +1,11 @@
+{% docs mart_ci_runner_activity_monthly %}
+
+Mart table containing quantitative data related to CI runner activity on GitLab.com.
+
+These metrics are aggregated at a monthly grain per `dim_namespace_id`.
+
+{% enddocs %}
+
 {% docs mart_estimated_xmau %}
 
 Documentation around Estimated [xMAU methodology is explained here](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/xmau-analysis/estimation-xmau-algorithm.html)
