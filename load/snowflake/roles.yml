@@ -22,6 +22,11 @@ databases:
     - testing_db:
         shared: no
 
+    - csharp_prod:
+        shared: no
+    - csharp_prep:
+        shared: no   
+
     - dpeterson_prod:
         shared: no
     - dpeterson_prep:
@@ -106,6 +111,11 @@ databases:
         shared: no
     - parmstrong_prep:
         shared: no
+
+    - pempey_prod:
+        shared: no
+    - pempey_prep:
+        shared: no    
 
     - rbacovic_prod:
         shared: no
@@ -740,6 +750,7 @@ roles:
             - boneyard
             - dbt_analytics
             - snowflake_db
+            - restricted_finance #this is about to move when POC for RBAC is completed
         privileges:
             databases:
                 read:
@@ -762,20 +773,6 @@ roles:
             - boneyard
             - dbt_analytics
             - snowflake_db
-
-    - restricted_finance:
-        warehouses:
-            - reporting
-        privileges:
-            databases:
-                read:
-                    - prod
-            schemas:
-                read:
-                    - prod.restricted_finance_*
-            tables:
-                read:
-                    - prod.restricted_finance_*.*
 
     - transformer: # For automated jobs
         warehouses:
@@ -1659,6 +1656,26 @@ roles:
                 read:
                     - prep.pmg.*
 
+    - restricted_finance:
+        warehouses:
+            - reporting
+        privileges:
+            databases:
+                read:
+                    - prod
+            schemas:
+                read:
+                    - prod.restricted_finance_common
+                    - prod.restricted_finance_common_mapping
+                    - prod.restricted_finance_common_mart_sales
+                    - prod.restricted_finance_legacy
+            tables:
+                read:
+                    - prod.restricted_finance_common.*
+                    - prod.restricted_finance_common_mapping.*
+                    - prod.restricted_finance_common_mart_sales.*
+                    - prod.restricted_finance_legacy.*
+
     - salesforce:
         warehouses:
             - analyst_xs
@@ -2093,6 +2110,47 @@ roles:
         warehouses:
             - analyst_xs
 
+    - csharp:
+        member_of:
+            - engineer
+        warehouses:
+            - engineer_xs
+            - engineer_xl
+            - loading
+            - reporting
+        owns:
+            databases:
+                - csharp_prep
+                - csharp_prod
+            schemas:
+                - csharp_prep.*
+                - csharp_prod.*
+            tables:
+                - csharp_prep.*.*
+                - csharp_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - csharp_prep
+                    - csharp_prod
+                write:
+                    - csharp_prep
+                    - csharp_prod
+            schemas:
+                read:
+                    - csharp_prep.*
+                    - csharp_prod.*
+                write:
+                    - csharp_prep.*
+                    - csharp_prod.*
+            tables:
+                read:
+                    - csharp_prep.*.*
+                    - csharp_prod.*.*
+                write:
+                    - csharp_prep.*.*
+                    - csharp_prod.*.*        
+
     - daruwajoye:
         member_of:
             - analyst_finance
@@ -2420,7 +2478,14 @@ roles:
            - analyst_engineering
         warehouses:
            - analyst_xs
-      
+
+    - jahye:
+        member_of:
+            - reporter
+            - analyst_marketing
+        warehouses:
+            - analyst_xs
+    
     - jameson:
         member_of:
             - analyst_marketing
@@ -2441,10 +2506,8 @@ roles:
             - reporting
 
     - jmitchell:
-        member_of:
-            - bamboohr_sensitive_separations
-        warehouses:
-            - analyst_xs
+        member_of: []
+        warehouses: []
 
     - jng:
         member_of:
@@ -3142,6 +3205,47 @@ roles:
         warehouses:
             - analyst_xs
 
+    - pempey:
+        member_of:
+            - engineer
+        warehouses:
+            - engineer_xs
+            - engineer_xl
+            - loading
+            - reporting
+        owns:
+            databases:
+                - pempey_prep
+                - pempey_prod
+            schemas:
+                - pempey_prep.*
+                - pempey_prod.*
+            tables:
+                - pempey_prep.*.*
+                - pempey_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - pempey_prep
+                    - pempey_prod
+                write:
+                    - pempey_prep
+                    - pempey_prod
+            schemas:
+                read:
+                    - pempey_prep.*
+                    - pempey_prod.*
+                write:
+                    - pempey_prep.*
+                    - pempey_prod.*
+            tables:
+                read:
+                    - pempey_prep.*.*
+                    - pempey_prod.*.*
+                write:
+                    - pempey_prep.*.*
+                    - pempey_prod.*.*
+
     - periscope:
         warehouses:
             - reporting
@@ -3297,6 +3401,13 @@ roles:
             - product_manager
             - snowplow
             - reporter
+        warehouses:
+            - reporting
+
+    - sisense_restricted_finance:
+        member_of:
+            - reporter
+            - restricted_finance
         warehouses:
             - reporting
 
@@ -3734,6 +3845,11 @@ users:
         member_of:
             - cmestel
 
+    - csharp:
+        can_login: yes
+        member_of:
+            - csharp        
+
     - daruwajoye:
         can_login: yes
         member_of:
@@ -3873,6 +3989,10 @@ users:
         member_of:
             - iwiedler
 
+    - jahye:
+        can_login: yes
+        member_of:
+            - jahye
     - jameson:
         can_login: yes
         member_of:
@@ -3894,9 +4014,8 @@ users:
             - jng
 
     - jmitchell:
-        can_login: yes
-        member_of:
-            - jmitchell
+        can_login: no
+        member_of: []
 
     - jmahdi:
         can_login: no
@@ -3978,7 +4097,7 @@ users:
     - kchen:
         can_login: yes
         member_of:
-            - vjallipalli
+            - kchen
 
     - kchu:
         can_login: yes
@@ -4139,12 +4258,16 @@ users:
         member_of:
             - pegan
 
+    - pempey:
+        can_login: yes
+        member_of:
+            - pempey        
+
     - periscope:
         can_login: yes
         member_of:
             - periscope
             - reporter
-            - restricted_finance #this is about to move when POC for RBAC is completed
 
     - periscope_sensitive:
         can_login: no
@@ -4227,8 +4350,7 @@ users:
     - sisense_restricted_finance:
         can_login: yes
         member_of:
-            - restricted_finance 
-            - reporter           
+            - sisense_restricted_finance           
 
     - snalamaru:
         can_login: yes

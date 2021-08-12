@@ -6,7 +6,7 @@
 
 WITH prep_usage_data_flattened AS ( 
   
-    SELECT * FROM {{ ref('prep_usage_data_flattened')}}
+    SELECT * FROM {{ ref('poc_prep_usage_data_flattened')}}
     {% if is_incremental() %}
 
       WHERE created_at >= (SELECT MAX(created_at) FROM {{this}})

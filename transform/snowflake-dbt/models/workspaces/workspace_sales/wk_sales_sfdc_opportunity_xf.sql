@@ -60,7 +60,7 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity_xf.stage_is_active,
       sfdc_opportunity_xf.stage_is_closed,
       sfdc_opportunity_xf.technical_evaluation_date,
-      sfdc_opportunity_xf.deal_path,
+
       sfdc_opportunity_xf.acv,
       sfdc_opportunity_xf.amount,
       sfdc_opportunity_xf.closed_deals,
@@ -184,7 +184,7 @@ WITH sfdc_opportunity AS (
       -----------------------------------------------------------
       -----------------------------------------------------------
       -- Channel Org. fields
-
+      sfdc_opportunity_xf.deal_path,
       sfdc_opportunity_xf.dr_partner_deal_type,
       sfdc_opportunity_xf.dr_partner_engagement,
       sfdc_opportunity_xf.partner_account,
@@ -201,12 +201,24 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity_xf.partner_discount_calc,
       sfdc_opportunity_xf.comp_channel_neutral,
     
+      CASE 
+        WHEN sfdc_opportunity_xf.deal_path = 'Direct'
+          THEN 'Direct'
+        WHEN sfdc_opportunity_xf.deal_path = 'Web Direct'
+          THEN 'Web Direct' 
+        WHEN sfdc_opportunity_xf.deal_path = 'Channel' 
+            AND sfdc_opportunity_xf.sales_qualified_source = 'Channel Generated' 
+          THEN 'Partner Sourced'
+        WHEN sfdc_opportunity_xf.deal_path = 'Channel' 
+            AND sfdc_opportunity_xf.sales_qualified_source != 'Channel Generated' 
+          THEN 'Partner Co-Sell'
+      END                                                         AS deal_path_engagement,
+
       sfdc_opportunity_xf.stage_name_3plus,
       sfdc_opportunity_xf.stage_name_4plus,
       sfdc_opportunity_xf.is_stage_3_plus,
       sfdc_opportunity_xf.is_lost,
       
-    
       -- NF: Added the 'Duplicate' stage to the is_open definition
       --sfdc_opportunity_xf.is_open,
       CASE 
@@ -565,20 +577,22 @@ WITH sfdc_opportunity AS (
 
       -- extended version of the deal size
       CASE 
-        WHEN net_arr > 0 AND net_arr < 5000 
-          THEN '1. (0k -5k)'
-        WHEN net_arr >=5000 AND net_arr < 25000 
-          THEN '2. (5k - 25k)'
-        WHEN net_arr >=25000 AND net_arr < 100000 
-          THEN '3. (25k - 100k)'
+        WHEN net_arr > 0 AND net_arr < 1000 
+          THEN '1. (0k -1k)'
+        WHEN net_arr >=1000 AND net_arr < 10000 
+          THEN '2. (1k - 10k)'
+        WHEN net_arr >=10000 AND net_arr < 50000 
+          THEN '3. (10k - 50k)'
+        WHEN net_arr >=50000 AND net_arr < 100000 
+          THEN '4. (50k - 100k)'
         WHEN net_arr >= 100000 AND net_arr < 250000 
-          THEN '4. (100k - 250k)'
+          THEN '5. (100k - 250k)'
         WHEN net_arr >= 250000 AND net_arr < 500000 
-          THEN '5. (250k - 500k)'
+          THEN '6. (250k - 500k)'
         WHEN net_arr >= 500000 AND net_arr < 1000000 
-          THEN '6. (500k-1000k)'
+          THEN '7. (500k-1000k)'
         WHEN net_arr >= 1000000 
-          THEN '7. (>1000k)'
+          THEN '8. (>1000k)'
         ELSE 'Other' 
       END                                                           AS calculated_deal_size,
 
@@ -639,7 +653,7 @@ WITH sfdc_opportunity AS (
           AND oppty_final.order_type_stamped IN ('1. New - First Order','2. New - Connected','3. Growth')
           -- Exclude Decomissioned as they are not aligned to the real owner
           -- Contract Reset, Decomission
-          AND oppty_final.forecast_category_name IN ('Standard','Ramp Deal','Internal Correction')
+          AND oppty_final.opportunity_category IN ('Standard','Ramp Deal','Internal Correction')
           -- Web Purchase have no Net ARR before reconciliation, exclude those 
           -- from ASP analysis
           AND ((oppty_final.is_web_portal_purchase = 1 
@@ -648,26 +662,43 @@ WITH sfdc_opportunity AS (
           -- Not JiHu
             THEN 1
           ELSE 0
-      END                                                           AS is_asp_eligible_flag,
+      END                                                           AS is_eligible_asp_analysis_flag,
 
       CASE 
         WHEN oppty_final.is_edu_oss = 0
           AND oppty_final.is_deleted = 0
           -- Renewals are not having the same motion as rest of deals
           AND oppty_final.is_renewal = 0
-          -- For ASP we care mainly about add on, new business
+          -- For stage age we exclude only ps/other
           AND oppty_final.order_type_stamped IN ('1. New - First Order','2. New - Connected','3. Growth','4. Contraction','6. Churn - Final','5. Churn - Partial')
           -- Only include deal types with meaningful journeys through the stages
-          AND oppty_final.forecast_category_name IN ('Standard','Ramp Deal','Decommissioned')
+          AND oppty_final.opportunity_category IN ('Standard','Ramp Deal','Decommissioned')
           -- Web Purchase have a different dynamic and should not be included
           AND oppty_final.is_web_portal_purchase = 0
           -- Not JiHu
             THEN 1
           ELSE 0
-      END                                                           AS is_stage_age_eligible_flag,
+      END                                                           AS is_elgible_age_analysis_flag,
 
-    -- is_stage_age_eligible_flag,
-    -- is_booked_churn_contraction_eligible_flag
+      CASE
+        WHEN oppty_final.is_edu_oss = 0
+          AND oppty_final.is_deleted = 0
+          AND (oppty_final.is_won = 1 
+              OR (oppty_final.is_renewal = 1 AND oppty_final.is_lost = 1))
+          AND oppty_final.order_type_stamped IN ('1. New - First Order','2. New - Connected','3. Growth','4. Contraction','6. Churn - Final','5. Churn - Partial')
+          -- Not JiHu
+            THEN 1
+          ELSE 0
+      END                                                           AS is_eligible_net_arr_flag,
+
+      CASE
+        WHEN oppty_final.is_edu_oss = 0
+          AND oppty_final.is_deleted = 0
+          AND oppty_final.order_type_stamped IN ('4. Contraction','6. Churn - Final','5. Churn - Partial')
+          -- Not JiHu
+            THEN 1
+          ELSE 0
+      END                                                           AS is_eligible_churn_contraction_flag,
 
       -- compound metrics to facilitate reporting
       -- created and closed within the quarter net arr

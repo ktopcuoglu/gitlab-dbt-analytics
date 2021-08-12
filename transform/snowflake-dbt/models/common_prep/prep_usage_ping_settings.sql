@@ -1,3 +1,7 @@
+{{ config(
+    tags=["product"]
+) }}
+
 {%- set settings_columns = dbt_utils.get_column_values(table=ref('prep_usage_ping_metrics_setting'), column='metrics_path', max_records=1000, default=['']) %}
 
 {{ simple_cte([
@@ -27,7 +31,7 @@
 ), settings_data AS (
 
     SELECT
-      ping_id AS dim_usage_ping_id,
+      dim_usage_ping_id,
       {% for column in settings_columns %}
         MAX(IFF(prep_usage_data_flattened.metrics_path = '{{column}}', metric_value, NULL)) AS {{column | replace(".","_")}}
         {{ "," if not loop.last }}

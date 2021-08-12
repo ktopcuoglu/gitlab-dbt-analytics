@@ -1,16 +1,16 @@
 /* grain: one record per host per metric per month */
 
-WITH flattened_usage_data AS (
-
-    SELECT * 
-    FROM {{ ref('prep_usage_data_flattened') }}
-
-), dim_gitlab_releases AS (
-  
-    SELECT *
-    FROM {{ ref('dim_gitlab_releases') }}
-
-), transformed AS (
+{{ simple_cte([('dim_billing_account', 'dim_billing_account'),
+                ('dim_crm_account', 'dim_crm_account'),
+                ('dim_date', 'dim_date'),
+                ('dim_instances', 'dim_instances'),
+                ('dim_licenses', 'dim_licenses'),
+                ('dim_product_detail', 'dim_product_detail')
+                ]
+                )
+}}
+                
+, transformed AS (
   
     SELECT DISTINCT
       metrics_path, 

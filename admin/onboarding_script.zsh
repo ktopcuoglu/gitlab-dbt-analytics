@@ -58,7 +58,7 @@ echo "dbt profile created.. You will need to edit this file later."
 ## you will need to edit this file
 ## install visual studio code
 echo "Installing VS Code.."
-brew cask install visual-studio-code
+brew install cask visual-studio-code
 ## this might ask you for your password
 code --version
 echo "VS Code successfully installed"
