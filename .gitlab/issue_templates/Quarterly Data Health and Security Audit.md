@@ -73,32 +73,7 @@ SISENSE
 1. [ ] Validate terminated employees have been removed from Sisense access.
     <details>
 
-     ```sql
-     
-    WITH FINAL AS (
-        
-        SELECT 
-          MAX(date_actual) AS date_actual, 
-          full_name,
-          work_email, 
-          is_termination_date 
-        FROM legacy.employee_directory_analysis 
-        GROUP BY 2,3,4 )
 
-    SELECT   
-       FINAL.full_name, 
-       sisense.email_address , 
-       FINAL.is_termination_date ,
-       FINAL.date_actual
-    FROM  FINAL
-    INNER JOIN legacy.sheetload_sisense_users sisense 
-    ON  FINAL.full_name = concat(sisense.first_name,' ', sisense.last_name) 
-    AND FINAL.work_email = sisense.email_address  
-    AND FINAL.is_termination_date = 'TRUE' 
-    GROUP BY 1,2,3,4
-    ORDER BY 1 ;
-    
-     ```
 
 
 2. [ ] De-activate any account that has not logged-in within the past 60 days from the moment of performing audit from Sisense.
