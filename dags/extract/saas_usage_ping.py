@@ -20,7 +20,7 @@ from kube_secrets import (
     SNOWFLAKE_LOAD_PASSWORD,
     SNOWFLAKE_PASSWORD,
     SNOWFLAKE_USER,
-    GITLAB_ANALYTICS_PRIVATE_TOKEN
+    GITLAB_ANALYTICS_PRIVATE_TOKEN,
 )
 
 # Load the env vars into a dict and set env vars
