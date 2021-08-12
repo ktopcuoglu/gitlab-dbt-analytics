@@ -4086,7 +4086,7 @@ users:
     - kchen:
         can_login: yes
         member_of:
-            - vjallipalli
+            - kchen
 
     - kchu:
         can_login: yes
