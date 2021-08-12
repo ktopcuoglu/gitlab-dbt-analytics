@@ -1,9 +1,9 @@
 connection_info:
-  database: GITLAB_COM_SCD_CI_DB_NAME
-  host: GITLAB_COM_SCD_CI_DB_HOST
-  pass: GITLAB_COM_SCD_CI_DB_PASS
-  port: GITLAB_COM_SCD_CI_DB_PORT
-  user: GITLAB_COM_SCD_CI_DB_USER
+  database: GITLAB_COM_CI_DB_NAME
+  host: GITLAB_COM_CI_DB_HOST
+  pass: GITLAB_COM_CI_DB_PASS
+  port: GITLAB_COM_CI_DB_PORT
+  user: GITLAB_COM_CI_DB_USER
 tables:
   ci_build_trace_chunks:
     dbt_source_model: true
