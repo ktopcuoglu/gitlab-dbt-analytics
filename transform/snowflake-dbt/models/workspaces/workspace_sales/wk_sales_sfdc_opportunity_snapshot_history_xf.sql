@@ -230,15 +230,15 @@ WITH date_details AS (
       sfdc_opportunity_snapshot_history.comp_channel_neutral,
 
       CASE 
-        WHEN sfdc_opportunity_xf.deal_path = 'Direct'
+        WHEN sfdc_opportunity_snapshot_history.deal_path = 'Direct'
           THEN 'Direct'
-        WHEN sfdc_opportunity_xf.deal_path = 'Web Direct'
+        WHEN sfdc_opportunity_snapshot_history.deal_path = 'Web Direct'
           THEN 'Web Direct' 
-        WHEN sfdc_opportunity_xf.deal_path = 'Channel' 
-            AND sfdc_opportunity_xf.sales_qualified_source = 'Channel Generated' 
+        WHEN sfdc_opportunity_snapshot_history.deal_path = 'Channel' 
+            AND sfdc_opportunity_snapshot_history.sales_qualified_source = 'Channel Generated' 
           THEN 'Partner Sourced'
-        WHEN sfdc_opportunity_xf.deal_path = 'Channel' 
-            AND sfdc_opportunity_xf.sales_qualified_source != 'Channel Generated' 
+        WHEN sfdc_opportunity_snapshot_history.deal_path = 'Channel' 
+            AND sfdc_opportunity_snapshot_history.sales_qualified_source != 'Channel Generated' 
           THEN 'Partner Co-Sell'
       END                                                         AS deal_path_engagement,
 
