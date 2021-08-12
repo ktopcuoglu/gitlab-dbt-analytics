@@ -112,6 +112,11 @@ databases:
     - parmstrong_prep:
         shared: no
 
+    - pempey_prod:
+        shared: no
+    - pempey_prep:
+        shared: no    
+
     - rbacovic_prod:
         shared: no
     - rbacovic_prep:
@@ -3193,6 +3198,47 @@ roles:
         warehouses:
             - analyst_xs
 
+    - pempey:
+        member_of:
+            - engineer
+        warehouses:
+            - engineer_xs
+            - engineer_xl
+            - loading
+            - reporting
+        owns:
+            databases:
+                - pempey_prep
+                - pempey_prod
+            schemas:
+                - pempey_prep.*
+                - pempey_prod.*
+            tables:
+                - pempey_prep.*.*
+                - pempey_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - pempey_prep
+                    - pempey_prod
+                write:
+                    - pempey_prep
+                    - pempey_prod
+            schemas:
+                read:
+                    - pempey_prep.*
+                    - pempey_prod.*
+                write:
+                    - pempey_prep.*
+                    - pempey_prod.*
+            tables:
+                read:
+                    - pempey_prep.*.*
+                    - pempey_prod.*.*
+                write:
+                    - pempey_prep.*.*
+                    - pempey_prod.*.*
+
     - periscope:
         warehouses:
             - reporting
@@ -4200,6 +4246,11 @@ users:
         can_login: yes
         member_of:
             - pegan
+
+    - pempey:
+        can_login: yes
+        member_of:
+            - pempey        
 
     - periscope:
         can_login: yes
