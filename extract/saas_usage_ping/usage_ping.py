@@ -1,37 +1,21 @@
 import datetime
 import json
 import logging
-import re
 import os
 import sys
 from os import environ as env
 from typing import Dict, List
 
 import pandas as pd
-import sqlparse
-import sql_metadata
 
 from fire import Fire
-from flatten_dict import flatten
 from gitlabdata.orchestration_utils import (
     dataframe_uploader,
     dataframe_enricher,
     snowflake_engine_factory,
 )
-from pprint import pprint
-from sqlalchemy.engine.base import Engine
 from sqlalchemy.exc import SQLAlchemyError
-from sqlparse.sql import (
-    Identifier,
-    IdentifierList,
-    remove_quotes,
-    Token,
-    TokenList,
-    Where,
-)
-from sqlparse.tokens import Keyword, Name, Punctuation, String, Whitespace
-from sqlparse.utils import imt
-
+from logging import error, info, basicConfig, getLogger, warning
 
 class UsagePing(object):
     def __init__(self, ping_date=None):
@@ -50,7 +34,7 @@ class UsagePing(object):
         can be updated to query an end point or query other functions
         to generate the {ping_name: sql_query} dictionary
         """
-        with open(os.path.join(os.path.dirname(__file__), "all_sql_queries.json")) as f:
+        with open(os.path.join(os.path.dirname(__file__), "transformed_instance_queries.json")) as f:
             saas_queries = json.load(f)
 
         return saas_queries
@@ -70,6 +54,7 @@ class UsagePing(object):
             logging.info(f"Running ping {key}...")
             try:
                 results = pd.read_sql(sql=query, con=connection)
+                info(results)
                 counter_value = results.loc[0, "counter_value"]
                 data_to_write = str(counter_value)
             except SQLAlchemyError as e:
@@ -78,6 +63,7 @@ class UsagePing(object):
 
             results_all[key] = data_to_write
 
+        info("Processed queries")
         connection.close()
         self.loader_engine.dispose()
 
