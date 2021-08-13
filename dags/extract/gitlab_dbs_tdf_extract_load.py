@@ -48,9 +48,9 @@ standard_secrets = [
 # Create Dictionary entry for Data Quality check. This is seprate from above to avoid duplicate DAG creation.
 
 config_dict_td_pgp = {
-    "gitlab_com_data_reconciliation_extract_load": {
+    "el_gitlab_com_trusted_data_extract_load": {
         "cloudsql_instance_name": None,
-        "dag_name": "gitlab_com_data_reconciliation_extract_load",
+        "dag_name": "el_gitlab_com_trusted_data_extract_load",
         "dbt_name": "None",
         "env_vars": {},
         "extract_schedule_interval": "0 9 */1 * *",
@@ -60,6 +60,23 @@ config_dict_td_pgp = {
             GITLAB_COM_DB_HOST,
             GITLAB_COM_DB_NAME,
             GITLAB_COM_PG_PORT,
+        ],
+        "start_date": datetime(2021, 5, 21),
+        "sync_schedule_interval": None,
+        "task_name": "gitlab-com",
+    },
+    "el_gitlab_com_trusted_data_extract_load_ci": {
+        "cloudsql_instance_name": None,
+        "dag_name": "el_gitlab_com_trusted_data_extract_load_ci",
+        "dbt_name": "None",
+        "env_vars": {},
+        "extract_schedule_interval": "0 9 */1 * *",
+        "secrets": [
+          GITLAB_COM_CI_DB_NAME,
+          GITLAB_COM_CI_DB_HOST,
+          GITLAB_COM_CI_DB_PASS,
+          GITLAB_COM_CI_DB_PORT,
+          GITLAB_COM_CI_DB_USER,
         ],
         "start_date": datetime(2021, 5, 21),
         "sync_schedule_interval": None,
@@ -98,7 +115,7 @@ for source_name, config in config_dict_td_pgp.items():
     with data_quality_dag:
 
         # PGP Extract
-        file_path = f"analytics/extract/postgres_pipeline/manifests/{config['dag_name']}_db_manifest.yaml"
+        file_path = f"analytics/extract/postgres_pipeline/manifests_decomposed/{config['dag_name']}_db_manifest.yaml"
         manifest = extract_manifest(file_path)
         table_list = extract_table_list_from_manifest(manifest)
         for table in table_list:
@@ -111,7 +128,7 @@ for source_name, config in config_dict_td_pgp.items():
             td_pgp_extract_cmd = f"""
             {clone_repo_cmd} &&
             cd analytics/extract/postgres_pipeline/postgres_pipeline/ &&
-            python main.py tap ../manifests/{config["dag_name"]}_db_manifest.yaml --load_type trusted_data --load_only_table {table}
+            python main.py tap ../manifests_decomposed/{config["dag_name"]}_db_manifest.yaml --load_type trusted_data --load_only_table {table}
         """
             td_pgp_extract = KubernetesPodOperator(
                 **gitlab_defaults,
@@ -135,4 +152,4 @@ for source_name, config in config_dict_td_pgp.items():
             )
             td_pgp_extract
 
-    globals()[f"{config['dag_name']}_td_pgp_extract"] = td_pgp_extract
+    globals()[f"{config['dag_name']}_td_pgp_extract"] = data_quality_dag
