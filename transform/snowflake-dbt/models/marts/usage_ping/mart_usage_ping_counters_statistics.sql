@@ -1,11 +1,7 @@
 /* grain: one record per host per metric per month */
 
-{{ simple_cte([('dim_billing_account', 'dim_billing_account'),
-                ('dim_crm_account', 'dim_crm_account'),
-                ('dim_date', 'dim_date'),
-                ('dim_instances', 'dim_instances'),
-                ('dim_licenses', 'dim_licenses'),
-                ('dim_product_detail', 'dim_product_detail')
+{{ simple_cte([('flattened_usage_data', 'prep_usage_data_flattende'),
+                ('dim_gitlab_releases', 'dim_gitlab_releases'),
                 ]
                 )
 }}
