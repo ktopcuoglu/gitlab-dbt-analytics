@@ -70,13 +70,12 @@ dag = DAG(
 
 clone_table_config = [
         {
-            "table_name": "",
-            "source_database": "",
-            "source_schema": "",
-            "source_table": "",
-            "target_schema": "",
-            "target_database": "",
-
+            "table_name": "mart_arr",
+            "source_database": "PROD",
+            "source_schema": "common_mart_sales",
+            "source_table": "mart_arr",
+            "target_schema": "full_table_clones",
+            "target_database": "RAW",
         },
 ]
 
@@ -84,6 +83,7 @@ clone_cmd = "python3 manage_snowflake.py create-table-clone --source_database PR
 
 for config in clone_table_config:
     target_table_name = f"'{config.get('table_name')}_$CLONE_NAME_DATE'"
+
     container_cmd = f"""
         {clone_repo_cmd} &&
         export PYTHONPATH="$CI_PROJECT_DIR/orchestration/:$PYTHONPATH" &&
