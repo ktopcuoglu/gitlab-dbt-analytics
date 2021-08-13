@@ -1,0 +1,5 @@
+version: 2
+
+models:
+  - name: mart_arr_table_clones
+    description: Source layer for all snapshots of Snowflake roles.
