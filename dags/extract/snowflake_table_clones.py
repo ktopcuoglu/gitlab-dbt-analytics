@@ -79,8 +79,6 @@ clone_table_config = [
         },
 ]
 
-clone_cmd = "python3 manage_snowflake.py create-table-clone --source_database PROD --source_schema common_mart_sales --source_table mart_arr --target_database RAW --target_schema full_table_clones  --target_table 'mart_arr_$CLONE_NAME_DATE'"
-
 for config in clone_table_config:
     target_table_name = f"'{config.get('table_name')}_$CLONE_NAME_DATE'"
 
@@ -88,6 +86,7 @@ for config in clone_table_config:
         {clone_repo_cmd} &&
         export PYTHONPATH="$CI_PROJECT_DIR/orchestration/:$PYTHONPATH" &&
         cd analytics/orchestration/ &&
+    
     python3 manage_snowflake.py create-table-clone " \
         --source_database {config.get('source_database')} " \
         --source_schema {config.get('source_schema')} " \
