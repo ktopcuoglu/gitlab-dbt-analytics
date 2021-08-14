@@ -9,7 +9,7 @@ WITH date_spine AS (
 
 ), calculated as (
 
-    SELECT  
+    SELECT
       date_day,
       date_day                                                                                AS date_actual,
 
@@ -77,7 +77,7 @@ WITH date_spine AS (
         1, 'Q1',
         2, 'Q2',
         3, 'Q3',
-        4, 'Q4'))                                                                             AS fiscal_quarter_name,  
+        4, 'Q4'))                                                                             AS fiscal_quarter_name,
       ('FY' || SUBSTR(fiscal_quarter_name, 3, 7))                                             AS fiscal_quarter_name_fy,
       DENSE_RANK() OVER (ORDER BY fiscal_quarter_name)                                        AS fiscal_quarter_number_absolute,
       fiscal_year || '-' || MONTHNAME(date_day)                                               AS fiscal_month_name,
@@ -92,13 +92,14 @@ WITH date_spine AS (
       DATE_TRUNC('month', last_day_of_fiscal_quarter)                                         AS last_month_of_fiscal_quarter,
       IFF(DATE_TRUNC('month', last_day_of_fiscal_quarter) = date_actual, TRUE, FALSE)         AS is_first_day_of_last_month_of_fiscal_quarter,
       DATE_TRUNC('month', last_day_of_fiscal_year)                                            AS last_month_of_fiscal_year,
-      IFF(DATE_TRUNC('month', last_day_of_fiscal_year) = date_actual, TRUE, FALSE)            AS is_first_day_of_last_month_of_fiscal_year
+      IFF(DATE_TRUNC('month', last_day_of_fiscal_year) = date_actual, TRUE, FALSE)            AS is_first_day_of_last_month_of_fiscal_year,
+      DATEADD('day',7,DATEADD('month',1,first_day_of_month))                                  AS snapshot_date_fpa
 
     FROM date_spine
 
 )
 
-SELECT 
+SELECT
   date_day,
   date_actual,
   day_name,
@@ -140,5 +141,6 @@ SELECT
   last_month_of_fiscal_quarter,
   is_first_day_of_last_month_of_fiscal_quarter,
   last_month_of_fiscal_year,
-  is_first_day_of_last_month_of_fiscal_year
+  is_first_day_of_last_month_of_fiscal_year,
+  snapshot_date_fpa
 FROM calculated
