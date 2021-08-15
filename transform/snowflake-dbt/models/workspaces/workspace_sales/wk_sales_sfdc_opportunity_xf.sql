@@ -201,12 +201,24 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity_xf.partner_discount_calc,
       sfdc_opportunity_xf.comp_channel_neutral,
     
+      CASE 
+        WHEN sfdc_opportunity_xf.deal_path = 'Direct'
+          THEN 'Direct'
+        WHEN sfdc_opportunity_xf.deal_path = 'Web Direct'
+          THEN 'Web Direct' 
+        WHEN sfdc_opportunity_xf.deal_path = 'Channel' 
+            AND sfdc_opportunity_xf.sales_qualified_source = 'Channel Generated' 
+          THEN 'Partner Sourced'
+        WHEN sfdc_opportunity_xf.deal_path = 'Channel' 
+            AND sfdc_opportunity_xf.sales_qualified_source != 'Channel Generated' 
+          THEN 'Partner Co-Sell'
+      END                                                         AS deal_path_engagement,
+
       sfdc_opportunity_xf.stage_name_3plus,
       sfdc_opportunity_xf.stage_name_4plus,
       sfdc_opportunity_xf.is_stage_3_plus,
       sfdc_opportunity_xf.is_lost,
       
-    
       -- NF: Added the 'Duplicate' stage to the is_open definition
       --sfdc_opportunity_xf.is_open,
       CASE 

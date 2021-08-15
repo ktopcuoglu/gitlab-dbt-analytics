@@ -23,13 +23,16 @@ import requests
 
 def get_sql_query_map(private_token=None) -> str:
     headers = {
-    'PRIVATE-TOKEN': private_token,
+        "PRIVATE-TOKEN": private_token,
     }
 
-    response = requests.get('https://gitlab.com/api/v4/usage_data/queries', headers=headers)
+    response = requests.get(
+        "https://gitlab.com/api/v4/usage_data/queries", headers=headers
+    )
     json_data = json.loads(response.text)
 
     return json_data
+
 
 def sql_queries_dict(json_data: str) -> Dict[Any, Any]:
     """
@@ -175,7 +178,9 @@ if __name__ == "__main__":
     ## available here
 
     config_dict = env.copy()
-    json_data = get_sql_query_map(private_token=config_dict["GITLAB_ANALYTICS_PRIVATE_TOKEN"])
+    json_data = get_sql_query_map(
+        private_token=config_dict["GITLAB_ANALYTICS_PRIVATE_TOKEN"]
+    )
 
     sql_queries_dictionary = sql_queries_dict(json_data)
     info("Processed sql queries")

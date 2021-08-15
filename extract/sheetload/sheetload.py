@@ -11,7 +11,6 @@ import boto3
 import pandas as pd
 from fire import Fire
 from gitlabdata.orchestration_utils import (
-    postgres_engine_factory,
     snowflake_engine_factory,
     query_executor,
 )

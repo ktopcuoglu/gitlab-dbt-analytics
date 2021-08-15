@@ -18,6 +18,7 @@ from gitlabdata.orchestration_utils import (
 from sqlalchemy.exc import SQLAlchemyError
 from logging import error, info, basicConfig, getLogger, warning
 
+
 class UsagePing(object):
     def __init__(self, ping_date=None):
         self.config_vars = env.copy()
@@ -35,7 +36,9 @@ class UsagePing(object):
         can be updated to query an end point or query other functions
         to generate the {ping_name: sql_query} dictionary
         """
-        with open(os.path.join(os.path.dirname(__file__), "transformed_instance_queries.json")) as f:
+        with open(
+            os.path.join(os.path.dirname(__file__), "transformed_instance_queries.json")
+        ) as f:
             saas_queries = json.load(f)
 
         return saas_queries
@@ -60,6 +63,9 @@ class UsagePing(object):
                 data_to_write = str(counter_value)
             except SQLAlchemyError as e:
                 error = str(e.__dict__["orig"])
+                data_to_write = error
+            except KeyError as k:
+                error = "Empty dataframe"
                 data_to_write = error
 
             results_all[key] = data_to_write
