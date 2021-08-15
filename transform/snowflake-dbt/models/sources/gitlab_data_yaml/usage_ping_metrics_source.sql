@@ -27,7 +27,6 @@ WITH source AS (
       data_by_row['tier']                                    AS tier,
       data_by_row['time_frame']::TEXT                        AS time_frame,
       data_by_row['value_type']::TEXT                        AS value_type,
-      data_by_row['performance_indicator_type']::TEXT        AS performance_indicator_type,
       snapshot_date
     FROM intermediate
 
