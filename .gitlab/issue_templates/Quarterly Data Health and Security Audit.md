@@ -19,23 +19,22 @@ SNOWFLAKE
 
     ```sql
 
-     SELECT									
-       employee.employee_id,									
-       employee.first_name,									
-       employee.last_name,									
-       employee.hire_date,									
-       employee.rehire_date,									
-       snowflake.last_success_login,									
-       snowflake.created_on,									
-       employee.termination_date,									
-       snowflake.is_disabled									
-     FROM PREP."SENSITIVE"."EMPLOYEE_DIRECTORY" employee									
-     INNER JOIN  PROD."LEGACY"."SNOWFLAKE_SHOW_USERS" snowflake									
-     ON employee.FIRST_NAME = snowflake.FIRST_NAME									
-     AND employee.LAST_NAME = snowflake.LAST_NAME									
-     AND snowflake.is_disabled ='false'									
-     AND employee.termination_date IS NOT NULL									
-     AND (CASE WHEN snowflake.last_success_login IS NULL THEN snowflake.created_on ELSE snowflake.last_success_login END) <= employee.termination_date ;									
+      SELECT									 
+        employee.employee_id,									 
+        employee.first_name,									 
+        employee.last_name,									 
+        employee.hire_date,									 
+        employee.rehire_date,									 
+        snowflake.last_success_login,									 
+        snowflake.created_on,									 
+        employee.termination_date,									
+        snowflake.is_disabled									 
+      FROM prep.sensitive.employee_directory employee 									 
+      INNER JOIN prod.legacy.snowflake_show_users  snowflake									 
+      ON employee.first_name = snowflake.first_name									 
+      AND employee.last_name = snowflake.last_name									 
+      AND snowflake.is_disabled ='false'									 
+      AND employee.termination_date IS NOT  NULL;									
 
     ```
 
@@ -53,14 +52,13 @@ SNOWFLAKE
        snowflake.created_on,										
        employee.termination_date,										
        snowflake.is_disabled										
-     FROM PREP."SENSITIVE"."EMPLOYEE_DIRECTORY" employee										
-     INNER JOIN  PROD."LEGACY"."SNOWFLAKE_SHOW_USERS" snowflake										
-     ON employee.FIRST_NAME = snowflake.FIRST_NAME										
-     AND employee.LAST_NAME = snowflake.LAST_NAME										
+     FROM prep.sensitive.employee_directory employee										
+     INNER JOIN  prod.legacy.snowflake_show_users snowflake										
+     ON employee.first_name = snowflake.first_name										
+     AND employee.last_name = snowflake.last_name										
      AND snowflake.is_disabled ='false'										
      AND employee.termination_date IS NULL										
-     AND CASE WHEN snowflake.last_success_login IS null THEN snowflake.created_on ELSE snowflake.last_success_login END <= dateadd('day', -60, CURRENT_DATE())										
-    
+     AND CASE WHEN snowflake.last_success_login IS null THEN snowflake.created_on ELSE snowflake.last_success_login END <= dateadd('day', -60, CURRENT_DATE());										
     ```
   
 
