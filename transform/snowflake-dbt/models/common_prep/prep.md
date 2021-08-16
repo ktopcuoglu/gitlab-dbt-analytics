@@ -664,3 +664,33 @@ Prep table for the dim table `dim_deployment` that is not yet created.
 Prep table for the dim table `dim_package` that is not yet created. It is also used in the `prep_event` table
 
 {% enddocs %}
+
+{% docs prep_issue_severity %}
+
+Prep table used to get Severity field from GitLab Incident issues for the `dim_issue` table.
+
+More information about [GitLab Incidents here](https://docs.gitlab.com/ee/operations/incident_management/incidents.html)
+
+{% enddocs %}
+
+{% docs prep_label_links %}
+
+Prep table used to join GitLab Labels to Issues, Merge Requests, & Epics
+
+More information about [labels here](https://docs.gitlab.com/ee/user/project/labels.html)
+
+{% enddocs %}
+
+{% docs prep_labels %}
+
+Prep table used to build `dim_issues`, `dim_merge_requests`, `dim_epics` tables. Holds detailed information about the labels used across GitLab
+
+More information about [labels here](https://docs.gitlab.com/ee/user/project/labels.html)
+
+{% enddocs %}
+
+{% docs prep_issue_links %}
+
+Prep table used to build `dim_issue_links` This table shows relationships of GitLab issues to other GitLab issues. It represents linked issues, which you can learn more about [here](https://docs.gitlab.com/ee/user/project/issues/related_issues.html)
+
+{% enddocs %}
