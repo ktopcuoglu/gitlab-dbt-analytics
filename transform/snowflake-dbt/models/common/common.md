@@ -486,15 +486,6 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
-{% docs fct_usage_ping_payloads %}
-Factual table with metadata on usage ping payloads received.
-
-The grain of the table is a usage_ping_id.
-
-Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
-
-{% enddocs %}
-
 {% docs fct_usage_ping_payload %}
 Factual table with metadata on usage ping payloads received.
 
@@ -942,4 +933,15 @@ Some examples of analysis that were done with the legacy table `gitlab_dotcom_da
 1. [New Namespace Stage Adoption](https://app.periscopedata.com/app/gitlab/761347/Group-Namespace-Conversion-Metrics): Evaluate how often new namespaces are adopting stages such as 'Create' and 'Verify' within their first days of use.
 1. [Stages per Organization](https://app.periscopedata.com/app/gitlab/824044/Stages-per-Organization-Deep-Dive---SpO): Identify how namespaces adopt stages within their first days and how this correlates with paid conversion and long-term engagement.
 
+{% enddocs %}
+
+{% docs dim_issue_links %}
+
+Dimensional table representing links between GitLab Issues recorded by the Events API. [More info about issue links can be found here](https://docs.gitlab.com/ee/user/project/issues/related_issues.html)
+
+Issue Links are created when relationships are defined between issues. This table has slowly changing dimensions, as issue links/relationships can be removed over time
+
+The grain of the table is the `dim_issue_link_id`. This table is easily joinable with:
+
+- `dim_issue` through `dim_issue_id` on `dim_source_issue_id` & `dim_target_issue_id`
 {% enddocs %}

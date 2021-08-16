@@ -87,6 +87,11 @@ databases:
     - mcooper_prep:
         shared: no
 
+    - mlaanen_prod:
+        shared: no
+    - mlaanen_prep:
+        shared: no
+
     - mpeychet_prod:
         shared: no
     - mpeychet_prep:
@@ -2961,6 +2966,45 @@ roles:
         warehouses:
             - reporting
 
+    - mlaanen:
+        member_of:
+            - analyst_core
+            - data_manager
+        warehouses:
+            - analyst_xs
+        owns:
+            databases:
+                - mlaanen_prep
+                - mlaanen_prod
+            schemas:
+                - mlaanen_prep.*
+                - mlaanen_prod.*
+            tables:
+                - mlaanen_prep.*.*
+                - mlaanen_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - mlaanen_prep
+                    - mlaanen_prod
+                write:
+                    - mlaanen_prep
+                    - mlaanen_prod
+            schemas:
+                read:
+                    - mlaanen_prep.*
+                    - mlaanen_prod.*
+                write:
+                    - mlaanen_prep.*
+                    - mlaanen_prod.*
+            tables:
+                read:
+                    - mlaanen_prep.*.*
+                    - mlaanen_prod.*.*
+                write:
+                    - mlaanen_prep.*.*
+                    - mlaanen_prod.*.*        
+
     - mlancini:
         warehouses:
             - reporting
@@ -4180,6 +4224,11 @@ users:
         can_login: yes
         member_of:
             - mkarampalas
+
+    - mlaanen:
+        can_login: yes
+        member_of:
+            - mlaanen        
 
     - mlancini:
         can_login: yes
