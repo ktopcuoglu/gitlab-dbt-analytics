@@ -4,7 +4,7 @@
 }}
 
 {{ simple_cte([
-    ('driveload_financial_metrics_program_phase_1','driveload_financial_metrics_program_phase_1'),
+    ('driveload_financial_metrics_program_phase_1_source','driveload_financial_metrics_program_phase_1_source'),
     ('dim_date','dim_date'),
     ('mart_arr_snapshot_model','mart_arr_snapshot_model'),
     ('dim_crm_account','dim_crm_account'),
@@ -43,7 +43,7 @@
       quantity,
       parent_account_cohort_month,
       months_since_parent_account_cohort_start
-    FROM driveload_financial_metrics_program_phase_1
+    FROM driveload_financial_metrics_program_phase_1_source
     WHERE arr_month <= '2021-05-01'
 
 ), snapshot_dates AS (
@@ -51,7 +51,7 @@
     SELECT DISTINCT
       first_day_of_month,
       snapshot_date_fpa
-    FROM common.dim_date
+    FROM dim_date
     ORDER BY 1 DESC
 
 ), parent_cohort_month_snapshot AS (
