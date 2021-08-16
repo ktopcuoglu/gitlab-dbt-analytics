@@ -486,15 +486,6 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
-{% docs fct_usage_ping_payloads %}
-Factual table with metadata on usage ping payloads received.
-
-The grain of the table is a usage_ping_id.
-
-Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
-
-{% enddocs %}
-
 {% docs fct_usage_ping_payload %}
 Factual table with metadata on usage ping payloads received.
 
