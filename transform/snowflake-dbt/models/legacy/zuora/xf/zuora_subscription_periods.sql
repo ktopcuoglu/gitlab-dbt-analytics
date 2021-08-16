@@ -66,7 +66,7 @@ WITH zuora_account AS (
       subscription_name_slugify,
       term_start_date,
       term_end_date,
-      LAST_VALUE(auto_renew) 
+      LAST_VALUE(auto_renew_native_hist)
         OVER 
           (PARTITION BY subscription_name_slugify, 
                         term_start_date,

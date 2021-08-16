@@ -87,6 +87,11 @@ databases:
     - mcooper_prep:
         shared: no
 
+    - mlaanen_prod:
+        shared: no
+    - mlaanen_prep:
+        shared: no
+
     - mpeychet_prod:
         shared: no
     - mpeychet_prep:
@@ -2478,7 +2483,14 @@ roles:
            - analyst_engineering
         warehouses:
            - analyst_xs
-      
+
+    - jahye:
+        member_of:
+            - reporter
+            - analyst_marketing
+        warehouses:
+            - analyst_xs
+    
     - jameson:
         member_of:
             - analyst_marketing
@@ -2953,6 +2965,45 @@ roles:
             - reporter
         warehouses:
             - reporting
+
+    - mlaanen:
+        member_of:
+            - analyst_core
+            - data_manager
+        warehouses:
+            - analyst_xs
+        owns:
+            databases:
+                - mlaanen_prep
+                - mlaanen_prod
+            schemas:
+                - mlaanen_prep.*
+                - mlaanen_prod.*
+            tables:
+                - mlaanen_prep.*.*
+                - mlaanen_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - mlaanen_prep
+                    - mlaanen_prod
+                write:
+                    - mlaanen_prep
+                    - mlaanen_prod
+            schemas:
+                read:
+                    - mlaanen_prep.*
+                    - mlaanen_prod.*
+                write:
+                    - mlaanen_prep.*
+                    - mlaanen_prod.*
+            tables:
+                read:
+                    - mlaanen_prep.*.*
+                    - mlaanen_prod.*.*
+                write:
+                    - mlaanen_prep.*.*
+                    - mlaanen_prod.*.*        
 
     - mlancini:
         warehouses:
@@ -3982,6 +4033,10 @@ users:
         member_of:
             - iwiedler
 
+    - jahye:
+        can_login: yes
+        member_of:
+            - jahye
     - jameson:
         can_login: yes
         member_of:
@@ -4086,7 +4141,7 @@ users:
     - kchen:
         can_login: yes
         member_of:
-            - vjallipalli
+            - kchen
 
     - kchu:
         can_login: yes
@@ -4169,6 +4224,11 @@ users:
         can_login: yes
         member_of:
             - mkarampalas
+
+    - mlaanen:
+        can_login: yes
+        member_of:
+            - mlaanen        
 
     - mlancini:
         can_login: yes
