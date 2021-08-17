@@ -193,7 +193,7 @@
       subscription_name,
       subscription_status,
       subscription_sales_type,
-      product_name
+      product_name,
       product_tier_name,
       product_delivery_type,
       service_type,
