@@ -68,4 +68,38 @@ def rollup_table_clone(engine, table_name):
             if processed_row:
                 select_string = select_string + processed_row
 
-        insert_stmt = f"INSERT INTO PARMSTRONG_PREP.ANALYTICS.MART_ARR_ROLLED_UP ({column_string}, ORIGINAL_TABLE_NAME) SELECT {select_string} '{items[1]}' as ORIGINAL_TABLE_NAME FROM RAW.FULL_TABLE_CLONES.{items[1]}"
+        insert_stmt = f"INSERT INTO {table_name}_ROLLUP ({column_string}, ORIGINAL_TABLE_NAME) SELECT {select_string} '{items[1]}' as ORIGINAL_TABLE_NAME FROM RAW.FULL_TABLE_CLONES.{items[1]}"
+
+def process_row(row):
+    character_len = row["character_maximum_length"]
+    if character_len and character_len > 0 and row['data_type'] != "TEXT":
+        return f"{row['column_name']} {row['data_type']} ({character_len}) ,"
+    else:
+        return f"{row['column_name']} {row['data_type']} ,"
+
+def create_rollup_table(engine, table_name):
+    tables_to_roll_up = get_tables_to_roll_up(engine, table_name)
+    latest_table_name = max(tables_to_roll_up.iteritems())[1]
+    rollup_table_name = f"{table_name}_ROLLUP"
+
+    latest_table_columns = get_table_column_names(engine, latest_table_name)
+
+    big_df = latest_table_columns
+
+    for items in tables_to_roll_up.iteritems():
+        print(f"Processing {items[1]}")
+        other_data = get_table_column_names(engine, items[1])
+        big_df = big_df.append(other_data[~other_data['compare_column'].isin(big_df['compare_column'])])
+
+    big_df = big_df.groupby(['column_name']).max().reset_index()
+
+    query_dataframe(engine, f"DROP TABLE IF EXISTS {rollup_table_name}")
+
+    create_table_statement = f"CREATE TABLE {rollup_table_name} ("
+
+    for i, row in big_df.iterrows():
+        create_table_statement = create_table_statement + process_row(row)
+
+    create_table_statement = create_table_statement[:-1] + ', ORIGINAL_TABLE_NAME TEXT)'
+
+    query_dataframe(engine, create_table_statement)
