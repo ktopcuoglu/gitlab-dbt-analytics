@@ -10,7 +10,7 @@ SNOWFLAKE
 1. [ ] Validate terminated employees have been removed from Snowflake access.
     <details>
 
-    Cross check between BambooHR and Snowflake
+    Cross check between Employee Directory and Snowflake
     * [ ] If applicable, check if users set to disabled in Snowflake
     * [ ] If applicable, check if users in [roles.yml](https://gitlab.com/gitlab-data/analytics/-/blob/master/permissions/snowflake/roles.yml):
         * [ ] isn't assigned to `warehouses`
@@ -19,49 +19,46 @@ SNOWFLAKE
 
     ```sql
 
-    SELECT DISTINCT 
-      employee.employee_id, 
-      employee.first_name, 
-      employee.last_name, 
-      bamboohr.employment_status,
-      employee.hire_date, 
-      employee.rehire_date, 
-      snowflake.last_success_login, 
-      snowflake.created_on, 
-      employee.termination_date, 
-      snowflake.is_disabled 
-    FROM "PREP"."BAMBOOHR"."BAMBOOHR_EMPLOYMENT_STATUS_SOURCE" bamboohr
-    INNER JOIN PREP."SENSITIVE"."EMPLOYEE_DIRECTORY" employee
-    INNER JOIN PROD."LEGACY"."SNOWFLAKE_SHOW_USERS" snowflake
-      ON bamboohr.EMPLOYEE_ID = employee.EMPLOYEE_ID 
-      AND employee.FIRST_NAME = snowflake.FIRST_NAME 
-      AND employee.LAST_NAME = snowflake.LAST_NAME 
-      WHERE bamboohr.employment_status = 'Terminated' 
-      AND snowflake.is_disabled ='false' 
-      AND (CASE WHEN snowflake.last_success_login IS NULL THEN snowflake.created_on ELSE snowflake.last_success_login END) >= employee.termination_date ;
+      SELECT									 
+        employee.employee_id,									 
+        employee.first_name,									 
+        employee.last_name,									 
+        employee.hire_date,									 
+        employee.rehire_date,									 
+        snowflake.last_success_login,									 
+        snowflake.created_on,									 
+        employee.termination_date,									
+        snowflake.is_disabled									 
+      FROM prep.sensitive.employee_directory employee 									 
+      INNER JOIN prod.legacy.snowflake_show_users  snowflake									 
+      ON employee.first_name = snowflake.first_name									 
+      AND employee.last_name = snowflake.last_name									 
+      AND snowflake.is_disabled ='false'									 
+      AND employee.termination_date IS NOT  NULL;									
 
     ```
 
-2. [ ] De-activate any account that has not logged-in within the past 30 days from the moment of performing audit from Snowflake.
+2. [ ] De-activate any account that has not logged-in within the past 60 days from the moment of performing audit from Snowflake.
     <details>
 
     ```sql
-    SELECT
-      user_name,
-      created_on,
-      login_name,
-      display_name,
-      first_name,
-      last_name,
-      email,
-      comment,
-      is_disabled,
-      last_success_login,
-      snapshot_date
-    FROM "PROD"."LEGACY"."SNOWFLAKE_SHOW_USERS"
-    WHERE is_disabled = 'false'
-      and CASE WHEN last_success_login IS null THEN created_on ELSE last_success_login END <= dateadd('day', -30, CURRENT_DATE()) ;
-    
+     SELECT										
+       employee.employee_id,										
+       employee.first_name,										
+       employee.last_name,										
+       employee.hire_date,										
+       employee.rehire_date,										
+       snowflake.last_success_login,										
+       snowflake.created_on,										
+       employee.termination_date,										
+       snowflake.is_disabled										
+     FROM prep.sensitive.employee_directory employee										
+     INNER JOIN  prod.legacy.snowflake_show_users snowflake										
+     ON employee.first_name = snowflake.first_name										
+     AND employee.last_name = snowflake.last_name										
+     AND snowflake.is_disabled ='false'										
+     AND employee.termination_date IS NULL										
+     AND CASE WHEN snowflake.last_success_login IS null THEN snowflake.created_on ELSE snowflake.last_success_login END <= dateadd('day', -60, CURRENT_DATE());										
     ```
   
 
@@ -74,24 +71,10 @@ SISENSE
 1. [ ] Validate terminated employees have been removed from Sisense access.
     <details>
 
-     ```sql
-     
-    SELECT   
-      sisense.id,  
-      employee.full_name, 
-      sisense.email_address , 
-      employee.is_termination_date 
-   FROM  legacy.employee_directory_analysis employee 
-   INNER JOIN legacy.sheetload_sisense_users sisense 
-    ON  employee.full_name = concat(sisense.first_name,' ', sisense.last_name) 
-    AND employee.work_email = sisense.email_address  
-    AND employee.is_termination_date = 'TRUE' 
-   GROUP BY 1,2,3,4 ;
-    
-     ```
 
 
-2. [ ] De-activate any account that has not logged-in within the past 30 days from the moment of performing audit from Sisense.
+
+2. [ ] De-activate any account that has not logged-in within the past 60 days from the moment of performing audit from Sisense.
 
     <details>
 
