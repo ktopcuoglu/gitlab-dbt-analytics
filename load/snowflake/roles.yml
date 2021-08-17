@@ -2004,10 +2004,8 @@ roles:
             - reporting
 
     - ahoffbauer:
-        member_of:
-            - people_operations
-        warehouses:
-            - analyst_xs
+        member_of: []
+        warehouses: []
 
     - aladhani:
         member_of:
@@ -2383,10 +2381,8 @@ roles:
             - analyst_xs
 
     - hfrancisco:
-        member_of:
-            - people_operations
-        warehouses:
-            - analyst_xs
+        member_of: []
+        warehouses: []
 
     - hsharma:
         warehouses:
@@ -3794,9 +3790,8 @@ users:
             - transformer
 
     - ahoffbauer:
-        can_login: yes
-        member_of:
-            - ahoffbauer
+        can_login: no
+        member_of: []
 
     - aladhani:
         can_login: yes
@@ -4003,9 +3998,8 @@ users:
             - grafana
 
     - hfrancisco:
-        can_login: yes
-        member_of:
-            - hfrancisco
+        can_login: no
+        member_of: []
 
     - hsharma:
         can_login: yes
