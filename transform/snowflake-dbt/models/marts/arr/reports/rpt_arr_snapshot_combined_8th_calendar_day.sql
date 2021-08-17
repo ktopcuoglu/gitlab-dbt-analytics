@@ -51,7 +51,7 @@
       driveload_financial_metrics_program_phase_1_source.quantity,
       driveload_financial_metrics_program_phase_1_source.parent_account_cohort_month,
       driveload_financial_metrics_program_phase_1_source.months_since_parent_account_cohort_start,
-      dim_crm_account.parent_crm_account_employee_count_band
+      dim_crm_account.parent_crm_account_employee_count_band                                       AS parent_crm_account_employee_count_band
     FROM driveload_financial_metrics_program_phase_1_source
     LEFT JOIN dim_crm_account
       ON driveload_financial_metrics_program_phase_1_source.dim_crm_account_id = dim_crm_account.dim_crm_account_id
@@ -121,7 +121,8 @@
       mart_arr_snapshot_model.quantity,
       parent_cohort_month_snapshot.parent_account_cohort_month                                  AS parent_account_cohort_month,
       DATEDIFF(month, parent_cohort_month_snapshot.parent_account_cohort_month, arr_month)      AS months_since_parent_account_cohort_start,
-      dim_crm_account.parent_crm_account_employee_count_band
+      COALESCE(mart_arr_snapshot_model.parent_crm_account_employee_count_band, dim_crm_account.parent_crm_account_employee_count_band)
+                                                                                                AS parent_crm_account_employee_count_band
     FROM mart_arr_snapshot_model
     INNER JOIN snapshot_dates
       ON mart_arr_snapshot_model.arr_month = snapshot_dates.first_day_of_month
@@ -178,13 +179,13 @@
       fiscal_year,
       subscription_start_month,
       subscription_end_month,
-      dim_billing_account_id,
+      combined.dim_billing_account_id,
       sold_to_country,
       billing_account_name,
       billing_account_number,
-      dim_crm_account_id,
+      combined.dim_crm_account_id,
       combined.dim_parent_crm_account_id,
-      parent_crm_account_name,
+      combined.parent_crm_account_name,
       parent_crm_account_billing_country,
       parent_crm_account_sales_segment,
       parent_crm_account_industry,
