@@ -61,7 +61,6 @@ sources:
           - name: updated_at
             tests:
               - not_null
-      - name: users  
       - name: version_checks
         columns:
           - name: id
