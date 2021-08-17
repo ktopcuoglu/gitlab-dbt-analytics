@@ -2165,6 +2165,13 @@ roles:
         member_of: []
         warehouses: []
 
+    - degan:
+        member_of:
+            - reporter
+            - analyst_marketing
+        warehouses:
+            - analyst_xs
+
     - dknox:
         member_of: []
         warehouses: []
@@ -3897,6 +3904,11 @@ users:
     - datwood: # https://gitlab.com/gitlab-data/analytics/-/issues/6551
         can_login: no
         member_of: []
+
+    - degan:
+        can_login: yes
+        member_of:
+            - degan
 
     - dknox: # https://gitlab.com/gitlab-data/analytics/-/issues/6970
         can_login: no
