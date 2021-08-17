@@ -84,6 +84,7 @@ sources:
       - name: people_budget
       - name: planned_values
       - name: procurement_cost_savings
+      - name: product_group_mappings
       - name: product_maturity_historical
       - name: rep_quotas
       - name: rep_quotas_full_ps_fy2020

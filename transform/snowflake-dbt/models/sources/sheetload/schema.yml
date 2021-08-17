@@ -316,6 +316,15 @@ models:
     - name: rolling_12_month_savings_without_audit
     - name: rolling_12_month_savings_with_audit
     - name: target
+- name: sheetload_product_group_mappings
+  description: This is the mapping between group, stage, and section.
+  columns:
+    - name: group_name
+      tests:
+      - not_null
+      - unique
+    - name: stage_name
+    - name: section_name
 - name: sheetload_product_maturity_historical_source
   description: This captures the categories_yaml file for FY 2021 Q1 and Q2.
 - name: sheetload_rep_quotas_source
