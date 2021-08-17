@@ -358,6 +358,7 @@ sources:
         freshness: null
       - name: cluster_providers_aws
         identifier: gitlab_db_cluster_providers_aws
+        freshness: null
       - name: cluster_providers_gcp
         identifier: gitlab_db_cluster_providers_gcp
       - name: clusters_applications_cilium

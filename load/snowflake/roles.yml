@@ -87,6 +87,11 @@ databases:
     - mcooper_prep:
         shared: no
 
+    - mlaanen_prod:
+        shared: no
+    - mlaanen_prep:
+        shared: no
+
     - mpeychet_prod:
         shared: no
     - mpeychet_prep:
@@ -1999,10 +2004,8 @@ roles:
             - reporting
 
     - ahoffbauer:
-        member_of:
-            - people_operations
-        warehouses:
-            - analyst_xs
+        member_of: []
+        warehouses: []
 
     - aladhani:
         member_of:
@@ -2378,10 +2381,8 @@ roles:
             - analyst_xs
 
     - hfrancisco:
-        member_of:
-            - people_operations
-        warehouses:
-            - analyst_xs
+        member_of: []
+        warehouses: []
 
     - hsharma:
         warehouses:
@@ -2960,6 +2961,45 @@ roles:
             - reporter
         warehouses:
             - reporting
+
+    - mlaanen:
+        member_of:
+            - analyst_core
+            - data_manager
+        warehouses:
+            - analyst_xs
+        owns:
+            databases:
+                - mlaanen_prep
+                - mlaanen_prod
+            schemas:
+                - mlaanen_prep.*
+                - mlaanen_prod.*
+            tables:
+                - mlaanen_prep.*.*
+                - mlaanen_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - mlaanen_prep
+                    - mlaanen_prod
+                write:
+                    - mlaanen_prep
+                    - mlaanen_prod
+            schemas:
+                read:
+                    - mlaanen_prep.*
+                    - mlaanen_prod.*
+                write:
+                    - mlaanen_prep.*
+                    - mlaanen_prod.*
+            tables:
+                read:
+                    - mlaanen_prep.*.*
+                    - mlaanen_prod.*.*
+                write:
+                    - mlaanen_prep.*.*
+                    - mlaanen_prod.*.*        
 
     - mlancini:
         warehouses:
@@ -3750,9 +3790,8 @@ users:
             - transformer
 
     - ahoffbauer:
-        can_login: yes
-        member_of:
-            - ahoffbauer
+        can_login: no
+        member_of: []
 
     - aladhani:
         can_login: yes
@@ -3959,9 +3998,8 @@ users:
             - grafana
 
     - hfrancisco:
-        can_login: yes
-        member_of:
-            - hfrancisco
+        can_login: no
+        member_of: []
 
     - hsharma:
         can_login: yes
@@ -4180,6 +4218,11 @@ users:
         can_login: yes
         member_of:
             - mkarampalas
+
+    - mlaanen:
+        can_login: yes
+        member_of:
+            - mlaanen        
 
     - mlancini:
         can_login: yes
