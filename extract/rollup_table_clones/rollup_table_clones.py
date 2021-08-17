@@ -69,6 +69,7 @@ def rollup_table_clone(engine, table_name):
                 select_string = select_string + processed_row
 
         insert_stmt = f"INSERT INTO {table_name}_ROLLUP ({column_string}, ORIGINAL_TABLE_NAME) SELECT {select_string} '{items[1]}' as ORIGINAL_TABLE_NAME FROM RAW.FULL_TABLE_CLONES.{items[1]}"
+        query_dataframe(engine, insert_stmt)
 
 def process_row(row):
     character_len = row["character_maximum_length"]
