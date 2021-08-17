@@ -1,111 +1,71 @@
-import datetime
-import logging
-import os
-import sys
-from typing import Dict, Any
-
-from fire import Fire
 from gitlabdata.orchestration_utils import (
-    snowflake_engine_factory,
-    query_executor,
-    append_to_xcom_file,
+    data_science_engine_factory,
+    query_dataframe,
+   # snowflake_stage_load_copy_remove,
 )
+from googleapiclient.discovery import build
+from yaml import load, safe_load, YAMLError
+from os import environ as env
+import pandas as pd
+from io import BytesIO
+from apiclient.http import MediaIoBaseDownload
 from sqlalchemy.engine.base import Engine
-from postgres_pipeline_table import PostgresPipelineTable
-from utils import (
-    check_if_schema_changed,
-    chunk_and_upload,
-    get_engines,
-    id_query_generator,
-    manifest_reader,
-)
+import numpy as np
+import time
+import logging
+import sys
+import os
 
 
-SCHEMA = "tap_postgres"
+def get_table_column_names(engine, table_name):
+    # TODO: Correct table reference.
+    query = f"SELECT " \
+            f"ordinal_position," \
+            f"table_name," \
+            f"column_name," \
+            f"data_type," \
+            f"character_maximum_length," \
+            f"column_name || data_type as compare_column " \
+            f"FROM RAW.INFORMATION_SCHEMA.COLUMNS " \
+            f"WHERE TABLE_NAME = '{table_name}' order by 1"
+    return query_dataframe(engine, query)
 
 
-def swap_temp_table(engine: Engine, real_table: str, temp_table: str) -> None:
-    """
-    Drop the real table and rename the temp table to take the place of the
-    real table.
-    """
+def process_merged_row(row):
+    existing_data_type = row['data_type_y']
+    joined_row = row['data_type_x']
+    if type(joined_row) == float:
+        return
 
-    if engine.has_table(real_table):
-        logging.info(
-            f"Swapping the temp table: {temp_table} with the real table: {real_table}"
-        )
-        swap_query = f"ALTER TABLE IF EXISTS tap_postgres.{temp_table} SWAP WITH tap_postgres.{real_table}"
-        query_executor(engine, swap_query)
+    if type(existing_data_type) == str:
+        return f"{row['column_name']}::{row['data_type_y']} AS {row['column_name']} ,"
     else:
-        logging.info(f"Renaming the temp table: {temp_table} to {real_table}")
-        rename_query = f"ALTER TABLE IF EXISTS tap_postgres.{temp_table} RENAME TO tap_postgres.{real_table}"
-        query_executor(engine, rename_query)
+        return f"{row['column_name']}::{row['data_type_x']} AS {row['column_name']} ,"
 
-    drop_query = f"DROP TABLE IF EXISTS tap_postgres.{temp_table}"
-    query_executor(engine, drop_query)
-
-
-def filter_manifest(manifest_dict: Dict, load_only_table: str = None) -> None:
-    # When load_only_table specified reduce manifest to keep only relevant table config
-    if load_only_table and load_only_table in manifest_dict["tables"].keys():
-        manifest_dict["tables"] = {
-            load_only_table: manifest_dict["tables"][load_only_table]
-        }
+def get_tables_to_roll_up(engine, table_name):
+    schema_check = f"SELECT table_name " \
+                   f"FROM RAW.INFORMATION_SCHEMA.TABLES" \
+                   f"WHERE RIGHT(TABLE_NAME, 2) = '08'" \
+                   f"AND LEFT(TABLE_NAME, {len(table_name)}) = '{table_name}' " \
+                   f"ORDER BY 1"
+    return  query_dataframe(engine, schema_check)["table_name"]
 
 
-def main(file_path: str, load_type: str, load_only_table: str = None) -> None:
-    """
-    Read data from a postgres DB and upload it directly to Snowflake.
-    """
+def rollup_table_clone(engine, table_name):
+    roll_up_table_info = get_table_column_names(engine, f"{table_name}_ROLLUP")
+    tables_to_roll_up = get_tables_to_roll_up(engine, table_name)
+    for items in tables_to_roll_up.iteritems():
+        print(f"Processing {items[1]}")
+        column_info = get_table_column_names(engine, items[1])
 
-    # Process the manifest
-    logging.info(f"Reading manifest at location: {file_path}")
-    manifest_dict = manifest_reader(file_path)
-    # When load_only_table specified reduce manifest to keep only relevant table config
-    filter_manifest(manifest_dict, load_only_table)
+        column_string = ", ".join((column_info)['column_name'].unique())
+        # Probably break this down, bit ridiculous as a one liner.
 
-    postgres_engine, snowflake_engine = get_engines(manifest_dict["connection_info"])
-    logging.info(snowflake_engine)
+        merged_df = pd.merge(column_info, roll_up_table_info, how="outer", on="column_name", )
+        select_string = " "
+        for i, row in merged_df.iterrows():
+            processed_row = process_merged_row(row)
+            if processed_row:
+                select_string = select_string + processed_row
 
-    for table in manifest_dict["tables"]:
-        logging.info(f"Processing Table: {table}")
-        table_dict = manifest_dict["tables"][table]
-        current_table = PostgresPipelineTable(table_dict)
-
-        # Check if the schema has changed or the table is new
-        schema_changed = current_table.check_if_schema_changed(
-            postgres_engine, snowflake_engine
-        )
-
-        # Call the correct function based on the load_type
-        loaded = current_table.do_load(
-            load_type, postgres_engine, snowflake_engine, schema_changed
-        )
-        logging.info(f"Finished upload for table: {table}")
-
-        # Drop the original table and rename the temp table
-        if schema_changed and loaded:
-            swap_temp_table(
-                snowflake_engine,
-                current_table.get_target_table_name(),
-                current_table.get_temp_target_table_name(),
-            )
-
-        count_query = f"SELECT COUNT(*) FROM {current_table.get_target_table_name()}"
-        count = 0
-
-        try:
-            count = query_executor(snowflake_engine, count_query)[0][0]
-        except:
-            pass  # likely that the table doesn't exist -- don't want an error here to stop the task
-
-        append_to_xcom_file(
-            {current_table.get_target_table_name(): count, "load_ran": loaded}
-        )
-
-
-if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO)
-    logging.getLogger("snowflake.connector.cursor").disabled = True
-    logging.getLogger("snowflake.connector.connection").disabled = True
-    Fire({"tap": main})
+        insert_stmt = f"INSERT INTO PARMSTRONG_PREP.ANALYTICS.MART_ARR_ROLLED_UP ({column_string}, ORIGINAL_TABLE_NAME) SELECT {select_string} '{items[1]}' as ORIGINAL_TABLE_NAME FROM RAW.FULL_TABLE_CLONES.{items[1]}"
