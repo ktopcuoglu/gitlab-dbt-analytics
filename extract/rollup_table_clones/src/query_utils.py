@@ -31,6 +31,15 @@ def get_table_column_names(engine, table_name):
     return query_dataframe(engine, query)
 
 
+def get_tables_to_roll_up(engine, table_name):
+    schema_check = f"SELECT table_name " \
+                   f"FROM RAW.INFORMATION_SCHEMA.TABLES" \
+                   f"WHERE RIGHT(TABLE_NAME, 2) = '08'" \
+                   f"AND LEFT(TABLE_NAME, {len(table_name)}) = '{table_name}' " \
+                   f"ORDER BY 1"
+    return  query_dataframe(engine, schema_check)["table_name"]
+
+
 def process_merged_row(row):
     existing_data_type = row['data_type_y']
     joined_row = row['data_type_x']
@@ -41,14 +50,6 @@ def process_merged_row(row):
         return f"{row['column_name']}::{row['data_type_y']} AS {row['column_name']} ,"
     else:
         return f"{row['column_name']}::{row['data_type_x']} AS {row['column_name']} ,"
-
-def get_tables_to_roll_up(engine, table_name):
-    schema_check = f"SELECT table_name " \
-                   f"FROM RAW.INFORMATION_SCHEMA.TABLES" \
-                   f"WHERE RIGHT(TABLE_NAME, 2) = '08'" \
-                   f"AND LEFT(TABLE_NAME, {len(table_name)}) = '{table_name}' " \
-                   f"ORDER BY 1"
-    return  query_dataframe(engine, schema_check)["table_name"]
 
 
 def rollup_table_clone(engine, table_name):
@@ -71,12 +72,14 @@ def rollup_table_clone(engine, table_name):
         insert_stmt = f"INSERT INTO {table_name}_ROLLUP ({column_string}, ORIGINAL_TABLE_NAME) SELECT {select_string} '{items[1]}' as ORIGINAL_TABLE_NAME FROM RAW.FULL_TABLE_CLONES.{items[1]}"
         query_dataframe(engine, insert_stmt)
 
+
 def process_row(row):
     character_len = row["character_maximum_length"]
     if character_len and character_len > 0 and row['data_type'] != "TEXT":
         return f"{row['column_name']} {row['data_type']} ({character_len}) ,"
     else:
         return f"{row['column_name']} {row['data_type']} ,"
+
 
 def create_rollup_table(engine, table_name):
     tables_to_roll_up = get_tables_to_roll_up(engine, table_name)
