@@ -51,11 +51,9 @@
       driveload_financial_metrics_program_phase_1_source.quantity,
       driveload_financial_metrics_program_phase_1_source.parent_account_cohort_month,
       driveload_financial_metrics_program_phase_1_source.months_since_parent_account_cohort_start,
-      dim_crm_account.parent_crm_account_employee_count_band                                       AS parent_crm_account_employee_count_band
+      driveload_financial_metrics_program_phase_1_source.parent_crm_account_employee_count_band
     FROM driveload_financial_metrics_program_phase_1_source
-    LEFT JOIN dim_crm_account
-      ON driveload_financial_metrics_program_phase_1_source.dim_crm_account_id = dim_crm_account.dim_crm_account_id
-    WHERE arr_month <= '2021-05-01'
+    WHERE arr_month <= '2021-06-01'
 
 ), snapshot_dates AS (
     --Use the 8th calendar day to snapshot ARR, Licensed Users, and Customer Count Metrics
@@ -121,8 +119,7 @@
       mart_arr_snapshot_model.quantity,
       parent_cohort_month_snapshot.parent_account_cohort_month                                  AS parent_account_cohort_month,
       DATEDIFF(month, parent_cohort_month_snapshot.parent_account_cohort_month, arr_month)      AS months_since_parent_account_cohort_start,
-      COALESCE(mart_arr_snapshot_model.parent_crm_account_employee_count_band, dim_crm_account.parent_crm_account_employee_count_band)
-                                                                                                AS parent_crm_account_employee_count_band
+      mart_arr_snapshot_model.parent_crm_account_employee_count_band
     FROM mart_arr_snapshot_model
     INNER JOIN snapshot_dates
       ON mart_arr_snapshot_model.arr_month = snapshot_dates.first_day_of_month
@@ -138,7 +135,7 @@
       ON mart_arr_snapshot_model.dim_parent_crm_account_id = parent_cohort_month_snapshot.dim_parent_crm_account_id
     WHERE LOWER(zuora_account_source.batch) != 'batch20'
       AND dim_crm_account.is_jihu_account = 'FALSE'
-      AND mart_arr_snapshot_model.arr_month >= '2021-06-01'
+      AND mart_arr_snapshot_model.arr_month >= '2021-07-01'
     ORDER BY 1 DESC
 
 ), combined AS (
