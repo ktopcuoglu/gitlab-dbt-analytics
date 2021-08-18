@@ -61,7 +61,6 @@
       rcl.customer_number,
       wf.accounting_segment,
       wf.accounting_type_id,
-      act.accounting_type_name,
       cal.period_name,
       SUM(wf.t_at)                                                              AS amount
      FROM waterfall_summary wf
@@ -84,7 +83,7 @@
        ON rcl.customer_number = zuora_account.account_number
      WHERE act.is_waterfall_account = 'Y'
        AND act.is_cost = 'N'
-    {{ dbt_utils.group_by(n=15) }}
+    {{ dbt_utils.group_by(n=14) }}
 
 ), rcl_max_prd AS (
    
@@ -136,7 +135,6 @@
       last_waterfall_line.customer_number,
       last_waterfall_line.accounting_segment,
       last_waterfall_line.accounting_type_id,
-      last_waterfall_line.accounting_type_name,
       last_waterfall_line.period_name,
       0                                                                 AS amount
     FROM last_waterfall_line
@@ -225,7 +223,6 @@
       waterfall_with_previous_revenue.customer_number,
       waterfall_with_previous_revenue.accounting_segment,
       waterfall_with_previous_revenue.accounting_type_id,
-      waterfall_with_previous_revenue.accounting_type_name,
       waterfall_with_previous_revenue.prior_total,
       {{ dbt_utils.pivot(
                           'period_name', 
@@ -239,7 +236,7 @@
                           else_value = 0,
                           ) }}
     FROM waterfall_with_previous_revenue
-    {{ dbt_utils.group_by(n=14) }}
+    {{ dbt_utils.group_by(n=13) }}
 
 )
 
