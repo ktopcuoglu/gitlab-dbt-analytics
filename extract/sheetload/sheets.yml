@@ -257,6 +257,10 @@ sheets:
     owner: '@laddula'
     tabs:
       - sisense_users
+  - name: sisense_users_roles
+    owner: '@laddula'
+    tabs:
+      - sisense_users_roles
   - name: social_marketing_metrics
     owner: '@jeanpeguero'
     tabs:
