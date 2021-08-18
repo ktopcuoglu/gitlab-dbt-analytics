@@ -52,6 +52,14 @@ def process_merged_row(row):
         return f"{row['column_name']}::{row['data_type_x']} AS {row['column_name']} ,"
 
 
+def process_row(row):
+    character_len = row["character_maximum_length"]
+    if character_len and character_len > 0 and row['data_type'] != "TEXT":
+        return f"{row['column_name']} {row['data_type']} ({character_len}) ,"
+    else:
+        return f"{row['column_name']} {row['data_type']} ,"
+
+
 def rollup_table_clone(engine, table_name):
     roll_up_table_info = get_table_column_names(engine, f"{table_name}_ROLLUP")
     tables_to_roll_up = get_tables_to_roll_up(engine, table_name)
@@ -73,18 +81,10 @@ def rollup_table_clone(engine, table_name):
         query_dataframe(engine, insert_stmt)
 
 
-def process_row(row):
-    character_len = row["character_maximum_length"]
-    if character_len and character_len > 0 and row['data_type'] != "TEXT":
-        return f"{row['column_name']} {row['data_type']} ({character_len}) ,"
-    else:
-        return f"{row['column_name']} {row['data_type']} ,"
-
-
-def create_rollup_table(engine, table_name):
+def create_rollup_table(engine, db_name, schema_name, table_name):
     tables_to_roll_up = get_tables_to_roll_up(engine, table_name)
-    latest_table_name = max(tables_to_roll_up.iteritems())[1]
-    rollup_table_name = f"{table_name}_ROLLUP"
+    latest_table_name = f"{db_name}.{schema_name}.{max(tables_to_roll_up.iteritems())[1]}"
+    rollup_table_name = f"{db_name}.{schema_name}.{table_name}_ROLLUP"
 
     latest_table_columns = get_table_column_names(engine, latest_table_name)
 
