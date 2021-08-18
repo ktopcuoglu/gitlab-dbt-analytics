@@ -180,3 +180,12 @@ models:
       tests:
         - not_null
         - unique
+- name: sheetload_product_group_mappings
+  description: This is the mapping between group, stage, and section.
+  columns:
+    - name: group_name
+      tests:
+      - not_null
+      - unique
+    - name: stage_name
+    - name: section_name

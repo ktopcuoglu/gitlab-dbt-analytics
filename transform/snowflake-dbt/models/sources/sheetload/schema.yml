@@ -316,7 +316,7 @@ models:
     - name: rolling_12_month_savings_without_audit
     - name: rolling_12_month_savings_with_audit
     - name: target
-- name: sheetload_product_group_mappings
+- name: sheetload_product_group_mappings_source
   description: This is the mapping between group, stage, and section.
   columns:
     - name: group_name
