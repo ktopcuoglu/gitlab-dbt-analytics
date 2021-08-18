@@ -27,7 +27,7 @@ def get_table_column_names(engine: Engine, db_name: str, table_name: str) -> pd.
     return query_dataframe(engine, query)
 
 
-def get_tables_to_roll_up(engine: Engine, db_name:  str, table_name: str) -> pd.DataFrame:
+def get_tables_to_roll_up(engine: Engine, db_name: str, table_name: str) -> pd.DataFrame:
     """
 
     :param engine:
@@ -93,8 +93,6 @@ def rollup_table_clone(engine: Engine, db_name: str, schema_name: str, table_nam
         column_info = get_table_column_names(engine, db_name, items[1])
 
         column_string = ", ".join((column_info)['column_name'].unique())
-        # Probably break this down, bit ridiculous as a one liner.
-
         merged_df = pd.merge(column_info, roll_up_table_info, how="outer", on="column_name", )
         select_string = " "
         for i, row in merged_df.iterrows():
