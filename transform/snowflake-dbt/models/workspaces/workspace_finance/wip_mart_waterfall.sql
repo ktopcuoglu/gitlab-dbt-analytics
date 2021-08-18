@@ -59,6 +59,7 @@
       rcl.sales_order_number,
       rcl.sales_order_line_number,
       rcl.customer_number,
+      rcl.deferred_amount,
       wf.accounting_segment,
       wf.accounting_type_id,
       cal.period_name,
@@ -83,15 +84,7 @@
        ON rcl.customer_number = zuora_account.account_number
      WHERE act.is_waterfall_account = 'Y'
        AND act.is_cost = 'N'
-    {{ dbt_utils.group_by(n=14) }}
-
-), rcl_max_prd AS (
-   
-    SELECT 
-      revenue_contract_line_id,
-      MAX(period_id)            AS rcl_max_prd_id
-    FROM waterfall
-    {{ dbt_utils.group_by(n=1) }}
+    {{ dbt_utils.group_by(n=15) }}
   
 ), rcl_min_prd AS (
    
@@ -100,14 +93,33 @@
       MIN(period_id)            AS rcl_min_prd_id
     FROM waterfall
     {{ dbt_utils.group_by(n=1) }}
+
+), schd_max_prd AS (
+
+    SELECT 
+      MAX(period_id) AS schd_max_prd_id
+    FROM schd
   
 ), rc_max_prd AS (
 
+/* 
+  If there is deferred revenue, we want the records to repeat w/ no amount for all future periods, if not, we want it to repeat 
+  until the revenue contract is completed (i.e. all revenue is recognized).
+*/
+
     SELECT 
       revenue_contract_id,
-      MAX(period_id)   AS rc_max_prd_id
+      schd_max_prd_id,
+      MAX(period_id)                  AS max_prd_id,
+      SUM(deferred_amount)            AS deferred_amount,
+      CASE 
+        WHEN SUM(deferred_amount) > 0
+          THEN schd_max_prd_id
+        ELSE MAX(period_id)
+      END                             AS rc_max_prd_id
     FROM waterfall
-    {{ dbt_utils.group_by(n=1) }}
+    INNER JOIN schd_max_prd
+    {{ dbt_utils.group_by(n=2) }}
   
 ), last_waterfall_line AS (
 
@@ -133,14 +145,13 @@
       last_waterfall_line.sales_order_number,
       last_waterfall_line.sales_order_line_number,
       last_waterfall_line.customer_number,
+      last_waterfall_line.deferred_amount,
       last_waterfall_line.accounting_segment,
       last_waterfall_line.accounting_type_id,
       last_waterfall_line.period_name,
       0                                                                 AS amount
     FROM last_waterfall_line
     CROSS JOIN cal
-    LEFT JOIN rcl_max_prd
-      ON last_waterfall_line.revenue_contract_line_id = rcl_max_prd.revenue_contract_line_id
     LEFT JOIN rcl_min_prd
       ON last_waterfall_line.revenue_contract_line_id = rcl_min_prd.revenue_contract_line_id
     LEFT JOIN rc_max_prd
