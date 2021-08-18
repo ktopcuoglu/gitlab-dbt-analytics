@@ -1,14 +1,20 @@
 from gitlabdata.orchestration_utils import (
-    data_science_engine_factory,
     query_dataframe,
     query_executor,
 )
 import pandas as pd
+from sqlalchemy.engine.base import Engine
 import logging
 
 
-def get_table_column_names(engine, db_name, table_name):
-    # TODO: Correct table reference.
+def get_table_column_names(engine: Engine, db_name: str, table_name: str) -> pd.DataFrame:
+    """
+
+    :param engine:
+    :param db_name:
+    :param table_name:
+    :return:
+    """
     query = f"SELECT " \
             f"ordinal_position," \
             f"table_name," \
@@ -21,20 +27,35 @@ def get_table_column_names(engine, db_name, table_name):
     return query_dataframe(engine, query)
 
 
-def get_tables_to_roll_up(engine, db_name, table_name):
+def get_tables_to_roll_up(engine: Engine, db_name:  str, table_name: str) -> pd.DataFrame:
+    """
+
+    :param engine:
+    :param db_name:
+    :param table_name:
+    :return:
+    :rtype:
+    """
     schema_check = f"SELECT table_name " \
                    f"FROM {db_name}.INFORMATION_SCHEMA.TABLES" \
                    f"WHERE RIGHT(TABLE_NAME, 2) = '08'" \
                    f"AND LEFT(TABLE_NAME, {len(table_name)}) = '{table_name}' " \
                    f"ORDER BY 1"
-    return  query_dataframe(engine, schema_check)["table_name"]
+    return query_dataframe(engine, schema_check)["table_name"]
 
 
-def process_merged_row(row):
+def process_merged_row(row: pd.DataFrame.Row) -> str:
+    """
+
+    :param row:
+    :return:
+    :rtype:
+    :rtype: object
+    """
     existing_data_type = row['data_type_y']
     joined_row = row['data_type_x']
     if type(joined_row) == float:
-        return
+        return ""
 
     if type(existing_data_type) == str:
         return f"{row['column_name']}::{row['data_type_y']} AS {row['column_name']} ,"
@@ -42,7 +63,13 @@ def process_merged_row(row):
         return f"{row['column_name']}::{row['data_type_x']} AS {row['column_name']} ,"
 
 
-def process_row(row):
+def process_row(row: pd.DataFrame.Row) -> str:
+    """
+
+    :param row:
+    :return:
+    :rtype: object
+    """
     character_len = row["character_maximum_length"]
     if character_len and character_len > 0 and row['data_type'] != "TEXT":
         return f"{row['column_name']} {row['data_type']} ({character_len}) ,"
@@ -50,7 +77,15 @@ def process_row(row):
         return f"{row['column_name']} {row['data_type']} ,"
 
 
-def rollup_table_clone(engine, db_name, schema_name, table_name):
+def rollup_table_clone(engine: Engine, db_name: str, schema_name: str, table_name: str) -> bool:
+    """
+
+    :param engine:
+    :param db_name:
+    :param schema_name:
+    :param table_name:
+    :rtype: object
+    """
     roll_up_table_info = get_table_column_names(engine, db_name, f"{table_name}_ROLLUP")
     tables_to_roll_up = get_tables_to_roll_up(engine, db_name, table_name)
     for items in tables_to_roll_up.iteritems():
@@ -75,8 +110,19 @@ def rollup_table_clone(engine, db_name, schema_name, table_name):
         query_executor(engine, insert_stmt)
         logging.info("Successfully rolled up table clones")
 
+    return True
 
-def recreate_rollup_table(engine, db_name, schema_name, table_name):
+
+def recreate_rollup_table(engine: Engine, db_name: str, schema_name: str, table_name: str) -> bool:
+    """
+
+    :param engine:
+    :param db_name:
+    :param schema_name:
+    :param table_name:
+    :type table_name:
+    :rtype: object
+    """
     tables_to_roll_up = get_tables_to_roll_up(engine, db_name, table_name)
     latest_table_name = max(tables_to_roll_up.iteritems())[1]
     rollup_table_name = f"{db_name}.{schema_name}.{table_name}_ROLLUP"
@@ -102,4 +148,6 @@ def recreate_rollup_table(engine, db_name, schema_name, table_name):
     create_table_statement = create_table_statement[:-1] + ', ORIGINAL_TABLE_NAME TEXT)'
 
     query_executor(engine, create_table_statement)
+
+    return True
 
