@@ -2004,10 +2004,8 @@ roles:
             - reporting
 
     - ahoffbauer:
-        member_of:
-            - people_operations
-        warehouses:
-            - analyst_xs
+        member_of: []
+        warehouses: []
 
     - aladhani:
         member_of:
@@ -2166,6 +2164,13 @@ roles:
     - datwood:
         member_of: []
         warehouses: []
+
+    - degan:
+        member_of:
+            - reporter
+            - analyst_marketing
+        warehouses:
+            - analyst_xs
 
     - dknox:
         member_of: []
@@ -2383,10 +2388,8 @@ roles:
             - analyst_xs
 
     - hfrancisco:
-        member_of:
-            - people_operations
-        warehouses:
-            - analyst_xs
+        member_of: []
+        warehouses: []
 
     - hsharma:
         warehouses:
@@ -3794,9 +3797,8 @@ users:
             - transformer
 
     - ahoffbauer:
-        can_login: yes
-        member_of:
-            - ahoffbauer
+        can_login: no
+        member_of: []
 
     - aladhani:
         can_login: yes
@@ -3903,6 +3905,11 @@ users:
         can_login: no
         member_of: []
 
+    - degan:
+        can_login: yes
+        member_of:
+            - degan
+
     - dknox: # https://gitlab.com/gitlab-data/analytics/-/issues/6970
         can_login: no
         member_of: []
@@ -4003,9 +4010,8 @@ users:
             - grafana
 
     - hfrancisco:
-        can_login: yes
-        member_of:
-            - hfrancisco
+        can_login: no
+        member_of: []
 
     - hsharma:
         can_login: yes

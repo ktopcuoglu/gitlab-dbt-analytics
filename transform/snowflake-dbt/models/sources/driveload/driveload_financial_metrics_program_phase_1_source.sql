@@ -35,6 +35,7 @@ WITH source AS (
       quantity::FLOAT                                     quantity,
       parent_account_cohort_month::DATE                   parent_account_cohort_month,
       months_since_parent_account_cohort_start::NUMBER    months_since_parent_account_cohort_start,
+      parent_crm_account_employee_count_band::VARCHAR     parent_crm_account_employee_count_band,
       arr_band_calc::VARCHAR                              arr_band_calc,
       product_name::VARCHAR                               product_name
     FROM source
