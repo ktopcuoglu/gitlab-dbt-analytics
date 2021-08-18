@@ -70,9 +70,8 @@ dag = DAG(
 table_name = "MART_ARR"
 # Set the command for the container
 container_cmd = f"""
-    {clone_repo_cmd} &&
-    export PYTHONPATH="$CI_PROJECT_DIR/orchestration/:$PYTHONPATH" &&
-    cd extract/rollup_table_clones/ &&
+    {clone_and_setup_extraction_cmd} &&
+    cd rollup_table_clones/src &&
     python3 execute.py --table_name {table_name}
 """
 
