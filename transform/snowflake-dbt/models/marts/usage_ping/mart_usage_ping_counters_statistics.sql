@@ -1,6 +1,6 @@
 /* grain: one record per host per metric per month */
 
-{{ simple_cte([('flattened_usage_data', 'prep_usage_data_flattende'),
+{{ simple_cte([('flattened_usage_data', 'prep_usage_data_flattened'),
                 ('dim_gitlab_releases', 'dim_gitlab_releases'),
                 ]
                 )
