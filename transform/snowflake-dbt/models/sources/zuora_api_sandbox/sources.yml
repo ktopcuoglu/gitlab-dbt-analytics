@@ -19,7 +19,7 @@ sources:
 
     tables:
       - name: account
-        description: '{{ doc("zuora_api_sandbox_account_source") }}'
+        description: "{{ doc("zuora_api_sandbox_account_source") }}"
         columns:
           - name: id
             description: Primary Key for Accounts
