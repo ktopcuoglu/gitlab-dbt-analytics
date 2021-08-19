@@ -224,7 +224,7 @@ def use_cloudsql_proxy(dag_name, operation, instance_name):
         cd analytics/orchestration &&
         python ci_helpers.py use_proxy --instance_name {instance_name} --command " \
             python ../extract/postgres_pipeline/postgres_pipeline/main.py tap  \
-            ../extract/postgres_pipeline/manifests/{dag_name}_db_manifest.yaml {operation}
+            ../extract/postgres_pipeline/manifests_decomposed/{dag_name}_db_manifest.yaml {operation}
         "
     """
 
@@ -234,7 +234,7 @@ def generate_cmd(dag_name, operation, cloudsql_instance_name):
         return f"""
             {clone_repo_cmd} &&
             cd analytics/extract/postgres_pipeline/postgres_pipeline/ &&
-            python main.py tap ../manifests/{dag_name}_db_manifest.yaml {operation}
+            python main.py tap ../manifests_decomposed/{dag_name}_db_manifest.yaml {operation}
         """
     else:
         return use_cloudsql_proxy(dag_name, operation, cloudsql_instance_name)
@@ -381,6 +381,8 @@ for source_name, config in config_dict.items():
                 f"{config['dag_name']}_db_extract",
                 default_args=extract_dag_args,
                 schedule_interval=config["extract_schedule_interval"],
+                description="This DAG do incremental extract from Postgres database"
+
             )
 
             with extract_dag:
@@ -418,7 +420,8 @@ for source_name, config in config_dict.items():
                         image=DATA_IMAGE,
                         task_id=f"{task_identifier}-pgp-extract",
                         name=f"{task_identifier}-pgp-extract",
-                        pool=f"{config['task_name']}_pool",
+                        #pool=f"{config['task_name']}_pool",
+                        pool='default_pool',
                         secrets=standard_secrets + config["secrets"],
                         env_vars={
                             **gitlab_pod_env_vars,
@@ -478,7 +481,8 @@ for source_name, config in config_dict.items():
                             image=DATA_IMAGE,
                             task_id=task_identifier,
                             name=task_identifier,
-                            pool=f"{config['task_name']}_pool",
+                            #pool=f"{config['task_name']}_pool",
+                            pool='default_pool',
                             secrets=standard_secrets + config["secrets"],
                             env_vars={
                                 **gitlab_pod_env_vars,
@@ -536,7 +540,8 @@ for source_name, config in config_dict.items():
                             image=DATA_IMAGE,
                             task_id=task_identifier,
                             name=task_identifier,
-                            pool=f"{config['task_name']}_pool",
+                            #pool=f"{config['task_name']}_pool",
+                            pool='default_pool',
                             secrets=standard_secrets + config["secrets"],
                             env_vars={
                                 **gitlab_pod_env_vars,
