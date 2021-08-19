@@ -70,14 +70,6 @@ tables_to_rollup = [
     ]
 
 
-# Create the DAG
-dag = DAG(
-    "driveload",
-    default_args=default_args,
-    schedule_interval="0 2 * * 1",
-    concurrency=1,
-)
-
 for table in tables_to_rollup:
     # Set the command for the container
     container_cmd = f"""
