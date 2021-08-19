@@ -65,21 +65,37 @@ default_args = {
 dag = DAG(
     "snowflake_table_clone_rollup", default_args=default_args, schedule_interval="0 7 * * *"
 )
-table_name = "MART_ARR"
-# Set the command for the container
-container_cmd = f"""
-    {clone_and_setup_extraction_cmd} &&
-    cd rollup_table_clones/src &&
-    python3 execute.py rollup_full_table_clones --table_name {table_name}
-"""
+tables_to_rollup = [
+        "MART_ARR",
+    ]
 
-make_clone = KubernetesPodOperator(
-    **gitlab_defaults,
-    image=DATA_IMAGE,
-    task_id="snowflake-table-clone-rollup",
-    name="snowflake-table-clone-rollup",
-    secrets=secrets,
-    env_vars=pod_env_vars,
-    arguments=[container_cmd],
-    dag=dag,
+
+# Create the DAG
+dag = DAG(
+    "driveload",
+    default_args=default_args,
+    schedule_interval="0 2 * * 1",
+    concurrency=1,
 )
+
+for table in tables_to_rollup:
+    # Set the command for the container
+    container_cmd = f"""
+        {clone_and_setup_extraction_cmd} &&
+        cd rollup_table_clones/src &&
+        python3 execute.py rollup_full_table_clones --table_name {table}
+    """
+
+    cleaned_table_name = table.replace("_", "-").lower()
+
+    make_clone = KubernetesPodOperator(
+            **gitlab_defaults,
+            image=DATA_IMAGE,
+            task_id=f"{cleaned_table_name}-clone-rollup",
+            name=f"{cleaned_table_name}-clone-rollup",
+            secrets=secrets,
+            env_vars=pod_env_vars,
+            arguments=[container_cmd],
+            dag=dag,
+    )
+
