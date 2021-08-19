@@ -16,14 +16,14 @@ def get_table_column_names(engine: Engine, db_name: str, table_name: str) -> pd.
     :return:
     """
     query = f"SELECT " \
-            f"ordinal_position," \
-            f"table_name," \
-            f"column_name," \
-            f"data_type," \
-            f"character_maximum_length," \
-            f"column_name || data_type as compare_column " \
+            f"  ordinal_position," \
+            f"  table_name," \
+            f"  column_name," \
+            f"  data_type," \
+            f"  character_maximum_length," \
+            f"  column_name || data_type as compare_column " \
             f"FROM {db_name}.INFORMATION_SCHEMA.COLUMNS " \
-            f"WHERE TABLE_NAME = '{table_name}' order by 1"
+            f"WHERE TABLE_NAME = '{table_name}' order by 1 "
     return query_dataframe(engine, query)
 
 
@@ -37,8 +37,8 @@ def get_tables_to_roll_up(engine: Engine, db_name: str, table_name: str) -> pd.D
     :rtype:
     """
     schema_check = f"SELECT table_name " \
-                   f"FROM {db_name}.INFORMATION_SCHEMA.TABLES" \
-                   f"WHERE RIGHT(TABLE_NAME, 2) = '08'" \
+                   f"FROM {db_name}.INFORMATION_SCHEMA.TABLES " \
+                   f"WHERE RIGHT(TABLE_NAME, 2) = '08' " \
                    f"AND LEFT(TABLE_NAME, {len(table_name)}) = '{table_name}' " \
                    f"ORDER BY 1"
     return query_dataframe(engine, schema_check)["table_name"]
@@ -100,10 +100,10 @@ def rollup_table_clone(engine: Engine, db_name: str, schema_name: str, table_nam
             if processed_row:
                 select_string = select_string + processed_row
 
-        insert_stmt = f"INSERT INTO {db_name}.{schema_name}.{table_name}_ROLLUP " \
+        insert_stmt = f" INSERT INTO {db_name}.{schema_name}.{table_name}_ROLLUP " \
                       f"({column_string}, ORIGINAL_TABLE_NAME) " \
-                      f"SELECT {select_string} '{items[1]}' as ORIGINAL_TABLE_NAME " \
-                      f"FROM {db_name}.{schema_name}.{items[1]}"
+                      f" SELECT {select_string} '{items[1]}' as ORIGINAL_TABLE_NAME " \
+                      f" FROM {db_name}.{schema_name}.{items[1]}"
         logging.info("Running query")
         query_executor(engine, insert_stmt)
         logging.info("Successfully rolled up table clones")
