@@ -200,7 +200,7 @@ sheets:
   - name: product_group_mappings
     owner: '@lmai1'
     tabs:
-      - mapping
+      - product_group_mappings
   - name: product_maturity_historical
     owner: '@dpeterson1'
     tabs:
