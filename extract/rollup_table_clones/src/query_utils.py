@@ -44,7 +44,7 @@ def get_tables_to_roll_up(engine: Engine, db_name: str, table_name: str) -> pd.D
     return query_dataframe(engine, schema_check)["table_name"]
 
 
-def process_merged_row(row: pd.DataFrame.Row) -> str:
+def process_merged_row(row: pd.Series) -> str:
     """
 
     :param row:
@@ -63,7 +63,7 @@ def process_merged_row(row: pd.DataFrame.Row) -> str:
         return f"{row['column_name']}::{row['data_type_x']} AS {row['column_name']} ,"
 
 
-def process_row(row: pd.DataFrame.Row) -> str:
+def process_row(row: pd.Series) -> str:
     """
 
     :param row:
