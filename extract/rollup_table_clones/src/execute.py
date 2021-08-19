@@ -17,7 +17,7 @@ def rollup_table_clones(
         gapi_keyfile: str = None,
         conn_dict: Dict[str, str] = None,
     ):
-    logging.info("Rolling up table clones")
+    logging.info(f"Rolling up table {table_name} clones")
     engine = snowflake_engine_factory(conn_dict or env, "LOADER", schema)
     rollup_table_clone(engine, db_name, schema, table_name)
     logging.info("Table clones rolled up")
