@@ -15,7 +15,6 @@ def rollup_table_clones(
         table_name: str,
         db_name: str = "RAW",
         schema: str = "FULL_TABLE_CLONES",
-        gapi_keyfile: str = None,
         conn_dict: Dict[str, str] = None,
     ):
     logging.info(f"Rolling up table {table_name} clones")

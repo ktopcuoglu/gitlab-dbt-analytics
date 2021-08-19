@@ -24,7 +24,6 @@ def get_table_column_names(engine: Engine, db_name: str, table_name: str) -> pd.
             f"  column_name || data_type as compare_column " \
             f"FROM {db_name}.INFORMATION_SCHEMA.COLUMNS " \
             f"WHERE TABLE_NAME = '{table_name}' order by 1 "
-    logging.info(f"Running {query}")
     return query_dataframe(engine, query)
 
 
@@ -42,7 +41,6 @@ def get_tables_to_roll_up(engine: Engine, db_name: str, table_name: str) -> pd.D
                    f"WHERE RIGHT(TABLE_NAME, 2) = '08' " \
                    f"AND LEFT(TABLE_NAME, {len(table_name)}) = '{table_name}' " \
                    f"ORDER BY 1"
-    logging.info(f"Running {schema_check}")
     return query_dataframe(engine, schema_check)["table_name"]
 
 
