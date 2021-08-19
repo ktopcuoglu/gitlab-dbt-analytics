@@ -12,7 +12,7 @@ SNOWFLAKE
 
     Cross check between Employee Directory and Snowflake
     * [ ] If applicable, check if users set to disabled in Snowflake
-    * [ ] If applicable, check if users in [roles.yml](https://gitlab.com/gitlab-data/analytics/-/blob/master/load/snowflake/roles.yml):
+    * [ ] If applicable, check if users in [roles.yml](https://gitlab.com/gitlab-data/analytics/-/blob/master/permissions/snowflake/roles.yml):
         * [ ] isn't assigned to `warehouses`
         * [ ] isn't assigned to `roles`
         * [ ] can_login set to: `no`

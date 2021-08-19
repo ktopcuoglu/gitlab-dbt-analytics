@@ -27,8 +27,9 @@ __init__.py     @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @mpeyc
 [Data Engineering]
 /dags/              @jjstark  @paul_armstrong   @snalamaru  @mpeychet_  @rparker2 @dvanrooijen2 @vedprakash2021
 /extract/           @jjstark  @paul_armstrong   @snalamaru  @mpeychet_  @rparker2 @dvanrooijen2 @vedprakash2021
-/load/              @jjstark  @paul_armstrong   @snalamaru  @mpeychet_  @rparker2    @iweeks @dvanrooijen2 @vedprakash2021
+/load/              @jjstark  @paul_armstrong   @snalamaru  @mpeychet_  @rparker2 @iweeks @dvanrooijen2 @vedprakash2021
 /orchestrate/       @jjstark  @paul_armstrong   @snalamaru  @mpeychet_  @rparker2 @dvanrooijen2 @vedprakash2021
+/permissions/       @jjstark  @paul_armstrong   @snalamaru  @mpeychet_  @rparker2 @iweeks @dvanrooijen2 @vedprakash2021
 /pump/              @jjstark  @paul_armstrong @vedprakash2021
 
 Makefile            @jjstark  @paul_armstrong   @snalamaru  @mpeychet_  @rparker2 @dvanrooijen2 @vedprakash2021
