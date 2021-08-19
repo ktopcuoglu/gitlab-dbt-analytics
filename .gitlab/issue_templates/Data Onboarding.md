@@ -266,8 +266,8 @@ Data team uses GCP (Google Cloud Platform) as our cloud provider. GCP credential
 - [ ] Please follow next step after running onboarding template, once you added GOOGLE_APPLICATION_CREDENTIALS path to your .zshrc file which can be accessed by `vi ~/.zshrc``. One of the project owners should send you configuration json file, which is important to add in your google credentials. Follow below steps:
 - [ ] Download the json file provided and move to your home directory (e.g. `/Users/yourusername`)
 - [ ] Open terminal and run the following command, replacing `yourusername` with your actual user name on your computer (type `pwd` into the terminal if you don’t know it — the path should contain your user name) and `filename.json` with you name of the file.
-    - echo export  GOOGLE_APPLICATION_CREDENTIALS=/Users/yourusername/filename.json >> ./.zshrc
-    - If you already have the variable  GOOGLE_APPLICATION_CREDENTIALS  modify its value to the file path and file name instead of adding a new one. 
+    - `echo export  GOOGLE_APPLICATION_CREDENTIALS=/Users/yourusername/filename.json >> ./.zshrc`
+    - If you already have the variable  `GOOGLE_APPLICATION_CREDENTIALS`  modify its value to the file path and file name instead of adding a new one. 
 - [ ] Refresh this file by sourcing it back, by running command in terminal: ``source ~/.zshrc``.
 
 ### Jupyter
