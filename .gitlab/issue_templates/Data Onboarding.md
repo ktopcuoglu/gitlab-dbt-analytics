@@ -250,7 +250,7 @@ DBT is our data transformation engine that we use to build our dimensional model
 - To get into the place to run dbt set, go to the analytics project (which you can get to by typing `jump analytics` from anywhere on your Mac) and follow next steps described here: [using dbt](https://about.gitlab.com/handbook/business-technology/data-team/platform/dbt-guide/#using-dbt).
 - [ ] Setup command "code" in VS studio by using `command` + `shift` + `p` in VS studio and choose "Install 'code' command in PATH command." This will allow you to use word `code` in terminal which will open indicated file directly in Visual Studio. This step is essential to complete next step.
 - [ ] From a different terminal window run `code ~/.dbt/profiles.yml` and update this file with your info.  The schema should be something like `yourname_scratch`. See [sample profiles](https://gitlab.com/gitlab-data/analytics/-/blob/master/admin/sample_profiles.yml) for an example.
-- Your `role` maybe the same as your `database`.
+- Your `role` may be the same as your `database`.
 - Back in your terminal window and check your local dbt setup: 
 - [ ] Run `dbt seed` to import the CSV's from the analytics/data into your schema. For dbt to compile this needs to be completed as some of the models have dependencies on the tables which are created by the CSV's.
 - [ ] Run `dbt run --models +staging.sfdc` to ensure that your connection has been successful, you are in the correct location, and everything will run smoothly.  For more details on the syntax for how to select and run the models, please refer to this [page](https://docs.getdbt.com/reference/node-selection/syntax#examples).  Afterwards, you can also try running `dbt compile` to ensure that the entire project will compile correctly.
