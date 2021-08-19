@@ -17,7 +17,7 @@ sources:
       warn_after: {count: 8, period: hour}
       error_after: {count: 24, period: hour}
 
-      tables:
+    tables:
       - name: account
         description: '{{ doc("zuora_api_sandbox_account_source") }}'
         columns:
