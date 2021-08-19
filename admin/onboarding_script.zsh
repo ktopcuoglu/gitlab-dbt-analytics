@@ -58,7 +58,7 @@ echo "dbt profile created.. You will need to edit this file later."
 ## you will need to edit this file
 ## install visual studio code
 echo "Installing VS Code.."
-brew install cask visual-studio-code
+brew install --cask visual-studio-code
 ## this might ask you for your password
 code --version
 echo "VS Code successfully installed"
@@ -77,7 +77,7 @@ echo "Handbook project successfully installed"
 
 echo "You've got everything set to build the handbook locally."
 echo "Setting up jump for the handbook.."
-cd /www-gitlab-com/
+cd www-gitlab-com/
 mark handbook
 echo "handbook jump alias successfully added"
 
