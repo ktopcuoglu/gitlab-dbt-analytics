@@ -90,6 +90,9 @@ def rollup_table_clone(engine: Engine, db_name: str, schema_name: str, table_nam
     """
     roll_up_table_info = get_table_column_names(engine, db_name, f"{table_name}_ROLLUP")
     logging.info(roll_up_table_info.head())
+    if roll_up_table_info is None:
+        recreate_rollup_table(engine, db_name, schema_name, table_name)
+        roll_up_table_info = get_table_column_names(engine, db_name, f"{table_name}_ROLLUP")
     tables_to_roll_up = get_tables_to_roll_up(engine, db_name, table_name)
     logging.info(tables_to_roll_up.head())
     for items in tables_to_roll_up.iteritems():
