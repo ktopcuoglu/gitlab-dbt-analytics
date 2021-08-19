@@ -24,6 +24,7 @@ def get_table_column_names(engine: Engine, db_name: str, table_name: str) -> pd.
             f"  column_name || data_type as compare_column " \
             f"FROM {db_name}.INFORMATION_SCHEMA.COLUMNS " \
             f"WHERE TABLE_NAME = '{table_name}' order by 1 "
+    logging.info(f"Running {query}")
     return query_dataframe(engine, query)
 
 
@@ -41,6 +42,7 @@ def get_tables_to_roll_up(engine: Engine, db_name: str, table_name: str) -> pd.D
                    f"WHERE RIGHT(TABLE_NAME, 2) = '08' " \
                    f"AND LEFT(TABLE_NAME, {len(table_name)}) = '{table_name}' " \
                    f"ORDER BY 1"
+    logging.info(f"Running {schema_check}")
     return query_dataframe(engine, schema_check)["table_name"]
 
 
@@ -87,7 +89,9 @@ def rollup_table_clone(engine: Engine, db_name: str, schema_name: str, table_nam
     :rtype: object
     """
     roll_up_table_info = get_table_column_names(engine, db_name, f"{table_name}_ROLLUP")
+    logging.info(roll_up_table_info.head())
     tables_to_roll_up = get_tables_to_roll_up(engine, db_name, table_name)
+    logging.info(tables_to_roll_up.head())
     for items in tables_to_roll_up.iteritems():
         logging.info(f"Processing {items[1]}")
         column_info = get_table_column_names(engine, db_name, items[1])
