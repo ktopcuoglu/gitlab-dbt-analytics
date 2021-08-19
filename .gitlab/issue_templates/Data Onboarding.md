@@ -188,7 +188,7 @@ Additional tools to install that are not part of the onboarding script:
 
 ## Airflow (Data Engineers only)
 - [ ] Read the Airflow section on the [Data Infrastructure page](https://about.gitlab.com/handbook/business-ops/data-team/platform/infrastructure/#airflow)
-- [ ] Watch the [Airflow Setup Walkthrough](https://www.youtube.com/watch?v=3Ym40gRHtvk&feature=youtu.be) with Taylor and Magda. In case you have an issue with the Airflow setup read this instruction [Troubleshooting local Airflow config](https://about.gitlab.com/handbook/business-technology/data-team/platform/infrastructure/#troubleshooting-local-airflow-config)
+- [ ] Watch the [Airflow Setup Walkthrough](https://www.youtube.com/watch?v=3Ym40gRHtvk&feature=youtu.be) with Taylor and Magda. In case you have an issue with the Airflow setup, read this instruction [Troubleshooting local Airflow config](https://about.gitlab.com/handbook/business-technology/data-team/platform/infrastructure/#troubleshooting-local-airflow-config)
 
 
 </details>
@@ -204,11 +204,11 @@ On [the Data team handbook page](https://about.gitlab.com/handbook/business-ops/
 
 ### The Data Warehouse - Connecting to Snowflake
 
-- [ ] Login with the credentials that your manager created following the instructions at https://about.gitlab.com/handbook/business-ops/data-team/platform/#warehouse-access. Please note that currently Snowflake is accessed through Okta (your manager already created access for you, check with your manage if you are unsure).
+- [ ] Login with the credentials that your manager created following the instructions at https://about.gitlab.com/handbook/business-ops/data-team/platform/#warehouse-access. Please note that currently Snowflake is accessed through Okta (your manager already created access for you, check with him/her if you are unsure).
 - [ ] Snowflake has a Web UI for querying the data warehouse that can be found under [Worksheets](https://gitlab.snowflakecomputing.com/console#/internal/worksheet). Familiarize yourself with it. Update your role, warehouse, and database to the same info you're instructed to put in your dbt profile (Ask your manager if this is confusing or check out [roles.yml](https://gitlab.com/gitlab-data/analytics/blob/master/load/snowflake/roles.yml) to see which roles, warehouses, and databases you've been assigned). The schema does not matter because your query will reference the schema.
 - [ ] Run `alter user "your_user" set default_role = "your_role";` to set the UI default Role to your appropriate role instead of `PUBLIC`. (E.g. `alter user "KDIETZ" set default_role = "KDIETZ";`)
 - [ ] You can test your Snowflake connection in the UI by first running selecting which warehouse to use (e.g. `use warehouse ANALYST_XS;`), clicking the "play" button, and then querying a database you have access to (e.g. `select * from "PROD"."COMMON"."DIM_CRM_PERSON" limit 10;`) 
-- [ ] We STRONGLY recommend using the UI, but if you must download a SQL development tool, you will need one that is compatible with Snowflake, such as [SQLWorkbench/J](http://sql-workbench.net) or [DataGrip](https://www.jetbrains.com/datagrip/). If you're interested in DataGrip, follow the [instructions to get a JetBrains license in the handbook](https://about.gitlab.com/handbook/tools-and-tips/#jetbrains). If using DataGrip, you may need to download the [Driver](https://docs.snowflake.net/manuals/user-guide/jdbc-download.html#downloading-the-driver). This template may be useful as you're configuring the DataGrip connection to Snowflake `jdbc:snowflake://{account:param}.snowflakecomputing.com/?{password}[&db={Database:param}][&warehouse={Warehouse:param}][&role={Role:param}]` We recommend not setting your schema, so you can select from the many options. [This](https://community.snowflake.com/s/article/How-To-Connect-to-Snowflake-from-JetBrains-DataGrip-using-OAuth) a good link how to setup Data Grip and Snowflake with SSO (OKTA) login.
+- [ ] We STRONGLY recommend using the UI, but if you must download a SQL development tool, you will need one that is compatible with Snowflake, such as [SQLWorkbench/J](http://sql-workbench.net) or [DataGrip](https://www.jetbrains.com/datagrip/). If you're interested in DataGrip, follow the [instructions to get a JetBrains license in the handbook](https://about.gitlab.com/handbook/tools-and-tips/#jetbrains). If using DataGrip, you may need to download the [Driver](https://docs.snowflake.net/manuals/user-guide/jdbc-download.html#downloading-the-driver). This template may be useful as you're configuring the DataGrip connection to Snowflake `jdbc:snowflake://{account:param}.snowflakecomputing.com/?{password}[&db={Database:param}][&warehouse={Warehouse:param}][&role={Role:param}]` We recommend not setting your schema, so you can select from the many options. [This](https://community.snowflake.com/s/article/How-To-Connect-to-Snowflake-from-JetBrains-DataGrip-using-OAuth) is a good link how to setup Data Grip and Snowflake with SSO (OKTA) login.
 
 ### Snowflake SQL
 
@@ -246,7 +246,7 @@ DBT is our data transformation engine that we use to build our dimensional model
 ### Getting Set up with dbt locally
 
 - Ensure you've set up your SSH configuration in the previous step as this is required to connect to one our dbt packages
-- All dbt commands need to be run within the venv (please notice that Docker imasge usage is obsolete)
+- All dbt commands need to be run within the `venv` approach (please notice that Docker imasge usage is obsolete)
 - To get into the place to run dbt set, go to the analytics project (which you can get to by typing `jump analytics` from anywhere on your Mac) and follow next steps described here: [using dbt](https://about.gitlab.com/handbook/business-technology/data-team/platform/dbt-guide/#using-dbt).
 - [ ] Setup command "code" in VS studio by using `command` + `shift` + `p` in VS studio and choose "Install 'code' command in PATH command." This will allow you to use word `code` in terminal which will open indicated file directly in Visual Studio. This step is essential to complete next step.
 - [ ] From a different terminal window run `code ~/.dbt/profiles.yml` and update this file with your info.  The schema should be something like `yourname_scratch`. See [sample profiles](https://gitlab.com/gitlab-data/analytics/-/blob/master/admin/sample_profiles.yml) for an example.
