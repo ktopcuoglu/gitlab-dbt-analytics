@@ -245,7 +245,7 @@ DBT is our data transformation engine that we use to build our dimensional model
 
 ### Getting Set up with dbt locally
 
-- Ensure you've set up your SSH configuration in the previous step as this is required to connect to one our dbt packages
+- Ensure you've set up your SSH configuration in the previous step as this is required to connect to one of our dbt packages
 - All dbt commands need to be run within the `venv` approach (please notice that Docker image usage is obsolete)
 - To get into the place to run dbt set, go to the analytics project (which you can get to by typing `jump analytics` from anywhere on your Mac) and follow next steps described here: [using dbt](https://about.gitlab.com/handbook/business-technology/data-team/platform/dbt-guide/#using-dbt).
 - [ ] Setup command "code" in VS studio by using `command` + `shift` + `p` in VS studio and choose "Install 'code' command in PATH command." This will allow you to use word `code` in terminal which will open indicated file directly in Visual Studio. This step is essential to complete next step.
