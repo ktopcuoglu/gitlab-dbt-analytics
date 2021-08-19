@@ -7,6 +7,7 @@ from fire import Fire
 from query_utils import rollup_table_clone
 from typing import Dict
 import logging
+import sys
 
 config_dict = env.copy()
 
@@ -23,6 +24,8 @@ def rollup_table_clones(
     logging.info("Table clones rolled up")
 
 if __name__ == "main":
+    logging.basicConfig(stream=sys.stdout, level=20)
+    logging.getLogger("snowflake.connector.cursor").disabled = True
     Fire(
         {
             "rollup_full_table_clones": rollup_table_clones,
