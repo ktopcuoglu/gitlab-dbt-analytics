@@ -70,7 +70,7 @@ table_name = "MART_ARR"
 container_cmd = f"""
     {clone_and_setup_extraction_cmd} &&
     cd rollup_table_clones/src &&
-    python3 execute.py --table_name {table_name}
+    python3 execute.py rollup_full_table_clones --table_name {table_name}
 """
 
 make_clone = KubernetesPodOperator(
