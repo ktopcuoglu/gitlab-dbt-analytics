@@ -23,7 +23,7 @@ def rollup_table_clones(
     rollup_table_clone(engine, db_name, schema, table_name)
     logging.info("Table clones rolled up")
 
-if __name__ == "main":
+if __name__ == "__main__":
     logging.basicConfig(stream=sys.stdout, level=20)
     logging.getLogger("snowflake.connector.cursor").disabled = True
     Fire(
