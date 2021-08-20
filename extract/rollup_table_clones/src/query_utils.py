@@ -45,20 +45,20 @@ def get_tables_to_roll_up(
             engine, db_name, schema_name, table_name
         )[-8:]
         schema_check = (
-            f"SELECT table_name "
-            f"FROM {db_name}.INFORMATION_SCHEMA.TABLES "
-            f"WHERE LEFT(TABLE_NAME, {len(table_name)}) = '{table_name}' "
+            f" SELECT table_name "
+            f" FROM {db_name}.INFORMATION_SCHEMA.TABLES "
+            f" WHERE LEFT(TABLE_NAME, {len(table_name)}) = '{table_name}' "
             f" AND TRY_TO_DATE(RIGHT(TABLE_NAME, 8), 'YYYYMMDD') > "
             f" TRY_TO_DATE('{latest_rolled_table}' , 'YYYYMMDD') "
             f" AND RIGHT(TABLE_NAME, 2) = '08' "
             f" ORDER BY 1"
         )
     else:
-        schema_check = f"SELECT table_name " \
-                       f"FROM {db_name}.INFORMATION_SCHEMA.TABLES" \
-                       f"WHERE RIGHT(TABLE_NAME, 2) = '08'" \
-                       f"AND LEFT(TABLE_NAME, {len(table_name)}) = '{table_name}' " \
-                       f"ORDER BY 1"
+        schema_check = f" SELECT table_name " \
+                       f" FROM {db_name}.INFORMATION_SCHEMA.TABLES " \
+                       f" WHERE RIGHT(TABLE_NAME, 2) = '08' " \
+                       f" AND LEFT(TABLE_NAME, {len(table_name)}) = '{table_name}' " \
+                       f" ORDER BY 1 "
 
     query_results = query_dataframe(engine, schema_check)
 
