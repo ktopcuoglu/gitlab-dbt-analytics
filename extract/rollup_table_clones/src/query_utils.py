@@ -17,17 +17,15 @@ def get_table_column_names(
     :param table_name:
     :return:
     """
-    query = (
-        f"SELECT "
-        f"  ordinal_position,"
-        f"  table_name,"
-        f"  column_name,"
-        f"  data_type,"
-        f"  character_maximum_length,"
-        f"  column_name || data_type as compare_column "
-        f"FROM {db_name}.INFORMATION_SCHEMA.COLUMNS "
-        f"WHERE TABLE_NAME = '{table_name}' order by 1 "
-    )
+    query = f" SELECT " \ 
+            f"  ordinal_position," \
+            f"  table_name," \ 
+            f"  column_name," \ 
+            f"  data_type," \ 
+            f"  character_maximum_length," \ 
+            f"  column_name || data_type as compare_column " \ 
+            f" FROM {db_name}.INFORMATION_SCHEMA.COLUMNS " \ 
+            f" WHERE TABLE_NAME = '{table_name}' order by 1 "
     return query_dataframe(engine, query)
 
 
@@ -57,7 +55,7 @@ def get_tables_to_roll_up(
     )
     query_results = query_dataframe(engine, schema_check)
 
-    if query_results is not None:
+    if not query_results.empty:
         return query_results["table_name"]
 
 
@@ -135,9 +133,8 @@ def rollup_table_clone(
     :rtype: object
     """
     roll_up_table_info = get_table_column_names(engine, db_name, f"{table_name}_ROLLUP")
-    logging.info(roll_up_table_info)
-    logging.info(type(roll_up_table_info))
-    if roll_up_table_info is None:
+
+    if roll_up_table_info.empty:
         recreate_rollup_table(engine, db_name, schema_name, table_name)
         roll_up_table_info = get_table_column_names(
             engine, db_name, f"{table_name}_ROLLUP"
