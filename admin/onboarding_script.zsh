@@ -72,7 +72,7 @@ echo "Handbook project successfully installed"
 
 echo "You've got everything set to build the handbook locally."
 echo "Setting up jump for the handbook.."
-cd /www-gitlab-com/
+cd www-gitlab-com
 mark handbook
 echo "handbook jump alias successfully added"
 
