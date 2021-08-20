@@ -41,9 +41,9 @@ def get_tables_to_roll_up(engine: Engine, db_name: str, schema_name: str, table_
     schema_check = f"SELECT table_name " \
                    f"FROM {db_name}.INFORMATION_SCHEMA.TABLES " \
                    f"WHERE LEFT(TABLE_NAME, {len(table_name)}) = '{table_name}' " \
-                   f"AND TRY_TO_DATE(RIGHT(TABLE_NAME, 8)) > TRY_TO_DATE(RIGHT({latest_rolled_table})) " \ 
-                   f"AND RIGHT(TABLE_NAME, 2) = '08' " \
-                   f"ORDER BY 1"
+                   f" AND TRY_TO_DATE(RIGHT(TABLE_NAME, 8)) > TRY_TO_DATE(RIGHT({latest_rolled_table})) " \
+                   f" AND RIGHT(TABLE_NAME, 2) = '08' " \
+                   f" ORDER BY 1"
     return query_dataframe(engine, schema_check)["table_name"]
 
 
@@ -122,8 +122,6 @@ def rollup_table_clone(engine: Engine, db_name: str, schema_name: str, table_nam
 
     tables_to_roll_up = get_tables_to_roll_up(engine, db_name, schema_name, table_name)
 
-    latest_table_name = max(tables_to_roll_up.iteritems())[1]
-
     for items in tables_to_roll_up.iteritems():
         logging.info(f"Processing {items[1]}")
         column_info = get_table_column_names(engine, db_name, items[1])
@@ -157,7 +155,7 @@ def recreate_rollup_table(engine: Engine, db_name: str, schema_name: str, table_
     :type table_name:
     :rtype: object
     """
-    tables_to_roll_up = get_tables_to_roll_up(engine, db_name, table_name)
+    tables_to_roll_up = get_tables_to_roll_up(engine, db_name, schema_name, table_name)
     latest_table_name = max(tables_to_roll_up.iteritems())[1]
     rollup_table_name = f"{db_name}.{schema_name}.{table_name}_ROLLUP"
 
