@@ -113,9 +113,8 @@ echo "Global gitignore created"
 
 ## Add in helper script
 echo "Copying make life easier script.."
-cd ~/
-curl https://gitlab.com/gitlab-data/analytics/raw/master/admin/make_life_easier.zsh > make_life_easier.zsh
-echo "source make_life_easier.zsh" >> ~/.zshrc
+curl https://gitlab.com/gitlab-data/analytics/raw/master/admin/make_life_easier.zsh > ~/.make_life_easier.zsh
+echo 'source ~/.make_life_easier.zsh' >> ~/.zshrc
 echo "Copied successfully"
 
 
