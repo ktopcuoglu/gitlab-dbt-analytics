@@ -1,33 +1,100 @@
-## Overview
 
-Goal: To help bring you, our new data team member, up to speed in the GitLab Data Team's analytics stack as efficiently as possible, without sacrificing quality for speed. There is a lot of information in the on-boarding issue, so please bookmark handbook pages, documentation pages, and log-ins for future reference. The goal is for you to complete and close the Data Team on-boarding issue within 1 week after you have completed the GitLab company on-boarding issue. These resources will be super helpful and serve as great reference material as you get up to speed and learn to work through issues and merge requests [over your first 90 days](https://gitlab.com/gitlab-com/www-gitlab-com/blob/master/source/job-families/finance/data-analyst/index.html.md#how-youll-ramp).
+# Welcome to the GitLab Data Program
 
-### Table of Contents
+Welcome to the GitLab Data Program -- we're excited to have you! The goal of this issue is to help bring you, our new data team member, up to speed in the GitLab Data Team's analytics stack as efficiently as possible, without sacrificing quality for speed. You should complete and close the Data Team on-boarding issue within 1 week after you have completed the GitLab company on-boarding issue. 
+
+## Table of Contents
+* [Getting Started](#getting-started)
 * [Access Requests](#access-requests)
-* [Getting your computer set up locally](#getting-your-computer-set-up-locally)
-* [Data stack](#data-stack)
+* [Slack Channels](#slack-channels)
+* [Team Introductions](#team-introductions)
+* [Computer Set Up](#computer-set-up)
+* [Data Stack](#data-stack)
 * [Data Operations](#data-operations)
 * [Important Data Sets](#important-data-sets)
-* [Getting Started](#getting-started)
-* [Other Stuff](#other-stuff)
+* [Supporting Information](#supporting-information)
 
+## Getting Started
 
+- [ ] Read (skim) through this full issue, just so you have a sense of what's coming.
+- [ ] Create a new issue in the Analytics project (this project). As you proceed and things are unclear, document it in the issue. Don't worry about organizing it; just brain dump it into the issue! This will help us iterate on the onboarding process.
+- [ ] Read the following pages of the handbook in their entirety. Bookmark them as you should soon be making MR's to improve our documentation!
+   - [ ] [Data Team](https://about.gitlab.com/handbook/business-ops/data-team/)
+   - [ ] [Data Direction page](https://about.gitlab.com/handbook/business-technology/data-team/direction/) to get a sense of what our short and longer-term roadmap.
+   - [ ] [Data Catalog](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/)
+- [ ] Watch @tlapiana's [talk at DataEngConf](https://www.youtube.com/watch?v=eu623QBwakc) that gives a phenomenal overview of how the team works.
+- [ ] Watch [this great talk](https://www.youtube.com/watch?v=prcz0ubTAAg) on what Analytics is
+- [ ] Watch [Overview of Growth Data at GitLab](https://www.youtube.com/watch?v=eNLkj3Ho2bk&feature=youtu.be) from Eli at the Growth Fastboot. (You'll need to be logged into GitLab Unfiltered.)
+- [ ] Browse a few of the [Data Team videos in GitLab Unfiltered](https://www.youtube.com/playlist?list=PL05JrBw4t0KrRVTZY33WEHv8SjlA_-keI)
+
+### Take a Deep Breath
+
+There is a lot of information being thrown at you over the last couple of days.
+It can all feel a bit overwhelming.
+The way we work at GitLab is unique and can be the hardest part of coming on board.
+It is really important to internalize that we work **handbook-first** and that **everything is always a work in progress**.
+Please watch one minute of [this clip](https://www.youtube.com/watch?v=LqzDY76Q8Eo&feature=youtu.be&t=7511) (you will need to be logged into GitLab unfiltered) where Sid gives a great example of why its important that we work this way.
+*This is the most important thing to learn during all of onboarding.*
 
 ## Access Requests
 
-- [ ] Join the `new slack channel?` slack channel
-- [ ] Manager: Add Snowflake Access [Instructions](https://about.gitlab.com/handbook/business-ops/data-team/platform/#warehouse-access)
-- [ ] Manager: Add to Stitch
-- [ ] Manager: Add to Fivetran.(For enabling Fivetran in Okta [use google groups](https://about.gitlab.com/handbook/business-ops/okta/#managing-okta-access-using-google-groups)) 
-- [ ] Manager: Add to Airflow as Admin - Is there an other suitable access level? 
+- [ ] Manager: Submit an Access Request to provision the new member with Data Tools
+    - [ ] Manager: Add to Lucidchart (via Okta)
+    - [ ] Manager: Add to Sisense as editor (via Okta) [example AR](https://gitlab.com/gitlab-com/team-member-epics/access-requests/-/issues/10858)
+    - [ ] Manager: Add to Snowflake [process](https://about.gitlab.com/handbook/business-ops/data-team/platform/#warehouse-access) and [example AR](https://gitlab.com/gitlab-com/team-member-epics/access-requests/-/issues/10857)
+     <!-- Analytics Engineer -->
+    - [ ] Manager: Add to Stitch
+    - [ ] Manager: Add to Fivetran.(For enabling Fivetran in Okta [use google groups](https://about.gitlab.com/handbook/business-ops/okta/#managing-okta-access-using-google-groups)) 
+    - [ ] Manager: Add to Airflow as Admin
+- [ ] Manager: Request addition to `@datateam` alias on Slack in PeopleOps Onboarding issue
+- [ ] Manager: Request addition to `@data-analysts` alias on Slack in PeopleOps Onboarding issue
+- [ ] Manager: Request addition to `Data Team` 1password vault in PeopleOps Onboarding issue
+- [ ] Manager: Add to the `gitlab-data` namespace as a Developer.
+- [ ] Manager: Update codeowners file in the handbook to include the new team member
+- [ ] Manager: Add to daily Geekbot standup (send `dashboard` to Geekbot on slack, click into a particular standup in the web UI, add via Manage button)
+- [ ] Manager: Invite to SheetLoad & Boneyard folders in Google Drive
+- [ ] Manager: Add to data team calendar as a calendar admin
+- [ ] Manager: Add to Data Team calendar
+- [ ] Manager: Add to the `GitLab Data Team` project as a Developer.
+- [ ] Manager: Add to [data triage](https://about.gitlab.com/handbook/business-ops/data-team/how-we-work/duties/#triager) in third week at GitLab (Week 1 = Company onboarding; Week 2 = Data team onboarding)
+- [ ] Manager: Add to Lucidchart `Data Team` team folder
+
+
 <!-- These permissions are optional and only thous needed should be let in the issue -->
-- [ ] Manager: Add to SFDC. [Access Request](https://gitlab.com/gitlab-com/access-requests/issues/new?issuable_template=New%20Access%20Request).
-- [ ] Manager: Add to Zuora. [Access Request](https://gitlab.com/gitlab-com/access-requests/issues/new?issuable_template=New%20Access%20Request). 
+- [ ] Manager: Add to SFDC. [Access Request](https://gitlab.com/gitlab-com/access-requests/issues/new?issuable_template=New%20Access%20Request)
+- [ ] Manager: Add to Zuora. [Access Request](https://gitlab.com/gitlab-com/access-requests/issues/new?issuable_template=New%20Access%20Request)
+- [ ] Manager: Marketo [Access Request](https://gitlab.com/gitlab-com/access-requests/issues/new?issuable_template=New%20Access%20Request)
+- [ ] Manager: Netsuite [Access Request](https://gitlab.com/gitlab-com/access-requests/issues/new?issuable_template=New%20Access%20Request)
+- [ ] Manager: Zendesk [Instructions](https://about.gitlab.com/handbook/support/internal-support/#regarding-licensing-and-subscriptions)
+
+## Team Introductions
+
+Getting to know the team
+
+- [ ] Review the [org chart](https://about.gitlab.com/company/team/org-chart/) to find your immediate team and the greater Data Team. Using your browser search to find your self on the page can be a quick way to find your team.
+- [ ] Schedule a Quarterly 1:1 meeting with the Sr. Director of Data and Analytics
+- [ ] Schedule coffee chats with members of the Data Team starting with thous in your immediate team. These should be in addition to the ones you do with other GitLab team members. Consider making these recurring meetings for every 3-4 weeks with everyone you will work closely with. In addition, you should also consider scheduling chats with Business Technology (IT, Enterprise Apps, Procurement) people as well.
 
 
-## Getting your computer set up locally
+## Slack Channels
 
-* Make sure that you have [created your SSH keys](https://docs.gitlab.com/ee/gitlab-basics/create-your-ssh-keys.html) prior to running this. You can check this by typing `ssh -T git@gitlab.com` into your terminal which should return "Welcome to GitLab, " + your_username. Make the SSH key with no password.
+Join these Slack channels:
+
+- [ ] `data`
+- [ ] `data-lounge`
+- [ ] `data-onboarding`
+- [ ] `data-daily`
+- [ ] `data-triage`
+- [ ] `data-engineering`
+- [ ] `business-technology`
+- [ ] `bt-team-lounge`
+- [ ] `dbt-runs`
+
+
+## Computer Set Up
+
+* [ ] Check that you have create your SSH keys by typing `ssh -T git@gitlab.com` into your terminal which should return "Welcome to GitLab, " + your_username.  :red_circle: This set up is required for subsequent steps
+  * [ ] If your SSH keys have not been created follow [these steps](https://docs.gitlab.com/ee/gitlab-basics/create-your-ssh-keys.html).  Make the SSH key with no password.
 
 *THE NEXT STEPS SHOULD ONLY BE RUN ON YOUR GITLAB-ISSUED LAPTOP. If you run this on your personal computer, we take no responsibility for the side effects.*
 
@@ -74,8 +141,9 @@ rm ~/onboarding_script.zsh
         * `Editor: Tab Size` is set to 4 spaces per tab
 
 ### Optional Steps
-* [ ] Install Data Grip (from JetBrains) for interfacing with databases
-    * [ ] Follow [this process](https://about.gitlab.com/handbook/tools-and-tips/#jetbrains) for requesting a license for Data Grip.  Until you have a license, you can easily use Data Grip on a trial basis for 30 days
+* Set up environment to build the handbook locally. [Instructions](https://about.gitlab.com/handbook/git-page-update/) 
+* Install Data Grip (from JetBrains) for interfacing with databases
+    * Follow [this process](https://about.gitlab.com/handbook/tools-and-tips/#jetbrains) for requesting a license for Data Grip.  Until you have a license, you can easily use Data Grip on a trial basis for 30 days
     - Change your formatting preferences in Data Grip by going to Preferences > Editor > Code Style > HTML. You should have:
         * Use tab character: unchecked
         * Tab size: 4
@@ -83,14 +151,17 @@ rm ~/onboarding_script.zsh
         * Continuation indent: 8
         * Keep indents on empty lines: unchecked
     - You can use `Command + Option + L` to format your file.
-* [ ] Consider following [these instructions](https://stackoverflow.com/a/23963086) so you can have option + arrow keys to move around the terminal easier
-* [ ] Better terminal theming - In the onboarding script the terminal has been configured to use the [bira OhMyZsh theme](https://github.com/ohmyzsh/ohmyzsh/wiki/Themes#bira). However if you would like an improved and configurable theme install [PowerLevel10K](https://github.com/romkatv/powerlevel10k) by running the below command from your terminal: 
+
+#### Terminal Improvements 
+[Improved terminal navigation](https://stackoverflow.com/a/23963086) with arrow keys.
+
+Terminal theming - In the onboarding script the terminal has been configured to use the [bira OhMyZsh theme](https://github.com/ohmyzsh/ohmyzsh/wiki/Themes#bira). However if you would like an improved and configurable theme install [PowerLevel10K](https://github.com/romkatv/powerlevel10k) by running the below command from your terminal: 
     ``` 
     git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
     ```
-    * Then reopen your terminal and you will be asked to configure this theme. If you would like to reconfigure the theme run `p10k configure`
+    Then reopen your terminal and you will be asked to configure this theme. If you would like to reconfigure the theme run `p10k configure`
 
-## Data stack
+## Data Stack
 
 Review our [Data Stack](https://about.gitlab.com/handbook/business-technology/data-team/platform/) for a general overview of the system.
 On [the Data team handbook page](https://about.gitlab.com/handbook/business-ops/data-team/platform/#extract-and-load), we explain the variety of methods used to extract data from its raw sources (`pipelines`) to load into our Snowflake data warehouse. We use open source dbt (more on this in a moment) as our transformation tool. The bulk of your projects and tasks will be in dbt , so we will spend a lot of time familiarizing yourself with those tools and then dig into specific data sources.
@@ -99,11 +170,11 @@ On [the Data team handbook page](https://about.gitlab.com/handbook/business-ops/
 
 ### The Data Warehouse - Connecting to Snowflake
 
-- [ ] Login to Snowflake using [Okta](https://gitlab.okta.com/app/UserHome) Login with the credentials that your manager created following the instructions at https://about.gitlab.com/handbook/business-ops/data-team/platform/#warehouse-access. Please note that currently Snowflake is accessed through Okta, however you still need to raise access request to get credentials, as you will need to restart your password and update dbt profile with Snowflake credentials. Access request should be raised the same way as it was for Google Cloud Platform credentials.
+- [ ] Login to Snowflake using [Okta](https://gitlab.okta.com/app/UserHome) 
 - [ ] Familiarize yourself with the [Snowflake Web UI](https://docs.snowflake.com/en/user-guide/snowflake-manager.html#worksheet-page)for querying the data warehouse. 
-- [ ] Change your password and update your role, warehouse, and database to the same info you're instructed to put in your dbt profile (Ask your manager if this is confusing or check out [roles.yml](https://gitlab.com/gitlab-data/analytics/blob/master/load/snowflake/roles.yml) to see which roles, warehouses, and databases you've been assigned). The schema does not matter because your query will reference the schema.
-- [ ] Run `alter user "your_user" set default_role = "your_role";` to set the UI default Role to your appropriate role instead of `PUBLIC`. (E.g. `alter user "KDIETZ" set default_role = "KDIETZ";`)
-- [ ] You can test your Snowflake connection in the UI by first running selecting which warehouse to use (e.g. `use warehouse ANALYST_XS;`), clicking the "play" button, and then querying a database you have access to (e.g. `select * from "PROD"."COMMON"."DIM_CRM_PERSON" limit 10;`) 
+- [ ] Update your role, warehouse, and database to the same info you're instructed to put in your dbt profile (Ask your manager if this is confusing or check out [roles.yml](https://gitlab.com/gitlab-data/analytics/blob/master/load/snowflake/roles.yml) to see which roles, warehouses, and databases you've been assigned). The schema does not matter because your query will reference the schema.
+  - [ ] Run `alter user "your_user" set default_role = "your_role";` to set the UI default Role to your appropriate role instead of `PUBLIC`. (E.g. `alter user "KDIETZ" set default_role = "KDIETZ";`)
+- [ ] Test your Snowflake connection in the UI by first running selecting which warehouse to use (e.g. `use warehouse ANALYST_XS;`), clicking the "play" button, and then querying a database you have access to (e.g. `select * from "PROD"."COMMON"."DIM_CRM_PERSON" limit 10;`) 
 
 We STRONGLY recommend using the UI, but if you must download a SQL development tool, you will need one that is compatible with Snowflake, such as [SQLWorkbench/J](http://sql-workbench.net) or [DataGrip](https://www.jetbrains.com/datagrip/). If you're interested in DataGrip, follow the [instructions to get a JetBrains license in the handbook](https://about.gitlab.com/handbook/tools-and-tips/#jetbrains). If using DataGrip, you may need to download the [Driver](https://docs.snowflake.net/manuals/user-guide/jdbc-download.html#downloading-the-driver). This template may be useful as you're configuring the DataGrip connection to Snowflake `jdbc:snowflake://{account:param}.snowflakecomputing.com/?{password}[&db={Database:param}][&warehouse={Warehouse:param}][&role={Role:param}]` We recommend not setting your schema so you can select from the many options. 
 ### Snowflake SQL
@@ -115,26 +186,24 @@ Snowflake SQL is probably not that different from the dialects of SQL you're alr
 
 ### dbt - Data Build Tool
 
-#### What is dbt?
-
 DBT is our data transformation engine that we use to build our dimensional model tables and related tables.
 
 <img src = "https://d33wubrfki0l68.cloudfront.net/18774f02c29380c2ca7ed0a6fe06e55f275bf745/a5007/ui/img/svg/product.svg">
 
-**Learning** 
+#### **Learning** 
 
 - [ ] Familiarize yourself with [dbt](https://www.getdbt.com/) and how we use it by reading our [dbt Guide](https://about.gitlab.com/handbook/business-ops/data-team/platform/dbt-guide/).
 - [ ] Watch [This podcast](https://www.dataengineeringpodcast.com/dbt-data-analytics-episode-81/). It is a general walkthrough of dbt/interview with its creator, Drew Banin.
 - [ ] Read about and and watch [Drew demo dbt docs to Emilie & Taylor](https://blog.fishtownanalytics.com/using-dbt-docs-fae6137da3c3). 
 - [ ] Read about [Scaling Knowledge](https://blog.fishtownanalytics.com/scaling-knowledge-160f9f5a9b6c) and the problem we're trying to solve with our documentation.
 
-**References** 
+#### **References** 
 - [ ] Peruse the [Official Docs](https://docs.getdbt.com).
 - [ ] Read our [SQL Style Guide](https://about.gitlab.com/handbook/business-ops/data-team/platform/sql-style-guide/).
 - [ ] Refer to http://jinja.pocoo.org/docs/2.10/templates/ as a resource for understanding Jinja which is used extensively in dbt.
 - [ ] Bookmark [our own internal documentation](https://dbt.gitlabdata.com). In addition to using dbt to manage our transformations, we use dbt to maintain documentations on those data transformations.
 
-**Getting Help**
+#### **Getting Help**
 - Consider joining [dbt slack](https://slack.getdbt.com) (Not required, but strongly recommended; if you join use your personal email).
 - Information and troubleshooting on dbt is sparse on Google & Stack Overflow, we recommend the following sources of help when you need it:
    * Your teammates! We are all here to help!
@@ -143,7 +212,7 @@ DBT is our data transformation engine that we use to build our dimensional model
    * [dbt Discourse](http://discourse.getdbt.com)
 
 
-#### Getting started with dbt
+#### **Configuring**
 
 _Ensure you've set up your SSH configuration in the previous step as this is required to connect to one our dbt packages_
 
@@ -157,20 +226,33 @@ _Ensure you've set up your SSH configuration in the previous step as this is req
 
 **Note:** If you get a weird semaphore issue error when running dbt try [this script](https://gist.github.com/llbbl/c54f44d028d014514d5d837f64e60bac) which is sourced from this [Apple forum thread](https://forums.developer.apple.com/thread/119429)
 
-### Google Cloud
+### Sisense 
 
-Data team uses GCP (Google Cloud Platform) as our cloud provider. GCP credentials are needed if you plan on connecting on your local machine to airflow or any CGP service (storage buckets, etc.) . Follow below steps to get running instance for yourself.
+Sisense is our enterprise standard data visualization application and is the only application approved for connecting to our Enterprise Data Warehouse.
 
-- [ ] Raise Access Request (AR) for Google Cloud Credentials. To do that please follow instructions here or create separate issue and copy contents from [here](https://about.gitlab.com/handbook/business-technology/team-member-enablement/onboarding-access-requests/access-requests/) or create separate issue and copy contents from [here](https://gitlab.com/gitlab-com/team-member-epics/access-requests/-/issues/10306#note_622125437). Ensure you update your name and other personal details and project name is ``gitlab-analysis.`` Assign it to your manager.
-- [ ] Please follow next step after running onboarding template, once you added GOOGLE_APPLICATION_CREDENTIALS path to your .zshrc file which can be accessed by `vi ~/.zshrc``. One of the project owners should send you configuration json file, which is important to add in your google credentials. Follow below steps:
-- [ ] Download the json file provided and move to your home directory (e.g. `/Users/yourusername`)
-- [ ] Open terminal and run the following command, replacing `yourusername` with your actual user name on your computer (type `pwd` into the terminal if you don’t know it — the path should contain your user name) and `filename.json` with you name of the file.
-    - echo export  GOOGLE_APPLICATION_CREDENTIALS=/Users/yourusername/filename.json >> ./.zshrc
-    - If you already have the variable  GOOGLE_APPLICATION_CREDENTIALS  modify its value to the file path and file name instead of adding a new one. 
-- [ ] Refresh this file by sourcing it back, by running command in terminal: ``source ~/.zshrc``.
-
+- [ ] Review the following training materials from the [Data Team Sisense](https://about.gitlab.com/handbook/business-technology/data-team/platform/periscope/#training-resources) page.
+  - [ ] Watch Accessing Sisense
+  - [ ] Review the Getting Started article
+  - [ ] Watch the Gitlab's Sisence Editor Training
+- [ ] [Sisense Admin Training Part 1](https://www.youtube.com/watch?v=YspSfOuEQV4&list=PL05JrBw4t0KrRVTZY33WEHv8SjlA_-keI&index=16)
+- [ ] [Sisense Admin Training Part 2](https://www.youtube.com/watch?v=LQT9fXw1EaE&list=PL05JrBw4t0KrRVTZY33WEHv8SjlA_-keI&index=14)
 
 ## Data Operations
+
+## How GitLab the Product Works
+
+- [ ] Familiarize yourself with GitLab CI https://docs.gitlab.com/ee/ci/quick_start/ and our running pipelines.
+- [ ] Become familiar with the [API docs](https://gitlab.com/gitlab-org/gitlab/tree/master/doc/api)
+- [ ] This is the [schema for the database](https://gitlab.com/gitlab-org/gitlab/-/blob/master/db/structure.sql)
+- [ ] If you ever want to know what queries are going on in the background while you're using GitLab.com, enable the [Performance Bar](https://docs.gitlab.com/ee/administration/monitoring/performance/performance_bar.html) and click on the numbers to the left of `pg`. This is useful for learning how the gitlab.com schema works. The performance bar can be enable by pressing `p + b` ([Shortcut Docs](https://docs.gitlab.com/ee/user/shortcuts.html)).
+
+### Metrics and Methods
+
+- [ ] Read through [SaaS Metrics 2.0](http://www.forentrepreneurs.com/saas-metrics-2/) to get a good understanding of general SaaS metrics.
+- [ ] Check out [10 Reads for Data Scientists Getting Started with Business Models](https://www.conordewey.com/blog/10-reads-for-data-scientists-getting-started-with-business-models/) and read through the collection of articles to deepen your understanding of SaaS metrics.
+- [ ] Familiarize yourself with the GitLab Metrics Sheet (search in Google Drive, it should come up) which contains most of the key metrics we use at GitLab and the [definitions of these metrics](https://about.gitlab.com/handbook/business-ops/data-team/kpi-index/).
+- [ ] Optional, for more information on Finance KPIs, you can watch this working session between the Manager, Financial Planning and Analysis and Data Analyst, Finance: [Finance KPIs](https://www.youtube.com/watch?v=dmdilBQb9PY&feature=youtu.be)
+
 
 ### Triage
 
@@ -178,11 +260,24 @@ Data triagers are the first responders to requests and problems for the Data tea
 - [ ] Read about the [Data Triage Process](https://about.gitlab.com/handbook/business-technology/data-team/how-we-work/triage/)
 - [ ] Checkout the Triage [template](https://gitlab.com/gitlab-data/analytics/-/blob/master/.gitlab/issue_templates/Data%20Triage.md)
 
-
-
 ## Important Data Sets
 
 There are many data sets brought into the Enterprise Data Warehouse, the following sections highlight some of them.  You should review the sections that are relevant for your area of focus, each data set is tagged with areas they support.  The other data sets can be skimmed for your general knowledge and information. 
+
+### GitLab.com (Product)
+This data comes from our GitLab.com SaaS product.
+
+<details>
+
+<summary>Review Steps</summary>
+
+- [ ] Become familiar with the [API docs](https://gitlab.com/gitlab-org/gitlab/tree/master/doc/api)
+- [ ] This is the [schema for the database](https://gitlab.com/gitlab-org/gitlab/-/blob/master/db/structure.sql)
+- [ ] If you ever want to know what queries are going on in the background while you're using GitLab.com, enable the [Performance Bar](https://docs.gitlab.com/ee/administration/monitoring/performance/performance_bar.html) and click on the numbers to the left of `pg`. This is useful for learning how the gitlab.com schema works. The performance bar can be enable by pressing `p + b` ([Shortcut Docs](https://docs.gitlab.com/ee/user/shortcuts.html)).
+
+</details>
+
+---
 
 ### Usage/Version Ping (Product)
 
@@ -227,7 +322,7 @@ Also referred as SFDC, Salesforce.com (Sales Force Dot Com).
 
 ### Zuora (Finance, Billing SSOT)
 
-Zuora is used for ...
+[Zuora](https://www.zuora.com/) is used for managing customer subscriptions to GitLab
 
 <details>
 
@@ -272,7 +367,7 @@ Marketo is used for ...
 
 <summary>Review Steps</summary>
 
-- [ ] For access to Marketo, your manager will need to create an [Access Request](https://gitlab.com/gitlab-com/access-requests/issues/new?issuable_template=New%20Access%20Request). Please confirm with your manager that this has been done.
+`Under Construction`
 
 </details>
 
@@ -288,7 +383,6 @@ Netsuite is used for ...
 <summary>Review Steps</summary>
 
 - [ ] Netsuite dbt models 101: Familiarize yourself with the Netsuite models by watching this [Data Netsuite dbt models](https://www.youtube.com/watch?v=u2329sQrWDY&feature=youtu.be). You will need to be logged into [GitLab Unfiltered](https://www.youtube.com/channel/UCMtZ0sc1HHNtGGWZFDRTh5A/).
-- [ ] For access to Netsuite, your manager will need to create an [Access Request](https://gitlab.com/gitlab-com/access-requests/issues/new?issuable_template=New%20Access%20Request). Please confirm with your manager that this has been done.
 
 </details>
 
@@ -303,7 +397,7 @@ Zendesk is used for ...
 
 <summary>Review Steps</summary>
 
-- [ ] For access to Zendesk, please follow the instructions in the [handbook](https://about.gitlab.com/handbook/support/internal-support/#light-agent-zendesk-accounts-available-for-all-gitlab-staff)
+`Under Construction`
 
 </details>
 
@@ -311,53 +405,35 @@ Zendesk is used for ...
 
 ### Sheetload (Various)
 
+Sheetloads are ...
+
+<details>
+
+<summary>Review Steps</summary>
+
 - [ ] Familiarize yourself with [SheetLoad](https://about.gitlab.com/handbook/business-ops/data-team/platform/#using-sheetload).
 
-## Getting Started
+</details>
 
-### How GitLab the Product Works
+---
 
-- [ ] Familiarize yourself with GitLab CI https://docs.gitlab.com/ee/ci/quick_start/ and our running pipelines.
-- [ ] Become familiar with the [API docs](https://gitlab.com/gitlab-org/gitlab/tree/master/doc/api)
-- [ ] This is the [schema for the database](https://gitlab.com/gitlab-org/gitlab/-/blob/master/db/structure.sql)
-- [ ] If you ever want to know what queries are going on in the background while you're using GitLab.com, enable the [Performance Bar](https://docs.gitlab.com/ee/administration/monitoring/performance/performance_bar.html) and click on the numbers to the left of `pg`. This is useful for learning how the gitlab.com schema works. The performance bar can be enable by pressing `p + b` ([Shortcut Docs](https://docs.gitlab.com/ee/user/shortcuts.html)).
+## Supporting Information 
 
-### Metrics and Methods
-
-- [ ] Read through [SaaS Metrics 2.0](http://www.forentrepreneurs.com/saas-metrics-2/) to get a good understanding of general SaaS metrics.
-- [ ] Check out [10 Reads for Data Scientists Getting Started with Business Models](https://www.conordewey.com/blog/10-reads-for-data-scientists-getting-started-with-business-models/) and read through the collection of articles to deepen your understanding of SaaS metrics.
-- [ ] Familiarize yourself with the GitLab Metrics Sheet (search in Google Drive, it should come up) which contains most of the key metrics we use at GitLab and the [definitions of these metrics](https://about.gitlab.com/handbook/business-ops/data-team/kpi-index/).
-- [ ] Optional, for more information on Finance KPIs, you can watch this working session between the Manager, Financial Planning and Analysis and Data Analyst, Finance: [Finance KPIs](https://www.youtube.com/watch?v=dmdilBQb9PY&feature=youtu.be)
-
-### Good First Issues:
-
-- [ ] [Replace]
-- [ ] [Replace]
+- Consider joining [Locally Optimistic slack](https://www.locallyoptimistic.com/community/)
+- Consider subscribing to the [Data Science Roundup](http://roundup.fishtownanalytics.com) (Not required, but recommended).
+- There are many Slack channels organized around interests, such as `#fitlab`, `#bookclub`, and `#woodworking`. There are also many organized by location (these all start with `#loc_`). This is a great way to connect to GitLab team members outside of the Data-team. Join some that are relevant to your interests, if you'd like.
+- Really really useful resources in [this Drive folder](https://drive.google.com/drive/folders/1wrI_7v0HwCwd-o1ryTv5dlh6GW_JyrSQ?usp=sharing) (GitLab Internal); Read the `a_README` file first.
 
 ### Resources to help you get started with your first issue
 
-- [ ] Pairing session between a new Data Analyst and a Staff Data Engineer working on the new analyst's first issue: [Pair on Lost MRR Dashboard Creation](https://www.youtube.com/watch?v=WuIcnpuS2Mg)
-- [ ] 2nd part of pairing session between a new Data Analyst and a Staff Data Engineer working on the new analyst's first issue: [Pair on Lost MRR Dashboard Creation Part 2](https://www.youtube.com/watch?v=HIlDH5gaL3M)
-- [ ] Setting up visual studio and git terminals to use for testing locally. (https://youtu.be/t5eoNLUl3x0)
-
- (Not required, but recommended).
-- [Company Call Agenda](https://docs.google.com/document/d/1JiLWsTOm0yprPVIW9W-hM4iUsRxkBt_1bpm3VXV4Muc/edit)
-- [DataOps Meeting Agenda](https://docs.google.com/document/d/1qCfpRRKQfSU3VplI45huE266CT0nB82levb3lF9xeUs/edit)
-- Optional, for more information on Finance KPIs, you can watch this working session between the Manager, Financial Planning and Analysis and Data Analyst, Finance: [Finance KPIs](https://www.youtube.com/watch?v=dmdilBQb9PY&feature=youtu.be)
-
-## Other Stuff
-
-- [ ] Familiarize yourself with the [Stitch](http://stitchdata.com) UI, as this is mostly the source of truth for what data we are loading. An email will have been sent with info on how to get logged in.
-- [ ] Consider joining [Locally Optimistic slack](https://www.locallyoptimistic.com/community/)
- (Not required, but recommended).
-- [ ] Consider subscribing to the [Data Science Roundup](http://roundup.fishtownanalytics.com) (Not required, but recommended).
-- [ ] There are many Slack channels organized around interests, such as `#fitlab`, `#bookclub`, and `#woodworking`. There are also many organized by location (these all start with `#loc_`). This is a great way to connect to GitLab team members outside of the Data-team. Join some that are relevant to your interests, if you'd like.
-- [ ] Really really useful resources in [this Drive folder](https://drive.google.com/drive/folders/1wrI_7v0HwCwd-o1ryTv5dlh6GW_JyrSQ?usp=sharing) (GitLab Internal); Read the `a_README` file first.
+- Pairing session between a new Data Analyst and a Staff Data Engineer working on the new analyst's first issue: [Pair on Lost MRR Dashboard Creation](https://www.youtube.com/watch?v=WuIcnpuS2Mg)
+- nd part of pairing session between a new Data Analyst and a Staff Data Engineer working on the new analyst's first issue: [Pair on Lost MRR Dashboard Creation Part 2](https://www.youtube.com/watch?v=HIlDH5gaL3M)
+- Setting up visual studio and git terminals to use for testing locally. [Visual Studio Setup - Data Team](https://youtu.be/t5eoNLUl3x0)
 
 
 ### References 
 
-Suggested Bookmarks None of these are required, but bookmarking these links will make life at GitLab much easier. Some of these are not hyperlinked for security concerns.
+Suggested bookmarks: none of these are required, but bookmarking these links will make life at GitLab much easier. Some of these are not hyperlinked for security concerns.
 
 -  1:1 with Manager Agenda
 - [Create new issue in Analytics Project](https://gitlab.com/gitlab-data/analytics/issues/new?issue%5Bassignee_id%5D=&issue%5Bmilestone_id%5D=)
