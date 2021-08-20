@@ -142,7 +142,7 @@ def rollup_table_clone(
 
     tables_to_roll_up = get_tables_to_roll_up(engine, db_name, schema_name, table_name)
 
-    if tables_to_roll_up is not None:
+    if not tables_to_roll_up.empty:
 
         for items in tables_to_roll_up.iteritems():
             logging.info(f"Processing {items[1]}")
@@ -187,6 +187,7 @@ def recreate_rollup_table(
     :type table_name:
     :rtype: object
     """
+    logging.info(f"Recreating {table_name}")
     tables_to_roll_up = get_tables_to_roll_up(engine, db_name, schema_name, table_name)
     latest_table_name = max(tables_to_roll_up.iteritems())[1]
     rollup_table_name = f"{db_name}.{schema_name}.{table_name}_ROLLUP"
@@ -214,5 +215,5 @@ def recreate_rollup_table(
     create_table_statement = create_table_statement[:-1] + ", ORIGINAL_TABLE_NAME TEXT)"
 
     query_executor(engine, create_table_statement)
-
+    logging.info(f"{table_name} recreated")
     return True
