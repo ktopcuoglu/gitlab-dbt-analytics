@@ -2,4 +2,4 @@ version: 2
 
 models:
   - name: zuora_api_sandbox_account_source
-    description: "Source layer for Zuora Accounts for cleaning and renaming"
+    description: Source layer for Zuora Accounts for cleaning and renaming
