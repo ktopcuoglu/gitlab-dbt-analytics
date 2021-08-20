@@ -144,7 +144,6 @@ def rollup_table_clone(engine: Engine, db_name: str, schema_name: str, table_nam
                           f"({column_string}, ORIGINAL_TABLE_NAME) " \
                           f" SELECT {select_string} '{items[1]}' as ORIGINAL_TABLE_NAME " \
                           f" FROM {db_name}.{schema_name}.{items[1]}"
-            logging.info("Running query")
             query_executor(engine, insert_stmt)
             logging.info("Successfully rolled up table clones")
     else:
