@@ -76,30 +76,6 @@ cd www-gitlab-com
 mark handbook
 echo "handbook jump alias successfully added"
 
-echo "Installing nvm.."
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
-nvm use
-
-echo "Installing yarn.."
-brew install yarn
-echo "Installing rbenv.."
-
-### Ruby setup
-brew install rbenv
-
-## Get ruby version from repo
-ruby_version=$(curl -L 'https://gitlab.com/gitlab-com/www-gitlab-com/-/raw/master/.ruby-version' )
-
-rbenv init
-rbenv install $ruby_version
-rbenv local $ruby_version
-gem install bundler
-bundle install
-##
-echo 'eval "$(rbenv init -)"' >> ~/.zshrc
-echo 'eval "$(rbenv version")"'
-
-
 ## install iterm2
 echo "Installing iTerm2.."
 cd ~/Downloads
