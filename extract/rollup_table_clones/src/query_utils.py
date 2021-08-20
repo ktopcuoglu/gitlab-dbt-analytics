@@ -126,25 +126,29 @@ def rollup_table_clone(engine: Engine, db_name: str, schema_name: str, table_nam
 
     tables_to_roll_up = get_tables_to_roll_up(engine, db_name, schema_name, table_name)
 
-    for items in tables_to_roll_up.iteritems():
-        logging.info(f"Processing {items[1]}")
-        column_info = get_table_column_names(engine, db_name, items[1])
+    if tables_to_roll_up is not None:
 
-        column_string = ", ".join((column_info)['column_name'].unique())
-        merged_df = pd.merge(column_info, roll_up_table_info, how="outer", on="column_name", )
-        select_string = " "
-        for i, row in merged_df.iterrows():
-            processed_row = process_merged_row(row)
-            if processed_row:
-                select_string = select_string + processed_row
+        for items in tables_to_roll_up.iteritems():
+            logging.info(f"Processing {items[1]}")
+            column_info = get_table_column_names(engine, db_name, items[1])
 
-        insert_stmt = f" INSERT INTO {db_name}.{schema_name}.{table_name}_ROLLUP " \
-                      f"({column_string}, ORIGINAL_TABLE_NAME) " \
-                      f" SELECT {select_string} '{items[1]}' as ORIGINAL_TABLE_NAME " \
-                      f" FROM {db_name}.{schema_name}.{items[1]}"
-        logging.info("Running query")
-        query_executor(engine, insert_stmt)
-        logging.info("Successfully rolled up table clones")
+            column_string = ", ".join((column_info)['column_name'].unique())
+            merged_df = pd.merge(column_info, roll_up_table_info, how="outer", on="column_name", )
+            select_string = " "
+            for i, row in merged_df.iterrows():
+                processed_row = process_merged_row(row)
+                if processed_row:
+                    select_string = select_string + processed_row
+
+            insert_stmt = f" INSERT INTO {db_name}.{schema_name}.{table_name}_ROLLUP " \
+                          f"({column_string}, ORIGINAL_TABLE_NAME) " \
+                          f" SELECT {select_string} '{items[1]}' as ORIGINAL_TABLE_NAME " \
+                          f" FROM {db_name}.{schema_name}.{items[1]}"
+            logging.info("Running query")
+            query_executor(engine, insert_stmt)
+            logging.info("Successfully rolled up table clones")
+    else:
+        logging.info(f"No tables to roll up for {table_name}")
 
     return True
 
