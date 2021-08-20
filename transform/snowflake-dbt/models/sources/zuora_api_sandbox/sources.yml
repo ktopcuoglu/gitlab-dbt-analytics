@@ -27,3 +27,4 @@ sources:
                   expression: "id REGEXP '[0-9a-z]{32}'"
       - name: accounting_period
         identifier: accountingperiod
+      - name: amendment

@@ -14,3 +14,11 @@ models:
         tags: ["tdf", "zuora"]
         tests:
           - not_null
+      - name: zuora_amendment_source
+        description: Source layer for Zuora Amendments for cleaning and renaming
+        columns:
+          - name: amendment_id
+            tags: ["tdf", "zuora"]
+            tests:
+              - not_null
+              - unique
