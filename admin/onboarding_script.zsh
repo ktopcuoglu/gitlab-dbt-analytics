@@ -36,6 +36,7 @@ echo "Installing the analytics project.."
 mkdir ~/repos/
 cd ~/repos/
 git clone git@gitlab.com:gitlab-data/analytics.git
+cd analytics
 mark analytics
 echo "Analytics repo successfully installed"
 
