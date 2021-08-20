@@ -190,10 +190,14 @@ def recreate_rollup_table(
     logging.info(f"Recreating {table_name}")
     tables_to_roll_up = get_tables_to_roll_up(engine, db_name, schema_name, table_name)
     latest_table_name = max(tables_to_roll_up.iteritems())[1]
+    logging.info("latest_table_name")
+    logging.info(latest_table_name)
     rollup_table_name = f"{db_name}.{schema_name}.{table_name}_ROLLUP"
-
+    logging.info("rollup_table_name")
+    logging.info(rollup_table_name)
     latest_table_columns = get_table_column_names(engine, db_name, latest_table_name)
-
+    logging.info("latest_table_columns")
+    logging.info(latest_table_columns)
     big_df = latest_table_columns
 
     for items in tables_to_roll_up.iteritems():
