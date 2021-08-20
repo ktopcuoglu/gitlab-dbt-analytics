@@ -28,8 +28,22 @@ def get_table_column_names(
             f"  WHERE TABLE_NAME = '{table_name}' order by 1 "
     return query_dataframe(engine, query)
 
-def get_tables_to_roll_up(
-    engine: Engine, db_name: str, schema_name: str, table_name: str, latest_table: bool=True,
+
+def get_existing_tables_to_roll_up(engine: Engine, db_name: str, table_name: str):
+
+    schema_check = f" SELECT table_name " \
+                   f" FROM {db_name}.INFORMATION_SCHEMA.TABLES " \
+                   f" WHERE RIGHT(TABLE_NAME, 2) = '08' " \
+                   f" AND LEFT(TABLE_NAME, {len(table_name)}) = '{table_name}' " \
+                   f" ORDER BY 1 "
+    query_results = query_dataframe(engine, schema_check)
+
+    if not query_results.empty:
+        return query_results["table_name"]
+
+
+def get_latest_tables_to_roll_up(
+    engine: Engine, db_name: str, schema_name: str, table_name: str
 ) -> pd.DataFrame:
     """
 
@@ -40,25 +54,18 @@ def get_tables_to_roll_up(
     :return:
     :rtype:
     """
-    if latest_table:
-        latest_rolled_table = get_latest_rolled_up_table_name(
-            engine, db_name, schema_name, table_name
-        )[-8:]
-        schema_check = (
-            f" SELECT table_name "
-            f" FROM {db_name}.INFORMATION_SCHEMA.TABLES "
-            f" WHERE LEFT(TABLE_NAME, {len(table_name)}) = '{table_name}' "
-            f" AND TRY_TO_DATE(RIGHT(TABLE_NAME, 8), 'YYYYMMDD') > "
-            f" TRY_TO_DATE('{latest_rolled_table}' , 'YYYYMMDD') "
-            f" AND RIGHT(TABLE_NAME, 2) = '08' "
-            f" ORDER BY 1"
-        )
-    else:
-        schema_check = f" SELECT table_name " \
-                       f" FROM {db_name}.INFORMATION_SCHEMA.TABLES " \
-                       f" WHERE RIGHT(TABLE_NAME, 2) = '08' " \
-                       f" AND LEFT(TABLE_NAME, {len(table_name)}) = '{table_name}' " \
-                       f" ORDER BY 1 "
+    latest_rolled_table = get_latest_rolled_up_table_name(
+        engine, db_name, schema_name, table_name
+    )[-8:]
+    schema_check = (
+        f" SELECT table_name "
+        f" FROM {db_name}.INFORMATION_SCHEMA.TABLES "
+        f" WHERE LEFT(TABLE_NAME, {len(table_name)}) = '{table_name}' "
+        f" AND TRY_TO_DATE(RIGHT(TABLE_NAME, 8), 'YYYYMMDD') > "
+        f" TRY_TO_DATE('{latest_rolled_table}' , 'YYYYMMDD') "
+        f" AND RIGHT(TABLE_NAME, 2) = '08' "
+        f" ORDER BY 1"
+    )
 
     query_results = query_dataframe(engine, schema_check)
 
@@ -146,7 +153,7 @@ def rollup_table_clone(
             engine, db_name, f"{table_name}_ROLLUP"
         )
 
-    tables_to_roll_up = get_tables_to_roll_up(engine, db_name, schema_name, table_name)
+    tables_to_roll_up = get_latest_tables_to_roll_up(engine, db_name, schema_name, table_name)
 
     if not tables_to_roll_up.empty:
 
@@ -194,7 +201,7 @@ def recreate_rollup_table(
     :rtype: object
     """
     logging.info(f"Recreating {table_name}")
-    tables_to_roll_up = get_tables_to_roll_up(engine, db_name, schema_name, table_name, False)
+    tables_to_roll_up = get_existing_tables_to_roll_up(engine, db_name, table_name)
     latest_table_name = max(tables_to_roll_up.iteritems())[1]
     logging.info("latest_table_name")
     logging.info(latest_table_name)
