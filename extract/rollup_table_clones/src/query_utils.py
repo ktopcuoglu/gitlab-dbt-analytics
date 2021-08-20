@@ -17,15 +17,15 @@ def get_table_column_names(
     :param table_name:
     :return:
     """
-    query = f" SELECT " \ 
-            f"  ordinal_position," \
-            f"  table_name," \ 
-            f"  column_name," \ 
-            f"  data_type," \ 
-            f"  character_maximum_length," \ 
-            f"  column_name || data_type as compare_column " \ 
-            f" FROM {db_name}.INFORMATION_SCHEMA.COLUMNS " \ 
-            f" WHERE TABLE_NAME = '{table_name}' order by 1 "
+    query = f" SELECT " \
+            f"  ordinal_position, " \
+            f"  table_name, " \
+            f"  column_name, " \
+            f"  data_type, " \
+            f"  character_maximum_length, " \
+            f"  column_name || data_type as compare_column " \
+            f"  FROM {db_name}.INFORMATION_SCHEMA.COLUMNS " \
+            f"  WHERE TABLE_NAME = '{table_name}' order by 1 "
     return query_dataframe(engine, query)
 
 
