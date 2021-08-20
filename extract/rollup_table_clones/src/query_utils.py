@@ -135,7 +135,8 @@ def rollup_table_clone(
     :rtype: object
     """
     roll_up_table_info = get_table_column_names(engine, db_name, f"{table_name}_ROLLUP")
-
+    logging.info(roll_up_table_info)
+    logging.info(type(roll_up_table_info))
     if roll_up_table_info is None:
         recreate_rollup_table(engine, db_name, schema_name, table_name)
         roll_up_table_info = get_table_column_names(
