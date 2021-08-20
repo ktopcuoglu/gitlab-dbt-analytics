@@ -12,4 +12,4 @@ sources:
       identifier: false
 
     tables:
-      - name: mart_arr_rolled_up
+      - name: mart_arr_rollup
