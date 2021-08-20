@@ -124,10 +124,6 @@ def rollup_table_clone(engine: Engine, db_name: str, schema_name: str, table_nam
 
     latest_table_name = max(tables_to_roll_up.iteritems())[1]
 
-    if latest_table_name == latest_rolled_table:
-        logging.info("All tables have been rolled up")
-        return True
-
     for items in tables_to_roll_up.iteritems():
         logging.info(f"Processing {items[1]}")
         column_info = get_table_column_names(engine, db_name, items[1])
