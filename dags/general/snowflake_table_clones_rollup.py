@@ -63,11 +63,13 @@ default_args = {
 # Create the DAG
 #  DAG will be triggered at 06:59am UTC which is 23:59 PM PST
 dag = DAG(
-    "snowflake_table_clone_rollup", default_args=default_args, schedule_interval="0 7 * * *"
+    "snowflake_table_clone_rollup",
+    default_args=default_args,
+    schedule_interval="0 7 * * *",
 )
 tables_to_rollup = [
-        "MART_ARR",
-    ]
+    "MART_ARR",
+]
 
 
 for table in tables_to_rollup:
@@ -81,13 +83,12 @@ for table in tables_to_rollup:
     cleaned_table_name = table.replace("_", "-").lower()
 
     make_clone = KubernetesPodOperator(
-            **gitlab_defaults,
-            image=DATA_IMAGE,
-            task_id=f"{cleaned_table_name}-clone-rollup",
-            name=f"{cleaned_table_name}-clone-rollup",
-            secrets=secrets,
-            env_vars=pod_env_vars,
-            arguments=[container_cmd],
-            dag=dag,
+        **gitlab_defaults,
+        image=DATA_IMAGE,
+        task_id=f"{cleaned_table_name}-clone-rollup",
+        name=f"{cleaned_table_name}-clone-rollup",
+        secrets=secrets,
+        env_vars=pod_env_vars,
+        arguments=[container_cmd],
+        dag=dag,
     )
-

@@ -7,7 +7,9 @@ from sqlalchemy.engine.base import Engine
 import logging
 
 
-def get_table_column_names(engine: Engine, db_name: str, table_name: str) -> pd.DataFrame:
+def get_table_column_names(
+    engine: Engine, db_name: str, table_name: str
+) -> pd.DataFrame:
     """
 
     :param engine:
@@ -15,19 +17,23 @@ def get_table_column_names(engine: Engine, db_name: str, table_name: str) -> pd.
     :param table_name:
     :return:
     """
-    query = f"SELECT " \
-            f"  ordinal_position," \
-            f"  table_name," \
-            f"  column_name," \
-            f"  data_type," \
-            f"  character_maximum_length," \
-            f"  column_name || data_type as compare_column " \
-            f"FROM {db_name}.INFORMATION_SCHEMA.COLUMNS " \
-            f"WHERE TABLE_NAME = '{table_name}' order by 1 "
+    query = (
+        f"SELECT "
+        f"  ordinal_position,"
+        f"  table_name,"
+        f"  column_name,"
+        f"  data_type,"
+        f"  character_maximum_length,"
+        f"  column_name || data_type as compare_column "
+        f"FROM {db_name}.INFORMATION_SCHEMA.COLUMNS "
+        f"WHERE TABLE_NAME = '{table_name}' order by 1 "
+    )
     return query_dataframe(engine, query)
 
 
-def get_tables_to_roll_up(engine: Engine, db_name: str, schema_name: str, table_name: str) -> pd.DataFrame:
+def get_tables_to_roll_up(
+    engine: Engine, db_name: str, schema_name: str, table_name: str
+) -> pd.DataFrame:
     """
 
     :param engine:
@@ -37,21 +43,27 @@ def get_tables_to_roll_up(engine: Engine, db_name: str, schema_name: str, table_
     :rtype:
     """
 
-    latest_rolled_table = get_latest_rolled_up_table_name(engine, db_name, schema_name, table_name)[-8:]
-    schema_check = f"SELECT table_name " \
-                   f"FROM {db_name}.INFORMATION_SCHEMA.TABLES " \
-                   f"WHERE LEFT(TABLE_NAME, {len(table_name)}) = '{table_name}' " \
-                   f" AND TRY_TO_DATE(RIGHT(TABLE_NAME, 8), 'YYYYMMDD') > " \
-                   f" TRY_TO_DATE('{latest_rolled_table}' , 'YYYYMMDD') " \
-                   f" AND RIGHT(TABLE_NAME, 2) = '08' " \
-                   f" ORDER BY 1"
+    latest_rolled_table = get_latest_rolled_up_table_name(
+        engine, db_name, schema_name, table_name
+    )[-8:]
+    schema_check = (
+        f"SELECT table_name "
+        f"FROM {db_name}.INFORMATION_SCHEMA.TABLES "
+        f"WHERE LEFT(TABLE_NAME, {len(table_name)}) = '{table_name}' "
+        f" AND TRY_TO_DATE(RIGHT(TABLE_NAME, 8), 'YYYYMMDD') > "
+        f" TRY_TO_DATE('{latest_rolled_table}' , 'YYYYMMDD') "
+        f" AND RIGHT(TABLE_NAME, 2) = '08' "
+        f" ORDER BY 1"
+    )
     query_results = query_dataframe(engine, schema_check)
 
     if query_results is not None:
         return query_results["table_name"]
 
 
-def get_latest_rolled_up_table_name(engine: Engine, db_name: str, schema_name: str, table_name: str):
+def get_latest_rolled_up_table_name(
+    engine: Engine, db_name: str, schema_name: str, table_name: str
+):
     """
 
     :param engine:
@@ -66,9 +78,11 @@ def get_latest_rolled_up_table_name(engine: Engine, db_name: str, schema_name: s
     :rtype:
     """
     final_table_name = f"{table_name}_ROLLUP"
-    query = f"SELECT " \
-            f" MAX(original_table_name) as latest_table_name" \
-            f" FROM {db_name}.{schema_name}.{final_table_name}"
+    query = (
+        f"SELECT "
+        f" MAX(original_table_name) as latest_table_name"
+        f" FROM {db_name}.{schema_name}.{final_table_name}"
+    )
     results = query_dataframe(engine, query)
     if results is not None:
         return results["latest_table_name"][0]
@@ -84,8 +98,8 @@ def process_merged_row(row: pd.Series) -> str:
     :rtype:
     :rtype: object
     """
-    existing_data_type = row['data_type_y']
-    joined_row = row['data_type_x']
+    existing_data_type = row["data_type_y"]
+    joined_row = row["data_type_x"]
     if type(joined_row) == float:
         return ""
 
@@ -103,13 +117,15 @@ def process_row(row: pd.Series) -> str:
     :rtype: object
     """
     character_len = row["character_maximum_length"]
-    if character_len and character_len > 0 and row['data_type'] != "TEXT":
+    if character_len and character_len > 0 and row["data_type"] != "TEXT":
         return f"{row['column_name']} {row['data_type']} ({character_len}) ,"
     else:
         return f"{row['column_name']} {row['data_type']} ,"
 
 
-def rollup_table_clone(engine: Engine, db_name: str, schema_name: str, table_name: str) -> bool:
+def rollup_table_clone(
+    engine: Engine, db_name: str, schema_name: str, table_name: str
+) -> bool:
     """
 
     :param engine:
@@ -122,7 +138,9 @@ def rollup_table_clone(engine: Engine, db_name: str, schema_name: str, table_nam
 
     if roll_up_table_info is None:
         recreate_rollup_table(engine, db_name, schema_name, table_name)
-        roll_up_table_info = get_table_column_names(engine, db_name, f"{table_name}_ROLLUP")
+        roll_up_table_info = get_table_column_names(
+            engine, db_name, f"{table_name}_ROLLUP"
+        )
 
     tables_to_roll_up = get_tables_to_roll_up(engine, db_name, schema_name, table_name)
 
@@ -132,18 +150,25 @@ def rollup_table_clone(engine: Engine, db_name: str, schema_name: str, table_nam
             logging.info(f"Processing {items[1]}")
             column_info = get_table_column_names(engine, db_name, items[1])
 
-            column_string = ", ".join((column_info)['column_name'].unique())
-            merged_df = pd.merge(column_info, roll_up_table_info, how="outer", on="column_name", )
+            column_string = ", ".join((column_info)["column_name"].unique())
+            merged_df = pd.merge(
+                column_info,
+                roll_up_table_info,
+                how="outer",
+                on="column_name",
+            )
             select_string = " "
             for i, row in merged_df.iterrows():
                 processed_row = process_merged_row(row)
                 if processed_row:
                     select_string = select_string + processed_row
 
-            insert_stmt = f" INSERT INTO {db_name}.{schema_name}.{table_name}_ROLLUP " \
-                          f"({column_string}, ORIGINAL_TABLE_NAME) " \
-                          f" SELECT {select_string} '{items[1]}' as ORIGINAL_TABLE_NAME " \
-                          f" FROM {db_name}.{schema_name}.{items[1]}"
+            insert_stmt = (
+                f" INSERT INTO {db_name}.{schema_name}.{table_name}_ROLLUP "
+                f"({column_string}, ORIGINAL_TABLE_NAME) "
+                f" SELECT {select_string} '{items[1]}' as ORIGINAL_TABLE_NAME "
+                f" FROM {db_name}.{schema_name}.{items[1]}"
+            )
             query_executor(engine, insert_stmt)
             logging.info("Successfully rolled up table clones")
     else:
@@ -152,7 +177,9 @@ def rollup_table_clone(engine: Engine, db_name: str, schema_name: str, table_nam
     return True
 
 
-def recreate_rollup_table(engine: Engine, db_name: str, schema_name: str, table_name: str) -> bool:
+def recreate_rollup_table(
+    engine: Engine, db_name: str, schema_name: str, table_name: str
+) -> bool:
     """
 
     :param engine:
@@ -173,9 +200,11 @@ def recreate_rollup_table(engine: Engine, db_name: str, schema_name: str, table_
     for items in tables_to_roll_up.iteritems():
         logging.info(f"Processing {items[1]}")
         other_data = get_table_column_names(engine, db_name, items[1])
-        big_df = big_df.append(other_data[~other_data['compare_column'].isin(big_df['compare_column'])])
+        big_df = big_df.append(
+            other_data[~other_data["compare_column"].isin(big_df["compare_column"])]
+        )
 
-    big_df = big_df.groupby(['column_name']).max().reset_index()
+    big_df = big_df.groupby(["column_name"]).max().reset_index()
 
     query_executor(engine, f"DROP TABLE IF EXISTS {rollup_table_name}")
 
@@ -184,9 +213,8 @@ def recreate_rollup_table(engine: Engine, db_name: str, schema_name: str, table_
     for i, row in big_df.iterrows():
         create_table_statement = create_table_statement + process_row(row)
 
-    create_table_statement = create_table_statement[:-1] + ', ORIGINAL_TABLE_NAME TEXT)'
+    create_table_statement = create_table_statement[:-1] + ", ORIGINAL_TABLE_NAME TEXT)"
 
     query_executor(engine, create_table_statement)
 
     return True
-
