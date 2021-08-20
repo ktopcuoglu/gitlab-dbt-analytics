@@ -28,31 +28,38 @@ def get_table_column_names(
             f"  WHERE TABLE_NAME = '{table_name}' order by 1 "
     return query_dataframe(engine, query)
 
-
 def get_tables_to_roll_up(
-    engine: Engine, db_name: str, schema_name: str, table_name: str
+    engine: Engine, db_name: str, schema_name: str, table_name: str, latest_table: bool=True,
 ) -> pd.DataFrame:
     """
 
+    :param latest_table:
     :param engine:
     :param db_name:
     :param table_name:
     :return:
     :rtype:
     """
+    if latest_table:
+        latest_rolled_table = get_latest_rolled_up_table_name(
+            engine, db_name, schema_name, table_name
+        )[-8:]
+        schema_check = (
+            f"SELECT table_name "
+            f"FROM {db_name}.INFORMATION_SCHEMA.TABLES "
+            f"WHERE LEFT(TABLE_NAME, {len(table_name)}) = '{table_name}' "
+            f" AND TRY_TO_DATE(RIGHT(TABLE_NAME, 8), 'YYYYMMDD') > "
+            f" TRY_TO_DATE('{latest_rolled_table}' , 'YYYYMMDD') "
+            f" AND RIGHT(TABLE_NAME, 2) = '08' "
+            f" ORDER BY 1"
+        )
+    else:
+        schema_check = f"SELECT table_name " \
+                       f"FROM {db_name}.INFORMATION_SCHEMA.TABLES" \
+                       f"WHERE RIGHT(TABLE_NAME, 2) = '08'" \
+                       f"AND LEFT(TABLE_NAME, {len(table_name)}) = '{table_name}' " \
+                       f"ORDER BY 1"
 
-    latest_rolled_table = get_latest_rolled_up_table_name(
-        engine, db_name, schema_name, table_name
-    )[-8:]
-    schema_check = (
-        f"SELECT table_name "
-        f"FROM {db_name}.INFORMATION_SCHEMA.TABLES "
-        f"WHERE LEFT(TABLE_NAME, {len(table_name)}) = '{table_name}' "
-        f" AND TRY_TO_DATE(RIGHT(TABLE_NAME, 8), 'YYYYMMDD') > "
-        f" TRY_TO_DATE('{latest_rolled_table}' , 'YYYYMMDD') "
-        f" AND RIGHT(TABLE_NAME, 2) = '08' "
-        f" ORDER BY 1"
-    )
     query_results = query_dataframe(engine, schema_check)
 
     if not query_results.empty:
@@ -119,7 +126,6 @@ def process_row(row: pd.Series) -> str:
         return f"{row['column_name']} {row['data_type']} ({character_len}) ,"
     else:
         return f"{row['column_name']} {row['data_type']} ,"
-
 
 def rollup_table_clone(
     engine: Engine, db_name: str, schema_name: str, table_name: str
@@ -188,7 +194,7 @@ def recreate_rollup_table(
     :rtype: object
     """
     logging.info(f"Recreating {table_name}")
-    tables_to_roll_up = get_tables_to_roll_up(engine, db_name, schema_name, table_name)
+    tables_to_roll_up = get_tables_to_roll_up(engine, db_name, schema_name, table_name, False)
     latest_table_name = max(tables_to_roll_up.iteritems())[1]
     logging.info("latest_table_name")
     logging.info(latest_table_name)
@@ -221,3 +227,4 @@ def recreate_rollup_table(
     query_executor(engine, create_table_statement)
     logging.info(f"{table_name} recreated")
     return True
+
