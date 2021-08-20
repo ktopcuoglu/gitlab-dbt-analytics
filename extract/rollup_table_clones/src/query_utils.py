@@ -45,7 +45,10 @@ def get_tables_to_roll_up(engine: Engine, db_name: str, schema_name: str, table_
                    f" TRY_TO_DATE('{latest_rolled_table}' , 'YYYYMMDD') " \
                    f" AND RIGHT(TABLE_NAME, 2) = '08' " \
                    f" ORDER BY 1"
-    return query_dataframe(engine, schema_check)["table_name"]
+    query_results = query_dataframe(engine, schema_check)
+
+    if query_results is not None:
+        return query_results["table_name"]
 
 
 def get_latest_rolled_up_table_name(engine: Engine, db_name: str, schema_name: str, table_name: str):
