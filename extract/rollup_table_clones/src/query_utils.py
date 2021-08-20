@@ -27,7 +27,7 @@ def get_table_column_names(engine: Engine, db_name: str, table_name: str) -> pd.
     return query_dataframe(engine, query)
 
 
-def get_tables_to_roll_up(engine: Engine, db_name: str, table_name: str) -> pd.DataFrame:
+def get_tables_to_roll_up(engine: Engine, db_name: str, schema_name: str, table_name: str) -> pd.DataFrame:
     """
 
     :param engine:
@@ -36,12 +36,40 @@ def get_tables_to_roll_up(engine: Engine, db_name: str, table_name: str) -> pd.D
     :return:
     :rtype:
     """
+
+    latest_rolled_table = get_latest_rolled_up_table_name(engine, db_name, schema_name, table_name)[-8:]
     schema_check = f"SELECT table_name " \
                    f"FROM {db_name}.INFORMATION_SCHEMA.TABLES " \
-                   f"WHERE RIGHT(TABLE_NAME, 2) = '08' " \
-                   f"AND LEFT(TABLE_NAME, {len(table_name)}) = '{table_name}' " \
+                   f"WHERE LEFT(TABLE_NAME, {len(table_name)}) = '{table_name}' " \
+                   f"AND TRY_TO_DATE(RIGHT(TABLE_NAME, 8)) > TRY_TO_DATE(RIGHT({latest_rolled_table})) " \ 
+                   f"AND RIGHT(TABLE_NAME, 2) = '08' " \
                    f"ORDER BY 1"
     return query_dataframe(engine, schema_check)["table_name"]
+
+
+def get_latest_rolled_up_table_name(engine: Engine, db_name: str, schema_name: str, table_name: str):
+    """
+
+    :param engine:
+    :type engine:
+    :param db_name:
+    :type db_name:
+    :param schema_name:
+    :type schema_name:
+    :param table_name:
+    :type table_name:
+    :return:
+    :rtype:
+    """
+    final_table_name = f"{table_name}_ROLLUP"
+    query = f"SELECT " \
+            f" MAX(original_table_name) as latest_table_name" \
+            f" FROM {db_name}.{schema_name}.{final_table_name}"
+    results = query_dataframe(engine, query)
+    if results is not None:
+        return results["latest_table_name"][0]
+    else:
+        return None
 
 
 def process_merged_row(row: pd.Series) -> str:
@@ -87,10 +115,19 @@ def rollup_table_clone(engine: Engine, db_name: str, schema_name: str, table_nam
     :rtype: object
     """
     roll_up_table_info = get_table_column_names(engine, db_name, f"{table_name}_ROLLUP")
+
     if roll_up_table_info is None:
         recreate_rollup_table(engine, db_name, schema_name, table_name)
         roll_up_table_info = get_table_column_names(engine, db_name, f"{table_name}_ROLLUP")
-    tables_to_roll_up = get_tables_to_roll_up(engine, db_name, table_name)
+
+    tables_to_roll_up = get_tables_to_roll_up(engine, db_name, schema_name, table_name)
+
+    latest_table_name = max(tables_to_roll_up.iteritems())[1]
+
+    if latest_table_name == latest_rolled_table:
+        logging.info("All tables have been rolled up")
+        return True
+
     for items in tables_to_roll_up.iteritems():
         logging.info(f"Processing {items[1]}")
         column_info = get_table_column_names(engine, db_name, items[1])
