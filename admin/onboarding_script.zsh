@@ -42,13 +42,7 @@ echo "Analytics repo successfully installed"
 ## you can now type "jump analytics" and you're in the right place
 
 ## gl_open is now an alias to open this on gitlab.com
-## install dbt
-echo "Installing dbt.."
-brew update
-brew tap fishtown-analytics/dbt
-brew install dbt
-echo "dbt successfully installed.. Printing version.."
-dbt --version
+
 echo "Setting up dbt profile.."
 mkdir ~/.dbt
 touch ~/.dbt/profiles.yml
