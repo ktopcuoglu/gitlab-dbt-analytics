@@ -3,3 +3,14 @@ version: 2
 models:
   - name: zuora_api_sandbox_account_source
     description: Source layer for Zuora Accounts for cleaning and renaming
+  - name: zuora_api_sandbox_accounting_period_source
+    description: Source layer for Zuora Accounting Periods for cleaning and renaming
+    columns:
+      - name: accounting_period_id
+        tags: ["tdf", "zuora"]
+        tests:
+          - not_null
+      - name: accounting_period_start_date
+        tags: ["tdf", "zuora"]
+        tests:
+          - not_null
