@@ -14,7 +14,7 @@ Welcome to the GitLab Data Program -- we're excited to have you! The goal of thi
 * [Important Data Sets](#important-data-sets)
 * [Supporting Information](#supporting-information)
 
-## Getting Started
+## Getting Started <!-- The purpose of this section is to give the new team member a foundation upon which the subsequent sections build. -->
 
 - [ ] Read (skim) through this full issue, just so you have a sense of what's coming.
 - [ ] Create a new issue in the Analytics project (this project). As you proceed and things are unclear, document it in the issue. Don't worry about organizing it; just brain dump it into the issue! This will help us iterate on the onboarding process.
@@ -26,6 +26,10 @@ Welcome to the GitLab Data Program -- we're excited to have you! The goal of thi
 - [ ] Watch [this great talk](https://www.youtube.com/watch?v=prcz0ubTAAg) on what Analytics is
 - [ ] Watch [Overview of Growth Data at GitLab](https://www.youtube.com/watch?v=eNLkj3Ho2bk&feature=youtu.be) from Eli at the Growth Fastboot. (You'll need to be logged into GitLab Unfiltered.)
 - [ ] Browse a few of the [Data Team videos in GitLab Unfiltered](https://www.youtube.com/playlist?list=PL05JrBw4t0KrRVTZY33WEHv8SjlA_-keI)
+- [ ] Watch [Data Team quick architecture overview](https://www.youtube.com/watch?v=0vlJdzYShpU)
+- [ ] **WIP: Guide on how the Data Team uses/process issues and MRs**
+
+
 
 ### Take a Deep Breath
 
@@ -36,7 +40,7 @@ It is really important to internalize that we work **handbook-first** and that *
 Please watch one minute of [this clip](https://www.youtube.com/watch?v=LqzDY76Q8Eo&feature=youtu.be&t=7511) (you will need to be logged into GitLab unfiltered) where Sid gives a great example of why its important that we work this way.
 *This is the most important thing to learn during all of onboarding.*
 
-## Access Requests
+## Access Requests <!-- The purpose of this section is to identify and drive access to all of the groups, applications, and data sources the team member will need.  -->
 
 - [ ] Manager: Submit an Access Request to provision the new member with Data Tools
     - [ ] Manager: Add to Lucidchart (via Okta)
@@ -60,14 +64,14 @@ Please watch one minute of [this clip](https://www.youtube.com/watch?v=LqzDY76Q8
 - [ ] Manager: Add to Lucidchart `Data Team` team folder
 
 
-<!-- These permissions are optional and only thous needed should be let in the issue -->
+<!-- These permissions are optional and only thous needed should be left in the issue -->
 - [ ] Manager: Add to SFDC. [Access Request](https://gitlab.com/gitlab-com/access-requests/issues/new?issuable_template=New%20Access%20Request)
 - [ ] Manager: Add to Zuora. [Access Request](https://gitlab.com/gitlab-com/access-requests/issues/new?issuable_template=New%20Access%20Request)
 - [ ] Manager: Marketo [Access Request](https://gitlab.com/gitlab-com/access-requests/issues/new?issuable_template=New%20Access%20Request)
 - [ ] Manager: Netsuite [Access Request](https://gitlab.com/gitlab-com/access-requests/issues/new?issuable_template=New%20Access%20Request)
 - [ ] Manager: Zendesk [Instructions](https://about.gitlab.com/handbook/support/internal-support/#regarding-licensing-and-subscriptions)
 
-## Team Introductions
+## Team Introductions <!-- This section is to reenforce the formal informality found within GitLab, directing the team member to meet the rest of the team. -->
 
 Getting to know the team
 
@@ -76,7 +80,7 @@ Getting to know the team
 - [ ] Schedule coffee chats with members of the Data Team starting with thous in your immediate team. These should be in addition to the ones you do with other GitLab team members. Consider making these recurring meetings for every 3-4 weeks with everyone you will work closely with. In addition, you should also consider scheduling chats with Business Technology (IT, Enterprise Apps, Procurement) people as well.
 
 
-## Slack Channels
+## Slack Channels <!-- This section is for a list of all slack channels that the team member should join as part of there regular work. -->
 
 Join these Slack channels:
 
@@ -91,7 +95,7 @@ Join these Slack channels:
 - [ ] `dbt-runs`
 
 
-## Computer Set Up
+## Computer Set Up <!-- This section is for directing the team member to set up their computer so they are ready for there every day work. -->
 
 * [ ] Check that you have create your SSH keys by typing `ssh -T git@gitlab.com` into your terminal which should return "Welcome to GitLab, " + your_username.  :red_circle: This set up is required for subsequent steps
   * [ ] If your SSH keys have not been created follow [these steps](https://docs.gitlab.com/ee/gitlab-basics/create-your-ssh-keys.html).  Make the SSH key with no password.
@@ -161,7 +165,7 @@ Terminal theming - In the onboarding script the terminal has been configured to 
     ```
     Then reopen your terminal and you will be asked to configure this theme. If you would like to reconfigure the theme run `p10k configure`
 
-## Data Stack
+## Data Stack <!-- This section is for providing detailed information to the new team member on the core tools the Data Team uses. -->
 
 Review our [Data Stack](https://about.gitlab.com/handbook/business-technology/data-team/platform/) for a general overview of the system.
 On [the Data team handbook page](https://about.gitlab.com/handbook/business-ops/data-team/platform/#extract-and-load), we explain the variety of methods used to extract data from its raw sources (`pipelines`) to load into our Snowflake data warehouse. We use open source dbt (more on this in a moment) as our transformation tool. The bulk of your projects and tasks will be in dbt , so we will spend a lot of time familiarizing yourself with those tools and then dig into specific data sources.
@@ -177,7 +181,7 @@ On [the Data team handbook page](https://about.gitlab.com/handbook/business-ops/
 - [ ] Test your Snowflake connection in the UI by first running selecting which warehouse to use (e.g. `use warehouse ANALYST_XS;`), clicking the "play" button, and then querying a database you have access to (e.g. `select * from "PROD"."COMMON"."DIM_CRM_PERSON" limit 10;`) 
 
 We STRONGLY recommend using the UI, but if you must download a SQL development tool, you will need one that is compatible with Snowflake, such as [SQLWorkbench/J](http://sql-workbench.net) or [DataGrip](https://www.jetbrains.com/datagrip/). If you're interested in DataGrip, follow the [instructions to get a JetBrains license in the handbook](https://about.gitlab.com/handbook/tools-and-tips/#jetbrains). If using DataGrip, you may need to download the [Driver](https://docs.snowflake.net/manuals/user-guide/jdbc-download.html#downloading-the-driver). This template may be useful as you're configuring the DataGrip connection to Snowflake `jdbc:snowflake://{account:param}.snowflakecomputing.com/?{password}[&db={Database:param}][&warehouse={Warehouse:param}][&role={Role:param}]` We recommend not setting your schema so you can select from the many options. 
-### Snowflake SQL
+#### Snowflake SQL
 
 Snowflake SQL is probably not that different from the dialects of SQL you're already familiar with, but here are a couple of resources to point you in the right direction:
 - [ ] [Differences we found while transition from Postgres to Snowflake](https://gitlab.com/gitlab-data/analytics/issues/645)
@@ -237,7 +241,7 @@ Sisense is our enterprise standard data visualization application and is the onl
 - [ ] [Sisense Admin Training Part 1](https://www.youtube.com/watch?v=YspSfOuEQV4&list=PL05JrBw4t0KrRVTZY33WEHv8SjlA_-keI&index=16)
 - [ ] [Sisense Admin Training Part 2](https://www.youtube.com/watch?v=LQT9fXw1EaE&list=PL05JrBw4t0KrRVTZY33WEHv8SjlA_-keI&index=14)
 
-## Data Operations
+## Data Operations <!-- This section is to provide the new team member with detailed information on processes the Data Team operates by.  -->
 
 ## How GitLab the Product Works
 
@@ -260,7 +264,7 @@ Data triagers are the first responders to requests and problems for the Data tea
 - [ ] Read about the [Data Triage Process](https://about.gitlab.com/handbook/business-technology/data-team/how-we-work/triage/)
 - [ ] Checkout the Triage [template](https://gitlab.com/gitlab-data/analytics/-/blob/master/.gitlab/issue_templates/Data%20Triage.md)
 
-## Important Data Sets
+## Important Data Sets <!-- This section is for providing the new team member general information and details on data sets specific to there role and tasks.  -->
 
 There are many data sets brought into the Enterprise Data Warehouse, the following sections highlight some of them.  You should review the sections that are relevant for your area of focus, each data set is tagged with areas they support.  The other data sets can be skimmed for your general knowledge and information. 
 
@@ -417,7 +421,7 @@ Sheetloads are ...
 
 ---
 
-## Supporting Information 
+## Supporting Information <!-- This section is other information that may be useful for a new team member for getting stated with there work. -->
 
 - Consider joining [Locally Optimistic slack](https://www.locallyoptimistic.com/community/)
 - Consider subscribing to the [Data Science Roundup](http://roundup.fishtownanalytics.com) (Not required, but recommended).
