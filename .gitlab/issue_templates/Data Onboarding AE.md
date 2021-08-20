@@ -16,9 +16,11 @@ Goal: To help bring you, our new data team member, up to speed in the GitLab Dat
 ## Access Requests
 
 - [ ] Join the `new slack channel?` slack channel
+- [ ] Manager: Add Snowflake Access [Instructions](https://about.gitlab.com/handbook/business-ops/data-team/platform/#warehouse-access)
 - [ ] Manager: Add to Stitch
 - [ ] Manager: Add to Fivetran.(For enabling Fivetran in Okta [use google groups](https://about.gitlab.com/handbook/business-ops/okta/#managing-okta-access-using-google-groups)) 
-- [ ] Manager: Add to Airflow as Admin? - Is there an other suitable access level? 
+- [ ] Manager: Add to Airflow as Admin - Is there an other suitable access level? 
+<!-- These permissions are optional and only thous needed should be let in the issue -->
 - [ ] Manager: Add to SFDC. [Access Request](https://gitlab.com/gitlab-com/access-requests/issues/new?issuable_template=New%20Access%20Request).
 - [ ] Manager: Add to Zuora. [Access Request](https://gitlab.com/gitlab-com/access-requests/issues/new?issuable_template=New%20Access%20Request). 
 
@@ -93,12 +95,13 @@ rm ~/onboarding_script.zsh
 Review our [Data Stack](https://about.gitlab.com/handbook/business-technology/data-team/platform/) for a general overview of the system.
 On [the Data team handbook page](https://about.gitlab.com/handbook/business-ops/data-team/platform/#extract-and-load), we explain the variety of methods used to extract data from its raw sources (`pipelines`) to load into our Snowflake data warehouse. We use open source dbt (more on this in a moment) as our transformation tool. The bulk of your projects and tasks will be in dbt , so we will spend a lot of time familiarizing yourself with those tools and then dig into specific data sources.
 
- - [ ] Our current data infrastructure is represented in this [system diagram](https://about.gitlab.com/handbook/business-ops/data-team/platform/infrastructure/#system-diagram)
+ - [ ] Review our current data infrastructure is represented in this [system diagram](https://about.gitlab.com/handbook/business-ops/data-team/platform/infrastructure/#system-diagram)
 
 ### The Data Warehouse - Connecting to Snowflake
 
-- [ ] Login with the credentials that your manager created following the instructions at https://about.gitlab.com/handbook/business-ops/data-team/platform/#warehouse-access. Please note that currently Snowflake is accessed through Okta, however you still need to raise access request to get credentials, as you will need to restart your password and update dbt profile with Snowflake credentials. Access request should be raised the same way as it was for Google Cloud Platform credentials.
-- [ ] Snowflake has a Web UI for querying the data warehouse that can be found under [Worksheets](https://gitlab.snowflakecomputing.com/console#/internal/worksheet). Familiarize yourself with it. Change your password and update your role, warehouse, and database to the same info you're instructed to put in your dbt profile (Ask your manager if this is confusing or check out [roles.yml](https://gitlab.com/gitlab-data/analytics/blob/master/load/snowflake/roles.yml) to see which roles, warehouses, and databases you've been assigned). The schema does not matter because your query will reference the schema.
+- [ ] Login to Snowflake using [Okta](https://gitlab.okta.com/app/UserHome) Login with the credentials that your manager created following the instructions at https://about.gitlab.com/handbook/business-ops/data-team/platform/#warehouse-access. Please note that currently Snowflake is accessed through Okta, however you still need to raise access request to get credentials, as you will need to restart your password and update dbt profile with Snowflake credentials. Access request should be raised the same way as it was for Google Cloud Platform credentials.
+- [ ] Familiarize yourself with the [Snowflake Web UI](https://docs.snowflake.com/en/user-guide/snowflake-manager.html#worksheet-page)for querying the data warehouse. 
+- [ ] Change your password and update your role, warehouse, and database to the same info you're instructed to put in your dbt profile (Ask your manager if this is confusing or check out [roles.yml](https://gitlab.com/gitlab-data/analytics/blob/master/load/snowflake/roles.yml) to see which roles, warehouses, and databases you've been assigned). The schema does not matter because your query will reference the schema.
 - [ ] Run `alter user "your_user" set default_role = "your_role";` to set the UI default Role to your appropriate role instead of `PUBLIC`. (E.g. `alter user "KDIETZ" set default_role = "KDIETZ";`)
 - [ ] You can test your Snowflake connection in the UI by first running selecting which warehouse to use (e.g. `use warehouse ANALYST_XS;`), clicking the "play" button, and then querying a database you have access to (e.g. `select * from "PROD"."COMMON"."DIM_CRM_PERSON" limit 10;`) 
 
