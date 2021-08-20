@@ -41,7 +41,7 @@ def get_tables_to_roll_up(engine: Engine, db_name: str, schema_name: str, table_
     schema_check = f"SELECT table_name " \
                    f"FROM {db_name}.INFORMATION_SCHEMA.TABLES " \
                    f"WHERE LEFT(TABLE_NAME, {len(table_name)}) = '{table_name}' " \
-                   f" AND TRY_TO_DATE(RIGHT(TABLE_NAME, 8)) > TRY_TO_DATE(RIGHT({latest_rolled_table})) " \
+                   f" AND TRY_TO_DATE(RIGHT(TABLE_NAME, 8)) > TRY_TO_DATE({latest_rolled_table}) " \
                    f" AND RIGHT(TABLE_NAME, 2) = '08' " \
                    f" ORDER BY 1"
     return query_dataframe(engine, schema_check)["table_name"]
