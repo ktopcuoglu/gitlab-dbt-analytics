@@ -42,29 +42,35 @@ Please watch one minute of [this clip](https://www.youtube.com/watch?v=LqzDY76Q8
 
 ## Access Requests <!-- The purpose of this section is to identify and drive access to all of the groups, applications, and data sources the team member will need.  -->
 
-- [ ] Manager: Submit an Access Request to provision the new member with Data Tools
-    - [ ] Manager: Add to Lucidchart (via Okta)
-    - [ ] Manager: Add to Sisense as editor (via Okta) [example AR](https://gitlab.com/gitlab-com/team-member-epics/access-requests/-/issues/10858)
-    - [ ] Manager: Add to Snowflake [process](https://about.gitlab.com/handbook/business-ops/data-team/platform/#warehouse-access) and [example AR](https://gitlab.com/gitlab-com/team-member-epics/access-requests/-/issues/10857)
-     <!-- Analytics Engineer -->
-    - [ ] Manager: Add to Stitch
-    - [ ] Manager: Add to Fivetran.(For enabling Fivetran in Okta [use google groups](https://about.gitlab.com/handbook/business-ops/okta/#managing-okta-access-using-google-groups)) 
-    - [ ] Manager: Add to Airflow as Admin
+### Submit an [Access Request](https://gitlab.com/gitlab-com/access-requests/issues/new?issuable_template=New%20Access%20Request) to provision the new member with Data Tools. 
+- [ ] Manager: Add to Lucidchart (via Okta)
+- [ ] Manager: Add to Sisense as editor (via Okta) [example AR](https://gitlab.com/gitlab-com/team-member-epics/access-requests/-/issues/10858)
+- [ ] Manager: Add to Snowflake [process](https://about.gitlab.com/handbook/business-ops/data-team/platform/#warehouse-access) and [example AR](https://gitlab.com/gitlab-com/team-member-epics/access-requests/-/issues/10857)
+    <!-- Analytics Engineer -->
+- [ ] Manager: Add to Stitch
+- [ ] Manager: Add to Fivetran.(For enabling Fivetran in Okta [use google groups](https://about.gitlab.com/handbook/business-ops/okta/#managing-okta-access-using-google-groups)) 
+- [ ] Manager: Add to Airflow as Admin
+
+### Slack
 - [ ] Manager: Request addition to `@datateam` alias on Slack in PeopleOps Onboarding issue
 - [ ] Manager: Request addition to `@data-analysts` alias on Slack in PeopleOps Onboarding issue
+
+### GitLab.com
+- [ ] Manager: Add to the `GitLab Data Team` project as a Developer.
+
+### Other Tools
 - [ ] Manager: Request addition to `Data Team` 1password vault in PeopleOps Onboarding issue
 - [ ] Manager: Add to the `gitlab-data` namespace as a Developer.
 - [ ] Manager: Update codeowners file in the handbook to include the new team member
 - [ ] Manager: Add to daily Geekbot standup (send `dashboard` to Geekbot on slack, click into a particular standup in the web UI, add via Manage button)
-- [ ] Manager: Invite to SheetLoad & Boneyard folders in Google Drive
-- [ ] Manager: Add to data team calendar as a calendar admin
+- [ ] Manager: Add to Data Team calendar as a calendar admin
 - [ ] Manager: Add to Data Team calendar
-- [ ] Manager: Add to the `GitLab Data Team` project as a Developer.
-- [ ] Manager: Add to [data triage](https://about.gitlab.com/handbook/business-ops/data-team/how-we-work/duties/#triager) in third week at GitLab (Week 1 = Company onboarding; Week 2 = Data team onboarding)
 - [ ] Manager: Add to Lucidchart `Data Team` team folder
 
-
+### Roll Specific
 <!-- These permissions are optional and only thous needed should be left in the issue -->
+- [ ] Manager: Invite to SheetLoad & Boneyard folders in Google Drive
+- [ ] Manager: Add to [data triage](https://about.gitlab.com/handbook/business-ops/data-team/how-we-work/duties/#triager) in third week at GitLab (Week 1 = Company onboarding; Week 2 = Data team onboarding)
 - [ ] Manager: Add to SFDC. [Access Request](https://gitlab.com/gitlab-com/access-requests/issues/new?issuable_template=New%20Access%20Request)
 - [ ] Manager: Add to Zuora. [Access Request](https://gitlab.com/gitlab-com/access-requests/issues/new?issuable_template=New%20Access%20Request)
 - [ ] Manager: Marketo [Access Request](https://gitlab.com/gitlab-com/access-requests/issues/new?issuable_template=New%20Access%20Request)
@@ -122,9 +128,7 @@ rm ~/onboarding_script.zsh
       * Installs all-the-things needed to contribute to [the handbook](about.gitlab.com/handbook) locally and build it locally. <!-- Do we need to build it locally? It seem that the MR pipeline replaces this for general use-->
       * Adds alias and environment variables needed for running dbt and other helper commands
 
-   
-   * Your default python version should now be python 3. Typing `which python` into a new terminal window should now return `/usr/local/anaconda3/bin/python` <!-- Is there a good reason to switch the default version of python?  I have ahd problems with this messing up some of the OS stuff in the past. -->
-   * dbt will be installed at its latest version. Typing `dbt --version` will output the current version.
+
 
 * [ ] Open a new terminal and test the following commands
     * [ ] `jump analytics` this should change the directory to `~/repos/analytics`
@@ -220,7 +224,7 @@ DBT is our data transformation engine that we use to build our dimensional model
 
 _Ensure you've set up your SSH configuration in the previous step as this is required to connect to one our dbt packages_
 
-- [ ] Follow the [instructions](https://about.gitlab.com/handbook/business-technology/data-team/platform/dbt-guide/#running-dbt) found in the handbook for running and configuring dbt.
+- [ ] Follow the [instructions](https://about.gitlab.com/handbook/business-technology/data-team/platform/dbt-guide/#Venv-workflow) found in the handbook for running and configuring dbt.
 - [ ] Run the `run-dbt` command from the analytics repository.  This will load the dbt dependencies and open a shell to virtual environment where dbt is installed allowing you run dbt commands
 - [ ] Run `dbt seed` to import the CSV's from the analytics/data into your schema. For dbt to compile this needs to be completed as some of the models have dependencies on the tables which are created by the CSV's.
 - [ ] Run `dbt run --models +staging.sfdc` from within the container to know that your connection has been successful, you are in the correct location, and everything will run smoothly.  For more details on the syntax for how to select and run the models, please refer to this [page](https://docs.getdbt.com/reference/node-selection/syntax#examples).  Afterwards, you can also try running `dbt compile` to ensure that the entire project will compile correctly.
@@ -243,7 +247,7 @@ Sisense is our enterprise standard data visualization application and is the onl
 
 ## Data Operations <!-- This section is to provide the new team member with detailed information on processes the Data Team operates by.  -->
 
-## How GitLab the Product Works
+### How GitLab the Product Works
 
 - [ ] Familiarize yourself with GitLab CI https://docs.gitlab.com/ee/ci/quick_start/ and our running pipelines.
 - [ ] Become familiar with the [API docs](https://gitlab.com/gitlab-org/gitlab/tree/master/doc/api)
