@@ -39,8 +39,8 @@ WITH source AS (
       turnonusagepingrequiredmetrics__c           AS turn_on_usage_ping_required_metrics,
       --IFF(LENGTH(TRIM(turnonoperationalmetrics__c)) > 0, turnonoperationalmetrics__c, NULL)
       --                                            AS turn_on_operational_metrics,
-      IFF(LENGTH(TRIM(contractoperationalmetrics__c)) > 0, contractoperationalmetrics__c, NULL)
-                                                  AS contract_operational_metrics,
+      --IFF(LENGTH(TRIM(contractoperationalmetrics__c)) > 0, contractoperationalmetrics__c, NULL)
+      --                                            AS contract_operational_metrics,
 
       --key_dates
       cancelleddate                               AS cancelled_date,
