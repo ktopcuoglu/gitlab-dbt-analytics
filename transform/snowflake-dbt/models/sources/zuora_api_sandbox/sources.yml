@@ -50,3 +50,17 @@ sources:
         identifier: rateplanchargetier
       - name: rate_plan
         identifier: rateplan
+      - name: refund
+      - name: revenue_schedule_item
+        identifier: revenuescheduleitem
+      - name: subscription
+        columns:
+          - name: accountid
+            description: Primary Key for Accounts
+            tests:
+              - dbt_utils.expression_is_true:
+                  expression: "accountid REGEXP '[0-9a-z]{32}'"
+              - relationships:
+                  to: source('zuora', 'account')
+                  field: id
+                  severity: warn

@@ -65,3 +65,22 @@ models:
     description: Source layer for Zuora Rate Plan Charge Tier. This is from zuora_api_sandbox used to UAT changes to the Zuora Program.
   - name: zuora_api_sandbox_rate_plan_source
     description: Source layer for Zuora Rate Plans for cleaning and renaming. This is from zuora_api_sandbox used to UAT changes to the Zuora Program.
+  - name: zuora_api_sandbox_refund_source
+    description: Source layer for Zuora Refunds for cleaning and renaming. This is from zuora_api_sandbox used to UAT changes to the Zuora Program.
+  - name: zuora_api_sandbox_revenue_schedule_item_source
+    description: Source layer for Zuora Revenue Schedule Item for cleaning and renaming. This is from zuora_api_sandbox used to UAT changes to the Zuora Program.
+    columns:
+      - name: revenue_schedule_item_id
+        tags: ["tdf", "zuora"]
+        tests:
+          - not_null
+      - name: rate_plan_charge_id
+        tags: ["tdf", "zuora"]
+        tests:
+          - not_null
+      - name: accounting_period_id
+        tags: ["tdf", "zuora"]
+        tests:
+          - not_null
+  - name: zuora_api_sandbox_subscription_source
+    description: Source layer for Zuora Subscriptions for cleaning and renaming. This is from zuora_api_sandbox used to UAT changes to the Zuora Program.
