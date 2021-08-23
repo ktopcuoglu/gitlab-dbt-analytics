@@ -71,12 +71,9 @@ def get_latest_tables_to_roll_up(
         query_results = query_dataframe(engine, schema_check)
 
         if query_results and not query_results.empty:
-            latest_table_name = query_results["latest_table_name"][0]
-            if latest_table_name:
-                return latest_table_name
-            #Hreturn query_results["table_name"]
+            return query_results["table_name"]
         else:
-            return pd.DataFrame()
+            return query_results
 
 
 def get_latest_rolled_up_table_name(
@@ -168,7 +165,7 @@ def rollup_table_clone(
         )
 
     tables_to_roll_up = get_latest_tables_to_roll_up(engine, db_name, schema_name, table_name)
-
+    logging.info(tables_to_roll_up)
     if not tables_to_roll_up.empty:
 
         for items in tables_to_roll_up.iteritems():
