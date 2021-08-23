@@ -360,20 +360,10 @@ models:
   description: Source model for sisense users roles.
   columns:
     - name: id
-      tests:
-        - not_null
     - name: updated_at
-      tests:
-        - not_null
     - name: role_id
-      tests:
-        - not_null
     - name: user_id
-      tests:
-        - not_null
     - name: space_id
-      tests:
-        - not_null
 - name: sheetload_sisense_users_source
   description: Source model for sisense users.
   columns:
