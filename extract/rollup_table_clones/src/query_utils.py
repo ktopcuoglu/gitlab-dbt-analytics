@@ -100,6 +100,9 @@ def get_latest_rolled_up_table_name(
         latest_table_name = results["latest_table_name"][0]
         if latest_table_name:
             return latest_table_name[-8:]
+    else:
+        # If empty just return the empty DF
+        return results
 
 
 
