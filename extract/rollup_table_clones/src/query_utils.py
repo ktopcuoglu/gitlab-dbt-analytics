@@ -69,8 +69,11 @@ def get_latest_tables_to_roll_up(
         )
 
         query_results = query_dataframe(engine, schema_check)
+
         if query_results and not query_results.empty:
             return query_results["table_name"]
+        else:
+            return query_results
 
 
 def get_latest_rolled_up_table_name(
