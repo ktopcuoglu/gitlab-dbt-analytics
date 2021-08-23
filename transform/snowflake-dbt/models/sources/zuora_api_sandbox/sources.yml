@@ -44,3 +44,9 @@ sources:
       - name: product_rate_plan
         identifier: productrateplan
       - name: product
+      - name: rate_plan_charge
+        identifier: rateplancharge
+      - name: rate_plan_charge_tier
+        identifier: rateplanchargetier
+      - name: rate_plan
+        identifier: rateplan
