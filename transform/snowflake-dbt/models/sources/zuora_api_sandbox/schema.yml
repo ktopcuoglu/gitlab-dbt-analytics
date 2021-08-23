@@ -2,7 +2,7 @@ version: 2
 
 models:
   - name: zuora_api_sandbox_account_source
-    description: Source layer for Zuora Accounts for cleaning and renaming
+    description: Source layer for Zuora Accounts for cleaning and renaming. This is from zuora_api_sandbox used to UAT changes to the Zuora Program.
   - name: zuora_api_sandbox_accounting_period_source
     description: Source layer for Zuora Accounting Periods for cleaning and renaming
     columns:
@@ -14,11 +14,11 @@ models:
         tags: ["tdf", "zuora"]
         tests:
           - not_null
-      - name: zuora_amendment_source
-        description: Source layer for Zuora Amendments for cleaning and renaming
-        columns:
-          - name: amendment_id
-            tags: ["tdf", "zuora"]
-            tests:
-              - not_null
-              - unique
+  - name: zuora_api_sandbox_amendment_source
+    description: Source layer for Zuora Amendments for cleaning and renaming
+    columns:
+      - name: amendment_id
+        tags: ["tdf", "zuora"]
+        tests:
+          - not_null
+          - unique
