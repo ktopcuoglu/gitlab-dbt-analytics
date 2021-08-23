@@ -363,8 +363,6 @@ models:
     - name: updated_at
     - name: role_id
     - name: user_id
-      tests:
-        - not_null
     - name: space_id
 - name: sheetload_sisense_users_source
   description: Source model for sisense users.
