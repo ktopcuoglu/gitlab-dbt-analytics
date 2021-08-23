@@ -32,7 +32,7 @@ WITH source AS (
       isinvoiceseparate                           AS is_invoice_separate,
       currentterm                                 AS current_term,
       currenttermperiodtype                       AS current_term_period_type,
-      endcustomerdetails__c                       AS sfdc_end_customer_details,
+      end_customer_details__c                     AS sfdc_end_customer_details,
       eoastarterbronzeofferaccepted__c            AS eoa_starter_bronze_offer_accepted,
       IFF(LENGTH(TRIM(turnoncloudlicensing__c)) > 0, turnoncloudlicensing__c, NULL)
                                                   AS turn_on_cloud_licensing,
