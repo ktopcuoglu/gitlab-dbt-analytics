@@ -28,3 +28,8 @@ sources:
       - name: accounting_period
         identifier: accountingperiod
       - name: amendment
+      - name: contact
+      - name: discount_applied_metrics
+        identifier: discountappliedmetrics
+      - name: invoice_item
+        identifier: invoiceitem
