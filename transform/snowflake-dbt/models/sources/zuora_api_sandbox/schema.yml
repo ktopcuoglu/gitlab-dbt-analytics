@@ -24,8 +24,6 @@ models:
           - unique
   - name: zuora_api_sandbox_contact_source
     description: Source layer for Zuora Contacts for cleaning and renaming. This is from zuora_api_sandbox used to UAT changes to the Zuora Program.
-  - name: zuora_api_sandbox_discount_applied_metrics_source
-    description: Source layer for Zuora Discount Applied Metrics  for cleaning and renaming. This is from zuora_api_sandbox used to UAT changes to the Zuora Program.
   - name: zuora_api_sandbox_invoice_item_source
     description: Source layer for Zuora Invoice Items for cleaning and renaming. This is from zuora_api_sandbox used to UAT changes to the Zuora Program.
   - name: zuora_api_sandbox_invoice_payment_source
