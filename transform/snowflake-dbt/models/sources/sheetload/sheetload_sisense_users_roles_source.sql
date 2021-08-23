@@ -6,11 +6,11 @@ WITH source AS (
 ), renamed as (
 
     SELECT
-      id::VARCHAR                            AS id,
-      updated_at::VARCHAR                    AS updated_at,
-      role_id::VARCHAR                       AS role_id,
-      user_id::VARCHAR                       AS user_id,
-      space_id::VARCHAR                      AS space_id
+      id::VARCHAR                               AS id,
+      updated_at::TIMESTAMP                     AS updated_at,
+      role_id::VARCHAR                          AS role_id,
+      user_id::VARCHAR                          AS user_id,
+      space_id::VARCHAR                         AS space_id
       
     FROM source
 )
