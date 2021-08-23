@@ -68,6 +68,7 @@ def get_latest_tables_to_roll_up(
             f" ORDER BY 1"
         )
 
+        logging.info(schema_check)
         query_results = query_dataframe(engine, schema_check)
 
         if query_results and not query_results.empty:
@@ -107,7 +108,6 @@ def get_latest_rolled_up_table_name(
     else:
         # If empty just return the empty DF
         return results
-
 
 
 def process_merged_row(row: pd.Series) -> str:
