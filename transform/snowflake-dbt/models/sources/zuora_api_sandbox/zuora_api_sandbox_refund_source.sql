@@ -18,7 +18,7 @@ WITH source AS (
       accountingcode::VARCHAR                AS accounting_code,
       amount::FLOAT                          AS refund_amount,
       billtocontactid::VARCHAR               AS bill_to_contact_id,
-      cancelledon::TIMESTAMP_TZ              AS cancelled_on,
+      -- cancelledon::TIMESTAMP_TZ              AS cancelled_on,
       comment::VARCHAR                       AS comment,
       createdbyid::VARCHAR                   AS created_by_id,
       createddate::TIMESTAMP_TZ              AS created_date,
