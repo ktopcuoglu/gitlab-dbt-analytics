@@ -40,5 +40,22 @@ models:
         tags: ["tdf", "zuora"]      
         tests:
           - not_null
-  - name: zuora__api_sandbox_invoice_source
+  - name: zuora_api_sandbox_invoice_source
     description: Source layer for Zuora Invoices for cleaning and renaming. This is from zuora_api_sandbox used to UAT changes to the Zuora Program.
+  - name: zuora_api_sandbox_product_rate_plan_charge_source
+    description: Source layer for Zuora Product Rate Plan Charges. This is from zuora_api_sandbox used to UAT changes to the Zuora Program.
+  - name: zuora_api_sandbox_product_rate_plan_charge_tier_source
+    description: Source layer for Zuora Product Rate Plan Charge Tier. This is from zuora_api_sandbox used to UAT changes to the Zuora Program.
+  - name: zuora_api_sandbox_product_rate_plan_source
+    description: Source layer for Zuora Product Rate Plans for cleaning and renaming. This is from zuora_api_sandbox used to UAT changes to the Zuora Program.
+  - name: zuora_api_sandbox_product_source
+    description: Source layer for Zuora Products for cleaning and renaming. This is from zuora_api_sandbox used to UAT changes to the Zuora Program.
+    columns:
+      - name: product_id
+        tags: ["tdf", "zuora"]
+        tests:
+          - not_null
+      - name: product_name
+        tags: ["tdf", "zuora"]
+        tests:
+          - not_null
