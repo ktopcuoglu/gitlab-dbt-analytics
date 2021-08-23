@@ -42,6 +42,37 @@ Please watch one minute of [this clip](https://www.youtube.com/watch?v=LqzDY76Q8
 
 ## Access Requests <!-- The purpose of this section is to identify and drive access to all of the groups, applications, and data sources the team member will need.  -->
 
+| Access To | Distributed Data Analyst | Data Analyst | Analytics Engineer | Data Scientist | Data Engineer | Method |
+| ------- | :----------------------: | :----------: | :----------------: | :------------: | :-----------: | ------ |
+|  Lucidchart | Yes | Yes | Yes | Yes  | Yes  | [Access Request](https://about.gitlab.com/handbook/business-technology/team-member-enablement/onboarding-access-requests/access-requests/) |
+|  Sisense |  Editor | Editor  | Editor  | Editor  | Editor | |
+|  Snowflake  | `analyst_core`  | `analyst_core`  | `analyst_core`  |  `analyst_core` | `analyst_core`| |
+|  Stitch |  No | No  | Yes | No | Yes | |
+|  Fivetran | No  | No  | Yes | No | Yes | |
+|  Airflow |  No | Analyst | Admin| No | Admin | |
+|  GCP group: `analytics`| No | No | No | Yes  | Yes  |   |
+| Slack alias: `@datateam` |   |   |   |   |   |  PeopleOps Onboarding |
+| Slack alias: `@data-analysts` |   |   |   |   |   |  PeopleOps Onboarding |
+| Slack alias: `@data-engineers` |   |   |   |   |   |  PeopleOps Onboarding |
+| Project: `GitLab Data Team` |   |   |   |   |   |   |
+| 1password vault: `Data Team` |   |   |   |   |   |  PeopleOps Onboarding |
+|  Namespce: `gitlab-data` |   |   |   |   |   |  |
+| daily Geekbot standup  |   |   |   |   |   |   |
+| codeowners file in the handbook  |   |   |   |   |   |   |
+|  Data Team calendar |   |   |   |   |   |   |
+|  Lucidchart folder: `Data Team` |   |   |   |   |   |   |
+|  Google Drive folder: SheetLoad |   |   |   |   |   |   |
+| Google Drive folder: Boneyard |   |   |   |   |   |   |
+| Salesforce  |   |   |   |   |   |   |
+|  Zuora |   |   |   |   |   |   |
+|  Marketo |   |   |   |   |   |   |
+|  Netsuite |   |   |   |   |   |   |
+|  Zendesk |   |   |   |   |   |   |
+
+|   |   |   |   |   |   |   |
+
+
+
 ### Submit an [Access Request](https://gitlab.com/gitlab-com/access-requests/issues/new?issuable_template=New%20Access%20Request) to provision the new member with Data Tools. 
 - [ ] Manager: Add to Lucidchart (via Okta)
 - [ ] Manager: Add to Sisense as editor (via Okta) [example AR](https://gitlab.com/gitlab-com/team-member-epics/access-requests/-/issues/10858)
@@ -88,17 +119,23 @@ Getting to know the team
 
 ## Slack Channels <!-- This section is for a list of all slack channels that the team member should join as part of there regular work. -->
 
-Join these Slack channels:
+- [ ] Join the Slack channels appropriate for your role:
 
-- [ ] `data`
-- [ ] `data-lounge`
-- [ ] `data-onboarding`
-- [ ] `data-daily`
-- [ ] `data-triage`
-- [ ] `data-engineering`
-- [ ] `business-technology`
-- [ ] `bt-team-lounge`
-- [ ] `dbt-runs`
+| Channel | Distributed Data Analyst | Data Analyst | Analytics Engineer | Data Scientist | Data Engineer | 
+| ------- | :----------------------: | :----------: | :----------------: | :------------: | :-----------: | 
+| `data` | Yes | Yes | Yes | Yes | Yes | 
+| `data-lounge` | Yes | Yes | Yes | Yes | Yes |
+| `data-onboarding` | Yes | Yes | Yes | Yes | Yes |
+| `data-daily` | No | Yes | Yes | Yes | Yes |
+| `data-triage` | No | Yes | Yes | Yes | Yes |
+| `data-engineering` | No | Yes | Yes | Yes | Yes |
+| `business-technology` | No | Yes | Yes | Yes | Yes |
+| `bt-team-lounge` | No | Yes | Yes | Yes | Yes |
+| `dbt-runs` | No | No | Yes | No | Yes |
+| `analytics-pipelines` | No | No | No | No | Yes |
+| `data-prom-alerts` | No | No | No | No | Yes |
+| `bt-data-science` | No | No | No | Yes | No |
+
 
 
 ## Computer Set Up <!-- This section is for directing the team member to set up their computer so they are ready for there every day work. -->
