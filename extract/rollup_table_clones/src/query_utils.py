@@ -99,6 +99,7 @@ def get_latest_rolled_up_table_name(
         f" FROM {db_name}.{schema_name}.{final_table_name}"
     )
     results = query_dataframe(engine, query)
+    logging.info(results)
     if not results.empty:
         latest_table_name = results["latest_table_name"][0]
         if latest_table_name:
