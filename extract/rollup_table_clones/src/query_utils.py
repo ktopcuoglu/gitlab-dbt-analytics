@@ -56,7 +56,7 @@ def get_latest_tables_to_roll_up(
     """
     latest_rolled_table = get_latest_rolled_up_table_name(
         engine, db_name, schema_name, table_name
-    )[-8:]
+    )
     schema_check = (
         f" SELECT table_name "
         f" FROM {db_name}.INFORMATION_SCHEMA.TABLES "
@@ -97,9 +97,9 @@ def get_latest_rolled_up_table_name(
     )
     results = query_dataframe(engine, query)
     if results is not None:
-        return results["latest_table_name"][0]
+        return results["latest_table_name"][0][-8:]
     else:
-        return None
+        return []
 
 
 def process_merged_row(row: pd.Series) -> str:
@@ -133,6 +133,7 @@ def process_row(row: pd.Series) -> str:
         return f"{row['column_name']} {row['data_type']} ({character_len}) ,"
     else:
         return f"{row['column_name']} {row['data_type']} ,"
+
 
 def rollup_table_clone(
     engine: Engine, db_name: str, schema_name: str, table_name: str
