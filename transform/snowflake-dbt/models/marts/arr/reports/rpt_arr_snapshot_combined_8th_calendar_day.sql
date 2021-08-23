@@ -124,17 +124,10 @@
     INNER JOIN snapshot_dates
       ON mart_arr_snapshot_model.arr_month = snapshot_dates.first_day_of_month
       AND mart_arr_snapshot_model.snapshot_date = snapshot_dates.snapshot_date_fpa
-    --filter out test accounts. Historical records in this model have the test accounts, so need to filter out here
-    LEFT JOIN zuora_account_source
-      ON mart_arr_snapshot_model.dim_billing_account_id = zuora_account_source.account_id
-    --filter out JiHu accounts based on correct JiHu flag logic
-    LEFT JOIN dim_crm_account
-      ON mart_arr_snapshot_model.dim_crm_account_id = dim_crm_account.dim_crm_account_id
     --calculate parent cohort month based on correct cohort logic
     LEFT JOIN parent_cohort_month_snapshot
       ON mart_arr_snapshot_model.dim_parent_crm_account_id = parent_cohort_month_snapshot.dim_parent_crm_account_id
-    WHERE LOWER(zuora_account_source.batch) != 'batch20'
-      AND dim_crm_account.is_jihu_account = 'FALSE'
+    WHERE mart_arr_snapshot_model.is_jihu_account != 'TRUE'
       AND mart_arr_snapshot_model.arr_month >= '2021-07-01'
     ORDER BY 1 DESC
 
