@@ -9,12 +9,12 @@ models:
       - name: accounting_period_id
         tags: ["tdf", "zuora_api_sandbox"]
         tests:
-          - not_null
+          - not_null:
               severity: warn
       - name: accounting_period_start_date
         tags: ["tdf", "zuora_api_sandbox"]
         tests:
-          - not_null
+          - not_null:
               severity: warn
   - name: zuora_api_sandbox_amendment_source
     description: Source layer for Zuora Amendments for cleaning and renaming. This is from zuora_api_sandbox used to UAT changes to the Zuora Program.
@@ -22,9 +22,9 @@ models:
       - name: amendment_id
         tags: ["tdf", "zuora_api_sandbox"]
         tests:
-          - not_null
+          - not_null:
               severity: warn
-          - unique
+          - unique:
               severity: warn
   - name: zuora_api_sandbox_contact_source
     description: Source layer for Zuora Contacts for cleaning and renaming. This is from zuora_api_sandbox used to UAT changes to the Zuora Program.
@@ -36,14 +36,14 @@ models:
       - name: invoice_payment_id
         tags: ["tdf", "zuora_api_sandbox"]      
         tests:
-          - not_null 
+          - not_null: 
               severity: warn
-          - unique
+          - unique:
               severity: warn
       - name: invoice_id
         tags: ["tdf", "zuora_api_sandbox"]      
         tests:
-          - not_null
+          - not_null:
               severity: warn
   - name: zuora_api_sandbox_invoice_source
     description: Source layer for Zuora Invoices for cleaning and renaming. This is from zuora_api_sandbox used to UAT changes to the Zuora Program.
@@ -59,12 +59,12 @@ models:
       - name: product_id
         tags: ["tdf", "zuora_api_sandbox"]
         tests:
-          - not_null
+          - not_null:
               severity: warn
       - name: product_name
         tags: ["tdf", "zuora_api_sandbox"]
         tests:
-          - not_null
+          - not_null:
               severity: warn
   - name: zuora_api_sandbox_rate_plan_charge_source
     description: Source layer for Zuora Rate Plan Charges for cleaning and renaming. This is from zuora_api_sandbox used to UAT changes to the Zuora Program.
@@ -80,17 +80,17 @@ models:
       - name: revenue_schedule_item_id
         tags: ["tdf", "zuora_api_sandbox"]
         tests:
-          - not_null
+          - not_null:
               severity: warn
       - name: rate_plan_charge_id
         tags: ["tdf", "zuora_api_sandbox"]
         tests:
-          - not_null
+          - not_null:
               severity: warn
       - name: accounting_period_id
         tags: ["tdf", "zuora_api_sandbox"]
         tests:
-          - not_null
+          - not_null:
               severity: warn
   - name: zuora_api_sandbox_subscription_source
     description: Source layer for Zuora Subscriptions for cleaning and renaming. This is from zuora_api_sandbox used to UAT changes to the Zuora Program.
