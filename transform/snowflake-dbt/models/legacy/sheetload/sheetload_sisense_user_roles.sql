@@ -1,7 +1,7 @@
 WITH source AS (
 
     SELECT *
-    FROM {{ ref('sheetload_sisense_users_roles_source') }}
+    FROM {{ ref('sheetload_sisense_user_roles_source') }}
 
 )
 
