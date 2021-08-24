@@ -123,17 +123,17 @@ WITH dim_billing_account AS (
       dim_subscription.subscription_lineage                                                 AS subscription_lineage,
       dim_subscription.subscription_cohort_month                                            AS subscription_cohort_month,
       dim_subscription.subscription_cohort_quarter                                          AS subscription_cohort_quarter,
-      MIN(dim_subscription.subscription_cohort_month) OVER (
+      MIN(arr_month.date_actual) OVER (
           PARTITION BY dim_billing_account.dim_billing_account_id)                          AS billing_account_cohort_month,
-      MIN(dim_subscription.subscription_cohort_quarter) OVER (
+      MIN(arr_month.first_day_of_fiscal_quarter) OVER (
           PARTITION BY dim_billing_account.dim_billing_account_id)                          AS billing_account_cohort_quarter,
-      MIN(dim_subscription.subscription_cohort_month) OVER (
+      MIN(arr_month.date_actual) OVER (
           PARTITION BY dim_crm_account.dim_crm_account_id)                                  AS crm_account_cohort_month,
-      MIN(dim_subscription.subscription_cohort_quarter) OVER (
+      MIN(arr_month.first_day_of_fiscal_quarter) OVER (
           PARTITION BY dim_crm_account.dim_crm_account_id)                                  AS crm_account_cohort_quarter,
-      MIN(dim_subscription.subscription_cohort_month) OVER (
+      MIN(arr_month.date_actual) OVER (
           PARTITION BY dim_crm_account.dim_parent_crm_account_id)                           AS parent_account_cohort_month,
-      MIN(dim_subscription.subscription_cohort_quarter) OVER (
+      MIN(arr_month.first_day_of_fiscal_quarter) OVER (
           PARTITION BY dim_crm_account.dim_parent_crm_account_id)                           AS parent_account_cohort_quarter,
       dim_subscription.turn_on_cloud_licensing                                              AS turn_on_cloud_licensing,
       dim_subscription.turn_on_operational_metrics                                          AS turn_on_operational_metrics,
@@ -223,7 +223,7 @@ WITH dim_billing_account AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@iweeks",
+    updated_by="@jpeguero",
     created_date="2021-07-29",
-    updated_date="2021-08-09"
+    updated_date="2021-08-24"
 ) }}
