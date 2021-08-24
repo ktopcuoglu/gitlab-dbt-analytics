@@ -28,6 +28,7 @@ def get_pmg_reporting_data_query(start_date: str, end_date: str) -> str:
         f"  content,"
         f"  team,"
         f"  budget,"
+        f"  sales_segment,"
         f"  data_source,"
         f"  impressions,"
         f"  clicks,"
