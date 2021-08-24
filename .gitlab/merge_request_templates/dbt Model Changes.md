@@ -78,7 +78,7 @@ Example: You might be looking at the count of opportunities before and after, if
 </details>
 </details>
 
-#### Testing - any exceptions must me noted
+#### Testing - any exceptions must be noted
 
 <details>
 <summary><i>Click to toggle Testing</i></summary>
