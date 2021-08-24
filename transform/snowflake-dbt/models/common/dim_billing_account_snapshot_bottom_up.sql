@@ -14,7 +14,7 @@
     SELECT *
     FROM {{ ref('zuora_account_snapshots_source') }}
     WHERE is_deleted = FALSE
-      AND LOWER(batch) != 'batch20'
+      AND LOWER(live_batch) != 'batch20'
 
 ), zuora_account_spined AS (
 
