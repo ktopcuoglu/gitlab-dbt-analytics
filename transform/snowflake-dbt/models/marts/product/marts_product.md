@@ -78,4 +78,5 @@ Only events that happened the last 400 days are included in this table.
 Mart table containing quantitative data related to CI runner activity on GitLab.com.
  
 These metrics are aggregated at a daily grain per `dim_project_id`.
+
 {% enddocs %}
