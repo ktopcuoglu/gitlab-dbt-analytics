@@ -60,6 +60,13 @@ WITH account_dims_mapping AS (
     FROM {{ ref('sfdc_lead_source') }}
     WHERE is_deleted = 'FALSE'
 
+), sfdc_lead_converted AS (
+
+    SELECT *
+    FROM sfdc_leads
+    WHERE is_converted
+    QUALIFY ROW_NUMBER() OVER(PARTITION BY converted_contact_id ORDER BY converted_date DESC) = 1
+
 ) , marketing_qualified_leads AS(
 
     SELECT
@@ -214,7 +221,7 @@ WITH account_dims_mapping AS (
       ON crm_person.sfdc_record_id = sfdc_leads.lead_id
     LEFT JOIN sfdc_contacts
       ON crm_person.sfdc_record_id = sfdc_contacts.contact_id
-    LEFT JOIN sfdc_leads AS sfdc_lead_converted
+    LEFT JOIN sfdc_lead_converted
       ON crm_person.sfdc_record_id = sfdc_lead_converted.converted_contact_id
     LEFT JOIN mqls
       ON crm_person.dim_crm_person_id = mqls.crm_person_id
