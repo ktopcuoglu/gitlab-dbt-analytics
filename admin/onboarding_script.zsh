@@ -11,7 +11,7 @@ brew install git
 echo "git successfully installed"
 
 ## set up git config
-git config --global user.name “Your Real Name”   # e.g. “John Smith“
+git config --global user.name “Your Real/Display Name”   # e.g. “John Smith“
 git config --global user.email your_gitlab_email # e.g. jsmith@gitlab.com
 # list your git config properties
 git config --list
