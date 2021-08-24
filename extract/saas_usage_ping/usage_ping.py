@@ -104,7 +104,7 @@ class UsagePing(object):
 
         snowflake_stage_load_copy_remove(
             f"{json_file_name}.json",
-            "raw.gitlab_data_yaml.gitlab_data_yaml_loads",
+            "raw.gitlab_data_yaml.gitlab_data_yaml_load",
             f"raw.saas_usage_ping.instance_redis_metrics",
             self.loader_engine,
         )        
