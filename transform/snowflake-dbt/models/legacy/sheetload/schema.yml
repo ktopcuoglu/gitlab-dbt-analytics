@@ -100,8 +100,8 @@ models:
   description: SDR counts by fiscal quarter and sales segment.
 - name: sheetload_sisense_users
   description: source model for Sisense users.
-- name: sheetload_sisense_users_roles
-  description: source model for Sisense users roles.
+- name: sheetload_sisense_user_roles
+  description: source model for Sisense user roles.
 - name: sheetload_social_marketing_metrics
 - name: sheetload_social_marketing_topic_metrics
 - name: sheetload_net_arr_net_iacv_conversion_factors

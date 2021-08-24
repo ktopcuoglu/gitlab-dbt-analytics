@@ -356,10 +356,12 @@ models:
     - name: fiscal_quarter
       tests:
         - not_null
-- name: sheetload_sisense_users_roles_source
+- name: sheetload_sisense_user_roles_source
   description: Source model for sisense users roles.
   columns:
     - name: id
+      tests:
+        - not_null
     - name: updated_at
     - name: role_id
     - name: user_id
