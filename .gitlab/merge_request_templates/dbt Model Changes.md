@@ -22,15 +22,66 @@ If you are the person who will be using this data and/or the dashboard it depend
 
 ## Submitter Checklist
 
+#### Testing - any exceptions must be noted
+
+- [ ] Every model should be [tested](https://docs.getdbt.com/docs/testing-and-documentation) AND documented in a `schema.yml` file. At minimum, unique, not nullable fields, and foreign key constraints should be tested, if applicable.
+- [ ] All models should be integrated into the [trusted data framework](https://about.gitlab.com/handbook/business-technology/data-team/platform/#tdf)
+- [ ] Run the appropriate pipeline for the model changes in this MR
+  - [ ] If there is an associated MR in the [Data Tests](https://gitlab.com/gitlab-data/data-tests) project, be sure to pass the branch name to the manual job using the `DATA_TEST_BRANCH` environment variable.
+- [ ] If the periscope_query job failed, validate that the changes you've made don't affect the grain of the table or the expected output in Periscope.
+- [ ] If you are on the Data Team, please paste the output of `dbt test` when run locally below. Any failing tests should be fixed or explained prior to requesting a review.
+
+<summary> dbt test results </summary>
+
+<pre><code>
+
+Paste the results of dbt test here, including the command.
+
+</code></pre>
+
+
 #### Style & Structure
-<details>
-<summary><i>Click to toggle Style & Structure</i></summary>
 
 - [ ] Field names should all be lowercased.
 - [ ] Function names should all be capitalized.
 - [ ] Ensure source tables/views are only referenced within [base models](https://about.gitlab.com/handbook/business-ops/data-team/platform/sql-style-guide/#base-models).
 - [ ] All references to existing tables/views/sources (i.e. `{{ ref('...') }}` statements) should be placed in CTEs at the top of the file.
 - [ ] If you are using [custom schemas](https://docs.getdbt.com/docs/using-custom-schemas) or modifying [materializations](https://docs.getdbt.com/docs/materializations), ensure these attributes are specified in the model.
+
+
+#### Pipelines
+
+<summary><i>Click to toggle Pipelines</i></summary>
+
+
+* [ ] Run the dbt_models pipeline with the full model selection syntax for all models which have changed
+    * [ ] which model selector did you use?: <!--- e.g. : +dim_subscription ---> 
+* [ ] Re-run the dbt_models pipeline (you may need to create a new pipeline with the "Run Pipeline" button), running only the models which have changed; e.g: dim_subscription. To remove any un-related pipeline failures.  
+
+**Which pipeline job do I run?** See our [handbook page](https://about.gitlab.com/handbook/business-ops/data-team/platform/ci-jobs/) on our CI jobs to better understand which job to run.
+
+**Provide an explanation here in case of any pipeline failures:**
+<!--- explanation per pipeline failure and indicate why this is accepted ---> 
+
+
+**What to do for failed pipelines** See our [handbook page](https://about.gitlab.com/handbook/business-ops/data-team/platform/ci-jobs/#what-to-do-if-a-pipeline-fails) 
+
+#### Auditing
+<details>
+<summary><i>Click to toggle Auditing</i></summary>
+What are you using to audit your results are accurate If you have an existing report/dashboard/dataset as reference, please provide your query used to validate the results of your model changes. If this is the first iteration of a model or validation is otherwise out of scope, please provide additional context.
+
+- [ ] Have you updated the values in any `dbt_audit` macros that you're referencing?
+
+<details>
+<summary> Paste query and results here </summary>
+
+<pre><code>
+
+Example: You might be looking at the count of opportunities before and after, if you're editing the opportunity model.
+
+</code></pre>
+</details>
 </details>
 
 #### Macros
@@ -58,64 +109,6 @@ If you are the person who will be using this data and/or the dashboard it depend
 - [ ] Does this MR change the **schema** or **model name** of any existing models?
   - [ ] Create an issue to change all existing periscope reporting to reference the new schema/name.
   - [ ] After merging, ensure the old model is dropped from snowflake. This can be done by creating an issue specifying the tables/models to be dropped and assiging to a snowflake admin. 
-</details>
-
-#### Auditing
-<details>
-<summary><i>Click to toggle Auditing</i></summary>
-What are you using to audit your results are accurate If you have an existing report/dashboard/dataset as reference, please provide your query used to validate the results of your model changes. If this is the first iteration of a model or validation is otherwise out of scope, please provide additional context.
-
-- [ ] Have you updated the values in any `dbt_audit` macros that you're referencing?
-
-<details>
-<summary> Paste query and results here </summary>
-
-<pre><code>
-
-Example: You might be looking at the count of opportunities before and after, if you're editing the opportunity model.
-
-</code></pre>
-</details>
-</details>
-
-#### Testing - any exceptions must be noted
-
-<details>
-<summary><i>Click to toggle Testing</i></summary>
-
-- [ ] Every model should be [tested](https://docs.getdbt.com/docs/testing-and-documentation) AND documented in a `schema.yml` file. At minimum, unique, not nullable fields, and foreign key constraints should be tested, if applicable.
-- [ ] All models should be integrated into the [trusted data framework](https://about.gitlab.com/handbook/business-technology/data-team/platform/#tdf)
-- [ ] Run the appropriate pipeline for the model changes in this MR
-  - [ ] If there is an associated MR in the [Data Tests](https://gitlab.com/gitlab-data/data-tests) project, be sure to pass the branch name to the manual job using the `DATA_TEST_BRANCH` environment variable.
-- [ ] If the periscope_query job failed, validate that the changes you've made don't affect the grain of the table or the expected output in Periscope.
-- [ ] If you are on the Data Team, please paste the output of `dbt test` when run locally below. Any failing tests should be fixed or explained prior to requesting a review.
-
-<summary> dbt test results </summary>
-
-<pre><code>
-
-Paste the results of dbt test here, including the command.
-
-</code></pre>
-
-</details>
-
-#### Pipelines
-
-<details> 
-<summary><i>Click to toggle Pipelines</i></summary>
-
-
-* [ ] Run the dbt_models pipeline with the full model selection syntax for all models which have changed (e.g. : +dim_subscription)
-* [ ] Re-run the dbt_models pipeline (you may need to create a new pipeline with the "Run Pipeline" button), running only the models which have changed; e.g: dim_subscription. To remove any un-related pipeline failures.  
-
-**Which pipeline job do I run?** See our [handbook page](https://about.gitlab.com/handbook/business-ops/data-team/platform/ci-jobs/) on our CI jobs to better understand which job to run.
-
-**Provide an explanation here in case of any pipeline failures:**
-<!--- explanation per pipeline failure and indicate why this is accepted ---> 
-
-
-**What to do for failed pipelines** See our [handbook page](https://about.gitlab.com/handbook/business-ops/data-team/platform/ci-jobs/#what-to-do-if-a-pipeline-fails) 
 </details>
 
 ## All MRs Checklist
