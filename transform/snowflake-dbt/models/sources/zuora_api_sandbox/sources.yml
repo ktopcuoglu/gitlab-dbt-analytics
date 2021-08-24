@@ -2,7 +2,7 @@ version: 2
 
 sources:
   - name: zuora_api_sandbox
-    tags: ["tdf","zuora_api_sandbox"]
+    tags: ["tdf","zuora"]
     database: '{{ env_var("SNOWFLAKE_LOAD_DATABASE") }}'
     schema: zuora_api_sandbox_stitch
     loader: Stitch
