@@ -7,21 +7,25 @@ models:
     description: Source layer for Zuora Accounting Periods for cleaning and renaming
     columns:
       - name: accounting_period_id
-        tags: ["tdf", "zuora"]
+        tags: ["tdf", "zuora_api_sandbox"]
         tests:
           - not_null
+              severity: warn
       - name: accounting_period_start_date
-        tags: ["tdf", "zuora"]
+        tags: ["tdf", "zuora_api_sandbox"]
         tests:
           - not_null
+              severity: warn
   - name: zuora_amendment_source
     description: Source layer for Zuora Amendments for cleaning and renaming
     columns:
       - name: amendment_id
-        tags: ["tdf", "zuora"]
+        tags: ["tdf", "zuora_api_sandbox"]
         tests:
           - not_null
+              severity: warn
           - unique
+              severity: warn
   - name: zuora_contact_source
     description: Source layer for Zuora Contacts for cleaning and renaming
   - name: zuora_discount_applied_metrics_source
@@ -34,14 +38,17 @@ models:
     description: Source layer for Zuora Products for cleaning and renaming
     columns:
       - name: invoice_payment_id
-        tags: ["tdf", "zuora"]      
+        tags: ["tdf", "zuora_api_sandbox"]      
         tests:
           - not_null
+              severity: warn
           - unique
+              severity: warn
       - name: invoice_id
-        tags: ["tdf", "zuora"]      
+        tags: ["tdf", "zuora_api_sandbox"]      
         tests:
           - not_null
+              severity: warn
   - name: zuora_product_rate_plan_charge_source
     description: Source layer for Zuora Product Rate Plan Charges
   - name: zuora_product_rate_plan_charge_tier_source
@@ -52,13 +59,15 @@ models:
     description: Source layer for Zuora Products for cleaning and renaming
     columns:
       - name: product_id
-        tags: ["tdf", "zuora"]
+        tags: ["tdf", "zuora_api_sandbox"]
         tests:
           - not_null
+              severity: warn
       - name: product_name
-        tags: ["tdf", "zuora"]
+        tags: ["tdf", "zuora_api_sandbox"]
         tests:
           - not_null
+              severity: warn
   - name: zuora_rate_plan_source
     description: Source layer for Zuora Rate Plans for cleaning and renaming
   - name: zuora_rate_plan_charge_source
@@ -69,17 +78,20 @@ models:
     description: Source layer for Zuora Revenue Schedule Item for cleaning and renaming
     columns:
       - name: revenue_schedule_item_id
-        tags: ["tdf", "zuora"]
+        tags: ["tdf", "zuora_api_sandbox"]
         tests:
           - not_null
+              severity: warn
       - name: rate_plan_charge_id
-        tags: ["tdf", "zuora"]
+        tags: ["tdf", "zuora_api_sandbox"]
         tests:
           - not_null
+              severity: warn
       - name: accounting_period_id
-        tags: ["tdf", "zuora"]
+        tags: ["tdf", "zuora_api_sandbox"]
         tests:
           - not_null
+              severity: warn
   - name: zuora_refund_source
     description: Source layer for Zuora Refunds for cleaning and renaming
   - name: zuora_subscription_source
