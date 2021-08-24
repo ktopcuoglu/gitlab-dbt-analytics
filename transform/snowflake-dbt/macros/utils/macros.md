@@ -57,6 +57,10 @@ This macro **is specific** to pgp tables (gitlab_dotcom, version, license) and s
 This is the GitLab overwrite for the dbt internal macro. See our [dbt guide](https://about.gitlab.com/handbook/business-ops/data-team/platform/dbt-guide/#general) for more info on how this works.
 {% enddocs %}
 
+{% docs get_column_values_ordered %}
+This macro retrieves the column values for a references table and allows you to order the column values once fetched.
+{% enddocs %}
+
 {% docs get_date_id %}
 This creates a conformed date_id for use in with the date dimension in common. This macro should always be used when the output for a column is meant to join with date_id in the date dimension. This macro does not include an alias so an alias must always be applied. 
 {% enddocs %}

@@ -87,6 +87,11 @@ databases:
     - mcooper_prep:
         shared: no
 
+    - mlaanen_prod:
+        shared: no
+    - mlaanen_prep:
+        shared: no
+
     - mpeychet_prod:
         shared: no
     - mpeychet_prep:
@@ -111,6 +116,11 @@ databases:
         shared: no
     - parmstrong_prep:
         shared: no
+
+    - pempey_prod:
+        shared: no
+    - pempey_prep:
+        shared: no    
 
     - rbacovic_prod:
         shared: no
@@ -1994,10 +2004,8 @@ roles:
             - reporting
 
     - ahoffbauer:
-        member_of:
-            - people_operations
-        warehouses:
-            - analyst_xs
+        member_of: []
+        warehouses: []
 
     - aladhani:
         member_of:
@@ -2156,6 +2164,13 @@ roles:
     - datwood:
         member_of: []
         warehouses: []
+
+    - degan:
+        member_of:
+            - reporter
+            - analyst_marketing
+        warehouses:
+            - analyst_xs
 
     - dknox:
         member_of: []
@@ -2373,10 +2388,8 @@ roles:
             - analyst_xs
 
     - hfrancisco:
-        member_of:
-            - people_operations
-        warehouses:
-            - analyst_xs
+        member_of: []
+        warehouses: []
 
     - hsharma:
         warehouses:
@@ -2473,7 +2486,14 @@ roles:
            - analyst_engineering
         warehouses:
            - analyst_xs
-      
+
+    - jahye:
+        member_of:
+            - reporter
+            - analyst_marketing
+        warehouses:
+            - analyst_xs
+    
     - jameson:
         member_of:
             - analyst_marketing
@@ -2949,6 +2969,45 @@ roles:
         warehouses:
             - reporting
 
+    - mlaanen:
+        member_of:
+            - analyst_core
+            - data_manager
+        warehouses:
+            - analyst_xs
+        owns:
+            databases:
+                - mlaanen_prep
+                - mlaanen_prod
+            schemas:
+                - mlaanen_prep.*
+                - mlaanen_prod.*
+            tables:
+                - mlaanen_prep.*.*
+                - mlaanen_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - mlaanen_prep
+                    - mlaanen_prod
+                write:
+                    - mlaanen_prep
+                    - mlaanen_prod
+            schemas:
+                read:
+                    - mlaanen_prep.*
+                    - mlaanen_prod.*
+                write:
+                    - mlaanen_prep.*
+                    - mlaanen_prod.*
+            tables:
+                read:
+                    - mlaanen_prep.*.*
+                    - mlaanen_prod.*.*
+                write:
+                    - mlaanen_prep.*.*
+                    - mlaanen_prod.*.*        
+
     - mlancini:
         warehouses:
             - reporting
@@ -3192,6 +3251,47 @@ roles:
             - bamboohr_sensitive_separations
         warehouses:
             - analyst_xs
+
+    - pempey:
+        member_of:
+            - engineer
+        warehouses:
+            - engineer_xs
+            - engineer_xl
+            - loading
+            - reporting
+        owns:
+            databases:
+                - pempey_prep
+                - pempey_prod
+            schemas:
+                - pempey_prep.*
+                - pempey_prod.*
+            tables:
+                - pempey_prep.*.*
+                - pempey_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - pempey_prep
+                    - pempey_prod
+                write:
+                    - pempey_prep
+                    - pempey_prod
+            schemas:
+                read:
+                    - pempey_prep.*
+                    - pempey_prod.*
+                write:
+                    - pempey_prep.*
+                    - pempey_prod.*
+            tables:
+                read:
+                    - pempey_prep.*.*
+                    - pempey_prod.*.*
+                write:
+                    - pempey_prep.*.*
+                    - pempey_prod.*.*
 
     - periscope:
         warehouses:
@@ -3493,10 +3593,8 @@ roles:
         warehouses: []
 
     - tknudsen:
-        member_of:
-            - bamboohr_sensitive_separations
-        warehouses:
-            - analyst_xs
+        member_of: []
+        warehouses: []
 
     - trevorromero:
         member_of:
@@ -3576,14 +3674,8 @@ roles:
                     - tullylanterdd_prod.*.*
 
     - vjallipalli:
-        member_of:
-            - analyst_finance
-            - bamboohr_analytics
-            - customers_db
-            - analyst_marketing
-            - data_team_analyst
-        warehouses:
-            - analyst_xs
+        member_of: []
+        warehouses: []
 
     - vjuhasz:
         member_of:
@@ -3697,9 +3789,8 @@ users:
             - transformer
 
     - ahoffbauer:
-        can_login: yes
-        member_of:
-            - ahoffbauer
+        can_login: no
+        member_of: []
 
     - aladhani:
         can_login: yes
@@ -3806,6 +3897,11 @@ users:
         can_login: no
         member_of: []
 
+    - degan:
+        can_login: yes
+        member_of:
+            - degan
+
     - dknox: # https://gitlab.com/gitlab-data/analytics/-/issues/6970
         can_login: no
         member_of: []
@@ -3906,9 +4002,8 @@ users:
             - grafana
 
     - hfrancisco:
-        can_login: yes
-        member_of:
-            - hfrancisco
+        can_login: no
+        member_of: []
 
     - hsharma:
         can_login: yes
@@ -3936,6 +4031,10 @@ users:
         member_of:
             - iwiedler
 
+    - jahye:
+        can_login: yes
+        member_of:
+            - jahye
     - jameson:
         can_login: yes
         member_of:
@@ -4040,7 +4139,7 @@ users:
     - kchen:
         can_login: yes
         member_of:
-            - vjallipalli
+            - kchen
 
     - kchu:
         can_login: yes
@@ -4124,6 +4223,11 @@ users:
         member_of:
             - mkarampalas
 
+    - mlaanen:
+        can_login: yes
+        member_of:
+            - mlaanen        
+
     - mlancini:
         can_login: yes
         member_of:
@@ -4200,6 +4304,11 @@ users:
         can_login: yes
         member_of:
             - pegan
+
+    - pempey:
+        can_login: yes
+        member_of:
+            - pempey        
 
     - periscope:
         can_login: yes
@@ -4339,9 +4448,8 @@ users:
             - tullylanterdd
 
     - tknudsen:
-        can_login: yes
-        member_of:
-            - tknudsen
+        can_login: no
+        member_of: []
 
     - tlapiana:
         can_login: no
@@ -4361,9 +4469,8 @@ users:
         member_of: []
 
     - vjallipalli:
-        can_login: yes
-        member_of:
-            - vjallipalli
+        can_login: no
+        member_of: []
 
     - vjuhasz:
         can_login: yes

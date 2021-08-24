@@ -19,7 +19,7 @@ WITH prep_ci_runner AS (
         WHEN ci_runner_description LIKE 'windows-shared-runners-manager%'
           THEN 'windows-runner-mgr'
           ELSE 'Other'
-      END                                           AS runner_manager,
+      END                                           AS ci_runner_manager,
       contacted_at,
       is_active,
       ci_runner_version,
@@ -30,12 +30,12 @@ WITH prep_ci_runner AS (
       is_locked,
       access_level,
       maximum_timeout,
-      runner_type,
+      runner_type                                   AS ci_runner_type,
       CASE runner_type
         WHEN 1 THEN 'shared'
         WHEN 2 THEN 'group-runner-hosted runners'
         WHEN 3 THEN 'project-runner-hosted runners' 
-      END                                           AS runner_type_summary,
+      END                                           AS ci_runner_type_summary,
       public_projects_minutes_cost_factor,
       private_projects_minutes_cost_factor
     

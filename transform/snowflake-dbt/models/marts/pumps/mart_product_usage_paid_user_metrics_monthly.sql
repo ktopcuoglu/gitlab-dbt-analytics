@@ -158,11 +158,11 @@
       NULL                                                                          AS iso_3_country_code,
       'SaaS'                                                                        AS delivery_type,
       -- Wave 1
-      monthly_saas_metrics.subscription_seats,
+      monthly_saas_metrics.license_utilization,
       monthly_saas_metrics.billable_user_count,
       NULL                                                                          AS active_user_count,
-      monthly_saas_metrics.license_utilization,
       monthly_saas_metrics.max_historical_user_count,
+      monthly_saas_metrics.subscription_seats,
       -- Wave 2 & 3
       monthly_saas_metrics.umau_28_days_user,
       monthly_saas_metrics.action_monthly_active_users_project_repo_28_days_user,
@@ -278,7 +278,7 @@
 {{ dbt_audit(
     cte_ref="unioned",
     created_by="@ischweickartDD",
-    updated_by="@ischweickartDD",
+    updated_by="@chrissharp",
     created_date="2021-06-11",
-    updated_date="2021-07-21"
+    updated_date="2021-08-23"
 ) }}

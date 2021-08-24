@@ -2191,54 +2191,6 @@ models:
       - name: status_purchased
         description: Status of CI Minutes usage against the extra CI Minutes purchased limit by namespaces.
 
-  - name: fct_usage_ping_payloads
-    description: '{{ doc("fct_usage_ping_payloads") }}'
-    columns:
-      - name: usage_ping_id
-        description: The unique identifier of the usage ping.
-        tests:
-          - not_null
-          - unique
-        tags: ["tdf", "common"]
-      - name: uuid
-        description: The unique identifier of the self-managed instance.
-        tests:
-          - not_null
-        tags: ["tdf", "common"]
-      - name: host_id
-        description: The identifier of the host of the instance.
-      - name: license_md5
-        description: The md5 hash of the license file. Use this field to join to dim_licenses.
-      - name: subscription_id
-        description: The zuora subscription id derived from the license. Use this field to join to dim_subscription.
-      - name: billing_account_id
-        description: The zuora account id associated with the subscription. Use this field to join to dim_billing_accounts.
-      - name: array_product_details_id
-        description: The array of distinct product detail ids associated with the subscription. Use this field to join to dim_product_detail.
-      - name: hostname
-        description: The name of the host of the instance.
-      - name: edition
-        description: The edition of GitLab on the instance.
-      - name: tier
-        description: The product tier of GitLab on the instance.
-      - name: version
-        description: The version of the GitLab release on the instance.
-      - name: is_pre_release
-        description: Derived boolean flag noting if the version of GitLab on the instance corresponds to a pre-release or release candidate.
-      - name: instance_user_count
-        description: The total count of users on the instance.
-      - name: license_plan
-        description: The plan code for the product tier of the license.
-      - name: is_trial
-        description: Boolean flag noting if the license was generated as part of a trial.
-      - name: created_at
-        description: The timestamp when the usage ping was created.
-        tests:
-          - not_null
-        tags: ["tdf", "common"]
-      - name: recorded_at
-        description: The timestamp when the usage ping was recorded.
-
   - name: fct_usage_ping_payload
     description: '{{ doc("fct_usage_ping_payload") }}'
     columns:
@@ -2883,12 +2835,12 @@ models:
       - name: dim_ci_runner_id
         description: The unique ID of the runner with which the CI build has been run
         tests:
-          - not_null
           - unique
       - name: created_date_id
       - name: created_at
       - name: updated_at
       - name: ci_runner_description
+      - name: ci_runner_manager
       - name: contacted_at
       - name: is_active
       - name: ci_runner_version
@@ -2899,7 +2851,8 @@ models:
       - name: is_locked
       - name: access_level
       - name: maximum_timeout
-      - name: runner_type
+      - name: ci_runner_type
+      - name: ci_runner_type_summary
       - name: public_projects_minutes_cost_factor
       - name: private_projects_minutes_cost_factor
 
@@ -2938,6 +2891,7 @@ models:
         description: Unique key of CI Build
         tests:
           - not_null
+          - unique
       - name: dim_ci_runner_id
         description: ID of the runner with which the CI build has been run.
       - name: dim_ci_pipeline_id
@@ -2949,20 +2903,18 @@ models:
       - name: ultimate_parent_namespace_id
       - name: dim_plan_id
         description: ID of the Plan
+        tests:
+          - not_null
       - name: dim_user_id
         description: Foreign key that shows the ID of the user who triggered the CI Build
-      - name: created_date_id
+      - name: ci_build_created_date_id
         description: Foreign key to `dim_date` that shows the ID of the date on which the stage was created.
+      - name: ci_build_started_at
+      - name: ci_build_finished_at
       - name: ci_build_duration_in_s
-      - name: ci_build_status
-      - name: runner_type_summary
-      - name: runner_manager
-      - name: namespace_is_internal
       - name: is_paid_by_gitlab
       - name: public_projects_minutes_cost_factor
       - name: private_projects_minutes_cost_factor
-      - name: project_visibility_level
-      - name: project_path
 
   - name: dim_merge_request
     description: '{{ doc("dim_merge_request") }}'
@@ -3072,5 +3024,71 @@ models:
         tests:
           - not_null
       - name: event_count
+        tests:
+          - not_null
+
+  - name: fct_event_all
+    description: '{{ doc("fct_event_all") }}'
+    columns:
+      - name: dim_event_id
+
+  - name: fct_daily_event_all
+    description: '{{ doc("fct_daily_event_all") }}'
+    columns:
+      - name: daily_usage_data_event_id
+        test:
+          - unique
+      - name: ultimate_parent_namespace_id
+        tests:
+          - not_null
+      - name: dim_user_id
+        tests:
+          - not_null
+      - name: event_name
+        tests:
+          - not_null
+      - name: event_created_date
+        tests:
+          - not_null
+      - name: is_blocked_namespace
+        tests:
+          - not_null
+      - name: namespace_created_date
+        tests:
+          - not_null
+      - name: namespace_is_internal
+        tests:
+          - not_null
+      - name: user_created_date
+        tests:
+          - not_null
+      - name: days_since_namespace_creation
+        tests:
+          - not_null
+      - name: weeks_since_namespace_creation
+        tests:
+          - not_null
+      - name: days_since_user_creation
+        tests:
+          - not_null
+      - name: weeks_since_user_creation
+        tests:
+          - not_null
+      - name: event_count
+        tests:
+          - not_null
+  - name: dim_issue_links
+    description: '{{ doc("dim_issue_links") }}'
+    columns:
+      - name: dim_issue_link_id
+        description: The identifier for an issue relationship
+        tests:
+          - not_null
+      - name: dim_source_issue_id
+        description: The identifier for source issue of an issue link
+        tests:
+          - not_null
+      - name: dim_target_issue_id
+        description: The identifier for target issue of an issue link
         tests:
           - not_null

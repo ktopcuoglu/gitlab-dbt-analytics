@@ -89,8 +89,6 @@
       ON estimated_value.is_smau
         AND umau.usage_ping_delivery_type = 'Self-Managed'
         AND umau.ping_created_month  = estimated_value.reporting_month
-        AND umau.stage_name = estimated_value.stage_name 
-        AND umau.section_name = estimated_value.section_name
         AND umau.edition = estimated_value.edition
   
 ), instance_gmau AS (
