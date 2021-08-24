@@ -52,13 +52,3 @@ sources:
       - name: revenue_schedule_item
         identifier: revenuescheduleitem
       - name: subscription
-        columns:
-          - name: accountid
-            description: Primary Key for Accounts
-            tests:
-              - dbt_utils.expression_is_true:
-                  expression: "accountid REGEXP '[0-9a-z]{32}'"
-              - relationships:
-                  to: source('zuora_api_sandbox', 'account')
-                  field: id
-                  severity: warn
