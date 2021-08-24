@@ -72,3 +72,10 @@ Mart table built on top of `fct_daily_event_400` (hence this table shows only th
 All these analysis have been done with `gitlab_dotcom_daily_usage_data_events` which was the legacy table of these tables.
 Only events that happened the last 400 days are included in this table.
 {% enddocs %}
+
+{% docs mart_ci_runner_activity_daily %}
+ 
+Mart table containing quantitative data related to CI runner activity on GitLab.com.
+ 
+These metrics are aggregated at a daily grain per `dim_project_id`.
+{% enddocs %}
