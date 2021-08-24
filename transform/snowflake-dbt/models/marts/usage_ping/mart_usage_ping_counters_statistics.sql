@@ -46,7 +46,7 @@
       -- Removing SaaS
       AND dim_instance_id <> 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f'
       -- Removing pre-releases
-      AND version_is_pre_release = FALSE
+      AND version_is_prerelease = FALSE
 
 )
 
