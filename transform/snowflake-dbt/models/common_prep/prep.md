@@ -694,3 +694,14 @@ More information about [labels here](https://docs.gitlab.com/ee/user/project/lab
 Prep table used to build `dim_issue_links` This table shows relationships of GitLab issues to other GitLab issues. It represents linked issues, which you can learn more about [here](https://docs.gitlab.com/ee/user/project/issues/related_issues.html)
 
 {% enddocs %}
+
+{% docs prep_release %}
+
+Prep table for the dim table `dim_release` that is not yet created. It is also used in the `prep_event` table
+
+{% enddocs %}
+
+{% docs prep_requirement %}
+
+Prep table for the dim table `dim_requirement` that is not yet created. It is also used in the `prep_event` table
+{% enddocs %}
