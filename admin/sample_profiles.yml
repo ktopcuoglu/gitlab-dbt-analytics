@@ -6,7 +6,7 @@ gitlab-snowflake:
       threads: 8
       account: gitlab
       user: YOUR USER # <-- This will be your GitLab email
-      role: YOUR ROLE # <-- Talk to your manager, but proably it is JSMITH for Jane Smith
+      role: YOUR ROLE # <-- Talk to your manager, usually, it is JSMITH for Jane Smith
       database: YOUR USERNAME # <-- JSMITH for Jane Smith
       warehouse: ANALYST_XS # <-- [ANALYST_XS, ENGINEER_XS], depends on your role
       schema: preparation
@@ -16,7 +16,7 @@ gitlab-snowflake:
       threads: 8
       account: gitlab
       user: YOUR USER # <-- This will be your GitLab email
-      role: YOUR ROLE # <-- Talk to your manager, but proably it is JSMITH for Jane Smith
+      role: YOUR ROLE # <-- Talk to your manager, usually, it is JSMITH for Jane Smith
       database: YOUR USERNAME # <-- JSMITH for Jane Smith
       warehouse: ANALYST_XS # <-- [ANALYST_XS, ENGINEER_XS], depends on your role
       schema: preparation
