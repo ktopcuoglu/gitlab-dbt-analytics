@@ -3593,10 +3593,8 @@ roles:
         warehouses: []
 
     - tknudsen:
-        member_of:
-            - bamboohr_sensitive_separations
-        warehouses:
-            - analyst_xs
+        member_of: []
+        warehouses: []
 
     - trevorromero:
         member_of:
@@ -4456,9 +4454,8 @@ users:
             - tullylanterdd
 
     - tknudsen:
-        can_login: yes
-        member_of:
-            - tknudsen
+        can_login: no
+        member_of: []
 
     - tlapiana:
         can_login: no
