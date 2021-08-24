@@ -1,14 +1,12 @@
 import json
-import re
 import sys
-import os
 import logging
+import requests
 
+from typing import Dict, Any
 from logging import error, info, basicConfig, getLogger, warning
-from os.path import join, getsize, dirname
 from os import environ as env
 
-from api import GitLabAPI
 from gitlabdata.orchestration_utils import (
     snowflake_engine_factory,
     snowflake_stage_load_copy_remove,
@@ -20,54 +18,30 @@ if __name__ == "__main__":
     GITLAB_COM_API_BASE_URL = "https://gitlab.com/api/v4"
     UPDATE_TESTS_METADATA_JOB_NAME = "update-tests-metadata"
     RSPEC_FLAKY_REPORT_ARTIFACT = "rspec_flaky/report-suite.json"
+    RSPEC_FLAKY_REPORT_URL = "https://gitlab-org.gitlab.io/gitlab/rspec_flaky/report-suite.json"
+
+    def quality_check(json_response: Dict[Any, Any]) -> None:
+        """
+        Sanity check on JSON response object for data integrity.
+        """
+        record_count = len(json_response)
+
+        if record_count < 2:
+            info(
+                f"Flaky report doesn't look as expected: {json_response}"
+            )
+            sys.exit(1)
 
     logging.basicConfig(stream=sys.stdout, level=20)
 
-    api_token = env["GITLAB_COM_API_TOKEN"]
-    api_client = GitLabAPI(api_token)
-
-    info(
-        f"1. Getting pipeline schedule {NIGHTLY_PIPELINE_SCHEDULE} for project {GITLAB_PROJECT_ID}."
+    r = requests.get(
+        RSPEC_FLAKY_REPORT_URL, timeout=120, headers={"Accept": "application/json"}
     )
-    pipeline_schedule = api_client.get_pipeline_schedule(
-        GITLAB_PROJECT_ID, NIGHTLY_PIPELINE_SCHEDULE
-    )
+    r.raise_for_status()
 
-    if pipeline_schedule is None:
-        error(
-            f"Pipeline schedule {NIGHTLY_PIPELINE_SCHEDULE} couldn't be found for project {GITLAB_PROJECT_ID}."
-        )
-        sys.exit(0)
+    rspec_flaky_report = r.json()
 
-    last_scheduled_pipeline_id = pipeline_schedule["last_pipeline"]["id"]
-
-    info(
-        f"2. Getting job '{UPDATE_TESTS_METADATA_JOB_NAME}' for pipeline {last_scheduled_pipeline_id} of project {GITLAB_PROJECT_ID}."
-    )
-    update_tests_metadata_job = api_client.get_pipeline_job(
-        GITLAB_PROJECT_ID, last_scheduled_pipeline_id, UPDATE_TESTS_METADATA_JOB_NAME
-    )
-
-    if update_tests_metadata_job is None:
-        error(
-            f"Job '{UPDATE_TESTS_METADATA_JOB_NAME}' couldn't be found for pipeline {last_scheduled_pipeline_id} of project {GITLAB_PROJECT_ID}"
-        )
-        sys.exit(0)
-
-    update_tests_metadata_job_id = update_tests_metadata_job["id"]
-
-    info(
-        f"3. Getting '{RSPEC_FLAKY_REPORT_ARTIFACT}' artifact for the {update_tests_metadata_job_id} job of project {GITLAB_PROJECT_ID}."
-    )
-    rspec_flaky_report = api_client.get_job_json_artifact(
-        GITLAB_PROJECT_ID, update_tests_metadata_job_id, RSPEC_FLAKY_REPORT_ARTIFACT
-    )
-
-    if rspec_flaky_report is None:
-        info(
-            f"Artifact '{RSPEC_FLAKY_REPORT_ARTIFACT}' couldn't be found for job {update_tests_metadata_job_id} of project {GITLAB_PROJECT_ID}"
-        )
-        sys.exit(0)
+    quality_check(rspec_flaky_report)
 
     flaky_tests = []
 
