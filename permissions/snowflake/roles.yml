@@ -52,6 +52,11 @@ databases:
     - iweeks_prep:
         shared: no
 
+    - jcaine_prod:
+        shared: no
+    - jcaine_prep:
+        shared: no       
+
     - jpeguero_prod:
         shared: no
     - jpeguero_prep:
@@ -2506,6 +2511,44 @@ roles:
         warehouses:
             - analyst_xs 
 
+    - jcaine:
+        member_of:
+            - analyst_sales
+        warehouses:
+            - analyst_xs
+        owns:
+            databases:
+                - jcaine_prep
+                - jcaine_prod
+            schemas:
+                - jcaine_prep.*
+                - jcaine_prod.*
+            tables:
+                - jcaine_prep.*.*
+                - jcaine_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - jcaine_prep
+                    - jcaine_prod
+                write:
+                    - jcaine_prep
+                    - jcaine_prod
+            schemas:
+                read:
+                    - jcaine_prep.*
+                    - jcaine_prod.*
+                write:
+                    - jcaine_prep.*
+                    - jcaine_prod.*
+            tables:
+                read:
+                    - jcaine_prep.*.*
+                    - jcaine_prod.*.*
+                write:
+                    - jcaine_prep.*.*
+                    - jcaine_prod.*.*
+
     - jjackson:
         member_of:
             - snowplow
@@ -4044,6 +4087,11 @@ users:
         can_login: yes
         member_of:
             - jbrennan
+
+    - jcaine:
+        can_login: yes
+        member_of:
+            - jcaine
 
     - jjackson:
         can_login: yes
