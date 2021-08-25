@@ -8,7 +8,7 @@ WITH source AS (
 ), zuora_account AS (
 
     SELECT *
-    FROM {{ ref('zuora_account_source') }}
+    FROM {{ source('zuora', 'account') }}
 
 ), renamed AS(
 
@@ -80,7 +80,7 @@ WITH source AS (
       zuora_account.batch AS live_batch
     FROM renamed
     LEFT JOIN zuora_account
-      ON renamed.account_id = zuora_account.account_id
+      ON renamed.account_id = zuora_account.id
 )
 
 SELECT *
