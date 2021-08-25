@@ -13,7 +13,10 @@
     ('dim_namespace_plan_hist', 'dim_namespace_plan_hist'),
     ('plans', 'gitlab_dotcom_plans_source'),
     ('prep_project', 'prep_project'),
-    ('prep_user', 'prep_user')
+    ('prep_user', 'prep_user'),
+    ('prep_issue_severity', 'prep_issue_severity'),
+    ('prep_label_links', 'prep_label_links'),
+    ('prep_labels', 'prep_labels')
 ]) }}
 
 , gitlab_dotcom_issues_source AS (
@@ -25,6 +28,19 @@
       WHERE updated_at >= (SELECT MAX(updated_at) FROM {{this}})
 
     {% endif %}
+
+), agg_labels AS (
+
+    SELECT 
+      gitlab_dotcom_issues_source.issue_id                                                          AS dim_issue_id,
+      ARRAY_AGG(LOWER(prep_labels.label_title)) WITHIN GROUP (ORDER BY prep_labels.label_title ASC) AS labels
+    FROM gitlab_dotcom_issues_source
+    LEFT JOIN prep_label_links
+        ON gitlab_dotcom_issues_source.issue_id = prep_label_links.dim_issue_id
+    LEFT JOIN prep_labels
+        ON prep_label_links.dim_label_id = prep_labels.dim_label_id
+    GROUP BY gitlab_dotcom_issues_source.issue_id  
+
 
 ), renamed AS (
   
@@ -65,9 +81,22 @@
         {{ map_state_id('state_id') }}                            AS state_name,
       gitlab_dotcom_issues_source.duplicated_to_id,
       gitlab_dotcom_issues_source.promoted_to_epic_id,
-      gitlab_dotcom_issues_source.issue_type
-
+      gitlab_dotcom_issues_source.issue_type,
+      CASE 
+        WHEN prep_issue_severity.severity = 4 THEN 'S1'
+        WHEN ARRAY_CONTAINS('severity::1'::variant, agg_labels.labels) OR ARRAY_CONTAINS('s1'::variant, agg_labels.labels) THEN 'S1'
+        WHEN prep_issue_severity.severity = 3 THEN 'S2'
+        WHEN ARRAY_CONTAINS('severity::2'::variant, agg_labels.labels) OR ARRAY_CONTAINS('s2'::variant, agg_labels.labels) THEN 'S2'
+        WHEN prep_issue_severity.severity = 2 THEN 'S3'
+        WHEN ARRAY_CONTAINS('severity::3'::variant, agg_labels.labels) OR ARRAY_CONTAINS('s3'::variant, agg_labels.labels) THEN 'S3'
+        WHEN prep_issue_severity.severity = 1 THEN 'S4'
+        WHEN ARRAY_CONTAINS('severity::4'::variant, agg_labels.labels) OR ARRAY_CONTAINS('s4'::variant, agg_labels.labels) THEN 'S4'
+        ELSE NULL
+      END AS severity,
+      agg_labels.labels
     FROM gitlab_dotcom_issues_source
+    LEFT JOIN agg_labels
+        ON gitlab_dotcom_issues_source.issue_id = agg_labels.dim_issue_id
     LEFT JOIN prep_project 
       ON gitlab_dotcom_issues_source.project_id = prep_project.dim_project_id
     LEFT JOIN dim_namespace_plan_hist 
@@ -76,14 +105,15 @@
       AND gitlab_dotcom_issues_source.created_at < dim_namespace_plan_hist.valid_to
     LEFT JOIN dim_date 
       ON TO_DATE(gitlab_dotcom_issues_source.created_at) = dim_date.date_day
+    LEFT JOIN prep_issue_severity
+      ON gitlab_dotcom_issues_source.issue_id = prep_issue_severity.dim_issue_id
     WHERE gitlab_dotcom_issues_source.project_id IS NOT NULL
-
 )
 
 {{ dbt_audit(
     cte_ref="renamed",
     created_by="@mpeychet_",
-    updated_by="@mpeychet_",
+    updated_by="@dtownsend",
     created_date="2021-06-17",
-    updated_date="2021-06-17"
+    updated_date="2021-08-04"
 ) }}

@@ -13,8 +13,8 @@ Source Access Request: <!-- link to source  Access Request issue, it should be a
 - [ ] Add to [okta-snowflake-users google group](https://groups.google.com/a/gitlab.com/g/okta-snowflake-users/members)
 - [ ] Update `roles.yml` and add a comment with a access request URL
 
-Usefull links:
-- Create user [SQL template](https://gitlab.com/gitlab-data/analytics/-/blob/master/load/snowflake/user_provision.sql)
+Useful links:
+- Create user [SQL template](https://gitlab.com/gitlab-data/analytics/-/blob/master/permissions/snowflake/user_provision.sql)
 - Snowflake paradigm [handbook page](https://about.gitlab.com/handbook/business-technology/data-team/platform/#snowflake-permissions-paradigm)
 
 /label ~Provisioning ~Snowflake ~"Team::Data Platform"  ~"Priority::1-Ops"

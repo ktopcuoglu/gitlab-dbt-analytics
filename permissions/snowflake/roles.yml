@@ -52,6 +52,11 @@ databases:
     - iweeks_prep:
         shared: no
 
+    - jcaine_prod:
+        shared: no
+    - jcaine_prep:
+        shared: no       
+
     - jpeguero_prod:
         shared: no
     - jpeguero_prep:
@@ -87,10 +92,20 @@ databases:
     - mcooper_prep:
         shared: no
 
+    - mlaanen_prod:
+        shared: no
+    - mlaanen_prep:
+        shared: no
+
     - mpeychet_prod:
         shared: no
     - mpeychet_prep:
         shared: no
+
+    - mramirez_prod:
+        shared: no
+    - mramirez_prep:
+        shared: no       
 
     - mvilain_prod:
         shared: no
@@ -1999,10 +2014,8 @@ roles:
             - reporting
 
     - ahoffbauer:
-        member_of:
-            - people_operations
-        warehouses:
-            - analyst_xs
+        member_of: []
+        warehouses: []
 
     - aladhani:
         member_of:
@@ -2161,6 +2174,13 @@ roles:
     - datwood:
         member_of: []
         warehouses: []
+
+    - degan:
+        member_of:
+            - reporter
+            - analyst_marketing
+        warehouses:
+            - analyst_xs
 
     - dknox:
         member_of: []
@@ -2378,10 +2398,8 @@ roles:
             - analyst_xs
 
     - hfrancisco:
-        member_of:
-            - people_operations
-        warehouses:
-            - analyst_xs
+        member_of: []
+        warehouses: []
 
     - hsharma:
         warehouses:
@@ -2497,6 +2515,44 @@ roles:
             - analyst_sales
         warehouses:
             - analyst_xs 
+
+    - jcaine:
+        member_of:
+            - analyst_sales
+        warehouses:
+            - analyst_xs
+        owns:
+            databases:
+                - jcaine_prep
+                - jcaine_prod
+            schemas:
+                - jcaine_prep.*
+                - jcaine_prod.*
+            tables:
+                - jcaine_prep.*.*
+                - jcaine_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - jcaine_prep
+                    - jcaine_prod
+                write:
+                    - jcaine_prep
+                    - jcaine_prod
+            schemas:
+                read:
+                    - jcaine_prep.*
+                    - jcaine_prod.*
+                write:
+                    - jcaine_prep.*
+                    - jcaine_prod.*
+            tables:
+                read:
+                    - jcaine_prep.*.*
+                    - jcaine_prod.*.*
+                write:
+                    - jcaine_prep.*.*
+                    - jcaine_prod.*.*
 
     - jjackson:
         member_of:
@@ -2961,6 +3017,45 @@ roles:
         warehouses:
             - reporting
 
+    - mlaanen:
+        member_of:
+            - analyst_core
+            - data_manager
+        warehouses:
+            - analyst_xs
+        owns:
+            databases:
+                - mlaanen_prep
+                - mlaanen_prod
+            schemas:
+                - mlaanen_prep.*
+                - mlaanen_prod.*
+            tables:
+                - mlaanen_prep.*.*
+                - mlaanen_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - mlaanen_prep
+                    - mlaanen_prod
+                write:
+                    - mlaanen_prep
+                    - mlaanen_prod
+            schemas:
+                read:
+                    - mlaanen_prep.*
+                    - mlaanen_prod.*
+                write:
+                    - mlaanen_prep.*
+                    - mlaanen_prod.*
+            tables:
+                read:
+                    - mlaanen_prep.*.*
+                    - mlaanen_prod.*.*
+                write:
+                    - mlaanen_prep.*.*
+                    - mlaanen_prod.*.*        
+
     - mlancini:
         warehouses:
             - reporting
@@ -3008,9 +3103,42 @@ roles:
                     - mpeychet_prod.*.*
 
     - mramirez:
-        member_of: []
+        member_of:
+            - analyst_sales
         warehouses:
             - analyst_xs
+        owns:
+            databases:
+                - mramirez_prep
+                - mramirez_prod
+            schemas:
+                - mramirez_prep.*
+                - mramirez_prod.*
+            tables:
+                - mramirez_prep.*.*
+                - mramirez_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - mramirez_prep
+                    - mramirez_prod
+                write:
+                    - mramirez_prep
+                    - mramirez_prod
+            schemas:
+                read:
+                    - mramirez_prep.*
+                    - mramirez_prod.*
+                write:
+                    - mramirez_prep.*
+                    - mramirez_prod.*
+            tables:
+                read:
+                    - mramirez_prep.*.*
+                    - mramirez_prod.*.*
+                write:
+                    - mramirez_prep.*.*
+                    - mramirez_prod.*.*
 
     - mray:
         member_of:
@@ -3546,10 +3674,8 @@ roles:
         warehouses: []
 
     - tknudsen:
-        member_of:
-            - bamboohr_sensitive_separations
-        warehouses:
-            - analyst_xs
+        member_of: []
+        warehouses: []
 
     - trevorromero:
         member_of:
@@ -3628,7 +3754,7 @@ roles:
                     - tullylanterdd_prep.*.*
                     - tullylanterdd_prod.*.*
 
-    - vjallipalli:
+    - vbrew:
         member_of:
             - analyst_finance
             - bamboohr_analytics
@@ -3637,6 +3763,10 @@ roles:
             - data_team_analyst
         warehouses:
             - analyst_xs
+
+    - vjallipalli:
+        member_of: []
+        warehouses: []
 
     - vjuhasz:
         member_of:
@@ -3750,9 +3880,8 @@ users:
             - transformer
 
     - ahoffbauer:
-        can_login: yes
-        member_of:
-            - ahoffbauer
+        can_login: no
+        member_of: []
 
     - aladhani:
         can_login: yes
@@ -3859,6 +3988,11 @@ users:
         can_login: no
         member_of: []
 
+    - degan:
+        can_login: yes
+        member_of:
+            - degan
+
     - dknox: # https://gitlab.com/gitlab-data/analytics/-/issues/6970
         can_login: no
         member_of: []
@@ -3959,9 +4093,8 @@ users:
             - grafana
 
     - hfrancisco:
-        can_login: yes
-        member_of:
-            - hfrancisco
+        can_login: no
+        member_of: []
 
     - hsharma:
         can_login: yes
@@ -4002,6 +4135,11 @@ users:
         can_login: yes
         member_of:
             - jbrennan
+
+    - jcaine:
+        can_login: yes
+        member_of:
+            - jcaine
 
     - jjackson:
         can_login: yes
@@ -4180,6 +4318,11 @@ users:
         can_login: yes
         member_of:
             - mkarampalas
+
+    - mlaanen:
+        can_login: yes
+        member_of:
+            - mlaanen        
 
     - mlancini:
         can_login: yes
@@ -4401,9 +4544,8 @@ users:
             - tullylanterdd
 
     - tknudsen:
-        can_login: yes
-        member_of:
-            - tknudsen
+        can_login: no
+        member_of: []
 
     - tlapiana:
         can_login: no
@@ -4422,10 +4564,14 @@ users:
         can_login: no
         member_of: []
 
-    - vjallipalli:
+    - vbrew:
         can_login: yes
         member_of:
-            - vjallipalli
+            - vbrew
+
+    - vjallipalli:
+        can_login: no
+        member_of: []
 
     - vjuhasz:
         can_login: yes
