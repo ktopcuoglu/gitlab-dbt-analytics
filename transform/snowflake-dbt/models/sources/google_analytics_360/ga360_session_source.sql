@@ -12,6 +12,7 @@ WITH source AS (
 
       --Info
       date::DATE                                    AS session_date,
+      client_id::VARCHAR                            AS client_id,
       visit_start_time::TIMESTAMP_TZ                AS visit_start_time,
       visit_number::FLOAT                           AS visit_number,
       total_visits::FLOAT                           AS total_visits,
