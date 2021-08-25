@@ -47,22 +47,22 @@ Please watch one minute of [this clip](https://www.youtube.com/watch?v=LqzDY76Q8
 |  Lucidchart | Yes | Yes | Yes | Yes  | Yes  | [Access Request](https://about.gitlab.com/handbook/business-technology/team-member-enablement/onboarding-access-requests/access-requests/) |
 |  Sisense |  Editor | Editor  | Editor  | Editor  | Editor | |
 |  Snowflake  | `analyst_core`  | `analyst_core`  | `analyst_core`  |  `analyst_core` | `analyst_core`| |
-|  Stitch |  No | No  | Yes | No | Yes | |
-|  Fivetran | No  | No  | Yes | No | Yes | |
-|  Airflow |  No | Analyst | Admin| No | Admin | |
+|  Stitch |  No | No  | No | No | Yes | |
+|  Fivetran | No  | No  | No | No | Yes | |
+|  Airflow |  No | Analyst | Admin| Analyst | Admin | |
 |  GCP group: `analytics`| No | No | No | Yes  | Yes  |   |
-| Slack alias: `@datateam` |   |   |   |   |   |  PeopleOps Onboarding |
-| Slack alias: `@data-analysts` |   |   |   |   |   |  PeopleOps Onboarding |
-| Slack alias: `@data-engineers` |   |   |   |   |   |  PeopleOps Onboarding |
-| Project: `GitLab Data Team` |   |   |   |   |   |   |
-| 1password vault: `Data Team` |   |   |   |   |   |  PeopleOps Onboarding |
-|  Namespce: `gitlab-data` |   |   |   |   |   |  |
-| daily Geekbot standup  |   |   |   |   |   |   |
-| codeowners file in the handbook  |   |   |   |   |   |   |
-|  Data Team calendar |   |   |   |   |   |   |
-|  Lucidchart folder: `Data Team` |   |   |   |   |   |   |
-|  Google Drive folder: SheetLoad |   |   |   |   |   |   |
-| Google Drive folder: Boneyard |   |   |   |   |   |   |
+| Slack alias: `@datateam` | No | Yes | Yes | Yes | Yes |  PeopleOps Onboarding |
+| Slack alias: `@data-analysts` | No | Yes | Yes | Yes | No |  PeopleOps Onboarding |
+| Slack alias: `@data-engineers` | No | No | Yes | No | Yes |  PeopleOps Onboarding |
+| Project: `GitLab Data Team` | No | Developer | Developer | Developer | Developer |
+| 1password vault: `Data Team` | No | Yes | Yes | Yes | Yes |  PeopleOps Onboarding |
+|  Namespce: `gitlab-data` |  No | Developer | Developer | Developer | Developer |  |
+| daily Geekbot standup  | No | Yes | Yes | Yes | Yes |  send `dashboard` to Geekbot on slack, click into a particular standup in the web UI, add via Manage button |
+|  codeowners file in the handbook  | No |Yes | Yes | Yes | Yes |
+|  Data Team calendar |  No |Yes | Yes | Yes | Yes |   |
+|  Lucidchart folder: `Data Team` | No |Yes | Yes | Yes | Yes |   |
+|  Google Drive folder: SheetLoad | No |Yes | Yes | Yes | Yes |   |
+|  Google Drive folder: Boneyard | No |Yes | Yes | Yes | Yes |   |
 | Salesforce  |   |   |   |   |   |   |
 |  Zuora |   |   |   |   |   |   |
 |  Marketo |   |   |   |   |   |   |
@@ -139,16 +139,27 @@ Getting to know the team
 
 
 ## Computer Set Up <!-- This section is for directing the team member to set up their computer so they are ready for there every day work. -->
+Description
 
+| Step | Distributed Data Analyst | Data Analyst | Analytics Engineer | Data Scientist | Data Engineer | 
+| ------- | :----------------------: | :----------: | :----------------: | :------------: | :-----------: | 
+| Core Steps | Yes | Yes | Yes | Yes | Yes | 
+| Command Line Interface | No | No | No | No | Yes |
+| Google Cloud | No | No | No | Yes | Yes |
+| Jupyter | No | No | No | Yes | No |
+| Optional Steps | No | Yes | Yes | Yes | Yes |
+
+
+### Core Steps
 * [ ] Check that you have create your SSH keys by typing `ssh -T git@gitlab.com` into your terminal which should return "Welcome to GitLab, " + your_username.  :red_circle: This set up is required for subsequent steps
   * [ ] If your SSH keys have not been created follow [these steps](https://docs.gitlab.com/ee/gitlab-basics/create-your-ssh-keys.html).  Make the SSH key with no password.
 
-*THE NEXT STEPS SHOULD ONLY BE RUN ON YOUR GITLAB-ISSUED LAPTOP. If you run this on your personal computer, we take no responsibility for the side effects.*
+**Note:** The following script is intended to set up the basic tools and environments that are standard for working with the data at GitLab.  There are optional tools and set up in the following sections.  If you are comfortable using the terminal to install these tools then you can use the script as a guide, otherwise run the script with the provided commands. 
+
+_**THE SCRIPT SHOULD ONLY BE RUN ON YOUR GITLAB-ISSUED LAPTOP.** If you run this on your personal computer, we take no responsibility for the side effects._
 
 * [ ] Open your computer's built-in terminal app. Run the following:
-<!---
-Would like to avoid installing Anaconda, might have a new feeder script for each role to fine tune the installs
---->
+
 ```
 curl https://gitlab.com/gitlab-data/analytics/raw/master/admin/onboarding_script.zsh > ~/onboarding_script.zsh
 zsh ~/onboarding_script.zsh
@@ -176,7 +187,7 @@ rm ~/onboarding_script.zsh
 
     **Note:** If the `gl_open` command does not work inspect your `~/.zshrc` file to make sure it has the command `source make_life_easier.zsh`
 
-* [ ] Install [Python 3.8.6](https://www.python.org/downloads/release/python-386/)
+
 
 * [ ] Configure VSCode (via the VSCode UI) with the [VSCode setup](https://discourse.getdbt.com/t/how-we-set-up-our-computers-for-working-on-dbt-projects/243?) section of Claire's post and [adding the tip](https://discourse.getdbt.com/t/how-we-set-up-our-computers-for-working-on-dbt-projects/243/10?u=tmurphy) from tmurphy later in the thread. It will add improved syntax highlighting and searching capabilities.
 * [ ] Your editor should be configured so that all tabs are converted to 4 spaces. This will minimize messy looking diffs and provide consistency across the team.
@@ -185,8 +196,38 @@ rm ~/onboarding_script.zsh
         * `Editor: Insert Spaces` is selected
         * `Editor: Tab Size` is set to 4 spaces per tab
 
+### Command Line Interface
+
+* [ ] Install the [gcloud sdk](https://cloud.google.com/sdk/docs/quickstart-macos) and authenticate once you're provisioned.
+    * [ ] For debugging services such as Airflow locally, you will need a set of service account credentials. Your manager will provide you with a service account.
+    * [ ] The environment variable `GOOGLE_APPLICATION_CREDENTIALS` should then point to the key provided by your manager.
+* [ ] Install [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/#install-with-homebrew-on-macos)
+* [ ] Install the [awscli](https://aws.amazon.com/cli/)
+
+### Google Cloud
+
+Data team uses GCP (Google Cloud Platform) as our cloud provider. GCP credentials are needed if you plan on connecting on your local machine to airflow or any CGP service (storage buckets, etc.) . Follow below steps to get running instance for yourself.
+
+- [ ] Raise Access Request (AR) for Google Cloud Credentials. To do that please follow instructions here or create separate issue and copy contents from [here](https://about.gitlab.com/handbook/business-technology/team-member-enablement/onboarding-access-requests/access-requests/) or create separate issue and copy contents from [here](https://gitlab.com/gitlab-com/team-member-epics/access-requests/-/issues/10306#note_622125437). Ensure you update your name and other personal details and project name is ``gitlab-analysis.`` Assign it to your manager.
+- [ ] Please follow next step after running onboarding template, once you added GOOGLE_APPLICATION_CREDENTIALS path to your .zshrc file which can be accessed by `vi ~/.zshrc``. One of the project owners should send you configuration json file, which is important to add in your google credentials. Follow below steps:
+- [ ] Download the json file provided and move to your home directory (e.g. `/Users/yourusername`)
+- [ ] Open terminal and run the following command, replacing `yourusername` with your actual user name on your computer (type `pwd` into the terminal if you don’t know it — the path should contain your user name) and `filename.json` with you name of the file.
+    - echo export  GOOGLE_APPLICATION_CREDENTIALS=/Users/yourusername/filename.json >> ./.zshrc
+    - If you already have the variable  GOOGLE_APPLICATION_CREDENTIALS  modify its value to the file path and file name instead of adding a new one. 
+- [ ] Refresh this file by sourcing it back, by running command in terminal: ``source ~/.zshrc``.
+
+### Jupyter
+
+- [ ] Ensure you've setup your dbt for running locally as mentioned above. The ./.dbt/profiles.yml file is a pre-requisite for this process. If you do not want dbt you can manually create the ./.dbt/profiles.yml file based off the [sample profile](https://gitlab.com/gitlab-data/analytics/-/blob/master/admin/sample_profiles.yml)
+- [ ] Clone the data-science repo into your repos directory: 
+    ``` git clone git@gitlab.com:gitlab-data/data-science.git```
+- [ ] See the readme provided in the [handbook jupyter guide](https://about.gitlab.com/handbook/business-technology/data-team/platform/jupyter-guide/) for further install instructions 
+
 ### Optional Steps
 * Set up environment to build the handbook locally. [Instructions](https://about.gitlab.com/handbook/git-page-update/) 
+* Install [Python 3.8.6](https://www.python.org/downloads/release/python-386/) manually
+* Consider downloading and installing [Little Snitch](https://www.obdev.at/products/littlesnitch/index.html) - You can submit for reimbursement for the full version
+
 * Install Data Grip (from JetBrains) for interfacing with databases
     * Follow [this process](https://about.gitlab.com/handbook/tools-and-tips/#jetbrains) for requesting a license for Data Grip.  Until you have a license, you can easily use Data Grip on a trial basis for 30 days
     - Change your formatting preferences in Data Grip by going to Preferences > Editor > Code Style > HTML. You should have:
@@ -199,6 +240,8 @@ rm ~/onboarding_script.zsh
 
 #### Terminal Improvements 
 [Improved terminal navigation](https://stackoverflow.com/a/23963086) with arrow keys.
+
+Disabling [autocorrect in zsh](https://coderwall.com/p/jaoypq/disabling-autocorrect-in-zsh) if it annoys you.
 
 Terminal theming - In the onboarding script the terminal has been configured to use the [bira OhMyZsh theme](https://github.com/ohmyzsh/ohmyzsh/wiki/Themes#bira). However if you would like an improved and configurable theme install [PowerLevel10K](https://github.com/romkatv/powerlevel10k) by running the below command from your terminal: 
     ``` 
@@ -270,6 +313,8 @@ _Ensure you've set up your SSH configuration in the previous step as this is req
 **Note:** When launching dbt you may see `WARNING: The GOOGLE_APPLICATION_CREDENTIALS variable is not set. Defaulting to a blank string.` Unless you are developing on Airflow this is ok and expected. If you require GOOGLE_APPLICATION_CREDENTIALS please follow the steps outlined below in the DataLab section.
 
 **Note:** If you get a weird semaphore issue error when running dbt try [this script](https://gist.github.com/llbbl/c54f44d028d014514d5d837f64e60bac) which is sourced from this [Apple forum thread](https://forums.developer.apple.com/thread/119429)
+
+**Note:** If the `make` commands are not recognizing the python commands you may needs to manually install python 3.8.6 as described in the [optional steps](#optional-steps) section on the computer set up.
 
 ### Sisense 
 
