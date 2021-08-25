@@ -4,8 +4,11 @@
     })
 }}
 
+{{ simple_cte([
+    ('dim_namespace_plan_hist', 'dim_namespace_plan_hist'),
+]) }}
 
-WITH usage_data AS (
+, usage_data AS (
 
     SELECT *
     FROM {{ ref('fct_event_400') }}
@@ -28,6 +31,7 @@ WITH usage_data AS (
       dim_user_id,
       event_name,
       TO_DATE(event_created_at)                                                                                        AS event_created_date,
+      dim_namespace_plan_hist.dim_plan_id                                                                              AS dim_plan_id_at_event_date,
 
       is_blocked_namespace,
       namespace_created_date,
@@ -39,8 +43,12 @@ WITH usage_data AS (
       DATEDIFF('week', user_created_date, event_created_date)                                                          AS weeks_since_user_creation,
       COUNT(DISTINCT event_id)                                                                                         AS event_count
     FROM usage_data
+    LEFT JOIN dim_namespace_plan_hist 
+      ON usage_data.ultimate_parent_namespace_id = dim_namespace_plan_hist.dim_namespace_id
+      AND TO_DATE(usage_data.event_created_at) >= dim_namespace_plan_hist.valid_from
+      AND TO_DATE(usage_data.event_created_at) < dim_namespace_plan_hist.valid_to
     WHERE days_since_user_creation >= 0
-    {{ dbt_utils.group_by(n=13) }}
+    {{ dbt_utils.group_by(n=14) }}
 
 )
 

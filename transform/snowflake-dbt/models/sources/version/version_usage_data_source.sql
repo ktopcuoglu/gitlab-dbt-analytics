@@ -21,7 +21,7 @@ WITH source AS (
       *,
       OBJECT_CONSTRUCT(
         {% for column in columns %}  
-          '{{ column.name | lower }}', {{ column.name | lower }}
+          '{{ column.name | lower }}', COALESCE(TRY_PARSE_JSON({{ column.name | lower }}), {{ column.name | lower }}::VARIANT)
           {% if not loop.last %}
             ,
           {% endif %}

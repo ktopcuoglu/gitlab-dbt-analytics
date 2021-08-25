@@ -273,3 +273,30 @@ models:
       - name: event_count
         tests:
           - not_null
+
+  - name: mart_saas_spo_400
+    description: Workspace model that shows monthly Stages per Organization data on a namespace-level for SaaS.
+    columns:
+      - name: reporting_month
+        tests:
+          - not_null
+      - name: organization_id
+        description: Top-level namespace id.
+        tests:
+          - not_null
+      - name: delivery
+        tests:
+          - not_null
+      - name: organization_type
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Group','Individual']
+      - name: product_tier
+        tests:
+          - not_null
+      - name: is_paid_product_tier
+        tests:
+          - not_null
+      - name: active_stage_count
+        description: number of active stages for a given organization in a given month
