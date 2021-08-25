@@ -9,7 +9,7 @@ CASE
     THEN 'Self-Managed - Ultimate'
   WHEN LOWER({{product_column}}) LIKE '%premium%'
     THEN 'Self-Managed - Premium'
-  WHEN LOWER({{product_column}}) LIKE 'bronze%'
+  WHEN LOWER({{product_column}}) LIKE '%bronze%'
     THEN 'SaaS - Bronze'
   WHEN LOWER({{product_column}}) LIKE '%starter%'
     THEN 'Self-Managed - Starter'
@@ -59,7 +59,7 @@ CASE
                                     , 'Hourly Consulting'
                                     , 'JIRA Integration'
                                     , 'Custom PS Education Services'
-                                    , 'ProServ Training Per-Seat Add-on'
+                                    , '%ProServ Training Per-Seat Add-on'
                                     )
     THEN 'Support'
   WHEN LOWER({{product_column}}) LIKE 'gitlab geo%'
