@@ -3,6 +3,7 @@ import json
 import logging
 import os
 import sys
+import requests
 from os import environ as env
 from typing import Dict, List
 
