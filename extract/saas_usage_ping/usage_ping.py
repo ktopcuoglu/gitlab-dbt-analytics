@@ -89,15 +89,17 @@ class UsagePing(object):
         """
         Call the Non SQL Metrics API and store the results in Snowflake RAW database
         """
-        config_dict = env.copy()    
+        config_dict = env.copy()
         headers = {
-            'PRIVATE-TOKEN': config_dict["GITLAB_ANALYTICS_PRIVATE_TOKEN"],
+            "PRIVATE-TOKEN": config_dict["GITLAB_ANALYTICS_PRIVATE_TOKEN"],
         }
 
-        response = requests.get('https://gitlab.com/api/v4/usage_data/non_sql_metrics', headers=headers)
+        response = requests.get(
+            "https://gitlab.com/api/v4/usage_data/non_sql_metrics", headers=headers
+        )
         json_data = json.loads(response.text)
-        
-        json_file_name = 'instance_redis_metrics'
+
+        json_file_name = "instance_redis_metrics"
 
         with open(f"{json_file_name}.json", "w") as f:
             json.dump(json_data, f)
@@ -107,7 +109,7 @@ class UsagePing(object):
             "raw.gitlab_data_yaml.gitlab_data_yaml_load",
             f"raw.saas_usage_ping.instance_redis_metrics",
             self.loader_engine,
-        )        
+        )
 
     def _get_namespace_queries(self) -> List[Dict]:
         """
