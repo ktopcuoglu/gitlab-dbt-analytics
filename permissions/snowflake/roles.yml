@@ -3754,6 +3754,16 @@ roles:
                     - tullylanterdd_prep.*.*
                     - tullylanterdd_prod.*.*
 
+    - vbrew:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+            - customers_db
+            - analyst_marketing
+            - data_team_analyst
+        warehouses:
+            - analyst_xs
+
     - vjallipalli:
         member_of: []
         warehouses: []
@@ -4553,6 +4563,11 @@ users:
     - valexieva:
         can_login: no
         member_of: []
+
+    - vbrew:
+        can_login: yes
+        member_of:
+            - vbrew
 
     - vjallipalli:
         can_login: no
