@@ -69,14 +69,14 @@ dag = DAG(
 )
 
 clone_table_config = [
-        {
-            "table_name": "mart_arr",
-            "source_database": "PROD",
-            "source_schema": "common_mart_sales",
-            "source_table": "mart_arr",
-            "target_schema": "full_table_clones",
-            "target_database": "RAW",
-        },
+    {
+        "table_name": "mart_arr",
+        "source_database": "PROD",
+        "source_schema": "common_mart_sales",
+        "source_table": "mart_arr",
+        "target_schema": "full_table_clones",
+        "target_database": "RAW",
+    },
 ]
 
 for config in clone_table_config:
@@ -96,13 +96,12 @@ for config in clone_table_config:
         --target_table {target_table_name}"""
 
     clone_dag = KubernetesPodOperator(
-            **gitlab_defaults,
-            image=DATA_IMAGE,
-            task_id=f"snowflake-clone-{config.get('source_table')}",
-            name=f"snowflake-clone-{config.get('source_table')}",
-            secrets=secrets,
-            env_vars=pod_env_vars,
-            arguments=[container_cmd],
-            dag=dag,
+        **gitlab_defaults,
+        image=DATA_IMAGE,
+        task_id=f"snowflake-clone-{config.get('source_table')}",
+        name=f"snowflake-clone-{config.get('source_table')}",
+        secrets=secrets,
+        env_vars=pod_env_vars,
+        arguments=[container_cmd],
+        dag=dag,
     )
-
