@@ -102,6 +102,11 @@ databases:
     - mpeychet_prep:
         shared: no
 
+    - mramirez_prod:
+        shared: no
+    - mramirez_prep:
+        shared: no       
+
     - mvilain_prod:
         shared: no
     - mvilain_prep:
@@ -3098,9 +3103,42 @@ roles:
                     - mpeychet_prod.*.*
 
     - mramirez:
-        member_of: []
+        member_of:
+            - analyst_sales
         warehouses:
             - analyst_xs
+        owns:
+            databases:
+                - mramirez_prep
+                - mramirez_prod
+            schemas:
+                - mramirez_prep.*
+                - mramirez_prod.*
+            tables:
+                - mramirez_prep.*.*
+                - mramirez_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - mramirez_prep
+                    - mramirez_prod
+                write:
+                    - mramirez_prep
+                    - mramirez_prod
+            schemas:
+                read:
+                    - mramirez_prep.*
+                    - mramirez_prod.*
+                write:
+                    - mramirez_prep.*
+                    - mramirez_prod.*
+            tables:
+                read:
+                    - mramirez_prep.*.*
+                    - mramirez_prod.*.*
+                write:
+                    - mramirez_prep.*.*
+                    - mramirez_prod.*.*
 
     - mray:
         member_of:
