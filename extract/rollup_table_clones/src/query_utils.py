@@ -71,6 +71,7 @@ def get_latest_tables_to_roll_up(
         logging.info(schema_check)
         query_results = query_dataframe(engine, schema_check)
 
+        query_results["table_name"]
         if query_results and not query_results.empty:
             return query_results["table_name"]
         else:
@@ -99,6 +100,7 @@ def get_latest_rolled_up_table_name(
         f" MAX(original_table_name) as latest_table_name"
         f" FROM {db_name}.{schema_name}.{final_table_name}"
     )
+    logging.info(query)
     results = query_dataframe(engine, query)
     logging.info(results)
     if not results.empty:
