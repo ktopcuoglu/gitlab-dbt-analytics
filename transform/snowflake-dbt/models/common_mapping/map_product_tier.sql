@@ -27,7 +27,7 @@ WITH zuora_product AS (
           THEN 'SaaS - Gold'
         WHEN LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE 'silver%'
           THEN 'SaaS - Silver'
-        WHEN LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE 'bronze%'
+        WHEN LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE '%bronze%'
           THEN 'SaaS - Bronze'
         WHEN LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE '%starter%'
           THEN 'Self-Managed - Starter'
@@ -45,7 +45,7 @@ WITH zuora_product AS (
           THEN 'Trueup'
         WHEN LTRIM(LOWER(zuora_product_rate_plan.product_rate_plan_name)) LIKE 'githost%'
           THEN 'GitHost'
-        WHEN LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE '%quick start with ha%'
+        WHEN LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE ANY ('%quick start with ha%', '%proserv training per-seat add-on%')
           THEN 'Support'
         WHEN TRIM(zuora_product_rate_plan.product_rate_plan_name) IN (
                                                                         'GitLab Service Package'
@@ -77,7 +77,6 @@ WITH zuora_product AS (
                                                                       , 'Hourly Consulting'
                                                                       , 'JIRA Integration'
                                                                       , 'Custom PS Education Services'
-                                                                      , 'ProServ Training Per-Seat Add-on'
                                                                      )
           THEN 'Support'
         WHEN LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE 'gitlab geo%'
