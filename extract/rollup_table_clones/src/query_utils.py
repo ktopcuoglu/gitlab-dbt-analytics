@@ -57,7 +57,7 @@ def get_latest_tables_to_roll_up(
     latest_rolled_table = get_latest_rolled_up_table_name(
         engine, db_name, schema_name, table_name
     )
-    if latest_rolled_table.empty:
+    if latest_rolled_table:
         schema_check = (
             f" SELECT table_name "
             f" FROM {db_name}.INFORMATION_SCHEMA.TABLES "
@@ -115,10 +115,10 @@ def get_latest_rolled_up_table_name(
         logging.info(results["latest_table_name"][0])
         if latest_table_name:
             return latest_table_name[-8:]
-    else:
-        # If empty just return the empty DF
-        logging.info("Results empty, returning empty df")
-        return results
+    # else:
+    #     # If empty just return the empty DF
+    #     logging.info("Results empty, returning empty df")
+    #     return results
 
 
 def process_merged_row(row: pd.Series) -> str:
