@@ -765,7 +765,7 @@ roles:
             - boneyard
             - dbt_analytics
             - snowflake_db
-            - restricted_finance #this is about to move when POC for RBAC is completed
+            - restricted_safe #this is about to move when POC for RBAC is completed
         privileges:
             databases:
                 read:
@@ -1671,7 +1671,7 @@ roles:
                 read:
                     - prep.pmg.*
 
-    - restricted_finance:
+    - restricted_safe:
         warehouses:
             - reporting
         privileges:
@@ -1680,16 +1680,16 @@ roles:
                     - prod
             schemas:
                 read:
-                    - prod.restricted_finance_common
-                    - prod.restricted_finance_common_mapping
-                    - prod.restricted_finance_common_mart_sales
-                    - prod.restricted_finance_legacy
+                    - prod.restricted_safe_common
+                    - prod.restricted_safe_common_mapping
+                    - prod.restricted_safe_common_mart_sales
+                    - prod.restricted_safe_legacy
             tables:
                 read:
-                    - prod.restricted_finance_common.*
-                    - prod.restricted_finance_common_mapping.*
-                    - prod.restricted_finance_common_mart_sales.*
-                    - prod.restricted_finance_legacy.*
+                    - prod.restricted_safe_common.*
+                    - prod.restricted_safe_common_mapping.*
+                    - prod.restricted_safe_common_mart_sales.*
+                    - prod.restricted_safe_legacy.*
 
     - salesforce:
         warehouses:
@@ -3532,10 +3532,10 @@ roles:
         warehouses:
             - reporting
 
-    - sisense_restricted_finance:
+    - sisense_restricted_safe:
         member_of:
             - reporter
-            - restricted_finance
+            - restricted_safe
         warehouses:
             - reporting
 
@@ -4490,10 +4490,10 @@ users:
         member_of:
             - skerr
 
-    - sisense_restricted_finance:
+    - sisense_restricted_safe:
         can_login: yes
         member_of:
-            - sisense_restricted_finance           
+            - sisense_restricted_safe           
 
     - snalamaru:
         can_login: yes
