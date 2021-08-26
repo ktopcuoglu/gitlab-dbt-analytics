@@ -58,7 +58,9 @@ class UsagePing(object):
             md5 timestamp: 54da37683078de0c1360a8e76d942227
         """
         encoding = 'utf-8'
-        return md5(str(timestamp).encode(encoding=encoding)).hexdigest()
+        timestamp_encoded = str(timestamp).encode(encoding=encoding)
+
+        return md5(timestamp_encoded).hexdigest()
 
     def saas_instance_ping(self):
         """
