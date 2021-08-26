@@ -27,13 +27,12 @@ Welcome to the GitLab Data Program -- we're excited to have you! The goal of thi
 - [ ] Watch [Overview of Growth Data at GitLab](https://www.youtube.com/watch?v=eNLkj3Ho2bk&feature=youtu.be) from Eli at the Growth Fastboot. (You'll need to be logged into GitLab Unfiltered.)
 - [ ] Browse a few of the [Data Team videos in GitLab Unfiltered](https://www.youtube.com/playlist?list=PL05JrBw4t0KrRVTZY33WEHv8SjlA_-keI)
 - [ ] Watch [Data Team quick architecture overview](https://www.youtube.com/watch?v=0vlJdzYShpU)
-- [ ] **WIP: Guide on how the Data Team uses/process issues and MRs**
 
 
 
 ### Take a Deep Breath
 
-There is a lot of information being thrown at you over the last couple of days.
+There is a lot of information has been thrown at you over the last couple of days.
 It can all feel a bit overwhelming.
 The way we work at GitLab is unique and can be the hardest part of coming on board.
 It is really important to internalize that we work **handbook-first** and that **everything is always a work in progress**.
@@ -41,6 +40,14 @@ Please watch one minute of [this clip](https://www.youtube.com/watch?v=LqzDY76Q8
 *This is the most important thing to learn during all of onboarding.*
 
 ## Access Requests <!-- The purpose of this section is to identify and drive access to all of the groups, applications, and data sources the team member will need.  -->
+
+Description
+
+<details>
+
+<summary>Manager Steps</summary>
+
+- [ ] Manager: Complete the access requests for the new team member based on there role and the method listed in the following table.
 
 | Access To | Distributed Data Analyst | Data Analyst | Analytics Engineer | Data Scientist | Data Engineer | Method |
 | ------- | :----------------------: | :----------: | :----------------: | :------------: | :-----------: | ------ |
@@ -69,48 +76,17 @@ Please watch one minute of [this clip](https://www.youtube.com/watch?v=LqzDY76Q8
 |  Netsuite |   |   |   |   |   |   |
 |  Zendesk |   |   |   |   |   |   |
 
-|   |   |   |   |   |   |   |
+</details>
 
-
-
-### Submit an [Access Request](https://gitlab.com/gitlab-com/access-requests/issues/new?issuable_template=New%20Access%20Request) to provision the new member with Data Tools. 
-- [ ] Manager: Add to Lucidchart (via Okta)
-- [ ] Manager: Add to Sisense as editor (via Okta) [example AR](https://gitlab.com/gitlab-com/team-member-epics/access-requests/-/issues/10858)
-- [ ] Manager: Add to Snowflake [process](https://about.gitlab.com/handbook/business-ops/data-team/platform/#warehouse-access) and [example AR](https://gitlab.com/gitlab-com/team-member-epics/access-requests/-/issues/10857)
-    <!-- Analytics Engineer -->
-- [ ] Manager: Add to Stitch
-- [ ] Manager: Add to Fivetran.(For enabling Fivetran in Okta [use google groups](https://about.gitlab.com/handbook/business-ops/okta/#managing-okta-access-using-google-groups)) 
-- [ ] Manager: Add to Airflow as Admin
-
-### Slack
-- [ ] Manager: Request addition to `@datateam` alias on Slack in PeopleOps Onboarding issue
-- [ ] Manager: Request addition to `@data-analysts` alias on Slack in PeopleOps Onboarding issue
-
-### GitLab.com
-- [ ] Manager: Add to the `GitLab Data Team` project as a Developer.
-
-### Other Tools
-- [ ] Manager: Request addition to `Data Team` 1password vault in PeopleOps Onboarding issue
-- [ ] Manager: Add to the `gitlab-data` namespace as a Developer.
-- [ ] Manager: Update codeowners file in the handbook to include the new team member
-- [ ] Manager: Add to daily Geekbot standup (send `dashboard` to Geekbot on slack, click into a particular standup in the web UI, add via Manage button)
-- [ ] Manager: Add to Data Team calendar as a calendar admin
-- [ ] Manager: Add to Data Team calendar
-- [ ] Manager: Add to Lucidchart `Data Team` team folder
-
-### Roll Specific
-<!-- These permissions are optional and only thous needed should be left in the issue -->
-- [ ] Manager: Invite to SheetLoad & Boneyard folders in Google Drive
-- [ ] Manager: Add to [data triage](https://about.gitlab.com/handbook/business-ops/data-team/how-we-work/duties/#triager) in third week at GitLab (Week 1 = Company onboarding; Week 2 = Data team onboarding)
-- [ ] Manager: Add to SFDC. [Access Request](https://gitlab.com/gitlab-com/access-requests/issues/new?issuable_template=New%20Access%20Request)
-- [ ] Manager: Add to Zuora. [Access Request](https://gitlab.com/gitlab-com/access-requests/issues/new?issuable_template=New%20Access%20Request)
-- [ ] Manager: Marketo [Access Request](https://gitlab.com/gitlab-com/access-requests/issues/new?issuable_template=New%20Access%20Request)
-- [ ] Manager: Netsuite [Access Request](https://gitlab.com/gitlab-com/access-requests/issues/new?issuable_template=New%20Access%20Request)
-- [ ] Manager: Zendesk [Instructions](https://about.gitlab.com/handbook/support/internal-support/#regarding-licensing-and-subscriptions)
+<br>
 
 ## Team Introductions <!-- This section is to reenforce the formal informality found within GitLab, directing the team member to meet the rest of the team. -->
 
 Getting to know the team
+
+<details>
+
+<summary>Team Member Steps</summary>
 
 - [ ] Review the [org chart](https://about.gitlab.com/company/team/org-chart/) to find your immediate team and the greater Data Team. Using your browser search to find your self on the page can be a quick way to find your team.
 - [ ] Schedule a Quarterly 1:1 meeting with the Sr. Director of Data and Analytics
@@ -136,18 +112,25 @@ Getting to know the team
 | `data-prom-alerts` | No | No | No | No | Yes |
 | `bt-data-science` | No | No | No | Yes | No |
 
-
+</details>
+<br>
 
 ## Computer Set Up <!-- This section is for directing the team member to set up their computer so they are ready for there every day work. -->
 Description
 
+<details>
+
+<summary>Team Member Steps</summary>
+
+- [ ] Set up your machine for everyday use based on your role and the steps outlined in the table below
+
 | Step | Distributed Data Analyst | Data Analyst | Analytics Engineer | Data Scientist | Data Engineer | 
 | ------- | :----------------------: | :----------: | :----------------: | :------------: | :-----------: | 
-| Core Steps | Yes | Yes | Yes | Yes | Yes | 
-| Command Line Interface | No | No | No | No | Yes |
-| Google Cloud | No | No | No | Yes | Yes |
-| Jupyter | No | No | No | Yes | No |
-| Optional Steps | No | Yes | Yes | Yes | Yes |
+| [Core Steps](#core-steps) | Yes | Yes | Yes | Yes | Yes | 
+| [Command Line Interface](#command-line-interface) | No | No | No | No | Yes |
+| [Google Cloud](#google-cloud) | No | No | No | Yes | Yes |
+| [Jupyter](#jupyter) | No | No | No | Yes | No |
+| [Optional Steps](#optional-steps) | No | Yes | Yes | Yes | Yes |
 
 
 ### Core Steps
@@ -249,11 +232,19 @@ Terminal theming - In the onboarding script the terminal has been configured to 
     ```
     Then reopen your terminal and you will be asked to configure this theme. If you would like to reconfigure the theme run `p10k configure`
 
+
+</details>
+<br>
+
 ## Data Stack <!-- This section is for providing detailed information to the new team member on the core tools the Data Team uses. -->
 
-Review our [Data Stack](https://about.gitlab.com/handbook/business-technology/data-team/platform/) for a general overview of the system.
 On [the Data team handbook page](https://about.gitlab.com/handbook/business-ops/data-team/platform/#extract-and-load), we explain the variety of methods used to extract data from its raw sources (`pipelines`) to load into our Snowflake data warehouse. We use open source dbt (more on this in a moment) as our transformation tool. The bulk of your projects and tasks will be in dbt , so we will spend a lot of time familiarizing yourself with those tools and then dig into specific data sources.
 
+<details>
+
+<summary>Team Member Steps</summary>
+
+- [ ] Review our [Data Stack](https://about.gitlab.com/handbook/business-technology/data-team/platform/) for a general overview of the system.
  - [ ] Review our current data infrastructure is represented in this [system diagram](https://about.gitlab.com/handbook/business-ops/data-team/platform/infrastructure/#system-diagram)
 
 ### The Data Warehouse - Connecting to Snowflake
@@ -327,7 +318,16 @@ Sisense is our enterprise standard data visualization application and is the onl
 - [ ] [Sisense Admin Training Part 1](https://www.youtube.com/watch?v=YspSfOuEQV4&list=PL05JrBw4t0KrRVTZY33WEHv8SjlA_-keI&index=16)
 - [ ] [Sisense Admin Training Part 2](https://www.youtube.com/watch?v=LQT9fXw1EaE&list=PL05JrBw4t0KrRVTZY33WEHv8SjlA_-keI&index=14)
 
+</details>
+<br>
+
 ## Data Operations <!-- This section is to provide the new team member with detailed information on processes the Data Team operates by.  -->
+
+Description
+
+<details>
+
+<summary>Team Member Steps</summary>
 
 ### How GitLab the Product Works
 
@@ -350,9 +350,16 @@ Data triagers are the first responders to requests and problems for the Data tea
 - [ ] Read about the [Data Triage Process](https://about.gitlab.com/handbook/business-technology/data-team/how-we-work/triage/)
 - [ ] Checkout the Triage [template](https://gitlab.com/gitlab-data/analytics/-/blob/master/.gitlab/issue_templates/Data%20Triage.md)
 
+</details>
+<br>
+
 ## Important Data Sets <!-- This section is for providing the new team member general information and details on data sets specific to there role and tasks.  -->
 
 There are many data sets brought into the Enterprise Data Warehouse, the following sections highlight some of them.  You should review the sections that are relevant for your area of focus, each data set is tagged with areas they support.  The other data sets can be skimmed for your general knowledge and information. 
+
+<details>
+
+<summary>Team Member Steps</summary>
 
 ### GitLab.com (Product)
 This data comes from our GitLab.com SaaS product.
@@ -367,7 +374,7 @@ This data comes from our GitLab.com SaaS product.
 
 </details>
 
----
+<br>
 
 ### Usage/Version Ping (Product)
 
@@ -386,7 +393,7 @@ Service Data aka Usage Ping is generated from individual installations of GitLab
 
 </details>
 
----
+<br>
 
 ### Salesforce (Sales, Marketing, Finance)
 
@@ -407,7 +414,7 @@ Also referred as SFDC, Salesforce.com (Sales Force Dot Com).
 
 </details>
 
----
+<br>
 
 
 ### Zuora (Finance, Billing SSOT)
@@ -429,7 +436,7 @@ Also referred as SFDC, Salesforce.com (Sales Force Dot Com).
 
 </details>
 
----
+<br>
 
 
 ### Snowplow (Product)
@@ -446,7 +453,7 @@ Also referred as SFDC, Salesforce.com (Sales Force Dot Com).
 - [ ] We use the [Snowplow dbt package](https://hub.getdbt.com/fishtown-analytics/snowplow/latest/) on our models. Their documentation does show up in our dbt docs.
 </details>
 
----
+<br>
 
 
 ### Marketo (email Campaign Management)
@@ -461,7 +468,7 @@ Marketo is used for ...
 
 </details>
 
----
+<br>
 
 
 ### Netsuite (Accounting)
@@ -476,7 +483,7 @@ Netsuite is used for ...
 
 </details>
 
----
+<br>
 
 
 ### Zendesk (Support)
@@ -491,7 +498,7 @@ Zendesk is used for ...
 
 </details>
 
----
+<br>
 
 ### Sheetload (Various)
 
@@ -505,9 +512,17 @@ Sheetloads are ...
 
 </details>
 
----
+<br>
+</details>  
+<br>
 
 ## Supporting Information <!-- This section is other information that may be useful for a new team member for getting stated with there work. -->
+
+Description
+
+<details>
+
+<summary> Team Member Steps</summary>
 
 - Consider joining [Locally Optimistic slack](https://www.locallyoptimistic.com/community/)
 - Consider subscribing to the [Data Science Roundup](http://roundup.fishtownanalytics.com) (Not required, but recommended).
@@ -534,6 +549,8 @@ Suggested bookmarks: none of these are required, but bookmarking these links wil
 - [Data Team GitLab Activity](https://gitlab.com/groups/gitlab-data/-/activity)
 - [Data Kitchen Data Ops Cookbook](https://drive.google.com/file/d/14KyYdFB-DOeD0y2rNyb2SqjXKygo10lg/view?usp=sharing) 
 - [Data Engineering Cookbook](https://drive.google.com/file/d/1Tm3GiV3P6c5S3mhfF9bm7VaKCtio-9hm/view?usp=sharing) 
+
+</details>
         
 
 
