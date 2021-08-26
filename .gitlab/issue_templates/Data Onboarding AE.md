@@ -52,12 +52,12 @@ You will need access to several groups, applications, tools, and data sources fo
 | Access To | Distributed Data Analyst | Data Analyst | Analytics Engineer | Data Scientist | Data Engineer | Method |
 | ------- | :----------------------: | :----------: | :----------------: | :------------: | :-----------: | ------ |
 |  Lucidchart | Yes | Yes | Yes | Yes  | Yes  | [Access Request](https://about.gitlab.com/handbook/business-technology/team-member-enablement/onboarding-access-requests/access-requests/) |
-|  Sisense |  Editor | Editor  | Editor  | Editor  | Editor | |
-|  Snowflake  | `analyst_core`  | `analyst_core`  | `analyst_core`  |  `analyst_core` | `analyst_core`| |
+|  Sisense |  Editor | Editor  | Editor  | Editor  | Editor | [Access Request](https://about.gitlab.com/handbook/business-technology/team-member-enablement/onboarding-access-requests/access-requests/) |
+|  Snowflake  | `analyst_core`  | `analyst_core`  | `analyst_core`  |  `analyst_core` | `analyst_core`| [Access Request](https://about.gitlab.com/handbook/business-technology/team-member-enablement/onboarding-access-requests/access-requests/) |
 |  Stitch |  No | No  | No | No | Yes | |
-|  Fivetran | No  | No  | No | No | Yes | |
+|  Fivetran | No  | No  | No | No | Yes | For enabling Fivetran in Okta [use google groups](https://about.gitlab.com/handbook/business-ops/okta/#managing-okta-access-using-google-groups) |
 |  Airflow |  No | Analyst | Admin| Analyst | Admin | |
-|  GCP group: `analytics`| No | No | No | Yes  | Yes  |   |
+|  GCP group: `analytics`| No | No | No | Yes  | Yes  | [Access Request](https://about.gitlab.com/handbook/business-technology/team-member-enablement/onboarding-access-requests/access-requests/)   |
 | Slack alias: `@datateam` | No | Yes | Yes | Yes | Yes |  PeopleOps Onboarding |
 | Slack alias: `@data-analysts` | No | Yes | Yes | Yes | No |  PeopleOps Onboarding |
 | Slack alias: `@data-engineers` | No | No | Yes | No | Yes |  PeopleOps Onboarding |
@@ -70,11 +70,11 @@ You will need access to several groups, applications, tools, and data sources fo
 |  Lucidchart folder: `Data Team` | No |Yes | Yes | Yes | Yes |   |
 |  Google Drive folder: SheetLoad | No |Yes | Yes | Yes | Yes |   |
 |  Google Drive folder: Boneyard | No |Yes | Yes | Yes | Yes |   |
-| Salesforce  |   |   |   |   |   |   |
-|  Zuora |   |   |   |   |   |   |
-|  Marketo |   |   |   |   |   |   |
-|  Netsuite |   |   |   |   |   |   |
-|  Zendesk |   |   |   |   |   |   |
+| Salesforce  |   |   |   |   |   |  [Access Request](https://about.gitlab.com/handbook/business-technology/team-member-enablement/onboarding-access-requests/access-requests/) |
+|  Zuora |   |   |   |   |   |  [Access Request](https://about.gitlab.com/handbook/business-technology/team-member-enablement/onboarding-access-requests/access-requests/)  |
+|  Marketo |   |   |   |   |   |  [Access Request](https://about.gitlab.com/handbook/business-technology/team-member-enablement/onboarding-access-requests/access-requests/)  |
+|  Netsuite |   |   |   |   |   | [Access Request](https://about.gitlab.com/handbook/business-technology/team-member-enablement/onboarding-access-requests/access-requests/)   |
+|  Zendesk |   |   |   |   |   | [Licence Request](https://about.gitlab.com/handbook/support/internal-support/#regarding-licensing-and-subscriptions) |
 
 </details>
 
@@ -139,6 +139,7 @@ Your computer set up is critical to working efficiently.  This section will help
 | [Command Line Interface](#command-line-interface) | No | No | No | No | Yes |
 | [Google Cloud](#google-cloud) | No | No | No | Yes | Yes |
 | [Jupyter](#jupyter) | No | No | No | Yes | No |
+| [Airflow](#airflow) | No | No | Yes | No | Yes |
 | [Optional Steps](#optional-steps) | No | Yes | Yes | Yes | Yes |
 
 
@@ -208,6 +209,9 @@ Data team uses GCP (Google Cloud Platform) as our cloud provider. GCP credential
     - If you already have the variable  GOOGLE_APPLICATION_CREDENTIALS  modify its value to the file path and file name instead of adding a new one. 
 - [ ] Refresh this file by sourcing it back, by running command in terminal: ``source ~/.zshrc``.
 
+### Airflow
+- [ ] Read the Airflow section on the [Data Infrastructure page](https://about.gitlab.com/handbook/business-ops/data-team/platform/infrastructure/#airflow)
+- [ ] Watch the [Airflow Setup Walkthrough](https://www.youtube.com/watch?v=3Ym40gRHtvk&feature=youtu.be) with Taylor and Magda. In case you have an issue with the Airflow setup, read this instruction [Troubleshooting local Airflow config](https://about.gitlab.com/handbook/business-technology/data-team/platform/infrastructure/#troubleshooting-local-airflow-config)
 ### Jupyter
 
 - [ ] Ensure you've setup your dbt for running locally as mentioned above. The ./.dbt/profiles.yml file is a pre-requisite for this process. If you do not want dbt you can manually create the ./.dbt/profiles.yml file based off the [sample profile](https://gitlab.com/gitlab-data/analytics/-/blob/master/admin/sample_profiles.yml)
@@ -219,7 +223,6 @@ Data team uses GCP (Google Cloud Platform) as our cloud provider. GCP credential
 * Set up environment to build the handbook locally. [Instructions](https://about.gitlab.com/handbook/git-page-update/) 
 * Install [Python 3.8.6](https://www.python.org/downloads/release/python-386/) manually
 * Consider downloading and installing [Little Snitch](https://www.obdev.at/products/littlesnitch/index.html) - You can submit for reimbursement for the full version
-
 * Install Data Grip (from JetBrains) for interfacing with databases
     * Follow [this process](https://about.gitlab.com/handbook/tools-and-tips/#jetbrains) for requesting a license for Data Grip.  Until you have a license, you can easily use Data Grip on a trial basis for 30 days
     - Change your formatting preferences in Data Grip by going to Preferences > Editor > Code Style > HTML. You should have:
@@ -229,13 +232,15 @@ Data team uses GCP (Google Cloud Platform) as our cloud provider. GCP credential
         * Continuation indent: 8
         * Keep indents on empty lines: unchecked
     - You can use `Command + Option + L` to format your file.
+    - You may need to download the [Driver](https://docs.snowflake.net/manuals/user-guide/jdbc-download.html#downloading-the-driver). 
+    - This template may be useful as you're configuring the DataGrip connection to Snowflake `jdbc:snowflake://{account:param}.snowflakecomputing.com/?{password}[&db={Database:param}][&warehouse={Warehouse:param}][&role={Role:param}]` 
+    - We recommend not setting your schema so you can select from the many options.
+* Consider installing [tldr](https://tldr.sh/) for easy reference to common CLI commands
 
 #### Terminal Improvements 
-[Improved terminal navigation](https://stackoverflow.com/a/23963086) with arrow keys.
-
-Disabling [autocorrect in zsh](https://coderwall.com/p/jaoypq/disabling-autocorrect-in-zsh) if it annoys you.
-
-Terminal theming - In the onboarding script the terminal has been configured to use the [bira OhMyZsh theme](https://github.com/ohmyzsh/ohmyzsh/wiki/Themes#bira). However if you would like an improved and configurable theme install [PowerLevel10K](https://github.com/romkatv/powerlevel10k) by running the below command from your terminal: 
+- [Improved terminal navigation](https://stackoverflow.com/a/23963086) with arrow keys.
+- Disabling [autocorrect in zsh](https://coderwall.com/p/jaoypq/disabling-autocorrect-in-zsh) if it annoys you.
+- Terminal theming - In the onboarding script the terminal has been configured to use the [bira OhMyZsh theme](https://github.com/ohmyzsh/ohmyzsh/wiki/Themes#bira). However if you would like an improved and configurable theme install [PowerLevel10K](https://github.com/romkatv/powerlevel10k) by running the below command from your terminal: 
     ``` 
     git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
     ```
@@ -254,7 +259,7 @@ On [the Data team handbook page](https://about.gitlab.com/handbook/business-ops/
 <summary>Team Member Steps</summary>
 
 - [ ] Review our [Data Stack](https://about.gitlab.com/handbook/business-technology/data-team/platform/) for a general overview of the system.
- - [ ] Review our current data infrastructure is represented in this [system diagram](https://about.gitlab.com/handbook/business-ops/data-team/platform/infrastructure/#system-diagram)
+- [ ] Review our current data infrastructure is represented in this [system diagram](https://about.gitlab.com/handbook/business-ops/data-team/platform/infrastructure/#system-diagram)
 
 ### The Data Warehouse - Connecting to Snowflake
 
@@ -264,7 +269,7 @@ On [the Data team handbook page](https://about.gitlab.com/handbook/business-ops/
   - [ ] Run `alter user "your_user" set default_role = "your_role";` to set the UI default Role to your appropriate role instead of `PUBLIC`. (E.g. `alter user "KDIETZ" set default_role = "KDIETZ";`)
 - [ ] Test your Snowflake connection in the UI by first running selecting which warehouse to use (e.g. `use warehouse ANALYST_XS;`), clicking the "play" button, and then querying a database you have access to (e.g. `select * from "PROD"."COMMON"."DIM_CRM_PERSON" limit 10;`) 
 
-We STRONGLY recommend using the UI, but if you must download a SQL development tool, you will need one that is compatible with Snowflake, such as [SQLWorkbench/J](http://sql-workbench.net) or [DataGrip](https://www.jetbrains.com/datagrip/). If you're interested in DataGrip, follow the [instructions to get a JetBrains license in the handbook](https://about.gitlab.com/handbook/tools-and-tips/#jetbrains). If using DataGrip, you may need to download the [Driver](https://docs.snowflake.net/manuals/user-guide/jdbc-download.html#downloading-the-driver). This template may be useful as you're configuring the DataGrip connection to Snowflake `jdbc:snowflake://{account:param}.snowflakecomputing.com/?{password}[&db={Database:param}][&warehouse={Warehouse:param}][&role={Role:param}]` We recommend not setting your schema so you can select from the many options. 
+We STRONGLY recommend using the UI, but if you must download a SQL development tool, you will need one that is compatible with Snowflake, such as [SQLWorkbench/J](http://sql-workbench.net) or [DataGrip](https://www.jetbrains.com/datagrip/). If you're interested in DataGrip, follow the instructions [optional steps](#optional-steps) section of the [Computer Set Up](#computer-set-up) sections of this issue.   
 #### Snowflake SQL
 
 Snowflake SQL is probably not that different from the dialects of SQL you're already familiar with, but here are a couple of resources to point you in the right direction:
@@ -307,7 +312,7 @@ _Ensure you've set up your SSH configuration in the previous step as this is req
 - [ ] Follow the [instructions](https://about.gitlab.com/handbook/business-technology/data-team/platform/dbt-guide/#Venv-workflow) found in the handbook for running and configuring dbt.
 - [ ] Run the `run-dbt` command from the analytics repository.  This will load the dbt dependencies and open a shell to virtual environment where dbt is installed allowing you run dbt commands
 - [ ] Run `dbt seed` to import the CSV's from the analytics/data into your schema. For dbt to compile this needs to be completed as some of the models have dependencies on the tables which are created by the CSV's.
-- [ ] Run `dbt run --models +staging.sfdc` from within the container to know that your connection has been successful, you are in the correct location, and everything will run smoothly.  For more details on the syntax for how to select and run the models, please refer to this [page](https://docs.getdbt.com/reference/node-selection/syntax#examples).  Afterwards, you can also try running `dbt compile` to ensure that the entire project will compile correctly.
+- [ ] Run `dbt run --models +staging.sfdc` from within the shell to know that your connection has been successful, you are in the correct location, and everything will run smoothly.  For more details on the syntax for how to select and run the models, please refer to this [page](https://docs.getdbt.com/reference/node-selection/syntax#examples).  Afterwards, you can also try running `dbt compile` to ensure that the entire project will compile correctly.
 - [ ] Test the command `make help` and use it to understand how to use various `make *` commands available to you.
 
 **Note:** When launching dbt you may see `WARNING: The GOOGLE_APPLICATION_CREDENTIALS variable is not set. Defaulting to a blank string.` Unless you are developing on Airflow this is ok and expected. If you require GOOGLE_APPLICATION_CREDENTIALS please follow the steps outlined below in the DataLab section.
@@ -332,7 +337,7 @@ Sisense is our enterprise standard data visualization application and is the onl
 
 ## Data Operations <!-- This section is to provide the new team member with detailed information on processes the Data Team operates by.  -->
 
-The Data Team works with people through the company.  This section is designed to give you information on how the Data Team manages thous interactions and how you will be a part of them.
+The Data Team works with people through the company.  This section is designed to give you information on how the Data Team manages thous interactions and how you will be a part of them.  Even more information can be found on the [How we Work](https://about.gitlab.com/handbook/business-technology/data-team/how-we-work/) page of the handbook.
 
 <details>
 
@@ -383,7 +388,6 @@ This data comes from our GitLab.com SaaS product.
 
 </details>
 
-<br>
 
 ### Usage/Version Ping (Product)
 
@@ -402,7 +406,6 @@ Service Data aka Usage Ping is generated from individual installations of GitLab
 
 </details>
 
-<br>
 
 ### Salesforce (Sales, Marketing, Finance)
 
@@ -423,7 +426,6 @@ Also referred as SFDC, Salesforce.com (Sales Force Dot Com).
 
 </details>
 
-<br>
 
 
 ### Zuora (Finance, Billing SSOT)
@@ -445,8 +447,6 @@ Also referred as SFDC, Salesforce.com (Sales Force Dot Com).
 
 </details>
 
-<br>
-
 
 ### Snowplow (Product)
 
@@ -462,8 +462,6 @@ Also referred as SFDC, Salesforce.com (Sales Force Dot Com).
 - [ ] We use the [Snowplow dbt package](https://hub.getdbt.com/fishtown-analytics/snowplow/latest/) on our models. Their documentation does show up in our dbt docs.
 </details>
 
-<br>
-
 
 ### Marketo (email Campaign Management)
 
@@ -477,7 +475,6 @@ Marketo is used for ...
 
 </details>
 
-<br>
 
 
 ### Netsuite (Accounting)
@@ -492,7 +489,6 @@ Netsuite is used for ...
 
 </details>
 
-<br>
 
 
 ### Zendesk (Support)
@@ -507,31 +503,24 @@ Zendesk is used for ...
 
 </details>
 
-<br>
 
 ### Sheetload (Various)
 
-Sheetloads are ...
+SheetLoad is the process by which a Google Sheets and CSVs from GCS or S3 can be ingested into the data warehouse.
 
 <details>
 
 <summary>Review Steps</summary>
 
-- [ ] Familiarize yourself with [SheetLoad](https://about.gitlab.com/handbook/business-ops/data-team/platform/#using-sheetload).
+- [ ] Familiarize yourself with [SheetLoad](https://about.gitlab.com/handbook/business-technology/data-team/platform/pipelines/#sheetload).
 
 </details>
 
-<br>
 </details>  
 
 
 ## Supporting Information <!-- This section is other information that may be useful for a new team member for getting stated with there work. -->
 
-Description
-
-<details>
-
-<summary> Team Member Steps</summary>
 
 - Consider joining [Locally Optimistic slack](https://www.locallyoptimistic.com/community/)
 - Consider subscribing to the [Data Science Roundup](http://roundup.fishtownanalytics.com) (Not required, but recommended).
@@ -541,7 +530,7 @@ Description
 ### Resources to help you get started with your first issue
 
 - Pairing session between a new Data Analyst and a Staff Data Engineer working on the new analyst's first issue: [Pair on Lost MRR Dashboard Creation](https://www.youtube.com/watch?v=WuIcnpuS2Mg)
-- nd part of pairing session between a new Data Analyst and a Staff Data Engineer working on the new analyst's first issue: [Pair on Lost MRR Dashboard Creation Part 2](https://www.youtube.com/watch?v=HIlDH5gaL3M)
+- Second part of pairing session between a new Data Analyst and a Staff Data Engineer working on the new analyst's first issue: [Pair on Lost MRR Dashboard Creation Part 2](https://www.youtube.com/watch?v=HIlDH5gaL3M)
 - Setting up visual studio and git terminals to use for testing locally. [Visual Studio Setup - Data Team](https://youtu.be/t5eoNLUl3x0)
 
 
@@ -559,7 +548,6 @@ Suggested bookmarks: none of these are required, but bookmarking these links wil
 - [Data Kitchen Data Ops Cookbook](https://drive.google.com/file/d/14KyYdFB-DOeD0y2rNyb2SqjXKygo10lg/view?usp=sharing) 
 - [Data Engineering Cookbook](https://drive.google.com/file/d/1Tm3GiV3P6c5S3mhfF9bm7VaKCtio-9hm/view?usp=sharing) 
 
-</details>
         
 
 
