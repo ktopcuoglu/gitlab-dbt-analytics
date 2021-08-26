@@ -57,6 +57,8 @@ def get_latest_tables_to_roll_up(
     latest_rolled_table = get_latest_rolled_up_table_name(
         engine, db_name, schema_name, table_name
     )
+    logging.info(latest_rolled_table)
+    logging.info("latest_rolled_table")
     if not latest_rolled_table.empty:
         schema_check = (
             f" SELECT table_name "
@@ -79,7 +81,6 @@ def get_latest_tables_to_roll_up(
     logging.info(schema_check)
     query_results = query_dataframe(engine, schema_check)
 
-    query_results["table_name"]
     if query_results and not query_results.empty:
         return query_results["table_name"]
     else:
