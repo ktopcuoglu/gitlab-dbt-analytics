@@ -30,8 +30,9 @@ from kube_secrets import (
     SNOWFLAKE_LOAD_PASSWORD,
     SNOWFLAKE_LOAD_ROLE,
     SNOWFLAKE_LOAD_USER,
-    SNOWFLAKE_LOAD_WAREHOUSE
+    SNOWFLAKE_LOAD_WAREHOUSE,
 )
+
 """ This file is used to generate the TDF records count DAG and Task. It has been broken into 2 to keep it modular"""
 # Load the env vars into a dict and set env vars
 env = os.environ.copy()
@@ -72,11 +73,11 @@ config_dict_td_pgp = {
         "env_vars": {},
         "extract_schedule_interval": "0 9 */1 * *",
         "secrets": [
-          GITLAB_COM_CI_DB_NAME,
-          GITLAB_COM_CI_DB_HOST,
-          GITLAB_COM_CI_DB_PASS,
-          GITLAB_COM_CI_DB_PORT,
-          GITLAB_COM_CI_DB_USER,
+            GITLAB_COM_CI_DB_NAME,
+            GITLAB_COM_CI_DB_HOST,
+            GITLAB_COM_CI_DB_PASS,
+            GITLAB_COM_CI_DB_PORT,
+            GITLAB_COM_CI_DB_USER,
         ],
         "start_date": datetime(2021, 5, 21),
         "sync_schedule_interval": None,
@@ -84,13 +85,16 @@ config_dict_td_pgp = {
     },
 }
 
+
 def extract_manifest(file_path):
     with open(file_path, "r") as file:
         manifest_dict = yaml.load(file, Loader=yaml.FullLoader)
     return manifest_dict
 
+
 def extract_table_list_from_manifest(manifest_contents):
     return manifest_contents["tables"].keys()
+
 
 for source_name, config in config_dict_td_pgp.items():
 
