@@ -18,7 +18,9 @@ if __name__ == "__main__":
     GITLAB_COM_API_BASE_URL = "https://gitlab.com/api/v4"
     UPDATE_TESTS_METADATA_JOB_NAME = "update-tests-metadata"
     RSPEC_FLAKY_REPORT_ARTIFACT = "rspec_flaky/report-suite.json"
-    RSPEC_FLAKY_REPORT_URL = "https://gitlab-org.gitlab.io/gitlab/rspec_flaky/report-suite.json"
+    RSPEC_FLAKY_REPORT_URL = (
+        "https://gitlab-org.gitlab.io/gitlab/rspec_flaky/report-suite.json"
+    )
 
     def quality_check(json_response: Dict[Any, Any]) -> None:
         """
@@ -27,9 +29,7 @@ if __name__ == "__main__":
         record_count = len(json_response)
 
         if record_count < 2:
-            info(
-                f"Flaky report doesn't look as expected: {json_response}"
-            )
+            info(f"Flaky report doesn't look as expected: {json_response}")
             sys.exit(1)
 
     logging.basicConfig(stream=sys.stdout, level=20)
