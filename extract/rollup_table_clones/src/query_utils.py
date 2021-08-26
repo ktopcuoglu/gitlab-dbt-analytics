@@ -106,19 +106,11 @@ def get_latest_rolled_up_table_name(
         f" MAX(original_table_name) as latest_table_name"
         f" FROM {db_name}.{schema_name}.{final_table_name}"
     )
-    logging.info(query)
     results = query_dataframe(engine, query)
-    logging.info(results)
     if not results.empty and results["latest_table_name"][0] is not None:
         latest_table_name = results["latest_table_name"][0]
-        logging.info("Results not empty, print latest table name: ")
-        logging.info(results["latest_table_name"][0])
         if latest_table_name:
             return latest_table_name[-8:]
-    # else:
-    #     # If empty just return the empty DF
-    #     logging.info("Results empty, returning empty df")
-    #     return results
 
 
 def process_merged_row(row: pd.Series) -> str:
@@ -165,10 +157,8 @@ def rollup_table_clone(
     :param table_name:
     :rtype: object
     """
-    roll_up_table_info = get_table_column_names(engine, db_name, f"{table_name}_ROLLUP")
 
-    logging.info("roll_up_table_info")
-    logging.info(roll_up_table_info)
+    roll_up_table_info = get_table_column_names(engine, db_name, f"{table_name}_ROLLUP")
 
     if roll_up_table_info.empty:
         recreate_rollup_table(engine, db_name, schema_name, table_name)
@@ -177,8 +167,7 @@ def rollup_table_clone(
         )
 
     tables_to_roll_up = get_latest_tables_to_roll_up(engine, db_name, schema_name, table_name)
-    logging.info("tables_to_roll_up")
-    logging.info(tables_to_roll_up)
+
     if not tables_to_roll_up.empty:
 
         for items in tables_to_roll_up.iteritems():
@@ -227,14 +216,8 @@ def recreate_rollup_table(
     logging.info(f"Recreating {table_name}")
     tables_to_roll_up = get_existing_tables_to_roll_up(engine, db_name, table_name)
     latest_table_name = max(tables_to_roll_up.iteritems())[1]
-    logging.info("latest_table_name")
-    logging.info(latest_table_name)
     rollup_table_name = f"{db_name}.{schema_name}.{table_name}_ROLLUP"
-    logging.info("rollup_table_name")
-    logging.info(rollup_table_name)
     latest_table_columns = get_table_column_names(engine, db_name, latest_table_name)
-    logging.info("latest_table_columns")
-    logging.info(latest_table_columns)
     big_df = latest_table_columns
 
     for items in tables_to_roll_up.iteritems():
