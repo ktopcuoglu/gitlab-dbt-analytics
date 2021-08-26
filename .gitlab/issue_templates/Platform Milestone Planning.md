@@ -3,17 +3,22 @@
 <!-- please link preceding milestone planning issue in the Linked Issues section below the description -->
 
 # Engineering Days :calendar: 
-Please add a number for days you'll be working this milestone. Engineers should subtract a day for each triage day and a day for meetings. Any time-off should also be subtracted from this number. This means that the maximum Engineering Days a Data Engineer will ever post is 7. If you have two triage days it's 5. **This section should be filled out by the data engineers themselves.**
+Please add a number for days you'll be working this milestone. Engineers should subtract a day for each triage day and a day for meetings. For example, If a milestone is two weeks long and an engineer has 1 triage day she would subtract 2 triage days from the 10 workdays and then 1 meeting day as well, which would be 7 engineering days. All PTO should also be subtraced, including the covered triage days. 
 
 - @jjstark: 
 - @paul_armstrong:
+- @laddula:
+- @vedprakash2021:
+- @rbacovic:
 
 **Total engineering days**: <!-- sum the above engineering days -->
 
 
 ---
 
-# Milestone Themes
+# Milestone Themes :book:
+
+Pioritized issues to be completed as they relate to OKRs, Epics, or other [MVCs](https://about.gitlab.com/handbook/values/#minimal-viable-change-mvc). This provides us with a snapshot of the most important things we're planning to accomplish in the milestone for clear communication with the business as well as an easy measure for results.
 
 ## P1 - Ops
 - 
@@ -26,8 +31,13 @@ Please add a number for days you'll be working this milestone. Engineers should 
 
 ---
 
+
+<details>
+<summary> velocity and capacity </summary>
+
 # Velocity and Capacity :race_car: 
-We calculate the velocity of our last milestone by dividing the points/weight completed by the number of engineering days that were available. **This section should be filled out by the data engineering team manager or whoever is running the planning**
+
+We calculate the velocity of our last milestone by dividing the points/weight completed by the number of engineering days that were available.
 
 ## Last Milestone
 Last Milestone: <!-- link here (it will probably be the current milestone) -->
@@ -42,7 +52,7 @@ We assume that preceding milestone's velocity is a good predictor of the followi
 
 **Engineering capacity for this milestone:** <!-- Total engineering days * Last milestone velocity -->
 
+</details>
 
----
 <!-- DO NOT EDIT BELOW THIS LINE -->
 /label ~Housekeeping ~"Team::Data Platform" ~Planning ~"Priority::1-Ops" 
