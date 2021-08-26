@@ -1,5 +1,5 @@
 
-# Welcome to the GitLab Data Program
+# Welcome to the GitLab Data Program :tada:
 
 Welcome to the GitLab Data Program -- we're excited to have you! The goal of this issue is to help bring you, our new data team member, up to speed in the GitLab Data Team's analytics stack as efficiently as possible, without sacrificing quality for speed. You should complete and close the Data Team on-boarding issue within 1 week after you have completed the GitLab company on-boarding issue. 
 
@@ -41,7 +41,7 @@ Please watch one minute of [this clip](https://www.youtube.com/watch?v=LqzDY76Q8
 
 ## Access Requests <!-- The purpose of this section is to identify and drive access to all of the groups, applications, and data sources the team member will need.  -->
 
-Description
+You will need access to several groups, applications, tools, and data sources for your every day work.  Your manager will take care of these, but review the list and ask your manager if you have any questions. 
 
 <details>
 
@@ -78,11 +78,11 @@ Description
 
 </details>
 
-<br>
+
 
 ## Team Introductions <!-- This section is to reenforce the formal informality found within GitLab, directing the team member to meet the rest of the team. -->
 
-Getting to know the team
+Getting to know the team will require purposeful steps on your part in our all-remote environment.  This section is to help you get started with [informal communication](https://about.gitlab.com/company/culture/all-remote/informal-communication/) and getting to you your team.
 
 <details>
 
@@ -92,8 +92,16 @@ Getting to know the team
 - [ ] Schedule a Quarterly 1:1 meeting with the Sr. Director of Data and Analytics
 - [ ] Schedule coffee chats with members of the Data Team starting with thous in your immediate team. These should be in addition to the ones you do with other GitLab team members. Consider making these recurring meetings for every 3-4 weeks with everyone you will work closely with. In addition, you should also consider scheduling chats with Business Technology (IT, Enterprise Apps, Procurement) people as well.
 
+</details>
+
 
 ## Slack Channels <!-- This section is for a list of all slack channels that the team member should join as part of there regular work. -->
+
+There are many slack channels for communication of data team needs and information.  This section provides a list of the channels you will need to join and review regularly for your regular work.
+
+<details>
+
+<summary>Team Member Steps</summary>
 
 - [ ] Join the Slack channels appropriate for your role:
 
@@ -112,11 +120,12 @@ Getting to know the team
 | `data-prom-alerts` | No | No | No | No | Yes |
 | `bt-data-science` | No | No | No | Yes | No |
 
+
 </details>
-<br>
 
 ## Computer Set Up <!-- This section is for directing the team member to set up their computer so they are ready for there every day work. -->
-Description
+
+Your computer set up is critical to working efficiently.  This section will help you get the foundational applications and systems set up on your machine that you will need for your every day work.
 
 <details>
 
@@ -234,7 +243,7 @@ Terminal theming - In the onboarding script the terminal has been configured to 
 
 
 </details>
-<br>
+
 
 ## Data Stack <!-- This section is for providing detailed information to the new team member on the core tools the Data Team uses. -->
 
@@ -319,11 +328,11 @@ Sisense is our enterprise standard data visualization application and is the onl
 - [ ] [Sisense Admin Training Part 2](https://www.youtube.com/watch?v=LQT9fXw1EaE&list=PL05JrBw4t0KrRVTZY33WEHv8SjlA_-keI&index=14)
 
 </details>
-<br>
+
 
 ## Data Operations <!-- This section is to provide the new team member with detailed information on processes the Data Team operates by.  -->
 
-Description
+The Data Team works with people through the company.  This section is designed to give you information on how the Data Team manages thous interactions and how you will be a part of them.
 
 <details>
 
@@ -351,7 +360,7 @@ Data triagers are the first responders to requests and problems for the Data tea
 - [ ] Checkout the Triage [template](https://gitlab.com/gitlab-data/analytics/-/blob/master/.gitlab/issue_templates/Data%20Triage.md)
 
 </details>
-<br>
+
 
 ## Important Data Sets <!-- This section is for providing the new team member general information and details on data sets specific to there role and tasks.  -->
 
@@ -514,7 +523,7 @@ Sheetloads are ...
 
 <br>
 </details>  
-<br>
+
 
 ## Supporting Information <!-- This section is other information that may be useful for a new team member for getting stated with there work. -->
 
