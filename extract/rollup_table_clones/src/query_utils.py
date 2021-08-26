@@ -160,6 +160,7 @@ def rollup_table_clone(
     """
     roll_up_table_info = get_table_column_names(engine, db_name, f"{table_name}_ROLLUP")
 
+    logging.info("roll_up_table_info")
     logging.info(roll_up_table_info)
 
     if roll_up_table_info.empty:
@@ -169,6 +170,7 @@ def rollup_table_clone(
         )
 
     tables_to_roll_up = get_latest_tables_to_roll_up(engine, db_name, schema_name, table_name)
+    logging.info("tables_to_roll_up")
     logging.info(tables_to_roll_up)
     if not tables_to_roll_up.empty:
 
