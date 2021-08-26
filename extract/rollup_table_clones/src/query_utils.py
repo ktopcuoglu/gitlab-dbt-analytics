@@ -105,6 +105,8 @@ def get_latest_rolled_up_table_name(
     logging.info(results)
     if not results.empty:
         latest_table_name = results["latest_table_name"][0]
+        logging.info("Results not empty, print latest table name: ")
+        logging.info(results["latest_table_name"][0])
         if latest_table_name:
             return latest_table_name[-8:]
     else:
