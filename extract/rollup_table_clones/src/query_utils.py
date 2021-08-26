@@ -57,9 +57,7 @@ def get_latest_tables_to_roll_up(
     latest_rolled_table = get_latest_rolled_up_table_name(
         engine, db_name, schema_name, table_name
     )
-    logging.info(latest_rolled_table)
-    logging.info("latest_rolled_table")
-    if not latest_rolled_table.empty:
+    if latest_rolled_table.empty:
         schema_check = (
             f" SELECT table_name "
             f" FROM {db_name}.INFORMATION_SCHEMA.TABLES "
@@ -78,7 +76,6 @@ def get_latest_tables_to_roll_up(
             f" ORDER BY 1"
         )
 
-    logging.info(schema_check)
     query_results = query_dataframe(engine, schema_check)
 
     if not query_results.empty:
