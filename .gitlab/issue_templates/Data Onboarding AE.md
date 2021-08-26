@@ -93,7 +93,7 @@ Getting to know the team will require purposeful steps on your part in our all-r
 
 - [ ] Review the [org chart](https://about.gitlab.com/company/team/org-chart/) to find your immediate team and the greater Data Team. Using your browser search to find your self on the page can be a quick way to find your team.
 - [ ] Schedule a Quarterly 1:1 meeting with the Sr. Director of Data and Analytics
-- [ ] Schedule coffee chats with members of the Data Team starting with thous in your immediate team. These should be in addition to the ones you do with other GitLab team members. Consider making these recurring meetings for every 3-4 weeks with everyone you will work closely with. In addition, you should also consider scheduling chats with Business Technology (IT, Enterprise Apps, Procurement) people as well.
+- [ ] Schedule coffee chats with members of the Data Team starting with those in your immediate team. These should be in addition to the ones you do with other GitLab team members. Consider making these recurring meetings for every 3-4 weeks with everyone you will work closely with. In addition, you should also consider scheduling chats with Business Technology (IT, Enterprise Apps, Procurement) people as well.
 
 </details>
 
