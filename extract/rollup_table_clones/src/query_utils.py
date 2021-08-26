@@ -103,7 +103,7 @@ def get_latest_rolled_up_table_name(
     logging.info(query)
     results = query_dataframe(engine, query)
     logging.info(results)
-    if not results.empty and results["latest_table_name"][0]:
+    if not results.empty and results["latest_table_name"][0] is not None:
         latest_table_name = results["latest_table_name"][0]
         logging.info("Results not empty, print latest table name: ")
         logging.info(results["latest_table_name"][0])
