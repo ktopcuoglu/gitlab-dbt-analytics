@@ -1,7 +1,7 @@
 WITH base AS (
 
     SELECT *
-    FROM {{ ref('prep_product_detail') }}
+    FROM {{ ref('prep_product_detail_api_sandbox') }}
 
 ), final AS (
 
@@ -33,8 +33,8 @@ WITH base AS (
 
 {{ dbt_audit(
     cte_ref="final",
-    created_by="@ischweickartDD",
-    updated_by="@mcooperDD",
-    created_date="2020-12-16",
-    updated_date="2021-01-26"
+    created_by="@ken_aguilar",
+    updated_by="@ken_aguilar",
+    created_date="2021-08-26",
+    updated_date="2021-08-26"
 ) }}

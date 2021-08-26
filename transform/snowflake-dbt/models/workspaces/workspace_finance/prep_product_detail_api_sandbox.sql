@@ -1,7 +1,7 @@
 WITH zuora_api_sandbox_product AS (
 
     SELECT *
-    FROM {{ ref('zuora_product_source') }}
+    FROM {{ ref('zuora_api_sandbox_product_source') }}
 
 ), zuora_api_sandbox_product_rate_plan AS (
 
