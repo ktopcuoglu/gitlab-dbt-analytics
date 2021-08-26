@@ -4,15 +4,15 @@
 Welcome to the GitLab Data Program -- we're excited to have you! The goal of this issue is to help bring you, our new data team member, up to speed in the GitLab Data Team's analytics stack as efficiently as possible, without sacrificing quality for speed. You should complete and close the Data Team on-boarding issue within 1 week after you have completed the GitLab company on-boarding issue. 
 
 ## Table of Contents
-* [Getting Started](#getting-started)
-* [Access Requests](#access-requests)
-* [Slack Channels](#slack-channels)
-* [Team Introductions](#team-introductions)
-* [Computer Set Up](#computer-set-up)
-* [Data Stack](#data-stack)
-* [Data Operations](#data-operations)
-* [Important Data Sets](#important-data-sets)
-* [Supporting Information](#supporting-information)
+- [Getting Started](#getting-started)
+- [Access Requests](#access-requests)
+- [Slack Channels](#slack-channels)
+- [Team Introductions](#team-introductions)
+- [Computer Set Up](#computer-set-up)
+- [Data Stack](#data-stack)
+- [Data Operations](#data-operations)
+- [Important Data Sets](#important-data-sets)
+- [Supporting Information](#supporting-information)
 
 ## Getting Started <!-- The purpose of this section is to give the new team member a foundation upon which the subsequent sections build. -->
 
@@ -54,27 +54,30 @@ You will need access to several groups, applications, tools, and data sources fo
 |  Lucidchart | Yes | Yes | Yes | Yes  | Yes  | [Access Request](https://about.gitlab.com/handbook/business-technology/team-member-enablement/onboarding-access-requests/access-requests/) |
 |  Sisense |  Editor | Editor  | Editor  | Editor  | Editor | [Access Request](https://about.gitlab.com/handbook/business-technology/team-member-enablement/onboarding-access-requests/access-requests/) |
 |  Snowflake  | `analyst_core`  | `analyst_core`  | `analyst_core`  |  `analyst_core` | `analyst_core`| [Access Request](https://about.gitlab.com/handbook/business-technology/team-member-enablement/onboarding-access-requests/access-requests/) |
-|  Stitch |  No | No  | No | No | Yes | |
-|  Fivetran | No  | No  | No | No | Yes | For enabling Fivetran in Okta [use google groups](https://about.gitlab.com/handbook/business-ops/okta/#managing-okta-access-using-google-groups) |
+|  Stitch |  No | No  | No | No | Yes | ? |
+|  Fivetran | No  | No  | No | No | Yes | [Instructions](https://about.gitlab.com/handbook/business-ops/okta/#managing-okta-access-using-google-groups) |
 |  Airflow |  No | Analyst | Admin| Analyst | Admin | |
-|  GCP group: `analytics`| No | No | No | Yes  | Yes  | [Access Request](https://about.gitlab.com/handbook/business-technology/team-member-enablement/onboarding-access-requests/access-requests/)   |
-| Slack alias: `@datateam` | No | Yes | Yes | Yes | Yes |  PeopleOps Onboarding |
-| Slack alias: `@data-analysts` | No | Yes | Yes | Yes | No |  PeopleOps Onboarding |
-| Slack alias: `@data-engineers` | No | No | Yes | No | Yes |  PeopleOps Onboarding |
-| Project: `GitLab Data Team` | No | Developer | Developer | Developer | Developer |
-| 1password vault: `Data Team` | No | Yes | Yes | Yes | Yes |  PeopleOps Onboarding |
-|  Namespce: `gitlab-data` |  No | Developer | Developer | Developer | Developer |  |
-| daily Geekbot standup  | No | Yes | Yes | Yes | Yes |  send `dashboard` to Geekbot on slack, click into a particular standup in the web UI, add via Manage button |
+|  GCP group: `analytics`| No | No | No | Yes  | Yes  | [Access Request](https://about.gitlab.com/handbook/business-technology/team-member-enablement/onboarding-access-requests/access-requests/) [Example](https://gitlab.com/gitlab-com/team-member-epics/access-requests/-/issues/10306#note_622125437)  |
+|  Slack alias: `@datateam` | No | Yes | Yes | Yes | Yes |  PeopleOps Onboarding |
+|  Slack alias: `@data-analysts` | No | Yes | Yes | Yes | No |  PeopleOps Onboarding |
+|  Slack alias: `@data-engineers` | No | No | Yes | No | Yes |  PeopleOps Onboarding |
+|  Project: `GitLab Data Team` | No | Developer | Developer | Developer | Developer |
+|  1password vault: `Data Team` | No | Yes | Yes | Yes | Yes |  PeopleOps Onboarding |
+|  Namespce: `gitlab-data` |  No | Developer | Developer | Developer | Developer | ? |
+| daily Geekbot standup  | No | Yes | Yes | Yes | Yes | [Instructions](https://geekbot.com/faq/#:~:text=How%20can%20i%20add%20new,participants%20with%20the%20broadcast%20channel.)  |
 |  codeowners file in the handbook  | No |Yes | Yes | Yes | Yes |
-|  Data Team calendar |  No |Yes | Yes | Yes | Yes |   |
-|  Lucidchart folder: `Data Team` | No |Yes | Yes | Yes | Yes |   |
-|  Google Drive folder: SheetLoad | No |Yes | Yes | Yes | Yes |   |
-|  Google Drive folder: Boneyard | No |Yes | Yes | Yes | Yes |   |
-| Salesforce  |   |   |   |   |   |  [Access Request](https://about.gitlab.com/handbook/business-technology/team-member-enablement/onboarding-access-requests/access-requests/) |
-|  Zuora |   |   |   |   |   |  [Access Request](https://about.gitlab.com/handbook/business-technology/team-member-enablement/onboarding-access-requests/access-requests/)  |
-|  Marketo |   |   |   |   |   |  [Access Request](https://about.gitlab.com/handbook/business-technology/team-member-enablement/onboarding-access-requests/access-requests/)  |
-|  Netsuite |   |   |   |   |   | [Access Request](https://about.gitlab.com/handbook/business-technology/team-member-enablement/onboarding-access-requests/access-requests/)   |
-|  Zendesk |   |   |   |   |   | [Licence Request](https://about.gitlab.com/handbook/support/internal-support/#regarding-licensing-and-subscriptions) |
+|  Data Team calendar |  No |Yes | Yes | Yes | Yes | ?  |
+|  Lucidchart folder: `Data Team` | No |Yes | Yes | Yes | Yes |  ? |
+|  Google Drive folder: SheetLoad | No |Yes | Yes | Yes | Yes |  ? |
+|  Google Drive folder: Boneyard | No |Yes | Yes | Yes | Yes |  ? |
+|  Service Account Credentials: Google Cloud | No | No | ? | No | Yes | ? |
+
+- [ ] Manager: Complete access requests for the new team member based on there assigned responsibilities following the provided method.
+    - [ ] Salesforce [Access Request](https://about.gitlab.com/handbook/business-technology/team-member-enablement/onboarding-access-requests/access-requests/) 
+    - [ ] Zuora [Access Request](https://about.gitlab.com/handbook/business-technology/team-member-enablement/onboarding-access-requests/access-requests/)  
+    - [ ] Marketo [Access Request](https://about.gitlab.com/handbook/business-technology/team-member-enablement/onboarding-access-requests/access-requests/)  
+    - [ ] Netsuite [Access Request](https://about.gitlab.com/handbook/business-technology/team-member-enablement/onboarding-access-requests/access-requests/)   
+    - [ ] Zendesk [Licence Request](https://about.gitlab.com/handbook/support/internal-support/#regarding-licensing-and-subscriptions) 
 
 </details>
 
@@ -144,70 +147,65 @@ Your computer set up is critical to working efficiently.  This section will help
 
 
 ### Core Steps
-* [ ] Check that you have create your SSH keys by typing `ssh -T git@gitlab.com` into your terminal which should return "Welcome to GitLab, " + your_username.  :red_circle: This set up is required for subsequent steps
-  * [ ] If your SSH keys have not been created follow [these steps](https://docs.gitlab.com/ee/gitlab-basics/create-your-ssh-keys.html).  Make the SSH key with no password.
+- [ ] Check that you have create your SSH keys by typing `ssh -T git@gitlab.com` into your terminal which should return "Welcome to GitLab, " + your_username.  :red_circle: This set up is required for subsequent steps
+  - [ ] If your SSH keys have not been created follow [these steps](https://docs.gitlab.com/ee/gitlab-basics/create-your-ssh-keys.html).  Make the SSH key with no password.
 
 **Note:** The following script is intended to set up the basic tools and environments that are standard for working with the data at GitLab.  There are optional tools and set up in the following sections.  If you are comfortable using the terminal to install these tools then you can use the script as a guide, otherwise run the script with the provided commands. 
 
 _**THE SCRIPT SHOULD ONLY BE RUN ON YOUR GITLAB-ISSUED LAPTOP.** If you run this on your personal computer, we take no responsibility for the side effects._
 
-* [ ] Open your computer's built-in terminal app. Run the following:
-
-```
-curl https://gitlab.com/gitlab-data/analytics/raw/master/admin/onboarding_script.zsh > ~/onboarding_script.zsh
-zsh ~/onboarding_script.zsh
-rm ~/onboarding_script.zsh
-```
-   
-   * This may take a while, and it might ask you for your password (multiple times) before it's done. Here's what this does:
-      * Installs iTerm, a mac-OS terminal replacement
-      * Installs VSCode, an open source text editor. VSCode is recommended for multiple reasons including community support, the [GitLab workflow](https://marketplace.visualstudio.com/items?itemName=fatihacet.gitlab-workflow) extension, and the LiveShare features.
-      * Installs oh-my-zsh for easy terminal theming, git autocomplete, and a few other plugins. If you are curious or would like to change the look and feel of your shell please [go here](https://github.com/ohmyzsh/ohmyzsh).<!-- Is this requeued or recommended? -->
-      * Installing dbt, the open source tool we use for data transformations. <!--  Why are we installing dbt when we use a virtual environment?-->
-      * Installing jump, an easy way to move through the file system. [Please find here more details on how to use jump](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/jump)
-      * Installing anaconda, how we recommend folks get their python distribution. <!-- Is this required? I don't thing that an Analytics Engineer would use most of these tools and a clean install of python 3.8 has less integration problems -->
-      * Installs all-the-things needed to contribute to [the handbook](about.gitlab.com/handbook) locally and build it locally. <!-- Do we need to build it locally? It seem that the MR pipeline replaces this for general use-->
-      * Adds alias and environment variables needed for running dbt and other helper commands
-
-
-
-* [ ] Open a new terminal and test the following commands
-    * [ ] `jump analytics` this should change the directory to `~/repos/analytics`
-    * [ ] `jump handbook` this should change the directory to  `~/repos/www-gitlab-com`
-    * [ ] `gl_open` if you are in a repo directory this command will open that repo on GitLab
+- [ ] Open your computer's built-in terminal app. Run the following:
+    ```zsh
+    curl https://gitlab.com/gitlab-data/analytics/raw/master/admin/onboarding_script.zsh > ~/onboarding_script.zsh
+    zsh ~/onboarding_script.zsh
+    rm ~/onboarding_script.zsh
+    ```
+    - This may take a while, and it might ask you for your password (multiple times) before it's done. Here's what this does:
+        - Installs iTerm, a mac-OS terminal replacement
+        - Installs VSCode, an open source text editor. 
+            - VSCode is recommended for multiple reasons including community support, the [GitLab workflow](https://marketplace.visualstudio.com/items?itemName=fatihacet.gitlab-workflow) extension, and the LiveShare features.
+        - Installs oh-my-zsh for easy terminal theming, git autocomplete, and a few other plugins. 
+            - If you are curious or would like to change the look and feel of your shell please [go here](https://github.com/ohmyzsh/ohmyzsh).
+        - Installs dbt, the open source tool we use for data transformations. 
+        - Installs jump, an easy way to move through the file system. [Please find here more details on how to use jump](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/jump)
+        - Installs anaconda, how we recommend folks get their python distribution. 
+        - Installs all-the-things needed to contribute to [the handbook](about.gitlab.com/handbook) locally and build it locally. <!-- Do we need to build it locally? It seem that the MR pipeline replaces this for general use-->
+        - Adds alias and environment variables needed for running dbt and other helper commands
+- [ ] Open a new terminal and test the following commands
+    - [ ] `jump analytics` this should change the directory to `~/repos/analytics`
+    - [ ] `jump handbook` this should change the directory to  `~/repos/www-gitlab-com`
+    - [ ] `gl_open` if you are in a repo directory this command will open that repo on GitLab
     
-    **Note:** If the `jump` commands do not work they can be set manually by navigating to the desired repo with the terminal and using the `mark` command and the appropriate label.
+**Note:** If the `jump` commands do not work they can be set manually by navigating to the desired repo with the terminal and using the `mark` command and the appropriate label.
 
-    **Note:** If the `gl_open` command does not work inspect your `~/.zshrc` file to make sure it has the command `source make_life_easier.zsh`
-
-
-
-* [ ] Configure VSCode (via the VSCode UI) with the [VSCode setup](https://discourse.getdbt.com/t/how-we-set-up-our-computers-for-working-on-dbt-projects/243?) section of Claire's post and [adding the tip](https://discourse.getdbt.com/t/how-we-set-up-our-computers-for-working-on-dbt-projects/243/10?u=tmurphy) from tmurphy later in the thread. It will add improved syntax highlighting and searching capabilities.
-* [ ] Your editor should be configured so that all tabs are converted to 4 spaces. This will minimize messy looking diffs and provide consistency across the team.
-    * VSCode
-        * `Editor: Detect Indentation` is deselected
-        * `Editor: Insert Spaces` is selected
-        * `Editor: Tab Size` is set to 4 spaces per tab
+**Note:** If the `gl_open` command does not work inspect your `~/.zshrc` file to make sure it has the command `source make_life_easier.zsh`.
+- [ ] Configure VSCode (via the VSCode UI) with the [VSCode setup](https://discourse.getdbt.com/t/how-we-set-up-our-computers-for-working-on-dbt-projects/243?) section of Claire's post and [adding the tip](https://discourse.getdbt.com/t/how-we-set-up-our-computers-for-working-on-dbt-projects/243/10?u=tmurphy) from tmurphy later in the thread. It will add improved syntax highlighting and searching capabilities.
+- [ ] Configure VSCode (via the VSCode UI) so that all tabs are converted to 4 spaces. This will minimize messy looking diffs and provide consistency across the team.
+    - VSCode
+        - `Editor: Detect Indentation` is deselected
+        - `Editor: Insert Spaces` is selected
+        - `Editor: Tab Size` is set to 4 spaces per tab
 
 ### Command Line Interface
 
-* [ ] Install the [gcloud sdk](https://cloud.google.com/sdk/docs/quickstart-macos) and authenticate once you're provisioned.
-    * [ ] For debugging services such as Airflow locally, you will need a set of service account credentials. Your manager will provide you with a service account.
-    * [ ] The environment variable `GOOGLE_APPLICATION_CREDENTIALS` should then point to the key provided by your manager.
-* [ ] Install [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/#install-with-homebrew-on-macos)
-* [ ] Install the [awscli](https://aws.amazon.com/cli/)
+- [ ] Install the [gcloud sdk](https://cloud.google.com/sdk/docs/quickstart-macos) and authenticate once you're provisioned.
+    - [ ] Confirm service account credentials provided by your manager.
+    - [ ] Point the environment variable `GOOGLE_APPLICATION_CREDENTIALS` in your .zshrc file, which can be accessed by `vi ~/.zshrc`, to the key provided by your manager. 
+- [ ] Install [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/#install-with-homebrew-on-macos)
+- [ ] Install the [awscli](https://aws.amazon.com/cli/)
 
 ### Google Cloud
 
 Data team uses GCP (Google Cloud Platform) as our cloud provider. GCP credentials are needed if you plan on connecting on your local machine to airflow or any CGP service (storage buckets, etc.) . Follow below steps to get running instance for yourself.
 
-- [ ] Raise Access Request (AR) for Google Cloud Credentials. To do that please follow instructions here or create separate issue and copy contents from [here](https://about.gitlab.com/handbook/business-technology/team-member-enablement/onboarding-access-requests/access-requests/) or create separate issue and copy contents from [here](https://gitlab.com/gitlab-com/team-member-epics/access-requests/-/issues/10306#note_622125437). Ensure you update your name and other personal details and project name is ``gitlab-analysis.`` Assign it to your manager.
-- [ ] Please follow next step after running onboarding template, once you added GOOGLE_APPLICATION_CREDENTIALS path to your .zshrc file which can be accessed by `vi ~/.zshrc``. One of the project owners should send you configuration json file, which is important to add in your google credentials. Follow below steps:
-- [ ] Download the json file provided and move to your home directory (e.g. `/Users/yourusername`)
-- [ ] Open terminal and run the following command, replacing `yourusername` with your actual user name on your computer (type `pwd` into the terminal if you don’t know it — the path should contain your user name) and `filename.json` with you name of the file.
-    - echo export  GOOGLE_APPLICATION_CREDENTIALS=/Users/yourusername/filename.json >> ./.zshrc
-    - If you already have the variable  GOOGLE_APPLICATION_CREDENTIALS  modify its value to the file path and file name instead of adding a new one. 
-- [ ] Refresh this file by sourcing it back, by running command in terminal: ``source ~/.zshrc``.
+- [ ] Compete the [Command Line Interface](#command-line-interface) set up before starting this set up.
+    - [ ] Download the json file provided by one of the project owners and move to your home directory (e.g. `/Users/yourusername`)
+    - [ ] Open terminal and run the following command, replacing `yourusername` with your actual user name on your computer (type `pwd` into the terminal if you don’t know it — the path should contain your user name) and `filename.json` with you name of the file.
+        ```zsh
+        echo 'export GOOGLE_APPLICATION_CREDENTIALS=/Users/yourusername/filename.json' >> ./.zshrc
+        ```
+        - If you already have the variable  `GOOGLE_APPLICATION_CREDENTIALS`  modify its value to the file path and file name instead of adding a new one. 
+    - [ ] Refresh this file by sourcing it back, by running command in terminal: `source ~/.zshrc`.
 
 ### Airflow
 - [ ] Read the Airflow section on the [Data Infrastructure page](https://about.gitlab.com/handbook/business-ops/data-team/platform/infrastructure/#airflow)
@@ -220,22 +218,22 @@ Data team uses GCP (Google Cloud Platform) as our cloud provider. GCP credential
 - [ ] See the readme provided in the [handbook jupyter guide](https://about.gitlab.com/handbook/business-technology/data-team/platform/jupyter-guide/) for further install instructions 
 
 ### Optional Steps
-* Set up environment to build the handbook locally. [Instructions](https://about.gitlab.com/handbook/git-page-update/) 
-* Install [Python 3.8.6](https://www.python.org/downloads/release/python-386/) manually
-* Consider downloading and installing [Little Snitch](https://www.obdev.at/products/littlesnitch/index.html) - You can submit for reimbursement for the full version
-* Install Data Grip (from JetBrains) for interfacing with databases
-    * Follow [this process](https://about.gitlab.com/handbook/tools-and-tips/#jetbrains) for requesting a license for Data Grip.  Until you have a license, you can easily use Data Grip on a trial basis for 30 days
+- Set up environment to build the handbook locally. [Instructions](https://about.gitlab.com/handbook/git-page-update/) 
+- Install [Python 3.8.6](https://www.python.org/downloads/release/python-386/) manually
+- Consider downloading and installing [Little Snitch](https://www.obdev.at/products/littlesnitch/index.html) - You can submit for reimbursement for the full version
+- Install Data Grip (from JetBrains) for interfacing with databases
+    - Follow [this process](https://about.gitlab.com/handbook/tools-and-tips/#jetbrains) for requesting a license for Data Grip.  Until you have a license, you can easily use Data Grip on a trial basis for 30 days
     - Change your formatting preferences in Data Grip by going to Preferences > Editor > Code Style > HTML. You should have:
-        * Use tab character: unchecked
-        * Tab size: 4
-        * Indent: 4
-        * Continuation indent: 8
-        * Keep indents on empty lines: unchecked
+        - Use tab character: unchecked
+        - Tab size: 4
+        - Indent: 4
+        - Continuation indent: 8
+        - Keep indents on empty lines: unchecked
     - You can use `Command + Option + L` to format your file.
     - You may need to download the [Driver](https://docs.snowflake.net/manuals/user-guide/jdbc-download.html#downloading-the-driver). 
     - This template may be useful as you're configuring the DataGrip connection to Snowflake `jdbc:snowflake://{account:param}.snowflakecomputing.com/?{password}[&db={Database:param}][&warehouse={Warehouse:param}][&role={Role:param}]` 
     - We recommend not setting your schema so you can select from the many options.
-* Consider installing [tldr](https://tldr.sh/) for easy reference to common CLI commands
+- Consider installing [tldr](https://tldr.sh/) for easy reference to common CLI commands
 
 #### Terminal Improvements 
 - [Improved terminal navigation](https://stackoverflow.com/a/23963086) with arrow keys.
@@ -299,10 +297,10 @@ DBT is our data transformation engine that we use to build our dimensional model
 #### **Getting Help**
 - Consider joining [dbt slack](https://slack.getdbt.com) (Not required, but strongly recommended; if you join use your personal email).
 - Information and troubleshooting on dbt is sparse on Google & Stack Overflow, we recommend the following sources of help when you need it:
-   * Your teammates! We are all here to help!
-   * dbt slack has a #beginners channel and they are very helpful.
-   * [Fishtown Analytics Blog](https://blog.fishtownanalytics.com)
-   * [dbt Discourse](http://discourse.getdbt.com)
+   - Your teammates! We are all here to help!
+   - dbt slack has a #beginners channel and they are very helpful.
+   - [Fishtown Analytics Blog](https://blog.fishtownanalytics.com)
+   - [dbt Discourse](http://discourse.getdbt.com)
 
 
 #### **Configuring**
@@ -347,8 +345,9 @@ The Data Team works with people through the company.  This section is designed t
 
 - [ ] Familiarize yourself with GitLab CI https://docs.gitlab.com/ee/ci/quick_start/ and our running pipelines.
 - [ ] Become familiar with the [API docs](https://gitlab.com/gitlab-org/gitlab/tree/master/doc/api)
-- [ ] This is the [schema for the database](https://gitlab.com/gitlab-org/gitlab/-/blob/master/db/structure.sql)
-- [ ] If you ever want to know what queries are going on in the background while you're using GitLab.com, enable the [Performance Bar](https://docs.gitlab.com/ee/administration/monitoring/performance/performance_bar.html) and click on the numbers to the left of `pg`. This is useful for learning how the gitlab.com schema works. The performance bar can be enable by pressing `p + b` ([Shortcut Docs](https://docs.gitlab.com/ee/user/shortcuts.html)).
+- [ ] Become familiar with the [schema for the database](https://gitlab.com/gitlab-org/gitlab/-/blob/master/db/structure.sql)
+
+If you ever want to know what queries are going on in the background while you're using GitLab.com, enable the [Performance Bar](https://docs.gitlab.com/ee/administration/monitoring/performance/performance_bar.html) and click on the numbers to the left of `pg`. This is useful for learning how the gitlab.com schema works. The performance bar can be enable by pressing `p + b` ([Shortcut Docs](https://docs.gitlab.com/ee/user/shortcuts.html)).
 
 ### Metrics and Methods
 
@@ -374,19 +373,6 @@ There are many data sets brought into the Enterprise Data Warehouse, the followi
 <details>
 
 <summary>Team Member Steps</summary>
-
-### GitLab.com (Product)
-This data comes from our GitLab.com SaaS product.
-
-<details>
-
-<summary>Review Steps</summary>
-
-- [ ] Become familiar with the [API docs](https://gitlab.com/gitlab-org/gitlab/tree/master/doc/api)
-- [ ] This is the [schema for the database](https://gitlab.com/gitlab-org/gitlab/-/blob/master/db/structure.sql)
-- [ ] If you ever want to know what queries are going on in the background while you're using GitLab.com, enable the [Performance Bar](https://docs.gitlab.com/ee/administration/monitoring/performance/performance_bar.html) and click on the numbers to the left of `pg`. This is useful for learning how the gitlab.com schema works. The performance bar can be enable by pressing `p + b` ([Shortcut Docs](https://docs.gitlab.com/ee/user/shortcuts.html)).
-
-</details>
 
 
 ### Usage/Version Ping (Product)
@@ -457,9 +443,9 @@ Also referred as SFDC, Salesforce.com (Sales Force Dot Com).
 <summary>Review Steps</summary>
 
 - [ ] To understand how this is implemented at GitLab read [Feature Implementation](https://about.gitlab.com/handbook/product/feature-instrumentation/#instrumentation-for-gitlabcom).
-- [ ] Also read how we pull data from [S3 into Snowflake](https://about.gitlab.com/handbook/business-ops/data-team/platform/#snowplow-infrastructure)
+- [ ] Read how we pull data from [S3 into Snowflake](https://about.gitlab.com/handbook/business-ops/data-team/platform/#snowplow-infrastructure)
 - [ ] Familiarize yourself with the [Snowplow Open Source documentation](https://github.com/snowplow/snowplow).
-- [ ] We use the [Snowplow dbt package](https://hub.getdbt.com/fishtown-analytics/snowplow/latest/) on our models. Their documentation does show up in our dbt docs.
+- [ ] Review the [Snowplow dbt package](https://hub.getdbt.com/fishtown-analytics/snowplow/latest/) as it is used in our models. Their documentation does show up in our dbt docs.
 </details>
 
 
