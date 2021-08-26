@@ -2,7 +2,7 @@
 <!-- link to the milestone this issue represents (it will probably be the one following the current DE Milestone)-->
 <!-- please link preceding milestone planning issue in the Linked Issues section below the description -->
 
-# Engineering Days (capacity):calendar: 
+# Engineering Days :calendar: 
 Please add a number for days you'll be working this milestone. Engineers should subtract a day for each triage day and a day for meetings. For example, If a milestone is two weeks long and an engineer has 1 triage day she would subtract 2 triage days from the 10 workdays and then 1 meeting day as well, which would be 7 engineering days. All PTO should also be subtraced, including the covered triage days. 
 
 - @jjstark: 
