@@ -2,7 +2,7 @@ version: 2
 
 models:
     - name: saas_usage_ping_instance
-      description: Source table for the RAW saas_usage_ping.gitlab_dotcom table representing instance level usage ping
+      description: Source table for the RAW saas_usage_ping.instance_sql_metrics table representing instance level usage ping
       columns:
         - name: saas_usage_ping_gitlab_dotcom_id
           tests:

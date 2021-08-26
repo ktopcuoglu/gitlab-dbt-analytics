@@ -5,6 +5,7 @@ import os
 import sys
 from os import environ as env
 from typing import Dict, List
+from hashlib import md5
 
 import pandas as pd
 
@@ -30,30 +31,46 @@ class UsagePing(object):
 
         self.start_date_28 = self.end_date - datetime.timedelta(28)
 
+    saas_queries = self._get_instance_queries()
     def _get_instance_queries(self) -> Dict:
         """
         can be updated to query an end point or query other functions
         to generate the {ping_name: sql_query} dictionary
         """
         with open(
-            os.path.join(os.path.dirname(__file__), "transformed_instance_queries.json")
+                os.path.join(os.path.dirname(__file__), "transformed_instance_queries.json")
         ) as f:
             saas_queries = json.load(f)
 
         return saas_queries
+
+    def _get_md5(self, timestamp: datetime) -> str:
+        """
+        Convert input datetime into md5 hash.
+        Result is returned as a str.
+        Example:
+
+            Input (datetime): datetime.now().timestamp()
+            Output (str): md5 hash
+
+            -----------------------------------------------------------
+            current timestamp: 1629986268.131019
+            md5 timestamp: 54da37683078de0c1360a8e76d942227
+        """
+        encoding = 'utf-8'
+        return md5(str(timestamp).encode(encoding=encoding)).hexdigest()
 
     def saas_instance_ping(self):
         """
         Take a dictionary of {ping_name: sql_query} and run each
         query to then upload to a table in raw.
         """
-        saas_queries = self._get_instance_queries()
 
         connection = self.loader_engine.connect()
 
         results_all = {}
 
-        for key, query in saas_queries.items():
+        for counter_sql_count, key, query in enumerate(saas_queries.items(), start=1):
             logging.info(f"Running ping {key}...")
             try:
                 results = pd.read_sql(sql=query, con=connection)
@@ -73,12 +90,13 @@ class UsagePing(object):
         connection.close()
         self.loader_engine.dispose()
 
-        ping_to_upload = pd.DataFrame(columns=["query_map", "run_results", "ping_date"])
+        ping_to_upload = pd.DataFrame(columns=["query_map", "run_results", "ping_date", "counter_sql_count", "run_id"])
 
-        ping_to_upload.loc[0] = [saas_queries, json.dumps(results_all), self.end_date]
+        ping_to_upload.loc[0] = [saas_queries, json.dumps(results_all), self.end_date, counter_sql_count,
+                                 self._get_md5(datetime.datetime.now().timestamp())]
 
         dataframe_uploader(
-            ping_to_upload, self.loader_engine, "gitlab_dotcom", "saas_usage_ping"
+            ping_to_upload, self.loader_engine, "instance_sql_metrics", "saas_usage_ping"
         )
 
         self.loader_engine.dispose()
@@ -96,7 +114,7 @@ class UsagePing(object):
         }
         """
         with open(
-            os.path.join(os.path.dirname(__file__), "usage_ping_namespace_queries.json")
+                os.path.join(os.path.dirname(__file__), "usage_ping_namespace_queries.json")
         ) as f:
             saas_queries = json.load(f)
 
