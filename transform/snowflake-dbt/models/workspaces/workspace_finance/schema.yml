@@ -125,3 +125,149 @@ models:
         tests:
           - unique
           - not_null
+  - name: dim_product_detail_api_sandbox
+    columns:
+      - name: dim_product_detail_id
+        description: The unique ID of each row in dim_product_detail, based on product rate plan charge ID.
+        tests:
+          - unique:
+              severity: warn
+          - not_null:
+              severity: warn
+        tags: [ "tdf", "common", "gainsight"]
+      - name: dim_product_tier_id
+        description: The unique ID of a product tier determined in dim_product_tier.
+        tests:
+          - not_null:
+              severity: warn
+        tags: [ "tdf", "common", "gainsight"]
+      - name: product_id
+        description: The ID of the product that contains the product rate plan.
+        tests:
+          - not_null:
+              severity: warn
+        tags: [ "tdf", "common", "gainsight"]
+      - name: product_name
+        description: The name of the product
+      - name: is_reporter_license
+        description: "Reporter licenses are in the Products with 'Additional Permission Types' in the name."
+      - name: billing_list_price
+        description: The price of the tier if the charge is a flat fee, or the price of each unit in the tier if the charge model is tiered pricing.
+      - name: product_rate_plan_charge_id
+        description: The unique ID of a product rate plan charge
+      - name: product_rate_plan_name
+        description: The name of the product rate plan. The name doesn't have to be unique in a Product Catalog, but the name has to be unique within a product.
+      - name: product_rate_plan_charge_name
+        description: The name of the product rate plan charge
+      - name: product_sku
+        description: The unique SKU for the product
+      - name: product_tier_historical
+        description: Product pricing tiers prior to [tier renaming](https://gitlab-com.gitlab.io/packaging-and-pricing/pricing-handbook/handbook/renaming_tiers/) (early 2021).
+      - name: product_tier_historical_short
+        description: Pulls the product tier from `product_tier_historical` with the delivery type removed
+      - name: product_tier_name
+        description: Product [pricing tiers](https://about.gitlab.com/handbook/marketing/strategic-marketing/tiers/) for both SaaS and Self-Managed customers. Includes the mapping from SaaS - Silver to SaaS - Premium, and from SaaS - Gold to SaaS - Ultimate.
+      - name: product_tier_name_short
+        description: Pulls the product tier from `product_tier_name` with the delivery type removed
+      - name: effective_start_date
+        description: The date when the product becomes available and can be subscribed to
+      - name: effective_end_date
+        description: The date when the product expires and can't be subscribed to anymore
+      - name: is_oss_or_edu_rate_plan
+        description: Flag for rate plans containing OSS or EDU
+  - name: prep_product_detail_api_sandbox
+    columns:
+      - name: dim_product_detail_id
+        description: The unique ID of each row in dim_product_detail, based on product rate plan charge ID.
+      - name: dim_product_tier_id
+        description: The unique ID of a product tier determined in dim_product_tier.
+      - name: product_id
+        description: The ID of the product that contains the product rate plan.
+      - name: product_name
+        description: The name of the product
+      - name: is_reporter_license
+        description: "Reporter licenses are in the Products with 'Additional Permission Types' in the name."
+      - name: billing_list_price
+        description: The price of the tier if the charge is a flat fee, or the price of each unit in the tier if the charge model is tiered pricing.
+      - name: product_rate_plan_charge_id
+        description: The unique ID of a product rate plan charge
+      - name: product_rate_plan_name
+        description: The name of the product rate plan. The name doesn't have to be unique in a Product Catalog, but the name has to be unique within a product.
+      - name: product_rate_plan_charge_name
+        description: The name of the product rate plan charge
+      - name: product_sku
+        description: The unique SKU for the product
+      - name: product_tier_historical
+        description: Product pricing tiers prior to [tier renaming](https://gitlab-com.gitlab.io/packaging-and-pricing/pricing-handbook/handbook/renaming_tiers/) (early 2021).
+      - name: product_tier_historical_short
+        description: Pulls the product tier from `product_tier_historical` with the delivery type removed
+      - name: product_tier_name
+        description: Product [pricing tiers](https://about.gitlab.com/handbook/marketing/strategic-marketing/tiers/) for both SaaS and Self-Managed customers. Includes the mapping from SaaS - Silver to SaaS - Premium, and from SaaS - Gold to SaaS - Ultimate.
+      - name: product_tier_name_short
+        description: Pulls the product tier from `product_tier_name` with the delivery type removed
+      - name: effective_start_date
+        description: The date when the product becomes available and can be subscribed to
+      - name: effective_end_date
+        description: The date when the product expires and can't be subscribed to anymore
+      - name: is_oss_or_edu_rate_plan
+        description: Flag for rate plans containing OSS or EDU
+  - name: map_product_tier_api_sandbox
+    columns:
+      - name: product_rate_plan_id
+        description: "Rate Plan ID for Zuora Product"
+        tests:
+          - not_null:
+              severity: warn
+          - unique:
+              severity: warn
+        tags: ["tdf", "common", "gainsight"]
+      - name: product_rate_plan_name
+        description: "rate plan name from Zuora product source"
+      - name: product_tier_historical
+        description: Product pricing tiers prior to [tier renaming](https://gitlab-com.gitlab.io/packaging-and-pricing/pricing-handbook/handbook/renaming_tiers/) (early 2021).
+        tests:
+          - not_null:
+              severity: warn
+        tags: ["tdf", "common", "gainsight"]
+      - name: product_delivery_type
+        description: "How product is delivered to customer; SaaS or Self-Managed (or Other)"
+      - name: product_ranking
+        description: "Numeric product pricing tier, independent of delivery type"
+      - name: product_tier
+        description: Product [pricing tiers](https://about.gitlab.com/handbook/marketing/strategic-marketing/tiers/) for both SaaS and Self-Managed customers. Includes the mapping from SaaS - Silver to SaaS - Premium, and from SaaS - Gold to SaaS - Ultimate.
+        tests:
+          - not_null:
+              severity: warn
+        tags: ["tdf", "common", "gainsight"]
+  - name: prep_product_tier_api_sandbox
+    columns:
+      - name: dim_product_tier_id
+        description: "The unique identifier of Pricing tiers for Zuora Products"
+        tests:
+          - not_null:
+              severity: warn
+          - unique:
+              severity: warn
+        tags: ["tdf", "common", "gainsight"]
+      - name: product_tier_historical
+        description: Product pricing tiers prior to [tier renaming](https://gitlab-com.gitlab.io/packaging-and-pricing/pricing-handbook/handbook/renaming_tiers/) (early 2021).
+        tests:
+          - not_null:
+              severity: warn
+          - unique:
+              severity: warn
+        tags: ["tdf", "common", "gainsight"]
+      - name: product_tier_historical_short
+        description: Pulls the product tier from `product_tier_historical` with the delivery type removed
+      - name: product_tier_name
+        description: Product [pricing tiers](https://about.gitlab.com/handbook/marketing/strategic-marketing/tiers/) for both SaaS and Self-Managed customers. Includes the mapping from SaaS - Silver to SaaS - Premium, and from SaaS - Gold to SaaS - Ultimate.
+        tests:
+          - not_null:
+              severity: warn
+        tags: ["tdf", "common", "gainsight"]
+      - name: product_tier_name_short
+        description: Pulls the product tier from `product_tier_name` with the delivery type removed
+      - name: product_delivery_type
+        description: "How product is delivered to customer; SaaS or Self-Managed (or Other)"
+      - name: product_ranking
+        description: "Numeric product pricing tier, independent of delivery type"
