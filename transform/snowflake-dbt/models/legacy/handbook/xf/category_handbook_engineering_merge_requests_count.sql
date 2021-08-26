@@ -30,7 +30,8 @@ WITH category_handbook_engineering_merge_requests_path_count AS (
       MAX(path_count_quality)             AS mr_count_quality,
       MAX(path_count_security)            AS mr_count_security,
       MAX(path_count_support)             AS mr_count_support,
-      MAX(path_count_ux)                  AS mr_count_ux
+      MAX(path_count_ux)                  AS mr_count_ux,
+      MAX(path_count_incubation)                  AS mr_count_incubation
         
     FROM category_handbook_engineering_merge_requests_path_count
     {{ dbt_utils.group_by(n=6) }}
