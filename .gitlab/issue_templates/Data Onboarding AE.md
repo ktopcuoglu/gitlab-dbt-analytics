@@ -335,7 +335,7 @@ Sisense is our enterprise standard data visualization application and is the onl
 
 ## Data Operations <!-- This section is to provide the new team member with detailed information on processes the Data Team operates by.  -->
 
-The Data Team works with people through the company.  This section is designed to give you information on how the Data Team manages thous interactions and how you will be a part of them.  Even more information can be found on the [How we Work](https://about.gitlab.com/handbook/business-technology/data-team/how-we-work/) page of the handbook.
+The Data Team works with people through the company.  This section is designed to give you information on how the Data Team manages those interactions and how you will be a part of them.  Even more information can be found on the [How we Work](https://about.gitlab.com/handbook/business-technology/data-team/how-we-work/) page of the handbook.
 
 <details>
 
