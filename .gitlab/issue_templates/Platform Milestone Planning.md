@@ -1,4 +1,6 @@
-
+Helpful links:
+- [Data Milestones](https://gitlab.com/groups/gitlab-data/-/milestones)
+- [Handbook entry](https://about.gitlab.com/handbook/business-technology/data-team/how-we-work/planning/#milestone-planning)
 <!-- link to the milestone this issue represents (it will probably be the one following the current DE Milestone)-->
 <!-- please link preceding milestone planning issue in the Linked Issues section below the description -->
 
@@ -56,3 +58,4 @@ We assume that preceding milestone's velocity is a good predictor of the followi
 
 <!-- DO NOT EDIT BELOW THIS LINE -->
 /label ~Housekeeping ~"Team::Data Platform" ~Planning ~"Priority::1-Ops" 
+/assign @jjstark @dvanrooijen2 @rbacovic @vedprakash2021 @laddula @paul_armstrong 
