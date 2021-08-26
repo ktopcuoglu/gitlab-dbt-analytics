@@ -57,7 +57,7 @@ def get_latest_tables_to_roll_up(
     latest_rolled_table = get_latest_rolled_up_table_name(
         engine, db_name, schema_name, table_name
     )
-    if latest_rolled_table:
+    if not latest_rolled_table.empty:
         schema_check = (
             f" SELECT table_name "
             f" FROM {db_name}.INFORMATION_SCHEMA.TABLES "
@@ -67,15 +67,23 @@ def get_latest_tables_to_roll_up(
             f" AND RIGHT(TABLE_NAME, 2) = '08' "
             f" ORDER BY 1"
         )
+    else:
+        schema_check = (
+            f" SELECT table_name "
+            f" FROM {db_name}.INFORMATION_SCHEMA.TABLES "
+            f" WHERE LEFT(TABLE_NAME, {len(table_name)}) = '{table_name}' "
+            f" AND RIGHT(TABLE_NAME, 2) = '08' "
+            f" ORDER BY 1"
+        )
 
-        logging.info(schema_check)
-        query_results = query_dataframe(engine, schema_check)
+    logging.info(schema_check)
+    query_results = query_dataframe(engine, schema_check)
 
-        query_results["table_name"]
-        if query_results and not query_results.empty:
-            return query_results["table_name"]
-        else:
-            return query_results
+    query_results["table_name"]
+    if query_results and not query_results.empty:
+        return query_results["table_name"]
+    else:
+        return query_results
 
 
 def get_latest_rolled_up_table_name(
@@ -111,6 +119,7 @@ def get_latest_rolled_up_table_name(
             return latest_table_name[-8:]
     else:
         # If empty just return the empty DF
+        logging.info("Results empty, returning empty df")
         return results
 
 
