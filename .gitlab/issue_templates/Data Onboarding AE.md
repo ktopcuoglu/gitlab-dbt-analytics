@@ -313,7 +313,7 @@ _Ensure you've set up your SSH configuration in the previous step as this is req
 - [ ] Run `dbt run --models +staging.sfdc` from within the shell to know that your connection has been successful, you are in the correct location, and everything will run smoothly.  For more details on the syntax for how to select and run the models, please refer to this [page](https://docs.getdbt.com/reference/node-selection/syntax#examples).  Afterwards, you can also try running `dbt compile` to ensure that the entire project will compile correctly.
 - [ ] Test the command `make help` and use it to understand how to use various `make *` commands available to you.
 
-**Note:** When launching dbt you may see `WARNING: The GOOGLE_APPLICATION_CREDENTIALS variable is not set. Defaulting to a blank string.` Unless you are developing on Airflow this is ok and expected. If you require GOOGLE_APPLICATION_CREDENTIALS please follow the steps outlined below in the DataLab section.
+**Note:** When launching dbt you may see `WARNING: The GOOGLE_APPLICATION_CREDENTIALS variable is not set. Defaulting to a blank string.` Unless you are developing on Airflow this is ok and expected. If you require `GOOGLE_APPLICATION_CREDENTIALS` please follow the steps outlined in the [Google Cloud](#google-cloud) section.
 
 **Note:** If you get a weird semaphore issue error when running dbt try [this script](https://gist.github.com/llbbl/c54f44d028d014514d5d837f64e60bac) which is sourced from this [Apple forum thread](https://forums.developer.apple.com/thread/119429)
 
@@ -327,8 +327,8 @@ Sisense is our enterprise standard data visualization application and is the onl
   - [ ] Watch Accessing Sisense
   - [ ] Review the Getting Started article
   - [ ] Watch the Gitlab's Sisence Editor Training
-- [ ] [Sisense Admin Training Part 1](https://www.youtube.com/watch?v=YspSfOuEQV4&list=PL05JrBw4t0KrRVTZY33WEHv8SjlA_-keI&index=16)
-- [ ] [Sisense Admin Training Part 2](https://www.youtube.com/watch?v=LQT9fXw1EaE&list=PL05JrBw4t0KrRVTZY33WEHv8SjlA_-keI&index=14)
+- [ ] Watch the Sisence Admin Training [Part 1](https://www.youtube.com/watch?v=YspSfOuEQV4&list=PL05JrBw4t0KrRVTZY33WEHv8SjlA_-keI&index=16)
+- [ ] Watch the Sisence Admin Training [Part 2](https://www.youtube.com/watch?v=LQT9fXw1EaE&list=PL05JrBw4t0KrRVTZY33WEHv8SjlA_-keI&index=14)
 
 </details>
 
