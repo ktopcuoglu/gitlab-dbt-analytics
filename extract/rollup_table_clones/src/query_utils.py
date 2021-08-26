@@ -17,25 +17,41 @@ def get_table_column_names(
     :param table_name:
     :return:
     """
-    query = f" SELECT " \
-            f"  ordinal_position, " \
-            f"  table_name, " \
-            f"  column_name, " \
-            f"  data_type, " \
-            f"  character_maximum_length, " \
-            f"  column_name || data_type as compare_column " \
-            f"  FROM {db_name}.INFORMATION_SCHEMA.COLUMNS " \
-            f"  WHERE TABLE_NAME = '{table_name}' order by 1 "
+    query = (
+        f" SELECT "
+        f"  ordinal_position, "
+        f"  table_name, "
+        f"  column_name, "
+        f"  data_type, "
+        f"  character_maximum_length, "
+        f"  column_name || data_type as compare_column "
+        f"  FROM {db_name}.INFORMATION_SCHEMA.COLUMNS "
+        f"  WHERE TABLE_NAME = '{table_name}' order by 1 "
+    )
     return query_dataframe(engine, query)
 
 
-def get_existing_tables_to_roll_up(engine: Engine, db_name: str, table_name: str):
+def get_existing_tables_to_roll_up(
+    engine: Engine, db_name: str, table_name: str
+) -> pd.Series:
+    """
 
-    schema_check = f" SELECT table_name " \
-                   f" FROM {db_name}.INFORMATION_SCHEMA.TABLES " \
-                   f" WHERE RIGHT(TABLE_NAME, 2) = '08' " \
-                   f" AND LEFT(TABLE_NAME, {len(table_name)}) = '{table_name}' " \
-                   f" ORDER BY 1 "
+    :param engine:
+    :type engine:
+    :param db_name:
+    :type db_name:
+    :param table_name:
+    :type table_name:
+    :return:
+    :rtype:
+    """
+    schema_check = (
+        f" SELECT table_name "
+        f" FROM {db_name}.INFORMATION_SCHEMA.TABLES "
+        f" WHERE RIGHT(TABLE_NAME, 2) = '08' "
+        f" AND LEFT(TABLE_NAME, {len(table_name)}) = '{table_name}' "
+        f" ORDER BY 1 "
+    )
     query_results = query_dataframe(engine, schema_check)
 
     if not query_results.empty:
@@ -86,7 +102,7 @@ def get_latest_tables_to_roll_up(
 
 def get_latest_rolled_up_table_name(
     engine: Engine, db_name: str, schema_name: str, table_name: str
-):
+) -> str:
     """
 
     :param engine:
@@ -107,8 +123,10 @@ def get_latest_rolled_up_table_name(
         f" FROM {db_name}.{schema_name}.{final_table_name}"
     )
     results = query_dataframe(engine, query)
+
     if not results.empty and results["latest_table_name"][0] is not None:
         latest_table_name = results["latest_table_name"][0]
+
         if latest_table_name:
             return latest_table_name[-8:]
 
@@ -166,7 +184,9 @@ def rollup_table_clone(
             engine, db_name, f"{table_name}_ROLLUP"
         )
 
-    tables_to_roll_up = get_latest_tables_to_roll_up(engine, db_name, schema_name, table_name)
+    tables_to_roll_up = get_latest_tables_to_roll_up(
+        engine, db_name, schema_name, table_name
+    )
 
     if not tables_to_roll_up.empty:
 
@@ -241,4 +261,3 @@ def recreate_rollup_table(
     query_executor(engine, create_table_statement)
     logging.info(f"{table_name} recreated")
     return True
-
