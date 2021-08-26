@@ -134,19 +134,16 @@ models:
               severity: warn
           - not_null:
               severity: warn
-        tags: [ "tdf", "common", "gainsight"]
       - name: dim_product_tier_id
         description: The unique ID of a product tier determined in dim_product_tier.
         tests:
           - not_null:
               severity: warn
-        tags: [ "tdf", "common", "gainsight"]
       - name: product_id
         description: The ID of the product that contains the product rate plan.
         tests:
           - not_null:
               severity: warn
-        tags: [ "tdf", "common", "gainsight"]
       - name: product_name
         description: The name of the product
       - name: is_reporter_license
@@ -220,7 +217,6 @@ models:
               severity: warn
           - unique:
               severity: warn
-        tags: ["tdf", "common", "gainsight"]
       - name: product_rate_plan_name
         description: "rate plan name from Zuora product source"
       - name: product_tier_historical
@@ -228,7 +224,6 @@ models:
         tests:
           - not_null:
               severity: warn
-        tags: ["tdf", "common", "gainsight"]
       - name: product_delivery_type
         description: "How product is delivered to customer; SaaS or Self-Managed (or Other)"
       - name: product_ranking
@@ -238,7 +233,6 @@ models:
         tests:
           - not_null:
               severity: warn
-        tags: ["tdf", "common", "gainsight"]
   - name: prep_product_tier_api_sandbox
     columns:
       - name: dim_product_tier_id
@@ -248,7 +242,6 @@ models:
               severity: warn
           - unique:
               severity: warn
-        tags: ["tdf", "common", "gainsight"]
       - name: product_tier_historical
         description: Product pricing tiers prior to [tier renaming](https://gitlab-com.gitlab.io/packaging-and-pricing/pricing-handbook/handbook/renaming_tiers/) (early 2021).
         tests:
@@ -256,7 +249,6 @@ models:
               severity: warn
           - unique:
               severity: warn
-        tags: ["tdf", "common", "gainsight"]
       - name: product_tier_historical_short
         description: Pulls the product tier from `product_tier_historical` with the delivery type removed
       - name: product_tier_name
@@ -264,7 +256,6 @@ models:
         tests:
           - not_null:
               severity: warn
-        tags: ["tdf", "common", "gainsight"]
       - name: product_tier_name_short
         description: Pulls the product tier from `product_tier_name` with the delivery type removed
       - name: product_delivery_type
