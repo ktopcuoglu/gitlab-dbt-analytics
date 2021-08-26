@@ -1,13 +1,10 @@
 import json
-import re
 import sys
-import os
 import logging
 import requests
 
 from typing import Dict, Any
 from logging import error, info, basicConfig, getLogger, warning
-from os.path import join, getsize, dirname
 from os import environ as env
 
 from gitlabdata.orchestration_utils import (
