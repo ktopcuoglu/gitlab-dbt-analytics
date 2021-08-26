@@ -1,4 +1,4 @@
-# Data Team Milestone Planning
+# Fusion Team Milestone Planning
 
 #### GTM Data Fusion Team
 
