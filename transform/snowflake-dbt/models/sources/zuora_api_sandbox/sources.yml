@@ -35,6 +35,7 @@ sources:
       - name: invoice_payment
         identifier: invoicepayment
       - name: product
+        freshness: null
       - name: product_rate_plan
         identifier: productrateplan
       - name: product_rate_plan_charge
