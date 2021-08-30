@@ -321,6 +321,110 @@ WITH sfdc_opportunity AS (
           ELSE 'Other'
       END                                                                    AS opportunity_owner_user_region,
 
+
+      -- NF: 20210827 Fields for competitor analysis 
+      CASE
+        WHEN CONTAINS (sfdc_opportunity_xf.competitors, 'Other') 
+          THEN 1 
+        ELSE 0
+      END                                 AS competitors_other_flag,
+      CASE
+        WHEN CONTAINS (sfdc_opportunity_xf.competitors, 'GitLab Core') 
+          THEN 1 
+        ELSE 0
+      END                                 AS competitors_gitlab_core_flag,
+      CASE
+        WHEN CONTAINS (sfdc_opportunity_xf.competitors, 'None') 
+          THEN 1 
+        ELSE 0
+      END                                 AS competitors_none_flag,
+      CASE
+        WHEN CONTAINS (sfdc_opportunity_xf.competitors, 'GitHub Enterprise') 
+          THEN 1 
+        ELSE 0
+      END                                 AS competitors_github_enterprise_flag,
+      CASE
+        WHEN CONTAINS (sfdc_opportunity_xf.competitors, 'BitBucket Server') 
+          THEN 1 
+        ELSE 0
+      END                                 AS competitors_bitbucket_server_flag,
+      CASE
+        WHEN CONTAINS (sfdc_opportunity_xf.competitors, 'Unknown') 
+          THEN 1 
+        ELSE 0
+      END                                 AS competitors_unknown_flag,
+      CASE
+        WHEN CONTAINS (sfdc_opportunity_xf.competitors, 'GitHub.com') 
+          THEN 1 
+        ELSE 0
+      END                                 AS competitors_github_flag,
+      CASE
+        WHEN CONTAINS (sfdc_opportunity_xf.competitors, 'GitLab.com') 
+          THEN 1 
+        ELSE 0
+      END                                 AS competitors_gitlab_flag,
+      CASE
+        WHEN CONTAINS (sfdc_opportunity_xf.competitors, 'Jenkins') 
+          THEN 1 
+        ELSE 0
+      END                                 AS competitors_jenkins_flag,
+      CASE
+        WHEN CONTAINS (sfdc_opportunity_xf.competitors, 'Azure DevOps') 
+          THEN 1 
+        ELSE 0
+      END                                 AS competitors_azure_devops_flag,
+      CASE
+        WHEN CONTAINS (sfdc_opportunity_xf.competitors, 'SVN') 
+          THEN 1 
+        ELSE 0
+      END                                 AS competitors_svn_flag,
+      CASE
+        WHEN CONTAINS (sfdc_opportunity_xf.competitors, 'BitBucket.Org') 
+          THEN 1 
+        ELSE 0
+      END                                 AS competitors_bitbucket_flag,
+      CASE
+        WHEN CONTAINS (sfdc_opportunity_xf.competitors, 'Atlassian') 
+          THEN 1 
+        ELSE 0
+      END                                 AS competitors_atlassian_flag,
+      CASE
+        WHEN CONTAINS (sfdc_opportunity_xf.competitors, 'Perforce') 
+          THEN 1 
+        ELSE 0
+      END                                 AS competitors_perforce_flag, 
+      CASE
+        WHEN CONTAINS (sfdc_opportunity_xf.competitors, 'Visual Studio Team Services') 
+          THEN 1 
+        ELSE 0
+      END                                 AS competitors_visual_studio_flag,
+      CASE
+        WHEN CONTAINS (sfdc_opportunity_xf.competitors, 'Azure') 
+          THEN 1 
+        ELSE 0
+      END                                 AS competitors_azure_flag,
+      CASE
+        WHEN CONTAINS (sfdc_opportunity_xf.competitors, 'Amazon Code Commit') 
+          THEN 1 
+        ELSE 0
+      END                                 AS competitors_amazon_code_commit_flag,
+      CASE
+        WHEN CONTAINS (sfdc_opportunity_xf.competitors, 'CircleCI') 
+          THEN 1 
+        ELSE 0
+      END                                 AS competitors_circleci_flag,
+      CASE
+        WHEN CONTAINS (sfdc_opportunity_xf.competitors, 'Bamboo') 
+          THEN 1 
+        ELSE 0
+      END                                 AS competitors_bamboo_flag,
+      CASE
+        WHEN CONTAINS (sfdc_opportunity_xf.competitors, 'AWS') 
+          THEN 1 
+        ELSE 0
+      END                                 AS competitors_aws_flag,
+
+
       -----------------------------------------------------------------------------------------------------      
       -----------------------------------------------------------------------------------------------------
       

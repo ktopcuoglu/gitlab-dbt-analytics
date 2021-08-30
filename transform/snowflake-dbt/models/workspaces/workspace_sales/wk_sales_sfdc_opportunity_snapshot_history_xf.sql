@@ -123,7 +123,7 @@ WITH date_details AS (
 
       sfdc_opportunity_snapshot_history.acv,
       --sfdc_opportunity_snapshot_history.closed_deals,
-      --sfdc_opportunity_snapshot_history.competitors,
+      sfdc_opportunity_snapshot_history.competitors,
       --sfdc_opportunity_snapshot_history.critical_deal_flag,
       --sfdc_opportunity_snapshot_history.deal_size,
       sfdc_opportunity_snapshot_history.forecast_category_name,
@@ -198,8 +198,9 @@ WITH date_details AS (
       sfdc_opportunity_snapshot_history.cp_identify_pain,
       sfdc_opportunity_snapshot_history.cp_metrics,
       sfdc_opportunity_snapshot_history.cp_risks,
+      */
       sfdc_opportunity_snapshot_history.cp_use_cases,
-      sfdc_opportunity_snapshot_history.cp_value_driver,
+      /*sfdc_opportunity_snapshot_history.cp_value_driver,
       sfdc_opportunity_snapshot_history.cp_why_do_anything_at_all,
       sfdc_opportunity_snapshot_history.cp_why_gitlab,
       sfdc_opportunity_snapshot_history.cp_why_now,
@@ -361,6 +362,110 @@ WITH date_details AS (
           THEN 1
         ELSE 0
       END                                                         AS is_renewal,
+
+
+      -- NF: 20210827 Fields for competitor analysis 
+      CASE
+        WHEN CONTAINS (sfdc_opportunity_snapshot_history.competitors, 'Other') 
+          THEN 1 
+        ELSE 0
+      END                                 AS competitors_other_flag,
+      CASE
+        WHEN CONTAINS (sfdc_opportunity_snapshot_history.competitors, 'GitLab Core') 
+          THEN 1 
+        ELSE 0
+      END                                 AS competitors_gitlab_core_flag,
+      CASE
+        WHEN CONTAINS (sfdc_opportunity_snapshot_history.competitors, 'None') 
+          THEN 1 
+        ELSE 0
+      END                                 AS competitors_none_flag,
+      CASE
+        WHEN CONTAINS (sfdc_opportunity_snapshot_history.competitors, 'GitHub Enterprise') 
+          THEN 1 
+        ELSE 0
+      END                                 AS competitors_github_enterprise_flag,
+      CASE
+        WHEN CONTAINS (sfdc_opportunity_snapshot_history.competitors, 'BitBucket Server') 
+          THEN 1 
+        ELSE 0
+      END                                 AS competitors_bitbucket_server_flag,
+      CASE
+        WHEN CONTAINS (sfdc_opportunity_snapshot_history.competitors, 'Unknown') 
+          THEN 1 
+        ELSE 0
+      END                                 AS competitors_unknown_flag,
+      CASE
+        WHEN CONTAINS (sfdc_opportunity_snapshot_history.competitors, 'GitHub.com') 
+          THEN 1 
+        ELSE 0
+      END                                 AS competitors_github_flag,
+      CASE
+        WHEN CONTAINS (sfdc_opportunity_snapshot_history.competitors, 'GitLab.com') 
+          THEN 1 
+        ELSE 0
+      END                                 AS competitors_gitlab_flag,
+      CASE
+        WHEN CONTAINS (sfdc_opportunity_snapshot_history.competitors, 'Jenkins') 
+          THEN 1 
+        ELSE 0
+      END                                 AS competitors_jenkins_flag,
+      CASE
+        WHEN CONTAINS (sfdc_opportunity_snapshot_history.competitors, 'Azure DevOps') 
+          THEN 1 
+        ELSE 0
+      END                                 AS competitors_azure_devops_flag,
+      CASE
+        WHEN CONTAINS (sfdc_opportunity_snapshot_history.competitors, 'SVN') 
+          THEN 1 
+        ELSE 0
+      END                                 AS competitors_svn_flag,
+      CASE
+        WHEN CONTAINS (sfdc_opportunity_snapshot_history.competitors, 'BitBucket.Org') 
+          THEN 1 
+        ELSE 0
+      END                                 AS competitors_bitbucket_flag,
+      CASE
+        WHEN CONTAINS (sfdc_opportunity_snapshot_history.competitors, 'Atlassian') 
+          THEN 1 
+        ELSE 0
+      END                                 AS competitors_atlassian_flag,
+      CASE
+        WHEN CONTAINS (sfdc_opportunity_snapshot_history.competitors, 'Perforce') 
+          THEN 1 
+        ELSE 0
+      END                                 AS competitors_perforce_flag, 
+      CASE
+        WHEN CONTAINS (sfdc_opportunity_snapshot_history.competitors, 'Visual Studio Team Services') 
+          THEN 1 
+        ELSE 0
+      END                                 AS competitors_visual_studio_flag,
+      CASE
+        WHEN CONTAINS (sfdc_opportunity_snapshot_history.competitors, 'Azure') 
+          THEN 1 
+        ELSE 0
+      END                                 AS competitors_azure_flag,
+      CASE
+        WHEN CONTAINS (sfdc_opportunity_snapshot_history.competitors, 'Amazon Code Commit') 
+          THEN 1 
+        ELSE 0
+      END                                 AS competitors_amazon_code_commit_flag,
+      CASE
+        WHEN CONTAINS (sfdc_opportunity_snapshot_history.competitors, 'CircleCI') 
+          THEN 1 
+        ELSE 0
+      END                                 AS competitors_circleci_flag,
+      CASE
+        WHEN CONTAINS (sfdc_opportunity_snapshot_history.competitors, 'Bamboo') 
+          THEN 1 
+        ELSE 0
+      END                                 AS competitors_bamboo_flag,
+      CASE
+        WHEN CONTAINS (sfdc_opportunity_snapshot_history.competitors, 'AWS') 
+          THEN 1 
+        ELSE 0
+      END                                 AS competitors_aws_flag,
+
 
       -- calculated age field
       -- if open, use the diff between created date and snapshot date
