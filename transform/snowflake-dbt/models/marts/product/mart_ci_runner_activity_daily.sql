@@ -85,7 +85,7 @@
 {{ dbt_audit(
    cte_ref="joined",
    created_by="@ischweickartDD",
-   updated_by="@snalamaru",
+   updated_by="@cssharp",
    created_date="2021-07-30",
    updated_date="2021-08-24"
 ) }}
