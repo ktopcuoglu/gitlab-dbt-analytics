@@ -1,36 +1,23 @@
 import datetime
 import json
 import logging
-import re
 import os
 import sys
+import requests
 from os import environ as env
 from typing import Dict, List
 
 import pandas as pd
-import sqlparse
-import sql_metadata
 
 from fire import Fire
-from flatten_dict import flatten
 from gitlabdata.orchestration_utils import (
     dataframe_uploader,
     dataframe_enricher,
     snowflake_engine_factory,
+    snowflake_stage_load_copy_remove,
 )
-from pprint import pprint
-from sqlalchemy.engine.base import Engine
 from sqlalchemy.exc import SQLAlchemyError
-from sqlparse.sql import (
-    Identifier,
-    IdentifierList,
-    remove_quotes,
-    Token,
-    TokenList,
-    Where,
-)
-from sqlparse.tokens import Keyword, Name, Punctuation, String, Whitespace
-from sqlparse.utils import imt
+from logging import error, info, basicConfig, getLogger, warning
 
 
 class UsagePing(object):
@@ -50,7 +37,9 @@ class UsagePing(object):
         can be updated to query an end point or query other functions
         to generate the {ping_name: sql_query} dictionary
         """
-        with open(os.path.join(os.path.dirname(__file__), "all_sql_queries.json")) as f:
+        with open(
+            os.path.join(os.path.dirname(__file__), "transformed_instance_queries.json")
+        ) as f:
             saas_queries = json.load(f)
 
         return saas_queries
@@ -70,14 +59,19 @@ class UsagePing(object):
             logging.info(f"Running ping {key}...")
             try:
                 results = pd.read_sql(sql=query, con=connection)
+                info(results)
                 counter_value = results.loc[0, "counter_value"]
                 data_to_write = str(counter_value)
             except SQLAlchemyError as e:
                 error = str(e.__dict__["orig"])
                 data_to_write = error
+            except KeyError as k:
+                error = "Empty dataframe"
+                data_to_write = error
 
             results_all[key] = data_to_write
 
+        info("Processed queries")
         connection.close()
         self.loader_engine.dispose()
 
@@ -90,6 +84,33 @@ class UsagePing(object):
         )
 
         self.loader_engine.dispose()
+
+    def saas_instance_redis_metrics(self):
+
+        """
+        Call the Non SQL Metrics API and store the results in Snowflake RAW database
+        """
+        config_dict = env.copy()
+        headers = {
+            "PRIVATE-TOKEN": config_dict["GITLAB_ANALYTICS_PRIVATE_TOKEN"],
+        }
+
+        response = requests.get(
+            "https://gitlab.com/api/v4/usage_data/non_sql_metrics", headers=headers
+        )
+        json_data = json.loads(response.text)
+
+        json_file_name = "instance_redis_metrics"
+
+        with open(f"{json_file_name}.json", "w") as f:
+            json.dump(json_data, f)
+
+        snowflake_stage_load_copy_remove(
+            f"{json_file_name}.json",
+            "raw.gitlab_data_yaml.gitlab_data_yaml_load",
+            f"raw.saas_usage_ping.instance_redis_metrics",
+            self.loader_engine,
+        )
 
     def _get_namespace_queries(self) -> List[Dict]:
         """

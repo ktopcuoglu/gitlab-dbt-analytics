@@ -34,10 +34,10 @@ if __name__ == "__main__":
     )
 
     if pipeline_schedule is None:
-        info(
+        error(
             f"Pipeline schedule {NIGHTLY_PIPELINE_SCHEDULE} couldn't be found for project {GITLAB_PROJECT_ID}."
         )
-        sys.exit(1)
+        sys.exit(0)
 
     last_scheduled_pipeline_id = pipeline_schedule["last_pipeline"]["id"]
 
@@ -49,10 +49,10 @@ if __name__ == "__main__":
     )
 
     if update_tests_metadata_job is None:
-        info(
+        error(
             f"Job '{UPDATE_TESTS_METADATA_JOB_NAME}' couldn't be found for pipeline {last_scheduled_pipeline_id} of project {GITLAB_PROJECT_ID}"
         )
-        sys.exit(1)
+        sys.exit(0)
 
     update_tests_metadata_job_id = update_tests_metadata_job["id"]
 

@@ -3,3 +3,7 @@ folders:
     owner: '@paul_armstrong'
     folder_name: clari_export_csv
     table_name: clari_export_forecast_net_iacv
+  - name: financial_metrics_program_phase_1
+    owner: '@paul_armmstrong'
+    folder_name: financial_metrics_program_phase_1
+    table_name: financial_metrics_program_phase_1

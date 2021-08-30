@@ -1,9 +1,5 @@
 {{ config(alias='sfdc_opportunity_snapshot_history_xf') }}
 
--- TODO:
--- Add logic to exclude vision opps from created pipeline metric
-
-
 WITH date_details AS (
 
     SELECT * 
@@ -37,16 +33,16 @@ WITH date_details AS (
       opportunity_owner_user_area,
       opportunity_owner_user_geo,
 
--------------------------------------
--- NF: These fields are not exposed yet in opty history, just for check
--- I am adding this logic
+      -------------------------------------
+      -- NF: These fields are not exposed yet in opty history, just for check
+      -- I am adding this logic
 
       stage_1_date,
       stage_1_date_month,
       stage_1_fiscal_year,
       stage_1_fiscal_quarter_name,
       stage_1_fiscal_quarter_date,
---------------------------------------
+      --------------------------------------
 
       is_won,
       is_duplicate_flag,
@@ -54,6 +50,26 @@ WITH date_details AS (
       net_incremental_acv,
       sales_qualified_source,
       incremental_acv
+
+      -- Channel Org. fields
+      -- this fields should be changed to this historical version
+      --deal_path,
+      --dr_partner_deal_type,
+      --dr_partner_engagement,
+      --partner_account,
+      --dr_status,
+      --distributor,
+      --influence_partner,
+      --fulfillment_partner,
+      --platform_partner,
+      --partner_track,
+      --is_public_sector_opp,
+      --is_registration_from_portal,
+      --calculated_discount,
+      --partner_discount,
+      --partner_discount_calc,
+      --comp_channel_neutral
+
     FROM {{ref('wk_sales_sfdc_opportunity_xf')}}  
 
 ), sfdc_users_xf AS (
@@ -194,6 +210,37 @@ WITH date_details AS (
       sfdc_opportunity_snapshot_history.record_type_id,
       --sfdc_opportunity_snapshot_history.opportunity_category,
 
+      -- Channel Org. fields
+      -- this fields should be changed to this historical version
+      sfdc_opportunity_snapshot_history.deal_path,
+      sfdc_opportunity_snapshot_history.dr_partner_deal_type,
+      sfdc_opportunity_snapshot_history.dr_partner_engagement,
+      sfdc_opportunity_snapshot_history.partner_account,
+      sfdc_opportunity_snapshot_history.dr_status,
+      sfdc_opportunity_snapshot_history.distributor,
+      sfdc_opportunity_snapshot_history.influence_partner,
+      sfdc_opportunity_snapshot_history.fulfillment_partner,
+      sfdc_opportunity_snapshot_history.platform_partner,
+      sfdc_opportunity_snapshot_history.partner_track,
+      sfdc_opportunity_snapshot_history.is_public_sector_opp,
+      sfdc_opportunity_snapshot_history.is_registration_from_portal,
+      sfdc_opportunity_snapshot_history.calculated_discount,
+      sfdc_opportunity_snapshot_history.partner_discount,
+      sfdc_opportunity_snapshot_history.partner_discount_calc,
+      sfdc_opportunity_snapshot_history.comp_channel_neutral,
+
+      CASE 
+        WHEN sfdc_opportunity_snapshot_history.deal_path = 'Direct'
+          THEN 'Direct'
+        WHEN sfdc_opportunity_snapshot_history.deal_path = 'Web Direct'
+          THEN 'Web Direct' 
+        WHEN sfdc_opportunity_snapshot_history.deal_path = 'Channel' 
+            AND sfdc_opportunity_snapshot_history.sales_qualified_source = 'Channel Generated' 
+          THEN 'Partner Sourced'
+        WHEN sfdc_opportunity_snapshot_history.deal_path = 'Channel' 
+            AND sfdc_opportunity_snapshot_history.sales_qualified_source != 'Channel Generated' 
+          THEN 'Partner Co-Sell'
+      END                                                         AS deal_path_engagement,
 
       --date helpers
 
@@ -573,6 +620,7 @@ WITH date_details AS (
       ------------------------------------------------------------------------------------------------------
 
       -- account driven fields
+      sfdc_accounts_xf.account_name,
       sfdc_accounts_xf.tsp_region,
       sfdc_accounts_xf.tsp_sub_region,
       sfdc_accounts_xf.ultimate_parent_sales_segment,
@@ -641,20 +689,22 @@ WITH date_details AS (
 
       -- extended version of the deal size
       CASE 
-        WHEN opp_snapshot.net_arr > 0 AND net_arr < 5000 
-          THEN '1. (0k -5k)'
-        WHEN opp_snapshot.net_arr >=5000 AND net_arr < 25000 
-          THEN '2. (5k - 25k)'
-        WHEN opp_snapshot.net_arr >=25000 AND net_arr < 100000 
-          THEN '3. (25k - 100k)'
-        WHEN opp_snapshot.net_arr >= 100000 AND net_arr < 250000 
-          THEN '4. (100k - 250k)'
-        WHEN opp_snapshot.net_arr >= 250000 AND net_arr < 500000 
-          THEN '5. (250k - 500k)'
-        WHEN opp_snapshot.net_arr >= 500000 AND net_arr < 1000000 
-          THEN '6. (500k-1000k)'
-        WHEN opp_snapshot.net_arr >= 1000000 
-          THEN '7. (>1000k)'
+        WHEN net_arr > 0 AND net_arr < 1000 
+          THEN '1. (0k -1k)'
+        WHEN net_arr >=1000 AND net_arr < 10000 
+          THEN '2. (1k - 10k)'
+        WHEN net_arr >=10000 AND net_arr < 50000 
+          THEN '3. (10k - 50k)'
+        WHEN net_arr >=50000 AND net_arr < 100000 
+          THEN '4. (50k - 100k)'
+        WHEN net_arr >= 100000 AND net_arr < 250000 
+          THEN '5. (100k - 250k)'
+        WHEN net_arr >= 250000 AND net_arr < 500000 
+          THEN '6. (250k - 500k)'
+        WHEN net_arr >= 500000 AND net_arr < 1000000 
+          THEN '7. (500k-1000k)'
+        WHEN net_arr >= 1000000 
+          THEN '8. (>1000k)'
         ELSE 'Other' 
       END                                                           AS calculated_deal_size,
 
@@ -667,7 +717,7 @@ WITH date_details AS (
           AND opp_snapshot.is_open = 1
          THEN 1
          ELSE 0
-      END                                                         AS is_eligible_open_pipeline_flag,
+      END                                                   AS is_eligible_open_pipeline_flag,
 
 
       -- Created pipeline eligibility definition
@@ -684,18 +734,82 @@ WITH date_details AS (
           -- exclude vision opps from FY21-Q2
           AND (opp_snapshot.pipeline_created_fiscal_quarter_name != 'FY21-Q2'
                 OR vision_opps.opportunity_id IS NULL)
+          -- 20210802 remove webpurchase deals
+          AND opp_snapshot.is_web_portal_purchase = 0
              THEN 1
          ELSE 0
-      END                                                   AS is_eligible_created_pipeline_flag,
+      END                                                      AS is_eligible_created_pipeline_flag,
 
-   
+      CASE
+        WHEN opp_snapshot.sales_accepted_date IS NOT NULL
+          AND opp_snapshot.is_edu_oss = 0
+          AND opp_snapshot.is_deleted = 0
+          AND opp_snapshot.order_type_stamped = '1. New - First Order'
+            THEN 1
+        ELSE 0
+      END                                                     AS is_eligible_sao_flag,
+
+      CASE 
+        WHEN opp_snapshot.is_edu_oss = 0
+          AND opp_snapshot.is_deleted = 0
+          -- For ASP we care mainly about add on, new business, excluding contraction / churn
+          AND opp_snapshot.order_type_stamped IN ('1. New - First Order','2. New - Connected','3. Growth')
+          -- Exclude Decomissioned as they are not aligned to the real owner
+          -- Contract Reset, Decomission
+          AND opp_snapshot.opportunity_category IN ('Standard','Ramp Deal','Internal Correction')
+          -- Web Purchase have no Net ARR before reconciliation, exclude those 
+          -- from ASP analysis
+          AND ((opp_snapshot.is_web_portal_purchase = 1 
+                AND net_arr > 0)
+                OR opp_snapshot.is_web_portal_purchase = 0)
+          -- Not JiHu
+            THEN 1
+          ELSE 0
+      END                                                    AS is_eligible_asp_analysis_flag,
+      
+      CASE 
+        WHEN opp_snapshot.is_edu_oss = 0
+          AND opp_snapshot.is_deleted = 0
+          -- Renewals are not having the same motion as rest of deals
+          AND opp_snapshot.is_renewal = 0
+          -- For stage age we exclude only ps/other
+          AND opp_snapshot.order_type_stamped IN ('1. New - First Order','2. New - Connected','3. Growth','4. Contraction','6. Churn - Final','5. Churn - Partial')
+          -- Only include deal types with meaningful journeys through the stages
+          AND opp_snapshot.opportunity_category IN ('Standard','Ramp Deal','Decommissioned')
+          -- Web Purchase have a different dynamic and should not be included
+          AND opp_snapshot.is_web_portal_purchase = 0
+          -- Not JiHu
+            THEN 1
+          ELSE 0
+      END                                                   AS is_elgible_age_analysis_flag,
+
+      CASE
+        WHEN opp_snapshot.is_edu_oss = 0
+          AND opp_snapshot.is_deleted = 0
+          AND (opp_snapshot.is_won = 1 
+              OR (opp_snapshot.is_renewal = 1 AND opp_snapshot.is_lost = 1))
+          AND opp_snapshot.order_type_stamped IN ('1. New - First Order','2. New - Connected','3. Growth','4. Contraction','6. Churn - Final','5. Churn - Partial')
+          -- Not JiHu
+            THEN 1
+          ELSE 0
+      END                                                   AS is_eligible_net_arr_flag,
+
+      CASE
+        WHEN opp_snapshot.is_edu_oss = 0
+          AND opp_snapshot.is_deleted = 0
+          AND opp_snapshot.order_type_stamped IN ('4. Contraction','6. Churn - Final','5. Churn - Partial')
+          -- Not JiHu
+            THEN 1
+          ELSE 0
+      END                                                  AS is_eligible_churn_contraction_flag,
+
       -- created within quarter
       CASE
         WHEN opp_snapshot.pipeline_created_fiscal_quarter_name = opp_snapshot.snapshot_fiscal_quarter_name
           AND is_eligible_created_pipeline_flag = 1
             THEN opp_snapshot.net_arr
         ELSE 0 
-      END                                                  AS created_in_snapshot_quarter_net_arr,
+      END                                                 AS created_in_snapshot_quarter_net_arr,
 
    -- created and closed within the quarter net arr
       CASE 
@@ -704,7 +818,7 @@ WITH date_details AS (
            AND is_eligible_created_pipeline_flag = 1
             THEN opp_snapshot.net_arr
         ELSE 0
-      END                                                   AS created_and_won_same_quarter_net_arr,
+      END                                                 AS created_and_won_same_quarter_net_arr,
 
 
       CASE
@@ -712,7 +826,7 @@ WITH date_details AS (
           AND is_eligible_created_pipeline_flag = 1
             THEN opp_snapshot.calculated_deal_count
         ELSE 0 
-      END                                                  AS created_in_snapshot_quarter_deal_count,
+      END                                                 AS created_in_snapshot_quarter_deal_count,
 
       ---------------------------------------------------------------------------------------------------------
       ---------------------------------------------------------------------------------------------------------

@@ -14,7 +14,7 @@
 , renamed AS (
   
     SELECT
-      ci_pipeline_id AS dim_ci_pipeline_id, 
+      ci_pipeline_id                                            AS dim_ci_pipeline_id, 
       
       -- FOREIGN KEYS
       gitlab_dotcom_ci_pipelines_source.project_id              AS dim_project_id,

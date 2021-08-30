@@ -11,6 +11,8 @@
     SELECT *
     FROM {{ ref('zuora_account_source') }}
     WHERE is_deleted = FALSE
+    --Exclude Batch20 which are the test accounts. This method replaces the manual dbt seed exclusion file.
+      AND LOWER(batch) != 'batch20'
 
 ), zuora_rate_plan_charge AS (
 
@@ -70,7 +72,7 @@
       SUM(mrr)                                                          AS mrr,
       SUM(mrr) * 12                                                     AS arr,
       SUM(quantity)                                                     AS quantity
-    FROM rate_plan_charge_filtered 
+    FROM rate_plan_charge_filtered
     INNER JOIN dim_date
       ON rate_plan_charge_filtered.effective_start_month <= dim_date.date_actual
       AND (rate_plan_charge_filtered.effective_end_month > dim_date.date_actual
@@ -150,7 +152,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@ischweickartDD",
-    updated_by="@ischweickartDD",
+    updated_by="@iweeks",
     created_date="2021-03-01",
-    updated_date="2021-05-24"
+    updated_date="2021-07-29"
 ) }}

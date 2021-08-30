@@ -64,6 +64,8 @@ WITH date_details AS (
           THEN DATE_TRUNC('month',DATEADD('month', zuora_subscription.current_term, zuora_subscription.subscription_end_date::DATE))
         ELSE NULL
       END                                                                       AS second_active_renewal_month,
+      zuora_subscription.auto_renew_native_hist,
+      zuora_subscription.auto_renew_customerdot_hist,
       zuora_subscription.turn_on_cloud_licensing,
       zuora_subscription.turn_on_operational_metrics,
       zuora_subscription.contract_operational_metrics,
@@ -89,5 +91,5 @@ WITH date_details AS (
     created_by="@ischweickartDD",
     updated_by="@jpeguero",
     created_date="2021-01-07",
-    updated_date="2021-07-29"
+    updated_date="2021-08-04"
 ) }}

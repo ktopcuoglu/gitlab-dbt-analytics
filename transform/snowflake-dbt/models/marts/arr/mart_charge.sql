@@ -62,6 +62,8 @@
       dim_subscription.subscription_name_slugify                                      AS subscription_name_slugify,
       dim_subscription.oldest_subscription_in_cohort                                  AS oldest_subscription_in_cohort,
       dim_subscription.subscription_lineage                                           AS subscription_lineage,
+      dim_subscription.auto_renew_native_hist,
+      dim_subscription.auto_renew_customerdot_hist,
       dim_subscription.turn_on_cloud_licensing,
       dim_subscription.turn_on_operational_metrics,
       dim_subscription.contract_operational_metrics,
@@ -181,5 +183,5 @@
     created_by="@iweeks",
     updated_by="@jpeguero",
     created_date="2021-06-07",
-    updated_date="2021-07-30"
+    updated_date="2021-08-04"
 ) }}

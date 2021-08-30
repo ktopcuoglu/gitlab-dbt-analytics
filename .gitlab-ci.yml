@@ -184,7 +184,7 @@ python_pytest:
     - analytics
   only:
     changes:
-      - "load/snowflake/roles.yml"
+      - "permissions/snowflake/roles.yml"
     refs:
       - merge_request
   allow_failure: true
@@ -192,7 +192,7 @@ python_pytest:
 yaml_validation:
   <<: *yaml_validate
   script:
-    - python -c 'import yaml, sys; print(yaml.safe_load(sys.stdin))' < load/snowflake/roles.yml
+    - python -c 'import yaml, sys; print(yaml.safe_load(sys.stdin))' < permissions/snowflake/roles.yml
 
 .permifrost: &permifrost
   stage: 🐍 Python
@@ -207,7 +207,7 @@ yaml_validation:
 permifrost_manual:
   <<: *permifrost
   script:
-    - permifrost grant load/snowflake/roles.yml --diff --dry
+    - permifrost grant permissions/snowflake/roles.yml --diff --dry
   when: manual
 
 # ======
