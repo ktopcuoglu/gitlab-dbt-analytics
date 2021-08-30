@@ -15,7 +15,7 @@ WITH snapshot_dates AS (
     SELECT *
     FROM {{ ref('zuora_account_snapshots_source') }}
     WHERE is_deleted = FALSE
-      AND LOWER(batch) != 'batch20'
+      AND LOWER(live_batch) != 'batch20'
 
 ), zuora_account_spined AS (
 
@@ -163,7 +163,7 @@ WITH snapshot_dates AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@iweeks",
+    updated_by="@jpeguero",
     created_date="2021-06-28",
-    updated_date="2021-08-09"
+    updated_date="2021-08-24"
 ) }}
