@@ -65,7 +65,6 @@ You will need access to several groups, applications, tools, and data sources fo
 |  1password vault: `Data Team` | No | Yes | Yes | Yes | Yes |  PeopleOps Onboarding |
 |  Namespce: `gitlab-data` |  No | Developer | Developer | Developer | Developer | ? |
 | daily Geekbot standup  | No | Yes | Yes | Yes | Yes | [Instructions](https://geekbot.com/faq/#:~:text=How%20can%20i%20add%20new,participants%20with%20the%20broadcast%20channel.)  |
-|  codeowners file in the handbook  | No |Yes | Yes | Yes | Yes |
 |  Data Team calendar |  No |Yes | Yes | Yes | Yes | ?  |
 |  Lucidchart folder: `Data Team` | No |Yes | Yes | Yes | Yes |  ? |
 |  Google Drive folder: SheetLoad | No |Yes | Yes | Yes | Yes |  ? |
