@@ -90,7 +90,7 @@
       COALESCE(estimated_value.pct_subscriptions_with_counters, 1)        AS pct_subscriptions_with_counters
     FROM umau
     LEFT JOIN estimated_value
-      ON estimated_value.is_smau
+      ON estimated_value.is_umau
         AND umau.usage_ping_delivery_type = 'Self-Managed'
         AND umau.ping_created_month  = estimated_value.reporting_month
         AND umau.edition = estimated_value.edition
@@ -140,7 +140,7 @@
       usage_ping_delivery_type,
       SUM(monthly_metric_value) AS monthly_metric_value_sum
     FROM instance_gmau
-    WHERE is_gmau = TRUE
+    WHERE is_paid_gmau = TRUE
     {{ dbt_utils.group_by(n=12) }}
 
 ), gmau_joined AS (
@@ -148,18 +148,19 @@
     SELECT 
       gmau.*,
       usage_ping_delivery_type                                                         AS delivery,
-      'GMAU'                                                              AS xmau_level,
+      'GMAU'                                                                           AS xmau_level,
       product_tier NOT IN ('Core', 'CE') AND usage_ping_delivery_type = 'Self-Managed' AS is_paid,
-      COALESCE(estimated_value.pct_subscriptions_with_counters, 1)        AS pct_subscriptions_with_counters
+      COALESCE(MAX(estimated_value.pct_subscriptions_with_counters), 1)                AS pct_subscriptions_with_counters
     FROM gmau
     LEFT JOIN estimated_value
-      ON estimated_value.is_gmau
+      ON estimated_value.is_paid_gmau
         AND gmau.usage_ping_delivery_type = 'Self-Managed'
         AND gmau.ping_created_month  = estimated_value.reporting_month
         AND gmau.stage_name = estimated_value.stage_name 
         AND gmau.group_name = estimated_value.group_name 
         AND gmau.section_name = estimated_value.section_name
         AND gmau.edition = estimated_value.edition
+    {{ dbt_utils.group_by(n=15) }}
   
 ), xmau AS (
 
