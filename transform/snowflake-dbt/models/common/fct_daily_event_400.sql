@@ -31,7 +31,7 @@
       dim_user_id,
       event_name,
       TO_DATE(event_created_at)                                                                                        AS event_created_date,
-      dim_namespace_plan_hist.dim_plan_id                                                                              AS dim_plan_id_at_event_date,
+      IFNULL(dim_namespace_plan_hist.dim_plan_id, 34)                                                                  AS dim_plan_id_at_event_date,
 
       is_blocked_namespace,
       namespace_created_date,
