@@ -2031,7 +2031,8 @@ roles:
             - analyst_xs
 
     - alpcohen:
-        member_of: []
+        member_of:
+            - xactly
         warehouses:
             - analyst_xs
 
@@ -3152,6 +3153,7 @@ roles:
     - mvilain:
         member_of:
             - analyst_sales
+            - xactly
         warehouses:
             - analyst_xs
         owns:
