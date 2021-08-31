@@ -22,16 +22,6 @@ if __name__ == "__main__":
         "https://gitlab-org.gitlab.io/gitlab/rspec_flaky/report-suite.json"
     )
 
-    def quality_check(json_response: Dict[Any, Any]) -> None:
-        """
-        Sanity check on JSON response object for data integrity.
-        """
-        record_count = len(json_response)
-
-        if record_count < 2:
-            info(f"Flaky report doesn't look as expected: {json_response}")
-            sys.exit(1)
-
     logging.basicConfig(stream=sys.stdout, level=20)
 
     r = requests.get(
@@ -40,8 +30,6 @@ if __name__ == "__main__":
     r.raise_for_status()
 
     rspec_flaky_report = r.json()
-
-    quality_check(rspec_flaky_report)
 
     flaky_tests = []
 
