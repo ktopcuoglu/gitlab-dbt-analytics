@@ -192,7 +192,7 @@ models:
         description: MYB = Multi-Year Booking. This boolean flag identifies if a subscription is booked for more than one year. This can either be by having a term greater than 12 months or having a linked subscription.
       - name: is_myb_with_multi_subs
         description: MYB = Multi-Year Booking. This boolean flag identifies if a subscription is booked for more than one year by using multiple linked subscriptions only. A subscription with a term greater than 12 but does not have linked subscriptions has a value of FALSE.
-  - name: dim_subscription
+  - name: dim_subscription_api_sandbox
     columns:
       - name: dim_subscription_id
         description: Unique identifier of a version of a subscription
