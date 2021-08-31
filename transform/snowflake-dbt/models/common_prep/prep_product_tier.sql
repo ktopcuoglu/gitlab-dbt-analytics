@@ -47,8 +47,7 @@ WITH product_tier_mapping AS (
 ), final AS (
 
   SELECT
-    {{ dbt_utils.surrogate_key(['product_tier_historical', 'product_delivery_type']) }}
-                                                                    AS dim_product_tier_id,
+    {{ dbt_utils.surrogate_key(['product_tier_historical']) }}      AS dim_product_tier_id,
     product_tier_historical,
     SPLIT_PART(product_tier_historical, ' - ', -1)                  AS product_tier_historical_short,
     product_tier                                                    AS product_tier_name,

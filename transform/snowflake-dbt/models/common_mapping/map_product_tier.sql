@@ -80,20 +80,23 @@ WITH zuora_product AS (
                                                                      )
           THEN 'Support'
         WHEN LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE 'gitlab geo%'
-          THEN 'Other'
+          THEN 'SaaS - Other'
         WHEN LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE 'ci runner%'
-          THEN 'Other'
+          THEN 'SaaS - Other'
         WHEN LOWER(zuora_product_rate_plan.product_rate_plan_name) LIKE 'discount%'
           THEN 'Other'
         WHEN TRIM(zuora_product_rate_plan.product_rate_plan_name) IN (
                                                                         '#movingtogitlab'
-                                                                      , 'File Locking'
                                                                       , 'Payment Gateway Test'
-                                                                      , 'Time Tracking'
-                                                                      , '1,000 CI Minutes'
                                                                       , 'EdCast Settlement Revenue'
                                                                      )
           THEN 'Other'
+        WHEN TRIM(zuora_product_rate_plan.product_rate_plan_name) IN (
+                                                                        'File Locking'
+                                                                      , 'Time Tracking'
+                                                                      , '1,000 CI Minutes'
+                                                                     )
+          THEN 'SaaS - Other'
         WHEN TRIM(zuora_product_rate_plan.product_rate_plan_name) IN ('Gitlab Storage 10GB')
           THEN 'Storage'
         ELSE 'Not Applicable'
@@ -103,13 +106,7 @@ WITH zuora_product AS (
           THEN 'Self-Managed'
         WHEN LOWER(product_tier_historical) LIKE ANY ('%saas%', 'storage')
           THEN 'SaaS'
-        WHEN TRIM(zuora_product_rate_plan.product_rate_plan_name) LIKE ANY (
-                                                                      'File Locking'
-                                                                     , 'Time Tracking'
-                                                                     , '1,000 CI Minutes'
-                                                                     , 'GitLab Geo%'
-                                                                     , 'CI Runner%'
-                                                                     )
+        WHEN LOWER(product_tier_historical) = 'SaaS - Other'
           THEN 'SaaS'
         WHEN product_tier_historical IN (
                                           'Basic'

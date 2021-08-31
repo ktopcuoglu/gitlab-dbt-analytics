@@ -687,6 +687,7 @@ models:
         description: Product pricing tiers prior to [tier renaming](https://gitlab-com.gitlab.io/packaging-and-pricing/pricing-handbook/handbook/renaming_tiers/) (early 2021).
         tests:
           - not_null
+          - unique
         tags: ["tdf", "common", "gainsight"]
       - name: product_tier_historical_short
         description: Pulls the product tier from `product_tier_historical` with the delivery type removed

@@ -74,7 +74,6 @@ WITH zuora_product AS (
       ON zuora_product_rate_plan_charge.product_rate_plan_id = common_product_tier_mapping.product_rate_plan_id
     LEFT JOIN common_product_tier
       ON common_product_tier_mapping.product_tier_historical = common_product_tier.product_tier_historical
-      AND common_product_tier_mapping.product_delivery_type = common_product_tier.product_delivery_type
     WHERE zuora_product.is_deleted = FALSE
       AND zuora_product_rate_plan_charge_tier.currency = 'USD'
     {{ dbt_utils.group_by(n=20) }}
@@ -114,7 +113,7 @@ WITH zuora_product AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@ischweickartDD",
-    updated_by="@jpeguero",
+    updated_by="@mcooperDD",
     created_date="2020-12-16",
-    updated_date="2021-08-31"
+    updated_date="2021-01-26"
 ) }}
