@@ -19,7 +19,7 @@
       gitlab_dotcom_labels_source.project_id     AS dim_project_id,
       --
       gitlab_dotcom_labels_source.group_id       AS dim_namespace_id,
-      gitlab_dotcom_labels_source.label_title,
+      gitlab_dotcom_labels_source.label_title    AS label_name,
       gitlab_dotcom_labels_source.label_type
     FROM gitlab_dotcom_labels_source
 
