@@ -40,7 +40,7 @@ WITH dim_date AS (
     FROM {{ ref('zuora_account_snapshots_source') }}
     WHERE is_deleted = FALSE
     --Exclude Batch20 which are the test accounts. This method replaces the manual dbt seed exclusion file.
-      AND LOWER(batch) != 'batch20'
+      AND LOWER(live_batch) != 'batch20'
 
 ), zuora_account_spined AS (
 
@@ -220,7 +220,7 @@ WITH dim_date AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@iweeks",
+    updated_by="@jpeguero",
     created_date="2021-07-29",
-    updated_date="2021-08-09",
+    updated_date="2021-08-24",
  	) }}
