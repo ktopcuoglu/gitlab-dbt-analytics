@@ -1856,7 +1856,6 @@ models:
       - name: dim_label_link_id
         tests:
           - not_null
-          - unique
       - name: dim_label_id
         tests:
           - not_null
