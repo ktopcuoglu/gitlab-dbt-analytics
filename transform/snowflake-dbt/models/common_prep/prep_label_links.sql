@@ -32,7 +32,8 @@ WITH gitlab_dotcom_label_links_source AS (
       --
       gitlab_dotcom_label_links_source.target_type,
       gitlab_dotcom_label_links_source.label_link_created_at       AS label_added_at,
-      gitlab_dotcom_label_links_source.label_link_updated_at       AS label_updated_at
+      gitlab_dotcom_label_links_source.label_link_updated_at       AS label_updated_at,
+      is_currently_valid
       --
 
     FROM gitlab_dotcom_label_links_source
