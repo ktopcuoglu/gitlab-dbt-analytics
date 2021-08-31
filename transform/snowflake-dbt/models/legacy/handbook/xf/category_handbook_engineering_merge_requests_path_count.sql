@@ -22,12 +22,13 @@ WITH category_handbook_engineering_merge_requests AS (
            ELSE 0 END                                                                     AS path_count_engineering,
 
       -- Engineering departments 
-      IFF(LOWER(merge_request_path) LIKE '%/handbook/engineering/development/%',1,0)      AS path_count_development,    
-      IFF(LOWER(merge_request_path) LIKE '%/handbook/engineering/infrastructure/%',1,0)   AS path_count_infrastructure,
-      IFF(LOWER(merge_request_path) LIKE '%/handbook/engineering/quality/%',1,0)          AS path_count_quality,
-      IFF(LOWER(merge_request_path) LIKE '%/handbook/engineering/security/%',1,0)         AS path_count_security,
-      IFF(LOWER(merge_request_path) LIKE '%/handbook/support/%',1,0)                      AS path_count_support,
-      IFF(LOWER(merge_request_path) LIKE '%/handbook/engineering/ux/%',1,0)               AS path_count_ux,
+      IFF(LOWER(merge_request_path) LIKE '%/handbook/engineering/development/%',1,0) OR IFF(LOWER(merge_request_path) LIKE '%data/performance_indicators/development_department.yml%',1,0)     AS path_count_development,    
+      IFF(LOWER(merge_request_path) LIKE '%/handbook/engineering/infrastructure/%',1,0) OR IFF(LOWER(merge_request_path) LIKE '%data/performance_indicators/infrastructure_department.yml%',1,0)  AS path_count_infrastructure,
+      IFF(LOWER(merge_request_path) LIKE '%/handbook/engineering/quality/%',1,0) OR IFF(LOWER(merge_request_path) LIKE '%data/performance_indicators/quality_department.yml%',1,0)         AS path_count_quality,
+      IFF(LOWER(merge_request_path) LIKE '%/handbook/engineering/security/%',1,0) OR IFF(LOWER(merge_request_path) LIKE '%data/performance_indicators/security_department.yml%',1,0)         AS path_count_security,
+      IFF(LOWER(merge_request_path) LIKE '%/handbook/support/%',1,0) OR IFF(LOWER(merge_request_path) LIKE '%data/performance_indicators/customer_support_department.yml%',1,0)                      AS path_count_support,
+      IFF(LOWER(merge_request_path) LIKE '%/handbook/engineering/ux/%',1,0) OR IFF(LOWER(merge_request_path) LIKE '%data/performance_indicators/ux_department.yml%',1,0)               AS path_count_ux,
+      IFF(LOWER(merge_request_path) LIKE '%/handbook/engineering/incubation/%',1,0) OR IFF(LOWER(merge_request_path) LIKE '%data/performance_indicators/incubation_engineering_department.yml%',1,0)               AS path_count_incubation,
 
       -- Metadata 
       merge_request_created_at,
