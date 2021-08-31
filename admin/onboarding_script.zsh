@@ -10,12 +10,6 @@ echo "Installing git.."
 brew install git
 echo "git successfully installed"
 
-## install tldr https://tldr.sh/
-echo "Installing tldr..."
-brew install tldr
-echo "tldr installed. "
-
-
 ## Get oh my zsh (plugins, themes for zsh).
 sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" "" --unattended
 git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
