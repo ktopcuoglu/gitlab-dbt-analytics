@@ -1697,3 +1697,28 @@ models:
         tests:
           - unique
           - not_null
+  - name: prep_issue_assignees
+    description: '{{ doc("prep_issue_assignees") }}'
+    columns:
+      - name: dim_user_issue_relation_id
+        tests:
+          - not_null
+          - unique
+      - name: dim_user_id
+        tests:
+          - not_null
+      - name: dim_issue_id
+        tests:
+          - not_null
+  - name: prep_issue_labels
+    description: '{{ doc("prep_issue_assignees") }}'
+    columns:
+      - name: date_id
+        tests:
+          - not_null
+      - name: dim_issue_id
+        tests:
+          - not_null
+      - name: dim_label_id
+        tests:
+          - not_null

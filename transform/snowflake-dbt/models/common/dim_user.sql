@@ -8,7 +8,8 @@ WITH prep_user AS (
       last_sign_in_at
       created_at,
       updated_at,
-      is_admin
+      is_admin,
+      username,
     FROM {{ ref('prep_user') }}
 
 )
