@@ -72,6 +72,7 @@ CASE
                                     , 'File Locking'
                                     , 'Payment Gateway Test'
                                     , 'Time Tracking'
+                                    , '1,000 CI Minutes'
                                     , 'EdCast Settlement Revenue'
                                     )
     THEN 'Other'
