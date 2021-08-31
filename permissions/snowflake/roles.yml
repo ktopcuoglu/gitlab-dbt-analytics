@@ -2751,6 +2751,7 @@ roles:
         member_of:
             - analyst_core
             - data_team_analyst
+            - salesforce
         warehouses:
             - analyst_xs
         owns:
