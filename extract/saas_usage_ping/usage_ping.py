@@ -44,13 +44,13 @@ class UsagePing(object):
 
         return saas_queries
 
-    def _get_md5(self, timestamp: datetime) -> str:
+    def _get_md5(self, timestamp: float=datetime.datetime.utcnow().timestamp()) -> str:
         """
         Convert input datetime into md5 hash.
-        Result is returned as a str.
+        Result is returned as a string.
         Example:
 
-            Input (datetime): datetime.now().timestamp()
+            Input (datetime): datetime.utcnow().timestamp()
             Output (str): md5 hash
 
             -----------------------------------------------------------
@@ -71,35 +71,51 @@ class UsagePing(object):
         connection = self.loader_engine.connect()
 
         results_all = {}
+        errors_data_all = {}
 
-        for counter_sql_count, key, query in enumerate(saas_queries.items(), start=1):
+        for key, query in saas_queries.items():
             logging.info(f"Running ping {key}...")
             try:
                 results = pd.read_sql(sql=query, con=connection)
                 info(results)
                 counter_value = results.loc[0, "counter_value"]
                 data_to_write = str(counter_value)
+            except KeyError as k:
+                error = "0"
+                data_to_write = error
             except SQLAlchemyError as e:
                 error = str(e.__dict__["orig"])
-                data_to_write = error
-            except KeyError as k:
-                error = "Empty dataframe"
-                data_to_write = error
+                error_data_to_write = error
 
             results_all[key] = data_to_write
+
+            if error_data_to_write:
+                errors_data_all[key] = error_data_to_write
 
         info("Processed queries")
         connection.close()
         self.loader_engine.dispose()
 
-        ping_to_upload = pd.DataFrame(columns=["query_map", "run_results", "ping_date", "counter_sql_count", "run_id"])
+        ping_to_upload = pd.DataFrame(columns=["query_map", "run_results", "ping_date", "run_id"])
 
-        ping_to_upload.loc[0] = [saas_queries, json.dumps(results_all), self.end_date, counter_sql_count,
-                                 self._get_md5(datetime.datetime.now().timestamp())]
+        ping_to_upload.loc[0] = [saas_queries, json.dumps(results_all), self.end_date,
+                                 self._get_md5(datetime.datetime.utcnow().timestamp())]
 
         dataframe_uploader(
             ping_to_upload, self.loader_engine, "instance_sql_metrics", "saas_usage_ping"
         )
+
+        """
+        Handling error data part to load data into table: raw.saas_usage_ping.instance_sql_errors
+        """
+        if errors_data_all:
+            error_data_to_upload = pd.DataFrame(columns=["run_id", "sql_errors", "ping_date"])
+
+            error_data_to_upload.loc[0] = [self._get_md5(datetime.datetime.utcnow().timestamp()),
+                                           json.dumps(errors_data_all),
+                                           self.end_date]
+
+            dataframe_uploader(error_data_to_upload, self.loader_engine, "instance_sql_errors", "saas_usage_ping")
 
         self.loader_engine.dispose()
 
