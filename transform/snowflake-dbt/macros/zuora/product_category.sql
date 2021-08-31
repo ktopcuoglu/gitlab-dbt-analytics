@@ -72,11 +72,11 @@ CASE
                                     , 'File Locking'
                                     , 'Payment Gateway Test'
                                     , 'Time Tracking'
-                                    , '1,000 CI Minutes'
-                                    , 'Gitlab Storage 10GB'
                                     , 'EdCast Settlement Revenue'
                                     )
     THEN 'Other'
+  WHEN TRIM({{product_column}}) IN ('Gitlab Storage 10GB')
+    THEN 'Storage'
   ELSE 'Not Applicable'
 END AS {{output_column_name}}
 

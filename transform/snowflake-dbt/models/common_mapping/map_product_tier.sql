@@ -91,16 +91,25 @@ WITH zuora_product AS (
                                                                       , 'Payment Gateway Test'
                                                                       , 'Time Tracking'
                                                                       , '1,000 CI Minutes'
-                                                                      , 'Gitlab Storage 10GB'
                                                                       , 'EdCast Settlement Revenue'
                                                                      )
           THEN 'Other'
+        WHEN TRIM(zuora_product_rate_plan.product_rate_plan_name) IN ('Gitlab Storage 10GB')
+          THEN 'Storage'
         ELSE 'Not Applicable'
       END                                                           AS product_tier_historical,
       CASE
         WHEN LOWER(product_tier_historical) LIKE '%self-managed%'
           THEN 'Self-Managed'
-        WHEN LOWER(product_tier_historical) LIKE '%saas%'
+        WHEN LOWER(product_tier_historical) LIKE ANY ('%saas%', 'storage')
+          THEN 'SaaS'
+        WHEN TRIM(zuora_product_rate_plan.product_rate_plan_name) LIKE ANY (
+                                                                      'File Locking'
+                                                                     , 'Time Tracking'
+                                                                     , '1,000 CI Minutes'
+                                                                     , 'GitLab Geo%'
+                                                                     , 'CI Runner%'
+                                                                     )
           THEN 'SaaS'
         WHEN product_tier_historical IN (
                                           'Basic'
@@ -152,5 +161,5 @@ WITH zuora_product AS (
     created_by="@ischweickartDD",
     updated_by="@jpeguero",
     created_date="2020-12-14",
-    updated_date="2021-08-02"
+    updated_date="2021-08-31"
 ) }}
