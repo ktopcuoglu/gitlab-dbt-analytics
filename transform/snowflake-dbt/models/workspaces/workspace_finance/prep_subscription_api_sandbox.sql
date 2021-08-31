@@ -68,7 +68,7 @@ WITH date_details AS (
       zuora_api_sandbox_subscription.auto_renew_customerdot_hist,
       zuora_api_sandbox_subscription.turn_on_cloud_licensing,
       -- zuora_api_sandbox_subscription.turn_on_operational_metrics,
-      zuora_api_sandbox_subscription.contract_operational_metrics,
+      -- zuora_api_sandbox_subscription.contract_operational_metrics,
       zuora_api_sandbox_subscription.turn_on_usage_ping_required_metrics,
       zuora_api_sandbox_subscription.contract_auto_renewal,
       zuora_api_sandbox_subscription.turn_on_auto_renewal,
