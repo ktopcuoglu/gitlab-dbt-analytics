@@ -1062,16 +1062,6 @@ models:
       - name: is_staging
         descrition: DRAFT - need to better identify instances used for staging environments
 
-  - name: fct_invoice
-    description: '{{ doc("fct_invoice") }}'
-    columns:
-      - name: dim_invoice_id
-        description: The unique identifier of an invoice
-        tests:
-          - not_null
-          - unique
-        tags: ["tdf", "common", "invoice"]
-
   - name: fct_invoice_item
     description: '{{ doc("fct_invoice_item") }}'
     columns:
