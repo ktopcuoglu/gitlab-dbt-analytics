@@ -180,7 +180,7 @@
       product_tier NOT IN ('Core', 'CE') AND usage_ping_delivery_type = 'Self-Managed' AS is_paid,
       COALESCE(MAX(estimated_value.pct_subscriptions_with_counters), 1)                AS pct_subscriptions_with_counters
     FROM gmau
-    LEFT JOIN estimated_value
+    LEFT JOIN estimated_value 
       ON estimated_value.is_paid_gmau
         AND gmau.usage_ping_delivery_type = 'Self-Managed'
         AND gmau.ping_created_month  = estimated_value.reporting_month
