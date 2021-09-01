@@ -6,9 +6,13 @@
 }}
 
 {{ simple_cte([
+    ('dim_date','dim_date'),
     ('estimated_value','mart_monthly_counter_adoption'),
     ('fct_usage_ping_payload','fct_usage_ping_payload'),
-    ('fct_monthly_usage_data','fct_monthly_usage_data')
+    ('fct_monthly_usage_data','fct_monthly_usage_data'),
+    ('fct_daily_event_400','fct_daily_event_400'),
+    ('map_saas_event_to_gmau','map_saas_event_to_gmau'),
+    ('map_saas_event_to_smau','map_saas_event_to_smau')
 ]) }}
 
 , smau AS (
@@ -54,6 +58,30 @@
         AND smau.section_name = estimated_value.section_name
         AND smau.edition = estimated_value.edition
   
+), saas_smau AS (
+  
+    SELECT 
+      first_day_of_month                AS reporting_month,
+      'SaaS'                            AS delivery,
+      NULL                              AS section_name,
+      stage_name,
+      NULL                              AS group_name,
+      'SMAU'                            AS xmau_level,
+      'SaaS'                            AS product_tier,
+      'SaaS'                            AS edition,
+      COUNT(DISTINCT dim_user_id)       AS recorded_monthly_metric_value_sum,
+      recorded_monthly_metric_value_sum AS estimated_monthly_metric_value_sum
+
+    FROM fct_daily_event_400
+    INNER JOIN map_saas_event_to_smau
+      ON fct_daily_event_400.event_name = map_saas_event_to_smau.event_name
+    INNER JOIN dim_date
+      ON fct_daily_event_400.event_created_date = dim_date.date_day
+      AND DATEDIFF('day', event_created_date, last_day_of_month) < 28
+    WHERE fct_daily_event_400.dim_plan_id_at_event_date <> 34
+    {{ dbt_utils.group_by(n=8) }}
+
+
 ), umau AS (
 
     SELECT 
@@ -162,6 +190,29 @@
         AND gmau.edition = estimated_value.edition
     {{ dbt_utils.group_by(n=15) }}
   
+), saas_gmau AS (
+  
+    SELECT 
+      first_day_of_month                AS reporting_month,
+      'SaaS'                            AS delivery,
+      NULL                              AS section_name,
+      stage_name,
+      group_name,
+      'GMAU'                            AS xmau_level,
+      'SaaS'                            AS product_tier,
+      'SaaS'                            AS edition,
+      COUNT(DISTINCT dim_user_id)       AS recorded_monthly_metric_value_sum,
+      recorded_monthly_metric_value_sum AS estimated_monthly_metric_value_sum
+
+    FROM fct_daily_event_400
+    INNER JOIN map_saas_event_to_gmau
+      ON fct_daily_event_400.event_name = map_saas_event_to_gmau.event_name
+    INNER JOIN dim_date
+      ON fct_daily_event_400.event_created_date = dim_date.date_day
+      AND DATEDIFF('day', event_created_date, last_day_of_month) < 28
+    WHERE fct_daily_event_400.dim_plan_id_at_event_date <> 34
+    {{ dbt_utils.group_by(n=8) }}
+
 ), xmau AS (
 
     SELECT *
@@ -233,6 +284,38 @@
     WHERE delivery = 'Self-Managed'
     {{ dbt_utils.group_by(n=9) }}
   
+    UNION 
+
+    SELECT
+      reporting_month,
+      section_name,
+      stage_name,
+      group_name,
+      product_tier,
+      xmau_level,
+      'SaaS' AS breakdown,
+      delivery,
+      edition,
+      recorded_monthly_metric_value_sum,
+      estimated_monthly_metric_value_sum
+    FROM saas_gmau
+  
+    UNION 
+
+    SELECT
+      reporting_month,
+      section_name,
+      stage_name,
+      group_name,
+      product_tier,
+      xmau_level,
+      'SaaS' AS breakdown,
+      delivery,
+      edition,
+      recorded_monthly_metric_value_sum,
+      estimated_monthly_metric_value_sum
+    FROM saas_smau
+
 )
 
 SELECT * 
