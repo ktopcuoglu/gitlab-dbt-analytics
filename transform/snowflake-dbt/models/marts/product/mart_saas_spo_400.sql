@@ -27,11 +27,25 @@
       0 AS umau
     FROM all_events
     INNER JOIN metrics ON all_events.event_name = metrics.event_name
+      AND is_smau
     LEFT JOIN prep_gitlab_dotcom_plan ON all_events.dim_plan_id_at_event_date = prep_gitlab_dotcom_plan.dim_plan_id
     WHERE namespace_is_internal = FALSE
       AND days_since_namespace_creation >= 0
     {{dbt_utils.group_by(n=6)}}
                                                                                   
+), umau AS (
+  
+    sSELECT
+      all_events.ultimate_parent_namespace_id,
+      first_day_of_month AS reporting_month
+      COUUNT(DISTINCT dim_user_id) AS umau
+    FROM all_events
+    INNER JOIN metrics ON all_events.event_name = metrics.event_name
+      AND is_umau
+    INNER JOIN all_events 
+      ON all_events.event_created_date = dim_date.date_day
+    WHERE event_created_date >= DATEADD('day',-28, dim_date.last_day_of_month)
+
 ), joined AS (                                               
 
     SELECT
