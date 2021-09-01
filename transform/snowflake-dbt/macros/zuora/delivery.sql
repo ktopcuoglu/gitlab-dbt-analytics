@@ -1,7 +1,7 @@
 {%- macro delivery(product_category_column, output_column_name = 'delivery') -%}
 
 CASE 
-  WHEN LOWER({{product_category_column}}) LIKE '%saas%'
+  WHEN LOWER({{product_category_column}}) LIKE ANY ('%saas%', 'storage')
     THEN 'SaaS'
   WHEN LOWER({{product_category_column}}) LIKE '%self-managed%'
     THEN 'Self-Managed'

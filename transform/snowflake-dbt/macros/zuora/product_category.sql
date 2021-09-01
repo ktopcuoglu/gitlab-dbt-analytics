@@ -62,21 +62,25 @@ CASE
                                     )
     THEN 'Support'
   WHEN LOWER({{product_column}}) LIKE 'gitlab geo%'
-    THEN 'Other'
+    THEN 'SaaS - Other'
   WHEN LOWER({{product_column}}) LIKE 'ci runner%'
-    THEN 'Other'
+    THEN 'SaaS - Other'
   WHEN LOWER({{product_column}}) LIKE 'discount%'
     THEN 'Other'
   WHEN TRIM({{product_column}}) IN (
                                       '#movingtogitlab'
-                                    , 'File Locking'
                                     , 'Payment Gateway Test'
-                                    , 'Time Tracking'
-                                    , '1,000 CI Minutes'
-                                    , 'Gitlab Storage 10GB'
                                     , 'EdCast Settlement Revenue'
                                     )
     THEN 'Other'
+  WHEN TRIM({{product_column}}) IN (
+                                      'File Locking'
+                                    , 'Time Tracking'
+                                    , '1,000 CI Minutes'
+                                    )
+    THEN 'SaaS - Other'
+  WHEN TRIM({{product_column}}) IN ('Gitlab Storage 10GB')
+    THEN 'Storage'
   ELSE 'Not Applicable'
 END AS {{output_column_name}}
 
