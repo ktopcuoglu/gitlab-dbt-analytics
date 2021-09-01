@@ -49,15 +49,16 @@ You will need access to several groups, applications, tools, and data sources fo
 
 - [ ] Manager: Complete the access requests for the new team member based on there role and the method listed in the following table.
 
+**Note:** Manager, many if not all of these [Access Request](https://about.gitlab.com/handbook/business-technology/team-member-enablement/onboarding-access-requests/access-requests/) can be done with a single issue.  Please review this section for all relevant requests and combine as many of them as possible.
+
 | Access To | Distributed Data Analyst | Data Analyst | Analytics Engineer | Data Scientist | Data Engineer | Method |
 | ------- | :----------------------: | :----------: | :----------------: | :------------: | :-----------: | ------ |
-|  Lucidchart | Yes | Yes | Yes | Yes  | Yes  | [Access Request](https://about.gitlab.com/handbook/business-technology/team-member-enablement/onboarding-access-requests/access-requests/) |
-|  Sisense |  Editor | Editor  | Editor  | Editor  | Editor | [Access Request](https://about.gitlab.com/handbook/business-technology/team-member-enablement/onboarding-access-requests/access-requests/) |
-|  Snowflake  | `analyst_core`  | `analyst_core`  | `analyst_core`  |  `analyst_core` | `analyst_core`| [Access Request](https://about.gitlab.com/handbook/business-technology/team-member-enablement/onboarding-access-requests/access-requests/) |
+|  Lucidchart | Yes | Yes | Yes | Yes  | Yes  | Access Request |
+|  Sisense |  Editor | Editor  | Editor  | Editor  | Editor | Access Request, [Example](https://gitlab.com/gitlab-com/team-member-epics/access-requests/-/issues/10858) |
 |  Stitch |  No | No  | No | No | Yes | ? |
 |  Fivetran | No  | No  | No | No | Yes | [Instructions](https://about.gitlab.com/handbook/business-ops/okta/#managing-okta-access-using-google-groups) |
 |  Airflow |  No | Analyst | Admin| Analyst | Admin | |
-|  GCP group: `analytics`| No | No | No | Yes  | Yes  | [Access Request](https://about.gitlab.com/handbook/business-technology/team-member-enablement/onboarding-access-requests/access-requests/) [Example](https://gitlab.com/gitlab-com/team-member-epics/access-requests/-/issues/10306#note_622125437)  |
+|  GCP group: `analytics`| No | No | No | Yes  | Yes  | Access Request, [Example](https://gitlab.com/gitlab-com/team-member-epics/access-requests/-/issues/10306#note_622125437)  |
 |  Slack alias: `@datateam` | No | Yes | Yes | Yes | Yes |  PeopleOps Onboarding |
 |  Slack alias: `@data-analysts` | No | Yes | Yes | Yes | No |  PeopleOps Onboarding |
 |  Slack alias: `@data-engineers` | No | No | Yes | No | Yes |  PeopleOps Onboarding |
@@ -72,11 +73,12 @@ You will need access to several groups, applications, tools, and data sources fo
 |  Service Account Credentials: Google Cloud | No | No | ? | No | Yes | ? |
 
 - [ ] Manager: Complete access requests for the new team member based on there assigned responsibilities following the provided method.
-    - [ ] Salesforce [Access Request](https://about.gitlab.com/handbook/business-technology/team-member-enablement/onboarding-access-requests/access-requests/) 
-    - [ ] Zuora [Access Request](https://about.gitlab.com/handbook/business-technology/team-member-enablement/onboarding-access-requests/access-requests/)  
-    - [ ] Marketo [Access Request](https://about.gitlab.com/handbook/business-technology/team-member-enablement/onboarding-access-requests/access-requests/)  
-    - [ ] Netsuite [Access Request](https://about.gitlab.com/handbook/business-technology/team-member-enablement/onboarding-access-requests/access-requests/)   
-    - [ ] Zendesk [Licence Request](https://about.gitlab.com/handbook/support/internal-support/#regarding-licensing-and-subscriptions) 
+    - [ ] Snowflake - Access Request, [Example](https://gitlab.com/gitlab-com/team-member-epics/access-requests/-/issues/10857)
+    - [ ] Salesforce - Access Request 
+    - [ ] Zuora - Access Request   
+    - [ ] Marketo - Access Request   
+    - [ ] Netsuite - Access Request    
+    - [ ] Zendesk - [Licence Request](https://about.gitlab.com/handbook/support/internal-support/#regarding-licensing-and-subscriptions) 
 
 </details>
 
@@ -165,10 +167,8 @@ _**THE SCRIPT SHOULD ONLY BE RUN ON YOUR GITLAB-ISSUED LAPTOP.** If you run this
             - VSCode is recommended for multiple reasons including community support, the [GitLab workflow](https://marketplace.visualstudio.com/items?itemName=fatihacet.gitlab-workflow) extension, and the LiveShare features.
         - Installs oh-my-zsh for easy terminal theming, git autocomplete, and a few other plugins. 
             - If you are curious or would like to change the look and feel of your shell please [go here](https://github.com/ohmyzsh/ohmyzsh).
-        - Installs dbt, the open source tool we use for data transformations. 
         - Installs jump, an easy way to move through the file system. [Please find here more details on how to use jump](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/jump)
         - Installs anaconda, how we recommend folks get their python distribution. 
-        - Installs all-the-things needed to contribute to [the handbook](about.gitlab.com/handbook) locally and build it locally. <!-- Do we need to build it locally? It seem that the MR pipeline replaces this for general use-->
         - Adds alias and environment variables needed for running dbt and other helper commands
 - [ ] Open a new terminal and test the following commands
     - [ ] `jump analytics` this should change the directory to `~/repos/analytics`
@@ -280,6 +280,22 @@ DBT is our data transformation engine that we use to build our dimensional model
 
 <img src = "https://d33wubrfki0l68.cloudfront.net/18774f02c29380c2ca7ed0a6fe06e55f275bf745/a5007/ui/img/svg/product.svg">
 
+#### **Configuring**
+
+_Ensure you've set up your SSH configuration in the previous step as this is required to connect to one our dbt packages_
+
+- [ ] Follow the [instructions](https://about.gitlab.com/handbook/business-technology/data-team/platform/dbt-guide/#Venv-workflow) found in the handbook for running and configuring dbt.
+- [ ] Run the `run-dbt` command from the analytics repository.  This will load the dbt dependencies and open a shell to virtual environment where dbt is installed allowing you run dbt commands
+- [ ] Run `dbt seed` to import the CSV's from the analytics/data into your schema. For dbt to compile this needs to be completed as some of the models have dependencies on the tables which are created by the CSV's.
+- [ ] Run `dbt run --models +staging.sfdc` from within the shell to know that your connection has been successful, you are in the correct location, and everything will run smoothly.  For more details on the syntax for how to select and run the models, please refer to this [page](https://docs.getdbt.com/reference/node-selection/syntax#examples).  Afterwards, you can also try running `dbt compile` to ensure that the entire project will compile correctly.
+- [ ] Test the command `make help` and use it to understand how to use various `make *` commands available to you.
+
+**Note:** When launching dbt you may see `WARNING: The GOOGLE_APPLICATION_CREDENTIALS variable is not set. Defaulting to a blank string.` Unless you are developing on Airflow this is ok and expected. If you require `GOOGLE_APPLICATION_CREDENTIALS` please follow the steps outlined in the [Google Cloud](#google-cloud) section.
+
+**Note:** If you get a weird semaphore issue error when running dbt try [this script](https://gist.github.com/llbbl/c54f44d028d014514d5d837f64e60bac) which is sourced from this [Apple forum thread](https://forums.developer.apple.com/thread/119429)
+
+**Note:** If the `make` commands are not recognizing the python commands you may needs to manually install python 3.8.6 as described in the [optional steps](#optional-steps) section on the computer set up.
+
 #### **Learning** 
 
 - [ ] Familiarize yourself with [dbt](https://www.getdbt.com/) and how we use it by reading our [dbt Guide](https://about.gitlab.com/handbook/business-ops/data-team/platform/dbt-guide/).
@@ -302,21 +318,7 @@ DBT is our data transformation engine that we use to build our dimensional model
    - [dbt Discourse](http://discourse.getdbt.com)
 
 
-#### **Configuring**
 
-_Ensure you've set up your SSH configuration in the previous step as this is required to connect to one our dbt packages_
-
-- [ ] Follow the [instructions](https://about.gitlab.com/handbook/business-technology/data-team/platform/dbt-guide/#Venv-workflow) found in the handbook for running and configuring dbt.
-- [ ] Run the `run-dbt` command from the analytics repository.  This will load the dbt dependencies and open a shell to virtual environment where dbt is installed allowing you run dbt commands
-- [ ] Run `dbt seed` to import the CSV's from the analytics/data into your schema. For dbt to compile this needs to be completed as some of the models have dependencies on the tables which are created by the CSV's.
-- [ ] Run `dbt run --models +staging.sfdc` from within the shell to know that your connection has been successful, you are in the correct location, and everything will run smoothly.  For more details on the syntax for how to select and run the models, please refer to this [page](https://docs.getdbt.com/reference/node-selection/syntax#examples).  Afterwards, you can also try running `dbt compile` to ensure that the entire project will compile correctly.
-- [ ] Test the command `make help` and use it to understand how to use various `make *` commands available to you.
-
-**Note:** When launching dbt you may see `WARNING: The GOOGLE_APPLICATION_CREDENTIALS variable is not set. Defaulting to a blank string.` Unless you are developing on Airflow this is ok and expected. If you require `GOOGLE_APPLICATION_CREDENTIALS` please follow the steps outlined in the [Google Cloud](#google-cloud) section.
-
-**Note:** If you get a weird semaphore issue error when running dbt try [this script](https://gist.github.com/llbbl/c54f44d028d014514d5d837f64e60bac) which is sourced from this [Apple forum thread](https://forums.developer.apple.com/thread/119429)
-
-**Note:** If the `make` commands are not recognizing the python commands you may needs to manually install python 3.8.6 as described in the [optional steps](#optional-steps) section on the computer set up.
 
 ### Sisense 
 
