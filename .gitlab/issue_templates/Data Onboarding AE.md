@@ -229,8 +229,9 @@ Data team uses GCP (Google Cloud Platform) as our cloud provider. GCP credential
         - Continuation indent: 8
         - Keep indents on empty lines: unchecked
     - You can use `Command + Option + L` to format your file.
-    - You may need to download the [Driver](https://docs.snowflake.net/manuals/user-guide/jdbc-download.html#downloading-the-driver). 
-    - This template may be useful as you're configuring the DataGrip connection to Snowflake `jdbc:snowflake://{account:param}.snowflakecomputing.com/?{password}[&db={Database:param}][&warehouse={Warehouse:param}][&role={Role:param}]` 
+    - You may need to download the [Driver](https://docs.snowflake.net/manuals/user-guide/jdbc-download.html#downloading-the-driver).
+    - Authenticate using Okta by selecting the Authentication type to `Authenticator` and setting the Authenticator to `externalbrowser`
+    - The host url can be found by logging into Snowflake directly through Okta.
     - We recommend not setting your schema so you can select from the many options.
 - Consider installing [tldr](https://tldr.sh/) for easy reference to common CLI commands
 
