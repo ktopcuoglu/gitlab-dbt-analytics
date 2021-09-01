@@ -2747,6 +2747,12 @@ roles:
                     - kaguilar_prep.*.*
                     - kaguilar_prod.*.*
 
+    - kallen:
+        member_of:
+            - bamboohr_sensitive_separations
+        warehouses:
+            - analyst_xs
+
     - kdietz:
         member_of:
             - analyst_core
@@ -4219,6 +4225,11 @@ users:
         can_login: yes
         member_of:
             - kaguilar
+
+    - kallen:
+        can_login: yes
+        member_of:
+            - kallen
 
     - kdietz:
         can_login: yes
