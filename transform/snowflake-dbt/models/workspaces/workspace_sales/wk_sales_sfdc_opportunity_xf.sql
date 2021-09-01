@@ -40,7 +40,7 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity_xf.merged_opportunity_id,
       sfdc_opportunity_xf.net_new_source_categories,
       sfdc_opportunity_xf.opportunity_business_development_representative,
-      sfdc_opportunity_xf.opportunity_owner,
+      opportunity_owner.name                            AS opportunity_owner,
       sfdc_opportunity_xf.opportunity_owner_department,
       sfdc_opportunity_xf.opportunity_owner_manager,
       sfdc_opportunity_xf.opportunity_owner_role,
@@ -66,6 +66,7 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity_xf.closed_deals,
       sfdc_opportunity_xf.competitors,
       sfdc_opportunity_xf.critical_deal_flag,
+      sfdc_opportunity_xf.fpa_master_booking_flag,
 
       -- Deal Size field is wrong in the source object
       -- it is using
@@ -540,6 +541,7 @@ WITH sfdc_opportunity AS (
 
       -- account driven fields 
       sfdc_accounts_xf.ultimate_parent_account_id,
+      sfdc_accounts_xf.is_jihu_account,
   
       -- medium level grouping of the order type field
       CASE 
@@ -740,11 +742,11 @@ WITH sfdc_opportunity AS (
       END                                                          AS is_eligible_created_pipeline_flag,
 
 
+      -- SAO alignment issue: https://mail.google.com/mail/u/0/#inbox/FMfcgzGkbDZKFplMhHCSFkPJSvDkTvCL
       CASE
         WHEN oppty_final.sales_accepted_date IS NOT NULL
           AND oppty_final.is_edu_oss = 0
           AND oppty_final.is_deleted = 0
-          AND oppty_final.order_type_stamped = '1. New - First Order'
             THEN 1
         ELSE 0
       END                                                         AS is_eligible_sao_flag,

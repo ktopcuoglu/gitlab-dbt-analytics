@@ -230,6 +230,8 @@ WITH date_details AS (
       sfdc_opportunity_snapshot_history.partner_discount_calc,
       sfdc_opportunity_snapshot_history.comp_channel_neutral,
 
+      sfdc_opportunity_snapshot_history.fpa_master_booking_flag,
+
       CASE 
         WHEN sfdc_opportunity_snapshot_history.deal_path = 'Direct'
           THEN 'Direct'
@@ -242,6 +244,19 @@ WITH date_details AS (
             AND sfdc_opportunity_snapshot_history.sales_qualified_source != 'Channel Generated' 
           THEN 'Partner Co-Sell'
       END                                                         AS deal_path_engagement,
+
+
+      -- stage dates
+            -- dates in stage fields
+      sfdc_opportunity_snapshot_history.stage_0_pending_acceptance_date,
+      sfdc_opportunity_snapshot_history.stage_1_discovery_date,
+      sfdc_opportunity_snapshot_history.stage_2_scoping_date,
+      sfdc_opportunity_snapshot_history.stage_3_technical_evaluation_date,
+      sfdc_opportunity_snapshot_history.stage_4_proposal_date,
+      sfdc_opportunity_snapshot_history.stage_5_negotiating_date,
+      sfdc_opportunity_snapshot_history.stage_6_awaiting_signature_date,
+      sfdc_opportunity_snapshot_history.stage_6_closed_won_date,
+      sfdc_opportunity_snapshot_history.stage_6_closed_lost_date,
 
       --date helpers
 
@@ -731,7 +746,8 @@ WITH date_details AS (
       sfdc_accounts_xf.ultimate_parent_sales_segment,
       sfdc_accounts_xf.tsp_max_hierarchy_sales_segment,
       sfdc_accounts_xf.ultimate_parent_account_id,
-      sfdc_accounts_xf.ultimate_parent_id        
+      sfdc_accounts_xf.ultimate_parent_id,
+      sfdc_accounts_xf.is_jihu_account        
       
 
     FROM sfdc_opportunity_snapshot_history opp_snapshot
