@@ -20,15 +20,9 @@
       all_events.ultimate_parent_namespace_id,
       all_events.event_created_date,
       DATE_TRUNC('month', event_created_date)                             AS event_month,
-      plan_name AS plan_name_at_reporting_month,
+      prep_gitlab_dotcom_plan.plan_name                                   AS plan_name_at_reporting_month,
       dim_user_id,
       metrics.stage_name,
-      FIRST_VALUE(plan_name) OVER (
-        PARTITION BY event_month, all_events.ultimate_parent_namespace_id 
-        ORDER BY event_created_date ASC)                                  AS plan_name_at_reporting_month,
-      FIRST_VALUE(plan_name) OVER (
-        PARTITION BY all_events.ultimate_parent_namespace_id 
-        ORDER BY event_created_date ASC)                                  AS plan_name_at_creation,
       COUNT(event_created_date)                                           AS event_count,
       0 AS umau
     FROM all_events
