@@ -5,6 +5,11 @@ WITH source AS (
     SELECT *
     FROM {{ source('snapshots', 'zuora_account_snapshots') }}
 
+), zuora_account AS (
+
+    SELECT *
+    FROM {{ source('zuora', 'account') }}
+
 ), renamed AS(
 
     SELECT
@@ -68,7 +73,15 @@ WITH source AS (
 
     FROM source
 
+), final AS (
+
+    SELECT
+      renamed.*,
+      zuora_account.batch AS live_batch
+    FROM renamed
+    LEFT JOIN zuora_account
+      ON renamed.account_id = zuora_account.id
 )
 
 SELECT *
-FROM renamed
+FROM final
