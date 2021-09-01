@@ -73,7 +73,7 @@ WITH product_tier_mapping AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@snalamaru",
-    updated_by="@jpeguero",
+    updated_by="@ischweickartDD",
     created_date="2020-12-29",
-    updated_date="2021-08-31"
+    updated_date="2021-01-26"
 ) }}
