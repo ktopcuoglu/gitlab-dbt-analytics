@@ -37,7 +37,7 @@ class UsagePing(object):
         to generate the {ping_name: sql_query} dictionary
         """
         with open(
-                os.path.join(os.path.dirname(__file__), "transformed_instance_queries.json")
+            os.path.join(os.path.dirname(__file__), "transformed_instance_queries.json")
         ) as f:
             saas_queries = json.load(f)
 
@@ -72,6 +72,7 @@ class UsagePing(object):
 
         results_all = {}
         errors_data_all = {}
+        error_data_to_write = None
 
         for key, query in saas_queries.items():
             logging.info(f"Running ping {key}...")
