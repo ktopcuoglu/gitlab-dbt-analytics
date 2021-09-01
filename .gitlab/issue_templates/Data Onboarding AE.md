@@ -284,8 +284,8 @@ DBT is our data transformation engine that we use to build our dimensional model
 
 - [ ] Familiarize yourself with [dbt](https://www.getdbt.com/) and how we use it by reading our [dbt Guide](https://about.gitlab.com/handbook/business-ops/data-team/platform/dbt-guide/).
 - [ ] Watch [This podcast](https://www.dataengineeringpodcast.com/dbt-data-analytics-episode-81/). It is a general walkthrough of dbt/interview with its creator, Drew Banin.
-- [ ] Read about and and watch [Drew demo dbt docs to Emilie & Taylor](https://blog.fishtownanalytics.com/using-dbt-docs-fae6137da3c3). 
-- [ ] Read about [Scaling Knowledge](https://blog.fishtownanalytics.com/scaling-knowledge-160f9f5a9b6c) and the problem we're trying to solve with our documentation.
+- [ ] Read about and and watch [Drew demo dbt docs to Emilie & Taylor](https://blog.getdbt.com/using-dbt-docs/). 
+- [ ] Read about [Scaling Knowledge](https://blog.getdbt.com/scaling-knowledge/) and the problem we're trying to solve with our documentation.
 
 #### **References** 
 - [ ] Peruse the [Official Docs](https://docs.getdbt.com).
@@ -298,7 +298,7 @@ DBT is our data transformation engine that we use to build our dimensional model
 - Information and troubleshooting on dbt is sparse on Google & Stack Overflow, we recommend the following sources of help when you need it:
    - Your teammates! We are all here to help!
    - dbt slack has a #beginners channel and they are very helpful.
-   - [Fishtown Analytics Blog](https://blog.fishtownanalytics.com)
+   - [dbt Labs Blog](https://blog.getdbt.com/)
    - [dbt Discourse](http://discourse.getdbt.com)
 
 
@@ -508,7 +508,7 @@ SheetLoad is the process by which a Google Sheets and CSVs from GCS or S3 can be
 
 
 - Consider joining [Locally Optimistic slack](https://www.locallyoptimistic.com/community/)
-- Consider subscribing to the [Data Science Roundup](http://roundup.fishtownanalytics.com) (Not required, but recommended).
+- Consider subscribing to the [Analytics Engineering Roundup](https://roundup.getdbt.com/) (Not required, but recommended).
 - There are many Slack channels organized around interests, such as `#fitlab`, `#bookclub`, and `#woodworking`. There are also many organized by location (these all start with `#loc_`). This is a great way to connect to GitLab team members outside of the Data-team. Join some that are relevant to your interests, if you'd like.
 - Really really useful resources in [this Drive folder](https://drive.google.com/drive/folders/1wrI_7v0HwCwd-o1ryTv5dlh6GW_JyrSQ?usp=sharing) (GitLab Internal); Read the `a_README` file first.
 
