@@ -31,7 +31,6 @@ class UsagePing(object):
 
         self.start_date_28 = self.end_date - datetime.timedelta(28)
 
-    saas_queries = self._get_instance_queries()
     def _get_instance_queries(self) -> Dict:
         """
         can be updated to query an end point or query other functions
@@ -67,6 +66,7 @@ class UsagePing(object):
         Take a dictionary of {ping_name: sql_query} and run each
         query to then upload to a table in raw.
         """
+        saas_queries = self._get_instance_queries()
 
         connection = self.loader_engine.connect()
 
@@ -87,7 +87,8 @@ class UsagePing(object):
                 error = str(e.__dict__["orig"])
                 error_data_to_write = error
 
-            results_all[key] = data_to_write
+            if data_to_write:
+                results_all[key] = data_to_write
 
             if error_data_to_write:
                 errors_data_all[key] = error_data_to_write
