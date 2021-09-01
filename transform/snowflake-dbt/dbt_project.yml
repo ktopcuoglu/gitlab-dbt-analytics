@@ -297,6 +297,9 @@ models:
     common_mapping:
       +materialized: table
       +schema: common_mapping
+      restricted_safe:
+        +schema: common_mapping_restricted_safe
+        secure: true
        
     common_prep:
       +materialized: table
