@@ -9,7 +9,7 @@
     ('billing_accounts','dim_billing_account'),
     ('crm_accounts','dim_crm_account'),
     ('location_country', 'dim_location_country'),
-    ('subscriptions', 'dim_subscription_snapshot_model')
+    ('subscriptions', 'dim_subscription_snapshot_bottom_up')
 ]) }}
 
 , sm_paid_user_metrics AS (
