@@ -99,7 +99,10 @@ WITH date_details AS (
       --sfdc_opportunity_snapshot_history.generated_source,
       sfdc_opportunity_snapshot_history.lead_source,
       sfdc_opportunity_snapshot_history.merged_opportunity_id,
-      sfdc_opportunity_snapshot_history.opportunity_owner,
+      
+      -- NF: This field is added directly from the user table
+      -- as the opportunity one is not clean
+      --sfdc_opportunity_snapshot_history.opportunity_owner,
  
       sfdc_opportunity_snapshot_history.opportunity_owner_department,
       sfdc_opportunity_snapshot_history.opportunity_sales_development_representative,
@@ -736,6 +739,10 @@ WITH date_details AS (
       -- duplicates flag
       sfdc_opportunity_xf.is_duplicate_flag                               AS current_is_duplicate_flag,
 
+
+      -- the owner name in the opportunity is not clean.
+      opportunity_owner.name AS opportunity_owner,
+
       ------------------------------------------------------------------------------------------------------
       ------------------------------------------------------------------------------------------------------
 
@@ -865,7 +872,6 @@ WITH date_details AS (
         WHEN opp_snapshot.sales_accepted_date IS NOT NULL
           AND opp_snapshot.is_edu_oss = 0
           AND opp_snapshot.is_deleted = 0
-          AND opp_snapshot.order_type_stamped = '1. New - First Order'
             THEN 1
         ELSE 0
       END                                                     AS is_eligible_sao_flag,
