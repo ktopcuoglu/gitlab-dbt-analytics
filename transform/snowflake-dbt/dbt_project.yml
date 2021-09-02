@@ -291,14 +291,14 @@ models:
         +schema: sensitive
         secure: true
       restricted_safe:
-        +schema: common_restricted_safe
+        +schema: restricted_safe_common
         secure: true
 
     common_mapping:
       +materialized: table
       +schema: common_mapping
       restricted_safe:
-        +schema: common_mapping_restricted_safe
+        +schema: restricted_safe_common_mapping
         secure: true
        
     common_prep:
@@ -308,7 +308,7 @@ models:
         +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
         +schema: "dotcom_usage_events_{{ var('year', (run_started_at - modules.datetime.timedelta(2)).strftime('%Y')) }}_{{ var('month', (run_started_at - modules.datetime.timedelta(2)).strftime('%m')) }}"
       restricted_safe:
-        +schema: common_prep_restricted_safe
+        +schema: restricted_safe_common_prep
         secure: true
 
 
