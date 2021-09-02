@@ -6,9 +6,9 @@ gitlab-snowflake:
       threads: 8
       account: gitlab
       user: YOUR USER # <-- This will be your GitLab email
-      role: YOUR ROLE # <-- Talk to your manager
+      role: YOUR ROLE # <-- Talk to your manager, usually, it is JSMITH for Jane Smith
       database: YOUR USERNAME # <-- JSMITH for Jane Smith
-      warehouse: ANALYST_XS
+      warehouse: ANALYST_XS # <-- [ANALYST_XS, ENGINEER_XS], depends on your role
       schema: preparation
       authenticator: externalbrowser # <--- You must be logged in via OKTA
     docs:
@@ -16,8 +16,8 @@ gitlab-snowflake:
       threads: 8
       account: gitlab
       user: YOUR USER # <-- This will be your GitLab email
-      role: YOUR ROLE # <-- Talk to your manager
+      role: YOUR ROLE # <-- Talk to your manager, usually, it is JSMITH for Jane Smith
       database: YOUR USERNAME # <-- JSMITH for Jane Smith
-      warehouse: ANALYST_XS
+      warehouse: ANALYST_XS # <-- [ANALYST_XS, ENGINEER_XS], depends on your role
       schema: preparation
       authenticator: externalbrowser # <--- You must be logged in via OKTA

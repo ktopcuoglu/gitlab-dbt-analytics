@@ -46,7 +46,7 @@
     LEFT JOIN dim_namespace_plan_hist 
       ON usage_data.ultimate_parent_namespace_id = dim_namespace_plan_hist.dim_namespace_id
       AND TO_DATE(usage_data.event_created_at) >= dim_namespace_plan_hist.valid_from
-      AND TO_DATE(usage_data.event_created_at) < dim_namespace_plan_hist.valid_to
+      AND TO_DATE(usage_data.event_created_at) < COALESCE(dim_namespace_plan_hist.valid_to, '2099-01-01') 
     WHERE days_since_user_creation >= 0
     {{ dbt_utils.group_by(n=14) }}
 

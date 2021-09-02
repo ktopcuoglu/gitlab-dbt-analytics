@@ -1,4 +1,4 @@
-## Install homebrew
+## Install homebrew 
 ## Check if exists
 command -v brew >/dev/null 2>&1 || { echo "Installing Homebrew.."
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
@@ -9,13 +9,6 @@ echo "Homebrew successfully installed"
 echo "Installing git.."
 brew install git
 echo "git successfully installed"
-
-
-## install tldr https://tldr.sh/
-echo "Installing tldr..."
-brew install tldr
-echo "tldr installed. "
-
 
 ## Get oh my zsh (plugins, themes for zsh).
 sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" "" --unattended
@@ -36,19 +29,14 @@ echo "Installing the analytics project.."
 mkdir ~/repos/
 cd ~/repos/
 git clone git@gitlab.com:gitlab-data/analytics.git
+cd analytics
 mark analytics
 echo "Analytics repo successfully installed"
 
 ## you can now type "jump analytics" and you're in the right place
 
 ## gl_open is now an alias to open this on gitlab.com
-## install dbt
-echo "Installing dbt.."
-brew update
-brew tap fishtown-analytics/dbt
-brew install dbt
-echo "dbt successfully installed.. Printing version.."
-dbt --version
+
 echo "Setting up dbt profile.."
 mkdir ~/.dbt
 touch ~/.dbt/profiles.yml
@@ -80,30 +68,6 @@ echo "Setting up jump for the handbook.."
 cd www-gitlab-com/
 mark handbook
 echo "handbook jump alias successfully added"
-
-echo "Installing nvm.."
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
-nvm use
-
-echo "Installing yarn.."
-brew install yarn
-echo "Installing rbenv.."
-
-### Ruby setup
-brew install rbenv
-
-## Get ruby version from repo
-ruby_version=$(curl -L 'https://gitlab.com/gitlab-com/www-gitlab-com/-/raw/master/.ruby-version' )
-
-rbenv init
-rbenv install $ruby_version
-rbenv local $ruby_version
-gem install bundler
-bundle install
-##
-echo 'eval "$(rbenv init -)"' >> ~/.zshrc
-echo 'eval "$(rbenv version")"'
-
 
 ## install iterm2
 echo "Installing iTerm2.."
@@ -142,8 +106,8 @@ echo "Global gitignore created"
 
 ## Add in helper script
 echo "Copying make life easier script.."
-curl https://gitlab.com/gitlab-data/analytics/raw/master/admin/make_life_easier.zsh > make_life_easier.zsh
-source make_life_easier.zsh >> ~/.zshrc
+curl https://gitlab.com/gitlab-data/analytics/raw/master/admin/make_life_easier.zsh > ~/.make_life_easier.zsh
+echo 'source ~/.make_life_easier.zsh' >> ~/.zshrc
 echo "Copied successfully"
 
 
