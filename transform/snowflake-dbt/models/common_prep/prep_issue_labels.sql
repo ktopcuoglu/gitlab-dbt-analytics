@@ -12,7 +12,6 @@
 , final AS (
     -- FOREIGN KEYS
     dim_date.date_id,
-
     dim_date.date_actual,
     dim_issue.dim_issue_id                          AS dim_issue_id,
     prep_labels.dim_label_id                        AS dim_label_id,
@@ -22,7 +21,7 @@
 
     FROM dim_issue
     INNER JOIN prep_label_links
-        ON issues.issue_id = prep_label_links.target_id
+        ON dim_issue.issue_id = prep_label_links.target_id
     INNER JOIN prep_labels
         ON prep_label_links.label_id = prep_labels.label_id
     LEFT JOIN dim_date 
