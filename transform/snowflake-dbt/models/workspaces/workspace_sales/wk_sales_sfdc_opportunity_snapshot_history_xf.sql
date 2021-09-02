@@ -233,7 +233,7 @@ WITH date_details AS (
       sfdc_opportunity_snapshot_history.partner_discount_calc,
       sfdc_opportunity_snapshot_history.comp_channel_neutral,
 
-      sfdc_opportunity_snapshot_history.fpa_master_booking_flag,
+      sfdc_opportunity_snapshot_history.fpa_master_bookings_flag,
 
       CASE 
         WHEN sfdc_opportunity_snapshot_history.deal_path = 'Direct'

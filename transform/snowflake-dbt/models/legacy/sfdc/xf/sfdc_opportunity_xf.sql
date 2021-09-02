@@ -202,7 +202,7 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity.stage_6_closed_lost_date,
 
       -- helper flag, tracks won deals & renewals + not jihu
-      sfdc_opportunity.fpa_master_booking_flag,
+      sfdc_opportunity.fpa_master_bookings_flag,
 
       -- command plan fields
       sfdc_opportunity.cp_champion,

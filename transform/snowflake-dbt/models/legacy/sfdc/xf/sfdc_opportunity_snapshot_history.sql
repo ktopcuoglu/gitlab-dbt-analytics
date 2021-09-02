@@ -164,7 +164,7 @@ WITH sfdc_opportunity_snapshots AS (
 
 
       -- flag to identify eligible booking deals, excluding jihu - issue: https://gitlab.com/gitlab-com/sales-team/field-operations/systems/-/issues/1805
-      fp_a_master_bookings_flag__c                AS fpa_master_booking_flag,
+      fp_a_master_bookings_flag__c                AS fpa_master_bookings_flag,
 
 
       -- metadata

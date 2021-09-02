@@ -66,7 +66,7 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity_xf.closed_deals,
       sfdc_opportunity_xf.competitors,
       sfdc_opportunity_xf.critical_deal_flag,
-      sfdc_opportunity_xf.fpa_master_booking_flag,
+      sfdc_opportunity_xf.fpa_master_bookings_flag,
 
       -- Deal Size field is wrong in the source object
       -- it is using
