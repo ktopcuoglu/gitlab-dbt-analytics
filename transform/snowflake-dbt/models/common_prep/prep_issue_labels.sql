@@ -10,6 +10,7 @@
 ]) }}
 
 , final AS (
+    SELECT
     -- FOREIGN KEYS
     dim_date.date_id,
     dim_date.date_actual,
