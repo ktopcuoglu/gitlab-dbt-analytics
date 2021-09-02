@@ -1,0 +1,17 @@
+version: 2
+
+models:
+  - name: map_crm_account
+    description: '{{ doc("map_crm_account") }}'
+    columns:
+      - name: dim_crm_account_id
+        description: CRM account ID for the account
+        tests:
+          - not_null
+          - unique
+      - name: dim_sales_segment_id
+        description: Unique identifier of a version of a sales segment
+      - name: dim_sales_territory_id
+        description: Unique identifier of a version of a sales territory
+      - name: dim_industry_id
+        description: Unique identifier of a version of a industry
