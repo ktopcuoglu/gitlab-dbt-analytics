@@ -1,12 +1,31 @@
 version: 2
 
 models:
-  - name: fct_invoice
-    description: '{{ doc("fct_invoice") }}'
+  - name: fct_charge
+    description: '{{ doc("fct_charge") }}'
     columns:
-      - name: dim_invoice_id
-        description: The unique identifier of an invoice
+      - name: dim_subscription_id
+        description: Unique identifier of a version of a subscription
+        tests:
+          - not_null
+      - name: dim_charge_id
+        description: The unique identifier of a verion of a rate plan charge
         tests:
           - not_null
           - unique
-        tags: ["tdf", "common", "invoice"]
+      - name: dim_product_detail_id
+        description: The unique ID of a product rate plan charge
+      - name: rate_plan_charge_number
+        description: A unique number that identifies the charge
+      - name: effective_start_date_id
+        description: Id of the date when the segmented charge starts or started. Use this field to join to dim_date on id.
+      - name: effective_end_date_id
+        description: Id of the date when the segmented charge ends or ended. Use this field to join to dim_date on id.
+      - name: quantity
+        description: The default quantity of units
+      - name: mrr
+        description: Monthly recurring revenue (MRR) is the amount of recurring charges in a given month. The MRR calculation doesn't include one-time charges nor usage charges.
+      - name: rate_plan_charge_segment
+        description: The identifying number of the subscription rate plan segment. Segments are numbered sequentially, starting with 1.
+      - name: rate_plan_charge_version
+        description: The version of the rate plan charge. Each time a charge is amended, Zuora creates a new version of the rate plan charge.
