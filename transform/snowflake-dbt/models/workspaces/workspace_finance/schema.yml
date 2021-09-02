@@ -285,3 +285,34 @@ models:
         description: flag indicating if account has been deleted
       - name: is_excluded
         description: Field used to exclude test accounts from downstream models
+  - name: prep_recurring_charge_api_sandbox
+    columns:
+      - name: mrr_id
+        description: The unique identifier of the MRR.
+        tests:
+          - not_null:
+              severity: warn
+          - unique:
+              severity: warn
+      - name: dim_date_id
+        description: The identifier of date month in dim_date
+      - name: dim_subscription_id
+        description: The identifier of subscription in dim_subscriptions table
+        tests:
+          - not_null:
+              severity: warn
+      - name: dim_product_detail_id
+        description: The identifier of product details in dim_product_detail
+        tests:
+          - not_null:
+              severity: warn
+      - name: dim_billing_account_id
+        description: Zuora account id
+      - name:  dim_crm_account_id
+        description: account id frm crm
+      - name: mrr
+        description: Monthly Recurring Revenue value for given month
+      - name: arr
+        description: Annual Recurring Revenue value for given month
+      - name: quantity
+        description: Total quantity
