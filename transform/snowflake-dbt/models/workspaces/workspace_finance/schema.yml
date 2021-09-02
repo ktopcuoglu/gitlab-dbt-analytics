@@ -319,8 +319,8 @@ models:
         tests:
           - not_null:
               severity: warn
-          # - accepted_values:
-          #     values: ['Active', 'Cancelled', 'Draft', 'Expired']
+          - accepted_values:
+              values: ['Active', 'Cancelled', 'Draft', 'Expired', 'Suspended']
       - name: subscription_version
         description: The version number of the subscription
       - name: is_auto_renew
@@ -380,8 +380,8 @@ models:
         tests:
           - not_null:
               severity: warn
-          # - accepted_values:
-          #     values: ['Active', 'Cancelled', 'Draft', 'Expired']
+          - accepted_values:
+              values: ['Active', 'Cancelled', 'Draft', 'Expired', 'Suspended']
       - name: subscription_version
         description: The version number of the subscription
       - name: is_auto_renew
