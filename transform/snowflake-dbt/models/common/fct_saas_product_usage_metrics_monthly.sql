@@ -11,13 +11,12 @@
       zuora_subscriptions.dim_subscription_id,
       zuora_subscriptions.dim_subscription_id_original,
       zuora_subscriptions.dim_billing_account_id,
-      zuora_subscriptions.subscription_status,
       dates.first_day_of_month                                                          AS snapshot_month
     FROM zuora_subscriptions
     INNER JOIN dates
       ON dates.date_actual BETWEEN '2017-04-01' AND CURRENT_DATE                        -- first month Usage Ping was collected
     WHERE zuora_subscriptions.product_delivery_type = 'SaaS'
-    {{ dbt_utils.group_by(n=5)}}
+    {{ dbt_utils.group_by(n=4)}}
 
 ), gitlab_seats AS (
     
@@ -44,7 +43,6 @@
       saas_subscriptions.dim_subscription_id,
       saas_subscriptions.dim_subscription_id_original,
       saas_subscriptions.dim_billing_account_id,
-      saas_subscriptions.subscription_status,
       saas_usage_ping.dim_namespace_id,
       saas_subscriptions.snapshot_month,
       {{ get_date_id('saas_subscriptions.snapshot_month') }}                            AS snapshot_date_id,
@@ -174,7 +172,7 @@
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@ischweickartDD",
-    updated_by="@chrissharp",
+    updated_by="@ischweickartDD",
     created_date="2021-06-02",
-    updated_date="2021-09-02"
+    updated_date="2021-06-10"
 ) }}

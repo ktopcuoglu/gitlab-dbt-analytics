@@ -11,13 +11,12 @@
       dim_subscription_id,
       dim_subscription_id_original,
       dim_billing_account_id,
-      subscription_status,
       first_day_of_month                                            AS snapshot_month
     FROM subscriptions
     INNER JOIN dates
       ON dates.date_actual BETWEEN '2017-04-01' AND CURRENT_DATE    -- first month Usage Ping was collected
     WHERE product_delivery_type = 'Self-Managed'
-    {{ dbt_utils.group_by(n=5)}}
+    {{ dbt_utils.group_by(n=4)}}
 
 ), usage_ping AS (
 
@@ -40,7 +39,6 @@
       sm_subscriptions.dim_subscription_id,
       sm_subscriptions.dim_subscription_id_original,
       sm_subscriptions.dim_billing_account_id,
-      sm_subscriptions.subscription_status,
       sm_subscriptions.snapshot_month,
       {{ get_date_id('sm_subscriptions.snapshot_month') }}                                    AS snapshot_date_id,
       seat_link.report_date                                                                   AS seat_link_report_date,
@@ -192,7 +190,7 @@
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@ischweickartDD",
-    updated_by="@chrissharp",
+    updated_by="@ischweickartDD",
     created_date="2021-02-08",
-    updated_date="2021-09-02"
+    updated_date="2021-07-21"
 ) }}
