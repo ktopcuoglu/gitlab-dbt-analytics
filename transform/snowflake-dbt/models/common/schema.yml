@@ -1233,11 +1233,13 @@ models:
       - name: is_downgrade
         description: a Salesforce [formula field](https://gitlab.my.salesforce.com/00N6100000IOu5y)
       - name: is_swing_deal
-        description: a checkbox used in salesforce with the help text "A swing deal is an opportunity with a Close Date in a future period that has the potential to be pulled into the current period."
+        description: a [checkbox used in salesforce](https://gitlab.my.salesforce.com/00N6100000IJEOZ) with the help text "A swing deal is an opportunity with a Close Date in a future period that has the potential to be pulled into the current period."
       - name: is_edu_oss
         description: a Salesforce [formula field](https://gitlab.my.salesforce.com/00N6100000IOu68)
       - name: is_web_portal_purchase
+        description: a [salesforce boolean field](https://gitlab.my.salesforce.com/00N6100000HJmTK)
       - name: is_sao
+        description: a [salesforce boolean field](https://gitlab.my.salesforce.com/00N4M00000Ib8xa)
         description: a boolean field created in the warehouse to flag Sales Accepted Opportunities. This field should be deprecated once sales accepted is in a more stable and consistent state in salesforce.
       - name: is_net_arr_closed_deal
         description: a boolean field created in the warehouse to flag Closed Deals and will help determine the Net ARR.
@@ -1254,12 +1256,17 @@ models:
       - name: net_arr
         description: a Salesforce [formula field](https://gitlab.my.salesforce.com/00N4M00000Ib5n8) which is marked as [WIP]
       - name: amount
-        description: from salesforce "This is the same as Total Contract Value. It takes the value of the entire agreement"
+        description: from [salesforce ui](https://gitlab.my.salesforce.com/_ui/common/config/field/StandardFieldAttributes/d?id=Amount&type=Opportunity&retURL=%2Fp%2Fsetup%2Flayout%2FLayoutFieldList%3Ftype%3DOpportunity%26setupid%3DOpportunityFields&_CONFIRMATIONTOKEN=VmpFPSxNakF5TVMwd09TMHdOVlF5TVRveE1UbzFNQzQzTmpWYSx5UXdBZFY3d0NtN21rekRFcUttcVVtLFl6UTNNekF5&setupid=OpportunityFields) "This is the same as Total Contract Value. It takes the value of the entire agreement"
       - name: recurring_amount
+        description: a [salesforce currency field](https://gitlab.my.salesforce.com/00N4M00000IbIDn)
       - name: true_up_amount
+        description: a [salesforce currency field](https://gitlab.my.salesforce.com/00N4M00000IbCVy)
       - name: proserv_amount
+        description: a [salesforce currency field](https://gitlab.my.salesforce.com/00N4M00000IbIDi)
       - name: other_non_recurring_amount
+        description: a [salesforce currency field](https://gitlab.my.salesforce.com/00N4M00000IbIDs)
       - name: arr_basis
+        description: a [salesforce formula field](https://gitlab.my.salesforce.com/00N4M00000IbIDx)
       - name: arr
         description: a WIP Salesforce [formula field](https://gitlab.my.salesforce.com/00N4M00000IbIE2) that returns 0
 
