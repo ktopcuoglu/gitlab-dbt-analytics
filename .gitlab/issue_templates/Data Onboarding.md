@@ -1,4 +1,3 @@
-
 # Welcome to the GitLab Data Program :tada:
 
 Welcome to the GitLab Data Program -- we're excited to have you! The goal of this issue is to help bring you, our new data team member, up to speed in the GitLab Data Team's analytics stack as efficiently as possible, without sacrificing quality for speed. You should complete and close the Data Team on-boarding issue within 1 week after you have completed the GitLab company on-boarding issue. 
@@ -444,7 +443,7 @@ Also referred as SFDC, Salesforce.com (Sales Force Dot Com).
 
 <summary>Review Steps</summary>
 
-- [ ] To understand how this is implemented at GitLab read [Feature Implementation](https://about.gitlab.com/handbook/product/feature-instrumentation/#instrumentation-for-gitlabcom).
+- [ ] To understand how this is implemented at GitLab read [Feature Implementation](https://docs.gitlab.com/ee/development/snowplow/index.html).
 - [ ] Read how we pull data from [S3 into Snowflake](https://about.gitlab.com/handbook/business-ops/data-team/platform/#snowplow-infrastructure)
 - [ ] Familiarize yourself with the [Snowplow Open Source documentation](https://github.com/snowplow/snowplow).
 - [ ] Review the [Snowplow dbt package](https://hub.getdbt.com/fishtown-analytics/snowplow/latest/) as it is used in our models. Their documentation does show up in our dbt docs.
