@@ -69,7 +69,8 @@ WITH date_details AS (
       zuora_subscription.turn_on_cloud_licensing,
       zuora_subscription.turn_on_operational_metrics,
       zuora_subscription.contract_operational_metrics,
-      zuora_subscription.turn_on_usage_ping_required_metrics,
+      -- zuora_subscription.turn_on_usage_ping_required_metrics,
+			null as 'turn_on_usage_ping_required_metrics' -- https://gitlab.com/gitlab-data/analytics/-/issues/10172
       zuora_subscription.contract_auto_renewal,
       zuora_subscription.turn_on_auto_renewal,
       zuora_subscription.contract_seat_reconciliation,
