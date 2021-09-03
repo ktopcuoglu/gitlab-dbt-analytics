@@ -529,6 +529,7 @@ roles:
                 read:
                     - raw.google_analytics_360_fivetran
                     - prep.google_analytics_360
+                    - prep.snowplow_202*
             tables:
                 read:
                     - raw.google_analytics_360_fivetran.ga_session
@@ -538,6 +539,7 @@ roles:
                     - prep.google_analytics_360.ga360_session_custom_dimension_source
                     - prep.google_analytics_360.ga360_session_hit_source
                     - prep.google_analytics_360.ga360_session_source
+                    - prep.snowplow_202*.*
 
     - engineer:
         member_of:
