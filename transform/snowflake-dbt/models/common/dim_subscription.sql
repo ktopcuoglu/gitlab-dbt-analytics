@@ -43,6 +43,8 @@ WITH prep_amendment AS (
     subscription.dim_subscription_id_previous,
     subscription.subscription_name_slugify,
     subscription.subscription_status,
+    subscription.namespace_id,
+    subscription.namespace_name,
     subscription.zuora_renewal_subscription_name,
     subscription.zuora_renewal_subscription_name_slugify,
     subscription.current_term,
@@ -92,7 +94,7 @@ WITH prep_amendment AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@snalamaru",
-    updated_by="@jpeguero",
+    updated_by="@chrissharp",
     created_date="2020-12-16",
-    updated_date="2021-08-04"
+    updated_date="2021-09-03"
 ) }}
