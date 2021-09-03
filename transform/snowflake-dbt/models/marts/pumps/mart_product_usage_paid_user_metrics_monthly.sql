@@ -138,7 +138,7 @@
       ON billing_accounts.dim_crm_account_id = crm_accounts.dim_crm_account_id
     LEFT JOIN location_country
       ON monthly_sm_metrics.dim_location_country_id = location_country.dim_location_country_id
-    INNER JOIN subscriptions
+    LEFT JOIN subscriptions
       ON monthly_sm_metrics.dim_subscription_id = subscriptions.dim_subscription_id 
       AND monthly_sm_metrics.snapshot_month = to_date(to_char(subscriptions.snapshot_id), 'YYYYMMDD')
 
@@ -266,7 +266,7 @@
       ON monthly_saas_metrics.dim_billing_account_id = billing_accounts.dim_billing_account_id
     LEFT JOIN crm_accounts
       ON billing_accounts.dim_crm_account_id = crm_accounts.dim_crm_account_id
-    INNER JOIN subscriptions
+    LEFT JOIN subscriptions
       ON monthly_saas_metrics.dim_subscription_id = subscriptions.dim_subscription_id 
       AND monthly_saas_metrics.snapshot_month = to_date(to_char(subscriptions.snapshot_id), 'YYYYMMDD')
     -- LEFT JOIN location_country
