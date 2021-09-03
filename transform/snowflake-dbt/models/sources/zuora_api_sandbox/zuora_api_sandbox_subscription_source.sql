@@ -36,7 +36,6 @@ WITH source AS (
       eoastarterbronzeofferaccepted__c            AS eoa_starter_bronze_offer_accepted,
       IFF(LENGTH(TRIM(turnoncloudlicensing__c)) > 0, turnoncloudlicensing__c, NULL)
                                                   AS turn_on_cloud_licensing,
-      turnonusagepingrequiredmetrics__c           AS turn_on_usage_ping_required_metrics,
       --IFF(LENGTH(TRIM(turnonoperationalmetrics__c)) > 0, turnonoperationalmetrics__c, NULL)
       --                                            AS turn_on_operational_metrics,
       --IFF(LENGTH(TRIM(contractoperationalmetrics__c)) > 0, contractoperationalmetrics__c, NULL)
