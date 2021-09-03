@@ -519,6 +519,26 @@ roles:
             - zuora
             - data_team_analyst
 
+    - empiricalpath:
+        privileges:
+            databases:
+                read:
+                    - raw
+                    - prep
+            schemas:
+                read:
+                    - raw.google_analytics_360_fivetran
+                    - prep.google_analytics_360
+            tables:
+                read:
+                    - raw.google_analytics_360_fivetran.ga_session
+                    - raw.google_analytics_360_fivetran.ga_session_custom_dimension
+                    - raw.google_analytics_360_fivetran.session_hit
+                    - raw.google_analytics_360_fivetran.session_hit_custom_dimension
+                    - prep.google_analytics_360.ga360_session_custom_dimension_source
+                    - prep.google_analytics_360.ga360_session_hit_source
+                    - prep.google_analytics_360.ga360_session_source
+
     - engineer:
         member_of:
             - covid19
@@ -2055,6 +2075,12 @@ roles:
         warehouses:
             - analyst_xs        
     
+    - bmartin:
+        member_of:  
+            - empiricalpath
+        warehouses:
+            - analyst_xs      
+ 
     - blutz:
         warehouses:
             - admin
@@ -3921,6 +3947,11 @@ users:
         can_login: yes
         member_of:
             - awaller
+
+    - bmartin:
+        can_login: yes
+        member_of:
+            - bmartin
 
     - blutz:
         can_login: yes
