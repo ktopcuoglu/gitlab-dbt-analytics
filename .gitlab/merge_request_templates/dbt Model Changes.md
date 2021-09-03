@@ -51,9 +51,6 @@ Paste the results of dbt test here, including the command.
 
 #### Pipelines
 
-<summary><i>Click to toggle Pipelines</i></summary>
-
-
 * [ ] Run the dbt_models pipeline with the full model selection syntax for all models which have changed
 * [ ] Re-run the dbt_models pipeline (you may need to create a new pipeline with the "Run Pipeline" button), running only the models which have changed; e.g: dim_subscription. To remove any un-related pipeline failures.  
 
