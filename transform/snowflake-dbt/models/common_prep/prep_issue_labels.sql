@@ -22,7 +22,7 @@
 
     FROM dim_issue
     INNER JOIN prep_label_links
-        ON dim_issue.issue_id = prep_label_links.target_id
+        ON dim_issue.dim_issue_id = prep_label_links.target_id
     INNER JOIN prep_labels
         ON prep_label_links.label_id = prep_labels.label_id
     LEFT JOIN dim_date 
