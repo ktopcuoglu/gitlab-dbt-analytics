@@ -43,7 +43,7 @@ class UsagePing(object):
 
         return saas_queries
 
-    def _get_md5(self, timestamp: float=datetime.datetime.utcnow().timestamp()) -> str:
+    def _get_md5(self, input_timestamp: float=datetime.datetime.utcnow().timestamp()) -> str:
         """
         Convert input datetime into md5 hash.
         Result is returned as a string.
@@ -57,7 +57,7 @@ class UsagePing(object):
             md5 timestamp: 54da37683078de0c1360a8e76d942227
         """
         encoding = 'utf-8'
-        timestamp_encoded = str(timestamp).encode(encoding=encoding)
+        timestamp_encoded = str(input_timestamp).encode(encoding=encoding)
 
         return md5(timestamp_encoded).hexdigest()
 
