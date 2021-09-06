@@ -389,6 +389,9 @@ models:
         dbt:
           +tags: ["dbt"]
 
+      workspace_datascience:
+        +schema: workspace_datascience
+
       workspace_marketing:
         +schema: workspace_marketing
 
