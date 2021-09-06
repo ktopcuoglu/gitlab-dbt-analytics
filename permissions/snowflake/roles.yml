@@ -97,11 +97,6 @@ databases:
     - mlaanen_prep:
         shared: no
 
-    - mpeychet_prod:
-        shared: no
-    - mpeychet_prep:
-        shared: no
-
     - mramirez_prod:
         shared: no
     - mramirez_prep:
@@ -3097,47 +3092,9 @@ roles:
             - reporting
 
     - mpeychet:
-        member_of:
-            - analyst_growth
-            - data_team_analyst
-            - gainsight
-        warehouses:
-            - analyst_xs
-            - analyst_l
-            - analyst_xl
-        owns:
-            databases:
-                - mpeychet_prep
-                - mpeychet_prod
-            schemas:
-                - mpeychet_prep.*
-                - mpeychet_prod.*
-            tables:
-                - mpeychet_prep.*.*
-                - mpeychet_prod.*.*
-        privileges:
-            databases:
-                read:
-                    - mpeychet_prep
-                    - mpeychet_prod
-                write:
-                    - mpeychet_prep
-                    - mpeychet_prod
-            schemas:
-                read:
-                    - mpeychet_prep.*
-                    - mpeychet_prod.*
-                write:
-                    - mpeychet_prep.*
-                    - mpeychet_prod.*
-            tables:
-                read:
-                    - mpeychet_prep.*.*
-                    - mpeychet_prod.*.*
-                write:
-                    - mpeychet_prep.*.*
-                    - mpeychet_prod.*.*
-
+        member_of: []
+        warehouses: []
+ 
     - mramirez:
         member_of:
             - analyst_sales
@@ -4378,9 +4335,8 @@ users:
             - securityadmin
 
     - mpeychet:
-        can_login: yes
-        member_of:
-            - mpeychet
+        can_login: no
+        member_of: []
 
     - mramirez:
         can_login: yes
