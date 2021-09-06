@@ -929,6 +929,10 @@ models:
           - accepted_values:
               values: ['Active', 'Cancelled', 'Draft', 'Expired']
         tags: ["tdf", "common", "gainsight"]
+      - name: namespace_name
+        description: The namespace related to the subscription.
+      - name: namespace_id
+        description: The id of the namespace related to the subscription.
       - name: subscription_version
         description: The version number of the subscription
       - name: is_auto_renew
