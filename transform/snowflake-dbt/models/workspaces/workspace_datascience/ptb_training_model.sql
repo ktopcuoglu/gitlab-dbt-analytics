@@ -185,7 +185,7 @@ WITH mart_arr_snapshot_bottom_up AS (
         , SUM(CASE WHEN cp_use_cases = 'Other' THEN 1 ELSE 0 END) AS use_case_other
         , SUM(CASE WHEN cp_use_cases = 'Cloud-Native: Embrace modern, cloud-native application development' THEN 1 ELSE 0 END) AS use_case_cloud_native
         , SUM(CASE WHEN cp_use_cases = 'GitOps: Automatically provision, manage and maintain infrastructure' THEN 1 ELSE 0 END) AS use_case_git_ops
-    FROM {{ref('sfdc_opportunity_snapshot_history_xf')}}
+    FROM {{ref('wk_sales_sfdc_opportunity_snapshot_history_xf')}}
     WHERE snapshot_date = $SNAPSHOT_DT
         AND opportunity_category IN ('Standard', 'Decommissioned', 'Ramp Deal') -- filter as requested by Noel
     GROUP BY account_id
@@ -220,7 +220,7 @@ WITH mart_arr_snapshot_bottom_up AS (
      , SUM(is_correct_contact__c) AS is_correct_contact_task
      , SUM(is_left_message__c) AS is_left_message_task
      , SUM(is_not_answered__c) AS is_not_answered_task
-    FROM {{ref('sfdc_event_task')}}
+    FROM {{ref('sfdc_task_source')}}
     WHERE createddate BETWEEN DATEADD($PERIOD_TYPE, -$PERIOD_UNIT, $SNAPSHOT_DT) AND $SNAPSHOT_DT  --filter PERIOD window. Because no histroic task table, going on createddate
     GROUP BY account_id
 
