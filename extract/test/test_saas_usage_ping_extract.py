@@ -24,7 +24,8 @@ in this implementation.
 for i, check_time in enumerate(input_timestamps):
     res = usage_ping_test._get_md5(usage_ping_test, check_time)
     # Check result
-    assert res == usage_ping_test._get_md5(usage_ping_test, check_time) # result_md5[i]
+    print(res)
+    assert res == result_md5[i]
     # Check output data type
     assert type(res) == str
     # Check is len 32 as it is expected length
