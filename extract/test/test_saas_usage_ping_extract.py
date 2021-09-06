@@ -17,12 +17,12 @@ result_md5 = ['5395980ed9280c9dcd51c6a97db5964e',
               '4bc716fb3a05b61a41207921fb31891f',
               '0ecef9a02ffa95e6f828e6d3f39e8f51']
 
-''' 
+'''
 Know testing the private method is not aligned with best praxis, but found it is sufficient
 in this implementation.
 '''
 for i, check_time in enumerate(input_timestamps):
-    res = usage_ping_test._get_md5(None, check_time)
+    res = usage_ping_test._get_md5(usage_ping_test, check_time)
     # Check result
     assert res == result_md5[i]
     # Check output data type
@@ -32,3 +32,5 @@ for i, check_time in enumerate(input_timestamps):
 
 # Check special case if None is passed, expect current date and time
 assert not usage_ping_test._get_md5(None, None) is None
+
+
