@@ -94,5 +94,5 @@ WITH date_details AS (
     created_by="@ischweickartDD",
     updated_by="@chrissharp",
     created_date="2021-01-07",
-    updated_date="2021-09-03"
+    updated_date="2021-09-06"
 ) }}

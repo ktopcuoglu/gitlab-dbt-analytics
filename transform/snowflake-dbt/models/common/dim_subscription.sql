@@ -96,5 +96,5 @@ WITH prep_amendment AS (
     created_by="@snalamaru",
     updated_by="@chrissharp",
     created_date="2020-12-16",
-    updated_date="2021-09-03"
+    updated_date="2021-09-06"
 ) }}
