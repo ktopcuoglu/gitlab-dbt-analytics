@@ -8,6 +8,9 @@ models:
           tests:
             - not_null
             - unique
+        - name: run_id
+          tests:
+            - not_null
     - name: saas_usage_ping_namespace
       description: Source table for the RAW saas_usage_ping.gitlab_dotcom_namespaces table representing namespace level usage ping
       columns:
