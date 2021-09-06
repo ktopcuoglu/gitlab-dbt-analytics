@@ -39,6 +39,10 @@ WITH source AS (
       --Supersonics fields
       IFF(LENGTH(TRIM(turnoncloudlicensing__c)) > 0, turnoncloudlicensing__c, NULL)
                                                   AS turn_on_cloud_licensing,
+<<<<<<< HEAD
+=======
+      -- turnonusagepingrequiredmetrics__c           AS turn_on_usage_ping_required_metrics,
+>>>>>>> 6bc964868fb6bc54b79fa6d689cef0589774f727
       IFF(LENGTH(TRIM(turnonoperationalmetrics__c)) > 0, turnonoperationalmetrics__c, NULL)
                                                   AS turn_on_operational_metrics,
       IFF(LENGTH(TRIM(contractoperationalmetrics__c)) > 0, contractoperationalmetrics__c, NULL)

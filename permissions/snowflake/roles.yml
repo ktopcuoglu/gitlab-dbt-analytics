@@ -97,11 +97,6 @@ databases:
     - mlaanen_prep:
         shared: no
 
-    - mpeychet_prod:
-        shared: no
-    - mpeychet_prep:
-        shared: no
-
     - mramirez_prod:
         shared: no
     - mramirez_prep:
@@ -1188,7 +1183,7 @@ roles:
                     - prod.common_mart_product
             tables:
                 read:
-                    - prod.common_mapping.prep_usage_ping_no_license_key
+                    - prod.common_prep.prep_usage_ping_no_license_key
                     - prod.common_mart_product.mart_product_usage_wave_1_3_metrics_latest
                     - prod.common_mart_product.mart_product_usage_wave_1_3_metrics_monthly
                     - prod.common_mart_product.mart_product_usage_wave_1_3_metrics_monthly_diff
@@ -2055,6 +2050,16 @@ roles:
     - alpcohen:
         member_of:
             - xactly
+        warehouses:
+            - analyst_xs
+
+    - amartin:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+            - customers_db
+            - analyst_marketing
+            - data_team_analyst
         warehouses:
             - analyst_xs
 
@@ -3097,47 +3102,9 @@ roles:
             - reporting
 
     - mpeychet:
-        member_of:
-            - analyst_growth
-            - data_team_analyst
-            - gainsight
-        warehouses:
-            - analyst_xs
-            - analyst_l
-            - analyst_xl
-        owns:
-            databases:
-                - mpeychet_prep
-                - mpeychet_prod
-            schemas:
-                - mpeychet_prep.*
-                - mpeychet_prod.*
-            tables:
-                - mpeychet_prep.*.*
-                - mpeychet_prod.*.*
-        privileges:
-            databases:
-                read:
-                    - mpeychet_prep
-                    - mpeychet_prod
-                write:
-                    - mpeychet_prep
-                    - mpeychet_prod
-            schemas:
-                read:
-                    - mpeychet_prep.*
-                    - mpeychet_prod.*
-                write:
-                    - mpeychet_prep.*
-                    - mpeychet_prod.*
-            tables:
-                read:
-                    - mpeychet_prep.*.*
-                    - mpeychet_prod.*.*
-                write:
-                    - mpeychet_prep.*.*
-                    - mpeychet_prod.*.*
-
+        member_of: []
+        warehouses: []
+ 
     - mramirez:
         member_of:
             - analyst_sales
@@ -3935,6 +3902,11 @@ users:
         member_of:
             - alpcohen
 
+    - amartin:
+        can_login: yes
+        member_of:
+            - amartin
+
     - amihaila:
         can_login: yes
         member_of:
@@ -4378,9 +4350,8 @@ users:
             - securityadmin
 
     - mpeychet:
-        can_login: yes
-        member_of:
-            - mpeychet
+        can_login: no
+        member_of: []
 
     - mramirez:
         can_login: yes
