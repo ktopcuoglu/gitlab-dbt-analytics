@@ -2053,6 +2053,16 @@ roles:
         warehouses:
             - analyst_xs
 
+    - amartin:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+            - customers_db
+            - analyst_marketing
+            - data_team_analyst
+        warehouses:
+            - analyst_xs
+
     - amihaila:
         member_of:
             - analyst_growth
@@ -3891,6 +3901,11 @@ users:
         can_login: yes
         member_of:
             - alpcohen
+
+    - amartin:
+        can_login: yes
+        member_of:
+            - amartin
 
     - amihaila:
         can_login: yes
