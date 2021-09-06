@@ -27,6 +27,7 @@
       0 AS umau
     FROM all_events
     INNER JOIN metrics ON all_events.event_name = metrics.event_name
+      AND is_smau
     LEFT JOIN prep_gitlab_dotcom_plan ON all_events.dim_plan_id_at_event_date = prep_gitlab_dotcom_plan.dim_plan_id
     WHERE namespace_is_internal = FALSE
       AND days_since_namespace_creation >= 0
