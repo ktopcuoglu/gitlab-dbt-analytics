@@ -1,5 +1,11 @@
-SET (PERIOD_TYPE, PERIOD_UNIT, PREDICTION_DT) = ('MONTH', 3, '2021-09-03')
-SET SNAPSHOT_DT = DATEADD($PERIOD_TYPE, -$PERIOD_UNIT, $PREDICTION_DT)
+--SET (PERIOD_TYPE, PERIOD_UNIT, PREDICTION_DT) = ('MONTH', 3, '2021-09-03')
+--SET SNAPSHOT_DT = DATEADD($PERIOD_TYPE, -$PERIOD_UNIT, '{{ prediction_date }}')
+
+-- {% set prediction_date = modules.datetime.datetime(2021, 9, 3) %}
+{% set period_type = 'MONTH'%}
+{% set delta_value = 3 %}
+{% set prediction_date = modules.datetime.datetime.now() %}
+{% set end_date = modules.datetime.datetime(prediction_date.year, prediction_date.month - delta_value, prediction_date.day) %}
 
 --Snapshot for just the "current" ARR month based on SNAPSHOT_DT
 WITH mart_arr_snapshot_bottom_up AS (
@@ -28,10 +34,10 @@ WITH mart_arr_snapshot_bottom_up AS (
         , MAX(CASE WHEN product_tier_name LIKE '%Starter%' or product_tier_name LIKE '%Bronze%' THEN 1 ELSE 0 END) AS is_starter_bronze_product_tier
         , MAX(CASE WHEN service_type = 'Full Service' THEN 1 ELSE 0 END) AS is_service_type_full_service
         , MAX(CASE WHEN service_type = 'Support Only' THEN 1 ELSE 0 END) AS is_service_type_support_only
-        , MIN(CASE WHEN term_start_date <= $SNAPSHOT_DT then DATEDIFF(month, term_start_date, $SNAPSHOT_DT) ELSE -1 END) AS subscription_months_into
-        , MIN(DATEDIFF(month, $SNAPSHOT_DT, term_end_date)) AS subscription_months_remaining
+        , MIN(CASE WHEN term_start_date <= '{{ end_date }}' then DATEDIFF(month, term_start_date, '{{ end_date }}') ELSE -1 END) AS subscription_months_into
+        , MIN(DATEDIFF(month, '{{ end_date }}', term_end_date)) AS subscription_months_remaining
         , MIN(DATEDIFF(month, subscription_start_date, subscription_end_date)) AS subscription_duration_in_months
-        , MIN(DATEDIFF(month, parent_account_cohort_month, $SNAPSHOT_DT)) AS account_tenure_in_months
+        , MIN(DATEDIFF(month, parent_account_cohort_month, '{{ end_date }}')) AS account_tenure_in_months
         , AVG(health_number) AS health_number
         , SUM(mrr) AS sum_mrr
         , SUM(arr) AS sum_arr
@@ -40,14 +46,14 @@ WITH mart_arr_snapshot_bottom_up AS (
         , SUM(CASE WHEN product_delivery_type = 'SaaS' THEN 1 ELSE 0 END) AS saas_instance_count
         , SUM(CASE WHEN product_delivery_type = 'Others' THEN 1 ELSE 0 END) AS others_instance_count
         , COUNT(DISTINCT(product_tier_name)) AS num_products_purchased
-        , SUM(CASE WHEN subscription_status = 'Cancelled' OR (subscription_status = 'Active' AND subscription_end_date <= dateadd(MONTH,-3,$SNAPSHOT_DT)) THEN 1 ELSE 0 END) AS cancelled_subs --added 3 months before counting active subscriptions as cancelled per Israel's feedback
+        , SUM(CASE WHEN subscription_status = 'Cancelled' OR (subscription_status = 'Active' AND subscription_end_date <= dateadd(MONTH,-3,'{{ end_date }}')) THEN 1 ELSE 0 END) AS cancelled_subs --added 3 months before counting active subscriptions as cancelled per Israel's feedback
     FROM mart_arr_snapshot_bottom_up
     -- Contains true-up snapshots for every date from 2020-03-01 to Present. MART_ARR_SNAPSHOT_MODEL contained non-true-up data but contains misisng data prior to 2021-06
-    WHERE snapshot_date = $SNAPSHOT_DT -- limit to snapshot to day before our prediction window
-        AND ARR_MONTH = date_trunc('MONTH', $SNAPSHOT_DT) -- limit data for just the month the $SNAPSHOT_DT falls in. arr_month is unique at the dim_crm_account_id & snapshot_date level
+    WHERE snapshot_date = '{{ end_date }}' -- limit to snapshot to day before our prediction window
+        AND ARR_MONTH = date_trunc('MONTH', '{{ end_date }}') -- limit data for just the month the '{{ end_date }}' falls in. arr_month is unique at the dim_crm_account_id & snapshot_date level
         AND is_jihu_account != 'TRUE' -- Remove Chinese accounts like this per feedback from Melia and Israel
-        AND subscription_end_date >= $SNAPSHOT_DT -- filter to just active subscriptions per feedback by Melia
-        --AND term_start_date <= $SNAPSHOT_DT --proposed fix for subscription_months_into it will exclude any future.
+        AND subscription_end_date >= '{{ end_date }}' -- filter to just active subscriptions per feedback by Melia
+        --AND term_start_date <= '{{ end_date }}' --proposed fix for subscription_months_into it will exclude any future.
     GROUP BY dim_crm_account_id -- dim_crm_account_id is not unique at each snapshot date, hence the group by
 
 -- Outcome variables, as defined by those events occuring at a set time period after the SNAPSHOT_DT
@@ -60,9 +66,9 @@ WITH mart_arr_snapshot_bottom_up AS (
         (
         SELECT dim_crm_account_id, arr_month, sum(arr) as sum_arr
         FROM mart_arr_snapshot_bottom_up -- Contains Snapshot for every date from 2020-03-01 to Present
-        WHERE snapshot_date = $PREDICTION_DT
-            AND arr_month > $SNAPSHOT_DT
-            AND arr_month <= $PREDICTION_DT
+        WHERE snapshot_date = '{{ prediction_date }}'
+            AND arr_month > '{{ end_date }}'
+            AND arr_month <= '{{ prediction_date }}'
         GROUP BY dim_crm_account_id, arr_month
         )
 
@@ -85,10 +91,10 @@ WITH mart_arr_snapshot_bottom_up AS (
         , MAX(CASE WHEN product_tier_name LIKE '%Starter%' or product_tier_name LIKE '%Bronze%' THEN 1 ELSE 0 END) AS is_starter_bronze_product_tier_prev
         , MAX(CASE WHEN service_type = 'Full Service' THEN 1 ELSE 0 END) AS is_service_type_full_service_prev
         , MAX(CASE WHEN service_type = 'Support Only' THEN 1 ELSE 0 END) AS is_service_type_support_only_prev
-        , SUM(CASE WHEN subscription_status = 'Cancelled' OR (subscription_status = 'Active' AND subscription_end_date <= dateadd(MONTH, -3, $SNAPSHOT_DT)) THEN 1 ELSE 0 END) AS cancelled_subs_prev --added 3 months before counting active subscriptions as cancelled per Israel's feedback
+        , SUM(CASE WHEN subscription_status = 'Cancelled' OR (subscription_status = 'Active' AND subscription_end_date <= dateadd(MONTH, -3, '{{ end_date }}')) THEN 1 ELSE 0 END) AS cancelled_subs_prev --added 3 months before counting active subscriptions as cancelled per Israel's feedback
     FROM mart_arr_snapshot_bottom_up
-    WHERE snapshot_date = $SNAPSHOT_DT -- limit to snapshot to day before our prediction window
-        AND ARR_MONTH = DATE_TRUNC('MONTH', DATEADD($PERIOD_TYPE, -$PERIOD_UNIT, $SNAPSHOT_DT)) -- limit to customer's data for just the PERIOD prior to where the $SNAPSHOT_DT falls
+    WHERE snapshot_date = '{{ end_date }}' -- limit to snapshot to day before our prediction window
+        AND ARR_MONTH = DATE_TRUNC('MONTH', DATEADD('{{ period_type }}', -'{{ delta_value }}', '{{ end_date }}')) -- limit to customer's data for just the PERIOD prior to where the '{{ end_date }}' falls
         AND is_jihu_account != 'TRUE' -- Remove Chinese accounts like this per feedback from Melia and Israel
     GROUP BY dim_crm_account_id
 
@@ -103,13 +109,13 @@ WITH mart_arr_snapshot_bottom_up AS (
            --not added in period1 cte as it will always give 0
            , SUM(CASE WHEN subscription_status = 'Cancelled' THEN 1 ELSE 0 END) AS cancelled_subscriptions_lifetime
     FROM PROD.COMMON_MART_SALES.MART_ARR_SNAPSHOT_BOTTOM_UP -- Contains Snapshot for every date from 2020-03-01 to Present
-    WHERE snapshot_date = $SNAPSHOT_DT -- limit to snapshot X periods prior to today
+    WHERE snapshot_date = '{{ end_date }}' -- limit to snapshot X periods prior to today
         AND is_jihu_account != 'TRUE' -- Remove Chinese accounts per Bhawana's notes, confirmed by Melia, removed missing values as per Israel's feedback
     GROUP BY dim_crm_account_id -- dim_crm_account_id is not unique at each snapshot date, hence the group by
 */
 
 
--- SFDC Opportunity Table as it appears on the date of $SNAPSHOT_DT
+-- SFDC Opportunity Table as it appears on the date of '{{ end_date }}'
 ), opps AS (
 
    SELECT account_id
@@ -186,7 +192,7 @@ WITH mart_arr_snapshot_bottom_up AS (
         , SUM(CASE WHEN cp_use_cases = 'Cloud-Native: Embrace modern, cloud-native application development' THEN 1 ELSE 0 END) AS use_case_cloud_native
         , SUM(CASE WHEN cp_use_cases = 'GitOps: Automatically provision, manage and maintain infrastructure' THEN 1 ELSE 0 END) AS use_case_git_ops
     FROM {{ref('wk_sales_sfdc_opportunity_snapshot_history_xf')}}
-    WHERE snapshot_date = $SNAPSHOT_DT
+    WHERE snapshot_date = '{{ end_date }}'
         AND opportunity_category IN ('Standard', 'Decommissioned', 'Ramp Deal') -- filter as requested by Noel
     GROUP BY account_id
 
@@ -203,7 +209,7 @@ WITH mart_arr_snapshot_bottom_up AS (
      , SUM(CASE WHEN type = 'Renewal' THEN 1 ELSE 0 END) AS renewal_event_count
      , SUM(CASE WHEN type IS NOT NULL THEN 1 ELSE 0 END) AS total_event_count
     FROM {{ref('sfdc_event_source')}}
-    WHERE createddate BETWEEN DATEADD($PERIOD_TYPE, -$PERIOD_UNIT, $SNAPSHOT_DT) AND $SNAPSHOT_DT  --filter PERIOD window. Because no histroic event table, going off createddate
+    WHERE createddate BETWEEN DATEADD('{{ period_type }}', -'{{ delta_value }}', '{{ end_date }}') AND '{{ end_date }}'  --filter PERIOD window. Because no histroic event table, going off createddate
     GROUP BY account_id
 
 ), tasks_salesforce AS (
@@ -221,7 +227,7 @@ WITH mart_arr_snapshot_bottom_up AS (
      , SUM(is_left_message__c) AS is_left_message_task
      , SUM(is_not_answered__c) AS is_not_answered_task
     FROM {{ref('sfdc_task_source')}}
-    WHERE createddate BETWEEN DATEADD($PERIOD_TYPE, -$PERIOD_UNIT, $SNAPSHOT_DT) AND $SNAPSHOT_DT  --filter PERIOD window. Because no histroic task table, going on createddate
+    WHERE createddate BETWEEN DATEADD('{{ period_type }}', -'{{ delta_value }}', '{{ end_date }}') AND '{{ end_date }}'  --filter PERIOD window. Because no histroic task table, going on createddate
     GROUP BY account_id
 
 ), bizible AS (
@@ -266,7 +272,7 @@ WITH mart_arr_snapshot_bottom_up AS (
         , SUM(CASE WHEN crm_person_title = 'Software Engineer' THEN 1 ELSE 0 END) AS touchpoint_crm_person_title_software_engineer
         , SUM(CASE WHEN crm_person_title = 'Development Team Lead' THEN 1 ELSE 0 END) AS touchpoint_crm_person_title_software_dev_team_lead
     FROM {{ref('mart_crm_attribution_touchpoint')}}
-    WHERE bizible_touchpoint_date BETWEEN DATEADD($PERIOD_TYPE, -$PERIOD_UNIT, $SNAPSHOT_DT) AND $SNAPSHOT_DT
+    WHERE bizible_touchpoint_date BETWEEN DATEADD('{{ period_type }}', -'{{ delta_value }}', '{{ end_date }}') AND '{{ end_date }}'
     GROUP BY dim_crm_account_id
 
 ), product_usage AS (
@@ -317,7 +323,7 @@ WITH mart_arr_snapshot_bottom_up AS (
         , MAX(CAST(SUBSTRING(cleaned_version,0,CHARINDEX('.',cleaned_version)-1) AS INT)) as gitlab_version
     FROM {{ref('mart_product_usage_paid_user_metrics_monthly')}}
     WHERE PING_CREATED_AT IS NOT NULL
-        AND SNAPSHOT_MONTH BETWEEN DATE_TRUNC(MONTH, DATEADD(MONTH, -$PERIOD_UNIT, $SNAPSHOT_DT)) AND DATE_TRUNC(MONTH, DATEADD(MONTH, -1, $SNAPSHOT_DT)) -- Usage data is at the SNAPSHOT_MONTH level. As such, we have to use the whole month PRIOR to our SNAPSHOT_DT to avoid leakage
+        AND SNAPSHOT_MONTH BETWEEN DATE_TRUNC(MONTH, DATEADD(MONTH, -'{{ delta_value }}', '{{ end_date }}')) AND DATE_TRUNC(MONTH, DATEADD(MONTH, -1, '{{ end_date }}')) -- Usage data is at the SNAPSHOT_MONTH level. As such, we have to use the whole month PRIOR to our SNAPSHOT_DT to avoid leakage
         AND ((delivery_type = 'SaaS')
             OR
             (instance_type='Production' AND delivery_type = 'Self-Managed'))
