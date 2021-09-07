@@ -1,6 +1,6 @@
 {{ config({
     "materialized": "incremental",
-    "unique_key": "inamespace_idd"
+    "unique_key": "namespace_id"
     })
 }}
 
