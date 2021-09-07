@@ -457,11 +457,15 @@ models:
         +schema: workspace_sales
         restricted_safe:
           +schema: restricted_safe_workspace_sales
+          +tags: ["safe"]
+          secure: true
 
       workspace_finance:
         +schema: workspace_finance
         restricted_safe:
           +schema: restricted_safe_workspace_finance
+          +tags: ["safe"]
+          secure: true
 
     # ------------------
     # Marts
