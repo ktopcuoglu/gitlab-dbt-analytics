@@ -42,9 +42,7 @@ dag = DAG("pmg_extract", default_args=default_args, schedule_interval="0 23 * * 
 
 
 # don't add a newline at the end of this because it gets added to in the K8sPodOperator arguments
-pmg_extract_command = f"{clone_and_setup_extraction_cmd} && python pmg/src/execute.py" \
-                      f"python3 sheetload/sheetload.py csv --filename social_twitter_impressions.csv --schema pmg " \
-                      f"--tablename paid_digital_new"
+pmg_extract_command = f"{clone_and_setup_extraction_cmd} && python pmg/src/execute.py"
 
 pmg_operator = KubernetesPodOperator(
     **gitlab_defaults,
