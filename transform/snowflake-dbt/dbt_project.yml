@@ -385,10 +385,9 @@ models:
         +enabled: true
 
       retention:
-        restricted_safe:
-          +schema: restricted_safe_legacy
-          +tags: ["safe"]
-          secure: true
+        +schema: restricted_safe_legacy
+        +tags: ["safe"]
+        secure: true
 
       sfdc:
         restricted_safe:
@@ -469,6 +468,11 @@ models:
     # ------------------
     marts:
       +materialized: table
+
+      arr:
+        +schema: restricted_safe_legacy
+        +tags: ["safe"]
+        secure: true 
 
       exports:
         +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
