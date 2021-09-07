@@ -372,10 +372,16 @@ models:
       netsuite:
         restricted_safe:
           +schema: restricted_safe_legacy
+          +tags: ["safe"]
 
       poc:
         +tags: ["poc", "product"]
         +enabled: true
+
+      retention:
+        restricted_safe:
+          +schema: restricted_safe_legacy
+          +tags: ["safe"]
 
       smau_events:
         +tags: ["product"]
