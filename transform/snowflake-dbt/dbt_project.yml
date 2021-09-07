@@ -499,7 +499,8 @@ models:
         +schema: common_mart_sales
         restricted_safe:
           +schema: restricted_safe_common_mart_sales
-
+          +tags: ["safe"]
+          secure: true
 
       usage_ping:
         +tags: ["product"]
