@@ -51,7 +51,86 @@ WITH sfdc_account AS (
           OR division_sales_segment IN ('Large', 'Strategic') 
           THEN TRUE
         ELSE FALSE 
-      END                                                                               AS is_large_and_up
+      END                                                                               AS is_large_and_up,
+
+
+      -- NF 20210829 Zoom info technology flags
+      CASE
+        WHEN CONTAINS (sfdc_account.zi_technologies,'ARE_USED: Jenkins') 
+          THEN 1 
+        ELSE 0
+      END                                 AS zi_jenkins_presence_flag,
+      CASE
+        WHEN CONTAINS (sfdc_account.zi_technologies, 'ARE_USED: SVN') 
+          THEN 1 
+        ELSE 0
+      END                                 AS zi_svn_presence_flag,
+      CASE
+        WHEN CONTAINS (sfdc_account.zi_technologies, 'ARE_USED: Tortoise SVN') 
+          THEN 1 
+        ELSE 0
+      END                                 AS zi_tortoise_svn_presence_flag,
+      CASE
+        WHEN CONTAINS (sfdc_account.zi_technologies, 'ARE_USED: Google Cloud Platform') 
+          THEN 1 
+        ELSE 0
+      END                                 AS zi_gcp_presence_flag,
+      CASE
+        WHEN CONTAINS (sfdc_account.zi_technologies, 'ARE_USED: Atlassian') 
+          THEN 1 
+        ELSE 0
+      END                                 AS zi_atlassian_presence_flag,
+      CASE
+        WHEN CONTAINS (sfdc_account.zi_technologies, 'ARE_USED: GitHub') 
+          THEN 1 
+        ELSE 0
+      END                                 AS zi_github_presence_flag,
+      CASE
+        WHEN CONTAINS (sfdc_account.zi_technologies, 'ARE_USED: GitHub Enterprise') 
+          THEN 1 
+        ELSE 0
+      END                                 AS zi_github_enterprise_presence_flag,
+      CASE
+        WHEN CONTAINS (sfdc_account.zi_technologies, 'ARE_USED: AWS') 
+          THEN 1 
+        ELSE 0
+      END                                 AS zi_aws_presence_flag,
+      CASE
+        WHEN CONTAINS (sfdc_account.zi_technologies, 'ARE_USED: Kubernetes') 
+          THEN 1 
+        ELSE 0
+      END                                 AS zi_kubernetes_presence_flag,
+      CASE
+        WHEN CONTAINS (sfdc_account.zi_technologies, 'ARE_USED: Apache Subversion') 
+          THEN 1 
+        ELSE 0
+      END                                 AS zi_apache_subversion_presence_flag,
+      CASE
+        WHEN CONTAINS (sfdc_account.zi_technologies, 'ARE_USED: Apache Subversion (SVN)') 
+          THEN 1 
+        ELSE 0
+      END                                 AS zi_apache_subversion_svn_presence_flag,
+      CASE
+        WHEN CONTAINS (sfdc_account.zi_technologies, 'ARE_USED: Hashicorp') 
+          THEN 1 
+        ELSE 0
+      END                                 AS zi_hashicorp_presence_flag,
+      CASE
+        WHEN CONTAINS (sfdc_account.zi_technologies, 'ARE_USED: Amazon AWS CloudTrail') 
+          THEN 1 
+        ELSE 0
+      END                                 AS zi_aws_cloud_trail_presence_flag,
+      CASE
+        WHEN CONTAINS (sfdc_account.zi_technologies, 'ARE_USED: CircleCI') 
+          THEN 1 
+        ELSE 0
+      END                                 AS zi_circle_ci_presence_flag,
+      CASE
+        WHEN CONTAINS (sfdc_account.zi_technologies, 'ARE_USED: BitBucket') 
+          THEN 1 
+        ELSE 0
+      END                                 AS zi_bit_bucket_presence_flag
+
 
     FROM sfdc_account
     LEFT JOIN parent_account

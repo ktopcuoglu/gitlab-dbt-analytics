@@ -52,6 +52,11 @@ databases:
     - iweeks_prep:
         shared: no
 
+    - jcaine_prod:
+        shared: no
+    - jcaine_prep:
+        shared: no       
+
     - jpeguero_prod:
         shared: no
     - jpeguero_prep:
@@ -92,10 +97,10 @@ databases:
     - mlaanen_prep:
         shared: no
 
-    - mpeychet_prod:
+    - mramirez_prod:
         shared: no
-    - mpeychet_prep:
-        shared: no
+    - mramirez_prep:
+        shared: no       
 
     - mvilain_prod:
         shared: no
@@ -509,6 +514,28 @@ roles:
             - zuora
             - data_team_analyst
 
+    - empiricalpath:
+        privileges:
+            databases:
+                read:
+                    - raw
+                    - prep
+            schemas:
+                read:
+                    - raw.google_analytics_360_fivetran
+                    - prep.google_analytics_360
+                    - prep.snowplow_202*
+            tables:
+                read:
+                    - raw.google_analytics_360_fivetran.ga_session
+                    - raw.google_analytics_360_fivetran.ga_session_custom_dimension
+                    - raw.google_analytics_360_fivetran.session_hit
+                    - raw.google_analytics_360_fivetran.session_hit_custom_dimension
+                    - prep.google_analytics_360.ga360_session_custom_dimension_source
+                    - prep.google_analytics_360.ga360_session_hit_source
+                    - prep.google_analytics_360.ga360_session_source
+                    - prep.snowplow_202*.*
+
     - engineer:
         member_of:
             - covid19
@@ -755,7 +782,7 @@ roles:
             - boneyard
             - dbt_analytics
             - snowflake_db
-            - restricted_finance #this is about to move when POC for RBAC is completed
+            - restricted_safe #this is about to move when POC for RBAC is completed
         privileges:
             databases:
                 read:
@@ -1156,7 +1183,7 @@ roles:
                     - prod.common_mart_product
             tables:
                 read:
-                    - prod.common_mapping.prep_usage_ping_no_license_key
+                    - prod.common_prep.prep_usage_ping_no_license_key
                     - prod.common_mart_product.mart_product_usage_wave_1_3_metrics_latest
                     - prod.common_mart_product.mart_product_usage_wave_1_3_metrics_monthly
                     - prod.common_mart_product.mart_product_usage_wave_1_3_metrics_monthly_diff
@@ -1661,7 +1688,7 @@ roles:
                 read:
                     - prep.pmg.*
 
-    - restricted_finance:
+    - restricted_safe:
         warehouses:
             - reporting
         privileges:
@@ -1670,16 +1697,16 @@ roles:
                     - prod
             schemas:
                 read:
-                    - prod.restricted_finance_common
-                    - prod.restricted_finance_common_mapping
-                    - prod.restricted_finance_common_mart_sales
-                    - prod.restricted_finance_legacy
+                    - prod.restricted_safe_common
+                    - prod.restricted_safe_common_mapping
+                    - prod.restricted_safe_common_mart_sales
+                    - prod.restricted_safe_legacy
             tables:
                 read:
-                    - prod.restricted_finance_common.*
-                    - prod.restricted_finance_common_mapping.*
-                    - prod.restricted_finance_common_mart_sales.*
-                    - prod.restricted_finance_legacy.*
+                    - prod.restricted_safe_common.*
+                    - prod.restricted_safe_common_mapping.*
+                    - prod.restricted_safe_common_mart_sales.*
+                    - prod.restricted_safe_legacy.*
 
     - salesforce:
         warehouses:
@@ -2021,7 +2048,18 @@ roles:
             - analyst_xs
 
     - alpcohen:
-        member_of: []
+        member_of:
+            - xactly
+        warehouses:
+            - analyst_xs
+
+    - amartin:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+            - customers_db
+            - analyst_marketing
+            - data_team_analyst
         warehouses:
             - analyst_xs
 
@@ -2044,6 +2082,12 @@ roles:
         warehouses:
             - analyst_xs        
     
+    - bmartin:
+        member_of:  
+            - empiricalpath
+        warehouses:
+            - analyst_xs      
+ 
     - blutz:
         warehouses:
             - admin
@@ -2506,6 +2550,44 @@ roles:
         warehouses:
             - analyst_xs 
 
+    - jcaine:
+        member_of:
+            - analyst_sales
+        warehouses:
+            - analyst_xs
+        owns:
+            databases:
+                - jcaine_prep
+                - jcaine_prod
+            schemas:
+                - jcaine_prep.*
+                - jcaine_prod.*
+            tables:
+                - jcaine_prep.*.*
+                - jcaine_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - jcaine_prep
+                    - jcaine_prod
+                write:
+                    - jcaine_prep
+                    - jcaine_prod
+            schemas:
+                read:
+                    - jcaine_prep.*
+                    - jcaine_prod.*
+                write:
+                    - jcaine_prep.*
+                    - jcaine_prod.*
+            tables:
+                read:
+                    - jcaine_prep.*.*
+                    - jcaine_prod.*.*
+                write:
+                    - jcaine_prep.*.*
+                    - jcaine_prod.*.*
+
     - jjackson:
         member_of:
             - snowplow
@@ -2698,10 +2780,17 @@ roles:
                     - kaguilar_prep.*.*
                     - kaguilar_prod.*.*
 
+    - kallen:
+        member_of:
+            - bamboohr_sensitive_separations
+        warehouses:
+            - analyst_xs
+
     - kdietz:
         member_of:
             - analyst_core
             - data_team_analyst
+            - salesforce
         warehouses:
             - analyst_xs
         owns:
@@ -3013,51 +3102,46 @@ roles:
             - reporting
 
     - mpeychet:
+        member_of: []
+        warehouses: []
+ 
+    - mramirez:
         member_of:
-            - analyst_growth
-            - data_team_analyst
-            - gainsight
+            - analyst_sales
         warehouses:
             - analyst_xs
-            - analyst_l
-            - analyst_xl
         owns:
             databases:
-                - mpeychet_prep
-                - mpeychet_prod
+                - mramirez_prep
+                - mramirez_prod
             schemas:
-                - mpeychet_prep.*
-                - mpeychet_prod.*
+                - mramirez_prep.*
+                - mramirez_prod.*
             tables:
-                - mpeychet_prep.*.*
-                - mpeychet_prod.*.*
+                - mramirez_prep.*.*
+                - mramirez_prod.*.*
         privileges:
             databases:
                 read:
-                    - mpeychet_prep
-                    - mpeychet_prod
+                    - mramirez_prep
+                    - mramirez_prod
                 write:
-                    - mpeychet_prep
-                    - mpeychet_prod
+                    - mramirez_prep
+                    - mramirez_prod
             schemas:
                 read:
-                    - mpeychet_prep.*
-                    - mpeychet_prod.*
+                    - mramirez_prep.*
+                    - mramirez_prod.*
                 write:
-                    - mpeychet_prep.*
-                    - mpeychet_prod.*
+                    - mramirez_prep.*
+                    - mramirez_prod.*
             tables:
                 read:
-                    - mpeychet_prep.*.*
-                    - mpeychet_prod.*.*
+                    - mramirez_prep.*.*
+                    - mramirez_prod.*.*
                 write:
-                    - mpeychet_prep.*.*
-                    - mpeychet_prod.*.*
-
-    - mramirez:
-        member_of: []
-        warehouses:
-            - analyst_xs
+                    - mramirez_prep.*.*
+                    - mramirez_prod.*.*
 
     - mray:
         member_of:
@@ -3071,6 +3155,7 @@ roles:
     - mvilain:
         member_of:
             - analyst_sales
+            - xactly
         warehouses:
             - analyst_xs
         owns:
@@ -3451,10 +3536,10 @@ roles:
         warehouses:
             - reporting
 
-    - sisense_restricted_finance:
+    - sisense_restricted_safe:
         member_of:
             - reporter
-            - restricted_finance
+            - restricted_safe
         warehouses:
             - reporting
 
@@ -3673,6 +3758,16 @@ roles:
                     - tullylanterdd_prep.*.*
                     - tullylanterdd_prod.*.*
 
+    - vbrew:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+            - customers_db
+            - analyst_marketing
+            - data_team_analyst
+        warehouses:
+            - analyst_xs
+
     - vjallipalli:
         member_of: []
         warehouses: []
@@ -3807,6 +3902,11 @@ users:
         member_of:
             - alpcohen
 
+    - amartin:
+        can_login: yes
+        member_of:
+            - amartin
+
     - amihaila:
         can_login: yes
         member_of:
@@ -3821,6 +3921,11 @@ users:
         can_login: yes
         member_of:
             - awaller
+
+    - bmartin:
+        can_login: yes
+        member_of:
+            - bmartin
 
     - blutz:
         can_login: yes
@@ -4045,6 +4150,11 @@ users:
         member_of:
             - jbrennan
 
+    - jcaine:
+        can_login: yes
+        member_of:
+            - jcaine
+
     - jjackson:
         can_login: yes
         member_of:
@@ -4120,6 +4230,11 @@ users:
         can_login: yes
         member_of:
             - kaguilar
+
+    - kallen:
+        can_login: yes
+        member_of:
+            - kallen
 
     - kdietz:
         can_login: yes
@@ -4235,9 +4350,8 @@ users:
             - securityadmin
 
     - mpeychet:
-        can_login: yes
-        member_of:
-            - mpeychet
+        can_login: no
+        member_of: []
 
     - mramirez:
         can_login: yes
@@ -4394,10 +4508,10 @@ users:
         member_of:
             - skerr
 
-    - sisense_restricted_finance:
+    - sisense_restricted_safe:
         can_login: yes
         member_of:
-            - sisense_restricted_finance           
+            - sisense_restricted_safe           
 
     - snalamaru:
         can_login: yes
@@ -4467,6 +4581,11 @@ users:
     - valexieva:
         can_login: no
         member_of: []
+
+    - vbrew:
+        can_login: yes
+        member_of:
+            - vbrew
 
     - vjallipalli:
         can_login: no

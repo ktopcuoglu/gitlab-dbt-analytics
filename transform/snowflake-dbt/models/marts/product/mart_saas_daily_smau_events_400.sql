@@ -21,6 +21,7 @@
       fct_daily_event_400.event_created_date, 
       map_saas_event_to_smau.stage_name,
       map_saas_event_to_smau.is_smau,
+      map_saas_event_to_smau.is_umau,
       fct_daily_event_400.is_blocked_namespace,
       fct_daily_event_400.namespace_created_date,
       fct_daily_event_400.namespace_is_internal,
@@ -33,7 +34,7 @@
     FROM fct_daily_event_400
     INNER JOIN map_saas_event_to_smau
       ON fct_daily_event_400.event_name = map_saas_event_to_smau.event_name 
-    {{ dbt_utils.group_by(n=14) }}
+    {{ dbt_utils.group_by(n=15) }}
 
 )
 
