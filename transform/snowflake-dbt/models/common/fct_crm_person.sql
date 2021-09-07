@@ -177,8 +177,6 @@ WITH account_dims_mapping AS (
       {{ get_date_id('converted_date') }}                                                                       AS converted_date_id,
       {{ get_date_pt_id('converted_date') }}                                                                    AS converted_date_pt_id,
       COALESCE(sfdc_contacts.worked_date, sfdc_leads.worked_date)                                               AS worked_date,
-      CONVERT_TIMEZONE('America/Los_Angeles', COALESCE(sfdc_contacts.worked_date, sfdc_leads.worked_date))
-                                                                                                                AS worked_date_pt,
       {{ get_date_id('worked_date') }}                                                                          AS worked_date_id,
       {{ get_date_pt_id('worked_date') }}                                                                       AS worked_date_pt_id,
 
