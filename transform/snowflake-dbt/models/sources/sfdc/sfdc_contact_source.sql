@@ -75,7 +75,7 @@ WITH source AS (
         unqualified_datetime__c     AS unqualified_datetime,
         nurture_datetime__c         AS nurture_datetime,
         bad_data_datetime__c        AS bad_data_datetime,
-        worked_date__c              AS worked_date,
+        worked_date__c              AS worked_datetime,
         web_portal_purchase_datetime__c AS web_portal_purchase_datetime,
         mkto_si__last_interesting_moment__c AS marketo_last_interesting_moment,
         mkto_si__last_interesting_moment_date__c AS marketo_last_interesting_moment_date,

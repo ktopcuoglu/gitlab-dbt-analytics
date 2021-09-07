@@ -176,7 +176,7 @@ WITH account_dims_mapping AS (
       sfdc_leads.converted_date::DATE                                                                           AS converted_date,
       {{ get_date_id('converted_date') }}                                                                       AS converted_date_id,
       {{ get_date_pt_id('converted_date') }}                                                                    AS converted_date_pt_id,
-      COALESCE(sfdc_contacts.worked_date, sfdc_leads.worked_date)                                               AS worked_date,
+      COALESCE(sfdc_contacts.worked_datetime, sfdc_leads.worked_datetime)                                               AS worked_date,
       {{ get_date_id('worked_date') }}                                                                          AS worked_date_id,
       {{ get_date_pt_id('worked_date') }}                                                                       AS worked_date_pt_id,
 
@@ -230,5 +230,5 @@ WITH account_dims_mapping AS (
     created_by="@mcooperDD",
     updated_by="@rkohnke",
     created_date="2020-12-01",
-    updated_date="2021-08-09"
+    updated_date="2021-09-07"
 ) }}
