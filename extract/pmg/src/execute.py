@@ -60,6 +60,16 @@ def write_date_json(date: str, df: DataFrame) -> str:
     return file_name
 
 
+def write_csv_data(file_name: str, data: pd.DataFrame):
+    """
+    Just here to return filenames, probably not needed but consistent with our other extracts
+    """
+    if data.to_csv(f"{file_name}.csv", index=False):
+        return file_name
+    else:
+        return False
+
+
 if __name__ == "__main__":
 
     bq = BigQueryClient()
@@ -76,11 +86,13 @@ if __name__ == "__main__":
 
     df_by_date = bq.get_dataframe_from_sql(sql_statement).groupby("date")
 
-    written_files = [write_date_json(date, df) for date, df in df_by_date]
+    #
+    [write_csv_data(file_name, data) for file_name, data in df_by_date]
+    #written_files = [write_date_json(date, df) for date, df in df_by_date]
 
-    [
-        snowflake_stage_load_copy_remove(
-            file_name, "pmg.pmg_load", "pmg.paid_digital", snowflake_engine
-        )
-        for file_name in written_files
-    ]
+    #[
+    #    snowflake_stage_load_copy_remove(
+    #        file_name, "pmg.pmg_load", "pmg.paid_digital", snowflake_engine
+    #    )
+    #    for file_name in written_files
+    #]
