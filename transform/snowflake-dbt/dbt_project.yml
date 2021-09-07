@@ -396,6 +396,11 @@ models:
       smau_events:
         +tags: ["product"]
 
+      snapshots:
+        restricted_safe:
+          +schema: restricted_safe_legacy
+          +tags: ["safe"]
+
       snowflake:
         +materialized: view
 
