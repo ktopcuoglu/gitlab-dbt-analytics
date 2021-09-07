@@ -369,6 +369,10 @@ models:
       license:
         +materialized: view
 
+      netsuite:
+        restricted_safe:
+          +schema: restricted_safe_legacy
+
       poc:
         +tags: ["poc", "product"]
         +enabled: true
