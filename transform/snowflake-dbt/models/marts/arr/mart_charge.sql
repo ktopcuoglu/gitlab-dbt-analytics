@@ -3,6 +3,10 @@
   })
 }}
 
+{{ config(
+    tags=["safe"]
+) }}
+
 {{ simple_cte([
     ('dim_amendment','dim_amendment'),
     ('dim_billing_account','dim_billing_account'),
