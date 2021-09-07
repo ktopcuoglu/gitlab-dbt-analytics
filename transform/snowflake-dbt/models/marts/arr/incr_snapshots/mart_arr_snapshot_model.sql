@@ -2,7 +2,7 @@
         "materialized": "incremental",
         "unique_key": "mart_arr_snapshot_id",
         "tags": ["edm_snapshot", "arr_snapshots"],
-        "schema": "common_mart_sales"
+        "schema": "restricted_safe_common_mart_sales"
     })
 }}
 

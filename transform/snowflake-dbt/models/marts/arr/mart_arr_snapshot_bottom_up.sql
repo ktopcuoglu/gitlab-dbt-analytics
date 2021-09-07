@@ -2,7 +2,7 @@
         "materialized": "incremental",
         "unique_key": "primary_key",
         "tags": ["arr_snapshots"],
-        "schema": "common_mart_sales"
+        "schema": "restricted_safe_common_mart_sales"
     })
 }}
 

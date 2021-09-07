@@ -290,10 +290,18 @@ models:
         +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
         +schema: sensitive
         secure: true
+      restricted_safe:
+        +schema: restricted_safe_common
+        +tags: ["safe"]
+        secure: true
 
     common_mapping:
       +materialized: table
       +schema: common_mapping
+      restricted_safe:
+        +schema: restricted_safe_common_mapping
+        +tags: ["safe"]
+        secure: true
        
     common_prep:
       +materialized: table
@@ -301,6 +309,11 @@ models:
       month_partition:
         +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
         +schema: "dotcom_usage_events_{{ var('year', (run_started_at - modules.datetime.timedelta(2)).strftime('%Y')) }}_{{ var('month', (run_started_at - modules.datetime.timedelta(2)).strftime('%m')) }}"
+      restricted_safe:
+        +schema: restricted_safe_common_prep
+        +tags: ["safe"]
+        secure: true
+
 
     # ------------------
     # Legacy (formerly Staging)
@@ -312,6 +325,12 @@ models:
         sensitive:
           +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
           +schema: sensitive
+          secure: true
+
+      customers:
+        restricted_safe:
+          +schema: restricted_safe_legacy
+          +tags: ["safe"]
           secure: true
 
       datasiren:
@@ -355,12 +374,41 @@ models:
       license:
         +materialized: view
 
+      netsuite:
+        restricted_safe:
+          +schema: restricted_safe_legacy
+          +tags: ["safe"]
+          secure: true
+
       poc:
         +tags: ["poc", "product"]
         +enabled: true
 
+      retention:
+        +schema: restricted_safe_legacy
+        +tags: ["safe"]
+        secure: true
+
+      sfdc:
+        restricted_safe:
+          +schema: restricted_safe_legacy
+          +tags: ["safe"]
+          secure: true
+
+      sheetload:
+        restricted_safe:
+          +schema: restricted_safe_legacy
+          +tags: ["safe"]
+          secure: true
+
       smau_events:
         +tags: ["product"]
+
+      snapshots:
+        restricted_safe:
+          +schema: restricted_safe_legacy
+          +tags: ["safe"]
+          secure: true
 
       snowflake:
         +materialized: view
@@ -376,6 +424,12 @@ models:
 
       trusted_data_framework:
         +tags: ["tdf"]
+
+      zuora:
+        restricted_safe:
+          +schema: restricted_safe_legacy
+          +tags: ["safe"]
+          secure: true
 
     # ------------------
     # Workspaces
@@ -401,15 +455,28 @@ models:
       workspace_sales:
         +materialized: table
         +schema: workspace_sales
+        restricted_safe:
+          +schema: restricted_safe_workspace_sales
+          +tags: ["safe"]
+          secure: true
 
       workspace_finance:
         +schema: workspace_finance
+        restricted_safe:
+          +schema: restricted_safe_workspace_finance
+          +tags: ["safe"]
+          secure: true
 
     # ------------------
     # Marts
     # ------------------
     marts:
       +materialized: table
+
+      arr:
+        +schema: restricted_safe_legacy
+        +tags: ["safe"]
+        secure: true 
 
       exports:
         +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
@@ -432,6 +499,13 @@ models:
         +schema: pumps_sensitive
         +materialized: table
       
+      sales_funnel:
+        +schema: common_mart_sales
+        restricted_safe:
+          +schema: restricted_safe_common_mart_sales
+          +tags: ["safe"]
+          secure: true
+
       usage_ping:
         +tags: ["product"]
 
