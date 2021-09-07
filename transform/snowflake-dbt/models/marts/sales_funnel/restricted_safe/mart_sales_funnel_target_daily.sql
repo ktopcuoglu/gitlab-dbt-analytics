@@ -1,8 +1,3 @@
-{{config({
-    "schema": "common_mart_sales"
-  })
-}}
-
 {{ simple_cte([
     ('dim_crm_user_hierarchy_live','dim_crm_user_hierarchy_live'),
     ('dim_sales_qualified_source','dim_sales_qualified_source'),
