@@ -285,87 +285,137 @@ models:
         description: flag indicating if account has been deleted
       - name: is_excluded
         description: Field used to exclude test accounts from downstream models
-  - name: prep_recurring_charge_api_sandbox
+  - name: prep_amendment_api_sandbox
+    description: Prep table for Zuora Amendments that increment subscription versions. This prep table will be used in Facts and Dimensions.
     columns:
-      - name: mrr_id
-        description: The unique identifier of the MRR.
+      - name: dim_amendment_id
         tests:
           - not_null:
               severity: warn
           - unique:
               severity: warn
-      - name: dim_date_id
-        description: The identifier of date month in dim_date
-      - name: dim_subscription_id
-        description: The identifier of subscription in dim_subscriptions table
-        tests:
-          - not_null:
-              severity: warn
-      - name: dim_product_detail_id
-        description: The identifier of product details in dim_product_detail
-        tests:
-          - not_null:
-              severity: warn
-      - name: dim_billing_account_id
-        description: Zuora account id
-      - name:  dim_crm_account_id
-        description: account id frm crm
-      - name: mrr
-        description: Monthly Recurring Revenue value for given month
-      - name: arr
-        description: Annual Recurring Revenue value for given month
-      - name: quantity
-        description: Total quantity
-  - name: fct_mrr_api_sandbox
-    description: One row represents Monthly Recurring Revenue per month, by rate plan charge.
+  - name: prep_subscription_api_sandbox
     columns:
-      - name: mrr_id
-        description: The unique identifier of the MRR.
-        tests:
-          - not_null:
-              severity: warn
-          - unique
-      - name: dim_date_id
-        description: The identifier of date month in dim_date
-      - name: dim_charge_id
-        description: join key for dim_charge
-        tests:
-          - not_null:
-              severity: warn
-      - name: dim_billing_account_id
-        description: join key for dim_billing_account
-        tests:
-          - not_null:
-              severity: warn
-          - relationships:
-              to: ref('dim_billing_account_api_sandbox')
-              field: dim_billing_account_id
-      - name: dim_crm_account_id
-        description: join key for dim_crm_account
-        tests:
-          - relationships:
-              to: ref('dim_crm_account')
-              field: dim_crm_account_id
       - name: dim_subscription_id
-        description: The identifier of subscription in dim_subscription table
+        description: Unique identifier of a version of a subscription
         tests:
           - not_null:
               severity: warn
-          - relationships:
-              to: ref('dim_subscription_api_sandbox')
-              field: dim_subscription_id
-      - name: dim_product_detail_id
-        description: The identifier of product details in dim_product_detail
-        tests:
-          - not_null:
+          - unique:
               severity: warn
+      - name: dim_crm_account_id
+        description: account id from SFDC identifing the customer
       - name: dim_billing_account_id
-        description: Zuora account id
-      - name:  dim_crm_account_id
-        description: account id frm crm
-      - name: mrr
-        description: Monthly Recurring Revenue value for given month
-      - name: arr
-        description: Annual Recurring Revenue value for given month
-      - name: quantity
-        description: Total quantity
+        description: The id of the Zuora account the subscription is associated with
+      - name: dim_crm_person_id_invoice_owner
+      - name: dim_crm_opportunity_id
+      - name: dim_subscription_id_original
+      - name: dim_subscription_id_previous
+      - name: amendment_id
+      - name: subscription_name_slugify
+        description: The unique identifier of the subscription
+      - name: subscription_status
+        description: The status of the subscription
+        tests:
+          - not_null:
+              severity: warn
+          - accepted_values:
+              values: ['Active', 'Cancelled', 'Draft', 'Expired', 'Suspended']
+      - name: subscription_version
+        description: The version number of the subscription
+      - name: is_auto_renew
+        description: Boolean field, if true, this subscription automatically renews at the end of the subscription term
+      - name: zuora_renewal_subscription_name
+        description: name of the linked subscription that renews the prior subscription in a lineage
+      - name: zuora_renewal_subscription_name_slugify
+        description: name of the linked subscription that renews the prior subscription in a lineage
+      - name: renewal_term
+        description: The length of the period for the subscription renewal term
+      - name: renewal_term_period_type
+        description: The period type for the subscription renewal term. This field is used with the renewal term field to specify the subscription renewal term.
+      - name: subscription_start_date
+        description: The date when the subscription term starts. This date is the same as the start date of the original term, which isn't necessarily the start date of the current or new term.
+      - name: subscription_end_date
+        description: The date when the subscription term ends, where the subscription ends at midnight the day before. For example, if the SubscriptionEndDate is 12/31/2016, the subscriptions ends at midnight (00:00:00 hours) on 12/30/2016. This date is the same as the term end date or the cancelation date, as appropriate.
+      - name: subscription_start_month
+        description: The month when the subscription term starts. This month is the same as the start month of the original term, which isn't necessarily the start month of the current or new term.
+      - name: subscription_end_month
+        description: The month when the subscription term ends. This month is the same as the term end month or the cancelation month, as appropriate.
+      - name: subscription_sales_type
+        description: Identifies whether a subscription is Sales-Assisted or Self-Service / Web Direct.
+        tests:
+          - not_null:
+              severity: warn
+          - accepted_values:
+                  values: ['Sales-Assisted', 'Self-Service']
+      - name: is_myb
+        description: MYB = Multi-Year Booking. This boolean flag identifies if a subscription is booked for more than one year. This can either be by having a term greater than 12 months or having a linked subscription.
+      - name: is_myb_with_multi_subs
+        description: MYB = Multi-Year Booking. This boolean flag identifies if a subscription is booked for more than one year by using multiple linked subscriptions only. A subscription with a term greater than 12 but does not have linked subscriptions has a value of FALSE.
+  - name: dim_subscription_api_sandbox
+    columns:
+      - name: dim_subscription_id
+        description: Unique identifier of a version of a subscription
+        tests:
+          - not_null:
+              severity: warn
+          - unique:
+              severity: warn
+      - name: dim_crm_account_id
+        description: account id from SFDC identifing the customer
+      - name: dim_billing_account_id
+        description: The id of the Zuora account the subscription is associated with
+      - name: dim_crm_person_id_invoice_owner
+      - name: dim_crm_opportunity_id
+      - name: dim_subscription_id_original
+        tests:
+          - not_null:
+              severity: warn
+      - name: dim_subscription_id_previous
+      - name: amendment_id
+      - name: subscription_name_slugify
+        description: The unique identifier of the subscription
+      - name: subscription_status
+        description: The status of the subscription
+        tests:
+          - not_null:
+              severity: warn
+          - accepted_values:
+              values: ['Active', 'Cancelled', 'Draft', 'Expired', 'Suspended']
+      - name: subscription_version
+        description: The version number of the subscription
+      - name: is_auto_renew
+        description: Boolean field, if true, this subscription automatically renews at the end of the subscription term
+      - name: zuora_renewal_subscription_name
+        description: name of the linked subscription that renews the prior subscription in a lineage
+      - name: zuora_renewal_subscription_name_slugify
+        description: name of the linked subscription that renews the prior subscription in a lineage
+      - name: renewal_term
+        description: The length of the period for the subscription renewal term
+      - name: renewal_term_period_type
+        description: The period type for the subscription renewal term. This field is used with the renewal term field to specify the subscription renewal term.
+      - name: subscription_start_date
+        description: The date when the subscription term starts. This date is the same as the start date of the original term, which isn't necessarily the start date of the current or new term.
+      - name: subscription_end_date
+        description: The date when the subscription term ends, where the subscription ends at midnight the day before. For example, if the SubscriptionEndDate is 12/31/2016, the subscriptions ends at midnight (00:00:00 hours) on 12/30/2016. This date is the same as the term end date or the cancelation date, as appropriate.
+      - name: subscription_start_month
+        description: The month when the subscription term starts. This month is the same as the start month of the original term, which isn't necessarily the start month of the current or new term.
+      - name: subscription_end_month
+        description: The month when the subscription term ends. This month is the same as the term end month or the cancelation month, as appropriate.
+      - name: subscription_sales_type
+        description: Identifies whether a subscription is Sales-Assisted or Self-Service / Web Direct.
+        tests:
+          - not_null:
+              severity: warn
+          - accepted_values:
+                  values: ['Sales-Assisted', 'Self-Service']
+      - name: lineage
+        description: "All the subscriptions subsquent to the primary subscription, separated by commas."
+      - name: cohort_month
+      - name: cohort_quarter
+      - name: cohort_year
+      - name: is_myb
+        description: MYB = Multi-Year Booking. This boolean flag identifies if a subscription is booked for more than one year. This can either be by having a term greater than 12 months or having a linked subscription.
+      - name: is_myb_with_multi_subs
+        description: MYB = Multi-Year Booking. This boolean flag identifies if a subscription is booked for more than one year by using multiple linked subscriptions only. A subscription with a term greater than 12 but does not have linked subscriptions has a value of FALSE.
+

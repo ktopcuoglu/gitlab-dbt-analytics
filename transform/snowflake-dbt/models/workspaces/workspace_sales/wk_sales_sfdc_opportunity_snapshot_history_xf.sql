@@ -99,7 +99,10 @@ WITH date_details AS (
       --sfdc_opportunity_snapshot_history.generated_source,
       sfdc_opportunity_snapshot_history.lead_source,
       sfdc_opportunity_snapshot_history.merged_opportunity_id,
-      sfdc_opportunity_snapshot_history.opportunity_owner,
+      
+      -- NF: This field is added directly from the user table
+      -- as the opportunity one is not clean
+      --sfdc_opportunity_snapshot_history.opportunity_owner,
  
       sfdc_opportunity_snapshot_history.opportunity_owner_department,
       sfdc_opportunity_snapshot_history.opportunity_sales_development_representative,
@@ -230,6 +233,8 @@ WITH date_details AS (
       sfdc_opportunity_snapshot_history.partner_discount_calc,
       sfdc_opportunity_snapshot_history.comp_channel_neutral,
 
+      sfdc_opportunity_snapshot_history.fpa_master_bookings_flag,
+
       CASE 
         WHEN sfdc_opportunity_snapshot_history.deal_path = 'Direct'
           THEN 'Direct'
@@ -242,6 +247,19 @@ WITH date_details AS (
             AND sfdc_opportunity_snapshot_history.sales_qualified_source != 'Channel Generated' 
           THEN 'Partner Co-Sell'
       END                                                         AS deal_path_engagement,
+
+
+      -- stage dates
+            -- dates in stage fields
+      sfdc_opportunity_snapshot_history.stage_0_pending_acceptance_date,
+      sfdc_opportunity_snapshot_history.stage_1_discovery_date,
+      sfdc_opportunity_snapshot_history.stage_2_scoping_date,
+      sfdc_opportunity_snapshot_history.stage_3_technical_evaluation_date,
+      sfdc_opportunity_snapshot_history.stage_4_proposal_date,
+      sfdc_opportunity_snapshot_history.stage_5_negotiating_date,
+      sfdc_opportunity_snapshot_history.stage_6_awaiting_signature_date,
+      sfdc_opportunity_snapshot_history.stage_6_closed_won_date,
+      sfdc_opportunity_snapshot_history.stage_6_closed_lost_date,
 
       --date helpers
 
@@ -721,6 +739,10 @@ WITH date_details AS (
       -- duplicates flag
       sfdc_opportunity_xf.is_duplicate_flag                               AS current_is_duplicate_flag,
 
+
+      -- the owner name in the opportunity is not clean.
+      opportunity_owner.name AS opportunity_owner,
+
       ------------------------------------------------------------------------------------------------------
       ------------------------------------------------------------------------------------------------------
 
@@ -731,7 +753,8 @@ WITH date_details AS (
       sfdc_accounts_xf.ultimate_parent_sales_segment,
       sfdc_accounts_xf.tsp_max_hierarchy_sales_segment,
       sfdc_accounts_xf.ultimate_parent_account_id,
-      sfdc_accounts_xf.ultimate_parent_id        
+      sfdc_accounts_xf.ultimate_parent_id,
+      sfdc_accounts_xf.is_jihu_account        
       
 
     FROM sfdc_opportunity_snapshot_history opp_snapshot
@@ -849,7 +872,6 @@ WITH date_details AS (
         WHEN opp_snapshot.sales_accepted_date IS NOT NULL
           AND opp_snapshot.is_edu_oss = 0
           AND opp_snapshot.is_deleted = 0
-          AND opp_snapshot.order_type_stamped = '1. New - First Order'
             THEN 1
         ELSE 0
       END                                                     AS is_eligible_sao_flag,
