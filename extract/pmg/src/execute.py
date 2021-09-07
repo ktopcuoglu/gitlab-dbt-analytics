@@ -72,8 +72,6 @@ if __name__ == "__main__":
 
     sql_statement = get_pmg_reporting_data_query(start_time, end_time)
     # Groups by date so we can create a file for each day
-    df = bq.get_dataframe_from_sql(sql_statement).groupby("date")
-
     df_by_date = bq.get_dataframe_from_sql(sql_statement).groupby("date")
 
     written_files = [write_date_json(date, df) for date, df in df_by_date]
