@@ -7,5 +7,5 @@ deployment_creation,release,ops,TRUE,FALSE
 secure_ci_build_creation,secure,secure_protect,TRUE,FALSE
 protect_ci_build_creation,protect,secure_protect,TRUE,FALSE
 package_creation,package,ops,TRUE,FALSE
-push_actions, create, dev, TRUE, FALSE
+push_action, create, dev, TRUE, FALSE
 
