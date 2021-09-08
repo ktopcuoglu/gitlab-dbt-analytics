@@ -298,7 +298,7 @@ models:
       - name: is_reseller
         description: Identify whether a crm_account is a reseller.
       - name: subscription_sales_type
-        description: Identifies whether a subscription is Sales-Assisted or Self-Service / Web Direct.
+        description: Identifies whether a subscription is Sales-Assisted or Self-Service / Web Direct
       - name: billing_account_number
         tests:
           - not_null:
