@@ -7,6 +7,8 @@ WITH sfdc_opportunity AS (
     SELECT opportunity_id,
           opportunity_category
     FROM {{ref('sfdc_opportunity')}}
+    -- NF 20210906 remove JiHu opties from the models
+    WHERE is_jihu_account = 0
 
 ), sfdc_users_xf AS (
 
@@ -784,7 +786,7 @@ WITH sfdc_opportunity AS (
           -- Not JiHu
             THEN 1
           ELSE 0
-      END                                                           AS is_elgible_age_analysis_flag,
+      END                                                           AS is_eligible_age_analysis_flag,
 
       CASE
         WHEN oppty_final.is_edu_oss = 0

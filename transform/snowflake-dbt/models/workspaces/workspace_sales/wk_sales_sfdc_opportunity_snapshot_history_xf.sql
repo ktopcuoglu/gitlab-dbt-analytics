@@ -10,6 +10,7 @@ WITH date_details AS (
     SELECT *
     FROM {{ref('sfdc_accounts_xf')}} 
 
+
 ), sfdc_opportunity_xf AS (
 
     SELECT 
@@ -506,6 +507,8 @@ WITH date_details AS (
       ON created_date_detail.date_actual = sfdc_opportunity_snapshot_history.created_date::DATE
     LEFT JOIN date_details net_arr_created_date
       ON net_arr_created_date.date_actual = sfdc_opportunity_snapshot_history.iacv_created_date::DATE
+    -- NF 20210906 remove JiHu opties from the models
+    WHERE is_jihu_account = 0
 
 ), net_iacv_to_net_arr_ratio AS (
 
@@ -908,7 +911,7 @@ WITH date_details AS (
           -- Not JiHu
             THEN 1
           ELSE 0
-      END                                                   AS is_elgible_age_analysis_flag,
+      END                                                   AS is_eligible_age_analysis_flag,
 
       CASE
         WHEN opp_snapshot.is_edu_oss = 0
