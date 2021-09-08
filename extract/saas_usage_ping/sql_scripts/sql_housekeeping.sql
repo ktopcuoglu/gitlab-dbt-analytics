@@ -2,6 +2,13 @@
 -- This is one time script and will be deleted after reviewing
 ----------------------------------------------------------------------
 
+----------------------------------------------------------------------
+-- 1/3 Creation script to clone the table with the data
+----------------------------------------------------------------------
+CREATE TABLE "8994-CHANGE-IN-SAAS_USAGE_PING-GITLAB_DOTCOM_RAW".saas_usage_ping.instance_sql_metrics -- rename schema_name for PROD
+CLONE "8994-CHANGE-IN-SAAS_USAGE_PING-GITLAB_DOTCOM_RAW".saas_usage_ping.gitlab_dotcom
+COPY GRANTS;
+
 
 ----------------------------------------------------------------------
 -- Check newly created tables
@@ -14,31 +21,8 @@ SELECT *
   FROM "8994-CHANGE-IN-SAAS_USAGE_PING-GITLAB_DOTCOM_RAW".saas_usage_ping.instance_sql_errors
  LIMIT 10;
 
-
 ----------------------------------------------------------------------
--- 1/3 Insert script for data into new table
-----------------------------------------------------------------------
-INSERT INTO "8994-CHANGE-IN-SAAS_USAGE_PING-GITLAB_DOTCOM_RAW".saas_usage_ping.instance_sql_metrics(query_map,
-                                                                                                    run_results,
-                                                                                                    ping_date,
-                                                                                                    _uploaded_at)
-SELECT query_map,
-       run_results,
-       ping_date,
-       _uploaded_at
-  FROM "8994-CHANGE-IN-SAAS_USAGE_PING-GITLAB_DOTCOM_RAW"."SAAS_USAGE_PING"."GITLAB_DOTCOM" -- rename schema_name for PROD
- ORDER BY ping_date DESC;
-
-
-----------------------------------------------------------------------
--- 2/3 Delete script for the old table.
-----------------------------------------------------------------------
-
-DROP TABLE "8994-CHANGE-IN-SAAS_USAGE_PING-GITLAB_DOTCOM_RAW"."SAAS_USAGE_PING"."GITLAB_DOTCOM"."SAAS_USAGE_PING"."GITLAB_DOTCOM"; -- rename schema_name for PROD
-
-
-----------------------------------------------------------------------
--- 3/3 UPDATE script for RUN_ID column.
+-- 2/3 UPDATE script for RUN_ID column.
 ----------------------------------------------------------------------
 UPDATE "8994-CHANGE-IN-SAAS_USAGE_PING-GITLAB_DOTCOM_RAW".saas_usage_ping.instance_sql_metrics -- rename schema_name for PROD
    SET run_id = md5_hex(ping_date)
@@ -46,6 +30,13 @@ UPDATE "8994-CHANGE-IN-SAAS_USAGE_PING-GITLAB_DOTCOM_RAW".saas_usage_ping.instan
 
 
 COMMIT;
+
+----------------------------------------------------------------------
+-- 3/3 Delete script for the old table in case all good with the
+-- new table.
+----------------------------------------------------------------------
+
+DROP TABLE "8994-CHANGE-IN-SAAS_USAGE_PING-GITLAB_DOTCOM_RAW"."SAAS_USAGE_PING"."GITLAB_DOTCOM"; -- rename schema_name for PROD
 
 ----------------------------------------------------------------------
 -- Test cases

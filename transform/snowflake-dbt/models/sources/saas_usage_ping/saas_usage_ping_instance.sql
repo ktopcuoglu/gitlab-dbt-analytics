@@ -10,8 +10,8 @@ WITH base AS (
       TRY_PARSE_JSON(query_map)   AS query_map,
       TRY_PARSE_JSON(run_results) AS run_results,
       ping_date::TIMESTAMP        AS ping_date,
-      DATEADD('s', _uploaded_at, '1970-01-01')::TIMESTAMP     AS _uploaded_at,
-      run_id                      AS run_id
+      run_id                      AS run_id,
+      DATEADD('s', _uploaded_at, '1970-01-01')::TIMESTAMP     AS _uploaded_at
     FROM base  
 
 )
