@@ -4013,7 +4013,7 @@ users:
         can_login: no
         member_of: []
 
-    - hsharma:
+    - hsharma: # De provisioned as part of Quarterly audit and security check.
         can_login: no
         member_of: []
 
