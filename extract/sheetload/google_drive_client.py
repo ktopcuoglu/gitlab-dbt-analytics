@@ -131,7 +131,7 @@ class GoogleDriveClient:
             query = f"{query} and mimeType='{file_type}'"
 
         page_token = None
-        all_results = []
+        all_results: List[Dict] = []
 
         while True:
             if page_token:
