@@ -5,19 +5,19 @@
     })
 }}
 
-{{simple_cte([('monthly_usage_data', 'monthly_usage_data')])}}
+{{simple_cte([('fct_monthly_usage_data', 'fct_monthly_usage_data')])}}
 
 , smau_only AS (
 
     SELECT 
-      host_id,
-      instance_id,
-      {{dbt_utils.surrogate_key(['host_id', 'instance_id'])}} AS organization_id,
-      ping_id                                                 AS dim_usage_ping_id,    
+      host_name,
+      dim_instance_id,
+      {{dbt_utils.surrogate_key(['host_name', 'dim_instance_id'])}} AS organization_id,
+      dim_usage_ping_id                                             AS dim_usage_ping_id,    
       stage_name,
-      created_month,
+      ping_created_month,
       monthly_metric_value
-    FROM monthly_usage_data
+    FROM fct_monthly_usage_data
     WHERE is_smau = TRUE
 
 ), fct_usage_ping_payload AS (
@@ -28,7 +28,7 @@
 )
 
 SELECT 
-  smau_only.created_month AS reporting_month,
+  smau_only.ping_created_month                                    AS reporting_month,
   smau_only.organization_id,
   'Self-Managed' AS delivery,
   IFF(instance_user_count = 1, 'Individual', 'Group')             AS organization_type,

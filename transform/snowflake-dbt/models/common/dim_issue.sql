@@ -37,7 +37,9 @@ WITH prep_issue AS (
       state_name,
       duplicated_to_id,
       promoted_to_epic_id,
-      issue_type
+      issue_type,
+      severity,
+      labels
     FROM {{ ref('prep_issue') }}
 
 )

@@ -32,6 +32,7 @@ product,For large product analytics data
 purchase_channel, Related to identifying types of purchase channel data
 retention, Related to retention of customers
 retention_snapshots, Related to snapshotted retention data
+safe, for models that need to be compliant with the SAFE framework
 sales_funnel, related to Lead to Cash funnel
 sales_territory, Related to sales territory mappings
 subscription_snapshot,For Subscription Snapshots
@@ -44,4 +45,5 @@ thanos,Prometheus Data pipeline
 workspace, Related to team workspaces
 version_db,Relates to the Version Database
 zuora,Relates to Zuora data
+zuora_api_sandbox, Relates to Zuora API Sandbox data
 zuora_revenue, Relates to Zuora Revenue data

@@ -49,7 +49,43 @@ models:
         description: The version of the rate plan charge. Each time a charge is amended, Zuora creates a new version of the rate plan charge.
       - name: charge_type
         description: Specifies the type of charge
-
+  - name: wip_mart_waterfall
+    description: Work in progress mart table replicating the waterfall report as seen in the Zuora Revenue UI. It shows how revenue is recognized over time for a given line item in a revenue contract. The grain of this table is as of period month - revenue contract line item - accounting segment - accounting type and can be summed to a higher grain if necessary.
+    columns:
+      - name: as_of_period_id
+        description: The waterfall can be seen as of a certain time period. This column allows you to filter the waterfall report to how it appeared in a given month.
+        tests:
+          - not_null
+      - name: book_name
+        description: The unique identifier of an accounting book
+      - name: organization_name
+        description: The unique identifier of an organization in Zuora Revenue
+      - name: revenue_contract_id
+        description: The unique identifier of a revenue contract 
+        tests:
+          - not_null
+      - name: revenue_contract_performance_obligation_name
+        description: The unique identifier of one of the performance obligations attached to a revenue contract
+        tests:
+          - not_null
+      - name: revenue_contract_line_id
+        description: The unique identifier of a line item in a revenue contract 
+        tests:
+          - not_null
+      - name: revenue_contract_customer_name
+        description: The name of the customer for a given revenue contract line item 
+        tests:
+          - not_null
+      - name: sales_order_number
+        description: The unique identifier of a sales order.
+      - name: sales_order_line_number
+        description: The unique identifier of a line item in a sales order.
+      - name: customer_number
+        description: The unique identifier of a customer in both Zuora Revenue and Zuora Billing
+      - name: accounting_segment
+        description: The unique identifier of an accounting segment.
+      - name: accounting_type_id
+        description: The unique identifier of an accounting type
   - name: rpt_crm_opportunity_accepted_period
   - name: rpt_crm_opportunity_closed_period
   - name: rpt_crm_person_mql
@@ -89,3 +125,297 @@ models:
         tests:
           - unique
           - not_null
+  - name: dim_product_detail_api_sandbox
+    columns:
+      - name: dim_product_detail_id
+        description: The unique ID of each row in dim_product_detail, based on product rate plan charge ID.
+        tests:
+          - unique:
+              severity: warn
+          - not_null:
+              severity: warn
+      - name: dim_product_tier_id
+        description: The unique ID of a product tier determined in dim_product_tier.
+        tests:
+          - not_null:
+              severity: warn
+      - name: product_id
+        description: The ID of the product that contains the product rate plan.
+        tests:
+          - not_null:
+              severity: warn
+      - name: product_name
+        description: The name of the product
+      - name: is_reporter_license
+        description: "Reporter licenses are in the Products with 'Additional Permission Types' in the name."
+      - name: billing_list_price
+        description: The price of the tier if the charge is a flat fee, or the price of each unit in the tier if the charge model is tiered pricing.
+      - name: product_rate_plan_charge_id
+        description: The unique ID of a product rate plan charge
+      - name: product_rate_plan_name
+        description: The name of the product rate plan. The name doesn't have to be unique in a Product Catalog, but the name has to be unique within a product.
+      - name: product_rate_plan_charge_name
+        description: The name of the product rate plan charge
+      - name: product_sku
+        description: The unique SKU for the product
+      - name: product_tier_historical
+        description: Product pricing tiers prior to [tier renaming](https://gitlab-com.gitlab.io/packaging-and-pricing/pricing-handbook/handbook/renaming_tiers/) (early 2021).
+      - name: product_tier_historical_short
+        description: Pulls the product tier from `product_tier_historical` with the delivery type removed
+      - name: product_tier_name
+        description: Product [pricing tiers](https://about.gitlab.com/handbook/marketing/strategic-marketing/tiers/) for both SaaS and Self-Managed customers. Includes the mapping from SaaS - Silver to SaaS - Premium, and from SaaS - Gold to SaaS - Ultimate.
+      - name: product_tier_name_short
+        description: Pulls the product tier from `product_tier_name` with the delivery type removed
+      - name: effective_start_date
+        description: The date when the product becomes available and can be subscribed to
+      - name: effective_end_date
+        description: The date when the product expires and can't be subscribed to anymore
+      - name: is_oss_or_edu_rate_plan
+        description: Flag for rate plans containing OSS or EDU
+  - name: prep_product_detail_api_sandbox
+    columns:
+      - name: dim_product_detail_id
+        description: The unique ID of each row in dim_product_detail, based on product rate plan charge ID.
+      - name: dim_product_tier_id
+        description: The unique ID of a product tier determined in dim_product_tier.
+      - name: product_id
+        description: The ID of the product that contains the product rate plan.
+      - name: product_name
+        description: The name of the product
+      - name: is_reporter_license
+        description: "Reporter licenses are in the Products with 'Additional Permission Types' in the name."
+      - name: billing_list_price
+        description: The price of the tier if the charge is a flat fee, or the price of each unit in the tier if the charge model is tiered pricing.
+      - name: product_rate_plan_charge_id
+        description: The unique ID of a product rate plan charge
+      - name: product_rate_plan_name
+        description: The name of the product rate plan. The name doesn't have to be unique in a Product Catalog, but the name has to be unique within a product.
+      - name: product_rate_plan_charge_name
+        description: The name of the product rate plan charge
+      - name: product_sku
+        description: The unique SKU for the product
+      - name: product_tier_historical
+        description: Product pricing tiers prior to [tier renaming](https://gitlab-com.gitlab.io/packaging-and-pricing/pricing-handbook/handbook/renaming_tiers/) (early 2021).
+      - name: product_tier_historical_short
+        description: Pulls the product tier from `product_tier_historical` with the delivery type removed
+      - name: product_tier_name
+        description: Product [pricing tiers](https://about.gitlab.com/handbook/marketing/strategic-marketing/tiers/) for both SaaS and Self-Managed customers. Includes the mapping from SaaS - Silver to SaaS - Premium, and from SaaS - Gold to SaaS - Ultimate.
+      - name: product_tier_name_short
+        description: Pulls the product tier from `product_tier_name` with the delivery type removed
+      - name: effective_start_date
+        description: The date when the product becomes available and can be subscribed to
+      - name: effective_end_date
+        description: The date when the product expires and can't be subscribed to anymore
+      - name: is_oss_or_edu_rate_plan
+        description: Flag for rate plans containing OSS or EDU
+  - name: map_product_tier_api_sandbox
+    columns:
+      - name: product_rate_plan_id
+        description: "Rate Plan ID for Zuora Product"
+      - name: product_rate_plan_name
+        description: "rate plan name from Zuora product source"
+      - name: product_tier_historical
+        description: Product pricing tiers prior to [tier renaming](https://gitlab-com.gitlab.io/packaging-and-pricing/pricing-handbook/handbook/renaming_tiers/) (early 2021).
+        tests:
+          - not_null:
+              severity: warn
+      - name: product_delivery_type
+        description: "How product is delivered to customer; SaaS or Self-Managed (or Other)"
+      - name: product_ranking
+        description: "Numeric product pricing tier, independent of delivery type"
+      - name: product_tier
+        description: Product [pricing tiers](https://about.gitlab.com/handbook/marketing/strategic-marketing/tiers/) for both SaaS and Self-Managed customers. Includes the mapping from SaaS - Silver to SaaS - Premium, and from SaaS - Gold to SaaS - Ultimate.
+        tests:
+          - not_null:
+              severity: warn
+  - name: prep_product_tier_api_sandbox
+    columns:
+      - name: dim_product_tier_id
+        description: "The unique identifier of Pricing tiers for Zuora Products"
+        tests:
+          - not_null:
+              severity: warn
+          - unique:
+              severity: warn
+      - name: product_tier_historical
+        description: Product pricing tiers prior to [tier renaming](https://gitlab-com.gitlab.io/packaging-and-pricing/pricing-handbook/handbook/renaming_tiers/) (early 2021).
+        tests:
+          - not_null:
+              severity: warn
+          - unique:
+              severity: warn
+      - name: product_tier_historical_short
+        description: Pulls the product tier from `product_tier_historical` with the delivery type removed
+      - name: product_tier_name
+        description: Product [pricing tiers](https://about.gitlab.com/handbook/marketing/strategic-marketing/tiers/) for both SaaS and Self-Managed customers. Includes the mapping from SaaS - Silver to SaaS - Premium, and from SaaS - Gold to SaaS - Ultimate.
+        tests:
+          - not_null:
+              severity: warn
+      - name: product_tier_name_short
+        description: Pulls the product tier from `product_tier_name` with the delivery type removed
+      - name: product_delivery_type
+        description: "How product is delivered to customer; SaaS or Self-Managed (or Other)"
+      - name: product_ranking
+        description: "Numeric product pricing tier, independent of delivery type"
+  - name: dim_billing_account_api_sandbox
+    columns:
+      - name: dim_billing_account_id
+        description: Unique id of the Zuora account
+        tests:
+          - not_null:
+              severity: warn
+          - unique:
+              severity: warn
+      - name: dim_crm_account_id
+        description: CRM account ID for the account
+      - name: account_number
+        description: A unique Zuora account number
+      - name: account_name
+        description: Zuora account name
+      - name: account_status
+        description: Status of the account in the system. Can be draft, active, cancelled.
+      - name: parent_id
+        description: Identifier of the parent customer account
+      - name: sfdc_account_code
+      - name: account_currency
+        description: A currency as defined in Billing Settings in the Zuora UI
+      - name: sold_to_country
+        description: The country of the sold to contact
+      - name: is_deleted
+        description: flag indicating if account has been deleted
+      - name: is_excluded
+        description: Field used to exclude test accounts from downstream models
+  - name: prep_amendment_api_sandbox
+    description: Prep table for Zuora Amendments that increment subscription versions. This prep table will be used in Facts and Dimensions.
+    columns:
+      - name: dim_amendment_id
+        tests:
+          - not_null:
+              severity: warn
+          - unique:
+              severity: warn
+  - name: prep_subscription_api_sandbox
+    columns:
+      - name: dim_subscription_id
+        description: Unique identifier of a version of a subscription
+        tests:
+          - not_null:
+              severity: warn
+          - unique:
+              severity: warn
+      - name: dim_crm_account_id
+        description: account id from SFDC identifing the customer
+      - name: dim_billing_account_id
+        description: The id of the Zuora account the subscription is associated with
+      - name: dim_crm_person_id_invoice_owner
+      - name: dim_crm_opportunity_id
+      - name: dim_subscription_id_original
+      - name: dim_subscription_id_previous
+      - name: amendment_id
+      - name: subscription_name_slugify
+        description: The unique identifier of the subscription
+      - name: subscription_status
+        description: The status of the subscription
+        tests:
+          - not_null:
+              severity: warn
+          - accepted_values:
+              values: ['Active', 'Cancelled', 'Draft', 'Expired', 'Suspended']
+      - name: subscription_version
+        description: The version number of the subscription
+      - name: is_auto_renew
+        description: Boolean field, if true, this subscription automatically renews at the end of the subscription term
+      - name: zuora_renewal_subscription_name
+        description: name of the linked subscription that renews the prior subscription in a lineage
+      - name: zuora_renewal_subscription_name_slugify
+        description: name of the linked subscription that renews the prior subscription in a lineage
+      - name: renewal_term
+        description: The length of the period for the subscription renewal term
+      - name: renewal_term_period_type
+        description: The period type for the subscription renewal term. This field is used with the renewal term field to specify the subscription renewal term.
+      - name: subscription_start_date
+        description: The date when the subscription term starts. This date is the same as the start date of the original term, which isn't necessarily the start date of the current or new term.
+      - name: subscription_end_date
+        description: The date when the subscription term ends, where the subscription ends at midnight the day before. For example, if the SubscriptionEndDate is 12/31/2016, the subscriptions ends at midnight (00:00:00 hours) on 12/30/2016. This date is the same as the term end date or the cancelation date, as appropriate.
+      - name: subscription_start_month
+        description: The month when the subscription term starts. This month is the same as the start month of the original term, which isn't necessarily the start month of the current or new term.
+      - name: subscription_end_month
+        description: The month when the subscription term ends. This month is the same as the term end month or the cancelation month, as appropriate.
+      - name: subscription_sales_type
+        description: Identifies whether a subscription is Sales-Assisted or Self-Service / Web Direct.
+        tests:
+          - not_null:
+              severity: warn
+          - accepted_values:
+                  values: ['Sales-Assisted', 'Self-Service']
+      - name: is_myb
+        description: MYB = Multi-Year Booking. This boolean flag identifies if a subscription is booked for more than one year. This can either be by having a term greater than 12 months or having a linked subscription.
+      - name: is_myb_with_multi_subs
+        description: MYB = Multi-Year Booking. This boolean flag identifies if a subscription is booked for more than one year by using multiple linked subscriptions only. A subscription with a term greater than 12 but does not have linked subscriptions has a value of FALSE.
+  - name: dim_subscription_api_sandbox
+    columns:
+      - name: dim_subscription_id
+        description: Unique identifier of a version of a subscription
+        tests:
+          - not_null:
+              severity: warn
+          - unique:
+              severity: warn
+      - name: dim_crm_account_id
+        description: account id from SFDC identifing the customer
+      - name: dim_billing_account_id
+        description: The id of the Zuora account the subscription is associated with
+      - name: dim_crm_person_id_invoice_owner
+      - name: dim_crm_opportunity_id
+      - name: dim_subscription_id_original
+        tests:
+          - not_null:
+              severity: warn
+      - name: dim_subscription_id_previous
+      - name: amendment_id
+      - name: subscription_name_slugify
+        description: The unique identifier of the subscription
+      - name: subscription_status
+        description: The status of the subscription
+        tests:
+          - not_null:
+              severity: warn
+          - accepted_values:
+              values: ['Active', 'Cancelled', 'Draft', 'Expired', 'Suspended']
+      - name: subscription_version
+        description: The version number of the subscription
+      - name: is_auto_renew
+        description: Boolean field, if true, this subscription automatically renews at the end of the subscription term
+      - name: zuora_renewal_subscription_name
+        description: name of the linked subscription that renews the prior subscription in a lineage
+      - name: zuora_renewal_subscription_name_slugify
+        description: name of the linked subscription that renews the prior subscription in a lineage
+      - name: renewal_term
+        description: The length of the period for the subscription renewal term
+      - name: renewal_term_period_type
+        description: The period type for the subscription renewal term. This field is used with the renewal term field to specify the subscription renewal term.
+      - name: subscription_start_date
+        description: The date when the subscription term starts. This date is the same as the start date of the original term, which isn't necessarily the start date of the current or new term.
+      - name: subscription_end_date
+        description: The date when the subscription term ends, where the subscription ends at midnight the day before. For example, if the SubscriptionEndDate is 12/31/2016, the subscriptions ends at midnight (00:00:00 hours) on 12/30/2016. This date is the same as the term end date or the cancelation date, as appropriate.
+      - name: subscription_start_month
+        description: The month when the subscription term starts. This month is the same as the start month of the original term, which isn't necessarily the start month of the current or new term.
+      - name: subscription_end_month
+        description: The month when the subscription term ends. This month is the same as the term end month or the cancelation month, as appropriate.
+      - name: subscription_sales_type
+        description: Identifies whether a subscription is Sales-Assisted or Self-Service / Web Direct.
+        tests:
+          - not_null:
+              severity: warn
+          - accepted_values:
+                  values: ['Sales-Assisted', 'Self-Service']
+      - name: lineage
+        description: "All the subscriptions subsquent to the primary subscription, separated by commas."
+      - name: cohort_month
+      - name: cohort_quarter
+      - name: cohort_year
+      - name: is_myb
+        description: MYB = Multi-Year Booking. This boolean flag identifies if a subscription is booked for more than one year. This can either be by having a term greater than 12 months or having a linked subscription.
+      - name: is_myb_with_multi_subs
+        description: MYB = Multi-Year Booking. This boolean flag identifies if a subscription is booked for more than one year by using multiple linked subscriptions only. A subscription with a term greater than 12 but does not have linked subscriptions has a value of FALSE.
+

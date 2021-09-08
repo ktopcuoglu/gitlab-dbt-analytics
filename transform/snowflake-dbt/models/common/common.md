@@ -486,15 +486,6 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
-{% docs fct_usage_ping_payloads %}
-Factual table with metadata on usage ping payloads received.
-
-The grain of the table is a usage_ping_id.
-
-Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
-
-{% enddocs %}
-
 {% docs fct_usage_ping_payload %}
 Factual table with metadata on usage ping payloads received.
 
@@ -882,6 +873,18 @@ LIMIT 100
 
 {% enddocs %}
 
+{% docs fct_monthly_usage_data %}
+
+Union of models `prep_monthly_usage_data_28_days` and `prep_monthly_usage_data_all_time`
+
+{% enddocs %}
+
+{% docs fct_weekly_usage_data_7_days %}
+
+Union of models `prep_monthly_usage_data_28_days` and `prep_monthly_usage_data_all_time`
+
+{% enddocs %}
+
 {% docs fct_daily_event_400 %}
 
 Factual table built on top of prep_events tables that allows to explore usage data of free and paid users and namespaces from our SaaS instance gitlab.com.
@@ -898,4 +901,47 @@ Some examples of analysis that were done with the legacy table `gitlab_dotcom_da
 1. [New Namespace Stage Adoption](https://app.periscopedata.com/app/gitlab/761347/Group-Namespace-Conversion-Metrics): Evaluate how often new namespaces are adopting stages such as 'Create' and 'Verify' within their first days of use.
 1. [Stages per Organization](https://app.periscopedata.com/app/gitlab/824044/Stages-per-Organization-Deep-Dive---SpO): Identify how namespaces adopt stages within their first days and how this correlates with paid conversion and long-term engagement.
 
+{% enddocs %}
+
+{% docs fct_event_all %}
+
+Factual table allowing us to explore all events happening on our SaaS Instance www.gitlab.com.
+
+This table allows us to answer for example some questions like:
+
+- basic: how many ultimate namespace open an issue every month ?
+- intermediate: split by plan_id, how many users that have used both merge requests and issues on a given month ?
+- advanced: in the first 30 days after the creation of the namespace, which stage/feature our users tend to adopt more ?
+
+The list of available events [is currently available here](https://app.periscopedata.com/app/gitlab/897425/fct_event-workflow?widget=12279318&udv=0)
+
+{% enddocs %}
+
+{% docs fct_daily_event_all %}
+
+Factual table built on top of prep_events tables that allows to explore usage data of free and paid users and namespaces from our SaaS instance gitlab.com.
+
+The granularity is one event per day per user per ultimate parent namespace.
+
+That means if a user creates the same day an issue on the Gitlab Data Team project and 2 issues in the main gitlab-com project, 2 rows will be recorded in the table.
+
+If 2 users A and B create on the same day 1 merge request on the GitLab Data Team projectm 2 rows will be also recorded in the table.
+
+Some examples of analysis that were done with the legacy table `gitlab_dotcom_daily_usage_data_events`:
+
+1. [User Journey Analysis](https://app.periscopedata.com/app/gitlab/869174/WIP-Cross-Stage-Adoption-Dashboard): See how often different product stages are used by the same namespaces. See what stages are used in combination.
+1. [New Namespace Stage Adoption](https://app.periscopedata.com/app/gitlab/761347/Group-Namespace-Conversion-Metrics): Evaluate how often new namespaces are adopting stages such as 'Create' and 'Verify' within their first days of use.
+1. [Stages per Organization](https://app.periscopedata.com/app/gitlab/824044/Stages-per-Organization-Deep-Dive---SpO): Identify how namespaces adopt stages within their first days and how this correlates with paid conversion and long-term engagement.
+
+{% enddocs %}
+
+{% docs dim_issue_links %}
+
+Dimensional table representing links between GitLab Issues recorded by the Events API. [More info about issue links can be found here](https://docs.gitlab.com/ee/user/project/issues/related_issues.html)
+
+Issue Links are created when relationships are defined between issues. This table has slowly changing dimensions, as issue links/relationships can be removed over time
+
+The grain of the table is the `dim_issue_link_id`. This table is easily joinable with:
+
+- `dim_issue` through `dim_issue_id` on `dim_source_issue_id` & `dim_target_issue_id`
 {% enddocs %}

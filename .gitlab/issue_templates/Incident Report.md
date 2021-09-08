@@ -1,4 +1,4 @@
-<!-- Subject Template: Incident YYMMDD - [name of incident] -->
+<!-- Subject Template: Incident YYYY-MM-DD | [name of incident] -->
 
 ## TL;DR
 

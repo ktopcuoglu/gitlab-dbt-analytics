@@ -44,60 +44,6 @@ models:
           - unique
         tags: ["tdf", "common", "sales_funnel"]
 
-  - name: prep_sfdc_account
-    description: '{{ doc("prep_sfdc_account") }}'
-    columns:
-      - name: dim_crm_account_id
-        description: CRM Account ID provided by Salesforce
-        tests:
-          - not_null
-      - name: dim_parent_crm_account_id
-        description: Ulimate parent CRM Account ID provided by Salesforce
-      - name: account_tsp_region_clean
-        description: Sales region, temp cleaning column for account
-      - name: parent_tsp_region_clean
-        description: Sales region, temp cleaning column for parent
-      - name: account_tsp_sub_region_clean
-        description: Sales sub region, temp cleaning column for account
-      - name: parent_tsp_sub_region_clean
-        description: Sales sub region, temp cleaning column for parent
-      - name: account_tsp_area_clean
-        description: Sales area, temp cleaning column for account
-      - name: parent_tsp_area_clean
-        description: Sales area, temp cleaning column for parent
-      - name: account_tsp_territory_clean
-        description: Sales territory, temp cleaning column for account
-      - name: parent_tsp_territory_clean
-        description: Sales territory, temp cleaning column for parent
-      - name: account_df_industry_clean
-        description: Industry, temp cleaning column for account
-      - name: parent_df_industry_clean
-        description: Industry, temp cleaning column for parent
-      - name: account_sales_segment_clean
-        description: Dim sales segment name final source column
-      - name: parent_sales_segment_clean
-        description: Dim sales segment name final source column
-      - name: account_billing_country_clean
-        description: Dim location country name final source column
-      - name: parent_billing_country_clean
-        description: Dim location country name final source column
-      - name: dim_account_sales_territory_name_source
-        description: Dim sales territory name final source column
-      - name: dim_parent_sales_territory_name_source
-        description: Dim sales territory name final source column
-      - name: dim_account_industry_name_source
-        description: Dim industry name final source column
-      - name: dim_parent_industry_name_source
-        description: Dim industry name final source column
-      - name: dim_account_sales_segment_name_source
-        description: Dim sales segment name final source column
-      - name: dim_parent_sales_segment_name_source
-        description: Dim sales segment name final source column
-      - name: dim_account_location_country_name_source
-        description: Dim location country name final source column
-      - name: dim_parent_location_country_name_source
-        description: Dim location country name final source column
-
   - name: prep_campaign
     description: '{{ doc("prep_campaign") }}'
     columns:
@@ -358,94 +304,6 @@ models:
           - not_null
           - unique
 
-  - name: prep_recurring_charge_subscription_monthly
-    description: '{{ doc("prep_recurring_charge_subscription_monthly") }}'
-    columns:
-      - name: dim_subscription_id
-        description: Unique identifier of a version of a subscription
-        tests:
-          - not_null
-        tags: ["tdf", "common", "gainsight"]
-      - name: dim_subscription_id_original
-        description: Identifier of the original subscription in lineage of a given Subscription ID
-        tests:
-          - not_null
-        tags: ["tdf", "common", "gainsight"]
-      - name: dim_billing_account_id
-        description: ID of the Zuora account associated with a given Subscription ID
-        tests:
-          - not_null
-        description: Zuora account id
-      - name: dim_crm_account_id
-        description: Account ID from SFDC identifing the customer
-      - name: dim_date_id
-        description: The identifier of date month in dim_date
-        tests:
-          - not_null
-      - name: subscription_status
-        description: Status of the subscription
-        tests:
-          - not_null
-          - accepted_values:
-              values: ['Active', 'Cancelled', 'Draft', 'Expired']
-        tags: ["tdf", "common", "gainsight"]
-      - name: unit_of_measure
-      - name: total_mrr
-        description: Monthly Recurring Revenue value for given month for a given Subscription ID
-      - name: total_arr
-        description: Annual Recurring Revenue value for given month for a given Subscription ID
-      - name: total_quantity
-        description: Total quantity
-      - name: sm_mrr
-        description: Monthly Recurring Revenue value for given month from Self-Managed products
-      - name: sm_arr
-        description: Annual Recurring Revenue value for given month from Self-Managed products
-      - name: sm_quantity
-        description: Total quantity of Self-Managed products
-      - name: saas_mrr
-        description: Monthly Recurring Revenue value for given month from SaaS products
-      - name: saas_arr
-        description: Annual Recurring Revenue value for given month from SaaS products
-      - name: saas_quantity
-        description: Total quantity of SaaS products
-      - name: other_mrr
-        description: Monthly Recurring Revenue value for given month from products that are neither Self-Managed nor SaaS
-      - name: other_arr
-        description: Annual Recurring Revenue value for given month from products that are neither Self-Managed nor SaaS
-      - name: other_quantity
-        description: Total quantity of products that are neither Self-Managed nor SaaS
-      - name: is_latest_record_per_subscription
-        description: Flags if the row contains the most recent record received for the subscription.
-
-  - name: prep_recurring_charge
-    description: '{{ doc("prep_recurring_charge") }}'
-    columns:
-      - name: mrr_id
-        description: The unique identifier of the MRR.
-        tests:
-          - not_null
-          - unique
-      - name: dim_date_id
-        description: The identifier of date month in dim_date
-      - name: dim_subscription_id
-        description: The identifier of subscription in dim_subscriptions table
-        tests:
-          - not_null
-      - name: dim_product_detail_id
-        description: The identifier of product details in dim_product_detail
-        tests:
-          - not_null
-      - name: dim_billing_account_id
-        description: Zuora account id
-      - name:  dim_crm_account_id
-        description: account id frm crm
-      - name: mrr
-        description: Monthly Recurring Revenue value for given month
-      - name: arr
-        description: Annual Recurring Revenue value for given month
-      - name: quantity
-        description: Total quantity
-
   - name: prep_product_detail
     columns:
       - name: dim_product_detail_id
@@ -482,69 +340,6 @@ models:
         description: The date when the product expires and can't be subscribed to anymore
       - name: is_oss_or_edu_rate_plan
         description: Flag for rate plans containing OSS or EDU
-
-  - name: prep_charge
-    description: '{{ doc("prep_charge") }}'
-    columns:
-      - name: dim_charge_id
-        description: The unique identifier of the rate plan charge.
-        tests:
-          - not_null
-          - unique
-      - name: dim_date_id
-        description: The identifier of date month in dim_date
-      - name: dim_subscription_id
-        description: The identifier of subscription in dim_subscriptions table
-        tests:
-          - not_null
-      - name: dim_product_detail_id
-        description: The identifier of product details in dim_product_detail
-        tests:
-          - not_null
-      - name: dim_billing_account_id
-        description: Zuora account id
-      - name:  dim_crm_account_id
-        description: account id frm crm
-      - name: mrr
-        description: Monthly Recurring Revenue value for given month
-      - name: arr
-        description: Annual Recurring Revenue value for given month
-      - name: quantity
-        description: Total quantity
-
-  - name: prep_crm_account
-    columns:
-      - name: dim_crm_account_id
-        description: account id from SFDC identifing the customer
-      - name: crm_account_name
-        description: account name from SFDC
-      - name: crm_account_country
-        description: billing country of SFDC account
-      - name: dim_parent_crm_account_id
-        description: ultimate parent account id
-      - name: ultimate_parent_account_name
-        description: parent account name
-      - name: ultimate_parent_account_segment
-        description: Sales segment of the parent account
-      - name: ultimate_parent_billing_country
-        description: billing country of parent account
-      - name: record_type_id
-      - name: federal_account
-      - name: gitlab_com_user
-      - name: is_jihu_account
-      - name: account_owner
-      - name: account_owner_team
-      - name: account_type
-      - name: gtm_strategy
-      - name: technical_account_manager
-      - name: is_deleted
-        description: flag indicating if account has been deleted
-      - name: is_reseller
-        description: Identify whether a crm_account is a reseller.
-      - name: merged_to_account_id
-        description: for deleted accounts this is the SFDC account they were merged to
-      - name: crm_account_created_date
-        description: The date on which the CRM account was created in SFDC
 
   - name: prep_sales_segment
     description: '{{ doc("prep_sales_segment") }}'
@@ -618,6 +413,10 @@ models:
           - accepted_values:
                   values: ['Sales-Assisted', 'Self-Service']
         tags: ["tdf"]
+      - name: namespace_name
+        description: The namespace related to the subscription.
+      - name: namespace_id
+        description: The id of the namespace related to the subscription.
       - name: is_myb
         description: MYB = Multi-Year Booking. This boolean flag identifies if a subscription is booked for more than one year. This can either be by having a term greater than 12 months or having a linked subscription.
       - name: is_myb_with_multi_subs
@@ -702,20 +501,6 @@ models:
         description: "How product is delivered to customer; SaaS or Self-Managed (or Other)"
       - name: product_ranking
         description: "Numeric product pricing tier, independent of delivery type"
-
-  - name: prep_quote
-    description: '{{ doc("prep_quote") }}'
-    columns:
-      - name: dim_quote_id
-        description: The unique identifier for each of the quotes.
-        tests:
-          - not_null
-          - unique
-      - name: quote_number
-      - name: quote_name
-      - name: quote_status
-      - name: is_primary_quote
-      - name: quote_start_date
 
   - name: prep_license
     description: '{{ doc("prep_license") }}'
@@ -1761,11 +1546,145 @@ models:
         tests:
           - unique
           - not_null
+  - name: prep_monthly_usage_data_28_days
+    description: '{{ doc("prep_monthly_usage_data_28_days") }}'
+    columns:
+        - name: primary_key
+          tests:
+            - not_null
+            - unique
+        - name: dim_usage_ping_id
+          tests:
+            - not_null
+        - name: dim_instance_id
+          tests:
+            - not_null
+        - name: metrics_path
+          tests:
+            - not_null
+  - name: prep_monthly_usage_data_all_time
+    description: '{{ doc("prep_monthly_usage_data_all_time") }}'
+    columns:
+        - name: primary_key
+          tests:
+            - not_null
+            - unique
+        - name: dim_usage_ping_id
+          tests:
+            - not_null
+        - name: dim_instance_id
+          tests:
+            - not_null
+        - name: metrics_path
+          tests:
+            - not_null
+  - name: prep_usage_data_7_days_flattened
+    description: '{{ doc("prep_usage_data_7_days_flattened") }}'
+    columns:
+        - name: instance_path_id
+          tests:
+            - not_null
+            - unique
+        - name: dim_usage_ping_id
+          tests:
+            - not_null
+        - name: metrics_path
+          tests:
+            - not_null
+  - name: prep_usage_data_28_days_flattened
+    description: '{{ doc("prep_usage_data_28_days_flattened") }}'
+    columns:
+        - name: instance_path_id
+          tests:
+            - not_null
+            - unique
+        - name: dim_usage_ping_id
+          tests:
+            - not_null
+        - name: metrics_path
+          tests:
+            - not_null
+  - name: prep_usage_data_all_time_flattened
+    description: '{{ doc("prep_usage_data_all_time_flattened") }}'
+    columns:
+        - name: instance_path_id
+          tests:
+            - not_null
+        - name: dim_usage_ping_id
+          tests:
+            - not_null
+        - name: metrics_path
+          tests:
+            - not_null
           
   - name: prep_deployment
     description: '{{ doc("prep_deployment") }}'
     columns:
       - name: dim_deployment_id
+        tests:
+          - not_null
+          - unique
+  - name: prep_issue_severity
+    description: '{{ doc("prep_issue_severity") }}'
+    columns:
+      - name: dim_issue_severity_id
+        tests:
+          - not_null
+          - unique
+      - name: dim_issue_id
+        tests:
+          - not_null
+          - unique
+  - name: prep_label_links
+    description: '{{ doc("prep_label_links") }}'
+    columns:
+      - name: dim_label_link_id
+        tests:
+          - not_null
+          - unique
+      - name: dim_label_id
+        tests:
+          - not_null
+  - name: prep_labels
+    description: '{{ doc("prep_labels") }}'
+    columns:
+      - name: dim_label_id
+        tests:
+          - not_null
+          - unique
+  - name: prep_issue_links
+    description: '{{ doc("prep_issue_links") }}'
+    columns:
+      - name: dim_issue_link_id
+        tests:
+          - not_null
+      - name: dim_source_issue_id
+        tests:
+          - not_null
+      - name: dim_target_issue_id
+        tests:
+          - not_null
+          
+  - name: prep_package
+    description: '{{ doc("prep_package") }}'
+    columns:
+      - name: dim_package_id
+        tests:
+          - unique
+          - not_null
+          
+  - name: prep_release
+    description: '{{ doc("prep_release") }}'
+    columns:
+      - name: dim_release_id
+        tests:
+          - unique
+          - not_null
+                    
+  - name: prep_requirement
+    description: '{{ doc("prep_requirement") }}'
+    columns:
+      - name: dim_requirement_id
         tests:
           - unique
           - not_null

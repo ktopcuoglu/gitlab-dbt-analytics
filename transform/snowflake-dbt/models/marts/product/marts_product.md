@@ -1,8 +1,41 @@
+{% docs mart_ci_runner_activity_monthly %}
+
+Mart table containing quantitative data related to CI runner activity on GitLab.com.
+
+These metrics are aggregated at a monthly grain per `dim_namespace_id`.
+
+{% enddocs %}
+
 {% docs mart_estimated_xmau %}
 
-Data mart to explore SMAU. The report looks at the usage ping sent by instances using GitLab. Then, for each stage, the report looks at the specific metrics/counter which is chosen to represent SMAU values. It then calculates Recorded SMAU.
+Documentation around Estimated [xMAU methodology is explained here](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/xmau-analysis/estimation-xmau-algorithm.html)
 
-Then calculates the Estimated SMAU Value as explained in detail in this page.
+Data mart to explore estimated xMAU PIs. The report looks at the usage ping sent by instances using GitLab. Then, for each stage, the report looks at the specific metrics/counter which is chosen to represent SMAU values. It then calculates Recorded SMAU.
+
+Then calculates the Estimated SMAU Value as explained [in detail in this page](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/xmau-analysis/estimation-xmau-algorithm.html).
+
+```
+SELECT
+  reporting_month,
+  stage_name,
+  SUM(estimated_monthly_metric_value_sum)  AS xmau
+FROM "PROD"."LEGACY"."MART_ESTIMATED_XMAU"
+WHERE xmau_level = 'SMAU'
+GROUP BY 1,2
+ORDER BY 1 DESC
+```
+
+ERD explaining the logic coming soon
+
+{% enddocs %}
+
+{% docs mart_estimated_paid_xmau %}
+
+Documentation around Estimated [xMAU methodology is explained here](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/xmau-analysis/estimation-xmau-algorithm.html)
+
+Data mart to explore estimated paid xMAU PIs. The report looks at the usage ping sent by instances using GitLab. Then, for each stage, the report looks at the specific metrics/counter which is chosen to represent SMAU values. It then calculates Recorded SMAU.
+
+Then calculates the Estimated SMAU Value as explained [in detail in this page](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/xmau-analysis/estimation-xmau-algorithm.html).
 
 ```
 SELECT
@@ -38,4 +71,12 @@ Mart table built on top of `fct_daily_event_400` (hence this table shows only th
 
 All these analysis have been done with `gitlab_dotcom_daily_usage_data_events` which was the legacy table of these tables.
 Only events that happened the last 400 days are included in this table.
+{% enddocs %}
+
+{% docs mart_ci_runner_activity_daily %}
+ 
+Mart table containing quantitative data related to CI runner activity on GitLab.com.
+ 
+These metrics are aggregated at a daily grain per `dim_project_id`.
+
 {% enddocs %}

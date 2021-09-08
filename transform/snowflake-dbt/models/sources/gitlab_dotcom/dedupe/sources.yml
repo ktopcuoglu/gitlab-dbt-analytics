@@ -55,6 +55,7 @@ sources:
         freshness: null
       - name: ci_build_trace_section_names
         identifier: gitlab_db_ci_build_trace_section_names
+        description: This table pipeline is deprecated and won't be refreshed, Ref MR https://gitlab.com/gitlab-data/analytics/-/merge_requests/5334.
         freshness: null
       - name: ci_builds
         identifier: gitlab_db_ci_builds
@@ -217,6 +218,8 @@ sources:
         identifier: gitlab_db_milestones
       - name: namespace_root_storage_statistics
         identifier: gitlab_db_namespace_root_storage_statistics
+      - name: namespace_settings
+        identifier:  gitlab_db_namespace_settings     
       - name: namespace_statistics
         identifier: gitlab_db_namespace_statistics
       - name: namespaces
@@ -357,6 +360,7 @@ sources:
         freshness: null
       - name: cluster_providers_aws
         identifier: gitlab_db_cluster_providers_aws
+        freshness: null
       - name: cluster_providers_gcp
         identifier: gitlab_db_cluster_providers_gcp
       - name: clusters_applications_cilium

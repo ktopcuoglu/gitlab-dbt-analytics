@@ -22,25 +22,6 @@ Here is an image documenting the ERD for this table:
 
 {% enddocs %}
 
-{% docs mart_arr_snapshots %}
-
-Keeps daily snapshots of mart_arr. This allows to query ARR from a historical perspective.
-
-The below query will pull ARR by month as observed on selected snapshot_date.
-
-SELECT
-  arr_month,
-  SUM(arr)  AS arr
-FROM "PROD"."LEGACY"."MART_ARR_SNAPSHOTS"
-WHERE arr_month < DATE_TRUNC('month',CURRENT_DATE)
-GROUP BY 1
-ORDER BY 1 DESC
-WHERE snapshot_date = '2020-08-01'
-
-{% enddocs %}
-
-{% enddocs %}
-
 {% docs mart_arr_col_months_since_parent_cohort_start %}
 
 The number of months between the MRR being reported in that row and the parent account cohort month. Must be a positive number.
