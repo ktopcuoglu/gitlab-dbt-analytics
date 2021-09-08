@@ -1,8 +1,3 @@
-{{config({
-    "schema": "common_mart_sales"
-  })
-}}
-
 {{ simple_cte([
     ('dim_crm_account','dim_crm_account'),
     ('dim_crm_opportunity','dim_crm_opportunity'),

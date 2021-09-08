@@ -3,6 +3,7 @@ import json
 import logging
 import os
 import sys
+import requests
 from os import environ as env
 from typing import Dict, List
 from hashlib import md5
@@ -14,6 +15,7 @@ from gitlabdata.orchestration_utils import (
     dataframe_uploader,
     dataframe_enricher,
     snowflake_engine_factory,
+    snowflake_stage_load_copy_remove,
 )
 from sqlalchemy.exc import SQLAlchemyError
 from logging import error, info, basicConfig, getLogger, warning
@@ -120,6 +122,33 @@ class UsagePing(object):
             dataframe_uploader(error_data_to_upload, self.loader_engine, "instance_sql_errors", "saas_usage_ping")
 
         self.loader_engine.dispose()
+
+    def saas_instance_redis_metrics(self):
+
+        """
+        Call the Non SQL Metrics API and store the results in Snowflake RAW database
+        """
+        config_dict = env.copy()
+        headers = {
+            "PRIVATE-TOKEN": config_dict["GITLAB_ANALYTICS_PRIVATE_TOKEN"],
+        }
+
+        response = requests.get(
+            "https://gitlab.com/api/v4/usage_data/non_sql_metrics", headers=headers
+        )
+        json_data = json.loads(response.text)
+
+        json_file_name = "instance_redis_metrics"
+
+        with open(f"{json_file_name}.json", "w") as f:
+            json.dump(json_data, f)
+
+        snowflake_stage_load_copy_remove(
+            f"{json_file_name}.json",
+            "raw.gitlab_data_yaml.gitlab_data_yaml_load",
+            f"raw.saas_usage_ping.instance_redis_metrics",
+            self.loader_engine,
+        )
 
     def _get_namespace_queries(self) -> List[Dict]:
         """

@@ -2,7 +2,7 @@
         "materialized": "incremental",
         "unique_key": "mrr_snapshot_id",
         "tags": ["arr_snapshots"],
-        "schema": "legacy"
+        "schema": "common"
     })
 }}
 
@@ -39,6 +39,8 @@ WITH dim_date AS (
     SELECT *
     FROM {{ ref('zuora_account_snapshots_source') }}
     WHERE is_deleted = FALSE
+    --Exclude Batch20 which are the test accounts. This method replaces the manual dbt seed exclusion file.
+      AND LOWER(live_batch) != 'batch20'
 
 ), zuora_account_spined AS (
 
@@ -86,9 +88,9 @@ WITH dim_date AS (
 
     SELECT *
     FROM {{ ref('zuora_subscription_snapshots_source') }}
-    WHERE subscription_status NOT IN ('Draft', 'Expired')
-       AND is_deleted = FALSE
+    WHERE is_deleted = FALSE
       AND exclude_from_analysis IN ('False', '')
+      AND subscription_status NOT IN ('Draft', 'Expired')
 
 ), zuora_subscription_spined AS (
 
@@ -107,11 +109,14 @@ WITH dim_date AS (
 
     SELECT
       date_id                                                   AS snapshot_id,
-      dim_billing_account_id                                    AS billing_account_id,
-      dim_crm_account_id                                        AS crm_account_id,
-      dim_subscription_id                                       AS subscription_id,
+      dim_charge_id,
+      dim_billing_account_id,
+      dim_crm_account_id,
+      dim_subscription_id,
       subscription_name,
-      dim_product_detail_id                                     AS product_details_id,
+      subscription_name_slugify,
+      subscription_status,
+      dim_product_detail_id,
       mrr,
       delta_tcv,
       unit_of_measure,
@@ -127,11 +132,14 @@ WITH dim_date AS (
 
     SELECT
       zuora_rate_plan_charge_spined.snapshot_id,
-      zuora_account_spined.account_id                           AS billing_account_id,
-      zuora_account_spined.crm_id                               AS crm_account_id,
-      zuora_subscription_spined.subscription_id,
+      zuora_rate_plan_charge_spined.rate_plan_charge_id         AS dim_charge_id,
+      zuora_account_spined.account_id                           AS dim_billing_account_id,
+      zuora_account_spined.crm_id                               AS dim_crm_account_id,
+      zuora_subscription_spined.subscription_id                 AS dim_subscription_id,
       zuora_subscription_spined.subscription_name,
-      zuora_rate_plan_charge_spined.product_rate_plan_charge_id AS product_details_id,
+      zuora_subscription_spined.subscription_name_slugify,
+      zuora_subscription_spined.subscription_status,
+      zuora_rate_plan_charge_spined.product_rate_plan_charge_id AS dim_product_detail_id,
       zuora_rate_plan_charge_spined.mrr,
       zuora_rate_plan_charge_spined.delta_tcv,
       zuora_rate_plan_charge_spined.unit_of_measure,
@@ -141,13 +149,13 @@ WITH dim_date AS (
     FROM zuora_rate_plan_charge_spined
     INNER JOIN zuora_rate_plan_spined
       ON zuora_rate_plan_spined.rate_plan_id = zuora_rate_plan_charge_spined.rate_plan_id
-        AND zuora_rate_plan_spined.snapshot_id = zuora_rate_plan_charge_spined.snapshot_id
+      AND zuora_rate_plan_spined.snapshot_id = zuora_rate_plan_charge_spined.snapshot_id
     INNER JOIN zuora_subscription_spined
       ON zuora_rate_plan_spined.subscription_id = zuora_subscription_spined.subscription_id
-        AND zuora_rate_plan_spined.snapshot_id = zuora_subscription_spined.snapshot_id
+      AND zuora_rate_plan_spined.snapshot_id = zuora_subscription_spined.snapshot_id
     INNER JOIN zuora_account_spined
       ON zuora_account_spined.account_id = zuora_subscription_spined.account_id
-        AND zuora_account_spined.snapshot_id = zuora_subscription_spined.snapshot_id
+      AND zuora_account_spined.snapshot_id = zuora_subscription_spined.snapshot_id
 
 ), combined_charges AS (
 
@@ -163,12 +171,15 @@ WITH dim_date AS (
 
     SELECT
       snapshot_id,
-      dim_date.date_id,
-      billing_account_id,
-      crm_account_id,
-      subscription_id,
+      dim_date.date_id                                     AS dim_date_id,
+      dim_charge_id,
+      dim_billing_account_id,
+      dim_crm_account_id,
+      dim_subscription_id,
+      dim_product_detail_id,
       subscription_name,
-      product_details_id,
+      subscription_name_slugify,
+      subscription_status,
       SUM(mrr)                                             AS mrr,
       SUM(mrr)* 12                                         AS arr,
       SUM(quantity)                                        AS quantity,
@@ -179,21 +190,25 @@ WITH dim_date AS (
       AND (combined_charges.effective_end_month > dim_date.date_actual
         OR combined_charges.effective_end_month IS NULL)
       AND dim_date.day_of_month = 1
-    {{ dbt_utils.group_by(n=7) }}
+    {{ dbt_utils.group_by(n=10) }}
 
 ), final AS (
 
     SELECT
-        {{ dbt_utils.surrogate_key(['snapshot_id', 'date_id', 'subscription_name', 'product_details_id', 'mrr']) }}
-          AS mrr_snapshot_id,
-        {{ dbt_utils.surrogate_key(['date_id', 'subscription_name', 'product_details_id', 'mrr']) }}
-          AS mrr_id,
+        {{ dbt_utils.surrogate_key(['snapshot_id', 'dim_date_id', 'dim_charge_id']) }}
+                                                            AS mrr_snapshot_id,
+        {{ dbt_utils.surrogate_key(['dim_date_id', 'dim_charge_id']) }}
+                                                            AS mrr_id,
         snapshot_id,
-        date_id,
-        billing_account_id,
-        crm_account_id,
-        subscription_id,
-        product_details_id,
+        dim_date_id,
+        dim_charge_id,
+        dim_product_detail_id,
+        dim_subscription_id,
+        dim_billing_account_id,
+        dim_crm_account_id,
+        subscription_name,
+        subscription_name_slugify,
+        subscription_status,
         mrr,
         arr,
         quantity,
@@ -204,8 +219,8 @@ WITH dim_date AS (
 
 {{ dbt_audit(
     cte_ref="final",
-    created_by="@msendal",
-    updated_by="@iweeks",
-    created_date="2020-09-29",
-    updated_date="2021-06-10",
+    created_by="@iweeks",
+    updated_by="@jpeguero",
+    created_date="2021-07-29",
+    updated_date="2021-08-24",
  	) }}

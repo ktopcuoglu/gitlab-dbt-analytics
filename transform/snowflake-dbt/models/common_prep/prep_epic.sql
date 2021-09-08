@@ -68,7 +68,7 @@
     LEFT JOIN dim_namespace_plan_hist 
         ON dim_namespace.ultimate_parent_namespace_id = dim_namespace_plan_hist.dim_namespace_id
         AND gitlab_dotcom_epics_dedupe_source.created_at >= dim_namespace_plan_hist.valid_from
-        AND gitlab_dotcom_epics_dedupe_source.created_at < dim_namespace_plan_hist.valid_to
+        AND gitlab_dotcom_epics_dedupe_source.created_at < COALESCE(dim_namespace_plan_hist.valid_to, '2099-01-01')
     LEFT JOIN prep_user 
         ON gitlab_dotcom_epics_dedupe_source.author_id = prep_user.dim_user_id
     LEFT JOIN dim_date 
