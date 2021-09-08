@@ -517,6 +517,11 @@ models:
     covid19:
       +schema: covid19
 
+    data_quality:
+      +schema: data_quality
+      +tags: ["product"]
+      +materialized: table
+
     # ------------------
     # Trusted Data Framework
     # ------------------
