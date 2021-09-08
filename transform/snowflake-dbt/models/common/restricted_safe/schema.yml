@@ -150,154 +150,154 @@ models:
         description: The version of the rate plan charge. Each time a charge is amended, Zuora creates a new version of the rate plan charge.
 
   - name: fct_crm_opportunity
-      description: '{{ doc("fct_crm_opportunity") }}'
-      columns:
-        - name: dim_crm_opportunity_id
-          description: A dbt generated surrogate key combining the sfdc_record_id and the sales_accepted_date.
-          tests:
-            - unique
-            - not_null
-          tags: [ "tdf", "common", "sales_funnel" ]
-        - name: dim_crm_account_id
-          description: join key for dim_crm_account from the accountid field in Salesforce
-          tests:
-            - relationships:
-                to: ref('dim_crm_account')
-                field: dim_crm_account_id
-          tags: [ "tdf", "common", "sales_funnel" ]
-        - name: dim_alliance_type_id
-          description: join key for dim_alliance_type
-          tests:
-            - relationships:
-                to: ref('dim_alliance_type')
-                field: dim_alliance_type_id
-          tags: [ "tdf", "common", "sales_funnel" ]
-        - name: dim_dr_partner_engagement_id
-          description: join key for dim_dr_partner_engagement
-          tests:
-            - relationships:
-                to: ref('dim_dr_partner_engagement')
-                field: dim_dr_partner_engagement_id
-          tags: [ "tdf", "common", "sales_funnel" ]
-        - name: dim_channel_type_id
-          description: join key for dim_channel_type
-          tests:
-            - relationships:
-                to: ref('dim_channel_type')
-                field: dim_channel_type_id
-          tags: [ "tdf", "common", "sales_funnel" ]
-        - name: dim_crm_person_id
-          description: A surrogate key for use when joining to `dim_crm_person`. Created from the contact_id where there is a contact and a lead_id where there isn't.
-        - name: sfdc_contact_id
-          description: the contact id from the fist contact by opportunity contact role created date for the given opportunity record
-        - name: created_date
-          description: timestamp for the opportunity record creation in Salesforce
-        - name: created_date_id
-          description: a foreign key generated from `get_date_id` macro with created_date the for use with dim_date
-        - name: sales_accepted_date
-          description: The sales_accepted_date from the sfdc_opportunity. Note that there can be opportunities with sales accepted dates that aren't sales accepted opportunities. This is indicated with the is_sao and is_sdr_sao booleans
-        - name: sales_accepted_date_id
-          description: a foreign key generated from `get_date_id` macro with sales_accepted_date the for use with dim_date
-        - name: close_date
-          description: a date entered by the sales team that is the expected close date for open opportunities and the actual close date for closed opportunities.
-        - name: close_date_id
-          description: a foreign key generated from `get_date_id` macro with close_date the for use with dim_date
-        - name: stage_0_pending_acceptance_date
-          description: a Salesforce [workflow generated](https://gitlab.my.salesforce.com/04Y4M000000g0GE) date
-        - name: stage_0_pending_acceptance_date_id
-          description: a foreign key generated from `get_date_id` macro with stage_0_pending_acceptance_date the for use with dim_date
-        - name: stage_1_discovery_date
-          description: a Salesforce [workflow generated](https://gitlab.my.salesforce.com/01Q4M000000kSb5) date
-        - name: stage_1_discovery_date_id
-          description: a foreign key generated from `get_date_id` macro with D the for use with dim_date
-        - name: stage_2_scoping_date
-          description: a Salesforce [workflow generated](https://gitlab.my.salesforce.com/01Q4M000000kSb6) date
-        - name: stage_2_scoping_date_id
-          description: a foreign key generated from `get_date_id` macro with stage_1_discovery_date the for use with dim_date
-        - name: stage_3_technical_evaluation_date
-          description: a Salesforce [workflow generated](https://gitlab.my.salesforce.com/01Q4M000000kSb7) date
-        - name: stage_3_technical_evaluation_date_id
-          description: a foreign key generated from `get_date_id` macro with stage_3_technical_evaluation_date the for use with dim_date
-        - name: stage_4_proposal_date
-          description: a Salesforce [workflow generated](https://gitlab.my.salesforce.com/01Q4M000000kSb8) date
-        - name: stage_4_proposal_date_id
-          description: a foreign key generated from `get_date_id` macro with stage_4_proposal_date the for use with dim_date
-        - name: stage_5_negotiating_date
-          description: a Salesforce [workflow generated](https://gitlab.my.salesforce.com/01Q4M000000kSb9) date
-        - name: stage_5_negotiating_date_id
-          description: a foreign key generated from `get_date_id` macro with stage_5_negotiating_date the for use with dim_date
-        - name: stage_6_closed_won_date
-          description: a Salesforce [workflow generated](https://gitlab.my.salesforce.com/01Q4M000000kSbE) date
-        - name: stage_6_closed_won_date_id
-          description: a foreign key generated from `get_date_id` macro with stage_6_closed_won_date the for use with dim_date
-        - name: stage_6_closed_lost_date
-          description: a Salesforce [workflow generated](https://gitlab.my.salesforce.com/01Q4M000000kSbD) date
-        - name: stage_6_closed_lost_date_id
-          description: a foreign key generated from `get_date_id` macro with stage_6_closed_lost_date the for use with dim_date
-        - name: days_in_0_pending_acceptance
-          description: a Salesforce [formula field](https://gitlab.my.salesforce.com/00N6100000HlNEI)
-        - name: days_in_1_discovery
-          description: a Salesforce [formula field](https://gitlab.my.salesforce.com/00N6100000HlNES)
-        - name: days_in_2_scoping
-          description: a Salesforce [formula field](https://gitlab.my.salesforce.com/00N6100000HlNEX)
-        - name: days_in_3_technical_evaluation
-          description: a Salesforce [formula field](https://gitlab.my.salesforce.com/00N6100000HlNEc)
-        - name: days_in_4_proposal
-          description: a Salesforce [formula field](https://gitlab.my.salesforce.com/00N6100000HlNEh)
-        - name: days_in_5_negotiating
-          description: a Salesforce [formula field](https://gitlab.my.salesforce.com/00N6100000HlNEm)
-        - name: days_in_sao
-          description: a Salesforce [formula field](https://gitlab.my.salesforce.com/00N4M00000Ib8xV)
-        - name: closed_buckets
-          description: a case generated column that uses the days_in_sao column. See SQL for this model.
-        - name: subscription_start_date
-          description: The Start Date from the Zuora quote that is either Primary or was Sent to Zuora.
-        - name: subscription_end_date
-          description: The End Date from the Zuora quote that is either Primary or was Sent to Zuora.
-        - name: is_closed
-          description: a Salesforce boolean field which is true when the Opportunity stage is a closed stage
-        - name: is_won
-          description: a Salesforce boolean field which is true when the Opportunity stage is a won stage
-        - name: is_refund
-          description: a Salesforce [formula field](https://gitlab.my.salesforce.com/00N6100000IOu5u)  with the help text "Counts the number of refund opps."
-        - name: is_downgrade
-          description: a Salesforce [formula field](https://gitlab.my.salesforce.com/00N6100000IOu5y) with the help text "Counts of the number of downgrade opps."
-        - name: is_swing_deal
-          description: a [checkbox used in salesforce](https://gitlab.my.salesforce.com/00N6100000IJEOZ) with the help text "A swing deal is an opportunity with a Close Date in a future period that has the potential to be pulled into the current period."
-        - name: is_edu_oss
-          description: a Salesforce [formula field](https://gitlab.my.salesforce.com/00N6100000IOu68). 1 if [Product_Category__c](https://gitlab.my.salesforce.com/00N6100000IJBtv) contains `EDU/OSS` else 0.
-        - name: is_web_portal_purchase
-          description: a [salesforce boolean field](https://gitlab.my.salesforce.com/00N6100000HJmTK)
-        - name: is_sao
-          description: a [salesforce boolean field](https://gitlab.my.salesforce.com/00N4M00000Ib8xa) field created in the warehouse to flag Sales Accepted Opportunities. This field should be deprecated once sales accepted is in a more stable and consistent state in salesforce.
-        - name: is_net_arr_closed_deal
-          description: a boolean field created in the warehouse to flag Closed Deals and will help determine the Net ARR.
-        - name: is_new_logo_first_order
-          description: a boolean field created in the warehouse to flag New Logos.
-        - name: is_net_arr_pipeline_created
-          description: a boolean field created in the warehouse to flag Net ARR Pipeline Created.
-        - name: is_win_rate_calc
-          description: a boolean field created in the warehouse to flag Win Rate. This field determines opportunities that will be included in calculating Win Rate.
-        - name: is_sdr_sao
-          description: a boolean field created in the warehouse to flag Sales Accepted Opportunities from [Sales Development Reps](https://about.gitlab.com/handbook/marketing/revenue-marketing/sdr/). This field should be deprecated once sales accepted is in a more stable and consistent state in salesforce.
-        - name: iacv
-          description: a Salesforce [formula field](https://gitlab.my.salesforce.com/00N6100000HJpyB) with the help text "For New Business or Add On, takes all first year recurring revenue + true ups. If Renewal, the recurring revenue + true ups minus the Renewal ACV. If the Renewal ACV is null, then the Incremental ACV is null"
-        - name: net_arr
-          description: a Salesforce [formula field](https://gitlab.my.salesforce.com/00N4M00000Ib5n8) with the net change to ARR of an opportunity
-        - name: amount
-          description: from [salesforce ui](https://gitlab.my.salesforce.com/_ui/common/config/field/StandardFieldAttributes/d?id=Amount&type=Opportunity&retURL=%2Fp%2Fsetup%2Flayout%2FLayoutFieldList%3Ftype%3DOpportunity%26setupid%3DOpportunityFields&_CONFIRMATIONTOKEN=VmpFPSxNakF5TVMwd09TMHdOVlF5TVRveE1UbzFNQzQzTmpWYSx5UXdBZFY3d0NtN21rekRFcUttcVVtLFl6UTNNekF5&setupid=OpportunityFields) "This is the same as Total Contract Value. It takes the value of the entire agreement"
-        - name: recurring_amount
-          description: a [salesforce currency field](https://gitlab.my.salesforce.com/00N4M00000IbIDn) with all Recurring dollars (Gitlab Seats, Storage).
-        - name: true_up_amount
-          description: a [salesforce currency field](https://gitlab.my.salesforce.com/00N4M00000IbCVy) with One-time True Up dollars for renewals.
-        - name: proserv_amount
-          description: a [salesforce currency field](https://gitlab.my.salesforce.com/00N4M00000IbIDi) with all professional services dollars in the opportunity.
-        - name: other_non_recurring_amount
-          description: a [salesforce currency field](https://gitlab.my.salesforce.com/00N4M00000IbIDs) with all other one-time fee products (Additional CI Minutes).
-        - name: arr_basis
-          description: a [salesforce formula field](https://gitlab.my.salesforce.com/00N4M00000IbIDx) for renewals only current subscription ARR.
-        - name: arr
-          description: a WIP Salesforce [formula field](https://gitlab.my.salesforce.com/00N4M00000IbIE2) that returns 0
+    description: '{{ doc("fct_crm_opportunity") }}'
+    columns:
+      - name: dim_crm_opportunity_id
+        description: A dbt generated surrogate key combining the sfdc_record_id and the sales_accepted_date.
+        tests:
+          - unique
+          - not_null
+        tags: [ "tdf", "common", "sales_funnel" ]
+      - name: dim_crm_account_id
+        description: join key for dim_crm_account from the accountid field in Salesforce
+        tests:
+          - relationships:
+              to: ref('dim_crm_account')
+              field: dim_crm_account_id
+        tags: [ "tdf", "common", "sales_funnel" ]
+      - name: dim_alliance_type_id
+        description: join key for dim_alliance_type
+        tests:
+          - relationships:
+              to: ref('dim_alliance_type')
+              field: dim_alliance_type_id
+        tags: [ "tdf", "common", "sales_funnel" ]
+      - name: dim_dr_partner_engagement_id
+        description: join key for dim_dr_partner_engagement
+        tests:
+          - relationships:
+              to: ref('dim_dr_partner_engagement')
+              field: dim_dr_partner_engagement_id
+        tags: [ "tdf", "common", "sales_funnel" ]
+      - name: dim_channel_type_id
+        description: join key for dim_channel_type
+        tests:
+          - relationships:
+              to: ref('dim_channel_type')
+              field: dim_channel_type_id
+        tags: [ "tdf", "common", "sales_funnel" ]
+      - name: dim_crm_person_id
+        description: A surrogate key for use when joining to `dim_crm_person`. Created from the contact_id where there is a contact and a lead_id where there isn't.
+      - name: sfdc_contact_id
+        description: the contact id from the fist contact by opportunity contact role created date for the given opportunity record
+      - name: created_date
+        description: timestamp for the opportunity record creation in Salesforce
+      - name: created_date_id
+        description: a foreign key generated from `get_date_id` macro with created_date the for use with dim_date
+      - name: sales_accepted_date
+        description: The sales_accepted_date from the sfdc_opportunity. Note that there can be opportunities with sales accepted dates that aren't sales accepted opportunities. This is indicated with the is_sao and is_sdr_sao booleans
+      - name: sales_accepted_date_id
+        description: a foreign key generated from `get_date_id` macro with sales_accepted_date the for use with dim_date
+      - name: close_date
+        description: a date entered by the sales team that is the expected close date for open opportunities and the actual close date for closed opportunities.
+      - name: close_date_id
+        description: a foreign key generated from `get_date_id` macro with close_date the for use with dim_date
+      - name: stage_0_pending_acceptance_date
+        description: a Salesforce [workflow generated](https://gitlab.my.salesforce.com/04Y4M000000g0GE) date
+      - name: stage_0_pending_acceptance_date_id
+        description: a foreign key generated from `get_date_id` macro with stage_0_pending_acceptance_date the for use with dim_date
+      - name: stage_1_discovery_date
+        description: a Salesforce [workflow generated](https://gitlab.my.salesforce.com/01Q4M000000kSb5) date
+      - name: stage_1_discovery_date_id
+        description: a foreign key generated from `get_date_id` macro with D the for use with dim_date
+      - name: stage_2_scoping_date
+        description: a Salesforce [workflow generated](https://gitlab.my.salesforce.com/01Q4M000000kSb6) date
+      - name: stage_2_scoping_date_id
+        description: a foreign key generated from `get_date_id` macro with stage_1_discovery_date the for use with dim_date
+      - name: stage_3_technical_evaluation_date
+        description: a Salesforce [workflow generated](https://gitlab.my.salesforce.com/01Q4M000000kSb7) date
+      - name: stage_3_technical_evaluation_date_id
+        description: a foreign key generated from `get_date_id` macro with stage_3_technical_evaluation_date the for use with dim_date
+      - name: stage_4_proposal_date
+        description: a Salesforce [workflow generated](https://gitlab.my.salesforce.com/01Q4M000000kSb8) date
+      - name: stage_4_proposal_date_id
+        description: a foreign key generated from `get_date_id` macro with stage_4_proposal_date the for use with dim_date
+      - name: stage_5_negotiating_date
+        description: a Salesforce [workflow generated](https://gitlab.my.salesforce.com/01Q4M000000kSb9) date
+      - name: stage_5_negotiating_date_id
+        description: a foreign key generated from `get_date_id` macro with stage_5_negotiating_date the for use with dim_date
+      - name: stage_6_closed_won_date
+        description: a Salesforce [workflow generated](https://gitlab.my.salesforce.com/01Q4M000000kSbE) date
+      - name: stage_6_closed_won_date_id
+        description: a foreign key generated from `get_date_id` macro with stage_6_closed_won_date the for use with dim_date
+      - name: stage_6_closed_lost_date
+        description: a Salesforce [workflow generated](https://gitlab.my.salesforce.com/01Q4M000000kSbD) date
+      - name: stage_6_closed_lost_date_id
+        description: a foreign key generated from `get_date_id` macro with stage_6_closed_lost_date the for use with dim_date
+      - name: days_in_0_pending_acceptance
+        description: a Salesforce [formula field](https://gitlab.my.salesforce.com/00N6100000HlNEI)
+      - name: days_in_1_discovery
+        description: a Salesforce [formula field](https://gitlab.my.salesforce.com/00N6100000HlNES)
+      - name: days_in_2_scoping
+        description: a Salesforce [formula field](https://gitlab.my.salesforce.com/00N6100000HlNEX)
+      - name: days_in_3_technical_evaluation
+        description: a Salesforce [formula field](https://gitlab.my.salesforce.com/00N6100000HlNEc)
+      - name: days_in_4_proposal
+        description: a Salesforce [formula field](https://gitlab.my.salesforce.com/00N6100000HlNEh)
+      - name: days_in_5_negotiating
+        description: a Salesforce [formula field](https://gitlab.my.salesforce.com/00N6100000HlNEm)
+      - name: days_in_sao
+        description: a Salesforce [formula field](https://gitlab.my.salesforce.com/00N4M00000Ib8xV)
+      - name: closed_buckets
+        description: a case generated column that uses the days_in_sao column. See SQL for this model.
+      - name: subscription_start_date
+        description: The Start Date from the Zuora quote that is either Primary or was Sent to Zuora.
+      - name: subscription_end_date
+        description: The End Date from the Zuora quote that is either Primary or was Sent to Zuora.
+      - name: is_closed
+        description: a Salesforce boolean field which is true when the Opportunity stage is a closed stage
+      - name: is_won
+        description: a Salesforce boolean field which is true when the Opportunity stage is a won stage
+      - name: is_refund
+        description: a Salesforce [formula field](https://gitlab.my.salesforce.com/00N6100000IOu5u)  with the help text "Counts the number of refund opps."
+      - name: is_downgrade
+        description: a Salesforce [formula field](https://gitlab.my.salesforce.com/00N6100000IOu5y) with the help text "Counts of the number of downgrade opps."
+      - name: is_swing_deal
+        description: a [checkbox used in salesforce](https://gitlab.my.salesforce.com/00N6100000IJEOZ) with the help text "A swing deal is an opportunity with a Close Date in a future period that has the potential to be pulled into the current period."
+      - name: is_edu_oss
+        description: a Salesforce [formula field](https://gitlab.my.salesforce.com/00N6100000IOu68). 1 if [Product_Category__c](https://gitlab.my.salesforce.com/00N6100000IJBtv) contains `EDU/OSS` else 0.
+      - name: is_web_portal_purchase
+        description: a [salesforce boolean field](https://gitlab.my.salesforce.com/00N6100000HJmTK)
+      - name: is_sao
+        description: a [salesforce boolean field](https://gitlab.my.salesforce.com/00N4M00000Ib8xa) field created in the warehouse to flag Sales Accepted Opportunities. This field should be deprecated once sales accepted is in a more stable and consistent state in salesforce.
+      - name: is_net_arr_closed_deal
+        description: a boolean field created in the warehouse to flag Closed Deals and will help determine the Net ARR.
+      - name: is_new_logo_first_order
+        description: a boolean field created in the warehouse to flag New Logos.
+      - name: is_net_arr_pipeline_created
+        description: a boolean field created in the warehouse to flag Net ARR Pipeline Created.
+      - name: is_win_rate_calc
+        description: a boolean field created in the warehouse to flag Win Rate. This field determines opportunities that will be included in calculating Win Rate.
+      - name: is_sdr_sao
+        description: a boolean field created in the warehouse to flag Sales Accepted Opportunities from [Sales Development Reps](https://about.gitlab.com/handbook/marketing/revenue-marketing/sdr/). This field should be deprecated once sales accepted is in a more stable and consistent state in salesforce.
+      - name: iacv
+        description: a Salesforce [formula field](https://gitlab.my.salesforce.com/00N6100000HJpyB) with the help text "For New Business or Add On, takes all first year recurring revenue + true ups. If Renewal, the recurring revenue + true ups minus the Renewal ACV. If the Renewal ACV is null, then the Incremental ACV is null"
+      - name: net_arr
+        description: a Salesforce [formula field](https://gitlab.my.salesforce.com/00N4M00000Ib5n8) with the net change to ARR of an opportunity
+      - name: amount
+        description: from [salesforce ui](https://gitlab.my.salesforce.com/_ui/common/config/field/StandardFieldAttributes/d?id=Amount&type=Opportunity&retURL=%2Fp%2Fsetup%2Flayout%2FLayoutFieldList%3Ftype%3DOpportunity%26setupid%3DOpportunityFields&_CONFIRMATIONTOKEN=VmpFPSxNakF5TVMwd09TMHdOVlF5TVRveE1UbzFNQzQzTmpWYSx5UXdBZFY3d0NtN21rekRFcUttcVVtLFl6UTNNekF5&setupid=OpportunityFields) "This is the same as Total Contract Value. It takes the value of the entire agreement"
+      - name: recurring_amount
+        description: a [salesforce currency field](https://gitlab.my.salesforce.com/00N4M00000IbIDn) with all Recurring dollars (Gitlab Seats, Storage).
+      - name: true_up_amount
+        description: a [salesforce currency field](https://gitlab.my.salesforce.com/00N4M00000IbCVy) with One-time True Up dollars for renewals.
+      - name: proserv_amount
+        description: a [salesforce currency field](https://gitlab.my.salesforce.com/00N4M00000IbIDi) with all professional services dollars in the opportunity.
+      - name: other_non_recurring_amount
+        description: a [salesforce currency field](https://gitlab.my.salesforce.com/00N4M00000IbIDs) with all other one-time fee products (Additional CI Minutes).
+      - name: arr_basis
+        description: a [salesforce formula field](https://gitlab.my.salesforce.com/00N4M00000IbIDx) for renewals only current subscription ARR.
+      - name: arr
+        description: a WIP Salesforce [formula field](https://gitlab.my.salesforce.com/00N4M00000IbIE2) that returns 0
 
   - name: fct_invoice
     description: '{{ doc("fct_invoice") }}'
