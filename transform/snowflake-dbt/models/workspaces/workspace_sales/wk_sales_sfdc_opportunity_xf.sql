@@ -7,8 +7,6 @@ WITH sfdc_opportunity AS (
     SELECT opportunity_id,
           opportunity_category
     FROM {{ref('sfdc_opportunity')}}
-    -- NF 20210906 remove JiHu opties from the models
-    WHERE is_jihu_account = 0
 
 ), sfdc_users_xf AS (
 
@@ -445,7 +443,7 @@ WITH sfdc_opportunity AS (
       -- fields form opportunity source
       sfdc_opportunity.opportunity_category
     
-    FROM {{ref('sfdc_opportunity_xf')}}
+    FROM {{ref('sfdc_opportunity_xf')}} sfdc_opportunity_xf
     -- not all fields are in opportunity xf
     INNER JOIN sfdc_opportunity
       ON sfdc_opportunity.opportunity_id = sfdc_opportunity_xf.opportunity_id
@@ -457,6 +455,8 @@ WITH sfdc_opportunity AS (
       -- pipeline creation date
     LEFT JOIN date_details stage_3_date 
       ON stage_3_date.date_actual = sfdc_opportunity_xf.stage_3_technical_evaluation_date::date
+   -- NF 20210906 remove JiHu opties from the models
+    WHERE sfdc_opportunity_xf.is_jihu_account = 0
 
 ), net_iacv_to_net_arr_ratio AS (
 
