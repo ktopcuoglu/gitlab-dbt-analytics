@@ -151,12 +151,12 @@ class GoogleDriveClient:
 
                 results = (
                     self.service.files()
-                        .list(
-                            q=query,
-                            pageSize=10,
-                            fields="nextPageToken, files(id, name, mimeType)",
+                    .list(
+                        q=query,
+                        pageSize=10,
+                        fields="nextPageToken, files(id, name, mimeType)",
                     )
-                        .execute()
+                    .execute()
                 )
 
                 items: List[Dict] = results.get("files", [])
