@@ -137,12 +137,14 @@ class GoogleDriveClient:
             if page_token:
 
                 results = (
-                    self.service.files().list(
-                            pageToken=page_token,
-                            q=query,
-                            pageSize=10,
-                            fields="nextPageToken, files(id, name, mimeType)",
-                    ).execute()
+                    self.service.files()
+                    .list(
+                        pageToken=page_token,
+                        q=query,
+                        pageSize=10,
+                        fields="nextPageToken, files(id, name, mimeType)",
+                    )
+                    .execute()
                 )
                 items: List[Dict] = results.get("files", [])
 
@@ -151,11 +153,13 @@ class GoogleDriveClient:
 
             else:
                 results = (
-                    self.service.files().list(
-                            q=query,
-                            pageSize=10,
-                            fields="nextPageToken, files(id, name, mimeType)",
-                    ).execute()
+                    self.service.files()
+                    .list(
+                        q=query,
+                        pageSize=10,
+                        fields="nextPageToken, files(id, name, mimeType)",
+                    )
+                    .execute()
                 )
 
                 items: List[Dict] = results.get("files", [])
@@ -163,7 +167,7 @@ class GoogleDriveClient:
                 if items:
                     all_results = all_results[:] + items[:]
 
-            page_token = results.get('nextPageToken')
+            page_token = results.get("nextPageToken")
             if not page_token:
                 break
 
