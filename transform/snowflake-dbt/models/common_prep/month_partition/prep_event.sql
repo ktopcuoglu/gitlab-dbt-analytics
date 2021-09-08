@@ -36,6 +36,14 @@
     "primary_key": "dim_deployment_id"
   },
   {
+    "event_name": "epic_creation",
+    "source_cte_name": "prep_epic",
+    "user_column_name": "author_id",
+    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
+    "project_column_name": "NULL    ",
+    "primary_key": "dim_epic_id"
+  },
+  {
     "event_name": "issue_creation",
     "source_cte_name": "prep_issue",
     "user_column_name": "author_id",
@@ -164,6 +172,7 @@
     ('prep_action', 'prep_action'),
     ('prep_ci_build', 'prep_ci_build'),
     ('prep_deployment', 'prep_deployment'),
+    ('prep_epic', 'prep_epic'),
     ('prep_issue', 'prep_issue'),
     ('prep_merge_request', 'prep_merge_request'),
     ('prep_note', 'prep_note'),

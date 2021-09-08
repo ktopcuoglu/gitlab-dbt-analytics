@@ -1432,6 +1432,30 @@ tables:
       FROM namespaces
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
+  namespace_settings:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'namespace_settings'
+    export_table_primary_key: namespace_id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT created_at
+      , updated_at
+      , namespace_id
+      , prevent_forking_outside_group
+      , allow_mfa_for_subgroups
+      , default_branch_name
+      , repository_read_only
+      , delayed_project_removal
+      , resource_access_token_creation_allowed
+      , lock_delayed_project_removal
+      , prevent_sharing_groups_outside_hierarchy
+      , new_user_signups_cap
+      , setup_for_company
+      , jobs_to_be_done
+      FROM namespace_settings
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   notes:
     dbt_source_model: true
     export_schema: 'gitlab_com'

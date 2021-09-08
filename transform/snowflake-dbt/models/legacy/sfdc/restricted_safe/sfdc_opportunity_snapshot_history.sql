@@ -148,6 +148,25 @@ WITH sfdc_opportunity_snapshots AS (
       fm_why_gitlab__c               AS cp_why_gitlab,
       fm_why_now__c                  AS cp_why_now,
 
+
+      -- ************************************
+
+       -- dates in stage fields
+      x0_pending_acceptance_date__c               AS stage_0_pending_acceptance_date,
+      x1_discovery_date__c                        AS stage_1_discovery_date,
+      x2_scoping_date__c                          AS stage_2_scoping_date,
+      x3_technical_evaluation_date__c             AS stage_3_technical_evaluation_date,
+      x4_proposal_date__c                         AS stage_4_proposal_date,
+      x5_negotiating_date__c                      AS stage_5_negotiating_date,
+      x6_awaiting_signature_date__c               AS stage_6_awaiting_signature_date,
+      x6_closed_won_date__c                       AS stage_6_closed_won_date,
+      x7_closed_lost_date__c                      AS stage_6_closed_lost_date,
+
+
+      -- flag to identify eligible booking deals, excluding jihu - issue: https://gitlab.com/gitlab-com/sales-team/field-operations/systems/-/issues/1805
+      fp_a_master_bookings_flag__c                AS fpa_master_bookings_flag,
+
+
       -- metadata
       convert_timezone('America/Los_Angeles',convert_timezone('UTC',
                CURRENT_TIMESTAMP())) AS _last_dbt_run,

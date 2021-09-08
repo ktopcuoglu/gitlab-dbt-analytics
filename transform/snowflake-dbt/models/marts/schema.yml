@@ -68,14 +68,6 @@ models:
       - name: dim_subscription_id
       - name: dim_subscription_id_original
 
-  - name: mart_arr_snapshots
-    description: Daily snapshots of MRR/ARR by month values per customer, subscription and product
-    columns:
-      - name: primary_key
-        tests:
-          - not_null
-        tags: ["tdf", "mart", "arr"]
-
   - name: mart_arr_snapshot_bottom_up
     description: Daily snapshots of MRR/ARR by month values per customer, subscription and product. Built using the snapshotted source tables.
     columns:
@@ -144,16 +136,7 @@ models:
         tests:
             - not_null
             - unique
-        tags: ["tdf", "mart", "sales_funnel"]
-
-  - name: mart_sales_funnel_partner_alliance_target
-    description: Model with Sales targets for partner and alliances used for planning the go to market Sales and Marketing motion.
-    columns:
-      - name: sales_funnel_partner_alliance_target_id
-        tests:
-            - not_null
-            - unique
-        tags: ["tdf", "mart", "sales_funnel"]
+        tags: ["tdf", "mart", "sales_funnel"]  
 
   - name: mart_sales_funnel_target_daily
     description: Model with Sales targets at a daily level and with QTD (Quater To Date), MTD (Month To Date) and YTD (Year To Date) target calculations.
@@ -171,6 +154,15 @@ models:
         description: Quarter To Date allocated target.
       - name: ytd_allocated_target
         description: Year To Date allocated target.
+  
+  - name: mart_sales_funnel_partner_alliance_target
+    description: Model with Sales targets for partner and alliances used for planning the go to market Sales and Marketing motion.
+    columns:
+      - name: sales_funnel_partner_alliance_target_id
+        tests:
+            - not_null
+            - unique
+        tags: ["tdf", "mart", "sales_funnel"]
 
   - name: mart_sales_funnel_partner_alliance_target_daily
     description: Model with Sales targets for partner and alliances at a daily level and with QTD (Quater To Date), MTD (Month To Date) and YTD (Year To Date) target calculations.

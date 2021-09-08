@@ -40,7 +40,7 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity_xf.merged_opportunity_id,
       sfdc_opportunity_xf.net_new_source_categories,
       sfdc_opportunity_xf.opportunity_business_development_representative,
-      sfdc_opportunity_xf.opportunity_owner,
+      opportunity_owner.name                            AS opportunity_owner,
       sfdc_opportunity_xf.opportunity_owner_department,
       sfdc_opportunity_xf.opportunity_owner_manager,
       sfdc_opportunity_xf.opportunity_owner_role,
@@ -66,6 +66,7 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity_xf.closed_deals,
       sfdc_opportunity_xf.competitors,
       sfdc_opportunity_xf.critical_deal_flag,
+      sfdc_opportunity_xf.fpa_master_bookings_flag,
 
       -- Deal Size field is wrong in the source object
       -- it is using
@@ -321,6 +322,110 @@ WITH sfdc_opportunity AS (
           ELSE 'Other'
       END                                                                    AS opportunity_owner_user_region,
 
+
+      -- NF: 20210827 Fields for competitor analysis 
+      CASE
+        WHEN CONTAINS (sfdc_opportunity_xf.competitors, 'Other') 
+          THEN 1 
+        ELSE 0
+      END                                 AS competitors_other_flag,
+      CASE
+        WHEN CONTAINS (sfdc_opportunity_xf.competitors, 'GitLab Core') 
+          THEN 1 
+        ELSE 0
+      END                                 AS competitors_gitlab_core_flag,
+      CASE
+        WHEN CONTAINS (sfdc_opportunity_xf.competitors, 'None') 
+          THEN 1 
+        ELSE 0
+      END                                 AS competitors_none_flag,
+      CASE
+        WHEN CONTAINS (sfdc_opportunity_xf.competitors, 'GitHub Enterprise') 
+          THEN 1 
+        ELSE 0
+      END                                 AS competitors_github_enterprise_flag,
+      CASE
+        WHEN CONTAINS (sfdc_opportunity_xf.competitors, 'BitBucket Server') 
+          THEN 1 
+        ELSE 0
+      END                                 AS competitors_bitbucket_server_flag,
+      CASE
+        WHEN CONTAINS (sfdc_opportunity_xf.competitors, 'Unknown') 
+          THEN 1 
+        ELSE 0
+      END                                 AS competitors_unknown_flag,
+      CASE
+        WHEN CONTAINS (sfdc_opportunity_xf.competitors, 'GitHub.com') 
+          THEN 1 
+        ELSE 0
+      END                                 AS competitors_github_flag,
+      CASE
+        WHEN CONTAINS (sfdc_opportunity_xf.competitors, 'GitLab.com') 
+          THEN 1 
+        ELSE 0
+      END                                 AS competitors_gitlab_flag,
+      CASE
+        WHEN CONTAINS (sfdc_opportunity_xf.competitors, 'Jenkins') 
+          THEN 1 
+        ELSE 0
+      END                                 AS competitors_jenkins_flag,
+      CASE
+        WHEN CONTAINS (sfdc_opportunity_xf.competitors, 'Azure DevOps') 
+          THEN 1 
+        ELSE 0
+      END                                 AS competitors_azure_devops_flag,
+      CASE
+        WHEN CONTAINS (sfdc_opportunity_xf.competitors, 'SVN') 
+          THEN 1 
+        ELSE 0
+      END                                 AS competitors_svn_flag,
+      CASE
+        WHEN CONTAINS (sfdc_opportunity_xf.competitors, 'BitBucket.Org') 
+          THEN 1 
+        ELSE 0
+      END                                 AS competitors_bitbucket_flag,
+      CASE
+        WHEN CONTAINS (sfdc_opportunity_xf.competitors, 'Atlassian') 
+          THEN 1 
+        ELSE 0
+      END                                 AS competitors_atlassian_flag,
+      CASE
+        WHEN CONTAINS (sfdc_opportunity_xf.competitors, 'Perforce') 
+          THEN 1 
+        ELSE 0
+      END                                 AS competitors_perforce_flag, 
+      CASE
+        WHEN CONTAINS (sfdc_opportunity_xf.competitors, 'Visual Studio Team Services') 
+          THEN 1 
+        ELSE 0
+      END                                 AS competitors_visual_studio_flag,
+      CASE
+        WHEN CONTAINS (sfdc_opportunity_xf.competitors, 'Azure') 
+          THEN 1 
+        ELSE 0
+      END                                 AS competitors_azure_flag,
+      CASE
+        WHEN CONTAINS (sfdc_opportunity_xf.competitors, 'Amazon Code Commit') 
+          THEN 1 
+        ELSE 0
+      END                                 AS competitors_amazon_code_commit_flag,
+      CASE
+        WHEN CONTAINS (sfdc_opportunity_xf.competitors, 'CircleCI') 
+          THEN 1 
+        ELSE 0
+      END                                 AS competitors_circleci_flag,
+      CASE
+        WHEN CONTAINS (sfdc_opportunity_xf.competitors, 'Bamboo') 
+          THEN 1 
+        ELSE 0
+      END                                 AS competitors_bamboo_flag,
+      CASE
+        WHEN CONTAINS (sfdc_opportunity_xf.competitors, 'AWS') 
+          THEN 1 
+        ELSE 0
+      END                                 AS competitors_aws_flag,
+
+
       -----------------------------------------------------------------------------------------------------      
       -----------------------------------------------------------------------------------------------------
       
@@ -436,6 +541,7 @@ WITH sfdc_opportunity AS (
 
       -- account driven fields 
       sfdc_accounts_xf.ultimate_parent_account_id,
+      sfdc_accounts_xf.is_jihu_account,
   
       -- medium level grouping of the order type field
       CASE 
@@ -636,11 +742,11 @@ WITH sfdc_opportunity AS (
       END                                                          AS is_eligible_created_pipeline_flag,
 
 
+      -- SAO alignment issue: https://mail.google.com/mail/u/0/#inbox/FMfcgzGkbDZKFplMhHCSFkPJSvDkTvCL
       CASE
         WHEN oppty_final.sales_accepted_date IS NOT NULL
           AND oppty_final.is_edu_oss = 0
           AND oppty_final.is_deleted = 0
-          AND oppty_final.order_type_stamped = '1. New - First Order'
             THEN 1
         ELSE 0
       END                                                         AS is_eligible_sao_flag,
