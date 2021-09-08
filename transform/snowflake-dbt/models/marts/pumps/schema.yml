@@ -44,6 +44,8 @@ models:
         tests:
           - not_null
         tags: ["tdf", "common", "gainsight"]
+      - name: subscription_status
+        description: Status of the subscription at the time the usage ping was created.
       - name: snapshot_date_id
         tests:
           - not_null
