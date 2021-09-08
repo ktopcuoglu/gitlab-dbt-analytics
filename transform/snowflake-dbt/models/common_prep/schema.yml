@@ -413,6 +413,10 @@ models:
           - accepted_values:
                   values: ['Sales-Assisted', 'Self-Service']
         tags: ["tdf"]
+      - name: namespace_name
+        description: The namespace related to the subscription.
+      - name: namespace_id
+        description: The id of the namespace related to the subscription.
       - name: is_myb
         description: MYB = Multi-Year Booking. This boolean flag identifies if a subscription is booked for more than one year. This can either be by having a term greater than 12 months or having a linked subscription.
       - name: is_myb_with_multi_subs
