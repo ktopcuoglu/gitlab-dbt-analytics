@@ -12,6 +12,7 @@ WITH source AS (
       subscriptionversionamendmentid              AS amendment_id,
       name                                        AS subscription_name,
         {{zuora_slugify("name")}}                 AS subscription_name_slugify,
+      nullif(gitlabnamespacename__c, '')          AS namespace_name,
       --keys
       accountid                                   AS account_id,
       creatoraccountid                            AS creator_account_id,
@@ -23,6 +24,7 @@ WITH source AS (
       nullif(previoussubscriptionid, '')          AS previous_subscription_id,
       nullif(recurlyid__c, '')                    AS sfdc_recurly_id,
       cpqbundlejsonid__qt                         AS cpq_bundle_json_id,
+      nullif(gitlabnamespaceid__c, '')            AS namespace_id,
 
       -- info
       status                                      AS subscription_status,

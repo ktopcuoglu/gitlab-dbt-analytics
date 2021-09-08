@@ -77,5 +77,3 @@ sources:
                   to: source('zuora', 'account')
                   field: id
                   severity: warn
-      - name: zuora_tables_date
-                  
