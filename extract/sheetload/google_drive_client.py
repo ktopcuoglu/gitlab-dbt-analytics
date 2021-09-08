@@ -146,20 +146,17 @@ class GoogleDriveClient:
                     )
                     .execute()
                 )
-                items: List[Dict] = results.get("files", [])
-
-                if items:
-                    all_results = all_results[:] + items[:]
 
             else:
+
                 results = (
                     self.service.files()
-                    .list(
-                        q=query,
-                        pageSize=10,
-                        fields="nextPageToken, files(id, name, mimeType)",
+                        .list(
+                            q=query,
+                            pageSize=10,
+                            fields="nextPageToken, files(id, name, mimeType)",
                     )
-                    .execute()
+                        .execute()
                 )
 
                 items: List[Dict] = results.get("files", [])
