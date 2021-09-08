@@ -5,8 +5,12 @@ WITH sfdc_opportunity_field_history AS (
   SELECT *
   FROM {{ ref('sfdc_opportunity_field_history_source')}}
 
-)
-, sfdc_opportunity_xf AS (
+), date_details AS (
+
+    SELECT * 
+    FROM {{ ref('wk_sales_date_details') }} 
+
+), sfdc_opportunity_xf AS (
 
   SELECT *
   FROM {{ ref('wk_sales_sfdc_opportunity_xf')}}
@@ -53,45 +57,48 @@ WITH sfdc_opportunity_field_history AS (
 ), pivoted_combined AS (
 
   SELECT opportunity_id,
-       MAX(CASE WHEN stage_name = '0-Pending Acceptance' 
+       MIN(CASE WHEN stage_name = '0-Pending Acceptance' 
           THEN min_stage_date
        ELSE NULL END)                  AS min_stage_0_date,
-       MAX(CASE WHEN stage_name = '1-Discovery' 
+       MIN(CASE WHEN stage_name = '1-Discovery' 
           THEN min_stage_date
        ELSE NULL END)                  AS min_stage_1_date,
-       MAX(CASE WHEN stage_name = '2-Scoping' 
+       MIN(CASE WHEN stage_name = '2-Scoping' 
           THEN min_stage_date
        ELSE NULL END)                  AS min_stage_2_date,
-       MAX(CASE WHEN stage_name = '3-Technical Evaluation' 
+       MIN(CASE WHEN stage_name = '3-Technical Evaluation' 
           THEN min_stage_date
        ELSE NULL END)                  AS min_stage_3_date,
-       MAX(CASE WHEN stage_name = '4-Proposal' 
+       MIN(CASE WHEN stage_name = '4-Proposal' 
           THEN min_stage_date
        ELSE NULL END)                  AS min_stage_4_date,
-       MAX(CASE WHEN stage_name = '5-Negotiating' 
+       MIN(CASE WHEN stage_name = '5-Negotiating' 
           THEN min_stage_date
        ELSE NULL END)                  AS min_stage_5_date,
-       MAX(CASE WHEN stage_name = '6-Awaiting Signature' 
+       MIN(CASE WHEN stage_name = '6-Awaiting Signature' 
           THEN min_stage_date
        ELSE NULL END)                  AS min_stage_6_date,
-       MAX(CASE WHEN stage_name = '7-Closing' 
+       MIN(CASE WHEN stage_name = '7-Closing' 
           THEN min_stage_date
        ELSE NULL END)                  AS min_stage_7_date,
-       MAX(CASE WHEN stage_name = '8-Closed Lost' 
+       MIN(CASE WHEN stage_name = '8-Closed Lost' 
           THEN min_stage_date
        ELSE NULL END)                  AS min_stage_8_lost_date,
-       MAX(CASE WHEN stage_name = 'Closed Won' 
+       MIN(CASE WHEN stage_name = 'Closed Won' 
           THEN min_stage_date
        ELSE NULL END)                  AS min_stage_8_won_date,
-       MAX(CASE WHEN stage_name = '9-Unqualified' 
+       MIN(CASE WHEN stage_name = '9-Unqualified' 
           THEN min_stage_date
        ELSE NULL END)                  AS min_stage_9_date,
-       MAX(CASE WHEN stage_name = '10-Duplicate' 
+       MIN(CASE WHEN stage_name = '10-Duplicate' 
           THEN min_stage_date
        ELSE NULL END)                  AS min_stage_10_date,
        MAX(CASE WHEN stage_name IN ('8-Closed Lost','Closed Won','10-Duplicate','9-Unqualified') 
           THEN min_stage_date
-       ELSE NULL END)                  AS max_closed_stage_date
+       ELSE NULL END)                  AS max_closed_stage_date,
+       MAX(CASE WHEN stage_name IN ('8-Closed Lost','10-Duplicate','9-Unqualified') 
+          THEN min_stage_date
+       ELSE NULL END)                  AS max_closed_lost_unqualified_duplicate_date
 
   FROM combined
   GROUP BY 1
@@ -100,96 +107,156 @@ WITH sfdc_opportunity_field_history AS (
 , pre_final AS (
 
 SELECT  
-        c.opportunity_id,
-        o.stage_name,
-        o.close_date,
-        o.sales_team_cro_level,
-        o.sales_team_rd_asm_level,
+        base.opportunity_id,
+        opty.stage_name,
+        opty.close_date,
+        opty.sales_team_cro_level,
+        opty.sales_team_rd_asm_level,
         -- adjusted dates for throughput analysis
         -- missing stage dates are completed using the next available stage date, up to a closed date
-        coalesce(c.min_stage_0_date,o.created_date) as stage_0_date,
-        coalesce(c.min_stage_1_date,c.min_stage_2_date,c.min_stage_3_date,c.min_stage_4_date,c.min_stage_5_date,c.min_stage_6_date,c.min_stage_7_date,c.min_stage_8_won_date)  AS stage_1_date,
-        coalesce(c.min_stage_2_date,c.min_stage_3_date,c.min_stage_4_date,c.min_stage_5_date,c.min_stage_6_date,c.min_stage_7_date,c.min_stage_8_won_date)                     AS stage_2_date,
-        coalesce(c.min_stage_3_date,c.min_stage_4_date,c.min_stage_5_date,c.min_stage_6_date,c.min_stage_7_date,c.min_stage_8_won_date)                                        AS stage_3_date,
-        coalesce(c.min_stage_4_date,c.min_stage_5_date,c.min_stage_6_date,c.min_stage_7_date,c.min_stage_8_won_date)                                                           AS stage_4_date,
-        coalesce(c.min_stage_5_date,c.min_stage_6_date,c.min_stage_7_date,c.min_stage_8_won_date)                                                                              AS stage_5_date,
-        coalesce(c.min_stage_6_date,c.min_stage_7_date,min_stage_8_won_date)                                                                                                   AS stage_6_date,
-        coalesce(c.min_stage_7_date,c.min_stage_8_won_date)                                                                                                                    AS stage_7_date,
-        c.min_stage_8_lost_date                     AS stage_8_lost_date,
-        c.min_stage_8_won_date                      AS stage_8_won_date,
-        c.min_stage_9_date                          AS stage_9_date,
-        c.min_stage_10_date                         AS stage_10_date,
-        c.max_closed_stage_date                     AS stage_closed_date,
+        coalesce(base.min_stage_0_date,opty.created_date) as stage_0_date,
+        coalesce(base.min_stage_1_date,base.min_stage_2_date,base.min_stage_3_date,base.min_stage_4_date,base.min_stage_5_date,base.min_stage_6_date,base.min_stage_7_date,base.min_stage_8_won_date)  AS stage_1_date,
+        coalesce(base.min_stage_2_date,base.min_stage_3_date,base.min_stage_4_date,base.min_stage_5_date,base.min_stage_6_date,base.min_stage_7_date,base.min_stage_8_won_date)                     AS stage_2_date,
+        coalesce(base.min_stage_3_date,base.min_stage_4_date,base.min_stage_5_date,base.min_stage_6_date,base.min_stage_7_date,base.min_stage_8_won_date)                                        AS stage_3_date,
+        coalesce(base.min_stage_4_date,base.min_stage_5_date,base.min_stage_6_date,base.min_stage_7_date,base.min_stage_8_won_date)                                                           AS stage_4_date,
+        coalesce(base.min_stage_5_date,base.min_stage_6_date,base.min_stage_7_date,base.min_stage_8_won_date)                                                                              AS stage_5_date,
+        coalesce(base.min_stage_6_date,base.min_stage_7_date,min_stage_8_won_date)                                                                                                   AS stage_6_date,
+        coalesce(base.min_stage_7_date,base.min_stage_8_won_date)                                                                                                                    AS stage_7_date,
+        base.min_stage_8_lost_date                     AS stage_8_lost_date,
+        base.min_stage_8_won_date                      AS stage_8_won_date,
+        base.min_stage_9_date                          AS stage_9_date,
+        base.min_stage_10_date                         AS stage_10_date,
+        base.max_closed_stage_date                     AS stage_closed_date,
+        base.max_closed_lost_unqualified_duplicate_date AS stage_close_lost_unqualified_duplicate_date,
         
         -- unadjusted fields
-        c.min_stage_0_date,
-        c.min_stage_1_date,
-        c.min_stage_2_date,
-        c.min_stage_3_date,
-        c.min_stage_4_date,
-        c.min_stage_5_date,
-        c.min_stage_6_date,
-        c.min_stage_7_date
-    FROM pivoted_combined c
-    INNER JOIN sfdc_opportunity_xf o
-      ON o.opportunity_id = c.opportunity_id
+        base.min_stage_0_date,
+        base.min_stage_1_date,
+        base.min_stage_2_date,
+        base.min_stage_3_date,
+        base.min_stage_4_date,
+        base.min_stage_5_date,
+        base.min_stage_6_date,
+        base.min_stage_7_date
+    FROM pivoted_combined base
+    INNER JOIN sfdc_opportunity_xf opty
+      ON opty.opportunity_id = base.opportunity_id
 )
 , final AS (
 
 SELECT  
-        *,
+        base.*,
 
         -- was stage skipped flag
         CASE
-            WHEN min_stage_0_date IS NULL
-                AND stage_0_date IS NOT NULL
+            WHEN base.min_stage_0_date IS NULL
+                AND base.stage_0_date IS NOT NULL
                 THEN 1
             ELSE 0 
         END AS was_stage_0_skipped_flag,
         CASE
-            WHEN min_stage_1_date IS NULL
-                AND stage_1_date IS NOT NULL            
+            WHEN base.min_stage_1_date IS NULL
+                AND base.stage_1_date IS NOT NULL            
                 THEN 1
             ELSE 0 
         END AS was_stage_1_skipped_flag,
         CASE
-            WHEN min_stage_2_date IS NULL
-                AND stage_2_date IS NOT NULL
+            WHEN base.min_stage_2_date IS NULL
+                AND base.stage_2_date IS NOT NULL
                 THEN 1
             ELSE 0 
         END AS was_stage_2_skipped_flag,
         CASE
-            WHEN min_stage_3_date IS NULL
-                AND stage_3_date IS NOT NULL
+            WHEN base.min_stage_3_date IS NULL
+                AND base.stage_3_date IS NOT NULL
                 THEN 1
             ELSE 0 
         END AS was_stage_3_skipped_flag,
         CASE
-            WHEN min_stage_4_date IS NULL
-                AND stage_4_date IS NOT NULL
+            WHEN base.min_stage_4_date IS NULL
+                AND base.stage_4_date IS NOT NULL
                 THEN 1
             ELSE 0 
         END AS was_stage_4_skipped_flag,        
         CASE
-            WHEN min_stage_5_date IS NULL
-                AND stage_5_date IS NOT NULL
+            WHEN base.min_stage_5_date IS NULL
+                AND base.stage_5_date IS NOT NULL
                 THEN 1
             ELSE 0 
         END AS was_stage_5_skipped_flag,
         CASE
-            WHEN min_stage_6_date IS NULL
-                AND stage_6_date IS NOT NULL
+            WHEN base.min_stage_6_date IS NULL
+                AND base.stage_6_date IS NOT NULL
                 THEN 1
             ELSE 0 
         END AS was_stage_6_skipped_flag,
         CASE
-            WHEN min_stage_7_date IS NULL
-                AND stage_7_date IS NOT  NULL
+            WHEN base.min_stage_7_date IS NULL
+                AND base.stage_7_date IS NOT  NULL
                 THEN 1
             ELSE 0 
-        END AS was_stage_7_skipped_flag
- 
-FROM pre_final 
+        END AS was_stage_7_skipped_flag,
+
+        -- calculate age in stage
+        DATEDIFF(day,coalesce(base.stage_1_date,base.stage_close_lost_unqualified_duplicate_date,CURRENT_DATE), base.stage_0_date) AS days_in_stage_0,
+        DATEDIFF(day,coalesce(base.stage_2_date,base.stage_close_lost_unqualified_duplicate_date,CURRENT_DATE), base.stage_1_date) AS days_in_stage_1,
+        DATEDIFF(day,coalesce(base.stage_3_date,base.stage_close_lost_unqualified_duplicate_date,CURRENT_DATE), base.stage_2_date) AS days_in_stage_2,
+        DATEDIFF(day,coalesce(base.stage_4_date,base.stage_close_lost_unqualified_duplicate_date,CURRENT_DATE), base.stage_3_date) AS days_in_stage_3,
+        DATEDIFF(day,coalesce(base.stage_5_date,base.stage_close_lost_unqualified_duplicate_date,CURRENT_DATE), base.stage_4_date) AS days_in_stage_4,
+        DATEDIFF(day,coalesce(base.stage_6_date,base.stage_close_lost_unqualified_duplicate_date,CURRENT_DATE), base.stage_5_date) AS days_in_stage_5,
+        DATEDIFF(day,coalesce(base.stage_7_date,base.stage_close_lost_unqualified_duplicate_date,CURRENT_DATE), base.stage_6_date) AS days_in_stage_6,        
+        DATEDIFF(day,coalesce(base.stage_closed_date,CURRENT_DATE), base.stage_7_date)                                             AS days_in_stage_7, 
+
+        -- stage date helpers
+        stage_0.fiscal_quarter_name_fy      AS stage_0_fiscal_quarter_name,
+        stage_0.first_day_of_fiscal_quarter AS stage_0_fiscal_quarter_date,
+        stage_0.fiscal_year                 AS stage_0_fiscal_year,
+        
+        stage_1.fiscal_quarter_name_fy      AS stage_1_fiscal_quarter_name,
+        stage_1.first_day_of_fiscal_quarter AS stage_1_fiscal_quarter_date,
+        stage_1.fiscal_year                 AS stage_1_fiscal_year,
+
+        stage_2.fiscal_quarter_name_fy      AS stage_2_fiscal_quarter_name,
+        stage_2.first_day_of_fiscal_quarter AS stage_2_fiscal_quarter_date,
+        stage_2.fiscal_year                 AS stage_2_fiscal_year,
+
+        stage_3.fiscal_quarter_name_fy      AS stage_3_fiscal_quarter_name,
+        stage_3.first_day_of_fiscal_quarter AS stage_3_fiscal_quarter_date,
+        stage_3.fiscal_year                 AS stage_3_fiscal_year,
+
+        stage_4.fiscal_quarter_name_fy      AS stage_4_fiscal_quarter_name,
+        stage_4.first_day_of_fiscal_quarter AS stage_4_fiscal_quarter_date,
+        stage_4.fiscal_year                 AS stage_4_fiscal_year,
+
+        stage_5.fiscal_quarter_name_fy      AS stage_5_fiscal_quarter_name,
+        stage_5.first_day_of_fiscal_quarter AS stage_5_fiscal_quarter_date,
+        stage_5.fiscal_year                 AS stage_5_fiscal_year,
+
+        stage_6.fiscal_quarter_name_fy      AS stage_6_fiscal_quarter_name,
+        stage_6.first_day_of_fiscal_quarter AS stage_6_fiscal_quarter_date,
+        stage_6.fiscal_year                 AS stage_6_fiscal_year,
+
+        stage_7.fiscal_quarter_name_fy      AS stage_7_fiscal_quarter_name,
+        stage_7.first_day_of_fiscal_quarter AS stage_7_fiscal_quarter_date,
+        stage_7.fiscal_year                 AS stage_7_fiscal_year
+
+FROM pre_final base
+  LEFT JOIN  date_details stage_0
+    ON stage_0.date_actual = base.stage_0_date::date
+  LEFT JOIN  date_details stage_1
+    ON stage_1.date_actual = base.stage_1_date::date
+  LEFT JOIN  date_details stage_2
+    ON stage_2.date_actual = base.stage_2_date::date
+  LEFT JOIN  date_details stage_3
+    ON stage_3.date_actual = base.stage_3_date::date
+  LEFT JOIN  date_details stage_4
+    ON stage_4.date_actual = base.stage_4_date::date
+  LEFT JOIN  date_details stage_5
+    ON stage_5.date_actual = base.stage_5_date::date
+  LEFT JOIN  date_details stage_6
+    ON stage_6.date_actual = base.stage_6_date::date
+  LEFT JOIN  date_details stage_7
+    ON stage_7.date_actual = base.stage_7_date::date
 
 )
 
