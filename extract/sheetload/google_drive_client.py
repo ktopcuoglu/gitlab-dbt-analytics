@@ -1,13 +1,13 @@
+from io import BytesIO
+from logging import info
+from os import environ as env
 from typing import Dict, List
 
+import pandas as pd
+from apiclient.http import MediaIoBaseDownload
 from googleapiclient.discovery import build
 from oauth2client.service_account import ServiceAccountCredentials
-from os import environ as env
 from yaml import safe_load
-from io import BytesIO
-from apiclient.http import MediaIoBaseDownload
-import pandas as pd
-from logging import error, info, basicConfig, getLogger
 
 
 class GoogleDriveClient:
@@ -22,7 +22,7 @@ class GoogleDriveClient:
             "drive", "v3", credentials=credentials, cache_discovery=False
         )
 
-    def get_data_frame_from_file_id(self, file_id) -> pd.DataFrame:
+    def get_data_frame_from_file_id(self, file_id: str) -> pd.DataFrame:
         """
         Google drive does not allow direct csv reading from the urls, so we need to
         download the file using their API method, create a df and then delete the local file
@@ -40,7 +40,9 @@ class GoogleDriveClient:
         df = pd.read_csv(BytesIO(bytes_data), low_memory=False)
         return df
 
-    def get_item_id(self, item_name, in_folder_id=None, is_folder=None) -> str:
+    def get_item_id(
+        self, item_name: str, in_folder_id: str = None, is_folder: bool = None
+    ) -> str:
         """
         Retrieves the unique identifier for a folder or file available in Google Drive.
         The folder / file must have been shared with whatever account is running this script
@@ -89,7 +91,7 @@ class GoogleDriveClient:
 
         return archive_folder_id
 
-    def create_folder(self, folder_name, in_folder_id) -> str:
+    def create_folder(self, folder_name: str, in_folder_id: str) -> str:
         """
 
         :param folder_name:
@@ -113,7 +115,7 @@ class GoogleDriveClient:
 
         return folder_id
 
-    def get_files_in_folder(self, folder_id, file_type) -> List[Dict]:
+    def get_files_in_folder(self, folder_id: str, file_type: str) -> List[Dict]:
         """
             Retrieves a list of all files of a specific type available in a specific folder
 
@@ -170,7 +172,7 @@ class GoogleDriveClient:
 
         return all_results
 
-    def move_file_to_folder(self, file_id, to_folder_id) -> bool:
+    def move_file_to_folder(self, file_id: str, to_folder_id: str) -> bool:
         """
 
         :param self:
