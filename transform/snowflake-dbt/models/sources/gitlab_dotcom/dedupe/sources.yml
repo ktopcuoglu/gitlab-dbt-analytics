@@ -218,6 +218,8 @@ sources:
         identifier: gitlab_db_milestones
       - name: namespace_root_storage_statistics
         identifier: gitlab_db_namespace_root_storage_statistics
+      - name: namespace_settings
+        identifier:  gitlab_db_namespace_settings     
       - name: namespace_statistics
         identifier: gitlab_db_namespace_statistics
       - name: namespaces

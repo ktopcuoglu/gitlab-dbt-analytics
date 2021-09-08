@@ -1,8 +1,3 @@
-{{config({
-    "schema": "common_mart_sales"
-  })
-}}
-
 {{ simple_cte([
     ('dim_crm_user_hierarchy_live', 'dim_crm_user_hierarchy_live'),
     ('dim_order_type','dim_order_type'),

@@ -1,5 +1,5 @@
 {{config({
-    "schema": "common_mart_sales"
+    "schema": "restricted_safe_common_mart_sales"
   })
 }}
 

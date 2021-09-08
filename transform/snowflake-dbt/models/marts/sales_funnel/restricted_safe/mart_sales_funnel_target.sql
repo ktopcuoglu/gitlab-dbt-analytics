@@ -1,8 +1,3 @@
-{{config({
-    "schema": "common_mart_sales"
-  })
-}}
-
 WITH dim_crm_user_hierarchy_live AS (
 
     SELECT *
