@@ -97,11 +97,6 @@ databases:
     - mlaanen_prep:
         shared: no
 
-    - mramirez_prod: 
-        shared: no
-    - mramirez_prep: 
-        shared: no       
-
     - mvilain_prod:
         shared: no
     - mvilain_prep:
@@ -3056,20 +3051,6 @@ roles:
     - mramirez: # De provisioned as part of Quarterly audit and security check.
         member_of: []
         warehouses: []
-        owns:
-            databases: []
-            schemas: []
-            tables: []
-        privileges:
-            databases:
-                read: []
-                write: []
-            schemas:
-                read: []
-                write: []
-            tables:
-                read: []
-                write: []
 
     - mray: # De provisioned as part of Quarterly audit and security check.
         member_of: []
