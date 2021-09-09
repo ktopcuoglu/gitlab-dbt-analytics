@@ -194,7 +194,7 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity_xf.influence_partner,
       sfdc_opportunity_xf.fulfillment_partner,
       sfdc_opportunity_xf.platform_partner,
-      sfdc_opportunity_xf.partner_track,
+      COALESCE(sfdc_opportunity_xf.partner_track,'N/A')          AS partner_track,
       sfdc_opportunity_xf.is_public_sector_opp,
       sfdc_opportunity_xf.is_registration_from_portal,
       sfdc_opportunity_xf.calculated_discount,
@@ -214,6 +214,15 @@ WITH sfdc_opportunity AS (
             AND sfdc_opportunity_xf.sales_qualified_source != 'Channel Generated' 
           THEN 'Partner Co-Sell'
       END                                                         AS deal_path_engagement,
+
+
+      -- NF: 20220906 Got confirmation from Colleen that DR Partner Track only makes sense when 
+      -- deal_path is direct
+      CASE 
+        WHEN sfdc_opportunity_xf.deal_path = 'Channel' 
+          THEN COALESCE(sfdc_opportunity_xf.partner_track,'N/A')
+        ELSE sfdc_opportunity_xf.deal_path
+      END                                                         AS calculated_partner_track,
 
       sfdc_opportunity_xf.stage_name_3plus,
       sfdc_opportunity_xf.stage_name_4plus,
@@ -443,7 +452,7 @@ WITH sfdc_opportunity AS (
       -- fields form opportunity source
       sfdc_opportunity.opportunity_category
     
-    FROM {{ref('sfdc_opportunity_xf')}}
+    FROM {{ref('sfdc_opportunity_xf')}} sfdc_opportunity_xf
     -- not all fields are in opportunity xf
     INNER JOIN sfdc_opportunity
       ON sfdc_opportunity.opportunity_id = sfdc_opportunity_xf.opportunity_id
@@ -455,6 +464,8 @@ WITH sfdc_opportunity AS (
       -- pipeline creation date
     LEFT JOIN date_details stage_3_date 
       ON stage_3_date.date_actual = sfdc_opportunity_xf.stage_3_technical_evaluation_date::date
+   -- NF 20210906 remove JiHu opties from the models
+    WHERE sfdc_opportunity_xf.is_jihu_account = 0
 
 ), net_iacv_to_net_arr_ratio AS (
 
@@ -784,7 +795,7 @@ WITH sfdc_opportunity AS (
           -- Not JiHu
             THEN 1
           ELSE 0
-      END                                                           AS is_elgible_age_analysis_flag,
+      END                                                           AS is_eligible_age_analysis_flag,
 
       CASE
         WHEN oppty_final.is_edu_oss = 0
