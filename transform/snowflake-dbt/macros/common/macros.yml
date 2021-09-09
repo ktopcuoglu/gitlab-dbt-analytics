@@ -58,9 +58,9 @@ macros:
         type: string
         description: Abbreviated influence partner account id from the opportunity object.
   - name: channel_type
-    description: This macro applies business logic to bucket dr_partner_engagement and order_type into the respective channel type. Partner Sourced is broken out by order type while assisted and fulfillment are not broken out by order type in analyses.
+    description: This macro applies business logic to bucket sqs_bucket_engagement, which is a grouping of sales_qualified_source, and order_type into the respective channel type. Partner Sourced and Co-sell by order type. If order_type is NULL it is classified as Co-sell - Growth.
     arguments:
-      - name: dr_partner_engegament
+      - name: sqs_bucket_engagement
         type: string
       - name: order_type
         type: string
