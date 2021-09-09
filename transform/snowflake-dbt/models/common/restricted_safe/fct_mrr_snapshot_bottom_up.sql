@@ -2,7 +2,7 @@
         "materialized": "incremental",
         "unique_key": "mrr_snapshot_id",
         "tags": ["arr_snapshots"],
-        "schema": "common"
+        "schema": "restricted_safe_common"
     })
 }}
 

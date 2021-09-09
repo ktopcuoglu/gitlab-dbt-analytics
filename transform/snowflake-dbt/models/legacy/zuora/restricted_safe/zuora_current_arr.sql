@@ -1,8 +1,3 @@
-{{config({
-    "schema": "restricted_safe_legacy"
-  })
-}}
-
 with subscription as (
 
   SELECT * FROM {{ref('zuora_subscription')}}
