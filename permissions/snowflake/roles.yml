@@ -3390,9 +3390,12 @@ roles:
                     - rheannamistry_prod.*.*
 
 
-    - rkohnke: # De provisioned as part of Quarterly audit and security check.
-        member_of: []
-        warehouses: []
+    - rkohnke: 
+        member_of: 
+            - reporter
+            - analyst_marketing
+        warehouses: 
+            - analyst_xs
 
     - rparker:
         member_of:
@@ -4343,9 +4346,10 @@ users:
         member_of:
             - rheannamistry
 
-    - rkohnke: # De provisioned as part of Quarterly audit and security check.
-        can_login: no
-        member_of: []
+    - rkohnke:
+        can_login: yes
+        member_of: 
+            -rkohnke
 
     - rparker:
         can_login: yes
