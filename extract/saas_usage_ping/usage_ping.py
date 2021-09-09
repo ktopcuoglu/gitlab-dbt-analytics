@@ -45,7 +45,9 @@ class UsagePing(object):
 
         return saas_queries
 
-    def _get_md5(self, input_timestamp: float=datetime.datetime.utcnow().timestamp()) -> str:
+    def _get_md5(
+        self, input_timestamp: float = datetime.datetime.utcnow().timestamp()
+    ) -> str:
         """
         Convert input datetime into md5 hash.
         Result is returned as a string.
@@ -58,7 +60,7 @@ class UsagePing(object):
             current timestamp: 1629986268.131019
             md5 timestamp: 54da37683078de0c1360a8e76d942227
         """
-        encoding = 'utf-8'
+        encoding = "utf-8"
         timestamp_encoded = str(input_timestamp).encode(encoding=encoding)
 
         return md5(timestamp_encoded).hexdigest()
@@ -100,26 +102,44 @@ class UsagePing(object):
         connection.close()
         self.loader_engine.dispose()
 
-        ping_to_upload = pd.DataFrame(columns=["query_map", "run_results", "ping_date", "run_id"])
+        ping_to_upload = pd.DataFrame(
+            columns=["query_map", "run_results", "ping_date", "run_id"]
+        )
 
-        ping_to_upload.loc[0] = [saas_queries, json.dumps(results_all), self.end_date,
-                                 self._get_md5(datetime.datetime.utcnow().timestamp())]
+        ping_to_upload.loc[0] = [
+            saas_queries,
+            json.dumps(results_all),
+            self.end_date,
+            self._get_md5(datetime.datetime.utcnow().timestamp()),
+        ]
 
         dataframe_uploader(
-            ping_to_upload, self.loader_engine, "instance_sql_metrics", "saas_usage_ping"
+            ping_to_upload,
+            self.loader_engine,
+            "instance_sql_metrics",
+            "saas_usage_ping",
         )
 
         """
         Handling error data part to load data into table: raw.saas_usage_ping.instance_sql_errors
         """
         if errors_data_all:
-            error_data_to_upload = pd.DataFrame(columns=["run_id", "sql_errors", "ping_date"])
+            error_data_to_upload = pd.DataFrame(
+                columns=["run_id", "sql_errors", "ping_date"]
+            )
 
-            error_data_to_upload.loc[0] = [self._get_md5(datetime.datetime.utcnow().timestamp()),
-                                           json.dumps(errors_data_all),
-                                           self.end_date]
+            error_data_to_upload.loc[0] = [
+                self._get_md5(datetime.datetime.utcnow().timestamp()),
+                json.dumps(errors_data_all),
+                self.end_date,
+            ]
 
-            dataframe_uploader(error_data_to_upload, self.loader_engine, "instance_sql_errors", "saas_usage_ping")
+            dataframe_uploader(
+                error_data_to_upload,
+                self.loader_engine,
+                "instance_sql_errors",
+                "saas_usage_ping",
+            )
 
         self.loader_engine.dispose()
 
@@ -163,7 +183,7 @@ class UsagePing(object):
         }
         """
         with open(
-                os.path.join(os.path.dirname(__file__), "usage_ping_namespace_queries.json")
+            os.path.join(os.path.dirname(__file__), "usage_ping_namespace_queries.json")
         ) as f:
             saas_queries = json.load(f)
 
