@@ -1,8 +1,3 @@
-{{config({
-    "schema": "legacy"
-  })
-}}
-
 WITH base_mrr AS (
 
     SELECT * FROM {{ ref('zuora_base_mrr_amortized') }}
