@@ -87,12 +87,12 @@ for config in clone_table_config:
         export PYTHONPATH="$CI_PROJECT_DIR/orchestration/:$PYTHONPATH" &&
         cd analytics/orchestration/ &&
     
-    python3 manage_snowflake.py create-table-clone " \
-        --source_database {config.get('source_database')} " \
-        --source_schema {config.get('source_schema')} " \
-        --source_table {config.get('source_table')}" \
-        --target_database {config.get('target_database')} " \
-        --target_schema {config.get('target_schema')}  " \
+    python3 manage_snowflake.py create-table-clone 
+        --source_database {config.get('source_database')}
+        --source_schema {config.get('source_schema')} 
+        --source_table {config.get('source_table')}
+        --target_database {config.get('target_database')} 
+        --target_schema {config.get('target_schema')}  
         --target_table {target_table_name}"""
 
     clone_dag = KubernetesPodOperator(
