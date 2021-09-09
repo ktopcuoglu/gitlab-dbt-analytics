@@ -9,6 +9,10 @@ CREATE TABLE "8994-CHANGE-IN-SAAS_USAGE_PING-GITLAB_DOTCOM_RAW".saas_usage_ping.
 CLONE "8994-CHANGE-IN-SAAS_USAGE_PING-GITLAB_DOTCOM_RAW".saas_usage_ping.gitlab_dotcom
 COPY GRANTS;
 
+-- Need to add this column manually, otherwise will raise an error.
+ALTER TABLE "8994-CHANGE-IN-SAAS_USAGE_PING-GITLAB_DOTCOM_RAW".saas_usage_ping.instance_sql_metrics
+    ADD COLUMN run_id VARCHAR(40); -- rename schema_name for PROD
+
 
 ----------------------------------------------------------------------
 -- Check newly created tables
@@ -58,4 +62,5 @@ SELECT COUNT(1) -- expect 1, OK
 -- 2/2 Test PREP - after DBT job is run:
 -- # dbt run --models saas_usage_ping_instance
  SELECT COUNT(1) as CNT -- expect 31, OK
+
    FROM "RBACOVIC_PREP"."SAAS_USAGE_PING"."SAAS_USAGE_PING_INSTANCE";  -- rename schema_name for PROD
