@@ -78,7 +78,7 @@ WITH source AS (
         status                                                  AS lead_status,
         last_utm_campaign__c                                    AS last_utm_campaign, 
         last_utm_content__c                                     AS last_utm_content,
-        crm_partner_id__c                                       AS crm_partner_id,
+        crm_partner_id_lookup__c                                AS crm_partner_id,
         name_of_active_sequence__c                              AS name_of_active_sequence,
         sequence_task_due_date__c::DATE                         AS sequence_task_due_date,
         sequence_status__c                                      AS sequence_status,

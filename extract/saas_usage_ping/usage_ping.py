@@ -1,36 +1,24 @@
 import datetime
 import json
 import logging
-import re
 import os
 import sys
+import requests
 from os import environ as env
 from typing import Dict, List
+from hashlib import md5
 
 import pandas as pd
-import sqlparse
-import sql_metadata
 
 from fire import Fire
-from flatten_dict import flatten
 from gitlabdata.orchestration_utils import (
     dataframe_uploader,
     dataframe_enricher,
     snowflake_engine_factory,
+    snowflake_stage_load_copy_remove,
 )
-from pprint import pprint
-from sqlalchemy.engine.base import Engine
 from sqlalchemy.exc import SQLAlchemyError
-from sqlparse.sql import (
-    Identifier,
-    IdentifierList,
-    remove_quotes,
-    Token,
-    TokenList,
-    Where,
-)
-from sqlparse.tokens import Keyword, Name, Punctuation, String, Whitespace
-from sqlparse.utils import imt
+from logging import error, info, basicConfig, getLogger, warning
 
 
 class UsagePing(object):
@@ -50,10 +38,32 @@ class UsagePing(object):
         can be updated to query an end point or query other functions
         to generate the {ping_name: sql_query} dictionary
         """
-        with open(os.path.join(os.path.dirname(__file__), "all_sql_queries.json")) as f:
+        with open(
+            os.path.join(os.path.dirname(__file__), "transformed_instance_queries.json")
+        ) as f:
             saas_queries = json.load(f)
 
         return saas_queries
+
+    def _get_md5(
+        self, input_timestamp: float = datetime.datetime.utcnow().timestamp()
+    ) -> str:
+        """
+        Convert input datetime into md5 hash.
+        Result is returned as a string.
+        Example:
+
+            Input (datetime): datetime.utcnow().timestamp()
+            Output (str): md5 hash
+
+            -----------------------------------------------------------
+            current timestamp: 1629986268.131019
+            md5 timestamp: 54da37683078de0c1360a8e76d942227
+        """
+        encoding = "utf-8"
+        timestamp_encoded = str(input_timestamp).encode(encoding=encoding)
+
+        return md5(timestamp_encoded).hexdigest()
 
     def saas_instance_ping(self):
         """
@@ -65,31 +75,100 @@ class UsagePing(object):
         connection = self.loader_engine.connect()
 
         results_all = {}
+        errors_data_all = {}
+        error_data_to_write = None
 
         for key, query in saas_queries.items():
             logging.info(f"Running ping {key}...")
             try:
                 results = pd.read_sql(sql=query, con=connection)
+                info(results)
                 counter_value = results.loc[0, "counter_value"]
                 data_to_write = str(counter_value)
+            except KeyError as k:
+                error = "0"
+                data_to_write = error
             except SQLAlchemyError as e:
                 error = str(e.__dict__["orig"])
-                data_to_write = error
+                error_data_to_write = error
 
-            results_all[key] = data_to_write
+            if data_to_write:
+                results_all[key] = data_to_write
 
+            if error_data_to_write:
+                errors_data_all[key] = error_data_to_write
+
+        info("Processed queries")
         connection.close()
         self.loader_engine.dispose()
 
-        ping_to_upload = pd.DataFrame(columns=["query_map", "run_results", "ping_date"])
-
-        ping_to_upload.loc[0] = [saas_queries, json.dumps(results_all), self.end_date]
-
-        dataframe_uploader(
-            ping_to_upload, self.loader_engine, "gitlab_dotcom", "saas_usage_ping"
+        ping_to_upload = pd.DataFrame(
+            columns=["query_map", "run_results", "ping_date", "run_id"]
         )
 
+        ping_to_upload.loc[0] = [
+            saas_queries,
+            json.dumps(results_all),
+            self.end_date,
+            self._get_md5(datetime.datetime.utcnow().timestamp()),
+        ]
+
+        dataframe_uploader(
+            ping_to_upload,
+            self.loader_engine,
+            "instance_sql_metrics",
+            "saas_usage_ping",
+        )
+
+        """
+        Handling error data part to load data into table: raw.saas_usage_ping.instance_sql_errors
+        """
+        if errors_data_all:
+            error_data_to_upload = pd.DataFrame(
+                columns=["run_id", "sql_errors", "ping_date"]
+            )
+
+            error_data_to_upload.loc[0] = [
+                self._get_md5(datetime.datetime.utcnow().timestamp()),
+                json.dumps(errors_data_all),
+                self.end_date,
+            ]
+
+            dataframe_uploader(
+                error_data_to_upload,
+                self.loader_engine,
+                "instance_sql_errors",
+                "saas_usage_ping",
+            )
+
         self.loader_engine.dispose()
+
+    def saas_instance_redis_metrics(self):
+
+        """
+        Call the Non SQL Metrics API and store the results in Snowflake RAW database
+        """
+        config_dict = env.copy()
+        headers = {
+            "PRIVATE-TOKEN": config_dict["GITLAB_ANALYTICS_PRIVATE_TOKEN"],
+        }
+
+        response = requests.get(
+            "https://gitlab.com/api/v4/usage_data/non_sql_metrics", headers=headers
+        )
+        json_data = json.loads(response.text)
+
+        json_file_name = "instance_redis_metrics"
+
+        with open(f"{json_file_name}.json", "w") as f:
+            json.dump(json_data, f)
+
+        snowflake_stage_load_copy_remove(
+            f"{json_file_name}.json",
+            "raw.gitlab_data_yaml.gitlab_data_yaml_load",
+            f"raw.saas_usage_ping.instance_redis_metrics",
+            self.loader_engine,
+        )
 
     def _get_namespace_queries(self) -> List[Dict]:
         """

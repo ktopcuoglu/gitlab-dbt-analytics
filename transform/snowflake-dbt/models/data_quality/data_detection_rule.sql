@@ -1,10 +1,3 @@
-{{config({
-    "schema": "data_quality",
-    "materialized": "table",
-    "tags": ["product"]
-  })
-}}
-
 WITH detection_rule AS (
 
     SELECT 

@@ -159,7 +159,7 @@ models:
           - not_null
 
   - name: gitlab_dotcom_ci_build_trace_section_names_source
-    description: Base model for Gitlab.com ci_builds
+    description: This table pipeline is deprecated and won't be refreshed, Ref MR https://gitlab.com/gitlab-data/analytics/-/merge_requests/5334.
     columns:
       - name: ci_build_id
         tags: ["tdf","gitlab_dotcom"]
@@ -1152,6 +1152,15 @@ models:
         tags: ["tdf","gitlab_dotcom"]
         tests:
           - not_null
+
+  - name: gitlab_dotcom_namespace_settings_source
+    description: Base model for Gitlab.com namespace settings
+    columns:
+      - name: namespace_id
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+          - unique
 
   - name: gitlab_dotcom_namespaces_source
     description: Base model for Gitlab.com namespaces

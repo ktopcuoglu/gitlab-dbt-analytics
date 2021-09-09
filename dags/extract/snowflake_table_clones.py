@@ -68,21 +68,40 @@ dag = DAG(
     "snowflake_table_clones", default_args=default_args, schedule_interval="0 7 * * *"
 )
 
-# Set the command for the container
-container_cmd = f"""
-    {clone_repo_cmd} &&
-    export PYTHONPATH="$CI_PROJECT_DIR/orchestration/:$PYTHONPATH" &&
-    cd analytics/orchestration/ &&
-    python3 manage_snowflake.py create-table-clone --source_database PROD --source_schema common_mart_sales --source_table mart_arr --target_database RAW --target_schema full_table_clones  --target_table "mart_arr_$CLONE_NAME_DATE"
-"""
+clone_table_config = [
+    {
+        "table_name": "mart_arr",
+        "source_database": "PROD",
+        "source_schema": "common_mart_sales",
+        "source_table": "mart_arr",
+        "target_schema": "full_table_clones",
+        "target_database": "RAW",
+    },
+]
 
-make_clone = KubernetesPodOperator(
-    **gitlab_defaults,
-    image=DATA_IMAGE,
-    task_id="snowflake-clone-arr-data-mart",
-    name="snowflake-clone-arr-data-mart",
-    secrets=secrets,
-    env_vars=pod_env_vars,
-    arguments=[container_cmd],
-    dag=dag,
-)
+for config in clone_table_config:
+    target_table_name = f"'{config.get('table_name')}_$CLONE_NAME_DATE'"
+
+    container_cmd = f"""
+        {clone_repo_cmd} &&
+        export PYTHONPATH="$CI_PROJECT_DIR/orchestration/:$PYTHONPATH" &&
+        cd analytics/orchestration/ &&
+    
+    python3 manage_snowflake.py create-table-clone  \
+        --source_database {config.get('source_database')}  \
+        --source_schema {config.get('source_schema')}  \
+        --source_table {config.get('source_table')} \
+        --target_database {config.get('target_database')} \
+        --target_schema {config.get('target_schema')}  \
+        --target_table '{target_table_name}'"""
+
+    clone_dag = KubernetesPodOperator(
+        **gitlab_defaults,
+        image=DATA_IMAGE,
+        task_id=f"snowflake-clone-{config.get('source_table').replace('_', '-')}",
+        name=f"snowflake-clone-{config.get('source_table').replace('_', '-')}",
+        secrets=secrets,
+        env_vars=pod_env_vars,
+        arguments=[container_cmd],
+        dag=dag,
+    )

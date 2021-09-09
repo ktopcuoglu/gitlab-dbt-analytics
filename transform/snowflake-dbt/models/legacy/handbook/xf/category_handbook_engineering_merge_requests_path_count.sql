@@ -22,13 +22,27 @@ WITH category_handbook_engineering_merge_requests AS (
            ELSE 0 END                                                                     AS path_count_engineering,
 
       -- Engineering departments 
-      IFF(LOWER(merge_request_path) LIKE '%/handbook/engineering/development/%',1,0)      AS path_count_development,    
-      IFF(LOWER(merge_request_path) LIKE '%/handbook/engineering/infrastructure/%',1,0)   AS path_count_infrastructure,
-      IFF(LOWER(merge_request_path) LIKE '%/handbook/engineering/quality/%',1,0)          AS path_count_quality,
-      IFF(LOWER(merge_request_path) LIKE '%/handbook/engineering/security/%',1,0)         AS path_count_security,
-      IFF(LOWER(merge_request_path) LIKE '%/handbook/support/%',1,0)                      AS path_count_support,
-      IFF(LOWER(merge_request_path) LIKE '%/handbook/engineering/ux/%',1,0)               AS path_count_ux,
-
+      CASE WHEN LOWER(merge_request_path) LIKE '%/handbook/engineering/development/%' THEN 1
+           WHEN LOWER(merge_request_path) LIKE '%data/performance_indicators/development_department.yml%' THEN 1
+           ELSE 0 END                                                                    AS path_count_development,   
+      CASE WHEN LOWER(merge_request_path) LIKE '%/handbook/engineering/infrastructure/%' THEN 1
+           WHEN LOWER(merge_request_path) LIKE '%data/performance_indicators/infrastructure_department.yml%' THEN 1
+           ELSE 0 END                                                                    AS path_count_infrastructure,
+      CASE WHEN LOWER(merge_request_path) LIKE '%/handbook/engineering/quality/%' THEN 1
+           WHEN LOWER(merge_request_path) LIKE '%data/performance_indicators/quality_department.yml%' THEN 1
+           ELSE 0 END                                                                    AS path_count_quality,
+      CASE WHEN LOWER(merge_request_path) LIKE '%/handbook/engineering/security/%' THEN 1
+           WHEN LOWER(merge_request_path) LIKE '%data/performance_indicators/security_department.yml%' THEN 1
+           ELSE 0 END                                                                    AS path_count_security,
+      CASE WHEN LOWER(merge_request_path) LIKE '%/handbook/support/%' THEN 1
+           WHEN LOWER(merge_request_path) LIKE '%data/performance_indicators/customer_support_department.yml%' THEN 1
+           ELSE 0 END                                                                     AS path_count_support,
+      CASE WHEN LOWER(merge_request_path) LIKE '%/handbook/engineering/ux/%' THEN 1
+           WHEN LOWER(merge_request_path) LIKE '%data/performance_indicators/ux_department.yml%' THEN 1
+           ELSE 0 END                                                                     AS path_count_ux,
+      CASE WHEN LOWER(merge_request_path) LIKE '%/handbook/engineering/incubation/%' THEN 1
+           WHEN LOWER(merge_request_path) LIKE '%data/performance_indicators/incubation_engineering_department.yml%' THEN 1
+           ELSE 0 END                                                                     AS path_count_incubation,
       -- Metadata 
       merge_request_created_at,
       merge_request_last_edited_at,

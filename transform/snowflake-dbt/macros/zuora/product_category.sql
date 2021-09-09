@@ -9,7 +9,7 @@ CASE
     THEN 'Self-Managed - Ultimate'
   WHEN LOWER({{product_column}}) LIKE '%premium%'
     THEN 'Self-Managed - Premium'
-  WHEN LOWER({{product_column}}) LIKE 'bronze%'
+  WHEN LOWER({{product_column}}) LIKE '%bronze%'
     THEN 'SaaS - Bronze'
   WHEN LOWER({{product_column}}) LIKE '%starter%'
     THEN 'Self-Managed - Starter'
@@ -27,7 +27,7 @@ CASE
     THEN 'Trueup'
   WHEN LTRIM(LOWER({{product_column}})) LIKE 'githost%'
     THEN 'GitHost'
-  WHEN LOWER({{product_column}}) LIKE '%quick start with ha%'
+  WHEN LOWER({{product_column}}) LIKE ANY ('%quick start with ha%', '%proserv training per-seat add-on%')
     THEN 'Support'
   WHEN TRIM({{product_column}}) IN (
                                       'GitLab Service Package'
@@ -59,25 +59,28 @@ CASE
                                     , 'Hourly Consulting'
                                     , 'JIRA Integration'
                                     , 'Custom PS Education Services'
-                                    , 'ProServ Training Per-Seat Add-on'
                                     )
     THEN 'Support'
   WHEN LOWER({{product_column}}) LIKE 'gitlab geo%'
-    THEN 'Other'
+    THEN 'SaaS - Other'
   WHEN LOWER({{product_column}}) LIKE 'ci runner%'
-    THEN 'Other'
+    THEN 'SaaS - Other'
   WHEN LOWER({{product_column}}) LIKE 'discount%'
     THEN 'Other'
   WHEN TRIM({{product_column}}) IN (
                                       '#movingtogitlab'
-                                    , 'File Locking'
                                     , 'Payment Gateway Test'
-                                    , 'Time Tracking'
-                                    , '1,000 CI Minutes'
-                                    , 'Gitlab Storage 10GB'
                                     , 'EdCast Settlement Revenue'
                                     )
     THEN 'Other'
+  WHEN TRIM({{product_column}}) IN (
+                                      'File Locking'
+                                    , 'Time Tracking'
+                                    , '1,000 CI Minutes'
+                                    )
+    THEN 'SaaS - Other'
+  WHEN TRIM({{product_column}}) IN ('Gitlab Storage 10GB')
+    THEN 'Storage'
   ELSE 'Not Applicable'
 END AS {{output_column_name}}
 

@@ -33,6 +33,8 @@ macros:
     description: '{{ doc("distinct_source") }}'
   - name: generate_schema_name
     description: '{{ doc("generate_schema_name") }}'
+  - name: get_column_values_ordered
+    description: '{{ doc("get_column_values_ordered") }}'
   - name: get_date_id
     description: '{{ doc("get_date_id") }}'
   - name: get_date_pt_id

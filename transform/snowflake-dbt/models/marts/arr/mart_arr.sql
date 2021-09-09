@@ -2,7 +2,7 @@
 {{ config({
         "materialized": "table",
         "transient": false,
-        "schema": "common_mart_sales"
+        "schema": "restricted_safe_common_mart_sales"
     })
 }}
 
@@ -102,17 +102,17 @@ WITH dim_billing_account AS (
       dim_subscription.subscription_lineage                                           AS subscription_lineage,
       dim_subscription.subscription_cohort_month                                      AS subscription_cohort_month,
       dim_subscription.subscription_cohort_quarter                                    AS subscription_cohort_quarter,
-      min(dim_subscription.subscription_cohort_month) OVER (
+      MIN(dim_date.date_actual) OVER (
           PARTITION BY dim_billing_account.dim_billing_account_id)                    AS billing_account_cohort_month,
-      min(dim_subscription.subscription_cohort_quarter) OVER (
+      MIN(dim_date.first_day_of_fiscal_quarter) OVER (
           PARTITION BY dim_billing_account.dim_billing_account_id)                    AS billing_account_cohort_quarter,
-      min(dim_subscription.subscription_cohort_month) OVER (
+      MIN(dim_date.date_actual) OVER (
           PARTITION BY dim_crm_account.dim_crm_account_id)                            AS crm_account_cohort_month,
-      min(dim_subscription.subscription_cohort_quarter) OVER (
+      MIN(dim_date.first_day_of_fiscal_quarter) OVER (
           PARTITION BY dim_crm_account.dim_crm_account_id)                            AS crm_account_cohort_quarter,
-      min(dim_subscription.subscription_cohort_month) OVER (
+      MIN(dim_date.date_actual) OVER (
           PARTITION BY dim_crm_account.dim_parent_crm_account_id)                     AS parent_account_cohort_month,
-      min(dim_subscription.subscription_cohort_quarter) OVER (
+      MIN(dim_date.first_day_of_fiscal_quarter) OVER (
           PARTITION BY dim_crm_account.dim_parent_crm_account_id)                     AS parent_account_cohort_quarter,
       dim_subscription.auto_renew_native_hist,
       dim_subscription.auto_renew_customerdot_hist,
@@ -200,5 +200,5 @@ WITH dim_billing_account AS (
     created_by="@msendal",
     updated_by="@jpeguero",
     created_date="2020-09-04",
-    updated_date="2021-08-04"
+    updated_date="2021-08-24"
 ) }}

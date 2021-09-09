@@ -7,7 +7,7 @@
 WITH data AS ( 
   
     SELECT * 
-    FROM {{ ref('prep_usage_data_7_days_flattened')}}
+    FROM {{ ref('poc_prep_usage_data_7_days_flattened')}}
     {% if is_incremental() %}
 
       WHERE created_at >= (SELECT MAX(created_week) FROM {{this}})

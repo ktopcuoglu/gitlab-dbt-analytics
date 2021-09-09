@@ -32,6 +32,15 @@
       created_date_pt.date_day                 AS created_date_pt,
       created_date.first_day_of_month          AS created_month,
       created_date_pt.first_day_of_month       AS created_month_pt,
+      lead_created_date.date_day               AS lead_created_date,
+      lead_created_date_pt.date_day            AS lead_created_date_pt,
+      lead_created_date.first_day_of_month     AS lead_created_month,
+      lead_created_date_pt.first_day_of_month  AS lead_created_month_pt,
+      contact_created_date.date_day            AS contact_created_date,
+      contact_created_date_pt.date_day         AS contact_created_date_pt,
+      contact_created_date.first_day_of_month  AS contact_created_month,
+      contact_created_date_pt.first_day_of_month 
+                                               AS contact_created_month_pt,
       inquiry_date.date_day                    AS inquiry_date,
       inquiry_date_pt.date_day                 AS inquiry_date_pt,
       inquiry_date.first_day_of_month          AS inquiry_month,
@@ -97,6 +106,14 @@
       ON fct_crm_person.created_date_id = created_date.date_id
     LEFT JOIN dim_date AS created_date_pt
       ON fct_crm_person.created_date_pt_id = created_date_pt.date_id
+    LEFT JOIN dim_date AS lead_created_date
+      ON fct_crm_person.lead_created_date_id = lead_created_date.date_id
+    LEFT JOIN dim_date AS lead_created_date_pt
+      ON fct_crm_person.lead_created_date_pt_id = lead_created_date_pt.date_id
+    LEFT JOIN dim_date AS contact_created_date
+      ON fct_crm_person.contact_created_date_id = contact_created_date.date_id
+    LEFT JOIN dim_date AS contact_created_date_pt
+      ON fct_crm_person.contact_created_date_pt_id = contact_created_date_pt.date_id
     LEFT JOIN dim_date AS inquiry_date
       ON fct_crm_person.inquiry_date_id = inquiry_date.date_id
     LEFT JOIN dim_date AS inquiry_date_pt

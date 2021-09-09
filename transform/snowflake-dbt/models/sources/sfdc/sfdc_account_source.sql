@@ -62,6 +62,7 @@ WITH source AS (
       partners_partner_status__c                    AS partner_status,
       fy22_new_logo_target_list__c::BOOLEAN         AS fy22_new_logo_target_list,
       first_order_available__c::BOOLEAN             AS is_first_order_available,
+      REPLACE(zi_technologies__c, 'The technologies that are used and not used at this account, according to ZoomInfo, after completing a scan are:', '') AS zi_technologies,
 
       -- territory success planning fields
       atam_approved_next_owner__c                   AS tsp_approved_next_owner,
@@ -139,15 +140,20 @@ WITH source AS (
       locally_Managed__c                            AS is_locally_managed_account,
       strategic__c                                  AS is_strategic_account,
 
-     -- ************************************
-     -- New SFDC Account Fields for FY22 Planning
-     next_fy_account_owner_temp__c                  AS next_fy_account_owner_temp,
-     next_fy_planning_notes_temp__c                 AS next_fy_planning_notes_temp,
-     next_fy_tsp_territory_temp__c                  AS next_fy_tsp_territory_temp,
-     next_fy_user_area_temp__c                      AS next_fy_user_area_temp,
-     next_fy_user_geo_temp__c                       AS next_fy_user_geo_temp,
-     next_fy_user_region_temp__c                    AS next_fy_user_region_temp,
-     next_fy_user_segment_temp__c                   AS next_fy_user_segment_temp,
+      -- ************************************
+      -- New SFDC Account Fields for FY22 Planning
+      next_fy_account_owner_temp__c                  AS next_fy_account_owner_temp,
+      next_fy_planning_notes_temp__c                 AS next_fy_planning_notes_temp,
+      next_fy_tsp_territory_temp__c                  AS next_fy_tsp_territory_temp,
+      next_fy_user_area_temp__c                      AS next_fy_user_area_temp,
+      next_fy_user_geo_temp__c                       AS next_fy_user_geo_temp,
+      next_fy_user_region_temp__c                    AS next_fy_user_region_temp,
+      next_fy_user_segment_temp__c                   AS next_fy_user_segment_temp,
+
+      --*************************************
+      -- Partner Account fields
+      partner_track__c                              AS partner_track,
+      partners_partner_type__c                      AS partners_partner_type,
 
       -- metadata
       createdbyid                                   AS created_by_id,
