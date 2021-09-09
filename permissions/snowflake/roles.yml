@@ -4351,6 +4351,9 @@ users:
         member_of:
             - rkohnke
 
+    - rkohnke:
+        can_login: no
+        member_of: []
     - rparker:
         can_login: yes
         member_of:
