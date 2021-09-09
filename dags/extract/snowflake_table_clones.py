@@ -98,8 +98,8 @@ for config in clone_table_config:
     clone_dag = KubernetesPodOperator(
         **gitlab_defaults,
         image=DATA_IMAGE,
-        task_id=f"snowflake-clone-{config.get('source_table')}",
-        name=f"snowflake-clone-{config.get('source_table')}",
+        task_id=f"snowflake-clone-{config.get('source_table').replace('_', '-')}",
+        name=f"snowflake-clone-{config.get('source_table').replace('_', '-')}",
         secrets=secrets,
         env_vars=pod_env_vars,
         arguments=[container_cmd],
