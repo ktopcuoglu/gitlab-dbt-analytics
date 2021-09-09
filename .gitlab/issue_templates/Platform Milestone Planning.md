@@ -20,7 +20,7 @@ Please add a number for days you'll be working this milestone. Engineers should 
 
 # Milestone Themes :book:
 
-Pioritized issues to be completed as they relate to OKRs, Epics, or other [MVCs](https://about.gitlab.com/handbook/values/#minimal-viable-change-mvc). This provides us with a snapshot of the most important things we're planning to accomplish in the milestone for clear communication with the business as well as an easy measure for results.
+Prioritized issues to be completed as they relate to OKRs, Epics, or other [MVCs](https://about.gitlab.com/handbook/values/#minimal-viable-change-mvc). This provides us with a snapshot of the most important things we're planning to accomplish in the milestone for clear communication with the business as well as an easy measure for results.
 
 ## P1 - Ops
 - 
