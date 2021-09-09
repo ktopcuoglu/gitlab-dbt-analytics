@@ -120,8 +120,8 @@
     LEFT JOIN crm_accounts
       ON free_user_metrics.dim_crm_account_id = crm_accounts.dim_crm_account_id
     LEFT JOIN subscriptions
-      ON monthly_sm_metrics.dim_subscription_id = subscriptions.dim_subscription_id 
-      AND monthly_sm_metrics.snapshot_month = to_date(to_char(subscriptions.snapshot_id), 'YYYYMMDD')
+      ON free_user_metrics.dim_subscription_id = subscriptions.dim_subscription_id 
+      AND free_user_metrics.snapshot_month = to_date(to_char(subscriptions.snapshot_id), 'YYYYMMDD')
 
 )
 

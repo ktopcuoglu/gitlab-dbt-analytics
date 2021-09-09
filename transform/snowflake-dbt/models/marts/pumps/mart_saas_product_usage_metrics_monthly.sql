@@ -7,7 +7,8 @@
     ('monthly_metrics', 'fct_saas_product_usage_metrics_monthly'),
     ('billing_accounts', 'dim_billing_account'),
     ('crm_accounts', 'dim_crm_account'),
-    ('location_country', 'dim_location_country')
+    ('location_country', 'dim_location_country'),
+    ('subscriptions', 'dim_subscription_snapshot_bottom_up')
 ]) }}
 
 , joined AS (
@@ -22,6 +23,7 @@
       monthly_metrics.snapshot_date_id,
       monthly_metrics.ping_created_at,
       monthly_metrics.ping_created_date_id,
+      subscriptions.subscription_status,
     --   location_country.country_name,
     --   location_country.iso_2_country_code,
     --   location_country.iso_3_country_code,
@@ -132,6 +134,9 @@
       ON billing_accounts.dim_crm_account_id = crm_accounts.dim_crm_account_id
     -- LEFT JOIN location_country
     --   ON monthly_metrics.dim_location_country_id = location_country.dim_location_country_id
+    LEFT JOIN subscriptions
+      ON monthly_metrics.dim_subscription_id = subscriptions.dim_subscription_id 
+      AND monthly_metrics.snapshot_month = to_date(to_char(subscriptions.snapshot_id), 'YYYYMMDD')
 
 )
 
