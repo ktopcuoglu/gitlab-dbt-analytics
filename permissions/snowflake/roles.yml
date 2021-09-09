@@ -697,6 +697,27 @@ roles:
                   - raw.tap_adaptive.*
                   - raw.tap_xactly.*   
 
+    - meltano:
+        warehouses:
+            - engineer_xs
+        member_of:
+            - zoom
+            - xactly
+            - adaptive
+        privileges:
+            databases:
+                write:
+                   - raw
+            schemas:
+              write:
+                  - raw.tap_zoom
+                  - raw.tap_adaptive
+                  - raw.tap_xactly
+            tables:
+              write:
+                  - raw.tap_zoom.*
+                  - raw.tap_adaptive.*
+                  - raw.tap_xactly.*       
 
     - people_operations:
         warehouses:
@@ -4329,6 +4350,10 @@ users:
     - mdewji:
         can_login: no
         member_of: []
+
+    - metano:
+        can_login: yes
+        member_of: meltano
 
     - michellecooper:
         can_login: no
