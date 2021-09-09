@@ -157,35 +157,35 @@ models:
         tests:
           - unique
           - not_null
-        tags: ["tdf", "common", "sales_funnel"]
+        tags: [ "tdf", "common", "sales_funnel" ]
       - name: dim_crm_account_id
         description: join key for dim_crm_account from the accountid field in Salesforce
         tests:
           - relationships:
               to: ref('dim_crm_account')
               field: dim_crm_account_id
-        tags: ["tdf", "common", "sales_funnel"]
+        tags: [ "tdf", "common", "sales_funnel" ]
       - name: dim_alliance_type_id
         description: join key for dim_alliance_type
         tests:
           - relationships:
               to: ref('dim_alliance_type')
               field: dim_alliance_type_id
-        tags: ["tdf", "common", "sales_funnel"]
+        tags: [ "tdf", "common", "sales_funnel" ]
       - name: dim_dr_partner_engagement_id
         description: join key for dim_dr_partner_engagement
         tests:
           - relationships:
               to: ref('dim_dr_partner_engagement')
               field: dim_dr_partner_engagement_id
-        tags: ["tdf", "common", "sales_funnel"]
+        tags: [ "tdf", "common", "sales_funnel" ]
       - name: dim_channel_type_id
         description: join key for dim_channel_type
         tests:
           - relationships:
               to: ref('dim_channel_type')
               field: dim_channel_type_id
-        tags: ["tdf", "common", "sales_funnel"]
+        tags: [ "tdf", "common", "sales_funnel" ]
       - name: dim_crm_person_id
         description: A surrogate key for use when joining to `dim_crm_person`. Created from the contact_id where there is a contact and a lead_id where there isn't.
       - name: sfdc_contact_id
@@ -259,16 +259,17 @@ models:
       - name: is_won
         description: a Salesforce boolean field which is true when the Opportunity stage is a won stage
       - name: is_refund
-        description: a Salesforce [formula field](https://gitlab.my.salesforce.com/00N6100000IOu5u)
+        description: a Salesforce [formula field](https://gitlab.my.salesforce.com/00N6100000IOu5u)  with the help text "Counts the number of refund opps."
       - name: is_downgrade
-        description: a Salesforce [formula field](https://gitlab.my.salesforce.com/00N6100000IOu5y)
+        description: a Salesforce [formula field](https://gitlab.my.salesforce.com/00N6100000IOu5y) with the help text "Counts of the number of downgrade opps."
       - name: is_swing_deal
-        description: a checkbox used in salesforce with the help text "A swing deal is an opportunity with a Close Date in a future period that has the potential to be pulled into the current period."
+        description: a [checkbox used in salesforce](https://gitlab.my.salesforce.com/00N6100000IJEOZ) with the help text "A swing deal is an opportunity with a Close Date in a future period that has the potential to be pulled into the current period."
       - name: is_edu_oss
-        description: a Salesforce [formula field](https://gitlab.my.salesforce.com/00N6100000IOu68)
+        description: a Salesforce [formula field](https://gitlab.my.salesforce.com/00N6100000IOu68). 1 if [Product_Category__c](https://gitlab.my.salesforce.com/00N6100000IJBtv) contains `EDU/OSS` else 0.
       - name: is_web_portal_purchase
+        description: a [salesforce boolean field](https://gitlab.my.salesforce.com/00N6100000HJmTK)
       - name: is_sao
-        description: a boolean field created in the warehouse to flag Sales Accepted Opportunities. This field should be deprecated once sales accepted is in a more stable and consistent state in salesforce.
+        description: a [salesforce boolean field](https://gitlab.my.salesforce.com/00N4M00000Ib8xa) field created in the warehouse to flag Sales Accepted Opportunities. This field should be deprecated once sales accepted is in a more stable and consistent state in salesforce.
       - name: is_net_arr_closed_deal
         description: a boolean field created in the warehouse to flag Closed Deals and will help determine the Net ARR.
       - name: is_new_logo_first_order
@@ -282,14 +283,19 @@ models:
       - name: iacv
         description: a Salesforce [formula field](https://gitlab.my.salesforce.com/00N6100000HJpyB) with the help text "For New Business or Add On, takes all first year recurring revenue + true ups. If Renewal, the recurring revenue + true ups minus the Renewal ACV. If the Renewal ACV is null, then the Incremental ACV is null"
       - name: net_arr
-        description: a Salesforce [formula field](https://gitlab.my.salesforce.com/00N4M00000Ib5n8) which is marked as [WIP]
+        description: a Salesforce [formula field](https://gitlab.my.salesforce.com/00N4M00000Ib5n8) with the net change to ARR of an opportunity
       - name: amount
-        description: from salesforce "This is the same as Total Contract Value. It takes the value of the entire agreement"
+        description: from [salesforce ui](https://gitlab.my.salesforce.com/_ui/common/config/field/StandardFieldAttributes/d?id=Amount&type=Opportunity&retURL=%2Fp%2Fsetup%2Flayout%2FLayoutFieldList%3Ftype%3DOpportunity%26setupid%3DOpportunityFields&_CONFIRMATIONTOKEN=VmpFPSxNakF5TVMwd09TMHdOVlF5TVRveE1UbzFNQzQzTmpWYSx5UXdBZFY3d0NtN21rekRFcUttcVVtLFl6UTNNekF5&setupid=OpportunityFields) "This is the same as Total Contract Value. It takes the value of the entire agreement"
       - name: recurring_amount
+        description: a [salesforce currency field](https://gitlab.my.salesforce.com/00N4M00000IbIDn) with all Recurring dollars (Gitlab Seats, Storage).
       - name: true_up_amount
+        description: a [salesforce currency field](https://gitlab.my.salesforce.com/00N4M00000IbCVy) with One-time True Up dollars for renewals.
       - name: proserv_amount
+        description: a [salesforce currency field](https://gitlab.my.salesforce.com/00N4M00000IbIDi) with all professional services dollars in the opportunity.
       - name: other_non_recurring_amount
+        description: a [salesforce currency field](https://gitlab.my.salesforce.com/00N4M00000IbIDs) with all other one-time fee products (Additional CI Minutes).
       - name: arr_basis
+        description: a [salesforce formula field](https://gitlab.my.salesforce.com/00N4M00000IbIDx) for renewals only current subscription ARR.
       - name: arr
         description: a WIP Salesforce [formula field](https://gitlab.my.salesforce.com/00N4M00000IbIE2) that returns 0
 
