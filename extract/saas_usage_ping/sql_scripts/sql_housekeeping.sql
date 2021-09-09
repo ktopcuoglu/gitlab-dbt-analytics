@@ -46,6 +46,7 @@ DROP TABLE "8994-CHANGE-IN-SAAS_USAGE_PING-GITLAB_DOTCOM_RAW"."SAAS_USAGE_PING".
 -- Test cases
 ----------------------------------------------------------------------
 
+
 -- 1/2 Test RAW
 SELECT COUNT(1) as CNT -- expect 0, OK
   FROM "8994-CHANGE-IN-SAAS_USAGE_PING-GITLAB_DOTCOM_RAW".saas_usage_ping.instance_sql_metrics -- rename schema_name for PROD
