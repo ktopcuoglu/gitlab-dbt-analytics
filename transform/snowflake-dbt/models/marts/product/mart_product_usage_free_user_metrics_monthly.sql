@@ -6,8 +6,7 @@
 
 {{ simple_cte([
     ('free_user_metrics', 'fct_product_usage_free_user_metrics_monthly'),
-    ('crm_accounts', 'dim_crm_account'),
-    ('subscriptions', 'dim_subscription_snapshot_bottom_up')
+    ('crm_accounts', 'dim_crm_account')
 ]) }}
 
 , joined AS (
@@ -23,7 +22,6 @@
       crm_account_name,
       parent_crm_account_name,
       free_user_metrics.ping_date,
-      subscriptions.subscription_status,
       -- Wave 2 & 3
       free_user_metrics.umau_28_days_user,
       free_user_metrics.action_monthly_active_users_project_repo_28_days_user,
@@ -119,9 +117,6 @@
     FROM free_user_metrics
     LEFT JOIN crm_accounts
       ON free_user_metrics.dim_crm_account_id = crm_accounts.dim_crm_account_id
-    LEFT JOIN subscriptions
-      ON free_user_metrics.dim_subscription_id = subscriptions.dim_subscription_id 
-      AND free_user_metrics.snapshot_month = to_date(to_char(subscriptions.snapshot_id), 'YYYYMMDD')
 
 )
 
@@ -139,7 +134,6 @@
         'crm_account_name',
         'parent_crm_account_name',
         'ping_date',
-        'subscription_status'
         'umau_28_days_user',
         'action_monthly_active_users_project_repo_28_days_user',
         'merge_requests_28_days_user',
@@ -235,7 +229,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@ischweickartDD",
-    updated_by="@chrissharp",
+    updated_by="@ischweickartDD",
     created_date="2021-06-14",
-    updated_date="2021-09-08"
+    updated_date="2021-07-23"
 ) }}
