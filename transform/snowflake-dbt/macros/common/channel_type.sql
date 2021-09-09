@@ -5,7 +5,7 @@ CASE
     AND {{ order_type }} = '1. New - First Order'
     THEN 'Chan Sourced - New'
   WHEN {{ sqs_bucket_engagement }} = 'Partner Sourced'
-    AND {{ order_type }} != '1. New - First Order'
+    AND ( {{ order_type }} != '1. New - First Order' OR {{ order_type }} IS NULL)
     THEN 'Chan Sourced - Growth'
   WHEN {{ sqs_bucket_engagement }} = 'Co-sell'
     AND {{ order_type }} = '1. New - First Order'
