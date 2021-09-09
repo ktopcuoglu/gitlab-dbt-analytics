@@ -93,7 +93,7 @@ for config in clone_table_config:
         --source_table {config.get('source_table')} \
         --target_database {config.get('target_database')} \
         --target_schema {config.get('target_schema')}  \
-        --target_table {target_table_name}"""
+        --target_table '{target_table_name}'"""
 
     clone_dag = KubernetesPodOperator(
         **gitlab_defaults,
