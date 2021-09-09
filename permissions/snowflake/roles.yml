@@ -4351,7 +4351,7 @@ users:
         can_login: no
         member_of: []
 
-    - metano:
+    - meltano:
         can_login: yes
         member_of: meltano
 
