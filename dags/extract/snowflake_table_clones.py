@@ -87,19 +87,19 @@ for config in clone_table_config:
         export PYTHONPATH="$CI_PROJECT_DIR/orchestration/:$PYTHONPATH" &&
         cd analytics/orchestration/ &&
     
-    python3 manage_snowflake.py create-table-clone " \
-        --source_database {config.get('source_database')} " \
-        --source_schema {config.get('source_schema')} " \
-        --source_table {config.get('source_table')}" \
-        --target_database {config.get('target_database')} " \
-        --target_schema {config.get('target_schema')}  " \
-        --target_table {target_table_name}"""
+    python3 manage_snowflake.py create-table-clone  \
+        --source_database {config.get('source_database')}  \
+        --source_schema {config.get('source_schema')}  \
+        --source_table {config.get('source_table')} \
+        --target_database {config.get('target_database')} \
+        --target_schema {config.get('target_schema')}  \
+        --target_table '{target_table_name}'"""
 
     clone_dag = KubernetesPodOperator(
         **gitlab_defaults,
         image=DATA_IMAGE,
-        task_id=f"snowflake-clone-{config.get('source_table')}",
-        name=f"snowflake-clone-{config.get('source_table')}",
+        task_id=f"snowflake-clone-{config.get('source_table').replace('_', '-')}",
+        name=f"snowflake-clone-{config.get('source_table').replace('_', '-')}",
         secrets=secrets,
         env_vars=pod_env_vars,
         arguments=[container_cmd],
