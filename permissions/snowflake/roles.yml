@@ -3396,6 +3396,10 @@ roles:
             - analyst_marketing
         warehouses:
             - analyst_xs
+    - rkohnke:
+        member_of: []
+        warehouses: []
+
 
     - rparker:
         member_of:
