@@ -41,6 +41,8 @@ This table unions the sets of all Self-Managed and SaaS **paid users**. The data
 
 The grain of this table is subscription per namespace || uuid-hostname per month.
 
+The join to `dim_subscription_snapshot_bottom_up` uses a datediff of -1 day so that the `subscription_status` reflects the position at the end of the previous month. This avoids the situation where a subscription expires on the last day of the month and new one begins on the 1st of the next month meaning the join produces a NULL.
+
 Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
 
 {% enddocs %}
