@@ -3,10 +3,10 @@
 CASE
   WHEN {{ sqs_bucket_engagement }} = 'Partner Sourced'
     AND {{ order_type }} = '1. New - First Order'
-    THEN 'Chan Sourced - New'
+    THEN 'Sourced - New'
   WHEN {{ sqs_bucket_engagement }} = 'Partner Sourced'
     AND ( {{ order_type }} != '1. New - First Order' OR {{ order_type }} IS NULL)
-    THEN 'Chan Sourced - Growth'
+    THEN 'Sourced - Growth'
   WHEN {{ sqs_bucket_engagement }} = 'Co-sell'
     AND {{ order_type }} = '1. New - First Order'
     THEN 'Co-sell - New'
