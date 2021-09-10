@@ -4229,7 +4229,8 @@ users:
 
     - meltano:
         can_login: yes
-        member_of: meltano
+        member_of: 
+            - meltano
 
     - michellecooper:
         can_login: no
@@ -4387,7 +4388,7 @@ users:
     - rkohnke:
         can_login: yes
         member_of: 
-            -rkohnke
+            - rkohnke
 
     - rparker:
         can_login: yes
