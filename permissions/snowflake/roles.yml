@@ -4432,7 +4432,7 @@ users:
     - rkohnke:
         can_login: yes
         member_of:
-            -rkohnke
+            - rkohnke
 
     - rparker:
         can_login: yes
