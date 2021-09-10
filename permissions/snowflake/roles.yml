@@ -2473,6 +2473,13 @@ roles:
         warehouses:
             - reporting
 
+    - isharan:
+        member_of:
+            - data_team_analyst
+            - analyst_core
+        warehouses:
+            - analyst_xs
+
     - iweeks:
         member_of:
             - analyst_finance
@@ -4028,6 +4035,11 @@ users:
         can_login: yes
         member_of:
             - iroussos
+
+    - isharan:
+        can_login: yes
+        member_of:
+            - isharan   
 
     - iweeks:
         can_login: yes
