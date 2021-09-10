@@ -136,7 +136,7 @@
     --   ON monthly_metrics.dim_location_country_id = location_country.dim_location_country_id
     LEFT JOIN subscriptions
       ON monthly_metrics.dim_subscription_id = subscriptions.dim_subscription_id 
-      AND monthly_metrics.snapshot_month = to_date(to_char(subscriptions.snapshot_id), 'YYYYMMDD')
+      AND DATEADD('day', -1, monthly_metrics.snapshot_month) = to_date(to_char(subscriptions.snapshot_id), 'YYYYMMDD')
 
 )
 
