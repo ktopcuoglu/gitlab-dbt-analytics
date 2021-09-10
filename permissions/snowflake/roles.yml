@@ -2062,12 +2062,14 @@ roles:
         member_of:
             - analyst_finance
             - bamboohr_analytics
+            - restricted_safe
         warehouses:
             - analyst_xs
 
     - alpcohen:
         member_of:
             - xactly
+            - restricted_safe
         warehouses:
             - analyst_xs
 
@@ -2078,6 +2080,7 @@ roles:
             - customers_db
             - analyst_marketing
             - data_team_analyst
+            - restricted_safe
         warehouses:
             - analyst_xs
 
@@ -2091,6 +2094,7 @@ roles:
         member_of:
             - analyst_finance
             - bamboohr_analytics
+            - restricted_safe
         warehouses:
             - analyst_xs
 
@@ -2134,6 +2138,7 @@ roles:
     - bbutterfield:
         member_of:
             - reporter
+            - restricted_safe
         warehouses:
             - reporting            
 
@@ -2144,6 +2149,7 @@ roles:
     - cbraza:
         member_of:
             - analyst_growth
+            - restricted_safe
         warehouses:
             - analyst_xs          
 
@@ -2162,6 +2168,7 @@ roles:
     - csharp:
         member_of:
             - engineer
+            - restricted_safe
         warehouses:
             - engineer_xs
             - engineer_xl
@@ -2204,6 +2211,7 @@ roles:
         member_of:
             - analyst_finance
             - bamboohr_analytics
+            - restricted_safe
         warehouses:
             - analyst_xs
 
@@ -2215,6 +2223,7 @@ roles:
         member_of:
             - reporter
             - analyst_marketing
+            - restricted_safe
         warehouses:
             - analyst_xs
 
@@ -2233,6 +2242,7 @@ roles:
     - dpeterson:
         member_of:
             - analyst_growth
+            - restricted_safe
         warehouses:
             - analyst_xs
         owns:
@@ -2281,6 +2291,7 @@ roles:
     - dtownsend:
         member_of:
             - analyst_engineering
+            - restricted_safe
         owns:
             databases:
                 - dtownsend_prep
@@ -2318,6 +2329,7 @@ roles:
         member_of:
             - analyst_core
             - data_manager
+            - restricted_safe
         warehouses:
             - analyst_xs
         owns:
@@ -2395,6 +2407,7 @@ roles:
         member_of:
             - analyst_finance
             - bamboohr_analytics
+            - restricted_safe
         warehouses:
             - analyst_xs
 
@@ -2477,6 +2490,7 @@ roles:
         member_of:
             - data_team_analyst
             - analyst_core
+            - restricted_safe
         warehouses:
             - analyst_xs
 
@@ -2487,6 +2501,7 @@ roles:
             - customers_db
             - data_team_analyst
             - data_manager
+            - restricted_safe
         warehouses:
             - analyst_xs
         owns:
@@ -2530,6 +2545,7 @@ roles:
         member_of:
             - reporter
             - analyst_marketing
+            - restricted_safe
         warehouses:
             - analyst_xs
 
@@ -2540,12 +2556,14 @@ roles:
     - jbrennan:
         member_of:
             - analyst_sales
+            - restricted_safe
         warehouses:
             - analyst_xs 
 
     - jcaine:
         member_of:
             - analyst_sales
+            - restricted_safe
         warehouses:
             - analyst_xs
         owns:
@@ -2608,6 +2626,7 @@ roles:
             - data_team_analyst
             - analyst_finance
             - gainsight
+            - restricted_safe
         warehouses:
             - analyst_xs
             - analyst_l
@@ -2657,6 +2676,7 @@ roles:
             - analyst_core
             - data_manager
             - engineer
+            - restricted_safe
         warehouses:
             - engineer_xs
             - engineer_xl
@@ -2702,6 +2722,7 @@ roles:
             - customers_db
             - analyst_marketing
             - data_team_analyst
+            - restricted_safe
         warehouses:
             - analyst_xs
 
@@ -2728,6 +2749,7 @@ roles:
             - customers_db
             - data_team_analyst
             - analyst_finance
+            - restricted_safe
         warehouses:
             - analyst_xs
         owns:
@@ -2774,6 +2796,7 @@ roles:
             - analyst_core
             - data_team_analyst
             - salesforce
+            - restricted_safe
         warehouses:
             - analyst_xs
         owns:
@@ -2818,6 +2841,7 @@ roles:
             - gainsight
             - analyst_core
             - data_team_analyst
+            - restricted_safe
         warehouses:
             - analyst_xs
         owns:
@@ -2857,6 +2881,7 @@ roles:
         member_of:
             - analyst_finance
             - bamboohr_analytics
+            - restricted_safe
         warehouses:
             - analyst_xs
 
@@ -2867,6 +2892,7 @@ roles:
             - customers_db
             - analyst_marketing
             - data_team_analyst
+            - restricted_safe
         warehouses:
             - analyst_xs
 
@@ -2881,6 +2907,7 @@ roles:
             - customers_db
             - analyst_marketing
             - data_team_analyst
+            - restricted_safe
         warehouses:
             - analyst_xs
 
@@ -2895,6 +2922,7 @@ roles:
     - laddula:
         member_of:
             - engineer
+            - restricted_safe
         warehouses:
             - engineer_xs
             - engineer_xl
@@ -2967,6 +2995,7 @@ roles:
     - marntz:
         member_of:
             - analyst_sales
+            - restricted_safe
         warehouses:
             - analyst_xs 
 
@@ -2975,6 +3004,7 @@ roles:
             - analyst_finance
             - customers_db
             - data_team_analyst
+            - restricted_safe
         warehouses:
             - analyst_xs
         owns:
@@ -3034,6 +3064,7 @@ roles:
         member_of:
             - analyst_core
             - data_manager
+            - restricted_safe
         warehouses:
             - analyst_xs
         owns:
@@ -3091,6 +3122,7 @@ roles:
         member_of:
             - analyst_sales
             - xactly
+            - restricted_safe
         warehouses:
             - analyst_xs
         owns:
@@ -3177,6 +3209,7 @@ roles:
     - nfiguera:
         member_of:
             - analyst_sales
+            - restricted_safe
         warehouses:
             - analyst_xs
         owns:
@@ -3221,12 +3254,14 @@ roles:
     - nraisinghani:
         member_of:
             - analyst_growth
+            - restricted_safe
         warehouses:
             - analyst_xs
 
     - parmstrong:
         member_of:
             - engineer
+            - restricted_safe
         warehouses:
             - engineer_xs
             - engineer_xl
@@ -3335,12 +3370,14 @@ roles:
     - rallison:
         member_of:
             - analyst_sales
+            - restricted_safe
         warehouses:
             - analyst_xs
 
     - rbacovic:
         member_of:
             - engineer
+            - restricted_safe
         warehouses:
             - engineer_xs
             - engineer_xl
@@ -3422,12 +3459,14 @@ roles:
         member_of: 
             - reporter
             - analyst_marketing
+            - restricted_safe
         warehouses: 
             - analyst_xs
 
     - rparker:
         member_of:
             - analyst_core
+            - restricted_safe
         warehouses:
             - analyst_xs
         owns:
@@ -3468,6 +3507,7 @@ roles:
             - product_manager
             - snowplow
             - reporter
+            - restricted_safe
         warehouses:
             - reporting
 
@@ -3487,6 +3527,7 @@ roles:
     - snalamaru:
         member_of:
             - engineer
+            - restricted_safe
         warehouses:
             - engineer_xs
             - engineer_xl
@@ -3536,6 +3577,7 @@ roles:
             - customers_db
             - analyst_marketing
             - data_team_analyst
+            - restricted_safe
         warehouses:
             - analyst_xs
 
@@ -3713,6 +3755,7 @@ roles:
     - vprakash:
         member_of:
             - engineer
+            - restricted_safe
         warehouses:
             - engineer_xs
             - engineer_xl
@@ -3755,6 +3798,7 @@ roles:
         member_of:
             - analyst_finance
             - bamboohr_analytics
+            - restricted_safe
         warehouses:
             - analyst_xs
 
