@@ -22,7 +22,7 @@
       dim_order_type.order_type_name,
       dim_order_type.order_type_grouped,
       dim_sales_qualified_source.sales_qualified_source_name,
-      dim_sales_qualified_source.sqs_bucket_engagement_name,
+      dim_sales_qualified_source.sqs_bucket_engagement,
       dim_channel_type.channel_type_name,
       dim_alliance_type.alliance_type_name,
       dim_alliance_type.alliance_type_short_name,
