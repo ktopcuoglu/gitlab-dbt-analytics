@@ -104,6 +104,7 @@ def get_latest_rolled_up_table_name(
     engine: Engine, db_name: str, schema_name: str, table_name: str
 ) -> str:
     """
+    Retrieves the latest table name that was rolled up.
 
     :param engine:
     :type engine:
@@ -113,7 +114,7 @@ def get_latest_rolled_up_table_name(
     :type schema_name:
     :param table_name:
     :type table_name:
-    :return:
+    :return: Last 8 digits of table name.
     :rtype:
     """
     final_table_name = f"{table_name}_ROLLUP"
@@ -131,6 +132,7 @@ def get_latest_rolled_up_table_name(
             return latest_table_name[-8:]
 
     return ""
+
 
 def process_merged_row(row: pd.Series) -> str:
     """
