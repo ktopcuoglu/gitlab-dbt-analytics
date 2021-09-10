@@ -130,6 +130,7 @@ def get_latest_rolled_up_table_name(
         if latest_table_name:
             return latest_table_name[-8:]
 
+    return ""
 
 def process_merged_row(row: pd.Series) -> str:
     """
