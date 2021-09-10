@@ -61,12 +61,12 @@ You will need access to several groups, applications, tools, and data sources fo
 |  Slack alias: `@datateam` | No | Yes | Yes | Yes | Yes |  PeopleOps Onboarding |
 |  Slack alias: `@data-analysts` | No | Yes | Yes | Yes | No |  PeopleOps Onboarding |
 |  Slack alias: `@data-engineers` | No | No | Yes | No | Yes |  PeopleOps Onboarding |
-|  Project: `GitLab Data Team` | No | Developer | Developer | Developer | Developer |
+|  Project: `GitLab Data Team` | Developer | Developer | Developer | Developer | Developer |
 |  1password vault: `Data Team` | No | Yes | Yes | Yes | Yes |  PeopleOps Onboarding |
-|  Namespce: `gitlab-data` |  No | Developer | Developer | Developer | Developer | ? |
+|  Namespce: `gitlab-data` |  Developer | Developer | Developer | Developer | Developer | ? |
 | daily Geekbot standup  | No | Optional | Optional | Yes | Yes | [Instructions](https://geekbot.com/faq/#:~:text=How%20can%20i%20add%20new,participants%20with%20the%20broadcast%20channel.)  |
 |  Data Team calendar |  No |Yes | Yes | Yes | Yes | ?  |
-|  Lucidchart folder: `Data Team` | No |Yes | Yes | Yes | Yes |  ? |
+|  Lucidchart folder: `Data Team` | Yes |Yes | Yes | Yes | Yes |  ? |
 |  Google Drive folder: SheetLoad | No |Yes | Yes | Yes | Yes |  ? |
 |  Google Drive folder: Boneyard | No |Yes | Yes | Yes | Yes |  ? |
 |  Service Account Credentials: Google Cloud | No | No | ? | No | Yes | ? |
