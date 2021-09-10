@@ -231,7 +231,7 @@
       AND smoothed_diffs.hostname = ping_ranges.hostname
         LEFT JOIN subscriptions
       ON smoothed_diffs.dim_subscription_id = subscriptions.dim_subscription_id 
-      AND DATEADD('day', -1, smoothed_diffs.snapshot_month) = to_date(to_char(subscriptions.snapshot_id), 'YYYYMMDD')
+      AND DATEADD('day', -1, smoothed_diffs.snapshot_month) = TO_DATE(TO_CHAR(subscriptions.snapshot_id), 'YYYYMMDD')
 
 )
 
