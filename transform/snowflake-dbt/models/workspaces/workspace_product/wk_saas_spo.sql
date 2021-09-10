@@ -6,21 +6,40 @@
 }}
 
 {{simple_cte([
-  ('dim_namespace', 'dim_namespace'),
   ('date_details', 'date_details'),
-  ('all_events', 'fct_daily_event_400'),
+  ('blocked_users', 'gitlab_dotcom_users_blocked_xf'),
+  ('all_events', 'gitlab_dotcom_daily_usage_data_events'),
   ('metrics', 'gitlab_dotcom_xmau_metrics')
 ])
 }}
 
-, events AS (
+, all_namespaces AS (
   
     SELECT
-      all_events.dim_namespace_id,
+      namespace_id,
+      namespace_type,
+      creator_id,
+      namespace_created_at
+    FROM {{ ref('gitlab_dotcom_namespaces_xf') }}
+    WHERE namespace_id = namespace_ultimate_parent_id
+      AND namespace_is_internal = FALSE
+
+), namespaces AS (
+  
+    SELECT 
+      all_namespaces.*,
+      IFF(blocked_users.user_id IS NOT NULL,TRUE,FALSE) AS created_by_blocked_user
+    FROM all_namespaces
+    LEFT JOIN blocked_users ON all_namespaces.creator_id = blocked_users.user_id
+  
+), events AS (
+  
+    SELECT
+      all_events.namespace_id,
       event_date,
       DATE_TRUNC('month', event_date)                             AS event_month,
       plan_name_at_event_date,
-      dim_user_id,
+      user_id,
       all_events.stage_name,
       IFF(all_events.stage_name='manage',user_id,NULL)            AS umau,
       FIRST_VALUE(plan_name_at_event_date) OVER (
@@ -32,7 +51,9 @@
       COUNT(event_date)                                           AS event_count
     FROM all_events
     INNER JOIN metrics ON all_events.event_name = metrics.events_to_include
-    WHERE namespace_is_internal = FALSE
+    WHERE (metrics.smau = TRUE OR metrics.is_umau = TRUE)
+      AND all_events.stage_name != 'monitor'
+      AND namespace_is_internal = FALSE
       AND days_since_namespace_creation >= 0
     {{dbt_utils.group_by(n=7)}}
                                                                                   
@@ -47,7 +68,7 @@
       stage_name,
       plan_name_at_reporting_month,
       created_by_blocked_user,
-      IFF(plan_name_at_reporting_month IN ('free','trial'), TRUE, FALSE)      AS plan_is_paid,
+      IFF(plan_name_at_reporting_month IN ('free','trial'), TRUE, FALSE)     AS plan_is_paid,
       SUM(event_count)                                                        AS monthly_stage_events,
       COUNT(DISTINCT user_id)                                                 AS monthly_stage_users,
       COUNT(DISTINCT event_date)                                              AS stage_active_days,
