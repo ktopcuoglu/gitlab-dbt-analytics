@@ -63,6 +63,10 @@
       converted_date_pt.date_day               AS converted_date_pt,
       converted_date.first_day_of_month        AS converted_month,
       converted_date_pt.first_day_of_month     AS converted_month_pt,
+      worked_date.date_day                     AS worked_date,
+      worked_date_pt.date_day                  AS worked_date_pt,
+      worked_date.first_day_of_month           AS worked_month,
+      worked_date_pt.first_day_of_month        AS worked_month_pt,
       dim_crm_person.email_domain,
       dim_crm_person.email_domain_type,
       dim_crm_person.email_hash,
@@ -138,13 +142,17 @@
       ON fct_crm_person.converted_date_id = converted_date.date_id
     LEFT JOIN dim_date converted_date_pt
       ON fct_crm_person.converted_date_pt_id = converted_date_pt.date_id
+    LEFT JOIN dim_date AS worked_date
+      ON fct_crm_person.worked_date_id = worked_date.date_id
+    LEFT JOIN dim_date AS worked_date_pt
+      ON fct_crm_person.worked_date_pt_id = worked_date_pt.date_id
 
 )
 
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@jpeguero",
+    updated_by="@rkohnke",
     created_date="2020-12-07",
-    updated_date="2021-08-24",
+    updated_date="2021-09-07",
   ) }}
