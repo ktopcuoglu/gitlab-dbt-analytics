@@ -1,8 +1,7 @@
 {{ config({
         "materialized": "incremental",
         "unique_key": "charge_snapshot_id",
-        "tags": ["arr_snapshots"],
-        "schema": "workspace_finance"
+        "tags": ["arr_snapshots"]
     })
 }}
 

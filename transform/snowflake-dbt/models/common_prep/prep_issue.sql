@@ -16,7 +16,8 @@
     ('prep_user', 'prep_user'),
     ('prep_issue_severity', 'prep_issue_severity'),
     ('prep_label_links', 'prep_label_links'),
-    ('prep_labels', 'prep_labels')
+    ('prep_labels', 'prep_labels'),
+    ('gitlab_dotcom_epic_issues_source', 'gitlab_dotcom_epic_issues_source')
 ]) }}
 
 , gitlab_dotcom_issues_source AS (
@@ -51,6 +52,7 @@
       gitlab_dotcom_issues_source.project_id                      AS dim_project_id,
       prep_project.dim_namespace_id,
       prep_project.ultimate_parent_namespace_id,
+      gitlab_dotcom_epic_issues_source.epic_id                    AS dim_epic_id,
       dim_date.date_id                                            AS created_date_id,
       IFNULL(dim_namespace_plan_hist.dim_plan_id, 34)             AS dim_plan_id,
       gitlab_dotcom_issues_source.author_id,
@@ -107,13 +109,15 @@
       ON TO_DATE(gitlab_dotcom_issues_source.created_at) = dim_date.date_day
     LEFT JOIN prep_issue_severity
       ON gitlab_dotcom_issues_source.issue_id = prep_issue_severity.dim_issue_id
+    LEFT JOIN gitlab_dotcom_epic_issues_source
+      ON gitlab_dotcom_issues_source.issue_id = gitlab_dotcom_epic_issues_source.issue_id
     WHERE gitlab_dotcom_issues_source.project_id IS NOT NULL
 )
 
 {{ dbt_audit(
     cte_ref="renamed",
     created_by="@mpeychet_",
-    updated_by="@dtownsend",
+    updated_by="@jpeguero",
     created_date="2021-06-17",
-    updated_date="2021-08-04"
+    updated_date="2021-09-07"
 ) }}
