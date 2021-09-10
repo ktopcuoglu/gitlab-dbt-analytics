@@ -16,6 +16,7 @@
     SELECT
       monthly_metrics.dim_subscription_id,
       monthly_metrics.dim_subscription_id_original,
+      subscriptions.subscription_status,
       {{ get_keyed_nulls('billing_accounts.dim_billing_account_id') }}      AS dim_billing_account_id,
       {{ get_keyed_nulls('crm_accounts.dim_crm_account_id') }}              AS dim_crm_account_id,
       monthly_metrics.dim_namespace_id::VARCHAR                             AS dim_namespace_id,
@@ -23,7 +24,6 @@
       monthly_metrics.snapshot_date_id,
       monthly_metrics.ping_created_at,
       monthly_metrics.ping_created_date_id,
-      subscriptions.subscription_status,
     --   location_country.country_name,
     --   location_country.iso_2_country_code,
     --   location_country.iso_3_country_code,
