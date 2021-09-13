@@ -4,6 +4,7 @@ arr_snapshots,For ARR Snapshots
 bamboohr,Related to bamboohr data source
 billing_account,For billing accounts
 common,For the common schema
+common_prep,For common_prep schema
 crm_account,For CRM Accounts
 customers_db,Relates to Customers database
 daily,Used in Airflow runs
