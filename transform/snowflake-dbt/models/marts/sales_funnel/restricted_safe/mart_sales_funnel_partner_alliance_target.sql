@@ -27,7 +27,7 @@
       dim_alliance_type.alliance_type_name,
       dim_alliance_type.alliance_type_short_name,
       fct_sales_funnel_target.allocated_target
-    FROM fct_sales_funnel_target=
+    FROM fct_sales_funnel_target
     LEFT JOIN dim_alliance_type
       ON fct_sales_funnel_target.dim_alliance_type_id = dim_alliance_type.dim_alliance_type_id
     LEFT JOIN dim_sales_qualified_source
