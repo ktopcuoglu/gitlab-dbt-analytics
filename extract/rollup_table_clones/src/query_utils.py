@@ -37,13 +37,9 @@ def get_existing_tables_to_roll_up(
     """
 
     :param engine:
-    :type engine:
     :param db_name:
-    :type db_name:
     :param table_name:
-    :type table_name:
     :return:
-    :rtype:
     """
     schema_check = (
         f" SELECT table_name "
@@ -63,12 +59,11 @@ def get_latest_tables_to_roll_up(
 ) -> pd.DataFrame:
     """
 
-    :param latest_table:
     :param engine:
     :param db_name:
+    :param schema_name:
     :param table_name:
-    :return:
-    :rtype:
+    :return: DataFrame containing table names to rollup
     """
     latest_rolled_table = get_latest_rolled_up_table_name(
         engine, db_name, schema_name, table_name
@@ -107,15 +102,10 @@ def get_latest_rolled_up_table_name(
     Retrieves the latest table name that was rolled up.
 
     :param engine:
-    :type engine:
     :param db_name:
-    :type db_name:
     :param schema_name:
-    :type schema_name:
     :param table_name:
-    :type table_name:
     :return: Last 8 digits of table name.
-    :rtype:
     """
     final_table_name = f"{table_name}_ROLLUP"
     query = (
@@ -136,11 +126,9 @@ def get_latest_rolled_up_table_name(
 
 def process_merged_row(row: pd.Series) -> str:
     """
-
+    For use when generating SELECT rows with data type casts
     :param row:
-    :return:
-    :rtype:
-    :rtype: object
+    :return: string with select cast built up
     """
     existing_data_type = row["data_type_y"]
     joined_row = row["data_type_x"]
@@ -155,7 +143,7 @@ def process_merged_row(row: pd.Series) -> str:
 
 def process_row(row: pd.Series) -> str:
     """
-
+    For use when generating CREATE TABLE STATEMENT
     :param row:
     :return:
     :rtype: object
@@ -171,7 +159,7 @@ def rollup_table_clone(
     engine: Engine, db_name: str, schema_name: str, table_name: str
 ) -> bool:
     """
-
+    Rolls up tables, columns will always be cast to expected dtype of the final table.
     :param engine:
     :param db_name:
     :param schema_name:
@@ -228,7 +216,8 @@ def recreate_rollup_table(
     engine: Engine, db_name: str, schema_name: str, table_name: str
 ) -> bool:
     """
-
+        Recreates the rollup table, due to differing column data types we take the most recent table as
+        correct and then add columns to it for tables which used to exist.
     :param engine:
     :param db_name:
     :param schema_name:
@@ -245,9 +234,9 @@ def recreate_rollup_table(
 
     for items in tables_to_roll_up.iteritems():
         logging.info(f"Processing {items[1]}")
-        other_data = get_table_column_names(engine, db_name, items[1])
+        table_column_data = get_table_column_names(engine, db_name, items[1])
         big_df = big_df.append(
-            other_data[~other_data["compare_column"].isin(big_df["compare_column"])]
+            table_column_data[~table_column_data["compare_column"].isin(big_df["compare_column"])]
         )
 
     big_df = big_df.groupby(["column_name"]).max().reset_index()
