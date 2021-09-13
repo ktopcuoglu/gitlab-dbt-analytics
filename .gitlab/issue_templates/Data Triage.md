@@ -121,18 +121,21 @@ The link to the Data Team Incident issue is <link>
 <details>
 <summary><i>Hours spent per activity for Data Analyst</i></summary>
 - 
--
--
+- 
+- 
 </details>
 
 <details>
 <summary><i>Hours spent per activity for Data Engineer</i></summary>
 - 
--
--
+- 
+- 
 </details>
 
 * [ ] List down the Groundhog Issues
+- 
+- 
+- 
 
 
 /label ~"workflow::In dev" ~"Housekeeping" ~"Data Team" ~"Documentation" ~"Triage" ~"Priority::1-Ops"
