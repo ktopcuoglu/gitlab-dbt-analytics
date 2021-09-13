@@ -120,12 +120,16 @@ The link to the Data Team Incident issue is <link>
 * [ ] List down the effort performed for today's triage.
 <details>
 <summary><i>Hours spent per activity</i></summary>
+
+
+- 
 -
 -
--
+
+
 </details>
+
 * [ ] List down the Groundhog Issues
-    - 
-    -
+
 
 /label ~"workflow::In dev" ~"Housekeeping" ~"Data Team" ~"Documentation" ~"Triage" ~"Priority::1-Ops"
