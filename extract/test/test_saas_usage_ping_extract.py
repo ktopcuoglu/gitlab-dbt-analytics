@@ -25,3 +25,6 @@ for i, check_time in enumerate(input_timestamps):
     assert len(res) == 32  # bytes in hex representation
     # As this is one-way function, can't test it with many things - let see to we have all details with various inputs
     assert res is not None
+
+
+# TODO: rbacovic - create test case for SQL correction
