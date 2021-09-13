@@ -2502,6 +2502,7 @@ roles:
             - data_team_analyst
             - data_manager
             - restricted_safe
+            - xactly
         warehouses:
             - analyst_xs
         owns:
@@ -2750,6 +2751,7 @@ roles:
             - data_team_analyst
             - analyst_finance
             - restricted_safe
+            - xactly
         warehouses:
             - analyst_xs
         owns:
