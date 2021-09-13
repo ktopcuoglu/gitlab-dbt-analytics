@@ -119,14 +119,17 @@ The link to the Data Team Incident issue is <link>
 * [ ] Leave a comment giving context on open items and issues. If it's relevant to a specific issue, consider commenting in that issue and then linking to your comment.
 * [ ] List down the effort performed for today's triage.
 <details>
-<summary><i>Hours spent per activity</i></summary>
-
-
+<summary><i>Hours spent per activity for Data Analyst</i></summary>
 - 
 -
 -
+</details>
 
-
+<details>
+<summary><i>Hours spent per activity for Data Engineer</i></summary>
+- 
+-
+-
 </details>
 
 * [ ] List down the Groundhog Issues
