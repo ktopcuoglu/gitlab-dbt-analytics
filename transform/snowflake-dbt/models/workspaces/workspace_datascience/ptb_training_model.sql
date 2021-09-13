@@ -4,8 +4,8 @@
 -- {% set prediction_date = modules.datetime.datetime(2021, 9, 3) %}
 {% set period_type = 'MONTH'%}
 {% set delta_value = 3 %}
-{% set prediction_date = modules.datetime.datetime.now() %}
-{% set end_date = modules.datetime.datetime(prediction_date.year, prediction_date.month - delta_value, prediction_date.day) %}
+{% set prediction_date = modules.datetime.datetime.now().date() %}
+{% set end_date = modules.datetime.datetime(prediction_date.year, prediction_date.month - delta_value, prediction_date.day).date() %}
 
 --Snapshot for just the "current" ARR month based on SNAPSHOT_DT
 WITH mart_arr_snapshot_bottom_up AS (
@@ -143,25 +143,6 @@ WITH mart_arr_snapshot_bottom_up AS (
         , SUM(CASE WHEN  sales_type = 'Renewal' and stage_name IN ('8-Closed Lost') THEN 1 ELSE 0 END) AS lost_opportunities_by_renewal
         , SUM(CASE WHEN  order_type_stamped = '1. New - First Order' and stage_name IN ('8-Closed Lost') THEN 1 ELSE 0 END) AS lost_opportunities_new_business
         , SUM(CASE WHEN  sales_type = 'Add-On Business' and stage_name IN ('8-Closed Lost') THEN 1 ELSE 0 END) AS lost_opportunities_add_on_business
-         /*
-          --  These fields are coming from zi_technologies which define technologies that company is using. It's on the account level not opportunity
-          --Want to confirm that these are numeric fields and not char fields. Otherwise the MAX function will not work as intended.
-        , MAX(zi_jenkins_presence_flag) AS zi_jenkins_presence_flag
-        , MAX(zi_svn_presence_flag) AS zi_svn_presence_flag
-        , MAX(zi_tortoise_svn_presence_flag) AS zi_tortoise_svn_presence_flag
-        , MAX(zi_gcp_presence_flag) AS zi_gcp_presence_flag
-        , MAX(zi_atlassian_presence_flag) AS zi_atlassian_presence_flag
-        , MAX(zi_github_presence_flag) AS zi_github_presence_flag
-        , MAX(zi_github_enterprise_presence_flag) AS zi_github_enterprise_presence_flag
-        , MAX(zi_aws_presence_flag) AS zi_aws_presence_flag
-        , MAX(zi_kubernetes_presence_flag) AS zi_kubernetes_presence_flag
-        , MAX(zi_apache_subversion_presence_flag) AS zi_apache_subversion_presence_flag
-        , MAX(zi_apache_suversion_svn_presence_flag) AS zi_apache_suversion_svn_presence_flag
-        , MAX(zi_hashicorp_presence_flag) AS zi_hashicorp_presence_flag
-        , MAX(zi_aws_cloud_trail_presence_flag) AS zi_aws_cloud_trail_presence_flag
-        , MAX(zi_circle_ci_presence_flag) AS zi_circle_ci_presence_flag
-        , MAX(zi_bit_bucket_presence_flag) AS zi_bit_bucket_presence_flag
-        */
         , MAX(competitors_other_flag) AS competitors_other
         , MAX(competitors_gitlab_core_flag) AS competitors_gitlab_core
         , MAX(competitors_none_flag) AS competitors_none
@@ -194,6 +175,7 @@ WITH mart_arr_snapshot_bottom_up AS (
     FROM {{ref('wk_sales_sfdc_opportunity_snapshot_history_xf')}}
     WHERE snapshot_date = '{{ end_date }}'
         AND opportunity_category IN ('Standard', 'Decommissioned', 'Ramp Deal') -- filter as requested by Noel
+        AND created_date BETWEEN DATEADD('{{ period_type }}', -'{{ delta_value }}', '{{ end_date }}') AND '{{ end_date }}'
     GROUP BY account_id
 
 ), events_salesforce AS (
@@ -229,7 +211,45 @@ WITH mart_arr_snapshot_bottom_up AS (
     FROM {{ref('sfdc_task_source')}}
     WHERE createddate BETWEEN DATEADD('{{ period_type }}', -'{{ delta_value }}', '{{ end_date }}') AND '{{ end_date }}'  --filter PERIOD window. Because no histroic task table, going on createddate
     GROUP BY account_id
+), zi_technologies AS (   
 
+    SELECT account_id_18__c AS account_id
+        , MAX(zi_revenue__c) AS zi_revenue
+        , MAX(zi_industry__c) AS zi_industry    
+        , MAX(zi_sic_code__c) AS zi_sic_code
+        , MAX(zi_naics_code__c) AS zi_naics_code
+        , MAX(zi_number_of_developers__c) AS zi_developers_cnt 
+        --, MAX(zi_products_and_services__c) AS zi_products_and_services -- Leaving out for now but could be useful to parse later 
+        
+        --Atlassian
+        , MAX(CASE WHEN CONTAINS(zi_technologies__c, 'ARE_USED: Atlassian') THEN 1 END) AS zi_atlassian_flag
+        , MAX(CASE WHEN (CONTAINS(zi_technologies__c, 'ARE_USED: BitBucket') OR CONTAINS(zi_technologies__c, 'ARE_USED: AtlASsian Bitbucket')) THEN 1 END) AS zi_bitbucket_flag
+        , MAX(CASE WHEN CONTAINS(zi_technologies__c, 'ARE_USED: Atlassian Jira Agile Tools') THEN 1 END) AS zi_jira_flag
+        
+        --GCP
+        , MAX(CASE WHEN (CONTAINS(zi_technologies__c, 'ARE_USED: Google Cloud Platform') OR CONTAINS(zi_technologies__c, 'ARE_USED: GCP')) THEN 1 END) AS zi_gcp_flag
+
+        --Github
+        , MAX(CASE WHEN CONTAINS(zi_technologies__c, 'ARE_USED: GitHub') THEN 1 END) AS zi_github_flag
+        , MAX(CASE WHEN CONTAINS(zi_technologies__c, 'ARE_USED: GitHub Enterprise') THEN 1 END) AS zi_github_enterprise_flag
+        
+        --AWS
+        , MAX(CASE WHEN CONTAINS(zi_technologies__c, 'ARE_USED: AWS') THEN 1 END) AS zi_aws_flag
+        , MAX(CASE WHEN (CONTAINS(zi_technologies__c, 'ARE_USED: Amazon AWS Identity and Access Management') OR CONTAINS(zi_technologies__c, 'Amazon AWS Identity and Access Management (IAM)')) THEN 1 END) AS zi_aws_iam_flag
+        , MAX(CASE WHEN CONTAINS(zi_technologies__c, 'ARE_USED: Amazon AWS CloudTrail') THEN 1 END) AS zi_aws_cloud_trail_flag
+        
+        --Other CI
+        , MAX(CASE WHEN CONTAINS(zi_technologies__c, 'ARE_USED: Hashicorp') THEN 1 END) AS zi_hAShicorp_flag
+        , MAX(CASE WHEN (CONTAINS(zi_technologies__c, 'ARE_USED: CircleCI') OR CONTAINS(zi_technologies__c, 'ARE_USED: Circle Internet Services')) THEN 1 END) AS zi_circleci_flag
+        , MAX(CASE WHEN CONTAINS(zi_technologies__c, 'ARE_USED: TravisCI') THEN 1 END) AS zi_travisci_flag
+        --Open Source/Free 
+        , MAX(CASE WHEN (CONTAINS(zi_technologies__c, 'ARE_USED: Apache Subversion') OR CONTAINS(zi_technologies__c, 'ARE_USED: SVN')) THEN 1 END) AS zi_apache_subversion_flag
+        , MAX(CASE WHEN CONTAINS(zi_technologies__c, 'ARE_USED: Jenkins') THEN 1 END) AS zi_jenkins_flag
+        , MAX(CASE WHEN CONTAINS(zi_technologies__c, 'ARE_USED: TortoiseSVN') THEN 1 END) AS zi_tortoise_svn_flag
+        , MAX(CASE WHEN CONTAINS(zi_technologies__c, 'ARE_USED: Kubernetes') THEN 1 END) AS zi_kubernetes_flag 
+    FROM {{ref('snapshots.sfdc_account_snapshots')}}
+    WHERE CAST(DBT_UPDATED_AT AS date) = {{ end_date }} -- Cast from datetime to date 
+    GROUP BY account_id  -- snapshots occur multiple times a day so data is not unique at the acccount + dbt_updated_at level.
 ), bizible AS (
 
     SELECT
@@ -438,22 +458,6 @@ SELECT
     , COALESCE(o.lost_opportunities_by_renewal, 0) AS lost_opportunities_by_renewal_cnt
     , COALESCE(o.lost_opportunities_new_business, 0) AS lost_opportunities_new_business_cnt
     , COALESCE(o.lost_opportunities_add_on_business, 0) AS lost_opportunities_add_on_business_cnt
-/* --to be uncommented once fields will become available
-    , COALESCE(o.zi_jenkins_presence_flag, 0) AS zi_jenkins_presence_flag
-    , COALESCE(o.zi_svn_presence_flag, 0) AS zi_svn_presence_flag
-    , COALESCE(o.zi_tortoise_presence_flag, 0) AS zi_tortoise_presence_flag
-    , COALESCE(o.zi_gcp_presence_flag, 0) AS zi_gcp_presence_flag
-    , COALESCE(o.zi_atlassian_presence_flag, 0) AS zi_atlassian_presence_flag
-    , COALESCE(o.zi_github_presence_flag, 0) AS zi_github_presence_flag
-    , COALESCE(o.zi_github_enterprise_presence_flag, 0) AS zi_github_enterprise_presence_flag
-    , COALESCE(o.zi_aws_presence_flag, 0) AS zi_aws_presence_flag
-    , COALESCE(o.zi_kubernetes_presence_flag, 0) AS zi_kubernetes_presence_flag
-    , COALESCE(o.zi_apache_subversion_presence_flag, 0) AS zi_apache_subversion_presence_flag
-    , COALESCE(o.zi_apache_subversion_svn_presence_flag, 0) AS zi_apache_subversion_svn_presence_flag
-    , COALESCE(o.zi_hashicorp_presence_flag, 0) AS zi_hashicorp_presence_flag
-    , COALESCE(o.zi_aws_cloud_trail_presence_flag, 0) AS zi_aws_cloud_trail_presence_flag
-    , COALESCE(o.zi_circle_ci_presence_flag, 0) AS zi_circle_ci_presence_flag
-    , COALESCE(o.zi_bit_bucket_presence_flag, 0) AS zi_bit_bucket_presence_flag*/
     , COALESCE(o.competitors_other, 0) AS competitors_other_flag
     , COALESCE(o.competitors_gitlab_core, 0) AS competitors_gitlab_core_flag
     , COALESCE(o.competitors_none, 0) AS competitors_none_flag
@@ -510,6 +514,34 @@ SELECT
     , COALESCE(ts.is_left_message_task, 0) AS is_left_message_task_flag
     , COALESCE(ts.is_not_answered_task, 0) AS is_not_answered_task_flag
     , CASE WHEN ts.account_id IS NOT NULL THEN 1 ELSE 0 END AS has_sfdc_tasks_flag
+
+--ZoomInfo Fields
+    , zt.zi_revenue AS zi_revenue
+    , zt.zi_industry AS zi_industry
+    , zt.zi_sic_code AS zi_sic_code
+    , zt.zi_naics_code AS zi_naics_code
+    , zt.zi_developers_cnt AS zi_developers_cnt
+    , COALESCE(zt.zi_atlassian_flag, 0) AS zi_atlassian_flag
+    , COALESCE(zt.zi_bitbucket_flag, 0) AS zi_bitbucket_flag
+    , COALESCE(zt.zi_jira_flag, 0) AS zi_jira_flag
+    , COALESCE(zt.zi_gcp_flag, 0) AS zi_gcp_flag
+    , COALESCE(zt.zi_github_flag, 0) AS zi_github_flag
+    , COALESCE(zt.zi_github_enterprise_flag, 0) AS zi_github_enterprise_flag
+    , COALESCE(zt.zi_aws_flag, 0) AS zi_aws_flag
+    , COALESCE(zt.zi_aws_iam_flag, 0) AS zi_aws_iam_flag
+    , COALESCE(zt.zi_aws_cloud_trail_flag, 0) AS zi_aws_cloud_trail_flag
+    , COALESCE(zt.zi_hashicorp_flag, 0) AS zi_hashicorp_flag
+    , COALESCE(zt.zi_circleci_flag, 0) AS zi_circleci_flag
+    , COALESCE(zt.zi_travisci_flag, 0) AS zi_travisci_flag
+    , COALESCE(zt.zi_apache_subversion_flag, 0) AS zi_apache_subversion_flag
+    , COALESCE(zt.zi_jenkins_flag, 0) AS zi_jenkins_flag
+    , COALESCE(zt.zi_tortoise_svn_flag, 0) AS zi_tortoise_svn_flag
+    , COALESCE(zt.zi_kubernetes_flag, 0) AS zi_kubernetes_flag
+    , COALESCE(zt.zi_atlassian_flag, zt.zi_bitbucket_flag, zt.zi_jira_flag, 0) AS zi_atlassian_any_flag
+    , COALESCE(zt.zi_github_flag, zt.zi_github_enterprise_flag, 0) AS zi_github_any_flag
+    , COALESCE(zt.zi_aws_flag, zt.zi_aws_iam_flag, zt.zi_aws_cloud_trail_flag, 0) AS zi_aws_any_flag
+    , COALESCE(zt.zi_hashicorp_flag, zt.zi_bitbucket_flag, zt.zi_jira_flag, 0) AS zi_other_ci_any_flag
+    , COALESCE(zt.zi_apache_subversion_flag, zt.zi_jenkins_flag, zt.zi_tortoise_svn_flag, zt.zi_kubernetes_flag, 0) AS zi_open_source_any_flag
 
     --Bizible Fields
     , COALESCE(b.num_bizible_touchpoints, 0) AS bizible_touchpoints_cnt
