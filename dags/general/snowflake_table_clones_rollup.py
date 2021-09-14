@@ -61,11 +61,10 @@ default_args = {
 }
 
 # Create the DAG
-#  DAG will be triggered at 06:59am UTC which is 23:59 PM PST
 dag = DAG(
     "snowflake_table_clone_rollup",
     default_args=default_args,
-    schedule_interval="0 7 * * *",
+    schedule_interval="0 12 9 * *",
 )
 tables_to_rollup = [
     "MART_ARR",
