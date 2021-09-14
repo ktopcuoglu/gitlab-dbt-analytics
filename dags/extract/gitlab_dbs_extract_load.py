@@ -87,8 +87,6 @@ dbt_secrets = [
     SNOWFLAKE_USER,
 ]
 
-every_eighth_hour = "0 */8 * * *"
-
 # Dictionary containing the configuration values for the various Postgres DBs
 config_dict = {
     "el_customers_scd_db": {
