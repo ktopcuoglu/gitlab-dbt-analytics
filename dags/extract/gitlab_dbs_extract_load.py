@@ -119,7 +119,7 @@ config_dict = {
             GITLAB_COM_PG_PORT,
         ],
         "start_date": datetime(2019, 5, 30),
-        "sync_schedule_interval": "0 */6 * * *",
+        "sync_schedule_interval": "0 2 */1 * *",
         "task_name": "gitlab-com",
     },
     "el_gitlab_com_ci": {
@@ -127,7 +127,7 @@ config_dict = {
         "dag_name": "el_gitlab_com_ci",
         "dbt_name": "none",
         "env_vars": {"HOURS": "12"},
-        "extract_schedule_interval": "0 */5 * * *",
+        "extract_schedule_interval": "0 */6 * * *",
         "secrets": [
             GITLAB_COM_CI_DB_NAME,
             GITLAB_COM_CI_DB_HOST,
@@ -136,7 +136,7 @@ config_dict = {
             GITLAB_COM_CI_DB_USER,
         ],
         "start_date": datetime(2019, 5, 30),
-        "sync_schedule_interval": "0 */5 * * *",
+        "sync_schedule_interval": "0 2 */1 * *",
         "task_name": "gitlab-com",
     },
     "el_gitlab_com_scd": {
