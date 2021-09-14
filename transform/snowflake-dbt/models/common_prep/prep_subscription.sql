@@ -47,6 +47,8 @@ WITH date_details AS (
       zuora_subscription.eoa_starter_bronze_offer_accepted,
       IFF(zuora_subscription.created_by_id = '2c92a0fd55822b4d015593ac264767f2', -- All Self-Service / Web direct subscriptions are identified by that created_by_id
           'Self-Service', 'Sales-Assisted')                                     AS subscription_sales_type,
+      zuora_subscription.namespace_name,
+      zuora_subscription.namespace_id,
 
       --Date Information
       zuora_subscription.subscription_start_date                                AS subscription_start_date,
@@ -64,10 +66,13 @@ WITH date_details AS (
           THEN DATE_TRUNC('month',DATEADD('month', zuora_subscription.current_term, zuora_subscription.subscription_end_date::DATE))
         ELSE NULL
       END                                                                       AS second_active_renewal_month,
+      zuora_subscription.auto_renew_native_hist,
+      zuora_subscription.auto_renew_customerdot_hist,
       zuora_subscription.turn_on_cloud_licensing,
       zuora_subscription.turn_on_operational_metrics,
       zuora_subscription.contract_operational_metrics,
-      zuora_subscription.turn_on_usage_ping_required_metrics,
+      -- zuora_subscription.turn_on_usage_ping_required_metrics,
+      NULL                                                                      AS turn_on_usage_ping_required_metrics, -- https://gitlab.com/gitlab-data/analytics/-/issues/10172
       zuora_subscription.contract_auto_renewal,
       zuora_subscription.turn_on_auto_renewal,
       zuora_subscription.contract_seat_reconciliation,
@@ -87,7 +92,7 @@ WITH date_details AS (
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@ischweickartDD",
-    updated_by="@jpeguero",
+    updated_by="@chrissharp",
     created_date="2021-01-07",
-    updated_date="2021-07-29"
+    updated_date="2021-09-06"
 ) }}

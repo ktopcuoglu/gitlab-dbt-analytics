@@ -12,20 +12,24 @@ WITH source AS (
       subscriptionversionamendmentid              AS amendment_id,
       name                                        AS subscription_name,
         {{zuora_slugify("name")}}                 AS subscription_name_slugify,
+      nullif(gitlabnamespacename__c, '')          AS namespace_name,
       --keys
       accountid                                   AS account_id,
       creatoraccountid                            AS creator_account_id,
       creatorinvoiceownerid                       AS creator_invoice_owner_id,
       invoiceownerid                              AS invoice_owner_id,
       nullif(opportunityid__c, '')                AS sfdc_opportunity_id,
+      nullif(opportunityname__qt, '')             AS crm_opportunity_name,
       nullif(originalid, '')                      AS original_id,
       nullif(previoussubscriptionid, '')          AS previous_subscription_id,
       nullif(recurlyid__c, '')                    AS sfdc_recurly_id,
       cpqbundlejsonid__qt                         AS cpq_bundle_json_id,
+      nullif(gitlabnamespaceid__c, '')            AS namespace_id,
 
       -- info
       status                                      AS subscription_status,
-      autorenew                                   AS auto_renew,
+      autorenew                                   AS auto_renew_native_hist,
+      autorenew__c                                AS auto_renew_customerdot_hist,
       version                                     AS version,
       termtype                                    AS term_type,
       notes                                       AS notes,
@@ -36,7 +40,7 @@ WITH source AS (
       eoastarterbronzeofferaccepted__c            AS eoa_starter_bronze_offer_accepted,
       IFF(LENGTH(TRIM(turnoncloudlicensing__c)) > 0, turnoncloudlicensing__c, NULL)
                                                   AS turn_on_cloud_licensing,
-      turnonusagepingrequiredmetrics__c           AS turn_on_usage_ping_required_metrics,
+      -- turnonusagepingrequiredmetrics__c           AS turn_on_usage_ping_required_metrics,
       IFF(LENGTH(TRIM(turnonoperationalmetrics__c)) > 0, turnonoperationalmetrics__c, NULL)
                                                   AS turn_on_operational_metrics,
       IFF(LENGTH(TRIM(contractoperationalmetrics__c)) > 0, contractoperationalmetrics__c, NULL)

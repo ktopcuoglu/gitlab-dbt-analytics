@@ -1,28 +1,14 @@
-import sys
-import re
-import json
 import time
 import random
-from io import StringIO
 from logging import error, info, basicConfig, getLogger
 from os import environ as env
-from typing import Dict, List, Tuple
-from yaml import load, safe_load, YAMLError
+from typing import List
+from yaml import load
 
-import boto3
 import gspread
 import pandas as pd
-from fire import Fire
-from gitlabdata.orchestration_utils import (
-    postgres_engine_factory,
-    snowflake_engine_factory,
-    query_executor,
-)
-from google.cloud import storage
-from google.oauth2 import service_account
 from gspread.exceptions import APIError
 from oauth2client.service_account import ServiceAccountCredentials
-from sqlalchemy.engine.base import Engine
 
 
 class GoogleSheetsClient:

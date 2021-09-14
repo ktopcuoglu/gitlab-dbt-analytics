@@ -2,8 +2,6 @@
     config({
         "materialized": "incremental",
         "unique_key": "primary_key",
-        "schema": "data_quality",
-        "tags": ["product"],
         "full_refresh": false
         
     })

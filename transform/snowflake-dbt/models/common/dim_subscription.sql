@@ -43,6 +43,8 @@ WITH prep_amendment AS (
     subscription.dim_subscription_id_previous,
     subscription.subscription_name_slugify,
     subscription.subscription_status,
+    subscription.namespace_id,
+    subscription.namespace_name,
     subscription.zuora_renewal_subscription_name,
     subscription.zuora_renewal_subscription_name_slugify,
     subscription.current_term,
@@ -50,6 +52,8 @@ WITH prep_amendment AS (
     subscription.renewal_term_period_type,
     subscription.eoa_starter_bronze_offer_accepted,
     subscription.subscription_sales_type,
+    subscription.auto_renew_native_hist,
+    subscription.auto_renew_customerdot_hist,
     subscription.turn_on_cloud_licensing,
     subscription.turn_on_operational_metrics,
     subscription.contract_operational_metrics,
@@ -90,7 +94,7 @@ WITH prep_amendment AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@snalamaru",
-    updated_by="@iweeks",
+    updated_by="@chrissharp",
     created_date="2020-12-16",
-    updated_date="2021-07-29"
+    updated_date="2021-09-06"
 ) }}

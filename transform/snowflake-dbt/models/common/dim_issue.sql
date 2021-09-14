@@ -7,6 +7,7 @@ WITH prep_issue AS (
       dim_project_id,
       dim_namespace_id,
       ultimate_parent_namespace_id,
+      dim_epic_id,
       created_date_id,
       dim_plan_id,
       author_id,
@@ -37,7 +38,9 @@ WITH prep_issue AS (
       state_name,
       duplicated_to_id,
       promoted_to_epic_id,
-      issue_type
+      issue_type,
+      severity,
+      labels
     FROM {{ ref('prep_issue') }}
 
 )
@@ -45,8 +48,8 @@ WITH prep_issue AS (
 {{ dbt_audit(
     cte_ref="prep_issue",
     created_by="@mpeychet_",
-    updated_by="@mpeychet_",
+    updated_by="@jpeguero",
     created_date="2021-06-17",
-    updated_date="2021-06-17"
+    updated_date="2021-09-07"
 ) }}
 

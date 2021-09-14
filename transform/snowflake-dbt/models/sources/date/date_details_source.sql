@@ -9,7 +9,7 @@ WITH date_spine AS (
 
 ), calculated as (
 
-    SELECT  
+    SELECT
       date_day,
       date_day                                                                                AS date_actual,
 
@@ -77,7 +77,7 @@ WITH date_spine AS (
         1, 'Q1',
         2, 'Q2',
         3, 'Q3',
-        4, 'Q4'))                                                                             AS fiscal_quarter_name,  
+        4, 'Q4'))                                                                             AS fiscal_quarter_name,
       ('FY' || SUBSTR(fiscal_quarter_name, 3, 7))                                             AS fiscal_quarter_name_fy,
       DENSE_RANK() OVER (ORDER BY fiscal_quarter_name)                                        AS fiscal_quarter_number_absolute,
       fiscal_year || '-' || MONTHNAME(date_day)                                               AS fiscal_month_name,
@@ -92,53 +92,65 @@ WITH date_spine AS (
       DATE_TRUNC('month', last_day_of_fiscal_quarter)                                         AS last_month_of_fiscal_quarter,
       IFF(DATE_TRUNC('month', last_day_of_fiscal_quarter) = date_actual, TRUE, FALSE)         AS is_first_day_of_last_month_of_fiscal_quarter,
       DATE_TRUNC('month', last_day_of_fiscal_year)                                            AS last_month_of_fiscal_year,
-      IFF(DATE_TRUNC('month', last_day_of_fiscal_year) = date_actual, TRUE, FALSE)            AS is_first_day_of_last_month_of_fiscal_year
+      IFF(DATE_TRUNC('month', last_day_of_fiscal_year) = date_actual, TRUE, FALSE)            AS is_first_day_of_last_month_of_fiscal_year,
+      DATEADD('day',7,DATEADD('month',1,first_day_of_month))                                  AS snapshot_date_fpa
 
     FROM date_spine
 
+), final AS (
+
+    SELECT
+      date_day,
+      date_actual,
+      day_name,
+      month_actual,
+      year_actual,
+      quarter_actual,
+      day_of_week,
+      first_day_of_week,
+      week_of_year,
+      day_of_month,
+      day_of_quarter,
+      day_of_year,
+      fiscal_year,
+      fiscal_quarter,
+      day_of_fiscal_quarter,
+      day_of_fiscal_year,
+      month_name,
+      first_day_of_month,
+      last_day_of_month,
+      first_day_of_year,
+      last_day_of_year,
+      first_day_of_quarter,
+      last_day_of_quarter,
+      first_day_of_fiscal_quarter,
+      last_day_of_fiscal_quarter,
+      first_day_of_fiscal_year,
+      last_day_of_fiscal_year,
+      week_of_fiscal_year,
+      month_of_fiscal_year,
+      last_day_of_week,
+      quarter_name,
+      fiscal_quarter_name,
+      fiscal_quarter_name_fy,
+      fiscal_quarter_number_absolute,
+      fiscal_month_name,
+      fiscal_month_name_fy,
+      holiday_desc,
+      is_holiday,
+      last_month_of_fiscal_quarter,
+      is_first_day_of_last_month_of_fiscal_quarter,
+      last_month_of_fiscal_year,
+      is_first_day_of_last_month_of_fiscal_year,
+      snapshot_date_fpa
+    FROM calculated
+
 )
 
-SELECT 
-  date_day,
-  date_actual,
-  day_name,
-  month_actual,
-  year_actual,
-  quarter_actual,
-  day_of_week,
-  first_day_of_week,
-  week_of_year,
-  day_of_month,
-  day_of_quarter,
-  day_of_year,
-  fiscal_year,
-  fiscal_quarter,
-  day_of_fiscal_quarter,
-  day_of_fiscal_year,
-  month_name,
-  first_day_of_month,
-  last_day_of_month,
-  first_day_of_year,
-  last_day_of_year,
-  first_day_of_quarter,
-  last_day_of_quarter,
-  first_day_of_fiscal_quarter,
-  last_day_of_fiscal_quarter,
-  first_day_of_fiscal_year,
-  last_day_of_fiscal_year,
-  week_of_fiscal_year,
-  month_of_fiscal_year,
-  last_day_of_week,
-  quarter_name,
-  fiscal_quarter_name,
-  fiscal_quarter_name_fy,
-  fiscal_quarter_number_absolute,
-  fiscal_month_name,
-  fiscal_month_name_fy,
-  holiday_desc,
-  is_holiday,
-  last_month_of_fiscal_quarter,
-  is_first_day_of_last_month_of_fiscal_quarter,
-  last_month_of_fiscal_year,
-  is_first_day_of_last_month_of_fiscal_year
-FROM calculated
+{{ dbt_audit(
+    cte_ref="final",
+    created_by="@msendal",
+    updated_by="@iweeks",
+    created_date="2020-06-01",
+    updated_date="2021-08-16"
+) }}
