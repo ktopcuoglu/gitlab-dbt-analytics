@@ -236,7 +236,9 @@ def recreate_rollup_table(
         logging.info(f"Processing {items[1]}")
         table_column_data = get_table_column_names(engine, db_name, items[1])
         big_df = big_df.append(
-            table_column_data[~table_column_data["compare_column"].isin(big_df["compare_column"])]
+            table_column_data[
+                ~table_column_data["compare_column"].isin(big_df["compare_column"])
+            ]
         )
 
     big_df = big_df.groupby(["column_name"]).max().reset_index()
