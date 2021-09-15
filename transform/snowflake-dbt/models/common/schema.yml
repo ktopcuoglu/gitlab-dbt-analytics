@@ -427,7 +427,7 @@ models:
       - name: is_actively_being_sequenced
         description: A boolean Salesforce field on the [lead](https://gitlab.my.salesforce.com/00N4M00000Ib1VK) and [contact](https://gitlab.my.salesforce.com/00N4M00000Ib1VP) denoting if the contact is going through an [Outreach](https://about.gitlab.com/handbook/marketing/marketing-operations/outreach/) sequence.
       - name: region
-        description: 'A picklist field on the [lead](https://gitlab.my.salesforce.com/00N61000009n0Sl) and [contact](https://gitlab.my.salesforce.com/00N6100000ELkLu?) object in Salesforce. Currently one of: AMER, APAC, EMEA, LATAM.
+        description: A picklist field on the [lead](https://gitlab.my.salesforce.com/00N61000009n0Sl) and [contact](https://gitlab.my.salesforce.com/00N6100000ELkLu?) object in Salesforce. Currently one of: AMER, APAC, EMEA, LATAM.
 
   - name: dim_crm_user_hierarchy_live
     description: '{{ doc("dim_crm_user_hierarchy_live") }}'
