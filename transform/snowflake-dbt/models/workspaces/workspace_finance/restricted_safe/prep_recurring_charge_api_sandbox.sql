@@ -14,8 +14,8 @@ WITH dim_date AS (
     SELECT *
     FROM {{ ref('zuora_api_sandbox_account_source') }}
     WHERE is_deleted = FALSE
-    --Exclude Batch20 which are the test accounts. This method replaces the manual dbt seed exclusion file.
-      AND LOWER(batch) != 'batch20'
+    --Keep the Batch20 test accounts since they would be in scope for this sandbox model.
+      --AND LOWER(batch) != 'batch20'
 
 ), zuora_api_sandbox_rate_plan AS (
 
