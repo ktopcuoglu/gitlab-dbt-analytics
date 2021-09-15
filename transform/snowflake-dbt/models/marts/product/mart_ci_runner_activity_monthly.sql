@@ -29,12 +29,7 @@
       first_day_of_month,
       LEAD(first_day_of_month, 1, '9999-12-31')
         OVER (PARTITION BY dim_ci_build_id ORDER BY first_day_of_month) AS last_day_of_month,
-      DATEDIFF('seconds',
-                IFF(ci_build_started_at > first_day_of_month,
-                    ci_build_started_at,  first_day_of_month),
-                IFF(ci_build_finished_at < last_day_of_month,
-                    ci_build_finished_at,  last_day_of_month)
-              )                                                         AS monthly_duration_in_s
+      DATEDIFF('seconds', ci_build_started_at, ci_build_finished_at) AS monthly_duration_in_s
     FROM month_spine
 
 ), ci_runner_activity_monthly AS (
