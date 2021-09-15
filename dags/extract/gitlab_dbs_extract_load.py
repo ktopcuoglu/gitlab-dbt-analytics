@@ -104,6 +104,7 @@ config_dict = {
         "start_date": datetime(2019, 5, 30),
         "sync_schedule_interval": "0 3 */1 * *",
         "task_name": "customers",
+        "description": "This DAG does full extract & load of customer database(Postgres) to snowflake",
     },
     "el_gitlab_com": {
         "cloudsql_instance_name": None,
@@ -121,6 +122,8 @@ config_dict = {
         "start_date": datetime(2019, 5, 30),
         "sync_schedule_interval": "0 2 */1 * *",
         "task_name": "gitlab-com",
+        "description": "This DAG does Incremental extract & load  of gitlab.com database(Postgres) to snowflake",
+        "description_incremental": "This DAG does backfill of incrmental table extract & load of gitlab.com database(Postgres) to snowflake",
     },
     "el_gitlab_com_ci": {
         "cloudsql_instance_name": None,
@@ -138,6 +141,8 @@ config_dict = {
         "start_date": datetime(2019, 5, 30),
         "sync_schedule_interval": "0 2 */1 * *",
         "task_name": "gitlab-com",
+        "description": "This DAG does Incremental extract & load of gitlab.com CI* database(Postgres) to snowflake",
+        "description_incremental": "This DAG does backfill of incrmental table extract & load of gitlab.com CI* database(Postgres) to snowflake",
     },
     "el_gitlab_com_scd": {
         "cloudsql_instance_name": None,
@@ -155,6 +160,7 @@ config_dict = {
         "start_date": datetime(2019, 5, 30),
         "sync_schedule_interval": "0 2 */1 * *",
         "task_name": "gitlab-com",
+        "description": "This DAG does Full extract & load of gitlab.com database(Postgres) to snowflake",
     },
     "el_gitlab_com_ci_scd": {
         "cloudsql_instance_name": None,
@@ -172,6 +178,7 @@ config_dict = {
         "start_date": datetime(2019, 5, 30),
         "sync_schedule_interval": "0 4 */1 * *",
         "task_name": "gitlab-com",
+        "description": "This DAG does Full extract & load of gitlab.com database CI* (Postgres) to snowflake",
     },
     "el_gitlab_ops": {
         "cloudsql_instance_name": "ops-db-restore",
@@ -190,6 +197,8 @@ config_dict = {
         "start_date": datetime(2019, 5, 30),
         "sync_schedule_interval": "0 2 */1 * *",
         "task_name": "gitlab-ops",
+        "description": "This DAG does Incremental extract & load of Operational database (Postgres) to snowflake",
+        "description_incremental": "This DAG does backfill of incrmental table extract & load of Operational database(Postgres) to snowflake",
     },
     "el_gitlab_ops_scd": {
         "cloudsql_instance_name": "ops-db-restore",
@@ -208,6 +217,7 @@ config_dict = {
         "start_date": datetime(2019, 5, 30),
         "sync_schedule_interval": "0 2 */1 * *",
         "task_name": "gitlab-ops",
+        "description": "This DAG does Full extract & load of Operational database (Postgres) to snowflake",
     },
 }
 
@@ -381,7 +391,7 @@ for source_name, config in config_dict.items():
             f"{config['dag_name']}_db_extract",
             default_args=extract_dag_args,
             schedule_interval=config["extract_schedule_interval"],
-            description="This DAG do incremental extract from Postgres database",
+            description=config["description"],
         )
 
         with extract_dag:
@@ -419,8 +429,7 @@ for source_name, config in config_dict.items():
                     image=DATA_IMAGE,
                     task_id=f"{task_identifier}-pgp-extract",
                     name=f"{task_identifier}-pgp-extract",
-                    # pool=f"{config['task_name']}_pool",
-                    pool="default_pool",
+                    pool=f"{config['task_name']}_pool",
                     secrets=standard_secrets + config["secrets"],
                     env_vars={
                         **gitlab_pod_env_vars,
@@ -453,6 +462,7 @@ for source_name, config in config_dict.items():
             default_args=sync_dag_args,
             schedule_interval=config["sync_schedule_interval"],
             concurrency=1,
+            description=config["description_incremental"],
         )
 
         with incremental_backfill_dag:
@@ -478,8 +488,7 @@ for source_name, config in config_dict.items():
                         image=DATA_IMAGE,
                         task_id=task_identifier,
                         name=task_identifier,
-                        # pool=f"{config['task_name']}_pool",
-                        pool="default_pool",
+                        pool=f"{config['task_name']}_pool",
                         secrets=standard_secrets + config["secrets"],
                         env_vars={
                             **gitlab_pod_env_vars,
@@ -503,6 +512,7 @@ for source_name, config in config_dict.items():
             default_args=sync_dag_args,
             schedule_interval=config["sync_schedule_interval"],
             concurrency=1,
+            description=config["description"],
         )
 
         with sync_dag:
@@ -537,8 +547,7 @@ for source_name, config in config_dict.items():
                         image=DATA_IMAGE,
                         task_id=task_identifier,
                         name=task_identifier,
-                        # pool=f"{config['task_name']}_pool",
-                        pool="default_pool",
+                        pool=f"{config['task_name']}_pool",
                         secrets=standard_secrets + config["secrets"],
                         env_vars={
                             **gitlab_pod_env_vars,
