@@ -1,7 +1,7 @@
 version: '3.7'
 services:
     airflow_webserver:
-        image: registry.gitlab.com/gitlab-data/data-image/airflow-image:v0.0.9
+        image: registry.gitlab.com/gitlab-data/data-image/airflow-image:100-create-helm-configuration-for-staging
         restart: always
         ports:
           - "8080:8080"
@@ -14,6 +14,7 @@ services:
           IN_CLUSTER: "False"
           GOOGLE_APPLICATION_CREDENTIALS: /root/gcp_service_creds.json
           GIT_BRANCH: ${GIT_BRANCH}
+          AIRFLOW__WEBSERVER__SECRET_KEY: 83a1e32380af3a62d159ca9461aa3e30436b4978c8dd66f907a02528b662
           AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql://postgres:postgres@airflow_db
         command: bash -c "airflow webserver"
         volumes:
@@ -33,7 +34,7 @@ services:
             read_only: True
 
     airflow_scheduler:
-        image: registry.gitlab.com/gitlab-data/data-image/airflow-image:v0.0.9
+        image: registry.gitlab.com/gitlab-data/data-image/airflow-image:100-create-helm-configuration-for-staging
         restart: always
         ports:
           - "8793:8793"
@@ -45,6 +46,7 @@ services:
           IN_CLUSTER: "False"
           GOOGLE_APPLICATION_CREDENTIALS: /root/gcp_service_creds.json
           GIT_BRANCH: ${GIT_BRANCH}
+          AIRFLOW__WEBSERVER__SECRET_KEY: 83a1e32380af3a62d159ca9461aa3e30436b4978c8dd66f907a02528b662
           AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql://postgres:postgres@airflow_db
         command: bash -c "airflow scheduler"
         volumes:
