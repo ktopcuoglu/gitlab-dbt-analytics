@@ -35,6 +35,16 @@ models:
         tests:
           - not_null
 
+  - name: prep_dim_subscription_snapshot_base
+      description: Base model for the dim_subscription snapshot data
+      columns:
+        - name: dim_subscription_id
+          tests:
+            - not_null
+        - name: dbt_valid_from
+          tests:
+            - not_null
+            -
   - name: prep_dr_partner_engagement
     description: '{{ doc("prep_dr_partner_engagement") }}'
     columns:
@@ -83,6 +93,26 @@ models:
           - not_null
           - unique
 
+  - name: prep_fct_mrr_snapshot_base
+    description: Base model for the fct_mrr snapshot data
+    columns:
+      - name: mrr_id
+        tests:
+          - not_null
+      - name: dbt_valid_from
+        tests:
+          - not_null
+
+  - name: prep_fct_retention_parent_account_snapshot_base
+    description: Base model for the fct_retention snapshot data
+    columns:
+      - name: fct_retention_id
+        tests:
+          - not_null
+      - name: dbt_valid_from
+        tests:
+          - not_null
+          -
   - name: prep_industry
     description: '{{ doc("prep_industry") }}'
     columns:
