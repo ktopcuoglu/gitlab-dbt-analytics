@@ -411,23 +411,6 @@ models:
       - name: lead_source
         description: A built-in salesforce picklist shown as initial Source in SFDC.
       - name: lead_source_type
-        description: A custom salesforce picklist on the [contact](https://gitlab.my.salesforce.com/00N6100000HmXh9?) and [lead](https://gitlab.my.salesforce.com/00N6100000HHDZJ) objects controlled by the built-in field.
-      - name: source_buckets
-        description: [A case statement](https://gitlab.com/gitlab-data/analytics/-/blob/master/transform/snowflake-dbt/macros/sfdc/sfdc_source_buckets.sql) that categorizes lead sources into pre-defined buckets. 
-      - name: net_new_source_categories
-        description: A case statement](https://gitlab.com/gitlab-data/analytics/-/blob/master/transform/snowflake-dbt/macros/sfdc/sfdc_source_buckets.sql) that categorizes lead sources into pre-defined buckets. 
-      - name: bizible_touchpoint_position
-        description: The actions done when the person took their First Touch (FT) through Bizible. This will also contain other actions in a comma-separated, [Bizible has their meaning documented](https://experienceleague.adobe.com/docs/bizible/using/introduction-to-bizible/overview-resources/bizible-attribution-models.html?lang=en).  
-      - name: bizible_marketing_channel_path
-        description: The channel the person's first Bizible touchpoint. 
-      - name: bizible_touchpoint_date
-        description: The date of the person Bizible touchpoint.
-      - name: sequence_step_type
-        description: A Salesforce field on the [lead](https://gitlab.my.salesforce.com/00N4M00000Ib5yL) and [contact](https://gitlab.my.salesforce.com/00N4M00000Ib5yG) object updated by Outreach, denoting the last step a person went through. Its possible for a person to not be in a sequence but have a value here. 
-      - name: is_actively_being_sequenced
-        description: A boolean Salesforce field on the [lead](https://gitlab.my.salesforce.com/00N4M00000Ib1VK) and [contact](https://gitlab.my.salesforce.com/00N4M00000Ib1VP) denoting if the contact is going through an [Outreach](https://about.gitlab.com/handbook/marketing/marketing-operations/outreach/) sequence.
-      - name: region
-        description: 'A picklist field on the [lead](https://gitlab.my.salesforce.com/00N61000009n0Sl) and [contact](https://gitlab.my.salesforce.com/00N6100000ELkLu?) object in Salesforce. Currently one of: AMER, APAC, EMEA, LATAM.
 
   - name: dim_crm_user_hierarchy_live
     description: '{{ doc("dim_crm_user_hierarchy_live") }}'
