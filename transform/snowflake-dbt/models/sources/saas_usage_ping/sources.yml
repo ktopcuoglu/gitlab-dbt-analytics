@@ -15,7 +15,7 @@ sources:
 
     tables:
       - name: instance
-        identifier: gitlab_dotcom
+        identifier: instance_sql_metrics
       - name: namespace
         identifier: gitlab_dotcom_namespace
       - name: instance_redis_metrics

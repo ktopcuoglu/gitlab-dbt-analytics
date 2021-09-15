@@ -1,8 +1,3 @@
-{{config({
-    "schema": "legacy"
-  })
-}}
-
 with sfdc_opportunity_xf  AS (
 
         SELECT *

@@ -117,6 +117,29 @@ The link to the Data Team Incident issue is <link>
 
 * [ ] At the end of your working day post EOD message to slack along with a link to this issue in the above mentioned slack channels so that it is clear for the next triager what time to check for issues from.
 * [ ] Leave a comment giving context on open items and issues. If it's relevant to a specific issue, consider commenting in that issue and then linking to your comment.
+* [ ] List down the effort performed for today's triage.
+<details>
+<summary><i>Hours spent per activity for Data Analyst</i></summary>
+
+- 
+- 
+- 
+
+</details>
+
+<details>
+<summary><i>Hours spent per activity for Data Engineer</i></summary>
+
+- 
+- 
+- 
+
+</details>
+
+* [ ] List down the Groundhog Issues
+- 
+- 
+- 
 
 
 /label ~"workflow::In dev" ~"Housekeeping" ~"Data Team" ~"Documentation" ~"Triage" ~"Priority::1-Ops"

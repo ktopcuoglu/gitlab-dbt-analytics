@@ -118,10 +118,16 @@ Example: You might be looking at the count of opportunities before and after, if
 - [ ] This MR is ready for final review and merge.
 - [ ] All threads are resolved.
 - [ ] Remove the `Draft:` prefix in the MR title before assigning to reviewer.
+- [ ] DBT full refresh required post merge?
+  - [ ] Yes. Create an issue with the model name which needs to be refreshed and assign it to the Reviewer to run it post merge. 
+  - [ ] No.
 - [ ] Assigned to reviewer.
 
 ## Reviewer Checklist
 - [ ]  Check before setting to merge
+- [ ]  If DBT Full refresh is required?
+  - [ ] Yes. Ensure to get the issue for Full Refresh Request. 
+  - [ ] No.
 
 ## Further changes requested
 * [ ]  AUTHOR: Uncheck all boxes before taking further action.
