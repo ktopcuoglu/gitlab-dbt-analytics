@@ -1,5 +1,5 @@
 {{config({
-    "schema": "legacy"
+    "schema": "restricted_safe_legacy"
   })
 }}
 

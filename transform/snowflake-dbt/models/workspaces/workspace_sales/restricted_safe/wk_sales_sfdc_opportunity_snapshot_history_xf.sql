@@ -10,6 +10,7 @@ WITH date_details AS (
     SELECT *
     FROM {{ref('sfdc_accounts_xf')}} 
 
+
 ), sfdc_opportunity_xf AS (
 
     SELECT 
@@ -507,6 +508,7 @@ WITH date_details AS (
     LEFT JOIN date_details net_arr_created_date
       ON net_arr_created_date.date_actual = sfdc_opportunity_snapshot_history.iacv_created_date::DATE
 
+
 ), net_iacv_to_net_arr_ratio AS (
 
     SELECT '2. New - Connected'     AS "ORDER_TYPE_STAMPED", 
@@ -774,6 +776,8 @@ WITH date_details AS (
       AND (sfdc_accounts_xf.ultimate_parent_account_id NOT IN ('0016100001YUkWVAA1')
             OR sfdc_accounts_xf.account_id IS NULL)                                        -- remove test account
       AND opp_snapshot.is_deleted = 0
+      -- NF 20210906 remove JiHu opties from the models
+      AND sfdc_accounts_xf.is_jihu_account = 0
 
 )
 -- in Q2 FY21 a few deals where created in the wrong stage, and as they were purely aspirational, 
@@ -908,7 +912,7 @@ WITH date_details AS (
           -- Not JiHu
             THEN 1
           ELSE 0
-      END                                                   AS is_elgible_age_analysis_flag,
+      END                                                   AS is_eligible_age_analysis_flag,
 
       CASE
         WHEN opp_snapshot.is_edu_oss = 0
