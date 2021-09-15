@@ -24,6 +24,7 @@ WITH source AS (
             data_by_row['content']::VARCHAR             AS content,
             data_by_row['team']::VARCHAR                AS team,
             data_by_row['budget']::VARCHAR              AS budget,
+            data_by_row['sales_segment']::VARCHAR       AS sales_segment,
             data_by_row['data_source']::VARCHAR         AS data_source,
             data_by_row['impressions']::NUMBER          AS impressions,
             data_by_row['clicks']::NUMBER               AS clicks,

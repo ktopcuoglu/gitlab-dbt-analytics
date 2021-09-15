@@ -31,21 +31,22 @@ sheets:
     owner: '@mvilain'
     tabs:
       - clari_ai_projection
-  - description: This identifies team members who have taken the level 2 certifications and have passed.
-    name: data_certifications
-    owner: '@iweeks'
-    tabs:
-      - cert_product_geo_dashboard
-      - cert_product_geo_sql
-      - cert_customer_segmentation_dashboard
-      - cert_customer_segmentation_sql
-      - cert_product_geo_viewer
-      - cert_customer_segmentation_viewer
-      - cert_pricing_customer_discount_dashboard
-      - cert_pricing_customer_discount_viewer
-      - cert_product_adoption_dashboard_user
-      - cert_sales_funnel_dashboard_user
-      - cert_sales_funnel_dashboard_developer
+  #- description: This identifies team members who have taken the level 2 certifications and have passed.
+  # This has been silenced as part of thi issue #10185
+  #  name: data_certifications
+  #  owner: '@iweeks'
+  #  tabs:
+  #    - cert_product_geo_dashboard
+  #    - cert_product_geo_sql
+  #    - cert_customer_segmentation_dashboard
+  #    - cert_customer_segmentation_sql
+  #    - cert_product_geo_viewer
+  #    - cert_customer_segmentation_viewer
+  #    - cert_pricing_customer_discount_dashboard
+  #    - cert_pricing_customer_discount_viewer
+  #    - cert_product_adoption_dashboard_user
+  #    - cert_sales_funnel_dashboard_user
+  #    - cert_sales_funnel_dashboard_developer
   - name: data_team_capacity
     owner: '@kathleentam'
     tabs:
@@ -218,10 +219,10 @@ sheets:
     owner: '@mmaneval20'
     tabs:
       - rfs_support_requests
-  - name: sales_funnel_partner_alliance_targets
-    owner: '@jeanpeguero'
-    tabs:
-      - sales_funnel_partner_alliance_targets_matrix
+  # - name: sales_funnel_partner_alliance_targets # See https://gitlab.com/gitlab-data/analytics/-/issues/10232
+  #   owner: '@jeanpeguero'
+  #   tabs:
+  #     - sales_funnel_partner_alliance_targets_matrix
   # - name: sales_funnel_targets # See https://gitlab.com/gitlab-data/analytics/-/issues/9473
   #   owner: '@paul_armstrong'
   #   tabs:
