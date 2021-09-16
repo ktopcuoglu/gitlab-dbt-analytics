@@ -1,11 +1,3 @@
-/* This table needs to be permanent to allow zero cloning at specific timestamps */
-{{ config({
-        "materialized": "table",
-        "transient": false,
-        "schema": "common_mart_sales"
-    })
-}}
-
 WITH dim_billing_account_api_sandbox AS (
 
   SELECT *
@@ -90,7 +82,7 @@ WITH dim_billing_account_api_sandbox AS (
       dim_crm_account.health_score_color                                                AS health_score_color,
       dim_crm_account.health_number                                                     AS health_number,
       dim_crm_account.is_jihu_account                                                   AS is_jihu_account,
-      
+
       --subscription info
       dim_subscription_api_sandbox.dim_subscription_id                                  AS dim_subscription_id,
       dim_subscription_api_sandbox.dim_subscription_id_original                         AS dim_subscription_id_original,
