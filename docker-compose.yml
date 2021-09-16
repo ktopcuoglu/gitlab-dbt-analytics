@@ -1,7 +1,7 @@
 version: '3.7'
 services:
     airflow_webserver:
-        image: registry.gitlab.com/gitlab-data/data-image/airflow-image:100-create-helm-configuration-for-staging
+        image: registry.gitlab.com/gitlab-data/data-image/airflow-image:v0.0.21
         restart: always
         ports:
           - "8080:8080"
@@ -34,7 +34,7 @@ services:
             read_only: True
 
     airflow_scheduler:
-        image: registry.gitlab.com/gitlab-data/data-image/airflow-image:100-create-helm-configuration-for-staging
+        image: registry.gitlab.com/gitlab-data/data-image/airflow-image:v0.0.21
         restart: always
         ports:
           - "8793:8793"
@@ -66,7 +66,7 @@ services:
             read_only: True
 
     airflow_db:
-      image: postgres:9.6
+      image: postgres:11
       environment:
         POSTGRES_USER: postgres
         POSTGRES_PASSWORD: postgres
