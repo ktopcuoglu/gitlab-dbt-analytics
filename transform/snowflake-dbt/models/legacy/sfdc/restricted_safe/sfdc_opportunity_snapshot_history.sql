@@ -84,6 +84,8 @@ WITH sfdc_opportunity_snapshots AS (
       renewal_acv__c                 AS renewal_acv,
       renewal_amount__c              AS renewal_amount,
       sql_source__c                  AS sales_qualified_source,
+      IFF(sales_qualified_source = 'Channel Generated', 'Partner Sourced', 'Co-sell')
+                                     AS sqs_bucket_engagement,
       sales_segmentation_o__c        AS segment,
       solutions_to_be_replaced__c    AS solutions_to_be_replaced,
       amount                         AS total_contract_value,
@@ -116,7 +118,7 @@ WITH sfdc_opportunity_snapshots AS (
       deal_path__c                                AS deal_path,
       dr_partner_deal_type__c                     AS dr_partner_deal_type,
       dr_partner_engagement__c                    AS dr_partner_engagement,
-      {{ channel_type('dr_partner_engagement', 'order_type_stamped') }}
+      {{ channel_type('sqs_bucket_engagement', 'order_type_stamped') }}
                                                   AS channel_type,
       impartnerprm__partneraccount__c             AS partner_account,
       vartopiadrs__dr_status1__c                  AS dr_status,

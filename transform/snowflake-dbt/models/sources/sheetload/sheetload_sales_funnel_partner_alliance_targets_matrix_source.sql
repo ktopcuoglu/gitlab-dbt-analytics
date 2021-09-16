@@ -8,7 +8,9 @@ WITH source AS (
     SELECT
       kpi_name::VARCHAR                                   AS kpi_name,
       month::VARCHAR                                      AS month,
-      partner_engagement_type::VARCHAR                    AS partner_engagement_type,
+      sales_qualified_source::VARCHAR                     AS sales_qualified_source,
+      IFF(sales_qualified_source::VARCHAR = 'Channel Generated', 'Partner Sourced', 'Co-sell')
+                                                          AS sqs_bucket_engagement,
       alliance_partner::VARCHAR                           AS alliance_partner,
       order_type::VARCHAR                                 AS order_type,
       area::VARCHAR                                       AS area,
