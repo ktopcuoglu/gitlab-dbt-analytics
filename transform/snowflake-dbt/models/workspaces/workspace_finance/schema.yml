@@ -568,5 +568,3 @@ models:
         description: Annual Recurring Revenue value for given month
       - name: quantity
         description: Total quantity
-
->>>>>>> master
