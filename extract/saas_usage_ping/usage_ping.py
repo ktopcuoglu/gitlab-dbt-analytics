@@ -65,7 +65,6 @@ class UsagePing(object):
 
         return md5(timestamp_encoded).hexdigest()
 
-    # TODO: rbacovic - consider to have a separate function for this fix as a permanent tool
     def saas_instance_ping(self):
         """
         Take a dictionary of {ping_name: sql_query} and run each
@@ -82,7 +81,7 @@ class UsagePing(object):
         for key, query in saas_queries.items():
             logging.info(f"Running ping {key}...")
             try:
-                results = pd.read_sql(sql=query, con=connection)  # TODO: rbacovic - check and correct query
+                results = pd.read_sql(sql=query, con=connection)
                 info(results)
                 counter_value = results.loc[0, "counter_value"]
                 data_to_write = str(counter_value)
