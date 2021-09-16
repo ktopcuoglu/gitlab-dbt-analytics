@@ -231,6 +231,7 @@ WITH sfdc_opportunity AS (
       {{ sales_segment_cleaning('sfdc_account.tsp_max_hierarchy_sales_segment') }}                      AS tsp_max_hierarchy_sales_segment,
       sfdc_account.division_sales_segment,
       sfdc_account.ultimate_parent_sales_segment,
+      sfdc_account.is_jihu_account,
 
       -- ************************************
       -- sales segmentation deprecated fields - 2020-09-03

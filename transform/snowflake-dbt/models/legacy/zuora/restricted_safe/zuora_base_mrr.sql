@@ -1,8 +1,3 @@
-{{config({
-    "schema": "legacy"
-  })
-}}
-
 WITH zuora_accts AS (
 
     SELECT *

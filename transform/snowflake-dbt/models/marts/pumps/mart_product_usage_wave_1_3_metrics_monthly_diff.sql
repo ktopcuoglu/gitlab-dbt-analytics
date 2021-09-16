@@ -5,7 +5,8 @@
 
 {{ simple_cte([
     ('monthly_metrics','fct_product_usage_wave_1_3_metrics_monthly'),
-    ('dim_date','dim_date')
+    ('dim_date','dim_date'),
+    ('subscriptions', 'dim_subscription_snapshot_bottom_up')
 ]) }}
 
 , months AS (
@@ -180,6 +181,7 @@
       smoothed_diffs.dim_subscription_id,
       smoothed_diffs.dim_subscription_id_original,
       smoothed_diffs.dim_billing_account_id,
+      subscriptions.subscription_status,
       smoothed_diffs.snapshot_month,
       smoothed_diffs.uuid,
       smoothed_diffs.hostname,
@@ -227,13 +229,16 @@
       ON smoothed_diffs.dim_subscription_id = ping_ranges.dim_subscription_id
       AND smoothed_diffs.uuid = ping_ranges.uuid
       AND smoothed_diffs.hostname = ping_ranges.hostname
+        LEFT JOIN subscriptions
+      ON smoothed_diffs.dim_subscription_id = subscriptions.dim_subscription_id 
+      AND DATEADD('day', -1, smoothed_diffs.snapshot_month) = TO_DATE(TO_CHAR(subscriptions.snapshot_id), 'YYYYMMDD')
 
 )
 
 {{ dbt_audit(
     cte_ref="final",
     created_by="@ischweickartDD",
-    updated_by="@ischweickartDD",
+    updated_by="@chrissharp",
     created_date="2021-03-04",
-    updated_date="2021-06-10"
+    updated_date="2021-09-09"
 ) }}
