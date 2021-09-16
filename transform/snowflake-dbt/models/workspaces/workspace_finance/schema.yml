@@ -369,7 +369,6 @@ models:
       - name: quarters_since_parent_account_cohort_start
       - name: dim_subscription_id
       - name: dim_subscription_id_original
-=======
       - name: dim_crm_account_id
         description: account id from SFDC identifing the customer
       - name: dim_billing_account_id
