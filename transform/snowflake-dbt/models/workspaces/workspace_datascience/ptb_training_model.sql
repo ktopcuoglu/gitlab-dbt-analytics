@@ -1,5 +1,6 @@
 {% set period_type = 'MONTH'%}
 {% set delta_value = 3 %}
+-- Prediction date offset by -1 to ensure its only predicting with complete days.
 {% set prediction_date = (modules.datetime.datetime.now() - modules.datetime.timedelta(days=1)).date()  %}
 {% set end_date = modules.datetime.datetime(prediction_date.year, prediction_date.month - delta_value, prediction_date.day).date() %}
 
