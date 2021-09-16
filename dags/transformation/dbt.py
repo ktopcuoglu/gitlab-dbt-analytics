@@ -96,7 +96,7 @@ dbt_non_product_models_command = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
     export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_S" &&
-    dbt run --profiles-dir profile --target prod --exclude tag:datasiren tag:product legacy.sheetload legacy.snapshots sources.gitlab_dotcom sources.sheetload sources.sfdc sources.zuora sources.dbt; ret=$?;
+    dbt run --profiles-dir profile --target prod --exclude tag:datasiren tag:product legacy.sheetload legacy.snapshots sources.gitlab_dotcom sources.sheetload sources.sfdc sources.zuora sources.dbt workspaces.*; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
 
@@ -135,7 +135,7 @@ dbt_product_models_command = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
     export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_XL" &&
-    dbt run --profiles-dir profile --target prod --models tag:product; ret=$?;
+    dbt run --profiles-dir profile --target prod --models tag:product --exclude workspaces.*; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
 
@@ -210,7 +210,7 @@ dbt_full_refresh = KubernetesPodOperator(
 dbt_test_cmd = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
-    dbt test --profiles-dir profile --target prod --exclude tag:datasiren snowplow legacy.snapshots source:gitlab_dotcom source:salesforce source:zuora; ret=$?;
+    dbt test --profiles-dir profile --target prod --exclude tag:datasiren snowplow legacy.snapshots source:gitlab_dotcom source:salesforce source:zuora workspaces.*; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py manifest; $ret
     python ../../orchestration/upload_dbt_file_to_snowflake.py test; exit $ret
 """
@@ -281,12 +281,88 @@ dbt_results = KubernetesPodOperator(
     dag=dag,
 )
 
+# dbt-workspaces
+dbt_workspaces_command = f"""
+    {pull_commit_hash} &&
+    {dbt_install_deps_cmd} &&
+    dbt run --profiles-dir profile --target prod --models workspaces.* ; ret=$?;
+    python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
+"""
+dbt_workspaces = KubernetesPodOperator(
+    **gitlab_defaults,
+    image=DBT_IMAGE,
+    task_id="dbt-workspaces",
+    name="dbt-workspaces",
+    trigger_rule="all_done",
+    secrets=[
+        GIT_DATA_TESTS_PRIVATE_KEY,
+        GIT_DATA_TESTS_CONFIG,
+        SALT,
+        SALT_EMAIL,
+        SALT_IP,
+        SALT_NAME,
+        SALT_PASSWORD,
+        SNOWFLAKE_ACCOUNT,
+        SNOWFLAKE_USER,
+        SNOWFLAKE_PASSWORD,
+        SNOWFLAKE_LOAD_PASSWORD,
+        SNOWFLAKE_LOAD_ROLE,
+        SNOWFLAKE_LOAD_USER,
+        SNOWFLAKE_LOAD_WAREHOUSE,
+        SNOWFLAKE_TRANSFORM_ROLE,
+        SNOWFLAKE_TRANSFORM_WAREHOUSE,
+        SNOWFLAKE_TRANSFORM_SCHEMA,
+    ],
+    env_vars=pod_env_vars,
+    arguments=[dbt_workspaces_command],
+    dag=dag,
+)
+
+# dbt-results
+dbt_workspaces_test_command = f"""
+    {pull_commit_hash} &&
+    {dbt_install_deps_cmd} &&
+    dbt test --profiles-dir profile --target prod --models workspaces.* ; ret=$?;
+    python ../../orchestration/upload_dbt_file_to_snowflake.py test; exit $ret
+"""
+dbt_workspaces_test = KubernetesPodOperator(
+    **gitlab_defaults,
+    image=DBT_IMAGE,
+    task_id="dbt-workspaces-test",
+    name="dbt-workspaces-test",
+    trigger_rule="all_done",
+    secrets=[
+        GIT_DATA_TESTS_PRIVATE_KEY,
+        GIT_DATA_TESTS_CONFIG,
+        SALT,
+        SALT_EMAIL,
+        SALT_IP,
+        SALT_NAME,
+        SALT_PASSWORD,
+        SNOWFLAKE_ACCOUNT,
+        SNOWFLAKE_USER,
+        SNOWFLAKE_PASSWORD,
+        SNOWFLAKE_LOAD_PASSWORD,
+        SNOWFLAKE_LOAD_ROLE,
+        SNOWFLAKE_LOAD_USER,
+        SNOWFLAKE_LOAD_WAREHOUSE,
+        SNOWFLAKE_TRANSFORM_ROLE,
+        SNOWFLAKE_TRANSFORM_WAREHOUSE,
+        SNOWFLAKE_TRANSFORM_SCHEMA,
+    ],
+    env_vars=pod_env_vars,
+    arguments=[dbt_workspaces_test_command],
+    dag=dag,
+)
+
 # Branching for run
 (
     branching_dbt_run
     >> dbt_non_product_models_task
     >> dbt_product_models_task
     >> dbt_test
+    >> dbt_workspaces
+    >> dbt_workspaces_test
     >> dbt_results
 )
 
