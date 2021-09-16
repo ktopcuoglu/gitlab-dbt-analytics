@@ -223,13 +223,13 @@ sheets:
     owner: '@jeanpeguero'
     tabs:
       - sales_funnel_partner_alliance_targets_matrix
-  # - name: sales_funnel_targets # See https://gitlab.com/gitlab-data/analytics/-/issues/9473
-  #   owner: '@paul_armstrong'
-  #   tabs:
-  #     - sales_funnel_targets_dates
-  #     - sales_funnel_targets_kpi_values
-  #     - sales_funnel_targets_opportunity
-  #     - sales_funnel_targets_matrix
+  - name: sales_funnel_targets
+    owner: '@paul_armstrong'
+    tabs:
+      - sales_funnel_targets_dates
+      - sales_funnel_targets_kpi_values
+      - sales_funnel_targets_opportunity
+      - sales_funnel_targets_matrix
   - name: sales_training_completion_dates
     owner: '@paul_armstrong'
     tabs:
