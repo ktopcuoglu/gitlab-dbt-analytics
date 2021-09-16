@@ -48,7 +48,7 @@ final_sql_query_dict = {
 for sql_metric, sql_query in final_sql_query_dict.items():
     #  check did we fix the bug with "JOINprep", should be fixed to "JOIN prep."
     final_sql = sql_query.upper()
-    assert not "JOINPREP".upper() in final_sql
+    assert not "JOINPREP" in final_sql
 
     if "JOIN" in final_sql:
         assert "JOIN PREP"
