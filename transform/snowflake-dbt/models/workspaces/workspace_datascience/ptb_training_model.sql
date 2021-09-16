@@ -1,10 +1,6 @@
---SET (PERIOD_TYPE, PERIOD_UNIT, PREDICTION_DT) = ('MONTH', 3, '2021-09-03')
---SET SNAPSHOT_DT = DATEADD($PERIOD_TYPE, -$PERIOD_UNIT, '{{ prediction_date }}')
-
--- {% set prediction_date = modules.datetime.datetime(2021, 9, 3) %}
 {% set period_type = 'MONTH'%}
 {% set delta_value = 3 %}
-{% set prediction_date = modules.datetime.datetime.now().date() %}
+{% set prediction_date = (modules.datetime.datetime.now() - modules.datetime.timedelta(days=1)).date()  %}
 {% set end_date = modules.datetime.datetime(prediction_date.year, prediction_date.month - delta_value, prediction_date.day).date() %}
 
 --Snapshot for just the "current" ARR month based on SNAPSHOT_DT
