@@ -489,7 +489,7 @@ models:
       product:
         +tags: ["product"]
         mart_ci_runner_activity_monthly:
-          +enabled: false
+          +enabled: true
         
       pumps: 
         +database: "{{ env_var('SNOWFLAKE_PROD_DATABASE') }}" #PROD
