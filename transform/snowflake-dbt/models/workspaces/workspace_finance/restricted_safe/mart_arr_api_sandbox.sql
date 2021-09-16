@@ -109,8 +109,6 @@ WITH dim_billing_account_api_sandbox AS (
       dim_subscription_api_sandbox.auto_renew_native_hist,
       dim_subscription_api_sandbox.auto_renew_customerdot_hist,
       dim_subscription_api_sandbox.turn_on_cloud_licensing,
-      dim_subscription_api_sandbox.turn_on_operational_metrics,
-      dim_subscription_api_sandbox.contract_operational_metrics,
       dim_subscription_api_sandbox.contract_auto_renewal,
       dim_subscription_api_sandbox.turn_on_auto_renewal,
       dim_subscription_api_sandbox.contract_seat_reconciliation,

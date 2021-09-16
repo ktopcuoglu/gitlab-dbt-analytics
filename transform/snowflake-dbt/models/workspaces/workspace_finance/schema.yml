@@ -298,16 +298,16 @@ models:
     columns:
       - name: dim_subscription_id
         description: Unique identifier of a version of a subscription
-  - name: mart_arr_api_sandbox
-    columns:
-      - name: arr
-        description: "Calculated as 12 * MRR value"
-      - name: primary_key
         tests:
           - not_null:
               severity: warn
           - unique:
               severity: warn
+  - name: mart_arr_api_sandbox
+    columns:
+      - name: arr
+        description: "Calculated as 12 * MRR value"
+      - name: primary_key
       - name: is_reseller
         description: Identify whether a crm_account is a reseller.
       - name: subscription_sales_type
