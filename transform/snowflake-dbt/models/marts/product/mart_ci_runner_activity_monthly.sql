@@ -17,10 +17,7 @@
       ci_runner_activity.is_paid_by_gitlab,
       ci_runner_activity.public_projects_minutes_cost_factor,
       ci_runner_activity.private_projects_minutes_cost_factor,
-      SUM(
-          DATEDIFF('seconds', 
-          ci_runner_activity.ci_build_started_at, 
-          ci_runner_activity.ci_build_finished_at))                                     AS ci_build_duration_in_s
+      SUM(ci_build_duration_in_s)                                                       AS ci_build_duration_in_s
     FROM ci_runner_activity
     INNER JOIN dim_date
       ON TO_DATE(ci_runner_activity.ci_build_started_at) = dim_date.date_day
