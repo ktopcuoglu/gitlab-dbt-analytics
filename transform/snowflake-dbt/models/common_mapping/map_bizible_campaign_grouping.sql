@@ -19,6 +19,7 @@ WITH bizible AS (
       								'bizible.bizible_ad_campaign_name','bizible.bizible_marketing_channel_path'
       							]) 
       }}																										AS bizible_campaign_grouping_id,
+      bizible.touchpoint_id                                 AS dim_crm_touchpoint_id,
       campaign.dim_campaign_id,
       campaign.dim_parent_campaign_id,
       bizible.bizible_touchpoint_type,
@@ -274,7 +275,7 @@ WITH bizible AS (
 {{ dbt_audit(
     cte_ref="touchpoints_with_campaign",
     created_by="@mcooperDD",
-    updated_by="@rkohnke",
+    updated_by="@michellecooper",
     created_date="2021-03-02",
-    updated_date="2021-07-20"
+    updated_date="2021-09-16"
 ) }}
