@@ -113,6 +113,7 @@ WITH map_merged_crm_account AS (
         TRUE, FALSE)                                        AS is_reseller,
     sfdc_account.created_date                               AS crm_account_created_date,
     sfdc_account.zi_technologies                            AS crm_account_zi_technologies,
+    sfdc_account.technical_account_manager_date,
 
     ----ultimate parent crm account info
     ultimate_parent_account.account_id                  AS dim_parent_crm_account_id,
@@ -159,5 +160,5 @@ WITH map_merged_crm_account AS (
     created_by="@msendal",
     updated_by="@jpeguero",
     created_date="2020-06-01",
-    updated_date="2021-08-09"
+    updated_date="2021-09-17"
 ) }}
