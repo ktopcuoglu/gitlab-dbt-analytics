@@ -536,9 +536,6 @@ models:
         tests:
           - not_null:
               severity: warn
-          - relationships:
-              to: ref('dim_billing_account_api_sandbox')
-              field: dim_billing_account_id
       - name: dim_crm_account_id
         description: join key for dim_crm_account
         tests:
