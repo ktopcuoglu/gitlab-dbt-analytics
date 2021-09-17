@@ -547,9 +547,6 @@ models:
         tests:
           - not_null:
               severity: warn
-          - relationships:
-              to: ref('dim_subscription_api_sandbox')
-              field: dim_subscription_id
       - name: dim_product_detail_id
         description: The identifier of product details in dim_product_detail
         tests:
