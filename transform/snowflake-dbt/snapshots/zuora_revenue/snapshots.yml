@@ -1,0 +1,17 @@
+version: 2
+
+snapshots:
+  - name: zuora_revenue_accounting_type_snapshots
+
+  - name: zuora_revenue_approval_detail_snapshots
+  - name: zuora_revenue_calendar_snapshots
+  - name: zuora_revenue_manual_journal_entry_snapshots
+  - name: zuora_revenue_revenue_contract_bill_snapshots
+  - name: zuora_revenue_revenue_contract_hold_snapshots
+  - name: zuora_revenue_revenue_contract_line_snapshots
+  - name: zuora_revenue_revenue_contract_performance_obligation_snapshots
+  - name: zuora_revenue_revenue_contract_schedule_deleted_snapshots
+  - name: zuora_revenue_book_snapshots
+  - name: zuora_revenue_organization_snapshots
+  - name: zuora_revenue_revenue_contract_header_snapshots
+  - name: zuora_revenue_revenue_contract_schedule_snapshots
