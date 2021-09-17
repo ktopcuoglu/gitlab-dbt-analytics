@@ -9,6 +9,6 @@
     }}
 
     SELECT *
-    FROM {{ source('zuora', 'product_rate_plan_charge_tier') }}
+    FROM {{ source('zuora_revenue','zuora_revenue_revenue_contract_performance_obligation_snapshots') }}
 
 {% endsnapshot %}

@@ -9,6 +9,6 @@
     }}
     
     SELECT * 
-    FROM {{ source('zuora', 'contact') }}
+    FROM {{ source('zuora_revenue', 'zuora_revenue_calendar_snapshots') }}
     
 {% endsnapshot %}
