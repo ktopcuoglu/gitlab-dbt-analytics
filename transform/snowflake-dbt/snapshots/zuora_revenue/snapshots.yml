@@ -2,7 +2,6 @@ version: 2
 
 snapshots:
   - name: zuora_revenue_accounting_type_snapshots
-
   - name: zuora_revenue_approval_detail_snapshots
   - name: zuora_revenue_calendar_snapshots
   - name: zuora_revenue_manual_journal_entry_snapshots
@@ -15,6 +14,6 @@ snapshots:
   - name: zuora_revenue_organization_snapshots
   - name: zuora_revenue_revenue_contract_header_snapshots
   - name: zuora_revenue_revenue_contract_schedule_snapshots
-# raw.zuora_revenue.bi3_ln_acct_summ
-# raw.zuora_revenue.bi3_ri_acct_summ
-# raw.zuora_revenue.bi3_rc_ln_cost
+  - name: zuora_revenue_line_accounting_summary
+  - name: zuora_revenue_invoice_accounting_summary
+  - name: zuora_revenue_line_cost
