@@ -17,3 +17,4 @@ snapshots:
   - name: zuora_revenue_line_accounting_summary
   - name: zuora_revenue_invoice_accounting_summary
   - name: zuora_revenue_line_cost
+  - name: zuora_revenue_invoice_accounting_summary
