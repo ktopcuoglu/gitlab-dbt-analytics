@@ -4,7 +4,7 @@
         config(
           strategy='timestamp',
           unique_key='id',
-          updated_at='updateddate',
+          updated_at='updt_dt',
         )
     }}
     
