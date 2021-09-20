@@ -11,6 +11,8 @@
 , flattened AS (
 
     SELECT
+      saas_usage_ping_redis_id                                    AS saas_usage_ping_redis_id,
+      ping_date                                                   AS ping_date,
       COALESCE(TRY_PARSE_JSON(path)[0]::TEXT, path::TEXT)         AS metric_path,
       value::TEXT                                                 AS metric_value,
       response['recording_ce_finished_at']::TIMESTAMP             AS recorded_at
