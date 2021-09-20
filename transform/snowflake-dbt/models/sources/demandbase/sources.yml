@@ -13,8 +13,8 @@ sources:
       identifier: false
 
     freshness:
-      warn_after: {count: 24, period: hour}
-      error_after: {count: 36, period: hour}
+      warn_after: {count: 48, period: hour}
+      error_after: {count: 72, period: hour}
 
     tables:
       - name: account
@@ -25,5 +25,6 @@ sources:
       - name: account_scores
       - name: account_site_page_metrics
       - name: campaign_account_performance
+        freshness: null
       - name: keyword_set
       - name: keyword_set_keyword
