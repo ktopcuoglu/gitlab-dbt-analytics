@@ -54,6 +54,18 @@ SELECT COUNT(1)
     OR run_id       IS NULL
     OR _uploaded_at IS NULL;
 
+-- Test case for WK_SAAS_USAGE_PING_INSTANCE_REDIS_METRICS DBT job
+SELECT ping_date,
+       metric_path,
+       COUNT(1)
+  FROM RBACOVIC_PROD.legacy.wk_saas_usage_ping_instance_redis_metrics
+ -- WHERE to_char(recorded_at,'yyyy-mm-dd') = '2021-09-13'
+ GROUP BY ping_date,
+          metric_path
+ HAVING COUNT(1) > 1;
+
+-- no rows returned, as expected
+
 
 -- If everything is OK, drop temp table
 DROP TABLE "10272-DUPLICATE-ENTRIES-IN-PROD-LEGACY-WK_SAAS_USAGE_PING_INSTANCE_REDIS_METRICS_RAW"."SAAS_USAGE_PING"."INSTANCE_REDIS_METRICS_OLD";
