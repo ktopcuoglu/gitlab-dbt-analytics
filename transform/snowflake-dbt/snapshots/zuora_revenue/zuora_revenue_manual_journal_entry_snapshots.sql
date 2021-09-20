@@ -3,8 +3,8 @@
     {{
         config(
           strategy='timestamp',
-          unique_key='id',
-          updated_at='updt_dt',
+          unique_key='je_line_id',
+          updated_at='je_line_updt_dt',
         )
     }}
     

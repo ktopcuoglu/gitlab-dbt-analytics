@@ -3,7 +3,7 @@
     {{
         config(
           strategy='timestamp',
-          unique_key='id',
+          unique_key='rc_id',
           updated_at='updt_dt',
         )
     }}
