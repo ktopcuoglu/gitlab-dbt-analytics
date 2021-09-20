@@ -9,6 +9,6 @@
     }}
     
     SELECT * 
-    FROM {{ source('zuora_revenue','zuora_revenue_revenue_contract_hold_snapshots') }}
+    FROM {{ source('zuora_revenue','zuora_revenue_revenue_contract_hold') }}
     
 {% endsnapshot %}
