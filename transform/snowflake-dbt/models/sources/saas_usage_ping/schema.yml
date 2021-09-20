@@ -11,6 +11,18 @@ models:
         - name: run_id
           tests:
             - not_null
+    - name: saas_usage_ping_instance_redis_metrics
+      description: Source table for the RAW saas_usage_ping.instance_redis_metrics table representing instance level usage ping
+      columns:
+        - name: ping_date
+          tests:
+            - not_null
+        - name: run_id
+          tests:
+            - not_null
+        - name: _uploaded_at
+          tests:
+            - not_null
     - name: saas_usage_ping_namespace
       description: Source table for the RAW saas_usage_ping.gitlab_dotcom_namespaces table representing namespace level usage ping
       columns:

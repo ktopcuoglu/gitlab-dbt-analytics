@@ -157,11 +157,11 @@ class UsagePing(object):
             "https://gitlab.com/api/v4/usage_data/non_sql_metrics", headers=headers
         )
         json_data = json.loads(response.text)
- 
+
         redis_data_to_upload = pd.DataFrame(columns=["jsontext", "ping_date", "run_id"])
 
         redis_data_to_upload.loc[0] = [
-            json.dumps(json_data),
+            json_data,
             self.end_date,
             self._get_md5(datetime.datetime.utcnow().timestamp()),
         ]
