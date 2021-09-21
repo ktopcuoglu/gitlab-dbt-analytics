@@ -6,6 +6,7 @@ WITH source AS (
 ), renamed AS (
 
     SELECT
+    
       amount,
       amount_display_symbol,
       amount_unit_type_id,

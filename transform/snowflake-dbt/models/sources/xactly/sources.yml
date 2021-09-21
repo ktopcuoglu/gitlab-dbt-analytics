@@ -18,3 +18,4 @@ sources:
 
     tables:
       - name: xc_credit
+      - name: xc_pos_hierarchy_hist
