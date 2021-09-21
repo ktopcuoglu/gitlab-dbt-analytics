@@ -1,5 +1,5 @@
 <!-- format should be something like 'user [de]provisioning - firstname last initial' -->
-<!-- example: user provisioning - John S -->
+<!-- example: user [de]provisioning - John S -->
 
 
 Source Access Request: <!-- link to source  Access Request issue, it should be approved and ready for provisioning -->
@@ -18,3 +18,11 @@ Useful links:
 - Snowflake paradigm [handbook page](https://about.gitlab.com/handbook/business-technology/data-team/platform/#snowflake-permissions-paradigm)
 
 /label ~Provisioning ~Snowflake ~"Team::Data Platform"  ~"Priority::1-Ops"
+
+# Removing existing User in Snowflake
+
+- [ ] 'SET DISABLED = TRUE' for the user using SECURITYADMIN role .
+- [ ] Remove user from [okta-snowflake-users google group](https://groups.google.com/a/gitlab.com/g/okta-snowflake-users/members)
+- [ ] Remove user records from `roles.yml`. 
+
+/label ~Deprovisioning ~Snowflake ~"Team::Data Platform"  ~"Priority::1-Ops"
