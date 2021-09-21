@@ -1,7 +1,7 @@
 WITH source AS (
 
     SELECT *
-    FROM {{ source('tap_xactly', 'credit') }}
+    FROM {{ source('tap_xactly', 'xc_credit') }}
 
 ), renamed AS (
 
