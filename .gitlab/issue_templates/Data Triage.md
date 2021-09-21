@@ -30,7 +30,7 @@ Please prioritize this issue since we dedicate a day from your milestone to this
         - [ ] Asking initial questions (data source, business logic clarification, etc) to groom the issue. 
 
 ### Friends and family days
-* [ ] As we currently have a no-merge Friday rule if there is an upcoming family and friends day during your triage week please share the below message in the #data channel: 
+* [ ] As we currently have a no-merge Friday rule if there is an upcoming family and friends day during your triage week which affects this please ensure this message (or similar) is shared #data channel by Tuesday at the latest: 
 * ```:awesome-dog-pug: :siren-siren:  Hi everyone, just a small FYI / reminder that due to the family and friends day this week the last day to merge MR’s in to the analytics repo this week will be Wednesday. :awesome-dog-pug: :siren-siren:```
 
 ### Maintain KPI related information         
