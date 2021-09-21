@@ -383,6 +383,9 @@ sources:
           error_after: {count: 14, period: day}
       - name: group_import_states
         identifier: gitlab_db_group_import_states
+      - name: integrations
+        identifier: gitlab_db_integrations
+        freshness: null
       - name: issues_prometheus_alert_events
         identifier: gitlab_db_issues_prometheus_alert_events
         freshness: null
