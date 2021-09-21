@@ -2,4 +2,5 @@ version: 2
 
 models:
   - name: zuora_tables_date
+  - name: sfdc_tables_date
 
