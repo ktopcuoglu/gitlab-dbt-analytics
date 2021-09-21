@@ -17,4 +17,4 @@ sources:
       error_after: {count: 24, period: hour}
 
     tables:
-      - name: credit
+      - name: xc_credit
