@@ -67,6 +67,7 @@ WITH source AS (
       trans_id,
 
     FROM source
+    
 )
 
 SELECT *

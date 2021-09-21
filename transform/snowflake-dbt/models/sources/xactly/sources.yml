@@ -19,3 +19,11 @@ sources:
     tables:
       - name: xc_credit
       - name: xc_pos_hierarchy_hist
+      - name: xc_pos_part_assignment
+      - name: xc_pos_part_assignment_hist
+      - name: xc_pos_relations
+      - name: xc_pos_relations_hist
+      - name: xc_pos_title_assignment
+      - name: xc_pos_title_assignment_hist
+      - name: xc_quota_assignment
+      - name: xc_quota_assignment_hist
