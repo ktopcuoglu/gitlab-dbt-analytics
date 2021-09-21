@@ -20,9 +20,7 @@ WITH source AS (
       pos_hierarchy_id,
       pos_hierarchy_type_id,
       to_pos_id,
-      md5(to_pos_name) AS to_pos_uuid,
-      version,
-      _loaded_at
+      md5(to_pos_name) AS to_pos_uuid
 
     FROM source
 )

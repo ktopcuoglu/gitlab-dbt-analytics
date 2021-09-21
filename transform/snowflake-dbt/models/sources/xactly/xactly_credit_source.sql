@@ -6,7 +6,7 @@ WITH source AS (
 ), renamed AS (
 
     SELECT
-    
+
       amount,
       amount_display_symbol,
       amount_unit_type_id,
@@ -33,7 +33,7 @@ WITH source AS (
       is_rollable,
       item_code,
       mgr_eff_part_id,
-      mgr_pos_id,
+      mgr_eff_pos_id,
       mgr_master_pos_id,
       modified_by_id,
       modified_by_name,
@@ -65,8 +65,6 @@ WITH source AS (
       sub_batch_number,
       sub_part_key,
       trans_id,
-      version,
-      _loaded_at
 
     FROM source
 )
