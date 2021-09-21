@@ -62,7 +62,6 @@ sources:
             tests:
               - not_null
       - name: version_checks
-        freshness: null
         columns:
           - name: id
             tests:
