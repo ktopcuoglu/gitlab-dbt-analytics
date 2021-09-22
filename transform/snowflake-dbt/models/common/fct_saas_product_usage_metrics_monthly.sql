@@ -28,8 +28,8 @@
       dates.first_day_of_month                                                          AS snapshot_month
     FROM gitlab_subscriptions
     INNER JOIN dates
-      ON dates.date_actual BETWEEN gitlab_subscriptions.valid_from
-                            AND IFNULL(gitlab_subscriptions.valid_to, CURRENT_DATE)
+      ON dates.date_actual BETWEEN TO_DATE(gitlab_subscriptions.valid_from)
+                            AND IFNULL(gitlab_subscriptions.valid_to, CURRENT_TIMESTAMP)
     QUALIFY ROW_NUMBER() OVER (
       PARTITION BY
         gitlab_subscriptions.namespace_id,
