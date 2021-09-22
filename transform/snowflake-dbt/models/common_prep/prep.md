@@ -117,7 +117,7 @@ Creates a base view of charges, including paid and free subscriptions. This base
 
 {% docs prep_charge %}
 
-Creates a base view of recurring charges that are not amortized over the months. This prep table is used for transaction line analyses that do not require amortization of charges.
+Creates a base view of recurring charges that are not amortized over the months. This prep table is used for transaction line analyses that do not require amortization of charges. The field `is_paid_in_full` has been added to this model to indicate whether a charge has been prepaid. This is based on the field `Payment Schedule` in Salesforce on the opportunity object, and is currently available for subscriptions created from April 2021 forward since this is when we began updating the Zuroa subscription object with the opportunity id.
 
 {% enddocs %}
 

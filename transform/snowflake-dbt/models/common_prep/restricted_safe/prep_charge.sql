@@ -52,6 +52,12 @@ WITH map_merged_crm_account AS (
     SELECT *
     FROM {{ ref('sheetload_manual_arr_true_up_allocation_source')}}
 
+), sfdc_opportunity AS (
+
+    SELECT *
+    FROM {{ ref('sfdc_opportunity_source') }}
+    WHERE is_deleted = FALSE
+
 ), non_manual_charges AS (
 
     SELECT
@@ -86,8 +92,11 @@ WITH map_merged_crm_account AS (
       zuora_rate_plan.amendement_type                                   AS rate_plan_charge_amendement_type,
       zuora_rate_plan_charge.unit_of_measure,
       CASE
-        WHEN DATE_TRUNC('month',zuora_rate_plan_charge.charged_through_date) = zuora_rate_plan_charge.effective_end_month::DATE
-          THEN TRUE ELSE FALSE
+        WHEN sfdc_opportunity.opportunity_id IS NULL
+          THEN NULL
+        WHEN sfdc_opportunity.payment_schedule = 'Prepaid'
+          THEN TRUE 
+        ELSE FALSE
       END                                                               AS is_paid_in_full,
       CASE
         WHEN charged_through_date IS NULL THEN zuora_subscription.current_term
@@ -122,7 +131,7 @@ WITH map_merged_crm_account AS (
       END                                                               AS previous_mrr,
       zuora_rate_plan_charge.mrr - previous_mrr                         AS delta_mrr_calc,
       CASE
-        WHEN LOWER(subscription_status) = 'active' AND subscription_end_date <= CURRENT_DATE AND is_last_segment = TRUE
+        WHEN LOWER(subscription_status) = 'active' AND zuora_subscription.subscription_end_date <= CURRENT_DATE AND is_last_segment = TRUE
           THEN -previous_mrr
         WHEN LOWER(subscription_status) = 'cancelled' AND is_last_segment = TRUE
           THEN -previous_mrr
@@ -143,7 +152,7 @@ WITH map_merged_crm_account AS (
       END                                                               AS previous_quantity,
       zuora_rate_plan_charge.quantity - previous_quantity               AS delta_quantity_calc,
       CASE
-        WHEN LOWER(subscription_status) = 'active' AND subscription_end_date <= CURRENT_DATE AND is_last_segment = TRUE
+        WHEN LOWER(subscription_status) = 'active' AND zuora_subscription.subscription_end_date <= CURRENT_DATE AND is_last_segment = TRUE
           THEN -previous_quantity
         WHEN LOWER(subscription_status) = 'cancelled' AND is_last_segment = TRUE
           THEN -previous_quantity
@@ -169,6 +178,9 @@ WITH map_merged_crm_account AS (
       ON map_merged_crm_account.dim_crm_account_id = sfdc_account.account_id
     LEFT JOIN ultimate_parent_account
       ON sfdc_account.ultimate_parent_account_id = ultimate_parent_account.account_id
+    LEFT JOIN sfdc_opportunity
+      ON zuora_subscription.sfdc_opportunity_id = sfdc_opportunity.opportunity_id
+        AND zuora_subscription.created_date >= '2021-04-01' -- reliable data is only available from April 2021 forward for opportunty ids on the subscription object
 
 ), manual_charges AS ( -- added as a work around until there is an automated method for adding true-up adjustments to Zuora Revenue/Zuora Billing
 
@@ -282,7 +294,7 @@ WITH map_merged_crm_account AS (
 {{ dbt_audit(
     cte_ref="arr_analysis_framework",
     created_by="@iweeks",
-    updated_by="@iweeks",
+    updated_by="@mcooper",
     created_date="2021-04-28",
-    updated_date="2021-07-29"
+    updated_date="2021-09-22"
 ) }}
