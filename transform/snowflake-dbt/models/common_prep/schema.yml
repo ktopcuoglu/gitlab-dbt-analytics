@@ -47,7 +47,7 @@ models:
   - name: prep_environment
     description: Prep table for the source data of the data being exposed in dimensional tables where various sources are combined.
     columns:
-      - name: dim_envionment_id
+      - name: dim_environment_id
         tests:
           - not_null
           - unique

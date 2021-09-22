@@ -2,6 +2,7 @@ WITH tiers AS (
 
     SELECT *
     FROM {{ ref('prep_product_tier') }}
+    WHERE product_delivery_type = 'Self-Managed'
 
 ), license AS (
 
