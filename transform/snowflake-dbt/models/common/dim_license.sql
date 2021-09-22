@@ -41,7 +41,7 @@ WITH tiers AS (
       license.updated_at
     FROM license
     LEFT JOIN tiers
-      ON LOWER(tiers.product_tier_name) = license.license_plan
+      ON LOWER(tiers.product_tier_historical_short) = license.license_plan
     LEFT JOIN environment
       ON environment.environment = license.environment
 )
