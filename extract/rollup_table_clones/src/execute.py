@@ -9,8 +9,6 @@ from typing import Dict
 import logging
 import sys
 
-config_dict = env.copy()
-
 
 def rollup_table_clones(
     table_name: str,
