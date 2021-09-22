@@ -2,19 +2,19 @@ WITH environment AS (
 
 
     SELECT
-      1 AS dim_envionment_id,
+      1 AS dim_environment_id,
       'Gitlab.com' AS environment
 
     UNION
 
     SELECT
-      2 AS dim_envionment_id,
+      2 AS dim_environment_id,
       'License DB' AS environment
 
     UNION
 
     SELECT
-      3 AS dim_envionment_id,
+      3 AS dim_environment_id,
       'Customers Portal' AS environment
 
 )

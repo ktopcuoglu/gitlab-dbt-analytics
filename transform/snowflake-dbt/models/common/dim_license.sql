@@ -23,7 +23,7 @@ WITH tiers AS (
       dim_subscription_id,
       dim_subscription_id_original,
       dim_subscription_id_previous,
-      environment.dim_envionment_id,
+      environment.dim_environment_id,
       tiers.dim_product_tier_id,
 
       -- Descriptive information

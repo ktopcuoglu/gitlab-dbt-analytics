@@ -1,7 +1,7 @@
 WITH environment AS (
 
     SELECT
-      dim_envionment_id,
+      dim_environment_id,
       environment
     FROM {{ ref('prep_environment') }}
 
