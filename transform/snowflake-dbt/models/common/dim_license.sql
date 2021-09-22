@@ -8,31 +8,42 @@ WITH tiers AS (
     SELECT *
     FROM {{ ref('prep_license') }}
 
+), environment AS (
+
+    SELECT *
+    FROM {{ ref('prep_environment') }}
+
 ), final AS (
 
     SELECT
+      -- Primary key
       dim_license_id,
 
+     -- Foreign keys
       dim_subscription_id,
       dim_subscription_id_original,
       dim_subscription_id_previous,
+      environment.dim_envionment_id,
       tiers.dim_product_tier_id,
 
-      license_md5,
-      subscription_name,
-      environment,
-      license_user_count,
-      license_plan,
-      is_trial,
-      is_internal,
-      company,
-      license_start_date,
-      license_expire_date,
-      created_at,
-      updated_at
+      -- Descriptive information
+      license.license_md5,
+      license.subscription_name,
+      license.environment,
+      license.license_user_count,
+      license.license_plan,
+      license.is_trial,
+      license.is_internal,
+      license.company,
+      license.license_start_date,
+      license.license_expire_date,
+      license.created_at,
+      license.updated_at
     FROM license
     LEFT JOIN tiers
-      ON LOWER(tiers.product_tier_name) = license.license_plan 
+      ON LOWER(tiers.product_tier_name) = license.license_plan
+    LEFT JOIN environment
+      ON environment.environment = license.environment
 )
 
 
