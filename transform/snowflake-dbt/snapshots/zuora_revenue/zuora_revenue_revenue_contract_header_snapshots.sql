@@ -1,4 +1,4 @@
-{% snapshot zuora_rateplancharge_snapshots %}
+{% snapshot zuora_revenue_revenue_contract_header_snapshots %}
 
     {{
         config(

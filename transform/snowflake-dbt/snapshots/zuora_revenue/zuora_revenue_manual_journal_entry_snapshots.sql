@@ -1,4 +1,4 @@
-{% snapshot zuora_discountappliedmetrics_snapshots %}
+{% snapshot zuora_revenue_manual_journal_entry_snapshots %}
 
     {{
         config(

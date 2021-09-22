@@ -1,4 +1,4 @@
-{% snapshot zuora_amendment_snapshots %}
+{% snapshot zuora_revenue_approval_detail_snapshots %}
 
     {{
         config(

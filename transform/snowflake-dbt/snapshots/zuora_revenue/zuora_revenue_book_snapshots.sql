@@ -1,4 +1,4 @@
-{% snapshot zuora_product_snapshots %}
+{% snapshot zuora_revenue_book_snapshots %}
 
     {{
         config(

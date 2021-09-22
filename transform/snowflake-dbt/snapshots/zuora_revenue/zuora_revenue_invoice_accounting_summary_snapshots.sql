@@ -1,4 +1,4 @@
-{% snapshot zuora_rateplan_snapshots %}
+{% snapshot zuora_revenue_invoice_accounting_summary_snapshots %}
 
     {{
         config(

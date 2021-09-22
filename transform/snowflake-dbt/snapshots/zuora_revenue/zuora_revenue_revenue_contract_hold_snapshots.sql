@@ -1,4 +1,4 @@
-{% snapshot zuora_invoiceitem_snapshots %}
+{% snapshot zuora_revenue_revenue_contract_hold_snapshots %}
 
     {{
         config(

@@ -1,4 +1,4 @@
-{% snapshot zuora_contact_snapshots %}
+{% snapshot zuora_revenue_calendar_snapshots %}
 
     {{
         config(

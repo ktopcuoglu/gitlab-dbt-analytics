@@ -1,4 +1,4 @@
-{% snapshot zuora_product_rate_plan_snapshots %}
+{% snapshot zuora_revenue_revenue_contract_schedule_deleted_snapshots %}
 
     {{
         config(
