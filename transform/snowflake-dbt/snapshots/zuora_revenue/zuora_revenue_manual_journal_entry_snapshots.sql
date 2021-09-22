@@ -4,7 +4,7 @@
         config(
           strategy='timestamp',
           unique_key='je_line_id',
-          updated_at='je_line_updt_dt',
+          updated_at='incr_updt_dt',
         )
     }}
     
