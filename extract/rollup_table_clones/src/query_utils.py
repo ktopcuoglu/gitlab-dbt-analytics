@@ -18,15 +18,17 @@ def get_table_column_names(
     :return:
     """
     query = (
-        f" SELECT "
-        f"  ordinal_position, "
-        f"  table_name, "
-        f"  column_name, "
-        f"  data_type, "
-        f"  character_maximum_length, "
-        f"  column_name || data_type as compare_column "
-        f"  FROM {db_name}.INFORMATION_SCHEMA.COLUMNS "
-        f"  WHERE TABLE_NAME = '{table_name}' order by 1 "
+        f"""
+        SELECT 
+          ordinal_position, 
+          table_name, 
+          column_name, 
+          data_type, 
+          character_maximum_length, 
+          column_name || data_type as compare_column 
+        FROM {db_name}.INFORMATION_SCHEMA.COLUMNS 
+        WHERE TABLE_NAME = '{table_name}' order by 1
+          """
     )
     return query_dataframe(engine, query)
 
@@ -42,11 +44,14 @@ def get_existing_tables_to_roll_up(
     :return:
     """
     schema_check = (
-        f" SELECT table_name "
-        f" FROM {db_name}.INFORMATION_SCHEMA.TABLES "
-        f" WHERE RIGHT(TABLE_NAME, 2) = '08' "
-        f" AND LEFT(TABLE_NAME, {len(table_name)}) = '{table_name}' "
-        f" ORDER BY 1 "
+        f""" 
+        SELECT
+         table_name 
+        FROM {db_name}.INFORMATION_SCHEMA.TABLES 
+        WHERE RIGHT(TABLE_NAME, 2) = '08' 
+        AND LEFT(TABLE_NAME, {len(table_name)}) = '{table_name}' 
+        ORDER BY 1
+        """
     )
     query_results = query_dataframe(engine, schema_check)
 
@@ -70,21 +75,27 @@ def get_latest_tables_to_roll_up(
     )
     if latest_rolled_table:
         schema_check = (
-            f" SELECT table_name "
-            f" FROM {db_name}.INFORMATION_SCHEMA.TABLES "
-            f" WHERE LEFT(TABLE_NAME, {len(table_name)}) = '{table_name}' "
-            f" AND TRY_TO_DATE(RIGHT(TABLE_NAME, 8), 'YYYYMMDD') > "
-            f" TRY_TO_DATE('{latest_rolled_table}' , 'YYYYMMDD') "
-            f" AND RIGHT(TABLE_NAME, 2) = '08' "
-            f" ORDER BY 1"
+            f"""
+             SELECT
+              table_name 
+             FROM {db_name}.INFORMATION_SCHEMA.TABLES 
+             WHERE LEFT(TABLE_NAME, {len(table_name)}) = '{table_name}' 
+             AND TRY_TO_DATE(RIGHT(TABLE_NAME, 8), 'YYYYMMDD') > 
+             TRY_TO_DATE('{latest_rolled_table}' , 'YYYYMMDD') 
+             AND RIGHT(TABLE_NAME, 2) = '08' 
+             ORDER BY 1
+            """
         )
     else:
         schema_check = (
-            f" SELECT table_name "
-            f" FROM {db_name}.INFORMATION_SCHEMA.TABLES "
-            f" WHERE LEFT(TABLE_NAME, {len(table_name)}) = '{table_name}' "
-            f" AND RIGHT(TABLE_NAME, 2) = '08' "
-            f" ORDER BY 1"
+            f""" 
+            SELECT
+             table_name 
+            FROM {db_name}.INFORMATION_SCHEMA.TABLES 
+            WHERE LEFT(TABLE_NAME, {len(table_name)}) = '{table_name}' 
+            AND RIGHT(TABLE_NAME, 2) = '08' 
+            ORDER BY 1
+            """
         )
 
     query_results = query_dataframe(engine, schema_check)
@@ -109,9 +120,11 @@ def get_latest_rolled_up_table_name(
     """
     final_table_name = f"{table_name}_ROLLUP"
     query = (
-        f"SELECT "
-        f" MAX(original_table_name) as latest_table_name"
-        f" FROM {db_name}.{schema_name}.{final_table_name}"
+        f"""
+        SELECT 
+         MAX(original_table_name) as latest_table_name
+        FROM {db_name}.{schema_name}.{final_table_name}
+        """
     )
     results = query_dataframe(engine, query)
 
@@ -199,10 +212,12 @@ def rollup_table_clone(
                     select_string = select_string + processed_row
 
             insert_stmt = (
-                f" INSERT INTO {db_name}.{schema_name}.{table_name}_ROLLUP "
-                f"({column_string}, ORIGINAL_TABLE_NAME) "
-                f" SELECT {select_string} '{items[1]}' as ORIGINAL_TABLE_NAME "
-                f" FROM {db_name}.{schema_name}.{items[1]}"
+                f""" 
+                INSERT INTO {db_name}.{schema_name}.{table_name}_ROLLUP 
+                 ({column_string}, ORIGINAL_TABLE_NAME) 
+                SELECT {select_string} '{items[1]}' as ORIGINAL_TABLE_NAME 
+                FROM {db_name}.{schema_name}.{items[1]}
+                """
             )
             query_executor(engine, insert_stmt)
             logging.info("Successfully rolled up table clones")
