@@ -18,12 +18,12 @@ WITH tiers AS (
 
     SELECT
       -- Primary key
-      dim_license_id,
+      license.dim_license_id,
 
      -- Foreign keys
-      dim_subscription_id,
-      dim_subscription_id_original,
-      dim_subscription_id_previous,
+      license.dim_subscription_id,
+      license.dim_subscription_id_original,
+      license.dim_subscription_id_previous,
       environment.dim_environment_id,
       tiers.dim_product_tier_id,
 
