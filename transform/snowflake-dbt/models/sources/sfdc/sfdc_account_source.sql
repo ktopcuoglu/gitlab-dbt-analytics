@@ -62,7 +62,8 @@ WITH source AS (
       partners_partner_status__c                    AS partner_status,
       fy22_new_logo_target_list__c::BOOLEAN         AS fy22_new_logo_target_list,
       first_order_available__c::BOOLEAN             AS is_first_order_available,
-      zi_technologies__c                            AS zi_technologies,
+      REPLACE(zi_technologies__c, 'The technologies that are used and not used at this account, according to ZoomInfo, after completing a scan are:', '') AS zi_technologies,
+      technical_account_manager_date__c::DATE       AS technical_account_manager_date,
 
       -- territory success planning fields
       atam_approved_next_owner__c                   AS tsp_approved_next_owner,

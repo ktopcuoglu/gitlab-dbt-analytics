@@ -1,0 +1,55 @@
+version: 2
+
+sources:
+  - name: zuora_api_sandbox
+    tags: ["tdf","zuora"]
+    database: '{{ env_var("SNOWFLAKE_LOAD_DATABASE") }}'
+    schema: zuora_api_sandbox_stitch
+    loader: Stitch
+    loaded_at_field: _sdc_batched_at
+
+    quoting:
+      database: true
+      schema: false
+      identifier: false
+
+    freshness:
+      warn_after: {count: 8, period: hour}
+      error_after: {count: 24, period: hour}
+
+    tables:
+      - name: account
+        columns:
+          - name: id
+            description: Primary Key for Accounts
+            tests:
+              - dbt_utils.expression_is_true:
+                  expression: "id REGEXP '[0-9a-z]{32}'"
+      - name: accounting_period
+        identifier: accountingperiod
+      - name: amendment
+      - name: contact
+      - name: invoice
+      - name: invoice_item
+        identifier: invoiceitem
+      - name: invoice_payment
+        identifier: invoicepayment
+      - name: product
+        freshness: null
+      - name: product_rate_plan
+        identifier: productrateplan
+      - name: product_rate_plan_charge
+        identifier: productrateplancharge
+      - name: product_rate_plan_charge_tier
+        identifier: productrateplanchargetier
+        freshness: null
+      - name: rate_plan
+        identifier: rateplan
+      - name: rate_plan_charge
+        identifier: rateplancharge
+      - name: rate_plan_charge_tier
+        identifier: rateplanchargetier
+      - name: refund
+      - name: revenue_schedule_item
+        identifier: revenuescheduleitem
+      - name: subscription

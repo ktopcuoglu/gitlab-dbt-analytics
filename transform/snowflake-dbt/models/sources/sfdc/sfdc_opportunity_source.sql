@@ -95,6 +95,8 @@ WITH source AS (
           WHEN sales_qualified_source LIKE ANY ('Web%', 'Missing%', 'Other') OR sales_qualified_source IS NULL THEN 'Web Direct Generated'
           ELSE sales_qualified_source
         END                                         AS sales_qualified_source_grouped,
+        IFF(sales_qualified_source = 'Channel Generated', 'Partner Sourced', 'Co-sell')
+                                                    AS sqs_bucket_engagement,
         sdr_pipeline_contribution__c                AS sdr_pipeline_contribution,
         solutions_to_be_replaced__c                 AS solutions_to_be_replaced,
         x3_technical_evaluation_date__c
@@ -203,7 +205,7 @@ WITH source AS (
         -- original issue: https://gitlab.com/gitlab-data/analytics/-/issues/6072
         dr_partner_deal_type__c                     AS dr_partner_deal_type,
         dr_partner_engagement__c                    AS dr_partner_engagement,
-        {{ channel_type('dr_partner_engagement', 'order_type_stamped') }}
+        {{ channel_type('sqs_bucket_engagement', 'order_type_stamped') }}
                                                     AS channel_type,
         impartnerprm__partneraccount__c             AS partner_account,
         vartopiadrs__dr_status1__c                  AS dr_status,
@@ -239,6 +241,9 @@ WITH source AS (
         sa_validated_tech_evaluation_close_statu__c AS sa_tech_evaluation_close_status,
         sa_validated_tech_evaluation_end_date__c    AS sa_tech_evaluation_end_date,
         sa_validated_tech_evaluation_start_date__c  AS sa_tech_evaluation_start_date,
+
+        -- flag to identify eligible booking deals, excluding jihu - issue: https://gitlab.com/gitlab-com/sales-team/field-operations/systems/-/issues/1805
+        fp_a_master_bookings_flag__c                AS fpa_master_bookings_flag,
 
         -- metadata
         convert_timezone('America/Los_Angeles',convert_timezone('UTC',

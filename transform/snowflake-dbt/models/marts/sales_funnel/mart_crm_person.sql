@@ -32,6 +32,15 @@
       created_date_pt.date_day                 AS created_date_pt,
       created_date.first_day_of_month          AS created_month,
       created_date_pt.first_day_of_month       AS created_month_pt,
+      lead_created_date.date_day               AS lead_created_date,
+      lead_created_date_pt.date_day            AS lead_created_date_pt,
+      lead_created_date.first_day_of_month     AS lead_created_month,
+      lead_created_date_pt.first_day_of_month  AS lead_created_month_pt,
+      contact_created_date.date_day            AS contact_created_date,
+      contact_created_date_pt.date_day         AS contact_created_date_pt,
+      contact_created_date.first_day_of_month  AS contact_created_month,
+      contact_created_date_pt.first_day_of_month 
+                                               AS contact_created_month_pt,
       inquiry_date.date_day                    AS inquiry_date,
       inquiry_date_pt.date_day                 AS inquiry_date_pt,
       inquiry_date.first_day_of_month          AS inquiry_month,
@@ -42,6 +51,16 @@
       accepted_date_pt.date_day                AS accepted_date_pt,
       accepted_date.first_day_of_month         AS accepted_month,
       accepted_date_pt.first_day_of_month      AS accepted_month_pt,
+      mql_sfdc_date.date_day                   AS mql_sfdc_date,
+      fct_crm_person.mql_sfdc_datetime,
+      mql_sfdc_date_pt.date_day                AS mql_sfdc_date_pt,
+      mql_sfdc_date.first_day_of_month         AS mql_sfdc_month,
+      mql_sfdc_date_pt.first_day_of_month      AS mql_sfdc_month_pt,   
+      mql_inferred_date.date_day               AS mql_inferred_date,
+      fct_crm_person.mql_inferred_datetime,
+      mql_inferred_date_pt.date_day            AS mql_inferred_date_pt,
+      mql_inferred_date.first_day_of_month     AS mql_inferred_month,
+      mql_inferred_date_pt.first_day_of_month  AS mql_inferred_month_pt,
       qualifying_date.date_day                 AS qualifying_date,
       qualifying_date_pt.date_day              AS qualifying_date_pt,
       qualifying_date.first_day_of_month       AS qualifying_month,
@@ -54,6 +73,10 @@
       converted_date_pt.date_day               AS converted_date_pt,
       converted_date.first_day_of_month        AS converted_month,
       converted_date_pt.first_day_of_month     AS converted_month_pt,
+      worked_date.date_day                     AS worked_date,
+      worked_date_pt.date_day                  AS worked_date_pt,
+      worked_date.first_day_of_month           AS worked_month,
+      worked_date_pt.first_day_of_month        AS worked_month_pt,
       dim_crm_person.email_domain,
       dim_crm_person.email_domain_type,
       dim_crm_person.email_hash,
@@ -93,6 +116,14 @@
       ON fct_crm_person.created_date_id = created_date.date_id
     LEFT JOIN dim_date AS created_date_pt
       ON fct_crm_person.created_date_pt_id = created_date_pt.date_id
+    LEFT JOIN dim_date AS lead_created_date
+      ON fct_crm_person.lead_created_date_id = lead_created_date.date_id
+    LEFT JOIN dim_date AS lead_created_date_pt
+      ON fct_crm_person.lead_created_date_pt_id = lead_created_date_pt.date_id
+    LEFT JOIN dim_date AS contact_created_date
+      ON fct_crm_person.contact_created_date_id = contact_created_date.date_id
+    LEFT JOIN dim_date AS contact_created_date_pt
+      ON fct_crm_person.contact_created_date_pt_id = contact_created_date_pt.date_id
     LEFT JOIN dim_date AS inquiry_date
       ON fct_crm_person.inquiry_date_id = inquiry_date.date_id
     LEFT JOIN dim_date AS inquiry_date_pt
@@ -104,7 +135,15 @@
     LEFT JOIN dim_date AS mql_date_latest
       ON fct_crm_person.mql_date_latest_id = mql_date_latest.date_id
     LEFT JOIN dim_date AS mql_date_latest_pt
-      ON fct_crm_person.mql_date_latest_pt_id = mql_date_latest_pt.date_id
+      ON fct_crm_person.mql_date_latest_pt_id = mql_date_latest_pt.date_id  
+    LEFT JOIN dim_date AS mql_sfdc_date
+      ON fct_crm_person.mql_sfdc_date_id = mql_sfdc_date.date_id
+    LEFT JOIN dim_date AS mql_sfdc_date_pt
+      ON fct_crm_person.mql_sfdc_date_pt_id = mql_sfdc_date_pt.date_id
+    LEFT JOIN dim_date AS mql_inferred_date
+      ON fct_crm_person.mql_inferred_date_id = mql_inferred_date.date_id
+    LEFT JOIN dim_date AS mql_inferred_date_pt
+      ON fct_crm_person.mql_inferred_date_pt_id = mql_inferred_date_pt.date_id
     LEFT JOIN dim_date AS accepted_date
       ON fct_crm_person.accepted_date_id = accepted_date.date_id
     LEFT JOIN dim_date AS accepted_date_pt
@@ -121,13 +160,17 @@
       ON fct_crm_person.converted_date_id = converted_date.date_id
     LEFT JOIN dim_date converted_date_pt
       ON fct_crm_person.converted_date_pt_id = converted_date_pt.date_id
+    LEFT JOIN dim_date AS worked_date
+      ON fct_crm_person.worked_date_id = worked_date.date_id
+    LEFT JOIN dim_date AS worked_date_pt
+      ON fct_crm_person.worked_date_pt_id = worked_date_pt.date_id
 
 )
 
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@jpeguero",
+    updated_by="@rkohnke",
     created_date="2020-12-07",
-    updated_date="2021-07-28",
+    updated_date="2021-09-17",
   ) }}

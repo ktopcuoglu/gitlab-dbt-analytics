@@ -29,6 +29,10 @@ Please prioritize this issue since we dedicate a day from your milestone to this
             - [ ] OR to the  Manager, Data if you aren't sure. 
         - [ ] Asking initial questions (data source, business logic clarification, etc) to groom the issue. 
 
+### Friends and family days
+* [ ] As we currently have a no-merge Friday rule if there is an upcoming family and friends day during your triage week which affects this please ensure this message (or similar) is shared #data channel by Tuesday at the latest: 
+* ```:awesome-dog-pug: :siren-siren:  Hi everyone, just a small FYI / reminder that due to the family and friends day this week the last day to merge MR’s in to the analytics repo this week will be Wednesday. :awesome-dog-pug: :siren-siren:```
+
 ### Maintain KPI related information         
 * [ ] Maintain the KPI Index page by 
     - [ ] Creating an issue with any outstanding concerns from your respective division (broken links, missing KPI definitions, charts vs links, etc)
@@ -117,6 +121,29 @@ The link to the Data Team Incident issue is <link>
 
 * [ ] At the end of your working day post EOD message to slack along with a link to this issue in the above mentioned slack channels so that it is clear for the next triager what time to check for issues from.
 * [ ] Leave a comment giving context on open items and issues. If it's relevant to a specific issue, consider commenting in that issue and then linking to your comment.
+* [ ] List down the effort performed for today's triage.
+<details>
+<summary><i>Hours spent per activity for Data Analyst</i></summary>
+
+- 
+- 
+- 
+
+</details>
+
+<details>
+<summary><i>Hours spent per activity for Data Engineer</i></summary>
+
+- 
+- 
+- 
+
+</details>
+
+* [ ] List down the Groundhog Issues
+- 
+- 
+- 
 
 
 /label ~"workflow::In dev" ~"Housekeeping" ~"Data Team" ~"Documentation" ~"Triage" ~"Priority::1-Ops"

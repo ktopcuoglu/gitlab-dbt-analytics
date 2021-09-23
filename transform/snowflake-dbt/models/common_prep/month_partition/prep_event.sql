@@ -12,12 +12,36 @@
     "primary_key": "dim_action_id"
   },
   {
+    "event_name": "dast_build_run",
+    "source_cte_name": "dast_jobs",
+    "user_column_name": "dim_user_id",
+    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
+    "project_column_name": "dim_project_id",
+    "primary_key": "dim_ci_build_id"
+  },
+  {
+    "event_name": "dependency_scanning_build_run",
+    "source_cte_name": "dependency_scanning_jobs",
+    "user_column_name": "dim_user_id",
+    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
+    "project_column_name": "dim_project_id",
+    "primary_key": "dim_ci_build_id"
+  },
+  {
     "event_name": "deployment_creation",
     "source_cte_name": "prep_deployment",
     "user_column_name": "dim_user_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
     "primary_key": "dim_deployment_id"
+  },
+  {
+    "event_name": "epic_creation",
+    "source_cte_name": "prep_epic",
+    "user_column_name": "author_id",
+    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
+    "project_column_name": "NULL    ",
+    "primary_key": "dim_epic_id"
   },
   {
     "event_name": "issue_creation",
@@ -34,6 +58,14 @@
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
     "primary_key": "dim_note_id"
+  },
+  {
+    "event_name": "license_scanning_build_run",
+    "source_cte_name": "license_scanning_jobs",
+    "user_column_name": "dim_user_id",
+    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
+    "project_column_name": "dim_project_id",
+    "primary_key": "dim_ci_build_id"
   },
   {
     "event_name": "merge_request_creation",
@@ -76,6 +108,46 @@
     "primary_key": "dim_ci_build_id"
   },
   {
+    "event_name": "push_action",
+    "source_cte_name": "push_actions",
+    "user_column_name": "dim_user_id",
+    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
+    "project_column_name": "dim_project_id",
+    "primary_key": "dim_action_id"
+  },
+  {
+    "event_name": "release_creation",
+    "source_cte_name": "prep_release",
+    "user_column_name": "author_id",
+    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
+    "project_column_name": "dim_project_id",
+    "primary_key": "dim_release_id"
+  },
+  {
+    "event_name": "requirement_creation",
+    "source_cte_name": "prep_requirement",
+    "user_column_name": "author_id",
+    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
+    "project_column_name": "dim_project_id",
+    "primary_key": "dim_requirement_id"
+  },
+  {
+    "event_name": "sast_build_run",
+    "source_cte_name": "sast_jobs",
+    "user_column_name": "dim_user_id",
+    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
+    "project_column_name": "dim_project_id",
+    "primary_key": "dim_ci_build_id"
+  },
+  {
+    "event_name": "secret_detection_build_run",
+    "source_cte_name": "secret_detection_jobs",
+    "user_column_name": "dim_user_id",
+    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
+    "project_column_name": "dim_project_id",
+    "primary_key": "dim_ci_build_id"
+  },
+  {
     "event_name": "secure_ci_build_creation",
     "source_cte_name": "secure_ci_build",
     "user_column_name": "dim_user_id",
@@ -100,20 +172,50 @@
     ('prep_action', 'prep_action'),
     ('prep_ci_build', 'prep_ci_build'),
     ('prep_deployment', 'prep_deployment'),
+    ('prep_epic', 'prep_epic'),
     ('prep_issue', 'prep_issue'),
     ('prep_merge_request', 'prep_merge_request'),
     ('prep_note', 'prep_note'),
     ('prep_package', 'prep_package'),
+    ('prep_release', 'prep_release'),
+    ('prep_requirement', 'prep_requirement'),
     ('dim_project', 'dim_project'),
     ('prep_namespace', 'prep_namespace'),
     ('prep_user', 'prep_user')
 ]) }}
 
-, issue_note AS (
+, dast_jobs AS (
+
+    SELECT *
+    FROM prep_ci_build
+    WHERE secure_ci_build_type = 'dast'
+
+), dependency_scanning_jobs AS (
+
+    SELECT *
+    FROM prep_ci_build
+    WHERE secure_ci_build_type = 'dependency_scanning'
+
+), push_actions AS (
+
+    SELECT *
+    FROM  prep_action
+    WHERE event_action_type = 'pushed'
+
+), issue_note AS (
 
     SELECT *
     FROM prep_note
     WHERE noteable_type = 'Issue'
+
+), license_scanning_jobs AS (
+
+    SELECT *
+    FROM prep_ci_build
+    WHERE secure_ci_build_type IN (
+                                  'license_scanning',
+                                  'license_management'
+                                )
 
 ), merge_request_note AS (
 
@@ -127,6 +229,18 @@
     FROM prep_ci_build
     WHERE secure_ci_build_type IN ('container_scanning')
     
+), sast_jobs AS (
+
+    SELECT *
+    FROM prep_ci_build
+    WHERE secure_ci_build_type = 'sast'
+
+), secret_detection_jobs AS (
+
+    SELECT *
+    FROM prep_ci_build
+    WHERE secure_ci_build_type = 'secret_detection'
+
 ), secure_ci_build AS (
 
     SELECT *
@@ -139,7 +253,6 @@
                                     'sast',
                                     'secret_detection'
                                     )
-
     
 ), succesful_ci_pipelines AS (
 
