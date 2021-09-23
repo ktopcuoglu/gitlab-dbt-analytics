@@ -44,7 +44,7 @@ WITH map_merged_crm_account AS (
 ), active_zuora_subscription AS (
 
     SELECT *
-    FROM zuora_subscription
+    -- FROM zuora_subscriptiondim
     WHERE subscription_status IN ('Active', 'Cancelled')
 
 ), manual_arr_true_up_allocation AS (

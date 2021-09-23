@@ -82,7 +82,7 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity.risk_reasons,
       sfdc_opportunity.tam_notes,
       sfdc_opportunity.payment_schedule,
-      sfdc_opportunity.comp_y2_iacv
+      sfdc_opportunity.comp_y2_iacv,
 
       -- stamped fields
       sfdc_opportunity.crm_opp_owner_stamped_name,
