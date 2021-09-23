@@ -34,7 +34,7 @@ WITH customers_db_licenses AS (
           LOWER(email) LIKE '%@gitlab.com' AND LOWER(company) LIKE '%gitlab%',
           TRUE, FALSE
          )                                                             AS is_internal,
-      company                                                          AS company,
+      company,
       license_start_date,
       license_expire_date,
       created_at,
