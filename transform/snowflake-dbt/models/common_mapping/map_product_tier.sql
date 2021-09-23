@@ -104,16 +104,12 @@ WITH zuora_product AS (
       CASE
         WHEN LOWER(product_tier_historical) LIKE '%self-managed%'
           THEN 'Self-Managed'
-        WHEN LOWER(product_tier_historical) LIKE ANY ('%saas%', 'storage')
+        WHEN LOWER(product_tier_historical) LIKE ANY ('%saas%', 'storage', 'standard', 'basic', 'plus', 'githost')
           THEN 'SaaS'
         WHEN LOWER(product_tier_historical) = 'SaaS - Other'
           THEN 'SaaS'
         WHEN product_tier_historical IN (
-                                          'Basic'
-                                        , 'GitHost'
-                                        , 'Other'
-                                        , 'Plus'
-                                        , 'Standard'
+                                          'Other'
                                         , 'Support'
                                         , 'Trueup'
                                         )
@@ -158,5 +154,5 @@ WITH zuora_product AS (
     created_by="@ischweickartDD",
     updated_by="@jpeguero",
     created_date="2020-12-14",
-    updated_date="2021-08-31"
+    updated_date="2021-09-17"
 ) }}

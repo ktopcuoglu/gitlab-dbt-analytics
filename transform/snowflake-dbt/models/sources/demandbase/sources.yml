@@ -12,9 +12,9 @@ sources:
       schema: false
       identifier: false
 
-    freshness:
-      warn_after: {count: 24, period: hour}
-      error_after: {count: 36, period: hour}
+    # freshness:
+    #   warn_after: {count: 24, period: hour}
+    #   error_after: {count: 36, period: hour}
 
     tables:
       - name: account

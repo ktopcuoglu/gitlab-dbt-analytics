@@ -254,6 +254,8 @@ models:
         tests:
           - not_null
         tags: ["tdf", "common", "gainsight"]
+      - name: subscription_status
+        description: Status of the subscription at the time the usage ping was created.
       - name: dim_billing_account_id
         description: Returns unknown ID (MD5(-1)) if the `account_id` from `fct_product_usage_wave_1_3_metrics_monthly` is not found in `dim_billing_account`.
         tests:
@@ -504,6 +506,8 @@ models:
         tests:
           - not_null
         tags: ["tdf", "common", "gainsight"]
+      - name: subscription_status
+        description: Status of the subscription at the time the usage ping was created.
       - name: snapshot_month
         description: Month from which Usage Ping and/or Seat Link data is reported (reported as the first day of the month - '2020-01-01').
         tests:
@@ -679,6 +683,8 @@ models:
         tests:
           - not_null
         tags: ["tdf", "common", "gainsight"]
+      - name: subscription_status
+        description: Status of the subscription at the time the usage ping was created.
       - name: dim_billing_account_id
         tests:
           - not_null
