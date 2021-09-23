@@ -2599,6 +2599,10 @@ roles:
                     - jcaine_prep.*.*
                     - jcaine_prod.*.*
 
+    - jdubail:
+        warehouses:
+            - reporting
+
     - jjackson: # De provisioned as part of Quarterly audit and security check.
         member_of: []
         warehouses: []
@@ -4113,6 +4117,12 @@ users:
         can_login: yes
         member_of:
             - jcaine
+
+    - jdubail:
+        can_login: yes
+        member_of:
+            - jdubail
+            - securityadmin
 
     - jjackson: # De provisioned as part of Quarterly audit and security check.
         can_login: no
