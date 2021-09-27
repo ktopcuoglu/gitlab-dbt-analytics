@@ -114,6 +114,7 @@
       dim_channel_type.channel_type_name,
       dim_sales_qualified_source.sales_qualified_source_name,
       dim_sales_qualified_source.sales_qualified_source_grouped,
+      dim_sales_qualified_source.sqs_bucket_engagement,
       dim_crm_account.is_jihu_account,
       dim_crm_account.fy22_new_logo_target_list,
       dim_crm_account.crm_account_gtm_strategy,
@@ -238,5 +239,5 @@
     created_by="@iweeks",
     updated_by="@jpeguero",
     created_date="2020-12-07",
-    updated_date="2021-08-09",
+    updated_date="2021-09-09",
   ) }}

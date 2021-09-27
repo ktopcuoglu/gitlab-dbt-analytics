@@ -51,6 +51,11 @@ sources:
           - name: report_timestamp
             tests:
               - not_null
+      - name: customers_db_licenses
+        columns:
+          - name: id
+            tests:
+              - not_null
       - name: customers_db_orders
         columns:
           - name: id
