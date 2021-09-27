@@ -3,7 +3,7 @@
     {{
         config(
           strategy='timestamp',
-          unique_key='prd_id || ''-'' || line_id || ''-'' || root_line_id || ''-'' || rc_id || ''-'' || acct_type_id',
+          unique_key='revenue_snapshot_id',
           updated_at='incr_updt_dt',
         )
     }}
