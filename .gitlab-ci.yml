@@ -124,7 +124,7 @@ clone_stop:
 
 .python_check: &python_check
   stage: 🐍 Python
-  image: registry.gitlab.com/gitlab-data/data-image/data-image:v0.0.13
+  image: registry.gitlab.com/gitlab-data/data-image/data-image:v0.0.20
   tags:
     - analytics
   only:
