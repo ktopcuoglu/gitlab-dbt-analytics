@@ -397,7 +397,7 @@ dbt_workspaces_test = KubernetesPodOperator(
     >> dbt_product_models_task
     >> dbt_test
     >> dbt_workspaces
-    >> dbt_workspaces_xl_command
+    >> dbt_workspaces_xl
     >> dbt_workspaces_test
     >> dbt_results
 )
