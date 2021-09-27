@@ -1,6 +1,5 @@
 import os
 from datetime import datetime, timedelta
-import json
 
 from airflow import DAG
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
@@ -61,8 +60,9 @@ default_args = {
 # Create the DAG
 dag = DAG("dbt", default_args=default_args, schedule_interval="45 8 * * *")
 
+
 # BranchPythonOperator functions
-def dbt_run_or_refresh(timestamp: datetime, dag: DAG) -> str:
+def dbt_run_or_refresh(timestamp: datetime) -> str:
     """
     Use the current date to determine whether to do a full-refresh or a
     normal run.
@@ -73,13 +73,10 @@ def dbt_run_or_refresh(timestamp: datetime, dag: DAG) -> str:
     """
 
     ## TODO: make this not hardcoded
-    SCHEDULE_INTERVAL_HOURS = 8
     current_weekday = timestamp.isoweekday()
-    current_seconds = timestamp.hour * 3600
-    dag_interval = SCHEDULE_INTERVAL_HOURS * 3600
 
     # run a full-refresh once per week (on sunday early AM)
-    if current_weekday == 7:  # and dag_interval > current_seconds:
+    if current_weekday == 7:
         return "dbt-full-refresh"
     else:
         return "dbt-non-product-models-run"
@@ -87,7 +84,7 @@ def dbt_run_or_refresh(timestamp: datetime, dag: DAG) -> str:
 
 branching_dbt_run = BranchPythonOperator(
     task_id="branching-dbt-run",
-    python_callable=lambda: dbt_run_or_refresh(datetime.now(), dag),
+    python_callable=lambda: dbt_run_or_refresh(datetime.now()),
     dag=dag,
 )
 
