@@ -18,6 +18,9 @@ models:
           tests:
             - not_null
             - unique
+        - name: response
+          tests:
+            - not_null
         - name: ping_date
           tests:
             - not_null

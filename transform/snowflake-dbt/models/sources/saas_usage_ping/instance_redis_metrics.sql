@@ -21,7 +21,7 @@ renamed AS (
       TRY_PARSE_JSON(jsontext) AS response,
       ping_date::TIMESTAMP     AS ping_date,
       run_id                   AS run_id,
-      DATEADD('s', _uploaded_at, '1970-01-01')::DATE AS _uploaded_at
+      DATEADD('s', _uploaded_at, '1970-01-01')::TIMESTAMP AS _uploaded_at
     FROM partiotioned
 
 )
