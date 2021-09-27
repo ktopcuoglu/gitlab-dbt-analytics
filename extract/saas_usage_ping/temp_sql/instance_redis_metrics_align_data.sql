@@ -5,7 +5,6 @@
  * "10272-DUPLICATE-ENTRIES-IN-PROD-LEGACY-WK_SAAS_USAGE_PING_INSTANCE_REDIS_METRICS_RAW" -> "RAW"
  */
 
-
 -- Crete temp table
 CREATE TABLE "10272-DUPLICATE-ENTRIES-IN-PROD-LEGACY-WK_SAAS_USAGE_PING_INSTANCE_REDIS_METRICS_RAW"."SAAS_USAGE_PING"."INSTANCE_REDIS_METRICS_OLD"
 CLONE "10272-DUPLICATE-ENTRIES-IN-PROD-LEGACY-WK_SAAS_USAGE_PING_INSTANCE_REDIS_METRICS_RAW"."SAAS_USAGE_PING"."INSTANCE_REDIS_METRICS"
@@ -44,8 +43,12 @@ UPDATE "10272-DUPLICATE-ENTRIES-IN-PROD-LEGACY-WK_SAAS_USAGE_PING_INSTANCE_REDIS
    SET _uploaded_at = DATE_PART(EPOCH_SECOND, TRIM(REPLACE(SUBSTR(try_parse_json(jsontext):"recording_ce_finished_at",1,19),'T',' '))::TIMESTAMP)
  WHERE _uploaded_at IS NULL;
 
+
 COMMIT;
 
+/***********************************************************************************************************************
+ * Test cases
+ ***********************************************************************************************************************/
 -- Test case 1/3 after updating and loading from local Airflow.
 SELECT COUNT(1)
   FROM "10272-DUPLICATE-ENTRIES-IN-PROD-LEGACY-WK_SAAS_USAGE_PING_INSTANCE_REDIS_METRICS_RAW"."SAAS_USAGE_PING"."INSTANCE_REDIS_METRICS"
