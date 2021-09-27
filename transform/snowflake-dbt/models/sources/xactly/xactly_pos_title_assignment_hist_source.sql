@@ -17,9 +17,9 @@ WITH source AS (
       object_id,
       pos_title_assignment_id,
       position_id,
-      md5(position_name) AS position_uuid,
       title_id,
-      title_name
+      title_name,
+      {{ nohash_sensitive_columns('position_name') }}
 
     FROM source
     

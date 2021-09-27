@@ -42,13 +42,11 @@ WITH source AS (
       order_code,
       order_item_id,
       participant_id,
-      md5(participant_name) AS participant_uuid,
       period_id,
       period_name,
       plan_id,
       plan_name,
       position_id,
-      md5(position_name) AS position_uuid,
       product_id,
       product_name,
       reason_code_id,
@@ -65,6 +63,7 @@ WITH source AS (
       sub_batch_number,
       sub_part_key,
       trans_id,
+      {{ nohash_sensitive_columns('participant_name', 'position_name') }}
 
     FROM source
     

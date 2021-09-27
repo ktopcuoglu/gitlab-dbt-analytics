@@ -11,7 +11,6 @@ WITH source AS (
       created_by_name,
       created_date,
       from_pos_id,
-      md5(from_pos_name) AS from_pos_uuid,
       is_active,
       modified_by_id,
       modified_by_name,
@@ -20,7 +19,7 @@ WITH source AS (
       pos_hierarchy_id,
       pos_hierarchy_type_id,
       to_pos_id,
-      md5(to_pos_name) AS to_pos_uuid
+      {{ nohash_sensitive_columns('from_pos_name', 'to_pos_name') }}
 
     FROM source
     

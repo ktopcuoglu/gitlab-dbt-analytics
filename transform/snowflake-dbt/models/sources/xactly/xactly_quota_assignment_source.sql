@@ -10,7 +10,6 @@ WITH source AS (
       amount,
       amount_unit_type_id,
       assignment_id,
-      md5(assignment_name) AS assignment_uuid,
       assignment_type,
       created_by_id,
       created_by_name,
@@ -25,7 +24,8 @@ WITH source AS (
       period_id,
       qta_asngmt_id,
       quota_assignment_id,
-      quota_id
+      quota_id,
+      {{ nohash_sensitive_columns('assignment_name') }}
 
     FROM source
 
