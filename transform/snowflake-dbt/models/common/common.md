@@ -945,3 +945,13 @@ The grain of the table is the `dim_issue_link_id`. This table is easily joinable
 
 - `dim_issue` through `dim_issue_id` on `dim_source_issue_id` & `dim_target_issue_id`
 {% enddocs %}
+
+{% docs fct_issue_metrics %}
+
+fact table representing base metrics around GitLab Issues, specifically GitLab Issue Age. The default age is calculated from when the issues was opened, & the other type of age is calculated from when a severity label was last added, which is used for Engineering Allocation related SLO timings.
+
+The grain of the table is per day issue detail, where each unique issue is denoted by  `dim_issue_id`. This table is easily joinable with:
+
+- `dim_issue` through `dim_issue_id`
+- `dim_date` through `dim_date_id`
+{% enddocs %}

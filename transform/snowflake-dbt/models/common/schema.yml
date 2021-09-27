@@ -2536,3 +2536,12 @@ models:
         description: The identifier for target issue of an issue link
         tests:
           - not_null
+  - name: fct_issue_metrics
+    description: '{{ doc("fct_issue_metrics") }}'
+    columns:
+      - name: date_id
+        tests:
+          - not_null
+      - name: dim_issue_id
+        tests:
+          - not_null
