@@ -4,4 +4,9 @@ models:
   - name: zuora_tables_date
   - name: sfdc_tables_date
   - name: gitlab_dotcom_tables_date
+  - name: snowplow_tables_date
+  - name: netsuite_tables_date
+  - name: bamboohr_tables_date
+  - name: demandbase_tables_date
+  - name: dqualtrics_tables_date
 
