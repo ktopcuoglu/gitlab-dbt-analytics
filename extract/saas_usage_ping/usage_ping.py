@@ -161,7 +161,7 @@ class UsagePing(object):
         redis_data_to_upload = pd.DataFrame(columns=["jsontext", "ping_date", "run_id"])
 
         redis_data_to_upload.loc[0] = [
-            json_data,
+            json.dumps(json_data),
             self.end_date,
             self._get_md5(datetime.datetime.utcnow().timestamp()),
         ]
