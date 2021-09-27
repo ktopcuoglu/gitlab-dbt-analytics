@@ -17,7 +17,12 @@ sources:
       error_after: {count: 24, period: hour}
 
     tables:
+      - name: xc_attainment_measure
+      - name: xc_attainment_measure_criteria
       - name: xc_credit
+      - name: xc_credit_adjustment
+      - name: xc_credit_held
+      - name: xc_credit_totals
       - name: xc_pos_hierarchy_hist
       - name: xc_pos_part_assignment
       - name: xc_pos_part_assignment_hist

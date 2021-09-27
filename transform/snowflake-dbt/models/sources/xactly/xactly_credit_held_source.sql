@@ -1,7 +1,7 @@
 WITH source AS (
 
     SELECT *
-    FROM {{ source('xactly', 'xc_credit_hold') }}
+    FROM {{ source('xactly', 'xc_credit_held') }}
 
 ), renamed AS (
 
@@ -12,6 +12,7 @@ WITH source AS (
       created_date,
       credit_held_id,
       credit_id,
+      held_date,
       is_active,
       is_held,
       modified_by_id,

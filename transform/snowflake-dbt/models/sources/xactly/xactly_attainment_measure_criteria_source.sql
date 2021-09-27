@@ -7,7 +7,7 @@ WITH source AS (
 
     SELECT
 
-      attainment_measure_criteria_id, 
+      attainment_measure_criteria_id,
       attainment_measure_id,
       created_by_id,
       created_date,
