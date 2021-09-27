@@ -3,8 +3,13 @@
     {{
         config(
           unique_key='namespace_id',
-          strategy='timestamp',
-          updated_at='updated_at',
+          strategy='check',
+          check_cols=[
+              'updated_at', 
+              'max_seats_used',
+              'seats',
+              'seats_in_use',
+          ],
         )
     }}
 
