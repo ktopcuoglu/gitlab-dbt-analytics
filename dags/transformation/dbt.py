@@ -285,7 +285,7 @@ dbt_results = KubernetesPodOperator(
 dbt_workspaces_command = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
-    dbt run --profiles-dir profile --target prod --models workspaces.* ; ret=$?;
+    dbt run --profiles-dir profile --target prod --models workspaces.* --exclude workspaces.workspace_datascience.*; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
 dbt_workspaces = KubernetesPodOperator(
@@ -318,7 +318,45 @@ dbt_workspaces = KubernetesPodOperator(
     dag=dag,
 )
 
-# dbt-results
+# dbt-workspaces-xl
+dbt_workspaces_xl_command = f"""
+    {pull_commit_hash} &&
+    {dbt_install_deps_cmd} &&
+    export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_L" &&
+    dbt run --profiles-dir profile --target prod --models workspaces.workspace_datascience.* ; ret=$?;
+    python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
+"""
+dbt_workspaces_xl = KubernetesPodOperator(
+    **gitlab_defaults,
+    image=DBT_IMAGE,
+    task_id="dbt-workspaces-xl",
+    name="dbt-workspaces-xl",
+    trigger_rule="all_done",
+    secrets=[
+        GIT_DATA_TESTS_PRIVATE_KEY,
+        GIT_DATA_TESTS_CONFIG,
+        SALT,
+        SALT_EMAIL,
+        SALT_IP,
+        SALT_NAME,
+        SALT_PASSWORD,
+        SNOWFLAKE_ACCOUNT,
+        SNOWFLAKE_USER,
+        SNOWFLAKE_PASSWORD,
+        SNOWFLAKE_LOAD_PASSWORD,
+        SNOWFLAKE_LOAD_ROLE,
+        SNOWFLAKE_LOAD_USER,
+        SNOWFLAKE_LOAD_WAREHOUSE,
+        SNOWFLAKE_TRANSFORM_ROLE,
+        SNOWFLAKE_TRANSFORM_WAREHOUSE,
+        SNOWFLAKE_TRANSFORM_SCHEMA,
+    ],
+    env_vars=pod_env_vars,
+    arguments=[dbt_workspaces_xl_command],
+    dag=dag,
+)
+
+# dbt-workspaces
 dbt_workspaces_test_command = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
@@ -362,6 +400,7 @@ dbt_workspaces_test = KubernetesPodOperator(
     >> dbt_product_models_task
     >> dbt_test
     >> dbt_workspaces
+    >> dbt_workspaces_xl_command
     >> dbt_workspaces_test
     >> dbt_results
 )
