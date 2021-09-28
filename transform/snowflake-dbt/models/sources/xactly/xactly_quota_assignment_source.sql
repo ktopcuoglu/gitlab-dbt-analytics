@@ -22,7 +22,7 @@ WITH source AS (
       modified_by_name,
       modified_date,
       period_id,
-      qta_asngmt_id,
+      qta_asgnmt_id,
       quota_assignment_id,
       quota_id,
       {{ nohash_sensitive_columns('assignment_name') }}

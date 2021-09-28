@@ -21,7 +21,7 @@ WITH source AS (
       object_id,
       pos_hierarchy_type_disp_name,
       pos_hierarchy_type_id,
-      pos_hierarchy_type_name,
+      pos_hierarchy_type_name
 
     FROM source
     
