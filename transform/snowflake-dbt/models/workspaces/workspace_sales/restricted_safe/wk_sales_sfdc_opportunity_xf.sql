@@ -194,7 +194,13 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity_xf.influence_partner,
       sfdc_opportunity_xf.fulfillment_partner,
       sfdc_opportunity_xf.platform_partner,
-      COALESCE(sfdc_opportunity_xf.partner_track,'N/A')          AS partner_track,
+      CASE
+        WHEN sfdc_opportunity_xf.partner_account IS NOT NULL 
+          THEN REPLACE(sfdc_opportunity_xf.partner_track,'select','Select')
+        ELSE 'Direct' 
+      END                                                          AS calculated_partner_track,
+      
+      COALESCE(sfdc_opportunity_xf.partner_track,'N/A')           AS partner_track,
       sfdc_opportunity_xf.is_public_sector_opp,
       sfdc_opportunity_xf.is_registration_from_portal,
       sfdc_opportunity_xf.calculated_discount,
@@ -551,6 +557,7 @@ WITH sfdc_opportunity AS (
       END                                                                   AS is_stage_4_plus,
 
       -- account driven fields 
+      sfdc_accounts_xf.account_name,
       sfdc_accounts_xf.ultimate_parent_account_id,
       sfdc_accounts_xf.is_jihu_account,
   
@@ -776,7 +783,6 @@ WITH sfdc_opportunity AS (
           AND ((oppty_final.is_web_portal_purchase = 1 
                 AND net_arr > 0)
                 OR oppty_final.is_web_portal_purchase = 0)
-          -- Not JiHu
             THEN 1
           ELSE 0
       END                                                           AS is_eligible_asp_analysis_flag,
@@ -792,7 +798,6 @@ WITH sfdc_opportunity AS (
           AND oppty_final.opportunity_category IN ('Standard','Ramp Deal','Decommissioned')
           -- Web Purchase have a different dynamic and should not be included
           AND oppty_final.is_web_portal_purchase = 0
-          -- Not JiHu
             THEN 1
           ELSE 0
       END                                                           AS is_eligible_age_analysis_flag,
@@ -803,7 +808,6 @@ WITH sfdc_opportunity AS (
           AND (oppty_final.is_won = 1 
               OR (oppty_final.is_renewal = 1 AND oppty_final.is_lost = 1))
           AND oppty_final.order_type_stamped IN ('1. New - First Order','2. New - Connected','3. Growth','4. Contraction','6. Churn - Final','5. Churn - Partial')
-          -- Not JiHu
             THEN 1
           ELSE 0
       END                                                           AS is_eligible_net_arr_flag,
@@ -812,7 +816,6 @@ WITH sfdc_opportunity AS (
         WHEN oppty_final.is_edu_oss = 0
           AND oppty_final.is_deleted = 0
           AND oppty_final.order_type_stamped IN ('4. Contraction','6. Churn - Final','5. Churn - Partial')
-          -- Not JiHu
             THEN 1
           ELSE 0
       END                                                           AS is_eligible_churn_contraction_flag,
