@@ -10,6 +10,6 @@
 
     SELECT *
     FROM {{ source('zuora_revenue','zuora_revenue_revenue_contract_performance_obligation') }}
-    QUALIFY RANK() OVER (PARTITION BY id ORDER BY incr_updt_dt DESC) = 1
+    QUALIFY RANK() OVER (PARTITION BY rc_pob_id ORDER BY incr_updt_dt DESC) = 1
 
 {% endsnapshot %}
