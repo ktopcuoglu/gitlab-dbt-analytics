@@ -16,9 +16,10 @@ WITH source AS (
       modified_date,
       object_id,
       participant_id,
+      participant_name,
       pos_part_assignment_id,
       position_id,
-      {{ nohash_sensitive_columns('participant_name', 'position_name') }}
+      position_name
 
     FROM source
     

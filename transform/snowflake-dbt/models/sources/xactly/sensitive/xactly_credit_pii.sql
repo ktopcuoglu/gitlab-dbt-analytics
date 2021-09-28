@@ -1,7 +1,7 @@
 WITH source AS (
 
     SELECT *
-    FROM {{ source('xactly', 'xc_credit') }}
+    FROM {{ ref('xactly_credit_source') }}
 
 ), renamed AS (
 
@@ -42,13 +42,11 @@ WITH source AS (
       order_code,
       order_item_id,
       participant_id,
-      participant_name,
       period_id,
       period_name,
       plan_id,
       plan_name,
       position_id,
-      position_name,
       product_id,
       product_name,
       reason_code_id,
@@ -64,7 +62,8 @@ WITH source AS (
       src_pos_relation_type_id,
       sub_batch_number,
       sub_part_key,
-      trans_id
+      trans_id,
+      {{ nohash_sensitive_columns('participant_name', 'position_name') }}
 
     FROM source
     

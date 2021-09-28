@@ -1,7 +1,7 @@
 WITH source AS (
 
     SELECT *
-    FROM {{ source('xactly', 'xc_quota_assignment_hist') }}
+    FROM {{ ref('xactly_quota_assignment_hist_source') }}
 
 ), renamed AS (
 
@@ -10,7 +10,6 @@ WITH source AS (
       amount,
       amount_unit_type_id,
       assignment_id,
-      assignment_name,
       assignment_type,
       created_by_id,
       created_by_name,
@@ -25,7 +24,8 @@ WITH source AS (
       object_id,
       period_id,
       quota_assignment_id,
-      quota_id
+      quota_id,
+      {{ nohash_sensitive_columns('assignment_name') }}
 
     FROM source
 

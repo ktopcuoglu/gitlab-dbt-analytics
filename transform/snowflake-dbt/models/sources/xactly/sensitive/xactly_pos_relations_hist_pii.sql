@@ -1,7 +1,7 @@
 WITH source AS (
 
     SELECT *
-    FROM {{ source('xactly', 'xc_pos_hierarchy_hist') }}
+    FROM {{ ref('xactly_pos_relations_hist_source') }}
 
 ), renamed AS (
 
@@ -11,16 +11,14 @@ WITH source AS (
       created_by_name,
       created_date,
       from_pos_id,
-      from_pos_name,
-      is_active,
+      id,
       modified_by_id,
       modified_by_name,
       modified_date,
       object_id,
-      pos_hierarchy_id,
-      pos_hierarchy_type_id,
+      pos_rel_type_id,
       to_pos_id,
-      to_pos_name
+      {{ nohash_sensitive_columns('from_pos_name', 'to_pos_name') }}
 
     FROM source
     
