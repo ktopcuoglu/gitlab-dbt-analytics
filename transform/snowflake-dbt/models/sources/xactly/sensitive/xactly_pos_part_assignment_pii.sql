@@ -15,9 +15,10 @@ WITH source AS (
       modified_by_name,
       modified_date,
       participant_id,
+      {{ nohash_sensitive_columns('xactly_pos_part_assignment_source', 'participant_name') }},
       pos_part_assignment_id,
       position_id,
-      {{ nohash_sensitive_columns('participant_name', 'position_name') }}
+      {{ nohash_sensitive_columns('xactly_pos_part_assignment_source', 'position_name') }}
 
     FROM source
     

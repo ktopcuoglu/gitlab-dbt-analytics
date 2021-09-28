@@ -1,7 +1,7 @@
 WITH source AS (
 
     SELECT *
-    FROM {{ red('xactly_pos_part_assignment_hist_source') }}
+    FROM {{ ref('xactly_pos_part_assignment_hist_source') }}
 
 ), renamed AS (
 

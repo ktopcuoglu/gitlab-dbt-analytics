@@ -17,9 +17,9 @@ WITH source AS (
       object_id,
       pos_title_assignment_id,
       position_id,
+      {{ nohash_sensitive_columns('xactly_pos_title_assignment_hist_source', 'position_name') }},
       title_id,
-      title_name,
-      {{ nohash_sensitive_columns('position_name') }}
+      title_name
 
     FROM source
     

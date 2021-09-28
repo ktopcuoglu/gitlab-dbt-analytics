@@ -42,6 +42,7 @@ WITH source AS (
       order_code,
       order_item_id,
       participant_id,
+      {{ nohash_sensitive_columns('xactly_credit_source', 'participant_name') }},
       period_id,
       period_name,
       plan_id,
@@ -63,7 +64,7 @@ WITH source AS (
       sub_batch_number,
       sub_part_key,
       trans_id,
-      {{ nohash_sensitive_columns('participant_name', 'position_name') }}
+      {{ nohash_sensitive_columns('xactly_credit_source', 'position_name') }}
 
     FROM source
     

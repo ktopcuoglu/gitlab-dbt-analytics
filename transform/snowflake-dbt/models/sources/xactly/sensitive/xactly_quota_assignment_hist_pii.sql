@@ -10,6 +10,7 @@ WITH source AS (
       amount,
       amount_unit_type_id,
       assignment_id,
+      {{ nohash_sensitive_columns('xactly_quota_assignment_hist_source', 'assignment_name') }},
       assignment_type,
       created_by_id,
       created_by_name,
@@ -24,8 +25,7 @@ WITH source AS (
       object_id,
       period_id,
       quota_assignment_id,
-      quota_id,
-      {{ nohash_sensitive_columns('assignment_name') }}
+      quota_id
 
     FROM source
 
