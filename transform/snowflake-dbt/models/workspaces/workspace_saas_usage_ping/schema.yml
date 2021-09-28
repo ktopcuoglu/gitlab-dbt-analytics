@@ -9,7 +9,7 @@ models:
     description: workspace table flattening JSON results contained in instance_redis_metrics's column run_results
     columns:
       - name: saas_usage_ping_redis_id
-        description: File with the metrics data stored in `.json` format
+        description: File with the metrics data stored in `.json` data type format
       - name: ping_date
         description: Date of ping
       - name: metric_path
