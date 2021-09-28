@@ -194,11 +194,13 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity_xf.influence_partner,
       sfdc_opportunity_xf.fulfillment_partner,
       sfdc_opportunity_xf.platform_partner,
+
       CASE
-        WHEN sfdc_opportunity_xf.partner_account IS NOT NULL 
+        WHEN sfdc_opportunity_xf.deal_path = 'Channel' 
           THEN REPLACE(sfdc_opportunity_xf.partner_track,'select','Select')
         ELSE 'Direct' 
-      END                                                          AS calculated_partner_track,
+      END                                                         AS calculated_partner_track,
+
       
       COALESCE(sfdc_opportunity_xf.partner_track,'N/A')           AS partner_track,
       sfdc_opportunity_xf.is_public_sector_opp,
@@ -221,14 +223,6 @@ WITH sfdc_opportunity AS (
           THEN 'Partner Co-Sell'
       END                                                         AS deal_path_engagement,
 
-
-      -- NF: 20220906 Got confirmation from Colleen that DR Partner Track only makes sense when 
-      -- deal_path is direct
-      CASE 
-        WHEN sfdc_opportunity_xf.deal_path = 'Channel' 
-          THEN COALESCE(sfdc_opportunity_xf.partner_track,'N/A')
-        ELSE sfdc_opportunity_xf.deal_path
-      END                                                         AS calculated_partner_track,
 
       sfdc_opportunity_xf.stage_name_3plus,
       sfdc_opportunity_xf.stage_name_4plus,
