@@ -18,4 +18,3 @@ models:
         description: Metric value
       - name: recorded_at
         description: Value for the metric `recording_ce_finished_at` in DATE format
-
