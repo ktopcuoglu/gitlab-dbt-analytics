@@ -439,6 +439,8 @@ models:
 
       workspace_data:
         +schema: workspace_data
+        tdf:
+          +materialized: table
 
         dbt:
           +tags: ["dbt"]
