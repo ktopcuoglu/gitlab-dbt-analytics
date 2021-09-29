@@ -93,7 +93,7 @@ dbt_non_product_models_command = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
     export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_S" &&
-    dbt run --profiles-dir profile --target ci --exclude tag:datasiren tag:product legacy.sheetload legacy.snapshots sources.gitlab_dotcom sources.sheetload sources.sfdc sources.zuora sources.dbt common_prep.month_partition workspaces.*; ret=$?;
+    dbt run --profiles-dir profile --target dev --exclude tag:datasiren tag:product legacy.sheetload legacy.snapshots sources.gitlab_dotcom sources.sheetload sources.sfdc sources.zuora sources.dbt common_prep.month_partition workspaces.*; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
 
@@ -132,7 +132,7 @@ dbt_product_models_command = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
     export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_L" &&
-    dbt run --profiles-dir profile --target ci --models tag:product --exclude workspaces.*; ret=$?;
+    dbt run --profiles-dir profile --target dev --models tag:product --exclude workspaces.*; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
 
@@ -171,7 +171,7 @@ dbt_full_refresh_cmd = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
     export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_L" &&
-    dbt run --profiles-dir profile --target ci --full-refresh --exclude tag:datasiren common.dim_ip_to_geo; ret=$?;
+    dbt run --profiles-dir profile --target dev --full-refresh --exclude tag:datasiren common.dim_ip_to_geo; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
 dbt_full_refresh = KubernetesPodOperator(
@@ -207,7 +207,7 @@ dbt_full_refresh = KubernetesPodOperator(
 dbt_test_cmd = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
-    dbt test --profiles-dir profile --target ci --exclude tag:datasiren snowplow legacy.snapshots source:gitlab_dotcom source:salesforce source:zuora workspaces.*; ret=$?;
+    dbt test --profiles-dir profile --target dev --exclude tag:datasiren snowplow legacy.snapshots source:gitlab_dotcom source:salesforce source:zuora workspaces.*; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py manifest; $ret
     python ../../orchestration/upload_dbt_file_to_snowflake.py test; exit $ret
 """
@@ -245,7 +245,7 @@ dbt_test = KubernetesPodOperator(
 dbt_results_cmd = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
-    dbt run --profiles-dir profile --target ci --models sources.dbt+ ; ret=$?;
+    dbt run --profiles-dir profile --target dev --models sources.dbt+ ; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
 dbt_results = KubernetesPodOperator(
@@ -282,7 +282,7 @@ dbt_results = KubernetesPodOperator(
 dbt_workspaces_command = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
-    dbt run --profiles-dir profile --target ci --models workspaces.* --exclude workspaces.workspace_datascience.*; ret=$?;
+    dbt run --profiles-dir profile --target dev --models workspaces.* --exclude workspaces.workspace_datascience.*; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
 dbt_workspaces = KubernetesPodOperator(
@@ -320,7 +320,7 @@ dbt_workspaces_xl_command = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
     export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_L" &&
-    dbt run --profiles-dir profile --target ci --models workspaces.workspace_datascience.* ; ret=$?;
+    dbt run --profiles-dir profile --target dev --models workspaces.workspace_datascience.* ; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
 dbt_workspaces_xl = KubernetesPodOperator(
@@ -357,7 +357,7 @@ dbt_workspaces_xl = KubernetesPodOperator(
 dbt_workspaces_test_command = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
-    dbt test --profiles-dir profile --target ci --models workspaces.* ; ret=$?;
+    dbt test --profiles-dir profile --target dev --models workspaces.* ; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py test; exit $ret
 """
 dbt_workspaces_test = KubernetesPodOperator(
