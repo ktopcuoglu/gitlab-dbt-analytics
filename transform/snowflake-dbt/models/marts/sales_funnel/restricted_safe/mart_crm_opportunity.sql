@@ -196,7 +196,14 @@
       -- Solutions-Architech fields
       dim_crm_opportunity.sa_tech_evaluation_close_status,
       dim_crm_opportunity.sa_tech_evaluation_end_date,
-      dim_crm_opportunity.sa_tech_evaluation_start_date
+      dim_crm_opportunity.sa_tech_evaluation_start_date,
+
+
+      -- Command Plan fields
+      dim_crm_opportunity.cp_partner,
+      dim_crm_opportunity.cp_paper_process,
+      dim_crm_opportunity.cp_help,
+      dim_crm_opportunity.cp_review_notes
 
     FROM fct_crm_opportunity
     LEFT JOIN dim_crm_opportunity
@@ -239,5 +246,5 @@
     created_by="@iweeks",
     updated_by="@jpeguero",
     created_date="2020-12-07",
-    updated_date="2021-09-09",
+    updated_date="2021-09-29",
   ) }}
