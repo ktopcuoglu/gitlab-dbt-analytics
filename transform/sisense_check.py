@@ -37,7 +37,7 @@ for path in paths_to_check:
     fullpath = f"{parentdirname}/periscope/{path}"  #TODO have it work for the SAFE space as well
     for root, dirs, files in os.walk(fullpath):
         for file in files:
-            if re.search("sql", file):
+            if file.endswith('.sql'):
                 full_filename = f"{root}/{file}"
                 #print(full_filename)
                 with open(full_filename, "r") as f:
