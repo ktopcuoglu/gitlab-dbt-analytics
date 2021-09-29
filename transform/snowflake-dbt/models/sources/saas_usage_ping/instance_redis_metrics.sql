@@ -3,8 +3,7 @@ WITH base AS (
     SELECT *
     FROM {{ source('saas_usage_ping', 'instance_redis_metrics') }}
 
-),
-partitioned AS (
+), partitioned AS (
 
     SELECT jsontext     AS jsontext,
            ping_date    AS ping_date,
