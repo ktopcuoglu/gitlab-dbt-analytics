@@ -327,3 +327,15 @@ models:
           - not_null
       - name: active_stage_count
         description: number of active stages for a given organization in a given month
+  - name: mart_gitlab_dotcom_issue_metrics
+    description: '{{ doc("mart_gitlab_dotcom_issue_metrics") }}'
+    columns:
+      - name: date_id
+        tests:
+          - not_null
+      - name: date_actual
+        tests:
+          - not_null
+      - name: dim_issue_id
+        tests:
+          - not_null

@@ -33,6 +33,6 @@
     cte_ref="final",
     created_by="@dtownsend",
     updated_by="@dtownsend",
-    created_date="2021-09-03",
-    updated_date="2021-09-03"
+    created_date="2021-10-01",
+    updated_date="2021-10-01"
 ) }}

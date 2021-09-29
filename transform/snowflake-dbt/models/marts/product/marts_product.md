@@ -80,3 +80,11 @@ Mart table containing quantitative data related to CI runner activity on GitLab.
 These metrics are aggregated at a daily grain per `dim_project_id`. Only activity since 2020-01-01 is being processed due to volume of data.
 
 {% enddocs %}
+
+{% docs mart_gitlab_dotcom_issue_metrics %}
+
+Mart table containing age metrics & related metadata for gitlab.com internal issues. Used for tracking internal work progress for things like Engineering Allocation & Corrective Actions
+
+These metrics are available for individual issues at daily level & can be aggregated up from there
+
+{% enddocs %}
