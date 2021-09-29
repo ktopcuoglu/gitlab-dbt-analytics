@@ -31,7 +31,7 @@ WITH bizible AS (
       CASE
         WHEN dim_parent_campaign_id = '7014M000001dowZQAQ' -- based on issue https://gitlab.com/gitlab-com/marketing/marketing-strategy-performance/-/issues/246
           OR (bizible_medium = 'sponsorship'
-          AND bizible_touchpoint_source IN ('issa','stackoverflow','securityweekly-appsec','unix&linux','stackexchange')))
+          AND bizible_touchpoint_source IN ('issa','stackoverflow','securityweekly-appsec','unix&linux','stackexchange'))
           THEN 'Publishers/Sponsorships' 
         WHEN  (bizible_touchpoint_type = 'Web Form' 
           AND (bizible_landing_page LIKE '%smbnurture%' 
