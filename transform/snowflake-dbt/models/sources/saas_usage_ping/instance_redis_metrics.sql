@@ -13,8 +13,7 @@ partitioned AS (
       FROM base
       QUALIFY ROW_NUMBER() OVER (PARTITION BY ping_date ORDER BY ping_date DESC) = 1
 
-),
-renamed AS (
+), renamed AS (
 
     SELECT
       {{ dbt_utils.surrogate_key(['ping_date', 'run_id'])}} AS saas_usage_ping_redis_id,
