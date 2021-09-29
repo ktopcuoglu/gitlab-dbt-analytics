@@ -24,12 +24,12 @@
     SELECT distinct
       dim_subscription_id,
       uuid,
-      hostame,
+      hostname,
       snapshot_month,
       {{ convert_variant_to_number_field('manage_analytics_total_unique_counts_monthly') }}                                         AS analytics_28_days_user,                   
-      {{ convert_variant_to_number_field('plan_redis_hll_counters_issues_edit_issues_edit_total_unique_counts_monthly') }},         AS issues_edit_28_days_user,
+      {{ convert_variant_to_number_field('plan_redis_hll_counters_issues_edit_issues_edit_total_unique_counts_monthly') }}          AS issues_edit_28_days_user,
       {{ convert_variant_to_number_field('package_redis_hll_counters_user_packages_user_packages_total_unique_counts_monthly') }}   AS user_packages_28_days_user, 
-      {{ convert_variant_to_number_field('configure_redis_hll_counters_terraform_p_terraform_state_api_unique_users_monthly') }},   AS terraform_state_api_28_days_user,
+      {{ convert_variant_to_number_field('configure_redis_hll_counters_terraform_p_terraform_state_api_unique_users_monthly') }}    AS terraform_state_api_28_days_user,
       {{ convert_variant_to_number_field('monitor_incident_management_activer_user_28_days') }}                                     AS incident_management_28_days_user
     FROM smau
 
