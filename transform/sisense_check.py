@@ -15,46 +15,51 @@ import yaml
 dirname = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 parentdirname = os.path.dirname(dirname)
 
-def get_file_display_name (filepath):
+
+def get_file_display_name(filepath):
     if os.path.exists(filepath):
         with open(filepath) as f_:
             dataMap = yaml.safe_load(f_)
-            display_name = dataMap['display_name']
+            display_name = dataMap["display_name"]
     else:
-       display_name = 'Untitled' 
+        display_name = "Untitled"
 
     return display_name
 
-def get_dashboard_name (sql_path):
+
+def get_dashboard_name(sql_path):
     yaml_root = os.path.dirname(sql_path)
-    dashboard_dir_list = yaml_root.rsplit('/',1)
-    sql_file_name = dashboard_dir_list[-1].split('.')[0]
-    yaml_path = f"{yaml_root}/{sql_file_name}.yaml" # check for existence
+    dashboard_dir_list = yaml_root.rsplit("/", 1)
+    sql_file_name = dashboard_dir_list[-1].split(".")[0]
+    yaml_path = f"{yaml_root}/{sql_file_name}.yaml"  # check for existence
     dashboard_name = get_file_display_name(yaml_path)
 
     return dashboard_name
 
-def get_chart_name (sql_path):
+
+def get_chart_name(sql_path):
     yaml_root = os.path.dirname(sql_path)
-    sql_file_name = sql_path.split('/')[-1]
-    yaml_file_name = sql_file_name.split('.')[0]
-    yaml_path = f"{yaml_root}/{yaml_file_name}.yaml" # check for existence
+    sql_file_name = sql_path.split("/")[-1]
+    yaml_file_name = sql_file_name.split(".")[0]
+    yaml_path = f"{yaml_root}/{yaml_file_name}.yaml"  # check for existence
     chart_name = get_file_display_name(yaml_path)
+    
     return chart_name
 
-paths_to_check = ["snippets","views","dashboards"]
 
-repos_to_check =  ["periscope","sisense-safe"] #["test"] #
+paths_to_check = ["snippets", "views", "dashboards"]
+
+repos_to_check = ["periscope", "sisense-safe"]  # ["test"] #
 
 periscope_table_dict = dict()
 for repo in repos_to_check:
     for path in paths_to_check:
-        fullpath = f"{parentdirname}/{repo}/{path}"  #TODO have it work for the SAFE space as well
+        fullpath = f"{parentdirname}/{repo}/{path}"  # TODO have it work for the SAFE space as well
         for root, dirs, files in os.walk(fullpath):
             for file in files:
-                if file.endswith('.sql'):
+                if file.endswith(".sql"):
                     full_filename = f"{root}/{file}"
-                    #print(full_filename)
+                    # print(full_filename)
                     with open(full_filename, "r") as f:
                         lines = f.readlines()
                         all_lines = " ".join(lines)
@@ -76,47 +81,65 @@ for repo in repos_to_check:
                                     simplified_name = re.sub(
                                         ".*\/analytics\/periscope\/", "", full_filename
                                     )
-                                    #print(match)
+                                    # print(match)
                                     clean_match = re.sub("[\(].*?[\)]", "", match)
-                                    match_table = periscope_table_dict.get(clean_match, {})
+                                    match_table = periscope_table_dict.get(
+                                        clean_match, {}
+                                    )
 
                                     label = f"{repo}-{path}"
 
-                                    if path == 'dashboards':
+                                    if path == "dashboards":
                                         dashboard_name = get_dashboard_name(root)
                                         chart_name = get_chart_name(simplified_name)
-                                        #print(chart_name)
-                                        match_dashboard = match_table.get(label,{})
-                                        match_dashboard.setdefault(dashboard_name,set()).add(chart_name) #  file.lower()
+                                        # print(chart_name)
+                                        match_dashboard = match_table.get(label, {})
+                                        match_dashboard.setdefault(
+                                            dashboard_name, set()
+                                        ).add(
+                                            chart_name
+                                        )  #  file.lower()
                                         match_table[label] = match_dashboard
                                     else:
-                                        match_table.setdefault(label, set()).add(file.lower())
-                                    
+                                        match_table.setdefault(label, set()).add(
+                                            file.lower()
+                                        )
+
                                     periscope_table_dict[clean_match] = match_table
-                                    
-#print(periscope_table_dict)
+
+# print(periscope_table_dict)
 
 models_to_match = set()
 models_filename = f"{dirname}/transform/snowflake-dbt/to_check.txt"
 with open(models_filename, "r") as f:
     lines = f.readlines()
     for line in lines:
-        models_to_match.add(line.strip().lower().split('.')[-1])
+        models_to_match.add(line.strip().lower().split(".")[-1])
 
 to_match = set()
-to_add =  models_to_match.copy() #{'[bamboohr_rpt_headcount_aggregation]', '[bamboohr_rpt_division_level]'} #
+to_add = (
+    models_to_match.copy()
+)  # {'[bamboohr_rpt_headcount_aggregation]', '[bamboohr_rpt_division_level]'} #
 i = 1
-while len(to_add) > 0 and i < 7:  #A catch for run away loops
+while len(to_add) > 0 and i < 7:  # A catch for run away loops
     to_check = to_add.copy()
     to_add = set()
     for line in to_check:
         match = periscope_table_dict.get(line, dict())
-        to_match = to_match.union(set().union(*[value for key, value in match.items() if key not in {'sisense-safe-dashboards','periscope-dashboards'}]))
+        to_match = to_match.union(
+            set().union(
+                *[
+                    value
+                    for key, value in match.items()
+                    if key not in {"sisense-safe-dashboards", "periscope-dashboards"}
+                ]
+            )
+        )
     for value in to_match:
-        table =  f"[{value.lower().split('.')[0]}]"
+        table = f"[{value.lower().split('.')[0]}]"
         if table not in to_check and table not in models_to_match:
-            to_add.add(table)  
-    
+            to_add.add(table)
+
     models_to_match = models_to_match.union(to_add)
     i = i + 1
 
@@ -128,7 +151,7 @@ for line in models_to_match:
     if len(match) > 0:
 
         for key, value in match.items():
-            if key in {'sisense-safe-dashboards','periscope-dashboards'}:
+            if key in {"sisense-safe-dashboards", "periscope-dashboards"}:
                 charts = match[key]
                 for keys, values in charts.items():
                     charts[keys] = list(values)
@@ -137,7 +160,7 @@ for line in models_to_match:
 
         output_dict[line.strip()] = match
 
-#print(output_dict)
+# print(output_dict)
 
-with open(f"{dirname}/transform/snowflake-dbt/sisense_elements.json", 'w') as fp:
+with open(f"{dirname}/transform/snowflake-dbt/sisense_elements.json", "w") as fp:
     json.dump(output_dict, fp)
