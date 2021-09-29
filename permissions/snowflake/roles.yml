@@ -27,6 +27,11 @@ databases:
     - csharp_prep:
         shared: no   
 
+    - degan_prod:
+        shared: no
+    - degan_prep:
+        shared: no
+
     - dpeterson_prod:
         shared: no
     - dpeterson_prep:
@@ -2225,6 +2230,38 @@ roles:
             - restricted_safe
         warehouses:
             - analyst_xs
+        owns:
+            databases:
+                - degan_prep
+                - degan_prod
+            schemas:
+                - degan_prep.*
+                - degan_prod.*
+            tables:
+                - degan_prep.*.*
+                - degan_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - degan_prep
+                    - degan_prod
+                write:
+                    - degan_prep
+                    - degan_prod
+            schemas:
+                read:
+                    - degan_prep.*
+                    - degan_prod.*
+                write:
+                    - degan_prep.*
+                    - degan_prod.*
+            tables:
+                read:
+                    - degan_prep.*.*
+                    - degan_prod.*.*
+                write:
+                    - degan_prep.*.*
+                    - degan_prod.*.*       
 
     - dknox:
         member_of: []
