@@ -122,25 +122,18 @@ WITH campaign_details AS (
       combined_touchpoints.is_attribution_touchpoint,
       bizible_campaign_grouping.integrated_campaign_grouping,
       bizible_campaign_grouping.bizible_integrated_campaign_grouping,
-      bizible_campaign_grouping.gtm_motion ,
-      bizible_campaign_grouping.touchpoint_segment                         
+      bizible_campaign_grouping.gtm_motion,
+      bizible_campaign_grouping.touchpoint_segment
 
     FROM combined_touchpoints
     LEFT JOIN bizible_campaign_grouping
-      ON combined_touchpoints.dim_campaign_id = bizible_campaign_grouping.dim_campaign_id
-        AND combined_touchpoints.dim_parent_campaign_id = bizible_campaign_grouping.dim_parent_campaign_id
-        AND combined_touchpoints.bizible_touchpoint_type = bizible_campaign_grouping.bizible_touchpoint_type
-        AND combined_touchpoints.bizible_landing_page = bizible_campaign_grouping.bizible_landing_page
-        AND combined_touchpoints.bizible_referrer_page = bizible_campaign_grouping.bizible_referrer_page
-        AND combined_touchpoints.bizible_form_url = bizible_campaign_grouping.bizible_form_url
-        AND combined_touchpoints.bizible_ad_campaign_name = bizible_campaign_grouping.bizible_ad_campaign_name
-        AND combined_touchpoints.bizible_marketing_channel_path = bizible_campaign_grouping.bizible_marketing_channel_path
+      ON combined_touchpoints.dim_crm_touchpoint_id = bizible_campaign_grouping.dim_crm_touchpoint_id
 )
 
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mcooperDD",
-    updated_by="@rkohnke",
+    updated_by="@michellecooper",
     created_date="2021-01-21",
-    updated_date="2021-08-09"
+    updated_date="2021-09-16"
 ) }}

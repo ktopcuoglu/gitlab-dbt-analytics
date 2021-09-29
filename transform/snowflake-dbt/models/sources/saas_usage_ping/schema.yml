@@ -2,12 +2,39 @@ version: 2
 
 models:
     - name: saas_usage_ping_instance
-      description: Source table for the RAW saas_usage_ping.gitlab_dotcom table representing instance level usage ping
+      description: Source table for the RAW saas_usage_ping.instance_sql_metrics table representing instance level usage ping
       columns:
         - name: saas_usage_ping_gitlab_dotcom_id
           tests:
             - not_null
             - unique
+        - name: run_id
+          tests:
+            - not_null
+    - name: instance_redis_metrics
+      description: Source table for the RAW saas_usage_ping.instance_redis_metrics table representing instance level usage ping
+      columns:
+        - name: saas_usage_ping_redis_id
+          description: Primary key for instance redis metrics reprsent as unique combination from ping_date + run_id columns
+          tests:
+            - not_null
+            - unique
+        - name: response
+          description: File with the metrics data stored in `.json` format
+          tests:
+            - not_null
+        - name: ping_date
+          description: Date of ping
+          tests:
+            - not_null
+        - name: run_id
+          description: Unique identifier for running job acquiring the data
+          tests:
+            - not_null
+        - name: _uploaded_at
+          description: Date and time when data is uploaded into Snowflake
+          tests:
+            - not_null
     - name: saas_usage_ping_namespace
       description: Source table for the RAW saas_usage_ping.gitlab_dotcom_namespaces table representing namespace level usage ping
       columns:

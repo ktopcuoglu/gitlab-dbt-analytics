@@ -7,6 +7,10 @@ sheets:
     owner: '@jeanpeguero'
     tabs:
       - crm_accounts_pricing_eoa
+  - name: ecommerce_expanded
+    owner: '@jeanpeguero'
+    tabs:
+      - ecommerce_expanded
   - name: frontend_interview_metrics
     owner: '@andr3'
     tabs:

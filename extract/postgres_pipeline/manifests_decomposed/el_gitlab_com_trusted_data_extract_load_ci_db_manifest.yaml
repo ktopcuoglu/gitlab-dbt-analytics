@@ -1,0 +1,77 @@
+connection_info:
+  database: GITLAB_COM_CI_DB_NAME
+  host: GITLAB_COM_CI_DB_HOST
+  pass: GITLAB_COM_CI_DB_PASS
+  port: GITLAB_COM_CI_DB_PORT
+  user: GITLAB_COM_CI_DB_USER
+tables:
+  cluster_1:
+    dbt_source_model: true
+    export_schema: 'gitlab_dotcom'
+    export_table: 'gitlab_pgp_export'
+    export_table_primary_key: created_date
+    import_db: GITLAB_DB
+    import_query: |-
+        SELECT 'gitlab_db_ci_runner_projects' AS table_name
+        , DATE(created_at) as created_date
+        , DATE(updated_at) as updated_date
+        , count(*) as number_of_records
+        FROM ci_runner_projects
+        WHERE DATE(updated_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL
+        SELECT 'gitlab_db_ci_runners' AS table_name
+        , DATE(created_at) as created_date
+        , DATE(updated_at) as updated_date
+        , count(*) as number_of_records
+        FROM ci_runners
+        WHERE DATE(updated_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL
+        SELECT 'gitlab_db_ci_group_variables' AS table_name
+        , DATE(created_at) as created_date
+        , DATE(updated_at) as updated_date
+        , count(*) as number_of_records
+        FROM ci_group_variables
+        WHERE DATE(updated_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL
+        SELECT 'gitlab_db_ci_triggers' AS table_name
+        , DATE(created_at) as created_date
+        , DATE(updated_at) as updated_date
+        , count(*) as number_of_records
+        FROM ci_triggers
+        WHERE DATE(updated_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+  cluster_2:
+    dbt_source_model: true
+    export_schema: 'gitlab_dotcom'
+    export_table: 'gitlab_pgp_export'
+    export_table_primary_key: created_date
+    import_db: GITLAB_DB
+    import_query: |-
+        SELECT 'gitlab_db_ci_pipeline_schedule_variables' AS table_name
+        , DATE(created_at) as created_date
+        , DATE(updated_at) as updated_date
+        , count(*) as number_of_records
+        FROM ci_pipeline_schedule_variables
+        WHERE DATE(updated_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL
+        SELECT 'gitlab_db_ci_pipeline_schedule_variables' AS table_name
+        , DATE(created_at) as created_date
+        , DATE(updated_at) as updated_date
+        , count(*) as number_of_records
+        FROM ci_pipeline_schedule_variables
+        WHERE DATE(updated_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL
+        SELECT 'gitlab_db_ci_trigger_requests' AS table_name
+        , DATE(created_at) as created_date
+        , DATE(updated_at) as updated_date
+        , count(*) as number_of_records
+        FROM ci_trigger_requests
+        WHERE DATE(updated_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+
+        

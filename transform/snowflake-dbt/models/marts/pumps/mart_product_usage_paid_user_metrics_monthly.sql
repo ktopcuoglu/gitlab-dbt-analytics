@@ -8,7 +8,8 @@
     ('monthly_sm_metrics','fct_product_usage_wave_1_3_metrics_monthly'),
     ('billing_accounts','dim_billing_account'),
     ('crm_accounts','dim_crm_account'),
-    ('location_country', 'dim_location_country')
+    ('location_country', 'dim_location_country'),
+    ('subscriptions', 'dim_subscription_snapshot_bottom_up')
 ]) }}
 
 , sm_paid_user_metrics AS (
@@ -22,6 +23,7 @@
       {{ get_keyed_nulls('billing_accounts.dim_billing_account_id') }}              AS dim_billing_account_id,
       {{ get_keyed_nulls('crm_accounts.dim_crm_account_id') }}                      AS dim_crm_account_id,
       monthly_sm_metrics.dim_subscription_id_original,
+      subscriptions.subscription_status,
       monthly_sm_metrics.snapshot_date_id,
       monthly_sm_metrics.ping_created_at,
       monthly_sm_metrics.dim_usage_ping_id,
@@ -136,6 +138,10 @@
       ON billing_accounts.dim_crm_account_id = crm_accounts.dim_crm_account_id
     LEFT JOIN location_country
       ON monthly_sm_metrics.dim_location_country_id = location_country.dim_location_country_id
+    LEFT JOIN subscriptions
+      ON monthly_sm_metrics.dim_subscription_id = subscriptions.dim_subscription_id 
+      AND DATEADD('day', -1, monthly_sm_metrics.snapshot_month) 
+      = TO_DATE(TO_CHAR(subscriptions.snapshot_id), 'YYYYMMDD')
 
 ), saas_paid_user_metrics AS (
 
@@ -148,6 +154,7 @@
       {{ get_keyed_nulls('billing_accounts.dim_billing_account_id') }}              AS dim_billing_account_id,
       {{ get_keyed_nulls('crm_accounts.dim_crm_account_id') }}                      AS dim_crm_account_id,
       monthly_saas_metrics.dim_subscription_id_original,
+      subscriptions.subscription_status,
       monthly_saas_metrics.snapshot_date_id,
       monthly_saas_metrics.ping_created_at,
       NULL                                                                          AS dim_usage_ping_id,
@@ -260,6 +267,10 @@
       ON monthly_saas_metrics.dim_billing_account_id = billing_accounts.dim_billing_account_id
     LEFT JOIN crm_accounts
       ON billing_accounts.dim_crm_account_id = crm_accounts.dim_crm_account_id
+    LEFT JOIN subscriptions
+      ON monthly_saas_metrics.dim_subscription_id = subscriptions.dim_subscription_id 
+      AND DATEADD('day', -1, monthly_saas_metrics.snapshot_month) 
+      = TO_DATE(TO_CHAR(subscriptions.snapshot_id), 'YYYYMMDD')
     -- LEFT JOIN location_country
     --   ON monthly_saas_metrics.dim_location_country_id = location_country.dim_location_country_id
 
@@ -280,5 +291,5 @@
     created_by="@ischweickartDD",
     updated_by="@chrissharp",
     created_date="2021-06-11",
-    updated_date="2021-08-23"
+    updated_date="2021-09-09"
 ) }}

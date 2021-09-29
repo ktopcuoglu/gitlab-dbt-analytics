@@ -77,6 +77,16 @@ models:
           - customers_db
         tests:
           - not_null
+  - name: customers_db_licenses_source
+    description: This table contains data from licenses in customers portal.
+    columns:
+      - name: license_id
+        tags:
+          - tdf
+          - customers_db
+        tests:
+          - not_null
+          - unique
   - name: customers_db_orders_source
     description: '{{ doc("customers_db_orders_source") }}'  
     columns:

@@ -1,4 +1,3 @@
-
 # Welcome to the GitLab Data Program :tada:
 
 Welcome to the GitLab Data Program -- we're excited to have you! The goal of this issue is to help bring you, our new data team member, up to speed in the GitLab Data Team's analytics stack as efficiently as possible, without sacrificing quality for speed. You should complete and close the Data Team on-boarding issue within 1 week after you have completed the GitLab company on-boarding issue. 
@@ -62,12 +61,12 @@ You will need access to several groups, applications, tools, and data sources fo
 |  Slack alias: `@datateam` | No | Yes | Yes | Yes | Yes |  PeopleOps Onboarding |
 |  Slack alias: `@data-analysts` | No | Yes | Yes | Yes | No |  PeopleOps Onboarding |
 |  Slack alias: `@data-engineers` | No | No | Yes | No | Yes |  PeopleOps Onboarding |
-|  Project: `GitLab Data Team` | No | Developer | Developer | Developer | Developer |
+|  Project: `GitLab Data Team` | Developer | Developer | Developer | Developer | Developer |
 |  1password vault: `Data Team` | No | Yes | Yes | Yes | Yes |  PeopleOps Onboarding |
-|  Namespce: `gitlab-data` |  No | Developer | Developer | Developer | Developer | ? |
+|  Namespace: `gitlab-data` |  Developer | Developer | Developer | Developer | Developer | ? |
 | daily Geekbot standup  | No | Optional | Optional | Yes | Yes | [Instructions](https://geekbot.com/faq/#:~:text=How%20can%20i%20add%20new,participants%20with%20the%20broadcast%20channel.)  |
 |  Data Team calendar |  No |Yes | Yes | Yes | Yes | ?  |
-|  Lucidchart folder: `Data Team` | No |Yes | Yes | Yes | Yes |  ? |
+|  Lucidchart folder: `Data Team` | Yes |Yes | Yes | Yes | Yes |  ? |
 |  Google Drive folder: SheetLoad | No |Yes | Yes | Yes | Yes |  ? |
 |  Google Drive folder: Boneyard | No |Yes | Yes | Yes | Yes |  ? |
 |  Service Account Credentials: Google Cloud | No | No | ? | No | Yes | ? |
@@ -444,7 +443,7 @@ Also referred as SFDC, Salesforce.com (Sales Force Dot Com).
 
 <summary>Review Steps</summary>
 
-- [ ] To understand how this is implemented at GitLab read [Feature Implementation](https://about.gitlab.com/handbook/product/feature-instrumentation/#instrumentation-for-gitlabcom).
+- [ ] To understand how this is implemented at GitLab read [Feature Implementation](https://docs.gitlab.com/ee/development/snowplow/index.html).
 - [ ] Read how we pull data from [S3 into Snowflake](https://about.gitlab.com/handbook/business-ops/data-team/platform/#snowplow-infrastructure)
 - [ ] Familiarize yourself with the [Snowplow Open Source documentation](https://github.com/snowplow/snowplow).
 - [ ] Review the [Snowplow dbt package](https://hub.getdbt.com/fishtown-analytics/snowplow/latest/) as it is used in our models. Their documentation does show up in our dbt docs.

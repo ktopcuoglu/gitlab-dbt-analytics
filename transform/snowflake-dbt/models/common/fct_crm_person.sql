@@ -177,6 +177,15 @@ WITH account_dims_mapping AS (
       CONVERT_TIMEZONE('America/Los_Angeles', mqls.last_mql_date)                                               AS mql_datetime_latest_pt,
       {{ get_date_id('last_mql_date') }}                                                                        AS mql_date_latest_id,
       {{ get_date_pt_id('last_mql_date') }}                                                                     AS mql_date_latest_pt_id,
+      COALESCE(sfdc_contacts.marketo_qualified_lead_datetime, sfdc_leads.marketo_qualified_lead_datetime)::DATE 
+                                                                                                                AS mql_sfdc_date,
+      COALESCE(sfdc_contacts.marketo_qualified_lead_datetime, sfdc_leads.marketo_qualified_lead_datetime)       AS mql_sfdc_datetime,
+      {{ get_date_id('mql_sfdc_date') }}                                                                        AS mql_sfdc_date_id,
+      {{ get_date_pt_id('mql_sfdc_date') }}                                                                     AS mql_sfdc_date_pt_id,
+      COALESCE(sfdc_contacts.mql_datetime_inferred, sfdc_leads.mql_datetime_inferred)::DATE                     AS mql_inferred_date,
+      COALESCE(sfdc_contacts.mql_datetime_inferred, sfdc_leads.mql_datetime_inferred)                           AS mql_inferred_datetime,
+      {{ get_date_id('mql_inferred_date') }}                                                                    AS mql_inferred_date_id,
+      {{ get_date_pt_id('mql_inferred_date') }}                                                                 AS mql_inferred_date_pt_id,
       COALESCE(sfdc_contacts.accepted_datetime, sfdc_leads.accepted_datetime)::DATE                             AS accepted_date,
       COALESCE(sfdc_contacts.accepted_datetime, sfdc_leads.accepted_datetime)                                   AS accepted_datetime,
       CONVERT_TIMEZONE('America/Los_Angeles', COALESCE(sfdc_contacts.accepted_datetime, sfdc_leads.accepted_datetime))
@@ -192,6 +201,9 @@ WITH account_dims_mapping AS (
       sfdc_lead_converted.converted_date::DATE                                                                  AS converted_date,
       {{ get_date_id('sfdc_lead_converted.converted_date') }}                                                   AS converted_date_id,
       {{ get_date_pt_id('sfdc_lead_converted.converted_date') }}                                                AS converted_date_pt_id,
+      COALESCE(sfdc_contacts.worked_datetime, sfdc_leads.worked_datetime)::DATE                                 AS worked_date,
+      {{ get_date_id('worked_date') }}                                                                          AS worked_date_id,
+      {{ get_date_pt_id('worked_date') }}                                                                       AS worked_date_pt_id,
 
      -- flags
       CASE
@@ -243,7 +255,7 @@ WITH account_dims_mapping AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mcooperDD",
-    updated_by="@jpeguero",
+    updated_by="@rkohnke",
     created_date="2020-12-01",
-    updated_date="2021-08-24"
+    updated_date="2021-09-17"
 ) }}
