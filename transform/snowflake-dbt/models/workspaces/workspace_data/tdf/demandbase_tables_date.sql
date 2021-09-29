@@ -1,8 +1,3 @@
-{{ config({
-        "materialized": "table"
-    })
-}}
-
 WITH demandbase_date AS (
 
     {% set tables = ['account','account_keyword_historical_rollup','account_keyword_intent','account_list','account_list_account','account_scores','account_site_page_metrics','campaign_account_performance','keyword_set','keyword_set_keyword'] %}	

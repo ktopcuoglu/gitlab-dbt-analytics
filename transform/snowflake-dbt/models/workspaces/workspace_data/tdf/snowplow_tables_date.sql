@@ -1,8 +1,3 @@
-  {{ config({
-        "materialized": "table"
-    })
-}}
-
 WITH snowplow_date AS (
 
     {% set tables = ['events' ,'events_sample','bad_events'] %}					

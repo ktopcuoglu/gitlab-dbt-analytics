@@ -1,8 +1,3 @@
-{{ config({
-        "materialized": "table"
-    })
-}}
-
 WITH netsuite_date AS (
 
     {% set tables = ['accounting_books' , 'accounting_periods','accounts','classes','currencies','customers','departments','entity','subsidiaries','transaction_lines','vendors' ] %}	

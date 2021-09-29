@@ -1,8 +1,3 @@
-{{ config({
-        "materialized": "table"
-    })
-}}
-
 WITH qualtrics_date AS (
 
     {% set tables = [
