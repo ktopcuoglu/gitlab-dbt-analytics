@@ -43,7 +43,7 @@ def get_chart_name(sql_path):
     yaml_file_name = sql_file_name.split(".")[0]
     yaml_path = f"{yaml_root}/{yaml_file_name}.yaml"  # check for existence
     chart_name = get_file_display_name(yaml_path)
-    
+
     return chart_name
 
 
