@@ -13,6 +13,8 @@ WITH account_dims_mapping AS (
       bizible_touchpoint_position,
       bizible_marketing_channel_path,
       bizible_touchpoint_date,
+      last_utm_content,
+      last_utm_campaign,
       dim_crm_account_id,
       dim_crm_user_id,
       person_score,
@@ -221,6 +223,8 @@ WITH account_dims_mapping AS (
       crm_person.sequence_task_due_date,
       crm_person.sequence_status,
       crm_person.last_activity_date,
+      crm_person.last_utm_content,
+      crm_person.last_utm_campaign,
 
      -- additive fields
 

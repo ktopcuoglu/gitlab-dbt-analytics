@@ -70,6 +70,8 @@
       fct_crm_person.is_mql,
       fct_crm_person.is_inquiry,
       fct_crm_person.mql_count,
+      fct_crm_person.last_utm_content,
+      fct_crm_person.last_utm_campaign,
 
       -- campaign info
       dim_campaign.dim_campaign_id,

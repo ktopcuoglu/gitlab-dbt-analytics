@@ -41,6 +41,7 @@
       dim_crm_touchpoint.touchpoint_segment,
       dim_crm_touchpoint.gtm_motion,
       dim_crm_touchpoint.integrated_campaign_grouping,
+      dim_crm_touchpoint.pipe_name,
       fct_crm_attribution_touchpoint.bizible_count_first_touch,
       fct_crm_attribution_touchpoint.bizible_count_lead_creation_touch,
       fct_crm_attribution_touchpoint.bizible_attribution_percent_full_path,
@@ -63,6 +64,7 @@
       dim_crm_person.owner_id,
       dim_crm_person.person_score,
       dim_crm_person.title                                                  AS crm_person_title,
+      dim_crm_person.country,
       dim_crm_person.status                                                 AS crm_person_status,
       dim_crm_person.lead_source,
       dim_crm_person.lead_source_type,
@@ -80,6 +82,8 @@
       fct_crm_person.is_mql,
       fct_crm_person.is_inquiry,
       fct_crm_person.mql_count,
+      fct_crm_person.last_utm_content,
+      fct_crm_person.last_utm_campaign,
 
       -- campaign info
       dim_campaign.dim_campaign_id,
@@ -201,6 +205,7 @@
       mart_crm_opportunity.deal_path_name,
       mart_crm_opportunity.order_type,
       mart_crm_opportunity.sales_qualified_source_name,
+      mart_crm_opportunity.sales_type,
       mart_crm_opportunity.closed_buckets,
       mart_crm_opportunity.source_buckets                                   AS opportunity_source_buckets,
       mart_crm_opportunity.opportunity_sales_development_representative,
