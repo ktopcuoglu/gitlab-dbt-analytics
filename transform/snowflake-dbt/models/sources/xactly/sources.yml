@@ -5,7 +5,7 @@ sources:
     database: '{{ env_var("SNOWFLAKE_LOAD_DATABASE") }}'
     schema: tap_xactly
     loader: Stitch
-    loaded_at_field: _sdc_batched_at
+    loaded_at_field: __loaded_at
 
     quoting:
       database: true
