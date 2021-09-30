@@ -148,6 +148,14 @@ tables:
         WHERE DATE(updated_at) > current_date - interval '8' day
         GROUP BY 1,2,3
         UNION ALL
+        SELECT 'bulk_import_entities' AS table_name
+        , DATE(created_at) as created_date
+        , DATE(updated_at) as updated_date
+        , count(*) as number_of_records
+        FROM bulk_import_entities
+        WHERE DATE(updated_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL
         SELECT 'gitlab_db_bulk_imports' AS table_name
         , DATE(created_at) as created_date
         , DATE(updated_at) as updated_date
