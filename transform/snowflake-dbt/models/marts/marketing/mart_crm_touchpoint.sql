@@ -160,7 +160,6 @@
       dim_crm_account.gitlab_com_user,
       dim_crm_account.crm_account_type,
       dim_crm_account.technical_account_manager,
-      dim_crm_account.is_deleted,
       dim_crm_account.merged_to_account_id,
       dim_crm_account.is_reseller
 

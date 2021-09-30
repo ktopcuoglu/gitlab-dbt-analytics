@@ -87,7 +87,7 @@ WITH campaign_details AS (
       bizible_landing_page,
       bizible_landing_page_raw,
       bizible_marketing_channel,
-      marketing_channel_path        AS bizible_marketing_channel_path,
+      bizible_marketing_channel_path,
       bizible_medium,
       bizible_referrer_page,
       bizible_referrer_page_raw,
