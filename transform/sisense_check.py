@@ -10,7 +10,7 @@ import yaml
 
 # dbt list -m sfdc_account_source+ netsuite_transaction_lines_source+ --exclude date_details dim_date > to_check.txt
 
-# Assumes the Periscope directory was checked out at the parent repository
+# Assumes the Periscope and the Sisense-Safe directory was checked out at the parent repository
 
 dirname = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 parentdirname = os.path.dirname(dirname)
@@ -31,7 +31,7 @@ def get_dashboard_name(sql_path):
     yaml_root = os.path.dirname(sql_path)
     dashboard_dir_list = yaml_root.rsplit("/", 1)
     sql_file_name = dashboard_dir_list[-1].split(".")[0]
-    yaml_path = f"{yaml_root}/{sql_file_name}.yaml"  # check for existence
+    yaml_path = f"{yaml_root}/{sql_file_name}.yaml"
     dashboard_name = get_file_display_name(yaml_path)
 
     return dashboard_name
@@ -41,20 +41,21 @@ def get_chart_name(sql_path):
     yaml_root = os.path.dirname(sql_path)
     sql_file_name = sql_path.split("/")[-1]
     yaml_file_name = sql_file_name.split(".")[0]
-    yaml_path = f"{yaml_root}/{yaml_file_name}.yaml"  # check for existence
+    yaml_path = f"{yaml_root}/{yaml_file_name}.yaml"
     chart_name = get_file_display_name(yaml_path)
 
     return chart_name
 
 
+# Get the file path for all files with a line that matches a table, view, or snippet call.
 paths_to_check = ["snippets", "views", "dashboards"]
 
-repos_to_check = ["periscope", "sisense-safe"]  # ["test"] #
+repos_to_check = ["periscope", "sisense-safe"]
 
 periscope_table_dict = dict()
 for repo in repos_to_check:
     for path in paths_to_check:
-        fullpath = f"{parentdirname}/{repo}/{path}"  # TODO have it work for the SAFE space as well
+        fullpath = f"{parentdirname}/{repo}/{path}"
         for root, dirs, files in os.walk(fullpath):
             for file in files:
                 if file.endswith(".sql"):
@@ -70,7 +71,8 @@ for repo in repos_to_check:
                         new_lines = clean_lines.split("\n")
 
                         for line in new_lines:
-
+                            # Attempts to get the direct table calls as well as references to views and snippets.
+                            # It will catch more than is needed but the unneeded matched tend to not get matched in latter steps.
                             matches = re.search(
                                 r"(?:(?=\[)| (?:legacy|common(?:.*?)|workspace(?:.+?)|boneyard|restricted_safe(?:.+?))\.)([\_A-z0-9\(\'\[\]\'\)]*)",
                                 line.lower(),
@@ -87,8 +89,10 @@ for repo in repos_to_check:
                                         clean_match, {}
                                     )
 
+                                    # The repo name could be an other level in the dictionary but it seemed to add un needed complexity to subsequent code.
                                     label = f"{repo}-{path}"
 
+                                    # Dashboards have an additional layer of structure added so that the chart names can be included as well as the dashboard names.
                                     if path == "dashboards":
                                         dashboard_name = get_dashboard_name(root)
                                         chart_name = get_chart_name(simplified_name)
@@ -107,8 +111,8 @@ for repo in repos_to_check:
 
                                     periscope_table_dict[clean_match] = match_table
 
-# print(periscope_table_dict)
 
+# Load in the list of models to match
 models_to_match = set()
 models_filename = f"{dirname}/transform/snowflake-dbt/to_check.txt"
 with open(models_filename, "r") as f:
@@ -116,10 +120,10 @@ with open(models_filename, "r") as f:
     for line in lines:
         models_to_match.add(line.strip().lower().split(".")[-1])
 
+
+# Recursively get all views and snippets that match and the views and sippets that use them.
 to_match = set()
-to_add = (
-    models_to_match.copy()
-)  # {'[bamboohr_rpt_headcount_aggregation]', '[bamboohr_rpt_division_level]'} #
+to_add = models_to_match.copy()
 i = 1
 while len(to_add) > 0 and i < 7:  # A catch for run away loops
     to_check = to_add.copy()
@@ -143,7 +147,7 @@ while len(to_add) > 0 and i < 7:  # A catch for run away loops
     models_to_match = models_to_match.union(to_add)
     i = i + 1
 
-
+# Restructure the lowest sets to arrays for json style formating
 output_dict = dict()
 for line in models_to_match:
     match = periscope_table_dict.get(line, [])
@@ -160,7 +164,6 @@ for line in models_to_match:
 
         output_dict[line.strip()] = match
 
-# print(output_dict)
 
 with open(f"{dirname}/transform/snowflake-dbt/sisense_elements.json", "w") as fp:
     json.dump(output_dict, fp)
