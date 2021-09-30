@@ -27,8 +27,9 @@ def get_table_column_names(
           character_maximum_length, 
           column_name || data_type as compare_column 
         FROM {db_name}.INFORMATION_SCHEMA.COLUMNS 
-        WHERE TABLE_NAME = '{table_name}' order by 1
-          """
+        WHERE TABLE_NAME = '{table_name}'
+        ORDER BY 1
+        """
     )
     return query_dataframe(engine, query)
 
