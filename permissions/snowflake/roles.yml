@@ -4423,8 +4423,8 @@ users:
     - nmalcolm:
         can_login: yes
         member_of:
-            - jdubail
             - nmalcolm
+            - securityadmin
 
     - nraisinghani:
         can_login: yes
