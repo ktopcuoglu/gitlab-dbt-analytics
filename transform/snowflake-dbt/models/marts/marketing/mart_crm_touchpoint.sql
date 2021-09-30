@@ -158,7 +158,6 @@
       dim_crm_account.gitlab_com_user,
       dim_crm_account.crm_account_type,
       dim_crm_account.technical_account_manager,
-      dim_crm_account.is_deleted,
       dim_crm_account.merged_to_account_id,
       dim_crm_account.is_reseller
 
@@ -183,7 +182,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mcooperDD",
-    updated_by="@rkohnke",
+    updated_by="@michellecooper",
     created_date="2021-02-18",
-    updated_date="2021-08-09"
+    updated_date="2021-09-29"
 ) }}
