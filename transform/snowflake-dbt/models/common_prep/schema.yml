@@ -36,15 +36,15 @@ models:
           - not_null
 
   - name: prep_dim_subscription_snapshot_base
-      description: Base model for the dim_subscription snapshot data
-      columns:
-        - name: dim_subscription_id
-          tests:
-            - not_null
-        - name: dbt_valid_from
-          tests:
-            - not_null
-            -
+    description: Base model for the dim_subscription snapshot data
+    columns:
+      - name: dim_subscription_id
+        tests:
+          - not_null
+      - name: dbt_valid_from
+        tests:
+          - not_null
+
   - name: prep_dr_partner_engagement
     description: '{{ doc("prep_dr_partner_engagement") }}'
     columns:
