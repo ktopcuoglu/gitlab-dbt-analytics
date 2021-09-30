@@ -3163,6 +3163,12 @@ roles:
         member_of: []
         warehouses: [] 
 
+    - mroark:
+        member_of:
+            - analyst_sales
+        warehouses:
+            - analyst_xs 
+
     - msendal:
         warehouses: []
 
@@ -4378,6 +4384,11 @@ users:
     - mriser:
         can_login: no
         member_of: []
+
+    - mroark:
+        can_login: yes
+        member_of:
+            - mroark 
 
     - mrodriguez:
         can_login: no
