@@ -72,7 +72,7 @@ clone_table_config = [
     {
         "table_name": "mart_arr",
         "source_database": "PROD",
-        "source_schema": "common_mart_sales",
+        "source_schema": "restricted_safe_common_mart_sales",
         "source_table": "mart_arr",
         "target_schema": "full_table_clones",
         "target_database": "RAW",

@@ -51,6 +51,16 @@
       accepted_date_pt.date_day                AS accepted_date_pt,
       accepted_date.first_day_of_month         AS accepted_month,
       accepted_date_pt.first_day_of_month      AS accepted_month_pt,
+      mql_sfdc_date.date_day                   AS mql_sfdc_date,
+      fct_crm_person.mql_sfdc_datetime,
+      mql_sfdc_date_pt.date_day                AS mql_sfdc_date_pt,
+      mql_sfdc_date.first_day_of_month         AS mql_sfdc_month,
+      mql_sfdc_date_pt.first_day_of_month      AS mql_sfdc_month_pt,   
+      mql_inferred_date.date_day               AS mql_inferred_date,
+      fct_crm_person.mql_inferred_datetime,
+      mql_inferred_date_pt.date_day            AS mql_inferred_date_pt,
+      mql_inferred_date.first_day_of_month     AS mql_inferred_month,
+      mql_inferred_date_pt.first_day_of_month  AS mql_inferred_month_pt,
       qualifying_date.date_day                 AS qualifying_date,
       qualifying_date_pt.date_day              AS qualifying_date_pt,
       qualifying_date.first_day_of_month       AS qualifying_month,
@@ -125,7 +135,15 @@
     LEFT JOIN dim_date AS mql_date_latest
       ON fct_crm_person.mql_date_latest_id = mql_date_latest.date_id
     LEFT JOIN dim_date AS mql_date_latest_pt
-      ON fct_crm_person.mql_date_latest_pt_id = mql_date_latest_pt.date_id
+      ON fct_crm_person.mql_date_latest_pt_id = mql_date_latest_pt.date_id  
+    LEFT JOIN dim_date AS mql_sfdc_date
+      ON fct_crm_person.mql_sfdc_date_id = mql_sfdc_date.date_id
+    LEFT JOIN dim_date AS mql_sfdc_date_pt
+      ON fct_crm_person.mql_sfdc_date_pt_id = mql_sfdc_date_pt.date_id
+    LEFT JOIN dim_date AS mql_inferred_date
+      ON fct_crm_person.mql_inferred_date_id = mql_inferred_date.date_id
+    LEFT JOIN dim_date AS mql_inferred_date_pt
+      ON fct_crm_person.mql_inferred_date_pt_id = mql_inferred_date_pt.date_id
     LEFT JOIN dim_date AS accepted_date
       ON fct_crm_person.accepted_date_id = accepted_date.date_id
     LEFT JOIN dim_date AS accepted_date_pt
@@ -154,5 +172,5 @@
     created_by="@iweeks",
     updated_by="@rkohnke",
     created_date="2020-12-07",
-    updated_date="2021-09-07",
+    updated_date="2021-09-17",
   ) }}

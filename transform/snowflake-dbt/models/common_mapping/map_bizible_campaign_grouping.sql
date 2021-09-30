@@ -1,9 +1,52 @@
-WITH bizible AS (
+WITH bizible_touchpoints AS (
  
-    SELECT *
+    SELECT 
+      touchpoint_id,
+      campaign_id,
+      bizible_touchpoint_type,
+      bizible_touchpoint_source,
+      bizible_landing_page,
+      bizible_landing_page_raw,
+      bizible_referrer_page,
+      bizible_referrer_page_raw,
+      bizible_form_url,
+      bizible_form_url_raw,
+      bizible_ad_campaign_name,
+      bizible_marketing_channel_path,
+      bizible_medium,
+      bizible_ad_content
     FROM {{ ref('sfdc_bizible_touchpoint_source') }}
     WHERE is_deleted = 'FALSE'
 
+), bizible_attribution_touchpoints AS (
+
+    SELECT 
+      touchpoint_id,
+      campaign_id,
+      bizible_touchpoint_type,
+      bizible_touchpoint_source,
+      bizible_landing_page,
+      bizible_landing_page_raw,
+      bizible_referrer_page,
+      bizible_referrer_page_raw,
+      bizible_form_url,
+      bizible_form_url_raw,
+      bizible_ad_campaign_name,
+      bizible_marketing_channel_path,
+      bizible_medium,
+      bizible_ad_content
+    FROM {{ ref('sfdc_bizible_attribution_touchpoint_source') }}
+    WHERE is_deleted = 'FALSE'
+
+), bizible AS (
+
+    SELECT *
+    FROM bizible_touchpoints
+
+    UNION ALL
+
+    SELECT *
+    FROM bizible_attribution_touchpoints
 
 ), campaign AS (
 
@@ -19,14 +62,21 @@ WITH bizible AS (
       								'bizible.bizible_ad_campaign_name','bizible.bizible_marketing_channel_path'
       							]) 
       }}																										AS bizible_campaign_grouping_id,
+      bizible.touchpoint_id                                 AS dim_crm_touchpoint_id,
       campaign.dim_campaign_id,
       campaign.dim_parent_campaign_id,
       bizible.bizible_touchpoint_type,
+      bizible.bizible_touchpoint_source,
       bizible.bizible_landing_page,
+      bizible.bizible_landing_page_raw,
       bizible.bizible_referrer_page,
+      bizible.bizible_referrer_page_raw,
       bizible.bizible_form_url,
       bizible.bizible_ad_campaign_name,
       bizible.bizible_marketing_channel_path,
+      bizible.bizible_ad_content,
+      bizible.bizible_medium,
+      bizible.bizible_form_url_raw,
       CASE
         WHEN dim_parent_campaign_id = '7014M000001dowZQAQ' -- based on issue https://gitlab.com/gitlab-com/marketing/marketing-strategy-performance/-/issues/246
           OR (bizible_medium = 'sponsorship'
@@ -211,7 +261,7 @@ WITH bizible AS (
             OR bizible_landing_page_raw LIKE '%webcast-gitops-multicloudapp%'
             OR bizible_referrer_page_raw LIKE '%webcast-gitops-multicloudapp%'))
             OR (dim_parent_campaign_id LIKE '%7014M000001dpmf%')
-          Then 'GitOps GTM webcast'
+          THEN 'GitOps GTM webcast'
         WHEN (bizible_touchpoint_type = 'Web Form' --added 2021-06-04 MSandP: 346
             AND ( bizible_form_url_raw LIKE '%devopsgtm%'
             OR bizible_landing_page_raw LIKE '%devopsgtm%'
@@ -219,14 +269,49 @@ WITH bizible AS (
             OR dim_parent_campaign_id LIKE '%7014M000001dpT9%'
               -- OR camp.campaign_parent_id LIKE '%7014M000001dn8M%')
             OR dim_campaign_id LIKE '%7014M000001vbtw%'
-          Then 'DevOps GTM'
+          THEN 'DevOps GTM'
+
+        WHEN (bizible_touchpoint_type = 'Web Form' --added 2021-06-04 MSandP: 346
+           AND (( bizible_form_url_raw LIKE '%utm_campaign=devopsgtm%' AND bizible_form_url_raw LIKE '%utm_content=partnercredit%' 
+           OR bizible_landing_page_raw LIKE '%utm_campaign=devopsgtm%' AND bizible_landing_page_raw LIKE '%utm_content=partnercredit%'
+           OR bizible_referrer_page_raw LIKE '%utm_campaign=devopsgtm%' AND bizible_referrer_page_raw LIKE '%utm_content=partnercredit%')
+           OR(
+              bizible_form_url_raw LIKE '%cloud-credits-promo%'
+           OR bizible_landing_page_raw LIKE '%cloud-credits-promo%'
+           OR bizible_referrer_page_raw LIKE '%cloud-credits-promo%'
+            )))
+           OR dim_parent_campaign_id LIKE '%7014M000001vcDr%'
+           OR dim_campaign_id LIKE '%7014M000001vcDr%'
+         THEN 'Cloud Partner Campaign'
+        WHEN (bizible_touchpoint_type = 'Web Form' --added 2021-06-04 MSandP: 346
+           AND (( bizible_form_url_raw LIKE '%utm_campaign=gitlab14%'
+           OR bizible_landing_page_raw LIKE '%utm_campaign=gitlab14%'
+           OR bizible_referrer_page_raw LIKE '%utm_campaign=gitlab14%')
+           OR(
+            bizible_form_url_raw LIKE '%the-shift-to-modern-devops%'
+           OR bizible_landing_page_raw LIKE '%the-shift-to-modern-devops%'
+           OR bizible_referrer_page_raw LIKE '%the-shift-to-modern-devops%'
+            )))
+         THEN 'GitLab 14 webcast'
+        WHEN dim_campaign_id LIKE '%7014M000001drcQ%'
+         THEN '20210512_ISSAWebcast'
+        WHEN (bizible_touchpoint_type = 'Web Form' --added 2021-0830 MSandP: 325
+          AND (( bizible_form_url_raw LIKE '%psdigitaltransformation%'
+          OR bizible_landing_page_raw LIKE '%psdigitaltransformation%'
+          OR bizible_referrer_page_raw LIKE '%psdigitaltransformation%')
+          OR(
+            bizible_form_url_raw LIKE '%psglobal%'
+          OR bizible_landing_page_raw LIKE '%psglobal%'
+          OR bizible_referrer_page_raw LIKE '%psglobal%'
+            )))
+        THEN 'PubSec Nurture'
           Else 'None'
       END                                                                                               AS bizible_integrated_campaign_grouping,
       IFF(bizible_integrated_campaign_grouping <> 'None','Demand Gen','Other')                          AS touchpoint_segment,
       CASE
-        WHEN bizible_integrated_campaign_grouping IN ('CI Build & Test Auto','CI Use Case','CI Use Case - FR','CI Use Case - DE','CI/CD Seeing is Believing','Jenkins Take Out','OctoCat','Premium to Ultimate') 
+        WHEN bizible_integrated_campaign_grouping IN ('CI Build & Test Auto','CI Use Case','CI Use Case - FR','CI Use Case - DE','CI/CD Seeing is Believing','Jenkins Take Out','OctoCat','Premium to Ultimate','20210512_ISSAWebcast') 
           THEN 'CI/CD'
-        WHEN bizible_integrated_campaign_grouping IN ('Deliver Better Products Faster','DevSecOps Use Case','Reduce Security and Compliance Risk','Simplify DevOps', 'DevOps GTM') 
+        WHEN bizible_integrated_campaign_grouping IN ('Deliver Better Products Faster','DevSecOps Use Case','Reduce Security and Compliance Risk','Simplify DevOps', 'DevOps GTM', 'Cloud Partner Campaign', 'GitLab 14 webcast') 
           THEN 'DevOps'
         WHEN bizible_integrated_campaign_grouping IN ('GitOps Use Case','GitOps GTM webcast')  
           THEN 'GitOps'
@@ -274,7 +359,7 @@ WITH bizible AS (
 {{ dbt_audit(
     cte_ref="touchpoints_with_campaign",
     created_by="@mcooperDD",
-    updated_by="@rkohnke",
+    updated_by="@michellecooper",
     created_date="2021-03-02",
-    updated_date="2021-07-20"
+    updated_date="2021-09-28"
 ) }}

@@ -36,7 +36,7 @@ WITH source AS (
       bizible2__landing_page__c               AS bizible_landing_page,
       bizible2__landing_page_raw__c           AS bizible_landing_page_raw,
       bizible2__marketing_channel__c          AS bizible_marketing_channel,
-      bizible2__marketing_channel_path__c     AS marketing_channel_path,
+      bizible2__marketing_channel_path__c     AS bizible_marketing_channel_path,
       bizible2__medium__c                     AS bizible_medium, 
       bizible2__referrer_page__c              AS bizible_referrer_page,  
       bizible2__referrer_page_raw__c          AS bizible_referrer_page_raw,  

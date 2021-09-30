@@ -142,8 +142,8 @@
       sfdc_opportunity.products_purchased,
       sfdc_opportunity.dr_partner_deal_type,
       sfdc_opportunity.dr_partner_engagement,
-      {{ alliance_type('partner_account.account_name', 'influence_partner.account_name', 'sfdc_opportunity.partner_account', 'sfdc_opportunity.influence_partner') }},
-      {{ alliance_type_short('partner_account.account_name', 'influence_partner.account_name', 'sfdc_opportunity.partner_account', 'sfdc_opportunity.influence_partner') }},
+      {{ alliance_type('fulfillment_partner.account_name', 'sfdc_opportunity.fulfillment_partner') }},
+      {{ alliance_type_short('fulfillment_partner.account_name', 'sfdc_opportunity.fulfillment_partner') }},
       sfdc_opportunity.channel_type,
       sfdc_opportunity.partner_account,
       sfdc_opportunity.dr_status,
@@ -161,10 +161,8 @@
       sfdc_opportunity.lead_source
 
     FROM sfdc_opportunity
-    LEFT JOIN sfdc_account AS partner_account
-      ON sfdc_opportunity.partner_account = partner_account.account_id
-    LEFT JOIN sfdc_account AS influence_partner
-      ON sfdc_opportunity.influence_partner = influence_partner.account_id
+    LEFT JOIN sfdc_account AS fulfillment_partner
+      ON sfdc_opportunity.fulfillment_partner = fulfillment_partner.account_id
 
 ), linear_attribution_base AS ( --the number of attribution touches a given opp has in total
     --linear attribution IACV of an opp / all touches (count_touches) for each opp - weighted by the number of touches in the given bucket (campaign,channel,etc)
@@ -485,5 +483,5 @@
     created_by="@mcooperDD",
     updated_by="@jpeguero",
     created_date="2020-11-30",
-    updated_date="2021-05-06"
+    updated_date="2021-09-15"
 ) }}

@@ -5,6 +5,7 @@
     ('smau', 'fct_usage_ping_subscription_mapped_smau')
 ]) }}
 
+
 , sm_subscriptions AS (
 
     SELECT
@@ -17,6 +18,20 @@
       ON dates.date_actual BETWEEN '2017-04-01' AND CURRENT_DATE    -- first month Usage Ping was collected
     WHERE product_delivery_type = 'Self-Managed'
     {{ dbt_utils.group_by(n=4)}}
+
+), smau_convert AS (
+
+    SELECT distinct
+      dim_subscription_id,
+      uuid,
+      hostname,
+      snapshot_month,
+      {{ convert_variant_to_number_field('manage_analytics_total_unique_counts_monthly') }}                                         AS analytics_28_days_user,                   
+      {{ convert_variant_to_number_field('plan_redis_hll_counters_issues_edit_issues_edit_total_unique_counts_monthly') }}          AS issues_edit_28_days_user,
+      {{ convert_variant_to_number_field('package_redis_hll_counters_user_packages_user_packages_total_unique_counts_monthly') }}   AS user_packages_28_days_user, 
+      {{ convert_variant_to_number_field('configure_redis_hll_counters_terraform_p_terraform_state_api_unique_users_monthly') }}    AS terraform_state_api_28_days_user,
+      {{ convert_variant_to_number_field('monitor_incident_management_activer_user_28_days') }}                                     AS incident_management_28_days_user
+    FROM smau
 
 ), usage_ping AS (
 
@@ -120,11 +135,11 @@
       usage_ping.remote_mirrors_all_time_event,
       usage_ping.projects_enforcing_code_owner_approval_28_days_user,
       usage_ping.project_clusters_enabled_28_days_user,
-      smau.manage_analytics_total_unique_counts_monthly                                       AS analytics_28_days_user,
-      smau.plan_redis_hll_counters_issues_edit_issues_edit_total_unique_counts_monthly        AS issues_edit_28_days_user,
-      smau.package_redis_hll_counters_user_packages_user_packages_total_unique_counts_monthly AS user_packages_28_days_user,
-      smau.configure_redis_hll_counters_terraform_p_terraform_state_api_unique_users_monthly  AS terraform_state_api_28_days_user,
-      smau.monitor_incident_management_activer_user_28_days                                   AS incident_management_28_days_user,
+      {{ null_negative_numbers('smau_convert.analytics_28_days_user') }}                     AS analytics_28_days_user,
+      {{ null_negative_numbers('smau_convert.issues_edit_28_days_user') }}                   AS issues_edit_28_days_user,
+      {{ null_negative_numbers('smau_convert.user_packages_28_days_user') }}                 AS user_packages_28_days_user,
+      {{ null_negative_numbers('smau_convert.terraform_state_api_28_days_user') }}           AS terraform_state_api_28_days_user,
+      {{ null_negative_numbers('smau_convert.incident_management_28_days_user') }}           AS incident_management_28_days_user,
       -- Wave 3.2
       usage_ping.auto_devops_enabled,
       usage_ping.gitaly_clusters_instance,
@@ -179,18 +194,18 @@
     LEFT JOIN seat_link
       ON sm_subscriptions.dim_subscription_id = seat_link.dim_subscription_id
       AND sm_subscriptions.snapshot_month = seat_link.snapshot_month
-    LEFT JOIN smau
-      ON sm_subscriptions.dim_subscription_id = smau.dim_subscription_id
-      AND sm_subscriptions.snapshot_month = smau.snapshot_month
-      AND usage_ping.uuid = smau.uuid
-      AND usage_ping.hostname = smau.hostname
+    LEFT JOIN smau_convert
+      ON sm_subscriptions.dim_subscription_id = smau_convert.dim_subscription_id
+      AND sm_subscriptions.snapshot_month = smau_convert.snapshot_month
+      AND usage_ping.uuid = smau_convert.uuid
+      AND usage_ping.hostname = smau_convert.hostname
   
 )
 
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@ischweickartDD",
-    updated_by="@ischweickartDD",
+    updated_by="@snalamaru",
     created_date="2021-02-08",
-    updated_date="2021-07-21"
+    updated_date="2021-09-28"
 ) }}

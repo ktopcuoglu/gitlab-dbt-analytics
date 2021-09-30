@@ -23,8 +23,8 @@ models:
             tests:
               - not_null
               - relationships:
-                 to: ref('zendesk_community_relations_users_source')
-                 field: user_id
+                  to: ref('zendesk_community_relations_users_source')
+                  field: user_id
           - name: submitter_id
             tests:
               - not_null

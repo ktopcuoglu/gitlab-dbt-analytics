@@ -231,4 +231,8 @@ WITH map_merged_crm_account AS (
 Convenience macro created to assist in the creation of new Dimensions based off a single source field. This returns the compiled SQL for selecting from the Source model   
 {% enddocs %}
 
+{% docs convert_variant_to_number_field %}
+This macro takes in a variant field, converts it to a varchar field and then to a Number field with lower case values. 
+{% enddocs %}
+
 
