@@ -148,7 +148,6 @@ models:
         tests:
           - not_null
 
-
   - name: prep_recurring_charge
     description: '{{ doc("prep_recurring_charge") }}'
     columns:
@@ -231,3 +230,13 @@ models:
         description: Dim location country name final source column
       - name: dim_parent_location_country_name_source
         description: Dim location country name final source column
+
+  - name: prep_mart_retention_parent_account_snapshot_base
+    description: Base model for the fct_retention snapshot data
+    columns:
+      - name: fct_retention_id
+        tests:
+          - not_null
+      - name: dbt_valid_from
+        tests:
+          - not_null

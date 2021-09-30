@@ -121,7 +121,9 @@ models:
       - name: dbt_valid_from
         tests:
           - not_null
-          -
+
+
+
   - name: prep_industry
     description: '{{ doc("prep_industry") }}'
     columns:
