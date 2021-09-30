@@ -97,6 +97,7 @@ WITH source AS (
       )                                                         THEN TRUE
         ELSE FALSE END                                                                          AS is_staging,     
         hostname                                                                                AS host_name,
+        
       COALESCE(raw_usage_data.raw_usage_data_payload, usage_data.raw_usage_data_payload_reconstructed)     AS raw_usage_data_payload
     FROM usage_data
     LEFT JOIN raw_usage_data
@@ -157,6 +158,7 @@ WITH source AS (
       is_internal, 
       is_staging, 
       instance_user_count,
+      license_user_count,
       dim_location_country_id 
     FROM add_country_info_to_usage_ping
     LEFT OUTER JOIN dim_product_tier
@@ -168,7 +170,7 @@ WITH source AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@kathleentam",
-    updated_by="@michellecooper",
+    updated_by="@chrissharp",
     created_date="2021-01-10",
-    updated_date="2021-04-30"
+    updated_date="2021-09-30"
 ) }}
