@@ -193,8 +193,9 @@ def rollup_table_clone(
         engine, db_name, schema_name, table_name
     )
 
-    if not tables_to_roll_up.empty:
-
+    if tables_to_roll_up.empty:
+        logging.info(f"No tables to roll up for {table_name}")
+    else:
         for items in tables_to_roll_up.iteritems():
             logging.info(f"Processing {items[1]}")
             column_info = get_table_column_names(engine, db_name, items[1])
@@ -222,8 +223,6 @@ def rollup_table_clone(
             )
             query_executor(engine, insert_stmt)
             logging.info("Successfully rolled up table clones")
-    else:
-        logging.info(f"No tables to roll up for {table_name}")
 
     return True
 
