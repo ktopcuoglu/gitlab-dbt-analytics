@@ -214,8 +214,8 @@ def rollup_table_clone(
             insert_stmt = (
                 f""" 
                 INSERT INTO {db_name}.{schema_name}.{table_name}_ROLLUP 
-                 ({column_string}, ORIGINAL_TABLE_NAME) 
-                SELECT {select_string} '{items[1]}' as ORIGINAL_TABLE_NAME 
+                 ({column_string}, ORIGINAL_TABLE_NAME, SNAPSHOT_DATE) 
+                SELECT {select_string} '{items[1]}' as ORIGINAL_TABLE_NAME, '{items[1][-8:]}'  
                 FROM {db_name}.{schema_name}.{items[1]}
                 """
             )
@@ -265,7 +265,7 @@ def recreate_rollup_table(
     for i, row in big_df.iterrows():
         create_table_statement = create_table_statement + process_row(row)
 
-    create_table_statement = create_table_statement[:-1] + ", ORIGINAL_TABLE_NAME TEXT)"
+    create_table_statement = create_table_statement[:-1] + ", ORIGINAL_TABLE_NAME TEXT, SNAPSHOT_DATE INT)"
 
     query_executor(engine, create_table_statement)
     logging.info(f"{table_name} recreated")
