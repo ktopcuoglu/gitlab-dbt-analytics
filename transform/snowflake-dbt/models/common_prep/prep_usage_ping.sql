@@ -97,7 +97,6 @@ WITH source AS (
       )                                                         THEN TRUE
         ELSE FALSE END                                                                          AS is_staging,     
         hostname                                                                                AS host_name,
-        
       COALESCE(raw_usage_data.raw_usage_data_payload, usage_data.raw_usage_data_payload_reconstructed)     AS raw_usage_data_payload
     FROM usage_data
     LEFT JOIN raw_usage_data
