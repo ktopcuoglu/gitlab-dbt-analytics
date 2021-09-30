@@ -123,26 +123,26 @@ WITH campaign_details AS (
       bizible_campaign_grouping.integrated_campaign_grouping,
       bizible_campaign_grouping.bizible_integrated_campaign_grouping,
       bizible_campaign_grouping.gtm_motion,
-      bizible_campaign_grouping.touchpoint_segment
+      bizible_campaign_grouping.touchpoint_segment,
       CASE
-        WHEN touchpoint_id ILIKE 'a6061000000CeS0%' -- Specific touchpoint overrides
+        WHEN combined_touchpoints.dim_crm_touchpoint_id ILIKE 'a6061000000CeS0%' -- Specific touchpoint overrides
           THEN 'Field Event'
-        WHEN marketing_channel_path = 'CPC.AdWords'
+        WHEN combined_touchpoints.bizible_marketing_channel_path = 'CPC.AdWords'
           THEN 'Google AdWords'
-        WHEN marketing_channel_path IN ('Email.Other', 'Email.Newsletter','Email.Outreach')
+        WHEN combined_touchpoints.bizible_marketing_channel_path IN ('Email.Other', 'Email.Newsletter','Email.Outreach')
           THEN 'Email'
-        WHEN marketing_channel_path IN ('Field Event','Partners.Google','Brand.Corporate Event','Conference','Speaking Session')
-                  OR (bizible_medium = 'Field Event (old)' AND marketing_channel_path = 'Other')
+        WHEN combined_touchpoints.bizible_marketing_channel_path IN ('Field Event','Partners.Google','Brand.Corporate Event','Conference','Speaking Session')
+                  OR (combined_touchpoints.bizible_medium = 'Field Event (old)' AND combined_touchpoints.bizible_marketing_channel_path = 'Other')
           THEN 'Field Event'
-        WHEN marketing_channel_path IN ('Paid Social.Facebook','Paid Social.LinkedIn','Paid Social.Twitter','Paid Social.YouTube')
+        WHEN combined_touchpoints.bizible_marketing_channel_path IN ('Paid Social.Facebook','Paid Social.LinkedIn','Paid Social.Twitter','Paid Social.YouTube')
           THEN 'Paid Social'
-        WHEN marketing_channel_path IN ('Social.Facebook','Social.LinkedIn','Social.Twitter','Social.YouTube')
+        WHEN combined_touchpoints.bizible_marketing_channel_path IN ('Social.Facebook','Social.LinkedIn','Social.Twitter','Social.YouTube')
           THEN 'Social'
-        WHEN marketing_channel_path IN ('Marketing Site.Web Referral','Web Referral')
+        WHEN combined_touchpoints.bizible_marketing_channel_path IN ('Marketing Site.Web Referral','Web Referral')
           THEN 'Web Referral'
-        WHEN marketing_channel_path in ('Marketing Site.Web Direct', 'Web Direct')
+        WHEN combined_touchpoints.bizible_marketing_channel_path in ('Marketing Site.Web Direct', 'Web Direct')
               -- Added to Web Direct
-              OR campaign_id in (
+              OR combined_touchpoints.dim_campaign_id in (
                                 '701610000008ciRAAQ', -- Trial - GitLab.com
                                 '70161000000VwZbAAK', -- Trial - Self-Managed
                                 '70161000000VwZgAAK', -- Trial - SaaS
@@ -150,13 +150,13 @@ WITH campaign_details AS (
                                 '701610000008cDYAAY'  -- 2018_MovingToGitLab
                                 )
           THEN 'Web Direct'
-        WHEN marketing_channel_path LIKE 'Organic Search.%'
-              OR marketing_channel_path = 'Marketing Site.Organic'
+        WHEN combined_touchpoints.bizible_marketing_channel_path LIKE 'Organic Search.%'
+              OR combined_touchpoints.bizible_marketing_channel_path = 'Marketing Site.Organic'
           THEN 'Organic Search'
-        WHEN marketing_channel_path IN ('Sponsorship')
+        WHEN combined_touchpoints.bizible_marketing_channel_path IN ('Sponsorship')
           THEN 'Paid Sponsorship'
         ELSE 'Unknown'
-      END AS pipe_name,
+      END AS pipe_name
     FROM combined_touchpoints
     LEFT JOIN bizible_campaign_grouping
       ON combined_touchpoints.dim_crm_touchpoint_id = bizible_campaign_grouping.dim_crm_touchpoint_id
