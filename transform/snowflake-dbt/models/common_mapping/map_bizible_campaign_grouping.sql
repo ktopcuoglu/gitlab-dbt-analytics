@@ -310,7 +310,7 @@ WITH bizible AS (
 {{ dbt_audit(
     cte_ref="touchpoints_with_campaign",
     created_by="@mcooperDD",
-    updated_by="@michellecooper",
+    updated_by="@rkohnke",
     created_date="2021-03-02",
-    updated_date="2021-09-16"
+    updated_date="2021-09-30"
 ) }}
