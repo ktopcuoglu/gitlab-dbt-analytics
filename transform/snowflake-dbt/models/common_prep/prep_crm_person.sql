@@ -80,7 +80,8 @@ WITH biz_person AS (
       sequence_status,
       is_actively_being_sequenced,
       region,
-      mailing_country                               AS country,
+      NULL                                          AS country,
+      mailing_country,
       last_activity_date,
 
       NULL                                          AS crm_partner_id
@@ -133,6 +134,7 @@ WITH biz_person AS (
       is_actively_being_sequenced,
       region,
       country,
+      NULL                                      AS mailing_country,
       last_activity_date,
 
       crm_partner_id
