@@ -173,7 +173,7 @@
     - *deps_and_seed
     - dbt snapshot $CI_PROFILE_TARGET --select $DBT_MODELS
 
-➕📸🥩🦖specify_snapshot_l:
+➕📸🥩🦖specify_l_snapshot:
   <<: *snowflake_dbt_jobs
   script:
     - echo $DBT_MODELS
