@@ -1,5 +1,8 @@
  {{ config(alias='report_opportunity_stages_dates') }}
 
+ --TODO
+ -- Check out for deals created in a stage that is not 0, use the creation date
+
 WITH sfdc_opportunity_field_history AS (
 
   SELECT *
