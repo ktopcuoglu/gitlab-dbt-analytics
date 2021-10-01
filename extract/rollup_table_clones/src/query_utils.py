@@ -17,8 +17,7 @@ def get_table_column_names(
     :param table_name:
     :return:
     """
-    query = (
-        f"""
+    query = f"""
         SELECT 
           ordinal_position, 
           table_name, 
@@ -30,7 +29,6 @@ def get_table_column_names(
         WHERE TABLE_NAME = '{table_name}'
         ORDER BY 1
         """
-    )
     return query_dataframe(engine, query)
 
 
@@ -44,8 +42,7 @@ def get_existing_tables_to_roll_up(
     :param table_name:
     :return:
     """
-    schema_check = (
-        f""" 
+    schema_check = f""" 
         SELECT
          table_name 
         FROM {db_name}.INFORMATION_SCHEMA.TABLES 
@@ -53,7 +50,6 @@ def get_existing_tables_to_roll_up(
         AND LEFT(TABLE_NAME, {len(table_name)}) = '{table_name}' 
         ORDER BY 1
         """
-    )
     query_results = query_dataframe(engine, schema_check)
 
     if not query_results.empty:
@@ -75,8 +71,7 @@ def get_latest_tables_to_roll_up(
         engine, db_name, schema_name, table_name
     )
     if latest_rolled_table:
-        schema_check = (
-            f"""
+        schema_check = f"""
              SELECT
               table_name 
              FROM {db_name}.INFORMATION_SCHEMA.TABLES 
@@ -86,10 +81,8 @@ def get_latest_tables_to_roll_up(
              AND RIGHT(TABLE_NAME, 2) = '08' 
              ORDER BY 1
             """
-        )
     else:
-        schema_check = (
-            f""" 
+        schema_check = f""" 
             SELECT
              table_name 
             FROM {db_name}.INFORMATION_SCHEMA.TABLES 
@@ -97,7 +90,6 @@ def get_latest_tables_to_roll_up(
             AND RIGHT(TABLE_NAME, 2) = '08' 
             ORDER BY 1
             """
-        )
 
     query_results = query_dataframe(engine, schema_check)
 
@@ -120,13 +112,11 @@ def get_latest_rolled_up_table_name(
     :return: Last 8 digits of table name.
     """
     final_table_name = f"{table_name}_ROLLUP"
-    query = (
-        f"""
+    query = f"""
         SELECT 
          MAX(original_table_name) as latest_table_name
         FROM {db_name}.{schema_name}.{final_table_name}
         """
-    )
     results = query_dataframe(engine, query)
 
     if not results.empty and results["latest_table_name"][0] is not None:
@@ -213,14 +203,12 @@ def rollup_table_clone(
                 if processed_row:
                     select_string = select_string + processed_row
 
-            insert_stmt = (
-                f""" 
+            insert_stmt = f""" 
                 INSERT INTO {db_name}.{schema_name}.{table_name}_ROLLUP 
                  ({column_string}, ORIGINAL_TABLE_NAME, SNAPSHOT_DATE) 
                 SELECT {select_string} '{items[1]}' as ORIGINAL_TABLE_NAME, '{items[1][-8:]}'  
                 FROM {db_name}.{schema_name}.{items[1]}
                 """
-            )
             query_executor(engine, insert_stmt)
             logging.info("Successfully rolled up table clones")
 
@@ -265,7 +253,9 @@ def recreate_rollup_table(
     for i, row in big_df.iterrows():
         create_table_statement = create_table_statement + process_row(row)
 
-    create_table_statement = create_table_statement[:-1] + ", ORIGINAL_TABLE_NAME TEXT, SNAPSHOT_DATE INT)"
+    create_table_statement = (
+        create_table_statement[:-1] + ", ORIGINAL_TABLE_NAME TEXT, SNAPSHOT_DATE INT)"
+    )
 
     query_executor(engine, create_table_statement)
     logging.info(f"{table_name} recreated")
