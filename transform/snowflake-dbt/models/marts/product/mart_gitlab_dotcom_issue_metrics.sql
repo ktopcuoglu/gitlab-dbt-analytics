@@ -60,17 +60,17 @@
     -- recursive join to get namespace paths for URL
     INNER JOIN dim_namespace namespace
       ON dim_issue.dim_namespace_id = dim_namespace.dim_namespace_id
-    LEFT JOIN dim_namespace namespace_1
+    LEFT OUTER JOIN dim_namespace namespace_1
       ON namespace_1.dim_namespace_id = namespace.parent_id
       -- make sure haven't reached top level namespace yet
       AND namespace.namespace_is_ultimate_parent = FALSE
-    LEFT JOIN dim_namespace namespace_2
+    LEFT OUTER JOIN dim_namespace namespace_2
       ON namespace_2.dim_namespace_id = namespace_1.parent_id
       AND namespace_1.namespace_is_ultimate_parent = FALSE
-    LEFT JOIN dim_namespace namespace_3
+    LEFT OUTER JOIN dim_namespace namespace_3
       ON namespace_3.dim_namespace_id = namespace_2.parent_id
       AND namespace_2.namespace_is_ultimate_parent = FALSE
-    LEFT JOIN dim_namespace namespace_4
+    LEFT OUTER JOIN dim_namespace namespace_4
       ON namespace_4.dim_namespace_id = namespace_3.parent_id
       AND namespace_3.namespace_is_ultimate_parent = FALSE
     -- scope to only main gitlab projects for now
