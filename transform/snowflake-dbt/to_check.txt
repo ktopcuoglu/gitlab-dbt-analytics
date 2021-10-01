@@ -1,1 +1,0 @@
-gitlab_snowflake.marts.sales_funnel.restricted_safe.mart_crm_opportunity
