@@ -276,7 +276,7 @@ WITH sfdc_lead AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@rmistry",
-    updated_by="@jpeguero",
+    updated_by="@iweeks",
     created_date="2021-01-19",
-    updated_date="2021-05-07"
+    updated_date="2021-10-01"
 ) }}
