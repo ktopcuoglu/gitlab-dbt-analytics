@@ -112,7 +112,7 @@ WITH sfdc_lead AS (
 ), gitlab_dotcom AS (
 
     SELECT
-      notification_email                                                                                                    AS email_address,
+      COALESCE(notification_email, email)                                                                                   AS email_address,
       user_id                                                                                                               AS user_id,
       SPLIT_PART(users_name,' ',1)                                                                                          AS first_name,
       SPLIT_PART(users_name,' ',2)                                                                                          AS last_name,
@@ -249,7 +249,7 @@ WITH sfdc_lead AS (
       zuora.created_date                                                                                                 AS zuora_created_date,
       zuora.active_state                                                                                                 AS zuora_active_state,
       dnc_list.result                                                                                                    AS dnc_list_result,
-      CASE 
+      CASE
         WHEN dnc_list.result IN ('undeliverable', 'do_not_send')
           THEN FALSE
         ELSE TRUE
