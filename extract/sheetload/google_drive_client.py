@@ -1,7 +1,7 @@
 from io import BytesIO
 from logging import info
 from os import environ as env
-from typing import Dict, List
+from typing import Dict, List, Any
 
 import pandas as pd
 from apiclient.http import MediaIoBaseDownload
@@ -98,7 +98,7 @@ class GoogleDriveClient:
         :param in_folder_id:
         :return: folder_id of folder which was created.
         """
-        file_metadata = {
+        file_metadata: Dict[str, Any] = {
             "name": folder_name,
             "mimeType": "application/vnd.google-apps.folder",
         }
