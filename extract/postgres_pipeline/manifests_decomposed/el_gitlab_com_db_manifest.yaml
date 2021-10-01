@@ -609,35 +609,32 @@ tables:
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   geo_nodes:
-    ''' This table is not in used in Postgres, so this section is used only as a fake query
-        but in order to be consistent, better to have it here along with other tables
-    '''
     export_schema: "gitlab_com"
     export_table: geo_nodes
     export_table_primary_key: id
     import_db: GITLAB_DB
     import_query: |-
-      SELECT NULL AS id
-      , NULL AS "primary"
-      , NULL AS oauth_application_id
-      , NULL AS enabled
-      , NULL AS access_key
-      , NULL AS encrypted_secret_access_key
-      , NULL AS encrypted_secret_access_key_iv
-      , NULL AS clone_url_prefix
-      , NULL AS files_max_capacity
-      , NULL AS repos_max_capacity
-      , NULL AS url
-      , NULL AS selective_sync_type
-      , NULL AS selective_sync_shards
-      , NULL AS verification_max_capacity
-      , NULL AS minimum_reverification_interval
-      , NULL AS internal_url
-      , NULL AS name
-      , NULL AS container_repositories_max_capacity
-      , NULL AS created_at
-      , NULL AS updated_at
-      , NULL AS sync_object_storage
+      SELECT id
+      , oauth_application_id
+      , enabled
+      , access_key
+      , clone_url_prefix
+      , files_max_capacity
+      , repos_max_capacity
+      , url
+      , selective_sync_type
+      , selective_sync_shards
+      , verification_max_capacity
+      , minimum_reverification_interval
+      , internal_url
+      , name
+      , container_repositories_max_capacity
+      , created_at
+      , updated_at
+      , sync_object_storage
+      FROM geo_nodes
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   grafana_integrations:
     export_schema: "gitlab_com"
     export_table: grafana_integrations
