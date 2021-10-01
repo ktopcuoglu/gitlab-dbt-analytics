@@ -37,7 +37,7 @@ class GoogleDriveClient:
             status, done = downloader.next_chunk()
 
         bytes_data = fh.getvalue()
-        df = pd.read_csv(BytesIO(bytes_data), low_memory=False)
+        df = pd.read_csv(BytesIO(bytes_data))
         return df
 
     def get_item_id(
