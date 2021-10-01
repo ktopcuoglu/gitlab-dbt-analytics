@@ -18,6 +18,7 @@
 ) , joined AS (
 
     SELECT
+      CONCAT(prep_issue_labels.date_id,prep_issue_labels.dim_issue_id) AS date_dim_issue_id,
       prep_issue_labels.date_id,
       prep_issue_labels.dim_issue_id,
       prep_issue_labels.date_actual,
