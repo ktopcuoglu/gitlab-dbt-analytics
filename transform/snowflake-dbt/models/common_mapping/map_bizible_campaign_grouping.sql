@@ -1,9 +1,52 @@
-WITH bizible AS (
+WITH bizible_touchpoints AS (
  
-    SELECT *
+    SELECT 
+      touchpoint_id,
+      campaign_id,
+      bizible_touchpoint_type,
+      bizible_touchpoint_source,
+      bizible_landing_page,
+      bizible_landing_page_raw,
+      bizible_referrer_page,
+      bizible_referrer_page_raw,
+      bizible_form_url,
+      bizible_form_url_raw,
+      bizible_ad_campaign_name,
+      bizible_marketing_channel_path,
+      bizible_medium,
+      bizible_ad_content
     FROM {{ ref('sfdc_bizible_touchpoint_source') }}
     WHERE is_deleted = 'FALSE'
 
+), bizible_attribution_touchpoints AS (
+
+    SELECT 
+      touchpoint_id,
+      campaign_id,
+      bizible_touchpoint_type,
+      bizible_touchpoint_source,
+      bizible_landing_page,
+      bizible_landing_page_raw,
+      bizible_referrer_page,
+      bizible_referrer_page_raw,
+      bizible_form_url,
+      bizible_form_url_raw,
+      bizible_ad_campaign_name,
+      bizible_marketing_channel_path,
+      bizible_medium,
+      bizible_ad_content
+    FROM {{ ref('sfdc_bizible_attribution_touchpoint_source') }}
+    WHERE is_deleted = 'FALSE'
+
+), bizible AS (
+
+    SELECT *
+    FROM bizible_touchpoints
+
+    UNION ALL
+
+    SELECT *
+    FROM bizible_attribution_touchpoints
 
 ), campaign AS (
 
@@ -23,11 +66,17 @@ WITH bizible AS (
       campaign.dim_campaign_id,
       campaign.dim_parent_campaign_id,
       bizible.bizible_touchpoint_type,
+      bizible.bizible_touchpoint_source,
       bizible.bizible_landing_page,
+      bizible.bizible_landing_page_raw,
       bizible.bizible_referrer_page,
+      bizible.bizible_referrer_page_raw,
       bizible.bizible_form_url,
       bizible.bizible_ad_campaign_name,
       bizible.bizible_marketing_channel_path,
+      bizible.bizible_ad_content,
+      bizible.bizible_medium,
+      bizible.bizible_form_url_raw,
       CASE
         WHEN dim_parent_campaign_id = '7014M000001dowZQAQ' -- based on issue https://gitlab.com/gitlab-com/marketing/marketing-strategy-performance/-/issues/246
           OR (bizible_medium = 'sponsorship'
@@ -312,5 +361,5 @@ WITH bizible AS (
     created_by="@mcooperDD",
     updated_by="@michellecooper",
     created_date="2021-03-02",
-    updated_date="2021-09-16"
+    updated_date="2021-09-28"
 ) }}
