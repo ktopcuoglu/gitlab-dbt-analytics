@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import os
-from os.path import join, getsize, dirname
+from os.path import dirname
+
 import re
 import json
 import yaml
@@ -16,7 +17,11 @@ dirname = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 parentdirname = os.path.dirname(dirname)
 
 
-def get_file_display_name(filepath):
+def get_file_display_name(filepath: str) -> str:
+    """
+    Gets the dispay name from yaml file based on file path
+    """
+
     if os.path.exists(filepath):
         with open(filepath) as f_:
             dataMap = yaml.safe_load(f_)
@@ -27,7 +32,11 @@ def get_file_display_name(filepath):
     return display_name
 
 
-def get_dashboard_name(sql_path):
+def get_dashboard_name(sql_path: str) -> str:
+    """
+    Gets the file path and name for the dashboard meta data.
+    """
+
     yaml_root = os.path.dirname(sql_path)
     dashboard_dir_list = yaml_root.rsplit("/", 1)
     sql_file_name = dashboard_dir_list[-1].split(".")[0]
@@ -37,7 +46,11 @@ def get_dashboard_name(sql_path):
     return dashboard_name
 
 
-def get_chart_name(sql_path):
+def get_chart_name(sql_path: str) -> str:
+    """
+    Gets the file path and name for the chart meta data.
+    """
+
     yaml_root = os.path.dirname(sql_path)
     sql_file_name = sql_path.split("/")[-1]
     yaml_file_name = sql_file_name.split(".")[0]
