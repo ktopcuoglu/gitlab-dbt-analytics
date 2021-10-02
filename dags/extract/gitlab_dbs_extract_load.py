@@ -442,7 +442,7 @@ for source_name, config in config_dict.items():
                     affinity=get_affinity(False),
                     tolerations=get_toleration(False),
                     arguments=[incremental_cmd],
-                    do_xcom_push=True,   
+                    do_xcom_push=True,
                 )
                 if short_circuit is not None:
                     (
