@@ -152,7 +152,6 @@ for source_name, config in config_dict_td_pgp.items():
                 affinity=get_affinity(True),
                 tolerations=get_toleration(True),
                 do_xcom_push=True,
-                xcom_push=True,
             )
             td_pgp_extract
 
