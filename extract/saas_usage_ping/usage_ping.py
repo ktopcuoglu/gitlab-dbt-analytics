@@ -158,16 +158,19 @@ class UsagePing(object):
         )
         json_data = json.loads(response.text)
 
-        json_file_name = "instance_redis_metrics"
+        redis_data_to_upload = pd.DataFrame(columns=["jsontext", "ping_date", "run_id"])
 
-        with open(f"{json_file_name}.json", "w") as f:
-            json.dump(json_data, f)
+        redis_data_to_upload.loc[0] = [
+            json.dumps(json_data),
+            self.end_date,
+            self._get_md5(datetime.datetime.utcnow().timestamp()),
+        ]
 
-        snowflake_stage_load_copy_remove(
-            f"{json_file_name}.json",
-            "raw.gitlab_data_yaml.gitlab_data_yaml_load",
-            f"raw.saas_usage_ping.instance_redis_metrics",
+        dataframe_uploader(
+            redis_data_to_upload,
             self.loader_engine,
+            "instance_redis_metrics",
+            "saas_usage_ping",
         )
 
     def _get_namespace_queries(self) -> List[Dict]:

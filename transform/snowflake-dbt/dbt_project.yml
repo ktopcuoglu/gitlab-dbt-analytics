@@ -439,6 +439,8 @@ models:
 
       workspace_data:
         +schema: workspace_data
+        tdf:
+          +materialized: table
 
         dbt:
           +tags: ["dbt"]
@@ -488,6 +490,8 @@ models:
 
       product:
         +tags: ["product"]
+        mart_ci_runner_activity_monthly:
+          +enabled: true
         
       pumps: 
         +database: "{{ env_var('SNOWFLAKE_PROD_DATABASE') }}" #PROD

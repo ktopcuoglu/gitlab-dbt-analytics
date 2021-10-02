@@ -38,6 +38,7 @@ WITH source AS (
       hide_no_password::BOOLEAN                                        AS has_hide_no_password_enabled,
       password_automatically_set::BOOLEAN                              AS is_password_automatically_set,
       IFF(lower(location) = 'nan', NULL, location)                     AS location,
+      email::VARCHAR                                                   AS email,
       public_email::VARCHAR                                            AS public_email,
       commit_email::VARCHAR                                            AS commit_email,
       email_opted_in::BOOLEAN                                          AS is_email_opted_in,
@@ -75,7 +76,7 @@ WITH source AS (
       user_type::NUMBER                                                AS user_type
 
     FROM source
-    
+
 ), add_job_hierarchy AS (
 
     SELECT

@@ -94,4 +94,6 @@ macros:
       - name: where_clause
         type: string
         description: Optional where clause, first condition can be passed through without a predicate. Subsequent conditions can be passed in the string if including additional AND 's
+  - name: convert_variant_to_number_field
+    description: '{{ doc("convert_variant_to_number_field") }}'
 

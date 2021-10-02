@@ -122,7 +122,8 @@ def rename_table_name(
     """
     Replaces the table name in the query -- represented as the list of tokens -- to make it able to run in Snowflake
 
-    Does this by prepending `prep.gitlab_dotcom.gitlab_dotcom_` to the table name in the query and then appending `_dedupe_source`
+    Does this by prepending `prep.gitlab_dotcom.gitlab_dotcom_`
+    to the table name in the query and then appending `_dedupe_source`.
     """
 
     if any(token_word in keywords_to_look_at for token_word in str(token).split(" ")):
@@ -137,13 +138,11 @@ def rename_table_name(
         ):
 
             # insert, token list to string list, create the SQL query, reparse it
-            # there is FOR sure a beter way to do that
-            token_string_list[index + i] = (
-                "prep.gitlab_dotcom.gitlab_dotcom_"
-                + str(next_token)
-                + "_dedupe_source AS "
-            )
-            token_string_list.insert(index + i + 1, str(next_token))
+            # there is FOR sure a better way to do that
+
+            token_string_list[
+                index + i
+            ] = f"prep.gitlab_dotcom.gitlab_dotcom_{str(next_token)}_dedupe_source AS {str(next_token)}"
 
 
 def rename_query_tables(sql_query: str) -> str:
