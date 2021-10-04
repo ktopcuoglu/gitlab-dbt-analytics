@@ -3,21 +3,21 @@
     })
 }}
 
-WITH gitlab_dotcom_namespaces_xf AS (
+WITH namespaces AS (
 
   SELECT 
     creator_id,
     namespace_id
   FROM {{ref('gitlab_dotcom_namespaces_xf')}}
 
-), gitlab_dotcom_user_preferences AS (
+), user_preferences AS (
 
   SELECT 
     user_id,
     setup_for_company
   FROM {{ref('gitlab_dotcom_user_preferences')}}
 
-), gitlab_dotcom_memberships AS (
+), memberships AS (
 
   SELECT 
     user_id,
@@ -25,7 +25,7 @@ WITH gitlab_dotcom_namespaces_xf AS (
     is_billable
   FROM {{ref('gitlab_dotcom_memberships')}}
 
-), gitlab_dotcom_users_xf AS (
+), users_xf AS (
 
   SELECT 
     user_id,
@@ -54,23 +54,23 @@ WITH gitlab_dotcom_namespaces_xf AS (
 ), is_user_in_company_namespace AS (
 
   SELECT DISTINCT 
-    gitlab_dotcom_memberships.user_id
-  FROM  gitlab_dotcom_namespaces_xf 
-  INNER JOIN gitlab_dotcom_user_preferences 
-    ON gitlab_dotcom_user_preferences.user_id = gitlab_dotcom_namespaces_xf.creator_id 
-      AND gitlab_dotcom_user_preferences.setup_for_company = TRUE
-  INNER JOIN gitlab_dotcom_memberships
-    ON gitlab_dotcom_memberships.ULTIMATE_PARENT_ID = gitlab_dotcom_namespaces_xf.namespace_id 
-      AND gitlab_dotcom_memberships.is_billable = 'TRUE'
+    memberships.user_id
+  FROM  namespaces 
+  INNER JOIN user_preferences 
+    ON user_preferences.user_id = namespaces.creator_id 
+      AND user_preferences.setup_for_company = TRUE
+  INNER JOIN memberships
+    ON memberships.ULTIMATE_PARENT_ID = namespaces.namespace_id 
+      AND memberships.is_billable = 'TRUE'
   
 ),  users AS ( 
 
   SELECT 
-    gitlab_dotcom_users_xf.user_id                                                                   AS row_integer,
-    gitlab_dotcom_users_xf.first_name,
-    gitlab_dotcom_users_xf.last_name, 
-    gitlab_dotcom_users_xf.users_name,
-    COALESCE(gitlab_dotcom_users_xf.notification_email, dim_marketing_contact.email_address)         AS email_id,
+    users_xf.user_id                                                                   AS row_integer,
+    users_xf.first_name,
+    users_xf.last_name, 
+    users_xf.users_name,
+    COALESCE(users_xf.notification_email, dim_marketing_contact.email_address)         AS email_id,
     setup_for_company                                                                                AS internal_value1,
     CASE 
       WHEN is_user_in_company_namespace.user_id IS NOT NULL 
@@ -86,15 +86,15 @@ WITH gitlab_dotcom_namespaces_xf AS (
       THEN 'persona_email' 
       ELSE 'business email' 
     END                                                                                              AS email_type 
-  FROM gitlab_dotcom_users_xf
-  LEFT JOIN gitlab_dotcom_user_preferences
-    ON gitlab_dotcom_user_preferences.user_id = gitlab_dotcom_users_xf.user_id 
+  FROM users_xf
+  LEFT JOIN user_preferences
+    ON user_preferences.user_id = users_xf.user_id 
   LEFT JOIN dim_marketing_contact
-   ON dim_marketing_contact.Gitlab_dotcom_user_id = gitlab_dotcom_users_xf.user_id  
+   ON dim_marketing_contact.Gitlab_dotcom_user_id = users_xf.user_id  
   LEFT JOIN dim_crm_account
    ON dim_crm_account.dim_crm_account_id = dim_marketing_contact.dim_crm_account_id
   LEFT JOIN is_user_in_company_namespace
-   ON is_user_in_company_namespace.user_id = gitlab_dotcom_users_xf.user_id 
+   ON is_user_in_company_namespace.user_id = users_xf.user_id 
 
 
 )
