@@ -105,6 +105,8 @@ models:
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_container_expiration_policies_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
+  - name: gitlab_dotcom_compliance_management_frameworks_dedupe_source
+    description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_csv_issue_imports_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_geo_nodes_dedupe_source

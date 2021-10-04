@@ -368,6 +368,8 @@ sources:
         freshness: null
       - name: container_expiration_policies
         identifier: gitlab_db_container_expiration_policies
+      - name: compliance_management_frameworks
+        identifier: gitlab_db_compliance_management_frameworks
       - name: csv_issue_imports
         identifier: gitlab_db_csv_issue_imports
       - name: geo_nodes
