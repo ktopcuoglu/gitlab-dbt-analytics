@@ -22,7 +22,7 @@ WITH snapshot_dates AS (
 
     SELECT
       *
-    FROM {{ ref('fct_mrr_snapshot_base') }}
+    FROM {{ ref('prep_fct_mrr_snapshot_base') }}
 
 ), prep_charge AS (
 
