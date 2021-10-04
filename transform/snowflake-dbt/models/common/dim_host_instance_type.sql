@@ -8,6 +8,7 @@
     SELECT DISTINCT
       gainsight_instance_info.instance_uuid                         AS instance_uuid,
       gainsight_instance_info.instance_hostname                     AS instance_hostname,
+      gainsight_instance_info.namespace_id                          AS namespace_id,
       gainsight_instance_info.instance_type                         AS instance_type,
       {{ get_keyed_nulls('crm_accounts.dim_crm_account_id')  }}     AS dim_crm_account_id,
       crm_accounts.crm_account_name
@@ -19,7 +20,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@snalamaru",
-    updated_by="@michellecooper",
+    updated_by="@snalamaru",
     created_date="2021-04-01",
-    updated_date="2021-05-03"
+    updated_date="2021-10-04"
 ) }}
