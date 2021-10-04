@@ -6,7 +6,7 @@ models:
   - name: wk_saas_usage_ping_instance_flattened
     description: workspace table flattening JSON results contained in saas_usage_ping_instance's column run_results
   - name: wk_saas_usage_ping_instance_redis_metrics
-    description: workspace table flattening JSON results contained in instance_redis_metrics's column run_results
+    description: workspace table flattening JSON results contained in instance_redis_metrics's column `response`
     columns:
       - name: saas_usage_ping_redis_id
         description: Primary key for instance redis metrics reprsent as unique combination from ping_date + run_id columns
