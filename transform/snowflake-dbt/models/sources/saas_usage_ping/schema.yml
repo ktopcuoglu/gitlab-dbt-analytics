@@ -5,10 +5,28 @@ models:
       description: Source table for the RAW saas_usage_ping.instance_sql_metrics table representing instance level usage ping
       columns:
         - name: saas_usage_ping_gitlab_dotcom_id
+          description: unique identifier (combine `ping_date` + `run_results` columns)
           tests:
             - not_null
             - unique
+        - name: query_map
+          description: json file structure with list of SQL queries executed
+          tests:
+            - not_null
+        - name: run_results
+          description: json file structure with list of SQL result as a product of execution in `query_map` column
+          tests:
+            - not_null
+        - name: ping_date
+          description: Date of when ping is executed
+          tests:
+            - not_null
         - name: run_id
+          description: Unique identifier of the run
+          tests:
+            - not_null
+        - name: _uploaded_at
+          description: Date and time of when data is uploaded into Data Warehouse
           tests:
             - not_null
     - name: instance_redis_metrics
