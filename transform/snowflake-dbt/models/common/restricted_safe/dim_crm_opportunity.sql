@@ -84,6 +84,13 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity.payment_schedule,
       sfdc_opportunity.comp_y2_iacv,
 
+      -- Command Plan fields
+      sfdc_opportunity.cp_partner,
+      sfdc_opportunity.cp_paper_process,
+      sfdc_opportunity.cp_help,
+      sfdc_opportunity.cp_review_notes,
+
+
       -- stamped fields
       sfdc_opportunity.crm_opp_owner_stamped_name,
       sfdc_opportunity.crm_account_owner_stamped_name,
@@ -112,7 +119,7 @@ WITH sfdc_opportunity AS (
 {{ dbt_audit(
     cte_ref="layered",
     created_by="@iweeks",
-    updated_by="@michellecooper",
+    updated_by="@jpeguero",
     created_date="2020-11-20",
-    updated_date="2021-09-23"
+    updated_date="2021-09-29"
 ) }}

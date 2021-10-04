@@ -1,8 +1,3 @@
-{{ config({
-        "materialized": "table"
-    })
-}}
-
 WITH salesforce_date AS (
 
     {% set tables = ['account', 'campaign', 'campaign_member', 'contact', 'event', 'executive_business_review', 'lead', 'opportunity_stage', 'opportunity_split', 'opportunity_split_type', 'opportunity_team_member', 'opportunity','opportunity_contact_role', 'proof_of_concept', 'record_type', 'statement_of_work', 'task', 'user_role', 'user', 'zqu_quote'] %}					
