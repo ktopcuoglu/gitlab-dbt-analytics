@@ -18,6 +18,7 @@ WITH source AS (
       instance_uuid::VARCHAR                               AS instance_uuid,
       hostname::VARCHAR                                    AS instance_hostname,
       instancetype::VARCHAR                                AS instance_type,
+      namespace_id::VARCHAR                                AS namespace_id, 
       to_timestamp(_updated_at::NUMBER)                    AS uploaded_at
     FROM source
 
