@@ -18,7 +18,7 @@ models:
           tests:
             - not_null
         - name: ping_date
-          description: Date of when ping is executed
+          description: Date when ping is executed
           tests:
             - not_null
         - name: run_id
@@ -42,7 +42,7 @@ models:
           tests:
             - not_null
         - name: ping_date
-          description: Date of ping
+          description: Date when ping is executed
           tests:
             - not_null
         - name: run_id
