@@ -352,6 +352,8 @@ sources:
         freshness:
           warn_after: { count: 14, period: day }
           error_after: { count: 30, period: day }
+      - name: bulk_import_entities
+        identifier: gitlab_db_bulk_import_entities
       - name: cluster_agent_tokens
         identifier: gitlab_db_cluster_agent_tokens
         freshness: null
