@@ -1,16 +1,12 @@
 {%- macro delivery(product_category_column, output_column_name = 'delivery') -%}
 
 CASE 
-  WHEN LOWER({{product_category_column}}) LIKE ANY ('%saas%', 'storage')
+  WHEN LOWER({{product_category_column}}) LIKE ANY ('%saas%', 'storage', 'standard', 'basic', 'plus', 'githost')
     THEN 'SaaS'
   WHEN LOWER({{product_category_column}}) LIKE '%self-managed%'
     THEN 'Self-Managed'
   WHEN {{product_category_column}} IN (
-                                        'Basic'
-                                      , 'GitHost'
-                                      , 'Other'
-                                      , 'Plus'
-                                      , 'Standard'
+                                        'Other'
                                       , 'Support'
                                       , 'Trueup'
                                       )

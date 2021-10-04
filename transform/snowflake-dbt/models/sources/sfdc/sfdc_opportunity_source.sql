@@ -169,6 +169,8 @@ WITH source AS (
           WHEN arr_net__c > 250000 THEN '250K+'
           ELSE 'Missing opportunity_deal_size'
         END opportunity_deal_size,
+        payment_schedule__c                         AS payment_schedule,
+        comp_y2_iacv__c                             AS comp_y2_iacv,
 
       -- ************************************
       -- sales segmentation deprecated fields - 2020-09-03
@@ -228,8 +230,12 @@ WITH source AS (
         fm_decision_criteria__c                     AS cp_decision_criteria,
         fm_decision_process__c                      AS cp_decision_process,
         fm_economic_buyer__c                        AS cp_economic_buyer,
+        fm_help__c                                  AS cp_help,
         fm_identify_pain__c                         AS cp_identify_pain,
         fm_metrics__c                               AS cp_metrics,
+        fm_partner__c                               AS cp_partner,
+        fm_paper_process__c                         AS cp_paper_process,
+        fm_review_notes__c                          AS cp_review_notes,
         fm_risks__c                                 AS cp_risks,
         fm_use_cases__c                             AS cp_use_cases,
         fm_value_driver__c                          AS cp_value_driver,
