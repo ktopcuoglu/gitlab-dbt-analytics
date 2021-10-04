@@ -547,7 +547,7 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% docs dim_host_instance_type %}
 
-Dimension table providing instance type for a given UUID/Host Name pair.
+Dimension table providing instance type for a given UUID/HostName pair or Namespace Id for Self-Managed and SaaS data respectively.
 
 {% enddocs %}
 
