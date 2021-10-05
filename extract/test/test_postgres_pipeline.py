@@ -7,7 +7,7 @@ import yaml
 # - compliance_management_frameworks
 ########################################################################################################################
 
-test_dir = "../postgres_pipeline/manifests_decomposed/"
+test_dir = "analytics/extract/postgres_pipeline/manifests_decomposed/"
 test_pattern = {
     "bulk_import_entities": "el_gitlab_com_db_manifest.yaml",
     "compliance_management_frameworks": "el_gitlab_com_scd_db_manifest.yaml",
