@@ -76,21 +76,19 @@ class UsagePing(object):
 
         results_all = {}
         errors_data_all = {}
-        error_data_to_write = None
 
         for key, query in saas_queries.items():
-            logging.info(f"Running ping {key}...")
+            logging.info(f"Running ping: {key}...")
             try:
+                data_to_write = error_data_to_write = None
                 results = pd.read_sql(sql=query, con=connection)
                 info(results)
                 counter_value = results.loc[0, "counter_value"]
                 data_to_write = str(counter_value)
             except KeyError as k:
-                error = "0"
-                data_to_write = error
+                data_to_write = "0"
             except SQLAlchemyError as e:
-                error = str(e.__dict__["orig"])
-                error_data_to_write = error
+                error_data_to_write = str(e.__dict__["orig"])
 
             if data_to_write:
                 results_all[key] = data_to_write
