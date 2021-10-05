@@ -12,9 +12,6 @@ sources:
       schema: false
       identifier: false
 
-    freshness:
-      warn_after: {count: 8, period: hour}
-
     tables:
       - name: xc_attainment_measure
       - name: xc_attainment_measure_criteria
