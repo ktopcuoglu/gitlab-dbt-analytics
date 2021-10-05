@@ -76,21 +76,20 @@ class UsagePing(object):
 
         results_all = {}
         errors_data_all = {}
-        error_data_to_write = None
 
-        metrics_list = [
-            "usage_activity_by_stage.monitor.operations_dashboard_default_dashboard",
-            "counts.alert_bot_incident_issues",
-            "counts.ci_runners_group_type_active_online",
-            "usage_activity_by_stage.verify.clusters_applications_runner",
-        ]
+        # metrics_list = [
+        #     "usage_activity_by_stage.monitor.operations_dashboard_default_dashboard",
+        #     "counts.alert_bot_incident_issues",
+        #     "counts.ci_runners_group_type_active_online",
+        #     "usage_activity_by_stage.verify.clusters_applications_runner",
+        # ]
+        #
+        # saas_queries2 = {k: v for k, v in saas_queries.items() if k in metrics_list}
 
-        saas_queries2 = {k: v for k, v in saas_queries.items() if k in metrics_list}
-
-        for key, query in saas_queries2.items():
+        for key, query in saas_queries.items():
             logging.info(f"Running ping: {key}...")
             try:
-                data_to_write = None
+                data_to_write = error_data_to_write = None
                 results = pd.read_sql(sql=query, con=connection)
                 info(results)
                 counter_value = results.loc[0, "counter_value"]
