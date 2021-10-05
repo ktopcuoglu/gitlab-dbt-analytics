@@ -735,6 +735,7 @@ tables:
       SELECT user_id
       , job_title
       , other_role
+      , registration_objective
       FROM user_details
   vulnerability_occurrences:
     dbt_source_model: true

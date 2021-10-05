@@ -22,7 +22,7 @@ WITH snapshot_dates AS (
 ), mart_arr AS (
 
     SELECT *
-    FROM {{ ref('mart_arr_snapshot_base') }}
+    FROM {{ ref('prep_mart_arr_snapshot_base') }}
 
 ), mart_arr_spined AS (
 

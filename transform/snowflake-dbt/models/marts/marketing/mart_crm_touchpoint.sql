@@ -53,6 +53,8 @@
       dim_crm_person.owner_id,
       dim_crm_person.person_score,
       dim_crm_person.title                                                 AS crm_person_title,
+      dim_crm_person.country,
+      dim_crm_person.mailing_country,
       dim_crm_person.status                                                AS crm_person_status,
       dim_crm_person.lead_source,
       dim_crm_person.lead_source_type,
@@ -70,6 +72,8 @@
       fct_crm_person.is_mql,
       fct_crm_person.is_inquiry,
       fct_crm_person.mql_count,
+      fct_crm_person.last_utm_content,
+      fct_crm_person.last_utm_campaign,
 
       -- campaign info
       dim_campaign.dim_campaign_id,
@@ -182,7 +186,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mcooperDD",
-    updated_by="@michellecooper",
+    updated_by="@degan",
     created_date="2021-02-18",
     updated_date="2021-09-29"
 ) }}
