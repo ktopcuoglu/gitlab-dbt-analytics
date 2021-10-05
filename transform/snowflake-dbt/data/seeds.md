@@ -42,7 +42,7 @@ Though, the plan SMAU event is the combination of 2 events (issue_creation and i
 
 Preliminary results for mapping subscriptions to opportunites. This file has the following assumptions:
 
-- subscription created on or before 2021-04-11 since this is when Zuora instrumentation was stood up for reliably associating subscriptions with opportunities
+- subscription created between 2021-02-01 and 2021-04-11 since this is when Zuora instrumentation was stood up for reliably associating subscriptions with opportunities
 - opportunity_id is pulled first from the invoice, then from the quote associated with a given subscription
 - subscription_ids with more than one associated opportunity_id (either through multiple invoices or quotes, or a combination of the two) have been filtered out
 - when a subscription version does not have an associated opportunity_id from an invoice or a quote, it has been filled in with the opportunity_id associated with an earlier version of the subscription, if one exists
