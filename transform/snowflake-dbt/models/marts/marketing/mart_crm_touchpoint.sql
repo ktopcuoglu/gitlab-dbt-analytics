@@ -190,7 +190,7 @@
     LEFT JOIN dim_crm_account
       ON fct_crm_touchpoint.dim_crm_account_id = dim_crm_account.dim_crm_account_id
     LEFT JOIN dim_crm_user AS campaign_owner
-      ON fct_campaign.campaign_owner_id = dim_crm_user.dim_crm_user_id
+      ON fct_campaign.campaign_owner_id = campaign_owner.dim_crm_user_id
     LEFT JOIN dim_crm_user
       ON fct_crm_touchpoint.dim_crm_user_id = dim_crm_user.dim_crm_user_id
 
