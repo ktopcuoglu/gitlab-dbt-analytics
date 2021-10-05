@@ -1,5 +1,6 @@
 version: 2
 
 models:
-  - name: user_businessemail_zoominfo
+  - name: gitlab_user_businessemail
+    description: Provides gitlab user with business email data to zoominfo
   

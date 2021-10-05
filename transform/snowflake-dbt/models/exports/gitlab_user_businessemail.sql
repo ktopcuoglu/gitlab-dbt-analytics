@@ -66,11 +66,11 @@ WITH namespaces AS (
 ),  users AS ( 
 
   SELECT 
-    users_xf.user_id                                                                   AS row_integer,
+    users_xf.user_id                                                                                 AS row_integer,
     users_xf.first_name,
     users_xf.last_name, 
     users_xf.users_name,
-    COALESCE(users_xf.notification_email, dim_marketing_contact.email_address)         AS email_id,
+    COALESCE(users_xf.notification_email, dim_marketing_contact.email_address)                       AS email_id,
     setup_for_company                                                                                AS internal_value1,
     CASE 
       WHEN is_user_in_company_namespace.user_id IS NOT NULL 
