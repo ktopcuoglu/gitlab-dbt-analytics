@@ -129,6 +129,17 @@
       fct_campaign.count_won_opportunities,
       fct_campaign.count_sent,
 
+      -- campaign owner info
+      campaign_owner.user_name                             AS campaign_rep_name,
+      campaign_owner.title                                 AS campaign_rep_title,
+      campaign_owner.team                                  AS campaign_rep_team,
+      campaign_owner.is_active                             AS campaign_rep_is_active,
+      campaign_owner.user_role_name                        AS campaign_rep_role_name,
+      campaign_owner.crm_user_sales_segment                AS campaign_crm_user_segment_name_live,
+      campaign_owner.crm_user_geo                          AS campaign_crm_user_geo_name_live,
+      campaign_owner.crm_user_region                       AS campaign_crm_user_region_name_live,
+      campaign_owner.crm_user_area                         AS campaign_crm_user_area_name_live,
+
       -- sales rep info
       dim_crm_user.user_name                                AS rep_name,
       dim_crm_user.title                                    AS rep_title,
@@ -232,6 +243,8 @@
       ON fct_crm_attribution_touchpoint.dim_crm_account_id = dim_crm_account.dim_crm_account_id
     LEFT JOIN dim_crm_user
       ON fct_crm_attribution_touchpoint.dim_crm_user_id = dim_crm_user.dim_crm_user_id
+    LEFT JOIN dim_crm_user AS campaign_owner
+      ON fct_campaign.campaign_owner_id = dim_crm_user.dim_crm_user_id
     LEFT JOIN mart_crm_opportunity
       ON fct_crm_attribution_touchpoint.dim_crm_opportunity_id = mart_crm_opportunity.dim_crm_opportunity_id
 )
@@ -239,7 +252,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mcooperDD",
-    updated_by="@degan",
+    updated_by="@rkohnke",
     created_date="2020-02-18",
-    updated_date="2020-09-29"
+    updated_date="2020-10-05"
 ) }}
