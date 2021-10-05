@@ -85,10 +85,10 @@ class UsagePing(object):
             "usage_activity_by_stage.verify.clusters_applications_runner",
         ]
 
-        saas_queries = {k: v for k, v in saas_queries.items() if k in metrics_list}
+        saas_queries2 = {k: v for k, v in saas_queries.items() if k in metrics_list}
 
-        for key, query in saas_queries.items():
-            logging.info(f"Running ping {key}...")
+        for key, query in saas_queries2.items():
+            logging.info(f"Running ping: {key}...")
             try:
                 results = pd.read_sql(sql=query, con=connection)
                 info(results)
