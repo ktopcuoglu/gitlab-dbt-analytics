@@ -1,4 +1,4 @@
-CREATE OR REPLACE TABLE IF NOT EXISTS RAW.TAP_POSTGRES.GITLAB_DB_GEO_NODES (
+CREATE TABLE IF NOT EXISTS RAW.TAP_POSTGRES.GITLAB_DB_GEO_NODES (
     id                                  NUMBER(38,0),
     primary                             BOOLEAN,
     oauth_application_id                NUMBER(38,0),
