@@ -1,8 +1,3 @@
-{{ config({
-        "materialized": "table"
-    })
-}}
-
 WITH namespaces AS (
 
   SELECT 
