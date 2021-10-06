@@ -34,7 +34,7 @@
       issue_id,
       "{{this.database}}".{{target.schema}}.regexp_to_array(issue_description, '(?<=(gitlab.my.|na34.)salesforce.com\/)[0-9a-zA-Z]{15,18}') AS sfdc_link_array,
       "{{this.database}}".{{target.schema}}.regexp_to_array(issue_description, '(?<=gitlab.zendesk.com\/agent\/tickets\/)[0-9]{1,18}')      AS zendesk_link_array,
-      SPLIT_PART(REGEXP_SUBSTR(issue_description, '~"customer priority::[0-9]{1,2}'), '::', -1)                                                        AS request_priority
+      SPLIT_PART(REGEXP_SUBSTR(issue_description, '~"customer priority::[0-9]{1,2}'), '::', -1)                                             AS request_priority
     FROM issue_extended
     WHERE issue_description IS NOT NULL
       AND NOT (ARRAY_SIZE(sfdc_link_array) = 0 AND ARRAY_SIZE(zendesk_link_array) = 0)
