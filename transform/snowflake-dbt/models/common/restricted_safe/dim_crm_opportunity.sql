@@ -81,6 +81,15 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity.risk_type,
       sfdc_opportunity.risk_reasons,
       sfdc_opportunity.tam_notes,
+      sfdc_opportunity.payment_schedule,
+      sfdc_opportunity.comp_y2_iacv,
+
+      -- Command Plan fields
+      sfdc_opportunity.cp_partner,
+      sfdc_opportunity.cp_paper_process,
+      sfdc_opportunity.cp_help,
+      sfdc_opportunity.cp_review_notes,
+
 
       -- stamped fields
       sfdc_opportunity.crm_opp_owner_stamped_name,
@@ -112,5 +121,5 @@ WITH sfdc_opportunity AS (
     created_by="@iweeks",
     updated_by="@jpeguero",
     created_date="2020-11-20",
-    updated_date="2021-07-20"
+    updated_date="2021-09-29"
 ) }}

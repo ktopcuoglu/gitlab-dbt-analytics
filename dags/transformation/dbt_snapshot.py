@@ -116,7 +116,6 @@ dbt_commit_hash_setter = KubernetesPodOperator(
         """
     ],
     do_xcom_push=True,
-    xcom_push=True,
     dag=dag,
 )
 

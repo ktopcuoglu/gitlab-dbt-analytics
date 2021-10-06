@@ -305,6 +305,9 @@ models:
           - not_null
         tags: ["tdf", "common", "sales_funnel"]
 
+  - name: dim_environment
+    description: Table with the source data of the data being exposed in dimensional tables where various sources are combined.
+
   - name: dim_gitlab_ops_gitlab_emails
     description: '{{ doc("gitlab_dotcom_gitlab_emails") }}'
     columns:
@@ -472,10 +475,13 @@ models:
     description: '{{ doc("dim_host_instance_type") }}'
     columns:
       - name: instance_uuid
-        description: Unique identifier for the instance
+        description: Unique identifier for the instance(Self-Managed)
         tags: ["gainsight"]
       - name: instance_hostname
-        description: Name of the host of the instance
+        description: Name of the host of the instance(Self-Managed)
+        tags: ["gainsight"]
+      - name: namespace_id
+        description: Unique Identifier for SaaS data
         tags: ["gainsight"]
       - name: instance_type
         description: Type of the instance
