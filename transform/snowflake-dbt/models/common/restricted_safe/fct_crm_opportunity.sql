@@ -124,6 +124,7 @@
       sfdc_opportunity.is_swing_deal,
       sfdc_opportunity.is_edu_oss,
       sfdc_opportunity.is_web_portal_purchase,
+      sfdc_opportunity.fpa_master_bookings_flag,
       sfdc_opportunity.deal_path,
       sfdc_opportunity.order_type_stamped                                        AS order_type,
       sfdc_opportunity.sales_segment,

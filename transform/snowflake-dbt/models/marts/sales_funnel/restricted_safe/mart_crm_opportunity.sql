@@ -134,7 +134,7 @@
       dim_crm_opportunity.iqm_submitted_by_role,
       dim_crm_opportunity.sdr_pipeline_contribution,
       dim_crm_opportunity.is_web_portal_purchase,
-      dim_crm_opportunity.fpa_master_bookings_flag,
+      fct_crm_opportunity.fpa_master_bookings_flag,
       dim_crm_opportunity.sales_path,
       dim_crm_opportunity.professional_services_value,
       fct_crm_opportunity.primary_solution_architect,
