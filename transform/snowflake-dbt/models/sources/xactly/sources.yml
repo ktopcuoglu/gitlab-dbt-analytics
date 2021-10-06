@@ -11,14 +11,20 @@ sources:
       database: true
       schema: false
       identifier: false
+    freshness:
+      warn_after: {count: 24, period: hour}
+      error_after: {count: 36, period: hour}
 
     tables:
       - name: xc_attainment_measure
       - name: xc_attainment_measure_criteria
       - name: xc_credit
       - name: xc_credit_adjustment
+        freshness: null
       - name: xc_credit_held
+        freshness: null
       - name: xc_credit_totals
+        freshness: null
       - name: xc_credit_type
       - name: xc_position
       - name: xc_position_hist
@@ -39,5 +45,7 @@ sources:
       - name: xc_quota
       - name: xc_quota_hist
       - name: xc_quota_relationship
+        freshness: null
       - name: xc_quota_totals
+        freshness: null
       - name: xc_role
