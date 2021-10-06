@@ -80,6 +80,20 @@ tables:
       , cluster_id
       , group_id
       FROM cluster_groups
+  compliance_management_frameworks:
+    export_schema: 'gitlab_com'
+    export_table: 'compliance_management_frameworks'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , name
+      , description
+      , color
+      , namespace_id
+      , regulated
+      , pipeline_configuration_full_path
+      FROM compliance_management_frameworks
   columns:
     advanced_metadata: true
     export_schema: 'gitlab_com'
