@@ -11,6 +11,7 @@
       *
     FROM {{ ref('gitlab_dotcom_notes_source') }}
     WHERE noteable_type = 'Epic'
+      AND system = FALSE
 
 ), epic_extended AS (
 

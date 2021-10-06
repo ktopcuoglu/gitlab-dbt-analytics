@@ -12,6 +12,7 @@
       *
     FROM {{ ref('gitlab_dotcom_notes_source') }}
     WHERE noteable_type = 'Issue'
+      AND system = FALSE
 
 ), issue_extended AS (
 
