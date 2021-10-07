@@ -74,7 +74,7 @@ SISENSE
 
 
 
-2. [ ] De-activate any account that has not logged-in within the past 60 days from the moment of performing audit from Sisense.
+2. [ ] De-activate any account that has not logged-in within the past 90 days from the moment of performing audit from Sisense.
 
     <details>
 
@@ -95,7 +95,7 @@ SISENSE
 
        SELECT * 
        FROM FINAL
-       WHERE last_login_date < CURRENT_DATE-30 ;
+       WHERE last_login_date < CURRENT_DATE-90 ;
 
    ```
 
