@@ -150,7 +150,7 @@ def process_row(row: pd.Series) -> str:
     For use when generating CREATE TABLE STATEMENT
     :param row:
     :return:
-    :rtype: object
+    :rtype: bool
     """
     character_len = row["character_maximum_length"]
     if character_len and character_len > 0 and row["data_type"] != "TEXT":
@@ -168,7 +168,7 @@ def rollup_table_clone(
     :param db_name:
     :param schema_name:
     :param table_name:
-    :rtype: object
+    :rtype: bool
     """
 
     roll_up_table_info = get_table_column_names(engine, db_name, f"{table_name}_ROLLUP")
@@ -226,7 +226,7 @@ def recreate_rollup_table(
     :param schema_name:
     :param table_name:
     :type table_name:
-    :rtype: object
+    :rtype: bool
     """
     logging.info(f"Recreating {table_name}")
     tables_to_roll_up = get_existing_tables_to_roll_up(engine, db_name, table_name)
