@@ -31,6 +31,7 @@
     prep_usage_ping.dim_crm_account_id,
     dim_parent_crm_account_id,
     dim_location_country_id,
+    license_user_count,
 
     {{ sales_wave_2_3_metrics() }}
 
