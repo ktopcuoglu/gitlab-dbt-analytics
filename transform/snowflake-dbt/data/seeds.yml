@@ -19,3 +19,5 @@ seeds:
     description: '{{ doc("version_blacklisted_instance_uuid") }}'
   - name: map_saas_event_to_smau
     description: '{{ doc("map_saas_event_to_smau") }}'
+  - name: subscription_opportunity_mapping
+    description: '{{ doc("subscription_opportunity_mapping") }}'

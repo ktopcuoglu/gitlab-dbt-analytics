@@ -249,7 +249,7 @@ WITH source AS (
         sa_validated_tech_evaluation_start_date__c  AS sa_tech_evaluation_start_date,
 
         -- flag to identify eligible booking deals, excluding jihu - issue: https://gitlab.com/gitlab-com/sales-team/field-operations/systems/-/issues/1805
-        fp_a_master_bookings_flag__c                AS fpa_master_bookings_flag,
+        fp_a_master_bookings_flag__c::BOOLEAN       AS fpa_master_bookings_flag,
 
         -- metadata
         convert_timezone('America/Los_Angeles',convert_timezone('UTC',
