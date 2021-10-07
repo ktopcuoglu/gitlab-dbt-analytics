@@ -245,7 +245,7 @@ def recreate_rollup_table(
         )
 
     big_df = big_df.groupby(["column_name"]).max().reset_index()
-    big_df = big_df.sort_values(by=['ordinal_position'])
+    big_df = big_df.sort_values(by=["ordinal_position"])
 
     query_executor(engine, f"DROP TABLE IF EXISTS {rollup_table_name}")
 
