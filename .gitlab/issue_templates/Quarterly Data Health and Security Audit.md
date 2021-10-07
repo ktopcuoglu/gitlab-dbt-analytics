@@ -60,10 +60,15 @@ SNOWFLAKE
      AND employee.termination_date IS NULL										
      AND CASE WHEN snowflake.last_success_login IS null THEN snowflake.created_on ELSE snowflake.last_success_login END <= dateadd('day', -60, CURRENT_DATE());										
     ```
-  
+
+
+3. [ ] Validate all user accounts do not have password set.
+    <details>
+
+    * [ ] Check HAS_PASSWRD is set to ‘false’ in users table. If set to ‘false’ then there is not password set. 
 
 SISENSE
-1. [ ] Validate terminated employees have been removed from Sisense access.
+1. [ ] Validate off-boarded employees have been removed from Sisense access.
     <details>
 
      ```sql
