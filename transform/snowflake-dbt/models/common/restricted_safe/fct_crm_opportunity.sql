@@ -124,6 +124,7 @@
       sfdc_opportunity.is_swing_deal,
       sfdc_opportunity.is_edu_oss,
       sfdc_opportunity.is_web_portal_purchase,
+      sfdc_opportunity.fpa_master_bookings_flag,
       sfdc_opportunity.deal_path,
       sfdc_opportunity.order_type_stamped                                        AS order_type,
       sfdc_opportunity.sales_segment,
@@ -217,11 +218,7 @@
     SELECT
 
       opportunity_id,
-      CASE
-        WHEN (is_won = 'TRUE' OR (sales_type = 'Renewal' AND stage_name = '8-Closed Lost'))
-            THEN TRUE
-        ELSE FALSE
-      END                                                                         AS is_net_arr_closed_deal
+      fpa_master_bookings_flag                                                    AS is_net_arr_closed_deal
 
     FROM sfdc_opportunity
 
@@ -380,6 +377,7 @@
       opportunity_fields.is_swing_deal,
       opportunity_fields.is_edu_oss,
       opportunity_fields.is_web_portal_purchase,
+      opportunity_fields.fpa_master_bookings_flag,
       is_sao.is_sao,
       is_sdr_sao.is_sdr_sao,
       is_net_arr_closed_deal.is_net_arr_closed_deal,
@@ -483,5 +481,5 @@
     created_by="@mcooperDD",
     updated_by="@jpeguero",
     created_date="2020-11-30",
-    updated_date="2021-09-15"
+    updated_date="2021-10-06"
 ) }}
