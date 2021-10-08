@@ -10,7 +10,8 @@
     ('prep_saas_usage_ping_namespace','prep_saas_usage_ping_namespace'),
     ('dim_date','dim_date'),
     ('bdg_namespace_subscription','bdg_namespace_order_subscription_monthly'),
-    ('gainsight_wave_2_3_metrics','gainsight_wave_2_3_metrics')
+    ('gainsight_wave_2_3_metrics','gainsight_wave_2_3_metrics'),
+    ('instance_types', 'dim_host_instance_type')
 ]) }}
 
 , joined AS (
@@ -21,8 +22,11 @@
       prep_saas_usage_ping_namespace.ping_name,
       prep_saas_usage_ping_namespace.counter_value,
       dim_date.first_day_of_month                           AS reporting_month, 
-      bdg_namespace_subscription.dim_subscription_id
+      bdg_namespace_subscription.dim_subscription_id,
+      instance_types.instance_type
     FROM prep_saas_usage_ping_namespace
+    LEFT JOIN instance_types
+      ON prep_saas_usage_ping_namespace.['dim_namespace_id']::VARCHAR = instance_types.namespace_id
     INNER JOIN dim_date
       ON prep_saas_usage_ping_namespace.ping_date = dim_date.date_day
     INNER JOIN bdg_namespace_subscription
@@ -47,6 +51,7 @@
       dim_subscription_id,
       reporting_month,
       MAX(ping_date)                                        AS ping_date,
+      instance_type,
       {{ dbt_utils.pivot('ping_name', gainsight_wave_metrics, then_value='counter_value') }}
     FROM joined
     {{ dbt_utils.group_by(n=3)}}
@@ -56,7 +61,7 @@
 {{ dbt_audit(
     cte_ref="pivoted",
     created_by="@mpeychet_",
-    updated_by="@ischweickartDD",
+    updated_by="@snalamaru",
     created_date="2021-03-22",
-    updated_date="2021-05-24"
+    updated_date="2021-10-08"
 ) }}
