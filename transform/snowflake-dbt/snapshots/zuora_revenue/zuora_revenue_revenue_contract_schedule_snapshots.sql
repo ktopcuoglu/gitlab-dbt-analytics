@@ -12,5 +12,6 @@
       rc_id || '-' || crtd_prd_id || '-' || root_line_id || '-' || ref_bill_id || '-' || schd_id || '-' || line_id || '-' || acctg_seg AS revenue_snapshot_id,
         *
     FROM {{ source('zuora_revenue','zuora_revenue_revenue_contract_schedule') }}
+    QUALIFY RANK() OVER (PARTITION BY schd_id, acctg_type ORDER BY incr_updt_dt DESC) = 1
 
 {% endsnapshot %}
