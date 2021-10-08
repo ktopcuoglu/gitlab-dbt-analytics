@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: gitlab_user_businessemail
+  - name: gitlab_user_outbound
     description: Provides gitlab user data with business emails to zoominfo.
     columns:
       - name: row_integer

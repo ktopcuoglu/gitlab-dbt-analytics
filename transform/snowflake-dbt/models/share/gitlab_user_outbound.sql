@@ -55,7 +55,7 @@ WITH namespaces AS (
     ON user_preferences.user_id = namespaces.creator_id 
       AND user_preferences.setup_for_company = TRUE
   INNER JOIN memberships
-    ON memberships.ULTIMATE_PARENT_ID = namespaces.namespace_id 
+    ON memberships.ultimate_parent_id = namespaces.namespace_id 
       AND memberships.is_billable = 'TRUE'
   
 ),  users AS ( 
@@ -78,14 +78,14 @@ WITH namespaces AS (
       WHEN email_id IS NULL 
       THEN 'missing' 
       WHEN RLIKE(SUBSTRING(email_id ,CHARINDEX('@', email_id ) +1, LEN(email_id ) - CHARINDEX('@', email_id )),'(yahoo)|(gmail)|(hotmail)|(rediff)|(outlook)|(verizon\\.net)|(live\\.)|(sbcglobal\\.net)|(laposte)|(pm\\.me)|(inbox)|(yandex)|(fastmail)|(protonmail)|(email\\.)|(att\\.net)|(posteo)|(rocketmail)|(bk\\.ru)') OR SUBSTRING(email_id ,CHARINDEX('@',email_id ) +1, LEN(email_id ) - CHARINDEX('@', email_id )) IN ('gmail.com','qq.com', 'hotmail.com','', 'yahoo.com','outlook.com','163.com','mail.ru','googlemail.com','yandex.ru', 'protonmail.com',  'icloud.com',  't-mobile.com','example.com',  'live.com', '126.com','me.com',  'gmx.de', 'hotmail.fr', 'web.de',  'google.com',  'yahoo.fr','naver.com', 'foxmail.com', 'aol.com', 'msn.com',  'hotmail.co.uk',   'ya.ru', 'wp.pl',   'gmx.net', 'live.fr','ymail.com',   'orange.fr',  'yahoo.co.uk',    'ancestry.com','free.fr', 'comcast.net', 'hotmail.de', 'mail.com', 'ukr.net',   'yahoo.co.jp',   'mac.com',  'yahoo.co.in',   'gitlab.com', 'yahoo.com.br','gitlab.localhost')  
-      THEN 'persona_email' 
+      THEN 'personal_email' 
       ELSE 'business email' 
     END                                                                                              AS email_type 
   FROM users_xf
   LEFT JOIN user_preferences
     ON user_preferences.user_id = users_xf.user_id 
   LEFT JOIN dim_marketing_contact
-   ON dim_marketing_contact.Gitlab_dotcom_user_id = users_xf.user_id  
+   ON dim_marketing_contact.gitlab_dotcom_user_id = users_xf.user_id  
   LEFT JOIN dim_crm_account
    ON dim_crm_account.dim_crm_account_id = dim_marketing_contact.dim_crm_account_id
   LEFT JOIN is_user_in_company_namespace
@@ -93,11 +93,10 @@ WITH namespaces AS (
 
 
 )
-
+---- pulls all business email users or personal email users who have set up for company = True or belongs to a namespace where set up for company is true. 
 
 SELECT *
 FROM users
-WHERE email_type = 'business email'
+WHERE email_type = 'business email' OR (email_type  = 'personal_email' AND (internal_value1 = TRUE OR internal_value2 = 1)) 
 
 
-  
