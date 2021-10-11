@@ -91,7 +91,36 @@ def add_counter_name_as_column(sql_metrics_name: str, sql_query: str) -> str:
         if token.is_keyword and str(token) == "FROM":
             from_index = index
             break
+
+    # TODO: rbacovic - translate count(xx.xx.xx) into COUNT(xx.xx) make this more readable
+    # Use case fixed: translate COUNT(xx.xx.xx) into COUNT(xx.xx)
+    for index, token in enumerate(token_list):
+        token = str(token).replace("COUNT( ", "COUNT(")
+        check_postgres_count = str(token).upper()
+        if (
+            check_postgres_count.startswith("COUNT")
+            and check_postgres_count.endswith(")")
+            and check_postgres_count.count("(") == 1
+            and check_postgres_count.count(".") == 2
+        ):
+            # distinguish COUNT(DISTINCT xx.xx.xx) from COUNT(xx.xx.xx)
+            if " " in token[6:]:
+                index_from = check_postgres_count.index(" ")
+            else:
+                index_from = check_postgres_count.index("(")
+            fixed_count = (
+                str(token)[: index_from + 1] + str(token)[token.index(".") + 1 :]
+            )
+
+            token_list[index] = fixed_count
+
     token_list_with_counter_name = token_list[:]
+
+    # TODO: rbacovic determinate if we have subquery (without FROM clause), make this a little bit more readable
+    # Use case fixed: put scalar sub query properly as a column value
+    # if yes, fit it as a scalar value in counter_value column
+    if from_index == 0:
+        from_index = len(token_list_with_counter_name) + 1
 
     # add a name for the count columns and add the date column
 

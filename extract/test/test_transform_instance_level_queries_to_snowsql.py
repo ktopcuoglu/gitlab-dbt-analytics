@@ -55,3 +55,9 @@ for sql_metric, sql_query in final_sql_query_dict.items():
 
     # compare translated query with working SQL
     assert sql_query == output_translated_sql[sql_metric]
+
+
+# TODO: rbacovic - Cover 3 new changes in test cases
+# TODO: rbacovic Scalar subquery
+# TODO: rbacovic COUNT from PG to Snowflake
+# TODO: rbacovic regular subquery
