@@ -152,9 +152,9 @@ WITH filtered_source as (
       v_tracker,
       uploaded_at,
       'GitLab' AS infra_source
-    {% if target.name not in ("prod") -%}
+    {% if target.name not in ("prod") -%} 
 
-    FROM {{ ref('snowplow_gitlab_good_events_sample_source') }}
+    FROM {{ ref('snowplow_gitlab_good_events_sample_source') }} -- The sample is not always from the current month so given then WHERE conditions this may be a blank tabel
 
     {%- else %}
 
