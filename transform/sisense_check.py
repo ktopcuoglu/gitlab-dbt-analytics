@@ -79,7 +79,7 @@ for repo in repos_to_check:
                         all_lines = " ".join(lines)
                         # Removes new lines following "from" and "join" b/c people don't follow style guide
                         clean_lines = re.sub(
-                            r"(from|join)([\s\\r\\n]*)", r"\1 ", all_lines.lower()
+                            r"(from|join)([\r\n]*)", r"\1 ", all_lines.lower()
                         )
                         new_lines = clean_lines.split("\n")
 
