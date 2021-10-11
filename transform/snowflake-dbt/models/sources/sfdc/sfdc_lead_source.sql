@@ -48,6 +48,7 @@ WITH source AS (
         countrycode                                             AS country_code,
         postalcode                                              AS postal_code,
         zi_company_country__c                                   AS zoominfo_company_country,
+        zi_contact_country__c                                   AS zoominfo_contact_country,
 
         -- info
         requested_contact__c                                    AS requested_contact,
