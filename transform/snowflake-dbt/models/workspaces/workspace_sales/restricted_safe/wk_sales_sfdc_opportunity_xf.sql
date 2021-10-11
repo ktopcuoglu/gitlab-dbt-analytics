@@ -203,6 +203,8 @@ WITH sfdc_opportunity AS (
 
       
       COALESCE(sfdc_opportunity_xf.partner_track,partner_account.partner_track)                     AS partner_track,
+      partner_account.gitlab_partner_program                                                        AS partner_gitlab_program,
+
       sfdc_opportunity_xf.is_public_sector_opp,
       sfdc_opportunity_xf.is_registration_from_portal,
       sfdc_opportunity_xf.calculated_discount,
@@ -557,8 +559,7 @@ WITH sfdc_opportunity AS (
       sfdc_accounts_xf.account_name,
       sfdc_accounts_xf.ultimate_parent_account_id,
       sfdc_accounts_xf.is_jihu_account,
-      sfdc_accounts_xf.gitlab_partner_program,
-  
+
       -- medium level grouping of the order type field
       CASE 
         WHEN sfdc_opportunity_xf.order_type_stamped = '1. New - First Order' 
