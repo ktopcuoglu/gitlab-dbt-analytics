@@ -8,7 +8,7 @@ SELECT *
 FROM {{ source('gitlab_dotcom', 'compliance_management_frameworks') }}
 {% if is_incremental() %}
 
-WHERE updated_at >= (SELECT MAX(updated_at) FROM {{this}})
+WHERE _uploaded_at >= (SELECT MAX(_uploaded_at) FROM {{this}})
 
 {% endif %}
-QUALIFY ROW_NUMBER() OVER (PARTITION BY id ORDER BY updated_at DESC) = 1
+QUALIFY ROW_NUMBER() OVER (PARTITION BY id ORDER BY _uploaded_at DESC) = 1
