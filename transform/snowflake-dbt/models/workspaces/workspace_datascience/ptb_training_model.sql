@@ -633,6 +633,8 @@ LEFT JOIN events_salesforce es
     ON p1.dim_crm_account_id = es.account_id
 LEFT JOIN tasks_salesforce ts
     ON p1.dim_crm_account_id = ts.account_id
+LEFT JOIN zi_technologies zt
+    ON p1.dim_crm_account_id = zt.account_id
 --LEFT JOIN lifetime l
 --    ON p1.dim_crm_account_id = l.dim_crm_account_id
 LEFT JOIN bizible b
