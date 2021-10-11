@@ -47,7 +47,7 @@ WITH mart_arr_snapshot_bottom_up AS (
     FROM mart_arr_snapshot_bottom_up
     -- Contains true-up snapshots for every date from 2020-03-01 to Present. MART_ARR_SNAPSHOT_MODEL contained non-true-up data but contains misisng data prior to 2021-06
     WHERE snapshot_date = '{{ end_date }}' -- limit to snapshot to day before our prediction window
-        AND ARR_MONTH = date_trunc('MONTH', '{{ end_date }}') -- limit data for just the month the '{{ end_date }}' falls in. arr_month is unique at the dim_crm_account_id & snapshot_date level
+        AND ARR_MONTH = date_trunc('MONTH', cast('{{ end_date }}' as date)) -- limit data for just the month the '{{ end_date }}' falls in. arr_month is unique at the dim_crm_account_id & snapshot_date level
         AND is_jihu_account != 'TRUE' -- Remove Chinese accounts like this per feedback from Melia and Israel
         AND subscription_end_date >= '{{ end_date }}' -- filter to just active subscriptions per feedback by Melia
         --AND term_start_date <= '{{ end_date }}' --proposed fix for subscription_months_into it will exclude any future.
@@ -91,7 +91,7 @@ WITH mart_arr_snapshot_bottom_up AS (
         , SUM(CASE WHEN subscription_status = 'Cancelled' OR (subscription_status = 'Active' AND subscription_end_date <= dateadd(MONTH, -3, '{{ end_date }}')) THEN 1 ELSE 0 END) AS cancelled_subs_prev --added 3 months before counting active subscriptions as cancelled per Israel's feedback
     FROM mart_arr_snapshot_bottom_up
     WHERE snapshot_date = '{{ end_date }}' -- limit to snapshot to day before our prediction window
-        AND ARR_MONTH = DATE_TRUNC('MONTH', DATEADD('{{ period_type }}', -'{{ delta_value }}', '{{ end_date }}')) -- limit to customer's data for just the PERIOD prior to where the '{{ end_date }}' falls
+        AND ARR_MONTH = DATE_TRUNC('MONTH', DATEADD('{{ period_type }}', -'{{ delta_value }}', cast('{{ end_date }}' as date))) -- limit to customer's data for just the PERIOD prior to where the '{{ end_date }}' falls
         AND is_jihu_account != 'TRUE' -- Remove Chinese accounts like this per feedback from Melia and Israel
     GROUP BY dim_crm_account_id
 
@@ -340,7 +340,7 @@ WITH mart_arr_snapshot_bottom_up AS (
         , MAX(CAST(SUBSTRING(cleaned_version,0,CHARINDEX('.',cleaned_version)-1) AS INT)) as gitlab_version
     FROM {{ref('mart_product_usage_paid_user_metrics_monthly')}}
     WHERE PING_CREATED_AT IS NOT NULL
-        AND SNAPSHOT_MONTH BETWEEN DATE_TRUNC(MONTH, DATEADD(MONTH, -'{{ delta_value }}', '{{ end_date }}')) AND DATE_TRUNC(MONTH, DATEADD(MONTH, -1, '{{ end_date }}')) -- Usage data is at the SNAPSHOT_MONTH level. As such, we have to use the whole month PRIOR to our SNAPSHOT_DT to avoid leakage
+        AND SNAPSHOT_MONTH BETWEEN DATE_TRUNC(MONTH, DATEADD(MONTH, -'{{ delta_value }}', cast('{{ end_date }}' as date)) AND DATE_TRUNC(MONTH, DATEADD(MONTH, -1, cast('{{ end_date }}' as date))) -- Usage data is at the SNAPSHOT_MONTH level. As such, we have to use the whole month PRIOR to our SNAPSHOT_DT to avoid leakage
         AND ((delivery_type = 'SaaS')
             OR
             (instance_type='Production' AND delivery_type = 'Self-Managed'))
