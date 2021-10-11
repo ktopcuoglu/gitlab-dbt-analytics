@@ -10,7 +10,6 @@ models:
         description: unique identifier (combine `ping_date` + `run_results` columns)
         tests:
           - not_null
-          - unique
       - name: ping_date
         description: Date when ping is executed
         tests:
@@ -30,7 +29,6 @@ models:
         description: Primary key for instance redis metrics reprsent as unique combination from ping_date + run_id columns
         tests:
           - not_null
-          - unique
       - name: ping_date
         description: Date when ping is executed
         tests:
