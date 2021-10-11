@@ -447,6 +447,8 @@ models:
 
       workspace_datascience:
         +schema: workspace_datascience
+        ptb:
+          +materialized: table
 
       workspace_marketing:
         +schema: workspace_marketing
