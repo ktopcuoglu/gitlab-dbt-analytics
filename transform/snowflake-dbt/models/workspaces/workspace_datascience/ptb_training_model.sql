@@ -8,7 +8,7 @@
 WITH mart_arr_snapshot_bottom_up AS (
 
     SELECT *
-    FROM {{ref('mart_arr_snapshot_bottom_up')}}
+    FROM {{ ref('mart_arr_snapshot_bottom_up') }}
 
     ), period_1 AS (
 
@@ -178,17 +178,17 @@ WITH mart_arr_snapshot_bottom_up AS (
 ), events_salesforce AS (
 
     SELECT
-       accountid as account_id
-     , SUM(CASE WHEN type = 'IQM' THEN 1 ELSE 0 END) AS initial_qualifying_meeting_event_count
-     , SUM(CASE WHEN type = 'Meeting' THEN 1 ELSE 0 END) AS meeting_event_count
-     , SUM(CASE WHEN type = 'Web Conference' THEN 1 ELSE 0 END) AS web_conference_event_count
-     , SUM(CASE WHEN type = 'Call' THEN 1 ELSE 0 END) AS call_event_count
-     , SUM(CASE WHEN type = 'Demo' THEN 1 ELSE 0 END) AS demo_event_count
-     , SUM(CASE WHEN type = 'In Person' THEN 1 ELSE 0 END) AS in_person_event_count
-     , SUM(CASE WHEN type = 'Renewal' THEN 1 ELSE 0 END) AS renewal_event_count
-     , SUM(CASE WHEN type IS NOT NULL THEN 1 ELSE 0 END) AS total_event_count
+       account_id as account_id
+     , SUM(CASE WHEN event_type = 'IQM' THEN 1 ELSE 0 END) AS initial_qualifying_meeting_event_count
+     , SUM(CASE WHEN event_type = 'Meeting' THEN 1 ELSE 0 END) AS meeting_event_count
+     , SUM(CASE WHEN event_type = 'Web Conference' THEN 1 ELSE 0 END) AS web_conference_event_count
+     , SUM(CASE WHEN event_type = 'Call' THEN 1 ELSE 0 END) AS call_event_count
+     , SUM(CASE WHEN event_type = 'Demo' THEN 1 ELSE 0 END) AS demo_event_count
+     , SUM(CASE WHEN event_type = 'In Person' THEN 1 ELSE 0 END) AS in_person_event_count
+     , SUM(CASE WHEN event_type = 'Renewal' THEN 1 ELSE 0 END) AS renewal_event_count
+     , SUM(CASE WHEN event_type IS NOT NULL THEN 1 ELSE 0 END) AS total_event_count
     FROM {{ref('sfdc_event_source')}}
-    WHERE createddate BETWEEN DATEADD('{{ period_type }}', -'{{ delta_value }}', '{{ end_date }}') AND '{{ end_date }}'  --filter PERIOD window. Because no histroic event table, going off createddate
+    WHERE created_at BETWEEN DATEADD('{{ period_type }}', -'{{ delta_value }}', '{{ end_date }}') AND '{{ end_date }}'  --filter PERIOD window. Because no histroic event table, going off createddate
     GROUP BY account_id
 
 ), tasks_salesforce AS (
@@ -205,9 +205,10 @@ WITH mart_arr_snapshot_bottom_up AS (
      , SUM(is_correct_contact__c) AS is_correct_contact_task
      , SUM(is_left_message__c) AS is_left_message_task
      , SUM(is_not_answered__c) AS is_not_answered_task
-    FROM {{ref('sfdc_task_source')}}
+    FROM {{ source('salesforce', 'task') }}
     WHERE createddate BETWEEN DATEADD('{{ period_type }}', -'{{ delta_value }}', '{{ end_date }}') AND '{{ end_date }}'  --filter PERIOD window. Because no histroic task table, going on createddate
     GROUP BY account_id
+
 ), zi_technologies AS (   
 
     SELECT account_id_18__c AS account_id
@@ -340,7 +341,7 @@ WITH mart_arr_snapshot_bottom_up AS (
         , MAX(CAST(SUBSTRING(cleaned_version,0,CHARINDEX('.',cleaned_version)-1) AS INT)) as gitlab_version
     FROM {{ref('mart_product_usage_paid_user_metrics_monthly')}}
     WHERE PING_CREATED_AT IS NOT NULL
-        AND SNAPSHOT_MONTH BETWEEN DATE_TRUNC(MONTH, DATEADD(MONTH, -'{{ delta_value }}', cast('{{ end_date }}' as date)) AND DATE_TRUNC(MONTH, DATEADD(MONTH, -1, cast('{{ end_date }}' as date))) -- Usage data is at the SNAPSHOT_MONTH level. As such, we have to use the whole month PRIOR to our SNAPSHOT_DT to avoid leakage
+        AND SNAPSHOT_MONTH BETWEEN DATE_TRUNC(MONTH, DATEADD(MONTH, -'{{ delta_value }}', cast('{{ end_date }}' as date))) AND DATE_TRUNC(MONTH, DATEADD(MONTH, -1, cast('{{ end_date }}' as date))) -- Usage data is at the SNAPSHOT_MONTH level. As such, we have to use the whole month PRIOR to our SNAPSHOT_DT to avoid leakage
         AND ((delivery_type = 'SaaS')
             OR
             (instance_type='Production' AND delivery_type = 'Self-Managed'))
