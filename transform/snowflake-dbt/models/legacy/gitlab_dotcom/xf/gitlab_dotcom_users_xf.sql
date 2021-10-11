@@ -15,9 +15,9 @@ WITH customers AS (
 , users AS (
 
     SELECT
-      {{ dbt_utils.star(from=ref('gitlab_dotcom_users'), except=["CREATED_AT", "FIRST_NAME", "LAST_NAME", "NOTIFICATION_EMAIL", "PUBLIC_EMAIL", "UPDATED_AT", "USERS_NAME", "USER_NAME", "EMAIL", "COMMIT_EMAIL"]) }},
-      created_at AS user_created_at,
-      updated_at AS user_updated_at
+      {{ dbt_utils.star(from=ref('gitlab_dotcom_users'), except=["created_at", "first_name", "last_name", "notification_email", "public_email", "updated_at", "users_name"]) }},
+      created_at        AS user_created_at,
+      updated_at        AS user_updated_at
     FROM {{ ref('gitlab_dotcom_users') }}
 
 )

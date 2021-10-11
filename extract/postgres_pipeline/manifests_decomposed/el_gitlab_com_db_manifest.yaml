@@ -209,6 +209,28 @@ tables:
       FROM boards_epic_boards
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
+  bulk_import_entities:
+    export_schema: 'gitlab_com'
+    export_table: bulk_import_entities
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , bulk_import_id
+      , parent_id
+      , namespace_id
+      , project_id
+      , source_type
+      , source_full_path
+      , destination_name
+      , destination_namespace
+      , status
+      , jid
+      , created_at
+      , updated_at
+      FROM bulk_import_entities
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   bulk_imports:
     export_schema: "gitlab_com"
     export_table: bulk_imports

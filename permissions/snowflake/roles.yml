@@ -2711,6 +2711,7 @@ roles:
     - jsanghvi: # External user - Protivitiy
         member_of:
             - analyst_finance
+            - restricted_safe
         warehouses:
             - analyst_xs
 
@@ -3624,6 +3625,7 @@ roles:
     - sp: # External user - Protivitiy
         member_of:
             - analyst_finance
+            - restricted_safe            
         warehouses:
             - analyst_xs
 

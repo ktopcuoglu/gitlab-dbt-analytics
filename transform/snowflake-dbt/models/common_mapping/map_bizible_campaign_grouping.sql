@@ -80,7 +80,7 @@ WITH bizible_touchpoints AS (
       CASE
         WHEN dim_parent_campaign_id = '7014M000001dowZQAQ' -- based on issue https://gitlab.com/gitlab-com/marketing/marketing-strategy-performance/-/issues/246
           OR (bizible_medium = 'sponsorship'
-          AND bizible_touchpoint_source IN ('issa','stackoverflow','securityweekly-appsec'))
+          AND bizible_touchpoint_source IN ('issa','stackoverflow','securityweekly-appsec','unix&linux','stackexchange'))
           THEN 'Publishers/Sponsorships' 
         WHEN  (bizible_touchpoint_type = 'Web Form' 
           AND (bizible_landing_page LIKE '%smbnurture%' 
@@ -359,7 +359,7 @@ WITH bizible_touchpoints AS (
 {{ dbt_audit(
     cte_ref="touchpoints_with_campaign",
     created_by="@mcooperDD",
-    updated_by="@michellecooper",
+    updated_by="@rkohnke",
     created_date="2021-03-02",
-    updated_date="2021-09-28"
+    updated_date="2021-09-30"
 ) }}
