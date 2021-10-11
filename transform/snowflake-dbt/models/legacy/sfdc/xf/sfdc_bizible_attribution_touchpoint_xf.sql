@@ -18,20 +18,20 @@ WITH opps AS (
       CASE
         WHEN touchpoint_id ILIKE 'a6061000000CeS0%' -- Specific touchpoint overrides
           THEN 'Field Event'
-        WHEN marketing_channel_path = 'CPC.AdWords'
+        WHEN bizible_marketing_channel_path = 'CPC.AdWords'
           THEN 'Google AdWords'
-        WHEN marketing_channel_path IN ('Email.Other', 'Email.Newsletter','Email.Outreach')
+        WHEN bizible_marketing_channel_path IN ('Email.Other', 'Email.Newsletter','Email.Outreach')
           THEN 'Email'
-        WHEN marketing_channel_path IN ('Field Event','Partners.Google','Brand.Corporate Event','Conference','Speaking Session')
-                  OR (bizible_medium = 'Field Event (old)' AND marketing_channel_path = 'Other')
+        WHEN bizible_marketing_channel_path IN ('Field Event','Partners.Google','Brand.Corporate Event','Conference','Speaking Session')
+                  OR (bizible_medium = 'Field Event (old)' AND bizible_marketing_channel_path = 'Other')
           THEN 'Field Event'
-        WHEN marketing_channel_path IN ('Paid Social.Facebook','Paid Social.LinkedIn','Paid Social.Twitter','Paid Social.YouTube')
+        WHEN bizible_marketing_channel_path IN ('Paid Social.Facebook','Paid Social.LinkedIn','Paid Social.Twitter','Paid Social.YouTube')
           THEN 'Paid Social'
-        WHEN marketing_channel_path IN ('Social.Facebook','Social.LinkedIn','Social.Twitter','Social.YouTube')
+        WHEN bizible_marketing_channel_path IN ('Social.Facebook','Social.LinkedIn','Social.Twitter','Social.YouTube')
           THEN 'Social'
-        WHEN marketing_channel_path IN ('Marketing Site.Web Referral','Web Referral')
+        WHEN bizible_marketing_channel_path IN ('Marketing Site.Web Referral','Web Referral')
           THEN 'Web Referral'
-        WHEN marketing_channel_path in ('Marketing Site.Web Direct', 'Web Direct')
+        WHEN bizible_marketing_channel_path in ('Marketing Site.Web Direct', 'Web Direct')
               -- Added to Web Direct
               OR campaign_id in (
                                 '701610000008ciRAAQ', -- Trial - GitLab.com
@@ -41,10 +41,10 @@ WITH opps AS (
                                 '701610000008cDYAAY'  -- 2018_MovingToGitLab
                                 )
           THEN 'Web Direct'
-        WHEN marketing_channel_path LIKE 'Organic Search.%'
-              OR marketing_channel_path = 'Marketing Site.Organic'
+        WHEN bizible_marketing_channel_path LIKE 'Organic Search.%'
+              OR bizible_marketing_channel_path = 'Marketing Site.Organic'
           THEN 'Organic Search'
-        WHEN marketing_channel_path IN ('Sponsorship')
+        WHEN bizible_marketing_channel_path IN ('Sponsorship')
           THEN 'Paid Sponsorship'
         ELSE 'Unknown'
               END                                                           AS pipe_name,

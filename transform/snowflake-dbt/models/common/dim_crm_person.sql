@@ -27,6 +27,8 @@ WITH crm_person AS (
       --info
       person_score,
       title,
+      country,
+      mailing_country,
       has_opted_out_email,
       email_bounced_date,
       email_bounced_reason,

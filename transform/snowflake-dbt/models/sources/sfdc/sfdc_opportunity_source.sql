@@ -230,8 +230,12 @@ WITH source AS (
         fm_decision_criteria__c                     AS cp_decision_criteria,
         fm_decision_process__c                      AS cp_decision_process,
         fm_economic_buyer__c                        AS cp_economic_buyer,
+        fm_help__c                                  AS cp_help,
         fm_identify_pain__c                         AS cp_identify_pain,
         fm_metrics__c                               AS cp_metrics,
+        fm_partner__c                               AS cp_partner,
+        fm_paper_process__c                         AS cp_paper_process,
+        fm_review_notes__c                          AS cp_review_notes,
         fm_risks__c                                 AS cp_risks,
         fm_use_cases__c                             AS cp_use_cases,
         fm_value_driver__c                          AS cp_value_driver,
@@ -245,7 +249,7 @@ WITH source AS (
         sa_validated_tech_evaluation_start_date__c  AS sa_tech_evaluation_start_date,
 
         -- flag to identify eligible booking deals, excluding jihu - issue: https://gitlab.com/gitlab-com/sales-team/field-operations/systems/-/issues/1805
-        fp_a_master_bookings_flag__c                AS fpa_master_bookings_flag,
+        fp_a_master_bookings_flag__c::BOOLEAN       AS fpa_master_bookings_flag,
 
         -- metadata
         convert_timezone('America/Los_Angeles',convert_timezone('UTC',

@@ -8,7 +8,8 @@ WITH source AS (
     SELECT
       user_id::NUMBER                     AS user_id,
       job_title::VARCHAR                  AS job_title,
-      other_role::VARCHAR                 AS other_role
+      other_role::VARCHAR                 AS other_role,
+      registration_objective::NUMBER      AS registration_objective
     FROM source
     
 )

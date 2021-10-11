@@ -27,6 +27,11 @@ databases:
     - csharp_prep:
         shared: no   
 
+    - degan_prod:
+        shared: no
+    - degan_prep:
+        shared: no
+
     - dpeterson_prod:
         shared: no
     - dpeterson_prep:
@@ -2225,6 +2230,38 @@ roles:
             - restricted_safe
         warehouses:
             - analyst_xs
+        owns:
+            databases:
+                - degan_prep
+                - degan_prod
+            schemas:
+                - degan_prep.*
+                - degan_prod.*
+            tables:
+                - degan_prep.*.*
+                - degan_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - degan_prep
+                    - degan_prod
+                write:
+                    - degan_prep
+                    - degan_prod
+            schemas:
+                read:
+                    - degan_prep.*
+                    - degan_prod.*
+                write:
+                    - degan_prep.*
+                    - degan_prod.*
+            tables:
+                read:
+                    - degan_prep.*.*
+                    - degan_prod.*.*
+                write:
+                    - degan_prep.*.*
+                    - degan_prod.*.*       
 
     - dknox:
         member_of: []
@@ -2670,6 +2707,13 @@ roles:
 
     - jsalazar: # De provisioned as part of Quarterly audit and security check.
         warehouses: []
+
+    - jsanghvi: # External user - Protivitiy
+        member_of:
+            - analyst_finance
+            - restricted_safe
+        warehouses:
+            - analyst_xs
 
     - jshen: # De provisioned as part of Quarterly audit and security check.
         member_of: []
@@ -3120,6 +3164,12 @@ roles:
         member_of: []
         warehouses: [] 
 
+    - mroark:
+        member_of:
+            - analyst_sales
+        warehouses:
+            - analyst_xs 
+
     - msendal:
         warehouses: []
 
@@ -3253,6 +3303,7 @@ roles:
     - ngalang:
         member_of:
             - analyst_growth
+            - restricted_safe            
         warehouses:
             - analyst_xs
 
@@ -3570,6 +3621,13 @@ roles:
                 write:
                     - snalamaru_prep.*.*
                     - snalamaru_prod.*.*
+
+    - sp: # External user - Protivitiy
+        member_of:
+            - analyst_finance
+            - restricted_safe            
+        warehouses:
+            - analyst_xs
 
     - ssichak:
         warehouses:
@@ -4154,6 +4212,11 @@ users:
         can_login: no
         member_of: []
 
+    - jsanghvi: # External user - Protivitiy
+        can_login: yes
+        member_of:
+            - jsanghvi       
+
     - jshen: # De provisioned as part of Quarterly audit and security check.
         can_login: no
         member_of: []
@@ -4324,6 +4387,11 @@ users:
         can_login: no
         member_of: []
 
+    - mroark:
+        can_login: yes
+        member_of:
+            - mroark 
+
     - mrodriguez:
         can_login: no
         member_of: []
@@ -4475,6 +4543,11 @@ users:
         can_login: yes
         member_of:
             - snalamaru
+
+    - sp: # External user - Protivitiy
+        can_login: yes
+        member_of:
+            - sp
 
     - sreddy:
         can_login: no
