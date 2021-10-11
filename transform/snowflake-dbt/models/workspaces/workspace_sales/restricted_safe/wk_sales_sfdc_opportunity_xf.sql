@@ -202,7 +202,7 @@ WITH sfdc_opportunity AS (
       END                                                                                           AS calculated_partner_track,
 
       
-      COALESCE(sfdc_opportunity_xf.partner_track,partner_account.partner_track,'Direct')            AS partner_track,
+      COALESCE(sfdc_opportunity_xf.partner_track,partner_account.partner_track)                     AS partner_track,
       sfdc_opportunity_xf.is_public_sector_opp,
       sfdc_opportunity_xf.is_registration_from_portal,
       sfdc_opportunity_xf.calculated_discount,
