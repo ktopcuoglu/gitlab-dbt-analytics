@@ -246,7 +246,7 @@ WITH mart_arr_snapshot_bottom_up AS (
         , MAX(CASE WHEN CONTAINS(zi_technologies__c, 'ARE_USED: TortoiseSVN') THEN 1 END) AS zi_tortoise_svn_flag
         , MAX(CASE WHEN CONTAINS(zi_technologies__c, 'ARE_USED: Kubernetes') THEN 1 END) AS zi_kubernetes_flag
     FROM {{ source('snapshots', 'sfdc_account_snapshots') }}
-    WHERE CAST(DBT_UPDATED_AT AS date) = {{ end_date }} -- Cast from datetime to date
+    WHERE CAST(DBT_UPDATED_AT AS date) = '{{ end_date }}' -- Cast from datetime to date
     GROUP BY account_id  -- snapshots occur multiple times a day so data is not unique at the acccount + dbt_updated_at level.
 ), bizible AS (
 
