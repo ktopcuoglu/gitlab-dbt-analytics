@@ -2211,14 +2211,6 @@ roles:
                     - csharp_prep.*.*
                     - csharp_prod.*.*        
 
-    - daruwajoye:
-        member_of:
-            - analyst_finance
-            - bamboohr_analytics
-            - restricted_safe
-        warehouses:
-            - analyst_xs
-
     - datwood:
         member_of: []
         warehouses: []
@@ -4016,11 +4008,6 @@ users:
         can_login: yes
         member_of:
             - csharp        
-
-    - daruwajoye:
-        can_login: yes
-        member_of:
-            - daruwajoye
 
     - datwood: # https://gitlab.com/gitlab-data/analytics/-/issues/6551
         can_login: no
