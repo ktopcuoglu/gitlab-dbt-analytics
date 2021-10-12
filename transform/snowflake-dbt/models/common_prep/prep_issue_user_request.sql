@@ -4,7 +4,8 @@
     ('map_namespace_lineage', 'map_namespace_lineage'),
     ('project', 'gitlab_dotcom_projects_source'),
     ('zendesk_ticket', 'zendesk_tickets_source'),
-    ('zendesk_organization', 'zendesk_organizations_source')
+    ('zendesk_organization', 'zendesk_organizations_source'),
+    ('map_moved_issue', 'map_moved_issue')
 ]) }}
 
 , issue_notes AS (
@@ -202,7 +203,20 @@
       AND gitlab_issue_description_zendesk_with_sfdc_account.dim_ticket_id = gitlab_issue_notes_zendesk_link.dim_ticket_id
     WHERE gitlab_issue_notes_zendesk_link.issue_id IS NULL
 
+), final AS (
+
+    SELECT
+      map_moved_issue.dim_issue_id,
+      union_links.link_type,
+      union_links.dim_crm_opportunity_id,
+      union_links.dim_crm_account_id,
+      union_links.dim_ticket_id,
+      union_links.request_priority
+    FROM union_links
+    INNER JOIN map_moved_issue
+      ON map_moved_issue.issue_id = union_links.dim_issue_id
+
 )
 
 SELECT *
-FROM union_links
+FROM final
