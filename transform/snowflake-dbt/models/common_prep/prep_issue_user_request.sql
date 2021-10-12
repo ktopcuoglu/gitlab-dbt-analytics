@@ -132,7 +132,7 @@
       dim_crm_opportunity_id,
       dim_crm_account_id,
       NULL AS dim_ticket_id,
-      request_priority
+      IFNULL(request_priority, 1) AS request_priority
     FROM gitlab_issue_notes_sfdc_links
     QUALIFY ROW_NUMBER() OVER(PARTITION BY issue_id, sfdc_id_18char ORDER BY note_created_at DESC) = 1
 
@@ -144,7 +144,7 @@
       NULL dim_crm_opportunity_id,
       NULL dim_crm_account_id,
       dim_ticket_id,
-      request_priority
+      IFNULL(request_priority, 1) AS request_priority
     FROM gitlab_issue_notes_zendesk_link
     QUALIFY ROW_NUMBER() OVER(PARTITION BY issue_id, dim_ticket_id ORDER BY note_created_at DESC) = 1
 
@@ -156,7 +156,7 @@
       gitlab_issue_description_sfdc_links.dim_crm_opportunity_id,
       gitlab_issue_description_sfdc_links.dim_crm_account_id,
       NULL AS dim_ticket_id,
-      gitlab_issue_description_sfdc_links.request_priority
+      IFNULL(gitlab_issue_description_sfdc_links.request_priority, 1) AS request_priority
     FROM gitlab_issue_description_sfdc_links
     LEFT JOIN gitlab_issue_notes_sfdc_links
       ON gitlab_issue_description_sfdc_links.issue_id = gitlab_issue_notes_sfdc_links.issue_id
@@ -171,7 +171,7 @@
       NULL dim_crm_opportunity_id,
       NULL dim_crm_account_id,
       gitlab_issue_description_zendesk_link.dim_ticket_id,
-      gitlab_issue_description_zendesk_link.request_priority
+      IFNULL(gitlab_issue_description_zendesk_link.request_priority, 1) AS request_priority
     FROM gitlab_issue_description_zendesk_link
     LEFT JOIN gitlab_issue_notes_zendesk_link
       ON gitlab_issue_description_zendesk_link.issue_id = gitlab_issue_notes_zendesk_link.issue_id
