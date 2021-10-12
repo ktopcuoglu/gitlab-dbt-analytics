@@ -58,7 +58,7 @@ WITH gitlab_dotcom_projects AS (
 
     SELECT
       *,
-      "{{this.database}}".{{target.schema}}.regexp_to_array(issue_description, '(?<=gitlab.com\/)gitlab-org\/.*issues\/[0-9]{1,10}')      AS issue_links
+      "{{this.database}}".{{target.schema}}.regexp_to_array(issue_description, '(?<=gitlab.com\/)gitlab-org\/[^\s]*issues\/[0-9]{1,10}')      AS issue_links
     FROM collaboration_projects_with_ids
     WHERE ARRAY_SIZE(issue_links) != 0
 
@@ -77,7 +77,7 @@ WITH gitlab_dotcom_projects AS (
 
     SELECT 
       collaboration_projects_with_ids.*,
-      "{{this.database}}".{{target.schema}}.regexp_to_array(issue_notes.note, '(?<=gitlab.com\/)gitlab-org\/.*issues\/[0-9]{1,10}') AS issue_links
+      "{{this.database}}".{{target.schema}}.regexp_to_array(issue_notes.note, '(?<=gitlab.com\/)gitlab-org\/[^\s]*issues\/[0-9]{1,10}') AS issue_links
     FROM collaboration_projects_with_ids
     LEFT JOIN issue_notes
       ON issue_notes.issue_id = collaboration_projects_with_ids.issue_id
