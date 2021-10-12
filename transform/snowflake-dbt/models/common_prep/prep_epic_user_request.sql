@@ -33,7 +33,7 @@
       epic_id,
       "{{this.database}}".{{target.schema}}.regexp_to_array(epic_description, '(?<=(gitlab.my.|na34.)salesforce.com\/)[0-9a-zA-Z]{15,18}') AS sfdc_link_array,
       "{{this.database}}".{{target.schema}}.regexp_to_array(epic_description, '(?<=gitlab.zendesk.com\/agent\/tickets\/)[0-9]{1,18}')      AS zendesk_link_array,
-      SPLIT_PART(REGEXP_SUBSTR(epic_description, '~"customer priority::[0-9]{1,2}'), '::', -1)                                                        AS request_priority
+      SPLIT_PART(REGEXP_SUBSTR(epic_description, '~"customer priority::[0-9]{1,2}'), '::', -1)::NUMBER                                     AS request_priority
     FROM epic_extended
     WHERE epic_description IS NOT NULL
       AND NOT (ARRAY_SIZE(sfdc_link_array) = 0 AND ARRAY_SIZE(zendesk_link_array) = 0)
@@ -52,7 +52,7 @@
       epic_id,
       "{{this.database}}".{{target.schema}}.regexp_to_array(note, '(?<=(gitlab.my.|na34.)salesforce.com\/)[0-9a-zA-Z]{15,18}') AS sfdc_link_array,
       "{{this.database}}".{{target.schema}}.regexp_to_array(note, '(?<=gitlab.zendesk.com\/agent\/tickets\/)[0-9]{1,18}')      AS zendesk_link_array,
-      SPLIT_PART(REGEXP_SUBSTR(note, '~"customer priority::[0-9]{1,2}'), '::', -1)                                             AS request_priority,
+      SPLIT_PART(REGEXP_SUBSTR(note, '~"customer priority::[0-9]{1,2}'), '::', -1)::NUMBER                                     AS request_priority,
       created_at                                                                                                               AS note_created_at,
       updated_at                                                                                                               AS note_updated_at
     FROM epic_notes_extended
@@ -130,7 +130,7 @@
       dim_crm_opportunity_id,
       dim_crm_account_id,
       NULL AS dim_ticket_id,
-      request_priority
+      IFNULL(request_priority, 1)::NUMBER AS request_priority
     FROM gitlab_epic_notes_sfdc_links
     QUALIFY ROW_NUMBER() OVER(PARTITION BY epic_id, sfdc_id_18char ORDER BY note_created_at DESC) = 1
 
@@ -142,7 +142,7 @@
       NULL dim_crm_opportunity_id,
       NULL dim_crm_account_id,
       dim_ticket_id,
-      request_priority
+      IFNULL(request_priority, 1)::NUMBER AS request_priority
     FROM gitlab_epic_notes_zendesk_link
     QUALIFY ROW_NUMBER() OVER(PARTITION BY epic_id, dim_ticket_id ORDER BY note_created_at DESC) = 1
 
@@ -154,7 +154,7 @@
       gitlab_epic_description_sfdc_links.dim_crm_opportunity_id,
       gitlab_epic_description_sfdc_links.dim_crm_account_id,
       NULL AS dim_ticket_id,
-      gitlab_epic_description_sfdc_links.request_priority
+      IFNULL(gitlab_epic_description_sfdc_links.request_priority, 1)::NUMBER AS request_priority
     FROM gitlab_epic_description_sfdc_links
     LEFT JOIN gitlab_epic_notes_sfdc_links
       ON gitlab_epic_description_sfdc_links.epic_id = gitlab_epic_notes_sfdc_links.epic_id
@@ -169,7 +169,7 @@
       NULL dim_crm_opportunity_id,
       NULL dim_crm_account_id,
       gitlab_epic_description_zendesk_link.dim_ticket_id,
-      gitlab_epic_description_zendesk_link.request_priority
+      IFNULL(gitlab_epic_description_zendesk_link.request_priority, 1)::NUMBER AS request_priority
     FROM gitlab_epic_description_zendesk_link
     LEFT JOIN gitlab_epic_notes_zendesk_link
       ON gitlab_epic_description_zendesk_link.epic_id = gitlab_epic_notes_zendesk_link.epic_id
