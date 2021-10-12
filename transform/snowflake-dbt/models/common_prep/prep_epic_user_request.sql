@@ -202,5 +202,10 @@
 
 )
 
-SELECT *
-FROM union_links
+{{ dbt_audit(
+    cte_ref="union_links",
+    created_by="@jpeguero",
+    updated_by="@jpeguero",
+    created_date="2021-10-12",
+    updated_date="2021-10-12",
+) }}

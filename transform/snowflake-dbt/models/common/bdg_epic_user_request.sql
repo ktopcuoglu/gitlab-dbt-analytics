@@ -21,7 +21,6 @@ WITH prep_epic_user_request AS (
 
 ), unioned AS (
 
-
     SELECT
       dim_epic_id,
       link_type,
@@ -46,5 +45,10 @@ WITH prep_epic_user_request AS (
 
 )
 
-SELECT *
-FROM unioned
+{{ dbt_audit(
+    cte_ref="unioned",
+    created_by="@jpeguero",
+    updated_by="@jpeguero",
+    created_date="2021-10-12",
+    updated_date="2021-10-12",
+) }}

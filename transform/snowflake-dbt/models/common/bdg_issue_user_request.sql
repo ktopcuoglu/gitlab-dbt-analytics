@@ -46,5 +46,11 @@ WITH prep_issue_user_request AS (
 
 )
 
-SELECT *
-FROM unioned
+{{ dbt_audit(
+    cte_ref="unioned",
+    created_by="@jpeguero",
+    updated_by="@jpeguero",
+    created_date="2021-10-12",
+    updated_date="2021-10-12",
+) }}
+
