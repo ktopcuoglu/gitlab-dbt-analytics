@@ -27,7 +27,7 @@ WITH RECURSIVE issues AS (
     SELECT
       issue_id                                                  AS issue_id,
       issue_lineage,
-      issue_lineage[ARRAY_SIZE(issue_lineage) - 1]::VARCHAR     AS last_moved_issue_id,
+      issue_lineage[ARRAY_SIZE(issue_lineage) - 1]::NUMBER      AS last_moved_issue_id,
       IFF(last_moved_issue_id != issue_id, TRUE, FALSE)         AS is_issue_moved,
       --return final common dimension mapping,
       last_moved_issue_id                                       AS dim_issue_id
