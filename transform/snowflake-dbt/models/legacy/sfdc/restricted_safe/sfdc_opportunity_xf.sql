@@ -232,6 +232,7 @@ WITH sfdc_opportunity AS (
       sfdc_account.division_sales_segment,
       sfdc_account.ultimate_parent_sales_segment,
       sfdc_account.is_jihu_account,
+      sfdc_account.gitlab_partner_program,
 
       -- ************************************
       -- sales segmentation deprecated fields - 2020-09-03
