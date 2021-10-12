@@ -2,7 +2,9 @@
     ('issue', 'gitlab_dotcom_issues_source'),
     ('map_namespace_internal', 'map_namespace_internal'),
     ('map_namespace_lineage', 'map_namespace_lineage'),
-    ('project', 'gitlab_dotcom_projects_source')
+    ('project', 'gitlab_dotcom_projects_source'),
+    ('zendesk_ticket', 'zendesk_tickets_source'),
+    ('zendesk_organization', 'zendesk_organizations_source')
 ]) }}
 
 , issue_notes AS (
@@ -114,6 +116,17 @@
     FROM gitlab_issue_notes_parsing, 
       TABLE(FLATTEN(zendesk_link_array)) f
 
+), gitlab_issue_notes_zendesk_with_sfdc_account AS (
+
+    SELECT
+      gitlab_issue_notes_zendesk_link.*,
+      zendesk_organization.sfdc_account_id AS dim_crm_account_id
+    FROM gitlab_issue_notes_zendesk_link
+    LEFT JOIN zendesk_ticket
+      ON zendesk_ticket.ticket_id = gitlab_issue_notes_zendesk_link.dim_ticket_id
+    LEFT JOIN zendesk_organization
+      ON zendesk_organization.organization_id = zendesk_ticket.organization_id
+
 ), gitlab_issue_description_zendesk_link AS (
 
     SELECT
@@ -123,6 +136,17 @@
       request_priority
     FROM gitlab_issue_description_parsing, 
         TABLE(FLATTEN(zendesk_link_array)) f
+
+), gitlab_issue_description_zendesk_with_sfdc_account AS (
+
+    SELECT
+      gitlab_issue_description_zendesk_link.*,
+      zendesk_organization.sfdc_account_id AS dim_crm_account_id
+    FROM gitlab_issue_description_zendesk_link
+    LEFT JOIN zendesk_ticket
+      ON zendesk_ticket.ticket_id = gitlab_issue_description_zendesk_link.dim_ticket_id
+    LEFT JOIN zendesk_organization
+      ON zendesk_organization.organization_id = zendesk_ticket.organization_id
 
 ), union_links AS (
 
@@ -142,10 +166,10 @@
       issue_id,
       link_type,
       NULL dim_crm_opportunity_id,
-      NULL dim_crm_account_id,
+      dim_crm_account_id,
       dim_ticket_id,
       IFNULL(request_priority, 1)::NUMBER AS request_priority
-    FROM gitlab_issue_notes_zendesk_link
+    FROM gitlab_issue_notes_zendesk_with_sfdc_account
     QUALIFY ROW_NUMBER() OVER(PARTITION BY issue_id, dim_ticket_id ORDER BY note_created_at DESC) = 1
 
     UNION
@@ -166,16 +190,16 @@
     UNION
 
     SELECT
-      gitlab_issue_description_zendesk_link.issue_id,
-      gitlab_issue_description_zendesk_link.link_type,
+      gitlab_issue_description_zendesk_with_sfdc_account.issue_id,
+      gitlab_issue_description_zendesk_with_sfdc_account.link_type,
       NULL dim_crm_opportunity_id,
-      NULL dim_crm_account_id,
-      gitlab_issue_description_zendesk_link.dim_ticket_id,
-      IFNULL(gitlab_issue_description_zendesk_link.request_priority, 1)::NUMBER AS request_priority
-    FROM gitlab_issue_description_zendesk_link
+      gitlab_issue_description_zendesk_with_sfdc_account.dim_crm_account_id,
+      gitlab_issue_description_zendesk_with_sfdc_account.dim_ticket_id,
+      IFNULL(gitlab_issue_description_zendesk_with_sfdc_account.request_priority, 1)::NUMBER AS request_priority
+    FROM gitlab_issue_description_zendesk_with_sfdc_account
     LEFT JOIN gitlab_issue_notes_zendesk_link
-      ON gitlab_issue_description_zendesk_link.issue_id = gitlab_issue_notes_zendesk_link.issue_id
-      AND gitlab_issue_description_zendesk_link.dim_ticket_id = gitlab_issue_notes_zendesk_link.dim_ticket_id
+      ON gitlab_issue_description_zendesk_with_sfdc_account.issue_id = gitlab_issue_notes_zendesk_link.issue_id
+      AND gitlab_issue_description_zendesk_with_sfdc_account.dim_ticket_id = gitlab_issue_notes_zendesk_link.dim_ticket_id
     WHERE gitlab_issue_notes_zendesk_link.issue_id IS NULL
 
 )
