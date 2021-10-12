@@ -19,13 +19,13 @@
 
     SELECT
       IFF(map_namespace_internal.ultimate_parent_namespace_id IS NULL, FALSE, TRUE) AS is_namespace_internal,
-      map_namespace_lineage.dim_namespace_id_ultimate_parent,
+      map_namespace_lineage.dim_namespace_ultimate_parent_id,
       epic.*
     FROM epic
     INNER JOIN map_namespace_lineage
       ON epic.group_id = map_namespace_lineage.dim_namespace_id
     INNER JOIN map_namespace_internal
-      ON map_namespace_lineage.dim_namespace_id_ultimate_parent = map_namespace_internal.ultimate_parent_namespace_id
+      ON map_namespace_lineage.dim_namespace_ultimate_parent_id = map_namespace_internal.ultimate_parent_namespace_id
     WHERE is_namespace_internal
     --  AND epic.epic_id = '2569'  -- Testing. TODO: Remove
 

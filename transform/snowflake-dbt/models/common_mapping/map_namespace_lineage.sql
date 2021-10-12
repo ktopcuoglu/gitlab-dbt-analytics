@@ -72,8 +72,8 @@
 
     SELECT
       extracted.namespace_id                                                    AS dim_namespace_id,
-      extracted.parent_id                                                       AS dim_namespace_id_parent,
-      extracted.ultimate_parent_namespace_id                                    AS dim_namespace_id_ultimate_parent,
+      extracted.parent_id                                                       AS dim_namespace_parent_id,
+      extracted.ultimate_parent_namespace_id                                    AS dim_namespace_ultimate_parent_id,
       extracted.upstream_lineage,
       extracted.is_currently_valid,
       namespace_plans.plan_id                                                   AS namespace_plan_id,
