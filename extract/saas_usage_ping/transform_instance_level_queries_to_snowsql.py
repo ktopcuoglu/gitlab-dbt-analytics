@@ -100,7 +100,8 @@ def add_counter_name_as_column(sql_metrics_name: str, sql_query: str) -> str:
         if (
             check_postgres_count.startswith("COUNT")
             and check_postgres_count.endswith(")")
-            and check_postgres_count.count("(") == 1
+            and check_postgres_count.count("(") > 0
+            and check_postgres_count.count("(") == check_postgres_count.count(")")
             and check_postgres_count.count(".") == 2
         ):
             # distinguish COUNT(DISTINCT xx.xx.xx) from COUNT(xx.xx.xx)
@@ -187,6 +188,13 @@ def rename_query_tables(sql_query: str) -> str:
 
     # start parsing the query and get the token_list
     parsed = sqlparse.parse(sql_query)
+    # TODO: rbacovic clean up token
+    # tokens = list(TokenList(parsed[0].tokens).flatten())
+    tokens = list(
+        token_flatten
+        for token_flatten in TokenList(parsed[0].tokens).flatten()
+        if token_flatten.value != "\n"
+    )
     tokens = list(TokenList(parsed[0].tokens).flatten())
 
     token_string_list = list(map(str, tokens))

@@ -60,4 +60,15 @@ for sql_metric, sql_query in final_sql_query_dict.items():
 # TODO: rbacovic - Cover 3 new changes in test cases
 # TODO: rbacovic Scalar subquery
 # TODO: rbacovic COUNT from PG to Snowflake
+# test_cases = ['COUNT(DISTINCT aa.bb.cc)',
+#               'COUNT(xx.yy.zz)',
+#               'COUNT( DISTINCT oo.pp.rr)',
+#               'COUNT( xx.yy.zz)',
+#               'COUNT(users.users.id)']
+# results = ['COUNT(DISTINCT bb.cc)',
+#               'COUNT(yy.zz)',
+#               'COUNT( DISTINCT pp.rr)',
+#               'COUNT(yy.zz)',
+#               'COUNT(users.id)']
+
 # TODO: rbacovic regular subquery
