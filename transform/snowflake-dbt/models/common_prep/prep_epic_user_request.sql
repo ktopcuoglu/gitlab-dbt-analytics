@@ -65,41 +65,43 @@
     SELECT
       note_id,
       epic_id,
-      "{{this.database}}".{{target.schema}}.id15to18(f.value::VARCHAR) AS sfdc_id_18char,
-      SUBSTR(sfdc_id_18char, 0, 3) AS sfdc_id_prefix,
+      "{{this.database}}".{{target.schema}}.id15to18(f.value::VARCHAR)    AS sfdc_id_18char,
+      SUBSTR(sfdc_id_18char, 0, 3)                                        AS sfdc_id_prefix,
       CASE
         WHEN sfdc_id_prefix = '001' THEN 'Account'
         WHEN sfdc_id_prefix = '003' THEN 'Contact'
         WHEN sfdc_id_prefix = '00Q' THEN 'Lead'
         WHEN sfdc_id_prefix = '006' THEN 'Opportunity'
         ELSE NULL
-      END                                               AS link_type,
-      IFF(link_type = 'Account', sfdc_id_18char, NULL)  AS dim_crm_account_id,
-      IFF(link_type = 'Opportunity', sfdc_id_18char, NULL)  AS dim_crm_opportunity_id,
+      END                                                                 AS link_type,
+      IFF(link_type = 'Account', sfdc_id_18char, NULL)                    AS dim_crm_account_id,
+      IFF(link_type = 'Opportunity', sfdc_id_18char, NULL)                AS dim_crm_opportunity_id,
       request_priority,
       note_created_at,
       note_updated_at
     FROM gitlab_epic_notes_parsing, 
       TABLE(FLATTEN(sfdc_link_array)) f
+    WHERE link_type IN ('Account', 'Opportunity')
 
 ), gitlab_epic_description_sfdc_links AS (
 
     SELECT
       epic_id,
-      "{{this.database}}".{{target.schema}}.id15to18(f.value::VARCHAR) AS sfdc_id_18char,
-      SUBSTR(sfdc_id_18char, 0, 3) AS sfdc_id_prefix,
+      "{{this.database}}".{{target.schema}}.id15to18(f.value::VARCHAR)  AS sfdc_id_18char,
+      SUBSTR(sfdc_id_18char, 0, 3)                                      AS sfdc_id_prefix,
       CASE
         WHEN sfdc_id_prefix = '001' THEN 'Account'
         WHEN sfdc_id_prefix = '003' THEN 'Contact'
         WHEN sfdc_id_prefix = '00Q' THEN 'Lead'
         WHEN sfdc_id_prefix = '006' THEN 'Opportunity'
         ELSE NULL
-      END                                            AS link_type,
-      IFF(link_type = 'Account', sfdc_id_18char, NULL)  AS dim_crm_account_id,
-      IFF(link_type = 'Opportunity', sfdc_id_18char, NULL)  AS dim_crm_opportunity_id,
+      END                                                               AS link_type,
+      IFF(link_type = 'Account', sfdc_id_18char, NULL)                  AS dim_crm_account_id,
+      IFF(link_type = 'Opportunity', sfdc_id_18char, NULL)              AS dim_crm_opportunity_id,
       request_priority
     FROM gitlab_epic_description_parsing, 
-    TABLE(FLATTEN(sfdc_link_array)) f
+      TABLE(FLATTEN(sfdc_link_array)) f
+    WHERE link_type IN ('Account', 'Opportunity')
 
 ), gitlab_epic_notes_zendesk_link AS (
 
