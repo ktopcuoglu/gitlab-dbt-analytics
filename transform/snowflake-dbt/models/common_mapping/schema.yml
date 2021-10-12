@@ -36,6 +36,28 @@ models:
       - name: dim_crm_account_id
       - name: ultimate_parent_account_id
 
+  - name: map_namespace_lineage
+    description: '{{ doc("map_namespace_lineage") }}'
+    columns:
+      - name: dim_namespace_id
+        tests:
+          - not_null
+          - unique
+      - name: dim_namespace_ultimate_parent_id
+        tests:
+          - not_null
+      - name: ultimate_parent_plan_id
+        tests:
+          - not_null
+          - accepted_values:
+              values: [2, 3, 4, 34, 67, 100, 101, 102, 103]
+      - name: ultimate_parent_plan_title
+        tests:
+          - not_null
+      - name: ultimate_parent_plan_is_paid
+        tests:
+          - not_null
+
   - name: map_product_tier
     description: '{{ doc("map_product_tier") }}'
     columns:
