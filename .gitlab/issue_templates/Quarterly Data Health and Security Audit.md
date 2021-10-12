@@ -2,7 +2,7 @@
 
 Quarterly audit is performed to validate security like right people with right access in environments (Example: Sisense, Snowflake.etc) and data feeds that are running are healthy (Example: Salesforce, GitLab.com..etc).
 
-Please see the [handbook page](https://about.gitlab.com/handbook/business-technology/data-team/how-we-work/) for more information. 
+Please see the [handbook page](https://about.gitlab.com/handbook/business-technology/data-team/data-management/#quarterly-data-health-and-security-audit) for more information. 
 
 Below checklist of activities would be run once for quarter to validate security and system health.
 
@@ -60,18 +60,47 @@ SNOWFLAKE
      AND employee.termination_date IS NULL										
      AND CASE WHEN snowflake.last_success_login IS null THEN snowflake.created_on ELSE snowflake.last_success_login END <= dateadd('day', -60, CURRENT_DATE());										
     ```
-  
 
-3. [ ] Validate all user accounts require multi-factor authentication.
+
+3. [ ] Validate all user accounts do not have password set.
     <details>
 
-    * [ ] Check EXT_AUTHN_DUO is set to ‘false’ in users table. If set to ‘false’ then MFA is diabled.
+    * [ ] Check HAS_PASSWRD is set to ‘false’ in users table. If set to ‘false’ then there is not password set. 
 
 SISENSE
-1. [ ] Validate terminated employees have been removed from Sisense access.
+1. [ ] Validate off-boarded employees have been removed from Sisense access.
     <details>
 
+     ```sql
 
+     WITH final AS (
+        
+        SELECT 
+          MAX(date_actual) AS date_actual, 
+          full_name,
+          work_email, 
+          is_termination_date 
+        FROM legacy.employee_directory_analysis 
+        GROUP BY 2,3,4
+
+    )
+
+    SELECT   
+       final.full_name, 
+       users.email_address , 
+       final.is_termination_date ,
+       final.date_actual
+    FROM  final
+    INNER JOIN legacy.sheetload_sisense_users users 
+      ON  final.full_name = concat(users.first_name,' ', users.last_name) 
+      AND final.is_termination_date = 'TRUE' 
+    LEFT JOIN legacy.sheetload_sisense_user_roles roles
+      ON users.id = roles.user_id
+    WHERE roles.user_id IS NOT NULL
+    GROUP BY 1,2,3,4
+    ORDER BY 1 ;
+
+   ```
 
 
 2. [ ] De-activate any account that has not logged-in within the past 90 days from the moment of performing audit from Sisense.
@@ -81,7 +110,7 @@ SISENSE
      ```sql
 
 
-    WITH FINAL AS (
+    WITH final AS (
        SELECT
           time_on_site_logs.user_id,
           users.first_name,
@@ -94,18 +123,10 @@ SISENSE
     )
 
        SELECT * 
-       FROM FINAL
+       FROM final
        WHERE last_login_date < CURRENT_DATE-90 ;
 
    ```
-
-3. [ ] Validate all user accounts require multi-factor authentication.
-
-
-    <details>
-
-     * [ ] Check “roles and policies” section under settings in Sisense. If 2FA is marked dash (--) for any user then two factor authentication is disabled.
-
 
 
 TRUSTED DATA
