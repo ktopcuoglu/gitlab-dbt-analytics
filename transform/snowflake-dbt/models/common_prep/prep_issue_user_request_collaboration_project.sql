@@ -58,7 +58,7 @@ WITH gitlab_dotcom_projects AS (
 
     SELECT
       *,
-      "{{this.database}}".{{target.schema}}.regexp_to_array(issue_description, '(?<=gitlab.com\/)gitlab-org\/[^\s]*issues\/[0-9]{1,10}')      AS issue_links
+      "{{this.database}}".{{target.schema}}.regexp_to_array(issue_description, '(?<=gitlab.com\/)gitlab-org\/[^ ]*issues\/[0-9]{1,10}')      AS issue_links
     FROM collaboration_projects_with_ids
     WHERE ARRAY_SIZE(issue_links) != 0
 
@@ -68,8 +68,8 @@ WITH gitlab_dotcom_projects AS (
       collaboration_projects_issue_descriptions.*,
       f.value AS user_request_issue_path,
       REPLACE(REPLACE(f.value, 'gitlab-ee', 'gitlab'), 'gitlab-ce', 'gitlab-foss') AS user_request_issue_path_fixed,
-      SPLIT_PART(f.value, '/', -1) AS user_request_issue_iid,
-      RTRIM(SPLIT_PART(f.value, '/issues', 1), '/-') AS user_request_project_path
+      SPLIT_PART(f.value, '/', -1)::NUMBER                                         AS user_request_issue_iid,
+      RTRIM(SPLIT_PART(f.value, '/issues', 1), '/-')                               AS user_request_project_path
     FROM collaboration_projects_issue_descriptions,
       TABLE(FLATTEN(issue_links)) f
 
@@ -77,7 +77,7 @@ WITH gitlab_dotcom_projects AS (
 
     SELECT 
       collaboration_projects_with_ids.*,
-      "{{this.database}}".{{target.schema}}.regexp_to_array(issue_notes.note, '(?<=gitlab.com\/)gitlab-org\/[^\s]*issues\/[0-9]{1,10}') AS issue_links
+      "{{this.database}}".{{target.schema}}.regexp_to_array(issue_notes.note, '(?<=gitlab.com\/)gitlab-org\/[^ ]*issues\/[0-9]{1,10}') AS issue_links
     FROM collaboration_projects_with_ids
     LEFT JOIN issue_notes
       ON issue_notes.issue_id = collaboration_projects_with_ids.issue_id
@@ -89,7 +89,7 @@ WITH gitlab_dotcom_projects AS (
       collaboration_projects_issue_notes.*,
       f.value AS user_request_issue_path,
       REPLACE(REPLACE(f.value, 'gitlab-ee', 'gitlab'), 'gitlab-ce', 'gitlab-foss')  AS user_request_issue_path_fixed,
-      SPLIT_PART(f.value, '/', -1)                                                  AS user_request_issue_iid,
+      SPLIT_PART(f.value, '/', -1)::NUMBER                                          AS user_request_issue_iid,
       RTRIM(SPLIT_PART(f.value, '/issues', 1), '/-')                                AS user_request_project_path
     FROM collaboration_projects_issue_notes,
       TABLE(FLATTEN(issue_links)) f
@@ -128,12 +128,12 @@ WITH gitlab_dotcom_projects AS (
 ), unioned_with_issue_links AS (
 
     SELECT
+      gitlab_issues.issue_id                                                AS dim_issue_id,
       unioned_with_user_request_project_id.account_id                       AS dim_crm_account_id,
       unioned_with_user_request_project_id.collaboration_project_id         AS dim_collaboration_project_id,
-      gitlab_issues.issue_id                                                AS dim_user_request_issue_id,
-      unioned_with_user_request_project_id.user_request_project_id          AS dim_user_request_project_id,
+      unioned_with_user_request_project_id.user_request_project_id          AS dim_project_id,
       unioned_with_user_request_project_id.gitlab_customer_success_project,
-      unioned_with_user_request_project_id.user_request_issue_iid
+      unioned_with_user_request_project_id.user_request_issue_iid           AS issue_internal_id
     FROM unioned_with_user_request_project_id
     INNER JOIN gitlab_issues
       ON gitlab_issues.project_id = unioned_with_user_request_project_id.user_request_project_id
@@ -142,12 +142,12 @@ WITH gitlab_dotcom_projects AS (
     UNION
 
     SELECT
+      gitlab_issues.issue_id                                                AS dim_issue_id,
       collaboration_projects_with_ids.account_id                            AS dim_crm_account_id,
       collaboration_projects_with_ids.collaboration_project_id              AS dim_collaboration_project_id,
-      gitlab_issues.issue_id                                                AS dim_user_request_issue_id,
-      gitlab_issues.project_id                                              AS dim_user_request_project_id,
+      gitlab_issues.project_id                                              AS dim_project_id,
       collaboration_projects_with_ids.gitlab_customer_success_project,
-      gitlab_issues.issue_iid                                               AS user_request_issue_internal_id
+      gitlab_issues.issue_iid                                               AS issue_internal_id
     FROM collaboration_projects_with_ids
     INNER JOIN issue_links
       ON issue_links.source_id = collaboration_projects_with_ids.issue_id
