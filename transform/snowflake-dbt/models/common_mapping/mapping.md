@@ -28,6 +28,12 @@ Table mapping current crm account ids to accounts merged in the past.
 
 {% enddocs %}
 
+{% docs map_moved_issue %}
+
+Table mapping current issues to issues moved in the past.
+
+{% enddocs %}
+
 {% docs map_namespace_lineage %}
 
 Table containing GitLab namespace lineages. The primary goal of this table is to determine the ultimate parent namespace for all namespaces. Additionally, this table provides plan (GitLab subscription) information for both the given namespace and its ultimate parent namespace.

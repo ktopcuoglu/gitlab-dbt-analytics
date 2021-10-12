@@ -27,6 +27,17 @@ models:
           - not_null
       - name: location_id
 
+  - name: map_moved_issue
+    description: '{{ doc("map_moved_issue") }}'
+    columns:
+      - name: issue_id
+        tests:
+          - unique
+          - not_null
+      - name: dim_issue_id
+        tests:
+          - not_null
+
   - name: map_license_subscription_account
     description: '{{ doc("map_license_subscription_account") }}'
     columns:
