@@ -22,6 +22,9 @@ models:
       - name: is_paid_by_gitlab
       - name: namespace_is_internal
       - name: ultimate_parent_plan_title
+      - name: dim_ci_runner_id
+      - name: dim_ci_pipeline_id
+      - name: dim_ci_stage_id
 
   - name: mart_ci_runner_activity_daily
     description: '{{ doc("mart_ci_runner_activity_daily") }}'
@@ -41,6 +44,9 @@ models:
       - name: dim_plan_id
         tests:
           - not_null
+      - name: dim_ci_runner_id
+      - name: dim_ci_pipeline_id
+      - name: dim_ci_stage_id
       - name: ci_build_duration_in_s
       - name: public_projects_minutes_cost_factor
       - name: private_projects_minutes_cost_factor
