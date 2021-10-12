@@ -73,7 +73,7 @@ WITH gitlab_dotcom_namespaces AS (
 
     SELECT
       *,
-      "{{this.database}}".{{target.schema}}.regexp_to_array(issue_description, '(?<=gitlab.com\/groups\/)gitlab-org\/[^\s]*epics\/[0-9]{1,10}') AS epic_links
+      "{{this.database}}".{{target.schema}}.regexp_to_array(issue_description, '(?<=gitlab.com\/groups\/)gitlab-org\/[^ ]*epics\/[0-9]{1,10}') AS epic_links
     FROM collaboration_projects_with_ids
     WHERE ARRAY_SIZE(epic_links) != 0
 
@@ -83,7 +83,7 @@ WITH gitlab_dotcom_namespaces AS (
       collaboration_projects_issue_descriptions.*,
       f.value AS user_request_issue_path,
       REPLACE(REPLACE(f.value, 'gitlab-ee', 'gitlab'), 'gitlab-ce', 'gitlab-foss') AS user_request_epic_path_fixed,
-      SPLIT_PART(f.value, '/', -1)                                                 AS user_request_epic_internal_id,
+      SPLIT_PART(f.value, '/', -1)::NUMBER                                         AS user_request_epic_internal_id,
       RTRIM(SPLIT_PART(f.value, '/epics', 1), '/-')                                AS user_request_namespace_path
     FROM collaboration_projects_issue_descriptions,
       TABLE(FLATTEN(epic_links)) f
@@ -92,7 +92,7 @@ WITH gitlab_dotcom_namespaces AS (
 
     SELECT 
       collaboration_projects_with_ids.*,
-      "{{this.database}}".{{target.schema}}.regexp_to_array(issue_notes.note, '(?<=gitlab.com\/groups\/)gitlab-org\/[^\s]*epics\/[0-9]{1,10}') AS epic_links
+      "{{this.database}}".{{target.schema}}.regexp_to_array(issue_notes.note, '(?<=gitlab.com\/groups\/)gitlab-org\/[^ ]*epics\/[0-9]{1,10}') AS epic_links
     FROM collaboration_projects_with_ids
     LEFT JOIN issue_notes
       ON issue_notes.issue_id = collaboration_projects_with_ids.issue_id
@@ -104,7 +104,7 @@ WITH gitlab_dotcom_namespaces AS (
       collaboration_projects_issue_notes.*,
       f.value                                                                      AS user_request_epic_path,
       REPLACE(REPLACE(f.value, 'gitlab-ee', 'gitlab'), 'gitlab-ce', 'gitlab-foss') AS user_request_epic_path_fixed,
-      SPLIT_PART(f.value, '/', -1)                                                 AS user_request_epic_internal_id,
+      SPLIT_PART(f.value, '/', -1)::NUMBER                                         AS user_request_epic_internal_id,
       RTRIM(SPLIT_PART(f.value, '/epics', 1), '/-')                                AS user_request_namespace_path
     FROM collaboration_projects_issue_notes,
       TABLE(FLATTEN(epic_links)) f
@@ -143,12 +143,12 @@ WITH gitlab_dotcom_namespaces AS (
 ), final AS (
 
     SELECT
+      gitlab_epics.epic_id                                                    AS dim_epic_id,
       unioned_with_user_request_namespace_id.account_id                       AS dim_crm_account_id,
       unioned_with_user_request_namespace_id.collaboration_project_id         AS dim_collaboration_project_id,
-      gitlab_epics.epic_id                                                    AS dim_user_request_epic_id,
-      unioned_with_user_request_namespace_id.user_request_namespace_id        AS dim_user_request_namespace_id,
+      unioned_with_user_request_namespace_id.user_request_namespace_id        AS dim_namespace_id,
       unioned_with_user_request_namespace_id.gitlab_customer_success_project,
-      unioned_with_user_request_namespace_id.user_request_epic_internal_id
+      unioned_with_user_request_namespace_id.user_request_epic_internal_id    AS epic_internal_id
     FROM unioned_with_user_request_namespace_id
     INNER JOIN gitlab_epics
       ON gitlab_epics.group_id = unioned_with_user_request_namespace_id.user_request_namespace_id
