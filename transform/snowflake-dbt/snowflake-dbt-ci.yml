@@ -236,6 +236,7 @@
 safe_model_script:
   <<: *safe_models_check
   script:
+    - ls
     - dbt --partial-parse ls --models tag:safe+ --output json > safe_models.json
     - python3 safe_model_check.py
   
