@@ -94,7 +94,7 @@ init-airflow:
 	@echo "Initializing the Airflow DB..."
 	@"$(DOCKER_UP)" -d airflow_db
 	@sleep 5
-	@"$(DOCKER_RUN)" airflow_scheduler airflow initdb
+	@"$(DOCKER_RUN)" airflow_scheduler airflow db init
 	@"$(DOCKER_RUN)" airflow_scheduler airflow create_user --role Admin -u admin -p admin -e datateam@gitlab.com -f admin -l admin
 	@"$(DOCKER_DOWN)"
 
