@@ -26,7 +26,7 @@
       instance_types.instance_type
     FROM prep_saas_usage_ping_namespace
     LEFT JOIN instance_types
-      ON prep_saas_usage_ping_namespace.['dim_namespace_id']::VARCHAR = instance_types.namespace_id
+      ON prep_saas_usage_ping_namespace.dim_namespace_id = instance_types.namespace_id
     INNER JOIN dim_date
       ON prep_saas_usage_ping_namespace.ping_date = dim_date.date_day
     INNER JOIN bdg_namespace_subscription
@@ -50,11 +50,11 @@
       dim_namespace_id,
       dim_subscription_id,
       reporting_month,
-      MAX(ping_date)                                        AS ping_date,
       instance_type,
+      MAX(ping_date)                                        AS ping_date,
       {{ dbt_utils.pivot('ping_name', gainsight_wave_metrics, then_value='counter_value') }}
     FROM joined
-    {{ dbt_utils.group_by(n=3)}}
+    {{ dbt_utils.group_by(n=4)}}
 
 )
 
