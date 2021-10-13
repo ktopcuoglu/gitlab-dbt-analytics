@@ -1414,6 +1414,8 @@ models:
         tests:
           - not_null
         tags: ["tdf", "common", "gainsight"]
+      - name: instance_type
+        description: Type of instance (Production/Non-Production)
       - name: subscription_seats
       - name: billable_user_count
       - name: license_utilization
@@ -2524,6 +2526,7 @@ models:
       - name: event_count
         tests:
           - not_null
+
   - name: dim_issue_links
     description: '{{ doc("dim_issue_links") }}'
     columns:

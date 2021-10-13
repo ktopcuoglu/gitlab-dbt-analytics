@@ -48,6 +48,7 @@
       {{ get_date_id('saas_subscriptions.snapshot_month') }}                            AS snapshot_date_id,
       saas_usage_ping.ping_date                                                         AS ping_created_at,
       {{ get_date_id('saas_usage_ping.ping_date') }}                                    AS ping_created_date_id,
+      saas_usage_ping.instance_type,
       -- Wave 1
       gitlab_seats.seats                                                                AS subscription_seats,
       gitlab_seats.seats_in_use                                                         AS billable_user_count,
