@@ -33,6 +33,3 @@ WITH run_results AS (
 
 SELECT *
 FROM joined
-
-
-
