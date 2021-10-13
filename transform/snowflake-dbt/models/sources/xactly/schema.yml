@@ -9,7 +9,7 @@ models:
         - name: position_name
           meta:
             sensitive: true
-    - name: xactly_pos_hierarchy_hist
+    - name: xactly_pos_hierarchy_hist_source
       columns:
         - name: from_pos_name
           meta:
@@ -17,7 +17,7 @@ models:
         - name: to_pos_name
           meta:
             sensitive: true
-    - name: xactly_pos_part_assignment
+    - name: xactly_pos_part_assignment_source
       columns:
         - name: participant_name
           meta:
@@ -25,7 +25,7 @@ models:
         - name: position_name
           meta:
             sensitive: true
-    - name: xactly_pos_part_assignment_hist
+    - name: xactly_pos_part_assignment_hist_source
       columns:
         - name: participant_name
           meta:
@@ -33,7 +33,7 @@ models:
         - name: position_name
           meta:
             sensitive: true
-    - name: xactly_pos_relations
+    - name: xactly_pos_relations_source
       columns:
         - name: from_pos_name
           meta:
@@ -41,7 +41,7 @@ models:
         - name: to_pos_name
           meta:
             sensitive: true
-    - name: xactly_pos_relations_hist
+    - name: xactly_pos_relations_hist_source
       columns:
         - name: from_pos_name
           meta:
@@ -49,22 +49,22 @@ models:
         - name: to_pos_name
           meta:
             sensitive: true
-    - name: xactly_pos_title_assignment
+    - name: xactly_pos_title_assignment_source
       columns:
         - name: position_name
           meta:
             sensitive: true
-    - name: xactly_pos_title_assignment_hist
+    - name: xactly_pos_title_assignment_hist_source
       columns:
         - name: position_name
           meta:
             sensitive: true
-    - name: xactly_quota_assignment
+    - name: xactly_quota_assignment_source
       columns:
         - name: assignment_name
           meta:
             sensitive: true
-    - name: xactly_quota_assignment_hist
+    - name: xactly_quota_assignment_hist_source
       columns:
         - name: assignment_name
           meta:
