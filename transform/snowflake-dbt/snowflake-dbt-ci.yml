@@ -218,6 +218,29 @@
     - dbt --partial-parse test $CI_PROFILE_TARGET --models $DBT_MODELS
 
 # ======
+# SAFE Models Check
+# ======
+
+.safe_models_check: &safe_models_check
+  stage: 🛠 dbt Misc
+  image: registry.gitlab.com/gitlab-data/data-image/data-image:v0.0.13
+  tags:
+    - analytics
+  only:
+    changes:
+      - "**/*.sql"
+    refs:
+      - merge_request
+  allow_failure: false
+
+safe_model_script:
+  <<: *safe_models_check
+  script:
+    - dbt --partial-parse ls --models tag:safe+ --output json > safe_models.json
+    - python3 safe_model_check.py
+  
+
+# ======
 # Periscope Model Check
 # ======
 
