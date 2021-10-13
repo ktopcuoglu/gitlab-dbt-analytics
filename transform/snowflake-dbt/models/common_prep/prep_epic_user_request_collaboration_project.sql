@@ -154,22 +154,6 @@ WITH gitlab_dotcom_namespaces AS (
       ON gitlab_epics.group_id = unioned_with_user_request_namespace_id.user_request_namespace_id
       AND gitlab_epics.epic_internal_id = unioned_with_user_request_namespace_id.user_request_epic_internal_id
 
-    -- UNION
-
-    -- SELECT
-    --   collaboration_projects_with_ids.account_id                            AS dim_crm_account_id,
-    --   collaboration_projects_with_ids.collaboration_project_id              AS dim_collaboration_project_id,
-    --   gitlab_issues.issue_id                                                AS dim_user_request_issue_id,
-    --   collaboration_projects_with_ids.gitlab_customer_success_project
-    -- FROM collaboration_projects_with_ids
-    -- INNER JOIN issue_links
-    --   ON issue_links.target_id = collaboration_projects_with_ids.issue_id
-    -- INNER JOIN gitlab_issues
-    --   ON gitlab_issues.issue_id = issue_links.target_id
-    -- INNER JOIN gitlab_dotcom_project_routes
-    --   ON gitlab_dotcom_project_routes.project_id = gitlab_issues.project_id
-    -- WHERE gitlab_dotcom_project_routes.path LIKE 'gitlab-org%'
-
 )
 
 {{ dbt_audit(
