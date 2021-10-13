@@ -13,7 +13,7 @@ def check_safe_models(file):
     ## results
     results = df[~is_restricted]
     results_count = results.count()["name"]
-    error_message = "The following models are not SAFE:\r\n" + results.to_csv(
+    error_message = "⚠️ The following models are not SAFE ⚠️:\r\n" + results.to_csv(
         index=False
     )
     if results_count == 0:
