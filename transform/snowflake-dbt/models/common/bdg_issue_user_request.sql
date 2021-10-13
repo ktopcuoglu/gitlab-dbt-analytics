@@ -37,9 +37,9 @@ WITH prep_issue_user_request AS (
     SELECT
       dim_issue_id,
       'Account'             AS link_type,
-      NULL                  AS dim_crm_opportunity_id,
+      MD5(-1)               AS dim_crm_opportunity_id,
       dim_crm_account_id,
-      NULL                  AS dim_ticket_id,
+      -1                    AS dim_ticket_id,
       1::NUMBER             AS request_priority,
       TRUE                  AS is_user_request_only_in_collaboration_project
     FROM issue_request_collaboration_projects_filtered

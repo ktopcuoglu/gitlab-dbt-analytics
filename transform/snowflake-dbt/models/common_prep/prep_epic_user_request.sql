@@ -236,10 +236,21 @@
       AND gitlab_epic_description_zendesk_with_sfdc_account.dim_ticket_id = gitlab_epic_notes_zendesk_link.dim_ticket_id
     WHERE gitlab_epic_notes_zendesk_link.epic_id IS NULL
 
+), final AS (
+
+    SELECT
+      dim_epic_id,
+      link_type,
+      {{ get_keyed_nulls('dim_crm_opportunity_id') }}    AS dim_crm_opportunity_id,
+      dim_crm_account_id,
+      IFNULL(dim_ticket_id, -1)                          AS dim_ticket_id,
+      request_priority
+    FROM union_links
+
 )
 
 {{ dbt_audit(
-    cte_ref="union_links",
+    cte_ref="final",
     created_by="@jpeguero",
     updated_by="@jpeguero",
     created_date="2021-10-12",
