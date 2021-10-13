@@ -3,7 +3,8 @@
     ('map_namespace_internal', 'map_namespace_internal'),
     ('map_namespace_lineage', 'map_namespace_lineage'),
     ('zendesk_ticket', 'zendesk_tickets_source'),
-    ('zendesk_organization', 'zendesk_organizations_source')
+    ('zendesk_organization', 'zendesk_organizations_source'),
+    ('sfdc_opportunity_source', 'sfdc_opportunity_source')
 ]) }}
 
 , epic_notes AS (
@@ -26,8 +27,7 @@
       ON epic.group_id = map_namespace_lineage.dim_namespace_id
     INNER JOIN map_namespace_internal
       ON map_namespace_lineage.dim_namespace_ultimate_parent_id = map_namespace_internal.ultimate_parent_namespace_id
-    WHERE is_namespace_internal
-    --  AND epic.epic_id = '2569'  -- Testing. TODO: Remove
+    WHERE map_namespace_lineage.dim_namespace_ultimate_parent_id = 9970 -- Gitlab-org group namespace id
 
 ),  gitlab_epic_description_parsing AS (
 
@@ -83,6 +83,23 @@
       TABLE(FLATTEN(sfdc_link_array)) f
     WHERE link_type IN ('Account', 'Opportunity')
 
+), gitlab_epic_notes_sfdc_links_with_account AS (
+
+    SELECT
+      gitlab_epic_notes_sfdc_links.epic_id,
+      gitlab_epic_notes_sfdc_links.sfdc_id_18char,
+      gitlab_epic_notes_sfdc_links.sfdc_id_prefix,
+      gitlab_epic_notes_sfdc_links.link_type,
+      IFNULL(gitlab_epic_notes_sfdc_links.dim_crm_account_id, sfdc_opportunity_source.account_id) AS dim_crm_account_id,
+      gitlab_epic_notes_sfdc_links.dim_crm_opportunity_id,
+      gitlab_epic_notes_sfdc_links.request_priority,
+      gitlab_epic_notes_sfdc_links.note_created_at,
+      gitlab_epic_notes_sfdc_links.note_updated_at
+    FROM gitlab_epic_notes_sfdc_links
+    LEFT JOIN sfdc_opportunity_source
+      ON sfdc_opportunity_source.opportunity_id = gitlab_epic_notes_sfdc_links.dim_crm_opportunity_id
+    WHERE IFNULL(gitlab_epic_notes_sfdc_links.dim_crm_account_id, sfdc_opportunity_source.account_id) IS NOT NULL
+
 ), gitlab_epic_description_sfdc_links AS (
 
     SELECT
@@ -102,6 +119,21 @@
     FROM gitlab_epic_description_parsing, 
       TABLE(FLATTEN(sfdc_link_array)) f
     WHERE link_type IN ('Account', 'Opportunity')
+
+), gitlab_epic_description_sfdc_links_with_account AS (
+
+    SELECT
+      gitlab_epic_description_sfdc_links.epic_id,
+      gitlab_epic_description_sfdc_links.sfdc_id_18char,
+      gitlab_epic_description_sfdc_links.sfdc_id_prefix,
+      gitlab_epic_description_sfdc_links.link_type,
+      IFNULL(gitlab_epic_description_sfdc_links.dim_crm_account_id, sfdc_opportunity_source.account_id) AS dim_crm_account_id,
+      gitlab_epic_description_sfdc_links.dim_crm_opportunity_id,
+      gitlab_epic_description_sfdc_links.request_priority
+    FROM gitlab_epic_description_sfdc_links
+    LEFT JOIN sfdc_opportunity_source
+      ON sfdc_opportunity_source.opportunity_id = gitlab_epic_description_sfdc_links.dim_crm_opportunity_id
+    WHERE IFNULL(gitlab_epic_description_sfdc_links.dim_crm_account_id, sfdc_opportunity_source.account_id) IS NOT NULL
 
 ), gitlab_epic_notes_zendesk_link AS (
 
@@ -126,6 +158,7 @@
       ON zendesk_ticket.ticket_id = gitlab_epic_notes_zendesk_link.dim_ticket_id
     LEFT JOIN zendesk_organization
       ON zendesk_organization.organization_id = zendesk_ticket.organization_id
+    WHERE zendesk_organization.sfdc_account_id IS NOT NULL
 
 ), gitlab_epic_description_zendesk_link AS (
 
@@ -147,6 +180,7 @@
       ON zendesk_ticket.ticket_id = gitlab_epic_description_zendesk_link.dim_ticket_id
     LEFT JOIN zendesk_organization
       ON zendesk_organization.organization_id = zendesk_ticket.organization_id
+    WHERE zendesk_organization.sfdc_account_id IS NOT NULL
 
 ), union_links AS (
 
@@ -157,7 +191,7 @@
       dim_crm_account_id,
       NULL AS dim_ticket_id,
       IFNULL(request_priority, 1)::NUMBER AS request_priority
-    FROM gitlab_epic_notes_sfdc_links
+    FROM gitlab_epic_notes_sfdc_links_with_account
     QUALIFY ROW_NUMBER() OVER(PARTITION BY epic_id, sfdc_id_18char ORDER BY note_created_at DESC) = 1
 
     UNION
@@ -175,17 +209,17 @@
     UNION
 
     SELECT
-      gitlab_epic_description_sfdc_links.epic_id,
-      gitlab_epic_description_sfdc_links.link_type,
-      gitlab_epic_description_sfdc_links.dim_crm_opportunity_id,
-      gitlab_epic_description_sfdc_links.dim_crm_account_id,
+      gitlab_epic_description_sfdc_links_with_account.epic_id,
+      gitlab_epic_description_sfdc_links_with_account.link_type,
+      gitlab_epic_description_sfdc_links_with_account.dim_crm_opportunity_id,
+      gitlab_epic_description_sfdc_links_with_account.dim_crm_account_id,
       NULL AS dim_ticket_id,
-      IFNULL(gitlab_epic_description_sfdc_links.request_priority, 1)::NUMBER AS request_priority
-    FROM gitlab_epic_description_sfdc_links
-    LEFT JOIN gitlab_epic_notes_sfdc_links
-      ON gitlab_epic_description_sfdc_links.epic_id = gitlab_epic_notes_sfdc_links.epic_id
-      AND gitlab_epic_description_sfdc_links.sfdc_id_18char = gitlab_epic_notes_sfdc_links.sfdc_id_18char
-    WHERE gitlab_epic_notes_sfdc_links.epic_id IS NULL
+      IFNULL(gitlab_epic_description_sfdc_links_with_account.request_priority, 1)::NUMBER AS request_priority
+    FROM gitlab_epic_description_sfdc_links_with_account
+    LEFT JOIN gitlab_epic_notes_sfdc_links_with_account
+      ON gitlab_epic_description_sfdc_links_with_account.epic_id = gitlab_epic_notes_sfdc_links_with_account.epic_id
+      AND gitlab_epic_description_sfdc_links_with_account.sfdc_id_18char = gitlab_epic_notes_sfdc_links_with_account.sfdc_id_18char
+    WHERE gitlab_epic_notes_sfdc_links_with_account.epic_id IS NULL
 
     UNION
 
