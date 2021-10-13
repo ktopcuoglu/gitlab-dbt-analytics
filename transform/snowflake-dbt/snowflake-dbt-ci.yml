@@ -224,6 +224,10 @@
 .safe_models_check: &safe_models_check
   stage: 🛠 dbt Misc
   image: registry.gitlab.com/gitlab-data/data-image/data-image:v0.0.13
+  before_script:
+    - cd transform/snowflake-dbt/
+  after_script:
+    - cd $CI_PROJECT_DIR/transform/snowflake-dbt/
   tags:
     - analytics
   only:
@@ -236,10 +240,8 @@
 safe_model_script:
   <<: *safe_models_check
   script:
-    - *deps_and_seed
     - dbt --partial-parse ls --models tag:safe+ --output json > safe_models.json
     - python3 safe_model_check.py
-  
 
 # ======
 # Periscope Model Check
