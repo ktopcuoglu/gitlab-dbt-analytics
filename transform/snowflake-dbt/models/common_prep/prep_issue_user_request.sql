@@ -247,7 +247,7 @@
       union_links.link_type,
       {{ get_keyed_nulls('union_links.dim_crm_opportunity_id')  }}     AS dim_crm_opportunity_id,
       union_links.dim_crm_account_id,
-      IFNULL(union_links.dim_ticket_id, -1)                            AS dim_ticket_id,
+      IFNULL(union_links.dim_ticket_id, -1)::NUMBER                    AS dim_ticket_id,
       union_links.request_priority
     FROM union_links
     INNER JOIN map_moved_issue

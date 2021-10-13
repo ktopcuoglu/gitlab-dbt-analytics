@@ -243,7 +243,7 @@
       link_type,
       {{ get_keyed_nulls('dim_crm_opportunity_id') }}    AS dim_crm_opportunity_id,
       dim_crm_account_id,
-      IFNULL(dim_ticket_id, -1)                          AS dim_ticket_id,
+      IFNULL(dim_ticket_id, -1)::NUMBER                  AS dim_ticket_id,
       request_priority
     FROM union_links
 
