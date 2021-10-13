@@ -1424,6 +1424,8 @@ models:
       - name: dim_namespace_id
       - name: dim_subscription_id
       - name: reporting_month
+      - name: instance_type
+        description: Type of instance (Production/Non-Production)
 
   - name: prep_saas_usage_ping_namespace
     description: '{{ doc("prep_saas_usage_ping_namespace") }}'
