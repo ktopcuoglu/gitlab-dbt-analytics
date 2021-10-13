@@ -90,7 +90,7 @@ models:
       - name: dim_crm_account_id
         tests:
           - not_null
-      - name: CONCAT(dim_issue_id, dim_crm_account_id)
+      - name: CONCAT(dim_issue_id, dim_crm_account_id, dim_original_issue_project_id, original_issue_internal_id)
         tests:
           - not_null
           - unique

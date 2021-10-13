@@ -242,7 +242,7 @@
 
 ), final AS (
 
-    SELECT
+    SELECT DISTINCT
       map_moved_issue.dim_issue_id,
       union_links.link_type,
       {{ get_keyed_nulls('union_links.dim_crm_opportunity_id')  }}     AS dim_crm_opportunity_id,
